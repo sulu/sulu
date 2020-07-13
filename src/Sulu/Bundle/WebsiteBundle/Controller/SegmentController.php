@@ -43,6 +43,10 @@ class SegmentController
         $url = $request->query->get('url');
         $segmentKey = $request->query->get('segment');
 
+        if (!$webspace->getSegment($segmentKey)) {
+            $segmentKey = null;
+        }
+
         $response = new RedirectResponse($url);
         $response->headers->setCookie(
             Cookie::create(

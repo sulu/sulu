@@ -36,6 +36,17 @@ class SegmentControllerTest extends WebsiteTestCase
         $this->assertEquals('http://sulu.lo/test', $response->getTargetUrl());
     }
 
+    public function testSwitchNonExisting()
+    {
+        $this->assertNull($this->client->getCookieJar()->get('_ss'));
+
+        $this->client->request('GET', 'http://sulu.lo/_sulu_segment_switch?segment=n&url=http://sulu.lo/test');
+        $response = $this->client->getResponse();
+
+        $this->assertNull($this->client->getCookieJar()->get('_ss'));
+        $this->assertEquals('http://sulu.lo/test', $response->getTargetUrl());
+    }
+
     public function testSwitchDefault()
     {
         $this->assertNull($this->client->getCookieJar()->get('_ss'));
