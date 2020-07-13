@@ -1893,6 +1893,11 @@ class PageControllerTest extends SuluTestCase
             ],
             'url' => '/test1',
             'article' => 'Test',
+            'ext' => [
+                'excerpt' => [
+                    'segment' => 's',
+                ],
+            ],
         ];
 
         $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
@@ -1906,10 +1911,7 @@ class PageControllerTest extends SuluTestCase
 
         $this->assertArrayHasKey('id', $data);
         $this->assertEquals('test1', $data['title']);
-        $this->assertEquals('/test1', $data['path']);
-        $this->assertEquals(1, $data['nodeState']);
-        $this->assertFalse($data['publishedState']);
-        $this->assertFalse($data['hasSub']);
+        $this->assertEquals('s', $data['ext']['excerpt']['segment']);
 
         $this->client->request('GET', '/api/pages/' . $data['id'] . '?webspace=sulu_io&language=en');
         $this->assertHttpStatusCode(200, $this->client->getResponse());
@@ -1917,9 +1919,7 @@ class PageControllerTest extends SuluTestCase
 
         $this->assertArrayHasKey('id', $response);
         $this->assertEquals('test1', $response['title']);
-        $this->assertEquals('/test1', $response['path']);
-        $this->assertFalse($response['publishedState']);
-        $this->assertFalse($response['hasSub']);
+        $this->assertEquals('s', $data['ext']['excerpt']['segment']);
     }
 
     public function testPostTriggerAction()
