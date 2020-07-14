@@ -1,0 +1,4 @@
+$dialogHeaderHeight: 85px;
+$dialogFooterHeight: 90px;
+$dialogMarginVertical: 100px;
+$dialogContentMaxHeight: calc(100vh - $dialogHeaderHeight - $dialogFooterHeight - $dialogMarginVertical);
