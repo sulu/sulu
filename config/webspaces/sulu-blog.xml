@@ -6,6 +6,10 @@
     <name>Sulu Blog</name>
     <key>sulu-blog</key>
 
+    <security>
+        <system>Sulu Blog</system>
+    </security>
+
     <localizations>
         <localization language="en" default="true"/>
     </localizations>

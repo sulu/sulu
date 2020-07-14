@@ -17,10 +17,10 @@ use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
-use Sulu\Component\Localization\Manager\LocalizationManager;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class MediaAdmin extends Admin
@@ -57,16 +57,23 @@ class MediaAdmin extends Admin
      */
     private $urlGenerator;
 
+    /**
+     * @var WebspaceManagerInterface
+     */
+    private $webspaceManager;
+
     public function __construct(
         ViewBuilderFactoryInterface $viewBuilderFactory,
         SecurityCheckerInterface $securityChecker,
-        LocalizationManager $localizationManager,
-        UrlGeneratorInterface $urlGenerator
+        LocalizationManagerInterface $localizationManager,
+        UrlGeneratorInterface $urlGenerator,
+        WebspaceManagerInterface $webspaceManager
     ) {
         $this->viewBuilderFactory = $viewBuilderFactory;
         $this->securityChecker = $securityChecker;
         $this->localizationManager = $localizationManager;
         $this->urlGenerator = $urlGenerator;
+        $this->webspaceManager = $webspaceManager;
     }
 
     public function configureNavigationItems(NavigationItemCollection $navigationItemCollection): void
@@ -151,7 +158,7 @@ class MediaAdmin extends Admin
 
     public function getSecurityContexts()
     {
-        return [
+        $securityContexts = [
             self::SULU_ADMIN_SECURITY_SYSTEM => [
                 'Media' => [
                     static::SECURITY_CONTEXT => [
@@ -167,6 +174,28 @@ class MediaAdmin extends Admin
                 ],
             ],
         ];
+
+        foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
+            $webspaceSecurity = $webspace->getSecurity();
+            if (!$webspaceSecurity) {
+                continue;
+            }
+
+            $webspaceSystem = $webspaceSecurity->getSystem();
+            if (!$webspaceSystem) {
+                continue;
+            }
+
+            $securityContexts[$webspaceSystem] = [
+                'Media' => [
+                    static::SECURITY_CONTEXT => [
+                        PermissionTypes::VIEW,
+                    ],
+                ],
+            ];
+        }
+
+        return $securityContexts;
     }
 
     public function getConfigKey(): ?string
