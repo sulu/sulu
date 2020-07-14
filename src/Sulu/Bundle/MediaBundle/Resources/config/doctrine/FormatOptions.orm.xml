@@ -9,10 +9,10 @@
         <id name="fileVersion" association-key="true"/>
         <id name="formatKey" type="string" length="255"/>
 
-        <field name="cropX" type="integer"/>
-        <field name="cropY" type="integer"/>
-        <field name="cropWidth" type="integer"/>
-        <field name="cropHeight" type="integer"/>
+        <field name="cropX" type="float"/>
+        <field name="cropY" type="float"/>
+        <field name="cropWidth" type="float"/>
+        <field name="cropHeight" type="float"/>
 
         <many-to-one field="fileVersion" target-entity="Sulu\Bundle\MediaBundle\Entity\FileVersion" inversed-by="formatOptions">
             <join-columns>
