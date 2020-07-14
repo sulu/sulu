@@ -14,7 +14,7 @@ jest.mock('sulu-page-bundle/stores/webspaceStore', () => ({
 }));
 
 jest.mock('../../../stores/securityContextStore/securityContextStore', () => ({
-    loadSecurityContextGroups: jest.fn(() => Promise.resolve()),
+    getSecurityContextGroups: jest.fn(() => Promise.resolve()),
 }));
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
@@ -51,8 +51,7 @@ test('Render with minimal', () => {
             'sulu.contact.organizations': ['view', 'add', 'edit', 'delete'],
         },
     };
-    const promise = Promise.resolve(securityContextGroups);
-    securityContextStore.loadSecurityContextGroups.mockReturnValue(promise);
+    securityContextStore.getSecurityContextGroups.mockReturnValue(securityContextGroups);
 
     const permissions = mount(
         <Permissions
@@ -62,11 +61,9 @@ test('Render with minimal', () => {
         />
     );
 
-    return promise.then(() => {
-        expect(securityContextStore.loadSecurityContextGroups).toBeCalledWith('Sulu');
-        permissions.update();
-        expect(permissions.render()).toMatchSnapshot();
-    });
+    expect(securityContextStore.getSecurityContextGroups).toBeCalledWith('Sulu');
+    permissions.update();
+    expect(permissions.render()).toMatchSnapshot();
 });
 
 test('Render in disabled state', () => {
@@ -99,8 +96,7 @@ test('Render in disabled state', () => {
             'sulu.contact.organizations': ['view', 'add', 'edit', 'delete'],
         },
     };
-    const promise = Promise.resolve(securityContextGroups);
-    securityContextStore.loadSecurityContextGroups.mockReturnValue(promise);
+    securityContextStore.getSecurityContextGroups.mockReturnValue(securityContextGroups);
 
     const permissions = mount(
         <Permissions
@@ -111,11 +107,9 @@ test('Render in disabled state', () => {
         />
     );
 
-    return promise.then(() => {
-        expect(securityContextStore.loadSecurityContextGroups).toBeCalledWith('Sulu');
-        permissions.update();
-        expect(permissions.render()).toMatchSnapshot();
-    });
+    expect(securityContextStore.getSecurityContextGroups).toBeCalledWith('Sulu');
+    permissions.update();
+    expect(permissions.render()).toMatchSnapshot();
 });
 
 test('Should trigger onChange correctly', () => {
@@ -148,8 +142,7 @@ test('Should trigger onChange correctly', () => {
             'sulu.contact.organizations': ['view', 'add', 'edit', 'delete'],
         },
     };
-    const promise = Promise.resolve(securityContextGroups);
-    securityContextStore.loadSecurityContextGroups.mockReturnValue(promise);
+    securityContextStore.getSecurityContextGroups.mockReturnValue(securityContextGroups);
 
     const onChange = jest.fn();
     const permissions = mount(
@@ -160,33 +153,30 @@ test('Should trigger onChange correctly', () => {
         />
     );
 
-    return promise.then(() => {
-        permissions.update();
-        const newContextPermissions: Array<ContextPermission> = [
-            {
-                id: 1,
-                context: 'sulu.contact.people',
-                permissions: {
-                    'view': true,
-                    'delete': true,
-                    'add': true,
-                    'edit': true,
-                },
+    const newContextPermissions: Array<ContextPermission> = [
+        {
+            id: 1,
+            context: 'sulu.contact.people',
+            permissions: {
+                'view': true,
+                'delete': true,
+                'add': true,
+                'edit': true,
             },
-            {
-                id: 2,
-                context: 'sulu.contact.organizations',
-                permissions: {
-                    'view': true,
-                    'delete': true,
-                    'add': true,
-                    'edit': false,
-                },
+        },
+        {
+            id: 2,
+            context: 'sulu.contact.organizations',
+            permissions: {
+                'view': true,
+                'delete': true,
+                'add': true,
+                'edit': false,
             },
-        ];
-        permissions.find(PermissionMatrix).at(0).instance().props.onChange(newContextPermissions);
-        expect(onChange).toBeCalledWith(newContextPermissions);
-    });
+        },
+    ];
+    permissions.find(PermissionMatrix).at(0).instance().props.onChange(newContextPermissions);
+    expect(onChange).toBeCalledWith(newContextPermissions);
 });
 
 test('Render with empty webspace section', () => {
@@ -224,8 +214,7 @@ test('Render with empty webspace section', () => {
             'sulu.webspaces.#webspace#.default-snippets': ['view', 'add', 'edit', 'delete'],
         },
     };
-    const promise = Promise.resolve(securityContextGroups);
-    securityContextStore.loadSecurityContextGroups.mockReturnValue(promise);
+    securityContextStore.getSecurityContextGroups.mockReturnValue(securityContextGroups);
 
     webspaceStore.allWebspaces = [
         {
@@ -253,18 +242,15 @@ test('Render with empty webspace section', () => {
         />
     );
 
-    return promise.then(() => {
-        expect(securityContextStore.loadSecurityContextGroups).toBeCalledWith('Sulu');
-        permissions.update();
+    expect(securityContextStore.getSecurityContextGroups).toBeCalledWith('Sulu');
 
-        // Currently we have to load each child separately, because of a bug in enzyme.
-        // TODO: https://github.com/airbnb/enzyme/issues/1213
-        const permissionChildren = permissions.children();
-        expect(permissionChildren.at(0).render()).toMatchSnapshot();
-        expect(permissionChildren.at(1).render()).toMatchSnapshot();
-        expect(permissionChildren.at(2).render()).toMatchSnapshot();
-        expect(permissionChildren.at(3).render()).toMatchSnapshot();
-    });
+    // Currently we have to load each child separately, because of a bug in enzyme.
+    // TODO: https://github.com/airbnb/enzyme/issues/1213
+    const permissionChildren = permissions.children();
+    expect(permissionChildren.at(0).render()).toMatchSnapshot();
+    expect(permissionChildren.at(1).render()).toMatchSnapshot();
+    expect(permissionChildren.at(2).render()).toMatchSnapshot();
+    expect(permissionChildren.at(3).render()).toMatchSnapshot();
 });
 
 test('Render with webspace section', () => {
@@ -314,8 +300,7 @@ test('Render with webspace section', () => {
             'sulu.webspaces.#webspace#.default-snippets': ['view', 'add', 'edit', 'delete'],
         },
     };
-    const promise = Promise.resolve(securityContextGroups);
-    securityContextStore.loadSecurityContextGroups.mockReturnValue(promise);
+    securityContextStore.getSecurityContextGroups.mockReturnValue(securityContextGroups);
 
     webspaceStore.allWebspaces = [
         {
@@ -343,18 +328,16 @@ test('Render with webspace section', () => {
         />
     );
 
-    return promise.then(() => {
-        expect(securityContextStore.loadSecurityContextGroups).toBeCalledWith('Sulu');
-        permissions.update();
+    expect(securityContextStore.getSecurityContextGroups).toBeCalledWith('Sulu');
+    permissions.update();
 
-        // Currently we have to load each child separately, because of a bug in enzyme.
-        // TODO: https://github.com/airbnb/enzyme/issues/1213
-        const permissionChildren = permissions.children();
-        expect(permissionChildren.at(0).render()).toMatchSnapshot();
-        expect(permissionChildren.at(1).render()).toMatchSnapshot();
-        expect(permissionChildren.at(2).render()).toMatchSnapshot();
-        expect(permissionChildren.at(3).render()).toMatchSnapshot();
-    });
+    // Currently we have to load each child separately, because of a bug in enzyme.
+    // TODO: https://github.com/airbnb/enzyme/issues/1213
+    const permissionChildren = permissions.children();
+    expect(permissionChildren.at(0).render()).toMatchSnapshot();
+    expect(permissionChildren.at(1).render()).toMatchSnapshot();
+    expect(permissionChildren.at(2).render()).toMatchSnapshot();
+    expect(permissionChildren.at(3).render()).toMatchSnapshot();
 });
 
 test('Should trigger onChange correctly when changing something in the webspace section', () => {
@@ -404,8 +387,7 @@ test('Should trigger onChange correctly when changing something in the webspace 
             'sulu.webspaces.#webspace#.default-snippets': ['view', 'add', 'edit', 'delete'],
         },
     };
-    const promise = Promise.resolve(securityContextGroups);
-    securityContextStore.loadSecurityContextGroups.mockReturnValue(promise);
+    securityContextStore.getSecurityContextGroups.mockReturnValue(securityContextGroups);
 
     webspaceStore.allWebspaces = [
         {
@@ -434,45 +416,42 @@ test('Should trigger onChange correctly when changing something in the webspace 
         />
     );
 
-    return promise.then(() => {
-        permissions.update();
-        const newContextPermissions: Array<ContextPermission> = [
-            {
-                id: 1,
-                context: 'sulu.contact.people',
-                permissions: {
-                    'view': true,
-                    'delete': true,
-                    'add': true,
-                    'edit': true,
-                },
+    const newContextPermissions: Array<ContextPermission> = [
+        {
+            id: 1,
+            context: 'sulu.contact.people',
+            permissions: {
+                'view': true,
+                'delete': true,
+                'add': true,
+                'edit': true,
             },
-            {
-                id: 2,
-                context: 'sulu.contact.organizations',
-                permissions: {
-                    'view': true,
-                    'delete': true,
-                    'add': true,
-                    'edit': true,
-                },
+        },
+        {
+            id: 2,
+            context: 'sulu.contact.organizations',
+            permissions: {
+                'view': true,
+                'delete': true,
+                'add': true,
+                'edit': true,
             },
-            {
-                id: 3,
-                context: 'sulu.webspaces.example',
-                permissions: {
-                    'view': true,
-                    'delete': true,
-                    'add': false,
-                    'edit': true,
-                    'live': false,
-                    'security': false,
-                },
+        },
+        {
+            id: 3,
+            context: 'sulu.webspaces.example',
+            permissions: {
+                'view': true,
+                'delete': true,
+                'add': false,
+                'edit': true,
+                'live': false,
+                'security': false,
             },
-        ];
-        permissions.find(PermissionMatrix).at(0).instance().props.onChange(newContextPermissions);
-        expect(onChange).toBeCalledWith(newContextPermissions);
-    });
+        },
+    ];
+    permissions.find(PermissionMatrix).at(0).instance().props.onChange(newContextPermissions);
+    expect(onChange).toBeCalledWith(newContextPermissions);
 });
 
 test('Should trigger onChange correctly when a webspace is added', () => {
@@ -522,8 +501,7 @@ test('Should trigger onChange correctly when a webspace is added', () => {
             'sulu.webspaces.#webspace#.default-snippets': ['view', 'add', 'edit', 'delete'],
         },
     };
-    const promise = Promise.resolve(securityContextGroups);
-    securityContextStore.loadSecurityContextGroups.mockReturnValue(promise);
+    securityContextStore.getSecurityContextGroups.mockReturnValue(securityContextGroups);
 
     webspaceStore.allWebspaces = [
         {
@@ -552,79 +530,76 @@ test('Should trigger onChange correctly when a webspace is added', () => {
         />
     );
 
-    return promise.then(() => {
-        permissions.update();
-        permissions.find('MultiSelect').prop('onChange')(['example', 'example3']);
+    permissions.find('MultiSelect').prop('onChange')(['example', 'example3']);
 
-        const expectedNewValue: Array<ContextPermission> = [
-            {
-                id: 1,
-                context: 'sulu.contact.people',
-                permissions: {
-                    'view': true,
-                    'delete': true,
-                    'add': true,
-                    'edit': true,
-                },
+    const expectedNewValue: Array<ContextPermission> = [
+        {
+            id: 1,
+            context: 'sulu.contact.people',
+            permissions: {
+                'view': true,
+                'delete': true,
+                'add': true,
+                'edit': true,
             },
-            {
-                id: 2,
-                context: 'sulu.contact.organizations',
-                permissions: {
-                    'view': true,
-                    'delete': true,
-                    'add': true,
-                    'edit': true,
-                },
+        },
+        {
+            id: 2,
+            context: 'sulu.contact.organizations',
+            permissions: {
+                'view': true,
+                'delete': true,
+                'add': true,
+                'edit': true,
             },
-            {
-                id: 3,
-                context: 'sulu.webspaces.example',
-                permissions: {
-                    'view': true,
-                    'delete': true,
-                    'add': true,
-                    'edit': true,
-                    'live': false,
-                    'security': false,
-                },
+        },
+        {
+            id: 3,
+            context: 'sulu.webspaces.example',
+            permissions: {
+                'view': true,
+                'delete': true,
+                'add': true,
+                'edit': true,
+                'live': false,
+                'security': false,
             },
-            {
-                id: undefined,
-                context: 'sulu.webspaces.example3',
-                permissions: {
-                    'view': false,
-                    'delete': false,
-                    'add': false,
-                    'edit': false,
-                    'live': false,
-                    'security': false,
-                },
+        },
+        {
+            id: undefined,
+            context: 'sulu.webspaces.example3',
+            permissions: {
+                'view': false,
+                'delete': false,
+                'add': false,
+                'edit': false,
+                'live': false,
+                'security': false,
             },
-            {
-                id: undefined,
-                context: 'sulu.webspaces.example3.analytics',
-                permissions: {
-                    'view': false,
-                    'delete': false,
-                    'add': false,
-                    'edit': false,
-                },
+        },
+        {
+            id: undefined,
+            context: 'sulu.webspaces.example3.analytics',
+            permissions: {
+                'view': false,
+                'delete': false,
+                'add': false,
+                'edit': false,
             },
-            {
-                id: undefined,
-                context: 'sulu.webspaces.example3.default-snippets',
-                permissions: {
-                    'view': false,
-                    'delete': false,
-                    'add': false,
-                    'edit': false,
-                },
+        },
+        {
+            id: undefined,
+            context: 'sulu.webspaces.example3.default-snippets',
+            permissions: {
+                'view': false,
+                'delete': false,
+                'add': false,
+                'edit': false,
             },
-        ];
+        },
+    ];
 
-        expect(onChange).toBeCalledWith(expectedNewValue);
-    });
+    expect(onChange).toBeCalledWith(expectedNewValue);
 });
 
 test('Should trigger onChange correctly when a webspace is removed', () => {
@@ -686,8 +661,7 @@ test('Should trigger onChange correctly when a webspace is removed', () => {
             'sulu.webspaces.#webspace#.default-snippets': ['view', 'add', 'edit', 'delete'],
         },
     };
-    const promise = Promise.resolve(securityContextGroups);
-    securityContextStore.loadSecurityContextGroups.mockReturnValue(promise);
+    securityContextStore.getSecurityContextGroups.mockReturnValue(securityContextGroups);
 
     webspaceStore.allWebspaces = [
         {
@@ -716,47 +690,44 @@ test('Should trigger onChange correctly when a webspace is removed', () => {
         />
     );
 
-    return promise.then(() => {
-        permissions.update();
-        permissions.find('MultiSelect').prop('onChange')(['example3']);
+    permissions.find('MultiSelect').prop('onChange')(['example3']);
 
-        const expectedNewValue: Array<ContextPermission> = [
-            {
-                id: 1,
-                context: 'sulu.contact.people',
-                permissions: {
-                    'view': true,
-                    'delete': true,
-                    'add': true,
-                    'edit': true,
-                },
+    const expectedNewValue: Array<ContextPermission> = [
+        {
+            id: 1,
+            context: 'sulu.contact.people',
+            permissions: {
+                'view': true,
+                'delete': true,
+                'add': true,
+                'edit': true,
             },
-            {
-                id: 2,
-                context: 'sulu.contact.organizations',
-                permissions: {
-                    'view': true,
-                    'delete': true,
-                    'add': true,
-                    'edit': true,
-                },
+        },
+        {
+            id: 2,
+            context: 'sulu.contact.organizations',
+            permissions: {
+                'view': true,
+                'delete': true,
+                'add': true,
+                'edit': true,
             },
-            {
-                id: 4,
-                context: 'sulu.webspaces.example3',
-                permissions: {
-                    'view': true,
-                    'delete': true,
-                    'add': true,
-                    'edit': true,
-                    'live': false,
-                    'security': true,
-                },
+        },
+        {
+            id: 4,
+            context: 'sulu.webspaces.example3',
+            permissions: {
+                'view': true,
+                'delete': true,
+                'add': true,
+                'edit': true,
+                'live': false,
+                'security': true,
             },
-        ];
+        },
+    ];
 
-        expect(onChange).toBeCalledWith(expectedNewValue);
-    });
+    expect(onChange).toBeCalledWith(expectedNewValue);
 });
 
 test('Should trigger a mobx autorun if the prop system changes', () => {
@@ -789,8 +760,7 @@ test('Should trigger a mobx autorun if the prop system changes', () => {
             'sulu.contact.organizations': ['view', 'add', 'edit', 'delete'],
         },
     };
-    const promise = Promise.resolve(securityContextGroups);
-    securityContextStore.loadSecurityContextGroups.mockReturnValue(promise);
+    securityContextStore.getSecurityContextGroups.mockReturnValue(securityContextGroups);
 
     const permissions = mount(
         <Permissions
@@ -800,16 +770,14 @@ test('Should trigger a mobx autorun if the prop system changes', () => {
         />
     );
 
-    return promise.then(() => {
-        // update with the same system, nothing should happen
-        // update it with a other system it should trigger a reload
-        permissions.setProps({system: 'Sulu'});
-        permissions.setProps({system: 'Other-System'});
+    // update with the same system, nothing should happen
+    // update it with a other system it should trigger a reload
+    permissions.setProps({system: 'Sulu'});
+    permissions.setProps({system: 'Other-System'});
 
-        expect(securityContextStore.loadSecurityContextGroups).toHaveBeenCalledWith('Sulu');
-        expect(securityContextStore.loadSecurityContextGroups).toHaveBeenCalledWith('Other-System');
-        expect(securityContextStore.loadSecurityContextGroups).toHaveBeenCalledTimes(2);
-    });
+    expect(securityContextStore.getSecurityContextGroups).toHaveBeenCalledWith('Sulu');
+    expect(securityContextStore.getSecurityContextGroups).toHaveBeenCalledWith('Other-System');
+    expect(securityContextStore.getSecurityContextGroups).toHaveBeenCalledTimes(2);
 });
 
 test('Pass disabled state to MultiSelect', () => {
@@ -818,8 +786,7 @@ test('Pass disabled state to MultiSelect', () => {
             'sulu.webspaces.#webspace#': ['view'],
         },
     };
-    const promise = Promise.resolve(securityContextGroups);
-    securityContextStore.loadSecurityContextGroups.mockReturnValue(promise);
+    securityContextStore.getSecurityContextGroups.mockReturnValue(securityContextGroups);
 
     const permissions = mount(
         <Permissions
@@ -830,10 +797,7 @@ test('Pass disabled state to MultiSelect', () => {
         />
     );
 
-    return promise.then(() => {
-        permissions.update();
-        expect(permissions.find('MultiSelect').prop('disabled')).toEqual(true);
-    });
+    expect(permissions.find('MultiSelect').prop('disabled')).toEqual(true);
 });
 
 test('Dispose autorun on unmount', () => {
@@ -866,8 +830,7 @@ test('Dispose autorun on unmount', () => {
             'sulu.contact.organizations': ['view', 'add', 'edit', 'delete'],
         },
     };
-    const promise = Promise.resolve(securityContextGroups);
-    securityContextStore.loadSecurityContextGroups.mockReturnValue(promise);
+    securityContextStore.getSecurityContextGroups.mockReturnValue(securityContextGroups);
 
     const permissions = mount(
         <Permissions

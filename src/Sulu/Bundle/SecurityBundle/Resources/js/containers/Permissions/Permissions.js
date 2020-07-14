@@ -31,12 +31,12 @@ class Permissions extends React.Component<Props> {
 
     @action componentDidMount() {
         this.systemDisposer = autorun(
-            () => {
-                securityContextStore.loadSecurityContextGroups(this.system).then(action((securityContextGroups) => {
-                    this.securityContextGroups = securityContextGroups;
-                }));
-            }
+            () => this.setSecurityContextGroups(securityContextStore.getSecurityContextGroups(this.system))
         );
+    }
+
+    @action setSecurityContextGroups(securityContextGroups: SecurityContextGroups) {
+        this.securityContextGroups = securityContextGroups;
     }
 
     componentWillUnmount() {

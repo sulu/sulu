@@ -14,7 +14,7 @@ jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
 }));
 
 jest.mock('../../../stores/securityContextStore', () => ({
-    loadAvailableActions: jest.fn(),
+    getAvailableActions: jest.fn(),
 }));
 
 beforeEach(() => {
@@ -34,15 +34,14 @@ test('Render matrix with correct all values selected if not given', () => {
     );
     ResourceRequester.get.mockReturnValue(rolePromise);
 
-    const actionPromise = Promise.resolve(['view', 'add', 'edit', 'delete', 'live', 'security']);
-    securityContextStore.loadAvailableActions.mockReturnValue(actionPromise);
+    securityContextStore.getAvailableActions.mockReturnValue(['view', 'add', 'edit', 'delete', 'live', 'security']);
 
     const value = {};
     const rolePermissions = mount(<RolePermissions onChange={jest.fn()} resourceKey="snippets" value={value} />);
 
     expect(rolePermissions.render()).toMatchSnapshot();
 
-    return Promise.all([rolePromise, actionPromise]).then(() => {
+    return Promise.all([rolePromise]).then(() => {
         rolePermissions.update();
         expect(rolePermissions.render()).toMatchSnapshot();
     });
@@ -61,8 +60,7 @@ test('Render matrix with correct given values', () => {
     );
     ResourceRequester.get.mockReturnValue(rolePromise);
 
-    const actionPromise = Promise.resolve(['view', 'add', 'edit', 'delete', 'security']);
-    securityContextStore.loadAvailableActions.mockReturnValue(actionPromise);
+    securityContextStore.getAvailableActions.mockReturnValue(['view', 'add', 'edit', 'delete', 'security']);
 
     const value = {
         '1': {
@@ -82,7 +80,7 @@ test('Render matrix with correct given values', () => {
 
     expect(rolePermissions.render()).toMatchSnapshot();
 
-    return Promise.all([rolePromise, actionPromise]).then(() => {
+    return Promise.all([rolePromise]).then(() => {
         rolePermissions.update();
         expect(rolePermissions.render()).toMatchSnapshot();
     });
@@ -141,12 +139,11 @@ test('Render matrix with correct default values from roles', () => {
     );
     ResourceRequester.get.mockReturnValue(rolePromise);
 
-    const actionPromise = Promise.resolve(['view', 'add', 'edit', 'delete', 'security']);
-    securityContextStore.loadAvailableActions.mockReturnValue(actionPromise);
+    securityContextStore.getAvailableActions.mockReturnValue(['view', 'add', 'edit', 'delete', 'security']);
 
     const rolePermissions = mount(<RolePermissions onChange={jest.fn()} resourceKey="snippets" value={{}} />);
 
-    return Promise.all([rolePromise, actionPromise]).then(() => {
+    return Promise.all([rolePromise]).then(() => {
         rolePermissions.update();
         expect(rolePermissions.render()).toMatchSnapshot();
     });
@@ -167,15 +164,14 @@ test('Call onChange callback when value changes', () => {
     );
     ResourceRequester.get.mockReturnValue(rolePromise);
 
-    const actionPromise = Promise.resolve(['view', 'add', 'edit', 'delete', 'live', 'security']);
-    securityContextStore.loadAvailableActions.mockReturnValue(actionPromise);
+    securityContextStore.getAvailableActions.mockReturnValue(['view', 'add', 'edit', 'delete', 'live', 'security']);
 
     const value = {};
     const rolePermissions = shallow(<RolePermissions onChange={changeSpy} resourceKey="snippets" value={value} />);
 
-    expect(securityContextStore.loadAvailableActions).toBeCalledWith('snippets');
+    expect(securityContextStore.getAvailableActions).toBeCalledWith('snippets');
 
-    return Promise.all([rolePromise, actionPromise]).then(() => {
+    return Promise.all([rolePromise]).then(() => {
         const newValue = {
             '1': {
                 view: true,
