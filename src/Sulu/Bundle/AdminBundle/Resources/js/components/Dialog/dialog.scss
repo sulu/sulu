@@ -1,4 +1,5 @@
 @import '../../containers/Application/colors.scss';
+@import './variables.scss';
 
 $contentBackgroundColor: $concrete;
 $footerBackgroundColor: $white;
@@ -31,6 +32,7 @@ $transitionDuration: 300ms;
     will-change: opacity;
     transition: opacity $transitionDuration;
     pointer-events: none;
+    max-height: calc(100vh - $dialogMarginVertical);
 
     & > * {
         pointer-events: auto;
@@ -62,10 +64,12 @@ $transitionDuration: 300ms;
         font-size: 22px;
         font-weight: bold;
         text-align: center;
-        padding: 30px;
+        height: $dialogHeaderHeight;
+        line-height: $dialogHeaderHeight;
     }
 
     article {
+        max-height: $dialogContentMaxHeight;
         color: $contentColor;
         font-size: 12px;
         line-height: 22px;
@@ -81,9 +85,11 @@ $transitionDuration: 300ms;
     footer {
         background: $footerBackgroundColor;
         border-top: 1px solid $footerBorderColor;
-        padding: 30px;
+        height: $dialogFooterHeight;
+        padding: 0 30px;
         display: flex;
         justify-content: space-between;
+        align-items: center;
         flex-direction: row-reverse;
     }
 }
