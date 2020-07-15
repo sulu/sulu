@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\SecurityBundle\Tests\Functional\Controller;
+namespace Sulu\Bundle\SecurityBundle\Tests\Unit\Controller;
 
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
@@ -105,7 +105,8 @@ class PermissionControllerTest extends TestCase
     public function testGetAction($id, $resourceKey, $permissions)
     {
         $request = new Request(['id' => $id, 'resourceKey' => $resourceKey]);
-        $this->accessControlManager->getPermissions($this->resources[$resourceKey]['security_class'], $id)->willReturn([1 => $permissions]);
+        $this->accessControlManager->getPermissions($this->resources[$resourceKey]['security_class'], $id)
+            ->willReturn([1 => $permissions]);
 
         $this->viewHandler->handle(
             View::create(

@@ -64,11 +64,19 @@ class DoctrineAccessControlProvider implements AccessControlProviderInterface
      */
     public function setPermissions($type, $identifier, $permissions)
     {
-        foreach ($permissions as $roleId => $rolePermissions) {
-            $accessControl = $this->accessControlRepository->findByTypeAndIdAndRole($type, $identifier, $roleId);
+        $accessControls = $this->accessControlRepository->findByTypeAndId($type, $identifier);
 
-            if ($accessControl) {
-                $accessControl->setPermissions($this->maskConverter->convertPermissionsToNumber($rolePermissions));
+        foreach ($permissions as $roleId => $rolePermissions) {
+            $filteredAccessControl = \array_values(
+                \array_filter($accessControls, function($accessControl) use ($roleId) {
+                    return $accessControl->getRole()->getId() === $roleId;
+                })
+            );
+
+            if (\count($filteredAccessControl) > 0) {
+                $filteredAccessControl[0]->setPermissions(
+                    $this->maskConverter->convertPermissionsToNumber($rolePermissions)
+                );
             } else {
                 $role = $this->roleRepository->findRoleById($roleId);
 
@@ -79,6 +87,15 @@ class DoctrineAccessControlProvider implements AccessControlProviderInterface
                 $accessControl->setEntityClass($type);
                 $this->objectManager->persist($accessControl);
             }
+        }
+
+        $existingRoleIds = \array_keys($permissions);
+        foreach ($accessControls as $accessControl) {
+            if (\in_array($accessControl->getRole()->getId(), $existingRoleIds)) {
+                continue;
+            }
+
+            $this->objectManager->remove($accessControl);
         }
 
         $this->objectManager->flush();

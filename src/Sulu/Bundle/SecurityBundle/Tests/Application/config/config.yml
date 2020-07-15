@@ -25,3 +25,9 @@ security:
             logout:
                 path: /admin/logout
                 target: /admin/
+
+sulu_admin:
+    resources:
+        secured_entity:
+            security_context: "sulu.security.secured_entity"
+            security_class: "Sulu\\Bundle\\SecurityBundle\\Tests\\Application\\SecuredEntity"
