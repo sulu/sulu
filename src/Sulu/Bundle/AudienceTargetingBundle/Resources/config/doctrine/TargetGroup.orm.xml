@@ -2,10 +2,11 @@
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-    <mapped-superclass name="Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroup"
-                       repository-class="Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepository"
-                       table="at_target_groups">
-
+    <mapped-superclass
+        name="Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroup"
+        repository-class="Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepository"
+        table="at_target_groups"
+    >
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>
@@ -16,16 +17,22 @@
         <field name="allWebspaces" column="allWebspaces" type="boolean" nullable="false"/>
         <field name="active" column="active" type="boolean" nullable="false"/>
 
-        <one-to-many field="webspaces"
-                     mapped-by="targetGroup"
-                     target-entity="Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupWebspace">
+        <one-to-many
+            field="webspaces"
+            mapped-by="targetGroup"
+            orphan-removal="true"
+            target-entity="Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupWebspace"
+        >
             <cascade>
                 <cascade-persist/>
             </cascade>
         </one-to-many>
-        <one-to-many field="rules"
-                     mapped-by="targetGroup"
-                     target-entity="Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRule">
+        <one-to-many
+            field="rules"
+            mapped-by="targetGroup"
+            orphan-removal="true"
+            target-entity="Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRule"
+        >
             <cascade>
                 <cascade-persist/>
             </cascade>
