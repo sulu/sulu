@@ -9,6 +9,7 @@ import headerStyles from './header.scss';
 const LOADER_SIZE = 24;
 
 type Props<T, U> = {
+    className?: string,
     emptyList: boolean,
     label?: string,
     leftButton?: ButtonConfig<T>,
@@ -23,6 +24,7 @@ export default class Header<T: string | number, U: string | number> extends Reac
 
     render() {
         const {
+            className,
             label,
             loading,
             emptyList,
@@ -31,6 +33,7 @@ export default class Header<T: string | number, U: string | number> extends Reac
         } = this.props;
 
         const headerClass = classNames(
+            className,
             headerStyles.header,
             {
                 [headerStyles.emptyList]: emptyList,
