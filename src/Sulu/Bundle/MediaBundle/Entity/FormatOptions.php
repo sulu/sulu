@@ -53,9 +53,9 @@ class FormatOptions
      *
      * @return FormatOptions
      */
-    public function setCropX($cropX)
+    public function setCropX($cropX): self
     {
-        $this->cropX = $cropX;
+        $this->cropX = (int)$cropX;
 
         return $this;
     }
@@ -65,7 +65,7 @@ class FormatOptions
      *
      * @return int
      */
-    public function getCropX()
+    public function getCropX(): int
     {
         return $this->cropX;
     }
@@ -77,9 +77,9 @@ class FormatOptions
      *
      * @return FormatOptions
      */
-    public function setCropY($cropY)
+    public function setCropY($cropY): self
     {
-        $this->cropY = $cropY;
+        $this->cropY = (int)$cropY;
 
         return $this;
     }
@@ -89,7 +89,7 @@ class FormatOptions
      *
      * @return int
      */
-    public function getCropY()
+    public function getCropY(): int
     {
         return $this->cropY;
     }
@@ -101,9 +101,9 @@ class FormatOptions
      *
      * @return FormatOptions
      */
-    public function setCropWidth($cropWidth)
+    public function setCropWidth($cropWidth): self
     {
-        $this->cropWidth = $cropWidth;
+        $this->cropWidth = (int)$cropWidth;
 
         return $this;
     }
@@ -113,7 +113,7 @@ class FormatOptions
      *
      * @return int
      */
-    public function getCropWidth()
+    public function getCropWidth(): int
     {
         return $this->cropWidth;
     }
@@ -125,9 +125,9 @@ class FormatOptions
      *
      * @return FormatOptions
      */
-    public function setCropHeight($cropHeight)
+    public function setCropHeight($cropHeight): self
     {
-        $this->cropHeight = $cropHeight;
+        $this->cropHeight = (int)$cropHeight;
 
         return $this;
     }
@@ -137,7 +137,7 @@ class FormatOptions
      *
      * @return int
      */
-    public function getCropHeight()
+    public function getCropHeight(): int
     {
         return $this->cropHeight;
     }
@@ -149,7 +149,7 @@ class FormatOptions
      *
      * @return FormatOptions
      */
-    public function setFormatKey($formatKey)
+    public function setFormatKey(string $formatKey): self
     {
         $this->formatKey = $formatKey;
 
@@ -161,7 +161,7 @@ class FormatOptions
      *
      * @return string
      */
-    public function getFormatKey()
+    public function getFormatKey(): string
     {
         return $this->formatKey;
     }
@@ -171,7 +171,7 @@ class FormatOptions
      *
      * @return FormatOptions
      */
-    public function setFileVersion(FileVersion $fileVersion)
+    public function setFileVersion(FileVersion $fileVersion): self
     {
         $this->fileVersion = $fileVersion;
 
@@ -183,7 +183,7 @@ class FormatOptions
      *
      * @return FileVersion
      */
-    public function getFileVersion()
+    public function getFileVersion(): FileVersion
     {
         return $this->fileVersion;
     }
