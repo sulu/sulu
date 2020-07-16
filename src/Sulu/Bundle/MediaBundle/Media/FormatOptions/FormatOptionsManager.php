@@ -121,8 +121,8 @@ class FormatOptionsManager implements FormatOptionsManagerInterface
         if (!isset($formatOptions)) {
             $formatOptions = new FormatOptions();
             $formatOptions->setFileVersion($fileVersion);
-            $fileVersion->addFormatOptions($formatOptions);
             $formatOptions->setFormatKey($formatKey);
+            $fileVersion->addFormatOptions($formatOptions);
         }
 
         $formatOptions = $this->setDataOnEntity($formatOptions, $data);
