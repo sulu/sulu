@@ -6,7 +6,7 @@ Array [
     class="multiItemSelectionClass"
   >
     <div
-      class="header"
+      class="header header"
     >
       <button
         class="button left"

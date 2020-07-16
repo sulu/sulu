@@ -131,7 +131,7 @@ class MultiItemSelection<T, U: string | number, V: string | number> extends Reac
                     useDragHandle={true}
                 >
                     {children && React.Children.map(children, (item, index) => (
-                        <ItemWrapperComponent isDisabled={disabled} index={index}>
+                        <ItemWrapperComponent index={index} isDisabled={disabled}>
                             {
                                 React.cloneElement(
                                     item,

@@ -5,7 +5,7 @@ exports[`Render ContactAccountSelection 1`] = `
   class="multiItemSelectionClass"
 >
   <div
-    class="header emptyList"
+    class="header header emptyList"
   >
     <button
       class="button left hasOptions"
@@ -37,7 +37,7 @@ exports[`Render ContactAccountSelection with data 1`] = `
   class="multiItemSelectionClass"
 >
   <div
-    class="header"
+    class="header header"
   >
     <button
       class="button left hasOptions"
@@ -199,7 +199,7 @@ exports[`Render disabled ContactAccountSelection 1`] = `
   class="multiItemSelectionClass disabled"
 >
   <div
-    class="header emptyList"
+    class="header disabled header emptyList"
   >
     <button
       class="button left hasOptions"
@@ -232,7 +232,7 @@ exports[`Render loading ContactAccountSelection 1`] = `
   class="multiItemSelectionClass"
 >
   <div
-    class="header emptyList"
+    class="header header emptyList"
   >
     <button
       class="button left hasOptions"

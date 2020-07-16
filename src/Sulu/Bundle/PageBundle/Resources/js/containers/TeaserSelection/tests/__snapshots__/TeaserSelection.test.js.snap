@@ -5,7 +5,7 @@ exports[`Load combined data from TeaserStore and props 1`] = `
   class="multiItemSelectionClass"
 >
   <div
-    class="header"
+    class="header header"
   >
     <button
       class="button left hasOptions"
@@ -262,7 +262,7 @@ exports[`Render loading teaser selection 1`] = `
   class="multiItemSelectionClass"
 >
   <div
-    class="header"
+    class="header header"
   >
     <button
       class="button left hasOptions"
@@ -383,7 +383,7 @@ exports[`Render teaser selection with data 1`] = `
   class="multiItemSelectionClass"
 >
   <div
-    class="header"
+    class="header header"
   >
     <button
       class="button left hasOptions"
@@ -488,7 +488,7 @@ exports[`Render teaser selection with presentations 1`] = `
   class="multiItemSelectionClass"
 >
   <div
-    class="header"
+    class="header header"
   >
     <button
       class="button left hasOptions"
