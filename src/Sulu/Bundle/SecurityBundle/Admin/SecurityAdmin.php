@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\SecurityBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
+use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
 use Sulu\Bundle\AdminBundle\Admin\View\TogglerToolbarAction;
@@ -67,6 +68,13 @@ class SecurityAdmin extends Admin
     private $translator;
 
     /**
+     * TODO: Instead of getting the security contexts from the admin pool, that should be closer to the SecurityBundle.
+     *
+     * @var AdminPool
+     */
+    private $adminPool;
+
+    /**
      * @var array
      */
     private $resources;
@@ -76,12 +84,14 @@ class SecurityAdmin extends Admin
         SecurityCheckerInterface $securityChecker,
         UrlGeneratorInterface $urlGenerator,
         TranslatorInterface $translator,
+        AdminPool $adminPool,
         array $resources
     ) {
         $this->viewBuilderFactory = $viewBuilderFactory;
         $this->securityChecker = $securityChecker;
         $this->urlGenerator = $urlGenerator;
         $this->translator = $translator;
+        $this->adminPool = $adminPool;
         $this->resources = $resources;
     }
 
@@ -229,6 +239,7 @@ class SecurityAdmin extends Admin
             'resourceKeySecurityContextMapping' => \array_filter(\array_map(function(array $resource) {
                 return $resource['security_context'] ?? null;
             }, $this->resources)),
+            'securityContexts' => $this->adminPool->getSecurityContextsWithPlaceholder(),
         ];
     }
 }

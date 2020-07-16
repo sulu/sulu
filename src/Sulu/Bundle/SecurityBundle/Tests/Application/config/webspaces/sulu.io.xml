@@ -6,6 +6,10 @@
     <name>Sulu CMF</name>
     <key>sulu_io</key>
 
+    <security>
+        <system>Sulu CMF</system>
+    </security>
+
     <localizations>
         <localization language="en" shadow="auto">
             <localization language="en" country="us" shadow="auto"/>

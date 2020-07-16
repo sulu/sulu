@@ -15,7 +15,7 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class AdminControllerTest extends SuluTestCase
 {
-    public function testRouteConfigWithTranslation()
+    public function testRouteConfig()
     {
         $client = $this->createAuthenticatedClient();
         $client->request('GET', '/admin/config');
@@ -34,6 +34,13 @@ class AdminControllerTest extends SuluTestCase
         }
 
         $this->assertEquals('User locked', $formRoute->options->toolbarActions[2]->options->label);
+
+        $securityContextConfig = $response->sulu_security->securityContexts;
+
+        $this->assertEquals(
+            ['view', 'add', 'edit', 'delete', 'security'],
+            $securityContextConfig->Sulu->Media->{'sulu.media.collections'}
+        );
     }
 
     public function testUserMetadataAction()

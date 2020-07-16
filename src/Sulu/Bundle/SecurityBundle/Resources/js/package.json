@@ -6,6 +6,7 @@
     "dependencies": {
         "classnames": "^2.2.5",
         "fast-deep-equal": "^3.1.1",
+        "loglevel": "^1.4.1",
         "url-search-params-polyfill": "^8.0.0"
     },
     "devDependencies": {

@@ -28,12 +28,10 @@ class RolePermissions extends React.Component<Props> {
     @observable roles: ?Array<Role>;
     @observable actions: ?Array<string>;
 
-    componentDidMount() {
+    @action componentDidMount() {
         const {resourceKey} = this.props;
 
-        securityContextStore.loadAvailableActions(resourceKey).then(action((actions) => {
-            this.actions = actions;
-        }));
+        this.actions = securityContextStore.getAvailableActions(resourceKey);
 
         ResourceRequester.get('roles').then(action((response) => {
             this.roles = response._embedded.roles;

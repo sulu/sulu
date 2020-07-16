@@ -15,10 +15,21 @@ use FOS\RestBundle\View\ViewHandlerInterface;
 use HandcraftedInTheAlps\RestRoutingBundle\Controller\Annotations\RouteResource;
 use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
+use Sulu\Bundle\AdminBundle\Controller\AdminController;
 use Sulu\Component\Rest\AbstractRestController;
 use Symfony\Component\HttpFoundation\Request;
 
+@\trigger_error(
+    \sprintf(
+        'The "%s" class is deprecated since Sulu 2.2, use data from "%s" instead.',
+        ContextsController::class,
+        AdminController::class
+    ),
+    \E_USER_DEPRECATED
+);
+
 /**
+ * @deprecated Deprecated since Sulu 2.2, use data from Sulu\Bundle\AdminBundle\Controller\AdminController::configAction
  * @RouteResource("security-contexts")
  */
 class ContextsController extends AbstractRestController implements ClassResourceInterface

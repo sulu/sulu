@@ -2,6 +2,17 @@
 
 ## dev-master
 
+### Deprecation of securityContextStore methods
+
+The `loadSecurityContextGroups` and `loadAvailableActions` method from the `securityContextStore` have been deprecated.
+Use the `getSecurityContextGroups` and `getAvailableActions` methods returning the data directly instead of in a
+promise.
+
+### Deprecation of ContextsController
+
+The `ContextsController` has been deprecated. The information is now delivered via `sulu_security.securityContexts`
+config in the `admin/config` endpoint.
+
 ### Deprecated urls variable in twig
 
 The `urls` twig variable has been deprecated in favour of the `localizations` variable. So the code should be adapted
