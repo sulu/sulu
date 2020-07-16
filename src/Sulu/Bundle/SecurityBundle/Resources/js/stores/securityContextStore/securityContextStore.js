@@ -1,6 +1,6 @@
 // @flow
 import log from 'loglevel';
-import type {SecurityContextGroups, Systems} from './types';
+import type {Actions, SecurityContextGroups, Systems} from './types';
 
 class SecurityContextStore {
     securityContexts: Systems;
@@ -16,18 +16,21 @@ class SecurityContextStore {
         return this.securityContexts[system];
     }
 
-    getAvailableActions(resourceKey: string) {
-        for (const systemKey in this.securityContexts) {
-            const system = this.securityContexts[systemKey];
-            for (const groupKey in system) {
-                const group = system[groupKey];
-                for (const permissionKey in group) {
-                    if (permissionKey === this.resourceKeyMapping[resourceKey]) {
-                        return group[permissionKey];
-                    }
+    getAvailableActions(resourceKey: string, system: string = 'Sulu'): Actions {
+        if (!this.securityContexts[system]) {
+            return [];
+        }
+
+        for (const groupKey in this.securityContexts[system]) {
+            const group = this.securityContexts[system][groupKey];
+            for (const permissionKey in group) {
+                if (permissionKey === this.resourceKeyMapping[resourceKey]) {
+                    return group[permissionKey];
                 }
             }
         }
+
+        return [];
     }
 
     // @deprecated
