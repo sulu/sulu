@@ -15,6 +15,7 @@ jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
 
 jest.mock('../../../stores/securityContextStore', () => ({
     getAvailableActions: jest.fn(),
+    getSystems: jest.fn(),
 }));
 
 beforeEach(() => {
@@ -26,8 +27,8 @@ test('Render matrix with correct all values selected if not given', () => {
         {
             _embedded: {
                 roles: [
-                    {id: 1, name: 'Administrator', permissions: []},
-                    {id: 2, name: 'Account Manager', permissions: []},
+                    {id: 1, name: 'Administrator', permissions: [], system: 'Sulu'},
+                    {id: 2, name: 'Account Manager', permissions: [], system: 'Sulu'},
                 ],
             },
         }
@@ -35,6 +36,7 @@ test('Render matrix with correct all values selected if not given', () => {
     ResourceRequester.get.mockReturnValue(rolePromise);
 
     securityContextStore.getAvailableActions.mockReturnValue(['view', 'add', 'edit', 'delete', 'live', 'security']);
+    securityContextStore.getSystems.mockReturnValue(['Sulu', 'Website']);
 
     const value = {};
     const rolePermissions = mount(<RolePermissions onChange={jest.fn()} resourceKey="snippets" value={value} />);
@@ -52,8 +54,8 @@ test('Render matrix with correct given values', () => {
         {
             _embedded: {
                 roles: [
-                    {id: 1, name: 'Admin'},
-                    {id: 2, name: 'Contact Manager'},
+                    {id: 1, name: 'Admin', system: 'Sulu'},
+                    {id: 2, name: 'Contact Manager', system: 'Sulu'},
                 ],
             },
         }
@@ -61,6 +63,7 @@ test('Render matrix with correct given values', () => {
     ResourceRequester.get.mockReturnValue(rolePromise);
 
     securityContextStore.getAvailableActions.mockReturnValue(['view', 'add', 'edit', 'delete', 'security']);
+    securityContextStore.getSystems.mockReturnValue(['Sulu', 'Website']);
 
     const value = {
         '1': {
@@ -106,6 +109,7 @@ test('Render matrix with correct default values from roles', () => {
                                 },
                             },
                         ],
+                        system: 'Sulu',
                     },
                     {
                         id: 2,
@@ -132,6 +136,34 @@ test('Render matrix with correct default values from roles', () => {
                                 },
                             },
                         ],
+                        system: 'Sulu',
+                    },
+                    {
+                        id: 3,
+                        name: 'Website User',
+                        permissions: [
+                            {
+                                context: 'sulu.contact.people',
+                                permissions: {
+                                    view: true,
+                                    add: true,
+                                    edit: true,
+                                    delete: true,
+                                    security: true,
+                                },
+                            },
+                            {
+                                context: 'sulu.global.snippets',
+                                permissions: {
+                                    view: true,
+                                    add: true,
+                                    edit: false,
+                                    delete: false,
+                                    security: true,
+                                },
+                            },
+                        ],
+                        system: 'Website',
                     },
                 ],
             },
@@ -139,13 +171,42 @@ test('Render matrix with correct default values from roles', () => {
     );
     ResourceRequester.get.mockReturnValue(rolePromise);
 
-    securityContextStore.getAvailableActions.mockReturnValue(['view', 'add', 'edit', 'delete', 'security']);
+    securityContextStore.getAvailableActions.mockImplementation((resourceKey, system) => {
+        if (system === 'Sulu') {
+            return ['view', 'add', 'edit', 'delete', 'security'];
+        }
 
-    const rolePermissions = mount(<RolePermissions onChange={jest.fn()} resourceKey="snippets" value={{}} />);
+        if (system === 'Website') {
+            return ['view'];
+        }
+    });
+    securityContextStore.getSystems.mockReturnValue(['Sulu', 'Website']);
+
+    const rolePermissions = shallow(<RolePermissions onChange={jest.fn()} resourceKey="snippets" value={{}} />);
 
     return Promise.all([rolePromise]).then(() => {
         rolePermissions.update();
-        expect(rolePermissions.render()).toMatchSnapshot();
+        expect(rolePermissions.find('SystemRolePermissions').at(0).prop('values')).toEqual({
+            '1': {
+                add: true,
+                delete: false,
+                edit: true,
+                security: true,
+                view: true,
+            },
+            '2': {
+                add: true,
+                delete: false,
+                edit: false,
+                security: true,
+                view: true,
+            },
+        });
+        expect(rolePermissions.find('SystemRolePermissions').at(1).prop('values')).toEqual({
+            '3': {
+                view: true,
+            },
+        });
     });
 });
 
@@ -156,8 +217,8 @@ test('Call onChange callback when value changes', () => {
         {
             _embedded: {
                 roles: [
-                    {id: 1, name: 'Administrator', permissions: []},
-                    {id: 2, name: 'Account Manager', permissions: []},
+                    {id: 1, name: 'Administrator', permissions: [], system: 'Sulu'},
+                    {id: 2, name: 'Account Manager', permissions: [], system: 'Website'},
                 ],
             },
         }
@@ -165,17 +226,35 @@ test('Call onChange callback when value changes', () => {
     ResourceRequester.get.mockReturnValue(rolePromise);
 
     securityContextStore.getAvailableActions.mockReturnValue(['view', 'add', 'edit', 'delete', 'live', 'security']);
+    securityContextStore.getSystems.mockReturnValue(['Sulu', 'Website']);
 
-    const value = {};
-    const rolePermissions = shallow(<RolePermissions onChange={changeSpy} resourceKey="snippets" value={value} />);
-
-    expect(securityContextStore.getAvailableActions).toBeCalledWith('snippets');
+    const value = {
+        '3': {
+            view: true,
+            add: true,
+            edit: true,
+            delete: true,
+        },
+    };
+    const rolePermissions = mount(<RolePermissions onChange={changeSpy} resourceKey="snippets" value={value} />);
 
     return Promise.all([rolePromise]).then(() => {
-        const newValue = {
-            '1': {
+        rolePermissions.update();
+        expect(securityContextStore.getAvailableActions).toBeCalledWith('snippets', 'Sulu');
+        expect(securityContextStore.getAvailableActions).toBeCalledWith('snippets', 'Website');
+
+        rolePermissions.find('Matrix').at(1).prop('onChange')({
+            '2': {
                 view: true,
-                add: false,
+                add: true,
+                edit: true,
+                delete: false,
+            },
+        });
+        expect(changeSpy).toHaveBeenLastCalledWith({
+            '3': {
+                view: true,
+                add: true,
                 edit: true,
                 delete: true,
             },
@@ -185,10 +264,29 @@ test('Call onChange callback when value changes', () => {
                 edit: true,
                 delete: false,
             },
-        };
-        rolePermissions.update();
+        });
 
-        rolePermissions.find('Matrix').prop('onChange')(newValue);
-        expect(changeSpy).toBeCalledWith(newValue);
+        rolePermissions.find('Matrix').at(0).prop('onChange')({
+            '1': {
+                view: true,
+                add: false,
+                edit: true,
+                delete: true,
+            },
+        });
+        expect(changeSpy).toHaveBeenLastCalledWith({
+            '3': {
+                view: true,
+                add: true,
+                edit: true,
+                delete: true,
+            },
+            '1': {
+                view: true,
+                add: false,
+                edit: true,
+                delete: true,
+            },
+        });
     });
 });
