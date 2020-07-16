@@ -16,6 +16,7 @@ import FileUploadButton from './FileUploadButton';
 import Form from './Form';
 import GhostIndicator from './GhostIndicator';
 import Grid from './Grid';
+import Heading from './Heading';
 import Icon from './Icon';
 import ImageRectangleSelection from './ImageRectangleSelection';
 import InfiniteScroller from './InfiniteScroller';
@@ -35,6 +36,7 @@ import PublishIndicator from './PublishIndicator';
 import ResourceLocator from './ResourceLocator';
 import SingleSelect from './SingleSelect';
 import Table from './Table';
+import Toggler from './Toggler';
 import Toolbar from './Toolbar';
 import Url from './Url';
 import withContainerSize from './withContainerSize';
@@ -58,6 +60,7 @@ export {
     Form,
     GhostIndicator,
     Grid,
+    Heading,
     Icon,
     ImageRectangleSelection,
     InfiniteScroller,
@@ -77,6 +80,7 @@ export {
     ResourceLocator,
     SingleSelect,
     Table,
+    Toggler,
     Toolbar,
     Url,
     withContainerSize,
