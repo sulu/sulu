@@ -55,7 +55,7 @@ class FormatOptions
      */
     public function setCropX($cropX): self
     {
-        $this->cropX = (int)$cropX;
+        $this->cropX = (int) $cropX;
 
         return $this;
     }
@@ -79,7 +79,7 @@ class FormatOptions
      */
     public function setCropY($cropY): self
     {
-        $this->cropY = (int)$cropY;
+        $this->cropY = (int) $cropY;
 
         return $this;
     }
@@ -103,7 +103,7 @@ class FormatOptions
      */
     public function setCropWidth($cropWidth): self
     {
-        $this->cropWidth = (int)$cropWidth;
+        $this->cropWidth = (int) $cropWidth;
 
         return $this;
     }
@@ -127,7 +127,7 @@ class FormatOptions
      */
     public function setCropHeight($cropHeight): self
     {
-        $this->cropHeight = (int)$cropHeight;
+        $this->cropHeight = (int) $cropHeight;
 
         return $this;
     }
