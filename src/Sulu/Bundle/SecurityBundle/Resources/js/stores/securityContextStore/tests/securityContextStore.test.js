@@ -127,3 +127,24 @@ test('Get security contexts for entire system', () => {
     expect(securityContextStore.getSecurityContextGroups('Sulu')).toEqual(suluSecurityContexts);
     expect(log.warn).not.toBeCalled();
 });
+
+test('Get systems from entire system', () => {
+    securityContextStore.resourceKeyMapping = {
+        'test': 'sulu.test',
+    };
+
+    securityContextStore.setSecurityContexts({
+        'Sulu': {
+            'Global': {
+                'sulu.snippets': ['view', 'add'],
+            },
+        },
+        'Website': {
+            'Global': {
+                'sulu.snippets': ['view'],
+            },
+        },
+    });
+
+    expect(securityContextStore.getSystems()).toEqual(['Sulu', 'Website']);
+});

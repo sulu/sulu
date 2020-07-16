@@ -8,6 +8,10 @@ class SecurityContextStore {
     // TODO Could be removed by using resourceKey for security as well instead of separate security key
     resourceKeyMapping: {[resourceKey: string]: string};
 
+    getSystems(): Array<string> {
+        return Object.keys(this.securityContexts);
+    }
+
     setSecurityContexts(securityContexts: Systems) {
         this.securityContexts = securityContexts;
     }
