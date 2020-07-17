@@ -26,7 +26,7 @@ test('Render the Matrix component', () => {
     const handleChange = jest.fn();
 
     expect(render(
-        <Matrix onChange={handleChange}>
+        <Matrix className="test" onChange={handleChange}>
             <Row name="global.articles" title="articles">
                 <Item icon="su-pen" name="view" />
                 <Item icon="su-plus" name="edit" />
