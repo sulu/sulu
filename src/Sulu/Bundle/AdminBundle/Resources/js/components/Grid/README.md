@@ -15,90 +15,90 @@ const boxStyles = {
 };
 
 <Grid>
-    <Grid.Section size={4}>
-        <Grid.Item size={12}>
+    <Grid.Section colSpan={4}>
+        <Grid.Item colSpan={12}>
             <div style={{width: `100%`, height: 200, backgroundColor: '#bada55'}} />
         </Grid.Item>
     </Grid.Section>
-    <Grid.Section size={8}>
-        <Grid.Item size={4} spaceAfter={4}>
+    <Grid.Section colSpan={8}>
+        <Grid.Item colSpan={4} spaceAfter={4}>
             <div style={boxStyles}>
                 <Input />
             </div>
         </Grid.Item>
-        <Grid.Item size={4}>
+        <Grid.Item colSpan={4}>
             <div style={boxStyles}>
                 <Input />
             </div>
         </Grid.Item>
-        <Grid.Item size={4}>
+        <Grid.Item colSpan={4}>
             <div style={boxStyles}>
                 <Input />
             </div>
         </Grid.Item>
-        <Grid.Item size={2}>
+        <Grid.Item colSpan={2}>
             <div style={boxStyles}>
                 <Input />
             </div>
         </Grid.Item>
-        <Grid.Item size={2}>
+        <Grid.Item colSpan={2}>
             <div style={boxStyles}>
                 <Input />
             </div>
         </Grid.Item>
-        <Grid.Item size={4}>
+        <Grid.Item colSpan={4}>
             <div style={boxStyles}>
                 <Input />
             </div>
         </Grid.Item>
-        <Grid.Item size={4}>
+        <Grid.Item colSpan={4}>
             <div style={boxStyles}>
                 <Input />
             </div>
         </Grid.Item>
-        <Grid.Item size={4}>
+        <Grid.Item colSpan={4}>
             <div style={boxStyles}>
                 <Input />
             </div>
         </Grid.Item>
-        <Grid.Item size={4}>
+        <Grid.Item colSpan={4}>
             <div style={boxStyles}>
                 <Input />
             </div>
         </Grid.Item>
-        <Grid.Item size={4}>
+        <Grid.Item colSpan={4}>
             <div style={boxStyles}>
                 <Input />
             </div>
         </Grid.Item>
-        <Grid.Item size={4}>
+        <Grid.Item colSpan={4}>
             <div style={boxStyles}>
                 <Input />
             </div>
         </Grid.Item>
-        <Grid.Item size={8}>
+        <Grid.Item colSpan={8}>
             <div style={boxStyles}>
                 <Input />
             </div>
         </Grid.Item>
-        <Grid.Item size={4}>
+        <Grid.Item colSpan={4}>
             <div style={boxStyles}>
                 <Input />
             </div>
         </Grid.Item>
     </Grid.Section>
-    <Grid.Section size={12}>
-        <Grid.Item size={4}>
+    <Grid.Section colSpan={12}>
+        <Grid.Item colSpan={4}>
             <div style={boxStyles}>
                 <Input />
             </div>
         </Grid.Item>
-        <Grid.Item size={4}>
+        <Grid.Item colSpan={4}>
             <div style={boxStyles}>
                 <Input />
             </div>
         </Grid.Item>
-        <Grid.Item size={4}>
+        <Grid.Item colSpan={4}>
             <div style={boxStyles}>
                 <Input />
             </div>
