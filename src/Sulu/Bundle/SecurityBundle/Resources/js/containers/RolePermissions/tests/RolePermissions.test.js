@@ -60,6 +60,38 @@ test('Render matrix with correct given values', () => {
     });
 });
 
+test('Hide system if no actions are given', () => {
+    const rolePromise = Promise.resolve(
+        {
+            _embedded: {
+                roles: [
+                    {id: 1, name: 'Admin', system: 'Sulu'},
+                    {id: 2, name: 'Contact Manager', system: 'Website'},
+                ],
+            },
+        }
+    );
+    ResourceRequester.get.mockReturnValue(rolePromise);
+
+    securityContextStore.getAvailableActions.mockImplementation((resourceKey, system) => {
+        if (system === 'Sulu') {
+            return ['view', 'add', 'edit', 'delete', 'security'];
+        }
+
+        if (system === 'Website') {
+            return [];
+        }
+    });
+    securityContextStore.getSystems.mockReturnValue(['Sulu', 'Website']);
+
+    const rolePermissions = mount(<RolePermissions onChange={jest.fn()} resourceKey="snippets" value={{}} />);
+
+    return Promise.all([rolePromise]).then(() => {
+        rolePermissions.update();
+        expect(rolePermissions.find('SystemRolePermissions')).toHaveLength(1);
+    });
+});
+
 test('Call onChange callback when value changes', () => {
     const changeSpy = jest.fn();
 

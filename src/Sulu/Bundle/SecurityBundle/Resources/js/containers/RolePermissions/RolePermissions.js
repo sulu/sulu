@@ -65,7 +65,7 @@ class RolePermissions extends React.Component<Props> {
             const actions = securityContextStore.getAvailableActions(resourceKey, system);
             const systemRoles = roles.filter((role) => role.system === system);
 
-            if (systemRoles.length === 0) {
+            if (systemRoles.length === 0 || actions.length === 0) {
                 return systemMatrices;
             }
 
