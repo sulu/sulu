@@ -148,3 +148,13 @@ test('Get systems from entire system', () => {
 
     expect(securityContextStore.getSystems()).toEqual(['Sulu', 'Website']);
 });
+
+test('Get security context from resourceKey', () => {
+    securityContextStore.resourceKeyMapping = {
+        'test': 'sulu.test',
+        'foo': 'sulu.foo',
+    };
+
+    expect(securityContextStore.getSecurityContextByResourceKey('test')).toEqual('sulu.test');
+    expect(securityContextStore.getSecurityContextByResourceKey('foo')).toEqual('sulu.foo');
+});

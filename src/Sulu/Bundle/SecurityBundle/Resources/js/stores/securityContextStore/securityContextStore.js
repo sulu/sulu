@@ -16,6 +16,10 @@ class SecurityContextStore {
         this.securityContexts = securityContexts;
     }
 
+    getSecurityContextByResourceKey(resourceKey: string) {
+        return this.resourceKeyMapping[resourceKey];
+    }
+
     getSecurityContextGroups(system: string): SecurityContextGroups {
         return this.securityContexts[system];
     }
