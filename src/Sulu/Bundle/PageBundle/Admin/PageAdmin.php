@@ -35,6 +35,8 @@ class PageAdmin extends Admin
      */
     const SECURITY_CONTEXT_PREFIX = 'sulu.webspaces.';
 
+    const SECURITY_CONTEXT_GROUP = 'Webspaces';
+
     const WEBSPACE_TABS_VIEW = 'sulu_page.webspaces';
 
     const PAGES_VIEW = 'sulu_page.pages_list';
@@ -323,9 +325,9 @@ class PageAdmin extends Admin
     {
         return \array_merge(
             [
-                self::SULU_ADMIN_SECURITY_SYSTEM => [
-                    'Webspaces' => [
-                        self::SECURITY_CONTEXT_PREFIX . '#webspace#' => [
+                static::SULU_ADMIN_SECURITY_SYSTEM => [
+                    static::SECURITY_CONTEXT_GROUP => [
+                        static::SECURITY_CONTEXT_PREFIX . '#webspace#' => [
                             PermissionTypes::VIEW,
                             PermissionTypes::ADD,
                             PermissionTypes::EDIT,
@@ -356,7 +358,13 @@ class PageAdmin extends Admin
                 continue;
             }
 
-            $webspaceSecuritySystemContexts[$system] = [];
+            $webspaceSecuritySystemContexts[$system] = [
+                static::SECURITY_CONTEXT_GROUP => [
+                    static::SECURITY_CONTEXT_PREFIX . '#webspace#' => [
+                        PermissionTypes::VIEW,
+                    ],
+                ],
+            ];
         }
 
         return $webspaceSecuritySystemContexts;

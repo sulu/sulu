@@ -27,6 +27,8 @@ class MediaAdmin extends Admin
 {
     const SECURITY_CONTEXT = 'sulu.media.collections';
 
+    const SECURITY_CONTEXT_GROUP = 'Media';
+
     const MEDIA_OVERVIEW_VIEW = 'sulu_media.overview';
 
     const EDIT_FORM_VIEW = 'sulu_media.form';
@@ -160,7 +162,7 @@ class MediaAdmin extends Admin
     {
         $securityContexts = [
             self::SULU_ADMIN_SECURITY_SYSTEM => [
-                'Media' => [
+                static::SECURITY_CONTEXT_GROUP => [
                     static::SECURITY_CONTEXT => [
                         PermissionTypes::VIEW,
                         PermissionTypes::ADD,
@@ -187,7 +189,7 @@ class MediaAdmin extends Admin
             }
 
             $securityContexts[$webspaceSystem] = [
-                'Media' => [
+                static::SECURITY_CONTEXT_GROUP => [
                     static::SECURITY_CONTEXT => [
                         PermissionTypes::VIEW,
                     ],
