@@ -1,185 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render matrix with correct all values selected if not given 1`] = `
-<div
-  class="spinner"
-  style="width: 40px; height: 40px;"
->
-  <div
-    class="doubleBounce1"
-  />
-  <div
-    class="doubleBounce2"
-  />
-</div>
-`;
-
-exports[`Render matrix with correct all values selected if not given 2`] = `
-<div
-  class="systemRolePermissions"
->
-  <div
-    class="line"
-  >
-    <div
-      class="label"
-    >
-      sulu_security.system_permission_heading
-    </div>
-  </div>
-  <table
-    class="matrix matrix"
-  >
-    <tbody>
-      <tr
-        class="row"
-      >
-        <td
-          class="name"
-        >
-          Administrator
-        </td>
-        <td
-          class="items"
-        >
-          <div
-            class="item"
-            title="View"
-          >
-            <span
-              aria-label="su-eye"
-              class="su-eye"
-            />
-          </div>
-          <div
-            class="item"
-            title="Add"
-          >
-            <span
-              aria-label="su-plus-circle"
-              class="su-plus-circle"
-            />
-          </div>
-          <div
-            class="item"
-            title="Edit"
-          >
-            <span
-              aria-label="su-pen"
-              class="su-pen"
-            />
-          </div>
-          <div
-            class="item"
-            title="Delete"
-          >
-            <span
-              aria-label="su-trash-alt"
-              class="su-trash-alt"
-            />
-          </div>
-          <div
-            class="item"
-            title="Live"
-          >
-            <span
-              aria-label="fa-signal"
-              class="fa fa-signal"
-            />
-          </div>
-          <div
-            class="item"
-            title="Security"
-          >
-            <span
-              aria-label="su-lock"
-              class="su-lock"
-            />
-          </div>
-          <button
-            class="rowButton"
-          >
-            sulu_admin.activate_all
-          </button>
-        </td>
-      </tr>
-      <tr
-        class="row"
-      >
-        <td
-          class="name"
-        >
-          Account Manager
-        </td>
-        <td
-          class="items"
-        >
-          <div
-            class="item"
-            title="View"
-          >
-            <span
-              aria-label="su-eye"
-              class="su-eye"
-            />
-          </div>
-          <div
-            class="item"
-            title="Add"
-          >
-            <span
-              aria-label="su-plus-circle"
-              class="su-plus-circle"
-            />
-          </div>
-          <div
-            class="item"
-            title="Edit"
-          >
-            <span
-              aria-label="su-pen"
-              class="su-pen"
-            />
-          </div>
-          <div
-            class="item"
-            title="Delete"
-          >
-            <span
-              aria-label="su-trash-alt"
-              class="su-trash-alt"
-            />
-          </div>
-          <div
-            class="item"
-            title="Live"
-          >
-            <span
-              aria-label="fa-signal"
-              class="fa fa-signal"
-            />
-          </div>
-          <div
-            class="item"
-            title="Security"
-          >
-            <span
-              aria-label="su-lock"
-              class="su-lock"
-            />
-          </div>
-          <button
-            class="rowButton"
-          >
-            sulu_admin.activate_all
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-`;
-
 exports[`Render matrix with correct given values 1`] = `
 <div
   class="spinner"
@@ -206,6 +26,19 @@ exports[`Render matrix with correct given values 2`] = `
     >
       sulu_security.system_permission_heading
     </div>
+    <label
+      class="label"
+    >
+      <span
+        class="switch toggler"
+      >
+        <input
+          type="checkbox"
+          value=""
+        />
+        <span />
+      </span>
+    </label>
   </div>
   <table
     class="matrix matrix"
