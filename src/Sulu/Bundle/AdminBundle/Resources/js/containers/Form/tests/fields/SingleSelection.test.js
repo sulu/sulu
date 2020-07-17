@@ -41,6 +41,7 @@ jest.mock('../../FormInspector', () => jest.fn(function(formStore) {
     this.locale = formStore.locale;
     this.options = formStore.options;
     this.getValueByPath = jest.fn();
+    this.addFinishFieldHandler = jest.fn();
 }));
 
 jest.mock('../../../../utils/Translator', () => ({
@@ -254,6 +255,7 @@ test('Throw an error if the auto_complete configuration was omitted', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const fieldTypeOptions = {
         default_type: 'auto_complete',
+        resource_key: 'accounts',
         types: {},
     };
 
@@ -342,6 +344,7 @@ test('Throw an error if no display_property is passed to the the single_select',
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const fieldTypeOptions = {
         default_type: 'single_select',
+        resource_key: 'accounts',
         types: {
             single_select: {
             },
@@ -363,6 +366,7 @@ test('Throw an error if no id_property is passed to the the single_select', () =
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const fieldTypeOptions = {
         default_type: 'single_select',
+        resource_key: 'accounts',
         types: {
             single_select: {
                 display_property: 'something',
@@ -414,7 +418,7 @@ test('Pass correct props to SingleItemSelection', () => {
         adapter: 'table',
         allowDeselectForDisabledItems: true,
         listKey: 'accounts_list',
-        detailOptions: undefined,
+        detailOptions: {},
         disabled: true,
         disabledIds: [],
         displayProperties: ['name'],
@@ -533,6 +537,30 @@ test('Throw an error if request_parameters schema option is not an array', () =>
     )).toThrow('"request_parameters"');
 });
 
+test('Should throw an error if "resource_store_properties_to_request" schema option is not an array', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const fieldTypeOptions = {
+        default_type: 'list_overlay',
+        resource_key: 'accounts',
+        types: {
+            list_overlay: {},
+        },
+    };
+
+    const schemaOptions = {
+        resource_store_properties_to_request: {name: 'resource_store_properties_to_request', value: 'not-an-array'},
+    };
+
+    expect(() => shallow(
+        <SingleSelection
+            {...fieldTypeDefaultProps}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            schemaOptions={schemaOptions}
+        />
+    )).toThrow('"resource_store_properties_to_request"');
+});
+
 test('Throw an error if item_disabled_condition schema option is not a string', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
 
@@ -643,8 +671,6 @@ test('Pass correct props with schema-options type to SingleItemSelection', () =>
         webspace: 'sulu',
     };
 
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test', options));
-
     const value = 3;
 
     const fieldTypeOptions = {
@@ -697,7 +723,21 @@ test('Pass correct props with schema-options type to SingleItemSelection', () =>
                 },
             ],
         },
+        resource_store_properties_to_request: {
+            name: 'resource_store_properties_to_request',
+            value: [
+                {
+                    name: 'dynamicKey',
+                    value: 'otherPropertyName',
+                },
+            ],
+        },
     };
+
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test', options));
+
+    const formInspectorValues = {'/otherPropertyName': 'value-returned-by-form-inspector'};
+    formInspector.getValueByPath.mockImplementation((path) => formInspectorValues[path]);
 
     const singleSelection = shallow(
         <SingleSelection
@@ -710,12 +750,15 @@ test('Pass correct props with schema-options type to SingleItemSelection', () =>
         />
     );
 
+    expect(formInspector.getValueByPath).toBeCalledWith('/otherPropertyName');
+
     expect(singleSelection.find(SingleSelectionComponent).props()).toEqual(expect.objectContaining({
         adapter: 'table',
         allowDeselectForDisabledItems: false,
         detailOptions: {
             'ghost-content': true,
             rootKey: 'testRootKey',
+            dynamicKey: 'value-returned-by-form-inspector',
         },
         disabled: true,
         disabledIds: [],
@@ -728,6 +771,7 @@ test('Pass correct props with schema-options type to SingleItemSelection', () =>
             webspace: 'sulu',
             types: 'test',
             rootKey: 'testRootKey',
+            dynamicKey: 'value-returned-by-form-inspector',
         },
         overlayTitle: 'sulu_contact.overlay_title',
         resourceKey: 'accounts',
@@ -735,7 +779,73 @@ test('Pass correct props with schema-options type to SingleItemSelection', () =>
     }));
 });
 
-test('Throw an error if a none string was passed to schema-options', () => {
+// eslint-disable-next-line max-len
+test('Should update props of SingleItemSelection when value of "resource_store_properties_to_request" property is changed', () => {
+    const value = 3;
+
+    const fieldTypeOptions = {
+        default_type: 'list_overlay',
+        resource_key: 'accounts',
+        types: {
+            list_overlay: {
+                adapter: 'table',
+                display_properties: ['name'],
+                empty_text: 'sulu_contact.nothing',
+                icon: 'su-account',
+                overlay_title: 'sulu_contact.overlay_title',
+            },
+        },
+    };
+
+    const schemaOptions = {
+        resource_store_properties_to_request: {
+            name: 'resource_store_properties_to_request',
+            value: [
+                {
+                    name: 'dynamicKey',
+                    value: 'otherPropertyName',
+                },
+            ],
+        },
+    };
+
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test', {}));
+
+    const formInspectorValues = {'/otherPropertyName': 'first-value'};
+    formInspector.getValueByPath.mockImplementation((path) => formInspectorValues[path]);
+
+    const singleSelection = shallow(
+        <SingleSelection
+            {...fieldTypeDefaultProps}
+            disabled={true}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            schemaOptions={schemaOptions}
+            value={value}
+        />
+    );
+
+    expect(formInspector.addFinishFieldHandler).toHaveBeenCalled();
+    expect(singleSelection.find(SingleSelectionComponent).props().detailOptions).toEqual({
+        dynamicKey: 'first-value',
+    });
+    expect(singleSelection.find(SingleSelectionComponent).props().listOptions).toEqual({
+        dynamicKey: 'first-value',
+    });
+
+    formInspectorValues['/otherPropertyName'] = 'second-value';
+    const finishFieldHandler = formInspector.addFinishFieldHandler.mock.calls[0][0];
+    finishFieldHandler('/otherPropertyName');
+
+    expect(singleSelection.find(SingleSelectionComponent).props().detailOptions).toEqual({
+        dynamicKey: 'second-value',
+    });
+    expect(singleSelection.find(SingleSelectionComponent).props().listOptions).toEqual({
+        dynamicKey: 'second-value',
+    });
+});
+
+test('Throw an error if "type" schema-options is not a string', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const value = 3;
 
@@ -771,7 +881,7 @@ test('Throw an error if a none string was passed to schema-options', () => {
     ).toThrow(/"type"/);
 });
 
-test('Throw an error if a none string was passed to field-type-options', () => {
+test('Throw an error if "default_type" field-type-option is not a string', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const value = 3;
 
@@ -1019,4 +1129,17 @@ test('Should throw an error if "types" schema option is not a string', () => {
             schemaOptions={{types: {name: 'types', value: []}}}
         />
     )).toThrowError(/"types"/);
+});
+
+test('Should throw an error if no "resource_key" option is passed in fieldOptions', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'pages'));
+
+    expect(() => shallow(
+        <SingleSelection
+            {...fieldTypeDefaultProps}
+            fieldTypeOptions={{default_type: 'list_overlay'}}
+            formInspector={formInspector}
+            schemaOptions={{types: {name: 'types', value: []}}}
+        />
+    )).toThrowError(/"resource_key"/);
 });
