@@ -4,17 +4,25 @@ import {shallow} from 'enzyme';
 import {FormInspector, ResourceFormStore} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
+import {webspaceStore} from 'sulu-page-bundle/stores';
 import RolePermissions from '../../fields/RolePermissions';
 
 jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn());
+
 jest.mock(
     'sulu-admin-bundle/containers/Form/stores/ResourceFormStore',
     () => jest.fn(function(resourceStore, formKey, options) {
         this.options = options;
     })
 );
+
 jest.mock('sulu-admin-bundle/containers/Form/FormInspector', () => jest.fn(function(formStore) {
     this.options = formStore.options;
+}));
+
+jest.mock('sulu-page-bundle/stores/webspaceStore/webspaceStore', () => ({
+    getWebspace: jest.fn(),
+    hasWebspace: jest.fn(),
 }));
 
 test('Pass props correctly to component', () => {
@@ -34,8 +42,11 @@ test('Pass props correctly to component', () => {
         />
     );
 
+    expect(webspaceStore.getWebspace).not.toBeCalled();
+
     expect(rolePermissions.find('RolePermissions').prop('disabled')).toEqual(false);
     expect(rolePermissions.find('RolePermissions').prop('resourceKey')).toEqual('snippets');
+    expect(rolePermissions.find('RolePermissions').prop('system')).toBe(undefined);
     expect(rolePermissions.find('RolePermissions').prop('value')).toBe(value);
 });
 
@@ -56,6 +67,40 @@ test('Pass disabled prop correctly to component', () => {
 
     expect(rolePermissions.find('RolePermissions').prop('disabled')).toEqual(true);
     expect(rolePermissions.find('RolePermissions').prop('value')).toEqual({});
+});
+
+test('Pass system prop correctly to component', () => {
+    const formInspector = new FormInspector(
+        new ResourceFormStore(
+            new ResourceStore('test'), 'snippets', {resourceKey: 'snippets', webspace: 'test'}
+        )
+    );
+
+    webspaceStore.getWebspace.mockImplementation((webspaceKey) => {
+        if (webspaceKey === 'test') {
+            return {
+                security: {
+                    system: 'test_security',
+                },
+            };
+        }
+    });
+
+    webspaceStore.hasWebspace.mockImplementation((webspaceKey) => {
+        if (webspaceKey === 'test') {
+            return true;
+        }
+    });
+
+    const rolePermissions = shallow(
+        <RolePermissions
+            {...fieldTypeDefaultProps}
+            disabled={true}
+            formInspector={formInspector}
+        />
+    );
+
+    expect(rolePermissions.find('RolePermissions').prop('system')).toEqual('test_security');
 });
 
 test('Pass disabled prop correctly to component', () => {
