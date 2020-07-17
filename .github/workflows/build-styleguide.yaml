@@ -1,0 +1,83 @@
+name: Build styleguide
+
+on:
+    push:
+        branches:
+            - master
+    release:
+        types:
+            - released
+
+jobs:
+    build-styleguide:
+        name: Build styleguide
+        runs-on: ubuntu-latest
+        steps:
+            - name: Get current version
+              id: get_current_version
+              run: |
+                  if [ $TAG_NAME ]; then echo ::set-output name=VERSION::$(echo $TAG_NAME | cut -d . -f -2); else echo ::set-output name=VERSION::$(echo $GITHUB_REF | cut -d / -f 3); fi
+              env:
+                  TAG_NAME: ${{ github.event.release.tag_name }}
+
+            - name: Checkout project
+              uses: actions/checkout@v2
+
+            - name: Checkout styleguide repository
+              uses: actions/checkout@v2
+              with:
+                  repository: luca-rath/sulu-js-reference
+                  token: ${{ secrets.ACCESS_TOKEN }}
+                  path: styleguide
+
+            - name: Delete old files for current version
+              run: rm -rf styleguide/${{ steps.get_current_version.outputs.VERSION }}/*
+
+            - name: Get available versions
+              id: get_available_versions
+              run: echo ::set-output name=VERSIONS::$(python -c 'import os, json; print json.dumps([f for f in os.listdir("styleguide/") if not f.startswith(".") and os.path.isdir(os.path.join("styleguide/", f))])')
+
+            - name: Create styleguide global variables
+              run: |
+                  echo 'globalThis.STYLEGUIDE_CURRENT_VERSION = "${{ steps.get_current_version.outputs.VERSION }}";' > styleguide-globals.js
+                  echo 'globalThis.STYLEGUIDE_AVAILABLE_VERSIONS = ${{ steps.get_available_versions.outputs.VERSIONS }};' >> styleguide-globals.js
+
+            - name: Use Node.js 12
+              uses: actions/setup-node@v1
+              with:
+                  node-version: 12.x
+
+            - name: Install dependencies
+              run: npm install
+
+            - name: Install version switcher
+              run: npm install --save-dev version-switcher
+
+            - name: Build styleguide
+              run: npm run styleguide:build -- --config styleguide.build.config.js
+
+            - name: Get latest release
+              id: get_latest_release
+              uses: pozetroninc/github-action-get-latest-release@v0.4.0
+              with:
+                  owner: sulu
+                  repo: sulu
+
+            - name: Get latest tag
+              id: get_latest_tag
+              run: echo ::set-output name=TAG::$(echo ${{ steps.get_latest_release.outputs.release }} | cut -d . -f -2)
+
+            - name: Update main index.html
+              run: echo '<!DOCTYPE html><html><body><script>window.location.href += "/${{ steps.get_latest_tag.outputs.TAG }}";</script></body></html>' > styleguide/index.html
+
+            - name: Push styleguide
+              run: |
+                  cd styleguide
+                  git config user.email "luca@sulu.io"
+                  git config user.name "Luca Rath-Heel"
+                  git remote set-url origin https://luca-rath:${{ secrets.ACCESS_TOKEN }}@github.com/luca-rath/sulu-js-reference.git
+                  git add .
+                  git status
+                  git commit -m "Publish ${{ steps.get_current_version.outputs.VERSION }}"
+                  git pull --ff-only origin master
+                  git push origin master

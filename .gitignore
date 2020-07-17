@@ -47,6 +47,7 @@ phpunit.xml
 
 # Styleguide
 /styleguide
+/styleguide-globals.js
 
 # IDEs
 .idea
