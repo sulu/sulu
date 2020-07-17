@@ -96,6 +96,7 @@ class RolePermissions extends React.Component<Props> {
                     key={system}
                     onChange={this.handleChange}
                     roles={systemRoles}
+                    system={system}
                     values={systemValues}
                 />
             );

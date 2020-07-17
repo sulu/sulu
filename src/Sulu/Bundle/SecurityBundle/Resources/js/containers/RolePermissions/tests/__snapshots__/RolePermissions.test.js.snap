@@ -16,10 +16,19 @@ exports[`Render matrix with correct all values selected if not given 1`] = `
 
 exports[`Render matrix with correct all values selected if not given 2`] = `
 <div
-  class="matrix"
+  class="systemRolePermissions"
 >
+  <div
+    class="line"
+  >
+    <div
+      class="label"
+    >
+      sulu_security.system_permission_heading
+    </div>
+  </div>
   <table
-    class="matrix"
+    class="matrix matrix"
   >
     <tbody>
       <tr
@@ -187,10 +196,19 @@ exports[`Render matrix with correct given values 1`] = `
 
 exports[`Render matrix with correct given values 2`] = `
 <div
-  class="matrix"
+  class="systemRolePermissions"
 >
+  <div
+    class="line"
+  >
+    <div
+      class="label"
+    >
+      sulu_security.system_permission_heading
+    </div>
+  </div>
   <table
-    class="matrix"
+    class="matrix matrix"
   >
     <tbody>
       <tr

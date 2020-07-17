@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
-import {Matrix} from 'sulu-admin-bundle/components';
+import {Heading, Matrix} from 'sulu-admin-bundle/components';
+import {translate} from 'sulu-admin-bundle/utils';
 import {getActionIcon} from '../../utils/Permission';
 import type {Role} from '../../types';
 import systemRolePermissionsStyles from './systemRolePermissions.scss';
@@ -11,6 +12,7 @@ type Props = {|
     disabled: boolean,
     onChange: (value: RolePermissions) => void,
     roles: Array<Role>,
+    system: string,
     values: RolePermissions,
 |};
 
@@ -21,11 +23,13 @@ export default class SystemRolePermissions extends React.Component<Props> {
     };
 
     render() {
-        const {actions, disabled, roles, values} = this.props;
+        const {actions, disabled, roles, system, values} = this.props;
 
         return (
-            <div className={systemRolePermissionsStyles.matrix}>
+            <div className={systemRolePermissionsStyles.systemRolePermissions}>
+                <Heading label={translate('sulu_security.system_permission_heading', {system})} />
                 <Matrix
+                    className={systemRolePermissionsStyles.matrix}
                     disabled={disabled}
                     onChange={this.handleChange}
                     values={values}

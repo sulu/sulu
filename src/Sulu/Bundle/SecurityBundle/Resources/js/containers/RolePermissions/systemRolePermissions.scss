@@ -1,7 +1,16 @@
-.matrix {
-    margin-bottom: 20px;
+@import 'sulu-admin-bundle/containers/Application/colors.scss';
+
+$systemRolePermissionsBorderColor: $silver;
+
+.systemRolePermissions {
+    border-top: 1px solid $systemRolePermissionsBorderColor;
+    padding: 30px 0;
 
     &:last-child {
         margin-bottom: 0;
     }
+}
+
+.matrix {
+    margin-top: 20px;
 }

@@ -2,10 +2,19 @@
 
 exports[`Render permissions for a single system 1`] = `
 <div
-  class="matrix"
+  class="systemRolePermissions"
 >
+  <div
+    class="line"
+  >
+    <div
+      class="label"
+    >
+      sulu_security.system_permission_heading
+    </div>
+  </div>
   <table
-    class="matrix"
+    class="matrix matrix"
   >
     <tbody>
       <tr

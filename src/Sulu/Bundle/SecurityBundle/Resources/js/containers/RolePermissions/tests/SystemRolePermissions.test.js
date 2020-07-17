@@ -19,6 +19,7 @@ test('Render permissions for a single system', () => {
             disabled={false}
             onChange={jest.fn()}
             roles={roles}
+            system="Sulu"
             values={{'2': {view: true, add: false, edit: true}, '3': {view: false, add: true, edit: false}}}
         />
     )).toMatchSnapshot();
@@ -31,6 +32,7 @@ test('Render permissions for a single system in disabled state', () => {
             disabled={true}
             onChange={jest.fn()}
             roles={[]}
+            system="Sulu"
             values={{}}
         />
     );
@@ -47,6 +49,7 @@ test('Call onChange callback when matrix changes', () => {
             disabled={false}
             onChange={changeSpy}
             roles={[]}
+            system="Sulu"
             values={{}}
         />
     );
