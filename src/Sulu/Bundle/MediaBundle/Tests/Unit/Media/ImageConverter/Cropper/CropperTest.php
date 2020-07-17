@@ -96,6 +96,23 @@ class CropperTest extends SuluTestCase
         $this->assertTrue($valid);
     }
 
+    public function testValidTooSmallButMaxWidthForImage()
+    {
+        $imagine = $this->createImagine();
+        $imageBox = new Box(60, 100);
+        $image = $imagine->create($imageBox);
+
+        $format = [
+            'scale' => [
+                'x' => 300,
+                'y' => 200,
+            ],
+        ];
+        $valid = $this->cropper->isValid($image, 0, 0, 60, 40, $format);
+
+        $this->assertTrue($valid);
+    }
+
     public function testNotValidTooSmall()
     {
         $imagine = $this->createImagine();
