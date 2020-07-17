@@ -6,6 +6,10 @@
     <name>Test CMF</name>
     <key>test_io</key>
 
+    <security>
+        <system>test_security_system</system>
+    </security>
+
     <localizations>
         <localization language="en" shadow="auto" default="true">
             <localization language="en" country="us" shadow="auto"/>

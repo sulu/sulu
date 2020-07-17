@@ -11,6 +11,7 @@ const defaultWebspace = {
     resourceLocatorStrategy: {
         inputType: 'resource-locator-strategy-input-type',
     },
+    security: undefined,
     segments: [],
     urls: [],
 };

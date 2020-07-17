@@ -4,6 +4,7 @@
         <property name="name" type="string" expose="true" groups="frontend,Default"/>
         <property name="key" type="string" expose="true" groups="frontend,Default"/>
         <property name="theme" type="string" expose="true" groups="frontend,Default"/>
+        <property name="security" expose="true" groups="frontend,Default"/>
         <property name="localizations" expose="true" groups="frontend,Default">
             <type><![CDATA[array<Sulu\Component\Localization\Localization>]]></type>
         </property>
