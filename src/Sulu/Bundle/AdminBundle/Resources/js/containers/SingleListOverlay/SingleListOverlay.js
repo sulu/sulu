@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {autorun, computed, observable} from 'mobx';
+import {autorun, comparer, computed, observable, reaction} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import ListStore from '../../containers/List/stores/ListStore';
@@ -43,6 +43,7 @@ class SingleListOverlay extends React.Component<Props> {
     page: IObservableValue<number> = observable.box(1);
     listStore: ListStore;
     excludedIdsDisposer: () => void;
+    changeOptionsDisposer: () => *;
     selectionDisposer: () => void;
 
     constructor(props: Props) {
@@ -74,6 +75,18 @@ class SingleListOverlay extends React.Component<Props> {
             initialSelectionIds
         );
 
+        this.changeOptionsDisposer = reaction(
+            () => this.props.options,
+            (options) => {
+                // reset liststore to reload whole tree instead of children of current active item
+                this.listStore.reset();
+                // set selected items as initialSelectionIds to expand them in case of a tree
+                this.listStore.initialSelectionIds = this.listStore.selectionIds;
+                this.listStore.options = {...this.listStore.options, ...options};
+            },
+            {equals: comparer.structural}
+        );
+
         this.selectionDisposer = autorun(() => {
             const {selections} = this.listStore;
 
@@ -95,6 +108,7 @@ class SingleListOverlay extends React.Component<Props> {
     componentWillUnmount() {
         this.listStore.destroy();
         this.excludedIdsDisposer();
+        this.changeOptionsDisposer();
         this.selectionDisposer();
     }
 
