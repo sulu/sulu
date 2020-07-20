@@ -132,7 +132,6 @@ class RequestAnalyzerResolverTest extends TestCase
                     'resourceLocatorPrefix' => '/de',
                     'resourceLocator' => '/search',
                 ],
-                'segmentKey' => 's',
             ],
             $result
         );

@@ -180,7 +180,6 @@ class TemplateAttributeResolverTest extends TestCase
                 'resourceLocator' => '/test',
                 'segmentKey' => null,
             ],
-            'segmentKey' => null,
         ], $resolved);
     }
 
@@ -220,7 +219,6 @@ class TemplateAttributeResolverTest extends TestCase
                 'resourceLocator' => '/test',
                 'segmentKey' => null,
             ],
-            'segmentKey' => null,
         ], $resolved);
     }
 }

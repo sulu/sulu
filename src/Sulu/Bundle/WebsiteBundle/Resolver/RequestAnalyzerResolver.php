@@ -56,7 +56,6 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
                 'resourceLocatorPrefix' => $requestAnalyzer->getResourceLocatorPrefix(),
                 'resourceLocator' => $requestAnalyzer->getResourceLocator(),
             ],
-            'segmentKey' => $segmentKey,
         ];
     }
 }
