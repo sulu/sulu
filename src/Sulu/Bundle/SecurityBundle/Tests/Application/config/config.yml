@@ -28,6 +28,16 @@ security:
 
 sulu_admin:
     resources:
+        secured_document:
+            security_context: "sulu.security.secured_document"
+            security_class: "Sulu\\Component\\Content\\Document\\Behavior\\SecurityBehavior"
         secured_entity:
             security_context: "sulu.security.secured_entity"
             security_class: "Sulu\\Bundle\\SecurityBundle\\Tests\\Application\\SecuredEntity"
+
+sulu_document_manager:
+    mapping:
+        secured_document:
+            alias: "secured_document"
+            phpcr_type: "mix:test"
+            class: "Sulu\\Bundle\\SecurityBundle\\Tests\\Application\\SecuredDocument"
