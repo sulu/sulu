@@ -26,8 +26,8 @@ jobs:
             - name: Checkout styleguide repository
               uses: actions/checkout@v2
               with:
-                  repository: luca-rath/sulu-js-reference
-                  token: ${{ secrets.ACCESS_TOKEN }}
+                  repository: sulu/sulu-javascript-docs
+                  token: ${{ secrets.SULU_USER_ACCESS_TOKEN }}
                   path: styleguide
 
             - name: Delete old files for current version
@@ -67,15 +67,15 @@ jobs:
               id: get_latest_tag
               run: echo ::set-output name=TAG::$(echo ${{ steps.get_latest_release.outputs.release }} | cut -d . -f -2)
 
-            - name: Update main index.html
+            - name: Update index.html
               run: echo '<!DOCTYPE html><html><body><script>window.location.href += "/${{ steps.get_latest_tag.outputs.TAG }}";</script></body></html>' > styleguide/index.html
 
             - name: Push styleguide
               run: |
                   cd styleguide
-                  git config user.email "luca@sulu.io"
-                  git config user.name "Luca Rath-Heel"
-                  git remote set-url origin https://luca-rath:${{ secrets.ACCESS_TOKEN }}@github.com/luca-rath/sulu-js-reference.git
+                  git config user.email "github@sulu.io"
+                  git config user.name "Sulu User"
+                  git remote set-url origin https://sulu-io-user:${{ secrets.SULU_USER_ACCESS_TOKEN }}@github.com/sulu/sulu-javascript-docs.git
                   git add .
                   git status
                   git commit -m "Publish ${{ steps.get_current_version.outputs.VERSION }}"

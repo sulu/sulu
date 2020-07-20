@@ -33,6 +33,7 @@ const javaScriptFileExists = (path, fileName) => {
 const babelConfig = JSON.parse(fs.readFileSync(path.resolve(__dirname, '.babelrc'))); // eslint-disable-line no-undef
 
 module.exports = { // eslint-disable-line
+    title: 'Sulu Javascript Docs',
     require: [
         'regenerator-runtime/runtime',
         './src/Sulu/Bundle/AdminBundle/Resources/js/containers/Application/global.scss',
