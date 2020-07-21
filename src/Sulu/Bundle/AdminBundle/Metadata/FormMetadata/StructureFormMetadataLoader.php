@@ -102,6 +102,10 @@ class StructureFormMetadataLoader implements FormMetadataLoaderInterface, CacheW
             $form->setDefaultType($this->defaultTypes[$key]);
         }
 
+        if (isset($metadataOptions['defaultTemplate']) && isset($form->getForms()[$metadataOptions['defaultTemplate']])) {
+            $form->setDefaultType($metadataOptions['defaultTemplate']);
+        }
+
         return $form;
     }
 

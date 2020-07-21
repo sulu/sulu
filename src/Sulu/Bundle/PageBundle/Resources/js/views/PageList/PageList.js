@@ -163,14 +163,37 @@ class PageList extends React.Component<Props> {
     };
 
     handleItemAdd = (id: ?string | number) => {
-        const {router} = this.props;
+        const {router, webspace} = this.props;
+
+        // Find template for id
+        let pageArray = [];
+        this.listStore.data.forEach((pages) => {
+            pageArray = [...pageArray, ...pages];
+        })
+        const page = pageArray.find((page) => {
+            return page.id === id
+        });
+
+        const key = page.path === '/' ? 'home' : 'page';
+        const template = page.template;
+        const defaultTemplates = webspace.defaultTemplates[key];
+        const defaultTemplate = defaultTemplates.find((defaultTemplate) => {
+            return defaultTemplate.parentTemplate === template;
+        });
+
+        let addFormArgs = {
+            parentId: id,
+            locale: this.locale.get(),
+            webspace: router.attributes.webspace,
+        }
+
+        if (defaultTemplate && defaultTemplate.template) {
+            addFormArgs.defaultTemplate = defaultTemplate.template;
+        }
+
         router.navigate(
             'sulu_page.page_add_form',
-            {
-                parentId: id,
-                locale: this.locale.get(),
-                webspace: router.attributes.webspace,
-            }
+            addFormArgs
         );
     };
 
