@@ -21,11 +21,26 @@ type Props<T, U, V> = {|
     sortable: boolean,
 |};
 
-const ItemWrapper = ({children}: Object) => (
-    <li className={multiItemSelectionStyles.listElement}>
-        {children}
-    </li>
-);
+type ItemWrapperProps = {
+    children: Element<typeof Item>,
+    isDisabled: boolean,
+};
+
+// Cannot use `disabled`, because that doesn't get passed down by SortableElement hoc
+const ItemWrapper = ({children, isDisabled: disabled}: ItemWrapperProps) => {
+    const listElementClass = classNames(
+        multiItemSelectionStyles.listElement,
+        {
+            [multiItemSelectionStyles.disabled]: disabled,
+        }
+    );
+
+    return (
+        <li className={listElementClass}>
+            {children}
+        </li>
+    );
+};
 
 const SortableItemWrapper = SortableElement(ItemWrapper);
 
@@ -94,6 +109,7 @@ class MultiItemSelection<T, U: string | number, V: string | number> extends Reac
         return (
             <div className={multiItemSelectionClass}>
                 <Header
+                    disabled={disabled}
                     emptyList={emptyList}
                     label={label}
                     leftButton={leftButton ? {disabled, ...leftButton} : undefined}
@@ -108,7 +124,7 @@ class MultiItemSelection<T, U: string | number, V: string | number> extends Reac
                     useDragHandle={true}
                 >
                     {children && React.Children.map(children, (item, index) => (
-                        <ItemWrapperComponent index={index}>
+                        <ItemWrapperComponent index={index} isDisabled={disabled}>
                             {
                                 React.cloneElement(
                                     item,

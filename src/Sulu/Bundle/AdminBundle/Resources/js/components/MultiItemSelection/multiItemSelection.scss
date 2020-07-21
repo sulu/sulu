@@ -9,7 +9,6 @@ $listElementDragBoxShadowColor: rgba($black, .1);
 .multiItemSelectionClass {
     &.disabled {
         opacity: .5;
-        pointer-events: none;
     }
 }
 
@@ -26,6 +25,10 @@ $listElementDragBoxShadowColor: rgba($black, .1);
 .list-element {
     list-style: none;
     border-bottom: 1px solid $listElementBorderBottomColor;
+
+    &.disabled {
+        pointer-events: none;
+    }
 
     &:last-child {
         border-bottom: 0;
