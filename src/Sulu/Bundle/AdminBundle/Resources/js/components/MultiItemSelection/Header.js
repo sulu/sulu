@@ -9,7 +9,7 @@ import headerStyles from './header.scss';
 const LOADER_SIZE = 24;
 
 type Props<T, U> = {
-    className?: string,
+    disabled: boolean,
     emptyList: boolean,
     label?: string,
     leftButton?: ButtonConfig<T>,
@@ -19,12 +19,13 @@ type Props<T, U> = {
 
 export default class Header<T: string | number, U: string | number> extends React.PureComponent<Props<T, U>> {
     static defaultProps = {
+        disabled: false,
         emptyList: true,
     };
 
     render() {
         const {
-            className,
+            disabled,
             label,
             loading,
             emptyList,
@@ -33,9 +34,9 @@ export default class Header<T: string | number, U: string | number> extends Reac
         } = this.props;
 
         const headerClass = classNames(
-            className,
             headerStyles.header,
             {
+                [headerStyles.disabled]: disabled,
                 [headerStyles.emptyList]: emptyList,
             }
         );

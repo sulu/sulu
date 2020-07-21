@@ -12,12 +12,6 @@ $listElementDragBoxShadowColor: rgba($black, .1);
     }
 }
 
-.header {
-    &.disabled {
-        pointer-events: none;
-    }
-}
-
 .list {
     margin: 0;
     padding: 0;

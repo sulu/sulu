@@ -106,17 +106,10 @@ class MultiItemSelection<T, U: string | number, V: string | number> extends Reac
             }
         );
 
-        const headerClass = classNames(
-            multiItemSelectionStyles.header,
-            {
-                [multiItemSelectionStyles.disabled]: disabled,
-            }
-        );
-
         return (
             <div className={multiItemSelectionClass}>
                 <Header
-                    className={headerClass}
+                    disabled={disabled}
                     emptyList={emptyList}
                     label={label}
                     leftButton={leftButton ? {disabled, ...leftButton} : undefined}
