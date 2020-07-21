@@ -78,7 +78,8 @@ class FormXmlLoader extends AbstractLoader
         $properties = $this->propertiesXmlParser->load(
             $tags,
             $xpath,
-            $propertiesNode
+            $propertiesNode,
+            $form->getKey()
         );
 
         $schemaNode = $xpath->query('/x:form/x:schema')->item(0);

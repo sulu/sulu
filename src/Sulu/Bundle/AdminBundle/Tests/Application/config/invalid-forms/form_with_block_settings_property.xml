@@ -3,7 +3,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/form-1.0.xsd"
 >
-    <key>form_with_block_type_property</key>
+    <key>form_with_block_settings_property</key>
 
     <properties>
         <block name="blocks" default-type="editor" minOccurs="0">

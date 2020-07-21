@@ -23,18 +23,30 @@ class ReservedPropertyNameException extends \Exception
      */
     private $propertyName;
 
-    public function __construct($blockPropertyName, $propertyName)
+    /**
+     * @var string
+     */
+    private $formKey;
+
+    public function __construct($blockPropertyName, $propertyName, $formKey)
     {
         $this->blockPropertyName = $blockPropertyName;
         $this->propertyName = $propertyName;
+        $this->formKey = $formKey;
 
         parent::__construct(
             \sprintf(
-                'Block "%s" defines has a child property named "%s", although it is a reserved property name',
+                'Block "%s" in form "%s" has a child property named "%s", although it is a reserved property name',
                 $this->blockPropertyName,
+                $this->formKey,
                 $this->propertyName
             )
         );
+    }
+
+    public function getFormKey()
+    {
+        return $this->formKey;
     }
 
     public function getBlockPropertyName()
