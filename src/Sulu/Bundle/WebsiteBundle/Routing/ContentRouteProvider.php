@@ -182,7 +182,7 @@ class ContentRouteProvider implements RouteProviderInterface
                     $documentSegmentKey = $document->getExtensionsData()['excerpt']['segment'];
                     $segment = $this->requestAnalyzer->getSegment();
 
-                    if ($segment && $segment->getKey() !== $documentSegmentKey) {
+                    if ($segment && $documentSegmentKey && $segment->getKey() !== $documentSegmentKey) {
                         $this->requestAnalyzer->changeSegment($documentSegmentKey);
                     }
                 }
