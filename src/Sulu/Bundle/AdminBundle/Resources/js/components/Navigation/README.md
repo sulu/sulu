@@ -22,7 +22,7 @@ const handleNavigationClick = (value) => {
     <Navigation
         title="sulu.io"
         username="John Travolta"
-        userImage={'http://lorempixel.com/200/200'}
+        userImage={'https://unsplash.it/200/200'}
         onItemClick={handleNavigationClick}
         onLogoutClick={handleLogoutClick}
         onProfileClick={handleProfileClick}
