@@ -8,7 +8,7 @@ const handleDrop = (file) => {
 };
 
 <SingleMediaDropzone
-    source="http://lorempixel.com/400/400"
+    source="https://unsplash.it/400/400"
     uploading={false}
     progress={0}
     onDrop={handleDrop}
@@ -37,7 +37,7 @@ const handleDrop = (file) => {
 };
 
 <SingleMediaDropzone
-    source="http://lorempixel.com/400/400"
+    source="https://unsplash.it/400/400"
     uploading={true}
     progress={60}
     onDrop={handleDrop}
