@@ -214,6 +214,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
         );
 
         // format cache
+        $container->setParameter('sulu_media.format_cache.private_path', $config['format_cache']['private_path']);
         $container->setParameter('sulu_media.format_cache.path', $config['format_cache']['path']);
         $container->setParameter('sulu_media.format_cache.save_image', $config['format_cache']['save_image']);
         $container->setParameter('sulu_media.format_cache.segments', $config['format_cache']['segments']);

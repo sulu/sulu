@@ -27,7 +27,7 @@ interface FormatCacheInterface
      *
      * @return bool
      */
-    public function save($content, $id, $fileName, $format);
+    public function save($content, $id, $fileName, $format/*, bool $private = false */);
 
     /**
      * Delete the image by the given parameters.

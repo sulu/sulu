@@ -150,6 +150,8 @@
             <argument>%sulu_media.format_cache.path%</argument>
             <argument>%sulu_media.format_cache.media_proxy_path%</argument>
             <argument>%sulu_media.format_cache.segments%</argument>
+            <argument>%sulu_media.format_cache.private_path%</argument>
+
             <tag name="sulu_media.format_cache" alias="local" />
         </service>
 

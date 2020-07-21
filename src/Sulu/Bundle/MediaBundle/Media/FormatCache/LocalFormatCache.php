@@ -38,17 +38,55 @@ class LocalFormatCache implements FormatCacheInterface
      */
     protected $segments;
 
-    public function __construct(Filesystem $filesystem, $path, $pathUrl, $segments)
+    /**
+     * @var string|null
+     */
+    protected $privatePath;
+
+    public function __construct(Filesystem $filesystem, $path, $pathUrl, $segments, $privatePath = null)
     {
         $this->filesystem = $filesystem;
         $this->path = $path;
         $this->pathUrl = $pathUrl;
         $this->segments = \intval($segments);
+
+        if (null === $privatePath) {
+            @\trigger_error(
+                \sprintf(
+                    'The usage of the "%s" without a "$privatePath" is deprecated and will not longer work in Sulu 3.0.',
+                    LocalFormatCache::class
+                ),
+                \E_USER_DEPRECATED
+            );
+        }
+
+        $this->privatePath = $privatePath;
     }
 
     public function save($content, $id, $fileName, $format)
     {
-        $savePath = $this->getPath($this->path, $id, $fileName, $format);
+        $private = \func_num_args() > 4 ? \func_get_arg(4) : false;
+
+        if (\func_num_args() <= 4) {
+            @\trigger_error(
+                \sprintf(
+                    'The usage of the "%s::%s" without a "$privatePath" is deprecated and will not longer work in Sulu 3.0.',
+                    LocalFormatCache::class,
+                    __METHOD__
+                ),
+                \E_USER_DEPRECATED
+            );
+        }
+
+        if ($private) {
+            if (null === $this->privatePath) {
+                throw new \LogicException('The "privatePath" is not configured but private formats are tried to be stored.');
+            }
+
+            $savePath = $this->getPath($this->privatePath, $id, $fileName, $format);
+        } else {
+            $savePath = $this->getPath($this->path, $id, $fileName, $format);
+        }
         if (!\is_dir(\dirname($savePath))) {
             $this->filesystem->mkdir(\dirname($savePath), 0775);
         }
@@ -67,6 +105,11 @@ class LocalFormatCache implements FormatCacheInterface
         $path = $this->getPath($this->path, $id, $fileName, $format);
         $this->filesystem->remove($path);
 
+        if ($this->privatePath) {
+            $privatePath = $this->getPath($this->privatePath, $id, $fileName, $format);
+            $this->filesystem->remove($privatePath);
+        }
+
         return true;
     }
 
@@ -77,20 +120,11 @@ class LocalFormatCache implements FormatCacheInterface
 
     public function clear()
     {
-        $realCacheDir = $this->path;
-        $oldCacheDir = $realCacheDir . '_old';
+        $this->clearDirectory($this->path);
 
-        if (!\is_writable($realCacheDir)) {
-            throw new \RuntimeException(\sprintf('Unable to write in the "%s" directory', $realCacheDir));
+        if ($this->privatePath) {
+            $this->clearDirectory($this->privatePath);
         }
-
-        if ($this->filesystem->exists($oldCacheDir)) {
-            $this->filesystem->remove($oldCacheDir);
-        }
-
-        $this->filesystem->rename($realCacheDir, $oldCacheDir);
-        $this->filesystem->mkdir($realCacheDir);
-        $this->filesystem->remove($oldCacheDir);
     }
 
     /**
@@ -217,5 +251,22 @@ class LocalFormatCache implements FormatCacheInterface
     protected function getFileNameFromUrl($url)
     {
         return \basename($url);
+    }
+
+    private function clearDirectory(string $realCacheDir): void
+    {
+        $oldCacheDir = $realCacheDir . '_old';
+
+        if (!\is_writable($realCacheDir)) {
+            throw new \RuntimeException(\sprintf('Unable to write in the "%s" directory', $realCacheDir));
+        }
+
+        if ($this->filesystem->exists($oldCacheDir)) {
+            $this->filesystem->remove($oldCacheDir);
+        }
+
+        $this->filesystem->rename($realCacheDir, $oldCacheDir);
+        $this->filesystem->mkdir($realCacheDir);
+        $this->filesystem->remove($oldCacheDir);
     }
 }

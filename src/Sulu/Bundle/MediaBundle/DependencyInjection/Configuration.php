@@ -133,6 +133,7 @@ class Configuration implements ConfigurationInterface
             ->arrayNode('format_cache')
                 ->addDefaultsIfNotSet()
                 ->children()
+                    ->scalarNode('private_path')->defaultValue('%kernel.project_dir%/var/images-cache')->end()
                     ->scalarNode('path')->defaultValue('%kernel.project_dir%/public/uploads/media')->end()
                     ->booleanNode('save_image')->defaultValue(true)->end()
                     ->scalarNode('segments')->defaultValue(10)->end()
