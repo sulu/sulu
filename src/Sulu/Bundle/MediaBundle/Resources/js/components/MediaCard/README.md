@@ -7,15 +7,15 @@ const [selected, setSelected] = React.useState(false);
 
 const imageSizes = [
     {
-        url: 'http://lorempixel.com/300/200',
+        url: 'https://unsplash.it/300/200',
         label: '300/200',
     },
     {
-        url: 'http://lorempixel.com/600/300',
+        url: 'https://unsplash.it/600/300',
         label: '600/300',
     },
     {
-        url: 'http://lorempixel.com/150/200',
+        url: 'https://unsplash.it/150/200',
         label: '150/200',
     }
 ];
@@ -41,10 +41,10 @@ const handleDirectDownload = (url) => {
         selected={selected}
         meta="image/png, 3,2 MB"
         title="This is a great title that is too too long"
-        image={'http://lorempixel.com/300/200'}
+        image={'https://unsplash.it/300/200'}
         imageSizes={imageSizes}
         directDownload={{
-            url: 'http://lorempixel.com/300/200',
+            url: 'https://unsplash.it/300/200',
             label: 'This is a downloadable image'
         }}
         onDirectDownload={handleDirectDownload}

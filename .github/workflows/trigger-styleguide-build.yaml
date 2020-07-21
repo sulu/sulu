@@ -1,0 +1,20 @@
+name: Trigger styleguide build
+
+on:
+    push:
+        branches:
+            - master
+            - release/2.*
+
+jobs:
+    trigger-styleguide-build:
+        name: Trigger styleguide build
+        runs-on: ubuntu-latest
+        steps:
+            - name: Trigger styleguide build
+              uses: benc-uk/workflow-dispatch@v1
+              with:
+                  repo: sulu/sulu-javascript-docs
+                  ref: master
+                  workflow: Build styleguide
+                  token: ${{ secrets.SULU_USER_ACCESS_TOKEN }}

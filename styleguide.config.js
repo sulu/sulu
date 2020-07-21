@@ -33,6 +33,7 @@ const javaScriptFileExists = (path, fileName) => {
 const babelConfig = JSON.parse(fs.readFileSync(path.resolve(__dirname, '.babelrc'))); // eslint-disable-line no-undef
 
 module.exports = { // eslint-disable-line
+    title: 'Sulu Javascript Docs',
     require: [
         'regenerator-runtime/runtime',
         './src/Sulu/Bundle/AdminBundle/Resources/js/containers/Application/global.scss',
@@ -47,21 +48,34 @@ module.exports = { // eslint-disable-line
     },
     sections: [
         {
-            name: 'Components',
-            components() {
-                let folders = glob.sync('./src/Sulu/Bundle/*/Resources/js/components/*');
-                // filter out higher order components
-                folders = folders
-                    .filter((folder) => firstLetterIsUppercase(path.basename(folder)))
+            name: 'Views',
+            sections: (function() {
+                const folders = glob.sync('./src/Sulu/Bundle/*/Resources/js/views/*');
+
+                return folders
+                    .filter((folder) => path.basename(folder) !== 'index.js')
                     .filter((folder) => javaScriptFileExists(folder, path.basename(folder)))
-                    .sort(compareFolderName);
+                    .map((folder) => {
+                        const component = path.basename(folder);
+                        return {name: component, content: folder + '/README.md'};
+                    });
+            })(),
+        },
+        {
+            name: 'Services',
+            sections: (function() {
+                const folders = glob.sync('./src/Sulu/Bundle/*/Resources/js/services/*');
 
-                return folders.map((folder) => {
-                    const component = path.basename(folder);
+                return folders
+                    .filter((folder) => path.basename(folder) !== 'index.js')
+                    .filter((folder) => javaScriptFileExists(folder, path.basename(folder)))
+                    .sort(compareFolderName)
+                    .map((folder) => {
+                        const component = path.basename(folder);
 
-                    return path.join(folder, component + '.js');
-                });
-            },
+                        return {name: component, content: folder + '/README.md'};
+                    });
+            })(),
         },
         {
             name: 'Containers',
@@ -81,36 +95,6 @@ module.exports = { // eslint-disable-line
             },
         },
         {
-            name: 'Services',
-            sections: (function() {
-                const folders = glob.sync('./src/Sulu/Bundle/*/Resources/js/services/*');
-
-                return folders
-                    .filter((folder) => path.basename(folder) !== 'index.js')
-                    .filter((folder) => javaScriptFileExists(folder, path.basename(folder)))
-                    .sort(compareFolderName)
-                    .map((folder) => {
-                        const component = path.basename(folder);
-
-                        return {name: component, content: folder + '/README.md'};
-                    });
-            })(),
-        },
-        {
-            name: 'Views',
-            sections: (function() {
-                const folders = glob.sync('./src/Sulu/Bundle/*/Resources/js/views/*');
-
-                return folders
-                    .filter((folder) => path.basename(folder) !== 'index.js')
-                    .filter((folder) => javaScriptFileExists(folder, path.basename(folder)))
-                    .map((folder) => {
-                        const component = path.basename(folder);
-                        return {name: component, content: folder + '/README.md'};
-                    });
-            })(),
-        },
-        {
             name: 'Higher-Order components',
             sections: (function() {
                 let folders = glob.sync('./src/Sulu/Bundle/*/Resources/js/components/*');
@@ -125,6 +109,23 @@ module.exports = { // eslint-disable-line
                         return {name: component, content: folder + '/README.md'};
                     });
             })(),
+        },
+        {
+            name: 'Components',
+            components() {
+                let folders = glob.sync('./src/Sulu/Bundle/*/Resources/js/components/*');
+                // filter out higher order components
+                folders = folders
+                    .filter((folder) => firstLetterIsUppercase(path.basename(folder)))
+                    .filter((folder) => javaScriptFileExists(folder, path.basename(folder)))
+                    .sort(compareFolderName);
+
+                return folders.map((folder) => {
+                    const component = path.basename(folder);
+
+                    return path.join(folder, component + '.js');
+                });
+            },
         },
     ],
     webpackConfig: {
