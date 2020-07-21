@@ -5,7 +5,7 @@ exports[`Clicking the left and right button inside the header should call the ri
   class="multiItemSelectionClass"
 >
   <div
-    class="header header"
+    class="header"
   >
     <button
       class="button left"
@@ -130,7 +130,7 @@ exports[`Render a button on the right with options and a value 1`] = `
   class="multiItemSelectionClass"
 >
   <div
-    class="header header"
+    class="header"
   >
     <div
       class="label"
@@ -249,7 +249,7 @@ exports[`Render a button on the right with options including icons and a value 1
   class="multiItemSelectionClass"
 >
   <div
-    class="header header"
+    class="header"
   >
     <div
       class="label"
@@ -368,7 +368,7 @@ exports[`Render a disabled MultiItemSelection with children 1`] = `
   class="multiItemSelectionClass disabled"
 >
   <div
-    class="header disabled header"
+    class="header disabled"
   >
     <div
       class="label"
@@ -475,7 +475,7 @@ exports[`Render a not sortable MultiItemSelection with children 1`] = `
   class="multiItemSelectionClass"
 >
   <div
-    class="header header"
+    class="header"
   >
     <div
       class="label"
@@ -570,7 +570,7 @@ exports[`Render an MultiItemSelection while loading 1`] = `
   class="multiItemSelectionClass"
 >
   <div
-    class="header header emptyList"
+    class="header emptyList"
   >
     <div
       class="label"
@@ -603,7 +603,7 @@ exports[`Render an MultiItemSelection with children 1`] = `
   class="multiItemSelectionClass"
 >
   <div
-    class="header header"
+    class="header"
   >
     <div
       class="label"
@@ -768,7 +768,7 @@ exports[`Render an empty MultiItemSelection 1`] = `
   class="multiItemSelectionClass"
 >
   <div
-    class="header header emptyList"
+    class="header emptyList"
   >
     <div
       class="label"

@@ -6,7 +6,7 @@ Array [
     class="multiItemSelectionClass"
   >
     <div
-      class="header header"
+      class="header"
     >
       <button
         class="button left"
@@ -268,7 +268,7 @@ Array [
     class="multiItemSelectionClass"
   >
     <div
-      class="header header"
+      class="header"
     >
       <button
         class="button left"
@@ -391,7 +391,7 @@ Array [
     class="multiItemSelectionClass"
   >
     <div
-      class="header header"
+      class="header"
     >
       <button
         class="button left"
@@ -514,7 +514,7 @@ Array [
     class="multiItemSelectionClass"
   >
     <div
-      class="header header"
+      class="header"
     >
       <button
         class="button left"
