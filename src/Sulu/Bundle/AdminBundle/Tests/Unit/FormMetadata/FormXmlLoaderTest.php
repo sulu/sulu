@@ -508,8 +508,8 @@ class FormXmlLoaderTest extends TestCase
     public function testLoadFormWithBlockTypeProperty()
     {
         $this->expectException(ReservedPropertyNameException::class);
-        $this->expectExceptionMessageMatches('"type"');
-        $this->expectExceptionMessageMatches('"form_with_block_type_property"');
+        $this->expectExceptionMessageRegExp('"type"');
+        $this->expectExceptionMessageRegExp('"form_with_block_type_property"');
 
         $this->loader->load(
             $this->getFormDirectory() . '../invalid-forms/form_with_block_type_property.xml'
@@ -519,8 +519,8 @@ class FormXmlLoaderTest extends TestCase
     public function testLoadFormWithBlockSettingsProperty()
     {
         $this->expectException(ReservedPropertyNameException::class);
-        $this->expectExceptionMessageMatches('"settings"');
-        $this->expectExceptionMessageMatches('"form_with_block_settings_property"');
+        $this->expectExceptionMessageRegExp('"settings"');
+        $this->expectExceptionMessageRegExp('"form_with_block_settings_property"');
 
         $this->loader->load(
             $this->getFormDirectory() . '../invalid-forms/form_with_block_settings_property.xml'

@@ -297,7 +297,7 @@ class StructureXmlLoaderTest extends TestCase
     public function testLoadFormWithBlockTypeProperty()
     {
         $this->expectException(ReservedPropertyNameException::class);
-        $this->expectExceptionMessageMatches('"type"');
+        $this->expectExceptionMessageRegExp('"type"');
 
         $this->load('template_with_block_type_property.xml');
     }
@@ -305,7 +305,7 @@ class StructureXmlLoaderTest extends TestCase
     public function testLoadFormWithBlockSettingsProperty()
     {
         $this->expectException(ReservedPropertyNameException::class);
-        $this->expectExceptionMessageMatches('"settings"');
+        $this->expectExceptionMessageRegExp('"settings"');
 
         $this->load('template_with_block_settings_property.xml');
     }

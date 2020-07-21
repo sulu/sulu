@@ -31,7 +31,7 @@ class FormOverlayListViewBuilderTest extends TestCase
     public function testBuildFormOverlayListViewWithoutResourceKey()
     {
         $this->expectException(\DomainException::class);
-        $this->expectExceptionMessageMatches('/"setResourceKey"/');
+        $this->expectExceptionMessageRegExp('/"setResourceKey"/');
 
         $route = (new FormOverlayListViewBuilder('sulu_category.list', '/category'))
             ->getView();
@@ -40,7 +40,7 @@ class FormOverlayListViewBuilderTest extends TestCase
     public function testBuildFormOverlayListViewWithoutListAdapters()
     {
         $this->expectException(\DomainException::class);
-        $this->expectExceptionMessageMatches('/"addListAdapters"/');
+        $this->expectExceptionMessageRegExp('/"addListAdapters"/');
 
         $route = (new FormOverlayListViewBuilder('sulu_category.list', '/category'))
             ->setResourceKey('categories')
@@ -155,7 +155,7 @@ class FormOverlayListViewBuilderTest extends TestCase
     public function testBuildListWithLocalesWithoutLocalePlaceholder()
     {
         $this->expectException(\DomainException::class);
-        $this->expectExceptionMessageMatches('":locale"');
+        $this->expectExceptionMessageRegExp('":locale"');
 
         $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles'))
             ->setResourceKey('roles')
@@ -171,7 +171,7 @@ class FormOverlayListViewBuilderTest extends TestCase
     public function testBuildListWithoutLocalesWithLocalePlaceholder()
     {
         $this->expectException(\DomainException::class);
-        $this->expectExceptionMessageMatches('":locale"');
+        $this->expectExceptionMessageRegExp('":locale"');
 
         $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles/:locale'))
             ->setResourceKey('roles')
@@ -184,7 +184,7 @@ class FormOverlayListViewBuilderTest extends TestCase
     public function testBuildListWithoutListKey()
     {
         $this->expectException(\DomainException::class);
-        $this->expectExceptionMessageMatches('"listKey"');
+        $this->expectExceptionMessageRegExp('"listKey"');
 
         $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles/:locale'))
             ->setResourceKey('roles')
@@ -195,7 +195,7 @@ class FormOverlayListViewBuilderTest extends TestCase
     public function testBuildListWithoutFormKey()
     {
         $this->expectException(\DomainException::class);
-        $this->expectExceptionMessageMatches('"formKey"');
+        $this->expectExceptionMessageRegExp('"formKey"');
 
         $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles/:locale'))
             ->setResourceKey('roles')
