@@ -213,11 +213,16 @@ define([
                                     return item['type'] === type.name;
                                 }),
                                 selectCallback: function(item) {
-                                    data.push(item);
+                                    var filteredArray = _.filter(data, function (arrayItem) {
+                                        return arrayItem.id === item.id && arrayItem.type === item.type;
+                                    });
+
+                                    if (0 === filteredArray.length) {
+                                        data.push(item);
+                                    } else {
+                                        data = _.without(data, _.findWhere(data, item));
+                                    }
                                 },
-                                deselectCallback: function(item) {
-                                    data = _.without(data, _.findWhere(data, item));
-                                }
                             },
                             type.componentOptions
                         )
