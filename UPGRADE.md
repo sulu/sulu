@@ -13,6 +13,12 @@ promise.
 The `ContextsController` has been deprecated. The information is now delivered via `sulu_security.securityContexts`
 config in the `admin/config` endpoint.
 
+### Disallow usage of "type" and "settings" as block property names
+
+You are not allowed to use `type` and `settings` as names for properties within blocks. They already have special
+meaning and using them has strange side effects. So we are actively throwing exceptions now to avoid this kind of
+behavior.
+
 ### Deprecated urls variable in twig
 
 The `urls` twig variable has been deprecated in favour of the `localizations` variable. So the code should be adapted

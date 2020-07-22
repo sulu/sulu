@@ -1,0 +1,23 @@
+<?xml version="1.0" ?>
+<template xmlns="http://schemas.sulu.io/template/template"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd">
+
+    <key>template_with_block_settings_property</key>
+
+    <view>page.html.twig</view>
+    <controller>SuluPageBundle:Default:index</controller>
+    <cacheLifetime>2400</cacheLifetime>
+
+    <properties>
+        <block name="blocks" default-type="test" minOccurs="0">
+            <types>
+                <type name="test">
+                    <properties>
+                        <property name="settings" type="text_editor"/>
+                    </properties>
+                </type>
+            </types>
+        </block>
+    </properties>
+</template>

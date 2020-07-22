@@ -165,7 +165,8 @@ class StructureXmlLoader extends AbstractLoader
         $result['properties'] = $this->propertiesXmlParser->load(
             $tags,
             $xpath,
-            $propertiesNode
+            $propertiesNode,
+            $type
         );
 
         $schemaNode = $xpath->query('/x:template/x:schema')->item(0);
