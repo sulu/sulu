@@ -4,6 +4,7 @@
 $tabTextColor: $black;
 $tabUnderlineBackgroundColor: $black;
 $buttonHorizontalPadding: 20px;
+$buttonHorizontalPaddingCompact: 10px;
 
 .tab {
     position: relative;
@@ -14,7 +15,7 @@ $buttonHorizontalPadding: 20px;
         height: 2px;
         background-color: $tabUnderlineBackgroundColor;
         position: absolute;
-        left: 20px;
+        left: $buttonHorizontalPadding;
         bottom: 0;
         transform: scaleX(0);
         transition: transform .15s ease-in-out;
@@ -49,6 +50,17 @@ $buttonHorizontalPadding: 20px;
 
         &::after {
             transform: scaleX(1);
+        }
+    }
+
+    &.compact {
+        button {
+            padding: 10px $buttonHorizontalPaddingCompact;
+        }
+
+        &::after {
+            width: calc(100% - $buttonHorizontalPaddingCompact * 2);
+            left: $buttonHorizontalPaddingCompact;
         }
     }
 }
