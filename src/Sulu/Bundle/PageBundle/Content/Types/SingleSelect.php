@@ -22,7 +22,7 @@ class SingleSelect extends SimpleContentType
 {
     public function __construct()
     {
-        parent::__construct('SingleSelect', '');
+        parent::__construct('SingleSelect');
     }
 
     public function getDefaultParams(PropertyInterface $property = null)

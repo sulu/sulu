@@ -50,6 +50,8 @@ class PortalInformation implements ArrayableInterface
     /**
      * The segment for this portal information.
      *
+     * @deprecated Is not set anymore since https://github.com/sulu/sulu/pull/5277
+     *
      * @var Segment
      */
     private $segment;
@@ -97,12 +99,15 @@ class PortalInformation implements ArrayableInterface
         $this->setWebspace($webspace);
         $this->setPortal($portal);
         $this->setLocalization($localization);
-        $this->setSegment($segment);
         $this->setUrl($url);
         $this->setRedirect($redirect);
         $this->setMain($main);
         $this->setUrlExpression($urlExpression);
         $this->setPriority($priority);
+
+        if ($segment) {
+            $this->setSegment($segment);
+        }
     }
 
     /**
@@ -194,21 +199,47 @@ class PortalInformation implements ArrayableInterface
     /**
      * Sets the segment for the PortalInformation.
      *
+     * @deprecated Is not set anymore since https://github.com/sulu/sulu/pull/5277
+     *
      * @param \Sulu\Component\Webspace\Segment $segment
      */
     public function setSegment($segment)
     {
+        @\trigger_error(
+            'Segment on the PortalInformation will be removed and should not be used anymore since Sulu 2.2',
+            \E_USER_DEPRECATED
+        );
         $this->segment = $segment;
     }
 
     /**
      * Returns the segment for the PortalInformation.
      *
+     * @deprecated Is not set anymore since https://github.com/sulu/sulu/pull/5277
+     *
      * @return \Sulu\Component\Webspace\Segment
      */
     public function getSegment()
     {
+        @\trigger_error(
+            'Segment on the PortalInformation will be removed and should not be used anymore since Sulu 2.2',
+            \E_USER_DEPRECATED
+        );
+
         return $this->segment;
+    }
+
+    /**
+     * @deprecated Is not set anymore since https://github.com/sulu/sulu/pull/5277
+     */
+    public function getSegmentKey()
+    {
+        @\trigger_error(
+            'Segment on the PortalInformation will be removed and should not be used anymore since Sulu 2.2',
+            \E_USER_DEPRECATED
+        );
+
+        return $this->segment ? $this->segment->getKey() : null;
     }
 
     /**

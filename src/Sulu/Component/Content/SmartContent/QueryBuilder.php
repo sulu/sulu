@@ -103,6 +103,14 @@ class QueryBuilder extends ContentQueryBuilder
             }
         }
 
+        if ($this->hasConfig('segmentKey')) {
+            $result = $this->buildSegmentKey($this->getConfig('segmentKey'), $locale);
+
+            if ($result) {
+                $sql2Where[] = $result;
+            }
+        }
+
         // build where clause for tags
         if ($this->hasConfig('tags')) {
             $sql2Where[] = $this->buildTagsWhere(
@@ -282,6 +290,26 @@ class QueryBuilder extends ContentQueryBuilder
         );
 
         return 'page.[' . $property->getName() . '] = ' . $targetGroupId;
+    }
+
+    private function buildSegmentKey($segmentKey, $locale)
+    {
+        if (!$segmentKey) {
+            return;
+        }
+
+        $structure = $this->structureManager->getStructure('excerpt');
+
+        $property = new TranslatedProperty(
+            $structure->getProperty('segment'),
+            $locale,
+            $this->languageNamespace,
+            'excerpt'
+        );
+
+        $column = 'page.[' . $property->getName() . ']';
+
+        return '(' . $column . ' = "' . $segmentKey . '" OR ' . $column . ' IS NULL)';
     }
 
     /**

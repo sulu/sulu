@@ -27,5 +27,13 @@ interface PreviewRendererInterface
      *
      * @return string
      */
-    public function render($object, $id, $webspaceKey, $locale, $partial = false, $targetGroupId = null);
+    public function render(
+        $object,
+        $id,
+        $webspaceKey,
+        $locale,
+        $partial = false,
+        $targetGroupId = null,
+        $segmentKey = null
+    );
 }

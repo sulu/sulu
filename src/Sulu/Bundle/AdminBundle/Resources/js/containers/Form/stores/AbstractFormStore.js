@@ -30,14 +30,18 @@ function transformRawSchema(
     rawSchema: RawSchema,
     data: Object,
     locale: ?string,
-    basePath: string = ''
+    basePath: string = '',
+    options: {[string]: any},
+    metadataOptions: ?{[string]: any}
 ): Schema {
     return Object.keys(rawSchema).reduce((schema, schemaKey) => {
         schema[schemaKey] = transformRawSchemaEntry(
             rawSchema[schemaKey],
             data,
             locale,
-            basePath + '/' + schemaKey
+            basePath + '/' + schemaKey,
+            options,
+            metadataOptions
         );
 
         return schema;
@@ -48,11 +52,13 @@ function transformRawSchemaEntry(
     rawSchemaEntry: RawSchemaEntry,
     data: Object,
     locale: ?string,
-    path: string
+    path: string,
+    options: {[string]: any},
+    metadataOptions: ?{[string]: any}
 ): SchemaEntry {
     const conditionData = conditionDataProviderRegistry.getAll().reduce(
         function(data, conditionDataProvider) {
-            return {...data, ...conditionDataProvider(data)};
+            return {...data, ...conditionDataProvider(data, options, metadataOptions)};
         },
         {...data, __locale: locale}
     );
@@ -63,7 +69,7 @@ function transformRawSchemaEntry(
         } else if (schemaEntryKey === 'visibleCondition' && rawSchemaEntry[schemaEntryKey]) {
             schemaEntry.visible = jexl.evalSync(rawSchemaEntry[schemaEntryKey], conditionData);
         } else if (schemaEntryKey === 'items' && rawSchemaEntry.items) {
-            schemaEntry.items = transformRawSchema(rawSchemaEntry.items, data, path);
+            schemaEntry.items = transformRawSchema(rawSchemaEntry.items, data, locale, path, options, metadataOptions);
         } else if (schemaEntryKey === 'types' && rawSchemaEntry.types) {
             const rawSchemaEntryTypes = rawSchemaEntry.types;
 
@@ -74,7 +80,9 @@ function transformRawSchemaEntry(
                         rawSchemaEntryTypes[schemaEntryTypeKey].form,
                         data,
                         locale,
-                        path + '/types/' + schemaEntryTypeKey + '/form'
+                        path + '/types/' + schemaEntryTypeKey + '/form',
+                        options,
+                        metadataOptions
                     ),
                 };
 
@@ -160,7 +168,9 @@ function collectTagPaths(
 
 export default class AbstractFormStore
 {
-    +data: Object;
+    +data: {[string]: any};
+    +options: {[string]: any};
+    +metadataOptions: ?{[string]: any};
     +loading: boolean;
     +locale: ?IObservableValue<string>;
     @observable rawSchema: RawSchema;
@@ -187,6 +197,10 @@ export default class AbstractFormStore
             this.modifiedFields.push(dataPath);
         }
 
+        this.updateFieldPathEvaluations();
+    }
+
+    setMultiple() {
         this.updateFieldPathEvaluations();
     }
 
@@ -240,7 +254,10 @@ export default class AbstractFormStore
                 transformRawSchema(
                     rawSchema,
                     untracked(() => toJS(this.data)),
-                    locale
+                    locale,
+                    '',
+                    this.options,
+                    this.metadataOptions
                 )
             )
         );

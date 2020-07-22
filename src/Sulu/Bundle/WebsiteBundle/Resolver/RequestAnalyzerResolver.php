@@ -41,10 +41,14 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
         $defaultLocalization = $requestAnalyzer->getPortal()->getDefaultLocalization();
         $defaultLocale = $defaultLocalization ? $defaultLocalization->getLocale() : null;
 
+        $segment = $requestAnalyzer->getSegment();
+        $segmentKey = $segment ? $segment->getKey() : null;
+
         return [
             'request' => [
                 'webspaceKey' => $requestAnalyzer->getWebspace()->getKey(),
                 'webspaceName' => $requestAnalyzer->getWebspace()->getName(),
+                'segmentKey' => $segmentKey,
                 'portalKey' => $requestAnalyzer->getPortal()->getKey(),
                 'portalName' => $requestAnalyzer->getPortal()->getName(),
                 'defaultLocale' => $defaultLocale,

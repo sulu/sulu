@@ -14,8 +14,18 @@
     </localizations>
 
     <segments>
-        <segment key="w">winter</segment>
-        <segment key="s" default="true">summer</segment>
+        <segment key="w" default="false">
+            <meta>
+                <title lang="en">Winter</title>
+                <title lang="de">Winter</title>
+            </meta>
+        </segment>
+        <segment key="s" default="true">
+            <meta>
+                <title lang="en">Summer</title>
+                <title lang="de">Sommer</title>
+            </meta>
+        </segment>
     </segments>
 
     <theme>massiveart</theme>
@@ -60,12 +70,12 @@
             <environments>
                 <environment type="prod">
                     <urls>
-                        <url>{language}.massiveart-us.{country}/{segment}</url>
+                        <url>{language}.massiveart-us.{country}</url>
                     </urls>
                 </environment>
                 <environment type="dev">
                     <urls>
-                        <url>massiveart-us.lo/{localization}/{segment}</url>
+                        <url>massiveart-us.lo/{localization}</url>
                     </urls>
                 </environment>
             </environments>
@@ -82,17 +92,17 @@
             <environments>
                 <environment type="prod">
                     <urls>
-                        <url>{language}.massiveart-ca.{country}/{segment}</url>
+                        <url>{language}.massiveart-ca.{country}</url>
                     </urls>
                 </environment>
                 <environment type="test">
                     <urls>
-                        <url>{language}.massiveart-ca.{country}/{segment}</url>
+                        <url>{language}.massiveart-ca.{country}</url>
                     </urls>
                 </environment>
                 <environment type="dev">
                     <urls>
-                        <url>massiveart-ca.lo/{localization}/{segment}</url>
+                        <url>massiveart-ca.lo/{localization}</url>
                     </urls>
                 </environment>
             </environments>

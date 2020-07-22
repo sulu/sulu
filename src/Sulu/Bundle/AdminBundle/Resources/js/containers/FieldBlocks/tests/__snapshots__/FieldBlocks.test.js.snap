@@ -830,7 +830,12 @@ exports[`Render collapsed blocks with block previews 1`] = `
         >
           <div
             class="icons"
-          />
+          >
+            <span
+              aria-label="su-hide"
+              class="su-hide"
+            />
+          </div>
           <div
             class="type"
           >

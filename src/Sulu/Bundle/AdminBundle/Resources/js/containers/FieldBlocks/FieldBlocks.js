@@ -28,10 +28,14 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
 
     @action componentDidMount() {
         if (this.settingsFormKey) {
+            const {formInspector} = this.props;
+
             this.blockSettingsFormStore = memoryFormStoreFactory.createFromFormKey(
                 this.settingsFormKey,
                 {},
-                undefined
+                formInspector.locale,
+                undefined,
+                formInspector.options
             );
         }
     }
@@ -97,15 +101,32 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
             return {};
         }
 
-        return Object.keys(settingsSchema).reduce((iconsMapping, schemaKey) => {
-            const blockSettingsTag = settingsSchema[schemaKey].tags.find((tag) => tag.name === SETTINGS_TAG);
+        const iconMappingReducerCreator = (prefixSchemaKey: string = '') => (iconsMapping, schemaKey) => {
+            const pointer = '/' + prefixSchemaKey + schemaKey;
+
+            if (!jsonpointer.has(settingsSchema, pointer)) {
+                return iconsMapping;
+            }
+
+            const schemaEntry = jsonpointer.get(settingsSchema, pointer);
+
+            if (schemaEntry.items) {
+                return Object.keys(schemaEntry.items).reduce(
+                    iconMappingReducerCreator(schemaKey + '/items/'),
+                    iconsMapping
+                );
+            }
+
+            const blockSettingsTag = schemaEntry.tags.find((tag) => tag.name === SETTINGS_TAG);
 
             if (blockSettingsTag) {
                 iconsMapping[SETTINGS_PREFIX + schemaKey] = blockSettingsTag.attributes.icon;
             }
 
             return iconsMapping;
-        }, {});
+        };
+
+        return Object.keys(settingsSchema).reduce(iconMappingReducerCreator(), {});
     }
 
     @computed get icons(): Array<Array<string>> {

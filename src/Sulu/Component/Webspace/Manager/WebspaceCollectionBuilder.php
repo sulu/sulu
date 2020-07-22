@@ -16,7 +16,6 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Environment;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
-use Sulu\Component\Webspace\Segment;
 use Sulu\Component\Webspace\Url;
 use Sulu\Component\Webspace\Url\ReplacerInterface;
 use Sulu\Component\Webspace\Webspace;
@@ -142,13 +141,11 @@ class WebspaceCollectionBuilder
 
     private function buildEnvironment(Portal $portal, Environment $environment)
     {
-        $segments = $portal->getWebspace()->getSegments();
-
         foreach ($environment->getUrls() as $url) {
             $urlAddress = $url->getUrl();
             $urlRedirect = $url->getRedirect();
             if (null == $urlRedirect) {
-                $this->buildUrls($portal, $environment, $url, $segments, $urlAddress);
+                $this->buildUrls($portal, $environment, $url, $urlAddress);
             } else {
                 // create the redirect
                 $this->buildUrlRedirect(
@@ -206,51 +203,30 @@ class WebspaceCollectionBuilder
     }
 
     /**
-     * @param Segment[] $segments
      * @param string[] $replacers
      * @param string $urlAddress
      */
     private function buildUrlFullMatch(
         Portal $portal,
         Environment $environment,
-        $segments,
         $replacers,
         $urlAddress,
         Localization $localization,
         Url $url
     ) {
-        if (!empty($segments)) {
-            foreach ($segments as $segment) {
-                $replacers[ReplacerInterface::REPLACER_SEGMENT] = $segment->getKey();
-                $urlResult = $this->generateUrlAddress($urlAddress, $replacers);
-                $this->portalInformations[$environment->getType()][$urlResult] = new PortalInformation(
-                    RequestAnalyzerInterface::MATCH_TYPE_FULL,
-                    $portal->getWebspace(),
-                    $portal,
-                    $localization,
-                    $urlResult,
-                    $segment,
-                    null,
-                    $url->isMain(),
-                    $url->getUrl(),
-                    $this->urlReplacer->hasHostReplacer($urlResult) ? 5 : 10
-                );
-            }
-        } else {
-            $urlResult = $this->generateUrlAddress($urlAddress, $replacers);
-            $this->portalInformations[$environment->getType()][$urlResult] = new PortalInformation(
-                RequestAnalyzerInterface::MATCH_TYPE_FULL,
-                $portal->getWebspace(),
-                $portal,
-                $localization,
-                $urlResult,
-                null,
-                null,
-                $url->isMain(),
-                $url->getUrl(),
-                $this->urlReplacer->hasHostReplacer($urlResult) ? 5 : 10
-            );
-        }
+        $urlResult = $this->generateUrlAddress($urlAddress, $replacers);
+        $this->portalInformations[$environment->getType()][$urlResult] = new PortalInformation(
+            RequestAnalyzerInterface::MATCH_TYPE_FULL,
+            $portal->getWebspace(),
+            $portal,
+            $localization,
+            $urlResult,
+            null,
+            null,
+            $url->isMain(),
+            $url->getUrl(),
+            $this->urlReplacer->hasHostReplacer($urlResult) ? 5 : 10
+        );
     }
 
     /**
@@ -263,11 +239,6 @@ class WebspaceCollectionBuilder
         Url $url
     ) {
         $replacers = [];
-
-        $defaultSegment = $portal->getWebspace()->getDefaultSegment();
-        if ($defaultSegment) {
-            $replacers[ReplacerInterface::REPLACER_SEGMENT] = $defaultSegment->getKey();
-        }
 
         $urlResult = $this->urlReplacer->cleanup(
             $urlAddress,
@@ -287,7 +258,7 @@ class WebspaceCollectionBuilder
                 $portal,
                 null,
                 $urlResult,
-                $portal->getWebspace()->getDefaultSegment(),
+                null,
                 $urlRedirect,
                 false, // partial matches cannot be main
                 $url->getUrl(),
@@ -299,14 +270,12 @@ class WebspaceCollectionBuilder
     /**
      * Builds the URLs for the portal, which are not a redirect.
      *
-     * @param Segment[] $segments
      * @param string $urlAddress
      */
     private function buildUrls(
         Portal $portal,
         Environment $environment,
         Url $url,
-        $segments,
         $urlAddress
     ) {
         if ($url->getLanguage()) {
@@ -323,14 +292,13 @@ class WebspaceCollectionBuilder
             $this->buildUrlFullMatch(
                 $portal,
                 $environment,
-                $segments,
                 $replacers,
                 $urlAddress,
                 $portal->getLocalization($locale),
                 $url
             );
         } else {
-            // create all the urls for every localization/segment combination
+            // create all the urls for every localization combination
             foreach ($portal->getLocalizations() as $localization) {
                 $language = $url->getLanguage() ? $url->getLanguage() : $localization->getLanguage();
                 $country = $url->getCountry() ? $url->getCountry() : $localization->getCountry();
@@ -344,7 +312,6 @@ class WebspaceCollectionBuilder
                 $this->buildUrlFullMatch(
                     $portal,
                     $environment,
-                    $segments,
                     $replacers,
                     $urlAddress,
                     $localization,

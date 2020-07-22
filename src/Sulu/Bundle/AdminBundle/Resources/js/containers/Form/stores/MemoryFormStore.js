@@ -12,15 +12,16 @@ export default class MemoryFormStore extends AbstractFormStore implements FormSt
     id = undefined;
     options = {};
     resourceKey = undefined;
-    @observable data: Object;
+    @observable data: {[string]: any};
     @observable dirty: boolean = false;
     updateFieldPathEvaluationsDisposer: ?() => void;
 
     constructor(
-        data: Object,
+        data: {[string]: any},
         rawSchema: RawSchema,
         jsonSchema: ?Object,
-        locale: ?IObservableValue<string>
+        locale: ?IObservableValue<string>,
+        metadataOptions: ?{[string]: any}
     ) {
         super();
 
@@ -30,6 +31,7 @@ export default class MemoryFormStore extends AbstractFormStore implements FormSt
         this.locale = locale;
         this.addMissingSchemaProperties();
         this.validator = jsonSchema ? ajv.compile(jsonSchema) : undefined;
+        this.metadataOptions = metadataOptions;
 
         this.updateFieldPathEvaluationsDisposer = autorun(this.updateFieldPathEvaluations);
     }
@@ -41,6 +43,8 @@ export default class MemoryFormStore extends AbstractFormStore implements FormSt
 
     @action setMultiple(data: Object) {
         this.data = data;
+
+        super.setMultiple();
     }
 
     destroy() {

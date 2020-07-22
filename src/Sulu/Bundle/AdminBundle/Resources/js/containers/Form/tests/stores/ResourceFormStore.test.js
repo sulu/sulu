@@ -15,7 +15,9 @@ jest.mock('../../../../stores/ResourceStore', () => function(resourceKey, id, op
     this.save = jest.fn().mockReturnValue(Promise.resolve());
     this.delete = jest.fn().mockReturnValue(Promise.resolve());
     this.set = jest.fn();
-    this.setMultiple = jest.fn();
+    this.setMultiple = jest.fn(function(data) {
+        Object.assign(this.data, data);
+    });
     this.change = jest.fn();
     this.copyFromLocale = jest.fn();
     this.data = mockObservable({});
@@ -233,6 +235,35 @@ test('Evaluate all disabledConditions and visibleConditions for schema', () => {
     }, 0);
 });
 
+test('Evaluate all disabledConditions and visibleConditions for schema after calling setMultiple', () => {
+    const metadata = {
+        item1: {
+            type: 'text_line',
+        },
+        item2: {
+            type: 'text_line',
+            disabledCondition: 'item1 != "item2"',
+            visibleCondition: 'item1 == "item2"',
+        },
+    };
+
+    const metadataPromise = Promise.resolve(metadata);
+    metadataStore.getSchema.mockReturnValue(metadataPromise);
+
+    const resourceStore = new ResourceStore('snippets', '1');
+    const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
+
+    setTimeout(() => {
+        expect(isObservable(resourceFormStore.schema)).toBe(false);
+
+        resourceFormStore.setMultiple({item1: 'item2'});
+        expect(resourceFormStore.schema.item2.disabled).toEqual(false);
+        expect(resourceFormStore.schema.item2.visible).toEqual(true);
+
+        resourceFormStore.destroy();
+    }, 0);
+});
+
 test('Evaluate disabledConditions and visibleConditions for schema with locale', (done) => {
     const metadata = {
         item: {
@@ -284,7 +315,7 @@ test('Evaluate disabledConditions and visibleConditions when changing locale', (
     });
 });
 
-test('Evaluate disabledConditions and visibleConditions for schema with locale', (done) => {
+test('Evaluate disabledConditions and visibleConditions for schema from data', (done) => {
     const metadata = {
         item: {
             type: 'text_line',
@@ -302,6 +333,56 @@ test('Evaluate disabledConditions and visibleConditions for schema with locale',
     const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
 
     resourceStore.data = observable({test: 'value1'});
+
+    setTimeout(() => {
+        expect(resourceFormStore.schema.item.disabled).toEqual(true);
+        expect(resourceFormStore.schema.item.visible).toEqual(false);
+        done();
+    }, 0);
+});
+
+test('Evaluate disabledConditions and visibleConditions for schema from options', (done) => {
+    const metadata = {
+        item: {
+            type: 'text_line',
+            disabledCondition: '__test == "value1"',
+            visibleCondition: '__test == "value2"',
+        },
+    };
+
+    conditionDataProviderRegistry.add((data, options) => ({__test: options.test}));
+
+    const metadataPromise = Promise.resolve(metadata);
+    metadataStore.getSchema.mockReturnValue(metadataPromise);
+
+    const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box('en')});
+    const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets', {test: 'value1'});
+
+    setTimeout(() => {
+        expect(resourceFormStore.schema.item.disabled).toEqual(true);
+        expect(resourceFormStore.schema.item.visible).toEqual(false);
+        done();
+    }, 0);
+});
+
+test('Evaluate disabledConditions and visibleConditions for schema from metadatOptions', (done) => {
+    const metadata = {
+        item: {
+            type: 'text_line',
+            disabledCondition: '__test == "value1"',
+            visibleCondition: '__test == "value2"',
+        },
+    };
+
+    conditionDataProviderRegistry.add(
+        (data, options, metadataOptions) => ({__test: metadataOptions && metadataOptions.test})
+    );
+
+    const metadataPromise = Promise.resolve(metadata);
+    metadataStore.getSchema.mockReturnValue(metadataPromise);
+
+    const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box('en')});
+    const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets', {}, {test: 'value1'});
 
     setTimeout(() => {
         expect(resourceFormStore.schema.item.disabled).toEqual(true);

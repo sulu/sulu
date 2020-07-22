@@ -21,6 +21,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class RequestAnalyzer implements RequestAnalyzerInterface
 {
+    const SULU_ATTRIBUTE = '_sulu';
+
     /**
      * @var RequestProcessorInterface[]
      */
@@ -41,7 +43,7 @@ class RequestAnalyzer implements RequestAnalyzerInterface
 
     public function analyze(Request $request)
     {
-        if ($request->attributes->has('_sulu')) {
+        if ($request->attributes->has(static::SULU_ATTRIBUTE)) {
             return;
         }
 
@@ -50,12 +52,12 @@ class RequestAnalyzer implements RequestAnalyzerInterface
             $attributes = $attributes->merge($requestProcessor->process($request, $attributes));
         }
 
-        $request->attributes->set('_sulu', $attributes);
+        $request->attributes->set(static::SULU_ATTRIBUTE, $attributes);
     }
 
     public function validate(Request $request)
     {
-        $attributes = $request->attributes->get('_sulu');
+        $attributes = $request->attributes->get(static::SULU_ATTRIBUTE);
 
         foreach ($this->requestProcessors as $provider) {
             $provider->validate($attributes);
@@ -64,17 +66,35 @@ class RequestAnalyzer implements RequestAnalyzerInterface
 
     public function getAttribute($name, $default = null)
     {
+        $requestAttributes = $this->getAttributes();
+
+        if (!$requestAttributes) {
+            return $default;
+        }
+
+        return $requestAttributes->getAttribute($name, $default);
+    }
+
+    private function getAttributes()
+    {
         $request = $this->requestStack->getCurrentRequest();
 
         if (null === $request) {
-            return $default;
+            return null;
         }
 
-        if (!$request->attributes->has('_sulu')) {
-            return $default;
+        if (!$request->attributes->has(static::SULU_ATTRIBUTE)) {
+            return null;
         }
 
-        return $request->attributes->get('_sulu')->getAttribute($name, $default);
+        return $request->attributes->get(static::SULU_ATTRIBUTE);
+    }
+
+    private function setAttributes(RequestAttributes $attributes)
+    {
+        $request = $this->requestStack->getCurrentRequest();
+
+        $request->attributes->set(static::SULU_ATTRIBUTE, $attributes);
     }
 
     public function getMatchType()
@@ -95,6 +115,15 @@ class RequestAnalyzer implements RequestAnalyzerInterface
     public function getSegment()
     {
         return $this->getAttribute('segment');
+    }
+
+    public function changeSegment(string $segmentKey)
+    {
+        $segment = $this->getWebspace()->getSegment($segmentKey);
+
+        $requestAttributes = (new RequestAttributes(['segment' => $segment]))->merge($this->getAttributes());
+
+        $this->setAttributes($requestAttributes);
     }
 
     public function getCurrentLocalization()

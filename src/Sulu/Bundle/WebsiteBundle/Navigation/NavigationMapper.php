@@ -67,7 +67,8 @@ class NavigationMapper implements NavigationMapperInterface
         $depth = 1,
         $flat = false,
         $context = null,
-        $loadExcerpt = false
+        $loadExcerpt = false,
+        $segmentKey = null
     ) {
         if ($this->stopwatch) {
             $this->stopwatch->start('NavigationMapper::getNavigation');
@@ -81,6 +82,7 @@ class NavigationMapper implements NavigationMapperInterface
                 'context' => $context,
                 'parent' => $parent,
                 'excerpt' => $loadExcerpt,
+                'segmentKey' => $segmentKey,
             ]
         );
         $result = $this->contentQuery->execute($webspaceKey, [$locale], $this->queryBuilder, $flat, $depth);
@@ -104,13 +106,14 @@ class NavigationMapper implements NavigationMapperInterface
         $depth = 1,
         $flat = false,
         $context = null,
-        $loadExcerpt = false
+        $loadExcerpt = false,
+        $segmentKey = null
     ) {
         if ($this->stopwatch) {
             $this->stopwatch->start('NavigationMapper::getRootNavigation.query');
         }
 
-        $this->queryBuilder->init(['context' => $context, 'excerpt' => $loadExcerpt]);
+        $this->queryBuilder->init(['context' => $context, 'excerpt' => $loadExcerpt, 'segmentKey' => $segmentKey]);
         $result = $this->contentQuery->execute($webspaceKey, [$locale], $this->queryBuilder, $flat, $depth);
 
         for ($i = 0; $i < \count($result); ++$i) {

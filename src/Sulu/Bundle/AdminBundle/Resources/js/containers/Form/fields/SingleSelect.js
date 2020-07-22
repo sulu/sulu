@@ -46,13 +46,15 @@ export default class SingleSelect extends React.Component<FieldTypeProps<string 
 
         return (
             <SingleSelectComponent disabled={!!disabled} onChange={this.handleChange} value={value}>
-                {values.value.map(({name: value, title}) => {
-                    if (typeof value !== 'string' && typeof value !== 'number') {
-                        throw new Error('The children of "values" must only contain values of type string or number!');
+                {values.value.map(({name: value, title}, index) => {
+                    if (typeof value !== 'string' && typeof value !== 'number' && value !== undefined) {
+                        throw new Error(
+                            'The children of "values" must only contain values of type string, number or undefined!'
+                        );
                     }
 
                     return (
-                        <SingleSelectComponent.Option key={value} value={value}>
+                        <SingleSelectComponent.Option key={index} value={value}>
                             {title || value}
                         </SingleSelectComponent.Option>
                     );

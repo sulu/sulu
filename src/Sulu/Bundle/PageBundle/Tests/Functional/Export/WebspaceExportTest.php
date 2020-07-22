@@ -305,6 +305,7 @@ class WebspaceExportTest extends SuluTestCase
                     'icon' => '',
                     'images' => '',
                     'audience_targeting_groups' => [],
+                    'segment' => '',
                 ],
             ],
             [
@@ -327,6 +328,7 @@ class WebspaceExportTest extends SuluTestCase
                     'icon' => '',
                     'images' => '',
                     'audience_targeting_groups' => [],
+                    'segment' => '',
                 ],
             ],
         ];
@@ -502,6 +504,12 @@ class WebspaceExportTest extends SuluTestCase
                         'target_group_selection',
                         false,
                         $extensionData['excerpt']['audience_targeting_groups']
+                    ),
+                    'segment' => $this->createItemArray(
+                        'segment',
+                        'single_select',
+                        false,
+                        $extensionData['excerpt']['segment']
                     ),
                 ],
             ];

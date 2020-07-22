@@ -60,6 +60,18 @@ test('Should return the errors from the ResourceFormStore', () => {
     expect(formInspector.errors).toBe(formStore.errors);
 });
 
+test('Should return the metadataOptions from the ResourceFormStore', () => {
+    const formStore = new ResourceFormStore(new ResourceStore('test', 1), 'test');
+    formStore.metadataOptions = {
+        webspace: 'example',
+    };
+    const formInspector = new FormInspector(formStore);
+
+    expect(formInspector.metadataOptions).toEqual({
+        webspace: 'example',
+    });
+});
+
 test('Should return the options from the ResourceFormStore', () => {
     const formStore = new ResourceFormStore(new ResourceStore('test', 1), 'test');
     formStore.options = {

@@ -23,6 +23,7 @@ use Sulu\Component\Content\ContentTypeExportInterface;
 use Sulu\Component\SmartContent\Exception\PageOutOfBoundsException;
 use Sulu\Component\Tag\Request\TagRequestHandlerInterface;
 use Sulu\Component\Util\ArrayableInterface;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -78,10 +79,10 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
     private $categoryReferenceStore;
 
     /**
-     * SmartContentType constructor.
-     *
-     * @param TargetGroupStoreInterface $targetGroupStore
+     * @var RequestAnalyzerInterface
      */
+    private $requestAnalyzer;
+
     public function __construct(
         DataProviderPoolInterface $dataProviderPool,
         TagManagerInterface $tagManager,
@@ -90,7 +91,8 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
         CategoryRequestHandlerInterface $categoryRequestHandler,
         ReferenceStoreInterface $tagReferenceStore,
         ReferenceStoreInterface $categoryReferenceStore,
-        TargetGroupStoreInterface $targetGroupStore = null
+        TargetGroupStoreInterface $targetGroupStore = null,
+        RequestAnalyzerInterface $requestAnalyzer
     ) {
         $this->dataProviderPool = $dataProviderPool;
         $this->tagManager = $tagManager;
@@ -100,6 +102,7 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
         $this->tagReferenceStore = $tagReferenceStore;
         $this->categoryReferenceStore = $categoryReferenceStore;
         $this->targetGroupStore = $targetGroupStore;
+        $this->requestAnalyzer = $requestAnalyzer;
     }
 
     public function read(
@@ -242,6 +245,11 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
 
         if ($this->targetGroupStore && isset($filters['audienceTargeting']) && $filters['audienceTargeting']) {
             $filters['targetGroupId'] = $this->targetGroupStore->getTargetGroupId();
+        }
+
+        $segment = $this->requestAnalyzer->getSegment();
+        if ($segment) {
+            $filters['segmentKey'] = $segment->getKey();
         }
 
         // resolve tags to id

@@ -12,6 +12,7 @@ export type Webspace = {
     navigations: Array<Navigation>,
     portalInformation: Array<PortalInformation>,
     resourceLocatorStrategy: ResourceLocatorStrategy,
+    segments: Array<Segment>,
     urls: Array<Url>,
 };
 
@@ -21,6 +22,13 @@ export type ResourceLocatorStrategy = {
 
 export type Navigation = {
     key: string,
+    title: string,
+};
+
+export type Segment = {
+    default: boolean,
+    key: string,
+    name: string,
     title: string,
 };
 

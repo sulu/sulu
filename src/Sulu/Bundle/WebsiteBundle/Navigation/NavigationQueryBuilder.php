@@ -31,6 +31,11 @@ class NavigationQueryBuilder extends ContentQueryBuilder
     private $parent = null;
 
     /**
+     * @var string|null
+     */
+    private $segmentKey = null;
+
+    /**
      * Returns custom select statement.
      */
     protected function buildWhere($webspaceKey, $locale)
@@ -39,10 +44,20 @@ class NavigationQueryBuilder extends ContentQueryBuilder
         if (null !== $this->context) {
             $where[] = \sprintf("page.[i18n:%s-navContexts] = '%s'", $locale, $this->context);
         }
+
         if (null !== $this->parent) {
             $where[] = \sprintf("ISDESCENDANTNODE(page, '%s')", $this->parent);
         } else {
             $where[] = \sprintf("ISDESCENDANTNODE(page, '%s')", '/cmf/' . $webspaceKey . '/contents');
+        }
+
+        if (null !== $this->segmentKey) {
+            $where[] = \sprintf(
+                "(page.[i18n:%s-excerpt-segment] = '%s' OR page.[i18n:%s-excerpt-segment] IS NULL)",
+                $locale,
+                $this->segmentKey,
+                $locale
+            );
         }
 
         return \implode(' AND ', $where);
@@ -66,5 +81,6 @@ class NavigationQueryBuilder extends ContentQueryBuilder
         $this->context = (isset($options['context'])) ? $options['context'] : null;
         $this->parent = (isset($options['parent'])) ? $options['parent'] : null;
         $this->excerpt = (isset($options['excerpt'])) ? $options['excerpt'] : true;
+        $this->segmentKey = (isset($options['segmentKey'])) ? $options['segmentKey'] : null;
     }
 }

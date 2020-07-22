@@ -20,6 +20,7 @@
             <argument type="service" id="sulu.content.resource_locator.strategy_pool"/>
             <argument type="service" id="sulu.content.structure_manager"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
 
             <tag name="sulu.context" context="website"/>
         </service>
@@ -53,6 +54,15 @@
 
             <tag name="kernel.event_subscriber"/>
             <tag name="sulu.context" context="website"/>
+        </service>
+
+        <service id="sulu_website.segment_subscriber"
+                 class="Sulu\Bundle\WebsiteBundle\EventListener\SegmentSubscriber">
+            <argument>%sulu_website.segment_header%</argument>
+            <argument type="service" id="sulu_core.webspace.request_analyzer" />
+            <argument>%sulu_website.segment_cookie_name%</argument>
+            <tag name="kernel.event_subscriber"/>
+            <tag name="sulu.context" context="website" />
         </service>
     </services>
 </container>

@@ -64,6 +64,13 @@
             <tag name="sulu.search.field" type="tags"/>
         </property>
 
+        <property name="segment" type="single_select">
+            <meta>
+                <title lang="de">Segmente</title>
+                <title lang="en">Segments</title>
+            </meta>
+        </property>
+
         <property name="icon" type="media_selection">
             <meta>
                 <title lang="de">Icon</title>

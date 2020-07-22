@@ -174,10 +174,12 @@ class XmlFileLoader11Test extends WebspaceTestCase
         $this->assertEquals('fr_ca', $webspace->getDefaultLocalization()->getLocale());
 
         $this->assertEquals('w', $webspace->getSegments()[0]->getKey());
-        $this->assertEquals('winter', $webspace->getSegments()[0]->getName());
+        $this->assertEquals('Winter', $webspace->getSegments()[0]->getTitle('en'));
+        $this->assertEquals('Winter', $webspace->getSegments()[0]->getTitle('de'));
         $this->assertEquals(true, $webspace->getSegments()[0]->isDefault());
         $this->assertEquals('s', $webspace->getSegments()[1]->getKey());
-        $this->assertEquals('summer', $webspace->getSegments()[1]->getName());
+        $this->assertEquals('Summer', $webspace->getSegments()[1]->getTitle('en'));
+        $this->assertEquals('Sommer', $webspace->getSegments()[1]->getTitle('de'));
         $this->assertEquals(false, $webspace->getSegments()[1]->isDefault());
 
         $this->assertEquals('massiveart', $webspace->getTheme());
@@ -218,7 +220,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
         $this->assertEquals('prod', $environmentProd->getType());
         $this->assertCount(1, $environmentProd->getUrls());
         $this->assertEquals(
-            '{language}.massiveart.{country}/{segment}',
+            '{language}.massiveart.{country}',
             $environmentProd->getUrls()[0]->getUrl()
         );
 
@@ -226,7 +228,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
         $this->assertEquals('dev', $environmentDev->getType());
         $this->assertCount(1, $environmentDev->getUrls());
         $this->assertEquals(
-            'massiveart.lo/{localization}/{segment}',
+            'massiveart.lo/{localization}',
             $environmentDev->getUrls()[0]->getUrl()
         );
 
@@ -249,7 +251,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
         $this->assertEquals('prod', $environmentProd->getType());
         $this->assertCount(2, $environmentProd->getUrls());
         $this->assertEquals(
-            '{language}.massiveart.{country}/{segment}',
+            '{language}.massiveart.{country}',
             $environmentProd->getUrls()[0]->getUrl()
         );
         $this->assertEquals(null, $environmentProd->getUrls()[0]->getCountry());
@@ -263,14 +265,13 @@ class XmlFileLoader11Test extends WebspaceTestCase
         );
         $this->assertEquals('ca', $environmentProd->getUrls()[1]->getCountry());
         $this->assertEquals('en', $environmentProd->getUrls()[1]->getLanguage());
-        $this->assertEquals('s', $environmentProd->getUrls()[1]->getSegment());
         $this->assertEquals(null, $environmentProd->getUrls()[1]->getRedirect());
 
         $environmentDev = $webspace->getPortals()[1]->getEnvironment('dev');
         $this->assertEquals('dev', $environmentDev->getType());
         $this->assertCount(1, $environmentDev->getUrls());
         $this->assertEquals(
-            'massiveart.lo/{localization}/{segment}',
+            'massiveart.lo/{localization}',
             $environmentDev->getUrls()[0]->getUrl()
         );
     }

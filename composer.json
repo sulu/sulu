@@ -62,7 +62,7 @@
         "oro/doctrine-extensions": "^1.0",
         "pagerfanta/pagerfanta": "^1.0.4 || ^2.0",
         "php-http/client-common": "^1.1.0 || ^2.0",
-        "php-http/guzzle6-adapter": "^1.1 || ^2.0",
+        "php-http/guzzle6-adapter": "^1.1.1 || ^2.0",
         "piwik/device-detector": "^3.7",
         "ramsey/uuid": "^3.1",
         "swiftmailer/swiftmailer": "^6.1.3",

@@ -253,6 +253,33 @@ test('Evaluate all disabledConditions and visibleConditions for schema', () => {
     }, 0);
 });
 
+test('Evaluate all disabledConditions and visibleConditions after calling setMultiple', () => {
+    const schema = {
+        item1: {
+            type: 'text_line',
+        },
+        item2: {
+            type: 'text_line',
+            disabledCondition: 'item1 != "item2"',
+            visibleCondition: 'item1 == "item2"',
+        },
+    };
+
+    const memoryFormStore = new MemoryFormStore({}, schema);
+
+    setTimeout(() => {
+        expect(memoryFormStore.schema.item2.disabled).toEqual(true);
+        expect(memoryFormStore.schema.item2.visible).toEqual(false);
+
+        memoryFormStore.setMultiple({item1: 'item2'});
+
+        expect(memoryFormStore.schema.item2.disabled).toEqual(false);
+        expect(memoryFormStore.schema.item2.visible).toEqual(true);
+
+        memoryFormStore.destroy();
+    }, 0);
+});
+
 test('Evaluate disabledConditions and visibleConditions for schema with locale', (done) => {
     const schema = {
         item: {

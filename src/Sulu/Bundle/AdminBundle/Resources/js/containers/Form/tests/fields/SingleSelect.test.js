@@ -243,6 +243,42 @@ test('Set default value if no value is passed', () => {
     expect(changeSpy).toBeCalledWith('mr');
 });
 
+test('Allow to pass one value for undefined', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const changeSpy = jest.fn();
+    const schemaOptions = {
+        values: {
+            name: 'values',
+            value: [
+                {
+                    name: undefined,
+                    title: 'None selected',
+                },
+                {
+                    name: 'mr',
+                    title: 'Mister',
+                },
+                {
+                    name: 'ms',
+                    title: 'Miss',
+                },
+            ],
+        },
+    };
+
+    const singleSelect = shallow(
+        <SingleSelect
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            onChange={changeSpy}
+            // $FlowFixMe
+            schemaOptions={schemaOptions}
+        />
+    );
+
+    expect(singleSelect.find('Option').at(0).prop('value')).toBeUndefined();
+});
+
 test('Set default value to a number of 0 should work', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const changeSpy = jest.fn();

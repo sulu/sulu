@@ -20,15 +20,17 @@ export default class PreviewStore {
     id: ?string | number;
     locale: ?string;
     @observable webspace: string;
+    @observable segment: ?string;
     @observable targetGroup: number = -1;
 
     @observable token: ?string;
 
-    constructor(resourceKey: string, id: ?string | number, locale: ?string, webspace: string) {
+    constructor(resourceKey: string, id: ?string | number, locale: ?string, webspace: string, segment: ?string) {
         this.resourceKey = resourceKey;
         this.id = id;
         this.locale = locale;
         this.webspace = webspace;
+        this.segment = segment;
     }
 
     @computed get starting() {
@@ -38,6 +40,7 @@ export default class PreviewStore {
     @computed get renderRoute() {
         return generateRoute('render', {
             webspace: this.webspace,
+            segment: this.segment,
             provider: this.resourceKey,
             id: this.id,
             locale: this.locale,
@@ -58,6 +61,10 @@ export default class PreviewStore {
         this.targetGroup = targetGroup;
     };
 
+    @action setSegment = (segment: ?string) => {
+        this.segment = segment;
+    };
+
     start(): Promise<*> {
         const route = generateRoute('start', {
             provider: this.resourceKey,
@@ -75,6 +82,7 @@ export default class PreviewStore {
         const route = generateRoute('update', {
             locale: this.locale,
             webspace: this.webspace,
+            segment: this.segment,
             token: this.token,
             provider: this.resourceKey,
             id: this.id,
@@ -89,6 +97,7 @@ export default class PreviewStore {
     updateContext(type: string): Promise<string> {
         const route = generateRoute('update-context', {
             webspace: this.webspace,
+            segment: this.segment,
             token: this.token,
             locale: this.locale,
             provider: this.resourceKey,

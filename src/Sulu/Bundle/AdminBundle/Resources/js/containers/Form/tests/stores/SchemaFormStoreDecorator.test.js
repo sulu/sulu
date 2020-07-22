@@ -26,10 +26,12 @@ test('Initialize a SchemaFormStore', () => {
     };
     // $FlowFixMe
     const initializerSpy = jest.fn().mockReturnValue(store);
-    const schemaFormStore = new SchemaFormStoreDecorator(initializerSpy, 'test');
+    const schemaFormStore = new SchemaFormStoreDecorator(initializerSpy, 'test', 'type', {});
 
     return Promise.all([schemaPromise, jsonSchemaPromise]).then(() => {
         expect(initializerSpy).toBeCalledWith(schema, jsonSchema);
+        expect(metadataStore.getSchema).toBeCalledWith('test', 'type', {});
+        expect(metadataStore.getJsonSchema).toBeCalledWith('test', 'type', {});
         expect(schemaFormStore.innerFormStore).toEqual(store);
     });
 });

@@ -1883,6 +1883,45 @@ class PageControllerTest extends SuluTestCase
         $this->assertFalse($response['hasSub']);
     }
 
+    public function testSegment()
+    {
+        $data = [
+            'title' => 'test1',
+            'template' => 'default',
+            'tags' => [
+                'tag1',
+            ],
+            'url' => '/test1',
+            'article' => 'Test',
+            'ext' => [
+                'excerpt' => [
+                    'segment' => 's',
+                ],
+            ],
+        ];
+
+        $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
+
+        $this->client->request(
+            'POST',
+            '/api/pages?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&language=en',
+            $data
+        );
+        $data = \json_decode($this->client->getResponse()->getContent(), true);
+
+        $this->assertArrayHasKey('id', $data);
+        $this->assertEquals('test1', $data['title']);
+        $this->assertEquals('s', $data['ext']['excerpt']['segment']);
+
+        $this->client->request('GET', '/api/pages/' . $data['id'] . '?webspace=sulu_io&language=en');
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
+
+        $this->assertArrayHasKey('id', $response);
+        $this->assertEquals('test1', $response['title']);
+        $this->assertEquals('s', $data['ext']['excerpt']['segment']);
+    }
+
     public function testPostTriggerAction()
     {
         $webspaceUuid = $this->session->getNode('/cmf/sulu_io/contents')->getIdentifier();

@@ -42,6 +42,16 @@
                     {% endfor %}
                 </ul>
             </nav>
+
+            <nav>
+                <ul>
+                    {% for segment in segments %}
+                        <li>
+                            <a href="{{ segment.url }}">{{ segment.title }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </nav>
         {% endblock %}
     </header>
 

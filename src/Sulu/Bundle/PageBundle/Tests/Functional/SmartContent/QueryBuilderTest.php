@@ -584,6 +584,104 @@ class QueryBuilderTest extends SuluTestCase
         $this->assertContains('Single', $titles);
     }
 
+    public function testSegment()
+    {
+        $root = $this->sessionManager->getContentNode('sulu_io');
+
+        $webspace = new Webspace();
+        $webspace->setKey('sulu_io');
+        $request = new Request([], [], ['_sulu' => new RequestAttributes(['webspace' => $webspace])]);
+        $request->headers->add(['Accept-Language' => 'en']);
+        $this->getContainer()->get('request_stack')->push($request);
+
+        /** @var PageDocument $skiingDocument */
+        $skiingDocument = $this->documentManager->create('page');
+        $skiingDocument->setTitle('Skiing');
+        $skiingDocument->setResourceSegment('/skiing');
+        $skiingDocument->setExtensionsData(
+            [
+                'excerpt' => ['segment' => 'w'],
+            ]
+        );
+        $skiingDocument->setStructureType('simple');
+        $skiingDocument->setWorkflowStage(WorkflowStage::PUBLISHED);
+        $this->documentManager->persist($skiingDocument, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->publish($skiingDocument, 'en');
+
+        $paraglidingDocument = $this->documentManager->create('page');
+        $paraglidingDocument->setTitle('Paragliding');
+        $paraglidingDocument->setResourceSegment('/paragliding');
+        $paraglidingDocument->setExtensionsData(
+            [
+                'excerpt' => ['segment' => 's'],
+            ]
+        );
+        $paraglidingDocument->setStructureType('simple');
+        $paraglidingDocument->setWorkflowStage(WorkflowStage::PUBLISHED);
+        $this->documentManager->persist($paraglidingDocument, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->publish($paraglidingDocument, 'en');
+
+        $hikingDocument = $this->documentManager->create('page');
+        $hikingDocument->setTitle('Hiking');
+        $hikingDocument->setResourceSegment('/hiking');
+        $hikingDocument->setStructureType('simple');
+        $hikingDocument->setWorkflowStage(WorkflowStage::PUBLISHED);
+        $this->documentManager->persist($hikingDocument, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->publish($hikingDocument, 'en');
+
+        $this->documentManager->flush();
+
+        $builder = new QueryBuilder(
+            $this->structureManager,
+            $this->extensionManager,
+            $this->sessionManager,
+            $this->languageNamespace
+        );
+
+        $builder->init([
+            'config' => [
+                'segmentKey' => 'w',
+                'dataSource' => $root->getIdentifier(),
+                'includeSubFolders' => true,
+                'audienceTargeting' => true,
+            ],
+        ]);
+
+        $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
+        $this->assertCount(2, $result);
+
+        $resultTitles = \array_map(function($row) {
+            return $row['title'];
+        }, $result);
+        $this->assertContains('Hiking', $resultTitles);
+        $this->assertContains('Skiing', $resultTitles);
+
+        $builder = new QueryBuilder(
+            $this->structureManager,
+            $this->extensionManager,
+            $this->sessionManager,
+            $this->languageNamespace
+        );
+
+        $builder->init([
+            'config' => [
+                'segmentKey' => 's',
+                'dataSource' => $root->getIdentifier(),
+                'includeSubFolders' => true,
+                'audienceTargeting' => true,
+            ],
+        ]);
+
+        $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
+        $this->assertCount(2, $result);
+
+        $resultTitles = \array_map(function($row) {
+            return $row['title'];
+        }, $result);
+        $this->assertContains('Hiking', $resultTitles);
+        $this->assertContains('Paragliding', $resultTitles);
+    }
+
     public function tagsProvider()
     {
         $documents = [];

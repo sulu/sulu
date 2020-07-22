@@ -42,19 +42,37 @@ interface PreviewInterface
      *
      * @return string Complete html response
      */
-    public function update(string $token, string $webspaceKey, array $data, ?int $targetGroupId): string;
+    public function update(
+        string $token,
+        string $webspaceKey,
+        array $data,
+        ?int $targetGroupId,
+        ?string $segmentKey
+    ): string;
 
     /**
      * Updates given context and restart preview with given data.
      *
      * @return string Complete html response
      */
-    public function updateContext(string $token, string $webspaceKey, array $context, ?int $targetGroupId): string;
+    public function updateContext(
+        string $token,
+        string $webspaceKey,
+        array $context,
+        ?int $targetGroupId,
+        ?string $segmentKey
+    ): string;
 
     /**
      * Returns rendered preview-session.
      *
      * @return string Complete html response
      */
-    public function render(string $token, string $webspaceKey, string $locale, ?int $targetGroupId): string;
+    public function render(
+        string $token,
+        string $webspaceKey,
+        string $locale,
+        ?int $targetGroupId,
+        ?string $segmentKey
+    ): string;
 }

@@ -104,6 +104,17 @@ test('Render collapsed blocks with block previews', () => {
             ],
             type: 'checkbox',
         },
+        section: {
+            items: {
+                section_setting: {
+                    tags: [
+                        {attributes: {icon: 'su-hide'}, name: 'sulu.block_setting_icon'},
+                    ],
+                    type: 'checkbox',
+                },
+            },
+            type: 'section',
+        },
     });
     const jsonSchemaPromise = Promise.resolve({});
     metadataStore.getSchema.mockReturnValue(schemaPromise);
@@ -124,6 +135,9 @@ test('Render collapsed blocks with block previews', () => {
             text2: undefined,
             something: 'Test 6',
             type: 'default',
+            settings: {
+                section_setting: true,
+            },
         },
     ];
 
@@ -1010,8 +1024,8 @@ test('Should open and close block settings overlay when confirm button is clicke
     fieldBlocks.find('Block').at(1).simulate('click');
     fieldBlocks.find('Block').at(1).find('Icon[name="su-cog"]').simulate('click');
     expect(fieldBlocks.find('Overlay').prop('open')).toEqual(true);
-    expect(metadataStore.getSchema).toBeCalledWith('page_block_settings');
-    expect(metadataStore.getJsonSchema).toBeCalledWith('page_block_settings');
+    expect(metadataStore.getSchema).toBeCalledWith('page_block_settings', undefined, undefined);
+    expect(metadataStore.getJsonSchema).toBeCalledWith('page_block_settings', undefined, undefined);
 
     return Promise.all([schemaPromise, jsonSchemaPromise]).then(() => {
         fieldBlocks.update();
@@ -1070,8 +1084,8 @@ test('Should open and close block settings overlay when confirm button is clicke
     fieldBlocks.find('Block').at(1).simulate('click');
     fieldBlocks.find('Block').at(1).find('Icon[name="su-cog"]').simulate('click');
     expect(fieldBlocks.find('Overlay').prop('open')).toEqual(true);
-    expect(metadataStore.getSchema).toBeCalledWith('page_block_settings');
-    expect(metadataStore.getJsonSchema).toBeCalledWith('page_block_settings');
+    expect(metadataStore.getSchema).toBeCalledWith('page_block_settings', undefined, undefined);
+    expect(metadataStore.getJsonSchema).toBeCalledWith('page_block_settings', undefined, undefined);
 
     return Promise.all([schemaPromise, jsonSchemaPromise]).then(() => {
         fieldBlocks.update();

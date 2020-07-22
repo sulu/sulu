@@ -17,6 +17,7 @@ use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\WebsiteBundle\Routing\ContentRouteProvider;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
+use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
@@ -37,6 +38,7 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzer;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Portal;
+use Sulu\Component\Webspace\Segment;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
@@ -100,7 +102,8 @@ class ContentRouteProviderTest extends TestCase
             $this->documentInspector->reveal(),
             $this->resourceLocatorStrategyPool->reveal(),
             $this->structureManager->reveal(),
-            $this->webspaceManager->reveal()
+            $this->webspaceManager->reveal(),
+            $this->requestAnalyzer->reveal()
         );
     }
 
@@ -108,7 +111,6 @@ class ContentRouteProviderTest extends TestCase
     {
         $localization = new Localization();
         $localization->setLanguage('de');
-        $this->requestAnalyzer->getCurrentLocalization()->willReturn($localization);
 
         $portal = new Portal();
         $portal->setKey('portal');
@@ -116,11 +118,6 @@ class ContentRouteProviderTest extends TestCase
         $webspace->setKey('webspace');
         $webspace->setTheme('theme');
         $portal->setWebspace($webspace);
-        $this->requestAnalyzer->getPortal()->willReturn($portal);
-
-        $this->requestAnalyzer->getMatchType()->willReturn(RequestAnalyzer::MATCH_TYPE_FULL);
-        $this->requestAnalyzer->getResourceLocator()->willReturn('/');
-        $this->requestAnalyzer->getResourceLocatorPrefix()->willReturn('');
 
         $this->resourceLocatorStrategy->loadByResourceLocator('', 'webspace', 'de')->willReturn('some-uuid');
 
@@ -157,6 +154,7 @@ class ContentRouteProviderTest extends TestCase
         $this->resourceLocatorStrategy->loadByResourceLocator('', 'webspace', 'de')->willReturn('some-uuid');
 
         $document = $this->prophesize(TitleBehavior::class)
+            ->willImplement(ExtensionBehavior::class)
             ->willImplement(RedirectTypeBehavior::class)
             ->willImplement(StructureBehavior::class)
             ->willImplement(UuidBehavior::class);
@@ -164,6 +162,7 @@ class ContentRouteProviderTest extends TestCase
         $document->getRedirectType()->willReturn(RedirectType::NONE);
         $document->getStructureType()->willReturn('default');
         $document->getUuid()->willReturn('some-uuid');
+        $document->getExtensionsData()->willReturn(['excerpt' => ['segment' => null]]);
         $this->documentManager->find('some-uuid', 'de', ['load_ghost_content' => false])->willReturn($document->reveal());
 
         $metadata = new Metadata();
@@ -196,6 +195,70 @@ class ContentRouteProviderTest extends TestCase
         $this->assertEquals(false, $defaults['partial']);
     }
 
+    public function testGetCollectionForRequestWithWrongSegment()
+    {
+        $attributes = $this->prophesize(RequestAttributes::class);
+
+        $localization = new Localization();
+        $localization->setLanguage('de');
+        $attributes->getAttribute('localization', null)->willReturn($localization);
+
+        $portal = new Portal();
+        $portal->setKey('portal');
+        $webspace = new Webspace();
+        $webspace->setKey('webspace');
+        $webspace->setTheme('theme');
+        $portal->setWebspace($webspace);
+        $attributes->getAttribute('portal', null)->willReturn($portal);
+
+        $attributes->getAttribute('matchType', null)->willReturn(RequestAnalyzer::MATCH_TYPE_FULL);
+        $attributes->getAttribute('resourceLocator', null)->willReturn(null);
+        $attributes->getAttribute('resourceLocatorPrefix', null)->willReturn('/de');
+
+        $this->resourceLocatorStrategy->loadByResourceLocator('', 'webspace', 'de')->willReturn('some-uuid');
+
+        $document = $this->prophesize(TitleBehavior::class)
+            ->willImplement(ExtensionBehavior::class)
+            ->willImplement(RedirectTypeBehavior::class)
+            ->willImplement(StructureBehavior::class)
+            ->willImplement(UuidBehavior::class);
+        $document->getTitle()->willReturn('some-title');
+        $document->getRedirectType()->willReturn(RedirectType::NONE);
+        $document->getStructureType()->willReturn('default');
+        $document->getUuid()->willReturn('some-uuid');
+        $document->getExtensionsData()->willReturn(['excerpt' => ['segment' => 'w']]);
+        $this->documentManager->find('some-uuid', 'de', ['load_ghost_content' => false])->willReturn($document->reveal());
+
+        $segment = new Segment();
+        $segment->setKey('s');
+        $this->requestAnalyzer->getSegment()->willReturn($segment);
+
+        $this->requestAnalyzer->changeSegment('w')->shouldBeCalled();
+
+        $metadata = new Metadata();
+        $metadata->setAlias('page');
+        $structureMetadata = new StructureMetadata();
+        $this->documentInspector->getMetadata($document->reveal())->willReturn($metadata);
+        $this->documentInspector->getStructureMetadata($document->reveal())->willReturn($structureMetadata);
+
+        $pageBridge = $this->prophesize(PageBridge::class);
+        $pageBridge->getController()->willReturn('::Controller');
+        $this->structureManager->wrapStructure('page', $structureMetadata)->willReturn($pageBridge->reveal());
+
+        $request = new Request(
+            [],
+            [],
+            ['_sulu' => $attributes->reveal()],
+            [],
+            [],
+            ['REQUEST_URI' => \rawurlencode('/de')]
+        );
+
+        $pageBridge->setDocument($document->reveal())->shouldBeCalled();
+
+        $this->contentRouteProvider->getRouteCollectionForRequest($request);
+    }
+
     public function testGetCollectionForRequestWithUmlauts()
     {
         $attributes = $this->prophesize(RequestAttributes::class);
@@ -218,13 +281,16 @@ class ContentRouteProviderTest extends TestCase
 
         $this->resourceLocatorStrategy->loadByResourceLocator('/käße', 'webspace', 'de')->willReturn('some-uuid');
 
-        $document = $this->prophesize(TitleBehavior::class)->willImplement(RedirectTypeBehavior::class)->willImplement(
-                StructureBehavior::class
-            )->willImplement(UuidBehavior::class);
+        $document = $this->prophesize(TitleBehavior::class)
+            ->willImplement(ExtensionBehavior::class)
+            ->willImplement(RedirectTypeBehavior::class)
+            ->willImplement(StructureBehavior::class)
+            ->willImplement(UuidBehavior::class);
         $document->getTitle()->willReturn('some-title');
         $document->getRedirectType()->willReturn(RedirectType::NONE);
         $document->getStructureType()->willReturn('default');
         $document->getUuid()->willReturn('some-uuid');
+        $document->getExtensionsData()->willReturn(['excerpt' => ['segment' => null]]);
         $this->documentManager->find('some-uuid', 'de', ['load_ghost_content' => false])->willReturn(
             $document->reveal()
         );
@@ -266,7 +332,6 @@ class ContentRouteProviderTest extends TestCase
     {
         $localization = new Localization();
         $localization->setLanguage('de');
-        $this->requestAnalyzer->getCurrentLocalization()->willReturn($localization);
 
         $portal = new Portal();
         $portal->setKey('portal');
@@ -274,11 +339,6 @@ class ContentRouteProviderTest extends TestCase
         $webspace->setKey('webspace');
         $webspace->setTheme('theme');
         $portal->setWebspace($webspace);
-        $this->requestAnalyzer->getPortal()->willReturn($portal);
-
-        $this->requestAnalyzer->getMatchType()->willReturn(RequestAnalyzer::MATCH_TYPE_FULL);
-        $this->requestAnalyzer->getResourceLocator()->willReturn('');
-        $this->requestAnalyzer->getResourceLocatorPrefix()->willReturn('/de');
 
         $this->resourceLocatorStrategy->loadByResourceLocator('', 'webspace', 'de')->willReturn('some-uuid');
 
@@ -326,6 +386,7 @@ class ContentRouteProviderTest extends TestCase
         $this->resourceLocatorStrategy->loadByResourceLocator('', 'webspace', 'de')->willReturn('some-uuid');
 
         $document = $this->prophesize(TitleBehavior::class)
+            ->willImplement(ExtensionBehavior::class)
             ->willImplement(RedirectTypeBehavior::class)
             ->willImplement(StructureBehavior::class)
             ->willImplement(UuidBehavior::class);
@@ -333,6 +394,7 @@ class ContentRouteProviderTest extends TestCase
         $document->getRedirectType()->willReturn(RedirectType::NONE);
         $document->getStructureType()->willReturn('default');
         $document->getUuid()->willReturn('some-uuid');
+        $document->getExtensionsData()->willReturn(['excerpt' => ['segment' => null]]);
         $this->documentManager->find('some-uuid', 'de', ['load_ghost_content' => false])->willReturn($document->reveal());
 
         $metadata = new Metadata();
@@ -373,12 +435,6 @@ class ContentRouteProviderTest extends TestCase
         $webspace->setKey('webspace');
         $webspace->setTheme('theme');
         $portal->setWebspace($webspace);
-        $this->requestAnalyzer->getPortal()->willReturn($portal);
-
-        $this->requestAnalyzer->getCurrentLocalization()->willReturn(null);
-        $this->requestAnalyzer->getMatchType()->willReturn(RequestAnalyzer::MATCH_TYPE_FULL);
-        $this->requestAnalyzer->getResourceLocator()->willReturn('');
-        $this->requestAnalyzer->getResourceLocatorPrefix()->willReturn('/de');
 
         $request = new Request([], [], [], [], [], ['REQUEST_URI' => \rawurlencode('/')]);
 
@@ -391,7 +447,6 @@ class ContentRouteProviderTest extends TestCase
     {
         $localization = new Localization();
         $localization->setLanguage('de');
-        $this->requestAnalyzer->getCurrentLocalization()->willReturn($localization);
 
         $portal = new Portal();
         $portal->setKey('portal');
@@ -399,11 +454,6 @@ class ContentRouteProviderTest extends TestCase
         $webspace->setKey('webspace');
         $webspace->setTheme('theme');
         $portal->setWebspace($webspace);
-        $this->requestAnalyzer->getPortal()->willReturn($portal);
-
-        $this->requestAnalyzer->getMatchType()->willReturn(RequestAnalyzer::MATCH_TYPE_FULL);
-        $this->requestAnalyzer->getResourceLocator()->willReturn('/');
-        $this->requestAnalyzer->getResourceLocatorPrefix()->willReturn('/de');
 
         $this->resourceLocatorStrategy->loadByResourceLocator('', 'webspace', 'de')
             ->willThrow(ResourceLocatorNotFoundException::class);
@@ -592,9 +642,6 @@ class ContentRouteProviderTest extends TestCase
         $attributes->getAttribute('resourceLocator', null)->willReturn('/qwertz/');
         $attributes->getAttribute('resourceLocatorPrefix', null)->willReturn('/de');
 
-        $this->requestAnalyzer->getResourceLocator()->willReturn('/qwertz/');
-        $this->requestAnalyzer->getResourceLocatorPrefix()->willReturn('/de');
-
         $this->resourceLocatorStrategy->loadByResourceLocator('/qwertz', 'webspace', 'de_at')
             ->willThrow(new ResourceLocatorMovedException('/new-test', '123-123-123'));
 
@@ -633,6 +680,7 @@ class ContentRouteProviderTest extends TestCase
         $this->resourceLocatorStrategy->loadByResourceLocator('', 'webspace', 'de')->willReturn('some-uuid');
 
         $document = $this->prophesize(TitleBehavior::class)
+            ->willImplement(ExtensionBehavior::class)
             ->willImplement(RedirectTypeBehavior::class)
             ->willImplement(StructureBehavior::class)
             ->willImplement(UuidBehavior::class);
@@ -640,6 +688,7 @@ class ContentRouteProviderTest extends TestCase
         $document->getRedirectType()->willReturn(RedirectType::NONE);
         $document->getStructureType()->willReturn('default');
         $document->getUuid()->willReturn('some-uuid');
+        $document->getExtensionsData()->willReturn(['excerpt' => ['segment' => null]]);
         $this->documentManager->find('some-uuid', 'de', ['load_ghost_content' => false])->willReturn($document->reveal());
 
         $metadata = new Metadata();
@@ -850,11 +899,10 @@ class ContentRouteProviderTest extends TestCase
         $attributes->getAttribute('resourceLocatorPrefix', null)->willReturn('');
         $attributes->getAttribute('portalUrl', null)->willReturn('sulu.lo');
 
-        $this->requestAnalyzer->getPortalUrl()->willReturn('sulu.lo');
-
         $this->resourceLocatorStrategy->loadByResourceLocator('', 'webspace', 'de_at')->willReturn('some-uuid');
 
         $document = $this->prophesize(TitleBehavior::class)
+            ->willImplement(ExtensionBehavior::class)
             ->willImplement(RedirectTypeBehavior::class)
             ->willImplement(StructureBehavior::class)
             ->willImplement(UuidBehavior::class);
@@ -863,6 +911,7 @@ class ContentRouteProviderTest extends TestCase
         $document->getRedirectType()->willReturn(RedirectType::NONE);
         $document->getStructureType()->willReturn('default');
         $document->getUuid()->willReturn('some-uuid');
+        $document->getExtensionsData()->willReturn(['excerpt' => ['segment' => null]]);
         $this->documentManager->find('some-uuid', 'de_at', ['load_ghost_content' => false])
             ->willReturn($document->reveal());
 

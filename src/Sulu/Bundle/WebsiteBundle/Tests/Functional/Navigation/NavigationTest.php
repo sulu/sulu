@@ -40,7 +40,7 @@ class NavigationTest extends SuluTestCase
     /**
      * @var NavigationMapperInterface
      */
-    private $navigation;
+    private $navigationMapper;
 
     /**
      * @var ContentMapperInterface
@@ -89,7 +89,7 @@ class NavigationTest extends SuluTestCase
 
         $contentQuery = new ContentQueryExecutor($this->sessionManager, $this->mapper);
 
-        $this->navigation = new NavigationMapper(
+        $this->navigationMapper = new NavigationMapper(
             $this->mapper,
             $contentQuery,
             new NavigationQueryBuilder($this->structureManager, $this->extensionManager, $this->languageNamespace),
@@ -157,7 +157,9 @@ class NavigationTest extends SuluTestCase
         $documents['products/product-1']->setParent($documents['products']);
         $documents['products/product-1']->setTitle('Products-1');
         $documents['products/product-1']->setResourceSegment('/products/products-1');
-        $documents['products/product-1']->setExtensionsData(['excerpt' => ['title' => 'Excerpt Products 1']]);
+        $documents['products/product-1']->setExtensionsData(
+            ['excerpt' => ['title' => 'Excerpt Products 1', 'segment' => 's']]
+        );
         $documents['products/product-1']->setNavigationContexts(['main', 'footer']);
         $documents['products/product-1']->setWorkflowStage(WorkflowStage::PUBLISHED);
         $this->documentManager->persist($documents['products/product-1'], 'en');
@@ -169,7 +171,9 @@ class NavigationTest extends SuluTestCase
         $documents['products/product-2']->setParent($documents['products']);
         $documents['products/product-2']->setTitle('Products-2');
         $documents['products/product-2']->setResourceSegment('/products/products-2');
-        $documents['products/product-2']->setExtensionsData(['excerpt' => ['title' => 'Excerpt Products 2']]);
+        $documents['products/product-2']->setExtensionsData(
+            ['excerpt' => ['title' => 'Excerpt Products 2', 'segment' => 'w']]
+        );
         $documents['products/product-2']->setNavigationContexts(['main']);
         $documents['products/product-2']->setWorkflowStage(WorkflowStage::PUBLISHED);
         $this->documentManager->persist($documents['products/product-2'], 'en');
@@ -181,7 +185,7 @@ class NavigationTest extends SuluTestCase
 
     public function testMainNavigation()
     {
-        $main = $this->navigation->getRootNavigation('sulu_io', 'en', 2);
+        $main = $this->navigationMapper->getRootNavigation('sulu_io', 'en', 2);
         $this->assertEquals(2, \count($main));
         $this->assertEquals(2, \count($main[0]['children']));
         $this->assertEquals(2, \count($main[1]['children']));
@@ -193,12 +197,12 @@ class NavigationTest extends SuluTestCase
         $this->assertEquals('/products/products-1', $main[1]['children'][0]['url']);
         $this->assertEquals('/products/products-2', $main[1]['children'][1]['url']);
 
-        $main = $this->navigation->getRootNavigation('sulu_io', 'en', 1);
+        $main = $this->navigationMapper->getRootNavigation('sulu_io', 'en', 1);
         $this->assertEquals(2, \count($main));
         $this->assertEquals(0, \count($main[0]['children']));
         $this->assertEquals(0, \count($main[1]['children']));
 
-        $main = $this->navigation->getRootNavigation('sulu_io', 'en', null);
+        $main = $this->navigationMapper->getRootNavigation('sulu_io', 'en', null);
         $this->assertEquals(2, \count($main));
         $this->assertEquals(2, \count($main[0]['children']));
         $this->assertEquals(2, \count($main[1]['children']));
@@ -208,9 +212,34 @@ class NavigationTest extends SuluTestCase
         $this->assertEquals(0, \count($main[1]['children'][1]['children']));
     }
 
+    public function testMainNavigationWithSegment()
+    {
+        $main = $this->navigationMapper->getRootNavigation('sulu_io', 'en', 2, false, null, false, 'w');
+        $this->assertEquals(2, \count($main));
+        $this->assertEquals(2, \count($main[0]['children']));
+        $this->assertEquals(1, \count($main[1]['children']));
+
+        $this->assertEquals('/news', $main[0]['url']);
+        $this->assertEquals('/news/news-1', $main[0]['children'][0]['url']);
+        $this->assertEquals('/news/news-2', $main[0]['children'][1]['url']);
+        $this->assertEquals('/products', $main[1]['url']);
+        $this->assertEquals('/products/products-2', $main[1]['children'][0]['url']);
+
+        $main = $this->navigationMapper->getRootNavigation('sulu_io', 'en', 2, false, null, false, 's');
+        $this->assertEquals(2, \count($main));
+        $this->assertEquals(2, \count($main[0]['children']));
+        $this->assertEquals(1, \count($main[1]['children']));
+
+        $this->assertEquals('/news', $main[0]['url']);
+        $this->assertEquals('/news/news-1', $main[0]['children'][0]['url']);
+        $this->assertEquals('/news/news-2', $main[0]['children'][1]['url']);
+        $this->assertEquals('/products', $main[1]['url']);
+        $this->assertEquals('/products/products-1', $main[1]['children'][0]['url']);
+    }
+
     public function testNavigation()
     {
-        $main = $this->navigation->getNavigation($this->data['news']->getUuid(), 'sulu_io', 'en', 1);
+        $main = $this->navigationMapper->getNavigation($this->data['news']->getUuid(), 'sulu_io', 'en', 1);
         $this->assertEquals(2, \count($main));
         $this->assertEquals(0, \count($main[0]['children']));
         $this->assertEquals(0, \count($main[1]['children']));
@@ -226,14 +255,14 @@ class NavigationTest extends SuluTestCase
 
     public function testMainNavigationFlat()
     {
-        $result = $this->navigation->getRootNavigation('sulu_io', 'en', 1, true);
+        $result = $this->navigationMapper->getRootNavigation('sulu_io', 'en', 1, true);
         $this->assertEquals(2, \count($result));
         $this->assertEquals('News', $result[0]['title']);
         $this->assertEquals('Products', $result[1]['title']);
 
         $this->markTestSkipped('This method does not work at more than one level. See issue #1252');
 
-        $result = $this->navigation->getRootNavigation('sulu_io', 'en', 2, true);
+        $result = $this->navigationMapper->getRootNavigation('sulu_io', 'en', 2, true);
         $this->assertEquals(6, \count($result));
         $this->assertEquals('News', $result[0]['title']);
         $this->assertEquals('News-1', $result[1]['title']);
@@ -258,7 +287,7 @@ class NavigationTest extends SuluTestCase
         $this->documentManager->persist($document, 'en');
         $this->documentManager->flush();
 
-        $result = $this->navigation->getNavigation($this->data['news']->getUuid(), 'sulu_io', 'en', 2, true);
+        $result = $this->navigationMapper->getNavigation($this->data['news']->getUuid(), 'sulu_io', 'en', 2, true);
         $this->assertEquals(3, \count($result));
         $this->assertEquals('News-1', $result[0]['title']);
         $this->assertEquals('News-2', $result[1]['title']);
@@ -279,7 +308,7 @@ class NavigationTest extends SuluTestCase
         $this->documentManager->publish($document, 'en');
         $this->documentManager->flush();
 
-        $result = $this->navigation->getNavigation(
+        $result = $this->navigationMapper->getNavigation(
             $this->data['news']->getUuid(),
             'sulu_io',
             'en',
@@ -303,7 +332,7 @@ class NavigationTest extends SuluTestCase
 
     public function testBreadcrumb()
     {
-        $breadcrumb = $this->navigation->getBreadcrumb($this->data['news/news-2']->getUuid(), 'sulu_io', 'en', 1);
+        $breadcrumb = $this->navigationMapper->getBreadcrumb($this->data['news/news-2']->getUuid(), 'sulu_io', 'en', 1);
         $this->assertEquals(3, \count($breadcrumb));
 
         // startpage has no title
@@ -318,7 +347,7 @@ class NavigationTest extends SuluTestCase
     public function testNavContexts()
     {
         // context footer (only news and one sub page news-1)
-        $result = $this->navigation->getRootNavigation('sulu_io', 'en', 2, false, 'footer');
+        $result = $this->navigationMapper->getRootNavigation('sulu_io', 'en', 2, false, 'footer');
 
         $this->assertEquals(1, \count($result));
         $layer1 = $result;
@@ -332,7 +361,7 @@ class NavigationTest extends SuluTestCase
         // /products/product-1 not: because of missing nav context on /products
 
         // context main (only products and two sub pages
-        $result = $this->navigation->getRootNavigation('sulu_io', 'en', 2, false, 'main');
+        $result = $this->navigationMapper->getRootNavigation('sulu_io', 'en', 2, false, 'main');
 
         $this->assertEquals(1, \count($result));
         $layer1 = $result;
@@ -352,7 +381,7 @@ class NavigationTest extends SuluTestCase
     public function testNavContextsFlat()
     {
         // context footer (only news and one sub page news-1)
-        $result = $this->navigation->getRootNavigation('sulu_io', 'en', 2, true, 'footer');
+        $result = $this->navigationMapper->getRootNavigation('sulu_io', 'en', 2, true, 'footer');
 
         $this->assertEquals(3, \count($result));
 
@@ -369,7 +398,7 @@ class NavigationTest extends SuluTestCase
         $this->assertEquals('Products-1', $result[2]['title']);
 
         // context main (only products and two sub pages
-        $result = $this->navigation->getRootNavigation('sulu_io', 'en', 2, true, 'main');
+        $result = $this->navigationMapper->getRootNavigation('sulu_io', 'en', 2, true, 'main');
 
         $this->assertEquals(5, \count($result));
 
@@ -399,7 +428,7 @@ class NavigationTest extends SuluTestCase
         $this->documentManager->persist($document, 'en');
         $this->documentManager->flush();
 
-        $main = $this->navigation->getNavigation($this->data['products']->getUuid(), 'sulu_io', 'en', 1);
+        $main = $this->navigationMapper->getNavigation($this->data['products']->getUuid(), 'sulu_io', 'en', 1);
         $this->assertEquals(2, \count($main));
         $this->assertEquals('/products/products-1', $main[0]['url']);
         $this->assertEquals('/products/products-2', $main[1]['url']);
@@ -409,13 +438,13 @@ class NavigationTest extends SuluTestCase
         $this->documentManager->publish($document, 'en');
         $this->documentManager->flush();
 
-        $main = $this->navigation->getNavigation($this->data['products']->getUuid(), 'sulu_io', 'en', 1);
+        $main = $this->navigationMapper->getNavigation($this->data['products']->getUuid(), 'sulu_io', 'en', 1);
         $this->assertEquals(3, \count($main));
         $this->assertEquals('/products/products-1', $main[0]['url']);
         $this->assertEquals('/products/products-2', $main[1]['url']);
         $this->assertEquals('/products/products-3', $main[2]['url']);
 
-        $main = $this->navigation->getNavigation($this->data['products']->getUuid(), 'sulu_io', 'en', 1, false, 'main');
+        $main = $this->navigationMapper->getNavigation($this->data['products']->getUuid(), 'sulu_io', 'en', 1, false, 'main');
         $this->assertEquals(2, \count($main));
         $this->assertEquals('/products/products-1', $main[0]['url']);
         $this->assertEquals('/products/products-2', $main[1]['url']);
@@ -427,13 +456,20 @@ class NavigationTest extends SuluTestCase
         $this->documentManager->publish($document, 'en');
         $this->documentManager->flush();
 
-        $main = $this->navigation->getNavigation($this->data['products']->getUuid(), 'sulu_io', 'en', 1);
+        $main = $this->navigationMapper->getNavigation($this->data['products']->getUuid(), 'sulu_io', 'en', 1);
         $this->assertEquals(3, \count($main));
         $this->assertEquals('/products/products-1', $main[0]['url']);
         $this->assertEquals('/products/products-2', $main[1]['url']);
         $this->assertEquals('/products/products-3', $main[2]['url']);
 
-        $main = $this->navigation->getNavigation($this->data['products']->getUuid(), 'sulu_io', 'en', 1, false, 'main');
+        $main = $this->navigationMapper->getNavigation(
+            $this->data['products']->getUuid(),
+            'sulu_io',
+            'en',
+            1,
+            false,
+            'main'
+        );
         $this->assertEquals(3, \count($main));
         $this->assertEquals('/products/products-1', $main[0]['url']);
         $this->assertEquals('/products/products-2', $main[1]['url']);
@@ -451,7 +487,7 @@ class NavigationTest extends SuluTestCase
         $this->documentManager->persist($document, 'en');
         $this->documentManager->flush();
 
-        $navigation = $this->navigation->getRootNavigation('sulu_io', 'en', 2);
+        $navigation = $this->navigationMapper->getRootNavigation('sulu_io', 'en', 2);
 
         $this->assertCount(1, $navigation);
         $this->assertEquals('/news', $navigation[0]['url']);
@@ -462,7 +498,7 @@ class NavigationTest extends SuluTestCase
 
     public function testNavigationOrder()
     {
-        $main = $this->navigation->getNavigation($this->data['news']->getUuid(), 'sulu_io', 'en', 1);
+        $main = $this->navigationMapper->getNavigation($this->data['news']->getUuid(), 'sulu_io', 'en', 1);
         $this->assertEquals(2, \count($main));
         $this->assertEquals(0, \count($main[0]['children']));
         $this->assertEquals(0, \count($main[1]['children']));
@@ -480,7 +516,7 @@ class NavigationTest extends SuluTestCase
         $session->save();
         $session->refresh(false);
 
-        $main = $this->navigation->getNavigation($this->data['news']->getUuid(), 'sulu_io', 'en', 1);
+        $main = $this->navigationMapper->getNavigation($this->data['news']->getUuid(), 'sulu_io', 'en', 1);
         $this->assertEquals(2, \count($main));
         $this->assertEquals(0, \count($main[0]['children']));
         $this->assertEquals(0, \count($main[1]['children']));

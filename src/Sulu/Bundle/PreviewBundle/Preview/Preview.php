@@ -86,8 +86,13 @@ class Preview implements PreviewInterface
         return $this->cache->contains($token);
     }
 
-    public function update(string $token, string $webspaceKey, array $data, ?int $targetGroupId): string
-    {
+    public function update(
+        string $token,
+        string $webspaceKey,
+        array $data,
+        ?int $targetGroupId,
+        ?string $segmentKey
+    ): string {
         $cacheItem = $this->fetch($token);
 
         $provider = $this->getProvider($cacheItem->getProviderKey());
@@ -96,11 +101,16 @@ class Preview implements PreviewInterface
             $this->save($cacheItem);
         }
 
-        return $this->renderPartial($cacheItem, $webspaceKey, $targetGroupId);
+        return $this->renderPartial($cacheItem, $webspaceKey, $targetGroupId, $segmentKey);
     }
 
-    public function updateContext(string $token, string $webspaceKey, array $context, ?int $targetGroupId): string
-    {
+    public function updateContext(
+        string $token,
+        string $webspaceKey,
+        array $context,
+        ?int $targetGroupId,
+        ?string $segmentKey
+    ): string {
         $cacheItem = $this->fetch($token);
 
         $provider = $this->getProvider($cacheItem->getProviderKey());
@@ -111,7 +121,8 @@ class Preview implements PreviewInterface
                 $webspaceKey,
                 $cacheItem->getLocale(),
                 false,
-                $targetGroupId
+                $targetGroupId,
+                $segmentKey
             );
         }
 
@@ -123,17 +134,23 @@ class Preview implements PreviewInterface
             $webspaceKey,
             $cacheItem->getLocale(),
             false,
-            $targetGroupId
+            $targetGroupId,
+            $segmentKey
         );
 
         $cacheItem->setHtml($this->removeContent($html));
         $this->save($cacheItem);
 
-        return $this->renderPartial($cacheItem, $webspaceKey, $targetGroupId);
+        return $this->renderPartial($cacheItem, $webspaceKey, $targetGroupId, $segmentKey);
     }
 
-    public function render(string $token, string $webspaceKey, string $locale, ?int $targetGroupId): string
-    {
+    public function render(
+        string $token,
+        string $webspaceKey,
+        string $locale,
+        ?int $targetGroupId,
+        ?string $segmentKey
+    ): string {
         $cacheItem = $this->fetch($token);
 
         $html = $this->renderer->render(
@@ -142,24 +159,30 @@ class Preview implements PreviewInterface
             $webspaceKey,
             $cacheItem->getLocale(),
             false,
-            $targetGroupId
+            $targetGroupId,
+            $segmentKey
         );
 
         $cacheItem->setHtml($this->removeContent($html));
         $this->save($cacheItem);
 
-        return $this->renderPartial($cacheItem, $webspaceKey, $targetGroupId);
+        return $this->renderPartial($cacheItem, $webspaceKey, $targetGroupId, $segmentKey);
     }
 
-    protected function renderPartial(PreviewCacheItem $cacheItem, string $webspaceKey, ?int $targetGroupId): string
-    {
+    protected function renderPartial(
+        PreviewCacheItem $cacheItem,
+        string $webspaceKey,
+        ?int $targetGroupId,
+        ?string $segmentKey
+    ): string {
         $partialHtml = $this->renderer->render(
             $cacheItem->getObject(),
             $cacheItem->getId(),
             $webspaceKey,
             $cacheItem->getLocale(),
             true,
-            $targetGroupId
+            $targetGroupId,
+            $segmentKey
         );
 
         return \str_replace(self::CONTENT_REPLACER, $partialHtml, $cacheItem->getHtml());

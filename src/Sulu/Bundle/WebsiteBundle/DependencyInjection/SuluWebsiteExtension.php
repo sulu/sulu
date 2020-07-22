@@ -111,6 +111,18 @@ class SuluWebsiteExtension extends Extension implements PrependExtensionInterfac
             'sulu_website.enabled_twig_attributes',
             $config['twig']['attributes']
         );
+        $container->setParameter(
+            'sulu_website.segment_switch_url',
+            $config['segments']['switch_url']
+        );
+        $container->setParameter(
+            'sulu_website.segment_cookie_name',
+            $config['segments']['cookie']
+        );
+        $container->setParameter(
+            'sulu_website.segment_header',
+            $config['segments']['header']
+        );
         $container->registerForAutoconfiguration(SitemapProviderInterface::class)
             ->addTag('sulu.sitemap.provider');
 

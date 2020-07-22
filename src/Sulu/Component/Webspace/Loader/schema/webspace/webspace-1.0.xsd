@@ -56,12 +56,18 @@
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="segmentType">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="key" use="optional"/>
-                <xs:attribute type="xs:boolean" name="default" use="optional"/>
-            </xs:extension>
-        </xs:simpleContent>
+        <xs:sequence>
+            <xs:element name="meta">
+                <xs:complexType>
+                    <xs:choice maxOccurs="unbounded">
+                        <xs:element type="langType" name="title"/>
+                    </xs:choice>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+
+        <xs:attribute type="xs:string" name="key" use="optional"/>
+        <xs:attribute type="xs:boolean" name="default" use="optional"/>
     </xs:complexType>
 
     <xs:complexType name="navigationType">
@@ -168,6 +174,7 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="language" use="optional"/>
                 <xs:attribute type="xs:string" name="country" use="optional"/>
+                <!-- kept for BC reasons, but URL segments were removed in https://github.com/sulu/sulu/pull/5277 -->
                 <xs:attribute type="xs:string" name="segment" use="optional"/>
                 <xs:attribute type="xs:string" name="redirect" use="optional"/>
                 <xs:attribute type="xs:boolean" name="main" use="optional"/>

@@ -23,6 +23,7 @@ use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Document\Subscriber\PHPCR\SuluNode;
 use Sulu\Component\Content\Exception\UnexpectedPropertyType;
 use Sulu\Component\Content\PreResolvableContentTypeInterface;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
 /**
  * content type for block.
@@ -39,10 +40,19 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
      */
     private $languageNamespace;
 
-    public function __construct(ContentTypeManagerInterface $contentTypeManager, $languageNamespace)
-    {
+    /**
+     * @var RequestAnalyzerInterface
+     */
+    private $requestAnalyzer;
+
+    public function __construct(
+        ContentTypeManagerInterface $contentTypeManager,
+        $languageNamespace,
+        RequestAnalyzerInterface $requestAnalyzer
+    ) {
         $this->contentTypeManager = $contentTypeManager;
         $this->languageNamespace = $languageNamespace;
+        $this->requestAnalyzer = $requestAnalyzer;
     }
 
     public function read(
@@ -363,18 +373,32 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
                 continue;
             }
 
+            $segment = $this->requestAnalyzer->getSegment();
+
+            if (
+                \is_array($blockPropertyTypeSettings)
+                && isset($blockPropertyTypeSettings['segment_enabled'])
+                && $blockPropertyTypeSettings['segment_enabled']
+                && isset($blockPropertyTypeSettings['segment'])
+                && $segment
+                && $blockPropertyTypeSettings['segment'] !== $segment->getKey()
+            ) {
+                continue;
+            }
+
+            $blockData = [];
+
             if ($returnType) {
-                $type = $blockPropertyType->getName();
-                $data[$i] = [
-                    'type' => $type,
-                    'settings' => $blockPropertyTypeSettings,
-                ];
+                $blockData['type'] = $blockPropertyType->getName();
+                $blockData['settings'] = $blockPropertyTypeSettings;
             }
 
             foreach ($blockPropertyType->getChildProperties() as $childProperty) {
                 $contentType = $this->contentTypeManager->get($childProperty->getContentTypeName());
-                $data[$i][$childProperty->getName()] = $dataCallback($contentType, $childProperty);
+                $blockData[$childProperty->getName()] = $dataCallback($contentType, $childProperty);
             }
+
+            $data[] = $blockData;
         }
 
         if (!$property->getIsMultiple() && \count($data) > 0) {

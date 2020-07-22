@@ -15,6 +15,7 @@ use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Implements logic to resolve parameters for website rendering.
@@ -36,6 +37,16 @@ class ParameterResolver implements ParameterResolverInterface
      */
     private $webspaceManager;
 
+    /*
+     * @var RequestStack
+     */
+    private $requestStack;
+
+    /**
+     * @var string
+     */
+    private $segmentSwitchUrl;
+
     /**
      * @var array
      */
@@ -48,6 +59,8 @@ class ParameterResolver implements ParameterResolverInterface
         StructureResolverInterface $structureResolver,
         RequestAnalyzerResolverInterface $requestAnalyzerResolver,
         WebspaceManagerInterface $webspaceManager,
+        RequestStack $requestStack,
+        $segmentSwitchUrl,
         array $enabledTwigAttributes = [
             'urls' => true,
         ]
@@ -55,6 +68,8 @@ class ParameterResolver implements ParameterResolverInterface
         $this->structureResolver = $structureResolver;
         $this->requestAnalyzerResolver = $requestAnalyzerResolver;
         $this->webspaceManager = $webspaceManager;
+        $this->requestStack = $requestStack;
+        $this->segmentSwitchUrl = $segmentSwitchUrl;
         $this->enabledTwigAttributes = $enabledTwigAttributes;
     }
 
@@ -71,11 +86,12 @@ class ParameterResolver implements ParameterResolverInterface
         }
 
         $requestAnalyzerData = $this->requestAnalyzerResolver->resolve($requestAnalyzer);
+        $webspace = $requestAnalyzer->getWebspace();
 
         if (null !== ($portal = $requestAnalyzer->getPortal())) {
             $allLocalizations = $portal->getLocalizations();
         } else {
-            $allLocalizations = $requestAnalyzer->getWebspace()->getLocalizations();
+            $allLocalizations = $webspace->getLocalizations();
         }
 
         $pageUrls = [];
@@ -111,6 +127,20 @@ class ParameterResolver implements ParameterResolverInterface
         }
 
         $structureData['localizations'] = $localizations;
+
+        $url = $this->requestStack->getCurrentRequest()->getUri();
+
+        $segments = [];
+        foreach ($webspace->getSegments() as $segment) {
+            $segmentKey = $segment->getKey();
+            $segmentSwitchUrls[$segmentKey] = $this->segmentSwitchUrl . '?segment=' . $segmentKey . '&url=' . $url;
+            $segments[$segmentKey] = [
+                'title' => $segment->getTitle($requestAnalyzer->getCurrentLocalization()->getLocale()),
+                'url' => $this->segmentSwitchUrl . '?segment=' . $segmentKey . '&url=' . $url,
+            ];
+        }
+
+        $structureData['segments'] = $segments;
 
         return \array_merge(
             $parameter,

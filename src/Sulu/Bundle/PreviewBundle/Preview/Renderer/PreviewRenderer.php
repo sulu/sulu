@@ -109,8 +109,15 @@ class PreviewRenderer implements PreviewRendererInterface
         $this->targetGroupHeader = $targetGroupHeader;
     }
 
-    public function render($object, $id, $webspaceKey, $locale, $partial = false, $targetGroupId = null)
-    {
+    public function render(
+        $object,
+        $id,
+        $webspaceKey,
+        $locale,
+        $partial = false,
+        $targetGroupId = null,
+        $segmentKey = null
+    ) {
         if (!$this->routeDefaultsProvider->supports(\get_class($object))) {
             throw new RouteDefaultsProviderNotFoundException($object, $id, $webspaceKey, $locale);
         }
@@ -129,6 +136,7 @@ class PreviewRenderer implements PreviewRendererInterface
         }
 
         $webspace = $portalInformation->getWebspace();
+        $segment = $segmentKey ? $webspace->getSegment($segmentKey) : null;
         $localization = $webspace->getLocalization($locale);
 
         $query = [];
@@ -145,6 +153,7 @@ class PreviewRenderer implements PreviewRendererInterface
         $attributes['_sulu'] = new RequestAttributes(
             [
                 'webspace' => $webspace,
+                'segment' => $segment,
                 'locale' => $locale,
                 'localization' => $localization,
                 'portal' => $portalInformation->getPortal(),

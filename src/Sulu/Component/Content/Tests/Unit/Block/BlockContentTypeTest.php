@@ -27,6 +27,8 @@ use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Types\BlockContentType;
 use Sulu\Component\Content\Types\TextArea;
 use Sulu\Component\Content\Types\TextLine;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Sulu\Component\Webspace\Segment;
 
 class BlockContentTypeTest extends TestCase
 {
@@ -56,6 +58,11 @@ class BlockContentTypeTest extends TestCase
     private $contentTypeValueMap;
 
     /**
+     * @var RequestAnalyzerInteface
+     */
+    private $requestAnalyzer;
+
+    /**
      * @var ContentTypeManagerInterface
      */
     private $contentTypeManager;
@@ -64,8 +71,14 @@ class BlockContentTypeTest extends TestCase
     {
         parent::setUp();
 
+        $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
         $this->contentTypeManager = $this->prophesize(ContentTypeManager::class);
-        $this->blockContentType = new BlockContentType($this->contentTypeManager->reveal(), 'not in use', 'i18n:');
+
+        $this->blockContentType = new BlockContentType(
+            $this->contentTypeManager->reveal(),
+            'not in use',
+            $this->requestAnalyzer->reveal()
+        );
 
         $this->contentTypeValueMap = [
             ['text_line', new TextLine('not in use')],
@@ -752,7 +765,7 @@ class BlockContentTypeTest extends TestCase
                         'settings' => new \stdClass(),
                     ],
                 ],
-                'settings' => [],
+                'settings' => new \stdClass(),
             ],
             [
                 'type' => 'type2',
@@ -761,6 +774,109 @@ class BlockContentTypeTest extends TestCase
             ],
         ];
         $this->blockProperty->setValue($data);
+
+        $result = $this->blockContentType->getContentData($this->blockProperty);
+
+        $this->assertEquals($data, $result);
+    }
+
+    public function testGetContentDataWithSegmentFilter()
+    {
+        $this->prepareSingleBlockProperty();
+
+        $this->blockProperty->setValue(
+            [
+                [
+                    'type' => 'type1',
+                    'title' => 'Test-Title-1',
+                    'article' => [
+                        'Test-Article-1-1',
+                        'Test-Article-1-2',
+                    ],
+                    'sub-block' => [
+                        [
+                            'type' => 'subType1',
+                            'title' => 'Test-Title-Sub-1',
+                            'article' => 'Test-Article-Sub-1',
+                            'settings' => new \stdClass(),
+                        ],
+                    ],
+                    'settings' => ['segment' => 'w', 'segment_enabled' => true],
+                ],
+                [
+                    'type' => 'type2',
+                    'name' => 'Test-Name-2',
+                    'settings' => ['segment' => 's', 'segment_enabled' => true],
+                ],
+            ]
+        );
+
+        $segment = new Segment();
+        $segment->setKey('w');
+        $this->requestAnalyzer->getSegment()->willReturn($segment);
+
+        $result = $this->blockContentType->getContentData($this->blockProperty);
+
+        $this->assertEquals(
+            [
+                [
+                    'type' => 'type1',
+                    'title' => 'Test-Title-1',
+                    'article' => [
+                        'Test-Article-1-1',
+                        'Test-Article-1-2',
+                    ],
+                    'sub-block' => [
+                        [
+                            'type' => 'subType1',
+                            'title' => 'Test-Title-Sub-1',
+                            'article' => 'Test-Article-Sub-1',
+                            'settings' => new \stdClass(),
+                        ],
+                    ],
+                    'settings' => ['segment' => 'w', 'segment_enabled' => true],
+                ],
+            ],
+            $result
+        );
+    }
+
+    public function testGetContentDataWithDisabledSegmentFilter()
+    {
+        $this->prepareSingleBlockProperty();
+
+        $data = [
+            [
+                'type' => 'type1',
+                'title' => 'Test-Title-1',
+                'article' => [
+                    'Test-Article-1-1',
+                    'Test-Article-1-2',
+                ],
+                'sub-block' => [
+                    [
+                        'type' => 'subType1',
+                        'title' => 'Test-Title-Sub-1',
+                        'article' => 'Test-Article-Sub-1',
+                        'settings' => new \stdClass(),
+                    ],
+                ],
+                'settings' => ['segment' => 'w', 'segment_enabled' => false],
+            ],
+            [
+                'type' => 'type2',
+                'name' => 'Test-Name-2',
+                'settings' => ['segment' => 's', 'segment_enabled' => false],
+            ],
+        ];
+
+        $this->blockProperty->setValue(
+            $data
+        );
+
+        $segment = new Segment();
+        $segment->setKey('w');
+        $this->requestAnalyzer->getSegment()->willReturn($segment);
 
         $result = $this->blockContentType->getContentData($this->blockProperty);
 
@@ -784,7 +900,7 @@ class BlockContentTypeTest extends TestCase
                         'type' => 'subType1',
                         'title' => 'Test-Title-Sub-1',
                         'article' => 'Test-Article-Sub-1',
-                        'settings' => [],
+                        'settings' => new \stdClass(),
                     ],
                     [
                         'type' => 'subType1',
@@ -793,12 +909,12 @@ class BlockContentTypeTest extends TestCase
                         'settings' => ['hidden' => true],
                     ],
                 ],
-                'settings' => [],
+                'settings' => new \stdClass(),
             ],
             [
                 'type' => 'type2',
                 'name' => 'Test-Name-2',
-                'settings' => [],
+                'settings' => new \stdClass(),
             ],
             [
                 'type' => 'type2',
@@ -824,15 +940,77 @@ class BlockContentTypeTest extends TestCase
                             'type' => 'subType1',
                             'title' => 'Test-Title-Sub-1',
                             'article' => 'Test-Article-Sub-1',
-                            'settings' => [],
+                            'settings' => new \stdClass(),
                         ],
                     ],
-                    'settings' => [],
+                    'settings' => new \stdClass(),
                 ],
                 [
                     'type' => 'type2',
                     'name' => 'Test-Name-2',
+                    'settings' => new \stdClass(),
+                ],
+            ],
+            $result
+        );
+    }
+
+    public function testGetViewData()
+    {
+        $this->prepareSingleBlockProperty();
+
+        $data = [
+            [
+                'type' => 'type1',
+                'title' => 'Test-Title-1',
+                'article' => [
+                    'Test-Article-1-1',
+                    'Test-Article-1-2',
+                ],
+                'sub-block' => [
+                    'type' => 'subType1',
+                    'title' => 'Test-Title-Sub-1',
+                    'article' => 'Test-Article-Sub-1',
                     'settings' => [],
+                ],
+                'settings' => ['segment' => 'w', 'segment_enabled' => true],
+            ],
+            [
+                'type' => 'type2',
+                'name' => 'Test-Name-2',
+                'settings' => ['segment' => 's', 'segment_enabled' => true],
+            ],
+        ];
+        $this->blockProperty->setValue($data);
+
+        $segment = new Segment();
+        $segment->setKey('s');
+        $this->requestAnalyzer->getSegment()->willReturn($segment);
+        $result = $this->blockContentType->getViewData($this->blockProperty);
+        $this->assertEquals(
+            [
+                [
+                    'name' => [],
+                ],
+            ],
+            $result
+        );
+
+        $segment = new Segment();
+        $segment->setKey('w');
+        $this->requestAnalyzer->getSegment()->willReturn($segment);
+        $result = $this->blockContentType->getViewData($this->blockProperty);
+        $this->assertEquals(
+            [
+                [
+                    'title' => [],
+                    'article' => [],
+                    'sub-block' => [
+                        [
+                            'title' => [],
+                            'article' => [],
+                        ],
+                    ],
                 ],
             ],
             $result

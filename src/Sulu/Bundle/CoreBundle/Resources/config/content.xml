@@ -159,6 +159,7 @@
         <service id="sulu.content.type.block" class="%sulu.content.type.block.class%">
             <argument type="service" id="sulu.content.type_manager"/>
             <argument>%sulu.content.language.namespace%</argument>
+            <argument type="service" id="sulu_core.webspace.request_analyzer" />
             <tag name="sulu.content.type" alias="block"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
         </service>

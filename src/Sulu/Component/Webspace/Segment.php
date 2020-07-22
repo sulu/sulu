@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Webspace;
 
+use Sulu\Component\Content\Compat\Metadata;
 use Sulu\Component\Util\ArrayableInterface;
 
 /**
@@ -26,18 +27,16 @@ class Segment implements ArrayableInterface
     private $key;
 
     /**
-     * The name of the segment.
-     *
-     * @var string
-     */
-    private $name;
-
-    /**
      * Defines if this segment is the default one.
      *
      * @var bool
      */
     private $default;
+
+    /**
+     * @var Metadata
+     */
+    private $metadata;
 
     /**
      * Sets the key of the segment.
@@ -60,26 +59,6 @@ class Segment implements ArrayableInterface
     }
 
     /**
-     * Sets the name of the segment.
-     *
-     * @param string $name
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
-
-    /**
-     * Returns the name of the segment.
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
      * Sets if this segment is the default one.
      *
      * @param bool $default
@@ -99,12 +78,32 @@ class Segment implements ArrayableInterface
         return $this->default;
     }
 
+    public function setMetadata($metadata)
+    {
+        $this->metadata = new Metadata($metadata);
+    }
+
+    public function getMetadata()
+    {
+        return $this->metadata->getData();
+    }
+
+    /**
+     * @param string $locale
+     *
+     * @return null|string
+     */
+    public function getTitle($locale)
+    {
+        return $this->metadata->get('title', $locale, \ucfirst($this->key));
+    }
+
     public function toArray($depth = null)
     {
         $res = [];
         $res['key'] = $this->getKey();
-        $res['name'] = $this->getName();
         $res['default'] = $this->isDefault();
+        $res['metadata'] = $this->getMetadata();
 
         return $res;
     }

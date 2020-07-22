@@ -431,6 +431,24 @@ exports[`Render correct preview 1`] = `
             </div>
           </li>
           <li>
+            <div
+              class="select dark"
+            >
+              <button
+                class="button dark"
+              >
+                <span
+                  aria-label="su-focus"
+                  class="su-focus icon"
+                />
+                <span
+                  aria-label="su-angle-down"
+                  class="su-angle-down dropdownIcon"
+                />
+              </button>
+            </div>
+          </li>
+          <li>
             <button
               class="button dark"
             >
