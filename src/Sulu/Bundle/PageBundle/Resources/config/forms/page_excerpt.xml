@@ -37,14 +37,10 @@
             </meta>
         </property>
         <property
-            name="ext/excerpt/segment"
+            name="ext/excerpt/segments"
             type="segment_select"
-            visibleCondition="__webspace ? __webspace.segments|length &gt; 0 : false"
-        >
-            <meta>
-                <title>sulu_admin.segments</title>
-            </meta>
-        </property>
+            visibleCondition="__webspace ? __webspace.segments|length &gt; 0 : true"
+        />
         <property name="ext/excerpt/icon" type="media_selection">
             <meta>
                 <title>sulu_page.icons</title>
