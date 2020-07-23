@@ -209,8 +209,8 @@ class NavigationMapperTest extends SuluTestCase
         $documents['products/product-1']->setExtensionsData([
             'excerpt' => [
                 'title' => 'Excerpt Products 1',
-                'segments' => ['sulu_io' => 's']
-            ]
+                'segments' => ['sulu_io' => 's'],
+            ],
         ]);
         $documents['products/product-1']->setNavigationContexts(['main', 'footer']);
         $documents['products/product-1']->setWorkflowStage(WorkflowStage::PUBLISHED);
@@ -226,8 +226,8 @@ class NavigationMapperTest extends SuluTestCase
         $documents['products/product-2']->setExtensionsData([
             'excerpt' => [
                 'title' => 'Excerpt Products 2',
-                'segments' => ['sulu_io' => 'w']
-            ]
+                'segments' => ['sulu_io' => 'w'],
+            ],
         ]);
         $documents['products/product-2']->setNavigationContexts(['main']);
         $documents['products/product-2']->setWorkflowStage(WorkflowStage::PUBLISHED);
