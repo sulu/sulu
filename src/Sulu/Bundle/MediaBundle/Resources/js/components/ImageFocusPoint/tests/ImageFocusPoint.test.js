@@ -26,13 +26,20 @@ test('Should render focus point cells with correct size', () => {
         />
     );
 
-    imageFocusPoint.find('img').prop('onLoad')({
-        currentTarget: {
-            getBoundingClientRect: jest.fn().mockReturnValue({width: '300px', height: '200px'}),
-        },
-    });
+    const getBoundingClientRectMock = jest.fn();
+    imageFocusPoint.instance().imageRef = {
+        getBoundingClientRect: getBoundingClientRectMock,
+    };
 
-    expect(imageFocusPoint.render()).toMatchSnapshot();
+    getBoundingClientRectMock.mockReturnValueOnce({width: '50px', height: '50px'});
+    imageFocusPoint.find('img').prop('onLoad')();
+    imageFocusPoint.update();
+    expect(imageFocusPoint.find('.focusPoints').prop('style')).toEqual({height: '50px', width: '50px'});
+
+    getBoundingClientRectMock.mockReturnValueOnce({width: '200px', height: '200px'});
+    window.dispatchEvent(new Event('resize'));
+    imageFocusPoint.update();
+    expect(imageFocusPoint.find('.focusPoints').prop('style')).toEqual({height: '200px', width: '200px'});
 });
 
 test('Should render ImageFocusPoint with focusing the top-left point', () => {
