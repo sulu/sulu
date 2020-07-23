@@ -473,8 +473,6 @@ class PageControllerTest extends SuluTestCase
 
     public function testPostWithBlockSettings()
     {
-        // TODO: adjust segment handling
-
         $data = [
             'title' => 'Block',
             'template' => 'block',
@@ -484,13 +482,13 @@ class PageControllerTest extends SuluTestCase
                     'type' => 'test',
                     'title' => 'Block 1',
                     'article' => 'Block 1 Article',
-                    'settings' => ['segment' => 's'],
+                    'settings' => ['segments' => ['sulu_io' => 's']],
                 ],
                 [
                     'type' => 'test',
                     'title' => 'Block 2',
                     'article' => 'Block 2 Article',
-                    'settings' => ['segment' => 'w'],
+                    'settings' => ['segments' => ['sulu_io' => 'w']],
                 ],
             ],
         ];
@@ -513,8 +511,8 @@ class PageControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $response = \json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals('s', $response->article[0]->settings->segment);
-        $this->assertEquals('w', $response->article[1]->settings->segment);
+        $this->assertEquals('s', $response->article[0]->settings->segments->sulu_io);
+        $this->assertEquals('w', $response->article[1]->settings->segments->sulu_io);
     }
 
     public function testGet()
@@ -1897,7 +1895,9 @@ class PageControllerTest extends SuluTestCase
             'article' => 'Test',
             'ext' => [
                 'excerpt' => [
-                    'segment' => 's',
+                    'segments' => [
+                        'sulu_io' => 's',
+                    ],
                 ],
             ],
         ];
@@ -1913,7 +1913,7 @@ class PageControllerTest extends SuluTestCase
 
         $this->assertArrayHasKey('id', $data);
         $this->assertEquals('test1', $data['title']);
-        $this->assertEquals('s', $data['ext']['excerpt']['segment']);
+        $this->assertEquals('s', $data['ext']['excerpt']['segments']['sulu_io']);
 
         $this->client->request('GET', '/api/pages/' . $data['id'] . '?webspace=sulu_io&language=en');
         $this->assertHttpStatusCode(200, $this->client->getResponse());
@@ -1921,7 +1921,7 @@ class PageControllerTest extends SuluTestCase
 
         $this->assertArrayHasKey('id', $response);
         $this->assertEquals('test1', $response['title']);
-        $this->assertEquals('s', $data['ext']['excerpt']['segment']);
+        $this->assertEquals('s', $data['ext']['excerpt']['segments']['sulu_io']);
     }
 
     public function testPostTriggerAction()

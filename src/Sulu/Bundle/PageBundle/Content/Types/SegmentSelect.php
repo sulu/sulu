@@ -46,4 +46,9 @@ class SegmentSelect extends SimpleContentType
 
         return \json_decode($value, true);
     }
+
+    public function exportData($propertyValue)
+    {
+        return \json_encode($propertyValue);
+    }
 }

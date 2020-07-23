@@ -221,6 +221,12 @@ class QueryBuilderTest extends SuluTestCase
     {
         $documents = $this->propertiesProvider();
 
+        $webspace = new Webspace();
+        $webspace->setKey('sulu_io');
+        $request = new Request([], [], ['_sulu' => new RequestAttributes(['webspace' => $webspace])]);
+        $request->headers->add(['Accept-Language' => 'en']);
+        $this->getContainer()->get('request_stack')->push($request);
+
         $builder = new QueryBuilder(
             $this->structureManager,
             $this->extensionManager,
@@ -612,8 +618,6 @@ class QueryBuilderTest extends SuluTestCase
 
     public function testSegment()
     {
-        // TODO: adjust segment handling
-
         $root = $this->sessionManager->getContentNode('sulu_io');
 
         $webspace = new Webspace();
@@ -628,7 +632,7 @@ class QueryBuilderTest extends SuluTestCase
         $skiingDocument->setResourceSegment('/skiing');
         $skiingDocument->setExtensionsData(
             [
-                'excerpt' => ['segment' => 'w'],
+                'excerpt' => ['segments' => ['sulu_io' => 'w']],
             ]
         );
         $skiingDocument->setStructureType('simple');
@@ -641,7 +645,7 @@ class QueryBuilderTest extends SuluTestCase
         $paraglidingDocument->setResourceSegment('/paragliding');
         $paraglidingDocument->setExtensionsData(
             [
-                'excerpt' => ['segment' => 's'],
+                'excerpt' => ['segments' => ['sulu_io' => 's']],
             ]
         );
         $paraglidingDocument->setStructureType('simple');

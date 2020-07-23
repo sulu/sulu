@@ -233,7 +233,7 @@ class AdminControllerTest extends SuluTestCase
         $this->assertObjectHasAttribute('ext/excerpt/title', $form);
         $this->assertObjectHasAttribute('ext/excerpt/more', $form);
         $this->assertObjectHasAttribute('ext/excerpt/description', $form);
-        $this->assertObjectHasAttribute('ext/excerpt/segment', $form);
+        $this->assertObjectHasAttribute('ext/excerpt/segments', $form);
 
         $schema = $response->schema;
 
