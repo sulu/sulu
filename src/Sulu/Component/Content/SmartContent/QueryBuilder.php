@@ -104,7 +104,7 @@ class QueryBuilder extends ContentQueryBuilder
         }
 
         if ($this->hasConfig('segmentKey')) {
-            $result = $this->buildSegmentKey($this->getConfig('segmentKey'), $locale);
+            $result = $this->buildSegmentKey($webspaceKey, $this->getConfig('segmentKey'), $locale);
 
             if ($result) {
                 $sql2Where[] = $result;
@@ -292,7 +292,7 @@ class QueryBuilder extends ContentQueryBuilder
         return 'page.[' . $property->getName() . '] = ' . $targetGroupId;
     }
 
-    private function buildSegmentKey($segmentKey, $locale)
+    private function buildSegmentKey($webspaceKey, $segmentKey, $locale)
     {
         if (!$segmentKey) {
             return;
@@ -301,13 +301,14 @@ class QueryBuilder extends ContentQueryBuilder
         $structure = $this->structureManager->getStructure('excerpt');
 
         $property = new TranslatedProperty(
-            $structure->getProperty('segment'),
+            $structure->getProperty('segments'),
             $locale,
             $this->languageNamespace,
             'excerpt'
         );
 
-        $column = 'page.[' . $property->getName() . ']';
+        $webspaceSegmentPropertyName = $property->getName() . '-' . $webspaceKey;
+        $column = 'page.[' . $webspaceSegmentPropertyName . ']';
 
         return '(' . $column . ' = "' . $segmentKey . '" OR ' . $column . ' IS NULL)';
     }

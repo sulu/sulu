@@ -473,6 +473,8 @@ class PageControllerTest extends SuluTestCase
 
     public function testPostWithBlockSettings()
     {
+        // TODO: adjust segment handling
+
         $data = [
             'title' => 'Block',
             'template' => 'block',

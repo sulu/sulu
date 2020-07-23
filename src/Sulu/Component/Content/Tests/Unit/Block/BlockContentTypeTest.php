@@ -412,6 +412,8 @@ class BlockContentTypeTest extends TestCase
 
     public function testReadMultiple()
     {
+        // TODO: adjust segment handling
+
         $this->prepareMultipleBlockProperty();
 
         $data = [

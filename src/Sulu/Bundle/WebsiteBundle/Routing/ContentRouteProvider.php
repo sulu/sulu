@@ -201,7 +201,8 @@ class ContentRouteProvider implements RouteProviderInterface
                 return $collection;
             } else {
                 if ($document instanceof ExtensionBehavior) {
-                    $documentSegmentKey = $document->getExtensionsData()['excerpt']['segment'];
+                    $documentSegments = $document->getExtensionsData()['excerpt']['segments'];
+                    $documentSegmentKey = $documentSegments[$portal->getWebspace()->getKey()] ?? null;
                     $segment = $this->requestAnalyzer->getSegment();
 
                     if ($segment && $documentSegmentKey && $segment->getKey() !== $documentSegmentKey) {

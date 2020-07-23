@@ -505,6 +505,7 @@ class WebspaceExportTest extends SuluTestCase
                         false,
                         \json_encode($extensionData['excerpt']['audience_targeting_groups'])
                     ),
+                    // TODO: adjust segment handling
                     'segment' => $this->createItemArray(
                         'segment',
                         'single_select',

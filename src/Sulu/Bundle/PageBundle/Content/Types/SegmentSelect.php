@@ -11,6 +11,8 @@
 
 namespace Sulu\Bundle\PageBundle\Content\Types;
 
+use PHPCR\NodeInterface;
+use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\SimpleContentType;
 
 class SegmentSelect extends SimpleContentType
@@ -18,6 +20,17 @@ class SegmentSelect extends SimpleContentType
     public function __construct()
     {
         parent::__construct('SegmentSelect', '{}');
+    }
+
+    public function write(NodeInterface $node, PropertyInterface $property, $userId, $webspaceKey, $languageCode, $segmentKey)
+    {
+        parent::write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
+
+        // write a separate property for per webspace to make segment queryable in the smart content data provider
+        foreach ($property->getValue() as $webspaceKeyValue => $segmentKeyValue) {
+            $webspaceSegmentPropertyName = $property->getName() . '-' . $webspaceKeyValue;
+            $node->setProperty($webspaceSegmentPropertyName, $this->removeIllegalCharacters($segmentKeyValue));
+        }
     }
 
     protected function encodeValue($value)
@@ -31,6 +44,6 @@ class SegmentSelect extends SimpleContentType
             $value = $this->defaultValue;
         }
 
-        return \json_decode($value);
+        return \json_decode($value, true);
     }
 }

@@ -612,6 +612,8 @@ class QueryBuilderTest extends SuluTestCase
 
     public function testSegment()
     {
+        // TODO: adjust segment handling
+
         $root = $this->sessionManager->getContentNode('sulu_io');
 
         $webspace = new Webspace();
