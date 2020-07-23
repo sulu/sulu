@@ -37,7 +37,7 @@ class AccountSelection extends SimpleContentType implements PreResolvableContent
         $this->accountManager = $accountManager;
         $this->accountReferenceStore = $accountReferenceStore;
 
-        parent::__construct('AccountSelection ');
+        parent::__construct('AccountSelection');
     }
 
     /**
