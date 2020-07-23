@@ -84,3 +84,87 @@ exports[`Render a Tabs component with a selected tab 1`] = `
   </div>
 </div>
 `;
+
+exports[`Render a Tabs component with light skin 1`] = `
+<div
+  class="container light"
+>
+  <div
+    class="wrapper"
+  >
+    <ul
+      class="tabs"
+    >
+      <li
+        class="tab"
+      >
+        <button
+          title="Tab 1"
+        >
+          Tab 1
+        </button>
+      </li>
+      <li
+        class="tab"
+      >
+        <button
+          title="Tab 2"
+        >
+          Tab 2
+        </button>
+      </li>
+      <li
+        class="tab"
+      >
+        <button
+          title="Tab 3"
+        >
+          Tab 3
+        </button>
+      </li>
+    </ul>
+  </div>
+</div>
+`;
+
+exports[`Render a Tabs component with small modifier 1`] = `
+<div
+  class="container default small"
+>
+  <div
+    class="wrapper"
+  >
+    <ul
+      class="tabs"
+    >
+      <li
+        class="tab small"
+      >
+        <button
+          title="Tab 1"
+        >
+          Tab 1
+        </button>
+      </li>
+      <li
+        class="tab small"
+      >
+        <button
+          title="Tab 2"
+        >
+          Tab 2
+        </button>
+      </li>
+      <li
+        class="tab small"
+      >
+        <button
+          title="Tab 3"
+        >
+          Tab 3
+        </button>
+      </li>
+    </ul>
+  </div>
+</div>
+`;
