@@ -89,4 +89,18 @@ class RoleRepository extends EntityRepository implements RoleRepositoryInterface
 
         return $roles;
     }
+
+    public function findRoleIdsBySystem($system)
+    {
+        $result = $this->createQueryBuilder('role')
+            ->select('role.id')
+            ->where('role.system = :system')
+            ->setParameter('system', $system)
+            ->getQuery()
+            ->getResult();
+
+        return array_map(function($role) {
+            return $role['id'];
+        }, $result);
+    }
 }
