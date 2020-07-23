@@ -1,8 +1,6 @@
 // @flow
 import React from 'react';
-import type {ElementRef} from 'react';
 import classNames from 'classnames';
-import type {Skin} from './types';
 import tabStyles from './tab.scss';
 
 type Props = {
@@ -10,14 +8,13 @@ type Props = {
     index?: number,
     onClick?: (index: ?number) => void,
     selected: boolean,
-    setRef?: (ref: ?ElementRef<'li'>) => void,
-    skin: Skin,
+    small: boolean,
 };
 
 export default class Tab extends React.PureComponent<Props> {
     static defaultProps = {
         selected: false,
-        skin: 'default',
+        small: false,
     };
 
     handleClick = () => {
@@ -34,20 +31,20 @@ export default class Tab extends React.PureComponent<Props> {
     render() {
         const {
             children,
-            setRef,
             selected,
-            skin,
+            small,
         } = this.props;
+
         const tabClass = classNames(
             tabStyles.tab,
             {
-                [tabStyles.compact]: skin === 'compact',
                 [tabStyles.selected]: selected,
+                [tabStyles.small]: small,
             }
         );
 
         return (
-            <li className={tabClass} ref={setRef}>
+            <li className={tabClass}>
                 <button
                     disabled={selected}
                     onClick={this.handleClick}

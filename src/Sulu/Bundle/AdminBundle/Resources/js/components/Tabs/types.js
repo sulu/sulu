@@ -1,2 +1,2 @@
 // @flow
-export type Skin = 'default' | 'compact';
+export type Skin = 'default' | 'light';

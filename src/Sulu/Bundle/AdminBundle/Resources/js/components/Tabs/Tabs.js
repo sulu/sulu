@@ -1,15 +1,16 @@
 // @flow
-import React from 'react';
+import React, {Fragment} from 'react';
 import type {ChildrenArray, Element, ElementRef} from 'react';
-import classNames from 'classnames';
 import {action, computed, observable} from 'mobx';
-import debounce from 'debounce';
 import {observer} from 'mobx-react';
+import classNames from 'classnames';
+import debounce from 'debounce';
 import Popover from '../Popover';
-import Menu from '../Menu';
-import Option from '../Select/Option';
+import Icon from '../Icon';
 import type {Skin} from './types';
 import Tab from './Tab';
+import CollapsedTabList from './CollapsedTabList';
+import CollapsedTab from './CollapsedTab';
 import tabsStyles from './tabs.scss';
 
 type Props = {
@@ -17,15 +18,24 @@ type Props = {
     onSelect: (tabIndex: number) => void,
     selectedIndex: ?number,
     skin: Skin,
+    small: boolean,
 };
 
 const DEBOUNCE_TIME = 200;
 
-const TabWrapper = ({children, index, setWidth}) => {
+const TabWrapper = ({children, index, setWidth}: {
+    children: Element<typeof Tab> | false,
+    index: number,
+    setWidth: (index: number, width: number) => void,
+}) => {
     function setRef(ref: ?ElementRef<'div'>) {
         if (ref) {
             setWidth(index, ref.offsetWidth);
         }
+    }
+
+    if (!children) {
+        return null;
     }
 
     return (
@@ -40,16 +50,17 @@ class Tabs extends React.Component<Props> {
     @observable wrapperWidth: number = 0;
     @observable tabWidths: Map<number, number> = new Map();
     @observable dropdownOpen = false;
+    @observable lastSelectedIndex: ?number;
 
     static defaultProps = {
         skin: 'default',
+        small: false,
     };
 
     static Tab = Tab;
 
+    containerRef: ?ElementRef<'div'>;
     wrapperRef: ?ElementRef<'div'>;
-    listRef: ?ElementRef<'ul'>;
-    buttonRef: ?ElementRef<*>;
 
     componentDidMount() {
         this.setDimensions();
@@ -72,28 +83,12 @@ class Tabs extends React.Component<Props> {
         this.setDimensions();
     }
 
+    setContainerRef = (ref: ?ElementRef<'div'>) => {
+        this.containerRef = ref;
+    };
+
     setWrapperRef = (ref: ?ElementRef<'div'>) => {
         this.wrapperRef = ref;
-    };
-
-    setListRef = (ref: ?ElementRef<'ul'>) => {
-        this.listRef = ref;
-    };
-
-    setMoreButtonRef = (ref: ?ElementRef<*>) => {
-        this.buttonRef = ref;
-    };
-
-    @action setTabWidth = (index: number, width: number) => {
-        this.tabWidths.set(index, width);
-    };
-
-    @action handleMoreButtonClick = () => {
-        this.dropdownOpen = !this.dropdownOpen;
-    };
-
-    @action handleDropdownClose = () => {
-        this.dropdownOpen = false;
     };
 
     @action setDimensions = () => {
@@ -102,12 +97,33 @@ class Tabs extends React.Component<Props> {
         }
     };
 
-    @action handleSelectionChange = (selectedTabIndex: ?number) => {
-        this.dropdownOpen = false;
+    @action setTabWidth = (index: number, width: number) => {
+        this.tabWidths.set(index, width);
+    };
 
+    @action handleDropdownToggle = () => {
+        this.dropdownOpen = !this.dropdownOpen;
+    };
+
+    @action handleDropdownClose = () => {
+        this.dropdownOpen = false;
+    };
+
+    changeTab = (selectedTabIndex: ?number) => {
         if (typeof selectedTabIndex !== 'undefined' && selectedTabIndex !== null) {
             this.props.onSelect(selectedTabIndex);
         }
+    };
+
+    handleTabClick = (selectedTabIndex: ?number) => {
+        this.changeTab(selectedTabIndex);
+    };
+
+    @action handleCollapsedTabClick = (selectedTabIndex: number) => {
+        this.dropdownOpen = false;
+        this.lastSelectedIndex = selectedTabIndex;
+
+        this.changeTab(selectedTabIndex);
     };
 
     isSelected(tabIndex: number) {
@@ -133,6 +149,14 @@ class Tabs extends React.Component<Props> {
             }
 
             if (b === selectedIndex) {
+                return 1;
+            }
+
+            if (a === this.lastSelectedIndex) {
+                return -1;
+            }
+
+            if (b === this.lastSelectedIndex) {
                 return 1;
             }
 
@@ -189,14 +213,14 @@ class Tabs extends React.Component<Props> {
         const {children} = this.props;
         const hiddenTabIndices = this.hiddenTabIndices;
 
-        return this.createTabItems(
+        return this.createCollapsedTabItems(
             React.Children.toArray(children).filter((child, index) => hiddenTabIndices.includes(index)),
             hiddenTabIndices
         );
     }
 
     createTabItems(tabs: Array<Element<typeof Tab> | false>, indices: number[]) {
-        const {skin} = this.props;
+        const {small} = this.props;
 
         return React.Children.map(tabs, (tab, localIndex) => {
             const index = indices[localIndex];
@@ -215,8 +239,8 @@ class Tabs extends React.Component<Props> {
                             ...tab.props,
                             index,
                             selected,
-                            skin,
-                            onClick: this.handleSelectionChange,
+                            small,
+                            onClick: this.handleTabClick,
                         }
                     )}
                 </TabWrapper>
@@ -224,63 +248,79 @@ class Tabs extends React.Component<Props> {
         });
     }
 
+    createCollapsedTabItems(tabs: Array<Element<typeof Tab> | false>, indices: number[]) {
+        const {skin} = this.props;
+
+        return React.Children.map(tabs, (tab, localIndex) => {
+            const index = indices[localIndex];
+
+            if (!tab) {
+                return null;
+            }
+
+            return (
+                <CollapsedTab
+                    index={index}
+                    key={index}
+                    onClick={this.handleCollapsedTabClick}
+                    skin={tab.props.skin || skin}
+                >
+                    {tab.props.children}
+                </CollapsedTab>
+            );
+        });
+    }
+
     render() {
         const {
             skin,
+            small,
         } = this.props;
 
         const containerClass = classNames(
             tabsStyles.container,
+            tabsStyles[skin],
             {
-                [tabsStyles.compact]: skin === 'compact',
+                [tabsStyles.small]: small,
             }
         );
 
         return (
-            <>
-                <div className={containerClass}>
-                    <div className={tabsStyles.wrapper} ref={this.setWrapperRef}>
-                        <ul className={tabsStyles.tabs} ref={this.setListRef}>
-                            {this.visibleTabs}
-                        </ul>
-                    </div>
-
-                    {this.hasHiddenTabs &&
-                        <>
-                            <button onClick={this.handleMoreButtonClick} ref={this.setMoreButtonRef}>
-                                ...
-                            </button>
-
-                            <Popover
-                                anchorElement={this.buttonRef ? this.buttonRef : undefined}
-                                backdrop={true}
-                                onClose={this.handleDropdownClose}
-                                open={this.dropdownOpen}
-                            >
-                                {
-                                    (setPopoverRef, styles) => (
-                                        <Menu menuRef={setPopoverRef} style={styles}>
-                                            {this.hiddenTabs.map((child, localIndex) => {
-                                                const index = this.hiddenTabIndices[localIndex];
-
-                                                return (
-                                                    <Option
-                                                        key={index}
-                                                        onClick={this.handleSelectionChange}
-                                                        value={index}
-                                                    >
-                                                        {child.props.children.props.children}
-                                                    </Option>
-                                                );
-                                            })}
-                                        </Menu>
-                                    )
-                                }
-                            </Popover>
-                        </>
-                    }
+            <div className={containerClass} ref={this.setContainerRef}>
+                <div className={tabsStyles.wrapper} ref={this.setWrapperRef}>
+                    <ul className={tabsStyles.tabs}>
+                        {this.visibleTabs}
+                    </ul>
                 </div>
-            </>
+
+                {this.hasHiddenTabs &&
+                    <Fragment>
+                        <button
+                            className={tabsStyles.button}
+                            onClick={this.handleDropdownToggle}
+                        >
+                            <Icon name="su-more" />
+                        </button>
+
+                        <Popover
+                            anchorElement={this.containerRef || undefined}
+                            horizontalOffset={10000}
+                            onClose={this.handleDropdownClose}
+                            open={this.dropdownOpen}
+                        >
+                            {
+                                (setPopoverRef, styles) => (
+                                    <div ref={setPopoverRef} style={styles}>
+                                        <CollapsedTabList skin={skin}>
+                                            {this.hiddenTabs}
+                                        </CollapsedTabList>
+                                    </div>
+                                )
+                            }
+                        </Popover>
+                    </Fragment>
+                }
+            </div>
         );
     }
 }
