@@ -6,6 +6,13 @@ import ResourceTabs from '../ResourceTabs';
 import Router from '../../../services/Router';
 import ResourceStore from '../../../stores/ResourceStore';
 
+jest.mock('debounce', () => jest.fn((callback) => callback));
+
+window.ResizeObserver = jest.fn(function() {
+    this.observe = jest.fn();
+    this.disconnect = jest.fn();
+});
+
 jest.mock('../../../utils/Translator', () => ({
     translate(key) {
         switch (key) {

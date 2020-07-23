@@ -5,28 +5,36 @@ Array [
   <div
     class="tabsContainer"
   >
-    <ul
-      class="tabs"
+    <div
+      class="container default"
     >
-      <li
-        class="tab"
+      <div
+        class="wrapper"
       >
-        <button
-          title="tabTitle1"
+        <ul
+          class="tabs"
         >
-          tabTitle1
-        </button>
-      </li>
-      <li
-        class="tab"
-      >
-        <button
-          title="tabTitle2"
-        >
-          tabTitle2
-        </button>
-      </li>
-    </ul>
+          <li
+            class="tab"
+          >
+            <button
+              title="tabTitle1"
+            >
+              tabTitle1
+            </button>
+          </li>
+          <li
+            class="tab"
+          >
+            <button
+              title="tabTitle2"
+            >
+              tabTitle2
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>,
   <h1>
     Child
@@ -39,19 +47,27 @@ Array [
   <div
     class="tabsContainer"
   >
-    <ul
-      class="tabs"
+    <div
+      class="container default"
     >
-      <li
-        class="tab"
+      <div
+        class="wrapper"
       >
-        <button
-          title="tabTitle1"
+        <ul
+          class="tabs"
         >
-          tabTitle1
-        </button>
-      </li>
-    </ul>
+          <li
+            class="tab"
+          >
+            <button
+              title="tabTitle1"
+            >
+              tabTitle1
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>,
   <h2>
     Value
@@ -64,19 +80,27 @@ Array [
   <div
     class="tabsContainer"
   >
-    <ul
-      class="tabs"
+    <div
+      class="container default"
     >
-      <li
-        class="tab"
+      <div
+        class="wrapper"
       >
-        <button
-          title="tabTitle1"
+        <ul
+          class="tabs"
         >
-          tabTitle1
-        </button>
-      </li>
-    </ul>
+          <li
+            class="tab"
+          >
+            <button
+              title="tabTitle1"
+            >
+              tabTitle1
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>,
   <h1>
     Header

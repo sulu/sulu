@@ -1,5 +1,5 @@
 // @flow
-import React, {Fragment} from 'react';
+import React from 'react';
 import type {ChildrenArray, Element, ElementRef} from 'react';
 import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
@@ -23,28 +23,6 @@ type Props = {
 
 const DEBOUNCE_TIME = 200;
 
-const TabWrapper = ({children, index, setWidth}: {
-    children: Element<typeof Tab> | false,
-    index: number,
-    setWidth: (index: number, width: number) => void,
-}) => {
-    function setRef(ref: ?ElementRef<'div'>) {
-        if (ref) {
-            setWidth(index, ref.offsetWidth);
-        }
-    }
-
-    if (!children) {
-        return null;
-    }
-
-    return (
-        <div ref={setRef}>
-            {children}
-        </div>
-    );
-};
-
 @observer
 class Tabs extends React.Component<Props> {
     @observable wrapperWidth: number = 0;
@@ -59,24 +37,29 @@ class Tabs extends React.Component<Props> {
 
     static Tab = Tab;
 
+    resizeObserver: ?ResizeObserver;
+
     containerRef: ?ElementRef<'div'>;
     wrapperRef: ?ElementRef<'div'>;
 
     componentDidMount() {
         this.setDimensions();
 
-        // $FlowFixMe
-        const resizeObserver = new ResizeObserver(
-            debounce(() => {
-                this.setDimensions();
-            }, DEBOUNCE_TIME)
+        this.resizeObserver = new ResizeObserver(
+            debounce(this.setDimensions, DEBOUNCE_TIME)
         );
 
         if (!this.wrapperRef) {
             return;
         }
 
-        resizeObserver.observe(this.wrapperRef);
+        this.resizeObserver.observe(this.wrapperRef);
+    }
+
+    componentWillUnmount() {
+        if (this.resizeObserver) {
+            this.resizeObserver.disconnect();
+        }
     }
 
     componentDidUpdate() {
@@ -231,19 +214,16 @@ class Tabs extends React.Component<Props> {
 
             const selected = this.isSelected(index);
 
-            return (
-                <TabWrapper index={index} setWidth={this.setTabWidth}>
-                    {React.cloneElement(
-                        tab,
-                        {
-                            ...tab.props,
-                            index,
-                            selected,
-                            small,
-                            onClick: this.handleTabClick,
-                        }
-                    )}
-                </TabWrapper>
+            return React.cloneElement(
+                tab,
+                {
+                    ...tab.props,
+                    index,
+                    selected,
+                    small,
+                    onClick: this.handleTabClick,
+                    setWidth: this.setTabWidth,
+                }
             );
         });
     }
@@ -294,7 +274,7 @@ class Tabs extends React.Component<Props> {
                 </div>
 
                 {this.hasHiddenTabs &&
-                    <Fragment>
+                    <React.Fragment>
                         <button
                             className={tabsStyles.button}
                             onClick={this.handleDropdownToggle}
@@ -318,7 +298,7 @@ class Tabs extends React.Component<Props> {
                                 )
                             }
                         </Popover>
-                    </Fragment>
+                    </React.Fragment>
                 }
             </div>
         );

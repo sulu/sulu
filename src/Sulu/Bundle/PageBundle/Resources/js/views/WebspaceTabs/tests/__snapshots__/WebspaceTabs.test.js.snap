@@ -5,9 +5,17 @@ Array [
   <div
     class="tabsContainer"
   >
-    <ul
-      class="tabs"
-    />
+    <div
+      class="container default"
+    >
+      <div
+        class="wrapper"
+      >
+        <ul
+          class="tabs"
+        />
+      </div>
+    </div>
   </div>,
   <div
     class="webspaceSelect"

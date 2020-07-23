@@ -3,6 +3,13 @@ import {mount, render} from 'enzyme';
 import React from 'react';
 import Tabs from '../Tabs.js';
 
+jest.mock('debounce', () => jest.fn((callback) => callback));
+
+window.ResizeObserver = jest.fn(function() {
+    this.observe = jest.fn();
+    this.disconnect = jest.fn();
+});
+
 test('Render a Tabs component', () => {
     const changeSpy = jest.fn();
 
