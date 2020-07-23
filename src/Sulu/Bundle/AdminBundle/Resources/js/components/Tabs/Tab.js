@@ -42,7 +42,10 @@ class Tab extends React.Component<Props> {
         }
 
         this.resizeObserver.observe(this.listItemRef);
-        setWidth(index, this.listItemRef.offsetWidth);
+
+        if (setWidth && this.listItemRef) {
+            setWidth(index, this.listItemRef.offsetWidth);
+        }
 
         if (selected) {
             this.selected = true;
