@@ -1,6 +1,7 @@
 // @flow
 import type {Node} from 'react';
 import {observer} from 'mobx-react';
+import {computed} from 'mobx';
 import React from 'react';
 import withContainerSize from '../withContainerSize';
 import type {Normalizer, RectangleChange, SelectionData} from './types';
@@ -28,21 +29,20 @@ class RectangleSelection extends React.Component<Props> {
         round: true,
     };
 
-    normalizers: Array<Normalizer> = [];
-
     static createNormalizers(props: Props): Array<Normalizer> {
         if (!props.containerWidth || !props.containerHeight) {
             return [];
         }
 
         const normalizers = [];
+
         normalizers.push(new SizeNormalizer(
             props.containerWidth,
             props.containerHeight,
             props.minWidth,
             props.minHeight
         ));
-        normalizers.push(new PositionNormalizer(props.containerWidth, props.containerHeight));
+
         if (props.minWidth && props.minHeight) {
             normalizers.push(new RatioNormalizer(
                 props.containerWidth,
@@ -52,6 +52,8 @@ class RectangleSelection extends React.Component<Props> {
             ));
         }
 
+        normalizers.push(new PositionNormalizer(props.containerWidth, props.containerHeight));
+
         if (props.round) {
             normalizers.push(new RoundingNormalizer());
         }
@@ -59,14 +61,8 @@ class RectangleSelection extends React.Component<Props> {
         return normalizers;
     }
 
-    constructor(props: Props) {
-        super(props);
-
-        this.normalizers = RectangleSelection.createNormalizers(this.props);
-    }
-
-    componentDidUpdate() {
-        this.normalizers = RectangleSelection.createNormalizers(this.props);
+    @computed get normalizers() {
+        return RectangleSelection.createNormalizers(this.props);
     }
 
     normalize(selection: SelectionData): SelectionData {
