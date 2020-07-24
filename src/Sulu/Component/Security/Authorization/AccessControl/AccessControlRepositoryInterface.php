@@ -32,8 +32,9 @@ interface AccessControlRepositoryInterface
      *
      * @param string $type The type of the AccessControl
      * @param int $id The id of the AccessControl
+     * @param string $sytem The option system to filter for
      *
      * @return AccessControlInterface[]
      */
-    public function findByTypeAndId($type, $id);
+    public function findByTypeAndId($type, $id, $system = null);
 }

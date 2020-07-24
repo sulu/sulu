@@ -37,12 +37,17 @@ class AccessControlRepository extends EntityRepository implements AccessControlR
         }
     }
 
-    public function findByTypeAndId($type, $id)
+    public function findByTypeAndId($type, $id, $system = null)
     {
         $queryBuilder = $this->createQueryBuilder('accessControl')
             ->leftJoin('accessControl.role', 'role')
             ->where('accessControl.entityId = :entityId')
             ->andWhere('accessControl.entityClass = :entityClass');
+
+        if ($system) {
+            $queryBuilder->andWhere('role.system = :system');
+            $queryBuilder->setParameter('system', $system);
+        }
 
         $query = $queryBuilder->getQuery()
             ->setParameter('entityId', $id)
