@@ -29,7 +29,6 @@
         "ext-dom": "*",
         "ext-json": "*",
         "ext-simplexml": "*",
-        "aferrandini/urlizer": "^1.0",
         "contao/imagine-svg": "^0.2.2 || ^1.0",
         "dantleech/phpcr-migrations-bundle": "^1.0",
         "doctrine/annotations": "^1.2",
