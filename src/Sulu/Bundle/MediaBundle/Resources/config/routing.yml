@@ -1,3 +1,19 @@
 sulu_media.redirect:
     path: /redirect/media/{id}
     defaults: { _controller: sulu_media.media_redirect_controller:redirectAction }
+
+sulu_media.admin.private_image.proxy:
+    path: "%sulu_media.format_cache.media_proxy_path%"
+    defaults:
+        _controller: sulu_media.media_stream_controller:getImageAction
+        _requestAnalyzer: false
+    requirements:
+        slug: .*
+
+sulu_media.admin.media.private_download:
+    path: "%sulu_media.media_manager.media_download_path%"
+    defaults:
+        _controller: sulu_media.media_stream_controller:downloadAction
+        _requestAnalyzer: false
+    requirements:
+        id: "\\d+"

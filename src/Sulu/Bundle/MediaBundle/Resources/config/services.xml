@@ -151,6 +151,8 @@
             <argument>%sulu_media.format_cache.media_proxy_path%</argument>
             <argument>%sulu_media.format_cache.segments%</argument>
             <argument>%sulu_media.format_cache.private_path%</argument>
+            <argument>%sulu_media.format_cache.media_proxy_path_private_admin%</argument>
+            <argument>%sulu.context%</argument>
 
             <tag name="sulu_media.format_cache" alias="local" />
         </service>
@@ -236,6 +238,8 @@
             <argument type="string">%sulu_media.media_manager.media_download_path%</argument>
             <argument>%sulu_media.media.max_file_size%</argument>
             <argument type="service" id="sulu.repository.target_group" on-invalid="null"/>
+            <argument type="string">%sulu_media.media_manager.media_download_path_private_admin%</argument>
+            <argument>%sulu.context%</argument>
         </service>
 
         <service id="Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface" alias="sulu_media.media_manager"/>

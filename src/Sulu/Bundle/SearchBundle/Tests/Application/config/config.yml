@@ -6,6 +6,7 @@ sulu_page:
         mapping:
             Sulu\Bundle\PageBundle\Document\PageDocument:
                 index: page
+
 sulu_search:
     indexes:
         product:

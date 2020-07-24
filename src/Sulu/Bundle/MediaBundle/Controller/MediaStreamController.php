@@ -233,6 +233,10 @@ class MediaStreamController
         /** @var MediaInterface $mediaEntity */
         $mediaEntity = $this->mediaRepository->findMediaById($id);
 
+        $collectionId = $mediaEntity->getCollection()->getId();
+
+        // TODO Implement security check here
+
         if (!$mediaEntity) {
             return null;
         }

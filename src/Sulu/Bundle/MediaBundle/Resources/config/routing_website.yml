@@ -13,3 +13,19 @@ sulu_media.website.media.download:
         _requestAnalyzer: false
     requirements:
         id: "\\d+"
+
+sulu_media.website.image.proxy_private_admin:
+    path: "%sulu_media.format_cache.media_proxy_path_private_admin%"
+    defaults:
+        _controller: sulu_media.media_stream_controller:getImageAction
+        _requestAnalyzer: false
+    requirements:
+        slug: .*
+
+sulu_media.website.media.download_private_admin:
+    path: "%sulu_media.media_manager.media_download_path_private_admin%"
+    defaults:
+        _controller: sulu_media.media_stream_controller:downloadAction
+        _requestAnalyzer: false
+    requirements:
+        id: "\\d+"

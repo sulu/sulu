@@ -199,6 +199,14 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
             'sulu_media.media_manager.media_download_path',
             $config['routing']['media_download_path']
         );
+        $container->setParameter(
+            'sulu_media.format_cache.media_proxy_path_private_admin',
+            $config['routing']['media_proxy_path_private_admin']
+        );
+        $container->setParameter(
+            'sulu_media.media_manager.media_download_path_private_admin',
+            $config['routing']['media_download_path']
+        );
 
         // format manager
         $container->setParameter(

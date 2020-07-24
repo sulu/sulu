@@ -43,7 +43,12 @@ class LocalFormatCache implements FormatCacheInterface
      */
     protected $privatePath;
 
-    public function __construct(Filesystem $filesystem, $path, $pathUrl, $segments, $privatePath = null)
+    /**
+     * @var string|null
+     */
+    protected $adminUrl;
+
+    public function __construct(Filesystem $filesystem, $path, $pathUrl, $segments, $privatePath = null, $adminUrl = null)
     {
         $this->filesystem = $filesystem;
         $this->path = $path;
@@ -61,6 +66,18 @@ class LocalFormatCache implements FormatCacheInterface
         }
 
         $this->privatePath = $privatePath;
+
+        if (null === $adminUrl) {
+            @\trigger_error(
+                \sprintf(
+                    'The usage of the "%s" without a "$adminUrl" is deprecated and will not longer work in Sulu 3.0.',
+                    LocalFormatCache::class
+                ),
+                \E_USER_DEPRECATED
+            );
+        }
+
+        $this->adminUrl = $adminUrl;
     }
 
     public function save($content, $id, $fileName, $format)
@@ -76,6 +93,10 @@ class LocalFormatCache implements FormatCacheInterface
                 ),
                 \E_USER_DEPRECATED
             );
+        }
+
+        if ($private) { // TODO remove this if
+            return false;
         }
 
         if ($private) {
@@ -116,6 +137,11 @@ class LocalFormatCache implements FormatCacheInterface
     public function getMediaUrl($id, $fileName, $format, $version, $subVersion)
     {
         return $this->getPathUrl($this->pathUrl, $id, $fileName, $format, $version, $subVersion);
+    }
+
+    public function getMediaAdminUrl($id, $fileName, $format, $version, $subVersion)
+    {
+        return $this->getPathUrl($this->adminUrl, $id, $fileName, $format, $version, $subVersion);
     }
 
     public function clear()

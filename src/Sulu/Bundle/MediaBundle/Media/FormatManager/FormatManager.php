@@ -125,6 +125,17 @@ class FormatManager implements FormatManagerInterface
                 throw new ImageProxyMediaNotFoundException('Media was not found');
             }
 
+            $collectionId = $media->getCollection()->getId();
+
+            // TODO Implement security check here for the collection
+
+            $isPrivate = false;
+            // TODO check if image is public available (if the media has permission set in other system like sulu)
+
+            if ($isPrivate) {
+                // TODO check if file exist in private folder and return it as BinaryFileResponse
+            }
+
             $fileVersion = $this->getLatestFileVersion($media);
 
             $supportedImageFormats = $this->converter->getSupportedOutputImageFormats($fileVersion->getMimeType());
@@ -157,7 +168,8 @@ class FormatManager implements FormatManagerInterface
                     $responseContent,
                     $media->getId(),
                     $this->replaceExtension($fileVersion->getName(), $imageFormat),
-                    $formatKey
+                    $formatKey,
+                    $isPrivate
                 );
             }
         } catch (MediaException $e) {
