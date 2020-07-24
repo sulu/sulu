@@ -13,7 +13,6 @@ namespace Sulu\Bundle\PageBundle\Content\Types;
 
 use PHPCR\NodeInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
-use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\SimpleContentType;
 
 /**
@@ -39,8 +38,7 @@ class DateTime extends SimpleContentType
         $value = $property->getValue();
         if (null != $value) {
             $value = \DateTime::createFromFormat(self::format, $value);
-            $new = new \DateTime();
-            $format = $new->format(self::format);
+
             $node->setProperty($property->getName(), $value);
         } else {
             $this->remove($node, $property, $webspaceKey, $languageCode, $segmentKey);
@@ -62,13 +60,5 @@ class DateTime extends SimpleContentType
         $property->setValue($value);
 
         return $value;
-    }
-
-    public function getDefaultParams(PropertyInterface $property = null)
-    {
-        return [
-            'display_options' => new PropertyParameter('display_options', [], 'collection'),
-            'placeholder' => new PropertyParameter('placeholder', null),
-        ];
     }
 }
