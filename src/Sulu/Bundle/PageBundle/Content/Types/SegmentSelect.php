@@ -49,6 +49,19 @@ class SegmentSelect extends SimpleContentType
 
     public function exportData($propertyValue)
     {
-        return \json_encode($propertyValue);
+        return $this->encodeValue($propertyValue);
+    }
+
+    public function importData(NodeInterface $node, PropertyInterface $property, $value, $userId, $webspaceKey, $languageCode, $segmentKey = null)
+    {
+        parent::importData(
+            $node,
+            $property,
+            $this->decodeValue($value),
+            $userId,
+            $webspaceKey,
+            $languageCode,
+            $segmentKey
+        );
     }
 }

@@ -3,7 +3,7 @@ import React from 'react';
 import type {Element} from 'react';
 import type {SelectProps} from '../Select';
 import Select from '../Select';
-import {translate} from '../../utils/Translator';
+import {translate} from '../../utils';
 
 type Props<T> = {|
     ...SelectProps<T>,

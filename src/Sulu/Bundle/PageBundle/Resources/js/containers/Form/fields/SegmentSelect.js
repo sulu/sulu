@@ -54,7 +54,7 @@ export default class SegmentSelect extends React.Component<FieldTypeProps<{ [web
         const {formInspector} = this.props;
 
         // we want to select a segment for each webspace on webspace-independent objects like articles
-        const matchingWebspaces: Array<Webspace> = formInspector.metadataOptions.webspace
+        const matchingWebspaces: Array<Webspace> = formInspector.metadataOptions?.webspace
             ? [webspaceStore.getWebspace(formInspector.metadataOptions.webspace)]
             : webspaceStore.grantedWebspaces;
 
