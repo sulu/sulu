@@ -279,7 +279,7 @@ class Tabs extends React.Component<Props> {
                             className={tabsStyles.button}
                             onClick={this.handleDropdownToggle}
                         >
-                            <Icon name="su-more" />
+                            <Icon name="su-more-horizontal" />
                         </button>
 
                         <Popover

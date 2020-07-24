@@ -1,9 +1,9 @@
 @font-face {
   font-family: 'sulu';
   src:
-    url('fonts/sulu.ttf?qz0ha3') format('truetype'),
-    url('fonts/sulu.woff?qz0ha3') format('woff'),
-    url('fonts/sulu.svg?qz0ha3#sulu') format('svg');
+    url('fonts/sulu.ttf?r55shh') format('truetype'),
+    url('fonts/sulu.woff?r55shh') format('woff'),
+    url('fonts/sulu.svg?r55shh#sulu') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -24,6 +24,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.su-more-horizontal:before {
+  content: "\e995";
+}
 .su-file-audio:before {
   content: "\e98c";
 }
