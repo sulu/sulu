@@ -1,6 +1,3 @@
-massive_search:
-    adapter: test
-
 sulu_page:
     search:
         mapping:
