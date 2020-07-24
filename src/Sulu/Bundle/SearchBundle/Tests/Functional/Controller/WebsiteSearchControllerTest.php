@@ -24,13 +24,6 @@ class WebsiteSearchControllerTest extends SuluTestCase
      */
     private $websiteClient;
 
-    protected static function getKernelConfiguration(): array
-    {
-        return [
-            'environment' => 'test_zend_lucene',
-        ];
-    }
-
     public static function setUpBeforeClass(): void
     {
         static::purgeDatabase();
