@@ -32,8 +32,11 @@ class Cropper implements CropperInterface
 
     public function isValid(ImageInterface $image, $x, $y, $width, $height, array $format)
     {
-        return $this->isInsideImage($image, $x, $y, $width, $height)
-            && $this->isNotSmallerThanFormat($width, $height, $format);
+        $isInsideImage = $this->isInsideImage($image, $x, $y, $width, $height);
+        $isNotSmallerThanFormat = $this->isNotSmallerThanFormat($width, $height, $format);
+        $isMaxSizeForImage = $this->isMaxSizeForImage($image, $width, $height);
+
+        return $isInsideImage && ($isNotSmallerThanFormat || $isMaxSizeForImage);
     }
 
     /**
@@ -79,5 +82,17 @@ class Cropper implements CropperInterface
         }
 
         return true;
+    }
+
+    private function isMaxSizeForImage(ImageInterface $image, $width, $height)
+    {
+        if ($width === $image->getSize()->getWidth()) {
+            return true;
+        }
+        if ($height === $image->getSize()->getHeight()) {
+            return true;
+        }
+
+        return false;
     }
 }

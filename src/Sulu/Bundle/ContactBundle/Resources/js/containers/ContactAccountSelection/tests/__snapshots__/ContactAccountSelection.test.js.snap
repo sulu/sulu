@@ -202,7 +202,7 @@ exports[`Render disabled ContactAccountSelection 1`] = `
   class="multiItemSelectionClass disabled"
 >
   <div
-    class="header emptyList"
+    class="header disabled emptyList"
   >
     <button
       class="button left hasOptions"

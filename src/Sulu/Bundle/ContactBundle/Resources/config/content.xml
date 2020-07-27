@@ -24,11 +24,27 @@
             <tag name="sulu.content.export" format="1.2.xliff" translate="false"/>
         </service>
 
+        <service id="sulu_contact.content.contact_selection" class="Sulu\Bundle\ContactBundle\Content\Types\ContactSelection">
+            <argument type="service" id="sulu.repository.contact" />
+            <argument type="service" id="sulu_contact.reference_store.contact" />
+
+            <tag name="sulu.content.type" alias="contact_selection"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false"/>
+        </service>
+
         <service id="sulu_contact.content.single_account_selection" class="Sulu\Bundle\ContactBundle\Content\Types\SingleAccountSelection">
             <argument type="service" id="sulu_contact.account_manager" />
             <argument type="service" id="sulu_contact.reference_store.account" />
 
             <tag name="sulu.content.type" alias="single_account_selection"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false"/>
+        </service>
+
+        <service id="sulu_contact.content.account_selection" class="Sulu\Bundle\ContactBundle\Content\Types\AccountSelection">
+            <argument type="service" id="sulu_contact.account_manager" />
+            <argument type="service" id="sulu_contact.reference_store.account" />
+
+            <tag name="sulu.content.type" alias="account_selection"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="false"/>
         </service>
     </services>

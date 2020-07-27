@@ -41,6 +41,13 @@ class SearchControllerTest extends SuluTestCase
      */
     private $user;
 
+    protected static function getKernelConfiguration(): array
+    {
+        return [
+            'environment' => 'test_search_adapter',
+        ];
+    }
+
     public function setUp(): void
     {
         $this->client = $this->createAuthenticatedClient();
@@ -72,7 +79,7 @@ class SearchControllerTest extends SuluTestCase
             ],
             [
                 [
-                    'q' => 'Product',
+                    'q' => 'Bike',
                     'indexes' => ['Product'],
                     'locale' => 'fr',
                 ],
@@ -86,7 +93,7 @@ class SearchControllerTest extends SuluTestCase
                                 'id' => null,
                                 'document' => [
                                     'id' => 6,
-                                    'title' => 'Product Xeon',
+                                    'title' => 'Bike Xeon',
                                     'description' => 'To be or not to be, that is the question',
                                     'url' => '/foobar',
                                     'locale' => 'fr',
@@ -97,7 +104,7 @@ class SearchControllerTest extends SuluTestCase
                                     'creatorName' => 'dantleech',
                                     'changerName' => 'dantleech',
                                     'properties' => [
-                                        'title' => 'Product Xeon',
+                                        'title' => 'Bike Xeon',
                                         'body' => 'To be or not to be, that is the question',
                                     ],
                                 ],
@@ -111,6 +118,8 @@ class SearchControllerTest extends SuluTestCase
             [
                 [
                     'q' => 'Xeon',
+                    'indexes' => ['Product'],
+                    'locale' => 'fr',
                     'limit' => 1,
                     'page' => 2,
                 ],
@@ -202,7 +211,7 @@ class SearchControllerTest extends SuluTestCase
     {
         $product = new Product();
         $product->id = 6;
-        $product->title = 'Product Xeon';
+        $product->title = 'Bike Xeon';
         $product->body = 'To be or not to be, that is the question';
         $product->url = '/foobar';
         $product->locale = 'fr';
