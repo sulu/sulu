@@ -1,0 +1,54 @@
+@import '../../containers/Application/colors.scss';
+
+$backgroundColor: rgba($black, .6);
+$borderColor: $white;
+$borderSize: 2px;
+$zIndex: 2;
+$zIndexDisabled: 1;
+
+.circle {
+    position: absolute;
+    background: $backgroundColor;
+    border-radius: 100%;
+    transform: translate(-50%, -50%);
+    will-change: width, height, left, top;
+    cursor: move;
+    border: $borderSize solid $borderColor;
+    z-index: $zIndex;
+
+    &.disabled {
+        cursor: default;
+        border: none;
+        pointer-events: none;
+        z-index: $zIndexDisabled;
+    }
+}
+
+.label {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 34px;
+    font-weight: bold;
+    color: $white;
+    user-select: none;
+
+    .circle.disabled & {
+        color: rgba($white, .5);
+    }
+}
+
+.resize-handle {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background: $borderColor;
+    cursor: nwse-resize;
+    box-shadow: 0 0 20px 0 rgba($black, .3);
+    will-change: transform, transform-origin;
+}

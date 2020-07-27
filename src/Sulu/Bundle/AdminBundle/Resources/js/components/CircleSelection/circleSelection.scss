@@ -1,0 +1,18 @@
+.container {
+    display: inline-flex;
+}
+
+.selection {
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+
+    &,
+    * {
+        user-select: none;
+    }
+
+    img {
+        pointer-events: none;
+    }
+}
