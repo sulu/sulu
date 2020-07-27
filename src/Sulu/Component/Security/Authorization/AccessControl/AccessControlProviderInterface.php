@@ -27,10 +27,11 @@ interface AccessControlProviderInterface
      *
      * @param string $type The type of the protected object
      * @param string $identifier The identifier of the protected object
+     * @param string $system The security system for filtering the permissions
      *
      * @return array
      */
-    public function getPermissions($type, $identifier);
+    public function getPermissions($type, $identifier, $system = null);
 
     /**
      * Returns whether this provider supports the given type.

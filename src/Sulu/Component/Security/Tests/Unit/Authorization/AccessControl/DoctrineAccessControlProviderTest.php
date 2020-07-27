@@ -205,7 +205,7 @@ class DoctrineAccessControlProviderTest extends TestCase
             $accessControl1,
             $accessControl2,
         ];
-        $this->accessControlRepository->findByTypeAndId('AcmeBundle\Example', 1)->willReturn($accessControls);
+        $this->accessControlRepository->findByTypeAndId('AcmeBundle\Example', 1, null)->willReturn($accessControls);
 
         $this->assertEquals(
             $this->doctrineAccessControlProvider->getPermissions('AcmeBundle\Example', 1),
@@ -216,9 +216,50 @@ class DoctrineAccessControlProviderTest extends TestCase
         );
     }
 
+    public function testGetPermissionsWithSystem()
+    {
+        $roleIdReflection = new \ReflectionProperty(Role::class, 'id');
+        $roleIdReflection->setAccessible(true);
+
+        $role1 = new Role();
+        $roleIdReflection->setValue($role1, 1);
+
+        $role2 = new Role();
+        $roleIdReflection->setValue($role2, 2);
+
+        $this->maskConverter->convertPermissionsToArray(64)->willReturn(['view' => true, 'edit' => false]);
+        $this->maskConverter->convertPermissionsToArray(96)->willReturn(['view' => true, 'edit' => true]);
+
+        $accessControl1 = new AccessControl();
+        $accessControl1->setPermissions(64);
+        $accessControl1->setRole($role1);
+
+        $accessControl2 = new AccessControl();
+        $accessControl2->setPermissions(96);
+        $accessControl2->setRole($role2);
+
+        $this->accessControlRepository->findByTypeAndId('AcmeBundle\Example', 1, 'Sulu')->willReturn([$accessControl1]);
+        $this->accessControlRepository->findByTypeAndId('AcmeBundle\Example', 1, 'Website')
+            ->willReturn([$accessControl2]);
+
+        $this->assertEquals(
+            $this->doctrineAccessControlProvider->getPermissions('AcmeBundle\Example', 1, 'Sulu'),
+            [
+                1 => ['view' => true, 'edit' => false],
+            ]
+        );
+
+        $this->assertEquals(
+            $this->doctrineAccessControlProvider->getPermissions('AcmeBundle\Example', 1, 'Website'),
+            [
+                2 => ['view' => true, 'edit' => true],
+            ]
+        );
+    }
+
     public function testGetPermissionsForNotExistingAccessControl()
     {
-        $this->accessControlRepository->findByTypeAndId('AcmeBundle\Example', 1)->willReturn([]);
+        $this->accessControlRepository->findByTypeAndId('AcmeBundle\Example', 1, null)->willReturn([]);
 
         $this->assertEquals(
             $this->doctrineAccessControlProvider->getPermissions('AcmeBundle\Example', 1),

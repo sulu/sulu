@@ -11,9 +11,11 @@
 
 namespace Sulu\Bundle\PageBundle\Tests\Functional\Repository;
 
+use Doctrine\ORM\EntityManagerInterface;
 use PHPCR\SessionInterface;
 use Sulu\Bundle\PageBundle\Document\HomeDocument;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
+use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\LocalizationFinderInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
@@ -26,6 +28,7 @@ use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Security\Authentication\RoleInterface;
+use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Util\SuluNodeHelper;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
@@ -46,6 +49,11 @@ class ContentRepositoryTest extends SuluTestCase
      * @var DocumentManagerInterface
      */
     private $documentManager;
+
+    /**
+     * @var EntityManagerInterface
+     */
+    private $em;
 
     /**
      * @var ContentRepository
@@ -82,16 +90,25 @@ class ContentRepositoryTest extends SuluTestCase
      */
     private $homeDocument;
 
+    /**
+     * @var RoleRepositoryInterface
+     */
+    private $roleRepository;
+
     public function setUp(): void
     {
+        $this->purgeDatabase();
+
         $this->session = $this->getContainer()->get('sulu_document_manager.default_session');
         $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
+        $this->em = $this->getContainer()->get('doctrine.orm.default_entity_manager');
         $this->propertyEncoder = $this->getContainer()->get('sulu_document_manager_test.property_encoder');
         $this->webspaceManager = $this->getContainer()->get('sulu_core.webspace.webspace_manager');
         $this->localizationFinder = $this->getContainer()->get('sulu.content.localization_finder');
         $this->structureManager = $this->getContainer()->get('sulu.content.structure_manager');
         $this->nodeHelper = $this->getContainer()->get('sulu.util.node_helper');
+        $this->roleRepository = $this->getContainer()->get('sulu.repository.role');
 
         $this->contentRepository = new ContentRepository(
             $this->sessionManager,
@@ -100,6 +117,7 @@ class ContentRepositoryTest extends SuluTestCase
             $this->localizationFinder,
             $this->structureManager,
             $this->nodeHelper,
+            $this->roleRepository,
             ['view' => 64, 'add' => 32, 'edit' => 16, 'delete' => 8]
         );
 
@@ -110,7 +128,26 @@ class ContentRepositoryTest extends SuluTestCase
 
     public function testFindByParent()
     {
-        $this->createPage('test-1', 'de');
+        $role1 = $this->createRole('Role 1', 'Sulu');
+        $role2 = $this->createRole('Role 2', 'Sulu');
+        $role3 = $this->createRole('Role 3', 'Website');
+
+        $this->em->flush();
+
+        $user = $this->prophesize(UserInterface::class);
+        $user->getRoleObjects()->willReturn([$role1, $role2]);
+
+        $page = $this->createPage(
+            'test-1',
+            'de',
+            [],
+            null,
+            [
+                $role1->getId() => ['edit' => true],
+                $role2->getId() => ['view' => true, 'archive' => true],
+                $role3->getId() => ['add' => true],
+            ]
+        );
         $this->createPage('test-2', 'de');
         $this->createPage('test-3', 'de');
 
@@ -120,7 +157,8 @@ class ContentRepositoryTest extends SuluTestCase
             $parentUuid,
             'de',
             'sulu_io',
-            MappingBuilder::create()->getMapping()
+            MappingBuilder::create()->getMapping(),
+            $user->reveal()
         );
 
         $this->assertCount(3, $result);
@@ -131,6 +169,22 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals('/test-2', $result[1]->getPath());
         $this->assertNotNull($result[2]->getId());
         $this->assertEquals('/test-3', $result[2]->getPath());
+
+        $this->assertEquals(
+            [
+                $role1->getId() => ['view' => false, 'add' => false, 'delete' => false, 'edit' => true],
+                $role2->getId() => [
+                    'view' => true,
+                    'add' => false,
+                    'edit' => false,
+                    'delete' => false,
+                    'archive' => true,
+                ],
+            ],
+            $result[0]->getPermissions()
+        );
+        $this->assertEquals([], $result[1]->getPermissions());
+        $this->assertEquals([], $result[2]->getPermissions());
     }
 
     public function testFindByParentMapping()
@@ -382,6 +436,57 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals('/test-2', $result[1]->getPath());
         $this->assertNotNull($result[2]->getId());
         $this->assertEquals('/test-3', $result[2]->getPath());
+    }
+
+    public function testFindByWebspaceRootWithPermissions()
+    {
+        $role1 = $this->createRole('Role 1', 'Sulu');
+        $role2 = $this->createRole('Role 2', 'Sulu');
+        $role3 = $this->createRole('Role 3', 'Website');
+
+        $this->em->flush();
+
+        $user = $this->prophesize(UserInterface::class);
+        $user->getRoleObjects()->willReturn([$role1, $role2]);
+
+        $page = $this->createPage(
+            'test-1',
+            'de',
+            [],
+            null,
+            [
+                $role1->getId() => ['edit' => true],
+                $role2->getId() => ['view' => true, 'archive' => true],
+                $role3->getId() => ['add' => true],
+            ]
+        );
+        $this->createPage('test-2', 'de');
+        $this->createPage('test-3', 'de');
+
+        $result = $this->contentRepository->findByWebspaceRoot(
+            'de',
+            'sulu_io',
+            MappingBuilder::create()->getMapping(),
+            $user->reveal()
+        );
+
+        $this->assertCount(3, $result);
+
+        $this->assertEquals(
+            [
+                $role1->getId() => ['view' => false, 'add' => false, 'delete' => false, 'edit' => true],
+                $role2->getId() => [
+                    'view' => true,
+                    'add' => false,
+                    'edit' => false,
+                    'delete' => false,
+                    'archive' => true,
+                ],
+            ],
+            $result[0]->getPermissions()
+        );
+        $this->assertEquals([], $result[1]->getPermissions());
+        $this->assertEquals([], $result[2]->getPermissions());
     }
 
     public function testFindByWebspaceRootNonExistingLocale()
@@ -690,15 +795,14 @@ class ContentRepositoryTest extends SuluTestCase
 
     public function testFindPermissions()
     {
-        $role1 = $this->prophesize(RoleInterface::class);
-        $role1->getId()->willReturn(1);
-        $role1->getIdentifier()->willReturn('ROLE_SULU_ROLE 1');
-        $role2 = $this->prophesize(RoleInterface::class);
-        $role2->getId()->willReturn(2);
-        $role2->getIdentifier()->willReturn('ROLE_SULU_ROLE-2');
+        $role1 = $this->createRole('Role 1', 'Sulu');
+        $role2 = $this->createRole('Role 2', 'Sulu');
+        $role3 = $this->createRole('Role 3', 'Website');
+
+        $this->em->flush();
 
         $user = $this->prophesize(UserInterface::class);
-        $user->getRoleObjects()->willReturn([$role1->reveal(), $role2->reveal()]);
+        $user->getRoleObjects()->willReturn([$role1, $role2]);
 
         $page = $this->createPage(
             'test-1',
@@ -706,9 +810,9 @@ class ContentRepositoryTest extends SuluTestCase
             [],
             null,
             [
-                1 => ['edit' => true],
-                2 => ['view' => true, 'archive' => true],
-                3 => ['add' => true],
+                $role1->getId() => ['edit' => true],
+                $role2->getId() => ['view' => true, 'archive' => true],
+                $role3->getId() => ['add' => true],
             ]
         );
 
@@ -722,8 +826,14 @@ class ContentRepositoryTest extends SuluTestCase
 
         $this->assertEquals(
             [
-                1 => ['view' => false, 'add' => false, 'delete' => false, 'edit' => true],
-                2 => ['view' => true, 'add' => false, 'edit' => false, 'delete' => false, 'archive' => true],
+                $role1->getId() => ['view' => false, 'add' => false, 'delete' => false, 'edit' => true],
+                $role2->getId() => [
+                    'view' => true,
+                    'add' => false,
+                    'edit' => false,
+                    'delete' => false,
+                    'archive' => true,
+                ],
             ],
             $result->getPermissions()
         );
@@ -764,15 +874,14 @@ class ContentRepositoryTest extends SuluTestCase
 
     public function testFindWithPermissionsNotGranted()
     {
-        $role1 = $this->prophesize(RoleInterface::class);
-        $role1->getId()->willReturn(1);
-        $role1->getIdentifier()->willReturn('ROLE_SULU_ROLE 1');
-        $role2 = $this->prophesize(RoleInterface::class);
-        $role2->getId()->willReturn(2);
-        $role2->getIdentifier()->willReturn('ROLE_SULU_ROLE-2');
+        $role1 = $this->createRole('Role 1', 'Sulu');
+        $role2 = $this->createRole('Role 2', 'Sulu');
+        $role3 = $this->createRole('Role 3', 'Website');
+
+        $this->em->flush();
 
         $user = $this->prophesize(UserInterface::class);
-        $user->getRoleObjects()->willReturn([$role1->reveal(), $role2->reveal()]);
+        $user->getRoleObjects()->willReturn([$role1, $role2]);
 
         $page = $this->createPage(
             'test-1',
@@ -780,9 +889,9 @@ class ContentRepositoryTest extends SuluTestCase
             [],
             null,
             [
-                1 => ['edit' => false],
-                2 => ['view' => false, 'archive' => false],
-                3 => ['add' => false],
+                $role1->getId() => ['edit' => false],
+                $role2->getId() => ['view' => false, 'archive' => false],
+                $role3->getId() => ['add' => false],
             ]
         );
 
@@ -796,8 +905,8 @@ class ContentRepositoryTest extends SuluTestCase
 
         $this->assertEquals(
             [
-                1 => ['view' => false, 'add' => false, 'delete' => false, 'edit' => false],
-                2 => ['view' => false, 'add' => false, 'edit' => false, 'delete' => false],
+                $role1->getId() => ['view' => false, 'add' => false, 'delete' => false, 'edit' => false],
+                $role2->getId() => ['view' => false, 'add' => false, 'edit' => false, 'delete' => false],
             ],
             $result->getPermissions()
         );
@@ -813,7 +922,26 @@ class ContentRepositoryTest extends SuluTestCase
      */
     public function testFindParentsWithSiblingsByUuid($webspaceKey)
     {
-        $page1 = $this->createPage('test-1', 'de');
+        $role1 = $this->createRole('Role 1', 'Sulu');
+        $role2 = $this->createRole('Role 2', 'Sulu');
+        $role3 = $this->createRole('Role 3', 'Website');
+
+        $this->em->flush();
+
+        $user = $this->prophesize(UserInterface::class);
+        $user->getRoleObjects()->willReturn([$role1, $role2]);
+
+        $page1 = $this->createPage(
+            'test-1',
+            'de',
+            [],
+            null,
+            [
+                $role1->getId() => ['edit' => true],
+                $role2->getId() => ['view' => true, 'archive' => true],
+                $role3->getId() => ['add' => true],
+            ]
+        );
         $page2 = $this->createPage('test-2', 'de');
         $page3 = $this->createPage('test-3', 'de', [], $page1);
         $page4 = $this->createPage('test-4', 'de', [], $page1);
@@ -831,16 +959,31 @@ class ContentRepositoryTest extends SuluTestCase
             $page10->getUuid(),
             'de',
             $webspaceKey,
-            MappingBuilder::create()->getMapping()
+            MappingBuilder::create()->getMapping(),
+            $user->reveal()
         );
 
         $layer = $result;
         $this->assertCount(2, $layer);
         $this->assertEquals($page1->getUuid(), $layer[0]->getId());
+        $this->assertEquals(
+            [
+                $role1->getId() => ['view' => false, 'add' => false, 'delete' => false, 'edit' => true],
+                $role2->getId() => [
+                    'view' => true,
+                    'add' => false,
+                    'edit' => false,
+                    'delete' => false,
+                    'archive' => true,
+                ],
+            ],
+            $layer[0]->getPermissions()
+        );
         $this->assertTrue($layer[0]->hasChildren());
         $this->assertNull($layer[0]->getChildren());
         $this->assertEquals($page2->getUuid(), $layer[1]->getId());
         $this->assertTrue($layer[1]->hasChildren());
+        $this->assertEquals([], $layer[1]->getPermissions());
         $this->assertCount(2, $layer[1]->getChildren());
 
         $layer = $layer[1]->getChildren();
@@ -848,27 +991,33 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals($page5->getUuid(), $layer[0]->getId());
         $this->assertFalse($layer[0]->hasChildren());
         $this->assertNull($layer[0]->getChildren());
+        $this->assertEquals([], $layer[1]->getPermissions());
         $this->assertEquals($page6->getUuid(), $layer[1]->getId());
         $this->assertTrue($layer[1]->hasChildren());
         $this->assertCount(2, $layer[1]->getChildren());
+        $this->assertEquals([], $layer[1]->getPermissions());
 
         $layer = $layer[1]->getChildren();
         $this->assertCount(2, $layer);
         $this->assertEquals($page9->getUuid(), $layer[0]->getId());
         $this->assertFalse($layer[0]->hasChildren());
         $this->assertNull($layer[0]->getChildren());
+        $this->assertEquals([], $layer[1]->getPermissions());
         $this->assertEquals($page10->getUuid(), $layer[1]->getId());
         $this->assertTrue($layer[1]->hasChildren());
         $this->assertCount(2, $layer[1]->getChildren());
+        $this->assertEquals([], $layer[1]->getPermissions());
 
         $layer = $layer[1]->getChildren();
         $this->assertCount(2, $layer);
         $this->assertEquals($page11->getUuid(), $layer[0]->getId());
         $this->assertFalse($layer[0]->hasChildren());
         $this->assertNull($layer[0]->getChildren());
+        $this->assertEquals([], $layer[1]->getPermissions());
         $this->assertEquals($page12->getUuid(), $layer[1]->getId());
         $this->assertTrue($layer[1]->hasChildren());
         $this->assertNull($layer[1]->getChildren());
+        $this->assertEquals([], $layer[1]->getPermissions());
     }
 
     public function testFindParentsWithSiblingsByUuidWithoutWebspaceKey()
@@ -889,7 +1038,26 @@ class ContentRepositoryTest extends SuluTestCase
 
     public function testFindByPaths()
     {
-        $page1 = $this->createPage('test-1', 'de');
+        $role1 = $this->createRole('Role 1', 'Sulu');
+        $role2 = $this->createRole('Role 2', 'Sulu');
+        $role3 = $this->createRole('Role 3', 'Website');
+
+        $this->em->flush();
+
+        $user = $this->prophesize(UserInterface::class);
+        $user->getRoleObjects()->willReturn([$role1, $role2]);
+
+        $page1 = $this->createPage(
+            'test-1',
+            'de',
+            [],
+            null,
+            [
+                $role1->getId() => ['edit' => true],
+                $role2->getId() => ['view' => true, 'archive' => true],
+                $role3->getId() => ['add' => true],
+            ]
+        );
         $page11 = $this->createPage('test-1/test-1', 'de', [], $page1);
         $page2 = $this->createPage('test-2', 'de');
         $page3 = $this->createPage('test-3', 'de');
@@ -897,7 +1065,8 @@ class ContentRepositoryTest extends SuluTestCase
         $result = $this->contentRepository->findByPaths(
             ['/cmf/sulu_io/contents', '/cmf/sulu_io/contents/test-1', '/cmf/sulu_io/contents/test-2'],
             'de',
-            MappingBuilder::create()->addProperties(['title'])->getMapping()
+            MappingBuilder::create()->addProperties(['title'])->getMapping(),
+            $user->reveal()
         );
 
         $this->assertCount(3, $result);
@@ -908,20 +1077,63 @@ class ContentRepositoryTest extends SuluTestCase
                     'uuid' => $content->getId(),
                     'hasChildren' => $content->hasChildren(),
                     'children' => $content->getChildren(),
+                    'permissions' => $content->getPermissions(),
                 ];
             },
             $result
         );
 
         $homepageUuid = $this->sessionManager->getContentNode('sulu_io')->getIdentifier();
-        $this->assertContains(['uuid' => $homepageUuid, 'hasChildren' => true, 'children' => []], $items);
-        $this->assertContains(['uuid' => $page1->getUuid(), 'hasChildren' => true, 'children' => []], $items);
-        $this->assertContains(['uuid' => $page2->getUuid(), 'hasChildren' => false, 'children' => []], $items);
+        $this->assertContains(
+            ['uuid' => $homepageUuid, 'hasChildren' => true, 'children' => [], 'permissions' => []],
+            $items
+        );
+        $this->assertContains(
+            [
+                'uuid' => $page1->getUuid(),
+                'hasChildren' => true,
+                'children' => [],
+                'permissions' => [
+                    $role1->getId() => ['view' => false, 'add' => false, 'delete' => false, 'edit' => true],
+                    $role2->getId() => [
+                        'view' => true,
+                        'add' => false,
+                        'edit' => false,
+                        'delete' => false,
+                        'archive' => true,
+                    ],
+                ],
+            ],
+            $items
+        );
+        $this->assertContains(
+            ['uuid' => $page2->getUuid(), 'hasChildren' => false, 'children' => [], 'permissions' => []],
+            $items
+        );
     }
 
     public function testFindByUuids()
     {
-        $page1 = $this->createPage('test-1', 'de');
+        $role1 = $this->createRole('Role 1', 'Sulu');
+        $role2 = $this->createRole('Role 2', 'Sulu');
+        $role3 = $this->createRole('Role 3', 'Website');
+
+        $this->em->flush();
+
+        $user = $this->prophesize(UserInterface::class);
+        $user->getRoleObjects()->willReturn([$role1, $role2]);
+
+        $page1 = $this->createPage(
+            'test-1',
+            'de',
+            [],
+            null,
+            [
+                $role1->getId() => ['edit' => true],
+                $role2->getId() => ['view' => true, 'archive' => true],
+                $role3->getId() => ['add' => true],
+            ]
+        );
         $page11 = $this->createPage('test-1/test-1', 'de', [], $page1);
         $page2 = $this->createPage('test-2', 'de');
         $page3 = $this->createPage('test-3', 'de');
@@ -929,7 +1141,8 @@ class ContentRepositoryTest extends SuluTestCase
         $result = $this->contentRepository->findByUuids(
             [$page1->getUuid(), $page2->getUuid()],
             'de',
-            MappingBuilder::create()->addProperties(['title'])->getMapping()
+            MappingBuilder::create()->addProperties(['title'])->getMapping(),
+            $user->reveal()
         );
 
         $this->assertCount(2, $result);
@@ -940,18 +1153,63 @@ class ContentRepositoryTest extends SuluTestCase
                     'uuid' => $content->getId(),
                     'hasChildren' => $content->hasChildren(),
                     'children' => $content->getChildren(),
+                    'permissions' => $content->getPermissions(),
                 ];
             },
             $result
         );
 
-        $this->assertContains(['uuid' => $page1->getUuid(), 'hasChildren' => true, 'children' => []], $items);
-        $this->assertContains(['uuid' => $page2->getUuid(), 'hasChildren' => false, 'children' => []], $items);
+        $this->assertContains(
+            [
+                'uuid' => $page1->getUuid(),
+                'hasChildren' => true,
+                'children' => [],
+                'permissions' => [
+                    $role1->getId() => ['view' => false, 'add' => false, 'delete' => false, 'edit' => true],
+                    $role2->getId() => [
+                        'view' => true,
+                        'add' => false,
+                        'edit' => false,
+                        'delete' => false,
+                        'archive' => true,
+                    ],
+                ],
+            ],
+            $items
+        );
+        $this->assertContains(
+            [
+                'uuid' => $page2->getUuid(),
+                'hasChildren' => false,
+                'children' => [],
+                'permissions' => [],
+            ],
+            $items
+        );
     }
 
     public function testFindAll()
     {
-        $page1 = $this->createPage('test-1', 'de');
+        $role1 = $this->createRole('Role 1', 'Sulu');
+        $role2 = $this->createRole('Role 2', 'Sulu');
+        $role3 = $this->createRole('Role 3', 'Website');
+
+        $this->em->flush();
+
+        $user = $this->prophesize(UserInterface::class);
+        $user->getRoleObjects()->willReturn([$role1, $role2]);
+
+        $page1 = $this->createPage(
+            'test-1',
+            'de',
+            [],
+            null,
+            [
+                $role1->getId() => ['edit' => true],
+                $role2->getId() => ['view' => true, 'archive' => true],
+                $role3->getId() => ['add' => true],
+            ]
+        );
         $page11 = $this->createPage('test-1-1', 'de', [], $page1);
         $page2 = $this->createPage('test-2', 'de');
         $page3 = $this->createPage('test-3', 'de');
@@ -959,7 +1217,8 @@ class ContentRepositoryTest extends SuluTestCase
         $result = $this->contentRepository->findAll(
             'de',
             'sulu_io',
-            MappingBuilder::create()->addProperties(['title'])->getMapping()
+            MappingBuilder::create()->addProperties(['title'])->getMapping(),
+            $user->reveal()
         );
 
         $paths = \array_map(
@@ -974,6 +1233,28 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertContains('/test-1/test-1-1', $paths);
         $this->assertContains('/test-2', $paths);
         $this->assertContains('/test-3', $paths);
+
+        $permissions = \array_map(
+            function(Content $content) {
+                return $content->getPermissions();
+            },
+            $result
+        );
+
+        $this->assertContains(
+            [
+                $role1->getId() => ['view' => false, 'add' => false, 'delete' => false, 'edit' => true],
+                $role2->getId() => [
+                    'view' => true,
+                    'add' => false,
+                    'edit' => false,
+                    'delete' => false,
+                    'archive' => true,
+                ],
+            ],
+            $permissions
+        );
+        $this->assertContains([], $permissions);
     }
 
     public function testFindAllNoPage()
@@ -998,12 +1279,32 @@ class ContentRepositoryTest extends SuluTestCase
 
     public function testFindAllByPortal()
     {
-        $this->createPage('test-1', 'de_at');
+        $role1 = $this->createRole('Role 1', 'Sulu');
+        $role2 = $this->createRole('Role 2', 'Sulu');
+        $role3 = $this->createRole('Role 3', 'Website');
+
+        $this->em->flush();
+
+        $user = $this->prophesize(UserInterface::class);
+        $user->getRoleObjects()->willReturn([$role1, $role2]);
+
+        $page1 = $this->createPage(
+            'test-1',
+            'de_at',
+            [],
+            null,
+            [
+                $role1->getId() => ['edit' => true],
+                $role2->getId() => ['view' => true, 'archive' => true],
+                $role3->getId() => ['add' => true],
+            ]
+        );
 
         $result = $this->contentRepository->findAllByPortal(
             'de_at',
             'sulucmf_at',
-            MappingBuilder::create()->setResolveUrl(true)->getMapping()
+            MappingBuilder::create()->setResolveUrl(true)->getMapping(),
+            $user->reveal()
         );
 
         \usort($result, function($content1, $content2) {
@@ -1011,12 +1312,23 @@ class ContentRepositoryTest extends SuluTestCase
         });
 
         $this->assertCount(2, $result);
+        $this->assertEquals([
+            $role1->getId() => ['view' => false, 'add' => false, 'delete' => false, 'edit' => true],
+            $role2->getId() => [
+                'view' => true,
+                'add' => false,
+                'edit' => false,
+                'delete' => false,
+                'archive' => true,
+            ],
+        ], $result[1]->getPermissions());
         $urls = $result[1]->getUrls();
         $this->assertEquals('/test-1', $urls['de_at']);
         $this->assertNull($urls['de']);
         $this->assertNull($urls['en']);
         $this->assertNull($urls['en_us']);
 
+        $this->assertEquals([], $result[0]->getPermissions());
         $urls = $result[0]->getUrls();
         $this->assertEquals('/', $urls['de_at']);
         $this->assertEquals('/', $urls['de']);
@@ -1227,5 +1539,16 @@ class ContentRepositoryTest extends SuluTestCase
         $this->documentManager->flush();
 
         return $document;
+    }
+
+    private function createRole(string $name, string $system)
+    {
+        $role = new Role();
+        $role->setName($name);
+        $role->setSystem($system);
+
+        $this->em->persist($role);
+
+        return $role;
     }
 }

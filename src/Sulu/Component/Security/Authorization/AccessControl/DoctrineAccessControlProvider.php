@@ -109,9 +109,9 @@ class DoctrineAccessControlProvider implements AccessControlProviderInterface
      *
      * @return array
      */
-    public function getPermissions($type, $identifier)
+    public function getPermissions($type, $identifier, $system = null)
     {
-        $accessControls = $this->accessControlRepository->findByTypeAndId($type, $identifier);
+        $accessControls = $this->accessControlRepository->findByTypeAndId($type, $identifier, $system);
 
         $permissions = [];
         foreach ($accessControls as $accessControl) {

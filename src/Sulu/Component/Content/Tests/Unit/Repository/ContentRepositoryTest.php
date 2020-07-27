@@ -39,6 +39,7 @@ use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
 use Sulu\Component\Util\SuluNodeHelper;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
@@ -91,6 +92,11 @@ class ContentRepositoryTest extends TestCase
     private $contentRepository;
 
     /**
+     * @var RoleRepositoryInterface
+     */
+    private $roleRepository;
+
+    /**
      * @var QueryInterface
      */
     private $query;
@@ -105,6 +111,7 @@ class ContentRepositoryTest extends TestCase
         $this->localizationFinder = $this->prophesize(LocalizationFinderInterface::class);
         $this->structureManager = $this->prophesize(StructureManagerInterface::class);
         $this->nodeHelper = $this->prophesize(SuluNodeHelper::class);
+        $this->roleRepository = $this->prophesize(RoleRepositoryInterface::class);
 
         $webspace = $this->prophesize(Webspace::class);
         $this->webspaceManager->findWebspaceByKey(Argument::any())->willReturn($webspace->reveal());
@@ -132,6 +139,7 @@ class ContentRepositoryTest extends TestCase
             $this->localizationFinder->reveal(),
             $this->structureManager->reveal(),
             $this->nodeHelper->reveal(),
+            $this->roleRepository->reveal(),
             []
         );
 

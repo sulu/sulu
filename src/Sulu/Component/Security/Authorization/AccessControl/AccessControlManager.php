@@ -62,7 +62,7 @@ class AccessControlManager implements AccessControlManagerInterface
         );
     }
 
-    public function getPermissions($type, $identifier)
+    public function getPermissions($type, $identifier, $system = null)
     {
         $accessControlProvider = $this->getAccessControlProvider($type);
 
@@ -70,7 +70,7 @@ class AccessControlManager implements AccessControlManagerInterface
             return;
         }
 
-        return $accessControlProvider->getPermissions($type, $identifier);
+        return $accessControlProvider->getPermissions($type, $identifier, $system);
     }
 
     public function getUserPermissions(SecurityCondition $securityCondition, $user)
@@ -79,14 +79,18 @@ class AccessControlManager implements AccessControlManagerInterface
             return [];
         }
 
-        $objectPermissions = $this->getUserObjectPermission($securityCondition, $user);
-        $checkPermissionType = null === $objectPermissions;
+        // TODO recognize system automatically
+        $system = 'Sulu';
+
+        $objectPermissions = $this->getUserObjectPermission($securityCondition, $user, $system);
+        $checkPermissionType = empty($objectPermissions);
 
         $securityContextPermissions = $this->getUserSecurityContextPermissions(
             $securityCondition->getLocale(),
             $securityCondition->getSecurityContext(),
             $user,
-            $checkPermissionType
+            $checkPermissionType,
+            $system
         );
 
         if ($checkPermissionType) {
@@ -96,16 +100,24 @@ class AccessControlManager implements AccessControlManagerInterface
         return $this->restrictPermissions($objectPermissions, $securityContextPermissions);
     }
 
-    public function getUserPermissionByArray($locale, $securityContext, $objectPermissionsByRole, UserInterface $user)
-    {
-        $objectPermissions = $this->getUserObjectPermissionByArray($objectPermissionsByRole, $user);
-        $checkPermissionType = null === $objectPermissions;
+    public function getUserPermissionByArray(
+        $locale,
+        $securityContext,
+        $objectPermissionsByRole,
+        UserInterface $user
+    ) {
+        // TODO recognize system automatically
+        $system = 'Sulu';
+
+        $objectPermissions = $this->getUserObjectPermissionByArray($objectPermissionsByRole, $user, $system);
+        $checkPermissionType = empty($objectPermissions);
 
         $securityContextPermissions = $this->getUserSecurityContextPermissions(
             $locale,
             $securityContext,
             $user,
-            $checkPermissionType
+            $checkPermissionType,
+            $system
         );
 
         if ($checkPermissionType) {
@@ -133,11 +145,15 @@ class AccessControlManager implements AccessControlManagerInterface
      *
      * @return array
      */
-    private function getUserObjectPermission(SecurityCondition $securityCondition, UserInterface $user)
+    private function getUserObjectPermission(SecurityCondition $securityCondition, UserInterface $user, $system)
     {
-        $permissions = $this->getPermissions($securityCondition->getObjectType(), $securityCondition->getObjectId());
+        $permissions = $this->getPermissions(
+            $securityCondition->getObjectType(),
+            $securityCondition->getObjectId(),
+            $system
+        );
 
-        return $this->getUserObjectPermissionByArray($permissions, $user);
+        return $this->getUserObjectPermissionByArray($permissions, $user, $system);
     }
 
     /**
@@ -148,7 +164,7 @@ class AccessControlManager implements AccessControlManagerInterface
      *
      * @return array
      */
-    private function getUserObjectPermissionByArray($permissions, UserInterface $user)
+    private function getUserObjectPermissionByArray($permissions, UserInterface $user, $system)
     {
         if (empty($permissions)) {
             return null;
@@ -159,6 +175,10 @@ class AccessControlManager implements AccessControlManagerInterface
         foreach ($roles as $role) {
             $roleId = $role->getId();
             if (!isset($permissions[$roleId])) {
+                continue;
+            }
+
+            if ($role->getSystem() !== $system) {
                 continue;
             }
 
@@ -183,11 +203,16 @@ class AccessControlManager implements AccessControlManagerInterface
         $locale,
         $securityContext,
         UserInterface $user,
-        $checkPermissionType
+        $checkPermissionType,
+        $system
     ) {
         $userPermissions = [];
 
         foreach ($user->getUserRoles() as $userRole) {
+            if ($userRole->getRole()->getSystem() !== $system) {
+                continue;
+            }
+
             $userPermissions = $this->cumulatePermissions(
                 $userPermissions,
                 $this->getUserRoleSecurityContextPermission(

@@ -123,6 +123,7 @@
 
         <service id="sulu_security.phpcr_access_control_provider" class="%sulu_security.phpcr_access_control_provider.class%">
             <argument type="service" id="sulu_document_manager.document_manager"/>
+            <argument type="service" id="sulu.repository.role"/>
             <argument>%permissions%</argument>
             <tag name="sulu.context" context="admin"/>
             <tag name="sulu.access_control"/>

@@ -86,12 +86,27 @@ class AccessControlManagerTest extends TestCase
         $accessControlProvider1->getPermissions(Argument::cetera())->shouldNotBeCalled();
         $accessControlProvider2 = $this->prophesize(AccessControlProviderInterface::class);
         $accessControlProvider2->supports(Argument::any())->willReturn(true);
-        $accessControlProvider2->getPermissions(\stdClass::class, '1')->shouldBeCalled();
+        $accessControlProvider2->getPermissions(\stdClass::class, '1', null)->shouldBeCalled();
 
         $this->accessControlManager->addAccessControlProvider($accessControlProvider1->reveal());
         $this->accessControlManager->addAccessControlProvider($accessControlProvider2->reveal());
 
         $this->accessControlManager->getPermissions(\stdClass::class, '1');
+    }
+
+    public function testGetPermissionsWithSystem()
+    {
+        $accessControlProvider1 = $this->prophesize(AccessControlProviderInterface::class);
+        $accessControlProvider1->supports(Argument::any())->willReturn(false);
+        $accessControlProvider1->getPermissions(Argument::cetera())->shouldNotBeCalled();
+        $accessControlProvider2 = $this->prophesize(AccessControlProviderInterface::class);
+        $accessControlProvider2->supports(Argument::any())->willReturn(true);
+        $accessControlProvider2->getPermissions(\stdClass::class, '1', 'Sulu')->shouldBeCalled();
+
+        $this->accessControlManager->addAccessControlProvider($accessControlProvider1->reveal());
+        $this->accessControlManager->addAccessControlProvider($accessControlProvider2->reveal());
+
+        $this->accessControlManager->getPermissions(\stdClass::class, '1', 'Sulu');
     }
 
     public function testGetPermissionsWithoutProvider()
@@ -115,7 +130,7 @@ class AccessControlManagerTest extends TestCase
         /** @var AccessControlProviderInterface $accessControlProvider */
         $accessControlProvider = $this->prophesize(AccessControlProviderInterface::class);
         $accessControlProvider->supports(\stdClass::class)->willReturn(true);
-        $accessControlProvider->getPermissions(\stdClass::class, '1')->willReturn($rolePermissions);
+        $accessControlProvider->getPermissions(\stdClass::class, '1', 'Sulu')->willReturn($rolePermissions);
         $this->accessControlManager->addAccessControlProvider($accessControlProvider->reveal());
 
         // create role for given role permissions from data provider
@@ -126,6 +141,7 @@ class AccessControlManagerTest extends TestCase
         /** @var Role $role1 */
         $role1 = $this->prophesize(Role::class);
         $role1->getPermissions()->willReturn([$permission1->reveal()]);
+        $role1->getSystem()->willReturn('Sulu');
         $role1->getId()->willReturn(1);
         /** @var UserRole $userRole1 */
         $userRole1 = $this->prophesize(UserRole::class);
@@ -140,6 +156,7 @@ class AccessControlManagerTest extends TestCase
         /** @var Role $role */
         $role2 = $this->prophesize(Role::class);
         $role2->getPermissions()->willReturn([$permission2->reveal()]);
+        $role2->getSystem()->willReturn('Sulu');
         $role2->getId()->willReturn(2);
         /** @var UserRole $userRole */
         $userRole2 = $this->prophesize(UserRole::class);
@@ -168,7 +185,7 @@ class AccessControlManagerTest extends TestCase
         /** @var AccessControlProviderInterface $accessControlProvider */
         $accessControlProvider = $this->prophesize(AccessControlProviderInterface::class);
         $accessControlProvider->supports(\stdClass::class)->willReturn(true);
-        $accessControlProvider->getPermissions(\stdClass::class, '1')
+        $accessControlProvider->getPermissions(\stdClass::class, '1', 'Sulu')
             ->willReturn([2 => ['view' => true, 'edit' => true]]);
         $this->accessControlManager->addAccessControlProvider($accessControlProvider->reveal());
 
@@ -180,6 +197,7 @@ class AccessControlManagerTest extends TestCase
         /** @var Role $role1 */
         $role1 = $this->prophesize(Role::class);
         $role1->getPermissions()->willReturn([$permission1->reveal()]);
+        $role1->getSystem()->willReturn('Sulu');
         $role1->getId()->willReturn(1);
         /** @var UserRole $userRole1 */
         $userRole1 = $this->prophesize(UserRole::class);
@@ -197,7 +215,7 @@ class AccessControlManagerTest extends TestCase
             $user->reveal()
         );
 
-        $this->assertEquals(['view' => false, 'edit' => false], $permissions);
+        $this->assertEquals(['view' => true, 'edit' => false], $permissions);
     }
 
     public function testAddAccessControlProvider()
