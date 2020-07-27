@@ -13,6 +13,7 @@ namespace Sulu\Component\Rest\ListBuilder\Metadata;
 
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineCaseFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineConcatenationFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineCountDistinctFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineCountFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
@@ -209,6 +210,32 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
         }
 
         return new DoctrineCountFieldDescriptor(
+            $propertyMetadata->getField()->getName(),
+            $propertyMetadata->getName(),
+            $propertyMetadata->getField()->getEntityName(),
+            $propertyMetadata->getTranslation(),
+            $joins,
+            $propertyMetadata->getVisibility(),
+            $propertyMetadata->getSearchability(),
+            $propertyMetadata->getType(),
+            $propertyMetadata->isSortable()
+        );
+    }
+
+    private function getCountDistinctFieldDescriptor(AbstractPropertyMetadata $propertyMetadata)
+    {
+        $joins = [];
+        foreach ($propertyMetadata->getField()->getJoins() as $joinMetadata) {
+            $joins[$joinMetadata->getEntityName()] = new DoctrineJoinDescriptor(
+                $joinMetadata->getEntityName(),
+                $joinMetadata->getEntityField(),
+                $joinMetadata->getCondition(),
+                $joinMetadata->getMethod(),
+                $joinMetadata->getConditionMethod()
+            );
+        }
+
+        return new DoctrineCountDistinctFieldDescriptor(
             $propertyMetadata->getField()->getName(),
             $propertyMetadata->getName(),
             $propertyMetadata->getField()->getEntityName(),

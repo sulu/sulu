@@ -57,6 +57,11 @@
         <xs:attributeGroup ref="propertyAttributeGroup"/>
     </xs:complexType>
 
+    <xs:complexType name="countDistinctPropertyType">
+        <xs:group ref="propertyGroup"/>
+        <xs:attributeGroup ref="propertyAttributeGroup"/>
+    </xs:complexType>
+
     <xs:complexType name="casePropertyType">
         <xs:group ref="casePropertyGroup"/>
         <xs:attributeGroup ref="propertyAttributeGroup"/>
@@ -93,6 +98,7 @@
                 <xs:element type="concatenationPropertyType" name="concatenation-property"/>
                 <xs:element type="groupConcatPropertyType" name="group-concat-property"/>
                 <xs:element type="countPropertyType" name="count-property"/>
+                <xs:element type="countDistinctPropertyType" name="count-distinct-property"/>
                 <xs:element type="casePropertyType" name="case-property"/>
                 <xs:element type="identityPropertyType" name="identity-property"/>
             </xs:choice>

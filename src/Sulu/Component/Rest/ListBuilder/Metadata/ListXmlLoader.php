@@ -89,6 +89,9 @@ class ListXmlLoader
             case 'count-property':
                 $propertyMetadata = $this->loadCountPropertyMetadata($xpath, $propertyNode);
                 break;
+            case 'count-distinct-property':
+                $propertyMetadata = $this->loadCountDistinctPropertyMetadata($xpath, $propertyNode);
+                break;
             case 'property':
                 $propertyMetadata = $this->loadSinglePropertyMetadata($xpath, $propertyNode);
                 break;
@@ -195,6 +198,19 @@ class ListXmlLoader
         $field = $this->getField($xpath, $propertyNode);
 
         $propertyMetadata = new CountPropertyMetadata(
+            XmlUtil::getValueFromXPath('@name', $xpath, $propertyNode)
+        );
+
+        $propertyMetadata->setField($field);
+
+        return $propertyMetadata;
+    }
+
+    private function loadCountDistinctPropertyMetadata(\DOMXPath $xpath, \DOMNode $propertyNode)
+    {
+        $field = $this->getField($xpath, $propertyNode);
+
+        $propertyMetadata = new CountDistinctPropertyMetadata(
             XmlUtil::getValueFromXPath('@name', $xpath, $propertyNode)
         );
 
