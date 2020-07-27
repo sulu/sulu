@@ -13,8 +13,8 @@ namespace Sulu\Bundle\SecurityBundle\Tests\Functional\Entity;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\SecurityBundle\Entity\AccessControl;
-use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\AccessControlRepository;
+use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 

@@ -76,7 +76,7 @@ class PhpcrAccessControlProviderTest extends TestCase
         $this->roleRepository->findRoleIdsBySystem(null)->willReturn([]);
 
         $this->assertEquals([
-            1 => ['view' => true, 'edit' => true, 'delete' => false]
+            1 => ['view' => true, 'edit' => true, 'delete' => false],
         ], $this->phpcrAccessControlProvider->getPermissions(\get_class($document), '1'));
     }
 

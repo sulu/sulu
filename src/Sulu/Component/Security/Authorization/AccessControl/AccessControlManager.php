@@ -12,6 +12,7 @@
 namespace Sulu\Component\Security\Authorization\AccessControl;
 
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
+use Sulu\Bundle\SecurityBundle\System\SystemStoreInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\MaskConverterInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
@@ -40,10 +41,19 @@ class AccessControlManager implements AccessControlManagerInterface
      */
     private $eventDispatcher;
 
-    public function __construct(MaskConverterInterface $maskConverter, EventDispatcherInterface $eventDispatcher)
-    {
+    /**
+     * @var SystemStoreInterface
+     */
+    private $systemStore;
+
+    public function __construct(
+        MaskConverterInterface $maskConverter,
+        EventDispatcherInterface $eventDispatcher,
+        SystemStoreInterface $systemStore
+    ) {
         $this->maskConverter = $maskConverter;
         $this->eventDispatcher = $eventDispatcher;
+        $this->systemStore = $systemStore;
     }
 
     public function setPermissions($type, $identifier, $permissions)
@@ -79,8 +89,7 @@ class AccessControlManager implements AccessControlManagerInterface
             return [];
         }
 
-        // TODO recognize system automatically
-        $system = 'Sulu';
+        $system = $this->systemStore->getSystem();
 
         $objectPermissions = $this->getUserObjectPermission($securityCondition, $user, $system);
         $checkPermissionType = empty($objectPermissions);
@@ -106,8 +115,7 @@ class AccessControlManager implements AccessControlManagerInterface
         $objectPermissionsByRole,
         UserInterface $user
     ) {
-        // TODO recognize system automatically
-        $system = 'Sulu';
+        $system = $this->systemStore->getSystem();
 
         $objectPermissions = $this->getUserObjectPermissionByArray($objectPermissionsByRole, $user, $system);
         $checkPermissionType = empty($objectPermissions);

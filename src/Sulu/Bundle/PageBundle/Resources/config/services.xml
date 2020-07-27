@@ -147,6 +147,7 @@
             <argument type="service" id="sulu.content.structure_manager"/>
             <argument type="service" id="sulu.util.node_helper"/>
             <argument type="service" id="sulu.repository.role"/>
+            <argument type="service" id="sulu_security.system_store"/>
             <argument>%sulu_security.permissions%</argument>
         </service>
         <service id="sulu_page.content_repository.event_subscriber"

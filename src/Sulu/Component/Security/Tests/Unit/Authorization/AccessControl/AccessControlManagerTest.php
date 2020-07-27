@@ -17,6 +17,7 @@ use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
+use Sulu\Bundle\SecurityBundle\System\SystemStoreInterface;
 use Sulu\Bundle\TestBundle\Testing\ReadObjectAttributeTrait;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlManager;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlProviderInterface;
@@ -44,13 +45,21 @@ class AccessControlManagerTest extends TestCase
      */
     private $eventDispatcher;
 
+    /**
+     * @var SystemStoreInterface
+     */
+    private $systemStore;
+
     public function setUp(): void
     {
         $this->maskConverter = $this->prophesize(MaskConverterInterface::class);
         $this->eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
+        $this->systemStore = $this->prophesize(SystemStoreInterface::class);
+
         $this->accessControlManager = new AccessControlManager(
             $this->maskConverter->reveal(),
-            $this->eventDispatcher->reveal()
+            $this->eventDispatcher->reveal(),
+            $this->systemStore->reveal()
         );
     }
 
@@ -122,15 +131,18 @@ class AccessControlManagerTest extends TestCase
         $securityContextPermissions,
         $userLocales,
         $locale,
-        $result
+        $result,
+        $system
     ) {
         $this->maskConverter->convertPermissionsToArray(0)->willReturn(['view' => false, 'edit' => false]);
         $this->maskConverter->convertPermissionsToArray(64)->willReturn(['view' => true, 'edit' => false]);
 
+        $this->systemStore->getSystem()->willReturn($system);
+
         /** @var AccessControlProviderInterface $accessControlProvider */
         $accessControlProvider = $this->prophesize(AccessControlProviderInterface::class);
         $accessControlProvider->supports(\stdClass::class)->willReturn(true);
-        $accessControlProvider->getPermissions(\stdClass::class, '1', 'Sulu')->willReturn($rolePermissions);
+        $accessControlProvider->getPermissions(\stdClass::class, '1', $system)->willReturn($rolePermissions);
         $this->accessControlManager->addAccessControlProvider($accessControlProvider->reveal());
 
         // create role for given role permissions from data provider
@@ -141,7 +153,7 @@ class AccessControlManagerTest extends TestCase
         /** @var Role $role1 */
         $role1 = $this->prophesize(Role::class);
         $role1->getPermissions()->willReturn([$permission1->reveal()]);
-        $role1->getSystem()->willReturn('Sulu');
+        $role1->getSystem()->willReturn($system);
         $role1->getId()->willReturn(1);
         /** @var UserRole $userRole1 */
         $userRole1 = $this->prophesize(UserRole::class);
@@ -156,7 +168,7 @@ class AccessControlManagerTest extends TestCase
         /** @var Role $role */
         $role2 = $this->prophesize(Role::class);
         $role2->getPermissions()->willReturn([$permission2->reveal()]);
-        $role2->getSystem()->willReturn('Sulu');
+        $role2->getSystem()->willReturn($system);
         $role2->getId()->willReturn(2);
         /** @var UserRole $userRole */
         $userRole2 = $this->prophesize(UserRole::class);
@@ -181,6 +193,8 @@ class AccessControlManagerTest extends TestCase
     {
         $this->maskConverter->convertPermissionsToArray(0)->willReturn(['view' => false, 'edit' => false]);
         $this->maskConverter->convertPermissionsToArray(64)->willReturn(['view' => true, 'edit' => false]);
+
+        $this->systemStore->getSystem()->willReturn('Sulu');
 
         /** @var AccessControlProviderInterface $accessControlProvider */
         $accessControlProvider = $this->prophesize(AccessControlProviderInterface::class);
@@ -246,6 +260,7 @@ class AccessControlManagerTest extends TestCase
                 ['de', 'en'],
                 'de',
                 ['view' => true, 'edit' => false],
+                'Sulu',
             ],
             [
                 [1 => ['view' => false, 'edit' => false]],
@@ -253,6 +268,7 @@ class AccessControlManagerTest extends TestCase
                 ['de', 'en'],
                 'de',
                 ['view' => false, 'edit' => false],
+                'Sulu',
             ],
             [
                 [],
@@ -260,6 +276,7 @@ class AccessControlManagerTest extends TestCase
                 ['de', 'en'],
                 'de',
                 ['view' => true, 'edit' => false],
+                'Sulu',
             ],
             [
                 [1 => ['view' => true, 'edit' => true]],
@@ -267,6 +284,7 @@ class AccessControlManagerTest extends TestCase
                 ['de', 'en'],
                 'de',
                 ['view' => true, 'edit' => true],
+                'Sulu',
             ],
             [
                 [
@@ -277,6 +295,7 @@ class AccessControlManagerTest extends TestCase
                 ['de', 'en'],
                 'de',
                 ['view' => true, 'edit' => true],
+                'Sulu',
             ],
             [
                 [
@@ -287,6 +306,7 @@ class AccessControlManagerTest extends TestCase
                 ['de', 'en'],
                 'de',
                 ['view' => false, 'edit' => false],
+                'Website',
             ],
             [
                 [
@@ -297,6 +317,7 @@ class AccessControlManagerTest extends TestCase
                 ['de', 'en'],
                 'de',
                 ['view' => true, 'edit' => true],
+                'Sulu',
             ],
             [
                 [
@@ -307,6 +328,7 @@ class AccessControlManagerTest extends TestCase
                 ['de', 'en'],
                 'fr',
                 ['view' => false, 'edit' => false],
+                'Sulu',
             ],
             [
                 [
@@ -317,6 +339,7 @@ class AccessControlManagerTest extends TestCase
                 ['de', 'en'],
                 null,
                 ['view' => true, 'edit' => true],
+                'Website',
             ],
             [
                 [1 => ['view' => true, 'edit' => true]],
@@ -324,6 +347,7 @@ class AccessControlManagerTest extends TestCase
                 ['en'],
                 'de',
                 ['view' => false, 'edit' => false],
+                'Sulu',
             ],
         ];
     }

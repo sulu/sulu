@@ -19,6 +19,7 @@ use PHPCR\Query\QOM\QueryObjectModelFactoryInterface;
 use PHPCR\SessionInterface;
 use PHPCR\Util\PathHelper;
 use PHPCR\Util\QOM\QueryBuilder;
+use Sulu\Bundle\SecurityBundle\System\SystemStoreInterface;
 use Sulu\Component\Content\Compat\LocalizationFinderInterface;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
@@ -103,6 +104,11 @@ class ContentRepository implements ContentRepositoryInterface
      */
     private $permissions;
 
+    /**
+     * @var SystemStoreInterface
+     */
+    private $systemStore;
+
     public function __construct(
         SessionManagerInterface $sessionManager,
         PropertyEncoder $propertyEncoder,
@@ -111,6 +117,7 @@ class ContentRepository implements ContentRepositoryInterface
         StructureManagerInterface $structureManager,
         SuluNodeHelper $nodeHelper,
         RoleRepositoryInterface $roleRepository,
+        SystemStoreInterface $systemStore,
         array $permissions
     ) {
         $this->sessionManager = $sessionManager;
@@ -120,6 +127,7 @@ class ContentRepository implements ContentRepositoryInterface
         $this->structureManager = $structureManager;
         $this->nodeHelper = $nodeHelper;
         $this->roleRepository = $roleRepository;
+        $this->systemStore = $systemStore;
         $this->permissions = $permissions;
 
         $this->session = $sessionManager->getSession();
@@ -414,7 +422,7 @@ class ContentRepository implements ContentRepositoryInterface
                         );
                     },
                     $result,
-                    array_keys($result)
+                    \array_keys($result)
                 )
             )
         );
@@ -423,19 +431,19 @@ class ContentRepository implements ContentRepositoryInterface
     private function resolveResultPermissions(array $result, UserInterface $user = null)
     {
         $permissions = [];
-        if ($user === null) {
+        if (null === $user) {
             return $permissions;
         }
 
         // TODO recognize system automatically
-        $systemRoleIds = $this->roleRepository->findRoleIdsBySystem('Sulu');
+        $systemRoleIds = $this->roleRepository->findRoleIdsBySystem($this->systemStore->getSystem());
 
         foreach ($result as $index => $row) {
             $permissions[$index] = [];
             $securityProperties = $row->getNode()->getProperties(SecuritySubscriber::SECURITY_PROPERTY_PREFIX . '*');
 
-            foreach($securityProperties as $securityProperty) {
-                $roleId = str_replace(SecuritySubscriber::SECURITY_PROPERTY_PREFIX, '', $securityProperty->getName());
+            foreach ($securityProperties as $securityProperty) {
+                $roleId = \str_replace(SecuritySubscriber::SECURITY_PROPERTY_PREFIX, '', $securityProperty->getName());
 
                 if (!\in_array($roleId, $systemRoleIds)) {
                     continue;

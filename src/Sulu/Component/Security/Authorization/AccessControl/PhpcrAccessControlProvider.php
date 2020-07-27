@@ -81,7 +81,7 @@ class PhpcrAccessControlProvider implements AccessControlProviderInterface
 
         $systemRoleIds = $this->roleRepository->findRoleIdsBySystem($system);
 
-        return array_filter(
+        return \array_filter(
             $documentPermissions,
             function($roleId) use ($systemRoleIds) {
                 return \in_array($roleId, $systemRoleIds);

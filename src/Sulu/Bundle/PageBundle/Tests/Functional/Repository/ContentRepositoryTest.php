@@ -16,6 +16,7 @@ use PHPCR\SessionInterface;
 use Sulu\Bundle\PageBundle\Document\HomeDocument;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
+use Sulu\Bundle\SecurityBundle\System\SystemStoreInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\LocalizationFinderInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
@@ -91,6 +92,11 @@ class ContentRepositoryTest extends SuluTestCase
     private $homeDocument;
 
     /**
+     * @var SystemStoreInterface
+     */
+    private $systemStore;
+
+    /**
      * @var RoleRepositoryInterface
      */
     private $roleRepository;
@@ -109,6 +115,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->structureManager = $this->getContainer()->get('sulu.content.structure_manager');
         $this->nodeHelper = $this->getContainer()->get('sulu.util.node_helper');
         $this->roleRepository = $this->getContainer()->get('sulu.repository.role');
+        $this->systemStore = $this->getContainer()->get('sulu_security.system_store');
 
         $this->contentRepository = new ContentRepository(
             $this->sessionManager,
@@ -118,6 +125,7 @@ class ContentRepositoryTest extends SuluTestCase
             $this->structureManager,
             $this->nodeHelper,
             $this->roleRepository,
+            $this->systemStore,
             ['view' => 64, 'add' => 32, 'edit' => 16, 'delete' => 8]
         );
 
@@ -136,6 +144,8 @@ class ContentRepositoryTest extends SuluTestCase
 
         $user = $this->prophesize(UserInterface::class);
         $user->getRoleObjects()->willReturn([$role1, $role2]);
+
+        $this->systemStore->setSystem('Sulu');
 
         $page = $this->createPage(
             'test-1',
@@ -440,14 +450,16 @@ class ContentRepositoryTest extends SuluTestCase
 
     public function testFindByWebspaceRootWithPermissions()
     {
-        $role1 = $this->createRole('Role 1', 'Sulu');
-        $role2 = $this->createRole('Role 2', 'Sulu');
-        $role3 = $this->createRole('Role 3', 'Website');
+        $role1 = $this->createRole('Role 1', 'Website');
+        $role2 = $this->createRole('Role 2', 'Website');
+        $role3 = $this->createRole('Role 3', 'Sulu');
 
         $this->em->flush();
 
         $user = $this->prophesize(UserInterface::class);
         $user->getRoleObjects()->willReturn([$role1, $role2]);
+
+        $this->systemStore->setSystem('Website');
 
         $page = $this->createPage(
             'test-1',
@@ -804,6 +816,8 @@ class ContentRepositoryTest extends SuluTestCase
         $user = $this->prophesize(UserInterface::class);
         $user->getRoleObjects()->willReturn([$role1, $role2]);
 
+        $this->systemStore->setSystem('Sulu');
+
         $page = $this->createPage(
             'test-1',
             'de',
@@ -883,6 +897,8 @@ class ContentRepositoryTest extends SuluTestCase
         $user = $this->prophesize(UserInterface::class);
         $user->getRoleObjects()->willReturn([$role1, $role2]);
 
+        $this->systemStore->setSystem('Sulu');
+
         $page = $this->createPage(
             'test-1',
             'de',
@@ -930,6 +946,8 @@ class ContentRepositoryTest extends SuluTestCase
 
         $user = $this->prophesize(UserInterface::class);
         $user->getRoleObjects()->willReturn([$role1, $role2]);
+
+        $this->systemStore->setSystem('Sulu');
 
         $page1 = $this->createPage(
             'test-1',
@@ -1047,6 +1065,8 @@ class ContentRepositoryTest extends SuluTestCase
         $user = $this->prophesize(UserInterface::class);
         $user->getRoleObjects()->willReturn([$role1, $role2]);
 
+        $this->systemStore->setSystem('Sulu');
+
         $page1 = $this->createPage(
             'test-1',
             'de',
@@ -1123,6 +1143,8 @@ class ContentRepositoryTest extends SuluTestCase
         $user = $this->prophesize(UserInterface::class);
         $user->getRoleObjects()->willReturn([$role1, $role2]);
 
+        $this->systemStore->setSystem('Sulu');
+
         $page1 = $this->createPage(
             'test-1',
             'de',
@@ -1198,6 +1220,8 @@ class ContentRepositoryTest extends SuluTestCase
 
         $user = $this->prophesize(UserInterface::class);
         $user->getRoleObjects()->willReturn([$role1, $role2]);
+
+        $this->systemStore->setSystem('Sulu');
 
         $page1 = $this->createPage(
             'test-1',
@@ -1287,6 +1311,8 @@ class ContentRepositoryTest extends SuluTestCase
 
         $user = $this->prophesize(UserInterface::class);
         $user->getRoleObjects()->willReturn([$role1, $role2]);
+
+        $this->systemStore->setSystem('Sulu');
 
         $page1 = $this->createPage(
             'test-1',
