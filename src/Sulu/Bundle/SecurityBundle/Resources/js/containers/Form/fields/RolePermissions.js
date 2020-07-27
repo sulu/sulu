@@ -23,6 +23,16 @@ class RolePermissions extends React.Component<FieldTypeProps<RolePermissionsType
         return webspaceStore.getWebspace(webspace);
     }
 
+    @computed get webspaceKey() {
+        const {
+            webspace: {
+                key,
+            } = {},
+        } = this;
+
+        return key;
+    }
+
     @computed get system() {
         const {
             webspace: {
@@ -56,6 +66,7 @@ class RolePermissions extends React.Component<FieldTypeProps<RolePermissionsType
                 resourceKey={formInspector.options.resourceKey}
                 system={this.system}
                 value={value ? value : {}}
+                webspaceKey={this.webspaceKey}
             />
         );
     }

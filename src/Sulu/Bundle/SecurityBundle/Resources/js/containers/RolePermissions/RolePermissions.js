@@ -15,6 +15,7 @@ type Props = {|
     resourceKey: string,
     system?: ?string,
     value: RolePermissionsType,
+    webspaceKey?: ?string,
 |};
 
 @observer
@@ -56,7 +57,7 @@ class RolePermissions extends React.Component<Props> {
 
     render() {
         const {roles} = this;
-        const {disabled, resourceKey, system, value} = this.props;
+        const {disabled, resourceKey, system, value, webspaceKey} = this.props;
 
         if (!roles) {
             return <Loader />;
@@ -92,6 +93,7 @@ class RolePermissions extends React.Component<Props> {
                     roles={systemRoles}
                     system={system}
                     values={systemValues}
+                    webspaceKey={webspaceKey}
                 />
             );
 

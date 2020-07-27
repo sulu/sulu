@@ -79,6 +79,7 @@ test('Pass system prop correctly to component', () => {
     webspaceStore.getWebspace.mockImplementation((webspaceKey) => {
         if (webspaceKey === 'test') {
             return {
+                key: 'test',
                 security: {
                     system: 'test_security',
                 },
@@ -101,6 +102,7 @@ test('Pass system prop correctly to component', () => {
     );
 
     expect(rolePermissions.find('RolePermissions').prop('system')).toEqual('test_security');
+    expect(rolePermissions.find('RolePermissions').prop('webspaceKey')).toEqual('test');
 });
 
 test('Pass disabled prop correctly to component', () => {

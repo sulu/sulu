@@ -321,3 +321,111 @@ test('Call onChange callback when new matrix for system is added', () => {
         });
     });
 });
+
+test('Use context for getting default values', () => {
+    const changeSpy = jest.fn();
+
+    const rolePromise = Promise.resolve(
+        {
+            _embedded: {
+                roles: [
+                    {
+                        id: 1,
+                        name: 'Administrator',
+                        permissions: [
+                            {
+                                context: 'sulu.pages.website',
+                                permissions: {add: true, delete: false, edit: true, live: false, view: true},
+                            },
+                        ],
+                        system: 'Sulu',
+                    },
+                ],
+            },
+        }
+    );
+    ResourceRequester.get.mockReturnValue(rolePromise);
+
+    securityContextStore.getAvailableActions.mockReturnValue(['view', 'add', 'edit', 'delete', 'live']);
+    securityContextStore.getSystems.mockReturnValue(['Sulu']);
+    securityContextStore.getSecurityContextByResourceKey.mockReturnValue('sulu.pages.website');
+
+    const value = {};
+    const rolePermissions = mount(<RolePermissions onChange={changeSpy} resourceKey="pages" value={value} />);
+
+    return Promise.all([rolePromise]).then(() => {
+        rolePermissions.update();
+
+        expect(rolePermissions.find('Toggler').at(0).prop('checked')).toEqual(false);
+
+        rolePermissions.find('Toggler').at(0).prop('onChange')(true);
+        rolePermissions.update();
+        expect(securityContextStore.getSecurityContextByResourceKey).toBeCalledWith('pages');
+        expect(rolePermissions.find('Matrix')).toHaveLength(1);
+
+        expect(rolePermissions.find('Matrix').prop('values')).toEqual({
+            '1': {
+                add: true,
+                delete: false,
+                edit: true,
+                live: false,
+                view: true,
+            },
+        });
+    });
+});
+
+test('Use context with replaced webspace for getting default values', () => {
+    const changeSpy = jest.fn();
+
+    const rolePromise = Promise.resolve(
+        {
+            _embedded: {
+                roles: [
+                    {
+                        id: 1,
+                        name: 'Administrator',
+                        permissions: [
+                            {
+                                context: 'sulu.pages.website',
+                                permissions: {add: true, delete: false, edit: true, live: false, view: true},
+                            },
+                        ],
+                        system: 'Sulu',
+                    },
+                ],
+            },
+        }
+    );
+    ResourceRequester.get.mockReturnValue(rolePromise);
+
+    securityContextStore.getAvailableActions.mockReturnValue(['view', 'add', 'edit', 'delete', 'live']);
+    securityContextStore.getSystems.mockReturnValue(['Sulu']);
+    securityContextStore.getSecurityContextByResourceKey.mockReturnValue('sulu.pages.#webspace#');
+
+    const value = {};
+    const rolePermissions = mount(
+        <RolePermissions onChange={changeSpy} resourceKey="pages" value={value} webspaceKey="website" />
+    );
+
+    return Promise.all([rolePromise]).then(() => {
+        rolePermissions.update();
+
+        expect(rolePermissions.find('Toggler').at(0).prop('checked')).toEqual(false);
+
+        rolePermissions.find('Toggler').at(0).prop('onChange')(true);
+        rolePermissions.update();
+        expect(securityContextStore.getSecurityContextByResourceKey).toBeCalledWith('pages');
+        expect(rolePermissions.find('Matrix')).toHaveLength(1);
+
+        expect(rolePermissions.find('Matrix').prop('values')).toEqual({
+            '1': {
+                add: true,
+                delete: false,
+                edit: true,
+                live: false,
+                view: true,
+            },
+        });
+    });
+});

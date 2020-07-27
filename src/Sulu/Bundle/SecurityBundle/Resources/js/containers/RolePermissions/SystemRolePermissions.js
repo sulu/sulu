@@ -18,10 +18,13 @@ type Props = {|
     roles: Array<Role>,
     system: string,
     values: RolePermissions,
+    webspaceKey?: ?string,
 |};
 
 @observer
 class SystemRolePermissions extends React.Component<Props> {
+    static webspacePlaceholder = '#webspace#';
+
     @observable active: boolean = false;
 
     @action componentDidMount() {
@@ -43,13 +46,18 @@ class SystemRolePermissions extends React.Component<Props> {
     };
 
     @computed get defaultValue() {
-        const {resourceKey, roles} = this.props;
+        const {resourceKey, roles, webspaceKey} = this.props;
 
         if (!roles) {
             return {};
         }
 
-        const securityContext = securityContextStore.getSecurityContextByResourceKey(resourceKey);
+        const securityContext = securityContextStore
+            .getSecurityContextByResourceKey(resourceKey)
+            ?.replace(
+                SystemRolePermissions.webspacePlaceholder,
+                webspaceKey || SystemRolePermissions.webspacePlaceholder
+            );
 
         return roles.reduce((value, role) => {
             const rolePermission = role.permissions.find((permission) => permission.context === securityContext);
