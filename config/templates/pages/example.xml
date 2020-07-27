@@ -326,10 +326,24 @@
             </meta>
         </property>
 
+        <property name="account_selection" type="account_selection">
+            <meta>
+                <title lang="en">Account Selection</title>
+                <title lang="de">Organisationen</title>
+            </meta>
+        </property>
+
         <property name="single_contact_selection" type="single_contact_selection">
             <meta>
                 <title lang="en">Single Contact Selection</title>
                 <title lang="de">Kontakt</title>
+            </meta>
+        </property>
+
+        <property name="contact_selection" type="contact_selection">
+            <meta>
+                <title lang="en">Contact Selection</title>
+                <title lang="de">Kontakte</title>
             </meta>
         </property>
 

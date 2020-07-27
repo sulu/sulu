@@ -368,7 +368,7 @@ exports[`Render a disabled MultiItemSelection with children 1`] = `
   class="multiItemSelectionClass disabled"
 >
   <div
-    class="header"
+    class="header disabled"
   >
     <div
       class="label"
@@ -380,7 +380,7 @@ exports[`Render a disabled MultiItemSelection with children 1`] = `
     class="list"
   >
     <li
-      class="listElement"
+      class="listElement disabled"
     >
       <div
         class="item"
@@ -409,7 +409,7 @@ exports[`Render a disabled MultiItemSelection with children 1`] = `
       </div>
     </li>
     <li
-      class="listElement"
+      class="listElement disabled"
     >
       <div
         class="item"
@@ -438,7 +438,7 @@ exports[`Render a disabled MultiItemSelection with children 1`] = `
       </div>
     </li>
     <li
-      class="listElement"
+      class="listElement disabled"
     >
       <div
         class="item"

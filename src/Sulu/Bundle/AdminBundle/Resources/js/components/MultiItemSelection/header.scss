@@ -10,6 +10,10 @@ $contentBackgroundColor: $alto;
     overflow: hidden;
     border-radius: 3px 3px 0 0;
 
+    &.disabled {
+        pointer-events: none;
+    }
+
     &.empty-list {
         border-radius: 3px;
     }

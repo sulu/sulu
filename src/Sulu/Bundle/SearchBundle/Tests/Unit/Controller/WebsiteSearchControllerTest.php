@@ -89,7 +89,7 @@ class WebsiteSearchControllerTest extends TestCase
         $this->requestAnalyzer->getWebspace()->willReturn($webspace);
 
         $searchQueryBuilder = $this->prophesize(SearchQueryBuilder::class);
-        $this->searchManager->createSearch('+("Test" OR "Test*" OR "Test~") ')->willReturn(
+        $this->searchManager->createSearch('+("Test" OR Test* OR Test~) ')->willReturn(
             $searchQueryBuilder->reveal()
         );
         $searchQueryBuilder->locale('en')->willReturn($searchQueryBuilder->reveal());

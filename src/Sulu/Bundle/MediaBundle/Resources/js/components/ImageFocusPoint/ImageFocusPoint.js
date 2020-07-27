@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import type {ElementRef} from 'react';
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Loader} from 'sulu-admin-bundle/components';
@@ -17,7 +18,16 @@ type Props = {|
 
 @observer
 class ImageFocusPoint extends React.Component<Props> {
+    imageRef: ?ElementRef<'img'>;
     @observable imageDimension: ClientRect;
+
+    componentDidMount() {
+        window.addEventListener('resize', this.updateImageDimension);
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.updateImageDimension);
+    }
 
     createFocusPoints(selectedPoint: Point) {
         const points = [];
@@ -114,8 +124,18 @@ class ImageFocusPoint extends React.Component<Props> {
         this.props.onChange(selectedPoint);
     };
 
-    @action handleImageLoad = (event: SyntheticEvent<HTMLImageElement>) => {
-        this.imageDimension = event.currentTarget.getBoundingClientRect();
+    setImageRef = (ref: ?ElementRef<'img'>) => {
+        this.imageRef = ref;
+    };
+
+    handleImageLoad = () => {
+        this.updateImageDimension();
+    };
+
+    @action updateImageDimension = () => {
+        if (this.imageRef) {
+            this.imageDimension = this.imageRef.getBoundingClientRect();
+        }
     };
 
     render() {
@@ -135,7 +155,12 @@ class ImageFocusPoint extends React.Component<Props> {
                     </div>
                     : <Loader />
                 }
-                <img className={imageFocusPointStyles.image} onLoad={this.handleImageLoad} src={image} />
+                <img
+                    className={imageFocusPointStyles.image}
+                    onLoad={this.handleImageLoad}
+                    ref={this.setImageRef}
+                    src={image}
+                />
             </div>
         );
     }

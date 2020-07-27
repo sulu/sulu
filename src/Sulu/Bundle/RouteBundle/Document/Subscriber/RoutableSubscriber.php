@@ -291,7 +291,7 @@ class RoutableSubscriber implements EventSubscriberInterface
     {
         $metadata = $this->documentInspector->getStructureMetadata($document);
 
-        if ($metadata->hasTag(self::TAG_NAME)) {
+        if ($metadata && $metadata->hasTag(self::TAG_NAME)) {
             return $this->getPropertyName(
                 $locale,
                 $metadata->getPropertyByTagName(self::TAG_NAME)->getName()
