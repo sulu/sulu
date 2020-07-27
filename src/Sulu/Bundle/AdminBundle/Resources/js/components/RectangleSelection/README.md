@@ -1,7 +1,7 @@
 This is a general purpose component to select an area on all kind of content. The properties allow to specify a minimum
 width as well as a minimum height, which the selection box cannot undercut. If both a minimum height and a minimum width
-is given, the ratio between these two is enforced. A double click on the selection box centers it and maximizes its
-size.
+is given, the ratio between these two is enforced. You can set `forceRatio={false}` to prevent this behaviour.
+A double click on the selection box centers it and maximizes its size.
 
 ```javascript
 const initialSelection = {width: 300, height: 100, left: 50, top: 50};
@@ -61,6 +61,61 @@ imageLoaded
             Top: {selection.top}, 
             Left: {selection.left}
         </p>
+    </div>
+    : null
+```
+
+There is also the possibility, to render multiple RectangleSelections for one single container. But you should use the
+`withContainerSize` hoc to automatically pass `containerWidth` and `containerHeight` to the `RectangleSelectionRenderer`
+components. For the sake of simplicity it's hardcoded in this example.
+
+```javascript
+// preload image
+let image = new Image();
+image.src = 'https://unsplash.it/800/500';
+
+const [imageLoaded, setImageLoaded] = React.useState(image.complete);
+const [firstSelection, setFirstSelection] = React.useState({width: 100, height: 200, top: 50, left: 50});
+const [secondSelection, setSecondSelection] = React.useState({width: 400, height: 200, top: 150, left: 250});
+const [active, setActive] = React.useState(1);
+
+image.onload = () => setImageLoaded(true);
+
+imageLoaded
+    ? <div>
+        <div style={{ width: '800px', height: '500px', position: 'relative', overflow: 'hidden', display: 'inline-flex' }}>
+            <img src="https://unsplash.it/800/500" style={{ userSelect: 'none', pointerEvents: 'none' }} alt="Unsplash image" />
+            <RectangleSelection.Renderer
+                backdrop={false}
+                minSizeNotification={false}
+                minWidth={100}
+                minHeight={200}
+                disabled={active !== 1}
+                onChange={setFirstSelection}
+                value={firstSelection}
+                label="1"
+                containerWidth={800}
+                containerHeight={500}
+            />
+            <RectangleSelection.Renderer
+                backdrop={false}
+                minSizeNotification={false}
+                minWidth={300}
+                minHeight={200}
+                forceRatio={false}
+                disabled={active !== 2}
+                onChange={setSecondSelection}
+                value={secondSelection}
+                label="2"
+                containerWidth={800}
+                containerHeight={500}
+            />
+        </div>
+        <div>
+            <p>Active: {active}</p>
+            <button onClick={() => {setActive(1)}}>#1</button>
+            <button onClick={() => {setActive(2)}}>#2</button>
+        </div>
     </div>
     : null
 ```

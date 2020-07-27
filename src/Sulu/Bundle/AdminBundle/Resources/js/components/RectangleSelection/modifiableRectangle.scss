@@ -4,13 +4,27 @@ $backdropColor: rgba($black, .6);
 $borderColor: $white;
 $borderSize: 2px;
 $minSizeNotificationColor: $white;
+$zIndex: 2;
+$zIndexDisabled: 1;
 
 .rectangle {
     position: absolute;
     background: transparent;
     border: $borderSize solid $borderColor;
+    will-change: width, height, left, top;
     cursor: move;
-    overflow: visible;
+    z-index: $zIndex;
+
+    &.disabled {
+        border: none;
+        cursor: default;
+        pointer-events: none;
+        z-index: $zIndexDisabled;
+    }
+
+    &.backdrop-disabled {
+        background-color: $backdropColor;
+    }
 }
 
 .backdrop {
@@ -21,6 +35,21 @@ $minSizeNotificationColor: $white;
     right: -$borderSize;
     outline-color: $backdropColor;
     outline-style: solid;
+}
+
+.label {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 34px;
+    font-weight: bold;
+    color: $white;
+    user-select: none;
+
+    .rectangle.disabled & {
+        color: rgba($white, .5);
+    }
 }
 
 .resize-handle {
