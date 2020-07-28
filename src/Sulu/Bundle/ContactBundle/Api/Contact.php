@@ -227,7 +227,7 @@ class Contact extends ApiWrapper
     /**
      * Get position.
      *
-     * @return string
+     * @return int
      *
      * @VirtualProperty
      * @SerializedName("position")
@@ -242,6 +242,26 @@ class Contact extends ApiWrapper
         }
 
         return $position->getId();
+    }
+
+    /**
+     * Get position.
+     *
+     * @return string
+     *
+     * @VirtualProperty
+     * @SerializedName("positionName")
+     * @Groups({"fullContact"})
+     */
+    public function getPositionName()
+    {
+        $position = $this->entity->getPosition();
+
+        if (!$position) {
+            return null;
+        }
+
+        return $position->getPosition();
     }
 
     /**

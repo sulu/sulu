@@ -51,7 +51,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     protected $lastName;
 
     /**
-     * @var string
+     * @var ContactTitle
      */
     protected $title;
 
