@@ -688,9 +688,8 @@ class WebspaceManagerTest extends WebspaceTestCase
 
         $result = $this->webspaceManager->findUrlsByResourceLocator('/test', 'dev', 'en_us', 'massiveart', null, 'http');
 
-        $this->assertCount(2, $result);
-        $this->assertContains('http://massiveart.lo:8080/en-us/w/test', $result);
-        $this->assertContains('http://massiveart.lo:8080/en-us/s/test', $result);
+        $this->assertCount(1, $result);
+        $this->assertContains('http://massiveart.lo:8080/en-us/test', $result);
 
         $result = $this->webspaceManager->findUrlsByResourceLocator('/test', 'dev', 'de_at', 'sulu_io', null, 'http');
         $this->assertEquals(['http://sulu.lo/test'], $result);
@@ -705,9 +704,8 @@ class WebspaceManagerTest extends WebspaceTestCase
 
         $result = $this->webspaceManager->findUrlsByResourceLocator('/test', 'dev', 'en_us', 'massiveart', null, 'https');
 
-        $this->assertCount(2, $result);
-        $this->assertContains('https://massiveart.lo/en-us/w/test', $result);
-        $this->assertContains('https://massiveart.lo/en-us/s/test', $result);
+        $this->assertCount(1, $result);
+        $this->assertContains('https://massiveart.lo/en-us/test', $result);
 
         $result = $this->webspaceManager->findUrlsByResourceLocator('/test', 'dev', 'de_at', 'sulu_io', null, 'https');
         $this->assertEquals(['https://sulu.lo:4444/test'], $result);
@@ -743,7 +741,7 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->requestStack->getCurrentRequest()->willReturn($request->reveal());
 
         $result = $this->webspaceManager->findUrlByResourceLocator('/test', 'dev', 'en_us', 'massiveart', null, 'http');
-        $this->assertEquals('http://massiveart.lo:8080/en-us/s/test', $result);
+        $this->assertEquals('http://massiveart.lo:8080/en-us/test', $result);
 
         $result = $this->webspaceManager->findUrlByResourceLocator('/test', 'dev', 'de_at', 'sulu_io', null, 'http');
         $this->assertEquals('http://sulu.lo/test', $result);
@@ -757,7 +755,7 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->requestStack->getCurrentRequest()->willReturn($request->reveal());
 
         $result = $this->webspaceManager->findUrlByResourceLocator('/test', 'dev', 'en_us', 'massiveart', null, 'https');
-        $this->assertEquals('https://massiveart.lo/en-us/s/test', $result);
+        $this->assertEquals('https://massiveart.lo/en-us/test', $result);
 
         $result = $this->webspaceManager->findUrlByResourceLocator('/test', 'dev', 'de_at', 'sulu_io', null, 'https');
         $this->assertEquals('https://sulu.lo:4444/test', $result);
