@@ -78,6 +78,8 @@ image.onload = () => setImageLoaded(true);
 imageLoaded
     ? <div>
         <CircleSelection
+            filled={true}
+            label="55"
             resizable={false}
             onChange={setSelection}
             value={selection}

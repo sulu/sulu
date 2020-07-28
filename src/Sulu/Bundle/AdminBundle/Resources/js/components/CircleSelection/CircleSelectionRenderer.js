@@ -10,6 +10,7 @@ type Props = {
     containerHeight: number,
     containerWidth: number,
     disabled: boolean,
+    filled: boolean,
     label?: string,
     maxRadius?: number,
     minRadius?: number,
@@ -22,6 +23,7 @@ type Props = {
 export default class CircleSelectionRenderer extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
+        filled: false,
         resizable: true,
         round: true,
     };
@@ -117,12 +119,13 @@ export default class CircleSelectionRenderer extends React.Component<Props> {
     };
 
     render() {
-        const {disabled, resizable, label, value = this.getMaximumSelection()} = this.props;
+        const {disabled, resizable, label, filled, value = this.getMaximumSelection()} = this.props;
         const {left, top, radius = 0} = value;
 
         return (
             <ModifiableCircle
                 disabled={disabled}
+                filled={filled}
                 label={label}
                 left={left}
                 onChange={this.handleCircleChange}

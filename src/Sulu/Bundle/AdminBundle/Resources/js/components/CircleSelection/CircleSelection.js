@@ -11,6 +11,7 @@ type Props = {
     containerHeight: number,
     containerWidth: number,
     disabled: boolean,
+    filled: boolean,
     label?: string,
     maxRadius?: number,
     minRadius?: number,
@@ -23,6 +24,7 @@ type Props = {
 class CircleSelection extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
+        filled: false,
         resizable: true,
         round: true,
     };
@@ -33,6 +35,7 @@ class CircleSelection extends React.Component<Props> {
             containerHeight,
             containerWidth,
             disabled,
+            filled,
             label,
             maxRadius,
             minRadius,
@@ -49,6 +52,7 @@ class CircleSelection extends React.Component<Props> {
                     containerHeight={containerHeight}
                     containerWidth={containerWidth}
                     disabled={disabled}
+                    filled={filled}
                     label={label}
                     maxRadius={maxRadius}
                     minRadius={minRadius}

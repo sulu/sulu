@@ -22,6 +22,15 @@ $zIndexDisabled: 1;
         pointer-events: none;
         z-index: $zIndexDisabled;
     }
+
+    &.filled {
+        background: $white;
+        box-shadow: 0 0 2px 1px rgba($black, .6);
+
+        &.disabled {
+            background: rgba($white, .6);
+        }
+    }
 }
 
 .label {
@@ -36,6 +45,14 @@ $zIndexDisabled: 1;
 
     .circle.disabled & {
         color: rgba($white, .5);
+    }
+
+    .circle.filled & {
+        color: $black;
+    }
+
+    .circle.filled.disabled & {
+        color: rgba($black, .6);
     }
 }
 
