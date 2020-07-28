@@ -107,7 +107,8 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
                         );
                     } elseif ($propertyMetadata instanceof CountPropertyMetadata) {
                         $fieldDescriptor = $this->getCountFieldDescriptor(
-                            $propertyMetadata
+                            $propertyMetadata,
+                            $options
                         );
                     } elseif ($propertyMetadata instanceof CasePropertyMetadata) {
                         $fieldDescriptor = $this->getCaseFieldDescriptor(
@@ -196,7 +197,10 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
         );
     }
 
-    private function getCountFieldDescriptor(AbstractPropertyMetadata $propertyMetadata)
+    private function getCountFieldDescriptor(
+        AbstractPropertyMetadata $propertyMetadata,
+        $options
+    )
     {
         $joins = [];
         foreach ($propertyMetadata->getField()->getJoins() as $joinMetadata) {
@@ -218,33 +222,8 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
             $propertyMetadata->getVisibility(),
             $propertyMetadata->getSearchability(),
             $propertyMetadata->getType(),
-            $propertyMetadata->isSortable()
-        );
-    }
-
-    private function getCountDistinctFieldDescriptor(AbstractPropertyMetadata $propertyMetadata)
-    {
-        $joins = [];
-        foreach ($propertyMetadata->getField()->getJoins() as $joinMetadata) {
-            $joins[$joinMetadata->getEntityName()] = new DoctrineJoinDescriptor(
-                $joinMetadata->getEntityName(),
-                $joinMetadata->getEntityField(),
-                $joinMetadata->getCondition(),
-                $joinMetadata->getMethod(),
-                $joinMetadata->getConditionMethod()
-            );
-        }
-
-        return new DoctrineCountDistinctFieldDescriptor(
-            $propertyMetadata->getField()->getName(),
-            $propertyMetadata->getName(),
-            $propertyMetadata->getField()->getEntityName(),
-            $propertyMetadata->getTranslation(),
-            $joins,
-            $propertyMetadata->getVisibility(),
-            $propertyMetadata->getSearchability(),
-            $propertyMetadata->getType(),
-            $propertyMetadata->isSortable()
+            $propertyMetadata->isSortable(),
+            $this->resolveOptions($propertyMetadata->getDistinct(), $options)
         );
     }
 

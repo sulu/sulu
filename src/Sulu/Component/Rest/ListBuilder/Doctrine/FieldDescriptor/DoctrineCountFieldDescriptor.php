@@ -11,6 +11,8 @@
 
 namespace Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor;
 
+use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
+
 /**
  * This class defines the necessary information for a field to resolve it within a Doctrine Query for the ListBuilder.
  *
@@ -18,8 +20,40 @@ namespace Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor;
  */
 class DoctrineCountFieldDescriptor extends DoctrineFieldDescriptor
 {
+    /**
+     * @var bool
+     */
+    private $distinct;
+
+    public function __construct(
+        string $fieldName,
+        string $name,
+        string $entityName,
+        string $translation = null,
+        array $joins = [],
+        string $visibility = FieldDescriptorInterface::VISIBILITY_YES,
+        string $searchability = FieldDescriptorInterface::SEARCHABILITY_NEVER,
+        string $type = '',
+        bool $sortable = true,
+        bool $distinct = false
+    ) {
+        parent::__construct(
+            $fieldName,
+            $name,
+            $entityName,
+            $translation,
+            $joins,
+            $visibility,
+            $searchability,
+            $type,
+            $sortable
+        );
+
+        $this->distinct = $distinct;
+    }
+
     public function getSelect()
     {
-        return 'COUNT(' . $this->encodeAlias($this->getEntityName()) . '.' . $this->getFieldName() . ')';
+        return 'COUNT(' . ($this->distinct ? 'DISTINCT ' : '') . $this->encodeAlias($this->getEntityName()) . '.' . $this->getFieldName() . ')';
     }
 }
