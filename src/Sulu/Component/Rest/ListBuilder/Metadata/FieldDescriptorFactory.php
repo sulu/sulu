@@ -13,7 +13,6 @@ namespace Sulu\Component\Rest\ListBuilder\Metadata;
 
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineCaseFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineConcatenationFieldDescriptor;
-use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineCountDistinctFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineCountFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
@@ -200,8 +199,7 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
     private function getCountFieldDescriptor(
         AbstractPropertyMetadata $propertyMetadata,
         $options
-    )
-    {
+    ) {
         $joins = [];
         foreach ($propertyMetadata->getField()->getJoins() as $joinMetadata) {
             $joins[$joinMetadata->getEntityName()] = new DoctrineJoinDescriptor(

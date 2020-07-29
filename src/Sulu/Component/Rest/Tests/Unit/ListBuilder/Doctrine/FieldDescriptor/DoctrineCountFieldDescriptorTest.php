@@ -13,7 +13,6 @@ namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Doctrine\FieldDescriptor;
 
 use PHPUnit\Framework\TestCase;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineCountFieldDescriptor;
-use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 
 class DoctrineCountFieldDescriptorTest extends TestCase
