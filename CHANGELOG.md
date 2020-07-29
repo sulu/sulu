@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* release/1.6
+    * BUGFIX      #5435  [ContactBundle]           Fix type of tag names for serialization of contacts
+
 * 1.6.34 (2020-06-09)
     * BUGFIX      #5323  [SnippetBundle]           Fix /cmf/snippets node not exist in live workspace
     * BUGFIX      #5328  [ContentBundle]           Fix url generation in link-prover with portals

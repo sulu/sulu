@@ -15,6 +15,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation\Accessor;
 use JMS\Serializer\Annotation\Exclude;
+use JMS\Serializer\Annotation\Type;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\TagBundle\Entity\Tag;
@@ -99,6 +100,7 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     /**
      * @var Collection
      * @Accessor(getter="getTagNameArray")
+     * @Type("array")
      */
     protected $tags;
 
