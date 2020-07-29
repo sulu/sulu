@@ -126,11 +126,22 @@ interface MediaManagerInterface
     /**
      * Returns download url for given id and filename.
      *
-     * @param string $id
+     * @param string|int $id
      * @param string $fileName
-     * @param string $version
+     * @param string|int $version
      *
      * @return string
      */
     public function getUrl($id, $fileName, $version);
+
+    /**
+     * Returns admin download url for given id and filename.
+     *
+     * @param string|int $id
+     * @param string $fileName
+     * @param string|int $version
+     *
+     * @return string
+     */
+    public function getAdminUrl($id, $fileName, $version);
 }

@@ -96,7 +96,7 @@ test('Should update resourceStore and call onSuccess after SingleMediaUpload has
 test('Should open and close crop overlay', () => {
     const resourceStore = new ResourceStore('media', 4, {locale: observable.box('de')});
     resourceStore.loading = false;
-    resourceStore.data.url = 'image.jpg';
+    resourceStore.data.adminUrl = 'image.jpg';
     resourceStore.data.isImage = true;
 
     const mediaVersionUpload = mount(<MediaVersionUpload
@@ -122,7 +122,7 @@ test('Should open and close crop overlay', () => {
 test('Should open and close focus point overlay', () => {
     const resourceStore = new ResourceStore('media', 4, {locale: observable.box('de')});
     resourceStore.loading = false;
-    resourceStore.data.url = 'image.jpg';
+    resourceStore.data.adminUrl = 'image.jpg';
     resourceStore.data.isImage = true;
 
     const mediaVersionUpload = mount(<MediaVersionUpload
@@ -146,6 +146,7 @@ test('Should save focus point overlay and call onSuccess', (done) => {
     const resourceStore = new ResourceStore('media', 4, {locale: observable.box('de')});
     const successSpy = jest.fn();
     resourceStore.loading = false;
+    resourceStore.data.adminUrl = 'image.jpg';
     resourceStore.data.url = 'image.jpg';
     resourceStore.data.isImage = true;
 
@@ -166,7 +167,7 @@ test('Should save focus point overlay and call onSuccess', (done) => {
 
     expect(ResourceRequester.put).toBeCalledWith(
         'media',
-        {focusPointX: 0, focusPointY: 2, isImage: true, url: 'image.jpg'},
+        {adminUrl: 'image.jpg', focusPointX: 0, focusPointY: 2, isImage: true, url: 'image.jpg'},
         {id: 4, locale: 'de'}
     );
 
@@ -183,7 +184,7 @@ test('Should save crop overlay and call onSuccess', () => {
     const resourceStore = new ResourceStore('media', 4, {locale: observable.box('de')});
     const successSpy = jest.fn();
     resourceStore.loading = false;
-    resourceStore.data.url = 'image.jpg';
+    resourceStore.data.adminUrl = 'image.jpg';
     resourceStore.data.isImage = true;
 
     const mediaVersionUpload = mount(<MediaVersionUpload

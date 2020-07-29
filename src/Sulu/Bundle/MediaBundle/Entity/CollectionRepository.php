@@ -370,6 +370,21 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
         return $queryBuilder->getQuery();
     }
 
+    public function findIdByMediaId(int $mediaId): ?int
+    {
+        $queryBuilder = $this->_em->createQueryBuilder()
+            ->from(MediaInterface::class, 'media')
+            ->select('IDENTITY(media.collection)')
+            ->where('media.id = :mediaId')
+            ->setParameter('mediaId', $mediaId);
+
+        try {
+            return (int) $queryBuilder->getQuery()->getSingleScalarResult();
+        } catch (NoResultException $e) {
+            return null;
+        }
+    }
+
     public function setAccessControlQueryEnhancer(AccessControlQueryEnhancer $accessControlQueryEnhancer)
     {
         $this->accessControlQueryEnhancer = $accessControlQueryEnhancer;

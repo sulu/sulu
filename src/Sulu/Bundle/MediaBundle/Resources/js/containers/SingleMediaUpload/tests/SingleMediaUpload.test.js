@@ -11,7 +11,7 @@ jest.mock('../../../stores/MediaUploadStore', () => jest.fn(function(media) {
     this.update = jest.fn();
     this.delete = jest.fn();
     this.getThumbnail = jest.fn((size) => size);
-    this.downloadUrl = media ? media.url : undefined;
+    this.downloadUrl = media?.adminUrl || media?.url;
     this.media = media;
 }));
 
@@ -21,7 +21,15 @@ jest.mock('sulu-admin-bundle/utils', () => ({
 
 test('Render a SingleMediaUpload', () => {
     const mediaUploadStore = new MediaUploadStore(
-        {id: 1, locale: 'en', mimeType: 'image/jpeg', title: 'test', thumbnails: {}, url: ''},
+        {
+            adminUrl: '',
+            id: 1,
+            locale: 'en',
+            mimeType: 'image/jpeg',
+            title: 'test',
+            thumbnails: {},
+            url: '',
+        },
         observable.box('en')
     );
 
@@ -32,7 +40,15 @@ test('Render a SingleMediaUpload', () => {
 
 test('Render a SingleMediaUpload in disabled state', () => {
     const mediaUploadStore = new MediaUploadStore(
-        {id: 1, locale: 'en', mimeType: 'image/jpeg', title: 'test', thumbnails: {}, url: ''},
+        {
+            adminUrl: '',
+            id: 1,
+            locale: 'en',
+            mimeType: 'image/jpeg',
+            title: 'test',
+            thumbnails: {},
+            url: '',
+        },
         observable.box('en')
     );
 
@@ -60,7 +76,15 @@ test('Render a SingleMediaUpload with an empty icon if no image is passed', () =
 
 test('Render a SingleMediaUpload with the round skin', () => {
     const mediaUploadStore = new MediaUploadStore(
-        {id: 1, locale: 'en', mimeType: 'image/jpeg', title: 'test', thumbnails: {}, url: ''},
+        {
+            adminUrl: '',
+            id: 1,
+            locale: 'en',
+            mimeType: 'image/jpeg',
+            title: 'test',
+            thumbnails: {},
+            url: '',
+        },
         observable.box('en')
     );
 
@@ -76,7 +100,15 @@ test('Render a SingleMediaUpload with the round skin', () => {
 
 test('Render a SingleMediaUpload with a different image size', () => {
     const mediaUploadStore = new MediaUploadStore(
-        {id: 1, locale: 'en', mimeType: 'image/jpeg', title: 'test', thumbnails: {}, url: ''},
+        {
+            adminUrl: '',
+            id: 1,
+            locale: 'en',
+            mimeType: 'image/jpeg',
+            title: 'test',
+            thumbnails: {},
+            url: '',
+        },
         observable.box('en')
     );
 
@@ -90,7 +122,15 @@ test('Render a SingleMediaUpload with a different image size', () => {
 
 test('Render a SingleMediaUpload without delete and download button', () => {
     const mediaUploadStore = new MediaUploadStore(
-        {id: 1, locale: 'en', mimeType: 'image/jpeg', title: 'test', thumbnails: {}, url: ''},
+        {
+            adminUrl: '',
+            id: 1,
+            locale: 'en',
+            mimeType: 'image/jpeg',
+            title: 'test',
+            thumbnails: {},
+            url: '',
+        },
         observable.box('en')
     );
 
@@ -107,7 +147,15 @@ test('Render a SingleMediaUpload without delete and download button', () => {
 test('Call update on MediaUploadStore if id is given and drop event occurs', () => {
     const uploadCompleteSpy = jest.fn();
     const mediaUploadStore = new MediaUploadStore(
-        {id: 1, locale: 'en', mimeType: 'image/jpeg', title: 'test', thumbnails: {}, url: ''},
+        {
+            adminUrl: '',
+            id: 1,
+            locale: 'en',
+            mimeType: 'image/jpeg',
+            title: 'test',
+            thumbnails: {},
+            url: '',
+        },
         observable.box('en')
     );
 
@@ -167,7 +215,15 @@ test('Download the image when the download button is clicked', () => {
     window.location = {assign: jest.fn()};
 
     const mediaUploadStore = new MediaUploadStore(
-        {id: 1, locale: 'en', mimeType: 'image/jpeg', title: 'test', thumbnails: {}, url: 'test.jpg'},
+        {
+            adminUrl: '',
+            id: 1,
+            locale: 'en',
+            mimeType: 'image/jpeg',
+            title: 'test',
+            thumbnails: {},
+            url: 'test.jpg',
+        },
         observable.box('en')
     );
 
@@ -184,7 +240,15 @@ test('Download the image when the download button is clicked', () => {
 
 test('Delete the image when the delete button is clicked and the overlay is confirmed', () => {
     const mediaUploadStore = new MediaUploadStore(
-        {id: 1, locale: 'en', mimeType: 'image/jpeg', title: 'test', thumbnails: {}, url: ''},
+        {
+            adminUrl: '',
+            id: 1,
+            locale: 'en',
+            mimeType: 'image/jpeg',
+            title: 'test',
+            thumbnails: {},
+            url: '',
+        },
         observable.box('en')
     );
     const deletePromise = Promise.resolve();

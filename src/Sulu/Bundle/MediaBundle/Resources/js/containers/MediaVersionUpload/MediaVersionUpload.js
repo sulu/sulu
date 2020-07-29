@@ -108,6 +108,7 @@ class MediaVersionUpload extends React.Component<Props> {
 
         const {
             data: {
+                adminUrl,
                 previewImageId,
                 isImage,
                 url,
@@ -181,7 +182,7 @@ class MediaVersionUpload extends React.Component<Props> {
                 />
                 <CropOverlay
                     id={id}
-                    image={url}
+                    image={adminUrl ? adminUrl : url}
                     locale={locale.get()}
                     onClose={this.handleCropOverlayClose}
                     onConfirm={this.handleCropOverlayConfirm}

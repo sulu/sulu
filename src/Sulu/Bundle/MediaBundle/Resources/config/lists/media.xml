@@ -129,6 +129,8 @@
 
         <property name="url" visibility="never"/>
 
+        <property name="adminUrl" visibility="never"/>
+
         <property name="type" translation="sulu_media.type" visibility="always">
             <field-name>name</field-name>
             <entity-name>SuluMediaBundle:MediaType</entity-name>

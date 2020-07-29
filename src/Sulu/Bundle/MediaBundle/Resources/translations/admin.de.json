@@ -11,6 +11,7 @@
     "sulu_media.select_media_plural": "Medien auswählen",
     "sulu_media.reset_selection": "Auswahl zurücksetzen",
     "sulu_media.copy_masterfile_url": "Original URL kopieren",
+    "sulu_media.copy_masterfile_url_website": "Original URL kopieren (Website)",
     "sulu_media.information_taxonomy": "Informationen und Taxonomien",
     "sulu_media.upload": "Upload",
     "sulu_media.upload_new_version": "Neue Version hochladen",

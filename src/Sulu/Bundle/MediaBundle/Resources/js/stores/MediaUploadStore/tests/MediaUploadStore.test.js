@@ -38,7 +38,15 @@ test('Calling the "update" method should make a "POST" request to the media upda
     });
 
     const mediaUploadStore = new MediaUploadStore(
-        {id: 1, locale: 'en', mimeType: 'image/jpeg', title: 'test', thumbnails: {}, url: ''},
+        {
+            adminUrl: '',
+            id: 1,
+            locale: 'en',
+            mimeType: 'image/jpeg',
+            title: 'test',
+            thumbnails: {},
+            url: '',
+        },
         observable.box('en')
     );
     const fileData = new File([''], 'fileName');
@@ -84,7 +92,15 @@ test('Calling the "create" method should make a "POST" request to the media upda
 
 test('Calling "delete" method should call the "delete" method of the ResourceRequester', () => {
     const mediaUploadStore = new MediaUploadStore(
-        {id: 2, locale: 'en', mimeType: 'image/jpeg', title: 'test', thumbnails: {}, url: ''},
+        {
+            adminUrl: '',
+            id: 2,
+            locale: 'en',
+            mimeType: 'image/jpeg',
+            title: 'test',
+            thumbnails: {},
+            url: '',
+        },
         observable.box('en')
     );
 
@@ -100,11 +116,21 @@ test('Calling "delete" method should call the "delete" method of the ResourceReq
 
 test('Calling "deletePreviewImage" method should call the "delete" method of the ResourceRequester', () => {
     const mediaUploadStore = new MediaUploadStore(
-        {id: 2, locale: 'en', mimeType: 'image/jpeg', title: 'test', thumbnails: {}, url: ''},
+        {
+            adminUrl: '',
+            id: 2,
+            locale: 'en',
+            mimeType: 'image/jpeg',
+            title: 'test',
+            thumbnails: {},
+            url: '',
+        },
         observable.box('en')
     );
 
-    const media = {id: 2,
+    const media = {
+        adminUrl: '',
+        id: 2,
         locale: 'en',
         mimeType: 'image/jpeg',
         title: 'test',
@@ -135,7 +161,15 @@ test('Calling the "updatePreviewImage" method should make a "POST" request to th
     });
 
     const mediaUploadStore = new MediaUploadStore(
-        {id: 1, locale: 'en', mimeType: 'image/jpeg', title: 'test', thumbnails: {}, url: ''},
+        {
+            adminUrl: '',
+            id: 2,
+            locale: 'en',
+            mimeType: 'image/jpeg',
+            title: 'test',
+            thumbnails: {},
+            url: '',
+        },
         observable.box('en')
     );
     const fileData = new File([''], 'fileName');
@@ -143,7 +177,7 @@ test('Calling the "updatePreviewImage" method should make a "POST" request to th
     mediaUploadStore.updatePreviewImage(fileData);
     expect(resourceRouteRegistry.getDetailUrl).toBeCalledWith(
         'media_preview',
-        {id: 1, locale: 'en'}
+        {id: 2, locale: 'en'}
     );
     expect(openSpy).toBeCalledWith('POST', '/media/1/preview?locale=en');
 });
@@ -157,7 +191,15 @@ test('After the "update" call request was successful the progress will be reset'
     });
 
     const mediaUploadStore = new MediaUploadStore(
-        {id: 1, locale: 'en', mimeType: 'image/jpeg', title: 'test', thumbnails: {}, url: ''},
+        {
+            adminUrl: '',
+            id: 1,
+            locale: 'en',
+            mimeType: 'image/jpeg',
+            title: 'test',
+            thumbnails: {},
+            url: '',
+        },
         observable.box('en')
     );
     const fileData = new File([''], 'fileName');
@@ -172,7 +214,15 @@ test('After the "update" call request was successful the progress will be reset'
             expect(mediaUploadStore.uploading).toEqual(false);
             expect(mediaUploadStore.progress).toEqual(0);
             expect(mediaUploadStore.media)
-                .toEqual({id: 1, locale: 'en', mimeType: 'image/jpeg', title: 'test1', thumbnails: {}, url: ''});
+                .toEqual({
+                    adminUrl: '',
+                    id: 1,
+                    locale: 'en',
+                    mimeType: 'image/jpeg',
+                    title: 'test1',
+                    thumbnails: {},
+                    url: '',
+                });
             done();
         }
     );
@@ -189,7 +239,15 @@ test('After the "updatePreviewImage" call request was successful the progress wi
     });
 
     const mediaUploadStore = new MediaUploadStore(
-        {id: 1, locale: 'en', mimeType: 'image/jpeg', title: 'test', thumbnails: {}, url: ''},
+        {
+            adminUrl: '',
+            id: 1,
+            locale: 'en',
+            mimeType: 'image/jpeg',
+            title: 'test',
+            thumbnails: {},
+            url: '',
+        },
         observable.box('en')
     );
     const fileData = new File([''], 'fileName');
@@ -204,6 +262,7 @@ test('After the "updatePreviewImage" call request was successful the progress wi
             expect(mediaUploadStore.uploading).toEqual(false);
             expect(mediaUploadStore.progress).toEqual(0);
             expect(mediaUploadStore.media).toEqual({
+                adminUrl: '',
                 id: 1,
                 locale: 'en',
                 mimeType: 'image/jpeg',
@@ -215,8 +274,16 @@ test('After the "updatePreviewImage" call request was successful the progress wi
         }
     );
 
-    const response =
-        '{"id": 1, "mimeType": "image/jpeg", "title": "test", "thumbnails": {"50x50": "image.jpg"}, "url": ""}';
+    const response = JSON.stringify({
+        adminUrl: '',
+        id: 1,
+        mimeType: 'image/jpeg',
+        title: 'test',
+        thumbnails: {
+            '50x50': 'image.jpg',
+        },
+        url: '',
+    });
 
     window.XMLHttpRequest.mock.instances[0].onload({
         target: {
@@ -229,7 +296,8 @@ test('Should return thumbnail path if available', () => {
     const thumbnailUrl = '/media/uploads/400x400/test.png';
     const mediaUploadStore = new MediaUploadStore(
         {
-            id: 1,
+            adminUrl: '',
+            id: 2,
             locale: 'en',
             mimeType: 'image/jpeg',
             title: 'test',
@@ -256,7 +324,16 @@ test('Should return undefined if thumbnail is not available yet', () => {
 test('Should return the mime type of the media if available', () => {
     const mimeType = 'image/jpg';
     const mediaUploadStore = new MediaUploadStore(
-        {id: 1, locale: 'en', mimeType, title: 'test', thumbnails: {}, url: ''},
+        {
+            adminUrl: '',
+            id: 2,
+            locale: 'en',
+            mimeType,
+            title: 'test',
+            thumbnails: {
+            },
+            url: '',
+        },
         observable.box('en')
     );
 
@@ -275,11 +352,38 @@ test('Should return undefined if the mime type is not available yet', () => {
 test('Should return downloadUrl if available', () => {
     const url = 'test.jpg';
     const mediaUploadStore = new MediaUploadStore(
-        {id: 1, locale: 'en', mimeType: 'image/jpeg', title: 'test', thumbnails: {}, url},
+        {
+            adminUrl: undefined,
+            id: 1,
+            locale: 'en',
+            mimeType: 'image/jpeg',
+            title: 'test',
+            thumbnails: {},
+            url,
+        },
         observable.box('en')
     );
 
     expect(mediaUploadStore.downloadUrl).toEqual(url);
+});
+
+test('Should return adminUrl if available', () => {
+    const url = 'test.jpg';
+    const adminUrl = 'admin-test.jpg';
+    const mediaUploadStore = new MediaUploadStore(
+        {
+            adminUrl,
+            id: 1,
+            locale: 'en',
+            mimeType: 'image/jpeg',
+            title: 'test',
+            thumbnails: {},
+            url,
+        },
+        observable.box('en')
+    );
+
+    expect(mediaUploadStore.downloadUrl).toEqual(adminUrl);
 });
 
 test('Should return undefined if downloadUrl is not available', () => {
