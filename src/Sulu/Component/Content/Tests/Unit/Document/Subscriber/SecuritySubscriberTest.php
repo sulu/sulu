@@ -32,6 +32,10 @@ class SecuritySubscriberTest extends SubscriberTestCase
 
     public function testPersist()
     {
+        $property = $this->prophesize(PropertyInterface::class);
+        $property->getName()->willReturn('sec:role-1');
+        $this->node->getProperties('sec:role-*')->willReturn([$property->reveal()]);
+
         /** @var SecurityBehavior $document */
         $document = $this->prophesize(SecurityBehavior::class);
         $document->getPermissions()->willReturn(
@@ -43,6 +47,27 @@ class SecuritySubscriberTest extends SubscriberTestCase
         $this->subscriber->handlePersist($this->persistEvent->reveal());
 
         $this->node->setProperty('sec:role-1', ['view', 'add', 'edit'])->shouldBeCalled();
+        $property->remove()->shouldNotBeCalled();
+    }
+
+    public function testPersistWithDeletingRoles()
+    {
+        $property = $this->prophesize(PropertyInterface::class);
+        $property->getName()->willReturn('sec:role-2');
+        $this->node->getProperties('sec:role-*')->willReturn([$property->reveal()]);
+
+        /** @var SecurityBehavior $document */
+        $document = $this->prophesize(SecurityBehavior::class);
+        $document->getPermissions()->willReturn(
+            [1 => ['view' => true, 'add' => true, 'edit' => true, 'delete' => false]]
+        );
+
+        $this->persistEvent->getDocument()->willReturn($document);
+
+        $this->subscriber->handlePersist($this->persistEvent->reveal());
+
+        $this->node->setProperty('sec:role-1', ['view', 'add', 'edit'])->shouldBeCalled();
+        $property->remove()->shouldBeCalled();
     }
 
     public function testHydrate()

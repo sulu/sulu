@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {mount, shallow} from 'enzyme';
+import {mount} from 'enzyme';
 import {ResourceRequester} from 'sulu-admin-bundle/services';
 import securityContextStore from '../../../stores/securityContextStore';
 import RolePermissions from '../RolePermissions';
@@ -14,46 +14,22 @@ jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
 }));
 
 jest.mock('../../../stores/securityContextStore', () => ({
+    suluSecuritySystem: 'Sulu',
+    resourceKeyMapping: {snippets: 'sulu.global.snippets'},
     getAvailableActions: jest.fn(),
+    getSecurityContextByResourceKey: jest.fn(),
+    getSystems: jest.fn(),
 }));
 
-beforeEach(() => {
-    RolePermissions.resourceKeyMapping = {snippets: 'sulu.global.snippets'};
-});
-
-test('Render matrix with correct all values selected if not given', () => {
-    const rolePromise = Promise.resolve(
-        {
-            _embedded: {
-                roles: [
-                    {id: 1, name: 'Administrator', permissions: []},
-                    {id: 2, name: 'Account Manager', permissions: []},
-                ],
-            },
-        }
-    );
-    ResourceRequester.get.mockReturnValue(rolePromise);
-
-    securityContextStore.getAvailableActions.mockReturnValue(['view', 'add', 'edit', 'delete', 'live', 'security']);
-
-    const value = {};
-    const rolePermissions = mount(<RolePermissions onChange={jest.fn()} resourceKey="snippets" value={value} />);
-
-    expect(rolePermissions.render()).toMatchSnapshot();
-
-    return Promise.all([rolePromise]).then(() => {
-        rolePermissions.update();
-        expect(rolePermissions.render()).toMatchSnapshot();
-    });
-});
+RolePermissions.suluSecuritySystem = 'Sulu';
 
 test('Render matrix with correct given values', () => {
     const rolePromise = Promise.resolve(
         {
             _embedded: {
                 roles: [
-                    {id: 1, name: 'Admin'},
-                    {id: 2, name: 'Contact Manager'},
+                    {id: 1, name: 'Admin', system: 'Sulu'},
+                    {id: 2, name: 'Contact Manager', system: 'Sulu'},
                 ],
             },
         }
@@ -61,6 +37,7 @@ test('Render matrix with correct given values', () => {
     ResourceRequester.get.mockReturnValue(rolePromise);
 
     securityContextStore.getAvailableActions.mockReturnValue(['view', 'add', 'edit', 'delete', 'security']);
+    securityContextStore.getSystems.mockReturnValue(['Sulu', 'Website']);
 
     const value = {
         '1': {
@@ -86,53 +63,14 @@ test('Render matrix with correct given values', () => {
     });
 });
 
-test('Render matrix with correct default values from roles', () => {
+test('Hide system if specific system is given', () => {
     const rolePromise = Promise.resolve(
         {
             _embedded: {
                 roles: [
-                    {
-                        id: 1,
-                        name: 'Admin',
-                        permissions: [
-                            {
-                                context: 'sulu.global.snippets',
-                                permissions: {
-                                    view: true,
-                                    add: true,
-                                    edit: true,
-                                    delete: false,
-                                    security: true,
-                                },
-                            },
-                        ],
-                    },
-                    {
-                        id: 2,
-                        name: 'Contact Manager',
-                        permissions: [
-                            {
-                                context: 'sulu.contact.people',
-                                permissions: {
-                                    view: true,
-                                    add: true,
-                                    edit: true,
-                                    delete: true,
-                                    security: true,
-                                },
-                            },
-                            {
-                                context: 'sulu.global.snippets',
-                                permissions: {
-                                    view: true,
-                                    add: true,
-                                    edit: false,
-                                    delete: false,
-                                    security: true,
-                                },
-                            },
-                        ],
-                    },
+                    {id: 1, name: 'Admin', system: 'Sulu'},
+                    {id: 2, name: 'Contact Manager', system: 'Website'},
+                    {id: 3, name: 'Blog Manager', system: 'Blog'},
                 ],
             },
         }
@@ -140,12 +78,49 @@ test('Render matrix with correct default values from roles', () => {
     ResourceRequester.get.mockReturnValue(rolePromise);
 
     securityContextStore.getAvailableActions.mockReturnValue(['view', 'add', 'edit', 'delete', 'security']);
+    securityContextStore.getSystems.mockReturnValue(['Sulu', 'Website', 'Blog']);
+
+    const rolePermissions = mount(
+        <RolePermissions onChange={jest.fn()} resourceKey="snippets" system="Blog" value={{}} />
+    );
+
+    return Promise.all([rolePromise]).then(() => {
+        rolePermissions.update();
+        expect(rolePermissions.find('SystemRolePermissions')).toHaveLength(2);
+        expect(rolePermissions.find('SystemRolePermissions').at(0).prop('system')).toEqual('Sulu');
+        expect(rolePermissions.find('SystemRolePermissions').at(1).prop('system')).toEqual('Blog');
+    });
+});
+
+test('Hide system if no actions are given', () => {
+    const rolePromise = Promise.resolve(
+        {
+            _embedded: {
+                roles: [
+                    {id: 1, name: 'Admin', system: 'Sulu'},
+                    {id: 2, name: 'Contact Manager', system: 'Website'},
+                ],
+            },
+        }
+    );
+    ResourceRequester.get.mockReturnValue(rolePromise);
+
+    securityContextStore.getAvailableActions.mockImplementation((resourceKey, system) => {
+        if (system === 'Sulu') {
+            return ['view', 'add', 'edit', 'delete', 'security'];
+        }
+
+        if (system === 'Website') {
+            return [];
+        }
+    });
+    securityContextStore.getSystems.mockReturnValue(['Sulu', 'Website']);
 
     const rolePermissions = mount(<RolePermissions onChange={jest.fn()} resourceKey="snippets" value={{}} />);
 
     return Promise.all([rolePromise]).then(() => {
         rolePermissions.update();
-        expect(rolePermissions.render()).toMatchSnapshot();
+        expect(rolePermissions.find('SystemRolePermissions')).toHaveLength(1);
     });
 });
 
@@ -156,8 +131,8 @@ test('Call onChange callback when value changes', () => {
         {
             _embedded: {
                 roles: [
-                    {id: 1, name: 'Administrator', permissions: []},
-                    {id: 2, name: 'Account Manager', permissions: []},
+                    {id: 1, name: 'Administrator', permissions: [], system: 'Sulu'},
+                    {id: 2, name: 'Account Manager', permissions: [], system: 'Sulu'},
                 ],
             },
         }
@@ -165,30 +140,295 @@ test('Call onChange callback when value changes', () => {
     ResourceRequester.get.mockReturnValue(rolePromise);
 
     securityContextStore.getAvailableActions.mockReturnValue(['view', 'add', 'edit', 'delete', 'live', 'security']);
+    securityContextStore.getSystems.mockReturnValue(['Sulu', 'Website']);
 
-    const value = {};
-    const rolePermissions = shallow(<RolePermissions onChange={changeSpy} resourceKey="snippets" value={value} />);
-
-    expect(securityContextStore.getAvailableActions).toBeCalledWith('snippets');
+    const value = {
+        '1': {
+            view: true,
+            add: true,
+            edit: true,
+            delete: true,
+        },
+    };
+    const rolePermissions = mount(<RolePermissions onChange={changeSpy} resourceKey="snippets" value={value} />);
 
     return Promise.all([rolePromise]).then(() => {
-        const newValue = {
-            '1': {
-                view: true,
-                add: false,
-                edit: true,
-                delete: true,
-            },
+        rolePermissions.update();
+        expect(securityContextStore.getAvailableActions).toBeCalledWith('snippets', 'Sulu');
+        expect(securityContextStore.getAvailableActions).toBeCalledWith('snippets', 'Website');
+
+        rolePermissions.find('Matrix').at(0).prop('onChange')({
             '2': {
                 view: true,
                 add: true,
                 edit: true,
                 delete: false,
             },
-        };
+        });
+        expect(changeSpy).toHaveBeenLastCalledWith({
+            '2': {
+                view: true,
+                add: true,
+                edit: true,
+                delete: false,
+            },
+        });
+    });
+});
+
+test('Call onChange callback when matrix for system is deactivated', () => {
+    const changeSpy = jest.fn();
+
+    const rolePromise = Promise.resolve(
+        {
+            _embedded: {
+                roles: [
+                    {id: 1, name: 'Website User', permissions: [], system: 'Website'},
+                    {id: 2, name: 'Account Manager', permissions: [], system: 'Sulu'},
+                    {id: 3, name: 'Website Manager', permissions: [], system: 'Website'},
+                    {id: 4, name: 'Administrator', permissions: [], system: 'Sulu'},
+                ],
+            },
+        }
+    );
+    ResourceRequester.get.mockReturnValue(rolePromise);
+
+    securityContextStore.getAvailableActions.mockReturnValue(['view', 'add', 'edit', 'delete', 'live', 'security']);
+    securityContextStore.getSystems.mockReturnValue(['Sulu', 'Website']);
+
+    const value = {
+        '1': {
+            view: true,
+            add: true,
+            edit: true,
+            delete: true,
+        },
+        '2': {
+            view: true,
+            add: true,
+            edit: true,
+            delete: true,
+        },
+        '3': {
+            view: true,
+            add: true,
+            edit: true,
+            delete: false,
+        },
+        '4': {
+            view: true,
+            add: true,
+            edit: true,
+            delete: false,
+        },
+    };
+    const rolePermissions = mount(<RolePermissions onChange={changeSpy} resourceKey="snippets" value={value} />);
+
+    return Promise.all([rolePromise]).then(() => {
         rolePermissions.update();
 
-        rolePermissions.find('Matrix').prop('onChange')(newValue);
-        expect(changeSpy).toBeCalledWith(newValue);
+        rolePermissions.find('Toggler').at(0).prop('onChange')(false);
+
+        expect(changeSpy).toHaveBeenLastCalledWith({
+            '1': {
+                view: true,
+                add: true,
+                edit: true,
+                delete: true,
+            },
+            '3': {
+                view: true,
+                add: true,
+                edit: true,
+                delete: false,
+            },
+        });
+    });
+});
+
+test('Call onChange callback when new matrix for system is added', () => {
+    const changeSpy = jest.fn();
+
+    const rolePromise = Promise.resolve(
+        {
+            _embedded: {
+                roles: [
+                    {id: 1, name: 'Website User', permissions: [], system: 'Website'},
+                    {id: 2, name: 'Account Manager', permissions: [], system: 'Sulu'},
+                    {id: 3, name: 'Website Manager', permissions: [], system: 'Website'},
+                    {id: 4, name: 'Administrator', permissions: [], system: 'Sulu'},
+                ],
+            },
+        }
+    );
+    ResourceRequester.get.mockReturnValue(rolePromise);
+
+    securityContextStore.getAvailableActions.mockReturnValue(['view', 'add', 'edit', 'delete', 'live']);
+    securityContextStore.getSystems.mockReturnValue(['Sulu', 'Website']);
+
+    const value = {
+        '1': {
+            view: true,
+            add: true,
+            edit: true,
+            delete: true,
+        },
+        '3': {
+            view: true,
+            add: true,
+            edit: true,
+            delete: false,
+        },
+    };
+    const rolePermissions = mount(<RolePermissions onChange={changeSpy} resourceKey="snippets" value={value} />);
+
+    return Promise.all([rolePromise]).then(() => {
+        rolePermissions.update();
+
+        expect(rolePermissions.find('Toggler').at(0).prop('checked')).toEqual(false);
+        expect(rolePermissions.find('Toggler').at(1).prop('checked')).toEqual(true);
+
+        rolePermissions.find('Toggler').at(0).prop('onChange')(true);
+        rolePermissions.update();
+        expect(rolePermissions.find('Matrix')).toHaveLength(2);
+
+        rolePermissions.find('Matrix').find('Row[name="2"] Item[icon="su-eye"] > div').simulate('click');
+
+        expect(changeSpy).toHaveBeenLastCalledWith({
+            '1': {
+                view: true,
+                add: true,
+                edit: true,
+                delete: true,
+            },
+            '2': {
+                view: true,
+                add: false,
+                edit: false,
+                delete: false,
+                live: false,
+            },
+            '3': {
+                view: true,
+                add: true,
+                edit: true,
+                delete: false,
+            },
+            '4': {
+                view: false,
+                add: false,
+                edit: false,
+                delete: false,
+                live: false,
+            },
+        });
+    });
+});
+
+test('Use context for getting default values', () => {
+    const changeSpy = jest.fn();
+
+    const rolePromise = Promise.resolve(
+        {
+            _embedded: {
+                roles: [
+                    {
+                        id: 1,
+                        name: 'Administrator',
+                        permissions: [
+                            {
+                                context: 'sulu.pages.website',
+                                permissions: {add: true, delete: false, edit: true, live: false, view: true},
+                            },
+                        ],
+                        system: 'Sulu',
+                    },
+                ],
+            },
+        }
+    );
+    ResourceRequester.get.mockReturnValue(rolePromise);
+
+    securityContextStore.getAvailableActions.mockReturnValue(['view', 'add', 'edit', 'delete', 'live']);
+    securityContextStore.getSystems.mockReturnValue(['Sulu']);
+    securityContextStore.getSecurityContextByResourceKey.mockReturnValue('sulu.pages.website');
+
+    const value = {};
+    const rolePermissions = mount(<RolePermissions onChange={changeSpy} resourceKey="pages" value={value} />);
+
+    return Promise.all([rolePromise]).then(() => {
+        rolePermissions.update();
+
+        expect(rolePermissions.find('Toggler').at(0).prop('checked')).toEqual(false);
+
+        rolePermissions.find('Toggler').at(0).prop('onChange')(true);
+        rolePermissions.update();
+        expect(securityContextStore.getSecurityContextByResourceKey).toBeCalledWith('pages');
+        expect(rolePermissions.find('Matrix')).toHaveLength(1);
+
+        expect(rolePermissions.find('Matrix').prop('values')).toEqual({
+            '1': {
+                add: true,
+                delete: false,
+                edit: true,
+                live: false,
+                view: true,
+            },
+        });
+    });
+});
+
+test('Use context with replaced webspace for getting default values', () => {
+    const changeSpy = jest.fn();
+
+    const rolePromise = Promise.resolve(
+        {
+            _embedded: {
+                roles: [
+                    {
+                        id: 1,
+                        name: 'Administrator',
+                        permissions: [
+                            {
+                                context: 'sulu.pages.website',
+                                permissions: {add: true, delete: false, edit: true, live: false, view: true},
+                            },
+                        ],
+                        system: 'Sulu',
+                    },
+                ],
+            },
+        }
+    );
+    ResourceRequester.get.mockReturnValue(rolePromise);
+
+    securityContextStore.getAvailableActions.mockReturnValue(['view', 'add', 'edit', 'delete', 'live']);
+    securityContextStore.getSystems.mockReturnValue(['Sulu']);
+    securityContextStore.getSecurityContextByResourceKey.mockReturnValue('sulu.pages.#webspace#');
+
+    const value = {};
+    const rolePermissions = mount(
+        <RolePermissions onChange={changeSpy} resourceKey="pages" value={value} webspaceKey="website" />
+    );
+
+    return Promise.all([rolePromise]).then(() => {
+        rolePermissions.update();
+
+        expect(rolePermissions.find('Toggler').at(0).prop('checked')).toEqual(false);
+
+        rolePermissions.find('Toggler').at(0).prop('onChange')(true);
+        rolePermissions.update();
+        expect(securityContextStore.getSecurityContextByResourceKey).toBeCalledWith('pages');
+        expect(rolePermissions.find('Matrix')).toHaveLength(1);
+
+        expect(rolePermissions.find('Matrix').prop('values')).toEqual({
+            '1': {
+                add: true,
+                delete: false,
+                edit: true,
+                live: false,
+                view: true,
+            },
+        });
     });
 });

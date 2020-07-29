@@ -161,7 +161,7 @@ class PageAdminTest extends TestCase
         $webspace1->getSecurity()->willReturn(null);
 
         $webspace2Security = $this->prophesize(Security::class);
-        $webspace2Security->getSystem()->willReturn('webspace-scurity-system-2');
+        $webspace2Security->getSystem()->willReturn('webspace-security-system-2');
 
         $webspace2 = $this->prophesize(Webspace::class);
         $webspace2->getKey()->willReturn('webspace-key-2');
@@ -180,7 +180,11 @@ class PageAdminTest extends TestCase
                         'sulu.webspaces.webspace-key-2' => ['view', 'add', 'edit', 'delete', 'live', 'security'],
                     ],
                 ],
-                'webspace-scurity-system-2' => [],
+                'webspace-security-system-2' => [
+                    'Webspaces' => [
+                        'sulu.webspaces.#webspace#' => ['view'],
+                    ],
+                ],
             ],
             $admin->getSecurityContexts()
         );
@@ -192,7 +196,11 @@ class PageAdminTest extends TestCase
                         'sulu.webspaces.#webspace#' => ['view', 'add', 'edit', 'delete', 'live', 'security'],
                     ],
                 ],
-                'webspace-scurity-system-2' => [],
+                'webspace-security-system-2' => [
+                    'Webspaces' => [
+                        'sulu.webspaces.#webspace#' => ['view'],
+                    ],
+                ],
             ],
             $admin->getSecurityContextsWithPlaceholder()
         );

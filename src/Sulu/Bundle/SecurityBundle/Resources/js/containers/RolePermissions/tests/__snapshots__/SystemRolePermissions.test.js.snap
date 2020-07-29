@@ -1,0 +1,126 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render permissions for a single system 1`] = `
+<div
+  class="systemRolePermissions"
+>
+  <div
+    class="line"
+  >
+    <div
+      class="label"
+    >
+      sulu_security.system_permission_heading
+    </div>
+    <label
+      class="label"
+    >
+      <span
+        class="switch toggler"
+      >
+        <input
+          type="checkbox"
+          value=""
+        />
+        <span />
+      </span>
+    </label>
+  </div>
+  <table
+    class="matrix matrix"
+  >
+    <tbody>
+      <tr
+        class="row"
+      >
+        <td
+          class="name"
+        >
+          User
+        </td>
+        <td
+          class="items"
+        >
+          <div
+            class="item selected"
+            title="View"
+          >
+            <span
+              aria-label="su-eye"
+              class="su-eye"
+            />
+          </div>
+          <div
+            class="item"
+            title="Add"
+          >
+            <span
+              aria-label="su-plus-circle"
+              class="su-plus-circle"
+            />
+          </div>
+          <div
+            class="item selected"
+            title="Edit"
+          >
+            <span
+              aria-label="su-pen"
+              class="su-pen"
+            />
+          </div>
+          <button
+            class="rowButton"
+          >
+            sulu_admin.deactivate_all
+          </button>
+        </td>
+      </tr>
+      <tr
+        class="row"
+      >
+        <td
+          class="name"
+        >
+          Contact Manager
+        </td>
+        <td
+          class="items"
+        >
+          <div
+            class="item"
+            title="View"
+          >
+            <span
+              aria-label="su-eye"
+              class="su-eye"
+            />
+          </div>
+          <div
+            class="item selected"
+            title="Add"
+          >
+            <span
+              aria-label="su-plus-circle"
+              class="su-plus-circle"
+            />
+          </div>
+          <div
+            class="item"
+            title="Edit"
+          >
+            <span
+              aria-label="su-pen"
+              class="su-pen"
+            />
+          </div>
+          <button
+            class="rowButton"
+          >
+            sulu_admin.deactivate_all
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;

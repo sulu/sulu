@@ -12,6 +12,7 @@ export type Webspace = {
     navigations: Array<Navigation>,
     portalInformation: Array<PortalInformation>,
     resourceLocatorStrategy: ResourceLocatorStrategy,
+    security: Security | typeof undefined,
     segments: Array<Segment>,
     urls: Array<Url>,
 };
@@ -19,6 +20,10 @@ export type Webspace = {
 export type ResourceLocatorStrategy = {
     inputType: string,
 };
+
+export type Security = {
+    system: string,
+}
 
 export type Navigation = {
     key: string,

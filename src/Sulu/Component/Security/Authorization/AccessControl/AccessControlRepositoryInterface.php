@@ -35,5 +35,5 @@ interface AccessControlRepositoryInterface
      *
      * @return AccessControlInterface[]
      */
-    public function findByTypeAndId($type, $id);
+    public function findByTypeAndId($type, $id, $system = null);
 }

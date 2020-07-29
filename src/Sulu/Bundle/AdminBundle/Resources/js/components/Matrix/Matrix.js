@@ -9,6 +9,7 @@ import matrixStyles from './matrix.scss';
 
 type Props = {|
     children: ChildrenArray<Element<typeof Row>>,
+    className?: string,
     disabled: boolean,
     onChange: (value: MatrixValues) => void,
     values: MatrixValues,
@@ -53,11 +54,13 @@ export default class Matrix extends React.PureComponent<Props> {
     render() {
         const {
             children,
+            className,
             disabled,
         } = this.props;
 
         const matrixClass = classNames(
             matrixStyles.matrix,
+            className,
             {
                 [matrixStyles.disabled]: disabled,
             }

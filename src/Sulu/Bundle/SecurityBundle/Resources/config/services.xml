@@ -119,10 +119,14 @@
         <service id="sulu_security.access_control_manager" class="%sulu_security.access_control_manager.class%">
             <argument type="service" id="sulu_security.mask_converter"/>
             <argument type="service" id="event_dispatcher"/>
+            <argument type="service" id="sulu_security.system_store"/>
         </service>
+
+        <service id="sulu_security.system_store" class="Sulu\Bundle\SecurityBundle\System\SystemStore" />
 
         <service id="sulu_security.phpcr_access_control_provider" class="%sulu_security.phpcr_access_control_provider.class%">
             <argument type="service" id="sulu_document_manager.document_manager"/>
+            <argument type="service" id="sulu.repository.role"/>
             <argument>%permissions%</argument>
             <tag name="sulu.context" context="admin"/>
             <tag name="sulu.access_control"/>
@@ -284,6 +288,13 @@
             <argument type="service" id="translator"/>
             <tag name="kernel.event_listener" event="kernel.request" method="copyUserLocaleToRequest"/>
             <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <service id="sulu_security.system_listener" class="Sulu\Bundle\SecurityBundle\EventListener\SystemListener">
+            <argument type="service" id="sulu_security.system_store" />
+            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
+            <argument>%sulu.context%</argument>
+            <tag name="kernel.event_listener" event="kernel.request" priority="24" />
         </service>
 
         <service id="sulu_security.fixtures.security_types" class="Sulu\Bundle\SecurityBundle\DataFixtures\ORM\LoadSecurityTypes">

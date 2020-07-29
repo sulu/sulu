@@ -16,6 +16,7 @@ use ReflectionException;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
+use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
 
 /**
  * This class handles the permission information for PHPCR nodes.
@@ -28,13 +29,22 @@ class PhpcrAccessControlProvider implements AccessControlProviderInterface
     private $documentManager;
 
     /**
+     * @var RoleRepositoryInterface
+     */
+    private $roleRepository;
+
+    /**
      * @var array
      */
     private $permissions;
 
-    public function __construct(DocumentManagerInterface $documentManager, array $permissions)
-    {
+    public function __construct(
+        DocumentManagerInterface $documentManager,
+        RoleRepositoryInterface $roleRepository,
+        array $permissions
+    ) {
         $this->documentManager = $documentManager;
+        $this->roleRepository = $roleRepository;
         $this->permissions = $permissions;
     }
 
@@ -47,12 +57,10 @@ class PhpcrAccessControlProvider implements AccessControlProviderInterface
         $this->documentManager->flush();
     }
 
-    public function getPermissions($type, $identifier)
+    public function getPermissions($type, $identifier, $system = null)
     {
-        $permissions = [];
-
         if (!$identifier) {
-            return $permissions;
+            return [];
         }
 
         try {
@@ -61,7 +69,25 @@ class PhpcrAccessControlProvider implements AccessControlProviderInterface
             return [];
         }
 
-        return $document->getPermissions();
+        $documentPermissions = $document->getPermissions();
+
+        if (!$documentPermissions) {
+            return [];
+        }
+
+        if (!$system) {
+            return $documentPermissions;
+        }
+
+        $systemRoleIds = $this->roleRepository->findRoleIdsBySystem($system);
+
+        return \array_filter(
+            $documentPermissions,
+            function($roleId) use ($systemRoleIds) {
+                return \in_array($roleId, $systemRoleIds);
+            },
+            \ARRAY_FILTER_USE_KEY
+        );
     }
 
     public function supports($type)

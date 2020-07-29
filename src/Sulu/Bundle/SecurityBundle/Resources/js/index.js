@@ -14,8 +14,10 @@ fieldRegistry.add('role_permissions', RolePermissions);
 formToolbarActionRegistry.add('sulu_security.enable_user', EnableUserToolbarAction);
 
 initializer.addUpdateConfigHook('sulu_security', (config: Object) => {
+    RolePermissionsContainer.suluSecuritySystem = config.suluSecuritySystem;
+
+    securityContextStore.suluSecuritySystem = config.suluSecuritySystem;
     securityContextStore.securityContexts = config.securityContexts;
     // TODO resourceKeyMapping could be removed by using resourceKey instead of separate security context
     securityContextStore.resourceKeyMapping = config.resourceKeySecurityContextMapping;
-    RolePermissionsContainer.resourceKeyMapping = config.resourceKeySecurityContextMapping;
 });

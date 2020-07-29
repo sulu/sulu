@@ -37,4 +37,9 @@ interface RoleRepositoryInterface extends RepositoryInterface
      * @return array
      */
     public function getRoleNames();
+
+    /**
+     * @return array
+     */
+    public function findRoleIdsBySystem($system);
 }

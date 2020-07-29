@@ -1,93 +1,106 @@
 // @flow
 import React from 'react';
-import {action, computed, observable} from 'mobx';
+import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
-import {Loader, Matrix} from 'sulu-admin-bundle/components';
+import {Loader} from 'sulu-admin-bundle/components';
 import {ResourceRequester} from 'sulu-admin-bundle/services';
 import securityContextStore from '../../stores/securityContextStore';
-import {getActionIcon} from '../../utils/Permission';
 import type {Role} from '../../types';
+import SystemRolePermissions from './SystemRolePermissions';
 import type {RolePermissions as RolePermissionsType} from './types';
 
 type Props = {|
     disabled: boolean,
     onChange: (value: RolePermissionsType) => void,
     resourceKey: string,
+    system?: ?string,
     value: RolePermissionsType,
+    webspaceKey?: ?string,
 |};
 
 @observer
 class RolePermissions extends React.Component<Props> {
+    static suluSecuritySystem: string;
+
     static defaultProps = {
         disabled: false,
     };
 
-    // TODO Could be removed by using resourceKey for security as well instead of separate security context
-    static resourceKeyMapping: {[resourceKey: string]: string};
-
     @observable roles: ?Array<Role>;
-    @observable actions: ?Array<string>;
 
     @action componentDidMount() {
-        const {resourceKey} = this.props;
-
-        this.actions = securityContextStore.getAvailableActions(resourceKey);
-
         ResourceRequester.get('roles').then(action((response) => {
             this.roles = response._embedded.roles;
         }));
     }
 
-    @computed get defaultValue() {
-        const {resourceKey} = this.props;
-        const {actions, roles} = this;
+    handleChange = (newSystemValue: RolePermissionsType, system: string) => {
+        const {roles} = this;
 
-        if (!actions || ! roles) {
-            return {};
+        if (!roles) {
+            return;
         }
 
-        const securityContext = RolePermissions.resourceKeyMapping[resourceKey];
+        const {onChange, value} = this.props;
+        const systemRoles = roles.filter((role) => role.system === system);
+        onChange({
+            ...Object.keys(value).reduce((values, roleId) => {
+                if (systemRoles.some((systemRole) => systemRole.id.toString() == roleId)) {
+                    return values;
+                }
 
-        return roles.reduce((value, role) => {
-            const rolePermission = role.permissions.find((permission) => permission.context === securityContext);
-            value[role.id] = actions.reduce((actionValue, action) => {
-                actionValue[action] = rolePermission ? rolePermission.permissions[action] : true;
+                values[roleId] = value[roleId];
 
-                return actionValue;
-            }, {});
-
-            return value;
-        }, {});
-    }
-
-    handleChange = (value: RolePermissionsType) => {
-        const {onChange} = this.props;
-        onChange(value);
+                return values;
+            }, {}),
+            ...newSystemValue,
+        });
     };
 
     render() {
-        const {actions, roles} = this;
-        const {disabled, value} = this.props;
+        const {roles} = this;
+        const {disabled, resourceKey, system, value, webspaceKey} = this.props;
 
-        if (!roles || !actions) {
+        if (!roles) {
             return <Loader />;
         }
 
-        return (
-            <Matrix
-                disabled={disabled}
-                onChange={this.handleChange}
-                values={Object.keys(value).length > 0 ? value : this.defaultValue}
-            >
-                {roles.map((role) => (
-                    <Matrix.Row key={role.id} name={role.id.toString()} title={role.name}>
-                        {actions.map((action) => (
-                            <Matrix.Item icon={getActionIcon(action)} key={action} name={action} />
-                        ))}
-                    </Matrix.Row>
-                ))}
-            </Matrix>
-        );
+        const systems = system ? [RolePermissions.suluSecuritySystem, system] : securityContextStore.getSystems();
+
+        return systems.reduce((systemMatrices, system) => {
+            const actions = securityContextStore.getAvailableActions(resourceKey, system);
+            const systemRoles = roles.filter((role) => role.system === system);
+
+            if (systemRoles.length === 0 || actions.length === 0) {
+                return systemMatrices;
+            }
+
+            const systemValues = Object.keys(value).reduce((systemValues, roleId) => {
+                if (!systemRoles.some((systemRole) => systemRole.id.toString() == roleId)) {
+                    return systemValues;
+                }
+
+                systemValues[roleId] = value[roleId];
+
+                return systemValues;
+            }, {});
+
+            systemMatrices.push(
+                <SystemRolePermissions
+                    actions={actions}
+                    disabled={disabled}
+                    key={system}
+                    onChange={this.handleChange}
+                    resourceKey={resourceKey}
+                    roles={systemRoles}
+                    system={system}
+                    values={systemValues}
+                    webspaceKey={webspaceKey}
+                />
+            );
+
+            return systemMatrices;
+        }, []);
     }
 }
 

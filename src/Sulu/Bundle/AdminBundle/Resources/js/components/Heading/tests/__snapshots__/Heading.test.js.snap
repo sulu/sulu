@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render heading 1`] = `
+Array [
+  <div
+    class="line"
+  >
+    <span
+      aria-label="su-hide"
+      class="su-hide icon"
+    />
+    <div
+      class="label"
+    >
+      Hide a block
+    </div>
+    Hello World!
+  </div>,
+  <div
+    class="description"
+  >
+    Hides a block when activated
+  </div>,
+]
+`;

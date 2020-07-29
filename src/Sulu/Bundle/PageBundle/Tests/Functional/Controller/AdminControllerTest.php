@@ -83,6 +83,7 @@ class AdminControllerTest extends SuluTestCase
         $this->assertEquals('destination_io', $pageConfig->webspaces->destination_io->key);
         $this->assertEquals('sulu_io', $pageConfig->webspaces->sulu_io->key);
         $this->assertEquals('test_io', $pageConfig->webspaces->test_io->key);
+        $this->assertEquals('test_security_system', $pageConfig->webspaces->test_io->security->system);
 
         $this->assertEquals('en', $pageConfig->webspaces->test_io->localizations[0]->language);
         $this->assertTrue($pageConfig->webspaces->test_io->localizations[0]->default);
@@ -103,7 +104,6 @@ class AdminControllerTest extends SuluTestCase
         $this->assertEquals('footer', $pageConfig->webspaces->destination_io->navigations[1]->key);
         $this->assertEquals('leaf', $pageConfig->webspaces->destination_io->resourceLocatorStrategy->inputType);
         $this->assertEquals([], $pageConfig->webspaces->destination_io->customUrls);
-        $this->assertEquals([], $pageConfig->webspaces->destination_io->_permissions);
     }
 
     public function testPagesListMetadataAction()

@@ -6,6 +6,10 @@
     <name>Sulu Test</name>
     <key>sulu-test</key>
 
+    <security>
+        <system>Sulu Test</system>
+    </security>
+
     <localizations>
         <localization language="en" default="true"/>
         <localization language="de"/>

@@ -23,6 +23,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class SecuritySubscriber implements EventSubscriberInterface
 {
+    const SECURITY_PROPERTY_PREFIX = 'sec:role-';
+
     /**
      * @var array
      */
@@ -67,9 +69,21 @@ class SecuritySubscriber implements EventSubscriberInterface
 
         $node = $event->getNode();
 
-        foreach ($document->getPermissions() as $roleId => $permission) {
+        $permissions = $document->getPermissions();
+
+        $existingRoleIds = \array_keys($permissions);
+        foreach ($node->getProperties(static::SECURITY_PROPERTY_PREFIX . '*') as $roleSecurityProperty) {
+            $propertyRoleId = \str_replace(static::SECURITY_PROPERTY_PREFIX, '', $roleSecurityProperty->getName());
+            if (\in_array(\intval($propertyRoleId), $existingRoleIds)) {
+                continue;
+            }
+
+            $roleSecurityProperty->remove();
+        }
+
+        foreach ($permissions as $roleId => $permission) {
             // TODO use PropertyEncoder, once it is refactored
-            $node->setProperty('sec:role-' . $roleId, $this->getAllowedPermissions($permission));
+            $node->setProperty(static::SECURITY_PROPERTY_PREFIX . $roleId, $this->getAllowedPermissions($permission));
         }
     }
 

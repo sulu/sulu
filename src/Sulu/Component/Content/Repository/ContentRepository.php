@@ -19,16 +19,19 @@ use PHPCR\Query\QOM\QueryObjectModelFactoryInterface;
 use PHPCR\SessionInterface;
 use PHPCR\Util\PathHelper;
 use PHPCR\Util\QOM\QueryBuilder;
+use Sulu\Bundle\SecurityBundle\System\SystemStoreInterface;
 use Sulu\Component\Content\Compat\LocalizationFinderInterface;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Compat\StructureType;
 use Sulu\Component\Content\Document\RedirectType;
+use Sulu\Component\Content\Document\Subscriber\SecuritySubscriber;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Repository\Mapping\MappingInterface;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Util\SuluNodeHelper;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
@@ -92,9 +95,19 @@ class ContentRepository implements ContentRepositoryInterface
     private $nodeHelper;
 
     /**
+     * @var RoleRepositoryInterface
+     */
+    private $roleRepository;
+
+    /**
      * @var array
      */
     private $permissions;
+
+    /**
+     * @var SystemStoreInterface
+     */
+    private $systemStore;
 
     public function __construct(
         SessionManagerInterface $sessionManager,
@@ -103,6 +116,8 @@ class ContentRepository implements ContentRepositoryInterface
         LocalizationFinderInterface $localizationFinder,
         StructureManagerInterface $structureManager,
         SuluNodeHelper $nodeHelper,
+        RoleRepositoryInterface $roleRepository,
+        SystemStoreInterface $systemStore,
         array $permissions
     ) {
         $this->sessionManager = $sessionManager;
@@ -111,6 +126,8 @@ class ContentRepository implements ContentRepositoryInterface
         $this->localizationFinder = $localizationFinder;
         $this->structureManager = $structureManager;
         $this->nodeHelper = $nodeHelper;
+        $this->roleRepository = $roleRepository;
+        $this->systemStore = $systemStore;
         $this->permissions = $permissions;
 
         $this->session = $sessionManager->getSession();
@@ -137,7 +154,10 @@ class ContentRepository implements ContentRepositoryInterface
             throw new ItemNotFoundException();
         }
 
-        return $this->resolveContent(\current($rows), $locale, $locales, $mapping, $user);
+        $resultPermissions = $this->resolveResultPermissions($rows, $user);
+        $permissions = empty($resultPermissions) ? [] : \current($resultPermissions);
+
+        return $this->resolveContent(\current($rows), $locale, $locales, $mapping, $user, $permissions);
     }
 
     public function findByParentUuid(
@@ -384,16 +404,62 @@ class ContentRepository implements ContentRepositoryInterface
         MappingInterface $mapping,
         UserInterface $user = null
     ) {
+        $result = \iterator_to_array($queryBuilder->execute());
+
+        $permissions = $this->resolveResultPermissions($result, $user);
+
         return \array_values(
             \array_filter(
                 \array_map(
-                    function(Row $row) use ($mapping, $locale, $locales, $user) {
-                        return $this->resolveContent($row, $locale, $locales, $mapping, $user);
+                    function(Row $row, $index) use ($mapping, $locale, $locales, $user, $permissions) {
+                        return $this->resolveContent(
+                            $row,
+                            $locale,
+                            $locales,
+                            $mapping,
+                            $user,
+                            $permissions[$index] ?? []
+                        );
                     },
-                    \iterator_to_array($queryBuilder->execute())
+                    $result,
+                    \array_keys($result)
                 )
             )
         );
+    }
+
+    private function resolveResultPermissions(array $result, UserInterface $user = null)
+    {
+        $permissions = [];
+        if (null === $user) {
+            return $permissions;
+        }
+
+        // TODO recognize system automatically
+        $systemRoleIds = $this->roleRepository->findRoleIdsBySystem($this->systemStore->getSystem());
+
+        foreach ($result as $index => $row) {
+            $permissions[$index] = [];
+            $securityProperties = $row->getNode()->getProperties(SecuritySubscriber::SECURITY_PROPERTY_PREFIX . '*');
+
+            foreach ($securityProperties as $securityProperty) {
+                $roleId = \str_replace(SecuritySubscriber::SECURITY_PROPERTY_PREFIX, '', $securityProperty->getName());
+
+                if (!\in_array($roleId, $systemRoleIds)) {
+                    continue;
+                }
+
+                foreach ($this->permissions as $permissionKey => $permission) {
+                    $permissions[$index][$roleId][$permissionKey] = false;
+                }
+
+                foreach ($securityProperty->getValue() as $permission) {
+                    $permissions[$index][$roleId][$permission] = true;
+                }
+            }
+        }
+
+        return $permissions;
     }
 
     /**
@@ -574,8 +640,6 @@ class ContentRepository implements ContentRepositoryInterface
      *
      * @param string $locale
      * @param string $locales
-     * @param MappingInterface $mapping Includes array of property names
-     * @param UserInterface $user
      *
      * @return Content
      */
@@ -584,7 +648,8 @@ class ContentRepository implements ContentRepositoryInterface
         $locale,
         $locales,
         MappingInterface $mapping,
-        UserInterface $user = null
+        UserInterface $user = null,
+        array $permissions
     ) {
         $webspaceKey = $this->nodeHelper->extractWebspaceFromPath($row->getPath());
 
@@ -642,7 +707,7 @@ class ContentRepository implements ContentRepositoryInterface
             $row->getValue('nodeType'),
             $this->resolveHasChildren($row), $this->resolveProperty($row, 'template', $locale, $shadowBase),
             $data,
-            $this->resolvePermissions($row, $user),
+            $permissions,
             $type
         );
         $content->setRow($row);
@@ -721,6 +786,9 @@ class ContentRepository implements ContentRepositoryInterface
             $data[$property] = $this->resolveProperty($row, $property, $locale);
         }
 
+        $resultPermissions = $this->resolveResultPermissions([$row], $user);
+        $permissions = empty($resultPermissions) ? [] : \current($resultPermissions);
+
         $content = new Content(
             $locale,
             $webspaceKey,
@@ -730,7 +798,7 @@ class ContentRepository implements ContentRepositoryInterface
             $row->getValue('nodeType'),
             $this->resolveHasChildren($row), $this->resolveProperty($row, 'template', $locale),
             $data,
-            $this->resolvePermissions($row, $user),
+            $permissions,
             $type
         );
 
@@ -806,38 +874,6 @@ class ContentRepository implements ContentRepositoryInterface
     private function resolvePath(Row $row, $webspaceKey)
     {
         return '/' . \ltrim(\str_replace($this->sessionManager->getContentPath($webspaceKey), '', $row->getPath()), '/');
-    }
-
-    /**
-     * Resolves permissions for given user.
-     *
-     * @param UserInterface $user
-     *
-     * @return array
-     */
-    private function resolvePermissions(Row $row, UserInterface $user = null)
-    {
-        $permissions = [];
-
-        $hasObjectPermissions = \count($row->getNode()->getProperties('sec:*')) > 0;
-
-        if (!$hasObjectPermissions) {
-            return [];
-        }
-
-        if (null !== $user) {
-            foreach ($user->getRoleObjects() as $role) {
-                foreach ($this->permissions as $permissionKey => $permission) {
-                    $permissions[$role->getId()][$permissionKey] = false;
-                }
-
-                foreach (\array_filter(\explode(' ', $row->getValue(\sprintf('role%s', $role->getId())))) as $permission) {
-                    $permissions[$role->getId()][$permission] = true;
-                }
-            }
-        }
-
-        return $permissions;
     }
 
     /**

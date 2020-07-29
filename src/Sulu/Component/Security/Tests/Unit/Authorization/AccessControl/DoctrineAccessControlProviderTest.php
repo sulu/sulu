@@ -66,10 +66,10 @@ class DoctrineAccessControlProviderTest extends TestCase
 
     public function testSetPermissions()
     {
-        $role1 = new Role();
-        $role2 = new Role();
-        $this->roleRepository->findRoleById(1)->willReturn($role1);
-        $this->roleRepository->findRoleById(2)->willReturn($role2);
+        $role1 = $this->prophesize(Role::class);
+        $role2 = $this->prophesize(Role::class);
+        $this->roleRepository->findRoleById(1)->willReturn($role1->reveal());
+        $this->roleRepository->findRoleById(2)->willReturn($role2->reveal());
 
         $this->maskConverter->convertPermissionsToNumber(['view' => true, 'edit' => false])->willReturn(64);
         $this->maskConverter->convertPermissionsToNumber(['view' => true, 'edit' => true])->willReturn(96);
@@ -78,13 +78,16 @@ class DoctrineAccessControlProviderTest extends TestCase
         $accessControl1->setEntityClass('AcmeBundle\Example');
         $accessControl1->setEntityId(1);
         $accessControl1->setPermissions(64);
-        $accessControl1->setRole($role1);
+        $accessControl1->setRole($role1->reveal());
 
         $accessControl2 = new AccessControl();
         $accessControl2->setEntityClass('AcmeBundle\Example');
         $accessControl2->setEntityId(1);
         $accessControl2->setPermissions(96);
-        $accessControl2->setRole($role2);
+        $accessControl2->setRole($role2->reveal());
+
+        $this->accessControlRepository->findByTypeAndId('AcmeBundle\Example', 1)
+            ->willReturn([]);
 
         $this->objectManager->persist($accessControl1)->shouldBeCalled();
         $this->objectManager->persist($accessControl2)->shouldBeCalled();
@@ -100,17 +103,68 @@ class DoctrineAccessControlProviderTest extends TestCase
         );
     }
 
+    public function testSetPermissionsWithRemovedRoles()
+    {
+        $role1 = $this->prophesize(Role::class);
+        $role1->getId()->willReturn(1);
+        $role2 = $this->prophesize(Role::class);
+        $role2->getId()->willReturn(2);
+        $this->roleRepository->findRoleById(1)->willReturn($role1->reveal());
+        $this->roleRepository->findRoleById(2)->willReturn($role2->reveal());
+
+        $this->maskConverter->convertPermissionsToNumber(['view' => true, 'edit' => false])->willReturn(64);
+        $this->maskConverter->convertPermissionsToNumber(['view' => true, 'edit' => true])->willReturn(96);
+
+        $accessControl1 = new AccessControl();
+        $accessControl1->setEntityClass('AcmeBundle\Example');
+        $accessControl1->setEntityId(1);
+        $accessControl1->setPermissions(64);
+        $accessControl1->setRole($role1->reveal());
+
+        $accessControl2 = new AccessControl();
+        $accessControl2->setEntityClass('AcmeBundle\Example');
+        $accessControl2->setEntityId(1);
+        $accessControl2->setPermissions(96);
+        $accessControl2->setRole($role2->reveal());
+
+        $this->accessControlRepository->findByTypeAndId('AcmeBundle\Example', 1)
+            ->willReturn([$accessControl1, $accessControl2]);
+
+        $this->objectManager->remove($accessControl1)->shouldNotBeCalled();
+        $this->objectManager->remove($accessControl2)->shouldBeCalled();
+        $this->objectManager->flush()->shouldBeCalled();
+
+        $this->doctrineAccessControlProvider->setPermissions(
+            'AcmeBundle\Example',
+            1,
+            [
+                1 => ['view' => true, 'edit' => false],
+            ]
+        );
+    }
+
     public function testSetPermissionsWithExistingAccessControl()
     {
-        $role = new Role();
-        $this->roleRepository->findRoleById(1)->willReturn($role);
+        $role1 = $this->prophesize(Role::class);
+        $role1->getId()->willReturn(1);
+        $this->roleRepository->findRoleById(1)->willReturn($role1->reveal());
+
+        $role2 = $this->prophesize(Role::class);
+        $role2->getId()->willReturn(2);
+        $this->roleRepository->findRoleById(2)->willReturn($role2->reveal());
 
         $this->maskConverter->convertPermissionsToNumber(['view' => true, 'edit' => false])->willReturn(64);
 
-        $accessControl = $this->prophesize(AccessControl::class);
-        $accessControl->setPermissions(64)->shouldBeCalled();
+        $accessControl1 = $this->prophesize(AccessControl::class);
+        $accessControl1->getRole()->willReturn($role1);
+        $accessControl1->setPermissions(64)->shouldBeCalled();
 
-        $this->accessControlRepository->findByTypeAndIdAndRole('AcmeBundle\Example', 1, 1)->willReturn($accessControl);
+        $accessControl2 = $this->prophesize(AccessControl::class);
+        $accessControl2->getRole()->willReturn($role2);
+        $accessControl2->setPermissions(64)->shouldBeCalled();
+
+        $this->accessControlRepository->findByTypeAndId('AcmeBundle\Example', 1)
+            ->willReturn([$accessControl1, $accessControl2]);
 
         $this->objectManager->persist(Argument::any())->shouldNotBeCalled();
         $this->objectManager->flush()->shouldBeCalled();
@@ -120,6 +174,7 @@ class DoctrineAccessControlProviderTest extends TestCase
             1,
             [
                 1 => ['view' => true, 'edit' => false],
+                2 => ['view' => true, 'edit' => false],
             ]
         );
     }
@@ -150,7 +205,7 @@ class DoctrineAccessControlProviderTest extends TestCase
             $accessControl1,
             $accessControl2,
         ];
-        $this->accessControlRepository->findByTypeAndId('AcmeBundle\Example', 1)->willReturn($accessControls);
+        $this->accessControlRepository->findByTypeAndId('AcmeBundle\Example', 1, null)->willReturn($accessControls);
 
         $this->assertEquals(
             $this->doctrineAccessControlProvider->getPermissions('AcmeBundle\Example', 1),
@@ -161,9 +216,50 @@ class DoctrineAccessControlProviderTest extends TestCase
         );
     }
 
+    public function testGetPermissionsWithSystem()
+    {
+        $roleIdReflection = new \ReflectionProperty(Role::class, 'id');
+        $roleIdReflection->setAccessible(true);
+
+        $role1 = new Role();
+        $roleIdReflection->setValue($role1, 1);
+
+        $role2 = new Role();
+        $roleIdReflection->setValue($role2, 2);
+
+        $this->maskConverter->convertPermissionsToArray(64)->willReturn(['view' => true, 'edit' => false]);
+        $this->maskConverter->convertPermissionsToArray(96)->willReturn(['view' => true, 'edit' => true]);
+
+        $accessControl1 = new AccessControl();
+        $accessControl1->setPermissions(64);
+        $accessControl1->setRole($role1);
+
+        $accessControl2 = new AccessControl();
+        $accessControl2->setPermissions(96);
+        $accessControl2->setRole($role2);
+
+        $this->accessControlRepository->findByTypeAndId('AcmeBundle\Example', 1, 'Sulu')->willReturn([$accessControl1]);
+        $this->accessControlRepository->findByTypeAndId('AcmeBundle\Example', 1, 'Website')
+            ->willReturn([$accessControl2]);
+
+        $this->assertEquals(
+            $this->doctrineAccessControlProvider->getPermissions('AcmeBundle\Example', 1, 'Sulu'),
+            [
+                1 => ['view' => true, 'edit' => false],
+            ]
+        );
+
+        $this->assertEquals(
+            $this->doctrineAccessControlProvider->getPermissions('AcmeBundle\Example', 1, 'Website'),
+            [
+                2 => ['view' => true, 'edit' => true],
+            ]
+        );
+    }
+
     public function testGetPermissionsForNotExistingAccessControl()
     {
-        $this->accessControlRepository->findByTypeAndId('AcmeBundle\Example', 1)->willReturn([]);
+        $this->accessControlRepository->findByTypeAndId('AcmeBundle\Example', 1, null)->willReturn([]);
 
         $this->assertEquals(
             $this->doctrineAccessControlProvider->getPermissions('AcmeBundle\Example', 1),

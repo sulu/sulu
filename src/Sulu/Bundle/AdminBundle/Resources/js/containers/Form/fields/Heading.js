@@ -1,11 +1,10 @@
 // @flow
-import React, {Fragment} from 'react';
+import React from 'react';
 import type {Node} from 'react';
 import {computed} from 'mobx';
 import {observer} from 'mobx-react';
-import Icon from '../../../components/Icon';
+import HeadingComponent from '../../../components/Heading';
 import type {FieldTypeProps} from '../../../types';
-import headingStyles from './heading.scss';
 
 type Props<T> = {
     ...FieldTypeProps<T>,
@@ -40,18 +39,13 @@ class Heading extends React.Component<Props<typeof undefined>> {
         const {children} = this.props;
 
         return (
-            <Fragment>
-                <div className={headingStyles.line}>
-                    {this.icon && <Icon className={headingStyles.icon} name={this.icon} />}
-                    {this.label && <div className={headingStyles.label}>{this.label}</div>}
-                    {children}
-                </div>
-                {this.description &&
-                    <div className={headingStyles.description}>
-                        {this.description}
-                    </div>
-                }
-            </Fragment>
+            <HeadingComponent
+                description={this.description}
+                icon={this.icon}
+                label={this.label}
+            >
+                {children}
+            </HeadingComponent>
         );
     }
 }

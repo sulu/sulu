@@ -2,7 +2,7 @@
 
 exports[`Render the Matrix component 1`] = `
 <table
-  class="matrix"
+  class="matrix test"
 >
   <tbody>
     <tr
