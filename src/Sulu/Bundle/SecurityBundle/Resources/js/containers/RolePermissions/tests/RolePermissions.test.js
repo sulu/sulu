@@ -14,11 +14,14 @@ jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
 }));
 
 jest.mock('../../../stores/securityContextStore', () => ({
+    suluSecuritySystem: 'Sulu',
     resourceKeyMapping: {snippets: 'sulu.global.snippets'},
     getAvailableActions: jest.fn(),
     getSecurityContextByResourceKey: jest.fn(),
     getSystems: jest.fn(),
 }));
+
+RolePermissions.suluSecuritySystem = 'Sulu';
 
 test('Render matrix with correct given values', () => {
     const rolePromise = Promise.resolve(

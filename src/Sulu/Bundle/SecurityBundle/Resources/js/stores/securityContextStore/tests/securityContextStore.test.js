@@ -11,6 +11,7 @@ jest.mock('sulu-admin-bundle/services/Requester', () => ({
 }));
 
 beforeEach(() => {
+    securityContextStore.suluSecuritySystem = 'Sulu';
     securityContextStore.setSecurityContexts({});
 });
 

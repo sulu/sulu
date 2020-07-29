@@ -20,6 +20,8 @@ type Props = {|
 
 @observer
 class RolePermissions extends React.Component<Props> {
+    static suluSecuritySystem: string;
+
     static defaultProps = {
         disabled: false,
     };
@@ -63,7 +65,7 @@ class RolePermissions extends React.Component<Props> {
             return <Loader />;
         }
 
-        const systems = system ? ['Sulu', system] : securityContextStore.getSystems();
+        const systems = system ? [RolePermissions.suluSecuritySystem, system] : securityContextStore.getSystems();
 
         return systems.reduce((systemMatrices, system) => {
             const actions = securityContextStore.getAvailableActions(resourceKey, system);

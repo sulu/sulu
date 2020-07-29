@@ -24,6 +24,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class SecuritySubscriber implements EventSubscriberInterface
 {
     const SECURITY_PROPERTY_PREFIX = 'sec:role-';
+
     /**
      * @var array
      */

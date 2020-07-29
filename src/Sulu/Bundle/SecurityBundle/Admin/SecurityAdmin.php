@@ -240,6 +240,7 @@ class SecurityAdmin extends Admin
                 return $resource['security_context'] ?? null;
             }, $this->resources)),
             'securityContexts' => $this->adminPool->getSecurityContextsWithPlaceholder(),
+            'suluSecuritySystem' => self::SULU_ADMIN_SECURITY_SYSTEM,
         ];
     }
 }

@@ -294,7 +294,7 @@
             <argument type="service" id="sulu_security.system_store" />
             <argument type="service" id="sulu_core.webspace.request_analyzer"/>
             <argument>%sulu.context%</argument>
-            <tag name="kernel.event_listener" event="kernel.request" />
+            <tag name="kernel.event_listener" event="kernel.request" priority="24" />
         </service>
 
         <service id="sulu_security.fixtures.security_types" class="Sulu\Bundle\SecurityBundle\DataFixtures\ORM\LoadSecurityTypes">
