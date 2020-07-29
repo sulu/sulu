@@ -176,4 +176,15 @@ interface RoleInterface extends AuditableInterface, SecurityIdentityInterface
      * @return RoleSettingInterface|null
      */
     public function getSetting($key);
+
+    /**
+     * Returns if the role is of type anonymous and is handle like IS_ANONYMOUS in Symfony.
+     * See https://symfony.com/doc/5.1/security.html#checking-to-see-if-a-user-is-logged-in-is-authenticated-fully documentation.
+     */
+    public function getAnonymous(): bool;
+
+    /**
+     * Set if the role is IS_ANONYMOUS.
+     */
+    public function setAnonymous(bool $anonymous);
 }

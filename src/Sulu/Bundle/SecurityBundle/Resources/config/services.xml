@@ -259,6 +259,10 @@
             <tag name="massive_build.builder" />
         </service>
 
+        <service id="sulu_security.init_security" class="Sulu\Bundle\SecurityBundle\Build\InitSecurityBuilder">
+            <tag name="massive_build.builder" />
+        </service>
+
         <service id="sulu_security.serializer.handler.secured_entity" class="Sulu\Component\Security\Serializer\Subscriber\SecuredEntitySubscriber">
             <argument type="service" id="sulu_security.access_control_manager"/>
             <argument type="service" id="security.token_storage"/>

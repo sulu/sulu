@@ -18,6 +18,7 @@ use JMS\Serializer\Annotation\Groups;
 use Sulu\Component\Persistence\Model\AuditableTrait;
 use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authentication\RoleSettingInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
 
 /**
  * Role.
@@ -78,6 +79,11 @@ class Role implements RoleInterface
     private $settings;
 
     /**
+     * @var bool
+     */
+    private $anonymous = false;
+
+    /**
      * Constructor.
      */
     public function __construct()
@@ -110,6 +116,10 @@ class Role implements RoleInterface
 
     public function getIdentifier()
     {
+        if ($this->anonymous) {
+            return AuthenticatedVoter::IS_ANONYMOUS;
+        }
+
         $key = $this->getKey();
 
         // keep backwards compatibility as name was used for generating identifier before key was introduced
@@ -327,5 +337,15 @@ class Role implements RoleInterface
     public function getSetting($key)
     {
         return $this->settings->get($key);
+    }
+
+    public function getAnonymous(): bool
+    {
+        return $this->anonymous;
+    }
+
+    public function setAnonymous(bool $anonymous)
+    {
+        $this->anonymous = $anonymous;
     }
 }

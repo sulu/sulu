@@ -124,6 +124,15 @@ class UserRole extends ApiEntity
      */
     public function setRole(RoleInterface $role)
     {
+        if ($role->getAnonymous()) {
+            throw new \LogicException(
+                \sprintf(
+                    'It is not allowed to add an anonymous role to a user. Tried to add role "%s".',
+                    $role->getName()
+                )
+            );
+        }
+
         $this->role = $role;
 
         return $this;

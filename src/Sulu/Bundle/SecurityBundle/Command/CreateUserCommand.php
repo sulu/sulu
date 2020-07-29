@@ -356,7 +356,14 @@ class CreateUserCommand extends Command
      */
     private function getRoleNames()
     {
-        $roleNames = $this->roleRepository->getRoleNames();
+        $roles = $this->roleRepository->findAllRoles();
+        $roleNames = [];
+
+        foreach ($roles as $role) {
+            if (!$role->getAnonymous()) {
+                $roleNames[] = $role->getName();
+            }
+        }
 
         if (empty($roleNames)) {
             throw new \RuntimeException(\sprintf(
