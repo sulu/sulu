@@ -15,6 +15,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation\Accessor;
 use JMS\Serializer\Annotation\Exclude;
+use JMS\Serializer\Annotation\Type;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
@@ -191,6 +192,7 @@ class Account implements AccountInterface
     /**
      * @var Collection|TagInterface[]
      * @Accessor(getter="getTagNameArray")
+     * @Type("array")
      */
     protected $tags;
 
