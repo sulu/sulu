@@ -18,6 +18,7 @@ use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\VirtualProperty;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
@@ -51,7 +52,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     protected $lastName;
 
     /**
-     * @var string
+     * @var ContactTitle
      */
     protected $title;
 
@@ -138,6 +139,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
      * @var Collection|TagInterface[]
      * @Accessor(getter="getTagNameArray")
      * @Groups({"fullContact"})
+     * @Type("array")
      */
     protected $tags;
 

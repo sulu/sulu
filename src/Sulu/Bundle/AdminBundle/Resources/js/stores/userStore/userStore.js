@@ -129,20 +129,6 @@ class UserStore {
     forgotPassword(user: string) {
         this.setLoading(true);
 
-        if (this.forgotPasswordSuccess) {
-            // if email was already sent use different api
-            return Requester.post(Config.endpoints.forgotPasswordResend, {user})
-                .then(() => {
-                    this.setLoading(false);
-                })
-                .catch((error) => {
-                    if (error.status !== 400) {
-                        return Promise.reject(error);
-                    }
-                    this.setLoading(false);
-                });
-        }
-
         return Requester.post(Config.endpoints.forgotPasswordReset, {user})
             .then(() => {
                 this.setLoading(false);

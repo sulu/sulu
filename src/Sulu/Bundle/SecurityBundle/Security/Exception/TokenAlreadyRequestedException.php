@@ -13,6 +13,8 @@ namespace Sulu\Bundle\SecurityBundle\Security\Exception;
 
 /**
  * This exception is thrown if a reset-password email is requested, but a token was already generated shortly before.
+ *
+ * @deprecated since Sulu 2.1.1 and will be removed in Sulu 3.0
  */
 class TokenAlreadyRequestedException extends SecurityException
 {

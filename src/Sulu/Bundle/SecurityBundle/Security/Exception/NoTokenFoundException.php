@@ -11,28 +11,13 @@
 
 namespace Sulu\Bundle\SecurityBundle\Security\Exception;
 
-use Sulu\Component\Security\Authentication\UserInterface;
-
 /**
- * This exception is thrown when a token-email for user without a token is requested.
+ * This exception is thrown when the reset password route is requested without a token.
  */
 class NoTokenFoundException extends SecurityException
 {
-    /** @var UserInterface */
-    private $user;
-
-    public function __construct(UserInterface $user)
+    public function __construct()
     {
-        parent::__construct(\sprintf('The user "%s" has no token!', $user->getUsername()), 1006);
-        $this->user = $user;
-    }
-
-    public function toArray()
-    {
-        return [
-            'code' => $this->code,
-            'message' => $this->message,
-            'user' => $this->user->getUsername(),
-        ];
+        parent::__construct('Token not found in query parameters!', 1006);
     }
 }

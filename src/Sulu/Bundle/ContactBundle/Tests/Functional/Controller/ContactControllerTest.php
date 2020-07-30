@@ -419,6 +419,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('Mustermann', $response->lastName);
         $this->assertEquals($title->getId(), $response->title);
         $this->assertEquals($position->getId(), $response->position);
+        $this->assertEquals($position->getPosition(), $response->positionName);
         $this->assertEquals('erika.mustermann@muster.at', $response->contactDetails->emails[0]->email);
         $this->assertEquals('erika.mustermann@muster.de', $response->contactDetails->emails[1]->email);
         $this->assertEquals('123456789', $response->contactDetails->phones[0]->phone);
