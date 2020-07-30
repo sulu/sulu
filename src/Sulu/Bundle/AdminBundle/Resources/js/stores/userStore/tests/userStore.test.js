@@ -265,19 +265,6 @@ test('Should send an email when the password is forgotten', () => {
     });
 });
 
-test('Should use different api to resend reset password', () => {
-    Requester.post.mockReturnValue(Promise.resolve({}));
-    userStore.setForgotPasswordSuccess(true);
-
-    const promise = userStore.forgotPassword('test');
-    expect(userStore.loading).toBe(true);
-
-    return promise.then(() => {
-        expect(Requester.post).toBeCalledWith('forgot_password_resend_url', {user: 'test'});
-        expect(userStore.loading).toBe(false);
-    });
-});
-
 test('Should logout', () => {
     userStore.setLoggedIn(true);
     Requester.get.mockReturnValue(Promise.resolve({}));

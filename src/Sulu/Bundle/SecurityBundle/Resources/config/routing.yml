@@ -3,12 +3,6 @@ sulu_security.reset_password.email:
     defaults:
         _controller: sulu_security.resetting_controller:sendEmailAction
 
-sulu_security.reset_password.email.resend:
-    path: reset/email/resend
-    defaults:
-        _controller: sulu_security.resetting_controller:sendEmailAction
-        generateNewKey: false
-
 sulu_security.reset_password.reset:
     path: reset
     defaults:

@@ -18,7 +18,6 @@ use Sulu\Bundle\SecurityBundle\Security\Exception\EmailTemplateException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\InvalidTokenException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\MissingPasswordException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\NoTokenFoundException;
-use Sulu\Bundle\SecurityBundle\Security\Exception\TokenAlreadyRequestedException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\TokenEmailsLimitReachedException;
 use Sulu\Bundle\SecurityBundle\Util\TokenGeneratorInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
@@ -27,6 +26,7 @@ use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -135,6 +135,11 @@ class ResettingController
      */
     protected $tokenSendLimit;
 
+    /**
+     * @var string
+     */
+    protected $secret;
+
     public function __construct(
         ValidatorInterface $validator,
         TranslatorInterface $translator,
@@ -153,7 +158,8 @@ class ResettingController
         string $translationDomain,
         string $mailTemplate,
         string $tokenSendLimit,
-        string $adminMail
+        string $adminMail,
+        string $secret
     ) {
         $this->validator = $validator;
         $this->translator = $translator;
@@ -174,6 +180,7 @@ class ResettingController
         $this->mailTemplate = $mailTemplate;
         $this->tokenSendLimit = $tokenSendLimit;
         $this->adminMail = $adminMail;
+        $this->secret = $secret;
     }
 
     /**
@@ -200,36 +207,21 @@ class ResettingController
      * Generates a token for a user and sends an email with
      * a link to the resetting route.
      *
-     * @param bool $generateNewKey If true a new token will be generated before sending the mail
-     *
      * @return JsonResponse
      */
-    public function sendEmailAction(Request $request, $generateNewKey = true)
+    public function sendEmailAction(Request $request)
     {
         try {
             /** @var UserInterface $user */
             $user = $this->findUser($request->get('user'));
-            if (true === $generateNewKey) {
-                $this->generateTokenForUser($user);
-            }
+            $token = $this->generateTokenForUser($user);
             $email = $this->getEmail($user);
-            $this->sendTokenEmail($user, $this->getSenderAddress($request), $email);
-            $response = new JsonResponse(['email' => $email]);
-        } catch (EntityNotFoundException $ex) {
-            $response = new JsonResponse($ex->toArray(), 400);
-        } catch (TokenAlreadyRequestedException $ex) {
-            $response = new JsonResponse($ex->toArray(), 400);
-        } catch (NoTokenFoundException $ex) {
-            $response = new JsonResponse($ex->toArray(), 400);
-        } catch (TokenEmailsLimitReachedException $ex) {
-            $response = new JsonResponse($ex->toArray(), 400);
-        } catch (EmailTemplateException $ex) {
-            $response = new JsonResponse($ex->toArray(), 400);
-        } catch (UserNotInSystemException $ex) {
-            $response = new JsonResponse($ex->toArray(), 400);
+            $this->sendTokenEmail($user, $this->getSenderAddress($request), $email, $token);
+        } catch (\Exception $ex) {
+            // do nothing
         }
 
-        return $response;
+        return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 
     /**
@@ -241,8 +233,13 @@ class ResettingController
     {
         try {
             $token = $request->get('token');
+
+            if (null == $token) {
+                throw new NoTokenFoundException();
+            }
+
             /** @var UserInterface $user */
-            $user = $this->findUserByValidToken($token);
+            $user = $this->findUserByValidToken($this->generateTokenHash($token));
             $this->changePassword($user, $request->get('password', ''));
             $this->deleteToken($user);
             $this->loginUser($user, $request);
@@ -250,6 +247,8 @@ class ResettingController
         } catch (InvalidTokenException $ex) {
             $response = new JsonResponse($ex->toArray(), 400);
         } catch (MissingPasswordException $ex) {
+            $response = new JsonResponse($ex->toArray(), 400);
+        } catch (NoTokenFoundException $ex) {
             $response = new JsonResponse($ex->toArray(), 400);
         }
 
@@ -304,7 +303,7 @@ class ResettingController
      *
      * @throws EmailTemplateException
      */
-    protected function getMessage($user)
+    protected function getMessage($user, string $token)
     {
         $resetUrl = $this->router->generate(static::$resetRouteId, [], UrlGeneratorInterface::ABSOLUTE_URL);
         $template = $this->mailTemplate;
@@ -319,7 +318,7 @@ class ResettingController
                 $template,
                 [
                     'user' => $user,
-                    'reset_url' => $resetUrl . '#/?forgotPasswordToken=' . $user->getPasswordResetToken(),
+                    'reset_url' => $resetUrl . '#/?forgotPasswordToken=' . $token,
                     'translation_domain' => $translationDomain,
                 ]
             )
@@ -422,18 +421,13 @@ class ResettingController
      * @param string $from From-Email-Address
      * @param string $to To-Email-Address
      *
-     * @throws NoTokenFoundException
      * @throws TokenEmailsLimitReachedException
      */
-    private function sendTokenEmail(UserInterface $user, $from, $to)
+    private function sendTokenEmail(UserInterface $user, string $from, string $to, string $token)
     {
-        if (null === $user->getPasswordResetToken()) {
-            throw new NoTokenFoundException($user);
-        }
-
         $maxNumberEmails = $this->tokenSendLimit;
 
-        if ($user->getPasswordResetTokenEmailsSent() === \intval($maxNumberEmails)) {
+        if (new \DateTime() < $user->getPasswordResetTokenExpiresAt() && $user->getPasswordResetTokenEmailsSent() === \intval($maxNumberEmails)) {
             throw new TokenEmailsLimitReachedException($maxNumberEmails, $user);
         }
         $mailer = $this->mailer;
@@ -441,7 +435,7 @@ class ResettingController
             ->setSubject($this->getSubject())
             ->setFrom($from)
             ->setTo($to)
-            ->setBody($this->getMessage($user));
+            ->setBody($this->getMessage($user, $token));
 
         $mailer->send($message);
         $user->setPasswordResetTokenEmailsSent($user->getPasswordResetTokenEmailsSent() + 1);
@@ -467,40 +461,27 @@ class ResettingController
     }
 
     /**
-     * Generates a new token for a new user.
-     *
-     * @throws TokenAlreadyRequestedException
+     * Generates a new token for a new user.*.
      */
     private function generateTokenForUser(UserInterface $user)
     {
-        // if a token was already requested within the request interval time frame
-        if (null !== $user->getPasswordResetToken()
-            && $this->dateIsInRequestFrame($user->getPasswordResetTokenExpiresAt())) {
-            throw new TokenAlreadyRequestedException(self::getRequestInterval());
-        }
-
-        $user->setPasswordResetToken($this->getToken());
+        $token = $this->getToken();
+        $user->setPasswordResetToken($this->generateTokenHash($token));
         $expireDateTime = (new \DateTime())->add(self::getResetInterval());
         $user->setPasswordResetTokenExpiresAt($expireDateTime);
-        $user->setPasswordResetTokenEmailsSent(0);
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();
+
+        return $token;
     }
 
     /**
-     * Takes a date-time of a reset-token and returns true iff the token associated with the date-time
-     * was requested less then the request-interval before. (So there is not really a need to generate a new token).
-     *
-     * @return bool
+     * Generates a hash for the specified token.
      */
-    private function dateIsInRequestFrame(\DateTime $date)
+    private function generateTokenHash(string $token): string
     {
-        if (null === $date) {
-            return false;
-        }
-
-        return (new \DateTime())->add(self::getResetInterval()) < $date->add(self::getRequestInterval());
+        return \hash('sha1', $this->secret . $token);
     }
 
     /**
