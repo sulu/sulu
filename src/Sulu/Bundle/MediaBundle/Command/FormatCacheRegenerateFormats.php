@@ -53,8 +53,7 @@ class FormatCacheRegenerateFormats extends Command
 
     protected function configure()
     {
-        $this->setDescription('Loops over sulu image cache, and regenerates the existing images')
-        ;
+        $this->setDescription('Loops over sulu image cache, and regenerates the existing images');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
