@@ -386,7 +386,7 @@ class ResettingControllerTest extends SuluTestCase
         $this->assertEquals(null, $response);
     }
 
-    protected function getExpectedEmailData(Client $client, User $user, string $token)
+    protected function getExpectedEmailData(Client $client, User $user, $token)
     {
         $sender = $this->getContainer()->getParameter('sulu_security.reset_password.mail.sender');
         $template = $this->getContainer()->getParameter('sulu_security.reset_password.mail.template');
