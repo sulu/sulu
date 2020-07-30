@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* release/1.6
+* 1.6.35 (2020-07-30)
     * BUGFIX      #5435  [ContactBundle]           Fix type of tag names for serialization of contacts
 
 * 1.6.34 (2020-06-09)
