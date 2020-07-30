@@ -60,6 +60,7 @@
             <argument>%sulu_security.reset_password.mail.template%</argument>
             <argument>%sulu_security.reset_password.mail.token_send_limit%</argument>
             <argument>%sulu_admin.email%</argument>
+            <argument>%kernel.secret%%</argument>
 
             <tag name="sulu.context" context="admin"/>
         </service>
@@ -299,6 +300,15 @@
 
         <service id="sulu_security.fixtures.security_types" class="Sulu\Bundle\SecurityBundle\DataFixtures\ORM\LoadSecurityTypes">
             <tag name="doctrine.fixture.orm"/>
+        </service>
+
+        <service id="sulu_security.login_failure_listener"
+                 class="Sulu\Bundle\SecurityBundle\EventListener\AuhenticationFailureListener">
+            <argument type="service" id="security.user_password_encoder.generic"/>
+            <argument type="service" id="sulu.repository.user"/>
+
+            <tag name="kernel.event_subscriber"/>
+            <tag name="sulu.context" context="admin"/>
         </service>
     </services>
 </container>

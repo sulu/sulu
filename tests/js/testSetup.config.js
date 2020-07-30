@@ -12,7 +12,6 @@ jest.mock('sulu-admin-bundle/services/Config', () => ({
         'logout': 'logout_url',
         'profileSettings': 'profile_settings_url',
         'forgotPasswordReset': 'forgot_password_reset_url',
-        'forgotPasswordResend': 'forgot_password_resend_url',
         'resetPassword': 'reset_password',
         'resources': 'resources_url/:resource',
         'routing': 'routing',
