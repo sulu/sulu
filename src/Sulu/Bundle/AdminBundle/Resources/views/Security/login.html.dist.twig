@@ -25,7 +25,6 @@
         <div data-aura-component="login@suluadmin"
              data-aura-login-check="{{ path('sulu_admin.login_check') }}"
              data-aura-reset-mail-url="{{ path('sulu_security.reset_password.email') }}"
-             data-aura-resend-url="{{ path('sulu_security.reset_password.email.resend') }}"
              data-aura-login-url="{{ path('sulu_admin.login') }}"
              data-aura-csrf-token="{{ csrf_token('authenticate') }}"
              {% if token is defined %}

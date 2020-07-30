@@ -190,5 +190,14 @@
             <tag name="sulu.js_config"/>
             <tag name="sulu.context" context="admin"/>
         </service>
+
+        <service id="sulu_security.login_failure_listener"
+                 class="Sulu\Bundle\SecurityBundle\EventListener\AuhenticationFailureListener">
+            <argument type="service" id="security.user_password_encoder.generic"/>
+            <argument type="service" id="sulu.repository.user"/>
+
+            <tag name="kernel.event_subscriber"/>
+            <tag name="sulu.context" context="admin"/>
+        </service>
     </services>
 </container>

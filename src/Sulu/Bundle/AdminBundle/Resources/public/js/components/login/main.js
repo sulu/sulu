@@ -597,7 +597,6 @@ define([], function() {
                 this.resetMailUser = user;
                 this.hideLoader(this.dom.$forgotPasswordFrame);
                 this.showEmailSentLabel();
-                this.moveToResendMailFrame(data.email);
             }.bind(this)).fail(function(data) {
                 this.hideLoader(this.dom.$forgotPasswordFrame);
                 this.displayRequestResetMailError(data.responseJSON.code);
