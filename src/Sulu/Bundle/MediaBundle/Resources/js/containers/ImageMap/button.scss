@@ -1,0 +1,26 @@
+@import 'sulu-admin-bundle/containers/Application/colors.scss';
+
+$buttonTextColor: $scorpion;
+$buttonTextColorActive: $white;
+$buttonBackgroundColor: $white;
+$buttonBackgroundColorActive: $shakespeare;
+$buttonBorderColor: $silver;
+
+.button {
+    width: 40px;
+    color: $buttonTextColor;
+    background-color: $buttonBackgroundColor;
+    border: 0;
+    cursor: pointer;
+    font-size: 14px;
+    border-right: 1px solid $buttonBorderColor;
+
+    &:hover {
+        color: $buttonTextColorActive;
+        background-color: $buttonBackgroundColorActive;
+    }
+
+    &:disabled {
+        pointer-events: none;
+    }
+}

@@ -21,6 +21,7 @@ import MediaCollection from './containers/MediaCollection';
 import MediaOverview from './views/MediaOverview';
 import MediaHistory from './views/MediaHistory';
 import MediaFormats from './views/MediaFormats';
+import ImageMap from './containers/Form/fields/ImageMap';
 
 const FIELD_TYPE_MEDIA_SELECTION = 'media_selection';
 const FIELD_TYPE_SINGLE_MEDIA_SELECTION = 'single_media_selection';
@@ -48,6 +49,7 @@ initializer.addUpdateConfigHook('sulu_media', (config: Object, initialized: bool
     fieldRegistry.add(FIELD_TYPE_SINGLE_MEDIA_SELECTION, SingleMediaSelection);
     fieldRegistry.add('single_media_upload', SingleMediaUpload);
     fieldRegistry.add('media_version_upload', MediaVersionUpload);
+    fieldRegistry.add('image_map', ImageMap);
 
     const imageFormatUrl = config.endpoints.image_format;
     blockPreviewTransformerRegistry.add(

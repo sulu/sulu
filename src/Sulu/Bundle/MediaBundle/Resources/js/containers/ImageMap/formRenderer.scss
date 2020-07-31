@@ -1,0 +1,67 @@
+@import 'sulu-admin-bundle/containers/Application/colors.scss';
+
+$cardBackgroundColor: $white;
+$cardBorderColor: $silver;
+$labelColor: $scorpion;
+
+.container {
+    background-color: $cardBackgroundColor;
+    border: 1px solid $cardBorderColor;
+    border-radius: 3px;
+    width: 100%;
+    margin-top: 3px;
+    overflow: hidden;
+}
+
+.toolbar {
+    display: flex;
+}
+
+.empty-tabs-label {
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    padding-left: 10px;
+    color: $scorpion;
+}
+
+.tabs {
+    margin-bottom: -1px;
+
+    /* REMOVE FROM HERE */
+    background: transparent;
+    padding: 0 20px;
+
+    > li {
+        &::after {
+            width: calc(100% - 20px);
+            left: 10px;
+        }
+
+        > button {
+            padding: 10px;
+        }
+    }
+}
+
+.content {
+    border-top: 1px solid $cardBorderColor;
+    padding: 30px;
+}
+
+.settings {
+    display: flex;
+    align-items: flex-start;
+
+    .form {
+        flex: 1 1 auto;
+    }
+
+    .remove-button {
+        flex: 0 0 auto;
+        margin-left: 30px;
+        border: 0;
+        background: none;
+        cursor: pointer;
+    }
+}
