@@ -259,7 +259,7 @@
             <tag name="massive_build.builder" />
         </service>
 
-        <service id="sulu_security.init_security" class="Sulu\Bundle\SecurityBundle\Build\InitSecurityBuilder">
+        <service id="sulu_security.init_security" class="Sulu\Bundle\SecurityBundle\Build\SecurityBuilder">
             <tag name="massive_build.builder" />
         </service>
 

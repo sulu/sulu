@@ -67,10 +67,10 @@ final class InitCommand extends Command
         $roles = $this->roleRepository->findAllRoles();
         $ui = new SymfonyStyle($input, $output);
 
-        $existAnonymousRoles = [];
+        $existingAnonymousRoles = [];
         foreach ($roles as $role) {
             if ($role->getAnonymous()) {
-                $existAnonymousRoles[$role->getSystem()] = $role;
+                $existingAnonymousRoles[$role->getSystem()] = $role;
             }
         }
 
@@ -80,11 +80,11 @@ final class InitCommand extends Command
                 continue;
             }
 
-            if (isset($existAnonymousRoles[$system])) {
+            if (isset($existingAnonymousRoles[$system])) {
                 $ui->text(\sprintf(
-                    '[x] Anonymous role exist in system "%s" as "%s".',
+                    '[ ] Anonymous role named "%s" exists in system "%s" already.',
                     $system,
-                    $existAnonymousRoles[$system]->getName()
+                    $existingAnonymousRoles[$system]->getName()
                 ));
 
                 continue;
@@ -96,7 +96,7 @@ final class InitCommand extends Command
             $role->setAnonymous(true);
             $role->setSystem($system);
 
-            $ui->text(\sprintf('[ ] Create anonymous role in system "%s" as "%s".', $system, $role->getName()));
+            $ui->text(\sprintf('[+] Create anonymous role in system "%s" as "%s".', $system, $role->getName()));
 
             $this->entityManager->persist($role);
 
@@ -106,6 +106,9 @@ final class InitCommand extends Command
         if ($count) {
             $ui->success(\sprintf('Created "%s" new anonymous roles.', $count));
         }
+
+        $output->writeln('');
+        $output->writeln('<comment>*</comment> Legend: [+] Added [*] Updated [-] Purged [ ] No change');
 
         $this->entityManager->flush();
 

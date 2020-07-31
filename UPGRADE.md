@@ -4,16 +4,15 @@
 
 ### Role Entity changed for anonymous roles
 
-Sulu need to handle anonymous users for this we need additional anonymous roles.
+Sulu needs to handle anonymous users, so we need additional anonymous roles.
 
-For this a Role Entity need an new anonymous field:
+Therefore the `Role` Entity needs a new field:
 
 ```sql
 ALTER TABLE se_roles ADD anonymous TINYINT(1) NOT NULL;
 ```
 
-In this case also the `RoleInterface` has changed and need to implement the new `getAnonymous` and `setAnonymous`
-functions.
+The `RoleInterface` has changed and now contains a `getAnonymous` and `setAnonymous` method.
 
 Now you need to run the following command to create the anonymous users:
 

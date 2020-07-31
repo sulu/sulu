@@ -14,6 +14,7 @@ namespace Sulu\Bundle\SecurityBundle\Tests\Unit\Entity;
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
+use Sulu\Bundle\SecurityBundle\Exception\AssignAnonymousRoleException;
 
 class UserRoleTest extends TestCase
 {
@@ -30,7 +31,7 @@ class UserRoleTest extends TestCase
 
     public function testAddAnonymousRole(): void
     {
-        $this->expectException(\LogicException::class);
+        $this->expectException(AssignAnonymousRoleException::class);
         $this->expectExceptionMessage(
             'It is not allowed to add an anonymous role to a user. Tried to add role "Anonymous".'
         );

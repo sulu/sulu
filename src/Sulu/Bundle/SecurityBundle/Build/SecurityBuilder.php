@@ -15,12 +15,14 @@ use Sulu\Bundle\CoreBundle\Build\SuluBuilder;
 
 /**
  * Builder for creating anonymous roles.
+ *
+ * @internal no backward compatibility promise is given for this class
  */
-class InitSecurityBuilder extends SuluBuilder
+final class SecurityBuilder extends SuluBuilder
 {
     public function getName()
     {
-        return 'init_security';
+        return 'security';
     }
 
     public function getDependencies()

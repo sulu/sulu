@@ -212,7 +212,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
                                 'fixtures' => [],
                                 'phpcr_migrations' => [],
                                 'system_collections' => [],
-                                'init_security' => [],
+                                'security' => [],
                             ],
                         ],
                         'dev' => [
@@ -223,7 +223,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
                                 'user' => [],
                                 'phpcr_migrations' => [],
                                 'system_collections' => [],
-                                'init_security' => [],
+                                'security' => [],
                             ],
                         ],
                         'maintain' => [

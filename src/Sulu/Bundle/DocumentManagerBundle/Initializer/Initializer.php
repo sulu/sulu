@@ -61,6 +61,6 @@ class Initializer
             $initializer->initialize($output, $purge);
         }
         $output->write(\PHP_EOL);
-        $output->writeln('<comment>*</> Legend: [+] Added [*] Updated [-] Purged [ ] No change');
+        $output->writeln('<comment>*</comment> Legend: [+] Added [*] Updated [-] Purged [ ] No change');
     }
 }
