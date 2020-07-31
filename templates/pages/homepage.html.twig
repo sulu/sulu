@@ -10,4 +10,8 @@
             </li>
         {% endfor %}
     </ul>
+
+    {% for media in content.media %}
+        <img src="{{ media.thumbnails['sulu-260x'] }}" />
+    {% endfor %}
 {% endblock %}
