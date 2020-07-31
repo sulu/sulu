@@ -5,6 +5,7 @@ $buttonTextColorActive: $white;
 $buttonBackgroundColor: $white;
 $buttonBackgroundColorActive: $shakespeare;
 $buttonBorderColor: $silver;
+$buttonDisabledBackgroundColor: $wildSand;
 
 .button {
     width: 40px;
@@ -16,11 +17,12 @@ $buttonBorderColor: $silver;
     border-right: 1px solid $buttonBorderColor;
 
     &:hover {
-        color: $buttonTextColorActive;
         background-color: $buttonBackgroundColorActive;
+        color: $buttonTextColorActive;
     }
 
     &:disabled {
         pointer-events: none;
+        background-color: $buttonDisabledBackgroundColor;
     }
 }

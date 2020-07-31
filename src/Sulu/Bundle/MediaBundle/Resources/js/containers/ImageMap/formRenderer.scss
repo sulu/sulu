@@ -63,5 +63,9 @@ $labelColor: $scorpion;
         border: 0;
         background: none;
         cursor: pointer;
+
+        &:disabled {
+            pointer-events: none;
+        }
     }
 }

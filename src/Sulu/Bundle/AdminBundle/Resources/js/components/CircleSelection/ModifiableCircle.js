@@ -25,6 +25,15 @@ class ModifiableCircle extends React.Component<Props> {
     @observable resizeMode = false;
     @observable resizeAngle = 0;
 
+    static defaultProps = {
+        disabled: false,
+        filled: false,
+        left: 0,
+        radius: 0,
+        resizable: true,
+        top: 0,
+    };
+
     circleRef: ?ElementRef<'div'>;
 
     componentDidMount() {
@@ -132,7 +141,7 @@ class ModifiableCircle extends React.Component<Props> {
                     height: width + 'px',
                 }}
             >
-                {label &&
+                {!!label &&
                     <div
                         className={modifiableCircleStyles.label}
                         style={{fontSize: `${labelSize}px`}}
@@ -140,7 +149,7 @@ class ModifiableCircle extends React.Component<Props> {
                         {label}
                     </div>
                 }
-                {resizable && !disabled &&
+                {!!resizable && !disabled &&
                     <div
                         className={modifiableCircleStyles.resizeHandle}
                         onMouseDown={this.handleResizeMouseDown}

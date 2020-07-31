@@ -2,6 +2,7 @@
 import {mount, render} from 'enzyme';
 import React from 'react';
 import {RectangleSelection} from '../RectangleSelection';
+import RectangleSelectionRenderer from '../RectangleSelectionRenderer';
 
 jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
@@ -87,7 +88,7 @@ test('The component should reset the value if modifiable rectangle is doubleclic
 
     view.find('ModifiableRectangle').prop('onDoubleClick')();
 
-    expect(changeSpy).toBeCalledWith(undefined);
+    expect(changeSpy).toBeCalledWith({height: 1000, left: 500, top: 0, width: 1000});
 });
 
 test('The component should center and maximize the selection when a minHeight and minWidth is given', () => {
@@ -121,7 +122,12 @@ test('The component should not allow the selection to move over the borders', ()
         </RectangleSelection>
     );
 
-    view.instance().handleRectangleChange({width: 0, height: 0, left: -10, top: -20});
+    view.find(RectangleSelectionRenderer).first().instance().handleRectangleChange({
+        width: 0,
+        height: 0,
+        left: -10,
+        top: -20,
+    });
     expect(changeSpy).toBeCalledWith({width: 2000, height: 1000, top: 0, left: 0});
 });
 
@@ -139,7 +145,12 @@ test('The component should not allow the selection to be bigger than the contain
         </RectangleSelection>
     );
 
-    view.instance().handleRectangleChange({width: 10, height: 20, left: 0, top: 0});
+    view.find(RectangleSelectionRenderer).first().instance().handleRectangleChange({
+        width: 10,
+        height: 20,
+        left: 0,
+        top: 0,
+    });
     expect(changeSpy).toBeCalledWith({width: 2000, height: 1000, top: 0, left: 0});
 });
 
@@ -159,7 +170,12 @@ test('The component should enforce a ratio on the selection if minWidth and minH
         </RectangleSelection>
     );
 
-    view.instance().handleRectangleChange({width: -10, height: -250, left: 0, top: 0});
+    view.find(RectangleSelectionRenderer).first().instance().handleRectangleChange({
+        width: -10,
+        height: -250,
+        left: 0,
+        top: 0,
+    });
     expect(changeSpy).toBeCalledWith(expect.objectContaining({width: 375, height: 750}));
 });
 

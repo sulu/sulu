@@ -14,14 +14,21 @@ class Button extends React.PureComponent<Props> {
         disabled: false,
     };
 
+    handleClick = (event: SyntheticEvent<HTMLButtonElement>) => {
+        const {onClick} = this.props;
+
+        event.preventDefault();
+        onClick();
+    };
+
     render() {
-        const {disabled, onClick, icon} = this.props;
+        const {disabled, icon} = this.props;
 
         return (
             <button
                 className={buttonStyles.button}
                 disabled={disabled}
-                onClick={onClick}
+                onClick={this.handleClick}
                 type="button"
             >
                 <Icon name={icon} />

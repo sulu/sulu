@@ -2,14 +2,10 @@
 
 exports[`The component should render 1`] = `
 <div
-  class="rectangle"
+  class="rectangle backdropDisabled"
   role="button"
   style="left:0px;top:0px;width:200px;height:100px"
 >
-  <div
-    class="backdrop"
-    style="outline-width:0px"
-  />
   <div
     class="resizeHandle"
     role="slider"
@@ -19,14 +15,10 @@ exports[`The component should render 1`] = `
 
 exports[`The component should render with correct positions 1`] = `
 <div
-  class="rectangle"
+  class="rectangle backdropDisabled"
   role="button"
   style="left:10px;top:20px;width:200px;height:100px"
 >
-  <div
-    class="backdrop"
-    style="outline-width:0px"
-  />
   <div
     class="resizeHandle"
     role="slider"
@@ -37,14 +29,10 @@ exports[`The component should render with correct positions 1`] = `
 exports[`The component should render with minimum size notification 1`] = `
 Array [
   <div
-    class="rectangle"
+    class="rectangle backdropDisabled"
     role="button"
     style="left:0px;top:0px;width:200px;height:100px"
   >
-    <div
-      class="backdrop"
-      style="outline-width:0px"
-    />
     <div
       class="resizeHandle"
       role="slider"

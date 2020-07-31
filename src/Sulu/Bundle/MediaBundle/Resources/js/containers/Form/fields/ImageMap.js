@@ -2,7 +2,7 @@
 import React from 'react';
 import {observable} from 'mobx';
 import debounce from 'debounce';
-import userStore from 'sulu-admin-bundle/stores/userStore/userStore';
+import userStore from 'sulu-admin-bundle/stores/userStore';
 import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 import ImageMapContainer from '../../ImageMap';
 import type {Value as ImageMapValue} from '../../ImageMap/types';

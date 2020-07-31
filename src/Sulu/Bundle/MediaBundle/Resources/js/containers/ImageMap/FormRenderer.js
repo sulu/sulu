@@ -43,14 +43,14 @@ export default class FormRenderer extends React.PureComponent<Props> {
     };
 
     render() {
-        const {value, onHotspotAdd, onHotspotSelect, selectedIndex, children} = this.props;
+        const {value, onHotspotAdd, onHotspotSelect, selectedIndex, children, disabled} = this.props;
 
         return (
             <Form>
                 <Form.Field label={translate('sulu_media.hotspots')}>
                     <div className={formRendererStyles.container}>
                         <div className={formRendererStyles.toolbar}>
-                            <Button icon="su-plus-circle" onClick={onHotspotAdd} />
+                            <Button disabled={disabled} icon="su-plus-circle" onClick={onHotspotAdd} />
 
                             {!value.length &&
                                 <div className={formRendererStyles.emptyTabsLabel}>
@@ -80,6 +80,7 @@ export default class FormRenderer extends React.PureComponent<Props> {
                                                 spaceAfter={1}
                                             >
                                                 <SingleSelect
+                                                    disabled={disabled}
                                                     onChange={this.handleHotspotTypeChange}
                                                     value={this.selectedHotspot.type}
                                                 >
@@ -95,6 +96,7 @@ export default class FormRenderer extends React.PureComponent<Props> {
 
                                     <button
                                         className={formRendererStyles.removeButton}
+                                        disabled={disabled}
                                         onClick={this.handleHotspotRemove}
                                     >
                                         <Icon name="su-trash-alt" />
