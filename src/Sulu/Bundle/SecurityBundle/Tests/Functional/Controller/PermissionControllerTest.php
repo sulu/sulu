@@ -46,6 +46,7 @@ class PermissionControllerTest extends SuluTestCase
         $role1 = $this->createRole('Role 1');
         $role2 = $this->createRole('Role 2');
         $this->em->flush();
+        $this->em->clear();
 
         $this->client->request(
             'PUT',
@@ -129,6 +130,7 @@ class PermissionControllerTest extends SuluTestCase
         $role1 = $this->createRole('Role 1');
         $role2 = $this->createRole('Role 2');
         $this->em->flush();
+        $this->em->clear();
 
         $document = $this->documentManager->create('secured_document');
         $document->setTitle('Test');
