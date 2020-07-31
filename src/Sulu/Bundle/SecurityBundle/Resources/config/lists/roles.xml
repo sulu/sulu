@@ -35,6 +35,11 @@
             <filter type="text" />
         </property>
 
+        <property name="anonymous" visibility="never">
+            <field-name>anonymous</field-name>
+            <entity-name>%sulu.model.role.class%</entity-name>
+        </property>
+
         <property
             name="system"
             visibility="always"

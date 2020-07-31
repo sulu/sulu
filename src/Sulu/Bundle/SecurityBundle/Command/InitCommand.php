@@ -103,13 +103,12 @@ final class InitCommand extends Command
             ++$count;
         }
 
-        if ($count) {
-            $ui->success(\sprintf('Created "%s" new anonymous roles.', $count));
-        }
-
         $output->writeln('');
         $output->writeln('<comment>*</comment> Legend: [+] Added [*] Updated [-] Purged [ ] No change');
 
+        if ($count) {
+            $ui->success(\sprintf('Created "%s" new anonymous roles.', $count));
+        }
         $this->entityManager->flush();
 
         return 0;

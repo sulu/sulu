@@ -27,9 +27,11 @@ interface RoleRepositoryInterface extends RepositoryInterface
     /**
      * Searches for all roles.
      *
+     * @param array $filter = []
+     *
      * @return RoleInterface[]
      */
-    public function findAllRoles();
+    public function findAllRoles(array $filter = []);
 
     /**
      * Return an array containing the names of all the roles.

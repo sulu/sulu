@@ -36,6 +36,11 @@ class RoleControllerTest extends SuluTestCase
     private $role2;
 
     /**
+     * @var Role
+     */
+    private $role3;
+
+    /**
      * @var SecurityType
      */
     protected $securityType1;
@@ -78,6 +83,13 @@ class RoleControllerTest extends SuluTestCase
         $this->em->persist($role2);
         $this->role2 = $role2;
 
+        $role3 = new Role();
+        $role3->setName('Anonymous Role');
+        $role3->setSystem('Website');
+        $role3->setAnonymous(true);
+        $this->em->persist($role3);
+        $this->role3 = $role3;
+
         $permission1 = new Permission();
         $permission1->setRole($role1);
         $permission1->setContext('context1');
@@ -117,6 +129,14 @@ class RoleControllerTest extends SuluTestCase
         $this->assertEquals('Sulu Administrator', $response->_embedded->roles[0]->name);
         $this->assertEquals('sulu_administrator', $response->_embedded->roles[0]->key);
         $this->assertEquals('Sulu', $response->_embedded->roles[0]->system);
+    }
+
+    public function testListWithAnonymous()
+    {
+        $this->client->request('GET', '/api/roles?flat=true&include-anonymous=true');
+        $response = \json_decode($this->client->getResponse()->getContent());
+
+        $this->assertEquals(3, \count($response->_embedded->roles));
     }
 
     public function testGetById()

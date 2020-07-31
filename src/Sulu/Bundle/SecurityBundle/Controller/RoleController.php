@@ -129,6 +129,11 @@ class RoleController extends AbstractRestController implements ClassResourceInte
     {
         if ('true' == $request->query->get('flat')) {
             $listBuilder = $this->doctrineListBuilderFactory->create($this->roleClass);
+            $fieldDescriptor = $this->getFieldDescriptors();
+
+            if (!$request->query->getBoolean('include-anonymous')) {
+                $listBuilder->where($fieldDescriptor['anonymous'], false);
+            }
 
             $this->restHelper->initializeListBuilder($listBuilder, $this->getFieldDescriptors());
 
@@ -142,7 +147,11 @@ class RoleController extends AbstractRestController implements ClassResourceInte
                 $listBuilder->count()
             );
         } else {
-            $roles = $this->roleRepository->findAllRoles();
+            $filter = [];
+            if (!$request->query->getBoolean('include-anonymous')) {
+                $filter['anonymous'] = false;
+            }
+            $roles = $this->roleRepository->findAllRoles($filter);
             $convertedRoles = [];
             if (null != $roles) {
                 foreach ($roles as $role) {
