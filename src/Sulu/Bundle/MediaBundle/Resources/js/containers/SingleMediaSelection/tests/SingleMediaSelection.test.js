@@ -99,6 +99,19 @@ test('Component should render with selected media without thumbnails with MimeTy
     expect(singleMediaSelection.render()).toMatchSnapshot();
 });
 
+test('Component should pass className to SingleItemSelection', () => {
+    const singleMediaSelection = shallow(
+        <SingleMediaSelection
+            className="test"
+            locale={observable.box('en')}
+            onChange={jest.fn()}
+            value={undefined}
+        />
+    );
+
+    expect(singleMediaSelection.find(SingleItemSelection).prop('className')).toEqual('test');
+});
+
 test('Component should pass types to SingleMediaSelectionOverlay', () => {
     const singleMediaSelection = shallow(
         <SingleMediaSelection

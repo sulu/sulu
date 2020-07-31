@@ -80,6 +80,44 @@ const leftButton = {
 <SingleItemSelection emptyText="Nothing was selected!" leftButton={leftButton} />
 ```
 
+If the component is not valid, it will have a red border.
+
+```javascript
+const leftButton = {
+    icon: 'su-document',
+    onClick: () => {
+        alert('Button pressed!');
+    },
+};
+
+const rightButton = {
+    icon: 'su-display-default',
+    onClick: (value) => {
+        alert(value + ' was pressed!');
+    },
+    options: [
+        {
+            label: 'Left',
+            value: 'left',
+        },
+    ],
+};
+
+const handleRemove = () => {
+    alert('Remove was pressed!');
+};
+
+<SingleItemSelection
+    valid={false}
+    emptyText="Nothing was selected!"
+    leftButton={leftButton}
+    onRemove={handleRemove}
+    rightButton={rightButton}
+>
+    Test item
+</SingleItemSelection>
+```
+
 The component can also be rendered in a disabled state:
 
 ```javascript

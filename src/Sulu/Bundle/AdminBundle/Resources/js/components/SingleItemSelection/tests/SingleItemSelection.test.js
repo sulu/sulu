@@ -47,6 +47,17 @@ test('Render with right button with options', () => {
     )).toMatchSnapshot();
 });
 
+test('Render with custom className', () => {
+    const leftButton = {
+        icon: 'su-document',
+        onClick: jest.fn(),
+    };
+
+    expect(render(
+        <SingleItemSelection className="test" leftButton={leftButton}>Test Item</SingleItemSelection>
+    )).toMatchSnapshot();
+});
+
 test('Render in disabled state', () => {
     const leftButton = {
         icon: 'su-document',

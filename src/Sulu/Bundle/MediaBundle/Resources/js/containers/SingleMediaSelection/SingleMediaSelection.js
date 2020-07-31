@@ -14,6 +14,7 @@ import type {Value} from './types';
 import singleMediaSelectionStyle from './singleMediaSelection.scss';
 
 type Props = {|
+    className?: string,
     disabled: boolean,
     displayOptions: Array<DisplayOption>,
     locale: IObservableValue<string>,
@@ -116,7 +117,7 @@ class SingleMediaSelection extends React.Component<Props> {
     };
 
     render() {
-        const {disabled, displayOptions, locale, types, valid, value} = this.props;
+        const {className, disabled, displayOptions, locale, types, valid, value} = this.props;
         const {loading, item: media} = this.singleMediaSelectionStore;
 
         const rightButton = displayOptions.length > 0
@@ -134,6 +135,7 @@ class SingleMediaSelection extends React.Component<Props> {
         return (
             <Fragment>
                 <SingleItemSelection
+                    className={className}
                     disabled={disabled}
                     emptyText={translate('sulu_media.select_media_singular')}
                     id={media && media.id}

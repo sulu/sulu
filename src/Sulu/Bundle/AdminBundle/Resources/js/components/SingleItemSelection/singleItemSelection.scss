@@ -3,9 +3,7 @@
 
 $singleItemSelectionBackgroundColor: $white;
 $singleItemSelectionEmptyColor: $silver;
-
 $singleItemSelectionErrorBorderColor: $persianRed;
-
 $singleItemSelectionDisabledColor: $gray;
 
 .single-item-selection {
@@ -14,6 +12,8 @@ $singleItemSelectionDisabledColor: $gray;
     background-color: $singleItemSelectionBackgroundColor;
     height: 30px;
     overflow: hidden;
+    border: 1px solid $singleItemSelectionBorderColor;
+    border-radius: $singleItemSelectionBorderRadius;
 
     .item-container {
         display: flex;
@@ -23,8 +23,6 @@ $singleItemSelectionDisabledColor: $gray;
         flex-grow: 1;
         padding-left: 10px;
         font-size: 12px;
-        border: 1px solid $singleItemSelectionBorderColor;
-        border-radius: 0 $singleItemSelectionBorderRadius $singleItemSelectionBorderRadius 0;
 
         .item {
             flex-grow: 1;
@@ -36,10 +34,6 @@ $singleItemSelectionDisabledColor: $gray;
 
         .empty {
             color: $singleItemSelectionEmptyColor;
-        }
-
-        &.has-right-button {
-            border-radius: 0;
         }
     }
 
@@ -55,14 +49,7 @@ $singleItemSelectionDisabledColor: $gray;
     }
 
     &.error {
-        .button {
-            border-color: $singleItemSelectionErrorBorderColor;
-        }
-
-        .item-container {
-            border-color: $singleItemSelectionErrorBorderColor;
-            border-left-color: $singleItemSelectionBorderColor;
-        }
+        border-color: $singleItemSelectionErrorBorderColor;
     }
 
     &.disabled {
