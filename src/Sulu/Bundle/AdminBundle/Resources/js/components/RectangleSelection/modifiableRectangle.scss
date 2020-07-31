@@ -4,8 +4,6 @@ $backdropColor: rgba($black, .6);
 $borderColor: $white;
 $borderSize: 2px;
 $minSizeNotificationColor: $white;
-$zIndex: 2;
-$zIndexDisabled: 1;
 
 .rectangle {
     position: absolute;
@@ -13,13 +11,11 @@ $zIndexDisabled: 1;
     border: $borderSize solid $borderColor;
     will-change: width, height, left, top;
     cursor: move;
-    z-index: $zIndex;
 
     &.disabled {
         border: none;
         cursor: default;
         pointer-events: none;
-        z-index: $zIndexDisabled;
     }
 
     &.backdrop-disabled {

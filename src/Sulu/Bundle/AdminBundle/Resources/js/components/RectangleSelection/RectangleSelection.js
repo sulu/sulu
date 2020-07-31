@@ -9,20 +9,21 @@ import rectangleSelectionStyles from './rectangleSelection.scss';
 type Props = {
     backdrop: boolean,
     children?: Node,
-    containerHeight: number,
-    containerWidth: number,
     disabled: boolean,
     forceRatio: boolean,
     label?: string,
     minHeight?: number,
-    minSizeNotification: booelan,
+    minSizeNotification: boolean,
     minWidth?: number,
     onChange: (s: ?SelectionData) => void,
     round: boolean,
     value: SelectionData | typeof undefined,
 };
 
-class RectangleSelection extends React.Component<Props> {
+class RectangleSelection extends React.Component<Props & {
+    containerHeight: number,
+    containerWidth: number,
+}> {
     static defaultProps = {
         backdrop: true,
         disabled: false,
@@ -76,7 +77,14 @@ export {
     RectangleSelection,
 };
 
-const RectangleSelectionComponent = withContainerSize(RectangleSelection, rectangleSelectionStyles.container);
-RectangleSelectionComponent.Renderer = RectangleSelectionRenderer;
+export default class RectangleSelectionComponent extends React.Component<Props> {
+    static defaultProps = RectangleSelection.defaultProps;
 
-export default RectangleSelectionComponent;
+    static Renderer = RectangleSelectionRenderer;
+
+    render() {
+        const Component = withContainerSize(RectangleSelection, rectangleSelectionStyles.container);
+
+        return <Component {...this.props} />;
+    }
+}

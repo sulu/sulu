@@ -3,8 +3,6 @@
 $backgroundColor: rgba($black, .6);
 $borderColor: $white;
 $borderSize: 2px;
-$zIndex: 2;
-$zIndexDisabled: 1;
 
 .circle {
     position: absolute;
@@ -14,13 +12,11 @@ $zIndexDisabled: 1;
     will-change: width, height, left, top;
     cursor: move;
     border: $borderSize solid $borderColor;
-    z-index: $zIndex;
 
     &.disabled {
         cursor: default;
         border: none;
         pointer-events: none;
-        z-index: $zIndexDisabled;
     }
 
     &.filled {

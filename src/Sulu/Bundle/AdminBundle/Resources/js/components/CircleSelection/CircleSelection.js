@@ -8,8 +8,6 @@ import circleSelectionStyles from './circleSelection.scss';
 
 type Props = {
     children?: Node,
-    containerHeight: number,
-    containerWidth: number,
     disabled: boolean,
     filled: boolean,
     label?: string,
@@ -21,7 +19,10 @@ type Props = {
     value: SelectionData | typeof undefined,
 };
 
-class CircleSelection extends React.Component<Props> {
+class CircleSelection extends React.Component<Props & {
+    containerHeight: number,
+    containerWidth: number,
+}> {
     static defaultProps = {
         disabled: false,
         filled: false,
@@ -70,7 +71,14 @@ export {
     CircleSelection,
 };
 
-const CircleSelectionComponent = withContainerSize(CircleSelection, circleSelectionStyles.container);
-CircleSelectionComponent.Renderer = CircleSelectionRenderer;
+export default class CircleSelectionComponent extends React.Component<Props> {
+    static defaultProps = CircleSelection.defaultProps;
 
-export default CircleSelectionComponent;
+    static Renderer = CircleSelectionRenderer;
+
+    render() {
+        const Component = withContainerSize(CircleSelection, circleSelectionStyles.container);
+
+        return <Component {...this.props} />;
+    }
+}
