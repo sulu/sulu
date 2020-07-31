@@ -44,10 +44,10 @@ class SecuritySubscriberTest extends SubscriberTestCase
 
         $this->persistEvent->getDocument()->willReturn($document);
 
-        $this->subscriber->handlePersist($this->persistEvent->reveal());
-
         $this->node->setProperty('sec:role-1', ['view', 'add', 'edit'])->shouldBeCalled();
         $property->remove()->shouldNotBeCalled();
+
+        $this->subscriber->handlePersist($this->persistEvent->reveal());
     }
 
     public function testPersistWithDeletingRoles()
@@ -64,10 +64,10 @@ class SecuritySubscriberTest extends SubscriberTestCase
 
         $this->persistEvent->getDocument()->willReturn($document);
 
-        $this->subscriber->handlePersist($this->persistEvent->reveal());
-
         $this->node->setProperty('sec:role-1', ['view', 'add', 'edit'])->shouldBeCalled();
         $property->remove()->shouldBeCalled();
+
+        $this->subscriber->handlePersist($this->persistEvent->reveal());
     }
 
     public function testHydrate()
@@ -91,8 +91,6 @@ class SecuritySubscriberTest extends SubscriberTestCase
         $this->hydrateEvent->getDocument()->willReturn($document);
         $this->hydrateEvent->getNode()->willReturn($node);
 
-        $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
-
         $document->setPermissions([
             1 => [
                 'view' => true,
@@ -107,5 +105,7 @@ class SecuritySubscriberTest extends SubscriberTestCase
                 'delete' => false,
             ],
         ])->shouldBeCalled();
+
+        $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
     }
 }
