@@ -2,6 +2,24 @@
 
 ## dev-master
 
+### Role Entity changed for anonymous roles
+
+Sulu needs to handle anonymous users, so we need additional anonymous roles.
+
+Therefore the `Role` Entity needs a new field:
+
+```sql
+ALTER TABLE se_roles ADD anonymous TINYINT(1) NOT NULL;
+```
+
+The `RoleInterface` has changed and now contains a `getAnonymous` and `setAnonymous` method.
+
+Now you need to run the following command to create the anonymous users:
+
+```bash
+bin/adminconsole sulu:security:init
+```
+
 ### Deprecation of securityContextStore methods
 
 The `loadSecurityContextGroups` and `loadAvailableActions` method from the `securityContextStore` have been deprecated.

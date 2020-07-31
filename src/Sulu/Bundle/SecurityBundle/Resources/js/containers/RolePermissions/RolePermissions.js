@@ -29,7 +29,7 @@ class RolePermissions extends React.Component<Props> {
     @observable roles: ?Array<Role>;
 
     @action componentDidMount() {
-        ResourceRequester.get('roles').then(action((response) => {
+        ResourceRequester.get('roles', {'include-anonymous': true}).then(action((response) => {
             this.roles = response._embedded.roles;
         }));
     }

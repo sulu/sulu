@@ -12,6 +12,15 @@
             <tag name="sulu.context" context="admin"/>
         </service>
 
+        <service id="sulu_security.command.init" class="Sulu\Bundle\SecurityBundle\Command\InitCommand">
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="sulu.repository.role"/>
+            <argument type="service" id="sulu_admin.admin_pool"/>
+
+            <tag name="console.command" />
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
         <service id="sulu_security.command.create_user" class="Sulu\Bundle\SecurityBundle\Command\CreateUserCommand">
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="sulu.repository.user"/>

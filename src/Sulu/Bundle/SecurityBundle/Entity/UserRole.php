@@ -16,6 +16,7 @@ use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\VirtualProperty;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
+use Sulu\Bundle\SecurityBundle\Exception\AssignAnonymousRoleException;
 use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 
@@ -124,6 +125,10 @@ class UserRole extends ApiEntity
      */
     public function setRole(RoleInterface $role)
     {
+        if ($role->getAnonymous()) {
+            throw new AssignAnonymousRoleException($role);
+        }
+
         $this->role = $role;
 
         return $this;

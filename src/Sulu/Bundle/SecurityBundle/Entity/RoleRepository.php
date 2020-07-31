@@ -61,12 +61,22 @@ class RoleRepository extends EntityRepository implements RoleRepositoryInterface
         }
     }
 
-    public function findAllRoles()
+    public function findAllRoles(array $filters = [])
     {
         try {
             $queryBuilder = $this->createQueryBuilder('role')
                 ->leftJoin('role.permissions', 'permissions')
                 ->addSelect('permissions');
+
+            if (isset($filters['anonymous'])) {
+                $queryBuilder->andWhere('role.anonymous = :anonymous')
+                    ->setParameter('anonymous', $filters['anonymous']);
+            }
+
+            if (isset($filters['system'])) {
+                $queryBuilder->andWhere('role.system = :system')
+                    ->setParameter('system', $filters['system']);
+            }
 
             $query = $queryBuilder->getQuery();
 
