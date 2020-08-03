@@ -465,7 +465,7 @@ class WebspaceExportTest extends SuluTestCase
                         'audience_targeting_groups',
                         'audience_targeting_groups',
                         false,
-                        $extensionData['excerpt']['audience_targeting_groups']
+                        \json_encode($extensionData['excerpt']['audience_targeting_groups'])
                     ),
                 ],
             ];
