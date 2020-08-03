@@ -212,6 +212,52 @@ class FormatControllerTest extends SuluTestCase
         $this->assertEquals(100, $response->{'small-inset'}->options->cropHeight);
     }
 
+    public function testPutWithFormatOptionsAsDecimal()
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'PUT',
+            \sprintf('/api/media/%d/formats/small-inset', $this->media->getId()),
+            [
+                'locale' => 'de',
+                'options' => [
+                    'cropX' => 10.05,
+                    'cropY' => 14.75,
+                    'cropWidth' => 100.1,
+                    'cropHeight' => 99.6,
+                ],
+            ]
+        );
+
+        $response = \json_decode($client->getResponse()->getContent());
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $this->assertEquals(10, $response->options->cropX);
+        $this->assertEquals(15, $response->options->cropY);
+        $this->assertEquals(100, $response->options->cropWidth);
+        $this->assertEquals(100, $response->options->cropHeight);
+
+        // Test if the options have really been persisted
+
+        $client->request(
+            'GET',
+            \sprintf('/api/media/%d/formats', $this->media->getId()),
+            [
+                'locale' => 'de',
+            ]
+        );
+
+        $response = \json_decode($client->getResponse()->getContent());
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $this->assertNotNull($response->{'small-inset'});
+        $this->assertEquals(10, $response->{'small-inset'}->options->cropX);
+        $this->assertEquals(15, $response->{'small-inset'}->options->cropY);
+        $this->assertEquals(100, $response->{'small-inset'}->options->cropWidth);
+        $this->assertEquals(100, $response->{'small-inset'}->options->cropHeight);
+    }
+
     public function testPutWithEmptyFormatOptions()
     {
         $client = $this->createAuthenticatedClient();

@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* release/1.6
+    * BUGFIX      #5418  [MediaBundle]             Store values from image crop as integers
+
 * 1.6.35 (2020-07-30)
     * BUGFIX      #5435  [ContactBundle]           Fix type of tag names for serialization of contacts
 
