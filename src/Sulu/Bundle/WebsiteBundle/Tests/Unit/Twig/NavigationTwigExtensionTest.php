@@ -15,9 +15,12 @@ use Sulu\Bundle\WebsiteBundle\Twig\Navigation\NavigationTwigExtension;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\Localization\Localization;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Segment;
 use Sulu\Component\Webspace\Webspace;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class NavigationTwigExtensionTest extends TestCase
 {
@@ -95,7 +98,7 @@ class NavigationTwigExtensionTest extends TestCase
         $localization = new Localization('de');
         $requestAnalyzer->getCurrentLocalization()->willReturn($localization);
 
-        $navigationMapper->getNavigation('123-123-123', 'sulu_io', 'de', 1, true, null, false, 's')
+        $navigationMapper->getNavigation('123-123-123', 'sulu_io', 'de', 1, true, null, false, 's', null)
             ->willThrow(new DocumentNotFoundException());
 
         $this->assertEquals([], $extension->flatNavigationFunction('123-123-123'));
@@ -123,9 +126,141 @@ class NavigationTwigExtensionTest extends TestCase
         $localization = new Localization('de');
         $requestAnalyzer->getCurrentLocalization()->willReturn($localization);
 
-        $navigationMapper->getNavigation('123-123-123', 'sulu_io', 'de', 1, false, null, false, 'w')
+        $navigationMapper->getNavigation('123-123-123', 'sulu_io', 'de', 1, false, null, false, 'w', null)
             ->willThrow(new DocumentNotFoundException());
 
         $this->assertEquals([], $extension->treeNavigationFunction('123-123-123'));
+    }
+
+    public function testFlatRootNavigationWithUser()
+    {
+        $navigationMapper = $this->prophesize(NavigationMapperInterface::class);
+        $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
+        $tokenStorage = $this->prophesize(TokenStorageInterface::class);
+
+        $token = $this->prophesize(TokenInterface::class);
+        $user = $this->prophesize(UserInterface::class);
+        $token->getUser()->willReturn($user->reveal());
+        $tokenStorage->getToken()->willReturn($token->reveal());
+
+        $extension = new NavigationTwigExtension(
+            $this->prophesize(ContentMapperInterface::class)->reveal(),
+            $navigationMapper->reveal(),
+            $requestAnalyzer->reveal(),
+            $tokenStorage->reveal()
+        );
+
+        $webspace = new Webspace();
+        $webspace->setKey('sulu_io');
+        $requestAnalyzer->getWebspace()->willReturn($webspace);
+
+        $requestAnalyzer->getSegment()->willReturn(null);
+
+        $localization = new Localization('de');
+        $requestAnalyzer->getCurrentLocalization()->willReturn($localization);
+
+        $navigationMapper->getRootNavigation('sulu_io', 'de', 1, true, 'main', false, null, $user->reveal())
+            ->shouldBeCalled();
+
+        $extension->flatRootNavigationFunction('main', 1, false);
+    }
+
+    public function testTreeRootNavigationWithUser()
+    {
+        $navigationMapper = $this->prophesize(NavigationMapperInterface::class);
+        $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
+        $tokenStorage = $this->prophesize(TokenStorageInterface::class);
+
+        $token = $this->prophesize(TokenInterface::class);
+        $user = $this->prophesize(UserInterface::class);
+        $token->getUser()->willReturn($user->reveal());
+        $tokenStorage->getToken()->willReturn($token->reveal());
+
+        $extension = new NavigationTwigExtension(
+            $this->prophesize(ContentMapperInterface::class)->reveal(),
+            $navigationMapper->reveal(),
+            $requestAnalyzer->reveal(),
+            $tokenStorage->reveal()
+        );
+
+        $webspace = new Webspace();
+        $webspace->setKey('sulu_io');
+        $requestAnalyzer->getWebspace()->willReturn($webspace);
+
+        $requestAnalyzer->getSegment()->willReturn(null);
+
+        $localization = new Localization('de');
+        $requestAnalyzer->getCurrentLocalization()->willReturn($localization);
+
+        $navigationMapper->getRootNavigation('sulu_io', 'de', 1, false, 'main', false, null, $user->reveal())
+            ->shouldBeCalled();
+
+        $extension->treeRootNavigationFunction('main', 1, false);
+    }
+
+    public function testFlatNavigationWithUser()
+    {
+        $navigationMapper = $this->prophesize(NavigationMapperInterface::class);
+        $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
+        $tokenStorage = $this->prophesize(TokenStorageInterface::class);
+
+        $token = $this->prophesize(TokenInterface::class);
+        $user = $this->prophesize(UserInterface::class);
+        $token->getUser()->willReturn($user->reveal());
+        $tokenStorage->getToken()->willReturn($token->reveal());
+
+        $extension = new NavigationTwigExtension(
+            $this->prophesize(ContentMapperInterface::class)->reveal(),
+            $navigationMapper->reveal(),
+            $requestAnalyzer->reveal(),
+            $tokenStorage->reveal()
+        );
+
+        $webspace = new Webspace();
+        $webspace->setKey('sulu_io');
+        $requestAnalyzer->getWebspace()->willReturn($webspace);
+
+        $requestAnalyzer->getSegment()->willReturn(null);
+
+        $localization = new Localization('de');
+        $requestAnalyzer->getCurrentLocalization()->willReturn($localization);
+
+        $navigationMapper->getNavigation('main', 'sulu_io', 'de', false, true, 1, false, null, $user->reveal())
+            ->shouldBeCalled();
+
+        $extension->flatNavigationFunction('main', 1, false);
+    }
+
+    public function testTreeNavigationWithUser()
+    {
+        $navigationMapper = $this->prophesize(NavigationMapperInterface::class);
+        $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
+        $tokenStorage = $this->prophesize(TokenStorageInterface::class);
+
+        $token = $this->prophesize(TokenInterface::class);
+        $user = $this->prophesize(UserInterface::class);
+        $token->getUser()->willReturn($user->reveal());
+        $tokenStorage->getToken()->willReturn($token->reveal());
+
+        $extension = new NavigationTwigExtension(
+            $this->prophesize(ContentMapperInterface::class)->reveal(),
+            $navigationMapper->reveal(),
+            $requestAnalyzer->reveal(),
+            $tokenStorage->reveal()
+        );
+
+        $webspace = new Webspace();
+        $webspace->setKey('sulu_io');
+        $requestAnalyzer->getWebspace()->willReturn($webspace);
+
+        $requestAnalyzer->getSegment()->willReturn(null);
+
+        $localization = new Localization('de');
+        $requestAnalyzer->getCurrentLocalization()->willReturn($localization);
+
+        $navigationMapper->getNavigation('main', 'sulu_io', 'de', false, false, 1, false, null, $user->reveal())
+            ->shouldBeCalled();
+
+        $extension->treeNavigationFunction('main', 1, false);
     }
 }

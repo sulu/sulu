@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\PageBundle\Content\PageSelectionContainer;
 use Sulu\Component\Content\Query\ContentQueryBuilder;
 use Sulu\Component\Content\Query\ContentQueryExecutor;
+use Sulu\Component\Security\Authentication\UserInterface;
 
 class PageSelectionContainerTest extends TestCase
 {
@@ -52,7 +53,7 @@ class PageSelectionContainerTest extends TestCase
         );
 
         $this->builder->init(['ids' => [2, 3, 1], 'properties' => [], 'published' => false])->shouldBeCalled();
-        $this->executor->execute('default', ['en'], $this->builder)->willReturn(
+        $this->executor->execute('default', ['en'], $this->builder, true, -1, null, null, false, null)->willReturn(
             [['id' => 1], ['id' => 2], ['id' => 3]]
         );
 
@@ -72,7 +73,7 @@ class PageSelectionContainerTest extends TestCase
         );
 
         $this->builder->init(['ids' => [2, 3, 1], 'properties' => [], 'published' => true])->shouldBeCalled();
-        $this->executor->execute('default', ['en'], $this->builder)->willReturn(
+        $this->executor->execute('default', ['en'], $this->builder, true, -1, null, null, false, null)->willReturn(
             [['id' => 1], ['id' => 2], ['id' => 3]]
         );
 
@@ -81,7 +82,7 @@ class PageSelectionContainerTest extends TestCase
 
     public function testGetDataOrder()
     {
-        $this->executor->execute('default', ['en'], $this->builder)->willReturn(
+        $this->executor->execute('default', ['en'], $this->builder, true, -1, null, null, false, null)->willReturn(
             [['id' => 1], ['id' => 2], ['id' => 3]]
         );
 
@@ -97,5 +98,29 @@ class PageSelectionContainerTest extends TestCase
 
         $result = $this->container->getData();
         $this->assertEquals([['id' => 2], ['id' => 3], ['id' => 1]], $result);
+    }
+
+    public function testGetDataWithUser()
+    {
+        $user = $this->prophesize(UserInterface::class);
+
+        $this->container = new PageSelectionContainer(
+            [2, 3, 1],
+            $this->executor->reveal(),
+            $this->builder->reveal(),
+            [],
+            'default',
+            'en',
+            true,
+            $user->reveal()
+        );
+
+        $this->builder->init(['ids' => [2, 3, 1], 'properties' => [], 'published' => false])->shouldBeCalled();
+        $this->executor
+             ->execute('default', ['en'], $this->builder, true, -1, null, null, false, $user->reveal())
+             ->willReturn([['id' => 1], ['id' => 2], ['id' => 3]]
+        );
+
+        $this->container->getData();
     }
 }

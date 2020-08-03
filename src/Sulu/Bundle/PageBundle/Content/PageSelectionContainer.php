@@ -15,6 +15,7 @@ use JMS\Serializer\Annotation\Exclude;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Util\ArrayableInterface;
 
 /**
@@ -84,6 +85,11 @@ class PageSelectionContainer implements ArrayableInterface
      */
     private $showDrafts;
 
+    /**
+     * @var UserInterface
+     */
+    private $user;
+
     public function __construct(
         $ids,
         ContentQueryExecutorInterface $contentQueryExecutor,
@@ -91,7 +97,8 @@ class PageSelectionContainer implements ArrayableInterface
         $params,
         $webspaceKey,
         $languageCode,
-        $showDrafts
+        $showDrafts,
+        UserInterface $user = null
     ) {
         $this->ids = $ids;
         $this->contentQueryExecutor = $contentQueryExecutor;
@@ -100,6 +107,7 @@ class PageSelectionContainer implements ArrayableInterface
         $this->languageCode = $languageCode;
         $this->params = $params;
         $this->showDrafts = $showDrafts;
+        $this->user = $user;
     }
 
     /**
@@ -133,7 +141,13 @@ class PageSelectionContainer implements ArrayableInterface
             $pages = $this->contentQueryExecutor->execute(
                 $this->webspaceKey,
                 [$this->languageCode],
-                $this->contentQueryBuilder
+                $this->contentQueryBuilder,
+                true,
+                -1,
+                null,
+                null,
+                false,
+                $this->user
             );
 
             // init vars

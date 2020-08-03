@@ -24,6 +24,7 @@ use Sulu\Component\Content\Repository\ContentRepository;
 use Sulu\Component\DocumentManager\Exception\DocumentManagerException;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Rest\Exception\RestException;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
@@ -287,7 +288,8 @@ class NodeRepository implements NodeRepositoryInterface
                 [],
                 $webspaceKey,
                 $languageCode,
-                true
+                true,
+                $this->getUser()
             );
 
             $result = $container->getData();
@@ -412,7 +414,10 @@ class NodeRepository implements NodeRepositoryInterface
             $this->queryBuilder,
             true,
             -1,
-            $limit
+            $limit,
+            null,
+            false,
+            $this->getUser()
         );
 
         if ($api) {
@@ -714,5 +719,20 @@ class NodeRepository implements NodeRepositoryInterface
         }
 
         return $this->prepareNode($structure, $webspaceKey, $srcLocale);
+    }
+
+    private function getUser(): ?UserInterface
+    {
+        if (!$this->tokenStorage) {
+            return null;
+        }
+
+        $user = $this->tokenStorage->getToken()->getUser();
+
+        if (\is_object($user)) {
+            return $user;
+        }
+
+        return null;
     }
 }

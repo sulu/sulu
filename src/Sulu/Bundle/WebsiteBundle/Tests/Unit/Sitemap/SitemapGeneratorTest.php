@@ -104,6 +104,8 @@ class SitemapGeneratorTest extends SuluTestCase
         $this->languageNamespace = $this->getContainer()->getParameter('sulu.content.language.namespace');
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
 
+        $this->getContainer()->get('sulu_security.system_store')->setSystem('sulu_io');
+
         $this->prepareTestData('en');
         $this->prepareTestData('en_us');
 

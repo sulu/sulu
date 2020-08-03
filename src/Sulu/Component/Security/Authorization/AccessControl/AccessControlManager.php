@@ -11,9 +11,9 @@
 
 namespace Sulu\Component\Security\Authorization\AccessControl;
 
-use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\SecurityBundle\System\SystemStoreInterface;
 use Sulu\Component\Security\Authentication\RoleInterface;
+use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\MaskConverterInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
@@ -47,14 +47,21 @@ class AccessControlManager implements AccessControlManagerInterface
      */
     private $systemStore;
 
+    /**
+     * @var RoleRepositoryInterface
+     */
+    private $roleRepository;
+
     public function __construct(
         MaskConverterInterface $maskConverter,
         EventDispatcherInterface $eventDispatcher,
-        SystemStoreInterface $systemStore
+        SystemStoreInterface $systemStore,
+        RoleRepositoryInterface $roleRepository
     ) {
         $this->maskConverter = $maskConverter;
         $this->eventDispatcher = $eventDispatcher;
         $this->systemStore = $systemStore;
+        $this->roleRepository = $roleRepository;
     }
 
     public function setPermissions($type, $identifier, $permissions)
@@ -86,23 +93,19 @@ class AccessControlManager implements AccessControlManagerInterface
 
     public function getUserPermissions(SecurityCondition $securityCondition, $user)
     {
-        if (!$user instanceof UserInterface) {
-            return [];
-        }
-
         $system = $this->systemStore->getSystem();
         $locale = $securityCondition->getLocale();
 
         $objectPermissions = $this->getUserObjectPermission(
             $securityCondition,
-            $this->getRolesForLocale($user, $locale),
+            $this->getRolesForLocale($user, $locale, $system),
             $system
         );
         $checkPermissionType = empty($objectPermissions);
 
         $securityContextPermissions = $this->getRolesSecurityContextPermissions(
             $securityCondition->getSecurityContext(),
-            $this->getRolesForLocale($user, $locale),
+            $this->getRolesForLocale($user, $locale, $system),
             $checkPermissionType,
             $system
         );
@@ -118,20 +121,20 @@ class AccessControlManager implements AccessControlManagerInterface
         $locale,
         $securityContext,
         $objectPermissionsByRole,
-        UserInterface $user
+        $user
     ) {
         $system = $this->systemStore->getSystem();
 
         $objectPermissions = $this->getRolesObjectPermissionsByArray(
             $objectPermissionsByRole,
-            $this->getRolesForLocale($user, $locale),
+            $this->getRolesForLocale($user, $locale, $system),
             $system
         );
         $checkPermissionType = empty($objectPermissions);
 
         $securityContextPermissions = $this->getRolesSecurityContextPermissions(
             $securityContext,
-            $this->getRolesForLocale($user, $locale),
+            $this->getRolesForLocale($user, $locale, $system),
             $checkPermissionType,
             $system
         );
@@ -278,12 +281,16 @@ class AccessControlManager implements AccessControlManagerInterface
         return $userPermission;
     }
 
-    private function getRolesForLocale(UserInterface $user, ?string $locale)
+    private function getRolesForLocale(?UserInterface $user, ?string $locale, string $system)
     {
+        if (!\is_object($user)) {
+            return $this->roleRepository->findAllRoles(['anonymous' => true, 'system' => $system]);
+        }
+
         $roles = [];
 
         foreach ($user->getUserRoles() as $userRole) {
-            if ($locale != null && !\in_array($locale, $userRole->getLocales())) {
+            if (null != $locale && !\in_array($locale, $userRole->getLocales())) {
                 continue;
             }
 

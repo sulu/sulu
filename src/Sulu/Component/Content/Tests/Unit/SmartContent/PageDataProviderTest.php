@@ -27,6 +27,7 @@ use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\Content\SmartContent\ContentDataItem;
 use Sulu\Component\Content\SmartContent\PageDataProvider;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
 use Sulu\Component\SmartContent\DataProviderResult;
 use Sulu\Component\SmartContent\DatasourceItem;
@@ -56,7 +57,7 @@ class PageDataProviderTest extends TestCase
      *
      * @return ContentQueryExecutorInterface
      */
-    private function getContentQueryExecutor($limit = -1, $page = 1, $result = [])
+    private function getContentQueryExecutor($limit = -1, $page = 1, $result = [], $user = null)
     {
         $mock = $this->prophesize(ContentQueryExecutorInterface::class);
 
@@ -67,7 +68,9 @@ class PageDataProviderTest extends TestCase
             true,
             -1,
             ($limit > -1 ? $limit + 1 : null),
-            ($limit > -1 ? $limit * ($page - 1) : null)
+            ($limit > -1 ? $limit * ($page - 1) : null),
+            false,
+            $user
         )->willReturn($result);
 
         return $mock->reveal();
@@ -352,6 +355,49 @@ class PageDataProviderTest extends TestCase
         $this->assertEquals($document2->reveal(), $items[1]->getResource()->getWrappedValueHolderValue());
         $this->assertTrue($result->getHasNextPage());
         $this->assertEquals(['123-123-123', '123-123-456'], $referenceStore->getAll());
+    }
+
+    public function testResolveResourceItemsWithUser()
+    {
+        $data = [
+            ['id' => '123-123-123', 'title' => 'My-Page', 'path' => '/my-page'],
+        ];
+
+        $document1 = $this->prophesize(BasePageDocument::class);
+
+        $user = $this->prophesize(UserInterface::class);
+
+        $referenceStore = new ReferenceStore();
+        $provider = new PageDataProvider(
+            $this->getContentQueryBuilder(
+                [
+                    'config' => ['dataSource' => '123-123-123', 'excluded' => ['123-123-123']],
+                    'properties' => ['my-properties' => true],
+                    'excluded' => ['123-123-123'],
+                    'published' => false,
+                ]
+            ),
+            $this->getContentQueryExecutor(2, 1, $data, $user->reveal()),
+            $this->getDocumentManager(['123-123-123' => $document1->reveal()]),
+            $this->getProxyFactory(),
+            $this->getSession(),
+            $referenceStore,
+            true
+        );
+
+        $result = $provider->resolveResourceItems(
+            ['dataSource' => '123-123-123', 'excluded' => ['123-123-123']],
+            ['properties' => new PropertyParameter('properties', ['my-properties' => true], 'collection')],
+            ['webspaceKey' => 'sulu_io', 'locale' => 'en'],
+            5,
+            1,
+            2,
+            $user->reveal()
+        );
+
+        $this->assertInstanceOf(DataProviderResult::class, $result);
+        $items = $result->getItems();
+        $this->assertEquals($data[0]['id'], $items[0]->getId());
     }
 
     public function testResolveDataItemsNoPagination()

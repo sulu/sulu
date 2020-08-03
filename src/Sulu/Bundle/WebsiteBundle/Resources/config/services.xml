@@ -122,6 +122,7 @@
             <argument type="service" id="sulu.content.mapper"/>
             <argument type="service" id="sulu_website.navigation_mapper"/>
             <argument type="service" id="sulu_core.webspace.request_analyzer" on-invalid="ignore"/>
+            <argument type="service" id="security.token_storage" on-invalid="ignore"/>
         </service>
         <service id="sulu_website.twig.navigation.memoized" class="%sulu_website.twig.navigation.memoized.class%">
             <argument type="service" id="sulu_website.twig.navigation"/>

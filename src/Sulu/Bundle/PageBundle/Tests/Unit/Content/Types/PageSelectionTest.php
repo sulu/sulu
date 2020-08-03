@@ -22,6 +22,9 @@ use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class PageSelectionTest extends TestCase
 {
@@ -91,7 +94,8 @@ class PageSelectionTest extends TestCase
     {
         $pageSelection = new PageSelection(
             $this->contentQueryExecutor->reveal(),
-            $this->contentQueryBuilder->reveal(), $this->referenceStore->reveal(),
+            $this->contentQueryBuilder->reveal(),
+            $this->referenceStore->reveal(),
             false
         );
 
@@ -104,7 +108,51 @@ class PageSelectionTest extends TestCase
 
         $this->contentQueryBuilder->init(['ids' => ['123-123-123'], 'properties' => [], 'published' => true])
             ->shouldBeCalled();
-        $this->contentQueryExecutor->execute('default', ['en'], $this->contentQueryBuilder->reveal())->willReturn([]);
+        $this->contentQueryExecutor
+             ->execute('default', ['en'], $this->contentQueryBuilder->reveal(), true, -1, null, null, false, null)
+             ->willReturn([]);
+
+        $pageSelection->getContentData($this->property->reveal());
+    }
+
+    public function testGetContentDataWithUser()
+    {
+        $tokenStorage = $this->prophesize(TokenStorageInterface::class);
+        $pageSelection = new PageSelection(
+            $this->contentQueryExecutor->reveal(),
+            $this->contentQueryBuilder->reveal(),
+            $this->referenceStore->reveal(),
+            false,
+            $tokenStorage->reveal()
+        );
+
+        $this->property->getValue()->willReturn(['123-123-123']);
+        $this->property->getParams()->willReturn([]);
+        $structure = $this->prophesize(StructureInterface::class);
+        $structure->getWebspaceKey()->willReturn('default');
+        $structure->getLanguageCode()->willReturn('en');
+        $this->property->getStructure()->willReturn($structure->reveal());
+
+        $user = $this->prophesize(UserInterface::class);
+        $token = $this->prophesize(TokenInterface::class);
+        $token->getUser()->willReturn($user->reveal());
+        $tokenStorage->getToken()->willReturn($token->reveal());
+
+        $this->contentQueryBuilder->init(['ids' => ['123-123-123'], 'properties' => [], 'published' => true])
+            ->shouldBeCalled();
+        $this->contentQueryExecutor
+             ->execute(
+                 'default',
+                 ['en'],
+                 $this->contentQueryBuilder->reveal(),
+                 true,
+                 -1,
+                 null,
+                 null,
+                 false,
+                 $user->reveal()
+             )
+             ->willReturn([]);
 
         $pageSelection->getContentData($this->property->reveal());
     }

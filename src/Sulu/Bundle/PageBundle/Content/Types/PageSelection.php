@@ -22,7 +22,9 @@ use Sulu\Component\Content\ContentTypeExportInterface;
 use Sulu\Component\Content\PreResolvableContentTypeInterface;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Util\ArrayableInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * content type for internal links selection.
@@ -49,16 +51,23 @@ class PageSelection extends ComplexContentType implements ContentTypeExportInter
      */
     private $showDrafts;
 
+    /**
+     * @var ?TokenStorageInterface
+     */
+    private $tokenStorage;
+
     public function __construct(
         ContentQueryExecutorInterface $contentQueryExecutor,
         ContentQueryBuilderInterface $contentQueryBuilder,
         ReferenceStoreInterface $referenceStore,
-        $showDrafts
+        $showDrafts,
+        TokenStorageInterface $tokenStorage = null
     ) {
         $this->contentQueryExecutor = $contentQueryExecutor;
         $this->contentQueryBuilder = $contentQueryBuilder;
         $this->referenceStore = $referenceStore;
         $this->showDrafts = $showDrafts;
+        $this->tokenStorage = $tokenStorage;
     }
 
     public function read(
@@ -135,7 +144,8 @@ class PageSelection extends ComplexContentType implements ContentTypeExportInter
             \array_merge($this->getDefaultParams(), $property->getParams()),
             $property->getStructure()->getWebspaceKey(),
             $property->getStructure()->getLanguageCode(),
-            $this->showDrafts
+            $this->showDrafts,
+            $this->getUser()
         );
 
         return $container->getData();
@@ -173,5 +183,20 @@ class PageSelection extends ComplexContentType implements ContentTypeExportInter
         foreach ($uuids as $uuid) {
             $this->referenceStore->add($uuid);
         }
+    }
+
+    private function getUser(): ?UserInterface
+    {
+        if (!$this->tokenStorage) {
+            return null;
+        }
+
+        $user = $this->tokenStorage->getToken()->getUser();
+
+        if (\is_object($user)) {
+            return $user;
+        }
+
+        return null;
     }
 }

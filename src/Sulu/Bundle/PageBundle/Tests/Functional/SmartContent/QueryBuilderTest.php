@@ -32,6 +32,7 @@ use Sulu\Component\Content\SmartContent\QueryBuilder;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
@@ -93,6 +94,11 @@ class QueryBuilderTest extends SuluTestCase
      */
     private $audienceTargetGroupRepository;
 
+    /**
+     * @var RoleInterface
+     */
+    private $anonymousRole;
+
     public function setUp(): void
     {
         parent::setUp();
@@ -112,6 +118,15 @@ class QueryBuilderTest extends SuluTestCase
 
         $em = $this->getContainer()->get('doctrine')->getManager();
         $user = $em->getRepository('Sulu\Bundle\SecurityBundle\Entity\User')->findOneByUsername('test');
+
+        $this->anonymousRole = $this->getContainer()->get('sulu.repository.role')->createNew();
+        $this->anonymousRole->setName('Anonymous');
+        $this->anonymousRole->setAnonymous(true);
+        $this->anonymousRole->setSystem('sulu_io');
+        $em->persist($this->anonymousRole);
+        $em->flush();
+
+        $this->getContainer()->get('sulu_security.system_store')->setSystem('sulu_io');
 
         $this->tag1 = $this->tagRepository->createNew();
         $this->tag1->setName('test1');

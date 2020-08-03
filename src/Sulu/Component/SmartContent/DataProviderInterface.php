@@ -12,6 +12,7 @@
 namespace Sulu\Component\SmartContent;
 
 use Sulu\Component\Content\Compat\PropertyParameter;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
 
 /**
@@ -52,6 +53,7 @@ interface DataProviderInterface
         $limit = null,
         $page = 1,
         $pageSize = null
+        /* ?UserInterface $user */
     );
 
     /**
@@ -73,6 +75,7 @@ interface DataProviderInterface
         $limit = null,
         $page = 1,
         $pageSize = null
+        /* UserInterface $user = null */
     );
 
     /**
@@ -84,5 +87,5 @@ interface DataProviderInterface
      *
      * @return DatasourceItemInterface
      */
-    public function resolveDatasource($datasource, array $propertyParameter, array $options);
+    public function resolveDatasource($datasource, array $propertyParameter, array $options /* ?UserInterface $user */);
 }

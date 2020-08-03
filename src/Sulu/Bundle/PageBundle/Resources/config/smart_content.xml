@@ -56,6 +56,7 @@
             <argument type="service" id="sulu_category.reference_store.category"/>
             <argument type="service" id="sulu_audience_targeting.target_group_store" on-invalid="null"/>
             <argument type="service" id="sulu_core.webspace.request_analyzer" />
+            <argument type="service" id="security.token_storage" on-invalid="null" />
 
             <tag name="sulu.content.type" alias="smart_content"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
@@ -68,6 +69,7 @@
             <argument type="service" id="fos_rest.view_handler"/>
             <argument type="service" id="sulu_tag.tag_manager"/>
             <argument type="service" id="sulu_page.smart_content.data_provider_pool"/>
+            <argument type="service" id="security.token_storage" on-invalid="null"/>
 
             <tag name="sulu.context" context="admin"/>
         </service>

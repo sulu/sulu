@@ -11,6 +11,8 @@
 
 namespace Sulu\Component\Content\Query;
 
+use Sulu\Component\Security\Authentication\UserInterface;
+
 /**
  * Interface for content query.
  */
@@ -38,5 +40,6 @@ interface ContentQueryExecutorInterface
         $limit = null,
         $offset = null,
         $moveUp = false
+        /* ?UserInterface $user = null */
     );
 }

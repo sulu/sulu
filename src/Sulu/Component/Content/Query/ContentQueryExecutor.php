@@ -14,6 +14,7 @@ namespace Sulu\Component\Content\Query;
 use Jackalope\Query\Row;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
@@ -54,7 +55,8 @@ class ContentQueryExecutor implements ContentQueryExecutorInterface
         $depth = -1,
         $limit = null,
         $offset = null,
-        $moveUp = false
+        $moveUp = false,
+        ?UserInterface $user = null
     ) {
         if ($this->stopwatch) {
             $this->stopwatch->start('ContentQuery::execute.build-query');
@@ -106,7 +108,8 @@ class ContentQueryExecutor implements ContentQueryExecutorInterface
             $locales,
             $fields,
             $depth,
-            $contentQueryBuilder->getPublished()
+            $contentQueryBuilder->getPublished(),
+            $user
         );
 
         if ($this->stopwatch) {
