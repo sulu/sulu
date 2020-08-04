@@ -1,3 +1,6 @@
 fos_rest:
     zone:
         - { path: ^/admin/* }
+    format_listener:
+        rules:
+            - { path: ^/_fos_user_context_hash, stop: true }
