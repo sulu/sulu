@@ -96,7 +96,7 @@ class AudienceTargetingGroups extends ComplexContentType implements ContentTypeE
             return \json_encode($propertyValue);
         }
 
-        return [];
+        return \json_encode([]);
     }
 
     public function importData(
