@@ -31,6 +31,7 @@ use Sulu\Component\SmartContent\Exception\PageOutOfBoundsException;
 use Sulu\Component\Tag\Request\TagRequestHandlerInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Segment;
+use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -322,7 +323,7 @@ class ContentTypeTest extends TestCase
 
         $property->expects($this->any())->method('getParams')
             ->will($this->returnValue($parameter));
-        $property->expects($this->exactly(3))->method('getStructure')
+        $property->expects($this->exactly(2))->method('getStructure')
             ->will($this->returnValue($structure->reveal()));
 
         $this->pageDataProvider->resolveResourceItems(
@@ -381,8 +382,13 @@ class ContentTypeTest extends TestCase
             null
         )->willReturn(new DataProviderResult([1, 2, 3, 4, 5, 6], true));
 
+        $webspace = new Webspace();
+        $webspace->setKey('sulu_io');
+
+        $this->requestAnalyzer->getWebspace()->willReturn($webspace);
+        $this->requestAnalyzer->getSegment()->willReturn(null);
+
         $structure->getUuid()->willReturn('123-123-123');
-        $structure->getWebspaceKey()->willReturn('sulu_io');
         $structure->getLanguageCode()->willReturn('de');
 
         $this->request->expects($this->at(0))->method('get')
@@ -512,7 +518,7 @@ class ContentTypeTest extends TestCase
 
         $property->expects($this->any())->method('getParams')
             ->will($this->returnValue(['max_per_page' => new PropertyParameter('max_per_page', '5')]));
-        $property->expects($this->exactly(3))->method('getStructure')
+        $property->expects($this->exactly(2))->method('getStructure')
             ->will($this->returnValue($structure->reveal()));
 
         $this->pageDataProvider->resolveResourceItems(
@@ -569,8 +575,13 @@ class ContentTypeTest extends TestCase
             null
         )->willReturn(new DataProviderResult([1, 2, 3, 4, 5], true));
 
+        $webspace = new Webspace();
+        $webspace->setKey('sulu_io');
+
+        $this->requestAnalyzer->getWebspace()->willReturn($webspace);
+        $this->requestAnalyzer->getSegment()->willReturn(null);
+
         $structure->getUuid()->willReturn('123-123-123');
-        $structure->getWebspaceKey()->willReturn('sulu_io');
         $structure->getLanguageCode()->willReturn('de');
 
         $pageData = $smartContent->getContentData($property);
@@ -700,11 +711,16 @@ class ContentTypeTest extends TestCase
             ->will($this->returnValue($config));
         $property->expects($this->any())->method('getParams')
             ->will($this->returnValue(['max_per_page' => new PropertyParameter('max_per_page', $pageSize)]));
-        $property->expects($this->exactly(3))->method('getStructure')
+        $property->expects($this->exactly(2))->method('getStructure')
             ->will($this->returnValue($structure->reveal()));
 
+        $webspace = new Webspace();
+        $webspace->setKey('sulu_io');
+
+        $this->requestAnalyzer->getWebspace()->willReturn($webspace);
+        $this->requestAnalyzer->getSegment()->willReturn(null);
+
         $structure->getUuid()->willReturn($uuid);
-        $structure->getWebspaceKey()->willReturn('sulu_io');
         $structure->getLanguageCode()->willReturn('de');
 
         $pageData = $smartContent->getContentData($property);
@@ -820,11 +836,16 @@ class ContentTypeTest extends TestCase
 
         $property->expects($this->any())->method('getParams')
             ->will($this->returnValue(['max_per_page' => new PropertyParameter('max_per_page', $pageSize)]));
-        $property->expects($this->exactly(3))->method('getStructure')
+        $property->expects($this->exactly(2))->method('getStructure')
             ->will($this->returnValue($structure->reveal()));
 
+        $webspace = new Webspace();
+        $webspace->setKey('sulu_io');
+
+        $this->requestAnalyzer->getWebspace()->willReturn($webspace);
+        $this->requestAnalyzer->getSegment()->willReturn(null);
+
         $structure->getUuid()->willReturn($uuid);
-        $structure->getWebspaceKey()->willReturn('sulu_io');
         $structure->getLanguageCode()->willReturn('de');
 
         $viewData = $smartContent->getViewData($property);
@@ -940,8 +961,13 @@ class ContentTypeTest extends TestCase
             )
         );
 
+        $webspace = new Webspace();
+        $webspace->setKey('sulu_io');
+
+        $this->requestAnalyzer->getWebspace()->willReturn($webspace);
+        $this->requestAnalyzer->getSegment()->willReturn(null);
+
         $structure->getUuid()->willReturn('123-123-123');
-        $structure->getWebspaceKey()->willReturn('sulu_io');
         $structure->getLanguageCode()->willReturn('de');
 
         return $property;
@@ -971,6 +997,12 @@ class ContentTypeTest extends TestCase
 
         $structure = $this->prophesize(StructureInterface::class);
         $property->getStructure()->willReturn($structure->reveal());
+
+        $webspace = new Webspace();
+        $webspace->setKey('sulu_io');
+
+        $this->requestAnalyzer->getWebspace()->willReturn($webspace);
+        $this->requestAnalyzer->getSegment()->willReturn(null);
 
         $this->targetGroupStore->getTargetGroupId()->willReturn(1);
         $this->pageDataProvider->resolveResourceItems(
@@ -1013,6 +1045,12 @@ class ContentTypeTest extends TestCase
         $structure = $this->prophesize(StructureInterface::class);
         $property->getStructure()->willReturn($structure->reveal());
 
+        $webspace = new Webspace();
+        $webspace->setKey('sulu_io');
+
+        $this->requestAnalyzer->getWebspace()->willReturn($webspace);
+        $this->requestAnalyzer->getSegment()->willReturn(null);
+
         $this->targetGroupStore->getTargetGroupId()->shouldNotBeCalled();
         $this->pageDataProvider->resolveResourceItems(
             Argument::that(function($value) {
@@ -1042,6 +1080,10 @@ class ContentTypeTest extends TestCase
             $this->targetGroupStore->reveal(),
             $this->requestAnalyzer->reveal()
         );
+
+        $webspace = new Webspace();
+        $webspace->setKey('sulu_io');
+        $this->requestAnalyzer->getWebspace()->willReturn($webspace);
 
         $segment = new Segment();
         $segment->setKey('s');
