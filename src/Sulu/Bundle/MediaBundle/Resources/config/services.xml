@@ -137,6 +137,9 @@
         <service id="sulu_media.collection_repository" class="%sulu_media.collection_repository.class%" public="true">
             <factory service="doctrine.orm.entity_manager" method="getRepository"/>
             <argument>%sulu_media.collection_entity%</argument>
+            <call method="setAccessControlQueryEnhancer">
+                <argument type="service" id="sulu_security.access_control_query_enhancer" />
+            </call>
         </service>
         <service id="sulu_media.file_version_meta_repository"
                  class="Sulu\Bundle\MediaBundle\Entity\FileVersionMetaRepository">

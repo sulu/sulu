@@ -15,10 +15,10 @@ use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer;
 use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
 use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
 use Sulu\Component\Security\Authentication\UserInterface;
-use Sulu\Component\Security\Authorization\AccessControl\SecuredEntityRepositoryTrait;
 
 /**
  * MediaRepository.
@@ -28,7 +28,10 @@ use Sulu\Component\Security\Authorization\AccessControl\SecuredEntityRepositoryT
  */
 class MediaRepository extends EntityRepository implements MediaRepositoryInterface
 {
-    use SecuredEntityRepositoryTrait;
+    /**
+     * @var AccessControlQueryEnhancer
+     */
+    private $accessControlQueryEnhancer;
 
     public function findMediaById($id, $asArray = false)
     {
@@ -187,7 +190,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
         $queryBuilder->addOrderBy($orderBy, $orderSort);
 
         if (null !== $user && null !== $permission) {
-            $this->addAccessControl($queryBuilder, $user, $permission, Collection::class, 'collection');
+            $this->accessControlQueryEnhancer->enhance($queryBuilder, $user, $permission, Collection::class, 'collection');
         }
 
         return $queryBuilder->getQuery()->getResult();
@@ -421,5 +424,10 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
         );
 
         return $subQuery->getScalarResult();
+    }
+
+    public function setAccessControlQueryEnhancer(AccessControlQueryEnhancer $accessControlQueryEnhancer)
+    {
+        $this->accessControlQueryEnhancer = $accessControlQueryEnhancer;
     }
 }

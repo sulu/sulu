@@ -2,6 +2,16 @@
 
 ## dev-master
 
+### Deprecation of SecuredEntityRepositoryTrait
+
+The `SecuredEntityRepositoryTrait` was deprecated, use the `AccessControlQueryEnhancer` service instead. The following
+classes stopped using the `SecuredEntityRepositoryTrait`, so the `addAccessControl` method won't be available anymore on
+them, consider this if you have extended one of these classes:
+
+- `DoctrineListBuilder`
+- `CollectionRepository`
+- `MediaRepository`
+
 ### Role Entity changed for anonymous roles
 
 Sulu needs to handle anonymous users, so we need additional anonymous roles.

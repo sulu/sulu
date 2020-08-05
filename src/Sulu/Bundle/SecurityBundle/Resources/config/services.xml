@@ -317,5 +317,10 @@
             <tag name="kernel.event_subscriber"/>
             <tag name="sulu.context" context="admin"/>
         </service>
+
+        <service
+            id="sulu_security.access_control_query_enhancer"
+            class="Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer"
+        />
     </services>
 </container>

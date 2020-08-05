@@ -17,6 +17,7 @@ use Doctrine\ORM\Query\Expr\Select;
 use Doctrine\ORM\QueryBuilder;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer;
 use Sulu\Bundle\SecurityBundle\Entity\AccessControl;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
@@ -126,7 +127,8 @@ class DoctrineListBuilderTest extends TestCase
             self::$entityName,
             $this->filterTypeRegistry->reveal(),
             $this->eventDispatcher->reveal(),
-            [PermissionTypes::VIEW => 64]
+            [PermissionTypes::VIEW => 64],
+            new AccessControlQueryEnhancer()
         );
         $this->doctrineListBuilder->limit(10);
         $this->queryBuilder->setFirstResult(Argument::any())->willReturn($this->queryBuilder->reveal());

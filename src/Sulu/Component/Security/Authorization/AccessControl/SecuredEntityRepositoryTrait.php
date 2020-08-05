@@ -12,11 +12,14 @@
 namespace Sulu\Component\Security\Authorization\AccessControl;
 
 use Doctrine\ORM\QueryBuilder;
+use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer;
 use Sulu\Bundle\SecurityBundle\Entity\AccessControl;
 use Sulu\Component\Security\Authentication\UserInterface;
 
 /**
  * This trait adds functionality to add filtering for access control to doctrine query builders.
+ *
+ * @deprecated Will be removed with 3.0, use the Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer instead.
  */
 trait SecuredEntityRepositoryTrait
 {
@@ -36,6 +39,15 @@ trait SecuredEntityRepositoryTrait
         $entityClass,
         $entityAlias
     ) {
+        @\trigger_error(
+            \sprintf(
+                'The "%s" is deprecated since Sulu 2.2. Use the "%s" service instead.',
+                __TRAIT__,
+                AccessControlQueryEnhancer::class
+            ),
+            \E_USER_DEPRECATED
+        );
+
         $queryBuilder->leftJoin(
             AccessControl::class,
             'accessControl',

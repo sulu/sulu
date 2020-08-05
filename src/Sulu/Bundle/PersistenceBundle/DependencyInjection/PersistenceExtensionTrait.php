@@ -83,6 +83,14 @@ trait PersistenceExtensionTrait
             $this->getClassMetadataDefinition($services['model']),
         ]);
 
+        $repositoryReflectionClass = new \ReflectionClass($repositoryClass);
+        if ($repositoryReflectionClass->hasMethod('setAccessControlQueryEnhancer')) {
+            $definition->addMethodCall(
+                'setAccessControlQueryEnhancer',
+                [new Reference('sulu_security.access_control_query_enhancer')]
+            );
+        }
+
         return $definition;
     }
 
