@@ -124,7 +124,9 @@
             <argument type="service" id="sulu.repository.role"/>
         </service>
 
-        <service id="sulu_security.system_store" class="Sulu\Bundle\SecurityBundle\System\SystemStore" />
+        <service id="sulu_security.system_store" class="Sulu\Bundle\SecurityBundle\System\SystemStore">
+            <argument type="service" id="sulu.repository.role"/>
+        </service>
 
         <service id="sulu_security.phpcr_access_control_provider" class="%sulu_security.phpcr_access_control_provider.class%">
             <argument type="service" id="sulu_document_manager.document_manager"/>

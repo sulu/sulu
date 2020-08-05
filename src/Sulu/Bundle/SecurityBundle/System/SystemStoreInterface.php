@@ -11,9 +11,13 @@
 
 namespace Sulu\Bundle\SecurityBundle\System;
 
+use Sulu\Component\Security\Authentication\RoleInterface;
+
 interface SystemStoreInterface
 {
     public function getSystem(): ?string;
 
     public function setSystem(string $system): void;
+
+    public function getAnonymousRole(): ?RoleInterface;
 }

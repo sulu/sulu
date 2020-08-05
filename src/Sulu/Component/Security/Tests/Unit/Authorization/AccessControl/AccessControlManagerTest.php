@@ -19,7 +19,6 @@ use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\SecurityBundle\System\SystemStoreInterface;
 use Sulu\Bundle\TestBundle\Testing\ReadObjectAttributeTrait;
-use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlManager;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlProviderInterface;
 use Sulu\Component\Security\Authorization\MaskConverterInterface;
@@ -51,17 +50,11 @@ class AccessControlManagerTest extends TestCase
      */
     private $systemStore;
 
-    /**
-     * @var RoleRepositoryInteface
-     */
-    private $roleRepository;
-
     public function setUp(): void
     {
         $this->maskConverter = $this->prophesize(MaskConverterInterface::class);
         $this->eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
         $this->systemStore = $this->prophesize(SystemStoreInterface::class);
-        $this->roleRepository = $this->prophesize(RoleRepositoryInterface::class);
 
         $this->maskConverter->convertPermissionsToArray(0)->willReturn(['view' => false, 'edit' => false]);
         $this->maskConverter->convertPermissionsToArray(64)->willReturn(['view' => true, 'edit' => false]);
@@ -69,8 +62,7 @@ class AccessControlManagerTest extends TestCase
         $this->accessControlManager = new AccessControlManager(
             $this->maskConverter->reveal(),
             $this->eventDispatcher->reveal(),
-            $this->systemStore->reveal(),
-            $this->roleRepository->reveal()
+            $this->systemStore->reveal()
         );
     }
 
@@ -248,7 +240,6 @@ class AccessControlManagerTest extends TestCase
             ->willReturn([2 => ['view' => true, 'edit' => true]]);
         $this->accessControlManager->addAccessControlProvider($accessControlProvider->reveal());
 
-        // create role for given role permissions from data provider
         /** @var Permission $permission1 */
         $permission1 = $this->prophesize(Permission::class);
         $permission1->getPermissions()->willReturn(64);
@@ -259,7 +250,7 @@ class AccessControlManagerTest extends TestCase
         $anonymousRole->getSystem()->willReturn('Sulu');
         $anonymousRole->getId()->willReturn(1);
 
-        $this->roleRepository->findAllRoles(['anonymous' => true, 'system' => 'Sulu'])->willReturn([$anonymousRole]);
+        $this->systemStore->getAnonymousRole()->willReturn($anonymousRole);
 
         $permissions = $this->accessControlManager->getUserPermissions(
             new SecurityCondition('example', 'de', \stdClass::class, '1'),
