@@ -12,17 +12,29 @@
 namespace Sulu\Component\SmartContent\Orm;
 
 use Doctrine\ORM\QueryBuilder;
+use Sulu\Component\Security\Authentication\UserInterface;
 
 /**
  * Provides basic implementation of orm DataProvider repository.
  */
 trait DataProviderRepositoryTrait
 {
+    private $accessControlQueryEnhancer = null;
+
     /**
      * @see DataProviderRepositoryInterface::findByFilters
      */
-    public function findByFilters($filters, $page, $pageSize, $limit, $locale, $options = [])
-    {
+    public function findByFilters(
+        $filters,
+        $page,
+        $pageSize,
+        $limit,
+        $locale,
+        $options = [],
+        ?UserInterface $user = null,
+        $entityClass = null,
+        $entityAlias = null
+    ) {
         $alias = 'entity';
         $queryBuilder = $this->createQueryBuilder($alias)
             ->addSelect($alias)
@@ -36,7 +48,17 @@ trait DataProviderRepositoryTrait
         }
 
         $query = $queryBuilder->getQuery();
-        $ids = $this->findByFiltersIds($filters, $page, $pageSize, $limit, $locale, $options);
+        $ids = $this->findByFiltersIds(
+            $filters,
+            $page,
+            $pageSize,
+            $limit,
+            $locale,
+            $options,
+            $user,
+            $entityClass,
+            $entityAlias
+        );
         $query->setParameter('ids', $ids);
 
         return $query->getResult();
@@ -54,8 +76,17 @@ trait DataProviderRepositoryTrait
      *
      * @return array
      */
-    private function findByFiltersIds($filters, $page, $pageSize, $limit, $locale, $options = [])
-    {
+    private function findByFiltersIds(
+        $filters,
+        $page,
+        $pageSize,
+        $limit,
+        $locale,
+        $options = [],
+        ?UserInterface $user = null,
+        $entityClass = null,
+        $entityAlias = null
+    ) {
         $parameter = [];
 
         $queryBuilder = $this->createQueryBuilder('c')
@@ -147,6 +178,16 @@ trait DataProviderRepositoryTrait
                     \strtolower($filters['websiteCategoriesOperator']),
                     'websiteCategories'
                 )
+            );
+        }
+
+        if ($this->accessControlQueryEnhancer && $entityClass && $entityAlias) {
+            $this->accessControlQueryEnhancer->enhance(
+                $queryBuilder,
+                $user,
+                64, // 64 is view permission in our bitmask, usually this is injected, but not possibl in a trait
+                $entityClass,
+                $entityAlias
             );
         }
 

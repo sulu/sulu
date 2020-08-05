@@ -321,6 +321,8 @@
         <service
             id="sulu_security.access_control_query_enhancer"
             class="Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer"
-        />
+        >
+            <argument type="service" id="sulu_security.system_store" />
+        </service>
     </services>
 </container>

@@ -327,6 +327,7 @@
             <argument type="service" id="sulu_media.media_manager"/>
             <argument type="string">%sulu.model.media.class%</argument>
             <argument type="string">%sulu_media.collection_entity%</argument>
+            <argument type="service" id="sulu_security.access_control_query_enhancer"/>
         </service>
 
         <service id="sulu_media.smart_content.data_provider.media" class="Sulu\Component\Media\SmartContent\MediaDataProvider">

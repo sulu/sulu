@@ -14,6 +14,7 @@ namespace Sulu\Component\SmartContent\Orm;
 use JMS\Serializer\SerializationContext;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Serializer\ArraySerializerInterface;
 use Sulu\Component\SmartContent\ArrayAccessItem;
 use Sulu\Component\SmartContent\Configuration\Builder;
@@ -110,7 +111,8 @@ abstract class BaseDataProvider implements DataProviderInterface
         array $options = [],
         $limit = null,
         $page = 1,
-        $pageSize = null
+        $pageSize = null,
+        UserInterface $user = null
     ) {
         list($result, $hasNextPage) = $this->resolveFilters(
             $filters,
@@ -118,7 +120,8 @@ abstract class BaseDataProvider implements DataProviderInterface
             $limit,
             $page,
             $pageSize,
-            $this->getOptions($propertyParameter, $options)
+            $this->getOptions($propertyParameter, $options),
+            $user
         );
 
         return new DataProviderResult($this->decorateResourceItems($result, $options['locale']), $hasNextPage);
@@ -133,9 +136,10 @@ abstract class BaseDataProvider implements DataProviderInterface
         $limit = null,
         $page = 1,
         $pageSize = null,
-        $options = []
+        $options = [],
+        UserInterface $user = null
     ) {
-        $result = $this->repository->findByFilters($filters, $page, $pageSize, $limit, $locale, $options);
+        $result = $this->repository->findByFilters($filters, $page, $pageSize, $limit, $locale, $options, $user);
 
         $hasNextPage = false;
         if (null !== $pageSize && \count($result) > $pageSize) {

@@ -21,6 +21,7 @@ use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Media\SmartContent\MediaDataItem;
 use Sulu\Component\Media\SmartContent\MediaDataProvider;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Serializer\ArraySerializerInterface;
 use Sulu\Component\SmartContent\ArrayAccessItem;
 use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
@@ -137,16 +138,18 @@ class MediaDataProviderTest extends TestCase
             $this->createMedia(3, 'Test-3')->reveal(),
         ];
 
+        $user = $this->prophesize(UserInterface::class);
+
         $resourceItems = [];
         foreach ($medias as $media) {
             $resourceItems[] = $this->createResourceItem($media);
         }
 
         return [
-            [['dataSource' => 42, 'tags' => [1]], null, 1, 3, $medias, false, $resourceItems],
-            [['dataSource' => 42, 'tags' => [1]], null, 1, 2, $medias, true, \array_slice($resourceItems, 0, 2)],
-            [['dataSource' => 42, 'tags' => [1]], 5, 1, 2, $medias, true, \array_slice($resourceItems, 0, 2)],
-            [['dataSource' => 42, 'tags' => [1]], 1, 1, 2, \array_slice($medias, 0, 1), false, \array_slice($resourceItems, 0, 1)],
+            [['dataSource' => 42, 'tags' => [1]], null, 1, 3, $medias, false, $user->reveal(), $resourceItems],
+            [['dataSource' => 42, 'tags' => [1]], null, 1, 2, $medias, true, null, \array_slice($resourceItems, 0, 2)],
+            [['dataSource' => 42, 'tags' => [1]], 5, 1, 2, $medias, true, null, \array_slice($resourceItems, 0, 2)],
+            [['dataSource' => 42, 'tags' => [1]], 1, 1, 2, \array_slice($medias, 0, 1), false, null, \array_slice($resourceItems, 0, 1)],
         ];
     }
 
@@ -160,6 +163,7 @@ class MediaDataProviderTest extends TestCase
         $pageSize,
         $repositoryResult,
         $hasNextPage,
+        $user,
         $items
     ) {
         $serializeCallback = function(Media $media) {
@@ -178,7 +182,15 @@ class MediaDataProviderTest extends TestCase
         $requestStack = $this->prophesize(RequestStack::class);
         $referenceStore = $this->prophesize(ReferenceStoreInterface::class);
         $provider = new MediaDataProvider(
-            $this->getRepository($filters, $page, $pageSize, $limit, $repositoryResult),
+            $this->getRepository(
+                $filters,
+                $page,
+                $pageSize,
+                $limit,
+                $repositoryResult,
+                ['webspace' => 'sulu_io', 'locale' => 'en'],
+                $user
+            ),
             $collectionManager->reveal(),
             $serializer->reveal(),
             $requestStack->reveal(),
@@ -191,7 +203,8 @@ class MediaDataProviderTest extends TestCase
             ['webspace' => 'sulu_io', 'locale' => 'en'],
             $limit,
             $page,
-            $pageSize
+            $pageSize,
+            $user
         );
 
         $this->assertInstanceOf(DataProviderResult::class, $result);
@@ -235,11 +248,12 @@ class MediaDataProviderTest extends TestCase
         $pageSize = 0,
         $limit = null,
         $result = [],
-        $options = ['webspace' => 'sulu_io', 'locale' => 'en']
+        $options = ['webspace' => 'sulu_io', 'locale' => 'en'],
+        $user = null
     ) {
         $mock = $this->prophesize(DataProviderRepositoryInterface::class);
 
-        $mock->findByFilters($filters, $page, $pageSize, $limit, 'en', $options)->willReturn($result);
+        $mock->findByFilters($filters, $page, $pageSize, $limit, 'en', $options, $user)->willReturn($result);
 
         return $mock->reveal();
     }

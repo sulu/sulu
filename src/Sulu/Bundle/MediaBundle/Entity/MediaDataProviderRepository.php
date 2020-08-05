@@ -16,6 +16,8 @@ use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Sulu\Bundle\MediaBundle\Api\Media as MediaApi;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
+use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryTrait;
 
@@ -48,20 +50,34 @@ class MediaDataProviderRepository implements DataProviderRepositoryInterface
      */
     private $collectionEntityName;
 
+    /**
+     * @var AccessControlQueryEnhancer
+     */
+    private $accessControlQueryEnhancer;
+
     public function __construct(
         EntityManagerInterface $entityManager,
         MediaManagerInterface $mediaManager,
         $mediaEntityName,
-        $collectionEntityName
+        $collectionEntityName,
+        AccessControlQueryEnhancer $accessControlQueryEnhancer
     ) {
         $this->entityManager = $entityManager;
         $this->mediaEntityName = $mediaEntityName;
         $this->collectionEntityName = $collectionEntityName;
         $this->mediaManager = $mediaManager;
+        $this->accessControlQueryEnhancer = $accessControlQueryEnhancer;
     }
 
-    public function findByFilters($filters, $page, $pageSize, $limit, $locale, $options = [])
-    {
+    public function findByFilters(
+        $filters,
+        $page,
+        $pageSize,
+        $limit,
+        $locale,
+        $options = [],
+        UserInterface $user = null
+    ) {
         if (!\array_key_exists('dataSource', $filters) ||
             '' === $filters['dataSource'] ||
             (null !== $limit && $limit < 1)
@@ -74,7 +90,17 @@ class MediaDataProviderRepository implements DataProviderRepositoryInterface
             $filters['dataSource'] = null;
         }
 
-        $entities = $this->parentFindByFilters($filters, $page, $pageSize, $limit, $locale, $options);
+        $entities = $this->parentFindByFilters(
+            $filters,
+            $page,
+            $pageSize,
+            $limit,
+            $locale,
+            $options,
+            $user,
+            Collection::class,
+            'collection'
+        );
 
         return \array_map(
             function(Media $media) use ($locale) {
@@ -88,7 +114,6 @@ class MediaDataProviderRepository implements DataProviderRepositoryInterface
     {
         $queryBuilder
             ->addSelect('type')
-            ->addSelect('collection')
             ->addSelect('file')
             ->addSelect('tag')
             ->addSelect('fileVersion')
@@ -101,7 +126,6 @@ class MediaDataProviderRepository implements DataProviderRepositoryInterface
             ->addSelect('creatorContact')
             ->addSelect('changerContact')
             ->leftJoin($alias . '.type', 'type')
-            ->leftJoin($alias . '.collection', 'collection')
             ->leftJoin($alias . '.files', 'file')
             ->leftJoin('file.fileVersions', 'fileVersion', 'WITH', 'fileVersion.version = file.version')
             ->leftJoin('fileVersion.tags', 'tag')
@@ -166,9 +190,7 @@ class MediaDataProviderRepository implements DataProviderRepositoryInterface
     protected function appendDatasource($datasource, $includeSubFolders, QueryBuilder $queryBuilder, $alias)
     {
         if (!$includeSubFolders) {
-            $queryBuilder
-                ->innerJoin($alias . '.collection', 'collection')
-                ->andWhere('collection.id = :collectionId');
+            $queryBuilder->andWhere('collection.id = :collectionId');
         } else {
             $queryBuilder
                 ->innerJoin(
@@ -177,12 +199,7 @@ class MediaDataProviderRepository implements DataProviderRepositoryInterface
                     Join::WITH,
                     'parentCollection.id = :collectionId'
                 )
-                ->innerJoin(
-                    $alias . '.collection',
-                    'collection',
-                    Join::WITH,
-                    'collection.lft BETWEEN parentCollection.lft AND parentCollection.rgt'
-                );
+                ->where('collection.lft BETWEEN parentCollection.lft AND parentCollection.rgt');
         }
 
         return ['collectionId' => $datasource];
@@ -204,6 +221,8 @@ class MediaDataProviderRepository implements DataProviderRepositoryInterface
     {
         return $this->entityManager->createQueryBuilder()
             ->select($alias)
-            ->from($this->mediaEntityName, $alias, $indexBy);
+            ->addSelect('collection')
+            ->from($this->mediaEntityName, $alias, $indexBy)
+            ->innerJoin($alias . '.collection', 'collection');
     }
 }

@@ -202,7 +202,7 @@ class AccountDataProviderTest extends TestCase
     ) {
         $mock = $this->prophesize(DataProviderRepositoryInterface::class);
 
-        $mock->findByFilters($filters, $page, $pageSize, $limit, 'en', $options)->willReturn($result);
+        $mock->findByFilters($filters, $page, $pageSize, $limit, 'en', $options, null)->willReturn($result);
 
         return $mock->reveal();
     }
