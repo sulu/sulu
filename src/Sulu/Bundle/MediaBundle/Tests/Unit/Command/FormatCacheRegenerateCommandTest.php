@@ -13,13 +13,13 @@ namespace Sulu\Bundle\MediaBundle\Tests\Unit\Command;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
-use Sulu\Bundle\MediaBundle\Command\FormatCacheRegenerateFormats;
+use Sulu\Bundle\MediaBundle\Command\FormatCacheRegenerateCommand;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
 
-class FormatCacheRegenerateFormatsTest extends TestCase
+class FormatCacheRegenerateCommandTest extends TestCase
 {
     /**
      * @var ObjectProphecy|FormatManagerInterface
@@ -50,7 +50,7 @@ class FormatCacheRegenerateFormatsTest extends TestCase
         $fileSystem = new Filesystem();
 
         $application = new Application();
-        $command = new FormatCacheRegenerateFormats(
+        $command = new FormatCacheRegenerateCommand(
             $fileSystem,
             $this->formatManager->reveal(),
             $localFormatCachePath

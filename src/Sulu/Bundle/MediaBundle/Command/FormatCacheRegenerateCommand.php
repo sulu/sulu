@@ -20,7 +20,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
-class FormatCacheRegenerateFormats extends Command
+class FormatCacheRegenerateCommand extends Command
 {
     protected static $defaultName = 'sulu:media:regenerate-formats';
 
