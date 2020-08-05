@@ -186,6 +186,24 @@ class PermissionControllerTest extends TestCase
         $this->permissionController->cputAction($request);
     }
 
+    public function testPutActionWithInheritance()
+    {
+        $request = new Request(
+            [
+                'id' => 5,
+                'resourceKey' => 'example',
+                'inherit' => true,
+            ],
+            [
+                'permissions' => [],
+            ]
+        );
+
+        $this->accessControlManager->setPermissions('Acme\\Example', 5, [], true)->shouldBeCalled();
+
+        $this->permissionController->cputAction($request);
+    }
+
     public function testPutActionWithMissingPermissionsAndWebspace()
     {
         $this->expectException(AccessDeniedException::class);

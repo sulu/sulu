@@ -142,6 +142,8 @@
             <call method="setAccessControlQueryEnhancer">
                 <argument type="service" id="sulu_security.access_control_query_enhancer" />
             </call>
+
+            <tag name="sulu_security.access_control_descendant_provider"/>
         </service>
         <service id="sulu_media.file_version_meta_repository"
                  class="Sulu\Bundle\MediaBundle\Entity\FileVersionMetaRepository">

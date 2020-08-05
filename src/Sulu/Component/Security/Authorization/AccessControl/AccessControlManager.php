@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Security\Authorization\AccessControl;
 
+use Sulu\Bundle\SecurityBundle\Exception\AccessControlDescendantProviderNotFoundException;
 use Sulu\Bundle\SecurityBundle\System\SystemStoreInterface;
 use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
@@ -46,17 +47,24 @@ class AccessControlManager implements AccessControlManagerInterface
      */
     private $systemStore;
 
+    /**
+     * @var DescendantProviderInterface[]
+     */
+    private $descendantProviders = [];
+
     public function __construct(
         MaskConverterInterface $maskConverter,
         EventDispatcherInterface $eventDispatcher,
-        SystemStoreInterface $systemStore
+        SystemStoreInterface $systemStore,
+        iterable $descendantProviders = []
     ) {
         $this->maskConverter = $maskConverter;
         $this->eventDispatcher = $eventDispatcher;
         $this->systemStore = $systemStore;
+        $this->descendantProviders = $descendantProviders;
     }
 
-    public function setPermissions($type, $identifier, $permissions)
+    public function setPermissions($type, $identifier, $permissions, $inherit = false)
     {
         $accessControlProvider = $this->getAccessControlProvider($type);
 
@@ -70,6 +78,23 @@ class AccessControlManager implements AccessControlManagerInterface
             new PermissionUpdateEvent($type, $identifier, $permissions),
             SecurityEvents::PERMISSION_UPDATE
         );
+
+        if ($inherit) {
+            $childrenProvider = $this->getChildrenProvider($type);
+
+            if (!$childrenProvider) {
+                throw new AccessControlDescendantProviderNotFoundException($type);
+            }
+
+            foreach ($childrenProvider->findDescendantIdsById($identifier) as $childIdentifier) {
+                $accessControlProvider->setPermissions($type, $childIdentifier, $permissions);
+
+                $this->eventDispatcher->dispatch(
+                    new PermissionUpdateEvent($type, $childIdentifier, $permissions),
+                    SecurityEvents::PERMISSION_UPDATE
+                );
+            }
+        }
     }
 
     public function getPermissions($type, $identifier, $system = null)
@@ -362,5 +387,16 @@ class AccessControlManager implements AccessControlManagerInterface
                 return $accessControlProvider;
             }
         }
+    }
+
+    private function getChildrenProvider(string $type): ?DescendantProviderInterface
+    {
+        foreach ($this->descendantProviders as $descendantProvider) {
+            if ($descendantProvider->supportsDescendantType($type)) {
+                return $descendantProvider;
+            }
+        }
+
+        return null;
     }
 }

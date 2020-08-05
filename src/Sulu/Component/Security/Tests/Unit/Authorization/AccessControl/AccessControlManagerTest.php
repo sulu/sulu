@@ -17,10 +17,12 @@ use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
+use Sulu\Bundle\SecurityBundle\Exception\AccessControlDescendantProviderNotFoundException;
 use Sulu\Bundle\SecurityBundle\System\SystemStoreInterface;
 use Sulu\Bundle\TestBundle\Testing\ReadObjectAttributeTrait;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlManager;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlProviderInterface;
+use Sulu\Component\Security\Authorization\AccessControl\DescendantProviderInterface;
 use Sulu\Component\Security\Authorization\MaskConverterInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Security\Event\PermissionUpdateEvent;
@@ -46,6 +48,16 @@ class AccessControlManagerTest extends TestCase
     private $eventDispatcher;
 
     /**
+     * @var DescendantProviderInterface
+     */
+    private $descendantProvider1;
+
+    /**
+     * @var DescendantProviderInterface
+     */
+    private $descendantProvider2;
+
+    /**
      * @var SystemStoreInterface
      */
     private $systemStore;
@@ -68,10 +80,17 @@ class AccessControlManagerTest extends TestCase
             'archive' => true,
         ]);
 
+        $this->descendantProvider1 = $this->prophesize(DescendantProviderInterface::class);
+        $this->descendantProvider2 = $this->prophesize(DescendantProviderInterface::class);
+
         $this->accessControlManager = new AccessControlManager(
             $this->maskConverter->reveal(),
             $this->eventDispatcher->reveal(),
-            $this->systemStore->reveal()
+            $this->systemStore->reveal(),
+            [
+                $this->descendantProvider1->reveal(),
+                $this->descendantProvider2->reveal(),
+            ]
         );
     }
 
@@ -93,6 +112,64 @@ class AccessControlManagerTest extends TestCase
         )->shouldBeCalled();
 
         $this->accessControlManager->setPermissions(\stdClass::class, '1', []);
+    }
+
+    public function testSetPermissionsWithInheritance()
+    {
+        $accessControlProvider = $this->prophesize(AccessControlProviderInterface::class);
+        $accessControlProvider->supports(Argument::any())->willReturn(true);
+        $accessControlProvider->setPermissions(\stdClass::class, '1', [])->shouldBeCalled();
+        $accessControlProvider->setPermissions(\stdClass::class, '2', [])->shouldBeCalled();
+        $accessControlProvider->setPermissions(\stdClass::class, '3', [])->shouldBeCalled();
+        $accessControlProvider->setPermissions(\stdClass::class, '5', [])->shouldBeCalled();
+
+        $this->descendantProvider1->supportsDescendantType(\stdClass::class)->willReturn(true);
+        $this->descendantProvider1->findDescendantIdsById('1')->willReturn(['2', '3', '5']);
+
+        $this->accessControlManager->addAccessControlProvider($accessControlProvider->reveal());
+
+        $this->eventDispatcher->dispatch(
+            new PermissionUpdateEvent(\stdClass::class, '1', []),
+            'sulu_security.permission_update'
+        )->shouldBeCalled();
+
+        $this->eventDispatcher->dispatch(
+            new PermissionUpdateEvent(\stdClass::class, '2', []),
+            'sulu_security.permission_update'
+        )->shouldBeCalled();
+
+        $this->eventDispatcher->dispatch(
+            new PermissionUpdateEvent(\stdClass::class, '3', []),
+            'sulu_security.permission_update'
+        )->shouldBeCalled();
+
+        $this->eventDispatcher->dispatch(
+            new PermissionUpdateEvent(\stdClass::class, '5', []),
+            'sulu_security.permission_update'
+        )->shouldBeCalled();
+
+        $this->accessControlManager->setPermissions(\stdClass::class, '1', [], true);
+    }
+
+    public function testSetPermissionsWithInheritanceWithoutDescendantProvider()
+    {
+        $this->expectException(AccessControlDescendantProviderNotFoundException::class);
+
+        $accessControlProvider = $this->prophesize(AccessControlProviderInterface::class);
+        $accessControlProvider->supports(Argument::any())->willReturn(true);
+        $accessControlProvider->setPermissions(\stdClass::class, '1', [])->shouldBeCalled();
+
+        $this->descendantProvider1->supportsDescendantType(\stdClass::class)->willReturn(false);
+        $this->descendantProvider2->supportsDescendantType(\stdClass::class)->willReturn(false);
+
+        $this->accessControlManager->addAccessControlProvider($accessControlProvider->reveal());
+
+        $this->eventDispatcher->dispatch(
+            new PermissionUpdateEvent(\stdClass::class, '1', []),
+            'sulu_security.permission_update'
+        )->shouldBeCalled();
+
+        $this->accessControlManager->setPermissions(\stdClass::class, '1', [], true);
     }
 
     public function testSetPermissionsWithoutProvider()
