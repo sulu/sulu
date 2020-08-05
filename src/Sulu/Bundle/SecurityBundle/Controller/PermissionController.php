@@ -106,6 +106,7 @@ class PermissionController implements ClassResourceInterface
             $identifier = $request->get('id');
             $permissions = $request->get('permissions');
             $webspace = $request->get('webspace');
+            $inherit = $request->query->getBoolean('inherit', false);
 
             $rawSecurityContext = $this->resources[$resourceKey]['security_context'] ?? null;
             $securityContext = $rawSecurityContext ? \str_replace('#webspace#', $webspace, $rawSecurityContext) : null;

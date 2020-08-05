@@ -121,7 +121,7 @@
             <argument type="service" id="sulu_security.mask_converter"/>
             <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="sulu_security.system_store"/>
-            <argument type="service" id="sulu.repository.role"/>
+            <argument type="tagged_iterator" tag="sulu_security.access_control_descendant_provider"/>
         </service>
 
         <service id="sulu_security.system_store" class="Sulu\Bundle\SecurityBundle\System\SystemStore">

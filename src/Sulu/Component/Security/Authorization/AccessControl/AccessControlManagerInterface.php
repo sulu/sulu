@@ -26,7 +26,7 @@ interface AccessControlManagerInterface
      * @param string $identifier The identifier of the protected object
      * @param mixed[] $permissions
      */
-    public function setPermissions($type, $identifier, $permissions);
+    public function setPermissions($type, $identifier, $permissions, bool $inherit = false);
 
     /**
      * Returns the permissions for all security identities.
