@@ -15,6 +15,7 @@
 
         <service id="sulu.content.type.single_page_selection" class="Sulu\Bundle\PageBundle\Content\Types\SinglePageSelection">
             <argument type="service" id="sulu_page.reference_store.content"/>
+            <argument type="service" id="sulu_security.security_checker" on-invalid="null"/>
 
             <tag name="sulu.content.type" alias="single_page_selection"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />

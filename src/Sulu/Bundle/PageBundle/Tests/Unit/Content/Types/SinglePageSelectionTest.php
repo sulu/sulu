@@ -16,6 +16,11 @@ use Prophecy\Argument;
 use Sulu\Bundle\PageBundle\Content\Types\SinglePageSelection;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
+use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
+use Sulu\Component\Security\Authorization\PermissionTypes;
+use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
+use Sulu\Component\Security\Authorization\SecurityCondition;
 
 class SinglePageSelectionTest extends TestCase
 {
@@ -30,6 +35,11 @@ class SinglePageSelectionTest extends TestCase
     private $referenceStore;
 
     /**
+     * @var ObjectProphecy
+     */
+    private $securityChecker;
+
+    /**
      * @var SinglePageSelection
      */
     private $type;
@@ -40,10 +50,11 @@ class SinglePageSelectionTest extends TestCase
 
         $this->property = $this->prophesize(PropertyInterface::class);
         $this->referenceStore = $this->prophesize(ReferenceStoreInterface::class);
+        $this->securityChecker = $this->prophesize(SecurityCheckerInterface::class);
 
         $this->type = new SinglePageSelection(
             $this->referenceStore->reveal(),
-            'some_template.html.twig'
+            $this->securityChecker->reveal()
         );
     }
 
@@ -80,5 +91,49 @@ class SinglePageSelectionTest extends TestCase
         foreach ($expected as $uuid) {
             $this->referenceStore->add($uuid)->shouldBeCalled();
         }
+    }
+
+    public function testContentData()
+    {
+        $structure = $this->prophesize(StructureInterface::class);
+        $structure->getLanguageCode()->willReturn('de');
+        $structure->getWebspaceKey()->willReturn('sulu_io');
+
+        $this->property->getValue()->willReturn('some-uuid');
+        $this->property->getStructure()->willReturn($structure->reveal());
+
+        $this->securityChecker->hasPermission(
+            new SecurityCondition(
+                'sulu.webspaces.sulu_io',
+                'de',
+                SecurityBehavior::class,
+                'some-uuid'
+            ),
+            PermissionTypes::VIEW
+        )->willReturn(true);
+
+        $this->assertEquals('some-uuid', $this->type->getContentData($this->property->reveal()));
+    }
+
+    public function testContentDataForMissingPermissions()
+    {
+        $structure = $this->prophesize(StructureInterface::class);
+        $structure->getLanguageCode()->willReturn('de');
+        $structure->getWebspaceKey()->willReturn('sulu_io');
+
+        $this->property->getValue()->willReturn('some-uuid');
+        $this->property->getStructure()->willReturn($structure->reveal());
+
+        $this->securityChecker->hasPermission(
+            new SecurityCondition(
+                'sulu.webspaces.sulu_io',
+                'de',
+                SecurityBehavior::class,
+                'some-uuid'
+            ),
+            PermissionTypes::VIEW
+        )->willReturn(false);
+
+        $this->assertNull($this->type->getContentData($this->property->reveal()));
     }
 }
