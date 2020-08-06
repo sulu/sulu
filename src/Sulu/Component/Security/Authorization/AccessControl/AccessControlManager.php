@@ -85,6 +85,10 @@ class AccessControlManager implements AccessControlManagerInterface
 
     public function getUserPermissions(SecurityCondition $securityCondition, $user)
     {
+        if (!\is_object($user)) {
+            $user = null;
+        }
+
         $system = $this->systemStore->getSystem();
         $locale = $securityCondition->getLocale();
 

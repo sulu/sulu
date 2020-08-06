@@ -132,7 +132,6 @@
             <argument type="service" id="sulu_document_manager.document_manager"/>
             <argument type="service" id="sulu.repository.role"/>
             <argument>%permissions%</argument>
-            <tag name="sulu.context" context="admin"/>
             <tag name="sulu.access_control"/>
         </service>
 
@@ -141,7 +140,6 @@
             <argument type="service" id="sulu.repository.role"/>
             <argument type="service" id="sulu.repository.access_control"/>
             <argument type="service" id="sulu_security.mask_converter"/>
-            <tag name="sulu.context" context="admin"/>
             <tag name="sulu.access_control"/>
         </service>
 

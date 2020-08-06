@@ -11,13 +11,18 @@
 
 namespace Sulu\Bundle\MediaBundle\Content\Types;
 
+use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Api\Media;
+use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\PreResolvableContentTypeInterface;
 use Sulu\Component\Content\SimpleContentType;
+use Sulu\Component\Security\Authorization\PermissionTypes;
+use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
+use Sulu\Component\Security\Authorization\SecurityCondition;
 
 class SingleMediaSelection extends SimpleContentType implements PreResolvableContentTypeInterface
 {
@@ -31,10 +36,19 @@ class SingleMediaSelection extends SimpleContentType implements PreResolvableCon
      */
     private $mediaReferenceStore;
 
-    public function __construct(MediaManagerInterface $mediaManager, ReferenceStoreInterface $referenceStore)
-    {
+    /**
+     * @var ?SecurityCheckerInterface
+     */
+    private $securityChecker;
+
+    public function __construct(
+        MediaManagerInterface $mediaManager,
+        ReferenceStoreInterface $referenceStore,
+        SecurityCheckerInterface $securityChecker = null
+    ) {
         $this->mediaManager = $mediaManager;
         $this->mediaReferenceStore = $referenceStore;
+        $this->securityChecker = $securityChecker;
 
         parent::__construct('SingleMediaSelection', '{"id": null}');
     }
@@ -49,6 +63,20 @@ class SingleMediaSelection extends SimpleContentType implements PreResolvableCon
         try {
             $entity = $this->mediaManager->getById($data['id'], $property->getStructure()->getLanguageCode());
         } catch (MediaNotFoundException $e) {
+            return null;
+        }
+
+        if ($this->securityChecker
+            && !$this->securityChecker->hasPermission(
+                new SecurityCondition(
+                    MediaAdmin::SECURITY_CONTEXT,
+                    $property->getStructure()->getLanguageCode(),
+                    Collection::class,
+                    $entity->getCollection()
+                ),
+                PermissionTypes::VIEW
+            )
+        ) {
             return null;
         }
 
