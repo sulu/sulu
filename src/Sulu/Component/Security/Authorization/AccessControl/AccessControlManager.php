@@ -276,7 +276,9 @@ class AccessControlManager implements AccessControlManagerInterface
     private function getRolesForLocale(?UserInterface $user, ?string $locale)
     {
         if (!\is_object($user)) {
-            return [$this->systemStore->getAnonymousRole()];
+            $anonymousRole = $this->systemStore->getAnonymousRole();
+
+            return $anonymousRole ? [$anonymousRole] : [];
         }
 
         $roles = [];

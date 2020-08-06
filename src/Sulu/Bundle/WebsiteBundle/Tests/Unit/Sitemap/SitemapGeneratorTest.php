@@ -9,12 +9,14 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\WebsiteBundle\Sitemap;
+namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\Sitemap;
 
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapContentQueryBuilder;
+use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapGenerator;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\StructureInterface;
@@ -34,6 +36,7 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Navigation;
 use Sulu\Component\Webspace\NavigationContext;
 use Sulu\Component\Webspace\Webspace;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class SitemapGeneratorTest extends SuluTestCase
 {
@@ -125,6 +128,9 @@ class SitemapGeneratorTest extends SuluTestCase
             $this->webspaceManager,
             new SitemapContentQueryBuilder($this->structureManager, $this->extensionManager, $this->languageNamespace)
         );
+
+        $user = $this->getContainer()->get('test_user_provider')->getUser();
+        $this->getContainer()->get('security.token_storage')->setToken(new UsernamePasswordToken($user, '', 'test'));
     }
 
     protected function prepareWebspaceManager()

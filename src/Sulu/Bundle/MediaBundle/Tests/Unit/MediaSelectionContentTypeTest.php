@@ -17,6 +17,10 @@ use Sulu\Bundle\MediaBundle\Content\Types\MediaSelectionContentType;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
+use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class MediaSelectionContentTypeTest extends TestCase
 {
@@ -39,10 +43,13 @@ class MediaSelectionContentTypeTest extends TestCase
     {
         $this->mediaManager = $this->prophesize(MediaManagerInterface::class);
         $this->mediaReferenceStore = $this->prophesize(ReferenceStoreInterface::class);
+        $this->tokenStorage = $this->prophesize(TokenStorageInterface::class);
 
         $this->mediaSelection = new MediaSelectionContentType(
             $this->mediaManager->reveal(),
-            $this->mediaReferenceStore->reveal()
+            $this->mediaReferenceStore->reveal(),
+            $this->tokenStorage->reveal(),
+            ['view' => 64]
         );
     }
 
@@ -365,6 +372,25 @@ class MediaSelectionContentTypeTest extends TestCase
         );
 
         $this->mediaSelection->read($node, $property, 'test', 'en', 's');
+    }
+
+    public function testGetContentData()
+    {
+        $property = $this->prophesize(PropertyInterface::class);
+        $property->getValue()->willReturn(['ids' => [1, 2, 3]]);
+        $property->getParams()->willReturn([]);
+
+        $structure = $this->prophesize(StructureInterface::class);
+        $property->getStructure()->willReturn($structure->reveal());
+
+        $token = $this->prophesize(TokenInterface::class);
+        $user = $this->prophesize(UserInterface::class);
+        $token->getUser()->willReturn($user->reveal());
+        $this->tokenStorage->getToken()->willReturn($token->reveal());
+
+        $this->mediaManager->getByIds([1, 2, 3], null, $user->reveal(), 64)->shouldBeCalled();
+
+        $result = $this->mediaSelection->getContentData($property->reveal());
     }
 
     public function testPreResolve()

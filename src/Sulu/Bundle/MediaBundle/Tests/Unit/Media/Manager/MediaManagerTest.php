@@ -181,11 +181,17 @@ class MediaManagerTest extends TestCase
     /**
      * @dataProvider provideGetByIds
      */
-    public function testGetByIds($ids, $media, $result)
+    public function testGetByIds($ids, $user, $permission, $media, $result)
     {
-        $this->mediaRepository->findMedia(Argument::any())->willReturn($media);
+        $this->mediaRepository->findMedia(
+            ['pagination' => false, 'ids' => $ids],
+            null,
+            null,
+            $user,
+            $permission
+        )->willReturn($media);
         $this->formatManager->getFormats(Argument::cetera())->willReturn(null);
-        $medias = $this->mediaManager->getByIds($ids, 'en');
+        $medias = $this->mediaManager->getByIds($ids, 'en', $user, $permission);
 
         for ($i = 0; $i < \count($medias); ++$i) {
             $this->assertEquals($result[$i]->getId(), $medias[$i]->getId());
@@ -452,10 +458,12 @@ class MediaManagerTest extends TestCase
         $media2 = $this->createMedia(2);
         $media3 = $this->createMedia(3);
 
+        $user = $this->prophesize(SuluUserInterface::class);
+
         return [
-            [[1, 2, 3], [$media1, $media2, $media3], [$media1, $media2, $media3]],
-            [[2, 1, 3], [$media1, $media2, $media3], [$media2, $media1, $media3]],
-            [[4, 1, 2], [$media1, $media2], [$media1, $media2]],
+            [[1, 2, 3], null, 64, [$media1, $media2, $media3], [$media1, $media2, $media3]],
+            [[2, 1, 3], $user->reveal(), 32, [$media1, $media2, $media3], [$media2, $media1, $media3]],
+            [[4, 1, 2], null, 16, [$media1, $media2], [$media1, $media2]],
         ];
     }
 

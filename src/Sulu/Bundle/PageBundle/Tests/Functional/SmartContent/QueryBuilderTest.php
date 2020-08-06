@@ -18,6 +18,7 @@ use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRule;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupWebspace;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
+use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Bundle\TagBundle\Tag\TagRepositoryInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
@@ -36,6 +37,7 @@ use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class QueryBuilderTest extends SuluTestCase
 {
@@ -117,16 +119,22 @@ class QueryBuilderTest extends SuluTestCase
         $this->languageNamespace = $this->getContainer()->getParameter('sulu.content.language.namespace');
 
         $em = $this->getContainer()->get('doctrine')->getManager();
-        $user = $em->getRepository('Sulu\Bundle\SecurityBundle\Entity\User')->findOneByUsername('test');
+
+        $user = $this->getContainer()->get('test_user_provider')->getUser();
 
         $this->anonymousRole = $this->getContainer()->get('sulu.repository.role')->createNew();
         $this->anonymousRole->setName('Anonymous');
         $this->anonymousRole->setAnonymous(true);
         $this->anonymousRole->setSystem('sulu_io');
+
+        $permission = new Permission();
+        $permission->setPermissions(122);
+        $permission->setRole($this->anonymousRole);
+        $permission->setContext('sulu.webspaces.sulu_io');
+
+        $em->persist($permission);
         $em->persist($this->anonymousRole);
         $em->flush();
-
-        $this->getContainer()->get('sulu_security.system_store')->setSystem('sulu_io');
 
         $this->tag1 = $this->tagRepository->createNew();
         $this->tag1->setName('test1');
@@ -147,6 +155,9 @@ class QueryBuilderTest extends SuluTestCase
         $em->persist($this->tag3);
 
         $em->flush();
+
+        $this->getContainer()->get('sulu_security.system_store')->setSystem('sulu_io');
+        $this->getContainer()->get('security.token_storage')->setToken(new UsernamePasswordToken($user, '', 'test'));
     }
 
     public function propertiesProvider()

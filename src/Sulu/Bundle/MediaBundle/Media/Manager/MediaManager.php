@@ -212,10 +212,16 @@ class MediaManager implements MediaManagerInterface
         return $mediaEntity;
     }
 
-    public function getByIds(array $ids, $locale)
+    public function getByIds(array $ids, $locale, UserInterface $user = null, $permission = null)
     {
         $media = [];
-        $mediaEntities = $this->mediaRepository->findMedia(['pagination' => false, 'ids' => $ids]);
+        $mediaEntities = $this->mediaRepository->findMedia(
+            ['pagination' => false, 'ids' => $ids],
+            null,
+            null,
+            $user,
+            $permission
+        );
         $this->count = \count($mediaEntities);
         foreach ($mediaEntities as $mediaEntity) {
             $media[\array_search($mediaEntity->getId(), $ids)] = $this->addFormatsAndUrl(

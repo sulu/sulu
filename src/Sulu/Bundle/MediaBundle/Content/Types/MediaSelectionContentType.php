@@ -20,7 +20,9 @@ use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeExportInterface;
 use Sulu\Component\Content\PreResolvableContentTypeInterface;
+use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Util\ArrayableInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * content type for image selection.
@@ -37,10 +39,26 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
      */
     private $referenceStore;
 
-    public function __construct(MediaManagerInterface $mediaManager, ReferenceStoreInterface $referenceStore)
-    {
+    /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
+
+    /**
+     * @var array
+     */
+    private $permissions;
+
+    public function __construct(
+        MediaManagerInterface $mediaManager,
+        ReferenceStoreInterface $referenceStore,
+        TokenStorageInterface $tokenStorage = null,
+        array $permissions = null
+    ) {
         $this->mediaManager = $mediaManager;
         $this->referenceStore = $referenceStore;
+        $this->tokenStorage = $tokenStorage;
+        $this->permissions = $permissions;
     }
 
     public function getDefaultParams(PropertyInterface $property = null)
@@ -120,7 +138,9 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
             isset($data['ids']) ? $data['ids'] : [],
             $property->getStructure()->getLanguageCode(),
             $types,
-            $this->mediaManager
+            $this->mediaManager,
+            $this->getUser(),
+            $this->permissions[PermissionTypes::VIEW]
         );
 
         return $container->getData();
@@ -167,5 +187,20 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
         foreach ($data['ids'] as $id) {
             $this->referenceStore->add($id);
         }
+    }
+
+    private function getUser()
+    {
+        if (!$this->tokenStorage) {
+            return null;
+        }
+
+        $user = $this->tokenStorage->getToken()->getUser();
+
+        if (\is_object($user)) {
+            return $user;
+        }
+
+        return null;
     }
 }

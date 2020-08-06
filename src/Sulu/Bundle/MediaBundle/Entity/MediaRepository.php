@@ -189,7 +189,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
 
         $queryBuilder->addOrderBy($orderBy, $orderSort);
 
-        if (null !== $user && null !== $permission) {
+        if (null !== $permission) {
             $this->accessControlQueryEnhancer->enhance($queryBuilder, $user, $permission, Collection::class, 'collection');
         }
 

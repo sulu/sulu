@@ -23,6 +23,7 @@ use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class SnippetTwigExtensionTest extends SuluTestCase
 {
@@ -92,6 +93,9 @@ class SnippetTwigExtensionTest extends SuluTestCase
             $this->requestAnalyzer,
             $this->structureResolver
         );
+
+        $user = $this->getContainer()->get('test_user_provider')->getUser();
+        $this->getContainer()->get('security.token_storage')->setToken(new UsernamePasswordToken($user, '', 'test'));
     }
 
     public function testLoadSnippetNotExists()

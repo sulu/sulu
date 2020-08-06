@@ -32,6 +32,7 @@ use Sulu\Component\Content\Query\ContentQueryExecutor;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Security\Authentication\RoleInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class NavigationMapperTest extends SuluTestCase
 {
@@ -127,6 +128,9 @@ class NavigationMapperTest extends SuluTestCase
             new NavigationQueryBuilder($this->structureManager, $this->extensionManager, $this->languageNamespace),
             $this->sessionManager
         );
+
+        $user = $this->getContainer()->get('test_user_provider')->getUser();
+        $this->getContainer()->get('security.token_storage')->setToken(new UsernamePasswordToken($user, '', 'test'));
     }
 
     /**
