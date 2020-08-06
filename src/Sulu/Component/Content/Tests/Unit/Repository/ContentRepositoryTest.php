@@ -189,7 +189,7 @@ class ContentRepositoryTest extends TestCase
         $this->nodeHelper->extractWebspaceFromPath('/cmf/sulu_io/contents')->willReturn('sulu_io');
 
         $node = $this->prophesize(NodeInterface::class);
-        $node->getProperties('sec:*')->willReturn([]);
+        $node->getProperties('sec:role-*')->willReturn([]);
         $row->getNode()->willReturn($node->reveal());
 
         $row->getValues()->willReturn(

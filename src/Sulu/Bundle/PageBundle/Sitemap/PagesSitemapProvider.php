@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\PageBundle\Sitemap;
 
+use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Bundle\WebsiteBundle\Sitemap\AbstractSitemapProvider;
 use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapAlternateLink;
 use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapUrl;
@@ -19,6 +20,7 @@ use Sulu\Component\Content\Repository\Content;
 use Sulu\Component\Content\Repository\ContentRepositoryInterface;
 use Sulu\Component\Content\Repository\Mapping\MappingBuilder;
 use Sulu\Component\Localization\Localization;
+use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\PortalInformation;
 
@@ -38,6 +40,11 @@ class PagesSitemapProvider extends AbstractSitemapProvider
     private $webspaceManager;
 
     /**
+     * @var AccessControlManagerInterface
+     */
+    private $accessControlManager;
+
+    /**
      * @var string
      */
     private $environment;
@@ -45,10 +52,12 @@ class PagesSitemapProvider extends AbstractSitemapProvider
     public function __construct(
         ContentRepositoryInterface $contentRepository,
         WebspaceManagerInterface $webspaceManager,
+        AccessControlManagerInterface $accessControlManager,
         string $environment
     ) {
         $this->contentRepository = $contentRepository;
         $this->webspaceManager = $webspaceManager;
+        $this->accessControlManager = $accessControlManager;
         $this->environment = $environment;
     }
 
@@ -82,6 +91,17 @@ class PagesSitemapProvider extends AbstractSitemapProvider
                     || true === $contentPage['seo-hideInSitemap']
                     || RedirectType::NONE !== $contentPage->getNodeType()
                 ) {
+                    continue;
+                }
+
+                $userPermissions = $this->accessControlManager->getUserPermissionByArray(
+                    $contentPage->getLocale(),
+                    PageAdmin::SECURITY_CONTEXT_PREFIX . $contentPage->getWebspaceKey(),
+                    $contentPage->getPermissions(),
+                    null
+                );
+
+                if (isset($userPermissions['view']) && !$userPermissions['view']) {
                     continue;
                 }
 

@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Tests\Functional\Controller;
 
+use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\TestBundle\Testing\WebsiteTestCase;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
@@ -24,7 +25,26 @@ class SitemapControllerTest extends WebsiteTestCase
     public function setUp(): void
     {
         $this->client = $this->createWebsiteClient();
+        $this->purgeDatabase();
         $this->initPhpcr();
+
+        $this->getContainer()->get('sulu_security.system_store')->setSystem('sulu_io');
+
+        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
+
+        $this->anonymousRole = $this->getContainer()->get('sulu.repository.role')->createNew();
+        $this->anonymousRole->setName('Anonymous');
+        $this->anonymousRole->setAnonymous(true);
+        $this->anonymousRole->setSystem('sulu_io');
+
+        $permission = new Permission();
+        $permission->setPermissions(122);
+        $permission->setRole($this->anonymousRole);
+        $permission->setContext('sulu.webspaces.sulu_io');
+
+        $em->persist($permission);
+        $em->persist($this->anonymousRole);
+        $em->flush();
     }
 
     public function testIndexSingleLanguage()

@@ -431,11 +431,6 @@ class ContentRepository implements ContentRepositoryInterface
     private function resolveResultPermissions(array $result, UserInterface $user = null)
     {
         $permissions = [];
-        if (null === $user) {
-            return $permissions;
-        }
-
-        // TODO recognize system automatically
         $systemRoleIds = $this->roleRepository->findRoleIdsBySystem($this->systemStore->getSystem());
 
         foreach ($result as $index => $row) {
