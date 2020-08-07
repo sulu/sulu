@@ -65,7 +65,7 @@ interface MediaManagerInterface
      *
      * @return Media[]
      */
-    public function getByIds(array $ids, $locale /* UserInterface $user = null, $permission = null */);
+    public function getByIds(array $ids, $locale /* UserInterface $user = null */);
 
     /**
      * Creates a new media or overrides an existing one.

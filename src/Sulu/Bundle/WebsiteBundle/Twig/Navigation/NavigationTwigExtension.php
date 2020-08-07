@@ -41,7 +41,7 @@ class NavigationTwigExtension extends AbstractExtension implements NavigationTwi
     private $requestAnalyzer;
 
     /**
-     * @var TokenStorageInterface
+     * @var ?TokenStorageInterface
      */
     private $tokenStorage;
 
@@ -212,7 +212,7 @@ class NavigationTwigExtension extends AbstractExtension implements NavigationTwi
 
         $user = $this->tokenStorage->getToken()->getUser();
 
-        if (\is_object($user)) {
+        if ($user instanceof UserInterface) {
             return $user;
         }
 

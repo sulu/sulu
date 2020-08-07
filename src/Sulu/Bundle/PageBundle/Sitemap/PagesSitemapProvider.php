@@ -40,25 +40,25 @@ class PagesSitemapProvider extends AbstractSitemapProvider
     private $webspaceManager;
 
     /**
-     * @var AccessControlManagerInterface
-     */
-    private $accessControlManager;
-
-    /**
      * @var string
      */
     private $environment;
 
+    /**
+     * @var ?AccessControlManagerInterface
+     */
+    private $accessControlManager;
+
     public function __construct(
         ContentRepositoryInterface $contentRepository,
         WebspaceManagerInterface $webspaceManager,
-        AccessControlManagerInterface $accessControlManager,
-        string $environment
+        string $environment,
+        AccessControlManagerInterface $accessControlManager = null
     ) {
         $this->contentRepository = $contentRepository;
         $this->webspaceManager = $webspaceManager;
-        $this->accessControlManager = $accessControlManager;
         $this->environment = $environment;
+        $this->accessControlManager = $accessControlManager;
     }
 
     public function build($page, $scheme, $host)
@@ -94,15 +94,17 @@ class PagesSitemapProvider extends AbstractSitemapProvider
                     continue;
                 }
 
-                $userPermissions = $this->accessControlManager->getUserPermissionByArray(
-                    $contentPage->getLocale(),
-                    PageAdmin::SECURITY_CONTEXT_PREFIX . $contentPage->getWebspaceKey(),
-                    $contentPage->getPermissions(),
-                    null
-                );
+                if ($this->accessControlManager) {
+                    $userPermissions = $this->accessControlManager->getUserPermissionByArray(
+                        $contentPage->getLocale(),
+                        PageAdmin::SECURITY_CONTEXT_PREFIX . $contentPage->getWebspaceKey(),
+                        $contentPage->getPermissions(),
+                        null
+                    );
 
-                if (isset($userPermissions['view']) && !$userPermissions['view']) {
-                    continue;
+                    if (isset($userPermissions['view']) && !$userPermissions['view']) {
+                        continue;
+                    }
                 }
 
                 $sitemapUrl = $this->generateSitemapUrl($contentPage, $portalInformation, $host, $scheme);

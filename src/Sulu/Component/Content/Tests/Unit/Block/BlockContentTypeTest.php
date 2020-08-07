@@ -83,13 +83,13 @@ class BlockContentTypeTest extends TestCase
         $this->contentTypeValueMap = [
             ['text_line', new TextLine('not in use')],
             ['text_area', new TextArea('not in use')],
-            ['internal_link', new SinglePageSelection(new ReferenceStore(), 'not in use')],
+            ['internal_link', new SinglePageSelection(new ReferenceStore())],
             ['block', $this->blockContentType],
         ];
 
         $this->contentTypeManager->get('text_line')->willReturn(new TextLine('not in use'));
         $this->contentTypeManager->get('text_area')->willReturn(new TextArea('not in use'));
-        $this->contentTypeManager->get('internal_link')->willReturn(new SinglePageSelection(new ReferenceStore(), 'not in use'));
+        $this->contentTypeManager->get('internal_link')->willReturn(new SinglePageSelection(new ReferenceStore()));
         $this->contentTypeManager->get('block')->willReturn($this->blockContentType);
     }
 

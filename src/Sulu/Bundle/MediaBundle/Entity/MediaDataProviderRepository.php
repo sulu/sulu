@@ -51,7 +51,7 @@ class MediaDataProviderRepository implements DataProviderRepositoryInterface
     private $collectionEntityName;
 
     /**
-     * @var AccessControlQueryEnhancer
+     * @var ?AccessControlQueryEnhancer
      */
     private $accessControlQueryEnhancer;
 
@@ -60,7 +60,7 @@ class MediaDataProviderRepository implements DataProviderRepositoryInterface
         MediaManagerInterface $mediaManager,
         $mediaEntityName,
         $collectionEntityName,
-        AccessControlQueryEnhancer $accessControlQueryEnhancer
+        AccessControlQueryEnhancer $accessControlQueryEnhancer = null
     ) {
         $this->entityManager = $entityManager;
         $this->mediaEntityName = $mediaEntityName;

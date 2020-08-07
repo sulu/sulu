@@ -91,8 +91,8 @@ class PagesSitemapProviderTest extends TestCase
         $this->sitemapProvider = new PagesSitemapProvider(
             $this->contentRepository->reveal(),
             $this->webspaceManager->reveal(),
-            $this->accessControlManager->reveal(),
-            'test'
+            'test',
+            $this->accessControlManager->reveal()
         );
     }
 

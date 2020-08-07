@@ -275,7 +275,6 @@
             <argument type="service" id="sulu_media.media_manager"/>
             <argument type="service" id="sulu_media.reference_store.media"/>
             <argument type="service" id="security.token_storage" on-invalid="null"/>
-            <argument>%sulu_security.permissions%</argument>
 
             <tag name="sulu.content.type" alias="media_selection"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />

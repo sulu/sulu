@@ -388,7 +388,7 @@ class MediaSelectionContentTypeTest extends TestCase
         $token->getUser()->willReturn($user->reveal());
         $this->tokenStorage->getToken()->willReturn($token->reveal());
 
-        $this->mediaManager->getByIds([1, 2, 3], null, $user->reveal(), 64)->shouldBeCalled();
+        $this->mediaManager->getByIds([1, 2, 3], null, $user->reveal())->shouldBeCalled();
 
         $result = $this->mediaSelection->getContentData($property->reveal());
     }

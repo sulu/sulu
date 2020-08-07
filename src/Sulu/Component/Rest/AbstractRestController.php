@@ -13,6 +13,7 @@ namespace Sulu\Component\Rest;
 
 use FOS\RestBundle\Controller\ControllerTrait;
 use FOS\RestBundle\View\ViewHandlerInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -49,7 +50,7 @@ abstract class AbstractRestController
         }
 
         $user = $token->getUser();
-        if (!\is_object($user)) {
+        if (!($user instanceof UserInterface)) {
             // e.g. anonymous authentication
             return null;
         }

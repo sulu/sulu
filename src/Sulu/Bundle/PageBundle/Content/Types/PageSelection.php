@@ -193,7 +193,7 @@ class PageSelection extends ComplexContentType implements ContentTypeExportInter
 
         $user = $this->tokenStorage->getToken()->getUser();
 
-        if (\is_object($user)) {
+        if ($user instanceof UserInterface) {
             return $user;
         }
 

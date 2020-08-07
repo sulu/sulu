@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\PersistenceBundle\DependencyInjection;
 
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
@@ -84,7 +85,10 @@ trait PersistenceExtensionTrait
         ]);
 
         $repositoryReflectionClass = new \ReflectionClass($repositoryClass);
-        if ($repositoryReflectionClass->hasMethod('setAccessControlQueryEnhancer')) {
+        if (
+            $repositoryReflectionClass->hasMethod('setAccessControlQueryEnhancer')
+            && !$repositoryReflectionClass->implementsInterface(ServiceEntityRepositoryInterface::class)
+        ) {
             $definition->addMethodCall(
                 'setAccessControlQueryEnhancer',
                 [new Reference('sulu_security.access_control_query_enhancer')]

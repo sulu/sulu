@@ -85,7 +85,7 @@ class AccessControlManager implements AccessControlManagerInterface
 
     public function getUserPermissions(SecurityCondition $securityCondition, $user)
     {
-        if (!\is_object($user)) {
+        if (!($user instanceof UserInterface)) {
             $user = null;
         }
 
@@ -279,7 +279,7 @@ class AccessControlManager implements AccessControlManagerInterface
 
     private function getRolesForLocale(?UserInterface $user, ?string $locale)
     {
-        if (!\is_object($user)) {
+        if (!($user instanceof UserInterface)) {
             $anonymousRole = $this->systemStore->getAnonymousRole();
 
             return $anonymousRole ? [$anonymousRole] : [];

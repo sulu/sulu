@@ -86,8 +86,7 @@ class MediaSelectionContainer implements ArrayableInterface
         $locale,
         $types,
         $mediaManager,
-        UserInterface $user = null,
-        $permission = null
+        UserInterface $user = null
     ) {
         $this->config = $config;
         $this->displayOption = $displayOption;
@@ -96,7 +95,6 @@ class MediaSelectionContainer implements ArrayableInterface
         $this->types = $types;
         $this->mediaManager = $mediaManager;
         $this->user = $user;
-        $this->permission = $permission;
     }
 
     /**
@@ -121,7 +119,7 @@ class MediaSelectionContainer implements ArrayableInterface
     private function loadData($locale)
     {
         if (!empty($this->ids)) {
-            return $this->mediaManager->getByIds($this->ids, $locale, $this->user, $this->permission);
+            return $this->mediaManager->getByIds($this->ids, $locale, $this->user);
         } else {
             return [];
         }

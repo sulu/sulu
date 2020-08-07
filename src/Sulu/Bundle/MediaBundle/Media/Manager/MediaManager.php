@@ -212,7 +212,7 @@ class MediaManager implements MediaManagerInterface
         return $mediaEntity;
     }
 
-    public function getByIds(array $ids, $locale, UserInterface $user = null, $permission = null)
+    public function getByIds(array $ids, $locale, UserInterface $user = null)
     {
         $media = [];
         $mediaEntities = $this->mediaRepository->findMedia(
@@ -220,7 +220,7 @@ class MediaManager implements MediaManagerInterface
             null,
             null,
             $user,
-            $permission
+            $this->permissions[PermissionTypes::VIEW]
         );
         $this->count = \count($mediaEntities);
         foreach ($mediaEntities as $mediaEntity) {

@@ -20,6 +20,7 @@ use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeExportInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\SmartContent\Exception\PageOutOfBoundsException;
 use Sulu\Component\Tag\Request\TagRequestHandlerInterface;
 use Sulu\Component\Util\ArrayableInterface;
@@ -455,7 +456,7 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
         }
     }
 
-    private function getUser()
+    private function getUser(): ?UserInterface
     {
         if (!$this->tokenStorage) {
             return null;
@@ -463,7 +464,7 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
 
         $user = $this->tokenStorage->getToken()->getUser();
 
-        if (\is_object($user)) {
+        if ($user instanceof UserInterface) {
             return $user;
         }
 

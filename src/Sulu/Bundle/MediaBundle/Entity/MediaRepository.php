@@ -29,7 +29,7 @@ use Sulu\Component\Security\Authentication\UserInterface;
 class MediaRepository extends EntityRepository implements MediaRepositoryInterface
 {
     /**
-     * @var AccessControlQueryEnhancer
+     * @var ?AccessControlQueryEnhancer
      */
     private $accessControlQueryEnhancer;
 
@@ -189,7 +189,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
 
         $queryBuilder->addOrderBy($orderBy, $orderSort);
 
-        if (null !== $permission) {
+        if (null !== $permission && $this->accessControlQueryEnhancer) {
             $this->accessControlQueryEnhancer->enhance($queryBuilder, $user, $permission, Collection::class, 'collection');
         }
 

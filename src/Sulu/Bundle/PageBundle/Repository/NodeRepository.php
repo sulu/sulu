@@ -729,7 +729,7 @@ class NodeRepository implements NodeRepositoryInterface
 
         $user = $this->tokenStorage->getToken()->getUser();
 
-        if (\is_object($user)) {
+        if ($user instanceof UserInterface) {
             return $user;
         }
 

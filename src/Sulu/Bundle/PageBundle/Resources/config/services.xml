@@ -196,8 +196,8 @@
                  class="Sulu\Bundle\PageBundle\Sitemap\PagesSitemapProvider">
             <argument type="service" id="sulu_page.content_repository"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
-            <argument type="service" id="sulu_security.access_control_manager"/>
             <argument>%kernel.environment%</argument>
+            <argument type="service" id="sulu_security.access_control_manager"/>
 
             <tag name="sulu.sitemap.provider"/>
         </service>
