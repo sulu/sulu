@@ -100,7 +100,7 @@ class FormatCacheRegenerateCommand extends Command
 
     private function getFileInformationArrayFromPath($path): array
     {
-        $pathParts = \explode('/', $path);
+        $pathParts = \explode(\DIRECTORY_SEPARATOR, $path);
         $formatKey = \reset($pathParts);
         $filenameParts = \explode('-', \end($pathParts), 2);
         $id = (int) $filenameParts[0];
