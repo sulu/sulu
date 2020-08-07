@@ -14,6 +14,7 @@ namespace Sulu\Bundle\SecurityBundle\Command;
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
+use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
 use Symfony\Component\Console\Command\Command;
@@ -95,6 +96,27 @@ final class InitCommand extends Command
             $role->setName('Anonymous User ' . $system);
             $role->setAnonymous(true);
             $role->setSystem($system);
+
+            $securityContexts = $this->adminPool->getSecurityContexts();
+            $securityContextsFlat = [];
+            foreach ($securityContexts[$system] as $section => $contexts) {
+                foreach ($contexts as $context => $permissionTypes) {
+                    if (\is_array($permissionTypes)) {
+                        $securityContextsFlat[] = $context;
+                    } else {
+                        // FIXME here for BC reasons, because the array used to only contain values without permission types
+                        $securityContextsFlat[] = $permissionTypes;
+                    }
+                }
+            }
+
+            foreach ($securityContextsFlat as $securityContext) {
+                $permission = new Permission();
+                $permission->setRole($role);
+                $permission->setContext($securityContext);
+                $permission->setPermissions(127);
+                $role->addPermission($permission);
+            }
 
             $ui->text(\sprintf('[+] Create anonymous role in system "%s" as "%s".', $system, $role->getName()));
 

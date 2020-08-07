@@ -298,6 +298,29 @@ class PageAdmin extends Admin
 
     public function getSecurityContexts()
     {
+        $webspaceSecuritySystemContexts = [];
+
+        /** @var Webspace $webspace */
+        foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
+            $security = $webspace->getSecurity();
+            if (!$security) {
+                continue;
+            }
+
+            $system = $security->getSystem();
+            if (!$system) {
+                continue;
+            }
+
+            $webspaceSecuritySystemContexts[$system] = [
+                static::SECURITY_CONTEXT_GROUP => [
+                    static::SECURITY_CONTEXT_PREFIX . $webspace->getKey() => [
+                        PermissionTypes::VIEW,
+                    ],
+                ],
+            ];
+        }
+
         $webspaceContexts = [];
         foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
             /* @var Webspace $webspace */
@@ -317,32 +340,11 @@ class PageAdmin extends Admin
                     'Webspaces' => $webspaceContexts,
                 ],
             ],
-            $this->getWebspaceSecuritySystemContexts()
+            $webspaceSecuritySystemContexts
         );
     }
 
     public function getSecurityContextsWithPlaceholder()
-    {
-        return \array_merge(
-            [
-                static::SULU_ADMIN_SECURITY_SYSTEM => [
-                    static::SECURITY_CONTEXT_GROUP => [
-                        static::SECURITY_CONTEXT_PREFIX . '#webspace#' => [
-                            PermissionTypes::VIEW,
-                            PermissionTypes::ADD,
-                            PermissionTypes::EDIT,
-                            PermissionTypes::DELETE,
-                            PermissionTypes::LIVE,
-                            PermissionTypes::SECURITY,
-                        ],
-                    ],
-                ],
-            ],
-            $this->getWebspaceSecuritySystemContexts()
-        );
-    }
-
-    private function getWebspaceSecuritySystemContexts(): array
     {
         $webspaceSecuritySystemContexts = [];
 
@@ -367,7 +369,23 @@ class PageAdmin extends Admin
             ];
         }
 
-        return $webspaceSecuritySystemContexts;
+        return \array_merge(
+            [
+                static::SULU_ADMIN_SECURITY_SYSTEM => [
+                    static::SECURITY_CONTEXT_GROUP => [
+                        static::SECURITY_CONTEXT_PREFIX . '#webspace#' => [
+                            PermissionTypes::VIEW,
+                            PermissionTypes::ADD,
+                            PermissionTypes::EDIT,
+                            PermissionTypes::DELETE,
+                            PermissionTypes::LIVE,
+                            PermissionTypes::SECURITY,
+                        ],
+                    ],
+                ],
+            ],
+            $webspaceSecuritySystemContexts
+        );
     }
 
     public function getConfigKey(): ?string
