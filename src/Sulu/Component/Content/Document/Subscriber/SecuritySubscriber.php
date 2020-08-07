@@ -11,8 +11,11 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
+use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
+use PHPCR\SessionInterface;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
+use Sulu\Component\DocumentManager\Behavior\Mapping\PathBehavior;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Events;
@@ -30,9 +33,15 @@ class SecuritySubscriber implements EventSubscriberInterface
      */
     private $permissions;
 
-    public function __construct(array $permissions)
+    /**
+     * @var SessionInterface
+     */
+    private $liveSession;
+
+    public function __construct(array $permissions, SessionInterface $liveSession)
     {
         $this->permissions = $permissions;
+        $this->liveSession = $liveSession;
     }
 
     public static function getSubscribedEvents()
@@ -68,22 +77,31 @@ class SecuritySubscriber implements EventSubscriberInterface
         }
 
         $node = $event->getNode();
+        $liveNode = $this->getLiveNode($document);
 
         $permissions = $document->getPermissions();
 
         $existingRoleIds = \array_keys($permissions);
         foreach ($node->getProperties(static::SECURITY_PROPERTY_PREFIX . '*') as $roleSecurityProperty) {
-            $propertyRoleId = \str_replace(static::SECURITY_PROPERTY_PREFIX, '', $roleSecurityProperty->getName());
+            $propertyName = $roleSecurityProperty->getName();
+            $propertyRoleId = \str_replace(static::SECURITY_PROPERTY_PREFIX, '', $propertyName);
             if (\in_array(\intval($propertyRoleId), $existingRoleIds)) {
                 continue;
             }
 
             $roleSecurityProperty->remove();
+            if ($liveNode && $liveNode->hasProperty($propertyName)) {
+                $liveNode->getProperty($propertyName)->remove();
+            }
         }
 
         foreach ($permissions as $roleId => $permission) {
+            $allowedPermissions = $this->getAllowedPermissions($permission);
             // TODO use PropertyEncoder, once it is refactored
-            $node->setProperty(static::SECURITY_PROPERTY_PREFIX . $roleId, $this->getAllowedPermissions($permission));
+            $node->setProperty(static::SECURITY_PROPERTY_PREFIX . $roleId, $allowedPermissions);
+            if ($liveNode) {
+                $liveNode->setProperty(static::SECURITY_PROPERTY_PREFIX . $roleId, $allowedPermissions);
+            }
         }
     }
 
@@ -131,5 +149,19 @@ class SecuritySubscriber implements EventSubscriberInterface
         }
 
         return $allowedPermissions;
+    }
+
+    /**
+     * Returns the live node for given document.
+     */
+    private function getLiveNode(PathBehavior $document): ?NodeInterface
+    {
+        $path = $document->getPath();
+
+        if (!$path) {
+            return null;
+        }
+
+        return $this->liveSession->getNode($path);
     }
 }

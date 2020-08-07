@@ -96,6 +96,7 @@
         <service id="sulu_document_manager.document.subscriber.security"
                  class="Sulu\Component\Content\Document\Subscriber\SecuritySubscriber">
             <argument>%sulu_security.permissions%</argument>
+            <argument type="service" id="sulu_document_manager.live_session"/>
             <tag name="sulu_document_manager.event_subscriber" />
         </service>
 
