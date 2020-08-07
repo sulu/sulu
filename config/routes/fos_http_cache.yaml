@@ -1,0 +1,4 @@
+# activate the following for user context based caching
+# see https://foshttpcachebundle.readthedocs.io/en/latest/features/user-context.html
+#user_context_hash:
+#    path: /_fos_user_context_hash
