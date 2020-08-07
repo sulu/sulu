@@ -10,3 +10,12 @@ sulu_search:
 
 sulu_website:
     resource: "@SuluWebsiteBundle/Resources/config/routing_website.yml"
+
+login:
+    path: /login
+    controller:   Symfony\Bundle\FrameworkBundle\Controller\TemplateController
+    defaults:
+        template: static/login.html.twig
+
+logout:
+    path: /logout
