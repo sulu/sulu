@@ -22,6 +22,9 @@ use Sulu\Component\Content\Exception\ResourceLocatorMovedException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPoolInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
+use Sulu\Component\Security\Authorization\PermissionTypes;
+use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
+use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
@@ -65,13 +68,19 @@ class ContentRouteProvider implements RouteProviderInterface
      */
     private $requestAnalyzer;
 
+    /**
+     * @var SecurityCheckerInterface|null
+     */
+    private $securityChecker;
+
     public function __construct(
         DocumentManagerInterface $documentManager,
         DocumentInspector $documentInspector,
         ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool,
         StructureManagerInterface $structureManager,
         WebspaceManagerInterface $webspaceManager,
-        RequestAnalyzerInterface $requestAnalyzer
+        RequestAnalyzerInterface $requestAnalyzer,
+        SecurityCheckerInterface $securityChecker = null
     ) {
         $this->documentManager = $documentManager;
         $this->documentInspector = $documentInspector;
@@ -79,6 +88,7 @@ class ContentRouteProvider implements RouteProviderInterface
         $this->structureManager = $structureManager;
         $this->webspaceManager = $webspaceManager;
         $this->requestAnalyzer = $requestAnalyzer;
+        $this->securityChecker = $securityChecker;
     }
 
     public function getRouteCollectionForRequest(Request $request)
@@ -145,6 +155,18 @@ class ContentRouteProvider implements RouteProviderInterface
                 // If the title is empty the document does not exist in this locale
                 // Necessary because of https://github.com/sulu/sulu/issues/2724, otherwise locale could be checked
                 return $collection;
+            }
+
+            if ($this->securityChecker) {
+                $this->securityChecker->checkPermission(
+                    new SecurityCondition(
+                        'sulu.webspaces.' . $document->getWebspaceName(),
+                        $document->getLocale(),
+                        \get_class($document),
+                        $document->getUuid()
+                    ),
+                    PermissionTypes::VIEW
+                );
             }
 
             if (\preg_match('/\/$/', $resourceLocator) && ('/' !== $resourceLocator || $prefix)) {
