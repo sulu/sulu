@@ -182,7 +182,7 @@ class PageAdminTest extends TestCase
                 ],
                 'webspace-security-system-2' => [
                     'Webspaces' => [
-                        'sulu.webspaces.#webspace#' => ['view'],
+                        'sulu.webspaces.webspace-key-2' => ['view'],
                     ],
                 ],
             ],
