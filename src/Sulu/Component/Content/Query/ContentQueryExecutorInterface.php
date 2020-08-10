@@ -11,8 +11,6 @@
 
 namespace Sulu\Component\Content\Query;
 
-use Sulu\Component\Security\Authentication\UserInterface;
-
 /**
  * Interface for content query.
  */

@@ -15,7 +15,6 @@ use JMS\Serializer\Annotation\Exclude;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
-use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Util\ArrayableInterface;
 
 /**

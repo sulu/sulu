@@ -235,7 +235,6 @@
             <argument type="service" id="security.token_storage" on-invalid="null" />
             <argument type="service" id="sulu_security.security_checker" on-invalid="null" />
             <argument type="service" id="sulu_media.ffprobe" on-invalid="null" />
-            <argument>%sulu_security.permissions%</argument>
             <argument type="string">%sulu_media.media_manager.media_download_path%</argument>
             <argument>%sulu_media.media.max_file_size%</argument>
             <argument type="service" id="sulu.repository.target_group" on-invalid="null"/>
@@ -276,6 +275,7 @@
             <argument type="service" id="sulu_media.media_manager"/>
             <argument type="service" id="sulu_media.reference_store.media"/>
             <argument type="service" id="security.token_storage" on-invalid="null"/>
+            <argument>%sulu_security.permissions%</argument>
 
             <tag name="sulu.content.type" alias="media_selection"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
@@ -338,6 +338,7 @@
             <argument type="service" id="sulu_core.array_serializer"/>
             <argument type="service" id="request_stack"/>
             <argument type="service" id="sulu_media.reference_store.media"/>
+            <argument type="service" id="security.token_storage" on-invalid="null"/>
 
             <tag name="sulu.smart_content.data_provider" alias="media"/>
         </service>

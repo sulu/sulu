@@ -20,13 +20,11 @@ use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeExportInterface;
-use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\SmartContent\Exception\PageOutOfBoundsException;
 use Sulu\Component\Tag\Request\TagRequestHandlerInterface;
 use Sulu\Component\Util\ArrayableInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Content type for smart selection.
@@ -85,11 +83,6 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
      */
     private $requestAnalyzer;
 
-    /**
-     * @var TokenStorageInterface|null
-     */
-    private $tokenStorage;
-
     public function __construct(
         DataProviderPoolInterface $dataProviderPool,
         TagManagerInterface $tagManager,
@@ -99,8 +92,7 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
         ReferenceStoreInterface $tagReferenceStore,
         ReferenceStoreInterface $categoryReferenceStore,
         TargetGroupStoreInterface $targetGroupStore = null,
-        RequestAnalyzerInterface $requestAnalyzer,
-        TokenStorageInterface $tokenStorage = null
+        RequestAnalyzerInterface $requestAnalyzer
     ) {
         $this->dataProviderPool = $dataProviderPool;
         $this->tagManager = $tagManager;
@@ -111,7 +103,6 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
         $this->categoryReferenceStore = $categoryReferenceStore;
         $this->targetGroupStore = $targetGroupStore;
         $this->requestAnalyzer = $requestAnalyzer;
-        $this->tokenStorage = $tokenStorage;
     }
 
     public function read(
@@ -300,8 +291,7 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
                 $options,
                 (!empty($limit) ? \intval($limit) : null),
                 $page,
-                $pageSize,
-                $this->getUser()
+                $pageSize
             );
 
             if ($page > 1 && 0 === \count($data->getItems())) {
@@ -313,9 +303,7 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
                 $params,
                 $options,
                 (!empty($limit) ? \intval($limit) : null),
-                1,
-                null,
-                $this->getUser()
+                1
             );
         }
 
@@ -454,20 +442,5 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
 
             $value[$key] = $ids;
         }
-    }
-
-    private function getUser(): ?UserInterface
-    {
-        if (!$this->tokenStorage) {
-            return null;
-        }
-
-        $user = $this->tokenStorage->getToken()->getUser();
-
-        if ($user instanceof UserInterface) {
-            return $user;
-        }
-
-        return null;
     }
 }

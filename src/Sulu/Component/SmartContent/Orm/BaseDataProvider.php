@@ -24,6 +24,7 @@ use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
 use Sulu\Component\SmartContent\DataProviderInterface;
 use Sulu\Component\SmartContent\DataProviderResult;
 use Sulu\Component\SmartContent\ItemInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Provides basic functionality for contact and account providers.
@@ -60,14 +61,21 @@ abstract class BaseDataProvider implements DataProviderInterface
      */
     private $referenceStore;
 
+    /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
+
     public function __construct(
         DataProviderRepositoryInterface $repository,
         ArraySerializerInterface $serializer,
-        ReferenceStoreInterface $referenceStore = null
+        ReferenceStoreInterface $referenceStore = null,
+        TokenStorageInterface $tokenStorage = null
     ) {
         $this->repository = $repository;
         $this->serializer = $serializer;
         $this->referenceStore = $referenceStore;
+        $this->tokenStorage = $tokenStorage;
     }
 
     public function getDefaultPropertyParameter()
@@ -111,8 +119,7 @@ abstract class BaseDataProvider implements DataProviderInterface
         array $options = [],
         $limit = null,
         $page = 1,
-        $pageSize = null,
-        UserInterface $user = null
+        $pageSize = null
     ) {
         list($result, $hasNextPage) = $this->resolveFilters(
             $filters,
@@ -120,8 +127,7 @@ abstract class BaseDataProvider implements DataProviderInterface
             $limit,
             $page,
             $pageSize,
-            $this->getOptions($propertyParameter, $options),
-            $user
+            $this->getOptions($propertyParameter, $options)
         );
 
         return new DataProviderResult($this->decorateResourceItems($result, $options['locale']), $hasNextPage);
@@ -136,10 +142,17 @@ abstract class BaseDataProvider implements DataProviderInterface
         $limit = null,
         $page = 1,
         $pageSize = null,
-        $options = [],
-        UserInterface $user = null
+        $options = []
     ) {
-        $result = $this->repository->findByFilters($filters, $page, $pageSize, $limit, $locale, $options, $user);
+        $result = $this->repository->findByFilters(
+            $filters,
+            $page,
+            $pageSize,
+            $limit,
+            $locale,
+            $options,
+            $this->getUser()
+        );
 
         $hasNextPage = false;
         if (null !== $pageSize && \count($result) > $pageSize) {
@@ -236,4 +249,19 @@ abstract class BaseDataProvider implements DataProviderInterface
      * @return ItemInterface[]
      */
     abstract protected function decorateDataItems(array $data);
+
+    private function getUser(): ?UserInterface
+    {
+        if (!$this->tokenStorage) {
+            return null;
+        }
+
+        $user = $this->tokenStorage->getToken()->getUser();
+
+        if ($user instanceof UserInterface) {
+            return $user;
+        }
+
+        return null;
+    }
 }

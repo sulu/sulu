@@ -13,7 +13,6 @@ namespace Sulu\Bundle\WebsiteBundle\Tests\Functional\Navigation;
 
 use PHPCR\NodeInterface;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
-use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\WebsiteBundle\Navigation\NavigationMapper;

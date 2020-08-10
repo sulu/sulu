@@ -29,6 +29,8 @@ use Sulu\Component\SmartContent\DataProviderResult;
 use Sulu\Component\SmartContent\DatasourceItem;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class MediaDataProviderTest extends TestCase
 {
@@ -181,6 +183,12 @@ class MediaDataProviderTest extends TestCase
         $collectionManager = $this->prophesize(CollectionManagerInterface::class);
         $requestStack = $this->prophesize(RequestStack::class);
         $referenceStore = $this->prophesize(ReferenceStoreInterface::class);
+        $tokenStorage = $this->prophesize(TokenStorageInterface::class);
+
+        $token = $this->prophesize(TokenInterface::class);
+        $token->getUser()->willReturn($user);
+        $tokenStorage->getToken()->willReturn($token->reveal());
+
         $provider = new MediaDataProvider(
             $this->getRepository(
                 $filters,
@@ -194,7 +202,8 @@ class MediaDataProviderTest extends TestCase
             $collectionManager->reveal(),
             $serializer->reveal(),
             $requestStack->reveal(),
-            $referenceStore->reveal()
+            $referenceStore->reveal(),
+            $tokenStorage->reveal()
         );
 
         $result = $provider->resolveResourceItems(

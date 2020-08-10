@@ -31,7 +31,6 @@ interface CollectionManagerInterface
      * @param bool $breadcrumb if true breadcrumb will be appended
      * @param array $filter array of criteria
      * @param array $sortBy fields to sort by
-     * @param int $permission
      *
      * @return Collection
      */
@@ -89,7 +88,6 @@ interface CollectionManagerInterface
      * @param int $depth maximum depth for query
      * @param array $sortBy
      * @param bool $systemCollections Whether or not system collectino should be included in the result
-     * @param int $permission
      *
      * @return \Sulu\Bundle\MediaBundle\Api\Collection[]
      */

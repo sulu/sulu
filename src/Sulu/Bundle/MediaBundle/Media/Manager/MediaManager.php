@@ -131,11 +131,6 @@ class MediaManager implements MediaManagerInterface
     private $pathCleaner;
 
     /**
-     * @var array
-     */
-    private $permissions;
-
-    /**
      * @var string
      */
     private $downloadPath;
@@ -151,7 +146,6 @@ class MediaManager implements MediaManagerInterface
     public $count;
 
     /**
-     * @param array $permissions
      * @param string $downloadPath
      * @param string $maxFileSize
      */
@@ -170,7 +164,6 @@ class MediaManager implements MediaManagerInterface
         TokenStorageInterface $tokenStorage = null,
         SecurityCheckerInterface $securityChecker = null,
         FFProbe $ffprobe = null,
-        $permissions,
         $downloadPath,
         $maxFileSize,
         TargetGroupRepositoryInterface $targetGroupRepository = null
@@ -190,7 +183,6 @@ class MediaManager implements MediaManagerInterface
         $this->tokenStorage = $tokenStorage;
         $this->securityChecker = $securityChecker;
         $this->ffprobe = $ffprobe;
-        $this->permissions = $permissions;
         $this->downloadPath = $downloadPath;
         $this->maxFileSize = $maxFileSize;
     }
@@ -212,15 +204,15 @@ class MediaManager implements MediaManagerInterface
         return $mediaEntity;
     }
 
-    public function getByIds(array $ids, $locale, UserInterface $user = null)
+    public function getByIds(array $ids, $locale, $permission = null)
     {
         $media = [];
         $mediaEntities = $this->mediaRepository->findMedia(
             ['pagination' => false, 'ids' => $ids],
             null,
             null,
-            $user,
-            $this->permissions[PermissionTypes::VIEW]
+            $this->getCurrentUser(),
+            $permission
         );
         $this->count = \count($mediaEntities);
         foreach ($mediaEntities as $mediaEntity) {
@@ -234,7 +226,7 @@ class MediaManager implements MediaManagerInterface
         return \array_values($media);
     }
 
-    public function get($locale, $filter = [], $limit = null, $offset = null)
+    public function get($locale, $filter = [], $limit = null, $offset = null, $permission = null)
     {
         $media = [];
         $mediaEntities = $this->mediaRepository->findMedia(
@@ -242,7 +234,7 @@ class MediaManager implements MediaManagerInterface
             $limit,
             $offset,
             $this->getCurrentUser(),
-            $this->permissions[PermissionTypes::VIEW]
+            $permission
         );
         $this->count = $this->mediaRepository->count($filter);
 

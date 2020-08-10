@@ -21,7 +21,6 @@ use Sulu\Component\Category\Request\CategoryRequestHandlerInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Compat\StructureInterface;
-use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\SmartContent\Configuration\ProviderConfiguration;
 use Sulu\Component\SmartContent\ContentType as SmartContent;
 use Sulu\Component\SmartContent\DataProviderInterface;
@@ -34,8 +33,6 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Segment;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
  * @group unit
@@ -97,11 +94,6 @@ class ContentTypeTest extends TestCase
      */
     private $requestAnalyzer;
 
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
-
     public function setUp(): void
     {
         $this->pageDataProvider = $this->prophesize(DataProviderInterface::class);
@@ -158,7 +150,6 @@ class ContentTypeTest extends TestCase
         $this->tagReferenceStore = $this->prophesize(ReferenceStoreInterface::class);
 
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
-        $this->tokenStorage = $this->prophesize(TokenStorageInterface::class);
     }
 
     private function getProviderConfiguration()
@@ -993,91 +984,6 @@ class ContentTypeTest extends TestCase
         $property->setValue(Argument::that(function($value) {
             return 1 === $value['targetGroupId'];
         }))->shouldBeCalled();
-
-        $smartContent->getContentData($property->reveal());
-    }
-
-    public function testGetContentDataWithUser()
-    {
-        $smartContent = new SmartContent(
-            $this->dataProviderPool,
-            $this->tagManager,
-            $this->requestStack,
-            $this->tagRequestHandler->reveal(),
-            $this->categoryRequestHandler->reveal(),
-            $this->categoryReferenceStore->reveal(),
-            $this->tagReferenceStore->reveal(),
-            $this->targetGroupStore->reveal(),
-            $this->requestAnalyzer->reveal(),
-            $this->tokenStorage->reveal()
-        );
-
-        $property = $this->prophesize(PropertyInterface::class);
-        $property->getParams()->willReturn([
-            'provider' => new PropertyParameter('provider', 'pages'),
-        ]);
-        $property->getValue()->willReturn([]);
-        $property->setValue(Argument::any())->shouldBeCalled();
-
-        $structure = $this->prophesize(StructureInterface::class);
-        $property->getStructure()->willReturn($structure->reveal());
-
-        $token = $this->prophesize(TokenInterface::class);
-        $user = $this->prophesize(UserInterface::class);
-        $token->getUser()->willReturn($user->reveal());
-        $this->tokenStorage->getToken()->willReturn($token->reveal());
-
-        $this->pageDataProvider->resolveResourceItems(
-            Argument::any(),
-            Argument::any(),
-            Argument::any(),
-            Argument::any(),
-            Argument::any(),
-            Argument::any(),
-            $user->reveal()
-        )->willReturn(new DataProviderResult([], false));
-
-        $smartContent->getContentData($property->reveal());
-    }
-
-    public function testGetContentDataWithAnonymousUser()
-    {
-        $smartContent = new SmartContent(
-            $this->dataProviderPool,
-            $this->tagManager,
-            $this->requestStack,
-            $this->tagRequestHandler->reveal(),
-            $this->categoryRequestHandler->reveal(),
-            $this->categoryReferenceStore->reveal(),
-            $this->tagReferenceStore->reveal(),
-            $this->targetGroupStore->reveal(),
-            $this->requestAnalyzer->reveal(),
-            $this->tokenStorage->reveal()
-        );
-
-        $property = $this->prophesize(PropertyInterface::class);
-        $property->getParams()->willReturn([
-            'provider' => new PropertyParameter('provider', 'pages'),
-        ]);
-        $property->getValue()->willReturn([]);
-        $property->setValue(Argument::any())->shouldBeCalled();
-
-        $structure = $this->prophesize(StructureInterface::class);
-        $property->getStructure()->willReturn($structure->reveal());
-
-        $token = $this->prophesize(TokenInterface::class);
-        $token->getUser()->willReturn('anon.');
-        $this->tokenStorage->getToken()->willReturn($token->reveal());
-
-        $this->pageDataProvider->resolveResourceItems(
-            Argument::any(),
-            Argument::any(),
-            Argument::any(),
-            Argument::any(),
-            Argument::any(),
-            Argument::any(),
-            null
-        )->willReturn(new DataProviderResult([], false));
 
         $smartContent->getContentData($property->reveal());
     }

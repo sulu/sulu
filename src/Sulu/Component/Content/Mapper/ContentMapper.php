@@ -690,7 +690,7 @@ class ContentMapper implements ContentMapperInterface
         }
 
         if ($document instanceof SecurityBehavior && $permission) {
-            $permissionKey = array_search($permission, $this->permissions);
+            $permissionKey = \array_search($permission, $this->permissions);
             $permissions = $this->accessControlManager->getUserPermissionByArray(
                 $document->getLocale(),
                 PageAdmin::SECURITY_CONTEXT_PREFIX . $document->getWebspaceName(),

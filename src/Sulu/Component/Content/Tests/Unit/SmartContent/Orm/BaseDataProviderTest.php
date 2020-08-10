@@ -22,6 +22,8 @@ use Sulu\Component\SmartContent\DataProviderResult;
 use Sulu\Component\SmartContent\Orm\BaseDataProvider;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 use Sulu\Component\SmartContent\ResourceItemInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class BaseDataProviderTest extends TestCase
 {
@@ -344,10 +346,15 @@ class BaseDataProviderTest extends TestCase
 
         $serializer = $this->prophesize(ArraySerializerInterface::class);
 
+        $tokenStorage = $this->prophesize(TokenStorageInterface::class);
+        $token = $this->prophesize(TokenInterface::class);
+        $token->getUser()->willReturn($user->reveal());
+        $tokenStorage->getToken()->willReturn($token->reveal());
+
         /** @var BaseDataProvider $provider */
         $provider = $this->getMockForAbstractClass(
             BaseDataProvider::class,
-            [$repository->reveal(), $serializer->reveal()]
+            [$repository->reveal(), $serializer->reveal(), null, $tokenStorage->reveal()]
         );
 
         $result = $provider->resolveResourceItems(
@@ -356,8 +363,7 @@ class BaseDataProviderTest extends TestCase
             ['locale' => 'en', 'webspace' => 'sulu_io'],
             -1,
             1,
-            null,
-            $user->reveal()
+            null
         );
     }
 

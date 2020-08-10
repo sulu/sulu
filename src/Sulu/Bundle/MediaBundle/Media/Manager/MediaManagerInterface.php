@@ -30,7 +30,7 @@ interface MediaManagerInterface
      *
      * @return Media[]
      */
-    public function get($locale, $filter = [], $limit = null, $offset = null);
+    public function get($locale, $filter = [], $limit = null, $offset = null /* $permission = null */);
 
     /**
      * Return the count of the last get.
@@ -65,7 +65,7 @@ interface MediaManagerInterface
      *
      * @return Media[]
      */
-    public function getByIds(array $ids, $locale /* UserInterface $user = null */);
+    public function getByIds(array $ids, $locale /* $permission = null */);
 
     /**
      * Creates a new media or overrides an existing one.

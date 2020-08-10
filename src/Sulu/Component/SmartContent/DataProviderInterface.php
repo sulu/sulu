@@ -12,7 +12,6 @@
 namespace Sulu\Component\SmartContent;
 
 use Sulu\Component\Content\Compat\PropertyParameter;
-use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
 
 /**

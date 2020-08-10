@@ -14,7 +14,6 @@ namespace Sulu\Bundle\MediaBundle\Content;
 use JMS\Serializer\Annotation\Exclude;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
-use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Util\ArrayableInterface;
 
 /**
@@ -66,15 +65,6 @@ class MediaSelectionContainer implements ArrayableInterface
     private $mediaManager;
 
     /**
-     * @Exclude
-     *
-     * @var ?UserInterface
-     */
-    private $user;
-
-    /**
-     * @Exclude
-     *
      * @var ?int
      */
     private $permission;
@@ -86,7 +76,7 @@ class MediaSelectionContainer implements ArrayableInterface
         $locale,
         $types,
         $mediaManager,
-        UserInterface $user = null
+        $permission = null
     ) {
         $this->config = $config;
         $this->displayOption = $displayOption;
@@ -94,7 +84,7 @@ class MediaSelectionContainer implements ArrayableInterface
         $this->locale = $locale;
         $this->types = $types;
         $this->mediaManager = $mediaManager;
-        $this->user = $user;
+        $this->permission = $permission;
     }
 
     /**
@@ -119,7 +109,7 @@ class MediaSelectionContainer implements ArrayableInterface
     private function loadData($locale)
     {
         if (!empty($this->ids)) {
-            return $this->mediaManager->getByIds($this->ids, $locale, $this->user);
+            return $this->mediaManager->getByIds($this->ids, $locale, $this->permission);
         } else {
             return [];
         }

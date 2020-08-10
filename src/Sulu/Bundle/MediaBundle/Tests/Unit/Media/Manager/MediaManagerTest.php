@@ -169,9 +169,6 @@ class MediaManagerTest extends TestCase
             $this->tokenStorage->reveal(),
             $this->securityChecker->reveal(),
             $this->ffprobe->reveal(),
-            [
-                'view' => 64,
-            ],
             '/download/{id}/media/{slug}',
             0,
             $this->targetGroupRepository->reveal()
@@ -183,15 +180,19 @@ class MediaManagerTest extends TestCase
      */
     public function testGetByIds($ids, $user, $media, $result)
     {
+        $token = $this->prophesize(TokenInterface::class);
+        $token->getUser()->willReturn($user);
+        $this->tokenStorage->getToken()->willReturn($token->reveal());
+
         $this->mediaRepository->findMedia(
             ['pagination' => false, 'ids' => $ids],
             null,
             null,
             $user,
-            64
+            null
         )->willReturn($media);
         $this->formatManager->getFormats(Argument::cetera())->willReturn(null);
-        $medias = $this->mediaManager->getByIds($ids, 'en', $user);
+        $medias = $this->mediaManager->getByIds($ids, 'en');
 
         for ($i = 0; $i < \count($medias); ++$i) {
             $this->assertEquals($result[$i]->getId(), $medias[$i]->getId());
@@ -217,7 +218,7 @@ class MediaManagerTest extends TestCase
         $this->mediaRepository->findMedia([], null, null, null, 64)->willReturn([])->shouldBeCalled();
         $this->mediaRepository->count(Argument::cetera())->shouldBeCalled();
 
-        $this->mediaManager->get('de', [], null, null);
+        $this->mediaManager->get('de', [], null, null, 64);
     }
 
     public function testGetWithSuluUser()
@@ -230,7 +231,7 @@ class MediaManagerTest extends TestCase
         $this->mediaRepository->findMedia([], null, null, $user->reveal(), 64)->willReturn([])->shouldBeCalled();
         $this->mediaRepository->count(Argument::cetera())->shouldBeCalled();
 
-        $this->mediaManager->get('de', [], null, null);
+        $this->mediaManager->get('de', [], null, null, 64);
     }
 
     public function testDeleteWithSecurity()

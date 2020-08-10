@@ -20,7 +20,7 @@ use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeExportInterface;
 use Sulu\Component\Content\PreResolvableContentTypeInterface;
-use Sulu\Component\Security\Authentication\UserInterface;
+use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Util\ArrayableInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -44,14 +44,21 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
      */
     private $tokenStorage;
 
+    /**
+     * @var ?array
+     */
+    private $permissions;
+
     public function __construct(
         MediaManagerInterface $mediaManager,
         ReferenceStoreInterface $referenceStore,
-        TokenStorageInterface $tokenStorage = null
+        TokenStorageInterface $tokenStorage = null,
+        $permissions = null
     ) {
         $this->mediaManager = $mediaManager;
         $this->referenceStore = $referenceStore;
         $this->tokenStorage = $tokenStorage;
+        $this->permissions = $permissions;
     }
 
     public function getDefaultParams(PropertyInterface $property = null)
@@ -132,7 +139,7 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
             $property->getStructure()->getLanguageCode(),
             $types,
             $this->mediaManager,
-            $this->getUser()
+            $this->permissions[PermissionTypes::VIEW]
         );
 
         return $container->getData();
@@ -179,20 +186,5 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
         foreach ($data['ids'] as $id) {
             $this->referenceStore->add($id);
         }
-    }
-
-    private function getUser(): ?UserInterface
-    {
-        if (!$this->tokenStorage) {
-            return null;
-        }
-
-        $user = $this->tokenStorage->getToken()->getUser();
-
-        if ($user instanceof UserInterface) {
-            return $user;
-        }
-
-        return null;
     }
 }

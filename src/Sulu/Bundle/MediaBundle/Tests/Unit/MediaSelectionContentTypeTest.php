@@ -18,9 +18,7 @@ use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
-use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class MediaSelectionContentTypeTest extends TestCase
 {
@@ -383,12 +381,7 @@ class MediaSelectionContentTypeTest extends TestCase
         $structure = $this->prophesize(StructureInterface::class);
         $property->getStructure()->willReturn($structure->reveal());
 
-        $token = $this->prophesize(TokenInterface::class);
-        $user = $this->prophesize(UserInterface::class);
-        $token->getUser()->willReturn($user->reveal());
-        $this->tokenStorage->getToken()->willReturn($token->reveal());
-
-        $this->mediaManager->getByIds([1, 2, 3], null, $user->reveal())->shouldBeCalled();
+        $this->mediaManager->getByIds([1, 2, 3], null, 64)->shouldBeCalled();
 
         $result = $this->mediaSelection->getContentData($property->reveal());
     }
