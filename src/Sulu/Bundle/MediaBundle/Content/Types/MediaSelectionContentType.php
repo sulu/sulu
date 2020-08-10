@@ -40,7 +40,7 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
     private $referenceStore;
 
     /**
-     * @var TokenStorageInterface
+     * @var ?TokenStorageInterface
      */
     private $tokenStorage;
 

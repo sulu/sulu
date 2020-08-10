@@ -68,14 +68,14 @@ class MediaSelectionContainer implements ArrayableInterface
     /**
      * @Exclude
      *
-     * @var UserInterface
+     * @var ?UserInterface
      */
     private $user;
 
     /**
      * @Exclude
      *
-     * @var int
+     * @var ?int
      */
     private $permission;
 
