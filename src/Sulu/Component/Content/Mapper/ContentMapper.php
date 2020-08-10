@@ -141,6 +141,11 @@ class ContentMapper implements ContentMapperInterface
      */
     private $accessControlManager;
 
+    /**
+     * @var array
+     */
+    private $permissions;
+
     public function __construct(
         DocumentManager $documentManager,
         WebspaceManagerInterface $webspaceManager,
@@ -154,7 +159,8 @@ class ContentMapper implements ContentMapperInterface
         EventDispatcherInterface $eventDispatcher,
         ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool,
         NamespaceRegistry $namespaceRegistry,
-        AccessControlManagerInterface $accessControlManager
+        AccessControlManagerInterface $accessControlManager,
+        $permissions
     ) {
         $this->contentTypeManager = $contentTypeManager;
         $this->structureManager = $structureManager;
@@ -168,6 +174,7 @@ class ContentMapper implements ContentMapperInterface
         $this->namespaceRegistry = $namespaceRegistry;
         $this->resourceLocatorStrategyPool = $resourceLocatorStrategyPool;
         $this->accessControlManager = $accessControlManager;
+        $this->permissions = $permissions;
 
         // deprecated
         $this->eventDispatcher = $eventDispatcher;
@@ -626,7 +633,8 @@ class ContentMapper implements ContentMapperInterface
         $fields,
         $maxDepth,
         $onlyPublished = true,
-        ?UserInterface $user = null
+        ?UserInterface $user = null,
+        $permission = null
     ) {
         $rootDepth = \substr_count($this->sessionManager->getContentPath($webspaceKey), '/');
 
@@ -636,7 +644,7 @@ class ContentMapper implements ContentMapperInterface
                 $pageDepth = \substr_count($row->getPath('page'), '/') - $rootDepth;
 
                 if (null === $maxDepth || $maxDepth < 0 || ($maxDepth > 0 && $pageDepth <= $maxDepth)) {
-                    $item = $this->rowToArray($row, $locale, $webspaceKey, $fields, $onlyPublished, $user);
+                    $item = $this->rowToArray($row, $locale, $webspaceKey, $fields, $onlyPublished, $user, $permission);
 
                     if (false === $item || \in_array($item, $result)) {
                         continue;
@@ -659,7 +667,8 @@ class ContentMapper implements ContentMapperInterface
         $webspaceKey,
         $fields,
         $onlyPublished = true,
-        ?UserInterface $user = null
+        ?UserInterface $user = null,
+        $permission = null
     ) {
         // reset cache
         $this->initializeExtensionCache();
@@ -680,7 +689,8 @@ class ContentMapper implements ContentMapperInterface
             return false;
         }
 
-        if ($document instanceof SecurityBehavior) {
+        if ($document instanceof SecurityBehavior && $permission) {
+            $permissionKey = array_search($permission, $this->permissions);
             $permissions = $this->accessControlManager->getUserPermissionByArray(
                 $document->getLocale(),
                 PageAdmin::SECURITY_CONTEXT_PREFIX . $document->getWebspaceName(),
@@ -688,7 +698,7 @@ class ContentMapper implements ContentMapperInterface
                 $user
             );
 
-            if (isset($permissions['view']) && !$permissions['view']) {
+            if (isset($permissions[$permissionKey]) && !$permissions[$permissionKey]) {
                 return false;
             }
         }

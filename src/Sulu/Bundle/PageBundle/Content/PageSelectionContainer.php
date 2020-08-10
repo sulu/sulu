@@ -86,9 +86,9 @@ class PageSelectionContainer implements ArrayableInterface
     private $showDrafts;
 
     /**
-     * @var UserInterface
+     * @var array
      */
-    private $user;
+    private $permission;
 
     public function __construct(
         $ids,
@@ -98,7 +98,7 @@ class PageSelectionContainer implements ArrayableInterface
         $webspaceKey,
         $languageCode,
         $showDrafts,
-        UserInterface $user = null
+        $permission = null
     ) {
         $this->ids = $ids;
         $this->contentQueryExecutor = $contentQueryExecutor;
@@ -107,7 +107,7 @@ class PageSelectionContainer implements ArrayableInterface
         $this->languageCode = $languageCode;
         $this->params = $params;
         $this->showDrafts = $showDrafts;
-        $this->user = $user;
+        $this->permission = $permission;
     }
 
     /**
@@ -147,7 +147,7 @@ class PageSelectionContainer implements ArrayableInterface
                 null,
                 null,
                 false,
-                $this->user
+                $this->permission
             );
 
             // init vars

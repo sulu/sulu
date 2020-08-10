@@ -60,6 +60,27 @@ class PageSelectionContainerTest extends TestCase
         $this->container->getData();
     }
 
+    public function testGetDataWithPermissions()
+    {
+        $this->container = new PageSelectionContainer(
+            [2, 3, 1],
+            $this->executor->reveal(),
+            $this->builder->reveal(),
+            [],
+            'default',
+            'en',
+            true,
+            64
+        );
+
+        $this->builder->init(['ids' => [2, 3, 1], 'properties' => [], 'published' => false])->shouldBeCalled();
+        $this->executor->execute('default', ['en'], $this->builder, true, -1, null, null, false, 64)->willReturn(
+            [['id' => 1], ['id' => 2], ['id' => 3]]
+        );
+
+        $this->container->getData();
+    }
+
     public function testGetDataOnlyPublished()
     {
         $this->container = new PageSelectionContainer(

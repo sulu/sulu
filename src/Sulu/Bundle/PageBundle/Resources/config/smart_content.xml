@@ -41,6 +41,7 @@
             <argument type="service" id="sulu_document_manager.default_session"/>
             <argument type="service" id="sulu_page.reference_store.content"/>
             <argument>%sulu_document_manager.show_drafts%</argument>
+            <argument>%sulu_security.permissions%</argument>
 
             <tag name="sulu.smart_content.data_provider" alias="pages"/>
         </service>

@@ -53,7 +53,6 @@ interface DataProviderInterface
         $limit = null,
         $page = 1,
         $pageSize = null
-        /* ?UserInterface $user */
     );
 
     /**
@@ -75,7 +74,6 @@ interface DataProviderInterface
         $limit = null,
         $page = 1,
         $pageSize = null
-        /* UserInterface $user = null */
     );
 
     /**
@@ -87,5 +85,5 @@ interface DataProviderInterface
      *
      * @return DatasourceItemInterface
      */
-    public function resolveDatasource($datasource, array $propertyParameter, array $options /* ?UserInterface $user */);
+    public function resolveDatasource($datasource, array $propertyParameter, array $options);
 }

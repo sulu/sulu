@@ -23,6 +23,7 @@ use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
+use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\SmartContent\ArrayAccessItem;
 use Sulu\Component\SmartContent\Configuration\Builder;
 use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
@@ -76,6 +77,11 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
      */
     private $showDrafts;
 
+    /**
+     * @var array
+     */
+    private $permissions;
+
     public function __construct(
         ContentQueryBuilderInterface $contentQueryBuilder,
         ContentQueryExecutorInterface $contentQueryExecutor,
@@ -83,7 +89,8 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
         LazyLoadingValueHolderFactory $proxyFactory,
         SessionInterface $session,
         ReferenceStoreInterface $referenceStore,
-        $showDrafts
+        $showDrafts,
+        $permissions
     ) {
         $this->contentQueryBuilder = $contentQueryBuilder;
         $this->contentQueryExecutor = $contentQueryExecutor;
@@ -92,6 +99,7 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
         $this->session = $session;
         $this->referenceStore = $referenceStore;
         $this->showDrafts = $showDrafts;
+        $this->permissions = $permissions;
     }
 
     public function getConfiguration()
@@ -141,7 +149,7 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
         ];
     }
 
-    public function resolveDatasource($datasource, array $propertyParameter, array $options, UserInterface $user = null)
+    public function resolveDatasource($datasource, array $propertyParameter, array $options)
     {
         $properties = \array_key_exists('properties', $propertyParameter) ?
             $propertyParameter['properties']->getValue() : [];
@@ -162,8 +170,7 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
             -1,
             1,
             0,
-            false,
-            $user
+            false
         );
 
         if (0 === \count($result)) {
@@ -179,8 +186,7 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
         array $options = [],
         $limit = null,
         $page = 1,
-        $pageSize = null,
-        UserInterface $user = null
+        $pageSize = null
     ) {
         list($items, $hasNextPage) = $this->resolveFilters(
             $filters,
@@ -188,8 +194,7 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
             $options,
             $limit,
             $page,
-            $pageSize,
-            $user
+            $pageSize
         );
 
         $items = $this->decorateDataItems($items, $options['locale']);
@@ -203,8 +208,7 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
         array $options = [],
         $limit = null,
         $page = 1,
-        $pageSize = null,
-        UserInterface $user = null
+        $pageSize = null
     ) {
         list($items, $hasNextPage) = $this->resolveFilters(
             $filters,
@@ -212,8 +216,7 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
             $options,
             $limit,
             $page,
-            $pageSize,
-            $user
+            $pageSize
         );
         $items = $this->decorateResourceItems($items, $options['locale']);
 
@@ -229,8 +232,7 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
         array $options = [],
         $limit = null,
         $page = 1,
-        $pageSize = null,
-        UserInterface $user = null
+        $pageSize = null
     ) {
         $emptyFilterResult = [[], false];
 
@@ -269,11 +271,11 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
 
         $hasNextPage = false;
         if (null !== $pageSize) {
-            $result = $this->loadPaginated($options, $limit, $page, $pageSize, $user);
+            $result = $this->loadPaginated($options, $limit, $page, $pageSize);
             $hasNextPage = (\count($result) > $pageSize);
             $items = \array_splice($result, 0, $pageSize);
         } else {
-            $items = $this->load($options, $limit, $user);
+            $items = $this->load($options, $limit);
         }
 
         return [$items, $hasNextPage];
@@ -288,7 +290,7 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
      *
      * @return array
      */
-    private function loadPaginated(array $options, $limit, $page, $pageSize, UserInterface $user = null)
+    private function loadPaginated(array $options, $limit, $page, $pageSize)
     {
         $pageSize = \intval($pageSize);
         $offset = ($page - 1) * $pageSize;
@@ -310,7 +312,7 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
             $loadLimit,
             $offset,
             false,
-            $user
+            $this->permissions[PermissionTypes::VIEW]
         );
     }
 
@@ -321,7 +323,7 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
      *
      * @return array
      */
-    private function load(array $options, $limit, UserInterface $user = null)
+    private function load(array $options, $limit)
     {
         return $this->contentQueryExecutor->execute(
             $options['webspaceKey'],
@@ -332,7 +334,7 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
             $limit,
             null,
             false,
-            $user
+            $this->permissions[PermissionTypes::VIEW]
         );
     }
 

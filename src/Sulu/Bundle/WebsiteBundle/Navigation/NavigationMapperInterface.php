@@ -11,8 +11,6 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Navigation;
 
-use Sulu\Component\Security\Authentication\UserInterface;
-
 /**
  * generates frontend navigation.
  */
@@ -39,8 +37,7 @@ interface NavigationMapperInterface
         $flat = false,
         $context = null,
         $loadExcerpt = false,
-        $segmentKey = null,
-        ?UserInterface $user = null
+        $segmentKey = null
     );
 
     /**
@@ -62,8 +59,7 @@ interface NavigationMapperInterface
         $flat = false,
         $context = null,
         $loadExcerpt = false,
-        $segmentKey = null,
-        ?UserInterface $user = null
+        $segmentKey = null
     );
 
     /**

@@ -288,8 +288,7 @@ class NodeRepository implements NodeRepositoryInterface
                 [],
                 $webspaceKey,
                 $languageCode,
-                true,
-                $this->getUser()
+                true
             );
 
             $result = $container->getData();
@@ -416,8 +415,7 @@ class NodeRepository implements NodeRepositoryInterface
             -1,
             $limit,
             null,
-            false,
-            $this->getUser()
+            false
         );
 
         if ($api) {

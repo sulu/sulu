@@ -96,7 +96,8 @@ class PageSelectionTest extends TestCase
             $this->contentQueryExecutor->reveal(),
             $this->contentQueryBuilder->reveal(),
             $this->referenceStore->reveal(),
-            false
+            false,
+            ['view' => 64]
         );
 
         $this->property->getValue()->willReturn(['123-123-123']);
@@ -109,7 +110,7 @@ class PageSelectionTest extends TestCase
         $this->contentQueryBuilder->init(['ids' => ['123-123-123'], 'properties' => [], 'published' => true])
             ->shouldBeCalled();
         $this->contentQueryExecutor
-             ->execute('default', ['en'], $this->contentQueryBuilder->reveal(), true, -1, null, null, false, null)
+             ->execute('default', ['en'], $this->contentQueryBuilder->reveal(), true, -1, null, null, false, 64)
              ->willReturn([]);
 
         $pageSelection->getContentData($this->property->reveal());
@@ -117,13 +118,12 @@ class PageSelectionTest extends TestCase
 
     public function testGetContentDataWithUser()
     {
-        $tokenStorage = $this->prophesize(TokenStorageInterface::class);
         $pageSelection = new PageSelection(
             $this->contentQueryExecutor->reveal(),
             $this->contentQueryBuilder->reveal(),
             $this->referenceStore->reveal(),
             false,
-            $tokenStorage->reveal()
+            ['view' => 64]
         );
 
         $this->property->getValue()->willReturn(['123-123-123']);
@@ -132,11 +132,6 @@ class PageSelectionTest extends TestCase
         $structure->getWebspaceKey()->willReturn('default');
         $structure->getLanguageCode()->willReturn('en');
         $this->property->getStructure()->willReturn($structure->reveal());
-
-        $user = $this->prophesize(UserInterface::class);
-        $token = $this->prophesize(TokenInterface::class);
-        $token->getUser()->willReturn($user->reveal());
-        $tokenStorage->getToken()->willReturn($token->reveal());
 
         $this->contentQueryBuilder->init(['ids' => ['123-123-123'], 'properties' => [], 'published' => true])
             ->shouldBeCalled();
@@ -150,7 +145,7 @@ class PageSelectionTest extends TestCase
                  null,
                  null,
                  false,
-                 $user->reveal()
+                 64
              )
              ->willReturn([]);
 

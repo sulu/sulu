@@ -28,6 +28,7 @@ interface ContentQueryExecutorInterface
      * @param int $limit
      * @param int $offset
      * @param bool $moveUp
+     * @param ?int $permission
      *
      * @return array
      */
@@ -39,7 +40,7 @@ interface ContentQueryExecutorInterface
         $depth = -1,
         $limit = null,
         $offset = null,
-        $moveUp = false
-        /* ?UserInterface $user = null */
+        $moveUp = false,
+        $permission = null
     );
 }

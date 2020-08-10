@@ -18,6 +18,7 @@ use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
+use Sulu\Component\Security\Authorization\PermissionTypes;
 use Symfony\Component\Stopwatch\Stopwatch;
 
 class NavigationMapper implements NavigationMapperInterface
@@ -47,18 +48,25 @@ class NavigationMapper implements NavigationMapperInterface
      */
     private $stopwatch;
 
+    /**
+     * @var array
+     */
+    private $permissions;
+
     public function __construct(
         ContentMapperInterface $contentMapper,
         ContentQueryExecutorInterface $contentQueryExecutor,
         ContentQueryBuilderInterface $queryBuilder,
         SessionManagerInterface $sessionManager,
-        Stopwatch $stopwatch = null
+        Stopwatch $stopwatch = null,
+        $permissions = null
     ) {
         $this->contentMapper = $contentMapper;
         $this->contentQueryExecutor = $contentQueryExecutor;
         $this->queryBuilder = $queryBuilder;
         $this->sessionManager = $sessionManager;
         $this->stopwatch = $stopwatch;
+        $this->permissions = $permissions;
     }
 
     public function getNavigation(
@@ -69,8 +77,7 @@ class NavigationMapper implements NavigationMapperInterface
         $flat = false,
         $context = null,
         $loadExcerpt = false,
-        $segmentKey = null,
-        ?UserInterface $user = null
+        $segmentKey = null
     ) {
         if ($this->stopwatch) {
             $this->stopwatch->start('NavigationMapper::getNavigation');
@@ -96,7 +103,7 @@ class NavigationMapper implements NavigationMapperInterface
             null,
             null,
             false,
-            $user
+            $this->permissions[PermissionTypes::VIEW] ?? null
         );
 
         foreach ($result as $item) {
@@ -119,8 +126,7 @@ class NavigationMapper implements NavigationMapperInterface
         $flat = false,
         $context = null,
         $loadExcerpt = false,
-        $segmentKey = null,
-        ?UserInterface $user = null
+        $segmentKey = null
     ) {
         if ($this->stopwatch) {
             $this->stopwatch->start('NavigationMapper::getRootNavigation.query');
@@ -136,7 +142,7 @@ class NavigationMapper implements NavigationMapperInterface
             null,
             null,
             false,
-            $user
+            $this->permissions[PermissionTypes::VIEW] ?? null
         );
 
         for ($i = 0; $i < \count($result); ++$i) {
