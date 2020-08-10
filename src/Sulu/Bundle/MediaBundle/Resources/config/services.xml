@@ -98,6 +98,7 @@
             <argument type="service" id="sulu_media.system_collections.manager" />
             <argument type="service" id="sulu_media.collection_manager" />
             <argument>%sulu_media.collection.type.default%</argument>
+            <argument>%sulu_security.permissions%</argument>
 
             <tag name="sulu.context" context="admin"/>
         </service>
@@ -297,7 +298,6 @@
             <argument type="service" id="doctrine.orm.entity_manager" />
             <argument type="service" id="security.token_storage" on-invalid="null"/>
             <argument type="string">%sulu_media.collection.previews.format%</argument>
-            <argument>%sulu_security.permissions%</argument>
         </service>
 
         <service id="sulu_media.twig_extension.disposition_type" class="%sulu_media.twig_extension.disposition_type.class%">

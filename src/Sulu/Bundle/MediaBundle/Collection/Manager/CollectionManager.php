@@ -92,11 +92,6 @@ class CollectionManager implements CollectionManagerInterface
      */
     private $collectionPreviewFormat;
 
-    /**
-     * @var array
-     */
-    private $permissions;
-
     public function __construct(
         CollectionRepositoryInterface $collectionRepository,
         MediaRepositoryInterface $mediaRepository,
@@ -104,8 +99,7 @@ class CollectionManager implements CollectionManagerInterface
         UserRepositoryInterface $userRepository,
         EntityManager $em,
         TokenStorageInterface $tokenStorage = null,
-        $collectionPreviewFormat,
-        $permissions
+        $collectionPreviewFormat
     ) {
         $this->collectionRepository = $collectionRepository;
         $this->mediaRepository = $mediaRepository;
@@ -114,11 +108,18 @@ class CollectionManager implements CollectionManagerInterface
         $this->em = $em;
         $this->tokenStorage = $tokenStorage;
         $this->collectionPreviewFormat = $collectionPreviewFormat;
-        $this->permissions = $permissions;
     }
 
-    public function getById($id, $locale, $depth = 0, $breadcrumb = false, $filter = [], $sortBy = [], $children = false)
-    {
+    public function getById(
+        $id,
+        $locale,
+        $depth = 0,
+        $breadcrumb = false,
+        $filter = [],
+        $sortBy = [],
+        $children = false,
+        $permission = null
+    ) {
         $collectionEntity = $this->collectionRepository->findCollectionById($id);
         if (null === $collectionEntity) {
             throw new CollectionNotFoundException($id);
@@ -132,7 +133,7 @@ class CollectionManager implements CollectionManagerInterface
                 $collectionEntity,
                 $sortBy,
                 $this->getCurrentUser(),
-                $this->permissions[PermissionTypes::VIEW]
+                $permission
             );
         }
 
@@ -193,8 +194,16 @@ class CollectionManager implements CollectionManagerInterface
         return $result;
     }
 
-    public function getTree($locale, $offset, $limit, $search, $depth = 0, $sortBy = [], $systemCollections = true)
-    {
+    public function getTree(
+        $locale,
+        $offset,
+        $limit,
+        $search,
+        $depth = 0,
+        $sortBy = [],
+        $systemCollections = true,
+        $permission = null
+    ) {
         $filter = [
             'offset' => $offset,
             'limit' => $limit,
@@ -210,7 +219,7 @@ class CollectionManager implements CollectionManagerInterface
             null,
             $sortBy,
             $this->getCurrentUser(),
-            $this->permissions[PermissionTypes::VIEW]
+            $permission
         );
 
         $collections = [];

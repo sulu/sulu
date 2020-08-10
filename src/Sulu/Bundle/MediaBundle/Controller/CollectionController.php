@@ -84,6 +84,11 @@ class CollectionController extends AbstractRestController implements ClassResour
      */
     private $defaultCollectionType;
 
+    /**
+     * @var array
+     */
+    private $permissions;
+
     public function __construct(
         ViewHandlerInterface $viewHandler,
         TokenStorageInterface $tokenStorage,
@@ -92,7 +97,8 @@ class CollectionController extends AbstractRestController implements ClassResour
         TranslatorInterface $translator,
         SystemCollectionManagerInterface $systemCollectionManager,
         CollectionManagerInterface $collectionManager,
-        array $defaultCollectionType
+        array $defaultCollectionType,
+        array $permissions
     ) {
         parent::__construct($viewHandler, $tokenStorage);
 
@@ -102,6 +108,7 @@ class CollectionController extends AbstractRestController implements ClassResour
         $this->systemCollectionManager = $systemCollectionManager;
         $this->collectionManager = $collectionManager;
         $this->defaultCollectionType = $defaultCollectionType;
+        $this->permissions = $permissions;
     }
 
     /**
@@ -153,7 +160,8 @@ class CollectionController extends AbstractRestController implements ClassResour
                         $breadcrumb,
                         $filter,
                         null !== $sortBy ? [$sortBy => $sortOrder] : [],
-                        $children
+                        $children,
+                        $this->permissions[PermissionTypes::VIEW]
                     );
 
                     if (SystemCollectionManagerInterface::COLLECTION_TYPE === $collection->getType()->getKey()) {
@@ -217,7 +225,8 @@ class CollectionController extends AbstractRestController implements ClassResour
                     $search,
                     $depth,
                     null !== $sortBy ? [$sortBy => $sortOrder] : [],
-                    $this->securityChecker->hasPermission('sulu.media.system_collections', 'view')
+                    $this->securityChecker->hasPermission('sulu.media.system_collections', 'view'),
+                    $this->permissions[PermissionTypes::VIEW]
                 );
             }
 

@@ -95,7 +95,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
 
         $queryBuilder->addOrderBy('collection.id', 'ASC');
 
-        if (null !== $user && null != $permission) {
+        if (null != $permission) {
             $this->accessControlQueryEnhancer->enhance(
                 $queryBuilder,
                 $user,
