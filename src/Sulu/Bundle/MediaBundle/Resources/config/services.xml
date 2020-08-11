@@ -98,6 +98,7 @@
             <argument type="service" id="sulu_media.system_collections.manager" />
             <argument type="service" id="sulu_media.collection_manager" />
             <argument>%sulu_media.collection.type.default%</argument>
+            <argument>%sulu_security.permissions%</argument>
 
             <tag name="sulu.context" context="admin"/>
         </service>
@@ -137,6 +138,9 @@
         <service id="sulu_media.collection_repository" class="%sulu_media.collection_repository.class%" public="true">
             <factory service="doctrine.orm.entity_manager" method="getRepository"/>
             <argument>%sulu_media.collection_entity%</argument>
+            <call method="setAccessControlQueryEnhancer">
+                <argument type="service" id="sulu_security.access_control_query_enhancer" />
+            </call>
         </service>
         <service id="sulu_media.file_version_meta_repository"
                  class="Sulu\Bundle\MediaBundle\Entity\FileVersionMetaRepository">
@@ -271,6 +275,8 @@
         <service id="sulu_media.type.media_selection" class="%sulu_media.media_selection.class%">
             <argument type="service" id="sulu_media.media_manager"/>
             <argument type="service" id="sulu_media.reference_store.media"/>
+            <argument type="service" id="security.token_storage" on-invalid="null"/>
+            <argument>%sulu_security.permissions%</argument>
 
             <tag name="sulu.content.type" alias="media_selection"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
@@ -279,6 +285,7 @@
         <service id="sulu_media.type.single_media_selection" class="Sulu\Bundle\MediaBundle\Content\Types\SingleMediaSelection">
             <argument type="service" id="sulu_media.media_manager"/>
             <argument type="service" id="sulu_media.reference_store.media"/>
+            <argument type="service" id="sulu_security.security_checker" on-invalid="null"/>
 
             <tag name="sulu.content.type" alias="single_media_selection"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
@@ -324,6 +331,7 @@
             <argument type="service" id="sulu_media.media_manager"/>
             <argument type="string">%sulu.model.media.class%</argument>
             <argument type="string">%sulu_media.collection_entity%</argument>
+            <argument type="service" id="sulu_security.access_control_query_enhancer"/>
         </service>
 
         <service id="sulu_media.smart_content.data_provider.media" class="Sulu\Component\Media\SmartContent\MediaDataProvider">
@@ -332,6 +340,7 @@
             <argument type="service" id="sulu_core.array_serializer"/>
             <argument type="service" id="request_stack"/>
             <argument type="service" id="sulu_media.reference_store.media"/>
+            <argument type="service" id="security.token_storage" on-invalid="null"/>
 
             <tag name="sulu.smart_content.data_provider" alias="media"/>
         </service>

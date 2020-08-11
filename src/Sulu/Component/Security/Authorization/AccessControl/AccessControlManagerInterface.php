@@ -42,7 +42,7 @@ interface AccessControlManagerInterface
      * Returns the permissions regarding an object and its security context for a given user.
      *
      * @param SecurityCondition $securityCondition The condition to check
-     * @param UserInterface $user The user for which the security is returned
+     * @param ?UserInterface $user The user for which the security is returned
      *
      * @return mixed[]
      */
@@ -54,9 +54,9 @@ interface AccessControlManagerInterface
      * @param string $locale
      * @param string $securityContext
      * @param mixed[] $objectPermissionsByRole
-     * @param UserInterface $user The user for which the security is returned
+     * @param ?UserInterface $user The user for which the security is returned
      *
      * @return mixed[]
      */
-    public function getUserPermissionByArray($locale, $securityContext, $objectPermissionsByRole, UserInterface $user);
+    public function getUserPermissionByArray($locale, $securityContext, $objectPermissionsByRole, $user);
 }

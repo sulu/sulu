@@ -11,8 +11,8 @@
 
 namespace Sulu\Component\Security\Authorization\AccessControl;
 
-use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\SecurityBundle\System\SystemStoreInterface;
+use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\MaskConverterInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
@@ -85,19 +85,23 @@ class AccessControlManager implements AccessControlManagerInterface
 
     public function getUserPermissions(SecurityCondition $securityCondition, $user)
     {
-        if (!$user instanceof UserInterface) {
-            return [];
+        if (!($user instanceof UserInterface)) {
+            $user = null;
         }
 
         $system = $this->systemStore->getSystem();
+        $locale = $securityCondition->getLocale();
 
-        $objectPermissions = $this->getUserObjectPermission($securityCondition, $user, $system);
+        $objectPermissions = $this->getUserObjectPermission(
+            $securityCondition,
+            $this->getRolesForLocale($user, $locale),
+            $system
+        );
         $checkPermissionType = empty($objectPermissions);
 
-        $securityContextPermissions = $this->getUserSecurityContextPermissions(
-            $securityCondition->getLocale(),
+        $securityContextPermissions = $this->getRolesSecurityContextPermissions(
             $securityCondition->getSecurityContext(),
-            $user,
+            $this->getRolesForLocale($user, $locale),
             $checkPermissionType,
             $system
         );
@@ -113,17 +117,20 @@ class AccessControlManager implements AccessControlManagerInterface
         $locale,
         $securityContext,
         $objectPermissionsByRole,
-        UserInterface $user
+        $user
     ) {
         $system = $this->systemStore->getSystem();
 
-        $objectPermissions = $this->getUserObjectPermissionByArray($objectPermissionsByRole, $user, $system);
+        $objectPermissions = $this->getRolesObjectPermissionsByArray(
+            $objectPermissionsByRole,
+            $this->getRolesForLocale($user, $locale),
+            $system
+        );
         $checkPermissionType = empty($objectPermissions);
 
-        $securityContextPermissions = $this->getUserSecurityContextPermissions(
-            $locale,
+        $securityContextPermissions = $this->getRolesSecurityContextPermissions(
             $securityContext,
-            $user,
+            $this->getRolesForLocale($user, $locale),
             $checkPermissionType,
             $system
         );
@@ -149,11 +156,11 @@ class AccessControlManager implements AccessControlManagerInterface
      * Returns the permissions for the given object for the given user.
      *
      * @param SecurityCondition $securityCondition The condition to check
-     * @param UserInterface $user The user for the check
+     * @param RoleInterface[] $roles The role for which the security should be checked
      *
      * @return array
      */
-    private function getUserObjectPermission(SecurityCondition $securityCondition, UserInterface $user, $system)
+    private function getUserObjectPermission(SecurityCondition $securityCondition, array $roles, $system)
     {
         $permissions = $this->getPermissions(
             $securityCondition->getObjectType(),
@@ -161,25 +168,24 @@ class AccessControlManager implements AccessControlManagerInterface
             $system
         );
 
-        return $this->getUserObjectPermissionByArray($permissions, $user, $system);
+        return $this->getRolesObjectPermissionsByArray($permissions, $roles, $system);
     }
 
     /**
      * Returns the permissions for the given permission array and the given user.
      *
      * @param array $permissions Object permissions
-     * @param UserInterface $user The user for the check
+     * @param RoleInterface[] $roles The role for which the security should be checked
      *
      * @return array
      */
-    private function getUserObjectPermissionByArray($permissions, UserInterface $user, $system)
+    private function getRolesObjectPermissionsByArray($permissions, array $roles, $system)
     {
         if (empty($permissions)) {
             return null;
         }
 
         $userPermission = [];
-        $roles = $user->getRoleObjects();
         foreach ($roles as $role) {
             $roleId = $role->getId();
             if (!isset($permissions[$roleId])) {
@@ -199,34 +205,35 @@ class AccessControlManager implements AccessControlManagerInterface
     /**
      * Returns the permissions for the given security context for the given user.
      *
-     * @param string $locale
      * @param string $securityContext
-     * @param UserInterface $user The user for which the security is checked
+     * @param RoleInterface[] $roles The role for which the security should be checked
      * @param bool $checkPermissionType Flag to show if the permission type should also be checked. If set to false
      *                                  it will only check if the user has access to the context in the given locale
      *
      * @return array
      */
-    private function getUserSecurityContextPermissions(
-        $locale,
+    private function getRolesSecurityContextPermissions(
         $securityContext,
-        UserInterface $user,
+        array $roles,
         $checkPermissionType,
         $system
     ) {
+        if (empty($roles)) {
+            return $this->maskConverter->convertPermissionsToArray(0);
+        }
+
         $userPermissions = [];
 
-        foreach ($user->getUserRoles() as $userRole) {
-            if ($userRole->getRole()->getSystem() !== $system) {
+        foreach ($roles as $role) {
+            if ($role->getSystem() !== $system) {
                 continue;
             }
 
             $userPermissions = $this->cumulatePermissions(
                 $userPermissions,
-                $this->getUserRoleSecurityContextPermission(
-                    $locale,
+                $this->getRoleSecurityContextPermissions(
                     $securityContext,
-                    $userRole,
+                    $role,
                     $checkPermissionType
                 )
             );
@@ -238,31 +245,23 @@ class AccessControlManager implements AccessControlManagerInterface
     /**
      * Returns the permissions for the given security context for the given user role.
      *
-     * @param string $locale
      * @param string $securityContext
-     * @param UserRole $userRole The user role for which the security is checked
+     * @param RoleInterface $role The role for which the security is checked
      * @param bool $checkPermissionType Flag to show if the permission type should also be checked
      *
      * @return array
      */
-    private function getUserRoleSecurityContextPermission(
-        $locale,
+    private function getRoleSecurityContextPermissions(
         $securityContext,
-        UserRole $userRole,
+        RoleInterface $role,
         $checkPermissionType
     ) {
-        $userPermission = $this->maskConverter->convertPermissionsToArray(0);
+        $userPermission = [];
 
-        foreach ($userRole->getRole()->getPermissions() as $permission) {
+        foreach ($role->getPermissions() as $permission) {
             $hasContext = $permission->getContext() == $securityContext;
 
             if (!$hasContext) {
-                continue;
-            }
-
-            $hasLocale = null == $locale || \in_array($locale, $userRole->getLocales());
-
-            if (!$hasLocale) {
                 continue;
             }
 
@@ -276,6 +275,27 @@ class AccessControlManager implements AccessControlManagerInterface
         }
 
         return $userPermission;
+    }
+
+    private function getRolesForLocale(?UserInterface $user, ?string $locale)
+    {
+        if (!($user instanceof UserInterface)) {
+            $anonymousRole = $this->systemStore->getAnonymousRole();
+
+            return $anonymousRole ? [$anonymousRole] : [];
+        }
+
+        $roles = [];
+
+        foreach ($user->getUserRoles() as $userRole) {
+            if (null != $locale && !\in_array($locale, $userRole->getLocales())) {
+                continue;
+            }
+
+            $roles[] = $userRole->getRole();
+        }
+
+        return $roles;
     }
 
     /**

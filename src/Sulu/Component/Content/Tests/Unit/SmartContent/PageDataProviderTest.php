@@ -56,7 +56,7 @@ class PageDataProviderTest extends TestCase
      *
      * @return ContentQueryExecutorInterface
      */
-    private function getContentQueryExecutor($limit = -1, $page = 1, $result = [])
+    private function getContentQueryExecutor($limit = -1, $page = 1, $result = [], $permission = 64)
     {
         $mock = $this->prophesize(ContentQueryExecutorInterface::class);
 
@@ -67,7 +67,9 @@ class PageDataProviderTest extends TestCase
             true,
             -1,
             ($limit > -1 ? $limit + 1 : null),
-            ($limit > -1 ? $limit * ($page - 1) : null)
+            ($limit > -1 ? $limit * ($page - 1) : null),
+            false,
+            $permission
         )->willReturn($result);
 
         return $mock->reveal();
@@ -121,7 +123,8 @@ class PageDataProviderTest extends TestCase
             $this->getProxyFactory(),
             $this->getSession(),
             new ReferenceStore(),
-            false
+            false,
+            ['view' => 64]
         );
 
         $configuration = $provider->getConfiguration();
@@ -138,7 +141,8 @@ class PageDataProviderTest extends TestCase
             $this->getProxyFactory(),
             $this->getSession(),
             new ReferenceStore(),
-            false
+            false,
+            ['view' => 64]
         );
 
         $parameter = $provider->getDefaultPropertyParameter();
@@ -159,7 +163,8 @@ class PageDataProviderTest extends TestCase
             $this->getProxyFactory(),
             $this->getSession(),
             new ReferenceStore(),
-            false
+            false,
+            ['view' => 64]
         );
 
         $result = $provider->resolveDataItems(
@@ -191,7 +196,8 @@ class PageDataProviderTest extends TestCase
             $this->getProxyFactory(),
             $this->getSession(),
             new ReferenceStore(),
-            true
+            true,
+            ['view' => 64]
         );
 
         $result = $provider->resolveDataItems(
@@ -233,7 +239,8 @@ class PageDataProviderTest extends TestCase
             $this->getProxyFactory(),
             $this->getSession(),
             new ReferenceStore(),
-            true
+            true,
+            ['view' => 64]
         );
 
         $result = $provider->resolveDataItems(
@@ -281,7 +288,8 @@ class PageDataProviderTest extends TestCase
             $this->getProxyFactory(),
             $this->getSession(),
             new ReferenceStore(),
-            false
+            false,
+            ['view' => 64]
         );
 
         $result = $provider->resolveDataItems(
@@ -330,7 +338,8 @@ class PageDataProviderTest extends TestCase
             $this->getProxyFactory(),
             $this->getSession(),
             $referenceStore,
-            true
+            true,
+            ['view' => 64]
         );
 
         $result = $provider->resolveResourceItems(
@@ -382,7 +391,8 @@ class PageDataProviderTest extends TestCase
             $this->getProxyFactory(),
             $this->getSession(),
             new ReferenceStore(),
-            true
+            true,
+            ['view' => 64]
         );
 
         $result = $provider->resolveDataItems(
@@ -415,7 +425,8 @@ class PageDataProviderTest extends TestCase
             $this->getProxyFactory(),
             $this->getSession(true),
             new ReferenceStore(),
-            true
+            true,
+            ['view' => 64]
         );
 
         $result = $provider->resolveDataItems(
@@ -437,12 +448,13 @@ class PageDataProviderTest extends TestCase
             $this->getContentQueryBuilder(
                 ['ids' => [$data['id']], 'properties' => ['my-properties' => true], 'published' => false]
             ),
-            $this->getContentQueryExecutor(0, 1, [$data]),
+            $this->getContentQueryExecutor(0, 1, [$data], null),
             $this->getDocumentManager([$data['id'] => $data]),
             $this->getProxyFactory(),
             $this->getSession(),
             new ReferenceStore(),
-            false
+            false,
+            ['view' => 64]
         );
 
         $result = $provider->resolveDatasource(
@@ -500,7 +512,8 @@ class PageDataProviderTest extends TestCase
             $this->getProxyFactory(),
             $this->getSession(),
             $referenceStore,
-            true
+            true,
+            ['view' => 64]
         );
 
         $result = $provider->resolveResourceItems(
@@ -540,7 +553,8 @@ class PageDataProviderTest extends TestCase
             $this->getProxyFactory(),
             $this->getSession(),
             $referenceStore,
-            true
+            true,
+            ['view' => 64]
         );
 
         $result = $provider->resolveResourceItems(

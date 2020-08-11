@@ -13,9 +13,16 @@ namespace Sulu\Bundle\SecurityBundle\Tests\System;
 
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\SecurityBundle\System\SystemStore;
+use Sulu\Component\Security\Authentication\RoleInterface;
+use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
 
 class SystemStoreTest extends TestCase
 {
+    /**
+     * @var RoleRepositoryInterface
+     */
+    private $roleRepository;
+
     /**
      * @var SystemStore
      */
@@ -23,7 +30,8 @@ class SystemStoreTest extends TestCase
 
     public function setUp(): void
     {
-        $this->systemStore = new SystemStore();
+        $this->roleRepository = $this->prophesize(RoleRepositoryInterface::class);
+        $this->systemStore = new SystemStore($this->roleRepository->reveal());
     }
 
     public function testSetSystem()
@@ -32,5 +40,23 @@ class SystemStoreTest extends TestCase
         $this->assertEquals('Sulu', $this->systemStore->getSystem());
         $this->systemStore->setSystem('Sulu Test');
         $this->assertEquals('Sulu Test', $this->systemStore->getSystem());
+    }
+
+    public function testGetAnonymousRoleWithLazyLoading()
+    {
+        $role = $this->prophesize(RoleInterface::class);
+        $this->roleRepository
+            ->findAllRoles(['anonymous' => true, 'system' => 'Sulu'])
+            ->willReturn([$role->reveal()])
+            ->shouldBeCalledTimes(1);
+        $this->systemStore->setSystem('Sulu');
+        $this->assertEquals($role->reveal(), $this->systemStore->getAnonymousRole());
+        $this->assertEquals($role->reveal(), $this->systemStore->getAnonymousRole());
+    }
+
+    public function testGetNonExistingAnonymousRole()
+    {
+        $this->systemStore->setSystem('Sulu');
+        $this->assertEquals(null, $this->systemStore->getAnonymousRole());
     }
 }

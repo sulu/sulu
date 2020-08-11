@@ -29,5 +29,5 @@ interface DataProviderRepositoryInterface
      *
      * @return object[]
      */
-    public function findByFilters($filters, $page, $pageSize, $limit, $locale, $options = []);
+    public function findByFilters($filters, $page, $pageSize, $limit, $locale, $options = []/*, ?UserInterface $user*/);
 }

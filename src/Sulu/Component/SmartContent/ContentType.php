@@ -302,7 +302,8 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
                 $filters,
                 $params,
                 $options,
-                (!empty($limit) ? \intval($limit) : null)
+                (!empty($limit) ? \intval($limit) : null),
+                1
             );
         }
 

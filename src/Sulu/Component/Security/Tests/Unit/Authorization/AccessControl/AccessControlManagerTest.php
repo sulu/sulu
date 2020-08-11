@@ -56,6 +56,9 @@ class AccessControlManagerTest extends TestCase
         $this->eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
         $this->systemStore = $this->prophesize(SystemStoreInterface::class);
 
+        $this->maskConverter->convertPermissionsToArray(0)->willReturn(['view' => false, 'edit' => false]);
+        $this->maskConverter->convertPermissionsToArray(64)->willReturn(['view' => true, 'edit' => false]);
+
         $this->accessControlManager = new AccessControlManager(
             $this->maskConverter->reveal(),
             $this->eventDispatcher->reveal(),
@@ -134,9 +137,6 @@ class AccessControlManagerTest extends TestCase
         $result,
         $system
     ) {
-        $this->maskConverter->convertPermissionsToArray(0)->willReturn(['view' => false, 'edit' => false]);
-        $this->maskConverter->convertPermissionsToArray(64)->willReturn(['view' => true, 'edit' => false]);
-
         $this->systemStore->getSystem()->willReturn($system);
 
         /** @var AccessControlProviderInterface $accessControlProvider */
@@ -191,9 +191,6 @@ class AccessControlManagerTest extends TestCase
 
     public function testGetUserPermissionsWithMissingRole()
     {
-        $this->maskConverter->convertPermissionsToArray(0)->willReturn(['view' => false, 'edit' => false]);
-        $this->maskConverter->convertPermissionsToArray(64)->willReturn(['view' => true, 'edit' => false]);
-
         $this->systemStore->getSystem()->willReturn('Sulu');
 
         /** @var AccessControlProviderInterface $accessControlProvider */
@@ -227,6 +224,68 @@ class AccessControlManagerTest extends TestCase
         $permissions = $this->accessControlManager->getUserPermissions(
             new SecurityCondition('example', 'de', \stdClass::class, '1'),
             $user->reveal()
+        );
+
+        $this->assertEquals(['view' => true, 'edit' => false], $permissions);
+    }
+
+    public function testGetUserPermissionsWithoutUser()
+    {
+        $this->systemStore->getSystem()->willReturn('Sulu');
+
+        /** @var AccessControlProviderInterface $accessControlProvider */
+        $accessControlProvider = $this->prophesize(AccessControlProviderInterface::class);
+        $accessControlProvider->supports(\stdClass::class)->willReturn(true);
+        $accessControlProvider->getPermissions(\stdClass::class, '1', 'Sulu')
+            ->willReturn([2 => ['view' => true, 'edit' => true]]);
+        $this->accessControlManager->addAccessControlProvider($accessControlProvider->reveal());
+
+        /** @var Permission $permission1 */
+        $permission1 = $this->prophesize(Permission::class);
+        $permission1->getPermissions()->willReturn(64);
+        $permission1->getContext()->willReturn('example');
+        /** @var Role $role1 */
+        $anonymousRole = $this->prophesize(Role::class);
+        $anonymousRole->getPermissions()->willReturn([$permission1->reveal()]);
+        $anonymousRole->getSystem()->willReturn('Sulu');
+        $anonymousRole->getId()->willReturn(1);
+
+        $this->systemStore->getAnonymousRole()->willReturn($anonymousRole);
+
+        $permissions = $this->accessControlManager->getUserPermissions(
+            new SecurityCondition('example', 'de', \stdClass::class, '1'),
+            null
+        );
+
+        $this->assertEquals(['view' => true, 'edit' => false], $permissions);
+    }
+
+    public function testGetUserPermissionsWithoutAnonymousUser()
+    {
+        $this->systemStore->getSystem()->willReturn('Sulu');
+
+        /** @var AccessControlProviderInterface $accessControlProvider */
+        $accessControlProvider = $this->prophesize(AccessControlProviderInterface::class);
+        $accessControlProvider->supports(\stdClass::class)->willReturn(true);
+        $accessControlProvider->getPermissions(\stdClass::class, '1', 'Sulu')
+            ->willReturn([2 => ['view' => true, 'edit' => true]]);
+        $this->accessControlManager->addAccessControlProvider($accessControlProvider->reveal());
+
+        /** @var Permission $permission1 */
+        $permission1 = $this->prophesize(Permission::class);
+        $permission1->getPermissions()->willReturn(64);
+        $permission1->getContext()->willReturn('example');
+        /** @var Role $role1 */
+        $anonymousRole = $this->prophesize(Role::class);
+        $anonymousRole->getPermissions()->willReturn([$permission1->reveal()]);
+        $anonymousRole->getSystem()->willReturn('Sulu');
+        $anonymousRole->getId()->willReturn(1);
+
+        $this->systemStore->getAnonymousRole()->willReturn($anonymousRole);
+
+        $permissions = $this->accessControlManager->getUserPermissions(
+            new SecurityCondition('example', 'de', \stdClass::class, '1'),
+            'anon.'
         );
 
         $this->assertEquals(['view' => true, 'edit' => false], $permissions);

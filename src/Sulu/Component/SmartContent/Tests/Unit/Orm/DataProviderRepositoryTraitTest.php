@@ -15,6 +15,8 @@ use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\QueryBuilder;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryTrait;
 
 class Query extends AbstractQuery
@@ -73,6 +75,65 @@ class DataProviderRepositoryTraitTest extends TestCase
         // using distinct here is essential, since due to our joins multiple rows might be returned
         // this makes problems if also a limit is used
         $queryBuilder->distinct()->shouldBeCalled();
+    }
+
+    public function testFindByFiltersIdsWithUser()
+    {
+        $user = $this->prophesize(UserInterface::class);
+        $accessControlQueryEnhancer = $this->prophesize(AccessControlQueryEnhancer::class);
+
+        $query = $this->prophesize(Query::class);
+        $query->setFirstResult(0)->willReturn($query);
+        $query->setMaxResults(Argument::any())->willReturn($query);
+        $query->getScalarResult()->willReturn([]);
+        $queryBuilder = $this->prophesize(QueryBuilder::class);
+        $queryBuilder->select(Argument::cetera())->willReturn($queryBuilder);
+        $queryBuilder->distinct(Argument::cetera())->willReturn($queryBuilder);
+        $queryBuilder->orderBy(Argument::cetera())->willReturn($queryBuilder);
+        $queryBuilder->getQuery()->willReturn($query);
+
+        $dataProviderRepositoryTrait = new class($accessControlQueryEnhancer->reveal(), $queryBuilder->reveal()) {
+            use DataProviderRepositoryTrait;
+
+            private $queryBuilder;
+
+            public function __construct($accessControlQueryEnhancer, $queryBuilder)
+            {
+                $this->accessControlQueryEnhancer = $accessControlQueryEnhancer;
+                $this->queryBuilder = $queryBuilder;
+            }
+
+            public function createQueryBuilder()
+            {
+                return $this->queryBuilder;
+            }
+
+            public function appendJoins()
+            {
+            }
+        };
+
+        $findByFiltersIdsReflection = new \ReflectionMethod(
+            \get_class($dataProviderRepositoryTrait),
+            'findByFiltersIds'
+        );
+        $findByFiltersIdsReflection->setAccessible(true);
+
+        $findByFiltersIdsReflection->invoke(
+            $dataProviderRepositoryTrait,
+            [],
+            1,
+            5,
+            null,
+            'de',
+            [],
+            $user->reveal(),
+            'Some\\Entity',
+            'entity'
+        );
+
+        $accessControlQueryEnhancer->enhance($queryBuilder->reveal(), $user->reveal(), 64, 'Some\\Entity', 'entity')
+            ->shouldBeCalled();
     }
 
     public function testFindByFiltersIdsWithDatasourceWithoutIncludeSubFolders()

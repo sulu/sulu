@@ -19,6 +19,7 @@ use PHPCR\Query\QueryInterface;
 use PHPCR\Query\QueryResultInterface;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
+use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Bundle\PageBundle\Document\HomeDocument;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
@@ -34,6 +35,7 @@ use Sulu\Component\Content\Document\Behavior\LocalizedAuthorBehavior;
 use Sulu\Component\Content\Document\Behavior\OrderBehavior;
 use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
+use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
@@ -56,6 +58,8 @@ use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\DocumentManager\NamespaceRegistry;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
+use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -132,6 +136,16 @@ class ContentMapper implements ContentMapperInterface
      */
     private $namespaceRegistry;
 
+    /**
+     * @var AccessControlManagerInterface
+     */
+    private $accessControlManager;
+
+    /**
+     * @var array
+     */
+    private $permissions;
+
     public function __construct(
         DocumentManager $documentManager,
         WebspaceManagerInterface $webspaceManager,
@@ -144,7 +158,9 @@ class ContentMapper implements ContentMapperInterface
         SessionManagerInterface $sessionManager,
         EventDispatcherInterface $eventDispatcher,
         ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool,
-        NamespaceRegistry $namespaceRegistry
+        NamespaceRegistry $namespaceRegistry,
+        AccessControlManagerInterface $accessControlManager,
+        $permissions
     ) {
         $this->contentTypeManager = $contentTypeManager;
         $this->structureManager = $structureManager;
@@ -157,6 +173,8 @@ class ContentMapper implements ContentMapperInterface
         $this->encoder = $encoder;
         $this->namespaceRegistry = $namespaceRegistry;
         $this->resourceLocatorStrategyPool = $resourceLocatorStrategyPool;
+        $this->accessControlManager = $accessControlManager;
+        $this->permissions = $permissions;
 
         // deprecated
         $this->eventDispatcher = $eventDispatcher;
@@ -614,7 +632,9 @@ class ContentMapper implements ContentMapperInterface
         $locales,
         $fields,
         $maxDepth,
-        $onlyPublished = true
+        $onlyPublished = true,
+        ?UserInterface $user = null,
+        $permission = null
     ) {
         $rootDepth = \substr_count($this->sessionManager->getContentPath($webspaceKey), '/');
 
@@ -624,7 +644,7 @@ class ContentMapper implements ContentMapperInterface
                 $pageDepth = \substr_count($row->getPath('page'), '/') - $rootDepth;
 
                 if (null === $maxDepth || $maxDepth < 0 || ($maxDepth > 0 && $pageDepth <= $maxDepth)) {
-                    $item = $this->rowToArray($row, $locale, $webspaceKey, $fields, $onlyPublished);
+                    $item = $this->rowToArray($row, $locale, $webspaceKey, $fields, $onlyPublished, $user, $permission);
 
                     if (false === $item || \in_array($item, $result)) {
                         continue;
@@ -641,8 +661,15 @@ class ContentMapper implements ContentMapperInterface
     /**
      * converts a query row to an array.
      */
-    private function rowToArray(Row $row, $locale, $webspaceKey, $fields, $onlyPublished = true)
-    {
+    private function rowToArray(
+        Row $row,
+        $locale,
+        $webspaceKey,
+        $fields,
+        $onlyPublished = true,
+        ?UserInterface $user = null,
+        $permission = null
+    ) {
         // reset cache
         $this->initializeExtensionCache();
         $templateName = $this->encoder->localizedSystemName('template', $locale);
@@ -660,6 +687,20 @@ class ContentMapper implements ContentMapperInterface
 
         if (!$node->hasProperty($templateName) && !$node->hasProperty('template')) {
             return false;
+        }
+
+        if ($document instanceof SecurityBehavior && $permission) {
+            $permissionKey = \array_search($permission, $this->permissions);
+            $permissions = $this->accessControlManager->getUserPermissionByArray(
+                $document->getLocale(),
+                PageAdmin::SECURITY_CONTEXT_PREFIX . $document->getWebspaceName(),
+                $document->getPermissions(),
+                $user
+            );
+
+            if (isset($permissions[$permissionKey]) && !$permissions[$permissionKey]) {
+                return false;
+            }
         }
 
         $redirectType = null;

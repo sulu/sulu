@@ -22,6 +22,7 @@ use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
+use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\SmartContent\ArrayAccessItem;
 use Sulu\Component\SmartContent\Configuration\Builder;
 use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
@@ -75,6 +76,11 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
      */
     private $showDrafts;
 
+    /**
+     * @var array
+     */
+    private $permissions;
+
     public function __construct(
         ContentQueryBuilderInterface $contentQueryBuilder,
         ContentQueryExecutorInterface $contentQueryExecutor,
@@ -82,7 +88,8 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
         LazyLoadingValueHolderFactory $proxyFactory,
         SessionInterface $session,
         ReferenceStoreInterface $referenceStore,
-        $showDrafts
+        $showDrafts,
+        $permissions
     ) {
         $this->contentQueryBuilder = $contentQueryBuilder;
         $this->contentQueryExecutor = $contentQueryExecutor;
@@ -91,6 +98,7 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
         $this->session = $session;
         $this->referenceStore = $referenceStore;
         $this->showDrafts = $showDrafts;
+        $this->permissions = $permissions;
     }
 
     public function getConfiguration()
@@ -160,7 +168,8 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
             true,
             -1,
             1,
-            0
+            0,
+            false
         );
 
         if (0 === \count($result)) {
@@ -300,7 +309,9 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
             true,
             -1,
             $loadLimit,
-            $offset
+            $offset,
+            false,
+            $this->permissions[PermissionTypes::VIEW]
         );
     }
 
@@ -319,7 +330,10 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
             $this->contentQueryBuilder,
             true,
             -1,
-            $limit
+            $limit,
+            null,
+            false,
+            $this->permissions[PermissionTypes::VIEW]
         );
     }
 

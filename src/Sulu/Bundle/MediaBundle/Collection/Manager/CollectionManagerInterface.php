@@ -34,7 +34,15 @@ interface CollectionManagerInterface
      *
      * @return Collection
      */
-    public function getById($id, $locale, $depth = 0, $breadcrumb = false, $filter = [], $sortBy = []);
+    public function getById(
+        $id,
+        $locale,
+        $depth = 0,
+        $breadcrumb = false,
+        $filter = [],
+        $sortBy = []
+        /* $permission = null */
+    );
 
     /**
      * Returns collections with a given parent and/or a given depth-level
@@ -83,7 +91,16 @@ interface CollectionManagerInterface
      *
      * @return \Sulu\Bundle\MediaBundle\Api\Collection[]
      */
-    public function getTree($locale, $offset, $limit, $search, $depth = 0, $sortBy = [], $systemCollections = true);
+    public function getTree(
+        $locale,
+        $offset,
+        $limit,
+        $search,
+        $depth = 0,
+        $sortBy = [],
+        $systemCollections = true
+        /* $permission = null */
+    );
 
     /**
      * Returns a collection count.

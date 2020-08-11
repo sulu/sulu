@@ -24,6 +24,7 @@
             <argument type="service" id="sulu_core.list_builder_filter_type_registry"/>
             <argument type="service" id="event_dispatcher"/>
             <argument>%sulu_security.permissions%</argument>
+            <argument type="service" id="sulu_security.access_control_query_enhancer"/>
         </service>
         <service
             id="Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface"

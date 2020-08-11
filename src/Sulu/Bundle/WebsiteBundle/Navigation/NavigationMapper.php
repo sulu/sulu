@@ -17,6 +17,7 @@ use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Sulu\Component\Security\Authorization\PermissionTypes;
 use Symfony\Component\Stopwatch\Stopwatch;
 
 class NavigationMapper implements NavigationMapperInterface
@@ -29,7 +30,7 @@ class NavigationMapper implements NavigationMapperInterface
     /**
      * @var ContentQueryExecutorInterface
      */
-    private $contentQuery;
+    private $contentQueryExecutor;
 
     /**
      * @var ContentQueryBuilderInterface
@@ -46,18 +47,25 @@ class NavigationMapper implements NavigationMapperInterface
      */
     private $stopwatch;
 
+    /**
+     * @var array
+     */
+    private $permissions;
+
     public function __construct(
         ContentMapperInterface $contentMapper,
-        ContentQueryExecutorInterface $contentQuery,
+        ContentQueryExecutorInterface $contentQueryExecutor,
         ContentQueryBuilderInterface $queryBuilder,
         SessionManagerInterface $sessionManager,
-        Stopwatch $stopwatch = null
+        Stopwatch $stopwatch = null,
+        $permissions = null
     ) {
         $this->contentMapper = $contentMapper;
-        $this->contentQuery = $contentQuery;
+        $this->contentQueryExecutor = $contentQueryExecutor;
         $this->queryBuilder = $queryBuilder;
         $this->sessionManager = $sessionManager;
         $this->stopwatch = $stopwatch;
+        $this->permissions = $permissions;
     }
 
     public function getNavigation(
@@ -85,7 +93,17 @@ class NavigationMapper implements NavigationMapperInterface
                 'segmentKey' => $segmentKey,
             ]
         );
-        $result = $this->contentQuery->execute($webspaceKey, [$locale], $this->queryBuilder, $flat, $depth);
+        $result = $this->contentQueryExecutor->execute(
+            $webspaceKey,
+            [$locale],
+            $this->queryBuilder,
+            $flat,
+            $depth,
+            null,
+            null,
+            false,
+            $this->permissions[PermissionTypes::VIEW] ?? null
+        );
 
         foreach ($result as $item) {
             if (!isset($item['children'])) {
@@ -114,7 +132,17 @@ class NavigationMapper implements NavigationMapperInterface
         }
 
         $this->queryBuilder->init(['context' => $context, 'excerpt' => $loadExcerpt, 'segmentKey' => $segmentKey]);
-        $result = $this->contentQuery->execute($webspaceKey, [$locale], $this->queryBuilder, $flat, $depth);
+        $result = $this->contentQueryExecutor->execute(
+            $webspaceKey,
+            [$locale],
+            $this->queryBuilder,
+            $flat,
+            $depth,
+            null,
+            null,
+            false,
+            $this->permissions[PermissionTypes::VIEW] ?? null
+        );
 
         for ($i = 0; $i < \count($result); ++$i) {
             if (!isset($result[$i]['children'])) {

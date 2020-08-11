@@ -60,6 +60,8 @@
             <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="sulu.content.resource_locator.strategy_pool"/>
             <argument type="service" id="sulu_document_manager.namespace_registry" />
+            <argument type="service" id="sulu_security.access_control_manager" />
+            <argument>%sulu_security.permissions%</argument>
         </service>
 
         <!-- content type manager -->
@@ -169,6 +171,7 @@
             <argument type="service" id="sulu.phpcr.session"/>
             <argument type="service" id="sulu.content.mapper"/>
             <argument type="service" id="debug.stopwatch" on-invalid="null"/>
+            <argument type="service" id="security.token_storage" on-invalid="null"/>
         </service>
 
         <!-- cache warmer for structures -->

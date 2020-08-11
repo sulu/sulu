@@ -19,6 +19,7 @@ use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\SmartContent\DataProviderPoolInterface;
 use Sulu\Component\SmartContent\Rest\ItemCollectionRepresentation;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Provides results for smart-content filters.
@@ -40,9 +41,10 @@ class SmartContentItemController extends AbstractRestController
     public function __construct(
         ViewHandlerInterface $viewHandler,
         TagManagerInterface $tagManager,
-        DataProviderPoolInterface $dataProviderPool
+        DataProviderPoolInterface $dataProviderPool,
+        TokenStorageInterface $tokenStorage = null
     ) {
-        parent::__construct($viewHandler);
+        parent::__construct($viewHandler, $tokenStorage);
         $this->tagManager = $tagManager;
         $this->dataProviderPool = $dataProviderPool;
     }
@@ -92,15 +94,20 @@ class SmartContentItemController extends AbstractRestController
             $this->getParams(\json_decode($request->get('params', '{}'), true))
         );
 
+        $user = $this->getUser();
+
         // resolve datasource and items
         $data = $provider->resolveDataItems(
             $filters,
             $params,
             $options,
-            $filters['limitResult'] ?? null
+            $filters['limitResult'] ?? null,
+            1,
+            null,
+            $user
         );
         $items = $data->getItems();
-        $datasource = $provider->resolveDatasource($request->get('dataSource'), [], $options);
+        $datasource = $provider->resolveDatasource($request->get('dataSource'), [], $options, $user);
 
         return $this->handleView($this->view(new ItemCollectionRepresentation($items, $datasource)));
     }

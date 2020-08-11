@@ -17,9 +17,11 @@ use Doctrine\ORM\Query\Expr\Select;
 use Doctrine\ORM\QueryBuilder;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer;
 use Sulu\Bundle\SecurityBundle\Entity\AccessControl;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
+use Sulu\Bundle\SecurityBundle\System\SystemStoreInterface;
 use Sulu\Bundle\TestBundle\Testing\ReadObjectAttributeTrait;
 use Sulu\Component\Rest\Exception\InvalidSearchException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
@@ -121,12 +123,16 @@ class DoctrineListBuilderTest extends TestCase
 
         $this->eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
 
+        $this->systemStore = $this->prophesize(SystemStoreInterface::class);
+        $this->systemStore->getSystem()->willReturn('Sulu');
+
         $this->doctrineListBuilder = new DoctrineListBuilder(
             $this->entityManager->reveal(),
             self::$entityName,
             $this->filterTypeRegistry->reveal(),
             $this->eventDispatcher->reveal(),
-            [PermissionTypes::VIEW => 64]
+            [PermissionTypes::VIEW => 64],
+            new AccessControlQueryEnhancer($this->systemStore->reveal())
         );
         $this->doctrineListBuilder->limit(10);
         $this->queryBuilder->setFirstResult(Argument::any())->willReturn($this->queryBuilder->reveal());
@@ -1107,7 +1113,7 @@ class DoctrineListBuilderTest extends TestCase
             'WITH',
             'accessControl.entityClass = :entityClass AND accessControl.entityId = SuluCoreBundle_Example.id'
         )->shouldBeCalled();
-        $this->queryBuilder->leftJoin('accessControl.role', 'role')->shouldBeCalled();
+        $this->queryBuilder->leftJoin('accessControl.role', 'role', 'WITH', 'role.system = :system')->shouldBeCalled();
         $this->queryBuilder->andWhere(
             'BIT_AND(accessControl.permissions, :permission) = :permission OR accessControl.permissions IS NULL'
         )->shouldBeCalled();
@@ -1115,6 +1121,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->queryBuilder->setParameter('roleIds', [1])->shouldBeCalled();
         $this->queryBuilder->setParameter('entityClass', self::$entityName)->shouldBeCalled();
         $this->queryBuilder->setParameter('permission', 64)->shouldBeCalled();
+        $this->queryBuilder->setParameter('system', 'Sulu')->shouldBeCalled();
 
         $this->doctrineListBuilder->execute();
     }
@@ -1145,7 +1152,7 @@ class DoctrineListBuilderTest extends TestCase
             'WITH',
             'accessControl.entityClass = :entityClass AND accessControl.entityId = stdClass.id'
         )->shouldBeCalled();
-        $this->queryBuilder->leftJoin('accessControl.role', 'role')->shouldBeCalled();
+        $this->queryBuilder->leftJoin('accessControl.role', 'role', 'WITH', 'role.system = :system')->shouldBeCalled();
         $this->queryBuilder->andWhere(
             'BIT_AND(accessControl.permissions, :permission) = :permission OR accessControl.permissions IS NULL'
         )->shouldBeCalled();
@@ -1153,6 +1160,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->queryBuilder->setParameter('roleIds', [1])->shouldBeCalled();
         $this->queryBuilder->setParameter('entityClass', \stdClass::class)->shouldBeCalled();
         $this->queryBuilder->setParameter('permission', 64)->shouldBeCalled();
+        $this->queryBuilder->setParameter('system', 'Sulu')->shouldBeCalled();
 
         $this->doctrineListBuilder->execute();
     }
@@ -1190,7 +1198,7 @@ class DoctrineListBuilderTest extends TestCase
             'WITH',
             'accessControl.entityClass = :entityClass AND accessControl.entityId = stdClass.id'
         )->shouldBeCalled();
-        $this->queryBuilder->leftJoin('accessControl.role', 'role')->shouldBeCalled();
+        $this->queryBuilder->leftJoin('accessControl.role', 'role', 'WITH', 'role.system = :system')->shouldBeCalled();
         $this->queryBuilder->andWhere(
             'BIT_AND(accessControl.permissions, :permission) = :permission OR accessControl.permissions IS NULL'
         )->shouldBeCalled();
@@ -1198,6 +1206,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->queryBuilder->setParameter('roleIds', [1])->shouldBeCalled();
         $this->queryBuilder->setParameter('entityClass', \stdClass::class)->shouldBeCalled();
         $this->queryBuilder->setParameter('permission', 64)->shouldBeCalled();
+        $this->queryBuilder->setParameter('system', 'Sulu')->shouldBeCalled();
 
         $this->doctrineListBuilder->execute();
     }

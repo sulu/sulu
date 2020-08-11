@@ -9,10 +9,11 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\Navigation;
+namespace Sulu\Bundle\WebsiteBundle\Tests\Functional\Navigation;
 
 use PHPCR\NodeInterface;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
+use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\WebsiteBundle\Navigation\NavigationMapper;
 use Sulu\Bundle\WebsiteBundle\Navigation\NavigationMapperInterface;
@@ -29,8 +30,12 @@ use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Query\ContentQueryExecutor;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Sulu\Component\Security\Authentication\RoleInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
-class NavigationTest extends SuluTestCase
+class NavigationMapperTest extends SuluTestCase
 {
     /**
      * @var StructureInterface[]
@@ -74,26 +79,70 @@ class NavigationTest extends SuluTestCase
 
     private $homeDocument;
 
+    /**
+     * @var RoleInteface
+     */
+    private $anonymousRole;
+
+    /**
+     * @var RoleInterface
+     */
+    private $grantedRole;
+
+    /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
+
+    /**
+     * @var UserInterface
+     */
+    private $user;
+
     protected function setUp(): void
     {
+        $this->purgeDatabase();
         $this->initPhpcr();
         $this->mapper = $this->getContainer()->get('sulu.content.mapper');
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->structureManager = $this->getContainer()->get('sulu.content.structure_manager');
         $this->extensionManager = $this->getContainer()->get('sulu_page.extension.manager');
         $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
+        $this->tokenStorage = $this->getContainer()->get('security.token_storage');
         $this->languageNamespace = 'i18n';
         $this->homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
 
+        $this->user = $this->getContainer()->get('test_user_provider')->getUser();
+
+        $this->getContainer()->get('sulu_security.system_store')->setSystem('sulu_io');
+
+        $entityManager = $this->getContainer()->get('doctrine.orm.entity_manager');
+        $this->anonymousRole = $this->getContainer()->get('sulu.repository.role')->createNew();
+        $this->anonymousRole->setName('Anonymous');
+        $this->anonymousRole->setAnonymous(true);
+        $this->anonymousRole->setSystem('sulu_io');
+        $entityManager->persist($this->anonymousRole);
+
+        $entityManager = $this->getContainer()->get('doctrine.orm.entity_manager');
+        $this->grantedRole = $this->getContainer()->get('sulu.repository.role')->createNew();
+        $this->grantedRole->setName('Granted');
+        $this->grantedRole->setAnonymous(false);
+        $this->grantedRole->setSystem('sulu_io');
+        $entityManager->persist($this->grantedRole);
+
+        $entityManager->flush();
+
         $this->data = $this->prepareTestData();
 
-        $contentQuery = new ContentQueryExecutor($this->sessionManager, $this->mapper);
+        $contentQuery = new ContentQueryExecutor($this->sessionManager, $this->mapper, null, $this->tokenStorage);
 
         $this->navigationMapper = new NavigationMapper(
             $this->mapper,
             $contentQuery,
             new NavigationQueryBuilder($this->structureManager, $this->extensionManager, $this->languageNamespace),
-            $this->sessionManager
+            $this->sessionManager,
+            null,
+            ['view' => 64]
         );
     }
 
@@ -180,6 +229,24 @@ class NavigationTest extends SuluTestCase
         $this->documentManager->publish($documents['products/product-2'], 'en');
         $this->documentManager->flush();
 
+        $documents['secured-document'] = $this->createPageDocument();
+        $documents['secured-document']->setStructureType('simple');
+        $documents['secured-document']->setParent($this->homeDocument);
+        $documents['secured-document']->setTitle('Secured Document');
+        $documents['secured-document']->setResourceSegment('/secured-document');
+        $documents['secured-document']->setExtensionsData(
+            ['excerpt' => ['title' => 'Secured Document', 'segment' => 'w']]
+        );
+        $documents['secured-document']->setNavigationContexts(['main']);
+        $documents['secured-document']->setWorkflowStage(WorkflowStage::PUBLISHED);
+        $documents['secured-document']->setPermissions([
+            $this->anonymousRole->getId() => ['view' => false],
+            $this->grantedRole->getId() => ['view' => true],
+        ]);
+        $this->documentManager->persist($documents['secured-document'], 'en');
+        $this->documentManager->publish($documents['secured-document'], 'en');
+        $this->documentManager->flush();
+
         return $documents;
     }
 
@@ -235,6 +302,37 @@ class NavigationTest extends SuluTestCase
         $this->assertEquals('/news/news-2', $main[0]['children'][1]['url']);
         $this->assertEquals('/products', $main[1]['url']);
         $this->assertEquals('/products/products-1', $main[1]['children'][0]['url']);
+    }
+
+    public function testMainNavigationWithSecuredDocument()
+    {
+        $userRole = $this->prophesize(UserRole::class);
+        $userRole->getLocales()->willReturn(['en']);
+        $userRole->getRole()->willReturn($this->grantedRole);
+        $this->user->addUserRole($userRole->reveal());
+        $this->tokenStorage->setToken(new UsernamePasswordToken($this->user, '', 'test'));
+
+        $main = $this->navigationMapper->getRootNavigation(
+            'sulu_io',
+            'en',
+            2,
+            false,
+            null,
+            false,
+            'w'
+        );
+        $this->assertCount(3, $main);
+        $this->assertEquals('News', $main[0]['title']);
+        $this->assertEquals('Products', $main[1]['title']);
+        $this->assertEquals('Secured Document', $main[2]['title']);
+    }
+
+    public function testMainNavigationWithoutSecuredDocument()
+    {
+        $main = $this->navigationMapper->getRootNavigation('sulu_io', 'en', 2, false, null, false, 'w');
+        $this->assertCount(2, $main);
+        $this->assertEquals('News', $main[0]['title']);
+        $this->assertEquals('Products', $main[1]['title']);
     }
 
     public function testNavigation()
@@ -296,6 +394,12 @@ class NavigationTest extends SuluTestCase
 
     public function testNavigationExcerpt()
     {
+        $userRole = $this->prophesize(UserRole::class);
+        $userRole->getLocales()->willReturn(['en']);
+        $userRole->getRole()->willReturn($this->grantedRole);
+        $this->user->addUserRole($userRole->reveal());
+        $this->tokenStorage->setToken(new UsernamePasswordToken($this->user, '', 'test'));
+
         $document = $this->createPageDocument();
         $document->setStructureType('simple');
         $document->setTitle('SubNews');

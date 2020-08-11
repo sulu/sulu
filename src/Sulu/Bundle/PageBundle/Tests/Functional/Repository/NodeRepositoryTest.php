@@ -11,8 +11,12 @@
 
 namespace Sulu\Bundle\PageBundle\Tests\Functional\Repository;
 
+use Doctrine\ORM\EntityManagerInterface;
 use PHPCR\NodeInterface;
 use Sulu\Bundle\PageBundle\Repository\NodeRepositoryInterface;
+use Sulu\Bundle\SecurityBundle\Entity\Permission;
+use Sulu\Bundle\SecurityBundle\Entity\Role;
+use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\StructureInterface;
@@ -27,6 +31,7 @@ use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 /**
  * @group functional
@@ -64,8 +69,14 @@ class NodeRepositoryTest extends SuluTestCase
      */
     private $documentManager;
 
+    /**
+     * @var EntityManagerInterface
+     */
+    private $em;
+
     protected function setUp(): void
     {
+        $this->purgeDatabase();
         $this->initPhpcr();
         $this->extensions = [new TestExtension('test1', 'test1')];
         $this->mapper = $this->getContainer()->get('sulu.content.mapper');
@@ -74,6 +85,32 @@ class NodeRepositoryTest extends SuluTestCase
         $this->extensionManager = $this->getContainer()->get('sulu_page.extension.manager');
         $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
         $this->extensionManager->addExtension(new TestExtension('test1', 'test1'));
+        $this->em = $this->getEntityManager();
+
+        $user = $this->getContainer()->get('test_user_provider')->getUser();
+
+        $role1 = new Role();
+        $role1->setName('Role1');
+        $role1->setSystem('Sulu');
+        $this->em->persist($role1);
+
+        $userRole1 = new UserRole();
+        $userRole1->setRole($role1);
+        $userRole1->setUser($user);
+        $userRole1->setLocale(\json_encode(['de', 'en']));
+        $user->addUserRole($userRole1);
+        $this->em->persist($userRole1);
+
+        $permission1 = new Permission();
+        $permission1->setPermissions(122);
+        $permission1->setRole($role1);
+        $permission1->setContext('sulu.webspaces.sulu_io');
+        $this->em->persist($permission1);
+
+        $this->em->flush();
+
+        $this->getContainer()->get('sulu_security.system_store')->setSystem('Sulu');
+        $this->getContainer()->get('security.token_storage')->setToken(new UsernamePasswordToken($user, '', 'test'));
     }
 
     private function prepareGetTestData()

@@ -121,15 +121,17 @@
             <argument type="service" id="sulu_security.mask_converter"/>
             <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="sulu_security.system_store"/>
+            <argument type="service" id="sulu.repository.role"/>
         </service>
 
-        <service id="sulu_security.system_store" class="Sulu\Bundle\SecurityBundle\System\SystemStore" />
+        <service id="sulu_security.system_store" class="Sulu\Bundle\SecurityBundle\System\SystemStore">
+            <argument type="service" id="sulu.repository.role"/>
+        </service>
 
         <service id="sulu_security.phpcr_access_control_provider" class="%sulu_security.phpcr_access_control_provider.class%">
             <argument type="service" id="sulu_document_manager.document_manager"/>
             <argument type="service" id="sulu.repository.role"/>
             <argument>%permissions%</argument>
-            <tag name="sulu.context" context="admin"/>
             <tag name="sulu.access_control"/>
         </service>
 
@@ -138,7 +140,6 @@
             <argument type="service" id="sulu.repository.role"/>
             <argument type="service" id="sulu.repository.access_control"/>
             <argument type="service" id="sulu_security.mask_converter"/>
-            <tag name="sulu.context" context="admin"/>
             <tag name="sulu.access_control"/>
         </service>
 
@@ -313,6 +314,13 @@
 
             <tag name="kernel.event_subscriber"/>
             <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <service
+            id="sulu_security.access_control_query_enhancer"
+            class="Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer"
+        >
+            <argument type="service" id="sulu_security.system_store" />
         </service>
     </services>
 </container>

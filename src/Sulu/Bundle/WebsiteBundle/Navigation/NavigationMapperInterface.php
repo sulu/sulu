@@ -36,7 +36,8 @@ interface NavigationMapperInterface
         $depth = 1,
         $flat = false,
         $context = null,
-        $loadExcerpt = false
+        $loadExcerpt = false,
+        $segmentKey = null
     );
 
     /**
@@ -57,7 +58,8 @@ interface NavigationMapperInterface
         $depth = 1,
         $flat = false,
         $context = null,
-        $loadExcerpt = false
+        $loadExcerpt = false,
+        $segmentKey = null
     );
 
     /**

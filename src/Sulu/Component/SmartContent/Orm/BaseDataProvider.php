@@ -14,6 +14,7 @@ namespace Sulu\Component\SmartContent\Orm;
 use JMS\Serializer\SerializationContext;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Serializer\ArraySerializerInterface;
 use Sulu\Component\SmartContent\ArrayAccessItem;
 use Sulu\Component\SmartContent\Configuration\Builder;
@@ -23,6 +24,7 @@ use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
 use Sulu\Component\SmartContent\DataProviderInterface;
 use Sulu\Component\SmartContent\DataProviderResult;
 use Sulu\Component\SmartContent\ItemInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Provides basic functionality for contact and account providers.
@@ -59,14 +61,21 @@ abstract class BaseDataProvider implements DataProviderInterface
      */
     private $referenceStore;
 
+    /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
+
     public function __construct(
         DataProviderRepositoryInterface $repository,
         ArraySerializerInterface $serializer,
-        ReferenceStoreInterface $referenceStore = null
+        ReferenceStoreInterface $referenceStore = null,
+        TokenStorageInterface $tokenStorage = null
     ) {
         $this->repository = $repository;
         $this->serializer = $serializer;
         $this->referenceStore = $referenceStore;
+        $this->tokenStorage = $tokenStorage;
     }
 
     public function getDefaultPropertyParameter()
@@ -135,7 +144,15 @@ abstract class BaseDataProvider implements DataProviderInterface
         $pageSize = null,
         $options = []
     ) {
-        $result = $this->repository->findByFilters($filters, $page, $pageSize, $limit, $locale, $options);
+        $result = $this->repository->findByFilters(
+            $filters,
+            $page,
+            $pageSize,
+            $limit,
+            $locale,
+            $options,
+            $this->getUser()
+        );
 
         $hasNextPage = false;
         if (null !== $pageSize && \count($result) > $pageSize) {
@@ -232,4 +249,19 @@ abstract class BaseDataProvider implements DataProviderInterface
      * @return ItemInterface[]
      */
     abstract protected function decorateDataItems(array $data);
+
+    private function getUser(): ?UserInterface
+    {
+        if (!$this->tokenStorage) {
+            return null;
+        }
+
+        $user = $this->tokenStorage->getToken()->getUser();
+
+        if ($user instanceof UserInterface) {
+            return $user;
+        }
+
+        return null;
+    }
 }

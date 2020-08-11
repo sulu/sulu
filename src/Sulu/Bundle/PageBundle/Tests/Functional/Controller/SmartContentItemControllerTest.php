@@ -13,14 +13,10 @@ namespace Sulu\Bundle\PageBundle\Tests\Functional\Controller;
 
 use Doctrine\ORM\EntityManager;
 use PHPCR\SessionInterface;
-use Sulu\Bundle\ContactBundle\Entity\Contact;
-use Sulu\Bundle\ContactBundle\Entity\Email;
-use Sulu\Bundle\ContactBundle\Entity\EmailType;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\PageBundle\Form\Type\PageDocumentType;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
-use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
@@ -111,55 +107,30 @@ class SmartContentItemControllerTest extends SuluTestCase
     {
         $this->purgeDatabase();
 
-        $contact = new Contact();
-        $contact->setFirstName('Max');
-        $contact->setLastName('Mustermann');
-        $this->em->persist($contact);
-        $this->em->flush();
-
-        $emailType = new EmailType();
-        $emailType->setName('Private');
-        $this->em->persist($emailType);
-        $this->em->flush();
-
-        $email = new Email();
-        $email->setEmail('max.mustermann@muster.at');
-        $email->setEmailType($emailType);
-        $this->em->persist($email);
-        $this->em->flush();
+        $user = $this->getContainer()->get('test_user_provider')->getUser();
 
         $role1 = new Role();
         $role1->setName('Role1');
         $role1->setSystem('Sulu');
         $this->em->persist($role1);
-        $this->em->flush();
-
-        $user = new User();
-        $user->setUsername('admin');
-        $user->setPassword('securepassword');
-        $user->setSalt('salt');
-        $user->setLocale('de');
-        $user->setContact($contact);
-        $this->em->persist($user);
-        $this->em->flush();
 
         $userRole1 = new UserRole();
         $userRole1->setRole($role1);
         $userRole1->setUser($user);
         $userRole1->setLocale(\json_encode(['de', 'en']));
+        $user->addUserRole($userRole1);
         $this->em->persist($userRole1);
-        $this->em->flush();
 
         $permission1 = new Permission();
         $permission1->setPermissions(122);
         $permission1->setRole($role1);
-        $permission1->setContext('Context 1');
+        $permission1->setContext('sulu.webspaces.sulu_io');
         $this->em->persist($permission1);
-        $this->em->flush();
 
         $this->tag1 = $this->getContainer()->get('sulu.repository.tag')->createNew();
         $this->tag1->setName('tag1');
         $this->em->persist($this->tag1);
+
         $this->em->flush();
     }
 

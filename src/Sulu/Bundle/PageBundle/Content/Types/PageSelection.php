@@ -22,6 +22,7 @@ use Sulu\Component\Content\ContentTypeExportInterface;
 use Sulu\Component\Content\PreResolvableContentTypeInterface;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
+use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Util\ArrayableInterface;
 
 /**
@@ -49,16 +50,23 @@ class PageSelection extends ComplexContentType implements ContentTypeExportInter
      */
     private $showDrafts;
 
+    /**
+     * @var array
+     */
+    private $permissions;
+
     public function __construct(
         ContentQueryExecutorInterface $contentQueryExecutor,
         ContentQueryBuilderInterface $contentQueryBuilder,
         ReferenceStoreInterface $referenceStore,
-        $showDrafts
+        $showDrafts,
+        $permissions = null
     ) {
         $this->contentQueryExecutor = $contentQueryExecutor;
         $this->contentQueryBuilder = $contentQueryBuilder;
         $this->referenceStore = $referenceStore;
         $this->showDrafts = $showDrafts;
+        $this->permissions = $permissions;
     }
 
     public function read(
@@ -135,7 +143,8 @@ class PageSelection extends ComplexContentType implements ContentTypeExportInter
             \array_merge($this->getDefaultParams(), $property->getParams()),
             $property->getStructure()->getWebspaceKey(),
             $property->getStructure()->getLanguageCode(),
-            $this->showDrafts
+            $this->showDrafts,
+            $this->permissions[PermissionTypes::VIEW]
         );
 
         return $container->getData();

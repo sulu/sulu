@@ -29,7 +29,6 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescrip
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
-use Sulu\Component\Security\Authorization\PermissionTypes;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -117,8 +116,16 @@ class CollectionManager implements CollectionManagerInterface
         $this->permissions = $permissions;
     }
 
-    public function getById($id, $locale, $depth = 0, $breadcrumb = false, $filter = [], $sortBy = [], $children = false)
-    {
+    public function getById(
+        $id,
+        $locale,
+        $depth = 0,
+        $breadcrumb = false,
+        $filter = [],
+        $sortBy = [],
+        $children = false,
+        $permission = null
+    ) {
         $collectionEntity = $this->collectionRepository->findCollectionById($id);
         if (null === $collectionEntity) {
             throw new CollectionNotFoundException($id);
@@ -132,7 +139,7 @@ class CollectionManager implements CollectionManagerInterface
                 $collectionEntity,
                 $sortBy,
                 $this->getCurrentUser(),
-                $this->permissions[PermissionTypes::VIEW]
+                $permission
             );
         }
 
@@ -193,8 +200,16 @@ class CollectionManager implements CollectionManagerInterface
         return $result;
     }
 
-    public function getTree($locale, $offset, $limit, $search, $depth = 0, $sortBy = [], $systemCollections = true)
-    {
+    public function getTree(
+        $locale,
+        $offset,
+        $limit,
+        $search,
+        $depth = 0,
+        $sortBy = [],
+        $systemCollections = true,
+        $permission = null
+    ) {
         $filter = [
             'offset' => $offset,
             'limit' => $limit,
@@ -210,7 +225,7 @@ class CollectionManager implements CollectionManagerInterface
             null,
             $sortBy,
             $this->getCurrentUser(),
-            $this->permissions[PermissionTypes::VIEW]
+            $permission
         );
 
         $collections = [];

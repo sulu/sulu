@@ -19,6 +19,7 @@ use Sulu\Component\Content\Repository\Content;
 use Sulu\Component\Content\Repository\ContentRepositoryInterface;
 use Sulu\Component\Content\Repository\Mapping\MappingBuilder;
 use Sulu\Component\Localization\Localization;
+use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Webspace;
@@ -34,6 +35,11 @@ class PagesSitemapProviderTest extends TestCase
      * @var WebspaceManagerInterface
      */
     private $webspaceManager;
+
+    /**
+     * @var AccessControlManagerInterface
+     */
+    private $accessControlManager;
 
     /**
      * @var PagesSitemapProvider
@@ -69,6 +75,7 @@ class PagesSitemapProviderTest extends TestCase
     {
         $this->contentRepository = $this->prophesize(ContentRepositoryInterface::class);
         $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
+        $this->accessControlManager = $this->prophesize(AccessControlManagerInterface::class);
 
         $this->webspace = $this->prophesize(Webspace::class);
         $this->portalInformation = $this->prophesize(PortalInformation::class);
@@ -84,7 +91,8 @@ class PagesSitemapProviderTest extends TestCase
         $this->sitemapProvider = new PagesSitemapProvider(
             $this->contentRepository->reveal(),
             $this->webspaceManager->reveal(),
-            'test'
+            'test',
+            $this->accessControlManager->reveal()
         );
     }
 
@@ -114,6 +122,9 @@ class PagesSitemapProviderTest extends TestCase
                 ->getMapping()
         )->willReturn($pages);
 
+        $this->accessControlManager->getUserPermissionByArray('de', 'sulu.webspaces.sulu_io', [], null)
+            ->shouldBeCalledTimes(3);
+
         $result = $this->sitemapProvider->build(1, 'http', 'localhost');
 
         $this->assertCount(3, $result);
@@ -121,6 +132,46 @@ class PagesSitemapProviderTest extends TestCase
             $this->assertEquals('http://localhost' . $pages[$i]->getUrl(), $result[$i]->getLoc());
             $this->assertEquals(new \DateTime($pages[$i]->getData()['changed']), $result[$i]->getLastMod());
         }
+    }
+
+    public function testBuildWithPermissions()
+    {
+        $localization = new Localization('de');
+        $this->webspace->getDefaultLocalization()->willReturn($localization);
+        $this->portalInformation->getLocalization()->willReturn($localization);
+
+        $this->webspaceManager->findPortalInformationsByHostIncludingSubdomains('localhost', 'test')
+            ->willReturn([$this->portalInformation->reveal()]);
+
+        /** @var Content[] $pages */
+        $pages = [
+            $this->createContent('/test-1', false, RedirectType::NONE, [], 'de', [1 => ['view' => true]]),
+            $this->createContent('/test-2', false, RedirectType::NONE, [], 'de', [1 => ['view' => false]]),
+            $this->createContent('/test-3', false, RedirectType::NONE, [], 'de', [1 => ['view' => true]]),
+        ];
+
+        $this->contentRepository->findAllByPortal(
+            'de',
+            $this->portalKey,
+            MappingBuilder::create()
+                ->addProperties(['changed', 'seo-hideInSitemap'])
+                ->setResolveUrl(true)
+                ->setHydrateGhost(false)
+                ->getMapping()
+        )->willReturn($pages);
+
+        $this->accessControlManager
+            ->getUserPermissionByArray('de', 'sulu.webspaces.sulu_io', [1 => ['view' => true]], null)
+            ->willReturn(['view' => true]);
+
+        $this->accessControlManager
+            ->getUserPermissionByArray('de', 'sulu.webspaces.sulu_io', [1 => ['view' => false]], null)
+            ->willReturn(['view' => false]);
+
+        $result = $this->sitemapProvider->build(1, 'http', 'localhost');
+
+        $this->assertEquals('http://localhost/test-1', $result[0]->getLoc());
+        $this->assertEquals('http://localhost/test-3', $result[1]->getLoc());
     }
 
     public function testBuildMultipleLocales()
@@ -260,12 +311,17 @@ class PagesSitemapProviderTest extends TestCase
      * @param string $url
      * @param bool $hideInSitemap
      * @param int $redirectTarget
-     * @param array $urls
      *
      * @return Content
      */
-    public function createContent($url, $hideInSitemap = false, $redirectTarget = RedirectType::NONE, $urls = [], $locale = 'de')
-    {
+    public function createContent(
+        $url,
+        $hideInSitemap = false,
+        $redirectTarget = RedirectType::NONE,
+        $urls = [],
+        $locale = 'de',
+        $permissions = []
+    ) {
         $content = new Content(
             $locale,
             $this->portalKey,
@@ -276,7 +332,7 @@ class PagesSitemapProviderTest extends TestCase
             false,
             'default',
             ['seo-hideInSitemap' => $hideInSitemap, 'changed' => (new \DateTime())->format('c')],
-            []
+            $permissions
         );
         $content->setUrl($url);
         $content->setUrls($urls);

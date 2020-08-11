@@ -377,7 +377,8 @@ class ContentTypeTest extends TestCase
             ['webspaceKey' => 'sulu_io', 'locale' => 'de'],
             null,
             1,
-            5
+            5,
+            null
         )->willReturn(new DataProviderResult([1, 2, 3, 4, 5, 6], true));
 
         $structure->getUuid()->willReturn('123-123-123');
@@ -564,7 +565,8 @@ class ContentTypeTest extends TestCase
             ['webspaceKey' => 'sulu_io', 'locale' => 'de'],
             null,
             1,
-            5
+            5,
+            null
         )->willReturn(new DataProviderResult([1, 2, 3, 4, 5], true));
 
         $structure->getUuid()->willReturn('123-123-123');
@@ -690,7 +692,8 @@ class ContentTypeTest extends TestCase
             ['webspaceKey' => 'sulu_io', 'locale' => 'de'],
             $limitResult,
             $page,
-            $pageSize
+            $pageSize,
+            null
         )->willReturn(new DataProviderResult($expectedData, $hasNextPage));
 
         $property->expects($this->exactly(1))->method('getValue')
@@ -806,7 +809,8 @@ class ContentTypeTest extends TestCase
             ['webspaceKey' => 'sulu_io', 'locale' => 'de'],
             $limitResult,
             $page < 1 ? 1 : ($page > \PHP_INT_MAX ? \PHP_INT_MAX : $page),
-            $pageSize
+            $pageSize,
+            null
         )->willReturn(new DataProviderResult($expectedData, $hasNextPage));
 
         $property->expects($this->at(1))->method('getValue')
@@ -918,6 +922,9 @@ class ContentTypeTest extends TestCase
                 'exclude_duplicates' => new PropertyParameter('exclude_duplicates', false),
             ],
             ['webspaceKey' => 'sulu_io', 'locale' => 'de'],
+            null,
+            1,
+            null,
             null
         )->willReturn(
             new DataProviderResult(
@@ -970,7 +977,8 @@ class ContentTypeTest extends TestCase
             Argument::that(function($value) {
                 return 1 === $value['targetGroupId'];
             }),
-            Argument::cetera()
+            Argument::cetera(),
+            null
         )->willReturn(new DataProviderResult([], false));
 
         $property->setValue(Argument::that(function($value) {
@@ -1010,7 +1018,8 @@ class ContentTypeTest extends TestCase
             Argument::that(function($value) {
                 return !\array_key_exists('targetGroupId', $value);
             }),
-            Argument::cetera()
+            Argument::cetera(),
+            null
         )->willReturn(new DataProviderResult([], false));
 
         $property->setValue(Argument::that(function($value) {
@@ -1051,7 +1060,8 @@ class ContentTypeTest extends TestCase
             Argument::that(function($value) {
                 return 's' === $value['segmentKey'];
             }),
-            Argument::cetera()
+            Argument::cetera(),
+            null
         )->willReturn(new DataProviderResult([], false));
 
         $property->setValue(Argument::that(function($value) {

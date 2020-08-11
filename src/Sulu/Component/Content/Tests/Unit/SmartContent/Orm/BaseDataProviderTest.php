@@ -15,12 +15,15 @@ use JMS\Serializer\SerializationContext;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Serializer\ArraySerializerInterface;
 use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
 use Sulu\Component\SmartContent\DataProviderResult;
 use Sulu\Component\SmartContent\Orm\BaseDataProvider;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 use Sulu\Component\SmartContent\ResourceItemInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class BaseDataProviderTest extends TestCase
 {
@@ -206,9 +209,8 @@ class BaseDataProviderTest extends TestCase
         $items
     ) {
         $repository = $this->prophesize(DataProviderRepositoryInterface::class);
-        $repository->findByFilters($filters, $page, $pageSize, $limit, 'en', $options)->shouldBeCalled()->willReturn(
-            $repositoryResult
-        );
+        $repository->findByFilters($filters, $page, $pageSize, $limit, 'en', $options, null)
+            ->shouldBeCalled()->willReturn($repositoryResult);
 
         $serializer = $this->prophesize(ArraySerializerInterface::class);
 
@@ -242,7 +244,7 @@ class BaseDataProviderTest extends TestCase
         $items
     ) {
         $repository = $this->prophesize(DataProviderRepositoryInterface::class);
-        $repository->findByFilters($filters, $page, $pageSize, $limit, 'en', [])->shouldBeCalled()->willReturn(
+        $repository->findByFilters($filters, $page, $pageSize, $limit, 'en', [], null)->shouldBeCalled()->willReturn(
             $repositoryResult
         );
 
@@ -293,7 +295,7 @@ class BaseDataProviderTest extends TestCase
         );
 
         $repository = $this->prophesize(DataProviderRepositoryInterface::class);
-        $repository->findByFilters($filters, $page, $pageSize, $limit, 'en', [])->shouldBeCalled()->willReturn(
+        $repository->findByFilters($filters, $page, $pageSize, $limit, 'en', [], null)->shouldBeCalled()->willReturn(
             $mockedItems
         );
 
@@ -335,6 +337,36 @@ class BaseDataProviderTest extends TestCase
         }
     }
 
+    public function testResolveResourceItemsWithUser()
+    {
+        $user = $this->prophesize(UserInterface::class);
+
+        $repository = $this->prophesize(DataProviderRepositoryInterface::class);
+        $repository->findByFilters([], 1, null, -1, 'en', [], $user->reveal())->shouldBeCalled()->willReturn([]);
+
+        $serializer = $this->prophesize(ArraySerializerInterface::class);
+
+        $tokenStorage = $this->prophesize(TokenStorageInterface::class);
+        $token = $this->prophesize(TokenInterface::class);
+        $token->getUser()->willReturn($user->reveal());
+        $tokenStorage->getToken()->willReturn($token->reveal());
+
+        /** @var BaseDataProvider $provider */
+        $provider = $this->getMockForAbstractClass(
+            BaseDataProvider::class,
+            [$repository->reveal(), $serializer->reveal(), null, $tokenStorage->reveal()]
+        );
+
+        $result = $provider->resolveResourceItems(
+            [],
+            [],
+            ['locale' => 'en', 'webspace' => 'sulu_io'],
+            -1,
+            1,
+            null
+        );
+    }
+
     /**
      * @dataProvider filtersProvider
      */
@@ -359,7 +391,7 @@ class BaseDataProviderTest extends TestCase
         );
 
         $repository = $this->prophesize(DataProviderRepositoryInterface::class);
-        $repository->findByFilters($filters, $page, $pageSize, $limit, 'en', [])->shouldBeCalled()->willReturn(
+        $repository->findByFilters($filters, $page, $pageSize, $limit, 'en', [], null)->shouldBeCalled()->willReturn(
             $mockedItems
         );
 

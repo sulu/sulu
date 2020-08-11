@@ -14,6 +14,8 @@ namespace Sulu\Component\Content\Query;
 use Jackalope\Query\Row;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
@@ -36,14 +38,21 @@ class ContentQueryExecutor implements ContentQueryExecutorInterface
      */
     private $stopwatch;
 
+    /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
+
     public function __construct(
         SessionManagerInterface $sessionManager,
         ContentMapperInterface $contentMapper,
-        Stopwatch $stopwatch = null
+        Stopwatch $stopwatch = null,
+        TokenStorageInterface $tokenStorage = null
     ) {
         $this->sessionManager = $sessionManager;
         $this->contentMapper = $contentMapper;
         $this->stopwatch = $stopwatch;
+        $this->tokenStorage = $tokenStorage;
     }
 
     public function execute(
@@ -54,7 +63,8 @@ class ContentQueryExecutor implements ContentQueryExecutorInterface
         $depth = -1,
         $limit = null,
         $offset = null,
-        $moveUp = false
+        $moveUp = false,
+        $permission = null
     ) {
         if ($this->stopwatch) {
             $this->stopwatch->start('ContentQuery::execute.build-query');
@@ -106,7 +116,9 @@ class ContentQueryExecutor implements ContentQueryExecutorInterface
             $locales,
             $fields,
             $depth,
-            $contentQueryBuilder->getPublished()
+            $contentQueryBuilder->getPublished(),
+            $this->getCurrentUser(),
+            $permission
         );
 
         if ($this->stopwatch) {
@@ -145,5 +157,29 @@ class ContentQueryExecutor implements ContentQueryExecutorInterface
         }
 
         return $query;
+    }
+
+    /**
+     * Returns current user or null if no user is loggedin.
+     *
+     * @return UserInterface|void
+     */
+    private function getCurrentUser()
+    {
+        if (!$this->tokenStorage) {
+            return;
+        }
+
+        if (!$this->tokenStorage->getToken()) {
+            return;
+        }
+
+        $user = $this->tokenStorage->getToken()->getUser();
+
+        if ($user instanceof UserInterface) {
+            return $user;
+        }
+
+        return;
     }
 }

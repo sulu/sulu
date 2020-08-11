@@ -16,6 +16,7 @@ use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
+use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer;
 use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredEntityRepositoryTrait;
@@ -29,6 +30,11 @@ use Sulu\Component\Security\Authorization\AccessControl\SecuredEntityRepositoryT
 class CollectionRepository extends NestedTreeRepository implements CollectionRepositoryInterface
 {
     use SecuredEntityRepositoryTrait;
+
+    /**
+     * @var AccessControlQueryEnhancer
+     */
+    private $accessControlQueryEnhancer;
 
     public function findCollectionById($id)
     {
@@ -92,8 +98,24 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
 
         $queryBuilder->addOrderBy('collection.id', 'ASC');
 
-        if (null !== $user && null != $permission) {
-            $this->addAccessControl($queryBuilder, $user, $permission, Collection::class, 'collection');
+        if (null != $permission) {
+            if ($this->accessControlQueryEnhancer) {
+                $this->accessControlQueryEnhancer->enhance(
+                    $queryBuilder,
+                    $user,
+                    $permission,
+                    Collection::class,
+                    'collection'
+                );
+            } else {
+                $this->addAccessControl(
+                    $queryBuilder,
+                    $user,
+                    $permission,
+                    Collection::class,
+                    'collection'
+                );
+            }
         }
 
         return $queryBuilder->getQuery()->getResult();
@@ -346,5 +368,10 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
         }
 
         return $queryBuilder->getQuery();
+    }
+
+    public function setAccessControlQueryEnhancer(AccessControlQueryEnhancer $accessControlQueryEnhancer)
+    {
+        $this->accessControlQueryEnhancer = $accessControlQueryEnhancer;
     }
 }

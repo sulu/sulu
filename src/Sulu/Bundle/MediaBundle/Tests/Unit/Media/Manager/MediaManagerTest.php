@@ -169,9 +169,7 @@ class MediaManagerTest extends TestCase
             $this->tokenStorage->reveal(),
             $this->securityChecker->reveal(),
             $this->ffprobe->reveal(),
-            [
-                'view' => 64,
-            ],
+            [],
             '/download/{id}/media/{slug}',
             0,
             $this->targetGroupRepository->reveal()
@@ -181,9 +179,19 @@ class MediaManagerTest extends TestCase
     /**
      * @dataProvider provideGetByIds
      */
-    public function testGetByIds($ids, $media, $result)
+    public function testGetByIds($ids, $user, $media, $result)
     {
-        $this->mediaRepository->findMedia(Argument::any())->willReturn($media);
+        $token = $this->prophesize(TokenInterface::class);
+        $token->getUser()->willReturn($user);
+        $this->tokenStorage->getToken()->willReturn($token->reveal());
+
+        $this->mediaRepository->findMedia(
+            ['pagination' => false, 'ids' => $ids],
+            null,
+            null,
+            $user,
+            null
+        )->willReturn($media);
         $this->formatManager->getFormats(Argument::cetera())->willReturn(null);
         $medias = $this->mediaManager->getByIds($ids, 'en');
 
@@ -211,7 +219,7 @@ class MediaManagerTest extends TestCase
         $this->mediaRepository->findMedia([], null, null, null, 64)->willReturn([])->shouldBeCalled();
         $this->mediaRepository->count(Argument::cetera())->shouldBeCalled();
 
-        $this->mediaManager->get('de', [], null, null);
+        $this->mediaManager->get('de', [], null, null, 64);
     }
 
     public function testGetWithSuluUser()
@@ -224,7 +232,7 @@ class MediaManagerTest extends TestCase
         $this->mediaRepository->findMedia([], null, null, $user->reveal(), 64)->willReturn([])->shouldBeCalled();
         $this->mediaRepository->count(Argument::cetera())->shouldBeCalled();
 
-        $this->mediaManager->get('de', [], null, null);
+        $this->mediaManager->get('de', [], null, null, 64);
     }
 
     public function testDeleteWithSecurity()
@@ -452,10 +460,12 @@ class MediaManagerTest extends TestCase
         $media2 = $this->createMedia(2);
         $media3 = $this->createMedia(3);
 
+        $user = $this->prophesize(SuluUserInterface::class);
+
         return [
-            [[1, 2, 3], [$media1, $media2, $media3], [$media1, $media2, $media3]],
-            [[2, 1, 3], [$media1, $media2, $media3], [$media2, $media1, $media3]],
-            [[4, 1, 2], [$media1, $media2], [$media1, $media2]],
+            [[1, 2, 3], null, [$media1, $media2, $media3], [$media1, $media2, $media3]],
+            [[2, 1, 3], $user->reveal(), [$media1, $media2, $media3], [$media2, $media1, $media3]],
+            [[4, 1, 2], null, [$media1, $media2], [$media1, $media2]],
         ];
     }
 
