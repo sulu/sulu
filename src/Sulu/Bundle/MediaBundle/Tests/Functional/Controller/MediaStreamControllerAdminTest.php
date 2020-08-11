@@ -16,39 +16,26 @@ use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\DataFixtures\ORM\LoadCollectionTypes;
 use Sulu\Bundle\MediaBundle\DataFixtures\ORM\LoadMediaTypes;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
+use Sulu\Bundle\SecurityBundle\Entity\Permission;
+use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class MediaStreamControllerAdminTest extends SuluTestCase
 {
-    /**
-     * @var KernelBrowser
-     */
-    private $client;
-
-    public function setUp(): void
-    {
-        $this->client = $this->createAuthenticatedClient();
-        $this->purgeDatabase();
-
-        $collectionTypes = new LoadCollectionTypes();
-        $collectionTypes->load($this->getEntityManager());
-        $mediaTypes = new LoadMediaTypes();
-        $mediaTypes->load($this->getEntityManager());
-    }
-
     public function testDownloadActionCheckPermissionCalled()
     {
+        $this->initDatabase();
+
         $filePath = $this->createMediaFile('test.jpg');
         $media = $this->createMedia($filePath, 'file-without-extension');
 
         // teardown needed to set a mocked service
         $this->tearDown();
-        $this->client = $this->createAuthenticatedClient();
+        $client = $this->createAuthenticatedClient();
 
         $securityChecker = $this->prophesize(SecurityCheckerInterface::class);
         $securityChecker->checkPermission(Argument::that(function(SecurityCondition $securityCondition) use ($media) {
@@ -63,10 +50,85 @@ class MediaStreamControllerAdminTest extends SuluTestCase
 
         self::$container->set('sulu_security.security_checker', $securityChecker->reveal());
 
-        $this->client->request('GET', $media->getAdminUrl());
-        $response = $this->client->getResponse();
+        $client->request('GET', $media->getAdminUrl());
+        $response = $client->getResponse();
 
         $this->assertHttpStatusCode(200, $response);
+    }
+
+    public function testDownloadActionCheckPermissionDenied()
+    {
+        $client = $this->createAuthenticatedClient([], [
+            'PHP_AUTH_USER' => 'secured_user',
+            'PHP_AUTH_PW' => 'secured_user',
+        ]);
+
+        $this->initDatabase();
+
+        $role = $this->getTestRole('Secure');
+        $user = $this->getTestUser('secured_user');
+        $userRole = new UserRole();
+        $userRole->setRole($role);
+        $userRole->setLocale('["en"]');
+        $userRole->setUser($user);
+
+        $this->getEntityManager()->persist($userRole);
+        $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
+
+        $filePath = $this->createMediaFile('test.jpg');
+        $media = $this->createMedia($filePath, 'file-without-extension');
+
+        $client->request('GET', $media->getAdminUrl());
+        $response = $client->getResponse();
+
+        $this->assertHttpStatusCode(403, $response);
+    }
+
+    public function testDownloadActionCheckPermissionAllowed()
+    {
+        $client = $this->createAuthenticatedClient([], [
+            'PHP_AUTH_USER' => 'secured_user',
+            'PHP_AUTH_PW' => 'secured_user',
+        ]);
+
+        $this->initDatabase();
+
+        $role = $this->getTestRole('Secure');
+        $permission = new Permission();
+        $permission->setRole($role);
+        $permission->setContext(MediaAdmin::SECURITY_CONTEXT);
+        $permission->setPermissions(64);
+        $role->addPermission($permission);
+        $this->getEntityManager()->persist($permission);
+
+        $user = $this->getTestUser('secured_user');
+        $userRole = new UserRole();
+        $userRole->setRole($role);
+        $userRole->setLocale('["en"]');
+        $userRole->setUser($user);
+
+        $this->getEntityManager()->persist($userRole);
+        $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
+
+        $filePath = $this->createMediaFile('test.jpg');
+        $media = $this->createMedia($filePath, 'file-without-extension');
+
+        $client->request('GET', $media->getAdminUrl());
+        $response = $client->getResponse();
+
+        $this->assertHttpStatusCode(200, $response);
+    }
+
+    private function initDatabase(): void
+    {
+        $this->purgeDatabase();
+
+        $collectionTypes = new LoadCollectionTypes();
+        $collectionTypes->load($this->getEntityManager());
+        $mediaTypes = new LoadMediaTypes();
+        $mediaTypes->load($this->getEntityManager());
     }
 
     private function createUploadedFile($path)

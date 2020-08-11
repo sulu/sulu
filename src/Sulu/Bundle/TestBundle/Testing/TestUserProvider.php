@@ -12,8 +12,11 @@
 namespace Sulu\Bundle\TestBundle\Testing;
 
 use Doctrine\ORM\EntityManager;
+use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\ContactBundle\Entity\ContactRepositoryInterface;
 use Sulu\Bundle\SecurityBundle\Entity\User;
+use Sulu\Component\Security\Authentication\RoleInterface;
+use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -58,27 +61,34 @@ class TestUserProvider implements UserProviderInterface
      */
     private $userProvider;
 
+    /**
+     * @var RoleRepositoryInterface
+     */
+    private $roleRepository;
+
     public function __construct(
         EntityManager $entityManager,
         ContactRepositoryInterface $contactRepository,
         UserRepositoryInterface $userRepository,
         EncoderFactoryInterface $userPasswordEncoderFactory,
-        UserProviderInterface $userProvider
+        UserProviderInterface $userProvider,
+        RoleRepositoryInterface $roleRepository
     ) {
         $this->entityManager = $entityManager;
         $this->contactRepository = $contactRepository;
         $this->userRepository = $userRepository;
         $this->userPasswordEncoderFactory = $userPasswordEncoderFactory;
         $this->userProvider = $userProvider;
+        $this->roleRepository = $roleRepository;
     }
 
-    public function getUser()
+    public function getUser(string $username = self::TEST_USER_USERNAME)
     {
-        if ($this->user) {
+        if ($this->user && self::TEST_USER_USERNAME === $username) {
             return $this->user;
         }
 
-        $user = $this->userRepository->findOneByUsername('test');
+        $user = $this->userRepository->findOneByUsername($username);
 
         if (!$user) {
             $contact = $this->contactRepository->createNew();
@@ -87,21 +97,46 @@ class TestUserProvider implements UserProviderInterface
             $this->entityManager->persist($contact);
 
             $user = $this->userRepository->createNew();
+            $user->setUsername($username);
             $user->setContact($contact);
             $this->entityManager->persist($user);
         }
 
-        $user->setUsername(self::TEST_USER_USERNAME);
         $user->setSalt('');
         $encoder = $this->userPasswordEncoderFactory->getEncoder($user);
-        $user->setPassword($encoder->encodePassword('test', $user->getSalt()));
+        $user->setPassword($encoder->encodePassword($username, $user->getSalt()));
         $user->setLocale('en');
 
         $this->entityManager->flush();
 
-        $this->user = $user;
+        if (self::TEST_USER_USERNAME === $username) {
+            $this->user = $user;
+        }
 
-        return $this->user;
+        return $user;
+    }
+
+    public function getRole(
+        string $name,
+        string $system = Admin::SULU_ADMIN_SECURITY_SYSTEM,
+        bool $anonymous = false
+    ): RoleInterface {
+        $role = $this->roleRepository->findOneByName($name);
+
+        if (!$role) {
+            /** @var RoleInterface $role */
+            $role = $this->roleRepository->createNew();
+            $role->setName($name);
+
+            $this->entityManager->persist($role);
+        }
+
+        $role->setSystem($system);
+        $role->setAnonymous($anonymous);
+
+        $this->entityManager->flush();
+
+        return $role;
     }
 
     /**
