@@ -11,6 +11,8 @@
 
 namespace Sulu\Bundle\MediaBundle\Controller;
 
+use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
+use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
@@ -23,6 +25,9 @@ use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Component\PHPCR\PathCleanupInterface;
+use Sulu\Component\Security\Authorization\PermissionTypes;
+use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
+use Sulu\Component\Security\Authorization\SecurityCondition;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -67,6 +72,11 @@ class MediaStreamController
      */
     protected $pathCleaner;
 
+    /**
+     * @var SecurityCheckerInterface|null
+     */
+    protected $securityChecker;
+
     public function __construct(
         DispositionTypeResolver $dispositionTypeResolver,
         MediaRepositoryInterface $mediaRepository,
@@ -74,7 +84,8 @@ class MediaStreamController
         FormatManagerInterface $formatManager,
         FormatCacheInterface $formatCache,
         MediaManagerInterface $mediaManager,
-        StorageInterface $storage
+        StorageInterface $storage,
+        ?SecurityCheckerInterface $securityChecker = null
     ) {
         $this->dispositionTypeResolver = $dispositionTypeResolver;
         $this->mediaRepository = $mediaRepository;
@@ -83,6 +94,7 @@ class MediaStreamController
         $this->formatCache = $formatCache;
         $this->mediaManager = $mediaManager;
         $this->storage = $storage;
+        $this->securityChecker = $securityChecker;
     }
 
     /**
@@ -128,6 +140,18 @@ class MediaStreamController
 
             if (!$fileVersion) {
                 return new Response(null, 404);
+            }
+
+            if ($this->securityChecker) {
+                $this->securityChecker->checkPermission(
+                    new SecurityCondition(
+                        MediaAdmin::SECURITY_CONTEXT,
+                        null,
+                        Collection::class,
+                        $fileVersion->getFile()->getMedia()->getCollection()->getId()
+                    ),
+                    PermissionTypes::VIEW
+                );
             }
 
             if ($request->query->has('inline')) {

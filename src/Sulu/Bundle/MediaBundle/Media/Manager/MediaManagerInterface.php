@@ -17,6 +17,9 @@ use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
+/**
+ * @method string getAdminUrl($id, $fileName, $version);
+ */
 interface MediaManagerInterface
 {
     /**
@@ -126,9 +129,9 @@ interface MediaManagerInterface
     /**
      * Returns download url for given id and filename.
      *
-     * @param string $id
+     * @param string|int $id
      * @param string $fileName
-     * @param string $version
+     * @param string|int $version
      *
      * @return string
      */

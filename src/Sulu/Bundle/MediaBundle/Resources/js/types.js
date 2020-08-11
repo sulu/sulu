@@ -1,5 +1,6 @@
 // @flow
 export type Media = {|
+    adminUrl: ?string,
     id: number,
     locale: string,
     mimeType: string,

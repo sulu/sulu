@@ -155,6 +155,7 @@ class Configuration implements ConfigurationInterface
                 ->children()
                     ->scalarNode('media_proxy_path')->defaultValue('/uploads/media/{slug}')->end()
                     ->scalarNode('media_download_path')->defaultValue('/media/{id}/download/{slug}')->end()
+                    ->scalarNode('media_download_path_admin')->defaultValue('/admin/media/{id}/download/{slug}')->end()
                 ->end()
             ->end()
             ->arrayNode('ffmpeg')

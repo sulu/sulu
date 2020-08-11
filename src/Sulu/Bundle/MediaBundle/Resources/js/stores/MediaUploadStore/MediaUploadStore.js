@@ -38,7 +38,11 @@ export default class MediaUploadStore {
             return undefined;
         }
 
-        return media.url;
+        if (!media.adminUrl) {
+            return media.url;
+        }
+
+        return media.adminUrl;
     }
 
     getThumbnail(size: string): ?string {

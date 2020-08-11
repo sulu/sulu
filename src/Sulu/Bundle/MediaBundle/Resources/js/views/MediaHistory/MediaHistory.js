@@ -51,7 +51,7 @@ class MediaHistory extends React.Component<Props> {
             throw new Error('Version "' + id + '" was not found. This should not happen and is likely a bug.');
         }
 
-        window.open(version.url + '&inline=1');
+        window.open((version.adminUrl ? version.adminUrl : version.url) + '&inline=1');
     };
 
     @action handleDeleteClick = (version: string | number) => {

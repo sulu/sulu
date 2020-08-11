@@ -223,6 +223,12 @@ class MediaController extends AbstractMediaController implements
                 $listResponse[$i]['version']
             );
 
+            $listResponse[$i]['adminUrl'] = $this->mediaManager->getAdminUrl(
+                $listResponse[$i]['id'],
+                $listResponse[$i]['name'],
+                $listResponse[$i]['version']
+            );
+
             if ($locale !== $listResponse[$i]['locale']) {
                 $listResponse[$i]['ghostLocale'] = $listResponse[$i]['locale'];
             }

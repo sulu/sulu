@@ -113,6 +113,7 @@
             <argument type="service" id="sulu_media.format_cache"/>
             <argument type="service" id="sulu_media.media_manager"/>
             <argument type="service" id="sulu_media.storage"/>
+            <argument type="service" id="sulu_security.security_checker" on-invalid="null"/>
         </service>
 
         <service
@@ -239,6 +240,7 @@
             <argument type="string">%sulu_media.media_manager.media_download_path%</argument>
             <argument>%sulu_media.media.max_file_size%</argument>
             <argument type="service" id="sulu.repository.target_group" on-invalid="null"/>
+            <argument type="string">%sulu_media.media_manager.media_download_path_admin%</argument>
         </service>
 
         <service id="Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface" alias="sulu_media.media_manager"/>

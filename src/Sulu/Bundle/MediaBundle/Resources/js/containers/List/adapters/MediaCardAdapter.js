@@ -33,8 +33,13 @@ class MediaCardAdapter extends React.Component<Props> {
         const imageSizes = [];
 
         imageSizes.push({
-            url: baseURL + item.url,
+            url: baseURL + item.adminUrl,
             label: translate('sulu_media.copy_masterfile_url'),
+        });
+
+        imageSizes.push({
+            url: baseURL + item.url,
+            label: translate('sulu_media.copy_masterfile_url_website'),
         });
 
         if (thumbnails) {
@@ -50,7 +55,7 @@ class MediaCardAdapter extends React.Component<Props> {
             imageSizes,
             onDownload: this.handleDownload,
             downloadCopyText: translate('sulu_media.copy_url'),
-            downloadUrl: baseURL + item.url,
+            downloadUrl: baseURL + item.adminUrl,
             downloadText: translate('sulu_media.download_masterfile'),
         };
     }

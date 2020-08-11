@@ -151,8 +151,15 @@ class MediaManager implements MediaManagerInterface
     public $count;
 
     /**
+     * @var string
+     */
+    private $adminDownloadPath;
+
+    /**
+     * @param array $permissions
      * @param string $downloadPath
      * @param string $maxFileSize
+     * @param string $adminDownloadPath
      */
     public function __construct(
         MediaRepositoryInterface $mediaRepository,
@@ -172,7 +179,8 @@ class MediaManager implements MediaManagerInterface
         $permissions,
         $downloadPath,
         $maxFileSize,
-        TargetGroupRepositoryInterface $targetGroupRepository = null
+        TargetGroupRepositoryInterface $targetGroupRepository = null,
+        $adminDownloadPath = null
     ) {
         $this->mediaRepository = $mediaRepository;
         $this->collectionRepository = $collectionRepository;
@@ -192,6 +200,18 @@ class MediaManager implements MediaManagerInterface
         $this->permissions = $permissions;
         $this->downloadPath = $downloadPath;
         $this->maxFileSize = $maxFileSize;
+
+        if (!$adminDownloadPath) {
+            @\trigger_error(
+                \sprintf(
+                    'The usage of the "%s" without setting the "$adminDownloadPath" is deprecated and will not longer work in Sulu 3.0.',
+                    MediaManager::class
+                ),
+                \E_USER_DEPRECATED
+            );
+        }
+
+        $this->adminDownloadPath = $adminDownloadPath ?: '/admin' . $this->downloadPath;
     }
 
     public function getById($id, $locale)
@@ -807,6 +827,11 @@ class MediaManager implements MediaManagerInterface
                 $fileVersion->getName(),
                 $fileVersion->getVersion()
             );
+            $versionData[$fileVersion->getVersion()]['adminUrl'] = $this->getAdminUrl(
+                $media->getId(),
+                $fileVersion->getName(),
+                $fileVersion->getVersion()
+            );
         }
 
         $media->setAdditionalVersionData($versionData);
@@ -820,6 +845,7 @@ class MediaManager implements MediaManagerInterface
         // Set Current Url
         if (isset($versionData[$media->getVersion()], $versionData[$media->getVersion()]['url'])) {
             $media->setUrl($versionData[$media->getVersion()]['url']);
+            $media->setAdminUrl($versionData[$media->getVersion()]['adminUrl']);
         }
 
         return $media;
@@ -837,19 +863,35 @@ class MediaManager implements MediaManagerInterface
         return $this->userRepository->findUserById($userId);
     }
 
-    public function getUrl($id, $fileName, $version)
+    /**
+     * Generate url by given path.
+     *
+     * @param string|int $id
+     * @param string|int $version
+     */
+    private function generateUrl(string $path, $id, string $fileName, $version): string
     {
         return \str_replace(
-            [
-                '{id}',
-                '{slug}',
-            ],
-            [
-                $id,
-                \rawurlencode($fileName),
-            ],
-            $this->downloadPath
-        ) . '?v=' . $version;
+                [
+                    '{id}',
+                    '{slug}',
+                ],
+                [
+                    $id,
+                    \rawurlencode($fileName),
+                ],
+                $path
+            ) . '?v=' . $version;
+    }
+
+    public function getUrl($id, $fileName, $version)
+    {
+        return $this->generateUrl($this->downloadPath, $id, $fileName, $version);
+    }
+
+    public function getAdminUrl($id, $fileName, $version)
+    {
+        return $this->generateUrl($this->adminDownloadPath, $id, $fileName, $version);
     }
 
     /**
