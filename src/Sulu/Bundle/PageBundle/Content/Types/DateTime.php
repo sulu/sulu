@@ -20,7 +20,7 @@ use Sulu\Component\Content\SimpleContentType;
  */
 class DateTime extends SimpleContentType
 {
-    const format = 'Y-m-d\TH:i:s';
+    const FORMAT = 'Y-m-d\TH:i:s';
 
     public function __construct()
     {
@@ -37,7 +37,7 @@ class DateTime extends SimpleContentType
     ) {
         $value = $property->getValue();
         if (null != $value) {
-            $value = \DateTime::createFromFormat(self::format, $value);
+            $value = \DateTime::createFromFormat(static::FORMAT, $value);
 
             $node->setProperty($property->getName(), $value);
         } else {
@@ -53,7 +53,7 @@ class DateTime extends SimpleContentType
             $propertyValue = $node->getPropertyValue($property->getName());
 
             if ($propertyValue instanceof \DateTime) {
-                $value = $propertyValue->format(self::format);
+                $value = $propertyValue->format(static::FORMAT);
             }
         }
 
