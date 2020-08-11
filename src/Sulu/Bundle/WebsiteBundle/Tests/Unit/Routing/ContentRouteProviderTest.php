@@ -33,6 +33,9 @@ use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\Localization\Localization;
+use Sulu\Component\Security\Authorization\PermissionTypes;
+use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
+use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzer;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
@@ -76,11 +79,6 @@ class ContentRouteProviderTest extends TestCase
     private $requestAnalyzer;
 
     /**
-     * @var ContentRouteProvider
-     */
-    private $contentRouteProvider;
-
-    /**
      * @var ObjectProphecy
      */
     private $webspaceManager;
@@ -96,15 +94,6 @@ class ContentRouteProviderTest extends TestCase
         $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
 
         $this->resourceLocatorStrategyPool->getStrategyByWebspaceKey(Argument::any())->willReturn($this->resourceLocatorStrategy->reveal());
-
-        $this->contentRouteProvider = new ContentRouteProvider(
-            $this->documentManager->reveal(),
-            $this->documentInspector->reveal(),
-            $this->resourceLocatorStrategyPool->reveal(),
-            $this->structureManager->reveal(),
-            $this->webspaceManager->reveal(),
-            $this->requestAnalyzer->reveal()
-        );
     }
 
     public function testStateTest()
@@ -127,7 +116,8 @@ class ContentRouteProviderTest extends TestCase
 
         $request = new Request([], [], [], [], [], ['REQUEST_URI' => \rawurlencode('/')]);
 
-        $routes = $this->contentRouteProvider->getRouteCollectionForRequest($request);
+        $contentRouteProvider = $this->createContentRouteProvider();
+        $routes = $contentRouteProvider->getRouteCollectionForRequest($request);
         $this->assertCount(0, $routes);
     }
 
@@ -186,7 +176,87 @@ class ContentRouteProviderTest extends TestCase
 
         $pageBridge->setDocument($document->reveal())->shouldBeCalled();
 
-        $routes = $this->contentRouteProvider->getRouteCollectionForRequest($request);
+        $contentRouteProvider = $this->createContentRouteProvider();
+        $routes = $contentRouteProvider->getRouteCollectionForRequest($request);
+
+        $defaults = $routes->getIterator()->current()->getDefaults();
+
+        $this->assertCount(1, $routes);
+        $this->assertEquals($pageBridge->reveal(), $defaults['structure']);
+        $this->assertEquals(false, $defaults['partial']);
+    }
+
+    public function testSecurityChecker()
+    {
+        $attributes = $this->prophesize(RequestAttributes::class);
+
+        $localization = new Localization();
+        $localization->setLanguage('de');
+        $attributes->getAttribute('localization', null)->willReturn($localization);
+
+        $portal = new Portal();
+        $portal->setKey('portal');
+        $webspace = new Webspace();
+        $webspace->setKey('webspace');
+        $webspace->setTheme('theme');
+        $portal->setWebspace($webspace);
+        $attributes->getAttribute('portal', null)->willReturn($portal);
+
+        $attributes->getAttribute('matchType', null)->willReturn(RequestAnalyzer::MATCH_TYPE_FULL);
+        $attributes->getAttribute('resourceLocator', null)->willReturn(null);
+        $attributes->getAttribute('resourceLocatorPrefix', null)->willReturn('/de');
+
+        $this->resourceLocatorStrategy->loadByResourceLocator('', 'webspace', 'de')->willReturn('some-uuid');
+
+        $document = $this->prophesize(TitleBehavior::class)
+            ->willImplement(ExtensionBehavior::class)
+            ->willImplement(RedirectTypeBehavior::class)
+            ->willImplement(StructureBehavior::class)
+            ->willImplement(WebspaceBehavior::class)
+            ->willImplement(UuidBehavior::class);
+        $document->getUuid()->willReturn('some-uuid');
+        $document->getTitle()->willReturn('some-title');
+        $document->getWebspaceName()->willReturn('webspace');
+        $document->getLocale()->willReturn('de');
+        $document->getRedirectType()->willReturn(RedirectType::NONE);
+        $document->getStructureType()->willReturn('default');
+        $document->getUuid()->willReturn('some-uuid');
+        $document->getExtensionsData()->willReturn(['excerpt' => ['segment' => null]]);
+        $this->documentManager->find('some-uuid', 'de', ['load_ghost_content' => false])->willReturn($document->reveal());
+
+        $metadata = new Metadata();
+        $metadata->setAlias('page');
+        $structureMetadata = new StructureMetadata();
+        $this->documentInspector->getMetadata($document->reveal())->willReturn($metadata);
+        $this->documentInspector->getStructureMetadata($document->reveal())->willReturn($structureMetadata);
+
+        $pageBridge = $this->prophesize(PageBridge::class);
+        $pageBridge->getController()->willReturn('::Controller');
+        $this->structureManager->wrapStructure('page', $structureMetadata)->willReturn($pageBridge->reveal());
+
+        $request = new Request(
+            [],
+            [],
+            ['_sulu' => $attributes->reveal()],
+            [],
+            [],
+            ['REQUEST_URI' => \rawurlencode('/de')]
+        );
+
+        $pageBridge->setDocument($document->reveal())->shouldBeCalled();
+
+        $securityChecker = $this->prophesize(SecurityCheckerInterface::class);
+        $securityChecker->checkPermission(Argument::that(function(SecurityCondition $securityCondition) use ($document) {
+            $this->assertSame('some-uuid', $securityCondition->getObjectId());
+            $this->assertSame(\get_class($document->reveal()), $securityCondition->getObjectType());
+            $this->assertSame('de', $securityCondition->getLocale());
+            $this->assertSame('sulu.webspaces.webspace', $securityCondition->getSecurityContext());
+
+            return true;
+        }), PermissionTypes::VIEW)->shouldBeCalled();
+
+        $contentRouteProvider = $this->createContentRouteProvider($securityChecker->reveal());
+        $routes = $contentRouteProvider->getRouteCollectionForRequest($request);
 
         $defaults = $routes->getIterator()->current()->getDefaults();
 
@@ -256,7 +326,8 @@ class ContentRouteProviderTest extends TestCase
 
         $pageBridge->setDocument($document->reveal())->shouldBeCalled();
 
-        $this->contentRouteProvider->getRouteCollectionForRequest($request);
+        $contentRouteProvider = $this->createContentRouteProvider();
+        $contentRouteProvider->getRouteCollectionForRequest($request);
     }
 
     public function testGetCollectionForRequestWithUmlauts()
@@ -316,7 +387,8 @@ class ContentRouteProviderTest extends TestCase
 
         $pageBridge->setDocument($document->reveal())->shouldBeCalled();
 
-        $routes = $this->contentRouteProvider->getRouteCollectionForRequest($request);
+        $contentRouteProvider = $this->createContentRouteProvider();
+        $routes = $contentRouteProvider->getRouteCollectionForRequest($request);
 
         /** @var Route $route */
         $route = $routes->getIterator()->current();
@@ -359,7 +431,8 @@ class ContentRouteProviderTest extends TestCase
 
         $request = new Request([], [], [], [], [], ['REQUEST_URI' => \rawurlencode('/')]);
 
-        $routes = $this->contentRouteProvider->getRouteCollectionForRequest($request);
+        $contentRouteProvider = $this->createContentRouteProvider();
+        $routes = $contentRouteProvider->getRouteCollectionForRequest($request);
         $this->assertCount(0, $routes);
     }
 
@@ -418,7 +491,8 @@ class ContentRouteProviderTest extends TestCase
 
         $pageBridge->setDocument($document->reveal())->shouldBeCalled();
 
-        $routes = $this->contentRouteProvider->getRouteCollectionForRequest($request);
+        $contentRouteProvider = $this->createContentRouteProvider();
+        $routes = $contentRouteProvider->getRouteCollectionForRequest($request);
 
         $defaults = $routes->getIterator()->current()->getDefaults();
 
@@ -438,7 +512,8 @@ class ContentRouteProviderTest extends TestCase
 
         $request = new Request([], [], [], [], [], ['REQUEST_URI' => \rawurlencode('/')]);
 
-        $routes = $this->contentRouteProvider->getRouteCollectionForRequest($request);
+        $contentRouteProvider = $this->createContentRouteProvider();
+        $routes = $contentRouteProvider->getRouteCollectionForRequest($request);
 
         $this->assertCount(0, $routes);
     }
@@ -459,7 +534,8 @@ class ContentRouteProviderTest extends TestCase
             ->willThrow(ResourceLocatorNotFoundException::class);
 
         $request = new Request([], [], [], [], [], ['REQUEST_URI' => \rawurlencode('/')]);
-        $routes = $this->contentRouteProvider->getRouteCollectionForRequest($request);
+        $contentRouteProvider = $this->createContentRouteProvider();
+        $routes = $contentRouteProvider->getRouteCollectionForRequest($request);
 
         $this->assertCount(0, $routes);
     }
@@ -510,7 +586,8 @@ class ContentRouteProviderTest extends TestCase
              ->willReturn('sulu.io/de/other-test');
 
         // Test the route provider
-        $routes = $this->contentRouteProvider->getRouteCollectionForRequest($request);
+        $contentRouteProvider = $this->createContentRouteProvider();
+        $routes = $contentRouteProvider->getRouteCollectionForRequest($request);
 
         $this->assertCount(1, $routes);
         $route = $routes->getIterator()->current();
@@ -568,7 +645,8 @@ class ContentRouteProviderTest extends TestCase
         );
 
         // Test the route provider
-        $routes = $this->contentRouteProvider->getRouteCollectionForRequest($request);
+        $contentRouteProvider = $this->createContentRouteProvider();
+        $routes = $contentRouteProvider->getRouteCollectionForRequest($request);
 
         $this->assertCount(1, $routes);
         $route = $routes->getIterator()->current();
@@ -615,7 +693,8 @@ class ContentRouteProviderTest extends TestCase
         );
 
         // Test the route provider
-        $routes = $this->contentRouteProvider->getRouteCollectionForRequest($request);
+        $contentRouteProvider = $this->createContentRouteProvider();
+        $routes = $contentRouteProvider->getRouteCollectionForRequest($request);
 
         $this->assertCount(1, $routes);
         $route = $routes->getIterator()->current();
@@ -650,7 +729,8 @@ class ContentRouteProviderTest extends TestCase
         );
 
         // Test the route provider
-        $routes = $this->contentRouteProvider->getRouteCollectionForRequest($request);
+        $contentRouteProvider = $this->createContentRouteProvider();
+        $routes = $contentRouteProvider->getRouteCollectionForRequest($request);
 
         $this->assertCount(1, $routes);
         $route = $routes->getIterator()->current();
@@ -707,7 +787,8 @@ class ContentRouteProviderTest extends TestCase
 
         $pageBridge->setDocument($document->reveal())->shouldBeCalled();
 
-        $routes = $this->contentRouteProvider->getRouteCollectionForRequest($request);
+        $contentRouteProvider = $this->createContentRouteProvider();
+        $routes = $contentRouteProvider->getRouteCollectionForRequest($request);
 
         $this->assertCount(1, $routes);
         $this->assertEquals($pageBridge->reveal(), $routes->getIterator()->current()->getDefaults()['structure']);
@@ -745,7 +826,8 @@ class ContentRouteProviderTest extends TestCase
         $request = new Request(
             [], [], ['_sulu' => $attributes->reveal()], [], [], ['REQUEST_URI' => \rawurlencode('/de/qwertz/')]
         );
-        $routes = $this->contentRouteProvider->getRouteCollectionForRequest($request);
+        $contentRouteProvider = $this->createContentRouteProvider();
+        $routes = $contentRouteProvider->getRouteCollectionForRequest($request);
 
         $this->assertCount(1, $routes);
         $route = $routes->getIterator()->current();
@@ -790,7 +872,8 @@ class ContentRouteProviderTest extends TestCase
             [],
             [], ['REQUEST_URI' => \rawurlencode('/de/foo/'), 'QUERY_STRING' => 'bar=baz']
         );
-        $routes = $this->contentRouteProvider->getRouteCollectionForRequest($request);
+        $contentRouteProvider = $this->createContentRouteProvider();
+        $routes = $contentRouteProvider->getRouteCollectionForRequest($request);
         $this->assertCount(1, $routes);
         $route = $routes->getIterator()->current();
         $this->assertEquals('sulu_website.redirect_controller:redirectAction', $route->getDefaults()['_controller']);
@@ -829,7 +912,8 @@ class ContentRouteProviderTest extends TestCase
         $request = new Request(
             [], [], ['_sulu' => $attributes->reveal()], [], [], ['REQUEST_URI' => \rawurlencode('/qwertz/')]
         );
-        $routes = $this->contentRouteProvider->getRouteCollectionForRequest($request);
+        $contentRouteProvider = $this->createContentRouteProvider();
+        $routes = $contentRouteProvider->getRouteCollectionForRequest($request);
 
         $this->assertCount(1, $routes);
         $route = $routes->getIterator()->current();
@@ -871,7 +955,8 @@ class ContentRouteProviderTest extends TestCase
         );
 
         // Test the route provider
-        $routes = $this->contentRouteProvider->getRouteCollectionForRequest($request);
+        $contentRouteProvider = $this->createContentRouteProvider();
+        $routes = $contentRouteProvider->getRouteCollectionForRequest($request);
 
         $this->assertCount(1, $routes);
         $route = $routes->getIterator()->current();
@@ -929,7 +1014,8 @@ class ContentRouteProviderTest extends TestCase
         );
 
         // Test the route provider
-        $routes = $this->contentRouteProvider->getRouteCollectionForRequest($request);
+        $contentRouteProvider = $this->createContentRouteProvider();
+        $routes = $contentRouteProvider->getRouteCollectionForRequest($request);
 
         $this->assertCount(1, $routes);
         $route = $routes->getIterator()->current();
@@ -942,8 +1028,22 @@ class ContentRouteProviderTest extends TestCase
         $request->getRequestFormat()->willReturn('');
 
         // Test the route provider
-        $routes = $this->contentRouteProvider->getRouteCollectionForRequest($request->reveal());
+        $contentRouteProvider = $this->createContentRouteProvider();
+        $routes = $contentRouteProvider->getRouteCollectionForRequest($request->reveal());
 
         $this->assertCount(0, $routes);
+    }
+
+    private function createContentRouteProvider(SecurityCheckerInterface $securityChecker = null): ContentRouteProvider
+    {
+        return new ContentRouteProvider(
+            $this->documentManager->reveal(),
+            $this->documentInspector->reveal(),
+            $this->resourceLocatorStrategyPool->reveal(),
+            $this->structureManager->reveal(),
+            $this->webspaceManager->reveal(),
+            $this->requestAnalyzer->reveal(),
+            $securityChecker
+        );
     }
 }
