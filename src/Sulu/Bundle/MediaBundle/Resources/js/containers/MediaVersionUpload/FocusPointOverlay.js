@@ -89,6 +89,7 @@ class FocusPointOverlay extends React.Component<Props> {
 
     render() {
         const {open} = this.props;
+        const image = this.resourceStore.data.adminUrl ? this.resourceStore.data.adminUrl : this.resourceStore.data.url;
 
         return (
             <Overlay
@@ -104,7 +105,7 @@ class FocusPointOverlay extends React.Component<Props> {
                 <div className={focusPointOverlayStyles.focusPointContainer}>
                     {!!this.resourceStore &&
                         <ImageFocusPoint
-                            image={this.resourceStore.data.adminUrl}
+                            image={image}
                             onChange={this.handleFocusPointChange}
                             value={{x: this.focusPointX, y: this.focusPointY}}
                         />

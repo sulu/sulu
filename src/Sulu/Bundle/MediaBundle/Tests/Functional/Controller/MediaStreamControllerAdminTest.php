@@ -12,11 +12,15 @@
 namespace Sulu\Bundle\MediaBundle\Tests\Functional\Controller;
 
 use Prophecy\Argument;
+use Sulu\Bundle\AdminBundle\Admin\Admin;
+use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\DataFixtures\ORM\LoadCollectionTypes;
 use Sulu\Bundle\MediaBundle\DataFixtures\ORM\LoadMediaTypes;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
+use Sulu\Bundle\SecurityBundle\Entity\Role;
+use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Security\Authorization\PermissionTypes;
@@ -64,15 +68,7 @@ class MediaStreamControllerAdminTest extends SuluTestCase
         ]);
 
         $this->initDatabase();
-
-        $role = $this->getTestRole('Secure');
-        $user = $this->getTestUser('secured_user');
-        $userRole = new UserRole();
-        $userRole->setRole($role);
-        $userRole->setLocale('["en"]');
-        $userRole->setUser($user);
-
-        $this->getEntityManager()->persist($userRole);
+        $this->createTestUser('secured_user', false);
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
@@ -93,22 +89,7 @@ class MediaStreamControllerAdminTest extends SuluTestCase
         ]);
 
         $this->initDatabase();
-
-        $role = $this->getTestRole('Secure');
-        $permission = new Permission();
-        $permission->setRole($role);
-        $permission->setContext(MediaAdmin::SECURITY_CONTEXT);
-        $permission->setPermissions(64);
-        $role->addPermission($permission);
-        $this->getEntityManager()->persist($permission);
-
-        $user = $this->getTestUser('secured_user');
-        $userRole = new UserRole();
-        $userRole->setRole($role);
-        $userRole->setLocale('["en"]');
-        $userRole->setUser($user);
-
-        $this->getEntityManager()->persist($userRole);
+        $this->createTestUser('secured_user', true);
         $this->getEntityManager()->flush();
         $this->getEntityManager()->clear();
 
@@ -119,6 +100,47 @@ class MediaStreamControllerAdminTest extends SuluTestCase
         $response = $client->getResponse();
 
         $this->assertHttpStatusCode(200, $response);
+    }
+
+    private function createTestUser(string $username, bool $hasPermission)
+    {
+        $contact = new Contact();
+        $this->getEntityManager()->persist($contact);
+        $contact->setFirstName('Max');
+        $contact->setLastName('Mustermann');
+
+        $user = new User();
+        $this->getEntityManager()->persist($user);
+        $user->setUsername($username);
+        $user->setContact($contact);
+
+        $user->setSalt('');
+
+        $encoder = self::$container->get('security.encoder_factory')->getEncoder($user);
+        $user->setPassword($encoder->encodePassword($username, $user->getSalt()));
+        $user->setLocale('en');
+
+        $role = new Role();
+        $this->getEntityManager()->persist($role);
+        $role->setName('Secure Test Role');
+        $role->setSystem(Admin::SULU_ADMIN_SECURITY_SYSTEM);
+        $role->setAnonymous(false);
+
+        $userRole = new UserRole();
+        $this->getEntityManager()->persist($userRole);
+        $user->addUserRole($userRole);
+        $userRole->setUser($user);
+        $userRole->setRole($role);
+        $userRole->setLocale('["en"]');
+
+        if ($hasPermission) {
+            $permission = new Permission();
+            $this->getEntityManager()->persist($permission);
+            $permission->setRole($role);
+            $permission->setContext(MediaAdmin::SECURITY_CONTEXT);
+            $permission->setPermissions(64);
+            $role->addPermission($permission);
+        }
     }
 
     private function initDatabase(): void
