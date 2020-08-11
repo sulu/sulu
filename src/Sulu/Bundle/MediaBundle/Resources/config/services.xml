@@ -235,6 +235,7 @@
             <argument type="service" id="security.token_storage" on-invalid="null" />
             <argument type="service" id="sulu_security.security_checker" on-invalid="null" />
             <argument type="service" id="sulu_media.ffprobe" on-invalid="null" />
+            <argument>%sulu_security.permissions%</argument>
             <argument type="string">%sulu_media.media_manager.media_download_path%</argument>
             <argument>%sulu_media.media.max_file_size%</argument>
             <argument type="service" id="sulu.repository.target_group" on-invalid="null"/>
@@ -298,6 +299,7 @@
             <argument type="service" id="doctrine.orm.entity_manager" />
             <argument type="service" id="security.token_storage" on-invalid="null"/>
             <argument type="string">%sulu_media.collection.previews.format%</argument>
+            <argument type="string">%sulu_security.permissions%</argument>
         </service>
 
         <service id="sulu_media.twig_extension.disposition_type" class="%sulu_media.twig_extension.disposition_type.class%">

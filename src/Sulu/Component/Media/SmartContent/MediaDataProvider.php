@@ -15,7 +15,6 @@ use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
-use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Serializer\ArraySerializerInterface;
 use Sulu\Component\SmartContent\DataProviderResult;
 use Sulu\Component\SmartContent\DatasourceItem;
@@ -115,8 +114,7 @@ class MediaDataProvider extends BaseDataProvider
         array $options = [],
         $limit = null,
         $page = 1,
-        $pageSize = null,
-        UserInterface $user = null
+        $pageSize = null
     ) {
         if (($filters['dataSource'] ?? null) === null) {
             return new DataProviderResult([], false);

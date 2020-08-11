@@ -19,6 +19,7 @@ use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer;
 use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
+use Sulu\Component\Security\Authorization\AccessControl\SecuredEntityRepositoryTrait;
 
 /**
  * CollectionRepository.
@@ -28,6 +29,8 @@ use Sulu\Component\Security\Authentication\UserInterface;
  */
 class CollectionRepository extends NestedTreeRepository implements CollectionRepositoryInterface
 {
+    use SecuredEntityRepositoryTrait;
+
     /**
      * @var AccessControlQueryEnhancer
      */
@@ -96,13 +99,23 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
         $queryBuilder->addOrderBy('collection.id', 'ASC');
 
         if (null != $permission) {
-            $this->accessControlQueryEnhancer->enhance(
-                $queryBuilder,
-                $user,
-                $permission,
-                Collection::class,
-                'collection'
-            );
+            if ($this->accessControlQueryEnhancer) {
+                $this->accessControlQueryEnhancer->enhance(
+                    $queryBuilder,
+                    $user,
+                    $permission,
+                    Collection::class,
+                    'collection'
+                );
+            } else {
+                $this->addAccessControl(
+                    $queryBuilder,
+                    $user,
+                    $permission,
+                    Collection::class,
+                    'collection'
+                );
+            }
         }
 
         return $queryBuilder->getQuery()->getResult();

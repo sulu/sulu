@@ -91,6 +91,11 @@ class CollectionManager implements CollectionManagerInterface
      */
     private $collectionPreviewFormat;
 
+    /**
+     * @var array
+     */
+    private $permissions;
+
     public function __construct(
         CollectionRepositoryInterface $collectionRepository,
         MediaRepositoryInterface $mediaRepository,
@@ -98,7 +103,8 @@ class CollectionManager implements CollectionManagerInterface
         UserRepositoryInterface $userRepository,
         EntityManager $em,
         TokenStorageInterface $tokenStorage = null,
-        $collectionPreviewFormat
+        $collectionPreviewFormat,
+        $permissions
     ) {
         $this->collectionRepository = $collectionRepository;
         $this->mediaRepository = $mediaRepository;
@@ -107,6 +113,7 @@ class CollectionManager implements CollectionManagerInterface
         $this->em = $em;
         $this->tokenStorage = $tokenStorage;
         $this->collectionPreviewFormat = $collectionPreviewFormat;
+        $this->permissions = $permissions;
     }
 
     public function getById(

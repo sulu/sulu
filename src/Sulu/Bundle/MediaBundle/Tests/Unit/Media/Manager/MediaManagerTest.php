@@ -169,6 +169,7 @@ class MediaManagerTest extends TestCase
             $this->tokenStorage->reveal(),
             $this->securityChecker->reveal(),
             $this->ffprobe->reveal(),
+            [],
             '/download/{id}/media/{slug}',
             0,
             $this->targetGroupRepository->reveal()

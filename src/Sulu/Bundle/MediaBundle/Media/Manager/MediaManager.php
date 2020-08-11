@@ -141,6 +141,11 @@ class MediaManager implements MediaManagerInterface
     private $ffprobe;
 
     /**
+     * @var array
+     */
+    private $permissions;
+
+    /**
      * @var int
      */
     public $count;
@@ -164,6 +169,7 @@ class MediaManager implements MediaManagerInterface
         TokenStorageInterface $tokenStorage = null,
         SecurityCheckerInterface $securityChecker = null,
         FFProbe $ffprobe = null,
+        $permissions,
         $downloadPath,
         $maxFileSize,
         TargetGroupRepositoryInterface $targetGroupRepository = null
@@ -183,6 +189,7 @@ class MediaManager implements MediaManagerInterface
         $this->tokenStorage = $tokenStorage;
         $this->securityChecker = $securityChecker;
         $this->ffprobe = $ffprobe;
+        $this->permissions = $permissions;
         $this->downloadPath = $downloadPath;
         $this->maxFileSize = $maxFileSize;
     }
