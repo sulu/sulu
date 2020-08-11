@@ -112,6 +112,8 @@ class NavigationMapperTest extends SuluTestCase
         $this->languageNamespace = 'i18n';
         $this->homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
 
+        $this->user = $this->getContainer()->get('test_user_provider')->getUser();
+
         $this->getContainer()->get('sulu_security.system_store')->setSystem('sulu_io');
 
         $entityManager = $this->getContainer()->get('doctrine.orm.entity_manager');
@@ -142,8 +144,6 @@ class NavigationMapperTest extends SuluTestCase
             null,
             ['view' => 64]
         );
-
-        $this->user = $this->getContainer()->get('test_user_provider')->getUser();
     }
 
     /**
