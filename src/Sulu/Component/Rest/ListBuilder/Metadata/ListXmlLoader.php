@@ -222,6 +222,7 @@ class ListXmlLoader
         );
 
         $propertyMetadata->setField($field);
+        $propertyMetadata->setDistinct(XmlUtil::getBooleanValueFromXPath('@distinct', $xpath, $propertyNode, false));
 
         return $propertyMetadata;
     }

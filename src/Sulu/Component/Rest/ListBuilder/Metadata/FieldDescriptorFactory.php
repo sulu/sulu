@@ -106,7 +106,8 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
                         );
                     } elseif ($propertyMetadata instanceof CountPropertyMetadata) {
                         $fieldDescriptor = $this->getCountFieldDescriptor(
-                            $propertyMetadata
+                            $propertyMetadata,
+                            $options
                         );
                     } elseif ($propertyMetadata instanceof CasePropertyMetadata) {
                         $fieldDescriptor = $this->getCaseFieldDescriptor(
@@ -195,8 +196,10 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
         );
     }
 
-    private function getCountFieldDescriptor(AbstractPropertyMetadata $propertyMetadata)
-    {
+    private function getCountFieldDescriptor(
+        AbstractPropertyMetadata $propertyMetadata,
+        $options
+    ) {
         $joins = [];
         foreach ($propertyMetadata->getField()->getJoins() as $joinMetadata) {
             $joins[$joinMetadata->getEntityName()] = new DoctrineJoinDescriptor(
@@ -217,7 +220,8 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
             $propertyMetadata->getVisibility(),
             $propertyMetadata->getSearchability(),
             $propertyMetadata->getType(),
-            $propertyMetadata->isSortable()
+            $propertyMetadata->isSortable(),
+            $this->resolveOptions($propertyMetadata->getDistinct(), $options)
         );
     }
 

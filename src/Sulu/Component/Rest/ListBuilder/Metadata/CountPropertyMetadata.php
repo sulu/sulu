@@ -21,6 +21,11 @@ class CountPropertyMetadata extends AbstractPropertyMetadata
      */
     private $field;
 
+    /**
+     * @var bool
+     */
+    private $distinct;
+
     public function setField(FieldMetadata $field)
     {
         $this->field = $field;
@@ -34,5 +39,15 @@ class CountPropertyMetadata extends AbstractPropertyMetadata
     public function getField()
     {
         return $this->field;
+    }
+
+    public function setDistinct(bool $distinct)
+    {
+        $this->distinct = $distinct;
+    }
+
+    public function getDistinct(): bool
+    {
+        return $this->distinct;
     }
 }

@@ -54,7 +54,7 @@
 
     <xs:complexType name="countPropertyType">
         <xs:group ref="propertyGroup"/>
-        <xs:attributeGroup ref="propertyAttributeGroup"/>
+        <xs:attributeGroup ref="countPropertyAttributeGroup"/>
     </xs:complexType>
 
     <xs:complexType name="casePropertyType">
@@ -165,6 +165,11 @@
     <xs:attributeGroup name="groupConcatPropertyAttributeGroup">
         <xs:attributeGroup ref="propertyAttributeGroup"/>
         <xs:attribute name="glue" type="xs:string"/>
+        <xs:attribute name="distinct" type="xs:boolean"/>
+    </xs:attributeGroup>
+
+    <xs:attributeGroup name="countPropertyAttributeGroup">
+        <xs:attributeGroup ref="propertyAttributeGroup"/>
         <xs:attribute name="distinct" type="xs:boolean"/>
     </xs:attributeGroup>
 
