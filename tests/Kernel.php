@@ -48,6 +48,14 @@ class Kernel extends SuluKernel implements HttpCacheProvider
     {
         if (!$this->httpCache) {
             $this->httpCache = new SuluHttpCache($this);
+            // Activate the following for user based caching see also:
+            // https://foshttpcachebundle.readthedocs.io/en/latest/features/user-context.html
+            //
+            //$this->httpCache->addSubscriber(
+            //    new \FOS\HttpCache\SymfonyCache\UserContextListener([
+            //        'session_name_prefix' => 'SULUSESSID',
+            //    ])
+            //);
         }
 
         return $this->httpCache;
