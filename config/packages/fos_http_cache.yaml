@@ -2,3 +2,12 @@ fos_http_cache:
     proxy_client:
         symfony:
             use_kernel_dispatcher: true
+
+# activate the following for user context based caching
+# also activate the route in config/routes/fos_http_cache.yaml and subscriber in src/Kernel.php
+# see also: https://foshttpcachebundle.readthedocs.io/en/latest/features/user-context.html
+#
+#    user_context:
+#        enabled: true
+#        role_provider: true
+#        hash_cache_ttl: 0
