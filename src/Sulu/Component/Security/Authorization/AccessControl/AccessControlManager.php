@@ -85,11 +85,15 @@ class AccessControlManager implements AccessControlManagerInterface
 
     public function getUserPermissions(SecurityCondition $securityCondition, $user)
     {
+        $system = $this->systemStore->getSystem();
+        if (!$system) {
+            return $this->maskConverter->convertPermissionsToArray(127);
+        }
+
         if (!($user instanceof UserInterface)) {
             $user = null;
         }
 
-        $system = $this->systemStore->getSystem();
         $locale = $securityCondition->getLocale();
 
         $objectPermissions = $this->getUserObjectPermission(
@@ -120,6 +124,10 @@ class AccessControlManager implements AccessControlManagerInterface
         $user
     ) {
         $system = $this->systemStore->getSystem();
+
+        if (!$system) {
+            return $this->maskConverter->convertPermissionsToArray(127);
+        }
 
         $objectPermissions = $this->getRolesObjectPermissionsByArray(
             $objectPermissionsByRole,

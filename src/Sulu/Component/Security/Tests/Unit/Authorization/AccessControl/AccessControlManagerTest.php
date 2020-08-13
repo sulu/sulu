@@ -58,6 +58,15 @@ class AccessControlManagerTest extends TestCase
 
         $this->maskConverter->convertPermissionsToArray(0)->willReturn(['view' => false, 'edit' => false]);
         $this->maskConverter->convertPermissionsToArray(64)->willReturn(['view' => true, 'edit' => false]);
+        $this->maskConverter->convertPermissionsToArray(127)->willReturn([
+            'view' => true,
+            'edit' => true,
+            'add' => true,
+            'delete' => true,
+            'live' => true,
+            'security' => true,
+            'archive' => true,
+        ]);
 
         $this->accessControlManager = new AccessControlManager(
             $this->maskConverter->reveal(),
@@ -258,6 +267,54 @@ class AccessControlManagerTest extends TestCase
         );
 
         $this->assertEquals(['view' => true, 'edit' => false], $permissions);
+    }
+
+    public function testGetUserPermissionsWithoutSystem()
+    {
+        $this->systemStore->getSystem()->willReturn(null);
+
+        /** @var AccessControlProviderInterface $accessControlProvider */
+        $accessControlProvider = $this->prophesize(AccessControlProviderInterface::class);
+        $accessControlProvider->supports(\stdClass::class)->willReturn(true);
+        $accessControlProvider->getPermissions(Argument::cetera())->shouldNotBeCalled();
+        $this->accessControlManager->addAccessControlProvider($accessControlProvider->reveal());
+
+        $permissions = $this->accessControlManager->getUserPermissions(
+            new SecurityCondition('example', 'de', \stdClass::class, '1'),
+            null
+        );
+
+        $this->assertEquals([
+            'view' => true,
+            'edit' => true,
+            'add' => true,
+            'delete' => true,
+            'live' => true,
+            'security' => true,
+            'archive' => true,
+        ], $permissions);
+    }
+
+    public function testGetUserPermissionByArrayWithoutSystem()
+    {
+        $this->systemStore->getSystem()->willReturn(null);
+
+        $permissions = $this->accessControlManager->getUserPermissionByArray(
+            'de',
+            'sulu_page.pages',
+            [],
+            null
+        );
+
+        $this->assertEquals([
+            'view' => true,
+            'edit' => true,
+            'add' => true,
+            'delete' => true,
+            'live' => true,
+            'security' => true,
+            'archive' => true,
+        ], $permissions);
     }
 
     public function testGetUserPermissionsWithoutAnonymousUser()
