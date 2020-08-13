@@ -36,7 +36,7 @@ export type ToolbarConfig = {
     backButton?: Button,
     disableAll?: boolean,
     errors?: Array<string>,
-    icons?: Array<Node>,
+    icons?: Array<Node>, // TODO would be better to be typed as Array<React.ComponentType>
     items?: Array<ToolbarItemConfig<*>>,
     locale?: Select<string>,
     showSuccess?: IObservableValue<boolean>,
