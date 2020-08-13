@@ -321,5 +321,18 @@
                 </join>
             </joins>
         </property>
+        
+        <property name="userLocked" visibility="no" translation="sulu_security.user_locked" type="bool">
+            <field-name>locked</field-name>
+            <entity-name>%sulu.model.user.class%</entity-name>
+
+            <joins>
+                <join>
+                    <entity-name>%sulu.model.user.class%</entity-name>
+                    <method>LEFT</method>
+                    <condition>%sulu.model.user.class%.contact = %sulu.model.contact.class%.id</condition>
+                </join>
+            </joins>
+        </property>
     </properties>
 </list>
