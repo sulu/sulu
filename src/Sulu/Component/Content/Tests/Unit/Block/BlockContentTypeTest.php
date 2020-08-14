@@ -1049,10 +1049,6 @@ class BlockContentTypeTest extends TestCase
             $result
         );
 
-        $webspace = new Webspace();
-        $webspace->setKey('webspace-1');
-        $this->requestAnalyzer->getWebspace()->willReturn($webspace);
-
         $segment = new Segment();
         $segment->setKey('w');
         $this->requestAnalyzer->getSegment()->willReturn($segment);

@@ -75,7 +75,7 @@ test('Render a label and a SingleSelect for each granted webspace that has segme
     expect(segmentSelect.render()).toMatchSnapshot();
 });
 
-test('Render only one label and SingleSelect for if options conatin a webspace', () => {
+test('Render only one label and SingleSelect if options contain a webspace', () => {
     const formInspector = new FormInspector(
         new ResourceFormStore(
             new ResourceStore('test'),

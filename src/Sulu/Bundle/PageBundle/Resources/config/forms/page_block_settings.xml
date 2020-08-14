@@ -26,7 +26,7 @@
             <tag name="sulu.block_setting_icon" icon="su-hide" />
         </property>
 
-        <section name="segment" visibleCondition="__webspace ? __webspace.segments|length &gt; 0 : true">
+        <section name="segments" visibleCondition="__webspace ? __webspace.segments|length &gt; 0 : true">
             <properties>
                 <property name="segment_enabled" type="checkbox">
                     <params>
