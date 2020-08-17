@@ -13,55 +13,52 @@ namespace Sulu\Bundle\PageBundle\Content\Types;
 
 use PHPCR\NodeInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
-use Sulu\Component\Content\SimpleContentType;
+use Sulu\Component\Content\ComplexContentType;
 
-class SegmentSelect extends SimpleContentType
+class SegmentSelect extends ComplexContentType
 {
-    public function __construct()
-    {
-        parent::__construct('SegmentSelect', '{}');
-    }
+    const SEPARATOR = '#';
 
     public function write(NodeInterface $node, PropertyInterface $property, $userId, $webspaceKey, $languageCode, $segmentKey)
     {
-        parent::write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
-
         // write a separate property for per webspace to make segment queryable in the smart content data provider
         foreach ($property->getValue() as $webspaceKeyValue => $segmentKeyValue) {
-            $webspaceSegmentPropertyName = $property->getName() . '-' . $webspaceKeyValue;
-            $node->setProperty($webspaceSegmentPropertyName, $this->removeIllegalCharacters($segmentKeyValue));
+            $node->setProperty(
+                $this->getWebspaceSegmentPropertyName($property, $webspaceKeyValue),
+                $segmentKeyValue
+            );
         }
     }
 
-    protected function encodeValue($value)
+    public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
-        return \json_encode($value);
-    }
-
-    protected function decodeValue($value)
-    {
-        if (!\is_string($value)) {
-            $value = $this->defaultValue;
+        $value = [];
+        foreach ($this->findProperties($node, $property) as $webspaceProperty) {
+            $value[\str_replace($this->getPrefix($property), '', $webspaceProperty->getName())] = $webspaceProperty->getValue();
         }
-
-        return \json_decode($value, true);
+        $property->setValue($value);
     }
 
-    public function exportData($propertyValue)
+    public function remove(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
-        return $this->encodeValue($propertyValue);
+        // if exist remove property of node
+        foreach ($this->findProperties($node, $property) as $webspaceProperty) {
+            $webspaceProperty->remove();
+        }
     }
 
-    public function importData(NodeInterface $node, PropertyInterface $property, $value, $userId, $webspaceKey, $languageCode, $segmentKey = null)
+    private function findProperties(NodeInterface $node, PropertyInterface $property)
     {
-        parent::importData(
-            $node,
-            $property,
-            $this->decodeValue($value),
-            $userId,
-            $webspaceKey,
-            $languageCode,
-            $segmentKey
-        );
+        return $node->getProperties($this->getPrefix($property) . '*');
+    }
+
+    private function getWebspaceSegmentPropertyName(PropertyInterface $property, string $webspaceKeyValue)
+    {
+        return $this->getPrefix($property) . $webspaceKeyValue;
+    }
+
+    private function getPrefix(PropertyInterface $property)
+    {
+        return $property->getName() . static::SEPARATOR;
     }
 }

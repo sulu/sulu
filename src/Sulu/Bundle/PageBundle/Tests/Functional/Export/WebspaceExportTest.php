@@ -305,7 +305,6 @@ class WebspaceExportTest extends SuluTestCase
                     'icon' => '',
                     'images' => '',
                     'audience_targeting_groups' => [],
-                    'segments' => ['sulu_io' => 'w'],
                 ],
             ],
             [
@@ -328,7 +327,6 @@ class WebspaceExportTest extends SuluTestCase
                     'icon' => '',
                     'images' => '',
                     'audience_targeting_groups' => [],
-                    'segments' => [],
                 ],
             ],
         ];
@@ -504,12 +502,6 @@ class WebspaceExportTest extends SuluTestCase
                         'target_group_selection',
                         false,
                         \json_encode($extensionData['excerpt']['audience_targeting_groups'])
-                    ),
-                    'segments' => $this->createItemArray(
-                        'segments',
-                        'segment_select',
-                        false,
-                        \json_encode($extensionData['excerpt']['segments'])
                     ),
                 ],
             ];

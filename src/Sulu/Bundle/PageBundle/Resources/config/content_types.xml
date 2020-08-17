@@ -27,7 +27,6 @@
         </service>
         <service id="sulu.content.type.segment_select" class="Sulu\Bundle\PageBundle\Content\Types\SegmentSelect">
             <tag name="sulu.content.type" alias="segment_select"/>
-            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
         </service>
         <service id="sulu.content.type.password" class="Sulu\Bundle\PageBundle\Content\Types\Password">
             <tag name="sulu.content.type" alias="password"/>

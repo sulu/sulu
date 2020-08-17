@@ -21,12 +21,21 @@ class SegmentSelectTest extends TestCase
     public function testRead()
     {
         $node = $this->prophesize(NodeInterface::class);
-        $node->hasProperty('test')->willReturn(true);
-        $node->getPropertyValue('test')->willReturn('{"sulu_io":"w"}');
 
         $property = $this->prophesize(PropertyInterface::class);
         $property->getName()->willReturn('test');
-        $property->setValue(['sulu_io' => 'w'])->shouldBeCalled();
+        $property->setValue(['website' => 'w', 'blog' => 's'])->shouldBeCalled();
+
+        $webspaceProperty1 = $this->prophesize(PropertyInterface::class);
+        $webspaceProperty1->getName()->willReturn('test#website');
+        $webspaceProperty1->getValue()->willReturn('w');
+
+        $webspaceProperty2 = $this->prophesize(PropertyInterface::class);
+        $webspaceProperty2->getName()->willReturn('test#blog');
+        $webspaceProperty2->getValue()->willReturn('s');
+
+        $node->getProperties('test#*')->willReturn([$webspaceProperty1->reveal(), $webspaceProperty2->reveal()]);
+        $node->hasProperty('test')->willReturn(true);
 
         $segmentSelect = new SegmentSelect();
 
@@ -36,8 +45,7 @@ class SegmentSelectTest extends TestCase
     public function testReadPropertyNotExists()
     {
         $node = $this->prophesize(NodeInterface::class);
-        $node->hasProperty('test')->willReturn(false);
-        $node->getPropertyValue('test')->shouldNotBeCalled();
+        $node->getProperties('test#*')->willReturn([]);
 
         $property = $this->prophesize(PropertyInterface::class);
         $property->getName()->willReturn('test');
@@ -51,9 +59,8 @@ class SegmentSelectTest extends TestCase
     public function testWrite()
     {
         $node = $this->prophesize(NodeInterface::class);
-        $node->setProperty('test', '{"sulu_io":"w","other":"a"}')->shouldBeCalled();
-        $node->setProperty('test-sulu_io', 'w')->shouldBeCalled();
-        $node->setProperty('test-other', 'a')->shouldBeCalled();
+        $node->setProperty('test#sulu_io', 'w')->shouldBeCalled();
+        $node->setProperty('test#other', 'a')->shouldBeCalled();
 
         $property = $this->prophesize(PropertyInterface::class);
         $property->getValue()->willReturn(['sulu_io' => 'w', 'other' => 'a']);
@@ -62,39 +69,5 @@ class SegmentSelectTest extends TestCase
         $segmentSelect = new SegmentSelect();
 
         $segmentSelect->write($node->reveal(), $property->reveal(), 1, 'sulu_io', 'de', null);
-    }
-
-    public function testExportData()
-    {
-        $segmentSelect = new SegmentSelect();
-
-        $exportResult = $segmentSelect->exportData(['sulu_io' => 'w', 'other' => 'a']);
-
-        $this->assertSame('{"sulu_io":"w","other":"a"}', $exportResult);
-    }
-
-    public function testImportData()
-    {
-        $node = $this->prophesize(NodeInterface::class);
-        $node->setProperty('test', '{"sulu_io":"w","other":"a"}')->shouldBeCalled();
-        $node->setProperty('test-sulu_io', 'w')->shouldBeCalled();
-        $node->setProperty('test-other', 'a')->shouldBeCalled();
-
-        $property = $this->prophesize(PropertyInterface::class);
-        $property->setValue(['sulu_io' => 'w', 'other' => 'a'])->shouldBeCalled();
-        $property->getValue()->willReturn(['sulu_io' => 'w', 'other' => 'a']);
-        $property->getName()->willReturn('test');
-
-        $segmentSelect = new SegmentSelect();
-
-        $segmentSelect->importData(
-            $node->reveal(),
-            $property->reveal(),
-            '{"sulu_io":"w","other":"a"}',
-            1,
-            'sulu_io',
-            'de',
-            null
-        );
     }
 }

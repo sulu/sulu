@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Content\SmartContent;
 
+use Sulu\Bundle\PageBundle\Content\Types\SegmentSelect;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
@@ -307,7 +308,7 @@ class QueryBuilder extends ContentQueryBuilder
             'excerpt'
         );
 
-        $webspaceSegmentPropertyName = $property->getName() . '-' . $webspaceKey;
+        $webspaceSegmentPropertyName = $property->getName() . SegmentSelect::SEPARATOR . $webspaceKey;
         $column = 'page.[' . $webspaceSegmentPropertyName . ']';
 
         return '(' . $column . ' = "' . $segmentKey . '" OR ' . $column . ' IS NULL)';
