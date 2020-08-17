@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {mount} from 'enzyme';
+import {shallow} from 'enzyme';
 import {FormInspector, ResourceFormStore} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
@@ -22,7 +22,7 @@ jest.mock('sulu-admin-bundle/stores', () => ({
     ResourceStore: jest.fn(),
 }));
 
-jest.mock('sulu-admin-bundle/utils', () => ({
+jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
@@ -53,29 +53,7 @@ jest.mock('../../../../stores/webspaceStore', () => ({
     ],
 }));
 
-test('Render a label and a SingleSelect for each granted webspace that has segments', () => {
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test'),
-            'test'
-        )
-    );
-
-    const segmentSelect = mount(
-        <SegmentSelect
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            value={{
-                'webspace-1': 's',
-            }}
-        />
-    );
-
-    expect(segmentSelect.find('SingleSelect')).toHaveLength(2);
-    expect(segmentSelect.render()).toMatchSnapshot();
-});
-
-test('Render only one label and SingleSelect if options contain a webspace', () => {
+test('Pass correct props to SegmentSelect', () => {
     const formInspector = new FormInspector(
         new ResourceFormStore(
             new ResourceStore('test'),
@@ -95,51 +73,18 @@ test('Render only one label and SingleSelect if options contain a webspace', () 
     };
     webspaceStore.getWebspace.mockReturnValue(webspace);
 
-    const segmentSelect = mount(
+    const segmentSelect = shallow(
         <SegmentSelect
             {...fieldTypeDefaultProps}
+            disabled={true}
             formInspector={formInspector}
             value={{}}
         />
     );
 
-    expect(webspaceStore.getWebspace).toBeCalledWith('sulu_io');
-    expect(segmentSelect.find('SingleSelect')).toHaveLength(1);
-});
-
-test('Pass correct props to SingleSelect', () => {
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test'),
-            'test'
-        )
-    );
-
-    const segmentSelect = mount(
-        <SegmentSelect
-            {...fieldTypeDefaultProps}
-            disabled={true}
-            formInspector={formInspector}
-            value={{
-                'webspace-1': 's',
-            }}
-        />
-    );
-
-    segmentSelect.find('Select').at(0).instance().openOptionList();
-    segmentSelect.update();
-
-    expect(segmentSelect.find('SingleSelect').at(0).prop('disabled')).toEqual(true);
-    expect(segmentSelect.find('SingleSelect').at(0).prop('value')).toEqual('s');
-    expect(segmentSelect.find('SingleSelect').at(1).prop('disabled')).toEqual(true);
-    expect(segmentSelect.find('SingleSelect').at(1).prop('value')).toEqual(undefined);
-
-    expect(segmentSelect.find('Option').at(0).prop('children')).toEqual('sulu_admin.none_selected');
-    expect(segmentSelect.find('Option').at(0).prop('value')).toEqual(undefined);
-    expect(segmentSelect.find('Option').at(1).prop('children')).toEqual('Winter');
-    expect(segmentSelect.find('Option').at(1).prop('value')).toEqual('w');
-    expect(segmentSelect.find('Option').at(2).prop('children')).toEqual('Summer');
-    expect(segmentSelect.find('Option').at(2).prop('value')).toEqual('s');
+    expect(segmentSelect.find('SegmentSelect').prop('disabled')).toEqual(true);
+    expect(segmentSelect.find('SegmentSelect').prop('value')).toEqual({});
+    expect(segmentSelect.find('SegmentSelect').prop('webspace')).toEqual('sulu_io');
 });
 
 test('Call onChange and onBlur if the value is changed', () => {
@@ -153,7 +98,7 @@ test('Call onChange and onBlur if the value is changed', () => {
         )
     );
 
-    const segmentSelect = mount(
+    const segmentSelect = shallow(
         <SegmentSelect
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -166,7 +111,10 @@ test('Call onChange and onBlur if the value is changed', () => {
         />
     );
 
-    segmentSelect.find('SingleSelect').at(1).prop('onChange')('a');
+    segmentSelect.find('SegmentSelect').prop('onChange')({
+        'webspace-1': 's',
+        'webspace-3': 'a',
+    });
     expect(changeSpy).toBeCalledWith({
         'webspace-1': 's',
         'webspace-3': 'a',
