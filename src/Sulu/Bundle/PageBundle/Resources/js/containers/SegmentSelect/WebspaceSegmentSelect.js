@@ -11,6 +11,7 @@ export default class WebspaceSegmentSelect extends React.Component<{
     onChange: (webspaceKey: string, segment: ?string) => void,
     value: ?string,
     webspace: Webspace,
+    webspaceNameVisible: boolean,
 }> {
     handleSelectChange = (value: ?string) => {
         const {onChange, webspace} = this.props;
@@ -19,12 +20,12 @@ export default class WebspaceSegmentSelect extends React.Component<{
     };
 
     render() {
-        const {disabled, value, webspace} = this.props;
+        const {disabled, value, webspace, webspaceNameVisible} = this.props;
 
         return (
             <div className={webspaceSegmentSelectStyles.webspaceSection}>
                 <label className={fieldStyles.label}>
-                    {webspace.name} - {translate('sulu_admin.segments')}
+                    {webspaceNameVisible && webspace.name + ' - '}{translate('sulu_admin.segments')}
                 </label>
 
                 <SingleSelect

@@ -44,6 +44,7 @@ export default class SegmentSelect extends React.Component<Props> {
                             onChange={this.handleWebspaceSegmentChange}
                             value={value ? value[webspace.key] : undefined}
                             webspace={webspace}
+                            webspaceNameVisible={this.visibleWebspaces.length > 1}
                         />
                     );
                 })}

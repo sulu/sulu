@@ -10,7 +10,11 @@ jest.mock('sulu-admin-bundle/utils/Translator', () => ({
 
 jest.mock('../../../stores/webspaceStore', () => ({
     getWebspace: jest.fn(),
-    grantedWebspaces: [
+}));
+
+test('Render a label and a SingleSelect for each granted webspace that has segments', () => {
+    // $FlowFixMe
+    webspaceStore.grantedWebspaces = [
         {
             name: 'Webspace One',
             key: 'webspace-1',
@@ -32,10 +36,77 @@ jest.mock('../../../stores/webspaceStore', () => ({
                 {key: 'p', title: 'Spring'},
             ],
         },
-    ],
-}));
+    ];
+
+    const segmentSelect = mount(
+        <SegmentSelect
+            disabled={false}
+            onChange={jest.fn()}
+            value={{
+                'webspace-1': 's',
+            }}
+            webspace={undefined}
+        />
+    );
+
+    expect(segmentSelect.find('SingleSelect')).toHaveLength(2);
+    expect(segmentSelect.render()).toMatchSnapshot();
+});
+
+test('Render a label without webspace name if only one webspace has segments', () => {
+    // $FlowFixMe
+    webspaceStore.grantedWebspaces = [
+        {
+            name: 'Webspace One',
+            key: 'webspace-1',
+            segments: [
+                {key: 'w', title: 'Winter'},
+                {key: 's', title: 'Summer'},
+            ],
+        },
+    ];
+
+    const segmentSelect = mount(
+        <SegmentSelect
+            disabled={false}
+            onChange={jest.fn()}
+            value={{
+                'webspace-1': 's',
+            }}
+            webspace={undefined}
+        />
+    );
+
+    expect(segmentSelect.find('label')).toHaveLength(1);
+    expect(segmentSelect.find('label').text()).toEqual('sulu_admin.segments');
+});
 
 test('Render a label and a SingleSelect for each granted webspace that has segments', () => {
+    // $FlowFixMe
+    webspaceStore.grantedWebspaces = [
+        {
+            name: 'Webspace One',
+            key: 'webspace-1',
+            segments: [
+                {key: 'w', title: 'Winter'},
+                {key: 's', title: 'Summer'},
+            ],
+        },
+        {
+            name: 'Webspace Two',
+            key: 'webspace-2',
+            segments: [],
+        },
+        {
+            name: 'Webspace Three',
+            key: 'webspace-3',
+            segments: [
+                {key: 'a', title: 'Autumn'},
+                {key: 'p', title: 'Spring'},
+            ],
+        },
+    ];
+
     const segmentSelect = mount(
         <SegmentSelect
             disabled={false}
@@ -76,6 +147,31 @@ test('Render only one label and SingleSelect if options contain a webspace', () 
 });
 
 test('Pass correct props to SingleSelect', () => {
+    // $FlowFixMe
+    webspaceStore.grantedWebspaces = [
+        {
+            name: 'Webspace One',
+            key: 'webspace-1',
+            segments: [
+                {key: 'w', title: 'Winter'},
+                {key: 's', title: 'Summer'},
+            ],
+        },
+        {
+            name: 'Webspace Two',
+            key: 'webspace-2',
+            segments: [],
+        },
+        {
+            name: 'Webspace Three',
+            key: 'webspace-3',
+            segments: [
+                {key: 'a', title: 'Autumn'},
+                {key: 'p', title: 'Spring'},
+            ],
+        },
+    ];
+
     const segmentSelect = mount(
         <SegmentSelect
             disabled={true}
@@ -105,6 +201,31 @@ test('Pass correct props to SingleSelect', () => {
 
 test('Call onChange if the value is changed', () => {
     const changeSpy = jest.fn();
+
+    // $FlowFixMe
+    webspaceStore.grantedWebspaces = [
+        {
+            name: 'Webspace One',
+            key: 'webspace-1',
+            segments: [
+                {key: 'w', title: 'Winter'},
+                {key: 's', title: 'Summer'},
+            ],
+        },
+        {
+            name: 'Webspace Two',
+            key: 'webspace-2',
+            segments: [],
+        },
+        {
+            name: 'Webspace Three',
+            key: 'webspace-3',
+            segments: [
+                {key: 'a', title: 'Autumn'},
+                {key: 'p', title: 'Spring'},
+            ],
+        },
+    ];
 
     const segmentSelect = mount(
         <SegmentSelect
