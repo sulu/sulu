@@ -1,6 +1,6 @@
 // @flow
 import {observer} from 'mobx-react';
-import {action, computed} from 'mobx';
+import {action, computed, toJS} from 'mobx';
 import React, {Fragment} from 'react';
 import ToolbarComponent from '../../components/Toolbar';
 import Snackbar from '../../components/Snackbar';
@@ -153,7 +153,11 @@ class Toolbar extends React.Component<ToolbarProps> {
                     <ToolbarComponent.Controls>
                         {iconsConfig.length > 0 &&
                             <ToolbarComponent.Icons>
-                                {iconsConfig.map((icon) => icon)}
+                                {iconsConfig.map((icon) => {
+                                    // TODO this creates a deep copy and has a performance impact.
+                                    // Would be better to return functional components in withToolbar.
+                                    return toJS(icon);
+                                })}
                             </ToolbarComponent.Icons>
                         }
                         {!!localeConfig &&

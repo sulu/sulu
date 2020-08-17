@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import {computed} from 'mobx';
 import MultiSelectComponent from '../../../components/MultiSelect';
 import type {FieldTypeProps} from '../../../types';
 
@@ -38,24 +39,32 @@ export default class Select extends React.Component<Props> {
         }
     }
 
-    handleChange = (value: Array<string | number>) => {
-        const {onChange, onFinish} = this.props;
-
-        onChange(value.length > 0 ? value : undefined);
-        onFinish();
-    };
-
-    render() {
-        const {schemaOptions, disabled, value} = this.props;
-        const {values} = schemaOptions;
+    @computed get values() {
+        const {values} = this.props.schemaOptions;
 
         if (!values || !Array.isArray(values.value)) {
             throw new Error('The "values" option has to be set for the Select FieldType');
         }
 
+        return values.value;
+    }
+
+    handleChange = (value: Array<string | number>) => {
+        const {onChange, onFinish} = this.props;
+
+        const allowedValues = this.values.map((value) => value.name);
+        const filteredValue = value.filter((v) => allowedValues.includes(v));
+
+        onChange(filteredValue.length > 0 ? filteredValue : undefined);
+        onFinish();
+    };
+
+    render() {
+        const {disabled, value} = this.props;
+
         return (
             <MultiSelectComponent disabled={!!disabled} onChange={this.handleChange} values={value || []}>
-                {values.value.map(({name: value, title}) => {
+                {this.values.map(({name: value, title}) => {
                     if (typeof value !== 'string' && typeof value !== 'number') {
                         throw new Error('The children of "values" must only contain values of type string or number!');
                     }
