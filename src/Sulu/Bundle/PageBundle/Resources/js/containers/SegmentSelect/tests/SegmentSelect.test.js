@@ -78,7 +78,7 @@ test('Render a label without webspace name if only one webspace has segments', (
     );
 
     expect(segmentSelect.find('label')).toHaveLength(1);
-    expect(segmentSelect.find('label').text()).toEqual('sulu_admin.segments');
+    expect(segmentSelect.find('label').text()).toEqual('sulu_admin.segment');
 });
 
 test('Render a label and a SingleSelect for each granted webspace that has segments', () => {

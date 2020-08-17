@@ -25,7 +25,7 @@ export default class WebspaceSegmentSelect extends React.Component<{
         return (
             <div className={webspaceSegmentSelectStyles.webspaceSection}>
                 <label className={fieldStyles.label}>
-                    {webspaceNameVisible && webspace.name + ' - '}{translate('sulu_admin.segments')}
+                    {webspaceNameVisible && webspace.name + ' - '}{translate('sulu_admin.segment')}
                 </label>
 
                 <SingleSelect

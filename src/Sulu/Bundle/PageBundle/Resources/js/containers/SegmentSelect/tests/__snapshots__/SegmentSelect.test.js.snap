@@ -8,7 +8,7 @@ Array [
     <label
       class="label"
     >
-      Webspace One - sulu_admin.segments
+      Webspace One - sulu_admin.segment
     </label>
     <div
       class="select"
@@ -55,7 +55,7 @@ Array [
     <label
       class="label"
     >
-      Webspace Three - sulu_admin.segments
+      Webspace Three - sulu_admin.segment
     </label>
     <div
       class="select"
@@ -107,7 +107,7 @@ Array [
     <label
       class="label"
     >
-      Webspace One - sulu_admin.segments
+      Webspace One - sulu_admin.segment
     </label>
     <div
       class="select"
@@ -154,7 +154,7 @@ Array [
     <label
       class="label"
     >
-      Webspace Three - sulu_admin.segments
+      Webspace Three - sulu_admin.segment
     </label>
     <div
       class="select"
