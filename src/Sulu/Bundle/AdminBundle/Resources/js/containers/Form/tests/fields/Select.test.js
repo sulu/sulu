@@ -144,6 +144,42 @@ test('Should call onChange with undefined if value is changed to an empty array'
     expect(finishSpy).toBeCalledWith();
 });
 
+test('Should call onChange with allowed values only if value contains old values', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const changeSpy = jest.fn();
+    const finishSpy = jest.fn();
+    const schemaOptions = {
+        values: {
+            name: 'values',
+            value: [
+                {
+                    name: 'mr',
+                    title: 'Mister',
+                },
+                {
+                    name: 'ms',
+                    title: 'Miss',
+                },
+            ],
+        },
+    };
+
+    const select = shallow(
+        <Select
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            onChange={changeSpy}
+            onFinish={finishSpy}
+            schemaOptions={schemaOptions}
+        />
+    );
+
+    select.simulate('change', ['mr', 'removed-value']);
+
+    expect(changeSpy).toBeCalledWith(['mr']);
+    expect(finishSpy).toBeCalledWith();
+});
+
 test('Should call onFinish callback on every onChange', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const finishSpy = jest.fn();
