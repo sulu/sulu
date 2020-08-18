@@ -70,7 +70,7 @@ export default class SaveWithPublishingToolbarAction extends AbstractFormToolbar
                 label: translate('sulu_admin.save_draft'),
                 disabled: !dirty,
                 onClick: () => {
-                    this.form.submit('draft');
+                    this.form.submit({action: 'draft'});
                 },
             });
         }
@@ -80,7 +80,7 @@ export default class SaveWithPublishingToolbarAction extends AbstractFormToolbar
                 label: translate('sulu_admin.save_publish'),
                 disabled: !dirty,
                 onClick: () => {
-                    this.form.submit('publish');
+                    this.form.submit({action: 'publish'});
                 },
             });
         }
@@ -91,7 +91,7 @@ export default class SaveWithPublishingToolbarAction extends AbstractFormToolbar
                 // TODO do not hardcode "publishedState" but use metadata instead
                 disabled: dirty || data.publishedState === undefined || !!data.publishedState,
                 onClick: () => {
-                    this.form.submit('publish');
+                    this.form.submit({action: 'publish'});
                 },
             });
         }

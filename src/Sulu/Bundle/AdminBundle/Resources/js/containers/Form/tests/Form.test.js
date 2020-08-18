@@ -2,11 +2,17 @@
 import React from 'react';
 import {observable} from 'mobx';
 import {mount, render, shallow} from 'enzyme';
+import log from 'loglevel';
 import Form from '../Form';
 import Router from '../../../services/Router';
 import ResourceStore from '../../../stores/ResourceStore';
 import ResourceFormStore from '../stores/ResourceFormStore';
 import metadataStore from '../stores/metadataStore';
+
+jest.mock('loglevel', () => ({
+    warn: jest.fn(),
+    debug: jest.fn(),
+}));
 
 jest.mock('../../../services/Router/Router', () => jest.fn());
 
@@ -90,7 +96,6 @@ test('Should call onSubmit callback', () => {
 });
 
 test.each([
-    [undefined],
     ['draft'],
     ['publish'],
 ])('Call saveHandlers with the action "%s" as argument when form is submitted', (action) => {
@@ -121,6 +126,43 @@ test.each([
     return submitPromise.then(() => {
         expect(handler1).toBeCalledWith(action);
         expect(handler2).toBeCalledWith(action);
+        expect(log.warn).toBeCalled();
+    });
+});
+
+test.each([
+    [undefined],
+    [{action: 'draft'}],
+    [{inherit: true}],
+])('Call saveHandlers with the action "%s" as argument when form is submitted', (action) => {
+    const handler1 = jest.fn();
+    const handler2 = jest.fn();
+    const submitPromise = Promise.resolve();
+    const submitSpy = jest.fn().mockReturnValue(submitPromise);
+
+    const resourceStore = new ResourceStore('snippet', '1');
+    resourceStore.data = {
+        block: [
+            {
+                text: 'Test',
+                type: 'default',
+            },
+        ],
+    };
+
+    const store = new ResourceFormStore(resourceStore, 'snippet');
+
+    const form = shallow(<Form onSubmit={submitSpy} store={store} />);
+
+    form.instance().formInspector.addSaveHandler(handler1);
+    form.instance().formInspector.addSaveHandler(handler2);
+
+    form.instance().submit(action);
+
+    return submitPromise.then(() => {
+        expect(handler1).toBeCalledWith(action);
+        expect(handler2).toBeCalledWith(action);
+        expect(log.warn).not.toBeCalled();
     });
 });
 

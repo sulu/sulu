@@ -1,8 +1,13 @@
 // @flow
 import {observable} from 'mobx';
+import log from 'loglevel';
 import ResourceStore from '../../../stores/ResourceStore';
 import FormInspector from '../FormInspector';
 import ResourceFormStore from '../stores/ResourceFormStore';
+
+jest.mock('loglevel', () => ({
+    warn: jest.fn(),
+}));
 
 jest.mock('../../../stores/ResourceStore', () => jest.fn(function(resourceKey, id, options) {
     this.resourceKey = resourceKey;
@@ -127,10 +132,9 @@ test('Should call registered onFinishField handlers', () => {
 });
 
 test.each([
-    [undefined],
     ['draft'],
     ['action'],
-])('Should call registered save handlers', (action) => {
+])('Should call registered save handlers with action parameter "%s"', (action) => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test', 3), 'test'));
     const saveHandler1 = jest.fn();
     const saveHandler2 = jest.fn();
@@ -140,6 +144,24 @@ test.each([
     formInspector.triggerSaveHandler(action);
     expect(saveHandler1).toBeCalledWith(action);
     expect(saveHandler2).toBeCalledWith(action);
+    expect(log.warn).toBeCalled();
+});
+
+test.each([
+    [undefined],
+    [{action: 'value'}],
+    [{inherit: true}],
+])('Should call regierested save handlers with options parameter "%s"', (options) => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test', 3), 'test'));
+    const saveHandler1 = jest.fn();
+    const saveHandler2 = jest.fn();
+    formInspector.addSaveHandler(saveHandler1);
+    formInspector.addSaveHandler(saveHandler2);
+
+    formInspector.triggerSaveHandler(options);
+    expect(saveHandler1).toBeCalledWith(options);
+    expect(saveHandler2).toBeCalledWith(options);
+    expect(log.warn).not.toBeCalled();
 });
 
 test('Should return the SchemaEntry for a given path by using the ResourceFormStore', () => {

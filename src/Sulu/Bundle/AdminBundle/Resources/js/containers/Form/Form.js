@@ -15,7 +15,7 @@ import MissingTypeDialog from './MissingTypeDialog';
 type Props = {|
     onError?: (errors: Object) => void,
     onMissingTypeCancel?: () => void,
-    onSubmit: (action: ?string) => ?Promise<Object>,
+    onSubmit: (action: ?string | {[string]: any}) => ?Promise<Object>,
     onSuccess?: () => void,
     router?: Router,
     store: FormStoreInterface,
@@ -67,16 +67,23 @@ class Form extends React.Component<Props> {
     }
 
     /** @public */
-    @action submit = (action: ?string) => {
+    @action submit = (options: ?string | {[string]: any}) => {
+        if (typeof options === 'string') {
+            log.warn(
+                'Passing a string to the "submit" method is deprecated since 2.2 and will be removed. ' +
+                'Pass an object with an "action" property instead.'
+            );
+        }
+
         const {onError, onSubmit, store} = this.props;
 
         this.showAllErrors = true;
 
         if (store.validate()) {
-            const submitPromise = onSubmit(action);
+            const submitPromise = onSubmit(options);
             if (submitPromise) {
                 return submitPromise.then((response) => {
-                    this.formInspector.triggerSaveHandler(action);
+                    this.formInspector.triggerSaveHandler(options);
                     return response;
                 });
             }
