@@ -197,6 +197,23 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals([], $result[2]->getPermissions());
     }
 
+    public function testFindDescendantIdsById()
+    {
+        $page1 = $this->createPage('test-1', 'de');
+        $page2 = $this->createPage('test-2', 'de', [], $page1);
+        $page3 = $this->createPage('test-3', 'de', [], $page1);
+
+        $parentUuid = $this->sessionManager->getContentNode('sulu_io')->getIdentifier();
+
+        $result = $this->contentRepository->findDescendantIdsById($parentUuid);
+
+        $this->assertCount(3, $result);
+
+        $this->assertEquals($page1->getUuid(), $result[0]);
+        $this->assertEquals($page2->getUuid(), $result[1]);
+        $this->assertEquals($page3->getUuid(), $result[2]);
+    }
+
     public function testFindByParentMapping()
     {
         $this->createPage('test-1', 'de');
