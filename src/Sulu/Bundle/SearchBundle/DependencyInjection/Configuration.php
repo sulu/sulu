@@ -46,6 +46,7 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->arrayNode('website')
+                    ->addDefaultsIfNotSet()
                     ->children()
                         ->arrayNode('additional_indexes')
                             ->prototype('scalar')

@@ -97,7 +97,7 @@ class WebsiteSearchController
         $hits = $this->searchManager
             ->createSearch($queryString)
             ->locale($locale)
-            ->indexes(array_merge(
+            ->indexes(\array_merge(
                 ['page_' . $webspace->getKey() . '_published'],
                 $this->additionalIndexes
             ))
