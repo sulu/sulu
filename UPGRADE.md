@@ -2,6 +2,27 @@
 
 ## dev-master
 
+### Deprecation of passing action string to submit form functions
+
+Passing an `action` string to the `submit` function of the `Form` react component is deprecated, instead an `options`
+object is passed now, which is more flexible. The old way still works, but will log a warning and will be removed
+in the next major release.
+
+This change affects the following JavaScript code:
+- `Form` container
+- `Form` view
+- `FormInspector`
+- `SaveHandler` registered in the `FormInspector`
+
+To avoid using the deprecation rewrite your code as shown in the next code snippet:
+
+```javascript
+// Before
+form.submit('publish');
+// After
+form.submit({action: 'publish'});
+```
+
 ### Role Entity changed for anonymous roles
 
 Sulu needs to handle anonymous users, so we need additional anonymous roles.
