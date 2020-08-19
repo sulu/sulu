@@ -124,6 +124,9 @@ jest.mock('sulu-admin-bundle/containers', () => {
         ).default,
         Form: require('sulu-admin-bundle/containers/Form').default,
         resourceFormStoreFactory: require('sulu-admin-bundle/containers/Form/stores/resourceFormStoreFactory').default,
+        memoryFormStoreFactory: {
+            createFromFormKey: jest.fn(),
+        },
         InfiniteLoadingStrategy: require(
             'sulu-admin-bundle/containers/List/loadingStrategies/InfiniteLoadingStrategy'
         ).default,

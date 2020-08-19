@@ -1,9 +1,10 @@
 // @flow
-import React from 'react';
+import React, {Fragment} from 'react';
+import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
-import {Form, resourceFormStoreFactory} from 'sulu-admin-bundle/containers';
+import {Form, memoryFormStoreFactory, resourceFormStoreFactory} from 'sulu-admin-bundle/containers';
 import type {FormStoreInterface} from 'sulu-admin-bundle/containers';
-import {Overlay} from 'sulu-admin-bundle/components';
+import {Dialog, Overlay} from 'sulu-admin-bundle/components';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {translate} from 'sulu-admin-bundle/utils';
 import permissionFormOverlayStyles from './permissionFormOverlay.scss';
@@ -19,30 +20,33 @@ const API_OPTIONS = {resourceKey: 'media'};
 
 @observer
 class PermissionFormOverlay extends React.Component<Props> {
-    formRef: ?Form;
+    @observable showInheritDialog: boolean = false;
+    permissionFormRef: ?Form;
+    inheritDialogFormRef: ?Form;
     resourceStore: ResourceStore;
     formStore: FormStoreInterface;
+    inheritDialogFormStore: FormStoreInterface;
 
     constructor(props: Props) {
         super(props);
 
-        this.createFormStore();
+        this.createFormStores();
     }
 
     componentDidUpdate(prevProps: Props) {
         const {collectionId} = this.props;
 
         if (collectionId !== prevProps.collectionId) {
-            this.destroyFormStore();
-            this.createFormStore();
+            this.destroyFormStores();
+            this.createFormStores();
         }
     }
 
     componentWillUnmount() {
-        this.destroyFormStore();
+        this.destroyFormStores();
     }
 
-    createFormStore() {
+    createFormStores() {
         const {collectionId} = this.props;
         this.resourceStore = new ResourceStore('permissions', collectionId, {}, API_OPTIONS);
         this.formStore = resourceFormStoreFactory.createFromResourceStore(
@@ -50,47 +54,92 @@ class PermissionFormOverlay extends React.Component<Props> {
             'permission_details',
             API_OPTIONS
         );
+        this.inheritDialogFormStore = memoryFormStoreFactory.createFromFormKey('permission_inheritance');
     }
 
-    destroyFormStore() {
+    destroyFormStores() {
         this.resourceStore.destroy();
         this.formStore.destroy();
+        this.inheritDialogFormStore.destroy();
     }
 
-    setFormRef = (formRef: ?Form) => {
-        this.formRef = formRef;
+    setPermissionFormRef = (permissionFormRef: ?Form) => {
+        this.permissionFormRef = permissionFormRef;
     };
 
-    handleConfirm = () => {
-        if (this.formRef) {
-            this.formRef.submit();
+    setInheritDialogFormRef = (inheritDialogFormRef: ?Form) => {
+        this.inheritDialogFormRef = inheritDialogFormRef;
+    };
+
+    @action handleConfirm = () => {
+        this.showInheritDialog = true;
+    };
+
+    @action handleConfirmInherit = () => {
+        this.showInheritDialog = false;
+        if (this.inheritDialogFormRef) {
+            this.inheritDialogFormRef.submit();
         }
     };
 
-    handleSubmit = () => {
+    @action handleSubmitInherit = () => {
+        if (this.permissionFormRef) {
+            this.permissionFormRef.submit(this.inheritDialogFormStore.data);
+        }
+    };
+
+    @action handleCancelInherit = () => {
+        this.showInheritDialog = false;
+    };
+
+    handleSubmitPermission = (options: ?string | {[string]: any}) => {
         const {onConfirm} = this.props;
 
-        this.resourceStore.save(API_OPTIONS).then(() => onConfirm());
+        if (typeof options === 'string') {
+            throw new Error('The passed options should not be a string. This should not happen and is likely a bug.');
+        }
+
+        this.resourceStore.save({...options, ...API_OPTIONS}).then(() => onConfirm());
     };
 
     render() {
         const {onClose, open} = this.props;
 
         return (
-            <Overlay
-                cancelText={translate('sulu_admin.cancel')}
-                confirmLoading={this.resourceStore && this.resourceStore.saving}
-                confirmText={translate('sulu_admin.ok')}
-                onClose={onClose}
-                onConfirm={this.handleConfirm}
-                open={open}
-                size="small"
-                title={translate('sulu_security.permissions')}
-            >
-                <div className={permissionFormOverlayStyles.overlay}>
-                    <Form onSubmit={this.handleSubmit} ref={this.setFormRef} store={this.formStore} />
-                </div>
-            </Overlay>
+            <Fragment>
+                <Overlay
+                    cancelText={translate('sulu_admin.cancel')}
+                    confirmLoading={this.resourceStore && this.resourceStore.saving}
+                    confirmText={translate('sulu_admin.ok')}
+                    onClose={onClose}
+                    onConfirm={this.handleConfirm}
+                    open={open}
+                    size="small"
+                    title={translate('sulu_security.permissions')}
+                >
+                    <div className={permissionFormOverlayStyles.overlay}>
+                        <Form
+                            onSubmit={this.handleSubmitPermission}
+                            ref={this.setPermissionFormRef}
+                            store={this.formStore}
+                        />
+                    </div>
+                </Overlay>
+                <Dialog
+                    cancelText={translate('sulu_admin.cancel')}
+                    confirmText={translate('sulu_admin.ok')}
+                    onCancel={this.handleCancelInherit}
+                    onConfirm={this.handleConfirmInherit}
+                    open={this.showInheritDialog}
+                    title={translate('sulu_security.inherit_permissions_title')}
+                >
+                    <Form
+                        onSubmit={this.handleSubmitInherit}
+                        ref={this.setInheritDialogFormRef}
+                        store={this.inheritDialogFormStore}
+                    />
+                </Dialog>
+            </Fragment>
         );
     }
 }

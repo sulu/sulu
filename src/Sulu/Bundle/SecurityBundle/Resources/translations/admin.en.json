@@ -16,5 +16,7 @@
     "sulu_security.delete": "Delete",
     "sulu_security.live": "Live",
     "sulu_security.security": "Security",
-    "sulu_security.system_permission_heading": "Activate permissions for {system}"
+    "sulu_security.system_permission_heading": "Activate permissions for {system}",
+    "sulu_security.inherit_permissions_title": "Inherit permissions?",
+    "sulu_security.inherit_permissions_label": "Override permissions of sub elements"
 }

@@ -76,6 +76,10 @@ jest.mock('sulu-admin-bundle/containers/Form/stores/ResourceFormStore', () => je
     this.destroy = jest.fn();
 }));
 
+jest.mock('sulu-admin-bundle/containers/Form/stores/memoryFormStoreFactory', () => ({
+    createFromFormKey: jest.fn(),
+}));
+
 let collectionListStoreMock: ListStore;
 let mediaListStoreMock: ListStore;
 
