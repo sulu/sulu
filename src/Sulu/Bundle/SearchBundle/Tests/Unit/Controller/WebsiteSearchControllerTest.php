@@ -119,7 +119,7 @@ class WebsiteSearchControllerTest extends TestCase
             $this->requestAnalyzer->reveal(),
             $this->parameterResolver->reveal(),
             $this->twig->reveal(),
-            ['examples']
+            ['examples_published']
         );
 
         $request = new Request(['q' => 'Test']);
