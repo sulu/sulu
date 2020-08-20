@@ -71,7 +71,7 @@ class WebsiteSearchControllerTest extends TestCase
             $this->requestAnalyzer->reveal(),
             $this->parameterResolver->reveal(),
             $this->twig->reveal(),
-            []
+            ['pages' => 'page_#webspace#_published']
         );
     }
 
@@ -112,14 +112,14 @@ class WebsiteSearchControllerTest extends TestCase
         $this->assertInstanceOf(Response::class, $this->websiteSearchController->queryAction($request));
     }
 
-    public function testQueryActionWithAdditionalIndexes()
+    public function testQueryActionWithDifferentIndexes()
     {
         $this->websiteSearchController = new WebsiteSearchController(
             $this->searchManager->reveal(),
             $this->requestAnalyzer->reveal(),
             $this->parameterResolver->reveal(),
             $this->twig->reveal(),
-            ['examples_published']
+            ['pages' => null, 'examples' => 'examples_published']
         );
 
         $request = new Request(['q' => 'Test']);
@@ -139,7 +139,7 @@ class WebsiteSearchControllerTest extends TestCase
             $searchQueryBuilder->reveal()
         );
         $searchQueryBuilder->locale('en')->willReturn($searchQueryBuilder->reveal());
-        $searchQueryBuilder->indexes(['page_sulu_published', 'examples_published'])->willReturn(
+        $searchQueryBuilder->indexes(['examples_published'])->willReturn(
             $searchQueryBuilder->reveal()
         );
         $searchQueryBuilder->execute()->willReturn([]);

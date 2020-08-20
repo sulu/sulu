@@ -234,6 +234,17 @@ class SuluPageExtension extends Extension implements PrependExtensionInterface
                     ],
                 ]
             );
+
+            $container->prependExtensionConfig(
+                'sulu_search',
+                [
+                    'website' => [
+                        'indexes' => [
+                            'pages' => 'page_#webspace#_published',
+                        ],
+                    ],
+                ]
+            );
         }
 
         if ($container->hasExtension('sulu_document_manager')) {
