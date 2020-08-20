@@ -71,7 +71,7 @@ class WebsiteSearchControllerTest extends TestCase
             $this->requestAnalyzer->reveal(),
             $this->parameterResolver->reveal(),
             $this->twig->reveal(),
-            ['pages' => 'page_#webspace#_published']
+            ['page_#webspace#_published']
         );
     }
 
@@ -119,7 +119,7 @@ class WebsiteSearchControllerTest extends TestCase
             $this->requestAnalyzer->reveal(),
             $this->parameterResolver->reveal(),
             $this->twig->reveal(),
-            ['pages' => null, 'examples' => 'examples_published']
+            ['examples_published']
         );
 
         $request = new Request(['q' => 'Test']);
