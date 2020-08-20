@@ -101,9 +101,7 @@ class WebsiteSearchController
                 \str_replace(
                     '#webspace#',
                     $webspace->getKey(),
-                    \array_filter(
-                        \array_values($this->indexes)
-                    )
+                    $this->indexes
                 )
             )
             ->execute();
