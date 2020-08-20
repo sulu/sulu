@@ -57,7 +57,7 @@ class WebsiteSearchController
         RequestAnalyzerInterface $requestAnalyzer,
         ParameterResolverInterface $parameterResolver,
         Environment $twig,
-        array $additionalIndexes
+        array $additionalIndexes = []
     ) {
         $this->searchManager = $searchManager;
         $this->requestAnalyzer = $requestAnalyzer;
