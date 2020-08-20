@@ -16,7 +16,6 @@ use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\MediaBundle\Api\Collection;
 use Sulu\Bundle\MediaBundle\Api\RootCollection;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
-use Sulu\Bundle\MediaBundle\Entity\Collection as CollectionEntity;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
 use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
@@ -89,6 +88,11 @@ class CollectionController extends AbstractRestController implements ClassResour
      */
     private $permissions;
 
+    /**
+     * @var string
+     */
+    private $collectionClass;
+
     public function __construct(
         ViewHandlerInterface $viewHandler,
         TokenStorageInterface $tokenStorage,
@@ -98,7 +102,8 @@ class CollectionController extends AbstractRestController implements ClassResour
         SystemCollectionManagerInterface $systemCollectionManager,
         CollectionManagerInterface $collectionManager,
         array $defaultCollectionType,
-        array $permissions
+        array $permissions,
+        string $collectionClass
     ) {
         parent::__construct($viewHandler, $tokenStorage);
 
@@ -109,6 +114,7 @@ class CollectionController extends AbstractRestController implements ClassResour
         $this->collectionManager = $collectionManager;
         $this->defaultCollectionType = $defaultCollectionType;
         $this->permissions = $permissions;
+        $this->collectionClass = $collectionClass;
     }
 
     /**
@@ -428,7 +434,7 @@ class CollectionController extends AbstractRestController implements ClassResour
 
     public function getSecuredClass()
     {
-        return CollectionEntity::class;
+        return $this->collectionClass;
     }
 
     public function getSecuredObjectId(Request $request)

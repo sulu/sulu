@@ -18,6 +18,7 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
+use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Cache\CacheInterface;
 use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
@@ -75,6 +76,8 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->systemCollectionCache = $this->getContainer()->get('sulu_media_test.system_collections.cache');
         $this->systemCollectionConfig = $this->getContainer()->getParameter('sulu_media.system_collections');
+        $this->roleRepository = $this->getContainer()->get('sulu.repository.role');
+        $this->accessControlManager = $this->getContainer()->get('sulu_security.access_control_manager');
 
         // to be sure that the system collections will rebuild after purge database
         $this->systemCollectionCache->invalidate();
@@ -237,6 +240,17 @@ class CollectionControllerTest extends SuluTestCase
         $mediaType->setDescription('This is an image');
 
         return $mediaType;
+    }
+
+    private function createRole()
+    {
+        $role = new Role();
+        $role->setName('Role');
+        $role->setSystem('Website');
+
+        $this->em->persist($role);
+
+        return $role;
     }
 
     private function mapCollections($collections)
@@ -649,11 +663,25 @@ class CollectionControllerTest extends SuluTestCase
     {
         $this->getContainer()->get('sulu_media.system_collections.manager')->warmUp();
         $this->client->getContainer()->get('sulu_media.system_collections.manager')->warmUp();
+        $role = $this->createRole();
+
+        $this->em->flush();
 
         $generateColor = '#ffcc00';
 
-        $this->assertNotEmpty($generateColor);
-        $this->assertEquals(7, \strlen($generateColor));
+        $permissions = [
+            $role->getId() => [
+                'view' => true,
+                'edit' => true,
+                'add' => true,
+                'delete' => false,
+                'archive' => false,
+                'live' => false,
+                'security' => false,
+            ],
+        ];
+
+        $this->accessControlManager->setPermissions(Collection::class, $this->collection1->getId(), $permissions);
 
         $this->client->request(
             'POST',
@@ -690,6 +718,17 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertEquals('Test Collection 2', $response->title);
         $this->assertEquals('This Description 2 is only for testing', $response->description);
         $this->assertEquals($this->collection1->getId(), $response->_embedded->parent->id);
+
+        $this->assertEquals(
+            $permissions,
+            $this->accessControlManager->getPermissions(Collection::class, $response->id)
+        );
+
+        $this->getContainer()->get('sulu_security.access_control_manager')->setPermissions(
+            Collection::class,
+            $response->id,
+            $permissions
+        );
 
         $this->client->request(
             'GET',
