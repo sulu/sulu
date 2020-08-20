@@ -11,12 +11,16 @@
 
 namespace Sulu\Bundle\PageBundle\Tests\Functional\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
 use PHPCR\PropertyType;
 use PHPCR\SessionInterface;
+use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\TestBundle\Testing\PHPCRImporter;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\WorkflowStage;
+use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class PageControllerTest extends SuluTestCase
@@ -37,17 +41,35 @@ class PageControllerTest extends SuluTestCase
     private $liveSession;
 
     /**
+     * @var DocumentManagerInteface
+     */
+    private $documentManager;
+
+    /**
      * @var PHPCRImporter
      */
     private $importer;
 
+    /**
+     * @var EntityManagerInterface
+     */
+    private $em;
+
+    /**
+     * @var AccessControlManagerInterface
+     */
+    private $accessControlManager;
+
     public function setUp(): void
     {
         $this->client = $this->createAuthenticatedClient();
+        $this->purgeDatabase();
         $this->initPhpcr();
         $this->session = $this->getContainer()->get('sulu_document_manager.default_session');
         $this->liveSession = $this->getContainer()->get('sulu_document_manager.live_session');
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
+        $this->em = $this->getContainer()->get('doctrine.orm.entity_manager');
+        $this->accessControlManager = $this->getContainer()->get('sulu_security.access_control_manager');
         $this->importer = new PHPCRImporter($this->session, $this->liveSession);
     }
 
@@ -325,6 +347,9 @@ class PageControllerTest extends SuluTestCase
 
     public function testPost()
     {
+        $role = $this->createRole();
+        $this->em->flush();
+
         $data1 = [
             'title' => 'news',
             'template' => 'default',
@@ -348,6 +373,22 @@ class PageControllerTest extends SuluTestCase
 
         $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
 
+        $permissions = [
+            $role->getId() => [
+                'view' => true,
+                'edit' => true,
+                'add' => true,
+                'delete' => false,
+                'archive' => false,
+                'live' => false,
+                'security' => false,
+            ],
+        ];
+
+        $homeDocument->setPermissions($permissions);
+        $this->documentManager->persist($homeDocument, 'en');
+        $this->documentManager->flush();
+
         $this->client->request(
             'POST',
             '/api/pages?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&language=en',
@@ -356,6 +397,11 @@ class PageControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $response = \json_decode($this->client->getResponse()->getContent());
         $uuid = $response->id;
+
+        $this->assertEquals(
+            $permissions,
+            $this->accessControlManager->getPermissions(SecurityBehavior::class, $response->id)
+        );
 
         $this->client->request(
             'POST',
@@ -2199,6 +2245,17 @@ class PageControllerTest extends SuluTestCase
     private function createPageDocument()
     {
         return $this->documentManager->create('page');
+    }
+
+    private function createRole()
+    {
+        $role = new Role();
+        $role->setName('Role');
+        $role->setSystem('Website');
+
+        $this->em->persist($role);
+
+        return $role;
     }
 
     private function setUpContent($data)

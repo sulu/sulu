@@ -131,6 +131,15 @@ class PhpcrAccessControlProviderTest extends TestCase
         $this->assertEquals([], $this->phpcrAccessControlProvider->getPermissions('Acme\Document', '1'));
     }
 
+    public function testGetPermissionsForUnsecuredDocument()
+    {
+        $document = $this->prophesize(WebspaceBehavior::class);
+
+        $this->documentManager->find('1', null, ['rehydrate' => false])->willReturn($document);
+
+        $this->assertEquals([], $this->phpcrAccessControlProvider->getPermissions('Acme\Document', '1'));
+    }
+
     /**
      * @dataProvider provideSupport
      */
