@@ -27,6 +27,8 @@
             <argument type="service" id="sulu_core.webspace.request_analyzer"/>
             <argument type="service" id="sulu_website.resolver.parameter"/>
             <argument type="service" id="twig"/>
+            <argument>%sulu_search.website.indexes%</argument>
+
             <tag name="sulu.context" context="website"/>
         </service>
 

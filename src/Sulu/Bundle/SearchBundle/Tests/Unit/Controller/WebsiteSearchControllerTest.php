@@ -70,7 +70,8 @@ class WebsiteSearchControllerTest extends TestCase
             $this->searchManager->reveal(),
             $this->requestAnalyzer->reveal(),
             $this->parameterResolver->reveal(),
-            $this->twig->reveal()
+            $this->twig->reveal(),
+            ['page_#webspace#_published']
         );
     }
 
@@ -93,7 +94,54 @@ class WebsiteSearchControllerTest extends TestCase
             $searchQueryBuilder->reveal()
         );
         $searchQueryBuilder->locale('en')->willReturn($searchQueryBuilder->reveal());
-        $searchQueryBuilder->index('page_sulu_published')->willReturn($searchQueryBuilder->reveal());
+        $searchQueryBuilder->indexes(['page_sulu_published'])->willReturn($searchQueryBuilder->reveal());
+        $searchQueryBuilder->execute()->willReturn([]);
+
+        $this->parameterResolver->resolve(
+            ['query' => 'Test', 'hits' => []],
+            $this->requestAnalyzer->reveal()
+        )->willReturn(['query' => 'Test', 'hits' => []]);
+
+        $this->twigLoader->exists(Argument::any())->willReturn(true);
+
+        $this->twig->render(
+            'search.html.twig',
+            ['query' => 'Test', 'hits' => []]
+        )->willReturn(new Response());
+
+        $this->assertInstanceOf(Response::class, $this->websiteSearchController->queryAction($request));
+    }
+
+    public function testQueryActionWithDifferentIndexes()
+    {
+        $this->websiteSearchController = new WebsiteSearchController(
+            $this->searchManager->reveal(),
+            $this->requestAnalyzer->reveal(),
+            $this->parameterResolver->reveal(),
+            $this->twig->reveal(),
+            ['examples_published', 'pages_#webspace#_published']
+        );
+
+        $request = new Request(['q' => 'Test']);
+
+        $localization = new Localization();
+        $localization->setLanguage('en');
+
+        $webspace = new Webspace();
+        $webspace->setKey('sulu');
+        $webspace->addTemplate('search', 'search');
+
+        $this->requestAnalyzer->getCurrentLocalization()->willReturn($localization);
+        $this->requestAnalyzer->getWebspace()->willReturn($webspace);
+
+        $searchQueryBuilder = $this->prophesize(SearchQueryBuilder::class);
+        $this->searchManager->createSearch('+("Test" OR Test* OR Test~) ')->willReturn(
+            $searchQueryBuilder->reveal()
+        );
+        $searchQueryBuilder->locale('en')->willReturn($searchQueryBuilder->reveal());
+        $searchQueryBuilder->indexes(['examples_published', 'pages_sulu_published'])->willReturn(
+            $searchQueryBuilder->reveal()
+        );
         $searchQueryBuilder->execute()->willReturn([]);
 
         $this->parameterResolver->resolve(

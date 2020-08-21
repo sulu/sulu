@@ -45,6 +45,15 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
+                ->arrayNode('website')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->arrayNode('indexes')
+                            ->useAttributeAsKey('key')
+                            ->prototype('scalar')->end()
+                        ->end()
+                    ->end()
+                ->end()
             ->end();
 
         return $treeBuilder;

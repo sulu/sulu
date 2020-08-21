@@ -47,16 +47,23 @@ class WebsiteSearchController
      */
     private $twig;
 
+    /**
+     * @var string[]
+     */
+    private $indexes;
+
     public function __construct(
         SearchManagerInterface $searchManager,
         RequestAnalyzerInterface $requestAnalyzer,
         ParameterResolverInterface $parameterResolver,
-        Environment $twig
+        Environment $twig,
+        array $indexes = []
     ) {
         $this->searchManager = $searchManager;
         $this->requestAnalyzer = $requestAnalyzer;
         $this->parameterResolver = $parameterResolver;
         $this->twig = $twig;
+        $this->indexes = $indexes;
     }
 
     /**
@@ -90,7 +97,13 @@ class WebsiteSearchController
         $hits = $this->searchManager
             ->createSearch($queryString)
             ->locale($locale)
-            ->index('page_' . $webspace->getKey() . '_published')
+            ->indexes(
+                \str_replace(
+                    '#webspace#',
+                    $webspace->getKey(),
+                    $this->indexes
+                )
+            )
             ->execute();
 
         $template = $webspace->getTemplate('search', $request->getRequestFormat());
