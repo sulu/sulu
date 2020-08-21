@@ -467,8 +467,10 @@ class WebspaceManager implements WebspaceManagerInterface
      */
     private function createResourceLocatorUrl($portalUrl, $resourceLocator, $scheme = null)
     {
+        $currentRequest = $this->requestStack->getCurrentRequest();
+
         if (!$scheme) {
-            $scheme = $this->defaultScheme;
+            $scheme = $currentRequest ? $currentRequest->getScheme() : $this->defaultScheme;
         }
 
         if (false !== \strpos($portalUrl, '/')) {
@@ -479,7 +481,6 @@ class WebspaceManager implements WebspaceManagerInterface
         $url = \rtrim(\sprintf('%s://%s', $scheme, $portalUrl), '/') . $resourceLocator;
 
         // add port if url points to host of current request and current request uses a custom port
-        $currentRequest = $this->requestStack->getCurrentRequest();
         if ($currentRequest) {
             $host = $currentRequest->getHost();
             $port = $currentRequest->getPort();

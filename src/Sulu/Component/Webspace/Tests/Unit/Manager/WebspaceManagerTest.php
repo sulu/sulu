@@ -700,6 +700,24 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals(['http://sulu.lo/test'], $result);
     }
 
+    public function testFindUrlsByResourceLocatorWithSchemeFromRequest()
+    {
+        $request = $this->prophesize(Request::class);
+        $request->getHost()->willReturn('massiveart.lo');
+        $request->getPort()->willReturn(8080);
+        $request->getScheme()->willReturn('https');
+        $this->requestStack->getCurrentRequest()->willReturn($request->reveal());
+
+        $result = $this->webspaceManager->findUrlsByResourceLocator('/test', 'dev', 'en_us', 'massiveart');
+
+        $this->assertCount(2, $result);
+        $this->assertContains('https://massiveart.lo:8080/en-us/w/test', $result);
+        $this->assertContains('https://massiveart.lo:8080/en-us/s/test', $result);
+
+        $result = $this->webspaceManager->findUrlsByResourceLocator('/test', 'dev', 'de_at', 'sulu_io');
+        $this->assertEquals(['https://sulu.lo/test'], $result);
+    }
+
     public function testFindUrlsByResourceLocatorRoot()
     {
         $result = $this->webspaceManager->findUrlsByResourceLocator('/', 'dev', 'en_us', 'massiveart');
