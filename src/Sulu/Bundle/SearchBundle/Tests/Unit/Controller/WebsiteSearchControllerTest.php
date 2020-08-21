@@ -119,7 +119,7 @@ class WebsiteSearchControllerTest extends TestCase
             $this->requestAnalyzer->reveal(),
             $this->parameterResolver->reveal(),
             $this->twig->reveal(),
-            ['examples_published']
+            ['examples_published', 'pages_#webspace#_published']
         );
 
         $request = new Request(['q' => 'Test']);
@@ -139,7 +139,7 @@ class WebsiteSearchControllerTest extends TestCase
             $searchQueryBuilder->reveal()
         );
         $searchQueryBuilder->locale('en')->willReturn($searchQueryBuilder->reveal());
-        $searchQueryBuilder->indexes(['examples_published'])->willReturn(
+        $searchQueryBuilder->indexes(['examples_published', 'pages_sulu_published'])->willReturn(
             $searchQueryBuilder->reveal()
         );
         $searchQueryBuilder->execute()->willReturn([]);
