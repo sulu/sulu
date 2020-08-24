@@ -15,7 +15,10 @@ use JMS\Serializer\Construction\DoctrineObjectConstructor;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-class JmsObjectConstructorCompilerPass implements CompilerPassInterface
+/**
+ * @internal
+ */
+final class JmsObjectConstructorCompilerPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
