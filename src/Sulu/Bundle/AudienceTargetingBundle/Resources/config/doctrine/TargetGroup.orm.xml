@@ -20,7 +20,6 @@
         <one-to-many
             field="webspaces"
             mapped-by="targetGroup"
-            orphan-removal="true"
             target-entity="Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupWebspace"
         >
             <cascade>
@@ -30,7 +29,6 @@
         <one-to-many
             field="rules"
             mapped-by="targetGroup"
-            orphan-removal="true"
             target-entity="Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRule"
         >
             <cascade>

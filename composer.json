@@ -50,7 +50,7 @@
         "guzzlehttp/psr7": "^1.5",
         "imagine/imagine": "^0.6.1 || ^0.7.0 || ^1.0",
         "jms/serializer": "^3.0",
-        "jms/serializer-bundle": "3.7.0",
+        "jms/serializer-bundle": "^3.0",
         "layershifter/tld-extract": "^1.1 || ^2.0",
         "massive/build-bundle": "^0.3 || ^0.4",
         "massive/search-bundle": "^2.0.0",

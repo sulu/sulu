@@ -20,7 +20,49 @@ class TargetGroupRepository extends EntityRepository implements TargetGroupRepos
 {
     public function save(TargetGroupInterface $targetGroup)
     {
-        $this->getEntityManager()->persist($targetGroup);
+        $newRules = [];
+        foreach ($targetGroup->getRules()->toArray() as $rule) {
+            $rule = $this->getEntityManager()->getRepository(TargetGroupRuleInterface::class)->save($rule);
+            $newRules[] = $rule;
+        }
+
+        $newWebspaces = [];
+        foreach ($targetGroup->getWebspaces()->toArray() as $webspace) {
+            $newWebspace = $this->getEntityManager()->merge($webspace);
+            $newWebspaces[] = $newWebspace;
+        }
+
+        $targetGroup->clearRules();
+        $targetGroup->clearWebspaces();
+        $targetGroup = $this->getEntityManager()->merge($targetGroup);
+
+        foreach ($targetGroup->getRules()->toArray() as $rule) {
+            if (!\in_array($rule, $newRules)) {
+                $targetGroup->removeRule($rule);
+                $this->getEntityManager()->remove($rule);
+            }
+        }
+
+        foreach ($targetGroup->getWebspaces()->toArray() as $webspace) {
+            if (!\in_array($webspace, $newWebspaces)) {
+                $targetGroup->removeWebspace($webspace);
+                $this->getEntityManager()->remove($webspace);
+            }
+        }
+
+        foreach ($newRules as $newRule) {
+            if (!$targetGroup->getRules()->contains($newRule)) {
+                $targetGroup->addRule($newRule);
+            }
+            $newRule->setTargetGroup($targetGroup);
+        }
+
+        foreach ($newWebspaces as $newWebspace) {
+            if (!$targetGroup->getWebspaces()->contains($newWebspace)) {
+                $targetGroup->addWebspace($newWebspace);
+            }
+            $newWebspace->setTargetGroup($targetGroup);
+        }
 
         return $targetGroup;
     }
