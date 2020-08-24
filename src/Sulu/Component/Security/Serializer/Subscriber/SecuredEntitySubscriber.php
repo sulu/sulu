@@ -18,7 +18,6 @@ use JMS\Serializer\Visitor\SerializationVisitorInterface;
 use Sulu\Component\Rest\ApiWrapper;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredEntityInterface;
-use Sulu\Component\Security\Authorization\SecurityCondition;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -67,13 +66,27 @@ class SecuredEntitySubscriber implements EventSubscriberInterface
             return;
         }
 
-        $permissions = $this->accessControlManager->getUserPermissions(
-            new SecurityCondition($object->getSecurityContext(), null, \get_class($object), $object->getId()),
+        $allPermissions = $this->accessControlManager->getPermissions(
+            \get_class($object),
+            $object->getId()
+        );
+
+        $permissions = $this->accessControlManager->getUserPermissionByArray(
+            null,
+            $object->getSecurityContext(),
+            $allPermissions,
             $this->tokenStorage->getToken()->getUser()
         );
+
         $visitor->visitProperty(
             new StaticPropertyMetadata('', '_permissions', $permissions),
             $permissions
+        );
+
+        $hasPermissions = !empty($allPermissions);
+        $visitor->visitProperty(
+            new StaticPropertyMetadata('', '_hasPermissions', $hasPermissions),
+            $hasPermissions
         );
     }
 }

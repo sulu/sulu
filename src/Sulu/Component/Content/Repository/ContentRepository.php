@@ -32,7 +32,6 @@ use Sulu\Component\Content\Repository\Mapping\MappingInterface;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
-use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\AccessControl\DescendantProviderInterface;
 use Sulu\Component\Util\SuluNodeHelper;
@@ -97,11 +96,6 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
     private $nodeHelper;
 
     /**
-     * @var RoleRepositoryInterface
-     */
-    private $roleRepository;
-
-    /**
      * @var array
      */
     private $permissions;
@@ -118,7 +112,6 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
         LocalizationFinderInterface $localizationFinder,
         StructureManagerInterface $structureManager,
         SuluNodeHelper $nodeHelper,
-        RoleRepositoryInterface $roleRepository,
         SystemStoreInterface $systemStore,
         array $permissions
     ) {
@@ -128,7 +121,6 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
         $this->localizationFinder = $localizationFinder;
         $this->structureManager = $structureManager;
         $this->nodeHelper = $nodeHelper;
-        $this->roleRepository = $roleRepository;
         $this->systemStore = $systemStore;
         $this->permissions = $permissions;
 
@@ -463,7 +455,6 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
     private function resolveResultPermissions(array $result, UserInterface $user = null)
     {
         $permissions = [];
-        $systemRoleIds = $this->roleRepository->findRoleIdsBySystem($this->systemStore->getSystem());
 
         foreach ($result as $index => $row) {
             $permissions[$index] = [];
@@ -471,10 +462,6 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
 
             foreach ($securityProperties as $securityProperty) {
                 $roleId = \str_replace(SecuritySubscriber::SECURITY_PROPERTY_PREFIX, '', $securityProperty->getName());
-
-                if (!\in_array($roleId, $systemRoleIds)) {
-                    continue;
-                }
 
                 foreach ($this->permissions as $permissionKey => $permission) {
                     $permissions[$index][$roleId][$permissionKey] = false;

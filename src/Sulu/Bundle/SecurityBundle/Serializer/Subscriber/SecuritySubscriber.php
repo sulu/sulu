@@ -93,9 +93,16 @@ class SecuritySubscriber implements EventSubscriberInterface
             $document->getPermissions(),
             $user
         );
+
         $visitor->visitProperty(
             new StaticPropertyMetadata('', '_permissions', $permissions),
             $permissions
+        );
+
+        $hasPermissions = !empty($document->getPermissions());
+        $visitor->visitProperty(
+            new StaticPropertyMetadata('', '_hasPermissions', $hasPermissions),
+            $hasPermissions
         );
     }
 }

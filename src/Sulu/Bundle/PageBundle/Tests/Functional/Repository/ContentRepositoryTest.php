@@ -29,7 +29,6 @@ use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Security\Authentication\RoleInterface;
-use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Util\SuluNodeHelper;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
@@ -96,11 +95,6 @@ class ContentRepositoryTest extends SuluTestCase
      */
     private $systemStore;
 
-    /**
-     * @var RoleRepositoryInterface
-     */
-    private $roleRepository;
-
     public function setUp(): void
     {
         $this->purgeDatabase();
@@ -114,7 +108,6 @@ class ContentRepositoryTest extends SuluTestCase
         $this->localizationFinder = $this->getContainer()->get('sulu.content.localization_finder');
         $this->structureManager = $this->getContainer()->get('sulu.content.structure_manager');
         $this->nodeHelper = $this->getContainer()->get('sulu.util.node_helper');
-        $this->roleRepository = $this->getContainer()->get('sulu.repository.role');
         $this->systemStore = $this->getContainer()->get('sulu_security.system_store');
 
         $this->contentRepository = new ContentRepository(
@@ -124,7 +117,6 @@ class ContentRepositoryTest extends SuluTestCase
             $this->localizationFinder,
             $this->structureManager,
             $this->nodeHelper,
-            $this->roleRepository,
             $this->systemStore,
             ['view' => 64, 'add' => 32, 'edit' => 16, 'delete' => 8]
         );
@@ -189,6 +181,12 @@ class ContentRepositoryTest extends SuluTestCase
                     'edit' => false,
                     'delete' => false,
                     'archive' => true,
+                ],
+                $role3->getId() => [
+                    'view' => false,
+                    'add' => true,
+                    'edit' => false,
+                    'delete' => false,
                 ],
             ],
             $result[0]->getPermissions()
@@ -510,6 +508,12 @@ class ContentRepositoryTest extends SuluTestCase
                     'edit' => false,
                     'delete' => false,
                     'archive' => true,
+                ],
+                $role3->getId() => [
+                    'view' => false,
+                    'add' => true,
+                    'edit' => false,
+                    'delete' => false,
                 ],
             ],
             $result[0]->getPermissions()
@@ -865,6 +869,12 @@ class ContentRepositoryTest extends SuluTestCase
                     'delete' => false,
                     'archive' => true,
                 ],
+                $role3->getId() => [
+                    'view' => false,
+                    'add' => true,
+                    'edit' => false,
+                    'delete' => false,
+                ],
             ],
             $result->getPermissions()
         );
@@ -940,6 +950,12 @@ class ContentRepositoryTest extends SuluTestCase
             [
                 $role1->getId() => ['view' => false, 'add' => false, 'delete' => false, 'edit' => false],
                 $role2->getId() => ['view' => false, 'add' => false, 'edit' => false, 'delete' => false],
+                $role3->getId() => [
+                    'view' => false,
+                    'add' => false,
+                    'edit' => false,
+                    'delete' => false,
+                ],
             ],
             $result->getPermissions()
         );
@@ -1010,6 +1026,12 @@ class ContentRepositoryTest extends SuluTestCase
                     'edit' => false,
                     'delete' => false,
                     'archive' => true,
+                ],
+                $role3->getId() => [
+                    'view' => false,
+                    'add' => true,
+                    'edit' => false,
+                    'delete' => false,
                 ],
             ],
             $layer[0]->getPermissions()
@@ -1139,6 +1161,12 @@ class ContentRepositoryTest extends SuluTestCase
                         'delete' => false,
                         'archive' => true,
                     ],
+                    $role3->getId() => [
+                        'view' => false,
+                        'add' => true,
+                        'edit' => false,
+                        'delete' => false,
+                    ],
                 ],
             ],
             $items
@@ -1211,6 +1239,12 @@ class ContentRepositoryTest extends SuluTestCase
                         'edit' => false,
                         'delete' => false,
                         'archive' => true,
+                    ],
+                    $role3->getId() => [
+                        'view' => false,
+                        'add' => true,
+                        'edit' => false,
+                        'delete' => false,
                     ],
                 ],
             ],
@@ -1292,10 +1326,15 @@ class ContentRepositoryTest extends SuluTestCase
                     'delete' => false,
                     'archive' => true,
                 ],
+                $role3->getId() => [
+                    'view' => false,
+                    'add' => true,
+                    'edit' => false,
+                    'delete' => false,
+                ],
             ],
             $permissions
         );
-        $this->assertContains([], $permissions);
     }
 
     public function testFindAllNoPage()
@@ -1363,6 +1402,12 @@ class ContentRepositoryTest extends SuluTestCase
                 'edit' => false,
                 'delete' => false,
                 'archive' => true,
+            ],
+            $role3->getId() => [
+                'view' => false,
+                'add' => true,
+                'edit' => false,
+                'delete' => false,
             ],
         ], $result[1]->getPermissions());
         $urls = $result[1]->getUrls();
