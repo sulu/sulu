@@ -25,15 +25,15 @@ const DEBOUNCE_TIME = 200;
 
 @observer
 class Tabs extends React.Component<Props> {
-    @observable wrapperWidth: number = 0;
-    @observable tabWidths: Map<number, number> = new Map();
-    @observable dropdownOpen = false;
-    @observable lastSelectedIndex: ?number;
-
     static defaultProps = {
         skin: 'default',
         small: false,
     };
+
+    @observable wrapperWidth: number = 0;
+    @observable tabWidths: Map<number, number> = new Map();
+    @observable dropdownOpen = false;
+    @observable lastSelectedIndex: ?number;
 
     static Tab = Tab;
 
@@ -80,7 +80,7 @@ class Tabs extends React.Component<Props> {
         }
     };
 
-    @action setTabWidth = (index: number, width: number) => {
+    @action handleTabWidthChange = (index: number, width: number) => {
         this.tabWidths.set(index, width);
     };
 
@@ -93,7 +93,7 @@ class Tabs extends React.Component<Props> {
     };
 
     changeTab = (selectedTabIndex: ?number) => {
-        if (typeof selectedTabIndex !== 'undefined' && selectedTabIndex !== null) {
+        if (selectedTabIndex !== undefined && selectedTabIndex !== null) {
             this.props.onSelect(selectedTabIndex);
         }
     };
@@ -222,7 +222,7 @@ class Tabs extends React.Component<Props> {
                     selected,
                     small,
                     onClick: this.handleTabClick,
-                    setWidth: this.setTabWidth,
+                    onWidthChange: this.handleTabWidthChange,
                 }
             );
         });

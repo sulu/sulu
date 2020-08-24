@@ -11,8 +11,8 @@ type Props = {
     children: string,
     index?: number,
     onClick?: (index: ?number) => void,
+    onWidthChange?: (index: ?number, width: number) => void,
     selected: boolean,
-    setWidth?: (index: ?number, width: number) => void,
     small: boolean,
 };
 
@@ -20,21 +20,21 @@ const DEBOUNCE_TIME = 200;
 
 @observer
 class Tab extends React.Component<Props> {
-    @observable selected = false;
-
     static defaultProps = {
         selected: false,
         small: false,
     };
 
+    @observable selected = false;
+
     listItemRef: ?ElementRef<'li'>;
     resizeObserver: ?ResizeObserver;
 
     @action componentDidMount() {
-        const {index, setWidth, selected} = this.props;
+        const {index, onWidthChange, selected} = this.props;
 
         this.resizeObserver = new ResizeObserver(
-            debounce(this.setWidth, DEBOUNCE_TIME)
+            debounce(this.handleWidthChange, DEBOUNCE_TIME)
         );
 
         if (!this.listItemRef) {
@@ -43,8 +43,8 @@ class Tab extends React.Component<Props> {
 
         this.resizeObserver.observe(this.listItemRef);
 
-        if (setWidth && this.listItemRef) {
-            setWidth(index, this.listItemRef.offsetWidth);
+        if (onWidthChange && this.listItemRef) {
+            onWidthChange(index, this.listItemRef.offsetWidth);
         }
 
         if (selected) {
@@ -71,11 +71,11 @@ class Tab extends React.Component<Props> {
         this.listItemRef = ref;
     };
 
-    setWidth = ([entry]: ResizeObserverEntry[]) => {
-        const {index, setWidth} = this.props;
+    handleWidthChange = ([entry]: ResizeObserverEntry[]) => {
+        const {index, onWidthChange} = this.props;
 
-        if (setWidth && entry) {
-            setWidth(index, entry.contentRect.width);
+        if (onWidthChange && entry) {
+            onWidthChange(index, entry.contentRect.width);
         }
     };
 
