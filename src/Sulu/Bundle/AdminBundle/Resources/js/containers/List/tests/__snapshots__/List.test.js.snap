@@ -21,6 +21,7 @@ exports[`Do not render Loader instead of Adapter if no page count is given 1`] =
         />
       </div>
       <input
+        placeholder="sulu_admin.list_search_placeholder"
         type="text"
         value=""
       />
@@ -60,6 +61,7 @@ exports[`Render Loader instead of Adapter if nothing was loaded yet 1`] = `
         />
       </div>
       <input
+        placeholder="sulu_admin.list_search_placeholder"
         type="text"
         value=""
       />
@@ -98,6 +100,7 @@ exports[`Render permission hint if permissions are missing 1`] = `
       class="su-lock"
     />
   </div>
+  sulu_admin.no_permissions
 </div>
 `;
 
@@ -125,6 +128,7 @@ exports[`Render the adapter in disabled state 1`] = `
         />
       </div>
       <input
+        placeholder="sulu_admin.list_search_placeholder"
         type="text"
         value=""
       />
@@ -201,6 +205,7 @@ exports[`Render the adapter with filters 1`] = `
         />
       </div>
       <input
+        placeholder="sulu_admin.list_search_placeholder"
         type="text"
         value=""
       />

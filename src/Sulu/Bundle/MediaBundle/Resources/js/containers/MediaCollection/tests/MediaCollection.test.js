@@ -813,7 +813,7 @@ test('Should send a request to add a new collection via the overlay', () => {
     expect(collectionStore.resourceStore.clone).not.toBeCalled();
     expect(field.mock.calls[0][0].value).toEqual(undefined);
 
-    expect(mediaCollection.find('CollectionSection > div > Dialog').prop('open')).toEqual(false);
+    expect(mediaCollection.find('Dialog[title="sulu_media.remove_collection"]').prop('open')).toEqual(false);
     expect(mediaCollection.find('CollectionFormOverlay > Overlay').prop('open')).toEqual(true);
 
     const header = document.querySelector('.content header');
@@ -899,7 +899,7 @@ test('Should send a request to update the collection via the overlay', () => {
     expect(collectionStore.resourceStore.clone).toBeCalled();
     expect(field.mock.calls[0][0].value).toEqual('Title');
 
-    expect(mediaCollection.find('CollectionSection > div > Dialog').prop('open')).toEqual(false);
+    expect(mediaCollection.find('Dialog[title="sulu_media.remove_collection"]').prop('open')).toEqual(false);
     expect(mediaCollection.find('CollectionFormOverlay > Overlay').prop('open')).toEqual(true);
 
     const header = document.querySelector('.content header');
@@ -969,7 +969,7 @@ test('Confirming the delete dialog should delete the item', () => {
     mediaCollection.find('DropdownButton').simulate('click');
     mediaCollection.find('DropdownButton Action').find({children: 'sulu_admin.delete'}).simulate('click');
 
-    expect(mediaCollection.find('CollectionSection > div > Dialog').prop('open')).toEqual(true);
+    expect(mediaCollection.find('Dialog[title="sulu_media.remove_collection"]').prop('open')).toEqual(true);
     expect(mediaCollection.find('CollectionFormOverlay > Overlay').prop('open')).toEqual(false);
 
     mediaCollection.find('Dialog Button[skin="primary"]').simulate('click');
@@ -977,15 +977,16 @@ test('Confirming the delete dialog should delete the item', () => {
     mediaCollection.update();
 
     expect(collectionStore.resourceStore.delete).toBeCalled();
-    expect(mediaCollection.find('CollectionSection > div > Dialog').prop('open')).toEqual(true);
-    expect(mediaCollection.find('CollectionSection > div > Dialog').prop('confirmLoading')).toEqual(true);
+    expect(mediaCollection.find('Dialog[title="sulu_media.remove_collection"]').prop('open')).toEqual(true);
+    expect(mediaCollection.find('Dialog[title="sulu_media.remove_collection"]').prop('confirmLoading')).toEqual(true);
 
     return promise.then(() => {
         collectionStore.resourceStore.deleting = false;
         expect(collectionNavigateSpy).toBeCalledWith(undefined);
         mediaCollection.update();
-        expect(mediaCollection.find('CollectionSection > div > Dialog').prop('open')).toEqual(false);
-        expect(mediaCollection.find('CollectionSection > div > Dialog').prop('confirmLoading')).toEqual(false);
+        expect(mediaCollection.find('Dialog[title="sulu_media.remove_collection"]').prop('open')).toEqual(false);
+        expect(mediaCollection.find('Dialog[title="sulu_media.remove_collection"]').prop('confirmLoading'))
+            .toEqual(false);
     });
 });
 
@@ -1101,7 +1102,7 @@ test('Confirming the move dialog should move the item', () => {
     mediaCollection.find('DropdownButton').simulate('click');
     mediaCollection.find('DropdownButton Action').find({children: 'sulu_admin.move'}).simulate('click');
 
-    expect(mediaCollection.find('CollectionSection > div > Dialog').prop('open')).toEqual(false);
+    expect(mediaCollection.find('Dialog[title="sulu_media.remove_collection"]').prop('open')).toEqual(false);
     expect(mediaCollection.find('CollectionFormOverlay > Overlay').prop('open')).toEqual(false);
     expect(mediaCollection.find(SingleListOverlay).prop('open')).toEqual(true);
 
@@ -1121,6 +1122,163 @@ test('Confirming the move dialog should move the item', () => {
         expect(mediaCollection.find(SingleListOverlay).prop('confirmLoading')).toEqual(false);
         expect(collectionStore.resourceStore.reload).toBeCalledWith();
     });
+});
+
+test('Confirming the move dialog should move the item after confirming the permission dialog', () => {
+    const promise = new RequestPromise(function(resolve) {
+        resolve({});
+    });
+    const page = observable.box();
+    const locale = observable.box();
+    const SingleListOverlay = require('sulu-admin-bundle/containers').SingleListOverlay;
+    const ListStore = require('sulu-admin-bundle/containers').ListStore;
+    const mediaListStore = new ListStore(
+        MEDIA_RESOURCE_KEY,
+        MEDIA_RESOURCE_KEY,
+        SETTINGS_KEY,
+        {
+            page,
+            locale,
+        }
+    );
+    const collectionListStore = new ListStore(
+        COLLECTIONS_RESOURCE_KEY,
+        SETTINGS_KEY,
+        USER_SETTINGS_KEY,
+        {
+            page,
+            locale,
+        }
+    );
+    const CollectionStore = require('../../../stores/CollectionStore').default;
+    const collectionStore = new CollectionStore(1, locale);
+    collectionStore.resourceStore.move = jest.fn().mockReturnValue(promise);
+
+    const mediaCollection = mount(
+        <MediaCollection
+            collectionListStore={collectionListStore}
+            collectionStore={collectionStore}
+            locale={locale}
+            mediaListAdapters={['media_card_overview']}
+            mediaListStore={mediaListStore}
+            onCollectionNavigate={jest.fn()}
+            onUploadOverlayClose={jest.fn()}
+            onUploadOverlayOpen={jest.fn()}
+            uploadOverlayOpen={false}
+        />
+    );
+
+    mediaCollection.find('DropdownButton').simulate('click');
+    mediaCollection.find('DropdownButton Action').find({children: 'sulu_admin.move'}).simulate('click');
+
+    expect(mediaCollection.find('Dialog[title="sulu_media.remove_collection"]').prop('open')).toEqual(false);
+    expect(mediaCollection.find('CollectionFormOverlay > Overlay').prop('open')).toEqual(false);
+    expect(mediaCollection.find(SingleListOverlay).prop('open')).toEqual(true);
+
+    expect(
+        mediaCollection.find('CollectionSection > div > Dialog[title="sulu_security.move_permission_title"]')
+            .prop('open')
+    ).toEqual(false);
+    mediaCollection.find(SingleListOverlay).prop('onConfirm')({id: 7, _hasPermissions: true});
+    mediaCollection.update();
+    expect(
+        mediaCollection.find('CollectionSection > div > Dialog[title="sulu_security.move_permission_title"]')
+            .prop('open')
+    ).toEqual(true);
+
+    mediaCollection.find('CollectionSection > div > Dialog[title="sulu_security.move_permission_title"]')
+        .prop('onConfirm')();
+
+    collectionStore.resourceStore.moving = true;
+    mediaCollection.update();
+
+    expect(collectionStore.resourceStore.move).toBeCalledWith(7);
+    expect(mediaCollection.find(SingleListOverlay).prop('open')).toEqual(true);
+    expect(mediaCollection.find(SingleListOverlay).prop('options')).toEqual({includeRoot: true});
+    expect(mediaCollection.find(SingleListOverlay).prop('confirmLoading')).toEqual(true);
+
+    return promise.then(() => {
+        collectionStore.resourceStore.moving = false;
+        mediaCollection.update();
+        expect(mediaCollection.find(SingleListOverlay).prop('open')).toEqual(false);
+        expect(mediaCollection.find(SingleListOverlay).prop('confirmLoading')).toEqual(false);
+        expect(collectionStore.resourceStore.reload).toBeCalledWith();
+    });
+});
+
+test('Confirming the move dialog should not move the item after denying the permission dialog', () => {
+    const promise = new RequestPromise(function(resolve) {
+        resolve({});
+    });
+    const page = observable.box();
+    const locale = observable.box();
+    const SingleListOverlay = require('sulu-admin-bundle/containers').SingleListOverlay;
+    const ListStore = require('sulu-admin-bundle/containers').ListStore;
+    const mediaListStore = new ListStore(
+        MEDIA_RESOURCE_KEY,
+        MEDIA_RESOURCE_KEY,
+        SETTINGS_KEY,
+        {
+            page,
+            locale,
+        }
+    );
+    const collectionListStore = new ListStore(
+        COLLECTIONS_RESOURCE_KEY,
+        SETTINGS_KEY,
+        USER_SETTINGS_KEY,
+        {
+            page,
+            locale,
+        }
+    );
+    const CollectionStore = require('../../../stores/CollectionStore').default;
+    const collectionStore = new CollectionStore(1, locale);
+    collectionStore.resourceStore.move = jest.fn().mockReturnValue(promise);
+
+    const mediaCollection = mount(
+        <MediaCollection
+            collectionListStore={collectionListStore}
+            collectionStore={collectionStore}
+            locale={locale}
+            mediaListAdapters={['media_card_overview']}
+            mediaListStore={mediaListStore}
+            onCollectionNavigate={jest.fn()}
+            onUploadOverlayClose={jest.fn()}
+            onUploadOverlayOpen={jest.fn()}
+            uploadOverlayOpen={false}
+        />
+    );
+
+    mediaCollection.find('DropdownButton').simulate('click');
+    mediaCollection.find('DropdownButton Action').find({children: 'sulu_admin.move'}).simulate('click');
+
+    expect(mediaCollection.find('Dialog[title="sulu_media.remove_collection"]').prop('open')).toEqual(false);
+    expect(mediaCollection.find('CollectionFormOverlay > Overlay').prop('open')).toEqual(false);
+    expect(mediaCollection.find(SingleListOverlay).prop('open')).toEqual(true);
+
+    expect(
+        mediaCollection.find('CollectionSection > div > Dialog[title="sulu_security.move_permission_title"]')
+            .prop('open')
+    ).toEqual(false);
+    mediaCollection.find(SingleListOverlay).prop('onConfirm')({id: 7, _hasPermissions: true});
+    mediaCollection.update();
+    expect(
+        mediaCollection.find('CollectionSection > div > Dialog[title="sulu_security.move_permission_title"]')
+            .prop('open')
+    ).toEqual(true);
+
+    mediaCollection.find('CollectionSection > div > Dialog[title="sulu_security.move_permission_title"]')
+        .prop('onCancel')();
+
+    mediaCollection.update();
+
+    expect(
+        mediaCollection.find('CollectionSection > div > Dialog[title="sulu_security.move_permission_title"]')
+            .prop('open')
+    ).toEqual(false);
+    expect(mediaCollection.find(SingleListOverlay).prop('open')).toEqual(true);
+    expect(mediaCollection.find(SingleListOverlay).prop('confirmLoading')).toEqual(false);
 });
 
 test('Confirming the permission overlay should save the permissions', () => {

@@ -85,6 +85,7 @@ class List extends React.Component<Props> {
     @observable adapterOptionsOpen: boolean = false;
     @observable columnOptionsOpen: boolean = false;
     @observable referencingItemsForDelete: Array<Object> = [];
+    @observable movingRestrictedTarget: ?Object = undefined;
     resolveCopy: ?(ResolveCopyArgument) => void;
     resolveDelete: ?(ResolveDeleteArgument) => void;
     resolveMove: ?(ResolveMoveArgument) => void;
@@ -305,11 +306,25 @@ class List extends React.Component<Props> {
     };
 
     @action handleMoveOverlayConfirmClick = (parent: Object) => {
-        if (!this.resolveMove) {
-            throw new Error('The resolveMove function is not set. This should not happen, and is likely a bug.');
+        if (!this.moveId) {
+            throw new Error('The moveId is not set. This should not happen and is likely a bug.');
         }
 
-        this.resolveMove({moved: true, parent});
+        const element = this.props.store.findById(this.moveId);
+
+        if (!element) {
+            throw new Error('The moveId does not refer to an element. This should not happen and is likely a bug.');
+        }
+
+        if (!element._hasPermissions && !parent._hasPermissions) {
+            if (!this.resolveMove) {
+                throw new Error('The resolveMove function is not set. This should not happen, and is likely a bug.');
+            }
+
+            this.resolveMove({moved: true, parent});
+        } else {
+            this.movingRestrictedTarget = parent;
+        }
     };
 
     @action handleMoveOverlayClose = () => {
@@ -318,6 +333,19 @@ class List extends React.Component<Props> {
         }
 
         this.resolveMove({moved: false});
+    };
+
+    @action handleMovePermissionWarningConfirm = () => {
+        if (!this.resolveMove) {
+            throw new Error('The resolveMove function is not set. This should not happen, and is likely a bug.');
+        }
+
+        this.resolveMove({moved: true, parent: this.movingRestrictedTarget});
+        this.movingRestrictedTarget = undefined;
+    };
+
+    @action handleMovePermissionWarningCancel = () => {
+        this.movingRestrictedTarget = undefined;
     };
 
     @action handleRequestItemCopy = (id: string | number) => {
@@ -660,23 +688,35 @@ class List extends React.Component<Props> {
                     </Fragment>
                 }
                 {movable &&
-                    <SingleListOverlay
-                        adapter={adapters[0]}
-                        allowActivateForDisabledItems={false}
-                        clearSelectionOnClose={true}
-                        confirmLoading={store.movingSelection || store.moving}
-                        disabledIds={this.moveId ? [this.moveId] : []}
-                        listKey={store.listKey}
-                        locale={store.observableOptions.locale}
-                        metadataOptions={store.metadataOptions}
-                        onClose={this.handleMoveOverlayClose}
-                        onConfirm={this.handleMoveOverlayConfirmClick}
-                        open={this.showMoveOverlay}
-                        options={store.options}
-                        reloadOnOpen={true}
-                        resourceKey={store.resourceKey}
-                        title={translate('sulu_admin.move_copy_overlay_title')}
-                    />
+                    <Fragment>
+                        <SingleListOverlay
+                            adapter={adapters[0]}
+                            allowActivateForDisabledItems={false}
+                            clearSelectionOnClose={true}
+                            confirmLoading={store.movingSelection || store.moving}
+                            disabledIds={this.moveId ? [this.moveId] : []}
+                            listKey={store.listKey}
+                            locale={store.observableOptions.locale}
+                            metadataOptions={store.metadataOptions}
+                            onClose={this.handleMoveOverlayClose}
+                            onConfirm={this.handleMoveOverlayConfirmClick}
+                            open={this.showMoveOverlay}
+                            options={store.options}
+                            reloadOnOpen={true}
+                            resourceKey={store.resourceKey}
+                            title={translate('sulu_admin.move_copy_overlay_title')}
+                        />
+                        <Dialog
+                            cancelText={translate('sulu_admin.cancel')}
+                            confirmText={translate('sulu_admin.confirm')}
+                            onCancel={this.handleMovePermissionWarningCancel}
+                            onConfirm={this.handleMovePermissionWarningConfirm}
+                            open={!!this.movingRestrictedTarget}
+                            title={translate('sulu_security.move_permission_title')}
+                        >
+                            {translate('sulu_security.move_permission_warning')}
+                        </Dialog>
+                    </Fragment>
                 }
                 {copyable &&
                     <SingleListOverlay
