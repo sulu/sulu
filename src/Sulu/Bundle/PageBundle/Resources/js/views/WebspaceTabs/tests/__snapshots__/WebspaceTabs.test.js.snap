@@ -11,9 +11,21 @@ Array [
       <div
         class="wrapper"
       >
-        <ul
-          class="tabs"
-        />
+        <div
+          class="tabsWrapper"
+        >
+          <ul
+            class="tabs"
+          />
+        </div>
+        <button
+          class="button hidden"
+        >
+          <span
+            aria-label="su-more-horizontal"
+            class="su-more-horizontal"
+          />
+        </button>
       </div>
     </div>
   </div>,

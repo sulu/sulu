@@ -53,6 +53,11 @@ $buttonHorizontalPaddingLight: 10px;
         }
     }
 
+    &.hidden {
+        visibility: hidden;
+        pointer-events: none;
+    }
+
     &.small {
         button {
             padding: 10px $buttonHorizontalPaddingLight;

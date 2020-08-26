@@ -2,7 +2,6 @@
 @import './variables.scss';
 
 .container {
-    display: flex;
     background-color: $tabMenuBackgroundColor;
     padding: 0 40px;
 
@@ -16,9 +15,14 @@
 }
 
 .wrapper {
+    display: flex;
+}
+
+.tabs-wrapper {
     flex: 1 1 auto;
     position: relative;
     height: $tabMenuHeight;
+    overflow: hidden;
 }
 
 .button {
@@ -29,6 +33,12 @@
     box-shadow: none;
     cursor: pointer;
     padding: 10px;
+
+    &.hidden {
+        visibility: hidden;
+        pointer-events: none;
+        position: absolute;
+    }
 }
 
 .tabs {

@@ -99,7 +99,15 @@ test('Clicking on several non- and collapsed tabs', () => {
     );
 
     tabs.instance().wrapperRef = {
+        offsetWidth: 89,
+    };
+
+    tabs.instance().tabsWrapperRef = {
         offsetWidth: 55,
+    };
+
+    tabs.instance().tabsWidth = {
+        offsetWidth: 100,
     };
 
     tabs.instance().setDimensions();
@@ -120,7 +128,7 @@ test('Clicking on several non- and collapsed tabs', () => {
 
     // Initial state
     expect(tabs.instance().visibleTabIndices).toEqual([0, 1, 2, 3, 4]);
-    expect(tabs.instance().hiddenTabIndices).toEqual([5, 6, 7, 8, 9]);
+    expect(tabs.instance().collapsedTabIndices).toEqual([5, 6, 7, 8, 9]);
 
     // Click on already visible tab
     tabs.instance().handleTabClick(4);
@@ -128,7 +136,7 @@ test('Clicking on several non- and collapsed tabs', () => {
     tabs.setProps({selectedIndex: 4});
 
     expect(tabs.instance().visibleTabIndices).toEqual([0, 1, 2, 3, 4]);
-    expect(tabs.instance().hiddenTabIndices).toEqual([5, 6, 7, 8, 9]);
+    expect(tabs.instance().collapsedTabIndices).toEqual([5, 6, 7, 8, 9]);
 
     // Click on hidden tab
     tabs.instance().handleCollapsedTabClick(6);
@@ -136,7 +144,7 @@ test('Clicking on several non- and collapsed tabs', () => {
     tabs.setProps({selectedIndex: 6});
 
     expect(tabs.instance().visibleTabIndices).toEqual([0, 1, 2, 3, 6]);
-    expect(tabs.instance().hiddenTabIndices).toEqual([4, 5, 7, 8, 9]);
+    expect(tabs.instance().collapsedTabIndices).toEqual([4, 5, 7, 8, 9]);
 
     // Click on another hidden tab
     tabs.instance().handleCollapsedTabClick(8);
@@ -144,7 +152,7 @@ test('Clicking on several non- and collapsed tabs', () => {
     tabs.setProps({selectedIndex: 8});
 
     expect(tabs.instance().visibleTabIndices).toEqual([0, 1, 2, 3, 8]);
-    expect(tabs.instance().hiddenTabIndices).toEqual([4, 5, 6, 7, 9]);
+    expect(tabs.instance().collapsedTabIndices).toEqual([4, 5, 6, 7, 9]);
 
     // Click on visible tab again
     tabs.instance().handleTabClick(2);
@@ -152,7 +160,7 @@ test('Clicking on several non- and collapsed tabs', () => {
     tabs.setProps({selectedIndex: 2});
 
     expect(tabs.instance().visibleTabIndices).toEqual([0, 1, 2, 3, 8]);
-    expect(tabs.instance().hiddenTabIndices).toEqual([4, 5, 6, 7, 9]);
+    expect(tabs.instance().collapsedTabIndices).toEqual([4, 5, 6, 7, 9]);
 
     // Click again on another visible tab
     tabs.instance().handleTabClick(3);
@@ -160,7 +168,7 @@ test('Clicking on several non- and collapsed tabs', () => {
     tabs.setProps({selectedIndex: 3});
 
     expect(tabs.instance().visibleTabIndices).toEqual([0, 1, 2, 3, 8]);
-    expect(tabs.instance().hiddenTabIndices).toEqual([4, 5, 6, 7, 9]);
+    expect(tabs.instance().collapsedTabIndices).toEqual([4, 5, 6, 7, 9]);
 });
 
 test('ResizeObserver.disconnect should be called before component unmount', () => {

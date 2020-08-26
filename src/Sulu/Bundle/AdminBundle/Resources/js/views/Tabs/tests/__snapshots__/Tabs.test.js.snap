@@ -11,28 +11,40 @@ Array [
       <div
         class="wrapper"
       >
-        <ul
-          class="tabs"
+        <div
+          class="tabsWrapper"
         >
-          <li
-            class="tab"
+          <ul
+            class="tabs"
           >
-            <button
-              title="tabTitle1"
+            <li
+              class="tab"
             >
-              tabTitle1
-            </button>
-          </li>
-          <li
-            class="tab"
-          >
-            <button
-              title="tabTitle2"
+              <button
+                title="tabTitle1"
+              >
+                tabTitle1
+              </button>
+            </li>
+            <li
+              class="tab"
             >
-              tabTitle2
-            </button>
-          </li>
-        </ul>
+              <button
+                title="tabTitle2"
+              >
+                tabTitle2
+              </button>
+            </li>
+          </ul>
+        </div>
+        <button
+          class="button hidden"
+        >
+          <span
+            aria-label="su-more-horizontal"
+            class="su-more-horizontal"
+          />
+        </button>
       </div>
     </div>
   </div>,
@@ -53,19 +65,31 @@ Array [
       <div
         class="wrapper"
       >
-        <ul
-          class="tabs"
+        <div
+          class="tabsWrapper"
         >
-          <li
-            class="tab"
+          <ul
+            class="tabs"
           >
-            <button
-              title="tabTitle1"
+            <li
+              class="tab"
             >
-              tabTitle1
-            </button>
-          </li>
-        </ul>
+              <button
+                title="tabTitle1"
+              >
+                tabTitle1
+              </button>
+            </li>
+          </ul>
+        </div>
+        <button
+          class="button hidden"
+        >
+          <span
+            aria-label="su-more-horizontal"
+            class="su-more-horizontal"
+          />
+        </button>
       </div>
     </div>
   </div>,
@@ -86,19 +110,31 @@ Array [
       <div
         class="wrapper"
       >
-        <ul
-          class="tabs"
+        <div
+          class="tabsWrapper"
         >
-          <li
-            class="tab"
+          <ul
+            class="tabs"
           >
-            <button
-              title="tabTitle1"
+            <li
+              class="tab"
             >
-              tabTitle1
-            </button>
-          </li>
-        </ul>
+              <button
+                title="tabTitle1"
+              >
+                tabTitle1
+              </button>
+            </li>
+          </ul>
+        </div>
+        <button
+          class="button hidden"
+        >
+          <span
+            aria-label="su-more-horizontal"
+            class="su-more-horizontal"
+          />
+        </button>
       </div>
     </div>
   </div>,

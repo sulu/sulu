@@ -7,29 +7,41 @@ exports[`Should mark the currently active child route as selected tab 1`] = `
   <div
     class="wrapper"
   >
-    <ul
-      class="tabs"
+    <div
+      class="tabsWrapper"
     >
-      <li
-        class="tab"
+      <ul
+        class="tabs"
       >
-        <button
-          title="Tab Titel 1"
+        <li
+          class="tab"
         >
-          Tab Titel 1
-        </button>
-      </li>
-      <li
-        class="tab selected"
-      >
-        <button
-          disabled=""
-          title="Tab Titel 2"
+          <button
+            title="Tab Titel 1"
+          >
+            Tab Titel 1
+          </button>
+        </li>
+        <li
+          class="tab selected"
         >
-          Tab Titel 2
-        </button>
-      </li>
-    </ul>
+          <button
+            disabled=""
+            title="Tab Titel 2"
+          >
+            Tab Titel 2
+          </button>
+        </li>
+      </ul>
+    </div>
+    <button
+      class="button hidden"
+    >
+      <span
+        aria-label="su-more-horizontal"
+        class="su-more-horizontal"
+      />
+    </button>
   </div>
 </div>
 `;
@@ -47,28 +59,40 @@ exports[`Should render the child components after the tabs 1`] = `
   <div
     class="wrapper"
   >
-    <ul
-      class="tabs"
+    <div
+      class="tabsWrapper"
     >
-      <li
-        class="tab"
+      <ul
+        class="tabs"
       >
-        <button
-          title="Tab Titel 1"
+        <li
+          class="tab"
         >
-          Tab Titel 1
-        </button>
-      </li>
-      <li
-        class="tab"
-      >
-        <button
-          title="Tab Titel 2"
+          <button
+            title="Tab Titel 1"
+          >
+            Tab Titel 1
+          </button>
+        </li>
+        <li
+          class="tab"
         >
-          Tab Titel 2
-        </button>
-      </li>
-    </ul>
+          <button
+            title="Tab Titel 2"
+          >
+            Tab Titel 2
+          </button>
+        </li>
+      </ul>
+    </div>
+    <button
+      class="button hidden"
+    >
+      <span
+        aria-label="su-more-horizontal"
+        class="su-more-horizontal"
+      />
+    </button>
   </div>
 </div>
 `;

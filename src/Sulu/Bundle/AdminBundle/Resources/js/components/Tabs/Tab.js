@@ -4,57 +4,33 @@ import type {ElementRef} from 'react';
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import classNames from 'classnames';
-import debounce from 'debounce';
 import tabStyles from './tab.scss';
 
 type Props = {
     children: string,
+    hidden: boolean,
     index?: number,
     onClick?: (index: ?number) => void,
-    onWidthChange?: (index: ?number, width: number) => void,
+    onRefChange?: (index: ?number, ref: ?ElementRef<'li'>) => void,
     selected: boolean,
     small: boolean,
 };
 
-const DEBOUNCE_TIME = 200;
-
 @observer
 class Tab extends React.Component<Props> {
     static defaultProps = {
+        hidden: false,
         selected: false,
         small: false,
     };
 
     @observable selected = false;
 
-    listItemRef: ?ElementRef<'li'>;
-    resizeObserver: ?ResizeObserver;
-
     @action componentDidMount() {
-        const {index, onWidthChange, selected} = this.props;
-
-        this.resizeObserver = new ResizeObserver(
-            debounce(this.handleWidthChange, DEBOUNCE_TIME)
-        );
-
-        if (!this.listItemRef) {
-            return;
-        }
-
-        this.resizeObserver.observe(this.listItemRef);
-
-        if (onWidthChange && this.listItemRef) {
-            onWidthChange(index, this.listItemRef.offsetWidth);
-        }
+        const {selected} = this.props;
 
         if (selected) {
             this.selected = true;
-        }
-    }
-
-    componentWillUnmount() {
-        if (this.resizeObserver) {
-            this.resizeObserver.disconnect();
         }
     }
 
@@ -67,15 +43,11 @@ class Tab extends React.Component<Props> {
         }
     }
 
-    setListItemRef = (ref: ?ElementRef<'li'>) => {
-        this.listItemRef = ref;
-    };
+    handleRefChange = (ref: ?ElementRef<'li'>) => {
+        const {index, onRefChange} = this.props;
 
-    handleWidthChange = ([entry]: ResizeObserverEntry[]) => {
-        const {index, onWidthChange} = this.props;
-
-        if (onWidthChange && entry) {
-            onWidthChange(index, entry.contentRect.width);
+        if (onRefChange) {
+            onRefChange(index, ref);
         }
     };
 
@@ -90,6 +62,7 @@ class Tab extends React.Component<Props> {
     render() {
         const {
             children,
+            hidden,
             small,
             selected,
         } = this.props;
@@ -97,13 +70,14 @@ class Tab extends React.Component<Props> {
         const tabClass = classNames(
             tabStyles.tab,
             {
+                [tabStyles.hidden]: hidden,
                 [tabStyles.selected]: this.selected,
                 [tabStyles.small]: small,
             }
         );
 
         return (
-            <li className={tabClass} ref={this.setListItemRef}>
+            <li className={tabClass} ref={this.handleRefChange}>
                 <button
                     disabled={selected}
                     onClick={this.handleClick}
