@@ -1,6 +1,11 @@
 CHANGELOG for Sulu
 ==================
 
+* 1.6.36 (2020-08-26)
+    * BUGFIX      #5415  [ContentBundle]           Fix teaser-selection deselecting
+    * BUGFIX      #5442  [AudienceTargetingBundle] Fix export data function of audience-target selection
+    * BUGFIX      #5418  [MediaBundle]             Store values from image crop as integers
+
 * 1.6.35 (2020-07-30)
     * BUGFIX      #5435  [ContactBundle]           Fix type of tag names for serialization of contacts
 

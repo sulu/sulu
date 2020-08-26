@@ -74,7 +74,7 @@ class TargetGroupSelection extends ComplexContentType implements ContentTypeExpo
             return \json_encode($propertyValue);
         }
 
-        return [];
+        return \json_encode([]);
     }
 
     public function importData(
