@@ -196,10 +196,10 @@ class FormatOptionsManagerTest extends TestCase
             42,
             'sulu-100x100',
             [
-                'cropX' => 10,
-                'cropY' => 11,
-                'cropHeight' => 12,
-                'cropWidth' => 13,
+                'cropX' => 10.05,
+                'cropY' => 11.15,
+                'cropHeight' => 12.12,
+                'cropWidth' => 13.42,
             ]
         );
 

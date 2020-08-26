@@ -503,7 +503,7 @@ class WebspaceExportTest extends SuluTestCase
                         'audience_targeting_groups',
                         'target_group_selection',
                         false,
-                        $extensionData['excerpt']['audience_targeting_groups']
+                        \json_encode($extensionData['excerpt']['audience_targeting_groups'])
                     ),
                     'segment' => $this->createItemArray(
                         'segment',

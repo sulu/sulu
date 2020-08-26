@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\FormMetadata;
 
 use PHPUnit\Framework\TestCase;
+use Sulu\Bundle\AdminBundle\Exception\InvalidRootTagException;
 use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadataMapper;
 use Sulu\Bundle\AdminBundle\FormMetadata\FormXmlLoader;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
@@ -524,6 +525,16 @@ class FormXmlLoaderTest extends TestCase
 
         $this->loader->load(
             $this->getFormDirectory() . '../invalid-forms/form_with_block_settings_property.xml'
+        );
+    }
+
+    public function testLoadFormInvalidRootTag()
+    {
+        $this->expectException(InvalidRootTagException::class);
+        $this->expectExceptionMessageRegExp('/"form"/');
+
+        $this->loader->load(
+            __DIR__ . \DIRECTORY_SEPARATOR . 'data' . \DIRECTORY_SEPARATOR . 'form_invalid_root_tag.xml'
         );
     }
 

@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\FormMetadata;
 
+use Sulu\Bundle\AdminBundle\Exception\InvalidRootTagException;
 use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadata as ExternalFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\LocalizedFormMetadataCollection;
@@ -68,6 +69,10 @@ class FormXmlLoader extends AbstractLoader
     {
         // init running vars
         $tags = [];
+
+        if (0 === $xpath->query('/x:form')->count()) {
+            throw new InvalidRootTagException($resource, 'form');
+        }
 
         $form = new ExternalFormMetadata();
         $form->setResource($resource);

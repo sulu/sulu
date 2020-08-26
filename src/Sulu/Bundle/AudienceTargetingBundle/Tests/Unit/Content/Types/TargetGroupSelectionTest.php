@@ -119,4 +119,39 @@ class TargetGroupSelectionTest extends TestCase
 
         $this->audienceTargetingGroups->remove($node->reveal(), $property->reveal(), 'sulu_io', 'en', null);
     }
+
+    public function testExportData()
+    {
+        $this->assertEquals('[]', $this->audienceTargetingGroups->exportData(null));
+        $this->assertEquals('[]', $this->audienceTargetingGroups->exportData([]));
+        $this->assertEquals('[1]', $this->audienceTargetingGroups->exportData([1]));
+    }
+
+    public function testImportDataEmpty()
+    {
+        $node = $this->prophesize(NodeInterface::class);
+        $property = $this->prophesize(PropertyInterface::class);
+
+        $property->getName()->willReturn('test');
+
+        $property->setValue([])->shouldBeCalled();
+        $property->getValue()->willReturn([]);
+        $node->setProperty('test', [])->shouldBeCalled();
+
+        $this->audienceTargetingGroups->importData($node->reveal(), $property->reveal(), '[]', 1, 'sulu_io', 'en');
+    }
+
+    public function testImportData()
+    {
+        $node = $this->prophesize(NodeInterface::class);
+        $property = $this->prophesize(PropertyInterface::class);
+
+        $property->getName()->willReturn('test');
+
+        $property->setValue([1, 2])->shouldBeCalled();
+        $property->getValue()->willReturn([1, 2]);
+        $node->setProperty('test', [1, 2])->shouldBeCalled();
+
+        $this->audienceTargetingGroups->importData($node->reveal(), $property->reveal(), '[1, 2]', 1, 'sulu_io', 'en');
+    }
 }
