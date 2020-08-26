@@ -51,3 +51,14 @@ test('Resize div should call callback', () => {
     expect(items.instance().parentWidth).toEqual(40);
     expect(items.instance().showText).toEqual(false);
 });
+
+test('ResizeObserver.disconnect should be called before component unmount', () => {
+    const items = mount(
+        <Items>
+            <Button>Test</Button>
+        </Items>
+    );
+
+    items.instance().componentWillUnmount();
+    expect(ResizeObserver.mock.instances[0].disconnect).toBeCalled();
+});

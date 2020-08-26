@@ -162,3 +162,26 @@ test('Clicking on several non- and collapsed tabs', () => {
     expect(tabs.instance().visibleTabIndices).toEqual([0, 1, 2, 3, 8]);
     expect(tabs.instance().hiddenTabIndices).toEqual([4, 5, 6, 7, 9]);
 });
+
+test('ResizeObserver.disconnect should be called before component unmount', () => {
+    const changeSpy = jest.fn();
+    const selectedTabIndex = 0;
+
+    const tabs = shallow(
+        <Tabs onSelect={changeSpy} selectedIndex={selectedTabIndex}>
+            <Tabs.Tab>Tab 1</Tabs.Tab>
+            <Tabs.Tab>Tab 2</Tabs.Tab>
+            <Tabs.Tab>Tab 3</Tabs.Tab>
+            <Tabs.Tab>Tab 4</Tabs.Tab>
+            <Tabs.Tab>Tab 5</Tabs.Tab>
+            <Tabs.Tab>Tab 6</Tabs.Tab>
+            <Tabs.Tab>Tab 7</Tabs.Tab>
+            <Tabs.Tab>Tab 8</Tabs.Tab>
+            <Tabs.Tab>Tab 9</Tabs.Tab>
+            <Tabs.Tab>Tab 10</Tabs.Tab>
+        </Tabs>
+    );
+
+    tabs.instance().componentWillUnmount();
+    expect(ResizeObserver.mock.instances[0].disconnect).toBeCalled();
+});
