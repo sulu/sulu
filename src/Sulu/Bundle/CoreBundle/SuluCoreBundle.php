@@ -13,6 +13,7 @@ namespace Sulu\Bundle\CoreBundle;
 
 use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\CsvHandlerCompilerPass;
 use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\ExceptionHandlerCompilerPass;
+use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\JmsObjectConstructorCompilerPass;
 use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\ListBuilderMetadataProviderCompilerPass;
 use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\RegisterContentTypesCompilerPass;
 use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\RegisterLocalizationProvidersPass;
@@ -51,5 +52,6 @@ class SuluCoreBundle extends Bundle
         );
 
         $container->addCompilerPass(new ExceptionHandlerCompilerPass());
+        $container->addCompilerPass(new JmsObjectConstructorCompilerPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, -1024);
     }
 }
