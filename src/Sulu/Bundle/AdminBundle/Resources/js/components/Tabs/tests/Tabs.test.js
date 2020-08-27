@@ -11,6 +11,13 @@ window.ResizeObserver = jest.fn(function() {
     this.disconnect = jest.fn();
 });
 
+Object.defineProperty(window, 'getComputedStyle', {
+    value: () => ({
+        paddingLeft: 20.0,
+        paddingRight: 20.0,
+    })
+});
+
 test('Render a Tabs component', () => {
     const changeSpy = jest.fn();
 
@@ -98,15 +105,15 @@ test('Clicking on several non- and collapsed tabs', () => {
         </Tabs>
     );
 
-    tabs.instance().wrapperRef = {
-        offsetWidth: 89,
+    tabs.instance().tabsRef = {
+        offsetWidth: 129,
     };
 
-    tabs.instance().tabsWrapperRef = {
+    tabs.instance().tabsContainerWrapperRef = {
         offsetWidth: 55,
     };
 
-    tabs.instance().tabsWidth = {
+    tabs.instance().tabsContainerRef = {
         offsetWidth: 100,
     };
 

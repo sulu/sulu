@@ -2,46 +2,34 @@
 
 exports[`Should mark the currently active child route as selected tab 1`] = `
 <div
-  class="container default"
+  class="tabs default"
 >
   <div
-    class="wrapper"
+    class="tabsContainerWrapper"
   >
-    <div
-      class="tabsWrapper"
+    <ul
+      class="tabsContainer"
     >
-      <ul
-        class="tabs"
+      <li
+        class="tab"
       >
-        <li
-          class="tab"
+        <button
+          title="Tab Titel 1"
         >
-          <button
-            title="Tab Titel 1"
-          >
-            Tab Titel 1
-          </button>
-        </li>
-        <li
-          class="tab selected"
+          Tab Titel 1
+        </button>
+      </li>
+      <li
+        class="tab selected"
+      >
+        <button
+          disabled=""
+          title="Tab Titel 2"
         >
-          <button
-            disabled=""
-            title="Tab Titel 2"
-          >
-            Tab Titel 2
-          </button>
-        </li>
-      </ul>
-    </div>
-    <button
-      class="button hidden"
-    >
-      <span
-        aria-label="su-more-horizontal"
-        class="su-more-horizontal"
-      />
-    </button>
+          Tab Titel 2
+        </button>
+      </li>
+    </ul>
   </div>
 </div>
 `;
@@ -54,45 +42,33 @@ exports[`Should mark the currently active child route as selected tab 2`] = `
 
 exports[`Should render the child components after the tabs 1`] = `
 <div
-  class="container default"
+  class="tabs default"
 >
   <div
-    class="wrapper"
+    class="tabsContainerWrapper"
   >
-    <div
-      class="tabsWrapper"
+    <ul
+      class="tabsContainer"
     >
-      <ul
-        class="tabs"
+      <li
+        class="tab"
       >
-        <li
-          class="tab"
+        <button
+          title="Tab Titel 1"
         >
-          <button
-            title="Tab Titel 1"
-          >
-            Tab Titel 1
-          </button>
-        </li>
-        <li
-          class="tab"
+          Tab Titel 1
+        </button>
+      </li>
+      <li
+        class="tab"
+      >
+        <button
+          title="Tab Titel 2"
         >
-          <button
-            title="Tab Titel 2"
-          >
-            Tab Titel 2
-          </button>
-        </li>
-      </ul>
-    </div>
-    <button
-      class="button hidden"
-    >
-      <span
-        aria-label="su-more-horizontal"
-        class="su-more-horizontal"
-      />
-    </button>
+          Tab Titel 2
+        </button>
+      </li>
+    </ul>
   </div>
 </div>
 `;

@@ -37,7 +37,7 @@ class Tabs extends React.Component<Props> {
     @observable tabWidths: Map<number, number> = new Map();
     @observable tabRefs: Map<number, ?ElementRef<'li'>> = new Map();
     @observable dropdownOpen = false;
-    @observable lastSelectedIndex: ?number;
+    @observable lastShownIndex: ?number;
 
     static Tab = Tab;
 
@@ -49,13 +49,11 @@ class Tabs extends React.Component<Props> {
     dropdownButtonRef: ?ElementRef<'button'>;
 
     componentDidMount() {
+        this.setDimensions();
+
         this.resizeObserver = new ResizeObserver(
             debounce(this.setDimensions, DEBOUNCE_TIME)
         );
-
-        if (this.tabsRef) {
-            this.resizeObserver.observe(this.tabsRef);
-        }
 
         if (this.tabsContainerWrapperRef) {
             this.resizeObserver.observe(this.tabsContainerWrapperRef);
@@ -70,10 +68,6 @@ class Tabs extends React.Component<Props> {
         if (this.resizeObserver) {
             this.resizeObserver.disconnect();
         }
-    }
-
-    componentDidUpdate() {
-        this.setDimensions();
     }
 
     setTabsRef = (ref: ?ElementRef<'div'>) => {
@@ -98,7 +92,7 @@ class Tabs extends React.Component<Props> {
         }
 
         const width = this.tabsRef.offsetWidth;
-        const style = getComputedStyle(this.tabsRef);
+        const style = window.getComputedStyle(this.tabsRef);
         if (this.tabsWidth !== width) {
             this.tabsWidth = width - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
         }
@@ -146,7 +140,7 @@ class Tabs extends React.Component<Props> {
         this.updateTabWidths();
     };
 
-    @action handleTabRefChange = (index: number, ref: ?ElementRef<'li'>) => {
+    @action setTabRef = (index: number, ref: ?ElementRef<'li'>) => {
         if (this.tabRefs.get(index) !== ref) {
             this.tabRefs.set(index, ref);
         }
@@ -172,7 +166,7 @@ class Tabs extends React.Component<Props> {
 
     @action handleCollapsedTabClick = (selectedTabIndex: number) => {
         this.dropdownOpen = false;
-        this.lastSelectedIndex = selectedTabIndex;
+        this.lastShownIndex = selectedTabIndex;
 
         this.changeTab(selectedTabIndex);
     };
@@ -198,6 +192,10 @@ class Tabs extends React.Component<Props> {
         let visibleTabIndices: number[] = [];
 
         const childIndices = this.childIndices;
+
+        // Sorts childIndices in it's natural order, except that the element with selectedIndex is positioned at the
+        // first place and the element withlastShownIndex is positioned at the second place.
+        // This ensures that those two elements will always be visible.
         childIndices.sort((a, b) => {
             if (a === selectedIndex) {
                 return -1;
@@ -207,11 +205,11 @@ class Tabs extends React.Component<Props> {
                 return 1;
             }
 
-            if (a === this.lastSelectedIndex) {
+            if (a === this.lastShownIndex) {
                 return -1;
             }
 
-            if (b === this.lastSelectedIndex) {
+            if (b === this.lastShownIndex) {
                 return 1;
             }
 
@@ -237,6 +235,8 @@ class Tabs extends React.Component<Props> {
             visibleTabIndices = [...visibleTabIndices, index];
         }
 
+        // Since visibleTabIndices contains only the indices of the elements that can be fully shown, we need to reset
+        // the sorting so the elements have the correct order again.
         visibleTabIndices.sort((a, b) => a - b);
 
         return visibleTabIndices;
@@ -250,29 +250,6 @@ class Tabs extends React.Component<Props> {
 
     @computed get hasCollapsedTabs(): boolean {
         return this.collapsedTabIndices.length > 0;
-    }
-
-    get tabs() {
-        const {children} = this.props;
-        const visibleTabIndices = this.visibleTabIndices;
-        const collapsedTabIndices = this.collapsedTabIndices;
-
-        return [
-            ...this.createTabItems(
-                React.Children.toArray(children).filter(
-                    (child, index) => visibleTabIndices.includes(index)
-                ),
-                visibleTabIndices,
-                false
-            ),
-            ...this.createTabItems(
-                React.Children.toArray(children).filter(
-                    (child, index) => collapsedTabIndices.includes(index)
-                ),
-                collapsedTabIndices,
-                true
-            ),
-        ];
     }
 
     createTabItems(tabs: Array<Element<typeof Tab> | false>, indices: number[], hidden: boolean) {
@@ -296,25 +273,35 @@ class Tabs extends React.Component<Props> {
                     selected,
                     small,
                     onClick: this.handleTabClick,
-                    onRefChange: this.handleTabRefChange,
+                    tabRef: this.setTabRef,
                 }
             );
         });
     }
 
-    get collapsedTabs() {
+    createTabs = () => {
         const {children} = this.props;
-        const collapsedTabIndices = this.collapsedTabIndices;
+        const {visibleTabIndices, collapsedTabIndices} = this;
 
-        return this.createCollapsedTabItems(
-            React.Children.toArray(children).filter((child, index) => collapsedTabIndices.includes(index)),
-            collapsedTabIndices
-        );
-    }
+        return [
+            ...this.createTabItems(
+                React.Children.toArray(children).filter(
+                    (child, index) => visibleTabIndices.includes(index)
+                ),
+                visibleTabIndices,
+                false
+            ),
+            ...this.createTabItems(
+                React.Children.toArray(children).filter(
+                    (child, index) => collapsedTabIndices.includes(index)
+                ),
+                collapsedTabIndices,
+                true
+            ),
+        ];
+    };
 
     createCollapsedTabItems(tabs: Array<Element<typeof Tab> | false>, indices: number[]) {
-        const {skin} = this.props;
-
         return React.Children.map(tabs, (tab, localIndex) => {
             const index = indices[localIndex];
 
@@ -327,13 +314,22 @@ class Tabs extends React.Component<Props> {
                     index={index}
                     key={index}
                     onClick={this.handleCollapsedTabClick}
-                    skin={tab.props.skin || skin}
                 >
                     {tab.props.children}
                 </CollapsedTab>
             );
         });
     }
+
+    createCollapsedTabs = () => {
+        const {children} = this.props;
+        const {collapsedTabIndices} = this;
+
+        return this.createCollapsedTabItems(
+            React.Children.toArray(children).filter((child, index) => collapsedTabIndices.includes(index)),
+            collapsedTabIndices
+        );
+    };
 
     render() {
         const {
@@ -349,45 +345,40 @@ class Tabs extends React.Component<Props> {
             }
         );
 
-        const buttonClass = classNames(
-            tabsStyles.button,
-            {
-                [tabsStyles.hidden]: !this.hasCollapsedTabs,
-            }
-        );
-
         return (
             <div className={tabsClass} ref={this.setTabsRef}>
                 <div className={tabsStyles.tabsContainerWrapper} ref={this.setTabsContainerWrapperRef}>
                     <ul className={tabsStyles.tabsContainer} ref={this.setTabsContainerRef}>
-                        {this.tabs}
+                        {this.createTabs()}
                     </ul>
                 </div>
 
-                <button
-                    className={buttonClass}
-                    onClick={this.handleDropdownToggle}
-                    ref={this.setDropdownButtonRef}
-                >
-                    <Icon name="su-more-horizontal" />
-                </button>
-
                 {this.hasCollapsedTabs &&
-                    <Popover
-                        anchorElement={this.dropdownButtonRef || undefined}
-                        onClose={this.handleDropdownClose}
-                        open={this.dropdownOpen}
-                    >
-                        {
-                            (setPopoverRef, styles) => (
-                                <div ref={setPopoverRef} style={styles}>
-                                    <CollapsedTabList skin={skin}>
-                                        {this.collapsedTabs}
-                                    </CollapsedTabList>
-                                </div>
-                            )
-                        }
-                    </Popover>
+                    <React.Fragment>
+                        <button
+                            className={tabsStyles.button}
+                            onClick={this.handleDropdownToggle}
+                            ref={this.setDropdownButtonRef}
+                        >
+                            <Icon name="su-more-horizontal" />
+                        </button>
+
+                        <Popover
+                            anchorElement={this.dropdownButtonRef || undefined}
+                            onClose={this.handleDropdownClose}
+                            open={this.dropdownOpen}
+                        >
+                            {
+                                (setPopoverRef, styles) => (
+                                    <div ref={setPopoverRef} style={styles}>
+                                        <CollapsedTabList skin={skin}>
+                                            {this.createCollapsedTabs()}
+                                        </CollapsedTabList>
+                                    </div>
+                                )
+                            }
+                        </Popover>
+                    </React.Fragment>
                 }
             </div>
         );

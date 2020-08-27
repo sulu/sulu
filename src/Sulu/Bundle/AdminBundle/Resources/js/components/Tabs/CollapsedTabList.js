@@ -16,8 +16,6 @@ export default class CollapsedTabList extends React.PureComponent<Props> {
         skin: 'default',
     };
 
-    static CollapsedTab = CollapsedTab;
-
     render() {
         const {
             children,

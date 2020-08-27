@@ -6,26 +6,14 @@ Array [
     class="tabsContainer"
   >
     <div
-      class="container default"
+      class="tabs default"
     >
       <div
-        class="wrapper"
+        class="tabsContainerWrapper"
       >
-        <div
-          class="tabsWrapper"
-        >
-          <ul
-            class="tabs"
-          />
-        </div>
-        <button
-          class="button hidden"
-        >
-          <span
-            aria-label="su-more-horizontal"
-            class="su-more-horizontal"
-          />
-        </button>
+        <ul
+          class="tabsContainer"
+        />
       </div>
     </div>
   </div>,

@@ -11,7 +11,7 @@
     }
 
     &.light {
-        background-color: $lightTabMenuBackgroundColor;
+        background-color: $tabMenuLightBackgroundColor;
     }
 }
 
@@ -30,12 +30,6 @@
     box-shadow: none;
     cursor: pointer;
     padding: 10px;
-
-    &.hidden {
-        visibility: hidden;
-        pointer-events: none;
-        position: absolute;
-    }
 }
 
 .tabs-container {

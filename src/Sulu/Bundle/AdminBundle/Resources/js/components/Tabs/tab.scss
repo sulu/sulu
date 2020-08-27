@@ -4,7 +4,7 @@
 $tabTextColor: $black;
 $tabUnderlineBackgroundColor: $black;
 $buttonHorizontalPadding: 20px;
-$buttonHorizontalPaddingLight: 10px;
+$buttonSmallHorizontalPadding: 10px;
 
 .tab {
     position: relative;
@@ -60,12 +60,12 @@ $buttonHorizontalPaddingLight: 10px;
 
     &.small {
         button {
-            padding: 10px $buttonHorizontalPaddingLight;
+            padding: 10px $buttonSmallHorizontalPadding;
         }
 
         &::after {
-            width: calc(100% - $buttonHorizontalPaddingLight * 2);
-            left: $buttonHorizontalPaddingLight;
+            width: calc(100% - $buttonSmallHorizontalPadding * 2);
+            left: $buttonSmallHorizontalPadding;
         }
     }
 }

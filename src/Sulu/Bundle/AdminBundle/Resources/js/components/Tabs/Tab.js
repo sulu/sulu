@@ -1,8 +1,6 @@
 // @flow
 import React from 'react';
 import type {ElementRef} from 'react';
-import {action, observable} from 'mobx';
-import {observer} from 'mobx-react';
 import classNames from 'classnames';
 import tabStyles from './tab.scss';
 
@@ -11,43 +9,23 @@ type Props = {
     hidden: boolean,
     index?: number,
     onClick?: (index: ?number) => void,
-    onRefChange?: (index: ?number, ref: ?ElementRef<'li'>) => void,
     selected: boolean,
     small: boolean,
+    tabRef?: (index: ?number, ref: ?ElementRef<'li'>) => void,
 };
 
-@observer
-class Tab extends React.Component<Props> {
+class Tab extends React.PureComponent<Props> {
     static defaultProps = {
         hidden: false,
         selected: false,
         small: false,
     };
 
-    @observable selected = false;
+    setTabRef = (ref: ?ElementRef<'li'>) => {
+        const {index, tabRef} = this.props;
 
-    @action componentDidMount() {
-        const {selected} = this.props;
-
-        if (selected) {
-            this.selected = true;
-        }
-    }
-
-    @action componentDidUpdate(prevProps: Props) {
-        const {selected: prevSelected} = prevProps;
-        const {selected} = this.props;
-
-        if (prevSelected !== selected) {
-            this.selected = selected;
-        }
-    }
-
-    handleRefChange = (ref: ?ElementRef<'li'>) => {
-        const {index, onRefChange} = this.props;
-
-        if (onRefChange) {
-            onRefChange(index, ref);
+        if (tabRef) {
+            tabRef(index, ref);
         }
     };
 
@@ -71,13 +49,13 @@ class Tab extends React.Component<Props> {
             tabStyles.tab,
             {
                 [tabStyles.hidden]: hidden,
-                [tabStyles.selected]: this.selected,
+                [tabStyles.selected]: selected,
                 [tabStyles.small]: small,
             }
         );
 
         return (
-            <li className={tabClass} ref={this.handleRefChange}>
+            <li className={tabClass} ref={this.setTabRef}>
                 <button
                     disabled={selected}
                     onClick={this.handleClick}

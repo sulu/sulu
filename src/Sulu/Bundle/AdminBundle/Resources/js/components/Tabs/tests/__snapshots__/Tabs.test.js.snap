@@ -2,217 +2,169 @@
 
 exports[`Render a Tabs component 1`] = `
 <div
-  class="container default"
+  class="tabs default"
 >
   <div
-    class="wrapper"
+    class="tabsContainerWrapper"
   >
-    <div
-      class="tabsWrapper"
+    <ul
+      class="tabsContainer"
     >
-      <ul
-        class="tabs"
+      <li
+        class="tab"
       >
-        <li
-          class="tab"
+        <button
+          title="Tab 1"
         >
-          <button
-            title="Tab 1"
-          >
-            Tab 1
-          </button>
-        </li>
-        <li
-          class="tab"
+          Tab 1
+        </button>
+      </li>
+      <li
+        class="tab"
+      >
+        <button
+          title="Tab 2"
         >
-          <button
-            title="Tab 2"
-          >
-            Tab 2
-          </button>
-        </li>
-        <li
-          class="tab"
+          Tab 2
+        </button>
+      </li>
+      <li
+        class="tab"
+      >
+        <button
+          title="Tab 3"
         >
-          <button
-            title="Tab 3"
-          >
-            Tab 3
-          </button>
-        </li>
-      </ul>
-    </div>
-    <button
-      class="button hidden"
-    >
-      <span
-        aria-label="su-more-horizontal"
-        class="su-more-horizontal"
-      />
-    </button>
+          Tab 3
+        </button>
+      </li>
+    </ul>
   </div>
 </div>
 `;
 
 exports[`Render a Tabs component with a selected tab 1`] = `
 <div
-  class="container default"
+  class="tabs default"
 >
   <div
-    class="wrapper"
+    class="tabsContainerWrapper"
   >
-    <div
-      class="tabsWrapper"
+    <ul
+      class="tabsContainer"
     >
-      <ul
-        class="tabs"
+      <li
+        class="tab selected"
       >
-        <li
-          class="tab"
+        <button
+          disabled=""
+          title="Tab 1"
         >
-          <button
-            disabled=""
-            title="Tab 1"
-          >
-            Tab 1
-          </button>
-        </li>
-        <li
-          class="tab"
+          Tab 1
+        </button>
+      </li>
+      <li
+        class="tab"
+      >
+        <button
+          title="Tab 2"
         >
-          <button
-            title="Tab 2"
-          >
-            Tab 2
-          </button>
-        </li>
-        <li
-          class="tab"
+          Tab 2
+        </button>
+      </li>
+      <li
+        class="tab"
+      >
+        <button
+          title="Tab 3"
         >
-          <button
-            title="Tab 3"
-          >
-            Tab 3
-          </button>
-        </li>
-      </ul>
-    </div>
-    <button
-      class="button hidden"
-    >
-      <span
-        aria-label="su-more-horizontal"
-        class="su-more-horizontal"
-      />
-    </button>
+          Tab 3
+        </button>
+      </li>
+    </ul>
   </div>
 </div>
 `;
 
 exports[`Render a Tabs component with light skin 1`] = `
 <div
-  class="container light"
+  class="tabs light"
 >
   <div
-    class="wrapper"
+    class="tabsContainerWrapper"
   >
-    <div
-      class="tabsWrapper"
+    <ul
+      class="tabsContainer"
     >
-      <ul
-        class="tabs"
+      <li
+        class="tab"
       >
-        <li
-          class="tab"
+        <button
+          title="Tab 1"
         >
-          <button
-            title="Tab 1"
-          >
-            Tab 1
-          </button>
-        </li>
-        <li
-          class="tab"
+          Tab 1
+        </button>
+      </li>
+      <li
+        class="tab"
+      >
+        <button
+          title="Tab 2"
         >
-          <button
-            title="Tab 2"
-          >
-            Tab 2
-          </button>
-        </li>
-        <li
-          class="tab"
+          Tab 2
+        </button>
+      </li>
+      <li
+        class="tab"
+      >
+        <button
+          title="Tab 3"
         >
-          <button
-            title="Tab 3"
-          >
-            Tab 3
-          </button>
-        </li>
-      </ul>
-    </div>
-    <button
-      class="button hidden"
-    >
-      <span
-        aria-label="su-more-horizontal"
-        class="su-more-horizontal"
-      />
-    </button>
+          Tab 3
+        </button>
+      </li>
+    </ul>
   </div>
 </div>
 `;
 
 exports[`Render a Tabs component with small modifier 1`] = `
 <div
-  class="container default small"
+  class="tabs default small"
 >
   <div
-    class="wrapper"
+    class="tabsContainerWrapper"
   >
-    <div
-      class="tabsWrapper"
+    <ul
+      class="tabsContainer"
     >
-      <ul
-        class="tabs"
+      <li
+        class="tab small"
       >
-        <li
-          class="tab small"
+        <button
+          title="Tab 1"
         >
-          <button
-            title="Tab 1"
-          >
-            Tab 1
-          </button>
-        </li>
-        <li
-          class="tab small"
+          Tab 1
+        </button>
+      </li>
+      <li
+        class="tab small"
+      >
+        <button
+          title="Tab 2"
         >
-          <button
-            title="Tab 2"
-          >
-            Tab 2
-          </button>
-        </li>
-        <li
-          class="tab small"
+          Tab 2
+        </button>
+      </li>
+      <li
+        class="tab small"
+      >
+        <button
+          title="Tab 3"
         >
-          <button
-            title="Tab 3"
-          >
-            Tab 3
-          </button>
-        </li>
-      </ul>
-    </div>
-    <button
-      class="button hidden"
-    >
-      <span
-        aria-label="su-more-horizontal"
-        class="su-more-horizontal"
-      />
-    </button>
+          Tab 3
+        </button>
+      </li>
+    </ul>
   </div>
 </div>
 `;
