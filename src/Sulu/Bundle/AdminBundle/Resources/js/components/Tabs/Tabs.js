@@ -30,9 +30,9 @@ class Tabs extends React.Component<Props> {
         small: false,
     };
 
-    @observable wrapperWidth: number = 0;
-    @observable tabsWrapperWidth: number = 0;
     @observable tabsWidth: number = 0;
+    @observable tabsContainerWrapperWidth: number = 0;
+    @observable tabsContainerWidth: number = 0;
 
     @observable tabWidths: Map<number, number> = new Map();
     @observable tabRefs: Map<number, ?ElementRef<'li'>> = new Map();
@@ -43,26 +43,26 @@ class Tabs extends React.Component<Props> {
 
     resizeObserver: ?ResizeObserver;
 
-    containerRef: ?ElementRef<'div'>;
-    wrapperRef: ?ElementRef<'div'>;
-    tabsWrapperRef: ?ElementRef<'div'>;
-    tabsRef: ?ElementRef<'ul'>;
+    tabsRef: ?ElementRef<'div'>;
+    tabsContainerWrapperRef: ?ElementRef<'div'>;
+    tabsContainerRef: ?ElementRef<'ul'>;
+    dropdownButtonRef: ?ElementRef<'button'>;
 
     componentDidMount() {
         this.resizeObserver = new ResizeObserver(
             debounce(this.setDimensions, DEBOUNCE_TIME)
         );
 
-        if (this.wrapperRef) {
-            this.resizeObserver.observe(this.wrapperRef);
-        }
-
-        if (this.tabsWrapperRef) {
-            this.resizeObserver.observe(this.tabsWrapperRef);
-        }
-
         if (this.tabsRef) {
             this.resizeObserver.observe(this.tabsRef);
+        }
+
+        if (this.tabsContainerWrapperRef) {
+            this.resizeObserver.observe(this.tabsContainerWrapperRef);
+        }
+
+        if (this.tabsContainerRef) {
+            this.resizeObserver.observe(this.tabsContainerRef);
         }
     }
 
@@ -76,42 +76,20 @@ class Tabs extends React.Component<Props> {
         this.setDimensions();
     }
 
-    setContainerRef = (ref: ?ElementRef<'div'>) => {
-        this.containerRef = ref;
-    };
-
-    setWrapperRef = (ref: ?ElementRef<'div'>) => {
-        this.wrapperRef = ref;
-    };
-
-    setTabsWrapperRef = (ref: ?ElementRef<'div'>) => {
-        this.tabsWrapperRef = ref;
-    };
-
-    setTabsRef = (ref: ?ElementRef<'ul'>) => {
+    setTabsRef = (ref: ?ElementRef<'div'>) => {
         this.tabsRef = ref;
     };
 
-    @action setWrapperWidth = () => {
-        if (!this.wrapperRef) {
-            return;
-        }
-
-        const width = this.wrapperRef.offsetWidth;
-        if (this.wrapperWidth !== width) {
-            this.wrapperWidth = width;
-        }
+    setTabsContainerWrapperRef = (ref: ?ElementRef<'div'>) => {
+        this.tabsContainerWrapperRef = ref;
     };
 
-    @action setTabsWrapperWidth = () => {
-        if (!this.tabsWrapperRef) {
-            return;
-        }
+    setTabsContainerRef = (ref: ?ElementRef<'ul'>) => {
+        this.tabsContainerRef = ref;
+    };
 
-        const width = this.tabsWrapperRef.offsetWidth;
-        if (this.tabsWrapperWidth !== width) {
-            this.tabsWrapperWidth = width;
-        }
+    setDropdownButtonRef = (ref: ?ElementRef<'button'>) => {
+        this.dropdownButtonRef = ref;
     };
 
     @action setTabsWidth = () => {
@@ -120,8 +98,31 @@ class Tabs extends React.Component<Props> {
         }
 
         const width = this.tabsRef.offsetWidth;
+        const style = getComputedStyle(this.tabsRef);
         if (this.tabsWidth !== width) {
-            this.tabsWidth = width;
+            this.tabsWidth = width - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+        }
+    };
+
+    @action setTabsContainerWrapperWidth = () => {
+        if (!this.tabsContainerWrapperRef) {
+            return;
+        }
+
+        const width = this.tabsContainerWrapperRef.offsetWidth;
+        if (this.tabsContainerWrapperWidth !== width) {
+            this.tabsContainerWrapperWidth = width;
+        }
+    };
+
+    @action setTabsContainerWidth = () => {
+        if (!this.tabsContainerRef) {
+            return;
+        }
+
+        const width = this.tabsContainerRef.offsetWidth;
+        if (this.tabsContainerWidth !== width) {
+            this.tabsContainerWidth = width;
         }
     };
 
@@ -139,9 +140,9 @@ class Tabs extends React.Component<Props> {
     };
 
     setDimensions = () => {
-        this.setWrapperWidth();
-        this.setTabsWrapperWidth();
         this.setTabsWidth();
+        this.setTabsContainerWrapperWidth();
+        this.setTabsContainerWidth();
         this.updateTabWidths();
     };
 
@@ -187,7 +188,7 @@ class Tabs extends React.Component<Props> {
     }
 
     @computed get visibleTabIndices(): number[] {
-        if (this.tabsWidth <= this.wrapperWidth) {
+        if (this.tabsContainerWidth <= this.tabsWidth) {
             return this.childIndices;
         }
 
@@ -228,7 +229,7 @@ class Tabs extends React.Component<Props> {
                 return this.childIndices;
             }
 
-            if (visibleWidth + nextWidth > this.tabsWrapperWidth) {
+            if (visibleWidth + nextWidth > this.tabsContainerWrapperWidth) {
                 break;
             }
 
@@ -340,8 +341,8 @@ class Tabs extends React.Component<Props> {
             small,
         } = this.props;
 
-        const containerClass = classNames(
-            tabsStyles.container,
+        const tabsClass = classNames(
+            tabsStyles.tabs,
             tabsStyles[skin],
             {
                 [tabsStyles.small]: small,
@@ -356,40 +357,38 @@ class Tabs extends React.Component<Props> {
         );
 
         return (
-            <div className={containerClass} ref={this.setContainerRef}>
-                <div className={tabsStyles.wrapper} ref={this.setWrapperRef}>
-                    <div className={tabsStyles.tabsWrapper} ref={this.setTabsWrapperRef}>
-                        <ul className={tabsStyles.tabs} ref={this.setTabsRef}>
-                            {this.tabs}
-                        </ul>
-                    </div>
-
-                    <button
-                        className={buttonClass}
-                        onClick={this.handleDropdownToggle}
-                    >
-                        <Icon name="su-more-horizontal" />
-                    </button>
-
-                    {this.hasCollapsedTabs &&
-                        <Popover
-                            anchorElement={this.containerRef || undefined}
-                            horizontalOffset={10000}
-                            onClose={this.handleDropdownClose}
-                            open={this.dropdownOpen}
-                        >
-                            {
-                                (setPopoverRef, styles) => (
-                                    <div ref={setPopoverRef} style={styles}>
-                                        <CollapsedTabList skin={skin}>
-                                            {this.collapsedTabs}
-                                        </CollapsedTabList>
-                                    </div>
-                                )
-                            }
-                        </Popover>
-                    }
+            <div className={tabsClass} ref={this.setTabsRef}>
+                <div className={tabsStyles.tabsContainerWrapper} ref={this.setTabsContainerWrapperRef}>
+                    <ul className={tabsStyles.tabsContainer} ref={this.setTabsContainerRef}>
+                        {this.tabs}
+                    </ul>
                 </div>
+
+                <button
+                    className={buttonClass}
+                    onClick={this.handleDropdownToggle}
+                    ref={this.setDropdownButtonRef}
+                >
+                    <Icon name="su-more-horizontal" />
+                </button>
+
+                {this.hasCollapsedTabs &&
+                    <Popover
+                        anchorElement={this.dropdownButtonRef || undefined}
+                        onClose={this.handleDropdownClose}
+                        open={this.dropdownOpen}
+                    >
+                        {
+                            (setPopoverRef, styles) => (
+                                <div ref={setPopoverRef} style={styles}>
+                                    <CollapsedTabList skin={skin}>
+                                        {this.collapsedTabs}
+                                    </CollapsedTabList>
+                                </div>
+                            )
+                        }
+                    </Popover>
+                }
             </div>
         );
     }

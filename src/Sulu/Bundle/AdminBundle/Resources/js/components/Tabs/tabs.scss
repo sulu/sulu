@@ -1,7 +1,8 @@
 @import '../../containers/Application/colors.scss';
 @import './variables.scss';
 
-.container {
+.tabs {
+    display: flex;
     background-color: $tabMenuBackgroundColor;
     padding: 0 40px;
 
@@ -14,11 +15,7 @@
     }
 }
 
-.wrapper {
-    display: flex;
-}
-
-.tabs-wrapper {
+.tabs-container-wrapper {
     flex: 1 1 auto;
     position: relative;
     height: $tabMenuHeight;
@@ -41,7 +38,7 @@
     }
 }
 
-.tabs {
+.tabs-container {
     position: absolute;
     display: flex;
     list-style: none;
