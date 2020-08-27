@@ -15,7 +15,7 @@ Object.defineProperty(window, 'getComputedStyle', {
     value: () => ({
         paddingLeft: 20.0,
         paddingRight: 20.0,
-    })
+    }),
 });
 
 test('Render a Tabs component', () => {
