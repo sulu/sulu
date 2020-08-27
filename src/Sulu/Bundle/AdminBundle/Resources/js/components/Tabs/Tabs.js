@@ -46,6 +46,7 @@ class Tabs extends React.Component<Props> {
     tabsRef: ?ElementRef<'div'>;
     tabsContainerWrapperRef: ?ElementRef<'div'>;
     tabsContainerRef: ?ElementRef<'ul'>;
+    dropdownButtonRef: ?ElementRef<'button'>;
 
     componentDidMount() {
         this.setDimensions();
@@ -79,6 +80,10 @@ class Tabs extends React.Component<Props> {
 
     setTabsContainerRef = (ref: ?ElementRef<'ul'>) => {
         this.tabsContainerRef = ref;
+    };
+
+    setDropdownButtonRef = (ref: ?ElementRef<'button'>) => {
+        this.dropdownButtonRef = ref;
     };
 
     @action setTabsWidth = () => {
@@ -353,13 +358,13 @@ class Tabs extends React.Component<Props> {
                         <button
                             className={tabsStyles.button}
                             onClick={this.handleDropdownToggle}
+                            ref={this.setDropdownButtonRef}
                         >
                             <Icon name="su-more-horizontal" />
                         </button>
 
                         <Popover
-                            anchorElement={this.tabsRef || undefined}
-                            horizontalOffset={99999999} // just an extremely high value to keep the tab aligned right
+                            anchorElement={this.dropdownButtonRef || undefined}
                             onClose={this.handleDropdownClose}
                             open={this.dropdownOpen}
                         >
