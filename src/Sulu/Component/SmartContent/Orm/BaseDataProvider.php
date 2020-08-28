@@ -256,8 +256,12 @@ abstract class BaseDataProvider implements DataProviderInterface
             return null;
         }
 
-        $user = $this->tokenStorage->getToken()->getUser();
+        $token = $this->tokenStorage->getToken();
+        if (!$token) {
+            return null;
+        }
 
+        $user = $token->getUser();
         if ($user instanceof UserInterface) {
             return $user;
         }
