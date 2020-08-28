@@ -6,6 +6,13 @@ import {userStore} from 'sulu-admin-bundle/stores';
 import WebspaceTabs from '../WebspaceTabs';
 import webspaceStore from '../../../stores/webspaceStore';
 
+jest.mock('debounce', () => jest.fn((callback) => callback));
+
+window.ResizeObserver = jest.fn(function() {
+    this.observe = jest.fn();
+    this.disconnect = jest.fn();
+});
+
 jest.mock('sulu-admin-bundle/services/Router/Router', () => jest.fn(function() {
     this.addUpdateRouteHook = jest.fn();
     this.bind = jest.fn();

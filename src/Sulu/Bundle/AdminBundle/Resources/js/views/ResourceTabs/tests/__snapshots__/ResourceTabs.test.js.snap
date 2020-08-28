@@ -1,29 +1,37 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Should mark the currently active child route as selected tab 1`] = `
-<ul
-  class="tabs"
+<div
+  class="tabs default"
 >
-  <li
-    class="tab"
+  <div
+    class="tabsContainerWrapper"
   >
-    <button
-      title="Tab Titel 1"
+    <ul
+      class="tabsContainer"
     >
-      Tab Titel 1
-    </button>
-  </li>
-  <li
-    class="tab selected"
-  >
-    <button
-      disabled=""
-      title="Tab Titel 2"
-    >
-      Tab Titel 2
-    </button>
-  </li>
-</ul>
+      <li
+        class="tab"
+      >
+        <button
+          title="Tab Titel 1"
+        >
+          Tab Titel 1
+        </button>
+      </li>
+      <li
+        class="tab selected"
+      >
+        <button
+          disabled=""
+          title="Tab Titel 2"
+        >
+          Tab Titel 2
+        </button>
+      </li>
+    </ul>
+  </div>
+</div>
 `;
 
 exports[`Should mark the currently active child route as selected tab 2`] = `
@@ -33,28 +41,36 @@ exports[`Should mark the currently active child route as selected tab 2`] = `
 `;
 
 exports[`Should render the child components after the tabs 1`] = `
-<ul
-  class="tabs"
+<div
+  class="tabs default"
 >
-  <li
-    class="tab"
+  <div
+    class="tabsContainerWrapper"
   >
-    <button
-      title="Tab Titel 1"
+    <ul
+      class="tabsContainer"
     >
-      Tab Titel 1
-    </button>
-  </li>
-  <li
-    class="tab"
-  >
-    <button
-      title="Tab Titel 2"
-    >
-      Tab Titel 2
-    </button>
-  </li>
-</ul>
+      <li
+        class="tab"
+      >
+        <button
+          title="Tab Titel 1"
+        >
+          Tab Titel 1
+        </button>
+      </li>
+      <li
+        class="tab"
+      >
+        <button
+          title="Tab Titel 2"
+        >
+          Tab Titel 2
+        </button>
+      </li>
+    </ul>
+  </div>
+</div>
 `;
 
 exports[`Should render the child components after the tabs 2`] = `

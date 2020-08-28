@@ -1,0 +1,28 @@
+@import '../../containers/Application/colors.scss';
+
+$collapsedTabTextColor: $black;
+$collapsedTabTextColorActive: $shakespeare;
+
+.collapsed-tab {
+    position: relative;
+    font-size: 12px;
+    color: $collapsedTabTextColor;
+
+    button {
+        display: block;
+        overflow: hidden;
+        width: 100%;
+        padding: 10px 20px 10px 40px;
+        text-align: left;
+        border: 0;
+        font-weight: inherit;
+        background-color: transparent;
+
+        &:hover,
+        &:active,
+        &:focus {
+            cursor: pointer;
+            color: $collapsedTabTextColorActive;
+        }
+    }
+}

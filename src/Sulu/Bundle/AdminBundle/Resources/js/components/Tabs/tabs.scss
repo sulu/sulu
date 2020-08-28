@@ -1,13 +1,45 @@
 @import '../../containers/Application/colors.scss';
 @import './variables.scss';
 
-$tabsMenuBackgroundColor: $alto;
-
 .tabs {
+    display: flex;
+    background-color: $tabMenuBackgroundColor;
+    padding: 0 40px;
+
+    &.small {
+        padding: 0 20px;
+    }
+
+    &.light {
+        background-color: $tabMenuLightBackgroundColor;
+    }
+}
+
+.tabs-container-wrapper {
+    flex: 1 1 auto;
+    position: relative;
     height: $tabMenuHeight;
+    overflow: hidden;
+}
+
+.button {
+    flex: 0 0 auto;
+    border: none;
+    outline: none;
+    background: none;
+    box-shadow: none;
+    cursor: pointer;
+    padding: 10px;
+}
+
+.tabs-container {
+    position: absolute;
+    display: flex;
     list-style: none;
     margin: 0;
-    padding: 0 40px;
-    display: flex;
-    background-color: $tabsMenuBackgroundColor;
+    padding: 0;
+
+    & > li {
+        display: block;
+    }
 }

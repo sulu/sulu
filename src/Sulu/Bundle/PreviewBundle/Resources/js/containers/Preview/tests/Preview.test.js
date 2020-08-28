@@ -14,6 +14,7 @@ window.open = jest.fn().mockReturnValue({addEventListener: jest.fn()});
 
 window.ResizeObserver = jest.fn(function() {
     this.observe = jest.fn();
+    this.disconnect = jest.fn();
 });
 
 jest.mock('debounce', () => jest.fn((value) => value));

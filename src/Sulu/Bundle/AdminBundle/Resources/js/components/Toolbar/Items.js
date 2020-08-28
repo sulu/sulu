@@ -24,6 +24,8 @@ class Items extends React.Component<Props> {
         skin: 'light',
     };
 
+    resizeObserver: ?ResizeObserver;
+
     parentRef: ?ElementRef<'div'>;
     childRef: ?ElementRef<'ul'>;
 
@@ -39,17 +41,21 @@ class Items extends React.Component<Props> {
         this.setDimensions();
 
         // $FlowFixMe
-        const resizeObserver = new ResizeObserver(
-            debounce(() => {
-                this.setDimensions();
-            }, DEBOUNCE_TIME)
+        this.resizeObserver = new ResizeObserver(
+            debounce(this.setDimensions, DEBOUNCE_TIME)
         );
 
         if (!this.parentRef) {
             return;
         }
 
-        resizeObserver.observe(this.parentRef);
+        this.resizeObserver.observe(this.parentRef);
+    }
+
+    componentWillUnmount() {
+        if (this.resizeObserver) {
+            this.resizeObserver.disconnect();
+        }
     }
 
     @action componentDidUpdate() {

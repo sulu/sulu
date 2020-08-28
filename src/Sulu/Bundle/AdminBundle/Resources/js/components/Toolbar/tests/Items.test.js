@@ -11,6 +11,7 @@ jest.mock('debounce', () => jest.fn((callback) => callback));
 
 window.ResizeObserver = jest.fn(function() {
     this.observe = jest.fn();
+    this.disconnect = jest.fn();
 });
 
 test('Render items', () => {
@@ -49,4 +50,15 @@ test('Resize div should call callback', () => {
     expect(items.instance().expandedWidth).toEqual(50);
     expect(items.instance().parentWidth).toEqual(40);
     expect(items.instance().showText).toEqual(false);
+});
+
+test('ResizeObserver.disconnect should be called before component unmount', () => {
+    const items = mount(
+        <Items>
+            <Button>Test</Button>
+        </Items>
+    );
+
+    items.instance().componentWillUnmount();
+    expect(ResizeObserver.mock.instances[0].disconnect).toBeCalled();
 });

@@ -20,9 +20,12 @@ jest.mock('../../../services/initializer', () => ({
     initializedTranslationsLocale: true,
 }));
 
+jest.mock('debounce', () => jest.fn((callback) => callback));
+
 beforeEach(() => {
     window.ResizeObserver = jest.fn(function() {
         this.observe = jest.fn();
+        this.disconnect = jest.fn();
     });
 
     toolbarStoreMock = {

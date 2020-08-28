@@ -4,6 +4,13 @@ import {mount, render} from 'enzyme';
 import Router, {Route} from '../../../services/Router';
 import Tabs from '../Tabs';
 
+jest.mock('debounce', () => jest.fn((callback) => callback));
+
+window.ResizeObserver = jest.fn(function() {
+    this.observe = jest.fn();
+    this.disconnect = jest.fn();
+});
+
 jest.mock('../../../services/Router/Router', () => jest.fn());
 
 jest.mock('../../../utils/Translator', () => ({
