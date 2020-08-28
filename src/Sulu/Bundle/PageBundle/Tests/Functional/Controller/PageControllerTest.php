@@ -1494,7 +1494,7 @@ class PageControllerTest extends SuluTestCase
 
         $this->client->request(
             'POST',
-            '/api/pages/' . $data[4]['id'] . '?webspace=sulu_io&language=en&action=copy&destination=' . $data[2]['id']
+            '/api/pages/' . $data[4]['id'] . '?language=en&action=copy&destination=' . $data[2]['id']
         );
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $response = \json_decode($this->client->getResponse()->getContent(), true);
@@ -1525,6 +1525,48 @@ class PageControllerTest extends SuluTestCase
         $rootNode = $this->session->getRootNode();
         $this->assertFalse($rootNode->hasNode('cmf/sulu_io/routes/de/test2/test3/testing5'));
         $this->assertFalse($rootNode->hasNode('cmf/sulu_io/routes/en/test2/test3/testing5'));
+    }
+
+    public function testCopyOtherWebspace()
+    {
+        $page = $this->createPageDocument();
+        $page->setTitle('Testpage');
+        $page->setResourceSegment('/testpage');
+        $page->setStructureType('default');
+        $this->documentManager->persist($page, 'fr', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->persist($page, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
+        $this->documentManager->flush();
+        $this->documentManager->clear();
+
+        $destinationUuid = $this->session->getNode('/cmf/test_io/contents')->getIdentifier();
+
+        $this->client->request(
+            'POST',
+            '/api/pages/' . $page->getUuid() . '?language=en&action=copy&destination=' . $destinationUuid
+        );
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
+
+        // check some properties
+        $this->assertNotEquals($page->getUuid(), $response['id']);
+        $this->assertEquals('Testpage', $response['title']);
+        $this->assertEquals('/testpage', $response['path']);
+        $this->assertEquals('/testpage', $response['url']);
+        $this->assertEquals(false, $response['publishedState']);
+        $this->assertNull($response['published']);
+
+        // check old node
+        $this->client->request(
+            'GET',
+            '/api/pages/' . $page->getUuid() . '?webspace=sulu_io&language=en'
+        );
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
+
+        $this->assertEquals($page->getUuid(), $response['id']);
+        $this->assertEquals('Testpage', $response['title']);
+        $this->assertEquals('/testpage', $response['path']);
+        $this->assertEquals('/testpage', $response['url']);
     }
 
     public function testCopyWithShadow()
