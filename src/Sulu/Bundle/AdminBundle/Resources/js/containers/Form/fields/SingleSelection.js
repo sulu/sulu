@@ -1,19 +1,26 @@
 // @flow
 import React from 'react';
-import {computed, observable} from 'mobx';
+import {computed, observable, toJS} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import jsonpointer from 'json-pointer';
+import equals from 'fast-deep-equal';
+import {observer} from 'mobx-react';
 import type {FieldTypeProps} from '../../../types';
 import ResourceSingleSelect from '../../../containers/ResourceSingleSelect';
 import SingleAutoComplete from '../../../containers/SingleAutoComplete';
 import SingleSelectionContainer from '../../../containers/SingleSelection';
 import userStore from '../../../stores/userStore';
 import {translate} from '../../../utils/Translator';
+import type {SchemaOption} from '../types';
+import FormInspector from '../FormInspector';
 
 type Props = FieldTypeProps<?Object | string | number>;
 
-export default class SingleSelection extends React.Component<Props>
+@observer
+class SingleSelection extends React.Component<Props>
 {
+    @observable requestOptions: {[string]: mixed};
+
     constructor(props: Props) {
         super(props);
 
@@ -23,6 +30,78 @@ export default class SingleSelection extends React.Component<Props>
                 + 'or as "auto_complete", received type was "' + this.type + '"!'
             );
         }
+
+        const {
+            fieldTypeOptions: {
+                resource_key: resourceKey,
+            },
+            formInspector,
+            schemaOptions: {
+                request_parameters: {
+                    value: requestParameters = [],
+                } = {},
+                resource_store_properties_to_request: {
+                    value: resourceStorePropertiesToRequest = [],
+                } = {},
+            },
+        } = this.props;
+
+        if (!resourceKey) {
+            throw new Error('The selection field needs a "resource_key" option to work properly');
+        }
+
+        if (!Array.isArray(requestParameters)) {
+            throw new Error('The "request_parameters" schemaOption must be an array!');
+        }
+
+        if (!Array.isArray(resourceStorePropertiesToRequest)) {
+            throw new Error('The "resource_store_properties_to_request" schemaOption must be an array!');
+        }
+
+        this.requestOptions = this.buildRequestOptions(
+            requestParameters,
+            resourceStorePropertiesToRequest,
+            formInspector
+        );
+
+        // update requestOptions observable if one of the "resource_store_properties_to_request" properties is changed
+        formInspector.addFinishFieldHandler((dataPath) => {
+            const observedDataPaths = resourceStorePropertiesToRequest.map((property) => {
+                return typeof property.value === 'string' ? '/' + property.value : '/' + property.name;
+            });
+
+            if (observedDataPaths.includes(dataPath)) {
+                const newRequestOptions = this.buildRequestOptions(
+                    requestParameters,
+                    resourceStorePropertiesToRequest,
+                    formInspector
+                );
+
+                if (!equals(this.requestOptions, newRequestOptions)) {
+                    this.requestOptions = newRequestOptions;
+                }
+            }
+        });
+    }
+
+    buildRequestOptions(
+        requestParameters: Array<SchemaOption>,
+        resourceStorePropertiesToRequest: Array<SchemaOption>,
+        formInspector: FormInspector
+    ) {
+        const requestOptions = {};
+
+        requestParameters.forEach((parameter) => {
+            requestOptions[parameter.name] = parameter.value;
+        });
+
+        resourceStorePropertiesToRequest.forEach((propertyToRequest) => {
+            const {name: parameterName, value: propertyName} = propertyToRequest;
+            const propertyPath = typeof propertyName === 'string' ? propertyName : parameterName;
+            requestOptions[parameterName] = toJS(formInspector.getValueByPath('/' + propertyPath));
+        });
+
+        return requestOptions;
     }
 
     handleChange = (value: ?Object | string | number) => {
@@ -126,7 +205,7 @@ export default class SingleSelection extends React.Component<Props>
                 types: {
                     list_overlay: {
                         adapter,
-                        detail_options: detailOptions,
+                        detail_options: typeDetailOptions,
                         list_key: listKey,
                         display_properties: displayProperties,
                         empty_text: emptyText,
@@ -137,7 +216,7 @@ export default class SingleSelection extends React.Component<Props>
             },
             schemaOptions: {
                 form_options_to_list_options: {
-                    value: formOptionsToListOptions,
+                    value: formOptionsToListOptions = [],
                 } = {},
                 item_disabled_condition: {
                     value: itemDisabledCondition,
@@ -147,9 +226,6 @@ export default class SingleSelection extends React.Component<Props>
                 } = {},
                 types: {
                     value: types,
-                } = {},
-                request_parameters: {
-                    value: requestParameters = [],
                 } = {},
             } = {},
             value,
@@ -174,44 +250,35 @@ export default class SingleSelection extends React.Component<Props>
             throw new Error('The "allow_deselect_for_disabled_items" schema option must be a boolean if given!');
         }
 
-        if (formOptionsToListOptions && !Array.isArray(formOptionsToListOptions)) {
+        if (!Array.isArray(formOptionsToListOptions)) {
             throw new Error('The "form_options_to_list_options" option has to be an array if defined!');
         }
 
-        if (!Array.isArray(requestParameters)) {
-            throw new Error('The "request_parameters" option has to be an array if defined!');
+        if (typeDetailOptions && typeof typeDetailOptions !== 'object') {
+            throw new Error('The "detail_options" option has to be an array if defined!');
         }
 
-        const formListOptions = formOptionsToListOptions
-            ? formOptionsToListOptions.reduce((currentOptions, formOption) => {
-                if (!formOption.name) {
-                    throw new Error('All options set in "form_options_to_list_options" must define name!');
-                }
-                currentOptions[formOption.name] = formInspector.options[formOption.name];
+        const formListOptions = formOptionsToListOptions.reduce((currentOptions, formOption) => {
+            if (!formOption.name) {
+                throw new Error('All options set in "form_options_to_list_options" must define name!');
+            }
+            currentOptions[formOption.name] = formInspector.options[formOption.name];
 
-                return currentOptions;
-            }, {})
-            : undefined;
+            return currentOptions;
+        }, {});
 
         const typeOptions = types ? {types} : undefined;
 
-        const listOptions = formListOptions || typeOptions
-            ? {
-                ...formListOptions,
-                ...typeOptions,
-            }
-            : {};
+        const listOptions = {
+            ...this.requestOptions,
+            ...formListOptions,
+            ...typeOptions,
+        };
 
-        if (requestParameters) {
-            requestParameters.forEach((parameter) => {
-                listOptions[parameter.name] = parameter.value;
-                detailOptions[parameter.name] = parameter.value;
-            });
-        }
-
-        if (detailOptions && typeof detailOptions !== 'object') {
-            throw new Error('The "detail_options" option has to be an array if defined!');
-        }
+        const detailOptions = {
+            ...this.requestOptions,
+            ...typeDetailOptions,
+        };
 
         return (
             <SingleSelectionContainer
@@ -355,3 +422,5 @@ export default class SingleSelection extends React.Component<Props>
         );
     }
 }
+
+export default SingleSelection;

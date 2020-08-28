@@ -29,6 +29,7 @@ jest.mock('../../../containers/List/stores/ListStore', () => jest.fn(
         });
 
         this.clear = jest.fn();
+        this.reset = jest.fn();
         this.clearSelection = jest.fn();
         this.destroy = jest.fn();
     }
@@ -61,6 +62,66 @@ test('Should instantiate the ListStore with locale, excluded-ids, options and me
     expect(singleListOverlay.instance().listStore.observableOptions.excludedIds.get()).toEqual(['id-1', 'id-2']);
     expect(singleListOverlay.instance().listStore.options).toBe(options);
     expect(singleListOverlay.instance().listStore.metadataOptions).toBe(metadataOptions);
+});
+
+test('Should update options of ListStore if the options prop is changed', () => {
+    const oldOptions = {key: 'value-1'};
+
+    const singleListOverlay = shallow(
+        <SingleListOverlay
+            adapter="table"
+            excludedIds={['id-1', 'id-2']}
+            listKey="snippets_list"
+            locale={observable.box('en')}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={false}
+            options={oldOptions}
+            resourceKey="snippets"
+            title="Selection"
+        />
+    );
+    singleListOverlay.instance().listStore.selectionIds = [12, 14];
+
+    expect(singleListOverlay.instance().listStore.reset).not.toBeCalled();
+    expect(singleListOverlay.instance().listStore.options).toEqual(oldOptions);
+
+    const newOptions = {key: 'value-2'};
+    singleListOverlay.setProps({
+        options: newOptions,
+    });
+
+    expect(singleListOverlay.instance().listStore.reset).toBeCalled();
+    expect(singleListOverlay.instance().listStore.initialSelectionIds).toEqual([12, 14]);
+    expect(singleListOverlay.instance().listStore.options).toEqual(newOptions);
+});
+
+test('Should not update options of ListStore if new value of options prop is equal to old value', () => {
+    const oldOptions = {key: 'value-1'};
+
+    const singleListOverlay = shallow(
+        <SingleListOverlay
+            adapter="table"
+            excludedIds={['id-1', 'id-2']}
+            listKey="snippets_list"
+            locale={observable.box('en')}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={false}
+            options={oldOptions}
+            resourceKey="snippets"
+            title="Selection"
+        />
+    );
+
+    expect(singleListOverlay.instance().listStore.reset).not.toBeCalled();
+
+    const newOldOptions = {key: 'value-1'};
+    singleListOverlay.setProps({
+        options: newOldOptions,
+    });
+
+    expect(singleListOverlay.instance().listStore.reset).not.toBeCalled();
 });
 
 test('Should instantiate the ListStore without locale, excluded-ids, options and metadataOptions', () => {
