@@ -37,7 +37,7 @@ class Tabs extends React.Component<Props> {
     @observable tabWidths: Map<number, number> = new Map();
     @observable tabRefs: Map<number, ?ElementRef<'li'>> = new Map();
     @observable dropdownOpen = false;
-    @observable lastShownIndex: ?number;
+    @observable lastSelectedIndex: ?number;
 
     static Tab = Tab;
 
@@ -166,7 +166,7 @@ class Tabs extends React.Component<Props> {
 
     @action handleCollapsedTabClick = (selectedTabIndex: number) => {
         this.dropdownOpen = false;
-        this.lastShownIndex = selectedTabIndex;
+        this.lastSelectedIndex = selectedTabIndex;
 
         this.changeTab(selectedTabIndex);
     };
@@ -194,7 +194,7 @@ class Tabs extends React.Component<Props> {
         const childIndices = this.childIndices;
 
         // Sorts childIndices in it's natural order, except that the element with selectedIndex is positioned at the
-        // first place and the element withlastShownIndex is positioned at the second place.
+        // first place and the element with lastSelectedIndex is positioned at the second place.
         // This ensures that those two elements will always be visible.
         childIndices.sort((a, b) => {
             if (a === selectedIndex) {
@@ -205,11 +205,11 @@ class Tabs extends React.Component<Props> {
                 return 1;
             }
 
-            if (a === this.lastShownIndex) {
+            if (a === this.lastSelectedIndex) {
                 return -1;
             }
 
-            if (b === this.lastShownIndex) {
+            if (b === this.lastSelectedIndex) {
                 return 1;
             }
 
@@ -235,7 +235,8 @@ class Tabs extends React.Component<Props> {
             visibleTabIndices = [...visibleTabIndices, index];
         }
 
-        // Since visibleTabIndices contains only the indices of the elements that can be fully shown, we need to reset
+        // Since visibleTabIndices contains only the indices of the elements that can be fully shown and both,
+        // selectedIndex and lastSelectedIndex are still positioned at the very beginning of the array, we need to reset
         // the sorting so the elements have the correct order again.
         visibleTabIndices.sort((a, b) => a - b);
 
