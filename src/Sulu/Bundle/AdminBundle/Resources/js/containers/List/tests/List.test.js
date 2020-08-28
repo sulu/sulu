@@ -594,15 +594,12 @@ test('Pass options to adapter', () => {
 });
 
 test('Pass correct options and metadataOptions to SingleListOverlays', () => {
-    const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)}, {option: 'test'}, {id: 1});
+    const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)}, {}, {id: 1});
 
     const list = shallow(<List adapters={['test']} store={listStore} />);
 
     expect(list.find(SingleListOverlay).at(0).prop('reloadOnOpen')).toEqual(true);
     expect(list.find(SingleListOverlay).at(1).prop('reloadOnOpen')).toEqual(true);
-
-    expect(list.find(SingleListOverlay).at(0).prop('options')).toEqual({option: 'test'});
-    expect(list.find(SingleListOverlay).at(1).prop('options')).toEqual({option: 'test'});
 
     expect(list.find(SingleListOverlay).at(0).prop('metadataOptions')).toEqual({id: 1});
     expect(list.find(SingleListOverlay).at(1).prop('metadataOptions')).toEqual({id: 1});

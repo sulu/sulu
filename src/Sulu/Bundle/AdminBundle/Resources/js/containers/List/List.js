@@ -688,7 +688,6 @@ class List extends React.Component<Props> {
                         onClose={this.handleCopyOverlayClose}
                         onConfirm={this.handleCopyOverlayConfirmClick}
                         open={this.showCopyOverlay}
-                        options={store.options}
                         reloadOnOpen={true}
                         resourceKey={store.resourceKey}
                         title={translate('sulu_admin.move_copy_overlay_title')}
