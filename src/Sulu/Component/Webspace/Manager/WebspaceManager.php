@@ -174,8 +174,10 @@ class WebspaceManager implements WebspaceManagerInterface
             );
             $sameWebspace = null === $webspaceKey || $portalInformation->getWebspace()->getKey() === $webspaceKey;
             $url = $this->createResourceLocatorUrl($scheme, $portalInformation->getUrl(), $resourceLocator);
-            if ($sameLocalization && $sameWebspace && $this->isFromDomain($url, $domain)) {
+            if ($sameLocalization && $sameWebspace) {
                 if ($portalInformation->isMain()) {
+                    \array_unshift($urls, $url);
+                } elseif ($this->isFromDomain($url, $domain)) {
                     \array_unshift($urls, $url);
                 } else {
                     $urls[] = $url;

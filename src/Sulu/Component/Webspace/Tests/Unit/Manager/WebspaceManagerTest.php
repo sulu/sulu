@@ -698,7 +698,7 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals('http://sulu.at/test', $result);
 
         $result = $this->webspaceManager->findUrlByResourceLocator('/test', 'main', 'de_at', 'sulu_io', 'sulu.lo');
-        $this->assertEquals('http://sulu.lo/test', $result);
+        $this->assertEquals('http://sulu.at/test', $result);
 
         $result = $this->webspaceManager->findUrlByResourceLocator(
             '/test',
@@ -708,7 +708,7 @@ class WebspaceManagerTest extends WebspaceTestCase
             'sulu.lo',
             'https'
         );
-        $this->assertEquals('https://sulu.lo/test', $result);
+        $this->assertEquals('https://sulu.at/test', $result);
     }
 
     public function testGetPortals()
