@@ -122,6 +122,7 @@ class ContentRepositoryTest extends TestCase
 
         $webspace = $this->prophesize(Webspace::class);
         $this->webspaceManager->findWebspaceByKey(Argument::any())->willReturn($webspace->reveal());
+        $webspace->isTemplateExcluded(Argument::any())->willReturn(false);
         $webspace->getAllLocalizations()->willReturn(
             [
                 new Localization('de', 'at'),
@@ -216,5 +217,49 @@ class ContentRepositoryTest extends TestCase
         $result = $this->contentRepository->find('123-123-123', 'de', 'sulu_io', $mapping);
 
         $this->assertTrue($result->isBrokenTemplate());
+    }
+
+    public function testFindWithExcludedTemplate()
+    {
+        $mapping = MappingBuilder::create()->getMapping();
+
+        $queryResult = $this->prophesize(QueryResultInterface::class);
+        $this->query->execute()->willReturn($queryResult->reveal());
+
+        $row = $this->prophesize(Row::class);
+        $rowIterator = new \ArrayIterator([$row->reveal()]);
+        $queryResult->getRows()->willReturn($rowIterator);
+
+        $row->getPath()->willReturn('/cmf/sulu_io/contents');
+        $this->nodeHelper->extractWebspaceFromPath('/cmf/sulu_io/contents')->willReturn('sulu_io');
+
+        $node = $this->prophesize(NodeInterface::class);
+        $node->getProperties('sec:role-*')->willReturn([]);
+        $row->getNode()->willReturn($node->reveal());
+
+        $row->getValues()->willReturn(
+            [
+                'node.deTemplate' => 'default',
+            ]
+        );
+        $row->getValue('deTemplate')->willReturn('default');
+        $row->getValue('node.deShadow_on')->willReturn(false);
+        $row->getValue('shadowOn')->willReturn(false);
+        $row->getValue('nodeType')->willReturn(1);
+        $row->getValue('uuid')->willReturn('123-123-123');
+        $row->getValue('state')->willReturn(WorkflowStage::PUBLISHED);
+
+        $this->sessionManager->getContentPath('sulu_io')->willReturn('/cmf/sulu_io/contents');
+        $this->structureManager->getStructure('default')->willReturn(null);
+
+        $webspace = $this->prophesize(Webspace::class);
+        $webspace->isTemplateExcluded('default')->willReturn(true);
+        $webspace->getAllLocalizations()->willReturn([]);
+        $this->webspaceManager->findWebspaceByKey('sulu_io')->willReturn($webspace->reveal());
+
+        $result = $this->contentRepository->find('123-123-123', 'de', 'sulu_io', $mapping);
+
+        $this->assertNull($result->getTemplate());
+        $this->assertNull($result->getOriginalTemplate());
     }
 }

@@ -693,6 +693,12 @@ class ContentRepository implements ContentRepositoryInterface
             $data[$item] = $this->resolveProperty($row, $item, $locale, $shadowBase);
         }
 
+        $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
+        $template = $this->resolveProperty($row, 'template', $locale, $shadowBase);
+        if ($webspace->isTemplateExcluded($template)) {
+            $template = null;
+        }
+
         $content = new Content(
             $originalLocale,
             $webspaceKey,
@@ -700,7 +706,8 @@ class ContentRepository implements ContentRepositoryInterface
             $this->resolvePath($row, $webspaceKey),
             $row->getValue('state'),
             $row->getValue('nodeType'),
-            $this->resolveHasChildren($row), $this->resolveProperty($row, 'template', $locale, $shadowBase),
+            $this->resolveHasChildren($row),
+            $template,
             $data,
             $permissions,
             $type

@@ -19,9 +19,11 @@ use JMS\Serializer\Metadata\StaticPropertyMetadata;
 use JMS\Serializer\Visitor\SerializationVisitorInterface;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
+use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\Content\Document\Structure\ManagedStructure;
 use Sulu\Component\Content\Document\Structure\Structure;
 use Sulu\Component\Content\Metadata\StructureMetadata;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 /**
  * Normalize ManagedStructure instances to the Structure type.
@@ -33,9 +35,15 @@ class StructureSubscriber implements EventSubscriberInterface
      */
     private $inspector;
 
-    public function __construct(DocumentInspector $inspector)
+    /**
+     * @var WebspaceManagerInterface
+     */
+    private $webspaceManager;
+
+    public function __construct(DocumentInspector $inspector, WebspaceManagerInterface $webspaceManager)
     {
         $this->inspector = $inspector;
+        $this->webspaceManager = $webspaceManager;
     }
 
     public static function getSubscribedEvents()
@@ -78,29 +86,29 @@ class StructureSubscriber implements EventSubscriberInterface
 
         if ($structureMetadata) {
             $template = $document->getStructureType();
-            $visitor->visitProperty(
-                new StaticPropertyMetadata('', 'template', $template),
-                $template
-            );
 
-            $visitor->visitProperty(
-                new StaticPropertyMetadata('', 'originTemplate', $template),
-                $template
-            );
+            $templateExcluded = false;
+            if ($document instanceof WebspaceBehavior) {
+                $webspace = $this->webspaceManager->findWebspaceByKey($this->inspector->getWebspace($document));
+                $templateExcluded = $webspace->isTemplateExcluded($template);
+            }
+
+            if (!$templateExcluded) {
+                $visitor->visitProperty(new StaticPropertyMetadata('', 'template', $template), $template);
+                $visitor->visitProperty(new StaticPropertyMetadata('', 'originTemplate', $template), $template);
+
+                $localizedTemplate = $structureMetadata->getTitle($this->inspector->getLocale($document));
+
+                $visitor->visitProperty(
+                    new StaticPropertyMetadata('', 'localizedTemplate', $localizedTemplate),
+                    $localizedTemplate
+                );
+            }
 
             $internal = false;
             $visitor->visitProperty(
                 new StaticPropertyMetadata('', 'internal', $internal),
                 $internal
-            );
-
-            $localizedTemplate = $structureMetadata->getTitle(
-                $this->inspector->getLocale($document)
-            );
-
-            $visitor->visitProperty(
-                new StaticPropertyMetadata('', 'localizedTemplate', $localizedTemplate),
-                $localizedTemplate
             );
 
             if ($context->hasAttribute('groups')

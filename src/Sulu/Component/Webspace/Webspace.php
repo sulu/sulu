@@ -550,6 +550,11 @@ class Webspace implements ArrayableInterface
         return $this->excludedTemplates;
     }
 
+    public function isTemplateExcluded(string $template)
+    {
+        return \in_array($template, $this->excludedTemplates);
+    }
+
     /**
      * Set resource-locator strategy.
      *

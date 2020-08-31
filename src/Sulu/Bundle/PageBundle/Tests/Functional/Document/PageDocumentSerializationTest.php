@@ -14,6 +14,7 @@ namespace Sulu\Bundle\PageBundle\Tests\Functional\Document;
 use JMS\Serializer\SerializerInterface;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Component\Content\Document\Extension\ExtensionContainer;
 use Sulu\Component\Content\Document\Structure\Structure;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\DocumentRegistry;
@@ -71,6 +72,10 @@ class PageDocumentSerializationTest extends SuluTestCase
             ],
             'integer' => 1234,
         ]);
+
+        $this->documentManager->persist($internalLink);
+        $this->documentManager->persist($page);
+        $this->documentManager->flush();
 
         $jsonResult = $this->serializer->serialize($page, 'json');
         $this->assertNotNull($jsonResult);
@@ -152,6 +157,17 @@ class PageDocumentSerializationTest extends SuluTestCase
         $page->setParent($this->parent);
         $page->setStructureType('contact');
         $page->setResourceSegment('/foo');
+        $page->setExtensionsData(new ExtensionContainer([
+            'excerpt' => [
+                'title' => $data['title'],
+                'more' => null,
+                'description' => null,
+                'categories' => null,
+                'tags' => [],
+                'icon' => null,
+                'images' => null,
+            ],
+        ]));
         $page->getStructure()->bind($data, true);
 
         return $page;
