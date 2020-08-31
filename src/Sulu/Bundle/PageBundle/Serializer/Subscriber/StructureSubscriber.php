@@ -83,10 +83,9 @@ class StructureSubscriber implements EventSubscriberInterface
                 $template
             );
 
-            $originTemplate = $document->getStructureType();
             $visitor->visitProperty(
-                new StaticPropertyMetadata('', 'originTemplate', $originTemplate),
-                $originTemplate
+                new StaticPropertyMetadata('', 'originTemplate', $template),
+                $template
             );
 
             $internal = false;
