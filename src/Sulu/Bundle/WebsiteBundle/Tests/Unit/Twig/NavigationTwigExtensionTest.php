@@ -165,6 +165,68 @@ class NavigationTwigExtensionTest extends TestCase
         $extension->flatRootNavigationFunction('main', 1, false);
     }
 
+    public function testFlatRootNavigationWithoutToken()
+    {
+        $navigationMapper = $this->prophesize(NavigationMapperInterface::class);
+        $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
+        $tokenStorage = $this->prophesize(TokenStorageInterface::class);
+
+        $tokenStorage->getToken()->willReturn(null);
+
+        $extension = new NavigationTwigExtension(
+            $this->prophesize(ContentMapperInterface::class)->reveal(),
+            $navigationMapper->reveal(),
+            $requestAnalyzer->reveal(),
+            $tokenStorage->reveal()
+        );
+
+        $webspace = new Webspace();
+        $webspace->setKey('sulu_io');
+        $requestAnalyzer->getWebspace()->willReturn($webspace);
+
+        $requestAnalyzer->getSegment()->willReturn(null);
+
+        $localization = new Localization('de');
+        $requestAnalyzer->getCurrentLocalization()->willReturn($localization);
+
+        $navigationMapper->getRootNavigation('sulu_io', 'de', 1, true, 'main', false, null, null)
+            ->shouldBeCalled();
+
+        $extension->flatRootNavigationFunction('main', 1, false);
+    }
+
+    public function testFlatRootNavigationWithoutUser()
+    {
+        $navigationMapper = $this->prophesize(NavigationMapperInterface::class);
+        $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
+        $tokenStorage = $this->prophesize(TokenStorageInterface::class);
+
+        $token = $this->prophesize(TokenInterface::class);
+        $token->getUser()->willReturn(null);
+        $tokenStorage->getToken()->willReturn($token->reveal());
+
+        $extension = new NavigationTwigExtension(
+            $this->prophesize(ContentMapperInterface::class)->reveal(),
+            $navigationMapper->reveal(),
+            $requestAnalyzer->reveal(),
+            $tokenStorage->reveal()
+        );
+
+        $webspace = new Webspace();
+        $webspace->setKey('sulu_io');
+        $requestAnalyzer->getWebspace()->willReturn($webspace);
+
+        $requestAnalyzer->getSegment()->willReturn(null);
+
+        $localization = new Localization('de');
+        $requestAnalyzer->getCurrentLocalization()->willReturn($localization);
+
+        $navigationMapper->getRootNavigation('sulu_io', 'de', 1, true, 'main', false, null, null)
+            ->shouldBeCalled();
+
+        $extension->flatRootNavigationFunction('main', 1, false);
+    }
+
     public function testTreeRootNavigationWithUser()
     {
         $navigationMapper = $this->prophesize(NavigationMapperInterface::class);
