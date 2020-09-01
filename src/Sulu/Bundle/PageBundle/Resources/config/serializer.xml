@@ -18,7 +18,6 @@
         <service id="sulu_page.document.serializer.subscriber.structure_behavior"
                  class="Sulu\Bundle\PageBundle\Serializer\Subscriber\StructureSubscriber">
             <argument type="service" id="sulu_document_manager.document_inspector"/>
-            <argument type="service" id="sulu_core.webspace.webspace_manager" />
             <tag name="jms_serializer.event_subscriber"/>
         </service>
 
