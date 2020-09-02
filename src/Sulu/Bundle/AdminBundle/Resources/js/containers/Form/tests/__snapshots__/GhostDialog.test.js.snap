@@ -18,58 +18,67 @@ Array [
         <header>
           sulu_admin.ghost_dialog_title
         </header>
-        <article>
+        <article
+          class="article left"
+        >
+          <p>
+            sulu_admin.ghost_dialog_description
+          </p>
           <div
-            class="ghostDialog"
+            class="grid grid"
           >
-            <p>
-              sulu_admin.ghost_dialog_description
-            </p>
-            <label
-              class="label"
-            >
-              sulu_admin.choose_language
-            </label>
             <div
-              class="localeSelect"
+              class="item gridItem colSpan colSpan-6 space-before-0 space-after-0"
             >
               <div
-                class="select"
+                class="field"
               >
-                <button
-                  class="displayValue default"
-                  type="button"
+                <label
+                  class="label"
                 >
-                  <div
-                    aria-label="en"
-                    class="croppedText"
-                    title="en"
+                  sulu_admin.choose_language
+                </label>
+                <div
+                  class="select"
+                >
+                  <button
+                    class="displayValue default"
+                    type="button"
                   >
                     <div
-                      aria-hidden="true"
-                      class="front"
+                      aria-label="en"
+                      class="croppedText"
+                      title="en"
                     >
-                      e
+                      <div
+                        aria-hidden="true"
+                        class="front"
+                      >
+                        e
+                      </div>
+                      <div
+                        aria-hidden="true"
+                        class="back"
+                      >
+                        <span>
+                          n
+                        </span>
+                      </div>
+                      <div
+                        class="whole"
+                      >
+                        en
+                      </div>
                     </div>
-                    <div
-                      aria-hidden="true"
-                      class="back"
-                    >
-                      <span>
-                        n
-                      </span>
-                    </div>
-                    <div
-                      class="whole"
-                    >
-                      en
-                    </div>
-                  </div>
-                  <span
-                    aria-label="su-angle-down"
-                    class="su-angle-down toggle"
-                  />
-                </button>
+                    <span
+                      aria-label="su-angle-down"
+                      class="su-angle-down toggle"
+                    />
+                  </button>
+                </div>
+                <label
+                  class="errorLabel"
+                />
               </div>
             </div>
           </div>

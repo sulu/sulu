@@ -11,6 +11,7 @@ import Button from '../Button';
 import dialogStyles from './dialog.scss';
 
 type Props = {|
+    align: 'left' | 'center',
     cancelText?: string,
     children: Node,
     confirmDisabled: boolean,
@@ -26,6 +27,7 @@ type Props = {|
 @observer
 class Dialog extends React.Component<Props> {
     static defaultProps = {
+        align: 'center',
         confirmDisabled: false,
         confirmLoading: false,
     };
@@ -65,15 +67,16 @@ class Dialog extends React.Component<Props> {
 
     render() {
         const {
-            title,
+            align,
             children,
             confirmDisabled,
+            cancelText,
+            confirmLoading,
+            confirmText,
             onCancel,
             onConfirm,
-            cancelText,
-            confirmText,
-            confirmLoading,
             size,
+            title,
         } = this.props;
 
         const {open, visible} = this;
@@ -92,6 +95,13 @@ class Dialog extends React.Component<Props> {
             }
         );
 
+        const articleStyle = classNames(
+            dialogStyles.article,
+            {
+                [dialogStyles[align]]: align,
+            }
+        );
+
         return (
             <Fragment>
                 {visible &&
@@ -106,7 +116,7 @@ class Dialog extends React.Component<Props> {
                                     <header>
                                         {title}
                                     </header>
-                                    <article>
+                                    <article className={articleStyle}>
                                         {children}
                                     </article>
                                     <footer>

@@ -3,9 +3,9 @@ import React from 'react';
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import Dialog from '../../components/Dialog';
+import Form from '../../components/Form';
 import SingleSelect from '../../components/SingleSelect';
 import {translate} from '../../utils/Translator';
-import ghostDialogStyles from './ghostDialog.scss';
 
 type Props = {
     locales: Array<string>,
@@ -48,6 +48,7 @@ class GhostDialog extends React.Component<Props> {
 
         return (
             <Dialog
+                align="left"
                 cancelText={translate('sulu_admin.no')}
                 confirmText={translate('sulu_admin.yes')}
                 onCancel={this.handleCancel}
@@ -55,10 +56,9 @@ class GhostDialog extends React.Component<Props> {
                 open={open}
                 title={translate('sulu_admin.ghost_dialog_title')}
             >
-                <div className={ghostDialogStyles.ghostDialog}>
-                    <p>{translate('sulu_admin.ghost_dialog_description')}</p>
-                    <label className={ghostDialogStyles.label}>{translate('sulu_admin.choose_language')}</label>
-                    <div className={ghostDialogStyles.localeSelect}>
+                <p>{translate('sulu_admin.ghost_dialog_description')}</p>
+                <Form>
+                    <Form.Field colSpan={6} label={translate('sulu_admin.choose_language')}>
                         <SingleSelect onChange={this.handleLocaleChange} value={this.selectedLocale}>
                             {locales.map((locale) => (
                                 <SingleSelect.Option key={locale} value={locale}>
@@ -66,8 +66,8 @@ class GhostDialog extends React.Component<Props> {
                                 </SingleSelect.Option>
                             ))}
                         </SingleSelect>
-                    </div>
-                </div>
+                    </Form.Field>
+                </Form>
             </Dialog>
         );
     }

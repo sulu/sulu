@@ -18,7 +18,9 @@ Array [
         <header>
           My dialog title
         </header>
-        <article>
+        <article
+          class="article center"
+        >
           <div>
             My dialog content
           </div>
