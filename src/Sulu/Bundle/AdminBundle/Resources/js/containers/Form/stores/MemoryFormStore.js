@@ -3,7 +3,7 @@ import {action, autorun, observable} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import Ajv from 'ajv';
 import jsonpointer from 'json-pointer';
-import type {FormStoreInterface, RawSchema} from '../types';
+import type {FormStoreInterface, RawSchema, SchemaType} from '../types';
 import AbstractFormStore from './AbstractFormStore';
 
 const ajv = new Ajv({allErrors: true, jsonPointers: true});
@@ -14,6 +14,7 @@ export default class MemoryFormStore extends AbstractFormStore implements FormSt
     resourceKey = undefined;
     @observable data: {[string]: any};
     @observable dirty: boolean = false;
+    @observable types: {[key: string]: SchemaType} = {};
     updateFieldPathEvaluationsDisposer: ?() => void;
 
     constructor(
@@ -41,10 +42,18 @@ export default class MemoryFormStore extends AbstractFormStore implements FormSt
         this.dirty = true;
     }
 
+    get hasInvalidType() {
+        return false;
+    }
+
     @action setMultiple(data: Object) {
         this.data = data;
 
         super.setMultiple();
+    }
+
+    setType() {
+        throw new Error('The MemoryFormStore cannot handle types');
     }
 
     destroy() {

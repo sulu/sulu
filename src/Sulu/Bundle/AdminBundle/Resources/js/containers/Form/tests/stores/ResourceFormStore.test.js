@@ -732,6 +732,26 @@ test('Loading flag should be set to false after data and schema have been loadin
     resourceFormStore.destroy();
 });
 
+test('Loading flag should be set to false after types have been loaded but currently set type is invalid', () => {
+    const types = {
+        sidebar: {key: 'sidebar', title: 'Sidebar'},
+    };
+    const promise = Promise.resolve({defaultType: 'sidebar', types});
+    metadataStore.getSchemaTypes.mockReturnValue(promise);
+
+    const resourceStore = new ResourceStore('snippets', '1');
+    resourceStore.data.template = 'not-existing';
+    const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
+    expect(toJS(resourceFormStore.types)).toEqual({});
+    expect(resourceFormStore.typesLoading).toEqual(true);
+
+    return promise.then(() => {
+        expect(toJS(resourceFormStore.types)).toEqual(types);
+        expect(resourceFormStore.loading).toEqual(false);
+        resourceFormStore.destroy();
+    });
+});
+
 test.each([true, false])('Forbidden flag should be set as %s', (forbidden) => {
     const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box()});
     const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
@@ -1364,6 +1384,49 @@ test('Set new type after copying from different locale', () => {
     });
 });
 
+test('HasInvalidType return true when invalid type is set', () => {
+    const schemaTypesPromise = Promise.resolve({
+        types: {
+            sidebar: {key: 'sidebar', title: 'Sidebar'},
+        },
+    });
+
+    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
+
+    const resourceStore = new ResourceStore('test', 1);
+    const resourceFormStore = new ResourceFormStore(resourceStore, 'test');
+
+    return schemaTypesPromise.then(() => {
+        resourceFormStore.setType('not-sidebar');
+        expect(resourceFormStore.hasInvalidType).toEqual(true);
+    });
+});
+
+test('HasInvalidType return false valid type is set', () => {
+    const schemaTypesPromise = Promise.resolve({
+        types: {
+            sidebar: {key: 'sidebar', title: 'Sidebar'},
+        },
+    });
+
+    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
+
+    const resourceStore = new ResourceStore('test', 1);
+    const resourceFormStore = new ResourceFormStore(resourceStore, 'test');
+
+    return schemaTypesPromise.then(() => {
+        resourceFormStore.setType('sidebar');
+        expect(resourceFormStore.hasInvalidType).toEqual(false);
+    });
+});
+
+test('HasInvalidType return false when types are not set yet', () => {
+    const resourceStore = new ResourceStore('test', 1);
+    const resourceFormStore = new ResourceFormStore(resourceStore, 'test');
+
+    expect(resourceFormStore.hasInvalidType).toEqual(false);
+});
+
 test('HasTypes return true when types are set', () => {
     const schemaTypesPromise = Promise.resolve({
         types: {
@@ -1395,7 +1458,7 @@ test('HasTypes return false when types are not set', () => {
     });
 });
 
-test.each(['sidebar', 'footer'])('Set type to given default if data has no template set', (defaultType) => {
+test.each(['sidebar', 'footer'])('Set type to default "%s" if data has no template set', (defaultType) => {
     const schemaTypesPromise = Promise.resolve({
         types: {
             sidebar: {key: 'sidebar', title: 'Sidebar'},

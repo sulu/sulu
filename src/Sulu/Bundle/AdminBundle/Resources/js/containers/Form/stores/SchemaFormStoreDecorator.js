@@ -114,6 +114,14 @@ export default class SchemaFormStoreDecorator implements FormStoreInterface {
         return [];
     }
 
+    @computed get hasInvalidType() {
+        if (this.innerFormStore) {
+            return this.innerFormStore.hasInvalidType;
+        }
+
+        return false;
+    }
+
     @computed get id() {
         if (this.innerFormStore) {
             return this.innerFormStore.id;
@@ -173,6 +181,20 @@ export default class SchemaFormStoreDecorator implements FormStoreInterface {
     @computed.struct get schema(): Schema {
         if (this.innerFormStore) {
             return this.innerFormStore.schema;
+        }
+
+        return {};
+    }
+
+    setType(type: string): void {
+        if (this.innerFormStore) {
+            return this.innerFormStore.setType(type);
+        }
+    }
+
+    @computed get types() {
+        if (this.innerFormStore) {
+            return this.innerFormStore.types;
         }
 
         return {};

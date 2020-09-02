@@ -112,6 +112,7 @@ export interface FormStoreInterface {
     +getSchemaEntryByPath: (schemaPath: string) => ?SchemaEntry,
     +getValueByPath: (path: string) => mixed,
     +getValuesByTag: (tagName: string) => Array<mixed>,
+    +hasInvalidType: boolean,
     +id: ?string | number,
     +isFieldModified: (dataPath: string) => boolean,
     +loading: boolean,
@@ -121,6 +122,8 @@ export interface FormStoreInterface {
     +resourceKey: ?string,
     +schema: Object,
     +setMultiple: (data: Object) => void,
+    +setType: (type: string) => void,
+    +types: {[key: string]: SchemaType},
     +validate: () => boolean,
 }
 
