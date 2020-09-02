@@ -2000,6 +2000,13 @@ class PageControllerTest extends SuluTestCase
             '/api/pages/' . $data['id'] . '?action=copy-locale&webspace=sulu_io&language=en&dest=de'
         );
         $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $result = \json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertCount(2, $result['availableLocales']);
+        $this->assertContains('de', $result['availableLocales']);
+        $this->assertContains('en', $result['availableLocales']);
+        $this->assertCount(2, $result['contentLocales']);
+        $this->assertContains('de', $result['contentLocales']);
+        $this->assertContains('en', $result['contentLocales']);
 
         $this->client->request(
             'GET',
@@ -2010,6 +2017,10 @@ class PageControllerTest extends SuluTestCase
         $this->assertEquals($data['title'], $result['title']);
         $this->assertEquals($data['url'], $result['url']);
         $this->assertEquals($data['article'], $result['article']);
+        $this->assertCount(2, $result['availableLocales']);
+        $this->assertContains('de', $result['availableLocales']);
+        $this->assertContains('en', $result['availableLocales']);
+        $this->assertCount(2, $result['contentLocales']);
         $this->assertContains('de', $result['contentLocales']);
         $this->assertContains('en', $result['contentLocales']);
     }
