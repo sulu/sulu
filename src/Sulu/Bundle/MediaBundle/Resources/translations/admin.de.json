@@ -62,7 +62,8 @@
     "sulu_media.right_bottom": "Rechts unten",
     "sulu_media.hotspots": "Hotspots",
     "sulu_media.add_hotspot": "Hotspot hinzufügen",
-    "sulu_media.hotspot_type": "Hotspot Typ",
+    "sulu_media.hotspot_type": "Hotspot-Typ",
+    "sulu_media.form_type": "Formular-Typ",
     "sulu_media.circle": "Kreis",
     "sulu_media.point": "Punkt",
     "sulu_media.rectangle": "Rechteck"

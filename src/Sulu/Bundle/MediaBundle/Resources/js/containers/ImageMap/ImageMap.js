@@ -2,20 +2,22 @@
 import React from 'react';
 import {observer} from 'mobx-react';
 import type {IObservableValue} from 'mobx';
-import {action, observable, toJS} from 'mobx';
+import {action, computed, observable, toJS} from 'mobx';
 import classNames from 'classnames';
 import type {Value as ImageValue} from '../SingleMediaSelection/types';
 import SingleMediaSelection from '../SingleMediaSelection';
-import type {Hotspot, Value} from './types';
+import type {Hotspot, Value, RenderHotspotFormCallback} from './types';
 import ImageRenderer from './ImageRenderer';
 import FormRenderer from './FormRenderer';
 import imageMapStyles from './imageMap.scss';
 
 type Props = {
+    defaultFormType: string,
     disabled: boolean,
-    formTypes: Array<string>,
+    formTypes: {[string]: string},
     locale: IObservableValue<string>,
     onChange: (data: Value) => void,
+    renderHotspotForm: RenderHotspotFormCallback,
     valid: boolean,
     value: Value,
 };
@@ -39,17 +41,26 @@ class ImageMap extends React.Component<Props> {
         id: undefined,
     };
 
-    @action componentDidUpdate(prevProps: Props) {
+    @action componentDidMount() {
+        const {value: {imageId}} = this.props;
+
+        this.imageValue = {
+            displayOption: undefined,
+            id: imageId,
+        };
+    }
+
+    @action componentDidUpdate() {
         const {value: {imageId}, formTypes} = this.props;
 
-        if (prevProps.value.imageId !== imageId) {
+        if (this.imageValue.id !== imageId) {
             this.imageValue = {
                 displayOption: undefined,
                 id: imageId,
             };
         }
 
-        if (formTypes.length === 0) {
+        if (Object.keys(formTypes).length === 0) {
             throw new Error('There needs to be at least one form type specified!');
         }
     }
@@ -67,7 +78,10 @@ class ImageMap extends React.Component<Props> {
         const {onChange, value} = this.props;
 
         const hotspots = toJS(value.hotspots);
-        hotspots[index].selection = selection;
+        hotspots[index].hotspot = {
+            ...hotspots[index].hotspot,
+            ...selection,
+        };
 
         onChange({
             ...value,
@@ -79,8 +93,19 @@ class ImageMap extends React.Component<Props> {
         const {onChange, value} = this.props;
 
         const hotspots = toJS(value.hotspots);
+        hotspots[index].hotspot = {type};
+
+        onChange({
+            ...value,
+            hotspots,
+        });
+    };
+
+    handleTypeChange = (index: number, type: string) => {
+        const {onChange, value} = this.props;
+
+        const hotspots = toJS(value.hotspots);
         hotspots[index].type = type;
-        hotspots[index].selection = undefined;
 
         onChange({
             ...value,
@@ -104,13 +129,13 @@ class ImageMap extends React.Component<Props> {
     };
 
     getDefaultHotspotData = (): Hotspot => {
-        const {formTypes} = this.props;
+        const {defaultFormType} = this.props;
 
         return {
-            formData: {},
-            formType: formTypes[0],
-            selection: undefined,
-            type: 'point',
+            hotspot: {
+                type: 'point',
+            },
+            type: defaultFormType,
         };
     };
 
@@ -128,8 +153,14 @@ class ImageMap extends React.Component<Props> {
         this.selectedIndex = value.hotspots.length;
     };
 
+    @computed get currentHotspot() {
+        const {value} = this.props;
+
+        return value.hotspots[this.selectedIndex];
+    }
+
     render() {
-        const {value, valid, locale, disabled} = this.props;
+        const {value, valid, locale, disabled, renderHotspotForm, formTypes} = this.props;
 
         const cardClass = classNames(
             imageMapStyles.card,
@@ -163,16 +194,20 @@ class ImageMap extends React.Component<Props> {
                         <div className={imageMapStyles.form}>
                             <FormRenderer
                                 disabled={disabled}
+                                formTypes={formTypes}
                                 onHotspotAdd={this.handleHotspotAdd}
                                 onHotspotRemove={this.handleHotspotRemove}
                                 onHotspotSelect={this.handleHotspotSelect}
                                 onHotspotTypeChange={this.handleHotspotTypeChange}
+                                onTypeChange={this.handleTypeChange}
                                 selectedIndex={this.selectedIndex}
                                 value={value.hotspots}
                             >
-                                <div>
-                                    hello
-                                </div>
+                                {this.currentHotspot && renderHotspotForm(
+                                    this.currentHotspot,
+                                    this.currentHotspot.type,
+                                    this.selectedIndex
+                                )}
                             </FormRenderer>
                         </div>
                     </div>

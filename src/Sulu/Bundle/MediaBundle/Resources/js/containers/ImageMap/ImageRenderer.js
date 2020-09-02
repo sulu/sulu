@@ -97,6 +97,9 @@ class ImageRenderer extends React.Component<Props> {
     getCommonSelectionProps = (hotspot: Hotspot, index: number) => {
         const {disabled, selectedIndex} = this.props;
 
+        const entries = Object.entries(hotspot.hotspot).filter(([key]) => key !== 'type');
+        const value = entries.length !== 0 ? Object.fromEntries(entries) : undefined;
+
         return {
             containerHeight: this.containerSize.height,
             containerWidth: this.containerSize.width,
@@ -104,8 +107,9 @@ class ImageRenderer extends React.Component<Props> {
             key: index,
             label: (index + 1).toString(),
             onChange: this.handleSelectionChange,
+            percentageValues: true,
             round: false,
-            value: hotspot.selection,
+            value,
         };
     };
 
@@ -173,16 +177,16 @@ class ImageRenderer extends React.Component<Props> {
                         />
                     }
 
-                    {this.sortedHotspots.map(([index, hotspot]) => {
-                        switch (hotspot.type) {
+                    {this.sortedHotspots.map(([index, hotspotData]) => {
+                        switch (hotspotData.hotspot.type) {
                             case 'circle':
-                                return this.renderCircleSelection(hotspot, index);
+                                return this.renderCircleSelection(hotspotData, index);
                             case 'point':
-                                return this.renderPointSelection(hotspot, index);
+                                return this.renderPointSelection(hotspotData, index);
                             case 'rectangle':
-                                return this.renderRectangleSelection(hotspot, index);
+                                return this.renderRectangleSelection(hotspotData, index);
                             default:
-                                throw new Error(`Unexpected hotspot type "${hotspot.type}".`);
+                                throw new Error(`Unexpected hotspot type "${hotspotData.hotspot.type}".`);
                         }
                     })}
                 </div>

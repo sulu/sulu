@@ -11,7 +11,6 @@
 
 namespace Sulu\Component\Content\Compat;
 
-use JMS\Serializer\Annotation\Type;
 use Sulu\Component\Content\Document\Structure\PropertyValue;
 use Sulu\Component\Util\ArrayableInterface;
 
@@ -107,6 +106,23 @@ class Property implements PropertyInterface, \JsonSerializable
      */
     protected $propertyValue;
 
+    /**
+     * properties managed by this block.
+     *
+     * @var PropertyType[]
+     */
+    protected $types = [];
+
+    /**
+     * @var PropertyType[]
+     */
+    protected $properties = [];
+
+    /**
+     * @var string|null
+     */
+    protected $defaultTypeName;
+
     public function __construct(
         $name,
         $metaData,
@@ -117,7 +133,8 @@ class Property implements PropertyInterface, \JsonSerializable
         $minOccurs = 1,
         $params = [],
         $tags = [],
-        $colSpan = null
+        $colSpan = null,
+        $defaultTypeName = null
     ) {
         $this->contentTypeName = $contentTypeName;
         $this->mandatory = $mandatory;
@@ -129,6 +146,7 @@ class Property implements PropertyInterface, \JsonSerializable
         $this->params = $params;
         $this->tags = $tags;
         $this->colSpan = $colSpan;
+        $this->defaultTypeName = $defaultTypeName;
     }
 
     public function setPropertyValue(PropertyValue $propertyValue)
@@ -447,11 +465,28 @@ class Property implements PropertyInterface, \JsonSerializable
 
     public function __clone()
     {
-        $value = $this->getValue();
-        if (\is_object($value)) {
-            $value = clone $value;
+        $clone = new self(
+            $this->getName(),
+            $this->getMetadata(),
+            $this->getContentTypeName(),
+            $this->getMandatory(),
+            $this->getMultilingual(),
+            $this->getMaxOccurs(),
+            $this->getMinOccurs(),
+            $this->getParams(),
+            $this->getTags(),
+            $this->getColSpan(),
+            $this->getDefaultTypeName()
+        );
+
+        $clone->types = [];
+        foreach ($this->types as $type) {
+            $clone->addType(clone $type);
         }
-        $this->setValue($value);
+
+        $clone->setValue($this->getValue());
+
+        return $clone;
     }
 
     public function toArray($depth = null)
@@ -461,5 +496,82 @@ class Property implements PropertyInterface, \JsonSerializable
         } else {
             return $this->getValue();
         }
+    }
+
+    public function getTypes()
+    {
+        return $this->types;
+    }
+
+    public function addType($type)
+    {
+        $this->types[$type->getName()] = $type;
+    }
+
+    public function getType($name)
+    {
+        if (!$this->hasType($name)) {
+            throw new \InvalidArgumentException(
+                \sprintf(
+                    'The block type "%s" has not been registered. Known block types are: [%s]',
+                    $name,
+                    \implode(', ', \array_keys($this->types))
+                )
+            );
+        }
+
+        return $this->types[$name];
+    }
+
+    public function hasType($name)
+    {
+        return isset($this->types[$name]);
+    }
+
+    public function getDefaultTypeName()
+    {
+        return $this->defaultTypeName;
+    }
+
+    /**
+     * returns child properties of given Type.
+     *
+     * @param string $typeName
+     *
+     * @return PropertyInterface[]
+     */
+    public function getChildProperties($typeName)
+    {
+        return $this->getType($typeName)->getChildProperties();
+    }
+
+    public function initProperties($index, $typeName)
+    {
+        $type = $this->getType($typeName);
+        $this->properties[$index] = clone $type;
+
+        return $this->properties[$index];
+    }
+
+    public function clearProperties()
+    {
+        $this->properties = [];
+    }
+
+    public function getProperties($index)
+    {
+        if (!isset($this->properties[$index])) {
+            throw new \OutOfRangeException(\sprintf(
+                'No properties at index "%s" in block "%s". Valid indexes: [%s]',
+                $index, $this->getName(), \implode(', ', \array_keys($this->properties))
+            ));
+        }
+
+        return $this->properties[$index];
+    }
+
+    public function getLength()
+    {
+        return \count($this->properties);
     }
 }

@@ -1,0 +1,435 @@
+<?php
+
+/*
+ * This file is part of Sulu.
+ *
+ * (c) Sulu GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+namespace Sulu\Bundle\MediaBundle\Content\Types;
+
+use PHPCR\NodeInterface;
+use Sulu\Component\Content\Compat\Block\BlockPropertyWrapper;
+use Sulu\Component\Content\Compat\Property;
+use Sulu\Component\Content\Compat\PropertyInterface;
+use Sulu\Component\Content\ComplexContentType;
+use Sulu\Component\Content\ContentTypeExportInterface;
+use Sulu\Component\Content\ContentTypeInterface;
+use Sulu\Component\Content\ContentTypeManagerInterface;
+use Sulu\Component\Content\Document\Structure\PropertyValue;
+use Sulu\Component\Content\Document\Subscriber\PHPCR\SuluNode;
+use Sulu\Component\Content\Exception\UnexpectedPropertyType;
+use Sulu\Component\Content\PreResolvableContentTypeInterface;
+
+class ImageMapContentType extends ComplexContentType implements ContentTypeExportInterface, PreResolvableContentTypeInterface
+{
+    /**
+     * @var ContentTypeManagerInterface
+     */
+    private $contentTypeManager;
+
+    public function __construct(ContentTypeManagerInterface $contentTypeManager)
+    {
+        $this->contentTypeManager = $contentTypeManager;
+    }
+
+    public function read(
+        NodeInterface $node,
+        PropertyInterface $property,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey
+    ) {
+        $data = [
+            'imageId' => null,
+            'hotspots' => [],
+        ];
+
+        // init properties
+        $imageIdProperty = new Property('imageId', '', 'text_line');
+        $typeProperty = new Property('type', '', 'text_line');
+        $hotspotProperty = new Property('hotspot', '', 'text_line');
+        $lengthProperty = new Property('length', '', 'text_line');
+
+        // load imageId
+        $contentType = $this->contentTypeManager->get($imageIdProperty->getContentTypeName());
+        $contentType->read(
+            $node,
+            new BlockPropertyWrapper($imageIdProperty, $property),
+            $webspaceKey,
+            $languageCode,
+            $segmentKey
+        );
+        $imageId = $imageIdProperty->getValue();
+        $data['imageId'] = $imageId ? (int) $imageId : null;
+
+        // load length
+        $contentType = $this->contentTypeManager->get($lengthProperty->getContentTypeName());
+        $contentType->read(
+            $node,
+            new BlockPropertyWrapper($lengthProperty, $property),
+            $webspaceKey,
+            $languageCode,
+            $segmentKey
+        );
+        $len = $lengthProperty->getValue();
+
+        for ($i = 0; $i < $len; ++$i) {
+            $hotspotData = [];
+
+            // load type
+            $contentType = $this->contentTypeManager->get($typeProperty->getContentTypeName());
+            $contentType->read(
+                $node,
+                new BlockPropertyWrapper($typeProperty, $property, $i),
+                $webspaceKey,
+                $languageCode,
+                $segmentKey
+            );
+            $type = $typeProperty->getValue();
+            $hotspotData['type'] = $type;
+
+            if (!$property->hasType($type)) {
+                continue;
+            }
+
+            $contentType = $this->contentTypeManager->get($hotspotProperty->getContentTypeName());
+            $contentType->read(
+                $node,
+                new BlockPropertyWrapper($hotspotProperty, $property, $i),
+                $webspaceKey,
+                $languageCode,
+                $segmentKey
+            );
+            $hotspot = \json_decode($hotspotProperty->getValue(), true);
+            $hotspotData['hotspot'] = $hotspot;
+
+            $propertyType = $property->initProperties($i, $type);
+
+            foreach ($propertyType->getChildProperties() as $subProperty) {
+                $contentType = $this->contentTypeManager->get($subProperty->getContentTypeName());
+                $contentType->read(
+                    $node,
+                    new BlockPropertyWrapper($subProperty, $property, $i),
+                    $webspaceKey,
+                    $languageCode,
+                    $segmentKey
+                );
+
+                $hotspotData[$subProperty->getName()] = $subProperty->getValue();
+            }
+
+            $data['hotspots'][] = $hotspotData;
+        }
+
+        $property->setValue($data);
+    }
+
+    public function hasValue(
+        NodeInterface $node,
+        PropertyInterface $property,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey
+    ) {
+        // init properties
+        $imageIdProperty = new Property('imageId', '', 'text_line');
+        $imageIdProperty = new BlockPropertyWrapper($imageIdProperty, $property);
+        $contentType = $this->contentTypeManager->get($imageIdProperty->getContentTypeName());
+
+        return $contentType->hasValue($node, $imageIdProperty, $webspaceKey, $languageCode, $segmentKey);
+    }
+
+    public function write(
+        NodeInterface $node,
+        PropertyInterface $property,
+        $userId,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey
+    ) {
+        return $this->doWrite($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey, false);
+    }
+
+    /**
+     * Save the value from given property.
+     *
+     * @param string $userId
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @param string $segmentKey
+     * @param bool $isImport
+     *
+     * @throws UnexpectedPropertyType
+     */
+    private function doWrite(
+        NodeInterface $node,
+        PropertyInterface $property,
+        $userId,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey,
+        $isImport = false
+    ) {
+        $data = $property->getValue();
+
+        $imageId = $data['imageId'] ?? null;
+        $hotspots = $data['hotspots'] ?? [];
+
+        $len = \count($hotspots);
+
+        // init properties
+        $imageIdProperty = new Property('imageId', '', 'text_line');
+        $typeProperty = new Property('type', '', 'text_line');
+        $hotspotProperty = new Property('hotspot', '', 'text_line');
+        $lengthProperty = new Property('length', '', 'text_line');
+
+        //save length
+        $lengthProperty->setValue($len);
+        $contentType = $this->contentTypeManager->get($lengthProperty->getContentTypeName());
+        $contentType->write(
+            $node,
+            new BlockPropertyWrapper($lengthProperty, $property),
+            $userId,
+            $webspaceKey,
+            $languageCode,
+            $segmentKey
+        );
+
+        //save imageId
+        $imageIdProperty->setValue($imageId);
+        $contentType = $this->contentTypeManager->get($imageIdProperty->getContentTypeName());
+        $contentType->write(
+            $node,
+            new BlockPropertyWrapper($imageIdProperty, $property),
+            $userId,
+            $webspaceKey,
+            $languageCode,
+            $segmentKey
+        );
+
+        for ($i = 0; $i < $len; ++$i) {
+            $hotspot = $hotspots[$i];
+            $propertyType = $property->initProperties($i, $hotspot['type']);
+
+            /** @var PropertyInterface $subProperty */
+            foreach ($propertyType->getChildProperties() as $subProperty) {
+                if (!isset($hotspot[$subProperty->getName()])) {
+                    continue;
+                }
+
+                $subName = $subProperty->getName();
+                $subValue = $hotspot[$subName];
+
+                if ($subValue instanceof PropertyValue) {
+                    $subValueProperty = new PropertyValue($subName, $subValue);
+                    $subProperty->setPropertyValue($subValueProperty);
+                    $hotspot[$subName] = $subValueProperty;
+                } else {
+                    $subProperty->setValue($subValue);
+                }
+            }
+
+            $this->writeProperty(
+                $typeProperty,
+                $property,
+                $propertyType->getName(),
+                $i,
+                $node,
+                $userId,
+                $webspaceKey,
+                $languageCode,
+                $segmentKey,
+                $isImport
+            );
+
+            $this->writeProperty(
+                $hotspotProperty,
+                $property,
+                \json_encode($hotspots[$i]['hotspot'] ?? null),
+                $i,
+                $node,
+                $userId,
+                $webspaceKey,
+                $languageCode,
+                $segmentKey,
+                $isImport
+            );
+
+            foreach ($propertyType->getChildProperties() as $subProperty) {
+                $this->writeProperty(
+                    $subProperty,
+                    $property,
+                    $subProperty->getValue(),
+                    $i,
+                    $node,
+                    $userId,
+                    $webspaceKey,
+                    $languageCode,
+                    $segmentKey,
+                    $isImport
+                );
+            }
+        }
+    }
+
+    /**
+     * write a property to node.
+     */
+    private function writeProperty(
+        PropertyInterface $property,
+        PropertyInterface $blockProperty,
+        $value,
+        $index,
+        NodeInterface $node,
+        $userId,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey,
+        $isImport = false
+    ): void {
+        // save sub property
+        $contentType = $this->contentTypeManager->get($property->getContentTypeName());
+        $blockPropertyWrapper = new BlockPropertyWrapper($property, $blockProperty, $index);
+        $blockPropertyWrapper->setValue($value);
+
+        if ($isImport && $contentType instanceof ContentTypeExportInterface) {
+            $contentType->importData(
+                new SuluNode($node),
+                $blockPropertyWrapper,
+                $value,
+                $userId,
+                $webspaceKey,
+                $languageCode,
+                $segmentKey
+            );
+
+            return;
+        }
+
+        $contentType->write(
+            new SuluNode($node),
+            $blockPropertyWrapper,
+            $userId,
+            $webspaceKey,
+            $languageCode,
+            $segmentKey
+        );
+    }
+
+    public function remove(
+        NodeInterface $node,
+        PropertyInterface $property,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey
+    ) {
+        foreach ($node->getProperties($property->getName() . '-*')  as $nodeProperty) {
+            $node->getProperty($nodeProperty->getName())->remove();
+        }
+    }
+
+    public function getViewData(PropertyInterface $property)
+    {
+        return $this->prepareData(
+            $property,
+            function(ContentTypeInterface $contentType, $property) {
+                return $contentType->getViewData($property);
+            },
+            false
+        );
+    }
+
+    public function getContentData(PropertyInterface $property)
+    {
+        return $this->prepareData(
+            $property,
+            function(ContentTypeInterface $contentType, $property) {
+                return $contentType->getContentData($property);
+            }
+        );
+    }
+
+    /**
+     * Returns prepared data from property
+     * use callback to prepare data foreach property function($contentType, $property).
+     *
+     * @param bool $returnType
+     *
+     * @return array
+     */
+    private function prepareData(PropertyInterface $property, callable $dataCallback, $returnType = true)
+    {
+        $value = $property->getValue();
+
+        $imageId = $value['imageId'] ?? null;
+        $imageId = $imageId ? (int) $imageId : null;
+
+        $imageProperty = new Property('image', '', 'single_media_selection');
+        $imageProperty->setValue(['id' => $imageId]);
+        $imageProperty->setStructure($property->getStructure());
+        $contentType = $this->contentTypeManager->get($imageProperty->getContentTypeName());
+
+        $data = [
+            'image' => $dataCallback($contentType, $imageProperty),
+            'hotspots' => [],
+        ];
+
+        foreach ($value['hotspots'] as $i => $hotspot) {
+            $hotspotData = [];
+
+            $propertyType = $property->initProperties($i, $hotspot['type']);
+            foreach ($propertyType->getChildProperties() as $childProperty) {
+                $childProperty->setValue($hotspot[$childProperty->getName()]);
+                $contentType = $this->contentTypeManager->get($childProperty->getContentTypeName());
+
+                $hotspotData[$childProperty->getName()] = $dataCallback($contentType, $childProperty);
+            }
+
+            if ($returnType) {
+                $hotspotData['type'] = $hotspot['type'];
+                $hotspotData['hotspot'] = $hotspot['hotspot'];
+            }
+
+            $data['hotspots'][] = $hotspotData;
+        }
+
+        return $data;
+    }
+
+    public function exportData($propertyValue)
+    {
+        return $propertyValue;
+    }
+
+    public function importData(
+        NodeInterface $node,
+        PropertyInterface $property,
+        $value,
+        $userId,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey = null
+    ) {
+        $property->setValue($value);
+        $this->doWrite($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey, true);
+    }
+
+    public function preResolve(PropertyInterface $property)
+    {
+        $this->prepareData(
+            $property,
+            function(ContentTypeInterface $contentType, $property) {
+                if (!$contentType instanceof PreResolvableContentTypeInterface) {
+                    return;
+                }
+
+                return $contentType->preResolve($property);
+            },
+            false
+        );
+    }
+}

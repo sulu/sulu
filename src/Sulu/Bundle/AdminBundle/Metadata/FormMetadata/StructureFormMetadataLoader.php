@@ -180,10 +180,10 @@ class StructureFormMetadataLoader implements FormMetadataLoaderInterface, CacheW
                 $optionMetadata->setName('settings_form_key');
                 $optionMetadata->setValue('page_block_settings');
                 $itemMetadata->addOption($optionMetadata);
+            }
 
-                foreach ($itemMetadata->getTypes() as $type) {
-                    $this->enhanceBlockMetadata($type->getItems());
-                }
+            foreach ($itemMetadata->getTypes() as $type) {
+                $this->enhanceBlockMetadata($type->getItems());
             }
 
             if ($itemMetadata instanceof SectionMetadata) {

@@ -39,9 +39,7 @@ class FormMetadataMapper
     {
         $items = [];
         foreach ($children as $child) {
-            if ($child instanceof BlockMetadata) {
-                $item = $this->mapBlock($child, $locale);
-            } elseif ($child instanceof ContentPropertyMetadata) {
+            if ($child instanceof BlockMetadata || $child instanceof ContentPropertyMetadata) {
                 $item = $this->mapProperty($child, $locale);
             } elseif ($child instanceof ContentSectionMetadata) {
                 $item = $this->mapSection($child, $locale);
@@ -95,9 +93,7 @@ class FormMetadataMapper
         $section->setVisibleCondition($property->getVisibleCondition());
 
         foreach ($property->getChildren() as $component) {
-            if ($component instanceof BlockMetadata) {
-                $item = $this->mapBlock($component, $locale);
-            } elseif ($component instanceof ContentPropertyMetadata) {
+            if ($component instanceof BlockMetadata || $component instanceof ContentPropertyMetadata) {
                 $item = $this->mapProperty($component, $locale);
             } elseif ($component instanceof ContentSectionMetadata) {
                 $item = $this->mapSection($component, $locale);
@@ -111,31 +107,10 @@ class FormMetadataMapper
         return $section;
     }
 
-    private function mapBlock(BlockMetadata $property, string $locale): FieldMetadata
-    {
-        $field = $this->mapProperty($property, $locale);
-        $field->setDefaultType($property->getDefaultComponentName());
-
-        foreach ($property->getComponents() as $component) {
-            $blockType = new FormMetadata();
-            $blockType->setName($component->getName());
-            $blockType->setTitle($component->getTitle($locale) ?? \ucfirst($component->getName()));
-
-            $blockTypeChildren = $this->mapChildren($component->getChildren(), $locale);
-
-            foreach ($blockTypeChildren as $blockTypeChild) {
-                $blockType->addItem($blockTypeChild);
-            }
-
-            $field->addType($blockType);
-        }
-
-        return $field;
-    }
-
     private function mapProperty(ContentPropertyMetadata $property, string $locale): FieldMetadata
     {
         $field = new FieldMetadata($property->getName());
+        $field->setDefaultType($property->getDefaultComponentName());
         $field->setTags($this->mapTags($property->getTags()));
 
         $field->setLabel($property->getTitle($locale));
@@ -152,6 +127,20 @@ class FormMetadataMapper
 
         foreach ($property->getParameters() as $parameter) {
             $field->addOption($this->mapOption($parameter, $locale));
+        }
+
+        foreach ($property->getComponents() as $component) {
+            $blockType = new FormMetadata();
+            $blockType->setName($component->getName());
+            $blockType->setTitle($component->getTitle($locale) ?? \ucfirst($component->getName()));
+
+            $blockTypeChildren = $this->mapChildren($component->getChildren(), $locale);
+
+            foreach ($blockTypeChildren as $blockTypeChild) {
+                $blockType->addItem($blockTypeChild);
+            }
+
+            $field->addType($blockType);
         }
 
         return $field;

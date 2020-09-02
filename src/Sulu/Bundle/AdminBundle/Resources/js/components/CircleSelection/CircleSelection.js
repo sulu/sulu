@@ -14,6 +14,7 @@ type Props = {
     maxRadius?: number,
     minRadius?: number,
     onChange: (value: ?SelectionData) => void,
+    percentageValues: boolean,
     resizable: boolean,
     round: boolean,
     value: SelectionData | typeof undefined,
@@ -26,6 +27,7 @@ class CircleSelection extends React.Component<Props & {
     static defaultProps = {
         disabled: false,
         filled: false,
+        percentageValues: true,
         resizable: true,
         round: true,
     };
@@ -41,6 +43,7 @@ class CircleSelection extends React.Component<Props & {
             maxRadius,
             minRadius,
             onChange,
+            percentageValues,
             resizable,
             round,
             value,
@@ -58,6 +61,7 @@ class CircleSelection extends React.Component<Props & {
                     maxRadius={maxRadius}
                     minRadius={minRadius}
                     onChange={onChange}
+                    percentageValues={percentageValues}
                     resizable={resizable}
                     round={round}
                     value={value}

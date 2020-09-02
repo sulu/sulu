@@ -26,22 +26,9 @@ $labelColor: $scorpion;
 }
 
 .tabs {
+    flex: 1 1 auto;
     margin-bottom: -1px;
-
-    /* REMOVE FROM HERE */
-    background: transparent;
-    padding: 0 20px;
-
-    > li {
-        &::after {
-            width: calc(100% - 20px);
-            left: 10px;
-        }
-
-        > button {
-            padding: 10px;
-        }
-    }
+    background-color: transparent !important;
 }
 
 .content {

@@ -63,6 +63,7 @@
     "sulu_media.hotspots": "Hotspots",
     "sulu_media.add_hotspot": "Add hotspot",
     "sulu_media.hotspot_type": "Hotspot type",
+    "sulu_media.form_type": "Form type",
     "sulu_media.circle": "Circle",
     "sulu_media.point": "Point",
     "sulu_media.rectangle": "Rectangle"

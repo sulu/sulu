@@ -17,12 +17,14 @@ use Sulu\Component\Content\Compat\Property as LegacyProperty;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Compat\PropertyTag;
+use Sulu\Component\Content\Compat\PropertyType;
 use Sulu\Component\Content\Compat\Section\SectionProperty;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\ItemMetadata;
 use Sulu\Component\Content\Metadata\Property;
+use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\SectionMetadata;
 use Sulu\Component\DocumentManager\NamespaceRegistry;
 
@@ -77,6 +79,17 @@ class LegacyPropertyFactory
             return $this->createBlockProperty($property, $structure);
         }
 
+        if (!$property instanceof PropertyMetadata) {
+            throw new \RuntimeException(\sprintf(
+                'Property needs to be of type [%s].',
+                implode(', ', [
+                    PropertyMetadata::class,
+                    BlockMetadata::class,
+                    SectionMetadata::class,
+                ])
+            ));
+        }
+
         if (null === $property->getType()) {
             throw new \RuntimeException(\sprintf(
                 'Property name "%s" has no type.',
@@ -99,13 +112,29 @@ class LegacyPropertyFactory
             $property->getMinOccurs(),
             $parameters,
             [],
-            $property->getColSpan()
+            $property->getColSpan(),
+            $property->getDefaultComponentName()
         );
 
         foreach ($property->getTags() as $tag) {
             $propertyBridge->addTag(new PropertyTag($tag['name'], $tag['priority'], $tag['attributes']));
         }
 
+        foreach ($property->getComponents() as $component) {
+            $propertyType = new PropertyType(
+                $component->getName(),
+                [
+                    'title' => $component->getTitles(),
+                    'info_text' => $component->getDescriptions(),
+                ]
+            );
+
+            foreach ($component->getChildren() as $property) {
+                $propertyType->addChild($this->createProperty($property, $structure));
+            }
+
+            $propertyBridge->addType($propertyType);
+        }
         $propertyBridge->setStructure($structure);
 
         return $propertyBridge;

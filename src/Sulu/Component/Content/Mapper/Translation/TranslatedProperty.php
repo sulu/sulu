@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Content\Mapper\Translation;
 
+use Sulu\Component\Content\Compat\Block\BlockPropertyType;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyTag;
 
@@ -301,5 +302,50 @@ class TranslatedProperty implements PropertyInterface
     public function getDocument()
     {
         return $this->property->getDocument();
+    }
+
+    public function getTypes()
+    {
+        return $this->property->getTypes();
+    }
+
+    public function addType($type)
+    {
+        $this->property->addType($type);
+    }
+
+    public function getType($name)
+    {
+        return $this->property->getType($name);
+    }
+
+    public function hasType($name)
+    {
+        return $this->property->hasType($name);
+    }
+
+    public function getProperties($index)
+    {
+        return $this->property->getProperties($index);
+    }
+
+    public function getLength()
+    {
+        return $this->property->getLength();
+    }
+
+    public function initProperties($index, $typeName)
+    {
+        return $this->property->initProperties($index, $typeName);
+    }
+
+    public function clearProperties()
+    {
+        $this->property->clearProperties();
+    }
+
+    public function getDefaultTypeName()
+    {
+        return $this->property->getDefaultTypeName();
     }
 }

@@ -16,27 +16,16 @@ use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Document\Structure\PropertyValue;
 
 /**
- * Representation of a block node in template xml.
+ * interface definition for block property.
+ *
+ * @method BlockPropertyType[] getTypes()
+ * @method addType(BlockPropertyType $type)
+ * @method BlockPropertyType getType(string $name)
+ * @method BlockPropertyType getProperties(int $index)
+ * @method BlockPropertyType initProperties(int $index, string $typeName)
  */
 class BlockProperty extends Property implements BlockPropertyInterface
 {
-    /**
-     * properties managed by this block.
-     *
-     * @var BlockPropertyType[]
-     */
-    private $types = [];
-
-    /**
-     * @var BlockPropertyType[]
-     */
-    private $properties = [];
-
-    /**
-     * @var string
-     */
-    private $defaultTypeName;
-
     public function __construct(
         $name,
         $metadata,
@@ -59,87 +48,9 @@ class BlockProperty extends Property implements BlockPropertyInterface
             $minOccurs,
             $params,
             $tags,
-            $col
+            $col,
+            $defaultTypeName
         );
-
-        $this->defaultTypeName = $defaultTypeName;
-    }
-
-    public function getTypes()
-    {
-        return $this->types;
-    }
-
-    public function addType(BlockPropertyType $type)
-    {
-        $this->types[$type->getName()] = $type;
-    }
-
-    public function getType($name)
-    {
-        if (!$this->hasType($name)) {
-            throw new \InvalidArgumentException(
-                \sprintf(
-                    'The block type "%s" has not been registered. Known block types are: [%s]',
-                    $name,
-                    \implode(', ', \array_keys($this->types))
-                )
-            );
-        }
-
-        return $this->types[$name];
-    }
-
-    public function hasType($name)
-    {
-        return isset($this->types[$name]);
-    }
-
-    public function getDefaultTypeName()
-    {
-        return $this->defaultTypeName;
-    }
-
-    /**
-     * returns child properties of given Type.
-     *
-     * @param string $typeName
-     *
-     * @return PropertyInterface[]
-     */
-    public function getChildProperties($typeName)
-    {
-        return $this->getType($typeName)->getChildProperties();
-    }
-
-    public function initProperties($index, $typeName)
-    {
-        $type = $this->getType($typeName);
-        $this->properties[$index] = clone $type;
-
-        return $this->properties[$index];
-    }
-
-    public function clearProperties()
-    {
-        $this->properties = [];
-    }
-
-    public function getProperties($index)
-    {
-        if (!isset($this->properties[$index])) {
-            throw new \OutOfRangeException(\sprintf(
-                'No properties at index "%s" in block "%s". Valid indexes: [%s]',
-                $index, $this->getName(), \implode(', ', \array_keys($this->properties))
-            ));
-        }
-
-        return $this->properties[$index];
-    }
-
-    public function getLength()
-    {
-        return \count($this->properties);
     }
 
     public function setValue($value)
@@ -261,28 +172,5 @@ class BlockProperty extends Property implements BlockPropertyInterface
         }
 
         return parent::getIsMultiple();
-    }
-
-    public function __clone()
-    {
-        $clone = new self(
-            $this->getName(),
-            $this->getMetadata(),
-            $this->getDefaultTypeName(),
-            $this->getMandatory(),
-            $this->getMultilingual(),
-            $this->getMaxOccurs(),
-            $this->getMinOccurs(),
-            $this->getParams()
-        );
-
-        $clone->types = [];
-        foreach ($this->types as $type) {
-            $clone->addType(clone $type);
-        }
-
-        $clone->setValue($this->getValue());
-
-        return $clone;
     }
 }

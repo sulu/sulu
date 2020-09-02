@@ -13,10 +13,12 @@ import formRendererStyles from './formRenderer.scss';
 type Props = {
     children: Element<*>,
     disabled: boolean,
+    formTypes: {[string]: string},
     onHotspotAdd: () => void,
     onHotspotRemove: (index: number) => void,
     onHotspotSelect: (index: number) => void,
     onHotspotTypeChange: (index: number, type: string) => void,
+    onTypeChange: (index: number, type: string) => void,
     selectedIndex: number,
     value: Array<Hotspot>,
 };
@@ -29,6 +31,12 @@ export default class FormRenderer extends React.PureComponent<Props> {
 
         return value[selectedIndex];
     }
+
+    handleTypeChange = (type: string) => {
+        const {onTypeChange, selectedIndex} = this.props;
+
+        onTypeChange(selectedIndex, type);
+    };
 
     handleHotspotTypeChange = (type: string) => {
         const {onHotspotTypeChange, selectedIndex} = this.props;
@@ -43,7 +51,7 @@ export default class FormRenderer extends React.PureComponent<Props> {
     };
 
     render() {
-        const {value, onHotspotAdd, onHotspotSelect, selectedIndex, children, disabled} = this.props;
+        const {value, onHotspotAdd, onHotspotSelect, selectedIndex, children, disabled, formTypes} = this.props;
 
         return (
             <Form>
@@ -62,6 +70,8 @@ export default class FormRenderer extends React.PureComponent<Props> {
                                 className={formRendererStyles.tabs}
                                 onSelect={onHotspotSelect}
                                 selectedIndex={selectedIndex}
+                                skin="light"
+                                small={true}
                             >
                                 {value.map((hotspot, index) => (
                                     <Tabs.Tab key={index}>{'#' + (index + 1).toString()}</Tabs.Tab>
@@ -77,12 +87,14 @@ export default class FormRenderer extends React.PureComponent<Props> {
                                             <Form.Field
                                                 colSpan={5}
                                                 label={translate('sulu_media.hotspot_type')}
+                                                required={false}
                                                 spaceAfter={1}
                                             >
                                                 <SingleSelect
                                                     disabled={disabled}
                                                     onChange={this.handleHotspotTypeChange}
-                                                    value={this.selectedHotspot.type}
+                                                    value={this.selectedHotspot.hotspot
+                                                        && this.selectedHotspot.hotspot.type}
                                                 >
                                                     {AVAILABLE_HOTSPOT_TYPES.map((value) => (
                                                         <SingleSelect.Option key={value} value={value}>
@@ -91,6 +103,27 @@ export default class FormRenderer extends React.PureComponent<Props> {
                                                     ))}
                                                 </SingleSelect>
                                             </Form.Field>
+
+                                            {Object.keys(formTypes).length > 1 &&
+                                                <Form.Field
+                                                    colSpan={5}
+                                                    label={translate('sulu_media.form_type')}
+                                                    required={false}
+                                                    spaceAfter={1}
+                                                >
+                                                    <SingleSelect
+                                                        disabled={disabled}
+                                                        onChange={this.handleTypeChange}
+                                                        value={this.selectedHotspot.type}
+                                                    >
+                                                        {Object.entries(formTypes).map(([key, value]) => (
+                                                            <SingleSelect.Option key={key} value={key}>
+                                                                {value}
+                                                            </SingleSelect.Option>
+                                                        ))}
+                                                    </SingleSelect>
+                                                </Form.Field>
+                                            }
                                         </Form>
                                     </div>
 

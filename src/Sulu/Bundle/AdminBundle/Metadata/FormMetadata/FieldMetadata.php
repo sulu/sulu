@@ -24,7 +24,7 @@ class FieldMetadata extends ItemMetadata
     protected $types = [];
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $defaultType;
 
@@ -73,12 +73,12 @@ class FieldMetadata extends ItemMetadata
         $this->options[$option->getName()] = $option;
     }
 
-    public function getDefaultType(): string
+    public function getDefaultType(): ?string
     {
         return $this->defaultType;
     }
 
-    public function setDefaultType(string $defaultType): void
+    public function setDefaultType(?string $defaultType): void
     {
         $this->defaultType = $defaultType;
     }

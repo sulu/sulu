@@ -60,7 +60,7 @@ class PropertiesXmlParser
         /** @var \DOMElement $node */
         foreach ($xpath->query('x:*', $context) as $node) {
             if ('property' === $node->tagName) {
-                $value = $this->loadProperty($xpath, $node, $tags);
+                $value = $this->loadProperty($xpath, $node, $tags, $formKey);
                 $result[$value['name']] = $value;
             } elseif ('block' === $node->tagName) {
                 $value = $this->loadBlock($xpath, $node, $tags, $formKey);
@@ -74,7 +74,7 @@ class PropertiesXmlParser
         return $result;
     }
 
-    private function loadProperty(\DOMXPath $xpath, \DOMNode $node, &$tags)
+    private function loadProperty(\DOMXPath $xpath, \DOMNode $node, &$tags, $formKey)
     {
         $result = $this->loadValues(
             $xpath,
@@ -82,6 +82,7 @@ class PropertiesXmlParser
             [
                 'name',
                 'type',
+                'default-type',
                 'minOccurs',
                 'maxOccurs',
                 'colspan',
@@ -98,6 +99,29 @@ class PropertiesXmlParser
         $result['tags'] = $this->loadTags($tags, $xpath, $node);
         $result['params'] = $this->loadParams('x:params/x:param', $xpath, $node);
         $result['meta'] = $this->loadMeta($xpath, $node);
+        $result['types'] = $this->loadTypes($tags, $xpath, $node, $formKey);
+
+        foreach ($result['types'] as $type) {
+            foreach (\array_keys($type['properties']) as $typePropertyName) {
+                if (\in_array($typePropertyName, $this->reservedBlockPropertyNames)) {
+                    throw new ReservedPropertyNameException($result['name'], $typePropertyName, $formKey);
+                }
+            }
+        }
+
+        $typeNames = \array_map(function($type) {
+            return $type['name'];
+        }, $result['types']);
+
+        if (!empty($typeNames)) {
+            if (!$result['default-type'] && null !== ($key = array_key_first($typeNames))) {
+                $result['default-type'] = $typeNames[$key];
+            }
+
+            if (!\in_array($result['default-type'], $typeNames)) {
+                throw new InvalidBlockDefaultTypeException($result['name'], $result['default-type'], $typeNames);
+            }
+        }
 
         return $result;
     }
@@ -132,35 +156,8 @@ class PropertiesXmlParser
 
     private function loadBlock(\DOMXPath $xpath, \DOMNode $node, &$tags, $formKey)
     {
-        $result = $this->loadValues(
-            $xpath,
-            $node,
-            [
-                'name',
-                'default-type',
-                'minOccurs',
-                'maxOccurs',
-                'colspan',
-                'cssClass',
-                'disabledCondition',
-                'visibleCondition',
-            ]
-        );
-
-        $result['mandatory'] = $this->getValueFromXPath('@mandatory', $xpath, $node, false);
+        $result = $this->loadProperty($xpath, $node, $tags, $formKey);
         $result['type'] = 'block';
-        $result['tags'] = $this->loadTags($tags, $xpath, $node);
-        $result['params'] = $this->loadParams('x:params/x:param', $xpath, $node);
-        $result['meta'] = $this->loadMeta($xpath, $node);
-        $result['types'] = $this->loadTypes($tags, $xpath, $node, $formKey);
-
-        $typeNames = \array_map(function($type) {
-            return $type['name'];
-        }, $result['types']);
-
-        if (!\in_array($result['default-type'], $typeNames)) {
-            throw new InvalidBlockDefaultTypeException($result['name'], $result['default-type'], $typeNames);
-        }
 
         return $result;
     }
@@ -382,7 +379,6 @@ class PropertiesXmlParser
     {
         $blockProperty = new BlockMetadata();
         $blockProperty->setName($propertyName);
-        $blockProperty->defaultComponentName = $data['default-type'];
 
         if (isset($data['disabledCondition'])) {
             $blockProperty->setDisabledCondition($data['disabledCondition']);
@@ -402,30 +398,14 @@ class PropertiesXmlParser
 
         $this->mapProperty($blockProperty, $data);
 
-        foreach ($data['types'] as $name => $type) {
-            $component = new ComponentMetadata();
-            $component->setName($name);
-
-            if (isset($type['meta']['title'])) {
-                $component->setTitles($type['meta']['title']);
-            }
-            if (isset($data['meta']['info_text'])) {
-                $component->setDescriptions($data['meta']['info_text']);
-            }
-
-            foreach ($this->mapProperties($type['properties']) as $property) {
-                $component->addChild($property);
-            }
-
-            $blockProperty->addComponent($component);
-        }
-
         return $blockProperty;
     }
 
     private function mapProperty(PropertyMetadata $property, $data): void
     {
         $data = $this->normalizePropertyData($data);
+
+        $property->defaultComponentName = $data['default-type'];
         $property->setType($data['type']);
         $property->setLocalized($data['multilingual']);
         $property->setRequired($data['mandatory']);
@@ -446,6 +426,25 @@ class PropertiesXmlParser
         $property->setParameters($data['params']);
         $property->setOnInvalid(\array_key_exists('onInvalid', $data) ? $data['onInvalid'] : null);
         $this->mapMeta($property, $data['meta']);
+
+        $types = $data['types'];
+        foreach ($types as $name => $type) {
+            $component = new ComponentMetadata();
+            $component->setName($name);
+
+            if (isset($type['meta']['title'])) {
+                $component->setTitles($type['meta']['title']);
+            }
+            if (isset($data['meta']['info_text'])) {
+                $component->setDescriptions($data['meta']['info_text']);
+            }
+
+            foreach ($this->mapProperties($type['properties']) as $childProperty) {
+                $component->addChild($childProperty);
+            }
+
+            $property->addComponent($component);
+        }
     }
 
     private function normalizePropertyData($data): array

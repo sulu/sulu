@@ -168,4 +168,76 @@ interface PropertyInterface extends ArrayableInterface
      * @param StructureInterface $structure
      */
     public function setStructure($structure);
+
+    /**
+     * returns a list of properties managed by this block.
+     *
+     * @return PropertyType[]
+     */
+    public function getTypes();
+
+    /**
+     * adds a type.
+     *
+     * @param PropertyType $type
+     */
+    public function addType($type);
+
+    /**
+     * Returns type with given name.
+     *
+     * @param string $name of property
+     *
+     * @throws \InvalidArgumentException
+     *
+     * @return PropertyType
+     */
+    public function getType($name);
+
+    /**
+     * Returns true if the type with given name is known.
+     *
+     * @param string $name
+     *
+     * @return bool
+     */
+    public function hasType($name);
+
+    /**
+     * returns properties for given index.
+     *
+     * @param int $index
+     *
+     * @return PropertyType
+     */
+    public function getProperties($index);
+
+    /**
+     * Returns sizeof block.
+     *
+     * @return int
+     */
+    public function getLength();
+
+    /**
+     * initiate new child with given type name.
+     *
+     * @param int $index
+     * @param string $typeName
+     *
+     * @return PropertyType
+     */
+    public function initProperties($index, $typeName);
+
+    /**
+     * clears all initialized properties.
+     */
+    public function clearProperties();
+
+    /**
+     * return default type name.
+     *
+     * @return string
+     */
+    public function getDefaultTypeName();
 }

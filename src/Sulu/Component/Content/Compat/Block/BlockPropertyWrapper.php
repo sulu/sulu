@@ -283,4 +283,49 @@ class BlockPropertyWrapper implements PropertyInterface
     {
         $this->property->setStructure($structure);
     }
+
+    public function getTypes()
+    {
+        return $this->property->getTypes();
+    }
+
+    public function addType($type)
+    {
+        $this->property->addType($type);
+    }
+
+    public function getType($name)
+    {
+        return $this->property->getType($name);
+    }
+
+    public function hasType($name)
+    {
+        return $this->property->hasType($name);
+    }
+
+    public function getProperties($index)
+    {
+        return $this->property->getProperties($index);
+    }
+
+    public function getLength()
+    {
+        return $this->property->getLength();
+    }
+
+    public function initProperties($index, $typeName)
+    {
+        return $this->property->initProperties($index, $typeName);
+    }
+
+    public function clearProperties()
+    {
+        $this->property->clearProperties();
+    }
+
+    public function getDefaultTypeName()
+    {
+        return $this->property->getDefaultTypeName();
+    }
 }
