@@ -29,6 +29,7 @@ $buttonSmallHorizontalPadding: 10px;
         background-color: transparent;
         font-size: 12px;
         border: 0;
+        white-space: nowrap;
 
         /* Needed because we want to prevent the jump on font-weight changes */
         &::after {
