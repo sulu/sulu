@@ -20,6 +20,7 @@ jest.mock('../../stores/MemoryFormStore', () => jest.fn(function(data, schema) {
     });
     this.validate = jest.fn().mockReturnValue(true);
     this.destroy = jest.fn();
+    this.types = {};
 }));
 jest.mock('../../stores/ResourceFormStore', () => jest.fn());
 jest.mock('../../FormInspector', () => jest.fn(function() {

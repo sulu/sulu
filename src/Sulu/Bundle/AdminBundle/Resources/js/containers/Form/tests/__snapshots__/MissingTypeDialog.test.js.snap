@@ -1,0 +1,113 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Should render a Dialog 1`] = `
+Array [
+  <div
+    class="backdrop visible fixed"
+    role="button"
+  />,
+  <div
+    class="dialogContainer open"
+  >
+    <div
+      class="dialog"
+    >
+      <section
+        class="content"
+      >
+        <header>
+          sulu_admin.missing_type_dialog_title
+        </header>
+        <article
+          class="article left"
+        >
+          <p>
+            sulu_admin.missing_type_dialog_description
+          </p>
+          <div
+            class="grid grid"
+          >
+            <div
+              class="item gridItem colSpan colSpan-6 space-before-0 space-after-0"
+            >
+              <div
+                class="field"
+              >
+                <label
+                  class="label"
+                >
+                  sulu_admin.choose_template
+                </label>
+                <div
+                  class="select"
+                >
+                  <button
+                    class="displayValue default"
+                    type="button"
+                  >
+                    <div
+                      aria-label="sulu_admin.please_choose"
+                      class="croppedText"
+                      title="sulu_admin.please_choose"
+                    >
+                      <div
+                        aria-hidden="true"
+                        class="front"
+                      >
+                        sulu_admin.p
+                      </div>
+                      <div
+                        aria-hidden="true"
+                        class="back"
+                      >
+                        <span>
+                          lease_choose
+                        </span>
+                      </div>
+                      <div
+                        class="whole"
+                      >
+                        sulu_admin.please_choose
+                      </div>
+                    </div>
+                    <span
+                      aria-label="su-angle-down"
+                      class="su-angle-down toggle"
+                    />
+                  </button>
+                </div>
+                <label
+                  class="errorLabel"
+                />
+              </div>
+            </div>
+          </div>
+        </article>
+        <footer>
+          <button
+            class="button primary"
+            disabled=""
+            type="button"
+          >
+            <span
+              class="text"
+            >
+              sulu_admin.ok
+            </span>
+          </button>
+          <button
+            class="button secondary"
+            type="button"
+          >
+            <span
+              class="text"
+            >
+              sulu_admin.cancel
+            </span>
+          </button>
+        </footer>
+      </section>
+    </div>
+  </div>,
+]
+`;

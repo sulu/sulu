@@ -1825,6 +1825,107 @@ test('Should save form when submitted and redirect to editView', () => {
     });
 });
 
+test('Should restore previous view to backView after MissingTypeOverlay has been cancelled', () => {
+    const ResourceRequester = require('../../../services/ResourceRequester');
+    ResourceRequester.put.mockReturnValue(Promise.resolve({}));
+    const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const metadataStore = require('../../../containers/Form/stores/metadataStore');
+    const resourceStore = new ResourceStore('snippets', 8, {locale: observable.box()});
+
+    const schemaTypesPromise = Promise.resolve(null);
+    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
+
+    const schemaPromise = Promise.resolve({});
+    metadataStore.getSchema.mockReturnValue(schemaPromise);
+
+    const jsonSchemaPromise = Promise.resolve();
+    metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
+
+    const route = {
+        options: {
+            backView: 'sulu_snippet.snippet_list',
+            formKey: 'snippets',
+            locales: [],
+            toolbarActions: [],
+        },
+    };
+    const router = {
+        addUpdateRouteHook: jest.fn(),
+        bind: jest.fn(),
+        navigate: jest.fn(),
+        restore: jest.fn(),
+        route,
+        attributes: {
+            id: 8,
+        },
+    };
+    const form = mount(
+        <Form resourceStore={resourceStore} route={route} router={router} />
+    );
+
+    resourceStore.locale.set('en');
+    resourceStore.data = {value: 'Value'};
+    resourceStore.loading = false;
+    resourceStore.destroy = jest.fn();
+
+    return Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
+        form.find('Form').at(1).prop('onMissingTypeCancel')();
+        expect(resourceStore.destroy).not.toBeCalled();
+        expect(router.restore).toBeCalledWith('sulu_snippet.snippet_list', {locale: 'en'});
+    });
+});
+
+test('Should not restore previous view if no backView is given after MissingTypeOverlay has been cancelled', () => {
+    const ResourceRequester = require('../../../services/ResourceRequester');
+    ResourceRequester.put.mockReturnValue(Promise.resolve({}));
+    const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const metadataStore = require('../../../containers/Form/stores/metadataStore');
+    const resourceStore = new ResourceStore('snippets', 8, {locale: observable.box()});
+
+    const schemaTypesPromise = Promise.resolve(null);
+    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
+
+    const schemaPromise = Promise.resolve({});
+    metadataStore.getSchema.mockReturnValue(schemaPromise);
+
+    const jsonSchemaPromise = Promise.resolve();
+    metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
+
+    const route = {
+        options: {
+            formKey: 'snippets',
+            locales: [],
+            toolbarActions: [],
+        },
+    };
+    const router = {
+        addUpdateRouteHook: jest.fn(),
+        bind: jest.fn(),
+        navigate: jest.fn(),
+        restore: jest.fn(),
+        route,
+        attributes: {
+            id: 8,
+        },
+    };
+    const form = mount(
+        <Form resourceStore={resourceStore} route={route} router={router} />
+    );
+
+    resourceStore.locale.set('en');
+    resourceStore.data = {value: 'Value'};
+    resourceStore.loading = false;
+    resourceStore.destroy = jest.fn();
+
+    return Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
+        form.find('Form').at(1).prop('onMissingTypeCancel')();
+        expect(resourceStore.destroy).not.toBeCalled();
+        expect(router.restore).not.toBeCalledWith();
+    });
+});
+
 test('Should pass router, store and schema handler to FormContainer', () => {
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;

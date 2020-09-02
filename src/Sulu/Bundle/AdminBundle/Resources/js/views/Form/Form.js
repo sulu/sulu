@@ -395,12 +395,50 @@ class Form extends React.Component<Props> {
             }));
     };
 
+    navigateBack = () => {
+        const {router} = this.props;
+        const {
+            attributes,
+            route: {
+                options: {
+                    backView,
+                    routerAttributesToBackView,
+                },
+            },
+        } = router;
+
+        if (!backView) {
+            return;
+        }
+
+        const backViewParameters = {};
+
+        if (routerAttributesToBackView) {
+            Object.keys(toJS(routerAttributesToBackView)).forEach((key) => {
+                const formOptionKey = routerAttributesToBackView[key];
+                const attributeName = isNaN(key) ? key : routerAttributesToBackView[key];
+
+                backViewParameters[formOptionKey] = attributes[attributeName];
+            });
+        }
+
+        if (this.resourceStore.locale) {
+            backViewParameters.locale = this.resourceStore.locale.get();
+        }
+
+        router.restore(backView, backViewParameters);
+    };
+
     handleError = () => {
         this.errors.push(translate('sulu_admin.form_contains_invalid_values'));
     };
 
     @action clearErrors = () => {
         this.errors.splice(0, this.errors.length);
+    };
+
+    handleMissingTypeCancel = () => {
+        this.navigateBack();
     };
 
     @action handleDirtyWarningCancelClick = () => {
@@ -453,6 +491,7 @@ class Form extends React.Component<Props> {
                 {titleVisible && title && <h1>{title}</h1>}
                 <FormContainer
                     onError={this.handleError}
+                    onMissingTypeCancel={this.handleMissingTypeCancel}
                     onSubmit={this.handleSubmit}
                     onSuccess={this.handleSuccess}
                     ref={this.setFormRef}
@@ -488,11 +527,9 @@ class Form extends React.Component<Props> {
 export default withToolbar(Form, function() {
     const {router} = this.props;
     const {
-        attributes,
         route: {
             options: {
                 backView,
-                routerAttributesToBackView,
             },
         },
     } = router;
@@ -500,24 +537,7 @@ export default withToolbar(Form, function() {
 
     const backButton = backView
         ? {
-            onClick: () => {
-                const backViewParameters = {};
-
-                if (routerAttributesToBackView) {
-                    Object.keys(toJS(routerAttributesToBackView)).forEach((key) => {
-                        const formOptionKey = routerAttributesToBackView[key];
-                        const attributeName = isNaN(key) ? key : routerAttributesToBackView[key];
-
-                        backViewParameters[formOptionKey] = attributes[attributeName];
-                    });
-                }
-
-                if (resourceStore.locale) {
-                    backViewParameters.locale = resourceStore.locale.get();
-                }
-
-                router.restore(backView, backViewParameters);
-            },
+            onClick: this.navigateBack,
         }
         : undefined;
     const locale = this.locales

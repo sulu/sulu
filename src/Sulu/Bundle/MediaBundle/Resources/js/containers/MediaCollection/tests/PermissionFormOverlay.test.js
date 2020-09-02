@@ -20,6 +20,7 @@ jest.mock('sulu-admin-bundle/containers/Form/stores/ResourceFormStore', () => je
     this.data = {};
     this.schema = {};
     this.validate = jest.fn().mockReturnValue(true);
+    this.types = {};
 }));
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({

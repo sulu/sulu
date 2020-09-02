@@ -10,9 +10,11 @@ import Renderer from './Renderer';
 import type {FormStoreInterface} from './types';
 import FormInspector from './FormInspector';
 import GhostDialog from './GhostDialog';
+import MissingTypeDialog from './MissingTypeDialog';
 
 type Props = {|
     onError?: (errors: Object) => void,
+    onMissingTypeCancel?: () => void,
     onSubmit: (action: ?string) => ?Promise<Object>,
     onSuccess?: () => void,
     router?: Router,
@@ -114,6 +116,20 @@ class Form extends React.Component<Props> {
         this.hideGhostDialog();
     };
 
+    @action handleMissingTypeDialogConfirm = (type: string) => {
+        const {store} = this.props;
+
+        store.setType(type);
+    };
+
+    @action handleMissingTypeDialogCancel = () => {
+        const {onMissingTypeCancel} = this.props;
+
+        if (onMissingTypeCancel) {
+            onMissingTypeCancel();
+        }
+    };
+
     handleFieldFinish = (dataPath: string, schemaPath: string) => {
         log.debug(
             'Finished editing field with dataPath "' + dataPath + '" and schemaPath "' + schemaPath + '"',
@@ -137,18 +153,27 @@ class Form extends React.Component<Props> {
             return <PermissionHint />;
         }
 
-        return store.loading
-            ? <Loader />
-            : (
-                <Fragment>
-                    {store.id && availableLocales &&
-                        <GhostDialog
-                            locales={availableLocales}
-                            onCancel={this.handleGhostDialogCancel}
-                            onConfirm={this.handleGhostDialogConfirm}
-                            open={this.displayGhostDialog}
-                        />
-                    }
+        if (store.loading) {
+            return <Loader />;
+        }
+
+        return (
+            <Fragment>
+                {store.id && availableLocales &&
+                    <GhostDialog
+                        locales={availableLocales}
+                        onCancel={this.handleGhostDialogCancel}
+                        onConfirm={this.handleGhostDialogConfirm}
+                        open={this.displayGhostDialog}
+                    />
+                }
+                <MissingTypeDialog
+                    onCancel={this.handleMissingTypeDialogCancel}
+                    onConfirm={this.handleMissingTypeDialogConfirm}
+                    open={store.hasInvalidType}
+                    types={store.types}
+                />
+                {!store.hasInvalidType &&
                     <Renderer
                         data={store.data}
                         dataPath=""
@@ -163,8 +188,9 @@ class Form extends React.Component<Props> {
                         schemaPath=""
                         showAllErrors={this.showAllErrors}
                     />
-                </Fragment>
-            );
+                }
+            </Fragment>
+        );
     }
 }
 
