@@ -20,6 +20,24 @@ test('The component should render in body when open', () => {
     expect(view.find('Dialog > Portal').at(0).render()).toMatchSnapshot();
 });
 
+test('The component should render aligned to the left', () => {
+    const view = shallow(
+        <Dialog
+            align="left"
+            cancelText="Cancel"
+            confirmText="Confirm"
+            onCancel={jest.fn()}
+            onConfirm={jest.fn()}
+            open={true}
+            title="My dialog title"
+        >
+            <div>My dialog content</div>
+        </Dialog>
+    );
+
+    expect(view.find('.article').hasClass('left')).toEqual(true);
+});
+
 test('The component should render in body without cancel button', () => {
     const onConfirm = jest.fn();
     const view = mount(
