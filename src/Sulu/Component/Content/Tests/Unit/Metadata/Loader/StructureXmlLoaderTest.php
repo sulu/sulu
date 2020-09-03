@@ -16,7 +16,6 @@ use Prophecy\Argument;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Exception\InvalidBlockDefaultTypeException;
-use Sulu\Component\Content\Exception\ReservedPropertyNameException;
 use Sulu\Component\Content\Metadata\Loader\Exception\RequiredPropertyNameNotFoundException;
 use Sulu\Component\Content\Metadata\Loader\Exception\RequiredTagNotFoundException;
 use Sulu\Component\Content\Metadata\Loader\StructureXmlLoader;
@@ -292,22 +291,6 @@ class StructureXmlLoaderTest extends TestCase
         $properties = $result->getProperties();
 
         $this->assertCount(2, $properties);
-    }
-
-    public function testLoadFormWithBlockTypeProperty()
-    {
-        $this->expectException(ReservedPropertyNameException::class);
-        $this->expectExceptionMessageRegExp('"type"');
-
-        $this->load('template_with_block_type_property.xml');
-    }
-
-    public function testLoadFormWithBlockSettingsProperty()
-    {
-        $this->expectException(ReservedPropertyNameException::class);
-        $this->expectExceptionMessageRegExp('"settings"');
-
-        $this->load('template_with_block_settings_property.xml');
     }
 
     public function testLoadFormWithInvalidBlockDefaultType()

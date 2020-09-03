@@ -18,7 +18,6 @@ use Sulu\Bundle\AdminBundle\FormMetadata\FormXmlLoader;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\LocalizedFormMetadataCollection;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
-use Sulu\Component\Content\Exception\ReservedPropertyNameException;
 use Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser;
 use Sulu\Component\Content\Metadata\Parser\SchemaXmlParser;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -504,28 +503,6 @@ class FormXmlLoaderTest extends TestCase
         $this->assertEquals('name', $formMetadata->getItems()['name']->getName());
         $this->assertEquals(8, $formMetadata->getItems()['name']->getColSpan());
         $this->assertCount(1, $formMetadata->getItems()['name']->getItems());
-    }
-
-    public function testLoadFormWithBlockTypeProperty()
-    {
-        $this->expectException(ReservedPropertyNameException::class);
-        $this->expectExceptionMessageRegExp('"type"');
-        $this->expectExceptionMessageRegExp('"form_with_block_type_property"');
-
-        $this->loader->load(
-            $this->getFormDirectory() . '../invalid-forms/form_with_block_type_property.xml'
-        );
-    }
-
-    public function testLoadFormWithBlockSettingsProperty()
-    {
-        $this->expectException(ReservedPropertyNameException::class);
-        $this->expectExceptionMessageRegExp('"settings"');
-        $this->expectExceptionMessageRegExp('"form_with_block_settings_property"');
-
-        $this->loader->load(
-            $this->getFormDirectory() . '../invalid-forms/form_with_block_settings_property.xml'
-        );
     }
 
     public function testLoadFormInvalidRootTag()
