@@ -11,6 +11,8 @@
 
 namespace Sulu\Component\Webspace\Manager;
 
+use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
+use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Util\WildcardUrlUtil;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
@@ -68,6 +70,11 @@ class WebspaceManager implements WebspaceManagerInterface
      */
     private $defaultScheme;
 
+    /**
+     * @var StructureMetadataFactoryInterface
+     */
+    private $structureMetadataFactory;
+
     public function __construct(
         LoaderInterface $loader,
         ReplacerInterface $urlReplacer,
@@ -75,7 +82,8 @@ class WebspaceManager implements WebspaceManagerInterface
         array $options,
         string $environment,
         string $defaultHost,
-        string $defaultScheme
+        string $defaultScheme,
+        StructureMetadataFactoryInterface $structureMetadataFactory
     ) {
         $this->loader = $loader;
         $this->urlReplacer = $urlReplacer;
@@ -84,6 +92,7 @@ class WebspaceManager implements WebspaceManagerInterface
         $this->environment = $environment;
         $this->defaultHost = $defaultHost;
         $this->defaultScheme = $defaultScheme;
+        $this->structureMetadataFactory = $structureMetadataFactory;
     }
 
     public function findWebspaceByKey(?string $key): ?Webspace
@@ -356,10 +365,17 @@ class WebspaceManager implements WebspaceManagerInterface
             );
 
             if (!$cache->isFresh()) {
+                $availableTemplates = \array_map(
+                    function(StructureMetadata $structure) {
+                        return $structure->getName();
+                    },
+                    $this->structureMetadataFactory->getStructures('page')
+                );
                 $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
                     $this->loader,
                     $this->urlReplacer,
-                    $this->options['config_dir']
+                    $this->options['config_dir'],
+                    $availableTemplates
                 );
                 $webspaceCollection = $webspaceCollectionBuilder->build();
                 $dumper = new PhpWebspaceCollectionDumper($webspaceCollection);
