@@ -1,15 +1,13 @@
 // @flow
 import React from 'react';
 import {shallow, mount, render} from 'enzyme';
-import Router from 'sulu-admin-bundle/services/Router';
-import Route from 'sulu-admin-bundle/services/Router/Route';
+import {Route, Router} from 'sulu-admin-bundle/services';
 import {findWithHighOrderFunction} from 'sulu-admin-bundle/utils/TestHelper';
 
 jest.mock('sulu-admin-bundle/containers', () => ({
     SingleListOverlay: jest.fn(() => null),
     withToolbar: jest.fn((Component) => Component),
 }));
-jest.mock('sulu-admin-bundle/services/Router/Router', () => jest.fn());
 jest.mock('sulu-admin-bundle/utils', () => ({
     translate: jest.fn((key) =>key),
 }));
@@ -19,7 +17,7 @@ jest.mock('sulu-website-bundle/containers/CacheClearToolbarAction', () => jest.f
     this.getNode = jest.fn();
     this.getToolbarItemConfig = jest.fn();
 }));
-jest.mock('sulu-admin-bundle/services/Router', () => jest.fn(function() {
+jest.mock('sulu-admin-bundle/services/Router/Router', () => jest.fn(function() {
     this.navigate = jest.fn();
     this.attributes = {
         webspace: 'sulu',
