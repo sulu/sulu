@@ -45,7 +45,7 @@
             class="Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadataProvider"
         >
             <argument type="service" id="sulu_core.expression_language" />
-            <argument type="tagged" tag="sulu_admin.form_metadata_loader"></argument>
+            <argument type="tagged" tag="sulu_admin.form_metadata_loader"/>
             <tag name="sulu_admin.metadata_provider" type="form" />
         </service>
 
@@ -54,6 +54,7 @@
             class="Sulu\Bundle\AdminBundle\Metadata\FormMetadata\XmlFormMetadataLoader"
         >
             <argument type="service" id="sulu_admin.form_metadata.form_xml_loader"/>
+            <argument type="service" id="sulu_admin.field_metadata_validator.chain"/>
             <argument>%sulu_admin.forms.directories%</argument>
             <argument>%sulu.cache_dir%/forms</argument>
             <argument>%kernel.debug%</argument>
@@ -65,7 +66,7 @@
             id="sulu_admin.list_metadata_provider"
             class="Sulu\Bundle\AdminBundle\Metadata\ListMetadata\ListMetadataProvider"
         >
-            <argument type="tagged" tag="sulu_admin.list_metadata_loader"></argument>
+            <argument type="tagged" tag="sulu_admin.list_metadata_loader"/>
             <tag name="sulu_admin.metadata_provider" type="list" />
         </service>
 
@@ -99,6 +100,7 @@
             <argument type="service" id="sulu_page.structure.factory"/>
             <argument type="service" id="sulu_admin.form_metadata.form_metadata_mapper"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument type="service" id="sulu_admin.field_metadata_validator.chain"/>
             <argument>%sulu.content.structure.default_types%</argument>
             <argument>%sulu_core.locales%</argument>
             <argument>%sulu.cache_dir%/form-structures</argument>
@@ -180,6 +182,18 @@
             <argument>%kernel.project_dir%</argument>
             <argument>%sulu_core.locales%</argument>
             <tag name="console.command"/>
+        </service>
+
+        <service id="sulu_admin.field_metadata_validator.chain"
+                 class="Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Validation\ChainFieldMetadataValidator">
+            <argument type="tagged" tag="sulu_admin.field_metadata_validator"/>
+        </service>
+        <service id="Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Validation\FieldMetadataValidatorInterface"
+                 alias="sulu_admin.field_metadata_validator.chain"/>
+
+        <service id="sulu_admin.field_metadata_validator.block"
+                 class="Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Validation\BlockFieldMetadataValidator">
+            <tag name="sulu_admin.field_metadata_validator"/>
         </service>
     </services>
 </container>

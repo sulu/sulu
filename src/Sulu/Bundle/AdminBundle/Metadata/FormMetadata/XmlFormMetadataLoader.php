@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\AdminBundle\Metadata\FormMetadata;
 
 use Sulu\Bundle\AdminBundle\FormMetadata\FormXmlLoader;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Validation\FieldMetadataValidatorInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataInterface;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Resource\FileResource;
@@ -24,6 +25,11 @@ class XmlFormMetadataLoader implements FormMetadataLoaderInterface, CacheWarmerI
      * @var FormXmlLoader
      */
     private $formXmlLoader;
+
+    /**
+     * @var FieldMetadataValidatorInterface
+     */
+    private $fieldMetadataValidator;
 
     /**
      * @var string[]
@@ -42,11 +48,13 @@ class XmlFormMetadataLoader implements FormMetadataLoaderInterface, CacheWarmerI
 
     public function __construct(
         FormXmlLoader $formXmlLoader,
+        FieldMetadataValidatorInterface $fieldMetadataValidator,
         array $formDirectories,
         string $cacheDir,
         bool $debug
     ) {
         $this->formXmlLoader = $formXmlLoader;
+        $this->fieldMetadataValidator = $fieldMetadataValidator;
         $this->formDirectories = $formDirectories;
         $this->cacheDir = $cacheDir;
         $this->debug = $debug;
@@ -87,7 +95,13 @@ class XmlFormMetadataLoader implements FormMetadataLoaderInterface, CacheWarmerI
         }
 
         foreach ($formsMetadataCollection as $key => $formMetadataCollection) {
+            /**
+             * @var string $locale
+             * @var FormMetadata $formMetadata
+             */
             foreach ($formMetadataCollection->getItems() as $locale => $formMetadata) {
+                $this->validateFormMetadata($formMetadata);
+
                 $configCache = $this->getConfigCache($key, $locale);
                 $configCache->write(
                     \serialize($formMetadata),
@@ -95,6 +109,19 @@ class XmlFormMetadataLoader implements FormMetadataLoaderInterface, CacheWarmerI
                         return new FileResource($resource);
                     }, $formsMetadataResources[$key])
                 );
+            }
+        }
+    }
+
+    private function validateFormMetadata(FormMetadata $formMetadata): void
+    {
+        foreach ($formMetadata->getItems() as $item) {
+            if ($item instanceof FieldMetadata) {
+                foreach ($item->getTypes() as $type) {
+                    $this->validateFormMetadata($type);
+                }
+
+                $this->fieldMetadataValidator->validate($item);
             }
         }
     }
