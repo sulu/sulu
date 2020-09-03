@@ -864,6 +864,7 @@ test('SingleListOverlay should disappear when onRequestItemCopy callback is call
 
 test('ListStore should copy item when onRequestItemCopy callback is called and overlay is confirmed', () => {
     const copyPromise = Promise.resolve({id: 9});
+    const copyFinishedSpy = jest.fn();
 
     listAdapterRegistry.get.mockReturnValue(TableAdapter);
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
@@ -874,7 +875,7 @@ test('ListStore should copy item when onRequestItemCopy callback is called and o
         {id: 2},
         {id: 3},
     ];
-    const list = mount(<List adapters={['table']} store={listStore} />);
+    const list = mount(<List adapters={['table']} onCopyFinished={copyFinishedSpy} store={listStore} />);
 
     const requestCopyPromise = list.find('TableAdapter').prop('onRequestItemCopy')(5);
     list.update();
@@ -883,7 +884,7 @@ test('ListStore should copy item when onRequestItemCopy callback is called and o
 
     list.find(SingleListOverlay).at(1).prop('onConfirm')({id: 8});
     return requestCopyPromise.then(() => {
-        expect(listStore.copy).toBeCalledWith(5, 8);
+        expect(listStore.copy).toBeCalledWith(5, 8, copyFinishedSpy);
 
         return copyPromise.then(() => {
             list.update();

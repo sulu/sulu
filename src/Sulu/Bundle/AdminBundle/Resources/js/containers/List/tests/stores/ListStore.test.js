@@ -2052,7 +2052,9 @@ test('Should copy the item with the given ID to the new given parent and reload 
         const postWithIdPromise = Promise.resolve({id: 9});
         ResourceRequester.post.mockReturnValue(postWithIdPromise);
 
-        listStore.copy(3, 8);
+        const callbackSpy = jest.fn();
+
+        listStore.copy(3, 8, callbackSpy);
 
         expect(ResourceRequester.post).toBeCalledWith(
             'snippets',
@@ -2060,7 +2062,10 @@ test('Should copy the item with the given ID to the new given parent and reload 
             {action: 'copy', destination: 8, id: 3, locale: 'de', webspace: 'sulu'}
         );
 
+        expect(callbackSpy).not.toBeCalled();
+
         return postWithIdPromise.then(() => {
+            expect(callbackSpy).toBeCalledWith({id: 9});
             expect(structureStrategy.clear).toBeCalledWith();
             expect(loadingStrategy.load).toHaveBeenLastCalledWith(
                 'snippets',
