@@ -14,6 +14,8 @@ namespace Sulu\Component\Content\Tests\Unit\Compat\Structure;
 use PHPUnit\Framework\TestCase;
 use Sulu\Component\Content\Compat\Block\BlockProperty;
 use Sulu\Component\Content\Compat\Block\BlockPropertyInterface;
+use Sulu\Component\Content\Compat\Property;
+use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyInterface as LegacyPropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Compat\Section\SectionPropertyInterface;
@@ -264,7 +266,7 @@ class LegacyPropertyFactoryTest extends TestCase
         /** @var Property $property */
         $property = $this->factory->createProperty($this->property2->reveal());
 
-        $this->assertInstanceOf(BlockPropertyInterface::class, $property);
+        $this->assertInstanceOf(PropertyInterface::class, $property);
         $this->assertCount(1, $property->getTypes());
         $type = $property->getType('hai');
         $this->assertNotNull($type);

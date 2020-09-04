@@ -9,7 +9,6 @@ $labelColor: $scorpion;
     border: 1px solid $cardBorderColor;
     border-radius: 3px;
     width: 100%;
-    margin-top: 3px;
     overflow: hidden;
 }
 
@@ -39,6 +38,7 @@ $labelColor: $scorpion;
 .settings {
     display: flex;
     align-items: flex-start;
+    padding-bottom: 30px;
 
     .form {
         flex: 1 1 auto;
