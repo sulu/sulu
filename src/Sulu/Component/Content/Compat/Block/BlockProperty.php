@@ -16,7 +16,7 @@ use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Document\Structure\PropertyValue;
 
 /**
- * interface definition for block property.
+ * Representation of a block node in template xml.
  *
  * @method BlockPropertyType[] getTypes()
  * @method addType(BlockPropertyType $type)

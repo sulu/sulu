@@ -60,7 +60,7 @@ class BlockContentTypeTest extends TestCase
     private $contentTypeValueMap;
 
     /**
-     * @var RequestAnalyzerInteface
+     * @var RequestAnalyzerInterface
      */
     private $requestAnalyzer;
 

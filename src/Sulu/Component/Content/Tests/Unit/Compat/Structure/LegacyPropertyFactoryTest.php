@@ -64,6 +64,11 @@ class LegacyPropertyFactoryTest extends TestCase
      */
     private $component;
 
+    /**
+     * @var ComponentMetadata
+     */
+    private $component2;
+
     public function setUp(): void
     {
         $this->namespaceRegistry = $this->prophesize(NamespaceRegistry::class);
@@ -76,6 +81,7 @@ class LegacyPropertyFactoryTest extends TestCase
         $this->section = $this->prophesize(SectionMetadata::class);
         $this->block = $this->prophesize(BlockMetadata::class);
         $this->component = $this->prophesize(ComponentMetadata::class);
+        $this->component2 = $this->prophesize(ComponentMetadata::class);
     }
 
     /**
@@ -226,6 +232,45 @@ class LegacyPropertyFactoryTest extends TestCase
         $this->assertCount(1, $blockType->getChildProperties());
         $this->assertEquals('Testtitel', $blockType->getMetadata()->get('title', 'de'));
         $this->assertEquals('Test title', $blockType->getMetadata()->get('title', 'en'));
+    }
+
+    /**
+     * It should create a block property.
+     *
+     * @depends testCreateProperty
+     */
+    public function testCreatePropertyWithTypes($child)
+    {
+        $this->setUpProperty($this->property2);
+
+        $this->component2->getName()->willReturn('hai');
+        $this->component2->getChildren()->willReturn([
+            $child->reveal(),
+        ]);
+        $this->component2->getTitles()->willReturn([
+            'de' => 'Testtitel',
+            'en' => 'Test title',
+        ]);
+        $this->component2->getDescriptions()->willReturn([
+            'de' => 'Test Beschreibung',
+            'en' => 'Test description',
+        ]);
+
+        $this->property2->getComponents()->willReturn([
+            $this->component2->reveal(),
+        ]);
+        $this->property2->getDefaultComponentName()->willReturn('foobar');
+
+        /** @var Property $property */
+        $property = $this->factory->createProperty($this->property2->reveal());
+
+        $this->assertInstanceOf(BlockPropertyInterface::class, $property);
+        $this->assertCount(1, $property->getTypes());
+        $type = $property->getType('hai');
+        $this->assertNotNull($type);
+        $this->assertCount(1, $type->getChildProperties());
+        $this->assertEquals('Testtitel', $type->getMetadata()->get('title', 'de'));
+        $this->assertEquals('Test title', $type->getMetadata()->get('title', 'en'));
     }
 
     /**

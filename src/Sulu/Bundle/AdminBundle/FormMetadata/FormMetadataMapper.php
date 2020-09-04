@@ -130,17 +130,17 @@ class FormMetadataMapper
         }
 
         foreach ($property->getComponents() as $component) {
-            $blockType = new FormMetadata();
-            $blockType->setName($component->getName());
-            $blockType->setTitle($component->getTitle($locale) ?? \ucfirst($component->getName()));
+            $type = new FormMetadata();
+            $type->setName($component->getName());
+            $type->setTitle($component->getTitle($locale) ?? \ucfirst($component->getName()));
 
-            $blockTypeChildren = $this->mapChildren($component->getChildren(), $locale);
+            $typeChildren = $this->mapChildren($component->getChildren(), $locale);
 
-            foreach ($blockTypeChildren as $blockTypeChild) {
-                $blockType->addItem($blockTypeChild);
+            foreach ($typeChildren as $typeChild) {
+                $type->addItem($typeChild);
             }
 
-            $field->addType($blockType);
+            $field->addType($type);
         }
 
         return $field;
