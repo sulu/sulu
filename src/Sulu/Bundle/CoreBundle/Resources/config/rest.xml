@@ -78,6 +78,13 @@
         </service>
 
         <service
+            id="sulu_core.date_filter_type"
+            class="Sulu\Component\Rest\ListBuilder\Filter\DateFilterType"
+        >
+            <tag name="sulu_core.list_builder_filter_type" />
+        </service>
+
+        <service
             id="sulu_core.date_time_filter_type"
             class="Sulu\Component\Rest\ListBuilder\Filter\DateTimeFilterType"
         >

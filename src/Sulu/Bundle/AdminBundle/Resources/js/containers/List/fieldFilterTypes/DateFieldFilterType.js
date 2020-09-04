@@ -11,10 +11,10 @@ function formatDate(date: ?Date) {
         return '';
     }
 
-    return date.toLocaleString(undefined, {year: 'numeric', month: '2-digit', day: '2-digit'});
+    return date.toLocaleDateString(undefined, {year: 'numeric', month: '2-digit', day: '2-digit'});
 }
 
-class DateTimeFieldFilterType extends AbstractFieldFilterType<?{from?: Date, to?: Date}> {
+class DateFieldFilterType extends AbstractFieldFilterType<?{from?: Date, to?: Date}> {
     handleChange = (field: string, fieldValue: ?Date) => {
         const {onChange, value} = this;
 
@@ -80,4 +80,4 @@ class DateTimeFieldFilterType extends AbstractFieldFilterType<?{from?: Date, to?
     }
 }
 
-export default DateTimeFieldFilterType;
+export default DateFieldFilterType;
