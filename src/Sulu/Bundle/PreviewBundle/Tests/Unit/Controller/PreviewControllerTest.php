@@ -204,7 +204,7 @@ class PreviewControllerTest extends TestCase
         $request->get('segment', null)->willReturn('s');
 
         $this->preview->exists('test-token')->willReturn(true)->shouldBeCalled();
-        $this->preview->updateContext('test-token', 'sulu_io', ['template' => 'default'], 1)
+        $this->preview->updateContext('test-token', 'sulu_io', ['template' => 'default'], 1, 's')
             ->shouldBeCalled()
             ->willReturn('<html><body><h1>SULU is awesome</h1></body></html>');
 
@@ -228,7 +228,7 @@ class PreviewControllerTest extends TestCase
         $request->get('segment', null)->willReturn('w');
 
         $this->preview->exists('test-token')->willReturn(true)->shouldBeCalled();
-        $this->preview->updateContext('test-token', 'sulu_io', ['template' => 'default'], 1)
+        $this->preview->updateContext('test-token', 'sulu_io', ['template' => 'default'], 1, 'w')
             ->shouldBeCalled()
             ->willReturn('<html><body><a href="/test">SULU is awesome</a></body></html>');
 
