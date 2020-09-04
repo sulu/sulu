@@ -117,7 +117,7 @@ class PreviewController
             $token = $this->preview->start($provider, $id, $locale, $this->getUserId());
         }
 
-        $content = $this->preview->updateContext($token, $webspace, $context, $targetGroup);
+        $content = $this->preview->updateContext($token, $webspace, $context, $targetGroup, $segment);
 
         return new JsonResponse(['content' => $content]);
     }
