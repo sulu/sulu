@@ -187,51 +187,37 @@ class ImageMapContentType extends ComplexContentType implements ContentTypeExpor
         $hotspotProperty = new Property('hotspot', '', 'text_line');
         $lengthProperty = new Property('length', '', 'text_line');
 
-        //save length
-        $lengthProperty->setValue($len);
-        $contentType = $this->contentTypeManager->get($lengthProperty->getContentTypeName());
-        $contentType->write(
+        //save imageId
+        $this->writeProperty(
+            $imageIdProperty,
+            $property,
+            $imageId,
+            null,
             $node,
-            new BlockPropertyWrapper($lengthProperty, $property),
             $userId,
             $webspaceKey,
             $languageCode,
-            $segmentKey
+            $segmentKey,
+            $isImport
         );
 
-        //save imageId
-        $imageIdProperty->setValue($imageId);
-        $contentType = $this->contentTypeManager->get($imageIdProperty->getContentTypeName());
-        $contentType->write(
+        //save length
+        $this->writeProperty(
+            $lengthProperty,
+            $property,
+            $len,
+            null,
             $node,
-            new BlockPropertyWrapper($imageIdProperty, $property),
             $userId,
             $webspaceKey,
             $languageCode,
-            $segmentKey
+            $segmentKey,
+            $isImport
         );
 
         for ($i = 0; $i < $len; ++$i) {
             $hotspot = $hotspots[$i];
             $propertyType = $property->initProperties($i, $hotspot['type']);
-
-            /** @var PropertyInterface $subProperty */
-            foreach ($propertyType->getChildProperties() as $subProperty) {
-                if (!isset($hotspot[$subProperty->getName()])) {
-                    continue;
-                }
-
-                $subName = $subProperty->getName();
-                $subValue = $hotspot[$subName];
-
-                if ($subValue instanceof PropertyValue) {
-                    $subValueProperty = new PropertyValue($subName, $subValue);
-                    $subProperty->setPropertyValue($subValueProperty);
-                    $hotspot[$subName] = $subValueProperty;
-                } else {
-                    $subProperty->setValue($subValue);
-                }
-            }
 
             $this->writeProperty(
                 $typeProperty,
@@ -258,6 +244,24 @@ class ImageMapContentType extends ComplexContentType implements ContentTypeExpor
                 $segmentKey,
                 $isImport
             );
+
+            /** @var PropertyInterface $subProperty */
+            foreach ($propertyType->getChildProperties() as $subProperty) {
+                if (!isset($hotspot[$subProperty->getName()])) {
+                    continue;
+                }
+
+                $subName = $subProperty->getName();
+                $subValue = $hotspot[$subName];
+
+                if ($subValue instanceof PropertyValue) {
+                    $subValueProperty = new PropertyValue($subName, $subValue);
+                    $subProperty->setPropertyValue($subValueProperty);
+                    $hotspot[$subName] = $subValueProperty;
+                } else {
+                    $subProperty->setValue($subValue);
+                }
+            }
 
             foreach ($propertyType->getChildProperties() as $subProperty) {
                 $this->writeProperty(
