@@ -11,10 +11,7 @@ function formatDate(date: ?Date) {
         return '';
     }
 
-    return date.toLocaleString(
-        undefined,
-        {year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit'}
-    );
+    return date.toLocaleString(undefined, {year: 'numeric', month: '2-digit', day: '2-digit'});
 }
 
 class DateTimeFieldFilterType extends AbstractFieldFilterType<?{from?: Date, to?: Date}> {
@@ -48,14 +45,12 @@ class DateTimeFieldFilterType extends AbstractFieldFilterType<?{from?: Date, to?
                     className={dateTimeFieldFilterTypeStyles.date}
                     inputRef={this.setFromInputRef}
                     onChange={this.handleFromChange}
-                    options={{dateFormat: true, timeFormat: true}}
                     value={value ? value.from : undefined}
                 />
                 <label className={dateTimeFieldFilterTypeStyles.label}>{translate('sulu_admin.until')}</label>
                 <DatePicker
                     className={dateTimeFieldFilterTypeStyles.date}
                     onChange={this.handleToChange}
-                    options={{dateFormat: true, timeFormat: true}}
                     value={value ? value.to : undefined}
                 />
             </Fragment>

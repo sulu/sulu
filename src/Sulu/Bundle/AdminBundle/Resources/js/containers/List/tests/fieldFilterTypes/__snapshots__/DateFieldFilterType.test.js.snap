@@ -25,9 +25,9 @@ exports[`Render with from and to value 1`] = `
           />
         </div>
         <input
-          placeholder="MM/DD/YYYY h:mm A"
+          placeholder="MM/DD/YYYY"
           type="text"
-          value="01/02/2020 12:00 PM"
+          value="01/02/2020"
         />
       </label>
     </div>
@@ -55,9 +55,9 @@ exports[`Render with from and to value 1`] = `
           />
         </div>
         <input
-          placeholder="MM/DD/YYYY h:mm A"
+          placeholder="MM/DD/YYYY"
           type="text"
-          value="01/09/2020 1:00 PM"
+          value="01/09/2020"
         />
       </label>
     </div>
@@ -90,9 +90,9 @@ exports[`Render with from and to value 2`] = `
           />
         </div>
         <input
-          placeholder="MM/DD/YYYY h:mm A"
+          placeholder="MM/DD/YYYY"
           type="text"
-          value="02/01/2018 12:00 AM"
+          value="02/01/2018"
         />
       </label>
     </div>
@@ -120,9 +120,9 @@ exports[`Render with from and to value 2`] = `
           />
         </div>
         <input
-          placeholder="MM/DD/YYYY h:mm A"
+          placeholder="MM/DD/YYYY"
           type="text"
-          value="05/03/2019 12:00 AM"
+          value="05/03/2019"
         />
       </label>
     </div>
@@ -155,7 +155,7 @@ exports[`Render with value of undefined 1`] = `
           />
         </div>
         <input
-          placeholder="MM/DD/YYYY h:mm A"
+          placeholder="MM/DD/YYYY"
           type="text"
           value=""
         />
@@ -185,7 +185,7 @@ exports[`Render with value of undefined 1`] = `
           />
         </div>
         <input
-          placeholder="MM/DD/YYYY h:mm A"
+          placeholder="MM/DD/YYYY"
           type="text"
           value=""
         />
@@ -220,9 +220,9 @@ exports[`Render with value set by setValue 1`] = `
           />
         </div>
         <input
-          placeholder="MM/DD/YYYY h:mm A"
+          placeholder="MM/DD/YYYY"
           type="text"
-          value="06/03/2017 12:00 PM"
+          value="06/03/2017"
         />
       </label>
     </div>
@@ -250,9 +250,9 @@ exports[`Render with value set by setValue 1`] = `
           />
         </div>
         <input
-          placeholder="MM/DD/YYYY h:mm A"
+          placeholder="MM/DD/YYYY"
           type="text"
-          value="03/06/2018 12:00 PM"
+          value="03/06/2018"
         />
       </label>
     </div>

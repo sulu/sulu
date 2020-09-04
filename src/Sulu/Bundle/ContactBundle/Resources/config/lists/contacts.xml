@@ -221,7 +221,7 @@
             <field-name>birthday</field-name>
             <entity-name>%sulu.model.contact.class%</entity-name>
 
-            <filter type="datetime" />
+            <filter type="date" />
         </property>
 
         <property name="title" translation="sulu_contact.title">
