@@ -130,3 +130,21 @@ test('The component should not round if told by the properties', () => {
     expect(view.find('ModifiableCircle').prop('left')).toBeGreaterThan(166);
     expect(view.find('ModifiableCircle').prop('radius')).toBeGreaterThan(166);
 });
+
+test('The component should work with percentage values if told by the properties', () => {
+    const changeSpy = jest.fn();
+
+    mount(
+        <CircleSelection
+            containerHeight={1000}
+            containerWidth={2000}
+            onChange={changeSpy}
+            percentageValues={true}
+            value={undefined}
+        >
+            <p>Lorem ipsum</p>
+        </CircleSelection>
+    );
+
+    expect(changeSpy).toBeCalledWith({top: 0.5, left: 0.5, radius: 0.25});
+});

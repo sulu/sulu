@@ -27,7 +27,7 @@ class CircleSelection extends React.Component<Props & {
     static defaultProps = {
         disabled: false,
         filled: false,
-        percentageValues: true,
+        percentageValues: false,
         resizable: true,
         round: true,
     };

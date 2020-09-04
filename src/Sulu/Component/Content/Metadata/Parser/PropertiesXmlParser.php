@@ -114,7 +114,7 @@ class PropertiesXmlParser
         }, $result['types']);
 
         if (!empty($typeNames)) {
-            if (!$result['default-type'] && null !== ($key = array_key_first($typeNames))) {
+            if (!$result['default-type'] && null !== ($key = \array_key_first($typeNames))) {
                 $result['default-type'] = $typeNames[$key];
             }
 

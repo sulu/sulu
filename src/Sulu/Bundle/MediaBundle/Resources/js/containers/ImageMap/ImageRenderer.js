@@ -98,7 +98,7 @@ class ImageRenderer extends React.Component<Props> {
         const {disabled, selectedIndex} = this.props;
 
         const entries = Object.entries(hotspot.hotspot).filter(([key]) => key !== 'type');
-        const value = entries.length !== 0 ? Object.fromEntries(entries) : undefined;
+        const value: Object | typeof undefined = entries.length !== 0 ? Object.fromEntries(entries) : undefined;
 
         return {
             containerHeight: this.containerSize.height,

@@ -173,4 +173,16 @@ class BlockProperty extends Property implements BlockPropertyInterface
 
         return parent::getIsMultiple();
     }
+
+    /**
+     * returns child properties of given Type.
+     *
+     * @param string $typeName
+     *
+     * @return PropertyInterface[]
+     */
+    public function getChildProperties($typeName)
+    {
+        return $this->getTypeChildProperties($typeName);
+    }
 }

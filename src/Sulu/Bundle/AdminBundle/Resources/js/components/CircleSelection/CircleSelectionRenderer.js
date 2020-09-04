@@ -25,36 +25,46 @@ export default class CircleSelectionRenderer extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
         filled: false,
-        percentageValues: true,
+        percentageValues: false,
         resizable: true,
         round: true,
     };
 
     handleChange = (value: ?SelectionData) => {
-        const {onChange, containerWidth, containerHeight} = this.props;
+        const {onChange, containerWidth, containerHeight, percentageValues} = this.props;
 
-        if (!value) {
-            onChange(undefined);
+        if (!percentageValues || !value) {
+            onChange(value);
+
+            return;
         }
 
+        const {left, top, radius = 0} = value;
+
         onChange({
-            left: value.left / containerWidth,
-            top: value.top / containerHeight,
-            radius: value.radius / containerWidth,
+            left: left / containerWidth,
+            top: top / containerHeight,
+            radius: radius / containerWidth,
         });
     };
 
     get value() {
-        const {value, containerWidth, containerHeight} = this.props;
+        const {value, containerWidth, containerHeight, percentageValues} = this.props;
 
         if (!value) {
             return this.getMaximumSelection();
         }
 
+        if (!percentageValues) {
+            return value;
+        }
+
+        const {left, top, radius = 0} = value;
+
         return {
-            left: value.left * containerWidth,
-            top: value.top * containerHeight,
-            radius: value.radius * containerWidth,
+            left: left * containerWidth,
+            top: top * containerHeight,
+            radius: radius * containerWidth,
         };
     }
 

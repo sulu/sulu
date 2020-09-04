@@ -82,7 +82,7 @@ class LegacyPropertyFactory
         if (!$property instanceof PropertyMetadata) {
             throw new \RuntimeException(\sprintf(
                 'Property needs to be of type [%s].',
-                implode(', ', [
+                \implode(', ', [
                     PropertyMetadata::class,
                     BlockMetadata::class,
                     SectionMetadata::class,

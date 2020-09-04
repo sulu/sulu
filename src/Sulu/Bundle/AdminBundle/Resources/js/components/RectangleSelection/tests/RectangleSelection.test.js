@@ -201,3 +201,21 @@ test('The component should not round if told by the properties', () => {
     expect(view.find('ModifiableRectangle').prop('height')).toBeGreaterThan(666);
     expect(view.find('ModifiableRectangle').prop('height')).toBeLessThan(1667);
 });
+
+test('The component should work with percentage values if told by the properties', () => {
+    const changeSpy = jest.fn();
+
+    mount(
+        <RectangleSelection
+            containerHeight={1000}
+            containerWidth={2000}
+            onChange={changeSpy}
+            percentageValues={true}
+            value={undefined}
+        >
+            <p>Lorem ipsum</p>
+        </RectangleSelection>
+    );
+
+    expect(changeSpy).toBeCalledWith({top: 0, left: 0, width: 1, height: 1});
+});

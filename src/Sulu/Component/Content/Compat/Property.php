@@ -540,7 +540,7 @@ class Property implements PropertyInterface, \JsonSerializable
      *
      * @return PropertyInterface[]
      */
-    public function getChildProperties($typeName)
+    public function getTypeChildProperties($typeName)
     {
         return $this->getType($typeName)->getChildProperties();
     }

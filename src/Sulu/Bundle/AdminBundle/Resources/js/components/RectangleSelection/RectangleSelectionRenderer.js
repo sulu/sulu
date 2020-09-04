@@ -29,37 +29,47 @@ export default class RectangleSelectionRenderer extends React.Component<Props> {
         disabled: false,
         forceRatio: true,
         minSizeNotification: true,
-        percentageValues: true,
+        percentageValues: false,
         round: true,
     };
 
     handleChange = (value: ?SelectionData) => {
-        const {onChange, containerWidth, containerHeight} = this.props;
+        const {onChange, containerWidth, containerHeight, percentageValues} = this.props;
 
-        if (!value) {
-            onChange(undefined);
+        if (!percentageValues || !value) {
+            onChange(value);
+
+            return;
         }
 
+        const {left, top, width, height} = value;
+
         onChange({
-            left: value.left / containerWidth,
-            top: value.top / containerHeight,
-            width: value.width / containerWidth,
-            height: value.height / containerHeight,
+            left: left / containerWidth,
+            top: top / containerHeight,
+            width: width / containerWidth,
+            height: height / containerHeight,
         });
     };
 
     get value() {
-        const {value, containerWidth, containerHeight} = this.props;
+        const {value, containerWidth, containerHeight, percentageValues} = this.props;
 
         if (!value) {
             return this.getMaximumSelection();
         }
 
+        if (!percentageValues) {
+            return value;
+        }
+
+        const {left, top, width, height} = value;
+
         return {
-            left: value.left * containerWidth,
-            top: value.top * containerHeight,
-            width: value.width * containerWidth,
-            height: value.height * containerHeight,
+            left: left * containerWidth,
+            top: top * containerHeight,
+            width: width * containerWidth,
+            height: height * containerHeight,
         };
     }
 
@@ -80,7 +90,15 @@ export default class RectangleSelectionRenderer extends React.Component<Props> {
     };
 
     static createNormalizers(props: Props): Array<Normalizer> {
-        const {containerWidth, containerHeight, minWidth, minHeight, forceRatio, percentageValues, round} = props;
+        const {
+            containerWidth,
+            containerHeight,
+            minWidth = 0,
+            minHeight = 0,
+            forceRatio,
+            percentageValues,
+            round,
+        } = props;
 
         if (!containerWidth || !containerHeight) {
             return [];

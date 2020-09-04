@@ -203,11 +203,14 @@ class ImageMap extends React.Component<Props> {
                                 selectedIndex={this.selectedIndex}
                                 value={value.hotspots}
                             >
-                                {this.currentHotspot && renderHotspotForm(
-                                    this.currentHotspot,
-                                    this.currentHotspot.type,
-                                    this.selectedIndex
-                                )}
+                                {this.currentHotspot
+                                    ? renderHotspotForm(
+                                        this.currentHotspot,
+                                        this.currentHotspot.type,
+                                        this.selectedIndex
+                                    )
+                                    : null
+                                }
                             </FormRenderer>
                         </div>
                     </div>

@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import type {Element} from 'react';
+import type {Node} from 'react';
 import {translate} from 'sulu-admin-bundle/utils/Translator';
 import Form from 'sulu-admin-bundle/components/Form';
 import Tabs from 'sulu-admin-bundle/components/Tabs';
@@ -11,7 +11,7 @@ import type {Hotspot} from './types';
 import formRendererStyles from './formRenderer.scss';
 
 type Props = {
-    children: Element<*>,
+    children: ?Node,
     disabled: boolean,
     formTypes: {[string]: string},
     onHotspotAdd: () => void,

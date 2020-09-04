@@ -120,6 +120,8 @@ class LegacyPropertyFactoryTest extends TestCase
         $this->property1->getDescriptions()->willReturn($description);
         $this->property1->getPlaceholders()->willReturn($placeholder);
         $this->property1->getTags()->willReturn([]);
+        $this->property1->getComponents()->willReturn([]);
+        $this->property1->getDefaultComponentName()->willReturn(null);
 
         $legacyProperty = $this->factory->createProperty($this->property1->reveal());
 
@@ -226,6 +228,9 @@ class LegacyPropertyFactoryTest extends TestCase
         $this->assertEquals('Test title', $blockType->getMetadata()->get('title', 'en'));
     }
 
+    /**
+     * @param PropertyMetadata $property
+     */
     private function setUpProperty($property)
     {
         $name = 'name';
@@ -268,5 +273,7 @@ class LegacyPropertyFactoryTest extends TestCase
         $property->getChildren()->willReturn([
             $this->component->reveal(),
         ]);
+        $property->getDefaultComponentName()->willReturn(null);
+        $property->getComponents()->willReturn([]);
     }
 }

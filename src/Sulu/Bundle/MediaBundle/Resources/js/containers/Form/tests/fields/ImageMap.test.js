@@ -39,6 +39,43 @@ jest.mock('sulu-admin-bundle/stores/userStore', () => ({
 
 jest.mock('../../../SingleMediaSelectionOverlay', () => jest.fn(() => null));
 
+const types = {
+    default: {
+        title: 'Default',
+        form: {
+            text1: {
+                label: 'Text 1',
+                tags: [
+                    {name: 'sulu.block_preview'},
+                ],
+                type: 'text_line',
+                visible: true,
+            },
+            text2: {
+                label: 'Text 2',
+                tags: [
+                    {name: 'sulu.block_preview'},
+                ],
+                type: 'text_line',
+                visible: true,
+            },
+            something: {
+                label: 'Something',
+                tags: [
+                    {name: 'sulu.block_preview'},
+                ],
+                type: 'text_area',
+                visible: true,
+            },
+            nothing: {
+                label: 'Nothing',
+                type: 'text_line',
+                visible: true,
+            },
+        },
+    },
+};
+
 test('Pass correct props to SingleMediaSelection component', () => {
     const formInspector = new FormInspector(
         new ResourceFormStore(
@@ -50,9 +87,11 @@ test('Pass correct props to SingleMediaSelection component', () => {
     const imageMap = shallow(
         <ImageMap
             {...fieldTypeDefaultProps}
+            defaultType="default"
             disabled={true}
             error={{keyword: 'mandatory', parameters: {}}}
             formInspector={formInspector}
+            types={types}
             value={{imageId: 33, hotspots: []}}
         />
     );
@@ -60,7 +99,7 @@ test('Pass correct props to SingleMediaSelection component', () => {
     expect(imageMap.find(ImageMapContainer).props().disabled).toEqual(true);
     expect(imageMap.find(ImageMapContainer).props().valid).toEqual(false);
     expect(imageMap.find(ImageMapContainer).props().locale.get()).toEqual('en');
-    expect(imageMap.find(ImageMapContainer).props().formTypes).toEqual(['default']);
+    expect(imageMap.find(ImageMapContainer).props().formTypes).toEqual({'default': 'Default'});
     expect(imageMap.find(ImageMapContainer).props().value).toEqual({imageId: 33, hotspots: []});
 });
 
@@ -75,7 +114,9 @@ test('Pass correct default value to ImageMapContainer', () => {
     const imageMap = shallow(
         <ImageMap
             {...fieldTypeDefaultProps}
+            defaultType="default"
             formInspector={formInspector}
+            types={types}
             value={undefined}
         />
     );
@@ -94,7 +135,9 @@ test('Pass content-locale of user to SingleMediaSelection if locale is not prese
     const imageMap = shallow(
         <ImageMap
             {...fieldTypeDefaultProps}
+            defaultType="default"
             formInspector={formInspector}
+            types={types}
             value={{imageId: 44, hotspots: []}}
         />
     );
@@ -116,9 +159,11 @@ test('Should call onChange and onFinish if the value changes', () => {
     const imageMap = shallow(
         <ImageMap
             {...fieldTypeDefaultProps}
+            defaultType="default"
             formInspector={formInspector}
             onChange={changeSpy}
             onFinish={finishSpy}
+            types={types}
             value={{imageId: 55, hotspots: []}}
         />
     );
