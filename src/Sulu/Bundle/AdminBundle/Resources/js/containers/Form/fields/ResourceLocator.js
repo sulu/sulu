@@ -21,6 +21,10 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
     constructor(props: FieldTypeProps<?string>) {
         super(props);
 
+        this.state = {
+            tagValuesChanged: false
+        };
+
         const {dataPath, fieldTypeOptions, formInspector, value} = this.props;
         const {generationUrl, modeResolver} = fieldTypeOptions;
 
@@ -43,16 +47,20 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
         }
 
         formInspector.addFinishFieldHandler((finishedFieldDataPath, finishedFieldSchemaPath) => {
+            const {tags: finishedFieldTags} = formInspector.getSchemaEntryByPath(finishedFieldSchemaPath) || {};
+            if (!finishedFieldTags || !finishedFieldTags.some((tag) => tag.name === PART_TAG)) {
+                return;
+            }
+
+            this.setState({
+                tagValuesChanged: true
+            });
+
             if (value !== undefined) {
                 return;
             }
 
             if (formInspector.isFieldModified(dataPath)) {
-                return;
-            }
-
-            const {tags: finishedFieldTags} = formInspector.getSchemaEntryByPath(finishedFieldSchemaPath) || {};
-            if (!finishedFieldTags || !finishedFieldTags.some((tag) => tag.name === PART_TAG)) {
                 return;
             }
 
@@ -127,7 +135,7 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
             disabled,
             formInspector,
             onChange,
-            value,
+            value
         } = this.props;
 
         if (value === HOMEPAGE_RESOURCE_LOCATOR) {
@@ -148,7 +156,7 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
                 </div>
                 {formInspector.id &&
                     <div className={resourceLocatorStyles.resourceLocatorActions}>
-                        {formInspector.formStore.isFieldModified(dataPath) &&
+                        {this.state.tagValuesChanged &&
                             <Button icon="su-sync" onClick={this.handleRegenerateButtonClick} skin="link">
                                 {translate('sulu_admin.refresh_url')}
                             </Button>
