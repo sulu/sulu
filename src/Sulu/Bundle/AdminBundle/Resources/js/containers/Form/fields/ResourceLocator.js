@@ -7,8 +7,8 @@ import ResourceLocatorHistory from '../../../containers/ResourceLocatorHistory';
 import Requester from '../../../services/Requester';
 import type {FieldTypeProps} from '../../../types';
 import resourceLocatorStyles from './resourceLocator.scss';
-import {translate} from "../../../utils/Translator";
-import Button from "../../../components/Button";
+import {translate} from '../../../utils/Translator';
+import Button from '../../../components/Button';
 
 const PART_TAG = 'sulu.rlp.part';
 
@@ -17,13 +17,10 @@ const HOMEPAGE_RESOURCE_LOCATOR = '/';
 @observer
 class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
     @observable mode: string;
+    @observable tagValuesChanged: string;
 
     constructor(props: FieldTypeProps<?string>) {
         super(props);
-
-        this.state = {
-            tagValuesChanged: false
-        };
 
         const {dataPath, fieldTypeOptions, formInspector, value} = this.props;
         const {generationUrl, modeResolver} = fieldTypeOptions;
@@ -46,15 +43,15 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
             return;
         }
 
+        this.tagValuesChanged = false;
+
         formInspector.addFinishFieldHandler((finishedFieldDataPath, finishedFieldSchemaPath) => {
             const {tags: finishedFieldTags} = formInspector.getSchemaEntryByPath(finishedFieldSchemaPath) || {};
             if (!finishedFieldTags || !finishedFieldTags.some((tag) => tag.name === PART_TAG)) {
                 return;
             }
 
-            this.setState({
-                tagValuesChanged: true
-            });
+            this.tagValuesChanged = true;
 
             if (value !== undefined) {
                 return;
@@ -103,10 +100,10 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
             }
         ).then((response) => {
             onChange(response.resourcelocator);
-        });
+        }).then(action(() => this.tagValuesChanged = false));
     };
 
-    handleRegenerateButtonClick = () => {
+    handleRegenerateButtonClick = async () => {
         this.generateUrl();
     };
 
@@ -135,7 +132,7 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
             disabled,
             formInspector,
             onChange,
-            value
+            value,
         } = this.props;
 
         if (value === HOMEPAGE_RESOURCE_LOCATOR) {
@@ -156,11 +153,9 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
                 </div>
                 {formInspector.id &&
                     <div className={resourceLocatorStyles.resourceLocatorActions}>
-                        {this.state.tagValuesChanged &&
-                            <Button icon="su-sync" onClick={this.handleRegenerateButtonClick} skin="link">
-                                {translate('sulu_admin.refresh_url')}
-                            </Button>
-                        }
+                        <Button icon="su-sync" onClick={this.handleRegenerateButtonClick} skin="link" disabled={!this.tagValuesChanged}>
+                            {translate('sulu_admin.regenerate_url')}
+                        </Button>
                         <ResourceLocatorHistory
                             id={formInspector.id}
                             options={{

@@ -150,5 +150,5 @@
     "sulu_admin.form_used_by": "This form is currently used by",
     "sulu_admin.from": "from",
     "sulu_admin.until": "until",
-    "sulu_admin.refresh_url": "Refresh URL"
+    "sulu_admin.regenerate_url": "Regenerate URL"
 }
