@@ -6,9 +6,9 @@ import ResourceLocatorComponent from '../../../components/ResourceLocator';
 import ResourceLocatorHistory from '../../../containers/ResourceLocatorHistory';
 import Requester from '../../../services/Requester';
 import type {FieldTypeProps} from '../../../types';
-import resourceLocatorStyles from './resourceLocator.scss';
 import {translate} from '../../../utils/Translator';
 import Button from '../../../components/Button';
+import resourceLocatorStyles from './resourceLocator.scss';
 
 const PART_TAG = 'sulu.rlp.part';
 
@@ -103,7 +103,7 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
         }).then(action(() => this.tagValuesChanged = false));
     };
 
-    handleRegenerateButtonClick = async () => {
+    handleRegenerateButtonClick = () => {
         this.generateUrl();
     };
 
@@ -153,7 +153,12 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
                 </div>
                 {formInspector.id &&
                     <div className={resourceLocatorStyles.resourceLocatorActions}>
-                        <Button icon="su-sync" onClick={this.handleRegenerateButtonClick} skin="link" disabled={!this.tagValuesChanged}>
+                        <Button
+                            disabled={!this.tagValuesChanged}
+                            icon="su-sync"
+                            onClick={this.handleRegenerateButtonClick}
+                            skin="link"
+                        >
                             {translate('sulu_admin.regenerate_url')}
                         </Button>
                         <ResourceLocatorHistory
