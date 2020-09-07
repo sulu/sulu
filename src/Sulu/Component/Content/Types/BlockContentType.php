@@ -12,6 +12,7 @@
 namespace Sulu\Component\Content\Types;
 
 use PHPCR\NodeInterface;
+use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStoreInterface;
 use Sulu\Component\Content\Compat\Block\BlockPropertyInterface;
 use Sulu\Component\Content\Compat\Block\BlockPropertyWrapper;
 use Sulu\Component\Content\Compat\Property;
@@ -45,14 +46,21 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
      */
     private $requestAnalyzer;
 
+    /**
+     * @var ?TargetGroupStoreInterface
+     */
+    private $targetGroupStore;
+
     public function __construct(
         ContentTypeManagerInterface $contentTypeManager,
         $languageNamespace,
-        RequestAnalyzerInterface $requestAnalyzer
+        RequestAnalyzerInterface $requestAnalyzer,
+        TargetGroupStoreInterface $targetGroupStore = null
     ) {
         $this->contentTypeManager = $contentTypeManager;
         $this->languageNamespace = $languageNamespace;
         $this->requestAnalyzer = $requestAnalyzer;
+        $this->targetGroupStore = $targetGroupStore;
     }
 
     public function read(
@@ -373,18 +381,26 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
                 continue;
             }
 
-            $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
-            $segment = $this->requestAnalyzer->getSegment();
+            if (\is_array($blockPropertyTypeSettings)) {
+                $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
+                $segment = $this->requestAnalyzer->getSegment();
+                if (isset($blockPropertyTypeSettings['segment_enabled'])
+                    && $blockPropertyTypeSettings['segment_enabled']
+                    && isset($blockPropertyTypeSettings['segments'][$webspaceKey])
+                    && $segment
+                    && $blockPropertyTypeSettings['segments'][$webspaceKey] !== $segment->getKey()
+                ) {
+                    continue;
+                }
 
-            if (
-                \is_array($blockPropertyTypeSettings)
-                && isset($blockPropertyTypeSettings['segment_enabled'])
-                && $blockPropertyTypeSettings['segment_enabled']
-                && isset($blockPropertyTypeSettings['segments'][$webspaceKey])
-                && $segment
-                && $blockPropertyTypeSettings['segments'][$webspaceKey] !== $segment->getKey()
-            ) {
-                continue;
+                if (isset($blockPropertyTypeSettings['target_groups_enabled'])
+                    && $blockPropertyTypeSettings['target_groups_enabled']
+                    && isset($blockPropertyTypeSettings['target_groups'])
+                    && $this->targetGroupStore
+                    && !\in_array($this->targetGroupStore->getTargetGroupId(), $blockPropertyTypeSettings['target_groups'])
+                ) {
+                    continue;
+                }
             }
 
             $blockData = [];

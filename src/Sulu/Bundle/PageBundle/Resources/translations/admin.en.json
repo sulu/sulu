@@ -55,5 +55,7 @@
     "sulu_page.hide_block_label": "Don't display on public website",
     "sulu_page.hide_block_description": "This block will not be published, but remains editable in the admin.",
     "sulu_page.segment_label": "Assign segment",
-    "sulu_page.segment_description": "The block will be automatically filtered on the website by the chosen segment."
+    "sulu_page.segment_description": "The block will be automatically filtered on the website by the chosen segment.",
+    "sulu_page.target_groups_label": "Assign target groups",
+    "sulu_page.target_groups_description": "The block will only be visible for the selected target groups."
 }

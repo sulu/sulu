@@ -162,6 +162,7 @@
             <argument type="service" id="sulu.content.type_manager"/>
             <argument>%sulu.content.language.namespace%</argument>
             <argument type="service" id="sulu_core.webspace.request_analyzer" />
+            <argument type="service" id="sulu_audience_targeting.target_group_store" on-invalid="null" />
             <tag name="sulu.content.type" alias="block"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
         </service>

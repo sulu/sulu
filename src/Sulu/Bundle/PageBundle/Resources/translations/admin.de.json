@@ -55,5 +55,7 @@
     "sulu_page.hide_block_label": "Nicht auf publizierter Website darstellen",
     "sulu_page.hide_block_description": "Dieser Block wird nicht veröffentlicht, kann aber weiterhin im Admin bearbeitet werden.",
     "sulu_page.segment_label": "Segment zuweisen",
-    "sulu_page.segment_description": "Der Block wird automatisch nach dem gewählten Segment auf der Website gefiltert."
+    "sulu_page.segment_description": "Der Block wird automatisch nach dem gewählten Segment auf der Website gefiltert.",
+    "sulu_page.target_groups_label": "Zielgruppen zuweisen",
+    "sulu_page.target_groups_description": "Der Block wird nur den ausgewählten Zielgruppen angezeigt."
 }

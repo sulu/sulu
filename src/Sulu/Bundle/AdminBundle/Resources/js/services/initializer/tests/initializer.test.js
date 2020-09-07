@@ -88,6 +88,44 @@ test('Should initialize when everything works', () => {
         });
 });
 
+test('Should initialize and return bundle names', () => {
+    const configData = {
+        sulu_admin: {},
+        sulu_audience_targeting: {},
+    };
+
+    const translationData = {
+        'sulu_admin.test1': 'Test1',
+    };
+
+    const routeData = {};
+
+    const translationPromise = Promise.resolve(translationData);
+    const configPromise = Promise.resolve(configData);
+    const routePromise = Promise.resolve(routeData);
+
+    Requester.get.mockImplementation((key) => {
+        switch (key) {
+            case 'translations_url?locale=en':
+                return translationPromise;
+            case 'config_url':
+                return configPromise;
+            case 'routing':
+                return routePromise;
+        }
+    });
+
+    const initPromise = initializer.initialize(true);
+    expect(initializer.loading).toBe(true);
+    expect(initializer.bundles).toEqual([]);
+
+    return initPromise
+        .then(() => {
+            expect(initializer.loading).toBe(false);
+            expect(initializer.bundles).toEqual(['sulu_admin', 'sulu_audience_targeting']);
+        });
+});
+
 test('Should only initialize translations if no user is logged in', () => {
     const translationData = {
         'sulu_admin.test1': 'Test1',

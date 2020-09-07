@@ -15,6 +15,7 @@ use Jackalope\Node;
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStoreInterface;
 use Sulu\Bundle\PageBundle\Content\Types\SinglePageSelection;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore;
 use Sulu\Component\Content\Compat\Block\BlockProperty;
@@ -64,6 +65,11 @@ class BlockContentTypeTest extends TestCase
     private $requestAnalyzer;
 
     /**
+     * @var TargetGroupStoreInterface
+     */
+    private $targetGroupStore;
+
+    /**
      * @var ContentTypeManagerInterface
      */
     private $contentTypeManager;
@@ -74,11 +80,13 @@ class BlockContentTypeTest extends TestCase
 
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
         $this->contentTypeManager = $this->prophesize(ContentTypeManager::class);
+        $this->targetGroupStore = $this->prophesize(TargetGroupStoreInterface::class);
 
         $this->blockContentType = new BlockContentType(
             $this->contentTypeManager->reveal(),
             'not in use',
-            $this->requestAnalyzer->reveal()
+            $this->requestAnalyzer->reveal(),
+            $this->targetGroupStore->reveal()
         );
 
         $this->contentTypeValueMap = [
@@ -861,6 +869,46 @@ class BlockContentTypeTest extends TestCase
                         'segments' => ['webspace-1' => 'w', 'webspace-2' => 'other'],
                         'segment_enabled' => true,
                     ],
+                ],
+            ],
+            $result
+        );
+    }
+
+    public function testGetContentDataWithTargetGroupsFilter()
+    {
+        $this->prepareSingleBlockProperty();
+
+        $this->blockProperty->setValue(
+            [
+                [
+                    'type' => 'type1',
+                    'title' => 'Test-Title-1',
+                    'settings' => ['target_groups' => [1], 'target_groups_enabled' => true],
+                ],
+                [
+                    'type' => 'type2',
+                    'name' => 'Test-Name-2',
+                    'settings' => ['target_groups' => [3, 4], 'target_groups_enabled' => true],
+                ],
+            ]
+        );
+
+        $this->targetGroupStore->getTargetGroupId()->willReturn(3);
+
+        $webspace = new Webspace();
+        $webspace->setKey('webspace-1');
+        $this->requestAnalyzer->getWebspace()->willReturn($webspace);
+        $this->requestAnalyzer->getSegment()->willReturn(null);
+
+        $result = $this->blockContentType->getContentData($this->blockProperty);
+
+        $this->assertEquals(
+            [
+                [
+                    'type' => 'type2',
+                    'name' => 'Test-Name-2',
+                    'settings' => ['target_groups' => [3, 4], 'target_groups_enabled' => true],
                 ],
             ],
             $result

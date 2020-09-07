@@ -51,5 +51,35 @@
                 <property name="segments" type="segment_select" visibleCondition="segment_enabled == true" />
             </properties>
         </section>
+
+        <section name="target_groups" visibleCondition="__bundles|includes('sulu_audience_targeting')">
+            <properties>
+                <property name="target_groups_enabled" type="checkbox">
+                    <params>
+                        <param name="description">
+                            <meta>
+                                <title>sulu_page.target_groups_description</title>
+                            </meta>
+                        </param>
+                        <param name="icon" value="su-user" />
+                        <param name="label">
+                            <meta>
+                                <title>sulu_page.target_groups_label</title>
+                            </meta>
+                        </param>
+                        <param name="skin" value="heading" />
+                        <param name="type" value="toggler" />
+                    </params>
+
+                    <tag name="sulu.block_setting_icon" icon="su-user" />
+                </property>
+
+                <property
+                    name="target_groups"
+                    type="target_group_selection"
+                    visibleCondition="target_groups_enabled == true"
+                />
+            </properties>
+        </section>
     </properties>
 </form>
