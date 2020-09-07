@@ -32,7 +32,7 @@ class DateTimeFilterType implements FilterTypeInterface
             $from = new \DateTime($from->format('Y-m-d H:i:00'));
             $listBuilder->where(
                 $fieldDescriptor,
-                $from,
+                $from->format('Y-m-d H:i:s'),
                 ListBuilderInterface::WHERE_COMPARATOR_GREATER_THAN
             );
 
@@ -40,19 +40,23 @@ class DateTimeFilterType implements FilterTypeInterface
             $to = new \DateTime($to->format('Y-m-d H:i:59'));
             $listBuilder->where(
                 $fieldDescriptor,
-                $to,
+                $to->format('Y-m-d H:i:s'),
                 ListBuilderInterface::WHERE_COMPARATOR_LESS
             );
         } elseif (isset($options['from']) && !isset($options['to'])) {
+            $from = new \DateTime($options['from']);
+            $from = new \DateTime($from->format('Y-m-d H:i:00'));
             $listBuilder->where(
                 $fieldDescriptor,
-                $options['from'],
+                $from->format('Y-m-d H:i:s'),
                 ListBuilderInterface::WHERE_COMPARATOR_GREATER
             );
         } elseif (!isset($options['from']) && isset($options['to'])) {
+            $to = new \DateTime($options['to']);
+            $to = new \DateTime($to->format('Y-m-d H:i:59'));
             $listBuilder->where(
                 $fieldDescriptor,
-                $options['to'],
+                $to->format('Y-m-d H:i:s'),
                 ListBuilderInterface::WHERE_COMPARATOR_LESS
             );
         }

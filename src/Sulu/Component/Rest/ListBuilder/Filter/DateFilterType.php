@@ -39,7 +39,7 @@ class DateFilterType implements FilterTypeInterface
             $listBuilder->where(
                 $fieldDescriptor,
                 $options['to'],
-                ListBuilderInterface::WHERE_COMPARATOR_LESS_THAN
+                ListBuilderInterface::WHERE_COMPARATOR_LESS
             );
         }
     }
