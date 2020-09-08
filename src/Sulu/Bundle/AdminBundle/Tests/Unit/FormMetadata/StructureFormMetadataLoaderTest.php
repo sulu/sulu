@@ -137,6 +137,11 @@ class StructureFormMetadataLoaderTest extends TestCase
         $structure->setTags([]);
         $structure->setChildren([]);
         $structure->burnProperties();
+
+        if (!\file_exists(static::CACHE_DIR)) {
+            \mkdir(static::CACHE_DIR);
+        }
+
         $structure->setResource(\tempnam(static::CACHE_DIR, 'some_template'));
 
         $this->formMetadataMapper->mapTags([])->willReturn([]);
