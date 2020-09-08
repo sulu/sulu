@@ -54,7 +54,7 @@ class MissingTypeDialog extends React.Component<Props> {
             >
                 <p>{translate('sulu_admin.missing_type_dialog_description')}</p>
                 <Form>
-                    <Form.Field colSpan={6} label={translate('sulu_admin.choose_template')}>
+                    <Form.Field colSpan={6}>
                         <SingleSelect onChange={this.handleTypeChange} value={this.selectedType}>
                             {Object.keys(types).map((key) => (
                                 <SingleSelect.Option key={types[key].key} value={types[key].key}>

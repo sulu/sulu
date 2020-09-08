@@ -33,11 +33,6 @@ Array [
               <div
                 class="field"
               >
-                <label
-                  class="label"
-                >
-                  sulu_admin.choose_template
-                </label>
                 <div
                   class="select"
                 >

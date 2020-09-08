@@ -15,7 +15,7 @@
     </localizations>
 
     <default-templates>
-        <default-template type="page">example</default-template>
+        <default-template type="page">homepage</default-template>
         <default-template type="home">homepage</default-template>
     </default-templates>
 
@@ -23,6 +23,10 @@
         <template type="search">search/search</template>
         <template type="error">error/error</template>
     </templates>
+
+    <excluded-templates>
+        <excluded-template>example</excluded-template>
+    </excluded-templates>
 
     <navigation>
         <contexts>

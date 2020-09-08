@@ -152,5 +152,7 @@
     "sulu_admin.until": "until",
     "sulu_admin.block_settings": "Block settings",
     "sulu_admin.hide_block": "Hide this block on website",
-    "sulu_admin.segment": "Segment"
+    "sulu_admin.segment": "Segment",
+    "sulu_admin.missing_type_dialog_title": "Choose new template",
+    "sulu_admin.missing_type_dialog_description": "The template for the copied page does not exist in this webspace."
 }
