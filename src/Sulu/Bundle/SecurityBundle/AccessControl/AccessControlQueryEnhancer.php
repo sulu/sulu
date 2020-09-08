@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\SecurityBundle\AccessControl;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Sulu\Bundle\SecurityBundle\Entity\AccessControl;
 use Sulu\Bundle\SecurityBundle\System\SystemStoreInterface;
@@ -24,9 +25,15 @@ class AccessControlQueryEnhancer
      */
     private $systemStore;
 
-    public function __construct(SystemStoreInterface $systemStore)
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    public function __construct(SystemStoreInterface $systemStore, EntityManagerInterface $entityManager)
     {
         $this->systemStore = $systemStore;
+        $this->entityManager = $entityManager;
     }
 
     public function enhance(
@@ -36,13 +43,20 @@ class AccessControlQueryEnhancer
         string $entityClass,
         string $entityAlias
     ) {
+        $systemRoleQueryBuilder = $this->entityManager->createQueryBuilder()
+            ->from(RoleInterface::class, 'systemRoles')
+            ->select('systemRoles.id')
+            ->where('systemRoles.system = :system');
+
         $queryBuilder->leftJoin(
             AccessControl::class,
             'accessControl',
             'WITH',
-            'accessControl.entityClass = :entityClass AND accessControl.entityId = ' . $entityAlias . '.id'
+            'accessControl.entityClass = :entityClass '
+            . 'AND accessControl.entityId = ' . $entityAlias . '.id '
+            . 'AND accessControl.role IN (' . $systemRoleQueryBuilder->getDQL() . ')'
         );
-        $queryBuilder->leftJoin('accessControl.role', 'role', 'WITH', 'role.system = :system');
+        $queryBuilder->leftJoin('accessControl.role', 'role');
         $queryBuilder->andWhere(
             'BIT_AND(accessControl.permissions, :permission) = :permission OR accessControl.permissions IS NULL'
         );

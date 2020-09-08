@@ -23,6 +23,9 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
+use Sulu\Bundle\SecurityBundle\Entity\AccessControl;
+use Sulu\Bundle\SecurityBundle\Entity\Role;
+use Sulu\Bundle\SecurityBundle\System\SystemStoreInterface;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
@@ -94,9 +97,16 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
      */
     private $collections;
 
+    /**
+     * @var SystemStoreInterface
+     */
+    private $systemStore;
+
     protected function setUp(): void
     {
         parent::setUp();
+
+        $this->systemStore = $this->getContainer()->get('sulu_security.system_store');
 
         $this->purgeDatabase();
         $this->em = $this->getEntityManager();
@@ -124,8 +134,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
         $collection->addMeta($collectionMeta);
 
         if (null !== $parent) {
-            $collection->setParent($this->collections[$parent]);
-            $this->collections[$parent]->addChildren($collection);
+            $collection->setParent($parent);
         }
 
         $this->em->persist($collection);
@@ -204,6 +213,29 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
         $this->em->persist($media);
 
         return $media;
+    }
+
+    private function createRole($name, $system)
+    {
+        $role = new Role();
+        $role->setName($name);
+        $role->setSystem($system);
+        $role->setAnonymous(true);
+        $this->em->persist($role);
+
+        return $role;
+    }
+
+    private function createAccessControl($entityClass, $id, $permissions, Role $role)
+    {
+        $accessControl = new AccessControl();
+        $accessControl->setPermissions($permissions);
+        $accessControl->setEntityId($id);
+        $accessControl->setEntityClass($entityClass);
+        $accessControl->setRole($role);
+        $this->em->persist($accessControl);
+
+        return $accessControl;
     }
 
     public function findByProvider()
@@ -530,7 +562,10 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
     public function testFindByFilters($filters, $page, $pageSize, $limit, $expected, $tags = [], $options = [])
     {
         foreach ($this->collectionData as $collection) {
-            $this->collections[] = $this->createCollection($collection[0], $collection[1]);
+            $this->collections[] = $this->createCollection(
+                $collection[0],
+                $collection[1] ? $this->collections[$collection[1]] : null
+            );
         }
 
         $this->em->flush();
@@ -644,5 +679,120 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
         }, $expectedIndexes);
 
         $this->assertEquals($expectedMediaIds, $mediaIds);
+    }
+
+    public function testFindByFiltersWithSecurityAllowed()
+    {
+        $collection = $this->createCollection('Collection 1');
+        $this->em->flush();
+
+        $role = $this->createRole('Role', 'Website');
+        $this->createAccessControl(\get_class($collection), $collection->getId(), 64, $role);
+
+        $medias = [];
+        $medias[] = $this->createMedia('Media 1', $collection, 'image/jpg', 'image');
+        $medias[] = $this->createMedia('Media 2', $collection, 'image/jpg', 'image');
+
+        $this->em->flush();
+
+        $filters = [
+            'dataSource' => $collection->getId(),
+        ];
+
+        $mediaResults = $this->getContainer()
+            ->get('sulu_media_test.smart_content.data_provider.media.repository')
+            ->findByFilters($filters, 1, 100, 100, 'de');
+
+        $this->assertCount(2, $mediaResults);
+        $this->assertEquals('Media 1', $mediaResults[0]->getName());
+        $this->assertEquals('Media 2', $mediaResults[1]->getName());
+    }
+
+    public function testFindByFiltersWithSecurityDenied()
+    {
+        $this->systemStore->setSystem('Website');
+        $collection = $this->createCollection('Collection 1');
+        $this->em->flush();
+
+        $role = $this->createRole('Role', 'Website');
+        $this->createAccessControl(\get_class($collection), $collection->getId(), 0, $role);
+
+        $medias = [];
+        $medias[] = $this->createMedia('Media 1', $collection, 'image/jpg', 'image');
+
+        $this->em->flush();
+
+        $filters = [
+            'dataSource' => $collection->getId(),
+        ];
+
+        $mediaResults = $this->getContainer()
+            ->get('sulu_media_test.smart_content.data_provider.media.repository')
+            ->findByFilters($filters, 1, 100, 100, 'de');
+
+        $this->assertCount(0, $mediaResults);
+    }
+
+    public function testFindByFiltersWithSecurityMixedPermissions()
+    {
+        $this->systemStore->setSystem('Website');
+        $collection = $this->createCollection('Collection');
+        $this->em->flush();
+
+        $collection1 = $this->createCollection('Collection 1', $collection);
+        $collection2 = $this->createCollection('Collection 2', $collection);
+        $this->em->flush();
+
+        $role = $this->createRole('Role', 'Website');
+        $this->createAccessControl(\get_class($collection1), $collection1->getId(), 64, $role);
+        $this->createAccessControl(\get_class($collection2), $collection2->getId(), 0, $role);
+
+        $medias = [];
+        $medias[] = $this->createMedia('Media 1', $collection1, 'image/jpg', 'image');
+        $medias[] = $this->createMedia('Media 2', $collection1, 'image/jpg', 'image');
+        $medias[] = $this->createMedia('Media 3', $collection2, 'image/jpg', 'image');
+        $medias[] = $this->createMedia('Media 4', $collection2, 'image/jpg', 'image');
+
+        $this->em->flush();
+
+        $filters = [
+            'dataSource' => $collection->getId(),
+            'includeSubFolders' => true,
+        ];
+
+        $mediaResults = $this->getContainer()
+            ->get('sulu_media_test.smart_content.data_provider.media.repository')
+            ->findByFilters($filters, 1, 100, 100, 'de');
+
+        $this->assertCount(2, $mediaResults);
+        $this->assertEquals('Media 1', $mediaResults[0]->getName());
+        $this->assertEquals('Media 2', $mediaResults[1]->getName());
+    }
+
+    public function testFindByFiltersWithSecurityDeniedAndOtherSystem()
+    {
+        $this->systemStore->setSystem('Website');
+        $collection = $this->createCollection('Collection 1');
+        $this->em->flush();
+
+        $websiteRole = $this->createRole('Website Role', 'Website');
+        $suluRole = $this->createRole('Sulu Role', 'Sulu');
+        $this->createAccessControl(\get_class($collection), $collection->getId(), 0, $websiteRole);
+        $this->createAccessControl(\get_class($collection), $collection->getId(), 64, $suluRole);
+
+        $medias = [];
+        $medias[] = $this->createMedia('Media 1', $collection, 'image/jpg', 'image');
+
+        $this->em->flush();
+
+        $filters = [
+            'dataSource' => $collection->getId(),
+        ];
+
+        $mediaResults = $this->getContainer()
+            ->get('sulu_media_test.smart_content.data_provider.media.repository')
+            ->findByFilters($filters, 1, 100, 100, 'de');
+
+        $this->assertCount(0, $mediaResults);
     }
 }
