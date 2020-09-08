@@ -54,7 +54,8 @@ class FieldFilterItem extends React.Component<Props> {
         this.fieldFilterType = new (listFieldFilterTypeRegistry.get(filterType))(
             this.handleFieldFilterTypeChange,
             filterTypeParameters,
-            value
+            value,
+            listFieldFilterTypeRegistry.getOptions(filterType)
         );
 
         this.valueDisposer = autorun(() => {

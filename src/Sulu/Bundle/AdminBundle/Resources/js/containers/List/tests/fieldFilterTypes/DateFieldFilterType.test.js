@@ -8,78 +8,78 @@ jest.mock('../../../../utils/Translator', () => ({
 }));
 
 test('Render with value of undefined', () => {
-    const dateTimeFieldFilterType = new DateFieldFilterType(jest.fn(), {}, undefined);
-    expect(mount(<div>{dateTimeFieldFilterType.getFormNode()}</div>).render()).toMatchSnapshot();
+    const dateFieldFilterType = new DateFieldFilterType(jest.fn(), {}, undefined);
+    expect(mount(<div>{dateFieldFilterType.getFormNode()}</div>).render()).toMatchSnapshot();
 });
 
 test.each([
     [new Date('2020-01-02'), new Date('2020-01-09')],
     [new Date('2018-02-01'), new Date('2019-05-03')],
 ])('Render with from and to value', (from, to) => {
-    const dateTimeFieldFilterType = new DateFieldFilterType(
+    const dateFieldFilterType = new DateFieldFilterType(
         jest.fn(),
         {},
         {from, to}
     );
-    expect(mount(<div>{dateTimeFieldFilterType.getFormNode()}</div>).render()).toMatchSnapshot();
+    expect(mount(<div>{dateFieldFilterType.getFormNode()}</div>).render()).toMatchSnapshot();
 });
 
 test('Render with value set by setValue', () => {
-    const dateTimeFieldFilterType = new DateFieldFilterType(
+    const dateFieldFilterType = new DateFieldFilterType(
         jest.fn(),
         {},
         undefined
     );
 
-    dateTimeFieldFilterType.setValue({from: new Date('2017-06-03'), to: new Date('2018-03-06')});
+    dateFieldFilterType.setValue({from: new Date('2017-06-03'), to: new Date('2018-03-06')});
 
-    expect(mount(<div>{dateTimeFieldFilterType.getFormNode()}</div>).render()).toMatchSnapshot();
+    expect(mount(<div>{dateFieldFilterType.getFormNode()}</div>).render()).toMatchSnapshot();
 });
 
 test('Call onChange handler with only from value', () => {
     const changeSpy = jest.fn();
-    const dateTimeFieldFilterType = new DateFieldFilterType(changeSpy, {}, undefined);
-    const dateTimeFieldFilterTypeForm = mount(dateTimeFieldFilterType.getFormNode());
+    const dateFieldFilterType = new DateFieldFilterType(changeSpy, {}, undefined);
+    const dateFieldFilterTypeForm = mount(dateFieldFilterType.getFormNode());
 
-    dateTimeFieldFilterTypeForm.find('DatePicker').at(0).prop('onChange')(new Date('2018-03-06'));
+    dateFieldFilterTypeForm.find('DatePicker').at(0).prop('onChange')(new Date('2018-03-06'));
 
     expect(changeSpy).toBeCalledWith({from: new Date('2018-03-06')});
 });
 
 test('Call onChange handler with only to value', () => {
     const changeSpy = jest.fn();
-    const dateTimeFieldFilterType = new DateFieldFilterType(changeSpy, {}, undefined);
-    const dateTimeFieldFilterTypeForm = mount(dateTimeFieldFilterType.getFormNode());
+    const dateFieldFilterType = new DateFieldFilterType(changeSpy, {}, undefined);
+    const dateFieldFilterTypeForm = mount(dateFieldFilterType.getFormNode());
 
-    dateTimeFieldFilterTypeForm.find('DatePicker').at(1).prop('onChange')(new Date('2018-04-06'));
+    dateFieldFilterTypeForm.find('DatePicker').at(1).prop('onChange')(new Date('2018-04-06'));
 
     expect(changeSpy).toBeCalledWith({to: new Date('2018-04-06')});
 });
 
 test('Call onChange handler with from value and existing value', () => {
     const changeSpy = jest.fn();
-    const dateTimeFieldFilterType = new DateFieldFilterType(
+    const dateFieldFilterType = new DateFieldFilterType(
         changeSpy,
         {},
         {from: new Date('2018-03-07'), to: new Date('2018-08-02')}
     );
-    const dateTimeFieldFilterTypeForm = mount(dateTimeFieldFilterType.getFormNode());
+    const dateFieldFilterTypeForm = mount(dateFieldFilterType.getFormNode());
 
-    dateTimeFieldFilterTypeForm.find('DatePicker').at(0).prop('onChange')(new Date('2017-12-25'));
+    dateFieldFilterTypeForm.find('DatePicker').at(0).prop('onChange')(new Date('2017-12-25'));
 
     expect(changeSpy).toBeCalledWith({from: new Date('2017-12-25'), to: new Date('2018-08-02')});
 });
 
 test('Call onChange handler with to value and existing value', () => {
     const changeSpy = jest.fn();
-    const dateTimeFieldFilterType = new DateFieldFilterType(
+    const dateFieldFilterType = new DateFieldFilterType(
         changeSpy,
         {},
         {from: new Date('2018-03-07'), to: new Date('2018-08-02')}
     );
-    const dateTimeFieldFilterTypeForm = mount(dateTimeFieldFilterType.getFormNode());
+    const dateFieldFilterTypeForm = mount(dateFieldFilterType.getFormNode());
 
-    dateTimeFieldFilterTypeForm.find('DatePicker').at(1).prop('onChange')(new Date('2018-04-06'));
+    dateFieldFilterTypeForm.find('DatePicker').at(1).prop('onChange')(new Date('2018-04-06'));
 
     expect(changeSpy).toBeCalledWith({from: new Date('2018-03-07'), to: new Date('2018-04-06')});
 });
@@ -92,9 +92,9 @@ test.each([
     [undefined, null],
     [{}, null],
 ])('Return value node with value "%s"', (value, expectedValueNode) => {
-    const dateTimeFieldFilterType = new DateFieldFilterType(jest.fn(), {}, undefined);
+    const dateFieldFilterType = new DateFieldFilterType(jest.fn(), {}, undefined);
 
-    const valueNodePromise = dateTimeFieldFilterType.getValueNode(value);
+    const valueNodePromise = dateFieldFilterType.getValueNode(value);
 
     if (!valueNodePromise) {
         throw new Error('The getValueNode function must return a promise!');

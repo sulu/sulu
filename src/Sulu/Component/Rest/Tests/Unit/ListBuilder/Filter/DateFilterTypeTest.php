@@ -38,8 +38,8 @@ class DateFilterTypeTest extends TestCase
     public function provideFilter()
     {
         return [
-            ['created', ['from' => '2020-02-05 00:00', 'to' => '2020-02-07 00:00'], ['2020-02-05 00:00', '2020-02-07 00:00']],
-            ['changed', ['from' => '2013-08-01 00:00', 'to' => '2020-02-10 00:00'], ['2013-08-01 00:00', '2020-02-10 00:00']],
+            ['created', ['from' => '2020-02-05 00:00', 'to' => '2020-02-07 00:00'], ['2020-02-05 00:00:00', '2020-02-07 23:59:59']],
+            ['changed', ['from' => '2013-08-01 00:00', 'to' => '2020-02-10 00:00'], ['2013-08-01 00:00:00', '2020-02-10 23:59:59']],
         ];
     }
 
@@ -57,15 +57,15 @@ class DateFilterTypeTest extends TestCase
             ->shouldBeCalled();
 
         $this->listBuilder
-            ->where($fieldDescriptor->reveal(), $expected[1], ListBuilderInterface::WHERE_COMPARATOR_LESS)
+            ->where($fieldDescriptor->reveal(), $expected[1], ListBuilderInterface::WHERE_COMPARATOR_LESS_THAN)
             ->shouldBeCalled();
     }
 
     public function provideFilterFromOnly()
     {
         return [
-            ['created', ['from' => '2020-02-05 00:00'], '2020-02-05 00:00'],
-            ['changed', ['from' => '2013-08-01 00:00'], '2013-08-01 00:00'],
+            ['created', ['from' => '2020-02-05 00:00'], '2020-02-05 00:00:00'],
+            ['changed', ['from' => '2013-08-01 00:00'], '2013-08-01 00:00:00'],
         ];
     }
 
@@ -85,8 +85,8 @@ class DateFilterTypeTest extends TestCase
     public function provideFilterToOnly()
     {
         return [
-            ['created', ['to' => '2020-02-05'], '2020-02-05'],
-            ['changed', ['to' => '2013-08-01'], '2013-08-01'],
+            ['created', ['to' => '2020-02-05'], '2020-02-05 23:59:59'],
+            ['changed', ['to' => '2013-08-01'], '2013-08-01 23:59:59'],
         ];
     }
 
@@ -100,7 +100,7 @@ class DateFilterTypeTest extends TestCase
         $this->dateTimeFilterType->filter($this->listBuilder->reveal(), $fieldDescriptor->reveal(), $value);
 
         $this->listBuilder
-            ->where($fieldDescriptor->reveal(), $expected, ListBuilderInterface::WHERE_COMPARATOR_LESS)
+            ->where($fieldDescriptor->reveal(), $expected, ListBuilderInterface::WHERE_COMPARATOR_LESS_THAN)
             ->shouldBeCalled();
     }
 

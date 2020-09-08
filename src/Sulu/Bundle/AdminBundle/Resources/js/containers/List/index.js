@@ -14,7 +14,6 @@ import BoolFieldTransformer from './fieldTransformers/BoolFieldTransformer';
 import BytesFieldTransformer from './fieldTransformers/BytesFieldTransformer';
 import DateFieldTransformer from './fieldTransformers/DateFieldTransformer';
 import DateFieldFilterType from './fieldFilterTypes/DateFieldFilterType';
-import DateTimeFieldFilterType from './fieldFilterTypes/DateTimeFieldFilterType';
 import DateTimeFieldTransformer from './fieldTransformers/DateTimeFieldTransformer';
 import SelectFieldFilterType from './fieldFilterTypes/SelectFieldFilterType';
 import NumberFieldFilterType from './fieldFilterTypes/NumberFieldFilterType';
@@ -55,7 +54,6 @@ export {
     BytesFieldTransformer,
     DateFieldTransformer,
     DateFieldFilterType,
-    DateTimeFieldFilterType,
     SelectFieldFilterType,
     DateTimeFieldTransformer,
     NumberFieldFilterType,

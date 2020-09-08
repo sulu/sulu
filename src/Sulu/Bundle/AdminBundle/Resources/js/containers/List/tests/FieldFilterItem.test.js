@@ -7,6 +7,7 @@ import listFieldFilterTypeRegistry from '../registries/listFieldFilterTypeRegist
 
 jest.mock('../registries/listFieldFilterTypeRegistry', () => ({
     get: jest.fn(),
+    getOptions: jest.fn().mockReturnValue({}),
 }));
 
 jest.mock('../../../utils/Translator', () => ({
@@ -41,7 +42,7 @@ test('Render FieldFilterItem with a FieldFilterType', () => {
 
     expect(fieldFilterItem.render()).toMatchSnapshot();
     expect(listFieldFilterTypeRegistry.get).toBeCalledWith('text');
-    expect(listFieldFilterType).toBeCalledWith(expect.any(Function), {value: 'Test'}, 'Test');
+    expect(listFieldFilterType).toBeCalledWith(expect.any(Function), {value: 'Test'}, 'Test', {});
     expect(setValueSpy).toBeCalledWith('Test');
 });
 

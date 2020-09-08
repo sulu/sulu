@@ -28,18 +28,22 @@ class DateFilterType implements FilterTypeInterface
         }
 
         if (isset($options['from'])) {
+            $from = new \DateTime($options['from']);
+            $from = new \DateTime($from->format('Y-m-d 00:00:00'));
             $listBuilder->where(
                 $fieldDescriptor,
-                $options['from'],
+                $from->format('Y-m-d H:i:s'),
                 ListBuilderInterface::WHERE_COMPARATOR_GREATER_THAN
             );
         }
 
         if (isset($options['to'])) {
+            $to = new \DateTime($options['to']);
+            $to = new \DateTime($to->format('Y-m-d 23:59:59'));
             $listBuilder->where(
                 $fieldDescriptor,
-                $options['to'],
-                ListBuilderInterface::WHERE_COMPARATOR_LESS
+                $to->format('Y-m-d H:i:s'),
+                ListBuilderInterface::WHERE_COMPARATOR_LESS_THAN
             );
         }
     }

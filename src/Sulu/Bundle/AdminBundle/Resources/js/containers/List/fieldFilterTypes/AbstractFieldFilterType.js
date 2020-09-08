@@ -5,16 +5,19 @@ import {action, observable} from 'mobx';
 export default class AbstractFieldFilterType<T> {
     onChange: (value: T) => void;
     parameters: ?{[string]: mixed};
+    options: Object;
     @observable value: T;
 
     constructor(
         onChange: (value: T) => void,
         parameters: ?{[string]: mixed},
-        value: T
+        value: T,
+        options: Object = {}
     ) {
         this.onChange = onChange;
         this.parameters = parameters;
         this.value = value;
+        this.options = options;
     }
 
     destroy() {}

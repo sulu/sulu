@@ -4,7 +4,7 @@ import type {ElementRef} from 'react';
 import DatePicker from '../../../components/DatePicker';
 import {translate} from '../../../utils/Translator';
 import AbstractFieldFilterType from './AbstractFieldFilterType';
-import dateTimeFieldFilterTypeStyles from './dateTimeFieldFilterType.scss';
+import dateFieldFilterTypeStyles from './dateFieldFilterType.scss';
 
 function formatDate(date: ?Date) {
     if (!date) {
@@ -12,6 +12,17 @@ function formatDate(date: ?Date) {
     }
 
     return date.toLocaleDateString(undefined, {year: 'numeric', month: '2-digit', day: '2-digit'});
+}
+
+function formatDateTime(date: ?Date) {
+    if (!date) {
+        return '';
+    }
+
+    return date.toLocaleString(
+        undefined,
+        {year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit'}
+    );
 }
 
 class DateFieldFilterType extends AbstractFieldFilterType<?{from?: Date, to?: Date}> {
@@ -40,17 +51,19 @@ class DateFieldFilterType extends AbstractFieldFilterType<?{from?: Date, to?: Da
 
         return (
             <Fragment>
-                <label className={dateTimeFieldFilterTypeStyles.label}>{translate('sulu_admin.from')}</label>
+                <label className={dateFieldFilterTypeStyles.label}>{translate('sulu_admin.from')}</label>
                 <DatePicker
-                    className={dateTimeFieldFilterTypeStyles.date}
+                    className={dateFieldFilterTypeStyles.date}
                     inputRef={this.setFromInputRef}
                     onChange={this.handleFromChange}
+                    options={{dateFormat: true, timeFormat: this.options.timeFormat}}
                     value={value ? value.from : undefined}
                 />
-                <label className={dateTimeFieldFilterTypeStyles.label}>{translate('sulu_admin.until')}</label>
+                <label className={dateFieldFilterTypeStyles.label}>{translate('sulu_admin.until')}</label>
                 <DatePicker
-                    className={dateTimeFieldFilterTypeStyles.date}
+                    className={dateFieldFilterTypeStyles.date}
                     onChange={this.handleToChange}
+                    options={{dateFormat: true, timeFormat: this.options.timeFormat}}
                     value={value ? value.to : undefined}
                 />
             </Fragment>
@@ -63,20 +76,21 @@ class DateFieldFilterType extends AbstractFieldFilterType<?{from?: Date, to?: Da
         }
 
         const {from, to} = value;
+        const dateFormatter = this.options.timeFormat ? formatDateTime : formatDate;
 
         if (!from && !to) {
             return Promise.resolve(null);
         }
 
         if (from && !to) {
-            return Promise.resolve(translate('sulu_admin.from') + ' ' + formatDate(from));
+            return Promise.resolve(translate('sulu_admin.from') + ' ' + dateFormatter(from));
         }
 
         if (!from && to) {
-            return Promise.resolve(translate('sulu_admin.until') + ' ' + formatDate(to));
+            return Promise.resolve(translate('sulu_admin.until') + ' ' + dateFormatter(to));
         }
 
-        return Promise.resolve(formatDate(from) + ' - ' + formatDate(to));
+        return Promise.resolve(dateFormatter(from) + ' - ' + dateFormatter(to));
     }
 }
 

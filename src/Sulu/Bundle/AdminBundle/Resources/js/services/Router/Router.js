@@ -32,7 +32,7 @@ function tryParse(value: ?string) {
     }
 
     if (value && value.match(/^\d\d\d\d-\d\d-\d\d \d\d:\d\d$/)) {
-        const date = new Date(value); // The time is necessary to avoid timezone issues
+        const date = new Date(value);
         if (date.toString() !== 'Invalid Date') {
             return date;
         }
