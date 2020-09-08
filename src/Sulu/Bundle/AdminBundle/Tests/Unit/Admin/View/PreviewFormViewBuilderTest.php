@@ -29,7 +29,7 @@ class PreviewFormViewBuilderTest extends TestCase
     public function testBuildPreviewFormViewWithoutResourceKey()
     {
         $this->expectException(\DomainException::class);
-        $this->expectExceptionMessageMatches('/"setResourceKey"/');
+        $this->expectExceptionMessageRegExp('/"setResourceKey"/');
 
         $view = (new PreviewFormViewBuilder('sulu_category.edit_form.details', '/details'))
             ->getView();
@@ -272,7 +272,7 @@ class PreviewFormViewBuilderTest extends TestCase
     public function testBuildFormWithLocalesWithoutLocalePlaceholder()
     {
         $this->expectException(\DomainException::class);
-        $this->expectExceptionMessageMatches('":locale"');
+        $this->expectExceptionMessageRegExp('":locale"');
 
         $view = (new PreviewFormViewBuilder('sulu_role.list', '/roles'))
             ->setResourceKey('roles')
@@ -285,7 +285,7 @@ class PreviewFormViewBuilderTest extends TestCase
     public function testBuildFormWithoutLocalesWithLocalePlaceholder()
     {
         $this->expectException(\DomainException::class);
-        $this->expectExceptionMessageMatches('":locale"');
+        $this->expectExceptionMessageRegExp('":locale"');
 
         $view = (new PreviewFormViewBuilder('sulu_role.list', '/roles/:locale'))
             ->setResourceKey('roles')
@@ -296,7 +296,7 @@ class PreviewFormViewBuilderTest extends TestCase
     public function testBuildFormWithRedirectToItself()
     {
         $this->expectException(\DomainException::class);
-        $this->expectExceptionMessageMatches('"editView"');
+        $this->expectExceptionMessageRegExp('"editView"');
 
         $view = (new PreviewFormViewBuilder('sulu_role.list', '/roles'))
             ->setResourceKey('roles')

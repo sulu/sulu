@@ -33,7 +33,7 @@ class ListViewBuilderTest extends TestCase
     public function testBuildListViewWithoutResourceKey()
     {
         $this->expectException(\DomainException::class);
-        $this->expectExceptionMessageMatches('/"setResourceKey"/');
+        $this->expectExceptionMessageRegExp('/"setResourceKey"/');
 
         $view = (new ListViewBuilder('sulu_category.list', '/category'))
             ->getView();
@@ -42,7 +42,7 @@ class ListViewBuilderTest extends TestCase
     public function testBuildListViewWithoutListAdapters()
     {
         $this->expectException(\DomainException::class);
-        $this->expectExceptionMessageMatches('/"addListAdapters"/');
+        $this->expectExceptionMessageRegExp('/"addListAdapters"/');
 
         $view = (new ListViewBuilder('sulu_category.list', '/category'))
             ->setResourceKey('categories')
@@ -153,7 +153,7 @@ class ListViewBuilderTest extends TestCase
     public function testBuildListWithLocalesWithoutLocalePlaceholder()
     {
         $this->expectException(\DomainException::class);
-        $this->expectExceptionMessageMatches('":locale"');
+        $this->expectExceptionMessageRegExp('":locale"');
 
         $view = (new ListViewBuilder('sulu_role.list', '/roles'))
             ->setResourceKey('roles')
@@ -168,7 +168,7 @@ class ListViewBuilderTest extends TestCase
     public function testBuildListWithoutLocalesWithLocalePlaceholder()
     {
         $this->expectException(\DomainException::class);
-        $this->expectExceptionMessageMatches('":locale"');
+        $this->expectExceptionMessageRegExp('":locale"');
 
         $view = (new ListViewBuilder('sulu_role.list', '/roles/:locale'))
             ->setResourceKey('roles')
@@ -180,7 +180,7 @@ class ListViewBuilderTest extends TestCase
     public function testBuildListWithoutListKey()
     {
         $this->expectException(\DomainException::class);
-        $this->expectExceptionMessageMatches('"listKey"');
+        $this->expectExceptionMessageRegExp('"listKey"');
 
         $view = (new ListViewBuilder('sulu_role.list', '/roles/:locale'))
             ->setResourceKey('roles')
