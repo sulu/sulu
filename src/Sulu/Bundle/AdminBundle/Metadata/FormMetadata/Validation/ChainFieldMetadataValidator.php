@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of Sulu.
  *
@@ -30,11 +28,11 @@ class ChainFieldMetadataValidator implements FieldMetadataValidatorInterface
         $this->validators = $validators;
     }
 
-    public function validate(FieldMetadata $fieldMetadata): void
+    public function validate(FieldMetadata $fieldMetadata, string $formKey): void
     {
         /** @var FieldMetadataValidatorInterface $validator */
         foreach ($this->validators as $validator) {
-            $validator->validate($fieldMetadata);
+            $validator->validate($fieldMetadata, $formKey);
         }
     }
 }

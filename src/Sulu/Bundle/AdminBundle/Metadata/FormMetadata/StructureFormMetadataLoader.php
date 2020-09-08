@@ -131,7 +131,7 @@ class StructureFormMetadataLoader implements FormMetadataLoaderInterface, CacheW
                 $structure = $this->mapStructureMetadata($structuresMetadata, $locale);
 
                 foreach ($structure->getForms() as $formMetadata) {
-                    $this->validateFormMetadata($formMetadata);
+                    $this->validateItems($formMetadata->getItems(), $formMetadata->getName());
                 }
 
                 $configCache = $this->getConfigCache($structureType, $locale);
@@ -188,15 +188,22 @@ class StructureFormMetadataLoader implements FormMetadataLoaderInterface, CacheW
         }
     }
 
-    private function validateFormMetadata(FormMetadata $formMetadata): void
+    /**
+     * @param ItemMetadata[] $items
+     */
+    private function validateItems(array $items, string $formKey): void
     {
-        foreach ($formMetadata->getItems() as $item) {
+        foreach ($items as $item) {
+            if ($item instanceof SectionMetadata) {
+                $this->validateItems($item->getItems(), $formKey);
+            }
+
             if ($item instanceof FieldMetadata) {
                 foreach ($item->getTypes() as $type) {
-                    $this->validateFormMetadata($type);
+                    $this->validateItems($type->getItems(), $formKey);
                 }
 
-                $this->fieldMetadataValidator->validate($item);
+                $this->fieldMetadataValidator->validate($item, $formKey);
             }
         }
     }

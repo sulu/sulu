@@ -188,8 +188,6 @@
                  class="Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Validation\ChainFieldMetadataValidator">
             <argument type="tagged" tag="sulu_admin.field_metadata_validator"/>
         </service>
-        <service id="Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Validation\FieldMetadataValidatorInterface"
-                 alias="sulu_admin.field_metadata_validator.chain"/>
 
         <service id="sulu_admin.field_metadata_validator.block"
                  class="Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Validation\BlockFieldMetadataValidator">

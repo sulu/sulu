@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of Sulu.
  *
@@ -14,11 +12,12 @@ declare(strict_types=1);
 namespace Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Validation;
 
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
+use Sulu\Component\Content\Exception\InvalidFieldMetadataException;
 
 interface FieldMetadataValidatorInterface
 {
     /**
      * @throws InvalidFieldMetadataException
      */
-    public function validate(FieldMetadata $fieldMetadata): void;
+    public function validate(FieldMetadata $fieldMetadata, string $formKey): void;
 }

@@ -11,7 +11,7 @@
 
 namespace Sulu\Component\Content\Exception;
 
-class ReservedPropertyNameException extends \Exception
+class ReservedPropertyNameException extends InvalidFieldMetadataException
 {
     /**
      * @var string
@@ -23,30 +23,20 @@ class ReservedPropertyNameException extends \Exception
      */
     private $propertyName;
 
-    /**
-     * @var string
-     */
-    private $formKey;
-
     public function __construct($blockPropertyName, $propertyName, $formKey)
     {
         $this->blockPropertyName = $blockPropertyName;
         $this->propertyName = $propertyName;
-        $this->formKey = $formKey;
 
         parent::__construct(
+            $formKey,
             \sprintf(
                 'Block "%s" in form "%s" has a child property named "%s", although it is a reserved property name',
                 $this->blockPropertyName,
-                $this->formKey,
+                $formKey,
                 $this->propertyName
             )
         );
-    }
-
-    public function getFormKey()
-    {
-        return $this->formKey;
     }
 
     public function getBlockPropertyName()

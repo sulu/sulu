@@ -47,11 +47,11 @@ class ChainFieldMetadataValidatorTest extends TestCase
 
     public function testValidate()
     {
-        $fieldMetadata = $this->prophesize(FieldMetadata::class);
+        $fieldMetadata = new FieldMetadata('some_field');
 
-        $this->fieldMetadataValidator1->validate($fieldMetadata->reveal())->shouldBeCalled();
-        $this->fieldMetadataValidator2->validate($fieldMetadata->reveal())->shouldBeCalled();
+        $this->fieldMetadataValidator1->validate($fieldMetadata, 'some_form_key')->shouldBeCalled();
+        $this->fieldMetadataValidator2->validate($fieldMetadata, 'some_form_key')->shouldBeCalled();
 
-        $this->chainFieldMetadataValidator->validate($fieldMetadata->reveal());
+        $this->chainFieldMetadataValidator->validate($fieldMetadata, 'some_form_key');
     }
 }

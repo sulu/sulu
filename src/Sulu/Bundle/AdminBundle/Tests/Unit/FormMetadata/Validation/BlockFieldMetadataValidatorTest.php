@@ -15,8 +15,9 @@ use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\ItemMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SectionMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Validation\BlockFieldMetadataValidator;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Validation\InvalidFieldMetadataException;
+use Sulu\Component\Content\Exception\ReservedPropertyNameException;
 
 class BlockFieldMetadataValidatorTest extends TestCase
 {
@@ -30,85 +31,125 @@ class BlockFieldMetadataValidatorTest extends TestCase
         $this->blockFieldMetadataValidator = new BlockFieldMetadataValidator();
     }
 
+    /**
+     * @param FormMetadata[] $types
+     */
+    private function createFieldMetadata(
+        string $name = 'some_property',
+        string $type = 'block',
+        array $types = []
+    ): FieldMetadata {
+        $fieldMetadata = new FieldMetadata($name);
+        $fieldMetadata->setType($type);
+
+        foreach ($types as $type) {
+            $fieldMetadata->addType($type);
+        }
+
+        return $fieldMetadata;
+    }
+
+    /**
+     * @param ItemMetadata[] $items
+     */
+    private function createFormMetadata(string $name = 'some_form', array $items = []): FormMetadata
+    {
+        $formMetadata = new FormMetadata();
+        $formMetadata->setName($name);
+
+        foreach ($items as $item) {
+            $formMetadata->addItem($item);
+        }
+
+        return $formMetadata;
+    }
+
+    /**
+     * @param ItemMetadata[] $items
+     */
+    private function createSectionMetadata(string $name = 'some_section', array $items = []): SectionMetadata
+    {
+        $sectionMetadata = new SectionMetadata($name);
+
+        foreach ($items as $item) {
+            $sectionMetadata->addItem($item);
+        }
+
+        return $sectionMetadata;
+    }
+
+    private function expectReservedPropertyNameException(string $formKey, string $blockName, string $propertyName)
+    {
+        $this->expectException(ReservedPropertyNameException::class);
+        $this->expectExceptionMessageMatches('"' . $formKey . '"');
+        $this->expectExceptionMessageMatches('"' . $blockName . '"');
+        $this->expectExceptionMessageMatches('"' . $propertyName . '"');
+    }
+
     public function testValidate()
     {
-        $fieldMetadata = $this->prophesize(FieldMetadata::class);
-        $fieldMetadata->getType()->willReturn('block');
-        $fieldMetadata->getName()->willReturn('my_block');
-
-        $type = $this->prophesize(FormMetadata::class);
-        $fieldMetadata->getTypes()->willReturn([$type->reveal()]);
-
-        $item = $this->prophesize(FieldMetadata::class);
-        $item->getName()->willReturn('other');
-        $type->getItems()->willReturn([$item->reveal()]);
+        $item = $this->createFieldMetadata('valid_name', 'text_line');
+        $type = $this->createFormMetadata('some_block_type', [$item]);
+        $block = $this->createFieldMetadata('some_block', 'block', [$type]);
 
         $this->expectNotToPerformAssertions();
 
-        $this->blockFieldMetadataValidator->validate($fieldMetadata->reveal());
+        $this->blockFieldMetadataValidator->validate($block, 'some_form_key');
     }
 
     public function testValidatePropertyNameType()
     {
-        $fieldMetadata = $this->prophesize(FieldMetadata::class);
-        $fieldMetadata->getType()->willReturn('block');
-        $fieldMetadata->getName()->willReturn('my_block');
+        $item = $this->createFieldMetadata('type', 'text_line');
+        $type = $this->createFormMetadata('some_block_type', [$item]);
+        $block = $this->createFieldMetadata('some_block', 'block', [$type]);
 
-        $type = $this->prophesize(FormMetadata::class);
-        $fieldMetadata->getTypes()->willReturn([$type->reveal()]);
+        $this->expectReservedPropertyNameException('some_form_key', 'some_block', 'type');
 
-        $item = $this->prophesize(FieldMetadata::class);
-        $item->getName()->willReturn('type');
-        $type->getItems()->willReturn([$item->reveal()]);
-
-        $this->expectException(InvalidFieldMetadataException::class);
-
-        $this->blockFieldMetadataValidator->validate($fieldMetadata->reveal());
+        $this->blockFieldMetadataValidator->validate($block, 'some_form_key');
     }
 
     public function testValidatePropertyNameSettings()
     {
-        $fieldMetadata = $this->prophesize(FieldMetadata::class);
-        $fieldMetadata->getType()->willReturn('block');
-        $fieldMetadata->getName()->willReturn('my_block');
+        $item = $this->createFieldMetadata('settings', 'text_line');
+        $type = $this->createFormMetadata('some_block_type', [$item]);
+        $block = $this->createFieldMetadata('some_block', 'block', [$type]);
 
-        $type = $this->prophesize(FormMetadata::class);
-        $fieldMetadata->getTypes()->willReturn([$type->reveal()]);
+        $this->expectReservedPropertyNameException('some_form_key', 'some_block', 'settings');
 
-        $item = $this->prophesize(FieldMetadata::class);
-        $item->getName()->willReturn('settings');
-        $type->getItems()->willReturn([$item->reveal()]);
-
-        $this->expectException(InvalidFieldMetadataException::class);
-
-        $this->blockFieldMetadataValidator->validate($fieldMetadata->reveal());
+        $this->blockFieldMetadataValidator->validate($block, 'some_form_key');
     }
 
-    public function testValidateItemNoFieldMetadata()
+    public function testValidateBlockWithSectionWithTypeProperty()
     {
-        $fieldMetadata = $this->prophesize(FieldMetadata::class);
-        $fieldMetadata->getType()->willReturn('block');
-        $fieldMetadata->getName()->willReturn('my_block');
+        $item = $this->createFieldMetadata('type', 'text_line');
+        $section = $this->createSectionMetadata('some_section', [$item]);
+        $type = $this->createFormMetadata('some_block_type', [$section]);
+        $block = $this->createFieldMetadata('some_block', 'block', [$type]);
 
-        $type = $this->prophesize(FormMetadata::class);
-        $fieldMetadata->getTypes()->willReturn([$type->reveal()]);
+        $this->expectReservedPropertyNameException('some_form_key', 'some_block', 'type');
 
-        $item = $this->prophesize(ItemMetadata::class);
-        $type->getItems()->willReturn([$item->reveal()]);
+        $this->blockFieldMetadataValidator->validate($block, 'some_form_key');
+    }
+
+    public function testValidateBlockWithSectionWithValidProperties()
+    {
+        $sectionItem = $this->createFieldMetadata('other_valid_name', 'text_line');
+        $section = $this->createSectionMetadata('some_section', [$sectionItem]);
+        $item = $this->createFieldMetadata('valid_name', 'text_line');
+        $type = $this->createFormMetadata('some_block_type', [$item, $section]);
+        $block = $this->createFieldMetadata('some_block', 'block', [$type]);
 
         $this->expectNotToPerformAssertions();
 
-        $this->blockFieldMetadataValidator->validate($fieldMetadata->reveal());
+        $this->blockFieldMetadataValidator->validate($block, 'some_form_key');
     }
 
     public function testValidateNotBlock()
     {
-        $fieldMetadata = $this->prophesize(FieldMetadata::class);
-        $fieldMetadata->getType()->willReturn('other');
-        $fieldMetadata->getName()->willReturn('my_other');
+        $property = $this->createFieldMetadata('some_property', 'text_line');
 
         $this->expectNotToPerformAssertions();
 
-        $this->blockFieldMetadataValidator->validate($fieldMetadata->reveal());
+        $this->blockFieldMetadataValidator->validate($property, 'some_form_key');
     }
 }

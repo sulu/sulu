@@ -82,6 +82,7 @@ class XmlFormMetadataLoader implements FormMetadataLoaderInterface, CacheWarmerI
         $formFinder = (new Finder())->in($this->formDirectories)->name('*.xml');
         $formsMetadataCollection = [];
         $formsMetadataResources = [];
+
         foreach ($formFinder as $formFile) {
             $formMetadataCollection = $this->formXmlLoader->load($formFile->getPathName());
             $items = $formMetadataCollection->getItems();
@@ -95,12 +96,8 @@ class XmlFormMetadataLoader implements FormMetadataLoaderInterface, CacheWarmerI
         }
 
         foreach ($formsMetadataCollection as $key => $formMetadataCollection) {
-            /**
-             * @var string $locale
-             * @var FormMetadata $formMetadata
-             */
             foreach ($formMetadataCollection->getItems() as $locale => $formMetadata) {
-                $this->validateFormMetadata($formMetadata);
+                $this->validateItems($formMetadata->getItems(), $key);
 
                 $configCache = $this->getConfigCache($key, $locale);
                 $configCache->write(
@@ -113,15 +110,22 @@ class XmlFormMetadataLoader implements FormMetadataLoaderInterface, CacheWarmerI
         }
     }
 
-    private function validateFormMetadata(FormMetadata $formMetadata): void
+    /**
+     * @param ItemMetadata[] $items
+     */
+    private function validateItems(array $items, string $formKey): void
     {
-        foreach ($formMetadata->getItems() as $item) {
+        foreach ($items as $item) {
+            if ($item instanceof SectionMetadata) {
+                $this->validateItems($item->getItems(), $formKey);
+            }
+
             if ($item instanceof FieldMetadata) {
                 foreach ($item->getTypes() as $type) {
-                    $this->validateFormMetadata($type);
+                    $this->validateItems($type->getItems(), $formKey);
                 }
 
-                $this->fieldMetadataValidator->validate($item);
+                $this->fieldMetadataValidator->validate($item, $formKey);
             }
         }
     }
