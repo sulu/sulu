@@ -73,7 +73,7 @@ exports[`Should render a block list 1`] = `
       class="su-plus buttonIcon"
     />
     <span
-      class="text"
+      class="buttonText"
     >
       Add block
     </span>
@@ -155,7 +155,7 @@ exports[`Should render a disabled block list 1`] = `
       class="su-plus buttonIcon"
     />
     <span
-      class="text"
+      class="buttonText"
     >
       Add block
     </span>
@@ -237,7 +237,7 @@ exports[`Should render a fully filled block list without add button if maxOccurs
       class="su-plus buttonIcon"
     />
     <span
-      class="text"
+      class="buttonText"
     >
       Add block
     </span>
@@ -261,7 +261,7 @@ exports[`Should render an empty block list 1`] = `
       class="su-plus buttonIcon"
     />
     <span
-      class="text"
+      class="buttonText"
     >
       Add block
     </span>

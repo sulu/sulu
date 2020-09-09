@@ -273,7 +273,7 @@ exports[`Render a simple MediaOverview 1`] = `
               type="button"
             >
               <span
-                class="text"
+                class="buttonText"
               >
                 <span
                   aria-label="su-th-large"
@@ -286,7 +286,7 @@ exports[`Render a simple MediaOverview 1`] = `
               type="button"
             >
               <span
-                class="text"
+                class="buttonText"
               >
                 <span
                   aria-label="su-align-justify"

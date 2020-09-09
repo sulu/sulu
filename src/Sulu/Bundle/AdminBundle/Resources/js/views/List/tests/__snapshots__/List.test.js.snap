@@ -238,7 +238,7 @@ Array [
             type="button"
           >
             <span
-              class="text"
+              class="buttonText"
             >
               Export
             </span>

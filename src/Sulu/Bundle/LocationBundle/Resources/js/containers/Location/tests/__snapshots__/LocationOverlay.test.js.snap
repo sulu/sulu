@@ -423,7 +423,7 @@ Array [
               type="button"
             >
               <span
-                class="text"
+                class="buttonText"
               >
                 sulu_admin.reset
               </span>
@@ -434,7 +434,7 @@ Array [
             type="button"
           >
             <span
-              class="text"
+              class="buttonText"
             >
               sulu_admin.confirm
             </span>
@@ -890,7 +890,7 @@ Array [
               type="button"
             >
               <span
-                class="text"
+                class="buttonText"
               >
                 sulu_admin.reset
               </span>
@@ -901,7 +901,7 @@ Array [
             type="button"
           >
             <span
-              class="text"
+              class="buttonText"
             >
               sulu_admin.confirm
             </span>

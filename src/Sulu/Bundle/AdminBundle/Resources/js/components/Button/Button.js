@@ -92,7 +92,7 @@ export default class Button<T> extends React.PureComponent<Props<T>> {
                     <Icon className={iconClass} name={icon} />
                 }
                 {children &&
-                    <span className={buttonStyles.text}>{children}</span>
+                    <span className={buttonStyles.buttonText}>{children}</span>
                 }
                 {showDropdownIcon &&
                     <Icon className={buttonStyles.dropdownIcon} name="su-angle-down" />

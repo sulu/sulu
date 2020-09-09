@@ -40,7 +40,7 @@ Array [
               type="button"
             >
               <span
-                class="text"
+                class="buttonText"
               >
                 Action 1
               </span>
@@ -50,7 +50,7 @@ Array [
               type="button"
             >
               <span
-                class="text"
+                class="buttonText"
               >
                 Action 2
               </span>
@@ -61,7 +61,7 @@ Array [
             type="button"
           >
             <span
-              class="text"
+              class="buttonText"
             >
               Apply
             </span>

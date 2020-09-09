@@ -445,7 +445,7 @@ Array [
                 type="button"
               >
                 <span
-                  class="text"
+                  class="buttonText"
                 >
                   sulu_admin.to_login
                 </span>
@@ -456,7 +456,7 @@ Array [
                 type="submit"
               >
                 <span
-                  class="text"
+                  class="buttonText"
                 >
                   sulu_admin.reset_password
                 </span>
@@ -585,7 +585,7 @@ Array [
                 type="button"
               >
                 <span
-                  class="text"
+                  class="buttonText"
                 >
                   sulu_admin.forgot_password
                 </span>
@@ -596,7 +596,7 @@ Array [
                 type="submit"
               >
                 <span
-                  class="text"
+                  class="buttonText"
                 >
                   sulu_admin.login
                 </span>

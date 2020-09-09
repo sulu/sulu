@@ -69,7 +69,7 @@ exports[`Render data in EditLines 2`] = `
       class="su-plus buttonIcon"
     />
     <span
-      class="text"
+      class="buttonText"
     >
       sulu_admin.add
     </span>
@@ -146,7 +146,7 @@ exports[`Render data in EditLines with other properties 2`] = `
       class="su-plus buttonIcon"
     />
     <span
-      class="text"
+      class="buttonText"
     >
       sulu_admin.add
     </span>

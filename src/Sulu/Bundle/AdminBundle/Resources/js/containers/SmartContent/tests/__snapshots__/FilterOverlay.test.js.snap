@@ -44,7 +44,7 @@ Array [
                   type="button"
                 >
                   <span
-                    class="text"
+                    class="buttonText"
                   >
                     sulu_admin.choose_data_source
                   </span>
@@ -86,7 +86,7 @@ Array [
                   type="button"
                 >
                   <span
-                    class="text"
+                    class="buttonText"
                   >
                     sulu_admin.choose_categories
                   </span>
@@ -393,7 +393,7 @@ Array [
               type="button"
             >
               <span
-                class="text"
+                class="buttonText"
               >
                 sulu_admin.reset
               </span>
@@ -404,7 +404,7 @@ Array [
             type="button"
           >
             <span
-              class="text"
+              class="buttonText"
             >
               sulu_admin.confirm
             </span>
@@ -456,7 +456,7 @@ Array [
               type="button"
             >
               <span
-                class="text"
+                class="buttonText"
               >
                 sulu_admin.reset
               </span>
@@ -467,7 +467,7 @@ Array [
             type="button"
           >
             <span
-              class="text"
+              class="buttonText"
             >
               sulu_admin.confirm
             </span>

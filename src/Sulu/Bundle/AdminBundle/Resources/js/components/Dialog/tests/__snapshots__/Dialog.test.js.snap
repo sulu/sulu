@@ -29,7 +29,7 @@ Array [
             type="button"
           >
             <span
-              class="text"
+              class="buttonText"
             >
               Confirm
             </span>
@@ -39,7 +39,7 @@ Array [
             type="button"
           >
             <span
-              class="text"
+              class="buttonText"
             >
               Cancel
             </span>

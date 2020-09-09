@@ -1,3 +1,3 @@
 // @flow
 
-export type ButtonSkin = 'primary' | 'secondary' | 'link' | 'icon';
+export type ButtonSkin = 'primary' | 'secondary' | 'link' | 'text' | 'icon';

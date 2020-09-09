@@ -344,7 +344,7 @@ exports[`Render ContactDetails with data 1`] = `
           class="su-plus buttonIcon"
         />
         <span
-          class="text"
+          class="buttonText"
         >
           sulu_admin.add
         </span>
@@ -497,7 +497,7 @@ exports[`Render empty ContactDetails 1`] = `
           class="su-plus buttonIcon"
         />
         <span
-          class="text"
+          class="buttonText"
         >
           sulu_admin.add
         </span>
@@ -854,7 +854,7 @@ exports[`Render empty phone and email fields even if other values are set 1`] = 
           class="su-plus buttonIcon"
         />
         <span
-          class="text"
+          class="buttonText"
         >
           sulu_admin.add
         </span>

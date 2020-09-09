@@ -9,7 +9,7 @@ exports[`The component should render with current adapter "folder" 1`] = `
     type="button"
   >
     <span
-      class="text"
+      class="buttonText"
     >
       <span
         aria-label="su-th-large"
@@ -22,7 +22,7 @@ exports[`The component should render with current adapter "folder" 1`] = `
     type="button"
   >
     <span
-      class="text"
+      class="buttonText"
     >
       <span
         aria-label="su-th-large"
@@ -42,7 +42,7 @@ exports[`The component should render with current adapter "table" 1`] = `
     type="button"
   >
     <span
-      class="text"
+      class="buttonText"
     >
       <span
         aria-label="su-th-large"
@@ -55,7 +55,7 @@ exports[`The component should render with current adapter "table" 1`] = `
     type="button"
   >
     <span
-      class="text"
+      class="buttonText"
     >
       <span
         aria-label="su-th-large"

@@ -85,7 +85,7 @@ exports[`Should render the Login component when initialized is true 1`] = `
               type="button"
             >
               <span
-                class="text"
+                class="buttonText"
               >
                 sulu_admin.forgot_password
               </span>
@@ -96,7 +96,7 @@ exports[`Should render the Login component when initialized is true 1`] = `
               type="submit"
             >
               <span
-                class="text"
+                class="buttonText"
               >
                 sulu_admin.login
               </span>
@@ -183,7 +183,7 @@ exports[`Should render the Login with forgot password view 1`] = `
               type="button"
             >
               <span
-                class="text"
+                class="buttonText"
               >
                 sulu_admin.to_login
               </span>
@@ -194,7 +194,7 @@ exports[`Should render the Login with forgot password view 1`] = `
               type="submit"
             >
               <span
-                class="text"
+                class="buttonText"
               >
                 sulu_admin.reset
               </span>
@@ -281,7 +281,7 @@ exports[`Should render the Login with forgot password with success 1`] = `
               type="button"
             >
               <span
-                class="text"
+                class="buttonText"
               >
                 sulu_admin.to_login
               </span>
@@ -292,7 +292,7 @@ exports[`Should render the Login with forgot password with success 1`] = `
               type="submit"
             >
               <span
-                class="text"
+                class="buttonText"
               >
                 sulu_admin.reset_resend
               </span>
@@ -404,7 +404,7 @@ exports[`Should render the Login with reset password view 1`] = `
               type="button"
             >
               <span
-                class="text"
+                class="buttonText"
               >
                 sulu_admin.to_login
               </span>
@@ -415,7 +415,7 @@ exports[`Should render the Login with reset password view 1`] = `
               type="submit"
             >
               <span
-                class="text"
+                class="buttonText"
               >
                 sulu_admin.reset_password
               </span>
@@ -527,7 +527,7 @@ exports[`Should render the LoginForm component with error 1`] = `
               type="button"
             >
               <span
-                class="text"
+                class="buttonText"
               >
                 sulu_admin.forgot_password
               </span>
@@ -538,7 +538,7 @@ exports[`Should render the LoginForm component with error 1`] = `
               type="submit"
             >
               <span
-                class="text"
+                class="buttonText"
               >
                 sulu_admin.login
               </span>

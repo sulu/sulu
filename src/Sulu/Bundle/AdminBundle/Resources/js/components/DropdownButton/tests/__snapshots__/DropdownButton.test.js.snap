@@ -10,7 +10,7 @@ exports[`Render dropdown button 1`] = `
     class="su-plus buttonIcon"
   />
   <span
-    class="text"
+    class="buttonText"
   >
     Add
   </span>

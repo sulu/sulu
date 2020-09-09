@@ -76,11 +76,16 @@ exports[`Render snippet areas with data as table 1`] = `
           <div
             class="cellContent"
           >
-            <div
-              class="title"
+            <button
+              class="button text titleButton"
+              type="button"
             >
-              Footer Snippet
-            </div>
+              <span
+                class="buttonText"
+              >
+                Footer Snippet
+              </span>
+            </button>
             <button
               class="button link deleteButton"
               type="button"
