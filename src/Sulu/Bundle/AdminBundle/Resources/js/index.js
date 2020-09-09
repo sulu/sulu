@@ -42,7 +42,7 @@ import {
     listFieldTransformerRegistry,
     listFieldFilterTypeRegistry,
     DateFieldTransformer,
-    DateTimeFieldFilterType,
+    DateFieldFilterType,
     DateTimeFieldTransformer,
     SelectFieldFilterType,
     FolderAdapter,
@@ -178,7 +178,8 @@ function registerListAdapters() {
 
 function registerListFieldFilterTypes() {
     listFieldFilterTypeRegistry.add('boolean', BooleanFieldFilterType);
-    listFieldFilterTypeRegistry.add('datetime', DateTimeFieldFilterType);
+    listFieldFilterTypeRegistry.add('date', DateFieldFilterType, {timeFormat: false});
+    listFieldFilterTypeRegistry.add('datetime', DateFieldFilterType, {timeFormat: true});
     listFieldFilterTypeRegistry.add('select', SelectFieldFilterType);
     listFieldFilterTypeRegistry.add('number', NumberFieldFilterType);
     listFieldFilterTypeRegistry.add('selection', SelectionFieldFilterType);

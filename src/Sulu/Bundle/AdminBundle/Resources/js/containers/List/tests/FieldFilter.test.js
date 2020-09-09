@@ -6,6 +6,7 @@ import listFieldFilterTypeRegistry from '../registries/listFieldFilterTypeRegist
 
 jest.mock('../registries/listFieldFilterTypeRegistry', () => ({
     get: jest.fn(),
+    getOptions: jest.fn().mockReturnValue({}),
 }));
 
 jest.mock('../../../utils/Translator', () => ({

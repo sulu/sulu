@@ -13,11 +13,11 @@ namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Filter;
 
 use PHPUnit\Framework\TestCase;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptor;
-use Sulu\Component\Rest\ListBuilder\Filter\DateTimeFilterType;
+use Sulu\Component\Rest\ListBuilder\Filter\DateFilterType;
 use Sulu\Component\Rest\ListBuilder\Filter\InvalidFilterTypeOptionsException;
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
 
-class DateTimeFilterTypeTest extends TestCase
+class DateFilterTypeTest extends TestCase
 {
     /**
      * @var DateFilterType
@@ -31,15 +31,15 @@ class DateTimeFilterTypeTest extends TestCase
 
     public function setUp(): void
     {
-        $this->dateTimeFilterType = new DateTimeFilterType();
+        $this->dateTimeFilterType = new DateFilterType();
         $this->listBuilder = $this->prophesize(ListBuilderInterface::class);
     }
 
     public function provideFilter()
     {
         return [
-            ['created', ['from' => '2020-02-05 12:15', 'to' => '2020-02-07 13:15'], ['2020-02-05 12:15:00', '2020-02-07 13:15:59']],
-            ['changed', ['from' => '2013-08-01 00:00', 'to' => '2020-02-10 00:00'], ['2013-08-01 00:00:00', '2020-02-10 00:00:59']],
+            ['created', ['from' => '2020-02-05 00:00', 'to' => '2020-02-07 00:00'], ['2020-02-05 00:00:00', '2020-02-07 23:59:59']],
+            ['changed', ['from' => '2013-08-01 00:00', 'to' => '2020-02-10 00:00'], ['2013-08-01 00:00:00', '2020-02-10 23:59:59']],
         ];
     }
 
@@ -57,14 +57,14 @@ class DateTimeFilterTypeTest extends TestCase
             ->shouldBeCalled();
 
         $this->listBuilder
-            ->where($fieldDescriptor->reveal(), $expected[1], ListBuilderInterface::WHERE_COMPARATOR_LESS)
+            ->where($fieldDescriptor->reveal(), $expected[1], ListBuilderInterface::WHERE_COMPARATOR_LESS_THAN)
             ->shouldBeCalled();
     }
 
     public function provideFilterFromOnly()
     {
         return [
-            ['created', ['from' => '2020-02-05 12:15'], '2020-02-05 12:15:00'],
+            ['created', ['from' => '2020-02-05 00:00'], '2020-02-05 00:00:00'],
             ['changed', ['from' => '2013-08-01 00:00'], '2013-08-01 00:00:00'],
         ];
     }
@@ -77,17 +77,16 @@ class DateTimeFilterTypeTest extends TestCase
         $fieldDescriptor = $this->prophesize(FieldDescriptor::class);
 
         $this->dateTimeFilterType->filter($this->listBuilder->reveal(), $fieldDescriptor->reveal(), $value);
-
         $this->listBuilder
-            ->where($fieldDescriptor->reveal(), $expected, ListBuilderInterface::WHERE_COMPARATOR_GREATER)
+            ->where($fieldDescriptor->reveal(), $expected, ListBuilderInterface::WHERE_COMPARATOR_GREATER_THAN)
             ->shouldBeCalled();
     }
 
     public function provideFilterToOnly()
     {
         return [
-            ['created', ['to' => '2020-02-05 12:15'], '2020-02-05 12:15:59'],
-            ['changed', ['to' => '2013-08-01 00:00'], '2013-08-01 00:00:59'],
+            ['created', ['to' => '2020-02-05'], '2020-02-05 23:59:59'],
+            ['changed', ['to' => '2013-08-01'], '2013-08-01 23:59:59'],
         ];
     }
 
@@ -101,7 +100,7 @@ class DateTimeFilterTypeTest extends TestCase
         $this->dateTimeFilterType->filter($this->listBuilder->reveal(), $fieldDescriptor->reveal(), $value);
 
         $this->listBuilder
-            ->where($fieldDescriptor->reveal(), $expected, ListBuilderInterface::WHERE_COMPARATOR_LESS)
+            ->where($fieldDescriptor->reveal(), $expected, ListBuilderInterface::WHERE_COMPARATOR_LESS_THAN)
             ->shouldBeCalled();
     }
 

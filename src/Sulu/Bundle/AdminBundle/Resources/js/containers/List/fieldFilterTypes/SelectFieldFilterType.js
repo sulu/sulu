@@ -6,7 +6,7 @@ import {translate} from '../../../utils/Translator';
 import AbstractFieldFilterType from './AbstractFieldFilterType';
 
 class SelectFieldFilterType extends AbstractFieldFilterType<?Array<string>> {
-    @computed get options(): Object {
+    @computed get parameterOptions(): Object {
         const {parameters} = this;
 
         if (!parameters) {
@@ -31,12 +31,12 @@ class SelectFieldFilterType extends AbstractFieldFilterType<?Array<string>> {
 
         return (
             <CheckboxGroup onChange={this.handleChange} values={value || []}>
-                {Object.keys(this.options).map((optionKey) => (
+                {Object.keys(this.parameterOptions).map((optionKey) => (
                     <Checkbox
                         key={optionKey}
                         value={optionKey}
                     >
-                        {translate(this.options[optionKey])}
+                        {translate(this.parameterOptions[optionKey])}
                     </Checkbox>
                 ))}
             </CheckboxGroup>
@@ -48,7 +48,7 @@ class SelectFieldFilterType extends AbstractFieldFilterType<?Array<string>> {
             return Promise.resolve(null);
         }
 
-        return Promise.resolve(values.map((value) => translate(this.options[value])).join(', '));
+        return Promise.resolve(values.map((value) => translate(this.parameterOptions[value])).join(', '));
     }
 }
 

@@ -120,6 +120,7 @@ jest.mock('../registries/listAdapterRegistry', () => ({
 
 jest.mock('../registries/listFieldFilterTypeRegistry', () => ({
     get: jest.fn(),
+    getOptions: jest.fn().mockReturnValue({}),
 }));
 
 jest.mock('../registries/listFieldTransformerRegistry', () => ({
