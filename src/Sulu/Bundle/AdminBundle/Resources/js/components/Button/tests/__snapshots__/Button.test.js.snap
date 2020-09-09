@@ -100,6 +100,13 @@ exports[`Should render with skin secondary and dropdown icon 1`] = `
 </button>
 `;
 
+exports[`Should render with skin text 1`] = `
+<button
+  class="button text"
+  type="button"
+/>
+`;
+
 exports[`should render disabled with skin secondary 1`] = `
 <button
   class="button secondary"

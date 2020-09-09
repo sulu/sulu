@@ -23,6 +23,10 @@ test('Should render with skin link', () => {
     expect(render(<Button skin="link" />)).toMatchSnapshot();
 });
 
+test('Should render with skin text', () => {
+    expect(render(<Button skin="text" />)).toMatchSnapshot();
+});
+
 test('Should render with skin icon', () => {
     expect(render(<Button skin="icon" />)).toMatchSnapshot();
 });

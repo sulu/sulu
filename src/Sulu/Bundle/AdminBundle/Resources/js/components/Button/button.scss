@@ -17,6 +17,9 @@ $secondaryDisabledColor: $silver;
 $linkColor: $black;
 $linkDisabledColor: $silverChalice;
 
+$textColor: $black;
+$textDisabledColor: $silverChalice;
+
 $iconFontSize: 14px;
 $iconBackgroundColorActive: $doveGray;
 $iconBackgroundColorHover: $mercury;
@@ -108,6 +111,28 @@ $iconColorActive: $white;
 
     &:disabled {
         color: $linkDisabledColor;
+    }
+}
+
+.text {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    font-size: $fontSize;
+    color: $textColor;
+
+    .button-icon + .text {
+        margin-left: 10px;
+    }
+
+    .dropdown-icon {
+        margin-left: 10px;
+        font-size: $dropdownFontSize;
+    }
+
+    &:disabled {
+        color: $textDisabledColor;
     }
 }
 

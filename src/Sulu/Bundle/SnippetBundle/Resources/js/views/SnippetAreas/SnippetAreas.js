@@ -107,7 +107,7 @@ class SnippetAreas extends React.Component<ViewProps> {
                                                 <Button
                                                     className={snippetAreasStyles.titleButton}
                                                     onClick={this.handleSnippetClick}
-                                                    skin="link"
+                                                    skin="text"
                                                     value={defaultUuid}
                                                 >
                                                     {defaultTitle}

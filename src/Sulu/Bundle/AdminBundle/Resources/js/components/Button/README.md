@@ -46,6 +46,19 @@ const onClick = () => {
 };
 
 <Button
+    skin="text"
+    onClick={onClick}>
+    Click me dude
+</Button>
+```
+
+```javascript
+const onClick = () => {
+    /* do click things */
+    alert('Clicked this nice button, congrats!');
+};
+
+<Button
     skin="icon"
     icon="su-plus"
     onClick={onClick}
