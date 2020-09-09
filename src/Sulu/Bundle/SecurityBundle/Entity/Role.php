@@ -18,7 +18,6 @@ use JMS\Serializer\Annotation\Groups;
 use Sulu\Component\Persistence\Model\AuditableTrait;
 use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authentication\RoleSettingInterface;
-use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
 
 /**
  * Role.
@@ -117,7 +116,7 @@ class Role implements RoleInterface
     public function getIdentifier()
     {
         if ($this->anonymous) {
-            return AuthenticatedVoter::IS_ANONYMOUS;
+            return RoleInterface::IS_SULU_ANONYMOUS;
         }
 
         $key = $this->getKey();
