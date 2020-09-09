@@ -94,7 +94,7 @@ exports[`Render Item with data as form 1`] = `
       type="button"
     >
       <span
-        class="text"
+        class="buttonText"
       >
         sulu_admin.cancel
       </span>
@@ -104,7 +104,7 @@ exports[`Render Item with data as form 1`] = `
       type="button"
     >
       <span
-        class="text"
+        class="buttonText"
       >
         sulu_admin.reset
       </span>
@@ -114,7 +114,7 @@ exports[`Render Item with data as form 1`] = `
       type="button"
     >
       <span
-        class="text"
+        class="buttonText"
       >
         sulu_admin.apply
       </span>

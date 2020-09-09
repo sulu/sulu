@@ -131,7 +131,7 @@ Array [
                       class="su-plus buttonIcon"
                     />
                     <span
-                      class="text"
+                      class="buttonText"
                     >
                       sulu_audience_targeting.add_condition
                     </span>
@@ -155,7 +155,7 @@ Array [
             type="button"
           >
             <span
-              class="text"
+              class="buttonText"
             >
               sulu_admin.ok
             </span>

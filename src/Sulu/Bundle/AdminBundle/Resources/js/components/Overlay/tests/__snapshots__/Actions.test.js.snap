@@ -9,7 +9,7 @@ exports[`The component should render 1`] = `
     type="button"
   >
     <span
-      class="text"
+      class="buttonText"
     >
       Action 1
     </span>
@@ -19,7 +19,7 @@ exports[`The component should render 1`] = `
     type="button"
   >
     <span
-      class="text"
+      class="buttonText"
     >
       Action 2
     </span>

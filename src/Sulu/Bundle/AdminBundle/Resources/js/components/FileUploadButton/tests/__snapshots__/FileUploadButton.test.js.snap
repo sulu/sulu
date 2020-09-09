@@ -9,7 +9,7 @@ exports[`Render a FileUploadButton 1`] = `
     type="button"
   >
     <span
-      class="text"
+      class="buttonText"
     >
       Upload something!
     </span>
@@ -37,7 +37,7 @@ exports[`Render a FileUploadButton with other skin and icon 1`] = `
       class="su-image buttonIcon"
     />
     <span
-      class="text"
+      class="buttonText"
     >
       Upload something!
     </span>
@@ -62,7 +62,7 @@ exports[`Render a disabled FileUploadButton 1`] = `
     type="button"
   >
     <span
-      class="text"
+      class="buttonText"
     >
       Upload something!
     </span>

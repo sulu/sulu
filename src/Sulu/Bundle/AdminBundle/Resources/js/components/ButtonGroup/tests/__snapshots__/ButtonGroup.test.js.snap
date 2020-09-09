@@ -9,7 +9,7 @@ exports[`Should render a button and a dropdown button 1`] = `
     type="button"
   >
     <span
-      class="text"
+      class="buttonText"
     >
       <span
         aria-label="su-th-large"
@@ -38,7 +38,7 @@ exports[`Should render a button with a custom className 1`] = `
     type="button"
   >
     <span
-      class="text"
+      class="buttonText"
     >
       <span
         aria-label="su-th-large"
@@ -58,7 +58,7 @@ exports[`Should render more than two buttons 1`] = `
     type="button"
   >
     <span
-      class="text"
+      class="buttonText"
     >
       <span
         aria-label="su-th-large"
@@ -71,7 +71,7 @@ exports[`Should render more than two buttons 1`] = `
     type="button"
   >
     <span
-      class="text"
+      class="buttonText"
     >
       <span
         aria-label="su-align-justify"
@@ -84,7 +84,7 @@ exports[`Should render more than two buttons 1`] = `
     type="button"
   >
     <span
-      class="text"
+      class="buttonText"
     >
       <span
         aria-label="su-th-large"
@@ -97,7 +97,7 @@ exports[`Should render more than two buttons 1`] = `
     type="button"
   >
     <span
-      class="text"
+      class="buttonText"
     >
       <span
         aria-label="su-align-justify"
@@ -117,7 +117,7 @@ exports[`Should render one button 1`] = `
     type="button"
   >
     <span
-      class="text"
+      class="buttonText"
     >
       <span
         aria-label="su-th-large"
@@ -137,7 +137,7 @@ exports[`Should render one button with a custom className and another one withou
     type="button"
   >
     <span
-      class="text"
+      class="buttonText"
     >
       <span
         aria-label="su-th-large"
@@ -150,7 +150,7 @@ exports[`Should render one button with a custom className and another one withou
     type="button"
   >
     <span
-      class="text"
+      class="buttonText"
     >
       <span
         aria-label="su-align-justify"
@@ -170,7 +170,7 @@ exports[`Should render two buttons 1`] = `
     type="button"
   >
     <span
-      class="text"
+      class="buttonText"
     >
       <span
         aria-label="su-th-large"
@@ -183,7 +183,7 @@ exports[`Should render two buttons 1`] = `
     type="button"
   >
     <span
-      class="text"
+      class="buttonText"
     >
       <span
         aria-label="su-align-justify"

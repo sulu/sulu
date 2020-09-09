@@ -10,7 +10,7 @@ exports[`Should render the button with icon 1`] = `
     class="su-plus buttonIcon"
   />
   <span
-    class="text"
+    class="buttonText"
   >
     Add something
   </span>

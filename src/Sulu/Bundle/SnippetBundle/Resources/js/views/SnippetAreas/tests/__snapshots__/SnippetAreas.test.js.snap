@@ -81,7 +81,7 @@ exports[`Render snippet areas with data as table 1`] = `
               type="button"
             >
               <span
-                class="text"
+                class="buttonText"
               >
                 Footer Snippet
               </span>
