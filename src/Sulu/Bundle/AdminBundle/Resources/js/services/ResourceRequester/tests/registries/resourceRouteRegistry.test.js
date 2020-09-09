@@ -35,9 +35,9 @@ test('Set and get endpoints for given key with date parameter', () => {
         },
     });
 
-    expect(resourceRouteRegistry.getDetailUrl('snippets', {value: new Date('2013-12-24')}))
+    expect(resourceRouteRegistry.getDetailUrl('snippets', {value: new Date('2013-12-24 00:00')}))
         .toEqual('get_snippet?value=2013-12-24 00:00');
-    expect(resourceRouteRegistry.getListUrl('snippets', {value: new Date('2020-09-07')}))
+    expect(resourceRouteRegistry.getListUrl('snippets', {value: new Date('2020-09-07 00:00')}))
         .toEqual('get_snippets?value=2020-09-07 00:00');
 });
 
@@ -77,11 +77,11 @@ test('Set and get endpoints for given key with date array parameter', () => {
 
     expect(resourceRouteRegistry.getDetailUrl(
         'snippets',
-        {dates: [new Date('2013-12-24 12:00'), new Date('2020-12-24')]})
+        {dates: [new Date('2013-12-24 12:00'), new Date('2020-12-24 00:00')]})
     ).toEqual('get_snippet?dates=2013-12-24 12:00,2020-12-24 00:00');
     expect(resourceRouteRegistry.getListUrl(
         'snippets',
-        {dates: [new Date('2020-09-07'), new Date('2020-11-05')]})
+        {dates: [new Date('2020-09-07 00:00'), new Date('2020-11-05 00:00')]})
     ).toEqual('get_snippets?dates=2020-09-07 00:00,2020-11-05 00:00');
 });
 
@@ -95,13 +95,13 @@ test('Set and get endpoints for given key with date in object parameter', () => 
         },
     });
 
-    resourceRouteRegistry.getDetailUrl('snippets', {value: {name: 'test', date: new Date('2020-09-07')}});
+    resourceRouteRegistry.getDetailUrl('snippets', {value: {name: 'test', date: new Date('2020-09-07 00:00')}});
     expect(SymfonyRouting.generate).toBeCalledWith(
         'get_snippet',
         {'value': {'name': 'test', 'date': '2020-09-07 00:00'}}
     );
 
-    resourceRouteRegistry.getListUrl('snippets', {value: {name: 'test', date: new Date('2020-09-07')}});
+    resourceRouteRegistry.getListUrl('snippets', {value: {name: 'test', date: new Date('2020-09-07 00:00')}});
     expect(SymfonyRouting.generate).toBeCalledWith(
         'get_snippets',
         {'value': {'name': 'test', 'date': '2020-09-07 00:00'}}
