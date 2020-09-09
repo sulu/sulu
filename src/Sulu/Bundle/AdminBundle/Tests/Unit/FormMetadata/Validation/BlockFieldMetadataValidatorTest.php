@@ -35,7 +35,7 @@ class BlockFieldMetadataValidatorTest extends TestCase
      * @param FormMetadata[] $types
      */
     private function createFieldMetadata(
-        string $name = 'some_property',
+        string $name,
         string $type = 'block',
         array $types = []
     ): FieldMetadata {
@@ -52,7 +52,7 @@ class BlockFieldMetadataValidatorTest extends TestCase
     /**
      * @param ItemMetadata[] $items
      */
-    private function createFormMetadata(string $name = 'some_form', array $items = []): FormMetadata
+    private function createFormMetadata(string $name, array $items = []): FormMetadata
     {
         $formMetadata = new FormMetadata();
         $formMetadata->setName($name);
@@ -67,7 +67,7 @@ class BlockFieldMetadataValidatorTest extends TestCase
     /**
      * @param ItemMetadata[] $items
      */
-    private function createSectionMetadata(string $name = 'some_section', array $items = []): SectionMetadata
+    private function createSectionMetadata(string $name, array $items = []): SectionMetadata
     {
         $sectionMetadata = new SectionMetadata($name);
 

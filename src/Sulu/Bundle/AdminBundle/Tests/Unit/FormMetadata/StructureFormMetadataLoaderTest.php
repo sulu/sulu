@@ -77,7 +77,7 @@ class StructureFormMetadataLoaderTest extends TestCase
      * @param FormMetadata[] $types
      */
     private function createFieldMetadata(
-        string $name = 'some_property',
+        string $name,
         string $type = 'text_line',
         array $types = []
     ): FieldMetadata {
@@ -94,7 +94,7 @@ class StructureFormMetadataLoaderTest extends TestCase
     /**
      * @param ItemMetadata[] $items
      */
-    private function createFormMetadata(string $name = 'some_form', string $key = 'some_form_key', array $items = []): FormMetadata
+    private function createFormMetadata(string $name, string $key, array $items = []): FormMetadata
     {
         $formMetadata = new FormMetadata();
         $formMetadata->setName($name);
@@ -111,7 +111,7 @@ class StructureFormMetadataLoaderTest extends TestCase
     /**
      * @param ItemMetadata[] $items
      */
-    private function createSectionMetadata(string $name = 'some_section', array $items = []): SectionMetadata
+    private function createSectionMetadata(string $name, array $items = []): SectionMetadata
     {
         $sectionMetadata = new SectionMetadata($name);
 
