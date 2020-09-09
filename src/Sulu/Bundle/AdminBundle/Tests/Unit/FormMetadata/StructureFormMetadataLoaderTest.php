@@ -158,6 +158,6 @@ class StructureFormMetadataLoaderTest extends TestCase
         $this->fieldMetadataValidator->validate($blockPropertyMetadata, 'some_template')->shouldBeCalled();
         $this->fieldMetadataValidator->validate($blockMetadata, 'some_template')->shouldBeCalled();
 
-        $this->structureFormMetadataLoader->warmUp('');
+        $this->structureFormMetadataLoader->warmUp(static::CACHE_DIR);
     }
 }

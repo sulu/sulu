@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\FormMetadata;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AdminBundle\FormMetadata\FormXmlLoader;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
@@ -119,7 +120,7 @@ class XmlFormMetadataLoaderTest extends TestCase
         $formMetadataCollection = new LocalizedFormMetadataCollection();
         $formMetadataCollection->add('en', $formMetadata);
 
-        $this->formXmlLoader->load(__DIR__ . '/dummy-forms/dummy-form.xml')
+        $this->formXmlLoader->load(Argument::cetera())
             ->willReturn($formMetadataCollection);
 
         $this->fieldMetadataValidator->validate($propertyMetadata, 'some_form_key')->shouldBeCalled();
@@ -127,6 +128,6 @@ class XmlFormMetadataLoaderTest extends TestCase
         $this->fieldMetadataValidator->validate($blockPropertyMetadata, 'some_form_key')->shouldBeCalled();
         $this->fieldMetadataValidator->validate($blockMetadata, 'some_form_key')->shouldBeCalled();
 
-        $this->xmlFormMetadataLoader->warmUp('');
+        $this->xmlFormMetadataLoader->warmUp(static::CACHE_DIR);
     }
 }
