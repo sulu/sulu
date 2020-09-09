@@ -68,7 +68,7 @@ Array [
         class="su-plus buttonIcon"
       />
       <span
-        class="text"
+        class="buttonText"
       >
         sulu_admin.add
       </span>

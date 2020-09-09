@@ -44,3 +44,15 @@ test('Has a filter type with an existing key', () => {
 test('Has a filter type with not existing key', () => {
     expect(listFieldFilterTypeRegistry.has('test')).toEqual(false);
 });
+
+test('Add a field filter type with options to the Registry', () => {
+    const Test1 = class Test1 extends AbstractFieldFilterType<*> {};
+    const Test2 = class Test1 extends AbstractFieldFilterType<*> {};
+    listFieldFilterTypeRegistry.add('test1', Test1, {option1: 'value1'});
+    listFieldFilterTypeRegistry.add('test2', Test2, {option2: 'value2'});
+
+    expect(listFieldFilterTypeRegistry.get('test1')).toBe(Test1);
+    expect(listFieldFilterTypeRegistry.get('test2')).toBe(Test2);
+    expect(listFieldFilterTypeRegistry.getOptions('test1')).toEqual({option1: 'value1'});
+    expect(listFieldFilterTypeRegistry.getOptions('test2')).toEqual({option2: 'value2'});
+});

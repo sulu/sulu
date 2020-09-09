@@ -10,7 +10,7 @@ exports[`Render an empty ConditionList 1`] = `
     class="su-plus buttonIcon"
   />
   <span
-    class="text"
+    class="buttonText"
   >
     sulu_audience_targeting.add_condition
   </span>

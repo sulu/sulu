@@ -14,7 +14,7 @@ namespace Sulu\Component\Rest\ListBuilder\Filter;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
 
-class DateTimeFilterType implements FilterTypeInterface
+class DateFilterType implements FilterTypeInterface
 {
     public function filter(
         ListBuilderInterface $listBuilder,
@@ -23,47 +23,33 @@ class DateTimeFilterType implements FilterTypeInterface
     ): void {
         if (!\is_array($options) || (!isset($options['from']) && !isset($options['to']))) {
             throw new InvalidFilterTypeOptionsException(
-                'The DateTimeFilterType requires its options to be an array with a "from" or "to" key!'
+                'The DateFilterType requires its options to be an array with a "from" or "to" key!'
             );
         }
 
-        if (isset($options['from']) && isset($options['to'])) {
+        if (isset($options['from'])) {
             $from = new \DateTime($options['from']);
-            $from = new \DateTime($from->format('Y-m-d H:i:00'));
+            $from = new \DateTime($from->format('Y-m-d 00:00:00'));
             $listBuilder->where(
                 $fieldDescriptor,
                 $from->format('Y-m-d H:i:s'),
                 ListBuilderInterface::WHERE_COMPARATOR_GREATER_THAN
             );
+        }
 
+        if (isset($options['to'])) {
             $to = new \DateTime($options['to']);
-            $to = new \DateTime($to->format('Y-m-d H:i:59'));
+            $to = new \DateTime($to->format('Y-m-d 23:59:59'));
             $listBuilder->where(
                 $fieldDescriptor,
                 $to->format('Y-m-d H:i:s'),
-                ListBuilderInterface::WHERE_COMPARATOR_LESS
-            );
-        } elseif (isset($options['from']) && !isset($options['to'])) {
-            $from = new \DateTime($options['from']);
-            $from = new \DateTime($from->format('Y-m-d H:i:00'));
-            $listBuilder->where(
-                $fieldDescriptor,
-                $from->format('Y-m-d H:i:s'),
-                ListBuilderInterface::WHERE_COMPARATOR_GREATER
-            );
-        } elseif (!isset($options['from']) && isset($options['to'])) {
-            $to = new \DateTime($options['to']);
-            $to = new \DateTime($to->format('Y-m-d H:i:59'));
-            $listBuilder->where(
-                $fieldDescriptor,
-                $to->format('Y-m-d H:i:s'),
-                ListBuilderInterface::WHERE_COMPARATOR_LESS
+                ListBuilderInterface::WHERE_COMPARATOR_LESS_THAN
             );
         }
     }
 
     public static function getDefaultIndexName(): string
     {
-        return 'datetime';
+        return 'date';
     }
 }

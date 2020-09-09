@@ -84,7 +84,7 @@ exports[`Should render a fully filled block list 1`] = `
       class="su-plus buttonIcon"
     />
     <span
-      class="text"
+      class="buttonText"
     >
       Add block
     </span>

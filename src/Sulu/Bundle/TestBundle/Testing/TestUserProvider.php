@@ -141,7 +141,7 @@ class TestUserProvider implements UserProviderInterface
      */
     public function refreshUser(UserInterface $user)
     {
-        if (self::TEST_USER_USERNAME === $this->getUser()->getUsername()) {
+        if (self::TEST_USER_USERNAME === $user->getUsername()) {
             return $this->getUser();
         }
 

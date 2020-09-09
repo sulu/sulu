@@ -589,7 +589,7 @@ Array [
               type="button"
             >
               <span
-                class="text"
+                class="buttonText"
               >
                 sulu_media.reset_selection
               </span>
@@ -601,7 +601,7 @@ Array [
             type="button"
           >
             <span
-              class="text"
+              class="buttonText"
             >
               sulu_admin.confirm
             </span>
@@ -1202,7 +1202,7 @@ Array [
               type="button"
             >
               <span
-                class="text"
+                class="buttonText"
               >
                 sulu_media.reset_selection
               </span>
@@ -1213,7 +1213,7 @@ Array [
             type="button"
           >
             <span
-              class="text"
+              class="buttonText"
             >
               sulu_admin.confirm
             </span>

@@ -21,7 +21,7 @@ exports[`Render PageList 1`] = `
           type="button"
         >
           <span
-            class="text"
+            class="buttonText"
           >
             <span
               aria-label="su-columns"
@@ -34,7 +34,7 @@ exports[`Render PageList 1`] = `
           type="button"
         >
           <span
-            class="text"
+            class="buttonText"
           >
             <span
               aria-label="su-columns"

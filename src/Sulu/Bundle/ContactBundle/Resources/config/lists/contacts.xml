@@ -221,7 +221,7 @@
             <field-name>birthday</field-name>
             <entity-name>%sulu.model.contact.class%</entity-name>
             <transformer type="date"/>
-            <filter type="datetime" />
+            <filter type="date" />
         </property>
 
         <property name="title" translation="sulu_contact.title">
@@ -321,7 +321,7 @@
                 </join>
             </joins>
         </property>
-        
+
         <property name="userLocked" visibility="no" translation="sulu_security.user_locked" type="bool">
             <field-name>locked</field-name>
             <entity-name>%sulu.model.user.class%</entity-name>

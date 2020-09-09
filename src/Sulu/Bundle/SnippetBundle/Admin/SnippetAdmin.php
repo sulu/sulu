@@ -176,6 +176,7 @@ class SnippetAdmin extends Admin
             $viewCollection->add(
                 $this->viewBuilderFactory
                     ->createViewBuilder('sulu_snippet.snippet_areas', '/snippet-areas', 'sulu_snippet.snippet_areas')
+                    ->setOption('snippetEditView', static::EDIT_FORM_VIEW)
                     ->setOption('tabTitle', 'sulu_snippet.default_snippets')
                     ->setOption('tabOrder', 3072)
                     ->setParent(PageAdmin::WEBSPACE_TABS_VIEW)

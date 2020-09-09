@@ -48,7 +48,7 @@ Array [
         class="su-download buttonIcon"
       />
       <span
-        class="text"
+        class="buttonText"
       >
         sulu_media.download_media
       </span>
@@ -62,7 +62,7 @@ Array [
         class="su-trash-alt buttonIcon"
       />
       <span
-        class="text"
+        class="buttonText"
       >
         sulu_media.delete_media
       </span>
@@ -155,7 +155,7 @@ Array [
         class="su-download buttonIcon"
       />
       <span
-        class="text"
+        class="buttonText"
       >
         sulu_media.download_media
       </span>
@@ -169,7 +169,7 @@ Array [
         class="su-trash-alt buttonIcon"
       />
       <span
-        class="text"
+        class="buttonText"
       >
         sulu_media.delete_media
       </span>
@@ -267,7 +267,7 @@ Array [
         class="su-download buttonIcon"
       />
       <span
-        class="text"
+        class="buttonText"
       >
         sulu_media.download_media
       </span>
@@ -281,7 +281,7 @@ Array [
         class="su-trash-alt buttonIcon"
       />
       <span
-        class="text"
+        class="buttonText"
       >
         sulu_media.delete_media
       </span>

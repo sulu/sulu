@@ -51,7 +51,7 @@ Array [
         class="su-focus buttonIcon"
       />
       <span
-        class="text"
+        class="buttonText"
       >
         sulu_media.set_focus_point
       </span>
@@ -65,7 +65,7 @@ Array [
         class="su-cut buttonIcon"
       />
       <span
-        class="text"
+        class="buttonText"
       >
         sulu_media.define_crops
       </span>
@@ -128,7 +128,7 @@ Array [
           class="su-image buttonIcon"
         />
         <span
-          class="text"
+          class="buttonText"
         >
           sulu_media.upload_preview_image
         </span>
@@ -150,7 +150,7 @@ Array [
         class="su-trash-alt buttonIcon"
       />
       <span
-        class="text"
+        class="buttonText"
       >
         sulu_media.delete_preview_image
       </span>
@@ -213,7 +213,7 @@ Array [
           class="su-image buttonIcon"
         />
         <span
-          class="text"
+          class="buttonText"
         >
           sulu_media.upload_preview_image
         </span>
@@ -236,7 +236,7 @@ Array [
         class="su-trash-alt buttonIcon"
       />
       <span
-        class="text"
+        class="buttonText"
       >
         sulu_media.delete_preview_image
       </span>

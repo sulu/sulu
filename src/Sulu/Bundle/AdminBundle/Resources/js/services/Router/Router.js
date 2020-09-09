@@ -24,8 +24,15 @@ function tryParse(value: ?string) {
         return undefined;
     }
 
-    if (value && value.match(/\d\d\d\d-\d\d-\d\d/)) {
+    if (value && value.match(/^\d\d\d\d-\d\d-\d\d$/)) {
         const date = new Date(value + ' 00:00'); // The time is necessary to avoid timezone issues
+        if (date.toString() !== 'Invalid Date') {
+            return date;
+        }
+    }
+
+    if (value && value.match(/^\d\d\d\d-\d\d-\d\d \d\d:\d\d$/)) {
+        const date = new Date(value);
         if (date.toString() !== 'Invalid Date') {
             return date;
         }

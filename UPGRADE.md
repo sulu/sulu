@@ -82,6 +82,13 @@ imports:
     - { resource: '../prod/sulu_http_cache.yaml' }
 ```
 
+## dev-release/2.1
+
+### DateTime filter type
+
+The DateTime filter type does now support time by default. If you want to reuse the "old" behaviour we have introduced
+a Date filter type.
+
 ## 2.1.0-RC2
 
 ### Add RestRoutingBundle

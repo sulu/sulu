@@ -229,7 +229,7 @@ exports[`Render block with schema 1`] = `
       class="su-plus buttonIcon"
     />
     <span
-      class="text"
+      class="buttonText"
     >
       sulu_admin.add_block
     </span>
@@ -488,7 +488,7 @@ exports[`Render block with schema and error on fields already being modified 1`]
       class="su-plus buttonIcon"
     />
     <span
-      class="text"
+      class="buttonText"
     >
       sulu_admin.add_block
     </span>
@@ -750,7 +750,7 @@ exports[`Render block with schema and error on fields already being modified 2`]
       class="su-plus buttonIcon"
     />
     <span
-      class="text"
+      class="buttonText"
     >
       sulu_admin.add_block
     </span>
@@ -865,7 +865,7 @@ exports[`Render collapsed blocks with block previews 1`] = `
       class="su-plus buttonIcon"
     />
     <span
-      class="text"
+      class="buttonText"
     >
       sulu_admin.add_block
     </span>
@@ -982,7 +982,7 @@ exports[`Render collapsed blocks with block previews 2`] = `
       class="su-plus buttonIcon"
     />
     <span
-      class="text"
+      class="buttonText"
     >
       sulu_admin.add_block
     </span>
@@ -1099,7 +1099,7 @@ exports[`Render collapsed blocks with block previews without tags 1`] = `
       class="su-plus buttonIcon"
     />
     <span
-      class="text"
+      class="buttonText"
     >
       sulu_admin.add_block
     </span>
