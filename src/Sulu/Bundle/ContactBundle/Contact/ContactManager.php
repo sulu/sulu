@@ -19,6 +19,7 @@ use Sulu\Bundle\ContactBundle\Entity\AccountRepositoryInterface;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\ContactAddress;
+use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\ContactBundle\Entity\ContactRepository;
 use Sulu\Bundle\ContactBundle\Entity\ContactTitleRepository;
 use Sulu\Bundle\ContactBundle\Entity\Fax;
@@ -203,7 +204,7 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
      * @param bool $patch
      * @param bool $flush
      *
-     * @return Contact
+     * @return ContactInterface
      *
      * @throws EntityNotFoundException
      */
@@ -366,7 +367,7 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
     /**
      * adds an address to the entity.
      *
-     * @param Contact $contact The entity to add the address to
+     * @param ContactInterface $contact The entity to add the address to
      * @param Address $address The address to be added
      * @param bool $isMain Defines if the address is the main Address of the contact
      *
@@ -396,7 +397,7 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
     /**
      * removes the address relation from a contact and also deletes the address if it has no more relations.
      *
-     * @param Contact $contact
+     * @param ContactInterface $contact
      * @param ContactAddress $contactAddress
      *
      * @return mixed|void
@@ -467,7 +468,7 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
      * @param $contact
      * @param string $locale
      *
-     * @return null|Contact
+     * @return null|ContactApi
      */
     public function getContact($contact, $locale)
     {
@@ -590,7 +591,7 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
     /**
      * Takes a contact entity and a locale and returns the api object.
      *
-     * @param Contact $contact
+     * @param ContactInterface $contact
      * @param string $locale
      *
      * @return ContactApi
