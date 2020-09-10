@@ -36,7 +36,7 @@ class BlockFieldMetadataValidatorTest extends TestCase
      */
     private function createFieldMetadata(
         string $name,
-        string $type = 'block',
+        string $type,
         array $types = []
     ): FieldMetadata {
         $fieldMetadata = new FieldMetadata($name);

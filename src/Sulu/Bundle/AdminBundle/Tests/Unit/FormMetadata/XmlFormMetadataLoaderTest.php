@@ -63,7 +63,7 @@ class XmlFormMetadataLoaderTest extends TestCase
      */
     private function createFieldMetadata(
         string $name,
-        string $type = 'text_line',
+        string $type,
         array $types = []
     ): FieldMetadata {
         $fieldMetadata = new FieldMetadata($name);
@@ -109,10 +109,10 @@ class XmlFormMetadataLoaderTest extends TestCase
 
     public function testWarmUp(): void
     {
-        $propertyMetadata = $this->createFieldMetadata('some_property');
-        $sectionPropertyMetadata = $this->createFieldMetadata('some_section_property');
+        $propertyMetadata = $this->createFieldMetadata('some_property', 'text_line');
+        $sectionPropertyMetadata = $this->createFieldMetadata('some_section_property', 'text_line');
         $sectionMetadata = $this->createSectionMetadata('some_section', [$sectionPropertyMetadata]);
-        $blockPropertyMetadata = $this->createFieldMetadata('some_block_property');
+        $blockPropertyMetadata = $this->createFieldMetadata('some_block_property', 'text_line');
         $blockTypeMetadata = $this->createFormMetadata('some_block_type', 'some_block_type_key', [$blockPropertyMetadata]);
         $blockMetadata = $this->createFieldMetadata('some_block', 'block', [$blockTypeMetadata]);
         $formMetadata = $this->createFormMetadata('some_form', 'some_form_key', [$propertyMetadata, $sectionMetadata, $blockMetadata]);
