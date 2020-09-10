@@ -12,7 +12,6 @@
 namespace Sulu\Component\Content\Metadata\Parser;
 
 use Sulu\Component\Content\Exception\InvalidBlockDefaultTypeException;
-use Sulu\Component\Content\Exception\ReservedPropertyNameException;
 use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\ComponentMetadata;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
@@ -36,11 +35,6 @@ class PropertiesXmlParser
      * @var string[]
      */
     private $locales;
-
-    private $reservedBlockPropertyNames = [
-        'type',
-        'settings',
-    ];
 
     public function __construct(TranslatorInterface $translator, array $locales)
     {
@@ -159,14 +153,6 @@ class PropertiesXmlParser
         $result['params'] = $this->loadParams('x:params/x:param', $xpath, $node);
         $result['meta'] = $this->loadMeta($xpath, $node);
         $result['types'] = $this->loadTypes($tags, $xpath, $node, $formKey);
-
-        foreach ($result['types'] as $type) {
-            foreach (\array_keys($type['properties']) as $typePropertyName) {
-                if (\in_array($typePropertyName, $this->reservedBlockPropertyNames)) {
-                    throw new ReservedPropertyNameException($result['name'], $typePropertyName, $formKey);
-                }
-            }
-        }
 
         $typeNames = \array_map(function($type) {
             return $type['name'];

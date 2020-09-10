@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\AdminBundle\Metadata\FormMetadata;
 
 use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadataMapper;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Validation\FieldMetadataValidatorInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataInterface;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\Content\Metadata\StructureMetadata;
@@ -39,6 +40,11 @@ class StructureFormMetadataLoader implements FormMetadataLoaderInterface, CacheW
     private $webspaceManager;
 
     /**
+     * @var FieldMetadataValidatorInterface
+     */
+    private $fieldMetadataValidator;
+
+    /**
      * @var string[]
      */
     private $defaultTypes;
@@ -62,6 +68,7 @@ class StructureFormMetadataLoader implements FormMetadataLoaderInterface, CacheW
         StructureMetadataFactoryInterface $structureMetadataFactory,
         FormMetadataMapper $formMetadataMapper,
         WebspaceManagerInterface $webspaceManager,
+        FieldMetadataValidatorInterface $fieldMetadataValidator,
         array $defaultTypes,
         array $locales,
         string $cacheDir,
@@ -70,6 +77,7 @@ class StructureFormMetadataLoader implements FormMetadataLoaderInterface, CacheW
         $this->structureMetadataFactory = $structureMetadataFactory;
         $this->formMetadataMapper = $formMetadataMapper;
         $this->webspaceManager = $webspaceManager;
+        $this->fieldMetadataValidator = $fieldMetadataValidator;
         $this->defaultTypes = $defaultTypes;
         $this->locales = $locales;
         $this->cacheDir = $cacheDir;
@@ -121,6 +129,11 @@ class StructureFormMetadataLoader implements FormMetadataLoaderInterface, CacheW
         foreach ($this->locales as $locale) {
             foreach ($structuresMetadataByTypes as $structureType => $structuresMetadata) {
                 $structure = $this->mapStructureMetadata($structuresMetadata, $locale);
+
+                foreach ($structure->getForms() as $formMetadata) {
+                    $this->validateItems($formMetadata->getItems(), $formMetadata->getName());
+                }
+
                 $configCache = $this->getConfigCache($structureType, $locale);
                 $configCache->write(
                     \serialize($structure),
@@ -171,6 +184,26 @@ class StructureFormMetadataLoader implements FormMetadataLoaderInterface, CacheW
 
             if ($itemMetadata instanceof SectionMetadata) {
                 $this->enhanceBlockMetadata($itemMetadata->getItems());
+            }
+        }
+    }
+
+    /**
+     * @param ItemMetadata[] $items
+     */
+    private function validateItems(array $items, string $formKey): void
+    {
+        foreach ($items as $item) {
+            if ($item instanceof SectionMetadata) {
+                $this->validateItems($item->getItems(), $formKey);
+            }
+
+            if ($item instanceof FieldMetadata) {
+                foreach ($item->getTypes() as $type) {
+                    $this->validateItems($type->getItems(), $formKey);
+                }
+
+                $this->fieldMetadataValidator->validate($item, $formKey);
             }
         }
     }
