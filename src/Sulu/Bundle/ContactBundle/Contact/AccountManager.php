@@ -72,7 +72,7 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
     /**
      * Adds an address to the entity.
      *
-     * @param AccountApi $account The entity to add the address to
+     * @param AccountInterface $account The entity to add the address to
      * @param AddressEntity $address The address to be added
      * @param bool $isMain Defines if the address is the main Address of the contact
      *
@@ -249,7 +249,7 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
      * Takes an account-entity and the id of a media and adds the media as the logo of the account.
      * TODO: handle logo adding differently and remove this method (or make it private).
      *
-     * @param Account $account
+     * @param AccountInterface $account
      * @param int $mediaId
      */
     public function setLogo($account, $mediaId)
@@ -317,7 +317,7 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
     /**
      * Returns an api entity for an doctrine entity.
      *
-     * @param Account $account
+     * @param AccountInterface $account
      * @param string $locale
      *
      * @return null|AccountApi
@@ -340,11 +340,10 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
     /**
      * Deletes (not just removes) all bank-accounts which are assigned to a contact.
      *
-     * @param $entity
+     * @param AccountInterface $entity
      */
     public function deleteBankAccounts($entity)
     {
-        /** @var Account $entity */
         if ($entity->getBankAccounts()) {
             $this->deleteAllEntitiesOfCollection($entity->getBankAccounts());
         }
@@ -365,7 +364,7 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
     /**
      * Takes a account entity and a locale and returns the api object.
      *
-     * @param Account $account
+     * @param AccountInterface $account
      * @param string $locale
      *
      * @return AccountApi
