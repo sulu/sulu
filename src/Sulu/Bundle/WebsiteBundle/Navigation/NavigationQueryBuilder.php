@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Navigation;
 
+use Sulu\Bundle\PageBundle\Content\Types\SegmentSelect;
 use Sulu\Component\Content\Query\ContentQueryBuilder;
 
 class NavigationQueryBuilder extends ContentQueryBuilder
@@ -53,10 +54,14 @@ class NavigationQueryBuilder extends ContentQueryBuilder
 
         if (null !== $this->segmentKey) {
             $where[] = \sprintf(
-                "(page.[i18n:%s-excerpt-segment] = '%s' OR page.[i18n:%s-excerpt-segment] IS NULL)",
+                "(page.[i18n:%s-excerpt-segments%s%s] = '%s' OR page.[i18n:%s-excerpt-segments%s%s] IS NULL)",
                 $locale,
+                SegmentSelect::SEPARATOR,
+                $webspaceKey,
                 $this->segmentKey,
-                $locale
+                $locale,
+                SegmentSelect::SEPARATOR,
+                $webspaceKey
             );
         }
 

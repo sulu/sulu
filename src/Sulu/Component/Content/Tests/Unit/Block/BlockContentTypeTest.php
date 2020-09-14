@@ -29,6 +29,7 @@ use Sulu\Component\Content\Types\TextArea;
 use Sulu\Component\Content\Types\TextLine;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Segment;
+use Sulu\Component\Webspace\Webspace;
 
 class BlockContentTypeTest extends TestCase
 {
@@ -430,7 +431,7 @@ class BlockContentTypeTest extends TestCase
                         'settings' => new \stdClass(),
                     ],
                 ],
-                'settings' => ['segment' => 'w'],
+                'settings' => ['segments' => ['default' => 'w', 'other' => 's']],
             ],
             [
                 'type' => 'type1',
@@ -464,7 +465,7 @@ class BlockContentTypeTest extends TestCase
             'i18n:de-block1-sub-block#1-type#0' => 'subType1',
             'i18n:de-block1-sub-block#1-title#0' => $data[1]['sub-block'][0]['title'],
             'i18n:de-block1-sub-block#1-article#0' => $data[1]['sub-block'][0]['article'],
-            'i18n:de-block1-settings#0' => '{"segment": "w"}',
+            'i18n:de-block1-settings#0' => '{"segments": {"default": "w", "other": "s"}}',
             'i18n:de-block1-sub-block#0-settings#0' => '{}',
             'i18n:de-block1-settings#1' => '{}',
             'i18n:de-block1-sub-block#1-settings#0' => '{}',
@@ -740,6 +741,12 @@ class BlockContentTypeTest extends TestCase
         ];
         $this->blockProperty->setValue($data);
 
+        $webspace = new Webspace();
+        $webspace->setKey('webspace-1');
+        $this->requestAnalyzer->getWebspace()->willReturn($webspace);
+
+        $this->requestAnalyzer->getSegment()->willReturn(null);
+
         $result = $this->blockContentType->getContentData($this->blockProperty);
 
         $this->assertEquals($data, $result);
@@ -775,6 +782,12 @@ class BlockContentTypeTest extends TestCase
         ];
         $this->blockProperty->setValue($data);
 
+        $webspace = new Webspace();
+        $webspace->setKey('webspace-1');
+        $this->requestAnalyzer->getWebspace()->willReturn($webspace);
+
+        $this->requestAnalyzer->getSegment()->willReturn(null);
+
         $result = $this->blockContentType->getContentData($this->blockProperty);
 
         $this->assertEquals($data, $result);
@@ -801,15 +814,25 @@ class BlockContentTypeTest extends TestCase
                             'settings' => new \stdClass(),
                         ],
                     ],
-                    'settings' => ['segment' => 'w', 'segment_enabled' => true],
+                    'settings' => [
+                        'segments' => ['webspace-1' => 'w', 'webspace-2' => 'other'],
+                        'segment_enabled' => true,
+                    ],
                 ],
                 [
                     'type' => 'type2',
                     'name' => 'Test-Name-2',
-                    'settings' => ['segment' => 's', 'segment_enabled' => true],
+                    'settings' => [
+                        'segments' => ['webspace-1' => 's', 'webspace-2' => 'other'],
+                        'segment_enabled' => true,
+                    ],
                 ],
             ]
         );
+
+        $webspace = new Webspace();
+        $webspace->setKey('webspace-1');
+        $this->requestAnalyzer->getWebspace()->willReturn($webspace);
 
         $segment = new Segment();
         $segment->setKey('w');
@@ -834,7 +857,10 @@ class BlockContentTypeTest extends TestCase
                             'settings' => new \stdClass(),
                         ],
                     ],
-                    'settings' => ['segment' => 'w', 'segment_enabled' => true],
+                    'settings' => [
+                        'segments' => ['webspace-1' => 'w', 'webspace-2' => 'other'],
+                        'segment_enabled' => true,
+                    ],
                 ],
             ],
             $result
@@ -861,18 +887,28 @@ class BlockContentTypeTest extends TestCase
                         'settings' => new \stdClass(),
                     ],
                 ],
-                'settings' => ['segment' => 'w', 'segment_enabled' => false],
+                'settings' => [
+                    'segments' => ['webspace-1' => 'w', 'webspace-2' => 'other'],
+                    'segment_enabled' => false,
+                ],
             ],
             [
                 'type' => 'type2',
                 'name' => 'Test-Name-2',
-                'settings' => ['segment' => 's', 'segment_enabled' => false],
+                'settings' => [
+                    'segments' => ['webspace-1' => 's', 'webspace-2' => 'w'],
+                    'segment_enabled' => false,
+                ],
             ],
         ];
 
         $this->blockProperty->setValue(
             $data
         );
+
+        $webspace = new Webspace();
+        $webspace->setKey('webspace-1');
+        $this->requestAnalyzer->getWebspace()->willReturn($webspace);
 
         $segment = new Segment();
         $segment->setKey('w');
@@ -924,6 +960,12 @@ class BlockContentTypeTest extends TestCase
         ];
         $this->blockProperty->setValue($data);
 
+        $webspace = new Webspace();
+        $webspace->setKey('webspace-1');
+        $this->requestAnalyzer->getWebspace()->willReturn($webspace);
+
+        $this->requestAnalyzer->getSegment()->willReturn(null);
+
         $result = $this->blockContentType->getContentData($this->blockProperty);
 
         $this->assertEquals(
@@ -973,19 +1015,30 @@ class BlockContentTypeTest extends TestCase
                     'article' => 'Test-Article-Sub-1',
                     'settings' => [],
                 ],
-                'settings' => ['segment' => 'w', 'segment_enabled' => true],
+                'settings' => [
+                    'segments' => ['webspace-1' => 'w', 'webspace-2' => 'other'],
+                    'segment_enabled' => true,
+                ],
             ],
             [
                 'type' => 'type2',
                 'name' => 'Test-Name-2',
-                'settings' => ['segment' => 's', 'segment_enabled' => true],
+                'settings' => [
+                    'segments' => ['webspace-1' => 's', 'webspace-2' => 'w'],
+                    'segment_enabled' => true,
+                ],
             ],
         ];
         $this->blockProperty->setValue($data);
 
+        $webspace = new Webspace();
+        $webspace->setKey('webspace-1');
+        $this->requestAnalyzer->getWebspace()->willReturn($webspace);
+
         $segment = new Segment();
         $segment->setKey('s');
         $this->requestAnalyzer->getSegment()->willReturn($segment);
+
         $result = $this->blockContentType->getViewData($this->blockProperty);
         $this->assertEquals(
             [
@@ -999,6 +1052,7 @@ class BlockContentTypeTest extends TestCase
         $segment = new Segment();
         $segment->setKey('w');
         $this->requestAnalyzer->getSegment()->willReturn($segment);
+
         $result = $this->blockContentType->getViewData($this->blockProperty);
         $this->assertEquals(
             [

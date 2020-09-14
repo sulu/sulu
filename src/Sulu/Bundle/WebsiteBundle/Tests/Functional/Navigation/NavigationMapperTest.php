@@ -206,9 +206,12 @@ class NavigationMapperTest extends SuluTestCase
         $documents['products/product-1']->setParent($documents['products']);
         $documents['products/product-1']->setTitle('Products-1');
         $documents['products/product-1']->setResourceSegment('/products/products-1');
-        $documents['products/product-1']->setExtensionsData(
-            ['excerpt' => ['title' => 'Excerpt Products 1', 'segment' => 's']]
-        );
+        $documents['products/product-1']->setExtensionsData([
+            'excerpt' => [
+                'title' => 'Excerpt Products 1',
+                'segments' => ['sulu_io' => 's'],
+            ],
+        ]);
         $documents['products/product-1']->setNavigationContexts(['main', 'footer']);
         $documents['products/product-1']->setWorkflowStage(WorkflowStage::PUBLISHED);
         $this->documentManager->persist($documents['products/product-1'], 'en');
@@ -220,9 +223,12 @@ class NavigationMapperTest extends SuluTestCase
         $documents['products/product-2']->setParent($documents['products']);
         $documents['products/product-2']->setTitle('Products-2');
         $documents['products/product-2']->setResourceSegment('/products/products-2');
-        $documents['products/product-2']->setExtensionsData(
-            ['excerpt' => ['title' => 'Excerpt Products 2', 'segment' => 'w']]
-        );
+        $documents['products/product-2']->setExtensionsData([
+            'excerpt' => [
+                'title' => 'Excerpt Products 2',
+                'segments' => ['sulu_io' => 'w'],
+            ],
+        ]);
         $documents['products/product-2']->setNavigationContexts(['main']);
         $documents['products/product-2']->setWorkflowStage(WorkflowStage::PUBLISHED);
         $this->documentManager->persist($documents['products/product-2'], 'en');

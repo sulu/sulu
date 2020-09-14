@@ -12,12 +12,17 @@
 namespace Sulu\Bundle\RouteBundle\Tests\Unit\Routing;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Sulu\Bundle\RouteBundle\Entity\RouteRepositoryInterface;
 use Sulu\Bundle\RouteBundle\Model\RouteInterface;
 use Sulu\Bundle\RouteBundle\Routing\Defaults\RouteDefaultsProviderInterface;
 use Sulu\Bundle\RouteBundle\Routing\RouteProvider;
+use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Sulu\Component\Webspace\Portal;
+use Sulu\Component\Webspace\Segment;
+use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -474,5 +479,119 @@ class RouteProviderTest extends TestCase
 
         $this->assertEquals('/de/test', $routes[0]->getPath());
         $this->assertEquals(['test' => 1], $routes[0]->getDefaults());
+    }
+
+    public function testGetRouteCollectionForRequestWithOtherSegment()
+    {
+        $request = $this->prophesize(Request::class);
+        $request->getPathInfo()->willReturn('/de/test');
+        $request->getLocale()->willReturn('de');
+        $request->getRequestFormat()->willReturn('html');
+
+        $webspace = new Webspace();
+        $webspace->setKey('webspace');
+
+        $portal = new Portal();
+        $portal->setKey('portal');
+        $portal->setWebspace($webspace);
+
+        $attributes = $this->prophesize(RequestAttributes::class);
+        $attributes->getAttribute('matchType')->willReturn(RequestAnalyzerInterface::MATCH_TYPE_FULL);
+        $attributes->getAttribute('resourceLocatorPrefix')->willReturn('/de');
+        $attributes->getAttribute('portal')->willReturn($portal);
+
+        $request->reveal()->attributes = new ParameterBag(['_sulu' => $attributes->reveal()]);
+
+        $routeEntity = $this->prophesize(RouteInterface::class);
+        $routeEntity->getEntityClass()->willReturn('Example');
+        $routeEntity->getEntityId()->willReturn('1');
+        $routeEntity->getId()->willReturn(1);
+        $routeEntity->getPath()->willReturn('/test');
+        $routeEntity->isHistory()->willReturn(false);
+        $routeEntity->getLocale()->willReturn('de');
+
+        $routeObject = $this->prophesize(ExtensionBehavior::class);
+        $routeObject->getExtensionsData()->willReturn([
+            'excerpt' => [
+                'segments' => ['webspace' => 'w'],
+            ],
+        ]);
+
+        $segment = new Segment();
+        $segment->setKey('s');
+        $this->requestAnalyzer->getSegment()->willReturn($segment);
+
+        $this->requestAnalyzer->changeSegment('w')->shouldBeCalled();
+
+        $this->routeRepository->findByPath('/test', 'de')->willReturn($routeEntity->reveal());
+        $this->defaultsProvider->supports('Example')->willReturn(true);
+        $this->defaultsProvider->isPublished('Example', '1', 'de')->willReturn(true);
+        $this->defaultsProvider->getByEntity('Example', '1', 'de')->willReturn(
+            ['object' => $routeObject->reveal()]
+        );
+
+        $collection = $this->routeProvider->getRouteCollectionForRequest($request->reveal());
+
+        $this->assertCount(1, $collection);
+        $routes = \array_values(\iterator_to_array($collection->getIterator()));
+
+        $this->assertEquals('/de/test', $routes[0]->getPath());
+    }
+
+    public function testGetRouteCollectionForRequestWithSameSegment()
+    {
+        $request = $this->prophesize(Request::class);
+        $request->getPathInfo()->willReturn('/de/test');
+        $request->getLocale()->willReturn('de');
+        $request->getRequestFormat()->willReturn('html');
+
+        $webspace = new Webspace();
+        $webspace->setKey('webspace');
+
+        $portal = new Portal();
+        $portal->setKey('portal');
+        $portal->setWebspace($webspace);
+
+        $attributes = $this->prophesize(RequestAttributes::class);
+        $attributes->getAttribute('matchType')->willReturn(RequestAnalyzerInterface::MATCH_TYPE_FULL);
+        $attributes->getAttribute('resourceLocatorPrefix')->willReturn('/de');
+        $attributes->getAttribute('portal')->willReturn($portal);
+
+        $request->reveal()->attributes = new ParameterBag(['_sulu' => $attributes->reveal()]);
+
+        $routeEntity = $this->prophesize(RouteInterface::class);
+        $routeEntity->getEntityClass()->willReturn('Example');
+        $routeEntity->getEntityId()->willReturn('1');
+        $routeEntity->getId()->willReturn(1);
+        $routeEntity->getPath()->willReturn('/test');
+        $routeEntity->isHistory()->willReturn(false);
+        $routeEntity->getLocale()->willReturn('de');
+
+        $routeObject = $this->prophesize(ExtensionBehavior::class);
+        $routeObject->getExtensionsData()->willReturn([
+            'excerpt' => [
+                'segments' => ['webspace' => 's'],
+            ],
+        ]);
+
+        $segment = new Segment();
+        $segment->setKey('s');
+        $this->requestAnalyzer->getSegment()->willReturn($segment);
+
+        $this->requestAnalyzer->changeSegment(Argument::cetera())->shouldNotBeCalled();
+
+        $this->routeRepository->findByPath('/test', 'de')->willReturn($routeEntity->reveal());
+        $this->defaultsProvider->supports('Example')->willReturn(true);
+        $this->defaultsProvider->isPublished('Example', '1', 'de')->willReturn(true);
+        $this->defaultsProvider->getByEntity('Example', '1', 'de')->willReturn(
+            ['object' => $routeObject->reveal()]
+        );
+
+        $collection = $this->routeProvider->getRouteCollectionForRequest($request->reveal());
+
+        $this->assertCount(1, $collection);
+        $routes = \array_values(\iterator_to_array($collection->getIterator()));
+
+        $this->assertEquals('/de/test', $routes[0]->getPath());
     }
 }

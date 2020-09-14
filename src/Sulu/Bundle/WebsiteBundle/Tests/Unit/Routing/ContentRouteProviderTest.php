@@ -152,7 +152,7 @@ class ContentRouteProviderTest extends TestCase
         $document->getRedirectType()->willReturn(RedirectType::NONE);
         $document->getStructureType()->willReturn('default');
         $document->getUuid()->willReturn('some-uuid');
-        $document->getExtensionsData()->willReturn(['excerpt' => ['segment' => null]]);
+        $document->getExtensionsData()->willReturn(['excerpt' => ['segments' => ['other-webspace' => null]]]);
         $this->documentManager->find('some-uuid', 'de', ['load_ghost_content' => false])->willReturn($document->reveal());
 
         $metadata = new Metadata();
@@ -221,7 +221,7 @@ class ContentRouteProviderTest extends TestCase
         $document->getRedirectType()->willReturn(RedirectType::NONE);
         $document->getStructureType()->willReturn('default');
         $document->getUuid()->willReturn('some-uuid');
-        $document->getExtensionsData()->willReturn(['excerpt' => ['segment' => null]]);
+        $document->getExtensionsData()->willReturn(['excerpt' => ['segments' => null]]);
         $this->documentManager->find('some-uuid', 'de', ['load_ghost_content' => false])->willReturn($document->reveal());
 
         $metadata = new Metadata();
@@ -296,7 +296,7 @@ class ContentRouteProviderTest extends TestCase
         $document->getRedirectType()->willReturn(RedirectType::NONE);
         $document->getStructureType()->willReturn('default');
         $document->getUuid()->willReturn('some-uuid');
-        $document->getExtensionsData()->willReturn(['excerpt' => ['segment' => 'w']]);
+        $document->getExtensionsData()->willReturn(['excerpt' => ['segments' => ['webspace' => 'w']]]);
         $this->documentManager->find('some-uuid', 'de', ['load_ghost_content' => false])->willReturn($document->reveal());
 
         $segment = new Segment();
@@ -361,7 +361,7 @@ class ContentRouteProviderTest extends TestCase
         $document->getRedirectType()->willReturn(RedirectType::NONE);
         $document->getStructureType()->willReturn('default');
         $document->getUuid()->willReturn('some-uuid');
-        $document->getExtensionsData()->willReturn(['excerpt' => ['segment' => null]]);
+        $document->getExtensionsData()->willReturn(['excerpt' => ['segments' => ['webspace' => null]]]);
         $this->documentManager->find('some-uuid', 'de', ['load_ghost_content' => false])->willReturn(
             $document->reveal()
         );
@@ -467,7 +467,7 @@ class ContentRouteProviderTest extends TestCase
         $document->getRedirectType()->willReturn(RedirectType::NONE);
         $document->getStructureType()->willReturn('default');
         $document->getUuid()->willReturn('some-uuid');
-        $document->getExtensionsData()->willReturn(['excerpt' => ['segment' => null]]);
+        $document->getExtensionsData()->willReturn(['excerpt' => ['segments' => ['webspace' => null]]]);
         $this->documentManager->find('some-uuid', 'de', ['load_ghost_content' => false])->willReturn($document->reveal());
 
         $metadata = new Metadata();
@@ -768,7 +768,7 @@ class ContentRouteProviderTest extends TestCase
         $document->getRedirectType()->willReturn(RedirectType::NONE);
         $document->getStructureType()->willReturn('default');
         $document->getUuid()->willReturn('some-uuid');
-        $document->getExtensionsData()->willReturn(['excerpt' => ['segment' => null]]);
+        $document->getExtensionsData()->willReturn(['excerpt' => ['segments' => ['webspace' => null]]]);
         $this->documentManager->find('some-uuid', 'de', ['load_ghost_content' => false])->willReturn($document->reveal());
 
         $metadata = new Metadata();
@@ -996,7 +996,7 @@ class ContentRouteProviderTest extends TestCase
         $document->getRedirectType()->willReturn(RedirectType::NONE);
         $document->getStructureType()->willReturn('default');
         $document->getUuid()->willReturn('some-uuid');
-        $document->getExtensionsData()->willReturn(['excerpt' => ['segment' => null]]);
+        $document->getExtensionsData()->willReturn(['excerpt' => ['segments' => ['other-webspace' => null]]]);
         $this->documentManager->find('some-uuid', 'de_at', ['load_ghost_content' => false])
             ->willReturn($document->reveal());
 

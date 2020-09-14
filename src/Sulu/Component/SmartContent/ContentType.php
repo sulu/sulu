@@ -275,7 +275,7 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
         $limit = (\array_key_exists('limitResult', $filters) && $configuration->hasLimit()) ?
             $filters['limitResult'] : null;
         $options = [
-            'webspaceKey' => $property->getStructure()->getWebspaceKey(),
+            'webspaceKey' => $this->requestAnalyzer->getWebspace()->getKey(),
             'locale' => $property->getStructure()->getLanguageCode(),
         ];
 

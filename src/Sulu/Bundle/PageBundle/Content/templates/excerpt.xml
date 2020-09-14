@@ -64,7 +64,7 @@
             <tag name="sulu.search.field" type="tags"/>
         </property>
 
-        <property name="segment" type="single_select">
+        <property name="segments" type="segment_select">
             <meta>
                 <title lang="de">Segmente</title>
                 <title lang="en">Segments</title>

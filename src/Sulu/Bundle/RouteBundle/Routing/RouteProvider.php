@@ -18,6 +18,7 @@ use Sulu\Bundle\RouteBundle\Entity\Route as SuluRoute;
 use Sulu\Bundle\RouteBundle\Entity\RouteRepositoryInterface;
 use Sulu\Bundle\RouteBundle\Model\RouteInterface;
 use Sulu\Bundle\RouteBundle\Routing\Defaults\RouteDefaultsProviderInterface;
+use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
@@ -86,8 +87,6 @@ class RouteProvider implements RouteProviderInterface
 
     public function getRouteCollectionForRequest(Request $request)
     {
-        $path = $this->decodePathInfo($request->getPathInfo());
-
         $collection = new RouteCollection();
         $path = $this->decodePathInfo($request->getPathInfo());
 
@@ -138,7 +137,21 @@ class RouteProvider implements RouteProviderInterface
             return $collection;
         }
 
-        $collection->add(self::ROUTE_PREFIX . $route->getId(), $this->createRoute($route, $request, $attributes));
+        $symfonyRoute = $this->createRoute($route, $request, $attributes);
+        $routeObject = $symfonyRoute->getDefaults()['object'] ?? null;
+
+        if ($routeObject instanceof ExtensionBehavior) {
+            $portal = $attributes->getAttribute('portal');
+            $documentSegments = $routeObject->getExtensionsData()['excerpt']['segments'];
+            $documentSegmentKey = $documentSegments[$portal->getWebspace()->getKey()] ?? null;
+            $segment = $this->requestAnalyzer->getSegment();
+
+            if ($segment && $documentSegmentKey && $segment->getKey() !== $documentSegmentKey) {
+                $this->requestAnalyzer->changeSegment($documentSegmentKey);
+            }
+        }
+
+        $collection->add(self::ROUTE_PREFIX . $route->getId(), $symfonyRoute);
 
         return $collection;
     }

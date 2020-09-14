@@ -373,15 +373,16 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
                 continue;
             }
 
+            $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
             $segment = $this->requestAnalyzer->getSegment();
 
             if (
                 \is_array($blockPropertyTypeSettings)
                 && isset($blockPropertyTypeSettings['segment_enabled'])
                 && $blockPropertyTypeSettings['segment_enabled']
-                && isset($blockPropertyTypeSettings['segment'])
+                && isset($blockPropertyTypeSettings['segments'][$webspaceKey])
                 && $segment
-                && $blockPropertyTypeSettings['segment'] !== $segment->getKey()
+                && $blockPropertyTypeSettings['segments'][$webspaceKey] !== $segment->getKey()
             ) {
                 continue;
             }
