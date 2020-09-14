@@ -16,14 +16,10 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\ItemMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SectionMetadata;
 use Sulu\Component\Content\Exception\ReservedPropertyNameException;
 
-class BlockFieldMetadataValidator implements FieldMetadataValidatorInterface
+class TypesPropertyFieldMetadataValidator implements FieldMetadataValidatorInterface
 {
     public function validate(FieldMetadata $fieldMetadata, string $formKey): void
     {
-        if ('block' !== $fieldMetadata->getType()) {
-            return;
-        }
-
         foreach ($fieldMetadata->getTypes() as $type) {
             $this->validateItems($fieldMetadata, $type->getItems(), $formKey);
         }
@@ -34,15 +30,15 @@ class BlockFieldMetadataValidator implements FieldMetadataValidatorInterface
      *
      * @throws ReservedPropertyNameException
      */
-    private function validateItems(FieldMetadata $blockMetadata, array $items, string $formKey): void
+    private function validateItems(FieldMetadata $fieldMetadata, array $items, string $formKey): void
     {
         foreach ($items as $itemMetadata) {
             if ($itemMetadata instanceof SectionMetadata) {
-                $this->validateItems($blockMetadata, $itemMetadata->getItems(), $formKey);
+                $this->validateItems($fieldMetadata, $itemMetadata->getItems(), $formKey);
             }
 
             if ($itemMetadata instanceof FieldMetadata) {
-                $this->validateField($blockMetadata, $itemMetadata, $formKey);
+                $this->validateField($fieldMetadata, $itemMetadata, $formKey);
             }
         }
     }
@@ -50,13 +46,13 @@ class BlockFieldMetadataValidator implements FieldMetadataValidatorInterface
     /**
      * @throws ReservedPropertyNameException
      */
-    private function validateField(FieldMetadata $blockMetadata, FieldMetadata $propertyMetadata, string $formKey): void
+    private function validateField(FieldMetadata $fieldMetadata, FieldMetadata $propertyMetadata, string $formKey): void
     {
         $propertyName = $propertyMetadata->getName();
 
-        if ('settings' === $propertyName) {
+        if ('type' === $propertyName) {
             throw new ReservedPropertyNameException(
-                $blockMetadata->getName(),
+                $fieldMetadata->getName(),
                 $propertyName,
                 $formKey
             );

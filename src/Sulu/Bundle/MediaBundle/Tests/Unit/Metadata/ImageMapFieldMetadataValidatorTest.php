@@ -9,26 +9,26 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\AdminBundle\Tests\Unit\FormMetadata\Validation;
+namespace Sulu\Bundle\MediaBundle\Tests\Unit\Metadata;
 
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\ItemMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SectionMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Validation\BlockFieldMetadataValidator;
+use Sulu\Bundle\MediaBundle\Metadata\ImageMapFieldMetadataValidator;
 use Sulu\Component\Content\Exception\ReservedPropertyNameException;
 
-class BlockFieldMetadataValidatorTest extends TestCase
+class ImageMapFieldMetadataValidatorTest extends TestCase
 {
     /**
-     * @var BlockFieldMetadataValidator
+     * @var ImageMapFieldMetadataValidator
      */
-    private $blockFieldMetadataValidator;
+    private $imageMapFieldMetadataValidator;
 
     protected function setUp(): void
     {
-        $this->blockFieldMetadataValidator = new BlockFieldMetadataValidator();
+        $this->imageMapFieldMetadataValidator = new ImageMapFieldMetadataValidator();
     }
 
     /**
@@ -78,67 +78,67 @@ class BlockFieldMetadataValidatorTest extends TestCase
         return $sectionMetadata;
     }
 
-    private function expectReservedPropertyNameException(string $formKey, string $blockName, string $propertyName)
+    private function expectReservedPropertyNameException(string $formKey, string $imageMapName, string $propertyName)
     {
         $this->expectException(ReservedPropertyNameException::class);
         $this->expectExceptionMessageRegExp('"' . $formKey . '"');
-        $this->expectExceptionMessageRegExp('"' . $blockName . '"');
+        $this->expectExceptionMessageRegExp('"' . $imageMapName . '"');
         $this->expectExceptionMessageRegExp('"' . $propertyName . '"');
     }
 
     public function testValidate()
     {
         $item = $this->createFieldMetadata('valid_name', 'text_line');
-        $type = $this->createFormMetadata('some_block_type', [$item]);
-        $block = $this->createFieldMetadata('some_block', 'block', [$type]);
+        $type = $this->createFormMetadata('some_image_map_type', [$item]);
+        $imageMap = $this->createFieldMetadata('some_image_map', 'image_map', [$type]);
 
         $this->expectNotToPerformAssertions();
 
-        $this->blockFieldMetadataValidator->validate($block, 'some_form_key');
+        $this->imageMapFieldMetadataValidator->validate($imageMap, 'some_form_key');
     }
 
-    public function testValidatePropertyNameSettings()
+    public function testValidatePropertyNameHotspot()
     {
-        $item = $this->createFieldMetadata('settings', 'text_line');
-        $type = $this->createFormMetadata('some_block_type', [$item]);
-        $block = $this->createFieldMetadata('some_block', 'block', [$type]);
+        $item = $this->createFieldMetadata('hotspot', 'text_line');
+        $type = $this->createFormMetadata('some_image_map_type', [$item]);
+        $imageMap = $this->createFieldMetadata('some_image_map', 'image_map', [$type]);
 
-        $this->expectReservedPropertyNameException('some_form_key', 'some_block', 'settings');
+        $this->expectReservedPropertyNameException('some_form_key', 'some_image_map', 'hotspot');
 
-        $this->blockFieldMetadataValidator->validate($block, 'some_form_key');
+        $this->imageMapFieldMetadataValidator->validate($imageMap, 'some_form_key');
     }
 
-    public function testValidateBlockWithSectionWithSettingsProperty()
+    public function testValidateImageMapWithSectionWithHotspotProperty()
     {
-        $item = $this->createFieldMetadata('settings', 'text_line');
+        $item = $this->createFieldMetadata('hotspot', 'text_line');
         $section = $this->createSectionMetadata('some_section', [$item]);
-        $type = $this->createFormMetadata('some_block_type', [$section]);
-        $block = $this->createFieldMetadata('some_block', 'block', [$type]);
+        $type = $this->createFormMetadata('some_image_map_type', [$section]);
+        $imageMap = $this->createFieldMetadata('some_image_map', 'image_map', [$type]);
 
-        $this->expectReservedPropertyNameException('some_form_key', 'some_block', 'settings');
+        $this->expectReservedPropertyNameException('some_form_key', 'some_image_map', 'hotspot');
 
-        $this->blockFieldMetadataValidator->validate($block, 'some_form_key');
+        $this->imageMapFieldMetadataValidator->validate($imageMap, 'some_form_key');
     }
 
-    public function testValidateBlockWithSectionWithValidProperties()
+    public function testValidateImageMapWithSectionWithValidProperties()
     {
         $sectionItem = $this->createFieldMetadata('other_valid_name', 'text_line');
         $section = $this->createSectionMetadata('some_section', [$sectionItem]);
         $item = $this->createFieldMetadata('valid_name', 'text_line');
-        $type = $this->createFormMetadata('some_block_type', [$item, $section]);
-        $block = $this->createFieldMetadata('some_block', 'block', [$type]);
+        $type = $this->createFormMetadata('some_image_map_type', [$item, $section]);
+        $imageMap = $this->createFieldMetadata('some_image_map', 'image_map', [$type]);
 
         $this->expectNotToPerformAssertions();
 
-        $this->blockFieldMetadataValidator->validate($block, 'some_form_key');
+        $this->imageMapFieldMetadataValidator->validate($imageMap, 'some_form_key');
     }
 
-    public function testValidateNotBlock()
+    public function testValidateNotImageMap()
     {
         $property = $this->createFieldMetadata('some_property', 'text_line');
 
         $this->expectNotToPerformAssertions();
 
-        $this->blockFieldMetadataValidator->validate($property, 'some_form_key');
+        $this->imageMapFieldMetadataValidator->validate($property, 'some_form_key');
     }
 }

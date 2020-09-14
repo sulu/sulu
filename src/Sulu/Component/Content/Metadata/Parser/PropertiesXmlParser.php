@@ -101,14 +101,6 @@ class PropertiesXmlParser
         $result['meta'] = $this->loadMeta($xpath, $node);
         $result['types'] = $this->loadTypes($tags, $xpath, $node, $formKey);
 
-        foreach ($result['types'] as $type) {
-            foreach (\array_keys($type['properties']) as $typePropertyName) {
-                if (\in_array($typePropertyName, $this->reservedBlockPropertyNames)) {
-                    throw new ReservedPropertyNameException($result['name'], $typePropertyName, $formKey);
-                }
-            }
-        }
-
         $typeNames = \array_map(function($type) {
             return $type['name'];
         }, $result['types']);
