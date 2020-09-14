@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\PageBundle\Tests\Unit\Content\Types;
 
 use PHPCR\NodeInterface;
+use PHPCR\PropertyInterface as PhpcrPropertyInterface;
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\PageBundle\Content\Types\SegmentSelect;
 use Sulu\Component\Content\Compat\PropertyInterface;
@@ -69,5 +70,23 @@ class SegmentSelectTest extends TestCase
         $segmentSelect = new SegmentSelect();
 
         $segmentSelect->write($node->reveal(), $property->reveal(), 1, 'sulu_io', 'de', null);
+    }
+
+    public function testRemove()
+    {
+        $node = $this->prophesize(NodeInterface::class);
+        $phpcrProperty1 = $this->prophesize(PhpcrPropertyInterface::class);
+        $phpcrProperty2 = $this->prophesize(PhpcrPropertyInterface::class);
+        $node->getProperties('property#*')->willReturn([$phpcrProperty1, $phpcrProperty2]);
+
+        $property = $this->prophesize(PropertyInterface::class);
+        $property->getName()->willReturn('property');
+
+        $segmentSelect = new SegmentSelect();
+
+        $segmentSelect->remove($node->reveal(), $property->reveal(), 'sulu_io', 'de', null);
+
+        $phpcrProperty1->remove()->shouldBeCalled();
+        $phpcrProperty2->remove()->shouldBeCalled();
     }
 }
