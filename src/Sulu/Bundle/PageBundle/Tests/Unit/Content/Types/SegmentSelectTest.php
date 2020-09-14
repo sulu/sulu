@@ -28,14 +28,14 @@ class SegmentSelectTest extends TestCase
         $property->setValue(['website' => 'w', 'blog' => 's'])->shouldBeCalled();
 
         $webspaceProperty1 = $this->prophesize(PropertyInterface::class);
-        $webspaceProperty1->getName()->willReturn('test#website');
+        $webspaceProperty1->getName()->willReturn('test-website');
         $webspaceProperty1->getValue()->willReturn('w');
 
         $webspaceProperty2 = $this->prophesize(PropertyInterface::class);
-        $webspaceProperty2->getName()->willReturn('test#blog');
+        $webspaceProperty2->getName()->willReturn('test-blog');
         $webspaceProperty2->getValue()->willReturn('s');
 
-        $node->getProperties('test#*')->willReturn([$webspaceProperty1->reveal(), $webspaceProperty2->reveal()]);
+        $node->getProperties('test-*')->willReturn([$webspaceProperty1->reveal(), $webspaceProperty2->reveal()]);
         $node->hasProperty('test')->willReturn(true);
 
         $segmentSelect = new SegmentSelect();
@@ -46,7 +46,7 @@ class SegmentSelectTest extends TestCase
     public function testReadPropertyNotExists()
     {
         $node = $this->prophesize(NodeInterface::class);
-        $node->getProperties('test#*')->willReturn([]);
+        $node->getProperties('test-*')->willReturn([]);
 
         $property = $this->prophesize(PropertyInterface::class);
         $property->getName()->willReturn('test');
@@ -60,8 +60,8 @@ class SegmentSelectTest extends TestCase
     public function testWrite()
     {
         $node = $this->prophesize(NodeInterface::class);
-        $node->setProperty('test#sulu_io', 'w')->shouldBeCalled();
-        $node->setProperty('test#other', 'a')->shouldBeCalled();
+        $node->setProperty('test-sulu_io', 'w')->shouldBeCalled();
+        $node->setProperty('test-other', 'a')->shouldBeCalled();
 
         $property = $this->prophesize(PropertyInterface::class);
         $property->getValue()->willReturn(['sulu_io' => 'w', 'other' => 'a']);
@@ -77,7 +77,7 @@ class SegmentSelectTest extends TestCase
         $node = $this->prophesize(NodeInterface::class);
         $phpcrProperty1 = $this->prophesize(PhpcrPropertyInterface::class);
         $phpcrProperty2 = $this->prophesize(PhpcrPropertyInterface::class);
-        $node->getProperties('property#*')->willReturn([$phpcrProperty1, $phpcrProperty2]);
+        $node->getProperties('property-*')->willReturn([$phpcrProperty1, $phpcrProperty2]);
 
         $property = $this->prophesize(PropertyInterface::class);
         $property->getName()->willReturn('property');
