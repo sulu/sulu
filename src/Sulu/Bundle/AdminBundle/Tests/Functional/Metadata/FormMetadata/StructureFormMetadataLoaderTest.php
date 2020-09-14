@@ -29,6 +29,14 @@ class StructureFormMetadataLoaderTest extends KernelTestCase
         $this->structureFormMetadataLoader = $this->getContainer()->get('sulu_admin_test.structure_form_metadata_loader');
     }
 
+    public function testGetMetadataWithoutLanguage()
+    {
+        $typedForm = $this->structureFormMetadataLoader->getMetadata('page');
+        $expectedTypedForm = $this->structureFormMetadataLoader->getMetadata('page', 'de');
+
+        $this->assertEquals($typedForm, $expectedTypedForm);
+    }
+
     public function testGetMetadataEnglish()
     {
         $typedForm = $this->structureFormMetadataLoader->getMetadata('page', 'en');
