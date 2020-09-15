@@ -1,0 +1,3 @@
+portal_route:
+    path: /portal-route
+    controller: Sulu\Bundle\WebsiteBundle\Tests\Application\TestController::index
