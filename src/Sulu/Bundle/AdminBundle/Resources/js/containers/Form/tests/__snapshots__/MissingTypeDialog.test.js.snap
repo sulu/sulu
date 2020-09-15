@@ -85,7 +85,7 @@ Array [
             type="button"
           >
             <span
-              class="text"
+              class="buttonText"
             >
               sulu_admin.ok
             </span>
@@ -95,7 +95,7 @@ Array [
             type="button"
           >
             <span
-              class="text"
+              class="buttonText"
             >
               sulu_admin.cancel
             </span>
