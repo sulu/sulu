@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Routing;
 
-use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\Route;
@@ -38,11 +37,11 @@ class PortalLoader extends Loader
         $prefixes = [];
         foreach ($this->webspaceManager->getPortalInformations() as $portalInformation) {
             // cast null to string as prefix can be empty string
-            $prefixes[] = preg_quote((string) $portalInformation->getPrefix());
+            $prefixes[] = \preg_quote((string) $portalInformation->getPrefix());
         }
 
         // need to omit prefix from path if it must be empty to pass symfony route validation
-        $prefixPattern = implode('|', array_unique($prefixes));
+        $prefixPattern = \implode('|', \array_unique($prefixes));
         $pathPrefix = empty($prefixPattern) ? '' : '{prefix}';
         $requirements = empty($prefixPattern) ? [] : ['prefix' => $prefixPattern];
 
