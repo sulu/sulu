@@ -42,8 +42,13 @@ class PortalLoader extends Loader
 
         $prefixes = [];
         foreach ($this->webspaceManager->getPortalInformations() as $portalInformation) {
-            // cast null to string as prefix can be empty string
-            $prefixes[] = preg_quote((string) $portalInformation->getPrefix());
+            if (!$portalInformation->getPrefix()) {
+                $prefixes[] = '(^$)?';
+                
+                continue;
+            }
+
+            $prefixes[] = preg_quote($portalInformation->getPrefix());
         }
 
         foreach ($importedRoutes as $importedRouteName => $importedRoute) {
