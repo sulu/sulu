@@ -34,28 +34,24 @@ class PortalLoader extends Loader
 
     public function load($resource, $type = null)
     {
-        $prefixes = [];
-        foreach ($this->webspaceManager->getPortalInformations() as $portalInformation) {
-            // cast null to string as prefix can be empty string
-            $prefixes[] = \preg_quote((string) $portalInformation->getPrefix());
-        }
-
-        // need to omit prefix from path if it must be empty to pass symfony route validation
-        $prefixPattern = \implode('|', \array_unique($prefixes));
-        $pathPrefix = empty($prefixPattern) ? '' : '{prefix}';
-        $requirements = empty($prefixPattern) ? [] : ['prefix' => $prefixPattern];
+        $collection = new RouteCollection();
 
         /** @var Route[] $importedRoutes */
         $importedRoutes = $this->import($resource, null);
-        $collection = new RouteCollection();
+
+        $prefixes = [];
+        foreach ($this->webspaceManager->getPortalInformations() as $portalInformation) {
+            // symfony does not accept an empty regex as requirement, therefore we use '()' to match an empty prefix
+            $prefixes[] = \preg_quote($portalInformation->getPrefix()) ?: '()';
+        }
 
         foreach ($importedRoutes as $importedRouteName => $importedRoute) {
             $collection->add(
                 $importedRouteName,
                 new Route(
-                    $pathPrefix . \ltrim($importedRoute->getPath(), '/'),
+                    '{prefix}' . \ltrim($importedRoute->getPath(), '/'),
                     $importedRoute->getDefaults(),
-                    \array_merge($requirements, $importedRoute->getRequirements()),
+                    \array_merge(['prefix' => \implode('|', $prefixes)], $importedRoute->getRequirements()),
                     $importedRoute->getOptions(),
                     $importedRoute->getHost(),
                     $importedRoute->getSchemes(),
