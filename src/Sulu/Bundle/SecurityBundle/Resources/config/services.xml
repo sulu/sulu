@@ -321,6 +321,7 @@
             class="Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer"
         >
             <argument type="service" id="sulu_security.system_store" />
+            <argument type="service" id="doctrine.orm.entity_manager" />
         </service>
     </services>
 </container>

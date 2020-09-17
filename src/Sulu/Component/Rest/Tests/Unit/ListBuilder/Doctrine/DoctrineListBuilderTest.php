@@ -36,6 +36,7 @@ use Sulu\Component\Rest\ListBuilder\Filter\FilterTypeInterface;
 use Sulu\Component\Rest\ListBuilder\Filter\FilterTypeRegistry;
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
 use Sulu\Component\Rest\ListBuilder\Metadata\SinglePropertyMetadata;
+use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -67,6 +68,11 @@ class DoctrineListBuilderTest extends TestCase
      * @var QueryBuilder
      */
     private $queryBuilder;
+
+    /**
+     * @var QueryBuilder
+     */
+    private $systemRoleQueryBuilder;
 
     /**
      * @var AbstractQuery
@@ -101,12 +107,13 @@ class DoctrineListBuilderTest extends TestCase
     {
         $this->entityManager = $this->prophesize(EntityManager::class);
         $this->filterTypeRegistry = $this->prophesize(FilterTypeRegistry::class);
+        $this->systemRoleQueryBuilder = $this->prophesize(QueryBuilder::class);
         $this->queryBuilder = $this->prophesize(QueryBuilder::class);
         $this->query = $this->prophesize(AbstractQuery::class);
 
         $this->entityManager->createQueryBuilder()->willReturn($this->queryBuilder->reveal());
 
-        $this->queryBuilder->from(self::$entityName, self::$entityNameAlias)->wilLReturn($this->queryBuilder->reveal());
+        $this->queryBuilder->from(self::$entityName, self::$entityNameAlias)->willReturn($this->queryBuilder->reveal());
         $this->queryBuilder->select(Argument::any())->willReturn($this->queryBuilder->reveal());
         $this->queryBuilder->addGroupBy()->willReturn($this->queryBuilder->reveal());
         $this->queryBuilder->where(Argument::any())->willReturn($this->queryBuilder->reveal());
@@ -117,6 +124,16 @@ class DoctrineListBuilderTest extends TestCase
         $this->queryBuilder->distinct(false)->should(function() {});
         $this->queryBuilder->setParameter('ids', ['1', '2', '3'])->should(function() {});
         $this->queryBuilder->addOrderBy(Argument::cetera())->shouldBeCalled();
+
+        $this->systemRoleQueryBuilder
+            ->from(RoleInterface::class, 'systemRoles')
+            ->willReturn($this->systemRoleQueryBuilder->reveal());
+        $this->systemRoleQueryBuilder
+             ->select('systemRoles.id')
+             ->willReturn($this->systemRoleQueryBuilder->reveal());
+        $this->systemRoleQueryBuilder
+             ->where('systemRoles.system = :system')->willReturn($this->systemRoleQueryBuilder->reveal());
+        $this->systemRoleQueryBuilder->getDQL()->willReturn('SELECT id');
 
         $this->query->getArrayResult()->willReturn($this->idResult);
         $this->query->getScalarResult()->willReturn([[3]]);
@@ -132,7 +149,7 @@ class DoctrineListBuilderTest extends TestCase
             $this->filterTypeRegistry->reveal(),
             $this->eventDispatcher->reveal(),
             [PermissionTypes::VIEW => 64],
-            new AccessControlQueryEnhancer($this->systemStore->reveal())
+            new AccessControlQueryEnhancer($this->systemStore->reveal(), $this->entityManager->reveal())
         );
         $this->doctrineListBuilder->limit(10);
         $this->queryBuilder->setFirstResult(Argument::any())->willReturn($this->queryBuilder->reveal());
@@ -1107,13 +1124,19 @@ class DoctrineListBuilderTest extends TestCase
 
         $this->doctrineListBuilder->setPermissionCheck($user->reveal(), PermissionTypes::VIEW);
 
+        $this->entityManager->createQueryBuilder()->willReturn(
+            $this->queryBuilder->reveal(),
+            $this->systemRoleQueryBuilder->reveal(),
+            $this->queryBuilder->reveal()
+        );
+
         $this->queryBuilder->leftJoin(
             AccessControl::class,
             'accessControl',
             'WITH',
-            'accessControl.entityClass = :entityClass AND accessControl.entityId = SuluCoreBundle_Example.id'
+            'accessControl.entityClass = :entityClass AND accessControl.entityId = SuluCoreBundle_Example.id AND accessControl.role IN (SELECT id)'
         )->shouldBeCalled();
-        $this->queryBuilder->leftJoin('accessControl.role', 'role', 'WITH', 'role.system = :system')->shouldBeCalled();
+        $this->queryBuilder->leftJoin('accessControl.role', 'role')->shouldBeCalled();
         $this->queryBuilder->andWhere(
             'BIT_AND(accessControl.permissions, :permission) = :permission OR accessControl.permissions IS NULL'
         )->shouldBeCalled();
@@ -1146,13 +1169,19 @@ class DoctrineListBuilderTest extends TestCase
 
         $this->doctrineListBuilder->setPermissionCheck($user->reveal(), PermissionTypes::VIEW, \stdClass::class);
 
+        $this->entityManager->createQueryBuilder()->willReturn(
+            $this->queryBuilder->reveal(),
+            $this->systemRoleQueryBuilder->reveal(),
+            $this->queryBuilder->reveal()
+        );
+
         $this->queryBuilder->leftJoin(
             AccessControl::class,
             'accessControl',
             'WITH',
-            'accessControl.entityClass = :entityClass AND accessControl.entityId = stdClass.id'
+            'accessControl.entityClass = :entityClass AND accessControl.entityId = stdClass.id AND accessControl.role IN (SELECT id)'
         )->shouldBeCalled();
-        $this->queryBuilder->leftJoin('accessControl.role', 'role', 'WITH', 'role.system = :system')->shouldBeCalled();
+        $this->queryBuilder->leftJoin('accessControl.role', 'role')->shouldBeCalled();
         $this->queryBuilder->andWhere(
             'BIT_AND(accessControl.permissions, :permission) = :permission OR accessControl.permissions IS NULL'
         )->shouldBeCalled();
@@ -1186,6 +1215,12 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->setPermissionCheck($user->reveal(), PermissionTypes::VIEW, \stdClass::class);
         $this->doctrineListBuilder->addPermissionCheckField($permissionCheckField->reveal());
 
+        $this->entityManager->createQueryBuilder()->willReturn(
+            $this->queryBuilder->reveal(),
+            $this->systemRoleQueryBuilder->reveal(),
+            $this->queryBuilder->reveal()
+        );
+
         $this->queryBuilder->leftJoin(
             'stdClass.myTest',
             'MyTest',
@@ -1196,9 +1231,9 @@ class DoctrineListBuilderTest extends TestCase
             AccessControl::class,
             'accessControl',
             'WITH',
-            'accessControl.entityClass = :entityClass AND accessControl.entityId = stdClass.id'
+            'accessControl.entityClass = :entityClass AND accessControl.entityId = stdClass.id AND accessControl.role IN (SELECT id)'
         )->shouldBeCalled();
-        $this->queryBuilder->leftJoin('accessControl.role', 'role', 'WITH', 'role.system = :system')->shouldBeCalled();
+        $this->queryBuilder->leftJoin('accessControl.role', 'role')->shouldBeCalled();
         $this->queryBuilder->andWhere(
             'BIT_AND(accessControl.permissions, :permission) = :permission OR accessControl.permissions IS NULL'
         )->shouldBeCalled();

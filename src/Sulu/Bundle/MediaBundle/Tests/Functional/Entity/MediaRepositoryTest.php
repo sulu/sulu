@@ -27,6 +27,7 @@ use Sulu\Bundle\SecurityBundle\Entity\AccessControl;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
+use Sulu\Bundle\SecurityBundle\System\SystemStoreInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
 use Sulu\Component\Security\Authentication\RoleInterface;
@@ -54,6 +55,11 @@ class MediaRepositoryTest extends SuluTestCase
     private $collectionTypes = [];
 
     /**
+     * @var SystemStoreInterface
+     */
+    private $systemStore;
+
+    /**
      * @var MediaRepository
      */
     private $mediaRepository;
@@ -66,6 +72,7 @@ class MediaRepositoryTest extends SuluTestCase
         $this->em = $this->getEntityManager();
         $this->setUpMedia();
 
+        $this->systemStore = $this->getContainer()->get('sulu_security.system_store');
         $this->mediaRepository = $this->getContainer()->get('sulu.repository.media');
     }
 
@@ -227,6 +234,7 @@ class MediaRepositoryTest extends SuluTestCase
             $userRole->setUser($user);
             $userRole->setRole($role);
             $this->em->persist($userRole);
+            $user->addUserRole($userRole);
         }
 
         $this->em->persist($contact);
@@ -568,6 +576,8 @@ class MediaRepositoryTest extends SuluTestCase
 
     public function testFindMediaForUserWithViewPermissions()
     {
+        $this->systemStore->setSystem('Sulu');
+
         $role = $this->createRole();
         $user = $this->createUser($role);
 
