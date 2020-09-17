@@ -13,34 +13,52 @@ namespace Sulu\Component\Content\Document\Subscriber;
 
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
+use Sulu\Component\DocumentManager\Event\CopyEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\PropertyEncoder;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class WebspaceSubscriber implements EventSubscriberInterface
 {
     /**
-     * @var DocumentInspector
-     */
-    private $inspector;
-
-    /**
      * @var PropertyEncoder
      */
-    private $encoder;
+    private $propertyEncoder;
+
+    /**
+     * @var DocumentInspector
+     */
+    private $documentInspector;
+
+    /**
+     * @var DocumentManagerInteface
+     */
+    private $documentManager;
+
+    /**
+     * @var WebspaceManagerInterface
+     */
+    private $webspaceManager;
 
     public function __construct(
-        PropertyEncoder $encoder,
-        DocumentInspector $inspector
+        PropertyEncoder $propertyEncoder,
+        DocumentInspector $documentInspector,
+        DocumentManagerInterface $documentManager,
+        WebspaceManagerInterface $webspaceManager
     ) {
-        $this->encoder = $encoder;
-        $this->inspector = $inspector;
+        $this->propertyEncoder = $propertyEncoder;
+        $this->documentInspector = $documentInspector;
+        $this->documentManager = $documentManager;
+        $this->webspaceManager = $webspaceManager;
     }
 
     public static function getSubscribedEvents()
     {
         return [
+            Events::COPY => ['deleteUnavailableLocales', 256],
             Events::PERSIST => ['handleWebspace'],
             // should happen after content is hydrated
             Events::HYDRATE => ['handleWebspace', -10],
@@ -55,7 +73,37 @@ class WebspaceSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $webspaceName = $this->inspector->getWebspace($document);
+        $webspaceName = $this->documentInspector->getWebspace($document);
         $event->getAccessor()->set('webspaceName', $webspaceName);
+    }
+
+    public function deleteUnavailableLocales(CopyEvent $event)
+    {
+        $copiedNode = $event->getCopiedNode();
+        $copiedDocument = $this->documentManager->find(
+            $event->getCopiedPath(),
+            $this->documentInspector->getLocale($event->getDocument())
+        );
+
+        $webspace = $this->webspaceManager->findWebspaceByKey($this->documentInspector->getWebspace($copiedDocument));
+
+        $webspaceLocales = \array_map(function($localization) {
+            return $localization->getLocale();
+        }, $webspace->getAllLocalizations());
+        $documentLocales = $this->documentInspector->getLocales($copiedDocument);
+
+        foreach ($documentLocales as $documentLocale) {
+            if (\in_array($documentLocale, $webspaceLocales)) {
+                continue;
+            }
+
+            $localizedProperties = $copiedNode->getProperties(
+                $this->propertyEncoder->localizedContentName('*', $documentLocale)
+            );
+
+            foreach ($localizedProperties as $localizedProperty) {
+                $localizedProperty->remove();
+            }
+        }
     }
 }

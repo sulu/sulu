@@ -475,7 +475,7 @@ export default class ListStore {
             }));
     };
 
-    copy = (id: string | number, parentId: string | number) => {
+    copy = (id: string | number, parentId: string | number, callback: ?(response: Object) => void) => {
         const queryOptions = {
             ...this.options,
             action: 'copy',
@@ -492,6 +492,7 @@ export default class ListStore {
         return ResourceRequester.post(this.resourceKey, undefined, {...queryOptions, id})
             .then(action((response) => {
                 this.copying = false;
+                callback?.(response);
                 // TODO do not hardcode "id", but use some metadata instead
                 this.activate(response.id);
                 this.clear();

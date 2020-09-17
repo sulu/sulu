@@ -41,6 +41,8 @@ jest.mock('../stores/ResourceFormStore', () => jest.fn(function(resourceStore) {
     this.copyFromLocale = jest.fn();
     this.getValueByPath = jest.fn();
     this.getSchemaEntryByPath = jest.fn().mockReturnValue({types: {default: {form: {}}}});
+    this.types = {};
+    this.setType = jest.fn();
 }));
 
 jest.mock('../../../stores/ResourceStore', () => jest.fn(function(resourceKey, id, observableOptions = {}) {
@@ -443,4 +445,41 @@ test('Should not show a GhostDialog if the resourceStore is currently loading', 
     const form = mount(<Form onSubmit={jest.fn()} store={formStore} />);
 
     expect(form.instance().displayGhostDialog).toEqual(false);
+});
+
+test('Should set the type of the formStore to selected value in MissingTypeDialog', () => {
+    const onMissingTypeCancelSpy = jest.fn();
+
+    const resourceStore = new ResourceStore('snippet', '1');
+    const formStore = new ResourceFormStore(resourceStore, 'snippet');
+    // $FlowFixMe
+    formStore.hasInvalidType = true;
+    formStore.types = {
+        default: {key: 'default', title: 'Default'},
+    };
+
+    const form = mount(<Form onMissingTypeCancel={onMissingTypeCancelSpy} onSubmit={jest.fn()} store={formStore} />);
+
+    expect(form.find('MissingTypeDialog').prop('open')).toEqual(true);
+    form.find('MissingTypeDialog SingleSelect DisplayValue').simulate('click');
+    form.find('MissingTypeDialog SingleSelect Option button').simulate('click');
+    form.find('MissingTypeDialog Button[skin="primary"]').simulate('click');
+
+    expect(onMissingTypeCancelSpy).not.toBeCalledWith();
+    expect(formStore.setType).toBeCalledWith('default');
+});
+
+test('Should call the onMissingTypeCancel callback if MissingTypeDialog is cancelled', () => {
+    const onMissingTypeCancelSpy = jest.fn();
+
+    const resourceStore = new ResourceStore('snippet', '1');
+    const formStore = new ResourceFormStore(resourceStore, 'snippet');
+    // $FlowFixMe
+    formStore.hasInvalidType = true;
+    const form = mount(<Form onMissingTypeCancel={onMissingTypeCancelSpy} onSubmit={jest.fn()} store={formStore} />);
+
+    expect(form.find('MissingTypeDialog').prop('open')).toEqual(true);
+    form.find('MissingTypeDialog Button[skin="secondary"]').simulate('click');
+
+    expect(onMissingTypeCancelSpy).toBeCalledWith();
 });

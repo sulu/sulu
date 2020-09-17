@@ -174,6 +174,13 @@ class PageList extends React.Component<Props> {
         );
     };
 
+    handleCopyFinished = (response: Object) => {
+        const {webspaceKey} = this.props;
+        if (webspaceKey.get() !== response.webspace) {
+            webspaceKey.set(response.webspace);
+        }
+    };
+
     render() {
         return (
             <div className={pageListStyles.pageList}>
@@ -184,6 +191,7 @@ class PageList extends React.Component<Props> {
                         },
                     }}
                     adapters={['column_list', 'tree_table']}
+                    onCopyFinished={this.handleCopyFinished}
                     onItemAdd={this.handleItemAdd}
                     onItemClick={this.handleEditClick}
                     searchable={false}

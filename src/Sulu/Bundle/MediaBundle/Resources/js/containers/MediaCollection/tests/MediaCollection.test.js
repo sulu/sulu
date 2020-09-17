@@ -31,6 +31,7 @@ jest.mock('sulu-admin-bundle/containers/Form/stores/ResourceFormStore', () =>jes
     this.isFieldModified = jest.fn();
     this.validate = jest.fn().mockReturnValue(true);
     this.destroy = jest.fn();
+    this.types = {};
 }));
 
 jest.mock('sulu-admin-bundle/containers', () => {

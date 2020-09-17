@@ -215,6 +215,38 @@ test('Should change excludeGhostsAndShadows when value of toggler is changed', (
     expect(webspaceOverview.instance().excludeGhostsAndShadows.get()).toEqual(false);
 });
 
+test('Should set webspace if copied page is in different webspace than the source', () => {
+    const PageList = require('../PageList').default;
+
+    const webspaceKey = observable.box('sulu');
+
+    const webspace = {
+        ...defaultWebspace,
+        localizations: undefined,
+        allLocalizations: [{localization: 'en', name: 'en'}, {localization: 'de', name: 'de'}],
+        key: 'sulu',
+    };
+
+    const router = new Router({});
+    router.attributes = {
+        webspace: 'sulu',
+    };
+
+    const webspaceOverview = mount(
+        <PageList
+            route={router.route}
+            router={router}
+            // $FlowFixMe
+            webspace={webspace}
+            webspaceKey={webspaceKey}
+        />
+    );
+
+    webspaceOverview.find('List').prop('onCopyFinished')({webspace: 'test'});
+
+    expect(webspaceKey.get()).toEqual('test');
+});
+
 test('Should use CacheClearToolbarAction for cache clearing', () => {
     const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
     const PageList = require('../PageList').default;

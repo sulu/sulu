@@ -45,6 +45,7 @@ type Props = {|
     itemActionsProvider?: ItemActionsProvider,
     itemDisabledCondition?: ?string,
     movable: boolean,
+    onCopyFinished?: (response: Object) => void,
     onItemAdd?: (id: ?string | number) => void,
     onItemClick?: (itemId: string | number) => void,
     orderable: boolean,
@@ -330,7 +331,7 @@ class List extends React.Component<Props> {
             }
 
             // TODO do not hardcode "id", but use some kind of metadata instead
-            this.props.store.copy(id, response.parent.id).then(action(() => {
+            this.props.store.copy(id, response.parent.id, this.props?.onCopyFinished).then(action(() => {
                 this.showCopyOverlay = false;
             }));
 
@@ -688,7 +689,6 @@ class List extends React.Component<Props> {
                         onClose={this.handleCopyOverlayClose}
                         onConfirm={this.handleCopyOverlayConfirmClick}
                         open={this.showCopyOverlay}
-                        options={store.options}
                         reloadOnOpen={true}
                         resourceKey={store.resourceKey}
                         title={translate('sulu_admin.move_copy_overlay_title')}

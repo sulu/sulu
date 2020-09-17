@@ -1,5 +1,5 @@
 // @flow
-import {action, autorun, computed, observable, when} from 'mobx';
+import {action, autorun, computed, get, observable, when} from 'mobx';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import Ajv from 'ajv';
 import jsonpointer from 'json-pointer';
@@ -75,9 +75,16 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
             const {type} = this;
 
             if (this.hasTypes && !type) {
+                this.setSchemaLoading(false);
                 return;
             }
 
+            if (this.hasTypes && !this.types[type]) {
+                this.setSchemaLoading(false);
+                return;
+            }
+
+            this.setSchemaLoading(true);
             Promise.all([
                 metadataStore.getSchema(this.formKey, type, this.metadataOptions),
                 metadataStore.getJsonSchema(this.formKey, type, this.metadataOptions),
@@ -91,13 +98,17 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
 
         this.rawSchema = schema;
         this.addMissingSchemaProperties();
-        this.schemaLoading = false;
+        this.setSchemaLoading(false);
 
         this.updateFieldPathEvaluationsDisposer = autorun(this.updateFieldPathEvaluations);
     };
 
     @computed get hasTypes(): boolean {
         return Object.keys(this.types).length > 0;
+    }
+
+    @computed get hasInvalidType(): boolean {
+        return !!this.types && !!this.type && !get(this.types, this.type);
     }
 
     @computed get loading(): boolean {
@@ -181,6 +192,10 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
 
     set dirty(dirty: boolean) {
         this.resourceStore.dirty = dirty;
+    }
+
+    @action setSchemaLoading(schemaLoading: boolean) {
+        this.schemaLoading = schemaLoading;
     }
 
     @action setType(type: string) {

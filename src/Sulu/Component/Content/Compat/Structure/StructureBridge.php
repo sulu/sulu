@@ -322,7 +322,8 @@ class StructureBridge implements StructureInterface
             'nodeType' => $this->getNodeType(),
             'nodeState' => $this->getNodeState(),
             'internal' => false,
-            'contentLocales' => $this->inspector->getLocales($document),
+            'availableLocales' => $this->inspector->getLocales($document),
+            'contentLocales' => $this->inspector->getConcreteLocales($document),
             'hasSub' => $this->getHasChildren(),
             'title' => $document->getTitle(), // legacy system returns diffent fields for title depending on $complete
         ];
