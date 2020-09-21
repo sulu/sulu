@@ -72,7 +72,7 @@ class SecuritySubscriber implements EventSubscriberInterface
         /** @var SecurityBehavior $document */
         $document = $event->getDocument();
 
-        if (!$this->supports($document) || !$document->getPermissions()) {
+        if (!$this->supports($document) || !\is_array($document->getPermissions())) {
             return;
         }
 

@@ -127,6 +127,32 @@ class SecuritySubscriberTest extends SubscriberTestCase
         $this->subscriber->handlePersist($this->persistEvent->reveal());
     }
 
+    public function testPersistWithoutAnyRoles()
+    {
+        $property = $this->prophesize(PropertyInterface::class);
+        $property->getName()->willReturn('sec:role-2');
+        $this->node->getProperties('sec:role-*')->willReturn([$property->reveal()]);
+        $liveNode = $this->prophesize(NodeInterface::class);
+        $liveProperty = $this->prophesize(PropertyInterface::class);
+        $liveNode->getProperty('sec:role-2')->willReturn($liveProperty->reveal());
+        $liveNode->hasProperty('sec:role-2')->willReturn(true);
+
+        /** @var SecurityBehavior $document */
+        $document = $this->prophesize(SecurityBehavior::class);
+        $document->willImplement(PathBehavior::class);
+        $document->getPath()->willReturn('/some/path');
+        $document->getPermissions()->willReturn([]);
+
+        $this->liveSession->getNode('/some/path')->willReturn($liveNode->reveal());
+
+        $this->persistEvent->getDocument()->willReturn($document);
+
+        $property->remove()->shouldBeCalled();
+        $liveProperty->remove()->shouldBeCalled();
+
+        $this->subscriber->handlePersist($this->persistEvent->reveal());
+    }
+
     public function testHydrate()
     {
         /** @var SecurityBehavior $document */
