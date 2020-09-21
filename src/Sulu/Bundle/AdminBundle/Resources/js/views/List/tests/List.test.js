@@ -725,6 +725,20 @@ test('Should throw an error when no listKey is defined in the route options', ()
 });
 
 test('Should destroy the store on unmount', () => {
+    const listToolbarActionRegistry = require('../registries/listToolbarActionRegistry').default;
+
+    listToolbarActionRegistry.add('sulu_admin.add', jest.fn(function() {
+        this.getNode = jest.fn();
+        this.setLocales = jest.fn();
+        this.destroy = jest.fn();
+    }));
+
+    listToolbarActionRegistry.add('sulu_admin.delete', jest.fn(function() {
+        this.getNode = jest.fn();
+        this.setLocales = jest.fn();
+        this.destroy = jest.fn();
+    }));
+
     const List = require('../List').default;
     const router = {
         bind: jest.fn(),
@@ -734,6 +748,14 @@ test('Should destroy the store on unmount', () => {
                 listKey: 'snippets',
                 locales: ['de', 'en'],
                 resourceKey: 'snippets',
+                toolbarActions: [
+                    {
+                        type: 'sulu_admin.add',
+                    },
+                    {
+                        type: 'sulu_admin.delete',
+                    },
+                ],
             },
         },
     };
@@ -754,9 +776,13 @@ test('Should destroy the store on unmount', () => {
     expect(router.bind).toBeCalledWith('limit', listStore.limit, 10);
     expect(router.bind).toBeCalledWith('filter', listStore.filterOptions, {});
 
+    const toolbarActions = list.instance().toolbarActions;
+
     list.unmount();
 
     expect(listStore.destroy).toBeCalled();
+    expect(toolbarActions[0].destroy).toBeCalledWith();
+    expect(toolbarActions[1].destroy).toBeCalledWith();
 });
 
 test('Should navigate to defined route on back button click', () => {
