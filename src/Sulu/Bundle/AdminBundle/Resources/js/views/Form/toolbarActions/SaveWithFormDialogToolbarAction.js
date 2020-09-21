@@ -3,35 +3,29 @@ import React from 'react';
 import type {ElementRef} from 'react';
 import {action, observable} from 'mobx';
 import Dialog from '../../../components/Dialog';
-import {default as FormContainer, memoryFormStoreFactory, ResourceFormStore} from '../../../containers/Form';
+import {default as FormContainer, memoryFormStoreFactory} from '../../../containers/Form';
 import type {FormStoreInterface} from '../../../containers/Form';
-import Router from '../../../services/Router';
 import {translate} from '../../../utils/Translator';
-import Form from '../Form';
 import AbstractFormToolbarAction from './AbstractFormToolbarAction';
 
 export default class SaveWithFormDialogToolbarAction extends AbstractFormToolbarAction {
     @observable showDialog: boolean = false;
     dialogForm: ?FormContainer;
-    dialogFormStore: FormStoreInterface;
+    dialogFormStore: ?FormStoreInterface;
 
-    constructor(
-        resourceFormStore: ResourceFormStore,
-        form: Form,
-        router: Router,
-        locales: ?Array<string>,
-        options: {[key: string]: mixed}
-    ) {
-        super(resourceFormStore, form, router, locales, options);
+    getDialogFormStore = () => {
+        if (!this.dialogFormStore) {
+            const {formKey} = this.options;
 
-        const {formKey} = options;
+            if (typeof formKey !== 'string') {
+                throw new Error('The "formKey" option of the SaveWithFormDialogToolbarAction must be a string!');
+            }
 
-        if (typeof formKey !== 'string') {
-            throw new Error('The "formKey" option of the SaveWithFormDialogToolbarAction must be a string!');
+            this.dialogFormStore = memoryFormStoreFactory.createFromFormKey(formKey);
         }
 
-        this.dialogFormStore = memoryFormStoreFactory.createFromFormKey(formKey);
-    }
+        return this.dialogFormStore;
+    };
 
     handleConfirm = () => {
         if (!this.dialogForm) {
@@ -46,6 +40,13 @@ export default class SaveWithFormDialogToolbarAction extends AbstractFormToolbar
     };
 
     @action handleSubmit = () => {
+        if (!this.dialogFormStore) {
+            throw new Error(
+                'The formStore for the SaveWithFormDialogToolbarAction has not been initialized. ' +
+                'This should not happen and is likely a bug.'
+            );
+        }
+
         this.form.submit(this.dialogFormStore.data);
         this.showDialog = false;
     };
@@ -71,11 +72,13 @@ export default class SaveWithFormDialogToolbarAction extends AbstractFormToolbar
                 open={this.showDialog}
                 title={title}
             >
-                <FormContainer
-                    onSubmit={this.handleSubmit}
-                    ref={this.setDialogFormRef}
-                    store={this.dialogFormStore}
-                />
+                {this.showDialog &&
+                    <FormContainer
+                        onSubmit={this.handleSubmit}
+                        ref={this.setDialogFormRef}
+                        store={this.getDialogFormStore()}
+                    />
+                }
             </Dialog>
         );
     }
@@ -94,6 +97,8 @@ export default class SaveWithFormDialogToolbarAction extends AbstractFormToolbar
     }
 
     destroy() {
-        this.dialogFormStore.destroy();
+        if (this.dialogFormStore) {
+            this.dialogFormStore.destroy();
+        }
     }
 }
