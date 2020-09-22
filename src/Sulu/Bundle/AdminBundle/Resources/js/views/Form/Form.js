@@ -260,7 +260,7 @@ class Form extends React.Component<Props> {
     };
 
     @action componentDidMount() {
-        const {router} = this.props;
+        const {resourceStore: parentResourceStore, router} = this.props;
         const {
             route: {
                 options: {
@@ -292,7 +292,8 @@ class Form extends React.Component<Props> {
                 this,
                 router,
                 this.locales,
-                toolbarAction.options
+                toolbarAction.options,
+                parentResourceStore
             ));
     }
 

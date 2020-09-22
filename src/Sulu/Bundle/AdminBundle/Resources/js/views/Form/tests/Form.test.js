@@ -426,7 +426,8 @@ test('Should add items defined in ToolbarActions to Toolbar with options', () =>
         form.instance(),
         router,
         undefined,
-        {test1: 'value1'}
+        {test1: 'value1'},
+        resourceStore
     );
 
     expect(DeleteToolbarAction).toBeCalledWith(
@@ -434,7 +435,8 @@ test('Should add items defined in ToolbarActions to Toolbar with options', () =>
         form.instance(),
         router,
         undefined,
-        {test2: 'value2'}
+        {test2: 'value2'},
+        resourceStore
     );
 
     expect(EditToolbarAction).toBeCalledWith(
@@ -442,7 +444,8 @@ test('Should add items defined in ToolbarActions to Toolbar with options', () =>
         form.instance(),
         router,
         undefined,
-        {}
+        {},
+        resourceStore
     );
 });
 

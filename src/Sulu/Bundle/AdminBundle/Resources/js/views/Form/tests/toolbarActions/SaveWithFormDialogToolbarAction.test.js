@@ -56,7 +56,7 @@ function createSaveWithFormDialogToolbarAction(options: {[string]: any}) {
         router,
     });
 
-    return new SaveWithFormDialogToolbarAction(formStore, form, router, locales, options);
+    return new SaveWithFormDialogToolbarAction(formStore, form, router, locales, options, resourceStore);
 }
 
 test('Return item config with correct disabled, loading, icon, type and value', () => {

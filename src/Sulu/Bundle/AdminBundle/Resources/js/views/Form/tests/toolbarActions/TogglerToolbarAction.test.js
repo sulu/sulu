@@ -68,7 +68,7 @@ function createTogglerToolbarAction(resourceKey, options: {[key: string]: mixed}
         router,
     });
 
-    return new TogglerToolbarAction(resourceFormStore, form, router, [], options);
+    return new TogglerToolbarAction(resourceFormStore, form, router, [], options, resourceStore);
 }
 
 test('Return item config with correct type, label, loading and value', () => {

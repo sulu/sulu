@@ -78,7 +78,7 @@ function createSetUnpublishedToolbarAction(options = {}) {
         router,
     });
 
-    return new SetUnpublishedToolbarAction(formStore, form, router, [], options);
+    return new SetUnpublishedToolbarAction(formStore, form, router, [], options, resourceStore);
 }
 
 test('Return enabled item config', () => {

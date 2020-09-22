@@ -6,6 +6,7 @@ import Dialog from '../../../components/Dialog';
 import {default as FormContainer, memoryFormStoreFactory, ResourceFormStore} from '../../../containers/Form';
 import type {FormStoreInterface} from '../../../containers/Form';
 import Router from '../../../services/Router';
+import ResourceStore from '../../../stores/ResourceStore';
 import {translate} from '../../../utils/Translator';
 import Form from '../Form';
 import AbstractFormToolbarAction from './AbstractFormToolbarAction';
@@ -20,9 +21,10 @@ export default class SaveWithFormDialogToolbarAction extends AbstractFormToolbar
         form: Form,
         router: Router,
         locales: ?Array<string>,
-        options: {[key: string]: mixed}
+        options: {[key: string]: mixed},
+        parentResourceStore: ResourceStore
     ) {
-        super(resourceFormStore, form, router, locales, options);
+        super(resourceFormStore, form, router, locales, options, parentResourceStore);
 
         const {formKey} = options;
 

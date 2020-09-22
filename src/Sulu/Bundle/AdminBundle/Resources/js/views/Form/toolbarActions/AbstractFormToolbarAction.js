@@ -1,5 +1,6 @@
 // @flow
 import type {Node} from 'react';
+import ResourceStore from '../../../stores/ResourceStore';
 import {ResourceFormStore} from '../../../containers/Form';
 import type {ToolbarItemConfig} from '../../../containers/Toolbar/types';
 import Router from '../../../services/Router';
@@ -11,19 +12,22 @@ export default class AbstractFormToolbarAction {
     router: Router;
     locales: ?Array<string>;
     options: {[key: string]: mixed};
+    parentResourceStore: ResourceStore;
 
     constructor(
         resourceFormStore: ResourceFormStore,
         form: Form,
         router: Router,
         locales: ?Array<string>,
-        options: {[key: string]: mixed}
+        options: {[key: string]: mixed},
+        parentResourceStore: ResourceStore
     ) {
         this.resourceFormStore = resourceFormStore;
         this.form = form;
         this.router = router;
         this.locales = locales;
         this.options = options;
+        this.parentResourceStore = parentResourceStore;
     }
 
     setLocales(locales: Array<string>) {

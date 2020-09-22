@@ -56,7 +56,7 @@ function createSaveWithPublishingToolbarAction(options = {}) {
         router,
     });
 
-    return new SaveWithPublishingToolbarAction(resourceFormStore, form, router, [], options);
+    return new SaveWithPublishingToolbarAction(resourceFormStore, form, router, [], options, resourceStore);
 }
 
 test('Return item config with correct disabled, loading, icon, type and value', () => {
