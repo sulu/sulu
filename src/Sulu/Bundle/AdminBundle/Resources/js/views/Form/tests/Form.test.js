@@ -426,7 +426,8 @@ test('Should add items defined in ToolbarActions to Toolbar with options', () =>
         form.instance(),
         router,
         undefined,
-        {test1: 'value1'}
+        {test1: 'value1'},
+        resourceStore
     );
 
     expect(DeleteToolbarAction).toBeCalledWith(
@@ -434,7 +435,8 @@ test('Should add items defined in ToolbarActions to Toolbar with options', () =>
         form.instance(),
         router,
         undefined,
-        {test2: 'value2'}
+        {test2: 'value2'},
+        resourceStore
     );
 
     expect(EditToolbarAction).toBeCalledWith(
@@ -442,7 +444,8 @@ test('Should add items defined in ToolbarActions to Toolbar with options', () =>
         form.instance(),
         router,
         undefined,
-        {}
+        {},
+        resourceStore
     );
 });
 
@@ -1127,7 +1130,7 @@ test('Should save form when submitted', () => {
     resourceStore.destroy = jest.fn();
 
     return Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
-        form.find('Form').at(1).instance().submit('publish');
+        form.find('Form').at(1).instance().submit({action: 'publish'});
         expect(resourceStore.destroy).not.toBeCalled();
         expect(ResourceRequester.put).toBeCalledWith(
             'snippets',
@@ -1390,7 +1393,7 @@ test('Should show warning when form is submitted but already changed on the serv
     resourceStore.destroy = jest.fn();
 
     return Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
-        form.find('Form').at(1).instance().submit('publish');
+        form.find('Form').at(1).instance().submit({action: 'publish'});
         expect(resourceStore.destroy).not.toBeCalled();
         expect(ResourceRequester.put).toBeCalledWith(
             'snippets',
@@ -1461,7 +1464,7 @@ test('Should show warning when form is submitted but already changed on the serv
     resourceStore.destroy = jest.fn();
 
     return Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
-        form.find('Form').at(1).instance().submit('publish');
+        form.find('Form').at(1).instance().submit({action: 'publish'});
         expect(resourceStore.destroy).not.toBeCalled();
         expect(ResourceRequester.put).toBeCalledWith(
             'snippets',
@@ -2045,16 +2048,44 @@ test('Should pass options to Form metadata with mixed routerAttribuesToFormMetad
 });
 
 test('Should destroy the store on unmount', () => {
+    const formToolbarActionRegistry = require('../registries/formToolbarActionRegistry');
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
     const resourceStore = new ResourceStore('snippets', 12, {locale: observable.box()});
     resourceStore.destroy = jest.fn();
+
+    const SaveToolbarAction = jest.fn(function() {
+        this.getNode = jest.fn();
+        this.destroy = jest.fn();
+    });
+
+    const DeleteToolbarAction = jest.fn(function() {
+        this.getNode = jest.fn();
+        this.destroy = jest.fn();
+    });
+
+    formToolbarActionRegistry.get.mockImplementation((name) => {
+        switch (name) {
+            case 'save':
+                return SaveToolbarAction;
+            case 'delete':
+                return DeleteToolbarAction;
+        }
+    });
+
     const route = {
         options: {
             formKey: 'snippets',
             locales: [],
             resourceKey: 'snippets',
-            toolbarActions: [],
+            toolbarActions: [
+                {
+                    type: 'save',
+                },
+                {
+                    type: 'delete',
+                },
+            ],
         },
     };
     const router = {
@@ -2073,9 +2104,13 @@ test('Should destroy the store on unmount', () => {
     const resourceFormStore = form.instance().resourceFormStore;
     resourceFormStore.destroy = jest.fn();
 
+    const toolbarActions = form.instance().toolbarActions;
+
     form.unmount();
     expect(resourceFormStore.destroy).toBeCalled();
     expect(resourceStore.destroy).not.toBeCalled();
+    expect(toolbarActions[0].destroy).toBeCalled();
+    expect(toolbarActions[1].destroy).toBeCalled();
 });
 
 test('Should destroy the own resourceStore if existing on unmount', () => {

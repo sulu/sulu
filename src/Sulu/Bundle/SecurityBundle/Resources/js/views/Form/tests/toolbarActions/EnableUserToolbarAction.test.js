@@ -67,7 +67,7 @@ function createEnableUserToolbarAction() {
         router,
     });
 
-    return new EnableUserToolbarAction(resourceFormStore, form, router, [], {});
+    return new EnableUserToolbarAction(resourceFormStore, form, router, [], {}, resourceStore);
 }
 
 test('Return item config with correct disabled, loading, icon, type and label', () => {

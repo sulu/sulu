@@ -3,6 +3,7 @@ import jexl from 'jexl';
 import log from 'loglevel';
 import {translate} from '../../../utils/Translator';
 import {ResourceFormStore} from '../../../containers/Form';
+import ResourceStore from '../../../stores/ResourceStore';
 import Form from '../Form';
 import Router from '../../../services/Router';
 import AbstractFormToolbarAction from './AbstractFormToolbarAction';
@@ -13,7 +14,8 @@ export default class SaveWithPublishingToolbarAction extends AbstractFormToolbar
         form: Form,
         router: Router,
         locales: ?Array<string>,
-        options: {[key: string]: mixed}
+        options: {[key: string]: mixed},
+        parentResourceStore: ResourceStore
     ) {
         const {
             publish_display_condition: publishDisplayCondition,
@@ -46,7 +48,7 @@ export default class SaveWithPublishingToolbarAction extends AbstractFormToolbar
             }
         }
 
-        super(resourceFormStore, form, router, locales, options);
+        super(resourceFormStore, form, router, locales, options, parentResourceStore);
     }
 
     getToolbarItemConfig() {
@@ -70,7 +72,7 @@ export default class SaveWithPublishingToolbarAction extends AbstractFormToolbar
                 label: translate('sulu_admin.save_draft'),
                 disabled: !dirty,
                 onClick: () => {
-                    this.form.submit('draft');
+                    this.form.submit({action: 'draft'});
                 },
             });
         }
@@ -80,7 +82,7 @@ export default class SaveWithPublishingToolbarAction extends AbstractFormToolbar
                 label: translate('sulu_admin.save_publish'),
                 disabled: !dirty,
                 onClick: () => {
-                    this.form.submit('publish');
+                    this.form.submit({action: 'publish'});
                 },
             });
         }
@@ -91,7 +93,7 @@ export default class SaveWithPublishingToolbarAction extends AbstractFormToolbar
                 // TODO do not hardcode "publishedState" but use metadata instead
                 disabled: dirty || data.publishedState === undefined || !!data.publishedState,
                 onClick: () => {
-                    this.form.submit('publish');
+                    this.form.submit({action: 'publish'});
                 },
             });
         }

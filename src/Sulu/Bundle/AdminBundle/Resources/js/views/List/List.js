@@ -290,6 +290,8 @@ class List extends React.Component<Props> {
 
     componentWillUnmount() {
         this.listStore.destroy();
+
+        this.toolbarActions.forEach((toolbarAction) => toolbarAction.destroy());
     }
 
     addItem = (parentId: ?string | number) => {

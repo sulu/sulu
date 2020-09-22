@@ -77,7 +77,7 @@ function createCopyLocaleToolbarAction(locales, options = {}) {
         router,
     });
 
-    return new CopyLocaleToolbarAction(formStore, form, router, locales, options);
+    return new CopyLocaleToolbarAction(formStore, form, router, locales, options, resourceStore);
 }
 
 test('Return enabled item config', () => {

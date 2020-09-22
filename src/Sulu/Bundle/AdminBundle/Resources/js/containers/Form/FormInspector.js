@@ -1,6 +1,7 @@
 // @flow
 import {computed} from 'mobx';
 import type {IObservableValue} from 'mobx';
+import log from 'loglevel';
 import type {FinishFieldHandler, FormStoreInterface, SaveHandler} from './types';
 
 export default class FormInspector {
@@ -56,8 +57,15 @@ export default class FormInspector {
         this.saveHandlers.push(saveHandler);
     }
 
-    triggerSaveHandler(action: ?string) {
-        this.saveHandlers.forEach((saveHandler) => saveHandler(action));
+    triggerSaveHandler(options: ?string | {[string]: any}) {
+        if (typeof options === 'string') {
+            log.warn(
+                'Passing a string to the "submit" method is deprecated since 2.2 and will be removed. ' +
+                'Pass an object with an "action" property instead.'
+            );
+        }
+
+        this.saveHandlers.forEach((saveHandler) => saveHandler(options));
     }
 
     addFinishFieldHandler(finishFieldHandler: FinishFieldHandler) {

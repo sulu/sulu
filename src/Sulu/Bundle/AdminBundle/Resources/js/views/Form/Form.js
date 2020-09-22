@@ -5,6 +5,7 @@ import type {IObservableValue} from 'mobx';
 import {action, computed, toJS, isObservableArray, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import equals from 'fast-deep-equal';
+import log from 'loglevel';
 import Dialog from '../../components/Dialog';
 import PublishIndicator from '../../components/PublishIndicator';
 import {default as FormContainer, ResourceFormStore, resourceFormStoreFactory} from '../../containers/Form';
@@ -259,7 +260,7 @@ class Form extends React.Component<Props> {
     };
 
     @action componentDidMount() {
-        const {router} = this.props;
+        const {resourceStore: parentResourceStore, router} = this.props;
         const {
             route: {
                 options: {
@@ -291,7 +292,8 @@ class Form extends React.Component<Props> {
                 this,
                 router,
                 this.locales,
-                toolbarAction.options
+                toolbarAction.options,
+                parentResourceStore
             ));
     }
 
@@ -315,21 +317,39 @@ class Form extends React.Component<Props> {
         if (this.hasOwnResourceStore) {
             this.resourceStore.destroy();
         }
+
+        this.toolbarActions.forEach((toolbarAction) => toolbarAction.destroy());
     }
 
     @action showSuccessSnackbar = () => {
         this.showSuccess.set(true);
     };
 
-    @action submit = (action: ?string) => {
+    @action submit = (options: ?string | {[string]: any}) => {
+        if (typeof options === 'string') {
+            log.warn(
+                'Passing a string to the "submit" method is deprecated since 2.2 and will be removed. ' +
+                'Pass an object with an "action" property instead.'
+            );
+        }
+
         if (!this.form) {
             throw new Error('The form ref has not been set! This should not happen and is likely a bug.');
         }
-        this.form.submit(action);
+        this.form.submit(options);
     };
 
-    handleSubmit = (actionParameter: ?string) => {
-        return this.save({action: actionParameter});
+    handleSubmit = (options: ?string | {[string]: any}) => {
+        if (typeof options === 'string') {
+            log.warn(
+                'Passing a string to the "submit" method is deprecated since 2.2 and will be removed. ' +
+                'Pass an object with an "action" property instead.'
+            );
+
+            options = {action: options};
+        }
+
+        return this.save(options);
     };
 
     handleSuccess = () => {

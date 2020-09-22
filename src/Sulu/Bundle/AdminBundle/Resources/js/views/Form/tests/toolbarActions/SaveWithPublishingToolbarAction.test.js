@@ -56,7 +56,7 @@ function createSaveWithPublishingToolbarAction(options = {}) {
         router,
     });
 
-    return new SaveWithPublishingToolbarAction(resourceFormStore, form, router, [], options);
+    return new SaveWithPublishingToolbarAction(resourceFormStore, form, router, [], options, resourceStore);
 }
 
 test('Return item config with correct disabled, loading, icon, type and value', () => {
@@ -297,7 +297,7 @@ test('Submit form with draft action when draft option is clicked', () => {
 
     toolbarItemConfig.options[0].onClick();
 
-    expect(publishableSaveToolbarAction.form.submit).toBeCalledWith('draft');
+    expect(publishableSaveToolbarAction.form.submit).toBeCalledWith({action: 'draft'});
 });
 
 test('Submit form with publish action when draft option is clicked', () => {
@@ -314,7 +314,7 @@ test('Submit form with publish action when draft option is clicked', () => {
 
     toolbarItemConfig.options[1].onClick();
 
-    expect(publishableSaveToolbarAction.form.submit).toBeCalledWith('publish');
+    expect(publishableSaveToolbarAction.form.submit).toBeCalledWith({action: 'publish'});
 });
 
 test('Return item config with loading button when saving flag is set', () => {
@@ -340,7 +340,7 @@ test('Submit form with draft action when draft option is clicked', () => {
 
     toolbarItemConfig.options[0].onClick();
 
-    expect(publishableSaveToolbarAction.form.submit).toBeCalledWith('draft');
+    expect(publishableSaveToolbarAction.form.submit).toBeCalledWith({action: 'draft'});
 });
 
 test('Submit form with publish action when draft option is clicked', () => {
@@ -357,5 +357,5 @@ test('Submit form with publish action when draft option is clicked', () => {
 
     toolbarItemConfig.options[1].onClick();
 
-    expect(publishableSaveToolbarAction.form.submit).toBeCalledWith('publish');
+    expect(publishableSaveToolbarAction.form.submit).toBeCalledWith({action: 'publish'});
 });

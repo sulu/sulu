@@ -9,6 +9,7 @@ import {translate} from '../../../utils/Translator';
 import {ResourceFormStore} from '../../../containers/Form';
 import Form from '../Form';
 import Router from '../../../services/Router';
+import ResourceStore from '../../../stores/ResourceStore';
 import AbstractFormToolbarAction from './AbstractFormToolbarAction';
 
 export default class DeleteDraftToolbarAction extends AbstractFormToolbarAction {
@@ -20,7 +21,8 @@ export default class DeleteDraftToolbarAction extends AbstractFormToolbarAction 
         form: Form,
         router: Router,
         locales: ?Array<string>,
-        options: {[key: string]: mixed}
+        options: {[key: string]: mixed},
+        parentResourceStore: ResourceStore
     ) {
         const {
             display_condition: displayCondition,
@@ -39,7 +41,7 @@ export default class DeleteDraftToolbarAction extends AbstractFormToolbarAction 
             }
         }
 
-        super(resourceFormStore, form, router, locales, options);
+        super(resourceFormStore, form, router, locales, options, parentResourceStore);
     }
 
     getNode() {

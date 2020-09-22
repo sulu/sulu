@@ -90,7 +90,7 @@ export type Schema = {[string]: SchemaEntry};
 
 export type FinishFieldHandler = (dataPath: string, schemaPath: string) => void;
 
-export type SaveHandler = (action: ?string) => void;
+export type SaveHandler = (action: ?string | {[string]: any}) => void;
 
 export type ConditionDataProvider = (
     data: {[string]: any},

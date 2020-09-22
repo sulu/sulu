@@ -47,7 +47,7 @@ function createTypeToolbarAction(options = {}) {
         router,
     });
 
-    return new TypeToolbarAction(resourceFormStore, form, router, [], options);
+    return new TypeToolbarAction(resourceFormStore, form, router, [], options, resourceStore);
 }
 
 test('Return item config with correct disabled, loading, options, icon, type and value ', () => {

@@ -63,7 +63,7 @@ function createDeleteToolbarAction(options = {}) {
         route: router.route,
         router,
     });
-    return new DeleteToolbarAction(resourceFormStore, form, router, [], options);
+    return new DeleteToolbarAction(resourceFormStore, form, router, [], options, resourceStore);
 }
 
 test('Return item config with correct disabled, loading, icon, type and value and return closed dialog', () => {

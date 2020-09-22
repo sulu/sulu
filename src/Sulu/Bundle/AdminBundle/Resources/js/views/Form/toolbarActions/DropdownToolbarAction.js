@@ -3,6 +3,7 @@ import React, {Fragment} from 'react';
 import {ResourceFormStore} from '../../../containers/Form';
 import type {DropdownOption} from '../../../components/Toolbar/types';
 import Router from '../../../services/Router';
+import ResourceStore from '../../../stores/ResourceStore';
 import formToolbarActionRegistry from '../registries/formToolbarActionRegistry';
 import Form from '../Form';
 import AbstractFormToolbarAction from './AbstractFormToolbarAction';
@@ -15,14 +16,16 @@ export default class DropdownToolbarAction extends AbstractFormToolbarAction {
         form: Form,
         router: Router,
         locales: ?Array<string>,
-        options: {[key: string]: mixed}
+        options: {[key: string]: mixed},
+        parentResourceStore: ResourceStore
     ) {
         super(
             resourceFormStore,
             form,
             router,
             locales,
-            options
+            options,
+            parentResourceStore
         );
 
         const {toolbarActions} = this.options;
@@ -52,7 +55,8 @@ export default class DropdownToolbarAction extends AbstractFormToolbarAction {
                     this.form,
                     router,
                     this.locales,
-                    ((options: any): {[key: string]: mixed})
+                    ((options: any): {[key: string]: mixed}),
+                    parentResourceStore
                 );
             });
     }

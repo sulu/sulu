@@ -50,7 +50,7 @@ function createDropdownToolbarAction(options = {}) {
         router,
     });
 
-    return new DropdownToolbarAction(resourceFormStore, form, router, [], options);
+    return new DropdownToolbarAction(resourceFormStore, form, router, [], options, resourceStore);
 }
 
 test('Return item config with an option for every action in array and skip undefined button', () => {

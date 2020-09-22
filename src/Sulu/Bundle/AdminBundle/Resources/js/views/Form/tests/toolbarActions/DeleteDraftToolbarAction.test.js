@@ -78,7 +78,7 @@ function createDeleteDraftToolbarAction(options = {}) {
         router,
     });
 
-    return new DeleteDraftToolbarAction(formStore, form, router, [], options);
+    return new DeleteDraftToolbarAction(formStore, form, router, [], options, resourceStore);
 }
 
 test('Return enabled item config', () => {

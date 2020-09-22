@@ -5,6 +5,7 @@ import jexl from 'jexl';
 import log from 'loglevel';
 import Dialog from '../../../components/Dialog';
 import ResourceRequester from '../../../services/ResourceRequester';
+import ResourceStore from '../../../stores/ResourceStore';
 import {translate} from '../../../utils/Translator';
 import {ResourceFormStore} from '../../../containers/Form';
 import Form from '../Form';
@@ -20,7 +21,8 @@ export default class SetUnpublishedToolbarAction extends AbstractFormToolbarActi
         form: Form,
         router: Router,
         locales: ?Array<string>,
-        options: {[key: string]: mixed}
+        options: {[key: string]: mixed},
+        parentResourceStore: ResourceStore
     ) {
         const {
             display_condition: displayCondition,
@@ -39,7 +41,7 @@ export default class SetUnpublishedToolbarAction extends AbstractFormToolbarActi
             }
         }
 
-        super(resourceFormStore, form, router, locales, options);
+        super(resourceFormStore, form, router, locales, options, parentResourceStore);
     }
 
     getNode() {
