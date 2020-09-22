@@ -291,7 +291,8 @@ class PageAdmin extends Admin
                     ->addToolbarActions([
                         new SaveWithFormDialogToolbarAction(
                             'sulu_security.inherit_permissions_title',
-                            'permission_inheritance'
+                            'permission_inheritance',
+                            '__parent.hasSub'
                         ),
                     ])
                     ->addRouterAttributesToFormRequest(['webspace'])
