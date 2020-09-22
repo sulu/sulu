@@ -91,48 +91,14 @@ test('Return item config with loading button when saving flag is set', () => {
 });
 
 test('Throw error if no formKey is passed', () => {
-    const saveWithFormDialogToolbarAction = createSaveWithFormDialogToolbarAction({title: 'Test'});
-
-    const toolbarItemConfig = saveWithFormDialogToolbarAction.getToolbarItemConfig();
-    if (!toolbarItemConfig) {
-        throw new Error('The toolbarItemConfig should be a value!');
-    }
-
-    const clickHandler = toolbarItemConfig.onClick;
-    if (!clickHandler) {
-        throw new Error('A onClick callback should be registered on the copy locale option');
-    }
-
-    clickHandler();
-
-    expect(() => saveWithFormDialogToolbarAction.getNode()).toThrow(/"formKey"/);
+    expect(() => createSaveWithFormDialogToolbarAction({})).toThrow(/"formKey"/);
 });
 
 test('Destroy store when being destroyed', () => {
-    const saveWithFormDialogToolbarAction = createSaveWithFormDialogToolbarAction({formKey: 'test', title: 'Test'});
-
-    const toolbarItemConfig = saveWithFormDialogToolbarAction.getToolbarItemConfig();
-    if (!toolbarItemConfig) {
-        throw new Error('The toolbarItemConfig should be a value!');
-    }
-
-    const clickHandler = toolbarItemConfig.onClick;
-    if (!clickHandler) {
-        throw new Error('A onClick callback should be registered on the copy locale option');
-    }
-
-    clickHandler();
-
-    saveWithFormDialogToolbarAction.getNode();
+    const saveWithFormDialogToolbarAction = createSaveWithFormDialogToolbarAction({formKey: 'test'});
     saveWithFormDialogToolbarAction.destroy();
 
-    const dialogFormStore = saveWithFormDialogToolbarAction.dialogFormStore;
-
-    if (!dialogFormStore) {
-        throw new Error('The dialogFormStore should have been initialized');
-    }
-
-    expect(dialogFormStore.destroy).toBeCalledWith();
+    expect(saveWithFormDialogToolbarAction.dialogFormStore.destroy).toBeCalledWith();
 });
 
 test('Close dialog when cancel button of dialog is clicked', () => {
