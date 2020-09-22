@@ -2,6 +2,7 @@
 import React from 'react';
 import type {ElementRef} from 'react';
 import {action, observable} from 'mobx';
+import jexl from 'jexl';
 import Dialog from '../../../components/Dialog';
 import {default as FormContainer, memoryFormStoreFactory, ResourceFormStore} from '../../../containers/Form';
 import type {FormStoreInterface} from '../../../containers/Form';
@@ -89,7 +90,16 @@ export default class SaveWithFormDialogToolbarAction extends AbstractFormToolbar
             label: translate('sulu_admin.save'),
             loading: this.resourceFormStore.saving,
             onClick: action(() => {
-                this.showDialog = true;
+                if (
+                    jexl.evalSync(
+                        this.options.condition,
+                        {...this.resourceFormStore.data, __parent: this.parentResourceStore.data}
+                    )
+                ) {
+                    this.showDialog = true;
+                } else {
+                    this.form.submit();
+                }
             }),
             type: 'button',
         };

@@ -21,7 +21,17 @@ class SaveWithFormDialogToolbarActionTest extends SuluTestCase
         $saveWithFormDialogToolbarAction = new SaveWithFormDialogToolbarAction('sulu_admin.save', 'form');
 
         $this->assertEquals(
-            '{"type":"sulu_admin.save_with_form_dialog","options":{"formKey":"form","title":"Save"}}',
+            '{"type":"sulu_admin.save_with_form_dialog","options":{"condition":"true","formKey":"form","title":"Save"}}',
+            $this->getContainer()->get('jms_serializer')->serialize($saveWithFormDialogToolbarAction, 'json')
+        );
+    }
+
+    public function testSerializerWithCondition()
+    {
+        $saveWithFormDialogToolbarAction = new SaveWithFormDialogToolbarAction('sulu_admin.save', 'form', 'flag');
+
+        $this->assertEquals(
+            '{"type":"sulu_admin.save_with_form_dialog","options":{"condition":"flag","formKey":"form","title":"Save"}}',
             $this->getContainer()->get('jms_serializer')->serialize($saveWithFormDialogToolbarAction, 'json')
         );
     }

@@ -13,11 +13,12 @@ namespace Sulu\Bundle\AdminBundle\Admin\View;
 
 class SaveWithFormDialogToolbarAction extends ToolbarAction
 {
-    public function __construct(string $title, string $formKey)
+    public function __construct(string $title, string $formKey, string $condition = 'true')
     {
         parent::__construct(
             'sulu_admin.save_with_form_dialog',
             [
+                'condition' => $condition,
                 'formKey' => $formKey,
                 'title' => $title,
             ]

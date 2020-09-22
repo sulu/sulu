@@ -60,7 +60,7 @@ function createSaveWithFormDialogToolbarAction(options: {[string]: any}) {
 }
 
 test('Return item config with correct disabled, loading, icon, type and value', () => {
-    const saveWithFormDialogToolbarAction = createSaveWithFormDialogToolbarAction({formKey: 'test'});
+    const saveWithFormDialogToolbarAction = createSaveWithFormDialogToolbarAction({condition: 'true', formKey: 'test'});
     saveWithFormDialogToolbarAction.resourceFormStore.resourceStore.saving = false;
 
     expect(saveWithFormDialogToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
@@ -73,7 +73,7 @@ test('Return item config with correct disabled, loading, icon, type and value', 
 });
 
 test('Return item config with enabled button when dirty flag is set', () => {
-    const saveWithFormDialogToolbarAction = createSaveWithFormDialogToolbarAction({formKey: 'test'});
+    const saveWithFormDialogToolbarAction = createSaveWithFormDialogToolbarAction({condition: 'true', formKey: 'test'});
     saveWithFormDialogToolbarAction.resourceFormStore.resourceStore.dirty = true;
 
     expect(saveWithFormDialogToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
@@ -82,7 +82,7 @@ test('Return item config with enabled button when dirty flag is set', () => {
 });
 
 test('Return item config with loading button when saving flag is set', () => {
-    const saveWithFormDialogToolbarAction = createSaveWithFormDialogToolbarAction({formKey: 'test'});
+    const saveWithFormDialogToolbarAction = createSaveWithFormDialogToolbarAction({condition: 'true', formKey: 'test'});
     saveWithFormDialogToolbarAction.resourceFormStore.resourceStore.saving = true;
 
     expect(saveWithFormDialogToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
@@ -102,7 +102,9 @@ test('Destroy store when being destroyed', () => {
 });
 
 test('Close dialog when cancel button of dialog is clicked', () => {
-    const saveWithFormDialogToolbarAction = createSaveWithFormDialogToolbarAction({formKey: 'test', title: 'Test'});
+    const saveWithFormDialogToolbarAction = createSaveWithFormDialogToolbarAction(
+        {condition: 'true', formKey: 'test', title: 'Test'}
+    );
 
     const toolbarItemConfig = saveWithFormDialogToolbarAction.getToolbarItemConfig();
     if (!toolbarItemConfig) {
@@ -140,7 +142,18 @@ test('Close dialog when cancel button of dialog is clicked', () => {
 });
 
 test('Submit form with passed form data dialog when confirm button of dialog is clicked', () => {
-    const saveWithFormDialogToolbarAction = createSaveWithFormDialogToolbarAction({formKey: 'test', title: 'Test'});
+    const saveWithFormDialogToolbarAction = createSaveWithFormDialogToolbarAction(
+        {condition: 'title == "test1" && __parent.title == "test2"', formKey: 'test', title: 'Test'}
+    );
+
+    // $FlowFixMe
+    saveWithFormDialogToolbarAction.resourceFormStore.data = {
+        title: 'test1',
+    };
+
+    saveWithFormDialogToolbarAction.parentResourceStore.data = {
+        title: 'test2',
+    };
 
     const toolbarItemConfig = saveWithFormDialogToolbarAction.getToolbarItemConfig();
     if (!toolbarItemConfig) {
@@ -178,4 +191,24 @@ test('Submit form with passed form data dialog when confirm button of dialog is 
     expect(element.instance().props).toEqual(expect.objectContaining({
         open: false,
     }));
+});
+
+test('Submit form without form data dialog when condition does not evaluate to true', () => {
+    const saveWithFormDialogToolbarAction = createSaveWithFormDialogToolbarAction(
+        {condition: 'false', formKey: 'test', title: 'Test'}
+    );
+
+    const toolbarItemConfig = saveWithFormDialogToolbarAction.getToolbarItemConfig();
+    if (!toolbarItemConfig) {
+        throw new Error('The toolbarItemConfig should be a value!');
+    }
+
+    const clickHandler = toolbarItemConfig.onClick;
+    if (!clickHandler) {
+        throw new Error('A onClick callback should be registered on the copy locale option');
+    }
+
+    clickHandler();
+
+    expect(saveWithFormDialogToolbarAction.form.submit).toBeCalledWith();
 });
