@@ -11,6 +11,7 @@ import permissionFormOverlayStyles from './permissionFormOverlay.scss';
 
 type Props = {|
     collectionId: ?number | string,
+    hasChildren: ?boolean,
     onClose: () => void,
     onConfirm: () => void,
     open: boolean,
@@ -72,7 +73,13 @@ class PermissionFormOverlay extends React.Component<Props> {
     };
 
     @action handleConfirm = () => {
-        this.showInheritDialog = true;
+        const {hasChildren} = this.props;
+
+        if (hasChildren) {
+            this.showInheritDialog = true;
+        } else if (this.permissionFormRef) {
+            this.permissionFormRef.submit();
+        }
     };
 
     @action handleConfirmInherit = () => {

@@ -52,7 +52,7 @@ export default class CollectionStore {
             return {};
         }
 
-        return this.resourceStore.data._permissions;
+        return this.resourceStore.data._permissions || {};
     }
 
     @computed get parentId(): ?number {

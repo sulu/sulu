@@ -72,6 +72,30 @@ test('Should return an empty permission object if still loading', () => {
     expect(collectionStore.permissions).toEqual({});
 });
 
+test('Should return an empty permission object if no permissions are given', (done) => {
+    ResourceRequester.get.mockReturnValue(Promise.resolve({
+        id: 2,
+        title: 'test',
+        _embedded: {
+            parent: {
+                id: 1,
+            },
+        },
+    }));
+
+    const locale = observable.box('en');
+    const collectionStore = new CollectionStore(1, locale);
+
+    when(
+        () => !collectionStore.loading,
+        () => {
+            expect(collectionStore.permissions).toEqual({});
+            collectionStore.destroy();
+            done();
+        }
+    );
+});
+
 test('Should return an empty permission object if no id was given', () => {
     const collectionStore = new CollectionStore(undefined, observable.box('en'));
 

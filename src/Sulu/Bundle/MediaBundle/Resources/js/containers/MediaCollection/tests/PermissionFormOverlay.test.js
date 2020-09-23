@@ -15,6 +15,8 @@ jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn(function() {
     });
 }));
 
+jest.mock('sulu-admin-bundle/containers/Form/MissingTypeDialog', () => jest.fn(() => null));
+
 jest.mock('sulu-admin-bundle/containers/Form/stores/ResourceFormStore', () => jest.fn(function() {
     this.destroy = jest.fn();
     this.data = {};
@@ -38,7 +40,13 @@ jest.mock('sulu-admin-bundle/utils/Translator', () => ({
 
 test('Create new ResourceFormStore when collectionId has changed', () => {
     const permissionFormOverlay = shallow(
-        <PermissionFormOverlay collectionId={1} onClose={jest.fn()} onConfirm={jest.fn()} open={true} />
+        <PermissionFormOverlay
+            collectionId={1}
+            hasChildren={true}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={true}
+        />
     );
 
     expect(ResourceStore).toHaveBeenLastCalledWith('permissions', 1, {}, {resourceKey: 'media'});
@@ -70,7 +78,13 @@ test('Create new ResourceFormStore when collectionId has changed', () => {
 
 test('Call destroy of created stores', () => {
     const permissionFormOverlay = shallow(
-        <PermissionFormOverlay collectionId={undefined} onClose={jest.fn()} onConfirm={jest.fn()} open={true} />
+        <PermissionFormOverlay
+            collectionId={undefined}
+            hasChildren={true}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={true}
+        />
     );
 
     const formStore = permissionFormOverlay.instance().formStore;
@@ -90,7 +104,13 @@ test('Confirming dialog should save the current value and inherit it', () => {
     const confirmSpy = jest.fn();
 
     const permissionFormOverlay = mount(
-        <PermissionFormOverlay collectionId={undefined} onClose={jest.fn()} onConfirm={confirmSpy} open={true} />
+        <PermissionFormOverlay
+            collectionId={undefined}
+            hasChildren={true}
+            onClose={jest.fn()}
+            onConfirm={confirmSpy}
+            open={true}
+        />
     );
 
     const savePromise = Promise.resolve();
@@ -118,7 +138,13 @@ test('Cancel inherit dialog should not save anything', () => {
     const closeSpy = jest.fn();
 
     const permissionFormOverlay = mount(
-        <PermissionFormOverlay collectionId={undefined} onClose={closeSpy} onConfirm={confirmSpy} open={true} />
+        <PermissionFormOverlay
+            collectionId={undefined}
+            hasChildren={true}
+            onClose={closeSpy}
+            onConfirm={confirmSpy}
+            open={true}
+        />
     );
 
     permissionFormOverlay.update();
@@ -139,7 +165,13 @@ test.each([
     [false],
 ])('Pass saving prop of value "%s" to confirmLoading prop of Overlay', (saving) => {
     const permissionFormOverlay = shallow(
-        <PermissionFormOverlay collectionId={1} onClose={jest.fn()} onConfirm={jest.fn()} open={true} />
+        <PermissionFormOverlay
+            collectionId={1}
+            hasChildren={true}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={true}
+        />
     );
 
     permissionFormOverlay.instance().resourceStore.saving = saving;
@@ -153,7 +185,13 @@ test.each([
     [false],
 ])('Pass open prop of value "%s" to open prop of Overlay', (open) => {
     const permissionFormOverlay = shallow(
-        <PermissionFormOverlay collectionId={1} onClose={jest.fn()} onConfirm={jest.fn()} open={open} />
+        <PermissionFormOverlay
+            collectionId={1}
+            hasChildren={true}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={open}
+        />
     );
 
     expect(permissionFormOverlay.find('Overlay').prop('open')).toEqual(open);
