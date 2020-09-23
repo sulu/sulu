@@ -395,9 +395,10 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
     {
         $queryBuilder = $this->createQueryBuilder('subCollection')
             ->select('subCollection.id')
-            ->leftJoin($this->_entityName, 'collection', Join::WITH, 'collection.id = :id')
-            ->setParameter('id', $id)
-            ->andWhere('subCollection.lft > collection.lft AND subCollection.rgt < collection.rgt');
+            ->from($this->_entityName, 'collection')
+            ->andWhere('collection.id = :id')
+            ->andWhere('subCollection.lft > collection.lft AND subCollection.rgt < collection.rgt')
+            ->setParameter('id', $id);
 
         return \array_map(function($collection) {
             return (int) $collection['id'];
