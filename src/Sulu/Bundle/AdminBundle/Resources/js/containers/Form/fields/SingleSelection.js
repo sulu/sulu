@@ -394,19 +394,22 @@ class SingleSelection extends React.Component<Props>
             throw new Error('The "data_path_to_auto_complete" schemaOption must be an array!');
         }
 
-        const options = dataPathToAutoComplete.reduce((options, schemaEntry) => {
-            const {name, value} = schemaEntry;
-            if (typeof name !== 'string' || typeof value !== 'string') {
-                throw new Error(
-                    'An entry of the "data_path_to_auto_complete" schemaOption must provide strings for their name and '
-                    + 'value'
-                );
-            }
+        const options = {
+            ...dataPathToAutoComplete.reduce((options, schemaEntry) => {
+                const {name, value} = schemaEntry;
+                if (typeof name !== 'string' || typeof value !== 'string') {
+                    throw new Error(
+                        'An entry of the "data_path_to_auto_complete" schemaOption must provide strings for their ' +
+                        'name and value'
+                    );
+                }
 
-            options[value] = formInspector.getValueByPath('/' + name);
+                options[value] = formInspector.getValueByPath('/' + name);
 
-            return options;
-        }, {});
+                return options;
+            }, {}),
+            ...this.requestOptions,
+        };
 
         return (
             <SingleAutoComplete
