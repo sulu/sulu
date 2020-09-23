@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, observable, toJS} from 'mobx';
+import {action, observable, toJS, reaction} from 'mobx';
 import {observer} from 'mobx-react';
 import {arrayMove} from 'react-sortable-hoc';
 import {translate} from '../../utils/Translator';
@@ -37,14 +37,24 @@ class BlockCollection extends React.Component<Props> {
         super(props);
 
         this.fillArrays();
+        reaction(() => this.props.value.length, this.fillArrays.bind(this));
     }
 
     fillArrays() {
         const {defaultType, onChange, minOccurs, value} = this.props;
         const {expandedBlocks, generatedBlockIds} = this;
 
-        if (!value) {
+        if ((!value || expandedBlocks.length === value.length || generatedBlockIds.length === value.length)
+                && value.length !== 0) {
             return;
+        }
+
+        if (expandedBlocks.length > value.length) {
+            expandedBlocks.length = 0;
+        }
+
+        if (generatedBlockIds.length > value.length) {
+            generatedBlockIds.length = 0;
         }
 
         expandedBlocks.push(...new Array(value.length - expandedBlocks.length).fill(false));
