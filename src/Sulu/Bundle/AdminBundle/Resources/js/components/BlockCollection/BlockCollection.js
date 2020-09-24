@@ -44,17 +44,16 @@ class BlockCollection extends React.Component<Props> {
         const {defaultType, onChange, minOccurs, value} = this.props;
         const {expandedBlocks, generatedBlockIds} = this;
 
-        if ((!value || expandedBlocks.length === value.length || generatedBlockIds.length === value.length)
-                && value.length !== 0) {
+        if (!value) {
             return;
         }
 
         if (expandedBlocks.length > value.length) {
-            expandedBlocks.length = 0;
+            expandedBlocks.splice(value.length);
         }
 
         if (generatedBlockIds.length > value.length) {
-            generatedBlockIds.length = 0;
+            generatedBlockIds.splice(value.length);
         }
 
         expandedBlocks.push(...new Array(value.length - expandedBlocks.length).fill(false));

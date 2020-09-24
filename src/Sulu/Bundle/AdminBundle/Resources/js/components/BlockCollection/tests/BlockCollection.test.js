@@ -413,7 +413,7 @@ test('Should adjust expandedBlocks and generatedBlockIds after updating the valu
         type2: 'Type 2',
     };
 
-    let value: any = [
+    const value = [
         {
             type: 'type1',
             content: 'Test 1',
@@ -438,20 +438,24 @@ test('Should adjust expandedBlocks and generatedBlockIds after updating the valu
         />
     );
 
-    value = [
-        {
-            type: 'type1',
-            content: 'Test 1',
-        },
-    ];
+    blockCollection.instance().expandedBlocks[0] = true;
 
     expect(blockCollection.props().value.length).toBe(3);
     expect(blockCollection.instance().expandedBlocks.length).toBe(3);
     expect(blockCollection.instance().generatedBlockIds.length).toBe(3);
+    expect(blockCollection.instance().expandedBlocks[0]).toBe(true);
 
-    blockCollection.setProps({value});
+    blockCollection.setProps({
+        value: [
+            {
+                type: 'type1',
+                content: 'Test 1',
+            },
+        ],
+    });
 
     expect(blockCollection.props().value.length).toBe(1);
     expect(blockCollection.instance().expandedBlocks.length).toBe(1);
     expect(blockCollection.instance().generatedBlockIds.length).toBe(1);
+    expect(blockCollection.instance().expandedBlocks[0]).toBe(true);
 });
