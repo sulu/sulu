@@ -37,10 +37,10 @@ class BlockCollection extends React.Component<Props> {
         super(props);
 
         this.fillArrays();
-        reaction(() => this.props.value.length, this.fillArrays.bind(this));
+        reaction(() => this.props.value.length, this.fillArrays);
     }
 
-    fillArrays() {
+    fillArrays = () => {
         const {defaultType, onChange, minOccurs, value} = this.props;
         const {expandedBlocks, generatedBlockIds} = this;
 
@@ -75,7 +75,7 @@ class BlockCollection extends React.Component<Props> {
                 ),
             ]);
         }
-    }
+    };
 
     @action handleAddBlock = () => {
         const {defaultType, onChange, value} = this.props;

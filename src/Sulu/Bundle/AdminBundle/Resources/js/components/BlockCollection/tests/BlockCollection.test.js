@@ -406,3 +406,52 @@ test('Should apply renderBlockContent before rendering the block content includi
     expect(blockCollection.find('Block').at(1).prop('children'))
         .toEqual(prefix + value[1].content + typePrefix + 'type1');
 });
+
+test('Should adjust expandedBlocks and generatedBlockIds after updating the value variable', () => {
+    const types = {
+        type1: 'Type 1',
+        type2: 'Type 2',
+    };
+
+    let value: any = [
+        {
+            type: 'type1',
+            content: 'Test 1',
+        },
+        {
+            type: 'type2',
+            content: 'Test 2',
+        },
+        {
+            type: 'type1',
+            content: 'Test 3',
+        },
+    ];
+
+    const blockCollection = mount(
+        <BlockCollection
+            defaultType="editor"
+            onChange={jest.fn()}
+            renderBlockContent={jest.fn()}
+            types={types}
+            value={value}
+        />
+    );
+
+    value = [
+        {
+            type: 'type1',
+            content: 'Test 1',
+        },
+    ];
+
+    expect(blockCollection.props().value.length).toBe(3);
+    expect(blockCollection.instance().expandedBlocks.length).toBe(3);
+    expect(blockCollection.instance().generatedBlockIds.length).toBe(3);
+
+    blockCollection.setProps({value});
+
+    expect(blockCollection.props().value.length).toBe(1);
+    expect(blockCollection.instance().expandedBlocks.length).toBe(1);
+    expect(blockCollection.instance().generatedBlockIds.length).toBe(1);
+});
