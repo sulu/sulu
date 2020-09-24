@@ -28,7 +28,11 @@
 
         <section name="segments" visibleCondition="__webspace ? __webspace.segments|length &gt; 0 : true">
             <properties>
-                <property name="segment_enabled" type="checkbox">
+                <property
+                    name="segment_enabled"
+                    type="checkbox"
+                    visibleCondition="__webspace ? __webspace.segments|length &gt; 0 : true"
+                >
                     <params>
                         <param name="description">
                             <meta>
@@ -54,7 +58,11 @@
 
         <section name="target_groups" visibleCondition="__bundles|includes('sulu_audience_targeting')">
             <properties>
-                <property name="target_groups_enabled" type="checkbox">
+                <property
+                    name="target_groups_enabled"
+                    type="checkbox"
+                    visibleCondition="__bundles|includes('sulu_audience_targeting')"
+                >
                     <params>
                         <param name="description">
                             <meta>

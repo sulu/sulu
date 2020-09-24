@@ -119,7 +119,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
 
             const blockSettingsTag = schemaEntry.tags.find((tag) => tag.name === SETTINGS_TAG);
 
-            if (blockSettingsTag) {
+            if (blockSettingsTag && schemaEntry.visible !== false) {
                 iconsMapping[SETTINGS_PREFIX + schemaKey] = blockSettingsTag.attributes.icon;
             }
 
