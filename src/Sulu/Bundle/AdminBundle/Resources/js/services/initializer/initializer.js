@@ -1,5 +1,5 @@
 // @flow
-import {action, observable} from 'mobx';
+import {action, computed, observable} from 'mobx';
 import moment from 'moment';
 import userStore from '../../stores/userStore';
 import Config from '../Config';
@@ -32,15 +32,25 @@ function setMomentLocale() {
 }
 
 class Initializer {
+    @observable config: ?{[string]: Object};
     @observable initialized: boolean = false;
     @observable initializedTranslationsLocale: ?string;
     @observable loading: boolean = false;
     updateConfigHooks: {[string]: Array<UpdateConfigHook>} = {};
 
+    @computed get bundles(): Array<string> {
+        if (!this.config) {
+            return [];
+        }
+
+        return Object.keys(this.config);
+    }
+
     @action clear() {
         this.initialized = false;
         this.initializedTranslationsLocale = undefined;
         this.loading = false;
+        this.config = undefined;
     }
 
     @action setInitialized() {
@@ -98,6 +108,8 @@ class Initializer {
 
         return Promise.all([configPromise, routePromise])
             .then(([config]) => {
+                this.config = config;
+
                 if (!this.initialized) {
                     setMomentLocale();
                 }

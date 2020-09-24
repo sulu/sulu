@@ -1,6 +1,7 @@
 // @flow
 import Form from './Form';
 import FormInspector from './FormInspector';
+import bundlesConditionDataProvider from './conditionDataProviders/bundlesConditionDataProvider';
 import conditionDataProviderRegistry from './registries/conditionDataProviderRegistry';
 import fieldRegistry from './registries/fieldRegistry';
 import MemoryFormStore from './stores/MemoryFormStore';
@@ -31,6 +32,7 @@ import Url from './fields/Url';
 import type {FormStoreInterface, Schema, Types} from './types';
 
 export {
+    bundlesConditionDataProvider,
     conditionDataProviderRegistry,
     fieldRegistry,
     Selection,

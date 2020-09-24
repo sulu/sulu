@@ -68,8 +68,10 @@ import FieldBlocks, {
     TimeBlockPreviewTransformer,
 } from './containers/FieldBlocks';
 import {
+    bundlesConditionDataProvider,
     Checkbox,
     ColorPicker,
+    conditionDataProviderRegistry,
     ChangelogLine,
     DatePicker,
     Email,
@@ -119,6 +121,7 @@ log.setDefaultLevel(process.env.NODE_ENV === 'production' ? log.levels.ERROR : l
 Requester.handleResponseHooks.push(logoutOnUnauthorizedResponse);
 
 jexl.addTransform('length', (value: Array<*>) => value.length);
+jexl.addTransform('includes', (value: Array<*>, search) => value.includes(search));
 jexl.addTransform('values', (value: Array<*>) => Object.values(value));
 
 const FIELD_TYPE_BLOCK = 'block';
@@ -154,6 +157,8 @@ initializer.addUpdateConfigHook('sulu_admin', (config: Object, initialized: bool
         registerFormToolbarActions();
         registerListToolbarActions();
         registerViews();
+
+        conditionDataProviderRegistry.add(bundlesConditionDataProvider);
     }
 
     processConfig(config);

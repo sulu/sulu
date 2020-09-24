@@ -103,6 +103,7 @@ test('Render collapsed blocks with block previews', () => {
                 {attributes: {icon: 'su-eye'}, name: 'sulu.block_setting_icon'},
             ],
             type: 'checkbox',
+            visibleCondition: 'false',
         },
         section: {
             items: {

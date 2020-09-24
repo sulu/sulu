@@ -33,7 +33,6 @@ $blockIconsColor: $gray;
 
         .icons {
             border-right: 1px solid $blockBorderColor;
-            padding-right: 10px;
             margin-right: 10px;
         }
     }
@@ -73,6 +72,7 @@ $blockIconsColor: $gray;
 
 .types {
     min-width: 120px;
+    margin-right: 10px;
 }
 
 .type {
@@ -87,7 +87,7 @@ $blockIconsColor: $gray;
     font-size: 14px;
 
     > * {
-        margin-left: 10px;
+        margin-right: 10px;
     }
 }
 
