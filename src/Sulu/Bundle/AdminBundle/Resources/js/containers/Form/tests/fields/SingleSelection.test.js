@@ -346,8 +346,7 @@ test('Throw an error if no display_property is passed to the the single_select',
         default_type: 'single_select',
         resource_key: 'accounts',
         types: {
-            single_select: {
-            },
+            single_select: {},
         },
     };
 
@@ -1142,4 +1141,47 @@ test('Should throw an error if no "resource_key" option is passed in fieldOption
             schemaOptions={{types: {name: 'types', value: []}}}
         />
     )).toThrowError(/"resource_key"/);
+});
+
+test('Should pass request_parameters to auto_complete options.', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+
+    const fieldTypeOptions = {
+        default_type: 'auto_complete',
+        resource_key: 'accounts',
+        types: {
+            auto_complete: {
+                display_property: 'name',
+                search_properties: ['name', 'number'],
+            },
+        },
+    };
+
+    const schemaOptions = {
+        request_parameters: {
+            name: 'request_parameters',
+            type: 'collection',
+            value: [
+                {
+                    name: 'ids',
+                    value: 1,
+                },
+            ],
+        },
+    };
+
+    const singleSelection = shallow(
+        <SingleSelection
+            {...fieldTypeDefaultProps}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            schemaOptions={schemaOptions}
+        />
+    );
+
+    expect(singleSelection.find('SingleAutoComplete').props()).toEqual(expect.objectContaining({
+        options: {
+            ids: 1,
+        },
+    }));
 });
