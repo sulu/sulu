@@ -5,7 +5,7 @@
           xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd"
           >
 
-    <key>hotel_page</key>
+    <key>default</key>
 
     <view>ClientWebsiteBundle:templates:default</view>
     <controller>Sulu\Bundle\WebsiteBundle\Controller\DefaultController::indexAction</controller>

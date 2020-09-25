@@ -11,9 +11,11 @@
 
 namespace Sulu\Component\Webspace\Manager;
 
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Environment;
+use Sulu\Component\Webspace\Exception\InvalidTemplateException;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Url;
@@ -66,18 +68,25 @@ class WebspaceCollectionBuilder
     private $portalInformations;
 
     /**
-     * @param LoaderInterface $loader The loader for the xml config files
-     * @param ReplacerInterface $urlReplacer Factory for url-replacers
-     * @param string $path The path to the xml config files
+     * @var TypedFormMetadata
      */
+    private $typedFormMetadata;
+
+    /**
+     * @var array
+     */
+    private $availableTemplates;
+
     public function __construct(
         LoaderInterface $loader,
         ReplacerInterface $urlReplacer,
-        $path
+        $path,
+        array $availableTemplates
     ) {
         $this->loader = $loader;
         $this->urlReplacer = $urlReplacer;
         $this->path = $path;
+        $this->availableTemplates = $availableTemplates;
     }
 
     public function build()
@@ -99,6 +108,17 @@ class WebspaceCollectionBuilder
 
             /** @var Webspace $webspace */
             $webspace = $this->loader->load($file->getRealPath());
+
+            foreach ($webspace->getDefaultTemplates() as $defaultTemplate) {
+                if (!\in_array($defaultTemplate, $this->availableTemplates)) {
+                    throw new InvalidTemplateException($webspace, $defaultTemplate);
+                }
+
+                if (\in_array($defaultTemplate, $webspace->getExcludedTemplates())) {
+                    throw new InvalidTemplateException($webspace, $defaultTemplate);
+                }
+            }
+
             $this->webspaces[] = $webspace;
 
             $this->buildPortals($webspace);
