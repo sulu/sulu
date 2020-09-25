@@ -13,6 +13,7 @@ namespace Sulu\Component\Webspace\Tests\Unit;
 
 use Prophecy\Argument;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Sulu\Component\Webspace\Exception\InvalidTemplateException;
 use Sulu\Component\Webspace\Loader\XmlFileLoader10;
 use Sulu\Component\Webspace\Loader\XmlFileLoader11;
 use Sulu\Component\Webspace\Manager\WebspaceCollectionBuilder;
@@ -55,7 +56,8 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
         $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
             $this->loader,
             new Replacer(),
-            $this->getResourceDirectory() . '/DataFixtures/Webspace/multiple'
+            $this->getResourceDirectory() . '/DataFixtures/Webspace/multiple',
+            ['default', 'overview']
         );
 
         $webspaceCollection = $webspaceCollectionBuilder->build();
@@ -181,7 +183,8 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
         $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
             $this->loader,
             new Replacer(),
-            $this->getResourceDirectory() . '/DataFixtures/Webspace/multiple-localization-urls'
+            $this->getResourceDirectory() . '/DataFixtures/Webspace/multiple-localization-urls',
+            ['default', 'overview']
         );
 
         $webspaceCollection = $webspaceCollectionBuilder->build();
@@ -202,7 +205,8 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
         $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
             $this->loader,
             new Replacer(),
-            $this->getResourceDirectory() . '/DataFixtures/Webspace/main'
+            $this->getResourceDirectory() . '/DataFixtures/Webspace/main',
+            ['default', 'overview']
         );
 
         $webspaceCollection = $webspaceCollectionBuilder->build();
@@ -228,7 +232,8 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
         $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
             $this->loader,
             new Replacer(),
-            $this->getResourceDirectory() . '/DataFixtures/Webspace/custom-url'
+            $this->getResourceDirectory() . '/DataFixtures/Webspace/custom-url',
+            ['default', 'overview']
         );
 
         $webspaceCollection = $webspaceCollectionBuilder->build();
@@ -255,7 +260,8 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
         $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
             $this->loader,
             new Replacer(),
-            $this->getResourceDirectory() . '/DataFixtures/Webspace/language-specific'
+            $this->getResourceDirectory() . '/DataFixtures/Webspace/language-specific',
+            ['default', 'overview']
         );
 
         $webspaceCollection = $webspaceCollectionBuilder->build();
@@ -273,5 +279,33 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
         $this->assertSame($portalInformations['austria.sulu.io']->getPriority(), 9);
         $this->assertSame($portalInformations['usa.sulu.io/en']->getPriority(), 10);
         $this->assertSame($portalInformations['usa.sulu.io']->getPriority(), 9);
+    }
+
+    public function testThrowForMissingDefaultTemplate()
+    {
+        $this->expectException(InvalidTemplateException::class);
+
+        $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
+            $this->loader,
+            new Replacer(),
+            $this->getResourceDirectory() . '/DataFixtures/Webspace/missing-default-template',
+            []
+        );
+
+        $webspaceCollection = $webspaceCollectionBuilder->build();
+    }
+
+    public function testThrowForMissingExcludedTemplate()
+    {
+        $this->expectException(InvalidTemplateException::class);
+
+        $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
+            $this->loader,
+            new Replacer(),
+            $this->getResourceDirectory() . '/DataFixtures/Webspace/excluded-default-template',
+            ['default', 'overview']
+        );
+
+        $webspaceCollection = $webspaceCollectionBuilder->build();
     }
 }

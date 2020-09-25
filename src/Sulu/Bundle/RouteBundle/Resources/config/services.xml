@@ -6,6 +6,7 @@
     <services>
         <service id="sulu_route.content_type" class="Sulu\Bundle\RouteBundle\Content\Type\RouteContentType">
             <tag name="sulu.content.type" alias="route"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
         </service>
 
         <service id="sulu_route.content_type.page_tree_route" class="Sulu\Bundle\RouteBundle\Content\Type\PageTreeRouteContentType">
@@ -16,6 +17,7 @@
             <argument type="service" id="doctrine.orm.entity_manager"/>
 
             <tag name="sulu.content.type" alias="page_tree_route"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
         </service>
 
         <service id="sulu_route.subscriber.routable"

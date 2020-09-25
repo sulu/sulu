@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, observable, toJS} from 'mobx';
+import {action, observable, toJS, reaction} from 'mobx';
 import {observer} from 'mobx-react';
 import {arrayMove} from '../../utils';
 import {translate} from '../../utils/Translator';
@@ -37,14 +37,23 @@ class BlockCollection extends React.Component<Props> {
         super(props);
 
         this.fillArrays();
+        reaction(() => this.props.value.length, this.fillArrays);
     }
 
-    fillArrays() {
+    fillArrays = () => {
         const {defaultType, onChange, minOccurs, value} = this.props;
         const {expandedBlocks, generatedBlockIds} = this;
 
         if (!value) {
             return;
+        }
+
+        if (expandedBlocks.length > value.length) {
+            expandedBlocks.splice(value.length);
+        }
+
+        if (generatedBlockIds.length > value.length) {
+            generatedBlockIds.splice(value.length);
         }
 
         expandedBlocks.push(...new Array(value.length - expandedBlocks.length).fill(false));
@@ -65,7 +74,7 @@ class BlockCollection extends React.Component<Props> {
                 ),
             ]);
         }
-    }
+    };
 
     @action handleAddBlock = () => {
         const {defaultType, onChange, value} = this.props;

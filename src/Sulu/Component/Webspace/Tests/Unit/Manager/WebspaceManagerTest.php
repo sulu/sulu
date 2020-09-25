@@ -12,6 +12,9 @@
 namespace Sulu\Component\Webspace\Tests\Unit;
 
 use Prophecy\Argument;
+use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
+use Sulu\Component\Content\Metadata\StructureMetadata;
+use Sulu\Component\Webspace\Exception\InvalidTemplateException;
 use Sulu\Component\Webspace\Loader\XmlFileLoader10;
 use Sulu\Component\Webspace\Loader\XmlFileLoader11;
 use Sulu\Component\Webspace\Manager\WebspaceManager;
@@ -47,6 +50,11 @@ class WebspaceManagerTest extends WebspaceTestCase
      */
     private $cacheDirectory;
 
+    /**
+     * @var ObjectProphecy
+     */
+    private $structureMetadataFactory;
+
     public function setUp(): void
     {
         $this->cacheDirectory = $this->getResourceDirectory() . '/cache';
@@ -69,6 +77,11 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->loader = new DelegatingLoader($resolver);
         $this->requestStack = $this->prophesize(RequestStack::class);
 
+        $this->structureMetadataFactory = $this->prophesize(StructureMetadataFactoryInterface::class);
+        $defaultStructure = new StructureMetadata('default');
+        $overviewStructure = new StructureMetadata('overview');
+        $this->structureMetadataFactory->getStructures('page')->willReturn([$defaultStructure, $overviewStructure]);
+
         $this->webspaceManager = new WebspaceManager(
             $this->loader,
             new Replacer(),
@@ -80,7 +93,8 @@ class WebspaceManagerTest extends WebspaceTestCase
             ],
             'test',
             'sulu.io',
-            'http'
+            'http',
+            $this->structureMetadataFactory->reveal()
         );
     }
 
@@ -577,7 +591,8 @@ class WebspaceManagerTest extends WebspaceTestCase
             ],
             'test',
             'sulu.io',
-            'http'
+            'http',
+            $this->structureMetadataFactory->reveal()
         );
 
         $webspaces = $this->webspaceManager->getWebspaceCollection();
@@ -593,6 +608,52 @@ class WebspaceManagerTest extends WebspaceTestCase
 
         $this->assertEquals('Sulu CMF', $webspace->getName());
         $this->assertEquals('sulu_io', $webspace->getKey());
+    }
+
+    public function testLoadMissingDefaultTemplate()
+    {
+        $this->expectException(InvalidTemplateException::class);
+
+        $this->structureMetadataFactory->getStructures('page')->willReturn([]);
+
+        $this->webspaceManager = new WebspaceManager(
+            $this->loader,
+            new Replacer(),
+            $this->requestStack->reveal(),
+            [
+                'cache_dir' => $this->getResourceDirectory() . '/cache',
+                'config_dir' => $this->getResourceDirectory() . '/DataFixtures/Webspace/missing-default-template',
+                'cache_class' => 'WebspaceCollectionCache' . \uniqid(),
+            ],
+            'prod',
+            'sulu.io',
+            'http',
+            $this->structureMetadataFactory->reveal()
+        );
+
+        $webspaces = $this->webspaceManager->getWebspaceCollection();
+    }
+
+    public function testLoadExcludedDefaultTemplate()
+    {
+        $this->expectException(InvalidTemplateException::class);
+
+        $this->webspaceManager = new WebspaceManager(
+            $this->loader,
+            new Replacer(),
+            $this->requestStack->reveal(),
+            [
+                'cache_dir' => $this->getResourceDirectory() . '/cache',
+                'config_dir' => $this->getResourceDirectory() . '/DataFixtures/Webspace/excluded-default-template',
+                'cache_class' => 'WebspaceCollectionCache' . \uniqid(),
+            ],
+            'prod',
+            'sulu.io',
+            'http',
+            $this->structureMetadataFactory->reveal()
+        );
+
+        $webspaces = $this->webspaceManager->getWebspaceCollection();
     }
 
     public function testRedirectUrl()
