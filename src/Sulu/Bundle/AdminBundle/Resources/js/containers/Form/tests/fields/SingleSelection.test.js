@@ -1185,3 +1185,106 @@ test('Should pass request_parameters to auto_complete options.', () => {
         },
     }));
 });
+
+test('Should pass request_parameters and dataPathToAutoComplete to auto_complete options.', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+
+    const fieldTypeOptions = {
+        default_type: 'auto_complete',
+        resource_key: 'accounts',
+        types: {
+            auto_complete: {
+                display_property: 'name',
+                search_properties: ['name', 'number'],
+            },
+        },
+    };
+
+    const schemaOptions = {
+        data_path_to_auto_complete: {
+            name: 'data_path_to_auto_complete',
+            value: [
+                {name: 'id', value: 'accountId'},
+            ],
+        },
+        request_parameters: {
+            name: 'request_parameters',
+            type: 'collection',
+            value: [
+                {
+                    name: 'ids',
+                    value: 1,
+                },
+            ],
+        },
+    };
+
+    formInspector.getValueByPath.mockReturnValue(5);
+
+    const singleSelection = shallow(
+        <SingleSelection
+            {...fieldTypeDefaultProps}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            schemaOptions={schemaOptions}
+        />
+    );
+
+    expect(singleSelection.find('SingleAutoComplete').props()).toEqual(expect.objectContaining({
+        options: {
+            ids: 1,
+            accountId: 5,
+        },
+    }));
+});
+
+test('Should pass same request_parameters and dataPathToAutoComplete options to auto_complete options.', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+
+    const fieldTypeOptions = {
+        default_type: 'auto_complete',
+        resource_key: 'accounts',
+        types: {
+            auto_complete: {
+                display_property: 'name',
+                search_properties: ['name', 'number'],
+            },
+        },
+    };
+
+    const schemaOptions = {
+        data_path_to_auto_complete: {
+            name: 'data_path_to_auto_complete',
+            value: [
+                {name: 'id', value: 'accountId'},
+            ],
+        },
+        request_parameters: {
+            name: 'request_parameters',
+            type: 'collection',
+            value: [
+                {
+                    name: 'accountId',
+                    value: 1,
+                },
+            ],
+        },
+    };
+
+    formInspector.getValueByPath.mockReturnValue(5);
+
+    const singleSelection = shallow(
+        <SingleSelection
+            {...fieldTypeDefaultProps}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            schemaOptions={schemaOptions}
+        />
+    );
+
+    expect(singleSelection.find('SingleAutoComplete').props()).toEqual(expect.objectContaining({
+        options: {
+            accountId: 1,
+        },
+    }));
+});
