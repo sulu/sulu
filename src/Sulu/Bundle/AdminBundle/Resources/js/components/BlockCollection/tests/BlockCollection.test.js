@@ -407,7 +407,7 @@ test('Should apply renderBlockContent before rendering the block content includi
         .toEqual(prefix + value[1].content + typePrefix + 'type1');
 });
 
-test('Should adjust expandedBlocks and generatedBlockIds after updating the value variable', () => {
+test('Should adjust expandedBlocks and generatedBlockIds after updating the value variable with fewer entries', () => {
     const types = {
         type1: 'Type 1',
         type2: 'Type 2',
@@ -459,3 +459,117 @@ test('Should adjust expandedBlocks and generatedBlockIds after updating the valu
     expect(blockCollection.instance().generatedBlockIds.length).toBe(1);
     expect(blockCollection.instance().expandedBlocks[0]).toBe(true);
 });
+
+test('Should adjust expandedBlocks and generatedBlockIds after updating the value variable with more entries', () => {
+    const types = {
+        type1: 'Type 1',
+        type2: 'Type 2',
+    };
+
+    const value = [
+        {
+            type: 'type1',
+            content: 'Test 1',
+        },
+    ];
+
+    const blockCollection = mount(
+        <BlockCollection
+            defaultType="editor"
+            onChange={jest.fn()}
+            renderBlockContent={jest.fn()}
+            types={types}
+            value={value}
+        />
+    );
+
+    blockCollection.instance().expandedBlocks[0] = true;
+
+    expect(blockCollection.props().value.length).toBe(1);
+    expect(blockCollection.instance().expandedBlocks.length).toBe(1);
+    expect(blockCollection.instance().generatedBlockIds.length).toBe(1);
+    expect(blockCollection.instance().expandedBlocks[0]).toBe(true);
+
+    blockCollection.setProps({
+        value: [
+            {
+                type: 'type1',
+                content: 'Test 1',
+            },
+            {
+                type: 'type2',
+                content: 'Test 2',
+            },
+            {
+                type: 'type1',
+                content: 'Test 3',
+            },
+        ],
+    });
+
+    expect(blockCollection.props().value.length).toBe(3);
+    expect(blockCollection.instance().expandedBlocks.length).toBe(3);
+    expect(blockCollection.instance().generatedBlockIds.length).toBe(3);
+    expect(blockCollection.instance().expandedBlocks[0]).toBe(true);
+});
+
+test('Should not adjust expandedBlocks and generatedBlockIds after updating the value variable with the same ' +
+    'amount of entries', () => {
+    const types = {
+        type1: 'Type 1',
+        type2: 'Type 2',
+    };
+
+    const value = [
+        {
+            type: 'type1',
+            content: 'Test 1',
+        },
+        {
+            type: 'type2',
+            content: 'Test 2',
+        },
+        {
+            type: 'type1',
+            content: 'Test 3',
+        },
+    ];
+
+    const blockCollection = mount(
+        <BlockCollection
+            defaultType="editor"
+            onChange={jest.fn()}
+            renderBlockContent={jest.fn()}
+            types={types}
+            value={value}
+        />
+    );
+
+    blockCollection.instance().expandedBlocks[0] = true;
+
+    expect(blockCollection.props().value.length).toBe(3);
+    expect(blockCollection.instance().expandedBlocks.length).toBe(3);
+    expect(blockCollection.instance().generatedBlockIds.length).toBe(3);
+    expect(blockCollection.instance().expandedBlocks[0]).toBe(true);
+
+    blockCollection.setProps({
+        value: [
+            {
+                type: 'type2',
+                content: 'Test 3',
+            },
+            {
+                type: 'type1',
+                content: 'Test 1',
+            },
+            {
+                type: 'type2',
+                content: 'Test 2',
+            },
+        ],
+    });
+
+    expect(blockCollection.props().value.length).toBe(3);
+    expect(blockCollection.instance().expandedBlocks.length).toBe(3);
+    expect(blockCollection.instance().generatedBlockIds.length).toBe(3);
+    expect(blockCollection.instance().expandedBlocks[0]).toBe(true);
