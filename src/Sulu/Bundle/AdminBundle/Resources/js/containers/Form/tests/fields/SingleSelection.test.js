@@ -1143,7 +1143,7 @@ test('Should throw an error if no "resource_key" option is passed in fieldOption
     )).toThrowError(/"resource_key"/);
 });
 
-test('Should pass request_parameters to auto_complete options.', () => {
+test('Should pass request_parameters to auto_complete options', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
 
     const fieldTypeOptions = {
@@ -1186,7 +1186,7 @@ test('Should pass request_parameters to auto_complete options.', () => {
     }));
 });
 
-test('Should pass request_parameters and dataPathToAutoComplete to auto_complete options.', () => {
+test('Should pass request_parameters and dataPathToAutoComplete to auto_complete options', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
 
     const fieldTypeOptions = {
@@ -1238,7 +1238,7 @@ test('Should pass request_parameters and dataPathToAutoComplete to auto_complete
     }));
 });
 
-test('Should pass same request_parameters and dataPathToAutoComplete options to auto_complete options.', () => {
+test('Should pass same request_parameters and dataPathToAutoComplete options to auto_complete options', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
 
     const fieldTypeOptions = {
