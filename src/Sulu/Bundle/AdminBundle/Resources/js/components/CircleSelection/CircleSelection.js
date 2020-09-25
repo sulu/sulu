@@ -75,14 +75,14 @@ export {
     CircleSelection,
 };
 
+const Component = withContainerSize(CircleSelection, circleSelectionStyles.container);
+
 export default class CircleSelectionComponent extends React.Component<Props> {
     static defaultProps = CircleSelection.defaultProps;
 
     static Renderer = CircleSelectionRenderer;
 
     render() {
-        const Component = withContainerSize(CircleSelection, circleSelectionStyles.container);
-
         return <Component {...this.props} />;
     }
 }

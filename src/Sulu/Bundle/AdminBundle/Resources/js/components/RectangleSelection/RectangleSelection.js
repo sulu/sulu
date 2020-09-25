@@ -81,14 +81,14 @@ export {
     RectangleSelection,
 };
 
+const Component = withContainerSize(RectangleSelection, rectangleSelectionStyles.container);
+
 export default class RectangleSelectionComponent extends React.Component<Props> {
     static defaultProps = RectangleSelection.defaultProps;
 
     static Renderer = RectangleSelectionRenderer;
 
     render() {
-        const Component = withContainerSize(RectangleSelection, rectangleSelectionStyles.container);
-
         return <Component {...this.props} />;
     }
 }
