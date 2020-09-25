@@ -513,8 +513,7 @@ test('Should adjust expandedBlocks and generatedBlockIds after updating the valu
     expect(blockCollection.instance().expandedBlocks[0]).toBe(true);
 });
 
-test('Should not adjust expandedBlocks and generatedBlockIds after updating the value variable with the same ' +
-    'amount of entries', () => {
+test('Updating value with same length should not adjust expandedBlocks and generatedBlockIds.', () => {
     const types = {
         type1: 'Type 1',
         type2: 'Type 2',
@@ -573,3 +572,4 @@ test('Should not adjust expandedBlocks and generatedBlockIds after updating the 
     expect(blockCollection.instance().expandedBlocks.length).toBe(3);
     expect(blockCollection.instance().generatedBlockIds.length).toBe(3);
     expect(blockCollection.instance().expandedBlocks[0]).toBe(true);
+});
