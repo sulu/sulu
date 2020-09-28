@@ -15,6 +15,7 @@ use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
 use Sulu\Bundle\AdminBundle\Admin\View\DropdownToolbarAction;
+use Sulu\Bundle\AdminBundle\Admin\View\SaveWithFormDialogToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\View;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
@@ -287,7 +288,13 @@ class PageAdmin extends Admin
                     ->addRequestParameters(['resourceKey' => 'pages'])
                     ->setTabCondition('_permissions.security')
                     ->setTabTitle('sulu_security.permissions')
-                    ->addToolbarActions([new ToolbarAction('sulu_admin.save')])
+                    ->addToolbarActions([
+                        new SaveWithFormDialogToolbarAction(
+                            'sulu_security.inherit_permissions_title',
+                            'permission_inheritance',
+                            '__parent.hasSub'
+                        ),
+                    ])
                     ->addRouterAttributesToFormRequest(['webspace'])
                     ->setTitleVisible(true)
                     ->setTabOrder(5120)

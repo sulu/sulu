@@ -17,6 +17,7 @@ use Sulu\Bundle\SecurityBundle\Exception\RoleNameAlreadyExistsException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\EmailNotUniqueException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\UsernameNotUniqueException;
 use Sulu\Component\HttpKernel\SuluKernel;
+use Sulu\Component\Security\Authorization\AccessControl\DescendantProviderInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
@@ -41,6 +42,9 @@ class SuluSecurityExtension extends Extension implements PrependExtensionInterfa
         foreach ($config['reset_password']['mail'] as $option => $value) {
             $container->setParameter('sulu_security.reset_password.mail.' . $option, $value);
         }
+
+        $container->registerForAutoconfiguration(DescendantProviderInterface::class)
+            ->addTag('sulu_security.access_control_descendant_provider');
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');

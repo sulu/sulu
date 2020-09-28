@@ -124,6 +124,9 @@ jest.mock('sulu-admin-bundle/containers', () => {
         ).default,
         Form: require('sulu-admin-bundle/containers/Form').default,
         resourceFormStoreFactory: require('sulu-admin-bundle/containers/Form/stores/resourceFormStoreFactory').default,
+        memoryFormStoreFactory: {
+            createFromFormKey: jest.fn(),
+        },
         InfiniteLoadingStrategy: require(
             'sulu-admin-bundle/containers/List/loadingStrategies/InfiniteLoadingStrategy'
         ).default,
@@ -167,12 +170,12 @@ jest.mock('sulu-admin-bundle/stores', () => {
         this.reload = jest.fn();
         this.loading = false;
         this.id = 1;
-        this.data = {
-            id: 1,
-            _permissions: {},
-        };
 
         mockExtendObservable(this, {
+            data: {
+                id: 1,
+                _permissions: {},
+            },
             deleting: false,
             moving: false,
         });
@@ -661,6 +664,52 @@ test('Pass correct options to SingleListOverlay', () => {
     expect(mediaCollection.find(SingleListOverlay).prop('listKey')).toEqual('collections');
     expect(mediaCollection.find(SingleListOverlay).prop('resourceKey')).toEqual('collections');
     expect(mediaCollection.find(SingleListOverlay).prop('reloadOnOpen')).toEqual(true);
+});
+
+test.each([true, false])('Pass correct hasChildren "%s" option to PermissionFormOverlay', (hasChildren) => {
+    const page = observable.box();
+    const locale = observable.box();
+    const ListStore = require('sulu-admin-bundle/containers').ListStore;
+    const mediaListStore = new ListStore(
+        MEDIA_RESOURCE_KEY,
+        SETTINGS_KEY,
+        USER_SETTINGS_KEY,
+        {
+            page,
+            locale,
+        }
+    );
+    const collectionListStore = new ListStore(
+        COLLECTIONS_RESOURCE_KEY,
+        SETTINGS_KEY,
+        USER_SETTINGS_KEY,
+        {
+            page,
+            locale,
+        }
+    );
+    const CollectionStore = require('../../../stores/CollectionStore').default;
+    const collectionStore = new CollectionStore(1, locale);
+    mockExtendObservable(collectionStore.resourceStore.data, {
+        hasChildren,
+    });
+
+    const mediaCollection = mount(
+        <MediaCollection
+            collectionListStore={collectionListStore}
+            collectionStore={collectionStore}
+            locale={locale}
+            mediaListAdapters={['media_card_overview']}
+            mediaListStore={mediaListStore}
+            onCollectionNavigate={jest.fn()}
+            onUploadOverlayClose={jest.fn()}
+            onUploadOverlayOpen={jest.fn()}
+            uploadOverlayOpen={false}
+        />
+    );
+
+    mediaCollection.update();
+    expect(mediaCollection.find('PermissionFormOverlay').prop('hasChildren')).toEqual(hasChildren);
 });
 
 test('Deactive dropzone by passing no collectionId if dropzone should not be shown', () => {

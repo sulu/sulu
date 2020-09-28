@@ -1,6 +1,6 @@
 //@flow
 import React from 'react';
-import {action, computed, observable} from 'mobx';
+import {action, computed, observable, get} from 'mobx';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import {observer} from 'mobx-react';
 import {List, ListStore, SingleListOverlay} from 'sulu-admin-bundle/containers';
@@ -42,6 +42,11 @@ class CollectionSection extends React.Component<Props> {
     @computed get collectionId(): ?number | string {
         const {resourceStore} = this.props;
         return resourceStore.id;
+    }
+
+    @computed get hasChildren(): ?boolean {
+        const {resourceStore} = this.props;
+        return get(resourceStore.data, 'hasChildren');
     }
 
     @computed get resourceStoreByOperationType(): ResourceStore {
@@ -246,6 +251,7 @@ class CollectionSection extends React.Component<Props> {
                 </Dialog>
                 <PermissionFormOverlay
                     collectionId={this.collectionId}
+                    hasChildren={this.hasChildren}
                     onClose={this.handlePermissionOverlayClose}
                     onConfirm={this.handlePermissionOverlayConfirm}
                     open={operationType === 'permissions'}

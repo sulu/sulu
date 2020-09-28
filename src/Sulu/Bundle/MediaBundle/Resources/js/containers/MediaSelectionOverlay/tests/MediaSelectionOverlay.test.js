@@ -12,10 +12,13 @@ jest.mock('sulu-admin-bundle/utils/Translator', () => ({
 jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn(function() {
     this.destroy = jest.fn();
     this.id = 1;
-    this.data = {
-        id: 1,
-        _permissions: {},
-    };
+
+    mockExtendObservable(this, {
+        data: {
+            id: 1,
+            _permissions: {},
+        },
+    });
 }));
 
 jest.mock('sulu-admin-bundle/containers/List/registries/listAdapterRegistry', () => {
@@ -74,6 +77,10 @@ jest.mock('sulu-admin-bundle/containers/List/stores/ListStore', () =>
 
 jest.mock('sulu-admin-bundle/containers/Form/stores/ResourceFormStore', () => jest.fn(function() {
     this.destroy = jest.fn();
+}));
+
+jest.mock('sulu-admin-bundle/containers/Form/stores/memoryFormStoreFactory', () => ({
+    createFromFormKey: jest.fn(),
 }));
 
 let collectionListStoreMock: ListStore;

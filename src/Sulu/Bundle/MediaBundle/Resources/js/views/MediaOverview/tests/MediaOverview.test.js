@@ -21,6 +21,11 @@ jest.mock('sulu-admin-bundle/containers', () => {
         resourceFormStoreFactory: require.requireActual(
             'sulu-admin-bundle/containers/Form/stores/resourceFormStoreFactory'
         ).default,
+        memoryFormStoreFactory: {
+            createFromFormKey: jest.fn(() => ({
+                destroy: jest.fn(),
+            })),
+        },
         AbstractAdapter: require('sulu-admin-bundle/containers/List/adapters/AbstractAdapter').default,
         List: require('sulu-admin-bundle/containers/List/List').default,
         ListStore: jest.fn(function(resourceKey, observableOptions) {
@@ -373,11 +378,13 @@ test('Should delete selected items when delete button is clicked', () => {
     mediaListStore.selectionIds.push(1, 4, 6);
 
     mediaOverview.update();
-    expect(mediaOverview.find('Dialog').at(5).prop('open')).toEqual(false);
+    expect(mediaOverview.find('MediaSection Dialog[title="sulu_admin.delete_warning_title"]').at(0).prop('open'))
+        .toEqual(false);
 
     getDeleteItem().onClick();
     mediaOverview.update();
-    expect(mediaOverview.find('Dialog').at(5).prop('open')).toEqual(true);
+    expect(mediaOverview.find('MediaSection Dialog[title="sulu_admin.delete_warning_title"]').at(0).prop('open'))
+        .toEqual(true);
 });
 
 test('Upload button should be disabled if no collection is selected', () => {

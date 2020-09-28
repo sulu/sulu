@@ -114,6 +114,7 @@ class CollectionRepositoryTest extends SuluTestCase
     {
         $collection = new Collection();
         $collectionMeta = new CollectionMeta();
+        $collection->setStyle($name);
         $collectionMeta->setTitle($name);
         $collectionMeta->setLocale('en-gb');
         $collection->setType($collectionType);
@@ -202,5 +203,25 @@ class CollectionRepositoryTest extends SuluTestCase
     public function testCountWithoutFilters()
     {
         $this->assertEquals(21, $this->collectionRepository->countCollections(5));
+    }
+
+    public function testGetDescendantIdsById()
+    {
+        $ids = $this->collectionRepository->findDescendantIdsById($this->collections[1]->getId());
+
+        $this->assertCount(10, $ids);
+
+        $this->assertSame([
+            $this->collections[2]->getId(),
+            $this->collections[3]->getId(),
+            $this->collections[4]->getId(),
+            $this->collections[5]->getId(),
+            $this->collections[6]->getId(),
+            $this->collections[7]->getId(),
+            $this->collections[8]->getId(),
+            $this->collections[9]->getId(),
+            $this->collections[10]->getId(),
+            $this->collections[11]->getId(),
+        ], $ids);
     }
 }

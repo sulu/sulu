@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+<form xmlns="http://schemas.sulu.io/template/template"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/form-1.0.xsd"
+>
+    <key>permission_inheritance</key>
+
+    <properties>
+        <property name="inherit" type="checkbox">
+            <params>
+                <param name="default_value" value="false" />
+                <param name="label">
+                    <meta>
+                        <title>sulu_security.inherit_permissions_label</title>
+                    </meta>
+                </param>
+            </params>
+        </property>
+    </properties>
+</form>

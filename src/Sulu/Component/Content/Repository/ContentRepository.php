@@ -24,6 +24,7 @@ use Sulu\Component\Content\Compat\LocalizationFinderInterface;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Compat\StructureType;
+use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\Subscriber\SecuritySubscriber;
 use Sulu\Component\Content\Document\WorkflowStage;
@@ -33,13 +34,14 @@ use Sulu\Component\Localization\Localization;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
+use Sulu\Component\Security\Authorization\AccessControl\DescendantProviderInterface;
 use Sulu\Component\Util\SuluNodeHelper;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 /**
  * Content repository which query content with sql2 statements.
  */
-class ContentRepository implements ContentRepositoryInterface
+class ContentRepository implements ContentRepositoryInterface, DescendantProviderInterface
 {
     private static $nonFallbackProperties = [
         'uuid',
@@ -308,6 +310,36 @@ class ContentRepository implements ContentRepositoryInterface
         return $this->resolveQueryBuilder($queryBuilder, $locale, $locales, $mapping, $user);
     }
 
+    public function findDescendantIdsById($id)
+    {
+        $queryBuilder = $this->getQueryBuilder();
+        $queryBuilder->where(
+            $this->qomFactory->comparison(
+                new PropertyValue('node', 'jcr:uuid'),
+                '=',
+                $this->qomFactory->literal($id)
+            )
+        );
+
+        $result = \iterator_to_array($queryBuilder->execute());
+
+        if (0 === \count($result)) {
+            return [];
+        }
+
+        $path = $result[0]->getPath();
+
+        $descendantQueryBuilder = $this->getQueryBuilder()
+            ->where($this->qomFactory->descendantNode('node', $path));
+
+        return \array_map(
+            function(Row $row) {
+                return $row->getNode()->getIdentifier();
+            },
+            \iterator_to_array($descendantQueryBuilder->execute())
+        );
+    }
+
     /**
      * Generates a content-tree with paths of given content array.
      *
@@ -466,7 +498,7 @@ class ContentRepository implements ContentRepositoryInterface
      *
      * @return QueryBuilder
      */
-    private function getQueryBuilder($locale, $locales, UserInterface $user = null)
+    private function getQueryBuilder($locale = null, $locales = [], UserInterface $user = null)
     {
         $queryBuilder = new QueryBuilder($this->qomFactory);
 
@@ -889,5 +921,17 @@ class ContentRepository implements ContentRepositoryInterface
         $result = $queryBuilder->execute();
 
         return \count(\iterator_to_array($result->getRows())) > 0;
+    }
+
+    public function supportsDescendantType(string $type): bool
+    {
+        try {
+            $class = new \ReflectionClass($type);
+        } catch (\ReflectionException $e) {
+            // in case the class does not exist there is no support
+            return false;
+        }
+
+        return $class->implementsInterface(SecurityBehavior::class);
     }
 }
