@@ -93,4 +93,26 @@ class DateTimeTest extends TestCase
 
         $dateTime->write($node->reveal(), $property->reveal(), 1, $webspaceKey, $locale, null);
     }
+
+    public function testGetContentData()
+    {
+        $property = $this->prophesize(PropertyInterface::class);
+        $property->getValue()->shouldBeCalled()->willReturn('2020-07-02T11:30:00');
+
+        $dateTime = new DateTime();
+        $result = $dateTime->getContentData($property->reveal());
+
+        $this->assertInstanceOf(\DateTime::class, $result);
+        $this->assertSame('2020-07-02T11:30:00', $result->format('Y-m-d\TH:i:s'));
+    }
+
+    public function testGetContentDataEmpty()
+    {
+        $property = $this->prophesize(PropertyInterface::class);
+        $property->getValue()->shouldBeCalled()->willReturn('');
+
+        $dateTime = new DateTime();
+
+        $this->assertNull($dateTime->getContentData($property->reveal()));
+    }
 }

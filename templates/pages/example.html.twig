@@ -32,6 +32,7 @@
     <p>{{ content.color }}</p>
     <p>{{ content.time }}</p>
     <p>{{ content.date }}</p>
+    <p>{{ content.datetime }}</p>
     <p>{{ content.email }}</p>
     <p>{{ content.link }}</p>
 
@@ -57,9 +58,13 @@
         <p>{{ content.single_account_selection.name }}</p>
     {% endif %}
 
+    <p>{{ content.account_selection | map(account => account.name) | join(', ') }}</p>
+
     {% if content.single_contact_selection %}
         <p>{{ content.single_contact_selection.fullName }}</p>
     {% endif %}
+
+    <p>{{ content.contact_selection | map(contact => contact.fullName) | join(', ') }}</p>
 
     <p>{{ content.contact_account_selection | map(contact => contact.name ?? contact.fullName) | join(', ') }}</p>
     <p>{{ content.text_area }}</p>

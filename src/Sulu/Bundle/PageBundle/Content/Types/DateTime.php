@@ -36,6 +36,7 @@ class DateTime extends SimpleContentType
         $segmentKey
     ) {
         $value = $property->getValue();
+
         if (null != $value) {
             $value = \DateTime::createFromFormat(static::FORMAT, $value);
 
@@ -60,5 +61,16 @@ class DateTime extends SimpleContentType
         $property->setValue($value);
 
         return $value;
+    }
+
+    public function getContentData(PropertyInterface $property)
+    {
+        $value = $property->getValue();
+
+        if (!empty($value)) {
+            return \DateTime::createFromFormat(static::FORMAT, $value);
+        }
+
+        return null;
     }
 }

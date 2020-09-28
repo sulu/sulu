@@ -13,7 +13,6 @@ namespace Sulu\Bundle\PageBundle\Content\Types;
 
 use PHPCR\NodeInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
-use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\SimpleContentType;
 
 /**
@@ -59,13 +58,5 @@ class Date extends SimpleContentType
         $property->setValue($value);
 
         return $value;
-    }
-
-    public function getDefaultParams(PropertyInterface $property = null)
-    {
-        return [
-            'display_options' => new PropertyParameter('display_options', [], 'collection'),
-            'placeholder' => new PropertyParameter('placeholder', null),
-        ];
     }
 }
