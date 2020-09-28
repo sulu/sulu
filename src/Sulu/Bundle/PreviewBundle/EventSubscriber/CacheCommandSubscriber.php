@@ -72,6 +72,7 @@ class CacheCommandSubscriber implements EventSubscriberInterface
         $previewKernel = $this->kernelFactory->create($this->environment);
 
         $application = $this->application ?: new Application($previewKernel);
+        $application->setAutoExit(false);
         $application->run($event->getInput(), $event->getOutput());
     }
 
