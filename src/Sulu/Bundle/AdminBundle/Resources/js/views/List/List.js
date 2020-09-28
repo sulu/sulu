@@ -360,6 +360,7 @@ class List extends React.Component<Props> {
                         editView,
                         itemDisabledCondition,
                         searchable,
+                        selectable,
                         title: routeTitle,
                     },
                 },
@@ -380,6 +381,7 @@ class List extends React.Component<Props> {
                     onItemClick={onItemClick || editView ? this.handleItemClick : undefined}
                     ref={this.setListRef}
                     searchable={searchable}
+                    selectable={selectable}
                     store={this.listStore}
                 />
                 {this.toolbarActions.map((toolbarAction) => toolbarAction.getNode())}

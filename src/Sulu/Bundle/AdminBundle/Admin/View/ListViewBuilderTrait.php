@@ -62,6 +62,11 @@ trait ListViewBuilderTrait
         $route->setOption('searchable', $searchable);
     }
 
+    private function setSelectableToView(View $route, bool $searchable): void
+    {
+        $route->setOption('selectable', $searchable);
+    }
+
     private function addRouterAttributesToListRequestToView(View $route, array $routerAttributesToListRequest): void
     {
         $oldRouterAttributesToListRequest = $route->getOption('routerAttributesToListRequest');

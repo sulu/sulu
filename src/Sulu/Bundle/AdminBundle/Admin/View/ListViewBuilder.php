@@ -150,6 +150,20 @@ class ListViewBuilder implements ListViewBuilderInterface
         return $this;
     }
 
+    public function enableSelection(): ListViewBuilderInterface
+    {
+        $this->setSelectableToView($this->view, true);
+
+        return $this;
+    }
+
+    public function disableSelection(): ListViewBuilderInterface
+    {
+        $this->setSelectableToView($this->view, false);
+
+        return $this;
+    }
+
     public function addRouterAttributesToListRequest(array $routerAttributesToListRequest): ListViewBuilderInterface
     {
         $this->addRouterAttributesToListRequestToView($this->view, $routerAttributesToListRequest);

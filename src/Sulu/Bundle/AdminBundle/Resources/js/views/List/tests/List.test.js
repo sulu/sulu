@@ -682,6 +682,24 @@ test('Should render the list non-searchable if the searchable option has been pa
     expect(list.find('List').prop('searchable')).toEqual(false);
 });
 
+test('Should render the list non-selectable if the selectable option has been passed as false', () => {
+    const List = require('../List').default;
+    const router = {
+        bind: jest.fn(),
+        route: {
+            options: {
+                adapters: ['tree_table'],
+                listKey: 'snippets',
+                resourceKey: 'snippets',
+                selectable: false,
+            },
+        },
+    };
+
+    const list = shallow(<List router={router} />);
+    expect(list.find('List').prop('selectable')).toEqual(false);
+});
+
 test('Should render the list with the passed itemDisabledCondition option', () => {
     const List = require('../List').default;
     const router = {
