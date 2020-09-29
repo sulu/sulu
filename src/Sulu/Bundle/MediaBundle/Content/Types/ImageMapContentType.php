@@ -136,8 +136,10 @@ class ImageMapContentType extends ComplexContentType implements ContentTypeExpor
         $segmentKey
     ) {
         // init properties
-        $imageIdProperty = new Property('imageId', '', 'text_line');
-        $imageIdProperty = new BlockPropertyWrapper($imageIdProperty, $property);
+        $imageIdProperty = new BlockPropertyWrapper(
+            new Property('imageId', '', 'text_line'),
+            $property
+        );
         $contentType = $this->contentTypeManager->get($imageIdProperty->getContentTypeName());
 
         return $contentType->hasValue($node, $imageIdProperty, $webspaceKey, $languageCode, $segmentKey);

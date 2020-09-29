@@ -1,12 +1,12 @@
 @import 'sulu-admin-bundle/containers/Application/colors.scss';
 
-$cardBackgroundColor: $white;
-$cardBorderColor: $silver;
+$backgroundColor: $white;
+$borderColor: $silver;
 $labelColor: $scorpion;
 
-.container {
-    background-color: $cardBackgroundColor;
-    border: 1px solid $cardBorderColor;
+.form-renderer {
+    background-color: $backgroundColor;
+    border: 1px solid $borderColor;
     border-radius: 3px;
     width: 100%;
     overflow: hidden;
@@ -31,7 +31,7 @@ $labelColor: $scorpion;
 }
 
 .content {
-    border-top: 1px solid $cardBorderColor;
+    border-top: 1px solid $borderColor;
     padding: 30px;
 }
 

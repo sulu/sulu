@@ -84,7 +84,7 @@
             <xs:element type="tagType" name="tag" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="paramsType" name="params" minOccurs="0" maxOccurs="1"/>
             <xs:element type="xs:string" name="indexField" minOccurs="0" maxOccurs="1"/>
-            <xs:element type="blockTypesType" name="types" minOccurs="1" maxOccurs="1"/>
+            <xs:element type="typesType" name="types" minOccurs="1" maxOccurs="1"/>
         </xs:choice>
 
         <xs:attribute type="xs:string" name="name" use="required"/>
@@ -114,7 +114,7 @@
             <xs:element type="metaType" name="meta" minOccurs="0" maxOccurs="1"/>
             <xs:element type="paramsType" name="params" minOccurs="0" maxOccurs="1"/>
             <xs:element type="tagType" name="tag" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element type="blockTypesType" name="types" minOccurs="1" maxOccurs="1"/>
+            <xs:element type="typesType" name="types" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
 
         <xs:attribute type="xs:string" name="name" use="required"/>
@@ -130,7 +130,7 @@
         <xs:attributeGroup ref="defaultAttributes"/>
     </xs:complexType>
 
-    <xs:complexType name="blockTypesType">
+    <xs:complexType name="typesType">
         <xs:sequence minOccurs="1" maxOccurs="1">
             <xs:element type="blockTypeType" name="type" minOccurs="1" maxOccurs="unbounded"/>
         </xs:sequence>

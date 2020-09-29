@@ -84,13 +84,13 @@ class ModifiableRectangle extends React.Component<Props> {
     handleDoubleClick = this.props.onDoubleClick;
 
     render() {
-        const {height, left, minSizeReached, backdropSize, top, width, disabled, label} = this.props;
+        const {backdropSize, disabled, height, label, left, minSizeReached, top, width} = this.props;
 
         const rectangleClass = classNames(
             modifiableRectangleStyles.rectangle,
             {
                 [modifiableRectangleStyles.disabled]: disabled,
-                [modifiableRectangleStyles.backdropDisabled]: !backdropSize,
+                [modifiableRectangleStyles.backdrop]: !!backdropSize,
             }
         );
 

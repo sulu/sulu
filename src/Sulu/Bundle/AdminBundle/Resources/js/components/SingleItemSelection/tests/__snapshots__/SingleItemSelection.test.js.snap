@@ -194,32 +194,6 @@ exports[`Render in loading state with no children 1`] = `
 </div>
 `;
 
-exports[`Render with custom className 1`] = `
-<div
-  class="singleItemSelection test"
->
-  <button
-    class="button left"
-    type="button"
-  >
-    <span
-      aria-label="su-document"
-      class="su-document icon"
-    />
-  </button>
-  <div
-    class="itemContainer"
-  >
-    <div
-      class="item"
-      role="button"
-    >
-      Test Item
-    </div>
-  </div>
-</div>
-`;
-
 exports[`Render with emptyText if no children have been passed 1`] = `
 <div
   class="singleItemSelection"
@@ -259,9 +233,9 @@ exports[`Render with emptyText if no children have been passed 1`] = `
 </div>
 `;
 
-exports[`Render with given children prop 1`] = `
+exports[`Render with given children prop and with custom className 1`] = `
 <div
-  class="singleItemSelection"
+  class="singleItemSelection test"
 >
   <button
     class="button left"

@@ -1,11 +1,10 @@
 // @flow
 import React from 'react';
 import {shallow} from 'enzyme';
-import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
-import FormInspector from 'sulu-admin-bundle/containers/Form/FormInspector';
-import ResourceFormStore from 'sulu-admin-bundle/containers/Form/stores/ResourceFormStore';
-import ResourceStore from 'sulu-admin-bundle/stores/ResourceStore';
 import {observable} from 'mobx';
+import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
+import {FormInspector, ResourceFormStore} from 'sulu-admin-bundle/containers';
+import {ResourceStore} from 'sulu-admin-bundle/stores';
 import ImageMap from '../../fields/ImageMap';
 import ImageMapContainer from '../../../ImageMap';
 
@@ -34,47 +33,10 @@ jest.mock('sulu-admin-bundle/utils/Translator', () => ({
 }));
 
 jest.mock('sulu-admin-bundle/stores/userStore', () => ({
-    contentLocale: 'userContentLocale',
+    contentLocale: 'en',
 }));
 
 jest.mock('../../../SingleMediaSelectionOverlay', () => jest.fn(() => null));
-
-const types = {
-    default: {
-        title: 'Default',
-        form: {
-            text1: {
-                label: 'Text 1',
-                tags: [
-                    {name: 'sulu.block_preview'},
-                ],
-                type: 'text_line',
-                visible: true,
-            },
-            text2: {
-                label: 'Text 2',
-                tags: [
-                    {name: 'sulu.block_preview'},
-                ],
-                type: 'text_line',
-                visible: true,
-            },
-            something: {
-                label: 'Something',
-                tags: [
-                    {name: 'sulu.block_preview'},
-                ],
-                type: 'text_area',
-                visible: true,
-            },
-            nothing: {
-                label: 'Nothing',
-                type: 'text_line',
-                visible: true,
-            },
-        },
-    },
-};
 
 test('Pass correct props to SingleMediaSelection component', () => {
     const formInspector = new FormInspector(
@@ -83,6 +45,19 @@ test('Pass correct props to SingleMediaSelection component', () => {
             'test'
         )
     );
+
+    const types = {
+        default: {
+            title: 'Default',
+            form: {
+                text: {
+                    label: 'Text',
+                    type: 'text_line',
+                    visible: true,
+                },
+            },
+        },
+    };
 
     const imageMap = shallow(
         <ImageMap
@@ -99,7 +74,7 @@ test('Pass correct props to SingleMediaSelection component', () => {
     expect(imageMap.find(ImageMapContainer).props().disabled).toEqual(true);
     expect(imageMap.find(ImageMapContainer).props().valid).toEqual(false);
     expect(imageMap.find(ImageMapContainer).props().locale.get()).toEqual('en');
-    expect(imageMap.find(ImageMapContainer).props().formTypes).toEqual({'default': 'Default'});
+    expect(imageMap.find(ImageMapContainer).props().types).toEqual({'default': 'Default'});
     expect(imageMap.find(ImageMapContainer).props().value).toEqual({imageId: 33, hotspots: []});
 });
 
@@ -110,6 +85,19 @@ test('Pass correct default value to ImageMapContainer', () => {
             'test'
         )
     );
+
+    const types = {
+        default: {
+            title: 'Default',
+            form: {
+                text: {
+                    label: 'Text',
+                    type: 'text_line',
+                    visible: true,
+                },
+            },
+        },
+    };
 
     const imageMap = shallow(
         <ImageMap
@@ -132,6 +120,19 @@ test('Pass content-locale of user to SingleMediaSelection if locale is not prese
         )
     );
 
+    const types = {
+        default: {
+            title: 'Default',
+            form: {
+                text: {
+                    label: 'Text',
+                    type: 'text_line',
+                    visible: true,
+                },
+            },
+        },
+    };
+
     const imageMap = shallow(
         <ImageMap
             {...fieldTypeDefaultProps}
@@ -142,7 +143,7 @@ test('Pass content-locale of user to SingleMediaSelection if locale is not prese
         />
     );
 
-    expect(imageMap.find(ImageMapContainer).props().locale.get()).toEqual('userContentLocale');
+    expect(imageMap.find(ImageMapContainer).props().locale.get()).toEqual('en');
 });
 
 test('Should call onChange and onFinish if the value changes', () => {
@@ -155,6 +156,19 @@ test('Should call onChange and onFinish if the value changes', () => {
             'test'
         )
     );
+
+    const types = {
+        default: {
+            title: 'Default',
+            form: {
+                text: {
+                    label: 'Text',
+                    type: 'text_line',
+                    visible: true,
+                },
+            },
+        },
+    };
 
     const imageMap = shallow(
         <ImageMap

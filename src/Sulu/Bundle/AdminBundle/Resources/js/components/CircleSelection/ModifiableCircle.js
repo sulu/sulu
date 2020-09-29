@@ -130,8 +130,8 @@ class ModifiableCircle extends React.Component<Props> {
         return (
             <div
                 className={circleClass}
-                onDoubleClick={!disabled && this.handleDoubleClick || undefined}
-                onMouseDown={!disabled && this.handleMoveMouseDown || undefined}
+                onDoubleClick={!disabled ? this.handleDoubleClick : undefined}
+                onMouseDown={!disabled ? this.handleMoveMouseDown : undefined}
                 ref={this.setCircleRef}
                 role="button"
                 style={{

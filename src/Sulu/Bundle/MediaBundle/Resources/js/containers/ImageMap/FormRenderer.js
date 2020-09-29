@@ -1,11 +1,8 @@
 // @flow
 import React from 'react';
 import type {Node} from 'react';
-import {translate} from 'sulu-admin-bundle/utils/Translator';
-import Form from 'sulu-admin-bundle/components/Form';
-import Tabs from 'sulu-admin-bundle/components/Tabs';
-import SingleSelect from 'sulu-admin-bundle/components/SingleSelect';
-import Icon from 'sulu-admin-bundle/components/Icon';
+import {translate} from 'sulu-admin-bundle/utils';
+import {Form, Icon, SingleSelect, Tabs} from 'sulu-admin-bundle/components';
 import Button from './Button';
 import type {Hotspot} from './types';
 import formRendererStyles from './formRenderer.scss';
@@ -13,17 +10,21 @@ import formRendererStyles from './formRenderer.scss';
 type Props = {
     children: ?Node,
     disabled: boolean,
-    formTypes: {[string]: string},
     onHotspotAdd: () => void,
     onHotspotRemove: (index: number) => void,
     onHotspotSelect: (index: number) => void,
     onHotspotTypeChange: (index: number, type: string) => void,
     onTypeChange: (index: number, type: string) => void,
     selectedIndex: number,
+    types: {[string]: string},
     value: Array<Hotspot>,
 };
 
-const AVAILABLE_HOTSPOT_TYPES = ['circle', 'point', 'rectangle'];
+const AVAILABLE_HOTSPOT_TYPES = {
+    circle: 'sulu_media.circle',
+    point: 'sulu_media.point',
+    rectangle: 'sulu_media.rectangle',
+};
 
 export default class FormRenderer extends React.PureComponent<Props> {
     get selectedHotspot() {
@@ -51,12 +52,12 @@ export default class FormRenderer extends React.PureComponent<Props> {
     };
 
     render() {
-        const {value, onHotspotAdd, onHotspotSelect, selectedIndex, children, disabled, formTypes} = this.props;
+        const {children, disabled, onHotspotAdd, onHotspotSelect, selectedIndex, types, value} = this.props;
 
         return (
             <Form>
                 <Form.Field label={translate('sulu_media.hotspots')}>
-                    <div className={formRendererStyles.container}>
+                    <div className={formRendererStyles.formRenderer}>
                         <div className={formRendererStyles.toolbar}>
                             <Button disabled={disabled} icon="su-plus-circle" onClick={onHotspotAdd} />
 
@@ -74,7 +75,7 @@ export default class FormRenderer extends React.PureComponent<Props> {
                                 small={true}
                             >
                                 {value.map((hotspot, index) => (
-                                    <Tabs.Tab key={index}>{'#' + (index + 1).toString()}</Tabs.Tab>
+                                    <Tabs.Tab key={index}>{'#' + index + 1}</Tabs.Tab>
                                 ))}
                             </Tabs>
                         </div>
@@ -96,15 +97,16 @@ export default class FormRenderer extends React.PureComponent<Props> {
                                                     value={this.selectedHotspot.hotspot
                                                         && this.selectedHotspot.hotspot.type}
                                                 >
-                                                    {AVAILABLE_HOTSPOT_TYPES.map((value) => (
-                                                        <SingleSelect.Option key={value} value={value}>
-                                                            {translate('sulu_media.' + value)}
-                                                        </SingleSelect.Option>
-                                                    ))}
+                                                    {Object.keys(AVAILABLE_HOTSPOT_TYPES)
+                                                        .map((key) => (
+                                                            <SingleSelect.Option key={key} value={key}>
+                                                                {translate(AVAILABLE_HOTSPOT_TYPES[key])}
+                                                            </SingleSelect.Option>
+                                                        ))}
                                                 </SingleSelect>
                                             </Form.Field>
 
-                                            {Object.keys(formTypes).length > 1 &&
+                                            {Object.keys(types).length > 1 &&
                                                 <Form.Field
                                                     colSpan={5}
                                                     label={translate('sulu_media.form_type')}
@@ -116,7 +118,7 @@ export default class FormRenderer extends React.PureComponent<Props> {
                                                         onChange={this.handleTypeChange}
                                                         value={this.selectedHotspot.type}
                                                     >
-                                                        {Object.entries(formTypes).map(([key, value]) => (
+                                                        {Object.entries(types).map(([key, value]) => (
                                                             <SingleSelect.Option key={key} value={key}>
                                                                 {value}
                                                             </SingleSelect.Option>

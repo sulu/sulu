@@ -5,6 +5,7 @@ import Breadcrumb from './Breadcrumb';
 import Button from './Button';
 import ButtonGroup from './ButtonGroup';
 import Checkbox, {CheckboxGroup} from './Checkbox';
+import CircleSelection from './CircleSelection';
 import CircularProgressbar from './CircularProgressbar';
 import CroppedText from './CroppedText';
 import DatePicker from './DatePicker';
@@ -33,9 +34,11 @@ import Overlay from './Overlay';
 import Phone from './Phone';
 import Popover from './Popover';
 import PublishIndicator from './PublishIndicator';
+import RectangleSelection from './RectangleSelection';
 import ResourceLocator from './ResourceLocator';
 import SingleSelect from './SingleSelect';
 import Table from './Table';
+import Tabs from './Tabs';
 import Toggler from './Toggler';
 import Toolbar from './Toolbar';
 import Url from './Url';
@@ -49,6 +52,7 @@ export {
     ButtonGroup,
     Checkbox,
     CheckboxGroup,
+    CircleSelection,
     CircularProgressbar,
     CroppedText,
     DatePicker,
@@ -77,9 +81,11 @@ export {
     Phone,
     Popover,
     PublishIndicator,
+    RectangleSelection,
     ResourceLocator,
     SingleSelect,
     Table,
+    Tabs,
     Toggler,
     Toolbar,
     Url,

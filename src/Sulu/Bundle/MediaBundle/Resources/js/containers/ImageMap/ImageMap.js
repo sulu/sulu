@@ -14,10 +14,10 @@ import imageMapStyles from './imageMap.scss';
 type Props = {
     defaultFormType: string,
     disabled: boolean,
-    formTypes: {[string]: string},
     locale: IObservableValue<string>,
     onChange: (data: Value) => void,
     renderHotspotForm: RenderHotspotFormCallback,
+    types: {[string]: string},
     valid: boolean,
     value: Value,
 };
@@ -42,26 +42,26 @@ class ImageMap extends React.Component<Props> {
     };
 
     @action componentDidMount() {
-        const {value: {imageId}} = this.props;
+        const {value: {imageId}, types} = this.props;
 
         this.imageValue = {
             displayOption: undefined,
             id: imageId,
         };
+
+        if (Object.keys(types).length === 0) {
+            throw new Error('There needs to be at least one form type specified!');
+        }
     }
 
     @action componentDidUpdate() {
-        const {value: {imageId}, formTypes} = this.props;
+        const {value: {imageId}} = this.props;
 
         if (this.imageValue.id !== imageId) {
             this.imageValue = {
                 displayOption: undefined,
                 id: imageId,
             };
-        }
-
-        if (Object.keys(formTypes).length === 0) {
-            throw new Error('There needs to be at least one form type specified!');
         }
     }
 
@@ -160,17 +160,17 @@ class ImageMap extends React.Component<Props> {
     }
 
     render() {
-        const {value, valid, locale, disabled, renderHotspotForm, formTypes} = this.props;
+        const {disabled, locale, renderHotspotForm, types, valid, value} = this.props;
 
-        const cardClass = classNames(
-            imageMapStyles.card,
+        const imageMapClass = classNames(
+            imageMapStyles.imageMap,
             {
                 [imageMapStyles.error]: !valid,
             }
         );
 
         return (
-            <div>
+            <React.Fragment>
                 <SingleMediaSelection
                     className={!!value.imageId && imageMapStyles.singleItemSelection || undefined}
                     disabled={disabled}
@@ -182,7 +182,7 @@ class ImageMap extends React.Component<Props> {
                 />
 
                 {!!value.imageId &&
-                    <div className={cardClass}>
+                    <div className={imageMapClass}>
                         <ImageRenderer
                             disabled={disabled}
                             locale={locale}
@@ -194,13 +194,13 @@ class ImageMap extends React.Component<Props> {
                         <div className={imageMapStyles.form}>
                             <FormRenderer
                                 disabled={disabled}
-                                formTypes={formTypes}
                                 onHotspotAdd={this.handleHotspotAdd}
                                 onHotspotRemove={this.handleHotspotRemove}
                                 onHotspotSelect={this.handleHotspotSelect}
                                 onHotspotTypeChange={this.handleHotspotTypeChange}
                                 onTypeChange={this.handleTypeChange}
                                 selectedIndex={this.selectedIndex}
+                                types={types}
                                 value={value.hotspots}
                             >
                                 {this.currentHotspot
@@ -215,7 +215,7 @@ class ImageMap extends React.Component<Props> {
                         </div>
                     </div>
                 }
-            </div>
+            </React.Fragment>
         );
     }
 }

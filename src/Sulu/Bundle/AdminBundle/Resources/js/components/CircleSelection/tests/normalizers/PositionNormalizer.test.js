@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 import PositionNormalizer from '../../normalizers/PositionNormalizer';
 
 test('The PositionNormalizer should correctly constrain the selection upwards', () => {

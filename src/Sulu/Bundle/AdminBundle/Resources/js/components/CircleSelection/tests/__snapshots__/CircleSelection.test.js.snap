@@ -1,48 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`The component should center and maximize the selection when a minRadius and maxRadius is given 1`] = `
-<div
-  class="selection"
->
-  <p>
-    Lorem ipsum
-  </p>
-  <div
-    class="circle"
-    role="button"
-    style="left: 1000px; top: 500px; width: 400px; height: 400px;"
-  >
-    <div
-      class="resizeHandle"
-      role="slider"
-      style="transform-origin: calc(50% + -200px) 50%; transform: translate(calc(-50% + 200px), -50%) rotate(0deg);"
-    />
-  </div>
-</div>
-`;
-
-exports[`The component should render with children 1`] = `
-<div
-  class="selection"
->
-  <p>
-    Lorem ipsum
-  </p>
-  <div
-    class="circle"
-    role="button"
-    style="left:1000px;top:500px;width:1000px;height:1000px"
-  >
-    <div
-      class="resizeHandle"
-      role="slider"
-      style="transform-origin:calc(50% + -500px) 50%;transform:translate(calc(-50% + 500px), -50%) rotate(0deg)"
-    />
-  </div>
-</div>
-`;
-
-exports[`The component should render with value as selection 1`] = `
+exports[`The component should render 1`] = `
 <div
   class="selection"
 >

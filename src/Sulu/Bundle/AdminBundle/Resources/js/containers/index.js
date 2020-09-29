@@ -16,7 +16,7 @@ import List, {
     PaginatedLoadingStrategy,
 } from './List';
 import type {ListAdapterProps, LoadingStrategyInterface, StructureStrategyInterface} from './List';
-import {blockPreviewTransformerRegistry} from './FieldBlocks';
+import FieldBlocks, {blockPreviewTransformerRegistry} from './FieldBlocks';
 import {viewRegistry} from './ViewRenderer';
 import Sidebar, {sidebarStore, sidebarRegistry} from './Sidebar';
 import type {ViewProps} from './ViewRenderer';
@@ -67,6 +67,7 @@ export {
     listFieldFilterTypeRegistry,
     listFieldTransformerRegistry,
     fieldRegistry,
+    FieldBlocks,
     FlatStructureStrategy,
     Form,
     FormInspector,

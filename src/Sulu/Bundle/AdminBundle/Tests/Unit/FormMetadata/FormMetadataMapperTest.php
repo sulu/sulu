@@ -137,6 +137,43 @@ class FormMetadataMapperTest extends TestCase
     public function testMapPropertiesWithComponents()
     {
         $form = $this->createFormWithAdvancedProperty();
+        $property = $form->getChild('name');
+
+        $component1 = new ComponentMetadata('component1');
+        $component1->setTitles([
+            'en' => 'First Component',
+            'de' => 'Erste Komponente',
+        ]);
+
+        $child1 = new PropertyMetadata('property1');
+        $child1->setType('text_line');
+        $child2 = new PropertyMetadata('property2');
+        $child2->setRequired(true);
+        $child2->setType('text_area');
+
+        $component1->addChild($child1);
+        $component1->addChild($child2);
+
+        $component2 = new ComponentMetadata('component2');
+        $component2->setTitles([
+            'en' => 'Second Component',
+            'de' => 'Zweite Komponente',
+        ]);
+
+        $child3 = new PropertyMetadata('property3');
+        $child3->setRequired(true);
+        $child3->setType('checkbox');
+        $child4 = new PropertyMetadata('property4');
+        $child4->setType('type');
+
+        $component2->addChild($child3);
+        $component2->addChild($child4);
+
+        $property->addComponent($component1);
+        $property->addComponent($component2);
+        $property->setMinOccurs(1);
+        $property->setMaxOccurs(2);
+        $property->defaultComponentName = 'component1';
 
         $newForm = new FormMetadata();
         $newForm->setItems($this->formMetadataMapper->mapChildren($form->getChildren(), 'en'));
@@ -434,42 +471,6 @@ class FormMetadataMapperTest extends TestCase
                 ],
             ],
         ]);
-
-        $component1 = new ComponentMetadata('component1');
-        $component1->setTitles([
-            'en' => 'First Component',
-            'de' => 'Erste Komponente',
-        ]);
-
-        $child1 = new PropertyMetadata('property1');
-        $child1->setType('text_line');
-        $child2 = new PropertyMetadata('property2');
-        $child2->setRequired(true);
-        $child2->setType('text_area');
-
-        $component1->addChild($child1);
-        $component1->addChild($child2);
-
-        $component2 = new ComponentMetadata('component2');
-        $component2->setTitles([
-            'en' => 'Second Component',
-            'de' => 'Zweite Komponente',
-        ]);
-
-        $child3 = new PropertyMetadata('property3');
-        $child3->setRequired(true);
-        $child3->setType('checkbox');
-        $child4 = new PropertyMetadata('property4');
-        $child4->setType('type');
-
-        $component2->addChild($child3);
-        $component2->addChild($child4);
-
-        $property->addComponent($component1);
-        $property->addComponent($component2);
-        $property->setMinOccurs(1);
-        $property->setMaxOccurs(2);
-        $property->defaultComponentName = 'component1';
 
         $form->addChild($property);
 

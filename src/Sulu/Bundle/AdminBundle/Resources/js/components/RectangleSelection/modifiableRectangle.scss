@@ -1,13 +1,18 @@
 @import '../../containers/Application/colors.scss';
 
 $backdropColor: rgba($black, .6);
+$rectangleBackgroundWithBackdrop: transparent;
+$rectangleBackgroundWithoutBackdrop: $backdropColor;
 $borderColor: $white;
 $borderSize: 2px;
 $minSizeNotificationColor: $white;
+$labelColor: $white;
+$labelColorDisabled: rgba($labelColor, .5);
+$resizeHandleBoxShadowColor: rgba($black, .3);
 
 .rectangle {
     position: absolute;
-    background: transparent;
+    background: $rectangleBackgroundWithoutBackdrop;
     border: $borderSize solid $borderColor;
     will-change: width, height, left, top;
     cursor: move;
@@ -18,8 +23,8 @@ $minSizeNotificationColor: $white;
         pointer-events: none;
     }
 
-    &.backdrop-disabled {
-        background-color: $backdropColor;
+    &.backdrop {
+        background-color: $rectangleBackgroundWithBackdrop;
     }
 }
 
@@ -38,13 +43,12 @@ $minSizeNotificationColor: $white;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    font-size: 34px;
     font-weight: bold;
-    color: $white;
+    color: $labelColor;
     user-select: none;
 
     .rectangle.disabled & {
-        color: rgba($white, .5);
+        color: $labelColorDisabled;
     }
 }
 
@@ -57,7 +61,7 @@ $minSizeNotificationColor: $white;
     right: -10px;
     background: $borderColor;
     cursor: nwse-resize;
-    box-shadow: 0 0 20px 0 rgba($black, .3);
+    box-shadow: 0 0 20px 0 $resizeHandleBoxShadowColor;
 }
 
 .min-size-notification {

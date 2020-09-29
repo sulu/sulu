@@ -16,8 +16,8 @@ type Props = {
     minSizeNotification: boolean,
     minWidth?: number,
     onChange: (s: ?SelectionData) => void,
-    percentageValues: boolean,
     round: boolean,
+    usePercentageValues: boolean,
     value: SelectionData | typeof undefined,
 };
 
@@ -30,8 +30,8 @@ class RectangleSelection extends React.Component<Props & {
         disabled: false,
         forceRatio: true,
         minSizeNotification: true,
-        percentageValues: false,
         round: true,
+        usePercentageValues: false,
     };
 
     render() {
@@ -47,7 +47,7 @@ class RectangleSelection extends React.Component<Props & {
             minSizeNotification,
             minWidth,
             onChange,
-            percentageValues,
+            usePercentageValues,
             round,
             value,
         } = this.props;
@@ -66,8 +66,8 @@ class RectangleSelection extends React.Component<Props & {
                     minSizeNotification={minSizeNotification}
                     minWidth={minWidth}
                     onChange={onChange}
-                    percentageValues={percentageValues}
                     round={round}
+                    usePercentageValues={usePercentageValues}
                     value={value}
                 >
                     {children}

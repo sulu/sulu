@@ -3,13 +3,15 @@ import React from 'react';
 import {mount, render, shallow} from 'enzyme';
 import SingleItemSelection from '../SingleItemSelection';
 
-test('Render with given children prop', () => {
+test('Render with given children prop and with custom className', () => {
     const leftButton = {
         icon: 'su-document',
         onClick: jest.fn(),
     };
 
-    expect(render(<SingleItemSelection leftButton={leftButton}>Test Item</SingleItemSelection>)).toMatchSnapshot();
+    expect(
+        render(<SingleItemSelection className="test" leftButton={leftButton}>Test Item</SingleItemSelection>)
+    ).toMatchSnapshot();
 });
 
 test('Render with right button', () => {
@@ -44,17 +46,6 @@ test('Render with right button with options', () => {
 
     expect(render(
         <SingleItemSelection leftButton={leftButton} rightButton={rightButton}>Test Item</SingleItemSelection>
-    )).toMatchSnapshot();
-});
-
-test('Render with custom className', () => {
-    const leftButton = {
-        icon: 'su-document',
-        onClick: jest.fn(),
-    };
-
-    expect(render(
-        <SingleItemSelection className="test" leftButton={leftButton}>Test Item</SingleItemSelection>
     )).toMatchSnapshot();
 });
 

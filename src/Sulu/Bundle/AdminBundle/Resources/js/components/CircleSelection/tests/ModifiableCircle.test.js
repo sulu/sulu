@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 import {mount, render, shallow} from 'enzyme';
 import React from 'react';
 import ModifiableCircle from '../ModifiableCircle';
@@ -8,20 +8,14 @@ jest.mock('../../../utils/Translator', () => ({
 }));
 
 test('The component should render', () => {
-    const view = render(<ModifiableCircle radius={100} />);
-
-    expect(view).toMatchSnapshot();
-});
-
-test('The component should render with correct positions', () => {
-    const view = render(<ModifiableCircle left={10} radius={100} top={20} />);
+    const view = render(<ModifiableCircle label="" left={10} radius={100} top={20} />);
 
     expect(view).toMatchSnapshot();
 });
 
 test('The component should call the double click callback', () => {
     const clickSpy = jest.fn();
-    const circle = shallow(<ModifiableCircle onDoubleClick={clickSpy} radius={100} />);
+    const circle = shallow(<ModifiableCircle label="" onDoubleClick={clickSpy} radius={100} />);
 
     circle.find('.circle').simulate('dblclick');
     expect(clickSpy).toHaveBeenCalledTimes(1);
@@ -32,7 +26,7 @@ test('The component should call the change callback on move', () => {
     const changeSpy = jest.fn();
     window.addEventListener = jest.fn((event, cb) => windowListeners[event] = cb);
 
-    const circle = mount(<ModifiableCircle onChange={changeSpy} radius={100} />);
+    const circle = mount(<ModifiableCircle label="" onChange={changeSpy} radius={100} />);
     expect(windowListeners.mousemove).toBeDefined();
     expect(windowListeners.mouseup).toBeDefined();
 
@@ -53,7 +47,7 @@ test('The component should call the change callback on resize', () => {
     const changeSpy = jest.fn();
     window.addEventListener = jest.fn((event, cb) => windowListeners[event] = cb);
 
-    const circle = mount(<ModifiableCircle onChange={changeSpy} radius={100} />);
+    const circle = mount(<ModifiableCircle label="" onChange={changeSpy} radius={100} />);
     circle.instance().circleRef = {
         getBoundingClientRect: () => ({
             left: 200,

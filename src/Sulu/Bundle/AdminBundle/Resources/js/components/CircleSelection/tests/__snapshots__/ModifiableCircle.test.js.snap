@@ -4,20 +4,6 @@ exports[`The component should render 1`] = `
 <div
   class="circle"
   role="button"
-  style="left:0px;top:0px;width:200px;height:200px"
->
-  <div
-    class="resizeHandle"
-    role="slider"
-    style="transform-origin:calc(50% + -100px) 50%;transform:translate(calc(-50% + 100px), -50%) rotate(0deg)"
-  />
-</div>
-`;
-
-exports[`The component should render with correct positions 1`] = `
-<div
-  class="circle"
-  role="button"
   style="left:10px;top:20px;width:200px;height:200px"
 >
   <div

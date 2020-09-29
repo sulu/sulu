@@ -2,31 +2,30 @@
 import React from 'react';
 import {observable, toJS} from 'mobx';
 import debounce from 'debounce';
-import userStore from 'sulu-admin-bundle/stores/userStore';
-import type {FieldTypeProps} from 'sulu-admin-bundle/types';
-import type {BlockError} from 'sulu-admin-bundle/containers/Form/types';
-import FieldRenderer from 'sulu-admin-bundle/containers/FieldBlocks/FieldRenderer';
 import jsonpointer from 'json-pointer';
+import {userStore} from 'sulu-admin-bundle/stores';
+import type {FieldTypeProps, BlockError} from 'sulu-admin-bundle/types';
+import {FieldBlocks} from 'sulu-admin-bundle/containers';
 import ImageMapContainer from '../../ImageMap';
-import type {Value as ImageMapValue, RenderHotspotFormCallback} from '../../ImageMap/types';
+import type {Value, RenderHotspotFormCallback} from '../../ImageMap/types';
 
 const MISSING_TYPE_ERROR_MESSAGE = 'The "image_map" field type needs at least one type to be configured!';
 
-export default class ImageMap extends React.Component<FieldTypeProps<ImageMapValue>> {
+export default class ImageMap extends React.Component<FieldTypeProps<Value>> {
     handleFinish = debounce(() => {
         const {onFinish} = this.props;
 
         onFinish();
     }, 1000);
 
-    handleChange = (value: ImageMapValue) => {
+    handleChange = (value: Value) => {
         const {onChange} = this.props;
 
         onChange(value);
         this.handleFinish();
     };
 
-    get defaultValue(): ImageMapValue {
+    get defaultValue(): Value {
         return {
             imageId: undefined,
             hotspots: [],
@@ -58,7 +57,8 @@ export default class ImageMap extends React.Component<FieldTypeProps<ImageMapVal
 
         if (!types[defaultType]) {
             throw new Error(
-                'The default type should exist in image_map "' + schemaPath + '".'
+                'The default type should exist in image_map "' + schemaPath + '". ' +
+                'This should not happen and is likely a bug.'
             );
         }
 
@@ -94,7 +94,7 @@ export default class ImageMap extends React.Component<FieldTypeProps<ImageMapVal
         const errors = ((toJS(error): any): ?BlockError);
 
         return (
-            <FieldRenderer
+            <FieldBlocks.FieldRenderer
                 data={value}
                 dataPath={dataPath + '/' + index}
                 errors={errors && errors.length > index && errors[index] ? errors[index] : undefined}
@@ -114,8 +114,8 @@ export default class ImageMap extends React.Component<FieldTypeProps<ImageMapVal
     render() {
         const {
             defaultType,
-            error,
             disabled,
+            error,
             formInspector,
             types,
             value,
@@ -142,10 +142,10 @@ export default class ImageMap extends React.Component<FieldTypeProps<ImageMapVal
             <ImageMapContainer
                 defaultFormType={defaultType}
                 disabled={!!disabled}
-                formTypes={formTypes}
                 locale={locale}
                 onChange={this.handleChange}
                 renderHotspotForm={this.renderHotspotForm}
+                types={formTypes}
                 valid={!error}
                 value={value || this.defaultValue}
             />

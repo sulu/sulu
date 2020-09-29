@@ -2,12 +2,11 @@
 import React from 'react';
 import type {ElementRef} from 'react';
 import {action, observable, toJS, when} from 'mobx';
+import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import debounce from 'debounce';
-import {CircleSelectionRenderer} from 'sulu-admin-bundle/components/CircleSelection';
-import {RectangleSelectionRenderer} from 'sulu-admin-bundle/components/RectangleSelection';
-import ResourceStore from 'sulu-admin-bundle/stores/ResourceStore';
-import type {IObservableValue} from 'mobx';
+import {CircleSelection, RectangleSelection} from 'sulu-admin-bundle/components';
+import {ResourceStore} from 'sulu-admin-bundle/stores';
 import type {Hotspot, Value} from './types';
 import imageRendererStyles from './imageRenderer.scss';
 
@@ -30,7 +29,7 @@ class ImageRenderer extends React.Component<Props> {
     imageWrapperRef: ?ElementRef<'div'>;
 
     componentDidMount() {
-        const {value, locale} = this.props;
+        const {locale, value} = this.props;
 
         this.setImageUrl(value.imageId, locale);
         this.setContainerSize();
@@ -107,7 +106,7 @@ class ImageRenderer extends React.Component<Props> {
             key: index,
             label: (index + 1).toString(),
             onChange: this.handleSelectionChange,
-            percentageValues: true,
+            usePercentageValues: true,
             round: false,
             value,
         };
@@ -115,7 +114,7 @@ class ImageRenderer extends React.Component<Props> {
 
     renderCircleSelection = (hotspot: Hotspot, index: number) => {
         return (
-            <CircleSelectionRenderer
+            <CircleSelection.Renderer
                 {...this.getCommonSelectionProps(hotspot, index)}
                 filled={false}
                 resizable={true}
@@ -125,7 +124,7 @@ class ImageRenderer extends React.Component<Props> {
 
     renderPointSelection = (hotspot: Hotspot, index: number) => {
         return (
-            <CircleSelectionRenderer
+            <CircleSelection.Renderer
                 {...this.getCommonSelectionProps(hotspot, index)}
                 filled={true}
                 resizable={false}
@@ -135,7 +134,7 @@ class ImageRenderer extends React.Component<Props> {
 
     renderRectangleSelection = (hotspot: Hotspot, index: number) => {
         return (
-            <RectangleSelectionRenderer
+            <RectangleSelection.Renderer
                 {...this.getCommonSelectionProps(hotspot, index)}
                 backdrop={false}
                 forceRatio={false}
@@ -168,11 +167,12 @@ class ImageRenderer extends React.Component<Props> {
 
     render() {
         return (
-            <div className={imageRendererStyles.container}>
-                <div className={imageRendererStyles.wrapper} ref={this.setImageWrapperRef}>
+            <div className={imageRendererStyles.imageRenderer}>
+                <div className={imageRendererStyles.imageRendererWrapper} ref={this.setImageWrapperRef}>
                     {this.imageUrl &&
                         <img
                             className={imageRendererStyles.image}
+                            key={this.imageUrl}
                             src={this.imageUrl}
                         />
                     }

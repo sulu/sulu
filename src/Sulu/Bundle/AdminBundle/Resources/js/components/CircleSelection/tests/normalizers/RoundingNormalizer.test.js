@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 import RoundingNormalizer from '../../normalizers/RoundingNormalizer';
 
 test('The RoundingNormalizer should round correctly', () => {

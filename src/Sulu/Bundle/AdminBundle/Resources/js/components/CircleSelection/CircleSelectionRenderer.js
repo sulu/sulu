@@ -15,9 +15,9 @@ type Props = {
     maxRadius?: number,
     minRadius?: number,
     onChange: (value: ?SelectionData) => void,
-    percentageValues: boolean,
     resizable: boolean,
     round: boolean,
+    usePercentageValues: boolean,
     value: SelectionData | typeof undefined,
 };
 
@@ -25,15 +25,15 @@ export default class CircleSelectionRenderer extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
         filled: false,
-        percentageValues: false,
         resizable: true,
         round: true,
+        usePercentageValues: false,
     };
 
     handleChange = (value: ?SelectionData) => {
-        const {onChange, containerWidth, containerHeight, percentageValues} = this.props;
+        const {onChange, containerWidth, containerHeight, usePercentageValues} = this.props;
 
-        if (!percentageValues || !value) {
+        if (!usePercentageValues || !value) {
             onChange(value);
 
             return;
@@ -49,13 +49,13 @@ export default class CircleSelectionRenderer extends React.Component<Props> {
     };
 
     get value() {
-        const {value, containerWidth, containerHeight, percentageValues} = this.props;
+        const {value, containerWidth, containerHeight, usePercentageValues} = this.props;
 
         if (!value) {
             return this.getMaximumSelection();
         }
 
-        if (!percentageValues) {
+        if (!usePercentageValues) {
             return value;
         }
 
@@ -85,7 +85,7 @@ export default class CircleSelectionRenderer extends React.Component<Props> {
     };
 
     static createNormalizers(props: Props): Array<Normalizer> {
-        const {containerWidth, containerHeight, maxRadius, minRadius, percentageValues, round, resizable} = props;
+        const {containerWidth, containerHeight, maxRadius, minRadius, usePercentageValues, round, resizable} = props;
 
         if (!containerWidth || !containerHeight) {
             return [];
@@ -99,8 +99,8 @@ export default class CircleSelectionRenderer extends React.Component<Props> {
         ];
 
         if (resizable) {
-            const calculatedMaxRadius = percentageValues && maxRadius ? maxRadius * containerWidth : maxRadius;
-            const calculatedMinRadius = percentageValues && minRadius ? minRadius * containerWidth : minRadius;
+            const calculatedMaxRadius = usePercentageValues && maxRadius ? maxRadius * containerWidth : maxRadius;
+            const calculatedMinRadius = usePercentageValues && minRadius ? minRadius * containerWidth : minRadius;
 
             normalizers.push(
                 new SizeNormalizer(
@@ -112,7 +112,7 @@ export default class CircleSelectionRenderer extends React.Component<Props> {
             );
         }
 
-        if (round && !percentageValues) {
+        if (round && !usePercentageValues) {
             normalizers.push(new RoundingNormalizer());
         }
 
@@ -130,12 +130,9 @@ export default class CircleSelectionRenderer extends React.Component<Props> {
     getMaximumSelection = (): SelectionData => {
         const {containerWidth, containerHeight, resizable} = this.props;
 
-        let radius;
-        if (containerWidth && containerHeight && resizable) {
-            radius = Math.min(containerWidth, containerHeight) / 2;
-        } else {
-            radius = 0;
-        }
+        const radius = (containerWidth && containerHeight && resizable)
+            ? Math.min(containerWidth, containerHeight) / 2
+            : 0;
 
         return this.normalize(
             this.centerSelection({

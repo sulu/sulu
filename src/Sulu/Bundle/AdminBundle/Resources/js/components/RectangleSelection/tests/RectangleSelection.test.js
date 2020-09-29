@@ -210,7 +210,7 @@ test('The component should work with percentage values if told by the properties
             containerHeight={1000}
             containerWidth={2000}
             onChange={changeSpy}
-            percentageValues={true}
+            usePercentageValues={true}
             value={undefined}
         >
             <p>Lorem ipsum</p>

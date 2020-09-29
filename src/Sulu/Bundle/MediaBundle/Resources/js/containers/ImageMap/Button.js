@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import Icon from 'sulu-admin-bundle/components/Icon';
+import {Icon} from 'sulu-admin-bundle/components';
 import buttonStyles from './button.scss';
 
 type Props = {

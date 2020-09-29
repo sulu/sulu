@@ -1,5 +1,5 @@
 // @flow
-import {mount, render} from 'enzyme';
+import {mount} from 'enzyme';
 import React from 'react';
 import {CircleSelection} from '../CircleSelection';
 import CircleSelectionRenderer from '../CircleSelectionRenderer';
@@ -11,17 +11,7 @@ jest.mock('../../../utils/Translator', () => ({
 jest.mock('../../withContainerSize/withContainerSize');
 jest.mock('../../../utils/DOM/afterElementsRendered');
 
-test('The component should render with children', () => {
-    const view = render(
-        <CircleSelection containerHeight={1000} containerWidth={2000} onChange={jest.fn()} value={undefined}>
-            <p>Lorem ipsum</p>
-        </CircleSelection>
-    );
-
-    expect(view).toMatchSnapshot();
-});
-
-test('The component should render with value as selection', () => {
+test('The component should render', () => {
     const view = mount(
         <CircleSelection
             containerHeight={1000}
@@ -34,6 +24,18 @@ test('The component should render with value as selection', () => {
     );
 
     expect(view.render()).toMatchSnapshot();
+});
+
+test('The component should center and maximize the selection if no value is given', () => {
+    const changeSpy = jest.fn();
+
+    mount(
+        <CircleSelection containerHeight={1000} containerWidth={2000} onChange={changeSpy} value={undefined}>
+            <p>Lorem ipsum</p>
+        </CircleSelection>
+    );
+
+    expect(changeSpy).toBeCalledWith({left: 1000, radius: 500, top: 500});
 });
 
 test('The component should reset the value if modifiable circle is doubleclicked', () => {
@@ -58,20 +60,22 @@ test('The component should reset the value if modifiable circle is doubleclicked
 });
 
 test('The component should center and maximize the selection when a minRadius and maxRadius is given', () => {
-    const view = mount(
+    const changeSpy = jest.fn();
+
+    mount(
         <CircleSelection
             containerHeight={1000}
             containerWidth={2000}
             maxRadius={200}
             minRadius={50}
-            onChange={jest.fn()}
+            onChange={changeSpy}
             value={undefined}
         >
             <p>Lorem ipsum</p>
         </CircleSelection>
     );
 
-    expect(view.render()).toMatchSnapshot();
+    expect(changeSpy).toBeCalledWith({left: 1000, radius: 200, top: 500});
 });
 
 test('The component should not allow the selection to move over the borders', () => {
@@ -139,7 +143,7 @@ test('The component should work with percentage values if told by the properties
             containerHeight={1000}
             containerWidth={2000}
             onChange={changeSpy}
-            percentageValues={true}
+            usePercentageValues={true}
             value={undefined}
         >
             <p>Lorem ipsum</p>

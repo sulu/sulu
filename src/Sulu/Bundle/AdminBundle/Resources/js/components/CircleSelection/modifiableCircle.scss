@@ -3,6 +3,14 @@
 $backgroundColor: rgba($black, .6);
 $borderColor: $white;
 $borderSize: 2px;
+$backgroundColorFilled: $white;
+$backgroundColorFilledDisabled: rgba($backgroundColorFilled, .6);
+$boxShadowColorFilled: rgba($black, .6);
+$labelColor: $white;
+$labelColorDisabled: rgba($labelColor, .5);
+$labelColorFilled: $black;
+$labelColorFilledDisabled: rgba($labelColorFilled, .6);
+$resizeHandleBoxShadowColor: rgba($black, .3);
 
 .circle {
     position: absolute;
@@ -20,11 +28,11 @@ $borderSize: 2px;
     }
 
     &.filled {
-        background: $white;
-        box-shadow: 0 0 2px 1px rgba($black, .6);
+        background: $backgroundColorFilled;
+        box-shadow: 0 0 2px 1px $boxShadowColorFilled;
 
         &.disabled {
-            background: rgba($white, .6);
+            background: $backgroundColorFilledDisabled;
         }
     }
 }
@@ -34,21 +42,20 @@ $borderSize: 2px;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    font-size: 34px;
     font-weight: bold;
-    color: $white;
+    color: $labelColor;
     user-select: none;
 
     .circle.disabled & {
-        color: rgba($white, .5);
+        color: $labelColorDisabled;
     }
 
     .circle.filled & {
-        color: $black;
+        color: $labelColorFilled;
     }
 
     .circle.filled.disabled & {
-        color: rgba($black, .6);
+        color: $labelColorFilledDisabled;
     }
 }
 
@@ -62,6 +69,6 @@ $borderSize: 2px;
     transform: translate(-50%, -50%);
     background: $borderColor;
     cursor: nwse-resize;
-    box-shadow: 0 0 20px 0 rgba($black, .3);
+    box-shadow: 0 0 20px 0 $resizeHandleBoxShadowColor;
     will-change: transform, transform-origin;
 }

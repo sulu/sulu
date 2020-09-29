@@ -53,16 +53,6 @@ class ImageMapContentTypeTest extends TestCase
      */
     private $property;
 
-    /**
-     * @var mixed[]
-     */
-    private $value;
-
-    /**
-     * @var mixed[]
-     */
-    private $types;
-
     protected function setUp(): void
     {
         $this->textLineContentType = $this->prophesize(TextLine::class);
@@ -74,7 +64,7 @@ class ImageMapContentTypeTest extends TestCase
 
         $this->imageMapContentType = new ImageMapContentType($this->contentTypeManager->reveal());
 
-        $this->types = [
+        $types = [
             'headline' => [
                 'children' => [
                     'headline' => 'text_line',
@@ -87,7 +77,52 @@ class ImageMapContentTypeTest extends TestCase
             ],
         ];
 
-        $this->value = [
+        $property = new Property(
+            'imageMap',
+            '',
+            'image_map',
+            false,
+            true,
+            1,
+            1,
+            [],
+            [],
+            null,
+            'text'
+        );
+
+        foreach ($types as $key => $config) {
+            $type = new PropertyType($key, []);
+
+            foreach ($config['children'] as $childName => $childType) {
+                $type->addChild(new Property($childName, '', $childType));
+            }
+
+            $property->addType($type);
+        }
+    }
+
+    public function testRead(): void
+    {
+        $node = $this->prophesize(NodeInterface::class);
+        $webspaceKey = 'example';
+        $languageCode = 'en';
+        $segmentKey = 's';
+
+        $types = [
+            'headline' => [
+                'children' => [
+                    'headline' => 'text_line',
+                ],
+            ],
+            'text' => [
+                'children' => [
+                    'text' => 'text_line',
+                ],
+            ],
+        ];
+
+        $value = [
             'imageId' => 1,
             'hotspots' => [
                 [
@@ -114,7 +149,7 @@ class ImageMapContentTypeTest extends TestCase
             ],
         ];
 
-        $this->property = new Property(
+        $property = new Property(
             'imageMap',
             '',
             'image_map',
@@ -128,111 +163,148 @@ class ImageMapContentTypeTest extends TestCase
             'text'
         );
 
-        foreach ($this->types as $key => $config) {
+        foreach ($types as $key => $config) {
             $type = new PropertyType($key, []);
 
             foreach ($config['children'] as $childName => $childType) {
                 $type->addChild(new Property($childName, '', $childType));
             }
 
-            $this->property->addType($type);
+            $property->addType($type);
         }
-    }
-
-    public function testRead(): void
-    {
-        $node = $this->prophesize(NodeInterface::class);
-        $webspaceKey = 'example';
-        $languageCode = 'en';
-        $segmentKey = 's';
-
-        $types = $this->types;
-        $value = $this->value;
-        $property = $this->property;
 
         $this->textLineContentType->read(
             $node->reveal(),
-            Argument::that(function($arg) use ($property) {
-                return $arg instanceof BlockPropertyWrapper
-                    && 'imageId' === $arg->getProperty()->getName()
-                    && $arg->getBlock() === $property
-                    && $arg->getName() === $arg->getBlock()->getName() . '-imageId';
+            Argument::that(function($property) use ($property) {
+                return $property instanceof BlockPropertyWrapper
+                    && 'imageId' === $property->getProperty()->getName()
+                    && $property->getBlock() === $property
+                    && $property->getName() === $property->getBlock()->getName() . '-imageId';
             }),
             $webspaceKey,
             $languageCode,
             $segmentKey
-        )->will(function($args) use ($value) {
-            [$node, $property] = $args;
+        )->will(function($arguments) use ($value) {
+            [$node, $property] = $arguments;
             $property->setValue($value['imageId']);
         })->shouldBeCalled();
 
         $this->textLineContentType->read(
             $node->reveal(),
-            Argument::that(function($arg) use ($property) {
-                return $arg instanceof BlockPropertyWrapper
-                    && 'length' === $arg->getProperty()->getName()
-                    && $arg->getBlock() === $property
-                    && $arg->getName() === $arg->getBlock()->getName() . '-length';
+            Argument::that(function($property) use ($property) {
+                return $property instanceof BlockPropertyWrapper
+                    && 'length' === $property->getProperty()->getName()
+                    && $property->getBlock() === $property
+                    && $property->getName() === $property->getBlock()->getName() . '-length';
             }),
             $webspaceKey,
             $languageCode,
             $segmentKey
-        )->will(function($args) use ($value) {
-            [$node, $property] = $args;
+        )->will(function($arguments) use ($value) {
+            [$node, $property] = $arguments;
             $property->setValue(\count($value['hotspots']));
         })->shouldBeCalled();
 
-        for ($i = 0; $i < \count($value['hotspots']); ++$i) {
+        $this->textLineContentType->read(
+            $node->reveal(),
+            Argument::that(function($property) use ($property) {
+                return $property instanceof BlockPropertyWrapper
+                    && 'type' === $property->getProperty()->getName()
+                    && $property->getBlock() === $property
+                    && $property->getName() === $property->getBlock()->getName() . '-type#0';
+            }),
+            $webspaceKey,
+            $languageCode,
+            $segmentKey
+        )->will(function($arguments) use ($value) {
+            [$node, $property] = $arguments;
+            $property->setValue($value['hotspots'][0]['type']);
+        })->shouldBeCalled();
+
+        $this->textLineContentType->read(
+            $node->reveal(),
+            Argument::that(function($property) use ($property) {
+                return $property instanceof BlockPropertyWrapper
+                    && 'hotspot' === $property->getProperty()->getName()
+                    && $property->getBlock() === $property
+                    && $property->getName() === $property->getBlock()->getName() . '-hotspot#0';
+            }),
+            $webspaceKey,
+            $languageCode,
+            $segmentKey
+        )->will(function($arguments) use ($value) {
+            [$node, $property] = $arguments;
+            $property->setValue(\json_encode($value['hotspots'][0]['hotspot']));
+        })->shouldBeCalled();
+
+        $propertyType = $types[$value['hotspots'][0]['type']];
+        foreach ($propertyType['children'] as $childName => $childType) {
             $this->textLineContentType->read(
                 $node->reveal(),
-                Argument::that(function($arg) use ($property, $i) {
-                    return $arg instanceof BlockPropertyWrapper
-                        && 'type' === $arg->getProperty()->getName()
-                        && $arg->getBlock() === $property
-                        && $arg->getName() === $arg->getBlock()->getName() . '-type#' . $i;
+                Argument::that(function($property) use ($property, $childName) {
+                    return $property instanceof BlockPropertyWrapper
+                        && $property->getProperty()->getName() === $childName
+                        && $property->getBlock() === $property
+                        && $property->getName() === $property->getBlock()->getName() . '-' . $childName . '#0';
                 }),
                 $webspaceKey,
                 $languageCode,
                 $segmentKey
-            )->will(function($args) use ($value, $i) {
-                [$node, $property] = $args;
-                $property->setValue($value['hotspots'][$i]['type']);
+            )->will(function($arguments) use ($value, $childName) {
+                [$node, $property] = $arguments;
+                $property->setValue($value['hotspots'][0][$childName]);
             })->shouldBeCalled();
+        }
 
+        $this->textLineContentType->read(
+            $node->reveal(),
+            Argument::that(function($property) use ($property) {
+                return $property instanceof BlockPropertyWrapper
+                    && 'type' === $property->getProperty()->getName()
+                    && $property->getBlock() === $property
+                    && $property->getName() === $property->getBlock()->getName() . '-type#1';
+            }),
+            $webspaceKey,
+            $languageCode,
+            $segmentKey
+        )->will(function($arguments) use ($value) {
+            [$node, $property] = $arguments;
+            $property->setValue($value['hotspots'][1]['type']);
+        })->shouldBeCalled();
+
+        $this->textLineContentType->read(
+            $node->reveal(),
+            Argument::that(function($property) use ($property) {
+                return $property instanceof BlockPropertyWrapper
+                    && 'hotspot' === $property->getProperty()->getName()
+                    && $property->getBlock() === $property
+                    && $property->getName() === $property->getBlock()->getName() . '-hotspot#1';
+            }),
+            $webspaceKey,
+            $languageCode,
+            $segmentKey
+        )->will(function($arguments) use ($value) {
+            [$node, $property] = $arguments;
+            $property->setValue(\json_encode($value['hotspots'][1]['hotspot']));
+        })->shouldBeCalled();
+
+        $propertyType = $types[$value['hotspots'][1]['type']];
+        foreach ($propertyType['children'] as $childName => $childType) {
             $this->textLineContentType->read(
                 $node->reveal(),
-                Argument::that(function($arg) use ($property, $i) {
-                    return $arg instanceof BlockPropertyWrapper
-                        && 'hotspot' === $arg->getProperty()->getName()
-                        && $arg->getBlock() === $property
-                        && $arg->getName() === $arg->getBlock()->getName() . '-hotspot#' . $i;
+                Argument::that(function($property) use ($property, $childName) {
+                    return $property instanceof BlockPropertyWrapper
+                        && $property->getProperty()->getName() === $childName
+                        && $property->getBlock() === $property
+                        && $property->getName() === $property->getBlock()->getName() . '-' . $childName . '#1';
                 }),
                 $webspaceKey,
                 $languageCode,
                 $segmentKey
-            )->will(function($args) use ($value, $i) {
-                [$node, $property] = $args;
-                $property->setValue(\json_encode($value['hotspots'][$i]['hotspot']));
+            )->will(function($arguments) use ($value, $childName) {
+                [$node, $property] = $arguments;
+                $property->setValue($value['hotspots'][1][$childName]);
             })->shouldBeCalled();
-
-            $propertyType = $types[$value['hotspots'][$i]['type']];
-            foreach ($propertyType['children'] as $childName => $childType) {
-                $this->textLineContentType->read(
-                    $node->reveal(),
-                    Argument::that(function($arg) use ($property, $childName, $i) {
-                        return $arg instanceof BlockPropertyWrapper
-                            && $arg->getProperty()->getName() === $childName
-                            && $arg->getBlock() === $property
-                            && $arg->getName() === $arg->getBlock()->getName() . '-' . $childName . '#' . $i;
-                    }),
-                    $webspaceKey,
-                    $languageCode,
-                    $segmentKey
-                )->will(function($args) use ($value, $i, $childName) {
-                    [$node, $property] = $args;
-                    $property->setValue($value['hotspots'][$i][$childName]);
-                })->shouldBeCalled();
-            }
         }
 
         $this->imageMapContentType->read($node->reveal(), $property, $webspaceKey, $languageCode, $segmentKey);
@@ -247,15 +319,50 @@ class ImageMapContentTypeTest extends TestCase
         $languageCode = 'en';
         $segmentKey = 's';
 
-        $property = $this->property;
+        $types = [
+            'headline' => [
+                'children' => [
+                    'headline' => 'text_line',
+                ],
+            ],
+            'text' => [
+                'children' => [
+                    'text' => 'text_line',
+                ],
+            ],
+        ];
+
+        $property = new Property(
+            'imageMap',
+            '',
+            'image_map',
+            false,
+            true,
+            1,
+            1,
+            [],
+            [],
+            null,
+            'text'
+        );
+
+        foreach ($types as $key => $config) {
+            $type = new PropertyType($key, []);
+
+            foreach ($config['children'] as $childName => $childType) {
+                $type->addChild(new Property($childName, '', $childType));
+            }
+
+            $property->addType($type);
+        }
 
         $this->textLineContentType->hasValue(
             $node->reveal(),
-            Argument::that(function($arg) use ($property) {
-                return $arg instanceof BlockPropertyWrapper
-                    && 'imageId' === $arg->getProperty()->getName()
-                    && $arg->getBlock() === $property
-                    && $arg->getName() === $arg->getBlock()->getName() . '-imageId';
+            Argument::that(function($property) use ($property) {
+                return $property instanceof BlockPropertyWrapper
+                    && 'imageId' === $property->getProperty()->getName()
+                    && $property->getBlock() === $property
+                    && $property->getName() === $property->getBlock()->getName() . '-imageId';
             }),
             $webspaceKey,
             $languageCode,
@@ -281,20 +388,80 @@ class ImageMapContentTypeTest extends TestCase
         $languageCode = 'en';
         $segmentKey = 's';
 
-        $value = $this->value;
-        $types = $this->types;
-        $property = $this->property;
+        $types = [
+            'headline' => [
+                'children' => [
+                    'headline' => 'text_line',
+                ],
+            ],
+            'text' => [
+                'children' => [
+                    'text' => 'text_line',
+                ],
+            ],
+        ];
+
+        $value = [
+            'imageId' => 1,
+            'hotspots' => [
+                [
+                    'type' => 'text',
+                    'text' => 'foo',
+                    'hotspot' => [
+                        'type' => 'circle',
+                        'left' => 0.3,
+                        'top' => 0.4,
+                        'radius' => 0.5,
+                    ],
+                ],
+                [
+                    'type' => 'headline',
+                    'headline' => 'bar',
+                    'hotspot' => [
+                        'type' => 'rectangle',
+                        'left' => 0.3,
+                        'top' => 0.4,
+                        'width' => 0.5,
+                        'height' => 0.6,
+                    ],
+                ],
+            ],
+        ];
+
+        $property = new Property(
+            'imageMap',
+            '',
+            'image_map',
+            false,
+            true,
+            1,
+            1,
+            [],
+            [],
+            null,
+            'text'
+        );
+
+        foreach ($types as $key => $config) {
+            $type = new PropertyType($key, []);
+
+            foreach ($config['children'] as $childName => $childType) {
+                $type->addChild(new Property($childName, '', $childType));
+            }
+
+            $property->addType($type);
+        }
 
         $property->setValue($value);
 
         $this->textLineContentType->write(
             Argument::type(SuluNode::class),
-            Argument::that(function($arg) use ($property, $value) {
-                return $arg instanceof BlockPropertyWrapper
-                    && 'imageId' === $arg->getProperty()->getName()
-                    && $arg->getBlock() === $property
-                    && $arg->getName() === $arg->getBlock()->getName() . '-imageId'
-                    && $arg->getValue() === $value['imageId'];
+            Argument::that(function($property) use ($property, $value) {
+                return $property instanceof BlockPropertyWrapper
+                    && 'imageId' === $property->getProperty()->getName()
+                    && $property->getBlock() === $property
+                    && $property->getName() === $property->getBlock()->getName() . '-imageId'
+                    && $property->getValue() === $value['imageId'];
             }),
             $userId,
             $webspaceKey,
@@ -304,12 +471,12 @@ class ImageMapContentTypeTest extends TestCase
 
         $this->textLineContentType->write(
             Argument::type(SuluNode::class),
-            Argument::that(function($arg) use ($property, $value) {
-                return $arg instanceof BlockPropertyWrapper
-                    && 'length' === $arg->getProperty()->getName()
-                    && $arg->getBlock() === $property
-                    && $arg->getName() === $arg->getBlock()->getName() . '-length'
-                    && $arg->getValue() === \count($value['hotspots']);
+            Argument::that(function($property) use ($property, $value) {
+                return $property instanceof BlockPropertyWrapper
+                    && 'length' === $property->getProperty()->getName()
+                    && $property->getBlock() === $property
+                    && $property->getName() === $property->getBlock()->getName() . '-length'
+                    && $property->getValue() === \count($value['hotspots']);
             }),
             $userId,
             $webspaceKey,
@@ -317,54 +484,100 @@ class ImageMapContentTypeTest extends TestCase
             $segmentKey
         )->shouldBeCalled();
 
-        for ($i = 0; $i < \count($value['hotspots']); ++$i) {
+        $this->textLineContentType->write(
+            Argument::type(SuluNode::class),
+            Argument::that(function($property) use ($property, $value) {
+                return $property instanceof BlockPropertyWrapper
+                    && 'type' === $property->getProperty()->getName()
+                    && $property->getBlock() === $property
+                    && $property->getName() === $property->getBlock()->getName() . '-type#0'
+                    && $property->getValue() === $value['hotspots'][0]['type'];
+            }),
+            $userId,
+            $webspaceKey,
+            $languageCode,
+            $segmentKey
+        )->shouldBeCalled();
+
+        $this->textLineContentType->write(
+            Argument::type(SuluNode::class),
+            Argument::that(function($property) use ($property, $value) {
+                return $property instanceof BlockPropertyWrapper
+                    && 'hotspot' === $property->getProperty()->getName()
+                    && $property->getBlock() === $property
+                    && $property->getName() === $property->getBlock()->getName() . '-hotspot#0'
+                    && $property->getValue() === \json_encode($value['hotspots'][0]['hotspot']);
+            }),
+            $userId,
+            $webspaceKey,
+            $languageCode,
+            $segmentKey
+        )->shouldBeCalled();
+
+        $propertyType = $types[$value['hotspots'][0]['type']];
+        foreach ($propertyType['children'] as $childName => $childType) {
             $this->textLineContentType->write(
                 Argument::type(SuluNode::class),
-                Argument::that(function($arg) use ($property, $value, $i) {
-                    return $arg instanceof BlockPropertyWrapper
-                        && 'type' === $arg->getProperty()->getName()
-                        && $arg->getBlock() === $property
-                        && $arg->getName() === $arg->getBlock()->getName() . '-type#' . $i
-                        && $arg->getValue() === $value['hotspots'][$i]['type'];
+                Argument::that(function($property) use ($property, $value, $childName) {
+                    return $property instanceof BlockPropertyWrapper
+                        && $property->getProperty()->getName() === $childName
+                        && $property->getBlock() === $property
+                        && $property->getName() === $property->getBlock()->getName() . '-' . $childName . '#0'
+                        && $property->getValue() === $value['hotspots'][0][$childName];
                 }),
                 $userId,
                 $webspaceKey,
                 $languageCode,
                 $segmentKey
             )->shouldBeCalled();
+        }
 
+        $this->textLineContentType->write(
+            Argument::type(SuluNode::class),
+            Argument::that(function($property) use ($property, $value) {
+                return $property instanceof BlockPropertyWrapper
+                    && 'type' === $property->getProperty()->getName()
+                    && $property->getBlock() === $property
+                    && $property->getName() === $property->getBlock()->getName() . '-type#1'
+                    && $property->getValue() === $value['hotspots'][1]['type'];
+            }),
+            $userId,
+            $webspaceKey,
+            $languageCode,
+            $segmentKey
+        )->shouldBeCalled();
+
+        $this->textLineContentType->write(
+            Argument::type(SuluNode::class),
+            Argument::that(function($property) use ($property, $value) {
+                return $property instanceof BlockPropertyWrapper
+                    && 'hotspot' === $property->getProperty()->getName()
+                    && $property->getBlock() === $property
+                    && $property->getName() === $property->getBlock()->getName() . '-hotspot#1'
+                    && $property->getValue() === \json_encode($value['hotspots'][1]['hotspot']);
+            }),
+            $userId,
+            $webspaceKey,
+            $languageCode,
+            $segmentKey
+        )->shouldBeCalled();
+
+        $propertyType = $types[$value['hotspots'][1]['type']];
+        foreach ($propertyType['children'] as $childName => $childType) {
             $this->textLineContentType->write(
                 Argument::type(SuluNode::class),
-                Argument::that(function($arg) use ($property, $value, $i) {
-                    return $arg instanceof BlockPropertyWrapper
-                        && 'hotspot' === $arg->getProperty()->getName()
-                        && $arg->getBlock() === $property
-                        && $arg->getName() === $arg->getBlock()->getName() . '-hotspot#' . $i
-                        && $arg->getValue() === \json_encode($value['hotspots'][$i]['hotspot']);
+                Argument::that(function($property) use ($property, $value, $childName) {
+                    return $property instanceof BlockPropertyWrapper
+                        && $property->getProperty()->getName() === $childName
+                        && $property->getBlock() === $property
+                        && $property->getName() === $property->getBlock()->getName() . '-' . $childName . '#1'
+                        && $property->getValue() === $value['hotspots'][1][$childName];
                 }),
                 $userId,
                 $webspaceKey,
                 $languageCode,
                 $segmentKey
             )->shouldBeCalled();
-
-            $propertyType = $types[$value['hotspots'][$i]['type']];
-            foreach ($propertyType['children'] as $childName => $childType) {
-                $this->textLineContentType->write(
-                    Argument::type(SuluNode::class),
-                    Argument::that(function($arg) use ($property, $value, $childName, $i) {
-                        return $arg instanceof BlockPropertyWrapper
-                            && $arg->getProperty()->getName() === $childName
-                            && $arg->getBlock() === $property
-                            && $arg->getName() === $arg->getBlock()->getName() . '-' . $childName . '#' . $i
-                            && $arg->getValue() === $value['hotspots'][$i][$childName];
-                    }),
-                    $userId,
-                    $webspaceKey,
-                    $languageCode,
-                    $segmentKey
-                )->shouldBeCalled();
-            }
         }
 
         $this->imageMapContentType->write(
@@ -384,7 +597,42 @@ class ImageMapContentTypeTest extends TestCase
         $languageCode = 'en';
         $segmentKey = 's';
 
-        $property = $this->property;
+        $types = [
+            'headline' => [
+                'children' => [
+                    'headline' => 'text_line',
+                ],
+            ],
+            'text' => [
+                'children' => [
+                    'text' => 'text_line',
+                ],
+            ],
+        ];
+
+        $property = new Property(
+            'imageMap',
+            '',
+            'image_map',
+            false,
+            true,
+            1,
+            1,
+            [],
+            [],
+            null,
+            'text'
+        );
+
+        foreach ($types as $key => $config) {
+            $type = new PropertyType($key, []);
+
+            foreach ($config['children'] as $childName => $childType) {
+                $type->addChild(new Property($childName, '', $childType));
+            }
+
+            $property->addType($type);
+        }
 
         $nodeProperty1 = $this->prophesize(\PHPCR\PropertyInterface::class);
         $nodeProperty1->getName()->willReturn('property1');
@@ -413,18 +661,78 @@ class ImageMapContentTypeTest extends TestCase
         $languageCode = 'en';
         $segmentKey = 's';
 
-        $value = $this->value;
-        $types = $this->types;
-        $property = $this->property;
+        $types = [
+            'headline' => [
+                'children' => [
+                    'headline' => 'text_line',
+                ],
+            ],
+            'text' => [
+                'children' => [
+                    'text' => 'text_line',
+                ],
+            ],
+        ];
+
+        $value = [
+            'imageId' => 1,
+            'hotspots' => [
+                [
+                    'type' => 'text',
+                    'text' => 'foo',
+                    'hotspot' => [
+                        'type' => 'circle',
+                        'left' => 0.3,
+                        'top' => 0.4,
+                        'radius' => 0.5,
+                    ],
+                ],
+                [
+                    'type' => 'headline',
+                    'headline' => 'bar',
+                    'hotspot' => [
+                        'type' => 'rectangle',
+                        'left' => 0.3,
+                        'top' => 0.4,
+                        'width' => 0.5,
+                        'height' => 0.6,
+                    ],
+                ],
+            ],
+        ];
+
+        $property = new Property(
+            'imageMap',
+            '',
+            'image_map',
+            false,
+            true,
+            1,
+            1,
+            [],
+            [],
+            null,
+            'text'
+        );
+
+        foreach ($types as $key => $config) {
+            $type = new PropertyType($key, []);
+
+            foreach ($config['children'] as $childName => $childType) {
+                $type->addChild(new Property($childName, '', $childType));
+            }
+
+            $property->addType($type);
+        }
 
         $this->textLineContentType->importData(
             Argument::type(SuluNode::class),
-            Argument::that(function($arg) use ($property, $value) {
-                return $arg instanceof BlockPropertyWrapper
-                    && 'imageId' === $arg->getProperty()->getName()
-                    && $arg->getBlock() === $property
-                    && $arg->getName() === $arg->getBlock()->getName() . '-imageId'
-                    && $arg->getValue() === $value['imageId'];
+            Argument::that(function($property) use ($property, $value) {
+                return $property instanceof BlockPropertyWrapper
+                    && 'imageId' === $property->getProperty()->getName()
+                    && $property->getBlock() === $property
+                    && $property->getName() === $property->getBlock()->getName() . '-imageId'
+                    && $property->getValue() === $value['imageId'];
             }),
             $value['imageId'],
             $userId,
@@ -435,12 +743,12 @@ class ImageMapContentTypeTest extends TestCase
 
         $this->textLineContentType->importData(
             Argument::type(SuluNode::class),
-            Argument::that(function($arg) use ($property, $value) {
-                return $arg instanceof BlockPropertyWrapper
-                    && 'length' === $arg->getProperty()->getName()
-                    && $arg->getBlock() === $property
-                    && $arg->getName() === $arg->getBlock()->getName() . '-length'
-                    && $arg->getValue() === \count($value['hotspots']);
+            Argument::that(function($property) use ($property, $value) {
+                return $property instanceof BlockPropertyWrapper
+                    && 'length' === $property->getProperty()->getName()
+                    && $property->getBlock() === $property
+                    && $property->getName() === $property->getBlock()->getName() . '-length'
+                    && $property->getValue() === \count($value['hotspots']);
             }),
             \count($value['hotspots']),
             $userId,
@@ -449,57 +757,106 @@ class ImageMapContentTypeTest extends TestCase
             $segmentKey
         )->shouldBeCalled();
 
-        for ($i = 0; $i < \count($value['hotspots']); ++$i) {
+        $this->textLineContentType->importData(
+            Argument::type(SuluNode::class),
+            Argument::that(function($property) use ($property, $value) {
+                return $property instanceof BlockPropertyWrapper
+                    && 'type' === $property->getProperty()->getName()
+                    && $property->getBlock() === $property
+                    && $property->getName() === $property->getBlock()->getName() . '-type#0'
+                    && $property->getValue() === $value['hotspots'][0]['type'];
+            }),
+            $value['hotspots'][0]['type'],
+            $userId,
+            $webspaceKey,
+            $languageCode,
+            $segmentKey
+        )->shouldBeCalled();
+
+        $this->textLineContentType->importData(
+            Argument::type(SuluNode::class),
+            Argument::that(function($property) use ($property, $value) {
+                return $property instanceof BlockPropertyWrapper
+                    && 'hotspot' === $property->getProperty()->getName()
+                    && $property->getBlock() === $property
+                    && $property->getName() === $property->getBlock()->getName() . '-hotspot#0'
+                    && $property->getValue() === \json_encode($value['hotspots'][0]['hotspot']);
+            }),
+            \json_encode($value['hotspots'][0]['hotspot']),
+            $userId,
+            $webspaceKey,
+            $languageCode,
+            $segmentKey
+        )->shouldBeCalled();
+
+        $propertyType = $types[$value['hotspots'][0]['type']];
+        foreach ($propertyType['children'] as $childName => $childType) {
             $this->textLineContentType->importData(
                 Argument::type(SuluNode::class),
-                Argument::that(function($arg) use ($property, $value, $i) {
-                    return $arg instanceof BlockPropertyWrapper
-                        && 'type' === $arg->getProperty()->getName()
-                        && $arg->getBlock() === $property
-                        && $arg->getName() === $arg->getBlock()->getName() . '-type#' . $i
-                        && $arg->getValue() === $value['hotspots'][$i]['type'];
+                Argument::that(function($property) use ($property, $value, $childName) {
+                    return $property instanceof BlockPropertyWrapper
+                        && $property->getProperty()->getName() === $childName
+                        && $property->getBlock() === $property
+                        && $property->getName() === $property->getBlock()->getName() . '-' . $childName . '#0'
+                        && $property->getValue() === $value['hotspots'][0][$childName];
                 }),
-                $value['hotspots'][$i]['type'],
+                $value['hotspots'][0][$childName],
                 $userId,
                 $webspaceKey,
                 $languageCode,
                 $segmentKey
             )->shouldBeCalled();
+        }
 
+        $this->textLineContentType->importData(
+            Argument::type(SuluNode::class),
+            Argument::that(function($property) use ($property, $value) {
+                return $property instanceof BlockPropertyWrapper
+                    && 'type' === $property->getProperty()->getName()
+                    && $property->getBlock() === $property
+                    && $property->getName() === $property->getBlock()->getName() . '-type#1'
+                    && $property->getValue() === $value['hotspots'][1]['type'];
+            }),
+            $value['hotspots'][1]['type'],
+            $userId,
+            $webspaceKey,
+            $languageCode,
+            $segmentKey
+        )->shouldBeCalled();
+
+        $this->textLineContentType->importData(
+            Argument::type(SuluNode::class),
+            Argument::that(function($property) use ($property, $value) {
+                return $property instanceof BlockPropertyWrapper
+                    && 'hotspot' === $property->getProperty()->getName()
+                    && $property->getBlock() === $property
+                    && $property->getName() === $property->getBlock()->getName() . '-hotspot#1'
+                    && $property->getValue() === \json_encode($value['hotspots'][1]['hotspot']);
+            }),
+            \json_encode($value['hotspots'][1]['hotspot']),
+            $userId,
+            $webspaceKey,
+            $languageCode,
+            $segmentKey
+        )->shouldBeCalled();
+
+        $propertyType = $types[$value['hotspots'][1]['type']];
+        foreach ($propertyType['children'] as $childName => $childType) {
             $this->textLineContentType->importData(
                 Argument::type(SuluNode::class),
-                Argument::that(function($arg) use ($property, $value, $i) {
-                    return $arg instanceof BlockPropertyWrapper
-                        && 'hotspot' === $arg->getProperty()->getName()
-                        && $arg->getBlock() === $property
-                        && $arg->getName() === $arg->getBlock()->getName() . '-hotspot#' . $i
-                        && $arg->getValue() === \json_encode($value['hotspots'][$i]['hotspot']);
+                Argument::that(function($property) use ($property, $value, $childName) {
+                    return $property instanceof BlockPropertyWrapper
+                        && $property->getProperty()->getName() === $childName
+                        && $property->getBlock() === $property
+                        && $property->getName() === $property->getBlock()->getName() . '-' . $childName . '#1'
+                        && $property->getValue() === $value['hotspots'][1][$childName];
                 }),
-                \json_encode($value['hotspots'][$i]['hotspot']),
+                $value['hotspots'][1][$childName],
                 $userId,
                 $webspaceKey,
                 $languageCode,
                 $segmentKey
             )->shouldBeCalled();
-
-            $propertyType = $types[$value['hotspots'][$i]['type']];
-            foreach ($propertyType['children'] as $childName => $childType) {
-                $this->textLineContentType->importData(
-                    Argument::type(SuluNode::class),
-                    Argument::that(function($arg) use ($property, $value, $childName, $i) {
-                        return $arg instanceof BlockPropertyWrapper
-                            && $arg->getProperty()->getName() === $childName
-                            && $arg->getBlock() === $property
-                            && $arg->getName() === $arg->getBlock()->getName() . '-' . $childName . '#' . $i
-                            && $arg->getValue() === $value['hotspots'][$i][$childName];
-                    }),
-                    $value['hotspots'][$i][$childName],
-                    $userId,
-                    $webspaceKey,
-                    $languageCode,
-                    $segmentKey
-                )->shouldBeCalled();
-            }
         }
 
         $this->imageMapContentType->importData(
@@ -520,33 +877,104 @@ class ImageMapContentTypeTest extends TestCase
 
     public function testGetContentData(): void
     {
-        $types = $this->types;
-        $value = $this->value;
-        $property = $this->property;
+        $types = [
+            'headline' => [
+                'children' => [
+                    'headline' => 'text_line',
+                ],
+            ],
+            'text' => [
+                'children' => [
+                    'text' => 'text_line',
+                ],
+            ],
+        ];
+
+        $value = [
+            'imageId' => 1,
+            'hotspots' => [
+                [
+                    'type' => 'text',
+                    'text' => 'foo',
+                    'hotspot' => [
+                        'type' => 'circle',
+                        'left' => 0.3,
+                        'top' => 0.4,
+                        'radius' => 0.5,
+                    ],
+                ],
+                [
+                    'type' => 'headline',
+                    'headline' => 'bar',
+                    'hotspot' => [
+                        'type' => 'rectangle',
+                        'left' => 0.3,
+                        'top' => 0.4,
+                        'width' => 0.5,
+                        'height' => 0.6,
+                    ],
+                ],
+            ],
+        ];
+
+        $property = new Property(
+            'imageMap',
+            '',
+            'image_map',
+            false,
+            true,
+            1,
+            1,
+            [],
+            [],
+            null,
+            'text'
+        );
+
+        foreach ($types as $key => $config) {
+            $type = new PropertyType($key, []);
+
+            foreach ($config['children'] as $childName => $childType) {
+                $type->addChild(new Property($childName, '', $childType));
+            }
+
+            $property->addType($type);
+        }
 
         $image = $this->prophesize(Media::class);
 
         $this->singleMediaSelectionContentType->getContentData(
-            Argument::that(function($arg) use ($value) {
-                return $arg instanceof Property
-                    && 'image' === $arg->getName()
-                    && $arg->getValue() === ['id' => $value['imageId']];
+            Argument::that(function($property) use ($value) {
+                return $property instanceof Property
+                    && 'image' === $property->getName()
+                    && $property->getValue() === ['id' => $value['imageId']];
             })
         )->willReturn($image->reveal())->shouldBeCalled();
 
-        for ($i = 0; $i < \count($value['hotspots']); ++$i) {
-            $propertyType = $types[$value['hotspots'][$i]['type']];
-            foreach ($propertyType['children'] as $childName => $childType) {
-                $this->textLineContentType->getContentData(
-                    Argument::that(function($arg) use ($childName, $i, $value) {
-                        return $arg instanceof Property
-                            && $arg->getName() === $childName
-                            && $arg->getValue() === $value['hotspots'][$i][$childName];
-                    })
-                )->will(function($args) {
-                    return $args[0]->getValue();
-                })->shouldBeCalled();
-            }
+        $propertyType = $types[$value['hotspots'][0]['type']];
+        foreach ($propertyType['children'] as $childName => $childType) {
+            $this->textLineContentType->getContentData(
+                Argument::that(function($property) use ($childName, $value) {
+                    return $property instanceof Property
+                        && $property->getName() === $childName
+                        && $property->getValue() === $value['hotspots'][0][$childName];
+                })
+            )->will(function($arguments) {
+                return $arguments[0]->getValue();
+            })->shouldBeCalled();
+        }
+
+        $propertyType = $types[$value['hotspots'][1]['type']];
+        foreach ($propertyType['children'] as $childName => $childType) {
+            $this->textLineContentType->getContentData(
+                Argument::that(function($property) use ($childName, $value) {
+                    return $property instanceof Property
+                        && $property->getName() === $childName
+                        && $property->getValue() === $value['hotspots'][1][$childName];
+                })
+            )->will(function($arguments) {
+                return $arguments[0]->getValue();
+            })->shouldBeCalled();
         }
 
         $expectedContentData = [
@@ -564,29 +992,98 @@ class ImageMapContentTypeTest extends TestCase
 
     public function testGetViewData(): void
     {
-        $types = $this->types;
-        $value = $this->value;
-        $property = $this->property;
+        $types = [
+            'headline' => [
+                'children' => [
+                    'headline' => 'text_line',
+                ],
+            ],
+            'text' => [
+                'children' => [
+                    'text' => 'text_line',
+                ],
+            ],
+        ];
+
+        $value = [
+            'imageId' => 1,
+            'hotspots' => [
+                [
+                    'type' => 'text',
+                    'text' => 'foo',
+                    'hotspot' => [
+                        'type' => 'circle',
+                        'left' => 0.3,
+                        'top' => 0.4,
+                        'radius' => 0.5,
+                    ],
+                ],
+                [
+                    'type' => 'headline',
+                    'headline' => 'bar',
+                    'hotspot' => [
+                        'type' => 'rectangle',
+                        'left' => 0.3,
+                        'top' => 0.4,
+                        'width' => 0.5,
+                        'height' => 0.6,
+                    ],
+                ],
+            ],
+        ];
+
+        $property = new Property(
+            'imageMap',
+            '',
+            'image_map',
+            false,
+            true,
+            1,
+            1,
+            [],
+            [],
+            null,
+            'text'
+        );
+
+        foreach ($types as $key => $config) {
+            $type = new PropertyType($key, []);
+
+            foreach ($config['children'] as $childName => $childType) {
+                $type->addChild(new Property($childName, '', $childType));
+            }
+
+            $property->addType($type);
+        }
 
         $this->singleMediaSelectionContentType->getViewData(
-            Argument::that(function($arg) use ($value) {
-                return $arg instanceof Property
-                    && 'image' === $arg->getName()
-                    && $arg->getValue() === ['id' => $value['imageId']];
+            Argument::that(function($property) use ($value) {
+                return $property instanceof Property
+                    && 'image' === $property->getName()
+                    && $property->getValue() === ['id' => $value['imageId']];
             })
         )->willReturn([])->shouldBeCalled();
 
-        for ($i = 0; $i < \count($value['hotspots']); ++$i) {
-            $propertyType = $types[$value['hotspots'][$i]['type']];
-            foreach ($propertyType['children'] as $childName => $childType) {
-                $this->textLineContentType->getViewData(
-                    Argument::that(function($arg) use ($childName, $i, $value) {
-                        return $arg instanceof Property
-                            && $arg->getName() === $childName
-                            && $arg->getValue() === $value['hotspots'][$i][$childName];
-                    })
-                )->willReturn([])->shouldBeCalled();
-            }
+        $propertyType = $types[$value['hotspots'][0]['type']];
+        foreach ($propertyType['children'] as $childName => $childType) {
+            $this->textLineContentType->getViewData(
+                Argument::that(function($property) use ($childName, $value) {
+                    return $property instanceof Property
+                        && $property->getName() === $childName
+                        && $property->getValue() === $value['hotspots'][0][$childName];
+                })
+            )->willReturn([])->shouldBeCalled();
+        }
+
+        $propertyType = $types[$value['hotspots'][1]['type']];
+        foreach ($propertyType['children'] as $childName => $childType) {
+            $this->textLineContentType->getViewData(
+                Argument::that(function($property) use ($childName, $value) {
+                    return $property instanceof Property
+                        && $property->getName() === $childName
+                        && $property->getValue() === $value['hotspots'][1][$childName];
+                })
+            )->willReturn([])->shouldBeCalled();
         }
 
         $expectedContentData = [
@@ -617,14 +1114,75 @@ class ImageMapContentTypeTest extends TestCase
 
     public function testPreResolve(): void
     {
-        $value = $this->value;
-        $property = $this->property;
+        $value = [
+            'imageId' => 1,
+            'hotspots' => [
+                [
+                    'type' => 'text',
+                    'text' => 'foo',
+                    'hotspot' => [
+                        'type' => 'circle',
+                        'left' => 0.3,
+                        'top' => 0.4,
+                        'radius' => 0.5,
+                    ],
+                ],
+                [
+                    'type' => 'headline',
+                    'headline' => 'bar',
+                    'hotspot' => [
+                        'type' => 'rectangle',
+                        'left' => 0.3,
+                        'top' => 0.4,
+                        'width' => 0.5,
+                        'height' => 0.6,
+                    ],
+                ],
+            ],
+        ];
+
+        $types = [
+            'headline' => [
+                'children' => [
+                    'headline' => 'text_line',
+                ],
+            ],
+            'text' => [
+                'children' => [
+                    'text' => 'text_line',
+                ],
+            ],
+        ];
+
+        $property = new Property(
+            'imageMap',
+            '',
+            'image_map',
+            false,
+            true,
+            1,
+            1,
+            [],
+            [],
+            null,
+            'text'
+        );
+
+        foreach ($types as $key => $config) {
+            $type = new PropertyType($key, []);
+
+            foreach ($config['children'] as $childName => $childType) {
+                $type->addChild(new Property($childName, '', $childType));
+            }
+
+            $property->addType($type);
+        }
 
         $this->singleMediaSelectionContentType->preResolve(
-            Argument::that(function($arg) use ($value) {
-                return $arg instanceof Property
-                    && 'image' === $arg->getName()
-                    && $arg->getValue() === ['id' => $value['imageId']];
+            Argument::that(function($property) use ($value) {
+                return $property instanceof Property
+                    && 'image' === $property->getName()
+                    && $property->getValue() === ['id' => $value['imageId']];
             })
         )->shouldBeCalled();
 

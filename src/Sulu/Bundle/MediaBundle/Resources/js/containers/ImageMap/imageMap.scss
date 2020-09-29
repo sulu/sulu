@@ -1,8 +1,8 @@
 @import 'sulu-admin-bundle/containers/Application/colors.scss';
 
-$cardBackgroundColor: $white;
-$cardBorderColor: $silver;
-$cardErrorBorderColor: $persianRed;
+$backgroundColor: $white;
+$borderColor: $silver;
+$borderColorError: $persianRed;
 
 .single-item-selection {
     border-bottom-left-radius: 0;
@@ -10,17 +10,17 @@ $cardErrorBorderColor: $persianRed;
     border-bottom: 0;
 }
 
-.card {
-    background-color: $cardBackgroundColor;
-    border: 1px solid $cardBorderColor;
+.image-map {
+    background-color: $backgroundColor;
+    border: 1px solid $borderColor;
     border-radius: 0 0 3px 3px;
     width: 100%;
     overflow: hidden;
     padding: 30px 30px;
 
     &.error {
-        border-color: $cardErrorBorderColor;
-        border-top-color: $cardBorderColor;
+        border-color: $borderColorError;
+        border-top-color: $borderColor;
     }
 }
 
