@@ -32,7 +32,9 @@ ckeditorConfigRegistry.add((config) => ({
 }));
 ```
 
-The `PluginRegistry` has an `add` method which takes the plugin class for the CKEditor, while the `ConfigRegistry`
-takes a function, which receives the config which is already there. The return value of this function will be shallow
-merged with the previously existing config. You can reuse the old values from the config, as seen e.g. in the above code
-snippet.
+The `PluginRegistry` has an `add` method which takes the plugin class for the CKEditor. Please be aware that the
+plugin must be compatible with the ckeditor version used in your project (which can be outputted by executing
+`npm list @ckeditor/ckeditor5-core`). 
+The `ConfigRegistry` takes a function, which receives the config which is already there. The return value of this 
+function will be shallow merged with the previously existing config. You can reuse the old values from the config, 
+as seen e.g. in the above code snippet.
