@@ -212,6 +212,8 @@ class CollectionManagerTest extends TestCase
         $permissions = [5 => ['view' => true]];
         $this->accessControlManager->getPermissions(Collection::class, 1)->willReturn($permissions);
 
+        $this->accessControlManager->setPermissions(Collection::class, null, $permissions)->shouldBeCalled();
+
         $this->collectionManager->save(
             [
                 'locale' => 'de',
@@ -219,7 +221,5 @@ class CollectionManagerTest extends TestCase
                 'title' => 'Test',
             ]
         );
-
-        $this->accessControlManager->setPermissions(Collection::class, null, $permissions)->shouldBeCalled();
     }
 }
