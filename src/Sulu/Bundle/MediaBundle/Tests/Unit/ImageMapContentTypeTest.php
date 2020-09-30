@@ -20,7 +20,6 @@ use Sulu\Bundle\MediaBundle\Content\Types\ImageMapContentType;
 use Sulu\Bundle\MediaBundle\Content\Types\SingleMediaSelection;
 use Sulu\Component\Content\Compat\Block\BlockPropertyWrapper;
 use Sulu\Component\Content\Compat\Property;
-use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyType;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Document\Subscriber\PHPCR\SuluNode;

@@ -11,7 +11,7 @@
 
 namespace Sulu\Component\Content\Metadata\Parser;
 
-use Sulu\Component\Content\Exception\InvalidBlockDefaultTypeException;
+use Sulu\Component\Content\Exception\InvalidDefaultTypeException;
 use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\ComponentMetadata;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
@@ -111,7 +111,7 @@ class PropertiesXmlParser
             }
 
             if (!\in_array($result['default-type'], $typeNames)) {
-                throw new InvalidBlockDefaultTypeException($result['name'], $result['default-type'], $typeNames);
+                throw new InvalidDefaultTypeException($result['name'], $result['default-type'], $typeNames);
             }
         }
 

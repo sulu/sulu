@@ -36,7 +36,7 @@ class InvalidBlockDefaultTypeException extends \Exception
      */
     public function __construct(string $name, string $defaultType, array $availableTypes)
     {
-        @trigger_error('The InvalidBlockDefaultTypeException is deprecated since version 2.2 and will be removed in version 3.0. Use InvalidDefaultTypeException instead.', E_USER_DEPRECATED);
+        @\trigger_error('The InvalidBlockDefaultTypeException is deprecated since version 2.2 and will be removed in version 3.0. Use InvalidDefaultTypeException instead.', \E_USER_DEPRECATED);
 
         parent::__construct(\sprintf(
             'Block "%s" has invalid default-type "%s". Available types are %s',
