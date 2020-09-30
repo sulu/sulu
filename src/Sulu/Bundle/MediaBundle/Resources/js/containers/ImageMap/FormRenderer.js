@@ -75,7 +75,7 @@ export default class FormRenderer extends React.PureComponent<Props> {
                                 small={true}
                             >
                                 {value.map((hotspot, index) => (
-                                    <Tabs.Tab key={index}>{'#' + index + 1}</Tabs.Tab>
+                                    <Tabs.Tab key={index}>{'#' + (index + 1)}</Tabs.Tab>
                                 ))}
                             </Tabs>
                         </div>

@@ -5,87 +5,58 @@ import ModifiableCircle from './ModifiableCircle';
 import PositionNormalizer from './normalizers/PositionNormalizer';
 import RoundingNormalizer from './normalizers/RoundingNormalizer';
 import SizeNormalizer from './normalizers/SizeNormalizer';
+import withPercentageValues from './withPercentageValues';
 
 type Props = {
     containerHeight: number,
     containerWidth: number,
     disabled: boolean,
-    filled: boolean,
     label?: string,
-    maxRadius?: number,
-    minRadius?: number,
+    maxRadius: number | typeof undefined,
+    minRadius: number | typeof undefined,
     onChange: (value: ?SelectionData) => void,
     resizable: boolean,
     round: boolean,
+    skin: 'filled' | 'outlined',
     usePercentageValues: boolean,
     value: SelectionData | typeof undefined,
 };
 
-export default class CircleSelectionRenderer extends React.Component<Props> {
+class CircleSelectionRenderer extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
-        filled: false,
+        maxRadius: undefined,
+        minRadius: undefined,
         resizable: true,
         round: true,
+        skin: 'outlined',
         usePercentageValues: false,
     };
 
-    handleChange = (value: ?SelectionData) => {
-        const {onChange, containerWidth, containerHeight, usePercentageValues} = this.props;
-
-        if (!usePercentageValues || !value) {
-            onChange(value);
-
-            return;
-        }
-
-        const {left, top, radius = 0} = value;
-
-        onChange({
-            left: left / containerWidth,
-            top: top / containerHeight,
-            radius: radius / containerWidth,
-        });
-    };
-
     get value() {
-        const {value, containerWidth, containerHeight, usePercentageValues} = this.props;
+        const {value} = this.props;
 
         if (!value) {
             return this.getMaximumSelection();
         }
 
-        if (!usePercentageValues) {
-            return value;
-        }
-
-        const {left, top, radius = 0} = value;
-
-        return {
-            left: left * containerWidth,
-            top: top * containerHeight,
-            radius: radius * containerWidth,
-        };
+        return value;
     }
 
     componentDidMount() {
         this.setInitialValue();
     }
 
-    componentDidUpdate() {
-        this.setInitialValue();
-    }
-
     setInitialValue = () => {
-        const {value} = this.props;
+        const {onChange, value} = this.props;
 
         if (!value) {
-            this.handleChange(this.value);
+            onChange(this.value);
         }
     };
 
     static createNormalizers(props: Props): Array<Normalizer> {
-        const {containerWidth, containerHeight, maxRadius, minRadius, usePercentageValues, round, resizable} = props;
+        const {containerWidth, containerHeight, maxRadius, minRadius, round, resizable} = props;
 
         if (!containerWidth || !containerHeight) {
             return [];
@@ -99,20 +70,17 @@ export default class CircleSelectionRenderer extends React.Component<Props> {
         ];
 
         if (resizable) {
-            const calculatedMaxRadius = usePercentageValues && maxRadius ? maxRadius * containerWidth : maxRadius;
-            const calculatedMinRadius = usePercentageValues && minRadius ? minRadius * containerWidth : minRadius;
-
             normalizers.push(
                 new SizeNormalizer(
                     containerWidth,
                     containerHeight,
-                    calculatedMaxRadius,
-                    calculatedMinRadius
+                    maxRadius,
+                    minRadius
                 )
             );
         }
 
-        if (round && !usePercentageValues) {
+        if (round) {
             normalizers.push(new RoundingNormalizer());
         }
 
@@ -128,11 +96,11 @@ export default class CircleSelectionRenderer extends React.Component<Props> {
     }
 
     getMaximumSelection = (): SelectionData => {
-        const {containerWidth, containerHeight, resizable} = this.props;
+        const {containerWidth, containerHeight, resizable, value} = this.props;
 
-        const radius = (containerWidth && containerHeight && resizable)
+        const radius = resizable
             ? Math.min(containerWidth, containerHeight) / 2
-            : 0;
+            : (value && value.radius) || 0;
 
         return this.normalize(
             this.centerSelection({
@@ -157,37 +125,41 @@ export default class CircleSelectionRenderer extends React.Component<Props> {
     }
 
     handleCircleDoubleClick = () => {
-        const {resizable} = this.props;
+        const {onChange, resizable} = this.props;
 
         if (resizable) {
-            this.handleChange(this.getMaximumSelection());
+            onChange(this.getMaximumSelection());
 
             return;
         }
 
-        this.handleChange(this.normalize(this.centerSelection(this.value)));
+        onChange(this.normalize(this.centerSelection(this.value)));
     };
 
     handleCircleChange = (value: SelectionData) => {
-        this.handleChange(this.normalize(value));
+        const {onChange} = this.props;
+
+        onChange(this.normalize(value));
     };
 
     render() {
-        const {disabled, resizable, label, filled} = this.props;
-        const {left, top, radius = 0} = this.value;
+        const {disabled, label, resizable, skin} = this.props;
+        const {left, top, radius} = this.value;
 
         return (
             <ModifiableCircle
                 disabled={disabled}
-                filled={filled}
                 label={label}
                 left={left}
                 onChange={this.handleCircleChange}
                 onDoubleClick={this.handleCircleDoubleClick}
                 radius={radius}
                 resizable={resizable}
+                skin={skin}
                 top={top}
             />
         );
     }
 }
+
+export default withPercentageValues(CircleSelectionRenderer);

@@ -116,8 +116,8 @@ class ImageRenderer extends React.Component<Props> {
         return (
             <CircleSelection.Renderer
                 {...this.getCommonSelectionProps(hotspot, index)}
-                filled={false}
                 resizable={true}
+                skin="outlined"
             />
         );
     };
@@ -126,8 +126,8 @@ class ImageRenderer extends React.Component<Props> {
         return (
             <CircleSelection.Renderer
                 {...this.getCommonSelectionProps(hotspot, index)}
-                filled={true}
                 resizable={false}
+                skin="filled"
             />
         );
     };
@@ -137,7 +137,6 @@ class ImageRenderer extends React.Component<Props> {
             <RectangleSelection.Renderer
                 {...this.getCommonSelectionProps(hotspot, index)}
                 backdrop={false}
-                forceRatio={false}
                 minSizeNotification={false}
             />
         );
@@ -172,7 +171,6 @@ class ImageRenderer extends React.Component<Props> {
                     {this.imageUrl &&
                         <img
                             className={imageRendererStyles.image}
-                            key={this.imageUrl}
                             src={this.imageUrl}
                         />
                     }

@@ -23,7 +23,7 @@ $resizeHandleBoxShadowColor: rgba($black, .3);
         pointer-events: none;
     }
 
-    &.backdrop {
+    &.has-backdrop {
         background-color: $rectangleBackgroundWithBackdrop;
     }
 }

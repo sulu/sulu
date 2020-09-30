@@ -6,71 +6,42 @@ import PositionNormalizer from './normalizers/PositionNormalizer';
 import RatioNormalizer from './normalizers/RatioNormalizer';
 import RoundingNormalizer from './normalizers/RoundingNormalizer';
 import SizeNormalizer from './normalizers/SizeNormalizer';
+import withPercentageValues from './withPercentageValues';
 
 type Props = {
     backdrop: boolean,
     containerHeight: number,
     containerWidth: number,
     disabled: boolean,
-    forceRatio: boolean,
     label?: string,
-    minHeight?: number,
+    minHeight: number | typeof undefined,
     minSizeNotification: boolean,
-    minWidth?: number,
+    minWidth: number | typeof undefined,
     onChange: (s: ?SelectionData) => void,
     round: boolean,
     usePercentageValues: boolean,
     value: SelectionData | typeof undefined,
 };
 
-export default class RectangleSelectionRenderer extends React.Component<Props> {
+class RectangleSelectionRenderer extends React.Component<Props> {
     static defaultProps = {
         backdrop: true,
         disabled: false,
-        forceRatio: true,
+        minHeight: undefined,
         minSizeNotification: true,
+        minWidth: undefined,
         round: true,
         usePercentageValues: false,
     };
 
-    handleChange = (value: ?SelectionData) => {
-        const {onChange, containerWidth, containerHeight, usePercentageValues} = this.props;
-
-        if (!usePercentageValues || !value) {
-            onChange(value);
-
-            return;
-        }
-
-        const {left, top, width, height} = value;
-
-        onChange({
-            left: left / containerWidth,
-            top: top / containerHeight,
-            width: width / containerWidth,
-            height: height / containerHeight,
-        });
-    };
-
     get value() {
-        const {value, containerWidth, containerHeight, usePercentageValues} = this.props;
+        const {value} = this.props;
 
         if (!value) {
             return this.getMaximumSelection();
         }
 
-        if (!usePercentageValues) {
-            return value;
-        }
-
-        const {left, top, width, height} = value;
-
-        return {
-            left: left * containerWidth,
-            top: top * containerHeight,
-            width: width * containerWidth,
-            height: height * containerHeight,
-        };
+        return value;
     }
 
     componentDidMount() {
@@ -82,10 +53,10 @@ export default class RectangleSelectionRenderer extends React.Component<Props> {
     }
 
     setInitialValue = () => {
-        const {value} = this.props;
+        const {onChange, value} = this.props;
 
         if (!value) {
-            this.handleChange(this.value);
+            onChange(this.value);
         }
     };
 
@@ -93,10 +64,8 @@ export default class RectangleSelectionRenderer extends React.Component<Props> {
         const {
             containerWidth,
             containerHeight,
-            minWidth = 0,
-            minHeight = 0,
-            forceRatio,
-            usePercentageValues,
+            minWidth,
+            minHeight,
             round,
         } = props;
 
@@ -104,15 +73,12 @@ export default class RectangleSelectionRenderer extends React.Component<Props> {
             return [];
         }
 
-        const calculatedMinWidth = usePercentageValues && minWidth ? minWidth * containerWidth : minWidth;
-        const calculatedMinHeight = usePercentageValues && minHeight ? minHeight * containerHeight : minHeight;
-
         let normalizers = [
             new SizeNormalizer(
                 containerWidth,
                 containerHeight,
-                calculatedMinWidth,
-                calculatedMinHeight
+                minWidth,
+                minHeight
             ),
             new PositionNormalizer(
                 containerWidth,
@@ -120,19 +86,19 @@ export default class RectangleSelectionRenderer extends React.Component<Props> {
             ),
         ];
 
-        if (forceRatio && minWidth && minHeight) {
+        if (minWidth && minHeight) {
             normalizers = [
                 ...normalizers,
                 new RatioNormalizer(
                     containerWidth,
                     containerHeight,
-                    calculatedMinWidth,
-                    calculatedMinHeight
+                    minWidth,
+                    minHeight
                 ),
             ];
         }
 
-        if (round && !usePercentageValues) {
+        if (round) {
             normalizers = [
                 ...normalizers,
                 new RoundingNormalizer(),
@@ -180,13 +146,16 @@ export default class RectangleSelectionRenderer extends React.Component<Props> {
     }
 
     handleRectangleDoubleClick = () => {
-        this.handleChange(this.getMaximumSelection());
+        const {onChange} = this.props;
+
+        onChange(this.getMaximumSelection());
     };
 
     handleRectangleChange = (change: RectangleChange) => {
         const {value} = this;
+        const {onChange} = this.props;
 
-        this.handleChange(this.normalize({
+        onChange(this.normalize({
             left: value.left + change.left,
             top: value.top + change.top,
             height: value.height + change.height,
@@ -204,7 +173,6 @@ export default class RectangleSelectionRenderer extends React.Component<Props> {
             minWidth,
             disabled,
             label,
-            usePercentageValues,
         } = this.props;
         const {height, left, top, width} = this.value;
 
@@ -215,10 +183,7 @@ export default class RectangleSelectionRenderer extends React.Component<Props> {
 
         let minSizeReached = false;
         if (minSizeNotification) {
-            const calculatedMinWidth = usePercentageValues && minWidth ? minWidth * containerWidth : minWidth;
-            const calculatedMinHeight = usePercentageValues && minHeight ? minHeight * containerHeight : minHeight;
-
-            if (height <= (calculatedMinHeight || 0) && width <= (calculatedMinWidth || 0)) {
+            if (height <= (minHeight || 0) && width <= (minWidth || 0)) {
                 minSizeReached = true;
             }
         }
@@ -239,3 +204,5 @@ export default class RectangleSelectionRenderer extends React.Component<Props> {
         );
     }
 }
+
+export default withPercentageValues(RectangleSelectionRenderer);

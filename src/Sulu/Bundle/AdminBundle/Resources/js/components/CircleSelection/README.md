@@ -63,6 +63,39 @@ imageLoaded
     : null
 ```
 
+If the values should be in percent, set `usePercentageValues={true}`. Be aware, that the `radius` is relative to the `containerWidth` then.
+
+```javascript
+// preload image
+let image = new Image();
+image.src = 'https://unsplash.it/800/500';
+
+const [imageLoaded, setImageLoaded] = React.useState(image.complete);
+const [selection, setSelection] = React.useState({radius: 0.1, top: 0.5, left: 0.5});
+
+image.onload = () => setImageLoaded(true);
+
+imageLoaded
+    ? <div>
+        <CircleSelection
+            label="1"
+            minRadius={0.06}
+            onChange={setSelection}
+            usePercentageValues={true}
+            value={selection}
+        >
+            <img src="https://unsplash.it/800/500"/>
+        </CircleSelection>
+
+        <p>
+            Radius: {selection.radius},
+            Top: {selection.top}, 
+            Left: {selection.left}
+        </p>
+    </div>
+    : null
+```
+
 There is also the possibility to render a PointSelection by setting `resizable={false}` and omitting the radius.
 
 ```javascript

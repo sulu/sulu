@@ -10,7 +10,6 @@ type Props = {
     backdrop: boolean,
     children?: Node,
     disabled: boolean,
-    forceRatio: boolean,
     label?: string,
     minHeight?: number,
     minSizeNotification: boolean,
@@ -28,7 +27,6 @@ class RectangleSelection extends React.Component<Props & {
     static defaultProps = {
         backdrop: true,
         disabled: false,
-        forceRatio: true,
         minSizeNotification: true,
         round: true,
         usePercentageValues: false,
@@ -41,7 +39,6 @@ class RectangleSelection extends React.Component<Props & {
             containerHeight,
             containerWidth,
             disabled,
-            forceRatio,
             label,
             minHeight,
             minSizeNotification,
@@ -60,7 +57,6 @@ class RectangleSelection extends React.Component<Props & {
                     containerHeight={containerHeight}
                     containerWidth={containerWidth}
                     disabled={disabled}
-                    forceRatio={forceRatio}
                     label={label}
                     minHeight={minHeight}
                     minSizeNotification={minSizeNotification}

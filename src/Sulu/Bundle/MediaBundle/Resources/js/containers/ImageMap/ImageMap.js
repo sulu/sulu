@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import React, {Fragment} from 'react';
 import {observer} from 'mobx-react';
 import type {IObservableValue} from 'mobx';
 import {action, computed, observable, toJS} from 'mobx';
@@ -170,7 +170,7 @@ class ImageMap extends React.Component<Props> {
         );
 
         return (
-            <React.Fragment>
+            <Fragment>
                 <SingleMediaSelection
                     className={!!value.imageId && imageMapStyles.singleItemSelection || undefined}
                     disabled={disabled}
@@ -215,7 +215,7 @@ class ImageMap extends React.Component<Props> {
                         </div>
                     </div>
                 }
-            </React.Fragment>
+            </Fragment>
         );
     }
 }

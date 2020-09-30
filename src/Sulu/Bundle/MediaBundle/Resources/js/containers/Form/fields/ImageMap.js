@@ -25,13 +25,6 @@ export default class ImageMap extends React.Component<FieldTypeProps<Value>> {
         this.handleFinish();
     };
 
-    get defaultValue(): Value {
-        return {
-            imageId: undefined,
-            hotspots: [],
-        };
-    }
-
     getHotspotFormSchemaType = (type: ?string) => {
         const {defaultType, schemaPath, types} = this.props;
 
@@ -69,7 +62,9 @@ export default class ImageMap extends React.Component<FieldTypeProps<Value>> {
         const {onChange, value: oldValues} = this.props;
 
         if (!oldValues) {
-            return;
+            throw new Error(
+                'It is impossible that this ImageMap has no value. This should not happen and is likely a bug.'
+            );
         }
 
         const newValues = toJS(oldValues);
@@ -147,7 +142,7 @@ export default class ImageMap extends React.Component<FieldTypeProps<Value>> {
                 renderHotspotForm={this.renderHotspotForm}
                 types={formTypes}
                 valid={!error}
-                value={value || this.defaultValue}
+                value={value || undefined}
             />
         );
     }

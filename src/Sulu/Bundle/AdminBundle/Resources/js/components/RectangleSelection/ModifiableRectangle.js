@@ -90,7 +90,7 @@ class ModifiableRectangle extends React.Component<Props> {
             modifiableRectangleStyles.rectangle,
             {
                 [modifiableRectangleStyles.disabled]: disabled,
-                [modifiableRectangleStyles.backdrop]: !!backdropSize,
+                [modifiableRectangleStyles.hasBackdrop]: !!backdropSize,
             }
         );
 

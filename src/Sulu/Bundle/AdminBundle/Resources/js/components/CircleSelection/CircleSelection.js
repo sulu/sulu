@@ -9,13 +9,13 @@ import circleSelectionStyles from './circleSelection.scss';
 type Props = {
     children?: Node,
     disabled: boolean,
-    filled: boolean,
     label?: string,
     maxRadius?: number,
     minRadius?: number,
     onChange: (value: ?SelectionData) => void,
     resizable: boolean,
     round: boolean,
+    skin: 'filled' | 'outlined',
     usePercentageValues: boolean,
     value: SelectionData | typeof undefined,
 };
@@ -26,9 +26,9 @@ class CircleSelection extends React.Component<Props & {
 }> {
     static defaultProps = {
         disabled: false,
-        filled: false,
         resizable: true,
         round: true,
+        skin: 'outlined',
         usePercentageValues: false,
     };
 
@@ -38,14 +38,14 @@ class CircleSelection extends React.Component<Props & {
             containerHeight,
             containerWidth,
             disabled,
-            filled,
             label,
             maxRadius,
             minRadius,
             onChange,
-            usePercentageValues,
             resizable,
             round,
+            skin,
+            usePercentageValues,
             value,
         } = this.props;
 
@@ -56,13 +56,13 @@ class CircleSelection extends React.Component<Props & {
                     containerHeight={containerHeight}
                     containerWidth={containerWidth}
                     disabled={disabled}
-                    filled={filled}
                     label={label}
                     maxRadius={maxRadius}
                     minRadius={minRadius}
                     onChange={onChange}
                     resizable={resizable}
                     round={round}
+                    skin={skin}
                     usePercentageValues={usePercentageValues}
                     value={value}
                 />

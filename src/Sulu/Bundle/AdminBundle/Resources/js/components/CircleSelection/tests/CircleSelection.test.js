@@ -92,7 +92,9 @@ test('The component should not allow the selection to move over the borders', ()
         </CircleSelection>
     );
 
-    view.find(CircleSelectionRenderer).first().instance().handleCircleChange({radius: 0, left: -10, top: -20});
+    view.find(CircleSelectionRenderer).first().children().first().instance().handleCircleChange(
+        {radius: 0, left: -10, top: -20}
+    );
     expect(changeSpy).toBeCalledWith({radius: 0, top: 0, left: 0});
 });
 
@@ -110,7 +112,9 @@ test('The component should not allow the selection to be bigger than the contain
         </CircleSelection>
     );
 
-    view.find(CircleSelectionRenderer).first().instance().handleCircleChange({radius: 5000, left: 0, top: 0});
+    view.find(CircleSelectionRenderer).first().children().first().instance().handleCircleChange(
+        {radius: 5000, left: 0, top: 0}
+    );
     expect(changeSpy).toBeCalledWith({radius: 2236, top: 0, left: 0});
 });
 

@@ -5,6 +5,6 @@ export interface Normalizer {
 
 export type SelectionData = {
     left: number,
-    radius?: number,
+    radius: number,
     top: number,
 };

@@ -1,7 +1,6 @@
 This is a general purpose component to select an area on all kind of content. The properties allow to specify a minimum
 width as well as a minimum height, which the selection box cannot undercut. If both a minimum height and a minimum width
-is given, the ratio between these two is enforced. You can set `forceRatio={false}` to prevent this behaviour.
-A double click on the selection box centers it and maximizes its size.
+is given, the ratio between these two is enforced. A double click on the selection box centers it and maximizes its size.
 
 ```javascript
 const initialSelection = {width: 300, height: 100, left: 50, top: 50};
@@ -65,6 +64,39 @@ imageLoaded
     : null
 ```
 
+If the values should be in percent, set `usePercentageValues={true}`.
+
+```javascript
+// preload image
+let image = new Image();
+image.src = 'https://unsplash.it/800/500';
+
+const [imageLoaded, setImageLoaded] = React.useState(image.complete);
+const [selection, setSelection] = React.useState({width: 0.5, height: 0.5, top: 0.25, left: 0.25});
+
+image.onload = () => setImageLoaded(true);
+
+imageLoaded
+    ? <div>
+        <RectangleSelection
+            minWidth={0.2}
+            onChange={setSelection}
+            value={selection}
+            usePercentageValues={true}
+        >
+            <img src="https://unsplash.it/800/500"/>
+        </RectangleSelection>
+
+        <p>
+            Width: {selection.width}, 
+            Height: {selection.height}, 
+            Top: {selection.top}, 
+            Left: {selection.left}
+        </p>
+    </div>
+    : null
+```
+
 There is also the possibility, to render multiple RectangleSelections for one single container. But you should use the
 `withContainerSize` hoc to automatically pass `containerWidth` and `containerHeight` to the `RectangleSelectionRenderer`
 components. For the sake of simplicity it's hardcoded in this example.
@@ -100,9 +132,7 @@ imageLoaded
             <RectangleSelection.Renderer
                 backdrop={false}
                 minSizeNotification={false}
-                minWidth={300}
                 minHeight={200}
-                forceRatio={false}
                 disabled={active !== 2}
                 onChange={setSecondSelection}
                 value={secondSelection}

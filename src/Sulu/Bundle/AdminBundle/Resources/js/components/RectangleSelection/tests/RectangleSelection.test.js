@@ -122,7 +122,7 @@ test('The component should not allow the selection to move over the borders', ()
         </RectangleSelection>
     );
 
-    view.find(RectangleSelectionRenderer).first().instance().handleRectangleChange({
+    view.find(RectangleSelectionRenderer).first().children().first().instance().handleRectangleChange({
         width: 0,
         height: 0,
         left: -10,
@@ -145,7 +145,7 @@ test('The component should not allow the selection to be bigger than the contain
         </RectangleSelection>
     );
 
-    view.find(RectangleSelectionRenderer).first().instance().handleRectangleChange({
+    view.find(RectangleSelectionRenderer).first().children().first().instance().handleRectangleChange({
         width: 10,
         height: 20,
         left: 0,
@@ -170,7 +170,7 @@ test('The component should enforce a ratio on the selection if minWidth and minH
         </RectangleSelection>
     );
 
-    view.find(RectangleSelectionRenderer).first().instance().handleRectangleChange({
+    view.find(RectangleSelectionRenderer).first().children().first().instance().handleRectangleChange({
         width: -10,
         height: -250,
         left: 0,

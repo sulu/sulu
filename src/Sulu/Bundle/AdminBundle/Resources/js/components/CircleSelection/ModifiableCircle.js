@@ -9,13 +9,13 @@ import modifiableCircleStyles from './modifiableCircle.scss';
 
 type Props = {
     disabled: boolean,
-    filled: boolean,
     label: string | typeof undefined,
     left: number,
     onChange?: (value: SelectionData) => void,
     onDoubleClick?: () => void,
     radius: number,
     resizable: boolean,
+    skin: 'filled' | 'outlined',
     top: number,
 };
 
@@ -27,10 +27,10 @@ class ModifiableCircle extends React.Component<Props> {
 
     static defaultProps = {
         disabled: false,
-        filled: false,
         left: 0,
         radius: 0,
         resizable: true,
+        skin: 'outlined',
         top: 0,
     };
 
@@ -115,7 +115,7 @@ class ModifiableCircle extends React.Component<Props> {
     handleDoubleClick = this.props.onDoubleClick;
 
     render() {
-        const {disabled, filled, resizable, label, radius, left, top} = this.props;
+        const {disabled, resizable, label, radius, left, skin, top} = this.props;
         const width = !resizable && radius === 0 ? 30 : radius * 2;
         const labelSize = radius === 0 ? 14 : Math.sqrt(radius) * 5;
 
@@ -123,7 +123,7 @@ class ModifiableCircle extends React.Component<Props> {
             modifiableCircleStyles.circle,
             {
                 [modifiableCircleStyles.disabled]: disabled,
-                [modifiableCircleStyles.filled]: filled,
+                [modifiableCircleStyles.filled]: skin === 'filled',
             }
         );
 
