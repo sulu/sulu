@@ -102,14 +102,14 @@ final class InitCommand extends Command
             }
 
             $permissionAdded = false;
-            $existSecurityContexts = [];
+            $existingSecurityContexts = [];
 
             foreach ($role->getPermissions() as $permission) {
-                $existSecurityContexts[] = $permission->getContext();
+                $existingSecurityContexts[] = $permission->getContext();
             }
 
             foreach ($securityContextsFlat as $securityContext) {
-                if (\in_array($securityContext, $existSecurityContexts)) {
+                if (\in_array($securityContext, $existingSecurityContexts)) {
                     continue;
                 }
 
