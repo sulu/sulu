@@ -16,15 +16,15 @@ use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\SimpleContentType;
 
 /**
- * ContentType for Date.
+ * ContentType for DateTime.
  */
-class Date extends SimpleContentType
+class DateTime extends SimpleContentType
 {
-    const FORMAT = 'Y-m-d';
+    const FORMAT = 'Y-m-d\TH:i:s';
 
     public function __construct()
     {
-        parent::__construct('Date');
+        parent::__construct('DateTime');
     }
 
     public function write(
@@ -36,6 +36,7 @@ class Date extends SimpleContentType
         $segmentKey
     ) {
         $value = $property->getValue();
+
         if (null != $value) {
             $value = \DateTime::createFromFormat(static::FORMAT, $value);
 
@@ -60,5 +61,16 @@ class Date extends SimpleContentType
         $property->setValue($value);
 
         return $value;
+    }
+
+    public function getContentData(PropertyInterface $property)
+    {
+        $value = $property->getValue();
+
+        if (!empty($value)) {
+            return \DateTime::createFromFormat(static::FORMAT, $value);
+        }
+
+        return null;
     }
 }

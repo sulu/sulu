@@ -25,13 +25,14 @@
         </p>
     {% endif %}
 
-    <p>{{ content.tag_selection | join(', ') }}</p>
+    <p>{{ content.tag_selection|join(', ') }}</p>
     <p>{{ content.single_select }}</p>
-    <p>{{ content.select | join(', ') }}</p>
+    <p>{{ content.select|join(', ') }}</p>
     <p>{{ content.checkbox }}</p>
     <p>{{ content.color }}</p>
     <p>{{ content.time }}</p>
     <p>{{ content.date }}</p>
+    <p>{{ content.datetime  ? content.datetime.format('Y-m-d H:i') : '' }}</p>
     <p>{{ content.email }}</p>
     <p>{{ content.link }}</p>
 
@@ -39,11 +40,11 @@
         <p>{{ sulu_content_load(content.single_page_selection).content.title }}</p>
     {% endif %}
 
-    <p>{{ content.page_selection | map(page => page.title) | join(', ') }}</p>
-    <p>{{ content.teaser_selection | map(teaser => teaser.title) | join(', ') }}</p>
-    <p>{{ content.smart_content | map(page => page.title) | join(', ') }}</p>
-    <p>{{ content.snippet_selection | map(snippet => snippet.title) | join(', ') }}</p>
-    <p>{{ content.category_selection | map(category => category.name) | join(', ') }}</p>
+    <p>{{ content.page_selection|map(page => page.title)|join(', ') }}</p>
+    <p>{{ content.teaser_selection|map(teaser => teaser.title)|join(', ') }}</p>
+    <p>{{ content.smart_content|map(page => page.title)|join(', ') }}</p>
+    <p>{{ content.snippet_selection|map(snippet => snippet.title)|join(', ') }}</p>
+    <p>{{ content.category_selection|map(category => category.name)|join(', ') }}</p>
 
     {% if content.single_media_selection %}
         <img src="{{ content.single_media_selection.thumbnails['sulu-260x'] }}" />
@@ -57,10 +58,14 @@
         <p>{{ content.single_account_selection.name }}</p>
     {% endif %}
 
+    <p>{{ content.account_selection|map(account => account.name)|join(', ') }}</p>
+
     {% if content.single_contact_selection %}
         <p>{{ content.single_contact_selection.fullName }}</p>
     {% endif %}
 
-    <p>{{ content.contact_account_selection | map(contact => contact.name ?? contact.fullName) | join(', ') }}</p>
+    <p>{{ content.contact_selection|map(contact => contact.fullName)|join(', ') }}</p>
+
+    <p>{{ content.contact_account_selection|map(contact => contact.name ?? contact.fullName)|join(', ') }}</p>
     <p>{{ content.text_area }}</p>
 {% endblock %}
