@@ -136,7 +136,7 @@ export default class ExportToolbarAction extends AbstractListToolbarAction {
             newLine: this.newLine,
             ...this.listStore.options,
             filter: filters,
-            search: search
+            search: search,
         }));
         this.showOverlay = false;
     };
