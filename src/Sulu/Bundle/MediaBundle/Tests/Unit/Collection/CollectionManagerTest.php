@@ -57,11 +57,6 @@ class CollectionManagerTest extends TestCase
      */
     private $collectionManager;
 
-    /**
-     * @var AccessControlManager
-     */
-    private $accessControlManager;
-
     public function setUp(): void
     {
         $this->collectionRepository = $this->prophesize(CollectionRepository::class);
@@ -69,7 +64,6 @@ class CollectionManagerTest extends TestCase
         $this->formatManager = $this->prophesize(FormatManagerInterface::class);
         $this->userRepository = $this->prophesize(UserRepositoryInterface::class);
         $this->entityManager = $this->prophesize(EntityManager::class);
-        $this->accessControlManager = $this->prophesize(AccessControlManager::class);
 
         $this->collectionManager = new CollectionManager(
             $this->collectionRepository->reveal(),
@@ -79,9 +73,7 @@ class CollectionManagerTest extends TestCase
             $this->entityManager->reveal(),
             null,
             'sulu-50x50',
-            ['view' => 64],
-            $this->accessControlManager->reveal(),
-            Collection::class
+            ['view' => 64]
         );
     }
 
@@ -199,27 +191,5 @@ class CollectionManagerTest extends TestCase
 
         $this->entityManager->persist($collectionEntity)->shouldBeCalled();
         $this->entityManager->flush()->shouldBeCalled();
-    }
-
-    public function testSaveWithParentPermissions()
-    {
-        $collectionEntity = $this->createEntity(1, 'de');
-        $this->collectionRepository->findCollectionById(1)->willReturn($collectionEntity);
-        $this->collectionRepository->countMedia($collectionEntity)->willReturn(0);
-        $this->collectionRepository->countSubCollections($collectionEntity)->willReturn(0);
-        $this->mediaRepository->findMedia(Argument::cetera())->willReturn([]);
-
-        $permissions = [5 => ['view' => true]];
-        $this->accessControlManager->getPermissions(Collection::class, 1)->willReturn($permissions);
-
-        $this->accessControlManager->setPermissions(Collection::class, null, $permissions)->shouldBeCalled();
-
-        $this->collectionManager->save(
-            [
-                'locale' => 'de',
-                'parent' => 1,
-                'title' => 'Test',
-            ]
-        );
     }
 }

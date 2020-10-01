@@ -29,7 +29,6 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescrip
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
-use Sulu\Component\Security\Authorization\AccessControl\AccessControlManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -97,16 +96,6 @@ class CollectionManager implements CollectionManagerInterface
      */
     private $permissions;
 
-    /**
-     * @var AccessControlManager
-     */
-    private $accessControlManager;
-
-    /**
-     * @var string
-     */
-    private $collectionClass;
-
     public function __construct(
         CollectionRepositoryInterface $collectionRepository,
         MediaRepositoryInterface $mediaRepository,
@@ -115,9 +104,7 @@ class CollectionManager implements CollectionManagerInterface
         EntityManager $em,
         TokenStorageInterface $tokenStorage = null,
         $collectionPreviewFormat,
-        $permissions,
-        AccessControlManager $accessControlManager,
-        string $collectionClass
+        $permissions
     ) {
         $this->collectionRepository = $collectionRepository;
         $this->mediaRepository = $mediaRepository;
@@ -127,8 +114,6 @@ class CollectionManager implements CollectionManagerInterface
         $this->tokenStorage = $tokenStorage;
         $this->collectionPreviewFormat = $collectionPreviewFormat;
         $this->permissions = $permissions;
-        $this->accessControlManager = $accessControlManager;
-        $this->collectionClass = $collectionClass;
     }
 
     public function getById(
@@ -445,16 +430,6 @@ class CollectionManager implements CollectionManagerInterface
 
         $this->em->persist($collectionEntity);
         $this->em->flush();
-
-        $parentCollection = $collectionEntity->getParent();
-
-        if ($parentCollection) {
-            $this->accessControlManager->setPermissions(
-                $this->collectionClass,
-                $collection->getId(),
-                $this->accessControlManager->getPermissions($this->collectionClass, $parentCollection->getId())
-            );
-        }
 
         return $collection;
     }

@@ -305,8 +305,6 @@
             <argument type="service" id="security.token_storage" on-invalid="null"/>
             <argument type="string">%sulu_media.collection.previews.format%</argument>
             <argument>%sulu_security.permissions%</argument>
-            <argument type="service" id="sulu_security.access_control_manager" />
-            <argument>%sulu.model.collection.class%</argument>
         </service>
 
         <service id="sulu_media.twig_extension.disposition_type" class="%sulu_media.twig_extension.disposition_type.class%">
