@@ -1,5 +1,5 @@
 // @flow
-import type {BlockError, FieldTypeProps} from './containers/Form/types';
+import type {BlockError, ErrorCollection, FieldTypeProps} from './containers/Form/types';
 import type {FormFieldTypes} from './components/Form/types';
 import type {ButtonOption} from './components/MultiItemSelection/types';
 import type {SelectionData} from './components/RectangleSelection';
@@ -12,6 +12,7 @@ export type {
     BlockError,
     BlockPreviewTransformer,
     ButtonOption,
+    ErrorCollection,
     FieldTransformer,
     FieldTypeProps,
     FormFieldTypes,

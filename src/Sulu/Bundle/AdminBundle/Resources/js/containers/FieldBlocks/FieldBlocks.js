@@ -22,8 +22,6 @@ const SETTINGS_TAG = 'sulu.block_setting_icon';
 
 @observer
 class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
-    static FieldRenderer = FieldRenderer;
-
     formRef: ?Form;
     @observable blockSettingsOpen: number | typeof undefined = undefined;
     @observable blockSettingsFormStore: FormStoreInterface;

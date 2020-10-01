@@ -5,9 +5,9 @@ import debounce from 'debounce';
 import jsonpointer from 'json-pointer';
 import {userStore} from 'sulu-admin-bundle/stores';
 import type {FieldTypeProps, BlockError} from 'sulu-admin-bundle/types';
-import {FieldBlocks} from 'sulu-admin-bundle/containers';
-import ImageMapContainer from '../../ImageMap';
-import type {Value, RenderHotspotFormCallback} from '../../ImageMap/types';
+import ImageMapContainer from '../../../ImageMap';
+import type {Value, RenderHotspotFormCallback} from '../../../ImageMap/types';
+import FieldRenderer from './FieldRenderer';
 
 const MISSING_TYPE_ERROR_MESSAGE = 'The "image_map" field type needs at least one type to be configured!';
 
@@ -89,7 +89,7 @@ export default class ImageMap extends React.Component<FieldTypeProps<Value>> {
         const errors = ((toJS(error): any): ?BlockError);
 
         return (
-            <FieldBlocks.FieldRenderer
+            <FieldRenderer
                 data={value}
                 dataPath={dataPath + '/' + index}
                 errors={errors && errors.length > index && errors[index] ? errors[index] : undefined}

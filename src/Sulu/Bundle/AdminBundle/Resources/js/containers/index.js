@@ -30,8 +30,8 @@ import Form, {
     ResourceFormStore,
     resourceFormStoreFactory,
     ResourceLocator,
-} from './Form';
-import type {FormStoreInterface, SchemaOption} from './Form/types';
+    Renderer} from './Form';
+import type {FormStoreInterface, Schema, SchemaOption} from './Form/types';
 import ResourceLocatorHistory from './ResourceLocatorHistory';
 import ResourceMultiSelect from './ResourceMultiSelect';
 import ResourceSingleSelect from './ResourceSingleSelect';
@@ -47,6 +47,7 @@ export type {
     FormStoreInterface,
     ListAdapterProps,
     LoadingStrategyInterface,
+    Schema,
     SchemaOption,
     StructureStrategyInterface,
     ViewProps,
@@ -77,6 +78,7 @@ export {
     InfiniteLoadingStrategy,
     PaginatedLoadingStrategy,
     memoryFormStoreFactory,
+    Renderer,
     ResourceFormStore,
     resourceFormStoreFactory,
     ResourceLocator,
