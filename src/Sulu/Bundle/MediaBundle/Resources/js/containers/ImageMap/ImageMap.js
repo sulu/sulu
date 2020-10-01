@@ -8,7 +8,7 @@ import type {Value as ImageValue} from '../SingleMediaSelection/types';
 import SingleMediaSelection from '../SingleMediaSelection';
 import type {Hotspot, Value, RenderHotspotFormCallback} from './types';
 import ImageRenderer from './ImageRenderer';
-import FormRenderer from './FormRenderer';
+import HotspotsFormRenderer from './HotspotsFormRenderer';
 import imageMapStyles from './imageMap.scss';
 
 type Props = {
@@ -192,7 +192,7 @@ class ImageMap extends React.Component<Props> {
                         />
 
                         <div className={imageMapStyles.form}>
-                            <FormRenderer
+                            <HotspotsFormRenderer
                                 disabled={disabled}
                                 onHotspotAdd={this.handleHotspotAdd}
                                 onHotspotRemove={this.handleHotspotRemove}
@@ -211,7 +211,7 @@ class ImageMap extends React.Component<Props> {
                                     )
                                     : null
                                 }
-                            </FormRenderer>
+                            </HotspotsFormRenderer>
                         </div>
                     </div>
                 }

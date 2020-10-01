@@ -5,7 +5,7 @@ import {translate} from 'sulu-admin-bundle/utils';
 import {Form, Icon, SingleSelect, Tabs} from 'sulu-admin-bundle/components';
 import Button from './Button';
 import type {Hotspot} from './types';
-import formRendererStyles from './formRenderer.scss';
+import hotspotsFormRendererStyles from './hotspotsFormRenderer.scss';
 
 type Props = {
     children: ?Node,
@@ -26,7 +26,7 @@ const AVAILABLE_HOTSPOT_TYPES = {
     rectangle: 'sulu_media.rectangle',
 };
 
-export default class FormRenderer extends React.PureComponent<Props> {
+export default class HotspotsFormRenderer extends React.PureComponent<Props> {
     get selectedHotspot() {
         const {value, selectedIndex} = this.props;
 
@@ -57,18 +57,18 @@ export default class FormRenderer extends React.PureComponent<Props> {
         return (
             <Form>
                 <Form.Field label={translate('sulu_media.hotspots')}>
-                    <div className={formRendererStyles.formRenderer}>
-                        <div className={formRendererStyles.toolbar}>
+                    <div className={hotspotsFormRendererStyles.hotspotsFormRenderer}>
+                        <div className={hotspotsFormRendererStyles.toolbar}>
                             <Button disabled={disabled} icon="su-plus-circle" onClick={onHotspotAdd} />
 
                             {!value.length &&
-                                <div className={formRendererStyles.emptyTabsLabel}>
+                                <div className={hotspotsFormRendererStyles.emptyTabsLabel}>
                                     {translate('sulu_media.add_hotspot')}
                                 </div>
                             }
 
                             <Tabs
-                                className={formRendererStyles.tabs}
+                                className={hotspotsFormRendererStyles.tabs}
                                 onSelect={onHotspotSelect}
                                 selectedIndex={selectedIndex}
                                 skin="light"
@@ -81,9 +81,9 @@ export default class FormRenderer extends React.PureComponent<Props> {
                         </div>
 
                         {!!value.length &&
-                            <div className={formRendererStyles.content}>
-                                <div className={formRendererStyles.settings}>
-                                    <div className={formRendererStyles.form}>
+                            <div className={hotspotsFormRendererStyles.content}>
+                                <div className={hotspotsFormRendererStyles.settings}>
+                                    <div className={hotspotsFormRendererStyles.form}>
                                         <Form>
                                             <Form.Field
                                                 colSpan={5}
@@ -130,7 +130,7 @@ export default class FormRenderer extends React.PureComponent<Props> {
                                     </div>
 
                                     <button
-                                        className={formRendererStyles.removeButton}
+                                        className={hotspotsFormRendererStyles.removeButton}
                                         disabled={disabled}
                                         onClick={this.handleHotspotRemove}
                                     >
