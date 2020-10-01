@@ -122,7 +122,7 @@ class CollectionController extends AbstractRestController implements ClassResour
 
             @\trigger_error(
                 \sprintf(
-                    'Omitting the "collectionClass" argument is deprecated and will not longer work in Sulu 3.0.',
+                    'Omitting the "collectionClass" argument is deprecated and will not longer work in Sulu 3.0.'
                 ),
                 \E_USER_DEPRECATED
             );

@@ -14,12 +14,13 @@ namespace Sulu\Bundle\MediaBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use JMS\Serializer\Annotation\Exclude;
+use Sulu\Bundle\SecurityBundle\Entity\PermissionInheritanceInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 
 /**
  * Collection.
  */
-class Collection implements CollectionInterface
+class Collection implements CollectionInterface, PermissionInheritanceInterface
 {
     /**
      * @var int
@@ -369,6 +370,13 @@ class Collection implements CollectionInterface
     public function getParent()
     {
         return $this->parent;
+    }
+
+    public function getParentId()
+    {
+        if ($this->parent) {
+            return $this->parent->getId();
+        }
     }
 
     /**

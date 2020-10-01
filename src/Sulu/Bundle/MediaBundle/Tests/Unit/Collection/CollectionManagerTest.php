@@ -23,7 +23,6 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionRepository;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepository;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
-use Sulu\Component\Security\Authorization\AccessControl\AccessControlManager;
 
 class CollectionManagerTest extends TestCase
 {

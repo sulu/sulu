@@ -211,17 +211,15 @@ class CollectionRepositoryTest extends SuluTestCase
 
         $this->assertCount(10, $ids);
 
-        $this->assertSame([
-            $this->collections[2]->getId(),
-            $this->collections[3]->getId(),
-            $this->collections[4]->getId(),
-            $this->collections[5]->getId(),
-            $this->collections[6]->getId(),
-            $this->collections[7]->getId(),
-            $this->collections[8]->getId(),
-            $this->collections[9]->getId(),
-            $this->collections[10]->getId(),
-            $this->collections[11]->getId(),
-        ], $ids);
+        $this->assertContains($this->collections[2]->getId(), $ids);
+        $this->assertContains($this->collections[3]->getId(), $ids);
+        $this->assertContains($this->collections[4]->getId(), $ids);
+        $this->assertContains($this->collections[5]->getId(), $ids);
+        $this->assertContains($this->collections[6]->getId(), $ids);
+        $this->assertContains($this->collections[7]->getId(), $ids);
+        $this->assertContains($this->collections[8]->getId(), $ids);
+        $this->assertContains($this->collections[9]->getId(), $ids);
+        $this->assertContains($this->collections[10]->getId(), $ids);
+        $this->assertContains($this->collections[11]->getId(), $ids);
     }
 }

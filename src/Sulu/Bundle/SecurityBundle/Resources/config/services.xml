@@ -323,5 +323,13 @@
             <argument type="service" id="sulu_security.system_store" />
             <argument type="service" id="doctrine.orm.entity_manager" />
         </service>
+
+        <service
+            id="sulu_security.permission_inheritance_subscriber"
+            class="Sulu\Bundle\SecurityBundle\EventListener\PermissionInheritanceSubscriber"
+        >
+            <argument type="service" id="sulu_security.access_control_manager" />
+            <tag name="doctrine.event_subscriber"/>
+        </service>
     </services>
 </container>
