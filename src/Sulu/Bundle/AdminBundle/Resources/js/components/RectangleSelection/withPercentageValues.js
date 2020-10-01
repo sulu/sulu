@@ -1,6 +1,8 @@
 // @flow
 import React from 'react';
 import type {ComponentType} from 'react';
+import {observer} from 'mobx-react';
+import {computed} from 'mobx';
 import {buildHocDisplayName} from '../../utils/react';
 import type {SelectionData} from './types';
 
@@ -15,6 +17,7 @@ type Props = {
 };
 
 export default function withPercentageValues(Component: ComponentType<*>) {
+    @observer
     class WithPercentageValuesComponent extends React.Component<Props> {
         static defaultProps = {
             minHeight: undefined,
@@ -40,7 +43,7 @@ export default function withPercentageValues(Component: ComponentType<*>) {
             });
         };
 
-        getTransformedMinHeight = () => {
+        @computed get transformedMinHeight() {
             const {containerHeight, minHeight} = this.props;
 
             if (!minHeight) {
@@ -48,9 +51,9 @@ export default function withPercentageValues(Component: ComponentType<*>) {
             }
 
             return minHeight * containerHeight;
-        };
+        }
 
-        getTransformedMinWidth = () => {
+        @computed get transformedMinWidth() {
             const {containerWidth, minWidth} = this.props;
 
             if (!minWidth) {
@@ -58,9 +61,9 @@ export default function withPercentageValues(Component: ComponentType<*>) {
             }
 
             return minWidth * containerWidth;
-        };
+        }
 
-        getTransformedValue = () => {
+        @computed get transformedValue() {
             const {containerHeight, containerWidth, value} = this.props;
 
             if (!value) {
@@ -74,7 +77,7 @@ export default function withPercentageValues(Component: ComponentType<*>) {
                 width: value.width * containerWidth,
                 height: value.height * containerHeight,
             };
-        };
+        }
 
         render() {
             const {usePercentageValues} = this.props;
@@ -87,10 +90,10 @@ export default function withPercentageValues(Component: ComponentType<*>) {
 
             const props = {
                 ...this.props,
-                minHeight: this.getTransformedMinHeight(),
-                minWidth: this.getTransformedMinWidth(),
+                minHeight: this.transformedMinHeight,
+                minWidth: this.transformedMinWidth,
                 onChange: this.handleChange,
-                value: this.getTransformedValue(),
+                value: this.transformedValue,
             };
 
             return (

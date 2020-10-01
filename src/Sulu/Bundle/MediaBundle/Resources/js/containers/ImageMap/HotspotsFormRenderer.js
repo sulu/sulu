@@ -3,6 +3,8 @@ import React from 'react';
 import type {Node} from 'react';
 import {translate} from 'sulu-admin-bundle/utils';
 import {Form, Icon, SingleSelect, Tabs} from 'sulu-admin-bundle/components';
+import {observer} from 'mobx-react';
+import {computed} from 'mobx';
 import Button from './Button';
 import type {Hotspot} from './types';
 import hotspotsFormRendererStyles from './hotspotsFormRenderer.scss';
@@ -26,8 +28,9 @@ const AVAILABLE_HOTSPOT_TYPES = {
     rectangle: 'sulu_media.rectangle',
 };
 
-export default class HotspotsFormRenderer extends React.PureComponent<Props> {
-    get selectedHotspot() {
+@observer
+class HotspotsFormRenderer extends React.PureComponent<Props> {
+    @computed get selectedHotspot() {
         const {value, selectedIndex} = this.props;
 
         return value[selectedIndex];
@@ -147,3 +150,5 @@ export default class HotspotsFormRenderer extends React.PureComponent<Props> {
         );
     }
 }
+
+export default HotspotsFormRenderer;

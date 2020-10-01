@@ -1,5 +1,7 @@
 // @flow
 import React from 'react';
+import {observer} from 'mobx-react';
+import {computed} from 'mobx';
 import type {Normalizer, SelectionData} from './types';
 import ModifiableCircle from './ModifiableCircle';
 import PositionNormalizer from './normalizers/PositionNormalizer';
@@ -22,6 +24,7 @@ type Props = {
     value: SelectionData | typeof undefined,
 };
 
+@observer
 class CircleSelectionRenderer extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
@@ -33,11 +36,11 @@ class CircleSelectionRenderer extends React.Component<Props> {
         usePercentageValues: false,
     };
 
-    get value() {
+    @computed get value() {
         const {value} = this.props;
 
         if (!value) {
-            return this.getMaximumSelection();
+            return this.maximumSelection;
         }
 
         return value;
@@ -87,7 +90,7 @@ class CircleSelectionRenderer extends React.Component<Props> {
         return normalizers;
     }
 
-    get normalizers() {
+    @computed get normalizers() {
         return CircleSelectionRenderer.createNormalizers(this.props);
     }
 
@@ -95,7 +98,7 @@ class CircleSelectionRenderer extends React.Component<Props> {
         return this.normalizers.reduce((data, normalizer) => normalizer.normalize(data), selection);
     }
 
-    getMaximumSelection = (): SelectionData => {
+    @computed get maximumSelection(): SelectionData {
         const {containerWidth, containerHeight, resizable, value} = this.props;
 
         const radius = resizable
@@ -109,7 +112,7 @@ class CircleSelectionRenderer extends React.Component<Props> {
                 radius,
             })
         );
-    };
+    }
 
     centerSelection(selection: SelectionData): SelectionData {
         const {containerWidth, containerHeight} = this.props;
@@ -128,7 +131,7 @@ class CircleSelectionRenderer extends React.Component<Props> {
         const {onChange, resizable} = this.props;
 
         if (resizable) {
-            onChange(this.getMaximumSelection());
+            onChange(this.maximumSelection);
 
             return;
         }

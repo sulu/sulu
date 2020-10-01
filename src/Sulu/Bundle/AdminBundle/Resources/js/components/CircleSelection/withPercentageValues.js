@@ -1,6 +1,8 @@
 // @flow
 import React from 'react';
 import type {ComponentType} from 'react';
+import {observer} from 'mobx-react';
+import {computed} from 'mobx';
 import {buildHocDisplayName} from '../../utils/react';
 import type {SelectionData} from './types';
 
@@ -15,6 +17,7 @@ type Props = {
 };
 
 export default function withPercentageValues(Component: ComponentType<*>) {
+    @observer
     class WithPercentageValuesComponent extends React.Component<Props> {
         wrappedComponent = Component;
 
@@ -41,7 +44,7 @@ export default function withPercentageValues(Component: ComponentType<*>) {
             });
         };
 
-        getTransformedMaxRadius = () => {
+        @computed get transformedMaxRadius() {
             const {containerWidth, maxRadius} = this.props;
 
             if (!maxRadius) {
@@ -49,9 +52,9 @@ export default function withPercentageValues(Component: ComponentType<*>) {
             }
 
             return maxRadius * containerWidth;
-        };
+        }
 
-        getTransformedMinRadius = () => {
+        @computed get transformedMinRadius() {
             const {containerWidth, minRadius} = this.props;
 
             if (!minRadius) {
@@ -59,9 +62,9 @@ export default function withPercentageValues(Component: ComponentType<*>) {
             }
 
             return minRadius * containerWidth;
-        };
+        }
 
-        getTransformedValue = () => {
+        @computed get transformedValue() {
             const {containerHeight, containerWidth, value} = this.props;
 
             if (!value) {
@@ -74,7 +77,7 @@ export default function withPercentageValues(Component: ComponentType<*>) {
                 top: value.top * containerHeight,
                 radius: value.radius * containerWidth,
             };
-        };
+        }
 
         render() {
             const {usePercentageValues} = this.props;
@@ -87,10 +90,10 @@ export default function withPercentageValues(Component: ComponentType<*>) {
 
             const props = {
                 ...this.props,
-                maxRadius: this.getTransformedMaxRadius(),
-                minRadius: this.getTransformedMinRadius(),
+                maxRadius: this.transformedMaxRadius,
+                minRadius: this.transformedMinRadius,
                 onChange: this.handleChange,
-                value: this.getTransformedValue(),
+                value: this.transformedValue,
             };
 
             return (

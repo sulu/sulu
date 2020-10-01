@@ -1,5 +1,7 @@
 // @flow
 import React from 'react';
+import {observer} from 'mobx-react';
+import {computed} from 'mobx';
 import type {Normalizer, RectangleChange, SelectionData} from './types';
 import ModifiableRectangle from './ModifiableRectangle';
 import PositionNormalizer from './normalizers/PositionNormalizer';
@@ -23,6 +25,7 @@ type Props = {
     value: SelectionData | typeof undefined,
 };
 
+@observer
 class RectangleSelectionRenderer extends React.Component<Props> {
     static defaultProps = {
         backdrop: true,
@@ -34,11 +37,11 @@ class RectangleSelectionRenderer extends React.Component<Props> {
         usePercentageValues: false,
     };
 
-    get value() {
+    @computed get value() {
         const {value} = this.props;
 
         if (!value) {
-            return this.getMaximumSelection();
+            return this.maximumSelection;
         }
 
         return value;
@@ -108,7 +111,7 @@ class RectangleSelectionRenderer extends React.Component<Props> {
         return normalizers;
     }
 
-    get normalizers() {
+    @computed get normalizers() {
         return RectangleSelectionRenderer.createNormalizers(this.props);
     }
 
@@ -116,7 +119,7 @@ class RectangleSelectionRenderer extends React.Component<Props> {
         return this.normalizers.reduce((data, normalizer) => normalizer.normalize(data), selection);
     }
 
-    getMaximumSelection = (): SelectionData => {
+    @computed get maximumSelection(): SelectionData {
         const {containerWidth, containerHeight} = this.props;
 
         return this.normalize(
@@ -129,7 +132,7 @@ class RectangleSelectionRenderer extends React.Component<Props> {
                 })
             )
         );
-    };
+    }
 
     centerSelection(selection: SelectionData): SelectionData {
         const {containerWidth, containerHeight} = this.props;
@@ -148,7 +151,7 @@ class RectangleSelectionRenderer extends React.Component<Props> {
     handleRectangleDoubleClick = () => {
         const {onChange} = this.props;
 
-        onChange(this.getMaximumSelection());
+        onChange(this.maximumSelection);
     };
 
     handleRectangleChange = (change: RectangleChange) => {

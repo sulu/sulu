@@ -120,7 +120,7 @@ class ImageRenderer extends React.Component<Props> {
         );
     };
 
-    get sortedHotspots() {
+    @computed get sortedHotspots() {
         const {value, selectedIndex} = this.props;
 
         const hotspots: Array<[number, Hotspot]> = Array.from(toJS(value.hotspots).entries());
