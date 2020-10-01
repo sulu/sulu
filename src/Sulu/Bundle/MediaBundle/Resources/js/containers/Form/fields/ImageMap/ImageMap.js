@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
 import {observable, toJS} from 'mobx';
-import debounce from 'debounce';
 import jsonpointer from 'json-pointer';
 import {userStore} from 'sulu-admin-bundle/stores';
 import type {FieldTypeProps, BlockError} from 'sulu-admin-bundle/types';
@@ -12,17 +11,10 @@ import FieldRenderer from './FieldRenderer';
 const MISSING_TYPE_ERROR_MESSAGE = 'The "image_map" field type needs at least one type to be configured!';
 
 export default class ImageMap extends React.Component<FieldTypeProps<Value>> {
-    handleFinish = debounce(() => {
-        const {onFinish} = this.props;
-
-        onFinish();
-    }, 1000);
-
     handleChange = (value: Value) => {
         const {onChange} = this.props;
 
         onChange(value);
-        this.handleFinish();
     };
 
     getHotspotFormSchemaType = (type: ?string) => {
@@ -112,6 +104,7 @@ export default class ImageMap extends React.Component<FieldTypeProps<Value>> {
             disabled,
             error,
             formInspector,
+            onFinish,
             types,
             value,
         } = this.props;
@@ -139,6 +132,7 @@ export default class ImageMap extends React.Component<FieldTypeProps<Value>> {
                 disabled={!!disabled}
                 locale={locale}
                 onChange={this.handleChange}
+                onFinish={onFinish}
                 renderHotspotForm={this.renderHotspotForm}
                 types={formTypes}
                 valid={!error}

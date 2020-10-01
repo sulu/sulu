@@ -24,6 +24,7 @@ type Props = {
     minSizeNotification: boolean,
     minWidth: number | typeof undefined,
     onChange: (s: ?SelectionData) => void,
+    onFinish?: () => void,
     round: boolean,
     usePercentageValues: boolean,
     value: SelectionData | typeof undefined,
@@ -179,11 +180,12 @@ class RectangleSelectionComponent extends React.Component<Props> {
             backdrop,
             containerHeight,
             containerWidth,
+            disabled,
+            label,
             minHeight,
             minSizeNotification,
             minWidth,
-            disabled,
-            label,
+            onFinish,
         } = this.props;
         const {height, left, top, width} = this.value;
 
@@ -209,6 +211,7 @@ class RectangleSelectionComponent extends React.Component<Props> {
                 minSizeReached={minSizeReached}
                 onChange={this.handleRectangleChange}
                 onDoubleClick={this.handleRectangleDoubleClick}
+                onFinish={onFinish}
                 top={top}
                 width={width}
             />

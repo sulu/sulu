@@ -16,6 +16,7 @@ type Props = {
     minSizeReached: boolean,
     onChange?: (r: RectangleChange) => void,
     onDoubleClick?: () => void,
+    onFinish?: () => void,
     top: number,
     width: number,
 };
@@ -52,8 +53,16 @@ class ModifiableRectangle extends React.Component<Props> {
     };
 
     @action handleMouseUp = () => {
-        this.moveMode = false;
-        this.resizeMode = false;
+        const {onFinish} = this.props;
+
+        if (this.moveMode || this.resizeMode) {
+            this.moveMode = false;
+            this.resizeMode = false;
+
+            if (onFinish) {
+                onFinish();
+            }
+        }
     };
 
     @action handleMouseMove = (event: MouseEvent) => {

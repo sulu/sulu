@@ -13,6 +13,7 @@ type Props = {
     left: number,
     onChange?: (value: SelectionData) => void,
     onDoubleClick?: () => void,
+    onFinish?: () => void,
     radius: number,
     resizable: boolean,
     skin: 'filled' | 'outlined',
@@ -61,8 +62,16 @@ class ModifiableCircle extends React.Component<Props> {
     };
 
     @action handleMouseUp = () => {
-        this.moveMode = false;
-        this.resizeMode = false;
+        const {onFinish} = this.props;
+
+        if (this.moveMode || this.resizeMode) {
+            this.moveMode = false;
+            this.resizeMode = false;
+
+            if (onFinish) {
+                onFinish();
+            }
+        }
     };
 
     @action handleMouseMove = (event: MouseEvent) => {

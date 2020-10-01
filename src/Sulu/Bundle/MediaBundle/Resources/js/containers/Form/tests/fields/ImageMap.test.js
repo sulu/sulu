@@ -8,8 +8,6 @@ import {ResourceStore} from 'sulu-admin-bundle/stores';
 import ImageMap from '../../fields/ImageMap';
 import ImageMapContainer from '../../../ImageMap';
 
-jest.mock('debounce', () => jest.fn((value) => value));
-
 jest.mock('sulu-admin-bundle/services/Router', () => jest.fn(function() {
     this.navigate = jest.fn();
 }));
@@ -183,6 +181,7 @@ test('Should call onChange and onFinish if the value changes', () => {
     );
 
     imageMap.find(ImageMapContainer).props().onChange({imageId: 44, hotspots: []});
+    imageMap.find(ImageMapContainer).props().onFinish();
 
     expect(changeSpy).toBeCalledWith({imageId: 44, hotspots: []});
     expect(finishSpy).toBeCalled();

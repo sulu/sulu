@@ -12,6 +12,7 @@ import imageRendererStyles from './imageRenderer.scss';
 type Props = {
     disabled: boolean,
     locale: IObservableValue<string>,
+    onFinish?: () => void,
     onSelectionChange: (index: number, selection: Object) => void,
     selectedIndex: number,
     value: Value,
@@ -72,7 +73,7 @@ class ImageRenderer extends React.Component<Props> {
     };
 
     getCommonSelectionProps = (hotspot: Hotspot, index: number) => {
-        const {disabled, selectedIndex} = this.props;
+        const {disabled, onFinish, selectedIndex} = this.props;
 
         const entries = Object.entries(hotspot.hotspot).filter(([key]) => key !== 'type');
         const value: Object | typeof undefined = entries.length !== 0 ? Object.fromEntries(entries) : undefined;
@@ -84,6 +85,7 @@ class ImageRenderer extends React.Component<Props> {
             key: index,
             label: (index + 1).toString(),
             onChange: this.handleSelectionChange,
+            onFinish,
             usePercentageValues: true,
             round: false,
             value,

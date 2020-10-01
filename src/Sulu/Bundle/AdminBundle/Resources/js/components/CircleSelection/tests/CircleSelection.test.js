@@ -16,6 +16,7 @@ test('The component should render', () => {
             containerHeight={1000}
             containerWidth={2000}
             onChange={jest.fn()}
+            onFinish={jest.fn()}
             value={{radius: 1, top: 3, left: 4}}
         >
             <p>Lorem ipsum</p>
@@ -29,7 +30,13 @@ test('The component should center and maximize the selection if no value is give
     const changeSpy = jest.fn();
 
     mount(
-        <CircleSelectionContainer containerHeight={1000} containerWidth={2000} onChange={changeSpy} value={undefined}>
+        <CircleSelectionContainer
+            containerHeight={1000}
+            containerWidth={2000}
+            onChange={changeSpy}
+            onFinish={jest.fn()}
+            value={undefined}
+        >
             <p>Lorem ipsum</p>
         </CircleSelectionContainer>
     );
@@ -47,6 +54,7 @@ test('The component should reset the value if modifiable circle is doubleclicked
             minHeight={100}
             minWidth={100}
             onChange={changeSpy}
+            onFinish={jest.fn()}
             value={{radius: 100, top: 30, left: 40}}
         >
             <p>Lorem ipsum</p>
@@ -68,6 +76,7 @@ test('The component should center and maximize the selection when a minRadius an
             maxRadius={200}
             minRadius={50}
             onChange={changeSpy}
+            onFinish={jest.fn()}
             value={undefined}
         >
             <p>Lorem ipsum</p>
@@ -85,6 +94,7 @@ test('The component should not allow the selection to move over the borders', ()
             containerHeight={1000}
             containerWidth={2000}
             onChange={changeSpy}
+            onFinish={jest.fn()}
             value={{left: 0, top: 0, radius: 2000}}
         >
             <p>Lorem ipsum</p>
@@ -105,6 +115,7 @@ test('The component should not allow the selection to be bigger than the contain
             containerHeight={1000}
             containerWidth={2000}
             onChange={changeSpy}
+            onFinish={jest.fn()}
             value={{left: 0, top: 0, radius: 2000}}
         >
             <p>Lorem ipsum</p>
@@ -126,6 +137,7 @@ test('The component should not round if told by the properties', () => {
             containerWidth={2000}
             minRadius={5}
             onChange={changeSpy}
+            onFinish={jest.fn()}
             round={false}
             value={undefined}
         >
@@ -146,6 +158,7 @@ test('The component should work with percentage values if told by the properties
             containerHeight={1000}
             containerWidth={2000}
             onChange={changeSpy}
+            onFinish={jest.fn()}
             usePercentageValues={true}
             value={undefined}
         >
@@ -154,4 +167,23 @@ test('The component should work with percentage values if told by the properties
     );
 
     expect(changeSpy).toBeCalledWith({top: 0.5, left: 0.5, radius: 0.25});
+});
+
+test('The component should call onFinish', () => {
+    const finishSpy = jest.fn();
+
+    const circleSelection = mount(
+        <CircleSelectionContainer
+            containerHeight={1000}
+            containerWidth={2000}
+            onChange={jest.fn()}
+            onFinish={finishSpy}
+            value={undefined}
+        >
+            <p>Lorem ipsum</p>
+        </CircleSelectionContainer>
+    );
+
+    circleSelection.find('ModifiableCircle').props().onFinish();
+    expect(finishSpy).toBeCalled();
 });

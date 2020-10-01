@@ -21,6 +21,7 @@ type Props = {
     maxRadius: number | typeof undefined,
     minRadius: number | typeof undefined,
     onChange: (value: ?SelectionData) => void,
+    onFinish?: () => void,
     resizable: boolean,
     round: boolean,
     skin: 'filled' | 'outlined',
@@ -154,7 +155,7 @@ class CircleSelectionComponent extends React.Component<Props> {
     };
 
     render() {
-        const {disabled, label, resizable, skin} = this.props;
+        const {disabled, label, onFinish, resizable, skin} = this.props;
         const {left, top, radius} = this.value;
 
         return (
@@ -164,6 +165,7 @@ class CircleSelectionComponent extends React.Component<Props> {
                 left={left}
                 onChange={this.handleCircleChange}
                 onDoubleClick={this.handleCircleDoubleClick}
+                onFinish={onFinish}
                 radius={radius}
                 resizable={resizable}
                 skin={skin}

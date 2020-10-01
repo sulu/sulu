@@ -16,6 +16,7 @@ type Props = {
     disabled: boolean,
     locale: IObservableValue<string>,
     onChange: (data: Value) => void,
+    onFinish?: () => void,
     renderHotspotForm: RenderHotspotFormCallback,
     types: {[string]: string},
     valid: boolean,
@@ -65,6 +66,14 @@ class ImageMap extends React.Component<Props> {
         }
     }
 
+    handleFinish = () => {
+        const {onFinish} = this.props;
+
+        if (onFinish) {
+            onFinish();
+        }
+    };
+
     handleImageChange = ({id}: ImageValue) => {
         const {onChange} = this.props;
 
@@ -72,6 +81,8 @@ class ImageMap extends React.Component<Props> {
             imageId: id,
             hotspots: [],
         });
+
+        this.handleFinish();
     };
 
     handleSelectionChange = (index: number, selection: Object) => {
@@ -99,6 +110,8 @@ class ImageMap extends React.Component<Props> {
             ...value,
             hotspots,
         });
+
+        this.handleFinish();
     };
 
     handleTypeChange = (index: number, type: string) => {
@@ -111,6 +124,8 @@ class ImageMap extends React.Component<Props> {
             ...value,
             hotspots,
         });
+
+        this.handleFinish();
     };
 
     @action handleHotspotRemove = (index: number) => {
@@ -120,6 +135,8 @@ class ImageMap extends React.Component<Props> {
             ...value,
             hotspots: toJS(value.hotspots).filter((hotspot, hotspotIndex) => hotspotIndex !== index),
         });
+
+        this.handleFinish();
 
         this.selectedIndex = Math.max(0, this.selectedIndex - 1);
     };
@@ -150,17 +167,19 @@ class ImageMap extends React.Component<Props> {
             ],
         });
 
+        this.handleFinish();
+
         this.selectedIndex = value.hotspots.length;
     };
 
     @computed get currentHotspot() {
         const {value} = this.props;
 
-        return value.hotspots[this.selectedIndex];
+        return value.hotspots.length ? value.hotspots[this.selectedIndex] : undefined;
     }
 
     render() {
-        const {disabled, locale, renderHotspotForm, types, valid, value} = this.props;
+        const {disabled, locale, onFinish, renderHotspotForm, types, valid, value} = this.props;
 
         const imageMapClass = classNames(
             imageMapStyles.imageMap,
@@ -186,6 +205,7 @@ class ImageMap extends React.Component<Props> {
                         <ImageRenderer
                             disabled={disabled}
                             locale={locale}
+                            onFinish={onFinish}
                             onSelectionChange={this.handleSelectionChange}
                             selectedIndex={this.selectedIndex}
                             value={value}

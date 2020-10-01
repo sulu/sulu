@@ -16,6 +16,7 @@ test('The component should render with children', () => {
             containerHeight={1000}
             containerWidth={2000}
             onChange={jest.fn()}
+            onFinish={jest.fn()}
             value={undefined}
         >
             <p>Lorem ipsum</p>
@@ -31,6 +32,7 @@ test('The component should render with value as selection', () => {
             containerHeight={1000}
             containerWidth={2000}
             onChange={jest.fn()}
+            onFinish={jest.fn()}
             value={{width: 1, height: 2, top: 3, left: 4}}
         >
             <p>Lorem ipsum</p>
@@ -48,6 +50,7 @@ test('The component should render with minimum size notification', () => {
             minHeight={200}
             minWidth={100}
             onChange={jest.fn()}
+            onFinish={jest.fn()}
             value={{width: 100, height: 200, top: 30, left: 40}}
         >
             <p>Lorem ipsum</p>
@@ -65,6 +68,7 @@ test('The component should render without minimum size notification', () => {
             minHeight={100}
             minWidth={100}
             onChange={jest.fn()}
+            onFinish={jest.fn()}
             value={{width: 100, height: 200, top: 30, left: 40}}
         >
             <p>Lorem ipsum</p>
@@ -84,6 +88,7 @@ test('The component should reset the value if modifiable rectangle is doubleclic
             minHeight={100}
             minWidth={100}
             onChange={changeSpy}
+            onFinish={jest.fn()}
             value={{width: 100, height: 200, top: 30, left: 40}}
         >
             <p>Lorem ipsum</p>
@@ -103,6 +108,7 @@ test('The component should center and maximize the selection when a minHeight an
             minHeight={50}
             minWidth={200}
             onChange={jest.fn()}
+            onFinish={jest.fn()}
             value={undefined}
         >
             <p>Lorem ipsum</p>
@@ -120,6 +126,7 @@ test('The component should not allow the selection to move over the borders', ()
             containerHeight={1000}
             containerWidth={2000}
             onChange={changeSpy}
+            onFinish={jest.fn()}
             value={{height: 2000, left: 0, top: 0, width: 2000}}
         >
             <p>Lorem ipsum</p>
@@ -143,6 +150,7 @@ test('The component should not allow the selection to be bigger than the contain
             containerHeight={1000}
             containerWidth={2000}
             onChange={changeSpy}
+            onFinish={jest.fn()}
             value={{height: 1000, left: 0, top: 0, width: 2000}}
         >
             <p>Lorem ipsum</p>
@@ -168,6 +176,7 @@ test('The component should enforce a ratio on the selection if minWidth and minH
             minHeight={20}
             minWidth={10}
             onChange={changeSpy}
+            onFinish={jest.fn()}
             value={{height: 1000, left: 0, top: 0, width: 2000}}
         >
             <p>Lorem ipsum</p>
@@ -193,6 +202,7 @@ test('The component should not round if told by the properties', () => {
             minHeight={1}
             minWidth={3}
             onChange={changeSpy}
+            onFinish={jest.fn()}
             round={false}
             value={undefined}
         >
@@ -214,6 +224,7 @@ test('The component should work with percentage values if told by the properties
             containerHeight={1000}
             containerWidth={2000}
             onChange={changeSpy}
+            onFinish={jest.fn()}
             usePercentageValues={true}
             value={undefined}
         >
@@ -222,4 +233,23 @@ test('The component should work with percentage values if told by the properties
     );
 
     expect(changeSpy).toBeCalledWith({top: 0, left: 0, width: 1, height: 1});
+});
+
+test('The component should call onFinish', () => {
+    const finishSpy = jest.fn();
+
+    const rectangleSelection = mount(
+        <RectangleSelectionContainer
+            containerHeight={1000}
+            containerWidth={2000}
+            onChange={jest.fn()}
+            onFinish={finishSpy}
+            value={undefined}
+        >
+            <p>Lorem ipsum</p>
+        </RectangleSelectionContainer>
+    );
+
+    rectangleSelection.find('ModifiableRectangle').props().onFinish();
+    expect(finishSpy).toBeCalled();
 });
