@@ -51,10 +51,17 @@ trait AssertHttpStatusCodeTrait
                 }
 
                 $message = \implode(\PHP_EOL, \array_slice($message, 0, $debugLength));
+
                 $message = \sprintf(
-                    'HTTP status code %s is not expected %s, showing %s lines of the response body: %s',
+                    'HTTP status code %s is not expected %s!' . \PHP_EOL
+                    . 'Exception: %s' . \PHP_EOL
+                    . 'Exception-File: %s' . \PHP_EOL
+                    . 'Showing %s lines of the response body:' . \PHP_EOL
+                    . '%s',
                     $httpCode,
                     $code,
+                    \rawurldecode($response->headers->get('X-Debug-Exception')),
+                    \rawurldecode($response->headers->get('X-Debug-Exception-File')),
                     $debugLength,
                     $message
                 );
