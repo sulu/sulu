@@ -1,12 +1,11 @@
 // @flow
 import React from 'react';
 import type {ElementRef} from 'react';
-import {action, observable, toJS, when} from 'mobx';
+import {action, observable, toJS, computed} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import debounce from 'debounce';
 import {CircleSelection, RectangleSelection} from 'sulu-admin-bundle/components';
-import {ResourceStore} from 'sulu-admin-bundle/stores';
 import type {Hotspot, Value} from './types';
 import imageRendererStyles from './imageRenderer.scss';
 
@@ -18,20 +17,15 @@ type Props = {
     value: Value,
 };
 
-const MEDIA_RESOURCE_KEY = 'media';
 const DEBOUNCE_TIME = 200;
 
 @observer
 class ImageRenderer extends React.Component<Props> {
     @observable containerSize: {height: number, width: number} = {width: 0, height: 0};
-    @observable imageUrl: ?string;
 
     imageWrapperRef: ?ElementRef<'div'>;
 
     componentDidMount() {
-        const {locale, value} = this.props;
-
-        this.setImageUrl(value.imageId, locale);
         this.setContainerSize();
 
         const resizeObserver = new ResizeObserver(
@@ -47,31 +41,15 @@ class ImageRenderer extends React.Component<Props> {
         resizeObserver.observe(this.imageWrapperRef);
     }
 
-    componentDidUpdate(prevProps: Props) {
-        const {value, locale} = this.props;
+    @computed get imageUrl() {
+        const {value: {imageId}, locale} = this.props;
 
-        if (prevProps.value.imageId !== value.imageId) {
-            this.setImageUrl(value.imageId, locale);
-        }
-    }
-
-    @action setImageUrl = (imageId: ?number, locale: IObservableValue<string>) => {
         if (!imageId) {
-            this.imageUrl = undefined;
-
-            return;
+            return undefined;
         }
 
-        const resourceStore = new ResourceStore(MEDIA_RESOURCE_KEY, imageId, {locale});
-
-        when(
-            () => !resourceStore.loading,
-            action((): void => {
-                this.imageUrl = resourceStore.data.url;
-                resourceStore.destroy();
-            })
-        );
-    };
+        return '/admin/media/redirect/media/' + imageId + '?locale=' + locale;
+    }
 
     @action setContainerSize = () => {
         if (!this.imageWrapperRef) {
@@ -165,13 +143,16 @@ class ImageRenderer extends React.Component<Props> {
     }
 
     render() {
+        const {imageUrl} = this;
+
         return (
             <div className={imageRendererStyles.imageRenderer}>
                 <div className={imageRendererStyles.imageRendererWrapper} ref={this.setImageWrapperRef}>
-                    {this.imageUrl &&
+                    {imageUrl &&
                         <img
                             className={imageRendererStyles.image}
-                            src={this.imageUrl}
+                            key={imageUrl}
+                            src={imageUrl}
                         />
                     }
 

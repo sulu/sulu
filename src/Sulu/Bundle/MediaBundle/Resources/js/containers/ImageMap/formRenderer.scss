@@ -2,8 +2,8 @@
 
 $formRendererBackgroundColor: $white;
 $formRendererBorderColor: $silver;
-$tabsBackgroundColor: transparent;
-$emptyTabsLabelColor: $scorpion;
+$formRendererTabsBackgroundColor: transparent;
+$formRendererEmptyTabsLabelColor: $scorpion;
 
 .form-renderer {
     background-color: $formRendererBackgroundColor;
@@ -22,13 +22,13 @@ $emptyTabsLabelColor: $scorpion;
     align-items: center;
     font-size: 12px;
     padding-left: 10px;
-    color: $emptyTabsLabelColor;
+    color: $formRendererEmptyTabsLabelColor;
 }
 
 .tabs {
     flex: 1 1 auto;
     margin-bottom: -1px;
-    background-color: $tabsBackgroundColor !important;
+    background-color: $formRendererTabsBackgroundColor !important;
 }
 
 .content {
