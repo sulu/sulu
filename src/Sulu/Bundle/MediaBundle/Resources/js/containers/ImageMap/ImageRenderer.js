@@ -22,16 +22,16 @@ const DEBOUNCE_TIME = 200;
 
 @observer
 class ImageRenderer extends React.Component<Props> {
-    @observable containerSize: {height: number, width: number} = {width: 0, height: 0};
+    @observable imageWrapperSize: {height: number, width: number} = {width: 0, height: 0};
 
     imageWrapperRef: ?ElementRef<'div'>;
 
     componentDidMount() {
-        this.setContainerSize();
+        this.setImageWrapperSize();
 
         const resizeObserver = new ResizeObserver(
             debounce(() => {
-                this.setContainerSize();
+                this.setImageWrapperSize();
             }, DEBOUNCE_TIME)
         );
 
@@ -52,14 +52,14 @@ class ImageRenderer extends React.Component<Props> {
         return '/admin/media/redirect/media/' + imageId + '?locale=' + locale;
     }
 
-    @action setContainerSize = () => {
+    @action setImageWrapperSize = () => {
         if (!this.imageWrapperRef) {
             return;
         }
 
         const {width, height} = this.imageWrapperRef.getBoundingClientRect();
 
-        this.containerSize = {width, height};
+        this.imageWrapperSize = {width, height};
     };
 
     setImageWrapperRef = (ref: ?ElementRef<'div'>) => {
@@ -79,8 +79,8 @@ class ImageRenderer extends React.Component<Props> {
         const value: Object | typeof undefined = entries.length !== 0 ? Object.fromEntries(entries) : undefined;
 
         return {
-            containerHeight: this.containerSize.height,
-            containerWidth: this.containerSize.width,
+            containerHeight: this.imageWrapperSize.height,
+            containerWidth: this.imageWrapperSize.width,
             disabled: disabled || index !== selectedIndex,
             key: index,
             label: (index + 1).toString(),

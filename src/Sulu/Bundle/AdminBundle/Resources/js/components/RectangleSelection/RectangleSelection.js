@@ -56,14 +56,10 @@ class RectangleSelectionComponent extends React.Component<Props> {
         this.setInitialValue();
     }
 
-    componentDidUpdate() {
-        this.setInitialValue();
-    }
-
     setInitialValue = () => {
-        const {onChange, value} = this.props;
+        const {containerHeight, containerWidth, onChange, value} = this.props;
 
-        if (!this.props.containerHeight || !this.props.containerWidth) {
+        if (!containerHeight || !containerWidth) {
             return;
         }
 
@@ -85,7 +81,7 @@ class RectangleSelectionComponent extends React.Component<Props> {
             return [];
         }
 
-        let normalizers = [
+        const normalizers = [
             new SizeNormalizer(
                 containerWidth,
                 containerHeight,
@@ -99,22 +95,18 @@ class RectangleSelectionComponent extends React.Component<Props> {
         ];
 
         if (minWidth && minHeight) {
-            normalizers = [
-                ...normalizers,
+            normalizers.push(
                 new RatioNormalizer(
                     containerWidth,
                     containerHeight,
                     minWidth,
                     minHeight
-                ),
-            ];
+                )
+            );
         }
 
         if (round) {
-            normalizers = [
-                ...normalizers,
-                new RoundingNormalizer(),
-            ];
+            normalizers.push(new RoundingNormalizer());
         }
 
         return normalizers;
@@ -194,12 +186,7 @@ class RectangleSelectionComponent extends React.Component<Props> {
             backdropSize = Math.max(containerHeight, containerWidth);
         }
 
-        let minSizeReached = false;
-        if (minSizeNotification) {
-            if (height <= (minHeight || 0) && width <= (minWidth || 0)) {
-                minSizeReached = true;
-            }
-        }
+        const minSizeReached = minSizeNotification && height <= (minHeight || 0) && width <= (minWidth || 0);
 
         return (
             <ModifiableRectangle

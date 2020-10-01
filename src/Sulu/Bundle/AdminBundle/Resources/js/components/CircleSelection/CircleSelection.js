@@ -56,9 +56,9 @@ class CircleSelectionComponent extends React.Component<Props> {
     }
 
     setInitialValue = () => {
-        const {onChange, value} = this.props;
+        const {containerHeight, containerWidth, onChange, value} = this.props;
 
-        if (!this.props.containerHeight || !this.props.containerWidth) {
+        if (!containerHeight || !containerWidth) {
             return;
         }
 

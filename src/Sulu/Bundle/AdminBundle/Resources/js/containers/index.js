@@ -30,7 +30,8 @@ import Form, {
     ResourceFormStore,
     resourceFormStoreFactory,
     ResourceLocator,
-    Renderer} from './Form';
+    Renderer,
+} from './Form';
 import type {FormStoreInterface, Schema, SchemaOption} from './Form/types';
 import ResourceLocatorHistory from './ResourceLocatorHistory';
 import ResourceMultiSelect from './ResourceMultiSelect';
