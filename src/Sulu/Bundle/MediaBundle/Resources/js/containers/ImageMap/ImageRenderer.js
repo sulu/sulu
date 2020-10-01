@@ -92,7 +92,7 @@ class ImageRenderer extends React.Component<Props> {
 
     renderCircleSelection = (hotspot: Hotspot, index: number) => {
         return (
-            <CircleSelection.Renderer
+            <CircleSelection
                 {...this.getCommonSelectionProps(hotspot, index)}
                 resizable={true}
                 skin="outlined"
@@ -102,7 +102,7 @@ class ImageRenderer extends React.Component<Props> {
 
     renderPointSelection = (hotspot: Hotspot, index: number) => {
         return (
-            <CircleSelection.Renderer
+            <CircleSelection
                 {...this.getCommonSelectionProps(hotspot, index)}
                 resizable={false}
                 skin="filled"
@@ -112,7 +112,7 @@ class ImageRenderer extends React.Component<Props> {
 
     renderRectangleSelection = (hotspot: Hotspot, index: number) => {
         return (
-            <RectangleSelection.Renderer
+            <RectangleSelection
                 {...this.getCommonSelectionProps(hotspot, index)}
                 backdrop={false}
                 minSizeNotification={false}

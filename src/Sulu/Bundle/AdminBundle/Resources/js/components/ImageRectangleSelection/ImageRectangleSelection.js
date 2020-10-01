@@ -3,7 +3,7 @@ import {action, computed, observable} from 'mobx';
 import log from 'loglevel';
 import {observer} from 'mobx-react';
 import React from 'react';
-import {RectangleSelection} from '../RectangleSelection/RectangleSelection';
+import RectangleSelection from '../RectangleSelection';
 import type {SelectionData} from '../RectangleSelection';
 import withContainerSize from '../withContainerSize';
 import imageRectangleSelectionStyles from './imageRectangleSelection.scss';
@@ -126,8 +126,6 @@ class ImageRectangleSelection extends React.Component<Props> {
 
         return (
             <RectangleSelection
-                containerHeight={this.scaledImageHeight}
-                containerWidth={this.scaledImageWidth}
                 minHeight={this.scaledMinHeight}
                 minWidth={this.scaledMinWidth}
                 onChange={this.handleRectangleSelectionChange}

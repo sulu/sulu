@@ -105,7 +105,7 @@ test('The component should pass a value of undefined', () => {
     onImageLoad();
     view.update();
 
-    view.find('RectangleSelectionRenderer').prop('onChange')(undefined);
+    view.find('RectangleSelectionComponent').prop('onChange')(undefined);
 
     expect(changeSpy).toBeCalledWith(undefined);
 });
@@ -131,7 +131,7 @@ test('The component should scale the value based on the image height and contain
     onImageLoad();
     view.update();
 
-    view.find('RectangleSelectionRenderer').prop('onChange')({width: 320, height: 180, top: 0, left: 320});
+    view.find('RectangleSelectionComponent').prop('onChange')({width: 320, height: 180, top: 0, left: 320});
 
     expect(changeSpy).toBeCalledWith({width: 960, height: 540, top: 0, left: 960});
 });
@@ -159,7 +159,7 @@ test('The component should not scale the value to exceed the natural image width
     onImageLoad();
     view.update();
 
-    view.find('RectangleSelectionRenderer').prop('onChange')({width: 554, height: 200, top: 0, left: 0});
+    view.find('RectangleSelectionComponent').prop('onChange')({width: 554, height: 200, top: 0, left: 0});
 
     expect(changeSpy).toBeCalledWith({width: 4896, height: 1769.1056910569105, top: 0, left: 0});
 });
@@ -194,7 +194,7 @@ test.each([
 
         view.update();
 
-        const rectangle = view.find('RectangleSelectionRenderer');
+        const rectangle = view.find('RectangleSelectionComponent');
         expect(rectangle.length).toBe(1);
         expect(rectangle.props().minHeight).toEqual(expectedMinHeight);
         expect(rectangle.props().minWidth).toEqual(expectedMinWidth);

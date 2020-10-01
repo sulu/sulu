@@ -1,8 +1,7 @@
 // @flow
 import {mount, render} from 'enzyme';
 import React from 'react';
-import {RectangleSelection} from '../RectangleSelection';
-import RectangleSelectionRenderer from '../RectangleSelectionRenderer';
+import {RectangleSelectionContainer} from '../RectangleSelection';
 
 jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
@@ -13,9 +12,14 @@ jest.mock('../../../utils/DOM/afterElementsRendered');
 
 test('The component should render with children', () => {
     const view = render(
-        <RectangleSelection containerHeight={1000} containerWidth={2000} onChange={jest.fn()} value={undefined}>
+        <RectangleSelectionContainer
+            containerHeight={1000}
+            containerWidth={2000}
+            onChange={jest.fn()}
+            value={undefined}
+        >
             <p>Lorem ipsum</p>
-        </RectangleSelection>
+        </RectangleSelectionContainer>
     );
 
     expect(view).toMatchSnapshot();
@@ -23,14 +27,14 @@ test('The component should render with children', () => {
 
 test('The component should render with value as selection', () => {
     const view = mount(
-        <RectangleSelection
+        <RectangleSelectionContainer
             containerHeight={1000}
             containerWidth={2000}
             onChange={jest.fn()}
             value={{width: 1, height: 2, top: 3, left: 4}}
         >
             <p>Lorem ipsum</p>
-        </RectangleSelection>
+        </RectangleSelectionContainer>
     );
 
     expect(view.render()).toMatchSnapshot();
@@ -38,7 +42,7 @@ test('The component should render with value as selection', () => {
 
 test('The component should render with minimum size notification', () => {
     const view = mount(
-        <RectangleSelection
+        <RectangleSelectionContainer
             containerHeight={1000}
             containerWidth={2000}
             minHeight={200}
@@ -47,7 +51,7 @@ test('The component should render with minimum size notification', () => {
             value={{width: 100, height: 200, top: 30, left: 40}}
         >
             <p>Lorem ipsum</p>
-        </RectangleSelection>
+        </RectangleSelectionContainer>
     );
 
     expect(view.render()).toMatchSnapshot();
@@ -55,7 +59,7 @@ test('The component should render with minimum size notification', () => {
 
 test('The component should render without minimum size notification', () => {
     const view = mount(
-        <RectangleSelection
+        <RectangleSelectionContainer
             containerHeight={1000}
             containerWidth={2000}
             minHeight={100}
@@ -64,7 +68,7 @@ test('The component should render without minimum size notification', () => {
             value={{width: 100, height: 200, top: 30, left: 40}}
         >
             <p>Lorem ipsum</p>
-        </RectangleSelection>
+        </RectangleSelectionContainer>
     );
 
     expect(view.render()).toMatchSnapshot();
@@ -74,7 +78,7 @@ test('The component should reset the value if modifiable rectangle is doubleclic
     const changeSpy = jest.fn();
 
     const view = mount(
-        <RectangleSelection
+        <RectangleSelectionContainer
             containerHeight={1000}
             containerWidth={2000}
             minHeight={100}
@@ -83,7 +87,7 @@ test('The component should reset the value if modifiable rectangle is doubleclic
             value={{width: 100, height: 200, top: 30, left: 40}}
         >
             <p>Lorem ipsum</p>
-        </RectangleSelection>
+        </RectangleSelectionContainer>
     );
 
     view.find('ModifiableRectangle').prop('onDoubleClick')();
@@ -93,7 +97,7 @@ test('The component should reset the value if modifiable rectangle is doubleclic
 
 test('The component should center and maximize the selection when a minHeight and minWidth is given', () => {
     const view = mount(
-        <RectangleSelection
+        <RectangleSelectionContainer
             containerHeight={1000}
             containerWidth={2000}
             minHeight={50}
@@ -102,7 +106,7 @@ test('The component should center and maximize the selection when a minHeight an
             value={undefined}
         >
             <p>Lorem ipsum</p>
-        </RectangleSelection>
+        </RectangleSelectionContainer>
     );
 
     expect(view.render()).toMatchSnapshot();
@@ -112,17 +116,17 @@ test('The component should not allow the selection to move over the borders', ()
     const changeSpy = jest.fn();
 
     const view = mount(
-        <RectangleSelection
+        <RectangleSelectionContainer
             containerHeight={1000}
             containerWidth={2000}
             onChange={changeSpy}
             value={{height: 2000, left: 0, top: 0, width: 2000}}
         >
             <p>Lorem ipsum</p>
-        </RectangleSelection>
+        </RectangleSelectionContainer>
     );
 
-    view.find(RectangleSelectionRenderer).first().children().first().instance().handleRectangleChange({
+    view.find('RectangleSelectionComponent').first().instance().handleRectangleChange({
         width: 0,
         height: 0,
         left: -10,
@@ -135,17 +139,17 @@ test('The component should not allow the selection to be bigger than the contain
     const changeSpy = jest.fn();
 
     const view = mount(
-        <RectangleSelection
+        <RectangleSelectionContainer
             containerHeight={1000}
             containerWidth={2000}
             onChange={changeSpy}
             value={{height: 1000, left: 0, top: 0, width: 2000}}
         >
             <p>Lorem ipsum</p>
-        </RectangleSelection>
+        </RectangleSelectionContainer>
     );
 
-    view.find(RectangleSelectionRenderer).first().children().first().instance().handleRectangleChange({
+    view.find('RectangleSelectionComponent').first().instance().handleRectangleChange({
         width: 10,
         height: 20,
         left: 0,
@@ -158,7 +162,7 @@ test('The component should enforce a ratio on the selection if minWidth and minH
     const changeSpy = jest.fn();
 
     const view = mount(
-        <RectangleSelection
+        <RectangleSelectionContainer
             containerHeight={1000}
             containerWidth={2000}
             minHeight={20}
@@ -167,10 +171,10 @@ test('The component should enforce a ratio on the selection if minWidth and minH
             value={{height: 1000, left: 0, top: 0, width: 2000}}
         >
             <p>Lorem ipsum</p>
-        </RectangleSelection>
+        </RectangleSelectionContainer>
     );
 
-    view.find(RectangleSelectionRenderer).first().children().first().instance().handleRectangleChange({
+    view.find('RectangleSelectionComponent').first().instance().handleRectangleChange({
         width: -10,
         height: -250,
         left: 0,
@@ -183,7 +187,7 @@ test('The component should not round if told by the properties', () => {
     const changeSpy = jest.fn();
 
     const view = mount(
-        <RectangleSelection
+        <RectangleSelectionContainer
             containerHeight={1000}
             containerWidth={2000}
             minHeight={1}
@@ -193,7 +197,7 @@ test('The component should not round if told by the properties', () => {
             value={undefined}
         >
             <p>Lorem ipsum</p>
-        </RectangleSelection>
+        </RectangleSelectionContainer>
     );
 
     expect(view.find('ModifiableRectangle').prop('top')).toBeGreaterThan(166);
@@ -206,7 +210,7 @@ test('The component should work with percentage values if told by the properties
     const changeSpy = jest.fn();
 
     mount(
-        <RectangleSelection
+        <RectangleSelectionContainer
             containerHeight={1000}
             containerWidth={2000}
             onChange={changeSpy}
@@ -214,7 +218,7 @@ test('The component should work with percentage values if told by the properties
             value={undefined}
         >
             <p>Lorem ipsum</p>
-        </RectangleSelection>
+        </RectangleSelectionContainer>
     );
 
     expect(changeSpy).toBeCalledWith({top: 0, left: 0, width: 1, height: 1});

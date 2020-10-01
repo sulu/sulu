@@ -29,7 +29,7 @@ const AVAILABLE_HOTSPOT_TYPES = {
 };
 
 @observer
-class HotspotsFormRenderer extends React.PureComponent<Props> {
+class HotspotsFormRenderer extends React.Component<Props> {
     @computed get selectedHotspot() {
         const {value, selectedIndex} = this.props;
 
