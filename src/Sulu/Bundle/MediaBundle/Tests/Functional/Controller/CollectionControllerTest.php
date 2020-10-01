@@ -663,25 +663,8 @@ class CollectionControllerTest extends SuluTestCase
     {
         $this->getContainer()->get('sulu_media.system_collections.manager')->warmUp();
         $this->client->getContainer()->get('sulu_media.system_collections.manager')->warmUp();
-        $role = $this->createRole();
-
-        $this->em->flush();
 
         $generateColor = '#ffcc00';
-
-        $permissions = [
-            $role->getId() => [
-                'view' => true,
-                'edit' => true,
-                'add' => true,
-                'delete' => false,
-                'archive' => false,
-                'live' => false,
-                'security' => false,
-            ],
-        ];
-
-        $this->accessControlManager->setPermissions(Collection::class, $this->collection1->getId(), $permissions);
 
         $this->client->request(
             'POST',
@@ -720,14 +703,8 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertEquals($this->collection1->getId(), $response->_embedded->parent->id);
 
         $this->assertEquals(
-            $permissions,
+            [],
             $this->accessControlManager->getPermissions(Collection::class, $response->id)
-        );
-
-        $this->getContainer()->get('sulu_security.access_control_manager')->setPermissions(
-            Collection::class,
-            $response->id,
-            $permissions
         );
 
         $this->client->request(
@@ -773,6 +750,58 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->assertNotEmpty($response);
         $this->assertEquals(2 + $this->getAmountOfSystemCollections(), $response->total);
+    }
+
+    public function testPostWithPermissions()
+    {
+        $this->getContainer()->get('sulu_media.system_collections.manager')->warmUp();
+        $this->client->getContainer()->get('sulu_media.system_collections.manager')->warmUp();
+        $role = $this->createRole();
+
+        $this->em->flush();
+
+        $generateColor = '#ffcc00';
+
+        $permissions = [
+            $role->getId() => [
+                'view' => true,
+                'edit' => true,
+                'add' => true,
+                'delete' => false,
+                'archive' => false,
+                'live' => false,
+                'security' => false,
+            ],
+        ];
+
+        $this->accessControlManager->setPermissions(Collection::class, $this->collection1->getId(), $permissions);
+
+        $this->client->request(
+            'POST',
+            '/api/collections',
+            [
+                'locale' => 'en-gb',
+                'style' => [
+                    'type' => 'circle',
+                    'color' => $generateColor,
+                ],
+                'type' => [
+                    'id' => $this->collectionType1->getId(),
+                ],
+                'title' => 'Test Collection 2',
+                'description' => 'This Description 2 is only for testing',
+                'parent' => $this->collection1->getId(),
+            ]
+        );
+
+        $response = \json_decode($this->client->getResponse()->getContent());
+
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+
+        $this->assertEquals(
+            $permissions,
+            $this->accessControlManager->getPermissions(Collection::class, $response->id)
+        );
     }
 
     public function testPostWithoutDetails()
