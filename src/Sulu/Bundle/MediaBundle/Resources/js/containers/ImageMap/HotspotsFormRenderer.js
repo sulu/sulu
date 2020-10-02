@@ -74,7 +74,7 @@ class HotspotsFormRenderer extends React.Component<Props> {
                                 className={hotspotsFormRendererStyles.tabs}
                                 onSelect={onHotspotSelect}
                                 selectedIndex={selectedIndex}
-                                skin="light"
+                                skin="transparent"
                                 small={true}
                             >
                                 {value.map((hotspot, index) => (

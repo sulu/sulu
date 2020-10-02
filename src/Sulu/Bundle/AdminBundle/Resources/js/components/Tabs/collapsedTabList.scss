@@ -2,9 +2,9 @@
 @import './variables.scss';
 
 $collapsedTabListBackgroundColor: $tabMenuBackgroundColor;
-$collapsedTabListLightBackgroundColor: $tabMenuLightBackgroundColor;
+$collapsedTabListTransparentBackgroundColor: $white;
 $collapsedTabListBoxShadowColor: rgba($dustyGray, .5);
-$collapsedTabListLightBoxShadowColor: rgba($alto, .5);
+$collapsedTabListTransparentBoxShadowColor: rgba($alto, .5);
 
 .collapsed-tab-list {
     list-style: none;
@@ -19,8 +19,8 @@ $collapsedTabListLightBoxShadowColor: rgba($alto, .5);
         box-shadow: 2px 6px 12px 0 $collapsedTabListBoxShadowColor;
     }
 
-    &.light {
-        background-color: $collapsedTabListLightBackgroundColor;
-        box-shadow: 2px 6px 12px 0 $collapsedTabListLightBoxShadowColor;
+    &.transparent {
+        background-color: $collapsedTabListTransparentBackgroundColor;
+        box-shadow: 2px 6px 12px 0 $collapsedTabListTransparentBoxShadowColor;
     }
 }

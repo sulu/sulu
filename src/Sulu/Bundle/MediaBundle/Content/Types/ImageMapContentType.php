@@ -389,7 +389,7 @@ class ImageMapContentType extends ComplexContentType implements ContentTypeExpor
 
             $propertyType = $property->initProperties($i, $hotspot['type']);
             foreach ($propertyType->getChildProperties() as $childProperty) {
-                $childProperty->setValue($hotspot[$childProperty->getName()]);
+                $childProperty->setValue($hotspot[$childProperty->getName()] ?? null);
                 $contentType = $this->contentTypeManager->get($childProperty->getContentTypeName());
 
                 $hotspotData[$childProperty->getName()] = $dataCallback($contentType, $childProperty);
