@@ -702,7 +702,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertEquals('Test Collection 2', $response->title);
         $this->assertEquals('This Description 2 is only for testing', $response->description);
         $this->assertEquals($this->collection1->getId(), $response->_embedded->parent->id);
-        $this->assertTrue($response->_hasPermissions);
+        $this->assertFalse($response->_hasPermissions);
 
         $this->assertEquals(
             [],
@@ -738,7 +738,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertNotEmpty($responseFirstEntity->changed);
         $this->assertEquals('Test Collection 2', $responseFirstEntity->title);
         $this->assertEquals('This Description 2 is only for testing', $responseFirstEntity->description);
-        $this->assertTrue($response->_hasPermissions);
+        $this->assertFalse($response->_hasPermissions);
 
         $this->client->request(
             'GET',
@@ -800,6 +800,7 @@ class CollectionControllerTest extends SuluTestCase
         $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $this->assertTrue($response->_hasPermissions);
 
         $this->assertEquals(
             $permissions,
