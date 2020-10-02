@@ -23,9 +23,7 @@ jest.mock('../../../../services/ResourceRequester/ResourceRequester', () => ({
 
 jest.mock('../../../../services/Requester/RequestPromise', () => {
     // $FlowFixMe
-    const ActualRequestPromise = require.requireActual('../../../../services/Requester/RequestPromise').default;
-
-    return class RequestPromise extends ActualRequestPromise {
+    return class RequestPromise extends Promise {
         abort = jest.fn();
     };
 });
