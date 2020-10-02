@@ -98,7 +98,7 @@ imageLoaded
 ```
 
 There is also the possibility, to render multiple RectangleSelections for one single container. But you should use the
-`withContainerSize` hoc to automatically pass `containerWidth` and `containerHeight` to the `RectangleSelectionRenderer`
+`withContainerSize` hoc to automatically pass `containerWidth` and `containerHeight` to the `RectangleSelection`
 components. For the sake of simplicity it's hardcoded in this example.
 
 ```javascript
@@ -117,7 +117,7 @@ imageLoaded
     ? <div>
         <div style={{ width: '800px', height: '500px', position: 'relative', overflow: 'hidden', display: 'inline-flex' }}>
             <img src="https://unsplash.it/800/500" style={{ userSelect: 'none', pointerEvents: 'none' }} alt="Unsplash image" />
-            <RectangleSelection.Renderer
+            <RectangleSelection
                 backdrop={false}
                 minSizeNotification={false}
                 minWidth={100}
@@ -129,7 +129,7 @@ imageLoaded
                 containerWidth={800}
                 containerHeight={500}
             />
-            <RectangleSelection.Renderer
+            <RectangleSelection
                 backdrop={false}
                 minSizeNotification={false}
                 minHeight={200}

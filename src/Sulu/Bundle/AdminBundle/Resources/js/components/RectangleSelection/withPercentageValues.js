@@ -12,7 +12,6 @@ type Props = {
     minHeight: number | typeof undefined,
     minWidth: number | typeof undefined,
     onChange: (value: ?SelectionData) => void,
-    usePercentageValues: boolean,
     value: SelectionData | typeof undefined,
 };
 
@@ -22,7 +21,6 @@ export default function withPercentageValues(Component: ComponentType<*>) {
         static defaultProps = {
             minHeight: undefined,
             minWidth: undefined,
-            usePercentageValues: false,
         };
 
         handleChange = (value: ?SelectionData) => {
@@ -80,14 +78,6 @@ export default function withPercentageValues(Component: ComponentType<*>) {
         }
 
         render() {
-            const {usePercentageValues} = this.props;
-
-            if (!usePercentageValues) {
-                return (
-                    <Component {...this.props} />
-                );
-            }
-
             const props = {
                 ...this.props,
                 minHeight: this.transformedMinHeight,

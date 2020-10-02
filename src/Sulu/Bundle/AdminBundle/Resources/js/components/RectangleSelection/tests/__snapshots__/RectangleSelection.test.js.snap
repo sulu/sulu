@@ -10,11 +10,11 @@ exports[`The component should center and maximize the selection when a minHeight
   <div
     class="rectangle hasBackdrop"
     role="button"
-    style="left: 0px; top: 250px; width: 2000px; height: 500px;"
+    style="left: 0px; top: 100px; width: 640px; height: 160px;"
   >
     <div
       class="backdrop"
-      style="outline-width: 2000px;"
+      style="outline-width: 640px;"
     />
     <div
       class="resizeHandle"
@@ -34,11 +34,11 @@ exports[`The component should render with children 1`] = `
   <div
     class="rectangle hasBackdrop"
     role="button"
-    style="left:0px;top:0px;width:2000px;height:1000px"
+    style="left:0px;top:0px;width:640px;height:360px"
   >
     <div
       class="backdrop"
-      style="outline-width:2000px"
+      style="outline-width:640px"
     />
     <div
       class="resizeHandle"
@@ -62,7 +62,7 @@ exports[`The component should render with minimum size notification 1`] = `
   >
     <div
       class="backdrop"
-      style="outline-width: 2000px;"
+      style="outline-width: 640px;"
     />
     <div
       class="resizeHandle"
@@ -92,7 +92,7 @@ exports[`The component should render with value as selection 1`] = `
   >
     <div
       class="backdrop"
-      style="outline-width: 2000px;"
+      style="outline-width: 640px;"
     />
     <div
       class="resizeHandle"
@@ -116,7 +116,7 @@ exports[`The component should render without minimum size notification 1`] = `
   >
     <div
       class="backdrop"
-      style="outline-width: 2000px;"
+      style="outline-width: 640px;"
     />
     <div
       class="resizeHandle"

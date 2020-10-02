@@ -1,7 +1,7 @@
 // @flow
 import {mount} from 'enzyme';
 import React from 'react';
-import {CircleSelectionContainer} from '../CircleSelection';
+import CircleSelection from '../CircleSelection';
 
 jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
@@ -12,15 +12,15 @@ jest.mock('../../../utils/DOM/afterElementsRendered');
 
 test('The component should render', () => {
     const view = mount(
-        <CircleSelectionContainer
-            containerHeight={1000}
-            containerWidth={2000}
+        <CircleSelection
+            // containerHeight={360}
+            // containerWidth={640}
             onChange={jest.fn()}
             onFinish={jest.fn()}
             value={{radius: 1, top: 3, left: 4}}
         >
             <p>Lorem ipsum</p>
-        </CircleSelectionContainer>
+        </CircleSelection>
     );
 
     expect(view.render()).toMatchSnapshot();
@@ -30,27 +30,27 @@ test('The component should center and maximize the selection if no value is give
     const changeSpy = jest.fn();
 
     mount(
-        <CircleSelectionContainer
-            containerHeight={1000}
-            containerWidth={2000}
+        <CircleSelection
+            // containerHeight={360}
+            // containerWidth={640}
             onChange={changeSpy}
             onFinish={jest.fn()}
             value={undefined}
         >
             <p>Lorem ipsum</p>
-        </CircleSelectionContainer>
+        </CircleSelection>
     );
 
-    expect(changeSpy).toBeCalledWith({left: 1000, radius: 500, top: 500});
+    expect(changeSpy).toBeCalledWith({left: 320, radius: 180, top: 180});
 });
 
 test('The component should reset the value if modifiable circle is doubleclicked', () => {
     const changeSpy = jest.fn();
 
     const view = mount(
-        <CircleSelectionContainer
-            containerHeight={1000}
-            containerWidth={2000}
+        <CircleSelection
+            // containerHeight={360}
+            // containerWidth={640}
             minHeight={100}
             minWidth={100}
             onChange={changeSpy}
@@ -58,21 +58,21 @@ test('The component should reset the value if modifiable circle is doubleclicked
             value={{radius: 100, top: 30, left: 40}}
         >
             <p>Lorem ipsum</p>
-        </CircleSelectionContainer>
+        </CircleSelection>
     );
 
     view.find('ModifiableCircle').prop('onDoubleClick')();
 
-    expect(changeSpy).toBeCalledWith({left: 1000, radius: 500, top: 500});
+    expect(changeSpy).toBeCalledWith({left: 320, radius: 180, top: 180});
 });
 
 test('The component should center and maximize the selection when a minRadius and maxRadius is given', () => {
     const changeSpy = jest.fn();
 
     mount(
-        <CircleSelectionContainer
-            containerHeight={1000}
-            containerWidth={2000}
+        <CircleSelection
+            // containerHeight={360}
+            // containerWidth={640}
             maxRadius={200}
             minRadius={50}
             onChange={changeSpy}
@@ -80,28 +80,28 @@ test('The component should center and maximize the selection when a minRadius an
             value={undefined}
         >
             <p>Lorem ipsum</p>
-        </CircleSelectionContainer>
+        </CircleSelection>
     );
 
-    expect(changeSpy).toBeCalledWith({left: 1000, radius: 200, top: 500});
+    expect(changeSpy).toBeCalledWith({left: 320, radius: 180, top: 180});
 });
 
 test('The component should not allow the selection to move over the borders', () => {
     const changeSpy = jest.fn();
 
     const view = mount(
-        <CircleSelectionContainer
-            containerHeight={1000}
-            containerWidth={2000}
+        <CircleSelection
+            // containerHeight={360}
+            // containerWidth={640}
             onChange={changeSpy}
             onFinish={jest.fn()}
             value={{left: 0, top: 0, radius: 2000}}
         >
             <p>Lorem ipsum</p>
-        </CircleSelectionContainer>
+        </CircleSelection>
     );
 
-    view.find('CircleSelectionComponent').first().instance().handleCircleChange(
+    view.find('RawCircleSelectionComponent').first().instance().handleCircleChange(
         {radius: 0, left: -10, top: -20}
     );
     expect(changeSpy).toBeCalledWith({radius: 0, top: 0, left: 0});
@@ -111,30 +111,30 @@ test('The component should not allow the selection to be bigger than the contain
     const changeSpy = jest.fn();
 
     const view = mount(
-        <CircleSelectionContainer
-            containerHeight={1000}
-            containerWidth={2000}
+        <CircleSelection
+            // containerHeight={360}
+            // containerWidth={640}
             onChange={changeSpy}
             onFinish={jest.fn()}
             value={{left: 0, top: 0, radius: 2000}}
         >
             <p>Lorem ipsum</p>
-        </CircleSelectionContainer>
+        </CircleSelection>
     );
 
-    view.find('CircleSelectionComponent').first().instance().handleCircleChange(
+    view.find('RawCircleSelectionComponent').first().instance().handleCircleChange(
         {radius: 5000, left: 0, top: 0}
     );
-    expect(changeSpy).toBeCalledWith({radius: 2236, top: 0, left: 0});
+    expect(changeSpy).toBeCalledWith({radius: 734, top: 0, left: 0});
 });
 
 test('The component should not round if told by the properties', () => {
     const changeSpy = jest.fn();
 
     const view = mount(
-        <CircleSelectionContainer
-            containerHeight={1000}
-            containerWidth={2000}
+        <CircleSelection
+            // containerHeight={360}
+            // containerWidth={640}
             minRadius={5}
             onChange={changeSpy}
             onFinish={jest.fn()}
@@ -142,7 +142,7 @@ test('The component should not round if told by the properties', () => {
             value={undefined}
         >
             <p>Lorem ipsum</p>
-        </CircleSelectionContainer>
+        </CircleSelection>
     );
 
     expect(view.find('ModifiableCircle').prop('top')).toBeGreaterThan(166);
@@ -154,34 +154,34 @@ test('The component should work with percentage values if told by the properties
     const changeSpy = jest.fn();
 
     mount(
-        <CircleSelectionContainer
-            containerHeight={1000}
-            containerWidth={2000}
+        <CircleSelection
+            // containerHeight={360}
+            // containerWidth={640}
             onChange={changeSpy}
             onFinish={jest.fn()}
             usePercentageValues={true}
             value={undefined}
         >
             <p>Lorem ipsum</p>
-        </CircleSelectionContainer>
+        </CircleSelection>
     );
 
-    expect(changeSpy).toBeCalledWith({top: 0.5, left: 0.5, radius: 0.25});
+    expect(changeSpy).toBeCalledWith({top: 0.5, left: 0.5, radius: 0.28125});
 });
 
 test('The component should call onFinish', () => {
     const finishSpy = jest.fn();
 
     const circleSelection = mount(
-        <CircleSelectionContainer
-            containerHeight={1000}
-            containerWidth={2000}
+        <CircleSelection
+            // containerHeight={360}
+            // containerWidth={640}
             onChange={jest.fn()}
             onFinish={finishSpy}
             value={undefined}
         >
             <p>Lorem ipsum</p>
-        </CircleSelectionContainer>
+        </CircleSelection>
     );
 
     circleSelection.find('ModifiableCircle').props().onFinish();

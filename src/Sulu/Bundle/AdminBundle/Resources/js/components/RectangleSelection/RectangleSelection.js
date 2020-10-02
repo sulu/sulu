@@ -31,7 +31,7 @@ type Props = {
 };
 
 @observer
-class RectangleSelectionComponent extends React.Component<Props> {
+class RawRectangleSelectionComponent extends React.Component<Props> {
     static defaultProps = {
         backdrop: true,
         disabled: false,
@@ -113,7 +113,7 @@ class RectangleSelectionComponent extends React.Component<Props> {
     }
 
     @computed get normalizers() {
-        return RectangleSelectionComponent.createNormalizers(this.props);
+        return RawRectangleSelectionComponent.createNormalizers(this.props);
     }
 
     normalize(selection: SelectionData): SelectionData {
@@ -170,6 +170,7 @@ class RectangleSelectionComponent extends React.Component<Props> {
     render() {
         const {
             backdrop,
+            children,
             containerHeight,
             containerWidth,
             disabled,
@@ -188,7 +189,7 @@ class RectangleSelectionComponent extends React.Component<Props> {
 
         const minSizeReached = minSizeNotification && height <= (minHeight || 0) && width <= (minWidth || 0);
 
-        return (
+        const rectangle = (
             <ModifiableRectangle
                 backdropSize={backdropSize}
                 disabled={disabled}
@@ -203,39 +204,36 @@ class RectangleSelectionComponent extends React.Component<Props> {
                 width={width}
             />
         );
+
+        if (children) {
+            return (
+                <div className={rectangleSelectionStyles.selection}>
+                    {children}
+                    {rectangle}
+                </div>
+            );
+        }
+
+        return rectangle;
     }
 }
 
-const RectangleSelectionWrapper = withPercentageValues(RectangleSelectionComponent);
+const RectangleSelectionComponentWithPercentageValues = withPercentageValues(RawRectangleSelectionComponent);
 
-class RectangleSelectionContainer extends React.Component<Props> {
-    static defaultProps = {
-        backdrop: true,
-        disabled: false,
-        minHeight: undefined,
-        minSizeNotification: true,
-        minWidth: undefined,
-        round: true,
-        usePercentageValues: false,
-    };
-
+class RectangleSelectionComponent extends React.Component<Props> {
     render() {
-        const {children, ...rest} = this.props;
+        const {usePercentageValues} = this.props;
 
-        return (
-            <div className={rectangleSelectionStyles.selection}>
-                {children}
-                <RectangleSelectionWrapper {...rest} />
-            </div>
-        );
+        if (usePercentageValues) {
+            return <RectangleSelectionComponentWithPercentageValues {...this.props} />;
+        }
+
+        return <RawRectangleSelectionComponent {...this.props} />;
     }
 }
 
-// This export should only be used in tests
-export {RectangleSelectionContainer};
-
-const RectangleSelectionContainerWrapper = withContainerSize(
-    RectangleSelectionContainer,
+const RectangleSelectionComponentWithContainerSize = withContainerSize(
+    RectangleSelectionComponent,
     rectangleSelectionStyles.container
 );
 
@@ -256,9 +254,9 @@ export default class RectangleSelection extends React.Component<Props> {
         const {children} = this.props;
 
         if (children) {
-            return <RectangleSelectionContainerWrapper {...this.props} />;
+            return <RectangleSelectionComponentWithContainerSize {...this.props} />;
         }
 
-        return <RectangleSelectionWrapper {...this.props} />;
+        return <RectangleSelectionComponent {...this.props} />;
     }
 }

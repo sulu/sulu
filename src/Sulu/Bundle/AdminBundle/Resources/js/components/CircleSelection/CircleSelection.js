@@ -30,7 +30,7 @@ type Props = {
 };
 
 @observer
-class CircleSelectionComponent extends React.Component<Props> {
+class RawCircleSelectionComponent extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
         maxRadius: undefined,
@@ -100,7 +100,7 @@ class CircleSelectionComponent extends React.Component<Props> {
     }
 
     @computed get normalizers() {
-        return CircleSelectionComponent.createNormalizers(this.props);
+        return RawCircleSelectionComponent.createNormalizers(this.props);
     }
 
     normalize(selection: SelectionData): SelectionData {
@@ -155,10 +155,10 @@ class CircleSelectionComponent extends React.Component<Props> {
     };
 
     render() {
-        const {disabled, label, onFinish, resizable, skin} = this.props;
+        const {children, disabled, label, onFinish, resizable, skin} = this.props;
         const {left, top, radius} = this.value;
 
-        return (
+        const circle = (
             <ModifiableCircle
                 disabled={disabled}
                 label={label}
@@ -172,39 +172,36 @@ class CircleSelectionComponent extends React.Component<Props> {
                 top={top}
             />
         );
+
+        if (children) {
+            return (
+                <div className={circleSelectionStyles.selection}>
+                    {children}
+                    {circle}
+                </div>
+            );
+        }
+
+        return circle;
     }
 }
 
-const CircleSelectionWrapper = withPercentageValues(CircleSelectionComponent);
+const CircleSelectionComponentWithPercentageValues = withPercentageValues(RawCircleSelectionComponent);
 
-class CircleSelectionContainer extends React.Component<Props> {
-    static defaultProps = {
-        disabled: false,
-        maxRadius: undefined,
-        minRadius: undefined,
-        resizable: true,
-        round: true,
-        skin: 'outlined',
-        usePercentageValues: false,
-    };
-
+class CircleSelectionComponent extends React.Component<Props> {
     render() {
-        const {children, ...rest} = this.props;
+        const {usePercentageValues} = this.props;
 
-        return (
-            <div className={circleSelectionStyles.selection}>
-                {children}
-                <CircleSelectionWrapper {...rest} />
-            </div>
-        );
+        if (usePercentageValues) {
+            return <CircleSelectionComponentWithPercentageValues {...this.props} />;
+        }
+
+        return <RawCircleSelectionComponent {...this.props} />;
     }
 }
 
-// This export should only be used in tests
-export {CircleSelectionContainer};
-
-const CircleSelectionContainerWrapper = withContainerSize(
-    CircleSelectionContainer,
+const CircleSelectionComponentWithContainerSize = withContainerSize(
+    CircleSelectionComponent,
     circleSelectionStyles.container
 );
 
@@ -225,9 +222,9 @@ export default class CircleSelection extends React.Component<Props> {
         const {children} = this.props;
 
         if (children) {
-            return <CircleSelectionContainerWrapper {...this.props} />;
+            return <CircleSelectionComponentWithContainerSize {...this.props} />;
         }
 
-        return <CircleSelectionWrapper {...this.props} />;
+        return <CircleSelectionComponent {...this.props} />;
     }
 }
