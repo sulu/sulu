@@ -1,0 +1,25 @@
+.image-renderer {
+    display: flex;
+    justify-content: center;
+}
+
+.image-renderer-wrapper {
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+
+    &,
+    * {
+        user-select: none;
+    }
+
+    img {
+        pointer-events: none;
+    }
+}
+
+.image {
+    width: auto;
+    max-height: 500px;
+    max-width: 100%;
+}

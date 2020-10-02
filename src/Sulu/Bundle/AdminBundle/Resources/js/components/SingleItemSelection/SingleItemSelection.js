@@ -11,6 +11,7 @@ import type {Button as ButtonConfig} from './types';
 type Props<T, U> = {|
     allowRemoveWhileItemDisabled: boolean,
     children?: Node,
+    className?: string,
     disabled: boolean,
     emptyText?: string,
     id?: T,
@@ -45,6 +46,7 @@ export default class SingleItemSelection<T: ?string | number, U> extends React.C
         const {
             allowRemoveWhileItemDisabled,
             children,
+            className,
             disabled,
             itemDisabled,
             emptyText,
@@ -58,6 +60,7 @@ export default class SingleItemSelection<T: ?string | number, U> extends React.C
 
         const singleItemSelectionClass = classNames(
             singleItemSelectionStyles.singleItemSelection,
+            className,
             {
                 [singleItemSelectionStyles.error]: !valid,
                 [singleItemSelectionStyles.disabled]: disabled || itemDisabled,
@@ -71,13 +74,6 @@ export default class SingleItemSelection<T: ?string | number, U> extends React.C
             }
         );
 
-        const itemContainerClass = classNames(
-            singleItemSelectionStyles.itemContainer,
-            {
-                [singleItemSelectionStyles.hasRightButton]: !!rightButton,
-            }
-        );
-
         return (
             <div className={singleItemSelectionClass}>
                 <Button
@@ -85,7 +81,7 @@ export default class SingleItemSelection<T: ?string | number, U> extends React.C
                     disabled={disabled || itemDisabled}
                     location="left"
                 />
-                <div className={itemContainerClass}>
+                <div className={singleItemSelectionStyles.itemContainer}>
                     <div className={itemClass} onClick={this.handleItemClick} role="button">
                         {children
                             ? children

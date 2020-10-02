@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The component should render 1`] = `
+<div
+  class="selection"
+>
+  <p>
+    Lorem ipsum
+  </p>
+  <div
+    class="circle"
+    role="button"
+    style="left: 4px; top: 3px; width: 2px; height: 2px;"
+  >
+    <div
+      class="resizeHandle"
+      role="slider"
+      style="transform-origin: calc(50% + -1px) 50%; transform: translate(calc(-50% + 1px), -50%) rotate(0deg);"
+    />
+  </div>
+</div>
+`;

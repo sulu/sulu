@@ -87,6 +87,16 @@ class PropertyMetadata extends ItemMetadata
      */
     protected $structure;
 
+    /**
+     * @var ItemMetadata[]
+     */
+    public $components = [];
+
+    /**
+     * @var string
+     */
+    public $defaultComponentName;
+
     public function getCssClass(): ?string
     {
         return $this->cssClass;
@@ -245,5 +255,47 @@ class PropertyMetadata extends ItemMetadata
     public function setOnInvalid(?string $onInvalid)
     {
         $this->onInvalid = $onInvalid;
+    }
+
+    /**
+     * Return the default component name.
+     *
+     * @return string
+     */
+    public function getDefaultComponentName()
+    {
+        return $this->defaultComponentName;
+    }
+
+    /**
+     * Return the components.
+     *
+     * @return ItemMetadata[]
+     */
+    public function getComponents()
+    {
+        return $this->components;
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return ItemMetadata
+     */
+    public function getComponentByName($name)
+    {
+        foreach ($this->components as $component) {
+            if ($component->getName() == $name) {
+                return $component;
+            }
+        }
+    }
+
+    /**
+     * Add a new component.
+     */
+    public function addComponent(ItemMetadata $component)
+    {
+        $this->components[] = $component;
     }
 }

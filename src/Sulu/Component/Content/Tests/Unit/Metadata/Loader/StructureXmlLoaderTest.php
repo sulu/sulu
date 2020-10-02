@@ -15,7 +15,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
-use Sulu\Component\Content\Exception\InvalidBlockDefaultTypeException;
+use Sulu\Component\Content\Exception\InvalidDefaultTypeException;
 use Sulu\Component\Content\Metadata\Loader\Exception\RequiredPropertyNameNotFoundException;
 use Sulu\Component\Content\Metadata\Loader\Exception\RequiredTagNotFoundException;
 use Sulu\Component\Content\Metadata\Loader\StructureXmlLoader;
@@ -295,8 +295,8 @@ class StructureXmlLoaderTest extends TestCase
 
     public function testLoadFormWithInvalidBlockDefaultType()
     {
-        $this->expectException(InvalidBlockDefaultTypeException::class);
-        $this->expectExceptionMessage('Block "blocks" has invalid default-type "test". Available types are "editor", "images"');
+        $this->expectException(InvalidDefaultTypeException::class);
+        $this->expectExceptionMessage('Property "blocks" has invalid default-type "test". Available types are "editor", "images"');
 
         $this->load('template_with_invalid_block_default_type.xml');
     }

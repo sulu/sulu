@@ -196,6 +196,11 @@
             <argument type="tagged" tag="sulu_admin.field_metadata_validator"/>
         </service>
 
+        <service id="sulu_admin.field_metadata_validator.types_property"
+                 class="Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Validation\TypesPropertyFieldMetadataValidator">
+            <tag name="sulu_admin.field_metadata_validator"/>
+        </service>
+
         <service id="sulu_admin.field_metadata_validator.block"
                  class="Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Validation\BlockFieldMetadataValidator">
             <tag name="sulu_admin.field_metadata_validator"/>

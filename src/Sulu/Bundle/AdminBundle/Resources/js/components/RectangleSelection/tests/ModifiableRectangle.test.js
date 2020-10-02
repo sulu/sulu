@@ -34,44 +34,44 @@ test('The component should call the double click callback', () => {
 });
 
 test('The component should call the change callback on move', () => {
-    const bodyListeners = {};
+    const windowListeners = {};
     const changeSpy = jest.fn();
-    document.body.addEventListener = jest.fn((event, cb) => bodyListeners[event] = cb);
+    window.addEventListener = jest.fn((event, cb) => windowListeners[event] = cb);
 
     const rectangle = mount(<ModifiableRectangle height={100} onChange={changeSpy} width={200} />);
-    expect(bodyListeners.mousemove).toBeDefined();
-    expect(bodyListeners.mouseup).toBeDefined();
+    expect(windowListeners.mousemove).toBeDefined();
+    expect(windowListeners.mouseup).toBeDefined();
 
-    rectangle.simulate('mousedown', {pageX: 10, pageY: 20});
-    bodyListeners.mousemove({pageX: 15, pageY: 30});
+    rectangle.simulate('mousedown', {});
+    windowListeners.mousemove({movementX: -15, movementY: -30});
 
     expect(changeSpy).toHaveBeenCalledTimes(1);
-    expect(changeSpy).toHaveBeenCalledWith({top: 10, left: 5, width: 0, height: 0});
+    expect(changeSpy).toHaveBeenCalledWith({top: -30, left: -15, width: 0, height: 0});
 
-    bodyListeners.mouseup();
-    bodyListeners.mousemove({pageX: 100, pageY: 200});
+    windowListeners.mouseup();
+    windowListeners.mousemove({movementX: 100, movementY: 200});
 
     expect(changeSpy).toHaveBeenCalledTimes(1);
 });
 
 test('The component should call the change callback on resize', () => {
-    const bodyListeners = {};
+    const windowListeners = {};
     const changeSpy = jest.fn();
-    document.body.addEventListener = jest.fn((event, cb) => bodyListeners[event] = cb);
+    window.addEventListener = jest.fn((event, cb) => windowListeners[event] = cb);
 
     const rectangle = mount(<ModifiableRectangle height={100} onChange={changeSpy} width={200} />);
     const resizeHandle = rectangle.find('.resizeHandle');
-    expect(bodyListeners.mousemove).toBeDefined();
-    expect(bodyListeners.mouseup).toBeDefined();
+    expect(windowListeners.mousemove).toBeDefined();
+    expect(windowListeners.mouseup).toBeDefined();
 
-    resizeHandle.simulate('mousedown', {pageX: 10, pageY: 20});
-    bodyListeners.mousemove({pageX: 15, pageY: 30});
+    resizeHandle.simulate('mousedown', {});
+    windowListeners.mousemove({movementX: 15, movementY: 30});
 
     expect(changeSpy).toHaveBeenCalledTimes(1);
-    expect(changeSpy).toHaveBeenCalledWith({top: 0, left: 0, width: 5, height: 10});
+    expect(changeSpy).toHaveBeenCalledWith({top: 0, left: 0, width: 15, height: 30});
 
-    bodyListeners.mouseup();
-    bodyListeners.mousemove({pageX: 100, pageY: 200});
+    windowListeners.mouseup();
+    windowListeners.mousemove({movementX: -10, movementY: 10});
 
     expect(changeSpy).toHaveBeenCalledTimes(1);
 });

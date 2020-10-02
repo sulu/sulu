@@ -10,12 +10,12 @@ const [selectedIndex, setSelectedIndex] = React.useState(0);
 </Tabs>
 ```
 
-There is also a `light` skin for tabs:
+There is also a `transparent` skin for tabs:
 
 ```javascript
 const [selectedIndex, setSelectedIndex] = React.useState(0);
 
-<Tabs selectedIndex={selectedIndex} onSelect={setSelectedIndex} skin="light">
+<Tabs selectedIndex={selectedIndex} onSelect={setSelectedIndex} skin="transparent">
     <Tabs.Tab>Cheeseburger</Tabs.Tab>
     <Tabs.Tab>Cupcakes</Tabs.Tab>
     <Tabs.Tab>Zombies</Tabs.Tab>
@@ -27,7 +27,7 @@ And a `small` modifier:
 ```javascript
 const [selectedIndex, setSelectedIndex] = React.useState(0);
 
-<Tabs selectedIndex={selectedIndex} onSelect={setSelectedIndex} skin="light" small={true}>
+<Tabs selectedIndex={selectedIndex} onSelect={setSelectedIndex} skin="transparent" small={true}>
     <Tabs.Tab>EN</Tabs.Tab>
     <Tabs.Tab>FR</Tabs.Tab>
     <Tabs.Tab>ES</Tabs.Tab>
@@ -63,12 +63,12 @@ const [selectedIndex, setSelectedIndex] = React.useState(0);
 </Tabs>
 ```
 
-And the same with `light` and `small`.
+And the same with `transparent` and `small`.
 
 ```javascript
 const [selectedIndex, setSelectedIndex] = React.useState(0);
 
-<Tabs selectedIndex={selectedIndex} onSelect={setSelectedIndex} skin="light" small={true}>
+<Tabs selectedIndex={selectedIndex} onSelect={setSelectedIndex} skin="transparent" small={true}>
     <Tabs.Tab>#1</Tabs.Tab>
     <Tabs.Tab>#2</Tabs.Tab>
     <Tabs.Tab>#3</Tabs.Tab>

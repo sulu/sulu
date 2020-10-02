@@ -58,10 +58,10 @@ class BlockPropertyTest extends TestCase
     /**
      * @dataProvider provideIsMultiple
      */
-    public function testGetIsMultiple()
+    public function testGetIsMultiple($minOccurs, $maxOccurs, $result)
     {
-        $blockProperty = new BlockProperty('block', [], 'test', false, false, null, null);
+        $blockProperty = new BlockProperty('block', [], 'test', false, false, $maxOccurs, $minOccurs);
 
-        $this->assertEquals(true, $blockProperty->getIsMultiple());
+        $this->assertEquals($result, $blockProperty->getIsMultiple());
     }
 }

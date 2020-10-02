@@ -150,4 +150,25 @@ class XmlFormMetadataLoaderTest extends KernelTestCase
         $this->assertEquals('editor', $types['editor']->getName());
         $this->assertEquals('editor_image', $types['editor_image']->getName());
     }
+
+    public function testGetMetadataWithPropertyWithTypes()
+    {
+        $form = $this->xmlFormMetadataLoader->getMetadata('form_with_property_with_types', 'en');
+
+        /** @var FieldMetadata $image */
+        $image = $form->getItems()['image'];
+
+        $this->assertInstanceOf(FieldMetadata::class, $image);
+        $this->assertEquals('editor', $image->getDefaultType());
+
+        $types = $image->getTypes();
+        $this->assertCount(2, $types);
+        $this->assertEquals('editor', $types['editor']->getName());
+        $this->assertCount(1, $types['editor']->getItems());
+        $this->assertEquals('article', $types['editor']->getItems()['article']->getName());
+        $this->assertEquals('editor_image', $types['editor_image']->getName());
+        $this->assertCount(2, $types['editor_image']->getItems());
+        $this->assertEquals('images', $types['editor_image']->getItems()['images']->getName());
+        $this->assertEquals('article', $types['editor_image']->getItems()['article']->getName());
+    }
 }

@@ -97,17 +97,6 @@ class BlockFieldMetadataValidatorTest extends TestCase
         $this->blockFieldMetadataValidator->validate($block, 'some_form_key');
     }
 
-    public function testValidatePropertyNameType()
-    {
-        $item = $this->createFieldMetadata('type', 'text_line');
-        $type = $this->createFormMetadata('some_block_type', [$item]);
-        $block = $this->createFieldMetadata('some_block', 'block', [$type]);
-
-        $this->expectReservedPropertyNameException('some_form_key', 'some_block', 'type');
-
-        $this->blockFieldMetadataValidator->validate($block, 'some_form_key');
-    }
-
     public function testValidatePropertyNameSettings()
     {
         $item = $this->createFieldMetadata('settings', 'text_line');
@@ -119,14 +108,14 @@ class BlockFieldMetadataValidatorTest extends TestCase
         $this->blockFieldMetadataValidator->validate($block, 'some_form_key');
     }
 
-    public function testValidateBlockWithSectionWithTypeProperty()
+    public function testValidateBlockWithSectionWithSettingsProperty()
     {
-        $item = $this->createFieldMetadata('type', 'text_line');
+        $item = $this->createFieldMetadata('settings', 'text_line');
         $section = $this->createSectionMetadata('some_section', [$item]);
         $type = $this->createFormMetadata('some_block_type', [$section]);
         $block = $this->createFieldMetadata('some_block', 'block', [$type]);
 
-        $this->expectReservedPropertyNameException('some_form_key', 'some_block', 'type');
+        $this->expectReservedPropertyNameException('some_form_key', 'some_block', 'settings');
 
         $this->blockFieldMetadataValidator->validate($block, 'some_form_key');
     }

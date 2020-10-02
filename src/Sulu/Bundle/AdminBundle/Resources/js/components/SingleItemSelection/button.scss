@@ -11,13 +11,12 @@ $singleItemSelectionButtonActiveBackgroundColor: $shakespeare;
     width: 28px;
     background-color: $singleItemSelectionButtonBackgroundColor;
     color: $singleItemSelectionButtonColor;
-    border: 1px solid $singleItemSelectionBorderColor;
+    border: none;
     cursor: pointer;
     font-size: 14px;
 
     &.left {
-        border-right: none;
-        border-radius: $singleItemSelectionBorderRadius 0 0 $singleItemSelectionBorderRadius;
+        border-right: 1px solid $singleItemSelectionBorderColor;
 
         &:hover {
             background-color: $singleItemSelectionButtonActiveBackgroundColor;
@@ -27,8 +26,7 @@ $singleItemSelectionButtonActiveBackgroundColor: $shakespeare;
     }
 
     &.right {
-        border-left: none;
-        border-radius: 0 $singleItemSelectionBorderRadius  $singleItemSelectionBorderRadius 0;
+        border-left: 1px solid $singleItemSelectionBorderColor;
     }
 
     &.has-options {

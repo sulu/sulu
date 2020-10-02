@@ -233,9 +233,9 @@ exports[`Render with emptyText if no children have been passed 1`] = `
 </div>
 `;
 
-exports[`Render with given children prop 1`] = `
+exports[`Render with given children prop and with custom className 1`] = `
 <div
-  class="singleItemSelection"
+  class="singleItemSelection test"
 >
   <button
     class="button left"
@@ -308,7 +308,7 @@ exports[`Render with right button 1`] = `
     />
   </button>
   <div
-    class="itemContainer hasRightButton"
+    class="itemContainer"
   >
     <div
       class="item"
@@ -343,7 +343,7 @@ exports[`Render with right button with options 1`] = `
     />
   </button>
   <div
-    class="itemContainer hasRightButton"
+    class="itemContainer"
   >
     <div
       class="item"

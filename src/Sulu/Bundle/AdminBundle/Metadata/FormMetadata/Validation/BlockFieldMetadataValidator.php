@@ -18,8 +18,6 @@ use Sulu\Component\Content\Exception\ReservedPropertyNameException;
 
 class BlockFieldMetadataValidator implements FieldMetadataValidatorInterface
 {
-    const RESERVED_PROPERTY_NAMES = ['type', 'settings'];
-
     public function validate(FieldMetadata $fieldMetadata, string $formKey): void
     {
         if ('block' !== $fieldMetadata->getType()) {
@@ -52,11 +50,11 @@ class BlockFieldMetadataValidator implements FieldMetadataValidatorInterface
     /**
      * @throws ReservedPropertyNameException
      */
-    private function validateField(FieldMetadata $blockMetadata, FieldMetadata $fieldMetadata, string $formKey): void
+    private function validateField(FieldMetadata $blockMetadata, FieldMetadata $propertyMetadata, string $formKey): void
     {
-        $propertyName = $fieldMetadata->getName();
+        $propertyName = $propertyMetadata->getName();
 
-        if (\in_array($propertyName, static::RESERVED_PROPERTY_NAMES, true)) {
+        if ('settings' === $propertyName) {
             throw new ReservedPropertyNameException(
                 $blockMetadata->getName(),
                 $propertyName,

@@ -15,6 +15,7 @@ import tabsStyles from './tabs.scss';
 
 type Props = {
     children: ChildrenArray<Element<typeof Tab> | false>,
+    className?: string,
     onSelect: (tabIndex: number) => void,
     selectedIndex: ?number,
     skin: Skin,
@@ -336,10 +337,12 @@ class Tabs extends React.Component<Props> {
         const {
             skin,
             small,
+            className,
         } = this.props;
 
         const tabsClass = classNames(
             tabsStyles.tabs,
+            className,
             tabsStyles[skin],
             {
                 [tabsStyles.small]: small,

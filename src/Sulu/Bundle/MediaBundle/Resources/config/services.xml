@@ -296,6 +296,13 @@
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
         </service>
 
+        <service id="sulu_media.type.image_map" class="Sulu\Bundle\MediaBundle\Content\Types\ImageMapContentType">
+            <argument type="service" id="sulu.content.type_manager"/>
+
+            <tag name="sulu.content.type" alias="image_map"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
+        </service>
+
         <service id="sulu_media.collection_manager" class="%sulu_media.collection_manager.class%" public="true">
             <argument type="service" id="sulu_media.collection_repository" />
             <argument type="service" id="sulu.repository.media" />
@@ -417,6 +424,11 @@
 
         <service id="sulu_media.fixtures.media_types" class="Sulu\Bundle\MediaBundle\DataFixtures\ORM\LoadMediaTypes">
             <tag name="doctrine.fixture.orm"/>
+        </service>
+
+        <service id="sulu_media.field_metadata_validator.image_map"
+                 class="Sulu\Bundle\MediaBundle\Metadata\ImageMapFieldMetadataValidator">
+            <tag name="sulu_admin.field_metadata_validator"/>
         </service>
     </services>
 </container>

@@ -8,13 +8,13 @@ exports[`The component should center and maximize the selection when a minHeight
     Lorem ipsum
   </p>
   <div
-    class="rectangle"
+    class="rectangle hasBackdrop"
     role="button"
-    style="left: 0px; top: 250px; width: 2000px; height: 500px;"
+    style="left: 0px; top: 100px; width: 640px; height: 160px;"
   >
     <div
       class="backdrop"
-      style="outline-width: 2000px;"
+      style="outline-width: 640px;"
     />
     <div
       class="resizeHandle"
@@ -32,13 +32,13 @@ exports[`The component should render with children 1`] = `
     Lorem ipsum
   </p>
   <div
-    class="rectangle"
+    class="rectangle hasBackdrop"
     role="button"
-    style="left:0px;top:0px;width:2000px;height:1000px"
+    style="left:0px;top:0px;width:640px;height:360px"
   >
     <div
       class="backdrop"
-      style="outline-width:2000px"
+      style="outline-width:640px"
     />
     <div
       class="resizeHandle"
@@ -56,13 +56,13 @@ exports[`The component should render with minimum size notification 1`] = `
     Lorem ipsum
   </p>
   <div
-    class="rectangle"
+    class="rectangle hasBackdrop"
     role="button"
     style="left: 40px; top: 30px; width: 100px; height: 200px;"
   >
     <div
       class="backdrop"
-      style="outline-width: 2000px;"
+      style="outline-width: 640px;"
     />
     <div
       class="resizeHandle"
@@ -86,13 +86,13 @@ exports[`The component should render with value as selection 1`] = `
     Lorem ipsum
   </p>
   <div
-    class="rectangle"
+    class="rectangle hasBackdrop"
     role="button"
     style="left: 4px; top: 3px; width: 1px; height: 2px;"
   >
     <div
       class="backdrop"
-      style="outline-width: 2000px;"
+      style="outline-width: 640px;"
     />
     <div
       class="resizeHandle"
@@ -110,13 +110,13 @@ exports[`The component should render without minimum size notification 1`] = `
     Lorem ipsum
   </p>
   <div
-    class="rectangle"
+    class="rectangle hasBackdrop"
     role="button"
     style="left: 40px; top: 30px; width: 100px; height: 200px;"
   >
     <div
       class="backdrop"
-      style="outline-width: 2000px;"
+      style="outline-width: 640px;"
     />
     <div
       class="resizeHandle"

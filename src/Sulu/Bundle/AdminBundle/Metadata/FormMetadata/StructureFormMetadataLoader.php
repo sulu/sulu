@@ -172,14 +172,19 @@ class StructureFormMetadataLoader implements FormMetadataLoaderInterface, CacheW
         return $typedForm;
     }
 
+    /**
+     * @param ItemMetadata[] $itemsMetadata
+     */
     private function enhanceBlockMetadata(array $itemsMetadata): void
     {
         foreach ($itemsMetadata as $itemMetadata) {
-            if ('block' === $itemMetadata->getType()) {
-                $optionMetadata = new OptionMetadata();
-                $optionMetadata->setName('settings_form_key');
-                $optionMetadata->setValue('page_block_settings');
-                $itemMetadata->addOption($optionMetadata);
+            if ($itemMetadata instanceof FieldMetadata) {
+                if ('block' === $itemMetadata->getType()) {
+                    $optionMetadata = new OptionMetadata();
+                    $optionMetadata->setName('settings_form_key');
+                    $optionMetadata->setValue('page_block_settings');
+                    $itemMetadata->addOption($optionMetadata);
+                }
 
                 foreach ($itemMetadata->getTypes() as $type) {
                     $this->enhanceBlockMetadata($type->getItems());

@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Should render with icon and disabled 1`] = `
+<button
+  class="button"
+  disabled=""
+  type="button"
+>
+  <span
+    aria-label="su-plus-circle"
+    class="su-plus-circle"
+  />
+</button>
+`;

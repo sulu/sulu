@@ -14,6 +14,8 @@ namespace Sulu\Component\Content\Tests\Unit\Compat\Structure;
 use PHPUnit\Framework\TestCase;
 use Sulu\Component\Content\Compat\Block\BlockProperty;
 use Sulu\Component\Content\Compat\Block\BlockPropertyInterface;
+use Sulu\Component\Content\Compat\Property;
+use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyInterface as LegacyPropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Compat\Section\SectionPropertyInterface;
@@ -64,6 +66,11 @@ class LegacyPropertyFactoryTest extends TestCase
      */
     private $component;
 
+    /**
+     * @var ComponentMetadata
+     */
+    private $component2;
+
     public function setUp(): void
     {
         $this->namespaceRegistry = $this->prophesize(NamespaceRegistry::class);
@@ -76,6 +83,7 @@ class LegacyPropertyFactoryTest extends TestCase
         $this->section = $this->prophesize(SectionMetadata::class);
         $this->block = $this->prophesize(BlockMetadata::class);
         $this->component = $this->prophesize(ComponentMetadata::class);
+        $this->component2 = $this->prophesize(ComponentMetadata::class);
     }
 
     /**
@@ -120,6 +128,8 @@ class LegacyPropertyFactoryTest extends TestCase
         $this->property1->getDescriptions()->willReturn($description);
         $this->property1->getPlaceholders()->willReturn($placeholder);
         $this->property1->getTags()->willReturn([]);
+        $this->property1->getComponents()->willReturn([]);
+        $this->property1->getDefaultComponentName()->willReturn(null);
 
         $legacyProperty = $this->factory->createProperty($this->property1->reveal());
 
@@ -226,6 +236,48 @@ class LegacyPropertyFactoryTest extends TestCase
         $this->assertEquals('Test title', $blockType->getMetadata()->get('title', 'en'));
     }
 
+    /**
+     * It should create a block property.
+     *
+     * @depends testCreateProperty
+     */
+    public function testCreatePropertyWithTypes($child)
+    {
+        $this->setUpProperty($this->property2);
+
+        $this->component2->getName()->willReturn('hai');
+        $this->component2->getChildren()->willReturn([
+            $child->reveal(),
+        ]);
+        $this->component2->getTitles()->willReturn([
+            'de' => 'Testtitel',
+            'en' => 'Test title',
+        ]);
+        $this->component2->getDescriptions()->willReturn([
+            'de' => 'Test Beschreibung',
+            'en' => 'Test description',
+        ]);
+
+        $this->property2->getComponents()->willReturn([
+            $this->component2->reveal(),
+        ]);
+        $this->property2->getDefaultComponentName()->willReturn('foobar');
+
+        /** @var Property $property */
+        $property = $this->factory->createProperty($this->property2->reveal());
+
+        $this->assertInstanceOf(PropertyInterface::class, $property);
+        $this->assertCount(1, $property->getTypes());
+        $type = $property->getType('hai');
+        $this->assertNotNull($type);
+        $this->assertCount(1, $type->getChildProperties());
+        $this->assertEquals('Testtitel', $type->getMetadata()->get('title', 'de'));
+        $this->assertEquals('Test title', $type->getMetadata()->get('title', 'en'));
+    }
+
+    /**
+     * @param PropertyMetadata $property
+     */
     private function setUpProperty($property)
     {
         $name = 'name';
@@ -268,5 +320,7 @@ class LegacyPropertyFactoryTest extends TestCase
         $property->getChildren()->willReturn([
             $this->component->reveal(),
         ]);
+        $property->getDefaultComponentName()->willReturn(null);
+        $property->getComponents()->willReturn([]);
     }
 }

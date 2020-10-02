@@ -30,11 +30,11 @@ test('Render a Tabs component', () => {
     )).toMatchSnapshot();
 });
 
-test('Render a Tabs component with light skin', () => {
+test('Render a Tabs component with transparent skin', () => {
     const changeSpy = jest.fn();
 
     expect(render(
-        <Tabs onSelect={changeSpy} selectedIndex={null} skin="light">
+        <Tabs onSelect={changeSpy} selectedIndex={null} skin="transparent">
             <Tabs.Tab>Tab 1</Tabs.Tab>
             <Tabs.Tab>Tab 2</Tabs.Tab>
             <Tabs.Tab>Tab 3</Tabs.Tab>

@@ -1,0 +1,74 @@
+@import '../../containers/Application/colors.scss';
+
+$backgroundColor: rgba($black, .6);
+$borderColor: $white;
+$borderSize: 2px;
+$backgroundColorFilled: $white;
+$backgroundColorFilledDisabled: rgba($backgroundColorFilled, .6);
+$boxShadowColorFilled: rgba($black, .6);
+$labelColor: $white;
+$labelColorDisabled: rgba($labelColor, .5);
+$labelColorFilled: $black;
+$labelColorFilledDisabled: rgba($labelColorFilled, .6);
+$resizeHandleBoxShadowColor: rgba($black, .3);
+
+.circle {
+    position: absolute;
+    background: $backgroundColor;
+    border-radius: 100%;
+    transform: translate(-50%, -50%);
+    will-change: width, height, left, top;
+    cursor: move;
+    border: $borderSize solid $borderColor;
+
+    &.disabled {
+        cursor: default;
+        border: none;
+        pointer-events: none;
+    }
+
+    &.filled {
+        background: $backgroundColorFilled;
+        box-shadow: 0 0 2px 1px $boxShadowColorFilled;
+
+        &.disabled {
+            background: $backgroundColorFilledDisabled;
+        }
+    }
+}
+
+.label {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: bold;
+    color: $labelColor;
+    user-select: none;
+
+    .circle.disabled & {
+        color: $labelColorDisabled;
+    }
+
+    .circle.filled & {
+        color: $labelColorFilled;
+    }
+
+    .circle.filled.disabled & {
+        color: $labelColorFilledDisabled;
+    }
+}
+
+.resize-handle {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background: $borderColor;
+    cursor: nwse-resize;
+    box-shadow: 0 0 20px 0 $resizeHandleBoxShadowColor;
+    will-change: transform, transform-origin;
+}
