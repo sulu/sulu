@@ -85,6 +85,7 @@ class TestUserProvider implements UserProviderInterface
             $contact->setFirstName('Max');
             $contact->setLastName('Mustermann');
             $this->entityManager->persist($contact);
+            $this->entityManager->flush();
 
             $user = $this->userRepository->createNew();
             $user->setContact($contact);

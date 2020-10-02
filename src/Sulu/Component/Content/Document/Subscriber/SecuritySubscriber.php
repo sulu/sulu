@@ -19,6 +19,8 @@ use Sulu\Component\DocumentManager\Behavior\Mapping\PathBehavior;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Events;
+use Sulu\Component\DocumentManager\PropertyEncoder;
+use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -38,16 +40,35 @@ class SecuritySubscriber implements EventSubscriberInterface
      */
     private $liveSession;
 
-    public function __construct(array $permissions, SessionInterface $liveSession)
-    {
+    /**
+     * @var PropertyEncoder
+     */
+    private $propertyEncoder;
+
+    /**
+     * @var AccessControlManagerInterface
+     */
+    private $accessControlManager;
+
+    public function __construct(
+        array $permissions,
+        SessionInterface $liveSession,
+        PropertyEncoder $propertyEncoder,
+        AccessControlManagerInterface $accessControlManager
+    ) {
         $this->permissions = $permissions;
         $this->liveSession = $liveSession;
+        $this->propertyEncoder = $propertyEncoder;
+        $this->accessControlManager = $accessControlManager;
     }
 
     public static function getSubscribedEvents()
     {
         return [
-            Events::PERSIST => 'handlePersist',
+            Events::PERSIST => [
+                ['handlePersist', 0],
+                ['handlePersistCreate', 3],
+            ],
             Events::HYDRATE => 'handleHydrate',
         ];
     }
@@ -62,6 +83,40 @@ class SecuritySubscriber implements EventSubscriberInterface
     public function supports($document)
     {
         return $document instanceof SecurityBehavior;
+    }
+
+    public function handlePersistCreate(PersistEvent $event)
+    {
+        /** @var SecurityBehavior $document */
+        $document = $event->getDocument();
+
+        if (!$this->supports($document)) {
+            return;
+        }
+
+        $node = $event->getNode();
+
+        $isNewDocument = 0 === \count(
+            $node->getProperties(
+                $this->propertyEncoder->encode(
+                    'system_localized',
+                    StructureSubscriber::STRUCTURE_TYPE_FIELD,
+                    '*'
+                )
+            )
+        );
+
+        if ($isNewDocument && $event->hasParentNode() && !$document->getPermissions()) {
+            $parentNode = $event->getParentNode();
+            $parentPermissions = $this->accessControlManager->getPermissions(
+                SecurityBehavior::class,
+                $parentNode->getIdentifier()
+            );
+
+            $document->setPermissions(
+                $parentPermissions
+            );
+        }
     }
 
     /**

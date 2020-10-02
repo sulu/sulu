@@ -17,7 +17,10 @@ use PHPCR\SessionInterface;
 use Prophecy\Argument;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Document\Subscriber\SecuritySubscriber;
+use Sulu\Component\Content\Document\Subscriber\StructureSubscriber;
 use Sulu\Component\DocumentManager\Behavior\Mapping\PathBehavior;
+use Sulu\Component\DocumentManager\PropertyEncoder;
+use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
 
 class SecuritySubscriberTest extends SubscriberTestCase
 {
@@ -31,14 +34,31 @@ class SecuritySubscriberTest extends SubscriberTestCase
      */
     private $subscriber;
 
+    /**
+     * @var PropertyEncoder
+     */
+    private $propertyEncoder;
+
+    /**
+     * @var AccessControlManagerInterface
+     */
+    private $accessControlManager;
+
     public function setUp(): void
     {
         parent::setUp();
 
         $this->liveSession = $this->prophesize(SessionInterface::class);
+        $this->propertyEncoder = $this->prophesize(PropertyEncoder::class);
+        $this->accessControlManager = $this->prophesize(AccessControlManagerInterface::class);
+
+        $this->node->getProperties(Argument::cetera())->willReturn([]);
+
         $this->subscriber = new SecuritySubscriber(
             ['view' => 64, 'add' => 32, 'edit' => 16, 'delete' => 8],
-            $this->liveSession->reveal()
+            $this->liveSession->reveal(),
+            $this->propertyEncoder->reveal(),
+            $this->accessControlManager->reveal()
         );
     }
 
@@ -151,6 +171,93 @@ class SecuritySubscriberTest extends SubscriberTestCase
         $liveProperty->remove()->shouldBeCalled();
 
         $this->subscriber->handlePersist($this->persistEvent->reveal());
+    }
+
+    public function testPersistCreate()
+    {
+        $this->propertyEncoder
+             ->encode('system_localized', StructureSubscriber::STRUCTURE_TYPE_FIELD, '*')
+             ->willReturn('i18n:*-type');
+
+        /** @var SecurityBehavior $document */
+        $document = $this->prophesize(SecurityBehavior::class);
+        $document->getPermissions()->willReturn();
+        $document->setPermissions(
+            [1 => ['view' => true, 'add' => true, 'edit' => true, 'delete' => false]]
+        )->shouldBeCalled();
+
+        $this->node->getProperties('i18n:*-type')->willReturn([]);
+
+        $parentNode = $this->prophesize(NodeInterface::class);
+        $parentNode->getIdentifier()->willReturn('parent-uuid');
+
+        $this->accessControlManager->getPermissions(SecurityBehavior::class, 'parent-uuid')->willReturn(
+            [1 => ['view' => true, 'add' => true, 'edit' => true, 'delete' => false]]
+        );
+
+        $this->persistEvent->hasParentNode()->willReturn(true);
+        $this->persistEvent->getParentNode()->willReturn($parentNode->reveal());
+        $this->persistEvent->getDocument()->willReturn($document);
+
+        $this->subscriber->handlePersistCreate($this->persistEvent->reveal());
+    }
+
+    public function testPersistCreateForExistingDocument()
+    {
+        $this->propertyEncoder
+             ->encode('system_localized', StructureSubscriber::STRUCTURE_TYPE_FIELD, '*')
+             ->willReturn('i18n:*-type');
+
+        /** @var SecurityBehavior $document */
+        $document = $this->prophesize(SecurityBehavior::class);
+        $document->getPermissions()->willReturn();
+        $document->setPermissions(Argument::cetera())->shouldNotBeCalled();
+
+        $property = $this->prophesize(PropertyInterface::class);
+        $this->node->getProperties('i18n:*-type')->willReturn([$property->reveal()]);
+
+        $this->persistEvent->hasParentNode()->willReturn(true);
+        $this->persistEvent->getDocument()->willReturn($document);
+
+        $this->subscriber->handlePersistCreate($this->persistEvent->reveal());
+    }
+
+    public function testPersistCreateForDocumentWithoutParentNode()
+    {
+        $this->propertyEncoder
+             ->encode('system_localized', StructureSubscriber::STRUCTURE_TYPE_FIELD, '*')
+             ->willReturn('i18n:*-type');
+
+        /** @var SecurityBehavior $document */
+        $document = $this->prophesize(SecurityBehavior::class);
+        $document->getPermissions()->willReturn();
+        $document->setPermissions(Argument::cetera())->shouldNotBeCalled();
+
+        $this->node->getProperties('i18n:*-type')->willReturn([]);
+
+        $this->persistEvent->hasParentNode()->willReturn(false);
+        $this->persistEvent->getDocument()->willReturn($document);
+
+        $this->subscriber->handlePersistCreate($this->persistEvent->reveal());
+    }
+
+    public function testPersistCreateForDocumentWithPermissions()
+    {
+        $this->propertyEncoder
+             ->encode('system_localized', StructureSubscriber::STRUCTURE_TYPE_FIELD, '*')
+             ->willReturn('i18n:*-type');
+
+        /** @var SecurityBehavior $document */
+        $document = $this->prophesize(SecurityBehavior::class);
+        $document->getPermissions()->willReturn([1 => ['view' => true]]);
+        $document->setPermissions(Argument::cetera())->shouldNotBeCalled();
+
+        $this->node->getProperties('i18n:*-type')->willReturn([]);
+
+        $this->persistEvent->hasParentNode()->willReturn(true);
+        $this->persistEvent->getDocument()->willReturn($document);
+
+        $this->subscriber->handlePersistCreate($this->persistEvent->reveal());
     }
 
     public function testHydrate()

@@ -89,6 +89,11 @@ class CollectionController extends AbstractRestController implements ClassResour
      */
     private $permissions;
 
+    /**
+     * @var string
+     */
+    private $collectionClass;
+
     public function __construct(
         ViewHandlerInterface $viewHandler,
         TokenStorageInterface $tokenStorage,
@@ -98,7 +103,8 @@ class CollectionController extends AbstractRestController implements ClassResour
         SystemCollectionManagerInterface $systemCollectionManager,
         CollectionManagerInterface $collectionManager,
         array $defaultCollectionType,
-        array $permissions
+        array $permissions,
+        string $collectionClass = null
     ) {
         parent::__construct($viewHandler, $tokenStorage);
 
@@ -109,6 +115,18 @@ class CollectionController extends AbstractRestController implements ClassResour
         $this->collectionManager = $collectionManager;
         $this->defaultCollectionType = $defaultCollectionType;
         $this->permissions = $permissions;
+        $this->collectionClass = $collectionClass;
+
+        if (!$this->collectionClass) {
+            $this->collectionClass = CollectionEntity::class;
+
+            @\trigger_error(
+                \sprintf(
+                    'Omitting the "collectionClass" argument is deprecated and will not longer work in Sulu 3.0.'
+                ),
+                \E_USER_DEPRECATED
+            );
+        }
     }
 
     /**
@@ -428,7 +446,7 @@ class CollectionController extends AbstractRestController implements ClassResour
 
     public function getSecuredClass()
     {
-        return CollectionEntity::class;
+        return $this->collectionClass;
     }
 
     public function getSecuredObjectId(Request $request)

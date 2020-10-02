@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Unit\Collection;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
@@ -81,7 +82,7 @@ class CollectionManagerTest extends TestCase
         $entityMeta = $this->prophesize(CollectionMeta::class);
         $entityMeta->getTitle()->willReturn($id . '');
         $entityMeta->getLocale()->willReturn($locale);
-        $entity->getMeta()->willReturn([$entityMeta->reveal()]);
+        $entity->getMeta()->willReturn(new ArrayCollection([$entityMeta->reveal()]));
         $entity->getId()->willReturn($id);
 
         if (null !== $parent) {

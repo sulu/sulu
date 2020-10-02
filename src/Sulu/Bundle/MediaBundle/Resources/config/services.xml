@@ -99,6 +99,7 @@
             <argument type="service" id="sulu_media.collection_manager" />
             <argument>%sulu_media.collection.type.default%</argument>
             <argument>%sulu_security.permissions%</argument>
+            <argument>%sulu.model.collection.class%</argument>
 
             <tag name="sulu.context" context="admin"/>
         </service>
