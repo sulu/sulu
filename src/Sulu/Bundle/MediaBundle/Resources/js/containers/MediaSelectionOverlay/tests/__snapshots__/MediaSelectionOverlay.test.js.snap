@@ -287,6 +287,36 @@ Array [
                     <div
                       class="fieldFilter"
                     />
+                    <div
+                      class="buttonGroup"
+                    >
+                      <button
+                        class="button icon active button"
+                        type="button"
+                      >
+                        <span
+                          class="buttonText"
+                        >
+                          <span
+                            aria-label="su-th-large"
+                            class="su-th-large"
+                          />
+                        </span>
+                      </button>
+                      <button
+                        class="button icon button"
+                        type="button"
+                      >
+                        <span
+                          class="buttonText"
+                        >
+                          <span
+                            aria-label="su-align-justify"
+                            class="su-align-justify"
+                          />
+                        </span>
+                      </button>
+                    </div>
                   </div>
                   <div
                     class="list"
@@ -900,6 +930,36 @@ Array [
                     <div
                       class="fieldFilter"
                     />
+                    <div
+                      class="buttonGroup"
+                    >
+                      <button
+                        class="button icon active button"
+                        type="button"
+                      >
+                        <span
+                          class="buttonText"
+                        >
+                          <span
+                            aria-label="su-th-large"
+                            class="su-th-large"
+                          />
+                        </span>
+                      </button>
+                      <button
+                        class="button icon button"
+                        type="button"
+                      >
+                        <span
+                          class="buttonText"
+                        >
+                          <span
+                            aria-label="su-align-justify"
+                            class="su-align-justify"
+                          />
+                        </span>
+                      </button>
+                    </div>
                   </div>
                   <div
                     class="list"

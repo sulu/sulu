@@ -181,7 +181,7 @@ class MediaSelectionOverlay extends React.Component<Props> {
                         collectionListStore={collectionListStore}
                         collectionStore={this.collectionStore}
                         locale={locale}
-                        mediaListAdapters={['media_card_selection']}
+                        mediaListAdapters={['media_card_selection', 'table']}
                         mediaListStore={mediaListStore}
                         onCollectionNavigate={this.handleCollectionNavigate}
                         onUploadOverlayClose={this.handleUploadOverlayClose}

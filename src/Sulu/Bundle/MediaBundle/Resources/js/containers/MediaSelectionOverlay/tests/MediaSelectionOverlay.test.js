@@ -29,6 +29,7 @@ jest.mock('sulu-admin-bundle/containers/List/registries/listAdapterRegistry', ()
             const adapters = {
                 'folder': require('sulu-admin-bundle/containers/List/adapters/FolderAdapter').default,
                 'media_card_selection': require('../../List/adapters/MediaCardSelectionAdapter').default,
+                'table': require('sulu-admin-bundle/containers/List/adapters/TableAdapter').default,
             };
             return adapters[key];
         }),
