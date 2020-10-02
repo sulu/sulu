@@ -361,6 +361,51 @@
             </meta>
         </property>
 
+        <property name="image_map" type="image_map" default-type="basic">
+            <meta>
+                <title lang="en">Image-Map</title>
+                <title lang="de">Image-Map</title>
+            </meta>
+
+            <types>
+                <type name="basic">
+                    <meta>
+                        <title lang="en">Basic</title>
+                        <title lang="de">Grundlegend</title>
+                    </meta>
+                    <properties>
+                        <property name="title" type="text_line">
+                            <meta>
+                                <title lang="en">Title</title>
+                                <title lang="de">Titel</title>
+                            </meta>
+                        </property>
+                        <property name="description" type="text_area">
+                            <meta>
+                                <title lang="en">Description</title>
+                                <title lang="de">Beschreibung</title>
+                            </meta>
+                        </property>
+                    </properties>
+                </type>
+
+                <type name="advanced">
+                    <meta>
+                        <title lang="en">Advanced</title>
+                        <title lang="de">Erweitert</title>
+                    </meta>
+                    <properties>
+                        <property name="text" type="text_editor">
+                            <meta>
+                                <title lang="en">Text</title>
+                                <title lang="de">Text</title>
+                            </meta>
+                        </property>
+                    </properties>
+                </type>
+            </types>
+        </property>
+
         <section name="test">
             <properties>
                 <block name="blocks2" default-type="editor" minOccurs="0">
