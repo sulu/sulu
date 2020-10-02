@@ -14,113 +14,99 @@ jest.mock('sulu-admin-bundle/containers/Form/stores/ResourceFormStore', () => je
     this.destroy = jest.fn();
 }));
 
-jest.mock('sulu-admin-bundle/containers', () => {
-    return {
-        withToolbar: jest.fn((Component) => Component),
-        Form: jest.fn(() => null),
-        resourceFormStoreFactory: require.requireActual(
-            'sulu-admin-bundle/containers/Form/stores/resourceFormStoreFactory'
-        ).default,
-        memoryFormStoreFactory: {
-            createFromFormKey: jest.fn(() => ({
-                destroy: jest.fn(),
-            })),
+jest.mock('sulu-admin-bundle/containers/CKEditor5', () => jest.fn(() => null));
+jest.mock('sulu-admin-bundle/containers/Toolbar/withToolbar', () => jest.fn((Component) => Component));
+
+jest.mock('sulu-admin-bundle/containers/Form/stores/memoryFormStoreFactory', () => ({
+    createFromFormKey: jest.fn(() => ({
+        destroy: jest.fn(),
+    })),
+}));
+
+jest.mock('sulu-admin-bundle/containers/List/stores/ListStore', () => jest.fn(function(resourceKey, observableOptions) {
+    const COLLECTIONS_RESOURCE_KEY = 'collections';
+
+    const collectionData = [
+        {
+            id: 1,
+            title: 'Title 1',
+            objectCount: 1,
+            description: 'Description 1',
         },
-        AbstractAdapter: require('sulu-admin-bundle/containers/List/adapters/AbstractAdapter').default,
-        List: require('sulu-admin-bundle/containers/List/List').default,
-        ListStore: jest.fn(function(resourceKey, observableOptions) {
-            const COLLECTIONS_RESOURCE_KEY = 'collections';
+        {
+            id: 2,
+            title: 'Title 2',
+            objectCount: 0,
+            description: 'Description 2',
+        },
+    ];
 
-            const collectionData = [
-                {
-                    id: 1,
-                    title: 'Title 1',
-                    objectCount: 1,
-                    description: 'Description 1',
-                },
-                {
-                    id: 2,
-                    title: 'Title 2',
-                    objectCount: 0,
-                    description: 'Description 2',
-                },
-            ];
-
-            const thumbnails = {
-                'sulu-240x': 'http://lorempixel.com/240/100',
-                'sulu-100x100': 'http://lorempixel.com/100/100',
-            };
-
-            const mediaData = [
-                {
-                    id: 1,
-                    title: 'Title 1',
-                    mimeType: 'image/png',
-                    size: 12345,
-                    url: 'http://lorempixel.com/500/500',
-                    thumbnails,
-                },
-                {
-                    id: 2,
-                    title: 'Title 1',
-                    mimeType: 'image/jpeg',
-                    size: 54321,
-                    url: 'http://lorempixel.com/500/500',
-                    thumbnails,
-                },
-            ];
-
-            this.observableOptions = observableOptions;
-            this.loading = false;
-            this.pageCount = 3;
-            this.moveSelection = jest.fn();
-            this.reload = jest.fn();
-            this.filterOptions = {
-                get: jest.fn().mockReturnValue({}),
-            };
-            this.active = {
-                get: jest.fn(),
-            };
-            this.sortColumn = {
-                get: jest.fn(),
-            };
-            this.sortOrder = {
-                get: jest.fn(),
-            };
-            this.searchTerm = {
-                get: jest.fn(),
-            };
-            this.limit = {
-                get: jest.fn().mockReturnValue(10),
-            };
-            this.setLimit = jest.fn();
-            this.data = (resourceKey === COLLECTIONS_RESOURCE_KEY)
-                ? collectionData
-                : mediaData;
-            this.selections = [];
-            this.selectionIds = [];
-            this.getPage = jest.fn().mockReturnValue(2);
-            this.getSchema = jest.fn().mockReturnValue({
-                title: {},
-                description: {},
-            });
-            this.destroy = jest.fn();
-            this.sendRequest = jest.fn();
-            this.clearSelection = jest.fn();
-            this.clear = jest.fn();
-            this.updateLoadingStrategy = jest.fn();
-            this.updateStructureStrategy = jest.fn();
-            this.sort = jest.fn();
-        }),
-        FlatStructureStrategy: require(
-            'sulu-admin-bundle/containers/List/structureStrategies/FlatStructureStrategy'
-        ).default,
-        InfiniteLoadingStrategy: require(
-            'sulu-admin-bundle/containers/List/loadingStrategies/InfiniteLoadingStrategy'
-        ).default,
-        SingleListOverlay: jest.fn(() => null),
+    const thumbnails = {
+        'sulu-240x': 'http://lorempixel.com/240/100',
+        'sulu-100x100': 'http://lorempixel.com/100/100',
     };
-});
+
+    const mediaData = [
+        {
+            id: 1,
+            title: 'Title 1',
+            mimeType: 'image/png',
+            size: 12345,
+            url: 'http://lorempixel.com/500/500',
+            thumbnails,
+        },
+        {
+            id: 2,
+            title: 'Title 1',
+            mimeType: 'image/jpeg',
+            size: 54321,
+            url: 'http://lorempixel.com/500/500',
+            thumbnails,
+        },
+    ];
+
+    this.observableOptions = observableOptions;
+    this.loading = false;
+    this.pageCount = 3;
+    this.moveSelection = jest.fn();
+    this.reload = jest.fn();
+    this.filterOptions = {
+        get: jest.fn().mockReturnValue({}),
+    };
+    this.active = {
+        get: jest.fn(),
+    };
+    this.sortColumn = {
+        get: jest.fn(),
+    };
+    this.sortOrder = {
+        get: jest.fn(),
+    };
+    this.searchTerm = {
+        get: jest.fn(),
+    };
+    this.limit = {
+        get: jest.fn().mockReturnValue(10),
+    };
+    this.setLimit = jest.fn();
+    this.data = (resourceKey === COLLECTIONS_RESOURCE_KEY)
+        ? collectionData
+        : mediaData;
+    this.selections = [];
+    this.selectionIds = [];
+    this.getPage = jest.fn().mockReturnValue(2);
+    this.getSchema = jest.fn().mockReturnValue({
+        title: {},
+        description: {},
+    });
+    this.destroy = jest.fn();
+    this.sendRequest = jest.fn();
+    this.clearSelection = jest.fn();
+    this.clear = jest.fn();
+    this.updateLoadingStrategy = jest.fn();
+    this.updateStructureStrategy = jest.fn();
+    this.sort = jest.fn();
+}));
 
 jest.mock('sulu-admin-bundle/stores', () => ({
     ResourceStore: jest.fn(function() {
@@ -163,7 +149,7 @@ jest.mock('sulu-admin-bundle/containers/List/registries/listAdapterRegistry', ()
     };
 });
 
-jest.mock('sulu-admin-bundle/containers/SingleListOverlay', () => jest.fn(() => null));
+jest.mock('sulu-admin-bundle/containers/SingleListOverlay/SingleListOverlay', () => jest.fn(() => null));
 
 beforeEach(() => {
     jest.resetModules();
@@ -637,13 +623,15 @@ test('Move overlay should disappear when overlay is closed', () => {
     expect(toolbarConfig.items[2].label).toEqual('sulu_admin.move_selected');
     toolbarConfig.items[2].onClick();
     mediaOverview.update();
-    expect(mediaOverview.find(SingleListOverlay).at(1).prop('listKey')).toEqual('collections');
-    expect(mediaOverview.find(SingleListOverlay).at(1).prop('resourceKey')).toEqual('collections');
-    expect(mediaOverview.find(SingleListOverlay).at(1).prop('open')).toEqual(true);
+    expect(mediaOverview.find(SingleListOverlay).find('[title="sulu_media.move_media"]').prop('listKey'))
+        .toEqual('collections');
+    expect(mediaOverview.find(SingleListOverlay).find('[title="sulu_media.move_media"]').prop('resourceKey'))
+        .toEqual('collections');
+    expect(mediaOverview.find(SingleListOverlay).find('[title="sulu_media.move_media"]').prop('open')).toEqual(true);
 
-    mediaOverview.find(SingleListOverlay).at(1).prop('onClose')();
+    mediaOverview.find(SingleListOverlay).find('[title="sulu_media.move_media"]').prop('onClose')();
     mediaOverview.update();
-    expect(mediaOverview.find(SingleListOverlay).at(1).prop('open')).toEqual(false);
+    expect(mediaOverview.find(SingleListOverlay).find('[title="sulu_media.move_media"]').prop('open')).toEqual(false);
 });
 
 test('Media should be moved when overlay is confirmed', () => {
@@ -680,20 +668,25 @@ test('Media should be moved when overlay is confirmed', () => {
     expect(toolbarConfig.items[2].label).toEqual('sulu_admin.move_selected');
     toolbarConfig.items[2].onClick();
     mediaOverview.update();
-    expect(mediaOverview.find(SingleListOverlay).at(1).prop('resourceKey')).toEqual('collections');
-    expect(mediaOverview.find(SingleListOverlay).at(1).prop('confirmLoading')).toEqual(false);
-    expect(mediaOverview.find(SingleListOverlay).at(1).prop('open')).toEqual(true);
+    expect(mediaOverview.find(SingleListOverlay).find('[title="sulu_media.move_media"]').prop('resourceKey'))
+        .toEqual('collections');
+    expect(mediaOverview.find(SingleListOverlay).find('[title="sulu_media.move_media"]').prop('confirmLoading'))
+        .toEqual(false);
+    expect(mediaOverview.find(SingleListOverlay).find('[title="sulu_media.move_media"]').prop('open')).toEqual(true);
 
-    mediaOverview.find(SingleListOverlay).at(1).prop('onConfirm')({id: 8});
+    mediaOverview.find(SingleListOverlay).find('[title="sulu_media.move_media"]').prop('onConfirm')({id: 8});
     mediaOverview.update();
-    expect(mediaOverview.find(SingleListOverlay).at(1).prop('confirmLoading')).toEqual(true);
+    expect(mediaOverview.find(SingleListOverlay).find('[title="sulu_media.move_media"]').prop('confirmLoading'))
+        .toEqual(true);
 
     expect(mediaOverview.instance().mediaListStore.moveSelection).toBeCalledWith(8);
 
     return movePromise.then(() => {
         mediaOverview.update();
         expect(mediaOverview.instance().collectionListStore.reload).toHaveBeenCalledTimes(1);
-        expect(mediaOverview.find(SingleListOverlay).at(1).prop('open')).toEqual(false);
-        expect(mediaOverview.find(SingleListOverlay).at(1).prop('confirmLoading')).toEqual(false);
+        expect(mediaOverview.find(SingleListOverlay).find('[title="sulu_media.move_media"]').prop('open'))
+            .toEqual(false);
+        expect(mediaOverview.find(SingleListOverlay).find('[title="sulu_media.move_media"]').prop('confirmLoading'))
+            .toEqual(false);
     });
 });

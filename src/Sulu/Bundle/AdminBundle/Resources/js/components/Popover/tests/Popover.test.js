@@ -2,21 +2,16 @@
 import {mount, shallow} from 'enzyme';
 import React from 'react';
 import Popover from '../Popover';
+import PopoverPositioner from '../PopoverPositioner';
 
-jest.mock('../PopoverPositioner', () => {
-    const PopoverPositioner = require.requireActual('../PopoverPositioner').default;
-
-    return class extends PopoverPositioner {
-        static getCroppedDimensions() {
-            return {
-                top: 1,
-                left: 2,
-                height: 30,
-                scrollTop: 4,
-            };
-        }
+PopoverPositioner.getCroppedDimensions = function() {
+    return {
+        top: 1,
+        left: 2,
+        height: 30,
+        scrollTop: 4,
     };
-});
+};
 
 const getMockedAnchorEl = () => ({
     getBoundingClientRect() {
