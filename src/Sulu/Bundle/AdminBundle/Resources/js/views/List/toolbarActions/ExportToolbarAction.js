@@ -116,15 +116,10 @@ export default class ExportToolbarAction extends AbstractListToolbarAction {
     };
 
     @action handleConfirm = () => {
-        let filters = {};
-        if (Object.keys(this.listStore.filterQueryOption).length > 0) {
-            filters = this.listStore.filterQueryOption;
-        }
+        const {filterQueryOption} = this.listStore;
+        const filter = Object.keys(filterQueryOption).length > 0 ? filterQueryOption : undefined;
 
-        let search = null;
-        if (this.listStore.searchTerm.get()) {
-            search = this.listStore.searchTerm.get();
-        }
+        const search = this.listStore.searchTerm.get();
 
         window.location.assign(resourceRouteRegistry.getListUrl(this.listStore.resourceKey, {
             _format: 'csv',
@@ -135,8 +130,8 @@ export default class ExportToolbarAction extends AbstractListToolbarAction {
             enclosure: this.enclosure,
             newLine: this.newLine,
             ...this.listStore.options,
-            filter: filters,
-            search: search,
+            filter: filter,
+            search,
         }));
         this.showOverlay = false;
     };
