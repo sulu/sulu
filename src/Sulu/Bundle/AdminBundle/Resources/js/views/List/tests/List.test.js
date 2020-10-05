@@ -86,6 +86,7 @@ jest.mock(
                 label: 'Description',
             },
         };
+        this.filterQueryOption = {};
         this.destroy = jest.fn();
         this.reset = jest.fn();
         this.reload = jest.fn();

@@ -116,6 +116,11 @@ export default class ExportToolbarAction extends AbstractListToolbarAction {
     };
 
     @action handleConfirm = () => {
+        const {filterQueryOption} = this.listStore;
+        const filter = Object.keys(filterQueryOption).length > 0 ? filterQueryOption : undefined;
+
+        const search = this.listStore.searchTerm.get();
+
         window.location.assign(resourceRouteRegistry.getListUrl(this.listStore.resourceKey, {
             _format: 'csv',
             locale: this.list.locale.get(),
@@ -125,6 +130,8 @@ export default class ExportToolbarAction extends AbstractListToolbarAction {
             enclosure: this.enclosure,
             newLine: this.newLine,
             ...this.listStore.options,
+            filter,
+            search,
         }));
         this.showOverlay = false;
     };
