@@ -102,6 +102,7 @@ test('Render different kind of data with edit button', () => {
         <ColumnListAdapter
             {...listAdapterDefaultProps}
             activeItems={[2, 4]}
+            adapterOptions={{getIndicators: (item) => item.hasChildren ? ['has-children-indicator'] : []}}
             data={data}
             onItemAdd={jest.fn()}
             onItemClick={jest.fn()}

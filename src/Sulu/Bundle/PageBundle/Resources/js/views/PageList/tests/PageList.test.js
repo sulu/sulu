@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {observable} from 'mobx';
+import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import {mount} from 'enzyme';
 import {Router} from 'sulu-admin-bundle/services';
 import {findWithHighOrderFunction, defaultWebspace} from 'sulu-admin-bundle/utils/TestHelper';
@@ -19,6 +19,10 @@ jest.mock('sulu-admin-bundle/containers', () => ({
         constructor(resourceKey, listKey, userSettingsKey, observableOptions) {
             this.resourceKey = resourceKey;
             this.observableOptions = observableOptions;
+
+            mockExtendObservable(this, {
+                data: [],
+            });
         }
 
         resourceKey;
@@ -49,6 +53,9 @@ jest.mock('sulu-admin-bundle/containers', () => ({
         updateLoadingStrategy = jest.fn();
         updateStructureStrategy = jest.fn();
         clear = jest.fn();
+    },
+    formMetadataStore: {
+        getSchemaTypes: jest.fn().mockReturnValue(Promise.resolve({types: {}})),
     },
     withToolbar: jest.fn((Component) => Component),
 }));
@@ -92,6 +99,10 @@ beforeEach(() => {
 });
 
 test('Render PageList', () => {
+    const formMetadataStore = require('sulu-admin-bundle/containers').formMetadataStore;
+    const metadataPromise = Promise.resolve({types: {homepage: {}, example: {}}});
+    formMetadataStore.getSchemaTypes.mockReturnValue(metadataPromise);
+
     const webspaceKey = observable.box('sulu');
     const webspace = {
         ...defaultWebspace,
@@ -114,8 +125,22 @@ test('Render PageList', () => {
         />
     );
 
-    webspaceOverview.update();
-    expect(webspaceOverview.render()).toMatchSnapshot();
+    webspaceOverview.instance().listStore.data.push(
+        [
+            {id: 1, title: 'Homepage', template: 'homepage'},
+        ]
+    );
+    webspaceOverview.instance().listStore.data.push(
+        [
+            {id: 2, title: 'Page 1', template: 'example'},
+            {id: 3, title: 'Page 2', template: 'not-existing'},
+        ]
+    );
+
+    return metadataPromise.then(() => {
+        webspaceOverview.update();
+        expect(webspaceOverview.render()).toMatchSnapshot();
+    });
 });
 
 test('Should show the locales from the webspace configuration for the toolbar', () => {

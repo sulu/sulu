@@ -655,6 +655,11 @@ exports[`Render different kind of data with edit button 1`] = `
               </div>
             </span>
             <span
+              class="indicator"
+            >
+              has-children-indicator
+            </span>
+            <span
               class="children"
             >
               <span
