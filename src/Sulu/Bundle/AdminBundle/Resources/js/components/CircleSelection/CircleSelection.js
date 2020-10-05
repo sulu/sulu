@@ -4,7 +4,7 @@ import type {Node} from 'react';
 import {observer} from 'mobx-react';
 import {computed} from 'mobx';
 import withContainerSize from '../withContainerSize';
-import type {Normalizer, SelectionData} from './types';
+import type {Normalizer, SelectionData, CircleChange} from './types';
 import ModifiableCircle from './ModifiableCircle';
 import PositionNormalizer from './normalizers/PositionNormalizer';
 import RoundingNormalizer from './normalizers/RoundingNormalizer';
@@ -148,10 +148,15 @@ class RawCircleSelectionComponent extends React.Component<Props> {
         onChange(this.normalize(this.centerSelection(this.value)));
     };
 
-    handleCircleChange = (value: SelectionData) => {
+    handleCircleChange = (change: CircleChange) => {
+        const {value} = this;
         const {onChange} = this.props;
 
-        onChange(this.normalize(value));
+        onChange(this.normalize({
+            left: value.left + change.left,
+            top: value.top + change.top,
+            radius: value.radius + change.radius,
+        }));
     };
 
     render() {

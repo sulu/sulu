@@ -95,7 +95,7 @@ test('The component should not allow the selection to move over the borders', ()
             // containerWidth={640}
             onChange={changeSpy}
             onFinish={jest.fn()}
-            value={{left: 0, top: 0, radius: 2000}}
+            value={{left: 0, top: 0, radius: 50}}
         >
             <p>Lorem ipsum</p>
         </CircleSelection>
@@ -104,7 +104,7 @@ test('The component should not allow the selection to move over the borders', ()
     view.find('RawCircleSelectionComponent').first().instance().handleCircleChange(
         {radius: 0, left: -10, top: -20}
     );
-    expect(changeSpy).toBeCalledWith({radius: 0, top: 0, left: 0});
+    expect(changeSpy).toBeCalledWith({radius: 50, top: 0, left: 0});
 });
 
 test('The component should not allow the selection to be bigger than the container', () => {
