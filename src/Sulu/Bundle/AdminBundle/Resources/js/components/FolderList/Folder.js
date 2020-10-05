@@ -4,11 +4,11 @@ import Icon from '../Icon';
 import folderStyles from './folder.scss';
 
 const FOLDER_ICON = 'su-folder';
+const FOLDER_PERMISSION_ICON = 'su-folder-permission';
 
 type Props = {
-    /** The id which will be passed as an argument inside the onClick handler */
+    hasPermissions: boolean,
     id: string | number,
-    /** The subtext underneath the title */
     info: string,
     onClick?: (id: string | number) => void,
     title: string,
@@ -23,6 +23,7 @@ export default class Folder extends React.PureComponent<Props> {
 
     render() {
         const {
+            hasPermissions,
             info,
             title,
         } = this.props;
@@ -35,7 +36,7 @@ export default class Folder extends React.PureComponent<Props> {
                 tabIndex="0"
             >
                 <div className={folderStyles.iconContainer}>
-                    <Icon name={FOLDER_ICON} />
+                    <Icon name={hasPermissions ? FOLDER_PERMISSION_ICON : FOLDER_ICON} />
                 </div>
                 <div className={folderStyles.description}>
                     <h5 className={folderStyles.title}>

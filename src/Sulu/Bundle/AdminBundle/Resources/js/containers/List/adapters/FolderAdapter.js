@@ -45,6 +45,7 @@ class FolderAdapter extends AbstractAdapter {
                 {data.map((item: Object) => (
                     // TODO: Don't access properties like "title" directly.
                     <FolderList.Folder
+                        hasPermissions={item._hasPermissions}
                         id={item.id}
                         info={FolderAdapter.getInfoText(item)}
                         key={item.id}
