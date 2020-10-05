@@ -86,6 +86,10 @@ class ColumnListAdapter extends AbstractAdapter {
 
         const indicators = [];
 
+        if (item._hasPermissions) {
+            indicators.push(<Icon key="permissions" name="su-permissions" />);
+        }
+
         if (item.linked === 'internal') {
             indicators.push(<Icon key="internal" name="su-link2" />);
         } else if (item.linked === 'external') {

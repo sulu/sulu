@@ -709,6 +709,14 @@ exports[`Render different kind of data with edit button 1`] = `
             <span
               class="indicator"
             >
+              <span
+                aria-label="su-permissions"
+                class="su-permissions"
+              />
+            </span>
+            <span
+              class="indicator"
+            >
               <div
                 class="publishIndicator"
               >

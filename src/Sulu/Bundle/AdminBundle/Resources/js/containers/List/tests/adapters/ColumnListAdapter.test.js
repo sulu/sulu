@@ -23,6 +23,7 @@ test('Render different kind of data with edit button', () => {
                 hasChildren: false,
                 publishedState: false,
                 published: '2017-08-23',
+                _hasPermissions: true,
             },
             {
                 id: 6,
