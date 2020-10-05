@@ -1,9 +1,9 @@
 @font-face {
   font-family: 'sulu';
   src:
-    url('fonts/sulu.ttf?8b0cjk') format('truetype'),
-    url('fonts/sulu.woff?8b0cjk') format('woff'),
-    url('fonts/sulu.svg?8b0cjk#sulu') format('svg');
+    url('fonts/sulu.ttf?qrn75k') format('truetype'),
+    url('fonts/sulu.woff?qrn75k') format('woff'),
+    url('fonts/sulu.svg?qrn75k#sulu') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -24,6 +24,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.su-folder-permission:before {
+  content: "\e9a0";
+}
 .su-exclamation-circle:before {
   content: "\e99a";
 }
