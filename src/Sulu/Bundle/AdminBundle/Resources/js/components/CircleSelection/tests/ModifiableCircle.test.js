@@ -30,14 +30,14 @@ test('The component should call the change callback on move', () => {
     expect(windowListeners.mousemove).toBeDefined();
     expect(windowListeners.mouseup).toBeDefined();
 
-    circle.simulate('mousedown', {});
-    windowListeners.mousemove({movementX: -15, movementY: -30});
+    circle.simulate('mousedown', {pageX: 10, pageY: 20});
+    windowListeners.mousemove({pageX: 15, pageY: 30});
 
     expect(changeSpy).toHaveBeenCalledTimes(1);
-    expect(changeSpy).toHaveBeenCalledWith({top: -30, left: -15, radius: 100});
+    expect(changeSpy).toHaveBeenCalledWith({top: 10, left: 5, radius: 0});
 
     windowListeners.mouseup();
-    windowListeners.mousemove({movementX: 100, movementY: 200});
+    windowListeners.mousemove({pageX: 100, pageY: 200});
 
     expect(changeSpy).toHaveBeenCalledTimes(1);
 });
@@ -65,7 +65,7 @@ test('The component should call the change callback on resize', () => {
     windowListeners.mousemove({clientX: 400, clientY: 200});
 
     expect(changeSpy).toHaveBeenCalledTimes(1);
-    expect(changeSpy).toHaveBeenCalledWith({top: 0, left: 0, radius: 141.4213562373095});
+    expect(changeSpy).toHaveBeenCalledWith({top: 0, left: 0, radius: 41.42135623730951});
 
     windowListeners.mouseup();
     windowListeners.mousemove({clientX: -10, clientY: 10});

@@ -31,6 +31,7 @@ class ModifiableRectangle extends React.Component<Props> {
 
     @observable moveMode = false;
     @observable resizeMode = false;
+    @observable clickAnchor = {pageY: 0, pageX: 0};
 
     componentDidMount() {
         window.addEventListener('mouseup', this.handleMouseUp);
@@ -42,13 +43,20 @@ class ModifiableRectangle extends React.Component<Props> {
         window.removeEventListener('mousemove', this.handleMouseMove);
     }
 
+    @action setClickAnchor(event: MouseEvent) {
+        this.clickAnchor.pageY = event.pageY;
+        this.clickAnchor.pageX = event.pageX;
+    }
+
     @action handleMoveMouseDown = (event: MouseEvent) => {
         event.stopPropagation();
+        this.setClickAnchor(event);
         this.moveMode = true;
     };
 
     @action handleResizeMouseDown = (event: MouseEvent) => {
         event.stopPropagation();
+        this.setClickAnchor(event);
         this.resizeMode = true;
     };
 
@@ -67,26 +75,24 @@ class ModifiableRectangle extends React.Component<Props> {
 
     @action handleMouseMove = (event: MouseEvent) => {
         const {onChange} = this.props;
-
-        if (!onChange) {
-            return;
-        }
-
-        const {movementX, movementY} = event;
         let top = 0, left = 0, width = 0, height = 0;
 
         if (this.moveMode) {
-            top = movementY;
-            left = movementX;
+            top = event.pageY - this.clickAnchor.pageY;
+            left = event.pageX - this.clickAnchor.pageX;
         }
 
         if (this.resizeMode) {
-            height = movementY;
-            width = movementX;
+            height = event.pageY - this.clickAnchor.pageY;
+            width = event.pageX - this.clickAnchor.pageX;
         }
 
         if (this.moveMode || this.resizeMode) {
-            onChange({top, left, width, height});
+            this.setClickAnchor(event);
+
+            if (onChange) {
+                onChange({top, left, width, height});
+            }
         }
     };
 

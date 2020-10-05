@@ -42,14 +42,14 @@ test('The component should call the change callback on move', () => {
     expect(windowListeners.mousemove).toBeDefined();
     expect(windowListeners.mouseup).toBeDefined();
 
-    rectangle.simulate('mousedown', {});
-    windowListeners.mousemove({movementX: -15, movementY: -30});
+    rectangle.simulate('mousedown', {pageX: 10, pageY: 20});
+    windowListeners.mousemove({pageX: 15, pageY: 30});
 
     expect(changeSpy).toHaveBeenCalledTimes(1);
-    expect(changeSpy).toHaveBeenCalledWith({top: -30, left: -15, width: 0, height: 0});
+    expect(changeSpy).toHaveBeenCalledWith({top: 10, left: 5, width: 0, height: 0});
 
     windowListeners.mouseup();
-    windowListeners.mousemove({movementX: 100, movementY: 200});
+    windowListeners.mousemove({pageX: 100, pageY: 200});
 
     expect(changeSpy).toHaveBeenCalledTimes(1);
 });
@@ -64,14 +64,14 @@ test('The component should call the change callback on resize', () => {
     expect(windowListeners.mousemove).toBeDefined();
     expect(windowListeners.mouseup).toBeDefined();
 
-    resizeHandle.simulate('mousedown', {});
-    windowListeners.mousemove({movementX: 15, movementY: 30});
+    resizeHandle.simulate('mousedown', {pageX: 10, pageY: 20});
+    windowListeners.mousemove({pageX: 15, pageY: 30});
 
     expect(changeSpy).toHaveBeenCalledTimes(1);
-    expect(changeSpy).toHaveBeenCalledWith({top: 0, left: 0, width: 15, height: 30});
+    expect(changeSpy).toHaveBeenCalledWith({top: 0, left: 0, width: 5, height: 10});
 
     windowListeners.mouseup();
-    windowListeners.mousemove({movementX: -10, movementY: 10});
+    windowListeners.mousemove({pageX: 100, pageY: 200});
 
     expect(changeSpy).toHaveBeenCalledTimes(1);
 });
