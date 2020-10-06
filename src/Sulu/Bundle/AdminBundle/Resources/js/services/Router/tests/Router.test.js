@@ -19,6 +19,11 @@ jest.mock('../registries/routeRegistry', () => {
 
 test('Navigate to route using state', () => {
     routeRegistry.getAll.mockReturnValue({
+        test: new Route({
+            name: 'test',
+            path: '/test',
+            type: 'form',
+        }),
         page: new Route({
             name: 'page',
             options: {
@@ -32,14 +37,16 @@ test('Navigate to route using state', () => {
     const history = createMemoryHistory();
     const router = new Router(history);
 
+    router.navigate('test');
     router.navigate('page', {uuid: 'some-uuid'});
     expect(isObservable(router.route)).toBe(true);
     expect(router.route.type).toBe('form');
     expect(router.route.options.type).toBe('page');
     expect(router.attributes.uuid).toBe('some-uuid');
     expect(history.location.pathname).toBe('/pages/some-uuid');
-    expect(history.entries.some((entry) => entry.pathname === '/')).toEqual(true);
-    expect(history.entries.some((entry) => entry.pathname === '/pages/some-uuid')).toEqual(true);
+
+    history.back();
+    expect(history.location.pathname).toBe('/test');
 });
 
 test('Reset route using the reset method', () => {
@@ -62,12 +69,38 @@ test('Reset route using the reset method', () => {
     expect(history.location.pathname).toBe('/');
 });
 
+test('Reset route using the reset method with hash and search', () => {
+    routeRegistry.getAll.mockReturnValue({
+        page: new Route({
+            name: 'page',
+            path: '/pages',
+            options: {
+                type: 'page',
+            },
+            type: 'list',
+        }),
+    });
+
+    const history = createMemoryHistory();
+    history.replace('/pages/some-uuid?test=value');
+    const router = new Router(history);
+
+    router.reset();
+    expect(history.location.pathname).toBe('/');
+    expect(history.location.search).toBe('');
+});
+
 test('Redirect to route using state', () => {
     routeRegistry.getAll.mockReturnValue({
-        test: new Route({
-            name: 'test',
-            type: 'test',
-            path: '/test',
+        test1: new Route({
+            name: 'test1',
+            type: 'test1',
+            path: '/test1',
+        }),
+        test2: new Route({
+            name: 'test2',
+            type: 'test2',
+            path: '/test2',
         }),
         page: new Route({
             name: 'page',
@@ -82,15 +115,17 @@ test('Redirect to route using state', () => {
     const history = createMemoryHistory();
     const router = new Router(history);
 
-    router.navigate('test', {uuid: 'some-uuid'});
+    router.navigate('test1');
+    router.navigate('test2');
     router.redirect('page', {uuid: 'some-uuid'});
     expect(isObservable(router.route)).toBe(true);
     expect(router.route.type).toBe('form');
     expect(router.route.options.type).toBe('page');
     expect(router.attributes.uuid).toBe('some-uuid');
     expect(history.location.pathname).toBe('/pages/some-uuid');
-    expect(history.entries.some((entry) => entry.pathname === '/test')).toEqual(false);
-    expect(history.entries.some((entry) => entry.pathname === '/pages/some-uuid')).toEqual(true);
+
+    history.back();
+    expect(history.location.pathname).toBe('/test1');
 });
 
 test('Navigate to route with search parameters using state', () => {
