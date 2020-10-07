@@ -124,9 +124,29 @@ class PageAdminTest extends TestCase
             true
         );
 
+        $webspace1 = $this->prophesize(Webspace::class);
+        $webspace1->getName()->willReturn('second webspace');
+
+        $webspace2 = $this->prophesize(Webspace::class);
+        $webspace2->getName()->willReturn('first webspace');
+
+        $this->webspaceManager->getWebspaceCollection()->willReturn(new WebspaceCollection([
+            $webspace1->reveal(),
+            $webspace2->reveal(),
+        ]));
+
+        $this->teaserProviderPool->getConfiguration()->willReturn([]);
+
         $config = $admin->getConfig();
 
-        $this->assertEquals(true, $config['versioning']);
+        $this->assertEquals(
+            [
+                'teaser' => [],
+                'versioning' => true,
+                'webspaces' => [$webspace1->reveal(), $webspace2->reveal()],
+            ],
+            $config
+        );
     }
 
     public function testGetConfigWithoutVersioning()
@@ -140,9 +160,19 @@ class PageAdminTest extends TestCase
             false
         );
 
+        $this->webspaceManager->getWebspaceCollection()->willReturn(new WebspaceCollection([]));
+        $this->teaserProviderPool->getConfiguration()->willReturn([]);
+
         $config = $admin->getConfig();
 
-        $this->assertEquals(false, $config['versioning']);
+        $this->assertEquals(
+            [
+                'teaser' => [],
+                'versioning' => false,
+                'webspaces' => [],
+            ],
+            $config
+        );
     }
 
     public function testGetSecurityContexts()
