@@ -7,7 +7,7 @@ class WebspaceStore {
     @observable allWebspaces: Array<Webspace>;
 
     setWebspaces(webspaces: Array<Webspace>) {
-        this.allWebspaces = webspaces;
+        this.allWebspaces = webspaces.sort((w1, w2) => w1.name.localeCompare(w2.name));
     }
 
     @computed get grantedWebspaces(): Array<Webspace> {

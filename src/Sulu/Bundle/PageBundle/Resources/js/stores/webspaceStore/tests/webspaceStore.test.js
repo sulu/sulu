@@ -164,3 +164,42 @@ test('Get webspace with given key', () => {
     expect(webspaceStore.getWebspace('sulu')).toEqual(webspace1);
     expect(log.warn).not.toBeCalled();
 });
+
+test('Webspaces are sorted by name', () => {
+    const webspace1 = {
+        ...defaultWebspace,
+        _permissions: {
+            view: true,
+        },
+        name: 'Second Webspace',
+        key: 'second',
+        resourceLocatorStrategy: {inputType: 'leaf'},
+    };
+
+    const webspace2 = {
+        ...defaultWebspace,
+        _permissions: {
+            view: true,
+        },
+        name: 'First Webspace',
+        key: 'first',
+        resourceLocatorStrategy: {inputType: 'leaf'},
+    };
+
+    const webspace3 = {
+        ...defaultWebspace,
+        _permissions: {
+            view: false,
+        },
+        name: 'Third Webspace',
+        key: 'third',
+        resourceLocatorStrategy: {inputType: 'leaf'},
+    };
+
+    const webspaces = [webspace1, webspace2, webspace3];
+
+    webspaceStore.setWebspaces(webspaces);
+
+    expect(webspaceStore.allWebspaces).toEqual([webspace2, webspace1, webspace3]);
+    expect(webspaceStore.grantedWebspaces).toEqual([webspace2, webspace1]);
+});
