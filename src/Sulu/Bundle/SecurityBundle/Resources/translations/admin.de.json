@@ -18,5 +18,7 @@
     "sulu_security.security": "Sicherheit",
     "sulu_security.system_permission_heading": "Berechtigung für {system} aktivieren",
     "sulu_security.inherit_permissions_title": "Berechtigung vererben?",
-    "sulu_security.inherit_permissions_label": "Berechtigungen an Unterelementen vererben"
+    "sulu_security.inherit_permissions_label": "Berechtigungen an Unterelementen vererben",
+    "sulu_security.move_permission_title": "Hinweis",
+    "sulu_security.move_permission_warning": "Die Berechtigungen des übergeordneten Elements werden nicht übernommen."
 }

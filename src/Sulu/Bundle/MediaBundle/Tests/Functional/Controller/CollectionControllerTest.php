@@ -327,6 +327,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertEquals('Default Collection Type', $response->type->description);
         $this->assertEquals(\date('Y-m-d'), \date('Y-m-d', \strtotime($response->created)));
         $this->assertEquals(\date('Y-m-d'), \date('Y-m-d', \strtotime($response->changed)));
+        $this->assertFalse($response->_hasPermissions);
     }
 
     public function testCGet()
@@ -701,6 +702,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertEquals('Test Collection 2', $response->title);
         $this->assertEquals('This Description 2 is only for testing', $response->description);
         $this->assertEquals($this->collection1->getId(), $response->_embedded->parent->id);
+        $this->assertFalse($response->_hasPermissions);
 
         $this->assertEquals(
             [],
@@ -736,6 +738,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertNotEmpty($responseFirstEntity->changed);
         $this->assertEquals('Test Collection 2', $responseFirstEntity->title);
         $this->assertEquals('This Description 2 is only for testing', $responseFirstEntity->description);
+        $this->assertFalse($response->_hasPermissions);
 
         $this->client->request(
             'GET',
@@ -797,6 +800,7 @@ class CollectionControllerTest extends SuluTestCase
         $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $this->assertTrue($response->_hasPermissions);
 
         $this->assertEquals(
             $permissions,

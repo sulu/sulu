@@ -130,14 +130,7 @@ jest.mock('../registries/listFieldTransformerRegistry', () => ({
 }));
 
 jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn(function(key) {
-        switch (key) {
-            case 'sulu_admin.page':
-                return 'Page';
-            case 'sulu_admin.of':
-                return 'of';
-        }
-    }),
+    translate: jest.fn((key) => key),
 }));
 
 jest.mock('../../SingleListOverlay', () => function() {
@@ -927,6 +920,7 @@ test('ListStore should move item when onRequestItemMove callback is called and o
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
     // $FlowFixMe
     listStore.move.mockReturnValue(movePromise);
+    listStore.findById.mockReturnValue({_hasPermissions: false});
     mockStructureStrategyData = [
         {id: 1},
         {id: 2},
@@ -947,6 +941,70 @@ test('ListStore should move item when onRequestItemMove callback is called and o
             expect(list.find(SingleListOverlay).at(0).prop('open')).toEqual(false);
         });
     });
+});
+
+test('ListStore should move item when onRequestItemMove callback is called and permission dialog is confirmed', () => {
+    const movePromise = Promise.resolve();
+
+    listAdapterRegistry.get.mockReturnValue(TableAdapter);
+    const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
+    // $FlowFixMe
+    listStore.move.mockReturnValue(movePromise);
+    listStore.findById.mockReturnValue({_hasPermissions: true});
+    mockStructureStrategyData = [
+        {id: 1},
+        {id: 2},
+        {id: 3},
+    ];
+    const list = mount(<List adapters={['table']} store={listStore} />);
+
+    const requestMovePromise = list.find('TableAdapter').prop('onRequestItemMove')(5);
+    list.update();
+    expect(list.find(SingleListOverlay).at(0).prop('open')).toEqual(true);
+
+    list.find(SingleListOverlay).at(0).prop('onConfirm')({id: 8});
+
+    list.update();
+    expect(list.find('Dialog[title="sulu_security.move_permission_title"]').prop('open')).toEqual(true);
+    list.find('Dialog[title="sulu_security.move_permission_title"]').prop('onConfirm')();
+    return requestMovePromise.then(() => {
+        expect(listStore.move).toBeCalledWith(5, 8);
+
+        return movePromise.then(() => {
+            list.update();
+            expect(list.find(SingleListOverlay).at(0).prop('open')).toEqual(false);
+        });
+    });
+});
+
+test('ListStore should not move when onRequestItemMove callback is called and permission dialog is denied', () => {
+    const movePromise = Promise.resolve();
+
+    listAdapterRegistry.get.mockReturnValue(TableAdapter);
+    const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
+    // $FlowFixMe
+    listStore.move.mockReturnValue(movePromise);
+    listStore.findById.mockReturnValue({_hasPermissions: false});
+    mockStructureStrategyData = [
+        {id: 1},
+        {id: 2},
+        {id: 3},
+    ];
+    const list = mount(<List adapters={['table']} store={listStore} />);
+
+    list.find('TableAdapter').prop('onRequestItemMove')(5);
+    list.update();
+    expect(list.find(SingleListOverlay).at(0).prop('open')).toEqual(true);
+
+    list.find(SingleListOverlay).at(0).prop('onConfirm')({id: 8, _hasPermissions: true});
+
+    list.update();
+    expect(list.find('Dialog[title="sulu_security.move_permission_title"]').prop('open')).toEqual(true);
+    list.find('Dialog[title="sulu_security.move_permission_title"]').prop('onCancel')();
+    list.update();
+    expect(list.find('Dialog[title="sulu_security.move_permission_title"]').prop('open')).toEqual(false);
+    expect(list.find(SingleListOverlay).at(0).prop('open')).toEqual(true);
+    expect(listStore.move).not.toBeCalledWith(5, 8);
 });
 
 test('Delete warning should disappear when deleting selection was requested and overlay is cancelled', () => {
@@ -1254,13 +1312,13 @@ test('Order warning should just disappear when onRequestItemOrder callback is ca
 
     const requestOrderPromise = list.find('TableAdapter').prop('onRequestItemOrder')(5);
     list.update();
-    expect(list.find('Dialog').at(3).prop('open')).toEqual(true);
+    expect(list.find('Dialog[title="sulu_admin.order_warning_title"]').prop('open')).toEqual(true);
 
-    list.find('Dialog').at(3).prop('onCancel')();
+    list.find('Dialog[title="sulu_admin.order_warning_title"]').prop('onCancel')();
 
     return requestOrderPromise.then(() => {
         list.update();
-        expect(list.find('Dialog').at(3).prop('open')).toEqual(false);
+        expect(list.find('Dialog[title="sulu_admin.order_warning_title"]').prop('open')).toEqual(false);
 
         expect(listStore.order).not.toBeCalled();
     });
@@ -1281,15 +1339,15 @@ test('ListStore should order item when onRequestItemOrder callback is called and
 
     const requestOrderPromise = list.find('TableAdapter').prop('onRequestItemOrder')(5, 8);
     list.update();
-    expect(list.find('Dialog').at(3).prop('open')).toEqual(true);
-    list.find('Dialog').at(3).prop('onConfirm')();
+    expect(list.find('Dialog[title="sulu_admin.order_warning_title"]').prop('open')).toEqual(true);
+    list.find('Dialog[title="sulu_admin.order_warning_title"]').prop('onConfirm')();
 
     return requestOrderPromise.then(() => {
         expect(listStore.order).toBeCalledWith(5, 8);
 
         return orderPromise.then(() => {
             list.update();
-            expect(list.find('Dialog').at(3).prop('open')).toEqual(false);
+            expect(list.find('Dialog[title="sulu_admin.order_warning_title"]').prop('open')).toEqual(false);
         });
     });
 });

@@ -20,7 +20,6 @@ use Sulu\Component\Rest\ApiWrapper;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredEntityInterface;
-use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Security\Serializer\Subscriber\SecuredEntitySubscriber;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -92,16 +91,20 @@ class SecuredEntitySubscriberTest extends TestCase
         $entity->getSecurityContext()->willReturn('sulu.example');
         $this->objectEvent->getObject()->willReturn($entity);
 
-        $securityCondition = new SecurityCondition('sulu.example', null, \get_class($entity->reveal()), 7);
+        $permissions = [3 => ['view' => true]];
+        $this->accessControlManager->getPermissions(\get_class($entity->reveal()), 7)->willReturn($permissions);
 
-        $permission = ['_permissions' => ['permission' => 'value']];
-        $this->accessControlManager->getUserPermissions($securityCondition, $this->user->reveal())->willReturn(
-            $permission
-        );
+        $userPermission = ['_permissions' => ['permission' => 'value']];
+        $this->accessControlManager->getUserPermissionByArray(null, 'sulu.example', $permissions, $this->user->reveal())
+            ->willReturn($userPermission);
 
         $this->visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
             return '_permissions' === $metadata->name;
-        }), $permission)->shouldBeCalled();
+        }), $userPermission)->shouldBeCalled();
+
+        $this->visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
+            return '_hasPermissions' === $metadata->name;
+        }), true)->shouldBeCalled();
 
         $this->securedEntitySubscriber->onPostSerialize($this->objectEvent->reveal());
     }
@@ -115,16 +118,20 @@ class SecuredEntitySubscriberTest extends TestCase
         $apiWrapper->getEntity()->willReturn($entity);
         $this->objectEvent->getObject()->willReturn($apiWrapper);
 
-        $securityCondition = new SecurityCondition('sulu.example', null, \get_class($entity->reveal()), 7);
+        $permissions = [3 => ['view' => true]];
+        $this->accessControlManager->getPermissions(\get_class($entity->reveal()), 7)->willReturn($permissions);
 
-        $permission = ['_permissions' => ['permission' => 'value']];
-        $this->accessControlManager->getUserPermissions($securityCondition, $this->user->reveal())->willReturn(
-            $permission
-        );
+        $userPermission = ['_permissions' => ['permission' => 'value']];
+        $this->accessControlManager->getUserPermissionByArray(null, 'sulu.example', $permissions, $this->user->reveal())
+            ->willReturn($userPermission);
 
         $this->visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
             return '_permissions' === $metadata->name;
-        }), $permission)->shouldBeCalled();
+        }), $userPermission)->shouldBeCalled();
+
+        $this->visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
+            return '_hasPermissions' === $metadata->name;
+        }), true)->shouldBeCalled();
 
         $this->securedEntitySubscriber->onPostSerialize($this->objectEvent->reveal());
     }

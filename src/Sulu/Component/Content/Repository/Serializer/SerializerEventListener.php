@@ -148,5 +148,11 @@ class SerializerEventListener implements EventSubscriberInterface
             new StaticPropertyMetadata('', '_permissions', $permissions),
             $permissions
         );
+
+        $hasPermissions = !empty($content->getPermissions());
+        $visitor->visitProperty(
+            new StaticPropertyMetadata('', '_hasPermissions', $hasPermissions),
+            $hasPermissions
+        );
     }
 }

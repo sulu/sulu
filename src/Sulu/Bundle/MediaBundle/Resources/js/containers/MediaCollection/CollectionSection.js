@@ -30,6 +30,7 @@ type Props = {
 @observer
 class CollectionSection extends React.Component<Props> {
     @observable openedCollectionOperationOverlayType: OperationType;
+    @observable movingRestrictedTargetCollection: ?Object = undefined;
 
     @action openCollectionOperationOverlay(operationType: OperationType) {
         this.openedCollectionOperationOverlayType = operationType;
@@ -155,7 +156,25 @@ class CollectionSection extends React.Component<Props> {
         this.closeCollectionOperationOverlay();
     };
 
-    handleMoveCollectionConfirm = (collection: Object) => {
+    @action handleMoveCollectionConfirm = (collection: Object) => {
+        const {resourceStore} = this.props;
+        if (!resourceStore.data._hasPermissions && !collection._hasPermissions) {
+            this.moveCollection(collection);
+        } else {
+            this.movingRestrictedTargetCollection = collection;
+        }
+    };
+
+    @action handleMovePermissionWarningConfirm = () => {
+        this.moveCollection(this.movingRestrictedTargetCollection);
+        this.movingRestrictedTargetCollection = undefined;
+    };
+
+    @action handleMovePermissionWarningCancel = () => {
+        this.movingRestrictedTargetCollection = undefined;
+    };
+
+    moveCollection = (collection: Object) => {
         const {resourceStore} = this.props;
         resourceStore.move(collection.id).then(() => {
             resourceStore.reload();
@@ -272,6 +291,16 @@ class CollectionSection extends React.Component<Props> {
                     resourceKey={COLLECTIONS_RESOURCE_KEY}
                     title={translate('sulu_media.move_collection')}
                 />
+                <Dialog
+                    cancelText={translate('sulu_admin.cancel')}
+                    confirmText={translate('sulu_admin.confirm')}
+                    onCancel={this.handleMovePermissionWarningCancel}
+                    onConfirm={this.handleMovePermissionWarningConfirm}
+                    open={!!this.movingRestrictedTargetCollection}
+                    title={translate('sulu_security.move_permission_title')}
+                >
+                    {translate('sulu_security.move_permission_warning')}
+                </Dialog>
             </div>
         );
     }
