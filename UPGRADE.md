@@ -1,6 +1,6 @@
 # Upgrade
 
-## dev-master
+## 2.2.0-RC1
 
 ### Deprecation of passing action string to submit form functions
 
