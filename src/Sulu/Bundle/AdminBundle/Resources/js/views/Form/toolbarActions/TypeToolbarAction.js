@@ -13,9 +13,19 @@ export default class TypeToolbarAction extends AbstractFormToolbarAction {
 
         const {
             disabled_condition: disabledCondition,
+            sort_by_title: sortByTitle = false,
         } = this.options;
 
         const isDisabled = disabledCondition ? jexl.evalSync(disabledCondition, this.resourceFormStore.data) : false;
+
+        const unsortedOptions = Object.keys(formTypes).map((key: string) => ({
+            value: formTypes[key].key,
+            label: formTypes[key].title,
+        }));
+
+        const sortedOptions = sortByTitle
+            ? unsortedOptions.sort((t1, t2) => t1.label.localeCompare(t2.label))
+            : unsortedOptions;
 
         return {
             type: 'select',
@@ -30,10 +40,7 @@ export default class TypeToolbarAction extends AbstractFormToolbarAction {
             loading: this.resourceFormStore.typesLoading,
             value: this.resourceFormStore.type,
             disabled: isDisabled,
-            options: Object.keys(formTypes).map((key: string) => ({
-                value: formTypes[key].key,
-                label: formTypes[key].title,
-            })),
+            options: sortedOptions,
         };
     }
 }

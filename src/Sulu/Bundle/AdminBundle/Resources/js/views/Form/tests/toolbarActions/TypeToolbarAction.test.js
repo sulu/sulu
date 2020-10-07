@@ -55,13 +55,13 @@ test('Return item config with correct disabled, loading, options, icon, type and
     typeToolbarAction.resourceFormStore.typesLoading = false;
     typeToolbarAction.resourceFormStore.type = 'default';
     typeToolbarAction.resourceFormStore.types = {
-        default: {
-            key: 'default',
-            title: 'Default',
-        },
         homepage: {
             key: 'homepage',
             title: 'Homepage',
+        },
+        default: {
+            key: 'default',
+            title: 'Default',
         },
     };
 
@@ -70,17 +70,44 @@ test('Return item config with correct disabled, loading, options, icon, type and
         loading: false,
         options: [
             {
-                label: 'Default',
-                value: 'default',
-            },
-            {
                 label: 'Homepage',
                 value: 'homepage',
+            },
+            {
+                label: 'Default',
+                value: 'default',
             },
         ],
         type: 'select',
         value: 'default',
     }));
+});
+
+test('Return item config with sorted options if sort_by_title is set', () => {
+    const typeToolbarAction = createTypeToolbarAction({sort_by_title: true});
+    typeToolbarAction.resourceFormStore.typesLoading = false;
+    typeToolbarAction.resourceFormStore.type = 'default';
+    typeToolbarAction.resourceFormStore.types = {
+        homepage: {
+            key: 'homepage',
+            title: 'Homepage',
+        },
+        default: {
+            key: 'default',
+            title: 'Default',
+        },
+    };
+
+    expect(typeToolbarAction.getToolbarItemConfig().options).toEqual([
+        {
+            label: 'Default',
+            value: 'default',
+        },
+        {
+            label: 'Homepage',
+            value: 'homepage',
+        },
+    ]);
 });
 
 test('Return item config with loading select', () => {
