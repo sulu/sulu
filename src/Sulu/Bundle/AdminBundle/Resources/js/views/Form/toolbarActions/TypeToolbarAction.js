@@ -24,7 +24,7 @@ export default class TypeToolbarAction extends AbstractFormToolbarAction {
         }));
 
         const sortedOptions = sortByTitle
-            ? unsortedOptions.sort((t1, t2) => t1.label.localeCompare(t2.label))
+            ? unsortedOptions.sort((t1, t2) => String(t1.label).localeCompare(String(t2.label)))
             : unsortedOptions;
 
         return {

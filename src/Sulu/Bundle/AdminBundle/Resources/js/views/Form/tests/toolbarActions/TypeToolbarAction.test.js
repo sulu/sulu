@@ -98,16 +98,18 @@ test('Return item config with sorted options if sort_by_title is set', () => {
         },
     };
 
-    expect(typeToolbarAction.getToolbarItemConfig().options).toEqual([
-        {
-            label: 'Default',
-            value: 'default',
-        },
-        {
-            label: 'Homepage',
-            value: 'homepage',
-        },
-    ]);
+    expect(typeToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
+        options: [
+            {
+                label: 'Default',
+                value: 'default',
+            },
+            {
+                label: 'Homepage',
+                value: 'homepage',
+            },
+        ],
+    }));
 });
 
 test('Return item config with loading select', () => {
