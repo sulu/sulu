@@ -6,6 +6,7 @@ import conditionDataProviderRegistry from './registries/conditionDataProviderReg
 import fieldRegistry from './registries/fieldRegistry';
 import MemoryFormStore from './stores/MemoryFormStore';
 import memoryFormStoreFactory from './stores/memoryFormStoreFactory';
+import metadataStore from './stores/metadataStore';
 import ResourceFormStore from './stores/ResourceFormStore';
 import resourceFormStoreFactory from './stores/resourceFormStoreFactory';
 import ChangelogLine from './fields/ChangelogLine';
@@ -47,6 +48,7 @@ export {
     FormInspector,
     MemoryFormStore,
     memoryFormStoreFactory,
+    metadataStore,
     ResourceFormStore,
     resourceFormStoreFactory,
     Number,

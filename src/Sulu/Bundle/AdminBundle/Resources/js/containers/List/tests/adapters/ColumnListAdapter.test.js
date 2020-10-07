@@ -23,6 +23,7 @@ test('Render different kind of data with edit button', () => {
                 hasChildren: false,
                 publishedState: false,
                 published: '2017-08-23',
+                _hasPermissions: true,
             },
             {
                 id: 6,
@@ -101,6 +102,7 @@ test('Render different kind of data with edit button', () => {
         <ColumnListAdapter
             {...listAdapterDefaultProps}
             activeItems={[2, 4]}
+            adapterOptions={{get_indicators: (item) => item.hasChildren ? ['has-children-indicator'] : []}}
             data={data}
             onItemAdd={jest.fn()}
             onItemClick={jest.fn()}

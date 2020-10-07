@@ -655,6 +655,11 @@ exports[`Render different kind of data with edit button 1`] = `
               </div>
             </span>
             <span
+              class="indicator"
+            >
+              has-children-indicator
+            </span>
+            <span
               class="children"
             >
               <span
@@ -705,6 +710,14 @@ exports[`Render different kind of data with edit button 1`] = `
                   Page 2
                 </div>
               </div>
+            </span>
+            <span
+              class="indicator"
+            >
+              <span
+                aria-label="su-permissions"
+                class="su-permissions"
+              />
             </span>
             <span
               class="indicator"

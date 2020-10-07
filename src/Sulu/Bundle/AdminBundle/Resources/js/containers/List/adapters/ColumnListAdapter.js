@@ -86,6 +86,10 @@ class ColumnListAdapter extends AbstractAdapter {
 
         const indicators = [];
 
+        if (item._hasPermissions) {
+            indicators.push(<Icon key="permissions" name="su-permissions" />);
+        }
+
         if (item.linked === 'internal') {
             indicators.push(<Icon key="internal" name="su-link2" />);
         } else if (item.linked === 'external') {
@@ -107,6 +111,21 @@ class ColumnListAdapter extends AbstractAdapter {
                     />
                 );
             }
+        }
+
+        const {
+            adapterOptions: {
+                get_indicators: getAdapterOptionsIndicators,
+            } = {},
+        } = this.props;
+
+        if (getAdapterOptionsIndicators) {
+            if (typeof getAdapterOptionsIndicators !== 'function') {
+                throw new Error('The "get_indicators" option of the ColumnListAdapter must be a function!');
+            }
+
+            // $FlowFixMe
+            indicators.push(...getAdapterOptionsIndicators(item));
         }
 
         return indicators;
