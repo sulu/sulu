@@ -115,13 +115,13 @@ class ColumnListAdapter extends AbstractAdapter {
 
         const {
             adapterOptions: {
-                getIndicators: getAdapterOptionsIndicators,
+                get_indicators: getAdapterOptionsIndicators,
             } = {},
         } = this.props;
 
         if (getAdapterOptionsIndicators) {
             if (typeof getAdapterOptionsIndicators !== 'function') {
-                throw new Error('The "getIndicators" option of the ColumnListAdapter must be a function!');
+                throw new Error('The "get_indicators" option of the ColumnListAdapter must be a function!');
             }
 
             // $FlowFixMe

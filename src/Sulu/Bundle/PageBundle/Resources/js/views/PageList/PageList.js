@@ -206,7 +206,7 @@ class PageList extends React.Component<Props> {
                     adapterOptions={{
                         column_list: {
                             display_root_level_toolbar: false,
-                            getIndicators,
+                            get_indicators: getIndicators,
                         },
                     }}
                     adapters={['column_list', 'tree_table']}
