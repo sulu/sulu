@@ -4,6 +4,7 @@ import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import equal from 'fast-deep-equal';
 import log from 'loglevel';
 import {compile} from 'path-to-regexp';
+import {parsePath} from 'history';
 import {transformDateForUrl} from '../../utils/Date';
 import type {AttributeMap, UpdateAttributesHook, UpdateRouteHook, UpdateRouteMethod} from './types';
 import routeRegistry from './registries/routeRegistry';
@@ -128,7 +129,7 @@ export default class Router {
     constructor(history: Object) {
         this.history = history;
 
-        this.history.listen((location) => {
+        this.history.listen(({location}) => {
             log.info('URL was changed to "' + location.pathname + location.search + '"');
             this.match(location.pathname, location.search);
         });
@@ -141,7 +142,8 @@ export default class Router {
                 // have to use the historyUrl as a fallback, because currentUrl could be undefined and break the routing
                 const url = currentUrl || historyUrl;
                 log.info('Router changes URL to "' + url + '"' + (this.redirectFlag ? ' replacing history' : ''));
-                this.redirectFlag ? this.history.replace(url) : this.history.push(url);
+                const newLocation = {search: '', ...parsePath(url)};
+                this.redirectFlag ? this.history.replace(newLocation) : this.history.push(newLocation);
                 this.redirectFlag = false;
             }
         });
@@ -226,7 +228,7 @@ export default class Router {
     };
 
     reset = () => {
-        this.history.replace('');
+        this.history.replace({search: '', ...parsePath('/')});
     };
 
     @action match(path: string, queryString: string) {
