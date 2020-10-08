@@ -136,12 +136,15 @@ class ImagineImageConverter implements ImageConverterInterface
 
     public function convert(FileVersion $fileVersion, $formatKey, $imageFormat)
     {
-        $imageResource = $this->mediaImageExtractor->extract($this->storage->load($fileVersion->getStorageOptions()));
+        $imageResource = $this->mediaImageExtractor->extract(
+            $this->storage->load($fileVersion->getStorageOptions()),
+            $fileVersion->getMimeType()
+        );
 
         try {
             $image = $this->imagine->read($imageResource);
         } catch (RuntimeException $e) {
-            throw new InvalidFileTypeException($e->getMessage());
+            throw new InvalidFileTypeException($e->getMessage(), $e);
         }
 
         $image = $this->toRGB($image);

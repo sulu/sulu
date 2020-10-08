@@ -47,9 +47,18 @@ class MediaImageExtractor implements MediaImageExtractorInterface
         $this->videoThumbnail = $videoThumbnail;
     }
 
-    public function extract($resource)
+    public function extract($resource/*, string $resourceMimeType*/)
     {
-        $mimeType = \mime_content_type($resource);
+        if (\func_num_args() <= 1) {
+            @\trigger_error(
+                \sprintf('Calling "%s()" without $resourceMimeType parameter is deprecated.', __METHOD__),
+                \E_USER_DEPRECATED
+            );
+
+            $mimeType = \mime_content_type($resource);
+        } else {
+            $mimeType = \func_get_arg(1);
+        }
 
         if ('application/pdf' === $mimeType) {
             return $this->convertPdfToImage($resource);
@@ -109,18 +118,12 @@ class MediaImageExtractor implements MediaImageExtractorInterface
      */
     private function convertPsdToImage($resource)
     {
-        $temporaryFilePath = $this->createTemporaryFile($resource);
-
         try {
-            $image = $this->imagine->open($temporaryFilePath);
+            $image = $this->imagine->read($resource);
             $image = $image->layers()[0];
-
-            \unlink($temporaryFilePath);
 
             return $this->createTemporaryResource($image->get('png'));
         } catch (RuntimeException $e) {
-            \unlink($temporaryFilePath);
-
             throw new InvalidMimeTypeForPreviewException('image/vnd.adobe.photoshop');
         }
     }
