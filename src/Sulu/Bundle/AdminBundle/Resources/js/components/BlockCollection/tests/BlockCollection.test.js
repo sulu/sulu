@@ -60,6 +60,21 @@ test('Should mark the add button disabled if maxOccurs is reached', () => {
     expect(blockCollection.find('Button[icon="su-plus"]').prop('disabled')).toEqual(true);
 });
 
+test('Should render add button with the given addText', () => {
+    const blockCollection = shallow(
+        <BlockCollection
+            addText="custom-add-button-text"
+            defaultType="editor"
+            maxOccurs={2}
+            onChange={jest.fn()}
+            renderBlockContent={jest.fn()}
+            value={[{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}]}
+        />
+    );
+
+    expect(blockCollection.find('Button[icon="su-plus"]').prop('children')).toEqual('custom-add-button-text');
+});
+
 test('Should add at least the minOccurs amount of blocks', () => {
     const changeSpy = jest.fn();
     const value = [{type: 'editor'}];

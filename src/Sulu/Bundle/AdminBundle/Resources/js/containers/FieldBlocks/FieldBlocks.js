@@ -94,6 +94,22 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
         return settingsFormKey;
     }
 
+    @computed get addText() {
+        const {
+            schemaOptions: {
+                add_text: {
+                    title: addText,
+                } = {},
+            },
+        } = this.props;
+
+        if (addText !== undefined && typeof addText !== 'string') {
+            throw new Error('The "block" field types only accepts strings as "add_text" schema option!');
+        }
+
+        return addText;
+    }
+
     @computed get iconsMapping() {
         const settingsSchema = this.blockSettingsFormStore?.schema;
 
@@ -365,6 +381,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
         return (
             <>
                 <BlockCollection
+                    addText={this.addText}
                     defaultType={defaultType}
                     disabled={!!disabled}
                     icons={this.icons}

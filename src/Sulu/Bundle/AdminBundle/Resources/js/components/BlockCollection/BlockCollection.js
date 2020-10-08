@@ -10,6 +10,7 @@ import blockCollectionStyles from './blockCollection.scss';
 import type {BlockEntry, RenderBlockContentCallback} from './types';
 
 type Props = {|
+    addText?: ?string,
     defaultType: string,
     disabled: boolean,
     icons?: Array<Array<string>>,
@@ -155,7 +156,7 @@ class BlockCollection extends React.Component<Props> {
     }
 
     render() {
-        const {disabled, icons, onSettingsClick, renderBlockContent, types, value} = this.props;
+        const {addText, disabled, icons, onSettingsClick, renderBlockContent, types, value} = this.props;
 
         return (
             <section className={blockCollectionStyles.blockCollection}>
@@ -182,7 +183,7 @@ class BlockCollection extends React.Component<Props> {
                     onClick={this.handleAddBlock}
                     skin="secondary"
                 >
-                    {translate('sulu_admin.add_block')}
+                    {addText ? addText : translate('sulu_admin.add_block')}
                 </Button>
             </section>
         );
