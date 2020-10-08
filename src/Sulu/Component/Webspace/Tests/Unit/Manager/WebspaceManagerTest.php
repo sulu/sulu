@@ -14,6 +14,7 @@ namespace Sulu\Component\Webspace\Tests\Unit;
 use Prophecy\Argument;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\Content\Metadata\StructureMetadata;
+use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Exception\InvalidTemplateException;
 use Sulu\Component\Webspace\Loader\XmlFileLoader10;
 use Sulu\Component\Webspace\Loader\XmlFileLoader11;
@@ -779,6 +780,18 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals(['https://sulu.lo/test'], $result);
     }
 
+    public function testFindUrlsByResourceLocatorWithWebspaceFromRequest()
+    {
+        $webspace = new Webspace();
+        $webspace->setKey('dan_io');
+        $request = new Request([], [], ['_sulu' => new RequestAttributes(['webspace' => $webspace])]);
+        $this->requestStack->getCurrentRequest()->willReturn($request);
+
+        $result = $this->webspaceManager->findUrlsByResourceLocator('/test', 'dev', 'de_at');
+
+        $this->assertEquals(['http://dan.lo/de/test'], $result);
+    }
+
     public function testFindUrlsByResourceLocatorRoot()
     {
         $result = $this->webspaceManager->findUrlsByResourceLocator('/', 'dev', 'en_us', 'massiveart');
@@ -857,6 +870,17 @@ class WebspaceManagerTest extends WebspaceTestCase
             'https'
         );
         $this->assertEquals('https://sulu.lo/test', $result);
+    }
+
+    public function testFindUrlByResourceLocatorWithWebspaceFromRequest()
+    {
+        $webspace = new Webspace();
+        $webspace->setKey('dan_io');
+        $request = new Request([], [], ['_sulu' => new RequestAttributes(['webspace' => $webspace])]);
+        $this->requestStack->getCurrentRequest()->willReturn($request);
+
+        $result = $this->webspaceManager->findUrlByResourceLocator('/test', 'dev', 'de_at');
+        $this->assertEquals('http://dan.lo/de/test', $result);
     }
 
     public function testFindUrlByResourceLocatorWithCustomHttpPort()
