@@ -17,6 +17,6 @@ class TestController
 {
     public function index()
     {
-        return new Response(null, 200);
+        return new Response('Portal Route', 200);
     }
 }

@@ -26,23 +26,46 @@ class PortalLoaderTest extends WebsiteTestCase
         $this->client = static::createWebsiteClient();
     }
 
-    public function testPortalRoute()
+    public function testPortalRouteEnDynamicLocalization()
     {
         $this->client->request('GET', 'http://example.lo/en/portal-route');
+        $response = $this->client->getResponse();
         $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $this->assertSame('Portal Route', $response->getContent());
+    }
 
+    public function testPortalRouteDeDynamicLocalization()
+    {
         $this->client->request('GET', 'http://example.lo/de/portal-route');
+        $response = $this->client->getResponse();
         $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $this->assertSame('Portal Route', $response->getContent());
+    }
 
+    public function testPortalRouteFrNotExistLocale()
+    {
         $this->client->request('GET', 'http://example.lo/fr/portal-route');
         $this->assertHttpStatusCode(404, $this->client->getResponse());
+    }
 
+    public function testPortalRouteWithoutPrefix()
+    {
         $this->client->request('GET', 'http://example-english.lo/portal-route');
+        $response = $this->client->getResponse();
         $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $this->assertSame('Portal Route', $response->getContent());
+    }
 
+    public function testPortalRouteWithPrefix()
+    {
         $this->client->request('GET', 'http://example-english.lo/valid-prefix/portal-route');
+        $response = $this->client->getResponse();
         $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $this->assertSame('Portal Route', $response->getContent());
+    }
 
+    public function testPortalRouteInvalidPrefix()
+    {
         $this->client->request('GET', 'http://example-english.lo/invalid-prefix/portal-route');
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
