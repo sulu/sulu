@@ -60,10 +60,10 @@ test('Should mark the add button disabled if maxOccurs is reached', () => {
     expect(blockCollection.find('Button[icon="su-plus"]').prop('disabled')).toEqual(true);
 });
 
-test('Should render add button with the given addText', () => {
+test('Should render add button with the given addButtonText', () => {
     const blockCollection = shallow(
         <BlockCollection
-            addText="custom-add-button-text"
+            addButtonText="custom-add-button-text"
             defaultType="editor"
             maxOccurs={2}
             onChange={jest.fn()}
