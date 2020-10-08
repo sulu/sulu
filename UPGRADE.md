@@ -2,6 +2,16 @@
 
 ## 2.2.0-RC1
 
+### CKeditor update
+
+Due to the update of the CKEditor you have to make sure that you are also using the latest ckeditor packages in your
+application based on our skeleton. These are the packages you should reference in your `package.json`:
+
+```
+"@ckeditor/ckeditor5-dev-utils": "^23.5.1",
+"@ckeditor/ckeditor5-theme-lark": "^23.0.0",
+```
+
 ### Deprecation of passing action string to submit form functions
 
 Passing an `action` string to the `submit` function of the `Form` react component is deprecated, instead an `options`

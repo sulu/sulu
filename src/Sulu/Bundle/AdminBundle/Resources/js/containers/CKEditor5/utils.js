@@ -12,7 +12,7 @@ function addLinkConversion(editor: Object, tag: string, internalAttribute: strin
 
     editor.conversion.for('downcast').attributeToElement({
         model: internalAttribute,
-        view: (attributeValue, writer) => {
+        view: (attributeValue, {writer}) => {
             return writer.createAttributeElement(tag, {[tagAttribute]: attributeValue});
         },
     });
