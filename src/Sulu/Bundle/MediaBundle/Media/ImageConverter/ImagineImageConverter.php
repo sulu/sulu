@@ -149,7 +149,10 @@ class ImagineImageConverter implements ImageConverterInterface
 
     public function convert(FileVersion $fileVersion, $formatKey, $imageFormat)
     {
-        $imageResource = $this->mediaImageExtractor->extract($this->storage->load($fileVersion->getStorageOptions()));
+        $imageResource = $this->mediaImageExtractor->extract(
+            $this->storage->load($fileVersion->getStorageOptions()),
+            $fileVersion->getMimeType()
+        );
 
         $imagine = $this->imagine;
         if ('svg' === $imageFormat && $this->svgImagine) {
@@ -159,7 +162,7 @@ class ImagineImageConverter implements ImageConverterInterface
         try {
             $image = $imagine->read($imageResource);
         } catch (RuntimeException $e) {
-            throw new InvalidFileTypeException($e->getMessage());
+            throw new InvalidFileTypeException($e->getMessage(), $e);
         }
 
         $image = $this->toRGB($image);

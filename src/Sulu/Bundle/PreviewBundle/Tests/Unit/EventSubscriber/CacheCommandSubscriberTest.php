@@ -63,6 +63,7 @@ class CacheCommandSubscriberTest extends TestCase
             ->shouldBeCalled()
             ->willReturn($this->previewKernel->reveal());
 
+        $this->application->setAutoExit(false)->shouldBeCalled();
         $this->application->run(Argument::any(), Argument::any())
             ->shouldBeCalled();
 
@@ -78,6 +79,7 @@ class CacheCommandSubscriberTest extends TestCase
             ->shouldBeCalled()
             ->willReturn($this->previewKernel->reveal());
 
+        $this->application->setAutoExit(false)->shouldBeCalled();
         $this->application->run(Argument::any(), Argument::any())
             ->shouldBeCalled();
 

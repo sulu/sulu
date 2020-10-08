@@ -117,9 +117,10 @@ class ImagineImageConverterTest extends TestCase
         $fileVersion->setName('test.jpg');
         $fileVersion->setVersion(1);
         $fileVersion->setStorageOptions(['option' => 1]);
+        $fileVersion->setMimeType('image/jpeg');
 
         $this->storage->load(['option' => 1])->willReturn('image-resource');
-        $this->mediaImageExtractor->extract('image-resource')->willReturn('image-resource');
+        $this->mediaImageExtractor->extract('image-resource', 'image/jpeg')->willReturn('image-resource');
         $this->imagine->read('image-resource')->willReturn($imagineImage->reveal());
 
         $imagineImage->palette()->willReturn($palette->reveal());
@@ -173,9 +174,10 @@ class ImagineImageConverterTest extends TestCase
         $fileVersion->setName('test.jpg');
         $fileVersion->setVersion(1);
         $fileVersion->setStorageOptions(['option' => 1]);
+        $fileVersion->setMimeType('image/jpeg');
 
         $this->storage->load(['option' => 1])->willReturn('image-resource');
-        $this->mediaImageExtractor->extract('image-resource')->willReturn('image-resource');
+        $this->mediaImageExtractor->extract('image-resource', 'image/jpeg')->willReturn('image-resource');
         $this->imagine->read('image-resource')->willReturn($imagineImage->reveal());
 
         $imagineImage->metadata()->willReturn(['']);
@@ -203,7 +205,7 @@ class ImagineImageConverterTest extends TestCase
         $fileVersion->setMimeType('image/svg+xml');
 
         $this->storage->load(['option' => 1])->willReturn('image-resource');
-        $this->mediaImageExtractor->extract('image-resource')->willReturn('image-resource');
+        $this->mediaImageExtractor->extract('image-resource', 'image/svg+xml')->willReturn('image-resource');
         $this->imagine->read('image-resource')->willReturn($imagineImage->reveal());
 
         $imagineImage->metadata()->willReturn(['']);
@@ -227,9 +229,10 @@ class ImagineImageConverterTest extends TestCase
         $fileVersion->setName('test.jpg');
         $fileVersion->setVersion(1);
         $fileVersion->setStorageOptions(['option' => 1]);
+        $fileVersion->setMimeType('image/jpeg');
 
         $this->storage->load(['option' => 1])->willReturn('image-resource');
-        $this->mediaImageExtractor->extract('image-resource')->willReturn('image-resource');
+        $this->mediaImageExtractor->extract('image-resource', 'image/jpeg')->willReturn('image-resource');
         $this->imagine->read('image-resource')->willReturn($imagineImage->reveal());
 
         $imagineImage->metadata()->willReturn(['']);
@@ -267,9 +270,10 @@ class ImagineImageConverterTest extends TestCase
         $fileVersion->setName('test.jpg');
         $fileVersion->setVersion(1);
         $fileVersion->setStorageOptions([]);
+        $fileVersion->setMimeType('image/jpeg');
 
         $this->storage->load([])->willReturn('image-content');
-        $this->mediaImageExtractor->extract('image-content')->willReturn('image-content');
+        $this->mediaImageExtractor->extract('image-content', 'image/jpeg')->willReturn('image-content');
         $this->imagine->read('image-content')->willReturn($imagineImage->reveal());
 
         $imagineImage->palette()->willReturn($palette->reveal());

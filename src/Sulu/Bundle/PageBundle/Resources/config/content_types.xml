@@ -39,6 +39,10 @@
             <tag name="sulu.content.type" alias="date"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
         </service>
+        <service id="sulu.content.type.datetime" class="Sulu\Bundle\PageBundle\Content\Types\DateTime">
+            <tag name="sulu.content.type" alias="datetime"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
+        </service>
         <service id="sulu.content.type.time" class="Sulu\Bundle\PageBundle\Content\Types\Time">
             <tag name="sulu.content.type" alias="time"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />

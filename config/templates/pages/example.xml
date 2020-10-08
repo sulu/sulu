@@ -196,6 +196,13 @@
             </meta>
         </property>
 
+        <property name="datetime" type="datetime">
+            <meta>
+                <title lang="en">Date with Time</title>
+                <title lang="de">Datum mit Zeit</title>
+            </meta>
+        </property>
+
         <property name="email" type="email">
             <meta>
                 <title lang="en">Email</title>
