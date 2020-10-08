@@ -187,6 +187,8 @@
 
         <!-- portal loader -->
         <service id="sulu_website.routing.portal_loader" class="%sulu_website.routing.portal_loader.class%">
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+
             <tag name="routing.loader"/>
         </service>
 

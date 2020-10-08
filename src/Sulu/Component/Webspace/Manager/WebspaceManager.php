@@ -15,6 +15,7 @@ use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Util\WildcardUrlUtil;
+use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Manager\Dumper\PhpWebspaceCollectionDumper;
 use Sulu\Component\Webspace\Portal;
@@ -208,6 +209,10 @@ class WebspaceManager implements WebspaceManagerInterface
         if (null === $environment) {
             $environment = $this->environment;
         }
+        if (null === $webspaceKey) {
+            $currentWebspace = $this->getCurrentWebspace();
+            $webspaceKey = $currentWebspace ? $currentWebspace->getKey() : $webspaceKey;
+        }
 
         $urls = [];
         $portals = $this->getWebspaceCollection()->getPortalInformations(
@@ -236,6 +241,10 @@ class WebspaceManager implements WebspaceManagerInterface
     ): ?string {
         if (null === $environment) {
             $environment = $this->environment;
+        }
+        if (null === $webspaceKey) {
+            $currentWebspace = $this->getCurrentWebspace();
+            $webspaceKey = $currentWebspace ? $currentWebspace->getKey() : $webspaceKey;
         }
 
         $urls = [];
@@ -472,6 +481,21 @@ class WebspaceManager implements WebspaceManagerInterface
         return WildcardUrlUtil::match($url, $portalUrl);
     }
 
+    private function getCurrentWebspace(): ?Webspace
+    {
+        $currentRequest = $this->requestStack->getCurrentRequest();
+        if (!$currentRequest) {
+            return null;
+        }
+
+        $suluAttributes = $currentRequest->attributes->get('_sulu');
+        if (!$suluAttributes instanceof RequestAttributes) {
+            return null;
+        }
+
+        return $suluAttributes->getAttribute('webspace');
+    }
+
     /**
      * Return a valid resource locator url.
      *
@@ -501,7 +525,7 @@ class WebspaceManager implements WebspaceManagerInterface
             $host = $currentRequest->getHost();
             $port = $currentRequest->getPort();
 
-            if ($url && false !== \strpos($url, $host)) {
+            if ($url && $host && false !== \strpos($url, $host)) {
                 if (!('http' == $scheme && 80 == $port) && !('https' == $scheme && 443 == $port)) {
                     $url = \str_replace($host, $host . ':' . $port, $url);
                 }
