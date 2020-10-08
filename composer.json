@@ -114,7 +114,7 @@
         "phpspec/prophecy": "^1.7",
         "phpstan/phpstan": "^0.12",
         "phpstan/phpstan-symfony": "^0.12",
-        "phpunit/phpunit": "^8.0",
+        "phpunit/phpunit": "^8.4",
         "psr/event-dispatcher": "^1.0",
         "superbalist/flysystem-google-storage": "^7.1",
         "symfony/browser-kit": "^4.3",

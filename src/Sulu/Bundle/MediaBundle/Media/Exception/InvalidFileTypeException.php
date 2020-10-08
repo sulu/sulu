@@ -16,8 +16,8 @@ class InvalidFileTypeException extends UploadFileException
     /**
      * @param string $message
      */
-    public function __construct($message)
+    public function __construct($message, \Throwable $previous = null)
     {
-        parent::__construct($message, self::EXCEPTION_CODE_BLOCKED_FILE_TYPE);
+        parent::__construct($message, self::EXCEPTION_CODE_BLOCKED_FILE_TYPE, $previous);
     }
 }
