@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Routing;
 
-use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
@@ -22,6 +22,16 @@ use Symfony\Component\Routing\RouteCollection;
  */
 class PortalLoader extends Loader
 {
+    /**
+     * @var WebspaceManagerInterface
+     */
+    private $webspaceManager;
+
+    public function __construct(WebspaceManagerInterface $webspaceManager)
+    {
+        $this->webspaceManager = $webspaceManager;
+    }
+
     public function load($resource, $type = null)
     {
         $collection = new RouteCollection();
@@ -29,26 +39,24 @@ class PortalLoader extends Loader
         /** @var Route[] $importedRoutes */
         $importedRoutes = $this->import($resource, null);
 
-        $condition = \sprintf(
-            'request.get("_sulu").getAttribute("portalInformation") !== null ' .
-            '&& request.get("_sulu").getAttribute("portalInformation").getType() === %s',
-            RequestAnalyzerInterface::MATCH_TYPE_FULL
-        );
+        $prefixes = [];
+        foreach ($this->webspaceManager->getPortalInformations() as $portalInformation) {
+            // symfony does not accept an empty regex as requirement, therefore we use '()' to match an empty prefix
+            $prefixes[] = \preg_quote($portalInformation->getPrefix()) ?: '()';
+        }
 
         foreach ($importedRoutes as $importedRouteName => $importedRoute) {
-            $importedCondition = $importedRoute->getCondition();
-
             $collection->add(
                 $importedRouteName,
                 new Route(
                     '{prefix}' . \ltrim($importedRoute->getPath(), '/'),
                     $importedRoute->getDefaults(),
-                    \array_merge(['prefix' => '(.*/)?'], $importedRoute->getRequirements()),
+                    \array_merge(['prefix' => \implode('|', $prefixes)], $importedRoute->getRequirements()),
                     $importedRoute->getOptions(),
                     $importedRoute->getHost(),
                     $importedRoute->getSchemes(),
                     $importedRoute->getMethods(),
-                    $condition . (!empty($importedCondition) ? ' and (' . $importedCondition . ')' : '')
+                    $importedRoute->getCondition()
                 )
             );
         }
