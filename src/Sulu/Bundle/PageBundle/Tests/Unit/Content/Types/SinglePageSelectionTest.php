@@ -35,11 +35,6 @@ class SinglePageSelectionTest extends TestCase
     private $referenceStore;
 
     /**
-     * @var ObjectProphecy
-     */
-    private $securityChecker;
-
-    /**
      * @var SinglePageSelection
      */
     private $type;
@@ -50,12 +45,8 @@ class SinglePageSelectionTest extends TestCase
 
         $this->property = $this->prophesize(PropertyInterface::class);
         $this->referenceStore = $this->prophesize(ReferenceStoreInterface::class);
-        $this->securityChecker = $this->prophesize(SecurityCheckerInterface::class);
 
-        $this->type = new SinglePageSelection(
-            $this->referenceStore->reveal(),
-            $this->securityChecker->reveal()
-        );
+        $this->type = new SinglePageSelection($this->referenceStore->reveal());
     }
 
     public function providePreResolve()
@@ -102,38 +93,6 @@ class SinglePageSelectionTest extends TestCase
         $this->property->getValue()->willReturn('some-uuid');
         $this->property->getStructure()->willReturn($structure->reveal());
 
-        $this->securityChecker->hasPermission(
-            new SecurityCondition(
-                'sulu.webspaces.sulu_io',
-                'de',
-                SecurityBehavior::class,
-                'some-uuid'
-            ),
-            PermissionTypes::VIEW
-        )->willReturn(true);
-
         $this->assertEquals('some-uuid', $this->type->getContentData($this->property->reveal()));
-    }
-
-    public function testContentDataForMissingPermissions()
-    {
-        $structure = $this->prophesize(StructureInterface::class);
-        $structure->getLanguageCode()->willReturn('de');
-        $structure->getWebspaceKey()->willReturn('sulu_io');
-
-        $this->property->getValue()->willReturn('some-uuid');
-        $this->property->getStructure()->willReturn($structure->reveal());
-
-        $this->securityChecker->hasPermission(
-            new SecurityCondition(
-                'sulu.webspaces.sulu_io',
-                'de',
-                SecurityBehavior::class,
-                'some-uuid'
-            ),
-            PermissionTypes::VIEW
-        )->willReturn(false);
-
-        $this->assertNull($this->type->getContentData($this->property->reveal()));
     }
 }

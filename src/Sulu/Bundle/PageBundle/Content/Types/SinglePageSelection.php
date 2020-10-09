@@ -32,19 +32,12 @@ class SinglePageSelection extends SimpleContentType implements PreResolvableCont
      */
     private $referenceStore;
 
-    /**
-     * @var ?SecurityCheckerInterface
-     */
-    private $securityChecker;
-
     public function __construct(
-        ReferenceStoreInterface $referenceStore,
-        SecurityCheckerInterface $securityChecker = null
+        ReferenceStoreInterface $referenceStore
     ) {
         parent::__construct('SinglePageSelection', '');
 
         $this->referenceStore = $referenceStore;
-        $this->securityChecker = $securityChecker;
     }
 
     public function write(
@@ -79,25 +72,6 @@ class SinglePageSelection extends SimpleContentType implements PreResolvableCont
         $property->setValue($value);
 
         return $value;
-    }
-
-    public function getContentData(PropertyInterface $property)
-    {
-        if ($this->securityChecker
-            && !$this->securityChecker->hasPermission(
-                new SecurityCondition(
-                    PageAdmin::SECURITY_CONTEXT_PREFIX . $property->getStructure()->getWebspaceKey(),
-                    $property->getStructure()->getLanguageCode(),
-                    SecurityBehavior::class,
-                    $property->getValue()
-                ),
-                PermissionTypes::VIEW
-            )
-        ) {
-            return null;
-        }
-
-        return parent::getContentData($property);
     }
 
     public function preResolve(PropertyInterface $property)
