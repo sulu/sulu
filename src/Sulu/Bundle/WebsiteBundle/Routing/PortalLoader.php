@@ -41,8 +41,8 @@ class PortalLoader extends Loader
 
         $prefixes = [];
         foreach ($this->webspaceManager->getPortalInformations() as $portalInformation) {
-            // symfony does not accept an empty regex as requirement, therefore we use '()' to match an empty prefix
-            $prefixes[] = \preg_quote($portalInformation->getPrefix()) ?: '()';
+            // symfony does not accept an empty regex as requirement, therefore we use '(^$)?' to match an empty prefix
+            $prefixes[] = \preg_quote($portalInformation->getPrefix()) ?: '(^$)?';
         }
 
         foreach ($importedRoutes as $importedRouteName => $importedRoute) {
