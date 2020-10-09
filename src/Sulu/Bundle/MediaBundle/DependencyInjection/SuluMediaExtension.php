@@ -277,13 +277,15 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
             $loader->load('services_imagine_svg.xml');
         }
 
-        if (\class_exists(VipsImagine::class)) {
+        $hasVipsAdapter = false;
+        if (\class_exists(VipsImagine::class) && \extension_loaded('vips')) {
             $loader->load('services_imagine_vips.xml');
+            $hasVipsAdapter = true;
         }
 
         if ('auto' === $config['adapter']) {
             $adapter = 'gd';
-            if (\class_exists(VipsImagine::class)) {
+            if ($hasVipsAdapter) {
                 $adapter = 'vips';
             } elseif (\class_exists(\Imagick::class)) {
                 $adapter = 'imagick';
