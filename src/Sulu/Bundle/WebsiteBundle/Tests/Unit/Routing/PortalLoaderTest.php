@@ -106,9 +106,9 @@ class PortalLoaderTest extends TestCase
         $this->assertInstanceOf(Route::class, $routeCollection->get('route2'));
 
         $this->assertEquals('/{prefix}example/route1', $routeCollection->get('route1')->getPath());
-        $this->assertEquals(['prefix' => 'de/|en/|()|custom/pre\-fix/'], $routeCollection->get('route1')->getRequirements());
+        $this->assertEquals(['prefix' => 'de/|en/|(^$)?|custom/pre\-fix/'], $routeCollection->get('route1')->getRequirements());
         $this->assertEquals('/{prefix}route2', $routeCollection->get('route2')->getPath());
-        $this->assertEquals(['prefix' => 'de/|en/|()|custom/pre\-fix/'], $routeCollection->get('route2')->getRequirements());
+        $this->assertEquals(['prefix' => 'de/|en/|(^$)?|custom/pre\-fix/'], $routeCollection->get('route2')->getRequirements());
         $this->assertEquals('', $routeCollection->get('route1')->getHost());
         $this->assertEquals('', $routeCollection->get('route2')->getHost());
     }
@@ -141,9 +141,9 @@ class PortalLoaderTest extends TestCase
         $this->assertInstanceOf(Route::class, $routeCollection->get('route2'));
 
         $this->assertEquals('/{prefix}example/route1', $routeCollection->get('route1')->getPath());
-        $this->assertEquals(['prefix' => '()'], $routeCollection->get('route1')->getRequirements());
+        $this->assertEquals(['prefix' => '(^$)?'], $routeCollection->get('route1')->getRequirements());
         $this->assertEquals('/{prefix}route2', $routeCollection->get('route2')->getPath());
-        $this->assertEquals(['prefix' => '()'], $routeCollection->get('route2')->getRequirements());
+        $this->assertEquals(['prefix' => '(^$)?'], $routeCollection->get('route2')->getRequirements());
         $this->assertEquals('', $routeCollection->get('route1')->getHost());
         $this->assertEquals('', $routeCollection->get('route2')->getHost());
     }
