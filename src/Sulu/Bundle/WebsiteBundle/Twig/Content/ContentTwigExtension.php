@@ -13,11 +13,16 @@ namespace Sulu\Bundle\WebsiteBundle\Twig\Content;
 
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
+use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Bundle\WebsiteBundle\Twig\Exception\ParentNotFoundException;
+use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Sulu\Component\Security\Authorization\PermissionTypes;
+use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
+use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
@@ -53,6 +58,11 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
     private $logger;
 
     /**
+     * @var ?SecurityCheckerInterface
+     */
+    private $securityChecker;
+
+    /**
      * Constructor.
      */
     public function __construct(
@@ -60,13 +70,15 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
         StructureResolverInterface $structureResolver,
         SessionManagerInterface $sessionManager,
         RequestAnalyzerInterface $requestAnalyzer,
-        LoggerInterface $logger = null
+        LoggerInterface $logger = null,
+        SecurityCheckerInterface $securityChecker = null
     ) {
         $this->contentMapper = $contentMapper;
         $this->structureResolver = $structureResolver;
         $this->sessionManager = $sessionManager;
         $this->requestAnalyzer = $requestAnalyzer;
         $this->logger = $logger ?: new NullLogger();
+        $this->securityChecker = $securityChecker;
     }
 
     public function getFunctions()
@@ -83,12 +95,28 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
             return;
         }
 
+        $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocale();
+
         try {
             $contentStructure = $this->contentMapper->load(
                 $uuid,
                 $this->requestAnalyzer->getWebspace()->getKey(),
-                $this->requestAnalyzer->getCurrentLocalization()->getLocale()
+                $locale
             );
+
+            if ($this->securityChecker
+                && !$this->securityChecker->hasPermission(
+                    new SecurityCondition(
+                        PageAdmin::SECURITY_CONTEXT_PREFIX . $contentStructure->getWebspaceKey(),
+                        $locale,
+                        SecurityBehavior::class,
+                        $uuid
+                    ),
+                    PermissionTypes::VIEW
+                )
+            ) {
+                return null;
+            }
 
             return $this->structureResolver->resolve($contentStructure);
         } catch (DocumentNotFoundException $e) {
