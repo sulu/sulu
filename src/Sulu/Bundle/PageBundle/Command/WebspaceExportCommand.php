@@ -21,7 +21,7 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 class WebspaceExportCommand extends Command
 {
-    protected static $defaultName = 'sulu:webspaces:export';
+    protected static $defaultName = 'sulu:webspaces:translation-export';
 
     /**
      * @var WebspaceExportInterface
@@ -44,7 +44,7 @@ class WebspaceExportCommand extends Command
             ->addOption('nodes', 'm', InputOption::VALUE_REQUIRED)
             ->addOption('ignored-nodes', 'i', InputOption::VALUE_REQUIRED)
             ->addOption('uuid', 'u', InputOption::VALUE_REQUIRED)
-            ->setDescription('Export webspace');
+            ->setDescription('Export webspace translations from given language.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

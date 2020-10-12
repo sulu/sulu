@@ -24,7 +24,7 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 class WebspaceImportCommand extends Command
 {
-    protected static $defaultName = 'sulu:webspaces:import';
+    protected static $defaultName = 'sulu:webspaces:translation-import';
 
     /**
      * @var WebspaceImportInterface
@@ -53,7 +53,7 @@ class WebspaceImportCommand extends Command
             ->addOption('uuid', 'u', InputOption::VALUE_REQUIRED)
             ->addOption('exportSuluVersion', '', InputOption::VALUE_OPTIONAL, '1.2 or 1.3', '1.3')
             ->addOption('overrideSettings', 'o', InputOption::VALUE_OPTIONAL, 'Override Settings-Tab', 'false')
-            ->setDescription('Import webspace');
+            ->setDescription('Import webspace translations');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

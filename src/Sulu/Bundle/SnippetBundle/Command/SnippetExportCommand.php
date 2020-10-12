@@ -19,7 +19,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class SnippetExportCommand extends Command
 {
-    protected static $defaultName = 'sulu:snippet:export';
+    protected static $defaultName = 'sulu:snippet:translation-export';
 
     /**
      * @var SnippetExportInterface
