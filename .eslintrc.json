@@ -176,7 +176,6 @@
         "react/jsx-key": "error",
         "react/jsx-indent": "error",
         "react/jsx-no-bind": "error",
-        "react/jsx-indent-props": "error",
         "react/jsx-equals-spacing": "error",
         "react/jsx-handler-names": "error",
         "react/jsx-first-prop-new-line": [
