@@ -37,19 +37,23 @@ const iconSettings = require('./fonts/selection.json');
 
 <div style={{display: 'flex', flexWrap: 'wrap'}}>
     {
-        iconSettings.icons.map((iconSetting) => {
-            const iconClass = 'su-' + iconSetting.properties.name;
-
-            return <div style={{textAlign: 'center', margin: '10px', width: '70px'}}>
-                <div style={{fontSize: '20px'}}>
-                    <Icon name={iconClass} />
+        iconSettings.icons
+            .sort((icon1, icon2) => {
+                return icon1.properties.name.localeCompare(icon2.properties.name);
+            })
+            .map((icon) => {
+                const iconClass = 'su-' + icon.properties.name;
+    
+                return <div style={{textAlign: 'center', margin: '10px', width: '70px', height: '50px'}}>
+                    <div style={{fontSize: '25px', marginBottom: '3px'}}>
+                        <Icon name={iconClass} />
+                    </div>
+    
+                    <div style={{fontSize: '10px'}}>
+                        {iconClass}
+                    </div>
                 </div>
-
-                <div style={{fontSize: '8px'}}>
-                    {iconClass}
-                </div>
-            </div>
-        })
+            })
     }
 </div>
 ```
