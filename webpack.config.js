@@ -90,10 +90,10 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
                             loader: 'css-loader',
                             options: {
                                 modules: {
+                                    exportLocalsConvention: 'camelCase',
                                     localIdentName: '[local]--[hash:base64:10]',
                                 },
                                 importLoaders: 1,
-                                localsConvention: 'camelCase',
                             },
                         },
                         'postcss-loader',
@@ -112,14 +112,16 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
                         },
                         {
                             loader: 'postcss-loader',
-                            options: styles.getPostCssConfig({
-                                themeImporter: {
-                                    themePath: require.resolve(
-                                        path.resolve(nodeModulesPath, '@ckeditor/ckeditor5-theme-lark')
-                                    ),
-                                },
-                                minify: true,
-                            }),
+                            options: {
+                                postcssOptions: styles.getPostCssConfig({
+                                    themeImporter: {
+                                        themePath: require.resolve(
+                                            path.resolve(nodeModulesPath, '@ckeditor/ckeditor5-theme-lark')
+                                        ),
+                                    },
+                                    minify: true,
+                                }),
+                            },
                         },
                     ],
                 },

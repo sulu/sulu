@@ -178,11 +178,13 @@ module.exports = { // eslint-disable-line
                         },
                         {
                             loader: 'postcss-loader',
-                            options: styles.getPostCssConfig({
-                                themeImporter: {
-                                    themePath: require.resolve('@ckeditor/ckeditor5-theme-lark'),
-                                },
-                            }),
+                            options: {
+                                postcssOptions: styles.getPostCssConfig({
+                                    themeImporter: {
+                                        themePath: require.resolve('@ckeditor/ckeditor5-theme-lark'),
+                                    },
+                                }),
+                            },
                         },
                     ],
                 },
@@ -194,8 +196,8 @@ module.exports = { // eslint-disable-line
                             loader: 'css-loader',
                             options: {
                                 importLoaders: 1,
-                                localsConvention: 'camelCase',
                                 modules: {
+                                    exportLocalsConvention: 'camelCase',
                                     localIdentName: '[local]--[hash:base64:10]',
                                 },
                             },
