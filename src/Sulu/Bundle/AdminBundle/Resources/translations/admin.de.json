@@ -148,6 +148,7 @@
     "sulu_admin.form_contains_invalid_values": "Das Formular beinhaltet ungültige Werte",
     "sulu_admin.form_save_server_error": "Beim Speichern des Formulars ist ein Fehler aufgetreten",
     "sulu_admin.form_used_by": "Dieses Formular wird momentan benutzt von",
+    "sulu_admin.refresh_url": "URL neu generieren",
     "sulu_admin.from": "ab",
     "sulu_admin.until": "bis",
     "sulu_admin.block_settings": "Block Einstellungen",

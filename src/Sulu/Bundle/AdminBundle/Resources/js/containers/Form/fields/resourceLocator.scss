@@ -1,13 +1,9 @@
-.resource-locator-container {
+.button-container {
+    margin-top: 10px;
     display: flex;
-    align-items: center;
+    flex-direction: row;
 }
 
-.resource-locator {
-    flex-grow: 1;
-}
-
-.resource-locator-history {
-    padding-left: 10px;
-    flex-shrink: 1;
+.refresh-button {
+    margin-right: 20px;
 }
