@@ -116,7 +116,8 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
             $security = $targetWebspace->getSecurity();
             $system = $security ? $security->getSystem() : null;
 
-            if ($this->securityChecker
+            if ($targetWebspace->hasWebsiteSecurity()
+                && $this->securityChecker
                 && !$this->securityChecker->hasPermission(
                     new SecurityCondition(
                         PageAdmin::SECURITY_CONTEXT_PREFIX . $contentStructure->getWebspaceKey(),
