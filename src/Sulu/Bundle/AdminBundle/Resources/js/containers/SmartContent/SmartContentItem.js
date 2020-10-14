@@ -27,8 +27,7 @@ export default class SmartContentItem extends React.Component<Props> {
                     </div>
                 }
                 <div className={smartContentItemStyles.title}>
-                    {(publishedState !== undefined || published !== undefined)
-                        && !(publishedState && published) &&
+                    {(publishedState !== undefined || published !== undefined) && !(publishedState && published) &&
                         <div className={smartContentItemStyles.publishIndicator}>
                             <PublishIndicator
                                 draft={!publishedState}
