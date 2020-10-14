@@ -197,7 +197,7 @@ class Application extends React.Component<Props>{
                                     </header>
                                     <div className={applicationStyles.viewContainer}>
                                         {router.route &&
-                                        <ViewRenderer router={router} />
+                                            <ViewRenderer router={router} />
                                         }
                                     </div>
                                 </main>
