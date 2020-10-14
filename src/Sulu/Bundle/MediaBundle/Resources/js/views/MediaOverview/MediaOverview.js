@@ -24,6 +24,7 @@ class MediaOverview extends React.Component<ViewProps> {
     mediaPage: IObservableValue<number> = observable.box();
     locale: IObservableValue<string> = observable.box();
     collectionId: IObservableValue<?number | string> = observable.box();
+    @observable errors: Array<string> = [];
     @observable mediaListStore: ListStore;
     @observable collectionListStore: ListStore;
     @observable collectionStore: CollectionStore;
@@ -143,6 +144,10 @@ class MediaOverview extends React.Component<ViewProps> {
         this.collectionId.set(collectionId);
     };
 
+    @action handleUploadError= () => {
+        this.errors.push(translate('sulu_admin.upload_server_error'));
+    };
+
     @action handleUploadOverlayOpen = () => {
         this.showMediaUploadOverlay = true;
     };
@@ -192,6 +197,7 @@ class MediaOverview extends React.Component<ViewProps> {
                     mediaListStore={this.mediaListStore}
                     onCollectionNavigate={this.handleCollectionNavigate}
                     onMediaNavigate={this.handleMediaNavigate}
+                    onUploadError={this.handleUploadError}
                     onUploadOverlayClose={this.handleUploadOverlayClose}
                     onUploadOverlayOpen={this.handleUploadOverlayOpen}
                     uploadOverlayOpen={this.showMediaUploadOverlay}
@@ -215,6 +221,7 @@ class MediaOverview extends React.Component<ViewProps> {
 }
 
 export default withToolbar(MediaOverview, function() {
+    const errors = this.errors;
     const router = this.props.router;
     const loading = this.collectionListStore.loading || this.mediaListStore.loading;
 
@@ -312,5 +319,6 @@ export default withToolbar(MediaOverview, function() {
             }
             : undefined,
         items,
+        errors,
     };
 });

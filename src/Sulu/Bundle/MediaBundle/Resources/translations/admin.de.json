@@ -43,6 +43,7 @@
     "sulu_media.formats": "Formate",
     "sulu_media.all_collections": "Alle Kollektionen",
     "sulu_media.move_media": "Medien verschieben",
+    "sulu_admin.upload_server_error": "Beim Upload einer Datei ist ein Fehler aufgetreten.",
     "sulu_media.set_focus_point": "Fokuspunkt setzen",
     "sulu_media.define_crops": "Ausschnitte festlegen",
     "sulu_media.upload_preview_image": "Vorschaubild hochladen",
