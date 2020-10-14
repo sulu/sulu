@@ -44,12 +44,20 @@ class SecurityCondition
      */
     private $locale;
 
-    public function __construct($securityContext, $locale = null, $objectType = null, $objectId = null)
+    /**
+     * The security system for which the permissions should be checked.
+     *
+     * @var string
+     */
+    private $system;
+
+    public function __construct($securityContext, $locale = null, $objectType = null, $objectId = null, $system = null)
     {
         $this->securityContext = $securityContext;
         $this->locale = $locale;
         $this->objectType = $objectType;
         $this->objectId = $objectId;
+        $this->system = $system;
     }
 
     /**
@@ -88,5 +96,13 @@ class SecurityCondition
     public function getLocale()
     {
         return $this->locale;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSystem()
+    {
+        return $this->system;
     }
 }

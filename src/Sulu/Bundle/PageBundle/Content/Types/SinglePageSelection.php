@@ -12,15 +12,10 @@
 namespace Sulu\Bundle\PageBundle\Content\Types;
 
 use PHPCR\NodeInterface;
-use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
-use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\PreResolvableContentTypeInterface;
 use Sulu\Component\Content\SimpleContentType;
-use Sulu\Component\Security\Authorization\PermissionTypes;
-use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
-use Sulu\Component\Security\Authorization\SecurityCondition;
 
 /**
  * ContentType for SinglePageSelection.

@@ -14,6 +14,7 @@ namespace Sulu\Component\Security\Authorization\AccessControl;
 use Sulu\Bundle\SecurityBundle\Exception\AccessControlDescendantProviderNotFoundException;
 use Sulu\Bundle\SecurityBundle\System\SystemStoreInterface;
 use Sulu\Component\Security\Authentication\RoleInterface;
+use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\MaskConverterInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
@@ -52,16 +53,23 @@ class AccessControlManager implements AccessControlManagerInterface
      */
     private $descendantProviders = [];
 
+    /**
+     * @var RoleRepositoryInterface
+     */
+    private $roleRepository;
+
     public function __construct(
         MaskConverterInterface $maskConverter,
         EventDispatcherInterface $eventDispatcher,
         SystemStoreInterface $systemStore,
-        iterable $descendantProviders = []
+        iterable $descendantProviders = [],
+        RoleRepositoryInterface $roleRepository
     ) {
         $this->maskConverter = $maskConverter;
         $this->eventDispatcher = $eventDispatcher;
         $this->systemStore = $systemStore;
         $this->descendantProviders = $descendantProviders;
+        $this->roleRepository = $roleRepository;
     }
 
     public function setPermissions($type, $identifier, $permissions, $inherit = false)
@@ -110,7 +118,7 @@ class AccessControlManager implements AccessControlManagerInterface
 
     public function getUserPermissions(SecurityCondition $securityCondition, $user)
     {
-        $system = $this->systemStore->getSystem();
+        $system = $securityCondition->getSystem() ?? $this->systemStore->getSystem();
         if (!$system) {
             return $this->maskConverter->convertPermissionsToArray(127);
         }
@@ -313,9 +321,7 @@ class AccessControlManager implements AccessControlManagerInterface
     private function getRolesForLocale(?UserInterface $user, ?string $locale)
     {
         if (!($user instanceof UserInterface)) {
-            $anonymousRole = $this->systemStore->getAnonymousRole();
-
-            return $anonymousRole ? [$anonymousRole] : [];
+            return $this->roleRepository->findAllRoles(['anonymous' => true]);
         }
 
         $roles = [];

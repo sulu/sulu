@@ -24,6 +24,7 @@ use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -63,6 +64,11 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
     private $securityChecker;
 
     /**
+     * @var WebspaceManagerInterface
+     */
+    private $webspaceManager;
+
+    /**
      * Constructor.
      */
     public function __construct(
@@ -71,7 +77,8 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
         SessionManagerInterface $sessionManager,
         RequestAnalyzerInterface $requestAnalyzer,
         LoggerInterface $logger = null,
-        SecurityCheckerInterface $securityChecker = null
+        SecurityCheckerInterface $securityChecker = null,
+        WebspaceManagerInterface $webspaceManager
     ) {
         $this->contentMapper = $contentMapper;
         $this->structureResolver = $structureResolver;
@@ -79,6 +86,7 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
         $this->requestAnalyzer = $requestAnalyzer;
         $this->logger = $logger ?: new NullLogger();
         $this->securityChecker = $securityChecker;
+        $this->webspaceManager = $webspaceManager;
     }
 
     public function getFunctions()
@@ -104,13 +112,18 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
                 $locale
             );
 
+            $targetWebspace = $this->webspaceManager->findWebspaceByKey($contentStructure->getWebspaceKey());
+            $security = $targetWebspace->getSecurity();
+            $system = $security ? $security->getSystem() : null;
+
             if ($this->securityChecker
                 && !$this->securityChecker->hasPermission(
                     new SecurityCondition(
                         PageAdmin::SECURITY_CONTEXT_PREFIX . $contentStructure->getWebspaceKey(),
                         $locale,
                         SecurityBehavior::class,
-                        $uuid
+                        $uuid,
+                        $system
                     ),
                     PermissionTypes::VIEW
                 )

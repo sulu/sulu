@@ -17,10 +17,6 @@ use Sulu\Bundle\PageBundle\Content\Types\SinglePageSelection;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
-use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
-use Sulu\Component\Security\Authorization\PermissionTypes;
-use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
-use Sulu\Component\Security\Authorization\SecurityCondition;
 
 class SinglePageSelectionTest extends TestCase
 {

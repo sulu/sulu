@@ -34,6 +34,7 @@ use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
 
 class ContentTwigExtensionTest extends TestCase
@@ -99,9 +100,14 @@ class ContentTwigExtensionTest extends TestCase
     private $extension;
 
     /**
-     * @var ObjectProphecy
+     * @var SecurityCheckerInterface
      */
     private $securityChecker;
+
+    /**
+     * @var WebspaceManagerInterface
+     */
+    private $webspaceManager;
 
     protected function setUp(): void
     {
@@ -117,6 +123,7 @@ class ContentTwigExtensionTest extends TestCase
         $this->parentNode = $this->prophesize(NodeInterface::class);
         $this->startPageNode = $this->prophesize(NodeInterface::class);
         $this->logger = $this->prophesize(LoggerInterface::class);
+        $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
 
         $webspace = new Webspace();
         $webspace->setKey('sulu_test');
@@ -124,6 +131,8 @@ class ContentTwigExtensionTest extends TestCase
         $locale = new Localization();
         $locale->setCountry('us');
         $locale->setLanguage('en');
+
+        $this->webspaceManager->findWebspaceByKey('sulu_test')->willReturn($webspace);
 
         $this->requestAnalyzer->getWebspace()->willReturn($webspace);
         $this->requestAnalyzer->getCurrentLocalization()->willReturn($locale);
@@ -159,7 +168,8 @@ class ContentTwigExtensionTest extends TestCase
             $this->sessionManager->reveal(),
             $this->requestAnalyzer->reveal(),
             null,
-            $this->securityChecker->reveal()
+            $this->securityChecker->reveal(),
+            $this->webspaceManager->reveal()
         );
     }
 
@@ -174,7 +184,7 @@ class ContentTwigExtensionTest extends TestCase
         $testStructure->getCreated()->willReturn(null);
         $testStructure->getChanged()->willReturn(null);
         $testStructure->getDocument()->willReturn(null);
-        $testStructure->getWebspaceKey()->willReturn('sulu_io');
+        $testStructure->getWebspaceKey()->willReturn('sulu_test');
 
         $titleProperty = new Property('title', [], 'text_line');
         $titleProperty->setValue('test');
@@ -210,7 +220,7 @@ class ContentTwigExtensionTest extends TestCase
         $testStructure->getCreated()->willReturn(null);
         $testStructure->getChanged()->willReturn(null);
         $testStructure->getDocument()->willReturn(null);
-        $testStructure->getWebspaceKey()->willReturn('sulu_io');
+        $testStructure->getWebspaceKey()->willReturn('sulu_test');
 
         $titleProperty = new Property('title', [], 'text_line');
         $titleProperty->setValue('test');
@@ -218,7 +228,7 @@ class ContentTwigExtensionTest extends TestCase
 
         $this->securityChecker->hasPermission(
             new SecurityCondition(
-                PageAdmin::SECURITY_CONTEXT_PREFIX . 'sulu_io',
+                PageAdmin::SECURITY_CONTEXT_PREFIX . 'sulu_test',
                 'en_us',
                 SecurityBehavior::class,
                 '123-123-123'
@@ -270,7 +280,7 @@ class ContentTwigExtensionTest extends TestCase
         $testStructure->getCreated()->willReturn(null);
         $testStructure->getChanged()->willReturn(null);
         $testStructure->getDocument()->willReturn(null);
-        $testStructure->getWebspaceKey()->willReturn('sulu_io');
+        $testStructure->getWebspaceKey()->willReturn('sulu_test');
 
         $titleProperty = new Property('title', [], 'text_line');
         $titleProperty->setValue('test');

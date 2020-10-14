@@ -48,7 +48,10 @@
     <p>{{ content.link }}</p>
 
     {% if content.single_page_selection %}
-        <p>{{ sulu_content_load(content.single_page_selection).content.title }}</p>
+        {% set page = sulu_content_load(content.single_page_selection) %}
+        {% if page %}
+            <a href="{{ sulu_content_path(page.content.url) }}">{{ page.content.title }}</a>
+        {% endif %}
     {% endif %}
 
     <p>{{ content.page_selection|map(page => page.title)|join(', ') }}</p>
