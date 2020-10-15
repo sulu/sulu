@@ -8,8 +8,8 @@ import searchFieldStyles from './searchField.scss';
 import type {Index} from './types';
 
 type Props = {|
-    indexes: ?{[indexName: string]: Index},
     indexName: ?string,
+    indexes: ?{[indexName: string]: Index},
     onIndexChange: (indexName: ?string) => void,
     onQueryChange: (query: ?string) => void,
     onSearch: () => void,
