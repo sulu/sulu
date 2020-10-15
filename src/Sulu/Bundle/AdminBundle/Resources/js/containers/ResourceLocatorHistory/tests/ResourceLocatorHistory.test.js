@@ -35,7 +35,6 @@ test('Pass props correctly to ResourceListStore', () => {
 test('Pass correct props to Button', () => {
     const resourceLocatorHistory = shallow(
         <ResourceLocatorHistory
-            disabled={true}
             id={5}
             options={{webspace: 'sulu'}}
             resourceKey="history_routes"
@@ -43,9 +42,23 @@ test('Pass correct props to Button', () => {
     );
 
     expect(resourceLocatorHistory.find('Button[icon="su-process"]').props()).toEqual(expect.objectContaining({
-        disabled: true,
+        disabled: false,
         icon: 'su-process',
         skin: 'link',
+    }));
+});
+
+test('Disable button if id is not set', () => {
+    const resourceLocatorHistory = shallow(
+        <ResourceLocatorHistory
+            id={undefined}
+            options={{webspace: 'sulu'}}
+            resourceKey="history_routes"
+        />
+    );
+
+    expect(resourceLocatorHistory.find('Button[icon="su-process"]').props()).toEqual(expect.objectContaining({
+        disabled: true,
     }));
 });
 

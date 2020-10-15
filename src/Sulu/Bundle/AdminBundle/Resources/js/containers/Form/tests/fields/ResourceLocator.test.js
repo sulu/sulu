@@ -96,28 +96,6 @@ test('Render just slash instead of ResourceLocatorComponent if used on the homep
     });
 });
 
-test('Disable ResourceLocatorHistory if new entity is created', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
-    const modePromise = Promise.resolve('leaf');
-
-    const resourceLocator = mount(
-        <ResourceLocator
-            {...fieldTypeDefaultProps}
-            fieldTypeOptions={{
-                generationUrl: '/admin/api/resourcelocators?action=generate',
-                historyResourceKey: 'page_resourcelocators',
-                modeResolver: () => modePromise,
-            }}
-            formInspector={formInspector}
-        />
-    );
-
-    return modePromise.then(() => {
-        resourceLocator.update();
-        expect(resourceLocator.find('ResourceLocatorHistory').props().disabled).toBeTruthy();
-    });
-});
-
 test('Pass correct options to ResourceLocatorHistory if entity already existed', () => {
     const formInspector = new FormInspector(
         new ResourceFormStore(new ResourceStore('test', 1), 'test', {webspace: 'sulu'})

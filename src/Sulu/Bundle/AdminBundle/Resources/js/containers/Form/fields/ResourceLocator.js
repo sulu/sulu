@@ -175,7 +175,6 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
                         {translate('sulu_admin.refresh_url')}
                     </Button>
                     <ResourceLocatorHistory
-                        disabled={!formInspector.id}
                         id={formInspector.id}
                         options={{
                             locale: formInspector.locale,

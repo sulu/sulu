@@ -12,18 +12,13 @@ import ResourceListStore from '../../stores/ResourceListStore';
 import resourceLocatorHistoryStyles from './resourceLocatorHistory.scss';
 
 type Props = {|
-    disabled: boolean,
-    id: string | number,
+    id: ?string | number,
     options: Object,
     resourceKey: string,
 |};
 
 @observer
 class ResourceLocatorHistory extends React.Component<Props> {
-    static defaultProps = {
-        disabled: false,
-    };
-
     resourceListStore: ?ResourceListStore;
     @observable open = false;
     @observable showDeleteWarning = false;
@@ -72,13 +67,13 @@ class ResourceLocatorHistory extends React.Component<Props> {
 
     render() {
         const {resourceListStore, props} = this;
-        const {disabled} = props;
+        const {id} = props;
 
         const historyRoutes = resourceListStore ? resourceListStore.data : [];
 
         return (
             <Fragment>
-                <Button disabled={disabled} icon="su-process" onClick={this.handleButtonClick} skin="link">
+                <Button disabled={!id} icon="su-process" onClick={this.handleButtonClick} skin="link">
                     {translate('sulu_admin.show_history')}
                 </Button>
                 <Overlay
