@@ -83,8 +83,8 @@ test('Return item config with correct disabled, loading, options, icon, type and
     }));
 });
 
-test('Return item config with sorted options if sort_by_title is set', () => {
-    const typeToolbarAction = createTypeToolbarAction({sort_by_title: true});
+test('Return item config with options sorted by title if sort_by is set to title', () => {
+    const typeToolbarAction = createTypeToolbarAction({sort_by: 'title'});
     typeToolbarAction.resourceFormStore.typesLoading = false;
     typeToolbarAction.resourceFormStore.type = 'default';
     typeToolbarAction.resourceFormStore.types = {
