@@ -767,12 +767,14 @@ test('Should correctly pass props to the BlockCollection', () => {
             maxOccurs={2}
             minOccurs={1}
             onChange={changeSpy}
+            schemaOptions={{add_button_text: {name: 'add_button_text', title: 'custom-add-text'}}}
             types={types}
             value={value}
         />
     );
 
     expect(fieldBlocks.find('BlockCollection').props()).toEqual(expect.objectContaining({
+        addButtonText: 'custom-add-text',
         disabled: true,
         maxOccurs: 2,
         minOccurs: 1,
@@ -1192,4 +1194,32 @@ test('Throw error if passed settings_form_key schema option is not a string', ()
             value={[]}
         />
     )).toThrow('The "block" field types only accepts strings as "settings_form_key" schema option!');
+});
+
+test('Throw error if passed add_button_text schema option is not a string', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+
+    const types = {
+        default: {
+            title: 'Default',
+            form: {
+                nothing: {
+                    label: 'Nothing',
+                    type: 'phone',
+                    visible: true,
+                },
+            },
+        },
+    };
+
+    expect(() => shallow(
+        <FieldBlocks
+            {...fieldTypeDefaultProps}
+            defaultType="editor"
+            formInspector={formInspector}
+            schemaOptions={{add_button_text: {name: 'add_button_text', title: ([]: any)}}}
+            types={types}
+            value={[]}
+        />
+    )).toThrow('The "block" field types only accepts strings as "add_button_text" schema option!');
 });
