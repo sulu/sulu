@@ -107,7 +107,7 @@ class SnippetAdmin extends Admin
         if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
             $formToolbarActionsWithoutType[] = new ToolbarAction('sulu_admin.save');
             $formToolbarActionsWithType[] = new ToolbarAction('sulu_admin.save');
-            $formToolbarActionsWithType[] = new ToolbarAction('sulu_admin.type');
+            $formToolbarActionsWithType[] = new ToolbarAction('sulu_admin.type', ['sort_by' => 'title']);
         }
 
         if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::DELETE)) {

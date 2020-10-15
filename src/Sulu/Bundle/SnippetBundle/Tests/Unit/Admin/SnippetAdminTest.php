@@ -113,7 +113,7 @@ class SnippetAdminTest extends TestCase
             'editView' => 'sulu_snippet.edit_form',
             'toolbarActions' => [
                 new Toolbaraction('sulu_admin.save'),
-                new Toolbaraction('sulu_admin.type'),
+                new Toolbaraction('sulu_admin.type', ['sort_by' => 'title']),
                 new Toolbaraction('sulu_admin.delete'),
             ],
         ], $this->readObjectAttribute($addDetailView, 'options'));
@@ -132,7 +132,7 @@ class SnippetAdminTest extends TestCase
             'formKey' => 'snippet',
             'toolbarActions' => [
                 new Toolbaraction('sulu_admin.save'),
-                new Toolbaraction('sulu_admin.type'),
+                new Toolbaraction('sulu_admin.type', ['sort_by' => 'title']),
                 new Toolbaraction('sulu_admin.delete'),
             ],
         ], $this->readObjectAttribute($editDetailView, 'options'));

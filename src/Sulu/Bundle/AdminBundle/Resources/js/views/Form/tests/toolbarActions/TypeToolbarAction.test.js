@@ -55,19 +55,50 @@ test('Return item config with correct disabled, loading, options, icon, type and
     typeToolbarAction.resourceFormStore.typesLoading = false;
     typeToolbarAction.resourceFormStore.type = 'default';
     typeToolbarAction.resourceFormStore.types = {
-        default: {
-            key: 'default',
-            title: 'Default',
-        },
         homepage: {
             key: 'homepage',
             title: 'Homepage',
+        },
+        default: {
+            key: 'default',
+            title: 'Default',
         },
     };
 
     expect(typeToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
         icon: 'su-brush',
         loading: false,
+        options: [
+            {
+                label: 'Homepage',
+                value: 'homepage',
+            },
+            {
+                label: 'Default',
+                value: 'default',
+            },
+        ],
+        type: 'select',
+        value: 'default',
+    }));
+});
+
+test('Return item config with options sorted by title if sort_by is set to title', () => {
+    const typeToolbarAction = createTypeToolbarAction({sort_by: 'title'});
+    typeToolbarAction.resourceFormStore.typesLoading = false;
+    typeToolbarAction.resourceFormStore.type = 'default';
+    typeToolbarAction.resourceFormStore.types = {
+        homepage: {
+            key: 'homepage',
+            title: 'Homepage',
+        },
+        default: {
+            key: 'default',
+            title: 'Default',
+        },
+    };
+
+    expect(typeToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
         options: [
             {
                 label: 'Default',
@@ -78,8 +109,6 @@ test('Return item config with correct disabled, loading, options, icon, type and
                 value: 'homepage',
             },
         ],
-        type: 'select',
-        value: 'default',
     }));
 });
 
