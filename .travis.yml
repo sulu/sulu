@@ -74,6 +74,7 @@ before_script:
   - composer self-update
   - if [[ $PHPCR_TRANSPORT = jackrabbit ]]; then composer require jackalope/jackalope-jackrabbit:~1.2 --no-update --no-interaction ; fi
   - composer validate --strict
+  - composer config minimum-stability dev
   - composer update -o $COMPOSER_FLAGS
 
 script:
