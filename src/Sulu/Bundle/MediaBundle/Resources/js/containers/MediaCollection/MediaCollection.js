@@ -21,7 +21,7 @@ type Props = {|
     mediaListStore: ListStore,
     onCollectionNavigate: (collectionId: ?string | number) => void,
     onMediaNavigate?: (mediaId: string | number) => void,
-    onUploadError: (error: any) => void,
+    onUploadError?: (error: any) => void,
     onUploadOverlayClose: () => void,
     onUploadOverlayOpen: () => void,
     overlayType: OverlayType,
@@ -66,7 +66,9 @@ class MediaCollection extends React.Component<Props> {
     @action handleUploadError = (error: any) => {
         const {mediaListStore, onUploadError} = this.props;
 
-        onUploadError(error);
+        if (onUploadError) {
+            onUploadError(error);
+        }
 
         mediaListStore.reset();
         mediaListStore.reload();
