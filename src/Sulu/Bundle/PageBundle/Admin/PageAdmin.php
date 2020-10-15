@@ -121,7 +121,7 @@ class PageAdmin extends Admin
             new ToolbarAction(
                 'sulu_admin.type',
                 [
-                    'sort_by_title' => true,
+                    'sort_by' => 'title',
                     'disabled_condition' => '(_permissions && !_permissions.edit)',
                 ]
             ),

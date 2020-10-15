@@ -5,27 +5,26 @@ import AbstractFormToolbarAction from './AbstractFormToolbarAction';
 
 export default class TypeToolbarAction extends AbstractFormToolbarAction {
     getToolbarItemConfig(): ?ToolbarItemConfig<string> {
-        const formTypes = this.resourceFormStore.types;
+        const formTypes = Object.keys(this.resourceFormStore.types).map((key) => this.resourceFormStore.types[key]);
 
-        if (!this.resourceFormStore.typesLoading && Object.keys(formTypes).length === 0) {
+        if (!this.resourceFormStore.typesLoading && formTypes.length === 0) {
             throw new Error('The ToolbarAction for types only works with entities actually supporting types!');
         }
 
         const {
             disabled_condition: disabledCondition,
-            sort_by_title: sortByTitle = false,
+            sort_by: sortBy,
         } = this.options;
+
+        if (sortBy !== undefined && typeof sortBy !== 'string') {
+            throw new Error('The "sort_by" option must be a string if given!');
+        }
 
         const isDisabled = disabledCondition ? jexl.evalSync(disabledCondition, this.resourceFormStore.data) : false;
 
-        const unsortedOptions = Object.keys(formTypes).map((key: string) => ({
-            value: formTypes[key].key,
-            label: formTypes[key].title,
-        }));
-
-        const sortedOptions = sortByTitle
-            ? unsortedOptions.sort((t1, t2) => String(t1.label).localeCompare(String(t2.label)))
-            : unsortedOptions;
+        const sortedTypes = sortBy
+            ? formTypes.sort((t1, t2) => String(t1[sortBy]).localeCompare(String(t2[sortBy])))
+            : formTypes;
 
         return {
             type: 'select',
@@ -40,7 +39,10 @@ export default class TypeToolbarAction extends AbstractFormToolbarAction {
             loading: this.resourceFormStore.typesLoading,
             value: this.resourceFormStore.type,
             disabled: isDisabled,
-            options: sortedOptions,
+            options: sortedTypes.map((type) => ({
+                value: type.key,
+                label: type.title,
+            })),
         };
     }
 }
