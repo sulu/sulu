@@ -124,9 +124,37 @@ class PageAdminTest extends TestCase
             true
         );
 
+        $webspace1 = new Webspace();
+        $webspace1->setName('beta webspace');
+
+        $webspace2 = new Webspace();
+        $webspace2->setName('alpha webspace');
+
+        $this->webspaceManager->getWebspaceCollection()->willReturn(new WebspaceCollection([
+            'one' => $webspace1,
+            'two' => $webspace2,
+        ]));
+
+        $this->teaserProviderPool->getConfiguration()->willReturn([]);
+
         $config = $admin->getConfig();
 
-        $this->assertEquals(true, $config['versioning']);
+        $this->assertEquals(
+            [
+                'teaser' => [],
+                'versioning' => true,
+                'webspaces' => [
+                    'two' => $webspace2,
+                    'one' => $webspace1,
+                ],
+            ],
+            $config
+        );
+
+        $this->assertEquals(
+            [$webspace2, $webspace1],
+            \array_values($config['webspaces'])
+        );
     }
 
     public function testGetConfigWithoutVersioning()
@@ -140,9 +168,19 @@ class PageAdminTest extends TestCase
             false
         );
 
+        $this->webspaceManager->getWebspaceCollection()->willReturn(new WebspaceCollection([]));
+        $this->teaserProviderPool->getConfiguration()->willReturn([]);
+
         $config = $admin->getConfig();
 
-        $this->assertEquals(false, $config['versioning']);
+        $this->assertEquals(
+            [
+                'teaser' => [],
+                'versioning' => false,
+                'webspaces' => [],
+            ],
+            $config
+        );
     }
 
     public function testGetSecurityContexts()
@@ -156,20 +194,19 @@ class PageAdminTest extends TestCase
             true
         );
 
-        $webspace1 = $this->prophesize(Webspace::class);
-        $webspace1->getKey()->willReturn('webspace-key-1');
-        $webspace1->getSecurity()->willReturn(null);
+        $webspace1 = new Webspace();
+        $webspace1->setKey('webspace-key-1');
 
         $webspace2Security = $this->prophesize(Security::class);
         $webspace2Security->getSystem()->willReturn('webspace-security-system-2');
 
-        $webspace2 = $this->prophesize(Webspace::class);
-        $webspace2->getKey()->willReturn('webspace-key-2');
-        $webspace2->getSecurity()->willReturn($webspace2Security->reveal());
+        $webspace2 = new Webspace();
+        $webspace2->setKey('webspace-key-2');
+        $webspace2->setSecurity($webspace2Security->reveal());
 
         $this->webspaceManager->getWebspaceCollection()->willReturn(new WebspaceCollection([
-            $webspace1->reveal(),
-            $webspace2->reveal(),
+            $webspace1,
+            $webspace2,
         ]));
 
         $this->assertEquals(
