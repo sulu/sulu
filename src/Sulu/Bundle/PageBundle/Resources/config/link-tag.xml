@@ -9,6 +9,8 @@
             <argument type="service" id="request_stack"/>
             <argument type="service" id="translator"/>
             <argument type="string">%kernel.environment%</argument>
+            <argument type="service" id="sulu_security.access_control_manager"/>
+            <argument type="service" id="security.token_storage"/>
 
             <tag name="sulu.link.provider" alias="page"/>
         </service>

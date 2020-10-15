@@ -14,11 +14,15 @@ namespace Sulu\Bundle\PageBundle\Markup\Link;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkConfigurationBuilder;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkItem;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderInterface;
+use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Component\Content\Repository\Content;
 use Sulu\Component\Content\Repository\ContentRepositoryInterface;
 use Sulu\Component\Content\Repository\Mapping\MappingBuilder;
+use Sulu\Component\Security\Authentication\UserInterface;
+use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PageLinkProvider implements LinkProviderInterface
@@ -48,18 +52,32 @@ class PageLinkProvider implements LinkProviderInterface
      */
     protected $environment;
 
+    /**
+     * @var AccessControlManagerInterface
+     */
+    private $accessControlManager;
+
+    /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
+
     public function __construct(
         ContentRepositoryInterface $contentRepository,
         WebspaceManagerInterface $webspaceManager,
         RequestStack $requestStack,
         TranslatorInterface $translator,
-        string $environment
+        string $environment,
+        AccessControlManagerInterface $accessControlManager,
+        TokenStorageInterface $tokenStorage
     ) {
         $this->contentRepository = $contentRepository;
         $this->webspaceManager = $webspaceManager;
         $this->requestStack = $requestStack;
         $this->translator = $translator;
         $this->environment = $environment;
+        $this->accessControlManager = $accessControlManager;
+        $this->tokenStorage = $tokenStorage;
     }
 
     public function getConfiguration()
@@ -96,6 +114,23 @@ class PageLinkProvider implements LinkProviderInterface
                 ->getMapping()
         );
 
+        $contents = \array_filter($contents, function(Content $content) {
+            $webspaceKey = $content->getWebspaceKey();
+            $targetWebspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
+            $security = $targetWebspace->getSecurity();
+            $system = $security ? $security->getSystem() : null;
+
+            $userPermissions = $this->accessControlManager->getUserPermissionByArray(
+                $content->getLocale(),
+                PageAdmin::SECURITY_CONTEXT_PREFIX . $webspaceKey,
+                $content->getPermissions(),
+                $this->getCurrentUser(),
+                $system
+            );
+
+            return !isset($userPermissions['view']) || $userPermissions['view'];
+        });
+
         return \array_map(
             function(Content $content) use ($locale, $scheme, $domain) {
                 return $this->getLinkItem($content, $locale, $scheme, $domain);
@@ -125,5 +160,29 @@ class PageLinkProvider implements LinkProviderInterface
         );
 
         return new LinkItem($content->getId(), $content->getPropertyWithDefault('title'), $url, $published);
+    }
+
+    /**
+     * Returns current user or null if no user is loggedin.
+     *
+     * @return UserInterface|void
+     */
+    private function getCurrentUser()
+    {
+        if (!$this->tokenStorage) {
+            return;
+        }
+
+        $token = $this->tokenStorage->getToken();
+        if (!$token) {
+            return;
+        }
+
+        $user = $token->getUser();
+        if ($user instanceof UserInterface) {
+            return $user;
+        }
+
+        return;
     }
 }

@@ -16,12 +16,18 @@ use Prophecy\Argument;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkConfiguration;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkItem;
 use Sulu\Bundle\PageBundle\Markup\Link\PageLinkProvider;
+use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Component\Content\Repository\Content;
 use Sulu\Component\Content\Repository\ContentRepositoryInterface;
 use Sulu\Component\Content\Repository\Mapping\MappingInterface;
+use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\Component\Webspace\Security;
+use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PageLinkProviderTest extends TestCase
@@ -72,14 +78,19 @@ class PageLinkProviderTest extends TestCase
     protected $domain = 'sulu.io';
 
     /**
-     * @var string
-     */
-    protected $webspaceKey = 'sulu_io';
-
-    /**
      * @var PageLinkProvider
      */
     protected $pageLinkProvider;
+
+    /**
+     * @var AccessControlManagerInterface
+     */
+    private $accessControlManager;
+
+    /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
 
     public function setUp(): void
     {
@@ -88,6 +99,8 @@ class PageLinkProviderTest extends TestCase
         $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
         $this->requestStack = $this->prophesize(RequestStack::class);
         $this->translator = $this->prophesize(TranslatorInterface::class);
+        $this->accessControlManager = $this->prophesize(AccessControlManagerInterface::class);
+        $this->tokenStorage = $this->prophesize(TokenStorageInterface::class);
 
         $this->request->getScheme()->willReturn($this->scheme);
         $this->request->getHost()->willReturn($this->domain);
@@ -97,7 +110,9 @@ class PageLinkProviderTest extends TestCase
             $this->webspaceManager->reveal(),
             $this->requestStack->reveal(),
             $this->translator->reveal(),
-            $this->environment
+            $this->environment,
+            $this->accessControlManager->reveal(),
+            $this->tokenStorage->reveal()
         );
     }
 
@@ -124,6 +139,7 @@ class PageLinkProviderTest extends TestCase
     public function testPreload()
     {
         $this->requestStack->getCurrentRequest()->willReturn($this->request->reveal());
+        $this->webspaceManager->findWebspaceByKey('sulu_io')->willReturn(new Webspace());
 
         $contents = [
             $this->createContent(1, 'Test 1', '/test-1'),
@@ -168,6 +184,7 @@ class PageLinkProviderTest extends TestCase
     public function testPreloadRemoved()
     {
         $this->requestStack->getCurrentRequest()->willReturn($this->request->reveal());
+        $this->webspaceManager->findWebspaceByKey('sulu_io')->willReturn(new Webspace());
 
         $contents = [
             $this->createContent(1, 'Test 1', '/test-1'),
@@ -206,6 +223,7 @@ class PageLinkProviderTest extends TestCase
     public function testPreloadNoRequest()
     {
         $this->requestStack->getCurrentRequest()->willReturn(null);
+        $this->webspaceManager->findWebspaceByKey('sulu_io')->willReturn(new Webspace());
 
         $contents = [
             $this->createContent(1, 'Test 1', '/test-1', null, null),
@@ -235,6 +253,70 @@ class PageLinkProviderTest extends TestCase
         $this->assertEquals(!empty($contents[0]->getPropertyWithDefault('published')), $result[0]->isPublished());
     }
 
+    public function testPreloadWithSecurity()
+    {
+        $this->requestStack->getCurrentRequest()->willReturn($this->request->reveal());
+        $webspace = new Webspace();
+        $security = new Security();
+        $security->setSystem('website');
+        $webspace->setSecurity($security);
+        $this->webspaceManager->findWebspaceByKey('sulu_io')->willReturn($webspace);
+
+        $user = new User();
+        $token = $this->prophesize(TokenInterface::class);
+        $token->getUser()->willReturn($user);
+        $this->tokenStorage->getToken()->willReturn($token->reveal());
+
+        $contents = [
+            $this->createContent(1, 'Test 1', '/test-1', null, 'sulu.io', 'sulu_io', []),
+            $this->createContent(2, 'Test 2', '/test-2', null, 'sulu.io', 'sulu_io', [1 => ['view' => false]]),
+            $this->createContent(3, 'Test 3', '/test-3', null, 'sulu.io', 'sulu_io', [1 => ['view' => true]]),
+        ];
+
+        $this->accessControlManager
+             ->getUserPermissionByArray($this->locale, 'sulu.webspaces.sulu_io', [], $user, 'website')
+             ->willReturn([]);
+        $this->accessControlManager
+             ->getUserPermissionByArray(
+                 $this->locale,
+                 'sulu.webspaces.sulu_io',
+                 [1 => ['view' => false]],
+                 $user,
+                 'website'
+             )
+             ->willReturn(['view' => false]);
+        $this->accessControlManager
+             ->getUserPermissionByArray(
+                 $this->locale,
+                 'sulu.webspaces.sulu_io',
+                 [1 => ['view' => true]],
+                 $user,
+                 'website'
+             )
+             ->willReturn(['view' => true]);
+
+        $this->contentRepository->findByUuids(
+            [1, 2, 3],
+            $this->locale,
+            Argument::that(
+                function(MappingInterface $mapping) {
+                    return $mapping->resolveUrl()
+                        && !$mapping->shouldHydrateGhost()
+                        && $mapping->onlyPublished()
+                        && ['title', 'published'] === $mapping->getProperties();
+                }
+            )
+        )->shouldBeCalledTimes(1)->willReturn($contents);
+
+        /** @var LinkItem[] $result */
+        $result = $this->pageLinkProvider->preload([1, 2, 3], $this->locale, true);
+
+        $this->assertCount(2, $result);
+
+        $this->assertEquals($contents[0]->getId(), $result[0]->getId());
+        $this->assertEquals($contents[2]->getId(), $result[2]->getId());
+    }
+
     /**
      * Create content prophecy.
      *
@@ -246,12 +328,21 @@ class PageLinkProviderTest extends TestCase
      *
      * @return Content
      */
-    private function createContent($id, $title, $url, $published = null, $domain = 'sulu.io')
-    {
+    private function createContent(
+        $id,
+        $title,
+        $url,
+        $published = null,
+        $domain = 'sulu.io',
+        $webspaceKey = 'sulu_io',
+        $permissions = []
+    ) {
         $content = $this->prophesize(Content::class);
         $content->getId()->willReturn($id);
         $content->getUrl()->willReturn($url);
-        $content->getWebspaceKey()->willReturn($this->webspaceKey);
+        $content->getLocale()->willReturn($this->locale);
+        $content->getPermissions()->willReturn($permissions);
+        $content->getWebspaceKey()->willReturn($webspaceKey);
         $content->getPropertyWithDefault('title', null)->willReturn($title);
         $content->getPropertyWithDefault('published', null)->willReturn($published);
 
@@ -259,7 +350,7 @@ class PageLinkProviderTest extends TestCase
             $url,
             $this->environment,
             $this->locale,
-            $this->webspaceKey,
+            $webspaceKey,
             $domain,
             $this->scheme
         )->will(

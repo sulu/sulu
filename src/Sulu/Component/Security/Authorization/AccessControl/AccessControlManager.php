@@ -154,9 +154,12 @@ class AccessControlManager implements AccessControlManagerInterface
         $locale,
         $securityContext,
         $objectPermissionsByRole,
-        $user
+        $user,
+        $system = null
     ) {
-        $system = $this->systemStore->getSystem();
+        if (!$system) {
+            $system = $this->systemStore->getSystem();
+        }
 
         if (!$system) {
             return $this->maskConverter->convertPermissionsToArray(127);

@@ -424,6 +424,103 @@ class AccessControlManagerTest extends TestCase
         ], $permissions);
     }
 
+    public function testGetUserPermissionByArrayWithSystem()
+    {
+        $this->systemStore->getSystem()->willReturn('system1');
+
+        /** @var Permission $permission1 */
+        $permission1 = $this->prophesize(Permission::class);
+        $permission1->getPermissions()->willReturn(64);
+        $permission1->getContext()->willReturn('example');
+        /** @var Role $anonymousRole1 */
+        $anonymousRole1 = $this->prophesize(Role::class);
+        $anonymousRole1->getPermissions()->willReturn([$permission1->reveal()]);
+        $anonymousRole1->getSystem()->willReturn('system1');
+        $anonymousRole1->getId()->willReturn(1);
+
+        /** @var Permission $permission2 */
+        $permission2 = $this->prophesize(Permission::class);
+        $permission2->getPermissions()->willReturn(32);
+        $permission2->getContext()->willReturn('example');
+        /** @var Role $anonymousRole2 */
+        $anonymousRole2 = $this->prophesize(Role::class);
+        $anonymousRole2->getPermissions()->willReturn([$permission2->reveal()]);
+        $anonymousRole2->getSystem()->willReturn('system2');
+        $anonymousRole2->getId()->willReturn(2);
+
+        $this->roleRepository->findAllRoles(['anonymous' => true])->willReturn([$anonymousRole1, $anonymousRole2]);
+
+        $permissions = $this->accessControlManager->getUserPermissionByArray(
+            'de',
+            'sulu_page.pages',
+            [
+                1 => [
+                    'view' => true,
+                    'edit' => true,
+                ],
+                2 => [
+                    'view' => true,
+                    'edit' => false,
+                ],
+            ],
+            null,
+            'system2'
+        );
+
+        $this->assertEquals([
+            'view' => true,
+            'edit' => false,
+        ], $permissions);
+    }
+
+    public function testGetUserPermissionByArrayWithSystemFromSystemStore()
+    {
+        $this->systemStore->getSystem()->willReturn('system1');
+
+        /** @var Permission $permission1 */
+        $permission1 = $this->prophesize(Permission::class);
+        $permission1->getPermissions()->willReturn(64);
+        $permission1->getContext()->willReturn('example');
+        /** @var Role $anonymousRole1 */
+        $anonymousRole1 = $this->prophesize(Role::class);
+        $anonymousRole1->getPermissions()->willReturn([$permission1->reveal()]);
+        $anonymousRole1->getSystem()->willReturn('system1');
+        $anonymousRole1->getId()->willReturn(1);
+
+        /** @var Permission $permission2 */
+        $permission2 = $this->prophesize(Permission::class);
+        $permission2->getPermissions()->willReturn(32);
+        $permission2->getContext()->willReturn('example');
+        /** @var Role $anonymousRole2 */
+        $anonymousRole2 = $this->prophesize(Role::class);
+        $anonymousRole2->getPermissions()->willReturn([$permission2->reveal()]);
+        $anonymousRole2->getSystem()->willReturn('system2');
+        $anonymousRole2->getId()->willReturn(2);
+
+        $this->roleRepository->findAllRoles(['anonymous' => true])->willReturn([$anonymousRole1, $anonymousRole2]);
+
+        $permissions = $this->accessControlManager->getUserPermissionByArray(
+            'de',
+            'sulu_page.pages',
+            [
+                1 => [
+                    'view' => true,
+                    'edit' => true,
+                ],
+                2 => [
+                    'view' => true,
+                    'edit' => false,
+                ],
+            ],
+            null
+        );
+
+        $this->assertEquals([
+            'view' => true,
+            'edit' => true,
+        ], $permissions);
+    }
+
     public function testGetUserPermissionByArrayWithoutSystem()
     {
         $this->systemStore->getSystem()->willReturn(null);
