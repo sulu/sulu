@@ -169,6 +169,20 @@ class FormOverlayListViewBuilder implements FormOverlayListViewBuilderInterface
         return $this;
     }
 
+    public function enableSelection(): FormOverlayListViewBuilderInterface
+    {
+        $this->setSelectableToView($this->view, true);
+
+        return $this;
+    }
+
+    public function disableSelection(): FormOverlayListViewBuilderInterface
+    {
+        $this->setSelectableToView($this->view, false);
+
+        return $this;
+    }
+
     public function addRouterAttributesToListRequest(array $routerAttributesToListRequest): FormOverlayListViewBuilderInterface
     {
         $this->addRouterAttributesToListRequestToView($this->view, $routerAttributesToListRequest);

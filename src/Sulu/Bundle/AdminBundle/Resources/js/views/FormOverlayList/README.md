@@ -20,6 +20,7 @@ In contrast to the default list, the form-overlay-list utilizes an overlay to di
 |                                      | be shown in the toolbar of the view                                           |
 | backView                             | Route to which the user will be navigated when the back button is clicked.    |
 | searchable                           | Boolean that defines if the list view should render a search field.           |
+| selectable                           | Boolean that defines if the items of the list should be selectable.           |
 | routerAttributesToListRequest        | Array of attributes that are passed from the [`Router`](#router) to the       |
 |                                      | `ListStore`. They will be appended to the requests sent from the `ListStore`. |
 | routerAttributesToFormRequest        | Array of attributes that are passed from the [`Router`](#router) to the       |

@@ -214,6 +214,32 @@ class ListViewBuilderTest extends TestCase
         $this->assertFalse($view->getOption('searchable'));
     }
 
+    public function testBuildListViewWithSelection()
+    {
+        $view = (new ListViewBuilder('sulu_role.list', '/roles'))
+            ->setResourceKey('roles')
+            ->setListKey('roles')
+            ->addListAdapters(['tree'])
+            ->disableSelection()
+            ->enableSelection()
+            ->getView();
+
+        $this->assertTrue($view->getOption('selectable'));
+    }
+
+    public function testBuildListViewWithoutSelection()
+    {
+        $view = (new ListViewBuilder('sulu_role.list', '/roles'))
+            ->setResourceKey('roles')
+            ->setListKey('roles')
+            ->addListAdapters(['tree'])
+            ->enableSelection()
+            ->disableSelection()
+            ->getView();
+
+        $this->assertFalse($view->getOption('selectable'));
+    }
+
     public function testBuildListWithViewrAttributesToListRequest()
     {
         $view = (new ListViewBuilder('sulu_role.list', '/roles'))

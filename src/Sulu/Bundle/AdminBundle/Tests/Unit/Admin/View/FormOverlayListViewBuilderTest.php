@@ -232,6 +232,34 @@ class FormOverlayListViewBuilderTest extends TestCase
         $this->assertFalse($route->getOption('searchable'));
     }
 
+    public function testBuildFormOverlayListViewWithSelection()
+    {
+        $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles'))
+            ->setResourceKey('roles')
+            ->setListKey('roles')
+            ->setFormKey('role_details')
+            ->addListAdapters(['tree'])
+            ->disableSelection()
+            ->enableSelection()
+            ->getView();
+
+        $this->assertTrue($route->getOption('selectable'));
+    }
+
+    public function testBuildFormOverlayListViewWithoutSelection()
+    {
+        $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles'))
+            ->setResourceKey('roles')
+            ->setListKey('roles')
+            ->setFormKey('role_details')
+            ->addListAdapters(['tree'])
+            ->enableSelection()
+            ->disableSelection()
+            ->getView();
+
+        $this->assertFalse($route->getOption('selectable'));
+    }
+
     public function testBuildListWithRouterAttributesToListRequest()
     {
         $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles'))
