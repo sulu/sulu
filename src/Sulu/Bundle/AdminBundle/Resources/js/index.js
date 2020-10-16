@@ -36,6 +36,7 @@ import {
     ArrayFieldTransformer,
     BooleanFieldFilterType,
     BoolFieldTransformer,
+    ColorFieldTransformer,
     IconFieldTransformer,
     BytesFieldTransformer,
     ColumnListAdapter,
@@ -206,6 +207,7 @@ function registerListFieldTransformers() {
     listFieldTransformerRegistry.add('string', new StringFieldTransformer());
     listFieldTransformerRegistry.add('thumbnails', new ThumbnailFieldTransformer());
     listFieldTransformerRegistry.add('bool', new BoolFieldTransformer());
+    listFieldTransformerRegistry.add('color', new ColorFieldTransformer());
     listFieldTransformerRegistry.add('icon', new IconFieldTransformer());
 
     // TODO: Remove this type when not needed anymore
