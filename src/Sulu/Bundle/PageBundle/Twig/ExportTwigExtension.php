@@ -28,7 +28,7 @@ class ExportTwigExtension extends AbstractExtension
     {
         return [
             new TwigFunction('sulu_content_type_export_escape', [ExportRuntime::class, 'escapeXmlContent']),
-            new TwigFunction('sulu_content_type_export_counter', [ExportManagerInterface::class, 'counter']),
+            new TwigFunction('sulu_content_type_export_counter', [ExportRuntime::class, 'counter']),
         ];
     }
 }
