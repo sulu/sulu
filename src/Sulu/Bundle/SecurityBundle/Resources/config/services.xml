@@ -122,6 +122,7 @@
             <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="sulu_security.system_store"/>
             <argument type="tagged_iterator" tag="sulu_security.access_control_descendant_provider"/>
+            <argument type="service" id="sulu.repository.role"/>
         </service>
 
         <service id="sulu_security.system_store" class="Sulu\Bundle\SecurityBundle\System\SystemStore">

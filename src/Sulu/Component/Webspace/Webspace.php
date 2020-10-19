@@ -410,6 +410,19 @@ class Webspace implements ArrayableInterface
         return $this->security;
     }
 
+    public function hasWebsiteSecurity()
+    {
+        $security = $this->getSecurity();
+
+        if (!$security) {
+            return false;
+        }
+
+        $system = $security->getSystem();
+
+        return null !== $system;
+    }
+
     /**
      * @return Navigation
      */

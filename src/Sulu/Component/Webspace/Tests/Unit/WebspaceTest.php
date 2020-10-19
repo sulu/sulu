@@ -12,6 +12,7 @@
 namespace Sulu\Component\Webspace\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
+use Sulu\Component\Content\Compat\Metadata;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Environment;
 use Sulu\Component\Webspace\Portal;
@@ -22,69 +23,53 @@ use Sulu\Component\Webspace\Webspace;
 
 class WebspaceTest extends TestCase
 {
-    /**
-     * @var Webspace
-     */
-    private $webspace;
-
-    /**
-     * @var Portal
-     */
-    private $portal;
-
-    /**
-     * @var Localization
-     */
-    private $localization;
-
-    /**
-     * @var Security
-     */
-    private $security;
-
-    /**
-     * @var string
-     */
-    private $theme = 'test';
-
-    /**
-     * @var Segment
-     */
-    private $segment;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->webspace = new Webspace();
-
-        $this->portal = $this->prophesize(Portal::class);
-        $this->localization = $this->prophesize(Localization::class);
-        $this->security = $this->prophesize(Security::class);
-        $this->segment = $this->prophesize(Segment::class);
-    }
-
     public function testToArray()
     {
+        $metadata = new Metadata([]);
+
         $expected = [
             'key' => 'foo',
             'name' => 'portal_key',
             'localizations' => [
-                ['fr'],
+                [
+                    'language' => 'fr',
+                    'country' => null,
+                    'localization' => 'fr',
+                    'default' => null,
+                    'xDefault' => null,
+                    'children' => [],
+                    'shadow' => null,
+                ],
             ],
             'security' => [
                 'system' => 'sec_sys',
             ],
             'segments' => [
                 [
-                    'asd',
+                    'key' => 'asd',
+                    'default' => null,
+                    'metadata' => $metadata,
                 ],
             ],
             'templates' => [],
             'defaultTemplates' => [],
             'excludedTemplates' => [],
             'portals' => [
-                ['one'],
+                [
+                    'key' => 'one',
+                    'name' => null,
+                    'localizations' => [
+                        [
+                            'language' => 'fr',
+                            'country' => null,
+                            'localization' => 'fr',
+                            'default' => null,
+                            'xDefault' => null,
+                            'children' => [],
+                            'shadow' => null,
+                        ],
+                    ],
+                ],
             ],
             'theme' => 'test',
             'navigation' => [
@@ -95,34 +80,32 @@ class WebspaceTest extends TestCase
             ],
         ];
 
-        $this->security->getSystem()->willReturn($expected['security']['system']);
-        $this->localization->toArray()->willReturn($expected['localizations'][0]);
-        $this->segment->toArray()->willReturn($expected['segments'][0]);
-        $this->portal->toArray()->willReturn($expected['portals'][0]);
+        $webspace = new Webspace();
+        $webspace->setKey($expected['key']);
+        $webspace->setName($expected['name']);
+        $webspace->setResourceLocatorStrategy($expected['resourceLocator']['strategy']);
+        $webspace->setTheme($expected['theme']);
 
-        $this->webspace->setKey($expected['key']);
-        $this->webspace->setName($expected['name']);
-        $this->webspace->setLocalizations(
-            [
-                $this->localization->reveal(),
-            ]
-        );
-        $this->webspace->setSecurity($this->security->reveal());
-        $this->webspace->setSegments(
-            [
-                $this->segment->reveal(),
-            ]
-        );
-        $this->webspace->setPortals(
-            [
-                $this->portal->reveal(),
-            ]
-        );
-        $this->webspace->setTheme($this->theme);
-        $this->webspace->setResourceLocatorStrategy($expected['resourceLocator']['strategy']);
+        $security = new Security();
+        $security->setSystem($expected['security']['system']);
+        $webspace->setSecurity($security);
 
-        $res = $this->webspace->toArray();
-        $this->assertEquals($expected, $res);
+        $portal = new Portal();
+        $portal->setKey($expected['portals'][0]['key']);
+        $portal->setEnvironments([]);
+        $webspace->addPortal($portal);
+
+        $localization = new Localization();
+        $localization->setLanguage($expected['localizations'][0]['language']);
+        $portal->addLocalization($localization);
+        $webspace->addLocalization($localization);
+
+        $segment = new Segment();
+        $segment->setKey($expected['segments'][0]['key']);
+        $segment->setMetadata($metadata);
+        $webspace->addSegment($segment);
+
+        $this->assertEquals($expected, $webspace->toArray());
     }
 
     private function getLocalization($language, $country = '', $shadow = null)
@@ -137,6 +120,8 @@ class WebspaceTest extends TestCase
 
     public function testFindLocalization()
     {
+        $webspace = new Webspace();
+
         $localeDe = $this->getLocalization('de');
         $localeDeAt = $this->getLocalization('de', 'at');
         $localeDeCh = $this->getLocalization('de', 'ch');
@@ -146,96 +131,130 @@ class WebspaceTest extends TestCase
 
         $localeEn = $this->getLocalization('en');
 
-        $this->webspace->addLocalization($localeDe);
-        $this->webspace->addLocalization($localeEn);
+        $webspace->addLocalization($localeDe);
+        $webspace->addLocalization($localeEn);
 
-        $result = $this->webspace->getLocalization('de');
+        $result = $webspace->getLocalization('de');
         $this->assertEquals('de', $result->getLocale());
 
-        $result = $this->webspace->getLocalization('de_at');
+        $result = $webspace->getLocalization('de_at');
         $this->assertEquals('de_at', $result->getLocale());
 
-        $result = $this->webspace->getLocalization('de_ch');
+        $result = $webspace->getLocalization('de_ch');
         $this->assertEquals('de_ch', $result->getLocale());
 
-        $result = $this->webspace->getLocalization('en');
+        $result = $webspace->getLocalization('en');
         $this->assertEquals('en', $result->getLocale());
 
-        $result = $this->webspace->getLocalization('en_us');
+        $result = $webspace->getLocalization('en_us');
         $this->assertEquals(null, $result);
     }
 
     public function testHasDomain()
     {
-        $environment = $this->prophesize(Environment::class);
-        $environment->getUrls()->willReturn([new Url('sulu.lo')]);
-        $this->portal->getEnvironment('prod')->willReturn($environment->reveal());
-        $this->webspace->addPortal($this->portal->reveal());
+        $webspace = new Webspace();
 
-        $this->assertTrue($this->webspace->hasDomain('sulu.lo', 'prod'));
-        $this->assertFalse($this->webspace->hasDomain('1.sulu.lo', 'prod'));
+        $portal = new Portal();
+        $webspace->addPortal($portal);
+
+        $environment = new Environment();
+        $environment->setType('prod');
+        $portal->addEnvironment($environment);
+
+        $url = new Url('sulu.lo');
+        $environment->addUrl($url);
+
+        $this->assertTrue($webspace->hasDomain('sulu.lo', 'prod'));
+        $this->assertFalse($webspace->hasDomain('1.sulu.lo', 'prod'));
     }
 
     public function testHasDomainWildcard()
     {
-        $environment = $this->prophesize(Environment::class);
-        $environment->getUrls()->willReturn([new Url('{host}')]);
-        $this->portal->getEnvironment('prod')->willReturn($environment->reveal());
-        $this->webspace->addPortal($this->portal->reveal());
+        $webspace = new Webspace();
 
-        $this->assertTrue($this->webspace->hasDomain('sulu.lo', 'prod'));
-        $this->assertTrue($this->webspace->hasDomain('1.sulu.lo', 'prod'));
+        $portal = new Portal();
+        $webspace->addPortal($portal);
+
+        $environment = new Environment();
+        $environment->setType('prod');
+        $portal->addEnvironment($environment);
+
+        $url = new Url('{host}');
+        $environment->addUrl($url);
+
+        $this->assertTrue($webspace->hasDomain('sulu.lo', 'prod'));
+        $this->assertTrue($webspace->hasDomain('1.sulu.lo', 'prod'));
     }
 
     public function testHasDomainWithLocalization()
     {
-        $environment = $this->prophesize(Environment::class);
+        $webspace = new Webspace();
+
+        $portal = new Portal();
+        $webspace->addPortal($portal);
+
+        $environment = new Environment();
+        $environment->setType('prod');
+        $portal->addEnvironment($environment);
+
         $url = new Url('sulu.lo', 'prod');
         $url->setLanguage('de');
         $url->setCountry('');
-        $environment->getUrls()->willReturn([$url]);
-        $this->portal->getEnvironment('prod')->willReturn($environment->reveal());
-        $this->webspace->addPortal($this->portal->reveal());
+        $environment->addUrl($url);
 
-        $this->assertTrue($this->webspace->hasDomain('sulu.lo', 'prod'));
-        $this->assertTrue($this->webspace->hasDomain('sulu.lo', 'prod', 'de'));
-        $this->assertFalse($this->webspace->hasDomain('sulu.lo', 'prod', 'en'));
+        $this->assertTrue($webspace->hasDomain('sulu.lo', 'prod'));
+        $this->assertTrue($webspace->hasDomain('sulu.lo', 'prod', 'de'));
+        $this->assertFalse($webspace->hasDomain('sulu.lo', 'prod', 'en'));
     }
 
     public function testHasDomainWithLocalizationWithCountry()
     {
-        $environment = $this->prophesize(Environment::class);
+        $webspace = new Webspace();
+
+        $portal = new Portal();
+        $webspace->addPortal($portal);
+
+        $environment = new Environment();
+        $environment->setType('prod');
+        $portal->addEnvironment($environment);
+
         $url = new Url('sulu.lo', 'prod');
         $url->setLanguage('de');
         $url->setCountry('at');
-        $environment->getUrls()->willReturn([$url]);
-        $this->portal->getEnvironment('prod')->willReturn($environment->reveal());
-        $this->webspace->addPortal($this->portal->reveal());
+        $environment->addUrl($url);
 
-        $this->assertTrue($this->webspace->hasDomain('sulu.lo', 'prod'));
-        $this->assertTrue($this->webspace->hasDomain('sulu.lo', 'prod', 'de_at'));
-        $this->assertFalse($this->webspace->hasDomain('sulu.lo', 'prod', 'de'));
+        $this->assertTrue($webspace->hasDomain('sulu.lo', 'prod'));
+        $this->assertTrue($webspace->hasDomain('sulu.lo', 'prod', 'de_at'));
+        $this->assertFalse($webspace->hasDomain('sulu.lo', 'prod', 'de'));
     }
 
     public function testHasDomainWithLocationAndCountry()
     {
-        $environment = $this->prophesize(Environment::class);
-        $url = new Url('sulu.de', 'prod');
-        $url->setLanguage('de');
-        $url->setCountry('');
+        $webspace = new Webspace();
+
+        $portal = new Portal();
+        $webspace->addPortal($portal);
+
+        $environment = new Environment();
+        $environment->setType('prod');
+        $portal->addEnvironment($environment);
+
+        $urlDe = new Url('sulu.de', 'prod');
+        $urlDe->setLanguage('de');
+        $urlDe->setCountry('');
+        $environment->addUrl($urlDe);
+
         $urlAt = new Url('sulu.at', 'prod');
         $urlAt->setLanguage('de');
         $urlAt->setCountry('at');
-        $environment->getUrls()->willReturn([$url, $urlAt]);
-        $this->portal->getEnvironment('prod')->willReturn($environment->reveal());
-        $this->webspace->addPortal($this->portal->reveal());
+        $environment->addUrl($urlAt);
 
-        $this->assertTrue($this->webspace->hasDomain('sulu.de', 'prod'));
-        $this->assertTrue($this->webspace->hasDomain('sulu.at', 'prod'));
-        $this->assertFalse($this->webspace->hasDomain('sulu.at', 'prod', 'de'));
-        $this->assertFalse($this->webspace->hasDomain('sulu.de', 'prod', 'de_at'));
-        $this->assertTrue($this->webspace->hasDomain('sulu.de', 'prod', 'de'));
-        $this->assertTrue($this->webspace->hasDomain('sulu.at', 'prod', 'de_at'));
+        $this->assertTrue($webspace->hasDomain('sulu.de', 'prod'));
+        $this->assertTrue($webspace->hasDomain('sulu.at', 'prod'));
+        $this->assertFalse($webspace->hasDomain('sulu.at', 'prod', 'de'));
+        $this->assertFalse($webspace->hasDomain('sulu.de', 'prod', 'de_at'));
+        $this->assertTrue($webspace->hasDomain('sulu.de', 'prod', 'de'));
+        $this->assertTrue($webspace->hasDomain('sulu.at', 'prod', 'de_at'));
     }
 
     public function testAddTemplate()
@@ -291,5 +310,27 @@ class WebspaceTest extends TestCase
         $this->assertEquals($templates, $webspace->getTemplates());
         $data = $webspace->toArray();
         $this->assertEquals($templates, $data['templates']);
+    }
+
+    public function testHasWebsiteSecurityWithoutSecurity()
+    {
+        $webspace = new Webspace();
+        $this->assertFalse($webspace->hasWebsiteSecurity());
+    }
+
+    public function testHasWebsiteSecurityWithoutSystem()
+    {
+        $webspace = new Webspace();
+        $webspace->setSecurity(new Security());
+        $this->assertFalse($webspace->hasWebsiteSecurity());
+    }
+
+    public function testHasWebsiteSecurityWithSystem()
+    {
+        $webspace = new Webspace();
+        $security = new Security();
+        $security->setSystem('test');
+        $webspace->setSecurity($security);
+        $this->assertTrue($webspace->hasWebsiteSecurity());
     }
 }

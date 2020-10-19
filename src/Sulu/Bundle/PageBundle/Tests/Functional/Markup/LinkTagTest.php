@@ -21,9 +21,12 @@ use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Repository\Content;
 use Sulu\Component\Content\Repository\ContentRepositoryInterface;
 use Sulu\Component\Content\Repository\Mapping\Mapping;
+use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class LinkTagTest extends TestCase
@@ -71,15 +74,20 @@ class LinkTagTest extends TestCase
     protected function setUp(): void
     {
         $this->contentRepository = $this->prophesize(ContentRepositoryInterface::class);
-        $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
-        $this->requestStack = $this->prophesize(RequestStack::class);
 
+        $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
+        $webspace = new Webspace();
+        $this->webspaceManager->findWebspaceByKey('sulu_io')->willReturn($webspace);
+
+        $this->requestStack = $this->prophesize(RequestStack::class);
         $this->request = $this->prophesize(Request::class);
         $this->request->getScheme()->willReturn('http');
         $this->request->getHost()->willReturn('sulu.io');
         $this->requestStack->getCurrentRequest()->willReturn($this->request->reveal());
 
         $this->translator = $this->prophesize(TranslatorInterface::class);
+        $this->accessControlManager = $this->prophesize(AccessControlManagerInterface::class);
+        $this->tokenStorage = $this->prophesize(TokenStorageInterface::class);
 
         $this->environment = 'prod';
 
@@ -90,7 +98,9 @@ class LinkTagTest extends TestCase
                     $this->webspaceManager->reveal(),
                     $this->requestStack->reveal(),
                     $this->translator->reveal(),
-                    $this->environment
+                    $this->environment,
+                    $this->accessControlManager->reveal(),
+                    $this->tokenStorage->reveal()
                 ),
             ]
         );
@@ -250,6 +260,15 @@ class LinkTagTest extends TestCase
         $this->contentRepository->findByUuids(['123-123-123'], 'de', Argument::type(Mapping::class))
             ->willReturn([$content]);
 
+        $this->webspaceManager->findUrlByResourceLocator(
+            $content->getUrl(),
+            $this->environment,
+            $content->getLocale(),
+            $content->getWebspaceKey(),
+            'sulu.io',
+            'http'
+        )->willReturn('/de' . $content->getUrl());
+
         $result = $this->linkTag->validateAll(
             [
                 '<sulu-link href="123-123-123" title="Test-Title">Test-Content</sulu-link>' => [
@@ -291,6 +310,15 @@ class LinkTagTest extends TestCase
         $content = $this->createContent('123-123-123', 'Pagetitle', '/test', 'published-date');
         $this->contentRepository->findByUuids(['123-123-123', '312-312-312'], 'de', Argument::type(Mapping::class))
             ->willReturn([$content]);
+
+        $this->webspaceManager->findUrlByResourceLocator(
+            $content->getUrl(),
+            $this->environment,
+            $content->getLocale(),
+            $content->getWebspaceKey(),
+            'sulu.io',
+            'http'
+        )->willReturn('/de' . $content->getUrl());
 
         $result = $this->linkTag->validateAll(
             [

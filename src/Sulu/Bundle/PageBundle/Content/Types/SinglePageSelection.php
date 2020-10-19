@@ -12,15 +12,10 @@
 namespace Sulu\Bundle\PageBundle\Content\Types;
 
 use PHPCR\NodeInterface;
-use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
-use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\PreResolvableContentTypeInterface;
 use Sulu\Component\Content\SimpleContentType;
-use Sulu\Component\Security\Authorization\PermissionTypes;
-use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
-use Sulu\Component\Security\Authorization\SecurityCondition;
 
 /**
  * ContentType for SinglePageSelection.
@@ -32,19 +27,12 @@ class SinglePageSelection extends SimpleContentType implements PreResolvableCont
      */
     private $referenceStore;
 
-    /**
-     * @var ?SecurityCheckerInterface
-     */
-    private $securityChecker;
-
     public function __construct(
-        ReferenceStoreInterface $referenceStore,
-        SecurityCheckerInterface $securityChecker = null
+        ReferenceStoreInterface $referenceStore
     ) {
         parent::__construct('SinglePageSelection', '');
 
         $this->referenceStore = $referenceStore;
-        $this->securityChecker = $securityChecker;
     }
 
     public function write(
@@ -79,25 +67,6 @@ class SinglePageSelection extends SimpleContentType implements PreResolvableCont
         $property->setValue($value);
 
         return $value;
-    }
-
-    public function getContentData(PropertyInterface $property)
-    {
-        if ($this->securityChecker
-            && !$this->securityChecker->hasPermission(
-                new SecurityCondition(
-                    PageAdmin::SECURITY_CONTEXT_PREFIX . $property->getStructure()->getWebspaceKey(),
-                    $property->getStructure()->getLanguageCode(),
-                    SecurityBehavior::class,
-                    $property->getValue()
-                ),
-                PermissionTypes::VIEW
-            )
-        ) {
-            return null;
-        }
-
-        return parent::getContentData($property);
     }
 
     public function preResolve(PropertyInterface $property)

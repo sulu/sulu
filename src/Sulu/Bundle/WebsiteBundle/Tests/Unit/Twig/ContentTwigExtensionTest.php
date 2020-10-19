@@ -16,19 +16,26 @@ use PHPCR\SessionInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Psr\Log\LoggerInterface;
+use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolver;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Bundle\WebsiteBundle\Twig\Content\ContentTwigExtension;
 use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Compat\Structure\StructureBridge;
 use Sulu\Component\Content\ContentTypeManagerInterface;
+use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Types\TextLine;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Sulu\Component\Security\Authorization\PermissionTypes;
+use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
+use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\Component\Webspace\Security;
 use Sulu\Component\Webspace\Webspace;
 
 class ContentTwigExtensionTest extends TestCase
@@ -93,6 +100,16 @@ class ContentTwigExtensionTest extends TestCase
      */
     private $extension;
 
+    /**
+     * @var SecurityCheckerInterface
+     */
+    private $securityChecker;
+
+    /**
+     * @var WebspaceManagerInterface
+     */
+    private $webspaceManager;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -107,15 +124,18 @@ class ContentTwigExtensionTest extends TestCase
         $this->parentNode = $this->prophesize(NodeInterface::class);
         $this->startPageNode = $this->prophesize(NodeInterface::class);
         $this->logger = $this->prophesize(LoggerInterface::class);
+        $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
 
-        $webspace = new Webspace();
-        $webspace->setKey('sulu_test');
+        $this->webspace = new Webspace();
+        $this->webspace->setKey('sulu_test');
 
         $locale = new Localization();
         $locale->setCountry('us');
         $locale->setLanguage('en');
 
-        $this->requestAnalyzer->getWebspace()->willReturn($webspace);
+        $this->webspaceManager->findWebspaceByKey('sulu_test')->willReturn($this->webspace);
+
+        $this->requestAnalyzer->getWebspace()->willReturn($this->webspace);
         $this->requestAnalyzer->getCurrentLocalization()->willReturn($locale);
 
         $this->contentTypeManager->get('text_line')->willReturn(new TextLine(''));
@@ -140,11 +160,17 @@ class ContentTwigExtensionTest extends TestCase
             $this->extensionManager->reveal()
         );
 
+        $this->securityChecker = $this->prophesize(SecurityCheckerInterface::class);
+        $this->securityChecker->hasPermission(Argument::cetera())->willReturn(true);
+
         $this->extension = new ContentTwigExtension(
             $this->contentMapper->reveal(),
             $this->structureResolver,
             $this->sessionManager->reveal(),
-            $this->requestAnalyzer->reveal()
+            $this->requestAnalyzer->reveal(),
+            null,
+            $this->securityChecker->reveal(),
+            $this->webspaceManager->reveal()
         );
     }
 
@@ -159,6 +185,7 @@ class ContentTwigExtensionTest extends TestCase
         $testStructure->getCreated()->willReturn(null);
         $testStructure->getChanged()->willReturn(null);
         $testStructure->getDocument()->willReturn(null);
+        $testStructure->getWebspaceKey()->willReturn('sulu_test');
 
         $titleProperty = new Property('title', [], 'text_line');
         $titleProperty->setValue('test');
@@ -181,6 +208,77 @@ class ContentTwigExtensionTest extends TestCase
         // content
         $this->assertEquals(['title' => 'test'], $result['content']);
         $this->assertEquals(['title' => []], $result['view']);
+    }
+
+    public function testLoadWithPermissions()
+    {
+        $testStructure = $this->prophesize(StructureBridge::class);
+        $testStructure->getKey()->willReturn('test');
+        $testStructure->getPath()->willReturn(null);
+        $testStructure->getUuid()->willReturn('123-123-123');
+        $testStructure->getCreator()->willReturn(1);
+        $testStructure->getChanger()->willReturn(1);
+        $testStructure->getCreated()->willReturn(null);
+        $testStructure->getChanged()->willReturn(null);
+        $testStructure->getDocument()->willReturn(null);
+        $testStructure->getWebspaceKey()->willReturn('sulu_test');
+
+        $titleProperty = new Property('title', [], 'text_line');
+        $titleProperty->setValue('test');
+        $testStructure->getProperties(true)->willReturn([$titleProperty]);
+
+        $this->securityChecker->hasPermission(Argument::cetera())->willReturn(false);
+
+        $this
+            ->contentMapper
+            ->load('123-123-123', 'sulu_test', 'en_us')
+            ->willReturn($testStructure);
+
+        $result = $this->extension->load('123-123-123');
+
+        $this->assertNotNull($result);
+    }
+
+    public function testLoadWithoutPermissions()
+    {
+        $testStructure = $this->prophesize(StructureBridge::class);
+        $testStructure->getKey()->willReturn('test');
+        $testStructure->getPath()->willReturn(null);
+        $testStructure->getUuid()->willReturn('123-123-123');
+        $testStructure->getCreator()->willReturn(1);
+        $testStructure->getChanger()->willReturn(1);
+        $testStructure->getCreated()->willReturn(null);
+        $testStructure->getChanged()->willReturn(null);
+        $testStructure->getDocument()->willReturn(null);
+        $testStructure->getWebspaceKey()->willReturn('sulu_test');
+
+        $titleProperty = new Property('title', [], 'text_line');
+        $titleProperty->setValue('test');
+        $testStructure->getProperties(true)->willReturn([$titleProperty]);
+
+        $this->securityChecker->hasPermission(
+            new SecurityCondition(
+                PageAdmin::SECURITY_CONTEXT_PREFIX . 'sulu_test',
+                'en_us',
+                SecurityBehavior::class,
+                '123-123-123',
+                'sulu_test'
+            ),
+            PermissionTypes::VIEW
+        )->willReturn(false);
+
+        $security = new Security();
+        $security->setSystem('sulu_test');
+        $this->webspace->setSecurity($security);
+
+        $this
+            ->contentMapper
+            ->load('123-123-123', 'sulu_test', 'en_us')
+            ->willReturn($testStructure);
+
+        $result = $this->extension->load('123-123-123');
+
+        $this->assertEquals(null, $result);
     }
 
     public function testLoadNull()
@@ -217,6 +315,7 @@ class ContentTwigExtensionTest extends TestCase
         $testStructure->getCreated()->willReturn(null);
         $testStructure->getChanged()->willReturn(null);
         $testStructure->getDocument()->willReturn(null);
+        $testStructure->getWebspaceKey()->willReturn('sulu_test');
 
         $titleProperty = new Property('title', [], 'text_line');
         $titleProperty->setValue('test');
