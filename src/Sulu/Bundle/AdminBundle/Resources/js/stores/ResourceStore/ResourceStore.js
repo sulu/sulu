@@ -232,13 +232,22 @@ export default class ResourceStore {
             throw new Error('Copying from another locale does only work for objects with locales!');
         }
 
+        const destinationLocale = this.locale.get();
+
         return ResourceRequester
             .post(
                 this.resourceKey,
                 {},
-                {...options, action: 'copy-locale', dest: this.locale.get(), id: this.id, locale}
-            ).then(action((response) => {
+                {...options, action: 'copy-locale', dest: destinationLocale, id: this.id, locale}
+            ).then(action(() => {
+                // api will return data of there source locale, therefore we need to load the data of the new locale
+                return ResourceRequester.get(
+                    this.resourceKey,
+                    {...options, ...this.loadOptions, locale: destinationLocale, id: this.id}
+                );
+            })).then(action((response) => {
                 this.setMultiple(response);
+
                 return response;
             }));
     }
