@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\PageBundle\Twig;
 
-use Sulu\Component\Export\Manager\ExportManagerInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -21,21 +20,6 @@ use Twig\TwigFunction;
 class ExportTwigExtension extends AbstractExtension
 {
     /**
-     * @var ExportManagerInterface
-     */
-    private $exportManager;
-
-    /**
-     * @var int
-     */
-    private $counter = 0;
-
-    public function __construct(ExportManagerInterface $exportManager)
-    {
-        $this->exportManager = $exportManager;
-    }
-
-    /**
      * Returns an array of possible function in this extension.
      *
      * @return array
@@ -43,38 +27,8 @@ class ExportTwigExtension extends AbstractExtension
     public function getFunctions()
     {
         return [
-            new TwigFunction('sulu_content_type_export_escape', [$this, 'escapeXmlContent']),
-            new TwigFunction('sulu_content_type_export_counter', [$this, 'counter']),
+            new TwigFunction('sulu_content_type_export_escape', [ExportRuntime::class, 'escapeXmlContent']),
+            new TwigFunction('sulu_content_type_export_counter', [ExportManagerInterface::class, 'counter']),
         ];
-    }
-
-    /**
-     * @return int
-     */
-    public function counter()
-    {
-        return $this->counter++;
-    }
-
-    /**
-     * @param $content
-     *
-     * @return string
-     */
-    public function escapeXmlContent($content)
-    {
-        if (\is_object($content) || \is_array($content)) {
-            if (\method_exists($content, 'getUuid')) {
-                return $content->getUuid();
-            }
-
-            return 'ERROR: wrong data';
-        }
-
-        if (\preg_match('/[<>{}"&]/', $content)) {
-            $content = '<![CDATA[' . $content . ']]>';
-        }
-
-        return $content;
     }
 }

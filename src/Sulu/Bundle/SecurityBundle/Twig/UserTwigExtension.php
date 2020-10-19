@@ -11,9 +11,6 @@
 
 namespace Sulu\Bundle\SecurityBundle\Twig;
 
-use Doctrine\Common\Cache\Cache;
-use Sulu\Bundle\SecurityBundle\Entity\User;
-use Sulu\Bundle\SecurityBundle\Entity\UserRepository;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -23,51 +20,12 @@ use Twig\TwigFunction;
 class UserTwigExtension extends AbstractExtension
 {
     /**
-     * @var UserRepository
-     */
-    private $userRepository;
-
-    /**
-     * @var Cache
-     */
-    private $cache;
-
-    public function __construct(Cache $cache, UserRepository $userRepository)
-    {
-        $this->cache = $cache;
-        $this->userRepository = $userRepository;
-    }
-
-    /**
      * @return array
      */
     public function getFunctions()
     {
         return [
-            new TwigFunction('sulu_resolve_user', [$this, 'resolveUserFunction']),
+            new TwigFunction('sulu_resolve_user', [UserRuntime::class, 'resolveUserFunction']),
         ];
-    }
-
-    /**
-     * resolves user id to user data.
-     *
-     * @param int $id id to resolve
-     *
-     * @return User
-     */
-    public function resolveUserFunction($id)
-    {
-        if ($this->cache->contains($id)) {
-            return $this->cache->fetch($id);
-        }
-
-        $user = $this->userRepository->findUserById($id);
-        if (null === $user) {
-            return;
-        }
-
-        $this->cache->save($id, $user);
-
-        return $user;
     }
 }

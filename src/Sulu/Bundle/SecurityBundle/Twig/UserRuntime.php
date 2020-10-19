@@ -1,0 +1,59 @@
+<?php
+
+/*
+ * This file is part of Sulu.
+ *
+ * (c) Sulu GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+namespace Sulu\Bundle\SecurityBundle\Twig;
+
+use Doctrine\Common\Cache\Cache;
+use Sulu\Bundle\SecurityBundle\Entity\User;
+use Sulu\Bundle\SecurityBundle\Entity\UserRepository;
+use Twig\Extension\RuntimeExtensionInterface;
+
+final class UserRuntime implements RuntimeExtensionInterface
+{
+    /**
+     * @var UserRepository
+     */
+    private $userRepository;
+
+    /**
+     * @var Cache
+     */
+    private $cache;
+
+    public function __construct(Cache $cache, UserRepository $userRepository)
+    {
+        $this->cache = $cache;
+        $this->userRepository = $userRepository;
+    }
+
+    /**
+     * resolves user id to user data.
+     *
+     * @param int $id id to resolve
+     *
+     * @return User
+     */
+    public function resolveUserFunction($id)
+    {
+        if ($this->cache->contains($id)) {
+            return $this->cache->fetch($id);
+        }
+
+        $user = $this->userRepository->findUserById($id);
+        if (null === $user) {
+            return;
+        }
+
+        $this->cache->save($id, $user);
+
+        return $user;
+    }
+}

@@ -44,7 +44,11 @@
 
         <service id="sulu_page.export_twig_extension" class="Sulu\Bundle\PageBundle\Twig\ExportTwigExtension">
             <tag name="twig.extension"/>
+        </service>
+
+        <service id="Sulu\Bundle\PageBundle\Twig\ExportRuntime">
             <argument type="service" id="sulu_page.export.manager"/>
+            <tag name="twig.runtime"/>
         </service>
     </services>
 </container>
