@@ -7,7 +7,6 @@ import colorFieldTransformerStyles from './colorFieldTransformer.scss';
 
 export default class ColorFieldTransformer implements FieldTransformer {
     transform(value: *): Node {
-        //test si contain # et 3 ou 6 charateres
         if (!/^#[0-9a-f]{3}([0-9a-f]{3})?$/i.test(value)) {
             log.error(`Transformer parameter "${value}" needs to be of type hexadecimal color.`);
             return value;
