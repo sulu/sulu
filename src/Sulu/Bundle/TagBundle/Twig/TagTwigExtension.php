@@ -11,113 +11,18 @@
 
 namespace Sulu\Bundle\TagBundle\Twig;
 
-use JMS\Serializer\SerializationContext;
-use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
-use Sulu\Component\Cache\MemoizeInterface;
-use Sulu\Component\Serializer\ArraySerializerInterface;
-use Sulu\Component\Tag\Request\TagRequestHandlerInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
 class TagTwigExtension extends AbstractExtension
 {
-    /**
-     * @var TagManagerInterface
-     */
-    private $tagManager;
-
-    /**
-     * @var TagRequestHandlerInterface
-     */
-    private $tagRequestHandler;
-
-    /**
-     * @var ArraySerializerInterface
-     */
-    private $serializer;
-
-    /**
-     * @var MemoizeInterface
-     */
-    private $memoizeCache;
-
-    public function __construct(
-        TagManagerInterface $tagManager,
-        TagRequestHandlerInterface $tagRequestHandler,
-        ArraySerializerInterface $serializer,
-        MemoizeInterface $memoizeCache
-    ) {
-        $this->tagManager = $tagManager;
-        $this->tagRequestHandler = $tagRequestHandler;
-        $this->serializer = $serializer;
-        $this->memoizeCache = $memoizeCache;
-    }
-
     public function getFunctions()
     {
         return [
-            new TwigFunction('sulu_tags', [$this, 'getTagsFunction']),
-            new TwigFunction('sulu_tag_url', [$this, 'setTagUrlFunction']),
-            new TwigFunction('sulu_tag_url_append', [$this, 'appendTagUrlFunction']),
-            new TwigFunction('sulu_tag_url_clear', [$this, 'clearTagUrlFunction']),
+            new TwigFunction('sulu_tags', [TagRuntime::class, 'getTagsFunction']),
+            new TwigFunction('sulu_tag_url', [TagRuntime::class, 'setTagUrlFunction']),
+            new TwigFunction('sulu_tag_url_append', [TagRuntime::class, 'appendTagUrlFunction']),
+            new TwigFunction('sulu_tag_url_clear', [TagRuntime::class, 'clearTagUrlFunction']),
         ];
-    }
-
-    /**
-     * @return array
-     */
-    public function getTagsFunction()
-    {
-        return $this->memoizeCache->memoizeById(
-            'sulu_tags',
-            \func_get_args(),
-            function() {
-                $tags = $this->tagManager->findAll();
-
-                $context = SerializationContext::create();
-                $context->setSerializeNull(true);
-                $context->setGroups(['partialTag']);
-
-                return $this->serializer->serialize($tags, $context);
-            }
-        );
-    }
-
-    /**
-     * Extends current URL with given tag.
-     *
-     * @param array $tag will be included in the URL
-     * @param string $tagsParameter GET parameter name
-     *
-     * @return string
-     */
-    public function appendTagUrlFunction($tag, $tagsParameter = 'tags')
-    {
-        return $this->tagRequestHandler->appendTagToUrl($tag, $tagsParameter);
-    }
-
-    /**
-     * Set tag to current URL.
-     *
-     * @param array $tag will be included in the URL
-     * @param string $tagsParameter GET parameter name
-     *
-     * @return string
-     */
-    public function setTagUrlFunction($tag, $tagsParameter = 'tags')
-    {
-        return $this->tagRequestHandler->setTagToUrl($tag, $tagsParameter);
-    }
-
-    /**
-     * Remove tag from current URL.
-     *
-     * @param string $tagsParameter GET parameter name
-     *
-     * @return string
-     */
-    public function clearTagUrlFunction($tagsParameter = 'tags')
-    {
-        return $this->tagRequestHandler->removeTagsFromUrl($tagsParameter);
     }
 }

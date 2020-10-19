@@ -42,12 +42,16 @@
         </service>
 
         <service id="sulu_category.twig_extension" class="Sulu\Bundle\CategoryBundle\Twig\CategoryTwigExtension">
+            <tag name="twig.extension"/>
+        </service>
+
+        <service id="sulu_category.twig_runtime" class="Sulu\Bundle\CategoryBundle\Twig\CategoryRuntime">
             <argument type="service" id="sulu_category.category_manager"/>
             <argument type="service" id="sulu_category.category_request_handler"/>
             <argument type="service" id="sulu_core.array_serializer"/>
             <argument type="service" id="sulu_core.cache.memoize"/>
 
-            <tag name="twig.extension"/>
+            <tag name="twig.runtime"/>
         </service>
 
         <service id="sulu_category.keyword_manager"

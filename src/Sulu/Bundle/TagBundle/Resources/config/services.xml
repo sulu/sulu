@@ -28,12 +28,16 @@
         </service>
 
         <service id="sulu_tag.twig_extension" class="Sulu\Bundle\TagBundle\Twig\TagTwigExtension">
+            <tag name="twig.extension"/>
+        </service>
+
+        <service id="sulu_tag.twig_runtime" class="Sulu\Bundle\TagBundle\Twig\TagRuntime">
             <argument type="service" id="sulu_tag.tag_manager"/>
             <argument type="service" id="sulu_tag.tag_request_handler"/>
             <argument type="service" id="sulu_core.array_serializer"/>
             <argument type="service" id="sulu_core.cache.memoize"/>
 
-            <tag name="twig.extension"/>
+            <tag name="twig.runtime"/>
         </service>
 
         <service id="sulu_tag.search.tags_converter" class="Sulu\Bundle\TagBundle\Search\TagsConverter">
