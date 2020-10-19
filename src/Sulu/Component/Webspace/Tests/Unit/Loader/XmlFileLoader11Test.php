@@ -60,6 +60,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
         $this->assertEquals('Sulu CMF', $webspace->getName());
         $this->assertEquals('sulu_io', $webspace->getKey());
         $this->assertEquals('sulu_io', $webspace->getSecurity()->getSystem());
+        $this->assertEquals(true, $webspace->getSecurity()->getPermissionCheck());
 
         $this->assertEquals('en', $webspace->getLocalizations()[0]->getLanguage());
         $this->assertEquals('us', $webspace->getLocalizations()[0]->getCountry());
@@ -148,6 +149,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
         $this->assertEquals('Massive Art', $webspace->getName());
         $this->assertEquals('massiveart', $webspace->getKey());
         $this->assertEquals('massiveart', $webspace->getSecurity()->getSystem());
+        $this->assertEquals(false, $webspace->getSecurity()->getPermissionCheck());
 
         $this->assertEquals('w', $webspace->getDefaultSegment()->getKey());
 

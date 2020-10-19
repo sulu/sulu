@@ -6,7 +6,7 @@
     <name>Sulu CMF</name>
     <key>sulu_io</key>
 
-    <security>
+    <security permission-check="true">
         <system>sulu_io</system>
     </security>
 

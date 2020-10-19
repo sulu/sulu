@@ -36,6 +36,7 @@ class {{ cache_class }} extends {{ base_class }}
 {% if webspace.security != null %}
         $security = new Security();
         $security->setSystem('{{ webspace.security.system }}');
+        $security->setPermissionCheck({{ webspace.security.permissionCheck ? 'true' : 'false' }});
         $webspace->setSecurity($security);
 {% endif %}
 {% for localization in webspace.localizations %}

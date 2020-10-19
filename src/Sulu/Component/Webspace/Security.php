@@ -24,6 +24,11 @@ class Security
     private $system;
 
     /**
+     * @var string
+     */
+    private $permissionCheck;
+
+    /**
      * Sets the key of the segment.
      *
      * @param string $system
@@ -41,5 +46,15 @@ class Security
     public function getSystem()
     {
         return $this->system;
+    }
+
+    public function setPermissionCheck(bool $permissionCheck)
+    {
+        $this->permissionCheck = $permissionCheck;
+    }
+
+    public function getPermissionCheck(): bool
+    {
+        return $this->permissionCheck;
     }
 }

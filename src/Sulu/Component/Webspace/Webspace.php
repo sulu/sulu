@@ -601,6 +601,7 @@ class Webspace implements ArrayableInterface
         $thisSecurity = $this->getSecurity();
         if (null != $thisSecurity) {
             $res['security']['system'] = $thisSecurity->getSystem();
+            $res['security']['permissionCheck'] = $thisSecurity->getPermissionCheck();
         }
 
         $res['segments'] = [];
