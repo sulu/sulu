@@ -360,7 +360,7 @@ test('Should not request a new URL if URL was defined', () => {
     expect(Requester.post).not.toBeCalled();
 });
 
-test('Should request a new URL including the options from the ResourceFormStore if no URL was defined', () => {
+test('Request new URL with options from FormInspector and resourceStorePropertiesToRequest field-type-option ', () => {
     const formInspector = new FormInspector(
         new ResourceFormStore(
             new ResourceStore('test'),
@@ -378,6 +378,9 @@ test('Should request a new URL including the options from the ResourceFormStore 
                 generationUrl: '/admin/api/resourcelocators?action=generate',
                 historyResourceKey: 'page_resourcelocators',
                 modeResolver: () => Promise.resolve('leaf'),
+                resourceStorePropertiesToRequest: {
+                    requestParamKey: 'propertyName',
+                },
             }}
             formInspector={formInspector}
             onChange={changeSpy}
@@ -390,6 +393,7 @@ test('Should request a new URL including the options from the ResourceFormStore 
     formInspector.getPathsByTag.mockReturnValue(['/title', '/subtitle']);
     formInspector.getValueByPath.mockReturnValueOnce('title-value');
     formInspector.getValueByPath.mockReturnValueOnce('subtitle-value');
+    formInspector.getValueByPath.mockReturnValueOnce('property-value');
     formInspector.getSchemaEntryByPath.mockReturnValue({
         tags: [
             {name: 'sulu.rlp.part'},
@@ -407,6 +411,7 @@ test('Should request a new URL including the options from the ResourceFormStore 
     expect(formInspector.getPathsByTag).toBeCalledWith('sulu.rlp.part');
     expect(formInspector.getValueByPath).toBeCalledWith('/title');
     expect(formInspector.getValueByPath).toBeCalledWith('/subtitle');
+    expect(formInspector.getValueByPath).toBeCalledWith('/propertyName');
     expect(Requester.post).toBeCalledWith(
         '/admin/api/resourcelocators?action=generate',
         {
@@ -414,6 +419,7 @@ test('Should request a new URL including the options from the ResourceFormStore 
             parts: {title: 'title-value', subtitle: 'subtitle-value'},
             resourceKey: 'test',
             webspace: 'example',
+            requestParamKey: 'property-value',
         }
     );
 

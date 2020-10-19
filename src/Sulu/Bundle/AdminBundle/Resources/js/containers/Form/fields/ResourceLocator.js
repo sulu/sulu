@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, observable} from 'mobx';
+import {action, observable, toJS} from 'mobx';
 import {observer} from 'mobx-react';
 import ResourceLocatorComponent from '../../../components/ResourceLocator';
 import ResourceLocatorHistory from '../../../containers/ResourceLocatorHistory';
@@ -19,8 +19,17 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
     constructor(props: FieldTypeProps<?string>) {
         super(props);
 
-        const {dataPath, onChange, fieldTypeOptions, formInspector, value} = this.props;
-        const {generationUrl, modeResolver} = fieldTypeOptions;
+        const {
+            dataPath,
+            fieldTypeOptions: {
+                generationUrl,
+                modeResolver,
+                resourceStorePropertiesToRequest = {},
+            },
+            formInspector,
+            onChange,
+            value,
+        } = this.props;
 
         if (!modeResolver) {
             throw new Error('The "modeResolver" must be a function returning a promise with the desired mode');
@@ -70,13 +79,22 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
                 return;
             }
 
+            const requestOptions = {...formInspector.options};
+
+            Object.entries(resourceStorePropertiesToRequest).forEach(([parameterName, propertyName]) => {
+                const propertyValue = toJS(formInspector.getValueByPath('/' + String(propertyName)));
+                if (propertyValue !== undefined) {
+                    requestOptions[parameterName] = propertyValue;
+                }
+            });
+
             Requester.post(
                 generationUrl,
                 {
                     parts: Object.fromEntries(partEntries),
                     resourceKey: formInspector.resourceKey,
                     locale: formInspector.locale ? formInspector.locale.get() : undefined,
-                    ...formInspector.options,
+                    ...requestOptions,
                 }
             ).then((response) => {
                 onChange(response.resourcelocator);
