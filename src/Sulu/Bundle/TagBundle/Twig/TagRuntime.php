@@ -18,7 +18,7 @@ use Sulu\Component\Serializer\ArraySerializerInterface;
 use Sulu\Component\Tag\Request\TagRequestHandlerInterface;
 use Twig\Extension\RuntimeExtensionInterface;
 
-class TagRuntime implements RuntimeExtensionInterface
+final class TagRuntime implements RuntimeExtensionInterface
 {
     /**
      * @var TagManagerInterface

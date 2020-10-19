@@ -16,14 +16,9 @@ use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
 use Sulu\Component\Cache\MemoizeInterface;
 use Sulu\Component\Category\Request\CategoryRequestHandlerInterface;
 use Sulu\Component\Serializer\ArraySerializerInterface;
-use Twig\Extension\AbstractExtension;
 use Twig\Extension\RuntimeExtensionInterface;
-use Twig\TwigFunction;
 
-/**
- * Provides functionality to handle categories in twig templates.
- */
-class CategoryRuntime implements RuntimeExtensionInterface
+final class CategoryRuntime implements RuntimeExtensionInterface
 {
     /**
      * @var CategoryManagerInterface
