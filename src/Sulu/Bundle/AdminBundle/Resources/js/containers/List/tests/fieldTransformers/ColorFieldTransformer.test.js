@@ -10,15 +10,20 @@ jest.mock('loglevel', () => ({
     error: jest.fn(),
 }));
 
+test('Test invalid color null', () => {
+    const value = null;
+    expect(colorTransformer.transform(value)).toBe(value);
+});
+
 test('Test invalid color (no hashtag)', () => {
     const value = 'FFF';
-    expect(colorTransformer.transform(value)).toBe(value);
+    expect(colorTransformer.transform(value)).toBe(null);
     expect(log.error).toBeCalledWith(`Transformer parameter "${value}" needs to be of type hexadecimal color.`);
 });
 
 test('Test invalid color (length 2)', () => {
     const value = '#FF';
-    expect(colorTransformer.transform(value)).toBe(value);
+    expect(colorTransformer.transform(value)).toBe(null);
     expect(log.error).toBeCalledWith(`Transformer parameter "${value}" needs to be of type hexadecimal color.`);
 });
 
