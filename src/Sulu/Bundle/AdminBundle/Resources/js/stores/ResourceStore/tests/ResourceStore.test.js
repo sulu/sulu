@@ -514,22 +514,29 @@ test('Saving should consider the passed idQueryParameter flag and reset it after
 
 test('Copy the content from different locale', () => {
     const resourceStore = new ResourceStore('pages', 4, {locale: observable.box('en')}, {webspace: 'sulu_io'});
-    resourceStore.set('content', 'old content');
-    expect(resourceStore.data).toEqual({content: 'old content'});
-    const oldData = resourceStore.data;
+    resourceStore.set('content', 'initial content');
+    expect(resourceStore.data).toEqual({content: 'initial content'});
+    const resourceStoreDataObject = resourceStore.data;
 
-    const germanContent = {id: 3, content: 'new content'};
-    const promise = Promise.resolve(germanContent);
-    ResourceRequester.post.mockReturnValue(promise);
+    const sourceLanguageContent = {id: 3, content: 'source language content'};
+    const postPromise = Promise.resolve(sourceLanguageContent);
+    ResourceRequester.post.mockReturnValue(postPromise);
 
-    resourceStore.copyFromLocale('de');
+    const targetLanguageContent = {id: 3, content: 'target language content'};
+    const getPromise = Promise.resolve(targetLanguageContent);
+    ResourceRequester.get.mockReturnValue(getPromise);
 
-    expect(ResourceRequester.post)
-        .toBeCalledWith('pages', {}, {action: 'copy-locale', id: 4, locale: 'de', dest: 'en'});
+    const copyPromise = resourceStore.copyFromLocale('de');
 
-    return promise.then(() => {
-        expect(resourceStore.data).toEqual(germanContent);
-        expect(resourceStore.data).toBe(oldData);
+    return copyPromise.then((copyPromiseValue) => {
+        expect(ResourceRequester.post)
+            .toBeCalledWith('pages', {}, {action: 'copy-locale', id: 4, locale: 'de', dest: 'en'});
+        expect(ResourceRequester.get)
+            .toBeCalledWith('pages', {id: 4, locale: 'en', webspace: 'sulu_io'});
+
+        expect(resourceStore.data).toBe(resourceStoreDataObject);
+        expect(resourceStore.data).toEqual({id: 3, content: 'target language content'});
+        expect(copyPromiseValue).toEqual({id: 3, content: 'target language content'});
     });
 });
 
