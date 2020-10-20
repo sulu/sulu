@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import React, {Fragment} from 'react';
 import {action, comparer, computed, observable, reaction, toJS} from 'mobx';
 import {observer} from 'mobx-react';
 import ResourceLocatorComponent from '../../../components/ResourceLocator';
@@ -61,7 +61,7 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
                 modeResolver,
             },
             formInspector,
-            value: initialValue,
+            value,
         } = this.props;
 
         if (!modeResolver) {
@@ -70,7 +70,7 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
 
         modeResolver(this.props).then(action((mode) => this.mode = mode));
 
-        if (initialValue === HOMEPAGE_RESOURCE_LOCATOR) {
+        if (value === HOMEPAGE_RESOURCE_LOCATOR) {
             return;
         }
 
@@ -192,7 +192,7 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
         }
 
         return (
-            <div>
+            <Fragment>
                 <ResourceLocatorComponent
                     disabled={!!disabled}
                     id={dataPath}
@@ -201,7 +201,7 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
                     onChange={this.handleInputChange}
                     value={value}
                 />
-                <div className={resourceLocatorStyles.buttonContainer}>
+                <div className={resourceLocatorStyles.buttonsContainer}>
                     <Button
                         className={resourceLocatorStyles.refreshButton}
                         disabled={!this.enableRefreshButton}
@@ -222,7 +222,7 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
                         resourceKey={historyResourceKey}
                     />
                 </div>
-            </div>
+            </Fragment>
         );
     }
 }
