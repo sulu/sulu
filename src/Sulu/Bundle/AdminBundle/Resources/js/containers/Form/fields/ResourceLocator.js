@@ -17,8 +17,9 @@ const HOMEPAGE_RESOURCE_LOCATOR = '/';
 @observer
 class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
     @observable mode: string;
-    @observable enableRefreshButton: boolean = false;
-    @observable wasModifiedManually: boolean = false;
+    @observable inputChanged: boolean = false;
+    @observable inputChangedSinceRefresh: boolean = false;
+    @observable partsChangedSinceRefresh: boolean = false;
 
     partsChangeDisposer: () => mixed;
 
@@ -49,7 +50,15 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
             },
         } = this.props;
 
-        return !id && !this.wasModifiedManually;
+        return !id && !this.inputChanged && Object.keys(this.parts).length > 0;
+    }
+
+    @computed get enableRefreshButton(): boolean {
+        if (this.enableAutoGeneration) {
+            return false;
+        }
+
+        return (this.inputChangedSinceRefresh || this.partsChangedSinceRefresh) && Object.keys(this.parts).length > 0;
     }
 
     constructor(props: FieldTypeProps<?string>) {
@@ -85,9 +94,7 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
         this.partsChangeDisposer = reaction(
             () => (this.parts),
             action(() => {
-                if (!this.enableAutoGeneration) {
-                    this.enableRefreshButton = true;
-                }
+                this.partsChangedSinceRefresh = true;
             }),
             {equals: comparer.structural}
         );
@@ -127,7 +134,8 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
             }
         });
 
-        this.enableRefreshButton = false;
+        this.inputChangedSinceRefresh = false;
+        this.partsChangedSinceRefresh = false;
 
         Requester.post(
             generationUrl,
@@ -150,8 +158,8 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
     @action handleInputChange = (value: ?string) => {
         const {onChange} = this.props;
 
-        this.enableRefreshButton = true;
-        this.wasModifiedManually = true;
+        this.inputChanged = true;
+        this.inputChangedSinceRefresh = true;
 
         onChange(value);
     };
