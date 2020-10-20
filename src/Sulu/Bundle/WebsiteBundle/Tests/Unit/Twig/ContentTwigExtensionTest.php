@@ -269,6 +269,7 @@ class ContentTwigExtensionTest extends TestCase
 
         $security = new Security();
         $security->setSystem('sulu_test');
+        $security->setPermissionCheck(true);
         $this->webspace->setSecurity($security);
 
         $this

@@ -418,9 +418,7 @@ class Webspace implements ArrayableInterface
             return false;
         }
 
-        $system = $security->getSystem();
-
-        return null !== $system;
+        return null !== $security->getSystem() && $security->getPermissionCheck();
     }
 
     /**
