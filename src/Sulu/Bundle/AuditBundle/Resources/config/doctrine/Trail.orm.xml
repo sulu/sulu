@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <mapped-superclass name="Sulu\Bundle\AuditBundle\Entity\Trail" table="su_trails"
+                       repository-class="Sulu\Bundle\AuditBundle\Repository\TrailRepository">
+
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+
+        <field name="triggerClass" type="string" column="triggerClass" length="255"/>
+        <field name="targetClass" type="string" column="targetClass" length="255"/>
+        <field name="triggerId" type="integer" column="triggerId"/>
+        <field name="targetId" type="integer" column="targetId" nullable="true"/>
+        <field name="event" type="string" column="event" length="255"/>
+        <field name="createdAt" type="datetime" column="createdAt"/>
+        <field name="changes" type="json" column="changes"/>
+
+    </mapped-superclass>
+</doctrine-mapping>

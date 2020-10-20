@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <service id="sulu_audit.trail.repository" class="Sulu\Bundle\AuditBundle\Repository\TrailRepository" public="true">
+            <argument type="service" id="doctrine.orm.default_entity_manager"/>
+            <argument type="service">
+                <service class="Doctrine\ORM\Mapping\ClassMetadata">
+                    <argument>Sulu\Bundle\AuditBundle\Entity\Trail</argument>
+                    <factory service="doctrine.orm.default_entity_manager" method="getClassMetadata"/>
+                </service>
+            </argument>
+        </service>
+
+        <service id="sulu_audit.service.trail" class="Sulu\Bundle\AuditBundle\Service\TrailService">
+            <argument type="service" id="security.token_storage"/>
+            <argument type="service" id="sulu_audit.trail.repository"/>
+            <tag name="sulu.context" context="admin"/>
+        </service>
+    </services>
+</container>
