@@ -16,12 +16,10 @@ use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
 
 class TrailRepository extends EntityRepository implements TrailRepositoryInterface
 {
-
     public function findTrailById(int $id)
     {
         // TODO: Implement findTrailById() method.
     }
-
 
     public function findAllTrails()
     {

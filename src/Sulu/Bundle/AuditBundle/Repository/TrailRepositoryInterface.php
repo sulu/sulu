@@ -19,8 +19,6 @@ interface TrailRepositoryInterface
     /**
      * Finds the Trail with the given ID.
      *
-     * @param int $id
-     *
      * @return TrailInterface
      */
     public function findTrailById(int $id);

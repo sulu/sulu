@@ -1,8 +1,15 @@
 <?php
 
+/*
+ * This file is part of Sulu.
+ *
+ * (c) Sulu GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Sulu\Bundle\AuditBundle\Service;
-
 
 use Sulu\Bundle\AuditBundle\Entity\Trail;
 use Sulu\Bundle\AuditBundle\Repository\TrailRepository;
@@ -20,12 +27,10 @@ class TrailService implements TrailServiceInterface
      */
     private $trailRepository;
 
-
     public function __construct(
         TokenStorageInterface $tokenStorage,
         TrailRepository $trailRepository
-    )
-    {
+    ) {
         $this->trailRepository = $trailRepository;
         if ($tokenStorage->getToken()) {
             $this->loginUser = $tokenStorage->getToken()->getUser();
@@ -38,21 +43,21 @@ class TrailService implements TrailServiceInterface
         $trail = $this->trailRepository->createNew();
 
         $trail->setTriggerId($this->loginUser->getId());
-        $trail->setTriggerClass(get_class($this->loginUser));
+        $trail->setTriggerClass(\get_class($this->loginUser));
         $trail->setTargetId($object->getId());
-        $trail->setTargetClass(get_class($object->getChanger()));
+        $trail->setTargetClass(\get_class($object->getChanger()));
     }
 
-    public function createTrailByNameAndChanges($id, string $name, array $changes,string $event)
+    public function createTrailByNameAndChanges($id, string $name, array $changes, string $event)
     {
         /** @var Trail $trail */
         $trail = $this->trailRepository->createNew();
 
-        if($this->loginUser){
+        if ($this->loginUser) {
             $trail->setTriggerId($this->loginUser->getId());
         }
 
-        $trail->setTriggerClass(get_class($this->loginUser));
+        $trail->setTriggerClass(\get_class($this->loginUser));
         $trail->setTargetId($id);
         $trail->setTargetClass($name);
         $trail->setEvent($event);

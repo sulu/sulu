@@ -40,46 +40,31 @@ class Trail implements TrailInterface
     /**
      * @return mixed
      */
-    public function getId() : int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
     public function getEvent(): string
     {
         return $this->event;
     }
 
-    /**
-     * @param string $event
-     */
     public function setEvent(string $event): void
     {
         $this->event = $event;
     }
 
-    /**
-     * @return int
-     */
     public function getTriggerId(): int
     {
         return $this->triggerId;
     }
 
-    /**
-     * @param int $triggerId
-     */
     public function setTriggerId(int $triggerId): void
     {
         $this->triggerId = $triggerId;
     }
 
-    /**
-     * @return int
-     */
     public function getTargetId(): int
     {
         return $this->targetId;
@@ -93,41 +78,26 @@ class Trail implements TrailInterface
         $this->targetId = $targetId;
     }
 
-    /**
-     * @return string
-     */
     public function getTargetClass(): string
     {
         return $this->targetClass;
     }
 
-    /**
-     * @param string $targetClass
-     */
     public function setTargetClass(string $targetClass): void
     {
         $this->targetClass = $targetClass;
     }
 
-    /**
-     * @return string
-     */
     public function getTriggerClass(): string
     {
         return $this->triggerClass;
     }
 
-    /**
-     * @param string $triggerClass
-     */
     public function setTriggerClass(string $triggerClass): void
     {
         $this->triggerClass = $triggerClass;
     }
 
-    /**
-     * @return \DateTime
-     */
     public function getCreatedAt(): \DateTime
     {
         return $this->createdAt;

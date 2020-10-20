@@ -1,7 +1,15 @@
 <?php
 
-namespace Sulu\Bundle\AuditBundle\EventSubscriber;
+/*
+ * This file is part of Sulu.
+ *
+ * (c) Sulu GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
+namespace Sulu\Bundle\AuditBundle\EventSubscriber;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\OnFlushEventArgs;
@@ -23,13 +31,11 @@ class FlushEventListener
 
     /**
      * FlushEventListener constructor.
-     * @param TrailServiceInterface $trailService
      */
     public function __construct(
         TrailServiceInterface $trailService,
         TokenStorageInterface $tokenStorage
-    )
-    {
+    ) {
         $this->trailService = $trailService;
 
         if ($tokenStorage->getToken()) {
@@ -38,7 +44,6 @@ class FlushEventListener
     }
 
     /**
-     * @param OnFlushEventArgs $args
      * @throws \ReflectionException
      */
     public function onFlush(OnFlushEventArgs $args)
@@ -47,11 +52,10 @@ class FlushEventListener
         $uow = $em->getUnitOfWork();
 
         if ($this->loginUser) {
-
             foreach ($uow->getScheduledEntityInsertions() as $key => $entity) {
                 $trail = $this->trailService->createTrailByNameAndChanges(
-                    NULL,
-                    $uow->getEntityPersister(get_class($entity))->getClassMetadata()->getName(),
+                    null,
+                    $uow->getEntityPersister(\get_class($entity))->getClassMetadata()->getName(),
                     $uow->getEntityChangeSet($entity),
                     EventMap::INSERT
                 );
@@ -61,7 +65,7 @@ class FlushEventListener
             foreach ($uow->getScheduledEntityUpdates() as $entity) {
                 $trail = $this->trailService->createTrailByNameAndChanges(
                     $entity->getId(),
-                    $uow->getEntityPersister(get_class($entity))->getClassMetadata()->getName(),
+                    $uow->getEntityPersister(\get_class($entity))->getClassMetadata()->getName(),
                     $uow->getEntityChangeSet($entity),
                     EventMap::UPDATE
                 );
@@ -71,26 +75,22 @@ class FlushEventListener
             foreach ($uow->getScheduledEntityDeletions() as $entity) {
                 $trail = $this->trailService->createTrailByNameAndChanges(
                     $entity->getId(),
-                    $uow->getEntityPersister(get_class($entity))->getClassMetadata()->getName(),
+                    $uow->getEntityPersister(\get_class($entity))->getClassMetadata()->getName(),
                     $uow->getEntityChangeSet($entity),
                     EventMap::DELETE
                 );
                 $this->save($em, $uow, $trail);
             }
         }
-
     }
 
     /**
-     * @param EntityManager $em
-     * @param UnitOfWork $uow
      * @param $entity
      */
     public function save(EntityManager $em, UnitOfWork $uow, $entity)
     {
         $em->persist($entity);
-        $metaData = $em->getClassMetadata(get_class($entity));
+        $metaData = $em->getClassMetadata(\get_class($entity));
         $uow->computeChangeSet($metaData, $entity);
     }
-
 }
