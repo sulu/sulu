@@ -220,7 +220,9 @@ class RouteProvider implements RouteProviderInterface
                         . $attributes->getAttribute('resourceLocatorPrefix')
                         . $route->getTarget()->getPath()
                         . ($request->getQueryString() ? ('?' . $request->getQueryString()) : ''),
-                ]
+                ],
+                [],
+                ['utf8' => true]
             );
         }
 
@@ -238,7 +240,9 @@ class RouteProvider implements RouteProviderInterface
                         $route->getEntityClass(),
                         $route->getEntityId(),
                         $request->getLocale()
-                    )
+                    ),
+                    [],
+                    ['utf8' => true]
                 );
 
                 return true;
