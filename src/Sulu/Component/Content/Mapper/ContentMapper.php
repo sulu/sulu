@@ -58,7 +58,6 @@ use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\DocumentManager\NamespaceRegistry;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
-use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -699,11 +698,16 @@ class ContentMapper implements ContentMapperInterface
 
         if ($document instanceof SecurityBehavior && $this->security && $permission && $webspace->hasWebsiteSecurity()) {
             $permissionKey = \array_search($permission, $this->permissions);
+            $documentWebspaceKey = $document->getWebspaceName();
+            $documentWebspace = $this->webspaceManager->findWebspaceByKey($documentWebspaceKey);
+            $documentWebspaceSecurity = $documentWebspace->getSecurity();
+
             $permissions = $this->accessControlManager->getUserPermissionByArray(
                 $document->getLocale(),
-                PageAdmin::SECURITY_CONTEXT_PREFIX . $document->getWebspaceName(),
+                PageAdmin::SECURITY_CONTEXT_PREFIX . $documentWebspaceKey,
                 $document->getPermissions(),
-                $this->security->getUser()
+                $this->security->getUser(),
+                $documentWebspaceSecurity->getSystem()
             );
 
             if (isset($permissions[$permissionKey]) && !$permissions[$permissionKey]) {

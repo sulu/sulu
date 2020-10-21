@@ -270,7 +270,6 @@ class ContentRouteProviderTest extends TestCase
         $this->assertEquals(false, $defaults['partial']);
     }
 
-
     public function testSecurityCheckerWithoutPermissionCheck()
     {
         $attributes = $this->prophesize(RequestAttributes::class);

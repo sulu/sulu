@@ -14,7 +14,6 @@ namespace Sulu\Component\Content\Query;
 use Jackalope\Query\Row;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
-use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
 
 /**

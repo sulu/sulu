@@ -6,7 +6,7 @@
     <name>Test CMF</name>
     <key>test_io</key>
 
-    <security>
+    <security permission-check="true">
         <system>test_security_system</system>
     </security>
 

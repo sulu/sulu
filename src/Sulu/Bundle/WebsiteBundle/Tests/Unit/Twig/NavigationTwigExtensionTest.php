@@ -15,7 +15,6 @@ use Sulu\Bundle\WebsiteBundle\Twig\Navigation\NavigationTwigExtension;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\Localization\Localization;
-use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Segment;
 use Sulu\Component\Webspace\Webspace;

@@ -14,9 +14,7 @@ namespace Sulu\Bundle\WebsiteBundle\Twig\Navigation;
 use Sulu\Bundle\WebsiteBundle\Navigation\NavigationMapperInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
-use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
