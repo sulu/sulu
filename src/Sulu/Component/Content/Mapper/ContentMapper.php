@@ -63,6 +63,7 @@ use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInte
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * Maps content nodes to phpcr nodes with content types and provides utility function to handle content nodes.
@@ -146,6 +147,11 @@ class ContentMapper implements ContentMapperInterface
      */
     private $permissions;
 
+    /**
+     * @var ?Security
+     */
+    private $security;
+
     public function __construct(
         DocumentManager $documentManager,
         WebspaceManagerInterface $webspaceManager,
@@ -160,7 +166,8 @@ class ContentMapper implements ContentMapperInterface
         ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool,
         NamespaceRegistry $namespaceRegistry,
         AccessControlManagerInterface $accessControlManager,
-        $permissions
+        $permissions,
+        Security $security = null
     ) {
         $this->contentTypeManager = $contentTypeManager;
         $this->structureManager = $structureManager;
@@ -175,6 +182,7 @@ class ContentMapper implements ContentMapperInterface
         $this->resourceLocatorStrategyPool = $resourceLocatorStrategyPool;
         $this->accessControlManager = $accessControlManager;
         $this->permissions = $permissions;
+        $this->security = $security;
 
         // deprecated
         $this->eventDispatcher = $eventDispatcher;
@@ -633,7 +641,6 @@ class ContentMapper implements ContentMapperInterface
         $fields,
         $maxDepth,
         $onlyPublished = true,
-        ?UserInterface $user = null,
         $permission = null
     ) {
         $rootDepth = \substr_count($this->sessionManager->getContentPath($webspaceKey), '/');
@@ -644,7 +651,7 @@ class ContentMapper implements ContentMapperInterface
                 $pageDepth = \substr_count($row->getPath('page'), '/') - $rootDepth;
 
                 if (null === $maxDepth || $maxDepth < 0 || ($maxDepth > 0 && $pageDepth <= $maxDepth)) {
-                    $item = $this->rowToArray($row, $locale, $webspaceKey, $fields, $onlyPublished, $user, $permission);
+                    $item = $this->rowToArray($row, $locale, $webspaceKey, $fields, $onlyPublished, $permission);
 
                     if (false === $item || \in_array($item, $result)) {
                         continue;
@@ -667,9 +674,10 @@ class ContentMapper implements ContentMapperInterface
         $webspaceKey,
         $fields,
         $onlyPublished = true,
-        ?UserInterface $user = null,
         $permission = null
     ) {
+        $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
+
         // reset cache
         $this->initializeExtensionCache();
         $templateName = $this->encoder->localizedSystemName('template', $locale);
@@ -689,13 +697,13 @@ class ContentMapper implements ContentMapperInterface
             return false;
         }
 
-        if ($document instanceof SecurityBehavior && $permission) {
+        if ($document instanceof SecurityBehavior && $this->security && $permission && $webspace->hasWebsiteSecurity()) {
             $permissionKey = \array_search($permission, $this->permissions);
             $permissions = $this->accessControlManager->getUserPermissionByArray(
                 $document->getLocale(),
                 PageAdmin::SECURITY_CONTEXT_PREFIX . $document->getWebspaceName(),
                 $document->getPermissions(),
-                $user
+                $this->security->getUser()
             );
 
             if (isset($permissions[$permissionKey]) && !$permissions[$permissionKey]) {

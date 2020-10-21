@@ -50,7 +50,7 @@ class NavigationMapperTest extends SuluTestCase
     /**
      * @var ContentMapperInterface
      */
-    private $mapper;
+    private $contentMapper;
 
     /**
      * @var DocumentManagerInterface
@@ -103,7 +103,7 @@ class NavigationMapperTest extends SuluTestCase
     {
         $this->purgeDatabase();
         $this->initPhpcr();
-        $this->mapper = $this->getContainer()->get('sulu.content.mapper');
+        $this->contentMapper = $this->getContainer()->get('sulu.content.mapper');
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->structureManager = $this->getContainer()->get('sulu.content.structure_manager');
         $this->extensionManager = $this->getContainer()->get('sulu_page.extension.manager');
@@ -134,10 +134,10 @@ class NavigationMapperTest extends SuluTestCase
 
         $this->data = $this->prepareTestData();
 
-        $contentQuery = new ContentQueryExecutor($this->sessionManager, $this->mapper, null, $this->tokenStorage);
+        $contentQuery = new ContentQueryExecutor($this->sessionManager, $this->contentMapper, null);
 
         $this->navigationMapper = new NavigationMapper(
-            $this->mapper,
+            $this->contentMapper,
             $contentQuery,
             new NavigationQueryBuilder($this->structureManager, $this->extensionManager, $this->languageNamespace),
             $this->sessionManager,
