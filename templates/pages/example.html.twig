@@ -85,5 +85,7 @@
     <p>{{ content.contact_account_selection|map(contact => contact.name ?? contact.fullName)|join(', ') }}</p>
     <p>{{ content.text_area }}</p>
 
-    {% include 'pages/includes/image_map.html.twig' with {image_map: content.image_map} only %}
+    {% if content.image_map %}
+        {% include 'pages/includes/image_map.html.twig' with {image_map: content.image_map} only %}
+    {% endif %}
 {% endblock %}

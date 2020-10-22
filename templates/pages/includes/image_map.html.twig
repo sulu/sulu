@@ -51,46 +51,44 @@
     }
 </style>
 
-{% if image_map.image.url|default %}
-    <div class="imageMap__container">
-        <img class="imageMap__img" src="{{ image_map.image.url }}"/>
-
-        {% for index, hotspot in image_map.hotspots %}
-            {% set left = hotspot.hotspot.left * 100 %}
-            {% set top = hotspot.hotspot.top * 100 %}
-
-            {% if hotspot.hotspot.type == 'rectangle' %}
-                {% set width = hotspot.hotspot.width * 100 %}
-                {% set height = hotspot.hotspot.height * 100 %}
-
-                <div class="imageMap__hotspot imageMap__hotspot--rectangle"
-                     style="left: {{ left }}%; top: {{ top }}%; width: {{ width }}%; height: {{ height }}%;">
-                    <span class="imageMap__hotspot-text">{{ index + 1 }}</span>
-                </div>
-            {% elseif hotspot.hotspot.type == 'circle' %}
-                {% set diameter = hotspot.hotspot.radius * 100 * 2 %}
-
-                <div class="imageMap__hotspot imageMap__hotspot--circle"
-                     style="left: {{ left }}%; top: {{ top }}%; width: {{ diameter }}%; padding-top: {{ diameter }}%;">
-                    <span class="imageMap__hotspot-text">{{ index + 1 }}</span>
-                </div>
-            {% elseif hotspot.hotspot.type == 'point' %}
-                <div class="imageMap__hotspot imageMap__hotspot--point"
-                     style="left: {{ left }}%; top: {{ top }}%;">
-                    <span class="imageMap__hotspot-text">{{ index + 1 }}</span>
-                </div>
-            {% endif %}
-        {% endfor %}
-    </div>
+<div class="imageMap__container">
+    <img class="imageMap__img" src="{{ image_map.image.url }}"/>
 
     {% for index, hotspot in image_map.hotspots %}
-        <h2>#{{ index + 1 }}</h2>
+        {% set left = hotspot.hotspot.left * 100 %}
+        {% set top = hotspot.hotspot.top * 100 %}
 
-        {% if hotspot.type == 'basic' %}
-            <b>{{ hotspot.title|default }}</b>
-            <p>{{ hotspot.description|default }}</p>
-        {% elseif hotspot.type == 'advanced' %}
-            <p>{{ hotspot.text|default|raw }}</p>
+        {% if hotspot.hotspot.type == 'rectangle' %}
+            {% set width = hotspot.hotspot.width * 100 %}
+            {% set height = hotspot.hotspot.height * 100 %}
+
+            <div class="imageMap__hotspot imageMap__hotspot--rectangle"
+                 style="left: {{ left }}%; top: {{ top }}%; width: {{ width }}%; height: {{ height }}%;">
+                <span class="imageMap__hotspot-text">{{ index + 1 }}</span>
+            </div>
+        {% elseif hotspot.hotspot.type == 'circle' %}
+            {% set diameter = hotspot.hotspot.radius * 100 * 2 %}
+
+            <div class="imageMap__hotspot imageMap__hotspot--circle"
+                 style="left: {{ left }}%; top: {{ top }}%; width: {{ diameter }}%; padding-top: {{ diameter }}%;">
+                <span class="imageMap__hotspot-text">{{ index + 1 }}</span>
+            </div>
+        {% elseif hotspot.hotspot.type == 'point' %}
+            <div class="imageMap__hotspot imageMap__hotspot--point"
+                 style="left: {{ left }}%; top: {{ top }}%;">
+                <span class="imageMap__hotspot-text">{{ index + 1 }}</span>
+            </div>
         {% endif %}
     {% endfor %}
-{% endif %}
+</div>
+
+{% for index, hotspot in image_map.hotspots %}
+    <h2>#{{ index + 1 }}</h2>
+
+    {% if hotspot.type == 'basic' %}
+        <b>{{ hotspot.title|default }}</b>
+        <p>{{ hotspot.description|default }}</p>
+    {% elseif hotspot.type == 'advanced' %}
+        <p>{{ hotspot.text|default|raw }}</p>
+    {% endif %}
+{% endfor %}
