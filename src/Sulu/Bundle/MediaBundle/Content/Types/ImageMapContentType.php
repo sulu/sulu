@@ -340,19 +340,13 @@ class ImageMapContentType extends ComplexContentType implements ContentTypeExpor
 
     public function getViewData(PropertyInterface $property)
     {
-        $data = $this->prepareData(
+        return $this->prepareData(
             $property,
             function(ContentTypeInterface $contentType, $property) {
                 return $contentType->getViewData($property);
             },
             false
         );
-
-        if (!($data['image'] ?? null)) {
-            return null;
-        }
-
-        return $data;
     }
 
     public function getContentData(PropertyInterface $property)
