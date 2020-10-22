@@ -23,6 +23,7 @@ use Sulu\Component\Content\SimpleContentType;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
 class SingleMediaSelection extends SimpleContentType implements PreResolvableContentTypeInterface
 {
@@ -37,6 +38,11 @@ class SingleMediaSelection extends SimpleContentType implements PreResolvableCon
     private $mediaReferenceStore;
 
     /**
+     * @var RequestAnalyzerInterface
+     */
+    private $requestAnalyzer;
+
+    /**
      * @var ?SecurityCheckerInterface
      */
     private $securityChecker;
@@ -44,10 +50,12 @@ class SingleMediaSelection extends SimpleContentType implements PreResolvableCon
     public function __construct(
         MediaManagerInterface $mediaManager,
         ReferenceStoreInterface $referenceStore,
+        RequestAnalyzerInterface $requestAnalyzer,
         SecurityCheckerInterface $securityChecker = null
     ) {
         $this->mediaManager = $mediaManager;
         $this->mediaReferenceStore = $referenceStore;
+        $this->requestAnalyzer = $requestAnalyzer;
         $this->securityChecker = $securityChecker;
 
         parent::__construct('SingleMediaSelection', '{"id": null}');
@@ -66,7 +74,10 @@ class SingleMediaSelection extends SimpleContentType implements PreResolvableCon
             return null;
         }
 
-        if ($this->securityChecker
+        $webspace = $this->requestAnalyzer->getWebspace();
+
+        if ($webspace->hasWebsiteSecurity()
+            && $this->securityChecker
             && !$this->securityChecker->hasPermission(
                 new SecurityCondition(
                     MediaAdmin::SECURITY_CONTEXT,
