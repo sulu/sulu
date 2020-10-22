@@ -141,7 +141,7 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
             $property->getStructure()->getLanguageCode(),
             $types,
             $this->mediaManager,
-            $webspace->hasWebsiteSecurity() ? $this->permissions[PermissionTypes::VIEW] : null
+            $webspace && $webspace->hasWebsiteSecurity() ? $this->permissions[PermissionTypes::VIEW] : null
         );
 
         return $container->getData();
