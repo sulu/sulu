@@ -4,7 +4,11 @@ import {fieldRegistry, ResourceLocator} from 'sulu-admin-bundle/containers';
 import initializer from 'sulu-admin-bundle/services/initializer';
 import PageTreeRoute from './containers/Form/fields/PageTreeRoute';
 
-initializer.addUpdateConfigHook('sulu_admin', () => {
+initializer.addUpdateConfigHook('sulu_admin', (config: Object, initialized: boolean) => {
+    if (initialized) {
+        return;
+    }
+
     const routeGenerationUrl = resourceRouteRegistry.getListUrl('routes', {action: 'generate'});
 
     fieldRegistry.add(
