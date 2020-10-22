@@ -26,32 +26,49 @@ use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 
 class AccountDataProviderTest extends TestCase
 {
+    /**
+     * @var DataProviderRepositoryInterface
+     */
+    private $dataProviderRepository;
+
+    /**
+     * @var ArraySerializerInterface
+     */
+    private $serializer;
+
+    /**
+     * @var ReferenceStoreInterface
+     */
+    private $referenceStore;
+
+    /**
+     * @var AccountDataProvider
+     */
+    private $accountDataProvider;
+
+    public function setUp(): void
+    {
+        $this->dataProviderRepository = $this->prophesize(DataProviderRepositoryInterface::class);
+        $this->serializer = $this->prophesize(ArraySerializerInterface::class);
+        $this->referenceStore = $this->prophesize(ReferenceStoreInterface::class);
+
+        $this->accountDataProvider = new AccountDataProvider(
+            $this->dataProviderRepository->reveal(),
+            $this->serializer->reveal(),
+            $this->referenceStore->reveal()
+        );
+    }
+
     public function testGetConfiguration()
     {
-        $serializer = $this->prophesize(ArraySerializerInterface::class);
-        $referenceStore = $this->prophesize(ReferenceStoreInterface::class);
-        $provider = new AccountDataProvider(
-            $this->getRepository(),
-            $serializer->reveal(),
-            $referenceStore->reveal()
-        );
-
-        $configuration = $provider->getConfiguration();
+        $configuration = $this->accountDataProvider->getConfiguration();
 
         $this->assertInstanceOf(ProviderConfigurationInterface::class, $configuration);
     }
 
     public function testGetDefaultParameter()
     {
-        $serializer = $this->prophesize(ArraySerializerInterface::class);
-        $referenceStore = $this->prophesize(ReferenceStoreInterface::class);
-        $provider = new AccountDataProvider(
-            $this->getRepository(),
-            $serializer->reveal(),
-            $referenceStore->reveal()
-        );
-
-        $parameter = $provider->getDefaultPropertyParameter();
+        $parameter = $this->accountDataProvider->getDefaultPropertyParameter();
 
         $this->assertEquals([], $parameter);
     }
@@ -82,15 +99,18 @@ class AccountDataProviderTest extends TestCase
      */
     public function testResolveDataItems($filters, $limit, $page, $pageSize, $repositoryResult, $hasNextPage, $items)
     {
-        $serializer = $this->prophesize(ArraySerializerInterface::class);
-        $referenceStore = $this->prophesize(ReferenceStoreInterface::class);
-        $provider = new AccountDataProvider(
-            $this->getRepository($filters, $page, $pageSize, $limit, $repositoryResult),
-            $serializer->reveal(),
-            $referenceStore->reveal()
-        );
+        $this->dataProviderRepository->findByFilters(
+            $filters,
+            $page,
+            $pageSize,
+            $limit,
+            'en',
+            [],
+            null,
+            null
+        )->willReturn($repositoryResult);
 
-        $result = $provider->resolveDataItems(
+        $result = $this->accountDataProvider->resolveDataItems(
             $filters,
             [],
             ['webspace' => 'sulu_io', 'locale' => 'en'],
@@ -146,22 +166,25 @@ class AccountDataProviderTest extends TestCase
             ['fullAccount', 'partialContact', 'partialCategory']
         );
 
-        $serializer = $this->prophesize(ArraySerializerInterface::class);
-        $serializer->serialize(Argument::type(Account::class), $context)
+        $this->serializer->serialize(Argument::type(Account::class), $context)
             ->will(
                 function($args) use ($serializeCallback) {
                     return $serializeCallback($args[0]);
                 }
             );
 
-        $referenceStore = $this->prophesize(ReferenceStoreInterface::class);
-        $provider = new AccountDataProvider(
-            $this->getRepository($filters, $page, $pageSize, $limit, $repositoryResult),
-            $serializer->reveal(),
-            $referenceStore->reveal()
-        );
+        $this->dataProviderRepository->findByFilters(
+            $filters,
+            $page,
+            $pageSize,
+            $limit,
+            'en',
+            [],
+            null,
+            null
+        )->willReturn($repositoryResult);
 
-        $result = $provider->resolveResourceItems(
+        $result = $this->accountDataProvider->resolveResourceItems(
             $filters,
             [],
             ['webspace' => 'sulu_io', 'locale' => 'en'],
@@ -180,13 +203,13 @@ class AccountDataProviderTest extends TestCase
     {
         $serializer = $this->prophesize(ArraySerializerInterface::class);
         $referenceStore = $this->prophesize(ReferenceStoreInterface::class);
-        $provider = new AccountDataProvider(
+        $this->accountDataProvider = new AccountDataProvider(
             $this->getRepository(),
             $serializer->reveal(),
             $referenceStore->reveal()
         );
 
-        $this->assertNull($provider->resolveDatasource('', [], []));
+        $this->assertNull($this->accountDataProvider->resolveDatasource('', [], []));
     }
 
     /**

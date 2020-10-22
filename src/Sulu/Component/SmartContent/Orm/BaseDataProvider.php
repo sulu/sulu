@@ -14,7 +14,7 @@ namespace Sulu\Component\SmartContent\Orm;
 use JMS\Serializer\SerializationContext;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
-use Sulu\Component\Security\Authentication\UserInterface;
+use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Serializer\ArraySerializerInterface;
 use Sulu\Component\SmartContent\ArrayAccessItem;
 use Sulu\Component\SmartContent\Configuration\Builder;
@@ -24,7 +24,8 @@ use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
 use Sulu\Component\SmartContent\DataProviderInterface;
 use Sulu\Component\SmartContent\DataProviderResult;
 use Sulu\Component\SmartContent\ItemInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * Provides basic functionality for contact and account providers.
@@ -62,20 +63,34 @@ abstract class BaseDataProvider implements DataProviderInterface
     private $referenceStore;
 
     /**
-     * @var TokenStorageInterface
+     * @var ?Security
      */
-    private $tokenStorage;
+    private $security;
+
+    /**
+     * @var ?RequestAnalyzerInterface
+     */
+    private $requestAnalyzer;
+
+    /**
+     * @var ?array
+     */
+    private $permissions;
 
     public function __construct(
         DataProviderRepositoryInterface $repository,
         ArraySerializerInterface $serializer,
         ReferenceStoreInterface $referenceStore = null,
-        TokenStorageInterface $tokenStorage = null
+        Security $security = null,
+        RequestAnalyzerInterface $requestAnalyzer = null,
+        $permissions = null
     ) {
         $this->repository = $repository;
         $this->serializer = $serializer;
         $this->referenceStore = $referenceStore;
-        $this->tokenStorage = $tokenStorage;
+        $this->security = $security;
+        $this->requestAnalyzer = $requestAnalyzer;
+        $this->permissions = $permissions;
     }
 
     public function getDefaultPropertyParameter()
@@ -144,6 +159,8 @@ abstract class BaseDataProvider implements DataProviderInterface
         $pageSize = null,
         $options = []
     ) {
+        $webspace = $this->requestAnalyzer ? $this->requestAnalyzer->getWebspace() : null;
+
         $result = $this->repository->findByFilters(
             $filters,
             $page,
@@ -151,7 +168,10 @@ abstract class BaseDataProvider implements DataProviderInterface
             $limit,
             $locale,
             $options,
-            $this->getUser()
+            $this->security && $webspace && $webspace->hasWebsiteSecurity() ? $this->security->getUser() : null,
+            $webspace && $webspace->hasWebsiteSecurity() && $this->permissions
+                ? $this->permissions[PermissionTypes::VIEW]
+                : null
         );
 
         $hasNextPage = false;
@@ -249,23 +269,4 @@ abstract class BaseDataProvider implements DataProviderInterface
      * @return ItemInterface[]
      */
     abstract protected function decorateDataItems(array $data);
-
-    private function getUser(): ?UserInterface
-    {
-        if (!$this->tokenStorage) {
-            return null;
-        }
-
-        $token = $this->tokenStorage->getToken();
-        if (!$token) {
-            return null;
-        }
-
-        $user = $token->getUser();
-        if ($user instanceof UserInterface) {
-            return $user;
-        }
-
-        return null;
-    }
 }

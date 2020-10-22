@@ -728,7 +728,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
 
         $mediaResults = $this->getContainer()
             ->get('sulu_media_test.smart_content.data_provider.media.repository')
-            ->findByFilters($filters, 1, 100, 100, 'de');
+            ->findByFilters($filters, 1, 100, 100, 'de', [], null, 64);
 
         $this->assertCount(0, $mediaResults);
     }
@@ -762,7 +762,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
 
         $mediaResults = $this->getContainer()
             ->get('sulu_media_test.smart_content.data_provider.media.repository')
-            ->findByFilters($filters, 1, 100, 100, 'de');
+            ->findByFilters($filters, 1, 100, 100, 'de', [], null, 64);
 
         $this->assertCount(2, $mediaResults);
         $this->assertEquals('Media 1', $mediaResults[0]->getName());
@@ -791,7 +791,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
 
         $mediaResults = $this->getContainer()
             ->get('sulu_media_test.smart_content.data_provider.media.repository')
-            ->findByFilters($filters, 1, 100, 100, 'de');
+            ->findByFilters($filters, 1, 100, 100, 'de', [], null, 64);
 
         $this->assertCount(0, $mediaResults);
     }

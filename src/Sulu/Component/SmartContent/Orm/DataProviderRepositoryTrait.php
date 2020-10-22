@@ -33,7 +33,8 @@ trait DataProviderRepositoryTrait
         $options = [],
         ?UserInterface $user = null,
         $entityClass = null,
-        $entityAlias = null
+        $entityAlias = null,
+        $permission = null
     ) {
         $alias = 'entity';
         $queryBuilder = $this->createQueryBuilder($alias)
@@ -57,7 +58,8 @@ trait DataProviderRepositoryTrait
             $options,
             $user,
             $entityClass,
-            $entityAlias
+            $entityAlias,
+            $permission
         );
         $query->setParameter('ids', $ids);
 
@@ -85,7 +87,8 @@ trait DataProviderRepositoryTrait
         $options = [],
         ?UserInterface $user = null,
         $entityClass = null,
-        $entityAlias = null
+        $entityAlias = null,
+        $permission = null
     ) {
         $parameter = [];
 
@@ -181,11 +184,11 @@ trait DataProviderRepositoryTrait
             );
         }
 
-        if ($this->accessControlQueryEnhancer && $entityClass && $entityAlias) {
+        if ($this->accessControlQueryEnhancer && $entityClass && $entityAlias && $permission) {
             $this->accessControlQueryEnhancer->enhance(
                 $queryBuilder,
                 $user,
-                64, // 64 is view permission in our bitmask, usually this is injected, but not possibl in a trait
+                $permission,
                 $entityClass,
                 $entityAlias
             );

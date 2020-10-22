@@ -76,7 +76,8 @@ class MediaDataProviderRepository implements DataProviderRepositoryInterface
         $limit,
         $locale,
         $options = [],
-        UserInterface $user = null
+        UserInterface $user = null,
+        $permission = null
     ) {
         if (!\array_key_exists('dataSource', $filters) ||
             '' === $filters['dataSource'] ||
@@ -99,7 +100,8 @@ class MediaDataProviderRepository implements DataProviderRepositoryInterface
             $options,
             $user,
             Collection::class,
-            'collection'
+            'collection',
+            $permission
         );
 
         return \array_map(

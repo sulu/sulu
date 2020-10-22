@@ -129,7 +129,8 @@ class DataProviderRepositoryTraitTest extends TestCase
             [],
             $user->reveal(),
             'Some\\Entity',
-            'entity'
+            'entity',
+            64
         );
 
         $accessControlQueryEnhancer->enhance($queryBuilder->reveal(), $user->reveal(), 64, 'Some\\Entity', 'entity')
