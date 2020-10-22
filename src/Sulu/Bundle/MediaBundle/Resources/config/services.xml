@@ -280,7 +280,7 @@
         <service id="sulu_media.type.media_selection" class="%sulu_media.media_selection.class%">
             <argument type="service" id="sulu_media.media_manager"/>
             <argument type="service" id="sulu_media.reference_store.media"/>
-            <argument type="service" id="security.token_storage" on-invalid="null"/>
+            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
             <argument>%sulu_security.permissions%</argument>
 
             <tag name="sulu.content.type" alias="media_selection"/>

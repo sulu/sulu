@@ -22,7 +22,7 @@ use Sulu\Component\Content\ContentTypeExportInterface;
 use Sulu\Component\Content\PreResolvableContentTypeInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Util\ArrayableInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
 /**
  * content type for image selection.
@@ -40,9 +40,9 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
     private $referenceStore;
 
     /**
-     * @var ?TokenStorageInterface
+     * @var RequestAnalyzer
      */
-    private $tokenStorage;
+    private $requestAnalyzer;
 
     /**
      * @var ?array
@@ -52,12 +52,12 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
     public function __construct(
         MediaManagerInterface $mediaManager,
         ReferenceStoreInterface $referenceStore,
-        TokenStorageInterface $tokenStorage = null,
+        RequestAnalyzerInterface $requestAnalyzer = null,
         $permissions = null
     ) {
         $this->mediaManager = $mediaManager;
         $this->referenceStore = $referenceStore;
-        $this->tokenStorage = $tokenStorage;
+        $this->requestAnalyzer = $requestAnalyzer;
         $this->permissions = $permissions;
     }
 
@@ -132,6 +132,8 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
         $params = $this->getParams($property->getParams());
         $types = $params['types']->getValue();
 
+        $webspace = $this->requestAnalyzer->getWebspace();
+
         $container = new MediaSelectionContainer(
             isset($data['config']) ? $data['config'] : [],
             isset($data['displayOption']) ? $data['displayOption'] : '',
@@ -139,7 +141,7 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
             $property->getStructure()->getLanguageCode(),
             $types,
             $this->mediaManager,
-            $this->permissions[PermissionTypes::VIEW]
+            $webspace->hasWebsiteSecurity() ? $this->permissions[PermissionTypes::VIEW] : null
         );
 
         return $container->getData();
