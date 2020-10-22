@@ -379,7 +379,7 @@ test('Request new URL with options from FormInspector and resourceStorePropertie
                 historyResourceKey: 'page_resourcelocators',
                 modeResolver: () => Promise.resolve('leaf'),
                 resourceStorePropertiesToRequest: {
-                    requestParamKey: 'propertyName',
+                    propertyName: 'requestParamKey',
                 },
             }}
             formInspector={formInspector}

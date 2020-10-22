@@ -38,7 +38,7 @@ initializer.addUpdateConfigHook('sulu_page', (config: Object, initialized: boole
             generationUrl: Config.endpoints.generateUrl,
             historyResourceKey: 'page_resourcelocators',
             resourceStorePropertiesToRequest: {
-                parentId: 'parentUuid',
+                parentUuid: 'parentId',
             },
         }
     );

@@ -81,8 +81,8 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
 
             const requestOptions = {...formInspector.options};
 
-            Object.entries(resourceStorePropertiesToRequest).forEach(([parameterName, propertyName]) => {
-                const propertyValue = toJS(formInspector.getValueByPath('/' + String(propertyName)));
+            Object.entries(resourceStorePropertiesToRequest).forEach(([propertyName, parameterName]) => {
+                const propertyValue = toJS(formInspector.getValueByPath('/' + propertyName));
                 if (propertyValue !== undefined) {
                     requestOptions[parameterName] = propertyValue;
                 }
