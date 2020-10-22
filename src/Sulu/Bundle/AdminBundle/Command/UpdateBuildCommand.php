@@ -74,7 +74,7 @@ class UpdateBuildCommand extends Command
 
     protected function configure()
     {
-        $this->setDescription('Downloads the current admin application build from the sulu/skeleton repository.');
+        $this->setDescription('Downloads the current admin application build from the sulu/skeleton repository or build it manually.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
