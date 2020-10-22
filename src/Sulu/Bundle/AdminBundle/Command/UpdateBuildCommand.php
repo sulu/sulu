@@ -21,7 +21,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class UpdateBuildCommand extends Command
 {
-    const EXIT_CODE_INVALID_FILES = 1;
+    const EXIT_CODE_ABORTED_MANUAL_BUILD = 1;
     const EXIT_CODE_COULD_NOT_INSTALL_NPM_PACKAGES = 2;
     const EXIT_CODE_COULD_NOT_BUILD_ADMIN_ASSETS = 3;
 
@@ -66,7 +66,6 @@ class UpdateBuildCommand extends Command
 
         $this->httpClient = $httpClient;
         $this->projectDir = $projectDir;
-        $suluVersion = '2.0.10';
         $this->suluVersion = $suluVersion;
         $this->remoteRepository = 'https://raw.githubusercontent.com/sulu/skeleton/' . $suluVersion;
         $this->remoteArchive = 'https://codeload.github.com/sulu/skeleton/zip/' . $suluVersion;
@@ -74,20 +73,27 @@ class UpdateBuildCommand extends Command
 
     protected function configure()
     {
-        $this->setDescription('Downloads the current admin application build from the sulu/skeleton repository or build it manually.');
+        $this->setDescription(
+            'Updates the administration application JavaScript build by downloading the official build '
+            . 'from the sulu/skeleton repository or building the assets via npm.'
+        );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if (!\preg_match(static::VERSION_REGEX, $this->suluVersion)) {
-            throw new \Exception(
-                'This command only works for tagged sulu versions matching semantic versioning, not for branches etc. '
-                . 'Given version was "' . $this->suluVersion . '".' . \PHP_EOL
-                . 'You would have to run "npm install" and "npm run build" in your "assets/admin" folder on your own.'
-            );
-        }
-
         $ui = new SymfonyStyle($input, $output);
+
+        if (!\preg_match(static::VERSION_REGEX, $this->suluVersion)) {
+            $ui->warning(
+                'This command can only download the official build for tagged versions of the "sulu/sulu" '
+                . 'package, not for branches etc. Your version is "' . $this->suluVersion . '".' . \PHP_EOL
+                . 'When not using a tagged version, you need to create the JavaScript build by yourself. '
+                . 'Please make sure that the content of your "assets/admin" folder is compatible with '
+                . 'your "sulu/sulu" package.'
+            );
+
+            return $this->doManualBuild($ui);
+        }
 
         $output->writeln('<info>Checking for changed files...</info>');
 
@@ -115,17 +121,24 @@ class UpdateBuildCommand extends Command
                 ]);
 
                 if ('y' !== \strtolower(
-                    $ui->ask(\sprintf('Do you want to overwrite your local version of "%s"?', $file), 'y')
-                )) {
+                        $ui->ask(\sprintf('Do you want to overwrite your local version of "%s"?', $file), 'y')
+                    )) {
                     $needManualBuild = true;
 
                     if ($localContent && \in_array($file, ['package.json'])) {
                         $mergedJson = $this->mergeJsonStrings($localContent, $remoteContent);
+
+                        $ui->writeln(\sprintf('Merged Version of "%s":', $file));
+                        $ui->writeln($mergedJson);
+
                         if ('y' === \strtolower(
-                            $ui->ask(\sprintf('Merge "%s" together? ' . \PHP_EOL . '%S', $file, $mergedJson), 'y')
-                        )) {
+                                $ui->ask(
+                                    \sprintf('Merge "%s" together like above?', $file),
+                                    'y'
+                                )
+                            )) {
                             $ui->writeln(\sprintf('Write new "%s" version.', $file));
-                            $this->writeFile($filePath, $mergedJson);
+                            $this->writeFile($filePath, $mergedJson . "\n");
                         }
                     }
 
@@ -137,7 +150,15 @@ class UpdateBuildCommand extends Command
             }
         }
 
-        if (!$needManualBuild) {
+        if ($needManualBuild) {
+            $ui->warning(\sprintf(
+                'The files in the local "%s" folder do not match the ones in the remote repository "%s".' . \PHP_EOL
+                . 'If you have added custom JavaScript to the administration interface, you need to create '
+                . 'the JavaScript build by yourself.',
+                static::ASSETS_DIR,
+                $this->remoteRepository
+            ));
+
             return $this->doManualBuild($ui);
         }
 
@@ -146,11 +167,9 @@ class UpdateBuildCommand extends Command
 
         $output->writeln('<info>Download remote repository...</info>');
         $response = $this->httpClient->request('GET', $this->remoteArchive);
-
-        $filesystem = new Filesystem();
-
         \file_put_contents($tempFileZip, $response->getContent());
 
+        $filesystem = new Filesystem();
         $zip = new \ZipArchive();
         if ($zip->open($tempFileZip)) {
             $output->writeln('<info>Extract ZIP archive...</info>');
@@ -219,23 +238,15 @@ class UpdateBuildCommand extends Command
             throw new \RuntimeException(\sprintf('The following is not a valid json: ' . \PHP_EOL . '%s', $additionalJson));
         }
 
-        $jsonArray = \array_merge_recursive($mainJsonArray, $additionalJsonArray);
+        $jsonArray = \array_replace_recursive($mainJsonArray, $additionalJsonArray);
 
-        return \json_encode($jsonArray, \JSON_PRETTY_PRINT);
+        return \json_encode($jsonArray, \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES);
     }
 
     private function doManualBuild(SymfonyStyle $ui): int
     {
-        $ui->warning(\sprintf(
-            'The files in the local "%s" folder do not match the ones in the remote repository "%s".' . \PHP_EOL
-            . 'If you have added custom JavaScript to the administration interface, you need to create '
-            . 'the JavaScript build by yourself. Do you want to create a build now?',
-            static::ASSETS_DIR,
-            $this->remoteRepository
-        ));
-
         if ('y' !== \strtolower($ui->ask('Do you want to create a build now?', 'y'))) {
-            return static::EXIT_CODE_INVALID_FILES;
+            return static::EXIT_CODE_ABORTED_MANUAL_BUILD;
         }
 
         $ui->title('Start manual build ...');
@@ -262,7 +273,7 @@ class UpdateBuildCommand extends Command
 
     private function cleanupPreviouslyInstalledDependencies(): void
     {
-        $removeBlockingFiles = [
+        $filesToCleanup = [
             'package-lock.json',
             'yarn.lock',
             'node_modules',
@@ -274,8 +285,10 @@ class UpdateBuildCommand extends Command
             throw new \Exception(\sprintf('Could not parse "%s" file', static::ASSETS_DIR . 'package.json'));
         }
 
-        $nodeModulesFolders = [
+        $suluVendorAssetFolder = \dirname(\dirname(\dirname(\dirname(\dirname(__DIR__)))));
+        $npmPackageFolders = [
             $this->projectDir . static::ASSETS_DIR,
+            $suluVendorAssetFolder,
         ];
 
         foreach ($packageJson['dependencies'] as $dependency => $path) {
@@ -283,12 +296,12 @@ class UpdateBuildCommand extends Command
                 continue;
             }
 
-            $nodeModulesFolders[] = $this->projectDir . static::ASSETS_DIR . \substr($path, \strlen('file:'));
+            $npmPackageFolders[] = $this->projectDir . static::ASSETS_DIR . \substr($path, \strlen('file:'));
         }
 
         $filesystem = new Filesystem();
-        foreach ($nodeModulesFolders as $folder) {
-            foreach ($removeBlockingFiles as $blockingFile) {
+        foreach ($npmPackageFolders as $folder) {
+            foreach ($filesToCleanup as $blockingFile) {
                 $path = $folder . $blockingFile;
 
                 if (!$filesystem->exists($path)) {
