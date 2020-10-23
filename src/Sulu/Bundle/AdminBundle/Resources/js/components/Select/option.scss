@@ -16,7 +16,7 @@ $fontSize: 12px;
     font-size: $fontSize;
     outline: 0;
 
-    &:not(:disabled):hover {
+    &:not(:disabled):focus {
         color: $hoverColor;
     }
 

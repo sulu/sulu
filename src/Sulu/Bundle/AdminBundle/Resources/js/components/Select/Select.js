@@ -3,6 +3,7 @@ import React from 'react';
 import type {Element, ElementRef} from 'react';
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
+import debounce from 'debounce';
 import {translate} from '../../utils/Translator';
 import Popover from '../Popover';
 import Menu from '../Menu';
@@ -43,6 +44,12 @@ class Select<T> extends React.Component<Props<T>> {
 
     @observable selectedOptionRef: ?ElementRef<'li'>;
 
+    @observable buttonRefs: Map<number, ElementRef<'button'>> = new Map();
+
+    @observable searchText: string = '';
+
+    @observable focusIndex: ?number;
+
     @observable open: boolean;
 
     @action openOptionList = () => {
@@ -71,7 +78,35 @@ class Select<T> extends React.Component<Props<T>> {
         }
     };
 
-    cloneOption(originalOption: Element<Class<Option<T>>>): Element<Class<Option<T>>> {
+    setButtonRef = (index: number) => action((ref: ?ElementRef<'li'>) => {
+        if (ref) {
+            this.buttonRefs.set(index, ref);
+        } else if (this.buttonRefs.has(index)) {
+            this.buttonRefs.delete(index);
+        }
+    });
+
+    @action clearSearchText = () => {
+        this.searchText = '';
+    };
+
+    debouncedClearSearchText = debounce(this.clearSearchText, 500);
+
+    @action appendSearchText = (searchText: string) => {
+        this.searchText += searchText;
+
+        const hit = Array.from(this.buttonRefs.entries()).find(([index, ref]) => {
+            return ref.textContent.startsWith(this.searchText);
+        });
+
+        if (hit) {
+            this.setFocusIndex(hit[0])
+        }
+
+        this.debouncedClearSearchText();
+    };
+
+    cloneOption(originalOption: Element<Class<Option<T>>>, index: number): Element<Class<Option<T>>> {
         const anchorWidth = this.displayValueRef ? this.displayValueRef.getBoundingClientRect().width : 0;
 
         return React.cloneElement(originalOption, {
@@ -79,7 +114,9 @@ class Select<T> extends React.Component<Props<T>> {
             onClick: this.handleOptionClick,
             selected: this.props.isOptionSelected(originalOption),
             selectedVisualization: this.props.selectedVisualization,
+            setFocusIndex: this.handleSetFocusIndex(index),
             optionRef: this.setSelectedOptionRef,
+            buttonRef: this.setButtonRef(index),
         });
     }
 
@@ -90,14 +127,14 @@ class Select<T> extends React.Component<Props<T>> {
     }
 
     cloneChildren(): SelectChildren<T> {
-        return React.Children.map(this.props.children, (child: any) => {
+        return React.Children.map(this.props.children, (child: any, index: number) => {
             if (!child) {
                 return child;
             }
 
             switch (child.type) {
                 case Option:
-                    return this.cloneOption(child);
+                    return this.cloneOption(child, index);
                 case Action:
                     return this.cloneAction(child);
                 default:
@@ -118,6 +155,69 @@ class Select<T> extends React.Component<Props<T>> {
 
     handleOptionListClose = this.closeOptionList;
 
+    @action setFocusIndex = (focusIndex: number) => {
+        if (focusIndex < 0 || focusIndex >= this.buttonRefs.size) {
+            return;
+        }
+
+        this.focusIndex = focusIndex;
+
+        if (this.buttonRefs.has(focusIndex)) {
+            const ref = this.buttonRefs.get(focusIndex);
+            ref.focus();
+        }
+    };
+
+    handleSetFocusIndex = (focusIndex: number) => () => {
+        this.setFocusIndex(focusIndex);
+    };
+
+    @action handleKeyDown = (event: KeyboardEvent) => {
+        if (!this.open) {
+            return;
+        }
+
+        if (event.key === 'Escape' || event.code === 27) {
+            event.preventDefault();
+            this.closeOptionList();
+
+            return;
+        }
+
+        if (event.key === 'Tab' || event.code === 9) {
+            event.preventDefault();
+            this.clearSearchText();
+
+            return;
+        }
+
+        if (event.key === 'ArrowUp' || event.code === 38) {
+            event.preventDefault();
+            this.setFocusIndex(this.focusIndex - 1);
+            this.clearSearchText();
+
+            return;
+        }
+
+        if (event.key === 'ArrowDown' || event.code === 40) {
+            event.preventDefault();
+            this.setFocusIndex(this.focusIndex + 1);
+            this.clearSearchText();
+
+            return;
+        }
+
+    };
+
+    handleKeyPress = (event: KeyboardEvent) => {
+        if (!this.open) {
+            return;
+        }
+
+        event.preventDefault();
+        this.appendSearchText(event.key);
+    };
+
     render() {
         const {
             icon,
@@ -128,7 +228,7 @@ class Select<T> extends React.Component<Props<T>> {
         const clonedChildren = this.cloneChildren();
 
         return (
-            <div className={selectStyles.select}>
+            <div className={selectStyles.select} onKeyDown={this.handleKeyDown} onKeyPress={this.handleKeyPress}>
                 <DisplayValue
                     disabled={disabled}
                     displayValueRef={this.setDisplayValueRef}

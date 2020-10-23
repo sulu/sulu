@@ -11,6 +11,7 @@ type Props<T> = {|
     icon?: string,
     onChange?: (checked: boolean, value?: T) => void,
     type: string,
+    tabIndex?: ?number,
 |};
 
 export default class Switch<T: string | number> extends React.PureComponent<Props<T>> {
@@ -41,6 +42,7 @@ export default class Switch<T: string | number> extends React.PureComponent<Prop
             children,
             className,
             disabled,
+            tabIndex,
         } = this.props;
         const labelClass = classNames(
             switchStyles.label,
@@ -57,13 +59,14 @@ export default class Switch<T: string | number> extends React.PureComponent<Prop
         );
 
         return (
-            <label className={labelClass} onClick={this.handleClick}>
+            <label className={labelClass} onClick={this.handleClick} tabIndex={-1}>
                 <span className={switchClass}>
                     <input
                         checked={checked}
                         disabled={disabled}
                         name={name}
                         onChange={this.handleChange}
+                        tabIndex={tabIndex}
                         type={type}
                         value={value}
                     />
