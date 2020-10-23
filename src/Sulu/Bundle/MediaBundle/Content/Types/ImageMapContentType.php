@@ -358,7 +358,7 @@ class ImageMapContentType extends ComplexContentType implements ContentTypeExpor
             }
         );
 
-        if (!($data['image'] ?? null)) {
+        if (!isset($data['image'])) {
             return null;
         }
 

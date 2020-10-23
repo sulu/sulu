@@ -901,6 +901,40 @@ class ImageMapContentTypeTest extends TestCase
         );
     }
 
+    public function testGetContentDataEmptyValue(): void
+    {
+        $value = [
+            'imageId' => null,
+            'hotspots' => [],
+        ];
+
+        $property = new Property(
+            'imageMap',
+            '',
+            'image_map',
+            false,
+            true,
+            1,
+            1,
+            [],
+            [],
+            null,
+            'text'
+        );
+
+        $this->singleMediaSelectionContentType->getContentData(
+            Argument::that(function($property) use ($value) {
+                return $property instanceof Property
+                    && 'image' === $property->getName()
+                    && $property->getValue() === ['id' => $value['imageId']];
+            })
+        )->willReturn(null)->shouldBeCalled();
+
+        $property->setValue($value);
+
+        $this->assertNull($this->imageMapContentType->getContentData($property));
+    }
+
     public function testGetViewData(): void
     {
         $types = [
