@@ -37,6 +37,9 @@ initializer.addUpdateConfigHook('sulu_page', (config: Object, initialized: boole
             modeResolver: (props) => loadResourceLocatorInputTypeByWebspace(props.formInspector.options.webspace),
             generationUrl: Config.endpoints.generateUrl,
             historyResourceKey: 'page_resourcelocators',
+            resourceStorePropertiesToRequest: {
+                parentUuid: 'parentId',
+            },
         }
     );
 
