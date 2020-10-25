@@ -173,12 +173,18 @@
         </service>
 
         <service id="sulu_website.twig.seo" class="%sulu_website.twig.seo.class%">
+
+            <tag name="twig.extension"/>
+        </service>
+
+        <service id="Sulu\Bundle\WebsiteBundle\Twig\Seo\SeoRuntime">
             <argument type="service" id="sulu_core.webspace.request_analyzer"/>
             <argument type="service" id="sulu_website.twig.content_path"/>
             <argument type="service" id="request_stack"/>
 
-            <tag name="twig.extension"/>
+            <tag name="twig.runtime"/>
         </service>
+
 
         <!-- twig extension: util -->
         <service id="sulu_website.twig.util" class="%sulu_website.twig.util.class%">

@@ -11,9 +11,6 @@
 
 namespace Sulu\Bundle\ContactBundle\Twig;
 
-use Doctrine\Common\Cache\Cache;
-use Sulu\Bundle\ContactBundle\Entity\Contact;
-use Sulu\Bundle\ContactBundle\Entity\ContactRepository;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -22,47 +19,10 @@ use Twig\TwigFunction;
  */
 class ContactTwigExtension extends AbstractExtension
 {
-    /**
-     * @var ContactRepository
-     */
-    private $contactRepository;
-
-    /**
-     * @var Cache
-     */
-    private $cache;
-
-    public function __construct(Cache $cache, ContactRepository $contactRepository)
-    {
-        $this->cache = $cache;
-        $this->contactRepository = $contactRepository;
-    }
-
     public function getFunctions()
     {
         return [
-            new TwigFunction('sulu_resolve_contact', [$this, 'resolveContactFunction']),
+            new TwigFunction('sulu_resolve_contact', [ContactRuntime::class, 'resolveContactFunction']),
         ];
-    }
-
-    /**
-     * @param int $id id to resolve
-     *
-     * @return Contact
-     */
-    public function resolveContactFunction($id)
-    {
-        if ($this->cache->contains($id)) {
-            return $this->cache->fetch($id);
-        }
-
-        $contact = $this->contactRepository->find($id);
-        if (null === $contact) {
-            return;
-        }
-
-        $this->cache->save($id, $contact);
-
-        return $contact;
     }
 }

@@ -319,9 +319,14 @@
         </service>
 
         <service id="sulu_media.twig_extension.media" class="%sulu_media.twig_extension.media.class%">
-            <argument type="service" id="sulu_media.media_manager"/>
 
             <tag name="twig.extension"/>
+        </service>
+
+        <service id="Sulu\Bundle\MediaBundle\Twig\MediaRuntime">
+            <argument type="service" id="sulu_media.media_manager"/>
+
+            <tag name="twig.runtime"/>
         </service>
 
         <service id="sulu_media.video_thumbnail_generator" class="%sulu_media.video_thumbnail_generator.class%">

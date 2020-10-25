@@ -47,12 +47,15 @@
         </service>
         <service id="sulu_contact.twig.cache" class="Doctrine\Common\Cache\ArrayCache"/>
         <service id="sulu_contact.twig" class="Sulu\Bundle\ContactBundle\Twig\ContactTwigExtension">
-            <argument type="service" id="sulu_contact.twig.cache"/>
-            <argument type="service" id="sulu.repository.contact"/>
 
             <tag name="twig.extension"/>
         </service>
+        <service id="Sulu\Bundle\ContactBundle\Twig\ContactRuntime">
+            <argument type="service" id="sulu_contact.twig.cache"/>
+            <argument type="service" id="sulu.repository.contact"/>
 
+            <tag name="twig.runtime"/>
+        </service>
         <service id="sulu_contact.account_factory" class="Sulu\Bundle\ContactBundle\Contact\AccountFactory" public="true">
             <argument type="string">%sulu.model.account.class%</argument>
         </service>
