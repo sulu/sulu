@@ -72,6 +72,9 @@ test('Pass props correctly to ResourceLocator', () => {
         expect(resourceLocator.find(ResourceLocatorComponent).prop('value')).toBe('/url');
         expect(resourceLocator.find(ResourceLocatorComponent).prop('mode')).toBe('full');
         expect(resourceLocator.find(ResourceLocatorComponent).prop('disabled')).toBe(true);
+
+        // should not throw any error on unmount
+        resourceLocator.unmount();
     });
 });
 
@@ -98,6 +101,9 @@ test('Render just slash instead of ResourceLocatorComponent if used on the homep
         resourceLocator.update();
         expect(resourceLocator.find(ResourceLocatorComponent)).toHaveLength(0);
         expect(resourceLocator.text()).toEqual('/');
+
+        // should not throw any error on unmount
+        resourceLocator.unmount();
     });
 });
 
@@ -803,7 +809,7 @@ test('Should request new URL with correct options and disable button when refres
                 historyResourceKey: 'page_resourcelocators',
                 modeResolver: () => modePromise,
                 resourceStorePropertiesToRequest: {
-                    requestParamKey: 'propertyName',
+                    propertyName: 'requestParamKey',
                 },
             }}
             formInspector={formInspector}

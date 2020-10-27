@@ -21,7 +21,7 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
     @observable inputChangedSinceRefresh: boolean = false;
     @observable partsChangedSinceRefresh: boolean = false;
 
-    partsChangeDisposer: () => mixed;
+    partsChangeDisposer: ?() => mixed;
 
     @computed get parts(): {[string]: mixed} {
         const {
@@ -112,7 +112,9 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
     }
 
     componentWillUnmount() {
-        this.partsChangeDisposer();
+        if (this.partsChangeDisposer) {
+            this.partsChangeDisposer();
+        }
     }
 
     @action refreshResourceLocator = () => {
