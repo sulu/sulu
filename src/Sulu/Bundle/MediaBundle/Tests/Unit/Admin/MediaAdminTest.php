@@ -76,13 +76,23 @@ class MediaAdminTest extends TestCase
         $webspace1 = new Webspace();
         $security1 = new Security();
         $security1->setSystem('Webspace1');
+        $security1->setPermissionCheck(true);
         $webspace1->setSecurity($security1);
 
         $webspace2 = new Webspace();
         $security2 = new Security();
         $security2->setSystem('Webspace2');
+        $security2->setPermissionCheck(true);
         $webspace2->setSecurity($security2);
-        $this->webspaceManager->getWebspaceCollection()->willReturn(new WebspaceCollection([$webspace1, $webspace2]));
+
+        $webspace3 = new Webspace();
+        $security3 = new Security();
+        $security3->setSystem('Webspace3');
+        $security3->setPermissionCheck(false);
+        $webspace3->setSecurity($security2);
+
+        $this->webspaceManager->getWebspaceCollection()
+            ->willReturn(new WebspaceCollection([$webspace1, $webspace2, $webspace3]));
 
         $this->assertEquals(
             [
