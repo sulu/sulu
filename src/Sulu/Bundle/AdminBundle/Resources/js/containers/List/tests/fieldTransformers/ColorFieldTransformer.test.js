@@ -18,13 +18,13 @@ test('Test invalid color null', () => {
 test('Test invalid color (no hashtag)', () => {
     const value = 'FFF';
     expect(colorTransformer.transform(value)).toBe(null);
-    expect(log.error).toBeCalledWith(`Transformer parameter "${value}" needs to be of type hexadecimal color.`);
+    expect(log.error).toBeCalledWith(`Invalid color given: "${value}". Format needs to be "#RGB" or "#RRGGBB".`);
 });
 
 test('Test invalid color (length 2)', () => {
     const value = '#FF';
     expect(colorTransformer.transform(value)).toBe(null);
-    expect(log.error).toBeCalledWith(`Transformer parameter "${value}" needs to be of type hexadecimal color.`);
+    expect(log.error).toBeCalledWith(`Invalid color given: "${value}". Format needs to be "#RGB" or "#RRGGBB".`);
 });
 
 test('Test valid color (lowercase)', () => {

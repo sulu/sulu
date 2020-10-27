@@ -12,7 +12,7 @@ export default class ColorFieldTransformer implements FieldTransformer {
         }
 
         if (!/^#[0-9a-f]{3}([0-9a-f]{3})?$/i.test(value)) {
-            log.error(`Transformer parameter "${value}" needs to be of type hexadecimal color.`);
+            log.error(`Invalid color given: "${value}". Format needs to be "#RGB" or "#RRGGBB".`);
 
             return null;
         }
@@ -20,6 +20,6 @@ export default class ColorFieldTransformer implements FieldTransformer {
         const style = {};
         style.backgroundColor = value;
 
-        return <div className={colorFieldTransformerStyles.colorBox} style={style}></div>;
+        return <div className={colorFieldTransformerStyles.colorBox} style={style} />;
     }
 }
