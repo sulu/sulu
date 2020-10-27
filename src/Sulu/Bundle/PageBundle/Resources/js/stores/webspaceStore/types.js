@@ -22,6 +22,7 @@ export type ResourceLocatorStrategy = {
 };
 
 export type Security = {
+    permissionCheck: boolean,
     system: string,
 }
 

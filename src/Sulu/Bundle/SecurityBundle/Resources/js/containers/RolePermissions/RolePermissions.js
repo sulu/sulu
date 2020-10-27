@@ -12,6 +12,7 @@ import type {RolePermissions as RolePermissionsType} from './types';
 type Props = {|
     disabled: boolean,
     onChange: (value: RolePermissionsType) => void,
+    permissionCheck?: ?boolean,
     resourceKey: string,
     system?: ?string,
     value: RolePermissionsType,
@@ -59,13 +60,17 @@ class RolePermissions extends React.Component<Props> {
 
     render() {
         const {roles} = this;
-        const {disabled, resourceKey, system, value, webspaceKey} = this.props;
+        const {disabled, permissionCheck, resourceKey, system, value, webspaceKey} = this.props;
 
         if (!roles) {
             return <Loader />;
         }
 
-        const systems = system ? [RolePermissions.suluSecuritySystem, system] : securityContextStore.getSystems();
+        const systems = permissionCheck && system
+            ? [RolePermissions.suluSecuritySystem, system]
+            : !permissionCheck && system
+                ? [RolePermissions.suluSecuritySystem]
+                : securityContextStore.getSystems();
 
         return systems.reduce((systemMatrices, system) => {
             const actions = securityContextStore.getAvailableActions(resourceKey, system);

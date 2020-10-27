@@ -81,7 +81,7 @@ test('Hide system if specific system is given', () => {
     securityContextStore.getSystems.mockReturnValue(['Sulu', 'Website', 'Blog']);
 
     const rolePermissions = mount(
-        <RolePermissions onChange={jest.fn()} resourceKey="snippets" system="Blog" value={{}} />
+        <RolePermissions onChange={jest.fn()} permissionCheck={true} resourceKey="snippets" system="Blog" value={{}} />
     );
 
     return Promise.all([rolePromise]).then(() => {
@@ -89,6 +89,34 @@ test('Hide system if specific system is given', () => {
         expect(rolePermissions.find('SystemRolePermissions')).toHaveLength(2);
         expect(rolePermissions.find('SystemRolePermissions').at(0).prop('system')).toEqual('Sulu');
         expect(rolePermissions.find('SystemRolePermissions').at(1).prop('system')).toEqual('Blog');
+    });
+});
+
+test('Show only Sulu system if specific system is given and permissionCheck is set to false for that system', () => {
+    const rolePromise = Promise.resolve(
+        {
+            _embedded: {
+                roles: [
+                    {id: 1, name: 'Admin', system: 'Sulu'},
+                    {id: 2, name: 'Contact Manager', system: 'Website'},
+                    {id: 3, name: 'Blog Manager', system: 'Blog'},
+                ],
+            },
+        }
+    );
+    ResourceRequester.get.mockReturnValue(rolePromise);
+
+    securityContextStore.getAvailableActions.mockReturnValue(['view', 'add', 'edit', 'delete', 'security']);
+    securityContextStore.getSystems.mockReturnValue(['Sulu', 'Website', 'Blog']);
+
+    const rolePermissions = mount(
+        <RolePermissions onChange={jest.fn()} permissionCheck={false} resourceKey="snippets" system="Blog" value={{}} />
+    );
+
+    return Promise.all([rolePromise]).then(() => {
+        rolePermissions.update();
+        expect(rolePermissions.find('SystemRolePermissions')).toHaveLength(1);
+        expect(rolePermissions.find('SystemRolePermissions').at(0).prop('system')).toEqual('Sulu');
     });
 });
 

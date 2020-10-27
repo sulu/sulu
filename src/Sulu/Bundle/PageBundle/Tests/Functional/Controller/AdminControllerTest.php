@@ -84,6 +84,7 @@ class AdminControllerTest extends SuluTestCase
         $this->assertEquals('sulu_io', $pageConfig->webspaces->sulu_io->key);
         $this->assertEquals('test_io', $pageConfig->webspaces->test_io->key);
         $this->assertEquals('test_security_system', $pageConfig->webspaces->test_io->security->system);
+        $this->assertEquals(true, $pageConfig->webspaces->test_io->security->permissionCheck);
 
         $this->assertEquals('en', $pageConfig->webspaces->test_io->localizations[0]->language);
         $this->assertTrue($pageConfig->webspaces->test_io->localizations[0]->default);

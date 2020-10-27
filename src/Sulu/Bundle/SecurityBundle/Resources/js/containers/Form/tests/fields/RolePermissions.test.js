@@ -45,6 +45,7 @@ test('Pass props correctly to component', () => {
     expect(webspaceStore.getWebspace).not.toBeCalled();
 
     expect(rolePermissions.find('RolePermissions').prop('disabled')).toEqual(false);
+    expect(rolePermissions.find('RolePermissions').prop('permissionCheck')).toBe(undefined);
     expect(rolePermissions.find('RolePermissions').prop('resourceKey')).toEqual('snippets');
     expect(rolePermissions.find('RolePermissions').prop('system')).toBe(undefined);
     expect(rolePermissions.find('RolePermissions').prop('value')).toBe(value);
@@ -82,6 +83,7 @@ test('Pass system prop correctly to component', () => {
                 key: 'test',
                 security: {
                     system: 'test_security',
+                    permissionCheck: true,
                 },
             };
         }
@@ -101,6 +103,7 @@ test('Pass system prop correctly to component', () => {
         />
     );
 
+    expect(rolePermissions.find('RolePermissions').prop('permissionCheck')).toEqual(true);
     expect(rolePermissions.find('RolePermissions').prop('system')).toEqual('test_security');
     expect(rolePermissions.find('RolePermissions').prop('webspaceKey')).toEqual('test');
 });
