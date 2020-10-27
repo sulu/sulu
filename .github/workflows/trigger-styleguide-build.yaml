@@ -16,5 +16,5 @@ jobs:
               with:
                   repo: sulu/sulu-javascript-docs
                   ref: master
-                  workflow: Build styleguide
+                  workflow: Update Documentation
                   token: ${{ secrets.SULU_USER_ACCESS_TOKEN }}
