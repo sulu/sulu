@@ -61,6 +61,10 @@ interface FormOverlayListViewBuilderInterface extends ViewBuilderInterface
 
     public function disableSearching(): self;
 
+    public function enableSelection(): self;
+
+    public function disableSelection(): self;
+
     /**
      * @param string[] $routerAttributesToListRequest
      */

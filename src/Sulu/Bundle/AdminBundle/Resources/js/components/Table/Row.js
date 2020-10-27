@@ -28,10 +28,10 @@ type Props = {
     /** @ignore */
     onSelectionChange?: (rowId: string | number, checked?: boolean) => void,
     rowIndex: number,
-    selected: boolean,
     selectInFirstCell: boolean,
     /** @ignore */
     selectMode?: SelectMode,
+    selected: boolean,
 };
 
 export default class Row extends React.PureComponent<Props> {

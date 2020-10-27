@@ -23,5 +23,6 @@ of the available options:
 | editView                             | Route to which the user will be navigated when the edit button of an item in  |
 |                                      | the list is clicked.                                                          |
 | searchable                           | Boolean that defines if the list view should render a search field.           |
+| selectable                           | Boolean that defines if the items of the list should be selectable.           |
 | routerAttributesToListRequest        | Array of attributes that are passed from the [`Router`](#router) to the       |
 |                                      | `ListStore`. They will be appended to the requests sent from the `ListStore`. |
