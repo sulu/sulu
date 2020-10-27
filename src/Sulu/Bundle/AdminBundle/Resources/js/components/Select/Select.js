@@ -54,7 +54,7 @@ class Select<T> extends React.Component<Props<T>> {
 
     @computed get buttonTexts() {
         return Array.from(this.buttonRefs.entries())
-            .map<[number, string]>(([index, ref]) => [index, ref.textContent])
+            .map<[number, string]>(([index, ref]) => [index, ref.textContent]);
     }
 
     @computed get selectedIndex() {
@@ -123,7 +123,7 @@ class Select<T> extends React.Component<Props<T>> {
 
         const hit = this.buttonTexts.find(([, text]) => text.toLowerCase().startsWith(this.searchText.toLowerCase()));
         if (hit) {
-            this.requestFocus(hit[0])
+            this.requestFocus(hit[0]);
         }
 
         this.debouncedClearSearchText();
@@ -234,7 +234,6 @@ class Select<T> extends React.Component<Props<T>> {
 
             return;
         }
-
     };
 
     handleKeyPress = (event: KeyboardEvent) => {
@@ -256,7 +255,12 @@ class Select<T> extends React.Component<Props<T>> {
         const clonedChildren = this.cloneChildren();
 
         return (
-            <div className={selectStyles.select} onKeyDown={this.handleKeyDown} onKeyPress={this.handleKeyPress}>
+            <div
+                className={selectStyles.select}
+                onKeyDown={this.handleKeyDown}
+                onKeyPress={this.handleKeyPress}
+                role="none"
+            >
                 <DisplayValue
                     disabled={disabled}
                     displayValueRef={this.setDisplayValueRef}

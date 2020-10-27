@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import type {ElementRef} from "react";
+import type {ElementRef} from 'react';
 import actionStyles from './action.scss';
 
 type Props<T> = {|
@@ -35,7 +35,7 @@ export default class Action<T> extends React.PureComponent<Props<T>> {
         }
     };
 
-    handleMouseMove = (event: MouseEvent) => {
+    handleMouseMove = () => {
         if (this.props.requestFocus) {
             this.props.requestFocus();
         }

@@ -9,14 +9,14 @@ import optionStyles from './option.scss';
 
 type Props<T> = {|
     anchorWidth: number,
+    buttonRef?: (buttonRef: ?ElementRef<'button'>) => void,
     children: string,
     disabled: boolean,
     onClick?: (value: T) => void,
     optionRef?: (optionNode: ElementRef<'li'>, selected: boolean) => void,
-    buttonRef?: (buttonRef: ?ElementRef<'button'>) => void,
+    requestFocus?: () => void,
     selected: boolean,
     selectedVisualization: OptionSelectedVisualization,
-    requestFocus?: () => void,
     value: T,
 |};
 
@@ -70,7 +70,7 @@ export default class Option<T> extends React.PureComponent<Props<T>> {
         );
     }
 
-    handleMouseMove = (event: MouseEvent) => {
+    handleMouseMove = () => {
         if (this.props.requestFocus) {
             this.props.requestFocus();
         }
@@ -93,7 +93,7 @@ export default class Option<T> extends React.PureComponent<Props<T>> {
         );
 
         return (
-            <li ref={this.setItemRef} onMouseMove={this.handleMouseMove}>
+            <li onMouseMove={this.handleMouseMove} ref={this.setItemRef}>
                 <button
                     className={optionClass}
                     disabled={disabled}

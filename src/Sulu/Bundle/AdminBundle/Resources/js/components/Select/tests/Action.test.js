@@ -39,7 +39,9 @@ test('The component should call the onClick callbacks with its value', () => {
 test('A hover on the component should fire the callback', () => {
     const onClick = jest.fn();
     const requestFocusSpy = jest.fn();
-    const action = shallow(<Action onClick={onClick} requestFocus={requestFocusSpy} value="my-value">My action</Action>);
+    const action = shallow(
+        <Action onClick={onClick} requestFocus={requestFocusSpy} value="my-value">My action</Action>
+    );
     action.find('li').simulate('mousemove');
     expect(requestFocusSpy).toBeCalled();
 });
