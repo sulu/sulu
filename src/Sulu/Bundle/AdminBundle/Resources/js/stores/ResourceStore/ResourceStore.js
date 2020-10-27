@@ -223,7 +223,7 @@ export default class ResourceStore {
             }));
     };
 
-    copyFromLocale(locale: string, options: Object = {}) {
+    copyFromLocale(sourceLocale: string, options: Object = {}) {
         if (!this.id) {
             throw new Error('Copying from another locale does not work for new objects!');
         }
@@ -232,11 +232,20 @@ export default class ResourceStore {
             throw new Error('Copying from another locale does only work for objects with locales!');
         }
 
+        const locale = this.locale.get();
+
         return ResourceRequester
             .post(
                 this.resourceKey,
                 {},
-                {...options, action: 'copy-locale', dest: this.locale.get(), id: this.id, locale}
+                {
+                    ...options,
+                    action: 'copy-locale',
+                    dest: locale,
+                    id: this.id,
+                    locale,
+                    src: sourceLocale,
+                }
             ).then(action((response) => {
                 this.setMultiple(response);
                 return response;

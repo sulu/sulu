@@ -128,8 +128,8 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
         return this.resourceStore.delete({...this.options, ...options});
     }
 
-    copyFromLocale(locale: string) {
-        return this.resourceStore.copyFromLocale(locale, this.options)
+    copyFromLocale(sourceLocale: string) {
+        return this.resourceStore.copyFromLocale(sourceLocale, this.options)
             .then((response) => {
                 if (this.hasTypes) {
                     this.setType(response[TYPE]);
