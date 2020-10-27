@@ -16,7 +16,7 @@ type Props<T> = {|
     buttonRef?: (buttonRef: ?ElementRef<'button'>) => void,
     selected: boolean,
     selectedVisualization: OptionSelectedVisualization,
-    setFocusIndex?: () => void,
+    requestFocus?: () => void,
     value: T,
 |};
 
@@ -29,8 +29,6 @@ export default class Option<T> extends React.PureComponent<Props<T>> {
         selected: false,
         selectedVisualization: 'icon',
     };
-
-    item: ElementRef<'li'>;
 
     handleButtonClick = () => {
         if (this.props.onClick) {
@@ -73,8 +71,8 @@ export default class Option<T> extends React.PureComponent<Props<T>> {
     }
 
     handleMouseMove = (event: MouseEvent) => {
-        if (this.props.setFocusIndex) {
-            this.props.setFocusIndex();
+        if (this.props.requestFocus) {
+            this.props.requestFocus();
         }
     };
 

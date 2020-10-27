@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import type {Element, ElementRef} from 'react';
-import {action, observable} from 'mobx';
+import {action, observable, computed} from 'mobx';
 import {observer} from 'mobx-react';
 import debounce from 'debounce';
 import {translate} from '../../utils/Translator';
@@ -44,16 +44,32 @@ class Select<T> extends React.Component<Props<T>> {
 
     @observable selectedOptionRef: ?ElementRef<'li'>;
 
+    @observable selectedButtonRef: ?ElementRef<'button'>;
+
     @observable buttonRefs: Map<number, ElementRef<'button'>> = new Map();
 
     @observable searchText: string = '';
 
-    @observable focusIndex: ?number;
+    @observable focusedElementIndex: number = 0;
 
     @observable open: boolean;
 
+    @computed get buttonTexts() {
+        return Array.from(this.buttonRefs.entries())
+            .map<[number, string]>(([index, ref]) => [index, ref.textContent])
+    }
+
     @action openOptionList = () => {
         this.open = true;
+        this.focusedElementIndex = 0;
+
+        if (this.selectedButtonRef) {
+            const selectedEntry = Array.from(this.buttonRefs.entries()).find(([, ref]) => ref === this.selectedButtonRef);
+
+            if (selectedEntry) {
+                this.requestFocus(selectedEntry[0]);
+            }
+        }
     };
 
     @action closeOptionList = () => {
@@ -78,9 +94,13 @@ class Select<T> extends React.Component<Props<T>> {
         }
     };
 
-    setButtonRef = (index: number) => action((ref: ?ElementRef<'li'>) => {
+    setButtonRef = (index: number) => action((ref: ?ElementRef<'button'>, selected: boolean) => {
         if (ref) {
             this.buttonRefs.set(index, ref);
+
+            if (!this.selectedButtonRef || selected) {
+                this.selectedButtonRef = ref;
+            }
         } else if (this.buttonRefs.has(index)) {
             this.buttonRefs.delete(index);
         }
@@ -95,12 +115,9 @@ class Select<T> extends React.Component<Props<T>> {
     @action appendSearchText = (searchText: string) => {
         this.searchText += searchText;
 
-        const hit = Array.from(this.buttonRefs.entries()).find(([index, ref]) => {
-            return ref.textContent.startsWith(this.searchText);
-        });
-
+        const hit = this.buttonTexts.find(([, text]) => text.startsWith(this.searchText));
         if (hit) {
-            this.setFocusIndex(hit[0])
+            this.requestFocus(hit[0])
         }
 
         this.debouncedClearSearchText();
@@ -114,15 +131,17 @@ class Select<T> extends React.Component<Props<T>> {
             onClick: this.handleOptionClick,
             selected: this.props.isOptionSelected(originalOption),
             selectedVisualization: this.props.selectedVisualization,
-            setFocusIndex: this.handleSetFocusIndex(index),
+            requestFocus: this.handleRequestFocus(index),
             optionRef: this.setSelectedOptionRef,
             buttonRef: this.setButtonRef(index),
         });
     }
 
-    cloneAction(originalAction: Element<typeof Action>) {
+    cloneAction(originalAction: Element<typeof Action>, index: number) {
         return React.cloneElement(originalAction, {
             afterAction: this.closeOptionList,
+            buttonRef: this.setButtonRef(index),
+            requestFocus: this.handleRequestFocus(index),
         });
     }
 
@@ -136,7 +155,7 @@ class Select<T> extends React.Component<Props<T>> {
                 case Option:
                     return this.cloneOption(child, index);
                 case Action:
-                    return this.cloneAction(child);
+                    return this.cloneAction(child, index);
                 default:
                     return child;
             }
@@ -155,21 +174,24 @@ class Select<T> extends React.Component<Props<T>> {
 
     handleOptionListClose = this.closeOptionList;
 
-    @action setFocusIndex = (focusIndex: number) => {
-        if (focusIndex < 0 || focusIndex >= this.buttonRefs.size) {
+    @action requestFocus = (focusedElementIndex: number) => {
+        if (focusedElementIndex < 0 || focusedElementIndex >= this.buttonRefs.size) {
             return;
         }
 
-        this.focusIndex = focusIndex;
+        this.focusedElementIndex = focusedElementIndex;
 
-        if (this.buttonRefs.has(focusIndex)) {
-            const ref = this.buttonRefs.get(focusIndex);
-            ref.focus();
+        if (this.buttonRefs.has(focusedElementIndex)) {
+            const ref = this.buttonRefs.get(focusedElementIndex);
+            
+            if (ref) {
+                ref.focus();
+            }
         }
     };
 
-    handleSetFocusIndex = (focusIndex: number) => () => {
-        this.setFocusIndex(focusIndex);
+    handleRequestFocus = (focusedElementIndex: number) => () => {
+        this.requestFocus(focusedElementIndex);
     };
 
     @action handleKeyDown = (event: KeyboardEvent) => {
@@ -177,31 +199,31 @@ class Select<T> extends React.Component<Props<T>> {
             return;
         }
 
-        if (event.key === 'Escape' || event.code === 27) {
+        if (event.key === 'Escape') {
             event.preventDefault();
             this.closeOptionList();
 
             return;
         }
 
-        if (event.key === 'Tab' || event.code === 9) {
+        if (event.key === 'Tab') {
             event.preventDefault();
             this.clearSearchText();
 
             return;
         }
 
-        if (event.key === 'ArrowUp' || event.code === 38) {
+        if (event.key === 'ArrowUp') {
             event.preventDefault();
-            this.setFocusIndex(this.focusIndex - 1);
+            this.requestFocus(this.focusedElementIndex - 1);
             this.clearSearchText();
 
             return;
         }
 
-        if (event.key === 'ArrowDown' || event.code === 40) {
+        if (event.key === 'ArrowDown') {
             event.preventDefault();
-            this.setFocusIndex(this.focusIndex + 1);
+            this.requestFocus(this.focusedElementIndex + 1);
             this.clearSearchText();
 
             return;
