@@ -396,6 +396,8 @@ class MediaSelectionContentTypeTest extends TestCase
         $structure = $this->prophesize(StructureInterface::class);
         $property->getStructure()->willReturn($structure->reveal());
 
+        $this->requestAnalyzer->getWebspace()->willReturn(null);
+
         $this->mediaManager->getByIds([1, 2, 3], null, null)->shouldBeCalled();
 
         $result = $this->mediaSelection->getContentData($property->reveal());

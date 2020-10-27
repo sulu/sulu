@@ -696,7 +696,13 @@ class ContentMapper implements ContentMapperInterface
             return false;
         }
 
-        if ($document instanceof SecurityBehavior && $this->security && $permission && $webspace->hasWebsiteSecurity()) {
+        if (
+            $document instanceof SecurityBehavior
+            && $this->security
+            && $permission
+            && $webspace
+            && $webspace->hasWebsiteSecurity()
+        ) {
             $permissionKey = \array_search($permission, $this->permissions);
             $documentWebspaceKey = $document->getWebspaceName();
             $documentWebspace = $this->webspaceManager->findWebspaceByKey($documentWebspaceKey);

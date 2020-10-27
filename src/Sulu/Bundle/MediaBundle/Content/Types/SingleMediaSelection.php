@@ -76,7 +76,8 @@ class SingleMediaSelection extends SimpleContentType implements PreResolvableCon
 
         $webspace = $this->requestAnalyzer->getWebspace();
 
-        if ($webspace->hasWebsiteSecurity()
+        if ($webspace
+            && $webspace->hasWebsiteSecurity()
             && $this->securityChecker
             && !$this->securityChecker->hasPermission(
                 new SecurityCondition(
