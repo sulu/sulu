@@ -316,7 +316,7 @@ class PageAdmin extends Admin
             }
 
             $system = $security->getSystem();
-            if (!$webspace->hasWebsiteSecurity()) {
+            if (!$system) {
                 continue;
             }
 
@@ -358,11 +358,17 @@ class PageAdmin extends Admin
 
         /** @var Webspace $webspace */
         foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
-            if (!$webspace->hasWebsiteSecurity()) {
+            $security = $webspace->getSecurity();
+            if (!$security) {
                 continue;
             }
 
-            $webspaceSecuritySystemContexts[$webspace->getSecurity()->getSystem()] = [
+            $system = $security->getSystem();
+            if (!$system) {
+                continue;
+            }
+
+            $webspaceSecuritySystemContexts[$system] = [
                 static::SECURITY_CONTEXT_GROUP => [
                     static::SECURITY_CONTEXT_PREFIX . '#webspace#' => [
                         PermissionTypes::VIEW,

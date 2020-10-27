@@ -178,11 +178,17 @@ class MediaAdmin extends Admin
         ];
 
         foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
-            if (!$webspace->hasWebsiteSecurity()) {
+            $webspaceSecurity = $webspace->getSecurity();
+            if (!$webspaceSecurity) {
                 continue;
             }
 
-            $securityContexts[$webspace->getSecurity()->getSystem()] = [
+            $webspaceSystem = $webspaceSecurity->getSystem();
+            if (!$webspaceSystem) {
+                continue;
+            }
+
+            $securityContexts[$webspaceSystem] = [
                 static::SECURITY_CONTEXT_GROUP => [
                     static::SECURITY_CONTEXT => [
                         PermissionTypes::VIEW,

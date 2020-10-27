@@ -197,13 +197,12 @@ class PageAdminTest extends TestCase
         $webspace1 = new Webspace();
         $webspace1->setKey('webspace-key-1');
 
-        $webspace2Security = new Security();
-        $webspace2Security->setSystem('webspace-security-system-2');
-        $webspace2Security->setPermissionCheck(true);
+        $webspace2Security = $this->prophesize(Security::class);
+        $webspace2Security->getSystem()->willReturn('webspace-security-system-2');
 
         $webspace2 = new Webspace();
         $webspace2->setKey('webspace-key-2');
-        $webspace2->setSecurity($webspace2Security);
+        $webspace2->setSecurity($webspace2Security->reveal());
 
         $this->webspaceManager->getWebspaceCollection()->willReturn(new WebspaceCollection([
             $webspace1,
