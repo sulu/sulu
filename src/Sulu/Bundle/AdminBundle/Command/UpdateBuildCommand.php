@@ -121,8 +121,8 @@ class UpdateBuildCommand extends Command
                 ]);
 
                 if ('y' !== \strtolower(
-                        $ui->ask(\sprintf('Do you want to overwrite your local version of "%s"?', $file), 'y')
-                    )) {
+                    $ui->ask(\sprintf('Do you want to overwrite your local version of "%s"?', $file), 'y')
+                )) {
                     $needManualBuild = true;
 
                     if ($localContent && \in_array($file, ['package.json'])) {
