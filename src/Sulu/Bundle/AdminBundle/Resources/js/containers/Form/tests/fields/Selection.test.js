@@ -19,6 +19,7 @@ jest.mock('../../../../stores/MultiSelectionStore', () => jest.fn(
         this.loading = false;
         this.idFilterParameter = idFilterParameter;
         this.loadItems = jest.fn();
+        this.items = [];
 
         mockExtendObservable(this, {
             items: [],
@@ -1231,14 +1232,16 @@ test('Should pass props correctly to MultiAutoComplete component', () => {
         />
     );
 
-    expect(selection.find('MultiAutoComplete').at(0).props()).toEqual(expect.objectContaining({
+    expect(selection.find('MultiAutoComplete').at(0).props()).toEqual({
         allowAdd: false,
         disabled: true,
         displayProperty: 'name',
+        id: '/',
         idProperty: 'uuid',
+        options: {},
         searchProperties: ['name'],
         selectionStore: selection.instance().autoCompleteSelectionStore,
-    }));
+    });
 
     expect(MultiSelectionStore).toBeCalledWith('snippets', value, locale, 'names');
 });
@@ -1332,14 +1335,16 @@ test('Should pass props with schema-options type correctly to MultiAutoComplete 
         />
     );
 
-    expect(selection.find('MultiAutoComplete').props()).toEqual(expect.objectContaining({
+    expect(selection.find('MultiAutoComplete').props()).toEqual({
         allowAdd: false,
         disabled: true,
         displayProperty: 'name',
+        id: '/',
         idProperty: 'uuid',
+        options: {},
         searchProperties: ['name'],
         selectionStore: selection.instance().autoCompleteSelectionStore,
-    }));
+    });
 });
 
 test('Should trigger a reload of the auto_complete items if the value prop changes', () => {

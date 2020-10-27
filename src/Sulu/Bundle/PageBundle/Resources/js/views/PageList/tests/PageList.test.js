@@ -220,10 +220,8 @@ test('Should change excludeGhostsAndShadows when value of toggler is changed', (
 
     const excludeGhostsAndShadows = webspaceOverview.instance().excludeGhostsAndShadows;
     expect(excludeGhostsAndShadows.get()).toEqual(false);
-    expect(webspaceOverview.instance().listStore.observableOptions).toEqual(expect.objectContaining({
-        'exclude-ghosts': excludeGhostsAndShadows,
-        'exclude-shadows': excludeGhostsAndShadows,
-    }));
+    expect(webspaceOverview.instance().listStore.observableOptions['exclude-ghosts']).toEqual(excludeGhostsAndShadows);
+    expect(webspaceOverview.instance().listStore.observableOptions['exclude-shadows']).toEqual(excludeGhostsAndShadows);
 
     let toolbarConfig = toolbarFunction.call(webspaceOverview.instance());
     expect(toolbarConfig.items[0].value).toEqual(true);
