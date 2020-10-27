@@ -180,14 +180,18 @@ class Select<T> extends React.Component<Props<T>> {
 
     handleOptionListClose = this.closeOptionList;
 
+    @computed get highestButtonIndex() {
+        const max = Math.max(...Array.from(this.buttonRefs.keys()))
+        return max;
+    }
+
     @action requestFocus = (focusedElementIndex: number) => {
-        if (focusedElementIndex < 0 || focusedElementIndex >= this.buttonRefs.size) {
+        if (focusedElementIndex < 0 || focusedElementIndex > this.highestButtonIndex) {
             return;
         }
 
-        this.focusedElementIndex = focusedElementIndex;
-
         if (this.buttonRefs.has(focusedElementIndex)) {
+            this.focusedElementIndex = focusedElementIndex;
             const ref = this.buttonRefs.get(focusedElementIndex);
 
             if (ref) {
@@ -205,35 +209,33 @@ class Select<T> extends React.Component<Props<T>> {
             return;
         }
 
+        event.preventDefault();
+
         if (event.key === 'Escape') {
-            event.preventDefault();
             this.closeOptionList();
 
             return;
         }
 
-        if (event.key === 'Tab') {
-            event.preventDefault();
-            this.clearSearchText();
-
-            return;
-        }
+        let focusedElementIndex = this.focusedElementIndex;
 
         if (event.key === 'ArrowUp') {
-            event.preventDefault();
-            this.requestFocus(this.focusedElementIndex - 1);
-            this.clearSearchText();
-
-            return;
+            do {
+                --focusedElementIndex;
+            } while (!this.buttonRefs.has(focusedElementIndex) && focusedElementIndex > 0);
         }
 
         if (event.key === 'ArrowDown') {
-            event.preventDefault();
-            this.requestFocus(this.focusedElementIndex + 1);
-            this.clearSearchText();
-
-            return;
+            do {
+                ++focusedElementIndex;
+            } while (!this.buttonRefs.has(focusedElementIndex) && focusedElementIndex <= this.highestButtonIndex);
         }
+
+        if (focusedElementIndex !== this.focusedElementIndex) {
+            this.requestFocus(focusedElementIndex);
+        }
+
+        this.clearSearchText();
     };
 
     handleKeyPress = (event: KeyboardEvent) => {

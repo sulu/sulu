@@ -46,11 +46,13 @@ exports[`The component should render with checkbox 1`] = `
   >
     <label
       class="label"
+      tabindex="-1"
     >
       <span
         class="switch checkbox dark input"
       >
         <input
+          tabindex="-1"
           type="checkbox"
         />
         <span />
