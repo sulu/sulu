@@ -181,7 +181,7 @@ class Select<T> extends React.Component<Props<T>> {
     handleOptionListClose = this.closeOptionList;
 
     @computed get highestButtonIndex() {
-        const max = Math.max(...Array.from(this.buttonRefs.keys()))
+        const max = Math.max(...Array.from(this.buttonRefs.keys()));
         return max;
     }
 

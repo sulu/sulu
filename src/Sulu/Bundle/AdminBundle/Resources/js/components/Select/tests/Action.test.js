@@ -2,7 +2,6 @@
 import {render, shallow} from 'enzyme';
 import React from 'react';
 import Action from '../Action';
-import Option from '../Option';
 
 test('The component should render', () => {
     const onClick = jest.fn();
