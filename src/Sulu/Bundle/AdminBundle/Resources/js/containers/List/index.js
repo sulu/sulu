@@ -11,6 +11,7 @@ import ThumbnailFieldTransformer from './fieldTransformers/ThumbnailFieldTransfo
 import StringFieldTransformer from './fieldTransformers/StringFieldTransformer';
 import BooleanFieldFilterType from './fieldFilterTypes/BooleanFieldFilterType';
 import BoolFieldTransformer from './fieldTransformers/BoolFieldTransformer';
+import ColorFieldTransformer from './fieldTransformers/ColorFieldTransformer';
 import IconFieldTransformer from './fieldTransformers/IconFieldTransformer';
 import BytesFieldTransformer from './fieldTransformers/BytesFieldTransformer';
 import DateFieldTransformer from './fieldTransformers/DateFieldTransformer';
@@ -65,6 +66,7 @@ export {
     TimeFieldTransformer,
     ThumbnailFieldTransformer,
     BoolFieldTransformer,
+    ColorFieldTransformer,
     IconFieldTransformer,
 };
 export type {
