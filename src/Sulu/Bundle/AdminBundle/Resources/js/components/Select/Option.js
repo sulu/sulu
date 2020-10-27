@@ -36,14 +36,14 @@ export default class Option<T> extends React.PureComponent<Props<T>> {
         }
     };
 
-    setItemRef = (item: ?ElementRef<'li'>) => {
+    setItemRef = (ref: ?ElementRef<'li'>) => {
         const {
-            selected,
             optionRef,
+            selected,
         } = this.props;
 
-        if (optionRef && item) {
-            optionRef(item, selected);
+        if (optionRef && ref) {
+            optionRef(ref, selected);
         }
     };
 

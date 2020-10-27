@@ -44,13 +44,11 @@ class Select<T> extends React.Component<Props<T>> {
 
     @observable selectedOptionRef: ?ElementRef<'li'>;
 
-    @observable selectedButtonRef: ?ElementRef<'button'>;
-
     @observable buttonRefs: Map<number, ElementRef<'button'>> = new Map();
 
     @observable searchText: string = '';
 
-    @observable focusedElementIndex: number = 0;
+    @observable focusedElementIndex: number = -1;
 
     @observable open: boolean;
 
@@ -59,17 +57,25 @@ class Select<T> extends React.Component<Props<T>> {
             .map<[number, string]>(([index, ref]) => [index, ref.textContent])
     }
 
+    @computed get selectedIndex() {
+        let selectedIndex = -1;
+
+        React.Children.forEach(this.props.children, (child: any, index: number) => {
+            if (!child || child.type !== Option) {
+                return;
+            }
+
+            if (this.props.isOptionSelected(child)) {
+                selectedIndex = index;
+            }
+        });
+
+        return selectedIndex;
+    }
+
     @action openOptionList = () => {
         this.open = true;
-        this.focusedElementIndex = 0;
-
-        if (this.selectedButtonRef) {
-            const selectedEntry = Array.from(this.buttonRefs.entries()).find(([, ref]) => ref === this.selectedButtonRef);
-
-            if (selectedEntry) {
-                this.requestFocus(selectedEntry[0]);
-            }
-        }
+        this.focusedElementIndex = this.selectedIndex;
     };
 
     @action closeOptionList = () => {
@@ -80,6 +86,10 @@ class Select<T> extends React.Component<Props<T>> {
         }
 
         this.open = false;
+
+        if (this.displayValueRef) {
+            this.displayValueRef.focus();
+        }
     };
 
     @action setDisplayValueRef = (ref: ?ElementRef<'button'>) => {
@@ -94,13 +104,9 @@ class Select<T> extends React.Component<Props<T>> {
         }
     };
 
-    setButtonRef = (index: number) => action((ref: ?ElementRef<'button'>, selected: boolean) => {
+    setButtonRef = (index: number) => action((ref: ?ElementRef<'button'>) => {
         if (ref) {
             this.buttonRefs.set(index, ref);
-
-            if (!this.selectedButtonRef || selected) {
-                this.selectedButtonRef = ref;
-            }
         } else if (this.buttonRefs.has(index)) {
             this.buttonRefs.delete(index);
         }
@@ -115,7 +121,7 @@ class Select<T> extends React.Component<Props<T>> {
     @action appendSearchText = (searchText: string) => {
         this.searchText += searchText;
 
-        const hit = this.buttonTexts.find(([, text]) => text.startsWith(this.searchText));
+        const hit = this.buttonTexts.find(([, text]) => text.toLowerCase().startsWith(this.searchText.toLowerCase()));
         if (hit) {
             this.requestFocus(hit[0])
         }
@@ -183,7 +189,7 @@ class Select<T> extends React.Component<Props<T>> {
 
         if (this.buttonRefs.has(focusedElementIndex)) {
             const ref = this.buttonRefs.get(focusedElementIndex);
-            
+
             if (ref) {
                 ref.focus();
             }

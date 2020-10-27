@@ -31,3 +31,10 @@ test('A click on the component should fire the callback', () => {
     option.find('button').simulate('click');
     expect(clickSpy).toBeCalled();
 });
+
+test('A hover on the component should fire the callback', () => {
+    const requestFocusSpy = jest.fn();
+    const option = shallow(<Option requestFocus={requestFocusSpy}>My option</Option>);
+    option.find('li').simulate('mousemove');
+    expect(requestFocusSpy).toBeCalled();
+});
