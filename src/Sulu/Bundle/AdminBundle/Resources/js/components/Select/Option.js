@@ -30,9 +30,21 @@ export default class Option<T> extends React.PureComponent<Props<T>> {
         selectedVisualization: 'icon',
     };
 
-    handleButtonClick = () => {
+    triggerButton = () => {
         if (this.props.onClick) {
             this.props.onClick(this.props.value);
+        }
+    };
+
+    handleButtonClick = () => {
+        this.triggerButton();
+    };
+
+    handleButtonKeyDown = (event: KeyboardEvent) => {
+        if (event.key === 'Enter' || event.key === 'Space') {
+            event.preventDefault();
+            event.stopPropagation();
+            this.triggerButton();
         }
     };
 
@@ -98,6 +110,7 @@ export default class Option<T> extends React.PureComponent<Props<T>> {
                     className={optionClass}
                     disabled={disabled}
                     onClick={this.handleButtonClick}
+                    onKeyDown={this.handleButtonKeyDown}
                     ref={this.setButtonRef}
                     style={{minWidth: anchorWidth + ANCHOR_WIDTH_DIFFERENCE}}
                 >

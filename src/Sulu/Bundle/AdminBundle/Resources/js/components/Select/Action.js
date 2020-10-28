@@ -13,7 +13,7 @@ type Props<T> = {|
 |};
 
 export default class Action<T> extends React.PureComponent<Props<T>> {
-    handleButtonClick = () => {
+    triggerButton = () => {
         const {
             onClick,
             afterAction,
@@ -24,6 +24,18 @@ export default class Action<T> extends React.PureComponent<Props<T>> {
 
         if (afterAction) {
             afterAction();
+        }
+    };
+
+    handleButtonClick = () => {
+        this.triggerButton();
+    };
+
+    handleButtonKeyDown = (event: KeyboardEvent) => {
+        if (event.key === 'Enter' || event.key === 'Space') {
+            event.preventDefault();
+            event.stopPropagation();
+            this.triggerButton();
         }
     };
 
@@ -47,6 +59,7 @@ export default class Action<T> extends React.PureComponent<Props<T>> {
                 <button
                     className={actionStyles.action}
                     onClick={this.handleButtonClick}
+                    onKeyDown={this.handleButtonKeyDown}
                     ref={this.setButtonRef}
                 >
                     {this.props.children}

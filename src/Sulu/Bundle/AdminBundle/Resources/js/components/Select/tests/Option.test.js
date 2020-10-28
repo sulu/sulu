@@ -32,6 +32,20 @@ test('A click on the component should fire the callback', () => {
     expect(clickSpy).toBeCalled();
 });
 
+test('Pressing enter on the component should fire the callback', () => {
+    const clickSpy = jest.fn();
+    const option = shallow(<Option onClick={clickSpy}>My option</Option>);
+    option.find('button').simulate('keydown', {key: 'Enter'});
+    expect(clickSpy).toBeCalled();
+});
+
+test('Pressing space on the component should fire the callback', () => {
+    const clickSpy = jest.fn();
+    const option = shallow(<Option onClick={clickSpy}>My option</Option>);
+    option.find('button').simulate('keydown', {key: 'Space'});
+    expect(clickSpy).toBeCalled();
+});
+
 test('A hover on the component should fire the callback', () => {
     const requestFocusSpy = jest.fn();
     const option = shallow(<Option requestFocus={requestFocusSpy}>My option</Option>);

@@ -80,8 +80,33 @@ class Select<T> extends React.Component<Props<T>> {
         return firstSelectedIndex;
     }
 
+    @action setDisplayValueRef = (ref: ?ElementRef<'button'>) => {
+        if (ref) {
+            this.displayValueRef = ref;
+        }
+    };
+
+    @action setSelectedOptionRef = (ref: ?ElementRef<'li'>, selected: boolean) => {
+        if (!this.selectedOptionRef || (ref && selected)) {
+            this.selectedOptionRef = ref;
+        }
+    };
+
+    setButtonRef = (index: number) => action((ref: ?ElementRef<'button'>) => {
+        if (ref) {
+            this.buttonRefsByIndex.set(index, ref);
+
+            if (index === this.focusedElementIndex) {
+                ref.focus();
+            }
+        } else if (this.buttonRefsByIndex.has(index)) {
+            this.buttonRefsByIndex.delete(index);
+        }
+    });
+
     @action openOptionList = () => {
         this.open = true;
+        this.clearSearchText();
         this.focusedElementIndex = this.firstSelectedIndex;
     };
 
@@ -98,26 +123,6 @@ class Select<T> extends React.Component<Props<T>> {
             this.displayValueRef.focus();
         }
     };
-
-    @action setDisplayValueRef = (ref: ?ElementRef<'button'>) => {
-        if (ref) {
-            this.displayValueRef = ref;
-        }
-    };
-
-    @action setSelectedOptionRef = (ref: ?ElementRef<'li'>, selected: boolean) => {
-        if (!this.selectedOptionRef || (ref && selected)) {
-            this.selectedOptionRef = ref;
-        }
-    };
-
-    setButtonRef = (index: number) => action((ref: ?ElementRef<'button'>) => {
-        if (ref) {
-            this.buttonRefsByIndex.set(index, ref);
-        } else if (this.buttonRefsByIndex.has(index)) {
-            this.buttonRefsByIndex.delete(index);
-        }
-    });
 
     @action clearSearchText = () => {
         this.searchText = '';
@@ -136,6 +141,94 @@ class Select<T> extends React.Component<Props<T>> {
         }
 
         this.debouncedClearSearchText();
+    };
+
+    @action requestFocus = (elementIndex: number) => {
+        if (!this.buttonRefsByIndex.has(elementIndex)) {
+            return;
+        }
+
+        this.focusedElementIndex = elementIndex;
+        const ref = this.buttonRefsByIndex.get(elementIndex);
+
+        if (ref) {
+            ref.focus();
+        }
+    };
+
+    handleOptionClick = (value: T) => {
+        this.props.onSelect(value);
+
+        if (this.props.closeOnSelect) {
+            this.closeOptionList();
+        }
+    };
+
+    handleDisplayValueClick = this.openOptionList;
+
+    handleOptionListClose = this.closeOptionList;
+
+    handleRequestFocus = (elementIndex: number) => () => {
+        this.requestFocus(elementIndex);
+    };
+
+    handleKeyDown = (event: KeyboardEvent) => {
+        if (['Enter', 'ArrowUp', 'ArrowDown'].includes(event.key)) {
+            if (!this.open && this.displayValueRef && document.activeElement === this.displayValueRef) {
+                event.preventDefault();
+                this.openOptionList();
+
+                return;
+            }
+        }
+
+        if (event.key === 'Escape') {
+            if (this.open) {
+                event.preventDefault();
+                this.closeOptionList();
+
+                return;
+            }
+        }
+
+        if (event.key === 'ArrowUp') {
+            if (this.open) {
+                event.preventDefault();
+
+                this.clearSearchText();
+                this.requestFocus(
+                    Math.max(
+                        ...this.availableButtonIndices.filter((i) => i < this.focusedElementIndex)
+                    )
+                );
+
+                return;
+            }
+        }
+
+        if (event.key === 'ArrowDown') {
+            if (this.open) {
+                event.preventDefault();
+
+                this.clearSearchText();
+                this.requestFocus(
+                    Math.min(
+                        ...this.availableButtonIndices.filter((i) => i > this.focusedElementIndex)
+                    )
+                );
+
+                return;
+            }
+        }
+    };
+
+    handleKeyPress = (event: KeyboardEvent) => {
+        if (!this.open) {
+            return;
+        }
+
+        event.preventDefault();
+        this.appendSearchText(event.key);
     };
 
     cloneOption(originalOption: Element<Class<Option<T>>>, index: number): Element<Class<Option<T>>> {
@@ -176,82 +269,6 @@ class Select<T> extends React.Component<Props<T>> {
             }
         });
     }
-
-    handleOptionClick = (value: T) => {
-        this.props.onSelect(value);
-
-        if (this.props.closeOnSelect) {
-            this.closeOptionList();
-        }
-    };
-
-    handleDisplayValueClick = this.openOptionList;
-
-    handleOptionListClose = this.closeOptionList;
-
-    @action requestFocus = (elementIndex: number) => {
-        if (!this.buttonRefsByIndex.has(elementIndex)) {
-            return;
-        }
-
-        this.focusedElementIndex = elementIndex;
-        const ref = this.buttonRefsByIndex.get(elementIndex);
-
-        if (ref) {
-            ref.focus();
-        }
-    };
-
-    handleRequestFocus = (elementIndex: number) => () => {
-        this.requestFocus(elementIndex);
-    };
-
-    @action handleKeyDown = (event: KeyboardEvent) => {
-        if (!this.open) {
-            return;
-        }
-
-        if (event.key === 'Escape') {
-            event.preventDefault();
-            this.closeOptionList();
-            this.clearSearchText();
-
-            return;
-        }
-
-        let focusedElementIndex = this.focusedElementIndex;
-
-        if (event.key === 'ArrowUp') {
-            event.preventDefault();
-            this.clearSearchText();
-
-            focusedElementIndex = Math.max(
-                ...this.availableButtonIndices.filter((i) => i < this.focusedElementIndex)
-            );
-        }
-
-        if (event.key === 'ArrowDown') {
-            event.preventDefault();
-            this.clearSearchText();
-
-            focusedElementIndex = Math.min(
-                ...this.availableButtonIndices.filter((i) => i > this.focusedElementIndex)
-            );
-        }
-
-        if (focusedElementIndex !== this.focusedElementIndex) {
-            this.requestFocus(focusedElementIndex);
-        }
-    };
-
-    handleKeyPress = (event: KeyboardEvent) => {
-        if (!this.open) {
-            return;
-        }
-
-        event.preventDefault();
-        this.appendSearchText(event.key);
-    };
 
     render() {
         const {
