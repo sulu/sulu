@@ -20,8 +20,9 @@ use Sulu\Component\SmartContent\DataProviderResult;
 use Sulu\Component\SmartContent\DatasourceItem;
 use Sulu\Component\SmartContent\Orm\BaseDataProvider;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * Media DataProvider for SmartContent.
@@ -44,9 +45,11 @@ class MediaDataProvider extends BaseDataProvider
         ArraySerializerInterface $serializer,
         RequestStack $requestStack,
         ReferenceStoreInterface $referenceStore,
-        TokenStorageInterface $tokenStorage = null
+        Security $security,
+        RequestAnalyzerInterface $requestAnalyzer,
+        $permissions
     ) {
-        parent::__construct($repository, $serializer, $referenceStore, $tokenStorage);
+        parent::__construct($repository, $serializer, $referenceStore, $security, $requestAnalyzer, $permissions);
 
         $this->configuration = self::createConfigurationBuilder()
             ->enableTags()

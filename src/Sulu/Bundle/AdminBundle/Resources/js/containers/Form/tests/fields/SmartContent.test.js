@@ -27,14 +27,16 @@ jest.mock('../../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
-jest.mock('../../stores/ResourceFormStore', () => jest.fn(function(resourceStore) {
+jest.mock('../../stores/ResourceFormStore', () => jest.fn(function(resourceStore, formKey, options, metadataOptions) {
     this.resourceKey = resourceStore.resourceKey;
     this.id = resourceStore.id;
+    this.metadataOptions = metadataOptions;
 }));
 
 jest.mock('../../FormInspector', () => jest.fn(function(formStore) {
     this.resourceKey = formStore.resourceKey;
     this.id = formStore.id;
+    this.metadataOptions = formStore.metadataOptions;
 }));
 
 jest.mock('../../../SmartContent/stores/SmartContentStore', () => jest.fn(function() {
@@ -63,7 +65,9 @@ beforeEach(() => {
 });
 
 test('Should correctly initialize SmartContentStore', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test', 1), 'test'));
+    const formInspector = new FormInspector(
+        new ResourceFormStore(new ResourceStore('test', 1), 'test', {}, {webspace: 'sulu_io'})
+    );
     smartContentConfigStore.getConfig.mockReturnValue({datasourceResourceKey: 'collections'});
 
     const value = {
@@ -102,7 +106,8 @@ test('Should correctly initialize SmartContentStore', () => {
 
     expect(smartContentStorePool.add).toBeCalledWith(smartContentStore, false);
     expect(smartContentConfigStore.getConfig).toBeCalledWith('media');
-    expect(SmartContentStore).toBeCalledWith('media', value, undefined, 'collections', undefined, schemaOptions);
+    expect(SmartContentStore)
+        .toBeCalledWith('media', value, undefined, 'collections', undefined, schemaOptions, 'sulu_io');
 
     smartContent.unmount();
     expect(smartContentStorePool.remove).toBeCalledWith(smartContentStore);
@@ -205,7 +210,7 @@ test('Should pass id to SmartContentStore if resourceKeys match', () => {
     );
 
     expect(smartContentConfigStore.getConfig).toBeCalledWith('pages');
-    expect(SmartContentStore).toBeCalledWith('pages', value, undefined, 'pages', 4, schemaOptions);
+    expect(SmartContentStore).toBeCalledWith('pages', value, undefined, 'pages', 4, schemaOptions, undefined);
 });
 
 test('Pass correct props to SmartContent component', () => {

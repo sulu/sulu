@@ -22,8 +22,10 @@ use Sulu\Component\SmartContent\DataProviderResult;
 use Sulu\Component\SmartContent\Orm\BaseDataProvider;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 use Sulu\Component\SmartContent\ResourceItemInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Sulu\Component\Webspace\Security as WebspaceSecurity;
+use Sulu\Component\Webspace\Webspace;
+use Symfony\Component\Security\Core\Security;
 
 class BaseDataProviderTest extends TestCase
 {
@@ -209,7 +211,7 @@ class BaseDataProviderTest extends TestCase
         $items
     ) {
         $repository = $this->prophesize(DataProviderRepositoryInterface::class);
-        $repository->findByFilters($filters, $page, $pageSize, $limit, 'en', $options, null)
+        $repository->findByFilters($filters, $page, $pageSize, $limit, 'en', $options, null, null)
             ->shouldBeCalled()->willReturn($repositoryResult);
 
         $serializer = $this->prophesize(ArraySerializerInterface::class);
@@ -244,9 +246,9 @@ class BaseDataProviderTest extends TestCase
         $items
     ) {
         $repository = $this->prophesize(DataProviderRepositoryInterface::class);
-        $repository->findByFilters($filters, $page, $pageSize, $limit, 'en', [], null)->shouldBeCalled()->willReturn(
-            $repositoryResult
-        );
+        $repository->findByFilters($filters, $page, $pageSize, $limit, 'en', [], null, null)
+            ->shouldBeCalled()
+            ->willReturn($repositoryResult);
 
         $serializer = $this->prophesize(ArraySerializerInterface::class);
 
@@ -295,9 +297,9 @@ class BaseDataProviderTest extends TestCase
         );
 
         $repository = $this->prophesize(DataProviderRepositoryInterface::class);
-        $repository->findByFilters($filters, $page, $pageSize, $limit, 'en', [], null)->shouldBeCalled()->willReturn(
-            $mockedItems
-        );
+        $repository->findByFilters($filters, $page, $pageSize, $limit, 'en', [], null, null)
+            ->shouldBeCalled()
+            ->willReturn($mockedItems);
 
         $serializer = $this->prophesize(ArraySerializerInterface::class);
         $serializer->serialize(
@@ -342,22 +344,78 @@ class BaseDataProviderTest extends TestCase
         $user = $this->prophesize(UserInterface::class);
 
         $repository = $this->prophesize(DataProviderRepositoryInterface::class);
-        $repository->findByFilters([], 1, null, -1, 'en', [], $user->reveal())->shouldBeCalled()->willReturn([]);
+        $repository->findByFilters([], 1, null, -1, 'en', [], $user->reveal(), 64)->shouldBeCalled()->willReturn([]);
 
         $serializer = $this->prophesize(ArraySerializerInterface::class);
 
-        $tokenStorage = $this->prophesize(TokenStorageInterface::class);
-        $token = $this->prophesize(TokenInterface::class);
-        $token->getUser()->willReturn($user->reveal());
-        $tokenStorage->getToken()->willReturn($token->reveal());
+        $security = $this->prophesize(Security::class);
+        $security->getUser()->willReturn($user->reveal());
+
+        $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
+        $webspace = new Webspace();
+        $webspaceSecurity = new WebspaceSecurity();
+        $webspaceSecurity->setSystem('website');
+        $webspaceSecurity->setPermissionCheck(true);
+        $webspace->setSecurity($webspaceSecurity);
+        $requestAnalyzer->getWebspace()->willReturn($webspace);
 
         /** @var BaseDataProvider $provider */
         $provider = $this->getMockForAbstractClass(
             BaseDataProvider::class,
-            [$repository->reveal(), $serializer->reveal(), null, $tokenStorage->reveal()]
+            [
+                $repository->reveal(),
+                $serializer->reveal(),
+                null,
+                $security->reveal(),
+                $requestAnalyzer->reveal(),
+                ['view' => 64],
+            ]
         );
 
-        $result = $provider->resolveResourceItems(
+        $provider->resolveResourceItems(
+            [],
+            [],
+            ['locale' => 'en', 'webspace' => 'sulu_io'],
+            -1,
+            1,
+            null
+        );
+    }
+
+    public function testResolveResourceItemsWithUserWithoutPermissionCheck()
+    {
+        $user = $this->prophesize(UserInterface::class);
+
+        $repository = $this->prophesize(DataProviderRepositoryInterface::class);
+        $repository->findByFilters([], 1, null, -1, 'en', [], null, null)->shouldBeCalled()->willReturn([]);
+
+        $serializer = $this->prophesize(ArraySerializerInterface::class);
+
+        $security = $this->prophesize(Security::class);
+        $security->getUser()->willReturn($user->reveal());
+
+        $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
+        $webspace = new Webspace();
+        $webspaceSecurity = new WebspaceSecurity();
+        $webspaceSecurity->setSystem('website');
+        $webspaceSecurity->setPermissionCheck(false);
+        $webspace->setSecurity($webspaceSecurity);
+        $requestAnalyzer->getWebspace()->willReturn($webspace);
+
+        /** @var BaseDataProvider $provider */
+        $provider = $this->getMockForAbstractClass(
+            BaseDataProvider::class,
+            [
+                $repository->reveal(),
+                $serializer->reveal(),
+                null,
+                $security->reveal(),
+                $requestAnalyzer->reveal(),
+                ['view' => 64],
+            ]
+        );
+
+        $provider->resolveResourceItems(
             [],
             [],
             ['locale' => 'en', 'webspace' => 'sulu_io'],
@@ -391,9 +449,9 @@ class BaseDataProviderTest extends TestCase
         );
 
         $repository = $this->prophesize(DataProviderRepositoryInterface::class);
-        $repository->findByFilters($filters, $page, $pageSize, $limit, 'en', [], null)->shouldBeCalled()->willReturn(
-            $mockedItems
-        );
+        $repository->findByFilters($filters, $page, $pageSize, $limit, 'en', [], null, null)
+            ->shouldBeCalled()
+            ->willReturn($mockedItems);
 
         $serializer = $this->prophesize(ArraySerializerInterface::class);
         $serializer->serialize(

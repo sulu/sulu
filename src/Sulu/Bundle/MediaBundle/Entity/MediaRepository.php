@@ -132,7 +132,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
             $orderBy,
             $orderSort,
             $ids
-            ) = $this->extractFilterVars($filter);
+        ) = $this->extractFilterVars($filter);
 
         // if empty array of ids is requested return empty array of medias
         if (null !== $ids && 0 === \count($ids)) {

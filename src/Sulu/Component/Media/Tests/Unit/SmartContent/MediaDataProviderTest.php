@@ -28,27 +28,79 @@ use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
 use Sulu\Component\SmartContent\DataProviderResult;
 use Sulu\Component\SmartContent\DatasourceItem;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Sulu\Component\Webspace\Security as WebspaceSecurity;
+use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Security;
 
 class MediaDataProviderTest extends TestCase
 {
+    /**
+     * @var DataProviderRepositoryInterface
+     */
+    private $dataProviderRepository;
+
+    /**
+     * @var CollectionManagerInterface
+     */
+    private $collectionManager;
+
+    /**
+     * @var ArraySerializerInterface
+     */
+    private $serializer;
+
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
+    /**
+     * @var ReferenceStoreInterface
+     */
+    private $referenceStore;
+
+    /**
+     * @var MediaDataProvider
+     */
+    private $mediaDataProvider;
+
+    /**
+     * @var Security
+     */
+    private $security;
+
+    /**
+     * @var RequestAnalyzerInterface
+     */
+    private $requestAnalyzer;
+
+    public function setUp(): void
+    {
+        $this->dataProviderRepository = $this->prophesize(DataProviderRepositoryInterface::class);
+        $this->collectionManager = $this->prophesize(CollectionManagerInterface::class);
+        $this->serializer = $this->prophesize(ArraySerializerInterface::class);
+        $this->requestStack = $this->prophesize(RequestStack::class);
+        $this->referenceStore = $this->prophesize(ReferenceStoreInterface::class);
+        $this->security = $this->prophesize(Security::class);
+        $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
+
+        $this->mediaDataProvider = new MediaDataProvider(
+            $this->dataProviderRepository->reveal(),
+            $this->collectionManager->reveal(),
+            $this->serializer->reveal(),
+            $this->requestStack->reveal(),
+            $this->referenceStore->reveal(),
+            $this->security->reveal(),
+            $this->requestAnalyzer->reveal(),
+            ['view' => 64]
+        );
+    }
+
     public function testGetConfiguration()
     {
-        $serializer = $this->prophesize(ArraySerializerInterface::class);
-        $collectionManager = $this->prophesize(CollectionManagerInterface::class);
-        $requestStack = $this->prophesize(RequestStack::class);
-        $referenceStore = $this->prophesize(ReferenceStoreInterface::class);
-        $provider = new MediaDataProvider(
-            $this->getRepository(),
-            $collectionManager->reveal(),
-            $serializer->reveal(),
-            $requestStack->reveal(),
-            $referenceStore->reveal()
-        );
-
-        $configuration = $provider->getConfiguration();
+        $configuration = $this->mediaDataProvider->getConfiguration();
 
         $this->assertInstanceOf(ProviderConfigurationInterface::class, $configuration);
         $this->assertTrue($configuration->hasAudienceTargeting());
@@ -56,19 +108,7 @@ class MediaDataProviderTest extends TestCase
 
     public function testGetDefaultParameter()
     {
-        $serializer = $this->prophesize(ArraySerializerInterface::class);
-        $collectionManager = $this->prophesize(CollectionManagerInterface::class);
-        $requestStack = $this->prophesize(RequestStack::class);
-        $referenceStore = $this->prophesize(ReferenceStoreInterface::class);
-        $provider = new MediaDataProvider(
-            $this->getRepository(),
-            $collectionManager->reveal(),
-            $serializer->reveal(),
-            $requestStack->reveal(),
-            $referenceStore->reveal()
-        );
-
-        $parameter = $provider->getDefaultPropertyParameter();
+        $parameter = $this->mediaDataProvider->getDefaultPropertyParameter();
 
         $this->assertEquals(
             [
@@ -105,19 +145,20 @@ class MediaDataProviderTest extends TestCase
      */
     public function testResolveDataItems($filters, $limit, $page, $pageSize, $repositoryResult, $hasNextPage, $items)
     {
-        $serializer = $this->prophesize(ArraySerializerInterface::class);
-        $collectionManager = $this->prophesize(CollectionManagerInterface::class);
-        $requestStack = $this->prophesize(RequestStack::class);
-        $referenceStore = $this->prophesize(ReferenceStoreInterface::class);
-        $provider = new MediaDataProvider(
-            $this->getRepository($filters, $page, $pageSize, $limit, $repositoryResult),
-            $collectionManager->reveal(),
-            $serializer->reveal(),
-            $requestStack->reveal(),
-            $referenceStore->reveal()
-        );
+        $this->dataProviderRepository
+             ->findByFilters(
+                 $filters,
+                 $page,
+                 $pageSize,
+                 $limit,
+                 'en',
+                 ['webspace' => 'sulu_io', 'locale' => 'en'],
+                 null,
+                 null
+             )
+            ->willReturn($repositoryResult);
 
-        $result = $provider->resolveDataItems(
+        $result = $this->mediaDataProvider->resolveDataItems(
             $filters,
             [],
             ['webspace' => 'sulu_io', 'locale' => 'en'],
@@ -168,52 +209,46 @@ class MediaDataProviderTest extends TestCase
         $user,
         $items
     ) {
+        $webspace = new Webspace();
+        $security = new WebspaceSecurity();
+        $security->setSystem('website');
+        $security->setPermissionCheck(true);
+        $webspace->setSecurity($security);
+        $this->requestAnalyzer->getWebspace()->willReturn($webspace);
+
         $serializeCallback = function(Media $media) {
             return $this->serialize($media);
         };
 
-        $serializer = $this->prophesize(ArraySerializerInterface::class);
-        $serializer->serialize(Argument::type(Media::class), Argument::type(SerializationContext::class))
+        $this->serializer->serialize(Argument::type(Media::class), Argument::type(SerializationContext::class))
             ->will(
                 function($args) use ($serializeCallback) {
                     return $serializeCallback($args[0]);
                 }
             );
 
-        $collectionManager = $this->prophesize(CollectionManagerInterface::class);
-        $requestStack = $this->prophesize(RequestStack::class);
-        $referenceStore = $this->prophesize(ReferenceStoreInterface::class);
-        $tokenStorage = $this->prophesize(TokenStorageInterface::class);
+        $this->security->getUser()->willReturn($user);
 
-        $token = $this->prophesize(TokenInterface::class);
-        $token->getUser()->willReturn($user);
-        $tokenStorage->getToken()->willReturn($token->reveal());
+        $this->dataProviderRepository
+             ->findByFilters(
+                 $filters,
+                 $page,
+                 $pageSize,
+                 $limit,
+                 'en',
+                 ['webspace' => 'sulu_io', 'locale' => 'en'],
+                 $user,
+                 64
+             )
+            ->willReturn($repositoryResult);
 
-        $provider = new MediaDataProvider(
-            $this->getRepository(
-                $filters,
-                $page,
-                $pageSize,
-                $limit,
-                $repositoryResult,
-                ['webspace' => 'sulu_io', 'locale' => 'en'],
-                $user
-            ),
-            $collectionManager->reveal(),
-            $serializer->reveal(),
-            $requestStack->reveal(),
-            $referenceStore->reveal(),
-            $tokenStorage->reveal()
-        );
-
-        $result = $provider->resolveResourceItems(
+        $result = $this->mediaDataProvider->resolveResourceItems(
             $filters,
             [],
             ['webspace' => 'sulu_io', 'locale' => 'en'],
             $limit,
             $page,
-            $pageSize,
-            $user
+            $pageSize
         );
 
         $this->assertInstanceOf(DataProviderResult::class, $result);
@@ -224,47 +259,16 @@ class MediaDataProviderTest extends TestCase
 
     public function testResolveDataSource()
     {
-        $serializer = $this->prophesize(ArraySerializerInterface::class);
-        $collectionManager = $this->prophesize(CollectionManagerInterface::class);
-        $requestStack = $this->prophesize(RequestStack::class);
-        $referenceStore = $this->prophesize(ReferenceStoreInterface::class);
-        $provider = new MediaDataProvider(
-            $this->getRepository(),
-            $collectionManager->reveal(),
-            $serializer->reveal(),
-            $requestStack->reveal(),
-            $referenceStore->reveal()
-        );
-
         $collection = $this->prophesize(Collection::class);
         $collection->getId()->willReturn(1);
         $collection->getTitle()->willReturn('test');
 
-        $collectionManager->getById('1', 'de')->willReturn($collection->reveal());
-        $result = $provider->resolveDatasource('1', [], ['locale' => 'de']);
+        $this->collectionManager->getById('1', 'de')->willReturn($collection->reveal());
+        $result = $this->mediaDataProvider->resolveDatasource('1', [], ['locale' => 'de']);
 
         $this->assertInstanceOf(DatasourceItem::class, $result);
         $this->assertEquals(1, $result->getId());
         $this->assertEquals('test', $result->getTitle());
-    }
-
-    /**
-     * @return DataProviderRepositoryInterface
-     */
-    private function getRepository(
-        $filters = [],
-        $page = null,
-        $pageSize = 0,
-        $limit = null,
-        $result = [],
-        $options = ['webspace' => 'sulu_io', 'locale' => 'en'],
-        $user = null
-    ) {
-        $mock = $this->prophesize(DataProviderRepositoryInterface::class);
-
-        $mock->findByFilters($filters, $page, $pageSize, $limit, 'en', $options, $user)->willReturn($result);
-
-        return $mock->reveal();
     }
 
     private function createMedia($id, $title, $tags = [])

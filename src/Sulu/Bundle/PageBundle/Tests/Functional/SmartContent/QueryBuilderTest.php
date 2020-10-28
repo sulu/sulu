@@ -37,7 +37,6 @@ use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class QueryBuilderTest extends SuluTestCase
 {
@@ -99,7 +98,12 @@ class QueryBuilderTest extends SuluTestCase
     /**
      * @var RoleInterface
      */
-    private $anonymousRole;
+    private $anonymousRoleSecurity;
+
+    /**
+     * @var RoleInterface
+     */
+    private $anonymousRoleNoSecurity;
 
     public function setUp(): void
     {
@@ -122,18 +126,43 @@ class QueryBuilderTest extends SuluTestCase
 
         $user = $this->getContainer()->get('test_user_provider')->getUser();
 
-        $this->anonymousRole = $this->getContainer()->get('sulu.repository.role')->createNew();
-        $this->anonymousRole->setName('Anonymous');
-        $this->anonymousRole->setAnonymous(true);
-        $this->anonymousRole->setSystem('sulu_io');
+        $this->anonymousRoleSecurity = $this->getContainer()->get('sulu.repository.role')->createNew();
+        $this->anonymousRoleSecurity->setName('Anonymous');
+        $this->anonymousRoleSecurity->setAnonymous(true);
+        $this->anonymousRoleSecurity->setSystem('test_security_system');
 
-        $permission = new Permission();
-        $permission->setPermissions(122);
-        $permission->setRole($this->anonymousRole);
-        $permission->setContext('sulu.webspaces.sulu_io');
+        $permission1 = new Permission();
+        $permission1->setPermissions(122);
+        $permission1->setRole($this->anonymousRoleSecurity);
+        $permission1->setContext('sulu.webspaces.sulu_io');
+        $em->persist($permission1);
 
-        $em->persist($permission);
-        $em->persist($this->anonymousRole);
+        $permission2 = new Permission();
+        $permission2->setPermissions(122);
+        $permission2->setRole($this->anonymousRoleSecurity);
+        $permission2->setContext('sulu.webspaces.test_io');
+        $em->persist($permission2);
+
+        $em->persist($this->anonymousRoleSecurity);
+
+        $this->anonymousRoleNoSecurity = $this->getContainer()->get('sulu.repository.role')->createNew();
+        $this->anonymousRoleNoSecurity->setName('Anonymous 2');
+        $this->anonymousRoleNoSecurity->setAnonymous(true);
+        $this->anonymousRoleNoSecurity->setSystem('sulu');
+
+        $permission1 = new Permission();
+        $permission1->setPermissions(122);
+        $permission1->setRole($this->anonymousRoleNoSecurity);
+        $permission1->setContext('sulu.webspaces.sulu_io');
+        $em->persist($permission1);
+
+        $permission2 = new Permission();
+        $permission2->setPermissions(122);
+        $permission2->setRole($this->anonymousRoleNoSecurity);
+        $permission2->setContext('sulu.webspaces.test_io');
+        $em->persist($permission2);
+
+        $em->persist($this->anonymousRoleNoSecurity);
         $em->flush();
 
         $this->tag1 = $this->tagRepository->createNew();
@@ -157,7 +186,6 @@ class QueryBuilderTest extends SuluTestCase
         $em->flush();
 
         $this->getContainer()->get('sulu_security.system_store')->setSystem('sulu_io');
-        $this->getContainer()->get('security.token_storage')->setToken(new UsernamePasswordToken($user, '', 'test'));
     }
 
     public function propertiesProvider()
@@ -377,6 +405,103 @@ class QueryBuilderTest extends SuluTestCase
             $this->assertEquals($expected->getPath(), '/cmf/sulu_io/contents' . $item['path']);
             $this->assertEquals($expected->getTitle(), $item['title']);
         }
+    }
+
+    public function testSecurity()
+    {
+        $webspace = $this->getContainer()->get('sulu_core.webspace.webspace_manager')
+            ->findWebspaceByKey('test_io');
+
+        $request = new Request([], [], ['_sulu' => new RequestAttributes(['webspace' => $webspace])]);
+        $this->getContainer()->get('request_stack')->push($request);
+
+        $root = $this->sessionManager->getContentNode('test_io');
+
+        /** @var PageDocument $document */
+        $document = $this->documentManager->create('page');
+        $document->setTitle('Document');
+        $document->setResourceSegment('/document');
+        $document->setStructureType('simple');
+        $document->setWorkflowStage(WorkflowStage::PUBLISHED);
+        $this->documentManager->persist($document, 'en', ['parent_path' => '/cmf/test_io/contents']);
+        $this->documentManager->publish($document, 'en');
+
+        $securedDocument = $this->documentManager->create('page');
+        $securedDocument->setTitle('Secured document');
+        $securedDocument->setResourceSegment('/secured-document');
+        $securedDocument->setStructureType('simple');
+        $securedDocument->setWorkflowStage(WorkflowStage::PUBLISHED);
+        $securedDocument->setPermissions([$this->anonymousRoleSecurity->getId() => ['view' => false]]);
+        $this->documentManager->persist($securedDocument, 'en', ['parent_path' => '/cmf/test_io/contents']);
+        $this->documentManager->publish($securedDocument, 'en');
+
+        $this->documentManager->flush();
+
+        $builder = new QueryBuilder(
+            $this->structureManager,
+            $this->extensionManager,
+            $this->sessionManager,
+            $this->languageNamespace
+        );
+
+        $builder->init([
+            'config' => [
+                'dataSource' => $root->getIdentifier(),
+            ],
+        ]);
+
+        $result = $this->contentQuery->execute('test_io', ['en'], $builder, true, -1, null, null, false, 64);
+        $this->assertCount(1, $result);
+        $this->assertEquals('Document', $result[0]['title']);
+    }
+
+    public function testSecurityWithoutPermissionCheck()
+    {
+        $webspace = $this->getContainer()->get('sulu_core.webspace.webspace_manager')
+            ->findWebspaceByKey('sulu_io');
+
+        $request = new Request([], [], ['_sulu' => new RequestAttributes(['webspace' => $webspace])]);
+        $this->getContainer()->get('request_stack')->push($request);
+
+        $root = $this->sessionManager->getContentNode('test_io');
+
+        /** @var PageDocument $document */
+        $document = $this->documentManager->create('page');
+        $document->setTitle('Document');
+        $document->setResourceSegment('/document');
+        $document->setStructureType('simple');
+        $document->setWorkflowStage(WorkflowStage::PUBLISHED);
+        $this->documentManager->persist($document, 'en', ['parent_path' => '/cmf/test_io/contents']);
+        $this->documentManager->publish($document, 'en');
+
+        $securedDocument = $this->documentManager->create('page');
+        $securedDocument->setTitle('Secured document');
+        $securedDocument->setResourceSegment('/secured-document');
+        $securedDocument->setStructureType('simple');
+        $securedDocument->setWorkflowStage(WorkflowStage::PUBLISHED);
+        $securedDocument->setPermissions([$this->anonymousRoleSecurity->getId() => ['view' => false]]);
+        $this->documentManager->persist($securedDocument, 'en', ['parent_path' => '/cmf/test_io/contents']);
+        $this->documentManager->publish($securedDocument, 'en');
+
+        $this->documentManager->flush();
+
+        $builder = new QueryBuilder(
+            $this->structureManager,
+            $this->extensionManager,
+            $this->sessionManager,
+            $this->languageNamespace
+        );
+
+        $builder->init([
+            'config' => [
+                'dataSource' => $root->getIdentifier(),
+            ],
+        ]);
+
+        $result = $this->contentQuery->execute('sulu_io', ['en'], $builder, true, -1, null, null, false, 64);
+        $this->assertCount(2, $result);
+        $this->assertEquals('Document', $result[0]['title']);
+        $this->assertEquals('Secured document', $result[1]['title']);
     }
 
     public function testAudienceTargeting()

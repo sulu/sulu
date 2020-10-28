@@ -14,8 +14,6 @@ namespace Sulu\Component\Content\Query;
 use Jackalope\Query\Row;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
-use Sulu\Component\Security\Authentication\UserInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
@@ -38,21 +36,14 @@ class ContentQueryExecutor implements ContentQueryExecutorInterface
      */
     private $stopwatch;
 
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
-
     public function __construct(
         SessionManagerInterface $sessionManager,
         ContentMapperInterface $contentMapper,
-        Stopwatch $stopwatch = null,
-        TokenStorageInterface $tokenStorage = null
+        Stopwatch $stopwatch = null
     ) {
         $this->sessionManager = $sessionManager;
         $this->contentMapper = $contentMapper;
         $this->stopwatch = $stopwatch;
-        $this->tokenStorage = $tokenStorage;
     }
 
     public function execute(
@@ -117,7 +108,6 @@ class ContentQueryExecutor implements ContentQueryExecutorInterface
             $fields,
             $depth,
             $contentQueryBuilder->getPublished(),
-            $this->getCurrentUser(),
             $permission
         );
 
@@ -157,29 +147,5 @@ class ContentQueryExecutor implements ContentQueryExecutorInterface
         }
 
         return $query;
-    }
-
-    /**
-     * Returns current user or null if no user is loggedin.
-     *
-     * @return UserInterface|void
-     */
-    private function getCurrentUser()
-    {
-        if (!$this->tokenStorage) {
-            return;
-        }
-
-        $token = $this->tokenStorage->getToken();
-        if (!$token) {
-            return;
-        }
-
-        $user = $token->getUser();
-        if ($user instanceof UserInterface) {
-            return $user;
-        }
-
-        return;
     }
 }

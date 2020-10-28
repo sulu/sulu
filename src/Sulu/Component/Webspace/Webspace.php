@@ -418,9 +418,7 @@ class Webspace implements ArrayableInterface
             return false;
         }
 
-        $system = $security->getSystem();
-
-        return null !== $system;
+        return null !== $security->getSystem() && $security->getPermissionCheck();
     }
 
     /**
@@ -601,6 +599,7 @@ class Webspace implements ArrayableInterface
         $thisSecurity = $this->getSecurity();
         if (null != $thisSecurity) {
             $res['security']['system'] = $thisSecurity->getSystem();
+            $res['security']['permissionCheck'] = $thisSecurity->getPermissionCheck();
         }
 
         $res['segments'] = [];

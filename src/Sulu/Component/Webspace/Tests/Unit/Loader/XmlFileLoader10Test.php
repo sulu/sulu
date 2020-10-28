@@ -61,6 +61,7 @@ class XmlFileLoader10Test extends WebspaceTestCase
         $this->assertEquals('Sulu CMF', $webspace->getName());
         $this->assertEquals('sulu_io', $webspace->getKey());
         $this->assertEquals('sulu_io', $webspace->getSecurity()->getSystem());
+        $this->assertEquals(true, $webspace->getSecurity()->getPermissionCheck());
 
         $this->assertEquals('en', $webspace->getLocalizations()[0]->getLanguage());
         $this->assertEquals('us', $webspace->getLocalizations()[0]->getCountry());

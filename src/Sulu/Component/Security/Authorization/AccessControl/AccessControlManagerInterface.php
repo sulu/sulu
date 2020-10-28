@@ -55,8 +55,9 @@ interface AccessControlManagerInterface
      * @param string $securityContext
      * @param mixed[] $objectPermissionsByRole
      * @param ?UserInterface $user The user for which the security is returned
+     * @param ?string $system The system in which the permission should be checked
      *
      * @return mixed[]
      */
-    public function getUserPermissionByArray($locale, $securityContext, $objectPermissionsByRole, $user);
+    public function getUserPermissionByArray($locale, $securityContext, $objectPermissionsByRole, $user, $system = null);
 }

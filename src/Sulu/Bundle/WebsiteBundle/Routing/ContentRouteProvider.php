@@ -157,7 +157,7 @@ class ContentRouteProvider implements RouteProviderInterface
                 return $collection;
             }
 
-            if ($this->securityChecker) {
+            if ($this->securityChecker && $portal->getWebspace()->hasWebsiteSecurity()) {
                 $this->securityChecker->checkPermission(
                     new SecurityCondition(
                         'sulu.webspaces.' . $document->getWebspaceName(),

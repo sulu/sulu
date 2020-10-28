@@ -13,6 +13,7 @@ export default class SmartContentStore {
     locale: ?IObservableValue<string>;
     dataSourceResourceKey: ?string;
     params: Object;
+    webspaceKey: ?string;
     @observable items: Array<Object> = [];
     @observable itemsLoading: boolean = true;
     @observable categoriesLoading: boolean;
@@ -38,13 +39,15 @@ export default class SmartContentStore {
         locale?: ?IObservableValue<string>,
         dataSourceResourceKey: ?string,
         id: ?string | number,
-        params: Object
+        params: Object,
+        webspaceKey: ?string
     ) {
         this.provider = provider;
         this.locale = locale;
         this.dataSourceResourceKey = dataSourceResourceKey;
         this.id = id;
         this.params = params;
+        this.webspaceKey = webspaceKey;
 
         if (filterCriteria) {
             this.audienceTargeting = filterCriteria.audienceTargeting;
@@ -111,6 +114,7 @@ export default class SmartContentStore {
                 excluded: [this.id, ...this.excludedIds],
                 locale: this.locale,
                 params: JSON.stringify(this.params),
+                webspace: this.webspaceKey,
                 ...this.filterCriteria,
             })
         ).then(action((response) => {

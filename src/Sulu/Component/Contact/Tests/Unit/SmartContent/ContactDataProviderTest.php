@@ -26,32 +26,49 @@ use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 
 class ContactDataProviderTest extends TestCase
 {
+    /**
+     * @var DataProviderRepositoryInterface
+     */
+    private $dataProviderRepository;
+
+    /**
+     * @var ArraySerializerInterface
+     */
+    private $serializer;
+
+    /**
+     * @var ReferenceStoreInterface
+     */
+    private $referenceStore;
+
+    /**
+     * @var ContactDataProvider
+     */
+    private $contactDataProvider;
+
+    public function setUp(): void
+    {
+        $this->dataProviderRepository = $this->prophesize(DataProviderRepositoryInterface::class);
+        $this->serializer = $this->prophesize(ArraySerializerInterface::class);
+        $this->referenceStore = $this->prophesize(ReferenceStoreInterface::class);
+
+        $this->contactDataProvider = new ContactDataProvider(
+            $this->dataProviderRepository->reveal(),
+            $this->serializer->reveal(),
+            $this->referenceStore->reveal()
+        );
+    }
+
     public function testGetConfiguration()
     {
-        $serializer = $this->prophesize(ArraySerializerInterface::class);
-        $referenceStore = $this->prophesize(ReferenceStoreInterface::class);
-        $provider = new ContactDataProvider(
-            $this->getRepository(),
-            $serializer->reveal(),
-            $referenceStore->reveal()
-        );
-
-        $configuration = $provider->getConfiguration();
+        $configuration = $this->contactDataProvider->getConfiguration();
 
         $this->assertInstanceOf(ProviderConfigurationInterface::class, $configuration);
     }
 
     public function testGetDefaultParameter()
     {
-        $serializer = $this->prophesize(ArraySerializerInterface::class);
-        $referenceStore = $this->prophesize(ReferenceStoreInterface::class);
-        $provider = new ContactDataProvider(
-            $this->getRepository(),
-            $serializer->reveal(),
-            $referenceStore->reveal()
-        );
-
-        $parameter = $provider->getDefaultPropertyParameter();
+        $parameter = $this->contactDataProvider->getDefaultPropertyParameter();
 
         $this->assertEquals([], $parameter);
     }
@@ -82,18 +99,21 @@ class ContactDataProviderTest extends TestCase
      */
     public function testResolveDataItems($filters, $limit, $page, $pageSize, $repositoryResult, $hasNextPage, $items)
     {
-        $serializer = $this->prophesize(ArraySerializerInterface::class);
-        $referenceStore = $this->prophesize(ReferenceStoreInterface::class);
-        $provider = new ContactDataProvider(
-            $this->getRepository($filters, $page, $pageSize, $limit, $repositoryResult),
-            $serializer->reveal(),
-            $referenceStore->reveal()
-        );
+        $this->dataProviderRepository->findByFilters(
+            $filters,
+            $page,
+            $pageSize,
+            $limit,
+            'en',
+            [],
+            null,
+            null
+        )->willReturn($repositoryResult);
 
-        $result = $provider->resolveDataItems(
+        $result = $this->contactDataProvider->resolveDataItems(
             $filters,
             [],
-            ['webspace' => 'sulu_io', 'locale' => 'en'],
+            ['locale' => 'en'],
             $limit,
             $page,
             $pageSize
@@ -118,15 +138,18 @@ class ContactDataProviderTest extends TestCase
             $dataItems[] = $this->createDataItem($contact);
         }
 
-        $serializer = $this->prophesize(ArraySerializerInterface::class);
-        $referenceStore = $this->prophesize(ReferenceStoreInterface::class);
-        $provider = new ContactDataProvider(
-            $this->getRepository(['sortBy' => null], 1, null, null, $contacts),
-            $serializer->reveal(),
-            $referenceStore->reveal()
-        );
+        $this->dataProviderRepository->findByFilters(
+            ['sortBy' => null],
+            1,
+            null,
+            null,
+            'en',
+            [],
+            null,
+            null
+        )->willReturn($contacts);
 
-        $result = $provider->resolveDataItems(['sortBy' => null], [], ['webspace' => 'sulu_io', 'locale' => 'en']);
+        $result = $this->contactDataProvider->resolveDataItems(['sortBy' => null], [], ['webspace' => 'sulu_io', 'locale' => 'en']);
         $this->assertEquals($dataItems, $result->getItems());
     }
 
@@ -171,22 +194,25 @@ class ContactDataProviderTest extends TestCase
             ['fullContact', 'partialAccount', 'partialCategory']
         );
 
-        $serializer = $this->prophesize(ArraySerializerInterface::class);
-        $serializer->serialize(Argument::type(Contact::class), $context)
+        $this->serializer->serialize(Argument::type(Contact::class), $context)
             ->will(
                 function($args) use ($serializeCallback) {
                     return $serializeCallback($args[0]);
                 }
             );
 
-        $referenceStore = $this->prophesize(ReferenceStoreInterface::class);
-        $provider = new ContactDataProvider(
-            $this->getRepository($filters, $page, $pageSize, $limit, $repositoryResult),
-            $serializer->reveal(),
-            $referenceStore->reveal()
-        );
+        $this->dataProviderRepository->findByFilters(
+            $filters,
+            $page,
+            $pageSize,
+            $limit,
+            'en',
+            [],
+            null,
+            null
+        )->willReturn($repositoryResult);
 
-        $result = $provider->resolveResourceItems(
+        $result = $this->contactDataProvider->resolveResourceItems(
             $filters,
             [],
             ['webspace' => 'sulu_io', 'locale' => 'en'],
@@ -203,33 +229,7 @@ class ContactDataProviderTest extends TestCase
 
     public function testResolveDataSource()
     {
-        $serializer = $this->prophesize(ArraySerializerInterface::class);
-        $referenceStore = $this->prophesize(ReferenceStoreInterface::class);
-        $provider = new ContactDataProvider(
-            $this->getRepository(),
-            $serializer->reveal(),
-            $referenceStore->reveal()
-        );
-
-        $this->assertNull($provider->resolveDatasource('', [], []));
-    }
-
-    /**
-     * @return DataProviderRepositoryInterface
-     */
-    private function getRepository(
-        $filters = [],
-        $page = null,
-        $pageSize = 0,
-        $limit = null,
-        $result = [],
-        $options = []
-    ) {
-        $mock = $this->prophesize(DataProviderRepositoryInterface::class);
-
-        $mock->findByFilters($filters, $page, $pageSize, $limit, 'en', $options, null)->willReturn($result);
-
-        return $mock->reveal();
+        $this->assertNull($this->contactDataProvider->resolveDatasource('', [], []));
     }
 
     private function createContact($id, $firstName, $lastName, $tags = [])

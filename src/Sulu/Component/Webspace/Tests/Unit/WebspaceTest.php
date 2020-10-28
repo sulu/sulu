@@ -43,6 +43,7 @@ class WebspaceTest extends TestCase
             ],
             'security' => [
                 'system' => 'sec_sys',
+                'permissionCheck' => false,
             ],
             'segments' => [
                 [
@@ -88,6 +89,7 @@ class WebspaceTest extends TestCase
 
         $security = new Security();
         $security->setSystem($expected['security']['system']);
+        $security->setPermissionCheck($expected['security']['permissionCheck']);
         $webspace->setSecurity($security);
 
         $portal = new Portal();
@@ -321,7 +323,9 @@ class WebspaceTest extends TestCase
     public function testHasWebsiteSecurityWithoutSystem()
     {
         $webspace = new Webspace();
-        $webspace->setSecurity(new Security());
+        $security = new Security();
+        $security->setPermissionCheck(true);
+        $webspace->setSecurity($security);
         $this->assertFalse($webspace->hasWebsiteSecurity());
     }
 
@@ -330,7 +334,18 @@ class WebspaceTest extends TestCase
         $webspace = new Webspace();
         $security = new Security();
         $security->setSystem('test');
+        $security->setPermissionCheck(true);
         $webspace->setSecurity($security);
         $this->assertTrue($webspace->hasWebsiteSecurity());
+    }
+
+    public function testHasWebsiteSecurityWithoutPermissionCheck()
+    {
+        $webspace = new Webspace();
+        $security = new Security();
+        $security->setSystem('test');
+        $security->setPermissionCheck(false);
+        $webspace->setSecurity($security);
+        $this->assertFalse($webspace->hasWebsiteSecurity());
     }
 }

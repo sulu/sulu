@@ -33,14 +33,24 @@ class RolePermissions extends React.Component<FieldTypeProps<RolePermissionsType
         return key;
     }
 
-    @computed get system() {
+    @computed get webspaceSecurity() {
         const {
             webspace: {
-                security: {
-                    system,
-                } = {},
+                security = {},
             } = {},
         } = this;
+
+        return security;
+    }
+
+    @computed get permissionCheck() {
+        const {permissionCheck} = this.webspaceSecurity;
+
+        return permissionCheck;
+    }
+
+    @computed get system() {
+        const {system} = this.webspaceSecurity;
 
         return system;
     }
@@ -63,6 +73,7 @@ class RolePermissions extends React.Component<FieldTypeProps<RolePermissionsType
             <RolePermissionsContainer
                 disabled={disabled || undefined}
                 onChange={this.handleChange}
+                permissionCheck={this.permissionCheck}
                 resourceKey={formInspector.options.resourceKey}
                 system={this.system}
                 value={value ? value : {}}

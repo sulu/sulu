@@ -278,10 +278,15 @@ class XmlFileLoader10 extends BaseXmlFileLoader
      */
     protected function generateSecurity()
     {
-        $securitySystemNode = $this->xpath->query('/x:webspace/x:security/x:system');
-        if ($securitySystemNode->length > 0) {
+        $securityNodeList = $this->xpath->query('/x:webspace/x:security');
+        if ($securityNodeList->length > 0) {
+            $securityNode = $securityNodeList->item(0);
+            $securitySystemNode = $this->xpath->query('x:system', $securityNode);
+            $permissionCheckAttribute = $securityNode->attributes->getNamedItem('permission-check');
+
             $security = new Security();
             $security->setSystem($securitySystemNode->item(0)->nodeValue);
+            $security->setPermissionCheck($permissionCheckAttribute ? 'true' === $permissionCheckAttribute->nodeValue : false);
             $this->webspace->setSecurity($security);
         }
     }

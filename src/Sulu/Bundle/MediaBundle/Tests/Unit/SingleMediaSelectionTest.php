@@ -28,6 +28,9 @@ use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Sulu\Component\Webspace\Security;
+use Sulu\Component\Webspace\Webspace;
 
 class SingleMediaSelectionTest extends TestCase
 {
@@ -47,6 +50,21 @@ class SingleMediaSelectionTest extends TestCase
     private $mediaReferenceStore;
 
     /**
+     * @var RequestAnalyzerInterface
+     */
+    private $requestAnalyzer;
+
+    /**
+     * @var SecurityCheckerInterface
+     */
+    private $securityChecker;
+
+    /**
+     * @var Webspace
+     */
+    private $webspace;
+
+    /**
      * @var NodeInterface
      */
     private $node;
@@ -55,11 +73,6 @@ class SingleMediaSelectionTest extends TestCase
      * @var PropertyInterface
      */
     private $nodeProperty;
-
-    /**
-     * @var SecurityCheckerInterface
-     */
-    private $securityChecker;
 
     /**
      * @var Media
@@ -73,11 +86,16 @@ class SingleMediaSelectionTest extends TestCase
         $this->media = $this->prophesize(Media::class);
         $this->node = $this->prophesize(NodeInterface::class);
         $this->nodeProperty = $this->prophesize(PropertyInterface::class);
+        $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
         $this->securityChecker = $this->prophesize(SecurityCheckerInterface::class);
+
+        $this->webspace = new Webspace();
+        $this->requestAnalyzer->getWebspace()->willReturn($this->webspace);
 
         $this->singleMediaSelection = new SingleMediaSelection(
             $this->mediaManager->reveal(),
             $this->mediaReferenceStore->reveal(),
+            $this->requestAnalyzer->reveal(),
             $this->securityChecker->reveal()
         );
     }
@@ -253,7 +271,42 @@ class SingleMediaSelectionTest extends TestCase
             PermissionTypes::VIEW
         )->willReturn(false);
 
+        $security = new Security();
+        $security->setSystem('website');
+        $security->setPermissionCheck(true);
+        $this->webspace->setSecurity($security);
+
         $this->assertNull($this->singleMediaSelection->getContentData($property));
+    }
+
+    public function testContentDataForMissingPermissionsWithPermissionCheckFalse()
+    {
+        $structure = $this->prophesize(StructureInterface::class);
+        $structure->getLanguageCode()->willReturn('de');
+
+        $property = new Property('media', [], 'single_media_selection');
+        $property->setValue(['id' => 11]);
+        $property->setStructure($structure->reveal());
+
+        $this->mediaManager->getById(11, 'de')->willReturn($this->media->reveal());
+        $this->media->getCollection()->willReturn(7);
+
+        $this->securityChecker->hasPermission(
+            new SecurityCondition(
+                'sulu.media.collections',
+                'de',
+                Collection::class,
+                7
+            ),
+            PermissionTypes::VIEW
+        )->willReturn(false);
+
+        $security = new Security();
+        $security->setSystem('website');
+        $security->setPermissionCheck(false);
+        $this->webspace->setSecurity($security);
+
+        $this->assertEquals($this->media->reveal(), $this->singleMediaSelection->getContentData($property));
     }
 
     public function testContentDataDeleted()

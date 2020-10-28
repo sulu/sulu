@@ -121,7 +121,8 @@ class SmartContent extends React.Component<Props> {
             formInspector.locale,
             datasourceResourceKey,
             formInspector.resourceKey === this.provider ? formInspector.id : undefined,
-            schemaOptions
+            schemaOptions,
+            formInspector.metadataOptions?.webspace
         );
 
         smartContentStorePool.add(this.smartContentStore, excludeDuplicates);

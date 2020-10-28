@@ -6,7 +6,7 @@
     <name>Sulu Test</name>
     <key>sulu-test</key>
 
-    <security>
+    <security permission-check="true">
         <system>Sulu Test</system>
     </security>
 

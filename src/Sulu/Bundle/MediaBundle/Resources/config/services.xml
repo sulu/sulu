@@ -280,7 +280,7 @@
         <service id="sulu_media.type.media_selection" class="%sulu_media.media_selection.class%">
             <argument type="service" id="sulu_media.media_manager"/>
             <argument type="service" id="sulu_media.reference_store.media"/>
-            <argument type="service" id="security.token_storage" on-invalid="null"/>
+            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
             <argument>%sulu_security.permissions%</argument>
 
             <tag name="sulu.content.type" alias="media_selection"/>
@@ -290,6 +290,7 @@
         <service id="sulu_media.type.single_media_selection" class="Sulu\Bundle\MediaBundle\Content\Types\SingleMediaSelection">
             <argument type="service" id="sulu_media.media_manager"/>
             <argument type="service" id="sulu_media.reference_store.media"/>
+            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
             <argument type="service" id="sulu_security.security_checker" on-invalid="null"/>
 
             <tag name="sulu.content.type" alias="single_media_selection"/>
@@ -352,7 +353,9 @@
             <argument type="service" id="sulu_core.array_serializer"/>
             <argument type="service" id="request_stack"/>
             <argument type="service" id="sulu_media.reference_store.media"/>
-            <argument type="service" id="security.token_storage" on-invalid="null"/>
+            <argument type="service" id="security.helper" on-invalid="ignore"/>
+            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
+            <argument>%sulu_security.permissions%</argument>
 
             <tag name="sulu.smart_content.data_provider" alias="media"/>
         </service>

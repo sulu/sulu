@@ -130,11 +130,14 @@ test('Load items if FilterCriteria is given with datasource', () => {
     const datasourcePromise = Promise.resolve({id: 3});
     ResourceRequester.get.mockReturnValue(datasourcePromise);
 
-    const smartContentStore = new SmartContentStore('content', filterCriteria, locale, 'pages', 4);
+    const smartContentStore = new SmartContentStore('content', filterCriteria, locale, 'pages', 4, {}, 'sulu_io');
     smartContentStore.start();
 
     return datasourcePromise.then(() => {
-        expect(Requester.get).toBeCalledWith('/api/items?provider=content&excluded=4&locale=en&dataSource=3');
+        expect(Requester.get)
+            .toBeCalledWith(
+                '/api/items?provider=content&excluded=4&locale=en&params=%7B%7D&webspace=sulu_io&dataSource=3'
+            );
     });
 });
 

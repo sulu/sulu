@@ -14,9 +14,7 @@ namespace Sulu\Bundle\WebsiteBundle\Twig\Navigation;
 use Sulu\Bundle\WebsiteBundle\Navigation\NavigationMapperInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
-use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -40,21 +38,14 @@ class NavigationTwigExtension extends AbstractExtension implements NavigationTwi
      */
     private $requestAnalyzer;
 
-    /**
-     * @var ?TokenStorageInterface
-     */
-    private $tokenStorage;
-
     public function __construct(
         ContentMapperInterface $contentMapper,
         NavigationMapperInterface $navigationMapper,
-        RequestAnalyzerInterface $requestAnalyzer = null,
-        TokenStorageInterface $tokenStorage = null
+        RequestAnalyzerInterface $requestAnalyzer = null
     ) {
         $this->contentMapper = $contentMapper;
         $this->navigationMapper = $navigationMapper;
         $this->requestAnalyzer = $requestAnalyzer;
-        $this->tokenStorage = $tokenStorage;
     }
 
     public function getFunctions()
@@ -80,8 +71,7 @@ class NavigationTwigExtension extends AbstractExtension implements NavigationTwi
             true,
             $context,
             $loadExcerpt,
-            $segment ? $segment->getKey() : null,
-            $this->getUser()
+            $segment ? $segment->getKey() : null
         );
     }
 
@@ -96,8 +86,7 @@ class NavigationTwigExtension extends AbstractExtension implements NavigationTwi
             false,
             $context,
             $loadExcerpt,
-            $segment ? $segment->getKey() : null,
-            $this->getUser()
+            $segment ? $segment->getKey() : null
         );
     }
 
@@ -131,8 +120,7 @@ class NavigationTwigExtension extends AbstractExtension implements NavigationTwi
                 true,
                 $context,
                 $loadExcerpt,
-                $segment ? $segment->getKey() : null,
-                $this->getUser()
+                $segment ? $segment->getKey() : null
             );
         } catch (DocumentNotFoundException $exception) {
             return [];
@@ -169,8 +157,7 @@ class NavigationTwigExtension extends AbstractExtension implements NavigationTwi
                 false,
                 $context,
                 $loadExcerpt,
-                $segment ? $segment->getKey() : null,
-                $this->getUser()
+                $segment ? $segment->getKey() : null
             );
         } catch (DocumentNotFoundException $exception) {
             return [];
@@ -202,25 +189,5 @@ class NavigationTwigExtension extends AbstractExtension implements NavigationTwi
         }
 
         return \preg_match(\sprintf('/%s([\/]|$)/', \preg_quote($itemPath, '/')), $requestPath);
-    }
-
-    private function getUser(): ?UserInterface
-    {
-        if (!$this->tokenStorage) {
-            return null;
-        }
-
-        $token = $this->tokenStorage->getToken();
-        if (!$token) {
-            return null;
-        }
-
-        $user = $token->getUser();
-
-        if ($user instanceof UserInterface) {
-            return $user;
-        }
-
-        return null;
     }
 }
