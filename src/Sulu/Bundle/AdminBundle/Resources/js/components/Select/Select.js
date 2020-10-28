@@ -44,7 +44,7 @@ class Select<T> extends React.Component<Props<T>> {
 
     @observable selectedOptionRef: ?ElementRef<'li'>;
 
-    @observable buttonRefs: Map<number, ElementRef<'button'>> = new Map();
+    @observable buttonRefsByIndex: Map<number, ElementRef<'button'>> = new Map();
 
     @observable searchText: string = '';
 
@@ -52,13 +52,20 @@ class Select<T> extends React.Component<Props<T>> {
 
     @observable open: boolean;
 
-    @computed get buttonTexts() {
-        return Array.from(this.buttonRefs.entries())
-            .map<[number, string]>(([index, ref]) => [index, ref.textContent]);
+    @computed get buttonTexts(): Map<number, string> {
+        return Array.from(this.buttonRefsByIndex.entries())
+            .reduce((buttonTexts, [index, ref]: [number, ElementRef<'button'>]) => {
+                buttonTexts.set(index, ref.textContent);
+                return buttonTexts;
+            }, new Map());
     }
 
-    @computed get selectedIndex() {
-        let selectedIndex = -1;
+    @computed get availableButtonIndices(): number[] {
+        return Array.from(this.buttonRefsByIndex.keys());
+    }
+
+    @computed get firstSelectedIndex() {
+        let firstSelectedIndex = -1;
 
         React.Children.forEach(this.props.children, (child: any, index: number) => {
             if (!child || child.type !== Option) {
@@ -66,16 +73,16 @@ class Select<T> extends React.Component<Props<T>> {
             }
 
             if (this.props.isOptionSelected(child)) {
-                selectedIndex = index;
+                firstSelectedIndex = index;
             }
         });
 
-        return selectedIndex;
+        return firstSelectedIndex;
     }
 
     @action openOptionList = () => {
         this.open = true;
-        this.focusedElementIndex = this.selectedIndex;
+        this.focusedElementIndex = this.firstSelectedIndex;
     };
 
     @action closeOptionList = () => {
@@ -106,9 +113,9 @@ class Select<T> extends React.Component<Props<T>> {
 
     setButtonRef = (index: number) => action((ref: ?ElementRef<'button'>) => {
         if (ref) {
-            this.buttonRefs.set(index, ref);
-        } else if (this.buttonRefs.has(index)) {
-            this.buttonRefs.delete(index);
+            this.buttonRefsByIndex.set(index, ref);
+        } else if (this.buttonRefsByIndex.has(index)) {
+            this.buttonRefsByIndex.delete(index);
         }
     });
 
@@ -121,7 +128,9 @@ class Select<T> extends React.Component<Props<T>> {
     @action appendSearchText = (searchText: string) => {
         this.searchText += searchText;
 
-        const hit = this.buttonTexts.find(([, text]) => text.toLowerCase().startsWith(this.searchText.toLowerCase()));
+        const entries = Array.from(this.buttonTexts.entries());
+        const hit = entries.find(([, text]) => text.toLowerCase().startsWith(this.searchText.toLowerCase()));
+
         if (hit) {
             this.requestFocus(hit[0]);
         }
@@ -181,27 +190,25 @@ class Select<T> extends React.Component<Props<T>> {
     handleOptionListClose = this.closeOptionList;
 
     @computed get highestButtonIndex() {
-        const max = Math.max(...Array.from(this.buttonRefs.keys()));
+        const max = Math.max(...Array.from(this.buttonRefsByIndex.keys()));
         return max;
     }
 
-    @action requestFocus = (focusedElementIndex: number) => {
-        if (focusedElementIndex < 0 || focusedElementIndex > this.highestButtonIndex) {
+    @action requestFocus = (elementIndex: number) => {
+        if (!this.buttonRefsByIndex.has(elementIndex)) {
             return;
         }
 
-        if (this.buttonRefs.has(focusedElementIndex)) {
-            this.focusedElementIndex = focusedElementIndex;
-            const ref = this.buttonRefs.get(focusedElementIndex);
+        this.focusedElementIndex = elementIndex;
+        const ref = this.buttonRefsByIndex.get(elementIndex);
 
-            if (ref) {
-                ref.focus();
-            }
+        if (ref) {
+            ref.focus();
         }
     };
 
-    handleRequestFocus = (focusedElementIndex: number) => () => {
-        this.requestFocus(focusedElementIndex);
+    handleRequestFocus = (elementIndex: number) => () => {
+        this.requestFocus(elementIndex);
     };
 
     @action handleKeyDown = (event: KeyboardEvent) => {
@@ -209,10 +216,10 @@ class Select<T> extends React.Component<Props<T>> {
             return;
         }
 
-        event.preventDefault();
-
         if (event.key === 'Escape') {
+            event.preventDefault();
             this.closeOptionList();
+            this.clearSearchText();
 
             return;
         }
@@ -220,22 +227,26 @@ class Select<T> extends React.Component<Props<T>> {
         let focusedElementIndex = this.focusedElementIndex;
 
         if (event.key === 'ArrowUp') {
-            do {
-                --focusedElementIndex;
-            } while (!this.buttonRefs.has(focusedElementIndex) && focusedElementIndex > 0);
+            event.preventDefault();
+            this.clearSearchText();
+
+            focusedElementIndex = Math.max(
+                ...this.availableButtonIndices.filter(i => i < this.focusedElementIndex)
+            )
         }
 
         if (event.key === 'ArrowDown') {
-            do {
-                ++focusedElementIndex;
-            } while (!this.buttonRefs.has(focusedElementIndex) && focusedElementIndex <= this.highestButtonIndex);
+            event.preventDefault();
+            this.clearSearchText();
+
+            focusedElementIndex = Math.min(
+                ...this.availableButtonIndices.filter(i => i > this.focusedElementIndex)
+            )
         }
 
         if (focusedElementIndex !== this.focusedElementIndex) {
             this.requestFocus(focusedElementIndex);
         }
-
-        this.clearSearchText();
     };
 
     handleKeyPress = (event: KeyboardEvent) => {
