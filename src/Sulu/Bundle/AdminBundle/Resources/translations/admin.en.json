@@ -148,6 +148,7 @@
     "sulu_admin.form_contains_invalid_values": "The form contains invalid values",
     "sulu_admin.form_save_server_error": "There was an error when trying to save the form",
     "sulu_admin.form_used_by": "This form is currently used by",
+    "sulu_admin.refresh_url": "Refresh URL",
     "sulu_admin.from": "from",
     "sulu_admin.until": "until",
     "sulu_admin.block_settings": "Block settings",

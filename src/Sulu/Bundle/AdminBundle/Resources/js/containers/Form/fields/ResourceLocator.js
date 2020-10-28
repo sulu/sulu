@@ -1,11 +1,13 @@
 // @flow
-import React from 'react';
-import {action, observable, toJS} from 'mobx';
+import React, {Fragment} from 'react';
+import {action, comparer, computed, observable, reaction, toJS} from 'mobx';
 import {observer} from 'mobx-react';
 import ResourceLocatorComponent from '../../../components/ResourceLocator';
 import ResourceLocatorHistory from '../../../containers/ResourceLocatorHistory';
 import Requester from '../../../services/Requester';
 import type {FieldTypeProps} from '../../../types';
+import {translate} from '../../../utils/Translator';
+import Button from '../../../components/Button';
 import resourceLocatorStyles from './resourceLocator.scss';
 
 const PART_TAG = 'sulu.rlp.part';
@@ -15,19 +17,59 @@ const HOMEPAGE_RESOURCE_LOCATOR = '/';
 @observer
 class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
     @observable mode: string;
+    @observable inputChanged: boolean = false;
+    @observable inputChangedSinceRefresh: boolean = false;
+    @observable partsChangedSinceRefresh: boolean = false;
+
+    partsChangeDisposer: ?() => mixed;
+
+    @computed get parts(): {[string]: mixed} {
+        const {
+            formInspector,
+        } = this.props;
+
+        const partEntries = formInspector.getPathsByTag(PART_TAG)
+            .map((path: string) => [path, formInspector.getValueByPath(path)])
+            .filter(([, value: mixed]) => !!value)
+            .map(([path: string, value: mixed]) => {
+                // path is a jsonpointer but the api controller requires property names
+                if (path.startsWith('/')) {
+                    return [path.substr(1), value];
+                }
+
+                return [path, value];
+            });
+
+        return Object.fromEntries(partEntries);
+    }
+
+    @computed get enableAutoGeneration(): boolean {
+        const {
+            formInspector: {
+                id,
+            },
+        } = this.props;
+
+        return !id && !this.inputChanged && Object.keys(this.parts).length > 0;
+    }
+
+    @computed get enableRefreshButton(): boolean {
+        if (this.enableAutoGeneration) {
+            return false;
+        }
+
+        return (this.inputChangedSinceRefresh || this.partsChangedSinceRefresh) && Object.keys(this.parts).length > 0;
+    }
 
     constructor(props: FieldTypeProps<?string>) {
         super(props);
 
         const {
-            dataPath,
             fieldTypeOptions: {
                 generationUrl,
                 modeResolver,
-                resourceStorePropertiesToRequest = {},
             },
             formInspector,
-            onChange,
             value,
         } = this.props;
 
@@ -37,6 +79,10 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
 
         modeResolver(this.props).then(action((mode) => this.mode = mode));
 
+        if (value === HOMEPAGE_RESOURCE_LOCATOR) {
+            return;
+        }
+
         if (!generationUrl) {
             return;
         }
@@ -45,66 +91,83 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
             throw new Error('The "generationUrl" fieldTypeOption must be a string!');
         }
 
-        if (value === HOMEPAGE_RESOURCE_LOCATOR) {
-            return;
-        }
+        this.partsChangeDisposer = reaction(
+            () => (this.parts),
+            action(() => {
+                this.partsChangedSinceRefresh = true;
+            }),
+            {equals: comparer.structural}
+        );
 
-        formInspector.addFinishFieldHandler((finishedFieldDataPath, finishedFieldSchemaPath) => {
-            if (value !== undefined) {
-                return;
-            }
-
-            if (formInspector.isFieldModified(dataPath)) {
-                return;
-            }
-
+        formInspector.addFinishFieldHandler(action((finishedFieldDataPath, finishedFieldSchemaPath) => {
             const {tags: finishedFieldTags} = formInspector.getSchemaEntryByPath(finishedFieldSchemaPath) || {};
             if (!finishedFieldTags || !finishedFieldTags.some((tag) => tag.name === PART_TAG)) {
                 return;
             }
 
-            const partEntries = formInspector.getPathsByTag(PART_TAG)
-                .map((path: string) => [path, formInspector.getValueByPath(path)])
-                .filter(([, value: mixed]) => !!value)
-                .map(([path: string, value: mixed]) => {
-                    // path is a jsonpointer but the api controller requires property names
-                    if (path.startsWith('/')) {
-                        return [path.substr(1), value];
-                    }
-
-                    return [path, value];
-                });
-
-            if (partEntries.length === 0) {
-                return;
+            if (this.enableAutoGeneration) {
+                this.refreshResourceLocator();
             }
-
-            const requestOptions = {...formInspector.options};
-
-            Object.entries(resourceStorePropertiesToRequest).forEach(([propertyName, parameterName]) => {
-                const propertyValue = toJS(formInspector.getValueByPath('/' + propertyName));
-                if (propertyValue !== undefined) {
-                    requestOptions[parameterName] = propertyValue;
-                }
-            });
-
-            Requester.post(
-                generationUrl,
-                {
-                    parts: Object.fromEntries(partEntries),
-                    resourceKey: formInspector.resourceKey,
-                    locale: formInspector.locale ? formInspector.locale.get() : undefined,
-                    ...requestOptions,
-                }
-            ).then((response) => {
-                onChange(response.resourcelocator);
-            });
-        });
+        }));
     }
 
-    handleBlur = () => {
+    componentWillUnmount() {
+        if (this.partsChangeDisposer) {
+            this.partsChangeDisposer();
+        }
+    }
+
+    @action refreshResourceLocator = () => {
+        const {
+            fieldTypeOptions: {
+                generationUrl,
+                resourceStorePropertiesToRequest = {},
+            },
+            formInspector,
+            onChange,
+        } = this.props;
+
+        const requestOptions = {...formInspector.options};
+
+        Object.entries(resourceStorePropertiesToRequest).forEach(([propertyName, parameterName]) => {
+            const propertyValue = toJS(formInspector.getValueByPath('/' + propertyName));
+            if (propertyValue !== undefined) {
+                requestOptions[parameterName] = propertyValue;
+            }
+        });
+
+        this.inputChangedSinceRefresh = false;
+        this.partsChangedSinceRefresh = false;
+
+        Requester.post(
+            generationUrl,
+            {
+                parts: this.parts,
+                resourceKey: formInspector.resourceKey,
+                locale: formInspector.locale ? formInspector.locale.get() : undefined,
+                ...requestOptions,
+            }
+        ).then(action((response) => {
+            onChange(response.resourcelocator);
+        }));
+    };
+
+    handleInputBlur = () => {
         const {onFinish} = this.props;
         onFinish();
+    };
+
+    @action handleInputChange = (value: ?string) => {
+        const {onChange} = this.props;
+
+        this.inputChanged = true;
+        this.inputChangedSinceRefresh = true;
+
+        onChange(value);
+    };
+
+    handleRefreshButtonClick = () => {
+        this.refreshResourceLocator();
     };
 
     render() {
@@ -131,7 +194,6 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
             dataPath,
             disabled,
             formInspector,
-            onChange,
             value,
         } = this.props;
 
@@ -140,32 +202,37 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
         }
 
         return (
-            <div className={resourceLocatorStyles.resourceLocatorContainer}>
-                <div className={resourceLocatorStyles.resourceLocator}>
-                    <ResourceLocatorComponent
-                        disabled={!!disabled}
-                        id={dataPath}
-                        mode={this.mode}
-                        onBlur={this.handleBlur}
-                        onChange={onChange}
-                        value={value}
+            <Fragment>
+                <ResourceLocatorComponent
+                    disabled={!!disabled}
+                    id={dataPath}
+                    mode={this.mode}
+                    onBlur={this.handleInputBlur}
+                    onChange={this.handleInputChange}
+                    value={value}
+                />
+                <div className={resourceLocatorStyles.buttonsContainer}>
+                    <Button
+                        className={resourceLocatorStyles.refreshButton}
+                        disabled={!this.enableRefreshButton}
+                        icon="su-sync"
+                        onClick={this.handleRefreshButtonClick}
+                        skin="link"
+                    >
+                        {translate('sulu_admin.refresh_url')}
+                    </Button>
+                    <ResourceLocatorHistory
+                        id={formInspector.id}
+                        options={{
+                            locale: formInspector.locale,
+                            resourceKey: formInspector.resourceKey,
+                            webspace: formInspector.options.webspace,
+                            ...options,
+                        }}
+                        resourceKey={historyResourceKey}
                     />
                 </div>
-                {formInspector.id &&
-                    <div className={resourceLocatorStyles.resourceLocatorHistory}>
-                        <ResourceLocatorHistory
-                            id={formInspector.id}
-                            options={{
-                                locale: formInspector.locale,
-                                resourceKey: formInspector.resourceKey,
-                                webspace: formInspector.options.webspace,
-                                ...options,
-                            }}
-                            resourceKey={historyResourceKey}
-                        />
-                    </div>
-                }
-            </div>
+            </Fragment>
         );
     }
 }

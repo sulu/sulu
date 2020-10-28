@@ -12,7 +12,7 @@ import ResourceListStore from '../../stores/ResourceListStore';
 import resourceLocatorHistoryStyles from './resourceLocatorHistory.scss';
 
 type Props = {|
-    id: string | number,
+    id: ?string | number,
     options: Object,
     resourceKey: string,
 |};
@@ -66,13 +66,14 @@ class ResourceLocatorHistory extends React.Component<Props> {
     };
 
     render() {
-        const {resourceListStore} = this;
+        const {resourceListStore, props} = this;
+        const {id} = props;
 
         const historyRoutes = resourceListStore ? resourceListStore.data : [];
 
         return (
             <Fragment>
-                <Button icon="su-process" onClick={this.handleButtonClick} skin="link">
+                <Button disabled={!id} icon="su-process" onClick={this.handleButtonClick} skin="link">
                     {translate('sulu_admin.show_history')}
                 </Button>
                 <Overlay

@@ -32,6 +32,36 @@ test('Pass props correctly to ResourceListStore', () => {
     expect(ResourceListStore).toBeCalledWith('history_routes', {id: 5, webspace: 'sulu'});
 });
 
+test('Pass correct props to Button', () => {
+    const resourceLocatorHistory = shallow(
+        <ResourceLocatorHistory
+            id={5}
+            options={{webspace: 'sulu'}}
+            resourceKey="history_routes"
+        />
+    );
+
+    expect(resourceLocatorHistory.find('Button[icon="su-process"]').props()).toEqual(expect.objectContaining({
+        disabled: false,
+        icon: 'su-process',
+        skin: 'link',
+    }));
+});
+
+test('Disable button if id is not set', () => {
+    const resourceLocatorHistory = shallow(
+        <ResourceLocatorHistory
+            id={undefined}
+            options={{webspace: 'sulu'}}
+            resourceKey="history_routes"
+        />
+    );
+
+    expect(resourceLocatorHistory.find('Button[icon="su-process"]').props()).toEqual(expect.objectContaining({
+        disabled: true,
+    }));
+});
+
 test('Show history routes in overlay', () => {
     const resourceLocatorHistory = mount(
         <ResourceLocatorHistory
