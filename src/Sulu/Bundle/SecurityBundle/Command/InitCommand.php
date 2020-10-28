@@ -75,24 +75,15 @@ final class InitCommand extends Command
             }
         }
 
-        $count = 0;
+        $addedCount = 0;
+        $updatedCount = 0;
         foreach ($systems as $system) {
             if (Admin::SULU_ADMIN_SECURITY_SYSTEM === $system) {
                 continue;
             }
 
-            if (isset($existingAnonymousRoles[$system])) {
-                $ui->text(\sprintf(
-                    '[ ] Anonymous role named "%s" exists in system "%s" already.',
-                    $system,
-                    $existingAnonymousRoles[$system]->getName()
-                ));
-
-                continue;
-            }
-
             /** @var RoleInterface $role */
-            $role = $this->roleRepository->createNew();
+            $role = $existingAnonymousRoles[$system] ?? $this->roleRepository->createNew();
             $role->setName('Anonymous User ' . $system);
             $role->setAnonymous(true);
             $role->setSystem($system);
@@ -110,27 +101,62 @@ final class InitCommand extends Command
                 }
             }
 
+            $permissionAdded = false;
+            $existingSecurityContexts = [];
+
+            foreach ($role->getPermissions() as $permission) {
+                $existingSecurityContexts[] = $permission->getContext();
+            }
+
             foreach ($securityContextsFlat as $securityContext) {
+                if (\in_array($securityContext, $existingSecurityContexts)) {
+                    continue;
+                }
+
                 $permission = new Permission();
                 $permission->setRole($role);
                 $permission->setContext($securityContext);
                 $permission->setPermissions(127);
                 $role->addPermission($permission);
+                $permissionAdded = true;
             }
 
-            $ui->text(\sprintf('[+] Create anonymous role in system "%s" as "%s".', $system, $role->getName()));
+            if ($role->getId()) {
+                if (!$permissionAdded) {
+                    $ui->text(\sprintf(
+                        '[ ] Anonymous role named "%s" exists in system "%s" already.',
+                        $existingAnonymousRoles[$system]->getName(),
+                        $system
+                    ));
+
+                    continue;
+                }
+
+                $ui->text(\sprintf(
+                    '[*] Anonymous role named "%s" in system "%s" was updated.',
+                    $existingAnonymousRoles[$system]->getName(),
+                    $system
+                ));
+                ++$updatedCount;
+            } else {
+                $ui->text(\sprintf('[+] Create anonymous role in system "%s" as "%s".', $system, $role->getName()));
+                ++$addedCount;
+            }
 
             $this->entityManager->persist($role);
-
-            ++$count;
         }
 
         $output->writeln('');
         $output->writeln('<comment>*</comment> Legend: [+] Added [*] Updated [-] Purged [ ] No change');
 
-        if ($count) {
-            $ui->success(\sprintf('Created "%s" new anonymous roles.', $count));
+        if ($addedCount) {
+            $ui->success(\sprintf('Created "%s" new anonymous roles.', $addedCount));
         }
+
+        if ($updatedCount) {
+            $ui->success(\sprintf('Updated "%s" anonymous roles.', $updatedCount));
+        }
+
         $this->entityManager->flush();
 
         return 0;
