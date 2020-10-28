@@ -1887,6 +1887,52 @@ class PageControllerTest extends SuluTestCase
         $this->assertContains('en', $result['contentLocales']);
     }
 
+    public function testCopyLocaleWithSource()
+    {
+        $data = [
+            'title' => 'test1',
+            'template' => 'default',
+            'url' => '/test1',
+            'article' => 'Test',
+        ];
+
+        $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
+
+        $this->client->request(
+            'POST',
+            '/api/pages?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&language=en&action=publish',
+            $data
+        );
+        $data = \json_decode($this->client->getResponse()->getContent(), true);
+
+        $this->client->request(
+            'POST',
+            '/api/pages/' . $data['id'] . '?action=copy-locale&webspace=sulu_io&language=de&src=en&dest=de'
+        );
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $result = \json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertEquals($data['id'], $result['id']);
+        $this->assertEquals($data['title'], $result['title']);
+        $this->assertEquals($data['url'], $result['url']);
+        $this->assertEquals($data['article'], $result['article']);
+        $this->assertFalse($result['publishedState']);
+        $this->assertContains('de', $result['contentLocales']);
+        $this->assertContains('en', $result['contentLocales']);
+
+        $this->client->request(
+            'GET',
+            '/api/pages/' . $data['id'] . '?webspace=sulu_io&language=de'
+        );
+        $result = \json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertEquals($data['id'], $result['id']);
+        $this->assertEquals($data['title'], $result['title']);
+        $this->assertEquals($data['url'], $result['url']);
+        $this->assertEquals($data['article'], $result['article']);
+        $this->assertFalse($result['publishedState']);
+        $this->assertContains('de', $result['contentLocales']);
+        $this->assertContains('en', $result['contentLocales']);
+    }
+
     public function testCopyMultipleLocales()
     {
         $data = [

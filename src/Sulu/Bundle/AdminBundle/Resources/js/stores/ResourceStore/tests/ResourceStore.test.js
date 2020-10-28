@@ -525,7 +525,7 @@ test('Copy the content from different locale', () => {
     resourceStore.copyFromLocale('de');
 
     expect(ResourceRequester.post)
-        .toBeCalledWith('pages', {}, {action: 'copy-locale', id: 4, locale: 'de', dest: 'en'});
+        .toBeCalledWith('pages', {}, {action: 'copy-locale', id: 4, locale: 'en', dest: 'en', src: 'de'});
 
     return promise.then(() => {
         expect(resourceStore.data).toEqual(germanContent);
