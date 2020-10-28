@@ -159,6 +159,7 @@ class WebspaceManager implements WebspaceManagerInterface
         $scheme = 'http'
     ) {
         $urls = [];
+        $partialMatchedUrls = [];
         $portals = $this->getWebspaceCollection()->getPortalInformations(
             $environment,
             [
@@ -175,15 +176,21 @@ class WebspaceManager implements WebspaceManagerInterface
             $sameWebspace = null === $webspaceKey || $portalInformation->getWebspace()->getKey() === $webspaceKey;
             $url = $this->createResourceLocatorUrl($scheme, $portalInformation->getUrl(), $resourceLocator);
             if ($sameLocalization && $sameWebspace) {
-                if ($portalInformation->isMain()) {
-                    \array_unshift($urls, $url);
-                } elseif ($this->isFromDomain($url, $domain)) {
-                    \array_unshift($urls, $url);
+                if (RequestAnalyzerInterface::MATCH_TYPE_FULL === $portalInformation->getType()) {
+                    if ($portalInformation->isMain()) {
+                        \array_unshift($urls, $url);
+                    } elseif ($this->isFromDomain($url, $domain)) {
+                        \array_unshift($urls, $url);
+                    } else {
+                        $urls[] = $url;
+                    }
                 } else {
-                    $urls[] = $url;
+                    $partialMatchedUrls[] = $url;
                 }
             }
         }
+
+        $urls = \array_merge($urls, $partialMatchedUrls);
 
         return \reset($urls);
     }
