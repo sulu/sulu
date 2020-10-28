@@ -140,15 +140,17 @@ Array [
               style="position: relative;"
             >
               <input
+                id="rc-editable-input-1"
                 spellcheck="false"
                 style="width: 80%; padding: 4px 10% 3px; box-shadow: inset 0 0 0 1px #ccc; font-size: 11px;"
                 value="AABBCC"
               />
-              <span
+              <label
+                for="rc-editable-input-1"
                 style="display: block; text-align: center; font-size: 11px; color: rgb(34, 34, 34); padding-top: 3px; padding-bottom: 4px; text-transform: capitalize;"
               >
                 hex
-              </span>
+              </label>
             </div>
           </div>
           <div
@@ -158,15 +160,17 @@ Array [
               style="position: relative;"
             >
               <input
+                id="rc-editable-input-2"
                 spellcheck="false"
                 style="width: 80%; padding: 4px 10% 3px; box-shadow: inset 0 0 0 1px #ccc; font-size: 11px;"
                 value="170"
               />
-              <span
+              <label
+                for="rc-editable-input-2"
                 style="display: block; text-align: center; font-size: 11px; color: rgb(34, 34, 34); padding-top: 3px; padding-bottom: 4px; text-transform: capitalize; cursor: ew-resize;"
               >
                 r
-              </span>
+              </label>
             </div>
           </div>
           <div
@@ -176,15 +180,17 @@ Array [
               style="position: relative;"
             >
               <input
+                id="rc-editable-input-3"
                 spellcheck="false"
                 style="width: 80%; padding: 4px 10% 3px; box-shadow: inset 0 0 0 1px #ccc; font-size: 11px;"
                 value="187"
               />
-              <span
+              <label
+                for="rc-editable-input-3"
                 style="display: block; text-align: center; font-size: 11px; color: rgb(34, 34, 34); padding-top: 3px; padding-bottom: 4px; text-transform: capitalize; cursor: ew-resize;"
               >
                 g
-              </span>
+              </label>
             </div>
           </div>
           <div
@@ -194,15 +200,17 @@ Array [
               style="position: relative;"
             >
               <input
+                id="rc-editable-input-4"
                 spellcheck="false"
                 style="width: 80%; padding: 4px 10% 3px; box-shadow: inset 0 0 0 1px #ccc; font-size: 11px;"
                 value="204"
               />
-              <span
+              <label
+                for="rc-editable-input-4"
                 style="display: block; text-align: center; font-size: 11px; color: rgb(34, 34, 34); padding-top: 3px; padding-bottom: 4px; text-transform: capitalize; cursor: ew-resize;"
               >
                 b
-              </span>
+              </label>
             </div>
           </div>
           <div
@@ -212,15 +220,17 @@ Array [
               style="position: relative;"
             >
               <input
+                id="rc-editable-input-5"
                 spellcheck="false"
                 style="width: 80%; padding: 4px 10% 3px; box-shadow: inset 0 0 0 1px #ccc; font-size: 11px;"
                 value="100"
               />
-              <span
+              <label
+                for="rc-editable-input-5"
                 style="display: block; text-align: center; font-size: 11px; color: rgb(34, 34, 34); padding-top: 3px; padding-bottom: 4px; text-transform: capitalize; cursor: ew-resize;"
               >
                 a
-              </span>
+              </label>
             </div>
           </div>
         </div>
