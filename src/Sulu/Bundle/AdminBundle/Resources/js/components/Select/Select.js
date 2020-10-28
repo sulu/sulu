@@ -231,8 +231,8 @@ class Select<T> extends React.Component<Props<T>> {
             this.clearSearchText();
 
             focusedElementIndex = Math.max(
-                ...this.availableButtonIndices.filter(i => i < this.focusedElementIndex)
-            )
+                ...this.availableButtonIndices.filter((i) => i < this.focusedElementIndex)
+            );
         }
 
         if (event.key === 'ArrowDown') {
@@ -240,8 +240,8 @@ class Select<T> extends React.Component<Props<T>> {
             this.clearSearchText();
 
             focusedElementIndex = Math.min(
-                ...this.availableButtonIndices.filter(i => i > this.focusedElementIndex)
-            )
+                ...this.availableButtonIndices.filter((i) => i > this.focusedElementIndex)
+            );
         }
 
         if (focusedElementIndex !== this.focusedElementIndex) {
