@@ -2,6 +2,29 @@
 
 ## dev-release/2.1
 
+### GhostDialog
+
+When a page was opened in a ghost language, the `GhostDialog`, which allows to copy content from another locale,
+appeared. But after copying the language, the API returned the wrong locale, and therefore the UI was broken. We fixed
+that by separating the `src` and `locale` parameter in the pages API. This results in a different request being sent to
+that API:
+
+Before:
+
+```
+/admin/api/pages/d3354303-a11b-443f-9cb7-cace67a4e57c?webspace=sulu-test&action=copy-locale&dest=de&locale=en
+```
+
+After:
+
+```
+/admin/api/pages/d3354303-a11b-443f-9cb7-cace67a4e57c?webspace=sulu-test&action=copy-locale&src=en&dest=de&locale=de
+```
+
+Mind the change of the `locale` query parameter and the addition of the `src` parameter. In case you have reused that
+functionality with some of your custom entities, you need to adjust your API so that they work with the new query
+parameters.
+
 ### DateTime filter type
 
 The DateTime filter type does now support time by default. If you want to reuse the "old" behaviour we have introduced
