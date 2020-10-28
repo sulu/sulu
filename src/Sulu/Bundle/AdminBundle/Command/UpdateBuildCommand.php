@@ -195,6 +195,8 @@ class UpdateBuildCommand extends Command
         }
 
         \unlink($tempFileZip);
+
+        return 0;
     }
 
     private function getLocalFile(string $path)
