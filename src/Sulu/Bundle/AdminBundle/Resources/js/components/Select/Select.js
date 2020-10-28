@@ -52,11 +52,11 @@ class Select<T> extends React.Component<Props<T>> {
 
     @observable open: boolean;
 
-    @computed get buttonTexts(): Map<number, string> {
+    @computed get buttonTextsByIndex(): Map<number, string> {
         return Array.from(this.buttonRefsByIndex.entries())
-            .reduce((buttonTexts, [index, ref]: [number, ElementRef<'button'>]) => {
-                buttonTexts.set(index, ref.textContent);
-                return buttonTexts;
+            .reduce((buttonTextsByIndex, [index, ref]: [number, ElementRef<'button'>]) => {
+                buttonTextsByIndex.set(index, ref.textContent);
+                return buttonTextsByIndex;
             }, new Map());
     }
 
@@ -128,7 +128,7 @@ class Select<T> extends React.Component<Props<T>> {
     @action appendSearchText = (searchText: string) => {
         this.searchText += searchText;
 
-        const entries = Array.from(this.buttonTexts.entries());
+        const entries = Array.from(this.buttonTextsByIndex.entries());
         const hit = entries.find(([, text]) => text.toLowerCase().startsWith(this.searchText.toLowerCase()));
 
         if (hit) {
@@ -188,11 +188,6 @@ class Select<T> extends React.Component<Props<T>> {
     handleDisplayValueClick = this.openOptionList;
 
     handleOptionListClose = this.closeOptionList;
-
-    @computed get highestButtonIndex() {
-        const max = Math.max(...Array.from(this.buttonRefsByIndex.keys()));
-        return max;
-    }
 
     @action requestFocus = (elementIndex: number) => {
         if (!this.buttonRefsByIndex.has(elementIndex)) {
