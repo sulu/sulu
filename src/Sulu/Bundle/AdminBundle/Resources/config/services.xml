@@ -174,7 +174,11 @@
         </service>
 
         <service id="sulu_admin.download_build_command" class="Sulu\Bundle\AdminBundle\Command\DownloadBuildCommand">
-            <argument type="service" id="sulu_admin.http_client" />
+            <tag name="console.command"/>
+        </service>
+
+        <service id="sulu_admin.update_build_command" class="Sulu\Bundle\AdminBundle\Command\UpdateBuildCommand">
+            <argument type="service" id="http_client" />
             <argument>%kernel.project_dir%</argument>
             <argument>%sulu.version%</argument>
             <tag name="console.command"/>
