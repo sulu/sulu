@@ -216,7 +216,7 @@ class Select<T> extends React.Component<Props<T>> {
                 );
 
                 return;
-            }:q
+            }
         }
     };
 
