@@ -158,8 +158,10 @@ class WebspaceManager implements WebspaceManagerInterface
         $domain = null,
         $scheme = 'http'
     ) {
-        $urls = [];
+        $sameDomainUrls = [];
+        $fullMatchedUrls = [];
         $partialMatchedUrls = [];
+
         $portals = $this->getWebspaceCollection()->getPortalInformations(
             $environment,
             [
@@ -177,12 +179,16 @@ class WebspaceManager implements WebspaceManagerInterface
             $url = $this->createResourceLocatorUrl($scheme, $portalInformation->getUrl(), $resourceLocator);
             if ($sameLocalization && $sameWebspace) {
                 if (RequestAnalyzerInterface::MATCH_TYPE_FULL === $portalInformation->getType()) {
-                    if ($portalInformation->isMain()) {
-                        \array_unshift($urls, $url);
-                    } elseif ($this->isFromDomain($url, $domain)) {
-                        \array_unshift($urls, $url);
+                    if ($this->isFromDomain($url, $domain)) {
+                        if ($portalInformation->isMain()) {
+                            \array_unshift($sameDomainUrls, $url);
+                        } else {
+                            $sameDomainUrls[] = $url;
+                        }
+                    } elseif ($portalInformation->isMain()) {
+                        \array_unshift($fullMatchedUrls, $url);
                     } else {
-                        $urls[] = $url;
+                        $fullMatchedUrls[] = $url;
                     }
                 } else {
                     $partialMatchedUrls[] = $url;
@@ -190,9 +196,9 @@ class WebspaceManager implements WebspaceManagerInterface
             }
         }
 
-        $urls = \array_merge($urls, $partialMatchedUrls);
+        $fullMatchedUrls = \array_merge($sameDomainUrls, $fullMatchedUrls, $partialMatchedUrls);
 
-        return \reset($urls);
+        return \reset($fullMatchedUrls);
     }
 
     public function getPortals()
