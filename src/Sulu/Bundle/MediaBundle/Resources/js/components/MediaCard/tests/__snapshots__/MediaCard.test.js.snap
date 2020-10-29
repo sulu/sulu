@@ -201,6 +201,7 @@ exports[`Render a MediaCard component with a checkbox for selection 1`] = `
       >
         <label
           class="label"
+          tabindex="-1"
         >
           <span
             class="switch checkbox dark checkbox"

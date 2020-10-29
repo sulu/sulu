@@ -1,16 +1,19 @@
 // @flow
 import React from 'react';
+import type {ElementRef} from 'react';
 import actionStyles from './action.scss';
 
 type Props<T> = {|
     afterAction?: () => void,
+    buttonRef?: (buttonRef: ?ElementRef<'button'>) => void,
     children: string,
     onClick: (value: ?T) => void,
+    requestFocus?: () => void,
     value?: T,
 |};
 
 export default class Action<T> extends React.PureComponent<Props<T>> {
-    handleButtonClick = () => {
+    triggerButton = () => {
         const {
             onClick,
             afterAction,
@@ -24,10 +27,41 @@ export default class Action<T> extends React.PureComponent<Props<T>> {
         }
     };
 
+    handleButtonClick = () => {
+        this.triggerButton();
+    };
+
+    handleButtonKeyDown = (event: KeyboardEvent) => {
+        if (event.key === 'Enter' || event.key === 'Space') {
+            event.preventDefault();
+            event.stopPropagation();
+            this.triggerButton();
+        }
+    };
+
+    setButtonRef = (ref: ?ElementRef<'button'>) => {
+        const {buttonRef} = this.props;
+
+        if (buttonRef) {
+            buttonRef(ref);
+        }
+    };
+
+    handleMouseMove = () => {
+        if (this.props.requestFocus) {
+            this.props.requestFocus();
+        }
+    };
+
     render() {
         return (
-            <li>
-                <button className={actionStyles.action} onClick={this.handleButtonClick}>
+            <li onMouseMove={this.handleMouseMove}>
+                <button
+                    className={actionStyles.action}
+                    onClick={this.handleButtonClick}
+                    onKeyDown={this.handleButtonKeyDown}
+                    ref={this.setButtonRef}
+                >
                     {this.props.children}
                 </button>
             </li>

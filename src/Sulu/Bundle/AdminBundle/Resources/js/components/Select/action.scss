@@ -1,6 +1,6 @@
 @import '../../containers/Application/colors.scss';
 
-$hoverColor: $shakespeare;
+$focusColor: $shakespeare;
 $fontColor: $blueZodiac;
 
 .action {
@@ -15,7 +15,7 @@ $fontColor: $blueZodiac;
     text-align: left;
     font-size: 12px;
 
-    &:hover {
-        color: $hoverColor;
+    &:focus {
+        color: $focusColor;
     }
 }

@@ -3,6 +3,7 @@
 exports[`The component should render with a dark skin 1`] = `
 <div
   class="select"
+  role="none"
 >
   <button
     class="displayValue dark hasIcon"

@@ -3,6 +3,7 @@
 exports[`The component should render in disabled state 1`] = `
 <label
   class="label disabled"
+  tabindex="-1"
 >
   <span
     class="switch disabled toggler"
@@ -25,6 +26,7 @@ exports[`The component should render in disabled state 1`] = `
 exports[`The component should render in the default state 1`] = `
 <label
   class="label"
+  tabindex="-1"
 >
   <span
     class="switch toggler"

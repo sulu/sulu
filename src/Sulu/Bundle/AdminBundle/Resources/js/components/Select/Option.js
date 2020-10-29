@@ -9,10 +9,12 @@ import optionStyles from './option.scss';
 
 type Props<T> = {|
     anchorWidth: number,
+    buttonRef?: (buttonRef: ?ElementRef<'button'>) => void,
     children: string,
     disabled: boolean,
     onClick?: (value: T) => void,
     optionRef?: (optionNode: ElementRef<'li'>, selected: boolean) => void,
+    requestFocus?: () => void,
     selected: boolean,
     selectedVisualization: OptionSelectedVisualization,
     value: T,
@@ -28,22 +30,40 @@ export default class Option<T> extends React.PureComponent<Props<T>> {
         selectedVisualization: 'icon',
     };
 
-    item: ElementRef<'li'>;
-
-    handleButtonClick = () => {
+    triggerButton = () => {
         if (this.props.onClick) {
             this.props.onClick(this.props.value);
         }
     };
 
-    setItemRef = (item: ?ElementRef<'li'>) => {
+    handleButtonClick = () => {
+        this.triggerButton();
+    };
+
+    handleButtonKeyDown = (event: KeyboardEvent) => {
+        if (event.key === 'Enter' || event.key === 'Space') {
+            event.preventDefault();
+            event.stopPropagation();
+            this.triggerButton();
+        }
+    };
+
+    setItemRef = (ref: ?ElementRef<'li'>) => {
         const {
-            selected,
             optionRef,
+            selected,
         } = this.props;
 
-        if (optionRef && item) {
-            optionRef(item, selected);
+        if (optionRef && ref) {
+            optionRef(ref, selected);
+        }
+    };
+
+    setButtonRef = (ref: ?ElementRef<'button'>) => {
+        const {buttonRef} = this.props;
+
+        if (buttonRef) {
+            buttonRef(ref);
         }
     };
 
@@ -57,9 +77,16 @@ export default class Option<T> extends React.PureComponent<Props<T>> {
                 checked={this.props.selected}
                 className={optionStyles.input}
                 onChange={this.handleButtonClick}
+                tabIndex={-1}
             />
         );
     }
+
+    handleMouseMove = () => {
+        if (this.props.requestFocus) {
+            this.props.requestFocus();
+        }
+    };
 
     render() {
         const {
@@ -78,11 +105,13 @@ export default class Option<T> extends React.PureComponent<Props<T>> {
         );
 
         return (
-            <li ref={this.setItemRef}>
+            <li onMouseMove={this.handleMouseMove} ref={this.setItemRef}>
                 <button
                     className={optionClass}
                     disabled={disabled}
                     onClick={this.handleButtonClick}
+                    onKeyDown={this.handleButtonKeyDown}
+                    ref={this.setButtonRef}
                     style={{minWidth: anchorWidth + ANCHOR_WIDTH_DIFFERENCE}}
                 >
                     {this.renderSelectedVisualization()}

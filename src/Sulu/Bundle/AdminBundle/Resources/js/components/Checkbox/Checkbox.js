@@ -10,6 +10,7 @@ type Props<T> = {|
     className?: string,
     onChange?: (checked: boolean, value?: T) => void,
     skin: 'dark' | 'light',
+    tabIndex?: ?number,
 |};
 
 const CHECKED_ICON = 'su-check';
@@ -31,6 +32,7 @@ export default class Checkbox<T: string | number> extends React.PureComponent<Pr
             children,
             className,
             disabled,
+            tabIndex,
         } = this.props;
         const checkboxClass = classNames(
             checkboxStyles.checkbox,
@@ -46,6 +48,7 @@ export default class Checkbox<T: string | number> extends React.PureComponent<Pr
                 icon={checked ? CHECKED_ICON : undefined}
                 name={name}
                 onChange={onChange}
+                tabIndex={tabIndex}
                 value={value}
             >
                 {children}

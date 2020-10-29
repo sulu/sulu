@@ -3,6 +3,7 @@
 exports[`Render in disabled state 1`] = `
 <div
   class="select"
+  role="none"
 >
   <button
     class="displayValue default"
@@ -59,6 +60,7 @@ exports[`Render in loading state 1`] = `
 exports[`Render in value 1`] = `
 <div
   class="select"
+  role="none"
 >
   <button
     class="displayValue default"
@@ -101,6 +103,7 @@ exports[`Render in value 1`] = `
 exports[`Render with data 1`] = `
 <div
   class="select"
+  role="none"
 >
   <button
     class="displayValue default"
@@ -173,6 +176,7 @@ exports[`Render with data 2`] = `
 exports[`Render with data with editable option 1`] = `
 <div
   class="select"
+  role="none"
 >
   <button
     class="displayValue default"

@@ -9,6 +9,7 @@ exports[`Render the component as disabled 1`] = `
   >
     <div
       class="select"
+      role="none"
     >
       <button
         class="displayValue flat"
@@ -64,6 +65,7 @@ exports[`Render the component with an error 1`] = `
   >
     <div
       class="select"
+      role="none"
     >
       <button
         class="displayValue flat"

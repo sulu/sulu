@@ -4,6 +4,7 @@ exports[`Render with data 1`] = `
 <div>
   <label
     class="label"
+    tabindex="-1"
   >
     <span
       class="switch checkbox dark"
@@ -20,6 +21,7 @@ exports[`Render with data 1`] = `
   </label>
   <label
     class="label"
+    tabindex="-1"
   >
     <span
       class="switch checkbox dark"
@@ -36,6 +38,7 @@ exports[`Render with data 1`] = `
   </label>
   <label
     class="label"
+    tabindex="-1"
   >
     <span
       class="switch checkbox dark"

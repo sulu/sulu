@@ -23,6 +23,7 @@ exports[`Render overlay with a URL 1`] = `
         >
           <div
             class="select"
+            role="none"
           >
             <button
               class="displayValue flat"
@@ -83,6 +84,7 @@ exports[`Render overlay with a URL 1`] = `
       </label>
       <div
         class="select"
+        role="none"
       >
         <button
           class="displayValue default"
@@ -174,6 +176,7 @@ exports[`Render overlay with an undefined URL 1`] = `
         >
           <div
             class="select"
+            role="none"
           >
             <button
               class="displayValue flat"
@@ -234,6 +237,7 @@ exports[`Render overlay with an undefined URL 1`] = `
       </label>
       <div
         class="select"
+        role="none"
       >
         <button
           class="displayValue default"
@@ -325,6 +329,7 @@ exports[`Render overlay with mailto URL 1`] = `
         >
           <div
             class="select"
+            role="none"
           >
             <button
               class="displayValue flat"
