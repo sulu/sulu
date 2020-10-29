@@ -63,6 +63,7 @@ exports[`Render an expanded block with a multiple types 1`] = `
       >
         <div
           class="select"
+          role="none"
         >
           <button
             class="displayValue default"

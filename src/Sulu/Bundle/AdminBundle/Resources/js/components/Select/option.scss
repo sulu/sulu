@@ -1,6 +1,6 @@
 @import '../../containers/Application/colors.scss';
 
-$hoverColor: $shakespeare;
+$focusColor: $shakespeare;
 $fontColor: $blueZodiac;
 $fontSize: 12px;
 
@@ -16,8 +16,8 @@ $fontSize: 12px;
     font-size: $fontSize;
     outline: 0;
 
-    &:not(:disabled):hover {
-        color: $hoverColor;
+    &:not(:disabled):focus {
+        color: $focusColor;
     }
 
     &:disabled {

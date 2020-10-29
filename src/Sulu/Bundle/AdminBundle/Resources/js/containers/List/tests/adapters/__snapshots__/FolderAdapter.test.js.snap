@@ -77,6 +77,7 @@ exports[`Render a basic Folder list with data 1`] = `
     <span>
       <div
         class="select"
+        role="none"
       >
         <button
           class="displayValue dark"

@@ -4,6 +4,7 @@ exports[`Render with a value of "[ 'audio', 'video' ]" 1`] = `
 <div>
   <label
     class="label"
+    tabindex="-1"
   >
     <span
       class="switch checkbox dark"
@@ -26,6 +27,7 @@ exports[`Render with a value of "[ 'audio', 'video' ]" 1`] = `
   </label>
   <label
     class="label"
+    tabindex="-1"
   >
     <span
       class="switch checkbox dark"
@@ -53,6 +55,7 @@ exports[`Render with a value of "[ 'image', 'video' ]" 1`] = `
 <div>
   <label
     class="label"
+    tabindex="-1"
   >
     <span
       class="switch checkbox dark"
@@ -75,6 +78,7 @@ exports[`Render with a value of "[ 'image', 'video' ]" 1`] = `
   </label>
   <label
     class="label"
+    tabindex="-1"
   >
     <span
       class="switch checkbox dark"
@@ -102,6 +106,7 @@ exports[`Render with a value of "undefined" 1`] = `
 <div>
   <label
     class="label"
+    tabindex="-1"
   >
     <span
       class="switch checkbox dark"
@@ -123,6 +128,7 @@ exports[`Render with value set by setValue 1`] = `
 <div>
   <label
     class="label"
+    tabindex="-1"
   >
     <span
       class="switch checkbox dark"

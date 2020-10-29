@@ -6,6 +6,7 @@ exports[`The component should render 1`] = `
 >
   <label
     class="label"
+    tabindex="-1"
   >
     <span
       class="switch checkbox dark"
@@ -22,6 +23,7 @@ exports[`The component should render 1`] = `
   </label>
   <label
     class="label"
+    tabindex="-1"
   >
     <span
       class="switch checkbox dark"
@@ -44,6 +46,7 @@ exports[`The component should render 1`] = `
   </label>
   <label
     class="label"
+    tabindex="-1"
   >
     <span
       class="switch checkbox dark"
@@ -71,6 +74,7 @@ exports[`The component should render disabled 1`] = `
 <div>
   <label
     class="label disabled"
+    tabindex="-1"
   >
     <span
       class="switch disabled checkbox dark"
@@ -88,6 +92,7 @@ exports[`The component should render disabled 1`] = `
   </label>
   <label
     class="label disabled"
+    tabindex="-1"
   >
     <span
       class="switch disabled checkbox dark"
@@ -111,6 +116,7 @@ exports[`The component should render disabled 1`] = `
   </label>
   <label
     class="label disabled"
+    tabindex="-1"
   >
     <span
       class="switch disabled checkbox dark"

@@ -69,6 +69,7 @@ exports[`Render column with ascending sort icon 1`] = `
     <span>
       <div
         class="select"
+        role="none"
       >
         <button
           class="displayValue dark"
@@ -226,6 +227,7 @@ exports[`Render column with descending sort icon 1`] = `
     <span>
       <div
         class="select"
+        role="none"
       >
         <button
           class="displayValue dark"
@@ -397,6 +399,7 @@ exports[`Render data with all different visibility types schema 1`] = `
     <span>
       <div
         class="select"
+        role="none"
       >
         <button
           class="displayValue dark"
@@ -660,6 +663,7 @@ exports[`Render data with pencil button and given itemActions when onItemEdit ca
     <span>
       <div
         class="select"
+        role="none"
       >
         <button
           class="displayValue dark"
@@ -848,6 +852,7 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
     <span>
       <div
         class="select"
+        role="none"
       >
         <button
           class="displayValue dark"
@@ -1113,6 +1118,7 @@ exports[`Render data with schema 1`] = `
     <span>
       <div
         class="select"
+        role="none"
       >
         <button
           class="displayValue dark"
@@ -1218,6 +1224,7 @@ exports[`Render data with schema and selections 1`] = `
             <span>
               <label
                 class="label"
+                tabindex="-1"
               >
                 <span
                   class="switch checkbox light"
@@ -1251,6 +1258,7 @@ exports[`Render data with schema and selections 1`] = `
             >
               <label
                 class="label"
+                tabindex="-1"
               >
                 <span
                   class="switch checkbox dark"
@@ -1291,6 +1299,7 @@ exports[`Render data with schema and selections 1`] = `
             >
               <label
                 class="label"
+                tabindex="-1"
               >
                 <span
                   class="switch checkbox dark"
@@ -1325,6 +1334,7 @@ exports[`Render data with schema and selections 1`] = `
             >
               <label
                 class="label"
+                tabindex="-1"
               >
                 <span
                   class="switch checkbox dark"
@@ -1368,6 +1378,7 @@ exports[`Render data with schema and selections 1`] = `
     <span>
       <div
         class="select"
+        role="none"
       >
         <button
           class="displayValue dark"
@@ -1518,6 +1529,7 @@ exports[`Render data with schema in different order 1`] = `
     <span>
       <div
         class="select"
+        role="none"
       >
         <button
           class="displayValue dark"
@@ -1639,6 +1651,7 @@ exports[`Render data with schema not containing all fields 1`] = `
     <span>
       <div
         class="select"
+        role="none"
       >
         <button
           class="displayValue dark"
@@ -1770,6 +1783,7 @@ exports[`Render data with skin 1`] = `
     <span>
       <div
         class="select"
+        role="none"
       >
         <button
           class="displayValue dark"

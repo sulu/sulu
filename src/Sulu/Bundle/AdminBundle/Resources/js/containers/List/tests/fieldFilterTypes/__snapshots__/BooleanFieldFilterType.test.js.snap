@@ -3,6 +3,7 @@
 exports[`Render with a value of "false" 1`] = `
 <label
   class="label"
+  tabindex="-1"
 >
   <span
     class="switch toggler"
@@ -18,6 +19,7 @@ exports[`Render with a value of "false" 1`] = `
 exports[`Render with a value of "true" 1`] = `
 <label
   class="label"
+  tabindex="-1"
 >
   <span
     class="switch toggler"
@@ -34,6 +36,7 @@ exports[`Render with a value of "true" 1`] = `
 exports[`Render with a value of "undefined" 1`] = `
 <label
   class="label"
+  tabindex="-1"
 >
   <span
     class="switch toggler"
@@ -49,6 +52,7 @@ exports[`Render with a value of "undefined" 1`] = `
 exports[`Render with value set by setValue 1`] = `
 <label
   class="label"
+  tabindex="-1"
 >
   <span
     class="switch toggler"

@@ -24,6 +24,7 @@ exports[`Render a basic Masonry view with the MediaCardOverviewAdapter 1`] = `
               >
                 <label
                   class="label"
+                  tabindex="-1"
                 >
                   <span
                     class="switch checkbox dark checkbox"
@@ -156,6 +157,7 @@ exports[`Render a basic Masonry view with the MediaCardOverviewAdapter 1`] = `
               >
                 <label
                   class="label"
+                  tabindex="-1"
                 >
                   <span
                     class="switch checkbox dark checkbox"

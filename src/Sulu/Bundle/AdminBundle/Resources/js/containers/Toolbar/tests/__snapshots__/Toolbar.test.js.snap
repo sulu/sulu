@@ -176,6 +176,7 @@ Array [
               >
                 <label
                   class="label"
+                  tabindex="-1"
                 >
                   <span
                     class="switch toggler"

@@ -6,6 +6,7 @@ exports[`Render with value of "{ eq: 6 }" 1`] = `
 >
   <div
     class="select"
+    role="none"
   >
     <button
       class="displayValue default"
@@ -57,6 +58,7 @@ exports[`Render with value of "{ gt: 7 }" 1`] = `
 >
   <div
     class="select"
+    role="none"
   >
     <button
       class="displayValue default"
@@ -108,6 +110,7 @@ exports[`Render with value of "{ lt: 2 }" 1`] = `
 >
   <div
     class="select"
+    role="none"
   >
     <button
       class="displayValue default"
@@ -159,6 +162,7 @@ exports[`Render with value of "undefined" 1`] = `
 >
   <div
     class="select"
+    role="none"
   >
     <button
       class="displayValue default"
