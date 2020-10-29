@@ -77,6 +77,69 @@ test('The component should not open the popover on display-value-click when disa
     expect(select.find('Menu')).toHaveLength(0);
 });
 
+test('The component should open the popover when pressing enter', () => {
+    const isOptionSelected = jest.fn().mockReturnValue(false);
+    const onSelect = jest.fn();
+
+    const select = mount(
+        <Select
+            disabled={true}
+            displayValue="My text"
+            isOptionSelected={isOptionSelected}
+            onSelect={onSelect}
+        >
+            <Option value="option-1">Option 1</Option>
+            <Option value="option-2">Option 2</Option>
+            <Divider />
+            <Option value="option-3">Option 3</Option>
+        </Select>
+    );
+    select.simulate('keydown', {key: 'Enter', preventDefault: jest.fn()});
+    expect(select.find('Menu')).toHaveLength(1);
+});
+
+test('The component should open the popover when pressing arrow down', () => {
+    const isOptionSelected = jest.fn().mockReturnValue(false);
+    const onSelect = jest.fn();
+
+    const select = mount(
+        <Select
+            disabled={true}
+            displayValue="My text"
+            isOptionSelected={isOptionSelected}
+            onSelect={onSelect}
+        >
+            <Option value="option-1">Option 1</Option>
+            <Option value="option-2">Option 2</Option>
+            <Divider />
+            <Option value="option-3">Option 3</Option>
+        </Select>
+    );
+    select.simulate('keydown', {key: 'ArrowDown', preventDefault: jest.fn()});
+    expect(select.find('Menu')).toHaveLength(1);
+});
+
+test('The component should open the popover when pressing arrow up', () => {
+    const isOptionSelected = jest.fn().mockReturnValue(false);
+    const onSelect = jest.fn();
+
+    const select = mount(
+        <Select
+            disabled={true}
+            displayValue="My text"
+            isOptionSelected={isOptionSelected}
+            onSelect={onSelect}
+        >
+            <Option value="option-1">Option 1</Option>
+            <Option value="option-2">Option 2</Option>
+            <Divider />
+            <Option value="option-3">Option 3</Option>
+        </Select>
+    );
+    select.simulate('keydown', {key: 'ArrowUp', preventDefault: jest.fn()});
+    expect(select.find('Menu')).toHaveLength(1);
+});
+
 test('The component should trigger the select callback and close the popover when an option is clicked', () => {
     const onSelect = jest.fn();
     const isOptionSelected = jest.fn().mockReturnValue(false);

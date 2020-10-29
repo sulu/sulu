@@ -68,13 +68,11 @@ class Select<T> extends React.Component<Props<T>> {
         let firstSelectedIndex = -1;
 
         React.Children.forEach(this.props.children, (child: any, index: number) => {
-            if (!child || child.type !== Option) {
+            if (!child || child.type !== Option || firstSelectedIndex !== -1 || !this.props.isOptionSelected(child)) {
                 return;
             }
 
-            if (this.props.isOptionSelected(child)) {
-                firstSelectedIndex = index;
-            }
+            firstSelectedIndex = index;
         });
 
         return firstSelectedIndex;
@@ -174,7 +172,7 @@ class Select<T> extends React.Component<Props<T>> {
 
     handleKeyDown = (event: KeyboardEvent) => {
         if (['Enter', 'ArrowUp', 'ArrowDown'].includes(event.key)) {
-            if (!this.open && this.displayValueRef && document.activeElement === this.displayValueRef) {
+            if (!this.open) {
                 event.preventDefault();
                 this.openOptionList();
 
