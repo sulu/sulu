@@ -214,6 +214,7 @@ exports[`Render ContactDetails with data 1`] = `
           >
             <div
               class="select"
+              role="none"
             >
               <button
                 class="displayValue flat"
@@ -724,6 +725,7 @@ exports[`Render empty phone and email fields even if other values are set 1`] = 
           >
             <div
               class="select"
+              role="none"
             >
               <button
                 class="displayValue flat"

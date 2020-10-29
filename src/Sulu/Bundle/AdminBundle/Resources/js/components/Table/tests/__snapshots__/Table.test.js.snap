@@ -593,6 +593,7 @@ exports[`Render the Table component in multiple selection mode 1`] = `
           <span>
             <label
               class="label"
+              tabindex="-1"
             >
               <span
                 class="switch checkbox light"
@@ -685,6 +686,7 @@ exports[`Render the Table component in multiple selection mode with select insid
             >
               <label
                 class="label"
+                tabindex="-1"
               >
                 <span
                   class="switch checkbox light"

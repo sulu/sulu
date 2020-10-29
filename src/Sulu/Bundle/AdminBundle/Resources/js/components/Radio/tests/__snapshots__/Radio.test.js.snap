@@ -3,6 +3,7 @@
 exports[`The component should render in dark skin 1`] = `
 <label
   class="label"
+  tabindex="-1"
 >
   <span
     class="switch radio dark"
@@ -18,6 +19,7 @@ exports[`The component should render in dark skin 1`] = `
 exports[`The component should render in disabled state 1`] = `
 <label
   class="label disabled"
+  tabindex="-1"
 >
   <span
     class="switch disabled radio dark disabled"
@@ -34,6 +36,7 @@ exports[`The component should render in disabled state 1`] = `
 exports[`The component should render in light skin 1`] = `
 <label
   class="label"
+  tabindex="-1"
 >
   <span
     class="switch radio light"

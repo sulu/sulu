@@ -15,6 +15,7 @@ exports[`Render component 1`] = `
   >
     <div
       class="select"
+      role="none"
     >
       <button
         class="displayValue default"
@@ -70,6 +71,7 @@ exports[`Render component in disabled state 1`] = `
   >
     <div
       class="select"
+      role="none"
     >
       <button
         class="displayValue default"

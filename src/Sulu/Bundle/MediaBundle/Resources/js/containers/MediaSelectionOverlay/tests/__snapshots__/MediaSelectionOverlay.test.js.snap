@@ -167,6 +167,7 @@ Array [
                         <span>
                           <div
                             class="select"
+                            role="none"
                           >
                             <button
                               class="displayValue dark"
@@ -315,6 +316,7 @@ Array [
                                   >
                                     <label
                                       class="label"
+                                      tabindex="-1"
                                     >
                                       <span
                                         class="switch checkbox dark checkbox"
@@ -447,6 +449,7 @@ Array [
                                   >
                                     <label
                                       class="label"
+                                      tabindex="-1"
                                     >
                                       <span
                                         class="switch checkbox dark checkbox"
@@ -780,6 +783,7 @@ Array [
                         <span>
                           <div
                             class="select"
+                            role="none"
                           >
                             <button
                               class="displayValue dark"
@@ -928,6 +932,7 @@ Array [
                                   >
                                     <label
                                       class="label"
+                                      tabindex="-1"
                                     >
                                       <span
                                         class="switch checkbox dark checkbox"
@@ -1060,6 +1065,7 @@ Array [
                                   >
                                     <label
                                       class="label"
+                                      tabindex="-1"
                                     >
                                       <span
                                         class="switch checkbox dark checkbox"

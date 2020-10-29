@@ -138,6 +138,7 @@ exports[`Render the MediaCollection 1`] = `
             <span>
               <div
                 class="select"
+                role="none"
               >
                 <button
                   class="displayValue dark"
@@ -285,6 +286,7 @@ exports[`Render the MediaCollection 1`] = `
                       >
                         <label
                           class="label"
+                          tabindex="-1"
                         >
                           <span
                             class="switch checkbox dark checkbox"
@@ -417,6 +419,7 @@ exports[`Render the MediaCollection 1`] = `
                       >
                         <label
                           class="label"
+                          tabindex="-1"
                         >
                           <span
                             class="switch checkbox dark checkbox"
@@ -675,6 +678,7 @@ exports[`Render the MediaCollection for all media 1`] = `
             <span>
               <div
                 class="select"
+                role="none"
               >
                 <button
                   class="displayValue dark"
@@ -822,6 +826,7 @@ exports[`Render the MediaCollection for all media 1`] = `
                       >
                         <label
                           class="label"
+                          tabindex="-1"
                         >
                           <span
                             class="switch checkbox dark checkbox"
@@ -954,6 +959,7 @@ exports[`Render the MediaCollection for all media 1`] = `
                       >
                         <label
                           class="label"
+                          tabindex="-1"
                         >
                           <span
                             class="switch checkbox dark checkbox"

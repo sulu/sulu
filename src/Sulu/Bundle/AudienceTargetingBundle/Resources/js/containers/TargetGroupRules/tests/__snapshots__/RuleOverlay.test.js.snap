@@ -70,6 +70,7 @@ Array [
                   </label>
                   <div
                     class="select"
+                    role="none"
                   >
                     <button
                       class="displayValue default"

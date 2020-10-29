@@ -3,6 +3,7 @@
 exports[`The component should render in checked state 1`] = `
 <label
   class="label"
+  tabindex="-1"
 >
   <span
     class="switch"
@@ -19,6 +20,7 @@ exports[`The component should render in checked state 1`] = `
 exports[`The component should render in disabled state 1`] = `
 <label
   class="label disabled"
+  tabindex="-1"
 >
   <span
     class="switch disabled"
@@ -35,6 +37,7 @@ exports[`The component should render in disabled state 1`] = `
 exports[`The component should render in unchecked state 1`] = `
 <label
   class="label"
+  tabindex="-1"
 >
   <span
     class="switch"
@@ -50,6 +53,7 @@ exports[`The component should render in unchecked state 1`] = `
 exports[`The component should render with class 1`] = `
 <label
   class="label"
+  tabindex="-1"
 >
   <span
     class="switch my-class"
@@ -65,6 +69,7 @@ exports[`The component should render with class 1`] = `
 exports[`The component should render with name 1`] = `
 <label
   class="label"
+  tabindex="-1"
 >
   <span
     class="switch"
@@ -81,6 +86,7 @@ exports[`The component should render with name 1`] = `
 exports[`The component should render with radio type 1`] = `
 <label
   class="label"
+  tabindex="-1"
 >
   <span
     class="switch my-class"
@@ -96,6 +102,7 @@ exports[`The component should render with radio type 1`] = `
 exports[`The component should render without a label container 1`] = `
 <label
   class="label"
+  tabindex="-1"
 >
   <span
     class="switch"

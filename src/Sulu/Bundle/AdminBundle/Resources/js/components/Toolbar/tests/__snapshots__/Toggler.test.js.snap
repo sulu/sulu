@@ -10,6 +10,7 @@ exports[`Render disabled toggler 1`] = `
   >
     <label
       class="label"
+      tabindex="-1"
     >
       <span
         class="switch toggler"
@@ -47,6 +48,7 @@ exports[`Render loading toggler 1`] = `
   >
     <label
       class="label"
+      tabindex="-1"
     >
       <span
         class="switch toggler"
@@ -73,6 +75,7 @@ exports[`Render toggler with skin 1`] = `
   >
     <label
       class="label"
+      tabindex="-1"
     >
       <span
         class="switch toggler"
@@ -99,6 +102,7 @@ exports[`Render with active toggler 1`] = `
   >
     <label
       class="label"
+      tabindex="-1"
     >
       <span
         class="switch toggler"

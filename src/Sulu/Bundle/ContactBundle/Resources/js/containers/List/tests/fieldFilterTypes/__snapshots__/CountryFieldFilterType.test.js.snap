@@ -23,6 +23,7 @@ Array [
   >
     <label
       class="label"
+      tabindex="-1"
     >
       <span
         class="switch checkbox dark"
@@ -39,6 +40,7 @@ Array [
     </label>
     <label
       class="label"
+      tabindex="-1"
     >
       <span
         class="switch checkbox dark"
@@ -55,6 +57,7 @@ Array [
     </label>
     <label
       class="label"
+      tabindex="-1"
     >
       <span
         class="switch checkbox dark"

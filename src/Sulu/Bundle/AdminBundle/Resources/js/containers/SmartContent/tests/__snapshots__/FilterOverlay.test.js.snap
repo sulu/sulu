@@ -51,6 +51,7 @@ Array [
                 </button>
                 <label
                   class="label"
+                  tabindex="-1"
                 >
                   <span
                     class="switch toggler"
@@ -96,6 +97,7 @@ Array [
                 >
                   <div
                     class="select"
+                    role="none"
                   >
                     <button
                       class="displayValue default"
@@ -157,6 +159,7 @@ Array [
                 >
                   <div
                     class="select"
+                    role="none"
                   >
                     <button
                       class="displayValue default"
@@ -204,6 +207,7 @@ Array [
               </h3>
               <label
                 class="label"
+                tabindex="-1"
               >
                 <span
                   class="switch toggler"
@@ -233,6 +237,7 @@ Array [
                 >
                   <div
                     class="select"
+                    role="none"
                   >
                     <button
                       class="displayValue default"
@@ -275,6 +280,7 @@ Array [
                 >
                   <div
                     class="select"
+                    role="none"
                   >
                     <button
                       class="displayValue default"
@@ -325,6 +331,7 @@ Array [
               >
                 <div
                   class="select"
+                  role="none"
                 >
                   <button
                     class="displayValue default"

@@ -126,6 +126,7 @@ exports[`Render with empty webspace section 2`] = `
 >
   <div
     class="select"
+    role="none"
   >
     <button
       class="displayValue default"
@@ -431,6 +432,7 @@ exports[`Render with webspace section 2`] = `
 >
   <div
     class="select"
+    role="none"
   >
     <button
       class="displayValue default"
