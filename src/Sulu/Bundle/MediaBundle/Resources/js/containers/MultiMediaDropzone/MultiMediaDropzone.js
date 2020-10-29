@@ -17,7 +17,7 @@ type Props = {
     onClose: () => void,
     onOpen: () => void,
     onUpload: (media: Array<Object>) => void,
-    onUploadError: (error: any) => void,
+    onUploadError: (errorResponse: string) => void,
     open: boolean,
 };
 
