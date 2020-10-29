@@ -1,12 +1,12 @@
 // @flow
-import {computed, observable} from 'mobx';
+import {action, computed, observable} from 'mobx';
 import log from 'loglevel';
 import type {Webspace} from './types';
 
 class WebspaceStore {
     @observable allWebspaces: Array<Webspace>;
 
-    setWebspaces(webspaces: Array<Webspace>) {
+    @action setWebspaces(webspaces: Array<Webspace>) {
         this.allWebspaces = webspaces;
     }
 
