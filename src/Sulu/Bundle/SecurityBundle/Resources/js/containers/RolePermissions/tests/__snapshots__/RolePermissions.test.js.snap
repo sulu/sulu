@@ -28,6 +28,7 @@ exports[`Render matrix with correct given values 2`] = `
     </div>
     <label
       class="label"
+      tabindex="-1"
     >
       <span
         class="switch toggler"
