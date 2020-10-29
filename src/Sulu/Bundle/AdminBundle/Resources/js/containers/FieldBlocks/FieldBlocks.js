@@ -14,7 +14,7 @@ const MISSING_BLOCK_ERROR_MESSAGE = 'The "block" field type needs at least one t
 const BLOCK_PREVIEW_TAG = 'sulu.block_preview';
 
 @observer
-export default class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
+class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
     @observable value: Object;
 
     constructor(props: FieldTypeProps<Array<BlockEntry>>) {
@@ -27,7 +27,9 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
         const {defaultType, onChange, types, value} = this.props;
         const {types: oldTypes} = prevProps;
 
-        this.updateValue(value);
+        if (!equals(prevProps.value, value) ){
+            this.updateValue(value);
+        }
 
         if (!types || !oldTypes) {
             throw new Error(MISSING_BLOCK_ERROR_MESSAGE);
@@ -254,3 +256,5 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
         );
     }
 }
+
+export default FieldBlocks;
