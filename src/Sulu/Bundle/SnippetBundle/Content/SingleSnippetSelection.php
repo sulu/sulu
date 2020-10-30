@@ -54,7 +54,7 @@ class SingleSnippetSelection extends SimpleContentType implements PreResolvableC
         $resolvedSnippet = $this->resolveSnippet($property);
 
         if (null === $resolvedSnippet) {
-            return $this->defaultValue;
+            return null;
         }
 
         return $resolvedSnippet['content'];
