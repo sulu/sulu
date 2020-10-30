@@ -11,7 +11,9 @@
 
 namespace Sulu\Bundle\SnippetBundle\Content;
 
+use Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManagerInterface;
 use Sulu\Bundle\SnippetBundle\Snippet\SnippetResolverInterface;
+use Sulu\Bundle\SnippetBundle\Snippet\WrongSnippetTypeException;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
@@ -26,15 +28,22 @@ class SingleSnippetSelection extends SimpleContentType implements PreResolvableC
     private $snippetResolver;
 
     /**
+     * @var DefaultSnippetManagerInterface
+     */
+    private $defaultSnippetManager;
+
+    /**
      * @var ReferenceStoreInterface
      */
     private $snippetReferenceStore;
 
     public function __construct(
         SnippetResolverInterface $snippetResolver,
+        DefaultSnippetManagerInterface $defaultSnippetManager,
         ReferenceStoreInterface $snippetReferenceStore
     ) {
         $this->snippetResolver = $snippetResolver;
+        $this->defaultSnippetManager = $defaultSnippetManager;
         $this->snippetReferenceStore = $snippetReferenceStore;
 
         parent::__construct('SingleSnippetSelection', null);
@@ -77,10 +86,6 @@ class SingleSnippetSelection extends SimpleContentType implements PreResolvableC
     {
         $snippetUuid = $property->getValue();
 
-        if (empty($snippetUuid)) {
-            return null;
-        }
-
         /** @var PageBridge $page */
         $page = $property->getStructure();
         $webspaceKey = $page->getWebspaceKey();
@@ -92,6 +97,15 @@ class SingleSnippetSelection extends SimpleContentType implements PreResolvableC
 
         $params = $property->getParams();
         $loadExcerpt = isset($params['loadExcerpt']) ? $params['loadExcerpt']->getValue() : false;
+        $defaultSnippetArea = isset($params['default']) ? $params['default']->getValue() : null;
+
+        if (empty($snippetUuid) && $defaultSnippetArea) {
+            $snippetUuid = $this->getDefaultSnippetId($webspaceKey, $defaultSnippetArea, $locale);
+        }
+
+        if (empty($snippetUuid)) {
+            return null;
+        }
 
         /** @var array[] $resolvedSnippets */
         $resolvedSnippets = $this->snippetResolver->resolve(
@@ -103,5 +117,16 @@ class SingleSnippetSelection extends SimpleContentType implements PreResolvableC
         );
 
         return \reset($resolvedSnippets) ?: null;
+    }
+
+    private function getDefaultSnippetId(string $webspaceKey, string $snippetArea, string $locale): ?string
+    {
+        try {
+            $snippet = $this->defaultSnippetManager->load($webspaceKey, $snippetArea, $locale);
+        } catch (WrongSnippetTypeException $exception) {
+            return null;
+        }
+
+        return $snippet ? $snippet->getUuid() : null;
     }
 }

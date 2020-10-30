@@ -24,6 +24,7 @@
 
         <service id="sulu_snippet.content.single_snippet_selection" class="Sulu\Bundle\SnippetBundle\Content\SingleSnippetSelection">
             <argument type="service" id="sulu_snippet.resolver"/>
+            <argument type="service" id="sulu_snippet.default_snippet.manager"/>
             <argument type="service" id="sulu_snippet.reference_store.snippet"/>
 
             <tag name="sulu.content.type" alias="single_snippet_selection"/>
