@@ -861,6 +861,9 @@ class WebspaceManagerTest extends WebspaceTestCase
         $result = $this->webspaceManager->findUrlByResourceLocator('/test', 'main', 'de_at', 'sulu_io', 'sulu.lo');
         $this->assertEquals('http://sulu.lo/test', $result);
 
+        $result = $this->webspaceManager->findUrlByResourceLocator('/test', 'main', 'de_at', 'sulu_io', 'other-domain.lo');
+        $this->assertEquals('http://sulu.at/test', $result);
+
         $result = $this->webspaceManager->findUrlByResourceLocator(
             '/test',
             'main',
