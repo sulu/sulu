@@ -173,6 +173,58 @@ class MediaDataProviderTest extends TestCase
         $this->assertEquals($items, $result->getItems());
     }
 
+    public function testResolveDataItemsWithoutSecurity()
+    {
+        $mediaDataProvider = new MediaDataProvider(
+            $this->dataProviderRepository->reveal(),
+            $this->collectionManager->reveal(),
+            $this->serializer->reveal(),
+            $this->requestStack->reveal(),
+            $this->referenceStore->reveal(),
+            null,
+            $this->requestAnalyzer->reveal(),
+            ['view' => 64]
+        );
+
+        $medias = [
+            $this->createMedia(1, 'Test-1')->reveal(),
+            $this->createMedia(2, 'Test-2')->reveal(),
+            $this->createMedia(3, 'Test-3')->reveal(),
+        ];
+
+        $dataItems = [];
+        foreach ($medias as $media) {
+            $dataItems[] = $this->createDataItem($media);
+        }
+
+        $this->dataProviderRepository
+             ->findByFilters(
+                 ['dataSource' => 42, 'tags' => [1]],
+                 1,
+                 3,
+                 null,
+                 'en',
+                 ['webspace' => 'sulu_io', 'locale' => 'en'],
+                 null,
+                 null
+             )
+            ->willReturn($medias);
+
+        $result = $mediaDataProvider->resolveDataItems(
+            ['dataSource' => 42, 'tags' => [1]],
+            [],
+            ['webspace' => 'sulu_io', 'locale' => 'en'],
+            null,
+            1,
+            3
+        );
+
+        $this->assertInstanceOf(DataProviderResult::class, $result);
+
+        $this->assertEquals(false, $result->getHasNextPage());
+        $this->assertEquals($dataItems, $result->getItems());
+    }
+
     public function resourceItemsDataProvider()
     {
         $medias = [
