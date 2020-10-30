@@ -201,6 +201,26 @@ class Contact extends ApiWrapper
     }
 
     /**
+     * Get name of title.
+     *
+     * @return string
+     *
+     * @VirtualProperty
+     * @SerializedName("titleName")
+     * @Groups({"fullContact"})
+     */
+    public function getTitleName()
+    {
+        $title = $this->entity->getTitle();
+
+        if (!$title) {
+            return null;
+        }
+
+        return $title->getTitle();
+    }
+
+    /**
      * Set position.
      *
      * @param string $position
@@ -245,7 +265,7 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Get position.
+     * Get name of position.
      *
      * @return string
      *
