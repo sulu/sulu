@@ -43,6 +43,7 @@
     <p>{{ content.page_selection|map(page => page.title)|join(', ') }}</p>
     <p>{{ content.teaser_selection|map(teaser => teaser.title)|join(', ') }}</p>
     <p>{{ content.smart_content|map(page => page.title)|join(', ') }}</p>
+    <p>{{ content.single_snippet_selection ? content.single_snippet_selection.title : '' }}</p>
     <p>{{ content.snippet_selection|map(snippet => snippet.title)|join(', ') }}</p>
     <p>{{ content.category_selection|map(category => category.name)|join(', ') }}</p>
 
