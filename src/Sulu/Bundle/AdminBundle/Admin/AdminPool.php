@@ -26,9 +26,9 @@ class AdminPool
     /**
      * Adds a new admin.
      *
-     * @param $admin
+     * @param Admin $admin
      */
-    public function addAdmin($admin)
+    public function addAdmin(Admin $admin)
     {
         $this->pool[] = $admin;
     }

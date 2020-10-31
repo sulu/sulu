@@ -115,7 +115,7 @@ class ViewRegistry
             return [];
         }
 
-        /** @var View $parentView */
+        /** @var View $parentViews */
         $parentViews = \array_values(\array_filter($views, function(View $view) use ($parent) {
             return $view->getName() === $parent;
         }));
