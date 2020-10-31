@@ -115,14 +115,14 @@ class ViewRegistry
             return [];
         }
 
-        /** @var View $parentViews */
+        /** @var View[] $parentViews */
         $parentViews = \array_values(\array_filter($views, function(View $view) use ($parent) {
             return $view->getName() === $parent;
         }));
 
         $parentView = null;
         if (!empty($parentViews)) {
-            $parentView = $parentViews[0];
+            $parentView = array_shift($parentViews);
         }
 
         $mergedViews = [];
