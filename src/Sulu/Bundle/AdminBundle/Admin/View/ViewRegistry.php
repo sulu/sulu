@@ -122,7 +122,7 @@ class ViewRegistry
 
         $parentView = null;
         if (!empty($parentViews)) {
-            $parentView = array_shift($parentViews);
+            $parentView = current($parentViews);
         }
 
         $mergedViews = [];
