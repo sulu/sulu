@@ -46,6 +46,11 @@ class ViewRegistry
         return $this->views;
     }
 
+    /**
+     * @param string $name
+     * @return View
+     * @throws ViewNotFoundException
+     */
     public function findViewByName(string $name): View
     {
         foreach ($this->getViews() as $view) {
@@ -85,6 +90,10 @@ class ViewRegistry
         }
     }
 
+    /**
+     * @param View[] $views
+     * @throws ParentViewNotFoundException
+     */
     private function validateViews(array $views): void
     {
         $viewNames = \array_map(function(View $view) {
@@ -104,7 +113,7 @@ class ViewRegistry
         }
     }
 
-    private function mergeViewOptions(array $views, string $parent = null)
+    private function mergeViewOptions(array $views, string $parent = null): array
     {
         /** @var View[] $childViews */
         $childViews = \array_filter($views, function(View $view) use ($parent) {
@@ -122,7 +131,7 @@ class ViewRegistry
 
         $parentView = null;
         if (!empty($parentViews)) {
-            $parentView = current($parentViews);
+            $parentView = \current($parentViews);
         }
 
         $mergedViews = [];
