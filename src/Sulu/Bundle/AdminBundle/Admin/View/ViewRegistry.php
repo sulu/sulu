@@ -47,8 +47,6 @@ class ViewRegistry
     }
 
     /**
-     * @param string $name
-     * @return View
      * @throws ViewNotFoundException
      */
     public function findViewByName(string $name): View
@@ -92,6 +90,7 @@ class ViewRegistry
 
     /**
      * @param View[] $views
+     *
      * @throws ParentViewNotFoundException
      */
     private function validateViews(array $views): void
