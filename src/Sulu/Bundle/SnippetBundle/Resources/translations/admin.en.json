@@ -1,6 +1,8 @@
 {
     "sulu_snippet.selection_overlay_title": "Choose snippets",
     "sulu_snippet.selection_label": "{count} {count, plural, =1 {snippet} other {snippets}} selected",
+    "sulu_snippet.no_snippet_selected": "No snippet selected",
+    "sulu_snippet.single_snippet_selection_overlay_title": "Choose snippet",
     "sulu_snippet.snippets": "Snippets",
     "sulu_snippet.snippet": "Snippet",
     "sulu_snippet.default_snippets": "Default Snippets",

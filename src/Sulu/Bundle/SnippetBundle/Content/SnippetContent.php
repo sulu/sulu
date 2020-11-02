@@ -26,9 +26,6 @@ use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeExportInterface;
 use Sulu\Component\Content\PreResolvableContentTypeInterface;
 
-/**
- * ContentType for Snippets.
- */
 class SnippetContent extends ComplexContentType implements ContentTypeExportInterface, PreResolvableContentTypeInterface
 {
     /**
@@ -114,11 +111,6 @@ class SnippetContent extends ComplexContentType implements ContentTypeExportInte
         if ($node->hasProperty($property->getName())) {
             $node->getProperty($property->getName())->remove();
         }
-    }
-
-    public function getDefaultParams(PropertyInterface $property = null)
-    {
-        return [];
     }
 
     public function getViewData(PropertyInterface $property)
