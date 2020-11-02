@@ -99,7 +99,7 @@ test('Promise returned by "update" method should be rejected if request has erro
     return expect(updatePromise).rejects.toEqual('invalid-format');
 });
 
-test('Promise returned by "update" method should be resolved if request is not successful', () => {
+test('Promise returned by "update" method should be rejected if request is not successful', () => {
     resourceRouteRegistry.getDetailUrl.mockReturnValue('/media/1?action=new-version&locale=en');
 
     window.XMLHttpRequest = jest.fn(function() {
