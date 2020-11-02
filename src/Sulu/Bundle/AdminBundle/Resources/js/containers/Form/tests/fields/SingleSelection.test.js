@@ -2,6 +2,7 @@
 import React from 'react';
 import {mount, shallow} from 'enzyme';
 import {observable} from 'mobx';
+import log from 'loglevel';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
 import Router from '../../../../services/Router';
 import ResourceStore from '../../../../stores/ResourceStore';
@@ -11,6 +12,10 @@ import FormInspector from '../../FormInspector';
 import ResourceFormStore from '../../stores/ResourceFormStore';
 import SingleSelection from '../../fields/SingleSelection';
 import SingleSelectionComponent from '../../../../containers/SingleSelection';
+
+jest.mock('loglevel', () => ({
+    warn: jest.fn(),
+}));
 
 jest.mock('../../../../containers/SingleListOverlay', () => jest.fn(() => null));
 
@@ -130,6 +135,7 @@ test('Pass correct options to SingleAutoComplete based on data_path_to_auto_comp
             accountId: 5,
         },
     }));
+    expect(log.warn).toBeCalledWith(expect.stringContaining('The "data_path_to_auto_complete" option is deprecated'));
 });
 
 test('Pass correct props with schema-options type to SingleAutoComplete', () => {

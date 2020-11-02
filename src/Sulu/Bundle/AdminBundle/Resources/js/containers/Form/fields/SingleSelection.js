@@ -2,6 +2,7 @@
 import React from 'react';
 import {computed, observable, toJS} from 'mobx';
 import type {IObservableValue} from 'mobx';
+import log from 'loglevel';
 import jsonpointer from 'json-pointer';
 import equals from 'fast-deep-equal';
 import {observer} from 'mobx-react';
@@ -392,6 +393,14 @@ class SingleSelection extends React.Component<Props>
 
         if (!Array.isArray(dataPathToAutoComplete)) {
             throw new Error('The "data_path_to_auto_complete" schemaOption must be an array!');
+        }
+
+        if (dataPathToAutoComplete.length > 0 ){
+            // @deprecated
+            log.warn(
+                'The "data_path_to_auto_complete" option is deprecated since version 2.2 and will be removed. ' +
+                'Use the "resource_store_properties_to_request" option instead.'
+            );
         }
 
         const options = {
