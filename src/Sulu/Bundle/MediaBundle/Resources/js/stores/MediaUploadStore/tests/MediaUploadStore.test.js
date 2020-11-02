@@ -51,6 +51,78 @@ test('Calling the "update" method should make a "POST" request to the media upda
     expect(openSpy).toBeCalledWith('POST', '/media/1?action=new-version&locale=en');
 });
 
+test('Promise returned by "update" method should be resolved if request is successful', () => {
+    resourceRouteRegistry.getDetailUrl.mockReturnValue('/media/1?action=new-version&locale=en');
+
+    window.XMLHttpRequest = jest.fn(function() {
+        this.open = jest.fn();
+        this.onload = jest.fn();
+        this.onerror = jest.fn();
+        this.upload = jest.fn();
+        this.send = jest.fn();
+    });
+
+    const mediaUploadStore = new MediaUploadStore(
+        {id: 1, locale: 'en', mimeType: 'image/jpeg', title: 'test', thumbnails: {}, url: ''},
+        observable.box('en')
+    );
+    const fileData = new File([''], 'fileName');
+
+    const updatePromise = mediaUploadStore.update(fileData);
+
+    window.XMLHttpRequest.mock.instances[0].onload({target: {status: 200, response: '{"title": "test1"}'}});
+
+    return expect(updatePromise).resolves.toEqual({title: 'test1'});
+});
+
+test('Promise returned by "update" method should be rejected if request has error status', () => {
+    resourceRouteRegistry.getDetailUrl.mockReturnValue('/media/1?action=new-version&locale=en');
+
+    window.XMLHttpRequest = jest.fn(function() {
+        this.open = jest.fn();
+        this.onload = jest.fn();
+        this.onerror = jest.fn();
+        this.upload = jest.fn();
+        this.send = jest.fn();
+    });
+
+    const mediaUploadStore = new MediaUploadStore(
+        {id: 1, locale: 'en', mimeType: 'image/jpeg', title: 'test', thumbnails: {}, url: ''},
+        observable.box('en')
+    );
+    const fileData = new File([''], 'fileName');
+
+    const updatePromise = mediaUploadStore.update(fileData);
+
+    window.XMLHttpRequest.mock.instances[0].onload({target: {status: 400, response: 'invalid-format'}});
+
+    return expect(updatePromise).rejects.toEqual('invalid-format');
+});
+
+test('Promise returned by "update" method should be rejected if request is not successful', () => {
+    resourceRouteRegistry.getDetailUrl.mockReturnValue('/media/1?action=new-version&locale=en');
+
+    window.XMLHttpRequest = jest.fn(function() {
+        this.open = jest.fn();
+        this.onload = jest.fn();
+        this.onerror = jest.fn();
+        this.upload = jest.fn();
+        this.send = jest.fn();
+    });
+
+    const mediaUploadStore = new MediaUploadStore(
+        {id: 1, locale: 'en', mimeType: 'image/jpeg', title: 'test', thumbnails: {}, url: ''},
+        observable.box('en')
+    );
+    const fileData = new File([''], 'fileName');
+
+    const updatePromise = mediaUploadStore.update(fileData);
+
+    window.XMLHttpRequest.mock.instances[0].onerror({target: {response: 'network-error'}});
+
+    return expect(updatePromise).rejects.toEqual('network-error');
+});
+
 test('Calling the "create" method should make a "POST" request to the media update api', () => {
     resourceRouteRegistry.getDetailUrl.mockReturnValue('/media?locale=en&collection=1');
 
@@ -75,7 +147,7 @@ test('Calling the "create" method should make a "POST" request to the media upda
     expect(resourceRouteRegistry.getDetailUrl).toBeCalledWith('media', {collection: 1, locale: 'en'});
     expect(openSpy).toBeCalledWith('POST', '/media?locale=en&collection=1');
 
-    window.XMLHttpRequest.mock.instances[0].onload({target: {response: '{"title": "test1"}'}});
+    window.XMLHttpRequest.mock.instances[0].onload({target: {status: 200, response: '{"title": "test1"}'}});
 
     return createPromise.then(() => {
         expect(mediaUploadStore.media).toEqual({title: 'test1'});
@@ -177,7 +249,7 @@ test('After the "update" call request was successful the progress will be reset'
         }
     );
 
-    window.XMLHttpRequest.mock.instances[0].onload({target: {response: '{"title": "test1"}'}});
+    window.XMLHttpRequest.mock.instances[0].onload({target: {status: 200, response: '{"title": "test1"}'}});
 });
 
 test('After the "updatePreviewImage" call request was successful the progress will be reset', (done) => {
@@ -218,11 +290,7 @@ test('After the "updatePreviewImage" call request was successful the progress wi
     const response =
         '{"id": 1, "mimeType": "image/jpeg", "title": "test", "thumbnails": {"50x50": "image.jpg"}, "url": ""}';
 
-    window.XMLHttpRequest.mock.instances[0].onload({
-        target: {
-            response,
-        },
-    });
+    window.XMLHttpRequest.mock.instances[0].onload({target: {status: 200, response}});
 });
 
 test('Should return thumbnail path if available', () => {
