@@ -2,7 +2,8 @@
 import equals from 'fast-deep-equal';
 import jsonpointer from 'json-pointer';
 import React, {Fragment} from 'react';
-import {toJS} from 'mobx';
+import {action, observable, toJS} from 'mobx';
+import {observer} from 'mobx-react';
 import BlockCollection from '../../components/BlockCollection';
 import type {BlockEntry} from '../../components/BlockCollection/types';
 import type {BlockError, FieldTypeProps} from '../Form/types';
@@ -12,10 +13,23 @@ import FieldRenderer from './FieldRenderer';
 const MISSING_BLOCK_ERROR_MESSAGE = 'The "block" field type needs at least one type to be configured!';
 const BLOCK_PREVIEW_TAG = 'sulu.block_preview';
 
-export default class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
+@observer
+class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
+    @observable value: Object;
+
+    constructor(props: FieldTypeProps<Array<BlockEntry>>) {
+        super(props);
+
+        this.value = this.props.value;
+    }
+
     componentDidUpdate(prevProps: FieldTypeProps<Array<BlockEntry>>) {
         const {defaultType, onChange, types, value} = this.props;
         const {types: oldTypes} = prevProps;
+
+        if (!equals(prevProps.value, value)){
+            this.updateValue(value);
+        }
 
         if (!types || !oldTypes) {
             throw new Error(MISSING_BLOCK_ERROR_MESSAGE);
@@ -47,8 +61,13 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
         }
     }
 
+    @action updateValue = (value: Object) => {
+        this.value = value;
+    };
+
     handleBlockChange = (index: number, name: string, value: Object) => {
-        const {onChange, value: oldValues} = this.props;
+        const {onChange} = this.props;
+        const oldValues = this.value;
 
         if (!oldValues) {
             return;
@@ -56,6 +75,8 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
 
         const newValues = toJS(oldValues);
         jsonpointer.set(newValues[index], '/' + name, value);
+
+        this.updateValue(newValues);
 
         onChange(newValues);
     };
@@ -204,7 +225,8 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
     };
 
     render() {
-        const {defaultType, disabled, maxOccurs, minOccurs, onChange, types, value} = this.props;
+        const {defaultType, disabled, maxOccurs, minOccurs, onChange, types} = this.props;
+        const value = this.value || [];
 
         if (!defaultType) {
             throw new Error('The "block" field type needs a defaultType!');
@@ -229,8 +251,10 @@ export default class FieldBlocks extends React.Component<FieldTypeProps<Array<Bl
                 onSortEnd={this.handleSortEnd}
                 renderBlockContent={this.renderBlockContent}
                 types={blockTypes}
-                value={value || []}
+                value={value}
             />
         );
     }
 }
+
+export default FieldBlocks;
