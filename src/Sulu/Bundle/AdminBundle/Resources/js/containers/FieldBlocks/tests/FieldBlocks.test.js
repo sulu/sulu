@@ -909,7 +909,7 @@ test('Should set correct default values for multiple single_select in blocks', (
             title: 'Default',
             form: {
                 position_center: {
-                    label: 'Position Left',
+                    label: 'Position Center',
                     type: 'single_select',
                     options: {
                         values: {
