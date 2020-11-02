@@ -19,14 +19,16 @@ class AdminPool
     /**
      * The array for all the admin-objects.
      *
-     * @var array
+     * @var Admin[]
      */
     private $pool = [];
 
     /**
      * Adds a new admin.
+     *
+     * @var Admin $admin
      */
-    public function addAdmin(Admin $admin)
+    public function addAdmin($admin)
     {
         $this->pool[] = $admin;
     }
