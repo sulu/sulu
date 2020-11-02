@@ -177,7 +177,13 @@ export default class MediaUploadStore {
 
             xhr.open('POST', url);
 
-            xhr.onload = (event: any) => resolve(JSON.parse(event.target.response));
+            xhr.onload = (event: any) => {
+                if (event.target.status >= 200 && event.target.status <= 299) {
+                    resolve(JSON.parse(event.target.response));
+                } else {
+                    reject(event.target.response);
+                }
+            };
             xhr.onerror = (event: any) => reject(event.target.response);
 
             if (xhr.upload) {

@@ -690,3 +690,36 @@ test('Media should be moved when overlay is confirmed', () => {
             .toEqual(false);
     });
 });
+
+test('Should show error if upload via MediaCollection fails', () => {
+    const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
+    const MediaOverview = require('../MediaOverview').default;
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, MediaOverview);
+
+    const router = {
+        restore: jest.fn(),
+        bind: jest.fn(),
+        route: {
+            options: {
+                locales: ['de'],
+                permissions: {
+                    add: true,
+                    delete: true,
+                    edit: true,
+                },
+            },
+        },
+        attributes: {
+            id: 4,
+        },
+    };
+    const mediaOverview = mount(<MediaOverview router={router} />);
+    mediaOverview.instance().collectionId.set(4);
+    mediaOverview.instance().locale.set('de');
+
+    expect(toolbarFunction.call(mediaOverview.instance()).errors).toEqual([]);
+
+    mediaOverview.find('MediaCollection').props().onUploadError(['invalid-file']);
+
+    expect(toolbarFunction.call(mediaOverview.instance()).errors).toEqual(['sulu_media.upload_server_error']);
+});

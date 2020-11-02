@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* 1.6.37 (2020-11-02)
+    * BUGFIX      #5471  [Webspace]                Check domain when creating an internal redirect
+
 * 1.6.36 (2020-08-26)
     * BUGFIX      #5415  [ContentBundle]           Fix teaser-selection deselecting
     * BUGFIX      #5442  [AudienceTargetingBundle] Fix export data function of audience-target selection

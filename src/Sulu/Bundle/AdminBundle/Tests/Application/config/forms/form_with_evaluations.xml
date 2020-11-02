@@ -98,5 +98,12 @@
                 <title lang="de">Anrede</title>
             </meta>
         </property>
+
+        <property name="title" type="text_line" visibleCondition="false" disabledCondition="true">
+            <meta>
+                <title lang="en">Title</title>
+                <title lang="de">Titel</title>
+            </meta>
+        </property>
     </properties>
 </form>

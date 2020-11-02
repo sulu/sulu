@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {mount, render} from 'enzyme';
+import {mount, render, shallow} from 'enzyme';
 import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import {RequestPromise} from 'sulu-admin-bundle/services/ResourceRequester';
 import MediaCardOverviewAdapter from '../../List/adapters/MediaCardOverviewAdapter';
@@ -102,6 +102,8 @@ jest.mock('sulu-admin-bundle/containers', () => {
             this.limit = {
                 get: jest.fn().mockReturnValue(10),
             };
+            this.reset = jest.fn();
+            this.reload = jest.fn();
             this.setLimit = jest.fn();
             this.data = (resourceKey === COLLECTIONS_RESOURCE_KEY)
                 ? collectionData
@@ -575,6 +577,57 @@ test('Render the MediaCollection without security buttons when permission is mis
     expect(mediaCollection.find('Action').find({children: 'sulu_admin.edit'})).toHaveLength(1);
     expect(mediaCollection.find('Action').find({children: 'sulu_admin.move'})).toHaveLength(1);
     expect(mediaCollection.find('Action').find({children: 'sulu_security.permissions'})).toHaveLength(0);
+});
+
+test('Reload medias and fire onUploadError callback if an error happens while uploading a file', () => {
+    const page = observable.box();
+    const locale = observable.box();
+    const onUploadErrorSpy = jest.fn();
+    const ListStore = require('sulu-admin-bundle/containers').ListStore;
+
+    const mediaListStore = new ListStore(
+        MEDIA_RESOURCE_KEY,
+        SETTINGS_KEY,
+        USER_SETTINGS_KEY,
+        {
+            page,
+            locale,
+        }
+    );
+    const collectionListStore = new ListStore(
+        COLLECTIONS_RESOURCE_KEY,
+        SETTINGS_KEY,
+        USER_SETTINGS_KEY,
+        {
+            page,
+            locale,
+        }
+    );
+    const CollectionStore = require('../../../stores/CollectionStore').default;
+    const collectionStore = new CollectionStore(1, locale);
+
+    const mediaCollection = shallow(
+        <MediaCollection
+            collectionListStore={collectionListStore}
+            collectionStore={collectionStore}
+            locale={locale}
+            mediaListAdapters={['media_card_overview']}
+            mediaListStore={mediaListStore}
+            onCollectionNavigate={jest.fn()}
+            onUploadError={onUploadErrorSpy}
+            onUploadOverlayClose={jest.fn()}
+            onUploadOverlayOpen={jest.fn()}
+            uploadOverlayOpen={false}
+        />
+    );
+
+    expect(onUploadErrorSpy).not.toBeCalled();
+
+    mediaCollection.find('MultiMediaDropzone').props().onUploadError(['wrong-file-extension-error']);
+
+    expect(onUploadErrorSpy).toBeCalledWith(['wrong-file-extension-error']);
+    expect(mediaListStore.reset).toBeCalled();
+    expect(mediaListStore.reload).toBeCalled();
 });
 
 test('Render the MediaCollection for all media', () => {

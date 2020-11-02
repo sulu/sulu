@@ -1,6 +1,8 @@
 {
     "sulu_snippet.selection_overlay_title": "Schnipsel auswählen",
     "sulu_snippet.selection_label": "{count} Schnipsel ausgewählt",
+    "sulu_snippet.no_snippet_selected": "Kein Snippet ausgewählt",
+    "sulu_snippet.single_snippet_selection_overlay_title": "Snippet auswählen",
     "sulu_snippet.snippets": "Schnipsel",
     "sulu_snippet.snippet": "Schnipsel",
     "sulu_snippet.default_snippets": "Standard Schnipsel",

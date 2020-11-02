@@ -291,6 +291,13 @@
             </meta>
         </property>
 
+        <property name="single_snippet_selection" type="single_snippet_selection">
+            <meta>
+                <title lang="en">Single Snippet Selection</title>
+                <title lang="de">Schnipsel</title>
+            </meta>
+        </property>
+
         <property name="snippet_selection" type="snippet_selection">
             <meta>
                 <title lang="en">Snippet Selection</title>

@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import {mount, shallow} from 'enzyme';
+import {observable} from 'mobx';
 import Router from '../../../services/Router';
 import fieldTypeDefaultProps from '../../../utils/TestHelper/fieldTypeDefaultProps';
 import FieldBlocks from '../FieldBlocks';
@@ -9,6 +10,8 @@ import metadataStore from '../../Form/stores/metadataStore';
 import ResourceFormStore from '../../Form/stores/ResourceFormStore';
 import ResourceStore from '../../../stores/ResourceStore';
 import blockPreviewTransformerRegistry from '../registries/blockPreviewTransformerRegistry';
+import fieldRegistry from '../../Form/registries/fieldRegistry';
+import SingleSelect from '../../Form/fields/SingleSelect';
 
 jest.mock('../../../services/Router/Router', () => jest.fn());
 jest.mock('../../Form/FormInspector', () => jest.fn(function() {
@@ -1133,6 +1136,130 @@ test('Destroy store on unmount', () => {
     fieldBlocks.unmount();
 
     expect(destroySpy).toBeCalledWith();
+});
+
+test('Should set correct default values for multiple single_select in blocks', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+
+    const types = {
+        default: {
+            title: 'Default',
+            form: {
+                position_center: {
+                    label: 'Position Center',
+                    type: 'single_select',
+                    options: {
+                        values: {
+                            name: 'values',
+                            type: 'collection',
+                            value: [
+                                {
+                                    name: 'left',
+                                    title: 'Left',
+                                },
+                                {
+                                    name: 'center',
+                                    title: 'Center',
+                                },
+                                {
+                                    name: 'right',
+                                    title: 'Right',
+                                },
+                            ],
+                        },
+                    },
+                },
+                position_left: {
+                    label: 'Position Left',
+                    type: 'single_select',
+                    options: {
+                        default_value: {
+                            name: 'default_value',
+                            type: 'string',
+                            value: 'left',
+                        },
+                        values: {
+                            name: 'values',
+                            type: 'collection',
+                            value: [
+                                {
+                                    name: 'left',
+                                    title: 'Left',
+                                },
+                                {
+                                    name: 'center',
+                                    title: 'Center',
+                                },
+                                {
+                                    name: 'right',
+                                    title: 'Right',
+                                },
+                            ],
+                        },
+                    },
+                },
+                position_right: {
+                    label: 'Position Right',
+                    type: 'single_select',
+                    options: {
+                        default_value: {
+                            name: 'default_value',
+                            type: 'string',
+                            value: 'right',
+                        },
+                        values: {
+                            name: 'values',
+                            type: 'collection',
+                            value: [
+                                {
+                                    name: 'left',
+                                    title: 'Left',
+                                },
+                                {
+                                    name: 'center',
+                                    title: 'Center',
+                                },
+                                {
+                                    name: 'right',
+                                    title: 'Right',
+                                },
+                            ],
+                        },
+                    },
+                },
+            },
+        },
+    };
+
+    formInspector.getSchemaEntryByPath.mockReturnValue({types});
+
+    fieldRegistry.get.mockReturnValue(SingleSelect);
+
+    const changeSpy = jest.fn();
+
+    const fieldBlocks = mount(
+        <FieldBlocks
+            {...fieldTypeDefaultProps}
+            defaultType="default"
+            formInspector={formInspector}
+            minOccurs={1}
+            onChange={changeSpy}
+            types={types}
+            value={observable([{type: 'default'}])}
+        />
+    );
+
+    fieldBlocks.find('Block').at(0).simulate('click');
+
+    expect(changeSpy).toBeCalledWith(
+        [
+            {
+                'position_left': 'left',
+                'position_right': 'right',
+                'type': 'default',
+            },
+        ]
+    );
 });
 
 test('Throw error if no default type are passed', () => {
