@@ -45,7 +45,7 @@ class MediaDataProvider extends BaseDataProvider
         ArraySerializerInterface $serializer,
         RequestStack $requestStack,
         ReferenceStoreInterface $referenceStore,
-        Security $security,
+        ?Security $security,
         RequestAnalyzerInterface $requestAnalyzer,
         $permissions
     ) {
