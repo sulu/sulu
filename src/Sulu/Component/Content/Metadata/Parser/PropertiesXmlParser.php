@@ -399,11 +399,11 @@ class PropertiesXmlParser
         }
 
         if (isset($data['disabledCondition'])) {
-            $section->setDisabledCondition($data['disabledCondition']);
+            $section->setDisabledCondition($this->normalizeConditionData($data['disabledCondition']));
         }
 
         if (isset($data['visibleCondition'])) {
-            $section->setVisibleCondition($data['visibleCondition']);
+            $section->setVisibleCondition($this->normalizeConditionData($data['visibleCondition']));
         }
 
         foreach ($data['properties'] as $name => $property) {
@@ -420,11 +420,11 @@ class PropertiesXmlParser
         $blockProperty->defaultComponentName = $data['default-type'];
 
         if (isset($data['disabledCondition'])) {
-            $blockProperty->setDisabledCondition($data['disabledCondition']);
+            $blockProperty->setDisabledCondition($this->normalizeConditionData($data['disabledCondition']));
         }
 
         if (isset($data['visibleCondition'])) {
-            $blockProperty->setVisibleCondition($data['visibleCondition']);
+            $blockProperty->setVisibleCondition($this->normalizeConditionData($data['visibleCondition']));
         }
 
         if (isset($data['meta']['title'])) {
@@ -472,12 +472,8 @@ class PropertiesXmlParser
         $property->setTags($data['tags']);
         $property->setMinOccurs(null !== $data['minOccurs'] ? \intval($data['minOccurs']) : null);
         $property->setMaxOccurs(null !== $data['maxOccurs'] ? \intval($data['maxOccurs']) : null);
-        $property->setDisabledCondition(
-            \array_key_exists('disabledCondition', $data) ? $data['disabledCondition'] : null
-        );
-        $property->setVisibleCondition(
-            \array_key_exists('visibleCondition', $data) ? $data['visibleCondition'] : null
-        );
+        $property->setDisabledCondition($this->normalizeConditionData($data['disabledCondition'] ?? null));
+        $property->setVisibleCondition($this->normalizeConditionData($data['visibleCondition'] ?? null));
         $property->setParameters($data['params']);
         $property->setOnInvalid(\array_key_exists('onInvalid', $data) ? $data['onInvalid'] : null);
         $this->mapMeta($property, $data['meta']);
@@ -498,6 +494,15 @@ class PropertiesXmlParser
             ],
             $this->normalizeItem($data)
         );
+
+        return $data;
+    }
+
+    private function normalizeConditionData($data): ?string
+    {
+        if (\is_bool($data)) {
+            return $data ? 'true' : 'false';
+        }
 
         return $data;
     }

@@ -168,7 +168,7 @@ class FormXmlLoaderTest extends TestCase
 
         $this->assertInstanceOf(FormMetadata::class, $formMetadata);
 
-        $this->assertCount(5, $formMetadata->getItems());
+        $this->assertCount(6, $formMetadata->getItems());
 
         $this->assertEquals(
             'lastName == \'section_property\'',
@@ -204,6 +204,16 @@ class FormXmlLoaderTest extends TestCase
         $this->assertEquals(
             'firstName == \'property\'',
             $formMetadata->getItems()['salutation']->getVisibleCondition()
+        );
+
+        $this->assertEquals(
+            'false',
+            $formMetadata->getItems()['title']->getVisibleCondition()
+        );
+
+        $this->assertEquals(
+            'true',
+            $formMetadata->getItems()['title']->getDisabledCondition()
         );
     }
 
