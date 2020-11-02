@@ -617,9 +617,9 @@ test('Reload medias and fire onUploadError callback if an error happens while up
 
     expect(onUploadErrorSpy).not.toBeCalled();
 
-    mediaCollection.find('MultiMediaDropzone').props().onUploadError('wrong-file-extension-error');
+    mediaCollection.find('MultiMediaDropzone').props().onUploadError(['wrong-file-extension-error']);
 
-    expect(onUploadErrorSpy).toBeCalledWith('wrong-file-extension-error');
+    expect(onUploadErrorSpy).toBeCalledWith(['wrong-file-extension-error']);
     expect(mediaListStore.reset).toBeCalled();
     expect(mediaListStore.reload).toBeCalled();
 });

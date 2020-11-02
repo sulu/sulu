@@ -715,7 +715,7 @@ test('Should show error if upload via MediaCollection fails', () => {
 
     expect(toolbarFunction.call(mediaOverview.instance()).errors).toEqual([]);
 
-    mediaOverview.find('MediaCollection').props().onUploadError('invalid-file');
+    mediaOverview.find('MediaCollection').props().onUploadError(['invalid-file']);
 
     expect(toolbarFunction.call(mediaOverview.instance()).errors).toEqual(['sulu_media.upload_server_error']);
 });

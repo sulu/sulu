@@ -181,7 +181,7 @@ test('Should fire onClose and onUploadError callback if an error happens when up
 
         expect(closeSpy).toBeCalledWith();
         expect(multiMediaDropzone.instance().mediaUploadStores.length).toBe(0);
-        expect(uploadErrorSpy).toBeCalledWith('error-while-uploading-file');
+        expect(uploadErrorSpy).toBeCalledWith(['error-while-uploading-file']);
     });
 });
 

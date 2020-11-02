@@ -17,7 +17,7 @@ type Props = {
     onClose: () => void,
     onOpen: () => void,
     onUpload: (media: Array<Object>) => void,
-    onUploadError: (errorResponse: string) => void,
+    onUploadError: (errorResponses: Array<string>) => void,
     open: boolean,
 };
 
@@ -83,18 +83,27 @@ class MultiMediaDropzone extends React.Component<Props> {
             this.addMediaUploadStore(mediaUploadStore);
         });
 
-        return Promise.all(uploadPromises).then((...media) => {
-            onUpload(...media);
+        return Promise.allSettled(uploadPromises).then((results) => {
+            const uploadedMedias = [];
+            const errorResponses = [];
+
+            results.forEach((result) => {
+                if (result.status === 'fulfilled') {
+                    uploadedMedias.push(result.value);
+                } else {
+                    errorResponses.push(result.reason);
+                }
+            });
+
+            if (errorResponses.length === 0) {
+                onUpload(uploadedMedias);
+            } else {
+                onUploadError(errorResponses);
+            }
 
             setTimeout(() => {
                 onClose();
                 this.destroyMediaUploadStores();
-            }, 1000);
-        }).catch((e) => {
-            setTimeout(() => {
-                onClose();
-                this.destroyMediaUploadStores();
-                onUploadError(e);
             }, 1000);
         });
     };
