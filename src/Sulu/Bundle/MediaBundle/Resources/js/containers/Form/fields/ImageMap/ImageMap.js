@@ -18,27 +18,26 @@ class ImageMap extends React.Component<FieldTypeProps<Value>> {
 
     constructor(props: FieldTypeProps<Value>) {
         super(props);
-        const {value} = this.props;
 
-        this.updateValue(value);
+        this.setValue(this.props.value);
     }
 
     componentDidUpdate(prevProps: FieldTypeProps<Value>): * {
         const {value} = this.props;
 
         if (!equals(prevProps.value, value)){
-            this.updateValue(value);
+            this.setValue(value);
         }
     }
 
-    @action updateValue = (value: Object) => {
+    @action setValue = (value: Object) => {
         this.value = value;
     };
 
     handleChange = (value: Value) => {
         const {onChange} = this.props;
 
-        this.updateValue(value);
+        this.setValue(value);
 
         onChange(value);
     };
@@ -89,7 +88,7 @@ class ImageMap extends React.Component<FieldTypeProps<Value>> {
         const newValues = toJS(oldValues);
         jsonpointer.set(newValues.hotspots[index], '/' + name, value);
 
-        this.updateValue(newValues);
+        this.setValue(newValues);
 
         onChange(newValues);
     };
