@@ -2,12 +2,14 @@
 import React from 'react';
 import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
+import type {IObservableValue} from 'mobx';
 import Input from '../Input';
 import resourceLocatorStyles from './resourceLocator.scss';
 
 type Props = {|
     disabled: boolean,
     id?: string,
+    locale: IObservableValue<string>,
     mode: string,
     onBlur?: () => void,
     onChange: (value: ?string) => void,
@@ -54,10 +56,13 @@ class ResourceLocator extends React.Component<Props> {
     }
 
     handleChange = (value: ?string) => {
-        const {mode, onChange} = this.props;
+        const {mode, onChange, locale} = this.props;
 
-        if (value && mode === 'leaf' && value.endsWith('/')) {
-            return;
+        if (value) {
+            value = value.toLocaleLowerCase(locale.get());
+            if (mode === 'leaf') {
+                value = value.replace(/\//g, '-');
+            }
         }
 
         onChange(value ? this.fixed + value : undefined);
