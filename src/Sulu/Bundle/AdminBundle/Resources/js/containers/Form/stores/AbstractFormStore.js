@@ -1,5 +1,5 @@
 // @flow
-import {action, computed, observable, set, toJS, untracked, when} from 'mobx';
+import {action, computed, isObservableArray, observable, set, toJS, untracked, when} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import jexl from 'jexl';
 import jsonpointer from 'json-pointer';
@@ -124,7 +124,11 @@ function collectTagPathsWithPriority(
             continue;
         }
 
-        if (types && Object.keys(types).length > 0 && data[key]) {
+        if (types
+            && Object.keys(types).length > 0
+            && data[key]
+            && (Array.isArray(data[key]) || isObservableArray(data[key]))
+        ) {
             for (const childKey of data[key].keys()) {
                 const childData = data[key][childKey];
                 pathsWithPriority.push(
