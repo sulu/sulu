@@ -1,13 +1,21 @@
 // @flow
 function addLinkConversion(editor: Object, tag: string, internalAttribute: string, tagAttribute: string) {
+    // implementation is inspired by the official ckeditor5-link package:
+    // https://github.com/ckeditor/ckeditor5/blob/v23.0.0/packages/ckeditor5-link/src/linkediting.js
+
     editor.model.schema.extend('$text', {allowAttributes: internalAttribute});
 
-    editor.conversion.for('upcast').attributeToAttribute({
+    editor.conversion.for('upcast').elementToAttribute({
         view: {
             name: tag,
-            key: tagAttribute,
+            attributes: {
+                [tagAttribute]: true,
+            },
         },
-        model: internalAttribute,
+        model: {
+            key: internalAttribute,
+            value: (viewElement) => viewElement.getAttribute(tagAttribute),
+        },
     });
 
     editor.conversion.for('downcast').attributeToElement({
