@@ -1247,6 +1247,11 @@ test('Return all the values for a given tag within blocks', () => {
             {type: 'default', text: 'Block 2', description: 'Block Description 2'},
             {type: 'other', text: 'Block 3', description: 'Block Description 2'},
         ],
+        image_map: {
+            hotspots: [
+                {type: 'default', text: 'Image Map', description: 'Image Map Description 1'},
+            ],
+        },
     });
 
     const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
@@ -1262,6 +1267,33 @@ test('Return all the values for a given tag within blocks', () => {
         },
         block: {
             type: 'block',
+            types: {
+                default: {
+                    form: {
+                        text: {
+                            tags: [
+                                {name: 'sulu.resource_locator_part'},
+                            ],
+                            type: 'text_line',
+                        },
+                        description: {
+                            type: 'text_line',
+                        },
+                    },
+                    title: 'Default',
+                },
+                other: {
+                    form: {
+                        text: {
+                            type: 'text_line',
+                        },
+                    },
+                    title: 'Other',
+                },
+            },
+        },
+        image_map: {
+            type: 'image_map',
             types: {
                 default: {
                     form: {
