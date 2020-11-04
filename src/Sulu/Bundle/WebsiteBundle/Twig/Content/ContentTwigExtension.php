@@ -112,24 +112,28 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
                 $locale
             );
 
-            $targetWebspace = $this->webspaceManager->findWebspaceByKey($contentStructure->getWebspaceKey());
-            $security = $targetWebspace->getSecurity();
-            $system = $security ? $security->getSystem() : null;
+            $targetWebspaceKey = $contentStructure->getWebspaceKey();
 
-            if ($targetWebspace->hasWebsiteSecurity()
-                && $this->securityChecker
-                && !$this->securityChecker->hasPermission(
-                    new SecurityCondition(
-                        PageAdmin::SECURITY_CONTEXT_PREFIX . $contentStructure->getWebspaceKey(),
-                        $locale,
-                        SecurityBehavior::class,
-                        $uuid,
-                        $system
-                    ),
-                    PermissionTypes::VIEW
-                )
-            ) {
-                return null;
+            if ($targetWebspaceKey) {
+                $targetWebspace = $this->webspaceManager->findWebspaceByKey($targetWebspaceKey);
+                $security = $targetWebspace->getSecurity();
+                $system = $security ? $security->getSystem() : null;
+
+                if ($targetWebspace->hasWebsiteSecurity()
+                    && $this->securityChecker
+                    && !$this->securityChecker->hasPermission(
+                        new SecurityCondition(
+                            PageAdmin::SECURITY_CONTEXT_PREFIX . $contentStructure->getWebspaceKey(),
+                            $locale,
+                            SecurityBehavior::class,
+                            $uuid,
+                            $system
+                        ),
+                        PermissionTypes::VIEW
+                    )
+                ) {
+                    return null;
+                }
             }
 
             return $this->structureResolver->resolve($contentStructure);
