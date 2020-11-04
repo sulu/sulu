@@ -196,6 +196,13 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
         onChange(newValues);
     };
 
+    handleBlocksChange = (value: Object) => {
+        const {onChange} = this.props;
+
+        this.updateValue(value);
+        onChange(value);
+    };
+
     handleSortEnd = () => {
         const {onFinish} = this.props;
         onFinish();
@@ -381,7 +388,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
     };
 
     render() {
-        const {defaultType, disabled, maxOccurs, minOccurs, onChange, types} = this.props;
+        const {defaultType, disabled, maxOccurs, minOccurs, types} = this.props;
         const value = this.value || [];
 
         if (!defaultType) {
@@ -406,7 +413,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
                     icons={this.icons}
                     maxOccurs={maxOccurs}
                     minOccurs={minOccurs}
-                    onChange={onChange}
+                    onChange={this.handleBlocksChange}
                     onSettingsClick={this.settingsFormKey ? this.handleSettingsClick : undefined}
                     onSortEnd={this.handleSortEnd}
                     renderBlockContent={this.renderBlockContent}

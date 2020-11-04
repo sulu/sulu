@@ -758,7 +758,6 @@ test('Should correctly pass props to the BlockCollection', () => {
         },
     };
     const value = [];
-    const changeSpy = jest.fn();
 
     const fieldBlocks = shallow(
         <FieldBlocks
@@ -769,7 +768,6 @@ test('Should correctly pass props to the BlockCollection', () => {
             label="Test"
             maxOccurs={2}
             minOccurs={1}
-            onChange={changeSpy}
             schemaOptions={{add_button_text: {name: 'add_button_text', title: 'custom-add-text'}}}
             types={types}
             value={value}
@@ -781,7 +779,6 @@ test('Should correctly pass props to the BlockCollection', () => {
         disabled: true,
         maxOccurs: 2,
         minOccurs: 1,
-        onChange: changeSpy,
         types: {
             default: 'Default',
         },
@@ -1136,6 +1133,50 @@ test('Destroy store on unmount', () => {
     fieldBlocks.unmount();
 
     expect(destroySpy).toBeCalledWith();
+});
+
+test('Should show correct value in type select after type is changed', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const types = {
+        default: {
+            title: 'Default',
+            form: {
+                text: {
+                    label: 'Text',
+                    type: 'text_line',
+                    visible: true,
+                },
+            },
+        },
+        other: {
+            title: 'Other',
+            form: {
+                other_text: {
+                    label: 'Other Text',
+                    type: 'text_line',
+                    visible: true,
+                },
+            },
+        },
+    };
+    const value = [{type: 'default'}];
+    formInspector.getSchemaEntryByPath.mockReturnValue({types});
+
+    const fieldBlocks = mount(
+        <FieldBlocks
+            {...fieldTypeDefaultProps}
+            defaultType="editor"
+            formInspector={formInspector}
+            types={types}
+            value={value}
+        />
+    );
+
+    fieldBlocks.find('BlockCollection Block').at(0).simulate('click');
+    fieldBlocks.find('BlockCollection').prop('onChange')([{type: 'other'}]);
+
+    fieldBlocks.update();
+    expect(fieldBlocks.find('BlockCollection Block').at(0).find('SingleSelect').prop('value')).toEqual('other');
 });
 
 test('Should set correct default values for multiple single_select in blocks', () => {
