@@ -50,6 +50,36 @@ class SegmentRequestProcessorTest extends TestCase
         $this->assertNull($attributes->getAttribute('segment'));
     }
 
+    public function testProcessWithoutWebspace()
+    {
+        $request = new Request();
+
+        $webspace = null;
+        $portalInformation = new PortalInformation(
+            RequestAnalyzerInterface::MATCH_TYPE_FULL,
+            $webspace
+        );
+
+        $attributes = $this->segmentRequestProcessor->process(
+            $request,
+            new RequestAttributes(['portalInformation' => $portalInformation])
+        );
+
+        $this->assertNull($attributes->getAttribute('segment'));
+    }
+
+    public function testProcessWithoutPortalInformation()
+    {
+        $request = new Request();
+
+        $attributes = $this->segmentRequestProcessor->process(
+            $request,
+            new RequestAttributes()
+        );
+
+        $this->assertNull($attributes->getAttribute('segment'));
+    }
+
     public function provideProcessWithDefaultSegmentValue()
     {
         return [

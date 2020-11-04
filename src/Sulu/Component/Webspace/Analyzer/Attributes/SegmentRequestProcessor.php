@@ -11,6 +11,8 @@
 
 namespace Sulu\Component\Webspace\Analyzer\Attributes;
 
+use Sulu\Component\Webspace\PortalInformation;
+use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
 
 class SegmentRequestProcessor implements RequestProcessorInterface
@@ -28,7 +30,18 @@ class SegmentRequestProcessor implements RequestProcessorInterface
     public function process(Request $request, RequestAttributes $requestAttributes)
     {
         $attributes = [];
-        $webspace = $requestAttributes->getAttribute('portalInformation')->getWebspace();
+
+        $portalInformation = $requestAttributes->getAttribute('portalInformation');
+
+        if (!$portalInformation instanceof PortalInformation) {
+            return new RequestAttributes($attributes);
+        }
+
+        $webspace = $portalInformation->getWebspace();
+
+        if (!$webspace instanceof Webspace) {
+            return new RequestAttributes($attributes);
+        }
 
         $segmentKey = $request->cookies->get($this->segmentCookieName);
         $cookieSegment = $segmentKey ? $webspace->getSegment($segmentKey) : null;
