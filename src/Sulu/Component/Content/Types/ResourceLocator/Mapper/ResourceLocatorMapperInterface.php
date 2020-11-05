@@ -104,7 +104,7 @@ interface ResourceLocatorMapperInterface
      *
      * @return string
      */
-    public function getUniquePath($path, $webspaceKey, $languageCode, $segmentKey = null);
+    public function getUniquePath($path, $webspaceKey, $languageCode, $segmentKey = null, $uuid = null);
 
     /**
      * Returns resource locator for parent node.

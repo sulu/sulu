@@ -145,6 +145,7 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
                 parts: this.parts,
                 resourceKey: formInspector.resourceKey,
                 locale: formInspector.locale ? formInspector.locale.get() : undefined,
+                id: formInspector.id,
                 ...requestOptions,
             }
         ).then(action((response) => {

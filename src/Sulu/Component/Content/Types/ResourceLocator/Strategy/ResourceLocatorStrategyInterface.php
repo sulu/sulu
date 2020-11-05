@@ -43,7 +43,7 @@ interface ResourceLocatorStrategyInterface
      *
      * @return string whole path
      */
-    public function generate($title, $parentUuid, $webspaceKey, $languageCode, $segmentKey = null);
+    public function generate($title, $parentUuid, $webspaceKey, $languageCode, $segmentKey = null, $uuid = null);
 
     /**
      * Creates a new route for given path.
