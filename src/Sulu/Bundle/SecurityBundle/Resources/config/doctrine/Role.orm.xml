@@ -11,7 +11,11 @@
         <field name="name" type="string" column="name" length="60" unique="true"/>
         <field name="key" type="string" length="60" column="role_key" nullable="true" unique="true"/>
         <field name="system" type="string" column="securitySystem" length="60"/>
-        <field name="anonymous" type="boolean" column="anonymous" nullable="false"/>
+        <field name="anonymous" type="boolean" column="anonymous" nullable="false">
+            <options>
+                <option name="default">false</option>
+            </options>
+        </field>
 
         <many-to-one field="securityType" target-entity="Sulu\Bundle\SecurityBundle\Entity\SecurityType"
                      inversed-by="roles">
