@@ -1101,6 +1101,74 @@ test('Should open and close block settings overlay when confirm button is clicke
     });
 });
 
+test('Should update block settings on submit and immediately show the icon', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+
+    const types = {
+        default: {
+            title: 'Default',
+            form: {
+                text1: {
+                    label: 'Text 1',
+                    tags: [
+                        {name: 'sulu.block_preview'},
+                    ],
+                    type: 'text_line',
+                    visible: true,
+                },
+            },
+        },
+    };
+
+    formInspector.getSchemaEntryByPath.mockReturnValue({types});
+
+    const schemaPromise = Promise.resolve({
+        setting: {
+            tags: [
+                {attributes: {icon: 'su-hide'}, name: 'sulu.block_setting_icon'},
+            ],
+            type: 'checkbox',
+        },
+    });
+    const jsonSchemaPromise = Promise.resolve({});
+    metadataStore.getSchema.mockReturnValue(schemaPromise);
+    metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
+
+    const value = [
+        {
+            text1: 'Test 1',
+            type: 'default',
+            settings: {
+                setting: true,
+            },
+        },
+    ];
+
+    const fieldBlocks = mount(
+        <FieldBlocks
+            {...fieldTypeDefaultProps}
+            defaultType="editor"
+            formInspector={formInspector}
+            schemaOptions={{settings_form_key: {name: 'settings_form_key', value: 'page_block_settings'}}}
+            types={types}
+            value={value}
+        />
+    );
+
+    fieldBlocks.find('Block').at(0).simulate('click');
+    fieldBlocks.find('Block').at(0).find('Icon[name="su-cog"]').simulate('click');
+
+    return Promise.all([schemaPromise, jsonSchemaPromise]).then(() => {
+        fieldBlocks.update();
+        expect(fieldBlocks.find('Icon[name="su-hide"]').exists()).toBe(true);
+
+        fieldBlocks.find('Checkbox[dataPath="/setting"]').prop('onChange')(false);
+        fieldBlocks.find('Overlay Button[children="sulu_admin.apply"]').simulate('click');
+
+        expect(fieldBlocks.find('Icon[name="su-hide"]').exists()).toBe(false);
+    });
+});
+
 test('Destroy store on unmount', () => {
     const types = {
         default: {

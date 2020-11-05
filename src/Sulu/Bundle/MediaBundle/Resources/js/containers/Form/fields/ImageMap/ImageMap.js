@@ -1,6 +1,8 @@
 // @flow
 import React from 'react';
-import {observable, toJS} from 'mobx';
+import {action, observable, toJS} from 'mobx';
+import {observer} from 'mobx-react';
+import equals from 'fast-deep-equal';
 import jsonpointer from 'json-pointer';
 import {userStore} from 'sulu-admin-bundle/stores';
 import type {FieldTypeProps, BlockError} from 'sulu-admin-bundle/types';
@@ -10,9 +12,32 @@ import FieldRenderer from './FieldRenderer';
 
 const MISSING_TYPE_ERROR_MESSAGE = 'The "image_map" field type needs at least one type to be configured!';
 
-export default class ImageMap extends React.Component<FieldTypeProps<Value>> {
+@observer
+class ImageMap extends React.Component<FieldTypeProps<Value>> {
+    @observable value: Value;
+
+    constructor(props: FieldTypeProps<Value>) {
+        super(props);
+
+        this.setValue(this.props.value);
+    }
+
+    componentDidUpdate(prevProps: FieldTypeProps<Value>) {
+        const {value} = this.props;
+
+        if (!equals(prevProps.value, value)){
+            this.setValue(value);
+        }
+    }
+
+    @action setValue = (value: Object) => {
+        this.value = value;
+    };
+
     handleChange = (value: Value) => {
         const {onChange} = this.props;
+
+        this.setValue(value);
 
         onChange(value);
     };
@@ -51,7 +76,8 @@ export default class ImageMap extends React.Component<FieldTypeProps<Value>> {
     };
 
     handleHotspotFormChange = (index: number, name: string, value: Object) => {
-        const {onChange, value: oldValues} = this.props;
+        const {onChange} = this.props;
+        const oldValues = this.value;
 
         if (!oldValues) {
             throw new Error(
@@ -61,6 +87,8 @@ export default class ImageMap extends React.Component<FieldTypeProps<Value>> {
 
         const newValues = toJS(oldValues);
         jsonpointer.set(newValues.hotspots[index], '/' + name, value);
+
+        this.setValue(newValues);
 
         onChange(newValues);
     };
@@ -106,7 +134,6 @@ export default class ImageMap extends React.Component<FieldTypeProps<Value>> {
             formInspector,
             onFinish,
             types,
-            value,
         } = this.props;
 
         const locale = formInspector.locale
@@ -136,8 +163,10 @@ export default class ImageMap extends React.Component<FieldTypeProps<Value>> {
                 renderHotspotForm={this.renderHotspotForm}
                 types={formTypes}
                 valid={!error}
-                value={value || undefined}
+                value={this.value || undefined}
             />
         );
     }
 }
+
+export default ImageMap;
