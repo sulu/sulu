@@ -59,7 +59,7 @@ class ResourceLocator extends React.Component<Props> {
         const {mode, onChange, locale} = this.props;
 
         if (value) {
-            value = value.toLocaleLowerCase(locale.get());
+            value = value.toLocaleLowerCase(locale.get()).replace(/ /g, '-');
             if (mode === 'leaf') {
                 value = value.replace(/\//g, '-');
             }

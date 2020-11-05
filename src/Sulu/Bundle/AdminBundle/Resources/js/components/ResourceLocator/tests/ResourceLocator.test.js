@@ -109,6 +109,28 @@ test('ResourceLocator should call the onChange callback and replace a typed slas
     expect(onChange).toBeCalledWith('/parent/child-');
 });
 
+test('ResourceLocator should call the onChange callback and replace a typed space with a dash in leaf mode', () => {
+    const onChange = jest.fn();
+    const value = '/parent/child';
+    const locale = observable.box('en');
+    const resourceLocator = mount(
+        <ResourceLocator locale={locale} mode="leaf" onBlur={jest.fn()} onChange={onChange} value={value} />
+    );
+    resourceLocator.find('Input').props().onChange('child test child');
+    expect(onChange).toBeCalledWith('/parent/child-test-child');
+});
+
+test('ResourceLocator should call the onChange callback and replace a typed space with a dash in full mode', () => {
+    const onChange = jest.fn();
+    const value = '/parent/child';
+    const locale = observable.box('en');
+    const resourceLocator = mount(
+        <ResourceLocator locale={locale} mode="full" onBlur={jest.fn()} onChange={onChange} value={value} />
+    );
+    resourceLocator.find('Input').props().onChange('parent/child test child');
+    expect(onChange).toBeCalledWith('/parent/child-test-child');
+});
+
 test('ResourceLocator should replace capital letters with lower case in leaf mode before calling onChange', () => {
     const onChange = jest.fn();
     const value = '/parent/child';
