@@ -377,9 +377,11 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
             return;
         }
 
+        value[blockSettingsOpen] = {...value[blockSettingsOpen], [SETTINGS_KEY]: blockSettingsFormStore.data};
+
         onChange([
             ...value.slice(0, blockSettingsOpen),
-            {...value[blockSettingsOpen], [SETTINGS_KEY]: blockSettingsFormStore.data},
+            {...value[blockSettingsOpen]},
             ...value.slice(blockSettingsOpen + 1),
         ]);
     };
