@@ -369,21 +369,22 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
 
     handleSettingsSubmit = () => {
         const {onChange} = this.props;
-        const value = this.value || [];
+        const oldValues = this.value || [];
 
         const {blockSettingsFormStore, blockSettingsOpen} = this;
 
-        if (!blockSettingsFormStore || blockSettingsOpen === undefined || !value) {
+        if (!blockSettingsFormStore || blockSettingsOpen === undefined || !oldValues) {
             return;
         }
 
-        value[blockSettingsOpen] = {...value[blockSettingsOpen], [SETTINGS_KEY]: blockSettingsFormStore.data};
+        const newValues = [
+            ...oldValues.slice(0, blockSettingsOpen),
+            {...oldValues[blockSettingsOpen], [SETTINGS_KEY]: blockSettingsFormStore.data},
+            ...oldValues.slice(blockSettingsOpen + 1),
+        ];
 
-        onChange([
-            ...value.slice(0, blockSettingsOpen),
-            {...value[blockSettingsOpen]},
-            ...value.slice(blockSettingsOpen + 1),
-        ]);
+        this.setValue(newValues);
+        onChange(newValues);
     };
 
     render() {
