@@ -40,6 +40,7 @@ interface ResourceLocatorStrategyInterface
      * @param string $webspaceKey key of portal
      * @param string $languageCode
      * @param string $segmentKey
+     * @param string $uuid
      *
      * @return string whole path
      */
