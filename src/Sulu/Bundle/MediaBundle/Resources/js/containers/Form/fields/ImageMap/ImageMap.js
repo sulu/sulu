@@ -22,7 +22,7 @@ class ImageMap extends React.Component<FieldTypeProps<Value>> {
         this.setValue(this.props.value);
     }
 
-    componentDidUpdate(prevProps: FieldTypeProps<Value>): * {
+    componentDidUpdate(prevProps: FieldTypeProps<Value>) {
         const {value} = this.props;
 
         if (!equals(prevProps.value, value)){
