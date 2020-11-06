@@ -1,9 +1,9 @@
 // @flow
 import type {Node} from 'react';
 
-export type BlockEntry = {
+export type BlockEntry<T> = {
     settings?: {[string]: any},
-    type: string,
+    type: T,
 };
 
 export type RenderBlockContentCallback = (value: *, type: string, index: number, expanded: boolean) => Node;

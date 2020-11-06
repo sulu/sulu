@@ -21,13 +21,13 @@ const SETTINGS_PREFIX = '/settings/';
 const SETTINGS_TAG = 'sulu.block_setting_icon';
 
 @observer
-class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
+class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry<string>>>> {
     formRef: ?Form;
     @observable blockSettingsOpen: number | typeof undefined = undefined;
     @observable blockSettingsFormStore: FormStoreInterface;
     @observable value: Object;
 
-    constructor(props: FieldTypeProps<Array<BlockEntry>>) {
+    constructor(props: FieldTypeProps<Array<BlockEntry<string>>>) {
         super(props);
 
         this.setValue(this.props.value);
@@ -47,7 +47,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
         }
     }
 
-    componentDidUpdate(prevProps: FieldTypeProps<Array<BlockEntry>>) {
+    componentDidUpdate(prevProps: FieldTypeProps<Array<BlockEntry<string>>>) {
         const {defaultType, onChange, types, value} = this.props;
         const {types: oldTypes} = prevProps;
 

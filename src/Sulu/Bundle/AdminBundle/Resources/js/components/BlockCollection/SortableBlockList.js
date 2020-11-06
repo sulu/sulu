@@ -21,7 +21,7 @@ type Props = {|
     onTypeChange?: (type: string | number, index: number) => void,
     renderBlockContent: RenderBlockContentCallback,
     types?: {[key: string]: string},
-    value: Array<BlockEntry>,
+    value: Array<BlockEntry<string>>,
 |};
 
 @observer

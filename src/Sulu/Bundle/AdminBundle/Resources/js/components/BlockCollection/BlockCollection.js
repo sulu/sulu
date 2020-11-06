@@ -9,25 +9,25 @@ import SortableBlockList from './SortableBlockList';
 import blockCollectionStyles from './blockCollection.scss';
 import type {BlockEntry, RenderBlockContentCallback} from './types';
 
-type Props = {|
+type Props<T> = {|
     addButtonText?: ?string,
     collapsable: boolean,
-    defaultType: string,
+    defaultType: T,
     disabled: boolean,
     icons?: Array<Array<string>>,
     maxOccurs?: ?number,
     minOccurs?: ?number,
     movable: boolean,
-    onChange: (value: Array<BlockEntry>) => void,
+    onChange: (value: Array<BlockEntry<T>>) => void,
     onSettingsClick?: (index: number) => void,
     onSortEnd?: (oldIndex: number, newIndex: number) => void,
     renderBlockContent: RenderBlockContentCallback,
     types?: {[key: string]: string},
-    value: Array<BlockEntry>,
+    value: Array<BlockEntry<T>>,
 |};
 
 @observer
-class BlockCollection extends React.Component<Props> {
+class BlockCollection<T> extends React.Component<Props<T>> {
     static idCounter = 0;
 
     static defaultProps = {
@@ -40,7 +40,7 @@ class BlockCollection extends React.Component<Props> {
     @observable generatedBlockIds: Array<number> = [];
     @observable expandedBlocks: Array<boolean> = [];
 
-    constructor(props: Props) {
+    constructor(props: Props<T>) {
         super(props);
 
         this.fillArrays();
