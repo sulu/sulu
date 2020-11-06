@@ -21,9 +21,12 @@ use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolver;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Bundle\WebsiteBundle\Twig\Content\ContentTwigExtension;
 use Sulu\Component\Content\Compat\Property;
+use Sulu\Component\Content\Compat\Structure\SnippetBridge;
 use Sulu\Component\Content\Compat\Structure\StructureBridge;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
+use Sulu\Component\Content\Document\Behavior\StructureBehavior;
+use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Types\TextLine;
@@ -177,6 +180,7 @@ class ContentTwigExtensionTest extends TestCase
     public function testLoad()
     {
         $testStructure = $this->prophesize(StructureBridge::class);
+        $pageDocument = $this->prophesize(WebspaceBehavior::class);
         $testStructure->getKey()->willReturn('test');
         $testStructure->getPath()->willReturn(null);
         $testStructure->getUuid()->willReturn('123-123-123');
@@ -184,7 +188,7 @@ class ContentTwigExtensionTest extends TestCase
         $testStructure->getChanger()->willReturn(1);
         $testStructure->getCreated()->willReturn(null);
         $testStructure->getChanged()->willReturn(null);
-        $testStructure->getDocument()->willReturn(null);
+        $testStructure->getDocument()->willReturn($pageDocument);
         $testStructure->getWebspaceKey()->willReturn('sulu_test');
 
         $titleProperty = new Property('title', [], 'text_line');
@@ -213,6 +217,7 @@ class ContentTwigExtensionTest extends TestCase
     public function testLoadWithPermissions()
     {
         $testStructure = $this->prophesize(StructureBridge::class);
+        $pageDocument = $this->prophesize(WebspaceBehavior::class);
         $testStructure->getKey()->willReturn('test');
         $testStructure->getPath()->willReturn(null);
         $testStructure->getUuid()->willReturn('123-123-123');
@@ -220,7 +225,7 @@ class ContentTwigExtensionTest extends TestCase
         $testStructure->getChanger()->willReturn(1);
         $testStructure->getCreated()->willReturn(null);
         $testStructure->getChanged()->willReturn(null);
-        $testStructure->getDocument()->willReturn(null);
+        $testStructure->getDocument()->willReturn($pageDocument);
         $testStructure->getWebspaceKey()->willReturn('sulu_test');
 
         $titleProperty = new Property('title', [], 'text_line');
@@ -242,6 +247,7 @@ class ContentTwigExtensionTest extends TestCase
     public function testLoadWithoutPermissions()
     {
         $testStructure = $this->prophesize(StructureBridge::class);
+        $pageDocument = $this->prophesize(WebspaceBehavior::class);
         $testStructure->getKey()->willReturn('test');
         $testStructure->getPath()->willReturn(null);
         $testStructure->getUuid()->willReturn('123-123-123');
@@ -249,7 +255,7 @@ class ContentTwigExtensionTest extends TestCase
         $testStructure->getChanger()->willReturn(1);
         $testStructure->getCreated()->willReturn(null);
         $testStructure->getChanged()->willReturn(null);
-        $testStructure->getDocument()->willReturn(null);
+        $testStructure->getDocument()->willReturn($pageDocument);
         $testStructure->getWebspaceKey()->willReturn('sulu_test');
 
         $titleProperty = new Property('title', [], 'text_line');
@@ -308,6 +314,7 @@ class ContentTwigExtensionTest extends TestCase
     public function testLoadParent()
     {
         $testStructure = $this->prophesize(StructureBridge::class);
+        $pageDocument = $this->prophesize(WebspaceBehavior::class);
         $testStructure->getKey()->willReturn('test');
         $testStructure->getPath()->willReturn(null);
         $testStructure->getUuid()->willReturn('321-321-321');
@@ -315,7 +322,7 @@ class ContentTwigExtensionTest extends TestCase
         $testStructure->getChanger()->willReturn(1);
         $testStructure->getCreated()->willReturn(null);
         $testStructure->getChanged()->willReturn(null);
-        $testStructure->getDocument()->willReturn(null);
+        $testStructure->getDocument()->willReturn($pageDocument);
         $testStructure->getWebspaceKey()->willReturn('sulu_test');
 
         $titleProperty = new Property('title', [], 'text_line');
@@ -331,6 +338,42 @@ class ContentTwigExtensionTest extends TestCase
 
         // uuid
         $this->assertEquals('321-321-321', $result['uuid']);
+
+        // metadata
+        $this->assertEquals(1, $result['creator']);
+        $this->assertEquals(1, $result['changer']);
+
+        // content
+        $this->assertEquals(['title' => 'test'], $result['content']);
+        $this->assertEquals(['title' => []], $result['view']);
+    }
+
+    public function testLoadWithoutWebspaceBehaviorDocument()
+    {
+        $testStructure = $this->prophesize(SnippetBridge::class);
+        $snippetDocument = $this->prophesize(StructureBehavior::class);
+        $testStructure->getKey()->willReturn('test');
+        $testStructure->getPath()->willReturn(null);
+        $testStructure->getUuid()->willReturn('123-123-123');
+        $testStructure->getCreator()->willReturn(1);
+        $testStructure->getChanger()->willReturn(1);
+        $testStructure->getCreated()->willReturn(null);
+        $testStructure->getChanged()->willReturn(null);
+        $testStructure->getDocument()->willReturn($snippetDocument);
+
+        $titleProperty = new Property('title', [], 'text_line');
+        $titleProperty->setValue('test');
+        $testStructure->getProperties(true)->willReturn([$titleProperty]);
+
+        $this
+            ->contentMapper
+            ->load('123-123-123', 'sulu_test', 'en_us')
+            ->willReturn($testStructure);
+
+        $result = $this->extension->load('123-123-123');
+
+        // uuid
+        $this->assertEquals('123-123-123', $result['uuid']);
 
         // metadata
         $this->assertEquals(1, $result['creator']);

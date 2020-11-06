@@ -17,6 +17,7 @@ use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Bundle\WebsiteBundle\Twig\Exception\ParentNotFoundException;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
+use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
@@ -111,6 +112,12 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
                 $this->requestAnalyzer->getWebspace()->getKey(),
                 $locale
             );
+
+            $document = $contentStructure->getDocument();
+
+            if (!$document || !$document instanceof WebspaceBehavior) {
+                return $this->structureResolver->resolve($contentStructure);
+            }
 
             $targetWebspace = $this->webspaceManager->findWebspaceByKey($contentStructure->getWebspaceKey());
             $security = $targetWebspace->getSecurity();
