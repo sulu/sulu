@@ -114,7 +114,7 @@ class TreeFullEditStrategyTest extends TestCase
         $this->documentInspector->getUuid($parent)->willReturn($parentUuid);
         $this->mapper->loadByContentUuid($parentUuid, $webspaceKey, $languageCode, null)->willReturn('path/to/parent');
         $this->cleaner->cleanup('path/to/parent/new-page', $languageCode)->willReturn('path/to/parent/new-page');
-        $this->mapper->getUniquePath('path/to/parent/new-page', $webspaceKey, $languageCode, null)->willReturn(
+        $this->mapper->getUniquePath('path/to/parent/new-page', $webspaceKey, $languageCode, null, null)->willReturn(
             'path/to/parent/new-page'
         );
 
@@ -137,7 +137,7 @@ class TreeFullEditStrategyTest extends TestCase
         $this->documentInspector->getUuid($parent)->willReturn($parentUuid);
         $this->mapper->loadByContentUuid($parentUuid, $webspaceKey, $languageCode, null)->willReturn('path/to/parent');
         $this->cleaner->cleanup('path/to/parent/new-page', $languageCode)->willReturn('path/to/parent/new-page');
-        $this->mapper->getUniquePath('path/to/parent/new-page', $webspaceKey, $languageCode, $segmentKey)->willReturn(
+        $this->mapper->getUniquePath('path/to/parent/new-page', $webspaceKey, $languageCode, $segmentKey, null)->willReturn(
             'path/to/parent/new-page'
         );
 
@@ -155,7 +155,7 @@ class TreeFullEditStrategyTest extends TestCase
         $parent->getPublished()->willReturn(true);
 
         $this->cleaner->cleanup('/new-page', $languageCode)->willReturn('/new-page');
-        $this->mapper->getUniquePath('/new-page', $webspaceKey, $languageCode, null)->willReturn(
+        $this->mapper->getUniquePath('/new-page', $webspaceKey, $languageCode, null, null)->willReturn(
             'path/to/parent/new-page'
         );
 
