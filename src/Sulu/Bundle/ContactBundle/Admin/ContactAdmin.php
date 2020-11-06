@@ -248,7 +248,7 @@ class ContactAdmin extends Admin
                     ->setResourceKey('accounts')
                     ->setBackView(static::ACCOUNT_LIST_VIEW)
                     ->setTitleProperty('name')
-                    ->addRouterAttributesToBlacklist(['active', 'limit', 'page', 'search', 'sortColumn', 'sortOrder'])
+                    ->addRouterAttributesToBlacklist(['active', 'filter', 'limit', 'page', 'search', 'sortColumn', 'sortOrder'])
             );
             $viewCollection->add(
                 $this->viewBuilderFactory
