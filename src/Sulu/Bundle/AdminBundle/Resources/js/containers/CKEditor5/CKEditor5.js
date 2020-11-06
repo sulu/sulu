@@ -13,6 +13,9 @@ import ListPlugin from '@ckeditor/ckeditor5-list/src/list';
 import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph';
 import StrikethroughPlugin from '@ckeditor/ckeditor5-basic-styles/src/strikethrough';
 import UnderlinePlugin from '@ckeditor/ckeditor5-basic-styles/src/underline';
+import SubscriptPlugin from '@ckeditor/ckeditor5-basic-styles/src/subscript';
+import SuperscriptPlugin from '@ckeditor/ckeditor5-basic-styles/src/superscript';
+import CodePlugin from '@ckeditor/ckeditor5-basic-styles/src/code';
 import TablePlugin from '@ckeditor/ckeditor5-table/src/table';
 import TableToolbarPlugin from '@ckeditor/ckeditor5-table/src/tabletoolbar';
 import {translate} from '../../utils/Translator';
@@ -85,15 +88,15 @@ export default class CKEditor5 extends React.Component<Props> {
                 'italic',
                 'underline',
                 'strikethrough',
-                'alignment:left',
-                'alignment:center',
-                'alignment:right',
-                'alignment:justify',
+                'subscript',
+                'superscript',
                 'bulletedlist',
                 'numberedlist',
                 'externalLink',
                 'internalLink',
+                'alignment',
                 'insertTable',
+                'code',
             ],
             heading: {
                 options: [
@@ -166,6 +169,9 @@ export default class CKEditor5 extends React.Component<Props> {
                     ParagraphPlugin,
                     StrikethroughPlugin,
                     UnderlinePlugin,
+                    SubscriptPlugin,
+                    SuperscriptPlugin,
+                    CodePlugin,
                     TablePlugin,
                     TableToolbarPlugin,
                     ...pluginRegistry.plugins,
