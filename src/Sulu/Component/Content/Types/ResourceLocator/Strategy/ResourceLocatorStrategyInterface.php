@@ -40,11 +40,10 @@ interface ResourceLocatorStrategyInterface
      * @param string $webspaceKey key of portal
      * @param string $languageCode
      * @param string $segmentKey
-     * @param string $uuid
      *
      * @return string whole path
      */
-    public function generate($title, $parentUuid, $webspaceKey, $languageCode, $segmentKey = null, $uuid = null);
+    public function generate($title, $parentUuid, $webspaceKey, $languageCode, $segmentKey = null/*, $uuid = null*/);
 
     /**
      * Creates a new route for given path.

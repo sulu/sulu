@@ -101,11 +101,10 @@ interface ResourceLocatorMapperInterface
      * @param string $webspaceKey key of portal
      * @param string $languageCode
      * @param string $segmentKey
-     * @param string $uuid
      *
      * @return string
      */
-    public function getUniquePath($path, $webspaceKey, $languageCode, $segmentKey = null, $uuid = null);
+    public function getUniquePath($path, $webspaceKey, $languageCode, $segmentKey = null/*, $uuid = null*/);
 
     /**
      * Returns resource locator for parent node.

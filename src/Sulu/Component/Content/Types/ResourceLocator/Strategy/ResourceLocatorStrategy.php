@@ -90,8 +90,14 @@ abstract class ResourceLocatorStrategy implements ResourceLocatorStrategyInterfa
         $this->resourceLocatorGenerator = $resourceLocatorGenerator;
     }
 
-    public function generate($title, $parentUuid, $webspaceKey, $languageCode, $segmentKey = null, $uuid = null)
+    public function generate($title, $parentUuid, $webspaceKey, $languageCode, $segmentKey = null/*, $uuid = null*/)
     {
+        $uuid = null;
+
+        if (\func_num_args() >= 6) {
+            $uuid = \func_get_arg(5);
+        }
+
         // title should not have a slash
         $title = \str_replace('/', '-', $title);
 

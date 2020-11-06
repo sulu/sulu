@@ -290,8 +290,14 @@ class PhpcrMapper implements ResourceLocatorMapperInterface
         return $this->isUnique($routes, $path);
     }
 
-    public function getUniquePath($path, $webspaceKey, $languageCode, $segmentKey = null, $uuid = null)
+    public function getUniquePath($path, $webspaceKey, $languageCode, $segmentKey = null/*, $uuid = null*/)
     {
+        $uuid = null;
+
+        if (\func_num_args() >= 5) {
+            $uuid = \func_get_arg(4);
+        }
+
         $routes = $this->getWebspaceRouteNode($webspaceKey, $languageCode, $segmentKey);
 
         if ($this->isUnique($routes, $path, $uuid)) {
