@@ -21,7 +21,7 @@ type Props<T> = {|
     onChange: (value: Array<BlockEntry<T>>) => void,
     onSettingsClick?: (index: number) => void,
     onSortEnd?: (oldIndex: number, newIndex: number) => void,
-    renderBlockContent: RenderBlockContentCallback,
+    renderBlockContent: RenderBlockContentCallback<T>,
     types?: {[key: string]: string},
     value: Array<BlockEntry<T>>,
 |};

@@ -7,7 +7,7 @@ import SortableBlock from './SortableBlock';
 import sortableBlockListStyles from './sortableBlockList.scss';
 import type {BlockEntry, RenderBlockContentCallback} from './types';
 
-type Props = {|
+type Props<T> = {|
     blockTypes: Array<string>,
     disabled: boolean,
     expandedBlocks: Array<boolean>,
@@ -19,13 +19,13 @@ type Props = {|
     onRemove?: (index: number) => void,
     onSettingsClick?: (index: number) => void,
     onTypeChange?: (type: string | number, index: number) => void,
-    renderBlockContent: RenderBlockContentCallback,
+    renderBlockContent: RenderBlockContentCallback<T>,
     types?: {[key: string]: string},
     value: Array<BlockEntry<string>>,
 |};
 
 @observer
-class SortableBlockList extends React.Component<Props> {
+class SortableBlockList<T: string> extends React.Component<Props<T>> {
     static defaultProps = {
         disabled: false,
         movable: true,
