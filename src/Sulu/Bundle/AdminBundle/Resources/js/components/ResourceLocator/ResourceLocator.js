@@ -16,6 +16,23 @@ type Props = {|
     value: ?string,
 |};
 
+const replacerMap = new Map([
+    // replace multiple dash with one
+    [/([-]+)/g, '-'],
+    // remove dash before slash
+    [/[-]+\//g, '/'],
+    // remove dash after slash
+    [/\/[-]+/g, '/'],
+    // delete dash at the beginning
+    [/^([-])/g, ''],
+    // replace multiple slashes
+    [/([/]+)/g, '/'],
+    // replace spaces with dashes
+    [/ /g, '-'],
+    // remove special characters
+    [/[^a-z0-9-_/]/g, ''],
+]);
+
 @observer
 class ResourceLocator extends React.Component<Props> {
     static defaultProps = {
@@ -59,17 +76,37 @@ class ResourceLocator extends React.Component<Props> {
         const {mode, onChange, locale} = this.props;
 
         if (value) {
-            value = value.toLocaleLowerCase(locale.get()).replace(/ /g, '-');
+            value = value.toLocaleLowerCase(locale.get());
+
             if (mode === 'leaf') {
                 value = value.replace(/\//g, '-');
             }
+
+            replacerMap.forEach((replaceValue, key) => {
+                if (value){
+                    value = value.replace(key, replaceValue);
+                }
+            });
         }
 
         onChange(value ? this.fixed + value : undefined);
     };
 
+    handleBlur = () => {
+        const {onBlur, onChange, value} = this.props;
+
+        if (value) {
+            const newValue = value.replace(/([-])$/g, '');
+            onChange(newValue);
+        }
+
+        if (onBlur) {
+            onBlur();
+        }
+    };
+
     render() {
-        const {disabled, id, onBlur} = this.props;
+        const {disabled, id} = this.props;
 
         return (
             <div className={resourceLocatorStyles.resourceLocator}>
@@ -77,7 +114,7 @@ class ResourceLocator extends React.Component<Props> {
                 <Input
                     disabled={disabled}
                     id={id}
-                    onBlur={onBlur}
+                    onBlur={this.handleBlur}
                     onChange={this.handleChange}
                     value={this.changeableValue}
                 />

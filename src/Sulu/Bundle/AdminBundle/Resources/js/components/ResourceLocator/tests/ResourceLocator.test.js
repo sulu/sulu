@@ -131,6 +131,94 @@ test('ResourceLocator should call the onChange callback and replace a typed spac
     expect(onChange).toBeCalledWith('/parent/child-test-child');
 });
 
+test('ResourceLocator should call the onChange callback and replace multiple slashes with one in full mode', () => {
+    const onChange = jest.fn();
+    const value = '/parent/child';
+    const locale = observable.box('en');
+    const resourceLocator = mount(
+        <ResourceLocator locale={locale} mode="full" onBlur={jest.fn()} onChange={onChange} value={value} />
+    );
+    resourceLocator.find('Input').props().onChange('parent///child//test/child');
+    expect(onChange).toBeCalledWith('/parent/child/test/child');
+});
+
+test('ResourceLocator should call the onChange callback and replace multiple dashes with one in leaf mode', () => {
+    const onChange = jest.fn();
+    const value = '/parent/child';
+    const locale = observable.box('en');
+    const resourceLocator = mount(
+        <ResourceLocator locale={locale} mode="leaf" onBlur={jest.fn()} onChange={onChange} value={value} />
+    );
+    resourceLocator.find('Input').props().onChange('child---test--child');
+    expect(onChange).toBeCalledWith('/parent/child-test-child');
+});
+
+test('ResourceLocator should call the onChange callback and replace multiple dashes with one in full mode', () => {
+    const onChange = jest.fn();
+    const value = '/parent/child';
+    const locale = observable.box('en');
+    const resourceLocator = mount(
+        <ResourceLocator locale={locale} mode="full" onBlur={jest.fn()} onChange={onChange} value={value} />
+    );
+    resourceLocator.find('Input').props().onChange('parent/child---child--test-child');
+    expect(onChange).toBeCalledWith('/parent/child-child-test-child');
+});
+
+test('ResourceLocator should call the onChange callback and replace dash before and after slash in full mode', () => {
+    const onChange = jest.fn();
+    const value = '/parent/child';
+    const locale = observable.box('en');
+    const resourceLocator = mount(
+        <ResourceLocator locale={locale} mode="full" onBlur={jest.fn()} onChange={onChange} value={value} />
+    );
+    resourceLocator.find('Input').props().onChange('parent/-child-/-test-/-child');
+    expect(onChange).toBeCalledWith('/parent/child/test/child');
+});
+
+test('ResourceLocator should call the onChange callback and remove dash at the beginning in leaf mode', () => {
+    const onChange = jest.fn();
+    const value = '/parent/child';
+    const locale = observable.box('en');
+    const resourceLocator = mount(
+        <ResourceLocator locale={locale} mode="leaf" onBlur={jest.fn()} onChange={onChange} value={value} />
+    );
+    resourceLocator.find('Input').props().onChange('-child');
+    expect(onChange).toBeCalledWith('/parent/child');
+});
+
+test('ResourceLocator should call the onChange callback and remove dash at the beginning in full mode', () => {
+    const onChange = jest.fn();
+    const value = '/parent/child';
+    const locale = observable.box('en');
+    const resourceLocator = mount(
+        <ResourceLocator locale={locale} mode="full" onBlur={jest.fn()} onChange={onChange} value={value} />
+    );
+    resourceLocator.find('Input').props().onChange('-parent/child');
+    expect(onChange).toBeCalledWith('/parent/child');
+});
+
+test('ResourceLocator should call the onChange callback and remove special characters in leaf mode', () => {
+    const onChange = jest.fn();
+    const value = '/parent/child';
+    const locale = observable.box('en');
+    const resourceLocator = mount(
+        <ResourceLocator locale={locale} mode="leaf" onBlur={jest.fn()} onChange={onChange} value={value} />
+    );
+    resourceLocator.find('Input').props().onChange('c!h"i$&()=$%`l`#+.,d%');
+    expect(onChange).toBeCalledWith('/parent/child');
+});
+
+test('ResourceLocator should call the onChange callback and remove special characters in full mode', () => {
+    const onChange = jest.fn();
+    const value = '/parent/child';
+    const locale = observable.box('en');
+    const resourceLocator = mount(
+        <ResourceLocator locale={locale} mode="full" onBlur={jest.fn()} onChange={onChange} value={value} />
+    );
+    resourceLocator.find('Input').props().onChange('parent/chi!ld/te"§st/ch;:il%§d%');
+    expect(onChange).toBeCalledWith('/parent/child/test/child');
+});
+
 test('ResourceLocator should replace capital letters with lower case in leaf mode before calling onChange', () => {
     const onChange = jest.fn();
     const value = '/parent/child';
