@@ -20,6 +20,7 @@ use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntityWrapper;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
+use Sulu\Bundle\SecurityBundle\Entity\User;
 
 class Category extends ApiEntityWrapper
 {
@@ -443,7 +444,7 @@ class Category extends ApiEntityWrapper
     /**
      * Takes a user entity and returns the fullname.
      *
-     * @param $user
+     * @param User $user
      *
      * @return string
      */
