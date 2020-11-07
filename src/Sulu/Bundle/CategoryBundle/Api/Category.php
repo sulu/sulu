@@ -462,7 +462,7 @@ class Category extends ApiEntityWrapper
      * Takes an array of CollectionMeta and returns a single meta for a given id.
      *
      * @param CollectionMeta $meta
-     * @param $id
+     * @param int $id
      *
      * @return CollectionMeta
      */
