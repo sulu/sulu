@@ -21,7 +21,7 @@ interface CategoryRepositoryInterface extends RepositoryInterface
     /**
      * Returns true if the given id is assigned to an existing category.
      *
-     * @param $id
+     * @param int $id
      *
      * @return bool
      */
