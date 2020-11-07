@@ -464,7 +464,7 @@ class Category extends ApiEntityWrapper
      * @param CollectionMeta $meta
      * @param int $id
      *
-     * @return CollectionMeta
+     * @return null|CollectionMeta
      */
     private function getSingleMetaById($meta, $id)
     {
@@ -476,6 +476,8 @@ class Category extends ApiEntityWrapper
                 }
             }
         }
+
+        return null;
     }
 
     /**
