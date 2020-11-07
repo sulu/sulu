@@ -304,7 +304,7 @@ class CategoryManager implements CategoryManagerInterface
      * Returns an array of API-Objects for a given array of category-entities.
      * The returned array can contain null-values, if the given entities are not valid.
      *
-     * @param $entities
+     * @param null|CategoryWrapper $entities
      * @param string $locale
      *
      * @return array
