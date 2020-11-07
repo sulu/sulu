@@ -14,6 +14,7 @@ namespace Sulu\Bundle\CategoryBundle\Category;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\CategoryBundle\Api\Category as CategoryWrapper;
+use Sulu\Bundle\CategoryBundle\Entity\Category;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryMetaRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
@@ -282,7 +283,7 @@ class CategoryManager implements CategoryManagerInterface
      * and provides neat getters and setters. If the given object is already an API-object,
      * the associated entity is used for wrapping.
      *
-     * @param $category
+     * @param Category $category
      * @param string $locale
      *
      * @return null|CategoryWrapper
