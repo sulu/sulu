@@ -504,7 +504,7 @@ class Category extends ApiEntityWrapper
     /**
      * Returns the translation with the current locale.
      *
-     * @param $withDefault
+     * @param bool $withDefault
      *
      * @return CategoryTranslationInterface
      */
