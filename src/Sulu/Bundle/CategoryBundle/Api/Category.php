@@ -524,7 +524,7 @@ class Category extends ApiEntityWrapper
      *
      * @param string $locale
      *
-     * @return CategoryTranslationInterface
+     * @return null|CategoryTranslationInterface
      */
     private function getTranslationByLocale($locale)
     {
@@ -535,5 +535,7 @@ class Category extends ApiEntityWrapper
                 }
             }
         }
+
+        return null;
     }
 }
