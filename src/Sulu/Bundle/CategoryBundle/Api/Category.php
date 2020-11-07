@@ -461,7 +461,7 @@ class Category extends ApiEntityWrapper
     /**
      * Takes an array of CollectionMeta and returns a single meta for a given id.
      *
-     * @param $meta
+     * @param CollectionMeta $meta
      * @param $id
      *
      * @return CollectionMeta
@@ -469,6 +469,7 @@ class Category extends ApiEntityWrapper
     private function getSingleMetaById($meta, $id)
     {
         if (null !== $id) {
+            /** @var CollectionMeta $singleMeta */
             foreach ($meta as $singleMeta) {
                 if ($singleMeta->getId() === $id) {
                     return $singleMeta;
