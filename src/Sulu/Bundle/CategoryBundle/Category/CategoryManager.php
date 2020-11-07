@@ -245,8 +245,8 @@ class CategoryManager implements CategoryManagerInterface
             throw new CategoryIdNotFoundException($id);
         }
 
+        /** @var CategoryTranslationInterface $translation */
         foreach ($entity->getTranslations() as $translation) {
-            /** @var CategoryTranslationInterface $translation */
             foreach ($translation->getKeywords() as $keyword) {
                 $this->keywordManager->delete($keyword, $entity);
             }
