@@ -5,9 +5,9 @@ import {SortableContainer} from 'react-sortable-hoc';
 import classNames from 'classnames';
 import SortableBlock from './SortableBlock';
 import sortableBlockListStyles from './sortableBlockList.scss';
-import type {BlockEntry, RenderBlockContentCallback} from './types';
+import type {RenderBlockContentCallback} from './types';
 
-type Props<T: string> = {|
+type Props<T: string, U: {type: T}> = {|
     disabled: boolean,
     expandedBlocks: Array<boolean>,
     generatedBlockIds: Array<number>,
@@ -18,13 +18,13 @@ type Props<T: string> = {|
     onRemove?: (index: number) => void,
     onSettingsClick?: (index: number) => void,
     onTypeChange?: (type: T, index: number) => void,
-    renderBlockContent: RenderBlockContentCallback<T>,
+    renderBlockContent: RenderBlockContentCallback<T, U>,
     types?: {[key: T]: string},
-    value: Array<BlockEntry<string>>,
+    value: Array<U>,
 |};
 
 @observer
-class SortableBlockList<T: string> extends React.Component<Props<T>> {
+class SortableBlockList<T: string, U: {type: T}> extends React.Component<Props<T, U>> {
     static defaultProps = {
         disabled: false,
         movable: true,

@@ -7,9 +7,9 @@ import {translate} from '../../utils/Translator';
 import Button from '../Button';
 import SortableBlockList from './SortableBlockList';
 import blockCollectionStyles from './blockCollection.scss';
-import type {BlockEntry, RenderBlockContentCallback} from './types';
+import type {RenderBlockContentCallback} from './types';
 
-type Props<T: string> = {|
+type Props<T: string, U: {type: T}> = {|
     addButtonText?: ?string,
     collapsable: boolean,
     defaultType: T,
@@ -18,16 +18,16 @@ type Props<T: string> = {|
     maxOccurs?: ?number,
     minOccurs?: ?number,
     movable: boolean,
-    onChange: (value: Array<BlockEntry<T>>) => void,
+    onChange: (value: Array<U>) => void,
     onSettingsClick?: (index: number) => void,
     onSortEnd?: (oldIndex: number, newIndex: number) => void,
-    renderBlockContent: RenderBlockContentCallback<T>,
+    renderBlockContent: RenderBlockContentCallback<T, U>,
     types?: {[key: T]: string},
-    value: Array<BlockEntry<T>>,
+    value: Array<U>,
 |};
 
 @observer
-class BlockCollection<T: string> extends React.Component<Props<T>> {
+class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, U>> {
     static idCounter = 0;
 
     static defaultProps = {
@@ -40,7 +40,7 @@ class BlockCollection<T: string> extends React.Component<Props<T>> {
     @observable generatedBlockIds: Array<number> = [];
     @observable expandedBlocks: Array<boolean> = [];
 
-    constructor(props: Props<T>) {
+    constructor(props: Props<T, U>) {
         super(props);
 
         this.fillArrays();
@@ -79,6 +79,7 @@ class BlockCollection<T: string> extends React.Component<Props<T>> {
                 ...value,
                 ...Array.from(
                     {length: minOccurs - value.length},
+                    // $FlowFixMe
                     () => ({type: defaultType})
                 ),
             ]);
@@ -96,6 +97,7 @@ class BlockCollection<T: string> extends React.Component<Props<T>> {
             this.expandedBlocks.push(true);
             this.generatedBlockIds.push(++BlockCollection.idCounter);
 
+            // $FlowFixMe
             onChange([...value, {type: defaultType}]);
         }
     };
@@ -142,7 +144,7 @@ class BlockCollection<T: string> extends React.Component<Props<T>> {
         }
     };
 
-    @action handleTypeChange = (type: string, index: number) => {
+    @action handleTypeChange = (type: T, index: number) => {
         const {onChange, value} = this.props;
         const newValue = toJS(value);
         newValue[index].type = type;
