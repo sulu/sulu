@@ -15,15 +15,21 @@ Array [
       <section
         class="content"
       >
-        <header>
+        <header
+          class="header"
+        >
           My dialog title
         </header>
-        <article>
+        <article
+          class="article"
+        >
           <div>
             My dialog content
           </div>
         </article>
-        <footer>
+        <footer
+          class="footer"
+        >
           <button
             class="button primary"
             type="button"

@@ -66,7 +66,7 @@ $transitionDuration: 300ms;
     overflow: hidden;
     box-shadow: 0 10px 18px 0 rgba($mineShaft, .5);
 
-    header {
+    .header {
         background: $primaryBackground;
         border-bottom: 1px solid $overlayBorderColor;
         height: $overlayHeaderHeight;
@@ -79,13 +79,13 @@ $transitionDuration: 300ms;
         }
     }
 
-    article {
+    .article {
         max-height: $overlayContentMaxHeight;
         overflow: auto;
         background: $primaryBackground;
     }
 
-    footer {
+    .footer {
         background: $secondaryBackground;
         border-top: 1px solid $overlayBorderColor;
         height: $overlayFooterHeight;

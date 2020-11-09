@@ -15,7 +15,9 @@ Array [
       <section
         class="content"
       >
-        <header>
+        <header
+          class="header"
+        >
           <h2>
             sulu_location.select_location
           </h2>
@@ -26,7 +28,9 @@ Array [
             tabindex="0"
           />
         </header>
-        <article>
+        <article
+          class="article"
+        >
           <div
             class="container"
           >
@@ -414,7 +418,9 @@ Array [
             </div>
           </div>
         </article>
-        <footer>
+        <footer
+          class="footer"
+        >
           <div
             class="actions"
           >
@@ -461,7 +467,9 @@ Array [
       <section
         class="content"
       >
-        <header>
+        <header
+          class="header"
+        >
           <h2>
             sulu_location.select_location
           </h2>
@@ -472,7 +480,9 @@ Array [
             tabindex="0"
           />
         </header>
-        <article>
+        <article
+          class="article"
+        >
           <div
             class="container"
           >
@@ -881,7 +891,9 @@ Array [
             </div>
           </div>
         </article>
-        <footer>
+        <footer
+          class="footer"
+        >
           <div
             class="actions"
           >
