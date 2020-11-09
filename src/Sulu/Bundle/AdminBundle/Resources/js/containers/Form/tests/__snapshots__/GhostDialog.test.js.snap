@@ -15,10 +15,14 @@ Array [
       <section
         class="content"
       >
-        <header>
+        <header
+          class="header"
+        >
           sulu_admin.ghost_dialog_title
         </header>
-        <article>
+        <article
+          class="article"
+        >
           <div
             class="ghostDialog"
           >
@@ -75,7 +79,9 @@ Array [
             </div>
           </div>
         </article>
-        <footer>
+        <footer
+          class="footer"
+        >
           <button
             class="button primary"
             type="button"

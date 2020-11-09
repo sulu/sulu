@@ -59,7 +59,7 @@ $transitionDuration: 300ms;
     overflow: hidden;
     position: relative;
 
-    header {
+    .header {
         color: $titleColor;
         font-size: 22px;
         font-weight: bold;
@@ -68,7 +68,7 @@ $transitionDuration: 300ms;
         line-height: $dialogHeaderHeight;
     }
 
-    article {
+    .article {
         max-height: $dialogContentMaxHeight;
         color: $contentColor;
         font-size: 12px;
@@ -82,7 +82,7 @@ $transitionDuration: 300ms;
         }
     }
 
-    footer {
+    .footer {
         background: $footerBackgroundColor;
         border-top: 1px solid $footerBorderColor;
         height: $dialogFooterHeight;

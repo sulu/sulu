@@ -15,7 +15,9 @@ Array [
       <section
         class="content"
       >
-        <header>
+        <header
+          class="header"
+        >
           <h2>
             sulu_admin.history
           </h2>
@@ -26,7 +28,9 @@ Array [
             tabindex="0"
           />
         </header>
-        <article>
+        <article
+          class="article"
+        >
           <div
             class="resourceLocatorHistoryOverlay"
           >
@@ -144,7 +148,9 @@ Array [
             </div>
           </div>
         </article>
-        <footer>
+        <footer
+          class="footer"
+        >
           <button
             class="button primary"
             type="button"

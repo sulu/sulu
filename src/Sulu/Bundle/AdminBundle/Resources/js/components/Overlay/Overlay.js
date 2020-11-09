@@ -134,7 +134,7 @@ class Overlay extends React.Component<Props> {
                         >
                             <div className={overlayClass}>
                                 <section className={overlayStyles.content}>
-                                    <header>
+                                    <header className={overlayStyles.header}>
                                         <h2>{title}</h2>
                                         <Icon
                                             className={overlayStyles.icon}
@@ -142,8 +142,8 @@ class Overlay extends React.Component<Props> {
                                             onClick={this.handleIconClick}
                                         />
                                     </header>
-                                    <article>{children}</article>
-                                    <footer>
+                                    <article className={overlayStyles.article}>{children}</article>
+                                    <footer className={overlayStyles.footer}>
                                         <Actions actions={actions} />
                                         <Button
                                             disabled={confirmDisabled}
