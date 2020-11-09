@@ -15,7 +15,9 @@ Array [
       <section
         class="content"
       >
-        <header>
+        <header
+          class="header"
+        >
           <h2>
             sulu_audience_targeting.configure_rule
           </h2>
@@ -26,7 +28,9 @@ Array [
             tabindex="0"
           />
         </header>
-        <article>
+        <article
+          class="article"
+        >
           <div
             class="overlay"
           >
@@ -150,7 +154,9 @@ Array [
             </div>
           </div>
         </article>
-        <footer>
+        <footer
+          class="footer"
+        >
           <button
             class="button primary"
             type="button"

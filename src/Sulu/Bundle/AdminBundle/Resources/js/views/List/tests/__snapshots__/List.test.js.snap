@@ -15,7 +15,9 @@ Array [
       <section
         class="content"
       >
-        <header>
+        <header
+          class="header"
+        >
           <h2 />
           <span
             aria-label="su-times"
@@ -24,7 +26,9 @@ Array [
             tabindex="0"
           />
         </header>
-        <article>
+        <article
+          class="article"
+        >
           <div
             class="overlay"
           >
@@ -236,7 +240,9 @@ Array [
             </div>
           </div>
         </article>
-        <footer>
+        <footer
+          class="footer"
+        >
           <button
             class="button primary"
             type="button"

@@ -44,7 +44,7 @@ class MediaSelectionOverlay extends React.Component<Props> {
             COLLECTIONS_RESOURCE_KEY,
             USER_SETTINGS_KEY,
             {
-                page: observable.box(),
+                page: observable.box(1),
                 locale,
                 parentId: collectionId,
             }
@@ -80,7 +80,7 @@ class MediaSelectionOverlay extends React.Component<Props> {
             MEDIA_RESOURCE_KEY,
             USER_SETTINGS_KEY,
             {
-                page: observable.box(),
+                page: observable.box(1),
                 collection: collectionId,
                 excludedIds,
                 locale,

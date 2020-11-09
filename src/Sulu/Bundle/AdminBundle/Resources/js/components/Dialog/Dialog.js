@@ -113,13 +113,13 @@ class Dialog extends React.Component<Props> {
                         >
                             <div className={dialogClass}>
                                 <section className={dialogStyles.content}>
-                                    <header>
+                                    <header className={dialogStyles.header}>
                                         {title}
                                     </header>
                                     <article className={articleStyle}>
                                         {children}
                                     </article>
-                                    <footer>
+                                    <footer className={dialogStyles.footer}>
                                         <Button
                                             disabled={confirmDisabled}
                                             loading={confirmLoading}

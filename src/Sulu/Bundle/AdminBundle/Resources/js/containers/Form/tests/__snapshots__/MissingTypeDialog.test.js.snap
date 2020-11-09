@@ -15,7 +15,9 @@ Array [
       <section
         class="content"
       >
-        <header>
+        <header
+          class="header"
+        >
           sulu_admin.missing_type_dialog_title
         </header>
         <article
@@ -79,7 +81,9 @@ Array [
             </div>
           </div>
         </article>
-        <footer>
+        <footer
+          class="footer"
+        >
           <button
             class="button primary"
             disabled=""

@@ -1,7 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render data in EditLines 1`] = `
-<header>
+<header
+  class="header"
+>
   <h2>
     Add something
   </h2>
@@ -78,7 +80,9 @@ exports[`Render data in EditLines 2`] = `
 `;
 
 exports[`Render data in EditLines with other properties 1`] = `
-<header>
+<header
+  class="header"
+>
   <h2>
     Add something
   </h2>
