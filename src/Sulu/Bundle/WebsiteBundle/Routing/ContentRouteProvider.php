@@ -59,18 +59,25 @@ class ContentRouteProvider implements RouteProviderInterface
      */
     private $webspaceManager;
 
+    /**
+     * @var array
+     */
+    private $defaultOptions;
+
     public function __construct(
         DocumentManagerInterface $documentManager,
         DocumentInspector $documentInspector,
         ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool,
         StructureManagerInterface $structureManager,
-        WebspaceManagerInterface $webspaceManager
+        WebspaceManagerInterface $webspaceManager,
+        array $defaultOptions = []
     ) {
         $this->documentManager = $documentManager;
         $this->documentInspector = $documentInspector;
         $this->resourceLocatorStrategyPool = $resourceLocatorStrategyPool;
         $this->structureManager = $structureManager;
         $this->webspaceManager = $webspaceManager;
+        $this->defaultOptions = $defaultOptions;
     }
 
     public function getRouteCollectionForRequest(Request $request)
@@ -243,7 +250,9 @@ class ContentRouteProvider implements RouteProviderInterface
             [
                 '_controller' => 'sulu_website.redirect_controller:redirectAction',
                 'url' => $url,
-            ]
+            ],
+            [],
+            $this->defaultOptions
         );
     }
 
@@ -258,7 +267,9 @@ class ContentRouteProvider implements RouteProviderInterface
                 '_controller' => $content->getController(),
                 'structure' => $content,
                 'partial' => 'true' === $request->get('partial', 'false'),
-            ]
+            ],
+            [],
+            $this->defaultOptions
         );
     }
 

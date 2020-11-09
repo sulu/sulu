@@ -60,6 +60,11 @@ class RouteProvider implements RouteProviderInterface
     private $proxyFactory;
 
     /**
+     * @var array
+     */
+    private $defaultOptions;
+
+    /**
      * @var Route[]
      */
     private $symfonyRouteCache = [];
@@ -74,14 +79,15 @@ class RouteProvider implements RouteProviderInterface
         RequestAnalyzerInterface $requestAnalyzer,
         RouteDefaultsProviderInterface $routeDefaultsProvider,
         RequestStack $requestStack,
-        LazyLoadingValueHolderFactory $proxyFactory = null
+        LazyLoadingValueHolderFactory $proxyFactory = null,
+        array $defaultOptions = []
     ) {
         $this->routeRepository = $routeRepository;
         $this->requestAnalyzer = $requestAnalyzer;
         $this->routeDefaultsProvider = $routeDefaultsProvider;
         $this->requestStack = $requestStack;
-
         $this->proxyFactory = $proxyFactory ?: new LazyLoadingValueHolderFactory();
+        $this->defaultOptions = $defaultOptions;
     }
 
     public function getRouteCollectionForRequest(Request $request)
@@ -222,7 +228,7 @@ class RouteProvider implements RouteProviderInterface
                         . ($request->getQueryString() ? ('?' . $request->getQueryString()) : ''),
                 ],
                 [],
-                ['utf8' => true]
+                $this->defaultOptions
             );
         }
 
@@ -242,7 +248,7 @@ class RouteProvider implements RouteProviderInterface
                         $request->getLocale()
                     ),
                     [],
-                    ['utf8' => true]
+                    $this->defaultOptions
                 );
 
                 return true;

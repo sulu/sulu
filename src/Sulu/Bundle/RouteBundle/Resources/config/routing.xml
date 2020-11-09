@@ -24,6 +24,7 @@
             <argument type="service" id="sulu_route.routing.defaults_provider"/>
             <argument type="service" id="request_stack"/>
             <argument type="service" id="sulu_route.routing.proxy_factory"/>
+            <argument type="collection" />
 
             <tag name="sulu.context" context="website"/>
         </service>
