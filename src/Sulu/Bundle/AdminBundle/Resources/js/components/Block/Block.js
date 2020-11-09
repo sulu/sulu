@@ -6,8 +6,8 @@ import Icon from '../Icon';
 import SingleSelect from '../SingleSelect';
 import blockStyles from './block.scss';
 
-type Props = {
-    activeType?: string,
+type Props<T: string> = {
+    activeType?: T,
     children: Node,
     dragHandle?: Node,
     expanded: boolean,
@@ -16,11 +16,11 @@ type Props = {
     onExpand?: () => void,
     onRemove?: () => void,
     onSettingsClick?: () => void,
-    onTypeChange?: (type: string | number) => void,
-    types?: {[key: string]: string},
+    onTypeChange?: (type: *) => void,
+    types?: {[key: T]: string},
 };
 
-export default class Block extends React.Component<Props> {
+export default class Block<T: string> extends React.Component<Props<T>> {
     static defaultProps: {
         expanded: false,
     };
@@ -39,7 +39,7 @@ export default class Block extends React.Component<Props> {
         }
     };
 
-    handleTypeChange = (type: string | number) => {
+    handleTypeChange = (type: *) => {
         const {onTypeChange} = this.props;
 
         if (onTypeChange) {

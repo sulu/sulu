@@ -9,7 +9,7 @@ import SortableBlockList from './SortableBlockList';
 import blockCollectionStyles from './blockCollection.scss';
 import type {BlockEntry, RenderBlockContentCallback} from './types';
 
-type Props<T> = {|
+type Props<T: string> = {|
     addButtonText?: ?string,
     collapsable: boolean,
     defaultType: T,
@@ -22,12 +22,12 @@ type Props<T> = {|
     onSettingsClick?: (index: number) => void,
     onSortEnd?: (oldIndex: number, newIndex: number) => void,
     renderBlockContent: RenderBlockContentCallback<T>,
-    types?: {[key: string]: string},
+    types?: {[key: T]: string},
     value: Array<BlockEntry<T>>,
 |};
 
 @observer
-class BlockCollection<T> extends React.Component<Props<T>> {
+class BlockCollection<T: string> extends React.Component<Props<T>> {
     static idCounter = 0;
 
     static defaultProps = {

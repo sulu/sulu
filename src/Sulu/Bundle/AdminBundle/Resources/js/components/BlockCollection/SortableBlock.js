@@ -6,7 +6,7 @@ import Block from '../Block';
 import SortableHandle from './SortableHandle';
 import type {RenderBlockContentCallback} from './types';
 
-type Props<T> = {
+type Props<T: string> = {
     activeType: T,
     expanded: boolean,
     icons?: Array<string>,
@@ -15,10 +15,10 @@ type Props<T> = {
     onExpand?: (index: number) => void,
     onRemove?: (index: number) => void,
     onSettingsClick?: (index: number) => void,
-    onTypeChange?: (type: string | number, index: number) => void,
+    onTypeChange?: (type: T, index: number) => void,
     renderBlockContent: RenderBlockContentCallback<T>,
     sortIndex: number,
-    types?: {[key: string]: string},
+    types?: {[key: T]: string},
     value: Object,
 };
 

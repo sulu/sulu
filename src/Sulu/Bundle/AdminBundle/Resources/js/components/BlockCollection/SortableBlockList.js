@@ -7,8 +7,7 @@ import SortableBlock from './SortableBlock';
 import sortableBlockListStyles from './sortableBlockList.scss';
 import type {BlockEntry, RenderBlockContentCallback} from './types';
 
-type Props<T> = {|
-    blockTypes: Array<string>,
+type Props<T: string> = {|
     disabled: boolean,
     expandedBlocks: Array<boolean>,
     generatedBlockIds: Array<number>,
@@ -18,9 +17,9 @@ type Props<T> = {|
     onExpand?: (index: number) => void,
     onRemove?: (index: number) => void,
     onSettingsClick?: (index: number) => void,
-    onTypeChange?: (type: string | number, index: number) => void,
+    onTypeChange?: (type: T, index: number) => void,
     renderBlockContent: RenderBlockContentCallback<T>,
-    types?: {[key: string]: string},
+    types?: {[key: T]: string},
     value: Array<BlockEntry<string>>,
 |};
 
@@ -61,7 +60,7 @@ class SortableBlockList<T: string> extends React.Component<Props<T>> {
         }
     };
 
-    handleTypeChange = (type: string | number, index: number) => {
+    handleTypeChange = (type: T, index: number) => {
         const {onTypeChange} = this.props;
 
         if (onTypeChange) {
