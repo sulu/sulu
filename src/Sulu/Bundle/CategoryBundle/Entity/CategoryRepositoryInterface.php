@@ -30,7 +30,7 @@ interface CategoryRepositoryInterface extends RepositoryInterface
     /**
      * Returns true if the given key is assigned to an existing category.
      *
-     * @param string|int $key
+     * @param string $key
      *
      * @return bool
      */

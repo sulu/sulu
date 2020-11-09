@@ -21,6 +21,7 @@ use Sulu\Bundle\CoreBundle\Entity\ApiEntityWrapper;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\SecurityBundle\Entity\User;
+use Sulu\Component\Security\Authentication\UserInterface;
 
 class Category extends ApiEntityWrapper
 {
@@ -444,7 +445,7 @@ class Category extends ApiEntityWrapper
     /**
      * Takes a user entity and returns the fullname.
      *
-     * @param User $user
+     * @param UserInterface $user
      *
      * @return string
      */
@@ -461,15 +462,15 @@ class Category extends ApiEntityWrapper
     /**
      * Takes an array of CollectionMeta and returns a single meta for a given id.
      *
-     * @param CollectionMeta $meta
+     * @param CategoryMetaInterface[] $meta
      * @param int $id
      *
-     * @return null|CollectionMeta
+     * @return null|CategoryMetaInterface
      */
     private function getSingleMetaById($meta, $id)
     {
         if (null !== $id) {
-            /** @var CollectionMeta $singleMeta */
+            /** @var CategoryMetaInterface[] $singleMeta */
             foreach ($meta as $singleMeta) {
                 if ($singleMeta->getId() === $id) {
                     return $singleMeta;

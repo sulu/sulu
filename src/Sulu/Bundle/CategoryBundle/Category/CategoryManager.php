@@ -283,7 +283,7 @@ class CategoryManager implements CategoryManagerInterface
      * and provides neat getters and setters. If the given object is already an API-object,
      * the associated entity is used for wrapping.
      *
-     * @param Category $category
+     * @param CategoryInterface $category
      * @param string $locale
      *
      * @return null|CategoryWrapper
@@ -304,7 +304,7 @@ class CategoryManager implements CategoryManagerInterface
      * Returns an array of API-Objects for a given array of category-entities.
      * The returned array can contain null-values, if the given entities are not valid.
      *
-     * @param null|CategoryWrapper $entities
+     * @param CategoryInterface[] $entities
      * @param string $locale
      *
      * @return array
