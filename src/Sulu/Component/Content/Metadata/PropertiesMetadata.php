@@ -111,6 +111,19 @@ class PropertiesMetadata extends ItemMetadata
                 continue;
             }
 
+            if ($child instanceof BlockMetadata) {
+                // deep cloning is necessary because the components must only be manipulated for these properties
+                $clone = \unserialize(\serialize($child));
+                foreach ($clone->getComponents() as $component) {
+                    $componentChildren = [];
+                    $componentChildren = \array_merge($componentChildren, $this->removeSectionProperties($component->getChildren()));
+                    $component->setChildren($componentChildren);
+                }
+
+                $properties[$clone->getName()] = $clone;
+                continue;
+            }
+
             $properties[$child->getName()] = $child;
         }
 
