@@ -24,7 +24,7 @@ export default class Section extends React.Component<Props> {
         const fields = React.Children.toArray(children);
         if (label || colSpan === 12) {
             fields.unshift(
-                <Grid.Item colSpan={12} key={fields.length}>
+                <Grid.Item className={gridStyles.dividerContainer} colSpan={12} key={fields.length}>
                     <Divider>
                         {label}
                     </Divider>

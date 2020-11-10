@@ -9,6 +9,12 @@
 .grid-section {
     margin-bottom: -$fieldMarginBottom;
 
+    &:first-child {
+        .divider-container {
+            margin-top: -50px;
+        }
+    }
+
     &:last-child {
         margin-bottom: 0;
     }
