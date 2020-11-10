@@ -2,17 +2,36 @@
 import React from 'react';
 import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
+import type {IObservableValue} from 'mobx';
 import Input from '../Input';
 import resourceLocatorStyles from './resourceLocator.scss';
 
 type Props = {|
     disabled: boolean,
     id?: string,
+    locale: IObservableValue<string>,
     mode: string,
     onBlur?: () => void,
     onChange: (value: ?string) => void,
     value: ?string,
 |};
+
+const replacerMap = new Map([
+    // remove dash before slash
+    [/[-]+\//g, '/'],
+    // remove dash after slash
+    [/\/[-]+/g, '/'],
+    // delete dash at the beginning
+    [/^([-])/g, ''],
+    // replace multiple slashes
+    [/([/]+)/g, '/'],
+    // replace spaces with dashes
+    [/ /g, '-'],
+    // replace multiple dash with one
+    [/([-]+)/g, '-'],
+    // remove special characters
+    [/[^a-z0-9-_/]/g, ''],
+]);
 
 @observer
 class ResourceLocator extends React.Component<Props> {
@@ -54,17 +73,40 @@ class ResourceLocator extends React.Component<Props> {
     }
 
     handleChange = (value: ?string) => {
-        const {mode, onChange} = this.props;
+        const {mode, onChange, locale} = this.props;
 
-        if (value && mode === 'leaf' && value.endsWith('/')) {
-            return;
+        if (value) {
+            value = value.toLocaleLowerCase(locale.get());
+
+            if (mode === 'leaf') {
+                value = value.replace(/\//g, '-');
+            }
+
+            replacerMap.forEach((replaceValue, key) => {
+                if (value){
+                    value = value.replace(key, replaceValue);
+                }
+            });
         }
 
         onChange(value ? this.fixed + value : undefined);
     };
 
+    handleBlur = () => {
+        const {onBlur, onChange, value} = this.props;
+
+        if (value) {
+            const newValue = value.replace(/([-])$/g, '');
+            onChange(newValue);
+        }
+
+        if (onBlur) {
+            onBlur();
+        }
+    };
+
     render() {
-        const {disabled, id, onBlur} = this.props;
+        const {disabled, id} = this.props;
 
         return (
             <div className={resourceLocatorStyles.resourceLocator}>
@@ -72,7 +114,7 @@ class ResourceLocator extends React.Component<Props> {
                 <Input
                     disabled={disabled}
                     id={id}
-                    onBlur={onBlur}
+                    onBlur={this.handleBlur}
                     onChange={this.handleChange}
                     value={this.changeableValue}
                 />
