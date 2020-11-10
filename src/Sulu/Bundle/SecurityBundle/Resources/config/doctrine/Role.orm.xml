@@ -13,7 +13,7 @@
         <field name="system" type="string" column="securitySystem" length="60"/>
         <field name="anonymous" type="boolean" column="anonymous" nullable="false">
             <options>
-                <option name="default">false</option>
+                <option name="default">0</option>
             </options>
         </field>
 
