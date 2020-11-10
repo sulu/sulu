@@ -13,6 +13,7 @@ namespace Sulu\Bundle\PageBundle\Tests\Functional\ResourceLocator\Mapper;
 
 use PHPCR\SessionInterface;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Bundle\PageBundle\Document\HomeDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
@@ -180,6 +181,18 @@ class PhpcrMapperTest extends SuluTestCase
         $result = $this->phpcrMapper->getUniquePath('/news', 'sulu_io', 'de');
         $this->assertEquals('/news', $result);
         $this->assertTrue($this->phpcrMapper->unique($result, 'sulu_io', 'de'));
+    }
+
+    public function testGetUniquePathForCurrentDocument()
+    {
+        /** @var BasePageDocument $document1 */
+        $document1 = $this->document1;
+
+        $result = $this->phpcrMapper->getUniquePath($document1->getResourceSegment(), 'sulu_io', 'de', null, $document1->getUuid());
+        $this->assertEquals($document1->getResourceSegment(), $result);
+
+        $result = $this->phpcrMapper->getUniquePath($document1->getResourceSegment(), 'sulu_io', 'de', null, null);
+        $this->assertEquals($document1->getResourceSegment() . '-1', $result);
     }
 
     public function testSaveFailure()

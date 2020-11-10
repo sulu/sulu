@@ -111,7 +111,7 @@ class ResourceLocatorStrategyTest extends TestCase
 
         $this->resourceLocatorGenerator->generate('test', null)->willReturn('/test');
         $this->cleaner->cleanup('/test', 'de')->willReturn('/test');
-        $this->mapper->getUniquePath('/test', 'sulu_io', 'de', null)->willReturn('/test');
+        $this->mapper->getUniquePath('/test', 'sulu_io', 'de', null, null)->willReturn('/test');
 
         $this->assertEquals(
             $this->resourceLocatorStrategy->generate('test', '123-123-123', 'sulu_io', 'de'),
@@ -140,7 +140,7 @@ class ResourceLocatorStrategyTest extends TestCase
 
         $this->resourceLocatorGenerator->generate('test', '/parent')->willReturn('/parent/test');
         $this->cleaner->cleanup('/parent/test', 'de')->willReturn('/parent/test');
-        $this->mapper->getUniquePath('/parent/test', 'sulu_io', 'de', null)->willReturn('/parent/test');
+        $this->mapper->getUniquePath('/parent/test', 'sulu_io', 'de', null, null)->willReturn('/parent/test');
 
         $this->assertEquals(
             $this->resourceLocatorStrategy->generate('test', '123-123-123', 'sulu_io', 'de'),
@@ -152,7 +152,7 @@ class ResourceLocatorStrategyTest extends TestCase
     {
         $this->resourceLocatorGenerator->generate('test', null)->willReturn('/test');
         $this->cleaner->cleanup('/test', 'de')->willReturn('/test');
-        $this->mapper->getUniquePath('/test', 'sulu_io', 'de', null)->willReturn('/test');
+        $this->mapper->getUniquePath('/test', 'sulu_io', 'de', null, null)->willReturn('/test');
 
         $this->assertEquals(
             $this->resourceLocatorStrategy->generate('test', null, 'sulu_io', 'de'),

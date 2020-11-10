@@ -90,8 +90,14 @@ abstract class ResourceLocatorStrategy implements ResourceLocatorStrategyInterfa
         $this->resourceLocatorGenerator = $resourceLocatorGenerator;
     }
 
-    public function generate($title, $parentUuid, $webspaceKey, $languageCode, $segmentKey = null)
+    public function generate($title, $parentUuid, $webspaceKey, $languageCode, $segmentKey = null/*, $uuid = null*/)
     {
+        $uuid = null;
+
+        if (\func_num_args() >= 6) {
+            $uuid = \func_get_arg(5);
+        }
+
         // title should not have a slash
         $title = \str_replace('/', '-', $title);
 
@@ -109,7 +115,7 @@ abstract class ResourceLocatorStrategy implements ResourceLocatorStrategyInterfa
         }
 
         // get unique path
-        $path = $this->mapper->getUniquePath($path, $webspaceKey, $languageCode, $segmentKey);
+        $path = $this->mapper->getUniquePath($path, $webspaceKey, $languageCode, $segmentKey, $uuid);
 
         return $path;
     }

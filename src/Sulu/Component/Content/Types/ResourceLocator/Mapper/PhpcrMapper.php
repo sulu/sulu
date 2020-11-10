@@ -290,11 +290,17 @@ class PhpcrMapper implements ResourceLocatorMapperInterface
         return $this->isUnique($routes, $path);
     }
 
-    public function getUniquePath($path, $webspaceKey, $languageCode, $segmentKey = null)
+    public function getUniquePath($path, $webspaceKey, $languageCode, $segmentKey = null/*, $uuid = null*/)
     {
+        $uuid = null;
+
+        if (\func_num_args() >= 5) {
+            $uuid = \func_get_arg(4);
+        }
+
         $routes = $this->getWebspaceRouteNode($webspaceKey, $languageCode, $segmentKey);
 
-        if ($this->isUnique($routes, $path)) {
+        if ($this->isUnique($routes, $path, $uuid)) {
             // path is already unique
             return $path;
         } else {
@@ -303,7 +309,7 @@ class PhpcrMapper implements ResourceLocatorMapperInterface
             // init counter
             $i = 1;
             // while $path-$i is not unique raise counter
-            while (!$this->isUnique($routes, $path . $i)) {
+            while (!$this->isUnique($routes, $path . $i, $uuid)) {
                 ++$i;
             }
 
@@ -340,10 +346,22 @@ class PhpcrMapper implements ResourceLocatorMapperInterface
      *
      * @return bool path is unique
      */
-    private function isUnique(NodeInterface $root, $path)
+    private function isUnique(NodeInterface $root, $path, $uuid = null)
     {
-        // check if root has node
-        return !$root->hasNode(\ltrim($path, '/'));
+        $path = \ltrim($path, '/');
+
+        if (!$root->hasNode($path)) {
+            return true;
+        }
+
+        if (!$uuid) {
+            return false;
+        }
+
+        $route = $root->getNode($path);
+
+        return $route->hasProperty('sulu:content')
+            && $route->getPropertyValue('sulu:content')->getIdentifier() === $uuid;
     }
 
     /**

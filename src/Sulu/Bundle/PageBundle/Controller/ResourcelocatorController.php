@@ -61,7 +61,9 @@ class ResourcelocatorController implements ClassResourceInterface
             \implode('-', $this->getRequestParameter($request, 'parts', true)),
             $this->getRequestParameter($request, 'parentId'),
             $webspaceKey,
-            $this->getRequestParameter($request, 'locale')
+            $this->getRequestParameter($request, 'locale'),
+            null,
+            $this->getRequestParameter($request, 'id') ?: null
         );
 
         return $this->viewHandler->handle(View::create(['resourcelocator' => $resourceLocator]));
