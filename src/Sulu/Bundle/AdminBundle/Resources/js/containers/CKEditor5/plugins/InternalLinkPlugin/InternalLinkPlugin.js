@@ -10,6 +10,7 @@ import ListItemView from '@ckeditor/ckeditor5-ui/src/list/listitemview';
 import {createDropdown} from '@ckeditor/ckeditor5-ui/src/dropdown/utils';
 import ContextualBalloon from '@ckeditor/ckeditor5-ui/src/panel/balloon/contextualballoon';
 import ClickObserver from '@ckeditor/ckeditor5-engine/src/view/observer/clickobserver';
+import {translate} from '../../../../utils';
 import LinkBalloonView from '../../LinkBalloonView';
 import LinkCommand from '../../LinkCommand';
 import {addLinkConversion, findModelItemInSelection, findViewLinkItemInSelection} from '../../utils';
@@ -139,7 +140,12 @@ export default class InternalLinkPlugin extends Plugin {
                 'buttonEnabled',
                 (internalLinkEnabled, externalLinkEnabled) => internalLinkEnabled && externalLinkEnabled
             );
-            dropdownButton.buttonView.set({icon: linkIcon});
+
+            dropdownButton.buttonView.set({
+                icon: linkIcon,
+                label: translate('sulu_admin.internal_link'),
+                tooltip: true,
+            });
 
             internalLinkTypeRegistry.getKeys().forEach((key) => {
                 const button = new ButtonView(locale);

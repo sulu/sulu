@@ -149,5 +149,7 @@
     "sulu_admin.form_save_server_error": "There was an error when trying to save the form",
     "sulu_admin.form_used_by": "This form is currently used by",
     "sulu_admin.from": "from",
-    "sulu_admin.until": "until"
+    "sulu_admin.until": "until",
+    "sulu_admin.external_link": "External Link",
+    "sulu_admin.internal_link": "Internal Link"
 }
