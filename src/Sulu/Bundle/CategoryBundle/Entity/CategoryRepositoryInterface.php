@@ -21,7 +21,7 @@ interface CategoryRepositoryInterface extends RepositoryInterface
     /**
      * Returns true if the given id is assigned to an existing category.
      *
-     * @param $id
+     * @param int $id
      *
      * @return bool
      */
@@ -30,7 +30,7 @@ interface CategoryRepositoryInterface extends RepositoryInterface
     /**
      * Returns true if the given key is assigned to an existing category.
      *
-     * @param $key
+     * @param string $key
      *
      * @return bool
      */
@@ -127,8 +127,8 @@ interface CategoryRepositoryInterface extends RepositoryInterface
      * of the toIds array.
      * Start- and end-points of a path are not returned.
      *
-     * @param $fromIds array Start-points of the paths which are processed
-     * @param $toIds array End-points of the paths which are processed
+     * @param array $fromIds Start-points of the paths which are processed
+     * @param array $toIds End-points of the paths which are processed
      *
      * @return array
      */

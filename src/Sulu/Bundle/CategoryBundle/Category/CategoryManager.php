@@ -14,6 +14,7 @@ namespace Sulu\Bundle\CategoryBundle\Category;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\CategoryBundle\Api\Category as CategoryWrapper;
+use Sulu\Bundle\CategoryBundle\Entity\Category;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryMetaRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
@@ -245,8 +246,8 @@ class CategoryManager implements CategoryManagerInterface
             throw new CategoryIdNotFoundException($id);
         }
 
+        /** @var CategoryTranslationInterface $translation */
         foreach ($entity->getTranslations() as $translation) {
-            /** @var CategoryTranslationInterface $translation */
             foreach ($translation->getKeywords() as $keyword) {
                 $this->keywordManager->delete($keyword, $entity);
             }
@@ -282,7 +283,7 @@ class CategoryManager implements CategoryManagerInterface
      * and provides neat getters and setters. If the given object is already an API-object,
      * the associated entity is used for wrapping.
      *
-     * @param $category
+     * @param CategoryInterface $category
      * @param string $locale
      *
      * @return null|CategoryWrapper
@@ -303,7 +304,7 @@ class CategoryManager implements CategoryManagerInterface
      * Returns an array of API-Objects for a given array of category-entities.
      * The returned array can contain null-values, if the given entities are not valid.
      *
-     * @param $entities
+     * @param CategoryInterface[] $entities
      * @param string $locale
      *
      * @return array
