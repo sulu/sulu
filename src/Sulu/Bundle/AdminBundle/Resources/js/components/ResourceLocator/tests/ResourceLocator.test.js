@@ -149,8 +149,8 @@ test('ResourceLocator should call the onChange callback and replace multiple das
     const resourceLocator = mount(
         <ResourceLocator locale={locale} mode="leaf" onBlur={jest.fn()} onChange={onChange} value={value} />
     );
-    resourceLocator.find('Input').props().onChange('child---test--child');
-    expect(onChange).toBeCalledWith('/parent/child-test-child');
+    resourceLocator.find('Input').props().onChange('child--- a /// test');
+    expect(onChange).toBeCalledWith('/parent/child-a-test');
 });
 
 test('ResourceLocator should call the onChange callback and replace multiple dashes with one in full mode', () => {

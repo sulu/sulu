@@ -17,8 +17,6 @@ type Props = {|
 |};
 
 const replacerMap = new Map([
-    // replace multiple dash with one
-    [/([-]+)/g, '-'],
     // remove dash before slash
     [/[-]+\//g, '/'],
     // remove dash after slash
@@ -29,6 +27,8 @@ const replacerMap = new Map([
     [/([/]+)/g, '/'],
     // replace spaces with dashes
     [/ /g, '-'],
+    // replace multiple dash with one
+    [/([-]+)/g, '-'],
     // remove special characters
     [/[^a-z0-9-_/]/g, ''],
 ]);
