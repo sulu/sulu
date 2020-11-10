@@ -28,9 +28,16 @@ class RouteDefaultOptionsCompilerPass implements CompilerPassInterface
 
         // copy default route options which are set by the symfony FrameworkExtension based on the config:
         // https://github.com/symfony/symfony/pull/31900
+        $routeDefaultOptions = $container->getDefinition('routing.loader')->getArgument(1);
+
+        // symfony 4.4 passes the default options as third argument
+        if (!\is_array($routeDefaultOptions)) {
+            $routeDefaultOptions = $container->getDefinition('routing.loader')->getArgument(2);
+        }
+
         $container->getDefinition('sulu_website.provider.content')->replaceArgument(
             7,
-            $container->getDefinition('routing.loader')->getArgument(1)
+            $routeDefaultOptions
         );
     }
 }
