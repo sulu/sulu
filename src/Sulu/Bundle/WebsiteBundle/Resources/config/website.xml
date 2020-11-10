@@ -20,6 +20,7 @@
             <argument type="service" id="sulu.content.resource_locator.strategy_pool"/>
             <argument type="service" id="sulu.content.structure_manager"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument type="collection" />
 
             <tag name="sulu.context" context="website"/>
         </service>
