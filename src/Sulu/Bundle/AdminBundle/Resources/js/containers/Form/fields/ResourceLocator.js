@@ -206,6 +206,7 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
                 <ResourceLocatorComponent
                     disabled={!!disabled}
                     id={dataPath}
+                    locale={formInspector.locale}
                     mode={this.mode}
                     onBlur={this.handleInputBlur}
                     onChange={this.handleInputChange}

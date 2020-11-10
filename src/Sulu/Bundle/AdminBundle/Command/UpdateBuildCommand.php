@@ -162,7 +162,7 @@ class UpdateBuildCommand extends Command
             return $this->doManualBuild($ui);
         }
 
-        $tempDirectory = \sys_get_temp_dir() . \DIRECTORY_SEPARATOR . static::REPOSITORY_NAME . \uniqid(\rand(), true);
+        $tempDirectory = \sys_get_temp_dir() . \DIRECTORY_SEPARATOR . static::REPOSITORY_NAME . \uniqid((string) \rand(), true);
         $tempFileZip = $tempDirectory . '.zip';
 
         $output->writeln('<info>Download remote repository...</info>');

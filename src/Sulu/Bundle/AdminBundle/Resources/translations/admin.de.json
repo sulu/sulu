@@ -151,6 +151,8 @@
     "sulu_admin.refresh_url": "URL neu generieren",
     "sulu_admin.from": "ab",
     "sulu_admin.until": "bis",
+    "sulu_admin.external_link": "Externer Link",
+    "sulu_admin.internal_link": "Interner Link",
     "sulu_admin.block_settings": "Block Einstellungen",
     "sulu_admin.hide_block": "Verstecke diesen Block auf der Webseite",
     "sulu_admin.segment": "Segment",

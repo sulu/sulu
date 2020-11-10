@@ -50,7 +50,16 @@ jest.mock('../../../../services/Requester', () => ({
 }));
 
 test('Pass props correctly to ResourceLocator', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const formInspector = new FormInspector(
+        new ResourceFormStore(
+            new ResourceStore(
+                'test',
+                undefined,
+                {'locale': 'en'}
+            ),
+            'test'
+        )
+    );
 
     const modePromise = Promise.resolve('full');
 
@@ -72,6 +81,7 @@ test('Pass props correctly to ResourceLocator', () => {
         expect(resourceLocator.find(ResourceLocatorComponent).prop('value')).toBe('/url');
         expect(resourceLocator.find(ResourceLocatorComponent).prop('mode')).toBe('full');
         expect(resourceLocator.find(ResourceLocatorComponent).prop('disabled')).toBe(true);
+        expect(resourceLocator.find(ResourceLocatorComponent).prop('locale')).toBe('en');
 
         // should not throw any error on unmount
         resourceLocator.unmount();

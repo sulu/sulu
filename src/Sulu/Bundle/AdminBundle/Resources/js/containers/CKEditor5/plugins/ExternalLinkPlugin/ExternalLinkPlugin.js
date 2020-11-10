@@ -7,6 +7,7 @@ import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
 import ContextualBalloon from '@ckeditor/ckeditor5-ui/src/panel/balloon/contextualballoon';
 import ClickObserver from '@ckeditor/ckeditor5-engine/src/view/observer/clickobserver';
 import {render, unmountComponentAtNode} from 'react-dom';
+import {translate} from '../../../../utils';
 import {addLinkConversion, findModelItemInSelection, findViewLinkItemInSelection} from '../../utils';
 import LinkBalloonView from '../../LinkBalloonView';
 import LinkCommand from '../../LinkCommand';
@@ -107,7 +108,11 @@ export default class ExternalLinkPlugin extends Plugin {
                 (internalLinkEnabled, externalLinkEnabled) => internalLinkEnabled && externalLinkEnabled
             );
 
-            button.set({icon: linkIcon});
+            button.set({
+                icon: linkIcon,
+                label: translate('sulu_admin.external_link'),
+                tooltip: true,
+            });
 
             button.on('execute', action(() => {
                 this.selection = this.editor.model.document.selection;

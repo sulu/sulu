@@ -41,11 +41,21 @@ class CustomUrlRouteProvider implements RouteProviderInterface
      */
     private $environment;
 
-    public function __construct(RequestAnalyzerInterface $requestAnalyzer, PathBuilder $pathBuilder, $environment)
-    {
+    /**
+     * @var array
+     */
+    private $defaultOptions;
+
+    public function __construct(
+        RequestAnalyzerInterface $requestAnalyzer,
+        PathBuilder $pathBuilder,
+        $environment,
+        array $defaultOptions = []
+    ) {
         $this->requestAnalyzer = $requestAnalyzer;
         $this->pathBuilder = $pathBuilder;
         $this->environment = $environment;
+        $this->defaultOptions = $defaultOptions;
     }
 
     public function getRouteCollectionForRequest(Request $request)
@@ -92,7 +102,9 @@ class CustomUrlRouteProvider implements RouteProviderInterface
                     '_custom_url' => $customUrlDocument,
                     '_webspace' => $this->requestAnalyzer->getWebspace(),
                     '_environment' => $this->environment,
-                ]
+                ],
+                [],
+                $this->defaultOptions
             )
         );
 
@@ -137,7 +149,9 @@ class CustomUrlRouteProvider implements RouteProviderInterface
                     '_controller' => 'sulu_website.redirect_controller:redirectAction',
                     '_finalized' => true,
                     'url' => $url,
-                ]
+                ],
+                [],
+                $this->defaultOptions
             )
         );
 

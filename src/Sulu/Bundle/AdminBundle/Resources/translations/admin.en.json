@@ -151,6 +151,8 @@
     "sulu_admin.refresh_url": "Refresh URL",
     "sulu_admin.from": "from",
     "sulu_admin.until": "until",
+    "sulu_admin.external_link": "External Link",
+    "sulu_admin.internal_link": "Internal Link",
     "sulu_admin.block_settings": "Block settings",
     "sulu_admin.hide_block": "Hide this block on website",
     "sulu_admin.segment": "Segment",

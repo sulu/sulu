@@ -2,7 +2,9 @@ imports:
     - { resource: services.yml }
 
 framework:
-    router: { resource: "%kernel.project_dir%/config/routing_website.yml" }
+    router:
+        resource: "%kernel.project_dir%/config/routing_website.yml"
+        utf8: true
 
 twig:
     paths: ['%kernel.project_dir%/templates']

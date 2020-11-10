@@ -111,7 +111,7 @@ interface CategoryManagerInterface
      * If data.id is set, the category which is assigned to the given id is overwritten.
      * If patch is set, the category which is assigned to the given id is updated partially.
      *
-     * @param $data
+     * @param array $data
      * @param $userId int Id of the user which is set as creator/changer. If null, the user of the request is set
      * @param string $locale
      * @param bool $patch

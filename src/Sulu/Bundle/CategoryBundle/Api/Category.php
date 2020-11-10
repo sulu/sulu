@@ -20,6 +20,8 @@ use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntityWrapper;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
+use Sulu\Bundle\SecurityBundle\Entity\User;
+use Sulu\Component\Security\Authentication\UserInterface;
 
 class Category extends ApiEntityWrapper
 {
@@ -443,7 +445,7 @@ class Category extends ApiEntityWrapper
     /**
      * Takes a user entity and returns the fullname.
      *
-     * @param $user
+     * @param UserInterface $user
      *
      * @return string
      */
@@ -460,20 +462,23 @@ class Category extends ApiEntityWrapper
     /**
      * Takes an array of CollectionMeta and returns a single meta for a given id.
      *
-     * @param $meta
-     * @param $id
+     * @param CategoryMetaInterface[] $meta
+     * @param int $id
      *
-     * @return CollectionMeta
+     * @return null|CategoryMetaInterface
      */
     private function getSingleMetaById($meta, $id)
     {
         if (null !== $id) {
+            /** @var CategoryMetaInterface[] $singleMeta */
             foreach ($meta as $singleMeta) {
                 if ($singleMeta->getId() === $id) {
                     return $singleMeta;
                 }
             }
         }
+
+        return null;
     }
 
     /**
@@ -500,7 +505,7 @@ class Category extends ApiEntityWrapper
     /**
      * Returns the translation with the current locale.
      *
-     * @param $withDefault
+     * @param bool $withDefault
      *
      * @return CategoryTranslationInterface
      */
@@ -520,7 +525,7 @@ class Category extends ApiEntityWrapper
      *
      * @param string $locale
      *
-     * @return CategoryTranslationInterface
+     * @return null|CategoryTranslationInterface
      */
     private function getTranslationByLocale($locale)
     {
@@ -531,5 +536,7 @@ class Category extends ApiEntityWrapper
                 }
             }
         }
+
+        return null;
     }
 }

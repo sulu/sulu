@@ -73,6 +73,11 @@ class ContentRouteProvider implements RouteProviderInterface
      */
     private $securityChecker;
 
+    /**
+     * @var array
+     */
+    private $defaultOptions;
+
     public function __construct(
         DocumentManagerInterface $documentManager,
         DocumentInspector $documentInspector,
@@ -80,7 +85,8 @@ class ContentRouteProvider implements RouteProviderInterface
         StructureManagerInterface $structureManager,
         WebspaceManagerInterface $webspaceManager,
         RequestAnalyzerInterface $requestAnalyzer,
-        SecurityCheckerInterface $securityChecker = null
+        SecurityCheckerInterface $securityChecker = null,
+        array $defaultOptions = []
     ) {
         $this->documentManager = $documentManager;
         $this->documentInspector = $documentInspector;
@@ -89,6 +95,7 @@ class ContentRouteProvider implements RouteProviderInterface
         $this->webspaceManager = $webspaceManager;
         $this->requestAnalyzer = $requestAnalyzer;
         $this->securityChecker = $securityChecker;
+        $this->defaultOptions = $defaultOptions;
     }
 
     public function getRouteCollectionForRequest(Request $request)
@@ -283,7 +290,9 @@ class ContentRouteProvider implements RouteProviderInterface
             [
                 '_controller' => 'sulu_website.redirect_controller:redirectAction',
                 'url' => $url,
-            ]
+            ],
+            [],
+            $this->defaultOptions
         );
     }
 
@@ -298,7 +307,9 @@ class ContentRouteProvider implements RouteProviderInterface
                 '_controller' => $content->getController(),
                 'structure' => $content,
                 'partial' => 'true' === $request->get('partial', 'false'),
-            ]
+            ],
+            [],
+            $this->defaultOptions
         );
     }
 
