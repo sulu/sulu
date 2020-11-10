@@ -183,7 +183,8 @@
         },
         "exclude-from-classmap": [
             "src/Sulu/Component/*/Tests/",
-            "src/Sulu/Bundle/*/Tests/"
+            "src/Sulu/Bundle/*/Tests/",
+            "src/Sulu/Bundle/*/Resources/phpcr-migrations"
         ]
     },
     "autoload-dev": {
