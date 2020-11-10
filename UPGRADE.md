@@ -1,5 +1,15 @@
 # Upgrade
 
+## dev-release/2.2
+
+### Added default value to anonymous column of se_roles table
+
+The se_roles was adjusted to use a default value for the `anonymous` column:
+
+```sql
+ALTER TABLE `se_roles` CHANGE `anonymous` `anonymous` TINYINT(1) NOT NULL DEFAULT 0;
+```
+
 ## 2.2.0-RC1
 
 ### CKeditor update
