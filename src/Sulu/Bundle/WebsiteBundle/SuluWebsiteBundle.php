@@ -27,7 +27,7 @@ class SuluWebsiteBundle extends Bundle
         $container->addCompilerPass(new SuluVersionPass());
         $container->addCompilerPass(new DeregisterDefaultRouteListenerCompilerPass());
         $container->addCompilerPass(
-            new RouteDefaultOptionsCompilerPass('sulu_website.provider.content', 7)
+            new RouteDefaultOptionsCompilerPass('sulu_website.provider.content', 5)
         );
 
         $container->addCompilerPass(
