@@ -165,5 +165,17 @@
     "sulu_admin.hide_block": "Verstecke diesen Block auf der Webseite",
     "sulu_admin.segment": "Segment",
     "sulu_admin.missing_type_dialog_title": "Neues Template auswählen",
-    "sulu_admin.missing_type_dialog_description": "Das Template der kopierten Seite steht in diesem Webspace nicht zur Verfügung."
+    "sulu_admin.missing_type_dialog_description": "Das Template der kopierten Seite steht in diesem Webspace nicht zur Verfügung.",
+    "sulu_admin.weekly": "Wöchentlich",
+    "sulu_admin.fixed": "Fixe Zeitspanne",
+    "sulu_admin.weekdays": "Wochentage",
+    "sulu_admin.monday": "Montag",
+    "sulu_admin.tuesday": "Dienstag",
+    "sulu_admin.wednesday": "Mittwoch",
+    "sulu_admin.thursday": "Donnerstag",
+    "sulu_admin.friday": "Freitag",
+    "sulu_admin.saturday": "Samstag",
+    "sulu_admin.sunday": "Sonntag",
+    "sulu_admin.start": "Start",
+    "sulu_admin.end": "Ende"
 }

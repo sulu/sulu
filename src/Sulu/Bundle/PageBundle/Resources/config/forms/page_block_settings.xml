@@ -26,6 +26,32 @@
             <tag name="sulu.block_setting_icon" icon="su-hide" />
         </property>
 
+        <section name="schedules">
+            <properties>
+                <property name="schedules_enabled" type="checkbox">
+                    <params>
+                        <param name="description">
+                            <meta>
+                                <title>sulu_page.schedules_description</title>
+                            </meta>
+                        </param>
+                        <param name="icon" value="su-clock" />
+                        <param name="label">
+                            <meta>
+                                <title>sulu_page.schedules_label</title>
+                            </meta>
+                        </param>
+                        <param name="skin" value="heading" />
+                        <param name="type" value="toggler" />
+                    </params>
+
+                    <tag name="sulu.block_setting_icon" icon="su-clock" />
+                </property>
+
+                <property name="schedules" type="schedules" visibleCondition="schedules_enabled == true" />
+            </properties>
+        </section>
+
         <section name="segments" visibleCondition="__webspace ? __webspace.segments|length &gt; 0 : true">
             <properties>
                 <property

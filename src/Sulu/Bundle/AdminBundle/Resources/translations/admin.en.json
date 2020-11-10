@@ -166,5 +166,17 @@
     "sulu_admin.hide_block": "Hide this block on website",
     "sulu_admin.segment": "Segment",
     "sulu_admin.missing_type_dialog_title": "Choose new template",
-    "sulu_admin.missing_type_dialog_description": "The template for the copied page does not exist in this webspace."
+    "sulu_admin.missing_type_dialog_description": "The template for the copied page does not exist in this webspace.",
+    "sulu_admin.weekly": "Weekly",
+    "sulu_admin.fixed": "Fixed time period",
+    "sulu_admin.weekdays": "Weekdays",
+    "sulu_admin.monday": "Monday",
+    "sulu_admin.tuesday": "Tuesday",
+    "sulu_admin.wednesday": "Wednesday",
+    "sulu_admin.thursday": "Thursday",
+    "sulu_admin.friday": "Friday",
+    "sulu_admin.saturday": "Saturday",
+    "sulu_admin.sunday": "Sunday",
+    "sulu_admin.start": "Start",
+    "sulu_admin.end": "End"
 }

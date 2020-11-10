@@ -25,6 +25,7 @@ import Number from './fields/Number';
 import PasswordConfirmation from './fields/PasswordConfirmation';
 import Phone from './fields/Phone';
 import SingleSelect from './fields/SingleSelect';
+import Schedules from './fields/Schedules';
 import Select from './fields/Select';
 import ResourceLocator from './fields/ResourceLocator';
 import Renderer from './Renderer';
@@ -60,6 +61,7 @@ export {
     Phone,
     Renderer,
     ResourceLocator,
+    Schedules,
     Select,
     SmartContent,
     SingleSelect,
