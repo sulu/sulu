@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\WebsiteBundle;
 
 use Sulu\Bundle\WebsiteBundle\DependencyInjection\Compiler\DeregisterDefaultRouteListenerCompilerPass;
-use Sulu\Bundle\WebsiteBundle\DependencyInjection\Compiler\RouteDefaultOptionsCompilerPass;
+use Sulu\Component\Route\RouteDefaultOptionsCompilerPass;
 use Sulu\Component\Symfony\CompilerPass\TaggedServiceCollectorCompilerPass;
 use Sulu\Component\Util\SuluVersionPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -26,7 +26,9 @@ class SuluWebsiteBundle extends Bundle
 
         $container->addCompilerPass(new SuluVersionPass());
         $container->addCompilerPass(new DeregisterDefaultRouteListenerCompilerPass());
-        $container->addCompilerPass(new RouteDefaultOptionsCompilerPass());
+        $container->addCompilerPass(
+            new RouteDefaultOptionsCompilerPass('sulu_website.provider.content', 7)
+        );
 
         $container->addCompilerPass(
             new TaggedServiceCollectorCompilerPass(

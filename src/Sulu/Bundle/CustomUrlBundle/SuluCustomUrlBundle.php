@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\CustomUrlBundle;
 
-use Sulu\Bundle\CustomUrlBundle\DependencyInjection\RouteDefaultOptionsCompilerPass;
+use Sulu\Component\Route\RouteDefaultOptionsCompilerPass;
 use Symfony\Cmf\Component\Routing\DependencyInjection\Compiler\RegisterRouteEnhancersPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -25,7 +25,9 @@ class SuluCustomUrlBundle extends Bundle
     {
         parent::build($container);
 
-        $container->addCompilerPass(new RouteDefaultOptionsCompilerPass());
+        $container->addCompilerPass(
+            new RouteDefaultOptionsCompilerPass('sulu_custom_urls.routing.provider', 3)
+        );
         $container->addCompilerPass(
             new RegisterRouteEnhancersPass('sulu_custom_urls.routing.router', 'sulu_custom_urls.route_enhancer')
         );

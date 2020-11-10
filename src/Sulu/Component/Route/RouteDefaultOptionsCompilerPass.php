@@ -9,20 +9,40 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\WebsiteBundle\DependencyInjection\Compiler;
+namespace Sulu\Component\Route;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class RouteDefaultOptionsCompilerPass implements CompilerPassInterface
 {
+    /**
+     * @var string
+     */
+    private $targetService;
+
+    /**
+     * @var string
+     */
+    private $targetDefaultOptionsArgument;
+
+    /**
+     * @param string $targetService
+     * @param int $targetDefaultOptionsArgument
+     */
+    public function __construct($targetService, $targetDefaultOptionsArgument)
+    {
+        $this->targetService = $targetService;
+        $this->targetDefaultOptionsArgument = $targetDefaultOptionsArgument;
+    }
+
     public function process(ContainerBuilder $container)
     {
         if (!$container->hasDefinition('routing.loader')) {
             return;
         }
 
-        if (!$container->hasDefinition('sulu_website.provider.content')) {
+        if (!$container->hasDefinition('sulu_custom_urls.routing.provider')) {
             return;
         }
 
@@ -35,8 +55,8 @@ class RouteDefaultOptionsCompilerPass implements CompilerPassInterface
             $routeDefaultOptions = $container->getDefinition('routing.loader')->getArgument(2);
         }
 
-        $container->getDefinition('sulu_website.provider.content')->replaceArgument(
-            7,
+        $container->getDefinition($this->targetService)->replaceArgument(
+            $this->targetDefaultOptionsArgument,
             $routeDefaultOptions
         );
     }
