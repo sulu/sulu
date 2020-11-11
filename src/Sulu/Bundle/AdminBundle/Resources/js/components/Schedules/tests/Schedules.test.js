@@ -30,10 +30,10 @@ test('Change value when a FixedSchedule in the BlockCollection changes', () => {
     const changeSpy = jest.fn();
     const schedules = mount(<Schedules onChange={changeSpy} value={value} />);
 
-    const date = new Date();
+    const date = new Date(2020, 10, 11, 16, 16, 30);
     schedules.find('FixedSchedule Field[label="sulu_admin.start"] DatePicker').prop('onChange')(date);
 
-    expect(changeSpy).toBeCalledWith([{type: 'weekly'}, {type: 'fixed', start: date}]);
+    expect(changeSpy).toBeCalledWith([{type: 'weekly'}, {type: 'fixed', start: '2020-11-11T16:16:30'}]);
 });
 
 test('Change value when a WeeklySchedule in the BlockCollection changes', () => {

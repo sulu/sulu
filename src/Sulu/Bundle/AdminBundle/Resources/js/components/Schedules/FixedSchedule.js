@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import {transformDateToDateTimeString} from '../../utils/Date';
 import {translate} from '../../utils/Translator';
 import DatePicker from '../DatePicker';
 import Form from '../Form';
@@ -14,12 +15,12 @@ type Props = {|
 export default class FixedSchedule extends React.Component<Props> {
     handleStartChange = (start: ?Date) => {
         const {index, onChange, value} = this.props;
-        onChange(index, {...value, start});
+        onChange(index, {...value, start: transformDateToDateTimeString(start)});
     };
 
     handleEndChange = (end: ?Date) => {
         const {index, onChange, value} = this.props;
-        onChange(index, {...value, end});
+        onChange(index, {...value, end: transformDateToDateTimeString(end)});
     };
 
     render() {
@@ -31,14 +32,14 @@ export default class FixedSchedule extends React.Component<Props> {
                     <DatePicker
                         onChange={this.handleStartChange}
                         options={{dateFormat: true, timeFormat: true}}
-                        value={value.start}
+                        value={value.start ? new Date(value.start) : undefined}
                     />
                 </Form.Field>
                 <Form.Field colSpan={6} label={translate('sulu_admin.end')}>
                     <DatePicker
                         onChange={this.handleEndChange}
                         options={{dateFormat: true, timeFormat: true}}
-                        value={value.end}
+                        value={value.end ? new Date(value.end) : undefined}
                     />
                 </Form.Field>
             </Form>

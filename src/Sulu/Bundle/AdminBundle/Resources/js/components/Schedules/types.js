@@ -3,8 +3,8 @@ export type ScheduleType = 'weekly' | 'fixed';
 export type Weekday = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday';
 
 export type FixedScheduleEntry = {|
-    end?: ?Date,
-    start?: ?Date,
+    end?: ?string,
+    start?: ?string,
     type: 'fixed',
 |};
 
