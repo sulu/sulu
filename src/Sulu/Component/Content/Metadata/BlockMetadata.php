@@ -71,4 +71,13 @@ class BlockMetadata extends PropertyMetadata
     {
         $this->components[] = $component;
     }
+
+    public function __clone()
+    {
+        $components = [];
+        foreach ($this->components as $component) {
+            $components[] = clone $component;
+        }
+        $this->components = $components;
+    }
 }

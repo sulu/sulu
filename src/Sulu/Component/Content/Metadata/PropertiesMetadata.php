@@ -113,7 +113,7 @@ class PropertiesMetadata extends ItemMetadata
 
             if ($child instanceof BlockMetadata) {
                 // Clone before removing sections, because the metadata including the sections is required elsewhere
-                $clone = \unserialize(\serialize($child));
+                $clone = clone $child;
                 foreach ($clone->getComponents() as $component) {
                     $componentChildren = [];
                     $componentChildren = \array_merge($componentChildren, $this->removeSectionProperties($component->getChildren()));
