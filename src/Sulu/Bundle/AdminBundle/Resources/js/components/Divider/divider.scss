@@ -1,8 +1,5 @@
 @import '../../containers/Application/colors.scss';
-
-$dividerBackgroundColor: $silver;
-$dividerMargin: 40px;
-$dividerTopMargin: 50px;
+@import './variables.scss';
 
 .divider {
     display: flex;
