@@ -47,7 +47,7 @@ export default class MemoryFormStore extends AbstractFormStore implements FormSt
     }
 
     @action setMultiple(data: Object) {
-        this.data = data;
+        this.data = {...this.data, ...data};
 
         super.setMultiple();
     }
