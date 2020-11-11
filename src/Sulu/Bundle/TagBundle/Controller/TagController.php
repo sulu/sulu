@@ -136,7 +136,8 @@ class TagController extends AbstractRestController implements ClassResourceInter
             $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors('tags');
             $listBuilder = $this->listBuilderFactory->create($this->tagClass);
 
-            $names = \array_filter(\explode(',', $request->get('names', '')));
+            $names = \json_decode($request->get('names-array', '[]'));
+
             if (\count($names) > 0) {
                 $listBuilder->in($fieldDescriptors['name'], $names);
             }
