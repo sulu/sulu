@@ -10,8 +10,8 @@ export type FixedScheduleEntry = {|
 
 export type WeeklyScheduleEntry = {|
     days?: ?Array<Weekday>,
-    end?: ?Date,
-    start?: ?Date,
+    end?: ?string,
+    start?: ?string,
     type: 'weekly',
 |};
 

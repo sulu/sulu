@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import {transformDateToTimeString, transformTimeStringToDate} from '../../utils/Date';
 import {translate} from '../../utils/Translator';
 import DatePicker from '../DatePicker';
 import MultiSelect from '../MultiSelect';
@@ -20,12 +21,12 @@ export default class WeeklySchedule extends React.Component<Props> {
 
     handleStartChange = (start: ?Date) => {
         const {index, onChange, value} = this.props;
-        onChange(index, {...value, start});
+        onChange(index, {...value, start: start ? transformDateToTimeString(start) : undefined});
     };
 
     handleEndChange = (end: ?Date) => {
         const {index, onChange, value} = this.props;
-        onChange(index, {...value, end});
+        onChange(index, {...value, end: end ? transformDateToTimeString(end) : undefined});
     };
 
     render() {
@@ -48,14 +49,14 @@ export default class WeeklySchedule extends React.Component<Props> {
                     <DatePicker
                         onChange={this.handleStartChange}
                         options={{dateFormat: false, timeFormat: true}}
-                        value={value.start}
+                        value={transformTimeStringToDate(value.start)}
                     />
                 </Form.Field>
                 <Form.Field colSpan={6} label={translate('sulu_admin.end')}>
                     <DatePicker
                         onChange={this.handleEndChange}
                         options={{dateFormat: false, timeFormat: true}}
-                        value={value.end}
+                        value={transformTimeStringToDate(value.end)}
                     />
                 </Form.Field>
             </Form>
