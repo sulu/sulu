@@ -112,7 +112,7 @@ class PropertiesMetadata extends ItemMetadata
             }
 
             if ($child instanceof BlockMetadata) {
-                // deep cloning is necessary because the components must only be manipulated for these properties
+                // Clone before removing sections, because the metadata including the sections is required elsewhere
                 $clone = \unserialize(\serialize($child));
                 foreach ($clone->getComponents() as $component) {
                     $componentChildren = [];
