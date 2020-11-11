@@ -1,6 +1,7 @@
 @import '../../components/Grid/variables.scss';
 @import '../../components/Form/variables.scss';
 @import './variables.scss';
+@import '../Divider/variables.scss';
 
 .grid {
     margin-bottom: -$sectionMarginBottom;
@@ -8,6 +9,12 @@
 
 .grid-section {
     margin-bottom: -$fieldMarginBottom;
+
+    &:first-child {
+        .divider-container {
+            margin-top: -$dividerTopMargin;
+        }
+    }
 
     &:last-child {
         margin-bottom: 0;

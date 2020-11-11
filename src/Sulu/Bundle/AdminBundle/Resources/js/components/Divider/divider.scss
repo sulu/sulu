@@ -1,13 +1,10 @@
-@import '../../containers/Application/colors.scss';
-
-$dividerBackgroundColor: $silver;
-$dividerMargin: 40px;
+@import './variables.scss';
 
 .divider {
     display: flex;
     align-items: center;
     font-size: 18px;
-    margin: 50px 0 30px;
+    margin: $dividerTopMargin 0 30px;
 
     &::before,
     &::after {

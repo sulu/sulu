@@ -5,7 +5,7 @@ exports[`Render section with given colSpan 1`] = `
   class="section gridSection colSpan colSpan-12 space-before-0 space-after-0"
 >
   <div
-    class="item colSpan colSpan-12 space-before-0 space-after-0"
+    class="item dividerContainer colSpan colSpan-12 space-before-0 space-after-0"
   >
     <div
       class="divider"
@@ -34,7 +34,7 @@ exports[`Render section without label but with divider 1`] = `
   class="section gridSection colSpan colSpan-12 space-before-0 space-after-0"
 >
   <div
-    class="item colSpan colSpan-12 space-before-0 space-after-0"
+    class="item dividerContainer colSpan colSpan-12 space-before-0 space-after-0"
   >
     <div
       class="divider"

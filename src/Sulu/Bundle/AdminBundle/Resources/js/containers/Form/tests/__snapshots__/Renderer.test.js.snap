@@ -8,7 +8,7 @@ exports[`Should not render fields when the schema contains a visible flag of fal
     class="section gridSection colSpan colSpan-12 space-before-0 space-after-0"
   >
     <div
-      class="item colSpan colSpan-12 space-before-0 space-after-0"
+      class="item dividerContainer colSpan colSpan-12 space-before-0 space-after-0"
     >
       <div
         class="divider"
@@ -204,7 +204,7 @@ exports[`Should render nested sections 1`] = `
     class="section gridSection colSpan colSpan-12 space-before-0 space-after-0"
   >
     <div
-      class="item colSpan colSpan-12 space-before-0 space-after-0"
+      class="item dividerContainer colSpan colSpan-12 space-before-0 space-after-0"
     >
       <div
         class="divider"
@@ -244,7 +244,7 @@ exports[`Should render nested sections 1`] = `
       class="section gridSection colSpan colSpan-12 space-before-0 space-after-0"
     >
       <div
-        class="item colSpan colSpan-12 space-before-0 space-after-0"
+        class="item dividerContainer colSpan colSpan-12 space-before-0 space-after-0"
       >
         <div
           class="divider"
@@ -258,7 +258,7 @@ exports[`Should render nested sections 1`] = `
     class="section gridSection colSpan colSpan-12 space-before-0 space-after-0"
   >
     <div
-      class="item colSpan colSpan-12 space-before-0 space-after-0"
+      class="item dividerContainer colSpan colSpan-12 space-before-0 space-after-0"
     >
       <div
         class="divider"
@@ -306,7 +306,7 @@ exports[`Should render sections with colSpan 1`] = `
     class="section gridSection colSpan colSpan-8 space-before-0 space-after-0"
   >
     <div
-      class="item colSpan colSpan-12 space-before-0 space-after-0"
+      class="item dividerContainer colSpan colSpan-12 space-before-0 space-after-0"
     >
       <div
         class="divider"
@@ -347,7 +347,7 @@ exports[`Should render sections with colSpan 1`] = `
     class="section gridSection colSpan colSpan-4 space-before-0 space-after-0"
   >
     <div
-      class="item colSpan colSpan-12 space-before-0 space-after-0"
+      class="item dividerContainer colSpan colSpan-12 space-before-0 space-after-0"
     >
       <div
         class="divider"
@@ -427,7 +427,7 @@ exports[`Should render sections without label 1`] = `
     class="section gridSection colSpan colSpan-4 space-before-0 space-after-0"
   >
     <div
-      class="item colSpan colSpan-12 space-before-0 space-after-0"
+      class="item dividerContainer colSpan colSpan-12 space-before-0 space-after-0"
     >
       <div
         class="divider"

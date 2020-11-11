@@ -111,6 +111,19 @@ class PropertiesMetadata extends ItemMetadata
                 continue;
             }
 
+            if ($child instanceof BlockMetadata) {
+                // Clone before removing sections, because the metadata including the sections is required elsewhere
+                $clone = clone $child;
+                foreach ($clone->getComponents() as $component) {
+                    $componentChildren = [];
+                    $componentChildren = \array_merge($componentChildren, $this->removeSectionProperties($component->getChildren()));
+                    $component->setChildren($componentChildren);
+                }
+
+                $properties[$clone->getName()] = $clone;
+                continue;
+            }
+
             $properties[$child->getName()] = $child;
         }
 
