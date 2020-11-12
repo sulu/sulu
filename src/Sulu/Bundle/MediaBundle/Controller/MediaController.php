@@ -206,7 +206,12 @@ class MediaController extends AbstractMediaController implements
         return $this->handleView($view);
     }
 
-    public function cgetAction(Request $request): Response
+    /**
+     * Lists all media.
+     *
+     * @return Response
+     */
+    public function cgetAction(Request $request)
     {
         if (null === $this->mediaListRepresentationFactory) {
             $listRepresentation = $this->legacyGetListRepresentation($request);
