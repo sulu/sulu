@@ -14,17 +14,16 @@ namespace Sulu\Bundle\ContactBundle\Controller;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Bundle\ContactBundle\Contact\AbstractContactManager;
-use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
-use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\MediaBundle\Api\Media;
-use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\ListRepresentationFactory\MediaListRepresentationFactory;
 use Sulu\Component\Rest\AbstractRestController;
-use Sulu\Component\Rest\ApiWrapper;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
+use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -188,6 +187,29 @@ abstract class AbstractMediaController extends AbstractRestController
 
             if ('true' === $request->get('flat')) {
                 $fieldDescriptors = $this->mediaListRepresentationFactory->getFieldDescriptors();
+
+                $fieldDescriptors['contactId'] = new DoctrineFieldDescriptor(
+                    'id',
+                    'contactId',
+                    $entityName,
+                    null,
+                    [
+                        $entityName => new DoctrineJoinDescriptor(
+                            $entityName,
+                            $entityName,
+                            $entityName . '.id = :contactId'
+                        ),
+                        static::$mediaEntityKey => new DoctrineJoinDescriptor(
+                            static::$mediaEntityKey,
+                            $entityName . '.medias',
+                            static::$mediaEntityKey . '.id = ' . $this->mediaClass . '.id',
+                            DoctrineJoinDescriptor::JOIN_METHOD_INNER
+                        ),
+                    ],
+                    FieldDescriptorInterface::VISIBILITY_NEVER,
+                    FieldDescriptorInterface::SEARCHABILITY_NEVER
+                );
+
                 $listBuilder = $this->mediaListRepresentationFactory->getListBuilder(
                     $fieldDescriptors,
                     $user,
@@ -196,18 +218,8 @@ abstract class AbstractMediaController extends AbstractRestController
                     null
                 );
 
-                $mediaIds = $this->getMediaIds($contactManager, $contactId, $locale);
-                if (empty($mediaIds)) {
-                    // It's not possible to just omit the `in` clause, if `$mediaIds` is empty,
-                    // because then the ListBuilder would include all medias.
-                    // Setting `$mediaIds` to `[0]` ensures, that the list builder won't match any media.
-                    $mediaIds = [0];
-                }
-
-                $listBuilder->in(
-                    $listBuilder->getFieldDescriptor('id'),
-                    $mediaIds
-                );
+                $listBuilder->setParameter('contactId', $contactId);
+                $listBuilder->where($fieldDescriptors['contactId'], $contactId);
 
                 $listRepresentation = $this->mediaListRepresentationFactory->getListRepresentation(
                     $listBuilder,
@@ -227,23 +239,5 @@ abstract class AbstractMediaController extends AbstractRestController
         }
 
         return $this->handleView($view);
-    }
-
-    /**
-     * @return int[]
-     */
-    protected function getMediaIds(AbstractContactManager $contactManager, int $contactId, string $locale): array
-    {
-        /** @var ApiWrapper $apiEntity */
-        $apiEntity = $contactManager->getById($contactId, $locale);
-        $entity = $apiEntity->getEntity();
-
-        if ($entity instanceof ContactInterface || $entity instanceof AccountInterface) {
-            return $entity->getMedias()->map(function(MediaInterface $media) {
-                return $media->getId();
-            })->toArray();
-        }
-
-        return [];
     }
 }
