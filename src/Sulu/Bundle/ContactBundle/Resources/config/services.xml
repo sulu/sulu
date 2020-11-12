@@ -119,12 +119,10 @@
                  public="true">
             <argument type="service" id="fos_rest.view_handler"/>
             <argument type="service" id="security.token_storage"/>
-            <argument type="service" id="sulu_core.doctrine_rest_helper"/>
-            <argument type="service" id="sulu_core.doctrine_list_builder_factory"/>
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="sulu.repository.media"/>
-            <argument type="service" id="sulu_media.media_manager"/>
             <argument type="service" id="sulu_contact.account_manager"/>
+            <argument type="service" id="sulu_media.media_list_representation_factory"/>
             <argument>%sulu.model.account.class%</argument>
             <argument>%sulu.model.media.class%</argument>
 
@@ -155,12 +153,10 @@
                  public="true">
             <argument type="service" id="fos_rest.view_handler"/>
             <argument type="service" id="security.token_storage"/>
-            <argument type="service" id="sulu_core.doctrine_rest_helper"/>
-            <argument type="service" id="sulu_core.doctrine_list_builder_factory"/>
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="sulu.repository.media"/>
-            <argument type="service" id="sulu_media.media_manager"/>
             <argument type="service" id="sulu_contact.contact_manager"/>
+            <argument type="service" id="sulu_media.media_list_representation_factory"/>
             <argument>%sulu.model.contact.class%</argument>
             <argument>%sulu.model.media.class%</argument>
 

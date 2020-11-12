@@ -17,9 +17,7 @@ use HandcraftedInTheAlps\RestRoutingBundle\Controller\Annotations\RouteResource;
 use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\ContactBundle\Contact\AbstractContactManager;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
-use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
-use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
-use Sulu\Component\Rest\RestHelperInterface;
+use Sulu\Bundle\MediaBundle\Media\ListRepresentationFactory\MediaListRepresentationFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -45,25 +43,22 @@ class AccountMediaController extends AbstractMediaController implements ClassRes
     public function __construct(
         ViewHandlerInterface $viewHandler,
         TokenStorageInterface $tokenStorage,
-        RestHelperInterface $restHelper,
-        DoctrineListBuilderFactoryInterface $listBuilderFactory,
         EntityManagerInterface $entityManager,
         MediaRepositoryInterface $mediaRepository,
-        MediaManagerInterface $mediaManager,
         AbstractContactManager $accountManager,
+        MediaListRepresentationFactory $mediaListRepresentationFactory,
         string $accountClass,
         string $mediaClass
     ) {
         parent::__construct(
             $viewHandler,
             $tokenStorage,
-            $restHelper,
-            $listBuilderFactory,
             $entityManager,
             $mediaRepository,
-            $mediaManager,
+            $mediaListRepresentationFactory,
             $mediaClass
         );
+
         $this->accountManager = $accountManager;
         $this->accountClass = $accountClass;
     }

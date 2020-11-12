@@ -15,24 +15,17 @@ use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
-use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
-use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
+use Sulu\Bundle\MediaBundle\Media\ListRepresentationFactory\MediaListRepresentationFactory;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
-use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
-use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
-use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
-use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
-use Sulu\Component\Rest\ListBuilder\ListRepresentation;
-use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 use Sulu\Component\Rest\RequestParametersTrait;
-use Sulu\Component\Rest\RestHelperInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredObjectControllerInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
@@ -65,21 +58,6 @@ class MediaController extends AbstractMediaController implements
     private $mediaManager;
 
     /**
-     * @var FormatManagerInterface
-     */
-    private $formatManager;
-
-    /**
-     * @var RestHelperInterface
-     */
-    private $restHelper;
-
-    /**
-     * @var DoctrineListBuilderFactoryInterface
-     */
-    private $doctrineListBuilderFactory;
-
-    /**
      * @var EntityManagerInterface
      */
     private $entityManager;
@@ -90,58 +68,38 @@ class MediaController extends AbstractMediaController implements
     private $storage;
 
     /**
-     * @var CollectionRepositoryInterface
-     */
-    private $collectionRepository;
-
-    /**
      * @var SecurityCheckerInterface
      */
     private $securityChecker;
 
     /**
-     * @var FieldDescriptorFactoryInterface
+     * @var MediaListRepresentationFactory
      */
-    private $fieldDescriptorFactory;
+    private $mediaListRepresentationFactory;
 
     /**
      * @var string
      */
     private $mediaClass;
 
-    /**
-     * @var string
-     */
-    private $collectionClass;
-
     public function __construct(
         ViewHandlerInterface $viewHandler,
         TokenStorageInterface $tokenStorage,
         MediaManagerInterface $mediaManager,
-        FormatManagerInterface $formatManager,
-        RestHelperInterface $restHelper,
-        DoctrineListBuilderFactoryInterface $doctrineListBuilderFactory,
         EntityManagerInterface $entityManager,
         StorageInterface $storage,
-        CollectionRepositoryInterface $collectionRepository,
         SecurityCheckerInterface $securityChecker,
-        FieldDescriptorFactoryInterface $fieldDescriptorFactory,
-        string $mediaClass,
-        string $collectionClass
+        MediaListRepresentationFactory $mediaListRepresentationFactory,
+        string $mediaClass
     ) {
         parent::__construct($viewHandler, $tokenStorage);
 
         $this->mediaManager = $mediaManager;
-        $this->formatManager = $formatManager;
-        $this->restHelper = $restHelper;
-        $this->doctrineListBuilderFactory = $doctrineListBuilderFactory;
         $this->entityManager = $entityManager;
         $this->storage = $storage;
-        $this->collectionRepository = $collectionRepository;
         $this->securityChecker = $securityChecker;
-        $this->fieldDescriptorFactory = $fieldDescriptorFactory;
+        $this->mediaListRepresentationFactory = $mediaListRepresentationFactory;
         $this->mediaClass = $mediaClass;
-        $this->collectionClass = $collectionClass;
     }
 
     /**
@@ -190,151 +148,35 @@ class MediaController extends AbstractMediaController implements
         return $this->handleView($view);
     }
 
-    /**
-     * Lists all media.
-     *
-     * @return Response
-     */
-    public function cgetAction(Request $request)
+    public function cgetAction(Request $request): Response
     {
-        $locale = $this->getRequestParameter($request, 'locale', true);
-        $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors('media');
+        /** @var UserInterface $user */
+        $user = $this->getUser();
         $types = \array_filter(\explode(',', $request->get('types')));
-        $listBuilder = $this->getListBuilder($request, $fieldDescriptors, $types);
-        $listBuilder->setParameter('locale', $locale);
-        $listResponse = $listBuilder->execute();
+        $collectionId = $request->get('collection');
+        $collectionId = $collectionId ? (int) $collectionId : null;
+        $locale = $this->getRequestParameter($request, 'locale', true);
 
-        for ($i = 0, $length = \count($listResponse); $i < $length; ++$i) {
-            $format = $this->formatManager->getFormats(
-                $listResponse[$i]['previewImageId'] ?? $listResponse[$i]['id'],
-                $listResponse[$i]['previewImageName'] ?? $listResponse[$i]['name'],
-                $listResponse[$i]['previewImageVersion'] ?? $listResponse[$i]['version'],
-                $listResponse[$i]['previewImageSubVersion'] ?? $listResponse[$i]['subVersion'],
-                $listResponse[$i]['previewImageMimeType'] ?? $listResponse[$i]['mimeType']
-            );
-
-            if (0 < \count($format)) {
-                $listResponse[$i]['thumbnails'] = $format;
-            }
-
-            $listResponse[$i]['url'] = $this->mediaManager->getUrl(
-                $listResponse[$i]['id'],
-                $listResponse[$i]['name'],
-                $listResponse[$i]['version']
-            );
-
-            if ($locale !== $listResponse[$i]['locale']) {
-                $listResponse[$i]['ghostLocale'] = $listResponse[$i]['locale'];
-            }
-        }
-
-        $ids = $listBuilder->getIds();
-        if (null != $ids) {
-            $result = [];
-            foreach ($listResponse as $item) {
-                $result[\array_search($item['id'], $ids)] = $item;
-            }
-            \ksort($result);
-            $listResponse = \array_values($result);
-        }
-
-        $list = new ListRepresentation(
-            $listResponse,
-            self::$entityKey,
-            'sulu_media.cget_media',
-            $request->query->all(),
-            $listBuilder->getCurrentPage(),
-            $listBuilder->getLimit(),
-            $listBuilder->count()
+        $fieldDescriptors = $this->mediaListRepresentationFactory->getFieldDescriptors();
+        $listBuilder = $this->mediaListRepresentationFactory->getListBuilder(
+            $fieldDescriptors,
+            $user,
+            $types,
+            !$request->get('sortBy'),
+            $collectionId
         );
 
-        $view = $this->view($list, 200);
+        $listRepresentation = $this->mediaListRepresentationFactory->getListRepresentation(
+            $listBuilder,
+            $locale,
+            static::$entityKey,
+            'sulu_media.cget_media',
+            $request->query->all()
+        );
+
+        $view = $this->view($listRepresentation, 200);
 
         return $this->handleView($view);
-    }
-
-    /**
-     * Returns a list-builder for media list.
-     *
-     * @param FieldDescriptorInterface[] $fieldDescriptors
-     * @param array $types
-     *
-     * @return DoctrineListBuilder
-     */
-    private function getListBuilder(Request $request, array $fieldDescriptors, $types)
-    {
-        $listBuilder = $this->doctrineListBuilderFactory->create($this->mediaClass);
-        $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
-
-        // default sort by created
-        if (!$request->get('sortBy')) {
-            $listBuilder->sort($fieldDescriptors['created'], 'desc');
-        }
-
-        $collectionId = $request->get('collection');
-        if ($collectionId) {
-            $collectionType = $this->collectionRepository->findCollectionTypeById($collectionId);
-            if (SystemCollectionManagerInterface::COLLECTION_TYPE === $collectionType) {
-                $this->securityChecker->checkPermission(
-                    'sulu.media.system_collections',
-                    PermissionTypes::VIEW
-                );
-            }
-            $listBuilder->addSelectField($fieldDescriptors['collection']);
-            $listBuilder->where($fieldDescriptors['collection'], $collectionId);
-        } else {
-            $listBuilder->addPermissionCheckField($fieldDescriptors['collection']);
-            $listBuilder->setPermissionCheck(
-                $this->getUser(),
-                PermissionTypes::VIEW,
-                $this->collectionClass
-            );
-        }
-
-        // set the types
-        if (\count($types)) {
-            $listBuilder->in($fieldDescriptors['type'], $types);
-        }
-
-        if (!$this->securityChecker->hasPermission('sulu.media.system_collections', PermissionTypes::VIEW)) {
-            $systemCollection = $this->collectionRepository
-                ->findCollectionByKey(SystemCollectionManagerInterface::COLLECTION_KEY);
-
-            $lftExpression = $listBuilder->createWhereExpression(
-                $fieldDescriptors['lft'],
-                $systemCollection->getLft(),
-                ListBuilderInterface::WHERE_COMPARATOR_LESS
-            );
-            $rgtExpression = $listBuilder->createWhereExpression(
-                $fieldDescriptors['rgt'],
-                $systemCollection->getRgt(),
-                ListBuilderInterface::WHERE_COMPARATOR_GREATER
-            );
-
-            $listBuilder->addExpression(
-                $listBuilder->createOrExpression([
-                    $lftExpression,
-                    $rgtExpression,
-                ])
-            );
-        }
-
-        // field which will be needed afterwards to generate route
-        $listBuilder->addSelectField($fieldDescriptors['previewImageId']);
-        $listBuilder->addSelectField($fieldDescriptors['previewImageName']);
-        $listBuilder->addSelectField($fieldDescriptors['previewImageVersion']);
-        $listBuilder->addSelectField($fieldDescriptors['previewImageSubVersion']);
-        $listBuilder->addSelectField($fieldDescriptors['previewImageMimeType']);
-        $listBuilder->addSelectField($fieldDescriptors['version']);
-        $listBuilder->addSelectField($fieldDescriptors['subVersion']);
-        $listBuilder->addSelectField($fieldDescriptors['name']);
-        $listBuilder->addSelectField($fieldDescriptors['locale']);
-        $listBuilder->addSelectField($fieldDescriptors['mimeType']);
-        $listBuilder->addSelectField($fieldDescriptors['storageOptions']);
-        $listBuilder->addSelectField($fieldDescriptors['id']);
-        $listBuilder->addSelectField($fieldDescriptors['collection']);
-
-        return $listBuilder;
     }
 
     /**
