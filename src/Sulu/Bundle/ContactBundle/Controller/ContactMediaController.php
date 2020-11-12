@@ -18,6 +18,9 @@ use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\ContactBundle\Contact\AbstractContactManager;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\ListRepresentationFactory\MediaListRepresentationFactory;
+use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
+use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
+use Sulu\Component\Rest\RestHelperInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -43,22 +46,27 @@ class ContactMediaController extends AbstractMediaController implements ClassRes
     public function __construct(
         ViewHandlerInterface $viewHandler,
         TokenStorageInterface $tokenStorage,
+        RestHelperInterface $restHelper,
+        DoctrineListBuilderFactoryInterface $listBuilderFactory,
         EntityManagerInterface $entityManager,
         MediaRepositoryInterface $mediaRepository,
+        MediaManagerInterface $mediaManager,
         AbstractContactManager $contactManager,
-        MediaListRepresentationFactory $mediaListRepresentationFactory,
         string $contactClass,
-        string $mediaClass
+        string $mediaClass,
+        MediaListRepresentationFactory $mediaListRepresentationFactory = null
     ) {
         parent::__construct(
             $viewHandler,
             $tokenStorage,
+            $restHelper,
+            $listBuilderFactory,
             $entityManager,
             $mediaRepository,
-            $mediaListRepresentationFactory,
-            $mediaClass
+            $mediaManager,
+            $mediaClass,
+            $mediaListRepresentationFactory
         );
-
         $this->contactManager = $contactManager;
         $this->contactClass = $contactClass;
     }
