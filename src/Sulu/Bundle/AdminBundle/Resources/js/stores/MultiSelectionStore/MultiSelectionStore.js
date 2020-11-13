@@ -69,7 +69,6 @@ export default class MultiSelectionStore<T = string | number, U: {id: T} = Objec
             ...this.requestParameters,
             locale: this.locale ? this.locale.get() : undefined,
             [this.idFilterParameter]: itemIds.join(','),
-            [this.idFilterParameter + '-array']: JSON.stringify(itemIds),
             limit: undefined,
             page: 1,
         }).then(action((data) => {
