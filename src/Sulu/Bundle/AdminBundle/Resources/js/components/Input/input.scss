@@ -15,6 +15,7 @@ $iconColor: $dustyGray;
 $iconBorderPadding: 5px;
 $placeholderColor: $dustyGray;
 $backgroundColor: $white;
+$patternDescriptionColor: $persianRed;
 
 $darkInputBorderRadius: 4px;
 $darkInputBorderColor: $doveGray;
@@ -204,4 +205,11 @@ $darkIconColor: $doveGray;
 
 .icon-clickable {
     cursor: pointer;
+}
+
+.pattern-description {
+    display: block;
+    color: $patternDescriptionColor;
+    font-size: 10px;
+    margin-top: 4px;
 }

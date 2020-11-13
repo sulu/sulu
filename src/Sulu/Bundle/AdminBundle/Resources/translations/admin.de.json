@@ -151,5 +151,6 @@
     "sulu_admin.from": "ab",
     "sulu_admin.until": "bis",
     "sulu_admin.external_link": "Externer Link",
-    "sulu_admin.internal_link": "Interner Link"
+    "sulu_admin.internal_link": "Interner Link",
+    "sulu_admin.default_input_pattern_description": "Ihre Eingabe muss das Muster{pattern, select, undefined{} other{ \"/{pattern}/\"}} erfüllen"
 }

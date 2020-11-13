@@ -12,6 +12,13 @@
             </meta>
             <params>
                 <param name="headline" value="true"/>
+                <param name="pattern" value="^[^,]*$"/>
+                <param name="pattern_description">
+                    <meta>
+                        <title lang="en">Tags may not contain commas</title>
+                        <title lang="de">Tags dürfen keine Beistriche enthalten</title>
+                    </meta>
+                </param>
             </params>
         </property>
     </properties>

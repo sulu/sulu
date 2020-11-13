@@ -27,6 +27,12 @@ export default class Input extends React.Component<FieldTypeProps<?string>> {
                 segment_delimiter: {
                     value: segmentDelimiter,
                 } = {},
+                pattern: {
+                    value: pattern,
+                } = {},
+                pattern_description: {
+                    title: patternDescription,
+                } = {},
             } = {},
             value,
         } = this.props;
@@ -47,6 +53,14 @@ export default class Input extends React.Component<FieldTypeProps<?string>> {
             throw new Error('The "segment_delimiter" schema option must be a string!');
         }
 
+        if (pattern !== undefined && typeof pattern !== 'string') {
+            throw new Error('The "pattern" schema option must be a string!');
+        }
+
+        if (patternDescription !== undefined && typeof patternDescription !== 'string') {
+            throw new Error('The "pattern_description" schema option must be a string!');
+        }
+
         return (
             <InputComponent
                 disabled={!!disabled}
@@ -56,6 +70,8 @@ export default class Input extends React.Component<FieldTypeProps<?string>> {
                 maxSegments={maxSegments ? parseInt(maxSegments) : undefined}
                 onBlur={this.handleBlur}
                 onChange={onChange}
+                pattern={pattern}
+                patternDescription={patternDescription}
                 segmentDelimiter={segmentDelimiter}
                 valid={!error}
                 value={value}

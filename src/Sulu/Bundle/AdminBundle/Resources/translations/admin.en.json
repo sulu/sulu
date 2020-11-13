@@ -151,5 +151,6 @@
     "sulu_admin.from": "from",
     "sulu_admin.until": "until",
     "sulu_admin.external_link": "External Link",
-    "sulu_admin.internal_link": "Internal Link"
+    "sulu_admin.internal_link": "Internal Link",
+    "sulu_admin.default_input_pattern_description": "Your input has to fulfill the pattern{pattern, select, undefined{} other{ \"/{pattern}/\"}}"
 }

@@ -18,6 +18,8 @@ use Sulu\Component\Persistence\Model\AuditableInterface;
  */
 interface TagInterface extends AuditableInterface
 {
+    public const PATTERN = '/^[^,]*$/';
+
     /**
      * Set name.
      *

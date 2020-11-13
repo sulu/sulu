@@ -211,6 +211,17 @@ class TagControllerTest extends SuluTestCase
         $this->assertEquals('name', $response->field);
     }
 
+    public function testPostInvalidName()
+    {
+        $this->client->request(
+            'POST',
+            '/api/tags',
+            ['name' => 'hello, world']
+        );
+
+        $this->assertHttpStatusCode(500, $this->client->getResponse());
+    }
+
     public function testPut()
     {
         $tag = $this->createTag('tag1');

@@ -1,7 +1,10 @@
 // @flow
 import React, {Fragment} from 'react';
 import type {ElementRef} from 'react';
+import {computed} from 'mobx';
+import {observer} from 'mobx-react';
 import classNames from 'classnames';
+import {translate} from '../../utils/Translator';
 import CharacterCounter from '../CharacterCounter';
 import Icon from '../Icon';
 import Loader from '../Loader';
@@ -11,7 +14,8 @@ import type {InputProps} from './types';
 
 const LOADER_SIZE = 20;
 
-export default class Input<T: ?string | ?number> extends React.PureComponent<InputProps<T>> {
+@observer
+export default class Input<T: ?string | ?number> extends React.Component<InputProps<T>> {
     static defaultProps = {
         alignment: 'left',
         collapsed: false,
@@ -20,6 +24,24 @@ export default class Input<T: ?string | ?number> extends React.PureComponent<Inp
         type: 'text',
         valid: true,
     };
+
+    @computed get patternFulfilled() {
+        const {pattern, value} = this.props;
+
+        if (pattern && value && typeof value === 'string') {
+            const regexp = new RegExp(pattern);
+
+            return regexp.test(value);
+        }
+
+        return true;
+    }
+
+    @computed get valid() {
+        const {valid} = this.props;
+
+        return valid && this.patternFulfilled;
+    }
 
     setInputRef = (ref: ?ElementRef<'input'>) => {
         const {inputRef} = this.props;
@@ -60,7 +82,6 @@ export default class Input<T: ?string | ?number> extends React.PureComponent<Inp
             headline,
             id,
             inputClass,
-            valid,
             disabled,
             icon,
             loading,
@@ -68,6 +89,8 @@ export default class Input<T: ?string | ?number> extends React.PureComponent<Inp
             maxCharacters,
             maxSegments,
             name,
+            pattern,
+            patternDescription,
             placeholder,
             onBlur,
             onIconClick,
@@ -92,7 +115,7 @@ export default class Input<T: ?string | ?number> extends React.PureComponent<Inp
             inputStyles[skin],
             inputStyles[alignment],
             {
-                [inputStyles.error]: !valid,
+                [inputStyles.error]: !this.valid,
                 [inputStyles.disabled]: disabled,
                 [inputStyles.collapsed]: collapsed,
                 [inputStyles.hasAppendIcon]: onClearClick,
@@ -153,6 +176,7 @@ export default class Input<T: ?string | ?number> extends React.PureComponent<Inp
                         onBlur={onBlur}
                         onChange={this.handleChange}
                         onKeyPress={onKeyPress ? this.handleKeyPress : undefined}
+                        pattern={pattern}
                         placeholder={placeholder}
                         ref={inputRef ? this.setInputRef : undefined}
                         step={step}
@@ -180,6 +204,14 @@ export default class Input<T: ?string | ?number> extends React.PureComponent<Inp
                         max={maxSegments}
                         value={value ? value.toString() : undefined}
                     />
+                }
+                {!this.patternFulfilled &&
+                    <label className={inputStyles.patternDescription}>
+                        {patternDescription || translate(
+                            'sulu_admin.default_input_pattern_description',
+                            {pattern: String(pattern)}
+                        )}
+                    </label>
                 }
             </Fragment>
         );

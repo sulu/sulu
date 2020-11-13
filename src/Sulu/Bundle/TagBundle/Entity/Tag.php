@@ -13,6 +13,7 @@ namespace Sulu\Bundle\TagBundle\Entity;
 
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
+use Sulu\Bundle\TagBundle\Exception\InvalidTagNameException;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 
@@ -58,6 +59,10 @@ class Tag implements TagInterface
 
     public function setName($name)
     {
+        if (!\preg_match(static::PATTERN, $name)) {
+            throw new InvalidTagNameException($name);
+        }
+
         $this->name = $name;
 
         return $this;

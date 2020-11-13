@@ -26,6 +26,8 @@ export type InputProps<T: ?string | ?number> = {|
     onClearClick?: () => void,
     onIconClick?: () => void,
     onKeyPress?: (key: ?string, event: SyntheticKeyboardEvent<HTMLInputElement>) => void,
+    pattern?: string,
+    patternDescription?: string,
     placeholder?: string,
     segmentDelimiter?: string,
     skin?: 'default' | 'dark',
