@@ -17,7 +17,6 @@ use FOS\RestBundle\View\ViewHandlerInterface;
 use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\TagBundle\Admin\TagAdmin;
 use Sulu\Bundle\TagBundle\Controller\Exception\ConstraintViolationException;
-use Sulu\Bundle\TagBundle\Exception\InvalidTagNameException;
 use Sulu\Bundle\TagBundle\Tag\Exception\TagAlreadyExistsException;
 use Sulu\Bundle\TagBundle\Tag\Exception\TagNotFoundException;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;

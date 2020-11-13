@@ -15,7 +15,7 @@ import type {InputProps} from './types';
 const LOADER_SIZE = 20;
 
 @observer
-export default class Input<T: ?string | ?number> extends React.Component<InputProps<T>> {
+class Input<T: ?string | ?number> extends React.Component<InputProps<T>> {
     static defaultProps = {
         alignment: 'left',
         collapsed: false,
@@ -217,3 +217,5 @@ export default class Input<T: ?string | ?number> extends React.Component<InputPr
         );
     }
 }
+
+export default Input;
