@@ -144,7 +144,9 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
     /**
      * Returns a collection of relations to get addresses.
      *
-     * @param $entity
+     * @param AddressEntity $entity
+     *
+     * @return Array
      */
     public function getAddressRelations($entity)
     {
@@ -262,7 +264,7 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
      * Sets the medias of the given account to the given medias.
      * Currently associated medias are replaced.
      *
-     * @param $mediaIds
+     * @param array $mediaIds
      *
      * @throws EntityNotFoundException
      */

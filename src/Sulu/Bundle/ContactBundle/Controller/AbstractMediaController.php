@@ -242,7 +242,7 @@ abstract class AbstractMediaController extends AbstractRestController
     /**
      * Returns the field-descriptors. Ensures that the descriptors get only instantiated once.
      *
-     * @param $entityName
+     * @param string $entityName
      *
      * @return DoctrineFieldDescriptor[]
      */
@@ -258,7 +258,7 @@ abstract class AbstractMediaController extends AbstractRestController
     /**
      * Creates the array of field-descriptors.
      *
-     * @param $entityName
+     * @param string $entityName
      */
     private function initFieldDescriptors($entityName, $id)
     {

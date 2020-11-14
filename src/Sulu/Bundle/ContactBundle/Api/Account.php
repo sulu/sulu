@@ -768,6 +768,8 @@ class Account extends ApiWrapper
         if ($this->entity->getMainContact()) {
             return new Contact($this->entity->getMainContact(), $this->locale);
         }
+
+        return $this;
     }
 
     /**

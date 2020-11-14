@@ -761,6 +761,8 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     public function addMedia(MediaInterface $media)
     {
         $this->medias[] = $media;
+
+        return $this;
     }
 
     public function removeMedia(MediaInterface $media)

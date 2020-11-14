@@ -237,7 +237,7 @@ class Contact extends ApiWrapper
     /**
      * Sets current position.
      *
-     * @param $position
+     * @param string $position
      */
     public function setCurrentPosition($position)
     {
@@ -1056,6 +1056,8 @@ class Contact extends ApiWrapper
     public function addMedia(MediaInterface $media)
     {
         $this->entity->addMedia($media);
+
+        return $this;
     }
 
     /**

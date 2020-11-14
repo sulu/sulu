@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\ContactBundle\Contact;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Persistence\ObjectManager;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\ContactBundle\Entity\AccountAddress;
@@ -100,7 +101,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * unsets main of all elements of an ArrayCollection | PersistanceCollection.
      *
-     * @param $arrayCollection
+     * @param array $arrayCollection
      *
      * @return bool returns true if a element was unset
      */
@@ -124,7 +125,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * sets the first element to main, if none is set.
      *
-     * @param $arrayCollection
+     * @param ArrayCollection $arrayCollection
      */
     public function setMainForCollection($arrayCollection)
     {
@@ -136,8 +137,10 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * checks if a collection for main attribute.
      *
-     * @param $arrayCollection
-     * @param $mainEntity will be set, if found
+     * @param ArrayCollection $arrayCollection
+     * @param ContactInterface $mainEntity will be set, if found
+     *
+     * @return bool
      */
     private function hasMain($arrayCollection, &$mainEntity = null)
     {
@@ -253,7 +256,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * creates a new main Account Contacts relation.
      *
-     * @param $position
+     * @param Postion $position
      *
      * @return AccountContact
      */
@@ -421,7 +424,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * deletes all addresses that are assigned to entity.
      *
-     * @param $entity
+     * @param AccountInterface $entity
      */
     public function deleteAddresses($entity)
     {
@@ -437,7 +440,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * deletes all emails that are assigned to entity.
      *
-     * @param $entity
+     * @param AccountInterface $entity
      */
     public function deleteEmails($entity)
     {
@@ -447,7 +450,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     }
 
     /**
-     * @param $arrayCollection
+     * @param ArrayCollection $arrayCollection
      */
     protected function deleteAllEntitiesOfCollection($arrayCollection)
     {
@@ -493,8 +496,8 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * checks if an account is employee of a company.
      *
-     * @param $contact
-     * @param $account
+     * @param ContactInterface $contact
+     * @param AccountInterface $account
      *
      * @return bool
      */
@@ -653,8 +656,8 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * Process all emails from request.
      *
-     * @param $contact The contact on which is worked
-     * @param $emails
+     * @param ContactInterface $contact The contact on which is worked
+     * @param array $emails
      *
      * @return bool True if the processing was successful, otherwise false
      */
@@ -764,7 +767,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * Process all urls of request.
      *
-     * @param $contact The contact to be processed
+     * @param ContactInterface $contact The contact to be processed
      * @param array $urls
      *
      * @return bool True if the processing was successful, otherwise false
@@ -811,7 +814,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * Process all categories of request.
      *
-     * @param $contact - the contact which is processed
+     * @param ContactInterface $contact - the contact which is processed
      *
      * @return bool True if the processing was successful, otherwise false
      */
@@ -837,7 +840,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     }
 
     /**
-     * @param $entry
+     * @param array $entry
      *
      * @return bool
      *
@@ -865,8 +868,8 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * Adds a new tag to the given contact.
      *
-     * @param $contact
-     * @param $data
+     * @param ContactInterface $contact
+     * @param array $data
      *
      * @return bool
      *
@@ -899,8 +902,8 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * Process all phones from request.
      *
-     * @param $contact The contact on which is processed
-     * @param $phones
+     * @param ContactInterface $contact The contact on which is processed
+     * @param array $phones
      *
      * @return bool True if the processing was successful, otherwise false
      */
@@ -946,7 +949,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * Add a new phone to the given contact and persist it with the given object manager.
      *
-     * @param $contact
+     * @param ContactInterface $contact
      * @param array $phoneData
      *
      * @throws EntityNotFoundException
@@ -981,7 +984,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
      * Updates the given phone.
      *
      * @param Phone $phone The phone object to update
-     * @param $entry The entry with the new data
+     * @param array<string, string> $entry The entry with the new data
      *
      * @throws EntityNotFoundException
      *
@@ -1006,7 +1009,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     }
 
     /**
-     * @param $contact
+     * @param ContactInterface $contact
      * @param array $faxes
      *
      * @return bool
@@ -1055,7 +1058,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     }
 
     /**
-     * @param $contact
+     * @param ContactInterface $contact
      * @param array $faxData
      *
      * @throws \Sulu\Component\Rest\Exception\EntityIdAlreadySetException
@@ -1083,7 +1086,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     }
 
     /**
-     * @param $entry
+     * @param array<string, string> $entry
      *
      * @throws EntityNotFoundException
      *
@@ -1214,7 +1217,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
      * Creates an address based on the data passed.
      *
      * @param array $addressData
-     * @param $isMain returns if address is main address
+     * @param bool $isMain returns if address is main address
      *
      * @throws \Sulu\Component\Rest\Exception\EntityIdAlreadySetException
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
@@ -1264,11 +1267,12 @@ abstract class AbstractContactManager implements ContactManagerInterface
             if (isset($addressData['title'])) {
                 $address->setTitle($addressData['title']);
             }
+
+            $isMain = false;
             if (isset($addressData['primaryAddress'])) {
                 $isMain = $this->getBooleanValue($addressData['primaryAddress']);
-            } else {
-                $isMain = false;
             }
+
             if (isset($addressData['billingAddress'])) {
                 $address->setBillingAddress($this->getBooleanValue($addressData['billingAddress']));
             }
@@ -1384,7 +1388,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * Checks if a value is a boolean and converts it if necessary and returns it.
      *
-     * @param $value
+     * @param mixed $value
      *
      * @return bool
      */
@@ -1403,7 +1407,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
      * Process all notes from request.
      *
      * @param Contact $contact The contact on which is worked
-     * @param $notes
+     * @param array $notes
      *
      * @return bool True if the processing was successful, otherwise false
      */
@@ -1446,7 +1450,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * Add a new note to the given contact and persist it with the given object manager.
      *
-     * @param $contact
+     * @param ContactInterface $contact
      * @param array $noteData
      *
      * @return bool True if there was no error, otherwise false
@@ -1489,7 +1493,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * Process all tags of request.
      *
-     * @param $contact The contact on which is worked
+     * @param ContactInterface $contact The contact on which is worked
      * @param array $tags
      *
      * @return bool True if the processing was successful, otherwise false
@@ -1531,8 +1535,8 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * Adds a new tag to the given contact and persist it with the given object manager.
      *
-     * @param $contact
-     * @param $data
+     * @param ContactInterface $contact
+     * @param string $data
      *
      * @return bool True if there was no error, otherwise false
      */
@@ -1548,8 +1552,8 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * Process all bankAccounts of a request.
      *
-     * @param $contact
-     * @param $bankAccounts
+     * @param ContactInterface $contact
+     * @param array $bankAccounts
      *
      * @return bool True if the processing was sucessful, otherwise false
      */
@@ -1592,33 +1596,33 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * Add a new note to the given contact and persist it with the given object manager.
      *
-     * @param $contact
-     * @param $data
+     * @param ContactInterface $contact
+     * @param array $data
      *
      * @return bool
      *
      * @throws EntityIdAlreadySetException
      */
-    protected function addBankAccount($contact, $data)
+    protected function addBankAccount($contact, $data = null)
     {
         $entityName = 'SuluContactBundle:BankAccount';
 
         if (isset($data['id'])) {
             throw new EntityIdAlreadySetException($entityName, $data['id']);
-        } else {
-            $entity = new BankAccount();
-            if (isset($data['bic'])) {
-                $entity->setBic($data['bic']);
-            }
-            $entity->setIban($data['iban']);
-            $entity->setPublic($this->getBooleanValue((\array_key_exists('public', $data) ? $data['public'] : false)));
-            if (isset($data['bankName'])) {
-                $entity->setBankName($data['bankName']);
-            }
-
-            $this->em->persist($entity);
-            $contact->addBankAccount($entity);
         }
+
+        $entity = new BankAccount();
+        if (isset($data['bic'])) {
+            $entity->setBic($data['bic']);
+        }
+        $entity->setIban($data['iban']);
+        $entity->setPublic($this->getBooleanValue((\array_key_exists('public', $data) ? $data['public'] : false)));
+        if (isset($data['bankName'])) {
+            $entity->setBankName($data['bankName']);
+        }
+
+        $this->em->persist($entity);
+        $contact->addBankAccount($entity);
 
         return true;
     }
@@ -1650,7 +1654,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * Process all addresses from request.
      *
-     * @param $contact The contact on which is worked
+     * @param ContactInterface $contact The contact on which is worked
      * @param array $addresses
      *
      * @return bool True if the processing was sucessful, otherwise false
@@ -1705,9 +1709,9 @@ abstract class AbstractContactManager implements ContactManagerInterface
     }
 
     /**
-     * sets main address.
+     * Sets main address.
      *
-     * @param $addresses
+     * @param ArrayCollection $addresses
      */
     protected function checkAndSetMainAddress($addresses)
     {
