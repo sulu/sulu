@@ -25,7 +25,7 @@ interface ContactManagerInterface
      * @param Address $address The address to be added
      * @param bool $isMain Defines if the address is the main Address of the contact
      *
-     * @return Array $relation
+     * @return array $relation
      */
     public function addAddress($entity, Address $address, $isMain);
 
