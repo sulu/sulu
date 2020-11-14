@@ -146,7 +146,7 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
      *
      * @param AddressEntity $entity
      *
-     * @return Array
+     * @return array
      */
     public function getAddressRelations($entity)
     {
