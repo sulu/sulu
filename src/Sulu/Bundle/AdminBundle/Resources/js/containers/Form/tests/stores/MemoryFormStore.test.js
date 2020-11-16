@@ -384,6 +384,16 @@ test('Set nested value', () => {
     memoryFormStore.destroy();
 });
 
+test('Set multiple values', () => {
+    const memoryFormStore = new MemoryFormStore({}, {});
+
+    memoryFormStore.setMultiple({key1: 'value1', key2: 'value2'});
+    memoryFormStore.setMultiple({key2: 'newValue2', key3: 'value3'});
+
+    expect(memoryFormStore.data).toEqual({key1: 'value1', key2: 'newValue2', key3: 'value3'});
+    memoryFormStore.destroy();
+});
+
 test('Loading flag should always be false', () => {
     const memoryFormStore = new MemoryFormStore({}, {});
     expect(memoryFormStore.loading).toEqual(false);
