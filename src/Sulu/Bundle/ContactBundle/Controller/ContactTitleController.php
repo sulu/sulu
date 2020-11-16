@@ -55,7 +55,7 @@ class ContactTitleController extends AbstractRestController implements ClassReso
     /**
      * Shows a single contact title for the given id.
      *
-     * @param int|string $id
+     * @param int $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -185,7 +185,7 @@ class ContactTitleController extends AbstractRestController implements ClassReso
     /**
      * Delete a contact title for the given id.
      *
-     * @param int|string $id
+     * @param int $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */

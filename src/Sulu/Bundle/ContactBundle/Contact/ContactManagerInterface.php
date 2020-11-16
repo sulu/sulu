@@ -21,7 +21,7 @@ interface ContactManagerInterface
     /**
      * adds an address to the entity.
      *
-     * @param ContactInterface $entity The entity to add the address to
+     * @param string $entity The entity to add the address to
      * @param Address $address The address to be added
      * @param bool $isMain Defines if the address is the main Address of the contact
      *
@@ -32,7 +32,7 @@ interface ContactManagerInterface
     /**
      * removes the address relation from a contact and also deletes the address if it has no more relations.
      *
-     * @param ContactInterface $entity
+     * @param string $entity
      * @param Address $address
      */
     public function removeAddressRelation($entity, $address);

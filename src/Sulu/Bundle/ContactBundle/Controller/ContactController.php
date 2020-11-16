@@ -450,7 +450,7 @@ class ContactController extends AbstractRestController implements ClassResourceI
     /**
      * Partially update an existing contact.
      *
-     * @param int|string $id
+     * @param int $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */

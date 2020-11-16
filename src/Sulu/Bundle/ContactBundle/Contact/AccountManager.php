@@ -144,7 +144,7 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
     /**
      * Returns a collection of relations to get addresses.
      *
-     * @param AddressEntity $entity
+     * @param AccountInterface $entity
      *
      * @return array
      */

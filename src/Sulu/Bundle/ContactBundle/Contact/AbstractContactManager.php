@@ -101,7 +101,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * unsets main of all elements of an ArrayCollection | PersistanceCollection.
      *
-     * @param array $arrayCollection
+     * @param ArrayCollection $arrayCollection
      *
      * @return bool returns true if a element was unset
      */
@@ -138,7 +138,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
      * checks if a collection for main attribute.
      *
      * @param ArrayCollection $arrayCollection
-     * @param ContactInterface $mainEntity will be set, if found
+     * @param mixed $mainEntity will be set, if found
      *
      * @return bool
      */
@@ -984,7 +984,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
      * Updates the given phone.
      *
      * @param Phone $phone The phone object to update
-     * @param array<string, string> $entry The entry with the new data
+     * @param array $entry The entry with the new data
      *
      * @throws EntityNotFoundException
      *

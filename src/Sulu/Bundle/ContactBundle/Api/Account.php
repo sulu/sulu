@@ -769,7 +769,7 @@ class Account extends ApiWrapper
             return new Contact($this->entity->getMainContact(), $this->locale);
         }
 
-        return $this;
+        return null;
     }
 
     /**
