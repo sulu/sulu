@@ -182,7 +182,8 @@ class MultiSelection extends React.Component<Props> {
                                 value={item}
                             >
                                 <div className={multiSelectionStyles.itemContainer}>
-                                    {(publishedState !== undefined || published !== undefined) && !(publishedState && published) &&
+                                    {(publishedState !== undefined || published !== undefined) &&
+                                    !(publishedState && published) &&
                                         <div className={multiSelectionStyles.publishIndicator}>
                                             <PublishIndicator
                                                 draft={!publishedState}
