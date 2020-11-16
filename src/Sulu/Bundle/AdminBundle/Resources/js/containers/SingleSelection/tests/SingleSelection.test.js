@@ -568,3 +568,95 @@ test('Pass correct allowRemoveWhileItemDisabled prop to SingleItemSelection comp
 
     expect(singleSelection.find(SingleItemSelection).prop('allowRemoveWhileItemDisabled')).toEqual(true);
 });
+
+test('PublishIndicator should not be rendered if not necessary', () => {
+    const locale = observable.box('en');
+    const singleSelection = mount(
+        <SingleSelection
+            adapter="table"
+            disabledIds={[]}
+            displayProperties={['name']}
+            emptyText="Nothing"
+            icon="su-test"
+            listKey="test"
+            locale={locale}
+            onChange={jest.fn()}
+            overlayTitle="Test"
+            resourceKey="test"
+            value={1}
+        />
+    );
+
+    singleSelection.instance().singleSelectionStore.item = {
+        id: 1,
+        name: 'Name',
+        published: '2020-11-16',
+        publishedState: true,
+    };
+
+    singleSelection.update();
+
+    expect(singleSelection.contains('PublishIndicator')).toBe(false);
+});
+
+test('PublishIndicator should be rendered as draft if necessary', () => {
+    const locale = observable.box('en');
+    const singleSelection = mount(
+        <SingleSelection
+            adapter="table"
+            disabledIds={[]}
+            displayProperties={['name']}
+            emptyText="Nothing"
+            icon="su-test"
+            listKey="test"
+            locale={locale}
+            onChange={jest.fn()}
+            overlayTitle="Test"
+            resourceKey="test"
+            value={1}
+        />
+    );
+
+    singleSelection.instance().singleSelectionStore.item = {
+        id: 1,
+        name: 'Name',
+        published: '2020-11-16',
+        publishedState: false,
+    };
+
+    singleSelection.update();
+
+    expect(singleSelection.find('PublishIndicator').prop('draft')).toBe(true);
+    expect(singleSelection.find('PublishIndicator').prop('published')).toBe(true);
+});
+
+test('PublishIndicator should be rendered as unpublished if necessary', () => {
+    const locale = observable.box('en');
+    const singleSelection = mount(
+        <SingleSelection
+            adapter="table"
+            disabledIds={[]}
+            displayProperties={['name']}
+            emptyText="Nothing"
+            icon="su-test"
+            listKey="test"
+            locale={locale}
+            onChange={jest.fn()}
+            overlayTitle="Test"
+            resourceKey="test"
+            value={1}
+        />
+    );
+
+    singleSelection.instance().singleSelectionStore.item = {
+        id: 1,
+        name: 'Name',
+        published: null,
+        publishedState: false,
+    };
+
+    singleSelection.update();
+
+    expect(singleSelection.find('PublishIndicator').prop('draft')).toBe(true);
+    expect(singleSelection.find('PublishIndicator').prop('published')).toBe(false);
+});
