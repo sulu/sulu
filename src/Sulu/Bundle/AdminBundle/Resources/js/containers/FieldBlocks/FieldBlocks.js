@@ -235,7 +235,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
 
     removeSections(blockSchemaTypeForm: Object) {
         let filteredForm = {};
-        Object.keys(blockSchemaTypeForm).map((key) => {
+        Object.keys(blockSchemaTypeForm).forEach((key) => {
             if (blockSchemaTypeForm[key]['type'] === 'section') {
                 filteredForm = {...filteredForm, ...this.removeSections(blockSchemaTypeForm[key]['items'])};
                 return false;
