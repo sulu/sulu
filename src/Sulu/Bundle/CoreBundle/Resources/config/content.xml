@@ -164,8 +164,31 @@
             <argument>%sulu.content.language.namespace%</argument>
             <argument type="service" id="sulu_core.webspace.request_analyzer" />
             <argument type="service" id="sulu_audience_targeting.target_group_store" on-invalid="null" />
+            <argument type="tagged" tag="sulu_content.block_skipper" />
             <tag name="sulu.content.type" alias="block"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
+        </service>
+
+        <service
+            id="sulu.content.type.block.hidden_skipper"
+            class="Sulu\Component\Content\Types\Block\HiddenBlockSkipper"
+        >
+            <tag name="sulu_content.block_skipper" />
+        </service>
+
+        <service
+            id="sulu.content.type.block.segment_skipper"
+            class="Sulu\Component\Content\Types\Block\SegmentBlockSkipper"
+        >
+            <argument type="service" id="sulu_core.webspace.request_analyzer" />
+            <tag name="sulu_content.block_skipper" />
+        </service>
+
+        <service
+            id="sulu.content.type.block.schedule_skipper"
+            class="Sulu\Component\Content\Types\Block\ScheduleBlockSkipper"
+        >
+            <tag name="sulu_content.block_skipper" />
         </service>
 
         <!-- content query -->

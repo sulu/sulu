@@ -24,6 +24,7 @@ use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Document\Subscriber\PHPCR\SuluNode;
 use Sulu\Component\Content\Exception\UnexpectedPropertyType;
 use Sulu\Component\Content\PreResolvableContentTypeInterface;
+use Sulu\Component\Content\Types\Block\BlockSkipperInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
 /**
@@ -43,24 +44,35 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
 
     /**
      * @var RequestAnalyzerInterface
+     *
+     * @deprecated This property is not needed anymore and will be removed in Sulu 3.0
      */
     private $requestAnalyzer;
 
     /**
      * @var ?TargetGroupStoreInterface
+     *
+     * @deprecated This property is not needed anymore and will be removed in Sulu 3.0
      */
     private $targetGroupStore;
+
+    /**
+     * @var BlockSkipperInterface[]
+     */
+    private $blockSkippers;
 
     public function __construct(
         ContentTypeManagerInterface $contentTypeManager,
         $languageNamespace,
         RequestAnalyzerInterface $requestAnalyzer,
-        TargetGroupStoreInterface $targetGroupStore = null
+        TargetGroupStoreInterface $targetGroupStore = null,
+        iterable $blockSkippers = []
     ) {
         $this->contentTypeManager = $contentTypeManager;
         $this->languageNamespace = $languageNamespace;
         $this->requestAnalyzer = $requestAnalyzer;
         $this->targetGroupStore = $targetGroupStore;
+        $this->blockSkippers = $blockSkippers;
     }
 
     public function read(
@@ -374,32 +386,9 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
             $blockPropertyType = $blockProperty->getProperties($i);
             $blockPropertyTypeSettings = $blockPropertyType->getSettings();
 
-            if (
-                \is_array($blockPropertyTypeSettings)
-                && !empty($blockPropertyTypeSettings['hidden'])
-            ) {
-                continue;
-            }
-
-            if (\is_array($blockPropertyTypeSettings)) {
-                $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
-                $segment = $this->requestAnalyzer->getSegment();
-                if (isset($blockPropertyTypeSettings['segment_enabled'])
-                    && $blockPropertyTypeSettings['segment_enabled']
-                    && isset($blockPropertyTypeSettings['segments'][$webspaceKey])
-                    && $segment
-                    && $blockPropertyTypeSettings['segments'][$webspaceKey] !== $segment->getKey()
-                ) {
-                    continue;
-                }
-
-                if (isset($blockPropertyTypeSettings['target_groups_enabled'])
-                    && $blockPropertyTypeSettings['target_groups_enabled']
-                    && isset($blockPropertyTypeSettings['target_groups'])
-                    && $this->targetGroupStore
-                    && !\in_array($this->targetGroupStore->getTargetGroupId(), $blockPropertyTypeSettings['target_groups'])
-                ) {
-                    continue;
+            foreach ($this->blockSkippers as $blockSkipper) {
+                if ($blockSkipper->shouldSkip($blockPropertyType)) {
+                    continue 2;
                 }
             }
 

@@ -146,5 +146,13 @@
         <service id="sulu_audience_targeting.target_group_store"
                  class="Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStore" public="true">
         </service>
+
+        <service
+            id="sulu_audience_targeting.target_group_block_skipper"
+            class="Sulu\Bundle\AudienceTargetingBundle\Content\Types\Block\TargetGroupBlockSkipper"
+        >
+            <argument type="service" id="sulu_audience_targeting.target_group_store"/>
+            <tag name="sulu_content.block_skipper" />
+        </service>
     </services>
 </container>
