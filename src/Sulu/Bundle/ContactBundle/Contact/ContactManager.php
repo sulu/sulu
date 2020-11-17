@@ -34,6 +34,9 @@ use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 
+/**
+ * @extends AbstractContactManager<ContactInterface, ContactApi, ContactAddress>
+ */
 class ContactManager extends AbstractContactManager implements DataProviderRepositoryInterface
 {
     /**

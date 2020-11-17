@@ -29,6 +29,8 @@ use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 
 /**
  * This Manager handles Account functionality.
+ *
+ * @extends AbstractContactManager<AccountInterface, AccountApi, AccountAddressEntity>
  */
 class AccountManager extends AbstractContactManager implements DataProviderRepositoryInterface
 {

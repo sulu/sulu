@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\ContactBundle\Contact;
 
-use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Persistence\ObjectManager;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\ContactBundle\Entity\AccountAddress;
@@ -20,7 +20,6 @@ use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\AddressType;
 use Sulu\Bundle\ContactBundle\Entity\BankAccount;
-use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\EmailType;
@@ -29,6 +28,7 @@ use Sulu\Bundle\ContactBundle\Entity\FaxType;
 use Sulu\Bundle\ContactBundle\Entity\Note;
 use Sulu\Bundle\ContactBundle\Entity\Phone;
 use Sulu\Bundle\ContactBundle\Entity\PhoneType;
+use Sulu\Bundle\ContactBundle\Entity\Position;
 use Sulu\Bundle\ContactBundle\Entity\SocialMediaProfile;
 use Sulu\Bundle\ContactBundle\Entity\SocialMediaProfileType;
 use Sulu\Bundle\ContactBundle\Entity\Url;
@@ -45,6 +45,12 @@ use Sulu\Component\Rest\Exception\EntityNotFoundException;
  * iteration the logic was just moved from the Controller to this class due
  * to better reusability. Reduce complexity of this service by splitting it
  * into multiple services!
+ *
+ * @template DoctrineEntity
+ * @template ApiEntity
+ * @template AddressRelationEntity
+ *
+ * @implements ContactManagerInterface<DoctrineEntity, ApiEntity, AddressRelationEntity>
  */
 abstract class AbstractContactManager implements ContactManagerInterface
 {
@@ -101,7 +107,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * unsets main of all elements of an ArrayCollection | PersistanceCollection.
      *
-     * @param ArrayCollection $arrayCollection
+     * @param Collection<AddressRelationEntity> $arrayCollection
      *
      * @return bool returns true if a element was unset
      */
@@ -120,12 +126,14 @@ abstract class AbstractContactManager implements ContactManagerInterface
                 }
             );
         }
+
+        return false;
     }
 
     /**
      * sets the first element to main, if none is set.
      *
-     * @param ArrayCollection $arrayCollection
+     * @param Collection<AddressRelationEntity> $arrayCollection
      */
     public function setMainForCollection($arrayCollection)
     {
@@ -137,7 +145,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * checks if a collection for main attribute.
      *
-     * @param ArrayCollection $arrayCollection
+     * @param Collection<AddressRelationEntity> $arrayCollection
      * @param mixed $mainEntity will be set, if found
      *
      * @return bool
@@ -160,7 +168,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * sets Entity's Main-Email.
      *
-     * @param Contact|AccountInterface $entity
+     * @param DoctrineEntity $entity
      */
     public function setMainEmail($entity)
     {
@@ -175,7 +183,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * sets Entity's Main-Phone.
      *
-     * @param Contact|AccountInterface $entity
+     * @param DoctrineEntity $entity
      */
     public function setMainPhone($entity)
     {
@@ -190,7 +198,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * sets Entity's Main-Fax.
      *
-     * @param Contact|AccountInterface $entity
+     * @param DoctrineEntity $entity
      */
     public function setMainFax($entity)
     {
@@ -205,7 +213,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * sets Entity's Main-Url.
      *
-     * @param Contact|AccountInterface $entity
+     * @param DoctrineEntity $entity
      */
     public function setMainUrl($entity)
     {
@@ -220,9 +228,9 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * Returns AccountContact relation if exists.
      *
-     * @return null|AccountContact
+     * @return AccountContact|null
      */
-    public function getAccounContact(AccountInterface $account, Contact $contact)
+    public function getAccounContact(AccountInterface $account, ContactInterface $contact)
     {
         foreach ($contact->getAccountContacts() as $accountContact) {
             /** @var AccountContact $accountContact */
@@ -231,15 +239,15 @@ abstract class AbstractContactManager implements ContactManagerInterface
             }
         }
 
-        return;
+        return null;
     }
 
     /**
      * returns the main account-contact relation.
      *
-     * @param Contact|AccountInterface $contact
+     * @param DoctrineEntity $contact
      *
-     * @return AccountContact|bool
+     * @return AccountContact|false
      */
     public function getMainAccountContact($contact)
     {
@@ -256,11 +264,11 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * creates a new main Account Contacts relation.
      *
-     * @param Postion $position
+     * @param Position $position
      *
      * @return AccountContact
      */
-    public function createMainAccountContact(Contact $contact, AccountInterface $account, $position = null)
+    public function createMainAccountContact(ContactInterface $contact, AccountInterface $account, $position = null)
     {
         $accountContact = new AccountContact();
         $accountContact->setAccount($account);
@@ -348,7 +356,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * clears all relational data from entity and deletes it.
      *
-     * @param ContactInterface $entity
+     * @param DoctrineEntity $entity
      */
     public function deleteAllRelations($entity)
     {
@@ -364,7 +372,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * deletes all notes that are assigned to entity.
      *
-     * @param ContactInterface $entity
+     * @param DoctrineEntity $entity
      */
     public function deleteNotes($entity)
     {
@@ -376,7 +384,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * deletes all phones that are assigned to entity.
      *
-     * @param ContactInterface $entity
+     * @param DoctrineEntity $entity
      */
     public function deletePhones($entity)
     {
@@ -388,7 +396,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * deletes all faxes that are assigned to entity.
      *
-     * @param ContactInterface $entity
+     * @param DoctrineEntity $entity
      */
     public function deleteFaxes($entity)
     {
@@ -400,7 +408,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * Deletes all social media profiles that are assigned to entity.
      *
-     * @param ContactInterface $entity
+     * @param DoctrineEntity $entity
      */
     public function deleteSocialMediaProfiles($entity)
     {
@@ -412,7 +420,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * deletes all urls that are assigned to entity.
      *
-     * @param ContactInterface $entity
+     * @param DoctrineEntity $entity
      */
     public function deleteUrls($entity)
     {
@@ -424,7 +432,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * deletes all addresses that are assigned to entity.
      *
-     * @param AccountInterface $entity
+     * @param DoctrineEntity $entity
      */
     public function deleteAddresses($entity)
     {
@@ -440,7 +448,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * deletes all emails that are assigned to entity.
      *
-     * @param AccountInterface $entity
+     * @param DoctrineEntity $entity
      */
     public function deleteEmails($entity)
     {
@@ -450,7 +458,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     }
 
     /**
-     * @param ArrayCollection $arrayCollection
+     * @param Collection $arrayCollection
      */
     protected function deleteAllEntitiesOfCollection($arrayCollection)
     {
@@ -462,7 +470,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * Returns the billing address of an account/contact.
      *
-     * @param AccountInterface|Contact $entity
+     * @param DoctrineEntity $entity
      * @param bool $force Forces function to return an address if any address is defined
      *                    if no delivery address is defined it will first return the main address then any
      */
@@ -479,7 +487,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * Returns the delivery address.
      *
-     * @param AccountInterface|Contact $entity
+     * @param DoctrineEntity $entity
      * @param bool $force Forces function to return an address if any address is defined
      *                    if no delivery address is defined it will first return the main address then any
      */
@@ -517,7 +525,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * returns addresses from account or contact.
      *
-     * @param AccountInterface|Contact $entity
+     * @param DoctrineEntity $entity
      *
      * @return \Doctrine\Common\Collections\Collection|null
      */
@@ -525,17 +533,17 @@ abstract class AbstractContactManager implements ContactManagerInterface
     {
         if ($entity instanceof AccountInterface) {
             return $entity->getAccountAddresses();
-        } elseif ($entity instanceof Contact) {
+        } elseif ($entity instanceof ContactInterface) {
             return $entity->getContactAddresses();
         }
 
-        return;
+        return null;
     }
 
     /**
      * Returns an address by callback-condition.
      *
-     * @param AccountInterface|Contact $entity
+     * @param DoctrineEntity $entity
      * @param bool $force Forces function to return an address if any address is defined
      *                    if no delivery address is defined it will first return the main address then any
      */
@@ -569,7 +577,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * adds new relations.
      *
-     * @param Contact $contact
+     * @param DoctrineEntity $contact
      * @param array $data
      */
     public function addNewContactRelations($contact, $data)
@@ -656,7 +664,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * Process all emails from request.
      *
-     * @param ContactInterface $contact The contact on which is worked
+     * @param DoctrineEntity $contact The contact on which is worked
      * @param array $emails
      *
      * @return bool True if the processing was successful, otherwise false
@@ -705,7 +713,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * Adds a new email to the given contact and persist it with the given object manager.
      *
-     * @param Contact $contact
+     * @param DoctrineEntity $contact
      * @param array $emailData
      *
      * @return bool
@@ -767,7 +775,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * Process all urls of request.
      *
-     * @param ContactInterface $contact The contact to be processed
+     * @param DoctrineEntity $contact The contact to be processed
      * @param array $urls
      *
      * @return bool True if the processing was successful, otherwise false
@@ -814,7 +822,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * Process all categories of request.
      *
-     * @param ContactInterface $contact - the contact which is processed
+     * @param DoctrineEntity $contact - the contact which is processed
      *
      * @return bool True if the processing was successful, otherwise false
      */
@@ -868,7 +876,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * Adds a new tag to the given contact.
      *
-     * @param ContactInterface $contact
+     * @param DoctrineEntity $contact
      * @param array $data
      *
      * @return bool
@@ -902,7 +910,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * Process all phones from request.
      *
-     * @param ContactInterface $contact The contact on which is processed
+     * @param DoctrineEntity $contact The contact on which is processed
      * @param array $phones
      *
      * @return bool True if the processing was successful, otherwise false
@@ -949,7 +957,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * Add a new phone to the given contact and persist it with the given object manager.
      *
-     * @param ContactInterface $contact
+     * @param DoctrineEntity $contact
      * @param array $phoneData
      *
      * @throws EntityNotFoundException
@@ -1009,7 +1017,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     }
 
     /**
-     * @param ContactInterface $contact
+     * @param DoctrineEntity $contact
      * @param array $faxes
      *
      * @return bool
@@ -1058,7 +1066,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     }
 
     /**
-     * @param ContactInterface $contact
+     * @param DoctrineEntity $contact
      * @param array $faxData
      *
      * @throws \Sulu\Component\Rest\Exception\EntityIdAlreadySetException
@@ -1111,7 +1119,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     }
 
     /**
-     * @param ContactInterface|AccountInterface $contact
+     * @param DoctrineEntity $contact
      * @param array $socialMediaProfiles
      *
      * @return bool
@@ -1157,7 +1165,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     }
 
     /**
-     * @param ContactInterface|AccountInterface $contact
+     * @param DoctrineEntity $contact
      * @param array $socialMediaProfileData
      *
      * @throws EntityIdAlreadySetException
@@ -1401,12 +1409,14 @@ abstract class AbstractContactManager implements ContactManagerInterface
         } elseif (\is_numeric($value)) {
             return 1 === $value ? true : false;
         }
+
+        return false;
     }
 
     /**
      * Process all notes from request.
      *
-     * @param Contact $contact The contact on which is worked
+     * @param DoctrineEntity $contact The contact on which is worked
      * @param array $notes
      *
      * @return bool True if the processing was successful, otherwise false
@@ -1450,7 +1460,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * Add a new note to the given contact and persist it with the given object manager.
      *
-     * @param ContactInterface $contact
+     * @param DoctrineEntity $contact
      * @param array $noteData
      *
      * @return bool True if there was no error, otherwise false
@@ -1493,7 +1503,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * Process all tags of request.
      *
-     * @param ContactInterface $contact The contact on which is worked
+     * @param DoctrineEntity $contact The contact on which is worked
      * @param array $tags
      *
      * @return bool True if the processing was successful, otherwise false
@@ -1535,7 +1545,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * Adds a new tag to the given contact and persist it with the given object manager.
      *
-     * @param ContactInterface $contact
+     * @param DoctrineEntity $contact
      * @param string $data
      *
      * @return bool True if there was no error, otherwise false
@@ -1552,7 +1562,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * Process all bankAccounts of a request.
      *
-     * @param ContactInterface $contact
+     * @param DoctrineEntity $contact
      * @param array $bankAccounts
      *
      * @return bool True if the processing was sucessful, otherwise false
@@ -1596,7 +1606,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * Add a new note to the given contact and persist it with the given object manager.
      *
-     * @param ContactInterface $contact
+     * @param DoctrineEntity $contact
      * @param array $data
      *
      * @return bool
@@ -1654,7 +1664,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * Process all addresses from request.
      *
-     * @param ContactInterface $contact The contact on which is worked
+     * @param DoctrineEntity $contact The contact on which is worked
      * @param array $addresses
      *
      * @return bool True if the processing was sucessful, otherwise false
@@ -1711,7 +1721,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * Sets main address.
      *
-     * @param ArrayCollection $addresses
+     * @param Collection<AddressRelationEntity> $addresses
      */
     protected function checkAndSetMainAddress($addresses)
     {
@@ -1740,6 +1750,10 @@ abstract class AbstractContactManager implements ContactManagerInterface
      * TODO: this is just a hack to avoid relations that start with index != 0
      * otherwise deserialization process will parse relations as object instead of an array
      * reindex entities.
+     *
+     * @param Collection $entities
+     *
+     * @return Collection
      */
     private function resetIndexOfSubentites($entities)
     {
