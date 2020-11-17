@@ -244,6 +244,8 @@
             <argument>%sulu_media.media.blocked_file_types%</argument>
         </service>
 
+        <service id="Sulu\Bundle\MediaBundle\Media\TypeManager\TypeManagerInterface" alias="sulu_media.type_manager"/>
+
         <service id="sulu_media.format_options_repository" class="Doctrine\ORM\EntityRepository">
             <factory service="doctrine.orm.entity_manager" method="getRepository"/>
             <argument>%sulu_media.format_options_entity%</argument>
