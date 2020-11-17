@@ -3,6 +3,7 @@
 /* eslint-disable import/no-dynamic-require */
 const fs = require('fs');
 const path = require('path');
+const webpack = require('webpack');
 const babelConfig = JSON.parse(fs.readFileSync(path.resolve(__dirname, '.babelrc'))); // eslint-disable-line no-undef
 
 module.exports = (env, argv) => { // eslint-disable-line no-undef
@@ -18,6 +19,10 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
     if (composerConfig.extra && composerConfig.extra['public-dir']) {
         publicDir = composerConfig.extra['public-dir'];
     }
+
+    const composerLock = JSON.parse(fs.readFileSync(path.resolve(projectRootPath, 'composer.lock')));
+    const suluPackage = composerLock.packages.find((p) => p.name === 'sulu/sulu');
+    const suluVersion = suluPackage ? suluPackage.version : 'unknown';
 
     const CleanObsoleteChunksPlugin = require(path.resolve(nodeModulesPath, 'webpack-clean-obsolete-chunks'));
     const CleanWebpackPlugin = require(path.resolve(nodeModulesPath, 'clean-webpack-plugin')).CleanWebpackPlugin;
@@ -47,6 +52,9 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
                 fileName: outputPath + '/manifest.json',
             }),
             new CleanObsoleteChunksPlugin(),
+            new webpack.DefinePlugin({
+                SULU_ADMIN_BUILD_VERSION: JSON.stringify(suluVersion),
+            }),
         ],
         resolve: {
             alias: {

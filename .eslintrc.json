@@ -5,7 +5,8 @@
         "jest": true
     },
     "globals": {
-        "process": true
+        "process": true,
+        "SULU_ADMIN_BUILD_VERSION": "readonly"
     },
     "extends": [
         "eslint:recommended",

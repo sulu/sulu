@@ -310,6 +310,16 @@ function processConfig(config: Object) {
 }
 
 function startAdmin() {
+    if (Config.suluVersion !== SULU_ADMIN_BUILD_VERSION) {
+        log.error(
+            'Sulu administration interface: JavaScript build version mismatch' +
+            '\nJavaScript build of the Sulu administration interface does not match the version of the Sulu backend.' +
+            '\nBackend version: ' + Config.suluVersion + ', JavaScript build version: ' + SULU_ADMIN_BUILD_VERSION +
+            '\n\nHave you forgotten to update the build while upgrading your application?' + '' +
+            '\nhttps://docs.sulu.io/en/latest/upgrades/upgrade-2.x.html'
+        );
+    }
+
     const router = new Router(createHashHistory());
     router.addUpdateAttributesHook(updateRouterAttributesFromView);
     router.addUpdateAttributesHook(updateRouterAttributesFromUserStoreContentLocale);
