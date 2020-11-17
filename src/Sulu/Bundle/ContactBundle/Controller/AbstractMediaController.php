@@ -16,6 +16,7 @@ use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Bundle\ContactBundle\Contact\AbstractContactManager;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
+use Sulu\Bundle\MediaBundle\Media\ListBuilderFactory\MediaListBuilderFactory;
 use Sulu\Bundle\MediaBundle\Media\ListRepresentationFactory\MediaListRepresentationFactory;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Component\Rest\AbstractRestController;
@@ -27,6 +28,7 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescri
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
+use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -81,9 +83,19 @@ abstract class AbstractMediaController extends AbstractRestController
     private $mediaClass;
 
     /**
+     * @var MediaListBuilderFactory|null
+     */
+    private $mediaListBuilderFactory;
+
+    /**
      * @var MediaListRepresentationFactory|null
      */
     private $mediaListRepresentationFactory;
+
+    /**
+     * @var FieldDescriptorFactoryInterface|null
+     */
+    private $fieldDescriptorFactory;
 
     public function __construct(
         ViewHandlerInterface $viewHandler,
@@ -94,7 +106,9 @@ abstract class AbstractMediaController extends AbstractRestController
         MediaRepositoryInterface $mediaRepository,
         MediaManagerInterface $mediaManager,
         string $mediaClass,
-        MediaListRepresentationFactory $mediaListRepresentationFactory = null
+        MediaListBuilderFactory $mediaListBuilderFactory = null,
+        MediaListRepresentationFactory $mediaListRepresentationFactory = null,
+        FieldDescriptorFactoryInterface $fieldDescriptorFactory = null
     ) {
         parent::__construct($viewHandler, $tokenStorage);
         $this->restHelper = $restHelper;
@@ -103,11 +117,13 @@ abstract class AbstractMediaController extends AbstractRestController
         $this->mediaRepository = $mediaRepository;
         $this->mediaClass = $mediaClass;
         $this->mediaManager = $mediaManager;
+        $this->mediaListBuilderFactory = $mediaListBuilderFactory;
         $this->mediaListRepresentationFactory = $mediaListRepresentationFactory;
+        $this->fieldDescriptorFactory = $fieldDescriptorFactory;
 
-        if (null === $this->mediaListRepresentationFactory) {
+        if (null === $this->mediaListBuilderFactory) {
             @\trigger_error(
-                'Instantiating AbstractMediaController without the $mediaListRepresentationFactory argument is deprecated.',
+                'Instantiating AbstractMediaController without the $mediaListBuilderFactory argument is deprecated.',
                 \E_USER_DEPRECATED
             );
         }
@@ -227,8 +243,10 @@ abstract class AbstractMediaController extends AbstractRestController
             $locale = $this->getUser()->getLocale();
 
             if ('true' === $request->get('flat')) {
-                if (null === $this->mediaListRepresentationFactory) {
-                    $listRepresentation = $this->legacyGetMultipleView(
+                if (null === $this->mediaListBuilderFactory
+                    || null === $this->mediaListRepresentationFactory
+                    || null === $this->fieldDescriptorFactory) {
+                    $listRepresentation = $this->getListRepresentation(
                         $entityName,
                         $routeName,
                         $contactId,
@@ -236,7 +254,7 @@ abstract class AbstractMediaController extends AbstractRestController
                         $locale
                     );
                 } else {
-                    $fieldDescriptors = $this->mediaListRepresentationFactory->getFieldDescriptors();
+                    $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors('media');
 
                     $fieldDescriptors['contactId'] = new DoctrineFieldDescriptor(
                         'id',
@@ -260,7 +278,7 @@ abstract class AbstractMediaController extends AbstractRestController
                         FieldDescriptorInterface::SEARCHABILITY_NEVER
                     );
 
-                    $listBuilder = $this->mediaListRepresentationFactory->getListBuilder(
+                    $listBuilder = $this->mediaListBuilderFactory->getListBuilder(
                         $fieldDescriptors,
                         $user,
                         [],
@@ -295,6 +313,8 @@ abstract class AbstractMediaController extends AbstractRestController
     /**
      * Returns a list representation containing all media of an entity.
      *
+     * @deprecated
+     *
      * @param string $entityName
      * @param string $routeName
      * @param Request $request
@@ -302,16 +322,16 @@ abstract class AbstractMediaController extends AbstractRestController
      *
      * @return ListRepresentation
      */
-    protected function legacyGetMultipleView($entityName, $routeName, $contactId, $request, $locale)
+    private function getListRepresentation($entityName, $routeName, $contactId, $request, $locale)
     {
         $listBuilder = $this->listBuilderFactory->create($entityName);
-        $fieldDescriptors = $this->legacyGetFieldDescriptors($entityName, $contactId);
+        $fieldDescriptors = $this->getFieldDescriptors($entityName, $contactId);
         $listBuilder->setIdField($fieldDescriptors['id']);
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
         $listResponse = $listBuilder->execute();
-        $listResponse = $this->legacyAddThumbnails($listResponse, $locale);
-        $listResponse = $this->legacyAddUrls($listResponse, $locale);
+        $listResponse = $this->addThumbnails($listResponse, $locale);
+        $listResponse = $this->addUrls($listResponse, $locale);
 
         return new ListRepresentation(
             $listResponse,
@@ -327,14 +347,16 @@ abstract class AbstractMediaController extends AbstractRestController
     /**
      * Returns the field-descriptors. Ensures that the descriptors get only instantiated once.
      *
+     * @deprecated
+     *
      * @param $entityName
      *
      * @return DoctrineFieldDescriptor[]
      */
-    private function legacyGetFieldDescriptors($entityName, $id)
+    private function getFieldDescriptors($entityName, $id)
     {
         if (null === $this->fieldDescriptors) {
-            $this->legacyInitFieldDescriptors($entityName, $id);
+            $this->initFieldDescriptors($entityName, $id);
         }
 
         return $this->fieldDescriptors;
@@ -343,9 +365,11 @@ abstract class AbstractMediaController extends AbstractRestController
     /**
      * Creates the array of field-descriptors.
      *
+     * @deprecated
+     *
      * @param $entityName
      */
-    private function legacyInitFieldDescriptors($entityName, $id)
+    private function initFieldDescriptors($entityName, $id)
     {
         $mediaEntityName = $this->mediaClass;
 
@@ -534,12 +558,14 @@ abstract class AbstractMediaController extends AbstractRestController
      * Takes an array of entities and resets the thumbnails-property containing the media id with
      * the actual urls to the thumbnails.
      *
+     * @deprecated
+     *
      * @param array $entities
      * @param string $locale
      *
      * @return array
      */
-    private function legacyAddThumbnails($entities, $locale)
+    private function addThumbnails($entities, $locale)
     {
         $ids = \array_filter(\array_column($entities, 'thumbnails'));
         $thumbnails = $this->mediaManager->getFormatUrls($ids, $locale);
@@ -558,12 +584,14 @@ abstract class AbstractMediaController extends AbstractRestController
     /**
      * Takes an array of entities and resets the url-property with the actual urls to the original file.
      *
+     * @deprecated
+     *
      * @param array $entities
      * @param string $locale
      *
      * @return array
      */
-    private function legacyAddUrls($entities, $locale)
+    private function addUrls($entities, $locale)
     {
         $ids = \array_filter(\array_column($entities, 'id'));
         $apiEntities = $this->mediaManager->getByIds($ids, $locale);

@@ -17,9 +17,11 @@ use HandcraftedInTheAlps\RestRoutingBundle\Controller\Annotations\RouteResource;
 use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\ContactBundle\Contact\AbstractContactManager;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
+use Sulu\Bundle\MediaBundle\Media\ListBuilderFactory\MediaListBuilderFactory;
 use Sulu\Bundle\MediaBundle\Media\ListRepresentationFactory\MediaListRepresentationFactory;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
+use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 use Sulu\Component\Rest\RestHelperInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -54,7 +56,9 @@ class ContactMediaController extends AbstractMediaController implements ClassRes
         AbstractContactManager $contactManager,
         string $contactClass,
         string $mediaClass,
-        MediaListRepresentationFactory $mediaListRepresentationFactory = null
+        MediaListBuilderFactory $mediaListBuilderFactory = null,
+        MediaListRepresentationFactory $mediaListRepresentationFactory = null,
+        FieldDescriptorFactoryInterface $fieldDescriptorFactory = null
     ) {
         parent::__construct(
             $viewHandler,
@@ -65,8 +69,11 @@ class ContactMediaController extends AbstractMediaController implements ClassRes
             $mediaRepository,
             $mediaManager,
             $mediaClass,
-            $mediaListRepresentationFactory
+            $mediaListBuilderFactory,
+            $mediaListRepresentationFactory,
+            $fieldDescriptorFactory
         );
+
         $this->contactManager = $contactManager;
         $this->contactClass = $contactClass;
     }

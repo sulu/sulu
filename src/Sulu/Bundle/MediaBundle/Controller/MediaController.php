@@ -20,6 +20,7 @@ use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
+use Sulu\Bundle\MediaBundle\Media\ListBuilderFactory\MediaListBuilderFactory;
 use Sulu\Bundle\MediaBundle\Media\ListRepresentationFactory\MediaListRepresentationFactory;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
@@ -117,6 +118,11 @@ class MediaController extends AbstractMediaController implements
     private $collectionClass;
 
     /**
+     * @var MediaListBuilderFactory|null
+     */
+    private $mediaListBuilderFactory;
+
+    /**
      * @var MediaListRepresentationFactory|null
      */
     private $mediaListRepresentationFactory;
@@ -135,6 +141,7 @@ class MediaController extends AbstractMediaController implements
         FieldDescriptorFactoryInterface $fieldDescriptorFactory,
         string $mediaClass,
         string $collectionClass,
+        MediaListBuilderFactory $mediaListBuilderFactory = null,
         MediaListRepresentationFactory $mediaListRepresentationFactory = null
     ) {
         parent::__construct($viewHandler, $tokenStorage);
@@ -150,9 +157,10 @@ class MediaController extends AbstractMediaController implements
         $this->fieldDescriptorFactory = $fieldDescriptorFactory;
         $this->mediaClass = $mediaClass;
         $this->collectionClass = $collectionClass;
+        $this->mediaListBuilderFactory = $mediaListBuilderFactory;
         $this->mediaListRepresentationFactory = $mediaListRepresentationFactory;
 
-        if (null === $this->mediaListRepresentationFactory) {
+        if (null === $this->mediaListBuilderFactory) {
             @\trigger_error(
                 'Instantiating MediaController without the $mediaListRepresentationFactory argument is deprecated.',
                 \E_USER_DEPRECATED
@@ -213,8 +221,8 @@ class MediaController extends AbstractMediaController implements
      */
     public function cgetAction(Request $request)
     {
-        if (null === $this->mediaListRepresentationFactory) {
-            $listRepresentation = $this->legacyGetListRepresentation($request);
+        if (null === $this->mediaListBuilderFactory || null === $this->mediaListRepresentationFactory) {
+            $listRepresentation = $this->getListRepresentation($request);
         } else {
             /** @var UserInterface $user */
             $user = $this->getUser();
@@ -224,7 +232,7 @@ class MediaController extends AbstractMediaController implements
             $locale = $this->getRequestParameter($request, 'locale', true);
 
             $fieldDescriptors = $this->mediaListRepresentationFactory->getFieldDescriptors();
-            $listBuilder = $this->mediaListRepresentationFactory->getListBuilder(
+            $listBuilder = $this->mediaListBuilderFactory->getListBuilder(
                 $fieldDescriptors,
                 $user,
                 $types,
@@ -246,12 +254,15 @@ class MediaController extends AbstractMediaController implements
         return $this->handleView($view);
     }
 
-    private function legacyGetListRepresentation(Request $request)
+    /**
+     * @deprecated
+     */
+    private function getListRepresentation(Request $request)
     {
         $locale = $this->getRequestParameter($request, 'locale', true);
         $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors('media');
         $types = \array_filter(\explode(',', $request->get('types')));
-        $listBuilder = $this->legacyGetListBuilder($request, $fieldDescriptors, $types);
+        $listBuilder = $this->getListBuilder($request, $fieldDescriptors, $types);
         $listBuilder->setParameter('locale', $locale);
         $listResponse = $listBuilder->execute();
 
@@ -303,12 +314,14 @@ class MediaController extends AbstractMediaController implements
     /**
      * Returns a list-builder for media list.
      *
+     * @deprecated
+     *
      * @param FieldDescriptorInterface[] $fieldDescriptors
      * @param array $types
      *
      * @return DoctrineListBuilder
      */
-    private function legacyGetListBuilder(Request $request, array $fieldDescriptors, $types)
+    private function getListBuilder(Request $request, array $fieldDescriptors, $types)
     {
         $listBuilder = $this->doctrineListBuilderFactory->create($this->mediaClass);
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);

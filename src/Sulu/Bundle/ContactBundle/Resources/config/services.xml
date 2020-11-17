@@ -127,7 +127,9 @@
             <argument type="service" id="sulu_contact.account_manager"/>
             <argument>%sulu.model.account.class%</argument>
             <argument>%sulu.model.media.class%</argument>
+            <argument type="service" id="sulu_media.media_list_builder_factory" />
             <argument type="service" id="sulu_media.media_list_representation_factory" />
+            <argument type="service" id="sulu_core.list_builder.field_descriptor_factory"/>
 
             <tag name="sulu.context" context="admin"/>
         </service>
@@ -164,7 +166,9 @@
             <argument type="service" id="sulu_contact.contact_manager"/>
             <argument>%sulu.model.contact.class%</argument>
             <argument>%sulu.model.media.class%</argument>
+            <argument type="service" id="sulu_media.media_list_builder_factory" />
             <argument type="service" id="sulu_media.media_list_representation_factory" />
+            <argument type="service" id="sulu_core.list_builder.field_descriptor_factory"/>
 
             <tag name="sulu.context" context="admin"/>
         </service>
