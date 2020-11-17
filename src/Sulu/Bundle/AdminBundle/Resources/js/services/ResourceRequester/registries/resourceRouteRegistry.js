@@ -43,7 +43,10 @@ class ResourceRouteRegistry {
 
     getDetailUrl(resourceKey: string, parameters: Object = {}) {
         if (!this.endpoints[resourceKey]) {
-            throw new Error('There are no routes for the resourceKey "' + resourceKey + '"!');
+            throw new Error(
+                'There are no routes for the resourceKey "' + resourceKey + '"!' +
+                '\n\nRegistered keys: ' + Object.keys(this.endpoints).sort().join(', ')
+            );
         }
 
         if (!this.endpoints[resourceKey].routes.detail) {
@@ -58,7 +61,10 @@ class ResourceRouteRegistry {
 
     getListUrl(resourceKey: string, parameters: Object = {}) {
         if (!this.endpoints[resourceKey]) {
-            throw new Error('There are no routes for the resourceKey "' + resourceKey + '"!');
+            throw new Error(
+                'There are no routes for the resourceKey "' + resourceKey + '"!' +
+                '\n\nRegistered keys: ' + Object.keys(this.endpoints).sort().join(', ')
+            );
         }
 
         if (!this.endpoints[resourceKey].routes.list) {

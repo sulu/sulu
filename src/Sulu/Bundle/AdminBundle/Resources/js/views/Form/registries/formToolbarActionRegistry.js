@@ -22,7 +22,10 @@ class FormToolbarActionRegistry {
 
     get(name: string) {
         if (!(name in this.toolbarActions)) {
-            throw new Error('There is no toolbar item with key "' + name + '" registered!');
+            throw new Error(
+                'There is no toolbar item with key "' + name + '" registered!' +
+                '\n\nRegistered keys: ' + Object.keys(this.toolbarActions).sort().join(', ')
+            );
         }
 
         return this.toolbarActions[name];

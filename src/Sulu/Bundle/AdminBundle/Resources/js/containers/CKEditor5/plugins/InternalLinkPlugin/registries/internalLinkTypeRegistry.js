@@ -38,7 +38,10 @@ class InternalLinkTypeRegistry {
 
     getOverlay(name: string): ComponentType<InternalLinkTypeOverlayProps> {
         if (!(name in this.overlays)) {
-            throw new Error('There is no overlay for an internal link type with the key "' + name + '" registered');
+            throw new Error(
+                'There is no overlay for an internal link type with the key "' + name + '" registered.' +
+                '\n\nRegistered keys: ' + Object.keys(this.overlays).sort().join(', ')
+            );
         }
 
         return this.overlays[name];
@@ -46,7 +49,10 @@ class InternalLinkTypeRegistry {
 
     getTitle(name: string): string {
         if (!(name in this.titles)) {
-            throw new Error('There is no title for an internal link type with the key "' + name + '" registered');
+            throw new Error(
+                'There is no title for an internal link type with the key "' + name + '" registered.' +
+                '\n\nRegistered keys: ' + Object.keys(this.titles).sort().join(', ')
+            );
         }
 
         return this.titles[name];
@@ -54,7 +60,10 @@ class InternalLinkTypeRegistry {
 
     getOptions(name: string): ?InternalLinkTypeOptions {
         if (!(name in this.options)) {
-            throw new Error('There are no options for an internal link type with the key "' + name + '" registered');
+            throw new Error(
+                'There are no options for an internal link type with the key "' + name + '" registered.' +
+                '\n\nRegistered keys: ' + Object.keys(this.options).sort().join(', ')
+            );
         }
 
         return this.options[name];

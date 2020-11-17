@@ -26,7 +26,10 @@ class FieldRegistry {
 
     get(name: string) {
         if (!(name in this.fields)) {
-            throw new Error('There is no field with key "' + name + '" registered');
+            throw new Error(
+                'There is no field with key "' + name + '" registered.' +
+                '\n\nRegistered keys: ' + Object.keys(this.fields).sort().join(', ')
+            );
         }
 
         return this.fields[name];
@@ -34,7 +37,10 @@ class FieldRegistry {
 
     getOptions(name: string) {
         if (!(name in this.options)) {
-            throw new Error('There are no options for a field with the key "' + name + '" registered');
+            throw new Error(
+                'There are no options for a field with the key "' + name + '" registered.' +
+                '\n\nRegistered keys: ' + Object.keys(this.options).sort().join(', ')
+            );
         }
 
         return this.options[name];
