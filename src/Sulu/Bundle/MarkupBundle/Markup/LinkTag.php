@@ -40,22 +40,22 @@ class LinkTag implements TagInterface
         $result = [];
         foreach ($attributesByTag as $tag => $attributes) {
             $provider = $this->getValue($attributes, 'provider', self::DEFAULT_PROVIDER);
-            if (!isset($attributes['href'])
-                || !\array_key_exists($provider . '-' . $attributes['href'], $contents)
-            ) {
-                $result[$tag] = $this->getContent($attributes);
 
-                continue;
+            if (isset($attributes['href']) && \array_key_exists($provider . '-' . $attributes['href'], $contents)) {
+                $item = $contents[$provider . '-' . $attributes['href']];
+
+                $title = $item->getTitle();
+                $attributes['href'] = $item->getUrl();
+                $attributes['title'] = $this->getValue($attributes, 'title', $item->getTitle());
+            } else {
+                $title = $this->getContent($attributes);
+                $attributes['href'] = null;
+                $attributes['title'] = $this->getValue($attributes, 'title');
             }
-
-            $item = $contents[$provider . '-' . $attributes['href']];
-
-            $attributes['href'] = $item->getUrl();
-            $attributes['title'] = $this->getValue($attributes, 'title', $item->getTitle());
 
             $htmlAttributes = \array_map(
                 function($value, $name) {
-                    if (\in_array($name, ['provider', 'content', 'validation-state']) || empty($value)) {
+                    if (\in_array($name, ['provider', 'content', 'sulu-validation-state']) || empty($value)) {
                         return;
                     }
 
@@ -68,7 +68,7 @@ class LinkTag implements TagInterface
             $result[$tag] = \sprintf(
                 '<a %s>%s</a>',
                 \implode(' ', \array_filter($htmlAttributes)),
-                $this->getValue($attributes, 'content', $item->getTitle())
+                $this->getValue($attributes, 'content', $title)
             );
         }
 
