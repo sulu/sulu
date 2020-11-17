@@ -48,7 +48,7 @@ class LinkTagTest extends TestCase
             }
         );
 
-        $this->linkTag = new LinkTag($this->providerPool->reveal());
+        $this->linkTag = new LinkTag($this->providerPool->reveal(), false);
     }
 
     public function provideParseData()
@@ -300,7 +300,7 @@ class LinkTagTest extends TestCase
 
     public function testParseAllValidationState()
     {
-        $this->providers['article']->preload(['123-123-123', '456-789-123'], 'de', true)
+        $this->providers['article']->preload(['123-123-123', '456-123-123', '456-789-123'], 'de', true)
             ->willReturn(
                 [
                     new LinkItem('123-123-123', 'Page-Title 1', '/de/test-1', true),
@@ -308,8 +308,9 @@ class LinkTagTest extends TestCase
             );
 
         $tag1 = '<sulu-link href="123-123-123" title="Test-Title" target="_blank" provider="article" sulu-validation-state="unpublished">Test-Content</sulu-link>';
-        $tag2 = '<sulu-link href="456-789-123" title="Test-Title" target="_blank" provider="article" sulu-validation-state="removed">Test-Content</sulu-link>';
-        $tag3 = '<sulu-link provider="article" sulu-validation-state="removed">Test-Content</sulu-link>';
+        $tag2 = '<sulu-link href="456-123-123" title="Test-Title" target="_blank" provider="article" sulu-validation-state="unpublished">Test-Content</sulu-link>';
+        $tag3 = '<sulu-link href="456-789-123" title="Test-Title" target="_blank" provider="article" sulu-validation-state="removed">Test-Content</sulu-link>';
+        $tag4 = '<sulu-link provider="article" sulu-validation-state="removed">Test-Content</sulu-link>';
 
         $result = $this->linkTag->parseAll(
             [
@@ -319,20 +320,28 @@ class LinkTagTest extends TestCase
                     'target' => '_blank',
                     'content' => 'Test-Content',
                     'provider' => 'article',
-                    'validation-state' => 'unpublished',
+                    'sulu-validation-state' => 'unpublished',
                 ],
                 $tag2 => [
+                    'href' => '456-123-123',
+                    'title' => 'Test-Title',
+                    'target' => '_blank',
+                    'content' => 'Test-Content',
+                    'provider' => 'article',
+                    'sulu-validation-state' => 'unpublished',
+                ],
+                $tag3 => [
                     'href' => '456-789-123',
                     'title' => 'Test-Title',
                     'target' => '_blank',
                     'content' => 'Test-Content',
                     'provider' => 'article',
-                    'validation-state' => 'removed',
+                    'sulu-validation-state' => 'removed',
                 ],
-                $tag3 => [
+                $tag4 => [
                     'provider' => 'article',
                     'content' => 'Test-Content',
-                    'validation-state' => 'removed',
+                    'sulu-validation-state' => 'removed',
                 ],
             ],
             'de'
@@ -343,6 +352,69 @@ class LinkTagTest extends TestCase
                 $tag1 => '<a href="/de/test-1" title="Test-Title" target="_blank">Test-Content</a>',
                 $tag2 => 'Test-Content',
                 $tag3 => 'Test-Content',
+                $tag4 => 'Test-Content',
+            ],
+            $result
+        );
+    }
+
+    public function testParseAllValidationStateInPreview()
+    {
+        $this->linkTag = new LinkTag($this->providerPool->reveal(), true);
+
+        $this->providers['article']->preload(['123-123-123', '456-123-123', '456-789-123'], 'de', true)
+            ->willReturn(
+                [
+                    new LinkItem('123-123-123', 'Page-Title 1', '/de/test-1', true),
+                ]
+            );
+
+        $tag1 = '<sulu-link href="123-123-123" title="Test-Title" target="_blank" provider="article" sulu-validation-state="unpublished">Test-Content</sulu-link>';
+        $tag2 = '<sulu-link href="456-123-123" title="Test-Title" target="_blank" provider="article" sulu-validation-state="unpublished">Test-Content</sulu-link>';
+        $tag3 = '<sulu-link href="456-789-123" title="Test-Title" target="_blank" provider="article" sulu-validation-state="removed">Test-Content</sulu-link>';
+        $tag4 = '<sulu-link provider="article" sulu-validation-state="removed">Test-Content</sulu-link>';
+
+        $result = $this->linkTag->parseAll(
+            [
+                $tag1 => [
+                    'href' => '123-123-123',
+                    'title' => 'Test-Title',
+                    'target' => '_blank',
+                    'content' => 'Test-Content',
+                    'provider' => 'article',
+                    'sulu-validation-state' => 'unpublished',
+                ],
+                $tag2 => [
+                    'href' => '456-123-123',
+                    'title' => 'Test-Title',
+                    'target' => '_blank',
+                    'content' => 'Test-Content',
+                    'provider' => 'article',
+                    'sulu-validation-state' => 'unpublished',
+                ],
+                $tag3 => [
+                    'href' => '456-789-123',
+                    'title' => 'Test-Title',
+                    'target' => '_blank',
+                    'content' => 'Test-Content',
+                    'provider' => 'article',
+                    'sulu-validation-state' => 'removed',
+                ],
+                $tag4 => [
+                    'provider' => 'article',
+                    'content' => 'Test-Content',
+                    'sulu-validation-state' => 'removed',
+                ],
+            ],
+            'de'
+        );
+
+        $this->assertEquals(
+            [
+                $tag1 => '<a href="/de/test-1" title="Test-Title" target="_blank">Test-Content</a>',
+                $tag2 => '<a title="Test-Title" target="_blank">Test-Content</a>',
+                $tag3 => 'Test-Content',
+                $tag4 => 'Test-Content',
             ],
             $result
         );

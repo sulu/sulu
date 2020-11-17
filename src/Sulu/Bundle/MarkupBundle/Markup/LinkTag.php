@@ -28,9 +28,15 @@ class LinkTag implements TagInterface
      */
     private $linkProviderPool;
 
-    public function __construct(LinkProviderPoolInterface $linkProviderPool)
+    /**
+     * @var bool
+     */
+    private $isPreview;
+
+    public function __construct(LinkProviderPoolInterface $linkProviderPool, bool $isPreview = false)
     {
         $this->linkProviderPool = $linkProviderPool;
+        $this->isPreview = $isPreview;
     }
 
     public function parseAll(array $attributesByTag, $locale)
@@ -40,6 +46,7 @@ class LinkTag implements TagInterface
         $result = [];
         foreach ($attributesByTag as $tag => $attributes) {
             $provider = $this->getValue($attributes, 'provider', self::DEFAULT_PROVIDER);
+            $validationState = $attributes['sulu-validation-state'] ?? null;
 
             if (isset($attributes['href']) && \array_key_exists($provider . '-' . $attributes['href'], $contents)) {
                 $item = $contents[$provider . '-' . $attributes['href']];
@@ -47,10 +54,16 @@ class LinkTag implements TagInterface
                 $title = $item->getTitle();
                 $attributes['href'] = $item->getUrl();
                 $attributes['title'] = $this->getValue($attributes, 'title', $item->getTitle());
-            } else {
+            } elseif ($this->isPreview && self::VALIDATE_UNPUBLISHED === $validationState) {
+                // render anchor without href to keep styling even if target is not published in preview
                 $title = $this->getContent($attributes);
                 $attributes['href'] = null;
                 $attributes['title'] = $this->getValue($attributes, 'title');
+            } else {
+                // only render text instead of anchor to prevent dead links on website
+                $result[$tag] = $this->getContent($attributes);
+
+                continue;
             }
 
             $htmlAttributes = \array_map(
