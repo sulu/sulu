@@ -447,7 +447,7 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
     }
 
     /**
-     * @param int|string $id
+     * @param int $id
      * @param string $locale
      *
      * @throws EntityNotFoundException
@@ -627,7 +627,7 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
 
     /**
      * @param ContactInterface $contact
-     * @param mixed $titleId
+     * @param int $titleId
      */
     public function setTitleOnContact($contact, $titleId)
     {

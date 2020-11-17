@@ -11,7 +11,10 @@
 
 namespace Sulu\Bundle\ContactBundle\Contact;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Sulu\Bundle\ContactBundle\Entity\Address;
+use Sulu\Bundle\ContactBundle\Entity\ContactAddress;
+use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 
 /**
  * Defines functionality of ContactManger.
@@ -21,11 +24,11 @@ interface ContactManagerInterface
     /**
      * adds an address to the entity.
      *
-     * @param string $entity The entity to add the address to
+     * @param ContactAddress $entity The entity to add the address to
      * @param Address $address The address to be added
      * @param bool $isMain Defines if the address is the main Address of the contact
      *
-     * @return array $relation
+     * @return ContactAddress $relation
      */
     public function addAddress($entity, Address $address, $isMain);
 
@@ -40,21 +43,21 @@ interface ContactManagerInterface
     /**
      * Returns a collection of relations to get addresses.
      *
-     * @param string $entity
+     * @param ContactInterface $entity
      */
     public function getAddressRelations($entity);
 
     /**
      * sets the first element to main, if none is set.
      *
-     * @param array $arrayCollection
+     * @param ArrayCollection $arrayCollection
      */
     public function setMainForCollection($arrayCollection);
 
     /**
      * unsets main of all elements of an ArrayCollection | PersistanceCollection.
      *
-     * @param array $arrayCollection
+     * @param ArrayCollection $arrayCollection
      *
      * @return bool returns true if a element was unset
      */
@@ -70,28 +73,28 @@ interface ContactManagerInterface
     /**
      * sets main fax, based on faxes that are set on entity.
      *
-     * @param string $entity
+     * @param ContactInterface $entity
      */
     public function setMainFax($entity);
 
     /**
      * sets main url, based on urls that are set on entity.
      *
-     * @param string $entity
+     * @param ContactInterface $entity
      */
     public function setMainUrl($entity);
 
     /**
      * sets main phone, based on phones that are set on entity.
      *
-     * @param string $entity
+     * @param ContactInterface $entity
      */
     public function setMainPhone($entity);
 
     /**
      * Returns an api entity.
      *
-     * @param string $id
+     * @param int $id
      * @param string $locale
      */
     public function getById($id, $locale);
