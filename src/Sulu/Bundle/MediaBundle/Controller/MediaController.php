@@ -231,7 +231,7 @@ class MediaController extends AbstractMediaController implements
             $collectionId = $collectionId ? (int) $collectionId : null;
             $locale = $this->getRequestParameter($request, 'locale', true);
 
-            $fieldDescriptors = $this->mediaListRepresentationFactory->getFieldDescriptors();
+            $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors('media');
             $listBuilder = $this->mediaListBuilderFactory->getListBuilder(
                 $fieldDescriptors,
                 $user,
