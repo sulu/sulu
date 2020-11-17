@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\ContactBundle\Contact;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\ContactAddress;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
@@ -24,11 +25,11 @@ interface ContactManagerInterface
     /**
      * adds an address to the entity.
      *
-     * @param ContactAddress $entity The entity to add the address to
+     * @param ContactInterface|AccountInterface $entity The entity to add the address to
      * @param Address $address The address to be added
      * @param bool $isMain Defines if the address is the main Address of the contact
      *
-     * @return ContactAddress $relation
+     * @return ContactInterface|AccountInterface $relation
      */
     public function addAddress($entity, Address $address, $isMain);
 
@@ -43,21 +44,21 @@ interface ContactManagerInterface
     /**
      * Returns a collection of relations to get addresses.
      *
-     * @param ContactInterface $entity
+     * @param ContactInterface|AccountInterface $entity
      */
     public function getAddressRelations($entity);
 
     /**
      * sets the first element to main, if none is set.
      *
-     * @param ArrayCollection $arrayCollection
+     * @param Collection $arrayCollection
      */
     public function setMainForCollection($arrayCollection);
 
     /**
      * unsets main of all elements of an ArrayCollection | PersistanceCollection.
      *
-     * @param ArrayCollection $arrayCollection
+     * @param Collection $arrayCollection
      *
      * @return bool returns true if a element was unset
      */
