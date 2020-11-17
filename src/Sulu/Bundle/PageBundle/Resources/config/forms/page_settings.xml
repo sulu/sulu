@@ -157,7 +157,13 @@
                         <title>sulu_page.changelog</title>
                     </meta>
                 </property>
-                <property name="versions" type="page_settings_versions" onInvalid="ignore" />
+                <property name="versions" type="settings_versions" onInvalid="ignore">
+                    <params>
+                        <param name="resource_key" type="string" value="page_versions"/>
+                        <param name="list_key" type="string" value="page_versions"/>
+                        <param name="user_settings_key" type="string" value="page_versions"/>
+                    </params>
+                </property>
             </properties>
         </section>
     </properties>

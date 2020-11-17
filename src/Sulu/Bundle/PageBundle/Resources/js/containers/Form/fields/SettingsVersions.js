@@ -1,6 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
-import {action, observable} from 'mobx';
+import {action, computed, observable} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import {Dialog} from 'sulu-admin-bundle/components';
@@ -12,7 +12,7 @@ import {translate} from 'sulu-admin-bundle/utils';
 type Props = FieldTypeProps<void>;
 
 @observer
-class PageSettingsVersions extends React.Component<Props> {
+class SettingsVersions extends React.Component<Props> {
     listStore: ListStore;
     @observable page: IObservableValue<number> = observable.box(1);
     @observable restoreId: ?string | number = undefined;
@@ -24,9 +24,9 @@ class PageSettingsVersions extends React.Component<Props> {
         const {formInspector} = this.props;
 
         this.listStore = new ListStore(
-            'page_versions',
-            'page_versions',
-            'page_versions',
+            this.resourceKey,
+            this.listKey,
+            this.userSettingsKey,
             {locale: formInspector.locale, page: this.page},
             {id: formInspector.id, webspace: formInspector.options.webspace}
         );
@@ -38,6 +38,83 @@ class PageSettingsVersions extends React.Component<Props> {
 
             this.listStore.reload();
         });
+    }
+
+    @computed get resourceKey(): string {
+        const {
+            schemaOptions: {
+                resource_key: {
+                    value: resourceKey,
+                } = {},
+            },
+        } = this.props;
+
+        if (resourceKey === undefined || typeof resourceKey !== 'string') {
+            throw new Error(
+                'The "resource_key" schemaOption is mandatory and must be a string, but received ' +
+                typeof resourceKey + '!'
+            );
+        }
+
+        return resourceKey;
+    }
+
+    @computed get listKey(): string {
+        const {
+            schemaOptions: {
+                list_key: {
+                    value: listKey,
+                } = {},
+            },
+        } = this.props;
+
+        if (listKey === undefined || typeof listKey !== 'string') {
+            throw new Error(
+                'The "list_key" schemaOption is mandatory and must be a string, but received ' +
+                typeof listKey + '!'
+            );
+        }
+
+        return listKey;
+    }
+
+    @computed get userSettingsKey(): string {
+        const {
+            schemaOptions: {
+                user_settings_key: {
+                    value: userSettingsKey,
+                } = {},
+            },
+        } = this.props;
+
+        if (userSettingsKey === undefined || typeof userSettingsKey !== 'string') {
+            throw new Error(
+                'The "user_settings_key" schemaOption is mandatory and must be a string, but received ' +
+                typeof userSettingsKey + '!'
+            );
+        }
+
+        return userSettingsKey;
+    }
+
+    @computed get parentRoute(): string {
+        const {
+            router: {
+                route: {
+                    parent: {
+                        name,
+                    } = {},
+                } = {},
+            } = {},
+        } = this.props;
+
+        if (name === undefined) {
+            throw new Error(
+                'A route with a valid parent route is required for this field type to work properly!'
+            );
+        }
+
+        return name;
     }
 
     @action handleRestoreClick = (id: string | number) => {
@@ -62,14 +139,14 @@ class PageSettingsVersions extends React.Component<Props> {
 
         this.restoring = true;
         ResourceRequester
-            .post('page_versions', {}, {action: 'restore', id, version: this.restoreId, locale, webspace})
+            .post(this.resourceKey, {}, {action: 'restore', id, version: this.restoreId, locale, webspace})
             .then(action(() => {
                 this.restoring = false;
                 this.restoreId = undefined;
                 if (!router) {
                     throw new Error('A router is required for this field type to work properly!');
                 }
-                router.navigate('sulu_page.page_edit_form', {id, locale, webspace});
+                router.navigate(this.parentRoute, {id, locale, webspace});
             }));
     };
 
@@ -108,4 +185,4 @@ class PageSettingsVersions extends React.Component<Props> {
     }
 }
 
-export default PageSettingsVersions;
+export default SettingsVersions;
