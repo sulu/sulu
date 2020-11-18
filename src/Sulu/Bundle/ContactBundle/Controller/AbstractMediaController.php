@@ -349,7 +349,7 @@ abstract class AbstractMediaController extends AbstractRestController
      *
      * @deprecated
      *
-     * @param $entityName
+     * @param string $entityName
      *
      * @return DoctrineFieldDescriptor[]
      */
@@ -367,7 +367,7 @@ abstract class AbstractMediaController extends AbstractRestController
      *
      * @deprecated
      *
-     * @param $entityName
+     * @param string $entityName
      */
     private function initFieldDescriptors($entityName, $id)
     {
