@@ -23,6 +23,11 @@ class PropertyMetadata
      */
     private $mandatory;
 
+    /**
+     * @var array<string, mixed>
+     */
+    private $jsonSchema = [];
+
     public function __construct(string $name, bool $mandatory)
     {
         $this->name = $name;
@@ -39,8 +44,34 @@ class PropertyMetadata
         return $this->mandatory;
     }
 
+    /**
+     * @param callable|mixed[] $jsonSchema
+     */
+    public function mergeJsonSchema($jsonSchema): void
+    {
+        $newJsonSchema = $jsonSchema;
+
+        if (\is_callable($jsonSchema)) {
+            $newJsonSchema = $jsonSchema($this->jsonSchema);
+        }
+
+        if (\is_array($jsonSchema)) {
+            $newJsonSchema = \array_merge($this->jsonSchema, $jsonSchema);
+        }
+
+        if (!\is_array($newJsonSchema)) {
+            throw new \Exception('Invalid json schema');
+        }
+
+        $this->jsonSchema = $newJsonSchema;
+    }
+
     public function toJsonSchema(): ?array
     {
-        return null;
+        if (empty($this->jsonSchema)) {
+            return null;
+        }
+
+        return $this->jsonSchema;
     }
 }

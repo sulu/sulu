@@ -12,6 +12,8 @@
 namespace Sulu\Bundle\MediaBundle\Content\Types;
 
 use PHPCR\NodeInterface;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata as SchemaPropertyMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataEnhancerInterface;
 use Sulu\Bundle\MediaBundle\Content\MediaSelectionContainer;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
@@ -19,6 +21,8 @@ use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeExportInterface;
+use Sulu\Component\Content\Metadata\ItemMetadata;
+use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\PreResolvableContentTypeInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Util\ArrayableInterface;
@@ -27,7 +31,7 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 /**
  * content type for image selection.
  */
-class MediaSelectionContentType extends ComplexContentType implements ContentTypeExportInterface, PreResolvableContentTypeInterface
+class MediaSelectionContentType extends ComplexContentType implements ContentTypeExportInterface, PreResolvableContentTypeInterface, PropertyMetadataEnhancerInterface
 {
     /**
      * @var MediaManagerInterface
@@ -188,5 +192,37 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
         foreach ($data['ids'] as $id) {
             $this->referenceStore->add($id);
         }
+    }
+
+    public function enhancePropertyMetadata(SchemaPropertyMetadata $propertyMetadata, ItemMetadata $itemMetadata): void
+    {
+        if (!($itemMetadata instanceof PropertyMetadata) || 'media_selection' !== $itemMetadata->getType()) {
+            return;
+        }
+
+        $propertyMetadata->mergeJsonSchema(function($jsonSchema) use ($itemMetadata) {
+            $required = $itemMetadata->isRequired();
+
+            $jsonSchema['type'] = 'object';
+            $jsonSchema['properties'] = \array_replace_recursive($jsonSchema['properties'] ?? [], [
+                'ids' => [
+                    'type' => 'array',
+                    'items' => [
+                        'type' => 'number',
+                    ],
+                    'minItems' => $required ? 1 : 0,
+                    'uniqueItems' => true,
+                ],
+                'displayOption' => [
+                    'type' => 'string',
+                ],
+            ]);
+
+            if ($required) {
+                $jsonSchema['required'] = \array_unique(\array_merge($jsonSchema['required'] ?? [], ['ids']));
+            }
+
+            return $jsonSchema;
+        });
     }
 }

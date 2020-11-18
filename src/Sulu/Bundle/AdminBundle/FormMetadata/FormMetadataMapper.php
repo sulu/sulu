@@ -20,6 +20,7 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TagMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ArrayMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ConstMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataEnhancerInterface;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
 use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\BlockMetadata as ContentBlockMetadata;
@@ -32,6 +33,16 @@ use Sulu\Component\Content\Metadata\SectionMetadata as ContentSectionMetadata;
  */
 class FormMetadataMapper
 {
+    /**
+     * @var PropertyMetadataEnhancerInterface
+     */
+    private $propertyMetadataEnhancer;
+
+    public function __construct(PropertyMetadataEnhancerInterface $propertyMetadataEnhancer)
+    {
+        $this->propertyMetadataEnhancer = $propertyMetadataEnhancer;
+    }
+
     /**
      * @return ItemMetadata[]
      */
@@ -225,7 +236,11 @@ class FormMetadataMapper
                 );
             }
 
-            return new PropertyMetadata($itemMetadata->getName(), $itemMetadata->isRequired());
+            $propertyMetadata = new PropertyMetadata($itemMetadata->getName(), $itemMetadata->isRequired());
+
+            $this->propertyMetadataEnhancer->enhancePropertyMetadata($propertyMetadata, $itemMetadata);
+
+            return $propertyMetadata;
         }, $itemsMetadata));
     }
 }

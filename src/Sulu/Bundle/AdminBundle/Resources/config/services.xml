@@ -93,8 +93,16 @@
         </service>
 
         <service
+            id="sulu_admin.property_metadata_enhancer"
+            class="Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataEnhancer">
+            <argument type="tagged" tag="sulu_admin.property_metadata_enhancer"/>
+        </service>
+
+        <service
             id="sulu_admin.form_metadata.form_metadata_mapper"
-            class="Sulu\Bundle\AdminBundle\FormMetadata\FormMetadataMapper"/>
+            class="Sulu\Bundle\AdminBundle\FormMetadata\FormMetadataMapper">
+            <argument type="service" id="sulu_admin.property_metadata_enhancer"/>
+        </service>
 
         <service id="sulu_admin.structure_form_metadata_loader" class="Sulu\Bundle\AdminBundle\Metadata\FormMetadata\StructureFormMetadataLoader" lazy="true">
             <argument type="service" id="sulu_page.structure.factory"/>
