@@ -20,9 +20,12 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
         publicDir = composerConfig.extra['public-dir'];
     }
 
-    const composerLock = JSON.parse(fs.readFileSync(path.resolve(projectRootPath, 'composer.lock')));
-    const suluPackage = composerLock.packages.find((p) => p.name === 'sulu/sulu');
-    const suluVersion = suluPackage ? suluPackage.version : 'unknown';
+    let suluVersion = undefined;
+    if (fs.existsSync(path.resolve(projectRootPath, 'composer.lock'))) {
+        const composerLock = JSON.parse(fs.readFileSync(path.resolve(projectRootPath, 'composer.lock')));
+        const suluPackage = composerLock.packages.find((packageItem) => packageItem.name === 'sulu/sulu');
+        suluVersion = suluPackage ? suluPackage.version : undefined;
+    }
 
     const CleanObsoleteChunksPlugin = require(path.resolve(nodeModulesPath, 'webpack-clean-obsolete-chunks'));
     const CleanWebpackPlugin = require(path.resolve(nodeModulesPath, 'clean-webpack-plugin')).CleanWebpackPlugin;
