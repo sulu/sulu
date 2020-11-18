@@ -8,6 +8,7 @@ import jexl from 'jexl';
 import classNames from 'classnames';
 import CroppedText from '../../components/CroppedText';
 import MultiItemSelection from '../../components/MultiItemSelection';
+import PublishIndicator from '../../components/PublishIndicator';
 import MultiSelectionStore from '../../stores/MultiSelectionStore';
 import MultiListOverlay from '../MultiListOverlay';
 import multiSelectionStyles from './multiSelection.scss';
@@ -169,6 +170,8 @@ class MultiSelection extends React.Component<Props> {
                             }
                         );
 
+                        const {published = undefined, publishedState = undefined} = item;
+
                         return (
                             <MultiItemSelection.Item
                                 allowRemoveWhileDisabled={allowDeselectForDisabledItems}
@@ -178,16 +181,28 @@ class MultiSelection extends React.Component<Props> {
                                 key={item.id}
                                 value={item}
                             >
-                                <div>
-                                    {displayProperties.map((displayProperty) => (
-                                        <span
-                                            className={itemColumnClass}
-                                            key={displayProperty}
-                                            style={{width: 100 / columns + '%'}}
-                                        >
-                                            <CroppedText>{item[displayProperty]}</CroppedText>
-                                        </span>
-                                    ))}
+                                <div className={multiSelectionStyles.itemContainer}>
+                                    {(publishedState !== undefined || published !== undefined) &&
+                                        !(publishedState && published) &&
+                                            <div className={multiSelectionStyles.publishIndicator}>
+                                                <PublishIndicator
+                                                    draft={!publishedState}
+                                                    published={!!published}
+                                                />
+                                            </div>
+                                    }
+
+                                    <div className={multiSelectionStyles.columnList}>
+                                        {displayProperties.map((displayProperty) => (
+                                            <span
+                                                className={itemColumnClass}
+                                                key={displayProperty}
+                                                style={{width: 100 / columns + '%'}}
+                                            >
+                                                <CroppedText>{item[displayProperty]}</CroppedText>
+                                            </span>
+                                        ))}
+                                    </div>
                                 </div>
                             </MultiItemSelection.Item>
                         );

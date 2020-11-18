@@ -5,6 +5,7 @@ import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import jexl from 'jexl';
 import SingleItemSelection from '../../components/SingleItemSelection';
+import PublishIndicator from '../../components/PublishIndicator';
 import SingleSelectionStore from '../../stores/SingleSelectionStore';
 import SingleListOverlay from '../SingleListOverlay';
 import singleSelectionStyles from './singleSelection.scss';
@@ -128,6 +129,9 @@ class SingleSelection extends React.Component<Props> {
         const itemDisabled = (!!item && disabledIds.includes(item.id)) ||
             (!!item && !!itemDisabledCondition && jexl.evalSync(itemDisabledCondition, item));
 
+        const published = item ? item.published : undefined;
+        const publishedState = item ? item.publishedState : undefined;
+
         return (
             <Fragment>
                 <SingleItemSelection
@@ -146,16 +150,28 @@ class SingleSelection extends React.Component<Props> {
                     value={item}
                 >
                     {item &&
-                        <div>
-                            {displayProperties.map((displayProperty) => (
-                                <span
-                                    className={singleSelectionStyles.itemColumn}
-                                    key={displayProperty}
-                                    style={{width: 100 / columns + '%'}}
-                                >
-                                    {item[displayProperty]}
-                                </span>
-                            ))}
+                        <div className={singleSelectionStyles.itemContainer}>
+                            {(publishedState !== undefined || published !== undefined) &&
+                                !(publishedState && published) &&
+                                    <div className={singleSelectionStyles.publishIndicator}>
+                                        <PublishIndicator
+                                            draft={!publishedState}
+                                            published={!!published}
+                                        />
+                                    </div>
+                            }
+
+                            <div className={singleSelectionStyles.columnList}>
+                                {displayProperties.map((displayProperty) => (
+                                    <span
+                                        className={singleSelectionStyles.itemColumn}
+                                        key={displayProperty}
+                                        style={{width: 100 / columns + '%'}}
+                                    >
+                                        {item[displayProperty]}
+                                    </span>
+                                ))}
+                            </div>
                         </div>
                     }
                 </SingleItemSelection>
