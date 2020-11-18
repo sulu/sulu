@@ -305,7 +305,7 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
     /**
      * Sets default values for form of address if not defined in config.
      *
-     * @param $config
+     * @param array $config
      */
     private function setDefaultForFormOfAddress($config)
     {

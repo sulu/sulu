@@ -34,6 +34,9 @@ use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 
+/**
+ * @extends AbstractContactManager<ContactInterface, ContactApi, ContactAddress>
+ */
 class ContactManager extends AbstractContactManager implements DataProviderRepositoryInterface
 {
     /**
@@ -92,7 +95,7 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
     /**
      * Returns contact entities by ids.
      *
-     * @param $ids
+     * @param array $ids
      * @param string $locale
      */
     public function getByIds($ids, $locale)
@@ -439,7 +442,7 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
     /**
      * Returns a collection of relations to get addresses.
      *
-     * @param $entity
+     * @param ContactInterface $entity
      */
     public function getAddressRelations($entity)
     {
@@ -447,7 +450,7 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
     }
 
     /**
-     * @param $id
+     * @param int $id
      * @param string $locale
      *
      * @throws EntityNotFoundException
@@ -465,7 +468,7 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
     /**
      * Returns an api entity for an doctrine entity.
      *
-     * @param $contact
+     * @param ContactInterface $contact
      * @param string $locale
      *
      * @return null|ContactApi
@@ -474,13 +477,13 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
     {
         if ($contact) {
             return $this->getApiObject($contact, $locale);
-        } else {
-            return;
         }
+
+        return null;
     }
 
     /**
-     * @param $data
+     * @param array $data
      *
      * @throws EntityNotFoundException
      */
@@ -564,7 +567,7 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
      * Sets the medias of the given contact to the given medias.
      * Currently associated medias are replaced.
      *
-     * @param $mediaIds
+     * @param array $mediaIds
      *
      * @throws EntityNotFoundException
      */
@@ -626,8 +629,8 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
     }
 
     /**
-     * @param $contact
-     * @param $titleId
+     * @param ContactInterface $contact
+     * @param int $titleId
      */
     public function setTitleOnContact($contact, $titleId)
     {

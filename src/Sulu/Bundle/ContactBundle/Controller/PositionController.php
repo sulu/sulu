@@ -55,7 +55,7 @@ class PositionController extends AbstractRestController implements ClassResource
     /**
      * Shows a single position for the given id.
      *
-     * @param $id
+     * @param int $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -193,7 +193,7 @@ class PositionController extends AbstractRestController implements ClassResource
     /**
      * Delete a position for the given id.
      *
-     * @param $id
+     * @param int $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -256,7 +256,7 @@ class PositionController extends AbstractRestController implements ClassResource
     /**
      * Helper function for patch action.
      *
-     * @param $item
+     * @param array $item
      *
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      *

@@ -366,7 +366,7 @@ class ContactController extends AbstractRestController implements ClassResourceI
     /**
      * Shows the contact with the given Id.
      *
-     * @param $id
+     * @param int $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -424,7 +424,7 @@ class ContactController extends AbstractRestController implements ClassResourceI
     }
 
     /**
-     * @param $id
+     * @param int $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -450,7 +450,7 @@ class ContactController extends AbstractRestController implements ClassResourceI
     /**
      * Partially update an existing contact.
      *
-     * @param $id
+     * @param int $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */

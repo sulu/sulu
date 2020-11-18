@@ -11,50 +11,57 @@
 
 namespace Sulu\Bundle\ContactBundle\Contact;
 
+use Doctrine\Common\Collections\Collection;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 
 /**
  * Defines functionality of ContactManger.
+ *
+ * @template DoctrineEntity
+ * @template ApiEntity
+ * @template AddressRelationEntity
  */
 interface ContactManagerInterface
 {
     /**
      * adds an address to the entity.
      *
-     * @param $entity The entity to add the address to
+     * @param DoctrineEntity $entity The entity to add the address to
      * @param Address $address The address to be added
      * @param bool $isMain Defines if the address is the main Address of the contact
      *
-     * @return $relation
+     * @return AddressRelationEntity $relation
      */
     public function addAddress($entity, Address $address, $isMain);
 
     /**
      * removes the address relation from a contact and also deletes the address if it has no more relations.
      *
-     * @param $entity
-     * @param $address
+     * @param string $entity
+     * @param AddressRelationEntity $address
      */
     public function removeAddressRelation($entity, $address);
 
     /**
      * Returns a collection of relations to get addresses.
      *
-     * @param $entity
+     * @param DoctrineEntity $entity
+     *
+     * @return AddressRelationEntity
      */
     public function getAddressRelations($entity);
 
     /**
      * sets the first element to main, if none is set.
      *
-     * @param $arrayCollection
+     * @param Collection<AddressRelationEntity> $arrayCollection
      */
     public function setMainForCollection($arrayCollection);
 
     /**
      * unsets main of all elements of an ArrayCollection | PersistanceCollection.
      *
-     * @param $arrayCollection
+     * @param Collection<AddressRelationEntity> $arrayCollection
      *
      * @return bool returns true if a element was unset
      */
@@ -63,44 +70,48 @@ interface ContactManagerInterface
     /**
      * sets main email, based on emails that are set on entity.
      *
-     * @param $entity
+     * @param DoctrineEntity $entity
      */
     public function setMainEmail($entity);
 
     /**
      * sets main fax, based on faxes that are set on entity.
      *
-     * @param $entity
+     * @param DoctrineEntity $entity
      */
     public function setMainFax($entity);
 
     /**
      * sets main url, based on urls that are set on entity.
      *
-     * @param $entity
+     * @param DoctrineEntity $entity
      */
     public function setMainUrl($entity);
 
     /**
      * sets main phone, based on phones that are set on entity.
      *
-     * @param $entity
+     * @param DoctrineEntity $entity
      */
     public function setMainPhone($entity);
 
     /**
      * Returns an api entity.
      *
-     * @param $id
+     * @param int $id
      * @param string $locale
+     *
+     * @return ApiEntity
      */
     public function getById($id, $locale);
 
     /**
      * Returns api entities.
      *
-     * @param $ids
+     * @param array $ids
      * @param string $locale
+     *
+     * @return ApiEntity[]
      */
     public function getByIds($ids, $locale);
 }
