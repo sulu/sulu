@@ -17,6 +17,7 @@ use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadataMapper;
 use Sulu\Bundle\AdminBundle\FormMetadata\FormXmlLoader;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\LocalizedFormMetadataCollection;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataEnhancer;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
 use Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser;
 use Sulu\Component\Content\Metadata\Parser\SchemaXmlParser;
@@ -43,7 +44,7 @@ class FormXmlLoaderTest extends TestCase
         );
         $schemaXmlParser = new SchemaXmlParser();
         $locales = ['de', 'en'];
-        $formMetadataMapper = new FormMetadataMapper();
+        $formMetadataMapper = new FormMetadataMapper(new PropertyMetadataEnhancer([]));
         $this->loader = new FormXmlLoader($propertiesXmlParser, $schemaXmlParser, $locales, $formMetadataMapper);
     }
 
