@@ -98,23 +98,15 @@ class SettingsVersions extends React.Component<Props> {
     }
 
     @computed get parentRoute(): string {
-        const {
-            router: {
-                route: {
-                    parent: {
-                        name,
-                    } = {},
-                } = {},
-            } = {},
-        } = this.props;
+        const {router} = this.props;
 
-        if (name === undefined) {
+        if (!router || !router.route || !router.route.parent || !router.route.parent.name) {
             throw new Error(
                 'A route with a valid parent route is required for this field type to work properly!'
             );
         }
 
-        return name;
+        return router.route.parent.name;
     }
 
     @action handleRestoreClick = (id: string | number) => {
