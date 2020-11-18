@@ -152,7 +152,7 @@ class SingleSelection extends React.Component<Props> {
                     {item &&
                         <div className={singleSelectionStyles.itemContainer}>
                             {(publishedState !== undefined || published !== undefined)
-                            && !(publishedState && published) &&
+                                && !(publishedState && published) &&
                                 <div className={singleSelectionStyles.publishIndicator}>
                                     <PublishIndicator
                                         draft={!publishedState}
