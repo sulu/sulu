@@ -15,5 +15,7 @@ use Sulu\Component\Content\Metadata\ItemMetadata;
 
 interface PropertyMetadataEnhancerInterface
 {
-    public function enhancePropertyMetadata(PropertyMetadata $propertyMetadata, ItemMetadata $itemMetadata): void;
+    public function supports(ItemMetadata $itemMetadata): bool;
+
+    public function enhancePropertyMetadata(PropertyMetadata $propertyMetadata, ItemMetadata $itemMetadata): PropertyMetadata;
 }

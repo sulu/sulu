@@ -236,11 +236,10 @@ class FormMetadataMapper
                 );
             }
 
-            $propertyMetadata = new PropertyMetadata($itemMetadata->getName(), $itemMetadata->isRequired());
-
-            $this->propertyMetadataEnhancer->enhancePropertyMetadata($propertyMetadata, $itemMetadata);
-
-            return $propertyMetadata;
+            return $this->propertyMetadataEnhancer->enhancePropertyMetadata(
+                new PropertyMetadata($itemMetadata->getName(), $itemMetadata->isRequired()),
+                $itemMetadata
+            );
         }, $itemsMetadata));
     }
 }

@@ -28,7 +28,12 @@ class PropertyMetadataEnhancer implements PropertyMetadataEnhancerInterface
         $this->propertyMetadataEnhancers = $propertyMetadataEnhancers;
     }
 
-    public function enhancePropertyMetadata(PropertyMetadata $propertyMetadata, ItemMetadata $itemMetadata): void
+    public function supports(ItemMetadata $itemMetadata): bool
+    {
+        throw new \Exception('This method should never be called and is most likely a bug.');
+    }
+
+    public function enhancePropertyMetadata(PropertyMetadata $propertyMetadata, ItemMetadata $itemMetadata): PropertyMetadata
     {
         /** @var PropertyMetadataEnhancerInterface $propertyMetadataEnhancer */
         foreach ($this->propertyMetadataEnhancers as $propertyMetadataEnhancer) {
@@ -36,7 +41,13 @@ class PropertyMetadataEnhancer implements PropertyMetadataEnhancerInterface
                 continue;
             }
 
-            $propertyMetadataEnhancer->enhancePropertyMetadata($propertyMetadata, $itemMetadata);
+            if (!$propertyMetadataEnhancer->supports($itemMetadata)) {
+                continue;
+            }
+
+            $propertyMetadata = $propertyMetadataEnhancer->enhancePropertyMetadata($propertyMetadata, $itemMetadata);
         }
+
+        return $propertyMetadata;
     }
 }

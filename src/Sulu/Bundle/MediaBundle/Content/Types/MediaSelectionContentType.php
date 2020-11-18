@@ -194,35 +194,43 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
         }
     }
 
-    public function enhancePropertyMetadata(SchemaPropertyMetadata $propertyMetadata, ItemMetadata $itemMetadata): void
+    public function supports(ItemMetadata $itemMetadata): bool
     {
-        if (!($itemMetadata instanceof PropertyMetadata) || 'media_selection' !== $itemMetadata->getType()) {
-            return;
+        return $itemMetadata instanceof PropertyMetadata && 'media_selection' === $itemMetadata->getType();
+    }
+
+    public function enhancePropertyMetadata(
+        SchemaPropertyMetadata $propertyMetadata,
+        ItemMetadata $itemMetadata
+    ): SchemaPropertyMetadata {
+        $jsonSchema = $propertyMetadata->toJsonSchema();
+        $required = $itemMetadata->isRequired();
+
+        $jsonSchema['type'] = 'object';
+        $jsonSchema['properties'] = \array_replace_recursive($jsonSchema['properties'] ?? [], [
+            'ids' => [
+                'type' => 'array',
+                'items' => [
+                    'type' => 'number',
+                ],
+                'minItems' => $required ? 1 : 0,
+                'uniqueItems' => true,
+                'message' => [
+                    'minItems' => 'sulu_admin.error_required',
+                ],
+            ],
+            'displayOption' => [
+                'type' => 'string',
+            ],
+        ]);
+
+        if ($required) {
+            $jsonSchema['required'] = \array_unique(\array_merge($jsonSchema['required'] ?? [], ['ids']));
+            $jsonSchema['message'] = \array_replace_recursive($jsonSchema['message'] ?? [], [
+                'ids' => 'sulu_admin.error_required',
+            ]);
         }
 
-        $propertyMetadata->mergeJsonSchema(function($jsonSchema) use ($itemMetadata) {
-            $required = $itemMetadata->isRequired();
-
-            $jsonSchema['type'] = 'object';
-            $jsonSchema['properties'] = \array_replace_recursive($jsonSchema['properties'] ?? [], [
-                'ids' => [
-                    'type' => 'array',
-                    'items' => [
-                        'type' => 'number',
-                    ],
-                    'minItems' => $required ? 1 : 0,
-                    'uniqueItems' => true,
-                ],
-                'displayOption' => [
-                    'type' => 'string',
-                ],
-            ]);
-
-            if ($required) {
-                $jsonSchema['required'] = \array_unique(\array_merge($jsonSchema['required'] ?? [], ['ids']));
-            }
-
-            return $jsonSchema;
-        });
+        return new SchemaPropertyMetadata($propertyMetadata->getName(), $propertyMetadata->isMandatory(), $jsonSchema);
     }
 }
