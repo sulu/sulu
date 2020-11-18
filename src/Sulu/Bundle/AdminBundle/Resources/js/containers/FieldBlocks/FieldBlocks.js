@@ -27,7 +27,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
         const {defaultType, onChange, types, value} = this.props;
         const {types: oldTypes} = prevProps;
 
-        if (!equals(prevProps.value, value)){
+        if (!equals(toJS(prevProps.value), toJS(value))){
             this.updateValue(value);
         }
 
