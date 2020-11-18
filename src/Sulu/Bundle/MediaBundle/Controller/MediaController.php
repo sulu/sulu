@@ -160,9 +160,9 @@ class MediaController extends AbstractMediaController implements
         $this->mediaListBuilderFactory = $mediaListBuilderFactory;
         $this->mediaListRepresentationFactory = $mediaListRepresentationFactory;
 
-        if (null === $this->mediaListBuilderFactory) {
+        if (null === $this->mediaListBuilderFactory || null === $this->mediaListRepresentationFactory) {
             @\trigger_error(
-                'Instantiating MediaController without the $mediaListRepresentationFactory argument is deprecated.',
+                'Instantiating MediaController without the $mediaListBuilderFactory or $mediaListRepresentationFactory argument is deprecated.',
                 \E_USER_DEPRECATED
             );
         }
