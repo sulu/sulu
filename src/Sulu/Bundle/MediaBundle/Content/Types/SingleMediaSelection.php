@@ -11,6 +11,8 @@
 
 namespace Sulu\Bundle\MediaBundle\Content\Types;
 
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata as SchemaPropertyMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataEnhancerInterface;
 use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
@@ -18,6 +20,8 @@ use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
+use Sulu\Component\Content\Metadata\ItemMetadata;
+use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\PreResolvableContentTypeInterface;
 use Sulu\Component\Content\SimpleContentType;
 use Sulu\Component\Security\Authorization\PermissionTypes;
@@ -25,7 +29,7 @@ use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
-class SingleMediaSelection extends SimpleContentType implements PreResolvableContentTypeInterface
+class SingleMediaSelection extends SimpleContentType implements PreResolvableContentTypeInterface, PropertyMetadataEnhancerInterface
 {
     /**
      * @var MediaManagerInterface
@@ -122,5 +126,40 @@ class SingleMediaSelection extends SimpleContentType implements PreResolvableCon
         }
 
         return \json_decode($value, true);
+    }
+
+    public function supports(ItemMetadata $itemMetadata): bool
+    {
+        return $itemMetadata instanceof PropertyMetadata && 'single_media_selection' === $itemMetadata->getType();
+    }
+
+    public function enhancePropertyMetadata(
+        SchemaPropertyMetadata $propertyMetadata,
+        ItemMetadata $itemMetadata
+    ): SchemaPropertyMetadata {
+        $jsonSchema = $propertyMetadata->toJsonSchema() ?? [];
+        $mandatory = $propertyMetadata->isMandatory();
+
+        $jsonSchema = \array_replace_recursive($jsonSchema, [
+            'type' => 'object',
+            'properties' => [
+                'id' => [
+                    'type' => 'number',
+                ],
+                'displayOption' => [
+                    'type' => 'string',
+                ],
+            ],
+        ]);
+
+        if ($mandatory) {
+            $jsonSchema = \array_replace_recursive($jsonSchema, [
+                'required' => \array_unique(
+                    \array_merge($jsonSchema['required'] ?? [], ['id'])
+                ),
+            ]);
+        }
+
+        return new SchemaPropertyMetadata($propertyMetadata->getName(), $mandatory, $jsonSchema);
     }
 }

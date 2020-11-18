@@ -17,5 +17,8 @@ interface PropertyMetadataEnhancerInterface
 {
     public function supports(ItemMetadata $itemMetadata): bool;
 
-    public function enhancePropertyMetadata(PropertyMetadata $propertyMetadata, ItemMetadata $itemMetadata): PropertyMetadata;
+    public function enhancePropertyMetadata(
+        PropertyMetadata $propertyMetadata,
+        ItemMetadata $itemMetadata
+    ): PropertyMetadata;
 }

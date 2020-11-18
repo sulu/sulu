@@ -203,34 +203,34 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
         SchemaPropertyMetadata $propertyMetadata,
         ItemMetadata $itemMetadata
     ): SchemaPropertyMetadata {
-        $jsonSchema = $propertyMetadata->toJsonSchema();
-        $required = $itemMetadata->isRequired();
+        $jsonSchema = $propertyMetadata->toJsonSchema() ?? [];
+        $mandatory = $propertyMetadata->isMandatory();
 
-        $jsonSchema['type'] = 'object';
-        $jsonSchema['properties'] = \array_replace_recursive($jsonSchema['properties'] ?? [], [
-            'ids' => [
-                'type' => 'array',
-                'items' => [
-                    'type' => 'number',
+        $jsonSchema = \array_replace_recursive($jsonSchema, [
+            'type' => 'object',
+            'properties' => [
+                'ids' => [
+                    'type' => 'array',
+                    'items' => [
+                        'type' => 'number',
+                    ],
+                    'minItems' => $mandatory ? 1 : 0,
+                    'uniqueItems' => true,
                 ],
-                'minItems' => $required ? 1 : 0,
-                'uniqueItems' => true,
-                'message' => [
-                    'minItems' => 'sulu_admin.error_required',
+                'displayOption' => [
+                    'type' => 'string',
                 ],
-            ],
-            'displayOption' => [
-                'type' => 'string',
             ],
         ]);
 
-        if ($required) {
-            $jsonSchema['required'] = \array_unique(\array_merge($jsonSchema['required'] ?? [], ['ids']));
-            $jsonSchema['message'] = \array_replace_recursive($jsonSchema['message'] ?? [], [
-                'ids' => 'sulu_admin.error_required',
+        if ($mandatory) {
+            $jsonSchema = \array_replace_recursive($jsonSchema, [
+                'required' => \array_unique(
+                    \array_merge($jsonSchema['required'] ?? [], ['ids'])
+                ),
             ]);
         }
 
-        return new SchemaPropertyMetadata($propertyMetadata->getName(), $propertyMetadata->isMandatory(), $jsonSchema);
+        return new SchemaPropertyMetadata($propertyMetadata->getName(), $mandatory, $jsonSchema);
     }
 }
