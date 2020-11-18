@@ -28,7 +28,8 @@ class ListFieldTransformerRegistry {
         if (!(name in this.fieldTransformers)) {
             throw new Error(
                 'The list field transformer with the key "' + name + '" is not defined. ' +
-                'You probably forgot to add it to the registry using the "add" method.'
+                'You probably forgot to add it to the registry using the "add" method.' +
+                '\n\nRegistered keys: ' + Object.keys(this.fieldTransformers).sort().join(', ')
             );
         }
 

@@ -32,7 +32,8 @@ class BlockPreviewTransformerRegistry {
         if (!(name in this.blockPreviewTransformers)) {
             throw new Error(
                 'The BlockPreviewTransformer with the key "' + name + '" is not defined. ' +
-                'You probably forgot to add it to the registry using the "add" method.'
+                'You probably forgot to add it to the registry using the "add" method.' +
+                '\n\nRegistered keys: ' + Object.keys(this.blockPreviewTransformers).sort().join(', ')
             );
         }
 

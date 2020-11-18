@@ -36,7 +36,10 @@ class RouteRegistry {
 
     get(name: string): Route {
         if (!(name in this.routes)) {
-            throw new Error('The route with the name "' + name + '" does not exist');
+            throw new Error(
+                'The route with the name "' + name + '" does not exist.' +
+                '\n\nRegistered names: ' + Object.keys(this.routes).sort().join(', ')
+            );
         }
 
         return this.routes[name];
