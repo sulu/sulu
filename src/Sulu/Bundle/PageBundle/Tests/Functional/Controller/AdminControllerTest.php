@@ -236,9 +236,11 @@ class AdminControllerTest extends SuluTestCase
         $this->assertObjectHasAttribute('ext/excerpt/description', $form);
         $this->assertObjectHasAttribute('ext/excerpt/segments', $form);
 
-        $schema = $response->schema;
+        $schema = (array) $response->schema;
 
-        $this->assertEquals(['required' => []], (array) $schema);
+        $this->assertArrayHasKey('required', $schema);
+        $this->assertEmpty($schema['required']);
+        $this->assertArrayHasKey('properties', $schema);
     }
 
     public function testPageSettingFormMetadataAction()

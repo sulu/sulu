@@ -12,11 +12,14 @@
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\FormMetadata;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadata as ExternalFormMetadata;
 use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadataMapper;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SectionMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataEnhancerInterface;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
 use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\ComponentMetadata;
@@ -30,9 +33,18 @@ class FormMetadataMapperTest extends TestCase
      */
     private $formMetadataMapper;
 
+    /**
+     * @var ObjectProphecy<PropertyMetadataEnhancerInterface>
+     */
+    private $propertyMetadataEnhancer;
+
     public function setUp(): void
     {
-        $this->formMetadataMapper = new FormMetadataMapper();
+        $this->propertyMetadataEnhancer = $this->prophesize(PropertyMetadataEnhancerInterface::class);
+
+        $this->formMetadataMapper = new FormMetadataMapper(
+            $this->propertyMetadataEnhancer->reveal()
+        );
     }
 
     public function testMapTags()
@@ -344,6 +356,10 @@ class FormMetadataMapperTest extends TestCase
     {
         $form = $this->createFormWithRequiredProperties();
 
+        $this->propertyMetadataEnhancer->enhancePropertyMetadata(Argument::cetera())->will(function($arguments) {
+            return $arguments[0];
+        });
+
         $schema = $this->formMetadataMapper->mapSchema($form->getChildren());
 
         $this->assertInstanceOf(SchemaMetadata::class, $schema);
@@ -359,6 +375,10 @@ class FormMetadataMapperTest extends TestCase
     public function testMapSchemaWithBlock()
     {
         $form = $this->createFormWithBlock();
+
+        $this->propertyMetadataEnhancer->enhancePropertyMetadata(Argument::cetera())->will(function($arguments) {
+            return $arguments[0];
+        });
 
         $schema = $this->formMetadataMapper->mapSchema($form->getChildren());
 
