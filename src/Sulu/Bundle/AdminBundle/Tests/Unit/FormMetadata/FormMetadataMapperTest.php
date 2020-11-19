@@ -22,6 +22,7 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SectionMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata as SchemaPropertyMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapperInterface;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapperRegistry;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
 use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\ComponentMetadata;
@@ -42,7 +43,7 @@ class FormMetadataMapperTest extends TestCase
 
     public function setUp(): void
     {
-        $this->propertyMetadataMapperRegistry = $this->prophesize(PropertyMetadataMapperInterface::class);
+        $this->propertyMetadataMapperRegistry = $this->prophesize(PropertyMetadataMapperRegistry::class);
 
         $this->formMetadataMapper = new FormMetadataMapper(
             $this->propertyMetadataMapperRegistry->reveal()
