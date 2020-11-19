@@ -3,7 +3,6 @@
 /* eslint-disable import/no-dynamic-require */
 const fs = require('fs');
 const path = require('path');
-const webpack = require('webpack');
 const babelConfig = JSON.parse(fs.readFileSync(path.resolve(__dirname, '.babelrc'))); // eslint-disable-line no-undef
 
 module.exports = (env, argv) => { // eslint-disable-line no-undef
@@ -28,6 +27,7 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
         suluVersion = suluPackage ? suluPackage.version : suluVersion;
     }
 
+    const webpack = require(path.resolve(nodeModulesPath, 'webpack'));
     const CleanObsoleteChunksPlugin = require(path.resolve(nodeModulesPath, 'webpack-clean-obsolete-chunks'));
     const CleanWebpackPlugin = require(path.resolve(nodeModulesPath, 'clean-webpack-plugin')).CleanWebpackPlugin;
     const ManifestPlugin = require(path.resolve(nodeModulesPath, 'webpack-manifest-plugin'));
