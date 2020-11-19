@@ -962,6 +962,46 @@ test('Should correctly pass props to the BlockCollection', () => {
     }));
 });
 
+test('Should pass new value to the BlockCollection if value prop is updated', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const types = {
+        default: {
+            title: 'Default',
+            form: {
+                text: {
+                    label: 'Text',
+                    type: 'text_line',
+                    visible: true,
+                },
+            },
+        },
+    };
+
+    const fieldBlocks = shallow(
+        <FieldBlocks
+            {...fieldTypeDefaultProps}
+            defaultType="editor"
+            disabled={true}
+            formInspector={formInspector}
+            label="Test"
+            maxOccurs={2}
+            minOccurs={1}
+            types={types}
+            value={[]}
+        />
+    );
+    expect(fieldBlocks.find('BlockCollection').props().value).toEqual([]);
+
+    fieldBlocks.setProps({value: [{type: 'default', text: 'One'}]});
+    expect(fieldBlocks.find('BlockCollection').props().value).toEqual([{type: 'default', text: 'One'}]);
+
+    fieldBlocks.setProps({value: observable([{type: 'default', text: 'Two'}])});
+    expect(fieldBlocks.find('BlockCollection').props().value).toEqual([{type: 'default', text: 'Two'}]);
+
+    fieldBlocks.setProps({value: observable([{type: 'default', text: 'Three'}])});
+    expect(fieldBlocks.find('BlockCollection').props().value).toEqual([{type: 'default', text: 'Three'}]);
+});
+
 test('Should pass correct schemaPath and router to FieldRenderer', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const router = new Router();
