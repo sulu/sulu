@@ -13,7 +13,7 @@ namespace Sulu\Bundle\MediaBundle\Content\Types;
 
 use PHPCR\NodeInterface;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata as SchemaPropertyMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataEnhancerInterface;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapperInterface;
 use Sulu\Bundle\MediaBundle\Content\MediaSelectionContainer;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
@@ -21,8 +21,7 @@ use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeExportInterface;
-use Sulu\Component\Content\Metadata\ItemMetadata;
-use Sulu\Component\Content\Metadata\PropertyMetadata;
+use Sulu\Component\Content\Metadata\PropertyMetadata as ContentPropertyMetadata;
 use Sulu\Component\Content\PreResolvableContentTypeInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Util\ArrayableInterface;
@@ -31,7 +30,7 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 /**
  * content type for image selection.
  */
-class MediaSelectionContentType extends ComplexContentType implements ContentTypeExportInterface, PreResolvableContentTypeInterface, PropertyMetadataEnhancerInterface
+class MediaSelectionContentType extends ComplexContentType implements ContentTypeExportInterface, PreResolvableContentTypeInterface, PropertyMetadataMapperInterface
 {
     /**
      * @var MediaManagerInterface
@@ -194,19 +193,11 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
         }
     }
 
-    public function supports(ItemMetadata $itemMetadata): bool
+    public function mapPropertyMetadata(ContentPropertyMetadata $propertyMetadata): SchemaPropertyMetadata
     {
-        return $itemMetadata instanceof PropertyMetadata && 'media_selection' === $itemMetadata->getType();
-    }
+        $mandatory = $propertyMetadata->isRequired();
 
-    public function enhancePropertyMetadata(
-        SchemaPropertyMetadata $propertyMetadata,
-        ItemMetadata $itemMetadata
-    ): SchemaPropertyMetadata {
-        $jsonSchema = $propertyMetadata->toJsonSchema() ?? [];
-        $mandatory = $propertyMetadata->isMandatory();
-
-        $jsonSchema = \array_replace_recursive($jsonSchema, [
+        $jsonSchema = [
             'type' => 'object',
             'properties' => [
                 'ids' => [
@@ -221,14 +212,10 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
                     'type' => 'string',
                 ],
             ],
-        ]);
+        ];
 
         if ($mandatory) {
-            $jsonSchema = \array_replace_recursive($jsonSchema, [
-                'required' => \array_unique(
-                    \array_merge($jsonSchema['required'] ?? [], ['ids'])
-                ),
-            ]);
+            $jsonSchema['required'] = ['ids'];
         }
 
         return new SchemaPropertyMetadata($propertyMetadata->getName(), $mandatory, $jsonSchema);

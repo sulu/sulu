@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\FormMetadata;
 
+use Sulu\Bundle\AdminBundle\Exception\PropertyMetadataMapperNotFoundException;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\ItemMetadata;
@@ -20,7 +21,7 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TagMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ArrayMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ConstMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataEnhancerInterface;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapperRegistry;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
 use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\BlockMetadata as ContentBlockMetadata;
@@ -34,13 +35,13 @@ use Sulu\Component\Content\Metadata\SectionMetadata as ContentSectionMetadata;
 class FormMetadataMapper
 {
     /**
-     * @var PropertyMetadataEnhancerInterface
+     * @var PropertyMetadataMapperRegistry
      */
-    private $propertyMetadataEnhancer;
+    private $propertyMetadataMapperRegistry;
 
-    public function __construct(PropertyMetadataEnhancerInterface $propertyMetadataEnhancer)
+    public function __construct(PropertyMetadataMapperRegistry $propertyMetadataMapperRegistry)
     {
-        $this->propertyMetadataEnhancer = $propertyMetadataEnhancer;
+        $this->propertyMetadataMapperRegistry = $propertyMetadataMapperRegistry;
     }
 
     /**
@@ -236,10 +237,19 @@ class FormMetadataMapper
                 );
             }
 
-            return $this->propertyMetadataEnhancer->enhancePropertyMetadata(
-                new PropertyMetadata($itemMetadata->getName(), $itemMetadata->isRequired()),
-                $itemMetadata
-            );
+            /** @var ContentPropertyMetadata $propertyMetadata */
+            $propertyMetadata = $itemMetadata;
+
+            try {
+                return $this->propertyMetadataMapperRegistry
+                    ->get($propertyMetadata->getType())
+                    ->mapPropertyMetadata($propertyMetadata);
+            } catch (PropertyMetadataMapperNotFoundException $e) {
+                return new PropertyMetadata(
+                    $propertyMetadata->getName(),
+                    $propertyMetadata->isRequired()
+                );
+            }
         }, $itemsMetadata));
     }
 }

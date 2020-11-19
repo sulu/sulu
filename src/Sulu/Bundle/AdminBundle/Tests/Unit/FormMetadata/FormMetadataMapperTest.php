@@ -14,12 +14,14 @@ namespace Sulu\Bundle\AdminBundle\Tests\Unit\FormMetadata;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
+use Sulu\Bundle\AdminBundle\Exception\PropertyMetadataMapperNotFoundException;
 use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadata as ExternalFormMetadata;
 use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadataMapper;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SectionMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataEnhancerInterface;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata as SchemaPropertyMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapperInterface;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
 use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\ComponentMetadata;
@@ -34,16 +36,16 @@ class FormMetadataMapperTest extends TestCase
     private $formMetadataMapper;
 
     /**
-     * @var ObjectProphecy<PropertyMetadataEnhancerInterface>
+     * @var ObjectProphecy<PropertyMetadataMapperInterface>
      */
-    private $propertyMetadataEnhancer;
+    private $propertyMetadataMapperRegistry;
 
     public function setUp(): void
     {
-        $this->propertyMetadataEnhancer = $this->prophesize(PropertyMetadataEnhancerInterface::class);
+        $this->propertyMetadataMapperRegistry = $this->prophesize(PropertyMetadataMapperInterface::class);
 
         $this->formMetadataMapper = new FormMetadataMapper(
-            $this->propertyMetadataEnhancer->reveal()
+            $this->propertyMetadataMapperRegistry->reveal()
         );
     }
 
@@ -356,9 +358,32 @@ class FormMetadataMapperTest extends TestCase
     {
         $form = $this->createFormWithRequiredProperties();
 
-        $this->propertyMetadataEnhancer->enhancePropertyMetadata(Argument::cetera())->will(function($arguments) {
-            return $arguments[0];
+        $propertyMetadataMapper = $this->prophesize(PropertyMetadataMapperInterface::class);
+        $this->propertyMetadataMapperRegistry->get(Argument::cetera())->willReturn($propertyMetadataMapper->reveal());
+        $propertyMetadataMapper->mapPropertyMetadata(Argument::cetera())->will(function($arguments) {
+            /** @var PropertyMetadata $propertyMetadata */
+            $propertyMetadata = $arguments[0];
+
+            return new SchemaPropertyMetadata($propertyMetadata->getName(), $propertyMetadata->isRequired());
         });
+
+        $schema = $this->formMetadataMapper->mapSchema($form->getChildren());
+
+        $this->assertInstanceOf(SchemaMetadata::class, $schema);
+        $this->assertEquals([
+            'required' => [
+                'property1',
+                'property2',
+                'property3',
+            ],
+        ], $schema->toJsonSchema());
+    }
+
+    public function testMapSchemaWithoutMapper()
+    {
+        $form = $this->createFormWithRequiredProperties();
+
+        $this->propertyMetadataMapperRegistry->get(Argument::cetera())->willThrow(PropertyMetadataMapperNotFoundException::class);
 
         $schema = $this->formMetadataMapper->mapSchema($form->getChildren());
 
@@ -376,8 +401,13 @@ class FormMetadataMapperTest extends TestCase
     {
         $form = $this->createFormWithBlock();
 
-        $this->propertyMetadataEnhancer->enhancePropertyMetadata(Argument::cetera())->will(function($arguments) {
-            return $arguments[0];
+        $propertyMetadataMapper = $this->prophesize(PropertyMetadataMapperInterface::class);
+        $this->propertyMetadataMapperRegistry->get(Argument::cetera())->willReturn($propertyMetadataMapper->reveal());
+        $propertyMetadataMapper->mapPropertyMetadata(Argument::cetera())->will(function($arguments) {
+            /** @var PropertyMetadata $propertyMetadata */
+            $propertyMetadata = $arguments[0];
+
+            return new SchemaPropertyMetadata($propertyMetadata->getName(), $propertyMetadata->isRequired());
         });
 
         $schema = $this->formMetadataMapper->mapSchema($form->getChildren());
