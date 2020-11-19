@@ -37,7 +37,7 @@ class FormMetadataMapperTest extends TestCase
     private $formMetadataMapper;
 
     /**
-     * @var ObjectProphecy<PropertyMetadataMapperInterface>
+     * @var ObjectProphecy<PropertyMetadataMapperRegistry>
      */
     private $propertyMetadataMapperRegistry;
 
