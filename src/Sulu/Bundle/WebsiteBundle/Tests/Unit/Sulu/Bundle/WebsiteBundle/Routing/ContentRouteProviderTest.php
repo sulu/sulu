@@ -528,7 +528,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
             ->willThrow(new ResourceLocatorMovedException('/new-test', '123-123-123'));
 
         $request = new Request(
-            [], [], ['_sulu' => $attributes->reveal(), '_format'=> 'json'], [], [], ['REQUEST_URI' => \rawurlencode('/de/qwertz/')]
+            [], [], ['_sulu' => $attributes->reveal(), '_format' => 'json'], [], [], ['REQUEST_URI' => \rawurlencode('/de/qwertz/')]
         );
 
         // Test the route provider
