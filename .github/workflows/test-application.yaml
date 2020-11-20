@@ -53,7 +53,7 @@ jobs:
                 phpcr-transport: [ doctrinedbal ]
                 composer-flags: [ '' ]
                 test-flags: [ '' ]
-                php-extensions: [ 'ctype, iconv, mysql' ]
+                php-extensions: [ 'ctype, iconv, mysql, gd' ]
                 tools: [ 'composer:v1' ]
                 env:
                     - {
