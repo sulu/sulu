@@ -76,7 +76,7 @@ class ContentRouteProvider implements RouteProviderInterface
     {
         $collection = new RouteCollection();
 
-        if ('' === $request->getRequestFormat()) {
+        if ('' === $request->getRequestFormat(null)) {
             return $collection;
         }
 

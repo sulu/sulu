@@ -904,7 +904,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
     public function testGetCollectionForEmptyFormat()
     {
         $request = $this->prophesize(Request::class);
-        $request->getRequestFormat()->willReturn('');
+        $request->getRequestFormat(null)->willReturn('');
 
         // Test the route provider
         $routes = $this->contentRouteProvider->getRouteCollectionForRequest($request->reveal());
