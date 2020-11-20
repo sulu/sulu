@@ -1,6 +1,11 @@
 name: Test application
 
-on: pull_request
+on:
+    pull_request:
+    push:
+        branches:
+            - master
+            - release/**
 
 jobs:
     php-cs-fixer:
@@ -28,3 +33,121 @@ jobs:
               run: curl "https://cs.symfony.com/download/php-cs-fixer-v2.phar" --output ${{ steps.php-cs-fixer-path.outputs.path }} && chmod +x ${{ steps.php-cs-fixer-path.outputs.path }}
             - name: Run php-cs-fixer
               run: ./${{ steps.php-cs-fixer-path.outputs.path }} fix --dry-run --diff
+
+    test:
+        name: "Run tests with php ${{ matrix.php-version }} (${{ matrix.phpcr-transport }})"
+        runs-on: ubuntu-latest
+
+        env:
+            JACKRABBIT_VERSION: 2.12.0
+            SYMFONY_DEPRECATIONS_HELPER: weak
+            SYMFONY__DATABASE__HOST: 127.0.0.1
+
+        strategy:
+            fail-fast: false
+            matrix:
+                php-version:
+                    - '5.5'
+                    - '7.0'
+                database: [ mysql ]
+                phpcr-transport: [ doctrinedbal ]
+                composer-flags: [ '' ]
+                test-flags: [ '' ]
+                php-extensions: [ 'ctype, iconv, mysql' ]
+                tools: [ 'composer:v1' ]
+                env:
+                    - {
+                          SYMFONY__PHPCR__TRANSPORT: doctrinedbal,
+                          SYMFONY__DATABASE__DRIVER: pdo_mysql,
+                          SYMFONY__DATABASE__PORT: 3306,
+                    }
+                include:
+                    - php-version: '7.4'
+                      database: postgres
+                      phpcr-transport: jackrabbit
+                      composer-flags: '--prefer-dist --no-interaction'
+                      test-flags: '--jackrabbit-restart' # restart jackrabbit after each suite see: https://github.com/sulu-io/sulu/issues/2137
+                      php-extensions: 'ctype, iconv, mysql, imagick'
+                      tools: 'composer:v2'
+                      env:
+                          SYMFONY__PHPCR__TRANSPORT: jackrabbit
+                          SYMFONY__DATABASE__DRIVER: pdo_pgsql
+                          SYMFONY__DATABASE__PORT: 5432
+                          SYMFONY__DATABASE__USER: postgres
+                          SYMFONY__DATABASE__PASSWORD: postgres
+
+        services:
+            mysql:
+                image: mysql:5.7
+                env:
+                    MYSQL_ALLOW_EMPTY_PASSWORD: yes
+                ports:
+                    - 3306:3306
+                options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=5
+
+            postgres:
+                image: postgres
+                env:
+                    POSTGRES_USER: postgres
+                    POSTGRES_PASSWORD: postgres
+                ports:
+                    - 5432:5432
+                options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+        steps:
+            - name: Checkout project
+              uses: actions/checkout@v2
+
+            - name: Install and configure PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: ${{ matrix.php-version }}
+                  extensions: ${{ matrix.php-extensions }}
+                  tools: ${{ matrix.tools }}
+                  coverage: none
+
+            - name: Cache jackrabbit runnable
+              uses: actions/cache@v2
+              id: jackrabbit-cache
+              if: ${{ matrix.phpcr-transport == 'jackrabbit' }}
+              with:
+                  path: downloads
+                  key: ${{ runner.os }}-jackrabbit-${{ env.JACKRABBIT_VERSION }}
+
+            - name: Download jackrabbit
+              if: ${{ matrix.phpcr-transport == 'jackrabbit' && steps.jackrabbit-cache.outputs.cache-hit != 'true' }}
+              run: |
+                  mkdir downloads
+                  cd downloads
+                  wget http://archive.apache.org/dist/jackrabbit/$JACKRABBIT_VERSION/jackrabbit-standalone-${{ env.JACKRABBIT_VERSION }}.jar
+                  cd -
+
+            - name: Run jackrabbit
+              if: ${{ matrix.phpcr-transport == 'jackrabbit' }}
+              run: java -jar downloads/jackrabbit-standalone-${{ env.JACKRABBIT_VERSION }}.jar > /dev/null &
+
+            - name: Get composer cache directory
+              id: composer-cache-dir
+              run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+            - name: Cache dependencies
+              uses: actions/cache@v2
+              id: composer-cache
+              with:
+                  path: ${{ steps.composer-cache-dir.outputs.dir }}
+                  key: ${{ runner.os }}-composer-${{ hashFiles('composer.lock') }}
+                  restore-keys: |
+                      ${{ runner.os }}-composer-
+
+            - name: Require jackrabbit dependencies
+              if: ${{ matrix.phpcr-transport == 'jackrabbit' }}
+              run: |
+                  composer remove jackalope/jackalope-doctrine-dbal --dev --no-interaction --no-update
+                  composer require jackalope/jackalope-jackrabbit:~1.2  --no-interaction --no-update
+
+            - name: Install dependencies
+              run: composer update ${{ matrix.composer-flags }}
+
+            - name: Run tests
+              run: time ./bin/runtests -i -a ${{ matrix.test-flags }}
+              env: ${{ matrix.env }}
