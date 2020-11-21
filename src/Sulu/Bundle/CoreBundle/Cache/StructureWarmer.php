@@ -30,6 +30,11 @@ class StructureWarmer implements CacheWarmerInterface
         $this->structureManager = $structureManager;
     }
 
+    /**
+     * Warms up the cache.
+     *
+     * @return string[] A list of classes or files to preload on PHP 7.4+
+     */
     public function warmUp($cacheDir)
     {
         // warmup the pages
@@ -37,8 +42,13 @@ class StructureWarmer implements CacheWarmerInterface
 
         // warm up the snippets
         $this->structureManager->getStructures(Structure::TYPE_SNIPPET);
+
+        return [];
     }
 
+    /**
+     * @return bool
+     */
     public function isOptional()
     {
         return true;

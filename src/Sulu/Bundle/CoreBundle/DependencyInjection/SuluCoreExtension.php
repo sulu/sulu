@@ -27,7 +27,7 @@ use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
-use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
@@ -252,7 +252,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
-        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
 
         foreach ($config['locales'] as $locale => $localeName) {
             if (\strtolower($locale) !== $locale) {
@@ -322,9 +322,11 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
     }
 
     /**
-     * @param $webspaceConfig
+     * @param array $webspaceConfig
+     * @param ContainerBuilder $container
+     * @param XmlFileLoader $loader
      */
-    private function initWebspace($webspaceConfig, ContainerBuilder $container, Loader\XmlFileLoader $loader)
+    private function initWebspace($webspaceConfig, ContainerBuilder $container, XmlFileLoader $loader)
     {
         $container->setParameter('sulu_core.webspace.config_dir', $webspaceConfig['config_dir']);
 
@@ -332,7 +334,8 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
     }
 
     /**
-     * @param $fieldsConfig
+     * @param array $fieldsConfig
+     * @param ContainerBuilder $container
      */
     private function initFields($fieldsConfig, ContainerBuilder $container)
     {
@@ -341,9 +344,11 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
     }
 
     /**
-     * @param $contentConfig
+     * @param array $contentConfig
+     * @param ContainerBuilder $container
+     * @param XmlFileLoader $loader
      */
-    private function initContent($contentConfig, ContainerBuilder $container, Loader\XmlFileLoader $loader)
+    private function initContent($contentConfig, ContainerBuilder $container, XmlFileLoader $loader)
     {
         // Default Language
         $container->setParameter('sulu.content.language.namespace', $contentConfig['language']['namespace']);
@@ -401,11 +406,11 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
     }
 
     /**
-     * @param $cache
-     * @param $container
-     * @param $loader
+     * @param array $cache
+     * @param ContainerBuilder $container
+     * @param XmlFileLoader $loader
      */
-    private function initCache($cache, ContainerBuilder $container, Loader\XmlFileLoader $loader)
+    private function initCache($cache, ContainerBuilder $container, XmlFileLoader $loader)
     {
         $container->setParameter('sulu_core.cache.memoize.default_lifetime', $cache['memoize']['default_lifetime']);
 
@@ -414,8 +419,10 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
 
     /**
      * Initializes list builder.
+     * @param ContainerBuilder $container
+     * @param XmlFileLoader $loader
      */
-    private function initListBuilder(ContainerBuilder $container, Loader\XmlFileLoader $loader)
+    private function initListBuilder(ContainerBuilder $container, XmlFileLoader $loader)
     {
         if (SuluKernel::CONTEXT_ADMIN === $container->getParameter('sulu.context')) {
             $loader->load('list_builder.xml');
