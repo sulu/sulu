@@ -321,34 +321,20 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         $loader->load('doctrine.xml');
     }
 
-    /**
-     * @param array $webspaceConfig
-     * @param ContainerBuilder $container
-     * @param XmlFileLoader $loader
-     */
-    private function initWebspace($webspaceConfig, ContainerBuilder $container, XmlFileLoader $loader)
+    private function initWebspace(array $webspaceConfig, ContainerBuilder $container, XmlFileLoader $loader)
     {
         $container->setParameter('sulu_core.webspace.config_dir', $webspaceConfig['config_dir']);
 
         $loader->load('webspace.xml');
     }
 
-    /**
-     * @param array $fieldsConfig
-     * @param ContainerBuilder $container
-     */
-    private function initFields($fieldsConfig, ContainerBuilder $container)
+    private function initFields(array $fieldsConfig, ContainerBuilder $container)
     {
         $container->setParameter('sulu.fields_defaults.translations', $fieldsConfig['translations']);
         $container->setParameter('sulu.fields_defaults.widths', $fieldsConfig['widths']);
     }
 
-    /**
-     * @param array $contentConfig
-     * @param ContainerBuilder $container
-     * @param XmlFileLoader $loader
-     */
-    private function initContent($contentConfig, ContainerBuilder $container, XmlFileLoader $loader)
+    private function initContent(array $contentConfig, ContainerBuilder $container, XmlFileLoader $loader)
     {
         // Default Language
         $container->setParameter('sulu.content.language.namespace', $contentConfig['language']['namespace']);
@@ -405,12 +391,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         $loader->load('content.xml');
     }
 
-    /**
-     * @param array $cache
-     * @param ContainerBuilder $container
-     * @param XmlFileLoader $loader
-     */
-    private function initCache($cache, ContainerBuilder $container, XmlFileLoader $loader)
+    private function initCache(array $cache, ContainerBuilder $container, XmlFileLoader $loader)
     {
         $container->setParameter('sulu_core.cache.memoize.default_lifetime', $cache['memoize']['default_lifetime']);
 
@@ -419,8 +400,6 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
 
     /**
      * Initializes list builder.
-     * @param ContainerBuilder $container
-     * @param XmlFileLoader $loader
      */
     private function initListBuilder(ContainerBuilder $container, XmlFileLoader $loader)
     {
