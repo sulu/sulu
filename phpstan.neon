@@ -4,6 +4,8 @@ parameters:
     paths:
         - ./
     level: 1
+    symfony:
+        container_xml_path: %rootDir%/../../../var/cache/admin/dev/App_KernelDevDebugContainer.xml
     excludes_analyse:
         - %currentWorkingDirectory%/config/*
         - %currentWorkingDirectory%/flow_types/*
