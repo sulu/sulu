@@ -14,7 +14,7 @@ import MultiSelectionStore from '../../stores/MultiSelectionStore';
 import {translate} from '../../utils/Translator';
 import MultiSelect from '../../components/MultiSelect';
 import SmartContentStore from './stores/SmartContentStore';
-import type { Conjunction, FilterCriteria, Sorting, SortOrder, Type } from './types';
+import type {Conjunction, FilterCriteria, Sorting, SortOrder, Type} from './types';
 import filterOverlayStyles from './filterOverlay.scss';
 
 type Props = {|
