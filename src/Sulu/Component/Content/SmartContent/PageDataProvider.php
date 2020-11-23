@@ -99,8 +99,7 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
         $showDrafts,
         FormMetadataProvider $formMetadataProvider = null,
         TokenStorageInterface $tokenStorage = null
-    )
-    {
+    ) {
         $this->contentQueryBuilder = $contentQueryBuilder;
         $this->contentQueryExecutor = $contentQueryExecutor;
         $this->documentManager = $documentManager;
