@@ -78,7 +78,7 @@ test('Should correctly initialize SmartContentStore', () => {
         sortMethod: undefined,
         tagOperator: undefined,
         tags: undefined,
-        types: undefined,
+        types: ['default', 'homepage'],
     };
 
     const schemaOptions = {

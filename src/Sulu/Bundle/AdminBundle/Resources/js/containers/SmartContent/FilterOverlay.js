@@ -338,8 +338,8 @@ class FilterOverlay extends React.Component<Props> {
                                         values={this.types || []}
                                     >
                                         {types.map((type) => (
-                                            <MultiSelect.Option key={type['value']} value={type['value']}>
-                                                {type['name']}
+                                            <MultiSelect.Option key={type.value} value={type.value}>
+                                                {type.name}
                                             </MultiSelect.Option>
                                         ))}
                                     </MultiSelect>

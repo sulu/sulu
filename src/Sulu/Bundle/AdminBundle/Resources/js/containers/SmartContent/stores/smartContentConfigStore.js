@@ -30,9 +30,7 @@ class SmartContentConfigStore {
             sortBy: config.sorting.length > 0 ? config.sorting[0].name : undefined,
             sortMethod: config.sorting.length > 0 ? 'asc' : undefined,
             tagOperator: config.tags ? 'or' : undefined,
-            types: config.types && config.types.length > 0 ? config.types.map((type)=>{
-                return type['value'];
-            }) : undefined,
+            types: config.types.length > 0 ? config.types.map((type)=> type['value']) : undefined,
             tags: undefined,
         };
     }

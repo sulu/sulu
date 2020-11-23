@@ -408,7 +408,7 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
     private function getTypes(): array
     {
         $types = [];
-        if ($this->tokenStorage && null != $this->tokenStorage->getToken()) {
+        if ($this->tokenStorage && null !== $this->tokenStorage->getToken()) {
             $user = $this->tokenStorage->getToken()->getUser();
 
             // user may be "anon."
