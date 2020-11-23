@@ -109,9 +109,11 @@ class CustomUrlController extends AbstractRestController implements SecuredContr
     /**
      * Create a new custom-url object.
      *
+     * @param string $webspace
+     *
      * @return Response
      */
-    public function postAction(string $webspace, Request $request)
+    public function postAction($webspace, Request $request)
     {
         $document = $this->customUrlManager->create(
             $webspace,
