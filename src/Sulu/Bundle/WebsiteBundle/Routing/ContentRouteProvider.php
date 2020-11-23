@@ -244,12 +244,15 @@ class ContentRouteProvider implements RouteProviderInterface
      */
     protected function getRedirectRoute(Request $request, $url)
     {
+        $requestFormat = $request->getRequestFormat(null);
+        $formatSuffix = $requestFormat ? '.' . $requestFormat : '';
+
         // redirect to linked page
         return new Route(
             $this->decodePathInfo($request->getPathInfo()),
             [
                 '_controller' => 'sulu_website.redirect_controller:redirectAction',
-                'url' => $url,
+                'url' => $url . $formatSuffix,
             ],
             [],
             $this->defaultOptions
