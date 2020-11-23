@@ -62,9 +62,9 @@ jobs:
                     - php-version: '7.0'
                       database: mysql
                       phpcr-transport: doctrinedbal
-                      composer-flags: ''
+                      composer-flags: '--prefer-lowest --prefer-dist --no-interaction'
                       test-flags: ''
-                      php-extensions: 'ctype, iconv, mysql, imagick'
+                      php-extensions: 'ctype, iconv, mysql, gd'
                       tools: 'composer:v2'
                       env:
                           SYMFONY__PHPCR__TRANSPORT: doctrinedbal
