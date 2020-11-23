@@ -13,6 +13,8 @@ namespace Sulu\Bundle\SnippetBundle\Content;
 
 use ProxyManager\Factory\LazyLoadingValueHolderFactory;
 use ProxyManager\Proxy\LazyLoadingInterface;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadataProvider;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\SnippetBundle\Admin\SnippetAdmin;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
@@ -20,12 +22,14 @@ use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\Content\SmartContent\ContentDataItem;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\SmartContent\ArrayAccessItem;
 use Sulu\Component\SmartContent\Configuration\Builder;
 use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
 use Sulu\Component\SmartContent\DataProviderInterface;
 use Sulu\Component\SmartContent\DataProviderResult;
 use Sulu\Component\Util\SuluNodeHelper;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * DataProvider for snippets.
@@ -67,13 +71,25 @@ class SnippetDataProvider implements DataProviderInterface
      */
     private $referenceStore;
 
+    /**
+     * @var FormMetadataProvider
+     */
+    private $formMetadataProvider;
+
+    /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
+
     public function __construct(
         ContentQueryExecutorInterface $contentQueryExecutor,
         ContentQueryBuilderInterface $snippetQueryBuilder,
         SuluNodeHelper $nodeHelper,
         LazyLoadingValueHolderFactory $proxyFactory,
         DocumentManagerInterface $documentManager,
-        ReferenceStoreInterface $referenceStore
+        ReferenceStoreInterface $referenceStore,
+        FormMetadataProvider $formMetadataProvider = null,
+        TokenStorageInterface $tokenStorage = null
     ) {
         $this->contentQueryExecutor = $contentQueryExecutor;
         $this->snippetQueryBuilder = $snippetQueryBuilder;
@@ -81,6 +97,8 @@ class SnippetDataProvider implements DataProviderInterface
         $this->proxyFactory = $proxyFactory;
         $this->documentManager = $documentManager;
         $this->referenceStore = $referenceStore;
+        $this->formMetadataProvider = $formMetadataProvider;
+        $this->tokenStorage = $tokenStorage;
     }
 
     public function getConfiguration()
@@ -100,6 +118,7 @@ class SnippetDataProvider implements DataProviderInterface
                         ['column' => 'changed', 'title' => 'sulu_admin.changed'],
                     ]
                 )
+                ->enableTypes($this->getTypes())
                 ->enableView(SnippetAdmin::EDIT_FORM_VIEW, ['id' => 'id'])
                 ->getConfiguration();
         }
@@ -218,6 +237,30 @@ class SnippetDataProvider implements DataProviderInterface
                 return true;
             }
         );
+    }
+
+    private function getTypes(): array
+    {
+        $types = [];
+        if ($this->tokenStorage && null !== $this->tokenStorage->getToken()) {
+            // the user is required for the metadata locale because of the translated template titles
+            $user = $this->tokenStorage->getToken()->getUser();
+
+            // user is "anon." if the user is not logged in
+            // the configuration is initialized on the first request when the AudienceTargeting is deactivated
+            if (!$user instanceof UserInterface) {
+                return $types;
+            }
+
+            /** @var TypedFormMetadata $metadata */
+            $metadata = $this->formMetadataProvider->getMetadata('snippet', $user->getLocale(), []);
+
+            foreach ($metadata->getForms() as $form) {
+                $types[] = ['type' => $form->getName(), 'title' => $form->getTitle()];
+            }
+        }
+
+        return $types;
     }
 
     /**

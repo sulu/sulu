@@ -329,7 +329,12 @@ class QueryBuilder extends ContentQueryBuilder
     {
         $sql2Where = [];
         foreach ($types as $type) {
-            $sql2Where[] = 'page.[i18n:' . $languageCode . '-template] = ' . $type;
+            if ('snippet' === static::$structureType) {
+                // snippet templates are not localized
+                $sql2Where[] = 'page.template = ' . $type;
+            } else {
+                $sql2Where[] = 'page.[i18n:' . $languageCode . '-template] = ' . $type;
+            }
         }
 
         if (\count($sql2Where) > 0) {

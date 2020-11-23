@@ -409,9 +409,11 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
     {
         $types = [];
         if ($this->tokenStorage && null !== $this->tokenStorage->getToken()) {
+            // the user is required for the metadata locale because of the translated template titles
             $user = $this->tokenStorage->getToken()->getUser();
 
-            // user may be "anon."
+            // user is "anon." if the user is not logged in
+            // this happens on the first request (/admin) when the AudienceTargeting is deactivated
             if (!$user instanceof UserInterface) {
                 return $types;
             }
