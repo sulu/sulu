@@ -39,29 +39,38 @@ jobs:
         runs-on: ubuntu-latest
 
         env:
-            JACKRABBIT_VERSION: 2.12.0
+            JACKRABBIT_VERSION: 2.20.2
             SYMFONY_DEPRECATIONS_HELPER: weak
             SYMFONY__DATABASE__HOST: 127.0.0.1
 
         strategy:
             fail-fast: false
             matrix:
-                php-version:
-                    - '5.5'
-                    - '7.0'
-                database: [ mysql ]
-                phpcr-transport: [ doctrinedbal ]
-                composer-flags: [ '' ]
-                test-flags: [ '' ]
-                php-extensions: [ 'ctype, iconv, mysql, gd' ]
-                tools: [ 'composer:v1' ]
-                env:
-                    - {
-                          SYMFONY__PHPCR__TRANSPORT: doctrinedbal,
-                          SYMFONY__DATABASE__DRIVER: pdo_mysql,
-                          SYMFONY__DATABASE__PORT: 3306,
-                    }
                 include:
+                    - php-version: '5.5'
+                      database: mysql
+                      phpcr-transport: doctrinedbal
+                      composer-flags: ''
+                      test-flags: ''
+                      php-extensions: 'ctype, iconv, mysql, gd'
+                      tools: 'composer:v1'
+                      env:
+                          SYMFONY__PHPCR__TRANSPORT: doctrinedbal
+                          SYMFONY__DATABASE__DRIVER: pdo_mysql
+                          SYMFONY__DATABASE__PORT: 3306
+
+                    - php-version: '7.0'
+                      database: mysql
+                      phpcr-transport: doctrinedbal
+                      composer-flags: ''
+                      test-flags: ''
+                      php-extensions: 'ctype, iconv, mysql, imagick'
+                      tools: 'composer:v2'
+                      env:
+                          SYMFONY__PHPCR__TRANSPORT: doctrinedbal
+                          SYMFONY__DATABASE__DRIVER: pdo_mysql
+                          SYMFONY__DATABASE__PORT: 3306
+
                     - php-version: '7.4'
                       database: postgres
                       phpcr-transport: jackrabbit
