@@ -502,6 +502,44 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('/de/other-test?test1=value1', $route->getDefaults()['url']);
     }
 
+    public function testGetRedirectForInternalLinkWithJsonFormat()
+    {
+        $attributes = $this->prophesize(RequestAttributes::class);
+
+        $portal = new Portal();
+        $portal->setKey('portal');
+        $webspace = new Webspace();
+        $webspace->setKey('webspace');
+        $webspace->setTheme('theme');
+        $portal->setWebspace($webspace);
+        $attributes->getAttribute('portal', null)->willReturn($portal);
+
+        $localization = new Localization('de', 'at');
+        $attributes->getAttribute('localization', null)->willReturn($localization);
+        $attributes->getAttribute('matchType', null)->willReturn(RequestAnalyzer::MATCH_TYPE_FULL);
+
+        $attributes->getAttribute('resourceLocator', null)->willReturn('/qwertz/');
+        $attributes->getAttribute('resourceLocatorPrefix', null)->willReturn('/de');
+
+        $this->requestAnalyzer->getResourceLocator()->willReturn('/qwertz/');
+        $this->requestAnalyzer->getResourceLocatorPrefix()->willReturn('/de');
+
+        $this->resourceLocatorStrategy->loadByResourceLocator('/qwertz', 'webspace', 'de_at')
+            ->willThrow(new ResourceLocatorMovedException('/new-test', '123-123-123'));
+
+        $request = new Request(
+            [], [], ['_sulu' => $attributes->reveal(), '_format' => 'json'], [], [], ['REQUEST_URI' => \rawurlencode('/de/qwertz/')]
+        );
+
+        // Test the route provider
+        $routes = $this->contentRouteProvider->getRouteCollectionForRequest($request);
+
+        $this->assertCount(1, $routes);
+        $route = $routes->getIterator()->current();
+        $this->assertEquals('SuluWebsiteBundle:Redirect:redirect', $route->getDefaults()['_controller']);
+        $this->assertEquals('/de/new-test.json', $route->getDefaults()['url']);
+    }
+
     public function testGetRedirectForExternalLink()
     {
         $attributes = $this->prophesize(RequestAttributes::class);
@@ -866,7 +904,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
     public function testGetCollectionForEmptyFormat()
     {
         $request = $this->prophesize(Request::class);
-        $request->getRequestFormat()->willReturn('');
+        $request->getRequestFormat(null)->willReturn('');
 
         // Test the route provider
         $routes = $this->contentRouteProvider->getRouteCollectionForRequest($request->reveal());
