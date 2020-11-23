@@ -12,8 +12,9 @@ import SingleListOverlay from '../../containers/SingleListOverlay';
 import MultiAutoComplete from '../../containers/MultiAutoComplete';
 import MultiSelectionStore from '../../stores/MultiSelectionStore';
 import {translate} from '../../utils/Translator';
+import MultiSelect from '../../components/MultiSelect';
 import SmartContentStore from './stores/SmartContentStore';
-import type {Conjunction, FilterCriteria, SortOrder} from './types';
+import type {Conjunction, FilterCriteria, SortOrder, Type} from './types';
 import filterOverlayStyles from './filterOverlay.scss';
 
 type Props = {|
@@ -29,6 +30,7 @@ type Props = {|
     smartContentStore: SmartContentStore,
     sortings: Array<{name: ?string, value: string}>,
     title: string,
+    types: Array<Type>,
 |};
 
 @observer
@@ -39,6 +41,7 @@ class FilterOverlay extends React.Component<Props> {
     @observable categoryOperator: ?Conjunction;
     @observable tags: ?Array<string | number>;
     @observable tagOperator: ?Conjunction;
+    @observable types: ?Array<string>;
     @observable audienceTargeting: ?boolean;
     @observable sortBy: ?string;
     @observable sortOrder: ?SortOrder;
@@ -71,6 +74,7 @@ class FilterOverlay extends React.Component<Props> {
         this.categories = smartContentStore.categories;
         this.categoryOperator = smartContentStore.categoryOperator;
         this.tags = smartContentStore.tags;
+        this.types = smartContentStore.types;
         this.tagOperator = smartContentStore.tagOperator;
         this.audienceTargeting = smartContentStore.audienceTargeting;
         this.sortBy = smartContentStore.sortBy;
@@ -92,6 +96,7 @@ class FilterOverlay extends React.Component<Props> {
         smartContentStore.sortOrder = this.sortOrder;
         smartContentStore.tagOperator = this.tagOperator;
         smartContentStore.tags = this.tags;
+        smartContentStore.types = this.types;
         smartContentStore.presentation = this.presentation;
 
         onClose();
@@ -105,6 +110,7 @@ class FilterOverlay extends React.Component<Props> {
         this.categories = defaultValue.categories;
         this.categoryOperator = defaultValue.categoryOperator;
         this.tags = defaultValue.tags;
+        this.types = defaultValue.types;
         this.tagOperator = defaultValue.tagOperator;
         this.audienceTargeting = defaultValue.audienceTargeting;
         this.sortBy = defaultValue.sortBy;
@@ -165,6 +171,10 @@ class FilterOverlay extends React.Component<Props> {
         this.tagOperator = tagOperator;
     };
 
+    @action handleTypesChange = (type: Array<string>) => {
+        this.types = type;
+    };
+
     @action handleAudienceTargetingChange = (audienceTargeting: boolean) => {
         this.audienceTargeting = audienceTargeting;
     };
@@ -218,6 +228,7 @@ class FilterOverlay extends React.Component<Props> {
             smartContentStore,
             sortings,
             title,
+            types,
         } = this.props;
 
         return (
@@ -312,6 +323,26 @@ class FilterOverlay extends React.Component<Props> {
                                             </SingleSelect.Option>
                                         </SingleSelect>
                                     </div>
+                                </div>
+                            </section>
+                        }
+
+                        {sections.includes('types') &&
+                            <section className={filterOverlayStyles.section}>
+                                <h3>{translate('sulu_admin.filter_by_types')}</h3>
+                                <div className={filterOverlayStyles.types}>
+                                    <MultiSelect
+                                        allSelectedText={translate('sulu_admin.all_types')}
+                                        noneSelectedText={translate('sulu_admin.no_types')}
+                                        onChange={this.handleTypesChange}
+                                        values={this.types || []}
+                                    >
+                                        {types.map((type) => (
+                                            <MultiSelect.Option key={type['value']} value={type['value']}>
+                                                {type['name']}
+                                            </MultiSelect.Option>
+                                        ))}
+                                    </MultiSelect>
                                 </div>
                             </section>
                         }

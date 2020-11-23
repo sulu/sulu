@@ -121,6 +121,14 @@ class QueryBuilder extends ContentQueryBuilder
             );
         }
 
+        // build where clause for types
+        if ($this->hasConfig('types')) {
+            $sql2Where[] = $this->buildTypesWhere(
+                $this->getConfig('types', []),
+                $locale
+            );
+        }
+
         // build where clause for categories
         if ($this->hasConfig('categories')) {
             $sql2Where[] = $this->buildCategoriesWhere(
@@ -307,6 +315,25 @@ class QueryBuilder extends ContentQueryBuilder
             if (\count($sql2Where) > 0) {
                 return '(' . \implode(' ' . \strtoupper($operator) . ' ', $sql2Where) . ')';
             }
+        }
+
+        return '';
+    }
+
+    /**
+     * @param array<string>|string $types
+     *
+     * @return string
+     */
+    private function buildTypesWhere($types, string $languageCode)
+    {
+        $sql2Where = [];
+        foreach ($types as $type) {
+            $sql2Where[] = 'page.[i18n:' . $languageCode . '-template] = ' . $type;
+        }
+
+        if (\count($sql2Where) > 0) {
+            return '(' . \implode(' or ', $sql2Where) . ')';
         }
 
         return '';

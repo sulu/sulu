@@ -38,6 +38,7 @@ test('Do not display if open is set to false', () => {
         sortMethod: 'asc',
         presentAs: 'two',
         limitResult: 5,
+        types: [],
     };
 
     const filterOverlay = shallow(
@@ -54,6 +55,7 @@ test('Do not display if open is set to false', () => {
             smartContentStore={smartContentStore}
             sortings={[]}
             title="Test"
+            types={[]}
         />
     );
 
@@ -77,6 +79,7 @@ test('Pass rootKey for categories to options for category list', () => {
         sortMethod: 'asc',
         presentAs: 'two',
         limitResult: 5,
+        types: [],
     };
 
     const filterOverlay = shallow(
@@ -93,6 +96,7 @@ test('Pass rootKey for categories to options for category list', () => {
             smartContentStore={smartContentStore}
             sortings={[]}
             title="Test"
+            types={[]}
         />
     );
 
@@ -117,6 +121,7 @@ test('Render with ListOverlays if smartContentStore is loaded', () => {
         sortMethod: 'asc',
         presentAs: 'two',
         limitResult: 5,
+        types: [],
     };
 
     const filterOverlay = shallow(
@@ -133,6 +138,7 @@ test('Render with ListOverlays if smartContentStore is loaded', () => {
             smartContentStore={smartContentStore}
             sortings={[]}
             title="Test"
+            types={[]}
         />
     );
 
@@ -157,6 +163,7 @@ test('Render without ListOverlays if smartContentStore is not loaded', () => {
         sortMethod: 'asc',
         presentAs: 'two',
         limitResult: 5,
+        types: [],
     };
 
     const filterOverlay = mount(
@@ -173,6 +180,7 @@ test('Render without ListOverlays if smartContentStore is not loaded', () => {
             smartContentStore={smartContentStore}
             sortings={[]}
             title="Test"
+            types={[]}
         />
     );
     expect(filterOverlay.find(SingleListOverlay)).toHaveLength(0);
@@ -194,6 +202,7 @@ test('Render with all fields', () => {
         sortMethod: 'asc',
         presentAs: 'two',
         limitResult: 5,
+        types: [],
     };
 
     const filterOverlay = mount(
@@ -210,6 +219,7 @@ test('Render with all fields', () => {
             smartContentStore={smartContentStore}
             sortings={[]}
             title="Test"
+            types={[]}
         />
     );
     expect(filterOverlay.find('Portal').at(1).render()).toMatchSnapshot();
@@ -230,6 +240,7 @@ test('Render with no fields', () => {
         sortMethod: 'asc',
         presentAs: 'two',
         limitResult: 5,
+        types: [],
     };
 
     const filterOverlay = mount(
@@ -246,6 +257,7 @@ test('Render with no fields', () => {
             smartContentStore={smartContentStore}
             sortings={[]}
             title="Test"
+            types={[]}
         />
     );
     expect(filterOverlay.find('Portal').at(1).render()).toMatchSnapshot();
@@ -267,6 +279,7 @@ test('Fill all fields using and update SmartContentStore on confirm', () => {
         sortMethod: 'asc',
         presentAs: 'two',
         limitResult: 5,
+        types: [],
     };
 
     const filterOverlay = mount(
@@ -282,13 +295,19 @@ test('Fill all fields using and update SmartContentStore on confirm', () => {
                 small: 'Small',
                 large: 'Large',
             }}
-            sections={['datasource', 'categories', 'tags', 'audienceTargeting', 'sorting', 'presentation', 'limit']}
+            sections={[
+                'datasource', 'categories', 'tags', 'audienceTargeting', 'sorting', 'presentation', 'limit', 'types',
+            ]}
             smartContentStore={smartContentStore}
             sortings={[
                 {name: 'title', value: 'Title'},
                 {name: 'changed', value: 'Changed'},
             ]}
             title="Test"
+            types={[
+                {name: 'default', value: 'default'},
+                {name: 'homepage', value: 'homepage'},
+            ]}
         />
     );
 
@@ -330,6 +349,10 @@ test('Fill all fields using and update SmartContentStore on confirm', () => {
     filterOverlay.update();
     expect(filterOverlay.find('div[className="tags"]').find('SingleSelect').prop('value')).toEqual('or');
 
+    filterOverlay.find('div[className="types"]').find('MultiSelect').prop('onChange')(['default']);
+    filterOverlay.update();
+    expect(filterOverlay.find('div[className="types"]').find('MultiSelect').prop('values')).toEqual(['default']);
+
     filterOverlay.find('Toggler[children="sulu_admin.use_target_groups"]').prop('onChange')(false);
     filterOverlay.update();
     expect(filterOverlay.find('Toggler[children="sulu_admin.use_target_groups"]').prop('checked')).toEqual(false);
@@ -361,6 +384,7 @@ test('Fill all fields using and update SmartContentStore on confirm', () => {
     expect(smartContentStore.sortOrder).toEqual(undefined);
     expect(smartContentStore.presentation).toEqual(undefined);
     expect(smartContentStore.limit).toEqual(undefined);
+    expect(smartContentStore.types).toEqual(undefined);
 
     filterOverlay.find('Overlay').prop('onConfirm')();
 
@@ -375,6 +399,7 @@ test('Fill all fields using and update SmartContentStore on confirm', () => {
     expect(smartContentStore.sortOrder).toEqual('asc');
     expect(smartContentStore.presentation).toEqual('large');
     expect(smartContentStore.limit).toEqual(7);
+    expect(smartContentStore.types).toEqual(['default']);
 
     expect(closeSpy).toBeCalledWith();
 });
@@ -392,6 +417,7 @@ test('Prefill all fields with correct values', () => {
     smartContentStore.sortOrder = 'desc';
     smartContentStore.presentation = 'small';
     smartContentStore.limit = 8;
+    smartContentStore.types = ['default', 'homepage'];
 
     const defaultValue = {
         dataSource: 1,
@@ -405,6 +431,7 @@ test('Prefill all fields with correct values', () => {
         sortMethod: 'asc',
         presentAs: 'two',
         limitResult: 5,
+        types: [],
     };
 
     const filterOverlay = mount(
@@ -420,13 +447,19 @@ test('Prefill all fields with correct values', () => {
                 small: 'Small',
                 large: 'Large',
             }}
-            sections={['datasource', 'categories', 'tags', 'audienceTargeting', 'sorting', 'presentation', 'limit']}
+            sections={[
+                'datasource', 'categories', 'tags', 'audienceTargeting', 'sorting', 'presentation', 'limit', 'types',
+            ]}
             smartContentStore={smartContentStore}
             sortings={[
                 {name: 'title', value: 'Title'},
                 {name: 'created', value: 'Created'},
             ]}
             title="Test"
+            types={[
+                {name: 'default', value: 'default'},
+                {name: 'homepage', value: 'homepage'},
+            ]}
         />
     );
 
@@ -446,6 +479,10 @@ test('Prefill all fields with correct values', () => {
 
     expect(MultiSelectionStore).toBeCalledWith('tags', [1, 2], undefined, 'names');
     expect(filterOverlay.find('div[className="tags"]').find('SingleSelect').prop('value')).toEqual('and');
+
+    expect(filterOverlay.find('div[className="types"]').find('MultiSelect').prop('values')).toEqual(
+        ['default', 'homepage']
+    );
 
     expect(filterOverlay.find('Toggler[children="sulu_admin.use_target_groups"]').prop('checked')).toEqual(true);
 
@@ -469,6 +506,7 @@ test('Reset all fields when reset action is clicked', () => {
     smartContentStore.sortOrder = 'desc';
     smartContentStore.presentation = 'large';
     smartContentStore.limit = 5;
+    smartContentStore.types = ['default', 'homepage'];
 
     const defaultValue = {
         dataSource: 1,
@@ -482,6 +520,7 @@ test('Reset all fields when reset action is clicked', () => {
         sortMethod: 'asc',
         presentAs: 'two',
         limitResult: 5,
+        types: [],
     };
 
     const filterOverlay = mount(
@@ -504,6 +543,10 @@ test('Reset all fields when reset action is clicked', () => {
                 {name: 'created', value: 'Created'},
             ]}
             title="Test"
+            types={[
+                {name: 'default', value: 'default'},
+                {name: 'homepage', value: 'homepage'},
+            ]}
         />
     );
 
@@ -521,4 +564,5 @@ test('Reset all fields when reset action is clicked', () => {
     expect(filterOverlay.instance().sortOrder).toEqual('asc');
     expect(filterOverlay.instance().presentation).toEqual('two');
     expect(filterOverlay.instance().limit).toEqual(5);
+    expect(filterOverlay.instance().types).toEqual([]);
 });

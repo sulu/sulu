@@ -53,6 +53,18 @@ interface ProviderConfigurationInterface
     public function hasTags(): bool;
 
     /**
+     * Returns types for types filtering.
+     *
+     * @return null|PropertyParameter[]
+     */
+    public function getTypes(): ?array;
+
+    /**
+     * Returns TRUE if types should be displayed.
+     */
+    public function hasTypes(): bool;
+
+    /**
      * Returns TRUE if categories should be displayed.
      */
     public function hasCategories(): bool;

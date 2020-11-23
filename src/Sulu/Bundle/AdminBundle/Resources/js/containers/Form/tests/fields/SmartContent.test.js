@@ -78,6 +78,7 @@ test('Should correctly initialize SmartContentStore', () => {
         sortMethod: undefined,
         tagOperator: undefined,
         tags: undefined,
+        types: [],
     };
 
     const schemaOptions = {
@@ -186,6 +187,7 @@ test('Should pass id to SmartContentStore if resourceKeys match', () => {
         sortMethod: undefined,
         tagOperator: undefined,
         tags: undefined,
+        types: [],
     };
 
     const schemaOptions = {
@@ -332,6 +334,7 @@ test('Should not call the onChange and onFinish callbacks if categories only dif
         sortMethod: undefined,
         tagOperator: undefined,
         tags: undefined,
+        types: [],
     };
 
     const schemaOptions = {
@@ -382,6 +385,7 @@ test('Should not call the onChange and onFinish callbacks if tags only differ in
         sortMethod: undefined,
         tagOperator: undefined,
         tags: ['Design', 'Programming'],
+        types: [],
     };
 
     const schemaOptions = {

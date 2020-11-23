@@ -15,6 +15,8 @@ use PHPCR\ItemNotFoundException;
 use PHPCR\SessionInterface;
 use ProxyManager\Factory\LazyLoadingValueHolderFactory;
 use ProxyManager\Proxy\LazyLoadingInterface;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadataProvider;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
@@ -22,6 +24,7 @@ use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\SmartContent\ArrayAccessItem;
 use Sulu\Component\SmartContent\Configuration\Builder;
 use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
@@ -29,6 +32,7 @@ use Sulu\Component\SmartContent\DataProviderAliasInterface;
 use Sulu\Component\SmartContent\DataProviderInterface;
 use Sulu\Component\SmartContent\DataProviderResult;
 use Sulu\Component\SmartContent\DatasourceItem;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * DataProvider for content.
@@ -75,6 +79,16 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
      */
     private $showDrafts;
 
+    /**
+     * @var FormMetadataProvider
+     */
+    private $formMetadataProvider;
+
+    /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
+
     public function __construct(
         ContentQueryBuilderInterface $contentQueryBuilder,
         ContentQueryExecutorInterface $contentQueryExecutor,
@@ -82,8 +96,11 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
         LazyLoadingValueHolderFactory $proxyFactory,
         SessionInterface $session,
         ReferenceStoreInterface $referenceStore,
-        $showDrafts
-    ) {
+        $showDrafts,
+        FormMetadataProvider $formMetadataProvider = null,
+        TokenStorageInterface $tokenStorage = null
+    )
+    {
         $this->contentQueryBuilder = $contentQueryBuilder;
         $this->contentQueryExecutor = $contentQueryExecutor;
         $this->documentManager = $documentManager;
@@ -91,6 +108,8 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
         $this->session = $session;
         $this->referenceStore = $referenceStore;
         $this->showDrafts = $showDrafts;
+        $this->formMetadataProvider = $formMetadataProvider;
+        $this->tokenStorage = $tokenStorage;
     }
 
     public function getConfiguration()
@@ -127,6 +146,7 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
                     ['column' => 'authored', 'title' => 'sulu_admin.authored'],
                 ]
             )
+            ->enableTypes($this->getTypes())
             ->enableView(PageAdmin::EDIT_FORM_VIEW, ['id' => 'id', 'webspace' => 'webspace'])
             ->getConfiguration();
 
@@ -384,6 +404,28 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
                 return true;
             }
         );
+    }
+
+    private function getTypes(): array
+    {
+        $types = [];
+        if ($this->tokenStorage && null != $this->tokenStorage->getToken()) {
+            $user = $this->tokenStorage->getToken()->getUser();
+
+            // user may be "anon."
+            if (!$user instanceof UserInterface) {
+                return $types;
+            }
+
+            /** @var TypedFormMetadata $metadata */
+            $metadata = $this->formMetadataProvider->getMetadata('page', $user->getLocale(), []);
+
+            foreach ($metadata->getForms() as $form) {
+                $types[] = ['type' => $form->getName(), 'title' => $form->getTitle()];
+            }
+        }
+
+        return $types;
     }
 
     public function getAlias()
