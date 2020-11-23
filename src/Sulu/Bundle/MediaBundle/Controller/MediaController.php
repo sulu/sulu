@@ -20,6 +20,8 @@ use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
+use Sulu\Bundle\MediaBundle\Media\ListBuilderFactory\MediaListBuilderFactory;
+use Sulu\Bundle\MediaBundle\Media\ListRepresentationFactory\MediaListRepresentationFactory;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
@@ -33,6 +35,7 @@ use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestHelperInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredObjectControllerInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
@@ -114,6 +117,16 @@ class MediaController extends AbstractMediaController implements
      */
     private $collectionClass;
 
+    /**
+     * @var MediaListBuilderFactory|null
+     */
+    private $mediaListBuilderFactory;
+
+    /**
+     * @var MediaListRepresentationFactory|null
+     */
+    private $mediaListRepresentationFactory;
+
     public function __construct(
         ViewHandlerInterface $viewHandler,
         TokenStorageInterface $tokenStorage,
@@ -127,7 +140,9 @@ class MediaController extends AbstractMediaController implements
         SecurityCheckerInterface $securityChecker,
         FieldDescriptorFactoryInterface $fieldDescriptorFactory,
         string $mediaClass,
-        string $collectionClass
+        string $collectionClass,
+        MediaListBuilderFactory $mediaListBuilderFactory = null,
+        MediaListRepresentationFactory $mediaListRepresentationFactory = null
     ) {
         parent::__construct($viewHandler, $tokenStorage);
 
@@ -142,6 +157,15 @@ class MediaController extends AbstractMediaController implements
         $this->fieldDescriptorFactory = $fieldDescriptorFactory;
         $this->mediaClass = $mediaClass;
         $this->collectionClass = $collectionClass;
+        $this->mediaListBuilderFactory = $mediaListBuilderFactory;
+        $this->mediaListRepresentationFactory = $mediaListRepresentationFactory;
+
+        if (null === $this->mediaListBuilderFactory || null === $this->mediaListRepresentationFactory) {
+            @\trigger_error(
+                'Instantiating MediaController without the $mediaListBuilderFactory or $mediaListRepresentationFactory argument is deprecated.',
+                \E_USER_DEPRECATED
+            );
+        }
     }
 
     /**
@@ -197,6 +221,44 @@ class MediaController extends AbstractMediaController implements
      */
     public function cgetAction(Request $request)
     {
+        if (null === $this->mediaListBuilderFactory || null === $this->mediaListRepresentationFactory) {
+            $listRepresentation = $this->getListRepresentation($request);
+        } else {
+            /** @var UserInterface $user */
+            $user = $this->getUser();
+            $types = \array_filter(\explode(',', $request->get('types')));
+            $collectionId = $request->get('collection');
+            $collectionId = $collectionId ? (int) $collectionId : null;
+            $locale = $this->getRequestParameter($request, 'locale', true);
+
+            $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors('media');
+            $listBuilder = $this->mediaListBuilderFactory->getListBuilder(
+                $fieldDescriptors,
+                $user,
+                $types,
+                !$request->get('sortBy'),
+                $collectionId
+            );
+
+            $listRepresentation = $this->mediaListRepresentationFactory->getListRepresentation(
+                $listBuilder,
+                $locale,
+                static::$entityKey,
+                'sulu_media.cget_media',
+                $request->query->all()
+            );
+        }
+
+        $view = $this->view($listRepresentation, 200);
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * @deprecated
+     */
+    private function getListRepresentation(Request $request)
+    {
         $locale = $this->getRequestParameter($request, 'locale', true);
         $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors('media');
         $types = \array_filter(\explode(',', $request->get('types')));
@@ -238,7 +300,7 @@ class MediaController extends AbstractMediaController implements
             $listResponse = \array_values($result);
         }
 
-        $list = new ListRepresentation(
+        return new ListRepresentation(
             $listResponse,
             self::$entityKey,
             'sulu_media.cget_media',
@@ -247,14 +309,12 @@ class MediaController extends AbstractMediaController implements
             $listBuilder->getLimit(),
             $listBuilder->count()
         );
-
-        $view = $this->view($list, 200);
-
-        return $this->handleView($view);
     }
 
     /**
      * Returns a list-builder for media list.
+     *
+     * @deprecated
      *
      * @param FieldDescriptorInterface[] $fieldDescriptors
      * @param array $types

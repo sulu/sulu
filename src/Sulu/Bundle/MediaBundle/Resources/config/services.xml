@@ -28,6 +28,30 @@
 
     <services>
         <service
+            id="sulu_media.media_list_builder_factory"
+            class="Sulu\Bundle\MediaBundle\Media\ListBuilderFactory\MediaListBuilderFactory"
+        >
+            <argument type="service" id="sulu_core.doctrine_rest_helper" />
+            <argument type="service" id="sulu_core.doctrine_list_builder_factory" />
+            <argument type="service" id="sulu_media.collection_repository" />
+            <argument type="service" id="sulu_security.security_checker" />
+            <argument>%sulu.model.media.class%</argument>
+            <argument>%sulu.model.collection.class%</argument>
+
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <service
+            id="sulu_media.media_list_representation_factory"
+            class="Sulu\Bundle\MediaBundle\Media\ListRepresentationFactory\MediaListRepresentationFactory"
+        >
+            <argument type="service" id="sulu_media.media_manager" />
+            <argument type="service" id="sulu_media.format_manager" />
+
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <service
             id="sulu_media.media_controller"
             class="Sulu\Bundle\MediaBundle\Controller\MediaController"
             public="true"
@@ -45,6 +69,8 @@
             <argument type="service" id="sulu_core.list_builder.field_descriptor_factory" />
             <argument>%sulu.model.media.class%</argument>
             <argument>%sulu.model.collection.class%</argument>
+            <argument type="service" id="sulu_media.media_list_builder_factory" />
+            <argument type="service" id="sulu_media.media_list_representation_factory" />
 
             <tag name="sulu.context" context="admin"/>
         </service>
