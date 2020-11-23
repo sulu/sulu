@@ -11,8 +11,10 @@
 
 namespace Sulu\Component\Media\SmartContent;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
+use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Serializer\ArraySerializerInterface;
@@ -37,14 +39,21 @@ class MediaDataProvider extends BaseDataProvider
      */
     private $collectionManager;
 
+    /**
+     * @var EntityManagerInterface|null
+     */
+    private $entityManager;
+
     public function __construct(
         DataProviderRepositoryInterface $repository,
         CollectionManagerInterface $collectionManager,
         ArraySerializerInterface $serializer,
         RequestStack $requestStack,
-        ReferenceStoreInterface $referenceStore
+        ReferenceStoreInterface $referenceStore,
+        EntityManagerInterface $entityManager = null
     ) {
         parent::__construct($repository, $serializer, $referenceStore);
+        $this->entityManager = $entityManager;
 
         $this->configuration = self::createConfigurationBuilder()
             ->enableTags()
@@ -59,6 +68,7 @@ class MediaDataProvider extends BaseDataProvider
                     ['column' => 'fileVersionMeta.title', 'title' => 'sulu_admin.title'],
                 ]
             )
+            ->enableTypes($this->getTypes())
             ->enableView(MediaAdmin::EDIT_FORM_VIEW, ['id' => 'id'])
             ->getConfiguration();
 
@@ -156,5 +166,25 @@ class MediaDataProvider extends BaseDataProvider
         $serializationContext->setGroups(['Default']);
 
         return $serializationContext;
+    }
+
+    /**
+     * @return array<int, array<string, string>>
+     */
+    protected function getTypes(): array
+    {
+        $types = [];
+
+        if (!$this->entityManager) {
+            return $types;
+        }
+
+        $repository = $this->entityManager->getRepository(MediaType::class);
+        /** @var MediaType $mediaType */
+        foreach ($repository->findAll() as $mediaType) {
+            $types[] = ['type' => $mediaType->getId(), 'title' => $mediaType->getName()];
+        }
+
+        return $types;
     }
 }

@@ -80,12 +80,12 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
     private $showDrafts;
 
     /**
-     * @var FormMetadataProvider
+     * @var FormMetadataProvider|null
      */
     private $formMetadataProvider;
 
     /**
-     * @var TokenStorageInterface
+     * @var TokenStorageInterface|null
      */
     private $tokenStorage;
 
@@ -405,6 +405,9 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
         );
     }
 
+    /**
+     * @return array<int, array<string, string>>
+     */
     private function getTypes(): array
     {
         $types = [];
@@ -413,7 +416,7 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
             $user = $this->tokenStorage->getToken()->getUser();
 
             // user is "anon." if the user is not logged in
-            // this happens on the first request (/admin) when the AudienceTargeting is deactivated
+            // this happens on the initial admin request (/admin) if the AudienceTargeting is deactivated
             if (!$user instanceof UserInterface) {
                 return $types;
             }

@@ -13,6 +13,7 @@ namespace Sulu\Bundle\SnippetBundle\Content;
 
 use ProxyManager\Factory\LazyLoadingValueHolderFactory;
 use ProxyManager\Proxy\LazyLoadingInterface;
+use Sulu\Bundle\AdminBundle\Exception\MetadataNotFoundException;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadataProvider;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\SnippetBundle\Admin\SnippetAdmin;
@@ -72,12 +73,12 @@ class SnippetDataProvider implements DataProviderInterface
     private $referenceStore;
 
     /**
-     * @var FormMetadataProvider
+     * @var FormMetadataProvider|null
      */
     private $formMetadataProvider;
 
     /**
-     * @var TokenStorageInterface
+     * @var TokenStorageInterface|null
      */
     private $tokenStorage;
 
@@ -239,6 +240,9 @@ class SnippetDataProvider implements DataProviderInterface
         );
     }
 
+    /**
+     * @return array<int, array<string, string>>
+     */
     private function getTypes(): array
     {
         $types = [];
@@ -247,13 +251,17 @@ class SnippetDataProvider implements DataProviderInterface
             $user = $this->tokenStorage->getToken()->getUser();
 
             // user is "anon." if the user is not logged in
-            // the configuration is initialized on the first request when the AudienceTargeting is deactivated
+            // this happens on the initial admin request (/admin) if the AudienceTargeting is deactivated
             if (!$user instanceof UserInterface) {
                 return $types;
             }
 
-            /** @var TypedFormMetadata $metadata */
-            $metadata = $this->formMetadataProvider->getMetadata('snippet', $user->getLocale(), []);
+            try {
+                /** @var TypedFormMetadata $metadata */
+                $metadata = $this->formMetadataProvider->getMetadata('snippet', $user->getLocale(), []);
+            } catch (MetadataNotFoundException $e) {
+                return $types;
+            }
 
             foreach ($metadata->getForms() as $form) {
                 $types[] = ['type' => $form->getName(), 'title' => $form->getTitle()];
