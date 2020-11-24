@@ -321,6 +321,9 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         $loader->load('doctrine.xml');
     }
 
+    /**
+    * @param array $webspaceConfig
+    */
     private function initWebspace(array $webspaceConfig, ContainerBuilder $container, XmlFileLoader $loader)
     {
         $container->setParameter('sulu_core.webspace.config_dir', $webspaceConfig['config_dir']);
