@@ -9,6 +9,11 @@ test('The component should render', () => {
     expect(displayValue).toMatchSnapshot();
 });
 
+test('The component should render with an inline component', () => {
+    const displayValue = render(<DisplayValue onClick={jest.fn()}><b>Value</b></DisplayValue>);
+    expect(displayValue).toMatchSnapshot();
+});
+
 test('The component should render with the flat skin', () => {
     const displayValue = render(<DisplayValue onClick={jest.fn()} skin="flat">My value</DisplayValue>);
     expect(displayValue).toMatchSnapshot();

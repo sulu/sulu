@@ -8,7 +8,7 @@ import displayValueStyles from './displayValue.scss';
 import type {Skin} from './types';
 
 type Props = {|
-    children: string|React.Node,
+    children: any,
     disabled: boolean,
     displayValueRef?: (button: ElementRef<'button'>) => void,
     icon?: string,

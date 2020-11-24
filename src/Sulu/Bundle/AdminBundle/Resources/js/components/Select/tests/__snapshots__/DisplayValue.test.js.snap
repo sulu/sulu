@@ -37,6 +37,21 @@ exports[`The component should render 1`] = `
 </button>
 `;
 
+exports[`The component should render with an inline component 1`] = `
+<button
+  class="displayValue default"
+  type="button"
+>
+  <b>
+    Value
+  </b>
+  <span
+    aria-label="su-angle-down"
+    class="su-angle-down toggle"
+  />
+</button>
+`;
+
 exports[`The component should render when disabled 1`] = `
 <button
   class="displayValue default"
