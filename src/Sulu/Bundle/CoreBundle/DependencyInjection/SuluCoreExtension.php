@@ -331,13 +331,19 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         $loader->load('webspace.xml');
     }
 
-    private function initFields(array $fieldsConfig, ContainerBuilder $container)
+    /**
+     * @param array $fieldsConfig
+     */
+    private function initFields($fieldsConfig, ContainerBuilder $container)
     {
         $container->setParameter('sulu.fields_defaults.translations', $fieldsConfig['translations']);
         $container->setParameter('sulu.fields_defaults.widths', $fieldsConfig['widths']);
     }
 
-    private function initContent(array $contentConfig, ContainerBuilder $container, XmlFileLoader $loader)
+    /**
+     * @param array $contentConfig
+     */
+    private function initContent($contentConfig, ContainerBuilder $container, XmlFileLoader $loader)
     {
         // Default Language
         $container->setParameter('sulu.content.language.namespace', $contentConfig['language']['namespace']);

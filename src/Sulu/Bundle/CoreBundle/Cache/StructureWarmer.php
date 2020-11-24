@@ -31,9 +31,7 @@ class StructureWarmer implements CacheWarmerInterface
     }
 
     /**
-     * Warms up the cache.
-     *
-     * @return string[] A list of classes or files to preload on PHP 7.4+
+     * @inheritDoc
      */
     public function warmUp($cacheDir)
     {
@@ -47,7 +45,7 @@ class StructureWarmer implements CacheWarmerInterface
     }
 
     /**
-     * @return bool
+     * @inheritDoc
      */
     public function isOptional()
     {
