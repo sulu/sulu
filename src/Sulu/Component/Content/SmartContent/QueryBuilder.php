@@ -295,7 +295,7 @@ class QueryBuilder extends ContentQueryBuilder
     /**
      * build tags where clauses.
      */
-    private function buildTagsWhere($tags, $operator, $languageCode)
+    protected function buildTagsWhere($tags, $operator, $languageCode)
     {
         $structure = $this->structureManager->getStructure('excerpt');
 
@@ -325,16 +325,11 @@ class QueryBuilder extends ContentQueryBuilder
      *
      * @return string
      */
-    private function buildTypesWhere($types, string $languageCode)
+    protected function buildTypesWhere($types, string $languageCode)
     {
         $sql2Where = [];
         foreach ($types as $type) {
-            if ('snippet' === static::$structureType) {
-                // snippet templates are not localized
-                $sql2Where[] = 'page.template = ' . $type;
-            } else {
-                $sql2Where[] = 'page.[i18n:' . $languageCode . '-template] = ' . $type;
-            }
+            $sql2Where[] = 'page.[i18n:' . $languageCode . '-template] = ' . $type;
         }
 
         if (\count($sql2Where) > 0) {
@@ -347,7 +342,7 @@ class QueryBuilder extends ContentQueryBuilder
     /**
      * build categories where clauses.
      */
-    private function buildCategoriesWhere($categories, $operator, $languageCode)
+    protected function buildCategoriesWhere($categories, $operator, $languageCode)
     {
         $structure = $this->structureManager->getStructure('excerpt');
 

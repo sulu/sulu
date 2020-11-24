@@ -113,13 +113,6 @@ class SnippetDataProviderTest extends TestCase
             ->shouldBeCalled()
             ->willReturn('en');
 
-        /** @var TypedFormMetadata|ObjectProphecy $typedFormMetadata */
-        $typedFormMetadata = $this->prophesize(TypedFormMetadata::class);
-
-        $formMetadataProvider->getMetadata('snippet', 'en', [])
-            ->shouldBeCalled()
-            ->willReturn($typedFormMetadata);
-
         $formMetadata1 = new FormMetadata();
         $formMetadata1->setName('template-1');
         $formMetadata1->setTitle('translated-template-1');
@@ -128,9 +121,13 @@ class SnippetDataProviderTest extends TestCase
         $formMetadata2->setName('template-2');
         $formMetadata2->setTitle('translated-template-2');
 
-        $typedFormMetadata->getForms()
+        $typedFormMetadata = new TypedFormMetadata();
+        $typedFormMetadata->addForm('template-1', $formMetadata1);
+        $typedFormMetadata->addForm('template-2', $formMetadata2);
+
+        $formMetadataProvider->getMetadata('snippet', 'en', [])
             ->shouldBeCalled()
-            ->willReturn([$formMetadata1, $formMetadata2]);
+            ->willReturn($typedFormMetadata);
 
         $provider = new SnippetDataProvider(
             $this->contentQueryExecutor->reveal(),

@@ -61,8 +61,8 @@ class MediaDataProviderTest extends TestCase
         /** @var EntityManagerInterface|ObjectProphecy $entityManager */
         $entityManager = $this->prophesize(EntityManagerInterface::class);
 
-        /** @var ObjectRepository|ObjectProphecy $objectRepository */
-        $objectRepository = $this->prophesize(ObjectRepository::class);
+        /** @var ObjectRepository|ObjectProphecy $mediaTypeRepository */
+        $mediaTypeRepository = $this->prophesize(ObjectRepository::class);
 
         $serializer = $this->prophesize(ArraySerializerInterface::class);
         $collectionManager = $this->prophesize(CollectionManagerInterface::class);
@@ -71,7 +71,7 @@ class MediaDataProviderTest extends TestCase
 
         $entityManager->getRepository(MediaType::class)
             ->shouldBeCalled()
-            ->willReturn($objectRepository->reveal());
+            ->willReturn($mediaTypeRepository->reveal());
 
         $mediaType1 = new MediaType();
         $mediaType1->setId(1);
@@ -81,7 +81,7 @@ class MediaDataProviderTest extends TestCase
         $mediaType2->setId(2);
         $mediaType2->setName('audio');
 
-        $objectRepository->findAll()
+        $mediaTypeRepository->findAll()
             ->shouldBeCalled()
             ->willReturn([$mediaType1, $mediaType2]);
 
