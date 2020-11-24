@@ -31,7 +31,9 @@ class StructureWarmer implements CacheWarmerInterface
     }
 
     /**
-     * @inheritDoc
+     * Warm up the cache for page and snippets.
+     *
+     * {@inheritdoc}
      */
     public function warmUp($cacheDir)
     {
@@ -45,7 +47,9 @@ class StructureWarmer implements CacheWarmerInterface
     }
 
     /**
-     * @inheritDoc
+     * Return true for isOptonal method.
+     *
+     * {@inheritdoc}
      */
     public function isOptional()
     {
