@@ -73,27 +73,17 @@ class MediaDataProviderTest extends TestCase
             ->shouldBeCalled()
             ->willReturn($objectRepository->reveal());
 
-        /** @var MediaType|ObjectProphecy $mediaType1 */
-        $mediaType1 = $this->prophesize(MediaType::class);
-        $mediaType1->getId()
-            ->shouldBeCalled()
-            ->willReturn(1);
-        $mediaType1->getName()
-            ->shouldBeCalled()
-            ->willReturn('image');
+        $mediaType1 = new MediaType();
+        $mediaType1->setId(1);
+        $mediaType1->setName('image');
 
-        /** @var MediaType|ObjectProphecy $mediaType2 */
-        $mediaType2 = $this->prophesize(MediaType::class);
-        $mediaType2->getId()
-            ->shouldBeCalled()
-            ->willReturn(2);
-        $mediaType2->getName()
-            ->shouldBeCalled()
-            ->willReturn('audio');
+        $mediaType2 = new MediaType();
+        $mediaType2->setId(2);
+        $mediaType2->setName('audio');
 
         $objectRepository->findAll()
             ->shouldBeCalled()
-            ->willReturn([$mediaType1->reveal(), $mediaType2->reveal()]);
+            ->willReturn([$mediaType1, $mediaType2]);
 
         /** @var TranslatorInterface|ObjectProphecy $translator */
         $translator = $this->prophesize(TranslatorInterface::class);

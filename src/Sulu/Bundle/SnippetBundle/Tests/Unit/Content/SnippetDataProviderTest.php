@@ -120,23 +120,13 @@ class SnippetDataProviderTest extends TestCase
             ->shouldBeCalled()
             ->willReturn($typedFormMetadata);
 
-        /** @var FormMetadata|ObjectProphecy $formMetadata1 */
-        $formMetadata1 = $this->prophesize(FormMetadata::class);
-        $formMetadata1->getName()
-            ->shouldBeCalled()
-            ->willReturn('template-1');
-        $formMetadata1->getTitle()
-            ->shouldBeCalled()
-            ->willReturn('translated-template-1');
+        $formMetadata1 = new FormMetadata();
+        $formMetadata1->setName('template-1');
+        $formMetadata1->setTitle('translated-template-1');
 
-        /** @var FormMetadata|ObjectProphecy $formMetadata2 */
-        $formMetadata2 = $this->prophesize(FormMetadata::class);
-        $formMetadata2->getName()
-            ->shouldBeCalled()
-            ->willReturn('template-2');
-        $formMetadata2->getTitle()
-            ->shouldBeCalled()
-            ->willReturn('translated-template-2');
+        $formMetadata2 = new FormMetadata();
+        $formMetadata2->setName('template-2');
+        $formMetadata2->setTitle('translated-template-2');
 
         $typedFormMetadata->getForms()
             ->shouldBeCalled()

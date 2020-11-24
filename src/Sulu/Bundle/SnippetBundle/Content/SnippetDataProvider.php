@@ -100,6 +100,10 @@ class SnippetDataProvider implements DataProviderInterface
         $this->referenceStore = $referenceStore;
         $this->formMetadataProvider = $formMetadataProvider;
         $this->tokenStorage = $tokenStorage;
+
+        if (!$formMetadataProvider) {
+            @\trigger_error('The usage of the "SnippetDataProvider" without setting the "FormMetadataProvider" is deprecated. Please inject the "FormMetadataProvider".', \E_USER_DEPRECATED);
+        }
     }
 
     public function getConfiguration()
@@ -246,12 +250,9 @@ class SnippetDataProvider implements DataProviderInterface
     private function getTypes(): array
     {
         $types = [];
-        if ($this->tokenStorage && null !== $this->tokenStorage->getToken()) {
-            // the user is required for the metadata locale because of the translated template titles
+        if ($this->tokenStorage && null !== $this->tokenStorage->getToken() && $this->formMetadataProvider) {
             $user = $this->tokenStorage->getToken()->getUser();
 
-            // user is "anon." if the user is not logged in
-            // this happens on the initial admin request (/admin) if the AudienceTargeting is deactivated
             if (!$user instanceof UserInterface) {
                 return $types;
             }
