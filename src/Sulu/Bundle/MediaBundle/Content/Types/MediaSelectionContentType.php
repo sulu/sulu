@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Content\Types;
 
 use PHPCR\NodeInterface;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata as SchemaPropertyMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ObjectMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapperInterface;
 use Sulu\Bundle\MediaBundle\Content\MediaSelectionContainer;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
@@ -21,7 +21,7 @@ use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeExportInterface;
-use Sulu\Component\Content\Metadata\PropertyMetadata as ContentPropertyMetadata;
+use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\PreResolvableContentTypeInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Util\ArrayableInterface;
@@ -193,7 +193,7 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
         }
     }
 
-    public function mapPropertyMetadata(ContentPropertyMetadata $propertyMetadata): SchemaPropertyMetadata
+    public function mapPropertyMetadata(PropertyMetadata $propertyMetadata): ObjectMetadata
     {
         $mandatory = $propertyMetadata->isRequired();
 
@@ -218,6 +218,6 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
             $jsonSchema['required'] = ['ids'];
         }
 
-        return new SchemaPropertyMetadata($propertyMetadata->getName(), $mandatory, $jsonSchema);
+        return new ObjectMetadata($propertyMetadata->getName(), $mandatory, $jsonSchema);
     }
 }

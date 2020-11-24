@@ -15,5 +15,5 @@ use Sulu\Component\Content\Metadata\PropertyMetadata as ContentPropertyMetadata;
 
 interface PropertyMetadataMapperInterface
 {
-    public function mapPropertyMetadata(ContentPropertyMetadata $propertyMetadata): PropertyMetadata;
+    public function mapPropertyMetadata(ContentPropertyMetadata $propertyMetadata): ObjectMetadata;
 }

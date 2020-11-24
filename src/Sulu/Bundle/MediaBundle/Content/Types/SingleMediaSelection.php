@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Content\Types;
 
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata as SchemaPropertyMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ObjectMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapperInterface;
 use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Api\Media;
@@ -20,7 +20,7 @@ use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
-use Sulu\Component\Content\Metadata\PropertyMetadata as ContentPropertyMetadata;
+use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\PreResolvableContentTypeInterface;
 use Sulu\Component\Content\SimpleContentType;
 use Sulu\Component\Security\Authorization\PermissionTypes;
@@ -127,7 +127,7 @@ class SingleMediaSelection extends SimpleContentType implements PreResolvableCon
         return \json_decode($value, true);
     }
 
-    public function mapPropertyMetadata(ContentPropertyMetadata $propertyMetadata): SchemaPropertyMetadata
+    public function mapPropertyMetadata(PropertyMetadata $propertyMetadata): ObjectMetadata
     {
         $mandatory = $propertyMetadata->isRequired();
 
@@ -147,6 +147,6 @@ class SingleMediaSelection extends SimpleContentType implements PreResolvableCon
             $jsonSchema['required'] = ['id'];
         }
 
-        return new SchemaPropertyMetadata($propertyMetadata->getName(), $mandatory, $jsonSchema);
+        return new ObjectMetadata($propertyMetadata->getName(), $mandatory, $jsonSchema);
     }
 }

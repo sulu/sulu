@@ -20,10 +20,9 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SectionMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TagMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ArrayMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ConstMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ObjectMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapperRegistry;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
-use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\BlockMetadata as ContentBlockMetadata;
 use Sulu\Component\Content\Metadata\ItemMetadata as ContentItemMetadata;
 use Sulu\Component\Content\Metadata\PropertyMetadata as ContentPropertyMetadata;
@@ -51,7 +50,7 @@ class FormMetadataMapper
     {
         $items = [];
         foreach ($children as $child) {
-            if ($child instanceof BlockMetadata || $child instanceof ContentPropertyMetadata) {
+            if ($child instanceof ContentBlockMetadata || $child instanceof ContentPropertyMetadata) {
                 $item = $this->mapProperty($child, $locale);
             } elseif ($child instanceof ContentSectionMetadata) {
                 $item = $this->mapSection($child, $locale);
@@ -105,7 +104,7 @@ class FormMetadataMapper
         $section->setVisibleCondition($property->getVisibleCondition());
 
         foreach ($property->getChildren() as $component) {
-            if ($component instanceof BlockMetadata || $component instanceof ContentPropertyMetadata) {
+            if ($component instanceof ContentBlockMetadata || $component instanceof ContentPropertyMetadata) {
                 $item = $this->mapProperty($component, $locale);
             } elseif ($component instanceof ContentSectionMetadata) {
                 $item = $this->mapSection($component, $locale);
@@ -245,7 +244,7 @@ class FormMetadataMapper
                     ->get($propertyMetadata->getType())
                     ->mapPropertyMetadata($propertyMetadata);
             } catch (PropertyMetadataMapperNotFoundException $e) {
-                return new PropertyMetadata(
+                return new ObjectMetadata(
                     $propertyMetadata->getName(),
                     $propertyMetadata->isRequired()
                 );
