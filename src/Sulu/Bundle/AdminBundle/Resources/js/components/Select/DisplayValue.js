@@ -8,7 +8,7 @@ import displayValueStyles from './displayValue.scss';
 import type {Skin} from './types';
 
 type Props = {|
-    children: string,
+    children: string|React.Node,
     disabled: boolean,
     displayValueRef?: (button: ElementRef<'button'>) => void,
     icon?: string,
@@ -40,6 +40,7 @@ export default class DisplayValue extends React.PureComponent<Props> {
 
     render() {
         const {children, disabled, icon, skin} = this.props;
+        const childrenOnlyString = typeof children === 'string';
 
         const displayValueClass = classNames(
             displayValueStyles.displayValue,
@@ -60,7 +61,10 @@ export default class DisplayValue extends React.PureComponent<Props> {
                 {!!icon &&
                     <Icon className={displayValueStyles.frontIcon} name={icon} />
                 }
-                <CroppedText>{children}</CroppedText>
+                {childrenOnlyString
+                    ? <CroppedText>{children}</CroppedText>
+                    : children
+                }
                 <Icon className={displayValueStyles.toggle} name="su-angle-down" />
             </button>
         );
