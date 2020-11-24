@@ -54,7 +54,7 @@ jobs:
               run: ./${{ steps.php-cs-fixer-path.outputs.path }} fix --dry-run --diff
 
     test:
-        name: "Run tests with php ${{ matrix.php-version }} (${{ matrix.phpcr-transport }})"
+        name: "Run tests with php ${{ matrix.php-version }} (${{ matrix.database }}, ${{ matrix.phpcr-transport }})"
         runs-on: ubuntu-latest
 
         env:
