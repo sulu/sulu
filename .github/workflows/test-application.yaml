@@ -35,7 +35,7 @@ jobs:
               run: ./${{ steps.php-cs-fixer-path.outputs.path }} fix --dry-run --diff
 
     test:
-        name: "Run tests with php ${{ matrix.php-version }} (${{ matrix.phpcr-transport }})"
+        name: "Run tests with php ${{ matrix.php-version }} (${{ matrix.database }}, ${{ matrix.phpcr-transport }})"
         runs-on: ubuntu-latest
 
         env:
@@ -95,7 +95,7 @@ jobs:
                 options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=5
 
             postgres:
-                image: postgres
+                image: postgres:12.5
                 env:
                     POSTGRES_USER: postgres
                     POSTGRES_PASSWORD: postgres
