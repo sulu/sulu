@@ -82,6 +82,14 @@ class MediaDataProvider extends BaseDataProvider
 
         $this->requestStack = $requestStack;
         $this->collectionManager = $collectionManager;
+
+        if (!$entityManager) {
+            @\trigger_error('The usage of the "MediaDataProvider" without setting the "EntityManager" is deprecated. Please inject the "EntityManager".', \E_USER_DEPRECATED);
+        }
+
+        if (!$translator) {
+            @\trigger_error('The usage of the "MediaDataProvider" without setting the "Translator" is deprecated. Please inject the "Translator".', \E_USER_DEPRECATED);
+        }
     }
 
     public function getDefaultPropertyParameter()
@@ -190,7 +198,7 @@ class MediaDataProvider extends BaseDataProvider
         $repository = $this->entityManager->getRepository(MediaType::class);
         /** @var MediaType $mediaType */
         foreach ($repository->findAll() as $mediaType) {
-            $title = $this->translator->trans('sulu_media.' . $mediaType->getName(), [], 'admin');
+            $title = $this->translator ? $this->translator->trans('sulu_media.' . $mediaType->getName(), [], 'admin') : $mediaType->getName();
             $types[] = ['type' => $mediaType->getId(), 'title' => $title];
         }
 
