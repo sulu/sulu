@@ -78,13 +78,12 @@ class AdminControllerTest extends SuluTestCase
         $client->request('GET', '/admin/metadata/form/page?webspace=sulu_io');
 
         $this->assertHttpStatusCode(200, $client->getResponse());
-        $response = \json_decode($client->getResponse()->getContent());
+        $response = \json_decode($client->getResponse()->getContent(), true);
 
-        $metadata = $response->types->images;
-        $schema = (array) $metadata->schema;
+        $schema = $response['types']['images']['schema'] ?? [];
 
         $this->assertArrayHasKey('required', $schema);
-        $this->assertSame(['title', 'url', 'images'], $schema['required']);
+        $this->assertSame(['title', 'url'], $schema['required']);
         $this->assertArrayHasKey('properties', $schema);
         $this->assertArrayHasKey('images', $schema['properties']);
         $this->assertSame([
@@ -95,15 +94,12 @@ class AdminControllerTest extends SuluTestCase
                     'items' => [
                         'type' => 'number',
                     ],
-                    'minItems' => 1,
+                    'minItems' => 0,
                     'uniqueItems' => true,
                 ],
                 'displayOption' => [
                     'type' => 'string',
                 ],
-            ],
-            'required' => [
-                'ids',
             ],
         ], $schema['properties']['images']);
         $this->assertArrayHasKey('image', $schema['properties']);

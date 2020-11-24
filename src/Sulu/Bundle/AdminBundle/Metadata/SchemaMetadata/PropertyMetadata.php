@@ -41,6 +41,6 @@ class PropertyMetadata
 
     public function toJsonSchema(): ?array
     {
-        return [];
+        return null;
     }
 }

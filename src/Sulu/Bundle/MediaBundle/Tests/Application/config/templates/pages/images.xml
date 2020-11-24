@@ -35,7 +35,7 @@
             <tag name="sulu.rlp"/>
         </property>
 
-        <property name="images" type="media_selection" mandatory="true">
+        <property name="images" type="media_selection">
             <meta>
                 <title lang="de">Images</title>
             </meta>
@@ -46,7 +46,6 @@
             <meta>
                 <title lang="de">Single Image</title>
             </meta>
-            <tag name="sulu.search.field" role="image" />
         </property>
     </properties>
 </template>
