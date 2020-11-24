@@ -34,6 +34,10 @@ trait PurgeDatabaseTrait
             $connection->executeUpdate('SET foreign_key_checks = 0;');
         }
 
+        if ($connection->getDriver() instanceof \Doctrine\DBAL\Driver\PDOPgSql\Driver) {
+            $connection->executeUpdate('SET session_replication_role = "replica";');
+        }
+
         $purger = new ORMPurger();
         $executor = new ORMExecutor($entityManager, $purger);
         $referenceRepository = new ProxyReferenceRepository($entityManager);
@@ -42,6 +46,10 @@ trait PurgeDatabaseTrait
 
         if ($connection->getDriver() instanceof \Doctrine\DBAL\Driver\PDOMySql\Driver) {
             $connection->executeUpdate('SET foreign_key_checks = 1;');
+        }
+
+        if ($connection->getDriver() instanceof \Doctrine\DBAL\Driver\PDOPgSql\Driver) {
+            $connection->executeUpdate('SET session_replication_role = "origin";');
         }
     }
 
