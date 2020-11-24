@@ -23,6 +23,7 @@ use Sulu\Component\SmartContent\DatasourceItem;
 use Sulu\Component\SmartContent\Orm\BaseDataProvider;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Media DataProvider for SmartContent.
@@ -44,16 +45,23 @@ class MediaDataProvider extends BaseDataProvider
      */
     private $entityManager;
 
+    /**
+     * @var TranslatorInterface|null
+     */
+    private $translator;
+
     public function __construct(
         DataProviderRepositoryInterface $repository,
         CollectionManagerInterface $collectionManager,
         ArraySerializerInterface $serializer,
         RequestStack $requestStack,
         ReferenceStoreInterface $referenceStore,
-        EntityManagerInterface $entityManager = null
+        EntityManagerInterface $entityManager = null,
+        TranslatorInterface $translator = null
     ) {
         parent::__construct($repository, $serializer, $referenceStore);
         $this->entityManager = $entityManager;
+        $this->translator = $translator;
 
         $this->configuration = self::createConfigurationBuilder()
             ->enableTags()
@@ -182,7 +190,8 @@ class MediaDataProvider extends BaseDataProvider
         $repository = $this->entityManager->getRepository(MediaType::class);
         /** @var MediaType $mediaType */
         foreach ($repository->findAll() as $mediaType) {
-            $types[] = ['type' => $mediaType->getId(), 'title' => $mediaType->getName()];
+            $title = $this->translator->trans('sulu_media.' . $mediaType->getName(), [], 'admin');
+            $types[] = ['type' => $mediaType->getId(), 'title' => $title];
         }
 
         return $types;

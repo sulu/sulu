@@ -15,13 +15,20 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use ProxyManager\Factory\LazyLoadingValueHolderFactory;
 use ProxyManager\Proxy\VirtualProxyInterface;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadataProvider;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\SnippetBundle\Content\SnippetDataProvider;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
+use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
 use Sulu\Component\Util\SuluNodeHelper;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class SnippetDataProviderTest extends TestCase
 {
@@ -82,6 +89,79 @@ class SnippetDataProviderTest extends TestCase
         );
 
         $this->referenceStore->getAll()->willReturn([]);
+    }
+
+    public function testGetTypesConfiguration()
+    {
+        /** @var TokenStorageInterface|ObjectProphecy $tokenStorage */
+        $tokenStorage = $this->prophesize(TokenStorageInterface::class);
+        /** @var FormMetadataProvider|ObjectProphecy $formMetadataProvider */
+        $formMetadataProvider = $this->prophesize(FormMetadataProvider::class);
+
+        /** @var TokenInterface|ObjectProphecy $token */
+        $token = $this->prophesize(TokenInterface::class);
+        /** @var UserInterface|ObjectProphecy $user */
+        $user = $this->prophesize(UserInterface::class);
+
+        $tokenStorage->getToken()
+            ->shouldBeCalled()
+            ->willReturn($token->reveal());
+        $token->getUser()
+            ->shouldBeCalled()
+            ->willReturn($user);
+        $user->getLocale()
+            ->shouldBeCalled()
+            ->willReturn('en');
+
+        /** @var TypedFormMetadata|ObjectProphecy $typedFormMetadata */
+        $typedFormMetadata = $this->prophesize(TypedFormMetadata::class);
+
+        $formMetadataProvider->getMetadata('snippet', 'en', [])
+            ->shouldBeCalled()
+            ->willReturn($typedFormMetadata);
+
+        /** @var FormMetadata|ObjectProphecy $formMetadata1 */
+        $formMetadata1 = $this->prophesize(FormMetadata::class);
+        $formMetadata1->getName()
+            ->shouldBeCalled()
+            ->willReturn('template-1');
+        $formMetadata1->getTitle()
+            ->shouldBeCalled()
+            ->willReturn('translated-template-1');
+
+        /** @var FormMetadata|ObjectProphecy $formMetadata2 */
+        $formMetadata2 = $this->prophesize(FormMetadata::class);
+        $formMetadata2->getName()
+            ->shouldBeCalled()
+            ->willReturn('template-2');
+        $formMetadata2->getTitle()
+            ->shouldBeCalled()
+            ->willReturn('translated-template-2');
+
+        $typedFormMetadata->getForms()
+            ->shouldBeCalled()
+            ->willReturn([$formMetadata1, $formMetadata2]);
+
+        $provider = new SnippetDataProvider(
+            $this->contentQueryExecutor->reveal(),
+            $this->snippetQueryBuilder->reveal(),
+            $this->nodeHelper->reveal(),
+            $this->proxyFactory->reveal(),
+            $this->documentManager->reveal(),
+            $this->referenceStore->reveal(),
+            $formMetadataProvider->reveal(),
+            $tokenStorage->reveal()
+        );
+
+        $configuration = $provider->getConfiguration();
+
+        $this->assertInstanceOf(ProviderConfigurationInterface::class, $configuration);
+
+        $this->assertCount(2, $configuration->getTypes());
+        $this->assertSame('template-1', $configuration->getTypes()[0]->getValue());
+        $this->assertSame('translated-template-1', $configuration->getTypes()[0]->getName());
+        $this->assertSame('template-2', $configuration->getTypes()[1]->getValue());
+        $this->assertSame('translated-template-2', $configuration->getTypes()[1]->getName());
     }
 
     /**

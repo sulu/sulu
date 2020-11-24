@@ -363,6 +363,7 @@
             <argument type="service" id="sulu_core.webspace.request_analyzer"/>
             <argument>%sulu_security.permissions%</argument>
             <argument type="service" id="doctrine.orm.default_entity_manager"/>
+            <argument type="service" id="translator"/>
 
             <tag name="sulu.smart_content.data_provider" alias="media"/>
         </service>

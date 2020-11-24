@@ -15,10 +15,14 @@ use PHPCR\ItemNotFoundException;
 use PHPCR\SessionInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use ProxyManager\Configuration;
 use ProxyManager\Factory\LazyLoadingValueHolderFactory;
 use ProxyManager\FileLocator\FileLocator;
 use ProxyManager\GeneratorStrategy\FileWriterGeneratorStrategy;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadataProvider;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore;
 use Sulu\Component\Content\Compat\PropertyParameter;
@@ -27,9 +31,12 @@ use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\Content\SmartContent\ContentDataItem;
 use Sulu\Component\Content\SmartContent\PageDataProvider;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
 use Sulu\Component\SmartContent\DataProviderResult;
 use Sulu\Component\SmartContent\DatasourceItem;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class PageDataProviderTest extends TestCase
 {
@@ -127,6 +134,81 @@ class PageDataProviderTest extends TestCase
         $configuration = $provider->getConfiguration();
 
         $this->assertInstanceOf(ProviderConfigurationInterface::class, $configuration);
+    }
+
+    public function testGetTypesConfiguration()
+    {
+        /** @var TokenStorageInterface|ObjectProphecy $tokenStorage */
+        $tokenStorage = $this->prophesize(TokenStorageInterface::class);
+        /** @var FormMetadataProvider|ObjectProphecy $formMetadataProvider */
+        $formMetadataProvider = $this->prophesize(FormMetadataProvider::class);
+
+        /** @var TokenInterface|ObjectProphecy $token */
+        $token = $this->prophesize(TokenInterface::class);
+        /** @var UserInterface|ObjectProphecy $user */
+        $user = $this->prophesize(UserInterface::class);
+
+        $tokenStorage->getToken()
+            ->shouldBeCalled()
+            ->willReturn($token->reveal());
+        $token->getUser()
+            ->shouldBeCalled()
+            ->willReturn($user);
+        $user->getLocale()
+            ->shouldBeCalled()
+            ->willReturn('en');
+
+        /** @var TypedFormMetadata|ObjectProphecy $typedFormMetadata */
+        $typedFormMetadata = $this->prophesize(TypedFormMetadata::class);
+
+        $formMetadataProvider->getMetadata('page', 'en', [])
+            ->shouldBeCalled()
+            ->willReturn($typedFormMetadata);
+
+        /** @var FormMetadata|ObjectProphecy $formMetadata1 */
+        $formMetadata1 = $this->prophesize(FormMetadata::class);
+        $formMetadata1->getName()
+            ->shouldBeCalled()
+            ->willReturn('template-1');
+        $formMetadata1->getTitle()
+            ->shouldBeCalled()
+            ->willReturn('translated-template-1');
+
+        /** @var FormMetadata|ObjectProphecy $formMetadata2 */
+        $formMetadata2 = $this->prophesize(FormMetadata::class);
+        $formMetadata2->getName()
+            ->shouldBeCalled()
+            ->willReturn('template-2');
+        $formMetadata2->getTitle()
+            ->shouldBeCalled()
+            ->willReturn('translated-template-2');
+
+        $typedFormMetadata->getForms()
+            ->shouldBeCalled()
+            ->willReturn([$formMetadata1, $formMetadata2]);
+
+        $provider = new PageDataProvider(
+            $this->getContentQueryBuilder(),
+            $this->getContentQueryExecutor(),
+            $this->getDocumentManager(),
+            $this->getProxyFactory(),
+            $this->getSession(),
+            new ReferenceStore(),
+            false,
+            ['view' => 64],
+            $formMetadataProvider->reveal(),
+            $tokenStorage->reveal()
+        );
+
+        $configuration = $provider->getConfiguration();
+
+        $this->assertInstanceOf(ProviderConfigurationInterface::class, $configuration);
+
+        $this->assertCount(2, $configuration->getTypes());
+        $this->assertSame('template-1', $configuration->getTypes()[0]->getValue());
+        $this->assertSame('translated-template-1', $configuration->getTypes()[0]->getName());
+        $this->assertSame('template-2', $configuration->getTypes()[1]->getValue());
+        $this->assertSame('translated-template-2', $configuration->getTypes()[1]->getName());
     }
 
     public function testGetDefaultParameter()
