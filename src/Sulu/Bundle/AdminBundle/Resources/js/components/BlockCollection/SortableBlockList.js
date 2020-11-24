@@ -13,6 +13,7 @@ type Props = {|
     expandedBlocks: Array<boolean>,
     generatedBlockIds: Array<number>,
     icons?: Array<Array<string>>,
+    movable: boolean,
     onCollapse: (index: number) => void,
     onExpand: (index: number) => void,
     onRemove?: (index: number) => void,
@@ -27,6 +28,7 @@ type Props = {|
 class SortableBlockList extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
+        movable: true,
     };
 
     handleExpand = (index: number) => {
@@ -69,6 +71,7 @@ class SortableBlockList extends React.Component<Props> {
             expandedBlocks,
             generatedBlockIds,
             icons,
+            movable,
             onRemove,
             onSettingsClick,
             renderBlockContent,
@@ -92,6 +95,7 @@ class SortableBlockList extends React.Component<Props> {
                         icons={icons && icons[index]}
                         index={index}
                         key={generatedBlockIds[index]}
+                        movable={movable}
                         onCollapse={this.handleCollapse}
                         onExpand={this.handleExpand}
                         onRemove={onRemove ? this.handleRemove : undefined}

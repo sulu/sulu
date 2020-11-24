@@ -10,6 +10,7 @@ type Props = {
     activeType: string,
     expanded: boolean,
     icons?: Array<string>,
+    movable?: boolean,
     onCollapse: (index: number) => void,
     onExpand: (index: number) => void,
     onRemove?: (index: number) => void,
@@ -63,6 +64,7 @@ class SortableBlock extends React.Component<Props> {
             activeType,
             expanded,
             icons,
+            movable = true,
             onRemove,
             onSettingsClick,
             renderBlockContent,
@@ -74,7 +76,7 @@ class SortableBlock extends React.Component<Props> {
         return (
             <Block
                 activeType={activeType}
-                dragHandle={<SortableHandle />}
+                dragHandle={movable && <SortableHandle />}
                 expanded={expanded}
                 icons={icons}
                 onCollapse={this.handleCollapse}
