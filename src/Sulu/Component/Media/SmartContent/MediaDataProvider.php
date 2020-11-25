@@ -41,6 +41,11 @@ class MediaDataProvider extends BaseDataProvider
     private $collectionManager;
 
     /**
+     * @var bool
+     */
+    private $hasAudienceTargeting;
+
+    /**
      * @var EntityManagerInterface|null
      */
     private $entityManager;
@@ -56,6 +61,7 @@ class MediaDataProvider extends BaseDataProvider
         ArraySerializerInterface $serializer,
         RequestStack $requestStack,
         ReferenceStoreInterface $referenceStore,
+        bool $hasAudienceTargeting = false,
         EntityManagerInterface $entityManager = null,
         TranslatorInterface $translator = null
     ) {
@@ -64,6 +70,7 @@ class MediaDataProvider extends BaseDataProvider
         $this->translator = $translator;
         $this->requestStack = $requestStack;
         $this->collectionManager = $collectionManager;
+        $this->hasAudienceTargeting = $hasAudienceTargeting;
 
         if (!$entityManager) {
             @\trigger_error('The usage of the "MediaDataProvider" without setting the "EntityManager" is deprecated. Please inject the "EntityManager".', \E_USER_DEPRECATED);
@@ -77,13 +84,12 @@ class MediaDataProvider extends BaseDataProvider
     public function getConfiguration()
     {
         if (!$this->configuration) {
-            $this->configuration = self::createConfigurationBuilder()
+            $builder = self::createConfigurationBuilder()
                 ->enableTags()
                 ->enableCategories()
                 ->enableLimit()
                 ->enablePagination()
                 ->enablePresentAs()
-                ->enableAudienceTargeting()
                 ->enableDatasource('collections', 'collections', 'column_list')
                 ->enableSorting(
                     [
@@ -91,8 +97,13 @@ class MediaDataProvider extends BaseDataProvider
                     ]
                 )
                 ->enableTypes($this->getTypes())
-                ->enableView(MediaAdmin::EDIT_FORM_VIEW, ['id' => 'id'])
-                ->getConfiguration();
+                ->enableView(MediaAdmin::EDIT_FORM_VIEW, ['id' => 'id']);
+
+            if ($this->hasAudienceTargeting) {
+                $builder->enableAudienceTargeting();
+            }
+
+            $this->configuration = $builder->getConfiguration();
         }
 
         return $this->configuration;

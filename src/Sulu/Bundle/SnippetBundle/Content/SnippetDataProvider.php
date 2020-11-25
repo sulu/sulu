@@ -72,6 +72,11 @@ class SnippetDataProvider implements DataProviderInterface
     private $referenceStore;
 
     /**
+     * @var bool
+     */
+    private $hasAudienceTargeting;
+
+    /**
      * @var FormMetadataProvider|null
      */
     private $formMetadataProvider;
@@ -88,6 +93,7 @@ class SnippetDataProvider implements DataProviderInterface
         LazyLoadingValueHolderFactory $proxyFactory,
         DocumentManagerInterface $documentManager,
         ReferenceStoreInterface $referenceStore,
+        bool $hasAudienceTargeting = false,
         FormMetadataProvider $formMetadataProvider = null,
         TokenStorageInterface $tokenStorage = null
     ) {
@@ -97,6 +103,7 @@ class SnippetDataProvider implements DataProviderInterface
         $this->proxyFactory = $proxyFactory;
         $this->documentManager = $documentManager;
         $this->referenceStore = $referenceStore;
+        $this->hasAudienceTargeting = $hasAudienceTargeting;
         $this->formMetadataProvider = $formMetadataProvider;
         $this->tokenStorage = $tokenStorage;
 
@@ -108,13 +115,12 @@ class SnippetDataProvider implements DataProviderInterface
     public function getConfiguration()
     {
         if (!$this->configuration) {
-            $this->configuration = Builder::create()
+            $builder = Builder::create()
                 ->enableTags()
                 ->enableCategories()
                 ->enablePresentAs()
                 ->enablePagination()
                 ->enableLimit()
-                ->enableAudienceTargeting()
                 ->enableSorting(
                     [
                         ['column' => 'title', 'title' => 'sulu_admin.title'],
@@ -123,8 +129,13 @@ class SnippetDataProvider implements DataProviderInterface
                     ]
                 )
                 ->enableTypes($this->getTypes())
-                ->enableView(SnippetAdmin::EDIT_FORM_VIEW, ['id' => 'id'])
-                ->getConfiguration();
+                ->enableView(SnippetAdmin::EDIT_FORM_VIEW, ['id' => 'id']);
+
+            if ($this->hasAudienceTargeting) {
+                $builder->enableAudienceTargeting();
+            }
+
+            $this->configuration = $builder->getConfiguration();
         }
 
         return $this->configuration;
