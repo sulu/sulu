@@ -99,12 +99,8 @@ class CustomUrlRequestProcessor implements RequestProcessorInterface
 
     /**
      * Matches given url to portal-information.
-     *
-     * @param string $url
-     *
-     * @return array
      */
-    private function matchCustomUrl($url, PortalInformation $portalInformation, Request $request)
+    private function matchCustomUrl(string $url, PortalInformation $portalInformation, Request $request): array
     {
         $webspace = $portalInformation->getWebspace();
         $routeDocument = $this->customUrlManager->findRouteByUrl(
@@ -162,12 +158,8 @@ class CustomUrlRequestProcessor implements RequestProcessorInterface
     /**
      * Server encodes the url and symfony does not encode it
      * Symfony decodes this data here https://github.com/symfony/symfony/blob/3.3/src/Symfony/Component/Routing/Matcher/UrlMatcher.php#L91.
-     *
-     * @param $pathInfo
-     *
-     * @return string
      */
-    private function decodeUrl($pathInfo)
+    private function decodeUrl(string $pathInfo): string
     {
         return \rawurldecode($pathInfo);
     }

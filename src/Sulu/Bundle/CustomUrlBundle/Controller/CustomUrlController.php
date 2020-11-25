@@ -115,10 +115,12 @@ class CustomUrlController extends AbstractRestController implements SecuredContr
      */
     public function postAction($webspace, Request $request)
     {
+        // throw helpful error message if targetLocale is not set
+        $this->getRequestParameter($request, 'targetLocale', true);
+
         $document = $this->customUrlManager->create(
             $webspace,
-            $request->request->all(),
-            $this->getRequestParameter($request, 'targetLocale', true)
+            $request->request->all()
         );
         $this->documentManager->flush();
 

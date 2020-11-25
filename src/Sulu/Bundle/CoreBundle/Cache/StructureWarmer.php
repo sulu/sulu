@@ -30,6 +30,11 @@ class StructureWarmer implements CacheWarmerInterface
         $this->structureManager = $structureManager;
     }
 
+    /**
+     * Warm up the cache for page and snippets.
+     *
+     * {@inheritdoc}
+     */
     public function warmUp($cacheDir)
     {
         // warmup the pages
@@ -37,8 +42,15 @@ class StructureWarmer implements CacheWarmerInterface
 
         // warm up the snippets
         $this->structureManager->getStructures(Structure::TYPE_SNIPPET);
+
+        return [];
     }
 
+    /**
+     * Return true for isOptonal method.
+     *
+     * {@inheritdoc}
+     */
     public function isOptional()
     {
         return true;
