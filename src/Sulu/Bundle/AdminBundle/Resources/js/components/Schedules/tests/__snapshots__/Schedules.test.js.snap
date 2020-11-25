@@ -12,14 +12,6 @@ exports[`Render Schedules 1`] = `
       role="switch"
     >
       <div
-        class="handle"
-      >
-        <span
-          aria-label="su-more"
-          class="su-more sortableHandle"
-        />
-      </div>
-      <div
         class="content"
       >
         <header
@@ -87,14 +79,6 @@ exports[`Render Schedules 1`] = `
       class="block"
       role="switch"
     >
-      <div
-        class="handle"
-      >
-        <span
-          aria-label="su-more"
-          class="su-more sortableHandle"
-        />
-      </div>
       <div
         class="content"
       >

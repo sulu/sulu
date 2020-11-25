@@ -50,6 +50,7 @@ class Schedules extends React.Component<Props> {
             // $FlowFixMe
             <BlockCollection
                 defaultType="fixed"
+                movable={false}
                 onChange={onChange}
                 renderBlockContent={this.renderBlockContent}
                 // $FlowFixMe
