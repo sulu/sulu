@@ -32,6 +32,7 @@ const defaultValue = {
     sortMethod: 'asc',
     presentAs: undefined,
     limitResult: undefined,
+    types: undefined,
 };
 
 test('Pass correct sections prop', () => {
@@ -42,6 +43,10 @@ test('Pass correct sections prop', () => {
         sorting: [],
         presentAs: false,
         limit: true,
+        types: [
+            {name: 'default', value: 'default'},
+            {name: 'homepage', value: 'homepage'},
+        ],
     });
 
     const smartContentStore = new SmartContentStore('content');
@@ -54,7 +59,7 @@ test('Pass correct sections prop', () => {
     );
 
     expect(smartContent.find('FilterOverlay').prop('sections'))
-        .toEqual(['tags', 'audienceTargeting', 'limit']);
+        .toEqual(['tags', 'audienceTargeting', 'types', 'limit']);
 });
 
 test('Disable sorting on MultiItemSelection', () => {
@@ -65,6 +70,7 @@ test('Disable sorting on MultiItemSelection', () => {
         sorting: [],
         presentAs: false,
         limit: true,
+        types: [],
     });
 
     const smartContentStore = new SmartContentStore('content');
@@ -87,6 +93,7 @@ test('Pass correct props to MultiItemSelection component', () => {
         sorting: [],
         presentAs: false,
         limit: true,
+        types: [],
     });
 
     const smartContentStore = new SmartContentStore('content');
@@ -113,6 +120,10 @@ test('Pass correct sections prop with other values', () => {
         sorting: [{name: 'title', value: 'Title'}],
         presentAs: true,
         limit: false,
+        types: [
+            {name: 'default', value: 'default'},
+            {name: 'homepage', value: 'homepage'},
+        ],
     });
 
     const presentations = [
@@ -134,7 +145,7 @@ test('Pass correct sections prop with other values', () => {
     expect(smartContent.find('FilterOverlay').prop('dataSourceListKey')).toEqual('pages_list');
     expect(smartContent.find('FilterOverlay').prop('dataSourceResourceKey')).toEqual('pages');
     expect(smartContent.find('FilterOverlay').prop('sections'))
-        .toEqual(['datasource', 'categories', 'sorting', 'presentation']);
+        .toEqual(['datasource', 'categories', 'sorting', 'types', 'presentation']);
     expect(smartContent.find('FilterOverlay').prop('presentations'))
         .toEqual({
             one: 'One column',
@@ -154,6 +165,7 @@ test('Open and closes the FilterOverlay when the icon is clicked', () => {
         ],
         presentAs: true,
         limit: false,
+        types: [],
     });
     const smartContent = shallow(
         <SmartContent

@@ -44,6 +44,11 @@ class ProviderConfiguration implements ProviderConfigurationInterface
     private $tags = false;
 
     /**
+     * @var PropertyParameter[]
+     */
+    private $types = [];
+
+    /**
      * @var bool
      */
     private $categories = false;
@@ -131,6 +136,27 @@ class ProviderConfiguration implements ProviderConfigurationInterface
     public function setTags(bool $tags)
     {
         $this->tags = $tags;
+    }
+
+    /**
+     * @return null|PropertyParameter[]
+     */
+    public function getTypes(): ?array
+    {
+        return $this->types;
+    }
+
+    public function hasTypes(): bool
+    {
+        return \count($this->types) > 0;
+    }
+
+    /**
+     * @param array<array<string, string | array<string, string>> $types
+     */
+    public function setTypes(array $types)
+    {
+        $this->types = $types;
     }
 
     public function hasCategories(): bool

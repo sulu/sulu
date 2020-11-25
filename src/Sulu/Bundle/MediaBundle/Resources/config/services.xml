@@ -359,6 +359,8 @@
             <argument type="service" id="sulu_core.array_serializer"/>
             <argument type="service" id="request_stack"/>
             <argument type="service" id="sulu_media.reference_store.media"/>
+            <argument type="service" id="doctrine.orm.default_entity_manager"/>
+            <argument type="service" id="translator"/>
 
             <tag name="sulu.smart_content.data_provider" alias="media"/>
         </service>

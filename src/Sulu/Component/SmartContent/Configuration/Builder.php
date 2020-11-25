@@ -45,6 +45,20 @@ class Builder implements BuilderInterface
         return $this;
     }
 
+    public function enableTypes(array $types = [])
+    {
+        $this->configuration->setTypes(
+            \array_map(
+                function($type) {
+                    return new PropertyParameter($type['title'], $type['type']);
+                },
+                $types
+            )
+        );
+
+        return $this;
+    }
+
     public function enableCategories(bool $enable = true)
     {
         $this->configuration->setCategories($enable);

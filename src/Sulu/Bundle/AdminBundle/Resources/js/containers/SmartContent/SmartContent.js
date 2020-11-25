@@ -62,6 +62,10 @@ class SmartContent extends React.Component<Props> {
             this.sections.push('sorting');
         }
 
+        if (this.config.types && this.config.types.length > 0){
+            this.sections.push('types');
+        }
+
         if (this.config.presentAs && this.props.presentations.length > 0) {
             this.sections.push('presentation');
         }
@@ -119,6 +123,7 @@ class SmartContent extends React.Component<Props> {
                     smartContentStore={store}
                     sortings={this.config.sorting}
                     title={translate('sulu_admin.filter_overlay_title', {fieldLabel: fieldLabel || ''})}
+                    types={this.config.types}
                 />
             </Fragment>
         );

@@ -56,6 +56,7 @@ test('Load categories and datasource when constructed', () => {
             tagOperator: undefined,
             tags: undefined,
             presentAs: undefined,
+            types: undefined,
         },
         locale,
         'pages'
@@ -94,6 +95,7 @@ test('Reset dataSourceLoading if loading of dataSource fails', (done) => {
             tagOperator: undefined,
             tags: undefined,
             presentAs: undefined,
+            types: undefined,
         },
         locale,
         'pages'
@@ -125,6 +127,7 @@ test('Load items if FilterCriteria is given with datasource', () => {
         sortMethod: undefined,
         presentAs: undefined,
         limitResult: undefined,
+        types: undefined,
     };
 
     const datasourcePromise = Promise.resolve({id: 3});
@@ -153,6 +156,7 @@ test('Load items if FilterCriteria is given with categories', () => {
         sortMethod: undefined,
         presentAs: undefined,
         limitResult: undefined,
+        types: undefined,
     };
 
     const categoriesPromise = Promise.resolve({
@@ -188,6 +192,7 @@ test('Load items if FilterCriteria is given with tags', () => {
         sortMethod: undefined,
         presentAs: undefined,
         limitResult: undefined,
+        types: undefined,
     };
 
     const smartContentStore = new SmartContentStore('content', filterCriteria, locale, 'pages', 4, params);
@@ -196,6 +201,33 @@ test('Load items if FilterCriteria is given with tags', () => {
     const expectedParams = '%7B%22provider%22%3A%7B%22name%22%3A%22provider%22,%22value%22%3A%22content%22%7D%7D';
     expect(Requester.get).toBeCalledWith(
         '/api/items?provider=content&excluded=4&locale=en&params=' + expectedParams + '&tags=Tag2'
+    );
+});
+
+test('Load items if FilterCriteria is given with types', () => {
+    const locale = observable.box('en');
+    const params = {provider: {name: 'provider', value: 'content'}};
+    const filterCriteria = {
+        dataSource: undefined,
+        includeSubFolders: undefined,
+        categories: undefined,
+        categoryOperator: undefined,
+        tags: undefined,
+        tagOperator: undefined,
+        audienceTargeting: undefined,
+        sortBy: undefined,
+        sortMethod: undefined,
+        presentAs: undefined,
+        limitResult: undefined,
+        types: ['default', 'homepage'],
+    };
+
+    const smartContentStore = new SmartContentStore('content', filterCriteria, locale, 'pages', 4, params);
+    smartContentStore.start();
+
+    const expectedParams = '%7B%22provider%22%3A%7B%22name%22%3A%22provider%22,%22value%22%3A%22content%22%7D%7D';
+    expect(Requester.get).toBeCalledWith(
+        '/api/items?provider=content&excluded=4&locale=en&params=' + expectedParams + '&types=default,homepage'
     );
 });
 
@@ -213,6 +245,7 @@ test('Load items excluding given ids', () => {
         sortMethod: undefined,
         presentAs: undefined,
         limitResult: undefined,
+        types: undefined,
     };
 
     const smartContentStore = new SmartContentStore('content', filterCriteria, locale, 'pages', 4);
@@ -236,6 +269,7 @@ test('Do not load items if FilterCriteria is given with empty categories and tag
         sortMethod: undefined,
         presentAs: undefined,
         limitResult: undefined,
+        types: undefined,
     };
 
     new SmartContentStore('content', filterCriteria, locale, 'pages', 4);
@@ -257,6 +291,7 @@ test('Load items and store them in the items variable', () => {
         sortMethod: 'asc',
         presentAs: 'large',
         limitResult: 9,
+        types: ['default'],
     };
 
     const items = [
@@ -276,7 +311,7 @@ test('Load items and store them in the items variable', () => {
     expect(Requester.get).toHaveBeenLastCalledWith(
         '/api/items?provider=content&excluded=4&locale=en&audienceTargeting=true&categoryOperator=and'
         + '&includeSubFolders=true&limitResult=9&sortBy=changed&sortMethod=asc&tagOperator=or&tags=Test1,Test3'
-        + '&presentAs=large'
+        + '&types=default&presentAs=large'
     );
 
     return itemsPromise.then(() => {
@@ -297,7 +332,7 @@ test('Load items and store them in the items variable', () => {
         expect(Requester.get).toHaveBeenLastCalledWith(
             '/api/items?provider=content&excluded=4&locale=en&audienceTargeting=true&categoryOperator=and'
             + '&includeSubFolders=true&limitResult=1&sortBy=changed&sortMethod=asc&tagOperator=or&tags=Test1,Test3'
-            + '&presentAs=large'
+            + '&types=default&presentAs=large'
         );
 
         return updatedItemsPromise.then(() => {
@@ -319,6 +354,7 @@ test('Generate filterCriteria from current state', () => {
     smartContentStore.sortOrder = 'asc';
     smartContentStore.presentation = 'large';
     smartContentStore.limit = 9;
+    smartContentStore.types = ['default'];
 
     expect(smartContentStore.filterCriteria).toEqual({
         audienceTargeting: true,
@@ -332,6 +368,7 @@ test('Generate filterCriteria from current state', () => {
         sortMethod: 'asc',
         tagOperator: 'or',
         tags: ['Test1', 'Test3'],
+        types: ['default'],
     });
 
     smartContentStore.destroy();
@@ -350,6 +387,7 @@ test('Generate filterCriteria from current state with empty arrays', () => {
     smartContentStore.sortOrder = 'asc';
     smartContentStore.presentation = 'large';
     smartContentStore.limit = 9;
+    smartContentStore.types = [];
 
     expect(smartContentStore.filterCriteria).toEqual({
         audienceTargeting: true,
@@ -363,6 +401,7 @@ test('Generate filterCriteria from current state with empty arrays', () => {
         sortMethod: 'asc',
         tagOperator: 'or',
         tags: undefined,
+        types: undefined,
     });
 
     smartContentStore.destroy();

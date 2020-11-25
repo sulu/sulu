@@ -22,4 +22,18 @@ class SnippetQueryBuilder extends QueryBuilder
     protected static $mixinTypes = ['sulu:snippet'];
 
     protected static $structureType = Structure::TYPE_SNIPPET;
+
+    protected function buildTypesWhere($types, string $languageCode)
+    {
+        $sql2Where = [];
+        foreach ($types as $type) {
+            $sql2Where[] = 'page.template = ' . $type;
+        }
+
+        if (\count($sql2Where) > 0) {
+            return '(' . \implode(' or ', $sql2Where) . ')';
+        }
+
+        return '';
+    }
 }
