@@ -91,3 +91,80 @@ exports[`Should render a fully filled block list 1`] = `
   </button>
 </section>
 `;
+
+exports[`Should render a non-movable block list 1`] = `
+<section
+  class="blockCollection"
+>
+  <div
+    class="sortableBlockList"
+  >
+    <section
+      class="block expanded"
+      role="switch"
+    >
+      <div
+        class="content"
+      >
+        <header
+          class="header"
+        >
+          <div
+            class="iconButtons"
+          >
+            <span
+              aria-label="su-trash-alt"
+              class="su-trash-alt clickable"
+              role="button"
+              tabindex="0"
+            />
+          </div>
+        </header>
+        <article
+          class="children"
+        />
+      </div>
+    </section>
+    <section
+      class="block expanded"
+      role="switch"
+    >
+      <div
+        class="content"
+      >
+        <header
+          class="header"
+        >
+          <div
+            class="iconButtons"
+          >
+            <span
+              aria-label="su-trash-alt"
+              class="su-trash-alt clickable"
+              role="button"
+              tabindex="0"
+            />
+          </div>
+        </header>
+        <article
+          class="children"
+        />
+      </div>
+    </section>
+  </div>
+  <button
+    class="button secondary"
+    type="button"
+  >
+    <span
+      aria-label="su-plus"
+      class="su-plus buttonIcon"
+    />
+    <span
+      class="buttonText"
+    >
+      Add block
+    </span>
+  </button>
+</section>
+`;

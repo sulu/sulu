@@ -28,7 +28,7 @@ test('Render collapsed sortable block', () => {
     )).toMatchSnapshot();
 });
 
-test('Render expanded sortable block with types', () => {
+test('Render expanded sortable, non-collapsable block with types', () => {
     const renderBlockContent = jest.fn().mockImplementation(
         (value, type) => 'Test for ' + value.content + (type ? ' and type ' + type : '')
     );
@@ -37,8 +37,6 @@ test('Render expanded sortable block with types', () => {
         <SortableBlock
             activeType="type2"
             expanded={true}
-            onCollapse={jest.fn()}
-            onExpand={jest.fn()}
             onRemove={jest.fn()}
             onSettingsClick={jest.fn()}
             renderBlockContent={renderBlockContent}

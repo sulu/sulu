@@ -43,7 +43,7 @@ exports[`Render collapsed sortable block 1`] = `
 </section>
 `;
 
-exports[`Render expanded sortable block with types 1`] = `
+exports[`Render expanded sortable, non-collapsable block with types 1`] = `
 <section
   class="block expanded"
   role="switch"
@@ -117,12 +117,6 @@ exports[`Render expanded sortable block with types 1`] = `
         <span
           aria-label="su-trash-alt"
           class="su-trash-alt clickable"
-          role="button"
-          tabindex="0"
-        />
-        <span
-          aria-label="su-angle-up"
-          class="su-angle-up clickable"
           role="button"
           tabindex="0"
         />
