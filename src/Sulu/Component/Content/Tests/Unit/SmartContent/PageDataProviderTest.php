@@ -136,6 +136,42 @@ class PageDataProviderTest extends TestCase
         $this->assertInstanceOf(ProviderConfigurationInterface::class, $configuration);
     }
 
+    public function testEnabledAudienceTargeting()
+    {
+        $provider = new PageDataProvider(
+            $this->getContentQueryBuilder(),
+            $this->getContentQueryExecutor(),
+            $this->getDocumentManager(),
+            $this->getProxyFactory(),
+            $this->getSession(),
+            new ReferenceStore(),
+            false,
+            true
+        );
+
+        $configuration = $provider->getConfiguration();
+
+        $this->assertTrue($configuration->hasAudienceTargeting());
+    }
+
+    public function testDisabledAudienceTargeting()
+    {
+        $provider = new PageDataProvider(
+            $this->getContentQueryBuilder(),
+            $this->getContentQueryExecutor(),
+            $this->getDocumentManager(),
+            $this->getProxyFactory(),
+            $this->getSession(),
+            new ReferenceStore(),
+            false,
+            false
+        );
+
+        $configuration = $provider->getConfiguration();
+
+        $this->assertFalse($configuration->hasAudienceTargeting());
+    }
+
     public function testGetTypesConfiguration()
     {
         /** @var TokenStorageInterface|ObjectProphecy $tokenStorage */

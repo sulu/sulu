@@ -47,13 +47,32 @@ class MediaDataProviderTest extends TestCase
             $collectionManager->reveal(),
             $serializer->reveal(),
             $requestStack->reveal(),
+            $referenceStore->reveal()
+        );
+
+        $configuration = $provider->getConfiguration();
+
+        $this->assertInstanceOf(ProviderConfigurationInterface::class, $configuration);
+        $this->assertFalse($configuration->hasAudienceTargeting());
+    }
+
+    public function testEnabledAudienceTargeting()
+    {
+        $serializer = $this->prophesize(ArraySerializerInterface::class);
+        $collectionManager = $this->prophesize(CollectionManagerInterface::class);
+        $requestStack = $this->prophesize(RequestStack::class);
+        $referenceStore = $this->prophesize(ReferenceStoreInterface::class);
+        $provider = new MediaDataProvider(
+            $this->getRepository(),
+            $collectionManager->reveal(),
+            $serializer->reveal(),
+            $requestStack->reveal(),
             $referenceStore->reveal(),
             true
         );
 
         $configuration = $provider->getConfiguration();
 
-        $this->assertInstanceOf(ProviderConfigurationInterface::class, $configuration);
         $this->assertTrue($configuration->hasAudienceTargeting());
     }
 
