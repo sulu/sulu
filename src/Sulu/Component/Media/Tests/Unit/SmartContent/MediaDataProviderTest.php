@@ -53,7 +53,6 @@ class MediaDataProviderTest extends TestCase
         $configuration = $provider->getConfiguration();
 
         $this->assertInstanceOf(ProviderConfigurationInterface::class, $configuration);
-        $this->assertFalse($configuration->hasAudienceTargeting());
     }
 
     public function testEnabledAudienceTargeting()
@@ -74,6 +73,26 @@ class MediaDataProviderTest extends TestCase
         $configuration = $provider->getConfiguration();
 
         $this->assertTrue($configuration->hasAudienceTargeting());
+    }
+
+    public function testDisabledAudienceTargeting()
+    {
+        $serializer = $this->prophesize(ArraySerializerInterface::class);
+        $collectionManager = $this->prophesize(CollectionManagerInterface::class);
+        $requestStack = $this->prophesize(RequestStack::class);
+        $referenceStore = $this->prophesize(ReferenceStoreInterface::class);
+        $provider = new MediaDataProvider(
+            $this->getRepository(),
+            $collectionManager->reveal(),
+            $serializer->reveal(),
+            $requestStack->reveal(),
+            $referenceStore->reveal(),
+            false
+        );
+
+        $configuration = $provider->getConfiguration();
+
+        $this->assertFalse($configuration->hasAudienceTargeting());
     }
 
     public function testGetTypesConfiguration()
