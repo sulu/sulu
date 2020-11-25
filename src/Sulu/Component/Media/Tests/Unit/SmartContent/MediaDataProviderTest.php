@@ -47,7 +47,8 @@ class MediaDataProviderTest extends TestCase
             $collectionManager->reveal(),
             $serializer->reveal(),
             $requestStack->reveal(),
-            $referenceStore->reveal()
+            $referenceStore->reveal(),
+            true
         );
 
         $configuration = $provider->getConfiguration();
@@ -100,6 +101,7 @@ class MediaDataProviderTest extends TestCase
             $serializer->reveal(),
             $requestStack->reveal(),
             $referenceStore->reveal(),
+            false,
             $entityManager->reveal(),
             $translator->reveal()
         );

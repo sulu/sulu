@@ -136,6 +136,7 @@ class SnippetDataProviderTest extends TestCase
             $this->proxyFactory->reveal(),
             $this->documentManager->reveal(),
             $this->referenceStore->reveal(),
+            false,
             $formMetadataProvider->reveal(),
             $tokenStorage->reveal()
         );

@@ -182,6 +182,7 @@ class PageDataProviderTest extends TestCase
             $this->getSession(),
             new ReferenceStore(),
             ['view' => 64],
+            false,
             $formMetadataProvider->reveal(),
             $tokenStorage->reveal()
         );
