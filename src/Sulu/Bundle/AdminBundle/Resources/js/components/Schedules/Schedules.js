@@ -49,6 +49,7 @@ class Schedules extends React.Component<Props> {
         return (
             // $FlowFixMe
             <BlockCollection
+                collapsable={false}
                 defaultType="fixed"
                 movable={false}
                 onChange={onChange}

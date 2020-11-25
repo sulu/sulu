@@ -8,7 +8,7 @@ exports[`Render Schedules 1`] = `
     class="sortableBlockList"
   >
     <section
-      class="block"
+      class="block expanded"
       role="switch"
     >
       <div
@@ -18,14 +18,58 @@ exports[`Render Schedules 1`] = `
           class="header"
         >
           <div
-            class="type"
+            class="types"
           >
-            sulu_admin.fixed
+            <div
+              class="select"
+              role="none"
+            >
+              <button
+                class="displayValue default"
+                type="button"
+              >
+                <div
+                  aria-label="sulu_admin.fixed"
+                  class="croppedText"
+                  title="sulu_admin.fixed"
+                >
+                  <div
+                    aria-hidden="true"
+                    class="front"
+                  >
+                    sulu_adm
+                  </div>
+                  <div
+                    aria-hidden="true"
+                    class="back"
+                  >
+                    <span>
+                      in.fixed
+                    </span>
+                  </div>
+                  <div
+                    class="whole"
+                  >
+                    sulu_admin.fixed
+                  </div>
+                </div>
+                <span
+                  aria-label="su-angle-down"
+                  class="su-angle-down toggle"
+                />
+              </button>
+            </div>
           </div>
-          <span
-            aria-label="su-angle-down"
-            class="su-angle-down"
-          />
+          <div
+            class="iconButtons"
+          >
+            <span
+              aria-label="su-trash-alt"
+              class="su-trash-alt clickable"
+              role="button"
+              tabindex="0"
+            />
+          </div>
         </header>
         <article
           class="children"
@@ -76,7 +120,7 @@ exports[`Render Schedules 1`] = `
       </div>
     </section>
     <section
-      class="block"
+      class="block expanded"
       role="switch"
     >
       <div
@@ -86,14 +130,58 @@ exports[`Render Schedules 1`] = `
           class="header"
         >
           <div
-            class="type"
+            class="types"
           >
-            sulu_admin.weekly
+            <div
+              class="select"
+              role="none"
+            >
+              <button
+                class="displayValue default"
+                type="button"
+              >
+                <div
+                  aria-label="sulu_admin.weekly"
+                  class="croppedText"
+                  title="sulu_admin.weekly"
+                >
+                  <div
+                    aria-hidden="true"
+                    class="front"
+                  >
+                    sulu_admi
+                  </div>
+                  <div
+                    aria-hidden="true"
+                    class="back"
+                  >
+                    <span>
+                      n.weekly
+                    </span>
+                  </div>
+                  <div
+                    class="whole"
+                  >
+                    sulu_admin.weekly
+                  </div>
+                </div>
+                <span
+                  aria-label="su-angle-down"
+                  class="su-angle-down toggle"
+                />
+              </button>
+            </div>
           </div>
-          <span
-            aria-label="su-angle-down"
-            class="su-angle-down"
-          />
+          <div
+            class="iconButtons"
+          >
+            <span
+              aria-label="su-trash-alt"
+              class="su-trash-alt clickable"
+              role="button"
+              tabindex="0"
+            />
+          </div>
         </header>
         <article
           class="children"
