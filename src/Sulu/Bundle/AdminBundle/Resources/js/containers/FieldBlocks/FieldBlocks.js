@@ -51,7 +51,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
         const {defaultType, onChange, types, value} = this.props;
         const {types: oldTypes} = prevProps;
 
-        if (!equals(prevProps.value, value)){
+        if (!equals(toJS(prevProps.value), toJS(value))){
             this.setValue(value);
         }
 
@@ -280,12 +280,14 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
     // eslint-disable-next-line no-unused-vars
     renderCollapsedBlockContent = (value: Object, type: string, index: number) => {
         const blockSchemaType = this.getBlockSchemaType(type);
-        const blockSchemaTypeForm = blockSchemaType.form;
+        const blockSchemaTypeForm = this.removeSections(blockSchemaType.form);
 
         const previewPropertyNames = Object.keys(blockSchemaTypeForm)
             .filter((schemaKey) => {
                 const schemaEntryTags = blockSchemaTypeForm[schemaKey].tags;
-                return schemaEntryTags && schemaEntryTags.some((tag) => tag.name === BLOCK_PREVIEW_TAG);
+                return schemaEntryTags &&
+                    value[schemaKey] &&
+                    schemaEntryTags.some((tag) => tag.name === BLOCK_PREVIEW_TAG);
             })
             .sort((propertyName1, propertyName2) => {
                 const propertyTags1 = blockSchemaTypeForm[propertyName1].tags;
@@ -314,7 +316,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
         if (previewPropertyNames.length === 0) {
             for (const fieldTypeKey of blockPreviewTransformerRegistry.blockPreviewTransformerKeysByPriority) {
                 for (const propertyName of Object.keys(blockSchemaTypeForm)) {
-                    if (blockSchemaTypeForm[propertyName].type === fieldTypeKey) {
+                    if (blockSchemaTypeForm[propertyName].type === fieldTypeKey && value[propertyName]) {
                         previewPropertyNames.push(propertyName);
                         break;
                     }
@@ -386,6 +388,20 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
         this.setValue(newValues);
         onChange(newValues);
     };
+
+    removeSections(blockSchemaTypeForm: Object) {
+        let filteredForm = {};
+        Object.keys(blockSchemaTypeForm).forEach((key) => {
+            if (blockSchemaTypeForm[key]['type'] === 'section') {
+                filteredForm = {...filteredForm, ...this.removeSections(blockSchemaTypeForm[key]['items'])};
+                return false;
+            }
+
+            filteredForm[key] = blockSchemaTypeForm[key];
+        });
+
+        return filteredForm;
+    }
 
     render() {
         const {defaultType, disabled, maxOccurs, minOccurs, types} = this.props;

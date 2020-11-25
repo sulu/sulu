@@ -20,19 +20,25 @@ exports[`Render with selected item 1`] = `
       class="item"
       role="button"
     >
-      <div>
-        <span
-          class="itemColumn"
-          style="width: 50%;"
+      <div
+        class="itemContainer"
+      >
+        <div
+          class="columnList"
         >
-          Name
-        </span>
-        <span
-          class="itemColumn"
-          style="width: 50%;"
-        >
-          Value
-        </span>
+          <span
+            class="itemColumn"
+            style="width: 50%;"
+          >
+            Name
+          </span>
+          <span
+            class="itemColumn"
+            style="width: 50%;"
+          >
+            Value
+          </span>
+        </div>
       </div>
     </div>
     <button
@@ -69,19 +75,25 @@ exports[`Render with selected item in disabled state 1`] = `
       class="item"
       role="button"
     >
-      <div>
-        <span
-          class="itemColumn"
-          style="width: 50%;"
+      <div
+        class="itemContainer"
+      >
+        <div
+          class="columnList"
         >
-          Name
-        </span>
-        <span
-          class="itemColumn"
-          style="width: 50%;"
-        >
-          Value
-        </span>
+          <span
+            class="itemColumn"
+            style="width: 50%;"
+          >
+            Name
+          </span>
+          <span
+            class="itemColumn"
+            style="width: 50%;"
+          >
+            Value
+          </span>
+        </div>
       </div>
     </div>
   </div>

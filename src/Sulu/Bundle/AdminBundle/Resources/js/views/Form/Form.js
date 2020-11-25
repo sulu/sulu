@@ -235,6 +235,14 @@ class Form extends React.Component<Props> {
             return true;
         }
 
+        const {route: viewRoute, router} = this.props;
+        if (router.route !== viewRoute) {
+            // If the route of this view does not match the currently active route anymore, then another view has
+            // already been loaded, and the warning does not need to be shown anymore. This happens e.g. when this view
+            // navigates to a Tab view, which will in turn do a redirect.
+            return true;
+        }
+
         if (
             this.showDirtyWarning === true
             && this.postponedRoute === route

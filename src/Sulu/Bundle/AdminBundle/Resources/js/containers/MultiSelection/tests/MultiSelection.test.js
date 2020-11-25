@@ -722,3 +722,48 @@ test('Pass correct allowRemoveWhileDisabled prop to Item of MultiItemSelection',
 
     expect(selection.find(MultiItemSelection.Item).at(0).prop('allowRemoveWhileDisabled')).toEqual(true);
 });
+
+test('PublishIndicator should be rendered if necessary', () => {
+    // $FlowFixMe
+    MultiSelectionStore.mockImplementationOnce(function() {
+        this.items = [
+            {
+                id: 1, // Published
+                published: '2020-11-16',
+                publishedState: true,
+            },
+            {
+                id: 2, // Draft
+                published: '2020-11-16',
+                publishedState: false,
+            },
+            {
+                id: 3, // Unpublished
+                published: null,
+                publishedState: false,
+            },
+        ];
+    });
+
+    const selection = mount(
+        <MultiSelection
+            adapter="table"
+            listKey="pages"
+            onChange={jest.fn()}
+            overlayTitle="Selection"
+            resourceKey="pages"
+            value={[1, 2, 3]}
+        />
+    );
+
+    // Published
+    expect(selection.find(MultiItemSelection.Item).at(0).contains('PublishIndicator')).toBe(false);
+
+    // Draft
+    expect(selection.find(MultiItemSelection.Item).at(1).find('PublishIndicator').prop('draft')).toBe(true);
+    expect(selection.find(MultiItemSelection.Item).at(1).find('PublishIndicator').prop('published')).toBe(true);
+
+    // Unpublished
+    expect(selection.find(MultiItemSelection.Item).at(2).find('PublishIndicator').prop('draft')).toBe(true);
+    expect(selection.find(MultiItemSelection.Item).at(2).find('PublishIndicator').prop('published')).toBe(false);
+});

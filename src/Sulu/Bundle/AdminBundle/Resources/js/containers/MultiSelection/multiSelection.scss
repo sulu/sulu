@@ -4,6 +4,20 @@ $multiSelectionMainColumnColor: $black;
 $multiSelectionColumnColor: $scorpion;
 $multiSelectionDisabledColumnColor: $gray;
 
+.item-container {
+    display: flex;
+    align-items: center;
+}
+
+.publish-indicator {
+    flex: 0 0 auto;
+    margin-right: 10px;
+}
+
+.column-list {
+    flex: 1 1 auto;
+}
+
 .item-column {
     color: $multiSelectionColumnColor;
     display: inline-block;

@@ -370,4 +370,13 @@ abstract class ItemMetadata
 
         return $this;
     }
+
+    public function __clone()
+    {
+        $children = [];
+        foreach ($this->children as $child) {
+            $children[] = clone $child;
+        }
+        $this->children = $children;
+    }
 }

@@ -66,6 +66,7 @@ jest.mock(
         this.options = {
             webspace: 'webspace',
         };
+        this.getPathsByTag = jest.fn().mockReturnValue([]);
     })
 );
 

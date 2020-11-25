@@ -18,7 +18,10 @@ class RuleRegistry {
 
     get(name: string): RuleType {
         if (!(name in this.rules)) {
-            throw new Error('There is no rule with key "' + name + '" registered');
+            throw new Error(
+                'There is no rule with key "' + name + '" registered.' +
+                '\n\nRegistered keys: ' + Object.keys(this.rules).sort().join(', ')
+            );
         }
 
         return this.rules[name];

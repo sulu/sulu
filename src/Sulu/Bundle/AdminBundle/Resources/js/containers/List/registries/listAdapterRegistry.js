@@ -31,7 +31,8 @@ class ListAdapterRegistry {
         if (!(name in this.adapters)) {
             throw new Error(
                 'The list adapter with the key "' + name + '" is not defined. ' +
-                'You probably forgot to add it to the store using the "add" method.'
+                'You probably forgot to add it to the registry using the "add" method.' +
+                '\n\nRegistered keys: ' + Object.keys(this.adapters).sort().join(', ')
             );
         }
 
@@ -40,7 +41,10 @@ class ListAdapterRegistry {
 
     getOptions(name: string) {
         if (!(name in this.options)) {
-            throw new Error('There are no options for a list adapter with the key "' + name + '" registered');
+            throw new Error(
+                'There are no options for a list adapter with the key "' + name + '" registered.' +
+                '\n\nRegistered keys: ' + Object.keys(this.options).sort().join(', ')
+            );
         }
 
         return this.options[name];

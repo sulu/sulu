@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\ContactBundle\Contact;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Persistence\ObjectManager;
 use Sulu\Bundle\ContactBundle\Api\Account as AccountApi;
 use Sulu\Bundle\ContactBundle\Api\Contact;
@@ -28,6 +29,8 @@ use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 
 /**
  * This Manager handles Account functionality.
+ *
+ * @extends AbstractContactManager<AccountInterface, AccountApi, AccountAddressEntity>
  */
 class AccountManager extends AbstractContactManager implements DataProviderRepositoryInterface
 {
@@ -144,7 +147,9 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
     /**
      * Returns a collection of relations to get addresses.
      *
-     * @param $entity
+     * @param AccountInterface $entity
+     *
+     * @return Collection
      */
     public function getAddressRelations($entity)
     {
@@ -262,7 +267,7 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
      * Sets the medias of the given account to the given medias.
      * Currently associated medias are replaced.
      *
-     * @param $mediaIds
+     * @param array $mediaIds
      *
      * @throws EntityNotFoundException
      */

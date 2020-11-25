@@ -262,7 +262,7 @@ Array [
                 class="section gridSection colSpan colSpan-12 space-before-0 space-after-0"
               >
                 <div
-                  class="item colSpan colSpan-12 space-before-0 space-after-0"
+                  class="item dividerContainer colSpan colSpan-12 space-before-0 space-after-0"
                 >
                   <div
                     class="divider"
@@ -735,7 +735,7 @@ Array [
                 class="section gridSection colSpan colSpan-12 space-before-0 space-after-0"
               >
                 <div
-                  class="item colSpan colSpan-12 space-before-0 space-after-0"
+                  class="item dividerContainer colSpan colSpan-12 space-before-0 space-after-0"
                 >
                   <div
                     class="divider"

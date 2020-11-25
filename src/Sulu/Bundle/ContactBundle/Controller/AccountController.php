@@ -257,7 +257,7 @@ class AccountController extends AbstractRestController implements ClassResourceI
 
     /**
      * @param int $accountId
-     * @param int j$contactId
+     * @param int $contactId
      *
      * @throws \Exception
      *
@@ -658,7 +658,7 @@ class AccountController extends AbstractRestController implements ClassResourceI
     /**
      * Partial update of account infos.
      *
-     * @param $id
+     * @param int $id
      *
      * @return Response
      */
@@ -736,7 +736,7 @@ class AccountController extends AbstractRestController implements ClassResourceI
     /**
      * Delete an account with the given id.
      *
-     * @param $id
+     * @param int $id
      *
      * @return Response
      */
@@ -827,7 +827,7 @@ class AccountController extends AbstractRestController implements ClassResourceI
      * Returns information about data which will be also deleted:
      * 3 contacts, total number of contacts, and if deleting is allowed (as 0 or 1).
      *
-     * @param $id
+     * @param int $id
      *
      * @return Response
      */
@@ -1235,8 +1235,6 @@ class AccountController extends AbstractRestController implements ClassResourceI
 
     /**
      * Retrieves the ids from the request.
-     *
-     * @param int &$count
      *
      * @return array
      */

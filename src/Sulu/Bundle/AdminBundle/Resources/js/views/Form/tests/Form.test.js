@@ -801,6 +801,43 @@ test('Should navigate to defined route after dialog has been confirmed', () => {
     expect(router.navigate).toBeCalledWith('test_route', backViewAttributes);
 });
 
+test('Should not show dialog on navigation if another route has already been loaded', () => {
+    const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const resourceStore = new ResourceStore('snippet', 1);
+
+    const route = {
+        options: {
+            backView: 'test_route',
+            formKey: 'snippets',
+            toolbarActions: [],
+        },
+    };
+    const otherRoute = {
+        options: {
+            toolbarActions: [],
+        },
+    };
+
+    const router = {
+        addUpdateRouteHook: jest.fn(),
+        attributes: {},
+        bind: jest.fn(),
+        navigate: jest.fn(),
+        route: otherRoute,
+    };
+    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+
+    form.instance().resourceFormStore.dirty = true;
+
+    const checkFormStoreDirtyStateBeforeNavigation = router.addUpdateRouteHook.mock.calls[0][0];
+
+    const backViewAttributes = {};
+
+    expect(form.find('Dialog[title="sulu_admin.dirty_warning_dialog_title"]').prop('open')).toEqual(false);
+    expect(checkFormStoreDirtyStateBeforeNavigation({}, backViewAttributes, router.navigate)).toEqual(true);
+});
+
 test('Should navigate to defined route after dialog has been confirmed using restore', () => {
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;

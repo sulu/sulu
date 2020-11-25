@@ -985,7 +985,235 @@ exports[`Render collapsed blocks with block previews 2`] = `
 </section>
 `;
 
+exports[`Render collapsed blocks with block previews and sections 1`] = `
+<section
+  class="blockCollection"
+>
+  <div
+    class="sortableBlockList"
+  >
+    <section
+      class="block"
+      role="switch"
+    >
+      <div
+        class="handle"
+      >
+        <span
+          aria-label="su-more"
+          class="su-more sortableHandle"
+        />
+      </div>
+      <div
+        class="content"
+      >
+        <header
+          class="header"
+        >
+          <div
+            class="icons"
+          />
+          <div
+            class="type"
+          >
+            Default
+          </div>
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down"
+          />
+        </header>
+        <article
+          class="children"
+        >
+          <p>
+            Test 1
+          </p>
+          <p>
+            Test 2
+          </p>
+        </article>
+      </div>
+    </section>
+    <section
+      class="block"
+      role="switch"
+    >
+      <div
+        class="handle"
+      >
+        <span
+          aria-label="su-more"
+          class="su-more sortableHandle"
+        />
+      </div>
+      <div
+        class="content"
+      >
+        <header
+          class="header"
+        >
+          <div
+            class="icons"
+          />
+          <div
+            class="type"
+          >
+            Default
+          </div>
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down"
+          />
+        </header>
+        <article
+          class="children"
+        >
+          <p>
+            Test 3
+          </p>
+          <p>
+            Test 4
+          </p>
+        </article>
+      </div>
+    </section>
+  </div>
+  <button
+    class="button secondary"
+    type="button"
+  >
+    <span
+      aria-label="su-plus"
+      class="su-plus buttonIcon"
+    />
+    <span
+      class="buttonText"
+    >
+      sulu_admin.add_block
+    </span>
+  </button>
+</section>
+`;
+
 exports[`Render collapsed blocks with block previews without tags 1`] = `
+<section
+  class="blockCollection"
+>
+  <div
+    class="sortableBlockList"
+  >
+    <section
+      class="block"
+      role="switch"
+    >
+      <div
+        class="handle"
+      >
+        <span
+          aria-label="su-more"
+          class="su-more sortableHandle"
+        />
+      </div>
+      <div
+        class="content"
+      >
+        <header
+          class="header"
+        >
+          <div
+            class="icons"
+          />
+          <div
+            class="type"
+          >
+            Default
+          </div>
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down"
+          />
+        </header>
+        <article
+          class="children"
+        >
+          <p>
+            media_selection
+          </p>
+          <p>
+            text_line
+          </p>
+          <p>
+            text_editor
+          </p>
+        </article>
+      </div>
+    </section>
+    <section
+      class="block"
+      role="switch"
+    >
+      <div
+        class="handle"
+      >
+        <span
+          aria-label="su-more"
+          class="su-more sortableHandle"
+        />
+      </div>
+      <div
+        class="content"
+      >
+        <header
+          class="header"
+        >
+          <div
+            class="icons"
+          />
+          <div
+            class="type"
+          >
+            Default
+          </div>
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down"
+          />
+        </header>
+        <article
+          class="children"
+        >
+          <p>
+            media_selection
+          </p>
+          <p>
+            text_line
+          </p>
+          <p>
+            text_editor
+          </p>
+        </article>
+      </div>
+    </section>
+  </div>
+  <button
+    class="button secondary"
+    type="button"
+  >
+    <span
+      aria-label="su-plus"
+      class="su-plus buttonIcon"
+    />
+    <span
+      class="buttonText"
+    >
+      sulu_admin.add_block
+    </span>
+  </button>
+</section>
+`;
+
+exports[`Render collapsed blocks with block previews without tags and with sections 1`] = `
 <section
   class="blockCollection"
 >

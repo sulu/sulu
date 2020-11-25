@@ -182,6 +182,227 @@ test('Render collapsed blocks with block previews', () => {
     });
 });
 
+test('Render collapsed blocks with block previews and sections', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+
+    const types = {
+        default: {
+            title: 'Default',
+            form: {
+                section1: {
+                    label: 'Section',
+                    type: 'section',
+                    items: {
+                        text1: {
+                            label: 'Text 1',
+                            tags: [
+                                {name: 'sulu.block_preview'},
+                            ],
+                            type: 'text_line',
+                            visible: true,
+                        },
+                        text2: {
+                            label: 'Text 2',
+                            tags: [
+                                {name: 'sulu.block_preview'},
+                            ],
+                            type: 'text_line',
+                            visible: true,
+                        },
+                        something: {
+                            label: 'Something',
+                            tags: [
+                                {name: 'sulu.block_preview'},
+                            ],
+                            type: 'text_area',
+                            visible: true,
+                        },
+                        nothing: {
+                            label: 'Nothing',
+                            type: 'text_line',
+                            visible: true,
+                        },
+                    },
+                },
+            },
+        },
+    };
+
+    formInspector.getSchemaEntryByPath.mockReturnValue({types});
+
+    const value = [
+        {
+            text1: 'Test 1',
+            text2: undefined,
+            something: 'Test 2',
+            type: 'default',
+        },
+        {
+            text1: undefined,
+            text2: 'Test 3',
+            something: 'Test 4',
+            type: 'default',
+        },
+    ];
+
+    blockPreviewTransformerRegistry.has.mockImplementation((key) => {
+        switch (key) {
+            case 'text_line':
+                return true;
+            case 'text_area':
+                return true;
+            default:
+                return false;
+        }
+    });
+
+    blockPreviewTransformerRegistry.get.mockImplementation((key) => {
+        switch (key) {
+            case 'text_line':
+                return {
+                    transform: function Transformer(value) {
+                        return <p>{value}</p>;
+                    },
+                };
+            case 'text_area':
+                return {
+                    transform: function Transformer(value) {
+                        return <p>{value}</p>;
+                    },
+                };
+        }
+    });
+
+    const fieldBlocks = shallow(
+        <FieldBlocks
+            {...fieldTypeDefaultProps}
+            defaultType="editor"
+            formInspector={formInspector}
+            types={types}
+            value={value}
+        />
+    );
+
+    expect(fieldBlocks.render()).toMatchSnapshot();
+});
+
+test('Render collapsed blocks with block previews without tags and with sections', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+
+    const types = {
+        default: {
+            title: 'Default',
+            form: {
+                section1: {
+                    label: 'Section',
+                    type: 'section',
+                    items: {
+                        nothing: {
+                            label: 'Nothing',
+                            type: 'phone',
+                            visible: true,
+                        },
+                        text1: {
+                            label: 'Text 1',
+                            type: 'text_line',
+                            visible: true,
+                        },
+                        text2: {
+                            label: 'Text 2',
+                            type: 'media_selection',
+                            visible: true,
+                        },
+                        something: {
+                            label: 'Text 3',
+                            type: 'text_editor',
+                            visible: true,
+                        },
+                    },
+                },
+            },
+        },
+    };
+
+    formInspector.getSchemaEntryByPath.mockReturnValue({types});
+
+    const value = [
+        {
+            nothing: 'phone',
+            text1: 'Test 1',
+            text2: 'Test 2',
+            something: 'Test 3',
+            type: 'default',
+        },
+        {
+            nothing: 'phone',
+            text1: 'Test 4',
+            text2: 'Test 5',
+            something: 'Test 6',
+            type: 'default',
+        },
+    ];
+
+    blockPreviewTransformerRegistry.has.mockImplementation((key) => {
+        switch (key) {
+            case 'media_selection':
+            case 'phone':
+            case 'text_line':
+            case 'text_editor':
+                return true;
+            default:
+                return false;
+        }
+    });
+
+    blockPreviewTransformerRegistry.get.mockImplementation((key) => {
+        switch (key) {
+            case 'phone':
+                return {
+                    transform: function Transformer() {
+                        return <p>phone</p>;
+                    },
+                };
+            case 'media_selection':
+                return {
+                    transform: function Transformer() {
+                        return <p>media_selection</p>;
+                    },
+                };
+            case 'text_line':
+                return {
+                    transform: function Transformer() {
+                        return <p>text_line</p>;
+                    },
+                };
+            case 'text_editor':
+                return {
+                    transform: function Transformer() {
+                        return <p>text_editor</p>;
+                    },
+                };
+        }
+    });
+
+    // $FlowFixMe
+    blockPreviewTransformerRegistry.blockPreviewTransformerKeysByPriority = [
+        'media_selection',
+        'text_line',
+        'text_editor',
+    ];
+
+    const fieldBlocks = shallow(
+        <FieldBlocks
+            {...fieldTypeDefaultProps}
+            defaultType="default"
+            formInspector={formInspector}
+            types={types}
+            value={value}
+        />
+    );
+
+    expect(fieldBlocks.render()).toMatchSnapshot();
+});
+
 test('Render collapsed blocks with block previews without tags', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
 
@@ -784,6 +1005,46 @@ test('Should correctly pass props to the BlockCollection', () => {
         },
         value,
     }));
+});
+
+test('Should pass new value to the BlockCollection if value prop is updated', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const types = {
+        default: {
+            title: 'Default',
+            form: {
+                text: {
+                    label: 'Text',
+                    type: 'text_line',
+                    visible: true,
+                },
+            },
+        },
+    };
+
+    const fieldBlocks = shallow(
+        <FieldBlocks
+            {...fieldTypeDefaultProps}
+            defaultType="editor"
+            disabled={true}
+            formInspector={formInspector}
+            label="Test"
+            maxOccurs={2}
+            minOccurs={1}
+            types={types}
+            value={[]}
+        />
+    );
+    expect(fieldBlocks.find('BlockCollection').props().value).toEqual([]);
+
+    fieldBlocks.setProps({value: [{type: 'default', text: 'One'}]});
+    expect(fieldBlocks.find('BlockCollection').props().value).toEqual([{type: 'default', text: 'One'}]);
+
+    fieldBlocks.setProps({value: observable([{type: 'default', text: 'Two'}])});
+    expect(fieldBlocks.find('BlockCollection').props().value).toEqual([{type: 'default', text: 'Two'}]);
+
+    fieldBlocks.setProps({value: observable([{type: 'default', text: 'Three'}])});
+    expect(fieldBlocks.find('BlockCollection').props().value).toEqual([{type: 'default', text: 'Three'}]);
 });
 
 test('Should pass correct schemaPath and router to FieldRenderer', () => {

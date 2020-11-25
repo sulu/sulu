@@ -190,6 +190,19 @@ class StructureXmlLoaderTest extends TestCase
         $this->assertEquals(['title', 'test21', 'test221'], \array_keys($result->getProperties()));
     }
 
+    public function testLoadBlockWithSections()
+    {
+        $this->contentTypeManager->has('text_line')->willReturn(true);
+        $this->contentTypeManager->has('resource_locator')->willReturn(true);
+        $this->contentTypeManager->has('block')->willReturn(true);
+
+        $this->contentTypeManager->getAll()->willReturn(['text_line']);
+
+        $result = $this->load('template_block_with_sections.xml');
+        $this->assertEquals(['title', 'url', 'block1'], \array_keys($result->getProperties()));
+        $this->assertEquals(['title1.1', 'title1.2'], \array_keys($result->getProperties()['block1']->getComponents()[0]->getChildren()));
+    }
+
     public function testLoadNestedBlocks()
     {
         $this->contentTypeManager->has('text_line')->willReturn(true);

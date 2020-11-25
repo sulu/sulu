@@ -22,7 +22,10 @@ class ListItemActionRegistry {
 
     get(name: string) {
         if (!(name in this.listItemActions)) {
-            throw new Error('There is no ItemAction with key "' + name + '" registered!');
+            throw new Error(
+                'There is no ItemAction with key "' + name + '" registered!' +
+                '\n\nRegistered keys: ' + Object.keys(this.listItemActions).sort().join(', ')
+            );
         }
 
         return this.listItemActions[name];

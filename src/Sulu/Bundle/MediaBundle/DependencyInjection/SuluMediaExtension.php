@@ -20,6 +20,7 @@ use Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\FormatNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\FormatOptionsMissingParameterException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
+use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
@@ -374,6 +375,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
         $loader->load('services_storage_' . $storage . '.xml');
 
         $container->setAlias('sulu_media.storage', 'sulu_media.storage.' . $storage)->setPublic(true);
+        $container->setAlias(StorageInterface::class, 'sulu_media.storage')->setPublic(true);
     }
 
     private function getSupportedMimeTypes($ghostScriptPath, $ffmpegBinary, $ffprobeBinary)
