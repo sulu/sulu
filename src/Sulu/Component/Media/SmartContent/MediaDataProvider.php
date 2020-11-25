@@ -62,24 +62,6 @@ class MediaDataProvider extends BaseDataProvider
         parent::__construct($repository, $serializer, $referenceStore);
         $this->entityManager = $entityManager;
         $this->translator = $translator;
-
-        $this->configuration = self::createConfigurationBuilder()
-            ->enableTags()
-            ->enableCategories()
-            ->enableLimit()
-            ->enablePagination()
-            ->enablePresentAs()
-            ->enableAudienceTargeting()
-            ->enableDatasource('collections', 'collections', 'column_list')
-            ->enableSorting(
-                [
-                    ['column' => 'fileVersionMeta.title', 'title' => 'sulu_admin.title'],
-                ]
-            )
-            ->enableTypes($this->getTypes())
-            ->enableView(MediaAdmin::EDIT_FORM_VIEW, ['id' => 'id'])
-            ->getConfiguration();
-
         $this->requestStack = $requestStack;
         $this->collectionManager = $collectionManager;
 
@@ -90,6 +72,30 @@ class MediaDataProvider extends BaseDataProvider
         if (!$translator) {
             @\trigger_error('The usage of the "MediaDataProvider" without setting the "Translator" is deprecated. Please inject the "Translator".', \E_USER_DEPRECATED);
         }
+    }
+
+    public function getConfiguration()
+    {
+        if (!$this->configuration) {
+            $this->configuration = self::createConfigurationBuilder()
+                ->enableTags()
+                ->enableCategories()
+                ->enableLimit()
+                ->enablePagination()
+                ->enablePresentAs()
+                ->enableAudienceTargeting()
+                ->enableDatasource('collections', 'collections', 'column_list')
+                ->enableSorting(
+                    [
+                        ['column' => 'fileVersionMeta.title', 'title' => 'sulu_admin.title'],
+                    ]
+                )
+                ->enableTypes($this->getTypes())
+                ->enableView(MediaAdmin::EDIT_FORM_VIEW, ['id' => 'id'])
+                ->getConfiguration();
+        }
+
+        return $this->configuration;
     }
 
     public function getDefaultPropertyParameter()
