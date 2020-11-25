@@ -51,3 +51,13 @@ const renderBlockContent = (value) => 'A not so unique block';
     value={value}
 />
 ```
+
+The `movable` flag can be used to disable the moving feature of blocks.
+
+```javascript
+const [value, setValue] = React.useState([{content: 'That is some content'}, {content: 'That is some more content'}]);
+
+const renderBlockContent = (value) => (<p>{value.content || <i>There is no content</i>}</p>);
+
+<BlockCollection movable={false} onChange={setValue} value={value} renderBlockContent={renderBlockContent} />
+```

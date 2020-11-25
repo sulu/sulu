@@ -31,6 +31,20 @@ test('Should render a fully filled block list', () => {
     )).toMatchSnapshot();
 });
 
+test('Should render a non-movable block list', () => {
+    const blockCollection = mount(
+        <BlockCollection
+            defaultType="editor"
+            movable={false}
+            onChange={jest.fn()}
+            renderBlockContent={jest.fn()}
+            value={[{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}]}
+        />
+    );
+
+    expect(blockCollection.find('.handle')).toHaveLength(0);
+});
+
 test('Should render a disabled block list', () => {
     const blockCollection = mount(
         <BlockCollection

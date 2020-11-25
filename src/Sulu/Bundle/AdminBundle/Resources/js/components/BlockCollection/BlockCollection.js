@@ -16,6 +16,7 @@ type Props = {|
     icons?: Array<Array<string>>,
     maxOccurs?: ?number,
     minOccurs?: ?number,
+    movable: boolean,
     onChange: (value: Array<BlockEntry>) => void,
     onSettingsClick?: (index: number) => void,
     onSortEnd?: (oldIndex: number, newIndex: number) => void,
@@ -30,6 +31,7 @@ class BlockCollection extends React.Component<Props> {
 
     static defaultProps = {
         disabled: false,
+        movable: true,
         value: [],
     };
 
@@ -156,7 +158,7 @@ class BlockCollection extends React.Component<Props> {
     }
 
     render() {
-        const {addButtonText, disabled, icons, onSettingsClick, renderBlockContent, types, value} = this.props;
+        const {addButtonText, disabled, icons, movable, onSettingsClick, renderBlockContent, types, value} = this.props;
 
         return (
             <section className={blockCollectionStyles.blockCollection}>
@@ -166,6 +168,7 @@ class BlockCollection extends React.Component<Props> {
                     generatedBlockIds={this.generatedBlockIds}
                     icons={icons}
                     lockAxis="y"
+                    movable={movable}
                     onCollapse={this.handleCollapse}
                     onExpand={this.handleExpand}
                     onRemove={this.hasMinimumReached() ? undefined : this.handleRemoveBlock}

@@ -6,9 +6,6 @@ exports[`Render a collapsed block 1`] = `
   role="switch"
 >
   <div
-    class="handle"
-  />
-  <div
     class="content"
   >
     <header
@@ -122,6 +119,37 @@ exports[`Render an expanded block with a multiple types 1`] = `
           role="button"
           tabindex="0"
         />
+        <span
+          aria-label="su-angle-up"
+          class="su-angle-up clickable"
+          role="button"
+          tabindex="0"
+        />
+      </div>
+    </header>
+    <article
+      class="children"
+    >
+      Some block content
+    </article>
+  </div>
+</section>
+`;
+
+exports[`Render an expanded block without dragHandle 1`] = `
+<section
+  class="block expanded"
+  role="switch"
+>
+  <div
+    class="content"
+  >
+    <header
+      class="header"
+    >
+      <div
+        class="iconButtons"
+      >
         <span
           aria-label="su-angle-up"
           class="su-angle-up clickable"
