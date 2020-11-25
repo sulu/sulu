@@ -28,7 +28,6 @@ The `MediaDataprovider` requires the `EntityManagerInterface` and the `Translato
 
 For the type filtering to work properly all those mentioned services are necessary.
 
-
 ## 2.1.3
 
 ### GhostDialog

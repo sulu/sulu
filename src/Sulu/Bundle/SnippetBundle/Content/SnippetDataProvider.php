@@ -13,7 +13,6 @@ namespace Sulu\Bundle\SnippetBundle\Content;
 
 use ProxyManager\Factory\LazyLoadingValueHolderFactory;
 use ProxyManager\Proxy\LazyLoadingInterface;
-use Sulu\Bundle\AdminBundle\Exception\MetadataNotFoundException;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadataProvider;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\SnippetBundle\Admin\SnippetAdmin;
@@ -257,12 +256,8 @@ class SnippetDataProvider implements DataProviderInterface
                 return $types;
             }
 
-            try {
-                /** @var TypedFormMetadata $metadata */
-                $metadata = $this->formMetadataProvider->getMetadata('snippet', $user->getLocale(), []);
-            } catch (MetadataNotFoundException $e) {
-                return $types;
-            }
+            /** @var TypedFormMetadata $metadata */
+            $metadata = $this->formMetadataProvider->getMetadata('snippet', $user->getLocale(), []);
 
             foreach ($metadata->getForms() as $form) {
                 $types[] = ['type' => $form->getName(), 'title' => $form->getTitle()];
