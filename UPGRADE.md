@@ -28,6 +28,9 @@ The `MediaDataprovider` requires the `EntityManagerInterface` and the `Translato
 
 For the type filtering to work properly all those mentioned services are necessary.
 
+In addition the reference to the `AudienceTargetingBundle` in the DataProviderPool is removed. Now every provider,
+which requires the `AudienceTargetingBundle`, has to enable it by itself only when the `AudienceTargetingBundle` is really enabled.
+
 ## 2.1.3
 
 ### GhostDialog
