@@ -66,3 +66,11 @@ const types = {
     That is a {activeType} Block!
 </Block>
 ```
+
+If the `onCollapse` and `onExpand` props are not set, the block cannot be collapsed:
+
+```javascript
+<Block>
+    That is a Block!
+</Block>
+```

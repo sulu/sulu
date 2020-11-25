@@ -12,8 +12,8 @@ type Props = {
     dragHandle?: Node,
     expanded: boolean,
     icons?: Array<string>,
-    onCollapse: () => void,
-    onExpand: () => void,
+    onCollapse?: () => void,
+    onExpand?: () => void,
     onRemove?: () => void,
     onSettingsClick?: () => void,
     onTypeChange?: (type: string | number) => void,
@@ -27,14 +27,14 @@ export default class Block extends React.Component<Props> {
 
     handleCollapse = () => {
         const {expanded, onCollapse} = this.props;
-        if (expanded) {
+        if (expanded && onCollapse) {
             onCollapse();
         }
     };
 
     handleExpand = () => {
         const {expanded, onExpand} = this.props;
-        if (!expanded) {
+        if (!expanded && onExpand) {
             onExpand();
         }
     };
@@ -48,7 +48,19 @@ export default class Block extends React.Component<Props> {
     };
 
     render() {
-        const {activeType, children, dragHandle, expanded, icons, onSettingsClick, onRemove, types} = this.props;
+        const {
+            activeType,
+            children,
+            dragHandle,
+            icons,
+            onCollapse,
+            onExpand,
+            onRemove,
+            onSettingsClick,
+            types,
+        } = this.props;
+
+        const expanded = this.props.expanded || (!onCollapse && !onExpand);
 
         const blockClass = classNames(
             blockStyles.block,
@@ -87,7 +99,9 @@ export default class Block extends React.Component<Props> {
                                 <div className={blockStyles.iconButtons}>
                                     {onSettingsClick && <Icon name="su-cog" onClick={onSettingsClick} />}
                                     {onRemove && <Icon name="su-trash-alt" onClick={onRemove} />}
-                                    <Icon name="su-angle-up" onClick={this.handleCollapse} />
+                                    {onCollapse && onExpand &&
+                                        <Icon name="su-angle-up" onClick={this.handleCollapse} />
+                                    }
                                 </div>
                             </Fragment>
                             : <Fragment>
@@ -97,7 +111,7 @@ export default class Block extends React.Component<Props> {
                                     </div>
                                 }
                                 {types && activeType && <div className={blockStyles.type}>{types[activeType]}</div>}
-                                <Icon name="su-angle-down" />
+                                {onCollapse && onExpand && <Icon name="su-angle-down" />}
                             </Fragment>
                         }
                     </header>
