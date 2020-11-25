@@ -11,6 +11,7 @@ import type {BlockEntry, RenderBlockContentCallback} from './types';
 
 type Props = {|
     addButtonText?: ?string,
+    collapsable: boolean,
     defaultType: string,
     disabled: boolean,
     icons?: Array<Array<string>>,
@@ -30,6 +31,7 @@ class BlockCollection extends React.Component<Props> {
     static idCounter = 0;
 
     static defaultProps = {
+        collapsable: true,
         disabled: false,
         movable: true,
         value: [],
@@ -46,7 +48,7 @@ class BlockCollection extends React.Component<Props> {
     }
 
     fillArrays = () => {
-        const {defaultType, onChange, minOccurs, value} = this.props;
+        const {collapsable, defaultType, onChange, minOccurs, value} = this.props;
         const {expandedBlocks, generatedBlockIds} = this;
 
         if (!value) {
@@ -61,7 +63,9 @@ class BlockCollection extends React.Component<Props> {
             generatedBlockIds.splice(value.length);
         }
 
-        expandedBlocks.push(...new Array(value.length - expandedBlocks.length).fill(false));
+        const collapsed = collapsable ? false : true;
+
+        expandedBlocks.push(...new Array(value.length - expandedBlocks.length).fill(collapsed));
         generatedBlockIds.push(
             ...new Array(value.length - generatedBlockIds.length).fill(false).map(() => ++BlockCollection.idCounter)
         );
@@ -158,7 +162,17 @@ class BlockCollection extends React.Component<Props> {
     }
 
     render() {
-        const {addButtonText, disabled, icons, movable, onSettingsClick, renderBlockContent, types, value} = this.props;
+        const {
+            addButtonText,
+            collapsable,
+            disabled,
+            icons,
+            movable,
+            onSettingsClick,
+            renderBlockContent,
+            types,
+            value,
+        } = this.props;
 
         return (
             <section className={blockCollectionStyles.blockCollection}>
@@ -169,8 +183,8 @@ class BlockCollection extends React.Component<Props> {
                     icons={icons}
                     lockAxis="y"
                     movable={movable}
-                    onCollapse={this.handleCollapse}
-                    onExpand={this.handleExpand}
+                    onCollapse={collapsable ? this.handleCollapse : undefined}
+                    onExpand={collapsable ? this.handleExpand : undefined}
                     onRemove={this.hasMinimumReached() ? undefined : this.handleRemoveBlock}
                     onSettingsClick={onSettingsClick ? this.handleSettingsClick : undefined}
                     onSortEnd={this.handleSortEnd}

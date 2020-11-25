@@ -14,8 +14,8 @@ type Props = {|
     generatedBlockIds: Array<number>,
     icons?: Array<Array<string>>,
     movable: boolean,
-    onCollapse: (index: number) => void,
-    onExpand: (index: number) => void,
+    onCollapse?: (index: number) => void,
+    onExpand?: (index: number) => void,
     onRemove?: (index: number) => void,
     onSettingsClick?: (index: number) => void,
     onTypeChange?: (type: string | number, index: number) => void,
@@ -33,12 +33,16 @@ class SortableBlockList extends React.Component<Props> {
 
     handleExpand = (index: number) => {
         const {onExpand} = this.props;
-        onExpand(index);
+        if (onExpand) {
+            onExpand(index);
+        }
     };
 
     handleCollapse = (index: number) => {
         const {onCollapse} = this.props;
-        onCollapse(index);
+        if (onCollapse) {
+            onCollapse(index);
+        }
     };
 
     handleRemove = (index: number) => {
@@ -72,6 +76,8 @@ class SortableBlockList extends React.Component<Props> {
             generatedBlockIds,
             icons,
             movable,
+            onCollapse,
+            onExpand,
             onRemove,
             onSettingsClick,
             renderBlockContent,
@@ -96,8 +102,8 @@ class SortableBlockList extends React.Component<Props> {
                         index={index}
                         key={generatedBlockIds[index]}
                         movable={movable}
-                        onCollapse={this.handleCollapse}
-                        onExpand={this.handleExpand}
+                        onCollapse={onCollapse ? this.handleCollapse : undefined}
+                        onExpand={onExpand ? this.handleExpand : undefined}
                         onRemove={onRemove ? this.handleRemove : undefined}
                         onSettingsClick={onSettingsClick ? this.handleSettingsClick : undefined}
                         onTypeChange={this.handleTypeChange}

@@ -61,3 +61,14 @@ const renderBlockContent = (value) => (<p>{value.content || <i>There is no conte
 
 <BlockCollection movable={false} onChange={setValue} value={value} renderBlockContent={renderBlockContent} />
 ```
+
+Setting the `collapsable` flag to false will cause all blocks to be expanded and there will be no possibility to
+collapse them.
+
+```javascript
+const [value, setValue] = React.useState([{content: 'That is some content'}, {content: 'That is some more content'}]);
+
+const renderBlockContent = (value) => (<p>{value.content || <i>There is no content</i>}</p>);
+
+<BlockCollection collapsable={false} onChange={setValue} value={value} renderBlockContent={renderBlockContent} />
+```

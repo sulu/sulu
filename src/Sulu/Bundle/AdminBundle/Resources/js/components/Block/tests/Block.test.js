@@ -24,13 +24,9 @@ test('Render an expanded block with a multiple types', () => {
     )).toMatchSnapshot();
 });
 
-test('Render an expanded block without dragHandle', () => {
+test('Render an block without dragHandle or collapse or expand button', () => {
     expect(render(
-        <Block
-            expanded={true}
-            onCollapse={jest.fn()}
-            onExpand={jest.fn()}
-        >
+        <Block expanded={true}>
             Some block content
         </Block>
     )).toMatchSnapshot();
