@@ -67,6 +67,43 @@ class SegmentSelectTest extends TestCase
         $property->getValue()->willReturn(['sulu_io' => 'w', 'other' => 'a']);
         $property->getName()->willReturn('test');
 
+        $suluIoProperty = $this->prophesize(PhpcrPropertyInterface::class);
+        $suluIoProperty->getName()->willReturn('test-sulu_io');
+        $otherProperty = $this->prophesize(PhpcrPropertyInterface::class);
+        $otherProperty->getName()->willReturn('test-other');
+
+        $node->getProperties('test-*')->willReturn([$suluIoProperty->reveal(), $otherProperty->reveal()]);
+
+        $segmentSelect = new SegmentSelect();
+
+        $segmentSelect->write($node->reveal(), $property->reveal(), 1, 'sulu_io', 'de', null);
+    }
+
+    public function testWriteWithRemovals()
+    {
+        $node = $this->prophesize(NodeInterface::class);
+        $node->setProperty('test-other', 'a')->shouldBeCalled();
+        $node->setProperty('test-sulu_blog', 's')->shouldBeCalled();
+
+        $property = $this->prophesize(PropertyInterface::class);
+        $property->getValue()->willReturn(['other' => 'a', 'sulu_blog' => 's']);
+        $property->getName()->willReturn('test');
+
+        $suluWebsiteProperty = $this->prophesize(PhpcrPropertyInterface::class);
+        $suluWebsiteProperty->getName()->willReturn('test-sulu_website');
+        $otherProperty = $this->prophesize(PhpcrPropertyInterface::class);
+        $otherProperty->getName()->willReturn('test-other');
+        $suluBlogProperty = $this->prophesize(PhpcrPropertyInterface::class);
+        $suluBlogProperty->getName()->willReturn('test-sulu_blog');
+
+        $node->getProperties('test-*')->willReturn(
+            [$suluWebsiteProperty->reveal(), $otherProperty->reveal(), $suluBlogProperty->reveal()]
+        );
+
+        $suluWebsiteProperty->remove()->shouldBeCalled();
+        $suluBlogProperty->remove()->shouldNotBeCalled();
+        $otherProperty->remove()->shouldNotBeCalled();
+
         $segmentSelect = new SegmentSelect();
 
         $segmentSelect->write($node->reveal(), $property->reveal(), 1, 'sulu_io', 'de', null);
