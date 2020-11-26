@@ -52,7 +52,7 @@ class MediaFormatController extends AbstractRestController implements ClassResou
     /**
      * Returns all format resources.
      *
-     * @param $id
+     * @param int $id
      *
      * @return Response
      */

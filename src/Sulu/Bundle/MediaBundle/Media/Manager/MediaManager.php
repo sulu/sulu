@@ -298,7 +298,7 @@ class MediaManager implements MediaManagerInterface
      * Modifies an existing media.
      *
      * @param UploadedFile $uploadedFile
-     * @param $data
+     * @param array $data
      * @param UserInterface $user
      *
      * @throws FileVersionNotFoundException
@@ -448,8 +448,8 @@ class MediaManager implements MediaManagerInterface
     /**
      * Create a new media.
      *
-     * @param $data
-     * @param $user
+     * @param array $data
+     * @param UserInterface $user
      *
      * @return Media
      */
@@ -494,8 +494,7 @@ class MediaManager implements MediaManagerInterface
     /**
      * Data can be set over by array.
      *
-     * @param $media
-     * @param $data
+     * @param array $data
      * @param UserInterface $user
      *
      * @return Media
@@ -596,7 +595,7 @@ class MediaManager implements MediaManagerInterface
                         $media->removeCategories();
 
                         if (\is_array($categoryIds) && !empty($categoryIds)) {
-                            /** @var CategoryRepositoryInterface $repository */
+                            /** @var CategoryRepositoryInterface $categories */
                             $categories = $this->categoryRepository->findCategoriesByIds($categoryIds);
 
                             foreach ($categories as $category) {
@@ -630,7 +629,7 @@ class MediaManager implements MediaManagerInterface
     }
 
     /**
-     * @param $collectionId
+     * @param int $collectionId
      *
      * @return object
      *
@@ -823,7 +822,7 @@ class MediaManager implements MediaManagerInterface
     /**
      * Returns a user for a given user-id.
      *
-     * @param $userId
+     * @param int $userId
      *
      * @return UserInterface
      */
@@ -874,7 +873,7 @@ class MediaManager implements MediaManagerInterface
     /**
      * Returns file name without special characters and preserves file extension.
      *
-     * @param $originalFileName
+     * @param string $originalFileName
      *
      * @return string
      */

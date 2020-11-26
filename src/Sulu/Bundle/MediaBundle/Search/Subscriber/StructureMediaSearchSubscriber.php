@@ -44,7 +44,7 @@ class StructureMediaSearchSubscriber implements EventSubscriberInterface
 
     /**
      * @param RequestAnalyzerInterface $requestAnalyzer
-     * @param $searchImageFormat
+     * @param string $searchImageFormat
      */
     public function __construct(
         MediaManagerInterface $mediaManager,
@@ -105,7 +105,7 @@ class StructureMediaSearchSubscriber implements EventSubscriberInterface
     /**
      * Returns the url for the image.
      *
-     * @param $data
+     * @param array|MediaSelectionContainer $data
      * @param string $locale
      *
      * @throws \RuntimeException
@@ -115,7 +115,7 @@ class StructureMediaSearchSubscriber implements EventSubscriberInterface
     {
         // new structures will container an instance of MediaSelectionContainer
         if ($data instanceof MediaSelectionContainer) {
-            $medias = $data->getData('de');
+            $medias = $data->getData();
         // old ones an array ...
         } else {
             $ids = [];

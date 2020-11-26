@@ -172,7 +172,7 @@ class LocalFormatCache implements FormatCacheInterface
     }
 
     /**
-     * @param $id
+     * @param int $id
      *
      * @return string
      */

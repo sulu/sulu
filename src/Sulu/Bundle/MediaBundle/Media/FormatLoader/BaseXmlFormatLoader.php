@@ -104,7 +104,7 @@ abstract class BaseXmlFormatLoader extends FileLoader
     }
 
     /**
-     * @param $file
+     * @param string $file
      *
      * @return array
      */
@@ -129,7 +129,7 @@ abstract class BaseXmlFormatLoader extends FileLoader
      * For a given format node and a given array of formats, this method parses the
      * format node to an array and adds it to the formats array.
      *
-     * @param $formats
+     * @param array $formats
      */
     private function addFormatFromFormatNode(\DOMNode $formatNode, &$formats)
     {
@@ -154,7 +154,7 @@ abstract class BaseXmlFormatLoader extends FileLoader
     /**
      * Tries to load the DOM Document of a given image formats xml.
      *
-     * @param $file string The path to the xml file
+     * @param string $file string The path to the xml file
      *
      * @return \DOMDocument
      *

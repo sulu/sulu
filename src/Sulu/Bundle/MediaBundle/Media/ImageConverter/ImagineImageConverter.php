@@ -213,7 +213,7 @@ class ImagineImageConverter implements ImageConverterInterface
     /**
      * Applies an array of transformations on a passed image.
      *
-     * @param $tansformations
+     * @param array $tansformations
      *
      * @return ImageInterface The modified image
      *
@@ -287,7 +287,7 @@ class ImagineImageConverter implements ImageConverterInterface
     /**
      * Scales a given image according to the information passed as the second argument.
      *
-     * @param $scale
+     * @param array $scale
      *
      * @return ImageInterface
      */
@@ -409,7 +409,7 @@ class ImagineImageConverter implements ImageConverterInterface
     /**
      * Return the options for the given format.
      *
-     * @param $formatKey
+     * @param string $formatKey
      *
      * @return array
      *
