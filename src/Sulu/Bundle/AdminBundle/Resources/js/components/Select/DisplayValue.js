@@ -60,8 +60,8 @@ export default class DisplayValue extends React.PureComponent<Props> {
                 {!!icon &&
                     <Icon className={displayValueStyles.frontIcon} name={icon} />
                 }
-                {typeof children === 'string'
-                    ? <CroppedText>{children}</CroppedText>
+                {typeof children === 'string' || typeof children === 'number'
+                    ? <CroppedText>{String(children)}</CroppedText>
                     : children
                 }
                 <Icon className={displayValueStyles.toggle} name="su-angle-down" />
