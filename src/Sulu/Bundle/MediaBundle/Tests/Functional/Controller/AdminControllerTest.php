@@ -87,9 +87,11 @@ class AdminControllerTest extends SuluTestCase
         $this->assertArrayHasKey('properties', $schema);
         $this->assertArrayHasKey('images', $schema['properties']);
         $this->assertSame([
+            'name' => 'images',
             'type' => 'object',
             'properties' => [
                 'ids' => [
+                    'name' => 'ids',
                     'type' => 'array',
                     'items' => [
                         'type' => 'number',
@@ -104,6 +106,7 @@ class AdminControllerTest extends SuluTestCase
         ], $schema['properties']['images']);
         $this->assertArrayHasKey('image', $schema['properties']);
         $this->assertSame([
+            'name' => 'image',
             'type' => 'object',
             'properties' => [
                 'id' => [

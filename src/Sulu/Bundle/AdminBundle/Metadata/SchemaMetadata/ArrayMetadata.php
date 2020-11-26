@@ -18,10 +18,28 @@ class ArrayMetadata extends PropertyMetadata
      */
     private $schemaMetadata;
 
-    public function __construct(string $name, bool $mandatory, SchemaMetadata $schemaMetadata)
-    {
-        parent::__construct($name, $mandatory);
+    /**
+     * @var int|null
+     */
+    private $minItems;
+
+    /**
+     * @var bool|null
+     */
+    private $uniqueItems;
+
+    public function __construct(
+        string $name,
+        bool $mandatory,
+        SchemaMetadata $schemaMetadata,
+        int $minItems = null,
+        bool $uniqueItems = null
+    ) {
+        parent::__construct($name, $mandatory, 'array');
+
         $this->schemaMetadata = $schemaMetadata;
+        $this->minItems = $minItems;
+        $this->uniqueItems = $uniqueItems;
     }
 
     public function toJsonSchema(): ?array
@@ -31,6 +49,14 @@ class ArrayMetadata extends PropertyMetadata
             'type' => 'array',
             'items' => $this->schemaMetadata->toJsonSchema(),
         ];
+
+        if (null !== $this->minItems) {
+            $jsonSchema['minItems'] = $this->minItems;
+        }
+
+        if (null !== $this->uniqueItems) {
+            $jsonSchema['uniqueItems'] = $this->uniqueItems;
+        }
 
         return $jsonSchema;
     }

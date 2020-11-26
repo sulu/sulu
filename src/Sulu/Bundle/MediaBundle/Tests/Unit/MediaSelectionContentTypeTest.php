@@ -438,15 +438,17 @@ class MediaSelectionContentTypeTest extends TestCase
     public function testMapPropertyMetadata(): void
     {
         $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('name');
+        $propertyMetadata->setName('property-name');
         $propertyMetadata->setRequired(false);
 
         $jsonSchema = $this->mediaSelection->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
 
         $this->assertEquals([
+            'name' => 'property-name',
             'type' => 'object',
             'properties' => [
                 'ids' => [
+                    'name' => 'ids',
                     'type' => 'array',
                     'items' => [
                         'type' => 'number',
@@ -464,15 +466,17 @@ class MediaSelectionContentTypeTest extends TestCase
     public function testMapPropertyMetadataRequired(): void
     {
         $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('name');
+        $propertyMetadata->setName('property-name');
         $propertyMetadata->setRequired(true);
 
         $jsonSchema = $this->mediaSelection->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
 
         $this->assertEquals([
+            'name' => 'property-name',
             'type' => 'object',
             'properties' => [
                 'ids' => [
+                    'name' => 'ids',
                     'type' => 'array',
                     'items' => [
                         'type' => 'number',

@@ -11,8 +11,11 @@
 
 namespace Sulu\Bundle\MediaBundle\Content\Types;
 
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\NumberMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ObjectMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapperInterface;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\StringMetadata;
 use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
@@ -20,7 +23,7 @@ use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
-use Sulu\Component\Content\Metadata\PropertyMetadata;
+use Sulu\Component\Content\Metadata\PropertyMetadata as ContentPropertyMetadata;
 use Sulu\Component\Content\PreResolvableContentTypeInterface;
 use Sulu\Component\Content\SimpleContentType;
 use Sulu\Component\Security\Authorization\PermissionTypes;
@@ -127,26 +130,13 @@ class SingleMediaSelection extends SimpleContentType implements PreResolvableCon
         return \json_decode($value, true);
     }
 
-    public function mapPropertyMetadata(PropertyMetadata $propertyMetadata): ObjectMetadata
+    public function mapPropertyMetadata(ContentPropertyMetadata $propertyMetadata): PropertyMetadata
     {
         $mandatory = $propertyMetadata->isRequired();
 
-        $jsonSchema = [
-            'type' => 'object',
-            'properties' => [
-                'id' => [
-                    'type' => 'number',
-                ],
-                'displayOption' => [
-                    'type' => 'string',
-                ],
-            ],
-        ];
-
-        if ($mandatory) {
-            $jsonSchema['required'] = ['id'];
-        }
-
-        return new ObjectMetadata($propertyMetadata->getName(), $mandatory, $jsonSchema);
+        return new ObjectMetadata($propertyMetadata->getName(), $mandatory, [
+            new NumberMetadata('id', $mandatory),
+            new StringMetadata('displayOption', false),
+        ]);
     }
 }

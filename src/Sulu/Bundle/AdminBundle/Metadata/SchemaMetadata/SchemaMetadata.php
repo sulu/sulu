@@ -28,16 +28,22 @@ class SchemaMetadata
      */
     private $allOfs;
 
-    public function __construct(array $properties = [], array $anyOfs = [], array $allOfs = [])
+    /**
+     * @var string|null
+     */
+    private $type;
+
+    public function __construct(array $properties = [], array $anyOfs = [], array $allOfs = [], string $type = null)
     {
         $this->properties = $properties;
         $this->anyOfs = $anyOfs;
         $this->allOfs = $allOfs;
+        $this->type = $type;
     }
 
     public function merge(self $schema)
     {
-        return new self([], [], [$this, $schema]);
+        return new self([], [], [$this, $schema], $schema->type ?? $this->type);
     }
 
     public function toJsonSchema()
@@ -79,6 +85,10 @@ class SchemaMetadata
             $jsonSchema['allOf'] = \array_map(function(SchemaMetadata $schema) {
                 return $schema->toJsonSchema();
             }, $this->allOfs);
+        }
+
+        if (null !== $this->type) {
+            $jsonSchema['type'] = $this->type;
         }
 
         return $jsonSchema;

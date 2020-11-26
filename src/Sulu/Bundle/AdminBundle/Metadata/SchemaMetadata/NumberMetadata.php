@@ -11,9 +11,10 @@
 
 namespace Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata;
 
-use Sulu\Component\Content\Metadata\PropertyMetadata as ContentPropertyMetadata;
-
-interface PropertyMetadataMapperInterface
+class NumberMetadata extends PropertyMetadata
 {
-    public function mapPropertyMetadata(ContentPropertyMetadata $propertyMetadata): PropertyMetadata;
+    public function __construct(string $name, bool $mandatory)
+    {
+        parent::__construct($name, $mandatory, 'number');
+    }
 }

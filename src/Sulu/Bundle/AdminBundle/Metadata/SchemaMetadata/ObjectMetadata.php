@@ -14,22 +14,54 @@ namespace Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata;
 class ObjectMetadata extends PropertyMetadata
 {
     /**
-     * @var array<string, mixed>|null
+     * @var PropertyMetadata[]
      */
-    private $jsonSchema;
-
-    public function __construct(string $name, bool $mandatory, ?array $jsonSchema = null)
-    {
-        $this->jsonSchema = $jsonSchema;
-
-        parent::__construct($name, $mandatory);
-    }
+    private $properties;
 
     /**
-     * @return array<string, mixed>|null
+     * @param PropertyMetadata[] $properties
      */
+    public function __construct(string $name, bool $mandatory, array $properties = [])
+    {
+        parent::__construct($name, $mandatory, 'object');
+
+        $this->properties = $properties;
+    }
+
     public function toJsonSchema(): ?array
     {
-        return $this->jsonSchema;
+        $jsonSchema = [
+            'name' => $this->getName(),
+            'type' => $this->getType(),
+        ];
+
+        $jsonSchema['required'] = \array_map(
+            function(PropertyMetadata $propertyMetadata) {
+                return $propertyMetadata->getName();
+            },
+            \array_filter(
+                $this->properties,
+                function(PropertyMetadata $propertyMetadata) {
+                    return $propertyMetadata->isMandatory();
+                }
+            )
+        );
+
+        $properties = [];
+
+        foreach ($this->properties as $property) {
+            $jsonSchemaProperty = $property->toJsonSchema();
+            if (!$jsonSchemaProperty) {
+                continue;
+            }
+
+            $properties[$property->getName()] = $jsonSchemaProperty;
+        }
+
+        if (\count($properties) > 0) {
+            $jsonSchema['properties'] = $properties;
+        }
+
+        return $jsonSchema;
     }
 }
