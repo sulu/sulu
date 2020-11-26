@@ -169,6 +169,7 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
             'website_tags_operator' => new PropertyParameter('website_tags_operator', 'OR'),
             'website_categories_operator' => new PropertyParameter('website_categories_operator', 'OR'),
             'sorting' => new PropertyParameter('sorting', $configuration->getSorting(), 'collection'),
+            'types' => new PropertyParameter('types', $configuration->getTypes(), 'collection'),
             'present_as' => new PropertyParameter('present_as', [], 'collection'),
             'category_root' => new PropertyParameter('category_root', null),
             'display_options' => new PropertyParameter(
@@ -177,6 +178,7 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
                     'tags' => new PropertyParameter('tags', true),
                     'categories' => new PropertyParameter('categories', true),
                     'sorting' => new PropertyParameter('sorting', true),
+                    'types' => new PropertyParameter('types', true),
                     'limit' => new PropertyParameter('limit', true),
                     'presentAs' => new PropertyParameter('presentAs', true),
                 ],
@@ -187,6 +189,7 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
                 'tags' => $configuration->hasTags(),
                 'categories' => $configuration->hasCategories(),
                 'sorting' => $configuration->hasSorting(),
+                'types' => $configuration->hasTypes(),
                 'limit' => $configuration->hasLimit(),
                 'presentAs' => $configuration->hasPresentAs(),
                 'audienceTargeting' => $configuration->hasAudienceTargeting(),

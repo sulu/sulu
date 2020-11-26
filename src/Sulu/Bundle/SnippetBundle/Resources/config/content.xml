@@ -54,6 +54,9 @@
             <argument type="service" id="sulu_page.smart_content.data_provider.content.proxy_factory"/>
             <argument type="service" id="sulu_document_manager.document_manager"/>
             <argument type="service" id="sulu_snippet.reference_store.snippet"/>
+            <argument type="expression">container.hasParameter('sulu_audience_targeting.enabled')</argument>
+            <argument type="service" id="sulu_admin.form_metadata_provider" on-invalid="null"/>
+            <argument type="service" id="security.token_storage" on-invalid="null"/>
 
             <tag name="sulu.smart_content.data_provider" alias="snippets"/>
         </service>

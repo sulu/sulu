@@ -69,6 +69,9 @@ class SmartContentItemController extends AbstractRestController
         if (isset($filters['tags'])) {
             $filters['tags'] = \explode(',', $this->getRequestParameter($request, 'tags'));
         }
+        if (isset($filters['types'])) {
+            $filters['types'] = \explode(',', $this->getRequestParameter($request, 'types'));
+        }
         if (isset($filters['sortBy'])) {
             $filters['sortBy'] = $this->getRequestParameter($request, 'sortBy');
         }

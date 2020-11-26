@@ -131,6 +131,20 @@ trait DataProviderRepositoryTrait
             );
         }
 
+        if (isset($filters['types']) && !empty($filters['types'])) {
+            $typeRelation = $this->appendTypeRelation($queryBuilder, 'c');
+            $parameter = \array_merge(
+                $parameter,
+                $this->appendRelation(
+                    $queryBuilder,
+                    $typeRelation,
+                    $filters['types'],
+                    'or',
+                    'typeId'
+                )
+            );
+        }
+
         if (isset($filters['categories']) && !empty($filters['categories'])) {
             $parameter = \array_merge(
                 $parameter,
@@ -373,6 +387,11 @@ trait DataProviderRepositoryTrait
     protected function appendTargetGroupRelation(QueryBuilder $queryBuilder, $alias)
     {
         return $alias . '.targetGroups';
+    }
+
+    protected function appendTypeRelation(QueryBuilder $queryBuilder, $alias)
+    {
+        return $alias . '.type';
     }
 
     /**
