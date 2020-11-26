@@ -21,12 +21,22 @@ class SegmentSelect extends ComplexContentType
 
     public function write(NodeInterface $node, PropertyInterface $property, $userId, $webspaceKey, $languageCode, $segmentKey)
     {
+        $propertyValue = $property->getValue();
+
         // write a separate property for per webspace to make segment queryable in the smart content data provider
-        foreach ($property->getValue() as $webspaceKeyValue => $segmentKeyValue) {
+        foreach ($propertyValue as $webspaceKeyValue => $segmentKeyValue) {
             $node->setProperty(
                 $this->getWebspaceSegmentPropertyName($property, $webspaceKeyValue),
                 $segmentKeyValue
             );
+        }
+
+        $propertyPrefix = $this->getPrefix($property);
+        foreach ($node->getProperties($propertyPrefix . '*') as $webspaceSegmentProperty) {
+            $webspaceKey = \str_replace($propertyPrefix, '', $webspaceSegmentProperty->getName());
+            if (!isset($propertyValue[$webspaceKey])) {
+                $webspaceSegmentProperty->remove();
+            }
         }
     }
 
