@@ -1,6 +1,23 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`The component should render 1`] = `
+exports[`The component should directly render given children if value of children prop contains another component 1`] = `
+<button
+  class="displayValue default"
+  type="button"
+>
+  Some 
+  <b>
+    bold
+  </b>
+   text
+  <span
+    aria-label="su-angle-down"
+    class="su-angle-down toggle"
+  />
+</button>
+`;
+
+exports[`The component should render a CroppedText if value of children prop is a string 1`] = `
 <button
   class="displayValue default"
   type="button"
