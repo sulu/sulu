@@ -57,6 +57,7 @@ jobs:
                       env:
                           SYMFONY__PHPCR__TRANSPORT: doctrinedbal
                           SYMFONY__DATABASE__DRIVER: pdo_mysql
+                          SYMFONY__DATABASE__VERSION: 5.7
                           SYMFONY__DATABASE__PORT: 3306
 
                     - php-version: '7.0'
@@ -69,6 +70,7 @@ jobs:
                       env:
                           SYMFONY__PHPCR__TRANSPORT: doctrinedbal
                           SYMFONY__DATABASE__DRIVER: pdo_mysql
+                          SYMFONY__DATABASE__VERSION: 5.7
                           SYMFONY__DATABASE__PORT: 3306
 
                     - php-version: '7.4'
@@ -81,6 +83,7 @@ jobs:
                       env:
                           SYMFONY__PHPCR__TRANSPORT: jackrabbit
                           SYMFONY__DATABASE__DRIVER: pdo_pgsql
+                          SYMFONY__DATABASE__VERSION: 12.5
                           SYMFONY__DATABASE__PORT: 5432
                           SYMFONY__DATABASE__USER: postgres
                           SYMFONY__DATABASE__PASSWORD: postgres
