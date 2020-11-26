@@ -11,12 +11,16 @@
 
 namespace Sulu\Component\Media\Tests\Unit\SmartContent;
 
+use Doctrine\Common\Persistence\ObjectRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use JMS\Serializer\SerializationContext;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MediaBundle\Api\Collection;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
+use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Media\SmartContent\MediaDataItem;
@@ -33,6 +37,7 @@ use Sulu\Component\Webspace\Security as WebspaceSecurity;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class MediaDataProviderTest extends TestCase
 {
@@ -103,7 +108,115 @@ class MediaDataProviderTest extends TestCase
         $configuration = $this->mediaDataProvider->getConfiguration();
 
         $this->assertInstanceOf(ProviderConfigurationInterface::class, $configuration);
+    }
+
+    public function testEnabledAudienceTargeting()
+    {
+        $serializer = $this->prophesize(ArraySerializerInterface::class);
+        $collectionManager = $this->prophesize(CollectionManagerInterface::class);
+        $requestStack = $this->prophesize(RequestStack::class);
+        $referenceStore = $this->prophesize(ReferenceStoreInterface::class);
+        $provider = new MediaDataProvider(
+            $this->dataProviderRepository->reveal(),
+            $collectionManager->reveal(),
+            $serializer->reveal(),
+            $requestStack->reveal(),
+            $referenceStore->reveal(),
+            null,
+            $this->requestAnalyzer->reveal(),
+            ['view' => 64],
+            true
+        );
+
+        $configuration = $provider->getConfiguration();
+
         $this->assertTrue($configuration->hasAudienceTargeting());
+    }
+
+    public function testDisabledAudienceTargeting()
+    {
+        $serializer = $this->prophesize(ArraySerializerInterface::class);
+        $collectionManager = $this->prophesize(CollectionManagerInterface::class);
+        $requestStack = $this->prophesize(RequestStack::class);
+        $referenceStore = $this->prophesize(ReferenceStoreInterface::class);
+        $provider = new MediaDataProvider(
+            $this->dataProviderRepository->reveal(),
+            $collectionManager->reveal(),
+            $serializer->reveal(),
+            $requestStack->reveal(),
+            $referenceStore->reveal(),
+            null,
+            $this->requestAnalyzer->reveal(),
+            ['view' => 64],
+            false
+        );
+
+        $configuration = $provider->getConfiguration();
+
+        $this->assertFalse($configuration->hasAudienceTargeting());
+    }
+
+    public function testGetTypesConfiguration()
+    {
+        /** @var EntityManagerInterface|ObjectProphecy $entityManager */
+        $entityManager = $this->prophesize(EntityManagerInterface::class);
+
+        /** @var ObjectRepository|ObjectProphecy $mediaTypeRepository */
+        $mediaTypeRepository = $this->prophesize(ObjectRepository::class);
+
+        $serializer = $this->prophesize(ArraySerializerInterface::class);
+        $collectionManager = $this->prophesize(CollectionManagerInterface::class);
+        $requestStack = $this->prophesize(RequestStack::class);
+        $referenceStore = $this->prophesize(ReferenceStoreInterface::class);
+
+        $entityManager->getRepository(MediaType::class)
+            ->shouldBeCalled()
+            ->willReturn($mediaTypeRepository->reveal());
+
+        $mediaType1 = new MediaType();
+        $mediaType1->setId(1);
+        $mediaType1->setName('image');
+
+        $mediaType2 = new MediaType();
+        $mediaType2->setId(2);
+        $mediaType2->setName('audio');
+
+        $mediaTypeRepository->findAll()
+            ->shouldBeCalled()
+            ->willReturn([$mediaType1, $mediaType2]);
+
+        /** @var TranslatorInterface|ObjectProphecy $translator */
+        $translator = $this->prophesize(TranslatorInterface::class);
+        $translator->trans('sulu_media.audio', [], 'admin')
+            ->shouldBeCalled()
+            ->willReturn('translated_audio');
+        $translator->trans('sulu_media.image', [], 'admin')
+            ->shouldBeCalled()
+            ->willReturn('translated_image');
+
+        $provider = new MediaDataProvider(
+            $this->dataProviderRepository->reveal(),
+            $collectionManager->reveal(),
+            $serializer->reveal(),
+            $requestStack->reveal(),
+            $referenceStore->reveal(),
+            null,
+            $this->requestAnalyzer->reveal(),
+            ['view' => 64],
+            false,
+            $entityManager->reveal(),
+            $translator->reveal()
+        );
+
+        $configuration = $provider->getConfiguration();
+
+        $this->assertInstanceOf(ProviderConfigurationInterface::class, $configuration);
+
+        $this->assertCount(2, $configuration->getTypes());
+        $this->assertSame(1, $configuration->getTypes()[0]->getValue());
+        $this->assertSame('translated_image', $configuration->getTypes()[0]->getName());
+        $this->assertSame(2, $configuration->getTypes()[1]->getValue());
+        $this->assertSame('translated_audio', $configuration->getTypes()[1]->getName());
     }
 
     public function testGetDefaultParameter()

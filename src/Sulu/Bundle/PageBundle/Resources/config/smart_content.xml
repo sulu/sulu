@@ -16,9 +16,7 @@
     <services>
         <!-- data provider -->
         <service id="sulu_page.smart_content.data_provider_pool"
-                 class="%sulu_page.smart_content.data_provider_pool.class%" public="true">
-            <argument type="expression">container.hasParameter('sulu_audience_targeting.enabled')</argument>
-        </service>
+                 class="%sulu_page.smart_content.data_provider_pool.class%" public="true"/>
 
         <!-- content provider -->
         <service id="sulu_page.smart_content.data_provider.content.proxy_factory"
@@ -42,6 +40,9 @@
             <argument type="service" id="sulu_page.reference_store.content"/>
             <argument>%sulu_document_manager.show_drafts%</argument>
             <argument>%sulu_security.permissions%</argument>
+            <argument type="expression">container.hasParameter('sulu_audience_targeting.enabled')</argument>
+            <argument type="service" id="sulu_admin.form_metadata_provider" on-invalid="null"/>
+            <argument type="service" id="security.token_storage" on-invalid="null"/>
 
             <tag name="sulu.smart_content.data_provider" alias="pages"/>
         </service>

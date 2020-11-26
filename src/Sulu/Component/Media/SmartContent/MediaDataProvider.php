@@ -11,8 +11,10 @@
 
 namespace Sulu\Component\Media\SmartContent;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
+use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Serializer\ArraySerializerInterface;
@@ -23,6 +25,7 @@ use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Media DataProvider for SmartContent.
@@ -39,6 +42,21 @@ class MediaDataProvider extends BaseDataProvider
      */
     private $collectionManager;
 
+    /**
+     * @var bool
+     */
+    private $hasAudienceTargeting;
+
+    /**
+     * @var EntityManagerInterface|null
+     */
+    private $entityManager;
+
+    /**
+     * @var TranslatorInterface|null
+     */
+    private $translator;
+
     public function __construct(
         DataProviderRepositoryInterface $repository,
         CollectionManagerInterface $collectionManager,
@@ -47,28 +65,54 @@ class MediaDataProvider extends BaseDataProvider
         ReferenceStoreInterface $referenceStore,
         ?Security $security,
         RequestAnalyzerInterface $requestAnalyzer,
-        $permissions
+        $permissions,
+        bool $hasAudienceTargeting = false,
+        EntityManagerInterface $entityManager = null,
+        TranslatorInterface $translator = null
     ) {
         parent::__construct($repository, $serializer, $referenceStore, $security, $requestAnalyzer, $permissions);
 
-        $this->configuration = self::createConfigurationBuilder()
-            ->enableTags()
-            ->enableCategories()
-            ->enableLimit()
-            ->enablePagination()
-            ->enablePresentAs()
-            ->enableAudienceTargeting()
-            ->enableDatasource('collections', 'collections', 'column_list')
-            ->enableSorting(
-                [
-                    ['column' => 'fileVersionMeta.title', 'title' => 'sulu_admin.title'],
-                ]
-            )
-            ->enableView(MediaAdmin::EDIT_FORM_VIEW, ['id' => 'id'])
-            ->getConfiguration();
-
         $this->requestStack = $requestStack;
         $this->collectionManager = $collectionManager;
+        $this->hasAudienceTargeting = $hasAudienceTargeting;
+        $this->entityManager = $entityManager;
+        $this->translator = $translator;
+
+        if (!$entityManager) {
+            @\trigger_error('The usage of the "MediaDataProvider" without setting the "EntityManager" is deprecated. Please inject the "EntityManager".', \E_USER_DEPRECATED);
+        }
+
+        if (!$translator) {
+            @\trigger_error('The usage of the "MediaDataProvider" without setting the "Translator" is deprecated. Please inject the "Translator".', \E_USER_DEPRECATED);
+        }
+    }
+
+    public function getConfiguration()
+    {
+        if (!$this->configuration) {
+            $builder = self::createConfigurationBuilder()
+                ->enableTags()
+                ->enableCategories()
+                ->enableLimit()
+                ->enablePagination()
+                ->enablePresentAs()
+                ->enableDatasource('collections', 'collections', 'column_list')
+                ->enableSorting(
+                    [
+                        ['column' => 'fileVersionMeta.title', 'title' => 'sulu_admin.title'],
+                    ]
+                )
+                ->enableTypes($this->getTypes())
+                ->enableView(MediaAdmin::EDIT_FORM_VIEW, ['id' => 'id']);
+
+            if ($this->hasAudienceTargeting) {
+                $builder->enableAudienceTargeting();
+            }
+
+            $this->configuration = $builder->getConfiguration();
+        }
+
+        return $this->configuration;
     }
 
     public function getDefaultPropertyParameter()
@@ -161,5 +205,26 @@ class MediaDataProvider extends BaseDataProvider
         $serializationContext->setGroups(['Default']);
 
         return $serializationContext;
+    }
+
+    /**
+     * @return array<int, array<string, string>>
+     */
+    protected function getTypes(): array
+    {
+        $types = [];
+
+        if (!$this->entityManager) {
+            return $types;
+        }
+
+        $repository = $this->entityManager->getRepository(MediaType::class);
+        /** @var MediaType $mediaType */
+        foreach ($repository->findAll() as $mediaType) {
+            $title = $this->translator ? $this->translator->trans('sulu_media.' . $mediaType->getName(), [], 'admin') : $mediaType->getName();
+            $types[] = ['type' => $mediaType->getId(), 'title' => $title];
+        }
+
+        return $types;
     }
 }

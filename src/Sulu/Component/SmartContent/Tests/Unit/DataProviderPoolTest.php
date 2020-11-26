@@ -12,7 +12,6 @@
 namespace Sulu\Component\SmartContent\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
-use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
 use Sulu\Component\SmartContent\DataProviderInterface;
 use Sulu\Component\SmartContent\DataProviderPool;
 use Sulu\Component\SmartContent\Exception\DataProviderAliasAlreadyExistsException;
@@ -81,18 +80,6 @@ class DataProviderPoolTest extends TestCase
         }
 
         $this->assertEquals($expectedProviders, $pool->getAll());
-    }
-
-    public function testAddWithoutAudienceTargeting()
-    {
-        $pool = new DataProviderPool(false);
-        $provider = $this->prophesize(DataProviderInterface::class);
-        $configuration = $this->prophesize(ProviderConfigurationInterface::class);
-        $provider->getConfiguration()->willReturn($configuration);
-
-        $configuration->setAudienceTargeting(false)->shouldBeCalled();
-
-        $pool->add('test', $provider->reveal());
     }
 
     public function existsProvider()

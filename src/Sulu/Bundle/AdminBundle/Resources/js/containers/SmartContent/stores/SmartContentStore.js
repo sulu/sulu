@@ -24,6 +24,7 @@ export default class SmartContentStore {
     @observable categoryOperator: ?Conjunction;
     @observable tags: ?Array<string | number>;
     @observable tagOperator: ?Conjunction;
+    @observable types: ?Array<string>;
     @observable audienceTargeting: ?boolean;
     @observable sortBy: ?string;
     @observable sortOrder: ?SortOrder;
@@ -58,6 +59,7 @@ export default class SmartContentStore {
             this.sortOrder = filterCriteria.sortMethod;
             this.tagOperator = filterCriteria.tagOperator;
             this.tags = filterCriteria.tags;
+            this.types = filterCriteria.types;
             this.presentation = filterCriteria.presentAs;
 
             if (filterCriteria.categories) {
@@ -157,6 +159,7 @@ export default class SmartContentStore {
             sortMethod: this.sortOrder,
             tagOperator: this.tagOperator,
             tags: this.tags && this.tags.length > 0 ? toJS(this.tags) : undefined,
+            types: this.types && this.types.length > 0 ? toJS(this.types) : undefined,
             presentAs: this.presentation,
         };
     }

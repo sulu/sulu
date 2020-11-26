@@ -1,5 +1,15 @@
 # Upgrade
 
+## 2.2.2
+
+### Added default value to anonymous column of se_roles table
+
+The se_roles was adjusted to use a default value for the `anonymous` column:
+
+```sql
+ALTER TABLE `se_roles` CHANGE `anonymous` `anonymous` TINYINT(1) NOT NULL DEFAULT 0;
+```
+
 ## 2.2.0-RC1
 
 ### CKeditor update
@@ -112,6 +122,37 @@ Additionally a `sulu_http_cache` configuration for the `stage` environment shoul
 imports:
     - { resource: '../prod/sulu_http_cache.yaml' }
 ```
+
+## 2.1.6
+
+### Smartcontent Type Filtering
+
+The Smartcontent is now able to filter the content via the types (templates).
+This results in two minor breaking changes in the `BuilderInterface` and the `ProviderConfigurationInterface`:
+
+```diff
+// src/Sulu/Component/SmartContent/Configuration/BuilderInterface.php
++    public function enableTypes(array $types = []);
+```
+
+```diff
+// src/Sulu/Component/SmartContent/Configuration/ProviderConfigurationInterface.php
++    public function hasTypes(): bool;
+```
+
+If you implemented one of these interfaces, you have to add both methods to your custom implementation.
+
+Furthermore the `PageDataProvider`, the `SnippetDataProvider` and the `MediaDataProvider` have been updated
+with additional services. The injected services are optionally but usage of these providers without them will throw
+a deprecation warning.
+
+`PageDataProvider` and `SnippetDataProvider` now additionally requires the `FormMetadataProvider` and the `TokenStorageInterface` services.
+The `MediaDataprovider` requires the `EntityManagerInterface` and the `TranslatorInterface`.
+
+For the type filtering to work properly all those mentioned services are necessary.
+
+In addition the reference to the `AudienceTargetingBundle` in the DataProviderPool is removed. Now every provider,
+which requires the `AudienceTargetingBundle`, has to enable it by itself only when the `AudienceTargetingBundle` is really enabled.
 
 ## 2.1.3
 

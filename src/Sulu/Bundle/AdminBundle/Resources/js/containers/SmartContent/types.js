@@ -18,6 +18,7 @@ export type FilterCriteria = {|
     sortMethod: ?SortOrder,
     tagOperator: ?Conjunction,
     tags: ?Array<string | number>,
+    types: ?Array<string>,
 |};
 
 export type SortOrder = 'asc' | 'desc';
@@ -34,6 +35,11 @@ export type Presentation = {
     value: string,
 };
 
+export type Type = {
+    name: string,
+    value: string,
+}
+
 export type SmartContentConfig = {
     audienceTargeting: boolean,
     categories: boolean,
@@ -45,6 +51,7 @@ export type SmartContentConfig = {
     resultToView?: {[string]: string},
     sorting: Array<Sorting>,
     tags: boolean,
+    types: Array<Type>,
     view?: string,
 };
 

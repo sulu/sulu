@@ -28,6 +28,13 @@ interface BuilderInterface
     public function enableTags(bool $enable = true);
 
     /**
+     * @param mixed[] $types
+     *
+     * @return BuilderInterface
+     */
+    public function enableTypes(array $types = []);
+
+    /**
      * Enables categories.
      *
      * @param bool|true $enable

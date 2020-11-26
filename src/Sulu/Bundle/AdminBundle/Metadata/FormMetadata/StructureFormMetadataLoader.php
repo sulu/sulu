@@ -121,6 +121,7 @@ class StructureFormMetadataLoader implements FormMetadataLoaderInterface, CacheW
     {
         $structuresMetadataByTypes = [];
         foreach ($this->structureMetadataFactory->getStructureTypes() as $structureType) {
+            $structuresMetadataByTypes[$structureType] = [];
             foreach ($this->structureMetadataFactory->getStructures($structureType) as $structureMetadata) {
                 if ($structureMetadata->isInternal() || 'home' === $structureType) {
                     continue;

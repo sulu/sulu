@@ -15,6 +15,8 @@ use PHPCR\ItemNotFoundException;
 use PHPCR\SessionInterface;
 use ProxyManager\Factory\LazyLoadingValueHolderFactory;
 use ProxyManager\Proxy\LazyLoadingInterface;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadataProvider;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
@@ -22,6 +24,7 @@ use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\SmartContent\ArrayAccessItem;
 use Sulu\Component\SmartContent\Configuration\Builder;
@@ -30,6 +33,7 @@ use Sulu\Component\SmartContent\DataProviderAliasInterface;
 use Sulu\Component\SmartContent\DataProviderInterface;
 use Sulu\Component\SmartContent\DataProviderResult;
 use Sulu\Component\SmartContent\DatasourceItem;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * DataProvider for content.
@@ -81,6 +85,21 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
      */
     private $permissions;
 
+    /*
+     * @var bool
+     */
+    private $hasAudienceTargeting;
+
+    /**
+     * @var FormMetadataProvider|null
+     */
+    private $formMetadataProvider;
+
+    /**
+     * @var TokenStorageInterface|null
+     */
+    private $tokenStorage;
+
     public function __construct(
         ContentQueryBuilderInterface $contentQueryBuilder,
         ContentQueryExecutorInterface $contentQueryExecutor,
@@ -89,7 +108,10 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
         SessionInterface $session,
         ReferenceStoreInterface $referenceStore,
         $showDrafts,
-        $permissions
+        $permissions,
+        bool $hasAudienceTargeting = false,
+        FormMetadataProvider $formMetadataProvider = null,
+        TokenStorageInterface $tokenStorage = null
     ) {
         $this->contentQueryBuilder = $contentQueryBuilder;
         $this->contentQueryExecutor = $contentQueryExecutor;
@@ -99,6 +121,13 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
         $this->referenceStore = $referenceStore;
         $this->showDrafts = $showDrafts;
         $this->permissions = $permissions;
+        $this->hasAudienceTargeting = $hasAudienceTargeting;
+        $this->formMetadataProvider = $formMetadataProvider;
+        $this->tokenStorage = $tokenStorage;
+
+        if (!$formMetadataProvider) {
+            @\trigger_error('The usage of the "PageDataProvider" without setting the "FormMetadataProvider" is deprecated. Please inject the "FormMetadataProvider".', \E_USER_DEPRECATED);
+        }
     }
 
     public function getConfiguration()
@@ -117,13 +146,12 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
      */
     private function initConfiguration()
     {
-        $this->configuration = Builder::create()
+        $builder = Builder::create()
             ->enableTags()
             ->enableCategories()
             ->enableLimit()
             ->enablePagination()
             ->enablePresentAs()
-            ->enableAudienceTargeting()
             ->enableDatasource('pages', 'pages', 'column_list')
             ->enableSorting(
                 [
@@ -135,8 +163,14 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
                     ['column' => 'authored', 'title' => 'sulu_admin.authored'],
                 ]
             )
-            ->enableView(PageAdmin::EDIT_FORM_VIEW, ['id' => 'id', 'webspace' => 'webspace'])
-            ->getConfiguration();
+            ->enableTypes($this->getTypes())
+            ->enableView(PageAdmin::EDIT_FORM_VIEW, ['id' => 'id', 'webspace' => 'webspace']);
+
+        if ($this->hasAudienceTargeting) {
+            $builder->enableAudienceTargeting();
+        }
+
+        $this->configuration = $builder->getConfiguration();
 
         return $this->configuration;
     }
@@ -398,6 +432,30 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
                 return true;
             }
         );
+    }
+
+    /**
+     * @return array<int, array<string, string>>
+     */
+    private function getTypes(): array
+    {
+        $types = [];
+        if ($this->tokenStorage && null !== $this->tokenStorage->getToken() && $this->formMetadataProvider) {
+            $user = $this->tokenStorage->getToken()->getUser();
+
+            if (!$user instanceof UserInterface) {
+                return $types;
+            }
+
+            /** @var TypedFormMetadata $metadata */
+            $metadata = $this->formMetadataProvider->getMetadata('page', $user->getLocale(), []);
+
+            foreach ($metadata->getForms() as $form) {
+                $types[] = ['type' => $form->getName(), 'title' => $form->getTitle()];
+            }
+        }
+
+        return $types;
     }
 
     public function getAlias()

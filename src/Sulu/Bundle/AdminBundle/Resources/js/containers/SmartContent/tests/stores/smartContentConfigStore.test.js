@@ -15,6 +15,10 @@ test('Set config and return config for given provider', () => {
         presentAs: true,
         sorting: [],
         limit: true,
+        types: [
+            {name: 'default', value: 'default'},
+            {name: 'homepage', value: 'homepage'},
+        ],
     };
 
     const contentProviderConfig = {
@@ -26,6 +30,10 @@ test('Set config and return config for given provider', () => {
         presentAs: true,
         sorting: [],
         limit: true,
+        types: [
+            {name: 'default', value: 'default'},
+            {name: 'homepage', value: 'homepage'},
+        ],
     };
 
     smartContentConfigStore.setConfig({
@@ -47,6 +55,7 @@ test('Return default value for given provider with presentations', () => {
         presentAs: false,
         sorting: [],
         limit: false,
+        types: [],
     };
 
     const pagesProviderConfig = {
@@ -58,6 +67,7 @@ test('Return default value for given provider with presentations', () => {
         presentAs: true,
         sorting: [{name: 'title', value: 'Title'}],
         limit: true,
+        types: [{name: 'default', value: 'default'}],
     };
 
     smartContentConfigStore.setConfig({
@@ -78,6 +88,7 @@ test('Return default value for given provider with presentations', () => {
             sortMethod: 'asc',
             tagOperator: 'or',
             tags: undefined,
+            types: ['default'],
         });
 
     expect(smartContentConfigStore.getDefaultValue('media', []))
@@ -93,5 +104,6 @@ test('Return default value for given provider with presentations', () => {
             sortMethod: undefined,
             tagOperator: undefined,
             tags: undefined,
+            types: undefined,
         });
 });
