@@ -1,6 +1,6 @@
 # Upgrade
 
-## dev-release/2.2
+## 2.2.2
 
 ### Added default value to anonymous column of se_roles table
 
