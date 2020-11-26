@@ -80,6 +80,11 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
     private $showDrafts;
 
     /**
+     * @var bool
+     */
+    private $hasAudienceTargeting;
+
+    /**
      * @var FormMetadataProvider|null
      */
     private $formMetadataProvider;
@@ -97,6 +102,7 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
         SessionInterface $session,
         ReferenceStoreInterface $referenceStore,
         $showDrafts,
+        bool $hasAudienceTargeting = false,
         FormMetadataProvider $formMetadataProvider = null,
         TokenStorageInterface $tokenStorage = null
     ) {
@@ -107,6 +113,7 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
         $this->session = $session;
         $this->referenceStore = $referenceStore;
         $this->showDrafts = $showDrafts;
+        $this->hasAudienceTargeting = $hasAudienceTargeting;
         $this->formMetadataProvider = $formMetadataProvider;
         $this->tokenStorage = $tokenStorage;
 
@@ -131,13 +138,12 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
      */
     private function initConfiguration()
     {
-        $this->configuration = Builder::create()
+        $builder = Builder::create()
             ->enableTags()
             ->enableCategories()
             ->enableLimit()
             ->enablePagination()
             ->enablePresentAs()
-            ->enableAudienceTargeting()
             ->enableDatasource('pages', 'pages', 'column_list')
             ->enableSorting(
                 [
@@ -150,8 +156,13 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
                 ]
             )
             ->enableTypes($this->getTypes())
-            ->enableView(PageAdmin::EDIT_FORM_VIEW, ['id' => 'id', 'webspace' => 'webspace'])
-            ->getConfiguration();
+            ->enableView(PageAdmin::EDIT_FORM_VIEW, ['id' => 'id', 'webspace' => 'webspace']);
+
+        if ($this->hasAudienceTargeting) {
+            $builder->enableAudienceTargeting();
+        }
+
+        $this->configuration = $builder->getConfiguration();
 
         return $this->configuration;
     }

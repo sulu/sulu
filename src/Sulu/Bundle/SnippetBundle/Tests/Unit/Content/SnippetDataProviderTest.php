@@ -91,6 +91,40 @@ class SnippetDataProviderTest extends TestCase
         $this->referenceStore->getAll()->willReturn([]);
     }
 
+    public function testEnabledAudienceTargeting()
+    {
+        $provider = new SnippetDataProvider(
+            $this->contentQueryExecutor->reveal(),
+            $this->snippetQueryBuilder->reveal(),
+            $this->nodeHelper->reveal(),
+            $this->proxyFactory->reveal(),
+            $this->documentManager->reveal(),
+            $this->referenceStore->reveal(),
+            true
+        );
+
+        $configuration = $provider->getConfiguration();
+
+        $this->assertTrue($configuration->hasAudienceTargeting());
+    }
+
+    public function testDisabledAudienceTargeting()
+    {
+        $provider = new SnippetDataProvider(
+            $this->contentQueryExecutor->reveal(),
+            $this->snippetQueryBuilder->reveal(),
+            $this->nodeHelper->reveal(),
+            $this->proxyFactory->reveal(),
+            $this->documentManager->reveal(),
+            $this->referenceStore->reveal(),
+            false
+        );
+
+        $configuration = $provider->getConfiguration();
+
+        $this->assertFalse($configuration->hasAudienceTargeting());
+    }
+
     public function testGetTypesConfiguration()
     {
         /** @var TokenStorageInterface|ObjectProphecy $tokenStorage */
@@ -136,6 +170,7 @@ class SnippetDataProviderTest extends TestCase
             $this->proxyFactory->reveal(),
             $this->documentManager->reveal(),
             $this->referenceStore->reveal(),
+            false,
             $formMetadataProvider->reveal(),
             $tokenStorage->reveal()
         );
