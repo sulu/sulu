@@ -4,13 +4,13 @@ import React from 'react';
 import CroppedText from '../../CroppedText';
 import DisplayValue from '../DisplayValue';
 
-test('The component should render', () => {
+test('The component should render a CroppedText if value of children prop is a string', () => {
     const displayValue = render(<DisplayValue onClick={jest.fn()}>My value</DisplayValue>);
     expect(displayValue).toMatchSnapshot();
 });
 
-test('The component should render with an inline component', () => {
-    const displayValue = render(<DisplayValue onClick={jest.fn()}><b>Value</b></DisplayValue>);
+test('The component should directly render given children if value of children prop contains another component', () => {
+    const displayValue = render(<DisplayValue onClick={jest.fn()}>Some <b>bold</b> text</DisplayValue>);
     expect(displayValue).toMatchSnapshot();
 });
 

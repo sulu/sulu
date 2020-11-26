@@ -28,9 +28,7 @@ const onActionClick = (actionValue) => console.log('clicked action with value:',
 Also a lot of options are possible and correctly handled as well as neatly styled.
 
 ```javascript
-const Action = SingleSelect.Action;
 const Option = SingleSelect.Option;
-const Divider = SingleSelect.Divider;
 
 const [selectValue, setSelectedValue] = React.useState('page-1');
 
@@ -60,5 +58,24 @@ const onChange = (value) => setSelectedValue(value);
     <Option value="20">Susan Bones</Option>
     <Option value="21">Marvolo Gaunt</Option>
     <Option value="22">Godric Gryffindor</Option>
+</SingleSelect>
+```
+
+The options can also contain render components such as icons:
+
+```javascript
+import {Icon} from 'sulu-admin-bundle/components';
+
+const Option = SingleSelect.Option;
+
+const [selectValue, setSelectedValue] = React.useState('page-1');
+
+const onChange = (value) => setSelectedValue(value);
+
+<SingleSelect value={selectValue} onChange={onChange}>
+    <Option disabled>Choose an icon</Option>
+    <Option value="fa-user"><Icon name="fa-user"/> fa-user</Option>
+    <Option value="su-inbox"><Icon name="su-inbox"/> su-inbox</Option>
+    <Option value="su-umbrella"><Icon name="su-umbrella"/> su-umbrella</Option>
 </SingleSelect>
 ```

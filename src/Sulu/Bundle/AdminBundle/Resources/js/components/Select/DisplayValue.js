@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import type {ElementRef} from 'react';
+import type {ElementRef, Node} from 'react';
 import classNames from 'classnames';
 import CroppedText from '../CroppedText';
 import Icon from '../Icon';
@@ -8,7 +8,7 @@ import displayValueStyles from './displayValue.scss';
 import type {Skin} from './types';
 
 type Props = {|
-    children: any,
+    children: Node,
     disabled: boolean,
     displayValueRef?: (button: ElementRef<'button'>) => void,
     icon?: string,
@@ -40,7 +40,6 @@ export default class DisplayValue extends React.PureComponent<Props> {
 
     render() {
         const {children, disabled, icon, skin} = this.props;
-        const childrenOnlyString = typeof children === 'string';
 
         const displayValueClass = classNames(
             displayValueStyles.displayValue,
@@ -61,7 +60,7 @@ export default class DisplayValue extends React.PureComponent<Props> {
                 {!!icon &&
                     <Icon className={displayValueStyles.frontIcon} name={icon} />
                 }
-                {childrenOnlyString
+                {typeof children === 'string'
                     ? <CroppedText>{children}</CroppedText>
                     : children
                 }
