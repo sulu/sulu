@@ -1,6 +1,14 @@
 CHANGELOG for Sulu
 ==================
 
+* 1.6.38 (2020-11-26)
+    * BUGFIX      #5651  [All]                     Enhance test-application workflow 
+    * BUGFIX      #5645  [All]                     Run tests with github actions 
+    * BUGFIX      #5600  [PageBundle]              Fix add request format to redirect url 
+    * BUGFIX      #5619  [All]                     Add 2.2 branch alias  
+    * BUGFIX      #5617  [All]                     Avoid warnings for composer 2 autoloader 
+
+
 * 1.6.37 (2020-11-02)
     * BUGFIX      #5471  [Webspace]                Check domain when creating an internal redirect
 
