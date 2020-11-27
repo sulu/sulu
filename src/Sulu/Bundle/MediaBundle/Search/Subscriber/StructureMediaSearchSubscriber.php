@@ -115,7 +115,7 @@ class StructureMediaSearchSubscriber implements EventSubscriberInterface
     {
         // new structures will container an instance of MediaSelectionContainer
         if ($data instanceof MediaSelectionContainer) {
-            $medias = $data->getData();
+            $medias = $data->getData('de');
         // old ones an array ...
         } else {
             $ids = [];
