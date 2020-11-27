@@ -73,7 +73,7 @@ export default class PreviewStore {
             targetGroup: this.targetGroup,
         });
 
-        return Requester.get(route).then((response) => {
+        return Requester.post(route).then((response) => {
             this.setToken(response.token);
         });
     }
@@ -113,6 +113,6 @@ export default class PreviewStore {
     stop(): Promise<*> {
         const route = generateRoute('stop', {token: this.token});
 
-        return Requester.get(route).then(this.setToken(null));
+        return Requester.post(route).then(this.setToken(null));
     }
 }
