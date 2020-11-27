@@ -264,7 +264,7 @@ test('Open and confirm restore overlay', () => {
     });
 });
 
-test('Throw error when resource_key parameter is undefined.', () => {
+test('Throw error when resource_key parameter is undefined', () => {
     const locale = observable.box('en');
     const formInspector = new FormInspector(
         new ResourceFormStore(
@@ -289,7 +289,7 @@ test('Throw error when resource_key parameter is undefined.', () => {
     )).toThrow('The "resource_key" schemaOption is mandatory and must be a string, but received undefined!');
 });
 
-test('Throw error when resource_key parameter is not a string.', () => {
+test('Throw error when resource_key parameter is not a string', () => {
     const locale = observable.box('en');
     const formInspector = new FormInspector(
         new ResourceFormStore(
@@ -318,7 +318,7 @@ test('Throw error when resource_key parameter is not a string.', () => {
     )).toThrow('The "resource_key" schemaOption is mandatory and must be a string, but received number!');
 });
 
-test('Throw error when list_key parameter is undefined.', () => {
+test('Use resource_key as a fallback, if list_key parameter is undefined', () => {
     const locale = observable.box('en');
     const formInspector = new FormInspector(
         new ResourceFormStore(
@@ -338,12 +338,18 @@ test('Throw error when list_key parameter is undefined.', () => {
         },
     };
 
-    expect(() => shallow(
-        <SettingsVersions {...fieldTypeDefaultProps} formInspector={formInspector} schemaOptions={schemaOptions} />
-    )).toThrow('The "list_key" schemaOption is mandatory and must be a string, but received undefined!');
+    const pageSettingsVersions = shallow(
+        <SettingsVersions
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            schemaOptions={schemaOptions}
+        />
+    );
+
+    expect(pageSettingsVersions.instance().listKey).toBe('page_versions');
 });
 
-test('Throw error when list_key parameter is not a string.', () => {
+test('Throw error when list_key parameter is not a string', () => {
     const locale = observable.box('en');
     const formInspector = new FormInspector(
         new ResourceFormStore(
@@ -369,10 +375,10 @@ test('Throw error when list_key parameter is not a string.', () => {
 
     expect(() => shallow(
         <SettingsVersions {...fieldTypeDefaultProps} formInspector={formInspector} schemaOptions={schemaOptions} />
-    )).toThrow('The "list_key" schemaOption is mandatory and must be a string, but received number!');
+    )).toThrow('The "list_key" schemaOption must be a string, but received number!');
 });
 
-test('Throw error when user_settings_key parameter is undefined.', () => {
+test('Use resource_key as a fallback, if user_settings_key parameter is undefined', () => {
     const locale = observable.box('en');
     const formInspector = new FormInspector(
         new ResourceFormStore(
@@ -392,9 +398,15 @@ test('Throw error when user_settings_key parameter is undefined.', () => {
         },
     };
 
-    expect(() => shallow(
-        <SettingsVersions {...fieldTypeDefaultProps} formInspector={formInspector} schemaOptions={schemaOptions} />
-    )).toThrow('The "user_settings_key" schemaOption is mandatory and must be a string, but received undefined!');
+    const pageSettingsVersions = shallow(
+        <SettingsVersions
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            schemaOptions={schemaOptions}
+        />
+    );
+
+    expect(pageSettingsVersions.instance().userSettingsKey).toBe('page_versions');
 });
 
 test('Throw error when user_settings_key parameter is not a string.', () => {
@@ -423,7 +435,7 @@ test('Throw error when user_settings_key parameter is not a string.', () => {
 
     expect(() => shallow(
         <SettingsVersions {...fieldTypeDefaultProps} formInspector={formInspector} schemaOptions={schemaOptions} />
-    )).toThrow('The "user_settings_key" schemaOption is mandatory and must be a string, but received number!');
+    )).toThrow('The "user_settings_key" schemaOption must be a string, but received number!');
 });
 
 test('Throw error when no parent route is set', () => {

@@ -160,8 +160,6 @@
                 <property name="versions" type="settings_versions" onInvalid="ignore">
                     <params>
                         <param name="resource_key" type="string" value="page_versions"/>
-                        <param name="list_key" type="string" value="page_versions"/>
-                        <param name="user_settings_key" type="string" value="page_versions"/>
                     </params>
                 </property>
             </properties>

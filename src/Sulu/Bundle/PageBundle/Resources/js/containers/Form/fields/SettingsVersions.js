@@ -63,14 +63,14 @@ class SettingsVersions extends React.Component<Props> {
         const {
             schemaOptions: {
                 list_key: {
-                    value: listKey,
+                    value: listKey = this.resourceKey,
                 } = {},
             },
         } = this.props;
 
-        if (listKey === undefined || typeof listKey !== 'string') {
+        if (typeof listKey !== 'string') {
             throw new Error(
-                'The "list_key" schemaOption is mandatory and must be a string, but received ' +
+                'The "list_key" schemaOption must be a string, but received ' +
                 typeof listKey + '!'
             );
         }
@@ -82,14 +82,14 @@ class SettingsVersions extends React.Component<Props> {
         const {
             schemaOptions: {
                 user_settings_key: {
-                    value: userSettingsKey,
+                    value: userSettingsKey = this.resourceKey,
                 } = {},
             },
         } = this.props;
 
-        if (userSettingsKey === undefined || typeof userSettingsKey !== 'string') {
+        if (typeof userSettingsKey !== 'string') {
             throw new Error(
-                'The "user_settings_key" schemaOption is mandatory and must be a string, but received ' +
+                'The "user_settings_key" schemaOption must be a string, but received ' +
                 typeof userSettingsKey + '!'
             );
         }
@@ -100,7 +100,7 @@ class SettingsVersions extends React.Component<Props> {
     @computed get parentRoute(): string {
         const {router} = this.props;
 
-        if (!router || !router.route || !router.route.parent || !router.route.parent.name) {
+        if (!router?.route?.parent?.name) {
             throw new Error(
                 'A route with a valid parent route is required for this field type to work properly!'
             );
