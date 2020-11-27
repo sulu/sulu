@@ -20,7 +20,7 @@ use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadataMapper;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SectionMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ObjectMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata as SchemaPropertyMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapperInterface;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapperRegistry;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
@@ -365,7 +365,7 @@ class FormMetadataMapperTest extends TestCase
             /** @var PropertyMetadata $propertyMetadata */
             $propertyMetadata = $arguments[0];
 
-            return new ObjectMetadata($propertyMetadata->getName(), $propertyMetadata->isRequired());
+            return new SchemaPropertyMetadata($propertyMetadata->getName(), $propertyMetadata->isRequired());
         });
 
         $schema = $this->formMetadataMapper->mapSchema($form->getChildren());
@@ -408,7 +408,7 @@ class FormMetadataMapperTest extends TestCase
             /** @var PropertyMetadata $propertyMetadata */
             $propertyMetadata = $arguments[0];
 
-            return new ObjectMetadata($propertyMetadata->getName(), $propertyMetadata->isRequired());
+            return new SchemaPropertyMetadata($propertyMetadata->getName(), $propertyMetadata->isRequired());
         });
 
         $schema = $this->formMetadataMapper->mapSchema($form->getChildren());
