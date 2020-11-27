@@ -156,29 +156,41 @@ class Xliff12 implements FormatImportInterface
                 continue;
             }
 
-            $names = \explode('#', $name, 2);
-            $blockName = $names[0];
-            $names = \explode('-', $names[1], 2);
-            $blockNr = $names[0];
-            $name = $names[1];
-
-            if (!isset($data[$blockName])) {
-                $data[$blockName] = [];
-                $data[$blockName]['name'] = $blockName;
-                $data[$blockName]['children'] = [];
-            }
-
-            if (!isset($data[$blockName]['children'][$blockNr])) {
-                $data[$blockName]['children'][$blockNr] = [];
-            }
-
-            $data[$blockName]['children'][$blockNr][$name] = [
-                'name' => $name,
-                'value' => $value,
-            ];
+            $blockData = $this->getBlockData($name, $value, $data);
+            $data[$blockData['name']] = $blockData;
         }
 
         return $data;
+    }
+
+    private function getBlockData(string $name, string $value, array $data): array
+    {
+        $names = \explode('#', $name, 2);
+        $blockName = $names[0];
+        $names = \explode('-', $names[1], 2);
+        $blockNr = $names[0];
+        $name = $names[1];
+
+        $blockData = $data[$blockName] ?? [
+            'name' => $blockName,
+            'children' => [
+                $blockNr => [],
+            ],
+        ];
+
+        if (false === \strpos($name, '#')) {
+            $blockData['children'][$blockNr][$name] = [
+                'name' => $name,
+                'value' => $value,
+            ];
+
+            return $blockData;
+        }
+
+        $innerBlockData = $this->getBlockData($name, $value, $blockData['children'][$blockNr] ?? []);
+        $blockData['children'][$blockNr][$innerBlockData['name']] = $innerBlockData;
+
+        return $blockData;
     }
 
     /**
