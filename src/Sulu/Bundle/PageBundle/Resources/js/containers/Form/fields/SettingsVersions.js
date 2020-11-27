@@ -82,7 +82,7 @@ class SettingsVersions extends React.Component<Props> {
         const {
             schemaOptions: {
                 user_settings_key: {
-                    value: userSettingsKey = this.resourceKey,
+                    value: userSettingsKey = this.listKey,
                 } = {},
             },
         } = this.props;

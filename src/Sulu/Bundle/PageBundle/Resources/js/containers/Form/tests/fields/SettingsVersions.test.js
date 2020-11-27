@@ -330,7 +330,7 @@ test('Use resource_key as a fallback, if list_key parameter is undefined', () =>
     const schemaOptions = {
         resource_key: {
             name: 'resource_key',
-            value: 'page_versions',
+            value: 'page_versions_resource_key',
         },
         user_settings_key: {
             name: 'user_settings_key',
@@ -346,7 +346,7 @@ test('Use resource_key as a fallback, if list_key parameter is undefined', () =>
         />
     );
 
-    expect(pageSettingsVersions.instance().listKey).toBe('page_versions');
+    expect(pageSettingsVersions.instance().listKey).toBe('page_versions_resource_key');
 });
 
 test('Throw error when list_key parameter is not a string', () => {
@@ -378,7 +378,7 @@ test('Throw error when list_key parameter is not a string', () => {
     )).toThrow('The "list_key" schemaOption must be a string, but received number!');
 });
 
-test('Use resource_key as a fallback, if user_settings_key parameter is undefined', () => {
+test('Use list_key as a fallback, if user_settings_key parameter is undefined', () => {
     const locale = observable.box('en');
     const formInspector = new FormInspector(
         new ResourceFormStore(
@@ -394,7 +394,7 @@ test('Use resource_key as a fallback, if user_settings_key parameter is undefine
         },
         list_key: {
             name: 'list_key',
-            value: 'page_versions',
+            value: 'page_versions_list_key',
         },
     };
 
@@ -406,7 +406,7 @@ test('Use resource_key as a fallback, if user_settings_key parameter is undefine
         />
     );
 
-    expect(pageSettingsVersions.instance().userSettingsKey).toBe('page_versions');
+    expect(pageSettingsVersions.instance().userSettingsKey).toBe('page_versions_list_key');
 });
 
 test('Throw error when user_settings_key parameter is not a string.', () => {
