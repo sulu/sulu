@@ -45,7 +45,7 @@ class PropertyMetadata
         return $this->mandatory;
     }
 
-    public function getType(): string
+    public function getType(): ?string
     {
         return $this->type;
     }

@@ -98,7 +98,6 @@ class AdminControllerTest extends SuluTestCase
                         'required' => [],
                         'type' => 'number',
                     ],
-                    'minItems' => 0,
                     'uniqueItems' => true,
                 ],
                 'displayOption' => [

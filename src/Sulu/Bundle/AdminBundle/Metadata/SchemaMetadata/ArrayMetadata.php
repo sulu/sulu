@@ -24,6 +24,11 @@ class ArrayMetadata extends PropertyMetadata
     private $minItems;
 
     /**
+     * @var int|null
+     */
+    private $maxItems;
+
+    /**
      * @var bool|null
      */
     private $uniqueItems;
@@ -33,12 +38,14 @@ class ArrayMetadata extends PropertyMetadata
         bool $mandatory,
         SchemaMetadata $schemaMetadata,
         int $minItems = null,
+        int $maxItems = null,
         bool $uniqueItems = null
     ) {
         parent::__construct($name, $mandatory, 'array');
 
         $this->schemaMetadata = $schemaMetadata;
         $this->minItems = $minItems;
+        $this->maxItems = $maxItems;
         $this->uniqueItems = $uniqueItems;
     }
 
@@ -52,6 +59,10 @@ class ArrayMetadata extends PropertyMetadata
 
         if (null !== $this->minItems) {
             $jsonSchema['minItems'] = $this->minItems;
+        }
+
+        if (null !== $this->maxItems) {
+            $jsonSchema['maxItems'] = $this->maxItems;
         }
 
         if (null !== $this->uniqueItems) {

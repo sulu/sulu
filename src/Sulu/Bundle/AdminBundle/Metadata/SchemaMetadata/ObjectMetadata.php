@@ -19,21 +19,38 @@ class ObjectMetadata extends PropertyMetadata
     private $properties;
 
     /**
-     * @param PropertyMetadata[] $properties
+     * @var SchemaMetadata[]
      */
-    public function __construct(string $name, bool $mandatory, array $properties = [])
+    private $anyOfs;
+
+    /**
+     * @var SchemaMetadata[]
+     */
+    private $allOfs;
+
+    /**
+     * @param PropertyMetadata[] $properties
+     * @param SchemaMetadata[] $anyOfs
+     * @param SchemaMetadata[] $allOfs
+     */
+    public function __construct(string $name, bool $mandatory, array $properties = [], array $anyOfs = [], array $allOfs = [], ?string $type = 'object')
     {
-        parent::__construct($name, $mandatory, 'object');
+        parent::__construct($name, $mandatory, $type);
 
         $this->properties = $properties;
+        $this->anyOfs = $anyOfs;
+        $this->allOfs = $allOfs;
     }
 
     public function toJsonSchema(): ?array
     {
         $jsonSchema = [
             'name' => $this->getName(),
-            'type' => $this->getType(),
         ];
+
+        if (null !== ($type = $this->getType())) {
+            $jsonSchema['type'] = $type;
+        }
 
         $jsonSchema['required'] = \array_values(
             \array_map(
@@ -62,6 +79,18 @@ class ObjectMetadata extends PropertyMetadata
 
         if (\count($properties) > 0) {
             $jsonSchema['properties'] = $properties;
+        }
+
+        if (\count($this->anyOfs) > 0) {
+            $jsonSchema['anyOf'] = \array_map(function(SchemaMetadata $schema) {
+                return $schema->toJsonSchema();
+            }, $this->anyOfs);
+        }
+
+        if (\count($this->allOfs) > 0) {
+            $jsonSchema['allOf'] = \array_map(function(SchemaMetadata $schema) {
+                return $schema->toJsonSchema();
+            }, $this->allOfs);
         }
 
         return $jsonSchema;

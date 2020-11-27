@@ -454,7 +454,6 @@ class MediaSelectionContentTypeTest extends TestCase
                         'required' => [],
                         'type' => 'number',
                     ],
-                    'minItems' => 0,
                     'uniqueItems' => true,
                 ],
                 'displayOption' => [
@@ -491,9 +490,72 @@ class MediaSelectionContentTypeTest extends TestCase
                     'type' => 'string',
                 ],
             ],
-            'required' => [
-                'ids',
+            'required' => ['ids'],
+        ], $jsonSchema);
+    }
+
+    public function testMapPropertyMetadataMinOccursAndMaxOccurs(): void
+    {
+        $propertyMetadata = new PropertyMetadata();
+        $propertyMetadata->setName('property-name');
+        $propertyMetadata->setMinOccurs(3);
+        $propertyMetadata->setMaxOccurs(5);
+
+        $jsonSchema = $this->mediaSelection->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
+
+        $this->assertEquals([
+            'name' => 'property-name',
+            'type' => 'object',
+            'properties' => [
+                'ids' => [
+                    'name' => 'ids',
+                    'type' => 'array',
+                    'items' => [
+                        'required' => [],
+                        'type' => 'number',
+                    ],
+                    'minItems' => 3,
+                    'maxItems' => 5,
+                    'uniqueItems' => true,
+                ],
+                'displayOption' => [
+                    'type' => 'string',
+                ],
             ],
+            'required' => [],
+        ], $jsonSchema);
+    }
+
+    public function testMapPropertyMetadataRequiredAndInvalidMinOccursAndMaxOccurs(): void
+    {
+        $propertyMetadata = new PropertyMetadata();
+        $propertyMetadata->setName('property-name');
+        $propertyMetadata->setRequired(true);
+        $propertyMetadata->setMinOccurs(0);
+        $propertyMetadata->setMaxOccurs(-2);
+
+        $jsonSchema = $this->mediaSelection->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
+
+        $this->assertEquals([
+            'name' => 'property-name',
+            'type' => 'object',
+            'properties' => [
+                'ids' => [
+                    'name' => 'ids',
+                    'type' => 'array',
+                    'items' => [
+                        'required' => [],
+                        'type' => 'number',
+                    ],
+                    'minItems' => 1,
+                    'maxItems' => 1,
+                    'uniqueItems' => true,
+                ],
+                'displayOption' => [
+                    'type' => 'string',
+                ],
+            ],
+            'required' => ['ids'],
         ], $jsonSchema);
     }
 }

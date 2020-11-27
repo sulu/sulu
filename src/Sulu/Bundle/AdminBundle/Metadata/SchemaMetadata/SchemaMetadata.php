@@ -33,6 +33,11 @@ class SchemaMetadata
      */
     private $type;
 
+    /**
+     * @param PropertyMetadata[] $properties
+     * @param SchemaMetadata[] $anyOfs
+     * @param SchemaMetadata[] $allOfs
+     */
     public function __construct(array $properties = [], array $anyOfs = [], array $allOfs = [], string $type = null)
     {
         $this->properties = $properties;

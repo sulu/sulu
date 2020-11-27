@@ -200,10 +200,33 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
     public function mapPropertyMetadata(ContentPropertyMetadata $propertyMetadata): PropertyMetadata
     {
         $mandatory = $propertyMetadata->isRequired();
-        $minItems = $mandatory ? 1 : 0;
+        $minItems = $propertyMetadata->getMinOccurs();
+        $maxItems = $propertyMetadata->getMaxOccurs();
+
+        if (null !== $minItems) {
+            // If minOccurs is set, minItems is at least 0
+            $minItems = \max(0, $minItems);
+        }
+
+        if ($mandatory) {
+            // If mandatory, minItems is at least 1
+            $minItems = \max(1, $minItems ?? 0);
+        }
+
+        if (null !== $maxItems) {
+            // maxItems is at least 0 and at least as high as minItems
+            $maxItems = \max($minItems ?? 0, $maxItems);
+        }
 
         return new ObjectMetadata($propertyMetadata->getName(), $mandatory, [
-            new ArrayMetadata('ids', $mandatory, new SchemaMetadata([], [], [], 'number'), $minItems, true),
+            new ArrayMetadata(
+                'ids',
+                $mandatory,
+                new SchemaMetadata([], [], [], 'number'),
+                $minItems,
+                $maxItems,
+                true
+            ),
             new StringMetadata('displayOption', false),
         ]);
     }
