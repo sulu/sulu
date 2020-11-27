@@ -42,7 +42,7 @@ class ClearCacheCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        /** @var FormatCacheClearerInterface $cacheClearer */
+        /** @var FormatCacheClearerInterface $cache */
         $cache = $input->getArgument('cache');
 
         $output->writeln('Clearing the Sulu media format cache.');

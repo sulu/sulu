@@ -57,7 +57,7 @@ abstract class AbstractMediaController extends AbstractRestController
     }
 
     /**
-     * @param $name
+     * @param string $name
      *
      * @return UploadedFile
      */
