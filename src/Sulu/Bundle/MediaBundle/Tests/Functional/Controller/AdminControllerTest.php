@@ -70,4 +70,55 @@ class AdminControllerTest extends SuluTestCase
 
         $this->assertEquals(['title'], $schema->required);
     }
+
+    public function testImagesFormMetadataAction()
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $client->request('GET', '/admin/metadata/form/page?webspace=sulu_io');
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = \json_decode($client->getResponse()->getContent(), true);
+
+        $schema = $response['types']['images']['schema'] ?? [];
+
+        $this->assertArrayHasKey('required', $schema);
+        $this->assertSame(['title', 'url'], $schema['required']);
+        $this->assertArrayHasKey('properties', $schema);
+        $this->assertArrayHasKey('images', $schema['properties']);
+        $this->assertEquals([
+            'name' => 'images',
+            'type' => 'object',
+            'required' => [],
+            'properties' => [
+                'ids' => [
+                    'name' => 'ids',
+                    'type' => 'array',
+                    'items' => [
+                        'required' => [],
+                        'type' => 'number',
+                    ],
+                    'minItems' => 0,
+                    'uniqueItems' => true,
+                ],
+                'displayOption' => [
+                    'type' => 'string',
+                ],
+            ],
+        ], $schema['properties']['images']);
+        $this->assertArrayHasKey('image', $schema['properties']);
+        $this->assertEquals([
+            'name' => 'image',
+            'type' => 'object',
+            'required' => [],
+            'properties' => [
+                'id' => [
+                    'type' => 'number',
+                ],
+                'displayOption' => [
+                    'type' => 'string',
+                ],
+            ],
+        ], $schema['properties']['image']);
+    }
 }

@@ -41,5 +41,11 @@
             </meta>
             <tag name="sulu.search.field" role="image" />
         </property>
+
+        <property name="image" type="single_media_selection">
+            <meta>
+                <title lang="de">Single Image</title>
+            </meta>
+        </property>
     </properties>
 </template>

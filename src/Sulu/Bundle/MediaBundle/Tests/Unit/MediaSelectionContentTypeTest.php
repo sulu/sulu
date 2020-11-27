@@ -18,6 +18,7 @@ use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Security;
 use Sulu\Component\Webspace\Webspace;
@@ -432,5 +433,67 @@ class MediaSelectionContentTypeTest extends TestCase
         $this->mediaReferenceStore->add(1)->shouldBeCalled();
         $this->mediaReferenceStore->add(2)->shouldBeCalled();
         $this->mediaReferenceStore->add(3)->shouldBeCalled();
+    }
+
+    public function testMapPropertyMetadata(): void
+    {
+        $propertyMetadata = new PropertyMetadata();
+        $propertyMetadata->setName('property-name');
+        $propertyMetadata->setRequired(false);
+
+        $jsonSchema = $this->mediaSelection->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
+
+        $this->assertEquals([
+            'name' => 'property-name',
+            'type' => 'object',
+            'properties' => [
+                'ids' => [
+                    'name' => 'ids',
+                    'type' => 'array',
+                    'items' => [
+                        'required' => [],
+                        'type' => 'number',
+                    ],
+                    'minItems' => 0,
+                    'uniqueItems' => true,
+                ],
+                'displayOption' => [
+                    'type' => 'string',
+                ],
+            ],
+            'required' => [],
+        ], $jsonSchema);
+    }
+
+    public function testMapPropertyMetadataRequired(): void
+    {
+        $propertyMetadata = new PropertyMetadata();
+        $propertyMetadata->setName('property-name');
+        $propertyMetadata->setRequired(true);
+
+        $jsonSchema = $this->mediaSelection->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
+
+        $this->assertEquals([
+            'name' => 'property-name',
+            'type' => 'object',
+            'properties' => [
+                'ids' => [
+                    'name' => 'ids',
+                    'type' => 'array',
+                    'items' => [
+                        'required' => [],
+                        'type' => 'number',
+                    ],
+                    'minItems' => 1,
+                    'uniqueItems' => true,
+                ],
+                'displayOption' => [
+                    'type' => 'string',
+                ],
+            ],
+            'required' => [
+                'ids',
+            ],
+        ], $jsonSchema);
     }
 }

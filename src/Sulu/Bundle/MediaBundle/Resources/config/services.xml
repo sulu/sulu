@@ -313,6 +313,7 @@
 
             <tag name="sulu.content.type" alias="media_selection"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
+            <tag name="sulu_admin.property_metadata_mapper" type="media_selection"/>
         </service>
 
         <service id="sulu_media.type.single_media_selection" class="Sulu\Bundle\MediaBundle\Content\Types\SingleMediaSelection">
@@ -323,6 +324,7 @@
 
             <tag name="sulu.content.type" alias="single_media_selection"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
+            <tag name="sulu_admin.property_metadata_mapper" type="single_media_selection"/>
         </service>
 
         <service id="sulu_media.type.image_map" class="Sulu\Bundle\MediaBundle\Content\Types\ImageMapContentType">

@@ -25,6 +25,7 @@ use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
@@ -341,5 +342,53 @@ class SingleMediaSelectionTest extends TestCase
         $this->mediaReferenceStore->add(11)->shouldBeCalled();
 
         $this->singleMediaSelection->preResolve($property);
+    }
+
+    public function testMapPropertyMetadata(): void
+    {
+        $propertyMetadata = new PropertyMetadata();
+        $propertyMetadata->setName('property-name');
+        $propertyMetadata->setRequired(false);
+
+        $jsonSchema = $this->singleMediaSelection->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
+
+        $this->assertEquals([
+            'name' => 'property-name',
+            'type' => 'object',
+            'properties' => [
+                'id' => [
+                    'type' => 'number',
+                ],
+                'displayOption' => [
+                    'type' => 'string',
+                ],
+            ],
+            'required' => [],
+        ], $jsonSchema);
+    }
+
+    public function testMapPropertyMetadataRequired(): void
+    {
+        $propertyMetadata = new PropertyMetadata();
+        $propertyMetadata->setName('property-name');
+        $propertyMetadata->setRequired(true);
+
+        $jsonSchema = $this->singleMediaSelection->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
+
+        $this->assertEquals([
+            'name' => 'property-name',
+            'type' => 'object',
+            'properties' => [
+                'id' => [
+                    'type' => 'number',
+                ],
+                'displayOption' => [
+                    'type' => 'string',
+                ],
+            ],
+            'required' => [
+                'id',
+            ],
+        ], $jsonSchema);
     }
 }

@@ -12,11 +12,14 @@
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\FormMetadata;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Sulu\Bundle\AdminBundle\Exception\InvalidRootTagException;
+use Sulu\Bundle\AdminBundle\Exception\PropertyMetadataMapperNotFoundException;
 use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadataMapper;
 use Sulu\Bundle\AdminBundle\FormMetadata\FormXmlLoader;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\LocalizedFormMetadataCollection;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapperRegistry;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
 use Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser;
 use Sulu\Component\Content\Metadata\Parser\SchemaXmlParser;
@@ -43,7 +46,14 @@ class FormXmlLoaderTest extends TestCase
         );
         $schemaXmlParser = new SchemaXmlParser();
         $locales = ['de', 'en'];
-        $formMetadataMapper = new FormMetadataMapper();
+
+        $propertyMetadataMapperRegistry = $this->prophesize(PropertyMetadataMapperRegistry::class);
+        $propertyMetadataMapperRegistry->has(Argument::cetera())->willReturn(false);
+        $propertyMetadataMapperRegistry->get(Argument::cetera())->will(function($arguments) {
+            throw new PropertyMetadataMapperNotFoundException($arguments[0]);
+        });
+
+        $formMetadataMapper = new FormMetadataMapper($propertyMetadataMapperRegistry->reveal());
         $this->loader = new FormXmlLoader($propertiesXmlParser, $schemaXmlParser, $locales, $formMetadataMapper);
     }
 

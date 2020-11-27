@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata;
 
-class SchemaMetadata
+class ObjectMetadata extends PropertyMetadata
 {
     /**
      * @var PropertyMetadata[]
@@ -19,36 +19,21 @@ class SchemaMetadata
     private $properties;
 
     /**
-     * @var SchemaMetadata[]
+     * @param PropertyMetadata[] $properties
      */
-    private $anyOfs;
-
-    /**
-     * @var SchemaMetadata[]
-     */
-    private $allOfs;
-
-    /**
-     * @var string|null
-     */
-    private $type;
-
-    public function __construct(array $properties = [], array $anyOfs = [], array $allOfs = [], string $type = null)
+    public function __construct(string $name, bool $mandatory, array $properties = [])
     {
+        parent::__construct($name, $mandatory, 'object');
+
         $this->properties = $properties;
-        $this->anyOfs = $anyOfs;
-        $this->allOfs = $allOfs;
-        $this->type = $type;
     }
 
-    public function merge(self $schema)
+    public function toJsonSchema(): ?array
     {
-        return new self([], [], [$this, $schema], $schema->type ?? $this->type);
-    }
-
-    public function toJsonSchema()
-    {
-        $jsonSchema = [];
+        $jsonSchema = [
+            'name' => $this->getName(),
+            'type' => $this->getType(),
+        ];
 
         $jsonSchema['required'] = \array_values(
             \array_map(
@@ -77,22 +62,6 @@ class SchemaMetadata
 
         if (\count($properties) > 0) {
             $jsonSchema['properties'] = $properties;
-        }
-
-        if (\count($this->anyOfs) > 0) {
-            $jsonSchema['anyOf'] = \array_map(function(SchemaMetadata $schema) {
-                return $schema->toJsonSchema();
-            }, $this->anyOfs);
-        }
-
-        if (\count($this->allOfs) > 0) {
-            $jsonSchema['allOf'] = \array_map(function(SchemaMetadata $schema) {
-                return $schema->toJsonSchema();
-            }, $this->allOfs);
-        }
-
-        if (null !== $this->type) {
-            $jsonSchema['type'] = $this->type;
         }
 
         return $jsonSchema;

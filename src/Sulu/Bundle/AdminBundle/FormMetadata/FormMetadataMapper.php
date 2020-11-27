@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\FormMetadata;
 
+use Sulu\Bundle\AdminBundle\Exception\PropertyMetadataMapperNotFoundException;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\ItemMetadata;
@@ -20,8 +21,8 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TagMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ArrayMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ConstMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapperRegistry;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
-use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\BlockMetadata as ContentBlockMetadata;
 use Sulu\Component\Content\Metadata\ItemMetadata as ContentItemMetadata;
 use Sulu\Component\Content\Metadata\PropertyMetadata as ContentPropertyMetadata;
@@ -33,13 +34,23 @@ use Sulu\Component\Content\Metadata\SectionMetadata as ContentSectionMetadata;
 class FormMetadataMapper
 {
     /**
+     * @var PropertyMetadataMapperRegistry
+     */
+    private $propertyMetadataMapperRegistry;
+
+    public function __construct(PropertyMetadataMapperRegistry $propertyMetadataMapperRegistry)
+    {
+        $this->propertyMetadataMapperRegistry = $propertyMetadataMapperRegistry;
+    }
+
+    /**
      * @return ItemMetadata[]
      */
     public function mapChildren(array $children, string $locale): array
     {
         $items = [];
         foreach ($children as $child) {
-            if ($child instanceof BlockMetadata || $child instanceof ContentPropertyMetadata) {
+            if ($child instanceof ContentBlockMetadata || $child instanceof ContentPropertyMetadata) {
                 $item = $this->mapProperty($child, $locale);
             } elseif ($child instanceof ContentSectionMetadata) {
                 $item = $this->mapSection($child, $locale);
@@ -93,7 +104,7 @@ class FormMetadataMapper
         $section->setVisibleCondition($property->getVisibleCondition());
 
         foreach ($property->getChildren() as $component) {
-            if ($component instanceof BlockMetadata || $component instanceof ContentPropertyMetadata) {
+            if ($component instanceof ContentBlockMetadata || $component instanceof ContentPropertyMetadata) {
                 $item = $this->mapProperty($component, $locale);
             } elseif ($component instanceof ContentSectionMetadata) {
                 $item = $this->mapSection($component, $locale);
@@ -225,7 +236,19 @@ class FormMetadataMapper
                 );
             }
 
-            return new PropertyMetadata($itemMetadata->getName(), $itemMetadata->isRequired());
+            /** @var ContentPropertyMetadata $propertyMetadata */
+            $propertyMetadata = $itemMetadata;
+
+            try {
+                return $this->propertyMetadataMapperRegistry
+                    ->get($propertyMetadata->getType())
+                    ->mapPropertyMetadata($propertyMetadata);
+            } catch (PropertyMetadataMapperNotFoundException $e) {
+                return new PropertyMetadata(
+                    $propertyMetadata->getName(),
+                    $propertyMetadata->isRequired()
+                );
+            }
         }, $itemsMetadata));
     }
 }
