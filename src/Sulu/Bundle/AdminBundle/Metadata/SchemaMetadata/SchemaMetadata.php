@@ -51,12 +51,16 @@ class SchemaMetadata
         $jsonSchema = [];
 
         $jsonSchema['required'] = \array_values(
-            \array_filter(
-                \array_map(function(PropertyMetadata $property) {
-                    if ($property->isMandatory()) {
-                        return $property->getName();
+            \array_map(
+                function(PropertyMetadata $propertyMetadata) {
+                    return $propertyMetadata->getName();
+                },
+                \array_filter(
+                    $this->properties,
+                    function(PropertyMetadata $propertyMetadata) {
+                        return $propertyMetadata->isMandatory();
                     }
-                }, $this->properties)
+                )
             )
         );
 

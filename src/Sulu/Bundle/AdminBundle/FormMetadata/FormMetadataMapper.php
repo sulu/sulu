@@ -20,7 +20,7 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SectionMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TagMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ArrayMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ConstMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ObjectMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapperRegistry;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
 use Sulu\Component\Content\Metadata\BlockMetadata as ContentBlockMetadata;
@@ -244,7 +244,7 @@ class FormMetadataMapper
                     ->get($propertyMetadata->getType())
                     ->mapPropertyMetadata($propertyMetadata);
             } catch (PropertyMetadataMapperNotFoundException $e) {
-                return new ObjectMetadata(
+                return new PropertyMetadata(
                     $propertyMetadata->getName(),
                     $propertyMetadata->isRequired()
                 );

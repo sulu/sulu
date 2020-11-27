@@ -363,6 +363,7 @@ class SingleMediaSelectionTest extends TestCase
                     'type' => 'string',
                 ],
             ],
+            'required' => [],
         ], $jsonSchema);
     }
 

@@ -35,15 +35,17 @@ class ObjectMetadata extends PropertyMetadata
             'type' => $this->getType(),
         ];
 
-        $jsonSchema['required'] = \array_map(
-            function(PropertyMetadata $propertyMetadata) {
-                return $propertyMetadata->getName();
-            },
-            \array_filter(
-                $this->properties,
+        $jsonSchema['required'] = \array_values(
+            \array_map(
                 function(PropertyMetadata $propertyMetadata) {
-                    return $propertyMetadata->isMandatory();
-                }
+                    return $propertyMetadata->getName();
+                },
+                \array_filter(
+                    $this->properties,
+                    function(PropertyMetadata $propertyMetadata) {
+                        return $propertyMetadata->isMandatory();
+                    }
+                )
             )
         );
 

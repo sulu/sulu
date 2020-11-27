@@ -451,6 +451,7 @@ class MediaSelectionContentTypeTest extends TestCase
                     'name' => 'ids',
                     'type' => 'array',
                     'items' => [
+                        'required' => [],
                         'type' => 'number',
                     ],
                     'minItems' => 0,
@@ -460,6 +461,7 @@ class MediaSelectionContentTypeTest extends TestCase
                     'type' => 'string',
                 ],
             ],
+            'required' => [],
         ], $jsonSchema);
     }
 
@@ -479,6 +481,7 @@ class MediaSelectionContentTypeTest extends TestCase
                     'name' => 'ids',
                     'type' => 'array',
                     'items' => [
+                        'required' => [],
                         'type' => 'number',
                     ],
                     'minItems' => 1,
