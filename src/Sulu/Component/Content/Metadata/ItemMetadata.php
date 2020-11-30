@@ -245,13 +245,13 @@ abstract class ItemMetadata
     }
 
     /**
-     * Return the paramter with the given name.
+     * Return the parameter with the given name.
      *
      * @param string $name
      */
     public function getParameter($name, bool $nullIfNotExists = false)
     {
-        $parameter = \array_values(
+        $parameter = $this->parameters[$name] ?? \array_values(
             \array_filter(
                 $this->parameters,
                 function(array $parameter) use ($name) {
@@ -263,7 +263,7 @@ abstract class ItemMetadata
         if (null === $parameter && !$nullIfNotExists) {
             throw new \InvalidArgumentException(\sprintf(
                 'Unknown parameter "%s", known parameters: "%s"',
-                $name, \implode('", "', \array_column($this->parameters, 'name'))
+                $name, \implode('", "', \array_keys($this->parameters))
             ));
         }
 
