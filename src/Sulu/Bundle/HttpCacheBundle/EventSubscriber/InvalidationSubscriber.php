@@ -180,7 +180,7 @@ class InvalidationSubscriber implements EventSubscriberInterface
     /**
      * Invalidates the structure of the given document.
      *
-     * @param object $document
+     * @param StructureBehavior $document
      */
     private function invalidateDocumentStructure($document)
     {
