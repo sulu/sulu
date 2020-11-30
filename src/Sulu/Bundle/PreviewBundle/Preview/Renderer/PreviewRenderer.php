@@ -115,8 +115,7 @@ class PreviewRenderer implements PreviewRendererInterface
         $webspaceKey,
         $locale,
         $partial = false,
-        $targetGroupId = null,
-        $segmentKey = null
+        $options = []
     ) {
         if (!$this->routeDefaultsProvider->supports(\get_class($object))) {
             throw new RouteDefaultsProviderNotFoundException($object, $id, $webspaceKey, $locale);
@@ -136,7 +135,7 @@ class PreviewRenderer implements PreviewRendererInterface
         }
 
         $webspace = $portalInformation->getWebspace();
-        $segment = $segmentKey ? $webspace->getSegment($segmentKey) : null;
+        $segment = isset($options['segmentKey']) ? $webspace->getSegment($options['segmentKey']) : null;
         $localization = $webspace->getLocalization($locale);
 
         $query = [];
@@ -174,8 +173,8 @@ class PreviewRenderer implements PreviewRendererInterface
         $request = new Request($query, $request, $attributes, [], [], $server);
         $request->setLocale($locale);
 
-        if ($this->targetGroupHeader && $targetGroupId) {
-            $request->headers->set($this->targetGroupHeader, $targetGroupId);
+        if ($this->targetGroupHeader && isset($options['targetGroupId'])) {
+            $request->headers->set($this->targetGroupHeader, $options['targetGroupId']);
         }
 
         // TODO Remove this event in 2.0 as it is not longer needed to set the correct theme.

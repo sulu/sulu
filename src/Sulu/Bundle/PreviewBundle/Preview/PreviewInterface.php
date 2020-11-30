@@ -46,8 +46,7 @@ interface PreviewInterface
         string $token,
         string $webspaceKey,
         array $data,
-        ?int $targetGroupId,
-        ?string $segmentKey
+        array $options = []
     ): string;
 
     /**
@@ -59,8 +58,7 @@ interface PreviewInterface
         string $token,
         string $webspaceKey,
         array $context,
-        ?int $targetGroupId,
-        ?string $segmentKey
+        array $options = []
     ): string;
 
     /**
@@ -72,7 +70,6 @@ interface PreviewInterface
         string $token,
         string $webspaceKey,
         string $locale,
-        ?int $targetGroupId,
-        ?string $segmentKey
+        array $options = []
     ): string;
 }

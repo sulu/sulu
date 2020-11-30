@@ -235,10 +235,15 @@ class PreviewRendererTest extends TestCase
         $request = new Request();
         $this->requestStack->getCurrentRequest()->willReturn($request);
 
-        $this->httpKernel->handle(Argument::type(Request::class), HttpKernelInterface::MASTER_REQUEST, false)
-            ->shouldBeCalled()->willReturn(new Response('<title>Hallo</title>'));
+        $this->httpKernel->handle(
+            Argument::that(function(Request $request) {
+                return 2 == $request->headers->get('X-Sulu-Target-Group');
+            }),
+            HttpKernelInterface::MASTER_REQUEST,
+            false
+        )->shouldBeCalled()->willReturn(new Response('<title>Hallo</title>'));
 
-        $response = $this->renderer->render($object->reveal(), 1, 'sulu_io', 'de', true, 2);
+        $response = $this->renderer->render($object->reveal(), 1, 'sulu_io', 'de', true, ['targetGroupId' => 2]);
         $this->assertEquals('<title>Hallo</title>', $response);
     }
 
@@ -279,7 +284,7 @@ class PreviewRendererTest extends TestCase
             false
         )->shouldBeCalled()->willReturn(new Response('<title>Hallo</title>'));
 
-        $response = $this->renderer->render($object->reveal(), 1, 'sulu_io', 'de', true, 2, 'w');
+        $response = $this->renderer->render($object->reveal(), 1, 'sulu_io', 'de', true, ['segmentKey' => 'w']);
         $this->assertEquals('<title>Hallo</title>', $response);
     }
 

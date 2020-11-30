@@ -75,7 +75,12 @@ class PreviewController
             $token = $this->preview->start($provider, $id, $locale, $this->getUserId());
         }
 
-        $content = $this->preview->render($token, $webspace, $locale, $targetGroup, $segment);
+        $content = $this->preview->render(
+            $token,
+            $webspace,
+            $locale,
+            ['targetGroupId' => $targetGroup, 'segmentKey' => $segment]
+        );
 
         $this->disableProfiler();
 
@@ -97,7 +102,12 @@ class PreviewController
             $token = $this->preview->start($provider, $id, $locale, $this->getUserId());
         }
 
-        $content = $this->preview->update($token, $webspace, $data, $targetGroup, $segment);
+        $content = $this->preview->update(
+            $token,
+            $webspace,
+            $data,
+            ['targetGroupId' => $targetGroup, 'segmentKey' => $segment]
+        );
 
         return new JsonResponse(['content' => $content]);
     }
@@ -117,7 +127,12 @@ class PreviewController
             $token = $this->preview->start($provider, $id, $locale, $this->getUserId());
         }
 
-        $content = $this->preview->updateContext($token, $webspace, $context, $targetGroup, $segment);
+        $content = $this->preview->updateContext(
+            $token,
+            $webspace,
+            $context,
+            ['targetGroupId' => $targetGroup, 'segmentKey' => $segment]
+        );
 
         return new JsonResponse(['content' => $content]);
     }

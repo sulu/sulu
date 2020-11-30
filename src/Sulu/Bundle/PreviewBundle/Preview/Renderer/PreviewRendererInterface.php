@@ -23,7 +23,6 @@ interface PreviewRendererInterface
      * @param string $webspaceKey
      * @param string $locale
      * @param bool $partial
-     * @param int $targetGroupId
      *
      * @return string
      */
@@ -33,7 +32,6 @@ interface PreviewRendererInterface
         $webspaceKey,
         $locale,
         $partial = false,
-        $targetGroupId = null,
-        $segmentKey = null
+        $options = []
     );
 }
