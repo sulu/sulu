@@ -271,7 +271,7 @@ abstract class ItemMetadata
             ));
         }
 
-        return $this->parameters[$name] ?? $matchingParameters[0];
+        return $this->parameters[$name] ?? $matchingParameters[0] ?? null;
     }
 
     /**
