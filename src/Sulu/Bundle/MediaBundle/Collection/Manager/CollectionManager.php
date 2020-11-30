@@ -489,7 +489,7 @@ class CollectionManager implements CollectionManagerInterface
     }
 
     /**
-     * @param $typeId
+     * @param int $typeId
      *
      * @return CollectionType
      *
@@ -544,7 +544,7 @@ class CollectionManager implements CollectionManagerInterface
     /**
      * Returns a user for a given user-id.
      *
-     * @param $userId
+     * @param int $userId
      *
      * @return \Sulu\Component\Security\Authentication\UserInterface
      */

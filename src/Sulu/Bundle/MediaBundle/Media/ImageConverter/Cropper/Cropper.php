@@ -42,10 +42,10 @@ class Cropper implements CropperInterface
     /**
      * Returns true iff the cropping does not exceed the image borders.
      *
-     * @param $x
-     * @param $y
-     * @param $width
-     * @param $height
+     * @param int $x
+     * @param int $y
+     * @param int $width
+     * @param int $height
      *
      * @return bool
      */
@@ -67,8 +67,8 @@ class Cropper implements CropperInterface
     /**
      * Returns true iff the crop is greater or equal to the size of a given format.
      *
-     * @param $width
-     * @param $height
+     * @param int $width
+     * @param int $height
      *
      * @return bool
      */

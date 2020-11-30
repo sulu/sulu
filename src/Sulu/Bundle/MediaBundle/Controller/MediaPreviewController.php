@@ -110,7 +110,7 @@ class MediaPreviewController extends AbstractMediaController implements ClassRes
     /**
      * Removes current preview image and sets default video thumbnail.
      *
-     * @param $id
+     * @param int $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */

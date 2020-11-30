@@ -282,9 +282,9 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
     }
 
     /**
-     * @param $collectionId
-     * @param $limit
-     * @param $offset
+     * @param int $collectionId
+     * @param int $limit
+     * @param int $offset
      *
      * @return array
      */

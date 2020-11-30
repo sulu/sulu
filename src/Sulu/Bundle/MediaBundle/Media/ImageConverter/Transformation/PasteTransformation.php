@@ -87,9 +87,9 @@ class PasteTransformation implements TransformationInterface
     /**
      * Create mask.
      *
-     * @param $maskPath
-     * @param $width
-     * @param $height
+     * @param string|array $maskPath The full path to the file or an array of file paths
+     * @param int $width
+     * @param int $height
      *
      * @return ImageInterface
      */
