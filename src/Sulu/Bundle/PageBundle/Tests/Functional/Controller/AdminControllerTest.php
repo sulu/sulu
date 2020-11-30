@@ -18,7 +18,7 @@ class AdminControllerTest extends SuluTestCase
     public function testRouteConfig()
     {
         $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/admin/config');
+        static::jsonRequest($client, 'GET', '/admin/config');
 
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = \json_decode($client->getResponse()->getContent());
@@ -39,7 +39,7 @@ class AdminControllerTest extends SuluTestCase
     public function testTeaserConfig()
     {
         $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/admin/config');
+        static::jsonRequest($client, 'GET', '/admin/config');
 
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = \json_decode($client->getResponse()->getContent());
@@ -54,7 +54,7 @@ class AdminControllerTest extends SuluTestCase
     public function testSmartContentConfig()
     {
         $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/admin/config');
+        static::jsonRequest($client, 'GET', '/admin/config');
 
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = \json_decode($client->getResponse()->getContent());
@@ -72,7 +72,7 @@ class AdminControllerTest extends SuluTestCase
     public function testWebspacesConfig()
     {
         $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/admin/config');
+        static::jsonRequest($client, 'GET', '/admin/config');
 
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = \json_decode($client->getResponse()->getContent());
@@ -98,7 +98,7 @@ class AdminControllerTest extends SuluTestCase
     {
         $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/admin/metadata/list/pages');
+        static::jsonRequest($client, 'GET', '/admin/metadata/list/pages');
 
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = \json_decode($client->getResponse()->getContent());
@@ -115,7 +115,7 @@ class AdminControllerTest extends SuluTestCase
     {
         $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/admin/metadata/form/page');
+        static::jsonRequest($client, 'GET', '/admin/metadata/form/page');
 
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = \json_decode($client->getResponse()->getContent());
@@ -191,7 +191,7 @@ class AdminControllerTest extends SuluTestCase
     {
         $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/admin/metadata/form/page_seo');
+        static::jsonRequest($client, 'GET', '/admin/metadata/form/page_seo');
 
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = \json_decode($client->getResponse()->getContent());
@@ -211,7 +211,7 @@ class AdminControllerTest extends SuluTestCase
     {
         $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/admin/metadata/form/page_excerpt');
+        static::jsonRequest($client, 'GET', '/admin/metadata/form/page_excerpt');
 
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = \json_decode($client->getResponse()->getContent());
@@ -231,7 +231,7 @@ class AdminControllerTest extends SuluTestCase
     {
         $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/admin/metadata/form/page_settings');
+        static::jsonRequest($client, 'GET', '/admin/metadata/form/page_settings');
 
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = \json_decode($client->getResponse()->getContent());

@@ -41,7 +41,7 @@ class PositionControllerTest extends SuluTestCase
 
         $this->em->flush();
 
-        $this->client->request('GET', '/api/contact-positions');
+        static::jsonRequest($this->client, 'GET', '/api/contact-positions');
 
         $response = \json_decode($this->client->getResponse()->getContent());
         $positions = $response->_embedded->contact_positions;
@@ -61,7 +61,7 @@ class PositionControllerTest extends SuluTestCase
 
         $this->em->flush();
 
-        $this->client->request('GET', '/api/contact-positions?ids=' . $position1->getId() . ',' . $position3->getId());
+        static::jsonRequest($this->client, 'GET', '/api/contact-positions?ids=' . $position1->getId() . ',' . $position3->getId());
 
         $response = \json_decode($this->client->getResponse()->getContent());
         $positions = $response->_embedded->contact_positions;
@@ -81,12 +81,12 @@ class PositionControllerTest extends SuluTestCase
 
         $this->em->flush();
 
-        $this->client->request(
+        static::jsonRequest($this->client,
             'DELETE',
             '/api/contact-positions?ids=' . $position1->getId() . ',' . $position3->getId()
         );
 
-        $this->client->request('GET', '/api/contact-positions');
+        static::jsonRequest($this->client, 'GET', '/api/contact-positions');
 
         $response = \json_decode($this->client->getResponse()->getContent());
         $positions = $response->_embedded->contact_positions;
@@ -103,12 +103,12 @@ class PositionControllerTest extends SuluTestCase
 
         $this->em->flush();
 
-        $this->client->request('PATCH', '/api/contact-positions', [
+        static::jsonRequest($this->client, 'PATCH', '/api/contact-positions', [
             ['id' => $position1->getId(), 'position' => 'CE'],
             ['position' => 'CIO'],
         ]);
 
-        $this->client->request('GET', '/api/contact-positions');
+        static::jsonRequest($this->client, 'GET', '/api/contact-positions');
 
         $response = \json_decode($this->client->getResponse()->getContent());
         $positions = $response->_embedded->contact_positions;

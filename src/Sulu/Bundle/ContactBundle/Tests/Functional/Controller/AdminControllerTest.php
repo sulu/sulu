@@ -84,7 +84,7 @@ class AdminControllerTest extends SuluTestCase
         $em->persist($faxType2);
         $em->flush();
 
-        $this->client->request('GET', '/admin/config');
+        static::jsonRequest($this->client, 'GET', '/admin/config');
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $response = \json_decode($this->client->getResponse()->getContent());
@@ -124,7 +124,7 @@ class AdminControllerTest extends SuluTestCase
 
     public function testContactsListMetadataAction()
     {
-        $this->client->request('GET', '/admin/metadata/list/contacts');
+        static::jsonRequest($this->client, 'GET', '/admin/metadata/list/contacts');
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $response = \json_decode($this->client->getResponse()->getContent(), true);
@@ -143,7 +143,7 @@ class AdminControllerTest extends SuluTestCase
 
     public function testAccountsListMetadataAction()
     {
-        $this->client->request('GET', '/admin/metadata/list/accounts');
+        static::jsonRequest($this->client, 'GET', '/admin/metadata/list/accounts');
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $response = \json_decode($this->client->getResponse()->getContent());
@@ -158,7 +158,7 @@ class AdminControllerTest extends SuluTestCase
     {
         $this->createCollectionTypes();
 
-        $this->client->request('GET', '/admin/metadata/form/contact_details');
+        static::jsonRequest($this->client, 'GET', '/admin/metadata/form/contact_details');
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $response = \json_decode($this->client->getResponse()->getContent());
@@ -177,7 +177,7 @@ class AdminControllerTest extends SuluTestCase
     {
         $this->createCollectionTypes();
 
-        $this->client->request('GET', '/admin/metadata/form/account_details');
+        static::jsonRequest($this->client, 'GET', '/admin/metadata/form/account_details');
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $response = \json_decode($this->client->getResponse()->getContent());

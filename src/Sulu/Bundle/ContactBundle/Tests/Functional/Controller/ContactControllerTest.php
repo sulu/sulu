@@ -119,7 +119,7 @@ class ContactControllerTest extends SuluTestCase
 
         $this->em->flush();
 
-        $this->client->request('GET', '/api/contacts/' . $contact->getId());
+        static::jsonRequest($this->client, 'GET', '/api/contacts/' . $contact->getId());
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
@@ -167,7 +167,7 @@ class ContactControllerTest extends SuluTestCase
         $addressType = $this->createAddressType('Private');
         $this->em->flush();
 
-        $this->client->request(
+        static::jsonRequest($this->client,
             'POST',
             '/api/contacts',
             [
@@ -260,7 +260,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('6850', $response->addresses[0]->postboxPostcode);
         $this->assertEquals('4711', $response->addresses[0]->postboxNumber);
 
-        $this->client->request('GET', '/api/contacts/' . $response->id);
+        static::jsonRequest($this->client, 'GET', '/api/contacts/' . $response->id);
         $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertNotNull($response->id);
@@ -293,7 +293,7 @@ class ContactControllerTest extends SuluTestCase
 
     public function testPostCategoryNull()
     {
-        $this->client->request(
+        static::jsonRequest($this->client,
             'POST',
             '/api/contacts',
             [
@@ -329,7 +329,7 @@ class ContactControllerTest extends SuluTestCase
         $category2 = $this->createCategory('second-category-key', 'en', 'Second Category', 'Description of second Category');
         $this->em->flush();
 
-        $this->client->request(
+        static::jsonRequest($this->client,
             'POST',
             '/api/contacts',
             [
@@ -462,7 +462,7 @@ class ContactControllerTest extends SuluTestCase
         $account = $this->createAccount('Musterfirma');
         $this->em->flush();
 
-        $this->client->request(
+        static::jsonRequest($this->client,
             'POST',
             '/api/contacts',
             [
@@ -490,7 +490,7 @@ class ContactControllerTest extends SuluTestCase
         $addressType = $this->createAddressType('Private');
         $this->em->flush();
 
-        $this->client->request(
+        static::jsonRequest($this->client,
             'POST',
             '/api/contacts',
             [
@@ -517,7 +517,7 @@ class ContactControllerTest extends SuluTestCase
         $addressType = $this->createAddressType('Private');
         $this->em->flush();
 
-        $this->client->request(
+        static::jsonRequest($this->client,
             'POST',
             '/api/contacts',
             [
@@ -547,7 +547,7 @@ class ContactControllerTest extends SuluTestCase
         $addressType = $this->createAddressType('Private');
         $this->em->flush();
 
-        $this->client->request(
+        static::jsonRequest($this->client,
             'POST',
             '/api/contacts',
             [
@@ -597,7 +597,7 @@ class ContactControllerTest extends SuluTestCase
         $position = $this->createPosition('Manager');
         $this->em->flush();
 
-        $this->client->request(
+        static::jsonRequest($this->client,
             'POST',
             '/api/contacts',
             [
@@ -625,7 +625,7 @@ class ContactControllerTest extends SuluTestCase
         $position = $this->createPosition('Manager');
         $this->em->flush();
 
-        $this->client->request(
+        static::jsonRequest($this->client,
             'POST',
             '/api/contacts',
             [
@@ -652,7 +652,7 @@ class ContactControllerTest extends SuluTestCase
         $position = $this->createPosition('Manager');
         $this->em->flush();
 
-        $this->client->request(
+        static::jsonRequest($this->client,
             'POST',
             '/api/contacts',
             [
@@ -678,7 +678,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals(0, $response->formOfAddress);
         $this->assertEquals('Sehr geehrte Frau Dr Mustermann', $response->salutation);
 
-        $this->client->request('GET', '/api/contacts/' . $response->id);
+        static::jsonRequest($this->client, 'GET', '/api/contacts/' . $response->id);
         $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertNotNull($response->id);
@@ -692,7 +692,7 @@ class ContactControllerTest extends SuluTestCase
 
     public function testGetListSearchEmpty()
     {
-        $this->client->request('GET', '/api/contacts?flat=true&search=Nothing&searchFields=fullName');
+        static::jsonRequest($this->client, 'GET', '/api/contacts?flat=true&search=Nothing&searchFields=fullName');
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $response = \json_decode($this->client->getResponse()->getContent());
@@ -711,7 +711,7 @@ class ContactControllerTest extends SuluTestCase
 
         // dont use max here because the user for tests also is called max
 
-        $this->client->request('GET', '/api/contacts?flat=true&search=Erika&searchFields=fullName&fields=fullName');
+        static::jsonRequest($this->client, 'GET', '/api/contacts?flat=true&search=Erika&searchFields=fullName&fields=fullName');
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $response = \json_decode($this->client->getResponse()->getContent());
@@ -736,7 +736,7 @@ class ContactControllerTest extends SuluTestCase
         $this->em->persist($contact2);
         $this->em->flush();
 
-        $this->client->request('GET', '/api/contacts?flat=true&fields=fullName&filter[salutation][eq]=Mann');
+        static::jsonRequest($this->client, 'GET', '/api/contacts?flat=true&fields=fullName&filter[salutation][eq]=Mann');
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $response = \json_decode($this->client->getResponse()->getContent());
@@ -777,17 +777,17 @@ class ContactControllerTest extends SuluTestCase
 
         // dont use max here because the user for tests also is called max
 
-        $this->client->request('GET', '/api/contacts?flat=false&search=Erika&excludedAccountId=' . $account1->getId());
+        static::jsonRequest($this->client, 'GET', '/api/contacts?flat=false&search=Erika&excludedAccountId=' . $account1->getId());
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(0, \count($response->_embedded->contacts));
 
-        $this->client->request('GET', '/api/contacts?flat=false&search=Erika&excludedAccountId=' . $account2->getId());
+        static::jsonRequest($this->client, 'GET', '/api/contacts?flat=false&search=Erika&excludedAccountId=' . $account2->getId());
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(0, \count($response->_embedded->contacts));
 
-        $this->client->request('GET', '/api/contacts?flat=false&search=Erika&excludedAccountId=' . $account3->getId());
+        static::jsonRequest($this->client, 'GET', '/api/contacts?flat=false&search=Erika&excludedAccountId=' . $account3->getId());
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(1, \count($response->_embedded->contacts));
@@ -817,7 +817,7 @@ class ContactControllerTest extends SuluTestCase
 
         $this->em->flush();
 
-        $this->client->request('GET', '/api/contacts?flat=true&accountId=' . $account->getId());
+        static::jsonRequest($this->client, 'GET', '/api/contacts?flat=true&accountId=' . $account->getId());
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $response = \json_decode($this->client->getResponse()->getContent());
@@ -853,7 +853,7 @@ class ContactControllerTest extends SuluTestCase
         $this->em->persist($role);
         $this->em->flush();
 
-        $this->client->request('GET', '/api/contacts?bySystem=true');
+        static::jsonRequest($this->client, 'GET', '/api/contacts?bySystem=true');
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $response = \json_decode($this->client->getResponse()->getContent());
@@ -921,7 +921,7 @@ class ContactControllerTest extends SuluTestCase
 
         $this->em->flush();
 
-        $this->client->request(
+        static::jsonRequest($this->client,
             'PUT',
             '/api/contacts/' . $contact->getId(),
             [
@@ -1044,7 +1044,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals(1, \count($response->categories));
         $this->assertEquals($category3->getId(), $response->categories[0]);
 
-        $this->client->request('GET', '/api/contacts/' . $response->id);
+        static::jsonRequest($this->client, 'GET', '/api/contacts/' . $response->id);
         $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals('John', $response->firstName);
@@ -1104,7 +1104,7 @@ class ContactControllerTest extends SuluTestCase
 
         $this->em->flush();
 
-        $this->client->request(
+        static::jsonRequest($this->client,
             'PUT',
             '/api/contacts/' . $contact->getId(),
             [
@@ -1186,7 +1186,7 @@ class ContactControllerTest extends SuluTestCase
 
         $this->em->flush();
 
-        $this->client->request(
+        static::jsonRequest($this->client,
             'PUT',
             '/api/contacts/' . $contact->getId(),
             [
@@ -1291,7 +1291,7 @@ class ContactControllerTest extends SuluTestCase
 
         $this->em->flush();
 
-        $this->client->request(
+        static::jsonRequest($this->client,
             'PUT',
             '/api/contacts/' . $contact->getId(),
             [
@@ -1425,7 +1425,7 @@ class ContactControllerTest extends SuluTestCase
 
         $this->em->flush();
 
-        $this->client->request(
+        static::jsonRequest($this->client,
             'PUT',
             '/api/contacts/' . $contact->getId(),
             [
@@ -1540,7 +1540,7 @@ class ContactControllerTest extends SuluTestCase
         );
         $this->em->flush();
 
-        $this->client->request(
+        static::jsonRequest($this->client,
             'PUT',
             '/api/contacts/' . $contact->getId(),
             [
@@ -1642,7 +1642,7 @@ class ContactControllerTest extends SuluTestCase
         );
         $this->em->flush();
 
-        $this->client->request(
+        static::jsonRequest($this->client,
             'PUT',
             '/api/contacts/' . $contact->getId(),
             [
@@ -1705,7 +1705,7 @@ class ContactControllerTest extends SuluTestCase
 
     public function testPutNotExisting()
     {
-        $this->client->request(
+        static::jsonRequest($this->client,
             'PUT',
             '/api/contacts/10113',
             [
@@ -1718,7 +1718,7 @@ class ContactControllerTest extends SuluTestCase
 
     public function testGetList()
     {
-        $this->client->request('GET', '/api/contacts?flat=true&fields=fullName,title,formOfAddress,salutation');
+        static::jsonRequest($this->client, 'GET', '/api/contacts?flat=true&fields=fullName,title,formOfAddress,salutation');
         $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals(1, $response->total);
@@ -1736,14 +1736,14 @@ class ContactControllerTest extends SuluTestCase
         $contact = $this->createContact('Max', 'Mustermann');
         $this->em->flush();
 
-        $this->client->request('GET', '/api/contacts?flat=true&fields=id,fullName');
+        static::jsonRequest($this->client, 'GET', '/api/contacts?flat=true&fields=id,fullName');
         $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals(2, $response->total);
         $this->assertEquals($contact->getId(), $response->_embedded->contacts[0]->id);
         $this->assertEquals('Max Mustermann', $response->_embedded->contacts[0]->fullName);
 
-        $this->client->request('GET', '/api/contacts?flat=true&fields=id,fullName');
+        static::jsonRequest($this->client, 'GET', '/api/contacts?flat=true&fields=id,fullName');
         $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals(2, $response->total);
@@ -1771,7 +1771,7 @@ class ContactControllerTest extends SuluTestCase
 
         $ids = \sprintf('%s,%s,%s', $contact1->getId(), $contact2->getId(), $contact3->getId());
 
-        $this->client->request('GET', '/api/contacts?flat=true&ids=' . $ids . '&fields=id');
+        static::jsonRequest($this->client, 'GET', '/api/contacts?flat=true&ids=' . $ids . '&fields=id');
         $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals(3, $response->total);
@@ -1783,7 +1783,7 @@ class ContactControllerTest extends SuluTestCase
 
     public function testGetListIdsEmpty()
     {
-        $this->client->request('GET', '/api/contacts?flat=true&ids=');
+        static::jsonRequest($this->client, 'GET', '/api/contacts?flat=true&ids=');
         $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertCount(0, $response->_embedded->contacts);
@@ -1809,7 +1809,7 @@ class ContactControllerTest extends SuluTestCase
 
         $ids = \sprintf('%s,%s,%s', $contact3->getId(), $contact1->getId(), $contact2->getId());
 
-        $this->client->request('GET', '/api/contacts?flat=true&ids=' . $ids . '&fields=id');
+        static::jsonRequest($this->client, 'GET', '/api/contacts?flat=true&ids=' . $ids . '&fields=id');
         $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals(3, $response->total);
@@ -1826,22 +1826,22 @@ class ContactControllerTest extends SuluTestCase
 
         $contactId = $contact->getId();
 
-        $this->client->request('DELETE', '/api/contacts/' . $contactId);
+        static::jsonRequest($this->client, 'DELETE', '/api/contacts/' . $contactId);
 
         $this->assertHttpStatusCode(204, $this->client->getResponse());
 
-        $this->client->request('GET', '/api/contacts/' . $contactId);
+        static::jsonRequest($this->client, 'GET', '/api/contacts/' . $contactId);
 
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
     public function testDeleteNotExisting()
     {
-        $this->client->request('DELETE', '/api/contacts/4711');
+        static::jsonRequest($this->client, 'DELETE', '/api/contacts/4711');
 
         $this->assertHttpStatusCode(404, $this->client->getResponse());
 
-        $this->client->request('GET', '/api/contacts?flat=true');
+        static::jsonRequest($this->client, 'GET', '/api/contacts?flat=true');
         $response = \json_decode($this->client->getResponse()->getContent());
 
         // Only the test user should be there
@@ -1894,7 +1894,7 @@ class ContactControllerTest extends SuluTestCase
         );
         $this->em->flush();
 
-        $this->client->request(
+        static::jsonRequest($this->client,
             'PUT',
             '/api/contacts/' . $contact->getId(),
             [
@@ -1967,7 +1967,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals(0, $response->formOfAddress);
         $this->assertEquals('Sehr geehrter John', $response->salutation);
 
-        $this->client->request(
+        static::jsonRequest($this->client,
             'PUT',
             '/api/contacts/' . $contact->getId(),
             [
@@ -2036,7 +2036,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals(0, $response->formOfAddress);
         $this->assertNull($response->salutation);
 
-        $this->client->request('GET', '/api/contacts/' . $response->id);
+        static::jsonRequest($this->client, 'GET', '/api/contacts/' . $response->id);
         $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals('John', $response->firstName);
@@ -2059,7 +2059,7 @@ class ContactControllerTest extends SuluTestCase
 
     public function testPatchNotExisting()
     {
-        $this->client->request(
+        static::jsonRequest($this->client,
             'PATCH',
             '/api/contacts/101',
             [
@@ -2080,12 +2080,12 @@ class ContactControllerTest extends SuluTestCase
         $contact = $this->createContact('Max', 'Mustermann');
         $this->em->flush();
 
-        $this->client->request('GET', '/api/contacts/' . $contact->getId());
+        static::jsonRequest($this->client, 'GET', '/api/contacts/' . $contact->getId());
         $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(0, \count($response->medias));
 
         // add two medias
-        $this->client->request(
+        static::jsonRequest($this->client,
             'PATCH',
             '/api/contacts/' . $contact->getId(),
             [
@@ -2100,7 +2100,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertCount(2, $response->medias);
 
         // remove medias
-        $this->client->request(
+        static::jsonRequest($this->client,
             'PATCH',
             '/api/contacts/' . $contact->getId(),
             [
@@ -2112,7 +2112,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals(0, \count($response->medias));
 
         // missing media
-        $this->client->request(
+        static::jsonRequest($this->client,
             'PATCH',
             '/api/contacts/' . $contact->getId(),
             [
@@ -2125,7 +2125,7 @@ class ContactControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(404, $this->client->getResponse());
 
-        $this->client->request('GET', '/api/contacts/' . $contact->getId());
+        static::jsonRequest($this->client, 'GET', '/api/contacts/' . $contact->getId());
         $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(0, \count($response->medias));
     }
@@ -2139,7 +2139,7 @@ class ContactControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        $this->client->request(
+        static::jsonRequest($this->client,
             'POST',
             '/api/contacts',
             [
@@ -2278,7 +2278,7 @@ class ContactControllerTest extends SuluTestCase
         );
         $this->em->flush();
 
-        $this->client->request(
+        static::jsonRequest($this->client,
             'PUT',
             '/api/contacts/' . $contact->getId(),
             [
@@ -2364,7 +2364,7 @@ class ContactControllerTest extends SuluTestCase
         $contact = $this->createContact('Max', 'Mustermann', null, new \DateTime());
         $this->em->flush();
 
-        $this->client->request('GET', '/api/contacts/' . $contact->getId());
+        static::jsonRequest($this->client, 'GET', '/api/contacts/' . $contact->getId());
         $response = \json_decode($this->client->getResponse()->getContent(), true);
         $this->assertNotNull($response['birthday']);
 
@@ -2374,7 +2374,7 @@ class ContactControllerTest extends SuluTestCase
             'birthday' => '',
         ];
 
-        $this->client->request('PUT', '/api/contacts/' . $contact->getId(), $data);
+        static::jsonRequest($this->client, 'PUT', '/api/contacts/' . $contact->getId(), $data);
         $response = \json_decode($this->client->getResponse()->getContent(), true);
         $this->assertNull($response['birthday']);
     }

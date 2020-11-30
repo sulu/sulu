@@ -18,7 +18,7 @@ class AdminControllerTest extends SuluTestCase
     public function testRouteConfigWithTranslation()
     {
         $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/admin/config');
+        static::jsonRequest($client, 'GET', '/admin/config');
 
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = \json_decode($client->getResponse()->getContent());
@@ -40,7 +40,7 @@ class AdminControllerTest extends SuluTestCase
     {
         $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/admin/metadata/form/user_details');
+        static::jsonRequest($client, 'GET', '/admin/metadata/form/user_details');
 
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = \json_decode($client->getResponse()->getContent());
@@ -61,7 +61,7 @@ class AdminControllerTest extends SuluTestCase
     {
         $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/admin/metadata/form/role_details');
+        static::jsonRequest($client, 'GET', '/admin/metadata/form/role_details');
 
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = \json_decode($client->getResponse()->getContent());

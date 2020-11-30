@@ -82,7 +82,7 @@ class KeywordControllerTest extends SuluTestCase
         $this->testPost('keyword1', 'de', $this->category1->getId());
         $this->testPost('keyword2', 'de', $this->category1->getId());
 
-        $this->client->request(
+        static::jsonRequest($this->client,
             'GET',
             '/api/categories/' . $this->category1->getId() . '/keywords?locale=de'
         );
@@ -104,7 +104,7 @@ class KeywordControllerTest extends SuluTestCase
     {
         $keyword = $this->testPost('keyword1', 'de', $this->category1->getId());
 
-        $this->client->request(
+        static::jsonRequest($this->client,
             'GET',
             '/api/categories/' . $this->category1->getId() . '/keywords/' . $keyword['id'] . '?locale=de'
         );
@@ -118,7 +118,7 @@ class KeywordControllerTest extends SuluTestCase
 
     public function testGetNotExisting()
     {
-        $this->client->request(
+        static::jsonRequest($this->client,
             'GET',
             '/api/categories/' . $this->category1->getId() . '/keywords/1?locale=de'
         );
@@ -128,7 +128,7 @@ class KeywordControllerTest extends SuluTestCase
 
     public function testPost($keyword = 'Test', $locale = 'de', $categoryId = null)
     {
-        $this->client->request(
+        static::jsonRequest($this->client,
             'POST',
             '/api/categories/' . ($categoryId ?: $this->category1->getId()) . '/keywords',
             ['locale' => $locale, 'keyword' => $keyword]
@@ -148,7 +148,7 @@ class KeywordControllerTest extends SuluTestCase
     {
         $first = $this->testPost($keyword, $locale);
 
-        $this->client->request(
+        static::jsonRequest($this->client,
             'POST',
             '/api/categories/' . $this->category1->getId() . '/keywords',
             ['locale' => $locale, 'keyword' => $keyword]
@@ -164,7 +164,7 @@ class KeywordControllerTest extends SuluTestCase
 
     public function testPostWithNotExistingCategoryTranslation()
     {
-        $this->client->request(
+        static::jsonRequest($this->client,
             'POST',
             '/api/categories/' . $this->category1->getId() . '/keywords',
             ['locale' => 'it', 'keyword' => 'my-keyword']
@@ -182,7 +182,7 @@ class KeywordControllerTest extends SuluTestCase
     {
         $first = $this->testPost($keyword, $locale);
 
-        $this->client->request(
+        static::jsonRequest($this->client,
             'POST',
             '/api/categories/' . $this->category2->getId() . '/keywords',
             ['locale' => $locale, 'keyword' => $keyword]
@@ -202,7 +202,7 @@ class KeywordControllerTest extends SuluTestCase
     {
         $first = $this->testPost('Test', $locale);
 
-        $this->client->request(
+        static::jsonRequest($this->client,
             'POST',
             '/api/categories/' . $this->category2->getId() . '/keywords',
             ['locale' => $locale, 'keyword' => $keyword]
@@ -221,7 +221,7 @@ class KeywordControllerTest extends SuluTestCase
     {
         $first = $this->testPost('Test', $locale);
 
-        $this->client->request(
+        static::jsonRequest($this->client,
             'PUT',
             '/api/categories/' . $this->category1->getId() . '/keywords/' . $first['id'],
             ['keyword' => $keyword]
@@ -239,7 +239,7 @@ class KeywordControllerTest extends SuluTestCase
     {
         $first = $this->testPost('Test', $locale);
 
-        $this->client->request(
+        static::jsonRequest($this->client,
             'PUT',
             '/api/categories/' . $this->category1->getId() . '/keywords/' . $first['id'] . '?force=overwrite',
             ['keyword' => $keyword]
@@ -257,7 +257,7 @@ class KeywordControllerTest extends SuluTestCase
     {
         $first = $this->testPost('Test', $locale);
 
-        $this->client->request(
+        static::jsonRequest($this->client,
             'PUT',
             '/api/categories/' . $this->category1->getId() . '/keywords/' . $first['id'] . '?force=detach',
             ['keyword' => $keyword]
@@ -280,7 +280,7 @@ class KeywordControllerTest extends SuluTestCase
     {
         $first = $this->testPostExistingOtherCategory('Test', $locale);
 
-        $this->client->request(
+        static::jsonRequest($this->client,
             'PUT',
             '/api/categories/' . $this->category1->getId() . '/keywords/' . $first['id'],
             ['keyword' => $keyword]
@@ -295,7 +295,7 @@ class KeywordControllerTest extends SuluTestCase
     {
         $first = $this->testPostExistingOtherCategory('Test', $locale);
 
-        $this->client->request(
+        static::jsonRequest($this->client,
             'PUT',
             '/api/categories/' . $this->category1->getId() . '/keywords/' . $first['id'] . '?force=overwrite',
             ['keyword' => $keyword]
@@ -313,7 +313,7 @@ class KeywordControllerTest extends SuluTestCase
     {
         $first = $this->testPostExistingOtherCategory('Test', $locale);
 
-        $this->client->request(
+        static::jsonRequest($this->client,
             'PUT',
             '/api/categories/' . $this->category1->getId() . '/keywords/' . $first['id'] . '?force=detach',
             ['keyword' => $keyword]
@@ -336,7 +336,7 @@ class KeywordControllerTest extends SuluTestCase
         $data1 = $this->testPost($keyword1, $locale, $this->category1->getId());
         $data2 = $this->testPost($keyword2, $locale, $this->category2->getId());
 
-        $this->client->request(
+        static::jsonRequest($this->client,
             'PUT',
             '/api/categories/' . $this->category2->getId() . '/keywords/' . $data2['id'],
             ['keyword' => $data1['keyword']]
@@ -352,7 +352,7 @@ class KeywordControllerTest extends SuluTestCase
         $data1 = $this->testPost($keyword1, $locale, $this->category1->getId());
         $data2 = $this->testPost($keyword2, $locale, $this->category2->getId());
 
-        $this->client->request(
+        static::jsonRequest($this->client,
             'PUT',
             '/api/categories/' . $this->category2->getId() . '/keywords/' . $data2['id'] . '?force=merge',
             ['keyword' => $data1['keyword']]
@@ -370,7 +370,7 @@ class KeywordControllerTest extends SuluTestCase
     {
         $first = $this->testPost($keyword, $locale);
 
-        $this->client->request(
+        static::jsonRequest($this->client,
             'DELETE',
             '/api/categories/' . $this->category1->getId() . '/keywords/' . $first['id']
         );
@@ -383,7 +383,7 @@ class KeywordControllerTest extends SuluTestCase
     {
         $first = $this->testPostExistingOtherCategory($keyword, $locale);
 
-        $this->client->request(
+        static::jsonRequest($this->client,
             'DELETE',
             '/api/categories/' . $this->category1->getId() . '/keywords/' . $first['id']
         );
