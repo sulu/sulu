@@ -97,7 +97,7 @@ class MediaStreamControllerTest extends WebsiteTestCase
         $this->assertHttpStatusCode(200, $response);
 
         $this->assertEquals(
-            'attachment; filename=fitness-seasons.jpeg; filename*=utf-8\'\'fitness-seasons.agency--C-%26-C--Rodach%2C-Johannes',
+            'attachment; filename=fitness-seasons.jpg; filename*=utf-8\'\'fitness-seasons.agency--C-%26-C--Rodach%2C-Johannes',
             \str_replace('"', '', $response->headers->get('Content-Disposition'))
         );
     }

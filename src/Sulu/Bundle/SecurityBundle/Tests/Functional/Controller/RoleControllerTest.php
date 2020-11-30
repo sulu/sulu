@@ -292,7 +292,7 @@ class RoleControllerTest extends SuluTestCase
                     ],
                 ],
                 'securityType' => [
-                    'id' => $this->securityType2,
+                    'id' => $this->securityType2->getId(),
                 ],
             ]
         );
