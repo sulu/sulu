@@ -403,7 +403,7 @@ class CollectionControllerTest extends SuluTestCase
             [
                 'locale' => 'en-gb',
                 'parentId' => $collection->getId(),
-                'flat' => true,
+                'flat' => 'true',
             ]
         );
 

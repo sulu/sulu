@@ -96,7 +96,7 @@ class PageControllerFieldsTest extends SuluTestCase
         static::jsonRequest($this->client,
             'GET',
             '/api/pages',
-            ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title', 'exclude-shadows' => true]
+            ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title', 'exclude-shadows' => 'true']
         );
 
         $result = \json_decode($this->client->getResponse()->getContent(), true);
@@ -139,7 +139,7 @@ class PageControllerFieldsTest extends SuluTestCase
         static::jsonRequest($this->client,
             'GET',
             '/api/pages',
-            ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title', 'exclude-ghosts' => true]
+            ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title', 'exclude-ghosts' => 'true']
         );
 
         $result = \json_decode($this->client->getResponse()->getContent(), true);
@@ -182,7 +182,7 @@ class PageControllerFieldsTest extends SuluTestCase
         static::jsonRequest($this->client,
             'GET',
             '/api/pages',
-            ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title', 'exclude-ghosts' => true, 'exclude-shadows' => true]
+            ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title', 'exclude-ghosts' => 'true', 'exclude-shadows' => 'true']
         );
 
         $result = \json_decode($this->client->getResponse()->getContent(), true);
