@@ -87,7 +87,7 @@ class PasteTransformation implements TransformationInterface
     /**
      * Create mask.
      *
-     * @param string|\Imagine\File\LoaderInterface|mixed $maskPath the file path, a LoaderInterface instance, or an object whose string representation is the image path
+     * @param string|array $maskPath The full path to the file or an array of file paths
      * @param int $width
      * @param int $height
      *

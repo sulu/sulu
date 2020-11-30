@@ -595,7 +595,6 @@ class MediaManager implements MediaManagerInterface
                         $media->removeCategories();
 
                         if (\is_array($categoryIds) && !empty($categoryIds)) {
-                            /** @var CategoryRepositoryInterface $categories */
                             $categories = $this->categoryRepository->findCategoriesByIds($categoryIds);
 
                             foreach ($categories as $category) {

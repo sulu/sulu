@@ -547,7 +547,7 @@ class MediaController extends AbstractMediaController implements
     }
 
     /**
-     * @param int $id
+     * @param int|null $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */

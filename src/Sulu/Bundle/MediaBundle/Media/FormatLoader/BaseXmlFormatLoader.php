@@ -154,7 +154,7 @@ abstract class BaseXmlFormatLoader extends FileLoader
     /**
      * Tries to load the DOM Document of a given image formats xml.
      *
-     * @param string $file string The path to the xml file
+     * @param string $file The path to the xml file
      *
      * @return \DOMDocument
      *
