@@ -249,16 +249,25 @@ abstract class ItemMetadata
      *
      * @param string $name
      */
-    public function getParameter($name)
+    public function getParameter($name, bool $nullIfNotExists = false)
     {
-        if (!isset($this->parameters[$name])) {
+        $parameter = \array_values(
+            \array_filter(
+                $this->parameters,
+                function(array $parameter) use ($name) {
+                    return $parameter['name'] === $name;
+                }
+            )
+        )[0] ?? null;
+
+        if (null === $parameter && !$nullIfNotExists) {
             throw new \InvalidArgumentException(\sprintf(
                 'Unknown parameter "%s", known parameters: "%s"',
-                $name, \implode('", "', \array_keys($this->parameters))
+                $name, \implode('", "', \array_column($this->parameters, 'name'))
             ));
         }
 
-        return $this->parameters[$name];
+        return $parameter;
     }
 
     /**

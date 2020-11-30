@@ -76,8 +76,7 @@ class SelectionPropertyMetadataMapperTest extends TestCase
     {
         $propertyMetadata = new PropertyMetadata();
         $propertyMetadata->setName('property-name');
-        $propertyMetadata->setMinOccurs(3);
-        $propertyMetadata->setMaxOccurs(5);
+        $propertyMetadata->setParameters(['min' => 3, 'max' => 5]);
 
         $jsonSchema = $this->selectionPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
 
@@ -102,8 +101,7 @@ class SelectionPropertyMetadataMapperTest extends TestCase
         $propertyMetadata = new PropertyMetadata();
         $propertyMetadata->setName('property-name');
         $propertyMetadata->setRequired(true);
-        $propertyMetadata->setMinOccurs(0);
-        $propertyMetadata->setMaxOccurs(-2);
+        $propertyMetadata->setParameters(['min' => 0, 'max' => -2]);
 
         $jsonSchema = $this->selectionPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
 
