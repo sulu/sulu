@@ -56,7 +56,7 @@ class PreviewController
 
         return new JsonResponse(
             [
-                'token' => $this->preview->start($provider, $id, $locale, $this->getUserId()),
+                'token' => $this->preview->start($provider, $id, $this->getUserId()),
             ]
         );
     }
@@ -71,16 +71,18 @@ class PreviewController
         $targetGroup = $this->getRequestParameter($request, 'targetGroup', false, null);
         $segment = $this->getRequestParameter($request, 'segment', false, null);
 
+        $options = [
+            'targetGroupId' => $targetGroup,
+            'segmentKey' => $segment,
+            'webspaceKey' => $webspace,
+            'locale' => $locale,
+        ];
+
         if (!$this->preview->exists($token)) {
-            $token = $this->preview->start($provider, $id, $locale, $this->getUserId());
+            $token = $this->preview->start($provider, $id, $this->getUserId(), $options);
         }
 
-        $content = $this->preview->render(
-            $token,
-            $webspace,
-            $locale,
-            ['targetGroupId' => $targetGroup, 'segmentKey' => $segment]
-        );
+        $content = $this->preview->render($token, $options);
 
         $this->disableProfiler();
 
@@ -98,15 +100,21 @@ class PreviewController
         $targetGroup = $this->getRequestParameter($request, 'targetGroup', false, null);
         $segment = $this->getRequestParameter($request, 'segment', false, null);
 
+        $options = [
+            'targetGroupId' => $targetGroup,
+            'segmentKey' => $segment,
+            'webspaceKey' => $webspace,
+            'locale' => $locale,
+        ];
+
         if (!$this->preview->exists($token)) {
-            $token = $this->preview->start($provider, $id, $locale, $this->getUserId());
+            $token = $this->preview->start($provider, $id, $this->getUserId(), $options);
         }
 
         $content = $this->preview->update(
             $token,
-            $webspace,
             $data,
-            ['targetGroupId' => $targetGroup, 'segmentKey' => $segment]
+            $options
         );
 
         return new JsonResponse(['content' => $content]);
@@ -123,15 +131,21 @@ class PreviewController
         $targetGroup = $this->getRequestParameter($request, 'targetGroup', false, null);
         $segment = $this->getRequestParameter($request, 'segment', false, null);
 
+        $options = [
+            'targetGroupId' => $targetGroup,
+            'segmentKey' => $segment,
+            'webspaceKey' => $webspace,
+            'locale' => $locale,
+        ];
+
         if (!$this->preview->exists($token)) {
-            $token = $this->preview->start($provider, $id, $locale, $this->getUserId());
+            $token = $this->preview->start($provider, $id, $this->getUserId(), $options);
         }
 
         $content = $this->preview->updateContext(
             $token,
-            $webspace,
             $context,
-            ['targetGroupId' => $targetGroup, 'segmentKey' => $segment]
+            $options
         );
 
         return new JsonResponse(['content' => $content]);

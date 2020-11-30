@@ -19,11 +19,6 @@ class PreviewCacheItem
     private $id;
 
     /**
-     * @var string
-     */
-    private $locale;
-
-    /**
      * @var int
      */
     private $userId;
@@ -43,10 +38,9 @@ class PreviewCacheItem
      */
     private $html;
 
-    public function __construct(string $id, string $locale, int $userId, string $providerKey, $object)
+    public function __construct(string $id, int $userId, string $providerKey, $object)
     {
         $this->id = $id;
-        $this->locale = $locale;
         $this->userId = $userId;
         $this->providerKey = $providerKey;
         $this->object = $object;
@@ -55,11 +49,6 @@ class PreviewCacheItem
     public function getId(): string
     {
         return $this->id;
-    }
-
-    public function getLocale(): string
-    {
-        return $this->locale;
     }
 
     public function getUserId(): int
@@ -94,6 +83,6 @@ class PreviewCacheItem
 
     public function getToken(): string
     {
-        return \md5(\sprintf('%s.%s.%s.%s', $this->providerKey, $this->id, $this->locale, $this->userId));
+        return \md5(\sprintf('%s.%s.%s', $this->providerKey, $this->id, $this->userId));
     }
 }

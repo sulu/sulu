@@ -92,11 +92,10 @@ class PreviewTest extends TestCase
 
         $this->provider->serialize($this->object->reveal())->willReturn($dataJson);
 
-        $token = $this->preview->start($this->providerKey, 1, $this->locale, 1, $data);
+        $token = $this->preview->start($this->providerKey, 1, 1, $data, ['locale' => $this->locale]);
 
         $expectedData = [
             'id' => '1',
-            'locale' => $this->locale,
             'providerKey' => $this->providerKey,
             'object' => $dataJson,
             'objectClass' => \get_class($this->object->reveal()),
@@ -127,11 +126,10 @@ class PreviewTest extends TestCase
 
         $this->provider->serialize($this->object->reveal())->willReturn($dataJson);
 
-        $token = $this->preview->start($this->providerKey, 1, $this->locale, 1);
+        $token = $this->preview->start($this->providerKey, 1, 1, [], ['locale' => $this->locale]);
 
         $expectedData = [
             'id' => '1',
-            'locale' => $this->locale,
             'providerKey' => $this->providerKey,
             'object' => $dataJson,
             'objectClass' => \get_class($this->object->reveal()),
@@ -156,7 +154,7 @@ class PreviewTest extends TestCase
     {
         $this->expectException(ProviderNotFoundException::class);
 
-        $this->preview->start('xxx', 1, $this->locale, 1);
+        $this->preview->start('xxx', 1, 1, ['locale' => $this->locale]);
     }
 
     public function testStop()
@@ -196,10 +194,9 @@ class PreviewTest extends TestCase
         $data = ['title' => 'Sulu'];
         $dataJson = \json_encode($data);
 
-        $token = \md5(\sprintf('%s.%s.%s.%s', $this->providerKey, 1, $this->locale, 1));
+        $token = \md5(\sprintf('%s.%s.%s', $this->providerKey, 1, 1));
         $cacheData = [
             'id' => '1',
-            'locale' => $this->locale,
             'providerKey' => $this->providerKey,
             'object' => \json_encode(['title' => 'test']),
             'objectClass' => \get_class($this->object->reveal()),
@@ -208,7 +205,6 @@ class PreviewTest extends TestCase
         ];
         $expectedData = [
             'id' => '1',
-            'locale' => $this->locale,
             'providerKey' => $this->providerKey,
             'object' => $dataJson,
             'objectClass' => \get_class($this->object->reveal()),
@@ -226,10 +222,8 @@ class PreviewTest extends TestCase
         $this->renderer->render(
             $this->object->reveal(),
             1,
-            $this->webspaceKey,
-            $this->locale,
             true,
-            []
+            ['webspaceKey' => $this->webspaceKey, 'locale' => $this->locale]
         )->willReturn('<h1 property="title">SULU</h1>');
 
         $this->cache->save(
@@ -244,7 +238,11 @@ class PreviewTest extends TestCase
             $this->cacheLifeTime
         )->shouldBeCalled();
 
-        $result = $this->preview->update($token, $this->webspaceKey, $data);
+        $result = $this->preview->update(
+            $token,
+            $data,
+            ['webspaceKey' => $this->webspaceKey, 'locale' => $this->locale]
+        );
 
         $this->assertEquals(
             '<html><body><div id="content"><h1 property="title">SULU</h1></div></body></html>',
@@ -257,10 +255,9 @@ class PreviewTest extends TestCase
         $data = ['title' => 'Sulu'];
         $dataJson = \json_encode($data);
 
-        $token = \md5(\sprintf('%s.%s.%s.%s', $this->providerKey, 1, $this->locale, 1));
+        $token = \md5(\sprintf('%s.%s.%s', $this->providerKey, 1, 1));
         $cacheData = [
             'id' => '1',
-            'locale' => $this->locale,
             'providerKey' => $this->providerKey,
             'object' => $dataJson,
             'objectClass' => \get_class($this->object->reveal()),
@@ -278,15 +275,17 @@ class PreviewTest extends TestCase
         $this->renderer->render(
             $this->object->reveal(),
             1,
-            $this->webspaceKey,
-            $this->locale,
             true,
-            []
+            ['webspaceKey' => $this->webspaceKey, 'locale' => $this->locale]
         )->willReturn('<h1 property="title">SULU</h1>');
 
         $this->cache->save(Argument::cetera())->shouldNotBeCalled();
 
-        $result = $this->preview->update($token, $this->webspaceKey, []);
+        $result = $this->preview->update(
+            $token,
+            [],
+            ['webspaceKey' => $this->webspaceKey, 'locale' => $this->locale]
+        );
 
         $this->assertEquals(
             '<html><body><div id="content"><h1 property="title">SULU</h1></div></body></html>',
@@ -307,7 +306,7 @@ class PreviewTest extends TestCase
         $this->provider->deserialize(Argument::cetera())->shouldNotBeCalled();
         $this->renderer->render(Argument::cetera())->shouldNotBeCalled();
 
-        $this->preview->update($token, $this->webspaceKey, ['title' => 'SULU']);
+        $this->preview->update($token, ['title' => 'SULU'], ['webspaceKey' => $this->webspaceKey]);
     }
 
     public function testUpdateWithOptions()
@@ -315,10 +314,9 @@ class PreviewTest extends TestCase
         $data = ['title' => 'Sulu'];
         $dataJson = \json_encode($data);
 
-        $token = \md5(\sprintf('%s.%s.%s.%s', $this->providerKey, 1, $this->locale, 1));
+        $token = \md5(\sprintf('%s.%s.%s', $this->providerKey, 1, 1));
         $cacheData = [
             'id' => '1',
-            'locale' => $this->locale,
             'providerKey' => $this->providerKey,
             'object' => $dataJson,
             'objectClass' => \get_class($this->object->reveal()),
@@ -336,19 +334,26 @@ class PreviewTest extends TestCase
         $this->renderer->render(
             $this->object->reveal(),
             1,
-            $this->webspaceKey,
-            $this->locale,
             true,
-            ['targetGroupId' => null, 'segmentKey' => 'w']
+            [
+                'targetGroupId' => null,
+                'segmentKey' => 'w',
+                'webspaceKey' => $this->webspaceKey,
+                'locale' => $this->locale,
+            ]
         )->willReturn('<h1 property="title">SULU</h1>');
 
         $this->cache->save(Argument::cetera())->shouldNotBeCalled();
 
         $result = $this->preview->update(
             $token,
-            $this->webspaceKey,
             [],
-            ['targetGroupId' => null, 'segmentKey' => 'w']
+            [
+                'targetGroupId' => null,
+                'segmentKey' => 'w',
+                'webspaceKey' => $this->webspaceKey,
+                'locale' => $this->locale,
+            ]
         );
 
         $this->assertEquals(
@@ -364,10 +369,9 @@ class PreviewTest extends TestCase
 
         $context = ['template' => 'expert'];
 
-        $token = \md5(\sprintf('%s.%s.%s.%s', $this->providerKey, 1, $this->locale, 1));
+        $token = \md5(\sprintf('%s.%s.%s', $this->providerKey, 1, 1));
         $cacheData = [
             'id' => '1',
-            'locale' => $this->locale,
             'providerKey' => $this->providerKey,
             'object' => $dataJson,
             'objectClass' => \get_class($this->object->reveal()),
@@ -378,7 +382,6 @@ class PreviewTest extends TestCase
         $newObject = $this->prophesize(\stdClass::class);
         $expectedData = [
             'id' => '1',
-            'locale' => $this->locale,
             'providerKey' => $this->providerKey,
             'object' => \json_encode(\array_merge($data, $context)),
             'objectClass' => \get_class($newObject->reveal()),
@@ -397,10 +400,8 @@ class PreviewTest extends TestCase
         $this->renderer->render(
             $newObject->reveal(),
             1,
-            $this->webspaceKey,
-            $this->locale,
             false,
-            []
+            ['webspaceKey' => $this->webspaceKey, 'locale' => $this->locale]
         )->willReturn(
             '<html><body><div id="content"><!-- CONTENT-REPLACER --><h1 property="title">SULU</h1><!-- CONTENT-REPLACER --></div></body></html>'
         );
@@ -408,10 +409,8 @@ class PreviewTest extends TestCase
         $this->renderer->render(
             $newObject->reveal(),
             1,
-            $this->webspaceKey,
-            $this->locale,
             true,
-            []
+            ['webspaceKey' => $this->webspaceKey, 'locale' => $this->locale]
         )->willReturn('<h1 property="title">SULU</h1>');
 
         $this->cache->save(
@@ -426,7 +425,11 @@ class PreviewTest extends TestCase
             $this->cacheLifeTime
         )->shouldBeCalled();
 
-        $result = $this->preview->updateContext($token, $this->webspaceKey, $context);
+        $result = $this->preview->updateContext(
+            $token,
+            $context,
+            ['webspaceKey' => $this->webspaceKey, 'locale' => $this->locale]
+        );
 
         $this->assertEquals(
             '<html><body><div id="content"><h1 property="title">SULU</h1></div></body></html>',
@@ -447,7 +450,6 @@ class PreviewTest extends TestCase
         $token = \md5(\sprintf('%s.%s.%s.%s', $this->providerKey, 1, $this->locale, 1));
         $cacheData = [
             'id' => '1',
-            'locale' => $this->locale,
             'providerKey' => $this->providerKey,
             'object' => $dataJson,
             'objectClass' => \get_class($this->object->reveal()),
@@ -466,13 +468,15 @@ class PreviewTest extends TestCase
         $this->renderer->render(
             $newObject->reveal(),
             1,
-            $this->webspaceKey,
-            $this->locale,
             false,
-            []
+            ['webspaceKey' => $this->webspaceKey, 'locale' => $this->locale]
         )->willReturn('<html><body><div id="content"><h1 property="title">SULU</h1></div></body></html>');
 
-        $this->preview->updateContext($token, $this->webspaceKey, $context);
+        $this->preview->updateContext(
+            $token,
+            $context,
+            ['webspaceKey' => $this->webspaceKey, 'locale' => $this->locale]
+        );
     }
 
     public function testUpdateContextNoContext()
@@ -482,10 +486,9 @@ class PreviewTest extends TestCase
 
         $context = [];
 
-        $token = \md5(\sprintf('%s.%s.%s.%s', $this->providerKey, 1, $this->locale, 1));
+        $token = \md5(\sprintf('%s.%s.%s', $this->providerKey, 1, 1));
         $cacheData = [
             'id' => '1',
-            'locale' => $this->locale,
             'providerKey' => $this->providerKey,
             'object' => $dataJson,
             'objectClass' => \get_class($this->object->reveal()),
@@ -504,17 +507,19 @@ class PreviewTest extends TestCase
         $this->renderer->render(
             $this->object->reveal(),
             1,
-            $this->webspaceKey,
-            $this->locale,
             false,
-            []
+            ['webspaceKey' => $this->webspaceKey, 'locale' => $this->locale]
         )->willReturn(
             '<html><body><div id="content"><h1 property="title">SULU</h1></div></body></html>'
         );
 
         $this->cache->save(Argument::cetera())->shouldNotBeCalled();
 
-        $result = $this->preview->updateContext($token, $this->webspaceKey, $context, []);
+        $result = $this->preview->updateContext(
+            $token,
+            $context,
+            ['webspaceKey' => $this->webspaceKey, 'locale' => $this->locale]
+        );
 
         $this->assertEquals(
             '<html><body><div id="content"><h1 property="title">SULU</h1></div></body></html>',
@@ -529,10 +534,9 @@ class PreviewTest extends TestCase
 
         $context = ['template' => 'expert'];
 
-        $token = \md5(\sprintf('%s.%s.%s.%s', $this->providerKey, 1, $this->locale, 1));
+        $token = \md5(\sprintf('%s.%s.%s', $this->providerKey, 1, 1));
         $cacheData = [
             'id' => '1',
-            'locale' => $this->locale,
             'providerKey' => $this->providerKey,
             'object' => $dataJson,
             'objectClass' => \get_class($this->object->reveal()),
@@ -543,7 +547,6 @@ class PreviewTest extends TestCase
         $newObject = $this->prophesize(\stdClass::class);
         $expectedData = [
             'id' => '1',
-            'locale' => $this->locale,
             'providerKey' => $this->providerKey,
             'object' => \json_encode(\array_merge($data, $context)),
             'objectClass' => \get_class($newObject->reveal()),
@@ -562,10 +565,8 @@ class PreviewTest extends TestCase
         $this->renderer->render(
             $newObject->reveal(),
             1,
-            $this->webspaceKey,
-            $this->locale,
             false,
-            ['targetGroupId' => 2, 'segmentKey' => null]
+            ['targetGroupId' => 2, 'segmentKey' => null, 'webspaceKey' => $this->webspaceKey, 'locale' => $this->locale]
         )->willReturn(
             '<html><body><div id="content"><!-- CONTENT-REPLACER --><h1 property="title">SULU</h1><!-- CONTENT-REPLACER --></div></body></html>'
         );
@@ -573,10 +574,8 @@ class PreviewTest extends TestCase
         $this->renderer->render(
             $newObject->reveal(),
             1,
-            $this->webspaceKey,
-            $this->locale,
             true,
-            ['targetGroupId' => 2, 'segmentKey' => null]
+            ['targetGroupId' => 2, 'segmentKey' => null, 'webspaceKey' => $this->webspaceKey, 'locale' => $this->locale]
         )->willReturn('<h1 property="title">SULU</h1>');
 
         $this->cache->save(
@@ -593,9 +592,8 @@ class PreviewTest extends TestCase
 
         $result = $this->preview->updateContext(
             $token,
-            $this->webspaceKey,
             $context,
-            ['targetGroupId' => 2, 'segmentKey' => null]
+            ['targetGroupId' => 2, 'segmentKey' => null, 'webspaceKey' => $this->webspaceKey, 'locale' => $this->locale]
         );
 
         $this->assertEquals(
@@ -609,10 +607,9 @@ class PreviewTest extends TestCase
         $data = ['title' => 'Sulu'];
         $dataJson = \json_encode($data);
 
-        $token = \md5(\sprintf('%s.%s.%s.%s', $this->providerKey, 1, $this->locale, 1));
+        $token = \md5(\sprintf('%s.%s.%s', $this->providerKey, 1, 1));
         $cacheData = [
             'id' => '1',
-            'locale' => $this->locale,
             'providerKey' => $this->providerKey,
             'object' => $dataJson,
             'objectClass' => \get_class($this->object->reveal()),
@@ -621,7 +618,6 @@ class PreviewTest extends TestCase
         ];
         $expectedData = [
             'id' => '1',
-            'locale' => $this->locale,
             'providerKey' => $this->providerKey,
             'object' => $dataJson,
             'objectClass' => \get_class($this->object->reveal()),
@@ -639,19 +635,15 @@ class PreviewTest extends TestCase
         $this->renderer->render(
             $this->object->reveal(),
             1,
-            $this->webspaceKey,
-            $this->locale,
             false,
-            []
+            ['webspaceKey' => $this->webspaceKey, 'locale' => $this->locale]
         )->willReturn('<html><body><div id="content"><!-- CONTENT-REPLACER --><h1 property="title">SULU</h1><!-- CONTENT-REPLACER --></div></body></html>');
 
         $this->renderer->render(
             $this->object->reveal(),
             1,
-            $this->webspaceKey,
-            $this->locale,
             true,
-            []
+            ['webspaceKey' => $this->webspaceKey, 'locale' => $this->locale]
         )->shouldBeCalled()->willReturn('<h1 property="title">SULU</h1>');
 
         $this->cache->save(
@@ -666,7 +658,7 @@ class PreviewTest extends TestCase
             $this->cacheLifeTime
         )->shouldBeCalled();
 
-        $result = $this->preview->render($token, $this->webspaceKey, $this->locale);
+        $result = $this->preview->render($token, ['webspaceKey' => $this->webspaceKey, 'locale' => $this->locale]);
 
         $this->assertEquals(
             '<html><body><div id="content"><h1 property="title">SULU</h1></div></body></html>',
@@ -679,10 +671,9 @@ class PreviewTest extends TestCase
         $data = ['title' => 'Sulu'];
         $dataJson = \json_encode($data);
 
-        $token = \md5(\sprintf('%s.%s.%s.%s', $this->providerKey, 1, $this->locale, 1));
+        $token = \md5(\sprintf('%s.%s.%s', $this->providerKey, 1, 1));
         $cacheData = [
             'id' => '1',
-            'locale' => $this->locale,
             'providerKey' => $this->providerKey,
             'object' => $dataJson,
             'objectClass' => \get_class($this->object->reveal()),
@@ -691,7 +682,6 @@ class PreviewTest extends TestCase
         ];
         $expectedData = [
             'id' => '1',
-            'locale' => $this->locale,
             'providerKey' => $this->providerKey,
             'object' => $dataJson,
             'objectClass' => \get_class($this->object->reveal()),
@@ -709,19 +699,25 @@ class PreviewTest extends TestCase
         $this->renderer->render(
             $this->object->reveal(),
             1,
-            $this->webspaceKey,
-            $this->locale,
             false,
-            ['targetGroupId' => null, 'segmentKey' => 's']
+            [
+                'targetGroupId' => null,
+                'segmentKey' => 's',
+                'webspaceKey' => $this->webspaceKey,
+                'locale' => $this->locale,
+            ]
         )->willReturn('<html><body><div id="content"><!-- CONTENT-REPLACER --><h1 property="title">SULU</h1><!-- CONTENT-REPLACER --></div></body></html>');
 
         $this->renderer->render(
             $this->object->reveal(),
             1,
-            $this->webspaceKey,
-            $this->locale,
             true,
-            ['targetGroupId' => null, 'segmentKey' => 's']
+            [
+                'targetGroupId' => null,
+                'segmentKey' => 's',
+                'webspaceKey' => $this->webspaceKey,
+                'locale' => $this->locale,
+            ]
         )
             ->willReturn('<h1 property="title">SULU</h1>');
 
@@ -739,9 +735,12 @@ class PreviewTest extends TestCase
 
         $result = $this->preview->render(
             $token,
-            $this->webspaceKey,
-            $this->locale,
-            ['targetGroupId' => null, 'segmentKey' => 's']
+            [
+                'targetGroupId' => null,
+                'segmentKey' => 's',
+                'webspaceKey' => $this->webspaceKey,
+                'locale' => $this->locale,
+            ]
         );
 
         $this->assertEquals(

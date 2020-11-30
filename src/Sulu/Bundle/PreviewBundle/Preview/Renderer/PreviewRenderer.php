@@ -112,11 +112,12 @@ class PreviewRenderer implements PreviewRendererInterface
     public function render(
         $object,
         $id,
-        $webspaceKey,
-        $locale,
         $partial = false,
         $options = []
     ) {
+        $webspaceKey = $options['webspaceKey'];
+        $locale = $options['locale'];
+
         if (!$this->routeDefaultsProvider->supports(\get_class($object))) {
             throw new RouteDefaultsProviderNotFoundException($object, $id, $webspaceKey, $locale);
         }

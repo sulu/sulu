@@ -57,12 +57,13 @@ class Preview implements PreviewInterface
         $this->cacheLifeTime = $cacheLifeTime;
     }
 
-    public function start(string $providerKey, string $id, string $locale, int $userId, array $data = []): string
+    public function start(string $providerKey, string $id, int $userId, array $data = [], array $options = []): string
     {
+        $locale = $options['locale'] ?? null;
         $provider = $this->getProvider($providerKey);
         $object = $provider->getObject($id, $locale);
 
-        $cacheItem = new PreviewCacheItem($id, $locale, $userId, $providerKey, $object);
+        $cacheItem = new PreviewCacheItem($id, $userId, $providerKey, $object);
         if (!empty($data)) {
             $provider->setValues($object, $locale, $data);
         }
@@ -88,27 +89,27 @@ class Preview implements PreviewInterface
 
     public function update(
         string $token,
-        string $webspaceKey,
         array $data,
         array $options = []
     ): string {
+        $locale = $options['locale'] ?? null;
         $cacheItem = $this->fetch($token);
 
         $provider = $this->getProvider($cacheItem->getProviderKey());
         if (!empty($data)) {
-            $provider->setValues($cacheItem->getObject(), $cacheItem->getLocale(), $data);
+            $provider->setValues($cacheItem->getObject(), $locale, $data);
             $this->save($cacheItem);
         }
 
-        return $this->renderPartial($cacheItem, $webspaceKey, $options);
+        return $this->renderPartial($cacheItem, $options);
     }
 
     public function updateContext(
         string $token,
-        string $webspaceKey,
         array $context,
         array $options = []
     ): string {
+        $locale = $options['locale'] ?? null;
         $cacheItem = $this->fetch($token);
 
         $provider = $this->getProvider($cacheItem->getProviderKey());
@@ -116,20 +117,16 @@ class Preview implements PreviewInterface
             return $this->renderer->render(
                 $cacheItem->getObject(),
                 $cacheItem->getId(),
-                $webspaceKey,
-                $cacheItem->getLocale(),
                 false,
                 $options
             );
         }
 
-        $cacheItem->setObject($provider->setContext($cacheItem->getObject(), $cacheItem->getLocale(), $context));
+        $cacheItem->setObject($provider->setContext($cacheItem->getObject(), $locale, $context));
 
         $html = $this->renderer->render(
             $cacheItem->getObject(),
             $cacheItem->getId(),
-            $webspaceKey,
-            $cacheItem->getLocale(),
             false,
             $options
         );
@@ -137,13 +134,11 @@ class Preview implements PreviewInterface
         $cacheItem->setHtml($this->removeContent($html));
         $this->save($cacheItem);
 
-        return $this->renderPartial($cacheItem, $webspaceKey, $options);
+        return $this->renderPartial($cacheItem, $options);
     }
 
     public function render(
         string $token,
-        string $webspaceKey,
-        string $locale,
         array $options = []
     ): string {
         $cacheItem = $this->fetch($token);
@@ -151,8 +146,6 @@ class Preview implements PreviewInterface
         $html = $this->renderer->render(
             $cacheItem->getObject(),
             $cacheItem->getId(),
-            $webspaceKey,
-            $cacheItem->getLocale(),
             false,
             $options
         );
@@ -160,19 +153,16 @@ class Preview implements PreviewInterface
         $cacheItem->setHtml($this->removeContent($html));
         $this->save($cacheItem);
 
-        return $this->renderPartial($cacheItem, $webspaceKey, $options);
+        return $this->renderPartial($cacheItem, $options);
     }
 
     protected function renderPartial(
         PreviewCacheItem $cacheItem,
-        string $webspaceKey,
         array $options = []
     ): string {
         $partialHtml = $this->renderer->render(
             $cacheItem->getObject(),
             $cacheItem->getId(),
-            $webspaceKey,
-            $cacheItem->getLocale(),
             true,
             $options
         );
@@ -200,7 +190,6 @@ class Preview implements PreviewInterface
     {
         $data = [
             'id' => $item->getId(),
-            'locale' => $item->getLocale(),
             'userId' => $item->getUserId(),
             'providerKey' => $item->getProviderKey(),
             'html' => $item->getHtml(),
@@ -222,7 +211,6 @@ class Preview implements PreviewInterface
 
         $cacheItem = new PreviewCacheItem(
             $data['id'],
-            $data['locale'],
             $data['userId'],
             $data['providerKey'],
             $provider->deserialize($data['object'], $data['objectClass'])

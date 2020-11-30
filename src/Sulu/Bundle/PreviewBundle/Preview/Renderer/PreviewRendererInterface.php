@@ -20,8 +20,6 @@ interface PreviewRendererInterface
      * Renders object in given webspace and locale.
      *
      * @param string $id
-     * @param string $webspaceKey
-     * @param string $locale
      * @param bool $partial
      *
      * @return string
@@ -29,8 +27,6 @@ interface PreviewRendererInterface
     public function render(
         $object,
         $id,
-        $webspaceKey,
-        $locale,
         $partial = false,
         $options = []
     );
