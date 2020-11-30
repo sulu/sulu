@@ -254,7 +254,11 @@ abstract class ItemMetadata
         $parameter = $this->parameters[$name] ?? \array_values(
             \array_filter(
                 $this->parameters,
-                function(array $parameter) use ($name) {
+                function($parameter) use ($name) {
+                    if (!\is_array($parameter)) {
+                        return false;
+                    }
+
                     return $parameter['name'] === $name;
                 }
             )
