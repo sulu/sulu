@@ -645,43 +645,6 @@ class MediaSelectionContentTypeTest extends TestCase
         ], $jsonSchema);
     }
 
-    public function testMapPropertyMetadataMinAndMaxWithoutParams(): void
-    {
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
-
-        $jsonSchema = $this->mediaSelection->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
-
-        $this->assertEquals([
-            'name' => 'property-name',
-            'anyOf' => [
-                $this->getNullSchema(),
-                [
-                    'type' => 'object',
-                    'properties' => [
-                        'ids' => [
-                            'anyOf' => [
-                                $this->getEmptyArraySchema(),
-                                [
-                                    'type' => 'array',
-                                    'items' => [
-                                        'type' => 'number',
-                                    ],
-                                    'uniqueItems' => true,
-                                ],
-                            ],
-                            'name' => 'ids',
-                        ],
-                        'displayOption' => [
-                            'type' => 'string',
-                            'name' => 'displayOption',
-                        ],
-                    ],
-                ],
-            ],
-        ], $jsonSchema);
-    }
-
     public function testMapPropertyMetadataMinAndMaxWithIntegerishValues(): void
     {
         $propertyMetadata = new PropertyMetadata();

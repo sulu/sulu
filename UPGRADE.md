@@ -17,6 +17,10 @@ The metadata classes in the `Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata` na
 
 * Various new metadata classes (like `ObjectMetadata`, `StringMetadata`, `NumberMetadata`, ...) have been introduced to allow better schema definitions of a property.
 
+### The constructor of the `TextLine` content type requires a new `$propertyMetadataMinMaxValueResolver` argument for full functionality
+
+Without this service, `min_characters` and `max_characters` parameters of a `text_line` property will not work.
+
 ### The constructor of the `TeaserContentType` requires a new `$propertyMetadataMinMaxValueResolver` argument for full functionality
 
 Without this service, `min` and `max` parameters of a `teaser_selection` property will not work.

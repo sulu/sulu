@@ -186,32 +186,6 @@ class SelectionPropertyMetadataMapperTest extends TestCase
         ], $jsonSchema);
     }
 
-    public function testMapPropertyMetadataMinAndMaxWithoutParams(): void
-    {
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
-
-        $jsonSchema = $this->selectionPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
-
-        $this->assertEquals([
-            'name' => 'property-name',
-            'anyOf' => [
-                $this->getNullSchema(),
-                $this->getEmptyArraySchema(),
-                [
-                    'type' => 'array',
-                    'items' => [
-                        'anyOf' => [
-                            ['type' => 'string'],
-                            ['type' => 'number'],
-                        ],
-                    ],
-                    'uniqueItems' => true,
-                ],
-            ],
-        ], $jsonSchema);
-    }
-
     public function testMapPropertyMetadataMinAndMaxWithIntegerishValues(): void
     {
         $propertyMetadata = new PropertyMetadata();
