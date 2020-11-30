@@ -350,7 +350,7 @@ class CollectionControllerTest extends SuluTestCase
             [
                 'locale' => 'en-gb',
                 'parentId' => 'root',
-                'flat' => true,
+                'flat' => 'true',
             ]
         );
 
@@ -372,8 +372,8 @@ class CollectionControllerTest extends SuluTestCase
             [
                 'locale' => 'en-gb',
                 'parentId' => 'root',
-                'flat' => true,
-                'includeRoot' => true,
+                'flat' => 'true',
+                'includeRoot' => 'true',
             ]
         );
 
