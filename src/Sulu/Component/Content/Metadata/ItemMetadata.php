@@ -247,31 +247,25 @@ abstract class ItemMetadata
     /**
      * Return the parameter with the given name.
      *
-     * @param string $name
+     * @return null|mixed
      */
-    public function getParameter($name, bool $nullIfNotExists = false)
+    public function getParameter(string $name)
     {
-        $matchingParameters = \array_values(
-            \array_filter(
-                $this->parameters,
-                function($parameter) use ($name) {
-                    if (!\is_array($parameter)) {
-                        return false;
-                    }
+        foreach ($this->parameters as $parameter) {
+            if (!\is_array($parameter)) {
+                continue;
+            }
 
-                    return $parameter['name'] === $name;
-                }
-            )
-        );
+            if (!isset($parameter['name'])) {
+                continue;
+            }
 
-        if (!isset($this->parameters[$name]) && empty($matchingParameters) && !$nullIfNotExists) {
-            throw new \InvalidArgumentException(\sprintf(
-                'Unknown parameter "%s", known parameters: "%s"',
-                $name, \implode('", "', \array_keys($this->parameters))
-            ));
+            if ($parameter['name'] === $name) {
+                return $parameter;
+            }
         }
 
-        return $this->parameters[$name] ?? $matchingParameters[0] ?? null;
+        return null;
     }
 
     /**

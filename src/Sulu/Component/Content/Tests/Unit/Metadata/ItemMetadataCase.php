@@ -11,8 +11,14 @@
 
 namespace Sulu\Component\Content\Tests\Unit\Metadata;
 
-abstract class ItemMetadataCase extends \PHPUnit\Framework\TestCase
+use PHPUnit\Framework\TestCase;
+use Sulu\Component\Content\Metadata\ItemMetadata;
+
+abstract class ItemMetadataCase extends TestCase
 {
+    /**
+     * @return ItemMetadata
+     */
     abstract public function getMetadata();
 
     public function testGetTagNotExist()
@@ -48,19 +54,17 @@ abstract class ItemMetadataCase extends \PHPUnit\Framework\TestCase
     {
         $metadata = $this->getMetadata();
         $metadata->setParameters([
-            'param1' => 'param',
+            ['name' => 'param1', 'value' => 'param'],
         ]);
-        $this->assertEquals('param', $metadata->getParameter('param1'));
+        $this->assertEquals('param', $metadata->getParameter('param1')['value']);
     }
 
     public function testGetParametersInvalid()
     {
-        $this->expectExceptionMessage('Unknown parameter "param5", known parameters: "param1"');
-        $this->expectException(\InvalidArgumentException::class);
         $metadata = $this->getMetadata();
         $metadata->setParameters([
-            'param1' => 'param',
+            ['name' => 'param1', 'value' => 'param'],
         ]);
-        $metadata->getParameter('param5');
+        $this->assertNull($metadata->getParameter('param5'));
     }
 }
