@@ -24,6 +24,8 @@ trait JsonRequestTrait
     {
         $content = null;
 
+        // GET parameters are still used as query parameters
+        // for all other Methods like POST, PUT, ... the request parameters are converted into a json object
         if ('GET' !== $method) {
             // JSON_THROW_ON_ERROR requires at least php 7.3
             $content = \json_encode($parameters, \defined('JSON_THROW_ON_ERROR') ? \JSON_THROW_ON_ERROR : 0);
