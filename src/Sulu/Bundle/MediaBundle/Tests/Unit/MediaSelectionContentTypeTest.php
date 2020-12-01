@@ -439,7 +439,6 @@ class MediaSelectionContentTypeTest extends TestCase
     {
         $propertyMetadata = new PropertyMetadata();
         $propertyMetadata->setName('property-name');
-        $propertyMetadata->setRequired(false);
 
         $jsonSchema = $this->mediaSelection->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
 
@@ -494,7 +493,7 @@ class MediaSelectionContentTypeTest extends TestCase
         ], $jsonSchema);
     }
 
-    public function testMapPropertyMetadataMinOccursAndMaxOccurs(): void
+    public function testMapPropertyMetadataMinAndMax(): void
     {
         $propertyMetadata = new PropertyMetadata();
         $propertyMetadata->setName('property-name');
@@ -525,41 +524,6 @@ class MediaSelectionContentTypeTest extends TestCase
                 ],
             ],
             'required' => [],
-        ], $jsonSchema);
-    }
-
-    public function testMapPropertyMetadataRequiredAndInvalidMinOccursAndMaxOccurs(): void
-    {
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
-        $propertyMetadata->setRequired(true);
-        $propertyMetadata->setParameters([
-            ['name' => 'min', 'value' => 0],
-            ['name' => 'max', 'value' => -2],
-        ]);
-
-        $jsonSchema = $this->mediaSelection->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
-
-        $this->assertEquals([
-            'name' => 'property-name',
-            'type' => 'object',
-            'properties' => [
-                'ids' => [
-                    'name' => 'ids',
-                    'type' => 'array',
-                    'items' => [
-                        'required' => [],
-                        'type' => 'number',
-                    ],
-                    'minItems' => 1,
-                    'maxItems' => 1,
-                    'uniqueItems' => true,
-                ],
-                'displayOption' => [
-                    'type' => 'string',
-                ],
-            ],
-            'required' => ['ids'],
         ], $jsonSchema);
     }
 }

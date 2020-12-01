@@ -17,6 +17,7 @@ use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ObjectMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapperInterface;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SelectionPropertyMetadataMapper;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\StringMetadata;
 use Sulu\Bundle\MediaBundle\Content\MediaSelectionContainer;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
@@ -200,31 +201,15 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
     public function mapPropertyMetadata(ContentPropertyMetadata $propertyMetadata): PropertyMetadata
     {
         $mandatory = $propertyMetadata->isRequired();
-        $minItems = $propertyMetadata->getParameter('min', true)['value'] ?? null;
-        $maxItems = $propertyMetadata->getParameter('max', true)['value'] ?? null;
-
-        if (null !== $minItems) {
-            // If minOccurs is set, minItems is at least 0
-            $minItems = \max(0, (int) $minItems);
-        }
-
-        if ($mandatory) {
-            // If mandatory, minItems is at least 1
-            $minItems = \max(1, $minItems ?? 0);
-        }
-
-        if (null !== $maxItems) {
-            // maxItems is at least 0 and at least as high as minItems
-            $maxItems = \max($minItems ?? 0, (int) $maxItems);
-        }
+        $minMaxValue = SelectionPropertyMetadataMapper::getValidatedMinMaxValue($propertyMetadata);
 
         return new ObjectMetadata($propertyMetadata->getName(), $mandatory, [
             new ArrayMetadata(
                 'ids',
                 $mandatory,
                 new SchemaMetadata([], [], [], 'number'),
-                $minItems,
-                $maxItems,
+                $minMaxValue->min,
+                $minMaxValue->max,
                 true
             ),
             new StringMetadata('displayOption', false),
