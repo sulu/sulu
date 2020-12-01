@@ -1,5 +1,16 @@
 # Upgrade
 
+## dev-master
+
+### Added resolveConflict parameter to RouteManagerInterface::createOrUpdateByAttributes
+
+The `createOrUpdateByAttributes` method of the `RouteManagerInterface` was adjusted to include a `resolveConflict`
+parameter. This makes the available parameters consistent to the `RouteManagerInterface::create` method and the
+`RouteManagerInterface::update` method.
+
+If you have implemented this interface in your project, you need to add the parameter to the 
+`createOrUpdateByAttributes` method of your implementation.
+
 ## 2.2.2
 
 ### Added default value to anonymous column of se_roles table

@@ -94,20 +94,32 @@ class RouteManager implements RouteManagerInterface
         return $route;
     }
 
-    public function createOrUpdateByAttributes(string $entityClass, string $id, string $locale, string $path): RouteInterface
-    {
+    public function createOrUpdateByAttributes(
+        string $entityClass,
+        string $id,
+        string $locale,
+        string $path,
+        $resolveConflict = true
+    ): RouteInterface {
         $oldRoute = $this->routeRepository->findByEntity($entityClass, $id, $locale);
-        if (!$oldRoute) {
-            return $this->createRoute($entityClass, $id, $locale, $path);
-        }
 
-        if ($oldRoute->getPath() === $path) {
+        if ($oldRoute && $oldRoute->getPath() === $path) {
             return $oldRoute;
         }
 
         $route = $this->createRoute($entityClass, $id, $locale, $path);
 
-        return $this->handleHistoryRoutes($oldRoute, $route);
+        if ($resolveConflict) {
+            $route = $this->conflictResolver->resolve($route);
+        }
+
+        if ($oldRoute) {
+            $route = $this->handleHistoryRoutes($oldRoute, $route);
+        }
+
+        $this->routeRepository->persist($route);
+
+        return $route;
     }
 
     protected function handleHistoryRoutes(RouteInterface $oldRoute, RouteInterface $newRoute): RouteInterface
@@ -171,14 +183,10 @@ class RouteManager implements RouteManagerInterface
 
     private function createRoute(string $entityClass, string $id, string $locale, string $path): RouteInterface
     {
-        $route = $this->routeRepository->createNew()
+        return $this->routeRepository->createNew()
             ->setEntityClass($entityClass)
             ->setEntityId($id)
             ->setLocale($locale)
             ->setPath($path);
-
-        $this->routeRepository->persist($route);
-
-        return $route;
     }
 }

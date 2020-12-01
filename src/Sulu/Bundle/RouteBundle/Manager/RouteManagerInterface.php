@@ -45,5 +45,11 @@ interface RouteManagerInterface
     /**
      * Creates a new route and handles the histories if the route has changed.
      */
-    public function createOrUpdateByAttributes(string $entityClass, string $id, string $locale, string $path): RouteInterface;
+    public function createOrUpdateByAttributes(
+        string $entityClass,
+        string $id,
+        string $locale,
+        string $path,
+        $resolveConflict = true
+    ): RouteInterface;
 }
