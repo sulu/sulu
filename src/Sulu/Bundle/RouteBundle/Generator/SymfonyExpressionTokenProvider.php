@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\RouteBundle\Generator;
 
+use Symfony\Component\ExpressionLanguage\ExpressionFunction;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Contracts\Translation\LocaleAwareInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -42,7 +43,10 @@ class SymfonyExpressionTokenProvider implements TokenProviderInterface
         }
 
         $this->translator = $translator;
+
         $this->expressionLanguage = new ExpressionLanguage();
+        $this->expressionLanguage->addFunction(ExpressionFunction::fromPhp('implode'));
+        $this->expressionLanguage->addFunction(ExpressionFunction::fromPhp('is_array'));
     }
 
     public function provide($entity, $name)
