@@ -39,13 +39,13 @@ export default class PreviewStore {
 
     @computed get renderRoute() {
         return generateRoute('render', {
-            webspace: this.webspace,
-            segment: this.segment,
+            webspaceKey: this.webspace,
+            segmentKey: this.segment,
             provider: this.resourceKey,
             id: this.id,
             locale: this.locale,
             token: this.token,
-            targetGroup: this.targetGroup,
+            targetGroupId: this.targetGroup,
         });
     }
 
@@ -70,7 +70,7 @@ export default class PreviewStore {
             provider: this.resourceKey,
             id: this.id,
             locale: this.locale,
-            targetGroup: this.targetGroup,
+            targetGroupId: this.targetGroup,
         });
 
         return Requester.post(route).then((response) => {
@@ -81,12 +81,12 @@ export default class PreviewStore {
     update(data: Object): Promise<string> {
         const route = generateRoute('update', {
             locale: this.locale,
-            webspace: this.webspace,
-            segment: this.segment,
+            webspaceKey: this.webspace,
+            segmentKey: this.segment,
             token: this.token,
             provider: this.resourceKey,
             id: this.id,
-            targetGroup: this.targetGroup,
+            targetGroupId: this.targetGroup,
         });
 
         return Requester.post(route, {data}).then((response) => {
@@ -96,13 +96,13 @@ export default class PreviewStore {
 
     updateContext(type: string): Promise<string> {
         const route = generateRoute('update-context', {
-            webspace: this.webspace,
-            segment: this.segment,
+            webspaceKey: this.webspace,
+            segmentKey: this.segment,
             token: this.token,
             locale: this.locale,
             provider: this.resourceKey,
             id: this.id,
-            targetGroup: this.targetGroup,
+            targetGroupId: this.targetGroup,
         });
 
         return Requester.post(route, {context: {template: type}}).then((response) => {
