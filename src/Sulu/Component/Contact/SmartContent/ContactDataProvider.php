@@ -35,10 +35,6 @@ class ContactDataProvider extends BaseDataProvider
             ->enableLimit()
             ->enablePagination()
             ->enablePresentAs()
-            ->enableSorting([
-                ['column' => 'id', 'title' => 'sulu_admin.id'],
-                ['column' => 'firstName', 'title' => 'sulu_admin.firstName'],
-            ])
             ->enableView(ContactAdmin::CONTACT_EDIT_FORM_VIEW, ['id' => 'id'])
             ->getConfiguration();
     }
