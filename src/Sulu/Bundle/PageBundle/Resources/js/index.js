@@ -44,7 +44,7 @@ initializer.addUpdateConfigHook('sulu_page', (config: Object, initialized: boole
     );
 
     if (config.versioning) {
-        fieldRegistry.add('page_settings_versions', SettingsVersions);
+        fieldRegistry.add('settings_versions', SettingsVersions);
     }
 
     for (const teaserProviderKey in config.teaser) {
