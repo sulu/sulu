@@ -359,6 +359,7 @@ class FormMetadataMapperTest extends TestCase
         $form = $this->createFormWithRequiredProperties();
 
         $propertyMetadataMapper = $this->prophesize(PropertyMetadataMapperInterface::class);
+        $this->propertyMetadataMapperRegistry->has(Argument::cetera())->willReturn(true);
         $this->propertyMetadataMapperRegistry->get(Argument::cetera())->willReturn($propertyMetadataMapper->reveal());
         $propertyMetadataMapper->mapPropertyMetadata(Argument::cetera())->will(function($arguments) {
             /** @var PropertyMetadata $propertyMetadata */
@@ -402,6 +403,7 @@ class FormMetadataMapperTest extends TestCase
         $form = $this->createFormWithBlock();
 
         $propertyMetadataMapper = $this->prophesize(PropertyMetadataMapperInterface::class);
+        $this->propertyMetadataMapperRegistry->has(Argument::cetera())->willReturn(true);
         $this->propertyMetadataMapperRegistry->get(Argument::cetera())->willReturn($propertyMetadataMapper->reveal());
         $propertyMetadataMapper->mapPropertyMetadata(Argument::cetera())->will(function($arguments) {
             /** @var PropertyMetadata $propertyMetadata */

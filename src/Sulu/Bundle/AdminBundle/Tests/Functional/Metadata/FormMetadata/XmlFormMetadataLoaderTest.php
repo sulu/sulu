@@ -43,7 +43,6 @@ class XmlFormMetadataLoaderTest extends KernelTestCase
         $form = $this->xmlFormMetadataLoader->getMetadata('form_with_schema', 'en');
         $schema = $form->getSchema()->toJsonSchema();
         $this->assertCount(1, \array_keys($schema));
-        $this->assertCount(0, $schema['required']);
         $this->assertCount(2, $schema['allOf']);
         $this->assertEquals(['first', 'third'], $schema['allOf'][0]['required']);
     }
