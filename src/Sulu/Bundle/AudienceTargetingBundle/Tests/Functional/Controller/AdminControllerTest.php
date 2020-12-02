@@ -31,7 +31,7 @@ class AdminControllerTest extends SuluTestCase
 
     public function testRulesConfig()
     {
-        $this->client->request('GET', '/admin/config');
+        $this->client->jsonRequest('GET', '/admin/config');
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $response = \json_decode($this->client->getResponse()->getContent());
@@ -46,7 +46,7 @@ class AdminControllerTest extends SuluTestCase
 
     public function testTargetGroupsListMetadataAction()
     {
-        $this->client->request('GET', '/admin/metadata/list/target_groups');
+        $this->client->jsonRequest('GET', '/admin/metadata/list/target_groups');
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $response = \json_decode($this->client->getResponse()->getContent());
@@ -60,7 +60,7 @@ class AdminControllerTest extends SuluTestCase
 
     public function testTargetGroupsFormMetadataAction()
     {
-        $this->client->request('GET', '/admin/metadata/form/target_group_details');
+        $this->client->jsonRequest('GET', '/admin/metadata/form/target_group_details');
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $response = \json_decode($this->client->getResponse()->getContent());

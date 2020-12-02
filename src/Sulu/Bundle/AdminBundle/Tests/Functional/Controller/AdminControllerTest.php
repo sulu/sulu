@@ -34,7 +34,7 @@ class AdminControllerTest extends SuluTestCase
         $collectionType = new LoadCollectionTypes();
         $collectionType->load($this->getEntityManager());
 
-        $this->client->request('GET', '/admin/config');
+        $this->client->jsonRequest('GET', '/admin/config');
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
@@ -58,7 +58,7 @@ class AdminControllerTest extends SuluTestCase
 
     public function testGetNotExistingMetdata()
     {
-        $this->client->request('GET', '/admin/metadata/test1/test');
+        $this->client->jsonRequest('GET', '/admin/metadata/test1/test');
 
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }

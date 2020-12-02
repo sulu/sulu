@@ -32,7 +32,7 @@ class CollaborationControllerTest extends SuluTestCase
     {
         $session = $this->client->getContainer()->get('session');
         $session->start();
-        $this->client->request('PUT', '/admin/api/collaborations?id=4&resourceKey=page');
+        $this->client->jsonRequest('PUT', '/admin/api/collaborations?id=4&resourceKey=page');
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
@@ -60,7 +60,7 @@ class CollaborationControllerTest extends SuluTestCase
 
         $cache->save($cacheItem);
 
-        $this->client->request('PUT', '/admin/api/collaborations?id=4&resourceKey=page');
+        $this->client->jsonRequest('PUT', '/admin/api/collaborations?id=4&resourceKey=page');
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
@@ -97,12 +97,12 @@ class CollaborationControllerTest extends SuluTestCase
 
         $cache->save($cacheItem);
 
-        $this->client->request('PUT', '/admin/api/collaborations?id=4&resourceKey=page');
+        $this->client->jsonRequest('PUT', '/admin/api/collaborations?id=4&resourceKey=page');
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->assertCount(3, $cache->getItem('page_4')->get());
 
-        $this->client->request('DELETE', '/admin/api/collaborations?id=4&resourceKey=page');
+        $this->client->jsonRequest('DELETE', '/admin/api/collaborations?id=4&resourceKey=page');
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $this->assertCount(2, $cache->getItem('page_4')->get());
     }

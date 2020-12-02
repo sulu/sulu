@@ -151,7 +151,7 @@ class MediaPreviewControllerTest extends SuluTestCase
 
         $this->assertEquals($preview, $media->getPreviewImage());
 
-        $this->client->request('DELETE', '/api/media/' . $mediaId . '/preview?locale=en');
+        $this->client->jsonRequest('DELETE', '/api/media/' . $mediaId . '/preview?locale=en');
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $response = \json_decode($this->client->getResponse()->getContent());

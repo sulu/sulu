@@ -29,7 +29,7 @@ class ProfileControllerTest extends SuluTestCase
 
     public function testPatchSettings()
     {
-        $this->client->request(
+        $this->client->jsonRequest(
             'PATCH',
             '/api/profile/settings',
             ['setting-key' => 'setting-value']
@@ -48,7 +48,7 @@ class ProfileControllerTest extends SuluTestCase
 
     public function testGet()
     {
-        $this->client->request('GET', '/api/profile');
+        $this->client->jsonRequest('GET', '/api/profile');
 
         $response = \json_decode($this->client->getResponse()->getContent());
 
@@ -63,7 +63,7 @@ class ProfileControllerTest extends SuluTestCase
 
     public function testPut()
     {
-        $this->client->request(
+        $this->client->jsonRequest(
             'PUT',
             '/api/profile',
             [
@@ -87,7 +87,7 @@ class ProfileControllerTest extends SuluTestCase
 
     public function testPutEmailNotUnique()
     {
-        $this->client->request(
+        $this->client->jsonRequest(
             'PUT',
             '/api/profile',
             [
@@ -110,7 +110,7 @@ class ProfileControllerTest extends SuluTestCase
 
     public function testPutUsernameNotUnique()
     {
-        $this->client->request(
+        $this->client->jsonRequest(
             'PUT',
             '/api/profile',
             [
@@ -133,7 +133,7 @@ class ProfileControllerTest extends SuluTestCase
 
     public function testPutWithoutFirstName()
     {
-        $this->client->request(
+        $this->client->jsonRequest(
             'PUT',
             '/api/profile',
             [
@@ -155,7 +155,7 @@ class ProfileControllerTest extends SuluTestCase
 
     public function testPutWithoutLastName()
     {
-        $this->client->request(
+        $this->client->jsonRequest(
             'PUT',
             '/api/profile',
             [
@@ -178,7 +178,7 @@ class ProfileControllerTest extends SuluTestCase
 
     public function testPutWithoutUsername()
     {
-        $this->client->request(
+        $this->client->jsonRequest(
             'PUT',
             '/api/profile',
             [
@@ -201,7 +201,7 @@ class ProfileControllerTest extends SuluTestCase
 
     public function testPutWithoutEmail()
     {
-        $this->client->request(
+        $this->client->jsonRequest(
             'PUT',
             '/api/profile',
             [
@@ -224,7 +224,7 @@ class ProfileControllerTest extends SuluTestCase
 
     public function testPutWithoutLocale()
     {
-        $this->client->request(
+        $this->client->jsonRequest(
             'PUT',
             '/api/profile',
             [
@@ -247,7 +247,7 @@ class ProfileControllerTest extends SuluTestCase
 
     public function testPutWithoutPassword()
     {
-        $this->client->request(
+        $this->client->jsonRequest(
             'PUT',
             '/api/profile',
             [
@@ -266,7 +266,7 @@ class ProfileControllerTest extends SuluTestCase
 
     public function testDeleteSettings()
     {
-        $this->client->request(
+        $this->client->jsonRequest(
             'PATCH',
             '/api/profile/settings',
             ['setting-key' => 'setting-value']
@@ -282,7 +282,7 @@ class ProfileControllerTest extends SuluTestCase
         $this->assertEquals('setting-key', $userSetting->getKey());
         $this->assertEquals('setting-value', \json_decode($userSetting->getValue()));
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'DELETE',
             '/api/profile/settings',
             ['key' => 'setting-key']

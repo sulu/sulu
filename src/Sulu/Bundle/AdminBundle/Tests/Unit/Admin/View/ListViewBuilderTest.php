@@ -310,12 +310,12 @@ class ListViewBuilderTest extends TestCase
             ->setResourceKey('roles')
             ->setListKey('roles')
             ->addListAdapters(['tree'])
-            ->addRequestParameters(['resourceKey' => 'pages', 'flat' => true])
+            ->addRequestParameters(['resourceKey' => 'pages', 'flat' => 'true'])
             ->addRequestParameters(['locale' => 'de'])
             ->getView();
 
         $this->assertSame(
-            ['resourceKey' => 'pages', 'flat' => true, 'locale' => 'de'],
+            ['resourceKey' => 'pages', 'flat' => 'true', 'locale' => 'de'],
             $view->getOption('requestParameters')
         );
     }
