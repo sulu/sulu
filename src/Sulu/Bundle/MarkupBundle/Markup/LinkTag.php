@@ -28,9 +28,15 @@ class LinkTag implements TagInterface
      */
     private $linkProviderPool;
 
-    public function __construct(LinkProviderPoolInterface $linkProviderPool)
+    /**
+     * @var bool
+     */
+    private $isPreview;
+
+    public function __construct(LinkProviderPoolInterface $linkProviderPool, bool $isPreview = false)
     {
         $this->linkProviderPool = $linkProviderPool;
+        $this->isPreview = $isPreview;
     }
 
     public function parseAll(array $attributesByTag, $locale)
@@ -40,22 +46,29 @@ class LinkTag implements TagInterface
         $result = [];
         foreach ($attributesByTag as $tag => $attributes) {
             $provider = $this->getValue($attributes, 'provider', self::DEFAULT_PROVIDER);
-            if (!isset($attributes['href'])
-                || !\array_key_exists($provider . '-' . $attributes['href'], $contents)
-            ) {
+            $validationState = $attributes['sulu-validation-state'] ?? null;
+
+            if (isset($attributes['href']) && \array_key_exists($provider . '-' . $attributes['href'], $contents)) {
+                $item = $contents[$provider . '-' . $attributes['href']];
+
+                $title = $item->getTitle();
+                $attributes['href'] = $item->getUrl();
+                $attributes['title'] = $this->getValue($attributes, 'title', $item->getTitle());
+            } elseif ($this->isPreview && self::VALIDATE_UNPUBLISHED === $validationState) {
+                // render anchor without href to keep styling even if target is not published in preview
+                $title = $this->getContent($attributes);
+                $attributes['href'] = null;
+                $attributes['title'] = $this->getValue($attributes, 'title');
+            } else {
+                // only render text instead of anchor to prevent dead links on website
                 $result[$tag] = $this->getContent($attributes);
 
                 continue;
             }
 
-            $item = $contents[$provider . '-' . $attributes['href']];
-
-            $attributes['href'] = $item->getUrl();
-            $attributes['title'] = $this->getValue($attributes, 'title', $item->getTitle());
-
             $htmlAttributes = \array_map(
                 function($value, $name) {
-                    if (\in_array($name, ['provider', 'content', 'validation-state']) || empty($value)) {
+                    if (\in_array($name, ['provider', 'content', 'sulu-validation-state']) || empty($value)) {
                         return;
                     }
 
@@ -68,7 +81,7 @@ class LinkTag implements TagInterface
             $result[$tag] = \sprintf(
                 '<a %s>%s</a>',
                 \implode(' ', \array_filter($htmlAttributes)),
-                $this->getValue($attributes, 'content', $item->getTitle())
+                $this->getValue($attributes, 'content', $title)
             );
         }
 

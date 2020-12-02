@@ -116,7 +116,7 @@ class CustomUrlRouteControllerTest extends SuluTestCase
     ) {
         foreach ($before as $beforeData) {
             $beforeData['targetDocument'] = $this->contentDocument->getUuid();
-            $this->client->request('POST', '/api/webspaces/sulu_io/custom-urls', $beforeData);
+            $this->client->jsonRequest('POST', '/api/webspaces/sulu_io/custom-urls', $beforeData);
         }
 
         $data['targetDocument'] = $this->contentDocument->getUuid();
@@ -125,13 +125,13 @@ class CustomUrlRouteControllerTest extends SuluTestCase
         $responseData = \json_decode($response->getContent(), true);
         $uuid = $responseData['id'];
 
-        $this->client->request('PUT', '/api/webspaces/sulu_io/custom-urls/' . $uuid, $data);
+        $this->client->jsonRequest('PUT', '/api/webspaces/sulu_io/custom-urls/' . $uuid, $data);
 
         $response = $this->client->getResponse();
         $responseData = \json_decode($response->getContent(), true);
         $uuid = $responseData['id'];
 
-        $this->client->request('GET', '/api/webspaces/sulu_io/custom-urls/' . $uuid . '/routes');
+        $this->client->jsonRequest('GET', '/api/webspaces/sulu_io/custom-urls/' . $uuid . '/routes');
         $response = \json_decode($this->client->getResponse()->getContent(), true);
 
         $customUrlRoutes = $response['_embedded']['custom_url_routes'];
@@ -147,7 +147,7 @@ class CustomUrlRouteControllerTest extends SuluTestCase
             }
         }
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'DELETE',
             '/api/webspaces/sulu_io/custom-urls/' . $uuid . '/routes?ids=' . \implode(',', $uuids)
         );
@@ -162,12 +162,12 @@ class CustomUrlRouteControllerTest extends SuluTestCase
             return;
         }
 
-        $this->client->request('GET', '/api/webspaces/sulu_io/custom-urls/' . $uuid);
+        $this->client->jsonRequest('GET', '/api/webspaces/sulu_io/custom-urls/' . $uuid);
         $customUrl = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals($url, $customUrl['customUrl']);
 
-        $this->client->request('GET', '/api/webspaces/sulu_io/custom-urls/' . $uuid . '/routes');
+        $this->client->jsonRequest('GET', '/api/webspaces/sulu_io/custom-urls/' . $uuid . '/routes');
         $customUrlRoutes = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals(

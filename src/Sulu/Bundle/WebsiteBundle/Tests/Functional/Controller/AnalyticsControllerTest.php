@@ -44,7 +44,7 @@ class AnalyticsControllerTest extends SuluTestCase
 
     public function testListEmptyResponse()
     {
-        $this->client->request('GET', '/api/webspaces/test/analytics');
+        $this->client->jsonRequest('GET', '/api/webspaces/test/analytics');
 
         $response = \json_decode($this->client->getResponse()->getContent(), true);
         $this->assertHttpStatusCode(200, $this->client->getResponse());
@@ -54,7 +54,7 @@ class AnalyticsControllerTest extends SuluTestCase
 
     public function testListWithAllDomains()
     {
-        $this->client->request('GET', '/api/webspaces/blog_sulu_io/analytics');
+        $this->client->jsonRequest('GET', '/api/webspaces/blog_sulu_io/analytics');
 
         $response = \json_decode($this->client->getResponse()->getContent(), true);
         $this->assertHttpStatusCode(200, $this->client->getResponse());
@@ -70,7 +70,7 @@ class AnalyticsControllerTest extends SuluTestCase
 
     public function testList()
     {
-        $this->client->request('GET', '/api/webspaces/sulu_io/analytics');
+        $this->client->jsonRequest('GET', '/api/webspaces/sulu_io/analytics');
 
         $response = \json_decode($this->client->getResponse()->getContent(), true);
         $this->assertHttpStatusCode(200, $this->client->getResponse());
@@ -105,7 +105,7 @@ class AnalyticsControllerTest extends SuluTestCase
 
     public function testGet()
     {
-        $this->client->request('GET', '/api/webspaces/sulu_io/analytics/' . $this->entities[0]->getId());
+        $this->client->jsonRequest('GET', '/api/webspaces/sulu_io/analytics/' . $this->entities[0]->getId());
 
         $response = \json_decode($this->client->getResponse()->getContent(), true);
         $this->assertHttpStatusCode(200, $this->client->getResponse());
@@ -119,7 +119,7 @@ class AnalyticsControllerTest extends SuluTestCase
 
     public function testPost()
     {
-        $this->client->request(
+        $this->client->jsonRequest(
             'POST',
             '/api/webspaces/sulu_io/analytics',
             [
@@ -143,7 +143,7 @@ class AnalyticsControllerTest extends SuluTestCase
 
     public function testPut()
     {
-        $this->client->request(
+        $this->client->jsonRequest(
             'POST',
             '/api/webspaces/sulu_io/analytics',
             [
@@ -169,10 +169,10 @@ class AnalyticsControllerTest extends SuluTestCase
 
     public function testDelete()
     {
-        $this->client->request('DELETE', '/api/webspaces/test_io/analytics/' . $this->entities[4]->getId());
+        $this->client->jsonRequest('DELETE', '/api/webspaces/test_io/analytics/' . $this->entities[4]->getId());
         $this->assertHttpStatusCode(204, $this->client->getResponse());
 
-        $this->client->request('GET', '/api/webspaces/test_io/analytics');
+        $this->client->jsonRequest('GET', '/api/webspaces/test_io/analytics');
         $response = \json_decode($this->client->getResponse()->getContent(), true);
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
@@ -188,10 +188,10 @@ class AnalyticsControllerTest extends SuluTestCase
             $this->entities[3]->getId(),
         ];
 
-        $this->client->request('DELETE', '/api/webspaces/sulu_io/analytics?ids=' . \implode(',', $ids));
+        $this->client->jsonRequest('DELETE', '/api/webspaces/sulu_io/analytics?ids=' . \implode(',', $ids));
         $this->assertHttpStatusCode(204, $this->client->getResponse());
 
-        $this->client->request('GET', '/api/webspaces/sulu_io/analytics');
+        $this->client->jsonRequest('GET', '/api/webspaces/sulu_io/analytics');
         $response = \json_decode($this->client->getResponse()->getContent(), true);
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 

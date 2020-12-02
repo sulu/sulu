@@ -19,7 +19,7 @@ class WebspaceLocalizationControllerTest extends SuluTestCase
     {
         $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/api/webspace/localizations?webspace=sulu_io');
+        $client->jsonRequest('GET', '/api/webspace/localizations?webspace=sulu_io');
         $response = \json_decode($client->getResponse()->getContent(), true);
 
         $data = $response['_embedded']['localizations'];
@@ -43,7 +43,7 @@ class WebspaceLocalizationControllerTest extends SuluTestCase
     {
         $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/api/webspace/localizations?webspace=sulu_lo');
+        $client->jsonRequest('GET', '/api/webspace/localizations?webspace=sulu_lo');
         $response = \json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(0, $response->code);

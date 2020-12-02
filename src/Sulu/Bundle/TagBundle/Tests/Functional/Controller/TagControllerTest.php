@@ -61,7 +61,7 @@ class TagControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/tags/' . $tag->getId()
         );
@@ -81,7 +81,7 @@ class TagControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/tags?flat=true'
         );
@@ -102,7 +102,7 @@ class TagControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/tags?flat=true&excludedIds=' . $tag1->getId() . ',' . $tag2->getId()
         );
@@ -121,7 +121,7 @@ class TagControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/tags?flat=true&names=tag1'
         );
@@ -140,7 +140,7 @@ class TagControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/tags?flat=true&search=tag2&searchFields=name'
         );
@@ -154,7 +154,7 @@ class TagControllerTest extends SuluTestCase
 
     public function testGetByIdNotExisting()
     {
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/tags/11230'
         );
@@ -168,7 +168,7 @@ class TagControllerTest extends SuluTestCase
 
     public function testPost()
     {
-        $this->client->request(
+        $this->client->jsonRequest(
             'POST',
             '/api/tags',
             ['name' => 'tag3']
@@ -179,7 +179,7 @@ class TagControllerTest extends SuluTestCase
 
         $this->assertEquals('tag3', $response->name);
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/tags/' . $response->id
         );
@@ -198,7 +198,7 @@ class TagControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'POST',
             '/api/tags',
             ['name' => 'tag1']
@@ -217,7 +217,7 @@ class TagControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'PUT',
             '/api/tags/' . $tag->getId(),
             ['name' => 'tag1_new']
@@ -227,7 +227,7 @@ class TagControllerTest extends SuluTestCase
 
         $this->assertEquals('tag1_new', $response->name);
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/tags/' . $tag->getId()
         );
@@ -247,7 +247,7 @@ class TagControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'PUT',
             '/api/tags/' . $tag2->getId(),
             ['name' => 'tag1']
@@ -262,7 +262,7 @@ class TagControllerTest extends SuluTestCase
 
     public function testPutNotExisting()
     {
-        $this->client->request(
+        $this->client->jsonRequest(
             'PUT',
             '/api/tags/4711',
             ['name' => 'tag1_new']
@@ -287,13 +287,13 @@ class TagControllerTest extends SuluTestCase
             [$mockedEventListener, 'onDelete']
         );
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'DELETE',
             '/api/tags/' . $tag1Id
         );
         $this->assertHttpStatusCode(204, $this->client->getResponse());
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/tags/' . $tag1Id
         );
@@ -302,7 +302,7 @@ class TagControllerTest extends SuluTestCase
 
     public function testDeleteByNotExistingId()
     {
-        $this->client->request(
+        $this->client->jsonRequest(
             'DELETE',
             '/api/tags/4711'
         );
@@ -331,7 +331,7 @@ class TagControllerTest extends SuluTestCase
             [$mockedEventListener, 'onMerge']
         );
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'POST',
             '/api/tags/merge',
             ['src' => \implode(',', [
@@ -341,25 +341,25 @@ class TagControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(303, $this->client->getResponse());
         $this->assertEquals('/api/tags/' . $tag1->getId(), $this->client->getResponse()->headers->get('location'));
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/tags/' . $tag1Id
         );
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/tags/' . $tag2Id
         );
         $this->assertHttpStatusCode(404, $this->client->getResponse());
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/tags/' . $tag3Id
         );
         $this->assertHttpStatusCode(404, $this->client->getResponse());
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/tags/' . $tag4Id
         );
@@ -372,7 +372,7 @@ class TagControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'POST',
             '/api/tags/merge',
             ['src' => 1233, 'dest' => $tag1->getId()]
@@ -392,7 +392,7 @@ class TagControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'PATCH',
             '/api/tags',
             [
@@ -419,7 +419,7 @@ class TagControllerTest extends SuluTestCase
         $this->assertEquals('tag5', $response[2]->name);
         $this->assertEquals('tag6', $response[3]->name);
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/tags?flat=true'
         );
@@ -442,7 +442,7 @@ class TagControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'PATCH',
             '/api/tags',
             [
@@ -469,7 +469,7 @@ class TagControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'PATCH',
             '/api/tags',
             [
@@ -489,7 +489,7 @@ class TagControllerTest extends SuluTestCase
         $this->assertEquals('tag11', $response[0]->name);
         $this->assertEquals('tag33', $response[1]->name);
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/tags?flat=true'
         );

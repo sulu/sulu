@@ -221,7 +221,7 @@ class SmartContentItemControllerTest extends SuluTestCase
 
     public function testGetItems()
     {
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/items?webspace=sulu_io&locale=en&dataSource=' . $this->team->getUuid() .
             '&provider=pages&excluded=' . $this->team->getUuid()
@@ -272,7 +272,7 @@ class SmartContentItemControllerTest extends SuluTestCase
 
     public function testGetItemsExcluded()
     {
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/items?webspace=sulu_io&locale=en&dataSource=' . $this->team->getUuid() .
             '&provider=pages&excluded=' . $this->johannes->getUuid()
@@ -315,7 +315,7 @@ class SmartContentItemControllerTest extends SuluTestCase
 
     public function testGetItemsMultipleExcluded()
     {
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/items?webspace=sulu_io&locale=en&dataSource='
             . $this->team->getUuid()
@@ -354,7 +354,7 @@ class SmartContentItemControllerTest extends SuluTestCase
 
     public function testGetItemsWithParams()
     {
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/items?webspace=sulu_io&locale=en&dataSource=' . $this->team->getUuid() .
             '&provider=pages&excluded=' . $this->johannes->getUuid() .
@@ -399,7 +399,7 @@ class SmartContentItemControllerTest extends SuluTestCase
 
     public function testGetItemsWithParamsAndNoType()
     {
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/items?webspace=sulu_io&locale=en&dataSource=' . $this->team->getUuid() .
             '&provider=pages&excluded=' . $this->johannes->getUuid() .
@@ -444,7 +444,7 @@ class SmartContentItemControllerTest extends SuluTestCase
 
     public function testGetItemsLimit()
     {
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/items?webspace=sulu_io&locale=en&dataSource=' . $this->team->getUuid() .
             '&provider=pages&excluded=' . $this->team->getUuid() . '&limitResult=2'
@@ -487,7 +487,7 @@ class SmartContentItemControllerTest extends SuluTestCase
 
     public function testGetItemsTags()
     {
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/items?webspace=sulu_io&locale=en&dataSource=' . $this->team->getUuid() .
             '&provider=pages&excluded=' . $this->team->getUuid() . '&limitResult=2&tags=' . $this->tag1->getName()

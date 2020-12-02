@@ -45,7 +45,9 @@ trait DataProviderRepositoryTrait
 
         if (isset($filters['sortBy'])) {
             $sortMethod = $filters['sortMethod'] ?? 'asc';
-            $this->appendSortBy($filters['sortBy'], $sortMethod, $queryBuilder, $alias, $locale);
+            $sortBy = false !== \strpos($filters['sortBy'], '.') ? $filters['sortBy'] : $alias . '.' . $filters['sortBy'];
+
+            $this->appendSortBy($sortBy, $sortMethod, $queryBuilder, $alias, $locale);
         }
 
         $query = $queryBuilder->getQuery();
@@ -92,29 +94,30 @@ trait DataProviderRepositoryTrait
     ) {
         $parameter = [];
 
-        $queryBuilder = $this->createQueryBuilder('c')
-            ->select('c.id')
+        $alias = 'entity';
+        $queryBuilder = $this->createQueryBuilder($alias)
+            ->select($alias . '.id')
             ->distinct()
-            ->orderBy('c.id', 'ASC');
+            ->orderBy($alias . '.id', 'ASC');
 
-        $tagRelation = $this->appendTagsRelation($queryBuilder, 'c');
-        $categoryRelation = $this->appendCategoriesRelation($queryBuilder, 'c');
+        $tagRelation = $this->appendTagsRelation($queryBuilder, $alias);
+        $categoryRelation = $this->appendCategoriesRelation($queryBuilder, $alias);
 
-        if (\array_key_exists('sortBy', $filters) && \is_array($filters['sortBy'])) {
-            $sortMethod = \array_key_exists('sortMethod', $filters) ? $filters['sortMethod'] : 'asc';
-            $this->appendSortBy($filters['sortBy'], $sortMethod, $queryBuilder, 'c', $locale);
+        if (isset($filters['sortBy'])) {
+            $sortMethod = $filters['sortMethod'] ?? 'asc';
+            $sortBy = false !== \strpos($filters['sortBy'], '.') ? $filters['sortBy'] : $alias . '.' . $filters['sortBy'];
 
-            foreach ($filters['sortBy'] as $sortColumn) {
-                $queryBuilder->addSelect($sortColumn);
-            }
+            $this->appendSortBy($sortBy, $sortMethod, $queryBuilder, $alias, $locale);
+            $queryBuilder->addSelect($sortBy);
         }
 
-        $parameter = \array_merge($parameter, $this->append($queryBuilder, 'c', $locale, $options));
+        $parameter = $this->append($queryBuilder, $alias, $locale, $options);
+
         if (isset($filters['dataSource'])) {
             $includeSubFolders = $this->getBoolean($filters['includeSubFolders'] ?? false);
             $parameter = \array_merge(
                 $parameter,
-                $this->appendDatasource($filters['dataSource'], $includeSubFolders, $queryBuilder, 'c')
+                $this->appendDatasource($filters['dataSource'], $includeSubFolders, $queryBuilder, $alias)
             );
         }
 
@@ -132,7 +135,7 @@ trait DataProviderRepositoryTrait
         }
 
         if (isset($filters['types']) && !empty($filters['types'])) {
-            $typeRelation = $this->appendTypeRelation($queryBuilder, 'c');
+            $typeRelation = $this->appendTypeRelation($queryBuilder, $alias);
             $parameter = \array_merge(
                 $parameter,
                 $this->appendRelation(
@@ -159,7 +162,7 @@ trait DataProviderRepositoryTrait
         }
 
         if (isset($filters['targetGroupId']) && $filters['targetGroupId']) {
-            $targetGroupRelation = $this->appendTargetGroupRelation($queryBuilder, 'c');
+            $targetGroupRelation = $this->appendTargetGroupRelation($queryBuilder, $alias);
             $parameter = \array_merge(
                 $parameter,
                 $this->appendRelation(
@@ -411,12 +414,10 @@ trait DataProviderRepositoryTrait
     /**
      * Extension point to append order.
      *
-     * @param array $sortBy
+     * @param string $sortBy
      * @param string $sortMethod
      * @param string $alias
      * @param string $locale
-     *
-     * @return array parameters for query
      */
     protected function appendSortBy($sortBy, $sortMethod, QueryBuilder $queryBuilder, $alias, $locale)
     {

@@ -31,7 +31,7 @@ class ResourcelocatorControllerTest extends SuluTestCase
 
     public function testGenerate()
     {
-        $this->client->request('POST', '/api/resourcelocators?action=generate', [
+        $this->client->jsonRequest('POST', '/api/resourcelocators?action=generate', [
             'parts' => ['title' => 'test1', 'discription' => 'test2'],
             'locale' => 'en',
             'webspace' => 'sulu_io',
@@ -45,7 +45,7 @@ class ResourcelocatorControllerTest extends SuluTestCase
     {
         $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'POST',
             '/api/pages?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&locale=en&action=publish',
             [
@@ -56,7 +56,7 @@ class ResourcelocatorControllerTest extends SuluTestCase
         );
         $parentPage = \json_decode($this->client->getResponse()->getContent(), true);
 
-        $this->client->request('POST', '/api/resourcelocators?action=generate', [
+        $this->client->jsonRequest('POST', '/api/resourcelocators?action=generate', [
             'parentId' => $parentPage['id'],
             'parts' => ['title' => 'test1', 'discription' => 'test2'],
             'locale' => 'en',
@@ -71,7 +71,7 @@ class ResourcelocatorControllerTest extends SuluTestCase
     {
         $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'POST',
             '/api/pages?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&language=en&action=publish',
             [
@@ -82,7 +82,7 @@ class ResourcelocatorControllerTest extends SuluTestCase
         );
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        $this->client->request('POST', '/api/resourcelocators?action=generate', [
+        $this->client->jsonRequest('POST', '/api/resourcelocators?action=generate', [
             'parts' => ['title' => 'test'],
             'locale' => 'en',
             'webspace' => 'sulu_io',
