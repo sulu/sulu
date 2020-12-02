@@ -38,7 +38,7 @@ class SchemaMetadata
      * @param SchemaMetadata[] $anyOfs
      * @param SchemaMetadata[] $allOfs
      */
-    public function __construct(array $properties = [], array $anyOfs = [], array $allOfs = [], string $type = null)
+    public function __construct(array $properties = [], array $anyOfs = [], array $allOfs = [], ?string $type = null)
     {
         $this->properties = $properties;
         $this->anyOfs = $anyOfs;
@@ -46,29 +46,19 @@ class SchemaMetadata
         $this->type = $type;
     }
 
-    public function merge(self $schema)
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function merge(self $schema): self
     {
         return new self([], [], [$this, $schema], $schema->type ?? $this->type);
     }
 
-    public function toJsonSchema()
+    public function toJsonSchema(): array
     {
         $jsonSchema = [];
-
-        $jsonSchema['required'] = \array_values(
-            \array_map(
-                function(PropertyMetadata $propertyMetadata) {
-                    return $propertyMetadata->getName();
-                },
-                \array_filter(
-                    $this->properties,
-                    function(PropertyMetadata $propertyMetadata) {
-                        return $propertyMetadata->isMandatory();
-                    }
-                )
-            )
-        );
-
         $properties = [];
 
         foreach ($this->properties as $property) {
@@ -98,6 +88,24 @@ class SchemaMetadata
 
         if (null !== $this->type) {
             $jsonSchema['type'] = $this->type;
+        }
+
+        $required = \array_values(
+            \array_map(
+                function(PropertyMetadata $propertyMetadata) {
+                    return $propertyMetadata->getName();
+                },
+                \array_filter(
+                    $this->properties,
+                    function(PropertyMetadata $propertyMetadata) {
+                        return $propertyMetadata->isMandatory();
+                    }
+                )
+            )
+        );
+
+        if (\count($required) > 0 || empty($jsonSchema)) {
+            $jsonSchema['required'] = $required;
         }
 
         return $jsonSchema;

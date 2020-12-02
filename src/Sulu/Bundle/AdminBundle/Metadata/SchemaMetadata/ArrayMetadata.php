@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata;
 
-class ArrayMetadata extends PropertyMetadata
+class ArrayMetadata extends SchemaMetadata
 {
     /**
      * @var SchemaMetadata
@@ -34,14 +34,12 @@ class ArrayMetadata extends PropertyMetadata
     private $uniqueItems;
 
     public function __construct(
-        string $name,
-        bool $mandatory,
         SchemaMetadata $schemaMetadata,
         int $minItems = null,
         int $maxItems = null,
         bool $uniqueItems = null
     ) {
-        parent::__construct($name, $mandatory, 'array');
+        parent::__construct([], [], [], 'array');
 
         $this->schemaMetadata = $schemaMetadata;
         $this->minItems = $minItems;
@@ -49,13 +47,11 @@ class ArrayMetadata extends PropertyMetadata
         $this->uniqueItems = $uniqueItems;
     }
 
-    public function toJsonSchema(): ?array
+    public function toJsonSchema(): array
     {
-        $jsonSchema = [
-            'name' => $this->getName(),
-            'type' => 'array',
-            'items' => $this->schemaMetadata->toJsonSchema(),
-        ];
+        $jsonSchema = parent::toJsonSchema();
+
+        $jsonSchema['items'] = $this->schemaMetadata->toJsonSchema();
 
         if (null !== $this->minItems) {
             $jsonSchema['minItems'] = $this->minItems;

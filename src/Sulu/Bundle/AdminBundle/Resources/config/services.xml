@@ -99,6 +99,20 @@
         </service>
 
         <service
+            id="sulu_admin.property_metadata_min_max_value_resolver"
+            class="Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMinMaxValueResolver"/>
+
+        <service
+            id="sulu_admin.property_metadata_mapper.selection"
+            class="Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SelectionPropertyMetadataMapper">
+            <argument type="service" id="sulu_admin.property_metadata_min_max_value_resolver"/>
+        </service>
+
+        <service
+            id="sulu_admin.property_metadata_mapper.single_selection"
+            class="Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SingleSelectionPropertyMetadataMapper"/>
+
+        <service
             id="sulu_admin.form_metadata.form_metadata_mapper"
             class="Sulu\Bundle\AdminBundle\FormMetadata\FormMetadataMapper">
             <argument type="service" id="sulu_admin.property_metadata_mapper_registry"/>

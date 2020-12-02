@@ -24,15 +24,15 @@ class PropertyMetadata
     private $mandatory;
 
     /**
-     * @var string|null
+     * @var SchemaMetadata|null
      */
-    private $type;
+    private $schemaMetadata;
 
-    public function __construct(string $name, bool $mandatory, string $type = null)
+    public function __construct(string $name, bool $mandatory, ?SchemaMetadata $schemaMetadata = null)
     {
         $this->name = $name;
         $this->mandatory = $mandatory;
-        $this->type = $type;
+        $this->schemaMetadata = $schemaMetadata;
     }
 
     public function getName(): string
@@ -45,17 +45,15 @@ class PropertyMetadata
         return $this->mandatory;
     }
 
-    public function getType(): ?string
-    {
-        return $this->type;
-    }
-
     public function toJsonSchema(): ?array
     {
-        if (null === $this->type) {
-            return null;
+        if (null !== $this->schemaMetadata) {
+            $jsonSchema = $this->schemaMetadata->toJsonSchema();
+            $jsonSchema['name'] = $this->name;
+
+            return $jsonSchema;
         }
 
-        return ['type' => $this->type];
+        return null;
     }
 }

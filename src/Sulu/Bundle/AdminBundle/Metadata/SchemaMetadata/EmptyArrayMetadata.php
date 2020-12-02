@@ -11,10 +11,10 @@
 
 namespace Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata;
 
-class StringMetadata extends SchemaMetadata
+class EmptyArrayMetadata extends ArrayMetadata
 {
     public function __construct()
     {
-        parent::__construct([], [], [], 'string');
+        parent::__construct(new SchemaMetadata(), null, 0);
     }
 }

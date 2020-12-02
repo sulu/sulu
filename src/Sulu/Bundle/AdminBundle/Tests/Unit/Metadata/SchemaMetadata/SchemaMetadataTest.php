@@ -42,12 +42,12 @@ class SchemaMetadataTest extends TestCase
                     [
                         new SchemaMetadata(
                             [
-                                new ConstMetadata('nodeType', false, 2),
+                                new PropertyMetadata('nodeType', false, new ConstMetadata(2)),
                             ]
                         ),
                         new SchemaMetadata(
                             [
-                                new ConstMetadata('nodeType', false, 4),
+                                new PropertyMetadata('nodeType', false, new ConstMetadata(4)),
                             ]
                         ),
                     ]
@@ -65,10 +65,8 @@ class SchemaMetadataTest extends TestCase
                 'required' => ['title'],
                 'allOf' => [
                     [
-                        'required' => [],
                         'anyOf' => [
                             [
-                                'required' => [],
                                 'properties' => [
                                     'nodeType' => [
                                         'name' => 'nodeType',
@@ -77,7 +75,6 @@ class SchemaMetadataTest extends TestCase
                                 ],
                             ],
                             [
-                                'required' => [],
                                 'properties' => [
                                     'nodeType' => [
                                         'name' => 'nodeType',

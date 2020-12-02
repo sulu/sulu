@@ -31,17 +31,16 @@ class SingleSelectionPropertyMetadataMapperTest extends TestCase
     {
         $propertyMetadata = new PropertyMetadata();
         $propertyMetadata->setName('property-name');
-        $propertyMetadata->setRequired(false);
 
         $jsonSchema = $this->singleSelectionPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
 
         $this->assertEquals([
             'name' => 'property-name',
             'anyOf' => [
-                ['type' => 'string', 'required' => []],
-                ['type' => 'number', 'required' => []],
+                ['type' => 'string'],
+                ['type' => 'number'],
+                ['type' => 'null'],
             ],
-            'required' => [],
         ], $jsonSchema);
     }
 
@@ -56,10 +55,9 @@ class SingleSelectionPropertyMetadataMapperTest extends TestCase
         $this->assertEquals([
             'name' => 'property-name',
             'anyOf' => [
-                ['type' => 'string', 'required' => []],
-                ['type' => 'number', 'required' => []],
+                ['type' => 'string'],
+                ['type' => 'number'],
             ],
-            'required' => [],
         ], $jsonSchema);
     }
 }

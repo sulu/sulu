@@ -348,22 +348,30 @@ class SingleMediaSelectionTest extends TestCase
     {
         $propertyMetadata = new PropertyMetadata();
         $propertyMetadata->setName('property-name');
-        $propertyMetadata->setRequired(false);
 
         $jsonSchema = $this->singleMediaSelection->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
 
         $this->assertEquals([
             'name' => 'property-name',
-            'type' => 'object',
-            'properties' => [
-                'id' => [
-                    'type' => 'number',
+            'anyOf' => [
+                [
+                    'type' => 'object',
+                    'properties' => [
+                        'id' => [
+                            'anyOf' => [
+                                ['type' => 'number'],
+                                ['type' => 'null'],
+                            ],
+                            'name' => 'id',
+                        ],
+                        'displayOption' => [
+                            'type' => 'string',
+                            'name' => 'displayOption',
+                        ],
+                    ],
                 ],
-                'displayOption' => [
-                    'type' => 'string',
-                ],
+                ['type' => 'null'],
             ],
-            'required' => [],
         ], $jsonSchema);
     }
 
@@ -381,14 +389,14 @@ class SingleMediaSelectionTest extends TestCase
             'properties' => [
                 'id' => [
                     'type' => 'number',
+                    'name' => 'id',
                 ],
                 'displayOption' => [
                     'type' => 'string',
+                    'name' => 'displayOption',
                 ],
             ],
-            'required' => [
-                'id',
-            ],
+            'required' => ['id'],
         ], $jsonSchema);
     }
 }

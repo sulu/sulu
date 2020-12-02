@@ -11,10 +11,10 @@
 
 namespace Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata;
 
-class NumberMetadata extends PropertyMetadata
+class NumberMetadata extends SchemaMetadata
 {
-    public function __construct(string $name, bool $mandatory)
+    public function __construct()
     {
-        parent::__construct($name, $mandatory, 'number');
+        parent::__construct([], [], [], 'number');
     }
 }

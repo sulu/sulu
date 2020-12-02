@@ -310,6 +310,7 @@
             <argument type="service" id="sulu_media.reference_store.media"/>
             <argument type="service" id="sulu_core.webspace.request_analyzer"/>
             <argument>%sulu_security.permissions%</argument>
+            <argument type="service" id="sulu_admin.property_metadata_min_max_value_resolver" on-invalid="null"/>
 
             <tag name="sulu.content.type" alias="media_selection"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />

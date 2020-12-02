@@ -17,16 +17,21 @@ class SingleSelectionPropertyMetadataMapper implements PropertyMetadataMapperInt
 {
     public function mapPropertyMetadata(ContentPropertyMetadata $propertyMetadata): PropertyMetadata
     {
-        return new ObjectMetadata(
+        $mandatory = $propertyMetadata->isRequired();
+
+        $anyOfs = [
+            new StringMetadata(),
+            new NumberMetadata(),
+        ];
+
+        if (!$mandatory) {
+            $anyOfs[] = new NullMetadata();
+        }
+
+        return new PropertyMetadata(
             $propertyMetadata->getName(),
-            $propertyMetadata->isRequired(),
-            [],
-            [
-                new SchemaMetadata([], [], [], 'string'),
-                new SchemaMetadata([], [], [], 'number'),
-            ],
-            [],
-            null
+            $mandatory,
+            new AnyOfsMetadata($anyOfs)
         );
     }
 }

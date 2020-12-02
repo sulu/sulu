@@ -41,7 +41,7 @@ class FormMetadataProviderTest extends KernelTestCase
         $this->assertInstanceOf(FormMetadata::class, $form);
         $this->assertCount(3, $form->getItems());
         $schema = $form->getSchema()->toJsonSchema();
-        $this->assertCount(2, \array_keys($schema));
+        $this->assertCount(1, \array_keys($schema));
     }
 
     public function testGetMetadataWithExpressions()

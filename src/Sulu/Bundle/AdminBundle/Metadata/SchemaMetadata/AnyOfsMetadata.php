@@ -11,10 +11,13 @@
 
 namespace Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata;
 
-class StringMetadata extends SchemaMetadata
+class AnyOfsMetadata extends SchemaMetadata
 {
-    public function __construct()
+    /**
+     * @param SchemaMetadata[] $anyOfs
+     */
+    public function __construct(array $anyOfs)
     {
-        parent::__construct([], [], [], 'string');
+        parent::__construct([], $anyOfs);
     }
 }

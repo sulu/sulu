@@ -11,13 +11,13 @@
 
 namespace Sulu\Bundle\AdminBundle\FormMetadata;
 
-use Sulu\Bundle\AdminBundle\Exception\PropertyMetadataMapperNotFoundException;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\ItemMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\OptionMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SectionMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TagMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\AnyOfsMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ArrayMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ConstMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata;
@@ -209,7 +209,7 @@ class FormMetadataMapper
     /**
      * @param ContentItemMetadata[] $itemsMetadata
      *
-     * @return ItemMetadata[]
+     * @return PropertyMetadata[]
      */
     private function mapSchemaProperties(array $itemsMetadata): array
     {
@@ -224,31 +224,34 @@ class FormMetadataMapper
                     $blockTypeSchemas[] = new SchemaMetadata(
                         \array_merge(
                             $this->mapSchemaProperties($blockType->getChildren()),
-                            ['type' => new ConstMetadata('type', true, $blockType->getName())]
+                            ['type' => new PropertyMetadata('type', true, new ConstMetadata($blockType->getName()))]
                         )
                     );
                 }
 
-                return new ArrayMetadata(
+                return new PropertyMetadata(
                     $itemMetadata->getName(),
                     $itemMetadata->isRequired(),
-                    new SchemaMetadata([], $blockTypeSchemas)
+                    new ArrayMetadata(
+                        new AnyOfsMetadata($blockTypeSchemas)
+                    )
                 );
             }
 
             /** @var ContentPropertyMetadata $propertyMetadata */
             $propertyMetadata = $itemMetadata;
+            $type = $propertyMetadata->getType();
 
-            try {
+            if ($this->propertyMetadataMapperRegistry->has($type)) {
                 return $this->propertyMetadataMapperRegistry
-                    ->get($propertyMetadata->getType())
+                    ->get($type)
                     ->mapPropertyMetadata($propertyMetadata);
-            } catch (PropertyMetadataMapperNotFoundException $e) {
-                return new PropertyMetadata(
-                    $propertyMetadata->getName(),
-                    $propertyMetadata->isRequired()
-                );
             }
+
+            return new PropertyMetadata(
+                $propertyMetadata->getName(),
+                $propertyMetadata->isRequired()
+            );
         }, $itemsMetadata));
     }
 }

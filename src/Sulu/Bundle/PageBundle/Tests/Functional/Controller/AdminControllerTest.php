@@ -163,10 +163,8 @@ class AdminControllerTest extends SuluTestCase
         $this->assertObjectHasAttribute('url', $overviewType->form);
         $this->assertObjectHasAttribute('article', $overviewType->form);
         $this->assertObjectHasAttribute('schema', $overviewType);
-        $this->assertEquals([], $overviewType->schema->required);
         $this->assertCount(1, (array) $overviewType->schema->properties);
         $this->assertEquals('array', $overviewType->schema->properties->block->type);
-        $this->assertEquals([], $overviewType->schema->properties->block->items->required);
         $this->assertCount(2, $overviewType->schema->properties->block->items->anyOf);
         $this->assertEquals(['title', 'type'], $overviewType->schema->properties->block->items->anyOf[0]->required);
         $this->assertCount(1, (array) $overviewType->schema->properties->block->items->anyOf[0]->properties);
@@ -236,11 +234,7 @@ class AdminControllerTest extends SuluTestCase
         $this->assertObjectHasAttribute('ext/excerpt/description', $form);
         $this->assertObjectHasAttribute('ext/excerpt/segments', $form);
 
-        $schema = (array) $response->schema;
-
-        $this->assertArrayHasKey('required', $schema);
-        $this->assertEmpty($schema['required']);
-        $this->assertArrayHasKey('properties', $schema);
+        $this->assertObjectHasAttribute('properties', $response->schema);
     }
 
     public function testPageSettingFormMetadataAction()

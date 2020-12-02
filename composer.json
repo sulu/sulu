@@ -105,7 +105,8 @@
         "symfony/validator": "^4.4 || ^5.0",
         "symfony/yaml": "^4.4 || ^5.0",
         "toflar/psr6-symfony-http-cache-store": "^1.1 || ^2.0",
-        "twig/twig": "^1.41 || ^2.10 || ^3.0"
+        "twig/twig": "^1.41 || ^2.10 || ^3.0",
+        "webmozart/assert": "^1.9"
     },
     "require-dev": {
         "google/cloud-storage": "^1.0",

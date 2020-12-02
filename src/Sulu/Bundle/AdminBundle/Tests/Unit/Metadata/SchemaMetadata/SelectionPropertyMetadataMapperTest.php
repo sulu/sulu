@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\Metadata\SchemaMetadata;
 
 use PHPUnit\Framework\TestCase;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMinMaxValueResolver;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SelectionPropertyMetadataMapper;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 
@@ -24,7 +25,25 @@ class SelectionPropertyMetadataMapperTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->selectionPropertyMetadataMapper = new SelectionPropertyMetadataMapper();
+        $this->selectionPropertyMetadataMapper = new SelectionPropertyMetadataMapper(
+            new PropertyMetadataMinMaxValueResolver()
+        );
+    }
+
+    private function getNullSchema(): array
+    {
+        return [
+            'type' => 'null',
+        ];
+    }
+
+    private function getEmptyArraySchema(): array
+    {
+        return [
+            'type' => 'array',
+            'items' => ['required' => []],
+            'maxItems' => 0,
+        ];
     }
 
     public function testMapPropertyMetadata(): void
@@ -36,15 +55,20 @@ class SelectionPropertyMetadataMapperTest extends TestCase
 
         $this->assertEquals([
             'name' => 'property-name',
-            'type' => 'array',
-            'items' => [
-                'required' => [],
-                'anyOf' => [
-                    ['type' => 'string', 'required' => []],
-                    ['type' => 'number', 'required' => []],
+            'anyOf' => [
+                [
+                    'type' => 'array',
+                    'items' => [
+                        'anyOf' => [
+                            ['type' => 'string'],
+                            ['type' => 'number'],
+                        ],
+                    ],
+                    'uniqueItems' => true,
                 ],
+                $this->getEmptyArraySchema(),
+                $this->getNullSchema(),
             ],
-            'uniqueItems' => true,
         ], $jsonSchema);
     }
 
@@ -60,10 +84,9 @@ class SelectionPropertyMetadataMapperTest extends TestCase
             'name' => 'property-name',
             'type' => 'array',
             'items' => [
-                'required' => [],
                 'anyOf' => [
-                    ['type' => 'string', 'required' => []],
-                    ['type' => 'number', 'required' => []],
+                    ['type' => 'string'],
+                    ['type' => 'number'],
                 ],
             ],
             'minItems' => 1,
@@ -76,46 +99,34 @@ class SelectionPropertyMetadataMapperTest extends TestCase
         $propertyMetadata = new PropertyMetadata();
         $propertyMetadata->setName('property-name');
         $propertyMetadata->setParameters([
-            ['name' => 'min', 'value' => 3],
-            ['name' => 'max', 'value' => 5],
+            ['name' => 'min', 'value' => 2],
+            ['name' => 'max', 'value' => 3],
         ]);
 
         $jsonSchema = $this->selectionPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
 
         $this->assertEquals([
             'name' => 'property-name',
-            'type' => 'array',
-            'items' => [
-                'required' => [],
-                'anyOf' => [
-                    ['type' => 'string', 'required' => []],
-                    ['type' => 'number', 'required' => []],
+            'anyOf' => [
+                [
+                    'type' => 'array',
+                    'items' => [
+                        'anyOf' => [
+                            ['type' => 'string'],
+                            ['type' => 'number'],
+                        ],
+                    ],
+                    'minItems' => 2,
+                    'maxItems' => 3,
+                    'uniqueItems' => true,
                 ],
+                $this->getEmptyArraySchema(),
+                $this->getNullSchema(),
             ],
-            'minItems' => 3,
-            'maxItems' => 5,
-            'uniqueItems' => true,
         ], $jsonSchema);
     }
 
-    public function testGetValidatedMinMaxValue(): void
-    {
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
-        $propertyMetadata->setParameters([
-            ['name' => 'min', 'value' => 2],
-            ['name' => 'max', 'value' => 3],
-        ]);
-
-        $minMaxValue = SelectionPropertyMetadataMapper::getValidatedMinMaxValue($propertyMetadata);
-
-        $this->assertObjectHasAttribute('min', $minMaxValue);
-        $this->assertSame(2, $minMaxValue->min);
-        $this->assertObjectHasAttribute('max', $minMaxValue);
-        $this->assertSame(3, $minMaxValue->max);
-    }
-
-    public function testGetValidatedMinMaxValueMinOnly(): void
+    public function testMapPropertyMetadataMinAndMaxMinOnly(): void
     {
         $propertyMetadata = new PropertyMetadata();
         $propertyMetadata->setName('property-name');
@@ -123,15 +134,29 @@ class SelectionPropertyMetadataMapperTest extends TestCase
             ['name' => 'min', 'value' => 2],
         ]);
 
-        $minMaxValue = SelectionPropertyMetadataMapper::getValidatedMinMaxValue($propertyMetadata);
+        $jsonSchema = $this->selectionPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
 
-        $this->assertObjectHasAttribute('min', $minMaxValue);
-        $this->assertSame(2, $minMaxValue->min);
-        $this->assertObjectHasAttribute('max', $minMaxValue);
-        $this->assertNull($minMaxValue->max);
+        $this->assertEquals([
+            'name' => 'property-name',
+            'anyOf' => [
+                [
+                    'type' => 'array',
+                    'items' => [
+                        'anyOf' => [
+                            ['type' => 'string'],
+                            ['type' => 'number'],
+                        ],
+                    ],
+                    'minItems' => 2,
+                    'uniqueItems' => true,
+                ],
+                $this->getEmptyArraySchema(),
+                $this->getNullSchema(),
+            ],
+        ], $jsonSchema);
     }
 
-    public function testGetValidatedMinMaxValueMaxOnly(): void
+    public function testMapPropertyMetadataMinAndMaxMaxOnly(): void
     {
         $propertyMetadata = new PropertyMetadata();
         $propertyMetadata->setName('property-name');
@@ -139,42 +164,55 @@ class SelectionPropertyMetadataMapperTest extends TestCase
             ['name' => 'max', 'value' => 2],
         ]);
 
-        $minMaxValue = SelectionPropertyMetadataMapper::getValidatedMinMaxValue($propertyMetadata);
+        $jsonSchema = $this->selectionPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
 
-        $this->assertObjectHasAttribute('min', $minMaxValue);
-        $this->assertNull($minMaxValue->min);
-        $this->assertObjectHasAttribute('max', $minMaxValue);
-        $this->assertSame(2, $minMaxValue->max);
+        $this->assertEquals([
+            'name' => 'property-name',
+            'anyOf' => [
+                [
+                    'type' => 'array',
+                    'items' => [
+                        'anyOf' => [
+                            ['type' => 'string'],
+                            ['type' => 'number'],
+                        ],
+                    ],
+                    'maxItems' => 2,
+                    'uniqueItems' => true,
+                ],
+                $this->getEmptyArraySchema(),
+                $this->getNullSchema(),
+            ],
+        ], $jsonSchema);
     }
 
-    public function testGetValidatedMinMaxValueWithoutParams(): void
+    public function testMapPropertyMetadataMinAndMaxWithoutParams(): void
     {
         $propertyMetadata = new PropertyMetadata();
         $propertyMetadata->setName('property-name');
 
-        $minMaxValue = SelectionPropertyMetadataMapper::getValidatedMinMaxValue($propertyMetadata);
+        $jsonSchema = $this->selectionPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
 
-        $this->assertObjectHasAttribute('min', $minMaxValue);
-        $this->assertNull($minMaxValue->min);
-        $this->assertObjectHasAttribute('max', $minMaxValue);
-        $this->assertNull($minMaxValue->max);
+        $this->assertEquals([
+            'name' => 'property-name',
+            'anyOf' => [
+                [
+                    'type' => 'array',
+                    'items' => [
+                        'anyOf' => [
+                            ['type' => 'string'],
+                            ['type' => 'number'],
+                        ],
+                    ],
+                    'uniqueItems' => true,
+                ],
+                $this->getEmptyArraySchema(),
+                $this->getNullSchema(),
+            ],
+        ], $jsonSchema);
     }
 
-    public function testGetValidatedMinMaxValueWithoutParamsRequired(): void
-    {
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
-        $propertyMetadata->setRequired(true);
-
-        $minMaxValue = SelectionPropertyMetadataMapper::getValidatedMinMaxValue($propertyMetadata);
-
-        $this->assertObjectHasAttribute('min', $minMaxValue);
-        $this->assertSame(1, $minMaxValue->min);
-        $this->assertObjectHasAttribute('max', $minMaxValue);
-        $this->assertNull($minMaxValue->max);
-    }
-
-    public function testGetValidatedMinMaxValueWithIntegerishValues(): void
+    public function testMapPropertyMetadataMinAndMaxWithIntegerishValues(): void
     {
         $propertyMetadata = new PropertyMetadata();
         $propertyMetadata->setName('property-name');
@@ -183,32 +221,30 @@ class SelectionPropertyMetadataMapperTest extends TestCase
             ['name' => 'max', 'value' => '3'],
         ]);
 
-        $minMaxValue = SelectionPropertyMetadataMapper::getValidatedMinMaxValue($propertyMetadata);
+        $jsonSchema = $this->selectionPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
 
-        $this->assertObjectHasAttribute('min', $minMaxValue);
-        $this->assertSame(2, $minMaxValue->min);
-        $this->assertObjectHasAttribute('max', $minMaxValue);
-        $this->assertSame(3, $minMaxValue->max);
+        $this->assertEquals([
+            'name' => 'property-name',
+            'anyOf' => [
+                [
+                    'type' => 'array',
+                    'items' => [
+                        'anyOf' => [
+                            ['type' => 'string'],
+                            ['type' => 'number'],
+                        ],
+                    ],
+                    'minItems' => 2,
+                    'maxItems' => 3,
+                    'uniqueItems' => true,
+                ],
+                $this->getEmptyArraySchema(),
+                $this->getNullSchema(),
+            ],
+        ], $jsonSchema);
     }
 
-    public function testGetValidatedMinMaxValueWithDifferentParamNames(): void
-    {
-        $propertyMetadata = new PropertyMetadata();
-        $propertyMetadata->setName('property-name');
-        $propertyMetadata->setParameters([
-            ['name' => 'minItems', 'value' => 2],
-            ['name' => 'maxItems', 'value' => 3],
-        ]);
-
-        $minMaxValue = SelectionPropertyMetadataMapper::getValidatedMinMaxValue($propertyMetadata, 'minItems', 'maxItems');
-
-        $this->assertObjectHasAttribute('min', $minMaxValue);
-        $this->assertSame(2, $minMaxValue->min);
-        $this->assertObjectHasAttribute('max', $minMaxValue);
-        $this->assertSame(3, $minMaxValue->max);
-    }
-
-    public function testGetValidatedMinMaxValueMinInvalidType(): void
+    public function testMapPropertyMetadataMinAndMaxMinInvalidType(): void
     {
         $this->expectExceptionMessage('Parameter "min" of property "property-name" needs to be either null or of type int');
 
@@ -218,10 +254,10 @@ class SelectionPropertyMetadataMapperTest extends TestCase
             ['name' => 'min', 'value' => 'invalid-value'],
         ]);
 
-        SelectionPropertyMetadataMapper::getValidatedMinMaxValue($propertyMetadata);
+        $this->selectionPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata);
     }
 
-    public function testGetValidatedMinMaxValueMinTooLow(): void
+    public function testMapPropertyMetadataMinAndMaxMinTooLow(): void
     {
         $this->expectExceptionMessage('Parameter "min" of property "property-name" needs to be greater than or equal "0"');
 
@@ -231,10 +267,10 @@ class SelectionPropertyMetadataMapperTest extends TestCase
             ['name' => 'min', 'value' => -1],
         ]);
 
-        SelectionPropertyMetadataMapper::getValidatedMinMaxValue($propertyMetadata);
+        $this->selectionPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata);
     }
 
-    public function testGetValidatedMinMaxValueMandatoryMinTooLow(): void
+    public function testMapPropertyMetadataMinAndMaxMandatoryMinTooLow(): void
     {
         $this->expectExceptionMessage('Because property "property-name" is mandatory, parameter "min" needs to be greater than or equal "1"');
 
@@ -245,10 +281,10 @@ class SelectionPropertyMetadataMapperTest extends TestCase
             ['name' => 'min', 'value' => 0],
         ]);
 
-        SelectionPropertyMetadataMapper::getValidatedMinMaxValue($propertyMetadata);
+        $this->selectionPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata);
     }
 
-    public function testGetValidatedMinMaxValueMaxInvalidType(): void
+    public function testMapPropertyMetadataMinAndMaxMaxInvalidType(): void
     {
         $this->expectExceptionMessage('Parameter "max" of property "property-name" needs to be either null or of type int');
 
@@ -258,10 +294,10 @@ class SelectionPropertyMetadataMapperTest extends TestCase
             ['name' => 'max', 'value' => 'invalid-value'],
         ]);
 
-        SelectionPropertyMetadataMapper::getValidatedMinMaxValue($propertyMetadata);
+        $this->selectionPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata);
     }
 
-    public function testGetValidatedMinMaxValueMaxTooLow(): void
+    public function testMapPropertyMetadataMinAndMaxMaxTooLow(): void
     {
         $this->expectExceptionMessage('Parameter "max" of property "property-name" needs to be greater than or equal "1"');
 
@@ -271,10 +307,10 @@ class SelectionPropertyMetadataMapperTest extends TestCase
             ['name' => 'max', 'value' => 0],
         ]);
 
-        SelectionPropertyMetadataMapper::getValidatedMinMaxValue($propertyMetadata);
+        $this->selectionPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata);
     }
 
-    public function testGetValidatedMinMaxValueMaxLowerThanMin(): void
+    public function testMapPropertyMetadataMinAndMaxMaxLowerThanMin(): void
     {
         $this->expectExceptionMessage('Because parameter "min" of property "property-name" has value "2", parameter "max" needs to be greater than or equal "2"');
 
@@ -285,6 +321,6 @@ class SelectionPropertyMetadataMapperTest extends TestCase
             ['name' => 'max', 'value' => 1],
         ]);
 
-        SelectionPropertyMetadataMapper::getValidatedMinMaxValue($propertyMetadata);
+        $this->selectionPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata);
     }
 }
