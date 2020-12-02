@@ -76,7 +76,7 @@ class ResettingControllerTest extends SuluTestCase
     {
         $this->client->enableProfiler();
 
-        static::jsonRequest($this->client, 'GET', '/security/reset/email', [
+        $this->client->jsonRequest('GET', '/security/reset/email', [
             'user' => $this->users[0]->getEmail(),
         ]);
 
@@ -114,7 +114,7 @@ class ResettingControllerTest extends SuluTestCase
     {
         $this->client->enableProfiler();
 
-        static::jsonRequest($this->client, 'GET', '/security/reset/email', [
+        $this->client->jsonRequest('GET', '/security/reset/email', [
             'user' => $this->users[0]->getUsername(),
         ]);
 
@@ -153,7 +153,7 @@ class ResettingControllerTest extends SuluTestCase
     {
         $this->client->enableProfiler();
 
-        static::jsonRequest($this->client, 'GET', '/security/reset/email', [
+        $this->client->jsonRequest('GET', '/security/reset/email', [
             'user' => $this->users[1]->getUsername(),
         ]);
 
@@ -196,7 +196,7 @@ class ResettingControllerTest extends SuluTestCase
         $counter = 1;
         $maxNumberEmails = $this->getContainer()->getParameter('sulu_security.reset_password.mail.token_send_limit');
         for (; $counter < $maxNumberEmails; ++$counter) {
-            static::jsonRequest($this->client, 'GET', '/security/reset/email', [
+            $this->client->jsonRequest('GET', '/security/reset/email', [
                 'user' => $this->users[2]->getEmail(),
             ]);
 
@@ -209,7 +209,7 @@ class ResettingControllerTest extends SuluTestCase
         }
 
         // now this request should fail
-        static::jsonRequest($this->client, 'GET', '/security/reset/email', [
+        $this->client->jsonRequest('GET', '/security/reset/email', [
             'user' => $this->users[2]->getEmail(),
         ]);
 
@@ -230,7 +230,7 @@ class ResettingControllerTest extends SuluTestCase
     {
         $this->client->enableProfiler();
 
-        static::jsonRequest($this->client, 'GET', '/security/reset/email');
+        $this->client->jsonRequest('GET', '/security/reset/email');
 
         $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
 
@@ -245,7 +245,7 @@ class ResettingControllerTest extends SuluTestCase
     {
         $this->client->enableProfiler();
 
-        static::jsonRequest($this->client, 'GET', '/security/reset/email', [
+        $this->client->jsonRequest('GET', '/security/reset/email', [
             'user' => 'lord.voldemort@askab.an',
         ]);
 
@@ -262,7 +262,7 @@ class ResettingControllerTest extends SuluTestCase
     {
         $this->client->enableProfiler();
 
-        static::jsonRequest($this->client, 'GET', '/security/reset/email', [
+        $this->client->jsonRequest('GET', '/security/reset/email', [
             'user' => $this->users[0]->getUsername(),
         ]);
         $response = \json_decode($this->client->getResponse()->getContent());
@@ -271,7 +271,7 @@ class ResettingControllerTest extends SuluTestCase
         $this->assertEquals(null, $response);
 
         // second request should be blocked
-        static::jsonRequest($this->client, 'GET', '/security/reset/email', [
+        $this->client->jsonRequest('GET', '/security/reset/email', [
             'user' => $this->users[0]->getUsername(),
         ]);
         $response = \json_decode($this->client->getResponse()->getContent());
@@ -286,7 +286,7 @@ class ResettingControllerTest extends SuluTestCase
     {
         $newPassword = 'anewpasswordishouldremeber';
 
-        static::jsonRequest($this->client, 'GET', '/security/reset/email', [
+        $this->client->jsonRequest('GET', '/security/reset/email', [
             'user' => $this->users[2]->getUsername(),
         ]);
         $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
@@ -294,7 +294,7 @@ class ResettingControllerTest extends SuluTestCase
         \preg_match('/forgotPasswordToken=(.*)/', $message->getBody(), $regexMatches);
         $token = $regexMatches[1];
 
-        static::jsonRequest($this->client, 'GET', '/security/reset', [
+        $this->client->jsonRequest('GET', '/security/reset', [
             'token' => $token,
             'password' => $newPassword,
         ]);
@@ -316,7 +316,7 @@ class ResettingControllerTest extends SuluTestCase
     {
         $passwordBefore = $this->users[2]->getPassword();
 
-        static::jsonRequest($this->client, 'GET', '/security/reset', [
+        $this->client->jsonRequest('GET', '/security/reset', [
             'password' => 'thispasswordshouldnotbeapplied',
         ]);
         $response = \json_decode($this->client->getResponse()->getContent());
@@ -331,7 +331,7 @@ class ResettingControllerTest extends SuluTestCase
     {
         $passwordBefore = $this->users[2]->getPassword();
 
-        static::jsonRequest($this->client, 'GET', '/security/reset', [
+        $this->client->jsonRequest('GET', '/security/reset', [
             'token' => 'thistokendoesnotexist',
             'password' => 'thispasswordshouldnotbeapplied',
         ]);
@@ -350,7 +350,7 @@ class ResettingControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        static::jsonRequest($this->client, 'GET', '/security/reset/email', [
+        $this->client->jsonRequest('GET', '/security/reset/email', [
             'user' => $user->getUsername(),
         ]);
         $this->assertHttpStatusCode(204, $this->client->getResponse());
@@ -373,7 +373,7 @@ class ResettingControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        static::jsonRequest($this->client, 'GET', '/security/reset/email', [
+        $this->client->jsonRequest('GET', '/security/reset/email', [
             'user' => $user->getUsername(),
         ]);
         $this->assertHttpStatusCode(204, $this->client->getResponse());

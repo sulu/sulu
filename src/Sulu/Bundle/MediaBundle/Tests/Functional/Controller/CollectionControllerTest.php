@@ -281,7 +281,7 @@ class CollectionControllerTest extends SuluTestCase
 
     public function testGetById()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/collections/' . $this->collection1->getId(),
             [
@@ -324,7 +324,7 @@ class CollectionControllerTest extends SuluTestCase
             );
         }
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/collections',
             [
@@ -344,7 +344,7 @@ class CollectionControllerTest extends SuluTestCase
     {
         $collection = $this->createCollection($this->collectionType1);
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/collections',
             [
@@ -366,7 +366,7 @@ class CollectionControllerTest extends SuluTestCase
     {
         $collection = $this->createCollection($this->collectionType1);
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/collections',
             [
@@ -397,7 +397,7 @@ class CollectionControllerTest extends SuluTestCase
             );
         }
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/collections',
             [
@@ -430,7 +430,7 @@ class CollectionControllerTest extends SuluTestCase
             ['en-gb' => 'Test Collection B', 'de' => 'Test Kollektion B']
         );
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/collections?sortBy=title&page=1&limit=2',
             [
@@ -453,7 +453,7 @@ class CollectionControllerTest extends SuluTestCase
 
     public function testcGetPaginatedWithRoot()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/collections?sortBy=title&page=1&limit=2&includeRoot=true',
             [
@@ -477,7 +477,7 @@ class CollectionControllerTest extends SuluTestCase
 
     public function testcGetPaginatedWithParentAndIgnoredRoot()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/collections?sortBy=title&page=1&limit=2&includeRoot=true&parentId=' . $this->collection1->getId(),
             [
@@ -513,7 +513,7 @@ class CollectionControllerTest extends SuluTestCase
             $parent
         );
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/collections?sortBy=title&page=1&limit=2',
             [
@@ -536,7 +536,7 @@ class CollectionControllerTest extends SuluTestCase
 
     public function testGetByIdNotExisting()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/collections/10?locale=en'
         );
@@ -555,7 +555,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertNotEmpty($generateColor);
         $this->assertEquals(7, \strlen($generateColor));
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'POST',
             '/api/collections',
             [
@@ -594,7 +594,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertNotEmpty($response->changer);
         */
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/collections?flat=true',
             [
@@ -655,7 +655,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertNotEmpty($generateColor);
         $this->assertEquals(7, \strlen($generateColor));
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'POST',
             '/api/collections',
             [
@@ -691,7 +691,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertEquals('This Description 2 is only for testing', $response->description);
         $this->assertEquals($this->collection1->getId(), $response->_embedded->parent->id);
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/collections/' . $this->collection1->getId() . '?depth=1&children=true',
             [
@@ -721,7 +721,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertEquals('Test Collection 2', $responseFirstEntity->title);
         $this->assertEquals('This Description 2 is only for testing', $responseFirstEntity->description);
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/collections?flat=true&depth=2',
             [
@@ -738,7 +738,7 @@ class CollectionControllerTest extends SuluTestCase
 
     public function testPostWithoutDetails()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'POST',
             '/api/collections',
             [
@@ -763,7 +763,7 @@ class CollectionControllerTest extends SuluTestCase
 
         // get collection in locale 'en-gb'
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/collections',
             [
@@ -809,7 +809,7 @@ class CollectionControllerTest extends SuluTestCase
 
         // get collection in locale 'en'
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/collections',
             [
@@ -861,7 +861,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertNotEmpty($generateColor);
         $this->assertEquals(7, \strlen($generateColor));
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'POST',
             '/api/collections',
             [
@@ -889,7 +889,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->getContainer()->get('sulu_media.system_collections.manager')->warmUp();
         $this->client->getContainer()->get('sulu_media.system_collections.manager')->warmUp();
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'PUT',
             '/api/collections/' . $this->collection1->getId(),
             [
@@ -906,7 +906,7 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/collections/' . $this->collection1->getId(),
             [
@@ -932,7 +932,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertEquals('This Description is only for testing changed', $response->description);
         $this->assertEquals('en-gb', $response->locale);
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/collections?locale=en-gb'
         );
@@ -971,7 +971,7 @@ class CollectionControllerTest extends SuluTestCase
 
     public function testPutWithoutLocale()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'PUT',
             '/api/collections/' . $this->collection1->getId(),
             [
@@ -998,7 +998,7 @@ class CollectionControllerTest extends SuluTestCase
             5
         );
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'PUT',
             '/api/collections/' . $childCollection->getId() . '?breadcrumb=true',
             [
@@ -1031,7 +1031,7 @@ class CollectionControllerTest extends SuluTestCase
             5
         );
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'PUT',
             '/api/collections/' . $childCollection->getId(),
             [
@@ -1066,7 +1066,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->em->flush();
 
         // Test put with only details
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'PUT',
             '/api/collections/' . $this->collection1->getId(),
             [
@@ -1083,7 +1083,7 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/collections/' . $this->collection1->getId() . '?locale=en-gb'
         );
@@ -1101,7 +1101,7 @@ class CollectionControllerTest extends SuluTestCase
 
     public function testPutNotExisting()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'PUT',
             '/api/collections/404',
             [
@@ -1121,10 +1121,10 @@ class CollectionControllerTest extends SuluTestCase
     {
         $collection1Id = $this->collection1->getId();
 
-        static::jsonRequest($this->client, 'DELETE', '/api/collections/' . $collection1Id);
+        $this->client->jsonRequest('DELETE', '/api/collections/' . $collection1Id);
         $this->assertHttpStatusCode(204, $this->client->getResponse());
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/collections/' . $collection1Id . '?locale=en'
         );
@@ -1138,10 +1138,10 @@ class CollectionControllerTest extends SuluTestCase
 
     public function testDeleteByIdNotExisting()
     {
-        static::jsonRequest($this->client, 'DELETE', '/api/collections/404');
+        $this->client->jsonRequest('DELETE', '/api/collections/404');
         $this->assertHttpStatusCode(404, $this->client->getResponse());
 
-        static::jsonRequest($this->client, 'GET', '/api/collections?locale=en&flat=true');
+        $this->client->jsonRequest('GET', '/api/collections?locale=en&flat=true');
         $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(2, $response->total);
     }
@@ -1214,7 +1214,7 @@ class CollectionControllerTest extends SuluTestCase
     {
         list($titles) = $this->prepareTree();
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/collections?flat=true',
             [
@@ -1233,7 +1233,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertContains(['title' => $titles[0], 'parent' => null, 'collections' => []], $items);
         $this->assertContains(['title' => $titles[3], 'parent' => null, 'collections' => []], $items);
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/collections?flat=true&depth=1',
             [
@@ -1256,7 +1256,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertContains(['title' => $titles[4], 'parent' => $titles[3], 'collections' => []], $items);
         $this->assertContains(['title' => $titles[5], 'parent' => $titles[3], 'collections' => []], $items);
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/collections?flat=true&depth=2',
             [
@@ -1285,7 +1285,7 @@ class CollectionControllerTest extends SuluTestCase
     {
         list($titles) = $this->prepareTree();
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/collections',
             [
@@ -1303,7 +1303,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertContains(['title' => $titles[0], 'parent' => null, 'collections' => []], $items);
         $this->assertContains(['title' => $titles[3], 'parent' => null, 'collections' => []], $items);
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/collections?depth=1',
             [
@@ -1341,7 +1341,7 @@ class CollectionControllerTest extends SuluTestCase
             $items
         );
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/collections?depth=2',
             [
@@ -1390,7 +1390,7 @@ class CollectionControllerTest extends SuluTestCase
     {
         list($titles, $ids) = $this->prepareTree();
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/collections/' . $ids[6],
             [
@@ -1414,7 +1414,7 @@ class CollectionControllerTest extends SuluTestCase
     {
         list($titles, $ids) = $this->prepareTree();
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/collections/' . $ids[3],
             [
@@ -1429,7 +1429,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertNull($response->_embedded->parent);
         $this->assertEmpty($response->_embedded->collections);
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/collections/' . $ids[3] . '?depth=1&children=true',
             [
@@ -1449,7 +1449,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertContains(['title' => $titles[4], 'parent' => $titles[3], 'collections' => []], $items);
         $this->assertContains(['title' => $titles[5], 'parent' => $titles[3], 'collections' => []], $items);
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/collections/' . $ids[3] . '?depth=2&children=true',
             [
@@ -1484,7 +1484,7 @@ class CollectionControllerTest extends SuluTestCase
     {
         list($titles, $ids) = $this->prepareTree();
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'POST',
             '/api/collections/' . $ids[3] . '?action=move&destination=' . $ids[0],
             [
@@ -1497,7 +1497,7 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->assertEquals($ids[0], $response->_embedded->parent->id);
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/collections?depth=3',
             [
@@ -1532,7 +1532,7 @@ class CollectionControllerTest extends SuluTestCase
             'sulu_media'
         );
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'POST',
             '/api/collections',
             [
@@ -1555,7 +1555,7 @@ class CollectionControllerTest extends SuluTestCase
             'sulu_media'
         );
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'PUT',
             '/api/collections/' . $collectionId,
             [
@@ -1577,10 +1577,10 @@ class CollectionControllerTest extends SuluTestCase
             'sulu_media'
         );
 
-        static::jsonRequest($this->client, 'DELETE', '/api/collections/' . $collectionId);
+        $this->client->jsonRequest('DELETE', '/api/collections/' . $collectionId);
         $this->assertHttpStatusCode(403, $this->client->getResponse());
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/collections/' . $collectionId . '?locale=en'
         );

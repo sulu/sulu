@@ -168,7 +168,7 @@ class SearchControllerTest extends SuluTestCase
             $hitResult['document']['changerId'] = $this->user->getId();
         }
 
-        static::jsonRequest($this->client, 'GET', '/search/query', $params);
+        $this->client->jsonRequest('GET', '/search/query', $params);
 
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(200, $response);
@@ -179,7 +179,7 @@ class SearchControllerTest extends SuluTestCase
 
     public function testGetIndexes()
     {
-        static::jsonRequest($this->client, 'GET', '/search/indexes');
+        $this->client->jsonRequest('GET', '/search/indexes');
 
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(200, $response);

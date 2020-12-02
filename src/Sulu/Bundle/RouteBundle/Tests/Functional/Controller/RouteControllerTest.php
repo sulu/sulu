@@ -45,7 +45,7 @@ class RouteControllerTest extends SuluTestCase
 
     public function testGenerate()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'POST',
             '/api/routes?action=generate',
             [
@@ -77,7 +77,7 @@ class RouteControllerTest extends SuluTestCase
         $this->entityManager->flush();
         $this->entityManager->clear();
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             \sprintf(
                 '/api/routes?resourceKey=%s&id=%s&locale=%s',
@@ -99,7 +99,7 @@ class RouteControllerTest extends SuluTestCase
 
     public function testCGetActionNotExistingResourceKey()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             \sprintf(
                 '/api/routes?resourceKey=%s&id=%s&locale=%s',
@@ -125,7 +125,7 @@ class RouteControllerTest extends SuluTestCase
         $this->entityManager->flush();
         $this->entityManager->clear();
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             \sprintf(
                 '/api/routes?history=true&resourceKey=%s&id=%s&locale=%s',
@@ -169,10 +169,10 @@ class RouteControllerTest extends SuluTestCase
 
         $targetRouteId = $targetRoute->getId();
 
-        static::jsonRequest($this->client, 'DELETE', '/api/routes?ids=' . $targetRouteId);
+        $this->client->jsonRequest('DELETE', '/api/routes?ids=' . $targetRouteId);
         $this->assertHttpStatusCode(204, $this->client->getResponse());
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             \sprintf(
                 '/api/routes?history=true&resourceKey=%s&id=%s&locale=%s',
@@ -198,10 +198,10 @@ class RouteControllerTest extends SuluTestCase
         $this->entityManager->flush();
         $this->entityManager->clear();
 
-        static::jsonRequest($this->client, 'DELETE', '/api/routes?ids=' . $routes[0]->getId());
+        $this->client->jsonRequest('DELETE', '/api/routes?ids=' . $routes[0]->getId());
         $this->assertHttpStatusCode(204, $this->client->getResponse());
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             \sprintf(
                 '/api/routes?history=true&resourceKey=%s&id=%s&locale=%s',

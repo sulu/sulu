@@ -80,7 +80,7 @@ class AccountControllerTest extends SuluTestCase
 
         // Make get request on flat api.
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/accounts?flat=true',
             [
@@ -112,7 +112,7 @@ class AccountControllerTest extends SuluTestCase
 
         // Make get request on flat api.
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/accounts?flat=true',
             [
@@ -134,7 +134,7 @@ class AccountControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/accounts'
         );
@@ -198,7 +198,7 @@ class AccountControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/accounts/' . $account->getId()
         );
@@ -245,7 +245,7 @@ class AccountControllerTest extends SuluTestCase
 
     public function testGetByIdNotExisting()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/accounts/11230'
         );
@@ -266,7 +266,7 @@ class AccountControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        static::jsonRequest($this->client, 'GET', '/api/accounts/' . $account->getId() . '/contacts?flat=true');
+        $this->client->jsonRequest('GET', '/api/accounts/' . $account->getId() . '/contacts?flat=true');
 
         $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $this->client->getResponse());
@@ -321,7 +321,7 @@ class AccountControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/accounts/' . $account->getId() . '/contacts?flat=true&fields=firstName&sortBy=firstName'
         );
@@ -371,7 +371,7 @@ class AccountControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/accounts/' . $account->getId() . '/contacts?search=Max&searchFields=fullName&flat=true&fields=fullName'
         );
@@ -405,7 +405,7 @@ class AccountControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'POST',
             '/api/accounts',
             [
@@ -526,7 +526,7 @@ class AccountControllerTest extends SuluTestCase
 
     public function testPostWithNullContactDetails()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'POST',
             '/api/accounts',
             [
@@ -542,7 +542,7 @@ class AccountControllerTest extends SuluTestCase
 
     public function testPostWithNullLogo()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'POST',
             '/api/accounts',
             [
@@ -568,7 +568,7 @@ class AccountControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'POST',
             '/api/accounts',
             [
@@ -589,7 +589,7 @@ class AccountControllerTest extends SuluTestCase
         $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertStringContainsString('15', $response->message);
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'POST',
             '/api/accounts',
             [
@@ -614,7 +614,7 @@ class AccountControllerTest extends SuluTestCase
         $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertStringContainsString('16', $response->message);
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'POST',
             '/api/accounts',
             [
@@ -639,7 +639,7 @@ class AccountControllerTest extends SuluTestCase
         $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertStringContainsString('17', $response->message);
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'POST',
             '/api/accounts',
             [
@@ -663,7 +663,7 @@ class AccountControllerTest extends SuluTestCase
         $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertStringContainsString('18', $response->message);
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'POST',
             '/api/accounts',
             [
@@ -684,7 +684,7 @@ class AccountControllerTest extends SuluTestCase
 
     public function testPostWithNotExistingUrlType()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'POST',
             '/api/accounts',
             [
@@ -707,7 +707,7 @@ class AccountControllerTest extends SuluTestCase
 
     public function testPostWithNotExistingEmailType()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'POST',
             '/api/accounts',
             [
@@ -738,7 +738,7 @@ class AccountControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'POST',
             '/api/accounts',
             [
@@ -765,7 +765,7 @@ class AccountControllerTest extends SuluTestCase
 
     public function testPostWithNotExistingAddressType()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'POST',
             '/api/accounts',
             [
@@ -791,7 +791,7 @@ class AccountControllerTest extends SuluTestCase
 
     public function testPostWithNotExistingFaxType()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'POST',
             '/api/accounts',
             [
@@ -814,7 +814,7 @@ class AccountControllerTest extends SuluTestCase
 
     public function testPostWithNotExistingCountry()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'POST',
             '/api/accounts',
             [
@@ -847,7 +847,7 @@ class AccountControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        static::jsonRequest($this->client, 'GET', '/api/accounts?flat=true');
+        $this->client->jsonRequest('GET', '/api/accounts?flat=true');
         $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals(3, $response->total);
@@ -862,13 +862,13 @@ class AccountControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        static::jsonRequest($this->client, 'GET', '/api/accounts?flat=true&search=Nothing&searchFields=name');
+        $this->client->jsonRequest('GET', '/api/accounts?flat=true&search=Nothing&searchFields=name');
         $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals(0, $response->total);
         $this->assertEquals(0, \count($response->_embedded->accounts));
 
-        static::jsonRequest($this->client, 'GET', '/api/accounts?flat=true&search=Comp&searchFields=name');
+        $this->client->jsonRequest('GET', '/api/accounts?flat=true&search=Comp&searchFields=name');
         $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals(1, $response->total);
@@ -915,7 +915,7 @@ class AccountControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'PUT',
             '/api/accounts/' . $account->getId(),
             [
@@ -1145,7 +1145,7 @@ class AccountControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'PUT',
             '/api/accounts/' . $account->getId(),
             [
@@ -1210,7 +1210,7 @@ class AccountControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'PUT',
             '/api/accounts/' . $account->getId(),
             [
@@ -1234,7 +1234,7 @@ class AccountControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'PUT',
             '/api/accounts/' . $account->getId() . '/contacts/' . $contact->getId(),
             [
@@ -1244,7 +1244,7 @@ class AccountControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        static::jsonRequest($this->client, 'GET', '/api/accounts/' . $account->getId() . '/contacts?flat=true');
+        $this->client->jsonRequest('GET', '/api/accounts/' . $account->getId() . '/contacts?flat=true');
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $response = \json_decode($this->client->getResponse()->getContent());
 
@@ -1276,7 +1276,7 @@ class AccountControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'PUT',
             '/api/accounts/' . $account->getId(),
             [
@@ -1293,7 +1293,7 @@ class AccountControllerTest extends SuluTestCase
 
     public function testPutNotExisting()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'PUT',
             '/api/accounts/4711',
             [
@@ -1306,7 +1306,7 @@ class AccountControllerTest extends SuluTestCase
 
     public function testPatchNotExisting()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'PATCH',
             '/api/accounts/101',
             [
@@ -1331,12 +1331,12 @@ class AccountControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        static::jsonRequest($this->client, 'GET', '/api/accounts/' . $account->getId());
+        $this->client->jsonRequest('GET', '/api/accounts/' . $account->getId());
         $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(0, \count($response->medias));
 
         // add two medias
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'PATCH',
             '/api/accounts/' . $account->getId(),
             [
@@ -1351,7 +1351,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertCount(2, $response->medias);
 
         // remove medias
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'PATCH',
             '/api/accounts/' . $account->getId(),
             [
@@ -1363,7 +1363,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals(0, \count($response->medias));
 
         // missing media
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'PATCH',
             '/api/accounts/' . $account->getId(),
             [
@@ -1376,7 +1376,7 @@ class AccountControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(404, $this->client->getResponse());
 
-        static::jsonRequest($this->client, 'GET', '/api/accounts/' . $account->getId());
+        $this->client->jsonRequest('GET', '/api/accounts/' . $account->getId());
         $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(0, \count($response->medias));
     }
@@ -1387,7 +1387,7 @@ class AccountControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        static::jsonRequest($this->client, 'DELETE', '/api/accounts/' . $account->getId());
+        $this->client->jsonRequest('DELETE', '/api/accounts/' . $account->getId());
         $this->assertHttpStatusCode(204, $this->client->getResponse());
     }
 
@@ -1398,7 +1398,7 @@ class AccountControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        static::jsonRequest($this->client, 'DELETE', '/api/accounts/' . $parentAccount->getId());
+        $this->client->jsonRequest('DELETE', '/api/accounts/' . $parentAccount->getId());
         $this->assertHttpStatusCode(409, $this->client->getResponse());
 
         $response = \json_decode($this->client->getResponse()->getContent());
@@ -1416,7 +1416,7 @@ class AccountControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        static::jsonRequest($this->client, 'GET', '/api/accounts/' . $account->getId() . '/addresses');
+        $this->client->jsonRequest('GET', '/api/accounts/' . $account->getId() . '/addresses');
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $response = \json_decode($this->client->getResponse()->getContent());
 
@@ -1424,7 +1424,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals('Musterstraße', $address->street);
         $this->assertEquals('1', $address->number);
 
-        static::jsonRequest($this->client, 'GET', '/api/accounts/' . $account->getId() . '/addresses?flat=true');
+        $this->client->jsonRequest('GET', '/api/accounts/' . $account->getId() . '/addresses?flat=true');
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $response = \json_decode($this->client->getResponse()->getContent());
 
@@ -1442,7 +1442,7 @@ class AccountControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'DELETE',
             '/api/accounts/' . $account->getId(),
             [
@@ -1452,7 +1452,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(204, $this->client->getResponse());
 
         // check if contacts are still there
-        static::jsonRequest($this->client, 'GET', '/api/contacts?flat=true');
+        $this->client->jsonRequest('GET', '/api/contacts?flat=true');
         $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $this->assertEquals(2, $response->total);
@@ -1478,7 +1478,7 @@ class AccountControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'DELETE',
             '/api/accounts/' . $account->getId(),
             [
@@ -1488,14 +1488,14 @@ class AccountControllerTest extends SuluTestCase
         // check if contacts are still there
         $this->assertHttpStatusCode(204, $this->client->getResponse());
 
-        static::jsonRequest($this->client, 'GET', '/api/contacts?flat=true');
+        $this->client->jsonRequest('GET', '/api/contacts?flat=true');
         $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(1, $response->total);
     }
 
     public function testDeleteByIdNotExisting()
     {
-        static::jsonRequest($this->client, 'DELETE', '/api/accounts/4711');
+        $this->client->jsonRequest('DELETE', '/api/accounts/4711');
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
@@ -1541,7 +1541,7 @@ class AccountControllerTest extends SuluTestCase
         // get number of contacts from both accounts
         $numContacts = $account->getAccountContacts()->count() + $acc->getAccountContacts()->count();
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/accounts/multipledeleteinfo',
             [
@@ -1589,7 +1589,7 @@ class AccountControllerTest extends SuluTestCase
 
         $numContacts = $account->getAccountContacts()->count();
 
-        static::jsonRequest($this->client, 'GET', '/api/accounts/' . $account->getId() . '/deleteinfo');
+        $this->client->jsonRequest('GET', '/api/accounts/' . $account->getId() . '/deleteinfo');
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $response = \json_decode($this->client->getResponse()->getContent());
@@ -1625,7 +1625,7 @@ class AccountControllerTest extends SuluTestCase
 
         $accountId = $account->getId();
 
-        static::jsonRequest($this->client, 'GET', '/api/accounts/' . $accountId . '/deleteinfo');
+        $this->client->jsonRequest('GET', '/api/accounts/' . $accountId . '/deleteinfo');
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $response = \json_decode($this->client->getResponse()->getContent());
 
@@ -1638,7 +1638,7 @@ class AccountControllerTest extends SuluTestCase
 
     public function testGetDeleteInfoByIdNotExisting()
     {
-        static::jsonRequest($this->client, 'GET', '/api/accounts/4711/deleteinfo');
+        $this->client->jsonRequest('GET', '/api/accounts/4711/deleteinfo');
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
@@ -1653,7 +1653,7 @@ class AccountControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'POST',
             '/api/accounts',
             [
@@ -1732,7 +1732,7 @@ class AccountControllerTest extends SuluTestCase
 
         $account2Id = $response->id;
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'PUT',
             '/api/accounts/' . $account2Id,
             [
@@ -1824,7 +1824,7 @@ class AccountControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'POST',
             '/api/accounts',
             [
@@ -1889,7 +1889,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals(false, $response->addresses[0]->primaryAddress);
         $this->assertEquals(true, $response->addresses[1]->primaryAddress);
 
-        static::jsonRequest($this->client, 'GET', '/api/accounts/' . $response->id);
+        $this->client->jsonRequest('GET', '/api/accounts/' . $response->id);
         $response = \json_decode($this->client->getResponse()->getContent());
 
         if (1 == $response->addresses[0]->number) {
@@ -1912,7 +1912,7 @@ class AccountControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'PUT',
             '/api/accounts/' . $account->getId(),
             [
@@ -1995,7 +1995,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals(false, $response->addresses[1]->primaryAddress);
         $this->assertEquals(true, $response->addresses[2]->primaryAddress);
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/accounts/' . $account->getId()
         );
@@ -2028,7 +2028,7 @@ class AccountControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/accounts?flat=true&hasNoParent=true'
         );

@@ -114,7 +114,7 @@ class MediaFormatControllerTest extends SuluTestCase
 
     public function testCGet()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             \sprintf('/api/media/%d/formats', $this->media->getId()),
             [
@@ -137,7 +137,7 @@ class MediaFormatControllerTest extends SuluTestCase
 
     public function testPatch()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             \sprintf('/api/media/%d/formats?locale=en', $this->media->getId())
         );
@@ -154,7 +154,7 @@ class MediaFormatControllerTest extends SuluTestCase
         $this->assertObjectNotHasAttribute('small-inset', $response);
         $this->assertObjectNotHasAttribute('one-side', $response);
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'PATCH',
             \sprintf('/api/media/%d/formats', $this->media->getId()),
             [
@@ -168,7 +168,7 @@ class MediaFormatControllerTest extends SuluTestCase
             ]
         );
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             \sprintf('/api/media/%d/formats?locale=en', $this->media->getId())
         );
@@ -189,7 +189,7 @@ class MediaFormatControllerTest extends SuluTestCase
 
     public function testPutWithFormatOptions()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'PUT',
             \sprintf('/api/media/%d/formats/small-inset?locale=de', $this->media->getId()),
             [
@@ -210,7 +210,7 @@ class MediaFormatControllerTest extends SuluTestCase
 
         // Test if the options have really been persisted
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             \sprintf('/api/media/%d/formats?locale=de', $this->media->getId())
         );
@@ -227,7 +227,7 @@ class MediaFormatControllerTest extends SuluTestCase
 
     public function testPutWithEmptyFormatOptions()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'PUT',
             \sprintf('/api/media/%d/formats/big-squared?locale=en', $this->media->getId()),
             []
@@ -240,7 +240,7 @@ class MediaFormatControllerTest extends SuluTestCase
 
         // Test if the options have really been persisted
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             \sprintf('/api/media/%d/formats?locale=en', $this->media->getId()),
             []
@@ -254,7 +254,7 @@ class MediaFormatControllerTest extends SuluTestCase
 
     public function testPutNotExistingFormat()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'PUT',
             \sprintf('/api/media/%d/formats/format-not-existing', $this->media->getId()),
             [
@@ -268,7 +268,7 @@ class MediaFormatControllerTest extends SuluTestCase
 
     public function testPutNotExistingMedia()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'PUT',
             \sprintf('/api/media/%d/formats/format-not-existing', 12345),
             [

@@ -29,7 +29,7 @@ class LocalizationControllerTest extends SuluTestCase
 
     public function testCgetAction()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/admin/api/localizations'
         );

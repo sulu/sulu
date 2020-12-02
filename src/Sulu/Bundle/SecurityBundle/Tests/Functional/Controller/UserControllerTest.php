@@ -238,7 +238,7 @@ class UserControllerTest extends SuluTestCase
 
     public function testList()
     {
-        static::jsonRequest($this->client, 'GET', '/api/users?flat=true');
+        $this->client->jsonRequest('GET', '/api/users?flat=true');
 
         $response = \json_decode($this->client->getResponse()->getContent());
 
@@ -251,7 +251,7 @@ class UserControllerTest extends SuluTestCase
 
     public function testGetById()
     {
-        static::jsonRequest($this->client, 'GET', '/api/users/' . $this->user1->getId());
+        $this->client->jsonRequest('GET', '/api/users/' . $this->user1->getId());
 
         $response = \json_decode($this->client->getResponse()->getContent());
 
@@ -266,7 +266,7 @@ class UserControllerTest extends SuluTestCase
 
     public function testGetByNotExistingId()
     {
-        static::jsonRequest($this->client, 'GET', '/api/users/1120');
+        $this->client->jsonRequest('GET', '/api/users/1120');
 
         $response = \json_decode($this->client->getResponse()->getContent());
 
@@ -276,7 +276,7 @@ class UserControllerTest extends SuluTestCase
 
     public function testPost()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'POST',
             '/api/users?contactId=' . $this->contact1->getId(),
             [
@@ -332,7 +332,7 @@ class UserControllerTest extends SuluTestCase
         $this->assertEquals('Group2', $response->userGroups[1]->group->name);
         $this->assertEquals('en', $response->userGroups[1]->locales[0]);
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/users/' . $response->id
         );
@@ -357,7 +357,7 @@ class UserControllerTest extends SuluTestCase
 
     public function testPostWithEntireContactObject()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'POST',
             '/api/users',
             [
@@ -378,7 +378,7 @@ class UserControllerTest extends SuluTestCase
         $this->assertEquals($this->contact1->getId(), $response->contact->id);
         $this->assertEquals('en', $response->locale);
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/users/' . $response->id
         );
@@ -393,7 +393,7 @@ class UserControllerTest extends SuluTestCase
 
     public function testPostWithMissingUsername()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'POST',
             '/api/users',
             [
@@ -423,7 +423,7 @@ class UserControllerTest extends SuluTestCase
 
     public function testPostWithMissingPassword()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'POST',
             '/api/users',
             [
@@ -453,7 +453,7 @@ class UserControllerTest extends SuluTestCase
 
     public function testPostWithNotUniqueEmail()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'POST',
             '/api/users',
             [
@@ -485,7 +485,7 @@ class UserControllerTest extends SuluTestCase
     {
         // no user-email passed, but a unique contact-email
         // so the controller should use the contact-email as the user-email as well
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'POST',
             '/api/users',
             [
@@ -517,25 +517,25 @@ class UserControllerTest extends SuluTestCase
 
     public function testDelete()
     {
-        static::jsonRequest($this->client, 'DELETE', '/api/users/' . $this->user1->getId());
+        $this->client->jsonRequest('DELETE', '/api/users/' . $this->user1->getId());
 
         $this->assertHttpStatusCode(204, $this->client->getResponse());
 
-        static::jsonRequest($this->client, 'GET', '/api/users/' . $this->user1->getId());
+        $this->client->jsonRequest('GET', '/api/users/' . $this->user1->getId());
 
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
     public function testDeleteNotExisting()
     {
-        static::jsonRequest($this->client, 'DELETE', '/api/users/11235');
+        $this->client->jsonRequest('DELETE', '/api/users/11235');
 
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
     public function testPut()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'PUT',
             '/api/users/' . $this->user1->getId(),
             [
@@ -596,7 +596,7 @@ class UserControllerTest extends SuluTestCase
         $this->assertEquals('Group2', $response->userGroups[1]->group->name);
         $this->assertEquals('en', $response->userGroups[1]->locales[0]);
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/users/' . $this->user1->getId()
         );
@@ -622,7 +622,7 @@ class UserControllerTest extends SuluTestCase
 
     public function testPostNonUniqueName()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'POST',
             '/api/users',
             [
@@ -644,7 +644,7 @@ class UserControllerTest extends SuluTestCase
 
     public function testPutNonUniqueName()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'POST',
             '/api/users',
             [
@@ -657,7 +657,7 @@ class UserControllerTest extends SuluTestCase
             ]
         );
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'PUT',
             '/api/users/' . $this->user2->getId(),
             [
@@ -679,7 +679,7 @@ class UserControllerTest extends SuluTestCase
 
     public function testPatch()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'PATCH',
             '/api/users/' . $this->user1->getId(),
             [
@@ -689,7 +689,7 @@ class UserControllerTest extends SuluTestCase
         $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertEquals('en', $response->locale);
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'PATCH',
             '/api/users/' . $this->user1->getId(),
             [
@@ -699,7 +699,7 @@ class UserControllerTest extends SuluTestCase
         $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertEquals('newusername', $response->username);
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'PATCH',
             '/api/users/' . $this->user1->getId(),
             [
@@ -711,7 +711,7 @@ class UserControllerTest extends SuluTestCase
         $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertEquals($this->contact1->getId(), $response->contact->id);
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/users/' . $this->user1->getId()
         );
@@ -724,7 +724,7 @@ class UserControllerTest extends SuluTestCase
 
     public function testPatchNonUniqueName()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'POST',
             '/api/users',
             [
@@ -737,7 +737,7 @@ class UserControllerTest extends SuluTestCase
             ]
         );
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'PATCH',
             '/api/users/' . $this->user2->getId(),
             [
@@ -754,7 +754,7 @@ class UserControllerTest extends SuluTestCase
 
     public function testPutWithMissingUsername()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'PUT',
             '/api/users/' . $this->user1->getId(),
             [
@@ -787,7 +787,7 @@ class UserControllerTest extends SuluTestCase
 
     public function testPutWithMissingPassword()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'PUT',
             '/api/users/' . $this->user1->getId(),
             [
@@ -826,7 +826,7 @@ class UserControllerTest extends SuluTestCase
 
     public function testGetUserAndRolesByContact()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/users?contactId=' . $this->contact2->getId()
         );
@@ -847,7 +847,7 @@ class UserControllerTest extends SuluTestCase
 
     public function testGetUserAndRolesByContactNotExisting()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/users?contactId=1234'
         );
@@ -858,7 +858,7 @@ class UserControllerTest extends SuluTestCase
 
     public function testGetUserAndRolesWithoutParam()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/users'
         );
@@ -873,7 +873,7 @@ class UserControllerTest extends SuluTestCase
 
     public function testCGetProperties()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/users'
         );
@@ -899,7 +899,7 @@ class UserControllerTest extends SuluTestCase
 
     public function testPutWithRemovedRoles()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'PUT',
             '/api/users/' . $this->user1->getId(),
             [
@@ -939,7 +939,7 @@ class UserControllerTest extends SuluTestCase
         $this->assertEquals('Role2', $response->userRoles[1]->role->name);
         $this->assertEquals('en', $response->userRoles[1]->locales[0]);
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'PUT',
             '/api/users/' . $this->user1->getId(),
             [
@@ -975,7 +975,7 @@ class UserControllerTest extends SuluTestCase
 
     public function testPostWithEmptyPassword()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'POST',
             '/api/users',
             [
@@ -1010,7 +1010,7 @@ class UserControllerTest extends SuluTestCase
 
     public function testPutWithoutPassword()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'PUT',
             '/api/users/' . $this->user1->getId(),
             [
@@ -1032,7 +1032,7 @@ class UserControllerTest extends SuluTestCase
 
     public function testPutWithEmptyPassword()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'PUT',
             '/api/users/' . $this->user1->getId(),
             [
@@ -1079,7 +1079,7 @@ class UserControllerTest extends SuluTestCase
 
     public function testEnableUser()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'POST',
             '/api/users/' . $this->user2->getId() . '?action=enable'
         );
@@ -1093,7 +1093,7 @@ class UserControllerTest extends SuluTestCase
 
     public function testLockUser()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'POST',
             '/api/users/' . $this->user1->getId() . '?action=lock'
         );
@@ -1105,7 +1105,7 @@ class UserControllerTest extends SuluTestCase
 
     public function testUnlockUser()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'POST',
             '/api/users/' . $this->user3->getId() . '?action=unlock'
         );

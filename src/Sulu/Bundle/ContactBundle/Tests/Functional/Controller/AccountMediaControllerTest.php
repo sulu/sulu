@@ -86,7 +86,7 @@ class AccountMediaControllerTest extends SuluTestCase
 
         $this->em->flush();
 
-        static::jsonRequest($this->client, 'GET', '/api/accounts/' . $this->account->getId() . '/medias?flat=true');
+        $this->client->jsonRequest('GET', '/api/accounts/' . $this->account->getId() . '/medias?flat=true');
         $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals(1, $response->total);
@@ -105,7 +105,7 @@ class AccountMediaControllerTest extends SuluTestCase
 
         $this->em->flush();
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/accounts/' . $this->account->getId()
         );
@@ -113,7 +113,7 @@ class AccountMediaControllerTest extends SuluTestCase
         $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(1, \count($response->medias));
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'POST',
             '/api/accounts/' . $this->account->getId() . '/medias',
             [
@@ -124,7 +124,7 @@ class AccountMediaControllerTest extends SuluTestCase
         $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertNotNull($response->id);
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/accounts/' . $this->account->getId()
         );
@@ -142,7 +142,7 @@ class AccountMediaControllerTest extends SuluTestCase
 
         $this->em->flush();
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/accounts/' . $this->account->getId()
         );
@@ -150,7 +150,7 @@ class AccountMediaControllerTest extends SuluTestCase
         $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertCount(1, $response->medias);
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'POST',
             '/api/accounts/' . $this->account->getId() . '/medias',
             [
@@ -160,7 +160,7 @@ class AccountMediaControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(404, $this->client->getResponse());
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/accounts/' . $this->account->getId()
         );
@@ -176,14 +176,14 @@ class AccountMediaControllerTest extends SuluTestCase
 
         $this->em->flush();
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'DELETE',
             '/api/accounts/' . $this->account->getId() . '/medias/' . $media1->getId()
         );
 
         $this->assertHttpStatusCode(204, $this->client->getResponse());
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/accounts/' . $this->account->getId()
         );
@@ -199,14 +199,14 @@ class AccountMediaControllerTest extends SuluTestCase
 
         $this->em->flush();
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'DELETE',
             '/api/accounts/' . $this->account->getId() . '/medias/99'
         );
 
         $this->assertHttpStatusCode(404, $this->client->getResponse());
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/accounts/' . $this->account->getId()
         );

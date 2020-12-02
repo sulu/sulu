@@ -51,7 +51,7 @@ class RoleSettingControllerTest extends SuluTestCase
 
     public function testGetNotExisting()
     {
-        static::jsonRequest($this->client, 'GET', '/api/roles/' . $this->role->getId() . '/settings/test');
+        $this->client->jsonRequest('GET', '/api/roles/' . $this->role->getId() . '/settings/test');
         $this->assertHttpStatusCode(204, $this->client->getResponse());
         $this->assertEmpty($this->client->getResponse()->getContent());
     }
@@ -60,7 +60,7 @@ class RoleSettingControllerTest extends SuluTestCase
     {
         $key = 'test-key';
 
-        static::jsonRequest($this->client, 'PUT', '/api/roles/' . $this->role->getId() . '/settings/' . $key, ['value' => 'test-1']);
+        $this->client->jsonRequest('PUT', '/api/roles/' . $this->role->getId() . '/settings/' . $key, ['value' => 'test-1']);
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $this->assertEquals('test-1', \json_decode($this->client->getResponse()->getContent()));
 
@@ -71,7 +71,7 @@ class RoleSettingControllerTest extends SuluTestCase
     {
         $key = $this->testPut();
 
-        static::jsonRequest($this->client, 'GET', '/api/roles/' . $this->role->getId() . '/settings/' . $key);
+        $this->client->jsonRequest('GET', '/api/roles/' . $this->role->getId() . '/settings/' . $key);
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $this->assertEquals('test-1', \json_decode($this->client->getResponse()->getContent()));
     }
@@ -80,7 +80,7 @@ class RoleSettingControllerTest extends SuluTestCase
     {
         $key = 'test-key';
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'PUT',
             '/api/roles/' . $this->role->getId() . '/settings/' . $key,
             ['value' => ['sulu' => 'awesome']]
@@ -95,7 +95,7 @@ class RoleSettingControllerTest extends SuluTestCase
     {
         $key = $this->testPutArray();
 
-        static::jsonRequest($this->client, 'GET', '/api/roles/' . $this->role->getId() . '/settings/' . $key);
+        $this->client->jsonRequest('GET', '/api/roles/' . $this->role->getId() . '/settings/' . $key);
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $this->assertEquals(['sulu' => 'awesome'], \json_decode($this->client->getResponse()->getContent(), true));
     }

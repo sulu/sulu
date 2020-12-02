@@ -41,7 +41,7 @@ class ContactTitleControllerTest extends SuluTestCase
 
         $this->em->flush();
 
-        static::jsonRequest($this->client, 'GET', '/api/contact-titles');
+        $this->client->jsonRequest('GET', '/api/contact-titles');
 
         $response = \json_decode($this->client->getResponse()->getContent());
         $contactTitles = $response->_embedded->contact_titles;
@@ -61,12 +61,12 @@ class ContactTitleControllerTest extends SuluTestCase
 
         $this->em->flush();
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'DELETE',
             '/api/contact-titles?ids=' . $contactTitle1->getId() . ',' . $contactTitle3->getId()
         );
 
-        static::jsonRequest($this->client, 'GET', '/api/contact-titles');
+        $this->client->jsonRequest('GET', '/api/contact-titles');
 
         $response = \json_decode($this->client->getResponse()->getContent());
         $contactTitles = $response->_embedded->contact_titles;
@@ -83,12 +83,12 @@ class ContactTitleControllerTest extends SuluTestCase
 
         $this->em->flush();
 
-        static::jsonRequest($this->client, 'PATCH', '/api/contact-titles', [
+        $this->client->jsonRequest('PATCH', '/api/contact-titles', [
             ['id' => $contactTitle1->getId(), 'title' => 'BA'],
             ['title' => 'MA'],
         ]);
 
-        static::jsonRequest($this->client, 'GET', '/api/contact-titles');
+        $this->client->jsonRequest('GET', '/api/contact-titles');
 
         $response = \json_decode($this->client->getResponse()->getContent());
         $contactTitles = $response->_embedded->contact_titles;

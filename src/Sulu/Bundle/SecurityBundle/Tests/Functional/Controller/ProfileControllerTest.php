@@ -29,7 +29,7 @@ class ProfileControllerTest extends SuluTestCase
 
     public function testPatchSettings()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'PATCH',
             '/api/profile/settings',
             ['setting-key' => 'setting-value']
@@ -48,7 +48,7 @@ class ProfileControllerTest extends SuluTestCase
 
     public function testGet()
     {
-        static::jsonRequest($this->client, 'GET', '/api/profile');
+        $this->client->jsonRequest('GET', '/api/profile');
 
         $response = \json_decode($this->client->getResponse()->getContent());
 
@@ -63,7 +63,7 @@ class ProfileControllerTest extends SuluTestCase
 
     public function testPut()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'PUT',
             '/api/profile',
             [
@@ -87,7 +87,7 @@ class ProfileControllerTest extends SuluTestCase
 
     public function testPutEmailNotUnique()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'PUT',
             '/api/profile',
             [
@@ -110,7 +110,7 @@ class ProfileControllerTest extends SuluTestCase
 
     public function testPutUsernameNotUnique()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'PUT',
             '/api/profile',
             [
@@ -133,7 +133,7 @@ class ProfileControllerTest extends SuluTestCase
 
     public function testPutWithoutFirstName()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'PUT',
             '/api/profile',
             [
@@ -155,7 +155,7 @@ class ProfileControllerTest extends SuluTestCase
 
     public function testPutWithoutLastName()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'PUT',
             '/api/profile',
             [
@@ -178,7 +178,7 @@ class ProfileControllerTest extends SuluTestCase
 
     public function testPutWithoutUsername()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'PUT',
             '/api/profile',
             [
@@ -201,7 +201,7 @@ class ProfileControllerTest extends SuluTestCase
 
     public function testPutWithoutEmail()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'PUT',
             '/api/profile',
             [
@@ -224,7 +224,7 @@ class ProfileControllerTest extends SuluTestCase
 
     public function testPutWithoutLocale()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'PUT',
             '/api/profile',
             [
@@ -247,7 +247,7 @@ class ProfileControllerTest extends SuluTestCase
 
     public function testPutWithoutPassword()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'PUT',
             '/api/profile',
             [
@@ -266,7 +266,7 @@ class ProfileControllerTest extends SuluTestCase
 
     public function testDeleteSettings()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'PATCH',
             '/api/profile/settings',
             ['setting-key' => 'setting-value']
@@ -282,7 +282,7 @@ class ProfileControllerTest extends SuluTestCase
         $this->assertEquals('setting-key', $userSetting->getKey());
         $this->assertEquals('setting-value', \json_decode($userSetting->getValue()));
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'DELETE',
             '/api/profile/settings',
             ['key' => 'setting-key']

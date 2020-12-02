@@ -18,7 +18,7 @@ class AdminControllerTest extends SuluTestCase
     public function testContactsConfig()
     {
         $client = $this->createAuthenticatedClient();
-        static::jsonRequest($client, 'GET', '/admin/config');
+        $client->jsonRequest('GET', '/admin/config');
 
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = \json_decode($client->getResponse()->getContent());
@@ -32,7 +32,7 @@ class AdminControllerTest extends SuluTestCase
     {
         $client = $this->createAuthenticatedClient();
 
-        static::jsonRequest($client, 'GET', '/admin/metadata/form/collection_details');
+        $client->jsonRequest('GET', '/admin/metadata/form/collection_details');
 
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = \json_decode($client->getResponse()->getContent());
@@ -51,7 +51,7 @@ class AdminControllerTest extends SuluTestCase
     {
         $client = $this->createAuthenticatedClient();
 
-        static::jsonRequest($client, 'GET', '/admin/metadata/form/media_details');
+        $client->jsonRequest('GET', '/admin/metadata/form/media_details');
 
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = \json_decode($client->getResponse()->getContent());

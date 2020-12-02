@@ -22,5 +22,4 @@ abstract class SuluTestCase extends WebTestCase
     use PhpCrInitTrait;
     use PurgeDatabaseTrait;
     use TestUserTrait;
-    use JsonRequestTrait;
 }

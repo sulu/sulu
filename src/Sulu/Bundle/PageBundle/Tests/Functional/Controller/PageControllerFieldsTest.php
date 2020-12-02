@@ -49,7 +49,7 @@ class PageControllerFieldsTest extends SuluTestCase
         $this->createPage('test-2', 'de');
         $this->createPage('test-3', 'de');
 
-        static::jsonRequest($this->client, 'GET', '/api/pages', ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title']);
+        $this->client->jsonRequest('GET', '/api/pages', ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title']);
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $result = \json_decode($this->client->getResponse()->getContent(), true);
@@ -73,7 +73,7 @@ class PageControllerFieldsTest extends SuluTestCase
         $this->createPage('test-2', 'de');
         $this->createPage('test-3', 'de');
 
-        static::jsonRequest($this->client, 'GET', '/api/pages', ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title']);
+        $this->client->jsonRequest('GET', '/api/pages', ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title']);
 
         $result = \json_decode($this->client->getResponse()->getContent(), true);
 
@@ -93,7 +93,7 @@ class PageControllerFieldsTest extends SuluTestCase
         $this->createPage('test-2', 'de');
         $this->createPage('test-3', 'de');
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/pages',
             ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title', 'exclude-shadows' => 'true']
@@ -116,7 +116,7 @@ class PageControllerFieldsTest extends SuluTestCase
         $this->createPage('test-2', 'de');
         $this->createPage('test-3', 'de');
 
-        static::jsonRequest($this->client, 'GET', '/api/pages', ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title']);
+        $this->client->jsonRequest('GET', '/api/pages', ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title']);
 
         $result = \json_decode($this->client->getResponse()->getContent(), true);
 
@@ -136,7 +136,7 @@ class PageControllerFieldsTest extends SuluTestCase
         $this->createPage('test-2', 'de');
         $this->createPage('test-3', 'de');
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/pages',
             ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title', 'exclude-ghosts' => 'true']
@@ -159,7 +159,7 @@ class PageControllerFieldsTest extends SuluTestCase
         $this->createShadowPage('test-2', 'en', 'de');
         $this->createPage('test-3', 'de');
 
-        static::jsonRequest($this->client, 'GET', '/api/pages', ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title']);
+        $this->client->jsonRequest('GET', '/api/pages', ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title']);
 
         $result = \json_decode($this->client->getResponse()->getContent(), true);
 
@@ -179,7 +179,7 @@ class PageControllerFieldsTest extends SuluTestCase
         $this->createShadowPage('test-2', 'en', 'de');
         $this->createPage('test-3', 'de');
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/pages',
             ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title', 'exclude-ghosts' => 'true', 'exclude-shadows' => 'true']
@@ -200,7 +200,7 @@ class PageControllerFieldsTest extends SuluTestCase
         $link = $this->createPage('test-1', 'en');
         $page = $this->createInternalLinkPage('test-2', 'en', $link);
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             \sprintf('/api/pages/%s', $page->getUuid()),
             ['webspace' => 'sulu_io', 'language' => 'en', 'fields' => 'title']
@@ -214,7 +214,7 @@ class PageControllerFieldsTest extends SuluTestCase
     {
         $page = $this->createExternalLinkPage('test-2', 'en', 'http://www.google.at');
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             \sprintf('/api/pages/%s', $page->getUuid()),
             ['webspace' => 'sulu_io', 'language' => 'en', 'fields' => 'title']
@@ -228,7 +228,7 @@ class PageControllerFieldsTest extends SuluTestCase
     {
         $page = $this->createShadowPage('test-2', 'en', 'de');
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             \sprintf('/api/pages/%s', $page->getUuid()),
             ['webspace' => 'sulu_io', 'language' => 'de', 'fields' => 'title']

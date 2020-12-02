@@ -119,7 +119,7 @@ class CustomUrlControllerTest extends SuluTestCase
             $data['targetDocument'] = $this->contentDocument->getUuid();
         }
 
-        static::jsonRequest($this->client, 'POST', '/api/webspaces/sulu_io/custom-urls', $data);
+        $this->client->jsonRequest('POST', '/api/webspaces/sulu_io/custom-urls', $data);
 
         $response = $this->client->getResponse();
         $responseData = \json_decode($response->getContent(), true);
@@ -509,7 +509,7 @@ class CustomUrlControllerTest extends SuluTestCase
             $data['targetDocument'] = $this->contentDocument->getUuid();
         }
 
-        static::jsonRequest($this->client, 'PUT', '/api/webspaces/sulu_io/custom-urls/' . $uuid, $data);
+        $this->client->jsonRequest('PUT', '/api/webspaces/sulu_io/custom-urls/' . $uuid, $data);
 
         $response = $this->client->getResponse();
         $responseData = \json_decode($response->getContent(), true);
@@ -578,7 +578,7 @@ class CustomUrlControllerTest extends SuluTestCase
 
         $dateTime = new \DateTime();
 
-        static::jsonRequest($this->client, 'GET', '/api/webspaces/sulu_io/custom-urls/' . $uuid);
+        $this->client->jsonRequest('GET', '/api/webspaces/sulu_io/custom-urls/' . $uuid);
 
         $response = $this->client->getResponse();
         $responseData = \json_decode($response->getContent(), true);
@@ -647,7 +647,7 @@ class CustomUrlControllerTest extends SuluTestCase
             $items[$url]['id'] = $this->testPost($data, $url);
         }
 
-        static::jsonRequest($this->client, 'GET', '/api/webspaces/sulu_io/custom-urls');
+        $this->client->jsonRequest('GET', '/api/webspaces/sulu_io/custom-urls');
         $requestTime = new \DateTime();
 
         $response = $this->client->getResponse();
@@ -684,12 +684,12 @@ class CustomUrlControllerTest extends SuluTestCase
     {
         $uuid = $this->testPost($data, $url);
 
-        static::jsonRequest($this->client, 'DELETE', '/api/webspaces/sulu_io/custom-urls/' . $uuid);
+        $this->client->jsonRequest('DELETE', '/api/webspaces/sulu_io/custom-urls/' . $uuid);
 
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(204, $response);
 
-        static::jsonRequest($this->client, 'GET', '/api/webspaces/sulu_io/custom-urls/' . $uuid);
+        $this->client->jsonRequest('GET', '/api/webspaces/sulu_io/custom-urls/' . $uuid);
 
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(404, $response);
@@ -721,12 +721,12 @@ class CustomUrlControllerTest extends SuluTestCase
             $uuids[] = $this->testPost($data, $url);
         }
 
-        static::jsonRequest($this->client, 'DELETE', '/api/webspaces/sulu_io/custom-urls?ids=' . \implode(',', $uuids));
+        $this->client->jsonRequest('DELETE', '/api/webspaces/sulu_io/custom-urls?ids=' . \implode(',', $uuids));
 
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(204, $response);
 
-        static::jsonRequest($this->client, 'GET', '/api/webspaces/sulu_io/custom-urls');
+        $this->client->jsonRequest('GET', '/api/webspaces/sulu_io/custom-urls');
 
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(200, $response);

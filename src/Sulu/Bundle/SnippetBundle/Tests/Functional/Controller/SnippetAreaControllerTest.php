@@ -40,7 +40,7 @@ class SnippetAreaControllerTest extends BaseFunctionalTestCase
 
     public function testCGet()
     {
-        static::jsonRequest($this->client, 'GET', '/api/snippet-areas?webspace=sulu_io');
+        $this->client->jsonRequest('GET', '/api/snippet-areas?webspace=sulu_io');
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $response = \json_decode($this->client->getResponse()->getContent(), true);
@@ -63,7 +63,7 @@ class SnippetAreaControllerTest extends BaseFunctionalTestCase
 
     public function testPutDefault()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'PUT',
             '/api/snippet-areas/car',
             ['webspace' => 'sulu_io', 'defaultUuid' => $this->car1->getUuid()]
@@ -77,7 +77,7 @@ class SnippetAreaControllerTest extends BaseFunctionalTestCase
         $this->assertEquals($this->car1->getUuid(), $response['defaultUuid']);
         $this->assertEquals($this->car1->getTitle(), $response['defaultTitle']);
 
-        static::jsonRequest($this->client, 'GET', '/api/snippet-areas?webspace=sulu_io');
+        $this->client->jsonRequest('GET', '/api/snippet-areas?webspace=sulu_io');
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $response = \json_decode($this->client->getResponse()->getContent(), true);
@@ -103,7 +103,7 @@ class SnippetAreaControllerTest extends BaseFunctionalTestCase
      */
     public function testDeleteDefault()
     {
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'DELETE',
             '/api/snippet-areas/car',
             ['webspace' => 'sulu_io']
@@ -117,7 +117,7 @@ class SnippetAreaControllerTest extends BaseFunctionalTestCase
         $this->assertEquals(null, $response['defaultUuid']);
         $this->assertEquals(null, $response['defaultTitle']);
 
-        static::jsonRequest($this->client, 'GET', '/api/snippet-areas?webspace=sulu_io');
+        $this->client->jsonRequest('GET', '/api/snippet-areas?webspace=sulu_io');
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $response = \json_decode($this->client->getResponse()->getContent(), true);

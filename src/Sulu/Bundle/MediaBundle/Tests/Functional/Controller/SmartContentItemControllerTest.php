@@ -58,7 +58,7 @@ class SmartContentItemControllerTest extends SuluTestCase
         $this->em->persist($media3);
         $this->em->flush();
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/items?provider=media&locale=en&dataSource=' . $collection->getId()
         );
@@ -89,7 +89,7 @@ class SmartContentItemControllerTest extends SuluTestCase
         $this->em->persist($media3);
         $this->em->flush();
 
-        static::jsonRequest($this->client,
+        $this->client->jsonRequest(
             'GET',
             '/api/items?provider=media&sortBy=fileVersionMeta.title&locale=en&dataSource=' . $collection->getId()
         );

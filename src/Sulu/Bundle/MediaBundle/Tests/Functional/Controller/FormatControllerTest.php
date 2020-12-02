@@ -26,7 +26,7 @@ class FormatControllerTest extends SuluTestCase
     {
         $client = $this->createAuthenticatedClient();
 
-        static::jsonRequest($client, 'GET', '/api/formats?locale=de');
+        $client->jsonRequest('GET', '/api/formats?locale=de');
 
         $response = \json_decode($client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $client->getResponse());
@@ -52,7 +52,7 @@ class FormatControllerTest extends SuluTestCase
     public function testCGetWithoutLocale()
     {
         $client = $this->createAuthenticatedClient();
-        static::jsonRequest($client, 'GET', '/api/formats');
+        $client->jsonRequest('GET', '/api/formats');
 
         $this->assertHttpStatusCode(400, $client->getResponse());
     }
