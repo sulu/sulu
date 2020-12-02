@@ -58,30 +58,30 @@ trait DataProviderRepositoryTrait
      */
     private function findByFiltersIds($filters, $page, $pageSize, $limit, $locale, $options = [])
     {
-        $parameter = [];
-
-        $queryBuilder = $this->createQueryBuilder('entity')
-            ->select('entity.id')
+        $alias = 'entity';
+        $queryBuilder = $this->createQueryBuilder($alias)
+            ->select($alias . '.id')
             ->distinct()
-            ->orderBy('entity.id', 'ASC');
+            ->orderBy($alias . '.id', 'ASC');
 
-        $tagRelation = $this->appendTagsRelation($queryBuilder, 'entity');
-        $categoryRelation = $this->appendCategoriesRelation($queryBuilder, 'entity');
+        $tagRelation = $this->appendTagsRelation($queryBuilder, $alias);
+        $categoryRelation = $this->appendCategoriesRelation($queryBuilder, $alias);
 
         if (isset($filters['sortBy'])) {
             $sortMethod = $filters['sortMethod'] ?? 'asc';
-            $sortBy = str_contains($filters['sortBy'], '.') ? $filters['sortBy'] : 'entity' . '.' . $filters['sortBy'];
+            $sortBy = str_contains($filters['sortBy'], '.') ? $filters['sortBy'] : $alias . '.' . $filters['sortBy'];
 
-            $this->appendSortBy($sortBy, $sortMethod, $queryBuilder, 'entity', $locale);
+            $this->appendSortBy($sortBy, $sortMethod, $queryBuilder, $alias, $locale);
             $queryBuilder->addSelect($sortBy);
         }
 
-        $parameter = \array_merge($parameter, $this->append($queryBuilder, 'entity', $locale, $options));
+        $parameter = $this->append($queryBuilder, $alias, $locale, $options);
+
         if (isset($filters['dataSource'])) {
             $includeSubFolders = $this->getBoolean($filters['includeSubFolders'] ?? false);
             $parameter = \array_merge(
                 $parameter,
-                $this->appendDatasource($filters['dataSource'], $includeSubFolders, $queryBuilder, 'entity')
+                $this->appendDatasource($filters['dataSource'], $includeSubFolders, $queryBuilder, $alias)
             );
         }
 
@@ -99,7 +99,7 @@ trait DataProviderRepositoryTrait
         }
 
         if (isset($filters['types']) && !empty($filters['types'])) {
-            $typeRelation = $this->appendTypeRelation($queryBuilder, 'entity');
+            $typeRelation = $this->appendTypeRelation($queryBuilder, $alias);
             $parameter = \array_merge(
                 $parameter,
                 $this->appendRelation(
@@ -126,7 +126,7 @@ trait DataProviderRepositoryTrait
         }
 
         if (isset($filters['targetGroupId']) && $filters['targetGroupId']) {
-            $targetGroupRelation = $this->appendTargetGroupRelation($queryBuilder, 'entity');
+            $targetGroupRelation = $this->appendTargetGroupRelation($queryBuilder, $alias);
             $parameter = \array_merge(
                 $parameter,
                 $this->appendRelation(
