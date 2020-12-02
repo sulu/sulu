@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Media\ImageConverter\Scaler;
 
 use Imagine\Image\Box;
+use Imagine\Image\BoxInterface;
 use Imagine\Image\ImageInterface;
 
 /**
@@ -42,12 +43,12 @@ class Scaler implements ScalerInterface
     /**
      * Gets the height and width of the resulting image, according to the given parameters.
      *
-     * @param $x
-     * @param $y
-     * @param $retina
-     * @param $forceRatio
-     * @param $size
-     * @param $mode
+     * @param int $x
+     * @param int $y
+     * @param bool $retina
+     * @param bool $forceRatio
+     * @param BoxInterface $size
+     * @param int|string $mode
      *
      * @return int[]
      */
@@ -97,9 +98,9 @@ class Scaler implements ScalerInterface
     }
 
     /**
-     * @param $size1
-     * @param $size2
-     * @param $originalSize
+     * @param int $size1
+     * @param int $size2
+     * @param int $originalSize
      *
      * @return array
      */

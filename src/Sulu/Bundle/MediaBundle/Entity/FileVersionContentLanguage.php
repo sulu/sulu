@@ -68,7 +68,7 @@ class FileVersionContentLanguage
     /**
      * Set id.
      *
-     * @param int
+     * @param int $id
      *
      * @return int
      */

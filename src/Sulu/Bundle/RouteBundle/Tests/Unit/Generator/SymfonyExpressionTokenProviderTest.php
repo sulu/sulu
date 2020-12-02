@@ -51,6 +51,44 @@ class SymfonyExpressionTokenProviderTest extends TestCase
         $this->assertEquals('TEST', $provider->provide($entity, 'translator.trans("test-key")'));
     }
 
+    public function testResolveWithImplode()
+    {
+        $translator = $this->prophesize(Translator::class);
+        $translator->getLocale()->willReturn('de');
+        $translator->setLocale('de')->shouldBeCalled();
+
+        $entity = ['title', 'subtitle'];
+
+        $provider = new SymfonyExpressionTokenProvider($translator->reveal());
+
+        $this->assertEquals(
+            'events/title-subtitle',
+            $provider->provide($entity, '"events/" ~ implode("-", object)')
+        );
+    }
+
+    public function testResolveWithIsArray()
+    {
+        $translator = $this->prophesize(Translator::class);
+        $translator->getLocale()->willReturn('de');
+        $translator->setLocale('de')->shouldBeCalled();
+
+        $entity = new \stdClass();
+        $array = ['first-array-value'];
+
+        $provider = new SymfonyExpressionTokenProvider($translator->reveal());
+
+        $this->assertEquals(
+            'not-array',
+            $provider->provide($entity, 'is_array(object) ? object[0] : "not-array"')
+        );
+
+        $this->assertEquals(
+            'first-array-value',
+            $provider->provide($array, 'is_array(object) ? object[0] : "not-array"')
+        );
+    }
+
     public function testResolveNotExists()
     {
         $this->expectException(CannotEvaluateTokenException::class);

@@ -241,6 +241,17 @@ test('ResourceLocator should replace capital letters with lower case in full mod
     expect(onChange).toBeCalledWith('/parent/child');
 });
 
+test('ResourceLocator should replace capital letters even when given locale is not a valid BCP 47 code', () => {
+    const onChange = jest.fn();
+    const value = '/parent/child';
+    const locale = observable.box('de_CH');
+    const resourceLocator = mount(
+        <ResourceLocator locale={locale} mode="leaf" onBlur={jest.fn()} onChange={onChange} value={value} />
+    );
+    resourceLocator.find('Input').props().onChange('CHILD');
+    expect(onChange).toBeCalledWith('/parent/child');
+});
+
 test('ResourceLocator should call the onChange callback when a slash is typed in full mode', () => {
     const onChange = jest.fn();
     const value = '/parent/child';

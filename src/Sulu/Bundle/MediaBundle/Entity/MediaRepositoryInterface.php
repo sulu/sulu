@@ -24,7 +24,7 @@ interface MediaRepositoryInterface extends RepositoryInterface
     /**
      * Finds the media with a given id.
      *
-     * @param $id
+     * @param int $id
      *
      * @return Media
      */
@@ -34,8 +34,8 @@ interface MediaRepositoryInterface extends RepositoryInterface
      * Finds the media with a given id, with just enough information
      * to be able to render the actual media.
      *
-     * @param $id
-     * @param $formatKey
+     * @param int $id
+     * @param string $formatKey
      *
      * @return Media
      */
@@ -65,7 +65,7 @@ interface MediaRepositoryInterface extends RepositoryInterface
      * to the media and to display the media. The method finds
      * the information for all medias with given ids.
      *
-     * @param $ids array The ids of the medias for which the info should be found
+     * @param array $ids array The ids of the medias for which the info should be found
      * @param string $locale string The locale in which the display info should be loaded
      *
      * @return array
@@ -81,9 +81,9 @@ interface MediaRepositoryInterface extends RepositoryInterface
     public function findMediaWithFilenameInCollectionWithId($filename, $collectionId);
 
     /**
-     * @param $collectionId
-     * @param $limit
-     * @param $offset
+     * @param int $collectionId
+     * @param int $limit
+     * @param int $offset
      */
     public function findMediaByCollectionId($collectionId, $limit, $offset);
 

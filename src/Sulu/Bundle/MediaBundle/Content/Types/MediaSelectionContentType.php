@@ -70,7 +70,7 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
     }
 
     /**
-     * @param $params
+     * @param array $params
      *
      * @return PropertyParameter[]
      */

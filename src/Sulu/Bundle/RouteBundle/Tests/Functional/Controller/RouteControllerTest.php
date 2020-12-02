@@ -61,7 +61,58 @@ class RouteControllerTest extends SuluTestCase
         $result = \json_decode($this->client->getResponse()->getContent(), true);
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        $this->assertEquals($result['resourcelocator'], '/prefix/2019/test');
+        $this->assertEquals('/prefix/2019/test', $result['resourcelocator']);
+    }
+
+    public function testGenerateWithConflict()
+    {
+        $this->createRoute('/prefix/2019/test');
+        $this->entityManager->flush();
+        $this->entityManager->clear();
+
+        $this->client->request(
+            'POST',
+            '/api/routes?action=generate',
+            [
+                'locale' => self::TEST_LOCALE,
+                'resourceKey' => self::TEST_RESOURCE_KEY,
+                'parts' => [
+                    'title' => 'test',
+                    'year' => '2019',
+                ],
+            ]
+        );
+
+        $result = \json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+
+        $this->assertEquals('/prefix/2019/test-1', $result['resourcelocator']);
+    }
+
+    public function testGenerateWithConflictSameEntity()
+    {
+        $this->createRoute('/prefix/2019/test');
+        $this->entityManager->flush();
+        $this->entityManager->clear();
+
+        $this->client->request(
+            'POST',
+            '/api/routes?action=generate',
+            [
+                'locale' => self::TEST_LOCALE,
+                'resourceKey' => self::TEST_RESOURCE_KEY,
+                'id' => self::TEST_ID,
+                'parts' => [
+                    'title' => 'test',
+                    'year' => '2019',
+                ],
+            ]
+        );
+
+        $result = \json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+
+        $this->assertEquals('/prefix/2019/test', $result['resourcelocator']);
     }
 
     public function testCGetAction()

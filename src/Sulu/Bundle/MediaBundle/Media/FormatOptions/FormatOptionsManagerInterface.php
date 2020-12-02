@@ -25,8 +25,8 @@ interface FormatOptionsManagerInterface
     /**
      * Returns the options for a single media identified by the id of the media and the key of the format.
      *
-     * @param $mediaId
-     * @param $formatKey
+     * @param int $mediaId
+     * @param string $formatKey
      *
      * @throws MediaNotFoundException
      * @throws FormatNotFoundException
@@ -39,7 +39,7 @@ interface FormatOptionsManagerInterface
     /**
      * Returns the options for all formats for a single media identified by its id.
      *
-     * @param $mediaId
+     * @param int $mediaId
      *
      * @throws MediaNotFoundException
      * @throws FileVersionNotFoundException
@@ -64,8 +64,8 @@ interface FormatOptionsManagerInterface
     /**
      * Deletes a format option, identified by the id of the file-version and the key of the format.
      *
-     * @param $mediaId
-     * @param $formatKey
+     * @param int $mediaId
+     * @param string $formatKey
      *
      * @throws MediaNotFoundException
      * @throws FormatNotFoundException
