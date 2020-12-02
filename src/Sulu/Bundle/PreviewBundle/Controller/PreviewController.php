@@ -56,7 +56,7 @@ class PreviewController
 
         return new JsonResponse(
             [
-                'token' => $this->preview->start($provider, $id, $locale, $this->getUserId()),
+                'token' => $this->preview->start($provider, $id, $this->getUserId()),
             ]
         );
     }
@@ -66,16 +66,14 @@ class PreviewController
         $provider = $this->getRequestParameter($request, 'provider', true);
         $id = $this->getRequestParameter($request, 'id', true);
         $token = $this->getRequestParameter($request, 'token', true);
-        $webspace = $this->getRequestParameter($request, 'webspace', true, null);
-        $locale = $this->getRequestParameter($request, 'locale', true, null);
-        $targetGroup = $this->getRequestParameter($request, 'targetGroup', false, null);
-        $segment = $this->getRequestParameter($request, 'segment', false, null);
+
+        $options = $this->getOptionsFromRequest($request);
 
         if (!$this->preview->exists($token)) {
-            $token = $this->preview->start($provider, $id, $locale, $this->getUserId());
+            $token = $this->preview->start($provider, $id, $this->getUserId(), $options);
         }
 
-        $content = $this->preview->render($token, $webspace, $locale, $targetGroup, $segment);
+        $content = $this->preview->render($token, $options);
 
         $this->disableProfiler();
 
@@ -88,16 +86,18 @@ class PreviewController
         $id = $this->getRequestParameter($request, 'id', true);
         $token = $this->getRequestParameter($request, 'token', true);
         $data = $this->getRequestParameter($request, 'data', true);
-        $locale = $this->getRequestParameter($request, 'locale', true, null);
-        $webspace = $this->getRequestParameter($request, 'webspace', true);
-        $targetGroup = $this->getRequestParameter($request, 'targetGroup', false, null);
-        $segment = $this->getRequestParameter($request, 'segment', false, null);
+
+        $options = $this->getOptionsFromRequest($request);
 
         if (!$this->preview->exists($token)) {
-            $token = $this->preview->start($provider, $id, $locale, $this->getUserId());
+            $token = $this->preview->start($provider, $id, $this->getUserId(), $options);
         }
 
-        $content = $this->preview->update($token, $webspace, $data, $targetGroup, $segment);
+        $content = $this->preview->update(
+            $token,
+            $data,
+            $options
+        );
 
         return new JsonResponse(['content' => $content]);
     }
@@ -108,16 +108,18 @@ class PreviewController
         $provider = $this->getRequestParameter($request, 'provider', true);
         $token = $this->getRequestParameter($request, 'token', true);
         $context = $this->getRequestParameter($request, 'context', true);
-        $locale = $this->getRequestParameter($request, 'locale', true, null);
-        $webspace = $this->getRequestParameter($request, 'webspace', true);
-        $targetGroup = $this->getRequestParameter($request, 'targetGroup', false, null);
-        $segment = $this->getRequestParameter($request, 'segment', false, null);
+
+        $options = $this->getOptionsFromRequest($request);
 
         if (!$this->preview->exists($token)) {
-            $token = $this->preview->start($provider, $id, $locale, $this->getUserId());
+            $token = $this->preview->start($provider, $id, $this->getUserId(), $options);
         }
 
-        $content = $this->preview->updateContext($token, $webspace, $context, $targetGroup, $segment);
+        $content = $this->preview->updateContext(
+            $token,
+            $context,
+            $options
+        );
 
         return new JsonResponse(['content' => $content]);
     }
@@ -129,7 +131,7 @@ class PreviewController
         return new JsonResponse();
     }
 
-    protected function disableProfiler()
+    private function disableProfiler()
     {
         if (!$this->profiler) {
             return;
@@ -138,7 +140,7 @@ class PreviewController
         $this->profiler->disable();
     }
 
-    protected function getUserId(): ?int
+    private function getUserId(): ?int
     {
         $token = $this->tokenStorage->getToken();
         if (!$token) {
@@ -151,5 +153,19 @@ class PreviewController
         }
 
         return $user->getId();
+    }
+
+    private function getOptionsFromRequest(Request $request)
+    {
+        return \array_filter($request->query->all(), function($key) {
+            switch ($key) {
+                case 'id':
+                case 'provider':
+                case 'token':
+                    return false;
+                default:
+                    return true;
+            }
+        }, \ARRAY_FILTER_USE_KEY);
     }
 }

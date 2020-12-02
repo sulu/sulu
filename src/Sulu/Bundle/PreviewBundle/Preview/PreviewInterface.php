@@ -25,7 +25,7 @@ interface PreviewInterface
      *
      * @throws ProviderNotFoundException
      */
-    public function start(string $providerKey, string $id, string $locale, int $userId, array $data = []): string;
+    public function start(string $providerKey, string $id, int $userId, array $data = [], array $options = []): string;
 
     /**
      * Stops the preview-session and deletes the data.
@@ -44,10 +44,8 @@ interface PreviewInterface
      */
     public function update(
         string $token,
-        string $webspaceKey,
         array $data,
-        ?int $targetGroupId,
-        ?string $segmentKey
+        array $options = []
     ): string;
 
     /**
@@ -57,10 +55,8 @@ interface PreviewInterface
      */
     public function updateContext(
         string $token,
-        string $webspaceKey,
         array $context,
-        ?int $targetGroupId,
-        ?string $segmentKey
+        array $options = []
     ): string;
 
     /**
@@ -70,9 +66,6 @@ interface PreviewInterface
      */
     public function render(
         string $token,
-        string $webspaceKey,
-        string $locale,
-        ?int $targetGroupId,
-        ?string $segmentKey
+        array $options = []
     ): string;
 }

@@ -63,9 +63,7 @@ class PreviewControllerTest extends TestCase
         $request->get('provider', null)->willReturn('test-provider');
         $request->get('locale', null)->willReturn('de');
 
-        $this->preview->start('test-provider', '123-123-123', 'de', 42)
-            ->shouldBeCalled()
-            ->willReturn('test-token');
+        $this->preview->start('test-provider', '123-123-123', 42)->shouldBeCalled()->willReturn('test-token');
 
         $response = $this->previewController->startAction($request->reveal());
         $this->assertEquals(\json_encode(['token' => 'test-token']), $response->getContent());
@@ -73,34 +71,41 @@ class PreviewControllerTest extends TestCase
 
     public function testRender()
     {
-        $request = $this->prophesize(Request::class);
-        $request->get('token', null)->willReturn('test-token');
-        $request->get('webspace', null)->willReturn('sulu_io');
-        $request->get('locale', null)->willReturn('de');
-        $request->get('id', null)->willReturn('123-123-123');
-        $request->get('provider', null)->willReturn('test-provider');
-        $request->get('targetGroup', null)->willReturn(1);
-        $request->get('segment', null)->willReturn('w');
+        $request = new Request(
+            [
+                'token' => 'test-token',
+                'webspaceKey' => 'sulu_io',
+                'id' => '123-123-123',
+                'provider' => 'test-provider',
+                'locale' => 'de',
+                'targetGroupId' => 1,
+                'segmentKey' => 'w',
+            ]
+        );
 
         $this->preview->exists('test-token')->willReturn(true)->shouldBeCalled();
-        $this->preview->render('test-token', 'sulu_io', 'de', 1, 'w')
-            ->shouldBeCalled()
-            ->willReturn('<html><body><h1>SULU is awesome</h1></body></html>');
+        $this->preview->render(
+            'test-token',
+            ['targetGroupId' => 1, 'segmentKey' => 'w', 'webspaceKey' => 'sulu_io', 'locale' => 'de']
+        )->shouldBeCalled()->willReturn('<html><body><h1>SULU is awesome</h1></body></html>');
 
-        $response = $this->previewController->renderAction($request->reveal());
+        $response = $this->previewController->renderAction($request);
         $this->assertEquals('<html><body><h1>SULU is awesome</h1></body></html>', $response->getContent());
     }
 
     public function testRenderInvalidToken()
     {
-        $request = $this->prophesize(Request::class);
-        $request->get('token', null)->willReturn('test-token');
-        $request->get('webspace', null)->willReturn('sulu_io');
-        $request->get('locale', null)->willReturn('de');
-        $request->get('id', null)->willReturn('123-123-123');
-        $request->get('provider', null)->willReturn('test-provider');
-        $request->get('targetGroup', null)->willReturn(1);
-        $request->get('segment', null)->willReturn('w');
+        $request = new Request(
+            [
+                'token' => 'test-token',
+                'webspaceKey' => 'sulu_io',
+                'id' => '123-123-123',
+                'provider' => 'test-provider',
+                'locale' => 'de',
+                'targetGroupId' => 1,
+                'segmentKey' => 'w',
+            ]
+        );
 
         $token = $this->prophesize(TokenInterface::class);
         $user = $this->prophesize(UserInterface::class);
@@ -109,54 +114,70 @@ class PreviewControllerTest extends TestCase
         $user->getId()->willReturn(42);
 
         $this->preview->exists('test-token')->willReturn(false)->shouldBeCalled();
-        $this->preview->start('test-provider', '123-123-123', 'de', 42)
-            ->willReturn('test-token');
-        $this->preview->render('test-token', 'sulu_io', 'de', 1, 'w')
-            ->shouldBeCalled()
-            ->willReturn('<html><body><h1>SULU is awesome</h1></body></html>');
+        $this->preview->start(
+            'test-provider',
+            '123-123-123',
+            42,
+            ['webspaceKey' => 'sulu_io', 'locale' => 'de', 'segmentKey' => 'w', 'targetGroupId' => 1]
+        )->willReturn('test-token');
+        $this->preview->render(
+            'test-token',
+            ['targetGroupId' => 1, 'segmentKey' => 'w', 'webspaceKey' => 'sulu_io', 'locale' => 'de']
+        )->shouldBeCalled()->willReturn('<html><body><h1>SULU is awesome</h1></body></html>');
 
-        $response = $this->previewController->renderAction($request->reveal());
+        $response = $this->previewController->renderAction($request);
         $this->assertEquals('<html><body><h1>SULU is awesome</h1></body></html>', $response->getContent());
     }
 
     public function testRenderWithATags()
     {
-        $request = $this->prophesize(Request::class);
-        $request->get('token', null)->willReturn('test-token');
-        $request->get('webspace', null)->willReturn('sulu_io');
-        $request->get('locale', null)->willReturn('de');
-        $request->get('id', null)->willReturn('123-123-123');
-        $request->get('provider', null)->willReturn('test-provider');
-        $request->get('targetGroup', null)->willReturn(1);
-        $request->get('segment', null)->willReturn('s');
+        $request = new Request(
+            [
+                'token' => 'test-token',
+                'webspaceKey' => 'sulu_io',
+                'id' => '123-123-123',
+                'provider' => 'test-provider',
+                'locale' => 'de',
+                'targetGroupId' => 1,
+                'segmentKey' => 's',
+            ]
+        );
 
         $this->preview->exists('test-token')->willReturn(true)->shouldBeCalled();
-        $this->preview->render('test-token', 'sulu_io', 'de', 1, 's')
-            ->shouldBeCalled()
-            ->willReturn('<html><body><h1>SULU is awesome</h1></body></html>');
+        $this->preview->render(
+            'test-token',
+            ['targetGroupId' => 1, 'segmentKey' => 's', 'webspaceKey' => 'sulu_io', 'locale' => 'de']
+        )->shouldBeCalled()->willReturn('<html><body><h1>SULU is awesome</h1></body></html>');
 
-        $response = $this->previewController->renderAction($request->reveal());
+        $response = $this->previewController->renderAction($request);
         $this->assertEquals('<html><body><h1>SULU is awesome</h1></body></html>', $response->getContent());
     }
 
     public function testUpdate()
     {
-        $request = $this->prophesize(Request::class);
-        $request->get('token', null)->willReturn('test-token');
-        $request->get('data', null)->willReturn(['title' => 'Sulu is awesome']);
-        $request->get('webspace', null)->willReturn('sulu_io');
-        $request->get('id', null)->willReturn('123-123-123');
-        $request->get('provider', null)->willReturn('test-provider');
-        $request->get('locale', null)->willReturn('de');
-        $request->get('targetGroup', null)->willReturn(1);
-        $request->get('segment', null)->willReturn('s');
+        $request = new Request(
+            [
+                'token' => 'test-token',
+                'webspaceKey' => 'sulu_io',
+                'id' => '123-123-123',
+                'provider' => 'test-provider',
+                'locale' => 'de',
+                'targetGroupId' => 1,
+                'segmentKey' => 's',
+            ],
+            [
+                'data' => ['title' => 'Sulu is awesome'],
+            ]
+        );
 
         $this->preview->exists('test-token')->willReturn(true)->shouldBeCalled();
-        $this->preview->update('test-token', 'sulu_io', ['title' => 'Sulu is awesome'], 1, 's')
-            ->shouldBeCalled()
-            ->willReturn('<html><body><h1>SULU is awesome</h1></body></html>');
+        $this->preview->update(
+            'test-token',
+            ['title' => 'Sulu is awesome'],
+            ['targetGroupId' => 1, 'segmentKey' => 's', 'webspaceKey' => 'sulu_io', 'locale' => 'de']
+        )->shouldBeCalled()->willReturn('<html><body><h1>SULU is awesome</h1></body></html>');
 
-        $response = $this->previewController->updateAction($request->reveal());
+        $response = $this->previewController->updateAction($request);
 
         $this->assertEquals(
             \json_encode(['content' => '<html><body><h1>SULU is awesome</h1></body></html>'], $this->encodingOptions),
@@ -166,22 +187,29 @@ class PreviewControllerTest extends TestCase
 
     public function testUpdateWithATags()
     {
-        $request = $this->prophesize(Request::class);
-        $request->get('token', null)->willReturn('test-token');
-        $request->get('data', null)->willReturn(['title' => 'Sulu is awesome']);
-        $request->get('webspace', null)->willReturn('sulu_io');
-        $request->get('id', null)->willReturn('123-123-123');
-        $request->get('provider', null)->willReturn('test-provider');
-        $request->get('locale', null)->willReturn('de');
-        $request->get('targetGroup', null)->willReturn(1);
-        $request->get('segment', null)->willReturn('s');
+        $request = new Request(
+            [
+                'token' => 'test-token',
+                'webspaceKey' => 'sulu_io',
+                'id' => '123-123-123',
+                'provider' => 'test-provider',
+                'locale' => 'de',
+                'targetGroupId' => 1,
+                'segmentKey' => 's',
+            ],
+            [
+                'data' => ['title' => 'Sulu is awesome'],
+            ]
+        );
 
         $this->preview->exists('test-token')->willReturn(true)->shouldBeCalled();
-        $this->preview->update('test-token', 'sulu_io', ['title' => 'Sulu is awesome'], 1, 's')
-            ->shouldBeCalled()
-            ->willReturn('<html><body><a href="/test">SULU is awesome</a></body></html>');
+        $this->preview->update(
+            'test-token',
+            ['title' => 'Sulu is awesome'],
+            ['targetGroupId' => 1, 'segmentKey' => 's', 'webspaceKey' => 'sulu_io', 'locale' => 'de']
+        )->shouldBeCalled()->willReturn('<html><body><a href="/test">SULU is awesome</a></body></html>');
 
-        $response = $this->previewController->updateAction($request->reveal());
+        $response = $this->previewController->updateAction($request);
         $this->assertEquals(
             \json_encode(
                 ['content' => '<html><body><a href="/test">SULU is awesome</a></body></html>'],
@@ -193,22 +221,29 @@ class PreviewControllerTest extends TestCase
 
     public function testUpdateContext()
     {
-        $request = $this->prophesize(Request::class);
-        $request->get('token', null)->willReturn('test-token');
-        $request->get('context', null)->willReturn(['template' => 'default']);
-        $request->get('webspace', null)->willReturn('sulu_io');
-        $request->get('id', null)->willReturn('123-123-123');
-        $request->get('provider', null)->willReturn('test-provider');
-        $request->get('locale', null)->willReturn('de');
-        $request->get('targetGroup', null)->willReturn(1);
-        $request->get('segment', null)->willReturn('s');
+        $request = new Request(
+            [
+                'token' => 'test-token',
+                'webspaceKey' => 'sulu_io',
+                'id' => '123-123-123',
+                'provider' => 'test-provider',
+                'locale' => 'de',
+                'targetGroupId' => 1,
+                'segmentKey' => 's',
+            ],
+            [
+                'context' => ['template' => 'default'],
+            ]
+        );
 
         $this->preview->exists('test-token')->willReturn(true)->shouldBeCalled();
-        $this->preview->updateContext('test-token', 'sulu_io', ['template' => 'default'], 1, 's')
-            ->shouldBeCalled()
-            ->willReturn('<html><body><h1>SULU is awesome</h1></body></html>');
+        $this->preview->updateContext(
+            'test-token',
+            ['template' => 'default'],
+            ['targetGroupId' => 1, 'segmentKey' => 's', 'webspaceKey' => 'sulu_io', 'locale' => 'de']
+        )->shouldBeCalled()->willReturn('<html><body><h1>SULU is awesome</h1></body></html>');
 
-        $response = $this->previewController->updateContextAction($request->reveal());
+        $response = $this->previewController->updateContextAction($request);
         $this->assertEquals(
             \json_encode(['content' => '<html><body><h1>SULU is awesome</h1></body></html>'], $this->encodingOptions),
             $response->getContent()
@@ -217,22 +252,29 @@ class PreviewControllerTest extends TestCase
 
     public function testUpdateContextWithATags()
     {
-        $request = $this->prophesize(Request::class);
-        $request->get('token', null)->willReturn('test-token');
-        $request->get('context', null)->willReturn(['template' => 'default']);
-        $request->get('webspace', null)->willReturn('sulu_io');
-        $request->get('id', null)->willReturn('123-123-123');
-        $request->get('provider', null)->willReturn('test-provider');
-        $request->get('locale', null)->willReturn('de');
-        $request->get('targetGroup', null)->willReturn(1);
-        $request->get('segment', null)->willReturn('w');
+        $request = new Request(
+            [
+                'token' => 'test-token',
+                'webspaceKey' => 'sulu_io',
+                'id' => '123-123-123',
+                'provider' => 'test-provider',
+                'locale' => 'de',
+                'targetGroupId' => 1,
+                'segmentKey' => 'w',
+            ],
+            [
+                'context' => ['template' => 'default'],
+            ]
+        );
 
         $this->preview->exists('test-token')->willReturn(true)->shouldBeCalled();
-        $this->preview->updateContext('test-token', 'sulu_io', ['template' => 'default'], 1, 'w')
-            ->shouldBeCalled()
-            ->willReturn('<html><body><a href="/test">SULU is awesome</a></body></html>');
+        $this->preview->updateContext(
+            'test-token',
+            ['template' => 'default'],
+            ['targetGroupId' => 1, 'segmentKey' => 'w', 'webspaceKey' => 'sulu_io', 'locale' => 'de']
+        )->shouldBeCalled()->willReturn('<html><body><a href="/test">SULU is awesome</a></body></html>');
 
-        $response = $this->previewController->updateContextAction($request->reveal());
+        $response = $this->previewController->updateContextAction($request);
         $this->assertEquals(
             \json_encode(
                 ['content' => '<html><body><a href="/test">SULU is awesome</a></body></html>'],

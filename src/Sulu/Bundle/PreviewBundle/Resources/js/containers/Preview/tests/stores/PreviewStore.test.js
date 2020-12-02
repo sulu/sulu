@@ -19,12 +19,12 @@ test('Should request server on start preview', () => {
     const previewStore = new PreviewStore('pages', '123-123-123', 'en', 'sulu_io');
 
     const requestPromise = Promise.resolve({token: '123-123-123'});
-    Requester.get.mockReturnValue(requestPromise);
+    Requester.post.mockReturnValue(requestPromise);
 
     previewStore.start();
 
     return requestPromise.then(() => {
-        expect(Requester.get).toBeCalledWith('/start?id=123-123-123&locale=en&provider=pages&targetGroup=-1');
+        expect(Requester.post).toBeCalledWith('/start?id=123-123-123&locale=en&provider=pages&targetGroupId=-1');
     });
 });
 
@@ -32,22 +32,19 @@ test('Should request server on start preview with target group', () => {
     const previewStore = new PreviewStore('pages', '123-123-123', 'en', 'sulu_io');
 
     const requestPromise = Promise.resolve({token: '123-123-123'});
-    Requester.get.mockReturnValue(requestPromise);
 
     previewStore.setTargetGroup(3);
     previewStore.start();
 
     return requestPromise.then(() => {
-        expect(Requester.get).toBeCalledWith('/start?id=123-123-123&locale=en&provider=pages&targetGroup=3');
+        expect(Requester.post).toBeCalledWith('/start?id=123-123-123&locale=en&provider=pages&targetGroupId=3');
     });
 });
 
 test('Should request server on update preview', () => {
     const previewStore = new PreviewStore('pages', '123-123-123', 'en', 'sulu_io');
 
-    const getPromise = Promise.resolve({token: '123-123-123'});
     const postPromise = Promise.resolve({content: '<h1>Sulu is awesome</h1>'});
-    Requester.get.mockReturnValue(getPromise);
     Requester.post.mockReturnValue(postPromise);
 
     previewStore.start();
@@ -57,7 +54,7 @@ test('Should request server on update preview', () => {
 
     return postPromise.then(() => {
         expect(Requester.post).toBeCalledWith(
-            '/update?id=123-123-123&locale=en&provider=pages&targetGroup=-1&webspace=sulu_io',
+            '/update?id=123-123-123&locale=en&provider=pages&targetGroupId=-1&webspaceKey=sulu_io',
             {data: {title: 'Sulu is aswesome'}}
         );
     });
@@ -66,9 +63,7 @@ test('Should request server on update preview', () => {
 test('Should request server on update preview with target group', () => {
     const previewStore = new PreviewStore('pages', '123-123-123', 'en', 'sulu_io');
 
-    const getPromise = Promise.resolve({token: '123-123-123'});
     const postPromise = Promise.resolve({content: '<h1>Sulu is awesome</h1>'});
-    Requester.get.mockReturnValue(getPromise);
     Requester.post.mockReturnValue(postPromise);
 
     previewStore.setTargetGroup(2);
@@ -79,7 +74,7 @@ test('Should request server on update preview with target group', () => {
 
     return postPromise.then(() => {
         expect(Requester.post).toBeCalledWith(
-            '/update?id=123-123-123&locale=en&provider=pages&targetGroup=2&webspace=sulu_io',
+            '/update?id=123-123-123&locale=en&provider=pages&targetGroupId=2&webspaceKey=sulu_io',
             {data: {title: 'Sulu is aswesome'}}
         );
     });
@@ -88,9 +83,7 @@ test('Should request server on update preview with target group', () => {
 test('Should request server on update preview with segment', () => {
     const previewStore = new PreviewStore('pages', '123-123-123', 'en', 'sulu_io');
 
-    const getPromise = Promise.resolve({token: '123-123-123'});
     const postPromise = Promise.resolve({content: '<h1>Sulu is awesome</h1>'});
-    Requester.get.mockReturnValue(getPromise);
     Requester.post.mockReturnValue(postPromise);
 
     previewStore.setSegment('w');
@@ -101,7 +94,7 @@ test('Should request server on update preview with segment', () => {
 
     return postPromise.then(() => {
         expect(Requester.post).toBeCalledWith(
-            '/update?id=123-123-123&locale=en&provider=pages&segment=w&targetGroup=-1&webspace=sulu_io',
+            '/update?id=123-123-123&locale=en&provider=pages&segmentKey=w&targetGroupId=-1&webspaceKey=sulu_io',
             {data: {title: 'Sulu is aswesome'}}
         );
     });
@@ -110,9 +103,7 @@ test('Should request server on update preview with segment', () => {
 test('Should request server on update-context preview', () => {
     const previewStore = new PreviewStore('pages', '123-123-123', 'en', 'sulu_io');
 
-    const getPromise = Promise.resolve({token: '123-123-123'});
     const postPromise = Promise.resolve({content: '<h1>Sulu is awesome</h1>'});
-    Requester.get.mockReturnValue(getPromise);
     Requester.post.mockReturnValue(postPromise);
 
     previewStore.start();
@@ -123,7 +114,7 @@ test('Should request server on update-context preview', () => {
     return postPromise.then(() => {
         expect(Requester.post)
             .toBeCalledWith(
-                '/update-context?id=123-123-123&locale=en&provider=pages&targetGroup=-1&webspace=sulu_io',
+                '/update-context?id=123-123-123&locale=en&provider=pages&targetGroupId=-1&webspaceKey=sulu_io',
                 {context: {template: 'default'}}
             );
     });
@@ -132,9 +123,7 @@ test('Should request server on update-context preview', () => {
 test('Should request server on update-context preview with target group', () => {
     const previewStore = new PreviewStore('pages', '123-123-123', 'en', 'sulu_io');
 
-    const getPromise = Promise.resolve({token: '123-123-123'});
     const postPromise = Promise.resolve({content: '<h1>Sulu is awesome</h1>'});
-    Requester.get.mockReturnValue(getPromise);
     Requester.post.mockReturnValue(postPromise);
 
     previewStore.setTargetGroup(6);
@@ -146,7 +135,7 @@ test('Should request server on update-context preview with target group', () => 
     return postPromise.then(() => {
         expect(Requester.post)
             .toBeCalledWith(
-                '/update-context?id=123-123-123&locale=en&provider=pages&targetGroup=6&webspace=sulu_io',
+                '/update-context?id=123-123-123&locale=en&provider=pages&targetGroupId=6&webspaceKey=sulu_io',
                 {context: {template: 'default'}}
             );
     });
@@ -155,9 +144,7 @@ test('Should request server on update-context preview with target group', () => 
 test('Should request server on update-context preview with segment', () => {
     const previewStore = new PreviewStore('pages', '123-123-123', 'en', 'sulu_io');
 
-    const getPromise = Promise.resolve({token: '123-123-123'});
     const postPromise = Promise.resolve({content: '<h1>Sulu is awesome</h1>'});
-    Requester.get.mockReturnValue(getPromise);
     Requester.post.mockReturnValue(postPromise);
 
     previewStore.setSegment('s');
@@ -169,7 +156,8 @@ test('Should request server on update-context preview with segment', () => {
     return postPromise.then(() => {
         expect(Requester.post)
             .toBeCalledWith(
-                '/update-context?id=123-123-123&locale=en&provider=pages&segment=s&targetGroup=-1&webspace=sulu_io',
+                '/update-context' +
+                '?id=123-123-123&locale=en&provider=pages&segmentKey=s&targetGroupId=-1&webspaceKey=sulu_io',
                 {context: {template: 'default'}}
             );
     });
@@ -178,16 +166,14 @@ test('Should request server on update-context preview with segment', () => {
 test('Should request server on stop preview', () => {
     const previewStore = new PreviewStore('pages', '123-123-123', 'en', 'sulu_io');
 
-    const getPromise = Promise.resolve({token: '123-123-123'});
     const postPromise = Promise.resolve({content: '<h1>Sulu is awesome</h1>'});
-    Requester.get.mockReturnValue(getPromise);
 
     previewStore.start();
     previewStore.stop();
 
     return postPromise.then(() => {
-        expect(Requester.get).toBeCalledWith('/start?id=123-123-123&locale=en&provider=pages&targetGroup=-1');
-        expect(Requester.get).toBeCalledWith('/stop');
+        expect(Requester.post).toBeCalledWith('/start?id=123-123-123&locale=en&provider=pages&targetGroupId=-1');
+        expect(Requester.post).toBeCalledWith('/stop');
     });
 });
 
