@@ -32,7 +32,9 @@ trait DataProviderRepositoryTrait
 
         if (isset($filters['sortBy'])) {
             $sortMethod = $filters['sortMethod'] ?? 'asc';
-            $this->appendSortBy($filters['sortBy'], $sortMethod, $queryBuilder, $alias, $locale);
+            $sortBy = str_contains($filters['sortBy'], '.') ? $filters['sortBy'] : $alias . '.' . $filters['sortBy'];
+
+            $this->appendSortBy($sortBy, $sortMethod, $queryBuilder, $alias, $locale);
         }
 
         $query = $queryBuilder->getQuery();
@@ -68,8 +70,10 @@ trait DataProviderRepositoryTrait
 
         if (isset($filters['sortBy'])) {
             $sortMethod = $filters['sortMethod'] ?? 'asc';
-            $this->appendSortBy($filters['sortBy'], $sortMethod, $queryBuilder, 'entity', $locale);
-            $queryBuilder->addSelect(str_contains($filters['sortBy'], '.') ? $filters['sortBy'] : 'entity' . '.' . $filters['sortBy']);
+            $sortBy = str_contains($filters['sortBy'], '.') ? $filters['sortBy'] : 'entity' . '.' . $filters['sortBy'];
+
+            $this->appendSortBy($sortBy, $sortMethod, $queryBuilder, 'entity', $locale);
+            $queryBuilder->addSelect($sortBy);
         }
 
         $parameter = \array_merge($parameter, $this->append($queryBuilder, 'entity', $locale, $options));
@@ -371,10 +375,8 @@ trait DataProviderRepositoryTrait
      */
     protected function appendSortBy($sortBy, $sortMethod, QueryBuilder $queryBuilder, $alias, $locale)
     {
-        if (str_contains($sortBy, '.') && !\in_array(\explode('.', $sortBy)[0], $queryBuilder->getAllAliases())) {
+        if (!\in_array(\explode('.', $sortBy)[0], $queryBuilder->getAllAliases())) {
             $this->appendSortByJoins($queryBuilder, $alias, $locale);
-        } elseif (!str_contains($sortBy, '.')) {
-            $sortBy = $alias . '.' . $sortBy;
         }
 
         $queryBuilder->orderBy($sortBy, $sortMethod);
