@@ -9,10 +9,13 @@ import Requester from '../../../../services/Requester';
 import ResourceStore from '../../../../stores/ResourceStore';
 import ResourceLocator from '../../fields/ResourceLocator';
 import ResourceLocatorComponent from '../../../../components/ResourceLocator';
+import userStore from '../../../../stores/userStore';
 
 jest.mock('../../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
+
+jest.mock('../../../../stores/userStore', () => ({}));
 
 jest.mock('../../../../stores/ResourceStore', () => jest.fn(function(resourceKey, id, observableOptions = {}) {
     this.resourceKey = resourceKey;
@@ -155,6 +158,40 @@ test('Render history link if entity already existed including passed options', (
             .toEqual({history: true, webspace: 'sulu', resourceKey: 'test'});
         expect(resourceLocator.find('ResourceLocatorHistory').prop('resourceKey')).toEqual('page_resourcelocators');
         expect(resourceLocator.find('ResourceLocatorHistory').prop('id')).toEqual(1);
+    });
+});
+
+test('Pass locale from userStore to ResourceLocator and ResourceLocatorHistory if form has no locale', () => {
+    const formInspector = new FormInspector(
+        new ResourceFormStore(
+            new ResourceStore('test', 1, {'locale': undefined}),
+            'test',
+            {webspace: 'sulu'}
+        )
+    );
+
+    const modePromise = Promise.resolve('full');
+
+    // $FlowFixMe
+    userStore.contentLocale = 'cz';
+
+    const resourceLocator = shallow(
+        <ResourceLocator
+            {...fieldTypeDefaultProps}
+            disabled={true}
+            fieldTypeOptions={{
+                generationUrl: '/admin/api/resourcelocators?action=generate',
+                historyResourceKey: 'page_resourcelocators',
+                modeResolver: () => modePromise,
+                options: {history: true},
+            }}
+            formInspector={formInspector}
+        />
+    );
+
+    return modePromise.then(() => {
+        expect(resourceLocator.find(ResourceLocatorComponent).prop('locale').get()).toBe('cz');
+        expect(resourceLocator.find('ResourceLocatorHistory').prop('options').locale).toBe('cz');
     });
 });
 
@@ -373,7 +410,7 @@ test('Should not request a new URL if URL was defined', () => {
 test('Request new URL with options from FormInspector and resourceStorePropertiesToRequest field-type-option ', () => {
     const formInspector = new FormInspector(
         new ResourceFormStore(
-            new ResourceStore('test'),
+            new ResourceStore('test', undefined, {locale: observable.box('en')}),
             'test',
             {webspace: 'example'}
         )
@@ -425,7 +462,7 @@ test('Request new URL with options from FormInspector and resourceStorePropertie
     expect(Requester.post).toBeCalledWith(
         '/admin/api/resourcelocators?action=generate',
         {
-            locale: undefined,
+            locale: 'en',
             parts: {title: 'title-value', subtitle: 'subtitle-value'},
             resourceKey: 'test',
             webspace: 'example',

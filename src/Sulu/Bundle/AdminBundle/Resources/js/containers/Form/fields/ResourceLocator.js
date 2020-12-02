@@ -6,6 +6,7 @@ import ResourceLocatorComponent from '../../../components/ResourceLocator';
 import ResourceLocatorHistory from '../../../containers/ResourceLocatorHistory';
 import Requester from '../../../services/Requester';
 import type {FieldTypeProps} from '../../../types';
+import userStore from '../../../stores/userStore';
 import resourceLocatorStyles from './resourceLocator.scss';
 
 const PART_TAG = 'sulu.rlp.part';
@@ -93,7 +94,7 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
                 {
                     parts: Object.fromEntries(partEntries),
                     resourceKey: formInspector.resourceKey,
-                    locale: formInspector.locale ? formInspector.locale.get() : undefined,
+                    locale: formInspector.locale ? formInspector.locale.get() : userStore.contentLocale,
                     ...requestOptions,
                 }
             ).then((response) => {
@@ -145,7 +146,7 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
                     <ResourceLocatorComponent
                         disabled={!!disabled}
                         id={dataPath}
-                        locale={formInspector.locale}
+                        locale={formInspector.locale ? formInspector.locale : observable.box(userStore.contentLocale)}
                         mode={this.mode}
                         onBlur={this.handleBlur}
                         onChange={onChange}
@@ -157,7 +158,7 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
                         <ResourceLocatorHistory
                             id={formInspector.id}
                             options={{
-                                locale: formInspector.locale,
+                                locale: formInspector.locale ? formInspector.locale.get() : userStore.contentLocale,
                                 resourceKey: formInspector.resourceKey,
                                 webspace: formInspector.options.webspace,
                                 ...options,
