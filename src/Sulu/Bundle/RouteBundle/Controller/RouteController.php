@@ -55,7 +55,7 @@ class RouteController extends AbstractRestController implements ClassResourceInt
     private $routeGenerator;
 
     /**
-     * @var ConflictResolverInterface
+     * @var ConflictResolverInterface|null
      */
     private $conflictResolver;
 
@@ -64,16 +64,23 @@ class RouteController extends AbstractRestController implements ClassResourceInt
         RouteRepositoryInterface $routeRepository,
         EntityManagerInterface $entityManager,
         RouteGeneratorInterface $routeGenerator,
-        ConflictResolverInterface $conflictResolver,
-        array $resourceKeyMappings
+        array $resourceKeyMappings,
+        ConflictResolverInterface $conflictResolver = null
     ) {
         parent::__construct($viewHandler);
 
         $this->routeRepository = $routeRepository;
         $this->entityManager = $entityManager;
         $this->routeGenerator = $routeGenerator;
-        $this->conflictResolver = $conflictResolver;
         $this->resourceKeyMappings = $resourceKeyMappings;
+        $this->conflictResolver = $conflictResolver;
+
+        if (null === $this->conflictResolver) {
+            @\trigger_error(
+                'Instantiating RouteController without the $conflictResolver argument is deprecated.',
+                \E_USER_DEPRECATED
+            );
+        }
     }
 
     public function postAction(Request $request): Response
@@ -167,17 +174,19 @@ class RouteController extends AbstractRestController implements ClassResourceInt
 
         $route = '/' . \implode('-', $parts);
         if ($resourceKeyMapping) {
-            $routePath = $this->routeGenerator->generate($parts, $this->resourceKeyMappings[$resourceKey]['options']);
+            $route = $this->routeGenerator->generate($parts, $this->resourceKeyMappings[$resourceKey]['options']);
 
-            // create temporary route that is not persisted to resolve possible conflicts with existing routes
-            $tempRoute = $this->routeRepository->createNew()
-                ->setPath($routePath)
-                ->setLocale($this->getRequestParameter($request, 'locale'))
-                ->setEntityClass($this->resourceKeyMappings[$resourceKey]['entityClass'])
-                ->setEntityId($this->getRequestParameter($request, 'id'));
-            $tempRoute = $this->conflictResolver->resolve($tempRoute);
+            if ($this->conflictResolver) {
+                // create temporary route that is not persisted to resolve possible conflicts with existing routes
+                $tempRouteEntity = $this->routeRepository->createNew()
+                    ->setPath($route)
+                    ->setLocale($this->getRequestParameter($request, 'locale'))
+                    ->setEntityClass($this->resourceKeyMappings[$resourceKey]['entityClass'])
+                    ->setEntityId($this->getRequestParameter($request, 'id'));
+                $tempRouteEntity = $this->conflictResolver->resolve($tempRouteEntity);
 
-            $route = $tempRoute->getPath();
+                $route = $tempRouteEntity->getPath();
+            }
         }
 
         return $this->handleView($this->view(['resourcelocator' => $route]));
