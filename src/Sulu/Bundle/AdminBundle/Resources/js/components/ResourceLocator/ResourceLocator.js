@@ -79,7 +79,7 @@ class ResourceLocator extends React.Component<Props> {
             try {
                 value = value.toLocaleLowerCase(locale.get());
             } catch (e) {
-                // fallback to unlocalized toLowerCase if locale is not a valid BCP 47 code
+                // fallback to toLowerCase if toLocaleLowerCase fails because given locale is not a valid BCP 47 code
                 value = value.toLowerCase();
             }
 
