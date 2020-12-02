@@ -233,7 +233,7 @@ class MediaWebsiteControllerTest extends WebsiteTestCase
         $date = new DateTime();
         $date->modify('+1 month');
 
-        $this->client->jsonRequest(
+        $this->client->request(
             'GET',
             '/uploads/media/sulu-50x50/01/' . $media->getId() . '-photo.jpeg'
         );
