@@ -171,7 +171,7 @@ class MediaController extends AbstractMediaController implements
     /**
      * Shows a single media with the given id.
      *
-     * @param $id
+     * @param int $id
      *
      * @return Response
      */
@@ -432,7 +432,7 @@ class MediaController extends AbstractMediaController implements
     /**
      * Delete a media with the given id.
      *
-     * @param $id
+     * @param int $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -454,8 +454,8 @@ class MediaController extends AbstractMediaController implements
     }
 
     /**
-     * @param $id
-     * @param $version
+     * @param int $id
+     * @param string $version
      *
      * @throws \Sulu\Component\Rest\Exception\MissingParameterException
      */
@@ -553,7 +553,7 @@ class MediaController extends AbstractMediaController implements
     }
 
     /**
-     * @param $id
+     * @param int|null $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */

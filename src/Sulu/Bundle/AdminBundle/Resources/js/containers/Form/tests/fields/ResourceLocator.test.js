@@ -9,10 +9,13 @@ import Requester from '../../../../services/Requester';
 import ResourceStore from '../../../../stores/ResourceStore';
 import ResourceLocator from '../../fields/ResourceLocator';
 import ResourceLocatorComponent from '../../../../components/ResourceLocator';
+import userStore from '../../../../stores/userStore';
 
 jest.mock('../../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
+
+jest.mock('../../../../stores/userStore', () => ({}));
 
 jest.mock('../../../../stores/ResourceStore', () => jest.fn(function(resourceKey, id, observableOptions = {}) {
     this.resourceKey = resourceKey;
@@ -55,7 +58,7 @@ test('Pass props correctly to ResourceLocator', () => {
             new ResourceStore(
                 'test',
                 undefined,
-                {'locale': 'en'}
+                {'locale': observable.box('en')}
             ),
             'test'
         )
@@ -81,7 +84,7 @@ test('Pass props correctly to ResourceLocator', () => {
         expect(resourceLocator.find(ResourceLocatorComponent).prop('value')).toBe('/url');
         expect(resourceLocator.find(ResourceLocatorComponent).prop('mode')).toBe('full');
         expect(resourceLocator.find(ResourceLocatorComponent).prop('disabled')).toBe(true);
-        expect(resourceLocator.find(ResourceLocatorComponent).prop('locale')).toBe('en');
+        expect(resourceLocator.find(ResourceLocatorComponent).prop('locale').get()).toBe('en');
 
         // should not throw any error on unmount
         resourceLocator.unmount();
@@ -144,6 +147,40 @@ test('Pass correct options to ResourceLocatorHistory if entity already existed',
             .toEqual({history: true, webspace: 'sulu', resourceKey: 'test'});
         expect(resourceLocator.find('ResourceLocatorHistory').prop('resourceKey')).toEqual('page_resourcelocators');
         expect(resourceLocator.find('ResourceLocatorHistory').prop('id')).toEqual(1);
+    });
+});
+
+test('Pass locale from userStore to ResourceLocator and ResourceLocatorHistory if form has no locale', () => {
+    const formInspector = new FormInspector(
+        new ResourceFormStore(
+            new ResourceStore('test', 1, {'locale': undefined}),
+            'test',
+            {webspace: 'sulu'}
+        )
+    );
+
+    const modePromise = Promise.resolve('full');
+
+    // $FlowFixMe
+    userStore.contentLocale = 'cz';
+
+    const resourceLocator = shallow(
+        <ResourceLocator
+            {...fieldTypeDefaultProps}
+            disabled={true}
+            fieldTypeOptions={{
+                generationUrl: '/admin/api/resourcelocators?action=generate',
+                historyResourceKey: 'page_resourcelocators',
+                modeResolver: () => modePromise,
+                options: {history: true},
+            }}
+            formInspector={formInspector}
+        />
+    );
+
+    return modePromise.then(() => {
+        expect(resourceLocator.find(ResourceLocatorComponent).prop('locale').get()).toBe('cz');
+        expect(resourceLocator.find('ResourceLocatorHistory').prop('options').locale).toBe('cz');
     });
 });
 
@@ -296,7 +333,7 @@ test('Should automatically request new URL when part field is finished on add fo
 });
 
 test('Should request URL with FormInspector options and resourceStorePropertiesToRequest field-type-option', () => {
-    const resourceStore = new ResourceStore('test');
+    const resourceStore = new ResourceStore('test', undefined, {locale: observable.box('en')});
     const formInspector = new FormInspector(
         new ResourceFormStore(
             resourceStore,
@@ -351,7 +388,7 @@ test('Should request URL with FormInspector options and resourceStorePropertiesT
     expect(Requester.post).toBeCalledWith(
         '/admin/api/resourcelocators?action=generate',
         {
-            locale: undefined,
+            locale: 'en',
             parts: {title: 'title-value', subtitle: 'subtitle-value'},
             resourceKey: 'test',
             webspace: 'example',
@@ -792,7 +829,7 @@ test('Should not enable refresh button when value of part field changes if all p
 });
 
 test('Should request new URL with correct options and disable button when refresh button is clicked', () => {
-    const resourceStore = new ResourceStore('test', 5);
+    const resourceStore = new ResourceStore('test', 5, {locale: observable.box('en')});
     const formInspector = new FormInspector(
         new ResourceFormStore(
             resourceStore,
@@ -846,7 +883,7 @@ test('Should request new URL with correct options and disable button when refres
             '/admin/api/resourcelocators?action=generate',
             {
                 id: 5,
-                locale: undefined,
+                locale: 'en',
                 parts: {title: 'title-value', subtitle: 'subtitle-value'},
                 resourceKey: 'test',
                 webspace: 'example',

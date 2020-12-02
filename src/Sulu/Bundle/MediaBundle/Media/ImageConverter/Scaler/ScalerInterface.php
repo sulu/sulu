@@ -24,7 +24,7 @@ interface ScalerInterface
      * @param ImageInterface $image The image to scale
      * @param int $x The value for the x dimension
      * @param int $y The value for the y dimension
-     * @param string $mode The mode to use for scale, inset or outbound
+     * @param string|int $mode The mode to use for scale, inset or outbound
      * @param bool $forceRatio Whether or not to force the format ratio when using the outbound mode
      * @param bool $retina Whether or not the scale is applied to a retina image
      *

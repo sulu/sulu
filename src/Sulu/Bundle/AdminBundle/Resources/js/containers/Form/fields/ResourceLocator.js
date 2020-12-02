@@ -8,6 +8,7 @@ import Requester from '../../../services/Requester';
 import type {FieldTypeProps} from '../../../types';
 import {translate} from '../../../utils/Translator';
 import Button from '../../../components/Button';
+import userStore from '../../../stores/userStore';
 import resourceLocatorStyles from './resourceLocator.scss';
 
 const PART_TAG = 'sulu.rlp.part';
@@ -144,7 +145,7 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
             {
                 parts: this.parts,
                 resourceKey: formInspector.resourceKey,
-                locale: formInspector.locale ? formInspector.locale.get() : undefined,
+                locale: formInspector.locale ? formInspector.locale.get() : userStore.contentLocale,
                 id: formInspector.id,
                 ...requestOptions,
             }
@@ -207,7 +208,7 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
                 <ResourceLocatorComponent
                     disabled={!!disabled}
                     id={dataPath}
-                    locale={formInspector.locale}
+                    locale={formInspector.locale ? formInspector.locale : observable.box(userStore.contentLocale)}
                     mode={this.mode}
                     onBlur={this.handleInputBlur}
                     onChange={this.handleInputChange}
@@ -226,7 +227,7 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
                     <ResourceLocatorHistory
                         id={formInspector.id}
                         options={{
-                            locale: formInspector.locale,
+                            locale: formInspector.locale ? formInspector.locale.get() : userStore.contentLocale,
                             resourceKey: formInspector.resourceKey,
                             webspace: formInspector.options.webspace,
                             ...options,

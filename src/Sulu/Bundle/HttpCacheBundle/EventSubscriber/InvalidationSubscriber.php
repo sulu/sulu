@@ -180,7 +180,7 @@ class InvalidationSubscriber implements EventSubscriberInterface
     /**
      * Invalidates the structure of the given document.
      *
-     * @param $document
+     * @param StructureBehavior $document
      */
     private function invalidateDocumentStructure($document)
     {
@@ -200,7 +200,7 @@ class InvalidationSubscriber implements EventSubscriberInterface
     /**
      * Invalidates all urls which are assigned to the given document in the given locale.
      *
-     * @param $document
+     * @param ResourceSegmentBehavior $document
      * @param string $locale
      */
     private function invalidateDocumentUrls($document, $locale)

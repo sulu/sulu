@@ -16,6 +16,7 @@ use FOS\RestBundle\View\ViewHandlerInterface;
 use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\RouteBundle\Entity\RouteRepositoryInterface;
 use Sulu\Bundle\RouteBundle\Generator\RouteGeneratorInterface;
+use Sulu\Bundle\RouteBundle\Manager\ConflictResolverInterface;
 use Sulu\Bundle\RouteBundle\Model\RouteInterface;
 use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
@@ -53,12 +54,18 @@ class RouteController extends AbstractRestController implements ClassResourceInt
      */
     private $routeGenerator;
 
+    /**
+     * @var ConflictResolverInterface|null
+     */
+    private $conflictResolver;
+
     public function __construct(
         ViewHandlerInterface $viewHandler,
         RouteRepositoryInterface $routeRepository,
         EntityManagerInterface $entityManager,
         RouteGeneratorInterface $routeGenerator,
-        array $resourceKeyMappings
+        array $resourceKeyMappings,
+        ConflictResolverInterface $conflictResolver = null
     ) {
         parent::__construct($viewHandler);
 
@@ -66,6 +73,14 @@ class RouteController extends AbstractRestController implements ClassResourceInt
         $this->entityManager = $entityManager;
         $this->routeGenerator = $routeGenerator;
         $this->resourceKeyMappings = $resourceKeyMappings;
+        $this->conflictResolver = $conflictResolver;
+
+        if (null === $this->conflictResolver) {
+            @\trigger_error(
+                'Instantiating RouteController without the $conflictResolver argument is deprecated.',
+                \E_USER_DEPRECATED
+            );
+        }
     }
 
     public function postAction(Request $request): Response
@@ -160,6 +175,18 @@ class RouteController extends AbstractRestController implements ClassResourceInt
         $route = '/' . \implode('-', $parts);
         if ($resourceKeyMapping) {
             $route = $this->routeGenerator->generate($parts, $this->resourceKeyMappings[$resourceKey]['options']);
+
+            if ($this->conflictResolver) {
+                // create temporary route that is not persisted to resolve possible conflicts with existing routes
+                $tempRouteEntity = $this->routeRepository->createNew()
+                    ->setPath($route)
+                    ->setLocale($this->getRequestParameter($request, 'locale'))
+                    ->setEntityClass($this->resourceKeyMappings[$resourceKey]['entityClass'])
+                    ->setEntityId($this->getRequestParameter($request, 'id'));
+                $tempRouteEntity = $this->conflictResolver->resolve($tempRouteEntity);
+
+                $route = $tempRouteEntity->getPath();
+            }
         }
 
         return $this->handleView($this->view(['resourcelocator' => $route]));
