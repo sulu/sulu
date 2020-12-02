@@ -87,7 +87,7 @@ class ContactMediaControllerTest extends SuluTestCase
 
         $this->em->flush();
 
-        $this->client->request('GET', '/api/contacts/' . $this->contact->getId() . '/medias?flat=true');
+        $this->client->jsonRequest('GET', '/api/contacts/' . $this->contact->getId() . '/medias?flat=true');
         $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals(1, $response->total);
@@ -106,7 +106,7 @@ class ContactMediaControllerTest extends SuluTestCase
 
         $this->em->flush();
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/contacts/' . $this->contact->getId()
         );
@@ -114,7 +114,7 @@ class ContactMediaControllerTest extends SuluTestCase
         $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(1, \count($response->medias));
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'POST',
             '/api/contacts/' . $this->contact->getId() . '/medias',
             [
@@ -125,7 +125,7 @@ class ContactMediaControllerTest extends SuluTestCase
         $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertNotNull($response->id);
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/contacts/' . $this->contact->getId()
         );
@@ -144,7 +144,7 @@ class ContactMediaControllerTest extends SuluTestCase
 
         $this->em->flush();
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/contacts/' . $this->contact->getId()
         );
@@ -152,7 +152,7 @@ class ContactMediaControllerTest extends SuluTestCase
         $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(1, \count($response->medias));
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'POST',
             '/api/contacts/' . $this->contact->getId() . '/medias',
             [
@@ -162,7 +162,7 @@ class ContactMediaControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(404, $this->client->getResponse());
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/contacts/' . $this->contact->getId()
         );
@@ -178,14 +178,14 @@ class ContactMediaControllerTest extends SuluTestCase
 
         $this->em->flush();
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'DELETE',
             '/api/contacts/' . $this->contact->getId() . '/medias/' . $media1->getId()
         );
 
         $this->assertHttpStatusCode(204, $this->client->getResponse());
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/contacts/' . $this->contact->getId()
         );
@@ -201,14 +201,14 @@ class ContactMediaControllerTest extends SuluTestCase
 
         $this->em->flush();
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'DELETE',
             '/api/contacts/' . $this->contact->getId() . '/medias/99'
         );
 
         $this->assertHttpStatusCode(404, $this->client->getResponse());
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/contacts/' . $this->contact->getId()
         );

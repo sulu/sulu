@@ -51,7 +51,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/categories/' . $category1->getId() . '?locale=en'
         );
@@ -78,7 +78,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/categories/' . $category2->getId() . '?locale=en'
         );
@@ -100,7 +100,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/categories/' . $category1->getId()
         );
@@ -110,7 +110,7 @@ class CategoryControllerTest extends SuluTestCase
 
     public function testGetByIdNotExisting()
     {
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/categories/101230?locale=en'
         );
@@ -139,7 +139,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/categories/' . $category->getId() . '?locale=de'
         );
@@ -150,7 +150,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertEquals('en', $response->defaultLocale);
         $this->assertEquals('EN', $response->name);
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/categories/' . $category->getId() . '?locale=en_us'
         );
@@ -178,7 +178,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/categories?locale=en'
         );
@@ -227,7 +227,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/categories?locale=en&ids=' . $category3->getId() . ',' . $category4->getId()
         );
@@ -260,7 +260,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/categories?locale=en&flat=true'
         );
@@ -313,7 +313,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/categories?locale=en&flat=true&selectedIds=' . $category3->getId()
         );
@@ -366,7 +366,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/categories?locale=en&flat=true&expandedIds=' . $category3->getId()
         );
@@ -422,7 +422,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/categories?locale=en&flat=true&expandedIds=' . $category2->getId()
         );
@@ -465,7 +465,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/categories?locale=en&flat=true&search=Third&searchFields=name'
         );
@@ -484,7 +484,7 @@ class CategoryControllerTest extends SuluTestCase
 
     public function testCGetWithNoLocale()
     {
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/categories'
         );
@@ -494,7 +494,7 @@ class CategoryControllerTest extends SuluTestCase
 
     public function testCGetFlatWithNoLocale()
     {
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/categories?flat=true'
         );
@@ -516,7 +516,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/categories?locale=en&rootKey=' . $category1->getKey()
         );
@@ -552,7 +552,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/categories?locale=en&flat=true&rootKey=' . $category1->getKey()
         );
@@ -590,7 +590,7 @@ class CategoryControllerTest extends SuluTestCase
 
         // search for existing third category
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/categories?locale=en&flat=true&rootKey=' . $category1->getKey() .
             '&searchFields=name&search=Third'
@@ -614,7 +614,7 @@ class CategoryControllerTest extends SuluTestCase
 
         // search for the root category => should be excluded also!
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/categories?locale=en&flat=true&rootKey=' . $category1->getKey() .
             '&searchFields=name&search=First'
@@ -630,7 +630,7 @@ class CategoryControllerTest extends SuluTestCase
 
         // search for not existing category
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/categories?locale=en&flat=true&rootKey=' . $category1->getKey() .
             '&searchFields=name&search=XXX'
@@ -659,7 +659,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/categories?locale=en&flat=true&rootKey=' . $category1->getKey()
             . '&expandedIds=' . $category4->getId()
@@ -700,7 +700,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/categories?locale=en&flat=true&rootKey=' . $category1->getKey()
             . '&expandedIds=' . $category2->getId()
@@ -725,7 +725,7 @@ class CategoryControllerTest extends SuluTestCase
 
     public function testCGetWithNotExistingRoot()
     {
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/categories?locale=en&rootKey=101'
         );
@@ -735,7 +735,7 @@ class CategoryControllerTest extends SuluTestCase
 
     public function testCGetFlatWithNotExistingRoot()
     {
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/categories?locale=en&flat=true&rootKey=101'
         );
@@ -755,7 +755,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/categories?locale=en&flat=true&parentId=' . $category1->getId()
         );
@@ -787,7 +787,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/categories?locale=de&flat=true&sortBy=name&sortOrder=desc'
         );
@@ -817,7 +817,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/categories?locale=de'
         );
@@ -841,7 +841,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertEquals('en', $categories[1]->defaultLocale);
         $this->assertEquals('Zweite Kategorie', $categories[1]->name);
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/categories?locale=de&rootKey=' . $category1->getKey()
         );
@@ -869,7 +869,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/categories?locale=de&flat=true'
         );
@@ -893,7 +893,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertEquals('en', $categories[1]->defaultLocale);
         $this->assertEquals('Zweite Kategorie', $categories[1]->name);
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/categories?locale=de&flat=true&rootKey=' . $category1->getKey()
         );
@@ -928,7 +928,7 @@ class CategoryControllerTest extends SuluTestCase
             $medias
         );
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'POST',
             '/api/categories?locale=en',
             [
@@ -963,7 +963,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertEquals('myKey', $response->meta[0]->key);
         $this->assertEquals('myValue', $response->meta[0]->value);
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/categories/' . $response->id . '?locale=en'
         );
@@ -980,7 +980,7 @@ class CategoryControllerTest extends SuluTestCase
 
     public function testPostWithoutMedia()
     {
-        $this->client->request(
+        $this->client->jsonRequest(
             'POST',
             '/api/categories?locale=en',
             [
@@ -998,7 +998,7 @@ class CategoryControllerTest extends SuluTestCase
 
     public function testPostWithNoLocale()
     {
-        $this->client->request(
+        $this->client->jsonRequest(
             'POST',
             '/api/categories',
             [
@@ -1016,7 +1016,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'POST',
             '/api/categories?locale=en',
             [
@@ -1030,7 +1030,7 @@ class CategoryControllerTest extends SuluTestCase
 
     public function testPostWithoutName()
     {
-        $this->client->request(
+        $this->client->jsonRequest(
             'POST',
             '/api/categories?locale=en',
             [
@@ -1051,7 +1051,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/categories/' . $category1->getId() . '?locale=en'
         );
@@ -1060,7 +1060,7 @@ class CategoryControllerTest extends SuluTestCase
         $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertCount(1, $response->children);
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'POST',
             '/api/categories?locale=en&parentId=' . $category1->getId(),
             [
@@ -1077,7 +1077,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertEquals('en', $response->defaultLocale);
         $this->assertEquals($category1->getId(), $response->parentId);
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/categories/' . $category1->getId() . '?locale=en'
         );
@@ -1096,7 +1096,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'PUT',
             '/api/categories/' . $category1->getId() . '?locale=en',
             [
@@ -1135,7 +1135,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertTrue('newMeta' === $response->meta[1]->key);
         $this->assertTrue('This meta got added' === $response->meta[1]->value);
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/categories/' . $category1->getId() . '?locale=en'
         );
@@ -1172,7 +1172,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/categories/' . $category1->getId() . '?locale=en'
         );
@@ -1187,7 +1187,7 @@ class CategoryControllerTest extends SuluTestCase
             ],
         ], $response['medias']);
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'PUT',
             '/api/categories/' . $category1->getId() . '?locale=en',
             [
@@ -1210,7 +1210,7 @@ class CategoryControllerTest extends SuluTestCase
             ],
         ], $response['medias']);
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/categories/' . $category1->getId() . '?locale=en'
         );
@@ -1233,7 +1233,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'PUT',
             '/api/categories/' . $category1->getId(),
             [
@@ -1253,7 +1253,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'PUT',
             '/api/categories/' . $category1->getId() . '?locale=cn',
             [
@@ -1265,7 +1265,7 @@ class CategoryControllerTest extends SuluTestCase
         $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertEquals('Imagine this is chinese', $response->name);
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/categories/' . $category1->getId() . '?locale=cn'
         );
@@ -1274,7 +1274,7 @@ class CategoryControllerTest extends SuluTestCase
         $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertEquals('Imagine this is chinese', $response->name);
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/categories/' . $category1->getId() . '?locale=en'
         );
@@ -1292,7 +1292,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'PUT',
             '/api/categories/' . $category1->getId() . '?locale=en',
             [
@@ -1318,7 +1318,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'PUT',
             '/api/categories/' . $category2->getId() . '?locale=en',
             [
@@ -1332,7 +1332,7 @@ class CategoryControllerTest extends SuluTestCase
 
     public function testPutNotExisting()
     {
-        $this->client->request(
+        $this->client->jsonRequest(
             'PUT',
             '/api/categories/101?locale=en',
             [
@@ -1357,7 +1357,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'PATCH',
             '/api/categories/' . $category->getId() . '?locale=en',
             [
@@ -1371,7 +1371,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertEquals('Name changed through patch', $response->name);
         $this->assertEquals('first-category-key', $response->key);
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/categories/' . $category->getId() . '?locale=en'
         );
@@ -1393,7 +1393,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'PATCH',
             '/api/categories/' . $category2->getId() . '?locale=en',
             [
@@ -1406,7 +1406,7 @@ class CategoryControllerTest extends SuluTestCase
 
     public function testPatchNotExisting()
     {
-        $this->client->request(
+        $this->client->jsonRequest(
             'PATCH',
             '/api/categories/101?locale=en',
             [
@@ -1427,14 +1427,14 @@ class CategoryControllerTest extends SuluTestCase
 
         $categoryId = $category->getId();
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'DELETE',
             '/api/categories/' . $categoryId
         );
 
         $this->assertHttpStatusCode(204, $this->client->getResponse());
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/categories/' . $categoryId . '?locale=en'
         );
@@ -1444,7 +1444,7 @@ class CategoryControllerTest extends SuluTestCase
 
     public function testDeleteNotExisting()
     {
-        $this->client->request(
+        $this->client->jsonRequest(
             'DELETE',
             '/api/categories/101'
         );
@@ -1469,14 +1469,14 @@ class CategoryControllerTest extends SuluTestCase
         $category1Id = $category1->getId();
         $category4Id = $category4->getId();
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'DELETE',
             '/api/categories/' . $category1Id
         );
 
         $this->assertHttpStatusCode(204, $this->client->getResponse());
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/categories?locale=en'
         );
@@ -1486,7 +1486,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertEquals(1, \count($response->_embedded->categories));
         $this->assertEquals($category2->getId(), $response->_embedded->categories[0]->id);
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/categories/' . $category4Id . '?locale=en'
         );
@@ -1506,7 +1506,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'POST',
             '/api/categories/' . $category4->getId() . '?locale=en&action=move&destination=' . $category3->getId()
         );
@@ -1515,7 +1515,7 @@ class CategoryControllerTest extends SuluTestCase
         $response = \json_decode($this->client->getResponse()->getContent(), true);
         $this->assertEquals($category3->getId(), $response['parentId']);
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/categories/' . $category4->getId() . '?locale=en'
         );
@@ -1539,7 +1539,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'POST',
             '/api/categories/' . $category4->getId() . '?locale=en&action=move&destination=root'
         );
@@ -1548,7 +1548,7 @@ class CategoryControllerTest extends SuluTestCase
         $response = \json_decode($this->client->getResponse()->getContent(), true);
         $this->assertArrayNotHasKey('parent', $response);
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/categories/' . $category4->getId() . '?locale=en'
         );

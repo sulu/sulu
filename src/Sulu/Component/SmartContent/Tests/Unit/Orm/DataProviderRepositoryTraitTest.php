@@ -167,8 +167,6 @@ class DataProviderRepositoryTraitTest extends TestCase
     public function testFindByFiltersWithSorting()
     {
         $query = $this->prophesize(Query::class);
-
-        $query = $this->prophesize(Query::class);
         $query->setParameter(Argument::cetera())->willReturn($query);
         $query->setFirstResult(0)->willReturn($query);
         $query->setMaxResults(Argument::any())->willReturn($query);
@@ -191,13 +189,11 @@ class DataProviderRepositoryTraitTest extends TestCase
             'de'
         );
 
-        $queryBuilder->orderBy('test', 'asc')->shouldBeCalled();
+        $queryBuilder->orderBy('entity.test', 'asc')->shouldBeCalled();
     }
 
     public function testFindByFiltersWithoutSorting()
     {
-        $query = $this->prophesize(Query::class);
-
         $query = $this->prophesize(Query::class);
         $query->setParameter(Argument::cetera())->willReturn($query);
         $query->setFirstResult(0)->willReturn($query);

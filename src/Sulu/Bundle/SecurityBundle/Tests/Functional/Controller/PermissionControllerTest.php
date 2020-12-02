@@ -48,18 +48,18 @@ class PermissionControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'PUT',
             '/api/permissions?resourceKey=secured_entity&id=2',
             [
                 'permissions' => [
-                    $role1->getId() => ['view' => true, 'edit' => true],
-                    $role2->getId() => ['view' => true, 'edit' => true],
+                    $role1->getId() => ['view' => 'true', 'edit' => 'true'],
+                    $role2->getId() => ['view' => 'true', 'edit' => 'true'],
                 ],
             ]
         );
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/permissions?resourceKey=secured_entity&id=2'
         );
@@ -98,7 +98,7 @@ class PermissionControllerTest extends SuluTestCase
             '/api/permissions?resourceKey=secured_entity&id=2',
             [
                 'permissions' => [
-                    $role1->getId() => ['view' => true, 'edit' => false],
+                    $role1->getId() => ['view' => 'true', 'edit' => 'false'],
                 ],
             ]
         );
@@ -139,18 +139,18 @@ class PermissionControllerTest extends SuluTestCase
 
         $this->documentManager->clear();
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'PUT',
             '/api/permissions?resourceKey=secured_document&id=' . $document->getUuid(),
             [
                 'permissions' => [
-                    $role1->getId() => ['view' => true, 'edit' => true],
-                    $role2->getId() => ['view' => true, 'edit' => true],
+                    $role1->getId() => ['view' => 'true', 'edit' => 'true'],
+                    $role2->getId() => ['view' => 'true', 'edit' => 'true'],
                 ],
             ]
         );
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/permissions?resourceKey=secured_document&id=' . $document->getUuid()
         );
@@ -184,17 +184,17 @@ class PermissionControllerTest extends SuluTestCase
             $response['permissions'][$role2->getId()]
         );
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'PUT',
             '/api/permissions?resourceKey=secured_document&id=' . $document->getUuid(),
             [
                 'permissions' => [
-                    $role1->getId() => ['view' => true, 'edit' => false],
+                    $role1->getId() => ['view' => 'true', 'edit' => 'false'],
                 ],
             ]
         );
 
-        $this->client->request(
+        $this->client->jsonRequest(
             'GET',
             '/api/permissions?resourceKey=secured_document&id=' . $document->getUuid()
         );

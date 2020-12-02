@@ -19,7 +19,7 @@ class WebspaceControllerTest extends SuluTestCase
     {
         $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/api/webspaces?locale=en');
+        $client->jsonRequest('GET', '/api/webspaces?locale=en');
         $response = \json_decode($client->getResponse()->getContent(), true);
 
         $this->assertHttpStatusCode(200, $client->getResponse());
