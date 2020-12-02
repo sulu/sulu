@@ -521,6 +521,22 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
                 null,
                 \array_reverse($this->mediaData),
             ],
+            // sort-by asc and limit
+            [
+                ['dataSource' => 'root', 'sortBy' => 'fileVersionMeta.title', 'sortMethod' => 'asc'],
+                1,
+                null,
+                3,
+                \array_slice($this->mediaData, 0, 3),
+            ],
+            // sort-by desc and limit
+            [
+                ['dataSource' => 'root', 'sortBy' => 'fileVersionMeta.title', 'sortMethod' => 'desc'],
+                1,
+                null,
+                3,
+                \array_slice(\array_reverse($this->mediaData), 0, 3),
+            ],
         ];
     }
 
