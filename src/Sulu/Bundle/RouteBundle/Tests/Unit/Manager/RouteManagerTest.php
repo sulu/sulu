@@ -446,9 +446,36 @@ class RouteManagerTest extends TestCase
         $this->routeRepository->createNew()->willReturn($route->reveal())->shouldBeCalled();
         $this->routeRepository->persist($route->reveal())->shouldBeCalled();
 
-        $result = $this->manager->createOrUpdateByAttributes($entityClass, $entityId, $locale, $path);
+        $result = $this->manager->createOrUpdateByAttributes($entityClass, $entityId, $locale, $path, false);
 
         $this->assertEquals($route->reveal(), $result);
+    }
+
+    public function testCreateByAttributesResolveConflict(): void
+    {
+        $entityClass = TestRoutable::class;
+        $entityId = '123-123-123';
+        $locale = 'en';
+        $path = '/test';
+
+        $this->routeRepository->findByEntity($entityClass, $entityId, $locale)->willReturn(null);
+
+        $route = $this->prophesize(RouteInterface::class);
+        $route->setEntityClass($entityClass)->shouldBeCalled()->willReturn($route->reveal());
+        $route->setEntityId($entityId)->shouldBeCalled()->willReturn($route->reveal());
+        $route->setLocale($locale)->shouldBeCalled()->willReturn($route->reveal());
+        $route->setPath($path)->shouldBeCalled()->willReturn($route->reveal());
+
+        $this->routeRepository->createNew()->willReturn($route->reveal())->shouldBeCalled();
+
+        $resolvedRoute = $this->prophesize(RouteInterface::class);
+        $this->conflictResolver->resolve($route->reveal())->willReturn($resolvedRoute->reveal());
+
+        $this->routeRepository->persist($resolvedRoute->reveal())->shouldBeCalled();
+
+        $result = $this->manager->createOrUpdateByAttributes($entityClass, $entityId, $locale, $path, true);
+
+        $this->assertEquals($resolvedRoute->reveal(), $result);
     }
 
     public function testUpdateByAttributesSamePath(): void
@@ -489,7 +516,6 @@ class RouteManagerTest extends TestCase
         $route->getPath()->willReturn($path);
 
         $this->routeRepository->createNew()->willReturn($route->reveal())->shouldBeCalled();
-        $this->routeRepository->persist($route->reveal())->shouldBeCalled();
 
         $oldRoute->setHistory(true)->shouldBeCalled()->willReturn($oldRoute->reveal());
         $oldRoute->setTarget($route->reveal())->shouldBeCalled()->willReturn($oldRoute->reveal());
@@ -507,9 +533,58 @@ class RouteManagerTest extends TestCase
         $route->addHistory($oldRoute->reveal())->shouldBeCalled()->willReturn($route->reveal());
         $oldRoute->getHistories()->willReturn([$historyRoute1->reveal(), $historyRoute2->reveal()]);
 
-        $result = $this->manager->createOrUpdateByAttributes($entityClass, $entityId, $locale, $path);
+        $this->routeRepository->persist($route->reveal())->shouldBeCalled();
+
+        $result = $this->manager->createOrUpdateByAttributes($entityClass, $entityId, $locale, $path, false);
 
         $this->assertEquals($route->reveal(), $result);
+    }
+
+    public function testUpdateByAttributesNewPathResolveConflict(): void
+    {
+        $entityClass = TestRoutable::class;
+        $entityId = '123-123-123';
+        $locale = 'en';
+        $path = '/test';
+
+        $oldRoute = $this->prophesize(RouteInterface::class);
+        $oldRoute->getPath()->shouldBeCalled()->willReturn('/test2');
+
+        $this->routeRepository->findByEntity($entityClass, $entityId, $locale)->willReturn($oldRoute->reveal());
+
+        $route = $this->prophesize(RouteInterface::class);
+        $route->setEntityClass($entityClass)->shouldBeCalled()->willReturn($route->reveal());
+        $route->setEntityId($entityId)->shouldBeCalled()->willReturn($route->reveal());
+        $route->setLocale($locale)->shouldBeCalled()->willReturn($route->reveal());
+        $route->setPath($path)->shouldBeCalled()->willReturn($route->reveal());
+
+        $this->routeRepository->createNew()->willReturn($route->reveal())->shouldBeCalled();
+
+        $resolvedRoute = $this->prophesize(RouteInterface::class);
+        $resolvedRoute->getPath()->willReturn($path . '-1');
+        $this->conflictResolver->resolve($route->reveal())->willReturn($resolvedRoute->reveal());
+
+        $oldRoute->setHistory(true)->shouldBeCalled()->willReturn($oldRoute->reveal());
+        $oldRoute->setTarget($resolvedRoute->reveal())->shouldBeCalled()->willReturn($oldRoute->reveal());
+
+        $historyRoute1 = $this->prophesize(RouteInterface::class);
+        $historyRoute1->setTarget($resolvedRoute->reveal())->shouldBeCalled();
+        $historyRoute1->getPath()->willReturn('/history-1');
+        $resolvedRoute->addHistory($historyRoute1->reveal())->shouldBeCalled()->willReturn($resolvedRoute->reveal());
+
+        $historyRoute2 = $this->prophesize(RouteInterface::class);
+        $historyRoute2->setTarget($resolvedRoute->reveal())->shouldBeCalled();
+        $historyRoute2->getPath()->willReturn('/history-2');
+        $resolvedRoute->addHistory($historyRoute2->reveal())->shouldBeCalled()->willReturn($resolvedRoute->reveal());
+
+        $resolvedRoute->addHistory($oldRoute->reveal())->shouldBeCalled()->willReturn($resolvedRoute->reveal());
+        $oldRoute->getHistories()->willReturn([$historyRoute1->reveal(), $historyRoute2->reveal()]);
+
+        $this->routeRepository->persist($resolvedRoute->reveal())->shouldBeCalled();
+
+        $result = $this->manager->createOrUpdateByAttributes($entityClass, $entityId, $locale, $path, true);
+
+        $this->assertEquals($resolvedRoute->reveal(), $result);
     }
 }
 
