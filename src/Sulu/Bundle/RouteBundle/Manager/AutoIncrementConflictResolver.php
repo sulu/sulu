@@ -31,12 +31,11 @@ class AutoIncrementConflictResolver implements ConflictResolverInterface
         $i = 1;
         $path = $route->getPath();
         $conflict = $this->routeRepository->findByPath($route->getPath(), $route->getLocale());
-
         while ($conflict) {
             if ($conflict && $conflict->getEntityClass() === $route->getEntityClass()
                 && $conflict->getEntityId() == $route->getEntityId()
             ) {
-                // if conflict is associated to the same entity, return this instead of the newly created route.
+                // if conflict is found but has the same entity relation return this instead of the newly created route.
                 return $conflict;
             }
 
@@ -45,24 +44,5 @@ class AutoIncrementConflictResolver implements ConflictResolverInterface
         }
 
         return $route;
-    }
-
-    public function resolveByAttributes(?string $entityClass, ?string $id, string $locale, string $path)
-    {
-        $i = 1;
-        $currentPath = $path;
-        $conflict = $this->routeRepository->findByPath($currentPath, $locale);
-
-        while ($conflict) {
-            if ($conflict->getEntityClass() === $entityClass && $conflict->getEntityId() == $id) {
-                // if conflict is associated to the same entity, return path as resolved.
-                return $currentPath;
-            }
-
-            $currentPath = $path . '-' . ($i++);
-            $conflict = $this->routeRepository->findByPath($currentPath, $locale);
-        }
-
-        return $currentPath;
     }
 }

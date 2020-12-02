@@ -24,9 +24,4 @@ interface ConflictResolverInterface
      * @return RouteInterface
      */
     public function resolve(RouteInterface $route);
-
-    /**
-     * @return string
-     */
-    public function resolveByAttributes(?string $entityClass, ?string $id, string $locale, string $path);
 }

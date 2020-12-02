@@ -167,14 +167,17 @@ class RouteController extends AbstractRestController implements ClassResourceInt
 
         $route = '/' . \implode('-', $parts);
         if ($resourceKeyMapping) {
-            $route = $this->routeGenerator->generate($parts, $this->resourceKeyMappings[$resourceKey]['options']);
+            $routePath = $this->routeGenerator->generate($parts, $this->resourceKeyMappings[$resourceKey]['options']);
 
-            $route = $this->conflictResolver->resolveByAttributes(
-                $this->resourceKeyMappings[$resourceKey]['entityClass'],
-                $this->getRequestParameter($request, 'id') ?: null,
-                $this->getRequestParameter($request, 'locale'),
-                $route
-            );
+            // create temporary route that is not persisted to resolve possible conflicts with existing routes
+            $tempRoute = $this->routeRepository->createNew()
+                ->setPath($routePath)
+                ->setLocale($this->getRequestParameter($request, 'locale'))
+                ->setEntityClass($this->resourceKeyMappings[$resourceKey]['entityClass'])
+                ->setEntityId($this->getRequestParameter($request, 'id'));
+            $tempRoute = $this->conflictResolver->resolve($tempRoute);
+
+            $route = $tempRoute->getPath();
         }
 
         return $this->handleView($this->view(['resourcelocator' => $route]));
