@@ -120,6 +120,34 @@ class ContactRepositoryTest extends SuluTestCase
         $this->assertEquals([$contact4, $contact5], $result);
     }
 
+    public function testFindByLimit2OrderAsc()
+    {
+        $contact1 = $this->createContact('AA', 'Mustermann');
+        $contact2 = $this->createContact('BB', 'Mustermann');
+        $contact3 = $this->createContact('XX', 'Musterfrau');
+        $contact4 = $this->createContact('ZZ', 'Musterfrau');
+
+        $this->em->flush();
+
+        $result = $this->contactRepository->findByFilters(['sortBy' => 'firstName', 'sortMethod' => 'asc'], 0, 0, 2, 'de');
+
+        $this->assertEquals([$contact1, $contact2], $result);
+    }
+
+    public function testFindByLimit2OrderDesc()
+    {
+        $contact1 = $this->createContact('AA', 'Mustermann');
+        $contact2 = $this->createContact('BB', 'Mustermann');
+        $contact3 = $this->createContact('XX', 'Musterfrau');
+        $contact4 = $this->createContact('ZZ', 'Musterfrau');
+
+        $this->em->flush();
+
+        $result = $this->contactRepository->findByFilters(['sortBy' => 'firstName', 'sortMethod' => 'desc'], 0, 0, 2, 'de');
+
+        $this->assertEquals([$contact4, $contact3], $result);
+    }
+
     public function testFindByTagOr()
     {
         $tag1 = $this->createTag('Tag 1');
