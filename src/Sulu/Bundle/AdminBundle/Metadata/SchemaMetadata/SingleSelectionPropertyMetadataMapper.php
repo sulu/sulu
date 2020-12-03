@@ -22,10 +22,14 @@ class SingleSelectionPropertyMetadataMapper implements PropertyMetadataMapperInt
         $anyOfs = [
             new StringMetadata(),
             new NumberMetadata(),
+            new ObjectMetadata([], 1),
         ];
 
         if (!$mandatory) {
-            $anyOfs = \array_merge([new NullMetadata()], $anyOfs);
+            $anyOfs = \array_merge([
+                new NullMetadata(),
+                new EmptyObjectMetadata(),
+            ], $anyOfs);
         }
 
         return new PropertyMetadata(

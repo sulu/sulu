@@ -34,6 +34,14 @@ class SingleSelectionPropertyMetadataMapperTest extends TestCase
         ];
     }
 
+    private function getEmptyObjectSchema(): array
+    {
+        return [
+            'type' => 'object',
+            'maxProperties' => 0,
+        ];
+    }
+
     public function testMapPropertyMetadata(): void
     {
         $propertyMetadata = new PropertyMetadata();
@@ -45,8 +53,10 @@ class SingleSelectionPropertyMetadataMapperTest extends TestCase
             'name' => 'property-name',
             'anyOf' => [
                 $this->getNullSchema(),
+                $this->getEmptyObjectSchema(),
                 ['type' => 'string'],
                 ['type' => 'number'],
+                ['type' => 'object', 'minProperties' => 1],
             ],
         ], $jsonSchema);
     }
@@ -64,6 +74,7 @@ class SingleSelectionPropertyMetadataMapperTest extends TestCase
             'anyOf' => [
                 ['type' => 'string'],
                 ['type' => 'number'],
+                ['type' => 'object', 'minProperties' => 1],
             ],
         ], $jsonSchema);
     }

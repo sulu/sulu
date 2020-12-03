@@ -34,16 +34,28 @@ class SchemaMetadata
     private $type;
 
     /**
+     * @var int|null
+     */
+    private $minProperties;
+
+    /**
+     * @var int|null
+     */
+    private $maxProperties;
+
+    /**
      * @param PropertyMetadata[] $properties
      * @param SchemaMetadata[] $anyOfs
      * @param SchemaMetadata[] $allOfs
      */
-    public function __construct(array $properties = [], array $anyOfs = [], array $allOfs = [], ?string $type = null)
+    public function __construct(array $properties = [], array $anyOfs = [], array $allOfs = [], ?string $type = null, ?int $minProperties = null, ?int $maxProperties = null)
     {
         $this->properties = $properties;
         $this->anyOfs = $anyOfs;
         $this->allOfs = $allOfs;
         $this->type = $type;
+        $this->minProperties = $minProperties;
+        $this->maxProperties = $maxProperties;
     }
 
     public function getType(): ?string
@@ -103,6 +115,14 @@ class SchemaMetadata
                 )
             )
         );
+
+        if (null !== $this->minProperties) {
+            $jsonSchema['minProperties'] = $this->minProperties;
+        }
+
+        if (null !== $this->maxProperties) {
+            $jsonSchema['maxProperties'] = $this->maxProperties;
+        }
 
         /*
          * If the schema is empty, the "required" property should always be added, no matter if it's empty or not,

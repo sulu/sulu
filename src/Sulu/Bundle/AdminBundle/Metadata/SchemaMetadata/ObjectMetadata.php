@@ -16,8 +16,8 @@ class ObjectMetadata extends SchemaMetadata
     /**
      * @param PropertyMetadata[] $properties
      */
-    public function __construct(array $properties = [])
+    public function __construct(array $properties = [], ?int $minProperties = null, ?int $maxProperties = null)
     {
-        parent::__construct($properties, [], [], 'object');
+        parent::__construct($properties, [], [], 'object', $minProperties, $maxProperties);
     }
 }
