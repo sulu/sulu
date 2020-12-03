@@ -53,39 +53,33 @@ class PageSelection extends ComplexContentType implements ContentTypeExportInter
     /**
      * @var array
      */
-<<<<<<< HEAD
     private $permissions;
-=======
+
+    /**
+     * @var array
+     */
     private $enabledTwigAttributes = [];
->>>>>>> e312527aab... Remove the path attribute from twig templates
 
     public function __construct(
         ContentQueryExecutorInterface $contentQueryExecutor,
         ContentQueryBuilderInterface $contentQueryBuilder,
         ReferenceStoreInterface $referenceStore,
         $showDrafts,
-<<<<<<< HEAD
-        $permissions = null
-=======
+        $permissions = null,
         array $enabledTwigAttributes = [
             'path' => true,
         ]
->>>>>>> e312527aab... Remove the path attribute from twig templates
     ) {
         $this->contentQueryExecutor = $contentQueryExecutor;
         $this->contentQueryBuilder = $contentQueryBuilder;
         $this->referenceStore = $referenceStore;
         $this->showDrafts = $showDrafts;
-<<<<<<< HEAD
         $this->permissions = $permissions;
-=======
+        $this->enabledTwigAttributes = $enabledTwigAttributes;
 
         if ($enabledTwigAttributes['path']) {
-            @trigger_error('Enable the path parameter is deprecated since sulu/sulu 2.1.', E_USER_DEPRECATED);
+            @trigger_error('Enabling the "path" parameter is deprecated since sulu/sulu 2.3.', E_USER_DEPRECATED);
         }
-
-        $this->enabledTwigAttributes = $enabledTwigAttributes;
->>>>>>> e312527aab... Remove the path attribute from twig templates
     }
 
     public function read(

@@ -115,12 +115,11 @@ class PageSelectionContainer implements ArrayableInterface
         $this->params = $params;
         $this->showDrafts = $showDrafts;
         $this->permission = $permission;
+        $this->enabledTwigAttributes = $enabledTwigAttributes;
 
         if ($enabledTwigAttributes['path']) {
-            @trigger_error('Enable the path parameter is deprecated since sulu/sulu 2.1.', E_USER_DEPRECATED);
+            @\trigger_error('Enabling the "path" parameter is deprecated since sulu/sulu 2.3.', \E_USER_DEPRECATED);
         }
-
-        $this->enabledTwigAttributes = $enabledTwigAttributes;
     }
 
     /**

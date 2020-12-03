@@ -4,8 +4,9 @@
 
 ## Twig path variable deprecated
 
-The `path` variable was deprecated as it was confused with the `url` property by many developers.
-You should disable it via:
+The `path` twig variable was deprecated because it was confused with the `url` property by many new developers.
+The now deprecated variable contains the internal PHPCR path of a page which should not be exposed to the twig template.
+You should disable the variable in your project via:
 
 ```yaml
 # config/packages/sulu_website.yaml

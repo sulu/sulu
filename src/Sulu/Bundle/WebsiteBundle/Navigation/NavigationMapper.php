@@ -73,16 +73,12 @@ class NavigationMapper implements NavigationMapperInterface
         $this->queryBuilder = $queryBuilder;
         $this->sessionManager = $sessionManager;
         $this->stopwatch = $stopwatch;
-<<<<<<< HEAD
         $this->permissions = $permissions;
-=======
+        $this->enabledTwigAttributes = $enabledTwigAttributes;
 
         if ($enabledTwigAttributes['path']) {
-            @trigger_error('Enable the path parameter is deprecated since sulu/sulu 2.1.', E_USER_DEPRECATED);
+            @trigger_error('Enabling the "path" parameter is deprecated since sulu/sulu 2.3.', E_USER_DEPRECATED);
         }
-
-        $this->enabledTwigAttributes = $enabledTwigAttributes;
->>>>>>> e312527aab... Remove the path attribute from twig templates
     }
 
     public function getNavigation(
@@ -110,7 +106,6 @@ class NavigationMapper implements NavigationMapperInterface
                 'segmentKey' => $segmentKey,
             ]
         );
-<<<<<<< HEAD
         $result = $this->contentQueryExecutor->execute(
             $webspaceKey,
             [$locale],
@@ -123,15 +118,7 @@ class NavigationMapper implements NavigationMapperInterface
             $this->permissions[PermissionTypes::VIEW] ?? null
         );
 
-        foreach ($result as $item) {
-            if (!isset($item['children'])) {
-                $item['children'] = [];
-            }
-        }
-=======
-        $result = $this->contentQuery->execute($webspaceKey, [$locale], $this->queryBuilder, $flat, $depth);
         $result = $this->normalizeResult($result);
->>>>>>> e312527aab... Remove the path attribute from twig templates
 
         if ($this->stopwatch) {
             $this->stopwatch->stop('NavigationMapper::getNavigation');

@@ -132,16 +132,15 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
         $this->hasAudienceTargeting = $hasAudienceTargeting;
         $this->formMetadataProvider = $formMetadataProvider;
         $this->tokenStorage = $tokenStorage;
+        $this->enabledTwigAttributes = $enabledTwigAttributes;
 
         if (!$formMetadataProvider) {
             @\trigger_error('The usage of the "PageDataProvider" without setting the "FormMetadataProvider" is deprecated. Please inject the "FormMetadataProvider".', \E_USER_DEPRECATED);
         }
 
         if ($enabledTwigAttributes['path']) {
-            @trigger_error('Enable the path parameter is deprecated since sulu/sulu 2.1.', E_USER_DEPRECATED);
+            @trigger_error('Enabling the "path" parameter is deprecated since sulu/sulu 2.3.', E_USER_DEPRECATED);
         }
-
-        $this->enabledTwigAttributes = $enabledTwigAttributes;
     }
 
     public function getConfiguration()
