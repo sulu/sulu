@@ -27,6 +27,13 @@ class SingleSelectionPropertyMetadataMapperTest extends TestCase
         $this->singleSelectionPropertyMetadataMapper = new SingleSelectionPropertyMetadataMapper();
     }
 
+    private function getNullSchema(): array
+    {
+        return [
+            'type' => 'null',
+        ];
+    }
+
     public function testMapPropertyMetadata(): void
     {
         $propertyMetadata = new PropertyMetadata();
@@ -37,9 +44,9 @@ class SingleSelectionPropertyMetadataMapperTest extends TestCase
         $this->assertEquals([
             'name' => 'property-name',
             'anyOf' => [
+                $this->getNullSchema(),
                 ['type' => 'string'],
                 ['type' => 'number'],
-                ['type' => 'null'],
             ],
         ], $jsonSchema);
     }

@@ -105,11 +105,14 @@ class AdminControllerTest extends SuluTestCase
         $this->assertEquals([
             'name' => 'images',
             'anyOf' => [
+                $this->getNullSchema(),
                 [
                     'type' => 'object',
                     'properties' => [
                         'ids' => [
                             'anyOf' => [
+                                $this->getNullSchema(),
+                                $this->getEmptyArraySchema(),
                                 [
                                     'type' => 'array',
                                     'items' => [
@@ -119,8 +122,6 @@ class AdminControllerTest extends SuluTestCase
                                     'maxItems' => 3,
                                     'uniqueItems' => true,
                                 ],
-                                $this->getEmptyArraySchema(),
-                                $this->getNullSchema(),
                             ],
                             'name' => 'ids',
                         ],
@@ -130,20 +131,20 @@ class AdminControllerTest extends SuluTestCase
                         ],
                     ],
                 ],
-                $this->getNullSchema(),
             ],
         ], $schema['properties']['images']);
         $this->assertArrayHasKey('image', $schema['properties']);
         $this->assertEquals([
             'name' => 'image',
             'anyOf' => [
+                $this->getNullSchema(),
                 [
                     'type' => 'object',
                     'properties' => [
                         'id' => [
                             'anyOf' => [
+                                $this->getNullSchema(),
                                 ['type' => 'number'],
-                                ['type' => 'null'],
                             ],
                             'name' => 'id',
                         ],
@@ -153,7 +154,6 @@ class AdminControllerTest extends SuluTestCase
                         ],
                     ],
                 ],
-                ['type' => 'null'],
             ],
         ], $schema['properties']['image']);
     }

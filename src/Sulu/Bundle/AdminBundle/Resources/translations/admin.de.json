@@ -30,6 +30,7 @@
     "sulu_admin.error_minlength": "Die minimale Länge dieses Feldes wurde unterschritten",
     "sulu_admin.error_minitems": "Dieses Feld hat zu wenig Zuweisungen",
     "sulu_admin.error_maxitems": "Dieses Feld hat zu viele Zuweisungen",
+    "sulu_admin.error_type": "Ein Fehler ist aufgetreten",
     "sulu_admin.welcome": "Willkommen",
     "sulu_admin.reset_password": "Passwort zurücksetzen",
     "sulu_admin.reset_password_error": "Die Passwörter stimmen nicht überein",

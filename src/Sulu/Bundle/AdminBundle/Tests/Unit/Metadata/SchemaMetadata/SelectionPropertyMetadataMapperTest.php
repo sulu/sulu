@@ -56,6 +56,8 @@ class SelectionPropertyMetadataMapperTest extends TestCase
         $this->assertEquals([
             'name' => 'property-name',
             'anyOf' => [
+                $this->getNullSchema(),
+                $this->getEmptyArraySchema(),
                 [
                     'type' => 'array',
                     'items' => [
@@ -66,8 +68,6 @@ class SelectionPropertyMetadataMapperTest extends TestCase
                     ],
                     'uniqueItems' => true,
                 ],
-                $this->getEmptyArraySchema(),
-                $this->getNullSchema(),
             ],
         ], $jsonSchema);
     }
@@ -108,6 +108,8 @@ class SelectionPropertyMetadataMapperTest extends TestCase
         $this->assertEquals([
             'name' => 'property-name',
             'anyOf' => [
+                $this->getNullSchema(),
+                $this->getEmptyArraySchema(),
                 [
                     'type' => 'array',
                     'items' => [
@@ -120,8 +122,6 @@ class SelectionPropertyMetadataMapperTest extends TestCase
                     'maxItems' => 3,
                     'uniqueItems' => true,
                 ],
-                $this->getEmptyArraySchema(),
-                $this->getNullSchema(),
             ],
         ], $jsonSchema);
     }
@@ -139,6 +139,8 @@ class SelectionPropertyMetadataMapperTest extends TestCase
         $this->assertEquals([
             'name' => 'property-name',
             'anyOf' => [
+                $this->getNullSchema(),
+                $this->getEmptyArraySchema(),
                 [
                     'type' => 'array',
                     'items' => [
@@ -150,8 +152,6 @@ class SelectionPropertyMetadataMapperTest extends TestCase
                     'minItems' => 2,
                     'uniqueItems' => true,
                 ],
-                $this->getEmptyArraySchema(),
-                $this->getNullSchema(),
             ],
         ], $jsonSchema);
     }
@@ -169,6 +169,8 @@ class SelectionPropertyMetadataMapperTest extends TestCase
         $this->assertEquals([
             'name' => 'property-name',
             'anyOf' => [
+                $this->getNullSchema(),
+                $this->getEmptyArraySchema(),
                 [
                     'type' => 'array',
                     'items' => [
@@ -180,8 +182,6 @@ class SelectionPropertyMetadataMapperTest extends TestCase
                     'maxItems' => 2,
                     'uniqueItems' => true,
                 ],
-                $this->getEmptyArraySchema(),
-                $this->getNullSchema(),
             ],
         ], $jsonSchema);
     }
@@ -196,6 +196,8 @@ class SelectionPropertyMetadataMapperTest extends TestCase
         $this->assertEquals([
             'name' => 'property-name',
             'anyOf' => [
+                $this->getNullSchema(),
+                $this->getEmptyArraySchema(),
                 [
                     'type' => 'array',
                     'items' => [
@@ -206,8 +208,6 @@ class SelectionPropertyMetadataMapperTest extends TestCase
                     ],
                     'uniqueItems' => true,
                 ],
-                $this->getEmptyArraySchema(),
-                $this->getNullSchema(),
             ],
         ], $jsonSchema);
     }
@@ -226,6 +226,8 @@ class SelectionPropertyMetadataMapperTest extends TestCase
         $this->assertEquals([
             'name' => 'property-name',
             'anyOf' => [
+                $this->getNullSchema(),
+                $this->getEmptyArraySchema(),
                 [
                     'type' => 'array',
                     'items' => [
@@ -238,8 +240,6 @@ class SelectionPropertyMetadataMapperTest extends TestCase
                     'maxItems' => 3,
                     'uniqueItems' => true,
                 ],
-                $this->getEmptyArraySchema(),
-                $this->getNullSchema(),
             ],
         ], $jsonSchema);
     }

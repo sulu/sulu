@@ -344,6 +344,13 @@ class SingleMediaSelectionTest extends TestCase
         $this->singleMediaSelection->preResolve($property);
     }
 
+    private function getNullSchema(): array
+    {
+        return [
+            'type' => 'null',
+        ];
+    }
+
     public function testMapPropertyMetadata(): void
     {
         $propertyMetadata = new PropertyMetadata();
@@ -354,13 +361,14 @@ class SingleMediaSelectionTest extends TestCase
         $this->assertEquals([
             'name' => 'property-name',
             'anyOf' => [
+                $this->getNullSchema(),
                 [
                     'type' => 'object',
                     'properties' => [
                         'id' => [
                             'anyOf' => [
+                                $this->getNullSchema(),
                                 ['type' => 'number'],
-                                ['type' => 'null'],
                             ],
                             'name' => 'id',
                         ],
@@ -370,7 +378,6 @@ class SingleMediaSelectionTest extends TestCase
                         ],
                     ],
                 ],
-                ['type' => 'null'],
             ],
         ], $jsonSchema);
     }

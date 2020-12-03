@@ -140,8 +140,8 @@ class SingleMediaSelection extends SimpleContentType implements PreResolvableCon
 
         if (!$mandatory) {
             $idMetadata = new AnyOfsMetadata([
-                $idMetadata,
                 new NullMetadata(),
+                $idMetadata,
             ]);
         }
 
@@ -152,8 +152,8 @@ class SingleMediaSelection extends SimpleContentType implements PreResolvableCon
 
         if (!$mandatory) {
             $singleMediaSelectionMetadata = new AnyOfsMetadata([
-                $singleMediaSelectionMetadata,
                 new NullMetadata(),
+                $singleMediaSelectionMetadata,
             ]);
         }
 

@@ -42,9 +42,9 @@ class SelectionPropertyMetadataMapper implements PropertyMetadataMapperInterface
 
         if (!$mandatory) {
             $selectionMetadata = new AnyOfsMetadata([
-                $selectionMetadata,
-                new EmptyArrayMetadata(),
                 new NullMetadata(),
+                new EmptyArrayMetadata(),
+                $selectionMetadata,
             ]);
         }
 

@@ -463,11 +463,14 @@ class MediaSelectionContentTypeTest extends TestCase
         $this->assertEquals([
             'name' => 'property-name',
             'anyOf' => [
+                $this->getNullSchema(),
                 [
                     'type' => 'object',
                     'properties' => [
                         'ids' => [
                             'anyOf' => [
+                                $this->getNullSchema(),
+                                $this->getEmptyArraySchema(),
                                 [
                                     'type' => 'array',
                                     'items' => [
@@ -475,8 +478,6 @@ class MediaSelectionContentTypeTest extends TestCase
                                     ],
                                     'uniqueItems' => true,
                                 ],
-                                $this->getEmptyArraySchema(),
-                                $this->getNullSchema(),
                             ],
                             'name' => 'ids',
                         ],
@@ -486,7 +487,6 @@ class MediaSelectionContentTypeTest extends TestCase
                         ],
                     ],
                 ],
-                $this->getNullSchema(),
             ],
         ], $jsonSchema);
     }
@@ -535,11 +535,14 @@ class MediaSelectionContentTypeTest extends TestCase
         $this->assertEquals([
             'name' => 'property-name',
             'anyOf' => [
+                $this->getNullSchema(),
                 [
                     'type' => 'object',
                     'properties' => [
                         'ids' => [
                             'anyOf' => [
+                                $this->getNullSchema(),
+                                $this->getEmptyArraySchema(),
                                 [
                                     'type' => 'array',
                                     'items' => [
@@ -549,8 +552,6 @@ class MediaSelectionContentTypeTest extends TestCase
                                     'maxItems' => 3,
                                     'uniqueItems' => true,
                                 ],
-                                $this->getEmptyArraySchema(),
-                                $this->getNullSchema(),
                             ],
                             'name' => 'ids',
                         ],
@@ -560,7 +561,6 @@ class MediaSelectionContentTypeTest extends TestCase
                         ],
                     ],
                 ],
-                $this->getNullSchema(),
             ],
         ], $jsonSchema);
     }
@@ -578,11 +578,14 @@ class MediaSelectionContentTypeTest extends TestCase
         $this->assertEquals([
             'name' => 'property-name',
             'anyOf' => [
+                $this->getNullSchema(),
                 [
                     'type' => 'object',
                     'properties' => [
                         'ids' => [
                             'anyOf' => [
+                                $this->getNullSchema(),
+                                $this->getEmptyArraySchema(),
                                 [
                                     'type' => 'array',
                                     'items' => [
@@ -591,8 +594,6 @@ class MediaSelectionContentTypeTest extends TestCase
                                     'minItems' => 2,
                                     'uniqueItems' => true,
                                 ],
-                                $this->getEmptyArraySchema(),
-                                $this->getNullSchema(),
                             ],
                             'name' => 'ids',
                         ],
@@ -602,7 +603,6 @@ class MediaSelectionContentTypeTest extends TestCase
                         ],
                     ],
                 ],
-                $this->getNullSchema(),
             ],
         ], $jsonSchema);
     }
@@ -620,11 +620,14 @@ class MediaSelectionContentTypeTest extends TestCase
         $this->assertEquals([
             'name' => 'property-name',
             'anyOf' => [
+                $this->getNullSchema(),
                 [
                     'type' => 'object',
                     'properties' => [
                         'ids' => [
                             'anyOf' => [
+                                $this->getNullSchema(),
+                                $this->getEmptyArraySchema(),
                                 [
                                     'type' => 'array',
                                     'items' => [
@@ -633,8 +636,6 @@ class MediaSelectionContentTypeTest extends TestCase
                                     'maxItems' => 2,
                                     'uniqueItems' => true,
                                 ],
-                                $this->getEmptyArraySchema(),
-                                $this->getNullSchema(),
                             ],
                             'name' => 'ids',
                         ],
@@ -644,7 +645,6 @@ class MediaSelectionContentTypeTest extends TestCase
                         ],
                     ],
                 ],
-                $this->getNullSchema(),
             ],
         ], $jsonSchema);
     }
@@ -659,11 +659,14 @@ class MediaSelectionContentTypeTest extends TestCase
         $this->assertEquals([
             'name' => 'property-name',
             'anyOf' => [
+                $this->getNullSchema(),
                 [
                     'type' => 'object',
                     'properties' => [
                         'ids' => [
                             'anyOf' => [
+                                $this->getNullSchema(),
+                                $this->getEmptyArraySchema(),
                                 [
                                     'type' => 'array',
                                     'items' => [
@@ -671,8 +674,6 @@ class MediaSelectionContentTypeTest extends TestCase
                                     ],
                                     'uniqueItems' => true,
                                 ],
-                                $this->getEmptyArraySchema(),
-                                $this->getNullSchema(),
                             ],
                             'name' => 'ids',
                         ],
@@ -682,7 +683,6 @@ class MediaSelectionContentTypeTest extends TestCase
                         ],
                     ],
                 ],
-                $this->getNullSchema(),
             ],
         ], $jsonSchema);
     }
@@ -701,11 +701,14 @@ class MediaSelectionContentTypeTest extends TestCase
         $this->assertEquals([
             'name' => 'property-name',
             'anyOf' => [
+                $this->getNullSchema(),
                 [
                     'type' => 'object',
                     'properties' => [
                         'ids' => [
                             'anyOf' => [
+                                $this->getNullSchema(),
+                                $this->getEmptyArraySchema(),
                                 [
                                     'type' => 'array',
                                     'items' => [
@@ -715,8 +718,6 @@ class MediaSelectionContentTypeTest extends TestCase
                                     'maxItems' => 3,
                                     'uniqueItems' => true,
                                 ],
-                                $this->getEmptyArraySchema(),
-                                $this->getNullSchema(),
                             ],
                             'name' => 'ids',
                         ],
@@ -726,7 +727,6 @@ class MediaSelectionContentTypeTest extends TestCase
                         ],
                     ],
                 ],
-                $this->getNullSchema(),
             ],
         ], $jsonSchema);
     }

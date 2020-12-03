@@ -30,6 +30,7 @@
     "sulu_admin.error_minlength": "The minimal length of this field was undershot",
     "sulu_admin.error_minitems": "This field has too few selections",
     "sulu_admin.error_maxitems": "This field has too much selections",
+    "sulu_admin.error_type": "An error occurred",
     "sulu_admin.welcome": "Welcome",
     "sulu_admin.reset_password": "Reset password",
     "sulu_admin.reset_password_error": "The passwords do not match",

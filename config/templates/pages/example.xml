@@ -359,6 +359,11 @@
                 <title lang="en">Contact Selection</title>
                 <title lang="de">Kontakte</title>
             </meta>
+
+            <params>
+                <param name="min" value="2"/>
+                <param name="max" value="2"/>
+            </params>
         </property>
 
         <property name="contact_account_selection" type="contact_account_selection">
