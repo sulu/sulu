@@ -157,6 +157,11 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
             $config['field_type_options'],
             $container->getDefinition('sulu_admin.field_type_option_registry')
         );
+
+        $this->registerPropertyMetadataMappers(
+            $config['field_type_options'],
+            $container
+        );
     }
 
     public function loadFieldTypeOptions(
@@ -166,6 +171,23 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
         foreach ($fieldTypeOptionsConfig as $baseFieldType => $baseFieldTypeConfig) {
             foreach ($baseFieldTypeConfig as $fieldTypeName => $fieldTypeConfig) {
                 $fieldTypeOptionRegistry->addMethodCall('add', [$fieldTypeName, $baseFieldType, $fieldTypeConfig]);
+            }
+        }
+    }
+
+    private function registerPropertyMetadataMappers(array $fieldTypeOptionsConfig, ContainerBuilder $container)
+    {
+        foreach ($fieldTypeOptionsConfig as $baseFieldType => $baseFieldTypeConfig) {
+            if (!\in_array($baseFieldType, ['selection', 'single_selection'], true)) {
+                continue;
+            }
+
+            $definition = $container->getDefinition('sulu_admin.property_metadata_mapper.' . $baseFieldType);
+
+            foreach ($baseFieldTypeConfig as $fieldTypeName => $fieldTypeConfig) {
+                $definition->addTag('sulu_admin.property_metadata_mapper', [
+                    'type' => $fieldTypeName,
+                ]);
             }
         }
     }

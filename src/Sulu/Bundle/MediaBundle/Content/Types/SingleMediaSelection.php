@@ -11,6 +11,8 @@
 
 namespace Sulu\Bundle\MediaBundle\Content\Types;
 
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\AnyOfsMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\NullMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\NumberMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ObjectMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata;
@@ -134,9 +136,27 @@ class SingleMediaSelection extends SimpleContentType implements PreResolvableCon
     {
         $mandatory = $propertyMetadata->isRequired();
 
-        return new ObjectMetadata($propertyMetadata->getName(), $mandatory, [
-            new NumberMetadata('id', $mandatory),
-            new StringMetadata('displayOption', false),
+        $idMetadata = new NumberMetadata();
+
+        if (!$mandatory) {
+            $idMetadata = new AnyOfsMetadata([
+                new NullMetadata(),
+                $idMetadata,
+            ]);
+        }
+
+        $singleMediaSelectionMetadata = new ObjectMetadata([
+            new PropertyMetadata('id', $mandatory, $idMetadata),
+            new PropertyMetadata('displayOption', false, new StringMetadata()),
         ]);
+
+        if (!$mandatory) {
+            $singleMediaSelectionMetadata = new AnyOfsMetadata([
+                new NullMetadata(),
+                $singleMediaSelectionMetadata,
+            ]);
+        }
+
+        return new PropertyMetadata($propertyMetadata->getName(), $mandatory, $singleMediaSelectionMetadata);
     }
 }

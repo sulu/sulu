@@ -71,6 +71,22 @@ class AdminControllerTest extends SuluTestCase
         $this->assertEquals(['title'], $schema->required);
     }
 
+    private function getNullSchema(): array
+    {
+        return [
+            'type' => 'null',
+        ];
+    }
+
+    private function getEmptyArraySchema(): array
+    {
+        return [
+            'type' => 'array',
+            'items' => ['required' => []],
+            'maxItems' => 0,
+        ];
+    }
+
     public function testImagesFormMetadataAction()
     {
         $client = $this->createAuthenticatedClient();
@@ -88,35 +104,55 @@ class AdminControllerTest extends SuluTestCase
         $this->assertArrayHasKey('images', $schema['properties']);
         $this->assertEquals([
             'name' => 'images',
-            'type' => 'object',
-            'required' => [],
-            'properties' => [
-                'ids' => [
-                    'name' => 'ids',
-                    'type' => 'array',
-                    'items' => [
-                        'required' => [],
-                        'type' => 'number',
+            'anyOf' => [
+                $this->getNullSchema(),
+                [
+                    'type' => 'object',
+                    'properties' => [
+                        'ids' => [
+                            'anyOf' => [
+                                $this->getNullSchema(),
+                                $this->getEmptyArraySchema(),
+                                [
+                                    'type' => 'array',
+                                    'items' => [
+                                        'type' => 'number',
+                                    ],
+                                    'minItems' => 2,
+                                    'maxItems' => 3,
+                                    'uniqueItems' => true,
+                                ],
+                            ],
+                            'name' => 'ids',
+                        ],
+                        'displayOption' => [
+                            'type' => 'string',
+                            'name' => 'displayOption',
+                        ],
                     ],
-                    'minItems' => 0,
-                    'uniqueItems' => true,
-                ],
-                'displayOption' => [
-                    'type' => 'string',
                 ],
             ],
         ], $schema['properties']['images']);
         $this->assertArrayHasKey('image', $schema['properties']);
         $this->assertEquals([
             'name' => 'image',
-            'type' => 'object',
-            'required' => [],
-            'properties' => [
-                'id' => [
-                    'type' => 'number',
-                ],
-                'displayOption' => [
-                    'type' => 'string',
+            'anyOf' => [
+                $this->getNullSchema(),
+                [
+                    'type' => 'object',
+                    'properties' => [
+                        'id' => [
+                            'anyOf' => [
+                                $this->getNullSchema(),
+                                ['type' => 'number'],
+                            ],
+                            'name' => 'id',
+                        ],
+                        'displayOption' => [
+                            'type' => 'string',
+                            'name' => 'displayOption',
+                        ],
+                    ],
                 ],
             ],
         ], $schema['properties']['image']);

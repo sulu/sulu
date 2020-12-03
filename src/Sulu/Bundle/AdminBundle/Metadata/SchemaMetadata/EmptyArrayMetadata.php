@@ -11,12 +11,10 @@
 
 namespace Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata;
 
-class NumberMetadata implements SchemaMetadataInterface
+class EmptyArrayMetadata extends ArrayMetadata
 {
-    public function toJsonSchema(): array
+    public function __construct()
     {
-        return [
-            'type' => 'number',
-        ];
+        parent::__construct(new SchemaMetadata(), null, 0);
     }
 }

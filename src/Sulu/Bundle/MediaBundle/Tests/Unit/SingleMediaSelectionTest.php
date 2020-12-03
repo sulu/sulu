@@ -344,26 +344,41 @@ class SingleMediaSelectionTest extends TestCase
         $this->singleMediaSelection->preResolve($property);
     }
 
+    private function getNullSchema(): array
+    {
+        return [
+            'type' => 'null',
+        ];
+    }
+
     public function testMapPropertyMetadata(): void
     {
         $propertyMetadata = new PropertyMetadata();
         $propertyMetadata->setName('property-name');
-        $propertyMetadata->setRequired(false);
 
         $jsonSchema = $this->singleMediaSelection->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
 
         $this->assertEquals([
             'name' => 'property-name',
-            'type' => 'object',
-            'properties' => [
-                'id' => [
-                    'type' => 'number',
-                ],
-                'displayOption' => [
-                    'type' => 'string',
+            'anyOf' => [
+                $this->getNullSchema(),
+                [
+                    'type' => 'object',
+                    'properties' => [
+                        'id' => [
+                            'anyOf' => [
+                                $this->getNullSchema(),
+                                ['type' => 'number'],
+                            ],
+                            'name' => 'id',
+                        ],
+                        'displayOption' => [
+                            'type' => 'string',
+                            'name' => 'displayOption',
+                        ],
+                    ],
                 ],
             ],
-            'required' => [],
         ], $jsonSchema);
     }
 
@@ -381,14 +396,14 @@ class SingleMediaSelectionTest extends TestCase
             'properties' => [
                 'id' => [
                     'type' => 'number',
+                    'name' => 'id',
                 ],
                 'displayOption' => [
                     'type' => 'string',
+                    'name' => 'displayOption',
                 ],
             ],
-            'required' => [
-                'id',
-            ],
+            'required' => ['id'],
         ], $jsonSchema);
     }
 }

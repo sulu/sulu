@@ -16,39 +16,21 @@ use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ConstMetadata;
 
 class ConstMetadataTest extends TestCase
 {
-    public function provideGetter()
-    {
-        return [
-            ['title', true],
-            ['article', false],
-        ];
-    }
-
-    /**
-     * @dataProvider provideGetter
-     */
-    public function testGetter($name, $mandatory)
-    {
-        $property = new ConstMetadata($name, $mandatory, null);
-        $this->assertEquals($name, $property->getName());
-        $this->assertEquals($mandatory, $property->isMandatory());
-    }
-
     public function provideToJsonSchema()
     {
         return [
-            ['title', 'Homepage', ['name' => 'title', 'const' => 'Homepage']],
-            ['article', 'Hello World', ['name' => 'article', 'const' => 'Hello World']],
-            ['article', null, ['name' => 'article', 'const' => null]],
+            ['Homepage', ['const' => 'Homepage']],
+            ['Hello World', ['const' => 'Hello World']],
+            [null, ['const' => null]],
         ];
     }
 
     /**
      * @dataProvider provideToJsonSchema
      */
-    public function testToJsonSchema($name, $const, $expectedSchema)
+    public function testToJsonSchema($const, $expectedSchema)
     {
-        $property = new ConstMetadata($name, false, $const);
+        $property = new ConstMetadata($const);
         $jsonSchema = $property->toJsonSchema();
 
         $this->assertEquals($jsonSchema, $expectedSchema);

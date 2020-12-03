@@ -11,10 +11,12 @@
 
 namespace Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata;
 
-class StringMetadata extends PropertyMetadata
+class StringMetadata implements SchemaMetadataInterface
 {
-    public function __construct(string $name, bool $mandatory)
+    public function toJsonSchema(): array
     {
-        parent::__construct($name, $mandatory, 'string');
+        return [
+            'type' => 'string',
+        ];
     }
 }

@@ -12,11 +12,15 @@
 namespace Sulu\Bundle\MediaBundle\Content\Types;
 
 use PHPCR\NodeInterface;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\AnyOfsMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ArrayMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\EmptyArrayMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\NullMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\NumberMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ObjectMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapperInterface;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMinMaxValueResolver;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\StringMetadata;
 use Sulu\Bundle\MediaBundle\Content\MediaSelectionContainer;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
@@ -47,7 +51,7 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
     private $referenceStore;
 
     /**
-     * @var RequestAnalyzer
+     * @var RequestAnalyzerInterface
      */
     private $requestAnalyzer;
 
@@ -56,16 +60,23 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
      */
     private $permissions;
 
+    /**
+     * @var PropertyMetadataMinMaxValueResolver|null
+     */
+    private $propertyMetadataMinMaxValueResolver;
+
     public function __construct(
         MediaManagerInterface $mediaManager,
         ReferenceStoreInterface $referenceStore,
         RequestAnalyzerInterface $requestAnalyzer = null,
-        $permissions = null
+        $permissions = null,
+        ?PropertyMetadataMinMaxValueResolver $propertyMetadataMinMaxValueResolver = null
     ) {
         $this->mediaManager = $mediaManager;
         $this->referenceStore = $referenceStore;
         $this->requestAnalyzer = $requestAnalyzer;
         $this->permissions = $permissions;
+        $this->propertyMetadataMinMaxValueResolver = $propertyMetadataMinMaxValueResolver;
     }
 
     public function getDefaultParams(PropertyInterface $property = null)
@@ -200,11 +211,43 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
     public function mapPropertyMetadata(ContentPropertyMetadata $propertyMetadata): PropertyMetadata
     {
         $mandatory = $propertyMetadata->isRequired();
-        $minItems = $mandatory ? 1 : 0;
 
-        return new ObjectMetadata($propertyMetadata->getName(), $mandatory, [
-            new ArrayMetadata('ids', $mandatory, new SchemaMetadata([], [], [], 'number'), $minItems, true),
-            new StringMetadata('displayOption', false),
+        $minMaxValue = (object) [
+            'min' => null,
+            'max' => null,
+        ];
+
+        if (null !== $this->propertyMetadataMinMaxValueResolver) {
+            $minMaxValue = $this->propertyMetadataMinMaxValueResolver->resolveMinMaxValue($propertyMetadata);
+        }
+
+        $idsMetadata = new ArrayMetadata(
+            new NumberMetadata(),
+            $minMaxValue->min,
+            $minMaxValue->max,
+            true
+        );
+
+        if (!$mandatory) {
+            $idsMetadata = new AnyOfsMetadata([
+                new NullMetadata(),
+                new EmptyArrayMetadata(),
+                $idsMetadata,
+            ]);
+        }
+
+        $mediaSelectionMetadata = new ObjectMetadata([
+            new PropertyMetadata('ids', $mandatory, $idsMetadata),
+            new PropertyMetadata('displayOption', false, new StringMetadata()),
         ]);
+
+        if (!$mandatory) {
+            $mediaSelectionMetadata = new AnyOfsMetadata([
+                new NullMetadata(),
+                $mediaSelectionMetadata,
+            ]);
+        }
+
+        return new PropertyMetadata($propertyMetadata->getName(), $mandatory, $mediaSelectionMetadata);
     }
 }

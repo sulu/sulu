@@ -13,6 +13,7 @@ namespace Sulu\Bundle\MediaBundle\Tests\Unit\Content\Types;
 
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMinMaxValueResolver;
 use Sulu\Bundle\MediaBundle\Content\Types\MediaSelectionContentType;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
@@ -63,7 +64,8 @@ class MediaSelectionContentTypeTest extends TestCase
             $this->mediaManager->reveal(),
             $this->mediaReferenceStore->reveal(),
             $this->requestAnalyzer->reveal(),
-            ['view' => 64]
+            ['view' => 64],
+            new PropertyMetadataMinMaxValueResolver()
         );
     }
 
@@ -435,33 +437,57 @@ class MediaSelectionContentTypeTest extends TestCase
         $this->mediaReferenceStore->add(3)->shouldBeCalled();
     }
 
+    private function getNullSchema(): array
+    {
+        return [
+            'type' => 'null',
+        ];
+    }
+
+    private function getEmptyArraySchema(): array
+    {
+        return [
+            'type' => 'array',
+            'items' => ['required' => []],
+            'maxItems' => 0,
+        ];
+    }
+
     public function testMapPropertyMetadata(): void
     {
         $propertyMetadata = new PropertyMetadata();
         $propertyMetadata->setName('property-name');
-        $propertyMetadata->setRequired(false);
 
         $jsonSchema = $this->mediaSelection->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
 
         $this->assertEquals([
             'name' => 'property-name',
-            'type' => 'object',
-            'properties' => [
-                'ids' => [
-                    'name' => 'ids',
-                    'type' => 'array',
-                    'items' => [
-                        'required' => [],
-                        'type' => 'number',
+            'anyOf' => [
+                $this->getNullSchema(),
+                [
+                    'type' => 'object',
+                    'properties' => [
+                        'ids' => [
+                            'anyOf' => [
+                                $this->getNullSchema(),
+                                $this->getEmptyArraySchema(),
+                                [
+                                    'type' => 'array',
+                                    'items' => [
+                                        'type' => 'number',
+                                    ],
+                                    'uniqueItems' => true,
+                                ],
+                            ],
+                            'name' => 'ids',
+                        ],
+                        'displayOption' => [
+                            'type' => 'string',
+                            'name' => 'displayOption',
+                        ],
                     ],
-                    'minItems' => 0,
-                    'uniqueItems' => true,
-                ],
-                'displayOption' => [
-                    'type' => 'string',
                 ],
             ],
-            'required' => [],
         ], $jsonSchema);
     }
 
@@ -478,22 +504,310 @@ class MediaSelectionContentTypeTest extends TestCase
             'type' => 'object',
             'properties' => [
                 'ids' => [
-                    'name' => 'ids',
                     'type' => 'array',
                     'items' => [
-                        'required' => [],
                         'type' => 'number',
                     ],
                     'minItems' => 1,
                     'uniqueItems' => true,
+                    'name' => 'ids',
                 ],
                 'displayOption' => [
                     'type' => 'string',
+                    'name' => 'displayOption',
                 ],
             ],
-            'required' => [
-                'ids',
+            'required' => ['ids'],
+        ], $jsonSchema);
+    }
+
+    public function testMapPropertyMetadataMinAndMax(): void
+    {
+        $propertyMetadata = new PropertyMetadata();
+        $propertyMetadata->setName('property-name');
+        $propertyMetadata->setParameters([
+            ['name' => 'min', 'value' => 2],
+            ['name' => 'max', 'value' => 3],
+        ]);
+
+        $jsonSchema = $this->mediaSelection->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
+
+        $this->assertEquals([
+            'name' => 'property-name',
+            'anyOf' => [
+                $this->getNullSchema(),
+                [
+                    'type' => 'object',
+                    'properties' => [
+                        'ids' => [
+                            'anyOf' => [
+                                $this->getNullSchema(),
+                                $this->getEmptyArraySchema(),
+                                [
+                                    'type' => 'array',
+                                    'items' => [
+                                        'type' => 'number',
+                                    ],
+                                    'minItems' => 2,
+                                    'maxItems' => 3,
+                                    'uniqueItems' => true,
+                                ],
+                            ],
+                            'name' => 'ids',
+                        ],
+                        'displayOption' => [
+                            'type' => 'string',
+                            'name' => 'displayOption',
+                        ],
+                    ],
+                ],
             ],
         ], $jsonSchema);
+    }
+
+    public function testMapPropertyMetadataMinAndMaxMinOnly(): void
+    {
+        $propertyMetadata = new PropertyMetadata();
+        $propertyMetadata->setName('property-name');
+        $propertyMetadata->setParameters([
+            ['name' => 'min', 'value' => 2],
+        ]);
+
+        $jsonSchema = $this->mediaSelection->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
+
+        $this->assertEquals([
+            'name' => 'property-name',
+            'anyOf' => [
+                $this->getNullSchema(),
+                [
+                    'type' => 'object',
+                    'properties' => [
+                        'ids' => [
+                            'anyOf' => [
+                                $this->getNullSchema(),
+                                $this->getEmptyArraySchema(),
+                                [
+                                    'type' => 'array',
+                                    'items' => [
+                                        'type' => 'number',
+                                    ],
+                                    'minItems' => 2,
+                                    'uniqueItems' => true,
+                                ],
+                            ],
+                            'name' => 'ids',
+                        ],
+                        'displayOption' => [
+                            'type' => 'string',
+                            'name' => 'displayOption',
+                        ],
+                    ],
+                ],
+            ],
+        ], $jsonSchema);
+    }
+
+    public function testMapPropertyMetadataMinAndMaxMaxOnly(): void
+    {
+        $propertyMetadata = new PropertyMetadata();
+        $propertyMetadata->setName('property-name');
+        $propertyMetadata->setParameters([
+            ['name' => 'max', 'value' => 2],
+        ]);
+
+        $jsonSchema = $this->mediaSelection->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
+
+        $this->assertEquals([
+            'name' => 'property-name',
+            'anyOf' => [
+                $this->getNullSchema(),
+                [
+                    'type' => 'object',
+                    'properties' => [
+                        'ids' => [
+                            'anyOf' => [
+                                $this->getNullSchema(),
+                                $this->getEmptyArraySchema(),
+                                [
+                                    'type' => 'array',
+                                    'items' => [
+                                        'type' => 'number',
+                                    ],
+                                    'maxItems' => 2,
+                                    'uniqueItems' => true,
+                                ],
+                            ],
+                            'name' => 'ids',
+                        ],
+                        'displayOption' => [
+                            'type' => 'string',
+                            'name' => 'displayOption',
+                        ],
+                    ],
+                ],
+            ],
+        ], $jsonSchema);
+    }
+
+    public function testMapPropertyMetadataMinAndMaxWithoutParams(): void
+    {
+        $propertyMetadata = new PropertyMetadata();
+        $propertyMetadata->setName('property-name');
+
+        $jsonSchema = $this->mediaSelection->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
+
+        $this->assertEquals([
+            'name' => 'property-name',
+            'anyOf' => [
+                $this->getNullSchema(),
+                [
+                    'type' => 'object',
+                    'properties' => [
+                        'ids' => [
+                            'anyOf' => [
+                                $this->getNullSchema(),
+                                $this->getEmptyArraySchema(),
+                                [
+                                    'type' => 'array',
+                                    'items' => [
+                                        'type' => 'number',
+                                    ],
+                                    'uniqueItems' => true,
+                                ],
+                            ],
+                            'name' => 'ids',
+                        ],
+                        'displayOption' => [
+                            'type' => 'string',
+                            'name' => 'displayOption',
+                        ],
+                    ],
+                ],
+            ],
+        ], $jsonSchema);
+    }
+
+    public function testMapPropertyMetadataMinAndMaxWithIntegerishValues(): void
+    {
+        $propertyMetadata = new PropertyMetadata();
+        $propertyMetadata->setName('property-name');
+        $propertyMetadata->setParameters([
+            ['name' => 'min', 'value' => '2'],
+            ['name' => 'max', 'value' => '3'],
+        ]);
+
+        $jsonSchema = $this->mediaSelection->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
+
+        $this->assertEquals([
+            'name' => 'property-name',
+            'anyOf' => [
+                $this->getNullSchema(),
+                [
+                    'type' => 'object',
+                    'properties' => [
+                        'ids' => [
+                            'anyOf' => [
+                                $this->getNullSchema(),
+                                $this->getEmptyArraySchema(),
+                                [
+                                    'type' => 'array',
+                                    'items' => [
+                                        'type' => 'number',
+                                    ],
+                                    'minItems' => 2,
+                                    'maxItems' => 3,
+                                    'uniqueItems' => true,
+                                ],
+                            ],
+                            'name' => 'ids',
+                        ],
+                        'displayOption' => [
+                            'type' => 'string',
+                            'name' => 'displayOption',
+                        ],
+                    ],
+                ],
+            ],
+        ], $jsonSchema);
+    }
+
+    public function testMapPropertyMetadataMinAndMaxMinInvalidType(): void
+    {
+        $this->expectExceptionMessage('Parameter "min" of property "property-name" needs to be either null or of type int');
+
+        $propertyMetadata = new PropertyMetadata();
+        $propertyMetadata->setName('property-name');
+        $propertyMetadata->setParameters([
+            ['name' => 'min', 'value' => 'invalid-value'],
+        ]);
+
+        $this->mediaSelection->mapPropertyMetadata($propertyMetadata);
+    }
+
+    public function testMapPropertyMetadataMinAndMaxMinTooLow(): void
+    {
+        $this->expectExceptionMessage('Parameter "min" of property "property-name" needs to be greater than or equal "0"');
+
+        $propertyMetadata = new PropertyMetadata();
+        $propertyMetadata->setName('property-name');
+        $propertyMetadata->setParameters([
+            ['name' => 'min', 'value' => -1],
+        ]);
+
+        $this->mediaSelection->mapPropertyMetadata($propertyMetadata);
+    }
+
+    public function testMapPropertyMetadataMinAndMaxMandatoryMinTooLow(): void
+    {
+        $this->expectExceptionMessage('Because property "property-name" is mandatory, parameter "min" needs to be greater than or equal "1"');
+
+        $propertyMetadata = new PropertyMetadata();
+        $propertyMetadata->setName('property-name');
+        $propertyMetadata->setRequired(true);
+        $propertyMetadata->setParameters([
+            ['name' => 'min', 'value' => 0],
+        ]);
+
+        $this->mediaSelection->mapPropertyMetadata($propertyMetadata);
+    }
+
+    public function testMapPropertyMetadataMinAndMaxMaxInvalidType(): void
+    {
+        $this->expectExceptionMessage('Parameter "max" of property "property-name" needs to be either null or of type int');
+
+        $propertyMetadata = new PropertyMetadata();
+        $propertyMetadata->setName('property-name');
+        $propertyMetadata->setParameters([
+            ['name' => 'max', 'value' => 'invalid-value'],
+        ]);
+
+        $this->mediaSelection->mapPropertyMetadata($propertyMetadata);
+    }
+
+    public function testMapPropertyMetadataMinAndMaxMaxTooLow(): void
+    {
+        $this->expectExceptionMessage('Parameter "max" of property "property-name" needs to be greater than or equal "1"');
+
+        $propertyMetadata = new PropertyMetadata();
+        $propertyMetadata->setName('property-name');
+        $propertyMetadata->setParameters([
+            ['name' => 'max', 'value' => 0],
+        ]);
+
+        $this->mediaSelection->mapPropertyMetadata($propertyMetadata);
+    }
+
+    public function testMapPropertyMetadataMinAndMaxMaxLowerThanMin(): void
+    {
+        $this->expectExceptionMessage('Because parameter "min" of property "property-name" has value "2", parameter "max" needs to be greater than or equal "2"');
+
+        $propertyMetadata = new PropertyMetadata();
+        $propertyMetadata->setName('property-name');
+        $propertyMetadata->setParameters([
+            ['name' => 'min', 'value' => 2],
+            ['name' => 'max', 'value' => 1],
+        ]);
+
+        $this->mediaSelection->mapPropertyMetadata($propertyMetadata);
     }
 }

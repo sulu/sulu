@@ -245,7 +245,6 @@ class FormXmlLoaderTest extends TestCase
 
         $this->assertEquals(
             [
-                'required' => [],
                 'allOf' => [
                     [
                         'required' => [
@@ -254,10 +253,8 @@ class FormXmlLoaderTest extends TestCase
                         ],
                     ],
                     [
-                        'required' => [],
                         'anyOf' => [
                             [
-                                'required' => [],
                                 'properties' => [
                                     'first' => [
                                         'name' => 'first',
@@ -266,7 +263,6 @@ class FormXmlLoaderTest extends TestCase
                                 ],
                             ],
                             [
-                                'required' => [],
                                 'properties' => [
                                     'second' => [
                                         'name' => 'second',
@@ -277,7 +273,6 @@ class FormXmlLoaderTest extends TestCase
                         ],
                         'allOf' => [
                             [
-                                'required' => [],
                                 'properties' => [
                                     'first' => [
                                         'name' => 'first',
@@ -306,13 +301,11 @@ class FormXmlLoaderTest extends TestCase
 
         $this->assertEquals(
             [
-                'required' => [],
                 'properties' => [
                     'blocks' => [
                         'name' => 'blocks',
                         'type' => 'array',
                         'items' => [
-                            'required' => [],
                             'anyOf' => [
                                 [
                                     'required' => [
@@ -360,13 +353,11 @@ class FormXmlLoaderTest extends TestCase
 
         $this->assertEquals(
             [
-                'required' => [],
                 'properties' => [
                     'block1' => [
                         'name' => 'block1',
                         'type' => 'array',
                         'items' => [
-                            'required' => [],
                             'anyOf' => [
                                 [
                                     'required' => [
@@ -382,7 +373,6 @@ class FormXmlLoaderTest extends TestCase
                                             'name' => 'block11',
                                             'type' => 'array',
                                             'items' => [
-                                                'required' => [],
                                                 'anyOf' => [
                                                     [
                                                         'required' => [
@@ -424,7 +414,6 @@ class FormXmlLoaderTest extends TestCase
                                             'name' => 'block12',
                                             'type' => 'array',
                                             'items' => [
-                                                'required' => [],
                                                 'anyOf' => [
                                                     [
                                                         'required' => [

@@ -13,6 +13,8 @@ namespace Sulu\Bundle\AdminBundle\Tests\Unit\Metadata\SchemaMetadata;
 
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\StringMetadata;
 
 class PropertyMetadataTest extends TestCase
 {
@@ -37,18 +39,18 @@ class PropertyMetadataTest extends TestCase
     public function provideToJsonSchema()
     {
         return [
-            ['title', null],
-            ['article', null],
-            ['article', null],
+            ['title', false, null, null],
+            ['article', false, new StringMetadata(), ['name' => 'article', 'type' => 'string']],
+            ['article', true, new SchemaMetadata(), ['name' => 'article', 'required' => []]],
         ];
     }
 
     /**
      * @dataProvider provideToJsonSchema
      */
-    public function testToJsonSchema($name, $expectedSchema)
+    public function testToJsonSchema($name, $mandatory, $schemaMetadata, $expectedSchema)
     {
-        $property = new PropertyMetadata($name, false);
+        $property = new PropertyMetadata($name, $mandatory, $schemaMetadata);
         $jsonSchema = $property->toJsonSchema();
 
         $this->assertEquals($jsonSchema, $expectedSchema);

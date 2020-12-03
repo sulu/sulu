@@ -11,88 +11,55 @@
 
 namespace Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata;
 
-class SchemaMetadata
+class SchemaMetadata implements SchemaMetadataInterface
 {
     /**
-     * @var PropertyMetadata[]
+     * @var PropertiesMetadata
      */
-    private $properties;
+    private $propertiesMetadata;
 
     /**
-     * @var SchemaMetadata[]
+     * @var AnyOfsMetadata
      */
-    private $anyOfs;
+    private $anyOfsMetadata;
 
     /**
-     * @var SchemaMetadata[]
+     * @var AllOfsMetadata
      */
-    private $allOfs;
+    private $allOfsMetadata;
 
     /**
-     * @var string|null
+     * @param PropertyMetadata[] $properties
+     * @param SchemaMetadataInterface[] $anyOfs
+     * @param SchemaMetadataInterface[] $allOfs
      */
-    private $type;
-
-    public function __construct(array $properties = [], array $anyOfs = [], array $allOfs = [], string $type = null)
+    public function __construct(array $properties = [], array $anyOfs = [], array $allOfs = [])
     {
-        $this->properties = $properties;
-        $this->anyOfs = $anyOfs;
-        $this->allOfs = $allOfs;
-        $this->type = $type;
+        $this->propertiesMetadata = new PropertiesMetadata($properties);
+        $this->anyOfsMetadata = new AnyOfsMetadata($anyOfs);
+        $this->allOfsMetadata = new AllOfsMetadata($allOfs);
     }
 
-    public function merge(self $schema)
+    public function merge(self $schema): self
     {
-        return new self([], [], [$this, $schema], $schema->type ?? $this->type);
+        return new self([], [], [$this, $schema]);
     }
 
-    public function toJsonSchema()
+    public function toJsonSchema(): array
     {
-        $jsonSchema = [];
-
-        $jsonSchema['required'] = \array_values(
-            \array_map(
-                function(PropertyMetadata $propertyMetadata) {
-                    return $propertyMetadata->getName();
-                },
-                \array_filter(
-                    $this->properties,
-                    function(PropertyMetadata $propertyMetadata) {
-                        return $propertyMetadata->isMandatory();
-                    }
-                )
-            )
+        $jsonSchema = \array_merge(
+            [],
+            $this->propertiesMetadata->toJsonSchema(),
+            $this->anyOfsMetadata->toJsonSchema(),
+            $this->allOfsMetadata->toJsonSchema()
         );
 
-        $properties = [];
-
-        foreach ($this->properties as $property) {
-            $jsonSchemaProperty = $property->toJsonSchema();
-            if (!$jsonSchemaProperty) {
-                continue;
-            }
-
-            $properties[$property->getName()] = $jsonSchemaProperty;
-        }
-
-        if (\count($properties) > 0) {
-            $jsonSchema['properties'] = $properties;
-        }
-
-        if (\count($this->anyOfs) > 0) {
-            $jsonSchema['anyOf'] = \array_map(function(SchemaMetadata $schema) {
-                return $schema->toJsonSchema();
-            }, $this->anyOfs);
-        }
-
-        if (\count($this->allOfs) > 0) {
-            $jsonSchema['allOf'] = \array_map(function(SchemaMetadata $schema) {
-                return $schema->toJsonSchema();
-            }, $this->allOfs);
-        }
-
-        if (null !== $this->type) {
-            $jsonSchema['type'] = $this->type;
+        /*
+         * If the schema is empty, there should be at least one property, because otherwise the admin ui treats an
+         * empty schema object as array instead of an object and would break
+         */
+        if (empty($jsonSchema)) {
+            $jsonSchema['required'] = [];
         }
 
         return $jsonSchema;

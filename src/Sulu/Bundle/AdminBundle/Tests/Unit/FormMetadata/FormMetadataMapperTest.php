@@ -14,7 +14,6 @@ namespace Sulu\Bundle\AdminBundle\Tests\Unit\FormMetadata;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
-use Sulu\Bundle\AdminBundle\Exception\PropertyMetadataMapperNotFoundException;
 use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadata as ExternalFormMetadata;
 use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadataMapper;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
@@ -360,6 +359,7 @@ class FormMetadataMapperTest extends TestCase
         $form = $this->createFormWithRequiredProperties();
 
         $propertyMetadataMapper = $this->prophesize(PropertyMetadataMapperInterface::class);
+        $this->propertyMetadataMapperRegistry->has(Argument::cetera())->willReturn(true);
         $this->propertyMetadataMapperRegistry->get(Argument::cetera())->willReturn($propertyMetadataMapper->reveal());
         $propertyMetadataMapper->mapPropertyMetadata(Argument::cetera())->will(function($arguments) {
             /** @var PropertyMetadata $propertyMetadata */
@@ -384,7 +384,7 @@ class FormMetadataMapperTest extends TestCase
     {
         $form = $this->createFormWithRequiredProperties();
 
-        $this->propertyMetadataMapperRegistry->get(Argument::cetera())->willThrow(PropertyMetadataMapperNotFoundException::class);
+        $this->propertyMetadataMapperRegistry->has(Argument::cetera())->willReturn(false);
 
         $schema = $this->formMetadataMapper->mapSchema($form->getChildren());
 
@@ -403,6 +403,7 @@ class FormMetadataMapperTest extends TestCase
         $form = $this->createFormWithBlock();
 
         $propertyMetadataMapper = $this->prophesize(PropertyMetadataMapperInterface::class);
+        $this->propertyMetadataMapperRegistry->has(Argument::cetera())->willReturn(true);
         $this->propertyMetadataMapperRegistry->get(Argument::cetera())->willReturn($propertyMetadataMapper->reveal());
         $propertyMetadataMapper->mapPropertyMetadata(Argument::cetera())->will(function($arguments) {
             /** @var PropertyMetadata $propertyMetadata */
@@ -415,13 +416,11 @@ class FormMetadataMapperTest extends TestCase
 
         $this->assertInstanceOf(SchemaMetadata::class, $schema);
         $this->assertEquals([
-            'required' => [],
             'properties' => [
                 'block' => [
                     'name' => 'block',
                     'type' => 'array',
                     'items' => [
-                        'required' => [],
                         'anyOf' => [
                             [
                                 'required' => ['property2', 'type'],

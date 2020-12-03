@@ -11,12 +11,12 @@
 
 namespace Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata;
 
-class NumberMetadata implements SchemaMetadataInterface
+class NullMetadata implements SchemaMetadataInterface
 {
     public function toJsonSchema(): array
     {
         return [
-            'type' => 'number',
+            'type' => 'null',
         ];
     }
 }

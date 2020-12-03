@@ -18,41 +18,29 @@ use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
 
 class ArrayMetadataTest extends TestCase
 {
-    public function provideGetter()
-    {
-        return [
-            ['title', true],
-            ['article', false],
-        ];
-    }
-
-    /**
-     * @dataProvider provideGetter
-     */
-    public function testGetter($name, $mandatory)
-    {
-        $property = new ArrayMetadata($name, $mandatory, new SchemaMetadata());
-        $this->assertEquals($name, $property->getName());
-        $this->assertEquals($mandatory, $property->isMandatory());
-    }
-
     public function provideToJsonSchema()
     {
         return [
             [
-                'title',
                 new SchemaMetadata(),
-                ['name' => 'title', 'type' => 'array', 'items' => ['required' => []]],
+                null,
+                null,
+                null,
+                ['type' => 'array', 'items' => ['required' => []]],
             ],
             [
-                'article',
                 new SchemaMetadata([new PropertyMetadata('test1', true), new PropertyMetadata('test2', false)]),
-                ['name' => 'article', 'type' => 'array', 'items' => ['required' => ['test1']]],
+                1,
+                null,
+                true,
+                ['type' => 'array', 'items' => ['required' => ['test1']], 'minItems' => 1, 'uniqueItems' => true],
             ],
             [
-                'article',
                 new SchemaMetadata([new PropertyMetadata('test1', true), new PropertyMetadata('test2', true)]),
-                ['name' => 'article', 'type' => 'array', 'items' => ['required' => ['test1', 'test2']]],
+                2,
+                3,
+                false,
+                ['type' => 'array', 'items' => ['required' => ['test1', 'test2']], 'minItems' => 2, 'maxItems' => 3, 'uniqueItems' => false],
             ],
         ];
     }
@@ -60,9 +48,9 @@ class ArrayMetadataTest extends TestCase
     /**
      * @dataProvider provideToJsonSchema
      */
-    public function testToJsonSchema($name, $schemaMetadata, $expectedSchema)
+    public function testToJsonSchema($schemaMetadata, $minItems, $maxItems, $uniqueItems, $expectedSchema)
     {
-        $property = new ArrayMetadata($name, false, $schemaMetadata);
+        $property = new ArrayMetadata($schemaMetadata, $minItems, $maxItems, $uniqueItems);
         $jsonSchema = $property->toJsonSchema();
 
         $this->assertEquals($jsonSchema, $expectedSchema);

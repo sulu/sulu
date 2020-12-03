@@ -39,6 +39,10 @@
             <meta>
                 <title lang="de">Images</title>
             </meta>
+            <params>
+                <param name="min" value="2"/>
+                <param name="max" value="3"/>
+            </params>
             <tag name="sulu.search.field" role="image" />
         </property>
 

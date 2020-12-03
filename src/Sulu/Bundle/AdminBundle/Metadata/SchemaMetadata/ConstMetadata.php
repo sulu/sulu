@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata;
 
-class ConstMetadata extends PropertyMetadata
+class ConstMetadata implements SchemaMetadataInterface
 {
     /**
      * @var string|number|null
@@ -21,16 +21,14 @@ class ConstMetadata extends PropertyMetadata
     /**
      * @param string|number|null $value
      */
-    public function __construct(string $name, bool $mandatory, $value = null)
+    public function __construct($value = null)
     {
-        parent::__construct($name, $mandatory);
         $this->value = $value;
     }
 
-    public function toJsonSchema(): ?array
+    public function toJsonSchema(): array
     {
         return [
-            'name' => $this->getName(),
             'const' => $this->value,
         ];
     }
