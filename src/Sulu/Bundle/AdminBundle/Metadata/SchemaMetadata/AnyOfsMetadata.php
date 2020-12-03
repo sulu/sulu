@@ -11,13 +11,31 @@
 
 namespace Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata;
 
-class AnyOfsMetadata extends SchemaMetadata
+class AnyOfsMetadata implements SchemaMetadataInterface
 {
     /**
-     * @param SchemaMetadata[] $anyOfs
+     * @var SchemaMetadataInterface[]
+     */
+    private $anyOfs;
+
+    /**
+     * @param SchemaMetadataInterface[] $anyOfs
      */
     public function __construct(array $anyOfs)
     {
-        parent::__construct([], $anyOfs);
+        $this->anyOfs = $anyOfs;
+    }
+
+    public function toJsonSchema(): array
+    {
+        if (!empty($this->anyOfs)) {
+            return [
+                'anyOf' => \array_map(function(SchemaMetadataInterface $schema) {
+                    return $schema->toJsonSchema();
+                }, $this->anyOfs),
+            ];
+        }
+
+        return [];
     }
 }

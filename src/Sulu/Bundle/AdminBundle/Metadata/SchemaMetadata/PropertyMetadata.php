@@ -24,11 +24,11 @@ class PropertyMetadata
     private $mandatory;
 
     /**
-     * @var SchemaMetadata|null
+     * @var SchemaMetadataInterface|null
      */
     private $schemaMetadata;
 
-    public function __construct(string $name, bool $mandatory, ?SchemaMetadata $schemaMetadata = null)
+    public function __construct(string $name, bool $mandatory, ?SchemaMetadataInterface $schemaMetadata = null)
     {
         $this->name = $name;
         $this->mandatory = $mandatory;

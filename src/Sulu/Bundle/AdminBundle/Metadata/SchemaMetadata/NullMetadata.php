@@ -11,10 +11,12 @@
 
 namespace Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata;
 
-class NullMetadata extends SchemaMetadata
+class NullMetadata implements SchemaMetadataInterface
 {
-    public function __construct()
+    public function toJsonSchema(): array
     {
-        parent::__construct([], [], [], 'null');
+        return [
+            'type' => 'null',
+        ];
     }
 }

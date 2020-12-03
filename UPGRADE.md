@@ -8,7 +8,7 @@ The metadata classes in the `Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata` na
 
 * The `PropertyMetadata` accepts a third optional attribute called `$schemaMetadata`, which allows to define the schema of that property.
 
-* `ArrayMetadata` and `ConstMetadata` now extend from `SchemaMetadata` instead of `PropertyMetadata`.
+* `ArrayMetadata` and `ConstMetadata` don't extend from `PropertyMetadata` anymore.
   Therfore the `$name` and `$mandatory` arguments have been removed from their constructors.
 
   To restore the same behaviour of these classes as before

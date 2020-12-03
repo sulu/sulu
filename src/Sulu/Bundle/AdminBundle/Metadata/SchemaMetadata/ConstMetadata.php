@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata;
 
-class ConstMetadata extends SchemaMetadata
+class ConstMetadata implements SchemaMetadataInterface
 {
     /**
      * @var string|number|null
@@ -23,8 +23,6 @@ class ConstMetadata extends SchemaMetadata
      */
     public function __construct($value = null)
     {
-        parent::__construct();
-
         $this->value = $value;
     }
 
