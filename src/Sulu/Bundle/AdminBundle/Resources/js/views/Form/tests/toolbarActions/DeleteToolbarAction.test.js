@@ -25,6 +25,7 @@ jest.mock('../../../../containers/Form', () => ({
     ResourceFormStore: class {
         data = {};
         resourceStore;
+
         constructor(resourceStore) {
             this.resourceStore = resourceStore;
         }
@@ -94,9 +95,47 @@ test('Return item config with correct disabled, loading, icon, type and value an
     }));
 });
 
+test('Return item config with correct translations for deleteLocale', () => {
+    const deleteToolbarAction = createDeleteToolbarAction({delete_locale: true});
+    deleteToolbarAction.resourceFormStore.resourceStore.id = 5;
+
+    expect(deleteToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
+        disabled: false,
+        icon: 'su-trash-alt',
+        label: 'sulu_admin.delete_locale',
+        type: 'button',
+    }));
+
+    const element = mount(deleteToolbarAction.getNode());
+    expect(element.at(0).instance().props).toEqual(expect.objectContaining({
+        cancelText: 'sulu_admin.cancel',
+        children: 'sulu_admin.delete_locale_warning_text',
+        confirmText: 'sulu_admin.ok',
+        open: false,
+        title: 'sulu_admin.delete_locale_warning_title',
+    }));
+    expect(element.at(1).instance().props).toEqual(expect.objectContaining({
+        cancelText: 'sulu_admin.cancel',
+        children: expect.arrayContaining(['sulu_admin.delete_linked_warning_text']),
+        confirmText: 'sulu_admin.ok',
+        open: false,
+        title: 'sulu_admin.delete_linked_warning_title',
+    }));
+});
+
 test('Return item config with disabled button if an add form is opened', () => {
     const deleteToolbarAction = createDeleteToolbarAction();
     deleteToolbarAction.resourceFormStore.resourceStore.id = undefined;
+
+    expect(deleteToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
+        disabled: true,
+    }));
+});
+
+test('Return item config with disabled button if only one contentLocale is available', () => {
+    const deleteToolbarAction = createDeleteToolbarAction({delete_locale: true});
+    deleteToolbarAction.resourceFormStore.resourceStore.id = undefined;
+    deleteToolbarAction.resourceFormStore.resourceStore.data = {contentLocales: ['de']};
 
     expect(deleteToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
         disabled: true,
@@ -122,6 +161,22 @@ test('Return item config when passed visible_condition is met', () => {
     deleteToolbarAction.resourceFormStore.data.url = '/';
 
     expect(deleteToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({label: 'sulu_admin.delete'}));
+});
+
+test('Throw error when "delete_locale" option is not a boolean', () => {
+    const resourceStore = new ResourceStore('test', undefined, {locale: observable.box('en')});
+    const resourceFormStore = new ResourceFormStore(resourceStore, 'test');
+    const router = new Router({});
+    const form = new Form({
+        locales: [],
+        resourceStore,
+        route: router.route,
+        router,
+    });
+
+    expect(() => {
+        return new DeleteToolbarAction(resourceFormStore, form, router, [], {delete_locale: 'test123'}, resourceStore);
+    }).toThrow('The "delete_locale" option must be a boolean, but received string!');
 });
 
 test('Open dialog on toolbar item click', () => {
@@ -182,7 +237,38 @@ test('Call delete when dialog is confirmed', () => {
     }));
 
     element.find('Button[skin="primary"]').simulate('click');
-    expect(deleteToolbarAction.resourceFormStore.delete).toBeCalledWith();
+    expect(deleteToolbarAction.resourceFormStore.delete).toBeCalledWith({deleteLocale: false});
+
+    return deletePromise.then(() => {
+        element = mount(deleteToolbarAction.getNode());
+        expect(deleteToolbarAction.router.restore).toBeCalledWith('sulu_test.list', {locale: 'en'});
+        expect(element.at(0).instance().props).toEqual(expect.objectContaining({
+            open: false,
+        }));
+    });
+});
+
+test('Call delete when dialog is confirmed with deleteLocale', () => {
+    const deleteToolbarAction = createDeleteToolbarAction({delete_locale: true});
+    deleteToolbarAction.resourceFormStore.resourceStore.id = 3;
+    deleteToolbarAction.router.route.options.backView = 'sulu_test.list';
+
+    const deletePromise = Promise.resolve();
+    deleteToolbarAction.resourceFormStore.delete.mockReturnValue(deletePromise);
+
+    const toolbarItemConfig = deleteToolbarAction.getToolbarItemConfig();
+    if (!toolbarItemConfig) {
+        throw new Error('The toolbarItemConfig should be a value!');
+    }
+    toolbarItemConfig.onClick();
+
+    let element = mount(deleteToolbarAction.getNode());
+    expect(element.at(0).instance().props).toEqual(expect.objectContaining({
+        open: true,
+    }));
+
+    element.find('Button[skin="primary"]').simulate('click');
+    expect(deleteToolbarAction.resourceFormStore.delete).toBeCalledWith({deleteLocale: true});
 
     return deletePromise.then(() => {
         element = mount(deleteToolbarAction.getNode());
@@ -214,7 +300,7 @@ test('Call delete when dialog is confirmed with router_attributes_to_back_view o
     }));
 
     element.find('Button[skin="primary"]').simulate('click');
-    expect(deleteToolbarAction.resourceFormStore.delete).toBeCalledWith();
+    expect(deleteToolbarAction.resourceFormStore.delete).toBeCalledWith({deleteLocale: false});
 
     return deletePromise.then(() => {
         element = mount(deleteToolbarAction.getNode());
@@ -247,7 +333,7 @@ test('Call delete when dialog is confirmed with router_attributes_to_back_view o
     }));
 
     element.find('Button[skin="primary"]').simulate('click');
-    expect(deleteToolbarAction.resourceFormStore.delete).toBeCalledWith();
+    expect(deleteToolbarAction.resourceFormStore.delete).toBeCalledWith({deleteLocale: false});
 
     return deletePromise.then(() => {
         element = mount(deleteToolbarAction.getNode());
@@ -283,7 +369,58 @@ test('Call delete with force when dialog is confirmed twice', (done) => {
     }));
 
     element.find('Button[skin="primary"]').simulate('click');
-    expect(deleteToolbarAction.resourceFormStore.delete).toBeCalledWith();
+    expect(deleteToolbarAction.resourceFormStore.delete).toBeCalledWith({deleteLocale: false});
+
+    setTimeout(() => {
+        element = mount(deleteToolbarAction.getNode());
+        expect(deleteToolbarAction.router.restore).toBeCalledTimes(0);
+        expect(element.at(0).prop('open')).toEqual(false);
+        expect(element.at(1).prop('open')).toEqual(true);
+        expect(element.at(1).find('li')).toHaveLength(2);
+        expect(element.at(1).find('li').at(0).prop('children')).toEqual('Item 1');
+        expect(element.at(1).find('li').at(1).prop('children')).toEqual('Item 2');
+
+        const deletePromise = Promise.resolve({});
+        deleteToolbarAction.resourceFormStore.delete.mockReturnValueOnce(deletePromise);
+
+        element.find('Button[skin="primary"]').simulate('click');
+
+        setTimeout(() => {
+            expect(deleteToolbarAction.router.restore).toBeCalledWith('sulu_test.list', {locale: 'en'});
+            expect(element.at(0).instance().props).toEqual(expect.objectContaining({
+                open: false,
+            }));
+
+            done();
+        });
+    });
+});
+
+test('Call delete with force and deleteLocale when dialog is confirmed twice', (done) => {
+    const deleteToolbarAction = createDeleteToolbarAction({delete_locale: true});
+    deleteToolbarAction.resourceFormStore.resourceStore.id = 3;
+    deleteToolbarAction.router.route.options.backView = 'sulu_test.list';
+
+    const jsonDeletePromise = Promise.resolve({items: [{name: 'Item 1'}, {name: 'Item 2'}]});
+    const deletePromise = Promise.reject({
+        json: jest.fn().mockReturnValue(jsonDeletePromise),
+        status: 409,
+    });
+    deleteToolbarAction.resourceFormStore.delete.mockReturnValueOnce(deletePromise);
+
+    const toolbarItemConfig = deleteToolbarAction.getToolbarItemConfig();
+    if (!toolbarItemConfig) {
+        throw new Error('The toolbarItemConfig should be a value!');
+    }
+    toolbarItemConfig.onClick();
+
+    let element = mount(deleteToolbarAction.getNode());
+    expect(element.at(0).instance().props).toEqual(expect.objectContaining({
+        open: true,
+    }));
+
+    element.find('Button[skin="primary"]').simulate('click');
+    expect(deleteToolbarAction.resourceFormStore.delete).toBeCalledWith({deleteLocale: true});
 
     setTimeout(() => {
         element = mount(deleteToolbarAction.getNode());
@@ -334,7 +471,7 @@ test('Cancel delete conflict occured with the allowConflictDeletion option set t
     }));
 
     element.find('Button[skin="primary"]').simulate('click');
-    expect(deleteToolbarAction.resourceFormStore.delete).toBeCalledWith();
+    expect(deleteToolbarAction.resourceFormStore.delete).toBeCalledWith({deleteLocale: false});
 
     setTimeout(() => {
         element = mount(deleteToolbarAction.getNode());

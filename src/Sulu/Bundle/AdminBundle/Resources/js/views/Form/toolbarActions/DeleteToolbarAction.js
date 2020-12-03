@@ -27,12 +27,13 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
         form: Form,
         router: Router,
         locales: ?Array<string>,
-        options: {[key: string]: mixed},
+        options: { [key: string]: mixed },
         parentResourceStore: ResourceStore
     ) {
         const {
             display_condition: displayCondition,
             visible_condition: visibleCondition,
+            delete_locale: deleteLocale = false,
         } = options;
 
         if (displayCondition) {
@@ -47,11 +48,15 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
             }
         }
 
+        if (typeof deleteLocale !== 'boolean') {
+            throw new Error('The "delete_locale" option must be a boolean, but received ' + typeof deleteLocale + '!');
+        }
+
         super(resourceFormStore, form, router, locales, options, parentResourceStore);
     }
 
     getNode() {
-        const {delete_locale: deleteLocale} = this.options;
+        const {delete_locale: deleteLocale = false} = this.options;
         const postfix = deleteLocale ? '_locale' : '';
 
         return (
@@ -96,7 +101,7 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
     getToolbarItemConfig() {
         const {
             visible_condition: visibleCondition,
-            delete_locale: deleteLocale,
+            delete_locale: deleteLocale = false,
         } = this.options;
 
         const {id, data} = this.resourceFormStore;
@@ -152,7 +157,7 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
     };
 
     @action handleConfirm = () => {
-        const {delete_locale: deleteLocale} = this.options;
+        const {delete_locale: deleteLocale = false} = this.options;
 
         this.resourceFormStore.delete({deleteLocale})
             .then(action(() => {
@@ -178,14 +183,14 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
     };
 
     @action handleLinkConfirm = () => {
-        const {delete_locale: deleteLocale} = this.options;
+        const {delete_locale: deleteLocale = false} = this.options;
 
         if (!this.allowConflictDeletion) {
             this.showLinkedDialog = false;
             return;
         }
 
-        this.resourceFormStore.delete({force: true, delete_locale: deleteLocale})
+        this.resourceFormStore.delete({force: true, deleteLocale})
             .then(action(() => {
                 this.showLinkedDialog = false;
                 this.navigateBack();
