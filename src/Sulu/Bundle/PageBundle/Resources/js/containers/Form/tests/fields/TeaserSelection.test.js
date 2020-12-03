@@ -6,6 +6,7 @@ import {FormInspector, ResourceFormStore} from 'sulu-admin-bundle/containers';
 import {ResourceStore, userStore} from 'sulu-admin-bundle/stores';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
 import {Router} from 'sulu-admin-bundle/services';
+import Selection from 'sulu-admin-bundle/containers/Form/fields/Selection';
 import TeaserSelection from '../../fields/TeaserSelection';
 import TeaserSelectionComponent from '../../../../containers/TeaserSelection';
 import teaserProviderRegistry from '../../../../containers/TeaserSelection/registries/teaserProviderRegistry';
@@ -68,7 +69,6 @@ test('Pass props correctly to component', () => {
 
     expect(field.find(TeaserSelectionComponent).prop('disabled')).toEqual(false);
     expect(field.find(TeaserSelectionComponent).prop('locale').get()).toEqual('en');
-    expect(field.find(TeaserSelectionComponent).prop('onChange')).toBe(changeSpy);
     expect(field.find(TeaserSelectionComponent).prop('presentations')).toBe(undefined);
     expect(field.find(TeaserSelectionComponent).prop('value')).toBe(value);
 });
@@ -195,4 +195,33 @@ test('Throw error if present_as schemaOption is from wrong type', () => {
             <TeaserSelection {...fieldTypeDefaultProps} formInspector={formInspector} schemaOptions={schemaOptions} />
         )
     ).toThrow(/present_as/);
+});
+
+test('Should call onChange and onFinish callback when TeaserSelection container fires onChange callback', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
+    // $FlowFixMe
+    userStore.contentLocale = 'de';
+
+    const changeSpy = jest.fn();
+    const finishSpy = jest.fn();
+
+    const field = shallow(
+        <TeaserSelection
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            onChange={changeSpy}
+            onFinish={finishSpy}
+        />
+    );
+
+    field.find(TeaserSelectionComponent).prop('onChange')({
+        presentAs: undefined,
+        items: [],
+    });
+
+    expect(changeSpy).toBeCalledWith({
+        presentAs: undefined,
+        items: [],
+    });
+    expect(finishSpy).toBeCalledWith();
 });

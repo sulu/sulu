@@ -282,6 +282,26 @@
                 <title lang="en">Teaser Selection</title>
                 <title lang="de">Anreiser</title>
             </meta>
+
+            <params>
+                <param name="min" value="1"/>
+                <param name="max" value="1"/>
+
+                <param name="present_as" type="collection">
+                    <param name="three-columns">
+                        <meta>
+                            <title lang="en">3 Columns</title>
+                            <title lang="de">3 Spalten</title>
+                        </meta>
+                    </param>
+                    <param name="five-columns">
+                        <meta>
+                            <title lang="en">5 Columns</title>
+                            <title lang="de">5 Spalten</title>
+                        </meta>
+                    </param>
+                </param>
+            </params>
         </property>
 
         <property name="smart_content" type="smart_content">
@@ -331,6 +351,11 @@
                 <title lang="en">Media Selection</title>
                 <title lang="de">Medien</title>
             </meta>
+
+            <params>
+                <param name="min" value="2"/>
+                <param name="max" value="3"/>
+            </params>
         </property>
 
         <property name="single_account_selection" type="single_account_selection">
