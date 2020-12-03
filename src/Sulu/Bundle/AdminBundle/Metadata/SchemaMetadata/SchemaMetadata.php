@@ -104,6 +104,10 @@ class SchemaMetadata
             )
         );
 
+        /*
+         * If the schema is empty, the "required" property should always be added, no matter if it's empty or not,
+         * because otherwise the admin ui would treat an empty schema object as array instead of an object and would break
+         */
         if (\count($required) > 0 || empty($jsonSchema)) {
             $jsonSchema['required'] = $required;
         }

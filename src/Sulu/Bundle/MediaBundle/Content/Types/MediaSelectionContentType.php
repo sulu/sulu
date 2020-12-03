@@ -70,7 +70,7 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
         ReferenceStoreInterface $referenceStore,
         RequestAnalyzerInterface $requestAnalyzer = null,
         $permissions = null,
-        PropertyMetadataMinMaxValueResolver $propertyMetadataMinMaxValueResolver = null
+        ?PropertyMetadataMinMaxValueResolver $propertyMetadataMinMaxValueResolver = null
     ) {
         $this->mediaManager = $mediaManager;
         $this->referenceStore = $referenceStore;

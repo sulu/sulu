@@ -9,7 +9,7 @@ The metadata classes in the `Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata` na
 * The `PropertyMetadata` accepts a third optional attribute called `$schemaMetadata`, which allows to define the schema of that property.
 
 * `ArrayMetadata` and `ConstMetadata` now extend from `SchemaMetadata` instead of `PropertyMetadata`.
-  Therfore the `$name` and `$mandatory` arguments have been removed from theirs constructors.
+  Therfore the `$name` and `$mandatory` arguments have been removed from their constructors.
 
   To restore the same behaviour of these classes as before
   * `new ArrayMetadata($name, $mandatory, $itemsSchema)` has to be changed to `new PropertyMetadata($name, $mandatory, new ArrayMetadata($itemsSchema))` and
@@ -20,11 +20,6 @@ The metadata classes in the `Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata` na
 ### The constructor of the `MediaSelectionContentType` requires a new `$propertyMetadataMinMaxValueResolver` for full functionality
 
 Without this service, `min` and `max` parameters of a `media_selection` property will not work.
-
-### The implementation of `ItemMetadata::getParameter($name)` has changed significantly
-
-This method now searches the `$parameters` array for the `$name` argument by the `name` property of the containing items instead of their key.
-Also, it will return `null` instead of throwing an exception, if no matching item can be found.
 
 ### Added resolveConflict parameter to RouteManagerInterface::createOrUpdateByAttributes
 
