@@ -216,6 +216,7 @@ export default class AbstractFormStore
             // $FlowFixMe
             for (const error of validator.errors) {
                 switch (error.keyword) {
+                    case 'type':
                     case 'oneOf':
                     case 'anyOf':
                         // these errors are not shown in the leaf field, e.g. in blocks and similar constructs
