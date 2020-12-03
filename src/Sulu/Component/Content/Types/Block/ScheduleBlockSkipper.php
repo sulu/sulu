@@ -12,9 +12,20 @@
 namespace Sulu\Component\Content\Types\Block;
 
 use Sulu\Component\Content\Compat\Block\BlockPropertyType;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
 class ScheduleBlockSkipper implements BlockSkipperInterface
 {
+    /**
+     * @var RequestAnalyzerInterface
+     */
+    private $requestAnalyzer;
+
+    public function __construct(RequestAnalyzerInterface $requestAnalyzer)
+    {
+        $this->requestAnalyzer = $requestAnalyzer;
+    }
+
     public function shouldSkip(BlockPropertyType $block): bool
     {
         $blockPropertyTypeSettings = $block->getSettings();
@@ -28,7 +39,7 @@ class ScheduleBlockSkipper implements BlockSkipperInterface
             return false;
         }
 
-        $now = \DateTime::createFromFormat('U', time());
+        $now = $this->requestAnalyzer->getDateTime();
 
         foreach ($blockPropertyTypeSettings['schedules'] as $schedule) {
             switch ($schedule['type']) {
@@ -45,8 +56,14 @@ class ScheduleBlockSkipper implements BlockSkipperInterface
                         break;
                     }
 
+                    $year = $now->format('Y');
+                    $month = $now->format('m');
+                    $day = $now->format('d');
+
                     $start = new \DateTime($schedule['start']);
+                    $start->setDate($year, $month, $day);
                     $end = new \DateTime($schedule['end']);
+                    $end->setDate($year, $month, $day);
                     if ($now >= $start && $now <= $end) {
                         return false;
                     }

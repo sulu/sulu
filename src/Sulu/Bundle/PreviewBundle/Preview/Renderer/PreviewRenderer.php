@@ -165,6 +165,7 @@ class PreviewRenderer implements PreviewRendererInterface
                 'scheme' => $currentRequest->getScheme(),
                 'host' => $currentRequest->getHost(),
                 'port' => $currentRequest->getPort(),
+                'dateTime' => new \DateTime(),
             ]
         );
 

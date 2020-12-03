@@ -102,6 +102,11 @@ class RequestAnalyzer implements RequestAnalyzerInterface
         return $this->getAttribute('matchType');
     }
 
+    public function getDateTime()
+    {
+        return $this->getAttribute('dateTime');
+    }
+
     public function getWebspace()
     {
         return $this->getAttribute('webspace');

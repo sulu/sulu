@@ -15,18 +15,24 @@ use PHPUnit\Framework\TestCase;
 use Sulu\Component\Content\Compat\Block\BlockPropertyType;
 use Sulu\Component\Content\Compat\Metadata;
 use Sulu\Component\Content\Types\Block\ScheduleBlockSkipper;
-use Symfony\Bridge\PhpUnit\ClockMock;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
 class ScheduleBlockSkipperTest extends TestCase
 {
-    public static function setUpBeforeClass(): void
-    {
-        ClockMock::register(ScheduleBlockSkipper::class);
-    }
+    /**
+     * @var RequestAnalyzerInterface
+     */
+    private $requestAnalyzer;
+
+    /**
+     * @var ScheduleBlockSkipper
+     */
+    private $scheduleBlockSkipper;
 
     public function setUp(): void
     {
-        $this->scheduleBlockSkipper = new ScheduleBlockSkipper();
+        $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
+        $this->scheduleBlockSkipper = new ScheduleBlockSkipper($this->requestAnalyzer->reveal());
     }
 
     public function testShouldNotSkipWithObjectAsSettings()
@@ -268,12 +274,11 @@ class ScheduleBlockSkipperTest extends TestCase
     public function testShouldSkip($settings, $now, $skip)
     {
         $nowDateTime = new \DateTime($now);
-        ClockMock::withClockMock($nowDateTime->getTimestamp());
+        $this->requestAnalyzer->getDateTime()->willReturn($nowDateTime);
 
         $blockPropertyType = new BlockPropertyType('type1', new Metadata([]));
         $blockPropertyType->setSettings($settings);
 
         $this->assertEquals($skip, $this->scheduleBlockSkipper->shouldSkip($blockPropertyType));
-        ClockMock::withClockMock(false);
     }
 }

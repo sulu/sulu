@@ -188,6 +188,7 @@
             id="sulu.content.type.block.schedule_skipper"
             class="Sulu\Component\Content\Types\Block\ScheduleBlockSkipper"
         >
+            <argument type="service" id="sulu_core.webspace.request_analyzer" />
             <tag name="sulu_content.block_skipper" />
         </service>
 

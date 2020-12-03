@@ -231,4 +231,23 @@ class RequestAnalyzerTest extends TestCase
 
         $this->assertSame($expected, $requestAnalyzer->{$method}());
     }
+
+    public function testGetDateTime()
+    {
+        $provider = $this->prophesize(RequestProcessorInterface::class);
+        $request = new Request();
+
+        $dateTime = new \DateTime();
+
+        $provider->process($request, Argument::type(RequestAttributes::class))
+            ->willReturn(new RequestAttributes(['dateTime' => $dateTime]));
+
+        $requestStack = $this->prophesize(RequestStack::class);
+        $requestStack->getCurrentRequest()->willReturn($request);
+        $requestAnalyzer = new RequestAnalyzer($requestStack->reveal(), [$provider->reveal()]);
+
+        $requestAnalyzer->analyze($request);
+
+        $this->assertEquals($dateTime, $requestAnalyzer->getDateTime());
+    }
 }

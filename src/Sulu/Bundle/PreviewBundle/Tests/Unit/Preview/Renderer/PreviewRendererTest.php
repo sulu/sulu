@@ -602,6 +602,7 @@ class PreviewRendererTest extends TestCase
                     $this->assertTrue($request->attributes->get('partial'));
                     $this->assertEquals('sulu-preview-test.io', $requestAttributes->getAttribute('host'));
                     $this->assertEquals(8080, $requestAttributes->getAttribute('port'));
+                    $this->assertEqualsWithDelta(new \DateTime(), $requestAttributes->getAttribute('dateTime'), 1);
 
                     // Assert equals will throw exception so also true can be returned.
                     return true;
