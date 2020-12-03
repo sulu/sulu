@@ -25,7 +25,7 @@ class SingleSelectionPropertyMetadataMapper implements PropertyMetadataMapperInt
         ];
 
         if (!$mandatory) {
-            $anyOfs = array_merge([new NullMetadata()], $anyOfs);
+            $anyOfs = \array_merge([new NullMetadata()], $anyOfs);
         }
 
         return new PropertyMetadata(

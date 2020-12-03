@@ -17,9 +17,14 @@ The metadata classes in the `Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata` na
 
 * Various new metadata classes (like `ObjectMetadata`, `StringMetadata`, `NumberMetadata`, ...) have been introduced to allow better schema definitions of a property.
 
-### The constructor of the `MediaSelectionContentType` requires a new `$propertyMetadataMinMaxValueResolver` for full functionality.
+### The constructor of the `MediaSelectionContentType` requires a new `$propertyMetadataMinMaxValueResolver` for full functionality
 
 Without this service, `min` and `max` parameters of a `media_selection` property will not work.
+
+### The implementation of `ItemMetadata::getParameter($name)` has changed significantly
+
+This method now searches the `$parameters` array for the `$name` argument by the `name` property of the containing items instead of their key.
+Also, it will return `null` instead of throwing an exception, if no matching item can be found.
 
 ### Added resolveConflict parameter to RouteManagerInterface::createOrUpdateByAttributes
 
