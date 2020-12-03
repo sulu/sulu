@@ -140,7 +140,6 @@ class NavigationMapper implements NavigationMapperInterface
             $this->stopwatch->start('NavigationMapper::getRootNavigation.query');
         }
 
-<<<<<<< HEAD
         $this->queryBuilder->init(['context' => $context, 'excerpt' => $loadExcerpt, 'segmentKey' => $segmentKey]);
         $result = $this->contentQueryExecutor->execute(
             $webspaceKey,
@@ -154,16 +153,7 @@ class NavigationMapper implements NavigationMapperInterface
             $this->permissions[PermissionTypes::VIEW] ?? null
         );
 
-        for ($i = 0; $i < \count($result); ++$i) {
-            if (!isset($result[$i]['children'])) {
-                $result[$i]['children'] = [];
-            }
-        }
-=======
-        $this->queryBuilder->init(['context' => $context, 'excerpt' => $loadExcerpt]);
-        $result = $this->contentQuery->execute($webspaceKey, [$locale], $this->queryBuilder, $flat, $depth);
         $result = $this->normalizeResult($result);
->>>>>>> e312527aab... Remove the path attribute from twig templates
 
         if ($this->stopwatch) {
             $this->stopwatch->stop('NavigationMapper::getRootNavigation.query');

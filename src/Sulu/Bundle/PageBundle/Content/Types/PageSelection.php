@@ -157,11 +157,8 @@ class PageSelection extends ComplexContentType implements ContentTypeExportInter
             $property->getStructure()->getWebspaceKey(),
             $property->getStructure()->getLanguageCode(),
             $this->showDrafts,
-<<<<<<< HEAD
-            $this->permissions[PermissionTypes::VIEW]
-=======
+            $this->permissions[PermissionTypes::VIEW],
             $this->enabledTwigAttributes
->>>>>>> e312527aab... Remove the path attribute from twig templates
         );
 
         return $container->getData();

@@ -223,13 +223,9 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
             return;
         }
 
-<<<<<<< HEAD
-        return new DatasourceItem($result[0]['id'], $result[0]['title'], '/' . \ltrim($result[0]['path'], '/'));
-=======
         $url = $result[0]['url'] ?? null;
 
         return new DatasourceItem($result[0]['id'], $result[0]['title'], $url);
->>>>>>> e312527aab... Remove the path attribute from twig templates
     }
 
     public function resolveDataItems(
