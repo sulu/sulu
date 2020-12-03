@@ -20,6 +20,7 @@ use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Event\PublishEvent;
 use Sulu\Component\DocumentManager\Event\RemoveDraftEvent;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
+use Sulu\Component\DocumentManager\Event\RemoveLocaleEvent;
 use Sulu\Component\DocumentManager\Event\UnpublishEvent;
 use Sulu\Component\DocumentManager\Events;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -47,6 +48,7 @@ class StructureSubscriber implements EventSubscriberInterface
             Events::REMOVE => ['deindexRemovedDocument', 600],
             Events::UNPUBLISH => ['deindexUnpublishedDocument', -1024],
             Events::REMOVE_DRAFT => ['indexDocumentAfterRemoveDraft', -1024],
+            Events::REMOVE_LOCALE => ['deindexRemovedLocaleDocument', -1024],
         ];
     }
 
@@ -135,6 +137,20 @@ class StructureSubscriber implements EventSubscriberInterface
      * Deindexes the document from the search index for the website.
      */
     public function deindexUnpublishedDocument(UnpublishEvent $event)
+    {
+        $document = $event->getDocument();
+
+        if (!$document instanceof StructureBehavior) {
+            return;
+        }
+
+        $this->searchManager->deindex($document);
+    }
+
+    /**
+     * Deindexes the document from the search index for the website.
+     */
+    public function deindexRemovedLocaleDocument(RemoveLocaleEvent $event)
     {
         $document = $event->getDocument();
 

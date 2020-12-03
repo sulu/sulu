@@ -22,6 +22,7 @@ use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Event\PublishEvent;
 use Sulu\Component\DocumentManager\Event\RemoveDraftEvent;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
+use Sulu\Component\DocumentManager\Event\RemoveLocaleEvent;
 use Sulu\Component\DocumentManager\Event\ReorderEvent;
 use Sulu\Component\DocumentManager\Event\UnpublishEvent;
 use Sulu\Component\DocumentManager\Events;
@@ -80,6 +81,7 @@ class PublishSubscriber implements EventSubscriberInterface
                 ['removePropertiesFromPublicWorkspace', 0],
             ],
             Events::REMOVE_DRAFT => 'copyPropertiesFromPublicWorkspace',
+            Events::REMOVE_LOCALE => 'removeLocalePropertiesFromPublicWorkspace',
             Events::FLUSH => 'flushPublicWorkspace',
         ];
     }
@@ -208,6 +210,18 @@ class PublishSubscriber implements EventSubscriberInterface
 
             $node->setProperty($property->getName(), $property->getValue());
         }
+    }
+
+    public function removeLocalePropertiesFromPublicWorkspace(RemoveLocaleEvent $event)
+    {
+        $document = $event->getDocument();
+        $locale = $event->getLocale();
+
+        $node = $event->getNode();
+        $this->removeLocalizedNodeProperties($node, $locale);
+
+        $liveNode = $this->getLiveNode($document);
+        $this->removeLocalizedNodeProperties($liveNode, $locale);
     }
 
     /**

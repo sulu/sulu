@@ -61,11 +61,10 @@ export default class DropdownToolbarAction extends AbstractFormToolbarAction {
             });
     }
 
-    getNode() {
+    getNode(index: ?number) {
         return (
-            // TODO Don't hardcode key to allow multiple usage of this action
-            <Fragment key="sulu_admin.dropdown">
-                {this.toolbarActions.map((toolbarAction) => toolbarAction.getNode())}
+            <Fragment key={'sulu_admin.dropdown' + (index || '')}>
+                {this.toolbarActions.map((toolbarAction, index) => toolbarAction.getNode(index))}
             </Fragment>
         );
     }

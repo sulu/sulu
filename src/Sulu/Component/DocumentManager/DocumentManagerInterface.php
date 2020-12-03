@@ -55,6 +55,14 @@ interface DocumentManagerInterface
     public function remove($document);
 
     /**
+     * Remove a specific locale of a document.
+     *
+     * @param object $document
+     * @param string $locale
+     */
+    public function removeLocale($document, $locale);
+
+    /**
      * Move the PHPCR node to which the document is mapped to be a child of the node at the given path or UUID.
      *
      * @param object $document

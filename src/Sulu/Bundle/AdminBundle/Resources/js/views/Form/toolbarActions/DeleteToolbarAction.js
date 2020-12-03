@@ -51,8 +51,11 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
     }
 
     getNode() {
+        const {delete_locale: deleteLocale} = this.options;
+        const postfix = deleteLocale ? '_locale' : '';
+
         return (
-            <Fragment key="sulu_admin.delete">
+            <Fragment key={'sulu_admin.delete' + postfix}>
                 <Dialog
                     cancelText={translate('sulu_admin.cancel')}
                     confirmLoading={this.resourceFormStore.deleting}
@@ -60,9 +63,9 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
                     onCancel={this.handleCancel}
                     onConfirm={this.handleConfirm}
                     open={this.showDialog}
-                    title={translate('sulu_admin.delete_warning_title')}
+                    title={translate('sulu_admin.delete' + postfix + '_warning_title')}
                 >
-                    {translate('sulu_admin.delete_warning_text')}
+                    {translate('sulu_admin.delete' + postfix + '_warning_text')}
                 </Dialog>
                 <Dialog
                     cancelText={translate('sulu_admin.cancel')}
@@ -93,17 +96,19 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
     getToolbarItemConfig() {
         const {
             visible_condition: visibleCondition,
+            delete_locale: deleteLocale,
         } = this.options;
 
         const {id, data} = this.resourceFormStore;
 
         const visibleConditionFulfilled = !visibleCondition || jexl.evalSync(visibleCondition, data);
+        const disableCondition = !id || (deleteLocale && jexl.evalSync('contentLocales.length == 1', data));
 
         if (visibleConditionFulfilled) {
             return {
-                disabled: !id,
+                disabled: !!disableCondition,
                 icon: 'su-trash-alt',
-                label: translate('sulu_admin.delete'),
+                label: translate('sulu_admin.delete' + (deleteLocale ? '_locale' : '')),
                 onClick: action(() => {
                     this.showDialog = true;
                 }),
@@ -147,7 +152,9 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
     };
 
     @action handleConfirm = () => {
-        this.resourceFormStore.delete()
+        const {delete_locale: deleteLocale} = this.options;
+
+        this.resourceFormStore.delete({deleteLocale})
             .then(action(() => {
                 this.showDialog = false;
                 this.navigateBack();
@@ -171,12 +178,14 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
     };
 
     @action handleLinkConfirm = () => {
+        const {delete_locale: deleteLocale} = this.options;
+
         if (!this.allowConflictDeletion) {
             this.showLinkedDialog = false;
             return;
         }
 
-        this.resourceFormStore.delete({force: true})
+        this.resourceFormStore.delete({force: true, delete_locale: deleteLocale})
             .then(action(() => {
                 this.showLinkedDialog = false;
                 this.navigateBack();

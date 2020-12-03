@@ -526,7 +526,7 @@ class Form extends React.Component<Props> {
                     router={router}
                     store={this.resourceFormStore}
                 />
-                {this.toolbarActions.map((toolbarAction) => toolbarAction.getNode())}
+                {this.toolbarActions.map((toolbarAction, index) => toolbarAction.getNode(index))}
                 <Dialog
                     cancelText={translate('sulu_admin.cancel')}
                     confirmText={translate('sulu_admin.confirm')}
