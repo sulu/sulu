@@ -77,7 +77,7 @@ class NavigationMapper implements NavigationMapperInterface
         $this->enabledTwigAttributes = $enabledTwigAttributes;
 
         if ($enabledTwigAttributes['path']) {
-            @trigger_error('Enabling the "path" parameter is deprecated since sulu/sulu 2.3.', E_USER_DEPRECATED);
+            @\trigger_error('Enabling the "path" parameter is deprecated since sulu/sulu 2.3.', \E_USER_DEPRECATED);
         }
     }
 

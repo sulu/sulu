@@ -2,7 +2,7 @@
 
 ## dev-master
 
-## Twig path variable deprecated
+### Deprecated path variable in twig
 
 The `path` twig variable was deprecated because it was confused with the `url` property by many new developers.
 The now deprecated variable contains the internal PHPCR path of a page which should not be exposed to the twig template.
