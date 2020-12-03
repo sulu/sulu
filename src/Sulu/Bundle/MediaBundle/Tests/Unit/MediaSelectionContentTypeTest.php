@@ -469,7 +469,6 @@ class MediaSelectionContentTypeTest extends TestCase
                     'properties' => [
                         'ids' => [
                             'anyOf' => [
-                                $this->getNullSchema(),
                                 $this->getEmptyArraySchema(),
                                 [
                                     'type' => 'array',
@@ -541,7 +540,6 @@ class MediaSelectionContentTypeTest extends TestCase
                     'properties' => [
                         'ids' => [
                             'anyOf' => [
-                                $this->getNullSchema(),
                                 $this->getEmptyArraySchema(),
                                 [
                                     'type' => 'array',
@@ -584,7 +582,6 @@ class MediaSelectionContentTypeTest extends TestCase
                     'properties' => [
                         'ids' => [
                             'anyOf' => [
-                                $this->getNullSchema(),
                                 $this->getEmptyArraySchema(),
                                 [
                                     'type' => 'array',
@@ -626,7 +623,6 @@ class MediaSelectionContentTypeTest extends TestCase
                     'properties' => [
                         'ids' => [
                             'anyOf' => [
-                                $this->getNullSchema(),
                                 $this->getEmptyArraySchema(),
                                 [
                                     'type' => 'array',
@@ -665,7 +661,6 @@ class MediaSelectionContentTypeTest extends TestCase
                     'properties' => [
                         'ids' => [
                             'anyOf' => [
-                                $this->getNullSchema(),
                                 $this->getEmptyArraySchema(),
                                 [
                                     'type' => 'array',
@@ -707,7 +702,6 @@ class MediaSelectionContentTypeTest extends TestCase
                     'properties' => [
                         'ids' => [
                             'anyOf' => [
-                                $this->getNullSchema(),
                                 $this->getEmptyArraySchema(),
                                 [
                                     'type' => 'array',
