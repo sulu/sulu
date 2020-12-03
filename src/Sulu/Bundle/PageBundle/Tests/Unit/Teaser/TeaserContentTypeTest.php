@@ -192,6 +192,36 @@ class TeaserContentTypeTest extends TestCase
         ];
     }
 
+    private function getTeaserItemSchema(): array
+    {
+        return [
+            'type' => 'object',
+            'properties' => [
+                'id' => [
+                    'type' => 'string',
+                    'name' => 'id',
+                ],
+                'type' => [
+                    'type' => 'string',
+                    'name' => 'type',
+                ],
+                'title' => [
+                    'type' => 'string',
+                    'name' => 'title',
+                ],
+                'description' => [
+                    'type' => 'string',
+                    'name' => 'description',
+                ],
+                'mediaId' => [
+                    'type' => 'number',
+                    'name' => 'mediaId',
+                ],
+            ],
+            'required' => ['id', 'type'],
+        ];
+    }
+
     public function testMapPropertyMetadata(): void
     {
         $propertyMetadata = new PropertyMetadata();
@@ -211,32 +241,7 @@ class TeaserContentTypeTest extends TestCase
                                 $this->getEmptyArraySchema(),
                                 [
                                     'type' => 'array',
-                                    'items' => [
-                                        'type' => 'object',
-                                        'properties' => [
-                                            'id' => [
-                                                'type' => 'string',
-                                                'name' => 'id',
-                                            ],
-                                            'type' => [
-                                                'type' => 'string',
-                                                'name' => 'type',
-                                            ],
-                                            'title' => [
-                                                'type' => 'string',
-                                                'name' => 'title',
-                                            ],
-                                            'description' => [
-                                                'type' => 'string',
-                                                'name' => 'description',
-                                            ],
-                                            'mediaId' => [
-                                                'type' => 'number',
-                                                'name' => 'mediaId',
-                                            ],
-                                        ],
-                                        'required' => ['id', 'type'],
-                                    ],
+                                    'items' => $this->getTeaserItemSchema(),
                                     'uniqueItems' => true,
                                 ],
                             ],
@@ -265,37 +270,18 @@ class TeaserContentTypeTest extends TestCase
             'type' => 'object',
             'properties' => [
                 'items' => [
-                    'type' => 'object',
-                    'properties' => [
-                        'id' => [
-                            'type' => 'string',
-                            'name' => 'id',
-                        ],
-                        'type' => [
-                            'type' => 'string',
-                            'name' => 'type',
-                        ],
-                        'title' => [
-                            'type' => 'string',
-                            'name' => 'title',
-                        ],
-                        'description' => [
-                            'type' => 'string',
-                            'name' => 'description',
-                        ],
-                        'mediaId' => [
-                            'type' => 'number',
-                            'name' => 'mediaId',
-                        ],
-                    ],
-                    'required' => ['id', 'type'],
+                    'type' => 'array',
+                    'items' => $this->getTeaserItemSchema(),
+                    'minItems' => 1,
+                    'uniqueItems' => true,
+                    'name' => 'items',
                 ],
                 'presentAs' => [
                     'type' => 'string',
                     'name' => 'presentAs',
                 ],
             ],
-            'required' => ['ids'],
+            'required' => ['items'],
         ], $jsonSchema);
     }
 
@@ -322,32 +308,7 @@ class TeaserContentTypeTest extends TestCase
                                 $this->getEmptyArraySchema(),
                                 [
                                     'type' => 'array',
-                                    'items' => [
-                                        'type' => 'object',
-                                        'properties' => [
-                                            'id' => [
-                                                'type' => 'string',
-                                                'name' => 'id',
-                                            ],
-                                            'type' => [
-                                                'type' => 'string',
-                                                'name' => 'type',
-                                            ],
-                                            'title' => [
-                                                'type' => 'string',
-                                                'name' => 'title',
-                                            ],
-                                            'description' => [
-                                                'type' => 'string',
-                                                'name' => 'description',
-                                            ],
-                                            'mediaId' => [
-                                                'type' => 'number',
-                                                'name' => 'mediaId',
-                                            ],
-                                        ],
-                                        'required' => ['id', 'type'],
-                                    ],
+                                    'items' => $this->getTeaserItemSchema(),
                                     'minItems' => 2,
                                     'maxItems' => 3,
                                     'uniqueItems' => true,
@@ -387,32 +348,7 @@ class TeaserContentTypeTest extends TestCase
                                 $this->getEmptyArraySchema(),
                                 [
                                     'type' => 'array',
-                                    'items' => [
-                                        'type' => 'object',
-                                        'properties' => [
-                                            'id' => [
-                                                'type' => 'string',
-                                                'name' => 'id',
-                                            ],
-                                            'type' => [
-                                                'type' => 'string',
-                                                'name' => 'type',
-                                            ],
-                                            'title' => [
-                                                'type' => 'string',
-                                                'name' => 'title',
-                                            ],
-                                            'description' => [
-                                                'type' => 'string',
-                                                'name' => 'description',
-                                            ],
-                                            'mediaId' => [
-                                                'type' => 'number',
-                                                'name' => 'mediaId',
-                                            ],
-                                        ],
-                                        'required' => ['id', 'type'],
-                                    ],
+                                    'items' => $this->getTeaserItemSchema(),
                                     'minItems' => 2,
                                     'uniqueItems' => true,
                                 ],
@@ -451,32 +387,7 @@ class TeaserContentTypeTest extends TestCase
                                 $this->getEmptyArraySchema(),
                                 [
                                     'type' => 'array',
-                                    'items' => [
-                                        'type' => 'object',
-                                        'properties' => [
-                                            'id' => [
-                                                'type' => 'string',
-                                                'name' => 'id',
-                                            ],
-                                            'type' => [
-                                                'type' => 'string',
-                                                'name' => 'type',
-                                            ],
-                                            'title' => [
-                                                'type' => 'string',
-                                                'name' => 'title',
-                                            ],
-                                            'description' => [
-                                                'type' => 'string',
-                                                'name' => 'description',
-                                            ],
-                                            'mediaId' => [
-                                                'type' => 'number',
-                                                'name' => 'mediaId',
-                                            ],
-                                        ],
-                                        'required' => ['id', 'type'],
-                                    ],
+                                    'items' => $this->getTeaserItemSchema(),
                                     'maxItems' => 2,
                                     'uniqueItems' => true,
                                 ],
@@ -516,32 +427,7 @@ class TeaserContentTypeTest extends TestCase
                                 $this->getEmptyArraySchema(),
                                 [
                                     'type' => 'array',
-                                    'items' => [
-                                        'type' => 'object',
-                                        'properties' => [
-                                            'id' => [
-                                                'type' => 'string',
-                                                'name' => 'id',
-                                            ],
-                                            'type' => [
-                                                'type' => 'string',
-                                                'name' => 'type',
-                                            ],
-                                            'title' => [
-                                                'type' => 'string',
-                                                'name' => 'title',
-                                            ],
-                                            'description' => [
-                                                'type' => 'string',
-                                                'name' => 'description',
-                                            ],
-                                            'mediaId' => [
-                                                'type' => 'number',
-                                                'name' => 'mediaId',
-                                            ],
-                                        ],
-                                        'required' => ['id', 'type'],
-                                    ],
+                                    'items' => $this->getTeaserItemSchema(),
                                     'minItems' => 2,
                                     'maxItems' => 3,
                                     'uniqueItems' => true,

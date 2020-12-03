@@ -6,7 +6,6 @@ import {FormInspector, ResourceFormStore} from 'sulu-admin-bundle/containers';
 import {ResourceStore, userStore} from 'sulu-admin-bundle/stores';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
 import {Router} from 'sulu-admin-bundle/services';
-import Selection from 'sulu-admin-bundle/containers/Form/fields/Selection';
 import TeaserSelection from '../../fields/TeaserSelection';
 import TeaserSelectionComponent from '../../../../containers/TeaserSelection';
 import teaserProviderRegistry from '../../../../containers/TeaserSelection/registries/teaserProviderRegistry';
