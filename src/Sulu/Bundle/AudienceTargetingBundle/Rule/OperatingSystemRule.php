@@ -44,7 +44,12 @@ class OperatingSystemRule implements RuleInterface
             return false;
         }
 
-        $operatingSystem = OperatingSystem::getOsFamily($this->deviceDetector->getOs('short_name'));
+        $operatingSystemShortName = $this->deviceDetector->getOs('short_name');
+        if (!$operatingSystemShortName) {
+            return false;
+        }
+
+        $operatingSystem = OperatingSystem::getOsFamily($operatingSystemShortName);
 
         return $operatingSystem == $options[static::OPERATING_SYSTEM];
     }
