@@ -51,11 +51,6 @@ class ScheduleBlockVisitor implements BlockVisitorInterface
                     }
                     break;
                 case 'weekly':
-                    $weekday = \strtolower($now->format('l'));
-                    if (!\is_array($schedule['days']) || !\in_array($weekday, $schedule['days'])) {
-                        break;
-                    }
-
                     $year = $now->format('Y');
                     $month = $now->format('m');
                     $day = $now->format('d');
@@ -64,6 +59,24 @@ class ScheduleBlockVisitor implements BlockVisitorInterface
                     $start->setDate($year, $month, $day);
                     $end = new \DateTime($schedule['end']);
                     $end->setDate($year, $month, $day);
+
+                    if ($end < $start) {
+                        $end->modify('+1 day');
+
+                        if (!$this->matchWeekday($start, $schedule)) {
+                            $start->modify('-1 day');
+                            $end->modify('-1 day');
+                        }
+
+                        if (!$this->matchWeekday($start, $schedule)) {
+                            break;
+                        }
+                    } else {
+                        if (!$this->matchWeekday($start, $schedule)) {
+                            break;
+                        }
+                    }
+
                     if ($now >= $start && $now <= $end) {
                         return $block;
                     }
@@ -72,5 +85,14 @@ class ScheduleBlockVisitor implements BlockVisitorInterface
         }
 
         return null;
+    }
+
+    private function matchWeekday(\DateTime $datetime, $schedule)
+    {
+        if (!\is_array($schedule['days'])) {
+            return true;
+        }
+
+        return \in_array(\strtolower($datetime->format('l')), $schedule['days']);
     }
 }

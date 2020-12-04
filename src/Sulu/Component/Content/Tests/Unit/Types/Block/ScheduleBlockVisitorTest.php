@@ -182,6 +182,66 @@ class ScheduleBlockVisitorTest extends TestCase
                         [
                             'type' => 'weekly',
                             'days' => ['thursday'],
+                            'start' => '20:00:00',
+                            'end' => '05:00:00',
+                        ],
+                    ],
+                ],
+                '2020-11-19T22:00:00', // Thursday
+                false,
+            ],
+            [
+                [
+                    'schedules_enabled' => true,
+                    'schedules' => [
+                        [
+                            'type' => 'weekly',
+                            'days' => ['thursday'],
+                            'start' => '20:00:00',
+                            'end' => '05:00:00',
+                        ],
+                    ],
+                ],
+                '2020-11-20T01:00:00', // Friday morning
+                false,
+            ],
+            [
+                [
+                    'schedules_enabled' => true,
+                    'schedules' => [
+                        [
+                            'type' => 'weekly',
+                            'days' => ['thursday'],
+                            'start' => '20:00:00',
+                            'end' => '05:00:00',
+                        ],
+                    ],
+                ],
+                '2020-11-20T07:00:00', // Friday morning
+                true,
+            ],
+            [
+                [
+                    'schedules_enabled' => true,
+                    'schedules' => [
+                        [
+                            'type' => 'weekly',
+                            'days' => ['thursday'],
+                            'start' => '20:00:00',
+                            'end' => '05:00:00',
+                        ],
+                    ],
+                ],
+                '2020-11-19T19:00:00', // Thursday
+                true,
+            ],
+            [
+                [
+                    'schedules_enabled' => true,
+                    'schedules' => [
+                        [
+                            'type' => 'weekly',
+                            'days' => ['thursday'],
                             'start' => '08:00:00',
                             'end' => '12:00:00',
                         ],
