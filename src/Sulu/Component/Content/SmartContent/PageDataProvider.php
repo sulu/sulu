@@ -223,9 +223,7 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
             return;
         }
 
-        $url = $result[0]['url'] ?? null;
-
-        return new DatasourceItem($result[0]['id'], $result[0]['title'], $url);
+        return new DatasourceItem($result[0]['id'], $result[0]['title'], $result[0]['url'] ?? null);
     }
 
     public function resolveDataItems(
