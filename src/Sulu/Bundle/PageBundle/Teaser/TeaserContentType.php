@@ -12,19 +12,30 @@
 namespace Sulu\Bundle\PageBundle\Teaser;
 
 use PHPCR\NodeInterface;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\AnyOfsMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ArrayMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\EmptyArrayMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\NullMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\NumberMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ObjectMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapperInterface;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMinMaxValueResolver;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\StringMetadata;
 use Sulu\Bundle\PageBundle\Teaser\Provider\TeaserProviderPoolInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreNotExistsException;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStorePoolInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
+use Sulu\Component\Content\Metadata\PropertyMetadata as ContentPropertyMetadata;
 use Sulu\Component\Content\PreResolvableContentTypeInterface;
 use Sulu\Component\Content\SimpleContentType;
 
 /**
  * Provides content-type for selecting teasers.
  */
-class TeaserContentType extends SimpleContentType implements PreResolvableContentTypeInterface
+class TeaserContentType extends SimpleContentType implements PreResolvableContentTypeInterface, PropertyMetadataMapperInterface
 {
     /**
      * @var TeaserProviderPoolInterface
@@ -41,16 +52,23 @@ class TeaserContentType extends SimpleContentType implements PreResolvableConten
      */
     private $referenceStorePool;
 
+    /**
+     * @var PropertyMetadataMinMaxValueResolver|null
+     */
+    private $propertyMetadataMinMaxValueResolver;
+
     public function __construct(
         TeaserProviderPoolInterface $providerPool,
         TeaserManagerInterface $teaserManager,
-        ReferenceStorePoolInterface $referenceStorePool
+        ReferenceStorePoolInterface $referenceStorePool,
+        ?PropertyMetadataMinMaxValueResolver $propertyMetadataMinMaxValueResolver = null
     ) {
         parent::__construct('teaser_selection');
 
         $this->teaserProviderPool = $providerPool;
         $this->teaserManager = $teaserManager;
         $this->referenceStorePool = $referenceStorePool;
+        $this->propertyMetadataMinMaxValueResolver = $propertyMetadataMinMaxValueResolver;
     }
 
     public function getDefaultParams(PropertyInterface $property = null)
@@ -166,5 +184,53 @@ class TeaserContentType extends SimpleContentType implements PreResolvableConten
         }
 
         return \array_merge($default, $property->getValue());
+    }
+
+    public function mapPropertyMetadata(ContentPropertyMetadata $propertyMetadata): PropertyMetadata
+    {
+        $mandatory = $propertyMetadata->isRequired();
+
+        $minMaxValue = (object) [
+            'min' => null,
+            'max' => null,
+        ];
+
+        if (null !== $this->propertyMetadataMinMaxValueResolver) {
+            $minMaxValue = $this->propertyMetadataMinMaxValueResolver->resolveMinMaxValue($propertyMetadata);
+        }
+
+        $itemsMetadata = new ArrayMetadata(
+            new ObjectMetadata([
+                new PropertyMetadata('id', true, new StringMetadata()),
+                new PropertyMetadata('type', true, new StringMetadata()),
+                new PropertyMetadata('title', false, new StringMetadata()),
+                new PropertyMetadata('description', false, new StringMetadata()),
+                new PropertyMetadata('mediaId', false, new NumberMetadata()),
+            ]),
+            $minMaxValue->min,
+            $minMaxValue->max,
+            true
+        );
+
+        if (!$mandatory) {
+            $itemsMetadata = new AnyOfsMetadata([
+                new EmptyArrayMetadata(),
+                $itemsMetadata,
+            ]);
+        }
+
+        $teaserSelectionMetadata = new ObjectMetadata([
+            new PropertyMetadata('items', $mandatory, $itemsMetadata),
+            new PropertyMetadata('presentAs', false, new StringMetadata()),
+        ]);
+
+        if (!$mandatory) {
+            $teaserSelectionMetadata = new AnyOfsMetadata([
+                new NullMetadata(),
+                $teaserSelectionMetadata,
+            ]);
+        }
+
+        return new PropertyMetadata($propertyMetadata->getName(), $mandatory, $teaserSelectionMetadata);
     }
 }

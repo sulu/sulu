@@ -39,8 +39,15 @@ class TeaserSelection extends React.Component<FieldTypeProps<TeaserSelectionValu
         );
     };
 
+    handleTeaserSelectionChange = (value: TeaserSelectionValue) => {
+        const {onChange, onFinish} = this.props;
+
+        onChange(value);
+        onFinish();
+    };
+
     render() {
-        const {disabled, onChange, schemaOptions = {}, value} = this.props;
+        const {disabled, schemaOptions = {}, value} = this.props;
 
         const {
             present_as: {
@@ -75,7 +82,7 @@ class TeaserSelection extends React.Component<FieldTypeProps<TeaserSelectionValu
             <TeaserSelectionComponent
                 disabled={disabled === null ? undefined : disabled}
                 locale={this.locale}
-                onChange={onChange}
+                onChange={this.handleTeaserSelectionChange}
                 onItemClick={this.handleItemClick}
                 presentations={presentations.length > 0 ? presentations : undefined}
                 value={value === null ? undefined : value}
