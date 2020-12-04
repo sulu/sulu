@@ -111,7 +111,6 @@ class AdminControllerTest extends SuluTestCase
                     'properties' => [
                         'ids' => [
                             'anyOf' => [
-                                $this->getNullSchema(),
                                 $this->getEmptyArraySchema(),
                                 [
                                     'type' => 'array',

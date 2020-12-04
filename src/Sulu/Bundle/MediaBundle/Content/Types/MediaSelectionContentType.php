@@ -230,7 +230,6 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
 
         if (!$mandatory) {
             $idsMetadata = new AnyOfsMetadata([
-                new NullMetadata(),
                 new EmptyArrayMetadata(),
                 $idsMetadata,
             ]);
