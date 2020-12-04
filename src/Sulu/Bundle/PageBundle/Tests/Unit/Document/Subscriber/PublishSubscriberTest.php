@@ -13,9 +13,11 @@ namespace Sulu\Bundle\PageBundle\Tests\Unit\Document\Subscriber;
 
 use PHPCR\NodeInterface;
 use PHPCR\NodeType\NodeTypeInterface;
+use PHPCR\PropertyInterface;
 use PHPCR\SessionInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Bundle\PageBundle\Document\Subscriber\PublishSubscriber;
 use Sulu\Component\DocumentManager\Behavior\Mapping\PathBehavior;
@@ -24,6 +26,7 @@ use Sulu\Component\DocumentManager\Event\MoveEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Event\PublishEvent;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
+use Sulu\Component\DocumentManager\Event\RemoveLocaleEvent;
 use Sulu\Component\DocumentManager\Event\ReorderEvent;
 use Sulu\Component\DocumentManager\Event\UnpublishEvent;
 use Sulu\Component\DocumentManager\Metadata;
@@ -214,6 +217,59 @@ class PublishSubscriberTest extends TestCase
         $this->liveSession->getNode(Argument::any())->shouldNotBeCalled();
 
         $this->publishSubscriber->removeNodeFromPublicWorkspace($event->reveal());
+    }
+
+    public function testRemoveLocalePropertiesFromPublicWorkspace()
+    {
+        /** @var ObjectProphecy|PathBehavior $document */
+        $document = $this->prophesize(PathBehavior::class);
+        $document->getPath()
+            ->willReturn('/cmf/sulu');
+
+        /** @var ObjectProphecy|NodeInterface $node */
+        $node = $this->prophesize(NodeInterface::class);
+        /** @var ObjectProphecy|NodeInterface $liveNode */
+        $liveNode = $this->prophesize(NodeInterface::class);
+        /** @var ObjectProphecy|RemoveLocaleEvent $event */
+        $event = $this->prophesize(RemoveLocaleEvent::class);
+        $event->getDocument()
+            ->willReturn($document->reveal());
+        $event->getLocale()
+            ->willReturn('de');
+        $event->getNode()
+            ->willReturn($node->reveal());
+
+        $this->liveSession->getNode('/cmf/sulu')
+            ->shouldBeCalled()
+            ->willReturn($liveNode->reveal());
+
+        $properties = [];
+
+        for ($i = 0; $i < 10; ++$i) {
+            /** @var PropertyInterface|ObjectProphecy $property */
+            $property = $this->prophesize(PropertyInterface::class);
+            $property->remove()->shouldBeCalled();
+
+            $properties[] = $property;
+        }
+
+        $node->getProperties('i18n:de-*')
+            ->shouldBeCalled()
+            ->willReturn(\array_slice($properties, 0, 5));
+
+        $liveNode->getProperties('i18n:de-*')
+            ->shouldBeCalled()
+            ->willReturn(\array_slice($properties, 5, 5));
+
+        $this->propertyEncoder->localizedSystemName('', 'de')
+            ->shouldBeCalled(2)
+            ->willReturn('i18n:de-');
+
+        $this->propertyEncoder->localizedContentName('', 'de')
+            ->shouldBeCalled(2)
+            ->willReturn('i18n:de-');
+
+        $this->publishSubscriber->removeLocalePropertiesFromPublicWorkspace($event->reveal());
     }
 
     public function testMoveNodeInPublicWorkspace()

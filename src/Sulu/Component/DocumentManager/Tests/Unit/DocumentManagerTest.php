@@ -29,6 +29,7 @@ use Sulu\Component\DocumentManager\Event\QueryExecuteEvent;
 use Sulu\Component\DocumentManager\Event\RefreshEvent;
 use Sulu\Component\DocumentManager\Event\RemoveDraftEvent;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
+use Sulu\Component\DocumentManager\Event\RemoveLocaleEvent;
 use Sulu\Component\DocumentManager\Event\ReorderEvent;
 use Sulu\Component\DocumentManager\Event\RestoreEvent;
 use Sulu\Component\DocumentManager\Event\UnpublishEvent;
@@ -110,6 +111,16 @@ class DocumentManagerTest extends TestCase
         $subscriber = $this->addSubscriber();
         $this->documentManager->remove(new \stdClass());
         $this->assertTrue($subscriber->remove);
+    }
+
+    /**
+     * It should issue a removeLocale event.
+     */
+    public function testRemoveLocale()
+    {
+        $subscriber = $this->addSubscriber();
+        $this->documentManager->removeLocale(new \stdClass(), 'en');
+        $this->assertTrue($subscriber->removeLocale);
     }
 
     /**
@@ -267,6 +278,8 @@ class TestDocumentManagerSubscriber implements EventSubscriberInterface
 
     public $remove = false;
 
+    public $removeLocale = false;
+
     public $copy = false;
 
     public $move = false;
@@ -312,6 +325,7 @@ class TestDocumentManagerSubscriber implements EventSubscriberInterface
         return [
             Events::PERSIST => 'handlePersist',
             Events::REMOVE => 'handleRemove',
+            Events::REMOVE_LOCALE => 'handleRemoveLocale',
             Events::MOVE => 'handleMove',
             Events::COPY => 'handleCopy',
             Events::CREATE => 'handleCreate',
@@ -347,6 +361,11 @@ class TestDocumentManagerSubscriber implements EventSubscriberInterface
     public function handleRemove(RemoveEvent $event)
     {
         $this->remove = true;
+    }
+
+    public function handleRemoveLocale(RemoveLocaleEvent $event)
+    {
+        $this->removeLocale = true;
     }
 
     public function handleCopy(CopyEvent $event)
