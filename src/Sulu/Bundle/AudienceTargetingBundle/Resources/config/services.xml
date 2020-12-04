@@ -148,11 +148,11 @@
         </service>
 
         <service
-            id="sulu_audience_targeting.target_group_block_skipper"
-            class="Sulu\Bundle\AudienceTargetingBundle\Content\Types\Block\TargetGroupBlockSkipper"
+            id="sulu_audience_targeting.target_group_block_visitor"
+            class="Sulu\Bundle\AudienceTargetingBundle\Content\Types\Block\TargetGroupBlockVisitor"
         >
             <argument type="service" id="sulu_audience_targeting.target_group_store"/>
-            <tag name="sulu_content.block_skipper" />
+            <tag name="sulu_content.block_visitor" />
         </service>
     </services>
 </container>

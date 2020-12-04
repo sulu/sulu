@@ -164,32 +164,32 @@
             <argument>%sulu.content.language.namespace%</argument>
             <argument type="service" id="sulu_core.webspace.request_analyzer" />
             <argument type="service" id="sulu_audience_targeting.target_group_store" on-invalid="null" />
-            <argument type="tagged" tag="sulu_content.block_skipper" />
+            <argument type="tagged" tag="sulu_content.block_visitor" />
             <tag name="sulu.content.type" alias="block"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
         </service>
 
         <service
-            id="sulu.content.type.block.hidden_skipper"
-            class="Sulu\Component\Content\Types\Block\HiddenBlockSkipper"
+            id="sulu.content.type.block.hidden_visitor"
+            class="Sulu\Component\Content\Types\Block\HiddenBlockVisitor"
         >
-            <tag name="sulu_content.block_skipper" />
+            <tag name="sulu_content.block_visitor" />
         </service>
 
         <service
-            id="sulu.content.type.block.segment_skipper"
-            class="Sulu\Component\Content\Types\Block\SegmentBlockSkipper"
+            id="sulu.content.type.block.segment_visitor"
+            class="Sulu\Component\Content\Types\Block\SegmentBlockVisitor"
         >
             <argument type="service" id="sulu_core.webspace.request_analyzer" />
-            <tag name="sulu_content.block_skipper" />
+            <tag name="sulu_content.block_visitor" />
         </service>
 
         <service
-            id="sulu.content.type.block.schedule_skipper"
-            class="Sulu\Component\Content\Types\Block\ScheduleBlockSkipper"
+            id="sulu.content.type.block.schedule_visitor"
+            class="Sulu\Component\Content\Types\Block\ScheduleBlockVisitor"
         >
             <argument type="service" id="sulu_core.webspace.request_analyzer" />
-            <tag name="sulu_content.block_skipper" />
+            <tag name="sulu_content.block_visitor" />
         </service>
 
         <!-- content query -->

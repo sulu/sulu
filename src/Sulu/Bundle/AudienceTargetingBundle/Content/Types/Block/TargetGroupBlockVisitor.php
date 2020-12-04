@@ -13,9 +13,9 @@ namespace Sulu\Bundle\AudienceTargetingBundle\Content\Types\Block;
 
 use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStoreInterface;
 use Sulu\Component\Content\Compat\Block\BlockPropertyType;
-use Sulu\Component\Content\Types\Block\BlockSkipperInterface;
+use Sulu\Component\Content\Types\Block\BlockVisitorInterface;
 
-class TargetGroupBlockSkipper implements BlockSkipperInterface
+class TargetGroupBlockVisitor implements BlockVisitorInterface
 {
     /**
      * @var TargetGroupStoreInterface
@@ -27,14 +27,19 @@ class TargetGroupBlockSkipper implements BlockSkipperInterface
         $this->targetGroupStore = $targetGroupStore;
     }
 
-    public function shouldSkip(BlockPropertyType $block): bool
+    public function visit(BlockPropertyType $block): ?BlockPropertyType
     {
         $blockPropertyTypeSettings = $block->getSettings();
 
-        return \is_array($blockPropertyTypeSettings)
+        if (\is_array($blockPropertyTypeSettings)
             && isset($blockPropertyTypeSettings['target_groups_enabled'])
             && $blockPropertyTypeSettings['target_groups_enabled']
             && isset($blockPropertyTypeSettings['target_groups'])
-            && !\in_array($this->targetGroupStore->getTargetGroupId(), $blockPropertyTypeSettings['target_groups']);
+            && !\in_array($this->targetGroupStore->getTargetGroupId(), $blockPropertyTypeSettings['target_groups'])
+        ) {
+            return null;
+        } else {
+            return $block;
+        }
     }
 }

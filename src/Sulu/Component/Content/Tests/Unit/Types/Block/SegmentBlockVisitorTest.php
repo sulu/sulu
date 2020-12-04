@@ -14,12 +14,12 @@ namespace Sulu\Component\Content\Tests\Unit\Types\Block;
 use PHPUnit\Framework\TestCase;
 use Sulu\Component\Content\Compat\Block\BlockPropertyType;
 use Sulu\Component\Content\Compat\Metadata;
-use Sulu\Component\Content\Types\Block\SegmentBlockSkipper;
+use Sulu\Component\Content\Types\Block\SegmentBlockVisitor;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Segment;
 use Sulu\Component\Webspace\Webspace;
 
-class SegmentBlockSkipperTest extends TestCase
+class SegmentBlockVisitorTest extends TestCase
 {
     /**
      * @var RequestAnalyzerInterface
@@ -27,14 +27,14 @@ class SegmentBlockSkipperTest extends TestCase
     private $requestAnalyzer;
 
     /**
-     * @var SegmentBlockSkipper
+     * @var SegmentBlockVisitor
      */
-    private $segmentBlockSkipper;
+    private $segmentBlockVisitor;
 
     public function setUp(): void
     {
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
-        $this->segmentBlockSkipper = new SegmentBlockSkipper($this->requestAnalyzer->reveal());
+        $this->segmentBlockVisitor = new SegmentBlockVisitor($this->requestAnalyzer->reveal());
     }
 
     public function testShouldNotSkipWithObjectAsSettings()
@@ -42,7 +42,7 @@ class SegmentBlockSkipperTest extends TestCase
         $blockPropertyType = new BlockPropertyType('type1', new Metadata([]));
         $blockPropertyType->setSettings(new \stdClass());
 
-        $this->assertFalse($this->segmentBlockSkipper->shouldSkip($blockPropertyType));
+        $this->assertEquals($blockPropertyType, $this->segmentBlockVisitor->visit($blockPropertyType));
     }
 
     public function testShouldNotSkipWithEmptyArrayAsSettings()
@@ -50,7 +50,7 @@ class SegmentBlockSkipperTest extends TestCase
         $blockPropertyType = new BlockPropertyType('type1', new Metadata([]));
         $blockPropertyType->setSettings([]);
 
-        $this->assertFalse($this->segmentBlockSkipper->shouldSkip($blockPropertyType));
+        $this->assertEquals($blockPropertyType, $this->segmentBlockVisitor->visit($blockPropertyType));
     }
 
     public function testShouldSkipWithOtherSegment()
@@ -66,7 +66,7 @@ class SegmentBlockSkipperTest extends TestCase
         $segment->setKey('s');
         $this->requestAnalyzer->getSegment()->willReturn($segment);
 
-        $this->assertTrue($this->segmentBlockSkipper->shouldSkip($blockPropertyType));
+        $this->assertNull($this->segmentBlockVisitor->visit($blockPropertyType));
     }
 
     public function testShouldNotSkipWithSameSegment()
@@ -82,7 +82,7 @@ class SegmentBlockSkipperTest extends TestCase
         $segment->setKey('w');
         $this->requestAnalyzer->getSegment()->willReturn($segment);
 
-        $this->assertFalse($this->segmentBlockSkipper->shouldSkip($blockPropertyType));
+        $this->assertEquals($blockPropertyType, $this->segmentBlockVisitor->visit($blockPropertyType));
     }
 
     public function testShouldNotSkipWithoutSegment()
@@ -95,7 +95,7 @@ class SegmentBlockSkipperTest extends TestCase
         $this->requestAnalyzer->getWebspace()->willReturn($webspace);
         $this->requestAnalyzer->getSegment()->willReturn(null);
 
-        $this->assertFalse($this->segmentBlockSkipper->shouldSkip($blockPropertyType));
+        $this->assertEquals($blockPropertyType, $this->segmentBlockVisitor->visit($blockPropertyType));
     }
 
     public function testShouldNotSkipWithoutSegmentForWebspace()
@@ -111,7 +111,7 @@ class SegmentBlockSkipperTest extends TestCase
         $segment->setKey('s');
         $this->requestAnalyzer->getSegment()->willReturn($segment);
 
-        $this->assertFalse($this->segmentBlockSkipper->shouldSkip($blockPropertyType));
+        $this->assertEquals($blockPropertyType, $this->segmentBlockVisitor->visit($blockPropertyType));
     }
 
     public function testShouldNotSkipWithDisabledSegment()
@@ -127,7 +127,7 @@ class SegmentBlockSkipperTest extends TestCase
         $segment->setKey('s');
         $this->requestAnalyzer->getSegment()->willReturn($segment);
 
-        $this->assertFalse($this->segmentBlockSkipper->shouldSkip($blockPropertyType));
+        $this->assertEquals($blockPropertyType, $this->segmentBlockVisitor->visit($blockPropertyType));
     }
 
     public function testShouldSkipWithoutSegmentEnabledFlag()
@@ -143,6 +143,6 @@ class SegmentBlockSkipperTest extends TestCase
         $segment->setKey('s');
         $this->requestAnalyzer->getSegment()->willReturn($segment);
 
-        $this->assertFalse($this->segmentBlockSkipper->shouldSkip($blockPropertyType));
+        $this->assertEquals($blockPropertyType, $this->segmentBlockVisitor->visit($blockPropertyType));
     }
 }

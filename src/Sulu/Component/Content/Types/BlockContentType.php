@@ -24,7 +24,7 @@ use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Document\Subscriber\PHPCR\SuluNode;
 use Sulu\Component\Content\Exception\UnexpectedPropertyType;
 use Sulu\Component\Content\PreResolvableContentTypeInterface;
-use Sulu\Component\Content\Types\Block\BlockSkipperInterface;
+use Sulu\Component\Content\Types\Block\BlockVisitorInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
 /**
@@ -57,22 +57,22 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
     private $targetGroupStore;
 
     /**
-     * @var BlockSkipperInterface[]
+     * @var BlockVisitorInterface[]
      */
-    private $blockSkippers;
+    private $blockVisitors;
 
     public function __construct(
         ContentTypeManagerInterface $contentTypeManager,
         $languageNamespace,
         RequestAnalyzerInterface $requestAnalyzer,
         TargetGroupStoreInterface $targetGroupStore = null,
-        iterable $blockSkippers = []
+        iterable $blockVisitors = []
     ) {
         $this->contentTypeManager = $contentTypeManager;
         $this->languageNamespace = $languageNamespace;
         $this->requestAnalyzer = $requestAnalyzer;
         $this->targetGroupStore = $targetGroupStore;
-        $this->blockSkippers = $blockSkippers;
+        $this->blockVisitors = $blockVisitors;
     }
 
     public function read(
@@ -381,16 +381,26 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
             $blockProperty = $blockProperty->getProperty();
         }
 
-        $data = [];
+        $blockPropertyTypes = [];
         for ($i = 0; $i < $blockProperty->getLength(); ++$i) {
             $blockPropertyType = $blockProperty->getProperties($i);
-            $blockPropertyTypeSettings = $blockPropertyType->getSettings();
 
-            foreach ($this->blockSkippers as $blockSkipper) {
-                if ($blockSkipper->shouldSkip($blockPropertyType)) {
-                    continue 2;
+            foreach ($this->blockVisitors as $blockVisitor) {
+                $blockPropertyType = $blockVisitor->visit($blockPropertyType);
+
+                if (!$blockPropertyType) {
+                    break;
                 }
             }
+
+            if ($blockPropertyType) {
+                $blockPropertyTypes[] = $blockPropertyType;
+            }
+        }
+
+        $data = [];
+        foreach ($blockPropertyTypes as $blockPropertyType) {
+            $blockPropertyTypeSettings = $blockPropertyType->getSettings();
 
             $blockData = [];
 

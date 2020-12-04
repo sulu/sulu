@@ -14,10 +14,10 @@ namespace Sulu\Component\Content\Tests\Unit\Types\Block;
 use PHPUnit\Framework\TestCase;
 use Sulu\Component\Content\Compat\Block\BlockPropertyType;
 use Sulu\Component\Content\Compat\Metadata;
-use Sulu\Component\Content\Types\Block\ScheduleBlockSkipper;
+use Sulu\Component\Content\Types\Block\ScheduleBlockVisitor;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
-class ScheduleBlockSkipperTest extends TestCase
+class ScheduleBlockVisitorTest extends TestCase
 {
     /**
      * @var RequestAnalyzerInterface
@@ -25,14 +25,14 @@ class ScheduleBlockSkipperTest extends TestCase
     private $requestAnalyzer;
 
     /**
-     * @var ScheduleBlockSkipper
+     * @var ScheduleBlockVisitor
      */
-    private $scheduleBlockSkipper;
+    private $scheduleBlockVisitor;
 
     public function setUp(): void
     {
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
-        $this->scheduleBlockSkipper = new ScheduleBlockSkipper($this->requestAnalyzer->reveal());
+        $this->scheduleBlockVisitor = new ScheduleBlockVisitor($this->requestAnalyzer->reveal());
     }
 
     public function testShouldNotSkipWithObjectAsSettings()
@@ -40,7 +40,7 @@ class ScheduleBlockSkipperTest extends TestCase
         $blockPropertyType = new BlockPropertyType('type1', new Metadata([]));
         $blockPropertyType->setSettings(new \stdClass());
 
-        $this->assertFalse($this->scheduleBlockSkipper->shouldSkip($blockPropertyType));
+        $this->assertEquals($blockPropertyType, $this->scheduleBlockVisitor->visit($blockPropertyType));
     }
 
     public function testShouldNotSkipWithEmptyArrayAsSettings()
@@ -48,7 +48,7 @@ class ScheduleBlockSkipperTest extends TestCase
         $blockPropertyType = new BlockPropertyType('type1', new Metadata([]));
         $blockPropertyType->setSettings([]);
 
-        $this->assertFalse($this->scheduleBlockSkipper->shouldSkip($blockPropertyType));
+        $this->assertEquals($blockPropertyType, $this->scheduleBlockVisitor->visit($blockPropertyType));
     }
 
     public function provideShouldSkip()
@@ -279,6 +279,10 @@ class ScheduleBlockSkipperTest extends TestCase
         $blockPropertyType = new BlockPropertyType('type1', new Metadata([]));
         $blockPropertyType->setSettings($settings);
 
-        $this->assertEquals($skip, $this->scheduleBlockSkipper->shouldSkip($blockPropertyType));
+        if (false === $skip) {
+            $this->assertEquals($blockPropertyType, $this->scheduleBlockVisitor->visit($blockPropertyType));
+        } else {
+            $this->assertNull($this->scheduleBlockVisitor->visit($blockPropertyType));
+        }
     }
 }

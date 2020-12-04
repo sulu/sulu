@@ -13,12 +13,14 @@ namespace Sulu\Component\Content\Types\Block;
 
 use Sulu\Component\Content\Compat\Block\BlockPropertyType;
 
-class HiddenBlockSkipper implements BlockSkipperInterface
+class HiddenBlockVisitor implements BlockVisitorInterface
 {
-    public function shouldSkip(BlockPropertyType $block): bool
+    public function visit(BlockPropertyType $block): ?BlockPropertyType
     {
         $blockPropertyTypeSettings = $block->getSettings();
 
-        return \is_array($blockPropertyTypeSettings) && !empty($blockPropertyTypeSettings['hidden']);
+        return \is_array($blockPropertyTypeSettings) && !empty($blockPropertyTypeSettings['hidden'])
+            ? null
+            : $block;
     }
 }

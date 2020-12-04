@@ -16,7 +16,7 @@ use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
-use Sulu\Component\Content\Types\Block\BlockSkipperInterface;
+use Sulu\Component\Content\Types\Block\BlockVisitorInterface;
 use Sulu\Component\HttpKernel\SuluKernel;
 use Sulu\Component\Rest\Csv\ObjectNotSupportedException;
 use Sulu\Component\Rest\DQL\Cast;
@@ -323,8 +323,8 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         $loader->load('request_analyzer.xml');
         $loader->load('doctrine.xml');
 
-        $container->registerForAutoconfiguration(BlockSkipperInterface::class)
-            ->addTag('sulu_content.block_skipper');
+        $container->registerForAutoconfiguration(BlockVisitorInterface::class)
+            ->addTag('sulu_content.block_visitor');
     }
 
     private function initWebspace(array $webspaceConfig, ContainerBuilder $container, XmlFileLoader $loader)

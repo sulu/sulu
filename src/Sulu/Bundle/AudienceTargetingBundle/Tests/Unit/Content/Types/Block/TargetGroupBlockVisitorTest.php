@@ -12,12 +12,12 @@
 namespace Sulu\Component\Content\Tests\Unit\Types\Block;
 
 use PHPUnit\Framework\TestCase;
-use Sulu\Bundle\AudienceTargetingBundle\Content\Types\Block\TargetGroupBlockSkipper;
+use Sulu\Bundle\AudienceTargetingBundle\Content\Types\Block\TargetGroupBlockVisitor;
 use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStoreInterface;
 use Sulu\Component\Content\Compat\Block\BlockPropertyType;
 use Sulu\Component\Content\Compat\Metadata;
 
-class TargetGroupBlockSkipperTest extends TestCase
+class TargetGroupBlockVisitorTest extends TestCase
 {
     /**
      * @var TargetGroupStoreInterface
@@ -25,14 +25,14 @@ class TargetGroupBlockSkipperTest extends TestCase
     private $targetGroupStore;
 
     /**
-     * @var TargetGroupBlockSkipper
+     * @var TargetGroupBlockVisitor
      */
-    private $targetGroupBlockSkipper;
+    private $targetGroupBlockVisitor;
 
     public function setUp(): void
     {
         $this->targetGroupStore = $this->prophesize(TargetGroupStoreInterface::class);
-        $this->targetGroupBlockSkipper = new TargetGroupBlockSkipper($this->targetGroupStore->reveal());
+        $this->targetGroupBlockVisitor = new TargetGroupBlockVisitor($this->targetGroupStore->reveal());
     }
 
     public function testShouldNotSkipWithObjectAsSettings()
@@ -40,7 +40,7 @@ class TargetGroupBlockSkipperTest extends TestCase
         $blockPropertyType = new BlockPropertyType('type1', new Metadata([]));
         $blockPropertyType->setSettings(new \stdClass());
 
-        $this->assertFalse($this->targetGroupBlockSkipper->shouldSkip($blockPropertyType));
+        $this->assertEquals($blockPropertyType, $this->targetGroupBlockVisitor->visit($blockPropertyType));
     }
 
     public function testShouldNotSkipWithEmptyArrayAsSettings()
@@ -48,7 +48,7 @@ class TargetGroupBlockSkipperTest extends TestCase
         $blockPropertyType = new BlockPropertyType('type1', new Metadata([]));
         $blockPropertyType->setSettings([]);
 
-        $this->assertFalse($this->targetGroupBlockSkipper->shouldSkip($blockPropertyType));
+        $this->assertEquals($blockPropertyType, $this->targetGroupBlockVisitor->visit($blockPropertyType));
     }
 
     public function testShouldSkipWithOtherTargetGroup()
@@ -58,7 +58,7 @@ class TargetGroupBlockSkipperTest extends TestCase
 
         $this->targetGroupStore->getTargetGroupId()->willReturn(3);
 
-        $this->assertTrue($this->targetGroupBlockSkipper->shouldSkip($blockPropertyType));
+        $this->assertNull($this->targetGroupBlockVisitor->visit($blockPropertyType));
     }
 
     public function testShouldNotSkipWithSameTargetGroup()
@@ -68,7 +68,7 @@ class TargetGroupBlockSkipperTest extends TestCase
 
         $this->targetGroupStore->getTargetGroupId()->willReturn(3);
 
-        $this->assertFalse($this->targetGroupBlockSkipper->shouldSkip($blockPropertyType));
+        $this->assertEquals($blockPropertyType, $this->targetGroupBlockVisitor->visit($blockPropertyType));
     }
 
     public function testShouldNotSkipWithoutTargetGroups()
@@ -78,7 +78,7 @@ class TargetGroupBlockSkipperTest extends TestCase
 
         $this->targetGroupStore->getTargetGroupId()->willReturn(3);
 
-        $this->assertFalse($this->targetGroupBlockSkipper->shouldSkip($blockPropertyType));
+        $this->assertEquals($blockPropertyType, $this->targetGroupBlockVisitor->visit($blockPropertyType));
     }
 
     public function testShouldNotSkipWithDisabledTargetGroups()
@@ -88,7 +88,7 @@ class TargetGroupBlockSkipperTest extends TestCase
 
         $this->targetGroupStore->getTargetGroupId()->willReturn(3);
 
-        $this->assertFalse($this->targetGroupBlockSkipper->shouldSkip($blockPropertyType));
+        $this->assertEquals($blockPropertyType, $this->targetGroupBlockVisitor->visit($blockPropertyType));
     }
 
     public function testShouldNotSkipWithoutTargetGroupsFlag()
@@ -98,6 +98,6 @@ class TargetGroupBlockSkipperTest extends TestCase
 
         $this->targetGroupStore->getTargetGroupId()->willReturn(3);
 
-        $this->assertFalse($this->targetGroupBlockSkipper->shouldSkip($blockPropertyType));
+        $this->assertEquals($blockPropertyType, $this->targetGroupBlockVisitor->visit($blockPropertyType));
     }
 }

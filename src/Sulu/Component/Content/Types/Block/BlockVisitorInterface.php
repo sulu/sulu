@@ -13,7 +13,7 @@ namespace Sulu\Component\Content\Types\Block;
 
 use Sulu\Component\Content\Compat\Block\BlockPropertyType;
 
-interface BlockSkipperInterface
+interface BlockVisitorInterface
 {
-    public function shouldSkip(BlockPropertyType $block): bool;
+    public function visit(BlockPropertyType $block): ?BlockPropertyType;
 }

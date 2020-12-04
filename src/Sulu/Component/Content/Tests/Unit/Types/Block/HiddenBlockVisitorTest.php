@@ -14,18 +14,18 @@ namespace Sulu\Component\Content\Tests\Unit\Types\Block;
 use PHPUnit\Framework\TestCase;
 use Sulu\Component\Content\Compat\Block\BlockPropertyType;
 use Sulu\Component\Content\Compat\Metadata;
-use Sulu\Component\Content\Types\Block\HiddenBlockSkipper;
+use Sulu\Component\Content\Types\Block\HiddenBlockVisitor;
 
-class HiddenBlockSkipperTest extends TestCase
+class HiddenBlockVisitorTest extends TestCase
 {
     /**
-     * @var HiddenBlockSkipper
+     * @var HiddenBlockVisitor
      */
-    private $hiddenBlockSkipper;
+    private $hiddenBlockVisitor;
 
     public function setUp(): void
     {
-        $this->hiddenBlockSkipper = new HiddenBlockSkipper();
+        $this->hiddenBlockVisitor = new HiddenBlockVisitor();
     }
 
     public function testShouldNotSkipWithObjectAsSettings()
@@ -33,7 +33,7 @@ class HiddenBlockSkipperTest extends TestCase
         $blockPropertyType = new BlockPropertyType('type1', new Metadata([]));
         $blockPropertyType->setSettings(new \stdClass());
 
-        $this->assertFalse($this->hiddenBlockSkipper->shouldSkip($blockPropertyType));
+        $this->assertEquals($blockPropertyType, $this->hiddenBlockVisitor->visit($blockPropertyType));
     }
 
     public function testShouldNotSkipWithEmptyArrayAsSettings()
@@ -41,7 +41,7 @@ class HiddenBlockSkipperTest extends TestCase
         $blockPropertyType = new BlockPropertyType('type1', new Metadata([]));
         $blockPropertyType->setSettings([]);
 
-        $this->assertFalse($this->hiddenBlockSkipper->shouldSkip($blockPropertyType));
+        $this->assertEquals($blockPropertyType, $this->hiddenBlockVisitor->visit($blockPropertyType));
     }
 
     public function testShouldSkipWithHiddenSetting()
@@ -49,7 +49,7 @@ class HiddenBlockSkipperTest extends TestCase
         $blockPropertyType = new BlockPropertyType('type1', new Metadata([]));
         $blockPropertyType->setSettings(['hidden' => true]);
 
-        $this->assertTrue($this->hiddenBlockSkipper->shouldSkip($blockPropertyType));
+        $this->assertNull($this->hiddenBlockVisitor->visit($blockPropertyType));
     }
 
     public function testShouldNotSkipWithHiddenSetting()
@@ -57,6 +57,6 @@ class HiddenBlockSkipperTest extends TestCase
         $blockPropertyType = new BlockPropertyType('type1', new Metadata([]));
         $blockPropertyType->setSettings(['hidden' => false]);
 
-        $this->assertFalse($this->hiddenBlockSkipper->shouldSkip($blockPropertyType));
+        $this->assertEquals($blockPropertyType, $this->hiddenBlockVisitor->visit($blockPropertyType));
     }
 }

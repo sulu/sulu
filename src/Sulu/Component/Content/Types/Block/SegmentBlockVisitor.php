@@ -14,7 +14,7 @@ namespace Sulu\Component\Content\Types\Block;
 use Sulu\Component\Content\Compat\Block\BlockPropertyType;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
-class SegmentBlockSkipper implements BlockSkipperInterface
+class SegmentBlockVisitor implements BlockVisitorInterface
 {
     /**
      * @var RequestAnalyzerInterface
@@ -26,7 +26,7 @@ class SegmentBlockSkipper implements BlockSkipperInterface
         $this->requestAnalyzer = $requestAnalyzer;
     }
 
-    public function shouldSkip(BlockPropertyType $block): bool
+    public function visit(BlockPropertyType $block): ?BlockPropertyType
     {
         $blockPropertyTypeSettings = $block->getSettings();
 
@@ -34,12 +34,17 @@ class SegmentBlockSkipper implements BlockSkipperInterface
         $webspaceKey = $webspace ? $webspace->getKey() : null;
         $segment = $this->requestAnalyzer->getSegment();
 
-        return \is_array($blockPropertyTypeSettings)
+        if (\is_array($blockPropertyTypeSettings)
             && $webspaceKey
             && isset($blockPropertyTypeSettings['segment_enabled'])
             && $blockPropertyTypeSettings['segment_enabled']
             && isset($blockPropertyTypeSettings['segments'][$webspaceKey])
             && $segment
-            && $blockPropertyTypeSettings['segments'][$webspaceKey] !== $segment->getKey();
+            && $blockPropertyTypeSettings['segments'][$webspaceKey] !== $segment->getKey()
+        ) {
+            return null;
+        } else {
+            return $block;
+        }
     }
 }

@@ -25,7 +25,7 @@ use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\ContentTypeManager;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
-use Sulu\Component\Content\Types\Block\BlockSkipperInterface;
+use Sulu\Component\Content\Types\Block\BlockVisitorInterface;
 use Sulu\Component\Content\Types\BlockContentType;
 use Sulu\Component\Content\Types\TextArea;
 use Sulu\Component\Content\Types\TextLine;
@@ -74,14 +74,14 @@ class BlockContentTypeTest extends TestCase
     private $contentTypeManager;
 
     /**
-     * @var BlockSkipperInterface
+     * @var BlockVisitorInterface
      */
-    private $blockSkipper1;
+    private $blockVisitor1;
 
     /**
-     * @var BlockSkipperInterface
+     * @var BlockVisitorInterface
      */
-    private $blockSkipper2;
+    private $blockVisitor2;
 
     protected function setUp(): void
     {
@@ -90,11 +90,11 @@ class BlockContentTypeTest extends TestCase
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
         $this->contentTypeManager = $this->prophesize(ContentTypeManager::class);
         $this->targetGroupStore = $this->prophesize(TargetGroupStoreInterface::class);
-        $this->blockSkipper1 = $this->prophesize(BlockSkipperInterface::class);
-        $this->blockSkipper2 = $this->prophesize(BlockSkipperInterface::class);
+        $this->blockVisitor1 = $this->prophesize(BlockVisitorInterface::class);
+        $this->blockVisitor2 = $this->prophesize(BlockVisitorInterface::class);
 
-        $this->blockSkipper1->shouldSkip(Argument::any())->willReturn(false);
-        $this->blockSkipper2->shouldSkip(Argument::any())->willReturn(false);
+        $this->blockVisitor1->visit(Argument::any())->will(function($arguments) {return $arguments[0]; });
+        $this->blockVisitor2->visit(Argument::any())->will(function($arguments) {return $arguments[0]; });
 
         $this->blockContentType = new BlockContentType(
             $this->contentTypeManager->reveal(),
@@ -102,8 +102,8 @@ class BlockContentTypeTest extends TestCase
             $this->requestAnalyzer->reveal(),
             $this->targetGroupStore->reveal(),
             [
-                $this->blockSkipper1->reveal(),
-                $this->blockSkipper2->reveal(),
+                $this->blockVisitor1->reveal(),
+                $this->blockVisitor2->reveal(),
             ]
         );
 
@@ -811,12 +811,12 @@ class BlockContentTypeTest extends TestCase
         $blockPropertyType2 = $this->blockProperty->getProperties(1);
         $blockPropertyType3 = $this->blockProperty->getProperties(2);
 
-        $this->blockSkipper1->shouldSkip($blockPropertyType1)->willReturn(true);
-        $this->blockSkipper1->shouldSkip($blockPropertyType2)->willReturn(false);
-        $this->blockSkipper1->shouldSkip($blockPropertyType3)->willReturn(false);
-        $this->blockSkipper2->shouldSkip($blockPropertyType1)->willReturn(false);
-        $this->blockSkipper2->shouldSkip($blockPropertyType2)->willReturn(true);
-        $this->blockSkipper2->shouldSkip($blockPropertyType3)->willReturn(false);
+        $this->blockVisitor1->visit($blockPropertyType1)->willReturn(null);
+        $this->blockVisitor1->visit($blockPropertyType2)->willReturn($blockPropertyType2);
+        $this->blockVisitor1->visit($blockPropertyType3)->willReturn($blockPropertyType3);
+        $this->blockVisitor2->visit($blockPropertyType1)->willReturn($blockPropertyType1);
+        $this->blockVisitor2->visit($blockPropertyType2)->willReturn(null);
+        $this->blockVisitor2->visit($blockPropertyType3)->willReturn($blockPropertyType3);
 
         $result = $this->blockContentType->getContentData($this->blockProperty);
 
@@ -909,12 +909,12 @@ class BlockContentTypeTest extends TestCase
         $blockPropertyType2 = $this->blockProperty->getProperties(1);
         $blockPropertyType3 = $this->blockProperty->getProperties(2);
 
-        $this->blockSkipper1->shouldSkip($blockPropertyType1)->willReturn(true);
-        $this->blockSkipper1->shouldSkip($blockPropertyType2)->willReturn(false);
-        $this->blockSkipper1->shouldSkip($blockPropertyType3)->willReturn(false);
-        $this->blockSkipper2->shouldSkip($blockPropertyType1)->willReturn(false);
-        $this->blockSkipper2->shouldSkip($blockPropertyType2)->willReturn(true);
-        $this->blockSkipper2->shouldSkip($blockPropertyType3)->willReturn(false);
+        $this->blockVisitor1->visit($blockPropertyType1)->willReturn(null);
+        $this->blockVisitor1->visit($blockPropertyType2)->willReturn($blockPropertyType2);
+        $this->blockVisitor1->visit($blockPropertyType3)->willReturn($blockPropertyType3);
+        $this->blockVisitor2->visit($blockPropertyType1)->willReturn($blockPropertyType1);
+        $this->blockVisitor2->visit($blockPropertyType2)->willReturn(null);
+        $this->blockVisitor2->visit($blockPropertyType3)->willReturn($blockPropertyType3);
 
         $result = $this->blockContentType->getViewData($this->blockProperty);
         $this->assertEquals(
