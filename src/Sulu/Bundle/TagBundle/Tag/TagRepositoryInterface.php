@@ -35,7 +35,7 @@ interface TagRepositoryInterface extends RepositoryInterface
     public function findTagByName($name);
 
     /**
-     * Searches for all roles.
+     * Searches for all tags.
      *
      * @return array
      */
