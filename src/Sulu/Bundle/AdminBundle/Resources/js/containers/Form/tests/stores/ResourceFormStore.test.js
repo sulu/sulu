@@ -1006,6 +1006,85 @@ test('Save the store should validate the current data and an anyOf', (done) => {
     );
 });
 
+test('Save the store should validate the current data and skip type errors', (done) => {
+    const jsonSchemaPromise = Promise.resolve({
+        properties: {
+            images: {
+                name: 'images',
+                anyOf: [
+                    {
+                        type: 'null',
+                    },
+                    {
+                        type: 'object',
+                        properties: {
+                            ids: {
+                                name: 'ids',
+                                anyOf: [
+                                    {
+                                        type: 'array',
+                                        maxItems: 0,
+                                    },
+                                    {
+                                        type: 'array',
+                                        items: {
+                                            type: 'number',
+                                        },
+                                        minItems: 2,
+                                        maxItems: 2,
+                                        uniqueItems: true,
+                                    },
+                                ],
+                            },
+                            displayOption: {
+                                name: 'displayOption',
+                                type: 'string',
+                            },
+                        },
+                    },
+                ],
+            },
+        },
+    });
+    metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
+
+    const resourceStore = new ResourceStore('snippets', '3');
+    const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
+
+    resourceStore.data = observable({
+        images: {
+            ids: [
+                1,
+            ],
+            displayOption: undefined,
+        },
+    });
+
+    when(
+        () => !resourceFormStore.schemaLoading,
+        (): void => {
+            const savePromise = resourceFormStore.save();
+            savePromise.catch(() => {
+                expect(toJS(resourceFormStore.errors)).toEqual({
+                    images: {
+                        ids: {
+                            keyword: 'minItems',
+                            parameters: {
+                                limit: 2,
+                            },
+                        },
+                        // if "type" wouldn't be skipped, there would be `keyword: 'type'` here,
+                        // which would have precendence over 'minItems'.
+                    },
+                });
+            });
+
+            // $FlowFixMe
+            expect(savePromise).rejects.toEqual(expect.any(String)).then(() => done());
+        }
+    );
+});
+
 test('Delete should delegate the call to resourceStore', () => {
     const deletePromise = Promise.resolve();
     const resourceStore = new ResourceStore('snippets', 3);
