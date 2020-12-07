@@ -27,9 +27,14 @@ class Events
     const HYDRATE = 'sulu_document_manager.hydrate';
 
     /**
-     * Fired when a document is removed via. the document manager.
+     * Fired when a document is removed via the document manager.
      */
     const REMOVE = 'sulu_document_manager.remove';
+
+    /**
+     * Fired when a document localization is removed via the document manager.
+     */
+    const REMOVE_LOCALE = 'sulu_document_manager.remove_locale';
 
     /**
      * Fired when a document should be refreshed.
@@ -37,17 +42,17 @@ class Events
     const REFRESH = 'sulu_document_manager.refresh';
 
     /**
-     * Fired when a document is copied via. the document manager.
+     * Fired when a document is copied via the document manager.
      */
     const COPY = 'sulu_document_manager.copy';
 
     /**
-     * Fired when a document is moved via. the document manager.
+     * Fired when a document is moved via the document manager.
      */
     const MOVE = 'sulu_document_manager.move';
 
     /**
-     * Fired when a document is created via. the document manager.
+     * Fired when a document is created via the document manager.
      *
      * NOTE: This event is NOT fired when a node is persisted for the first time,
      *       it is fired when a NEW INSTANCE of a document is created from the document

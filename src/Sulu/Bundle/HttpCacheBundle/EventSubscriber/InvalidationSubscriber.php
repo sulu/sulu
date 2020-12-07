@@ -25,6 +25,7 @@ use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrateg
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 use Sulu\Component\DocumentManager\Event\PublishEvent;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
+use Sulu\Component\DocumentManager\Event\RemoveLocaleEvent;
 use Sulu\Component\DocumentManager\Event\UnpublishEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
@@ -108,6 +109,7 @@ class InvalidationSubscriber implements EventSubscriberInterface
             Events::PUBLISH => ['invalidateDocumentBeforePublishing', 1024],
             Events::UNPUBLISH => ['invalidateDocumentBeforeUnpublishing', 1024],
             Events::REMOVE => ['invalidateDocumentBeforeRemoving', 1024],
+            Events::REMOVE_LOCALE => ['invalidateDocumentBeforeRemovingLocale', 1024],
         ];
     }
 
@@ -174,6 +176,24 @@ class InvalidationSubscriber implements EventSubscriberInterface
             foreach ($this->documentInspector->getPublishedLocales($document) as $locale) {
                 $this->invalidateDocumentUrls($document, $locale);
             }
+        }
+    }
+
+    /**
+     * Invalidates the assigned structure and all urls in all locales of the document when a document gets removed.
+     * This method is executed before the actual removing of the document because the document must still
+     * exist to gather the urls of the document.
+     */
+    public function invalidateDocumentBeforeRemovingLocale(RemoveLocaleEvent $event)
+    {
+        $document = $event->getDocument();
+
+        if ($document instanceof StructureBehavior) {
+            $this->invalidateDocumentStructure($document);
+        }
+
+        if ($document instanceof ResourceSegmentBehavior) {
+            $this->invalidateDocumentUrls($document, $event->getLocale());
         }
     }
 

@@ -31,6 +31,7 @@ use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrateg
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 use Sulu\Component\DocumentManager\Event\PublishEvent;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
+use Sulu\Component\DocumentManager\Event\RemoveLocaleEvent;
 use Sulu\Component\DocumentManager\Event\UnpublishEvent;
 use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
@@ -475,6 +476,80 @@ class InvalidationSubscriberTest extends TestCase
         $this->cacheManager->invalidatePath($urlEn2)->shouldBeCalled();
 
         $this->invalidationSubscriber->invalidateDocumentBeforeRemoving($event->reveal());
+    }
+
+    /**
+     * @dataProvider provideRequest
+     */
+    public function testInvalidateDocumentBeforeRemovingLocale($request, $scheme)
+    {
+        $documentUuid = '743c89e6-2ac5-7777-1234-3e709a27a0bb';
+
+        if ($request) {
+            $request->getScheme()->willReturn($scheme);
+            $this->requestStack->getCurrentRequest()->willReturn($request->reveal());
+        }
+
+        $documentLocales = ['en', 'de'];
+        $documentWebspace = 'sulu_io';
+
+        $resourceLocatorEn1 = '/path/to/1';
+        $resourceLocatorEn2 = '/path/to/2';
+
+        $urlEn1 = 'sulu.lo/path/to/1';
+        $urlEn2 = 'sulu.lo/path/to/2';
+
+        $document = $this->prophesize(BasePageDocument::class);
+        $document->getPublished()->willReturn(true);
+        $document->getUuid()->willReturn($documentUuid);
+        $document->getWebspaceName()->willReturn($documentWebspace);
+        $this->documentInspector->getPublishedLocales($document)->willReturn($documentLocales);
+
+        $event = $this->prophesize(RemoveLocaleEvent::class);
+        $event->getDocument()->willReturn($document);
+        $event->getLocale()->willReturn('en');
+
+        $structureMetadata = $this->prophesize(StructureMetadata::class);
+        $this->documentInspector->getStructureMetadata($document)->willReturn($structureMetadata);
+        $metadata = $this->prophesize(Metadata::class);
+        $metadata->getAlias()->willReturn('alias');
+        $this->documentInspector->getMetadata($document)->willReturn($metadata);
+
+        $structureBridge = $this->prophesize(StructureBridge::class);
+        $this->structureManager->wrapStructure('alias', $structureMetadata)->willReturn($structureBridge);
+        $structureBridge->setDocument($document)->shouldBeCalled();
+        $this->cacheManager->invalidateTag($documentUuid)->shouldBeCalled();
+
+        $this->resourceLocatorStrategy->loadByContentUuid($documentUuid, $documentWebspace, $documentLocales[0])
+            ->willReturn($resourceLocatorEn1);
+        $rli = $this->prophesize(ResourceLocatorInformation::class);
+        $rli->getResourceLocator()->willReturn($resourceLocatorEn2);
+        $this->resourceLocatorStrategy->loadHistoryByContentUuid($documentUuid, $documentWebspace, $documentLocales[0])
+            ->willReturn([$rli]);
+
+        // en url related
+        $this->webspaceManager->findUrlsByResourceLocator(
+            $resourceLocatorEn1,
+            $this->env,
+            $documentLocales[0],
+            $documentWebspace,
+            null,
+            $scheme
+        )->willReturn([$urlEn1]);
+
+        $this->webspaceManager->findUrlsByResourceLocator(
+            $resourceLocatorEn2,
+            $this->env,
+            $documentLocales[0],
+            $documentWebspace,
+            null,
+            $scheme
+        )->willReturn([$urlEn2]);
+
+        $this->cacheManager->invalidatePath($urlEn1)->shouldBeCalled();
+        $this->cacheManager->invalidatePath($urlEn2)->shouldBeCalled();
+
+        $this->invalidationSubscriber->invalidateDocumentBeforeRemovingLocale($event->reveal());
     }
 
     public function testInvalidateDocumentBeforeRemovingWithResourceLocatorNotFoundException()

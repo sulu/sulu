@@ -63,6 +63,12 @@ class DocumentManager implements DocumentManagerInterface
         $this->eventDispatcher->dispatch($event, Events::REMOVE);
     }
 
+    public function removeLocale($document, $locale)
+    {
+        $event = new Event\RemoveLocaleEvent($document, $locale);
+        $this->eventDispatcher->dispatch($event, Events::REMOVE_LOCALE);
+    }
+
     public function move($document, $destId)
     {
         $event = new Event\MoveEvent($document, $destId);

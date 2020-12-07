@@ -21,6 +21,7 @@ use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Event\PublishEvent;
 use Sulu\Component\DocumentManager\Event\RemoveDraftEvent;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
+use Sulu\Component\DocumentManager\Event\RemoveLocaleEvent;
 use Sulu\Component\DocumentManager\Event\UnpublishEvent;
 
 class StructureSubscriberTest extends TestCase
@@ -170,6 +171,18 @@ class StructureSubscriberTest extends TestCase
         $this->searchManager->deindex($document)->shouldBeCalled();
 
         $this->subscriber->deindexUnpublishedDocument($unpublishEvent->reveal());
+    }
+
+    public function testDeindexRemovedLocaleDocument()
+    {
+        $unpublishEvent = $this->prophesize(RemoveLocaleEvent::class);
+
+        $document = $this->prophesize(StructureBehavior::class);
+        $unpublishEvent->getDocument()->willReturn($document->reveal());
+
+        $this->searchManager->deindex($document)->shouldBeCalled();
+
+        $this->subscriber->deindexRemovedLocaleDocument($unpublishEvent->reveal());
     }
 
     private function getPersistEventMock($document)

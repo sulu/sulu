@@ -299,6 +299,34 @@ test('Saving and dirty flag should be set to false when creating has failed', (d
     });
 });
 
+test('Deleting should throw error when id is undefined', () => {
+    ResourceRequester.delete.mockReturnValue(Promise.resolve({}));
+    const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box('en')});
+    resourceStore.data = {id: undefined};
+
+    expect(() => resourceStore.delete()).toThrow('Cannot delete resource with an undefined "id"');
+});
+
+test('Deleting with delete_locale should throw error when locale is undefined', () => {
+    ResourceRequester.delete.mockReturnValue(Promise.resolve({}));
+    const resourceStore = new ResourceStore('snippets', '1', {});
+    resourceStore.data = {id: 1};
+
+    expect(() => {
+        resourceStore.delete({deleteLocale: true});
+    }).toThrow('Cannot delete a localized resource with an undefined "locale"');
+});
+
+test('Deleting without delete_locale should not throw error when locale is undefined', () => {
+    ResourceRequester.delete.mockReturnValue(Promise.resolve({}));
+    const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box()});
+    resourceStore.data = {id: 1};
+
+    expect(() => {
+        resourceStore.delete({delete_locale: false});
+    }).not.toThrow();
+});
+
 test('Deleting flag should be set to true when deleting', () => {
     ResourceRequester.delete.mockReturnValue(Promise.resolve({}));
     const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box('en')});

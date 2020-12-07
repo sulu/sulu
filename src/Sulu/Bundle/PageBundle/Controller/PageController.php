@@ -362,6 +362,7 @@ class PageController extends AbstractRestController implements ClassResourceInte
         $locale = $this->getLocale($request);
         $webspace = $this->getWebspace($request);
         $force = $this->getBooleanRequestParameter($request, 'force', false, false);
+        $deleteLocale = $this->getBooleanRequestParameter($request, 'deleteLocale', false, false);
 
         if (!$force) {
             $references = \array_filter(
@@ -394,22 +395,26 @@ class PageController extends AbstractRestController implements ClassResourceInte
 
         $view = $this->responseDelete(
             $id,
-            function($id) use ($request) {
+            function($id) use ($request, $locale, $deleteLocale) {
                 try {
                     $document = $this->documentManager->find($id);
 
                     $this->securityChecker->checkPermission(
-                            $this->getSecurityCondition($request, $document),
-                            'delete'
-                        );
+                        $this->getSecurityCondition($request, $document),
+                        'delete'
+                    );
 
-                    $this->documentManager->remove($document);
+                    if ($deleteLocale) {
+                        $this->documentManager->removeLocale($document, $locale);
+                    } else {
+                        $this->documentManager->remove($document);
+                    }
                     $this->documentManager->flush();
                 } catch (DocumentNotFoundException $ex) {
                     throw new EntityNotFoundException('Content', $id);
                 }
             }
-            );
+        );
 
         return $this->handleView($view);
     }

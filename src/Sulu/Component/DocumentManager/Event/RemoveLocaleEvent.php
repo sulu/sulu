@@ -13,7 +13,7 @@ namespace Sulu\Component\DocumentManager\Event;
 
 use PHPCR\NodeInterface;
 
-class RemoveDraftEvent extends AbstractMappingEvent
+class RemoveLocaleEvent extends AbstractMappingEvent
 {
     /**
      * @param object $document

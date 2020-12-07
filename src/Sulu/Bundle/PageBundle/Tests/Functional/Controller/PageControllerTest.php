@@ -829,6 +829,46 @@ class PageControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
+    public function testDeleteLocale()
+    {
+        $data = [
+            [
+                'template' => 'default',
+                'title' => 'test1',
+                'description' => 'test1',
+                'tags' => [
+                    'tag1',
+                    'tag2',
+                ],
+                'url' => '/test1',
+                'article' => 'Test',
+            ],
+        ];
+
+        $data = $this->setUpContent($data);
+
+        $this->client->jsonRequest(
+            'PUT',
+            '/api/pages/' . $data[0]['id'] . '?webspace=sulu_io&language=de',
+            [
+                'title' => 'Testtitle DE',
+                'template' => 'default',
+                'url' => '/test-de',
+                'authored' => '2017-11-20T13:15:00',
+                'author' => 1,
+            ]
+        );
+
+        $this->client->jsonRequest('GET', '/api/pages/' . $data[0]['id'] . '?webspace=sulu_io&language=en');
+        $this->assertCount(2, \json_decode($this->client->getResponse()->getContent(), true)['contentLocales']);
+
+        $this->client->jsonRequest('DELETE', '/api/pages/' . $data[0]['id'] . '?webspace=sulu_io&language=en&deleteLocale=true');
+        $this->assertHttpStatusCode(204, $this->client->getResponse());
+
+        $this->client->jsonRequest('GET', '/api/pages/' . $data[0]['id'] . '?webspace=sulu_io&language=en');
+        $this->assertCount(1, \json_decode($this->client->getResponse()->getContent(), true)['contentLocales']);
+    }
+
     public function testPut()
     {
         $data = [

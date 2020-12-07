@@ -28,6 +28,7 @@ use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 use Sulu\Component\DocumentManager\Event\CopyEvent;
 use Sulu\Component\DocumentManager\Event\PublishEvent;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
+use Sulu\Component\DocumentManager\Event\RemoveLocaleEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\Route\Document\Behavior\RoutableBehavior;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -120,6 +121,7 @@ class RoutableSubscriber implements EventSubscriberInterface
                 // high priority to ensure nodes are not deleted until we iterate over children
                 ['handleRemove', 1024],
             ],
+            Events::REMOVE_LOCALE => ['handleRemoveLocale', 1024],
             Events::PUBLISH => ['handlePublish', -2000],
             Events::COPY => ['handleCopy', -2000],
         ];
@@ -197,6 +199,32 @@ class RoutableSubscriber implements EventSubscriberInterface
             $this->entityManager->remove($route);
         }
 
+        $this->entityManager->flush();
+    }
+
+    /**
+     * Removes route for one locale.
+     */
+    public function handleRemoveLocale(RemoveLocaleEvent $event): void
+    {
+        $document = $event->getDocument();
+        if (!$document instanceof RoutableBehavior) {
+            return;
+        }
+
+        $locale = $event->getLocale();
+        $localizedDocument = $this->documentManager->find($document->getUuid(), $locale);
+
+        $route = $this->routeRepository->findByEntity(
+            $localizedDocument->getClass(),
+            $localizedDocument->getUuid(),
+            $locale
+        );
+        if (!$route) {
+            return;
+        }
+
+        $this->entityManager->remove($route);
         $this->entityManager->flush();
     }
 

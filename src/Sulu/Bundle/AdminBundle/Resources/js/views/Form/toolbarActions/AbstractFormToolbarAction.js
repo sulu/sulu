@@ -34,7 +34,8 @@ export default class AbstractFormToolbarAction {
         this.locales = locales;
     }
 
-    getNode(): Node {
+    // eslint-disable-next-line no-unused-vars
+    getNode(index: ?number): Node {
         return null;
     }
 

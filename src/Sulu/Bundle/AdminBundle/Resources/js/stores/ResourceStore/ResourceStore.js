@@ -173,10 +173,13 @@ export default class ResourceStore {
         if (!this.data.id) {
             throw new Error('Cannot delete resource with an undefined "id"');
         }
+        const {locale} = this.observableOptions;
+
+        if (options.deleteLocale && !locale) {
+            throw new Error('Cannot delete a localized resource with an undefined "locale"');
+        }
 
         this.deleting = true;
-
-        const {locale} = this.observableOptions;
 
         const requestOptions = options;
         if (locale) {
