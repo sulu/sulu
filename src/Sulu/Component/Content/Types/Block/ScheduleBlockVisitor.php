@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Content\Types\Block;
 
+use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeRequestEnhancer;
 use Sulu\Component\Content\Compat\Block\BlockPropertyType;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
@@ -21,9 +22,17 @@ class ScheduleBlockVisitor implements BlockVisitorInterface
      */
     private $requestAnalyzer;
 
-    public function __construct(RequestAnalyzerInterface $requestAnalyzer)
-    {
+    /**
+     * @var CacheLifetimeRequestEnhancer
+     */
+    private $cacheLifetimeRequestEnhancer;
+
+    public function __construct(
+        RequestAnalyzerInterface $requestAnalyzer,
+        CacheLifetimeRequestEnhancer $cacheLifetimeRequestEnhancer
+    ) {
         $this->requestAnalyzer = $requestAnalyzer;
+        $this->cacheLifetimeRequestEnhancer = $cacheLifetimeRequestEnhancer;
     }
 
     public function visit(BlockPropertyType $block): ?BlockPropertyType
@@ -40,14 +49,22 @@ class ScheduleBlockVisitor implements BlockVisitorInterface
         }
 
         $now = $this->requestAnalyzer->getDateTime();
+        $nowTimestamp = $now->getTimestamp();
+
+        $returnBlock = false;
 
         foreach ($blockPropertyTypeSettings['schedules'] as $schedule) {
             switch ($schedule['type']) {
                 case 'fixed':
                     $start = new \DateTime($schedule['start']);
                     $end = new \DateTime($schedule['end']);
+
+                    $this->cacheLifetimeRequestEnhancer->setCacheLifetime($start->getTimestamp() - $nowTimestamp);
+                    $this->cacheLifetimeRequestEnhancer->setCacheLifetime($end->getTimestamp() - $nowTimestamp);
+
                     if ($now >= $start && $now <= $end) {
-                        return $block;
+                        $returnBlock = true;
+                        continue 2;
                     }
                     break;
                 case 'weekly':
@@ -69,22 +86,22 @@ class ScheduleBlockVisitor implements BlockVisitorInterface
                         }
 
                         if (!$this->matchWeekday($start, $schedule)) {
-                            break;
+                            continue 2;
                         }
                     } else {
                         if (!$this->matchWeekday($start, $schedule)) {
-                            break;
+                            continue 2;
                         }
                     }
 
                     if ($now >= $start && $now <= $end) {
-                        return $block;
+                        $returnBlock = true;
                     }
                     break;
             }
         }
 
-        return null;
+        return $returnBlock ? $block : null;
     }
 
     private function matchWeekday(\DateTime $datetime, $schedule)

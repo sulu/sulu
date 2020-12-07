@@ -189,6 +189,7 @@
             class="Sulu\Component\Content\Types\Block\ScheduleBlockVisitor"
         >
             <argument type="service" id="sulu_core.webspace.request_analyzer" />
+            <argument type="service" id="sulu_http_cache.cache_lifetime.request_enhancer" on-invalid="null" />
             <tag name="sulu_content.block_visitor" />
         </service>
 

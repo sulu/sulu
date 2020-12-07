@@ -9,6 +9,14 @@
             <argument type="service" id="sulu_http_cache.cache_lifetime.resolver"/>
             <argument>%sulu_http_cache.cache.max_age%</argument>
             <argument>%sulu_http_cache.cache.shared_max_age%</argument>
+            <argument type="service" id="sulu_http_cache.cache_lifetime.request_enhancer"/>
+        </service>
+
+        <service
+            id="sulu_http_cache.cache_lifetime.request_enhancer"
+            class="Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeRequestEnhancer"
+        >
+            <argument type="service" id="request_stack" />
         </service>
 
         <service id="Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeEnhancerInterface"

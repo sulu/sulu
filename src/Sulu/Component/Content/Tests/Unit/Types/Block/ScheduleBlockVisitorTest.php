@@ -12,6 +12,8 @@
 namespace Sulu\Component\Content\Tests\Unit\Types\Block;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
+use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeRequestEnhancer;
 use Sulu\Component\Content\Compat\Block\BlockPropertyType;
 use Sulu\Component\Content\Compat\Metadata;
 use Sulu\Component\Content\Types\Block\ScheduleBlockVisitor;
@@ -25,6 +27,11 @@ class ScheduleBlockVisitorTest extends TestCase
     private $requestAnalyzer;
 
     /**
+     * @var CacheLifetimeRequestEnhancer
+     */
+    private $cacheLifetimeRequestEnhancer;
+
+    /**
      * @var ScheduleBlockVisitor
      */
     private $scheduleBlockVisitor;
@@ -32,7 +39,11 @@ class ScheduleBlockVisitorTest extends TestCase
     public function setUp(): void
     {
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
-        $this->scheduleBlockVisitor = new ScheduleBlockVisitor($this->requestAnalyzer->reveal());
+        $this->cacheLifetimeRequestEnhancer = $this->prophesize(CacheLifetimeRequestEnhancer::class);
+        $this->scheduleBlockVisitor = new ScheduleBlockVisitor(
+            $this->requestAnalyzer->reveal(),
+            $this->cacheLifetimeRequestEnhancer->reveal()
+        );
     }
 
     public function testShouldNotSkipWithObjectAsSettings()
@@ -51,7 +62,7 @@ class ScheduleBlockVisitorTest extends TestCase
         $this->assertEquals($blockPropertyType, $this->scheduleBlockVisitor->visit($blockPropertyType));
     }
 
-    public function provideShouldSkip()
+    public function provideVisit()
     {
         return [
             [
@@ -60,6 +71,7 @@ class ScheduleBlockVisitorTest extends TestCase
                 ],
                 '2020-11-19T08:00:00',
                 false,
+                [],
             ],
             [
                 [
@@ -69,6 +81,7 @@ class ScheduleBlockVisitorTest extends TestCase
                 ],
                 '2020-11-19T08:00:00',
                 false,
+                [],
             ],
             [
                 [
@@ -79,6 +92,7 @@ class ScheduleBlockVisitorTest extends TestCase
                 ],
                 '2020-11-19T08:00:00',
                 false,
+                [],
             ],
             [
                 [
@@ -87,6 +101,7 @@ class ScheduleBlockVisitorTest extends TestCase
                 ],
                 '2020-11-19T08:00:00',
                 false,
+                [],
             ],
             [
                 [
@@ -97,6 +112,7 @@ class ScheduleBlockVisitorTest extends TestCase
                 ],
                 '2020-11-19T08:00:00',
                 true,
+                [-345600, -50400],
             ],
             [
                 [
@@ -107,6 +123,7 @@ class ScheduleBlockVisitorTest extends TestCase
                 ],
                 '2020-11-16T08:00:00',
                 false,
+                [-345600, 36000],
             ],
             [
                 [
@@ -118,6 +135,7 @@ class ScheduleBlockVisitorTest extends TestCase
                 ],
                 '2020-11-19T08:00:00',
                 true,
+                [-345600, -50400, 86400, 554400],
             ],
             [
                 [
@@ -129,6 +147,7 @@ class ScheduleBlockVisitorTest extends TestCase
                 ],
                 '2020-11-19T08:00:00',
                 false,
+                [-345600, 36000, 86400, 554400],
             ],
             [
                 [
@@ -144,6 +163,7 @@ class ScheduleBlockVisitorTest extends TestCase
                 ],
                 '2020-11-19T10:00:00', // Thursday
                 true,
+                [],
             ],
             [
                 [
@@ -159,6 +179,7 @@ class ScheduleBlockVisitorTest extends TestCase
                 ],
                 '2020-11-19T10:00:00', // Thursday
                 false,
+                [],
             ],
             [
                 [
@@ -174,6 +195,7 @@ class ScheduleBlockVisitorTest extends TestCase
                 ],
                 '2020-11-19T20:00:00', // Thursday
                 true,
+                [],
             ],
             [
                 [
@@ -189,6 +211,7 @@ class ScheduleBlockVisitorTest extends TestCase
                 ],
                 '2020-11-19T22:00:00', // Thursday
                 false,
+                [],
             ],
             [
                 [
@@ -204,6 +227,7 @@ class ScheduleBlockVisitorTest extends TestCase
                 ],
                 '2020-11-20T01:00:00', // Friday morning
                 false,
+                [],
             ],
             [
                 [
@@ -219,6 +243,7 @@ class ScheduleBlockVisitorTest extends TestCase
                 ],
                 '2020-11-20T07:00:00', // Friday morning
                 true,
+                [],
             ],
             [
                 [
@@ -234,6 +259,7 @@ class ScheduleBlockVisitorTest extends TestCase
                 ],
                 '2020-11-19T19:00:00', // Thursday
                 true,
+                [],
             ],
             [
                 [
@@ -255,6 +281,7 @@ class ScheduleBlockVisitorTest extends TestCase
                 ],
                 '2020-11-19T20:00:00', // Thursday
                 false,
+                [],
             ],
             [
                 [
@@ -276,6 +303,7 @@ class ScheduleBlockVisitorTest extends TestCase
                 ],
                 '2020-11-19T20:00:00', // Thursday
                 false,
+                [],
             ],
             [
                 [
@@ -292,6 +320,7 @@ class ScheduleBlockVisitorTest extends TestCase
                 ],
                 '2020-11-19T20:00:00', // Thursday
                 true,
+                [-388800, -93600],
             ],
             [
                 [
@@ -308,6 +337,7 @@ class ScheduleBlockVisitorTest extends TestCase
                 ],
                 '2020-11-19T20:00:00', // Thursday
                 false,
+                [-388800, -93600],
             ],
             [
                 [
@@ -324,14 +354,14 @@ class ScheduleBlockVisitorTest extends TestCase
                 ],
                 '2020-11-19T20:00:00', // Thursday
                 false,
+                [-43200, 79200],
             ],
         ];
     }
 
-    /**
-     * @dataProvider provideShouldSkip
+    /** @dataProvider provideVisit
      */
-    public function testShouldSkip($settings, $now, $skip)
+    public function testVisit($settings, $now, $skip, $requestCacheLifetimes)
     {
         $nowDateTime = new \DateTime($now);
         $this->requestAnalyzer->getDateTime()->willReturn($nowDateTime);
@@ -344,5 +374,9 @@ class ScheduleBlockVisitorTest extends TestCase
         } else {
             $this->assertNull($this->scheduleBlockVisitor->visit($blockPropertyType));
         }
+
+        $this->cacheLifetimeRequestEnhancer
+            ->setCacheLifeTime(Argument::cetera())
+            ->shouldBeCalledTimes(\count($requestCacheLifetimes));
     }
 }
