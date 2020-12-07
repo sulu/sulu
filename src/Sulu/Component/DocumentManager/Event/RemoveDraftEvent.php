@@ -27,8 +27,6 @@ class RemoveDraftEvent extends AbstractMappingEvent
 
     /**
      * Sets the node this event should operate on.
-     *
-     * TODO Check if should be move to DocumentManager itself
      */
     public function setNode(NodeInterface $node)
     {

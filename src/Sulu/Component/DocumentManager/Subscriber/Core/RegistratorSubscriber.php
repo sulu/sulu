@@ -18,6 +18,7 @@ use Sulu\Component\DocumentManager\Event\ConfigureOptionsEvent;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
+use Sulu\Component\DocumentManager\Event\RemoveLocaleEvent;
 use Sulu\Component\DocumentManager\Event\ReorderEvent;
 use Sulu\Component\DocumentManager\Events;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -156,7 +157,7 @@ class RegistratorSubscriber implements EventSubscriberInterface
     /**
      * If the node for the persisted document is in the registry.
      *
-     * @param PersistEvent|ReorderEvent $event
+     * @param PersistEvent|ReorderEvent|RemoveLocaleEvent $event
      */
     public function handleNodeFromRegistry($event)
     {
