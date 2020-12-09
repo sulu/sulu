@@ -1,5 +1,6 @@
 The `Toolbar` component serves as container for `Controls`. The `Controls` component groups components which provide
-the user interaction like `Button`, `Select` or `Dropdown`.
+the user interaction like `Button`, `Toggler`, `Select` or `Dropdown`. Additionally the `Popover` component exists,
+which shows a button that hides the return value of the `children` prop and shows it on a click.
 
 ```javascript
 <Toolbar>
@@ -38,6 +39,9 @@ component you can group the items by using the `Items` component.
         </Toolbar.Items>
     </Toolbar.Controls>
     <Toolbar.Controls>
+        <Toolbar.Popover label="Show content">
+            {() => 'Content'}
+        </Toolbar.Popover>
         <Toolbar.Select 
             label="Chose an option" 
             onClick={() => null}
@@ -78,6 +82,9 @@ The appearance of the `Toolbar` can be changed by passing the attribute `skin`. 
         </Toolbar.Items>
     </Toolbar.Controls>
     <Toolbar.Controls>
+        <Toolbar.Popover label="Show content">
+            {() => 'Content'}
+        </Toolbar.Popover>
         <Toolbar.Select 
             label="Chose an option" 
             onClick={() => null}

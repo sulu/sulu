@@ -5,7 +5,7 @@ import Popover from '../Popover';
 
 test('Render a Popover', () => {
     expect(render(
-        <Popover icon="su-calendar" label="Set time" size="small">{() => 'Child'}</Popover>
+        <Popover icon="su-calendar" label="Set time" size="small" skin="light">{() => 'Child'}</Popover>
     )).toMatchSnapshot();
 });
 

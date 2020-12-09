@@ -5,7 +5,7 @@ exports[`Render a Popover 1`] = `
   class="popover small"
 >
   <button
-    class="button small"
+    class="button small light"
   >
     <span
       aria-label="su-calendar"
