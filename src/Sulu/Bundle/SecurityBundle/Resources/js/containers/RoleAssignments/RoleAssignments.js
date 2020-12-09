@@ -79,7 +79,7 @@ class RoleAssignments extends React.Component<Props> {
                         disabled={disabled}
                         displayProperty="name"
                         onChange={this.handleRoleChange}
-                        requestParameters={{sortBy: 'name'}}
+                        requestParameters={{sortBy: 'name', limit: ''}}
                         resourceKey="roles"
                         values={this.selectedRoles}
                     />
