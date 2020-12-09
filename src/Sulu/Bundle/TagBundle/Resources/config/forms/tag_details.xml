@@ -9,9 +9,11 @@
         <property name="name" type="text_line" mandatory="true">
             <meta>
                 <title>sulu_admin.name</title>
+                <info_text>sulu_tag.no_commas_allowed</info_text>
             </meta>
             <params>
                 <param name="headline" value="true"/>
+                <param name="pattern" value="^[^,]*$"/>
             </params>
         </property>
     </properties>
