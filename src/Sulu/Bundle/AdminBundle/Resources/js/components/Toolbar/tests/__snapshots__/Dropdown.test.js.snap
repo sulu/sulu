@@ -2,7 +2,7 @@
 
 exports[`Render disabled dropdown 1`] = `
 <div
-  class="dropdown"
+  class="popover"
 >
   <button
     class="button"
@@ -23,7 +23,7 @@ exports[`Render disabled dropdown 1`] = `
 
 exports[`Render dropdown 1`] = `
 <div
-  class="dropdown"
+  class="popover"
 >
   <button
     class="button"
@@ -43,7 +43,7 @@ exports[`Render dropdown 1`] = `
 
 exports[`Render dropdown with a different size 1`] = `
 <div
-  class="dropdown small"
+  class="popover small"
 >
   <button
     class="button small"
@@ -63,7 +63,7 @@ exports[`Render dropdown with a different size 1`] = `
 
 exports[`Render dropdown with a prepended icon 1`] = `
 <div
-  class="dropdown"
+  class="popover"
 >
   <button
     class="button"
@@ -87,7 +87,7 @@ exports[`Render dropdown with a prepended icon 1`] = `
 
 exports[`Render dropdown without text 1`] = `
 <div
-  class="dropdown"
+  class="popover"
 >
   <button
     class="button"
@@ -102,7 +102,7 @@ exports[`Render dropdown without text 1`] = `
 
 exports[`Render loading dropdown 1`] = `
 <div
-  class="dropdown"
+  class="popover"
 >
   <button
     class="button"

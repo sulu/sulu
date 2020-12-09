@@ -144,9 +144,9 @@ test('No active options should disable dropdown', () => {
     const dropdown = mount(<Dropdown {...propsMock} />);
 
     expect(dropdown.find('button').instance().disabled).toBe(true);
-    expect(dropdown.instance().open).toBe(false);
+    expect(dropdown.find('OptionList')).toHaveLength(0);
 
     // click on button shouldn't open the options
     dropdown.find('button').simulate('click');
-    expect(dropdown.instance().open).toBe(false);
+    expect(dropdown.find('OptionList')).toHaveLength(0);
 });

@@ -33,6 +33,18 @@ export type Button = {|
     success?: boolean,
 |};
 
+export type Popover = {|
+    children: (onClose: () => void) => Node,
+    className?: string,
+    disabled?: boolean,
+    icon?: string,
+    label?: string | number,
+    loading?: boolean,
+    showText?: boolean,
+    size?: string,
+    skin?: Skin,
+|};
+
 export type Toggler = {|
     disabled?: boolean,
     label: string,
