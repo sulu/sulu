@@ -12,7 +12,6 @@
 namespace Sulu\Component\Content\Tests\Unit\Types\Block;
 
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeRequestEnhancer;
 use Sulu\Component\Content\Compat\Block\BlockPropertyType;
 use Sulu\Component\Content\Compat\Metadata;
@@ -123,7 +122,7 @@ class ScheduleBlockVisitorTest extends TestCase
                 ],
                 '2020-11-16T08:00:00',
                 false,
-                [-345600, 36000],
+                [-86400, 208800],
             ],
             [
                 [
@@ -163,7 +162,7 @@ class ScheduleBlockVisitorTest extends TestCase
                 ],
                 '2020-11-19T10:00:00', // Thursday
                 true,
-                [],
+                [338400, 352800],
             ],
             [
                 [
@@ -179,7 +178,7 @@ class ScheduleBlockVisitorTest extends TestCase
                 ],
                 '2020-11-19T10:00:00', // Thursday
                 false,
-                [],
+                [-7200, 7200],
             ],
             [
                 [
@@ -195,7 +194,7 @@ class ScheduleBlockVisitorTest extends TestCase
                 ],
                 '2020-11-19T20:00:00', // Thursday
                 true,
-                [],
+                [-43200, -28800],
             ],
             [
                 [
@@ -211,7 +210,7 @@ class ScheduleBlockVisitorTest extends TestCase
                 ],
                 '2020-11-19T22:00:00', // Thursday
                 false,
-                [],
+                [-7200, 25200],
             ],
             [
                 [
@@ -227,7 +226,7 @@ class ScheduleBlockVisitorTest extends TestCase
                 ],
                 '2020-11-20T01:00:00', // Friday morning
                 false,
-                [],
+                [-18000, 14400],
             ],
             [
                 [
@@ -243,7 +242,7 @@ class ScheduleBlockVisitorTest extends TestCase
                 ],
                 '2020-11-20T07:00:00', // Friday morning
                 true,
-                [],
+                [-39600, -7200],
             ],
             [
                 [
@@ -259,7 +258,7 @@ class ScheduleBlockVisitorTest extends TestCase
                 ],
                 '2020-11-19T19:00:00', // Thursday
                 true,
-                [],
+                [3600, 36000],
             ],
             [
                 [
@@ -281,7 +280,7 @@ class ScheduleBlockVisitorTest extends TestCase
                 ],
                 '2020-11-19T20:00:00', // Thursday
                 false,
-                [],
+                [-43200, -28800, -21600, 3600],
             ],
             [
                 [
@@ -303,7 +302,7 @@ class ScheduleBlockVisitorTest extends TestCase
                 ],
                 '2020-11-19T20:00:00', // Thursday
                 false,
-                [],
+                [-43200, 10800, -21600, 3600],
             ],
             [
                 [
@@ -320,7 +319,7 @@ class ScheduleBlockVisitorTest extends TestCase
                 ],
                 '2020-11-19T20:00:00', // Thursday
                 true,
-                [-388800, -93600],
+                [-43200, -28800, -388800, -93600],
             ],
             [
                 [
@@ -337,7 +336,7 @@ class ScheduleBlockVisitorTest extends TestCase
                 ],
                 '2020-11-19T20:00:00', // Thursday
                 false,
-                [-388800, -93600],
+                [-43200, 0, -388800, -93600],
             ],
             [
                 [
@@ -354,7 +353,7 @@ class ScheduleBlockVisitorTest extends TestCase
                 ],
                 '2020-11-19T20:00:00', // Thursday
                 false,
-                [-43200, 79200],
+                [-43200, -28800, -43200, 79200],
             ],
         ];
     }
@@ -375,8 +374,8 @@ class ScheduleBlockVisitorTest extends TestCase
             $this->assertNull($this->scheduleBlockVisitor->visit($blockPropertyType));
         }
 
-        $this->cacheLifetimeRequestEnhancer
-            ->setCacheLifeTime(Argument::cetera())
-            ->shouldBeCalledTimes(\count($requestCacheLifetimes));
+        foreach ($requestCacheLifetimes as $cacheLifetime) {
+            $this->cacheLifetimeRequestEnhancer->setCacheLifetime($cacheLifetime)->shouldBeCalled();
+        }
     }
 }

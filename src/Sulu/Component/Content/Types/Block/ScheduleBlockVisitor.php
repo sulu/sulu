@@ -78,21 +78,22 @@ class ScheduleBlockVisitor implements BlockVisitorInterface
                     $end->setDate($year, $month, $day);
 
                     if ($end < $start) {
-                        $end->modify('+1 day');
-
-                        if (!$this->matchWeekday($start, $schedule)) {
-                            $start->modify('-1 day');
-                            $end->modify('-1 day');
-                        }
-
-                        if (!$this->matchWeekday($start, $schedule)) {
-                            continue 2;
-                        }
-                    } else {
-                        if (!$this->matchWeekday($start, $schedule)) {
-                            continue 2;
-                        }
+                        $start->modify('-1 day');
                     }
+
+                    $i = 0;
+                    do {
+                        if ($this->matchWeekday($start, $schedule)) {
+                            break;
+                        }
+
+                        $start->modify('+1 day');
+                        $end->modify('+1 day');
+                        ++$i;
+                    } while ($i < 7);
+
+                    $this->cacheLifetimeRequestEnhancer->setCacheLifetime($start->getTimestamp() - $nowTimestamp);
+                    $this->cacheLifetimeRequestEnhancer->setCacheLifetime($end->getTimestamp() - $nowTimestamp);
 
                     if ($now >= $start && $now <= $end) {
                         $returnBlock = true;
