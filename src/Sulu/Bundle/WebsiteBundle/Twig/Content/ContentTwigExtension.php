@@ -115,7 +115,10 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
 
             $document = $contentStructure->getDocument();
 
-            if (!$document || !$document instanceof WebspaceBehavior) {
+            if (!$this->securityChecker
+                || !$document instanceof WebspaceBehavior
+                || !$document instanceof SecurityBehavior
+            ) {
                 return $this->structureResolver->resolve($contentStructure);
             }
 
@@ -124,7 +127,6 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
             $system = $security ? $security->getSystem() : null;
 
             if ($targetWebspace->hasWebsiteSecurity()
-                && $this->securityChecker
                 && !$this->securityChecker->hasPermission(
                     new SecurityCondition(
                         PageAdmin::SECURITY_CONTEXT_PREFIX . $contentStructure->getWebspaceKey(),
