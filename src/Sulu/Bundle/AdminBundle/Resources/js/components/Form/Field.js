@@ -21,6 +21,7 @@ type Props<T: string | number> = {|
     label?: string,
     onTypeChange?: (type: T) => void,
     required: boolean,
+    skin?: 'light' | 'dark',
     spaceAfter: ColSpan,
     type?: T,
     types?: FormFieldTypes,
@@ -83,12 +84,13 @@ class Field<T: string | number> extends React.Component<Props<T>> {
     render() {
         const {
             children,
-            id,
+            colSpan,
             description,
             error,
+            id,
             label,
             required,
-            colSpan,
+            skin,
             spaceAfter,
             types,
         } = this.props;
@@ -98,6 +100,7 @@ class Field<T: string | number> extends React.Component<Props<T>> {
         const fieldClass = classNames(
             fieldStyles.field,
             {
+                [fieldStyles[skin]]: !!skin,
                 [fieldStyles.error]: !!error,
             }
         );

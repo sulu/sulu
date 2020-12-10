@@ -2,6 +2,7 @@
 @import './variables.scss';
 
 $labelColor: $scorpion;
+$labelDarkColor: $silver;
 $labelErrorColor: $roman;
 $errorLabelColor: $persianRed;
 $errorLabelBackgroundColor: $roman;
@@ -47,6 +48,10 @@ $errorLabelHeight: 20px;
 
     &::after {
         content: '\200B';
+    }
+
+    .dark & {
+        color: $labelDarkColor;
     }
 }
 

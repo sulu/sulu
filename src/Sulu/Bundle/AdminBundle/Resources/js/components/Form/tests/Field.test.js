@@ -5,7 +5,7 @@ import Field from '../Field';
 
 test('Display a field with label', () => {
     expect(render(
-        <Field label="Test">
+        <Field label="Test" skin="dark">
             <p>Test</p>
         </Field>
     )).toMatchSnapshot();
