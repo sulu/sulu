@@ -2,7 +2,7 @@
 
 exports[`Render disabled select 1`] = `
 <div
-  class="select"
+  class="popover"
 >
   <button
     class="button"
@@ -23,7 +23,7 @@ exports[`Render disabled select 1`] = `
 
 exports[`Render loading select 1`] = `
 <div
-  class="select"
+  class="popover"
 >
   <button
     class="button"
@@ -54,7 +54,7 @@ exports[`Render loading select 1`] = `
 
 exports[`Render select 1`] = `
 <div
-  class="select"
+  class="popover"
 >
   <button
     class="button"
@@ -74,7 +74,7 @@ exports[`Render select 1`] = `
 
 exports[`Render select with a different size 1`] = `
 <div
-  class="select small"
+  class="popover small"
 >
   <button
     class="button small"
@@ -94,7 +94,7 @@ exports[`Render select with a different size 1`] = `
 
 exports[`Render select with a prepended icon 1`] = `
 <div
-  class="select"
+  class="popover"
 >
   <button
     class="button"
@@ -118,7 +118,7 @@ exports[`Render select with a prepended icon 1`] = `
 
 exports[`Render select without text 1`] = `
 <div
-  class="select"
+  class="popover"
 >
   <button
     class="button"

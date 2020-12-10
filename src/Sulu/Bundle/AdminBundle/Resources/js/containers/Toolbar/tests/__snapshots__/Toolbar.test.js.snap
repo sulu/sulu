@@ -146,7 +146,7 @@ Array [
           </li>
           <li>
             <div
-              class="dropdown"
+              class="popover"
             >
               <button
                 class="button light"

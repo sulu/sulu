@@ -7,6 +7,7 @@ import Controls from './Controls';
 import Dropdown from './Dropdown';
 import Items from './Items';
 import Icons from './Icons';
+import Popover from './Popover';
 import Toggler from './Toggler';
 import Select from './Select';
 import type {Skin} from './types';
@@ -25,8 +26,9 @@ export default class Toolbar extends React.PureComponent<Props> {
     static Button = Button;
     static Controls = Controls;
     static Dropdown = Dropdown;
-    static Items = Items;
     static Icons = Icons;
+    static Items = Items;
+    static Popover = Popover;
     static Select = Select;
     static Toggler = Toggler;
 

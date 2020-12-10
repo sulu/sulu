@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render a Popover 1`] = `
+<div
+  class="popover small"
+>
+  <button
+    class="button small light"
+  >
+    <span
+      aria-label="su-calendar"
+      class="su-calendar icon"
+    />
+    <span
+      class="label"
+    >
+      Set time
+    </span>
+    <span
+      aria-label="su-angle-down"
+      class="su-angle-down dropdownIcon"
+    />
+  </button>
+</div>
+`;

@@ -38,7 +38,7 @@ exports[`Dont react or update preview when data is changed during formstore is l
         >
           <li>
             <div
-              class="select dark"
+              class="popover"
             >
               <button
                 class="button dark"
@@ -61,7 +61,7 @@ exports[`Dont react or update preview when data is changed during formstore is l
           </li>
           <li>
             <div
-              class="select dark"
+              class="popover"
             >
               <button
                 class="button dark"
@@ -155,7 +155,7 @@ exports[`Dont react or update preview when data is changed during preview-store 
         >
           <li>
             <div
-              class="select dark"
+              class="popover"
             >
               <button
                 class="button dark"
@@ -178,7 +178,7 @@ exports[`Dont react or update preview when data is changed during preview-store 
           </li>
           <li>
             <div
-              class="select dark"
+              class="popover"
             >
               <button
                 class="button dark"
@@ -271,7 +271,7 @@ exports[`React and update preview when data is changed 1`] = `
         >
           <li>
             <div
-              class="select dark"
+              class="popover"
             >
               <button
                 class="button dark"
@@ -294,7 +294,7 @@ exports[`React and update preview when data is changed 1`] = `
           </li>
           <li>
             <div
-              class="select dark"
+              class="popover"
             >
               <button
                 class="button dark"
@@ -391,7 +391,7 @@ exports[`Render correct preview 1`] = `
         >
           <li>
             <div
-              class="select dark"
+              class="popover"
             >
               <button
                 class="button dark"
@@ -414,7 +414,7 @@ exports[`Render correct preview 1`] = `
           </li>
           <li>
             <div
-              class="select dark"
+              class="popover"
             >
               <button
                 class="button dark"
@@ -432,7 +432,7 @@ exports[`Render correct preview 1`] = `
           </li>
           <li>
             <div
-              class="select dark"
+              class="popover"
             >
               <button
                 class="button dark"
@@ -523,7 +523,7 @@ exports[`Render correct preview with target groups 1`] = `
         >
           <li>
             <div
-              class="select dark"
+              class="popover"
             >
               <button
                 class="button dark"
@@ -546,7 +546,7 @@ exports[`Render correct preview with target groups 1`] = `
           </li>
           <li>
             <div
-              class="select dark"
+              class="popover"
             >
               <button
                 class="button dark"
@@ -564,7 +564,7 @@ exports[`Render correct preview with target groups 1`] = `
           </li>
           <li>
             <div
-              class="select dark"
+              class="popover"
             >
               <button
                 class="button dark"
@@ -655,7 +655,7 @@ exports[`Render nothing if separate window is opened and rerender if it is close
         >
           <li>
             <div
-              class="select dark"
+              class="popover"
             >
               <button
                 class="button dark"
@@ -678,7 +678,7 @@ exports[`Render nothing if separate window is opened and rerender if it is close
           </li>
           <li>
             <div
-              class="select dark"
+              class="popover"
             >
               <button
                 class="button dark"
@@ -769,7 +769,7 @@ exports[`Render nothing if separate window is opened and rerender if it is close
         >
           <li>
             <div
-              class="select dark"
+              class="popover"
             >
               <button
                 class="button dark"
@@ -792,7 +792,7 @@ exports[`Render nothing if separate window is opened and rerender if it is close
           </li>
           <li>
             <div
-              class="select dark"
+              class="popover"
             >
               <button
                 class="button dark"
