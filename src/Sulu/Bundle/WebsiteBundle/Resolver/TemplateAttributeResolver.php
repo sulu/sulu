@@ -91,8 +91,9 @@ class TemplateAttributeResolver implements TemplateAttributeResolverInterface
 
         if (!isset($customParameters['localizations'])) {
             $localizations = [];
+            $urls = $customParameters['urls'] ?? $this->getUrls();
 
-            foreach ($this->getUrls() as $locale => $url) {
+            foreach ($urls as $locale => $url) {
                 $localizations[$locale] = [
                     'locale' => $locale,
                     'url' => $url,
