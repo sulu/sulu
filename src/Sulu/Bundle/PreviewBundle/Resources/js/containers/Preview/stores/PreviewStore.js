@@ -1,7 +1,8 @@
 // @flow
 import queryString from 'query-string';
 import {action, computed, observable} from 'mobx';
-import Requester from 'sulu-admin-bundle/services/Requester';
+import {Requester} from 'sulu-admin-bundle/services';
+import {transformDateForUrl} from 'sulu-admin-bundle/utils';
 import type {PreviewRouteName} from './../types';
 
 const generateRoute = (name: PreviewRouteName, options: Object): string => {
@@ -22,6 +23,7 @@ export default class PreviewStore {
     @observable webspace: string;
     @observable segment: ?string;
     @observable targetGroup: number = -1;
+    @observable dateTime: ?Date = undefined;
 
     @observable token: ?string;
 
@@ -46,6 +48,7 @@ export default class PreviewStore {
             locale: this.locale,
             token: this.token,
             targetGroupId: this.targetGroup,
+            dateTime: this.dateTime && transformDateForUrl(this.dateTime),
         });
     }
 
@@ -65,12 +68,15 @@ export default class PreviewStore {
         this.segment = segment;
     };
 
+    @action setDateTime = (dateTime: ?Date) => {
+        this.dateTime = dateTime;
+    };
+
     start(): Promise<*> {
         const route = generateRoute('start', {
             provider: this.resourceKey,
             id: this.id,
             locale: this.locale,
-            targetGroupId: this.targetGroup,
         });
 
         return Requester.post(route).then((response) => {
@@ -87,6 +93,7 @@ export default class PreviewStore {
             provider: this.resourceKey,
             id: this.id,
             targetGroupId: this.targetGroup,
+            dateTime: this.dateTime && transformDateForUrl(this.dateTime),
         });
 
         return Requester.post(route, {data}).then((response) => {
@@ -103,6 +110,7 @@ export default class PreviewStore {
             provider: this.resourceKey,
             id: this.id,
             targetGroupId: this.targetGroup,
+            dateTime: this.dateTime && transformDateForUrl(this.dateTime),
         });
 
         return Requester.post(route, {context: {template: type}}).then((response) => {

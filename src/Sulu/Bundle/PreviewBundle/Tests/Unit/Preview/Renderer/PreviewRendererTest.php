@@ -298,6 +298,53 @@ class PreviewRendererTest extends TestCase
         $this->assertEquals('<title>Hallo</title>', $response);
     }
 
+    public function testRenderWithDateTime()
+    {
+        $object = $this->prophesize(\stdClass::class);
+
+        $portalInformation = $this->prophesize(PortalInformation::class);
+        $webspace = $this->prophesize(Webspace::class);
+        $localization = new Localization('de');
+        $webspace->getLocalization('de')->willReturn($localization);
+        $portalInformation->getWebspace()->willReturn($webspace->reveal());
+        $portalInformation->getPortal()->willReturn($this->prophesize(Portal::class)->reveal());
+        $portalInformation->getUrl()->willReturn('sulu.lo');
+        $portalInformation->getPrefix()->willReturn('/de');
+
+        $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de', $this->environment)
+            ->willReturn([$portalInformation->reveal()]);
+
+        $this->routeDefaultsProvider->supports(\get_class($object->reveal()))->willReturn(true);
+        $this->routeDefaultsProvider->getByEntity(\get_class($object->reveal()), 1, 'de', $object)
+            ->willReturn(['object' => $object, '_controller' => 'SuluTestBundle:Test:render']);
+
+        $this->eventDispatcher->dispatch(Argument::type(PreRenderEvent::class), Events::PRE_RENDER)
+            ->shouldBeCalled();
+
+        $request = new Request();
+        $this->requestStack->getCurrentRequest()->willReturn($request);
+
+        $dateTimeString = '2020-12-10T18:29:15';
+
+        $this->httpKernel->handle(
+            Argument::that(function(Request $request) use ($dateTimeString) {
+                $dateTime = $request->attributes->get('_sulu')->getAttribute('dateTime');
+
+                return $dateTime->getTimestamp() === (new \DateTime($dateTimeString))->getTimestamp();
+            }),
+            HttpKernelInterface::MASTER_REQUEST,
+            false
+        )->shouldBeCalled()->willReturn(new Response('<title>Hallo</title>'));
+
+        $response = $this->renderer->render(
+            $object->reveal(),
+            1,
+            true,
+            ['webspaceKey' => 'sulu_io', 'locale' => 'de', 'dateTime' => $dateTimeString]
+        );
+        $this->assertEquals('<title>Hallo</title>', $response);
+    }
+
     public function testRenderPortalNotFound()
     {
         $object = $this->prophesize(\stdClass::class);

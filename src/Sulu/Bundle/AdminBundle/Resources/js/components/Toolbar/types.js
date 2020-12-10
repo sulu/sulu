@@ -4,12 +4,14 @@ import ItemsComponent from './Items';
 import IconsComponent from './Icons';
 import ButtonComponent from './Button';
 import DropdownComponent from './Dropdown';
+import PopoverComponent from './Popover';
 import SelectComponent from './Select';
 import TogglerComponent from './Toggler';
 
 export type Item =
     Element<typeof ButtonComponent>
     | Element<typeof DropdownComponent>
+    | Element<typeof PopoverComponent>
     | Element<typeof SelectComponent>
     | Element<typeof TogglerComponent>;
 export type Group = Element<typeof ItemsComponent> | Element<typeof IconsComponent>;

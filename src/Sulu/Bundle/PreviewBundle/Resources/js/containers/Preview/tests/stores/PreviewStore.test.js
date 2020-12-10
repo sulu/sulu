@@ -24,20 +24,7 @@ test('Should request server on start preview', () => {
     previewStore.start();
 
     return requestPromise.then(() => {
-        expect(Requester.post).toBeCalledWith('/start?id=123-123-123&locale=en&provider=pages&targetGroupId=-1');
-    });
-});
-
-test('Should request server on start preview with target group', () => {
-    const previewStore = new PreviewStore('pages', '123-123-123', 'en', 'sulu_io');
-
-    const requestPromise = Promise.resolve({token: '123-123-123'});
-
-    previewStore.setTargetGroup(3);
-    previewStore.start();
-
-    return requestPromise.then(() => {
-        expect(Requester.post).toBeCalledWith('/start?id=123-123-123&locale=en&provider=pages&targetGroupId=3');
+        expect(Requester.post).toBeCalledWith('/start?id=123-123-123&locale=en&provider=pages');
     });
 });
 
@@ -75,6 +62,27 @@ test('Should request server on update preview with target group', () => {
     return postPromise.then(() => {
         expect(Requester.post).toBeCalledWith(
             '/update?id=123-123-123&locale=en&provider=pages&targetGroupId=2&webspaceKey=sulu_io',
+            {data: {title: 'Sulu is aswesome'}}
+        );
+    });
+});
+
+test('Should request server on update preview with date time', () => {
+    const previewStore = new PreviewStore('pages', '123-123-123', 'en', 'sulu_io');
+
+    const postPromise = Promise.resolve({content: '<h1>Sulu is awesome</h1>'});
+    Requester.post.mockReturnValue(postPromise);
+
+    previewStore.setDateTime(new Date(2020, 11, 10, 18, 50, 10));
+    previewStore.start();
+    previewStore.update({title: 'Sulu is aswesome'}).then((content) => {
+        expect(content).toEqual('<h1>Sulu is awesome</h1>');
+    });
+
+    return postPromise.then(() => {
+        expect(Requester.post).toBeCalledWith(
+            '/update?dateTime=2020-12-10%2018%3A50&id=123-123-123&locale=en&provider=pages&targetGroupId=-1'
+            + '&webspaceKey=sulu_io',
             {data: {title: 'Sulu is aswesome'}}
         );
     });
@@ -141,6 +149,28 @@ test('Should request server on update-context preview with target group', () => 
     });
 });
 
+test('Should request server on update-context preview with datetime', () => {
+    const previewStore = new PreviewStore('pages', '123-123-123', 'en', 'sulu_io');
+
+    const postPromise = Promise.resolve({content: '<h1>Sulu is awesome</h1>'});
+    Requester.post.mockReturnValue(postPromise);
+
+    previewStore.setDateTime(new Date(2020, 11, 10, 18, 50, 10));
+    previewStore.start();
+    previewStore.updateContext('default').then((content) => {
+        expect(content).toEqual('<h1>Sulu is awesome</h1>');
+    });
+
+    return postPromise.then(() => {
+        expect(Requester.post)
+            .toBeCalledWith(
+                '/update-context?dateTime=2020-12-10%2018%3A50&id=123-123-123&locale=en&provider=pages&targetGroupId=-1'
+                + '&webspaceKey=sulu_io',
+                {context: {template: 'default'}}
+            );
+    });
+});
+
 test('Should request server on update-context preview with segment', () => {
     const previewStore = new PreviewStore('pages', '123-123-123', 'en', 'sulu_io');
 
@@ -172,7 +202,7 @@ test('Should request server on stop preview', () => {
     previewStore.stop();
 
     return postPromise.then(() => {
-        expect(Requester.post).toBeCalledWith('/start?id=123-123-123&locale=en&provider=pages&targetGroupId=-1');
+        expect(Requester.post).toBeCalledWith('/start?id=123-123-123&locale=en&provider=pages');
         expect(Requester.post).toBeCalledWith('/stop');
     });
 });
