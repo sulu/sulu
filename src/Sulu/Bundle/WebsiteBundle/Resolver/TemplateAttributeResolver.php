@@ -89,15 +89,10 @@ class TemplateAttributeResolver implements TemplateAttributeResolverInterface
             $this->requestAnalyzerResolver->resolve($this->requestAnalyzer)
         );
 
-        // Generate Urls
-        if (!isset($customParameters['urls'])) {
-            $customParameters['urls'] = $this->getUrls();
-        }
-
         if (!isset($customParameters['localizations'])) {
             $localizations = [];
 
-            foreach ($customParameters['urls'] as $locale => $url) {
+            foreach ($this->getUrls() as $locale => $url) {
                 $localizations[$locale] = [
                     'locale' => $locale,
                     'url' => $url,
@@ -107,8 +102,15 @@ class TemplateAttributeResolver implements TemplateAttributeResolverInterface
             $customParameters['localizations'] = $localizations;
         }
 
-        if (isset($this->enabledTwigAttributes['urls']) && !$this->enabledTwigAttributes['urls']) {
-            unset($customParameters['urls']);
+        if ($this->enabledTwigAttributes['urls'] ?? true) {
+            @\trigger_error('Enabling the "urls" parameter is deprecated since Sulu 2.2', \E_USER_DEPRECATED);
+
+            if (!isset($customParameters['urls'])) {
+                $customParameters['urls'] = [];
+                foreach ($customParameters['localizations'] as $localization) {
+                    $customParameters['urls'][$localization['locale']] = $localization['url'];
+                }
+            }
         }
 
         return \array_merge(
