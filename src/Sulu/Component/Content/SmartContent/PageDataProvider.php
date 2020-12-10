@@ -138,7 +138,7 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
             @\trigger_error('The usage of the "PageDataProvider" without setting the "FormMetadataProvider" is deprecated. Please inject the "FormMetadataProvider".', \E_USER_DEPRECATED);
         }
 
-        if ($enabledTwigAttributes['path']) {
+        if ($enabledTwigAttributes['path'] ?? true) {
             @\trigger_error('Enabling the "path" parameter is deprecated since sulu/sulu 2.3.', \E_USER_DEPRECATED);
         }
     }
@@ -414,7 +414,7 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
             function($item) use ($locale) {
                 $this->referenceStore->add($item['id']);
 
-                if (!$this->enabledTwigAttributes['path']) {
+                if (!($this->enabledTwigAttributes['path'] ?? true)) {
                     unset($item['path']);
                 }
 

@@ -117,7 +117,7 @@ class PageSelectionContainer implements ArrayableInterface
         $this->permission = $permission;
         $this->enabledTwigAttributes = $enabledTwigAttributes;
 
-        if ($enabledTwigAttributes['path']) {
+        if ($enabledTwigAttributes['path'] ?? true) {
             @\trigger_error('Enabling the "path" parameter is deprecated since sulu/sulu 2.3.', \E_USER_DEPRECATED);
         }
     }
@@ -167,7 +167,7 @@ class PageSelectionContainer implements ArrayableInterface
 
             // map pages
             foreach ($pages as $page) {
-                if (!$this->enabledTwigAttributes['path']) {
+                if (!($this->enabledTwigAttributes['path'] ?? true)) {
                     unset($page['path']);
                 }
 

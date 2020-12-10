@@ -51,7 +51,7 @@ class StructureResolver implements StructureResolverInterface
         $this->extensionManager = $structureManager;
         $this->enabledTwigAttributes = $enabledTwigAttributes;
 
-        if ($enabledTwigAttributes['path']) {
+        if ($enabledTwigAttributes['path'] ?? true) {
             @\trigger_error('Enabling the "path" parameter is deprecated since sulu/sulu 2.3.', \E_USER_DEPRECATED);
         }
     }
@@ -70,7 +70,7 @@ class StructureResolver implements StructureResolverInterface
             'template' => $structure->getKey(),
         ];
 
-        if ($this->enabledTwigAttributes['path']) {
+        if ($this->enabledTwigAttributes['path'] ?? true) {
             $data['path'] = $structure->getPath();
         }
 

@@ -108,9 +108,12 @@ class PageSelectionTest extends TestCase
             ->shouldBeCalled();
         $this->contentQueryExecutor
              ->execute('default', ['en'], $this->contentQueryBuilder->reveal(), true, -1, null, null, false, 64)
-             ->willReturn([]);
+             ->willReturn([['id' => '123-123-123', 'path' => 'phpcr/path/123']]);
 
-        $pageSelection->getContentData($this->property->reveal());
+        $this->assertSame(
+            [['id' => '123-123-123', 'path' => 'phpcr/path/123']],
+            $pageSelection->getContentData($this->property->reveal())
+        );
     }
 
     public function testGetContentDataWithUser()
@@ -147,6 +150,36 @@ class PageSelectionTest extends TestCase
              ->willReturn([]);
 
         $pageSelection->getContentData($this->property->reveal());
+    }
+
+    public function testGetContentDataWithoutPathParameter()
+    {
+        $pageSelection = new PageSelection(
+            $this->contentQueryExecutor->reveal(),
+            $this->contentQueryBuilder->reveal(),
+            $this->referenceStore->reveal(),
+            false,
+            ['view' => 64],
+            ['path' => false]
+        );
+
+        $this->property->getValue()->willReturn(['123-123-123']);
+        $this->property->getParams()->willReturn([]);
+        $structure = $this->prophesize(StructureInterface::class);
+        $structure->getWebspaceKey()->willReturn('default');
+        $structure->getLanguageCode()->willReturn('en');
+        $this->property->getStructure()->willReturn($structure->reveal());
+
+        $this->contentQueryBuilder->init(['ids' => ['123-123-123'], 'properties' => [], 'published' => true])
+            ->shouldBeCalled();
+        $this->contentQueryExecutor
+            ->execute('default', ['en'], $this->contentQueryBuilder->reveal(), true, -1, null, null, false, 64)
+            ->willReturn([['id' => '123-123-123', 'path' => 'phpcr/path/123']]);
+
+        $this->assertSame(
+            [['id' => '123-123-123']],
+            $pageSelection->getContentData($this->property->reveal())
+        );
     }
 
     public function testPreResolve()

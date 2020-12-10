@@ -103,9 +103,11 @@ class PageSelectionContainerTest extends TestCase
 
     public function testGetDataOrder()
     {
-        $this->executor->execute('default', ['en'], $this->builder, true, -1, null, null, false, null)->willReturn(
-            [['id' => 1], ['id' => 2], ['id' => 3]]
-        );
+        $this->executor->execute('default', ['en'], $this->builder, true, -1, null, null, false, null)->willReturn([
+            ['id' => 1, 'path' => 'phpcr/path/1'],
+            ['id' => 2],
+            ['id' => 3],
+        ]);
 
         $this->container = new PageSelectionContainer(
             [2, 3, 1],
@@ -118,7 +120,7 @@ class PageSelectionContainerTest extends TestCase
         );
 
         $result = $this->container->getData();
-        $this->assertEquals([['id' => 2], ['id' => 3], ['id' => 1]], $result);
+        $this->assertEquals([['id' => 2], ['id' => 3], ['id' => 1, 'path' => 'phpcr/path/1']], $result);
     }
 
     public function testGetDataWithUser()
@@ -143,5 +145,28 @@ class PageSelectionContainerTest extends TestCase
         );
 
         $this->container->getData();
+    }
+
+    public function testGetDataWithoutPathParameter()
+    {
+        $this->executor->execute('default', ['en'], $this->builder, true, -1, null, null, false, null)->willReturn([
+            ['id' => 1, 'path' => 'phpcr/path/1'],
+            ['id' => 2],
+        ]);
+
+        $this->container = new PageSelectionContainer(
+            [1, 2],
+            $this->executor->reveal(),
+            $this->builder->reveal(),
+            [],
+            'default',
+            'en',
+            false,
+            null,
+            ['path' => false]
+        );
+
+        $result = $this->container->getData();
+        $this->assertEquals([['id' => 1], ['id' => 2]], $result);
     }
 }

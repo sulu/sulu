@@ -460,12 +460,73 @@ class PageDataProviderTest extends TestCase
 
         $this->assertInstanceOf(DataProviderResult::class, $result);
         $items = $result->getItems();
+
         $this->assertEquals($data[0]['id'], $items[0]->getId());
+        $this->assertEquals($data[0]['path'], $items[0]['path']);
         $this->assertTrue($items[0]->getResource()->initializeProxy());
         $this->assertEquals($document1->reveal(), $items[0]->getResource()->getWrappedValueHolderValue());
+
         $this->assertEquals($data[1]['id'], $items[1]->getId());
+        $this->assertEquals($data[1]['path'], $items[1]['path']);
         $this->assertTrue($items[1]->getResource()->initializeProxy());
         $this->assertEquals($document2->reveal(), $items[1]->getResource()->getWrappedValueHolderValue());
+
+        $this->assertTrue($result->getHasNextPage());
+        $this->assertEquals(['123-123-123', '123-123-456'], $referenceStore->getAll());
+    }
+
+    public function testResolveResourceItemsWithoutPathParameter()
+    {
+        $data = [
+            ['id' => '123-123-123', 'title' => 'My-Page', 'path' => '/my-page'],
+            ['id' => '123-123-456', 'title' => 'My-Page-1', 'path' => '/my-page-1'],
+            ['id' => '123-123-789', 'title' => 'My-Page-2', 'path' => '/my-page-2'],
+        ];
+
+        $document1 = $this->prophesize(BasePageDocument::class);
+        $document2 = $this->prophesize(BasePageDocument::class);
+
+        $referenceStore = new ReferenceStore();
+        $provider = new PageDataProvider(
+            $this->getContentQueryBuilder(
+                [
+                    'config' => ['dataSource' => '123-123-123', 'excluded' => ['123-123-123']],
+                    'properties' => ['my-properties' => true],
+                    'excluded' => ['123-123-123'],
+                    'published' => false,
+                ]
+            ),
+            $this->getContentQueryExecutor(2, 1, $data),
+            $this->getDocumentManager(['123-123-123' => $document1->reveal(), '123-123-456' => $document2->reveal()]),
+            $this->getProxyFactory(),
+            $this->getSession(),
+            $referenceStore,
+            true,
+            ['view' => 64],
+            false,
+            null,
+            null,
+            ['path' => false]
+        );
+
+        $result = $provider->resolveResourceItems(
+            ['dataSource' => '123-123-123', 'excluded' => ['123-123-123']],
+            ['properties' => new PropertyParameter('properties', ['my-properties' => true], 'collection')],
+            ['webspaceKey' => 'sulu_io', 'locale' => 'en'],
+            5,
+            1,
+            2
+        );
+
+        $this->assertInstanceOf(DataProviderResult::class, $result);
+        $items = $result->getItems();
+
+        $this->assertEquals($data[0]['id'], $items[0]->getId());
+        $this->assertNull($items[2]['path'] ?? null);
+
+        $this->assertEquals($data[1]['id'], $items[1]->getId());
+        $this->assertNull($items[1]['path'] ?? null);
+
         $this->assertTrue($result->getHasNextPage());
         $this->assertEquals(['123-123-123', '123-123-456'], $referenceStore->getAll());
     }
@@ -549,7 +610,7 @@ class PageDataProviderTest extends TestCase
 
     public function testResolveDatasource()
     {
-        $data = ['id' => '123-123-123', 'title' => 'My-Page', 'path' => null];
+        $data = ['id' => '123-123-123', 'title' => 'My-Page', 'url' => '/my-page'];
 
         $provider = new PageDataProvider(
             $this->getContentQueryBuilder(
@@ -573,7 +634,7 @@ class PageDataProviderTest extends TestCase
         $this->assertInstanceOf(DatasourceItem::class, $result);
         $this->assertEquals($data['id'], $result->getId());
         $this->assertEquals($data['title'], $result->getTitle());
-        $this->assertEquals($data['path'], $result->getPath());
+        $this->assertEquals($data['url'], $result->getPath());
         $this->assertNull($result->getImage());
     }
 
