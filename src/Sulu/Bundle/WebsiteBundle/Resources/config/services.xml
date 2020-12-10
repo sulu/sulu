@@ -212,6 +212,7 @@
             <argument type="service" id="router"/>
             <argument type="service" id="request_stack"/>
             <argument>%kernel.environment%</argument>
+            <argument>%sulu_website.enabled_twig_attributes%</argument>
         </service>
 
         <service id="Sulu\Bundle\WebsiteBundle\Resolver\TemplateAttributeResolverInterface"

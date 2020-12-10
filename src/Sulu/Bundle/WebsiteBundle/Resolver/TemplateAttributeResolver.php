@@ -53,6 +53,11 @@ class TemplateAttributeResolver implements TemplateAttributeResolverInterface
     protected $environment;
 
     /**
+     * @var array
+     */
+    private $enabledTwigAttributes;
+
+    /**
      * TemplateAttributeResolver constructor.
      *
      * @param string $environment
@@ -63,7 +68,10 @@ class TemplateAttributeResolver implements TemplateAttributeResolverInterface
         WebspaceManagerInterface $webspaceManager,
         RouterInterface $router,
         RequestStack $requestStack,
-        $environment
+        $environment,
+        array $enabledTwigAttributes = [
+            'urls' => true,
+        ]
     ) {
         $this->requestAnalyzer = $requestAnalyzer;
         $this->requestAnalyzerResolver = $requestAnalyzerResolver;
@@ -71,6 +79,7 @@ class TemplateAttributeResolver implements TemplateAttributeResolverInterface
         $this->router = $router;
         $this->requestStack = $requestStack;
         $this->environment = $environment;
+        $this->enabledTwigAttributes = $enabledTwigAttributes;
     }
 
     public function resolve($customParameters = [])
@@ -83,6 +92,23 @@ class TemplateAttributeResolver implements TemplateAttributeResolverInterface
         // Generate Urls
         if (!isset($customParameters['urls'])) {
             $customParameters['urls'] = $this->getUrls();
+        }
+
+        if (!isset($customParameters['localizations'])) {
+            $localizations = [];
+
+            foreach ($customParameters['urls'] as $locale => $url) {
+                $localizations[$locale] = [
+                    'locale' => $locale,
+                    'url' => $url,
+                ];
+            }
+
+            $customParameters['localizations'] = $localizations;
+        }
+
+        if (isset($this->enabledTwigAttributes['urls']) && !$this->enabledTwigAttributes['urls']) {
+            unset($customParameters['urls']);
         }
 
         return \array_merge(
