@@ -9,23 +9,25 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Tests\Unit\Types;
+namespace Sulu\Bundle\AdminBundle\Tests\Unit\Metadata\SchemaMetadata;
 
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMinMaxValueResolver;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\TextPropertyMetadataMapper;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
-use Sulu\Component\Content\Types\TextLine;
 
-class TextLineTest extends TestCase
+class TextPropertyMetadataMapperTest extends TestCase
 {
     /**
-     * @var TextLine
+     * @var TextPropertyMetadataMapper
      */
-    private $textLine;
+    private $textPropertyMetadataMapper;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
-        $this->textLine = new TextLine(new PropertyMetadataMinMaxValueResolver());
+        $this->textPropertyMetadataMapper = new TextPropertyMetadataMapper(
+            new PropertyMetadataMinMaxValueResolver()
+        );
     }
 
     private function getNullSchema(): array
@@ -48,7 +50,7 @@ class TextLineTest extends TestCase
         $propertyMetadata = new PropertyMetadata();
         $propertyMetadata->setName('property-name');
 
-        $jsonSchema = $this->textLine->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
+        $jsonSchema = $this->textPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
 
         $this->assertEquals([
             'name' => 'property-name',
@@ -68,7 +70,7 @@ class TextLineTest extends TestCase
         $propertyMetadata->setName('property-name');
         $propertyMetadata->setRequired(true);
 
-        $jsonSchema = $this->textLine->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
+        $jsonSchema = $this->textPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
 
         $this->assertEquals([
             'name' => 'property-name',
@@ -85,7 +87,7 @@ class TextLineTest extends TestCase
             ['name' => 'pattern', 'value' => '^[^,]*$'],
         ]);
 
-        $jsonSchema = $this->textLine->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
+        $jsonSchema = $this->textPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
 
         $this->assertEquals([
             'name' => 'property-name',
@@ -105,11 +107,11 @@ class TextLineTest extends TestCase
         $propertyMetadata = new PropertyMetadata();
         $propertyMetadata->setName('property-name');
         $propertyMetadata->setParameters([
-            ['name' => 'min_characters', 'value' => 2],
-            ['name' => 'max_characters', 'value' => 3],
+            ['name' => 'minLength', 'value' => 2],
+            ['name' => 'maxLength', 'value' => 3],
         ]);
 
-        $jsonSchema = $this->textLine->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
+        $jsonSchema = $this->textPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
 
         $this->assertEquals([
             'name' => 'property-name',
@@ -130,10 +132,10 @@ class TextLineTest extends TestCase
         $propertyMetadata = new PropertyMetadata();
         $propertyMetadata->setName('property-name');
         $propertyMetadata->setParameters([
-            ['name' => 'min_characters', 'value' => 2],
+            ['name' => 'minLength', 'value' => 2],
         ]);
 
-        $jsonSchema = $this->textLine->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
+        $jsonSchema = $this->textPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
 
         $this->assertEquals([
             'name' => 'property-name',
@@ -153,10 +155,10 @@ class TextLineTest extends TestCase
         $propertyMetadata = new PropertyMetadata();
         $propertyMetadata->setName('property-name');
         $propertyMetadata->setParameters([
-            ['name' => 'max_characters', 'value' => 2],
+            ['name' => 'maxLength', 'value' => 2],
         ]);
 
-        $jsonSchema = $this->textLine->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
+        $jsonSchema = $this->textPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
 
         $this->assertEquals([
             'name' => 'property-name',
@@ -176,11 +178,11 @@ class TextLineTest extends TestCase
         $propertyMetadata = new PropertyMetadata();
         $propertyMetadata->setName('property-name');
         $propertyMetadata->setParameters([
-            ['name' => 'min_characters', 'value' => '2'],
-            ['name' => 'max_characters', 'value' => '3'],
+            ['name' => 'minLength', 'value' => '2'],
+            ['name' => 'maxLength', 'value' => '3'],
         ]);
 
-        $jsonSchema = $this->textLine->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
+        $jsonSchema = $this->textPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
 
         $this->assertEquals([
             'name' => 'property-name',
@@ -198,81 +200,81 @@ class TextLineTest extends TestCase
 
     public function testMapPropertyMetadataMinAndMaxMinInvalidType(): void
     {
-        $this->expectExceptionMessage('Parameter "min_characters" of property "property-name" needs to be either null or of type int');
+        $this->expectExceptionMessage('Parameter "minLength" of property "property-name" needs to be either null or of type int');
 
         $propertyMetadata = new PropertyMetadata();
         $propertyMetadata->setName('property-name');
         $propertyMetadata->setParameters([
-            ['name' => 'min_characters', 'value' => 'invalid-value'],
+            ['name' => 'minLength', 'value' => 'invalid-value'],
         ]);
 
-        $this->textLine->mapPropertyMetadata($propertyMetadata);
+        $this->textPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata);
     }
 
     public function testMapPropertyMetadataMinAndMaxMinTooLow(): void
     {
-        $this->expectExceptionMessage('Parameter "min_characters" of property "property-name" needs to be greater than or equal "0"');
+        $this->expectExceptionMessage('Parameter "minLength" of property "property-name" needs to be greater than or equal "0"');
 
         $propertyMetadata = new PropertyMetadata();
         $propertyMetadata->setName('property-name');
         $propertyMetadata->setParameters([
-            ['name' => 'min_characters', 'value' => -1],
+            ['name' => 'minLength', 'value' => -1],
         ]);
 
-        $this->textLine->mapPropertyMetadata($propertyMetadata);
+        $this->textPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata);
     }
 
     public function testMapPropertyMetadataMinAndMaxMandatoryMinTooLow(): void
     {
-        $this->expectExceptionMessage('Because property "property-name" is mandatory, parameter "min_characters" needs to be greater than or equal "1"');
+        $this->expectExceptionMessage('Because property "property-name" is mandatory, parameter "minLength" needs to be greater than or equal "1"');
 
         $propertyMetadata = new PropertyMetadata();
         $propertyMetadata->setName('property-name');
         $propertyMetadata->setRequired(true);
         $propertyMetadata->setParameters([
-            ['name' => 'min_characters', 'value' => 0],
+            ['name' => 'minLength', 'value' => 0],
         ]);
 
-        $this->textLine->mapPropertyMetadata($propertyMetadata);
+        $this->textPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata);
     }
 
     public function testMapPropertyMetadataMinAndMaxMaxInvalidType(): void
     {
-        $this->expectExceptionMessage('Parameter "max_characters" of property "property-name" needs to be either null or of type int');
+        $this->expectExceptionMessage('Parameter "maxLength" of property "property-name" needs to be either null or of type int');
 
         $propertyMetadata = new PropertyMetadata();
         $propertyMetadata->setName('property-name');
         $propertyMetadata->setParameters([
-            ['name' => 'max_characters', 'value' => 'invalid-value'],
+            ['name' => 'maxLength', 'value' => 'invalid-value'],
         ]);
 
-        $this->textLine->mapPropertyMetadata($propertyMetadata);
+        $this->textPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata);
     }
 
     public function testMapPropertyMetadataMinAndMaxMaxTooLow(): void
     {
-        $this->expectExceptionMessage('Parameter "max_characters" of property "property-name" needs to be greater than or equal "1"');
+        $this->expectExceptionMessage('Parameter "maxLength" of property "property-name" needs to be greater than or equal "1"');
 
         $propertyMetadata = new PropertyMetadata();
         $propertyMetadata->setName('property-name');
         $propertyMetadata->setParameters([
-            ['name' => 'max_characters', 'value' => 0],
+            ['name' => 'maxLength', 'value' => 0],
         ]);
 
-        $this->textLine->mapPropertyMetadata($propertyMetadata);
+        $this->textPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata);
     }
 
     public function testMapPropertyMetadataMinAndMaxMaxLowerThanMin(): void
     {
-        $this->expectExceptionMessage('Because parameter "min_characters" of property "property-name" has value "2", parameter "max_characters" needs to be greater than or equal "2"');
+        $this->expectExceptionMessage('Because parameter "minLength" of property "property-name" has value "2", parameter "maxLength" needs to be greater than or equal "2"');
 
         $propertyMetadata = new PropertyMetadata();
         $propertyMetadata->setName('property-name');
         $propertyMetadata->setParameters([
-            ['name' => 'min_characters', 'value' => 2],
-            ['name' => 'max_characters', 'value' => 1],
+            ['name' => 'minLength', 'value' => 2],
+            ['name' => 'maxLength', 'value' => 1],
         ]);
 
-        $this->textLine->mapPropertyMetadata($propertyMetadata);
+        $this->textPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata);
     }
 }

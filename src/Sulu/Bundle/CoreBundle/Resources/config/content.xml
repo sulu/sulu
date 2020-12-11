@@ -141,10 +141,8 @@
             <tag name="sulu.content.export" format="1.2.xliff" translate="true" />
         </service>
         <service id="sulu.content.type.text_line" class="%sulu.content.type.text_line.class%">
-            <argument type="service" id="sulu_admin.property_metadata_min_max_value_resolver" on-invalid="null"/>
             <tag name="sulu.content.type" alias="text_line"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="true" />
-            <tag name="sulu_admin.property_metadata_mapper" type="text_line"/>
         </service>
         <service id="sulu.content.type.text_area" class="%sulu.content.type.text_line.class%">
             <tag name="sulu.content.type" alias="text_area"/>

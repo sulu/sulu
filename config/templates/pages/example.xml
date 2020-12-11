@@ -136,8 +136,8 @@
 
             <params>
                 <param name="pattern" value="^[^,]*$"/>
-                <param name="min_characters" value="2"/>
-                <param name="max_characters" value="3"/>
+                <param name="minLength" value="2"/>
+                <param name="maxLength" value="3"/>
             </params>
         </property>
 
