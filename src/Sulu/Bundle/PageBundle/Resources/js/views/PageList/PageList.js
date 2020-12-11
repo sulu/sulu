@@ -3,7 +3,7 @@ import {action, intercept, observable} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import React from 'react';
-import {Icon} from 'sulu-admin-bundle/components';
+import {Loader, Icon} from 'sulu-admin-bundle/components';
 import {formMetadataStore, List, ListStore, withToolbar} from 'sulu-admin-bundle/containers';
 import userStore from 'sulu-admin-bundle/stores/userStore/userStore';
 import type {Localization} from 'sulu-admin-bundle/stores';
@@ -38,6 +38,7 @@ class PageList extends React.Component<Props> {
     excludeGhostsAndShadowsDisposer: () => void;
     webspaceKeyDisposer: () => void;
     @observable availablePageTypes: Array<string> = [];
+    @observable availablePageTypesLoading: boolean = true;
 
     static getDerivedRouteAttributes(route: Route, attributes: AttributeMap) {
         if (typeof attributes.webspace !== 'string') {
@@ -134,9 +135,10 @@ class PageList extends React.Component<Props> {
         );
         router.bind('active', this.listStore.active);
 
-        formMetadataStore.getSchemaTypes('page', {webspace}).then((schemaTypes: Object) => {
+        formMetadataStore.getSchemaTypes('page', {webspace}).then(action((schemaTypes: Object) => {
             this.availablePageTypes = Object.keys(schemaTypes.types);
-        });
+            this.availablePageTypesLoading = false;
+        }));
 
         this.excludeGhostsAndShadowsDisposer = intercept(this.excludeGhostsAndShadows, '', (change) => {
             this.listStore.clear();
@@ -202,22 +204,25 @@ class PageList extends React.Component<Props> {
 
         return (
             <div className={pageListStyles.pageList}>
-                <List
-                    adapterOptions={{
-                        column_list: {
-                            display_root_level_toolbar: false,
-                            get_indicators: getIndicators,
-                        },
-                    }}
-                    adapters={['column_list', 'tree_table']}
-                    onCopyFinished={this.handleCopyFinished}
-                    onItemAdd={this.handleItemAdd}
-                    onItemClick={this.handleEditClick}
-                    searchable={false}
-                    selectable={false}
-                    store={this.listStore}
-                    toolbarClassName={pageListStyles.listToolbar}
-                />
+                {this.availablePageTypesLoading
+                    ? <Loader />
+                    : <List
+                        adapterOptions={{
+                            column_list: {
+                                display_root_level_toolbar: false,
+                                get_indicators: getIndicators,
+                            },
+                        }}
+                        adapters={['column_list', 'tree_table']}
+                        onCopyFinished={this.handleCopyFinished}
+                        onItemAdd={this.handleItemAdd}
+                        onItemClick={this.handleEditClick}
+                        searchable={false}
+                        selectable={false}
+                        store={this.listStore}
+                        toolbarClassName={pageListStyles.listToolbar}
+                    />
+                }
                 {this.cacheClearToolbarAction.getNode()}
             </div>
         );
