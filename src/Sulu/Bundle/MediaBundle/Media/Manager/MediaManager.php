@@ -296,24 +296,24 @@ class MediaManager implements MediaManagerInterface
         $mimeType = $uploadedFile->getMimeType();
         $properties = [];
 
-        try {
-            // if the file is a video we add the duration
-            if (\fnmatch('video/*', $mimeType) && $this->ffprobe) {
-                $properties['duration'] = $this->ffprobe->format($uploadedFile->getPathname())->get('duration');
+        // if the file is a video we add the duration
+        if (\fnmatch('video/*', $mimeType) && $this->ffprobe) {
+            $properties['duration'] = $this->ffprobe->format($uploadedFile->getPathname())->get('duration');
 
-                // Dimensions
-                try {
-                    $dimensions = $this->ffprobe->streams($uploadedFile->getPathname())->videos()->first()->getDimensions();
-                    $properties['width'] = $dimensions->getWidth();
-                    $properties['height'] = $dimensions->getHeight();
-                } catch (\InvalidArgumentException $e) {
-                    // Exception is thrown if the video stream could not be obtained
-                } catch (\RuntimeException $e) {
-                    // Exception is thrown if the dimension could not be extracted
-                }
+            // Dimensions
+            try {
+                $dimensions = $this->ffprobe->streams($uploadedFile->getPathname())->videos()->first()->getDimensions();
+                $properties['width'] = $dimensions->getWidth();
+                $properties['height'] = $dimensions->getHeight();
+            } catch (\InvalidArgumentException $e) {
+                // Exception is thrown if the video stream could not be obtained
+            } catch (\RuntimeException $e) {
+                // Exception is thrown if the dimension could not be extracted
             }
-        } catch (ExecutableNotFoundException $e) {
-            // Exception is thrown if ffmpeg is not installed -> video properties are not set
+        } elseif (\fnmatch('image/*', $mimeType)) {
+            $dimensions = getimagesize($uploadedFile->getPathname());
+            $properties['width'] = $dimensions[0];
+            $properties['height'] = $dimensions[1];
         }
 
         return $properties;
