@@ -315,9 +315,11 @@ class MediaManager implements MediaManagerInterface
                 // Exception is thrown if ffmpeg is not installed -> video properties are not set
             }
         } elseif (\fnmatch('image/*', $mimeType)) {
-            $dimensions = getimagesize($uploadedFile->getPathname());
-            $properties['width'] = $dimensions[0];
-            $properties['height'] = $dimensions[1];
+            $dimensions = \getimagesize($uploadedFile->getPathname());
+            if (\is_array($dimensions)) {
+                $properties['width'] = $dimensions[0];
+                $properties['height'] = $dimensions[1];
+            }
         }
 
         return $properties;
