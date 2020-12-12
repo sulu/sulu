@@ -13,6 +13,7 @@ namespace Sulu\Bundle\MediaBundle\Media\Manager;
 
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
+use FFMpeg\Exception\ExecutableNotFoundException;
 use FFMpeg\FFProbe;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
@@ -297,17 +298,21 @@ class MediaManager implements MediaManagerInterface
 
         // if the file is a video we add the duration
         if (\fnmatch('video/*', $mimeType) && $this->ffprobe) {
-            $properties['duration'] = $this->ffprobe->format($uploadedFile->getPathname())->get('duration');
-
-            // Dimensions
             try {
-                $dimensions = $this->ffprobe->streams($uploadedFile->getPathname())->videos()->first()->getDimensions();
-                $properties['width'] = $dimensions->getWidth();
-                $properties['height'] = $dimensions->getHeight();
-            } catch (\InvalidArgumentException $e) {
-                // Exception is thrown if the video stream could not be obtained
-            } catch (\RuntimeException $e) {
-                // Exception is thrown if the dimension could not be extracted
+                $properties['duration'] = $this->ffprobe->format($uploadedFile->getPathname())->get('duration');
+
+                // Dimensions
+                try {
+                    $dimensions = $this->ffprobe->streams($uploadedFile->getPathname())->videos()->first()->getDimensions();
+                    $properties['width'] = $dimensions->getWidth();
+                    $properties['height'] = $dimensions->getHeight();
+                } catch (\InvalidArgumentException $e) {
+                    // Exception is thrown if the video stream could not be obtained
+                } catch (\RuntimeException $e) {
+                    // Exception is thrown if the dimension could not be extracted
+                }
+            } catch (ExecutableNotFoundException $e) {
+                // Exception is thrown if ffmpeg is not installed -> video properties are not set
             }
         } elseif (\fnmatch('image/*', $mimeType)) {
             $dimensions = getimagesize($uploadedFile->getPathname());
