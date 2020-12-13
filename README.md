@@ -61,7 +61,7 @@ The Sulu content management system is a **community-driven open source project**
 
 ## 📫&nbsp; Have a question? Want to chat? Ran into a problem?
 
-We are happy to welcome you in our official [Slack channel](https://sulu.io/services-and-support) or answer your qeustions via [GitHub Discussions](https://github.com/sulu/sulu/discussions)! Obviously you can always **reach out to us directly** via the [Sulu twitter account](https://twitter.com/sulu) or post your question on [StackOverflow](https://stackoverflow.com/questions/tagged/sulu) with the official `sulu` tag.
+We are happy to welcome you in our official [Slack channel](https://sulu.io/services-and-support) or answer your questions via [GitHub Discussions](https://github.com/sulu/sulu/discussions)! Obviously you can always **reach out to us directly** via the [Sulu twitter account](https://twitter.com/sulu) or post your question on [StackOverflow](https://stackoverflow.com/questions/tagged/sulu) with the official `sulu` tag.
 
 
 ## 🤝&nbsp; Found a bug? Missing a specific feature?
