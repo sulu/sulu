@@ -152,7 +152,7 @@ class FormMetadataMapper
         $option->setName($parameter['name']);
         $option->setType($parameter['type']);
 
-        if ('collection' === $parameter['type']) {
+        if (OptionMetadata::TYPE_COLLECTION === $parameter['type']) {
             foreach ($parameter['value'] as $parameterName => $parameterValue) {
                 $valueOption = new OptionMetadata();
                 $valueOption->setName($parameterValue['name']);
@@ -162,7 +162,7 @@ class FormMetadataMapper
 
                 $option->addValueOption($valueOption);
             }
-        } elseif ('string' === $parameter['type'] || 'expression' === $parameter['type']) {
+        } elseif (OptionMetadata::TYPE_STRING === $parameter['type'] || OptionMetadata::TYPE_EXPRESSION === $parameter['type']) {
             $option->setValue($parameter['value']);
             $this->mapOptionMeta($parameter, $locale, $option);
         } else {
