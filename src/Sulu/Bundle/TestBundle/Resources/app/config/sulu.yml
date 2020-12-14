@@ -51,3 +51,9 @@ jms_serializer:
 swiftmailer:
     url: 'null://localhost'
     spool: { type: 'memory' }
+
+sulu_website:
+    twig:
+        attributes:
+            urls: false
+            path: false

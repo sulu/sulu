@@ -2,6 +2,20 @@
 
 ## dev-master
 
+### Deprecated path variable in twig
+
+The `path` twig variable was deprecated because it was confused with the `url` property by many new developers.
+The now deprecated variable contains the internal PHPCR path of a page which should not be exposed to the twig template.
+You should disable the variable in your project via:
+
+```yaml
+# config/packages/sulu_website.yaml
+sulu_website:
+    twig:
+        attributes:
+            path: false
+```
+
 ### Changes in `SchemaMetadata` classes
 
 The metadata classes in the `Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata` namespace have changed significantly.

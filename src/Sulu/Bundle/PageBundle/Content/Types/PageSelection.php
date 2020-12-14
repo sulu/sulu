@@ -55,18 +55,31 @@ class PageSelection extends ComplexContentType implements ContentTypeExportInter
      */
     private $permissions;
 
+    /**
+     * @var array
+     */
+    private $enabledTwigAttributes = [];
+
     public function __construct(
         ContentQueryExecutorInterface $contentQueryExecutor,
         ContentQueryBuilderInterface $contentQueryBuilder,
         ReferenceStoreInterface $referenceStore,
         $showDrafts,
-        $permissions = null
+        $permissions = null,
+        array $enabledTwigAttributes = [
+            'path' => true,
+        ]
     ) {
         $this->contentQueryExecutor = $contentQueryExecutor;
         $this->contentQueryBuilder = $contentQueryBuilder;
         $this->referenceStore = $referenceStore;
         $this->showDrafts = $showDrafts;
         $this->permissions = $permissions;
+        $this->enabledTwigAttributes = $enabledTwigAttributes;
+
+        if ($enabledTwigAttributes['path'] ?? true) {
+            @\trigger_error('Enabling the "path" parameter is deprecated since sulu/sulu 2.3.', \E_USER_DEPRECATED);
+        }
     }
 
     public function read(
@@ -144,7 +157,8 @@ class PageSelection extends ComplexContentType implements ContentTypeExportInter
             $property->getStructure()->getWebspaceKey(),
             $property->getStructure()->getLanguageCode(),
             $this->showDrafts,
-            $this->permissions[PermissionTypes::VIEW]
+            $this->permissions[PermissionTypes::VIEW],
+            $this->enabledTwigAttributes
         );
 
         return $container->getData();

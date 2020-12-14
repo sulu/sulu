@@ -52,13 +52,21 @@ class NavigationMapper implements NavigationMapperInterface
      */
     private $permissions;
 
+    /**
+     * @var array
+     */
+    private $enabledTwigAttributes = [];
+
     public function __construct(
         ContentMapperInterface $contentMapper,
         ContentQueryExecutorInterface $contentQueryExecutor,
         ContentQueryBuilderInterface $queryBuilder,
         SessionManagerInterface $sessionManager,
         Stopwatch $stopwatch = null,
-        $permissions = null
+        $permissions = null,
+        array $enabledTwigAttributes = [
+            'path' => true,
+        ]
     ) {
         $this->contentMapper = $contentMapper;
         $this->contentQueryExecutor = $contentQueryExecutor;
@@ -66,6 +74,11 @@ class NavigationMapper implements NavigationMapperInterface
         $this->sessionManager = $sessionManager;
         $this->stopwatch = $stopwatch;
         $this->permissions = $permissions;
+        $this->enabledTwigAttributes = $enabledTwigAttributes;
+
+        if ($enabledTwigAttributes['path'] ?? true) {
+            @\trigger_error('Enabling the "path" parameter is deprecated since sulu/sulu 2.3.', \E_USER_DEPRECATED);
+        }
     }
 
     public function getNavigation(
@@ -105,11 +118,7 @@ class NavigationMapper implements NavigationMapperInterface
             $this->permissions[PermissionTypes::VIEW] ?? null
         );
 
-        foreach ($result as $item) {
-            if (!isset($item['children'])) {
-                $item['children'] = [];
-            }
-        }
+        $result = $this->normalizeResult($result);
 
         if ($this->stopwatch) {
             $this->stopwatch->stop('NavigationMapper::getNavigation');
@@ -144,11 +153,7 @@ class NavigationMapper implements NavigationMapperInterface
             $this->permissions[PermissionTypes::VIEW] ?? null
         );
 
-        for ($i = 0; $i < \count($result); ++$i) {
-            if (!isset($result[$i]['children'])) {
-                $result[$i]['children'] = [];
-            }
-        }
+        $result = $this->normalizeResult($result);
 
         if ($this->stopwatch) {
             $this->stopwatch->stop('NavigationMapper::getRootNavigation.query');
@@ -269,5 +274,24 @@ class NavigationMapper implements NavigationMapperInterface
 
         // do not show
         return false;
+    }
+
+    private function normalizeResult(array $result)
+    {
+        foreach ($result as $key => $item) {
+            if (isset($item['children'])) {
+                $item['children'] = $this->normalizeResult($item['children']);
+            } else {
+                $item['children'] = [];
+            }
+
+            if (!($this->enabledTwigAttributes['path'] ?? true)) {
+                unset($item['path']);
+            }
+
+            $result[$key] = $item;
+        }
+
+        return $result;
     }
 }

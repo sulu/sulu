@@ -94,6 +94,7 @@
             <argument type="service" id="sulu.phpcr.session"/>
             <argument type="service" id="debug.stopwatch" on-invalid="null"/>
             <argument>%sulu_security.permissions%</argument>
+            <argument>%sulu_website.enabled_twig_attributes%</argument>
         </service>
 
         <!-- sitemap generator -->
@@ -196,6 +197,7 @@
         <service id="sulu_website.resolver.structure" class="%sulu_website.resolver.structure.class%" public="true">
             <argument type="service" id="sulu.content.type_manager" />
             <argument type="service" id="sulu_page.extension.manager"/>
+            <argument>%sulu_website.enabled_twig_attributes%</argument>
         </service>
 
         <service id="sulu_website.resolver.request_analyzer" class="%sulu_website.resolver.request_analyzer.class%">

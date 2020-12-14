@@ -35,12 +35,25 @@ class StructureResolver implements StructureResolverInterface
      */
     protected $extensionManager;
 
+    /**
+     * @var bool
+     */
+    private $enabledTwigAttributes = true;
+
     public function __construct(
         ContentTypeManagerInterface $contentTypeManager,
-        ExtensionManagerInterface $structureManager
+        ExtensionManagerInterface $structureManager,
+        array $enabledTwigAttributes = [
+            'path' => true,
+        ]
     ) {
         $this->contentTypeManager = $contentTypeManager;
         $this->extensionManager = $structureManager;
+        $this->enabledTwigAttributes = $enabledTwigAttributes;
+
+        if ($enabledTwigAttributes['path'] ?? true) {
+            @\trigger_error('Enabling the "path" parameter is deprecated since sulu/sulu 2.3.', \E_USER_DEPRECATED);
+        }
     }
 
     public function resolve(StructureInterface $structure, bool $loadExcerpt = true)
@@ -55,8 +68,11 @@ class StructureResolver implements StructureResolverInterface
             'created' => $structure->getCreated(),
             'changed' => $structure->getChanged(),
             'template' => $structure->getKey(),
-            'path' => $structure->getPath(),
         ];
+
+        if ($this->enabledTwigAttributes['path'] ?? true) {
+            $data['path'] = $structure->getPath();
+        }
 
         $document = $structure->getDocument();
         if ($document instanceof ExtensionBehavior && $loadExcerpt) {

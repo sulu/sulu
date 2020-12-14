@@ -100,6 +100,11 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
      */
     private $tokenStorage;
 
+    /**
+     * @var array
+     */
+    private $enabledTwigAttributes = [];
+
     public function __construct(
         ContentQueryBuilderInterface $contentQueryBuilder,
         ContentQueryExecutorInterface $contentQueryExecutor,
@@ -111,7 +116,10 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
         $permissions,
         bool $hasAudienceTargeting = false,
         FormMetadataProvider $formMetadataProvider = null,
-        TokenStorageInterface $tokenStorage = null
+        TokenStorageInterface $tokenStorage = null,
+        array $enabledTwigAttributes = [
+            'path' => true,
+        ]
     ) {
         $this->contentQueryBuilder = $contentQueryBuilder;
         $this->contentQueryExecutor = $contentQueryExecutor;
@@ -124,9 +132,14 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
         $this->hasAudienceTargeting = $hasAudienceTargeting;
         $this->formMetadataProvider = $formMetadataProvider;
         $this->tokenStorage = $tokenStorage;
+        $this->enabledTwigAttributes = $enabledTwigAttributes;
 
         if (!$formMetadataProvider) {
             @\trigger_error('The usage of the "PageDataProvider" without setting the "FormMetadataProvider" is deprecated. Please inject the "FormMetadataProvider".', \E_USER_DEPRECATED);
+        }
+
+        if ($enabledTwigAttributes['path'] ?? true) {
+            @\trigger_error('Enabling the "path" parameter is deprecated since sulu/sulu 2.3.', \E_USER_DEPRECATED);
         }
     }
 
@@ -210,7 +223,7 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
             return;
         }
 
-        return new DatasourceItem($result[0]['id'], $result[0]['title'], '/' . \ltrim($result[0]['path'], '/'));
+        return new DatasourceItem($result[0]['id'], $result[0]['title'], $result[0]['url'] ?? null);
     }
 
     public function resolveDataItems(
@@ -400,6 +413,10 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
         return \array_map(
             function($item) use ($locale) {
                 $this->referenceStore->add($item['id']);
+
+                if (!($this->enabledTwigAttributes['path'] ?? true)) {
+                    unset($item['path']);
+                }
 
                 return new ArrayAccessItem($item['id'], $item, $this->getResource($item['id'], $locale));
             },
