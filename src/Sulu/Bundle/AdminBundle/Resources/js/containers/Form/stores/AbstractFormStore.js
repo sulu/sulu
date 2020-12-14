@@ -1,15 +1,13 @@
 // @flow
-import {action, computed, isObservableArray, observable, set, toJS, untracked, when} from 'mobx';
+import {action, isObservableArray, observable, set, toJS} from 'mobx';
 import type {IObservableValue} from 'mobx';
-import jexl from 'jexl';
 import jsonpointer from 'json-pointer';
 import log from 'loglevel';
-import type {RawSchema, RawSchemaEntry, Schema, SchemaEntry} from '../types';
-import conditionDataProviderRegistry from '../registries/conditionDataProviderRegistry';
+import type {Schema, SchemaEntry} from '../types';
 
 const SECTION_TYPE = 'section';
 
-function addSchemaProperties(data: Object, key: string, schema: RawSchema) {
+function addSchemaProperties(data: Object, key: string, schema: Schema) {
     const type = schema[key].type;
 
     if (type !== SECTION_TYPE) {
@@ -24,77 +22,6 @@ function addSchemaProperties(data: Object, key: string, schema: RawSchema) {
     }
 
     return data;
-}
-
-function transformRawSchema(
-    rawSchema: RawSchema,
-    data: Object,
-    locale: ?string,
-    basePath: string = '',
-    options: {[string]: any},
-    metadataOptions: ?{[string]: any}
-): Schema {
-    return Object.keys(rawSchema).reduce((schema, schemaKey) => {
-        schema[schemaKey] = transformRawSchemaEntry(
-            rawSchema[schemaKey],
-            data,
-            locale,
-            basePath + '/' + schemaKey,
-            options,
-            metadataOptions
-        );
-
-        return schema;
-    }, {});
-}
-
-function transformRawSchemaEntry(
-    rawSchemaEntry: RawSchemaEntry,
-    data: Object,
-    locale: ?string,
-    path: string,
-    options: {[string]: any},
-    metadataOptions: ?{[string]: any}
-): SchemaEntry {
-    const conditionData = conditionDataProviderRegistry.getAll().reduce(
-        function(data, conditionDataProvider) {
-            return {...data, ...conditionDataProvider(data, options, metadataOptions)};
-        },
-        {...data, __locale: locale}
-    );
-
-    return Object.keys(rawSchemaEntry).reduce((schemaEntry, schemaEntryKey) => {
-        if (schemaEntryKey === 'disabledCondition' && rawSchemaEntry[schemaEntryKey]) {
-            schemaEntry.disabled = jexl.evalSync(rawSchemaEntry[schemaEntryKey], conditionData);
-        } else if (schemaEntryKey === 'visibleCondition' && rawSchemaEntry[schemaEntryKey]) {
-            schemaEntry.visible = jexl.evalSync(rawSchemaEntry[schemaEntryKey], conditionData);
-        } else if (schemaEntryKey === 'items' && rawSchemaEntry.items) {
-            schemaEntry.items = transformRawSchema(rawSchemaEntry.items, data, locale, path, options, metadataOptions);
-        } else if (schemaEntryKey === 'types' && rawSchemaEntry.types) {
-            const rawSchemaEntryTypes = rawSchemaEntry.types;
-
-            schemaEntry.types = Object.keys(rawSchemaEntryTypes).reduce((schemaEntryTypes, schemaEntryTypeKey) => {
-                schemaEntryTypes[schemaEntryTypeKey] = {
-                    title: rawSchemaEntryTypes[schemaEntryTypeKey].title,
-                    form: transformRawSchema(
-                        rawSchemaEntryTypes[schemaEntryTypeKey].form,
-                        data,
-                        locale,
-                        path + '/types/' + schemaEntryTypeKey + '/form',
-                        options,
-                        metadataOptions
-                    ),
-                };
-
-                return schemaEntryTypes;
-            }, {});
-        } else {
-            // $FlowFixMe
-            schemaEntry[schemaEntryKey] = rawSchemaEntry[schemaEntryKey];
-        }
-
-        return schemaEntry;
-    }, {});
 }
 
 function sortObjectByPriority(a, b) {
@@ -112,7 +39,7 @@ function sortObjectByPriority(a, b) {
 function collectTagPathsWithPriority(
     tagName: string,
     data: Object,
-    schema: RawSchema,
+    schema: Schema,
     parentPath: Array<string> = ['']
 ) {
     const pathsWithPriority = [];
@@ -163,7 +90,7 @@ function collectTagPathsWithPriority(
 function collectTagPaths(
     tagName: string,
     data: Object,
-    schema: RawSchema,
+    schema: Schema,
     parentPath: Array<string> = ['']
 ) {
     return collectTagPathsWithPriority(tagName, data, schema, parentPath)
@@ -177,16 +104,12 @@ export default class AbstractFormStore
     +metadataOptions: ?{[string]: any};
     +loading: boolean;
     +locale: ?IObservableValue<string>;
-    @observable rawSchema: RawSchema;
+    @observable schema: Schema;
     @observable evaluatedSchema: Schema = {};
     modifiedFields: Array<string> = [];
     @observable errors: Object = {};
     validator: ?(data: Object) => boolean;
     pathsByTag: {[tagName: string]: Array<string>} = {};
-
-    @computed.struct get schema(): Schema {
-        return toJS(this.evaluatedSchema);
-    }
 
     get forbidden(): boolean {
         return false;
@@ -200,12 +123,6 @@ export default class AbstractFormStore
         if (!this.modifiedFields.includes(dataPath)) {
             this.modifiedFields.push(dataPath);
         }
-
-        this.updateFieldPathEvaluations();
-    }
-
-    setMultiple() {
-        this.updateFieldPathEvaluations();
     }
 
     @action validate() {
@@ -249,25 +166,6 @@ export default class AbstractFormStore
         return true;
     }
 
-    updateFieldPathEvaluations = () => {
-        const {loading, rawSchema} = this;
-        const locale = this.locale ? this.locale.get() : undefined;
-
-        when(
-            () => !loading,
-            (): void => this.setEvaluatedSchema(
-                transformRawSchema(
-                    rawSchema,
-                    untracked(() => toJS(this.data)),
-                    locale,
-                    '',
-                    this.options,
-                    this.metadataOptions
-                )
-            )
-        );
-    };
-
     @action setEvaluatedSchema(evaluatedSchema: Schema) {
         this.evaluatedSchema = evaluatedSchema;
     }
@@ -281,9 +179,9 @@ export default class AbstractFormStore
     }
 
     getPathsByTag(tagName: string) {
-        const {data, rawSchema} = this;
+        const {data, schema} = this;
         if (!(tagName in this.pathsByTag)) {
-            this.pathsByTag[tagName] = collectTagPaths(tagName, data, rawSchema);
+            this.pathsByTag[tagName] = collectTagPaths(tagName, data, schema);
         }
 
         return this.pathsByTag[tagName];
@@ -294,8 +192,10 @@ export default class AbstractFormStore
     }
 
     @action addMissingSchemaProperties() {
-        const schemaFields = Object.keys(this.rawSchema)
-            .reduce((data, key) => addSchemaProperties(data, key, this.rawSchema), {});
+        const schemaFields = Object.keys(this.schema)
+            .reduce((data, key) => addSchemaProperties(data, key, this.schema), {});
         set(this.data, {...schemaFields, ...this.data});
     }
+
+    destroy() {}
 }

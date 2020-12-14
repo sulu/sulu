@@ -8,6 +8,7 @@ import Form from '../../components/Form';
 import Router from '../../services/Router';
 import Field from './Field';
 import FormInspector from './FormInspector';
+import Section from './Section';
 import type {ErrorCollection, Schema, SchemaEntry} from './types';
 
 type Props = {|
@@ -39,13 +40,15 @@ class Renderer extends React.Component<Props> {
     };
 
     renderSection(schemaField: SchemaEntry, schemaKey: string, schemaPath: string) {
-        const {colSpan, label, items} = schemaField;
+        const {data, formInspector} = this.props;
+        const {items} = schemaField;
+
         return (
-            <Form.Section colSpan={colSpan} key={schemaKey} label={label}>
+            <Section data={data} formInspector={formInspector} key={schemaKey} name={schemaKey} schema={schemaField}>
                 {!!items &&
                     Object.keys(items).map((key) => this.renderItem(items[key], key, schemaPath + '/items/' + key))
                 }
-            </Form.Section>
+            </Section>
         );
     }
 
@@ -59,6 +62,7 @@ class Renderer extends React.Component<Props> {
 
         return (
             <Field
+                data={data}
                 dataPath={itemDataPath}
                 error={error}
                 formInspector={formInspector}
@@ -80,11 +84,7 @@ class Renderer extends React.Component<Props> {
         schemaField: SchemaEntry,
         schemaKey: string,
         schemaPath: string
-    ): ?Element<typeof Field | typeof Form.Section> {
-        if (schemaField.visible === false) {
-            return null;
-        }
-
+    ): ?Element<typeof Field | typeof Section> {
         if (schemaField.type === 'section') {
             return this.renderSection(schemaField, schemaKey, schemaPath);
         }

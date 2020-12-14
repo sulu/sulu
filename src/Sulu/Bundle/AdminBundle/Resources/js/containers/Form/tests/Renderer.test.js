@@ -145,31 +145,31 @@ test('Should render nested field types with based on schema', () => {
     expect(renderer).toMatchSnapshot();
 });
 
-test('Should not render fields when the schema contains a visible flag of false', () => {
+test('Should not render fields when the schema contains a visibleCondition evaluating false', () => {
     const schema = {
         highlight: {
             items: {
                 title: {
                     type: 'text_line',
-                    visible: true,
+                    visibleCondition: 'test == "Test"',
                 },
                 url: {
                     type: 'text_line',
-                    visible: false,
+                    visibleCondition: 'test == false',
                 },
             },
             type: 'section',
-            visible: true,
+            visibleCondition: 'test == "Test"',
         },
         highlight2: {
             items: {
                 title: {
                     type: 'text_line',
-                    visible: true,
+                    visibleCondition: 'test == "Test"',
                 },
             },
             type: 'section',
-            visible: false,
+            visibleCondition: 'test == false',
         },
         text: {
             label: 'Text',
@@ -178,7 +178,7 @@ test('Should not render fields when the schema contains a visible flag of false'
         datetime: {
             label: 'Datetime',
             type: 'datetime',
-            visible: false,
+            visibleCondition: 'test == false',
         },
     };
 
@@ -188,7 +188,7 @@ test('Should not render fields when the schema contains a visible flag of false'
 
     const renderer = render(
         <Renderer
-            data={{}}
+            data={{test: 'Test'}}
             dataPath=""
             formInspector={formInspector}
             onChange={changeSpy}

@@ -1,6 +1,6 @@
 // @flow
 import metadataStore from '../../../stores/metadataStore';
-import type {RawSchema, SchemaTypes} from '../types';
+import type {Schema, SchemaTypes} from '../types';
 
 const FORM_TYPE = 'form';
 
@@ -28,7 +28,7 @@ class MetadataStore {
             });
     }
 
-    getSchema(formKey: string, type: ?string, metadataOptions: ?Object): Promise<RawSchema> {
+    getSchema(formKey: string, type: ?string, metadataOptions: ?Object): Promise<Schema> {
         return metadataStore.loadMetadata(FORM_TYPE, formKey, metadataOptions)
             .then((configuration) => {
                 const typeConfiguration = this.getTypeConfiguration(configuration, type, formKey);

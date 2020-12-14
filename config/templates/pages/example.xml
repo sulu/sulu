@@ -447,7 +447,7 @@
                                 <title lang="de">Titel</title>
                             </meta>
                         </property>
-                        <property name="description" type="text_area">
+                        <property name="description" type="text_area" visibleCondition="title == 'Test'">
                             <meta>
                                 <title lang="en">Description</title>
                                 <title lang="de">Beschreibung</title>
