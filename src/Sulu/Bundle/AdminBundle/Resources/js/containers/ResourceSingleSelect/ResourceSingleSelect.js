@@ -42,12 +42,15 @@ class ResourceSingleSelect<T: string | number> extends React.Component<Props<T>>
         super(props);
 
         const {
-            requestParameters,
             idProperty,
             resourceKey,
+            requestParameters,
         } = this.props;
 
-        this.resourceListStore = new ResourceListStore(resourceKey, requestParameters, idProperty);
+        // sending an empty limit to the server will disable pagination
+        const parameters = {limit: '', ...requestParameters};
+
+        this.resourceListStore = new ResourceListStore(resourceKey, parameters, idProperty);
     }
 
     handleReset = () => {
