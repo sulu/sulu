@@ -49,7 +49,7 @@ class FormMetadataProvider implements MetadataProviderInterface
             throw new MetadataNotFoundException('form', $key);
         }
 
-        $expressionContext = array_merge(['locale' => $locale], $metadataOptions);
+        $expressionContext = \array_merge(['locale' => $locale], $metadataOptions);
         if ($form instanceof FormMetadata) {
             $this->evaluateFormItemExpressions($form->getItems(), $expressionContext);
         } elseif ($form instanceof TypedFormMetadata) {
