@@ -82,6 +82,7 @@ import {
     localeConditionDataProvider,
     Select,
     Number,
+    parentConditionDataProvider,
     PasswordConfirmation,
     Phone,
     Selection,
@@ -162,6 +163,7 @@ initializer.addUpdateConfigHook('sulu_admin', (config: Object, initialized: bool
 
         conditionDataProviderRegistry.add(bundlesConditionDataProvider);
         conditionDataProviderRegistry.add(localeConditionDataProvider);
+        conditionDataProviderRegistry.add(parentConditionDataProvider);
     }
 
     processConfig(config);
