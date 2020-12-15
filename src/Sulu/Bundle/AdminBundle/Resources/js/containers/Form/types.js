@@ -73,8 +73,8 @@ export type SaveHandler = (action: ?string | {[string]: any}) => void;
 
 export type ConditionDataProvider = (
     data: {[string]: any},
-    options: {[string]: any},
-    metadataOptions: ?{[string]: any}
+    dataPath: ?string,
+    formInspector: FormInspector,
 ) => {[string]: any};
 
 export interface FormStoreInterface {

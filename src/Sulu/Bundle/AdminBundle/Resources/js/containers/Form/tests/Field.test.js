@@ -338,44 +338,6 @@ test('Do not render anything if visibleCondition evaluates to false', () => {
     expect(field.find('Field')).toHaveLength(1);
 });
 
-test('Render the field if visibleCondition with locale evaluates to true', () => {
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('snippets', undefined, {locale: 'en'}),
-            'snippets'
-        )
-    );
-
-    fieldRegistry.get.mockReturnValue(function Text() {
-        return <input type="date" />;
-    });
-
-    const schema = {
-        label: 'Text',
-        type: 'text_line',
-        visibleCondition: '__locale == "en"',
-    };
-
-    const field = shallow(
-        <Field
-            data={{}}
-            dataPath="/block/0/text"
-            formInspector={formInspector}
-            name="text"
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            onSuccess={undefined}
-            router={undefined}
-            schema={schema}
-            schemaPath="/text"
-            showAllErrors={true}
-            value="test"
-        />
-    );
-
-    expect(field.find('Field')).toHaveLength(1);
-});
-
 test('Render the field if visibleCondition with conditionDataProvider evaluates to true', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
 
@@ -447,44 +409,6 @@ test('Pass disabled flag to FieldType if disabledCondition evaluates to true', (
 
     data.title = 'Change title!';
     expect(field.find('Text').prop('disabled')).toEqual(false);
-});
-
-test('Pass disabled flag to FieldType if disabledCondition with locale evaluates to true', () => {
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('snippets', undefined, {locale: 'en'}),
-            'snippets'
-        )
-    );
-
-    fieldRegistry.get.mockReturnValue(function Text() {
-        return <input type="date" />;
-    });
-
-    const schema = {
-        disabledCondition: '__locale == "en"',
-        label: 'Text',
-        type: 'text_line',
-    };
-
-    const field = shallow(
-        <Field
-            data={{}}
-            dataPath="/block/0/text"
-            formInspector={formInspector}
-            name="text"
-            onChange={jest.fn()}
-            onFinish={jest.fn()}
-            onSuccess={undefined}
-            router={undefined}
-            schema={schema}
-            schemaPath="/text"
-            showAllErrors={true}
-            value="test"
-        />
-    );
-
-    expect(field.find('Text').prop('disabled')).toEqual(true);
 });
 
 test('Pass disabled flag to FieldType if disabledCondition with conditionDataProvider evaluates to true', () => {

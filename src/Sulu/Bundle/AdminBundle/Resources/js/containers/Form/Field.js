@@ -36,14 +36,13 @@ class Field extends React.Component<Props> {
     };
 
     @computed get conditionData() {
-        const {data, formInspector} = this.props;
-        const {locale, metadataOptions, options} = formInspector;
+        const {data, dataPath, formInspector} = this.props;
 
         return conditionDataProviderRegistry.getAll().reduce(
             function(data, conditionDataProvider) {
-                return {...data, ...conditionDataProvider(data, options, metadataOptions)};
+                return {...data, ...conditionDataProvider(data, dataPath, formInspector)};
             },
-            {...data, __locale: locale}
+            {...data}
         );
     }
 

@@ -90,44 +90,6 @@ test('Do not render anything if visibleCondition evaluates to false', () => {
     expect(section.find('Section')).toHaveLength(1);
 });
 
-test('Render the section if visibleCondition with locale evaluates to true', () => {
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('snippets', undefined, {locale: 'en'}),
-            'snippets'
-        )
-    );
-
-    fieldRegistry.get.mockReturnValue(function Text() {
-        return <input type="date" />;
-    });
-
-    const schema = {
-        label: 'Text',
-        type: 'text_line',
-        visibleCondition: '__locale == "en"',
-    };
-
-    const section = shallow(
-        <Section data={{}} formInspector={formInspector} name="section" schema={schema}>
-            <Field
-                data={{}}
-                dataPath=""
-                formInspector={formInspector}
-                name="test"
-                onChange={jest.fn()}
-                onFinish={jest.fn()}
-                onSuccess={jest.fn()}
-                router={undefined}
-                schema={{label: 'label1', type: 'text'}}
-                schemaPath=""
-            />
-        </Section>
-    );
-
-    expect(section.find('Section')).toHaveLength(1);
-});
-
 test('Render the section if visibleCondition with conditionDataProvider evaluates to true', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
 

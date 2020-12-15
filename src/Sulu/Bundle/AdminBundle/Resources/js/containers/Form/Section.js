@@ -22,13 +22,12 @@ type Props = {|
 class Section extends React.Component<Props> {
     @computed get conditionData() {
         const {data, formInspector} = this.props;
-        const {locale, metadataOptions, options} = formInspector;
 
         return conditionDataProviderRegistry.getAll().reduce(
             function(data, conditionDataProvider) {
-                return {...data, ...conditionDataProvider(data, options, metadataOptions)};
+                return {...data, ...conditionDataProvider(data, undefined, formInspector)};
             },
-            {...data, __locale: locale}
+            {...data}
         );
     }
 

@@ -79,6 +79,7 @@ import {
     fieldRegistry,
     Heading,
     Input,
+    localeConditionDataProvider,
     Select,
     Number,
     PasswordConfirmation,
@@ -160,6 +161,7 @@ initializer.addUpdateConfigHook('sulu_admin', (config: Object, initialized: bool
         registerViews();
 
         conditionDataProviderRegistry.add(bundlesConditionDataProvider);
+        conditionDataProviderRegistry.add(localeConditionDataProvider);
     }
 
     processConfig(config);
