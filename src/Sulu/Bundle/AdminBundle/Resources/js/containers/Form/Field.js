@@ -127,6 +127,7 @@ class Field extends React.Component<Props> {
         }
 
         const {
+            data,
             dataPath,
             error,
             formInspector,
@@ -198,6 +199,7 @@ class Field extends React.Component<Props> {
                 <div className={fieldStyles.fieldContainer}>
                     <div className={fieldStyles.field}>
                         <FieldType
+                            data={data}
                             dataPath={dataPath}
                             defaultType={defaultType}
                             disabled={this.disabled}

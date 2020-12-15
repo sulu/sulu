@@ -66,7 +66,6 @@ test('Pass correct props to SingleMediaSelection component', () => {
                 text: {
                     label: 'Text',
                     type: 'text_line',
-                    visible: true,
                 },
             },
         },
@@ -106,7 +105,6 @@ test('Pass correct default value to ImageMapContainer', () => {
                 text: {
                     label: 'Text',
                     type: 'text_line',
-                    visible: true,
                 },
             },
         },
@@ -140,7 +138,6 @@ test('Pass content-locale of user to SingleMediaSelection if locale is not prese
                 text: {
                     label: 'Text',
                     type: 'text_line',
-                    visible: true,
                 },
             },
         },
@@ -177,7 +174,6 @@ test('Should call onChange and onFinish if the value changes', () => {
                 text: {
                     label: 'Text',
                     type: 'text_line',
-                    visible: true,
                 },
             },
         },

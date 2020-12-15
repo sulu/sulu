@@ -261,9 +261,14 @@ test('Pass correct props to FieldType', () => {
         type: 'text_line',
         types: {},
     };
+
+    const data = {
+        title: 'Test',
+    };
+
     const field = shallow(
         <Field
-            data={{}}
+            data={data}
             dataPath="/block/0/text"
             formInspector={formInspector}
             name="text"
@@ -279,6 +284,7 @@ test('Pass correct props to FieldType', () => {
     );
 
     expect(field.find('Text').props()).toEqual(expect.objectContaining({
+        data,
         dataPath: '/block/0/text',
         disabled: false,
         formInspector,

@@ -194,6 +194,7 @@ class Form extends React.Component<Props> {
                         schema={store.schema}
                         schemaPath=""
                         showAllErrors={this.showAllErrors}
+                        value={store.data}
                     />
                 }
             </Fragment>

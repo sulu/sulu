@@ -23,6 +23,7 @@ type Props = {|
     schema: Schema,
     schemaPath: string,
     showAllErrors: boolean,
+    value: Object,
 |};
 
 @observer
@@ -53,7 +54,7 @@ class Renderer extends React.Component<Props> {
     }
 
     renderField(schemaField: SchemaEntry, schemaKey: string, schemaPath: string) {
-        const {data, dataPath, errors, formInspector, onChange, onSuccess, router, showAllErrors} = this.props;
+        const {data, dataPath, errors, formInspector, onChange, onSuccess, router, showAllErrors, value} = this.props;
         const itemDataPath = dataPath + '/' + schemaKey;
 
         const error = (showAllErrors || formInspector.isFieldModified(itemDataPath)) && errors && errors[schemaKey]
@@ -75,7 +76,7 @@ class Renderer extends React.Component<Props> {
                 schema={schemaField}
                 schemaPath={schemaPath}
                 showAllErrors={showAllErrors}
-                value={jsonpointer.has(data, '/' + schemaKey) ? jsonpointer.get(data, '/' + schemaKey) : undefined}
+                value={jsonpointer.has(value, '/' + schemaKey) ? jsonpointer.get(value, '/' + schemaKey) : undefined}
             />
         );
     }

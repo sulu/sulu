@@ -36,12 +36,10 @@ test('Should call onFieldFinish callback when editing a field has finished', () 
         text: {
             label: 'Text',
             type: 'text_line',
-            visible: true,
         },
         datetime: {
             label: 'Datetime',
             type: 'datetime',
-            visible: true,
         },
     };
     const fieldFinishSpy = jest.fn();
@@ -58,6 +56,7 @@ test('Should call onFieldFinish callback when editing a field has finished', () 
             router={undefined}
             schema={schema}
             schemaPath=""
+            value={{}}
         />
     );
 
@@ -73,12 +72,10 @@ test('Should render field types based on schema', () => {
         text: {
             label: 'Text',
             type: 'text_line',
-            visible: true,
         },
         datetime: {
             label: 'Datetime',
             type: 'datetime',
-            visible: true,
         },
     };
 
@@ -97,6 +94,7 @@ test('Should render field types based on schema', () => {
             router={undefined}
             schema={schema}
             schemaPath=""
+            value={{}}
         />
     );
 
@@ -108,12 +106,10 @@ test('Should render nested field types with based on schema', () => {
         'test/text': {
             label: 'Text',
             type: 'text_line',
-            visible: true,
         },
         'test/datetime': {
             label: 'Datetime',
             type: 'datetime',
-            visible: true,
         },
     };
 
@@ -139,6 +135,7 @@ test('Should render nested field types with based on schema', () => {
             router={undefined}
             schema={schema}
             schemaPath=""
+            value={data}
         />
     );
 
@@ -182,13 +179,15 @@ test('Should not render fields when the schema contains a visibleCondition evalu
         },
     };
 
+    const data = {test: 'Test'};
+
     const changeSpy = jest.fn();
 
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
 
     const renderer = render(
         <Renderer
-            data={{test: 'Test'}}
+            data={data}
             dataPath=""
             formInspector={formInspector}
             onChange={changeSpy}
@@ -197,31 +196,28 @@ test('Should not render fields when the schema contains a visibleCondition evalu
             router={undefined}
             schema={schema}
             schemaPath=""
+            value={data}
         />
     );
 
     expect(renderer).toMatchSnapshot();
 });
 
-test('Should pass correct schemaPath to fields', () => {
+test('Should pass correct dataPath and schemaPath to fields', () => {
     const schema = {
         highlight: {
             items: {
                 title: {
                     type: 'text_line',
-                    visible: true,
                 },
                 url: {
                     type: 'text_line',
-                    visible: true,
                 },
             },
             type: 'section',
-            visible: true,
         },
         article: {
             type: 'text_line',
-            visible: true,
         },
     };
 
@@ -238,6 +234,7 @@ test('Should pass correct schemaPath to fields', () => {
             router={undefined}
             schema={schema}
             schemaPath="/test"
+            value={{}}
         />
     );
 
@@ -249,17 +246,69 @@ test('Should pass correct schemaPath to fields', () => {
     expect(renderer.find('Field').at(2).prop('dataPath')).toEqual('/block/0/article');
 });
 
+test('Should pass correct data and value to fields', () => {
+    const schema = {
+        highlight: {
+            items: {
+                title: {
+                    type: 'text_line',
+                },
+                url: {
+                    type: 'text_line',
+                },
+            },
+            type: 'section',
+        },
+        article: {
+            type: 'text_line',
+        },
+    };
+
+    const value = {
+        title: 'Some title',
+        url: 'some-url',
+        article: 'Some article',
+    };
+
+    const data = {
+        title: 'Page title',
+        block: value,
+    };
+
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
+
+    const renderer = shallow(
+        <Renderer
+            data={data}
+            dataPath="/block/0"
+            formInspector={formInspector}
+            onChange={jest.fn()}
+            onFieldFinish={jest.fn()}
+            onSuccess={undefined}
+            router={undefined}
+            schema={schema}
+            schemaPath="/test"
+            value={value}
+        />
+    );
+
+    expect(renderer.find('Field').at(0).prop('data')).toEqual(data);
+    expect(renderer.find('Field').at(0).prop('value')).toEqual('Some title');
+    expect(renderer.find('Field').at(1).prop('data')).toEqual(data);
+    expect(renderer.find('Field').at(1).prop('value')).toEqual('some-url');
+    expect(renderer.find('Field').at(2).prop('data')).toEqual(data);
+    expect(renderer.find('Field').at(2).prop('value')).toEqual('Some article');
+});
+
 test('Should pass name, schema and formInspector to fields', () => {
     const schema = {
         text: {
             label: 'Text',
             type: 'text_line',
-            visible: true,
         },
         datetime: {
             label: 'Datetime',
             type: 'datetime',
-            visible: true,
         },
     };
 
@@ -280,6 +329,7 @@ test('Should pass name, schema and formInspector to fields', () => {
             router={undefined}
             schema={schema}
             schemaPath=""
+            value={{}}
         />
     );
 
@@ -305,12 +355,10 @@ test('Should pass router to fields if given', () => {
         text: {
             label: 'Text',
             type: 'text_line',
-            visible: true,
         },
         datetime: {
             label: 'Datetime',
             type: 'datetime',
-            visible: true,
         },
     };
 
@@ -332,6 +380,7 @@ test('Should pass router to fields if given', () => {
             router={router}
             schema={schema}
             schemaPath=""
+            value={{}}
         />
     );
 
@@ -346,12 +395,10 @@ test('Should pass errors to fields that have already been modified at least once
         text: {
             label: 'Text',
             type: 'text_line',
-            visible: true,
         },
         datetime: {
             label: 'Datetime',
             type: 'datetime',
-            visible: true,
         },
     };
 
@@ -387,6 +434,7 @@ test('Should pass errors to fields that have already been modified at least once
             router={undefined}
             schema={schema}
             schemaPath=""
+            value={{}}
         />
     );
 
@@ -401,12 +449,10 @@ test('Should pass all errors to fields if showAllErrors is set to true', () => {
         text: {
             label: 'Text',
             type: 'text_line',
-            visible: true,
         },
         datetime: {
             label: 'Datetime',
             type: 'datetime',
-            visible: true,
         },
     };
 
@@ -440,6 +486,7 @@ test('Should pass all errors to fields if showAllErrors is set to true', () => {
             schema={schema}
             schemaPath=""
             showAllErrors={true}
+            value={{}}
         />
     );
 
@@ -462,15 +509,12 @@ test('Should render nested sections', () => {
                 item11: {
                     label: 'Item 1.1',
                     type: 'text_line',
-                    visible: true,
                 },
                 section11: {
                     label: 'Section 1.1',
                     type: 'section',
-                    visible: true,
                 },
             },
-            visible: true,
         },
         section2: {
             label: 'Section 2',
@@ -479,10 +523,8 @@ test('Should render nested sections', () => {
                 item21: {
                     label: 'Item 2.1',
                     type: 'text_line',
-                    visible: true,
                 },
             },
-            visible: true,
         },
     };
 
@@ -499,6 +541,7 @@ test('Should render nested sections', () => {
             router={undefined}
             schema={schema}
             schemaPath=""
+            value={{}}
         />
     )).toMatchSnapshot();
 });
@@ -515,10 +558,8 @@ test('Should render sections with colSpan', () => {
                 item11: {
                     label: 'Item 1.1',
                     type: 'text_line',
-                    visible: true,
                 },
             },
-            visible: true,
         },
         section2: {
             label: 'Section 2',
@@ -528,10 +569,8 @@ test('Should render sections with colSpan', () => {
                 item21: {
                     label: 'Item 2.1',
                     type: 'text_line',
-                    visible: true,
                 },
             },
-            visible: true,
         },
     };
 
@@ -548,6 +587,7 @@ test('Should render sections with colSpan', () => {
             router={undefined}
             schema={schema}
             schemaPath=""
+            value={{}}
         />
     )).toMatchSnapshot();
 });
@@ -563,10 +603,8 @@ test('Should render sections without label', () => {
                 item11: {
                     label: 'Item 1.1',
                     type: 'text_line',
-                    visible: true,
                 },
             },
-            visible: true,
         },
         section2: {
             label: 'Section 2',
@@ -576,10 +614,8 @@ test('Should render sections without label', () => {
                 item21: {
                     label: 'Item 2.1',
                     type: 'text_line',
-                    visible: true,
                 },
             },
-            visible: true,
         },
     };
 
@@ -596,6 +632,7 @@ test('Should render sections without label', () => {
             router={undefined}
             schema={schema}
             schemaPath=""
+            value={{}}
         />
     )).toMatchSnapshot();
 });

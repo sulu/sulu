@@ -1,6 +1,7 @@
 // @flow
 
 const fieldTypeDefaultProps = {
+    data: {},
     dataPath: '/',
     defaultType: undefined,
     disabled: undefined,

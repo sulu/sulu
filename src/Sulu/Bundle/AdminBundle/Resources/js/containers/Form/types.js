@@ -107,6 +107,7 @@ export interface FormStoreInterface {
 }
 
 export type FieldTypeProps<T> = {|
+    data: Object,
     dataPath: string,
     defaultType: ?string,
     disabled: ?boolean,

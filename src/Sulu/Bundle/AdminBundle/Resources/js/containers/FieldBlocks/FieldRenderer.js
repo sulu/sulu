@@ -18,6 +18,7 @@ type Props = {|
     schema: Schema,
     schemaPath: string,
     showAllErrors: boolean,
+    value: Object,
 |};
 
 export default class FieldRenderer extends React.Component<Props> {
@@ -42,6 +43,7 @@ export default class FieldRenderer extends React.Component<Props> {
             schema,
             schemaPath,
             showAllErrors,
+            value,
         } = this.props;
 
         return (
@@ -57,6 +59,7 @@ export default class FieldRenderer extends React.Component<Props> {
                 schema={schema}
                 schemaPath={schemaPath}
                 showAllErrors={showAllErrors}
+                value={value}
             />
         );
     }
