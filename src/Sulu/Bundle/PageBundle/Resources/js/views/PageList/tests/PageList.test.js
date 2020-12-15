@@ -143,6 +143,41 @@ test('Render PageList', () => {
     });
 });
 
+test('Should show loader if available page types have not been loaded yet', () => {
+    const formMetadataStore = require('sulu-admin-bundle/containers').formMetadataStore;
+    const metadataPromise = Promise.resolve({types: {homepage: {}, example: {}}});
+    formMetadataStore.getSchemaTypes.mockReturnValue(metadataPromise);
+
+    const webspaceKey = observable.box('sulu');
+    const webspace = {
+        ...defaultWebspace,
+        localizations: undefined,
+    };
+
+    const PageList = require('../PageList').default;
+    const router = new Router({});
+    router.attributes = {
+        webspace: 'sulu',
+    };
+
+    const webspaceOverview = mount(
+        <PageList
+            route={router.route}
+            router={router}
+            // $FlowFixMe
+            webspace={webspace}
+            webspaceKey={webspaceKey}
+        />
+    );
+
+    expect(webspaceOverview.find('Loader')).toHaveLength(1);
+
+    return metadataPromise.then(() => {
+        webspaceOverview.update();
+        expect(webspaceOverview.find('Loader')).toHaveLength(0);
+    });
+});
+
 test('Should show the locales from the webspace configuration for the toolbar', () => {
     const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
     const PageList = require('../PageList').default;
@@ -241,6 +276,10 @@ test('Should change excludeGhostsAndShadows when value of toggler is changed', (
 });
 
 test('Should set webspace if copied page is in different webspace than the source', () => {
+    const formMetadataStore = require('sulu-admin-bundle/containers').formMetadataStore;
+    const metadataPromise = Promise.resolve({types: {homepage: {}, example: {}}});
+    formMetadataStore.getSchemaTypes.mockReturnValue(metadataPromise);
+
     const PageList = require('../PageList').default;
 
     const webspaceKey = observable.box('sulu');
@@ -267,9 +306,11 @@ test('Should set webspace if copied page is in different webspace than the sourc
         />
     );
 
-    webspaceOverview.find('List').prop('onCopyFinished')({webspace: 'test'});
-
-    expect(webspaceKey.get()).toEqual('test');
+    return metadataPromise.then(() => {
+        webspaceOverview.update();
+        webspaceOverview.find('List').prop('onCopyFinished')({webspace: 'test'});
+        expect(webspaceKey.get()).toEqual('test');
+    });
 });
 
 test('Should use CacheClearToolbarAction for cache clearing', () => {
