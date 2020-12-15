@@ -37,8 +37,8 @@ class TextPropertyMetadataMapper implements PropertyMetadataMapperInterface
         if (null !== $this->propertyMetadataMinMaxValueResolver) {
             $minMaxValue = $this->propertyMetadataMinMaxValueResolver->resolveMinMaxValue(
                 $propertyMetadata,
-                'minLength',
-                'maxLength'
+                'min_length',
+                'max_length'
             );
         }
 

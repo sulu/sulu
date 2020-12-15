@@ -107,8 +107,8 @@ class TextPropertyMetadataMapperTest extends TestCase
         $propertyMetadata = new PropertyMetadata();
         $propertyMetadata->setName('property-name');
         $propertyMetadata->setParameters([
-            ['name' => 'minLength', 'value' => 2],
-            ['name' => 'maxLength', 'value' => 3],
+            ['name' => 'min_length', 'value' => 2],
+            ['name' => 'max_length', 'value' => 3],
         ]);
 
         $jsonSchema = $this->textPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
@@ -132,7 +132,7 @@ class TextPropertyMetadataMapperTest extends TestCase
         $propertyMetadata = new PropertyMetadata();
         $propertyMetadata->setName('property-name');
         $propertyMetadata->setParameters([
-            ['name' => 'minLength', 'value' => 2],
+            ['name' => 'min_length', 'value' => 2],
         ]);
 
         $jsonSchema = $this->textPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
@@ -155,7 +155,7 @@ class TextPropertyMetadataMapperTest extends TestCase
         $propertyMetadata = new PropertyMetadata();
         $propertyMetadata->setName('property-name');
         $propertyMetadata->setParameters([
-            ['name' => 'maxLength', 'value' => 2],
+            ['name' => 'max_length', 'value' => 2],
         ]);
 
         $jsonSchema = $this->textPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
@@ -178,8 +178,8 @@ class TextPropertyMetadataMapperTest extends TestCase
         $propertyMetadata = new PropertyMetadata();
         $propertyMetadata->setName('property-name');
         $propertyMetadata->setParameters([
-            ['name' => 'minLength', 'value' => '2'],
-            ['name' => 'maxLength', 'value' => '3'],
+            ['name' => 'min_length', 'value' => '2'],
+            ['name' => 'max_length', 'value' => '3'],
         ]);
 
         $jsonSchema = $this->textPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
@@ -200,12 +200,12 @@ class TextPropertyMetadataMapperTest extends TestCase
 
     public function testMapPropertyMetadataMinAndMaxMinInvalidType(): void
     {
-        $this->expectExceptionMessage('Parameter "minLength" of property "property-name" needs to be either null or of type int');
+        $this->expectExceptionMessage('Parameter "min_length" of property "property-name" needs to be either null or of type int');
 
         $propertyMetadata = new PropertyMetadata();
         $propertyMetadata->setName('property-name');
         $propertyMetadata->setParameters([
-            ['name' => 'minLength', 'value' => 'invalid-value'],
+            ['name' => 'min_length', 'value' => 'invalid-value'],
         ]);
 
         $this->textPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata);
@@ -213,12 +213,12 @@ class TextPropertyMetadataMapperTest extends TestCase
 
     public function testMapPropertyMetadataMinAndMaxMinTooLow(): void
     {
-        $this->expectExceptionMessage('Parameter "minLength" of property "property-name" needs to be greater than or equal "0"');
+        $this->expectExceptionMessage('Parameter "min_length" of property "property-name" needs to be greater than or equal "0"');
 
         $propertyMetadata = new PropertyMetadata();
         $propertyMetadata->setName('property-name');
         $propertyMetadata->setParameters([
-            ['name' => 'minLength', 'value' => -1],
+            ['name' => 'min_length', 'value' => -1],
         ]);
 
         $this->textPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata);
@@ -226,13 +226,13 @@ class TextPropertyMetadataMapperTest extends TestCase
 
     public function testMapPropertyMetadataMinAndMaxMandatoryMinTooLow(): void
     {
-        $this->expectExceptionMessage('Because property "property-name" is mandatory, parameter "minLength" needs to be greater than or equal "1"');
+        $this->expectExceptionMessage('Because property "property-name" is mandatory, parameter "min_length" needs to be greater than or equal "1"');
 
         $propertyMetadata = new PropertyMetadata();
         $propertyMetadata->setName('property-name');
         $propertyMetadata->setRequired(true);
         $propertyMetadata->setParameters([
-            ['name' => 'minLength', 'value' => 0],
+            ['name' => 'min_length', 'value' => 0],
         ]);
 
         $this->textPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata);
@@ -240,12 +240,12 @@ class TextPropertyMetadataMapperTest extends TestCase
 
     public function testMapPropertyMetadataMinAndMaxMaxInvalidType(): void
     {
-        $this->expectExceptionMessage('Parameter "maxLength" of property "property-name" needs to be either null or of type int');
+        $this->expectExceptionMessage('Parameter "max_length" of property "property-name" needs to be either null or of type int');
 
         $propertyMetadata = new PropertyMetadata();
         $propertyMetadata->setName('property-name');
         $propertyMetadata->setParameters([
-            ['name' => 'maxLength', 'value' => 'invalid-value'],
+            ['name' => 'max_length', 'value' => 'invalid-value'],
         ]);
 
         $this->textPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata);
@@ -253,12 +253,12 @@ class TextPropertyMetadataMapperTest extends TestCase
 
     public function testMapPropertyMetadataMinAndMaxMaxTooLow(): void
     {
-        $this->expectExceptionMessage('Parameter "maxLength" of property "property-name" needs to be greater than or equal "1"');
+        $this->expectExceptionMessage('Parameter "max_length" of property "property-name" needs to be greater than or equal "1"');
 
         $propertyMetadata = new PropertyMetadata();
         $propertyMetadata->setName('property-name');
         $propertyMetadata->setParameters([
-            ['name' => 'maxLength', 'value' => 0],
+            ['name' => 'max_length', 'value' => 0],
         ]);
 
         $this->textPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata);
@@ -266,13 +266,13 @@ class TextPropertyMetadataMapperTest extends TestCase
 
     public function testMapPropertyMetadataMinAndMaxMaxLowerThanMin(): void
     {
-        $this->expectExceptionMessage('Because parameter "minLength" of property "property-name" has value "2", parameter "maxLength" needs to be greater than or equal "2"');
+        $this->expectExceptionMessage('Because parameter "min_length" of property "property-name" has value "2", parameter "max_length" needs to be greater than or equal "2"');
 
         $propertyMetadata = new PropertyMetadata();
         $propertyMetadata->setName('property-name');
         $propertyMetadata->setParameters([
-            ['name' => 'minLength', 'value' => 2],
-            ['name' => 'maxLength', 'value' => 1],
+            ['name' => 'min_length', 'value' => 2],
+            ['name' => 'max_length', 'value' => 1],
         ]);
 
         $this->textPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata);

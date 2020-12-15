@@ -89,14 +89,14 @@ test('Component correctly logs deprecated warning for max_characters', () => {
     expect(inputValid.find(InputComponent).prop('valid')).toBe(true);
 });
 
-test('Component correctly chooses softMaxLength over max_characters', () => {
+test('Component correctly chooses soft_max_length over max_characters', () => {
     const schemaOptions = {
         max_characters: {
             name: 'max_characters',
             value: '55',
         },
-        softMaxLength: {
-            name: 'softMaxLength',
+        soft_max_length: {
+            name: 'soft_max_length',
             value: '70',
         },
     };
@@ -115,10 +115,10 @@ test('Component correctly chooses softMaxLength over max_characters', () => {
     expect(inputValid.find(InputComponent).prop('valid')).toBe(true);
 });
 
-test('Pass props correctly including softMaxLength to Input component', () => {
+test('Pass props correctly including soft_max_length to Input component', () => {
     const schemaOptions = {
-        softMaxLength: {
-            name: 'softMaxLength',
+        soft_max_length: {
+            name: 'soft_max_length',
             value: '70',
         },
         max_segments: {
