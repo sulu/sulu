@@ -73,7 +73,7 @@ exports[`Dont react or update preview when data is changed during formstore is l
                 <span
                   class="label"
                 >
-                  sulu_admin.set_time
+                  12/16/2020, 2:06:22 PM
                 </span>
                 <span
                   aria-label="su-angle-down"
@@ -213,7 +213,7 @@ exports[`Dont react or update preview when data is changed during preview-store 
                 <span
                   class="label"
                 >
-                  sulu_admin.set_time
+                  12/16/2020, 2:06:22 PM
                 </span>
                 <span
                   aria-label="su-angle-down"
@@ -352,7 +352,7 @@ exports[`React and update preview when data is changed 1`] = `
                 <span
                   class="label"
                 >
-                  sulu_admin.set_time
+                  12/16/2020, 2:06:22 PM
                 </span>
                 <span
                   aria-label="su-angle-down"
@@ -495,7 +495,7 @@ exports[`Render correct preview 1`] = `
                 <span
                   class="label"
                 >
-                  sulu_admin.set_time
+                  12/16/2020, 2:06:22 PM
                 </span>
                 <span
                   aria-label="su-angle-down"
@@ -650,7 +650,7 @@ exports[`Render correct preview with target groups 1`] = `
                 <span
                   class="label"
                 >
-                  sulu_admin.set_time
+                  12/16/2020, 2:06:22 PM
                 </span>
                 <span
                   aria-label="su-angle-down"
@@ -805,7 +805,7 @@ exports[`Render nothing if separate window is opened and rerender if it is close
                 <span
                   class="label"
                 >
-                  sulu_admin.set_time
+                  12/16/2020, 2:06:22 PM
                 </span>
                 <span
                   aria-label="su-angle-down"
@@ -942,7 +942,7 @@ exports[`Render nothing if separate window is opened and rerender if it is close
                 <span
                   class="label"
                 >
-                  sulu_admin.set_time
+                  12/16/2020, 2:06:22 PM
                 </span>
                 <span
                   aria-label="su-angle-down"

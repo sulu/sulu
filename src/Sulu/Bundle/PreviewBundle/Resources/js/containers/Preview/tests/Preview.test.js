@@ -17,6 +17,16 @@ window.ResizeObserver = jest.fn(function() {
     this.disconnect = jest.fn();
 });
 
+// $FlowFixMe
+const constantDate = new Date(2020, 11, 16, 14, 6, 22);
+
+// eslint-disable-next-line no-global-assign
+Date = class extends Date {
+    constructor() {
+        return constantDate;
+    }
+};
+
 jest.mock('debounce', () => jest.fn((value) => value));
 
 jest.mock('../stores/PreviewStore', () => jest.fn(function() {
@@ -501,7 +511,7 @@ test('Change dateTime in PreviewStore when DatePicker changed', () => {
         expect(PreviewStore).toBeCalledWith(undefined, undefined, 'de', 'sulu_io', undefined);
 
         const date = new Date();
-        preview.find('Button[label="sulu_admin.set_time"]').simulate('click');
+        preview.find('Button[icon="su-calendar"]').simulate('click');
         preview.find('DatePicker').prop('onChange')(date);
         expect(previewStore.setDateTime).toBeCalledWith(date);
     });

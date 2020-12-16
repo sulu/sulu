@@ -307,12 +307,12 @@ class Preview extends React.Component<Props> {
                             />
                             <Toolbar.Popover
                                 icon="su-calendar"
-                                label={translate('sulu_admin.set_time')}
+                                label={(this.previewStore?.dateTime || new Date()).toLocaleString()}
                             >
                                 {() => (
                                     <div className={previewStyles.dateTimeForm}>
                                         <Form skin="dark">
-                                            <Form.Field label={translate('sulu_admin.date_time')}>
+                                            <Form.Field label={translate('sulu_admin.preview_date_time')}>
                                                 <DatePicker
                                                     onChange={this.handleDateTimeChange}
                                                     options={{dateFormat: true, timeFormat: true}}
