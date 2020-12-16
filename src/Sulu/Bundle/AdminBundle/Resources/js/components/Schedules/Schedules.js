@@ -9,12 +9,17 @@ import WeeklySchedule from './WeeklySchedule';
 import type {ScheduleEntry, ScheduleType} from './types';
 
 type Props = {|
+    disabled: boolean,
     onChange: (value: Array<ScheduleEntry>) => void,
     value: ?Array<ScheduleEntry>,
 |};
 
 @observer
 class Schedules extends React.Component<Props> {
+    static defaultProps = {
+        disabled: false,
+    };
+
     @computed get types(): {[key: ScheduleType]: string} {
         return {
             weekly: translate('sulu_admin.weekly'),
@@ -44,13 +49,14 @@ class Schedules extends React.Component<Props> {
     };
 
     render() {
-        const {onChange, value} = this.props;
+        const {disabled, onChange, value} = this.props;
 
         return (
             // $FlowFixMe
             <BlockCollection
                 collapsable={false}
                 defaultType="fixed"
+                disabled={disabled}
                 movable={false}
                 onChange={onChange}
                 renderBlockContent={this.renderBlockContent}

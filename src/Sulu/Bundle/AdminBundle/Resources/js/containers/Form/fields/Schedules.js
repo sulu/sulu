@@ -14,10 +14,10 @@ export default class Schedules extends React.Component<Props> {
     };
 
     render() {
-        const {value} = this.props;
+        const {disabled, value} = this.props;
 
         return (
-            <SchedulesComponent onChange={this.handleChange} value={value} />
+            <SchedulesComponent disabled={!!disabled} onChange={this.handleChange} value={value} />
         );
     }
 }

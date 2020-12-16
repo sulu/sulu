@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {mount, render} from 'enzyme';
+import {mount, shallow, render} from 'enzyme';
 import Schedules from '../Schedules';
 
 jest.mock('../../../utils/Translator', () => ({
@@ -14,6 +14,12 @@ test('Render Schedules', () => {
     ];
 
     expect(render(<Schedules onChange={jest.fn()} value={value} />)).toMatchSnapshot();
+});
+
+test('Disable blocks if schedules is disabled', () => {
+    const schedules = shallow(<Schedules disabled={true} onChange={jest.fn()} value={[]} />);
+
+    expect(schedules.find('BlockCollection').prop('disabled')).toEqual(true);
 });
 
 test('Change value when BlockCollection adds a new block', () => {

@@ -13,10 +13,14 @@ jest.mock('../../FormInspector', () => jest.fn());
 
 test('Pass correct props to Schedules component', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
+    const disabled = false;
     const value = [{type: 'fixed'}, {type: 'weekly'}];
-    const schedules = shallow(<Schedules {...fieldTypeDefaultProps} formInspector={formInspector} value={value} />);
+    const schedules = shallow(
+        <Schedules {...fieldTypeDefaultProps} disabled={disabled} formInspector={formInspector} value={value} />
+    );
 
     expect(schedules.props()).toEqual(expect.objectContaining({
+        disabled,
         value,
     }));
 });
