@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import log from 'loglevel';
 import {shallow} from 'enzyme';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
 import ResourceStore from '../../../../stores/ResourceStore';
@@ -7,6 +8,10 @@ import FormInspector from '../../FormInspector';
 import ResourceFormStore from '../../stores/ResourceFormStore';
 import Input from '../../fields/Input';
 import InputComponent from '../../../../components/Input';
+
+jest.mock('loglevel', () => ({
+    warn: jest.fn(),
+}));
 
 jest.mock('../../../../stores/ResourceStore', () => jest.fn());
 jest.mock('../../stores/ResourceFormStore', () => jest.fn());
@@ -62,10 +67,58 @@ test('Pass headline prop correctly', () => {
     expect(inputValid.find(InputComponent).prop('headline')).toBe(true);
 });
 
-test('Pass props correctly including maxCharacters to Input component', () => {
+test('Component correctly logs deprecated warning for max_characters', () => {
     const schemaOptions = {
         max_characters: {
             name: 'max_characters',
+            value: '70',
+        },
+    };
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
+    const inputValid = shallow(
+        <Input
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            schemaOptions={schemaOptions}
+        />
+    );
+
+    expect(log.warn).toBeCalledWith(expect.stringContaining('The "max_characters" schema option is deprecated'));
+
+    expect(inputValid.find(InputComponent).prop('maxCharacters')).toBe(70);
+    expect(inputValid.find(InputComponent).prop('valid')).toBe(true);
+});
+
+test('Component correctly chooses soft_max_length over max_characters', () => {
+    const schemaOptions = {
+        max_characters: {
+            name: 'max_characters',
+            value: '55',
+        },
+        soft_max_length: {
+            name: 'soft_max_length',
+            value: '70',
+        },
+    };
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'snippets'));
+    const inputValid = shallow(
+        <Input
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            schemaOptions={schemaOptions}
+        />
+    );
+
+    expect(log.warn).toBeCalledWith(expect.stringContaining('The "max_characters" schema option is deprecated'));
+
+    expect(inputValid.find(InputComponent).prop('maxCharacters')).toBe(70);
+    expect(inputValid.find(InputComponent).prop('valid')).toBe(true);
+});
+
+test('Pass props correctly including soft_max_length to Input component', () => {
+    const schemaOptions = {
+        soft_max_length: {
+            name: 'soft_max_length',
             value: '70',
         },
         max_segments: {

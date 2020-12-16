@@ -103,6 +103,15 @@
             class="Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMinMaxValueResolver"/>
 
         <service
+            id="sulu_admin.property_metadata_mapper.text"
+            class="Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\TextPropertyMetadataMapper">
+            <argument type="service" id="sulu_admin.property_metadata_min_max_value_resolver"/>
+
+            <tag name="sulu_admin.property_metadata_mapper" type="text_line"/>
+            <tag name="sulu_admin.property_metadata_mapper" type="text_area"/>
+        </service>
+
+        <service
             id="sulu_admin.property_metadata_mapper.selection"
             class="Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SelectionPropertyMetadataMapper">
             <argument type="service" id="sulu_admin.property_metadata_min_max_value_resolver"/>

@@ -126,6 +126,21 @@
             </types>
         </block>
 
+        <property name="text_line" type="text_line">
+            <meta>
+                <title lang="en">Text Line</title>
+                <title lang="de">Text</title>
+                <info_text lang="en">There are no commas allowed in this field</info_text>
+                <info_text lang="de">In diesem Feld sind keine Beistriche erlaubt</info_text>
+            </meta>
+
+            <params>
+                <param name="pattern" value="^[^,]*$"/>
+                <param name="min_length" value="2"/>
+                <param name="max_length" value="3"/>
+            </params>
+        </property>
+
         <property name="number" type="number">
             <meta>
                 <title lang="en">Number</title>
@@ -402,7 +417,15 @@
             <meta>
                 <title lang="en">Textarea</title>
                 <title lang="de">Text</title>
+                <info_text lang="en">There are only lower case letters and spaces allowed in this field</info_text>
+                <info_text lang="de">In diesem Feld sind nur Kleinbuchstaben und Abstände erlaubt</info_text>
             </meta>
+
+            <params>
+                <param name="pattern" value="^[a-z ]*$"/>
+                <param name="min_length" value="200"/>
+                <param name="max_length" value="300"/>
+            </params>
         </property>
 
         <property name="image_map" type="image_map" default-type="basic">

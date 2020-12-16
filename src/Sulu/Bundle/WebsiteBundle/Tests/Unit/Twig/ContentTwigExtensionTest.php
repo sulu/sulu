@@ -138,7 +138,7 @@ class ContentTwigExtensionTest extends TestCase
         $this->requestAnalyzer->getWebspace()->willReturn($this->webspace);
         $this->requestAnalyzer->getCurrentLocalization()->willReturn($locale);
 
-        $this->contentTypeManager->get('text_line')->willReturn(new TextLine(''));
+        $this->contentTypeManager->get('text_line')->willReturn(new TextLine());
 
         $this->sessionManager->getSession()->willReturn($this->session->reveal());
         $this->sessionManager->getContentNode('sulu_test')->willReturn($this->startPageNode->reveal());
