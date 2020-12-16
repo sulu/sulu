@@ -16,7 +16,7 @@ type Props<T: string> = {
     onExpand?: () => void,
     onRemove?: () => void,
     onSettingsClick?: () => void,
-    onTypeChange?: (type: *) => void,
+    onTypeChange?: (type: T) => void,
     types?: {[key: T]: string},
 };
 
@@ -39,7 +39,7 @@ export default class Block<T: string> extends React.Component<Props<T>> {
         }
     };
 
-    handleTypeChange = (type: *) => {
+    handleTypeChange: (type: T) => void = (type) => {
         const {onTypeChange} = this.props;
 
         if (onTypeChange) {
@@ -84,6 +84,7 @@ export default class Block<T: string> extends React.Component<Props<T>> {
                                     <div className={blockStyles.types}>
                                         <SingleSelect onChange={this.handleTypeChange} value={activeType}>
                                             {Object.keys(types).map((key) => (
+                                                // $FlowFixMe
                                                 <SingleSelect.Option key={key} value={key}>
                                                     {types[key]}
                                                 </SingleSelect.Option>
