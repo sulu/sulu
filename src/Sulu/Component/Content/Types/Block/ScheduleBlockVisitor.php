@@ -78,10 +78,16 @@ class ScheduleBlockVisitor implements BlockVisitorInterface
                     $end->setDate($year, $month, $day);
 
                     if ($end < $start) {
+                        // If the end date is smaller than the start date, it means that the user has entered a time
+                        // combination that spans multiple days. In order to make sure that the start date is before the
+                        // end date the start date has to be set to yesterday.
                         $start->modify('-1 day');
                     }
 
                     $i = 0;
+                    // This loop checks for the coming 7 days for matches of the weekdays selected by the users. This is
+                    // necessary to find the exact weekday on which the next change happens, so that it can be set as
+                    // cachelifetime.
                     do {
                         if ($this->matchWeekday($start, $schedule)) {
                             break;
@@ -108,6 +114,7 @@ class ScheduleBlockVisitor implements BlockVisitorInterface
     private function matchWeekday(\DateTime $datetime, $schedule)
     {
         if (!\is_array($schedule['days'])) {
+            // If the user has not selected any weekdays, then the given times are valid for every weekday.
             return true;
         }
 

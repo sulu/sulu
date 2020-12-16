@@ -10,7 +10,7 @@ test.each([
     const date = transformTimeStringToDate(time);
 
     if (!date) {
-        throw new Error('A date shoudl be returned');
+        throw new Error('A date should be returned');
     }
 
     expect(date.getHours()).toEqual(hour);
