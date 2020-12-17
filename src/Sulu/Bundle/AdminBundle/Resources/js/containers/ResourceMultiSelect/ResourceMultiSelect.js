@@ -51,11 +51,15 @@ class ResourceMultiSelect<T: string | number> extends React.Component<Props<T>> 
 
     @action createResourceListStore = () => {
         const {
+            idProperty,
             resourceKey,
             requestParameters,
         } = this.props;
 
-        this.resourceListStore = new ResourceListStore(resourceKey, requestParameters);
+        // sending an empty limit to the server will disable pagination
+        const parameters = {limit: '', ...requestParameters};
+
+        this.resourceListStore = new ResourceListStore(resourceKey, parameters, idProperty);
     };
 
     // TODO: Remove explicit type annotation when flow bug is fixed
