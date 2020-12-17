@@ -14,6 +14,10 @@ jobs:
         steps:
             - name: Checkout project
               uses: actions/checkout@v1
+            - name: Install and configure PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '7.4'
             - name: Get Composer Cache Directory
               id: composer-cache
               run: echo "::set-output name=dir::$(composer config cache-files-dir)"
