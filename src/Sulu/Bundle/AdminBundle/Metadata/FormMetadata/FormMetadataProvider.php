@@ -49,11 +49,12 @@ class FormMetadataProvider implements MetadataProviderInterface
             throw new MetadataNotFoundException('form', $key);
         }
 
+        $expressionContext = \array_merge(['locale' => $locale], $metadataOptions);
         if ($form instanceof FormMetadata) {
-            $this->evaluateFormItemExpressions($form->getItems(), $metadataOptions);
+            $this->evaluateFormItemExpressions($form->getItems(), $expressionContext);
         } elseif ($form instanceof TypedFormMetadata) {
             foreach ($form->getForms() as $formType) {
-                $this->evaluateFormItemExpressions($formType->getItems(), $metadataOptions);
+                $this->evaluateFormItemExpressions($formType->getItems(), $expressionContext);
             }
 
             if (\array_key_exists('tags', $metadataOptions)) {
@@ -108,21 +109,21 @@ class FormMetadataProvider implements MetadataProviderInterface
     /**
      * @param ItemMetadata[] $items
      */
-    private function evaluateFormItemExpressions(array $items, array $metadataOptions)
+    private function evaluateFormItemExpressions(array $items, array $context)
     {
         foreach ($items as $item) {
             if ($item instanceof SectionMetadata) {
-                $this->evaluateFormItemExpressions($item->getItems(), $metadataOptions);
+                $this->evaluateFormItemExpressions($item->getItems(), $context);
             }
 
             if ($item instanceof FieldMetadata) {
                 foreach ($item->getTypes() as $type) {
-                    $this->evaluateFormItemExpressions($type->getItems(), $metadataOptions);
+                    $this->evaluateFormItemExpressions($type->getItems(), $context);
                 }
 
                 foreach ($item->getOptions() as $option) {
                     if (OptionMetadata::TYPE_EXPRESSION === $option->getType()) {
-                        $option->setValue($this->expressionLanguage->evaluate($option->getValue(), $metadataOptions));
+                        $option->setValue($this->expressionLanguage->evaluate($option->getValue(), $context));
                     }
                 }
             }
