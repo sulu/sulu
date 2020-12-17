@@ -53,6 +53,11 @@ class TemplateAttributeResolver implements TemplateAttributeResolverInterface
     protected $environment;
 
     /**
+     * @var array
+     */
+    private $enabledTwigAttributes;
+
+    /**
      * TemplateAttributeResolver constructor.
      *
      * @param string $environment
@@ -63,7 +68,10 @@ class TemplateAttributeResolver implements TemplateAttributeResolverInterface
         WebspaceManagerInterface $webspaceManager,
         RouterInterface $router,
         RequestStack $requestStack,
-        $environment
+        $environment,
+        array $enabledTwigAttributes = [
+            'urls' => true,
+        ]
     ) {
         $this->requestAnalyzer = $requestAnalyzer;
         $this->requestAnalyzerResolver = $requestAnalyzerResolver;
@@ -71,6 +79,7 @@ class TemplateAttributeResolver implements TemplateAttributeResolverInterface
         $this->router = $router;
         $this->requestStack = $requestStack;
         $this->environment = $environment;
+        $this->enabledTwigAttributes = $enabledTwigAttributes;
     }
 
     public function resolve($customParameters = [])
@@ -80,9 +89,29 @@ class TemplateAttributeResolver implements TemplateAttributeResolverInterface
             $this->requestAnalyzerResolver->resolve($this->requestAnalyzer)
         );
 
-        // Generate Urls
-        if (!isset($customParameters['urls'])) {
-            $customParameters['urls'] = $this->getUrls();
+        if (!isset($customParameters['localizations'])) {
+            $localizations = [];
+            $urls = $customParameters['urls'] ?? $this->getUrls();
+
+            foreach ($urls as $locale => $url) {
+                $localizations[$locale] = [
+                    'locale' => $locale,
+                    'url' => $url,
+                ];
+            }
+
+            $customParameters['localizations'] = $localizations;
+        }
+
+        if ($this->enabledTwigAttributes['urls'] ?? true) {
+            @\trigger_error('Enabling the "urls" parameter is deprecated since Sulu 2.2', \E_USER_DEPRECATED);
+
+            if (!isset($customParameters['urls'])) {
+                $customParameters['urls'] = [];
+                foreach ($customParameters['localizations'] as $localization) {
+                    $customParameters['urls'][$localization['locale']] = $localization['url'];
+                }
+            }
         }
 
         return \array_merge(
