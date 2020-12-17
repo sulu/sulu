@@ -43,7 +43,7 @@ test('Render with data', () => {
         />
     );
 
-    expect(ResourceListStore).toBeCalledWith('test', {});
+    expect(ResourceListStore).toBeCalledWith('test', {limit: ''}, 'id');
     expect(resourceMultiSelect.render()).toMatchSnapshot();
 });
 
@@ -75,7 +75,7 @@ test('Render in disabled state', () => {
         />
     );
 
-    expect(ResourceListStore).toBeCalledWith('test', {});
+    expect(ResourceListStore).toBeCalledWith('test', {limit: ''}, 'id');
     expect(resourceMultiSelect.find('MultiSelect').prop('disabled')).toEqual(true);
 });
 
@@ -133,7 +133,7 @@ test('Pass requestParameters', () => {
         />
     );
 
-    expect(ResourceListStore).toBeCalledWith('test', requestParameters);
+    expect(ResourceListStore).toBeCalledWith('test', {limit: '', testOption: 'testValue'}, 'id');
 });
 
 test('Pass requestParameters when requestParameters props changed', () => {
@@ -172,8 +172,8 @@ test('Pass requestParameters when requestParameters props changed', () => {
 
     // $FlowFixMe
     expect(ResourceListStore.mock.calls).toEqual([
-        ['test', requestParameters1],
-        ['test', requestParameters2],
+        ['test', {limit: ''}, 'id'],
+        ['test', {limit: '', testOption: 'testValue'}, 'id'],
     ]);
 });
 
@@ -190,20 +190,16 @@ test('Pass requestParameters when resourceKey props changed', () => {
         ];
     });
 
-    const requestParameters = {};
-
     const resourceMultiSelect = mount(
         <ResourceMultiSelect
             displayProperty="name"
             onChange={jest.fn()}
-            requestParameters={requestParameters}
             resourceKey="test1"
             values={undefined}
         />
     );
 
     resourceMultiSelect.setProps({
-        requestParameters,
         displayProperty: 'name',
         onChange: jest.fn(),
         resourceKey: 'test2',
@@ -212,8 +208,8 @@ test('Pass requestParameters when resourceKey props changed', () => {
 
     // $FlowFixMe
     expect(ResourceListStore.mock.calls).toEqual([
-        ['test1', requestParameters],
-        ['test2', requestParameters],
+        ['test1', {limit: ''}, 'id'],
+        ['test2', {limit: ''}, 'id'],
     ]);
 });
 

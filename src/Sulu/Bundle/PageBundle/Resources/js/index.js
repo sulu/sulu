@@ -13,7 +13,7 @@ import TeaserSelection from './containers/Form/fields/TeaserSelection';
 import {teaserProviderRegistry} from './containers/TeaserSelection';
 import PageSettingsNavigationSelect from './containers/Form/fields/PageSettingsNavigationSelect';
 import PageSettingsShadowLocaleSelect from './containers/Form/fields/PageSettingsShadowLocaleSelect';
-import PageSettingsVersions from './containers/Form/fields/PageSettingsVersions';
+import SettingsVersions from './containers/Form/fields/SettingsVersions';
 import webspaceStore from './stores/webspaceStore';
 import {loadResourceLocatorInputTypeByWebspace} from './utils/Webspace';
 import PageTabs from './views/PageTabs';
@@ -54,7 +54,7 @@ initializer.addUpdateConfigHook('sulu_page', (config: Object, initialized: boole
     );
 
     if (config.versioning) {
-        fieldRegistry.add('page_settings_versions', PageSettingsVersions);
+        fieldRegistry.add('settings_versions', SettingsVersions);
     }
 
     for (const teaserProviderKey in config.teaser) {

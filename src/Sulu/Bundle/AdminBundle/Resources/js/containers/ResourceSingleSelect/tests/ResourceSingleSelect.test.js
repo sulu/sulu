@@ -26,6 +26,8 @@ test('Render in loading state', () => {
             value={undefined}
         />
     )).toMatchSnapshot();
+
+    expect(ResourceListStore).toBeCalledWith('test', {limit: ''}, 'id');
 });
 
 test('Render in disabled state', () => {
@@ -166,7 +168,7 @@ test('Pass requestParameters to ResourceListStore', () => {
         />
     );
 
-    expect(ResourceListStore).toBeCalledWith('test', requestParameters, 'id');
+    expect(ResourceListStore).toBeCalledWith('test', {limit: '', flat: true}, 'id');
 });
 
 test('Trigger the change callback when the selection changes', () => {
