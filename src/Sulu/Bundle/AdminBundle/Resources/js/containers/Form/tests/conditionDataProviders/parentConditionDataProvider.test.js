@@ -2,67 +2,57 @@
 import parentConditionDataProvider from '../../conditionDataProviders/parentConditionDataProvider';
 
 test('Return parent for root level', () => {
-    const data = {
-        title: 'Test',
-    };
+    const data = {title: 'Test'};
 
-    expect(parentConditionDataProvider(data, '/title')).toEqual({__parent: data});
+    expect(parentConditionDataProvider(data, '/title')).toEqual({__parent: {title: 'Test'}});
 });
 
 test('Return parent for first block', () => {
-    const blocks = [
-        {
-            title: 'Block title 1',
-        },
-        {
-            title: 'Block title 2',
-        },
-    ];
-
     const data = {
         title: 'Title',
-        blocks,
+        blocks: [
+            {title: 'Block title 1'},
+            {title: 'Block title 2'},
+        ],
     };
 
-    expect(parentConditionDataProvider(data, '/blocks/0/title')).toEqual({__parent: blocks[0]});
+    expect(parentConditionDataProvider(data, '/blocks/0/title')).toEqual({__parent: {title: 'Block title 1'}});
 });
 
 test('Return parent for second block', () => {
-    const blocks = [
-        {
-            title: 'Block title 1',
-        },
-        {
-            title: 'Block title 2',
-        },
-    ];
-
     const data = {
         title: 'Title',
-        blocks,
+        blocks: [
+            {title: 'Block title 1'},
+            {title: 'Block title 2'},
+        ],
     };
 
-    expect(parentConditionDataProvider(data, '/blocks/1/title')).toEqual({__parent: blocks[1]});
+    expect(parentConditionDataProvider(data, '/blocks/1/title')).toEqual({__parent: {title: 'Block title 2'}});
 });
 
 test('Return parent for nested second block', () => {
-    const nestedBlocks = [
-        {
-            title: 'Block title 1',
-        },
-        {
-            title: 'Block title 2',
-        },
-    ];
-
     const data = {
         title: 'Title',
         blocks: [
             {
-                blocks: nestedBlocks,
+                blocks: [
+                    {title: 'Block title 1'},
+                    {title: 'Block title 2'},
+                ],
             },
         ],
     };
 
-    expect(parentConditionDataProvider(data, '/blocks/0/blocks/1/title')).toEqual({__parent: nestedBlocks[1]});
+    expect(parentConditionDataProvider(data, '/blocks/0/blocks/1/title')).toEqual({
+        __parent: {
+            __parent: {
+                blocks: [
+                    {title: 'Block title 1'},
+                    {title: 'Block title 2'},
+                ],
+            },
+            title: 'Block title 2',
+        },
+    });
 });
