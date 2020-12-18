@@ -105,7 +105,6 @@ export default class AbstractFormStore
     +loading: boolean;
     +locale: ?IObservableValue<string>;
     schema: Schema;
-    @observable evaluatedSchema: Schema = {};
     modifiedFields: Array<string> = [];
     @observable errors: Object = {};
     validator: ?(data: Object) => boolean;
@@ -164,10 +163,6 @@ export default class AbstractFormStore
         }
 
         return true;
-    }
-
-    @action setEvaluatedSchema(evaluatedSchema: Schema) {
-        this.evaluatedSchema = evaluatedSchema;
     }
 
     getValueByPath = (path: string): mixed => {

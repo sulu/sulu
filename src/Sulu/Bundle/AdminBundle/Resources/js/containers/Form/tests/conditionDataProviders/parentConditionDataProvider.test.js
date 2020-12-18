@@ -36,6 +36,7 @@ test('Return parent for nested second block', () => {
         title: 'Title',
         blocks: [
             {
+                title: 'Block title',
                 blocks: [
                     {title: 'Block title 1'},
                     {title: 'Block title 2'},
@@ -47,6 +48,7 @@ test('Return parent for nested second block', () => {
     expect(parentConditionDataProvider(data, '/blocks/0/blocks/1/title')).toEqual({
         __parent: {
             __parent: {
+                title: 'Block title',
                 blocks: [
                     {title: 'Block title 1'},
                     {title: 'Block title 2'},

@@ -16,7 +16,7 @@ jest.mock('../../../../stores/ResourceStore', () => jest.fn(function(resourceSto
     this.locale = observableOptions?.locale;
 }));
 
-test('Return locale from FormInspector', () => {
+test('Return undefined if FormInspector has no locale', () => {
     const formInspector = new FormInspector(
         new ResourceFormStore(new ResourceStore('test'), 'test', {webspace: 'test'})
     );
