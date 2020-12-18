@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Should not render fields when the schema contains a visible flag of false 1`] = `
+exports[`Should not render fields when the schema contains a visibleCondition evaluating false 1`] = `
 <div
   class="grid grid"
 >

@@ -71,7 +71,6 @@ test('Render collapsed blocks with block previews', () => {
                         {name: 'sulu.block_preview'},
                     ],
                     type: 'text_line',
-                    visible: true,
                 },
                 text2: {
                     label: 'Text 2',
@@ -79,7 +78,6 @@ test('Render collapsed blocks with block previews', () => {
                         {name: 'sulu.block_preview'},
                     ],
                     type: 'text_line',
-                    visible: true,
                 },
                 something: {
                     label: 'Something',
@@ -87,12 +85,10 @@ test('Render collapsed blocks with block previews', () => {
                         {name: 'sulu.block_preview'},
                     ],
                     type: 'text_area',
-                    visible: true,
                 },
                 nothing: {
                     label: 'Nothing',
                     type: 'text_line',
-                    visible: true,
                 },
             },
         },
@@ -106,7 +102,6 @@ test('Render collapsed blocks with block previews', () => {
                 {attributes: {icon: 'su-eye'}, name: 'sulu.block_setting_icon'},
             ],
             type: 'checkbox',
-            visibleCondition: 'false',
         },
         section: {
             items: {
@@ -199,7 +194,6 @@ test('Render collapsed blocks with block previews and sections', () => {
                                 {name: 'sulu.block_preview'},
                             ],
                             type: 'text_line',
-                            visible: true,
                         },
                         text2: {
                             label: 'Text 2',
@@ -207,7 +201,6 @@ test('Render collapsed blocks with block previews and sections', () => {
                                 {name: 'sulu.block_preview'},
                             ],
                             type: 'text_line',
-                            visible: true,
                         },
                         something: {
                             label: 'Something',
@@ -215,12 +208,10 @@ test('Render collapsed blocks with block previews and sections', () => {
                                 {name: 'sulu.block_preview'},
                             ],
                             type: 'text_area',
-                            visible: true,
                         },
                         nothing: {
                             label: 'Nothing',
                             type: 'text_line',
-                            visible: true,
                         },
                     },
                 },
@@ -300,22 +291,18 @@ test('Render collapsed blocks with block previews without tags and with sections
                         nothing: {
                             label: 'Nothing',
                             type: 'phone',
-                            visible: true,
                         },
                         text1: {
                             label: 'Text 1',
                             type: 'text_line',
-                            visible: true,
                         },
                         text2: {
                             label: 'Text 2',
                             type: 'media_selection',
-                            visible: true,
                         },
                         something: {
                             label: 'Text 3',
                             type: 'text_editor',
-                            visible: true,
                         },
                     },
                 },
@@ -413,22 +400,18 @@ test('Render collapsed blocks with block previews without tags', () => {
                 nothing: {
                     label: 'Nothing',
                     type: 'phone',
-                    visible: true,
                 },
                 text1: {
                     label: 'Text 1',
                     type: 'text_line',
-                    visible: true,
                 },
                 text2: {
                     label: 'Text 2',
                     type: 'media_selection',
-                    visible: true,
                 },
                 something: {
                     label: 'Text 3',
                     type: 'text_editor',
-                    visible: true,
                 },
             },
         },
@@ -527,7 +510,6 @@ test('Render collapsed blocks with block previews', () => {
                         {name: 'sulu.block_preview', priority: -100},
                     ],
                     type: 'text_line',
-                    visible: true,
                 },
                 text2: {
                     label: 'Text 2',
@@ -535,7 +517,6 @@ test('Render collapsed blocks with block previews', () => {
                         {name: 'sulu.block_preview'},
                     ],
                     type: 'text_line',
-                    visible: true,
                 },
                 something: {
                     label: 'Text 3',
@@ -543,7 +524,6 @@ test('Render collapsed blocks with block previews', () => {
                         {name: 'sulu.block_preview', priority: 100},
                     ],
                     type: 'text_line',
-                    visible: true,
                 },
             },
         },
@@ -609,12 +589,10 @@ test('Render block with schema', () => {
                 text1: {
                     label: 'Text 1',
                     type: 'text_line',
-                    visible: true,
                 },
                 text2: {
                     label: 'Text 2',
                     type: 'text_line',
-                    visible: true,
                 },
             },
         },
@@ -669,12 +647,10 @@ test('Call not onChange on componentDidUpdate when new types are the same', () =
                         text1: {
                             label: 'Text 1',
                             type: 'text_line',
-                            visible: true,
                         },
                         text2: {
                             label: 'Text 2',
                             type: 'text_line',
-                            visible: true,
                         },
                     },
                 },
@@ -715,12 +691,10 @@ test('Call not onChange on componentDidUpdate when new types are the same', () =
                     text1: {
                         label: 'Text 1 a',
                         type: 'text_line',
-                        visible: true,
                     },
                     text2: {
                         label: 'Text 2 b',
                         type: 'text_line',
-                        visible: true,
                     },
                 },
             },
@@ -749,12 +723,10 @@ test('Call onChange on componentDidUpdate when type not longer exist', () => {
                         text1: {
                             label: 'Text 1',
                             type: 'text_line',
-                            visible: true,
                         },
                         text2: {
                             label: 'Text 2',
                             type: 'text_line',
-                            visible: true,
                         },
                     },
                 },
@@ -795,12 +767,10 @@ test('Call onChange on componentDidUpdate when type not longer exist', () => {
                     text1: {
                         label: 'Text 1',
                         type: 'text_line',
-                        visible: true,
                     },
                     text2: {
                         label: 'Text 2',
                         type: 'text_line',
-                        visible: true,
                     },
                 },
             },
@@ -831,7 +801,6 @@ test('Render block with schema and error on fields already being modified', () =
                 text: {
                     label: 'Text',
                     type: 'text_line',
-                    visible: true,
                 },
             },
         },
@@ -903,7 +872,6 @@ test('Render block with schema and error on fields already being modified', () =
                 text: {
                     label: 'Text',
                     type: 'text_line',
-                    visible: true,
                 },
             },
         },
@@ -973,7 +941,6 @@ test('Should correctly pass props to the BlockCollection', () => {
                 text: {
                     label: 'Text',
                     type: 'text_line',
-                    visible: true,
                 },
             },
         },
@@ -1016,7 +983,6 @@ test('Should pass new value to the BlockCollection if value prop is updated', ()
                 text: {
                     label: 'Text',
                     type: 'text_line',
-                    visible: true,
                 },
             },
         },
@@ -1047,6 +1013,61 @@ test('Should pass new value to the BlockCollection if value prop is updated', ()
     expect(fieldBlocks.find('BlockCollection').props().value).toEqual([{type: 'default', text: 'Three'}]);
 });
 
+test('Should pass correct data and value and router to FieldRenderer', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const router = new Router();
+
+    const types = {
+        default: {
+            title: 'Default',
+            form: {
+                text: {
+                    type: 'text_line',
+                },
+            },
+        },
+    };
+    formInspector.getSchemaEntryByPath.mockReturnValue({types});
+
+    const data = {
+        title: 'Test',
+    };
+
+    const value = [
+        {
+            title: 'Test 1',
+            type: 'default',
+        },
+        {
+            title: 'Test 2',
+            type: 'default',
+        },
+    ];
+
+    const fieldBlocks = mount(
+        <FieldBlocks
+            {...fieldTypeDefaultProps}
+            data={data}
+            dataPath=""
+            defaultType="editor"
+            formInspector={formInspector}
+            router={router}
+            schemaPath=""
+            types={types}
+            value={value}
+        />
+    );
+
+    fieldBlocks.find('SortableBlockList').prop('onExpand')(0);
+    fieldBlocks.find('SortableBlockList').prop('onExpand')(1);
+    fieldBlocks.update();
+
+    expect(fieldBlocks.find('FieldRenderer').at(0).prop('data')).toEqual(data);
+    expect(fieldBlocks.find('FieldRenderer').at(0).prop('value')).toEqual(value[0]);
+    expect(fieldBlocks.find('FieldRenderer').at(1).prop('data')).toEqual(data);
+    expect(fieldBlocks.find('FieldRenderer').at(1).prop('value')).toEqual(value[1]);
+});
+
 test('Should pass correct schemaPath and router to FieldRenderer', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const router = new Router();
@@ -1057,7 +1078,6 @@ test('Should pass correct schemaPath and router to FieldRenderer', () => {
             form: {
                 text: {
                     type: 'text_line',
-                    visible: true,
                 },
             },
         },
@@ -1097,7 +1117,6 @@ test('Should call onFinish when a field from the child renderer has finished edi
                 text: {
                     label: 'Text',
                     type: 'text_line',
-                    visible: true,
                 },
             },
         },
@@ -1136,7 +1155,6 @@ test ('Should set nested properties in handleBlockChange and call onChange with 
                 text: {
                     label: 'Text',
                     type: 'text_line',
-                    visible: true,
                 },
             },
         },
@@ -1179,7 +1197,6 @@ test('Should call onFinish when the order of the blocks has changed', () => {
                 text: {
                     label: 'Text',
                     type: 'text_line',
-                    visible: true,
                 },
             },
         },
@@ -1213,7 +1230,6 @@ test('Should open and close block settings overlay close button is clicked', () 
                 text: {
                     label: 'Text',
                     type: 'text_line',
-                    visible: true,
                 },
             },
         },
@@ -1251,7 +1267,6 @@ test('Should open and close block settings overlay when confirm button is clicke
                 text: {
                     label: 'Text',
                     type: 'text_line',
-                    visible: true,
                 },
             },
         },
@@ -1311,7 +1326,6 @@ test('Should open and close block settings overlay when confirm button is clicke
                 text: {
                     label: 'Text',
                     type: 'text_line',
-                    visible: true,
                 },
             },
         },
@@ -1375,7 +1389,6 @@ test('Should update block settings on submit and immediately show the icon', () 
                         {name: 'sulu.block_preview'},
                     ],
                     type: 'text_line',
-                    visible: true,
                 },
             },
         },
@@ -1438,7 +1451,6 @@ test('Destroy store on unmount', () => {
                 text: {
                     label: 'Text',
                     type: 'text_line',
-                    visible: true,
                 },
             },
         },
@@ -1473,7 +1485,6 @@ test('Should show correct value in type select after type is changed', () => {
                 text: {
                     label: 'Text',
                     type: 'text_line',
-                    visible: true,
                 },
             },
         },
@@ -1483,7 +1494,6 @@ test('Should show correct value in type select after type is changed', () => {
                 other_text: {
                     label: 'Other Text',
                     type: 'text_line',
-                    visible: true,
                 },
             },
         },
@@ -1675,7 +1685,6 @@ test('Throw error if passed settings_form_key schema option is not a string', ()
                 nothing: {
                     label: 'Nothing',
                     type: 'phone',
-                    visible: true,
                 },
             },
         },
@@ -1703,7 +1712,6 @@ test('Throw error if passed add_button_text schema option is not a string', () =
                 nothing: {
                     label: 'Nothing',
                     type: 'phone',
-                    visible: true,
                 },
             },
         },

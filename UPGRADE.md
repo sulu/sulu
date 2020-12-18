@@ -2,6 +2,32 @@
 
 ## dev-master
 
+### conditionDataProvider interface changed
+
+The interface of `conditionDataProviders` changed its arguments. In order to make these providers even more powerful,
+they now also get the `dataPath` passed. Also, instead of the `options` and `metadataOptions` a `formInspector` instance
+is passed, which allows accessing both of the properties.
+
+```javascript
+// before
+function (data: {[string]: any}, options: {[string]: any}, metadataOptions: {[string]: any}) {
+    const webspaceKey = data.webspace || options.webspace || (metadataOptions && metadataOptions.webspace);
+}
+
+// after
+function (data: {[string]: any}, dataPath: ?string, formInspector: FormInspector) {
+    const {options, metadataOptions} = formInspector;
+    const webspaceKey = data.webspace || options.webspace || (metadataOptions && metadataOptions.webspace);
+}
+```
+
+### Props of Renderer component changed
+
+The [`Renderer` React component](https://github.com/sulu/sulu/blob/release/2.2/src/Sulu/Bundle/AdminBundle/Resources/js/containers/Form/Renderer.js)
+has changed its interface to support better evaluation of the `disbledCondition` and `visibleCondition`. Therefore it
+needs the data of the entire form being passed to the `data` prop and the data for the fields rendered by the
+`Renderer` need to be passed to the `value` prop.
+
 ### Deprecated path variable in twig
 
 The `path` twig variable was deprecated because it was confused with the `url` property by many new developers.

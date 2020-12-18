@@ -19,9 +19,16 @@ jest.mock('../../../stores/ResourceStore', () => jest.fn());
 test('Should pass props correctly to Renderer', () => {
     const fieldFinishSpy = jest.fn();
     const successSpy = jest.fn();
+
+    const value = {
+        title: 'Test',
+    };
+
     const data = {
         content: 'test',
+        block: value,
     };
+
     const errors = {
         content: {
             keyword: 'minLength',
@@ -47,6 +54,7 @@ test('Should pass props correctly to Renderer', () => {
             router={router}
             schema={schema}
             schemaPath="/test"
+            value={value}
         />
     );
 
@@ -61,6 +69,7 @@ test('Should pass props correctly to Renderer', () => {
         schema,
         schemaPath: '/test',
         showAllErrors: false,
+        value,
     }));
 });
 
@@ -80,6 +89,7 @@ test('Should pass showAllErrors prop to Renderer', () => {
             schema={{}}
             schemaPath=""
             showAllErrors={true}
+            value={{}}
         />
     );
 
@@ -102,6 +112,7 @@ test('Should call onChange callback with correct index', () => {
             router={undefined}
             schema={{}}
             schemaPath=""
+            value={{}}
         />
     );
 
@@ -126,6 +137,7 @@ test('Should call onFieldFinish when some subfield finishes editing', () => {
             router={undefined}
             schema={{}}
             schemaPath=""
+            value={{}}
         />
     );
 

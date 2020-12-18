@@ -1,0 +1,45 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render section with children 1`] = `
+<div
+  class="section gridSection colSpan colSpan-12 space-before-0 space-after-0"
+>
+  <div
+    class="item dividerContainer colSpan colSpan-12 space-before-0 space-after-0"
+  >
+    <div
+      class="divider"
+    >
+      Section
+    </div>
+  </div>
+  <div
+    class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+  >
+    <div
+      class="field"
+    >
+      <label
+        class="label"
+        for=""
+      >
+        label1
+      </label>
+      <div
+        class="fieldContainer"
+      >
+        <div
+          class="field"
+        >
+          <input
+            type="text"
+          />
+        </div>
+      </div>
+      <label
+        class="errorLabel"
+      />
+    </div>
+  </div>
+</div>
+`;

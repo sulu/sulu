@@ -1,6 +1,6 @@
 // @flow
 import type {IObservableValue} from 'mobx';
-import type {RawSchema} from '../types';
+import type {Schema} from '../types';
 import MemoryFormStore from './MemoryFormStore';
 import SchemaFormStoreDecorator from './SchemaFormStoreDecorator';
 
@@ -20,7 +20,7 @@ class MemoryFormStoreFactory {
         );
     }
 
-    createFromSchema(schema: RawSchema, jsonSchema: Object, data: Object = {}) {
+    createFromSchema(schema: Schema, jsonSchema: Object, data: Object = {}) {
         return new MemoryFormStore(data, schema, jsonSchema);
     }
 }

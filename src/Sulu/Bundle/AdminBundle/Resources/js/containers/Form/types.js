@@ -19,18 +19,9 @@ export type Tag = {
     priority?: number,
 };
 
-type BaseType = {
-    title: string,
-};
-
-export type RawType = BaseType & {
-    form: RawSchema,
-};
-
-export type RawTypes = {[key: string]: RawType};
-
-export type Type = BaseType & {
+export type Type = {
     form: Schema,
+    title: string,
 };
 
 export type Types = {[key: string]: Type};
@@ -55,10 +46,12 @@ export type SchemaOption = {
 
 export type SchemaOptions = {[key: string]: SchemaOption | typeof undefined};
 
-type BaseSchemaEntry = {
+export type SchemaEntry = {
     colSpan?: ColSpan,
     defaultType?: string,
     description?: string,
+    disabledCondition?: string,
+    items?: Schema,
     label?: string,
     maxOccurs?: number,
     minOccurs?: number,
@@ -68,23 +61,9 @@ type BaseSchemaEntry = {
     spaceAfter?: ColSpan,
     tags?: Array<Tag>,
     type: string,
-};
-
-export type RawSchemaEntry = BaseSchemaEntry & {
-    disabledCondition?: string,
-    items?: RawSchema,
-    types?: RawTypes,
+    types?: Types,
     visibleCondition?: string,
 };
-
-export type SchemaEntry = BaseSchemaEntry & {
-    disabled?: boolean,
-    items?: Schema,
-    types?: Types,
-    visible?: boolean,
-};
-
-export type RawSchema = {[string]: RawSchemaEntry};
 
 export type Schema = {[string]: SchemaEntry};
 
@@ -94,8 +73,8 @@ export type SaveHandler = (action: ?string | {[string]: any}) => void;
 
 export type ConditionDataProvider = (
     data: {[string]: any},
-    options: {[string]: any},
-    metadataOptions: ?{[string]: any}
+    dataPath: ?string,
+    formInspector: FormInspector,
 ) => {[string]: any};
 
 export interface FormStoreInterface {
@@ -128,6 +107,7 @@ export interface FormStoreInterface {
 }
 
 export type FieldTypeProps<T> = {|
+    data: Object,
     dataPath: string,
     defaultType: ?string,
     disabled: ?boolean,

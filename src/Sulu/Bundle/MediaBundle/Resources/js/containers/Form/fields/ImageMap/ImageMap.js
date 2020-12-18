@@ -95,6 +95,7 @@ class ImageMap extends React.Component<FieldTypeProps<Value>> {
 
     renderHotspotForm: RenderHotspotFormCallback = (value: Object, type: string, index: number) => {
         const {
+            data,
             dataPath,
             error,
             formInspector,
@@ -110,7 +111,7 @@ class ImageMap extends React.Component<FieldTypeProps<Value>> {
 
         return (
             <FieldRenderer
-                data={value}
+                data={data}
                 dataPath={dataPath + '/' + index}
                 errors={errors && errors.length > index && errors[index] ? errors[index] : undefined}
                 formInspector={formInspector}
@@ -122,6 +123,7 @@ class ImageMap extends React.Component<FieldTypeProps<Value>> {
                 schema={hotspotFormSchemaType.form}
                 schemaPath={schemaPath + '/types/' + type + '/form'}
                 showAllErrors={showAllErrors}
+                value={value}
             />
         );
     };

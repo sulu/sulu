@@ -35,7 +35,6 @@ test('Create data object for schema', () => {
             },
         },
     });
-    memoryFormStore.destroy();
 });
 
 test('Create data object for schema while keeping existing data', () => {
@@ -58,7 +57,6 @@ test('Create data object for schema while keeping existing data', () => {
         title: 'Test',
         description: undefined,
     });
-    memoryFormStore.destroy();
 });
 
 test('Create data object for schema with sections', () => {
@@ -95,293 +93,38 @@ test('Create data object for schema with sections', () => {
         item11: undefined,
         item21: undefined,
     });
-    memoryFormStore.destroy();
-});
-
-test('Evaluate all disabledConditions and visibleConditions for schema', () => {
-    const schema = {
-        item1: {
-            type: 'text_line',
-        },
-        item2: {
-            type: 'text_line',
-            disabledCondition: 'item1 != "item2"',
-            visibleCondition: 'item1 == "item2"',
-        },
-        section: {
-            items: {
-                item31: {
-                    type: 'text_line',
-                },
-                item32: {
-                    type: 'text_line',
-                    disabledCondition: 'item1 != "item32"',
-                    visibleCondition: 'item1 == "item32"',
-                },
-            },
-            type: 'section',
-            disabledCondition: 'item1 != "section"',
-            visibleCondition: 'item1 == "section"',
-        },
-        block: {
-            type: 'block',
-            types: {
-                text_line: {
-                    title: 'item41',
-                    form: {
-                        item41: {
-                            type: 'text_line',
-                            disabledCondition: 'item1 != "item41"',
-                            visibleCondition: 'item1 == "item41"',
-                        },
-                        item42: {
-                            type: 'text_line',
-                        },
-                    },
-                },
-            },
-        },
-    };
-
-    const memoryFormStore = new MemoryFormStore({}, schema);
-
-    setTimeout(() => {
-        const sectionItems1 = memoryFormStore.schema.section.items;
-        if (!sectionItems1) {
-            throw new Error('Section items should be defined!');
-        }
-        const blockTypes1 = memoryFormStore.schema.block.types;
-        if (!blockTypes1) {
-            throw new Error('Block types should be defined!');
-        }
-
-        expect(memoryFormStore.schema.item2.disabled).toEqual(true);
-        expect(memoryFormStore.schema.item2.visible).toEqual(false);
-        expect(sectionItems1.item32.disabled).toEqual(true);
-        expect(sectionItems1.item32.visible).toEqual(false);
-        expect(memoryFormStore.schema.section.disabled).toEqual(true);
-        expect(memoryFormStore.schema.section.visible).toEqual(false);
-        expect(blockTypes1.text_line.form.item41.disabled).toEqual(true);
-        expect(blockTypes1.text_line.form.item41.visible).toEqual(false);
-
-        memoryFormStore.data = observable({item1: 'item2'});
-        expect(memoryFormStore.schema.item2.disabled).toEqual(true);
-        expect(memoryFormStore.schema.item2.visible).toEqual(false);
-
-        memoryFormStore.finishField('/item1');
-        const sectionItems2 = memoryFormStore.schema.section.items;
-        if (!sectionItems2) {
-            throw new Error('Section items should be defined!');
-        }
-        const blockTypes2 = memoryFormStore.schema.block.types;
-        if (!blockTypes2) {
-            throw new Error('Block types should be defined!');
-        }
-
-        expect(memoryFormStore.schema.item2.disabled).toEqual(false);
-        expect(memoryFormStore.schema.item2.visible).toEqual(true);
-        expect(sectionItems2.item32.disabled).toEqual(true);
-        expect(sectionItems2.item32.visible).toEqual(false);
-        expect(memoryFormStore.schema.section.disabled).toEqual(true);
-        expect(memoryFormStore.schema.section.visible).toEqual(false);
-        expect(blockTypes2.text_line.form.item41.disabled).toEqual(true);
-        expect(blockTypes2.text_line.form.item41.visible).toEqual(false);
-
-        memoryFormStore.data = observable({item1: 'item32'});
-
-        memoryFormStore.finishField('/item1');
-        const sectionItems3 = memoryFormStore.schema.section.items;
-        if (!sectionItems3) {
-            throw new Error('Section items should be defined!');
-        }
-        const blockTypes3 = memoryFormStore.schema.block.types;
-        if (!blockTypes3) {
-            throw new Error('Block types should be defined!');
-        }
-
-        expect(memoryFormStore.schema.item2.disabled).toEqual(true);
-        expect(memoryFormStore.schema.item2.visible).toEqual(false);
-        expect(sectionItems3.item32.disabled).toEqual(false);
-        expect(sectionItems3.item32.visible).toEqual(true);
-        expect(memoryFormStore.schema.section.disabled).toEqual(true);
-        expect(memoryFormStore.schema.section.visible).toEqual(false);
-        expect(blockTypes3.text_line.form.item41.disabled).toEqual(true);
-        expect(blockTypes3.text_line.form.item41.visible).toEqual(false);
-
-        memoryFormStore.data = observable({item1: 'section'});
-        memoryFormStore.finishField('/item1');
-
-        const sectionItems4 = memoryFormStore.schema.section.items;
-        if (!sectionItems4) {
-            throw new Error('Section items should be defined!');
-        }
-        const blockTypes4 = memoryFormStore.schema.block.types;
-        if (!blockTypes4) {
-            throw new Error('Block types should be defined!');
-        }
-
-        expect(memoryFormStore.schema.item2.disabled).toEqual(true);
-        expect(memoryFormStore.schema.item2.visible).toEqual(false);
-        expect(sectionItems4.item32.disabled).toEqual(true);
-        expect(sectionItems4.item32.visible).toEqual(false);
-        expect(memoryFormStore.schema.section.disabled).toEqual(false);
-        expect(memoryFormStore.schema.section.visible).toEqual(true);
-        expect(blockTypes4.text_line.form.item41.disabled).toEqual(true);
-        expect(blockTypes4.text_line.form.item41.visible).toEqual(false);
-
-        memoryFormStore.data = observable({item1: 'item41'});
-        memoryFormStore.finishField('/item1');
-        const sectionItems5 = memoryFormStore.schema.section.items;
-        if (!sectionItems5) {
-            throw new Error('Section items should be defined!');
-        }
-        const blockTypes5 = memoryFormStore.schema.block.types;
-        if (!blockTypes5) {
-            throw new Error('Block types should be defined!');
-        }
-
-        expect(memoryFormStore.schema.item2.disabled).toEqual(true);
-        expect(memoryFormStore.schema.item2.visible).toEqual(false);
-        expect(sectionItems5.item32.disabled).toEqual(true);
-        expect(sectionItems5.item32.visible).toEqual(false);
-        expect(memoryFormStore.schema.section.disabled).toEqual(true);
-        expect(memoryFormStore.schema.section.visible).toEqual(false);
-        expect(blockTypes5.text_line.form.item41.disabled).toEqual(false);
-        expect(blockTypes5.text_line.form.item41.visible).toEqual(true);
-
-        memoryFormStore.destroy();
-    }, 0);
-});
-
-test('Evaluate all disabledConditions and visibleConditions after calling setMultiple', () => {
-    const schema = {
-        item1: {
-            type: 'text_line',
-        },
-        item2: {
-            type: 'text_line',
-            disabledCondition: 'item1 != "item2"',
-            visibleCondition: 'item1 == "item2"',
-        },
-    };
-
-    const memoryFormStore = new MemoryFormStore({}, schema);
-
-    setTimeout(() => {
-        expect(memoryFormStore.schema.item2.disabled).toEqual(true);
-        expect(memoryFormStore.schema.item2.visible).toEqual(false);
-
-        memoryFormStore.setMultiple({item1: 'item2'});
-
-        expect(memoryFormStore.schema.item2.disabled).toEqual(false);
-        expect(memoryFormStore.schema.item2.visible).toEqual(true);
-
-        memoryFormStore.destroy();
-    }, 0);
-});
-
-test('Evaluate disabledConditions and visibleConditions for schema with locale', (done) => {
-    const schema = {
-        item: {
-            type: 'text_line',
-            disabledCondition: '__locale == "en"',
-            visibleCondition: '__locale == "de"',
-        },
-    };
-
-    const memoryFormStore = new MemoryFormStore({}, schema, {}, observable.box('en'));
-
-    setTimeout(() => {
-        expect(memoryFormStore.schema.item.disabled).toEqual(true);
-        expect(memoryFormStore.schema.item.visible).toEqual(false);
-        memoryFormStore.destroy();
-        done();
-    });
-});
-
-test('Evaluate disabledConditions and visibleConditions when changing locale', (done) => {
-    const schema = {
-        item: {
-            type: 'text_line',
-            disabledCondition: '__locale == "en"',
-            visibleCondition: '__locale == "de"',
-        },
-    };
-
-    const locale = observable.box('en');
-    const memoryFormStore = new MemoryFormStore({}, schema, {}, locale);
-
-    setTimeout(() => {
-        expect(memoryFormStore.schema.item.disabled).toEqual(true);
-        expect(memoryFormStore.schema.item.visible).toEqual(false);
-
-        locale.set('de');
-        setTimeout(() => {
-            expect(memoryFormStore.schema.item.disabled).toEqual(false);
-            expect(memoryFormStore.schema.item.visible).toEqual(true);
-            memoryFormStore.destroy();
-            done();
-        }, 0);
-    }, 0);
-});
-
-test('Evaluate disabledConditions and visibleConditions for schema with conditionDataProvider', (done) => {
-    const schema = {
-        item: {
-            type: 'text_line',
-            disabledCondition: '__test == "value1"',
-            visibleCondition: '__test == "value2"',
-        },
-    };
-
-    conditionDataProviderRegistry.add((data) => ({__test: data.test}));
-
-    const memoryFormStore = new MemoryFormStore({test: 'value1'}, schema, {}, observable.box('en'));
-
-    setTimeout(() => {
-        expect(memoryFormStore.schema.item.disabled).toEqual(true);
-        expect(memoryFormStore.schema.item.visible).toEqual(false);
-        memoryFormStore.destroy();
-        done();
-    });
 });
 
 test('Asking for resourceKey should return undefined', () => {
     const memoryFormStore = new MemoryFormStore({}, {});
     expect(memoryFormStore.resourceKey).toBeUndefined();
-    memoryFormStore.destroy();
 });
 
 test('Asking for resourceKey should return undefined', () => {
     const memoryFormStore = new MemoryFormStore({}, {});
     expect(memoryFormStore.resourceKey).toBeUndefined();
-    memoryFormStore.destroy();
 });
 
 test('Asking for id should return undefined', () => {
     const memoryFormStore = new MemoryFormStore({}, {});
     expect(memoryFormStore.id).toBeUndefined();
-    memoryFormStore.destroy();
 });
 
 test('Read dirty flag', () => {
     const memoryFormStore = new MemoryFormStore({}, {});
     expect(memoryFormStore.dirty).toEqual(false);
-    memoryFormStore.destroy();
 });
 
 test('Set dirty flag', () => {
     const memoryFormStore = new MemoryFormStore({}, {});
     memoryFormStore.change('test', 'test');
     expect(memoryFormStore.dirty).toEqual(true);
-    memoryFormStore.destroy();
 });
 
 test('Set nested value', () => {
     const memoryFormStore = new MemoryFormStore({}, {});
     memoryFormStore.change('test1/test2', 'test');
     expect(memoryFormStore.data).toEqual({test1: {test2: 'test'}});
-    memoryFormStore.destroy();
 });
 
 test('Set multiple values', () => {
@@ -391,13 +134,11 @@ test('Set multiple values', () => {
     memoryFormStore.setMultiple({key2: 'newValue2', key3: 'value3'});
 
     expect(memoryFormStore.data).toEqual({key1: 'value1', key2: 'newValue2', key3: 'value3'});
-    memoryFormStore.destroy();
 });
 
 test('Loading flag should always be false', () => {
     const memoryFormStore = new MemoryFormStore({}, {});
     expect(memoryFormStore.loading).toEqual(false);
-    memoryFormStore.destroy();
 });
 
 test('Data attribute should return the data', () => {
@@ -408,16 +149,6 @@ test('Data attribute should return the data', () => {
     const memoryFormStore = new MemoryFormStore(data, {});
 
     expect(memoryFormStore.data).toBe(data);
-    memoryFormStore.destroy();
-});
-
-test('Destroying the store should call all the disposers', () => {
-    const memoryFormStore = new MemoryFormStore({}, {});
-    memoryFormStore.updateFieldPathEvaluationsDisposer = jest.fn();
-
-    memoryFormStore.destroy();
-
-    expect(memoryFormStore.updateFieldPathEvaluationsDisposer).toBeCalled();
 });
 
 test('Should return value for property path', () => {

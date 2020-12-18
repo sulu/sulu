@@ -1,17 +1,32 @@
 // @flow
 import {render, shallow} from 'enzyme';
 import React from 'react';
+import {observable} from 'mobx';
 import ResourceStore from '../../../stores/ResourceStore';
 import Router from '../../../services/Router';
+import conditionDataProviderRegistry from '../registries/conditionDataProviderRegistry';
 import Field from '../Field';
 import fieldRegistry from '../registries/fieldRegistry';
 import FormInspector from '../FormInspector';
 import ResourceFormStore from '../stores/ResourceFormStore';
 
+beforeEach(() => {
+    conditionDataProviderRegistry.clear();
+});
+
 jest.mock('../../../services/Router/Router', () => jest.fn());
-jest.mock('../../../stores/ResourceStore', () => jest.fn());
-jest.mock('../FormInspector', () => jest.fn());
-jest.mock('../stores/ResourceFormStore', () => jest.fn());
+
+jest.mock('../../../stores/ResourceStore', () => jest.fn(function(resourceKey, id, observableOptions) {
+    this.locale = observableOptions?.locale;
+}));
+
+jest.mock('../FormInspector', () => jest.fn(function(resourceFormStore) {
+    this.locale = resourceFormStore.locale;
+}));
+
+jest.mock('../stores/ResourceFormStore', () => jest.fn(function(resourceStore) {
+    this.locale = resourceStore.locale;
+}));
 
 jest.mock('../registries/fieldRegistry', () => ({
     get: jest.fn(),
@@ -31,6 +46,7 @@ test('Render correct label with correct field type', () => {
     });
     expect(render(
         <Field
+            data={{}}
             dataPath=""
             formInspector={formInspector}
             name="test"
@@ -38,7 +54,7 @@ test('Render correct label with correct field type', () => {
             onFinish={jest.fn()}
             onSuccess={successSpy}
             router={undefined}
-            schema={{label: 'label1', type: 'text', visible: true}}
+            schema={{label: 'label1', type: 'text'}}
             schemaPath=""
         />
     )).toMatchSnapshot();
@@ -48,6 +64,7 @@ test('Render correct label with correct field type', () => {
     });
     expect(render(
         <Field
+            data={{}}
             dataPath=""
             formInspector={formInspector}
             name="test"
@@ -55,7 +72,7 @@ test('Render correct label with correct field type', () => {
             onFinish={jest.fn()}
             onSuccess={successSpy}
             router={undefined}
-            schema={{label: 'label2', type: 'datetime', visible: true}}
+            schema={{label: 'label2', type: 'datetime'}}
             schemaPath=""
         />
     )).toMatchSnapshot();
@@ -69,6 +86,7 @@ test('Render field with correct values for grid', () => {
     });
     expect(render(
         <Field
+            data={{}}
             dataPath=""
             formInspector={formInspector}
             name="test"
@@ -76,7 +94,7 @@ test('Render field with correct values for grid', () => {
             onFinish={jest.fn()}
             onSuccess={undefined}
             router={undefined}
-            schema={{label: 'label1', type: 'text', colSpan: 8, spaceAfter: 3, visible: true}}
+            schema={{label: 'label1', type: 'text', colSpan: 8, spaceAfter: 3}}
             schemaPath=""
         />
     )).toMatchSnapshot();
@@ -90,6 +108,7 @@ test('Render a required field with correct field type', () => {
     });
     expect(render(
         <Field
+            data={{}}
             dataPath=""
             formInspector={formInspector}
             name="test"
@@ -97,7 +116,7 @@ test('Render a required field with correct field type', () => {
             onFinish={jest.fn()}
             onSuccess={undefined}
             router={undefined}
-            schema={{label: 'label1', required: true, type: 'text', visible: true}}
+            schema={{label: 'label1', required: true, type: 'text'}}
             schemaPath=""
         />
     )).toMatchSnapshot();
@@ -108,6 +127,7 @@ test('Render a field without a label', () => {
 
     expect(render(
         <Field
+            data={{}}
             dataPath=""
             formInspector={formInspector}
             name="test"
@@ -115,7 +135,7 @@ test('Render a field without a label', () => {
             onFinish={jest.fn()}
             onSuccess={undefined}
             router={undefined}
-            schema={{type: 'text', visible: true}}
+            schema={{type: 'text'}}
             schemaPath=""
         />
     )).toMatchSnapshot();
@@ -126,6 +146,7 @@ test('Render a field with a description', () => {
 
     expect(render(
         <Field
+            data={{}}
             dataPath=""
             formInspector={formInspector}
             name="test"
@@ -137,7 +158,6 @@ test('Render a field with a description', () => {
                 description: 'Small description describing the field',
                 label: 'label1',
                 type: 'text',
-                visible: true,
             }}
             schemaPath=""
         />
@@ -153,6 +173,7 @@ test('Render a field with an error', () => {
     expect(
         render(
             <Field
+                data={{}}
                 dataPath=""
                 error={{keyword: 'minLength', parameters: {}}}
                 formInspector={formInspector}
@@ -161,7 +182,7 @@ test('Render a field with an error', () => {
                 onFinish={jest.fn()}
                 onSuccess={undefined}
                 router={undefined}
-                schema={{label: 'label1', type: 'text', visible: true}}
+                schema={{label: 'label1', type: 'text'}}
                 schemaPath=""
             />
         )
@@ -177,6 +198,7 @@ test('Render a field without a const error', () => {
     expect(
         render(
             <Field
+                data={{}}
                 dataPath=""
                 error={{keyword: 'const', parameters: {}}}
                 formInspector={formInspector}
@@ -185,7 +207,7 @@ test('Render a field without a const error', () => {
                 onFinish={jest.fn()}
                 onSuccess={undefined}
                 router={undefined}
-                schema={{label: 'label1', type: 'text', visible: true}}
+                schema={{label: 'label1', type: 'text'}}
                 schemaPath=""
             />
         )
@@ -207,6 +229,7 @@ test('Render a field with a error collection', () => {
     expect(
         render(
             <Field
+                data={{}}
                 dataPath=""
                 error={error}
                 formInspector={formInspector}
@@ -215,7 +238,7 @@ test('Render a field with a error collection', () => {
                 onFinish={jest.fn()}
                 onSuccess={undefined}
                 router={undefined}
-                schema={{label: 'label1', type: 'text', visible: true}}
+                schema={{label: 'label1', type: 'text'}}
                 schemaPath=""
             />
         )
@@ -237,10 +260,15 @@ test('Pass correct props to FieldType', () => {
         minOccurs: 2,
         type: 'text_line',
         types: {},
-        visible: true,
     };
+
+    const data = {
+        title: 'Test',
+    };
+
     const field = shallow(
         <Field
+            data={data}
             dataPath="/block/0/text"
             formInspector={formInspector}
             name="text"
@@ -256,8 +284,9 @@ test('Pass correct props to FieldType', () => {
     );
 
     expect(field.find('Text').props()).toEqual(expect.objectContaining({
+        data,
         dataPath: '/block/0/text',
-        disabled: undefined,
+        disabled: false,
         formInspector,
         label: 'Text',
         maxOccurs: 4,
@@ -271,7 +300,7 @@ test('Pass correct props to FieldType', () => {
     }));
 });
 
-test('Pass disabled flag to disabled FieldType', () => {
+test('Do not render anything if visibleCondition evaluates to false', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
 
     fieldRegistry.get.mockReturnValue(function Text() {
@@ -279,16 +308,16 @@ test('Pass disabled flag to disabled FieldType', () => {
     });
 
     const schema = {
-        disabled: true,
         label: 'Text',
-        maxOccurs: 4,
-        minOccurs: 2,
         type: 'text_line',
-        types: {},
-        visible: true,
+        visibleCondition: 'title != "Test"',
     };
+
+    const data = observable({title: 'Test'});
+
     const field = shallow(
         <Field
+            data={data}
             dataPath="/block/0/text"
             formInspector={formInspector}
             name="text"
@@ -303,18 +332,118 @@ test('Pass disabled flag to disabled FieldType', () => {
         />
     );
 
-    expect(field.find('Text').props()).toEqual(expect.objectContaining({
-        dataPath: '/block/0/text',
-        disabled: true,
-        formInspector,
+    expect(field.find('Field')).toHaveLength(0);
+
+    data.title = 'Changed title!';
+    expect(field.find('Field')).toHaveLength(1);
+});
+
+test('Render the field if visibleCondition with conditionDataProvider evaluates to true', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
+
+    conditionDataProviderRegistry.add((data) => ({__test: data.test}));
+
+    fieldRegistry.get.mockReturnValue(function Text() {
+        return <input type="date" />;
+    });
+
+    const schema = {
         label: 'Text',
-        maxOccurs: 4,
-        minOccurs: 2,
-        schemaPath: '/text',
-        showAllErrors: true,
-        types: {},
-        value: 'test',
-    }));
+        type: 'text_line',
+        visibleCondition: '__test == "Test"',
+    };
+
+    const field = shallow(
+        <Field
+            data={{test: 'Test'}}
+            dataPath="/block/0/text"
+            formInspector={formInspector}
+            name="text"
+            onChange={jest.fn()}
+            onFinish={jest.fn()}
+            onSuccess={undefined}
+            router={undefined}
+            schema={schema}
+            schemaPath="/text"
+            showAllErrors={true}
+            value="test"
+        />
+    );
+
+    expect(field.find('Field')).toHaveLength(1);
+});
+
+test('Pass disabled flag to FieldType if disabledCondition evaluates to true', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
+
+    fieldRegistry.get.mockReturnValue(function Text() {
+        return <input type="date" />;
+    });
+
+    const schema = {
+        disabledCondition: 'title == "Test"',
+        label: 'Text',
+        type: 'text_line',
+    };
+
+    const data = observable({title: 'Test'});
+
+    const field = shallow(
+        <Field
+            data={data}
+            dataPath="/block/0/text"
+            formInspector={formInspector}
+            name="text"
+            onChange={jest.fn()}
+            onFinish={jest.fn()}
+            onSuccess={undefined}
+            router={undefined}
+            schema={schema}
+            schemaPath="/text"
+            showAllErrors={true}
+            value="test"
+        />
+    );
+
+    expect(field.find('Text').prop('disabled')).toEqual(true);
+
+    data.title = 'Change title!';
+    expect(field.find('Text').prop('disabled')).toEqual(false);
+});
+
+test('Pass disabled flag to FieldType if disabledCondition with conditionDataProvider evaluates to true', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
+
+    conditionDataProviderRegistry.add((data) => ({__test: data.test}));
+
+    fieldRegistry.get.mockReturnValue(function Text() {
+        return <input type="date" />;
+    });
+
+    const schema = {
+        disabledCondition: '__test == "Test"',
+        label: 'Text',
+        type: 'text_line',
+    };
+
+    const field = shallow(
+        <Field
+            data={{test: 'Test'}}
+            dataPath="/block/0/text"
+            formInspector={formInspector}
+            name="text"
+            onChange={jest.fn()}
+            onFinish={jest.fn()}
+            onSuccess={undefined}
+            router={undefined}
+            schema={schema}
+            schemaPath="/text"
+            showAllErrors={true}
+            value="test"
+        />
+    );
+
+    expect(field.find('Text').prop('disabled')).toEqual(true);
 });
 
 test('Merge with options from fieldRegistry before passing props to FieldType', () => {
@@ -336,10 +465,10 @@ test('Merge with options from fieldRegistry before passing props to FieldType', 
         },
         type: 'text_line',
         types: {},
-        visible: true,
     };
     const field = shallow(
         <Field
+            data={{}}
             dataPath=""
             formInspector={formInspector}
             name="text"
@@ -379,6 +508,7 @@ test('Call onChange callback when value of Field changes', () => {
     const changeSpy = jest.fn();
     const field = shallow(
         <Field
+            data={{}}
             dataPath=""
             formInspector={formInspector}
             name="test"
@@ -386,7 +516,7 @@ test('Call onChange callback when value of Field changes', () => {
             onFinish={jest.fn()}
             onSuccess={undefined}
             router={undefined}
-            schema={{label: 'label', type: 'text', visible: true}}
+            schema={{label: 'label', type: 'text'}}
             schemaPath=""
         />
     );
@@ -406,6 +536,7 @@ test('Do not call onChange callback when value of disabled Field changes', () =>
     const changeSpy = jest.fn();
     const field = shallow(
         <Field
+            data={{title: 'Test'}}
             dataPath=""
             formInspector={formInspector}
             name="test"
@@ -413,7 +544,7 @@ test('Do not call onChange callback when value of disabled Field changes', () =>
             onFinish={jest.fn()}
             onSuccess={undefined}
             router={undefined}
-            schema={{label: 'label', type: 'text', disabled: true}}
+            schema={{label: 'label', type: 'text', disabledCondition: 'title == "Test"'}}
             schemaPath=""
         />
     );
@@ -433,6 +564,7 @@ test('Call onFinish callback after editing the field has finished', () => {
     const finishSpy = jest.fn();
     const field = shallow(
         <Field
+            data={{}}
             dataPath="/block/0/test"
             formInspector={formInspector}
             name="test"
@@ -440,7 +572,7 @@ test('Call onFinish callback after editing the field has finished', () => {
             onFinish={finishSpy}
             onSuccess={undefined}
             router={undefined}
-            schema={{label: 'label', type: 'text', visible: true}}
+            schema={{label: 'label', type: 'text'}}
             schemaPath="/test"
         />
     );
@@ -460,6 +592,7 @@ test('Call onSuccess callback when field calls onSuccess', () => {
     const finishSpy = jest.fn();
     const field = shallow(
         <Field
+            data={{}}
             dataPath="/block/0/test"
             formInspector={formInspector}
             name="test"
@@ -467,7 +600,7 @@ test('Call onSuccess callback when field calls onSuccess', () => {
             onFinish={finishSpy}
             onSuccess={successSpy}
             router={undefined}
-            schema={{label: 'label', type: 'text', visible: true}}
+            schema={{label: 'label', type: 'text'}}
             schemaPath="/test"
         />
     );
@@ -486,6 +619,7 @@ test('Do not render anything if field does not exist and onInvalid is set to ign
 
     const field = shallow(
         <Field
+            data={{}}
             dataPath="/test"
             formInspector={formInspector}
             name="test"

@@ -1,5 +1,5 @@
 // @flow
-import {isObservable, observable, observable as mockObservable, toJS, when} from 'mobx';
+import {observable, observable as mockObservable, toJS, when} from 'mobx';
 import ResourceFormStore from '../../stores/ResourceFormStore';
 import ResourceStore from '../../../../stores/ResourceStore';
 import metadataStore from '../../stores/metadataStore';
@@ -75,318 +75,6 @@ test('Create data object for schema', (done) => {
             },
         });
         resourceFormStore.destroy();
-        done();
-    }, 0);
-});
-
-test('Evaluate all disabledConditions and visibleConditions for schema', () => {
-    const metadata = {
-        item1: {
-            type: 'text_line',
-        },
-        item2: {
-            type: 'text_line',
-            disabledCondition: 'item1 != "item2"',
-            visibleCondition: 'item1 == "item2"',
-        },
-        section: {
-            items: {
-                item31: {
-                    type: 'text_line',
-                },
-                item32: {
-                    type: 'text_line',
-                    disabledCondition: 'item1 != "item32"',
-                    visibleCondition: 'item1 == "item32"',
-                },
-            },
-            type: 'section',
-            disabledCondition: 'item1 != "section"',
-            visibleCondition: 'item1 == "section"',
-        },
-        block: {
-            types: {
-                text_line: {
-                    form: {
-                        item41: {
-                            type: 'text_line',
-                            disabledCondition: 'item1 != "item41"',
-                            visibleCondition: 'item1 == "item41"',
-                        },
-                        item42: {
-                            type: 'text_line',
-                        },
-                    },
-                },
-            },
-        },
-    };
-
-    const metadataPromise = Promise.resolve(metadata);
-    metadataStore.getSchema.mockReturnValue(metadataPromise);
-
-    const resourceStore = new ResourceStore('snippets', '1');
-    const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
-
-    setTimeout(() => {
-        expect(isObservable(resourceFormStore.schema)).toBe(false);
-        const sectionItems1 = resourceFormStore.schema.section.items;
-        if (!sectionItems1) {
-            throw new Error('Section items should be defined!');
-        }
-        const blockTypes1 = resourceFormStore.schema.block.types;
-        if (!blockTypes1) {
-            throw new Error('Block types should be defined!');
-        }
-
-        expect(resourceFormStore.schema.item2.disabled).toEqual(true);
-        expect(resourceFormStore.schema.item2.visible).toEqual(false);
-        expect(sectionItems1.item32.disabled).toEqual(true);
-        expect(sectionItems1.item32.visible).toEqual(false);
-        expect(resourceFormStore.schema.section.disabled).toEqual(true);
-        expect(resourceFormStore.schema.section.visible).toEqual(false);
-        expect(blockTypes1.text_line.form.item41.disabled).toEqual(true);
-        expect(blockTypes1.text_line.form.item41.visible).toEqual(false);
-
-        resourceStore.data = observable({item1: 'item2'});
-        expect(resourceFormStore.schema.item2.disabled).toEqual(true);
-        expect(resourceFormStore.schema.item2.visible).toEqual(false);
-
-        resourceFormStore.finishField('/item1');
-        const sectionItems2 = resourceFormStore.schema.section.items;
-        if (!sectionItems2) {
-            throw new Error('Section items should be defined!');
-        }
-        const blockTypes2 = resourceFormStore.schema.block.types;
-        if (!blockTypes2) {
-            throw new Error('Block types should be defined!');
-        }
-
-        expect(resourceFormStore.schema.item2.disabled).toEqual(false);
-        expect(resourceFormStore.schema.item2.visible).toEqual(true);
-        expect(sectionItems2.item32.disabled).toEqual(true);
-        expect(sectionItems2.item32.visible).toEqual(false);
-        expect(resourceFormStore.schema.section.disabled).toEqual(true);
-        expect(resourceFormStore.schema.section.visible).toEqual(false);
-        expect(blockTypes2.text_line.form.item41.disabled).toEqual(true);
-        expect(blockTypes2.text_line.form.item41.visible).toEqual(false);
-
-        resourceStore.data = observable({item1: 'item32'});
-        resourceFormStore.finishField('/item1');
-        const sectionItems3 = resourceFormStore.schema.section.items;
-        if (!sectionItems3) {
-            throw new Error('Section items should be defined!');
-        }
-        const blockTypes3 = resourceFormStore.schema.block.types;
-        if (!blockTypes3) {
-            throw new Error('Block types should be defined!');
-        }
-
-        expect(resourceFormStore.schema.item2.disabled).toEqual(true);
-        expect(resourceFormStore.schema.item2.visible).toEqual(false);
-        expect(sectionItems3.item32.disabled).toEqual(false);
-        expect(sectionItems3.item32.visible).toEqual(true);
-        expect(resourceFormStore.schema.section.disabled).toEqual(true);
-        expect(resourceFormStore.schema.section.visible).toEqual(false);
-        expect(blockTypes3.text_line.form.item41.disabled).toEqual(true);
-        expect(blockTypes3.text_line.form.item41.visible).toEqual(false);
-
-        resourceStore.data = observable({item1: 'section'});
-        resourceFormStore.finishField('/item1');
-        const sectionItems4 = resourceFormStore.schema.section.items;
-        if (!sectionItems4) {
-            throw new Error('Section items should be defined!');
-        }
-        const blockTypes4 = resourceFormStore.schema.block.types;
-        if (!blockTypes4) {
-            throw new Error('Block types should be defined!');
-        }
-
-        expect(resourceFormStore.schema.item2.disabled).toEqual(true);
-        expect(resourceFormStore.schema.item2.visible).toEqual(false);
-        expect(sectionItems4.item32.disabled).toEqual(true);
-        expect(sectionItems4.item32.visible).toEqual(false);
-        expect(resourceFormStore.schema.section.disabled).toEqual(false);
-        expect(resourceFormStore.schema.section.visible).toEqual(true);
-        expect(blockTypes4.text_line.form.item41.disabled).toEqual(true);
-        expect(blockTypes4.text_line.form.item41.visible).toEqual(false);
-
-        resourceStore.data = observable({item1: 'item41'});
-        resourceFormStore.finishField('/item1');
-        const sectionItems5 = resourceFormStore.schema.section.items;
-        if (!sectionItems5) {
-            throw new Error('Section items should be defined!');
-        }
-        const blockTypes5 = resourceFormStore.schema.block.types;
-        if (!blockTypes5) {
-            throw new Error('Block types should be defined!');
-        }
-
-        expect(resourceFormStore.schema.item2.disabled).toEqual(true);
-        expect(resourceFormStore.schema.item2.visible).toEqual(false);
-        expect(sectionItems5.item32.disabled).toEqual(true);
-        expect(sectionItems5.item32.visible).toEqual(false);
-        expect(resourceFormStore.schema.section.disabled).toEqual(true);
-        expect(resourceFormStore.schema.section.visible).toEqual(false);
-        expect(blockTypes5.text_line.form.item41.disabled).toEqual(false);
-        expect(blockTypes5.text_line.form.item41.visible).toEqual(true);
-
-        resourceFormStore.destroy();
-    }, 0);
-});
-
-test('Evaluate all disabledConditions and visibleConditions for schema after calling setMultiple', () => {
-    const metadata = {
-        item1: {
-            type: 'text_line',
-        },
-        item2: {
-            type: 'text_line',
-            disabledCondition: 'item1 != "item2"',
-            visibleCondition: 'item1 == "item2"',
-        },
-    };
-
-    const metadataPromise = Promise.resolve(metadata);
-    metadataStore.getSchema.mockReturnValue(metadataPromise);
-
-    const resourceStore = new ResourceStore('snippets', '1');
-    const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
-
-    setTimeout(() => {
-        expect(isObservable(resourceFormStore.schema)).toBe(false);
-
-        resourceFormStore.setMultiple({item1: 'item2'});
-        expect(resourceFormStore.schema.item2.disabled).toEqual(false);
-        expect(resourceFormStore.schema.item2.visible).toEqual(true);
-
-        resourceFormStore.destroy();
-    }, 0);
-});
-
-test('Evaluate disabledConditions and visibleConditions for schema with locale', (done) => {
-    const metadata = {
-        item: {
-            type: 'text_line',
-            disabledCondition: '__locale == "en"',
-            visibleCondition: '__locale == "de"',
-        },
-    };
-
-    const metadataPromise = Promise.resolve(metadata);
-    metadataStore.getSchema.mockReturnValue(metadataPromise);
-
-    const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box('en')});
-    const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
-
-    setTimeout(() => {
-        expect(resourceFormStore.schema.item.disabled).toEqual(true);
-        expect(resourceFormStore.schema.item.visible).toEqual(false);
-        done();
-    }, 0);
-});
-
-test('Evaluate disabledConditions and visibleConditions when changing locale', (done) => {
-    const metadata = {
-        item: {
-            type: 'text_line',
-            disabledCondition: '__locale == "en"',
-            visibleCondition: '__locale == "de"',
-        },
-    };
-
-    const metadataPromise = Promise.resolve(metadata);
-    metadataStore.getSchema.mockReturnValue(metadataPromise);
-
-    const locale = observable.box('en');
-    const resourceStore = new ResourceStore('snippets', '1', {locale});
-    const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
-
-    setTimeout(() => {
-        expect(resourceFormStore.schema.item.disabled).toEqual(true);
-        expect(resourceFormStore.schema.item.visible).toEqual(false);
-
-        locale.set('de');
-        setTimeout(() => {
-            expect(resourceFormStore.schema.item.disabled).toEqual(false);
-            expect(resourceFormStore.schema.item.visible).toEqual(true);
-            done();
-        });
-    });
-});
-
-test('Evaluate disabledConditions and visibleConditions for schema from data', (done) => {
-    const metadata = {
-        item: {
-            type: 'text_line',
-            disabledCondition: '__test == "value1"',
-            visibleCondition: '__test == "value2"',
-        },
-    };
-
-    conditionDataProviderRegistry.add((data) => ({__test: data.test}));
-
-    const metadataPromise = Promise.resolve(metadata);
-    metadataStore.getSchema.mockReturnValue(metadataPromise);
-
-    const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box('en')});
-    const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
-
-    resourceStore.data = observable({test: 'value1'});
-
-    setTimeout(() => {
-        expect(resourceFormStore.schema.item.disabled).toEqual(true);
-        expect(resourceFormStore.schema.item.visible).toEqual(false);
-        done();
-    }, 0);
-});
-
-test('Evaluate disabledConditions and visibleConditions for schema from options', (done) => {
-    const metadata = {
-        item: {
-            type: 'text_line',
-            disabledCondition: '__test == "value1"',
-            visibleCondition: '__test == "value2"',
-        },
-    };
-
-    conditionDataProviderRegistry.add((data, options) => ({__test: options.test}));
-
-    const metadataPromise = Promise.resolve(metadata);
-    metadataStore.getSchema.mockReturnValue(metadataPromise);
-
-    const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box('en')});
-    const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets', {test: 'value1'});
-
-    setTimeout(() => {
-        expect(resourceFormStore.schema.item.disabled).toEqual(true);
-        expect(resourceFormStore.schema.item.visible).toEqual(false);
-        done();
-    }, 0);
-});
-
-test('Evaluate disabledConditions and visibleConditions for schema from metadatOptions', (done) => {
-    const metadata = {
-        item: {
-            type: 'text_line',
-            disabledCondition: '__test == "value1"',
-            visibleCondition: '__test == "value2"',
-        },
-    };
-
-    conditionDataProviderRegistry.add(
-        (data, options, metadataOptions) => ({__test: metadataOptions && metadataOptions.test})
-    );
-
-    const metadataPromise = Promise.resolve(metadata);
-    metadataStore.getSchema.mockReturnValue(metadataPromise);
-
-    const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box('en')});
-    const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets', {}, {test: 'value1'});
-
-    setTimeout(() => {
-        expect(resourceFormStore.schema.item.disabled).toEqual(true);
-        expect(resourceFormStore.schema.item.visible).toEqual(false);
         done();
     }, 0);
 });
@@ -575,7 +263,7 @@ test('Change type should update schema and data', (done) => {
     const cachedPathsByTag = resourceFormStore.pathsByTag;
 
     setTimeout(() => {
-        expect(resourceFormStore.rawSchema).toEqual(sidebarMetadata);
+        expect(resourceFormStore.schema).toEqual(sidebarMetadata);
         expect(resourceFormStore.pathsByTag).not.toBe(cachedPathsByTag);
         expect(resourceFormStore.data).toEqual({
             title: 'Title',
@@ -1143,13 +831,11 @@ test('Destroying the store should call all the disposers', () => {
     const resourceFormStore = new ResourceFormStore(new ResourceStore('snippets', '2'), 'snippets');
     resourceFormStore.schemaDisposer = jest.fn();
     resourceFormStore.typeDisposer = jest.fn();
-    resourceFormStore.updateFieldPathEvaluationsDisposer = jest.fn();
 
     resourceFormStore.destroy();
 
     expect(resourceFormStore.schemaDisposer).toBeCalled();
     expect(resourceFormStore.typeDisposer).toBeCalled();
-    expect(resourceFormStore.updateFieldPathEvaluationsDisposer).toBeCalled();
 });
 
 test('Destroying the store should not fail if no disposers are available', () => {
@@ -1178,7 +864,7 @@ test('Return all the values for a given tag', () => {
     });
 
     const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
-    resourceFormStore.rawSchema = {
+    resourceFormStore.schema = {
         title: {
             tags: [
                 {name: 'sulu.resource_locator_part'},
@@ -1211,7 +897,7 @@ test('Return all the values for a given tag sorted by priority', () => {
     });
 
     const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
-    resourceFormStore.rawSchema = {
+    resourceFormStore.schema = {
         title: {
             tags: [
                 {name: 'sulu.resource_locator_part', priority: 10},
@@ -1242,7 +928,7 @@ test('Return all the values for a given tag within sections', () => {
     });
 
     const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
-    resourceFormStore.rawSchema = {
+    resourceFormStore.schema = {
         highlight: {
             items: {
                 title: {
@@ -1282,7 +968,7 @@ test('Return all the values for a given tag with empty blocks', () => {
     });
 
     const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
-    resourceFormStore.rawSchema = {
+    resourceFormStore.schema = {
         title: {
             tags: [
                 {name: 'sulu.resource_locator_part'},
@@ -1334,7 +1020,7 @@ test('Return all the values for a given tag within blocks', () => {
     });
 
     const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
-    resourceFormStore.rawSchema = {
+    resourceFormStore.schema = {
         title: {
             tags: [
                 {name: 'sulu.resource_locator_part'},
@@ -1454,7 +1140,7 @@ test('Return SchemaEntry for given schemaPath', (done) => {
 
 test('Remember fields being finished as modified fields and forget about them after saving', () => {
     const resourceFormStore = new ResourceFormStore(new ResourceStore('test'), 'snippets');
-    resourceFormStore.rawSchema = {};
+    resourceFormStore.schema = {};
     resourceFormStore.finishField('/block/0/text');
     resourceFormStore.finishField('/block/0/text');
     resourceFormStore.finishField('/block/1/text');

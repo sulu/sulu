@@ -3,15 +3,18 @@ import React from 'react';
 import {computed} from 'mobx';
 import {observer} from 'mobx-react';
 import log from 'loglevel';
+import jexl from 'jexl';
 import Router from '../../services/Router';
 import {translate} from '../../utils';
-import FieldComponent from '../../components/Form/Field';
+import Form from '../../components/Form';
+import conditionDataProviderRegistry from './registries/conditionDataProviderRegistry';
 import fieldRegistry from './registries/fieldRegistry';
 import fieldStyles from './field.scss';
 import FormInspector from './FormInspector';
 import type {Error, ErrorCollection, SchemaEntry} from './types';
 
 type Props = {|
+    data: Object,
     dataPath: string,
     error?: Error | ErrorCollection,
     formInspector: FormInspector,
@@ -32,10 +35,41 @@ class Field extends React.Component<Props> {
         showAllErrors: false,
     };
 
-    handleChange = (value: *) => {
-        const {name, onChange, schema} = this.props;
+    @computed get conditionData() {
+        const {data, dataPath, formInspector} = this.props;
 
-        if (schema.disabled) {
+        return conditionDataProviderRegistry.getAll().reduce(
+            function(data, conditionDataProvider) {
+                return {...data, ...conditionDataProvider(data, dataPath, formInspector)};
+            },
+            {...data}
+        );
+    }
+
+    @computed get disabled() {
+        const {schema} = this.props;
+
+        if (!schema.disabledCondition) {
+            return false;
+        }
+
+        return jexl.evalSync(schema.disabledCondition, this.conditionData);
+    }
+
+    @computed get visible() {
+        const {schema} = this.props;
+
+        if (!schema.visibleCondition) {
+            return true;
+        }
+
+        return jexl.evalSync(schema.visibleCondition, this.conditionData);
+    }
+
+    handleChange = (value: *) => {
+        const {name, onChange} = this.props;
+
+        if (this.disabled) {
             return;
         }
 
@@ -87,7 +121,12 @@ class Field extends React.Component<Props> {
     }
 
     render() {
+        if (!this.visible) {
+            return null;
+        }
+
         const {
+            data,
             dataPath,
             error,
             formInspector,
@@ -103,7 +142,6 @@ class Field extends React.Component<Props> {
         const {
             defaultType,
             description,
-            disabled,
             label,
             maxOccurs,
             minOccurs,
@@ -125,7 +163,7 @@ class Field extends React.Component<Props> {
             log.error(e);
 
             return (
-                <FieldComponent
+                <Form.Field
                     colSpan={schema.colSpan}
                     spaceAfter={schema.spaceAfter}
                 >
@@ -140,7 +178,7 @@ class Field extends React.Component<Props> {
                             </div>
                         </div>
                     </div>
-                </FieldComponent>
+                </Form.Field>
             );
         }
         const fieldTypeOptions = fieldRegistry.getOptions(type);
@@ -148,7 +186,7 @@ class Field extends React.Component<Props> {
         const errorKeyword = this.findErrorKeyword(error);
 
         return (
-            <FieldComponent
+            <Form.Field
                 colSpan={schema.colSpan}
                 description={description}
                 error={errorKeyword ? translate('sulu_admin.error_' + errorKeyword.toLowerCase()) : undefined}
@@ -160,9 +198,10 @@ class Field extends React.Component<Props> {
                 <div className={fieldStyles.fieldContainer}>
                     <div className={fieldStyles.field}>
                         <FieldType
+                            data={data}
                             dataPath={dataPath}
                             defaultType={defaultType}
-                            disabled={disabled}
+                            disabled={this.disabled}
                             error={error}
                             fieldTypeOptions={fieldTypeOptions}
                             formInspector={formInspector}
@@ -181,7 +220,7 @@ class Field extends React.Component<Props> {
                         />
                     </div>
                 </div>
-            </FieldComponent>
+            </Form.Field>
         );
     }
 }

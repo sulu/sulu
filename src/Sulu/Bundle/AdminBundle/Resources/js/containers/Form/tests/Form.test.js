@@ -328,6 +328,7 @@ test('Should pass data, onSuccess, router and schema to Renderer', () => {
         onSuccess: successSpy,
         router,
         schema: store.schema,
+        value: store.data,
     }));
 
     const formInspector = form.find('Renderer').prop('formInspector');

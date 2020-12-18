@@ -4,7 +4,7 @@ import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import Ajv from 'ajv';
 import jsonpointer from 'json-pointer';
 import ResourceStore from '../../../stores/ResourceStore';
-import type {FormStoreInterface, RawSchema, SchemaEntry, SchemaType, SchemaTypes} from '../types';
+import type {FormStoreInterface, Schema, SchemaEntry, SchemaType, SchemaTypes} from '../types';
 import AbstractFormStore from './AbstractFormStore';
 import metadataStore from './metadataStore';
 
@@ -23,7 +23,6 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
     @observable typesLoading: boolean = true;
     schemaDisposer: ?() => void;
     typeDisposer: ?() => void;
-    updateFieldPathEvaluationsDisposer: ?() => void;
     metadataOptions: ?{[string]: any};
 
     constructor(resourceStore: ResourceStore, formKey: string, options: Object = {}, metadataOptions: ?Object) {
@@ -45,10 +44,6 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
 
         if (this.typeDisposer) {
             this.typeDisposer();
-        }
-
-        if (this.updateFieldPathEvaluationsDisposer) {
-            this.updateFieldPathEvaluationsDisposer();
         }
     }
 
@@ -92,15 +87,13 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
         });
     };
 
-    @action handleSchemaResponse = ([schema, jsonSchema]: [RawSchema, Object]) => {
+    @action handleSchemaResponse = ([schema, jsonSchema]: [Schema, Object]) => {
         this.validator = jsonSchema ? ajv.compile(jsonSchema) : undefined;
         this.pathsByTag = {};
 
-        this.rawSchema = schema;
+        this.schema = schema;
         this.addMissingSchemaProperties();
         this.setSchemaLoading(false);
-
-        this.updateFieldPathEvaluationsDisposer = autorun(this.updateFieldPathEvaluations);
     };
 
     @computed get hasTypes(): boolean {
@@ -154,8 +147,6 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
 
     setMultiple(data: Object) {
         this.resourceStore.setMultiple(data);
-
-        super.setMultiple();
     }
 
     change(name: string, value: mixed) {

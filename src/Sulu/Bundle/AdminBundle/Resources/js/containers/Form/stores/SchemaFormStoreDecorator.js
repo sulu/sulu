@@ -1,13 +1,13 @@
 // @flow
 import {action, computed, observable} from 'mobx';
-import type {FormStoreInterface, RawSchema, Schema, SchemaEntry} from '../types';
+import type {FormStoreInterface, Schema, SchemaEntry} from '../types';
 import metadataStore from './metadataStore';
 
 export default class SchemaFormStoreDecorator implements FormStoreInterface {
     @observable innerFormStore: ?FormStoreInterface;
 
     constructor(
-        initializer: (schema: RawSchema, jsonSchema: Object) => FormStoreInterface,
+        initializer: (schema: Schema, jsonSchema: Object) => FormStoreInterface,
         formKey: string,
         type: ?string,
         metadataOptions: ?{[string]: any}

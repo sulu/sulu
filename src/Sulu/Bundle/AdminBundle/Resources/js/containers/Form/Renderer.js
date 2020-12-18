@@ -8,6 +8,7 @@ import Form from '../../components/Form';
 import Router from '../../services/Router';
 import Field from './Field';
 import FormInspector from './FormInspector';
+import Section from './Section';
 import type {ErrorCollection, Schema, SchemaEntry} from './types';
 
 type Props = {|
@@ -22,6 +23,7 @@ type Props = {|
     schema: Schema,
     schemaPath: string,
     showAllErrors: boolean,
+    value: Object,
 |};
 
 @observer
@@ -39,18 +41,20 @@ class Renderer extends React.Component<Props> {
     };
 
     renderSection(schemaField: SchemaEntry, schemaKey: string, schemaPath: string) {
-        const {colSpan, label, items} = schemaField;
+        const {data, formInspector} = this.props;
+        const {items} = schemaField;
+
         return (
-            <Form.Section colSpan={colSpan} key={schemaKey} label={label}>
+            <Section data={data} formInspector={formInspector} key={schemaKey} name={schemaKey} schema={schemaField}>
                 {!!items &&
                     Object.keys(items).map((key) => this.renderItem(items[key], key, schemaPath + '/items/' + key))
                 }
-            </Form.Section>
+            </Section>
         );
     }
 
     renderField(schemaField: SchemaEntry, schemaKey: string, schemaPath: string) {
-        const {data, dataPath, errors, formInspector, onChange, onSuccess, router, showAllErrors} = this.props;
+        const {data, dataPath, errors, formInspector, onChange, onSuccess, router, showAllErrors, value} = this.props;
         const itemDataPath = dataPath + '/' + schemaKey;
 
         const error = (showAllErrors || formInspector.isFieldModified(itemDataPath)) && errors && errors[schemaKey]
@@ -59,6 +63,7 @@ class Renderer extends React.Component<Props> {
 
         return (
             <Field
+                data={data}
                 dataPath={itemDataPath}
                 error={error}
                 formInspector={formInspector}
@@ -71,7 +76,7 @@ class Renderer extends React.Component<Props> {
                 schema={schemaField}
                 schemaPath={schemaPath}
                 showAllErrors={showAllErrors}
-                value={jsonpointer.has(data, '/' + schemaKey) ? jsonpointer.get(data, '/' + schemaKey) : undefined}
+                value={jsonpointer.has(value, '/' + schemaKey) ? jsonpointer.get(value, '/' + schemaKey) : undefined}
             />
         );
     }
@@ -80,11 +85,7 @@ class Renderer extends React.Component<Props> {
         schemaField: SchemaEntry,
         schemaKey: string,
         schemaPath: string
-    ): ?Element<typeof Field | typeof Form.Section> {
-        if (schemaField.visible === false) {
-            return null;
-        }
-
+    ): ?Element<typeof Field | typeof Section> {
         if (schemaField.type === 'section') {
             return this.renderSection(schemaField, schemaKey, schemaPath);
         }

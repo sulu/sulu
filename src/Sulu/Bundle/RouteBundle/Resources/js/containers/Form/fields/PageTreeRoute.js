@@ -96,6 +96,7 @@ class PageTreeRoute extends Component<Props> {
         }
 
         const {
+            data,
             dataPath,
             defaultType,
             disabled,
@@ -130,6 +131,7 @@ class PageTreeRoute extends Component<Props> {
 
                     <Grid.Item colSpan={7}>
                         <ResourceLocator
+                            data={data}
                             dataPath={dataPath}
                             defaultType={defaultType}
                             disabled={disabled}
