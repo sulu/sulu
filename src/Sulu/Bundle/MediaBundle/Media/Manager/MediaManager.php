@@ -15,6 +15,7 @@ use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
 use FFMpeg\Exception\ExecutableNotFoundException;
 use FFMpeg\FFProbe;
+use Imagine\Image\ImagineInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Api\Media;
@@ -156,6 +157,11 @@ class MediaManager implements MediaManagerInterface
     private $adminDownloadPath;
 
     /**
+     * @var ImagineInterface
+     */
+    private $imagine;
+
+    /**
      * @param array $permissions
      * @param string $downloadPath
      * @param string $maxFileSize
@@ -180,7 +186,8 @@ class MediaManager implements MediaManagerInterface
         $downloadPath,
         $maxFileSize,
         TargetGroupRepositoryInterface $targetGroupRepository = null,
-        $adminDownloadPath = null
+        $adminDownloadPath = null,
+        ?ImagineInterface $imagine = null
     ) {
         $this->mediaRepository = $mediaRepository;
         $this->collectionRepository = $collectionRepository;
@@ -212,6 +219,18 @@ class MediaManager implements MediaManagerInterface
         }
 
         $this->adminDownloadPath = $adminDownloadPath ?: '/admin' . $this->downloadPath;
+
+        if (!$imagine) {
+            @\trigger_error(
+                \sprintf(
+                    'The usage of the "%s" without setting "$imagine" is deprecated and will not longer work in Sulu 3.0.',
+                    MediaManager::class
+                ),
+                \E_USER_DEPRECATED
+            );
+        }
+
+        $this->imagine = $imagine;
     }
 
     public function getById($id, $locale)
@@ -315,10 +334,10 @@ class MediaManager implements MediaManagerInterface
                 // Exception is thrown if ffmpeg is not installed -> video properties are not set
             }
         } elseif (\fnmatch('image/*', $mimeType)) {
-            $dimensions = \getimagesize($uploadedFile->getPathname());
-            if (\is_array($dimensions)) {
-                $properties['width'] = $dimensions[0];
-                $properties['height'] = $dimensions[1];
+            if ($this->imagine) {
+                $image = $this->imagine->open($uploadedFile->getPathname());
+                $properties['width'] = $image->getSize()->getWidth();
+                $properties['height'] = $image->getSize()->getHeight();
             }
         }
 
