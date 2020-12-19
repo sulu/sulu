@@ -16,6 +16,7 @@ use Doctrine\ORM\EntityManager;
 use FFMpeg\Exception\ExecutableNotFoundException;
 use FFMpeg\FFProbe;
 use Imagine\Exception\InvalidArgumentException;
+use Imagine\Exception\RuntimeException;
 use Imagine\Image\ImagineInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
@@ -340,7 +341,7 @@ class MediaManager implements MediaManagerInterface
                     $image = $this->imagine->open($uploadedFile->getPathname());
                     $properties['width'] = $image->getSize()->getWidth();
                     $properties['height'] = $image->getSize()->getHeight();
-                } catch (InvalidArgumentException $exception) {
+                } catch (InvalidArgumentException|RuntimeException $exception) {
                     // Exception is thrown -> image properties are not set
                 }
             }
