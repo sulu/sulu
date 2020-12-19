@@ -341,7 +341,7 @@ class MediaManager implements MediaManagerInterface
                     $image = $this->imagine->open($uploadedFile->getPathname());
                     $properties['width'] = $image->getSize()->getWidth();
                     $properties['height'] = $image->getSize()->getHeight();
-                } catch (InvalidArgumentException|RuntimeException $exception) {
+                } catch (InvalidArgumentException | RuntimeException $exception) {
                     // Exception is thrown -> image properties are not set
                 }
             }
