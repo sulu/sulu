@@ -84,6 +84,16 @@ class ScheduleBlockVisitorTest extends TestCase
             ],
             [
                 [
+                    'schedules' => [
+                        ['type' => 'fixed'],
+                    ],
+                ],
+                '2020-11-19T08:00:00',
+                false,
+                [],
+            ],
+            [
+                [
                     'schedules_enabled' => false,
                     'schedules' => [
                         ['type' => 'fixed', 'start' => '2020-11-15T08:00:00', 'end' => '2020-11-18T18:00'],
@@ -101,6 +111,50 @@ class ScheduleBlockVisitorTest extends TestCase
                 '2020-11-19T08:00:00',
                 false,
                 [],
+            ],
+            [
+                [
+                    'schedules_enabled' => true,
+                    'schedules' => [
+                        ['type' => 'fixed', 'start' => '2020-11-15T08:00:00'],
+                    ],
+                ],
+                '2020-11-19T08:00:00',
+                false,
+                [-345600],
+            ],
+            [
+                [
+                    'schedules_enabled' => true,
+                    'schedules' => [
+                        ['type' => 'fixed', 'start' => '2020-11-15T08:00:00'],
+                    ],
+                ],
+                '2020-11-14T08:00:00',
+                true,
+                [86400],
+            ],
+            [
+                [
+                    'schedules_enabled' => true,
+                    'schedules' => [
+                        ['type' => 'fixed', 'end' => '2020-11-20T08:00:00'],
+                    ],
+                ],
+                '2020-11-19T08:00:00',
+                false,
+                [86400],
+            ],
+            [
+                [
+                    'schedules_enabled' => true,
+                    'schedules' => [
+                        ['type' => 'fixed', 'end' => '2020-11-20T08:00:00'],
+                    ],
+                ],
+                '2020-11-21T08:00:00',
+                true,
+                [-86400],
             ],
             [
                 [

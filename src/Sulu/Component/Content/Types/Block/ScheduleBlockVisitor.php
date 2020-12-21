@@ -56,11 +56,31 @@ class ScheduleBlockVisitor implements BlockVisitorInterface
         foreach ($blockPropertyTypeSettings['schedules'] as $schedule) {
             switch ($schedule['type']) {
                 case 'fixed':
-                    $start = new \DateTime($schedule['start']);
-                    $end = new \DateTime($schedule['end']);
+                    $start = isset($schedule['start']) ? new \DateTime($schedule['start']) : null;
+                    $end = isset($schedule['end']) ? new \DateTime($schedule['end']) : null;
 
-                    $this->cacheLifetimeRequestEnhancer->setCacheLifetime($start->getTimestamp() - $nowTimestamp);
-                    $this->cacheLifetimeRequestEnhancer->setCacheLifetime($end->getTimestamp() - $nowTimestamp);
+                    if (!$start && !$end) {
+                        $returnBlock = true;
+                        continue 2;
+                    }
+
+                    if ($start) {
+                        $this->cacheLifetimeRequestEnhancer->setCacheLifetime($start->getTimestamp() - $nowTimestamp);
+                    }
+
+                    if ($end) {
+                        $this->cacheLifetimeRequestEnhancer->setCacheLifetime($end->getTimestamp() - $nowTimestamp);
+                    }
+
+                    if (!$start && $now <= $end) {
+                        $returnBlock = true;
+                        continue 2;
+                    }
+
+                    if (!$end && $now >= $start) {
+                        $returnBlock = true;
+                        continue 2;
+                    }
 
                     if ($now >= $start && $now <= $end) {
                         $returnBlock = true;
