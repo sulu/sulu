@@ -54,6 +54,7 @@ class Schedules extends React.Component<Props> {
         return (
             // $FlowFixMe
             <BlockCollection
+                addButtonText={translate('sulu_page.add_schedule')}
                 collapsable={false}
                 defaultType="fixed"
                 disabled={disabled}

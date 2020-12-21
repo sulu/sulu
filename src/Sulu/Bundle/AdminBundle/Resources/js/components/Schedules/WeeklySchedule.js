@@ -34,7 +34,7 @@ export default class WeeklySchedule extends React.Component<Props> {
 
         return (
             <Form>
-                <Form.Field colSpan={6} label={translate('sulu_admin.weekdays')} spaceAfter={6}>
+                <Form.Field colSpan={12} label={translate('sulu_admin.weekdays')}>
                     <MultiSelect onChange={this.handleDaysChange} values={value.days || []}>
                         <MultiSelect.Option value="monday">{translate('sulu_admin.monday')}</MultiSelect.Option>
                         <MultiSelect.Option value="tuesday">{translate('sulu_admin.tuesday')}</MultiSelect.Option>

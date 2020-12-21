@@ -5,7 +5,7 @@ exports[`Render a WeeklySchedule 1`] = `
   class="grid grid"
 >
   <div
-    class="item gridItem colSpan colSpan-6 space-before-0 space-after-6"
+    class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
   >
     <div
       class="field"
