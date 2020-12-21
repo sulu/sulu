@@ -2,9 +2,9 @@
 import type {Node} from 'react';
 import type {SchemaEntry} from '../Form/types';
 
-export type BlockEntry<T> = {
+export type BlockEntry = {
     settings?: {[string]: any},
-    type: T,
+    type: string,
 };
 
 export type BlockPreviewTransformerMap = {[string]: BlockPreviewTransformer};
