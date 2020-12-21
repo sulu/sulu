@@ -34,20 +34,20 @@ class CacheLifetimeEnhancer implements CacheLifetimeEnhancerInterface
     private $sharedMaxAge;
 
     /**
-     * @var CacheLifetimeRequestEnhancer
+     * @var CacheLifetimeRequestStore
      */
-    private $cacheLifetimeRequestEnhancer;
+    private $cacheLifetimeRequestStore;
 
     public function __construct(
         CacheLifetimeResolverInterface $cacheLifetimeResolver,
         $maxAge,
         $sharedMaxAge,
-        CacheLifetimeRequestEnhancer $cacheLifetimeRequestEnhancer
+        CacheLifetimeRequestStore $cacheLifetimeRequestStore
     ) {
         $this->cacheLifetimeResolver = $cacheLifetimeResolver;
         $this->maxAge = $maxAge;
         $this->sharedMaxAge = $sharedMaxAge;
-        $this->cacheLifetimeRequestEnhancer = $cacheLifetimeRequestEnhancer;
+        $this->cacheLifetimeRequestStore = $cacheLifetimeRequestStore;
     }
 
     public function enhance(Response $response, StructureInterface $structure)
@@ -62,7 +62,7 @@ class CacheLifetimeEnhancer implements CacheLifetimeEnhancerInterface
             $cacheLifetimeData['value']
         );
 
-        $requestCacheLifetime = $this->cacheLifetimeRequestEnhancer->getCacheLifetime();
+        $requestCacheLifetime = $this->cacheLifetimeRequestStore->getCacheLifetime();
 
         if (null !== $requestCacheLifetime && $requestCacheLifetime < $cacheLifetime) {
             $cacheLifetime = $requestCacheLifetime;

@@ -12,11 +12,11 @@
 namespace Sulu\Bundle\HttpCacheBundle\Tests\Unit\CacheLifetime;
 
 use PHPUnit\Framework\TestCase;
-use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeRequestEnhancer;
+use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeRequestStore;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class CacheLifetimeRequestEnhancerTest extends TestCase
+class CacheLifetimeRequestStoreTest extends TestCase
 {
     /**
      * @var RequestStack
@@ -24,14 +24,14 @@ class CacheLifetimeRequestEnhancerTest extends TestCase
     private $requestStack;
 
     /**
-     * @var CacheLifetimeRequestEnhancer
+     * @var CacheLifetimeRequestStore
      */
-    private $cacheLifetimeRequestEnhancer;
+    private $cacheLifetimeRequestStore;
 
     public function setUp(): void
     {
         $this->requestStack = $this->prophesize(RequestStack::class);
-        $this->cacheLifetimeRequestEnhancer = new CacheLifetimeRequestEnhancer($this->requestStack->reveal());
+        $this->cacheLifetimeRequestStore = new CacheLifetimeRequestStore($this->requestStack->reveal());
     }
 
     public function provideSetCacheLifetime()
@@ -52,13 +52,13 @@ class CacheLifetimeRequestEnhancerTest extends TestCase
         $request = new Request([], [], $previousCacheLifetime ? ['_cacheLifetime' => $previousCacheLifetime] : []);
         $this->requestStack->getCurrentRequest()->willReturn($request);
 
-        $this->cacheLifetimeRequestEnhancer->setCacheLifetime($newCacheLifetime);
+        $this->cacheLifetimeRequestStore->setCacheLifetime($newCacheLifetime);
 
-        $this->assertEquals($expectedCacheLifetime, $this->cacheLifetimeRequestEnhancer->getCacheLifetime());
+        $this->assertEquals($expectedCacheLifetime, $this->cacheLifetimeRequestStore->getCacheLifetime());
     }
 
     public function testGetCacheLifetimeWithoutRequest()
     {
-        $this->assertNull($this->cacheLifetimeRequestEnhancer->getCacheLifetime());
+        $this->assertNull($this->cacheLifetimeRequestStore->getCacheLifetime());
     }
 }

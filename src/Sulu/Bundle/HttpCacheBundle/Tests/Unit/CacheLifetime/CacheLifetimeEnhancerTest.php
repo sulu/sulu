@@ -15,7 +15,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\HttpCacheBundle\Cache\SuluHttpCache;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeEnhancer;
-use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeRequestEnhancer;
+use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeRequestStore;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolver;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
@@ -31,9 +31,9 @@ class CacheLifetimeEnhancerTest extends TestCase
     private $cacheLifetimeEnhancer;
 
     /**
-     * @var CacheLifetimeRequestEnhancer
+     * @var CacheLifetimeRequestStore
      */
-    private $cacheLifetimeRequestEnhancer;
+    private $cacheLifetimeRequestStore;
 
     /**
      * @var CacheLifetimeResolver
@@ -73,7 +73,7 @@ class CacheLifetimeEnhancerTest extends TestCase
     public function setUp(): void
     {
         $this->cacheLifetimeResolver = $this->prophesize(CacheLifetimeResolver::class);
-        $this->cacheLifetimeRequestEnhancer = $this->prophesize(CacheLifetimeRequestEnhancer::class);
+        $this->cacheLifetimeRequestStore = $this->prophesize(CacheLifetimeRequestStore::class);
 
         $this->page = $this->prophesize(PageBridge::class);
         $this->snippet = $this->prophesize(SnippetBridge::class);
@@ -85,7 +85,7 @@ class CacheLifetimeEnhancerTest extends TestCase
             $this->cacheLifetimeResolver->reveal(),
             $this->maxAge,
             $this->sharedMaxAge,
-            $this->cacheLifetimeRequestEnhancer->reveal()
+            $this->cacheLifetimeRequestStore->reveal()
         );
     }
 
@@ -127,7 +127,7 @@ class CacheLifetimeEnhancerTest extends TestCase
         }
 
         if ($requestCacheLifetime) {
-            $this->cacheLifetimeRequestEnhancer->getCacheLifetime()->willReturn($requestCacheLifetime);
+            $this->cacheLifetimeRequestStore->getCacheLifetime()->willReturn($requestCacheLifetime);
         }
 
         $this->cacheLifetimeResolver->resolve(Argument::cetera())->willReturn($cacheLifetime);

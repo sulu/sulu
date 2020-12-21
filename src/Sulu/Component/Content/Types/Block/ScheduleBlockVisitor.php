@@ -11,7 +11,7 @@
 
 namespace Sulu\Component\Content\Types\Block;
 
-use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeRequestEnhancer;
+use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeRequestStore;
 use Sulu\Component\Content\Compat\Block\BlockPropertyType;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
@@ -23,16 +23,16 @@ class ScheduleBlockVisitor implements BlockVisitorInterface
     private $requestAnalyzer;
 
     /**
-     * @var CacheLifetimeRequestEnhancer
+     * @var CacheLifetimeRequestStore
      */
-    private $cacheLifetimeRequestEnhancer;
+    private $cacheLifetimeRequestStore;
 
     public function __construct(
         RequestAnalyzerInterface $requestAnalyzer,
-        CacheLifetimeRequestEnhancer $cacheLifetimeRequestEnhancer
+        CacheLifetimeRequestStore $cacheLifetimeRequestStore
     ) {
         $this->requestAnalyzer = $requestAnalyzer;
-        $this->cacheLifetimeRequestEnhancer = $cacheLifetimeRequestEnhancer;
+        $this->cacheLifetimeRequestStore = $cacheLifetimeRequestStore;
     }
 
     public function visit(BlockPropertyType $block): ?BlockPropertyType
@@ -65,11 +65,11 @@ class ScheduleBlockVisitor implements BlockVisitorInterface
                     }
 
                     if ($start) {
-                        $this->cacheLifetimeRequestEnhancer->setCacheLifetime($start->getTimestamp() - $nowTimestamp);
+                        $this->cacheLifetimeRequestStore->setCacheLifetime($start->getTimestamp() - $nowTimestamp);
                     }
 
                     if ($end) {
-                        $this->cacheLifetimeRequestEnhancer->setCacheLifetime($end->getTimestamp() - $nowTimestamp);
+                        $this->cacheLifetimeRequestStore->setCacheLifetime($end->getTimestamp() - $nowTimestamp);
                     }
 
                     if (!$start && $now <= $end) {
@@ -118,8 +118,8 @@ class ScheduleBlockVisitor implements BlockVisitorInterface
                         ++$i;
                     } while ($i < 7);
 
-                    $this->cacheLifetimeRequestEnhancer->setCacheLifetime($start->getTimestamp() - $nowTimestamp);
-                    $this->cacheLifetimeRequestEnhancer->setCacheLifetime($end->getTimestamp() - $nowTimestamp);
+                    $this->cacheLifetimeRequestStore->setCacheLifetime($start->getTimestamp() - $nowTimestamp);
+                    $this->cacheLifetimeRequestStore->setCacheLifetime($end->getTimestamp() - $nowTimestamp);
 
                     if ($now >= $start && $now <= $end) {
                         $returnBlock = true;

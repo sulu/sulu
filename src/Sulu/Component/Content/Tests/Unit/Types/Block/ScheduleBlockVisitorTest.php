@@ -12,7 +12,7 @@
 namespace Sulu\Component\Content\Tests\Unit\Types\Block;
 
 use PHPUnit\Framework\TestCase;
-use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeRequestEnhancer;
+use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeRequestStore;
 use Sulu\Component\Content\Compat\Block\BlockPropertyType;
 use Sulu\Component\Content\Compat\Metadata;
 use Sulu\Component\Content\Types\Block\ScheduleBlockVisitor;
@@ -26,9 +26,9 @@ class ScheduleBlockVisitorTest extends TestCase
     private $requestAnalyzer;
 
     /**
-     * @var CacheLifetimeRequestEnhancer
+     * @var CacheLifetimeRequestStore
      */
-    private $cacheLifetimeRequestEnhancer;
+    private $cacheLifetimeRequestStore;
 
     /**
      * @var ScheduleBlockVisitor
@@ -38,10 +38,10 @@ class ScheduleBlockVisitorTest extends TestCase
     public function setUp(): void
     {
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
-        $this->cacheLifetimeRequestEnhancer = $this->prophesize(CacheLifetimeRequestEnhancer::class);
+        $this->cacheLifetimeRequestStore = $this->prophesize(CacheLifetimeRequestStore::class);
         $this->scheduleBlockVisitor = new ScheduleBlockVisitor(
             $this->requestAnalyzer->reveal(),
-            $this->cacheLifetimeRequestEnhancer->reveal()
+            $this->cacheLifetimeRequestStore->reveal()
         );
     }
 
@@ -429,7 +429,7 @@ class ScheduleBlockVisitorTest extends TestCase
         }
 
         foreach ($requestCacheLifetimes as $cacheLifetime) {
-            $this->cacheLifetimeRequestEnhancer->setCacheLifetime($cacheLifetime)->shouldBeCalled();
+            $this->cacheLifetimeRequestStore->setCacheLifetime($cacheLifetime)->shouldBeCalled();
         }
     }
 }

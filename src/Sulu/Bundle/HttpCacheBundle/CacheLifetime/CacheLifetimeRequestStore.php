@@ -13,7 +13,7 @@ namespace Sulu\Bundle\HttpCacheBundle\CacheLifetime;
 
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class CacheLifetimeRequestEnhancer
+class CacheLifetimeRequestStore
 {
     const ATTRIBUTE_KEY = '_cacheLifetime';
 
