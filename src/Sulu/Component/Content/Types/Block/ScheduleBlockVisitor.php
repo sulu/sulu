@@ -134,8 +134,7 @@ class ScheduleBlockVisitor implements BlockVisitorInterface
     private function matchWeekday(\DateTime $datetime, $schedule)
     {
         if (!\is_array($schedule['days'])) {
-            // If the user has not selected any weekdays, then the given times are valid for every weekday.
-            return true;
+            return false;
         }
 
         return \in_array(\strtolower($datetime->format('l')), $schedule['days']);

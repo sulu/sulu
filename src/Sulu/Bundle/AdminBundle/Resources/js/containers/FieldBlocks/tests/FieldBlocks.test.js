@@ -964,13 +964,50 @@ test('Should correctly pass props to the BlockCollection', () => {
 
     expect(fieldBlocks.find('BlockCollection').props()).toEqual(expect.objectContaining({
         addButtonText: 'custom-add-text',
+        collapsable: true,
         disabled: true,
         maxOccurs: 2,
         minOccurs: 1,
+        movable: true,
         types: {
             default: 'Default',
         },
         value,
+    }));
+});
+
+test('Should pass collapsable and movable props to the BlockCollection', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const types = {
+        default: {
+            title: 'Default',
+            form: {
+                text: {
+                    label: 'Text',
+                    type: 'text_line',
+                    visible: true,
+                },
+            },
+        },
+    };
+    const fieldBlocks = shallow(
+        <FieldBlocks
+            {...fieldTypeDefaultProps}
+            defaultType="editor"
+            disabled={true}
+            formInspector={formInspector}
+            label="Test"
+            maxOccurs={2}
+            minOccurs={1}
+            schemaOptions={{movable: {name: 'movable', value: false}, collapsable: {name: 'collapsable', value: false}}}
+            types={types}
+            value={[]}
+        />
+    );
+
+    expect(fieldBlocks.find('BlockCollection').props()).toEqual(expect.objectContaining({
+        collapsable: false,
+        movable: false,
     }));
 });
 
@@ -1373,6 +1410,66 @@ test('Should open and close block settings overlay when confirm button is clicke
         fieldBlocks.find('Overlay Button[children="sulu_admin.apply"]').simulate('click');
         expect(fieldBlocks.find('Overlay').prop('open')).toEqual(false);
         expect(changeSpy).toBeCalledWith([{type: 'default'}, {settings: {setting: true}, type: 'default'}]);
+    });
+});
+
+test('Should open and not close block settings overlay when confirm button is clicked with invalid data', () => {
+    const changeSpy = jest.fn();
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const types = {
+        default: {
+            title: 'Default',
+            form: {
+                text: {
+                    label: 'Text',
+                    type: 'text_line',
+                    visible: true,
+                },
+            },
+        },
+    };
+    const value = [
+        {type: 'default'},
+        {type: 'default'},
+    ];
+    formInspector.getSchemaEntryByPath.mockReturnValue({types});
+
+    const schemaPromise = Promise.resolve({
+        setting: {
+            mandatory: true,
+            tags: [],
+            type: 'checkbox',
+        },
+    });
+    const jsonSchemaPromise = Promise.resolve({required: ['setting']});
+    metadataStore.getSchema.mockReturnValue(schemaPromise);
+    metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
+
+    const fieldBlocks = mount(
+        <FieldBlocks
+            {...fieldTypeDefaultProps}
+            defaultType="editor"
+            formInspector={formInspector}
+            onChange={changeSpy}
+            schemaOptions={{settings_form_key: {name: 'settings_form_key', value: 'page_block_settings'}}}
+            types={types}
+            value={value}
+        />
+    );
+
+    expect(fieldBlocks.find('Overlay').prop('open')).toEqual(false);
+    fieldBlocks.find('Block').at(1).simulate('click');
+    fieldBlocks.find('Block').at(1).find('Icon[name="su-cog"]').simulate('click');
+    expect(fieldBlocks.find('Overlay').prop('open')).toEqual(true);
+    expect(metadataStore.getSchema).toBeCalledWith('page_block_settings', undefined, undefined);
+    expect(metadataStore.getJsonSchema).toBeCalledWith('page_block_settings', undefined, undefined);
+
+    return Promise.all([schemaPromise, jsonSchemaPromise]).then(() => {
+        fieldBlocks.update();
+
+        fieldBlocks.find('Overlay Button[children="sulu_admin.apply"]').simulate('click');
+        expect(fieldBlocks.find('Overlay').prop('open')).toEqual(true);
+        expect(changeSpy).not.toBeCalled();
     });
 });
 
