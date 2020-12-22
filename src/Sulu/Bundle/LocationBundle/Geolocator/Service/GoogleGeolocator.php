@@ -11,11 +11,11 @@
 
 namespace Sulu\Bundle\LocationBundle\Geolocator\Service;
 
-use GuzzleHttp\ClientInterface;
 use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorInterface;
 use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorLocation;
 use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorResponse;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
  * Geolocator which uses the google geocoding API.
@@ -27,24 +27,26 @@ class GoogleGeolocator implements GeolocatorInterface
     const ENDPOINT = 'https://maps.googleapis.com/maps/api/geocode/json';
 
     /**
-     * @var ClientInterface
+     * @var HttpClientInterface
      */
-    protected $client;
+    protected $httpClient;
 
     /**
      * @var string
      */
     protected $apiKey;
 
-    public function __construct(ClientInterface $client, string $apiKey)
-    {
-        $this->client = $client;
+    public function __construct(
+        HttpClientInterface $httpClient,
+        string $apiKey
+    ) {
+        $this->httpClient = $httpClient;
         $this->apiKey = $apiKey;
     }
 
     public function locate(string $query): GeolocatorResponse
     {
-        $response = $this->client->request(
+        $response = $this->httpClient->request(
             'GET',
             self::ENDPOINT,
             [
@@ -66,7 +68,7 @@ class GoogleGeolocator implements GeolocatorInterface
             );
         }
 
-        $googleResponse = \json_decode($response->getBody(), true);
+        $googleResponse = $response->toArray();
         $response = new GeolocatorResponse();
         if ('OK' != $googleResponse['status']) {
             return $response;

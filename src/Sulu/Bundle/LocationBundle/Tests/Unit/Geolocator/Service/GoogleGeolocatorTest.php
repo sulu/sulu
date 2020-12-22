@@ -11,14 +11,10 @@
 
 namespace Sulu\Bundle\LocationBundle\Tests\Unit\Geolocator\Service;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Handler\MockHandler;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Middleware;
-use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\LocationBundle\Geolocator\Service\GoogleGeolocator;
+use Symfony\Component\HttpClient\MockHttpClient;
+use Symfony\Component\HttpClient\Response\MockResponse;
 
 class GoogleGeolocatorTest extends TestCase
 {
@@ -63,10 +59,10 @@ class GoogleGeolocatorTest extends TestCase
     {
         $fixtureName = __DIR__ . '/google-responses/' . \md5($query) . '.json';
         $fixture = \file_get_contents($fixtureName);
-        $mockHandler = new MockHandler([new Response(200, [], $fixture)]);
+        $mockResponse = new MockResponse($fixture);
 
-        $client = new Client(['handler' => HandlerStack::create($mockHandler)]);
-        $geolocator = new GoogleGeolocator($client, '');
+        $httpClient = new MockHttpClient($mockResponse);
+        $geolocator = new GoogleGeolocator($httpClient, '');
 
         $results = $geolocator->locate($query);
         $this->assertCount($expectedCount, $results);
@@ -84,20 +80,13 @@ class GoogleGeolocatorTest extends TestCase
 
     public function testApiKey()
     {
-        $mockHandler = new MockHandler([new Response(200, [], '{"status": "OK","results":[]}')]);
-        $stack = HandlerStack::create($mockHandler);
-        $stack->push(
-            Middleware::mapRequest(
-                function(Request $request) {
-                    $this->assertStringContainsString('key=foobar', $request->getUri()->getQuery());
+        $mockResponse = new MockResponse('{"status": "OK","results":[]}');
 
-                    return $request;
-                }
-            )
-        );
-
-        $client = new Client(['handler' => $stack]);
-        $geolocator = new GoogleGeolocator($client, 'foobar');
+        $httpClient = new MockHttpClient($mockResponse);
+        $geolocator = new GoogleGeolocator($httpClient, 'foobar');
         $geolocator->locate('foobar');
+
+        $this->assertStringContainsString('key=foobar', $mockResponse->getRequestUrl());
+
     }
 }

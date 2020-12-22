@@ -11,12 +11,10 @@
 
 namespace Sulu\Bundle\LocationBundle\Tests\Unit\Geolocator\Service;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Handler\MockHandler;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\LocationBundle\Geolocator\Service\NominatimGeolocator;
+use Symfony\Component\HttpClient\MockHttpClient;
+use Symfony\Component\HttpClient\Response\MockResponse;
 
 class NominatimGeolocatorTest extends TestCase
 {
@@ -47,10 +45,10 @@ class NominatimGeolocatorTest extends TestCase
     {
         $fixtureName = __DIR__ . '/responses/' . \md5($query) . '.json';
         $fixture = \file_get_contents($fixtureName);
-        $mockHandler = new MockHandler([new Response(200, [], $fixture)]);
+        $mockResponse = new MockResponse($fixture);
 
-        $client = new Client(['handler' => HandlerStack::create($mockHandler)]);
-        $geolocator = new NominatimGeolocator($client, '', '');
+        $httpClient = new MockHttpClient($mockResponse);
+        $geolocator = new NominatimGeolocator($httpClient, 'https://example.org', 'key');
 
         $results = $geolocator->locate($query);
         $this->assertCount($expectedCount, $results);

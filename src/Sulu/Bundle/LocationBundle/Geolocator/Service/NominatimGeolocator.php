@@ -16,6 +16,7 @@ use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorInterface;
 use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorLocation;
 use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorResponse;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
  * Geolocator which uses the open street maps nominatim service.
@@ -25,9 +26,9 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class NominatimGeolocator implements GeolocatorInterface
 {
     /**
-     * @var ClientInterface
+     * @var HttpClientInterface
      */
-    protected $client;
+    protected $httpClient;
 
     /**
      * @var string
@@ -39,16 +40,19 @@ class NominatimGeolocator implements GeolocatorInterface
      */
     private $key;
 
-    public function __construct(ClientInterface $client, string $baseUrl, string $key)
-    {
-        $this->client = $client;
+    public function __construct(
+        HttpClientInterface $httpClient,
+        string $baseUrl,
+        string $key
+    ) {
+        $this->httpClient = $httpClient;
         $this->baseUrl = $baseUrl;
         $this->key = $key;
     }
 
     public function locate(string $query): GeolocatorResponse
     {
-        $response = $this->client->request(
+        $response = $this->httpClient->request(
             'GET',
             $this->baseUrl,
             [
@@ -72,7 +76,7 @@ class NominatimGeolocator implements GeolocatorInterface
             );
         }
 
-        $results = \json_decode($response->getBody(), true);
+        $results = $response->toArray();
         $response = new GeolocatorResponse();
         foreach ($results as $result) {
             $location = new GeolocatorLocation();
