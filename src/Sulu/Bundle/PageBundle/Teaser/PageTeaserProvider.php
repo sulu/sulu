@@ -161,7 +161,9 @@ class PageTeaserProvider implements TeaserProviderInterface
             }
         );
 
-        return $this->showDrafts ? array_diff($allPageIndexNames, $publishedPageIndexNames) : $publishedPageIndexNames;
+        return $this->showDrafts
+            ? \array_values(\array_diff($allPageIndexNames, $publishedPageIndexNames))
+            : \array_values($publishedPageIndexNames);
     }
 
     /**
