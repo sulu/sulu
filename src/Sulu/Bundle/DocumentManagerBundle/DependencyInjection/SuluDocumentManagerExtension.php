@@ -176,12 +176,6 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
             || ($container->hasParameter('sulu.preview') && $container->getParameter('sulu.preview'))
         );
 
-        $container->setParameter(
-            'sulu_document_manager.show_drafts',
-            SuluKernel::CONTEXT_ADMIN === $container->getParameter('sulu.context')
-            || ($container->hasParameter('sulu.preview') && $container->getParameter('sulu.preview'))
-        );
-
         $container->setParameter('sulu_document_manager.slugifier', $config['slugifier']);
 
         $container->registerForAutoconfiguration(DocumentFixtureInterface::class)
