@@ -32,10 +32,19 @@ class PageTeaserProvider implements TeaserProviderInterface
      */
     private $translator;
 
-    public function __construct(SearchManagerInterface $searchManager, TranslatorInterface $translator)
-    {
+    /**
+     * @var bool
+     */
+    private $showDrafts;
+
+    public function __construct(
+        SearchManagerInterface $searchManager,
+        TranslatorInterface $translator,
+        bool $showDrafts = false
+    ) {
         $this->searchManager = $searchManager;
         $this->translator = $translator;
+        $this->showDrafts = $showDrafts;
     }
 
     public function getConfiguration()
@@ -138,12 +147,21 @@ class PageTeaserProvider implements TeaserProviderInterface
      */
     private function getPageIndexes()
     {
-        return \array_filter(
+        $allPageIndexNames = \array_filter(
             $this->searchManager->getIndexNames(),
             function($index) {
-                return \preg_match('/page_(.*)_published/', $index) > 0;
+                return \preg_match('/page_(.+)/', $index) > 0;
             }
         );
+
+        $publishedPageIndexNames = \array_filter(
+            $allPageIndexNames,
+            function($index) {
+                return \preg_match('/page_(.+)_published/', $index) > 0;
+            }
+        );
+
+        return $this->showDrafts ? array_diff($allPageIndexNames, $publishedPageIndexNames) : $publishedPageIndexNames;
     }
 
     /**
