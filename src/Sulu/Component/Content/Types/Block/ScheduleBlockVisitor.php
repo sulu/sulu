@@ -105,7 +105,7 @@ class ScheduleBlockVisitor implements BlockVisitorInterface
                     }
 
                     $i = 0;
-                    // This loop checks for the coming 7 days for matches of the weekdays selected by the users. This is
+                    // This loop checks the coming 7 days for matches of the weekdays selected by the user. This is
                     // necessary to find the exact weekday on which the next change happens, so that it can be set as
                     // cachelifetime.
                     do {
