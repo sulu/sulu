@@ -1,5 +1,5 @@
 // @flow
-import {action, isObservableArray, observable, set, toJS} from 'mobx';
+import {action, computed, isObservableArray, observable, set, toJS} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import jsonpointer from 'json-pointer';
 import log from 'loglevel';
@@ -157,12 +157,16 @@ export default class AbstractFormStore
 
         this.errors = errors;
 
-        if (Object.keys(this.errors).length > 0) {
+        if (this.hasErrors) {
             log.info('Form validation detected the following errors: ', toJS(this.errors));
             return false;
         }
 
         return true;
+    }
+
+    @computed get hasErrors() {
+        return Object.keys(this.errors).length > 0;
     }
 
     getValueByPath = (path: string): mixed => {

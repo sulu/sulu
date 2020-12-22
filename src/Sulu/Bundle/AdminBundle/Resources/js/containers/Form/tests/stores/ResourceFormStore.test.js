@@ -530,6 +530,7 @@ test('Validate should return true if no errors occured', (done) => {
         () => !resourceFormStore.schemaLoading,
         (): void => {
             expect(resourceFormStore.validate()).toEqual(true);
+            expect(resourceFormStore.hasErrors).toEqual(false);
             done();
         }
     );
@@ -549,6 +550,7 @@ test('Validate should return false if errors occured', (done) => {
         () => !resourceFormStore.schemaLoading,
         (): void => {
             expect(resourceFormStore.validate()).toEqual(false);
+            expect(resourceFormStore.hasErrors).toEqual(true);
             done();
         }
     );

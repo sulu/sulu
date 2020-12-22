@@ -91,6 +91,7 @@ export interface FormStoreInterface {
     +getSchemaEntryByPath: (schemaPath: string) => ?SchemaEntry,
     +getValueByPath: (path: string) => mixed,
     +getValuesByTag: (tagName: string) => Array<mixed>,
+    +hasErrors: boolean,
     +hasInvalidType: boolean,
     +id: ?string | number,
     +isFieldModified: (dataPath: string) => boolean,
