@@ -38,6 +38,31 @@ jobs:
             - name: Run php-cs-fixer
               run: ./${{ steps.php-cs-fixer-path.outputs.path }} fix --dry-run --diff
 
+    validate-js-build:
+        name: Validate JavaScript builds
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout project
+              uses: actions/checkout@v2
+
+            - name: Install and configure Node
+              uses: actions/setup-node@v2-beta
+              with:
+                  node-version: '12'
+
+            - name: Install packages
+              run: |
+                  sudo apt-get update
+                  sudo apt-get install ruby ruby-all-dev
+                  sudo gem update --system
+                  sudo gem install compass
+
+            - name: Build JavaScript
+              run: bin/build-bundles.sh
+
+            - name: Validate builds
+              run: bin/ci/validate-build-bundles.sh
+
     test:
         name: "Run tests with php ${{ matrix.php-version }} (${{ matrix.database }}, ${{ matrix.phpcr-transport }})"
         runs-on: ubuntu-latest
