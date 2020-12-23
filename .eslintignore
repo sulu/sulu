@@ -4,7 +4,6 @@
 styleguide/
 **/build/admin/
 
-.circleci/
 .git/
 .github/
 bin/
