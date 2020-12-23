@@ -6,8 +6,8 @@ import Block from '../Block';
 import SortableHandle from './SortableHandle';
 import type {RenderBlockContentCallback} from './types';
 
-type Props = {
-    activeType: string,
+type Props<T: string, U: {type: T}> = {
+    activeType: T,
     expanded: boolean,
     icons?: Array<string>,
     movable?: boolean,
@@ -15,14 +15,14 @@ type Props = {
     onExpand?: (index: number) => void,
     onRemove?: (index: number) => void,
     onSettingsClick?: (index: number) => void,
-    onTypeChange?: (type: string | number, index: number) => void,
-    renderBlockContent: RenderBlockContentCallback,
+    onTypeChange?: (type: T, index: number) => void,
+    renderBlockContent: RenderBlockContentCallback<T, U>,
     sortIndex: number,
-    types?: {[key: string]: string},
+    types?: {[key: T]: string},
     value: Object,
 };
 
-class SortableBlock extends React.Component<Props> {
+class SortableBlock<T: string, U: {type: T}> extends React.Component<Props<T, U>> {
     handleCollapse = () => {
         const {sortIndex, onCollapse} = this.props;
 
@@ -55,7 +55,7 @@ class SortableBlock extends React.Component<Props> {
         }
     };
 
-    handleTypeChange = (type) => {
+    handleTypeChange: (type: T) => void = (type) => {
         const {sortIndex, onTypeChange} = this.props;
 
         if (onTypeChange) {
@@ -98,5 +98,5 @@ class SortableBlock extends React.Component<Props> {
     }
 }
 
-const SortableElementBlock: ComponentType<Props> = SortableElement(SortableBlock);
+const SortableElementBlock: ComponentType<Props<*, *>> = SortableElement(SortableBlock);
 export default SortableElementBlock;

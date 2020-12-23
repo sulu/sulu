@@ -5,7 +5,7 @@ import type {SelectProps} from '../Select';
 import Select from '../Select';
 import {translate} from '../../utils/Translator';
 
-type Props<T> = {|
+type Props<T: string | number> = {|
     ...SelectProps<T>,
     onChange?: (value: T) => void,
     value: ?T,

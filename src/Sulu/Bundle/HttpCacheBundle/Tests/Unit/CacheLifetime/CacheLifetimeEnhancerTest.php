@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\HttpCacheBundle\Cache\SuluHttpCache;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeEnhancer;
+use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeRequestStore;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolver;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
@@ -28,6 +29,11 @@ class CacheLifetimeEnhancerTest extends TestCase
      * @var CacheLifetimeEnhancer
      */
     private $cacheLifetimeEnhancer;
+
+    /**
+     * @var CacheLifetimeRequestStore
+     */
+    private $cacheLifetimeRequestStore;
 
     /**
      * @var CacheLifetimeResolver
@@ -67,6 +73,8 @@ class CacheLifetimeEnhancerTest extends TestCase
     public function setUp(): void
     {
         $this->cacheLifetimeResolver = $this->prophesize(CacheLifetimeResolver::class);
+        $this->cacheLifetimeRequestStore = $this->prophesize(CacheLifetimeRequestStore::class);
+
         $this->page = $this->prophesize(PageBridge::class);
         $this->snippet = $this->prophesize(SnippetBridge::class);
         $this->response = $this->prophesize(Response::class);
@@ -76,16 +84,19 @@ class CacheLifetimeEnhancerTest extends TestCase
         $this->cacheLifetimeEnhancer = new CacheLifetimeEnhancer(
             $this->cacheLifetimeResolver->reveal(),
             $this->maxAge,
-            $this->sharedMaxAge
+            $this->sharedMaxAge,
+            $this->cacheLifetimeRequestStore->reveal()
         );
     }
 
     public function provideCacheLifeTime()
     {
         return [
-            [50],
-            [500],
-            [0],
+            [50, null, 50],
+            [500, null, 500],
+            [0, null, 0],
+            [700, 800, 700],
+            [600, 400, 400],
         ];
     }
 
@@ -94,14 +105,17 @@ class CacheLifetimeEnhancerTest extends TestCase
      *
      * @dataProvider provideCacheLifeTime
      */
-    public function testEnhance(int $cacheLifetime)
+    public function testEnhance(int $cacheLifetime, ?int $requestCacheLifetime, int $expectedCacheLifetime)
     {
         $this->page->getCacheLifeTime()->willReturn(
             ['type' => CacheLifetimeResolverInterface::TYPE_SECONDS, 'value' => $cacheLifetime]
         );
 
-        if ($cacheLifetime > 0) {
-            $this->responseHeaderBag->set(SuluHttpCache::HEADER_REVERSE_PROXY_TTL, $cacheLifetime)->shouldBeCalled();
+        if ($expectedCacheLifetime > 0) {
+            $this->responseHeaderBag
+                ->set(SuluHttpCache::HEADER_REVERSE_PROXY_TTL, $expectedCacheLifetime)
+                ->shouldBeCalled();
+
             $this->response->setPublic()->shouldBeCalled();
             $this->response->setMaxAge($this->maxAge)->shouldBeCalled();
             $this->response->setSharedMaxAge($this->sharedMaxAge)->shouldBeCalled();
@@ -110,6 +124,10 @@ class CacheLifetimeEnhancerTest extends TestCase
             $this->response->setPublic()->shouldNotBeCalled();
             $this->response->setMaxAge(Argument::any())->shouldNotBeCalled();
             $this->response->setSharedMaxAge(Argument::any())->shouldNotBeCalled();
+        }
+
+        if ($requestCacheLifetime) {
+            $this->cacheLifetimeRequestStore->getCacheLifetime()->willReturn($requestCacheLifetime);
         }
 
         $this->cacheLifetimeResolver->resolve(Argument::cetera())->willReturn($cacheLifetime);

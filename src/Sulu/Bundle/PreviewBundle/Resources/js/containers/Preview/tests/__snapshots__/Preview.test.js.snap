@@ -67,6 +67,29 @@ exports[`Dont react or update preview when data is changed during formstore is l
                 class="button dark"
               >
                 <span
+                  aria-label="su-calendar"
+                  class="su-calendar icon"
+                />
+                <span
+                  class="label"
+                >
+                  12/16/2020, 2:06:22 PM
+                </span>
+                <span
+                  aria-label="su-angle-down"
+                  class="su-angle-down dropdownIcon"
+                />
+              </button>
+            </div>
+          </li>
+          <li>
+            <div
+              class="popover"
+            >
+              <button
+                class="button dark"
+              >
+                <span
                   aria-label="su-webspace"
                   class="su-webspace icon"
                 />
@@ -168,6 +191,29 @@ exports[`Dont react or update preview when data is changed during preview-store 
                   class="label"
                 >
                   sulu_preview.auto
+                </span>
+                <span
+                  aria-label="su-angle-down"
+                  class="su-angle-down dropdownIcon"
+                />
+              </button>
+            </div>
+          </li>
+          <li>
+            <div
+              class="popover"
+            >
+              <button
+                class="button dark"
+              >
+                <span
+                  aria-label="su-calendar"
+                  class="su-calendar icon"
+                />
+                <span
+                  class="label"
+                >
+                  12/16/2020, 2:06:22 PM
                 </span>
                 <span
                   aria-label="su-angle-down"
@@ -300,6 +346,29 @@ exports[`React and update preview when data is changed 1`] = `
                 class="button dark"
               >
                 <span
+                  aria-label="su-calendar"
+                  class="su-calendar icon"
+                />
+                <span
+                  class="label"
+                >
+                  12/16/2020, 2:06:22 PM
+                </span>
+                <span
+                  aria-label="su-angle-down"
+                  class="su-angle-down dropdownIcon"
+                />
+              </button>
+            </div>
+          </li>
+          <li>
+            <div
+              class="popover"
+            >
+              <button
+                class="button dark"
+              >
+                <span
                   aria-label="su-webspace"
                   class="su-webspace icon"
                 />
@@ -404,6 +473,29 @@ exports[`Render correct preview 1`] = `
                   class="label"
                 >
                   sulu_preview.auto
+                </span>
+                <span
+                  aria-label="su-angle-down"
+                  class="su-angle-down dropdownIcon"
+                />
+              </button>
+            </div>
+          </li>
+          <li>
+            <div
+              class="popover"
+            >
+              <button
+                class="button dark"
+              >
+                <span
+                  aria-label="su-calendar"
+                  class="su-calendar icon"
+                />
+                <span
+                  class="label"
+                >
+                  12/16/2020, 2:06:22 PM
                 </span>
                 <span
                   aria-label="su-angle-down"
@@ -552,6 +644,29 @@ exports[`Render correct preview with target groups 1`] = `
                 class="button dark"
               >
                 <span
+                  aria-label="su-calendar"
+                  class="su-calendar icon"
+                />
+                <span
+                  class="label"
+                >
+                  12/16/2020, 2:06:22 PM
+                </span>
+                <span
+                  aria-label="su-angle-down"
+                  class="su-angle-down dropdownIcon"
+                />
+              </button>
+            </div>
+          </li>
+          <li>
+            <div
+              class="popover"
+            >
+              <button
+                class="button dark"
+              >
+                <span
                   aria-label="su-webspace"
                   class="su-webspace icon"
                 />
@@ -684,6 +799,29 @@ exports[`Render nothing if separate window is opened and rerender if it is close
                 class="button dark"
               >
                 <span
+                  aria-label="su-calendar"
+                  class="su-calendar icon"
+                />
+                <span
+                  class="label"
+                >
+                  12/16/2020, 2:06:22 PM
+                </span>
+                <span
+                  aria-label="su-angle-down"
+                  class="su-angle-down dropdownIcon"
+                />
+              </button>
+            </div>
+          </li>
+          <li>
+            <div
+              class="popover"
+            >
+              <button
+                class="button dark"
+              >
+                <span
                   aria-label="su-webspace"
                   class="su-webspace icon"
                 />
@@ -782,6 +920,29 @@ exports[`Render nothing if separate window is opened and rerender if it is close
                   class="label"
                 >
                   sulu_preview.auto
+                </span>
+                <span
+                  aria-label="su-angle-down"
+                  class="su-angle-down dropdownIcon"
+                />
+              </button>
+            </div>
+          </li>
+          <li>
+            <div
+              class="popover"
+            >
+              <button
+                class="button dark"
+              >
+                <span
+                  aria-label="su-calendar"
+                  class="su-calendar icon"
+                />
+                <span
+                  class="label"
+                >
+                  12/16/2020, 2:06:22 PM
                 </span>
                 <span
                   aria-label="su-angle-down"

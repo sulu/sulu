@@ -57,5 +57,8 @@
     "sulu_page.segment_label": "Segment zuweisen",
     "sulu_page.segment_description": "Der Block wird automatisch nach dem gewählten Segment auf der Website gefiltert.",
     "sulu_page.target_groups_label": "Zielgruppen zuweisen",
-    "sulu_page.target_groups_description": "Der Block wird nur den ausgewählten Zielgruppen angezeigt."
+    "sulu_page.target_groups_description": "Der Block wird nur den ausgewählten Zielgruppen angezeigt.",
+    "sulu_page.add_schedule": "Zeitfenster hinzufügen",
+    "sulu_page.schedules_label": "Zeitfenster zuweisen",
+    "sulu_page.schedules_description": "Der Block wird nur angezeigt, wenn mindestens einer der Bedingungen erfüllt wird."
 }

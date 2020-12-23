@@ -17,6 +17,16 @@ window.ResizeObserver = jest.fn(function() {
     this.disconnect = jest.fn();
 });
 
+// $FlowFixMe
+const constantDate = new Date(2020, 11, 16, 14, 6, 22);
+
+// eslint-disable-next-line no-global-assign
+Date = class extends Date {
+    constructor() {
+        return constantDate;
+    }
+};
+
 jest.mock('debounce', () => jest.fn((value) => value));
 
 jest.mock('../stores/PreviewStore', () => jest.fn(function() {
@@ -24,6 +34,7 @@ jest.mock('../stores/PreviewStore', () => jest.fn(function() {
     this.update = jest.fn().mockReturnValue(Promise.resolve());
     this.updateContext = jest.fn().mockReturnValue(Promise.resolve());
     this.stop = jest.fn().mockReturnValue(Promise.resolve());
+    this.setDateTime = jest.fn();
     this.setSegment = jest.fn();
     this.setWebspace = jest.fn();
     this.setTargetGroup = jest.fn();
@@ -478,5 +489,30 @@ test('Change target group in PreviewStore when selection of target group has cha
         preview.find('Select').at(2).prop('onChange')(4);
         expect(previewStore.setTargetGroup).toBeCalledWith(4);
         expect(previewStore.update).toBeCalledWith(undefined);
+    });
+});
+
+test('Change dateTime in PreviewStore when DatePicker changed', () => {
+    const resourceStore = new ResourceStore('pages', 1, {title: 'Test'});
+    const formStore = new ResourceFormStore(resourceStore, 'pages');
+    const router = new Router({});
+
+    const preview = mount(<Preview formStore={formStore} router={router} />);
+
+    const startPromise = Promise.resolve();
+    const previewStore = preview.instance().previewStore;
+    previewStore.start.mockReturnValue(startPromise);
+    previewStore.starting = false;
+
+    preview.instance().handleStartClick();
+
+    return startPromise.then(() => {
+        preview.update();
+        expect(PreviewStore).toBeCalledWith(undefined, undefined, 'de', 'sulu_io', undefined);
+
+        const date = new Date();
+        preview.find('Button[icon="su-calendar"]').simulate('click');
+        preview.find('DatePicker').prop('onChange')(date);
+        expect(previewStore.setDateTime).toBeCalledWith(date);
     });
 });

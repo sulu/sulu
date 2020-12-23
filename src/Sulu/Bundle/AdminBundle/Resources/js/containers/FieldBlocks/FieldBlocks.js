@@ -5,7 +5,6 @@ import React, {Fragment} from 'react';
 import {action, observable, computed, toJS} from 'mobx';
 import {observer} from 'mobx-react';
 import BlockCollection from '../../components/BlockCollection';
-import type {BlockEntry} from '../../components/BlockCollection/types';
 import Overlay from '../../components/Overlay';
 import {translate} from '../../utils/Translator';
 import Form, {memoryFormStoreFactory} from '../Form';
@@ -13,6 +12,7 @@ import type {BlockError, FieldTypeProps, FormStoreInterface} from '../Form/types
 import blockPreviewTransformerRegistry from './registries/blockPreviewTransformerRegistry';
 import FieldRenderer from './FieldRenderer';
 import fieldBlocksStyles from './fieldBlocks.scss';
+import type {BlockEntry} from './types';
 
 const MISSING_BLOCK_ERROR_MESSAGE = 'The "block" field type needs at least one type to be configured!';
 const BLOCK_PREVIEW_TAG = 'sulu.block_preview';
@@ -119,6 +119,38 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
         }
 
         return addButtonText;
+    }
+
+    @computed get collapsable() {
+        const {
+            schemaOptions: {
+                collapsable: {
+                    value: collapsable,
+                } = {},
+            },
+        } = this.props;
+
+        if (collapsable !== undefined && typeof collapsable !== 'boolean') {
+            throw new Error('The "block" field types only accepts booleans as "collapsable" schema option!');
+        }
+
+        return collapsable;
+    }
+
+    @computed get movable() {
+        const {
+            schemaOptions: {
+                movable: {
+                    value: movable,
+                } = {},
+            },
+        } = this.props;
+
+        if (movable !== undefined && typeof movable !== 'boolean') {
+            throw new Error('The "block" field types only accepts booleans as "collapsable" schema option!');
+        }
+
+        return movable;
     }
 
     @computed get iconsMapping() {
@@ -364,7 +396,10 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
 
     @action handleSettingsOverlayConfirm = () => {
         this.formRef?.submit();
-        this.closeSettingsOverlay();
+
+        if (!this.blockSettingsFormStore.hasErrors) {
+            this.closeSettingsOverlay();
+        }
     };
 
     @action closeSettingsOverlay = () => {
@@ -426,11 +461,13 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
             <>
                 <BlockCollection
                     addButtonText={this.addButtonText}
+                    collapsable={this.collapsable}
                     defaultType={defaultType}
                     disabled={!!disabled}
                     icons={this.icons}
                     maxOccurs={maxOccurs}
                     minOccurs={minOccurs}
+                    movable={this.movable}
                     onChange={this.handleBlocksChange}
                     onSettingsClick={this.settingsFormKey ? this.handleSettingsClick : undefined}
                     onSortEnd={this.handleSortEnd}

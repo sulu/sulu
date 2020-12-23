@@ -25,12 +25,11 @@ use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\ContentTypeManager;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
+use Sulu\Component\Content\Types\Block\BlockVisitorInterface;
 use Sulu\Component\Content\Types\BlockContentType;
 use Sulu\Component\Content\Types\TextArea;
 use Sulu\Component\Content\Types\TextLine;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
-use Sulu\Component\Webspace\Segment;
-use Sulu\Component\Webspace\Webspace;
 
 class BlockContentTypeTest extends TestCase
 {
@@ -74,6 +73,16 @@ class BlockContentTypeTest extends TestCase
      */
     private $contentTypeManager;
 
+    /**
+     * @var BlockVisitorInterface
+     */
+    private $blockVisitor1;
+
+    /**
+     * @var BlockVisitorInterface
+     */
+    private $blockVisitor2;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -81,12 +90,21 @@ class BlockContentTypeTest extends TestCase
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
         $this->contentTypeManager = $this->prophesize(ContentTypeManager::class);
         $this->targetGroupStore = $this->prophesize(TargetGroupStoreInterface::class);
+        $this->blockVisitor1 = $this->prophesize(BlockVisitorInterface::class);
+        $this->blockVisitor2 = $this->prophesize(BlockVisitorInterface::class);
+
+        $this->blockVisitor1->visit(Argument::any())->will(function($arguments) {return $arguments[0]; });
+        $this->blockVisitor2->visit(Argument::any())->will(function($arguments) {return $arguments[0]; });
 
         $this->blockContentType = new BlockContentType(
             $this->contentTypeManager->reveal(),
             'not in use',
             $this->requestAnalyzer->reveal(),
-            $this->targetGroupStore->reveal()
+            $this->targetGroupStore->reveal(),
+            [
+                $this->blockVisitor1->reveal(),
+                $this->blockVisitor2->reveal(),
+            ]
         );
 
         $this->contentTypeValueMap = [
@@ -749,18 +767,12 @@ class BlockContentTypeTest extends TestCase
         ];
         $this->blockProperty->setValue($data);
 
-        $webspace = new Webspace();
-        $webspace->setKey('webspace-1');
-        $this->requestAnalyzer->getWebspace()->willReturn($webspace);
-
-        $this->requestAnalyzer->getSegment()->willReturn(null);
-
         $result = $this->blockContentType->getContentData($this->blockProperty);
 
         $this->assertEquals($data, $result);
     }
 
-    public function testGetContentDataWithEmptySettings()
+    public function testGetContentDataWithSkips()
     {
         $this->prepareSingleBlockProperty();
 
@@ -777,272 +789,38 @@ class BlockContentTypeTest extends TestCase
                         'type' => 'subType1',
                         'title' => 'Test-Title-Sub-1',
                         'article' => 'Test-Article-Sub-1',
-                        'settings' => new \stdClass(),
+                        'settings' => [],
                     ],
                 ],
-                'settings' => new \stdClass(),
+                'settings' => [],
             ],
             [
                 'type' => 'type2',
                 'name' => 'Test-Name-2',
-                'settings' => new \stdClass(),
-            ],
-        ];
-        $this->blockProperty->setValue($data);
-
-        $webspace = new Webspace();
-        $webspace->setKey('webspace-1');
-        $this->requestAnalyzer->getWebspace()->willReturn($webspace);
-
-        $this->requestAnalyzer->getSegment()->willReturn(null);
-
-        $result = $this->blockContentType->getContentData($this->blockProperty);
-
-        $this->assertEquals($data, $result);
-    }
-
-    public function testGetContentDataWithSegmentFilter()
-    {
-        $this->prepareSingleBlockProperty();
-
-        $this->blockProperty->setValue(
-            [
-                [
-                    'type' => 'type1',
-                    'title' => 'Test-Title-1',
-                    'article' => [
-                        'Test-Article-1-1',
-                        'Test-Article-1-2',
-                    ],
-                    'sub-block' => [
-                        [
-                            'type' => 'subType1',
-                            'title' => 'Test-Title-Sub-1',
-                            'article' => 'Test-Article-Sub-1',
-                            'settings' => new \stdClass(),
-                        ],
-                    ],
-                    'settings' => [
-                        'segments' => ['webspace-1' => 'w', 'webspace-2' => 'other'],
-                        'segment_enabled' => true,
-                    ],
-                ],
-                [
-                    'type' => 'type2',
-                    'name' => 'Test-Name-2',
-                    'settings' => [
-                        'segments' => ['webspace-1' => 's', 'webspace-2' => 'other'],
-                        'segment_enabled' => true,
-                    ],
-                ],
-            ]
-        );
-
-        $webspace = new Webspace();
-        $webspace->setKey('webspace-1');
-        $this->requestAnalyzer->getWebspace()->willReturn($webspace);
-
-        $segment = new Segment();
-        $segment->setKey('w');
-        $this->requestAnalyzer->getSegment()->willReturn($segment);
-
-        $result = $this->blockContentType->getContentData($this->blockProperty);
-
-        $this->assertEquals(
-            [
-                [
-                    'type' => 'type1',
-                    'title' => 'Test-Title-1',
-                    'article' => [
-                        'Test-Article-1-1',
-                        'Test-Article-1-2',
-                    ],
-                    'sub-block' => [
-                        [
-                            'type' => 'subType1',
-                            'title' => 'Test-Title-Sub-1',
-                            'article' => 'Test-Article-Sub-1',
-                            'settings' => new \stdClass(),
-                        ],
-                    ],
-                    'settings' => [
-                        'segments' => ['webspace-1' => 'w', 'webspace-2' => 'other'],
-                        'segment_enabled' => true,
-                    ],
-                ],
-            ],
-            $result
-        );
-    }
-
-    public function testGetContentDataWithTargetGroupsFilter()
-    {
-        $this->prepareSingleBlockProperty();
-
-        $this->blockProperty->setValue(
-            [
-                [
-                    'type' => 'type1',
-                    'title' => 'Test-Title-1',
-                    'settings' => ['target_groups' => [1], 'target_groups_enabled' => true],
-                ],
-                [
-                    'type' => 'type2',
-                    'name' => 'Test-Name-2',
-                    'settings' => ['target_groups' => [3, 4], 'target_groups_enabled' => true],
-                ],
-            ]
-        );
-
-        $this->targetGroupStore->getTargetGroupId()->willReturn(3);
-
-        $webspace = new Webspace();
-        $webspace->setKey('webspace-1');
-        $this->requestAnalyzer->getWebspace()->willReturn($webspace);
-        $this->requestAnalyzer->getSegment()->willReturn(null);
-
-        $result = $this->blockContentType->getContentData($this->blockProperty);
-
-        $this->assertEquals(
-            [
-                [
-                    'type' => 'type2',
-                    'name' => 'Test-Name-2',
-                    'settings' => ['target_groups' => [3, 4], 'target_groups_enabled' => true],
-                ],
-            ],
-            $result
-        );
-    }
-
-    public function testGetContentDataWithDisabledSegmentFilter()
-    {
-        $this->prepareSingleBlockProperty();
-
-        $data = [
-            [
-                'type' => 'type1',
-                'title' => 'Test-Title-1',
-                'article' => [
-                    'Test-Article-1-1',
-                    'Test-Article-1-2',
-                ],
-                'sub-block' => [
-                    [
-                        'type' => 'subType1',
-                        'title' => 'Test-Title-Sub-1',
-                        'article' => 'Test-Article-Sub-1',
-                        'settings' => new \stdClass(),
-                    ],
-                ],
-                'settings' => [
-                    'segments' => ['webspace-1' => 'w', 'webspace-2' => 'other'],
-                    'segment_enabled' => false,
-                ],
-            ],
-            [
-                'type' => 'type2',
-                'name' => 'Test-Name-2',
-                'settings' => [
-                    'segments' => ['webspace-1' => 's', 'webspace-2' => 'w'],
-                    'segment_enabled' => false,
-                ],
-            ],
-        ];
-
-        $this->blockProperty->setValue(
-            $data
-        );
-
-        $webspace = new Webspace();
-        $webspace->setKey('webspace-1');
-        $this->requestAnalyzer->getWebspace()->willReturn($webspace);
-
-        $segment = new Segment();
-        $segment->setKey('w');
-        $this->requestAnalyzer->getSegment()->willReturn($segment);
-
-        $result = $this->blockContentType->getContentData($this->blockProperty);
-
-        $this->assertEquals($data, $result);
-    }
-
-    public function testGetContentDataWithHiddenBlocks()
-    {
-        $this->prepareSingleBlockProperty();
-
-        $data = [
-            [
-                'type' => 'type1',
-                'title' => 'Test-Title-1',
-                'article' => [
-                    'Test-Article-1-1',
-                    'Test-Article-1-2',
-                ],
-                'sub-block' => [
-                    [
-                        'type' => 'subType1',
-                        'title' => 'Test-Title-Sub-1',
-                        'article' => 'Test-Article-Sub-1',
-                        'settings' => new \stdClass(),
-                    ],
-                    [
-                        'type' => 'subType1',
-                        'title' => 'Test-Title-Sub-1',
-                        'article' => 'Test-Article-Sub-1',
-                        'settings' => ['hidden' => true],
-                    ],
-                ],
-                'settings' => new \stdClass(),
-            ],
-            [
-                'type' => 'type2',
-                'name' => 'Test-Name-2',
-                'settings' => new \stdClass(),
+                'settings' => [],
             ],
             [
                 'type' => 'type2',
                 'name' => 'Test-Name-3',
-                'settings' => ['hidden' => true],
+                'settings' => [],
             ],
         ];
+
         $this->blockProperty->setValue($data);
+        $blockPropertyType1 = $this->blockProperty->getProperties(0);
+        $blockPropertyType2 = $this->blockProperty->getProperties(1);
+        $blockPropertyType3 = $this->blockProperty->getProperties(2);
 
-        $webspace = new Webspace();
-        $webspace->setKey('webspace-1');
-        $this->requestAnalyzer->getWebspace()->willReturn($webspace);
-
-        $this->requestAnalyzer->getSegment()->willReturn(null);
+        $this->blockVisitor1->visit($blockPropertyType1)->willReturn(null);
+        $this->blockVisitor1->visit($blockPropertyType2)->willReturn($blockPropertyType2);
+        $this->blockVisitor1->visit($blockPropertyType3)->willReturn($blockPropertyType3);
+        $this->blockVisitor2->visit($blockPropertyType1)->willReturn($blockPropertyType1);
+        $this->blockVisitor2->visit($blockPropertyType2)->willReturn(null);
+        $this->blockVisitor2->visit($blockPropertyType3)->willReturn($blockPropertyType3);
 
         $result = $this->blockContentType->getContentData($this->blockProperty);
 
-        $this->assertEquals(
-            [
-                [
-                    'type' => 'type1',
-                    'title' => 'Test-Title-1',
-                    'article' => [
-                        'Test-Article-1-1',
-                        'Test-Article-1-2',
-                    ],
-                    'sub-block' => [
-                        [
-                            'type' => 'subType1',
-                            'title' => 'Test-Title-Sub-1',
-                            'article' => 'Test-Article-Sub-1',
-                            'settings' => new \stdClass(),
-                        ],
-                    ],
-                    'settings' => new \stdClass(),
-                ],
-                [
-                    'type' => 'type2',
-                    'name' => 'Test-Name-2',
-                    'settings' => new \stdClass(),
-                ],
-            ],
-            $result
-        );
+        $this->assertEquals([['type' => 'type2', 'name' => 'Test-Name-3', 'settings' => []]], $result);
     }
 
     public function testGetViewData()
@@ -1063,43 +841,15 @@ class BlockContentTypeTest extends TestCase
                     'article' => 'Test-Article-Sub-1',
                     'settings' => [],
                 ],
-                'settings' => [
-                    'segments' => ['webspace-1' => 'w', 'webspace-2' => 'other'],
-                    'segment_enabled' => true,
-                ],
+                'settings' => [],
             ],
             [
                 'type' => 'type2',
                 'name' => 'Test-Name-2',
-                'settings' => [
-                    'segments' => ['webspace-1' => 's', 'webspace-2' => 'w'],
-                    'segment_enabled' => true,
-                ],
+                'settings' => [],
             ],
         ];
         $this->blockProperty->setValue($data);
-
-        $webspace = new Webspace();
-        $webspace->setKey('webspace-1');
-        $this->requestAnalyzer->getWebspace()->willReturn($webspace);
-
-        $segment = new Segment();
-        $segment->setKey('s');
-        $this->requestAnalyzer->getSegment()->willReturn($segment);
-
-        $result = $this->blockContentType->getViewData($this->blockProperty);
-        $this->assertEquals(
-            [
-                [
-                    'name' => [],
-                ],
-            ],
-            $result
-        );
-
-        $segment = new Segment();
-        $segment->setKey('w');
-        $this->requestAnalyzer->getSegment()->willReturn($segment);
 
         $result = $this->blockContentType->getViewData($this->blockProperty);
         $this->assertEquals(
@@ -1113,6 +863,64 @@ class BlockContentTypeTest extends TestCase
                             'article' => [],
                         ],
                     ],
+                ],
+                [
+                    'name' => [],
+                ],
+            ],
+            $result
+        );
+    }
+
+    public function testGetViewDataWithSkips()
+    {
+        $this->prepareSingleBlockProperty();
+
+        $data = [
+            [
+                'type' => 'type1',
+                'title' => 'Test-Title-1',
+                'article' => [
+                    'Test-Article-1-1',
+                    'Test-Article-1-2',
+                ],
+                'sub-block' => [
+                    'type' => 'subType1',
+                    'title' => 'Test-Title-Sub-1',
+                    'article' => 'Test-Article-Sub-1',
+                    'settings' => [],
+                ],
+                'settings' => [],
+            ],
+            [
+                'type' => 'type2',
+                'name' => 'Test-Name-2',
+                'settings' => [],
+            ],
+            [
+                'type' => 'type2',
+                'name' => 'Test-Name-3',
+                'settings' => [],
+            ],
+        ];
+
+        $this->blockProperty->setValue($data);
+        $blockPropertyType1 = $this->blockProperty->getProperties(0);
+        $blockPropertyType2 = $this->blockProperty->getProperties(1);
+        $blockPropertyType3 = $this->blockProperty->getProperties(2);
+
+        $this->blockVisitor1->visit($blockPropertyType1)->willReturn(null);
+        $this->blockVisitor1->visit($blockPropertyType2)->willReturn($blockPropertyType2);
+        $this->blockVisitor1->visit($blockPropertyType3)->willReturn($blockPropertyType3);
+        $this->blockVisitor2->visit($blockPropertyType1)->willReturn($blockPropertyType1);
+        $this->blockVisitor2->visit($blockPropertyType2)->willReturn(null);
+        $this->blockVisitor2->visit($blockPropertyType3)->willReturn($blockPropertyType3);
+
+        $result = $this->blockContentType->getViewData($this->blockProperty);
+        $this->assertEquals(
+            [
+                [
+                    'name' => [],
                 ],
             ],
             $result

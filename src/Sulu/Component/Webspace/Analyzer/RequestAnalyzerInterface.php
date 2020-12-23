@@ -72,6 +72,13 @@ interface RequestAnalyzerInterface
     public function getMatchType();
 
     /**
+     * Returns the current or simulate DateTime object for this request.
+     *
+     * @return \DateTime
+     */
+    public function getDateTime();
+
+    /**
      * Returns the current webspace for this request.
      *
      * @return Webspace

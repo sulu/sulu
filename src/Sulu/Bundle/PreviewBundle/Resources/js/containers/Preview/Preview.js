@@ -4,7 +4,7 @@ import {action, computed, observable, reaction, toJS, when} from 'mobx';
 import {observer} from 'mobx-react';
 import debounce from 'debounce';
 import classNames from 'classnames';
-import {Loader, Toolbar} from 'sulu-admin-bundle/components';
+import {DatePicker, Form, Loader, Toolbar} from 'sulu-admin-bundle/components';
 import {ResourceFormStore, sidebarStore} from 'sulu-admin-bundle/containers';
 import {Router} from 'sulu-admin-bundle/services';
 import {ResourceListStore} from 'sulu-admin-bundle/stores';
@@ -216,6 +216,10 @@ class Preview extends React.Component<Props> {
         this.selectedDeviceOption = value;
     };
 
+    @action handleDateTimeChange = debounce((value: ?Date) => {
+        this.previewStore.setDateTime(value || new Date());
+    }, Preview.debounceDelay);
+
     @action handleWebspaceChange = (webspace: string) => {
         this.previewStore.setWebspace(webspace);
     };
@@ -301,6 +305,24 @@ class Preview extends React.Component<Props> {
                                 options={this.availableDeviceOptions}
                                 value={this.selectedDeviceOption}
                             />
+                            <Toolbar.Popover
+                                icon="su-calendar"
+                                label={(this.previewStore?.dateTime || new Date()).toLocaleString()}
+                            >
+                                {() => (
+                                    <div className={previewStyles.dateTimeForm}>
+                                        <Form skin="dark">
+                                            <Form.Field label={translate('sulu_admin.preview_date_time')}>
+                                                <DatePicker
+                                                    onChange={this.handleDateTimeChange}
+                                                    options={{dateFormat: true, timeFormat: true}}
+                                                    value={this.previewStore?.dateTime}
+                                                />
+                                            </Form.Field>
+                                        </Form>
+                                    </div>
+                                )}
+                            </Toolbar.Popover>
                             {previewWebspaceChooser &&
                                 <Toolbar.Select
                                     icon="su-webspace"

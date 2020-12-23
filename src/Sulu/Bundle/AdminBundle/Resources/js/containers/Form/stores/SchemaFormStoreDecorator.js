@@ -68,6 +68,14 @@ export default class SchemaFormStoreDecorator implements FormStoreInterface {
         return [];
     }
 
+    @computed get hasErrors() {
+        if (this.innerFormStore) {
+            return this.innerFormStore.hasErrors;
+        }
+
+        return false;
+    }
+
     @computed get forbidden() {
         if (this.innerFormStore) {
             return this.innerFormStore.forbidden;

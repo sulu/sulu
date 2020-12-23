@@ -90,7 +90,7 @@ exports[`Display a field with label 1`] = `
   class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
 >
   <div
-    class="field"
+    class="field dark"
   >
     <label
       class="label"
