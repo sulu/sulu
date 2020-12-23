@@ -48,8 +48,13 @@
                     <tag name="sulu.block_setting_icon" icon="su-clock" />
                 </property>
 
-                <block name="schedules" minOccurs="1" visibleCondition="schedules_enabled == true">
+                <block name="schedules" default-type="fixed" minOccurs="1" visibleCondition="schedules_enabled == true">
                     <params>
+                        <param name="add_button_text">
+                            <meta>
+                                <title>sulu_page.add_schedule</title>
+                            </meta>
+                        </param>
                         <param name="collapsable" value="false" />
                         <param name="movable" value="false" />
                     </params>
