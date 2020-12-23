@@ -61,7 +61,67 @@ jobs:
             - name: Run php-cs-fixer
               run: ./${{ steps.php-cs-fixer-path.outputs.path }} fix --dry-run --diff
 
-    test:
+    js-css:
+        name: Test JavaScript application
+        runs-on: ubuntu-latest
+
+        strategy:
+            fail-fast: false
+            matrix:
+                include:
+                    - node-version: '12'
+                    - node-version: '14'
+
+        steps:
+            - name: Checkout project
+              uses: actions/checkout@v2
+
+            - name: Install and configure Node
+              uses: actions/setup-node@v2-beta
+              with:
+                  node-version: ${{ matrix.node-version }}
+
+            - name: Get npm cache directory
+              id: npm-cache-dir
+              run: echo "::set-output name=dir::$(npm config get cache)"
+
+            - name: Cache dependencies
+              uses: actions/cache@v2
+              with:
+                  path: ${{ steps.npm-cache-dir.outputs.dir }}
+                  key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+
+            - name: Assert error when using yarn
+              run: tests/js/check-yarn-warning.sh
+
+            - name: Install dependencies
+              run: npm install --ignore-optional
+
+            - name: Lint JavaScript and CSS code
+              run: |
+                  npm run lint:js
+                  npm run lint:scss
+                  npm run flow -- check
+                  npm run depcruise
+
+            - name: Test JavaScript code
+              run: npm test -- --maxWorkers=4
+
+            - name: Test Styleguidist build
+              run: npm run styleguide:build
+
+            - name: Install and configure PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '7.4'
+                  tools: 'composer:v2'
+
+            - name: Test application build
+              run: |
+                  rm composer.json && composer require friendsofsymfony/jsrouting-bundle:^2.3 --no-interaction
+                  npm run build
+
+    php:
         name: "Run tests with php ${{ matrix.php-version }} (${{ matrix.database }}, ${{ matrix.phpcr-transport }})"
         runs-on: ubuntu-latest
 
@@ -168,8 +228,8 @@ jobs:
 
             - name: Install dependencies
               run: |
-                composer validate --strict
-                composer update ${{ matrix.composer-flags }}
+                  composer validate --strict
+                  composer update ${{ matrix.composer-flags }}
 
             - name: PHPStan
               if: ${{ matrix.phpstan }}
