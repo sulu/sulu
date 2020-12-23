@@ -2,6 +2,10 @@
 
 ## dev-master
 
+### The constructor of the `NominatimGeolocator` and `GoogleGeolocator` requires a `Symfony\Contracts\HttpClient\HttpClientInterface` for the `$client` argument
+
+Constructing `NominatimGeolocator` and `GoogleGeolocator` with the previous `GuzzleHttp\ClientInterface` is deprecated. 
+
 ### conditionDataProvider interface changed
 
 The interface of `conditionDataProviders` changed its arguments. In order to make these providers even more powerful,

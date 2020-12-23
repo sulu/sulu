@@ -11,6 +11,8 @@
 
 namespace Sulu\Bundle\LocationBundle\Geolocator\Service;
 
+use GuzzleHttp\ClientInterface;
+use Psr\Http\Message\ResponseInterface;
 use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorInterface;
 use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorLocation;
 use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorResponse;
@@ -27,9 +29,9 @@ class GoogleGeolocator implements GeolocatorInterface
     const ENDPOINT = 'https://maps.googleapis.com/maps/api/geocode/json';
 
     /**
-     * @var HttpClientInterface
+     * @var HttpClientInterface|ClientInterface
      */
-    protected $httpClient;
+    protected $client;
 
     /**
      * @var string
@@ -37,16 +39,30 @@ class GoogleGeolocator implements GeolocatorInterface
     protected $apiKey;
 
     public function __construct(
-        HttpClientInterface $httpClient,
+        $client,
         string $apiKey
     ) {
-        $this->httpClient = $httpClient;
+        if ($client instanceof ClientInterface) {
+            @\trigger_error(
+                \sprintf(
+                    'Instantiating GoogleGeolocator with %s as first argument is deprecated, please use %s instead.',
+                    ClientInterface::class, HttpClientInterface::class
+                ),
+                \E_USER_DEPRECATED
+            );
+        } elseif (!($client instanceof HttpClientInterface)) {
+            throw new \InvalidArgumentException(
+                \sprintf('Please provide a %s as client', HttpClientInterface::class)
+            );
+        }
+
+        $this->client = $client;
         $this->apiKey = $apiKey;
     }
 
     public function locate(string $query): GeolocatorResponse
     {
-        $response = $this->httpClient->request(
+        $response = $this->client->request(
             'GET',
             self::ENDPOINT,
             [
@@ -68,7 +84,13 @@ class GoogleGeolocator implements GeolocatorInterface
             );
         }
 
-        $googleResponse = $response->toArray();
+        if ($response instanceof ResponseInterface) {
+            // BC to support for guzzle client
+            $googleResponse = \json_decode($response->getBody(), true);
+        } else {
+            $googleResponse = $response->toArray();
+        }
+
         $response = new GeolocatorResponse();
         if ('OK' != $googleResponse['status']) {
             return $response;

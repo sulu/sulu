@@ -11,6 +11,10 @@
 
 namespace Sulu\Bundle\LocationBundle\Tests\Unit\Geolocator\Service;
 
+use GuzzleHttp\Client;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\LocationBundle\Geolocator\Service\NominatimGeolocator;
 use Symfony\Component\HttpClient\MockHttpClient;
@@ -36,6 +40,34 @@ class NominatimGeolocatorTest extends TestCase
                 ],
             ],
         ];
+    }
+
+    /**
+     * Test if BC is maintained and guzzle client still works.
+     *
+     * @dataProvider provideLocate
+     */
+    public function testGuzzleLocate($query, $expectedCount, $expectationMap)
+    {
+        $fixtureName = __DIR__ . '/responses/' . \md5($query) . '.json';
+        $fixture = \file_get_contents($fixtureName);
+        $mockHandler = new MockHandler([new Response(200, [], $fixture)]);
+
+        $client = new Client(['handler' => HandlerStack::create($mockHandler)]);
+        $geolocator = new NominatimGeolocator($client, '', '');
+
+        $results = $geolocator->locate($query);
+        $this->assertCount($expectedCount, $results);
+
+        if (0 == \count($results)) {
+            return;
+        }
+
+        $result = \current($results->toArray());
+
+        foreach ($expectationMap as $field => $expectation) {
+            $this->assertEquals($expectation, $result[$field]);
+        }
     }
 
     /**
