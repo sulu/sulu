@@ -62,7 +62,7 @@ jobs:
               run: ./${{ steps.php-cs-fixer-path.outputs.path }} fix --dry-run --diff
 
     js-css:
-        name: Test JavaScript application
+        name: "Test JavaScript application with Node ${{ matrix.node-version }}"
         runs-on: ubuntu-latest
 
         strategy:
