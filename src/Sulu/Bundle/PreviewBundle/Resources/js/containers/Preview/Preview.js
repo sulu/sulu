@@ -312,7 +312,10 @@ class Preview extends React.Component<Props> {
                                 {() => (
                                     <div className={previewStyles.dateTimeForm}>
                                         <Form skin="dark">
-                                            <Form.Field label={translate('sulu_admin.preview_date_time')}>
+                                            <Form.Field
+                                                description={translate('sulu_admin.preview_date_time_description')}
+                                                label={translate('sulu_admin.preview_date_time')}
+                                            >
                                                 <DatePicker
                                                     onChange={this.handleDateTimeChange}
                                                     options={{dateFormat: true, timeFormat: true}}

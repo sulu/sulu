@@ -178,5 +178,6 @@
     "sulu_admin.sunday": "Sonntag",
     "sulu_admin.start": "Start",
     "sulu_admin.end": "Ende",
-    "sulu_admin.preview_date_time": "Zeit/Datum für Seitenvorschau"
+    "sulu_admin.preview_date_time": "Zeit/Datum für Seitenvorschau",
+    "sulu_admin.preview_date_time_description": "Eingabeld löschen um das aktuelle Datum zu verwenden."
 }

@@ -179,5 +179,6 @@
     "sulu_admin.sunday": "Sunday",
     "sulu_admin.start": "Start",
     "sulu_admin.end": "End",
-    "sulu_admin.preview_date_time": "Time/Date for page preview"
+    "sulu_admin.preview_date_time": "Time/Date for page preview",
+    "sulu_admin.preview_date_time_description": "Clear input to use the current date."
 }
