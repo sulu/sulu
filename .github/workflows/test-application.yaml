@@ -64,6 +64,14 @@ jobs:
     js-css:
         name: Test JavaScript application
         runs-on: ubuntu-latest
+
+        strategy:
+            fail-fast: false
+            matrix:
+                include:
+                    - node-version: '12'
+                    - node-version: '14'
+
         steps:
             - name: Checkout project
               uses: actions/checkout@v2
@@ -71,7 +79,7 @@ jobs:
             - name: Install and configure Node
               uses: actions/setup-node@v2-beta
               with:
-                  node-version: '12'
+                  node-version: ${{ matrix.node-version }}
 
             - name: Get npm cache directory
               id: npm-cache-dir
@@ -81,7 +89,7 @@ jobs:
               uses: actions/cache@v2
               with:
                   path: ${{ steps.npm-cache-dir.outputs.dir }}
-                  key: ${{ runner.os }}-composer-${{ hashFiles('**/package-lock.json') }}
+                  key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
 
             - name: Assert error when using yarn
               run: tests/js/check-yarn-warning.sh
