@@ -198,13 +198,5 @@
             "*": "dist"
         },
         "sort-packages": true
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-release/1.6": "1.6.x-dev",
-            "dev-release/2.1": "2.1.x-dev",
-            "dev-release/2.2": "2.2.x-dev",
-            "dev-master": "2.x-dev"
-        }
     }
 }

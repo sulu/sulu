@@ -7,22 +7,19 @@
 
 <br/>
 <p align="center">
-    <a href="https://github.com/sulu/sulu/blob/master/LICENSE" target="_blank">
+    <a href="https://github.com/sulu/sulu/blob/2.x/LICENSE" target="_blank">
         <img src="https://img.shields.io/github/license/sulu/sulu.svg" alt="GitHub license">
     </a>
     <a href="https://github.com/sulu/sulu/releases" target="_blank">
         <img src="https://img.shields.io/github/tag/sulu/sulu.svg" alt="GitHub tag (latest SemVer)">
     </a>
     <a href="https://github.com/sulu/sulu/actions" target="_blank">
-        <img src="https://img.shields.io/github/workflow/status/sulu/sulu/Test%20application/master.svg?label=github-actions" alt="GitHub actions status">
+        <img src="https://img.shields.io/github/workflow/status/sulu/sulu/Test%20application.svg?label=test-workflow" alt="Test workflow status">
     </a>
     <a href="https://travis-ci.org/sulu/sulu/branches" target="_blank">
-        <img src="https://img.shields.io/travis/sulu/sulu/master.svg?label=travis" alt="Travis build">
+        <img src="https://img.shields.io/travis/sulu/sulu/2.x.svg?label=travis" alt="Travis build">
     </a>
-    <a href="https://circleci.com/gh/sulu/sulu/tree/master" target="_blank">
-        <img src="https://img.shields.io/circleci/build/github/sulu/sulu/master.svg?label=circleci" alt="CircleCI build">
-    </a>
-    <a href="https://github.com/sulu/sulu/commits/master" target="_blank">
+    <a href="https://github.com/sulu/sulu/commits/2.x" target="_blank">
         <img src="https://img.shields.io/github/commit-activity/y/sulu/sulu.svg" alt="GitHub commit activity">
     </a>
     <a href="https://github.com/sulu/sulu/graphs/contributors" target="_blank">
@@ -71,8 +68,9 @@ Feel free to **file a new issue** with a respective title and description on the
 
 ## ✅&nbsp; Requirements
 
-Sulu requires a **PHP version higher or equal to 7.2** and is compatible with every **Symfony version starting from 4.3**. Have a look at the `require` section in the [composer.json](https://github.com/sulu/sulu/blob/master/composer.json) of the [sulu/sulu](https://github.com/sulu/sulu) core framework to find an **up-to-date list of the requirements** of Sulu content management system.
+Sulu requires a **PHP version higher or equal to 7.2** and is compatible with every **Symfony version starting from 4.3**. Have a look at the `require` section in the [composer.json](https://github.com/sulu/sulu/blob/2.x/composer.json) of the [sulu/sulu](https://github.com/sulu/sulu) core framework to find an **up-to-date list of the requirements** of Sulu content management system.
 
 
 ## 📘&nbsp; License
+
 The Sulu content management system is released under the under terms of the [MIT License](LICENSE).
