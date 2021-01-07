@@ -16,9 +16,6 @@
     <a href="https://github.com/sulu/sulu/actions" target="_blank">
         <img src="https://img.shields.io/github/workflow/status/sulu/sulu/Test%20application.svg?label=test-workflow" alt="Test workflow status">
     </a>
-    <a href="https://travis-ci.org/sulu/sulu/branches" target="_blank">
-        <img src="https://img.shields.io/travis/sulu/sulu/2.x.svg?label=travis" alt="Travis build">
-    </a>
     <a href="https://github.com/sulu/sulu/commits/2.x" target="_blank">
         <img src="https://img.shields.io/github/commit-activity/y/sulu/sulu.svg" alt="GitHub commit activity">
     </a>
