@@ -1,8 +1,5 @@
 # Sulu
 
-[![](https://travis-ci.org/sulu/sulu.png?branch=develop)](https://travis-ci.org/sulu/sulu)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/sulu/sulu/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/sulu/sulu/?branch=develop)
-
 This package contains the main stack for the
 [Sulu Content Management Framework](https://github.com/sulu/sulu-minimal) (CMF) licensed under the [MIT License](LICENSE).
 
