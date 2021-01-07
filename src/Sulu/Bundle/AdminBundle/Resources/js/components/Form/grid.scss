@@ -11,7 +11,7 @@
     margin-bottom: -$fieldMarginBottom;
 
     &:first-child {
-        .divider-container {
+        > .divider-container {
             margin-top: -$dividerTopMargin;
         }
     }
