@@ -1,37 +1,34 @@
 | Q | A
 | --- | ---
-| Bug fix? | no
-| New feature? | no
-| BC breaks? | no
-| Deprecations? | no
-| Fixed tickets | fixes #issuenum
-| Related issues/PRs | #issuenum
+| Bug fix? | no yes
+| New feature? | no yes
+| BC breaks? | no yes
+| Deprecations? | no yes <!-- if yes add them to the UPGRADE.md file -->
+| Fixed tickets | fixes # <!-- add issue number here e.g.: #5730 -->
+| Related issues/PRs | # <!-- add issue or PR number here e.g.: #5730 -->
 | License | MIT
-| Documentation PR | sulu/sulu-docs#prnum
+| Documentation PR | sulu/sulu-docs# <!-- add docs PR number here e.g.: sulu/sulu-docs#615 -->
 
 #### What's in this PR?
 
-Explain the contents of the PR.
+<!-- Explain the contents of the PR. -->
 
 #### Why?
 
-Which problem does the PR fix? (remove this section if you linked an issue above)
+<!-- Which problem does the PR fix? (add some context and maybe link to an issue here) -->
 
 #### Example Usage
 
-~~~php
+<!--
+```php
 // If you added new features, show examples of how to use them here
-// (remove this section if not a new feature)
 
 $foo = new Foo();
 
 // Now we can do
 $foo->doSomething();
-~~~
-
-#### BC Breaks/Deprecations
-
-Describe BC breaks/deprecations here. (remove this section if not needed)
+```
+-->
 
 #### To Do
 
