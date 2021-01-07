@@ -1,5 +1,9 @@
 CHANGELOG for Sulu
 ==================
+
+* 1.6.x
+    * ENHANCEMENT #5732  [All]                     Change branch names
+
 * 1.6.39 (2020-12-18)
     * BUGFIX      #5651  [MediaBundle]             Fix for image height calculation
 
