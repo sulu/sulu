@@ -9,6 +9,6 @@ Template](http://docs.sulu.io/en/latest/developer/contributing/pull-requests.htm
 
 Useful links:
 
-* [Creating a Pull Request](http://docs.sulu.io/en/latest/developer/contributing/pull-requests.html): Sulu specific Pull Request Guide.
+* [Creating a Pull Request](https://docs.sulu.io/en/latest/developer/contributing/index.html): Sulu specific Pull Request Guide.
 * [Coding Standards](http://symfony.com/doc/current/contributing/code/index.html): General Symfony coding standards.
-* [General Developer Documentation](https://github.com/sulu-cmf/docs/blob/master/developer-documentation): General Sulu Developer documentation index.
+* [General Developer Documentation](https://docs.sulu.io/): General Sulu Developer documentation index.
