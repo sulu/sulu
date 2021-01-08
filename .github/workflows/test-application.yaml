@@ -216,7 +216,7 @@ jobs:
               id: composer-cache
               with:
                   path: ${{ steps.composer-cache-dir.outputs.dir }}
-                  key: ${{ runner.os }}-composer-${{ hashFiles('composer.lock') }}
+                  key: ${{ runner.os }}-composer-${{ hashFiles('composer.json', 'composer.lock') }}
                   restore-keys: |
                       ${{ runner.os }}-composer-
 
