@@ -8,36 +8,6 @@ on:
             - '[0-9]+.[0-9]+'
 
 jobs:
-    php-cs-fixer:
-        name: Run php-cs-fixer
-        runs-on: ubuntu-18.04
-        steps:
-            - name: Checkout project
-              uses: actions/checkout@v1
-            - name: Create downloads directory
-              run: mkdir downloads
-            - name: Install and configure PHP
-              uses: shivammathur/setup-php@v2
-              with:
-                  php-version: '7.4'
-            - name: Get downloads path
-              id: php-cs-fixer-dir
-              run: echo "::set-output name=dir::downloads"
-            - name: Get php-cs-fixer path
-              id: php-cs-fixer-path
-              run: echo "::set-output name=path::${{ steps.php-cs-fixer-dir.outputs.dir }}/php-cs-fixer.phar"
-            - name: Cache php-cs-fixer
-              id: php-cs-fixer-cache
-              uses: actions/cache@v1
-              with:
-                  path: ${{ steps.php-cs-fixer-dir.outputs.dir }}
-                  key: php-cs-fixer
-            - name: Download php-cs-fixer
-              if: steps.php-cs-fixer-cache.outputs.cache-hit != 'true'
-              run: curl "https://cs.symfony.com/download/php-cs-fixer-v2.phar" --output ${{ steps.php-cs-fixer-path.outputs.path }} && chmod +x ${{ steps.php-cs-fixer-path.outputs.path }}
-            - name: Run php-cs-fixer
-              run: ./${{ steps.php-cs-fixer-path.outputs.path }} fix --dry-run --diff
-
     validate-js-build:
         name: Validate JavaScript builds
         runs-on: ubuntu-latest
@@ -83,6 +53,7 @@ jobs:
                       test-flags: ''
                       php-extensions: 'ctype, iconv, mysql, gd'
                       tools: 'composer:v1'
+                      php-cs-fixer: false
                       env:
                           SYMFONY__PHPCR__TRANSPORT: doctrinedbal
                           SYMFONY__DATABASE__DRIVER: pdo_mysql
@@ -96,6 +67,7 @@ jobs:
                       test-flags: ''
                       php-extensions: 'ctype, iconv, mysql, gd'
                       tools: 'composer:v2'
+                      php-cs-fixer: false
                       env:
                           SYMFONY__PHPCR__TRANSPORT: doctrinedbal
                           SYMFONY__DATABASE__DRIVER: pdo_mysql
@@ -109,6 +81,7 @@ jobs:
                       test-flags: '--jackrabbit-restart' # restart jackrabbit after each suite see: https://github.com/sulu-io/sulu/issues/2137
                       php-extensions: 'ctype, iconv, mysql, imagick'
                       tools: 'composer:v2'
+                      php-cs-fixer: true
                       env:
                           SYMFONY__PHPCR__TRANSPORT: jackrabbit
                           SYMFONY__DATABASE__DRIVER: pdo_pgsql
@@ -179,6 +152,13 @@ jobs:
                   key: ${{ runner.os }}-composer-${{ hashFiles('composer.lock') }}
                   restore-keys: |
                       ${{ runner.os }}-composer-
+
+            -   name: Run php-cs-fixer
+                if: ${{ matrix.php-cs-fixer }}
+                run: |
+                    composer global require friendsofphp/php-cs-fixer --prefer-dist --no-interaction
+                    GLOBAL_BIN_DIR=$(composer global config bin-dir --absolute --quiet)
+                    $GLOBAL_BIN_DIR/php-cs-fixer fix --dry-run --diff
 
             - name: Require jackrabbit dependencies
               if: ${{ matrix.phpcr-transport == 'jackrabbit' }}
