@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\CoreBundle\Entity;
 
-use Doctrine\Common\Inflector\Inflector;
+use Doctrine\Inflector\InflectorFactory;
 use JMS\Serializer\Annotation\Accessor;
 use JMS\Serializer\Annotation\Exclude;
 
@@ -81,7 +81,9 @@ abstract class ApiEntity
         // if no apiPath is not set generate it from basepath
         if (\is_null($this->getApiPath())) {
             $class = \explode('\\', \get_class($this));
-            $plural = Inflector::pluralize(\strtolower(\end($class)));
+            // this is deprecated already so no use to do fancy to get the factory
+            $inflector = InflectorFactory::create()->build();
+            $plural = $inflector->pluralize(\strtolower(\end($class)));
             $this->apiPath = $this->apiBasePath . '/' . $plural;
         }
 

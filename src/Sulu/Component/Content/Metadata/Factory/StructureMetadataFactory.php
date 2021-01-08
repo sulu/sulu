@@ -11,7 +11,7 @@
 
 namespace Sulu\Component\Content\Metadata\Factory;
 
-use Doctrine\Common\Inflector\Inflector;
+use Doctrine\Inflector\InflectorFactory;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -52,6 +52,11 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
      */
     private $cache = [];
 
+    /**
+     * @var \Doctrine\Inflector\Inflector
+     */
+    private $inflector;
+
     public function __construct(
         LoaderInterface $loader,
         array $typePaths,
@@ -64,6 +69,8 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
         $this->loader = $loader;
         $this->debug = $debug;
         $this->defaultTypes = $defaultTypes;
+
+        $this->inflector = InflectorFactory::create()->build();
     }
 
     public function getStructureMetadata($type, $structureType = null)
@@ -87,8 +94,8 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
             '%s%s%s%s',
             $this->cachePath,
             \DIRECTORY_SEPARATOR,
-            Inflector::camelize($type),
-            Inflector::camelize($structureType)
+            $this->inflector->camelize($type),
+            $this->inflector->camelize($structureType)
         );
 
         $cache = new ConfigCache($cachePath, $this->debug);
