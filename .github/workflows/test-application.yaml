@@ -89,7 +89,9 @@ jobs:
               uses: actions/cache@v2
               with:
                   path: ${{ steps.npm-cache-dir.outputs.dir }}
-                  key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+                  key: ${{ runner.os }}-npm-${{ hashFiles('**/package.json', '**/package-lock.json') }}
+                  restore-keys: |
+                      ${{ runner.os }}-npm-
 
             - name: Assert error when using yarn
               run: tests/js/check-yarn-warning.sh
