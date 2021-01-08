@@ -195,8 +195,6 @@
     },
     "scripts": {
         "bootstrap-test-environment": [
-            "bin/adminconsole doctrine:database:create --if-not-exists --env test",
-            "bin/adminconsole doctrine:schema:update --force --env test",
             "bin/runtests --initialize --no-bundle-tests --no-component-tests"
         ],
         "lint": [
@@ -231,6 +229,8 @@
             "bin/websiteconsole lint:container --env prod"
         ],
         "lint-doctrine": [
+            "bin/adminconsole doctrine:database:create --if-not-exists",
+            "bin/adminconsole doctrine:schema:update --force",
             "bin/adminconsole doctrine:ensure-production-settings --env prod",
             "bin/adminconsole doctrine:schema:validate"
         ]
