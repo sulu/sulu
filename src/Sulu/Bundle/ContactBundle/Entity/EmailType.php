@@ -94,7 +94,7 @@ class EmailType implements \JsonSerializable
      *
      * @return EmailType
      */
-    public function addEmail(\Sulu\Bundle\ContactBundle\Entity\Email $emails)
+    public function addEmail(Email $emails)
     {
         $this->emails[] = $emails;
 
@@ -104,7 +104,7 @@ class EmailType implements \JsonSerializable
     /**
      * Remove emails.
      */
-    public function removeEmail(\Sulu\Bundle\ContactBundle\Entity\Email $emails)
+    public function removeEmail(Email $emails)
     {
         $this->emails->removeElement($emails);
     }
