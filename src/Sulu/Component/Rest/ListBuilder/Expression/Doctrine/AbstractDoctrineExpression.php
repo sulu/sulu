@@ -33,6 +33,6 @@ abstract class AbstractDoctrineExpression implements ExpressionInterface
      */
     public function getUniqueId()
     {
-        return  \str_replace('.', '_', \uniqid('', true));
+        return \str_replace('.', '_', \uniqid('', true));
     }
 }

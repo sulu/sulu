@@ -94,7 +94,7 @@ class UrlType implements \JsonSerializable
      *
      * @return UrlType
      */
-    public function addUrl(\Sulu\Bundle\ContactBundle\Entity\Url $urls)
+    public function addUrl(Url $urls)
     {
         $this->urls[] = $urls;
 
@@ -104,7 +104,7 @@ class UrlType implements \JsonSerializable
     /**
      * Remove urls.
      */
-    public function removeUrl(\Sulu\Bundle\ContactBundle\Entity\Url $urls)
+    public function removeUrl(Url $urls)
     {
         $this->urls->removeElement($urls);
     }

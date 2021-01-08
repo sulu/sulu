@@ -97,7 +97,7 @@ class Phone
      *
      * @return Phone
      */
-    public function setPhoneType(\Sulu\Bundle\ContactBundle\Entity\PhoneType $phoneType)
+    public function setPhoneType(PhoneType $phoneType)
     {
         $this->phoneType = $phoneType;
 
@@ -119,7 +119,7 @@ class Phone
      *
      * @return Phone
      */
-    public function addContact(\Sulu\Bundle\ContactBundle\Entity\ContactInterface $contacts)
+    public function addContact(ContactInterface $contacts)
     {
         $this->contacts[] = $contacts;
 
@@ -129,7 +129,7 @@ class Phone
     /**
      * Remove contacts.
      */
-    public function removeContact(\Sulu\Bundle\ContactBundle\Entity\ContactInterface $contacts)
+    public function removeContact(ContactInterface $contacts)
     {
         $this->contacts->removeElement($contacts);
     }

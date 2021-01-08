@@ -70,7 +70,7 @@ class ContactLocale
      *
      * @return ContactLocale
      */
-    public function setContact(\Sulu\Bundle\ContactBundle\Entity\ContactInterface $contact)
+    public function setContact(ContactInterface $contact)
     {
         $this->contact = $contact;
 

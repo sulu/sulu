@@ -96,7 +96,7 @@ class Url
      *
      * @return Url
      */
-    public function setUrlType(\Sulu\Bundle\ContactBundle\Entity\UrlType $urlType)
+    public function setUrlType(UrlType $urlType)
     {
         $this->urlType = $urlType;
 
@@ -148,7 +148,7 @@ class Url
      *
      * @return Url
      */
-    public function addContact(\Sulu\Bundle\ContactBundle\Entity\ContactInterface $contacts)
+    public function addContact(ContactInterface $contacts)
     {
         $this->contacts[] = $contacts;
 
@@ -158,7 +158,7 @@ class Url
     /**
      * Remove contacts.
      */
-    public function removeContact(\Sulu\Bundle\ContactBundle\Entity\ContactInterface $contacts)
+    public function removeContact(ContactInterface $contacts)
     {
         $this->contacts->removeElement($contacts);
     }
