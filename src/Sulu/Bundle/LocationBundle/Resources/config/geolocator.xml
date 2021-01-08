@@ -9,10 +9,9 @@
 
     <services>
         <!-- Guzzle client -->
-        <service id="sulu_location.geolocator.guzzle.client" alias="sulu_location.geolocator.guzzle.client_deprecated">
+        <service id=""sulu_location.geolocator.guzzle.client" class="%sulu_location.guzzle.client.class%">
             <deprecated />
         </service>
-        <service id="sulu_location.geolocator.guzzle.client_deprecated" class="%sulu_location.guzzle.client.class%"/>
 
         <!-- Geolocator services -->
         <!-- * Nominatim * -->
