@@ -157,7 +157,7 @@ class FilterTranslation
      *
      * @return FilterTranslation
      */
-    public function setFilter(\Sulu\Bundle\ResourceBundle\Entity\Filter $filter)
+    public function setFilter(Filter $filter)
     {
         $this->filter = $filter;
 

@@ -124,7 +124,7 @@ class Country implements \JsonSerializable
      *
      * @return Country
      */
-    public function addAddresse(\Sulu\Bundle\ContactBundle\Entity\Address $addresses)
+    public function addAddresse(Address $addresses)
     {
         $this->addresses[] = $addresses;
 
@@ -134,7 +134,7 @@ class Country implements \JsonSerializable
     /**
      * Remove addresses.
      */
-    public function removeAddresse(\Sulu\Bundle\ContactBundle\Entity\Address $addresses)
+    public function removeAddresse(Address $addresses)
     {
         $this->addresses->removeElement($addresses);
     }
@@ -171,7 +171,7 @@ class Country implements \JsonSerializable
      *
      * @return Country
      */
-    public function addAddress(\Sulu\Bundle\ContactBundle\Entity\Address $addresses)
+    public function addAddress(Address $addresses)
     {
         $this->addresses[] = $addresses;
 
@@ -181,7 +181,7 @@ class Country implements \JsonSerializable
     /**
      * Remove addresses.
      */
-    public function removeAddress(\Sulu\Bundle\ContactBundle\Entity\Address $addresses)
+    public function removeAddress(Address $addresses)
     {
         $this->addresses->removeElement($addresses);
     }

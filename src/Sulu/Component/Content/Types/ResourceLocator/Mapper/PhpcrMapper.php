@@ -104,7 +104,7 @@ class PhpcrMapper implements ResourceLocatorMapperInterface
     {
         $result = $this->iterateRouteNodes(
             $contentNode,
-            function($resourceLocator, \PHPCR\NodeInterface $node) {
+            function($resourceLocator, NodeInterface $node) {
                 if (false === $node->getPropertyValue('sulu:history') && false !== $resourceLocator) {
                     return $resourceLocator;
                 }
@@ -188,7 +188,7 @@ class PhpcrMapper implements ResourceLocatorMapperInterface
         // get current path node
         $pathNode = $this->iterateRouteNodes(
             $contentNode,
-            function($resourceLocator, \PHPCR\NodeInterface $node) use (&$result) {
+            function($resourceLocator, NodeInterface $node) use (&$result) {
                 if (false === $node->getPropertyValue('sulu:history') && false !== $resourceLocator) {
                     return $node;
                 } else {

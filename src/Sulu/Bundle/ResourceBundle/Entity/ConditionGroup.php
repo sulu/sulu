@@ -54,7 +54,7 @@ class ConditionGroup
      *
      * @return ConditionGroup
      */
-    public function addCondition(\Sulu\Bundle\ResourceBundle\Entity\Condition $conditions)
+    public function addCondition(Condition $conditions)
     {
         $this->conditions[] = $conditions;
 
@@ -64,7 +64,7 @@ class ConditionGroup
     /**
      * Remove conditions.
      */
-    public function removeCondition(\Sulu\Bundle\ResourceBundle\Entity\Condition $conditions)
+    public function removeCondition(Condition $conditions)
     {
         $this->conditions->removeElement($conditions);
     }
@@ -84,7 +84,7 @@ class ConditionGroup
      *
      * @return ConditionGroup
      */
-    public function setFilter(\Sulu\Bundle\ResourceBundle\Entity\Filter $filter)
+    public function setFilter(Filter $filter)
     {
         $this->filter = $filter;
 
