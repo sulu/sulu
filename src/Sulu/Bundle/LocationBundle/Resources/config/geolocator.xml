@@ -9,7 +9,7 @@
 
     <services>
         <!-- Guzzle client -->
-        <service id=""sulu_location.geolocator.guzzle.client" class="%sulu_location.guzzle.client.class%">
+        <service id="sulu_location.geolocator.guzzle.client" class="%sulu_location.guzzle.client.class%">
             <deprecated />
         </service>
 
