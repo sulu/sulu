@@ -411,7 +411,7 @@ class FileVersion implements AuditableInterface
      *
      * @return FileVersion
      */
-    public function addContentLanguage(\Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage $contentLanguages)
+    public function addContentLanguage(FileVersionContentLanguage $contentLanguages)
     {
         $this->contentLanguages[] = $contentLanguages;
 
@@ -421,7 +421,7 @@ class FileVersion implements AuditableInterface
     /**
      * Remove contentLanguages.
      */
-    public function removeContentLanguage(\Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage $contentLanguages)
+    public function removeContentLanguage(FileVersionContentLanguage $contentLanguages)
     {
         $this->contentLanguages->removeElement($contentLanguages);
     }
@@ -441,7 +441,7 @@ class FileVersion implements AuditableInterface
      *
      * @return FileVersion
      */
-    public function addPublishLanguage(\Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage $publishLanguages)
+    public function addPublishLanguage(FileVersionPublishLanguage $publishLanguages)
     {
         $this->publishLanguages[] = $publishLanguages;
 
@@ -451,7 +451,7 @@ class FileVersion implements AuditableInterface
     /**
      * Remove publishLanguages.
      */
-    public function removePublishLanguage(\Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage $publishLanguages)
+    public function removePublishLanguage(FileVersionPublishLanguage $publishLanguages)
     {
         $this->publishLanguages->removeElement($publishLanguages);
     }
@@ -471,7 +471,7 @@ class FileVersion implements AuditableInterface
      *
      * @return FileVersion
      */
-    public function addMeta(\Sulu\Bundle\MediaBundle\Entity\FileVersionMeta $meta)
+    public function addMeta(FileVersionMeta $meta)
     {
         $this->meta[] = $meta;
 
@@ -481,7 +481,7 @@ class FileVersion implements AuditableInterface
     /**
      * Remove meta.
      */
-    public function removeMeta(\Sulu\Bundle\MediaBundle\Entity\FileVersionMeta $meta)
+    public function removeMeta(FileVersionMeta $meta)
     {
         $this->meta->removeElement($meta);
     }
@@ -525,7 +525,7 @@ class FileVersion implements AuditableInterface
      *
      * @return FileVersion
      */
-    public function setFile(\Sulu\Bundle\MediaBundle\Entity\File $file = null)
+    public function setFile(File $file = null)
     {
         $this->file = $file;
 
@@ -635,7 +635,7 @@ class FileVersion implements AuditableInterface
      *
      * @return FileVersion
      */
-    public function setDefaultMeta(\Sulu\Bundle\MediaBundle\Entity\FileVersionMeta $defaultMeta = null)
+    public function setDefaultMeta(FileVersionMeta $defaultMeta = null)
     {
         $this->defaultMeta = $defaultMeta;
 

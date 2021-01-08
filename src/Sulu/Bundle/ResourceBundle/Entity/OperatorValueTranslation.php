@@ -157,7 +157,7 @@ class OperatorValueTranslation
      *
      * @return OperatorValueTranslation
      */
-    public function setOperatorValue(\Sulu\Bundle\ResourceBundle\Entity\OperatorValue $operatorValue)
+    public function setOperatorValue(OperatorValue $operatorValue)
     {
         $this->operatorValue = $operatorValue;
 

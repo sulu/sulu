@@ -163,7 +163,7 @@ class Condition
      *
      * @return Condition
      */
-    public function setConditionGroup(\Sulu\Bundle\ResourceBundle\Entity\ConditionGroup $conditionGroup)
+    public function setConditionGroup(ConditionGroup $conditionGroup)
     {
         $this->conditionGroup = $conditionGroup;
 

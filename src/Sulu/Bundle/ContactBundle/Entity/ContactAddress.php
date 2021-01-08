@@ -79,7 +79,7 @@ class ContactAddress
      *
      * @return ContactAddress
      */
-    public function setAddress(\Sulu\Bundle\ContactBundle\Entity\Address $address)
+    public function setAddress(Address $address)
     {
         $this->address = $address;
 

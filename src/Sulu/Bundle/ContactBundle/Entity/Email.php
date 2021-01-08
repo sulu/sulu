@@ -97,7 +97,7 @@ class Email
      *
      * @return Email
      */
-    public function setEmailType(\Sulu\Bundle\ContactBundle\Entity\EmailType $emailType)
+    public function setEmailType(EmailType $emailType)
     {
         $this->emailType = $emailType;
 

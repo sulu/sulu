@@ -96,7 +96,7 @@ class Url
      *
      * @return Url
      */
-    public function setUrlType(\Sulu\Bundle\ContactBundle\Entity\UrlType $urlType)
+    public function setUrlType(UrlType $urlType)
     {
         $this->urlType = $urlType;
 

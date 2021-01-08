@@ -157,7 +157,7 @@ class OperatorTranslation
      *
      * @return OperatorTranslation
      */
-    public function setOperator(\Sulu\Bundle\ResourceBundle\Entity\Operator $operator)
+    public function setOperator(Operator $operator)
     {
         $this->operator = $operator;
 

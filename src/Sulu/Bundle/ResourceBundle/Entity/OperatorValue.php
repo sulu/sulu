@@ -59,7 +59,7 @@ class OperatorValue
      *
      * @return OperatorValue
      */
-    public function addTranslation(\Sulu\Bundle\ResourceBundle\Entity\OperatorValueTranslation $translations)
+    public function addTranslation(OperatorValueTranslation $translations)
     {
         $this->translations[] = $translations;
 
@@ -69,7 +69,7 @@ class OperatorValue
     /**
      * Remove translations.
      */
-    public function removeTranslation(\Sulu\Bundle\ResourceBundle\Entity\OperatorValueTranslation $translations)
+    public function removeTranslation(OperatorValueTranslation $translations)
     {
         $this->translations->removeElement($translations);
     }
@@ -89,7 +89,7 @@ class OperatorValue
      *
      * @return OperatorValue
      */
-    public function setOperator(\Sulu\Bundle\ResourceBundle\Entity\Operator $operator)
+    public function setOperator(Operator $operator)
     {
         $this->operator = $operator;
 

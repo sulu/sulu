@@ -97,7 +97,7 @@ class Phone
      *
      * @return Phone
      */
-    public function setPhoneType(\Sulu\Bundle\ContactBundle\Entity\PhoneType $phoneType)
+    public function setPhoneType(PhoneType $phoneType)
     {
         $this->phoneType = $phoneType;
 

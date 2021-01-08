@@ -34,7 +34,7 @@ class AppCache extends HttpCache implements KernelInterface
         return $this->kernel->registerBundles();
     }
 
-    public function registerContainerConfiguration(\Symfony\Component\Config\Loader\LoaderInterface $loader)
+    public function registerContainerConfiguration(Symfony\Component\Config\Loader\LoaderInterface $loader)
     {
         return $this->kernel->registerContainerConfiguration($loader);
     }

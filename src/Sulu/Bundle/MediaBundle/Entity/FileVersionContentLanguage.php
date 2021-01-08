@@ -86,7 +86,7 @@ class FileVersionContentLanguage
      *
      * @return FileVersionContentLanguage
      */
-    public function setFileVersion(\Sulu\Bundle\MediaBundle\Entity\FileVersion $fileVersion = null)
+    public function setFileVersion(FileVersion $fileVersion = null)
     {
         $this->fileVersion = $fileVersion;
 
