@@ -115,7 +115,7 @@ class RouteGeneratorCompilerPassTest extends TestCase
         $definition->replaceArgument(
             1,
             Argument::that(
-                function($argument) use ($serviceId) {
+                function($argument) {
                     return 0 === \count($argument);
                 }
             )

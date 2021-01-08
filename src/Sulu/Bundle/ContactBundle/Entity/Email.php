@@ -97,7 +97,7 @@ class Email
      *
      * @return Email
      */
-    public function setEmailType(\Sulu\Bundle\ContactBundle\Entity\EmailType $emailType)
+    public function setEmailType(EmailType $emailType)
     {
         $this->emailType = $emailType;
 
@@ -119,7 +119,7 @@ class Email
      *
      * @return Email
      */
-    public function addContact(\Sulu\Bundle\ContactBundle\Entity\ContactInterface $contacts)
+    public function addContact(ContactInterface $contacts)
     {
         $this->contacts[] = $contacts;
 
@@ -129,7 +129,7 @@ class Email
     /**
      * Remove contacts.
      */
-    public function removeContact(\Sulu\Bundle\ContactBundle\Entity\ContactInterface $contacts)
+    public function removeContact(ContactInterface $contacts)
     {
         $this->contacts->removeElement($contacts);
     }

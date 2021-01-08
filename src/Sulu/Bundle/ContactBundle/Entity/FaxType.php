@@ -94,7 +94,7 @@ class FaxType implements \JsonSerializable
      *
      * @return FaxType
      */
-    public function addFaxe(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes)
+    public function addFaxe(Fax $faxes)
     {
         $this->faxes[] = $faxes;
 
@@ -104,7 +104,7 @@ class FaxType implements \JsonSerializable
     /**
      * Remove faxes.
      */
-    public function removeFaxe(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes)
+    public function removeFaxe(Fax $faxes)
     {
         $this->faxes->removeElement($faxes);
     }
@@ -141,7 +141,7 @@ class FaxType implements \JsonSerializable
      *
      * @return FaxType
      */
-    public function addFax(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes)
+    public function addFax(Fax $faxes)
     {
         $this->faxes[] = $faxes;
 
@@ -151,7 +151,7 @@ class FaxType implements \JsonSerializable
     /**
      * Remove faxes.
      */
-    public function removeFax(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes)
+    public function removeFax(Fax $faxes)
     {
         $this->faxes->removeElement($faxes);
     }

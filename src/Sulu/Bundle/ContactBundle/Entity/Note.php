@@ -91,7 +91,7 @@ class Note
      *
      * @return Note
      */
-    public function addContact(\Sulu\Bundle\ContactBundle\Entity\ContactInterface $contacts)
+    public function addContact(ContactInterface $contacts)
     {
         $this->contacts[] = $contacts;
 
@@ -101,7 +101,7 @@ class Note
     /**
      * Remove contacts.
      */
-    public function removeContact(\Sulu\Bundle\ContactBundle\Entity\ContactInterface $contacts)
+    public function removeContact(ContactInterface $contacts)
     {
         $this->contacts->removeElement($contacts);
     }

@@ -94,7 +94,7 @@ class PhoneType implements \JsonSerializable
      *
      * @return PhoneType
      */
-    public function addPhone(\Sulu\Bundle\ContactBundle\Entity\Phone $phones)
+    public function addPhone(Phone $phones)
     {
         $this->phones[] = $phones;
 
@@ -104,7 +104,7 @@ class PhoneType implements \JsonSerializable
     /**
      * Remove phones.
      */
-    public function removePhone(\Sulu\Bundle\ContactBundle\Entity\Phone $phones)
+    public function removePhone(Phone $phones)
     {
         $this->phones->removeElement($phones);
     }
