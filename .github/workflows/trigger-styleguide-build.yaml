@@ -3,8 +3,8 @@ name: Trigger styleguide build
 on:
     push:
         branches:
-            - master
-            - release/2.*
+            - '2.x'
+            - '2.[0-9]+'
 
 jobs:
     trigger-styleguide-build:
