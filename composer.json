@@ -207,6 +207,7 @@
             "@lint-doctrine"
         ],
         "test": [
+            "Composer\\Config::disableProcessTimeout",
             "bin/runtests --all"
         ],
         "phpstan": [
