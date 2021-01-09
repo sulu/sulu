@@ -126,10 +126,17 @@ abstract class BaseDataProvider implements DataProviderInterface
 
     /**
      * Resolves filters.
+     * @param array $filters
+     * @param string $locale
+     * @param null $limit
+     * @param int $page
+     * @param null $pageSize
+     * @param array $options
+     * @return array
      */
     private function resolveFilters(
         array $filters,
-        $locale,
+        string $locale,
         $limit = null,
         $page = 1,
         $pageSize = null,
