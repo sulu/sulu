@@ -866,6 +866,74 @@ test('Validate should return false if errors occured', (done) => {
     );
 });
 
+test('Validate should not return incorrect errors', (done) => {
+    // This test ensures that https://github.com/sulu/sulu/issues/5709 has been fixed
+
+    const jsonSchemaPromise = Promise.resolve({
+        properties: {
+            blocks: {
+                type: 'array',
+                items: {
+                    allOf: [
+                        {
+                            if: {
+                                properties: {
+                                    type: {
+                                        const: 'text',
+                                    },
+                                },
+                            },
+                            then: {
+                                required: ['text'],
+                            },
+                        },
+                        {
+                            if: {
+                                properties: {
+                                    type: {
+                                        const: 'image',
+                                    },
+                                },
+                            },
+                            then: {
+                                required: ['title'],
+                            },
+                        },
+                    ],
+                },
+            },
+        },
+    });
+    metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
+
+    const resourceStore = new ResourceStore('snippets', '3');
+    const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
+
+    resourceStore.data = observable({
+        blocks: [
+            {
+                type: 'text',
+                text: undefined,
+            },
+            {
+                type: 'image',
+                title: 'this is block 2',
+            },
+        ],
+    });
+
+    when(
+        () => !resourceFormStore.schemaLoading,
+        (): void => {
+            expect(resourceFormStore.validate()).toEqual(false);
+            expect(toJS(resourceFormStore.errors.blocks)[0]).toHaveProperty('text');
+            expect(toJS(resourceFormStore.errors.blocks)[0]).not.toHaveProperty('title');
+            expect(toJS(resourceFormStore.errors.blocks)[0]).not.toHaveProperty('type');
+            done();
+        }
+    );
+});
+
 test('Save the store should validate the current data and an oneOf', (done) => {
     const jsonSchemaPromise = Promise.resolve({
         required: ['title', 'blocks'],

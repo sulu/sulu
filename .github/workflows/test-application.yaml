@@ -8,59 +8,6 @@ on:
             - '[0-9]+.[0-9]+'
 
 jobs:
-    download-language:
-        name: Download languages
-        runs-on: ubuntu-18.04
-        steps:
-            - name: Checkout project
-              uses: actions/checkout@v1
-            - name: Install and configure PHP
-              uses: shivammathur/setup-php@v2
-              with:
-                  php-version: '7.4'
-            - name: Get Composer Cache Directory
-              id: composer-cache
-              run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-            - name: Cache dependencies
-              uses: actions/cache@v1
-              with:
-                  path: ${{ steps.composer-cache.outputs.dir }}
-                  key: composer-cache
-            - name: Install dependencies
-              run: composer update
-            - name: Download language
-              run: bin/console sulu:admin:download-language nl
-
-    php-cs-fixer:
-        name: Run php-cs-fixer
-        runs-on: ubuntu-18.04
-        steps:
-            - name: Checkout project
-              uses: actions/checkout@v1
-            - name: Create downloads directory
-              run: mkdir downloads
-            - name: Install and configure PHP
-              uses: shivammathur/setup-php@v2
-              with:
-                  php-version: '7.4'
-            - name: Get downloads path
-              id: php-cs-fixer-dir
-              run: echo "::set-output name=dir::downloads"
-            - name: Get php-cs-fixer path
-              id: php-cs-fixer-path
-              run: echo "::set-output name=path::${{ steps.php-cs-fixer-dir.outputs.dir }}/php-cs-fixer.phar"
-            - name: Cache php-cs-fixer
-              id: php-cs-fixer-cache
-              uses: actions/cache@v1
-              with:
-                  path: ${{ steps.php-cs-fixer-dir.outputs.dir }}
-                  key: php-cs-fixer
-            - name: Download php-cs-fixer
-              if: steps.php-cs-fixer-cache.outputs.cache-hit != 'true'
-              run: curl "https://cs.symfony.com/download/php-cs-fixer-v2.phar" --output ${{ steps.php-cs-fixer-path.outputs.path }} && chmod +x ${{ steps.php-cs-fixer-path.outputs.path }}
-            - name: Run php-cs-fixer
-              run: ./${{ steps.php-cs-fixer-path.outputs.path }} fix --dry-run --diff
-
     js-css:
         name: "Test JavaScript application with Node ${{ matrix.node-version }}"
         runs-on: ubuntu-latest
@@ -143,8 +90,7 @@ jobs:
                       composer-flags: '--prefer-lowest --prefer-dist --no-interaction'
                       php-extensions: 'ctype, iconv, mysql, gd'
                       tools: 'composer:v1'
-                      phpstan: false
-                      lint-container: false
+                      lint: false
                       env:
                           SYMFONY_DEPRECATIONS_HELPER: disabled
                           PHPCR_TRANSPORT: jackrabbit
@@ -158,8 +104,7 @@ jobs:
                       composer-flags: '--prefer-dist --no-interaction'
                       php-extensions: 'ctype, iconv, mysql, imagick'
                       tools: 'composer:v2'
-                      phpstan: true
-                      lint-container: true
+                      lint: true
                       env:
                           SYMFONY_DEPRECATIONS_HELPER: weak
                           PHPCR_TRANSPORT: doctrinedbal
@@ -229,31 +174,21 @@ jobs:
                   composer require jackalope/jackalope-jackrabbit:^1.4  --no-interaction --no-update
 
             - name: Install dependencies
-              run: |
-                  composer validate --strict
-                  composer update ${{ matrix.composer-flags }}
+              run: composer update ${{ matrix.composer-flags }}
 
-            - name: PHPStan
-              if: ${{ matrix.phpstan }}
-              run: |
-                  bin/adminconsole cache:clear --env dev
-                  bin/websiteconsole cache:clear --env dev
-                  vendor/bin/phpstan analyze
+            - name: Bootstrap test environment
+              run: composer bootstrap-test-environment
               env: ${{ matrix.env }}
 
-            - name: Lint container
-              if: ${{ matrix.lint-container }}
-              run: |
-                  bin/adminconsole lint:container --env dev
-                  bin/websiteconsole lint:container --env dev
-                  bin/adminconsole lint:container --env test
-                  bin/websiteconsole lint:container --env test
-                  bin/adminconsole lint:container --env stage
-                  bin/websiteconsole lint:container --env stage
-                  bin/adminconsole lint:container --env prod
-                  bin/websiteconsole lint:container --env prod
+            - name: Lint code
+              if: ${{ matrix.lint }}
+              run: composer lint
               env: ${{ matrix.env }}
 
-            - name: Run tests
-              run: time bin/runtests -i -a
+            - name: Execute test cases
+              run: time composer test
+              env: ${{ matrix.env }}
+
+            - name: Test download-language script
+              run: bin/console sulu:admin:download-language nl
               env: ${{ matrix.env }}

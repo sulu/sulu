@@ -167,15 +167,17 @@ class AdminControllerTest extends SuluTestCase
         $this->assertCount(1, (array) $overviewType->schema->properties);
         $this->assertEquals('array', $overviewType->schema->properties->block->type);
         $this->assertEquals([], $overviewType->schema->properties->block->items->required);
-        $this->assertCount(2, $overviewType->schema->properties->block->items->anyOf);
-        $this->assertEquals(['title', 'type'], $overviewType->schema->properties->block->items->anyOf[0]->required);
-        $this->assertCount(1, (array) $overviewType->schema->properties->block->items->anyOf[0]->properties);
-        $this->assertEquals('type', $overviewType->schema->properties->block->items->anyOf[0]->properties->type->name);
-        $this->assertEquals('type1', $overviewType->schema->properties->block->items->anyOf[0]->properties->type->const);
-        $this->assertEquals(['image', 'type'], $overviewType->schema->properties->block->items->anyOf[1]->required);
-        $this->assertCount(1, (array) $overviewType->schema->properties->block->items->anyOf[1]->properties);
-        $this->assertEquals('type', $overviewType->schema->properties->block->items->anyOf[1]->properties->type->name);
-        $this->assertEquals('type2', $overviewType->schema->properties->block->items->anyOf[1]->properties->type->const);
+        $this->assertCount(2, $overviewType->schema->properties->block->items->allOf);
+        $this->assertEquals(['type'], $overviewType->schema->properties->block->items->allOf[0]->if->required);
+        $this->assertCount(1, (array) $overviewType->schema->properties->block->items->allOf[0]->if->properties);
+        $this->assertEquals('type', $overviewType->schema->properties->block->items->allOf[0]->if->properties->type->name);
+        $this->assertEquals('type1', $overviewType->schema->properties->block->items->allOf[0]->if->properties->type->const);
+        $this->assertEquals(['title'], $overviewType->schema->properties->block->items->allOf[0]->then->required);
+        $this->assertEquals(['type'], $overviewType->schema->properties->block->items->allOf[1]->if->required);
+        $this->assertCount(1, (array) $overviewType->schema->properties->block->items->allOf[1]->if->properties);
+        $this->assertEquals('type', $overviewType->schema->properties->block->items->allOf[1]->if->properties->type->name);
+        $this->assertEquals('type2', $overviewType->schema->properties->block->items->allOf[1]->if->properties->type->const);
+        $this->assertEquals(['image'], $overviewType->schema->properties->block->items->allOf[1]->then->required);
 
         $blocksType = $types->blocks;
         $this->assertEquals(1, $blocksType->form->block->minOccurs);

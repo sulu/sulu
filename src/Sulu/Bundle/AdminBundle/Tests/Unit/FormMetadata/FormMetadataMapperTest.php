@@ -371,23 +371,33 @@ class FormMetadataMapperTest extends TestCase
                     'type' => 'array',
                     'items' => [
                         'required' => [],
-                        'anyOf' => [
+                        'allOf' => [
                             [
-                                'required' => ['property2', 'type'],
-                                'properties' => [
-                                    'type' => [
-                                        'name' => 'type',
-                                        'const' => 'component1',
+                                'if' => [
+                                    'properties' => [
+                                        'type' => [
+                                            'name' => 'type',
+                                            'const' => 'component1',
+                                        ],
                                     ],
+                                    'required' => ['type'],
+                                ],
+                                'then' => [
+                                    'required' => ['property2'],
                                 ],
                             ],
                             [
-                                'required' => ['property3', 'type'],
-                                'properties' => [
-                                    'type' => [
-                                        'name' => 'type',
-                                        'const' => 'component2',
+                                'if' => [
+                                    'properties' => [
+                                        'type' => [
+                                            'name' => 'type',
+                                            'const' => 'component2',
+                                        ],
                                     ],
+                                    'required' => ['type'],
+                                ],
+                                'then' => [
+                                    'required' => ['property3'],
                                 ],
                             ],
                         ],
