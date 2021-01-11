@@ -133,8 +133,12 @@ export default class AbstractFormStore
             for (const error of validator.errors) {
                 switch (error.keyword) {
                     case 'type':
+                    case 'if':
+                    case 'then':
+                    case 'else':
                     case 'oneOf':
                     case 'anyOf':
+                    case 'allOf':
                         // these errors are not shown in the leaf field, e.g. in blocks and similar constructs
                         // these errors also have child errors, which will be shown on the correct leaf field
                         break;

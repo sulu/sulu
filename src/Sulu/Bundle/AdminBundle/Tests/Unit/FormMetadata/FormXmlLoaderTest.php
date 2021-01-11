@@ -306,29 +306,33 @@ class FormXmlLoaderTest extends TestCase
                         'name' => 'blocks',
                         'type' => 'array',
                         'items' => [
-                            'anyOf' => [
+                            'allOf' => [
                                 [
-                                    'required' => [
-                                        'article',
-                                        'type',
-                                    ],
-                                    'properties' => [
-                                        'type' => [
-                                            'name' => 'type',
-                                            'const' => 'editor',
+                                    'if' => [
+                                        'properties' => [
+                                            'type' => [
+                                                'name' => 'type',
+                                                'const' => 'editor',
+                                            ],
                                         ],
+                                        'required' => ['type'],
+                                    ],
+                                    'then' => [
+                                        'required' => ['article'],
                                     ],
                                 ],
                                 [
-                                    'required' => [
-                                        'images',
-                                        'type',
-                                    ],
-                                    'properties' => [
-                                        'type' => [
-                                            'name' => 'type',
-                                            'const' => 'editor_image',
+                                    'if' => [
+                                        'properties' => [
+                                            'type' => [
+                                                'name' => 'type',
+                                                'const' => 'editor_image',
+                                            ],
                                         ],
+                                        'required' => ['type'],
+                                    ],
+                                    'then' => [
+                                        'required' => ['images'],
                                     ],
                                 ],
                             ],
@@ -358,82 +362,102 @@ class FormXmlLoaderTest extends TestCase
                         'name' => 'block1',
                         'type' => 'array',
                         'items' => [
-                            'anyOf' => [
+                            'allOf' => [
                                 [
-                                    'required' => [
-                                        'block11',
-                                        'type',
-                                    ],
-                                    'properties' => [
-                                        'type' => [
-                                            'name' => 'type',
-                                            'const' => 'type11',
+                                    'if' => [
+                                        'properties' => [
+                                            'type' => [
+                                                'name' => 'type',
+                                                'const' => 'type11',
+                                            ],
                                         ],
-                                        'block11' => [
-                                            'name' => 'block11',
-                                            'type' => 'array',
-                                            'items' => [
-                                                'anyOf' => [
-                                                    [
-                                                        'required' => [
-                                                            'type',
-                                                        ],
-                                                        'properties' => [
-                                                            'type' => [
-                                                                'name' => 'type',
-                                                                'const' => 'type111',
+                                        'required' => ['type'],
+                                    ],
+                                    'then' => [
+                                        'properties' => [
+                                            'block11' => [
+                                                'name' => 'block11',
+                                                'type' => 'array',
+                                                'items' => [
+                                                    'allOf' => [
+                                                        [
+                                                            'if' => [
+                                                                'properties' => [
+                                                                    'type' => [
+                                                                        'name' => 'type',
+                                                                        'const' => 'type111',
+                                                                    ],
+                                                                ],
+                                                                'required' => ['type'],
+                                                            ],
+                                                            'then' => [
+                                                                'required' => [],
                                                             ],
                                                         ],
-                                                    ],
-                                                    [
-                                                        'required' => [
-                                                            'type',
-                                                        ],
-                                                        'properties' => [
-                                                            'type' => [
-                                                                'name' => 'type',
-                                                                'const' => 'type112',
+                                                        [
+                                                            'if' => [
+                                                                'properties' => [
+                                                                    'type' => [
+                                                                        'name' => 'type',
+                                                                        'const' => 'type112',
+                                                                    ],
+                                                                ],
+                                                                'required' => ['type'],
+                                                            ],
+                                                            'then' => [
+                                                                'required' => [],
                                                             ],
                                                         ],
                                                     ],
                                                 ],
                                             ],
                                         ],
+                                        'required' => ['block11'],
                                     ],
                                 ],
                                 [
-                                    'required' => [
-                                        'type',
-                                    ],
-                                    'properties' => [
-                                        'type' => [
-                                            'name' => 'type',
-                                            'const' => 'type12',
+                                    'if' => [
+                                        'properties' => [
+                                            'type' => [
+                                                'name' => 'type',
+                                                'const' => 'type12',
+                                            ],
                                         ],
-                                        'block12' => [
-                                            'name' => 'block12',
-                                            'type' => 'array',
-                                            'items' => [
-                                                'anyOf' => [
-                                                    [
-                                                        'required' => [
-                                                            'type',
-                                                        ],
-                                                        'properties' => [
-                                                            'type' => [
-                                                                'name' => 'type',
-                                                                'const' => 'type121',
+                                        'required' => ['type'],
+                                    ],
+                                    'then' => [
+                                        'properties' => [
+                                            'block12' => [
+                                                'name' => 'block12',
+                                                'type' => 'array',
+                                                'items' => [
+                                                    'allOf' => [
+                                                        [
+                                                            'if' => [
+                                                                'properties' => [
+                                                                    'type' => [
+                                                                        'name' => 'type',
+                                                                        'const' => 'type121',
+                                                                    ],
+                                                                ],
+                                                                'required' => ['type'],
+                                                            ],
+                                                            'then' => [
+                                                                'required' => [],
                                                             ],
                                                         ],
-                                                    ],
-                                                    [
-                                                        'required' => [
-                                                            'type',
-                                                        ],
-                                                        'properties' => [
-                                                            'type' => [
-                                                                'name' => 'type',
-                                                                'const' => 'type122',
+                                                        [
+                                                            'if' => [
+                                                                'properties' => [
+                                                                    'type' => [
+                                                                        'name' => 'type',
+                                                                        'const' => 'type122',
+                                                                    ],
+                                                                ],
+                                                                'required' => ['type'],
+                                                            ],
+                                                            'then' => [
+                                                                'required' => [],
                                                             ],
                                                         ],
                                                     ],

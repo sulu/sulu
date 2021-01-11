@@ -225,6 +225,11 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
 
         // converter
         $ghostScriptPath = $config['ghost_script']['path'];
+
+        if (\method_exists($container, 'resolveEnvPlaceholders')) {
+            $ghostScriptPath = $container->resolveEnvPlaceholders($ghostScriptPath, true);
+        }
+
         $container->setParameter('sulu_media.ghost_script.path', $ghostScriptPath);
 
         // storage

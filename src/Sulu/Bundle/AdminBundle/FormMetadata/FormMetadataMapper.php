@@ -17,9 +17,10 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\ItemMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\OptionMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SectionMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TagMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\AnyOfsMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\AllOfsMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ArrayMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ConstMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\IfThenElseMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapperRegistry;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
@@ -221,11 +222,11 @@ class FormMetadataMapper
             if ($itemMetadata instanceof ContentBlockMetadata) {
                 $blockTypeSchemas = [];
                 foreach ($itemMetadata->getComponents() as $blockType) {
-                    $blockTypeSchemas[] = new SchemaMetadata(
-                        \array_merge(
-                            $this->mapSchemaProperties($blockType->getChildren()),
-                            ['type' => new PropertyMetadata('type', true, new ConstMetadata($blockType->getName()))]
-                        )
+                    $blockTypeSchemas[] = new IfThenElseMetadata(
+                        new SchemaMetadata([
+                            new PropertyMetadata('type', true, new ConstMetadata($blockType->getName())),
+                        ]),
+                        new SchemaMetadata($this->mapSchemaProperties($blockType->getChildren()))
                     );
                 }
 
@@ -233,7 +234,7 @@ class FormMetadataMapper
                     $itemMetadata->getName(),
                     $itemMetadata->isRequired(),
                     new ArrayMetadata(
-                        new AnyOfsMetadata($blockTypeSchemas)
+                        new AllOfsMetadata($blockTypeSchemas)
                     )
                 );
             }
