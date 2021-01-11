@@ -19,6 +19,7 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SectionMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TagMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ArrayMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ConstMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\IfThenElseMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
 use Sulu\Component\Content\Metadata\BlockMetadata;
@@ -221,18 +222,16 @@ class FormMetadataMapper
             if ($itemMetadata instanceof ContentBlockMetadata) {
                 $blockTypeSchemas = [];
                 foreach ($itemMetadata->getComponents() as $blockType) {
-                    $blockTypeSchemas[] = new SchemaMetadata(
-                        \array_merge(
-                            $this->mapSchemaProperties($blockType->getChildren()),
-                            ['type' => new ConstMetadata('type', true, $blockType->getName())]
-                        )
+                    $blockTypeSchemas[] = new IfThenElseMetadata(
+                        new SchemaMetadata([new ConstMetadata('type', true, $blockType->getName())]),
+                        new SchemaMetadata($this->mapSchemaProperties($blockType->getChildren()))
                     );
                 }
 
                 return new ArrayMetadata(
                     $itemMetadata->getName(),
                     $itemMetadata->isRequired(),
-                    new SchemaMetadata([], $blockTypeSchemas)
+                    new SchemaMetadata([], [], $blockTypeSchemas)
                 );
             }
 
