@@ -270,6 +270,7 @@
             <argument>%sulu_media.media.max_file_size%</argument>
             <argument type="service" id="sulu.repository.target_group" on-invalid="null"/>
             <argument type="string">%sulu_media.media_manager.media_download_path_admin%</argument>
+            <argument type="service" id="sulu_media.adapter"/>
         </service>
 
         <service id="Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface" alias="sulu_media.media_manager"/>

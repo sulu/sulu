@@ -15,6 +15,9 @@ use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
 use FFMpeg\Exception\ExecutableNotFoundException;
 use FFMpeg\FFProbe;
+use Imagine\Exception\InvalidArgumentException;
+use Imagine\Exception\RuntimeException;
+use Imagine\Image\ImagineInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Api\Media;
@@ -156,6 +159,11 @@ class MediaManager implements MediaManagerInterface
     private $adminDownloadPath;
 
     /**
+     * @var ImagineInterface
+     */
+    private $imagine;
+
+    /**
      * @param array $permissions
      * @param string $downloadPath
      * @param string $maxFileSize
@@ -180,7 +188,8 @@ class MediaManager implements MediaManagerInterface
         $downloadPath,
         $maxFileSize,
         TargetGroupRepositoryInterface $targetGroupRepository = null,
-        $adminDownloadPath = null
+        $adminDownloadPath = null,
+        ?ImagineInterface $imagine = null
     ) {
         $this->mediaRepository = $mediaRepository;
         $this->collectionRepository = $collectionRepository;
@@ -212,6 +221,18 @@ class MediaManager implements MediaManagerInterface
         }
 
         $this->adminDownloadPath = $adminDownloadPath ?: '/admin' . $this->downloadPath;
+
+        if (!$imagine) {
+            @\trigger_error(
+                \sprintf(
+                    'The usage of the "%s" without setting "$imagine" is deprecated and will not longer work in Sulu 3.0.',
+                    MediaManager::class
+                ),
+                \E_USER_DEPRECATED
+            );
+        }
+
+        $this->imagine = $imagine;
     }
 
     public function getById($id, $locale)
@@ -296,9 +317,9 @@ class MediaManager implements MediaManagerInterface
         $mimeType = $uploadedFile->getMimeType();
         $properties = [];
 
-        try {
-            // if the file is a video we add the duration
-            if (\fnmatch('video/*', $mimeType) && $this->ffprobe) {
+        // if the file is a video we add the duration
+        if (\fnmatch('video/*', $mimeType) && $this->ffprobe) {
+            try {
                 $properties['duration'] = $this->ffprobe->format($uploadedFile->getPathname())->get('duration');
 
                 // Dimensions
@@ -311,9 +332,19 @@ class MediaManager implements MediaManagerInterface
                 } catch (\RuntimeException $e) {
                     // Exception is thrown if the dimension could not be extracted
                 }
+            } catch (ExecutableNotFoundException $e) {
+                // Exception is thrown if ffmpeg is not installed -> video properties are not set
             }
-        } catch (ExecutableNotFoundException $e) {
-            // Exception is thrown if ffmpeg is not installed -> video properties are not set
+        } elseif (\fnmatch('image/*', $mimeType)) {
+            if ($this->imagine) {
+                try {
+                    $image = $this->imagine->open($uploadedFile->getPathname());
+                    $properties['width'] = $image->getSize()->getWidth();
+                    $properties['height'] = $image->getSize()->getHeight();
+                } catch (InvalidArgumentException | RuntimeException $exception) {
+                    // Exception is thrown -> image properties are not set
+                }
+            }
         }
 
         return $properties;
