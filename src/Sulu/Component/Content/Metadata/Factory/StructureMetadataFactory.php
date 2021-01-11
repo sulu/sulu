@@ -53,7 +53,7 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
     private $cache = [];
 
     /**
-     * @var \Doctrine\Inflector\Inflector
+     * @var Inflector
      */
     private $inflector;
 

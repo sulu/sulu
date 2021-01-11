@@ -29,7 +29,7 @@ class AliasFilingSubscriber extends AbstractFilingSubscriber
     private $metadataFactory;
 
     /**
-     * @var \Doctrine\Inflector\Inflector
+     * @var Inflector
      */
     private $inflector;
 

@@ -81,7 +81,6 @@ abstract class ApiEntity
         // if no apiPath is not set generate it from basepath
         if (\is_null($this->getApiPath())) {
             $class = \explode('\\', \get_class($this));
-            // this is deprecated already so no use to do fancy to get the factory
             $inflector = InflectorFactory::create()->build();
             $plural = $inflector->pluralize(\strtolower(\end($class)));
             $this->apiPath = $this->apiBasePath . '/' . $plural;
