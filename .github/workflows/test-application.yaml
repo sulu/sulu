@@ -188,7 +188,3 @@ jobs:
             - name: Execute test cases
               run: time composer test
               env: ${{ matrix.env }}
-
-            - name: Test download-language script
-              run: bin/console sulu:admin:download-language nl
-              env: ${{ matrix.env }}
