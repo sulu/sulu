@@ -12,10 +12,12 @@
 namespace Sulu\Bundle\LocationBundle\Geolocator\Service;
 
 use GuzzleHttp\ClientInterface;
+use Psr\Http\Message\ResponseInterface;
 use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorInterface;
 use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorLocation;
 use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorResponse;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
  * Geolocator which uses the open street maps nominatim service.
@@ -25,7 +27,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class NominatimGeolocator implements GeolocatorInterface
 {
     /**
-     * @var ClientInterface
+     * @var HttpClientInterface|ClientInterface
      */
     protected $client;
 
@@ -39,8 +41,25 @@ class NominatimGeolocator implements GeolocatorInterface
      */
     private $key;
 
-    public function __construct(ClientInterface $client, string $baseUrl, string $key)
-    {
+    public function __construct(
+        $client,
+        string $baseUrl,
+        string $key
+    ) {
+        if ($client instanceof ClientInterface) {
+            @\trigger_error(
+                \sprintf(
+                    'Instantiating NominatimGeolocator with %s as first argument is deprecated, please use %s instead.',
+                    ClientInterface::class, HttpClientInterface::class
+                ),
+                \E_USER_DEPRECATED
+            );
+        } elseif (!($client instanceof HttpClientInterface)) {
+            throw new \InvalidArgumentException(
+                \sprintf('Please provide a %s as client', HttpClientInterface::class)
+            );
+        }
+
         $this->client = $client;
         $this->baseUrl = $baseUrl;
         $this->key = $key;
@@ -72,7 +91,13 @@ class NominatimGeolocator implements GeolocatorInterface
             );
         }
 
-        $results = \json_decode($response->getBody(), true);
+        if ($response instanceof ResponseInterface) {
+            // BC to support for guzzle client
+            $results = \json_decode($response->getBody(), true);
+        } else {
+            $results = $response->toArray();
+        }
+
         $response = new GeolocatorResponse();
         foreach ($results as $result) {
             $location = new GeolocatorLocation();

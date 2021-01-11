@@ -19,6 +19,8 @@ use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\LocationBundle\Geolocator\Service\GoogleGeolocator;
+use Symfony\Component\HttpClient\MockHttpClient;
+use Symfony\Component\HttpClient\Response\MockResponse;
 
 class GoogleGeolocatorTest extends TestCase
 {
@@ -63,6 +65,46 @@ class GoogleGeolocatorTest extends TestCase
     {
         $fixtureName = __DIR__ . '/google-responses/' . \md5($query) . '.json';
         $fixture = \file_get_contents($fixtureName);
+        $mockResponse = new MockResponse($fixture);
+
+        $httpClient = new MockHttpClient($mockResponse);
+        $geolocator = new GoogleGeolocator($httpClient, '');
+
+        $results = $geolocator->locate($query);
+        $this->assertCount($expectedCount, $results);
+
+        if (0 == \count($results)) {
+            return;
+        }
+
+        $result = \current($results->toArray());
+
+        foreach ($expectationMap as $field => $expectation) {
+            $this->assertEquals($expectation, $result[$field]);
+        }
+    }
+
+    public function testApiKey()
+    {
+        $mockResponse = new MockResponse('{"status": "OK","results":[]}');
+
+        $httpClient = new MockHttpClient($mockResponse);
+        $geolocator = new GoogleGeolocator($httpClient, 'foobar-key');
+        $geolocator->locate('foobar');
+
+        $this->assertArrayHasKey('key', $mockResponse->getRequestOptions()['query']);
+        $this->assertEquals('foobar-key', $mockResponse->getRequestOptions()['query']['key']);
+    }
+
+    /**
+     * Test if BC is maintained and guzzle client still works.
+     *
+     * @dataProvider provideLocate
+     */
+    public function testGuzzleLocate($query, $expectedCount, $expectationMap)
+    {
+        $fixtureName = __DIR__ . '/google-responses/' . \md5($query) . '.json';
+        $fixture = \file_get_contents($fixtureName);
         $mockHandler = new MockHandler([new Response(200, [], $fixture)]);
 
         $client = new Client(['handler' => HandlerStack::create($mockHandler)]);
@@ -82,7 +124,10 @@ class GoogleGeolocatorTest extends TestCase
         }
     }
 
-    public function testApiKey()
+    /**
+     * Test if BC is maintained and guzzle client still works.
+     */
+    public function testGuzzleApiKey()
     {
         $mockHandler = new MockHandler([new Response(200, [], '{"status": "OK","results":[]}')]);
         $stack = HandlerStack::create($mockHandler);
