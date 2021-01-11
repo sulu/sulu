@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\DocumentManager\Subscriber\Behavior\Path;
 
+use Doctrine\Inflector\Inflector;
 use Doctrine\Inflector\InflectorFactory;
 use PHPCR\SessionInterface;
 use Sulu\Component\DocumentManager\Behavior\Path\AliasFilingBehavior;

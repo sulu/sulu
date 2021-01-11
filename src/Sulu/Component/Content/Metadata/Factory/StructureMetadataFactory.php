@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Content\Metadata\Factory;
 
+use Doctrine\Inflector\Inflector;
 use Doctrine\Inflector\InflectorFactory;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\FileLocator;
