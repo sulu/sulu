@@ -2,6 +2,15 @@
 
 ## 2.1.x
 
+### Deprecated service `sulu_location.geolocator.guzzle.client` and parameter `sulu_location.guzzle.client.class`
+
+Because `NominatimGeolocator` and `GoogleGeolocator` now use the symfony http client the `sulu_location.geolocator.guzzle.client` is now deprecated
+as is the parameter `sulu_location.guzzle.client.class`.
+
+### The constructor of the `NominatimGeolocator` and `GoogleGeolocator` requires a `Symfony\Contracts\HttpClient\HttpClientInterface` for the `$client` argument
+
+Constructing `NominatimGeolocator` and `GoogleGeolocator` with the previous `GuzzleHttp\ClientInterface` is deprecated. 
+
 ### Doctrine changes for PHP 8 Support
 
 To prepare for PHP8 support, the version constraints of the `doctrine/persistence` package and the `doctrine/dbal` package were updated 
