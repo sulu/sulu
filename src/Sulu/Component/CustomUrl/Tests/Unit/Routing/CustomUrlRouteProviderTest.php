@@ -28,14 +28,18 @@ class CustomUrlRouteProviderTest extends TestCase
     public function dataProvider()
     {
         return [
-            ['sulu.io', '/test', 'sulu.io/test', false],
-            ['sulu.io', '/test.html', 'sulu.io/test', false],
-            ['sulu.io', '/test.html', 'sulu.io/test', true, true],
-            ['sulu.io', '/test.html', 'sulu.io/test', true, false, false],
-            ['sulu.io', '/test.html', 'sulu.io/test', true, false, true, false],
-            ['sulu.io', '/test.html', 'sulu.io/test', true, false, true, true, WorkflowStage::PUBLISHED],
-            ['sulu.io', '/test.html', 'sulu.io/test', true, false, true, true, WorkflowStage::TEST],
-            ['sulu.io', '/käße.html', 'sulu.io/kaese', true, false, true, true, WorkflowStage::TEST],
+            ['sulu.io', '/test', null, 'sulu.io/test', false],
+            ['sulu.io', '/test.html', 'html', 'sulu.io/test', false],
+            ['sulu.io', '/test.json', 'json', 'sulu.io/test', false],
+            ['sulu.io', '/test.html', 'html', 'sulu.io/test', false],
+            ['sulu.io', '/test', null, 'sulu.io/test', true, true, 'sulu.io/test-1'],
+            ['sulu.io', '/test.html', 'html', 'sulu.io/test', true, true, 'sulu.io/test-1.html'],
+            ['sulu.io', '/test.json', 'json', 'sulu.io/test', true, true, 'sulu.io/test-1.json'],
+            ['sulu.io', '/test.html', 'html', 'sulu.io/test', true, false, null, false],
+            ['sulu.io', '/test.html', 'html', 'sulu.io/test', true, false, null, true, false],
+            ['sulu.io', '/test.html', 'html', 'sulu.io/test', true, false, null, true, true, WorkflowStage::PUBLISHED],
+            ['sulu.io', '/test.html', 'html', 'sulu.io/test', true, false, null, true, true, WorkflowStage::TEST],
+            ['sulu.io', '/käße.html', 'html', 'sulu.io/kaese', true, false, null, true, true, WorkflowStage::TEST],
         ];
     }
 
@@ -44,10 +48,12 @@ class CustomUrlRouteProviderTest extends TestCase
      */
     public function testGetRouteCollectionForRequest(
         $host,
-        $requestedUri,
-        $route,
+        $pathInfo,
+        $requestFormat,
+        $expectedRoutePath,
         $exists = true,
         $history = true,
+        $expectedHistoryRedirectUrl = null,
         $published = true,
         $hasTarget = true,
         $workflowStage = WorkflowStage::PUBLISHED,
@@ -67,9 +73,9 @@ class CustomUrlRouteProviderTest extends TestCase
             ->willReturn('/cmf/sulu_io/custom-urls/routes');
 
         $request->getHost()->willReturn($host);
-        $request->getRequestUri()->willReturn($requestedUri);
-        $request->getPathInfo()->willReturn(\rawurlencode($requestedUri));
+        $request->getPathInfo()->willReturn($pathInfo);
         $request->getScheme()->willReturn('http');
+        $request->getRequestFormat(null)->willReturn($requestFormat);
 
         if (!$exists) {
             $requestAnalyzer->getAttribute('customUrlRoute')->willReturn(null);
@@ -77,11 +83,11 @@ class CustomUrlRouteProviderTest extends TestCase
         } else {
             $routeDocument = $this->prophesize(RouteDocument::class);
             $routeDocument->isHistory()->willReturn($history);
-            $routeDocument->getPath()->willReturn('/cmf/sulu_io/custom-urls/routes/' . $route);
+            $routeDocument->getPath()->willReturn('/cmf/sulu_io/custom-urls/routes/' . $expectedRoutePath);
 
             if ($history) {
                 $target = $this->prophesize(RouteDocument::class);
-                $target->getPath()->willReturn('/cmf/sulu_io/custom-urls/routes/' . $route . '-1');
+                $target->getPath()->willReturn('/cmf/sulu_io/custom-urls/routes/' . $expectedRoutePath . '-1');
                 $routeDocument->getTargetDocument()->willReturn($target->reveal());
                 $requestAnalyzer->getAttribute('customUrl')->willReturn(null);
 
@@ -131,7 +137,7 @@ class CustomUrlRouteProviderTest extends TestCase
                 [
                     '_controller' => 'sulu_website.redirect_controller:redirectAction',
                     '_finalized' => true,
-                    'url' => 'http://' . $route . '-1',
+                    'url' => 'http://' . $expectedHistoryRedirectUrl,
                 ],
                 $defaults
             );
