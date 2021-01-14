@@ -25,6 +25,9 @@ $textEditorUnpublishedLinkColor: $gold;
         --ck-font-size-base: $textEditorFontSize;
         --ck-icon-size: $textEditorFontSize;
 
+        /* z-index */
+        --ck-z-default: 0;
+
         /* shadows */
         --ck-color-shadow-inner: none;
         --ck-color-shadow-drop: none;
@@ -150,8 +153,6 @@ $textEditorUnpublishedLinkColor: $gold;
     }
 
     .ck.ck-editor {
-        z-index: 0;
-
         .ck.ck-toolbar__separator {
             background: none;
             width: $textEditorButtonMinSize;

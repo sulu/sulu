@@ -25,7 +25,6 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Webspace;
-use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 
 class CustomUrlRequestProcessorTest extends TestCase
@@ -33,15 +32,18 @@ class CustomUrlRequestProcessorTest extends TestCase
     public function dataProvider()
     {
         return [
-            ['sulu.io', 'test', 'sulu.io/test', false],
-            ['sulu.io', 'täst', 'sulu.io/täst', false],
-            ['sulu.io', 'test.html', 'sulu.io/test', false],
-            ['sulu.io', 'test.html', 'sulu.io/test', true, true],
-            ['sulu.io', 'test.html', 'sulu.io/test', true, false, false],
-            ['sulu.io', 'test.html', 'sulu.io/test', true, false, true, false],
-            ['sulu.io', 'test.html', 'sulu.io/test', true, false, true, false, true],
-            ['sulu.io', 'test.html', 'sulu.io/test', true, false, true, true, false, WorkflowStage::PUBLISHED],
-            ['sulu.io', 'test.html', 'sulu.io/test', true, false, true, true, false, WorkflowStage::TEST],
+            ['sulu.io', '/test', null, 'sulu.io/test', false],
+            ['sulu.io', '/täst', null, 'sulu.io/täst', false],
+            ['sulu.io', '/test.html', null, 'sulu.io/test', false],
+            ['sulu.io', '/test.json', null, 'sulu.io/test', false],
+            ['sulu.io', '/test.html', 'search=test', 'sulu.io/test?search=test', false],
+            ['sulu.io', '/test.json', 'search=test', 'sulu.io/test?search=test', false],
+            ['sulu.io', '/test.html', null, 'sulu.io/test', true, true],
+            ['sulu.io', '/test.html', null, 'sulu.io/test', true, false, false],
+            ['sulu.io', '/test.html', null, 'sulu.io/test', true, false, true, false],
+            ['sulu.io', '/test.html', null, 'sulu.io/test', true, false, true, false, true],
+            ['sulu.io', '/test.html', null, 'sulu.io/test', true, false, true, true, false, WorkflowStage::PUBLISHED],
+            ['sulu.io', '/test.html', null, 'sulu.io/test', true, false, true, true, false, WorkflowStage::TEST],
         ];
     }
 
@@ -50,8 +52,9 @@ class CustomUrlRequestProcessorTest extends TestCase
      */
     public function testProcess(
         $host,
-        $requestedUri,
-        $route,
+        $pathInfo,
+        $queryString,
+        $expectedUrl,
         $exists = true,
         $history = true,
         $published = true,
@@ -69,31 +72,27 @@ class CustomUrlRequestProcessorTest extends TestCase
 
         $request = $this->prophesize(Request::class);
         $request->getHost()->willReturn($host);
-        $request->getRequestUri()->willReturn('/' . \rawurlencode($requestedUri));
-        $request->getPathInfo()->willReturn('/' . \rawurlencode($requestedUri));
-        $request->getScheme()->willReturn('http');
-        $request->getUri()->willReturn('http://' . $host . '/' . \rawurlencode($requestedUri));
-        $request->reveal()->query = new ParameterBag();
-        $request->reveal()->request = new ParameterBag();
+        $request->getPathInfo()->willReturn($pathInfo);
+        $request->getQueryString()->willReturn($queryString);
 
         $customUrlManager = $this->prophesize(CustomUrlManager::class);
 
         if (!$exists) {
-            $customUrlManager->findRouteByUrl($route, $webspaceKey)->willReturn(null)->shouldBeCalled();
+            $customUrlManager->findRouteByUrl($expectedUrl, $webspaceKey)->willReturn(null)->shouldBeCalled();
         } else {
             $routeDocument = $this->prophesize(RouteDocument::class);
             $routeDocument->isHistory()->willReturn($history);
-            $routeDocument->getPath()->willReturn('/cmf/sulu_io/custom-urls/routes/' . $route);
+            $routeDocument->getPath()->willReturn('/cmf/sulu_io/custom-urls/routes/' . $expectedUrl);
 
             if ($history) {
-                $customUrlManager->findByUrl($route, $webspaceKey, 'de')->shouldNotBeCalled();
+                $customUrlManager->findByUrl($expectedUrl, $webspaceKey, 'de')->shouldNotBeCalled();
             } else {
                 $customUrl = $this->prophesize(CustomUrlDocument::class);
                 $customUrl->isPublished()->willReturn($published);
                 $customUrl->getBaseDomain()->willReturn('sulu.lo/*');
                 $customUrl->getDomainParts()->willReturn(['prefix' => '', 'suffix' => ['test-1']]);
                 $customUrl->getTargetLocale()->willReturn('de');
-                $customUrlManager->findByUrl($route, $webspaceKey, 'de')->willReturn($customUrl->reveal());
+                $customUrlManager->findByUrl($expectedUrl, $webspaceKey, 'de')->willReturn($customUrl->reveal());
 
                 if ($hasTarget) {
                     $target = $this->prophesize(PageDocument::class);
@@ -105,7 +104,7 @@ class CustomUrlRequestProcessorTest extends TestCase
                 $routeDocument->getTargetDocument()->willReturn($customUrl->reveal());
             }
 
-            $customUrlManager->findRouteByUrl($route, $webspaceKey)->willReturn($routeDocument->reveal());
+            $customUrlManager->findRouteByUrl($expectedUrl, $webspaceKey)->willReturn($routeDocument->reveal());
         }
 
         $wildcardPortalInformation = new PortalInformation(
@@ -126,7 +125,7 @@ class CustomUrlRequestProcessorTest extends TestCase
 
         $webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
         $webspaceManager->findPortalInformationsByUrl(
-            $route,
+            $expectedUrl,
             'prod'
         )->willReturn($noConcretePortal ? [] : [$wildcardPortalInformation]);
         $webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de', 'prod')

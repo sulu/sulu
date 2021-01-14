@@ -26,6 +26,7 @@ class RedirectEnhancerTest extends TestCase
         $request = $this->prophesize(Request::class);
         $request->getHost()->willReturn('sulu.io');
         $request->getScheme()->willReturn('http');
+        $request->getRequestFormat(null)->willReturn(null);
         $request->getQueryString()->willReturn(null);
 
         $webspace = $this->prophesize(Webspace::class);
@@ -73,6 +74,8 @@ class RedirectEnhancerTest extends TestCase
         $request = $this->prophesize(Request::class);
         $request->getHost()->willReturn('sulu.io');
         $request->getScheme()->willReturn('http');
+        $request->getRequestFormat(null)->willReturn(null);
+        $request->getQueryString()->willReturn('param=1');
 
         $webspace = $this->prophesize(Webspace::class);
         $webspace->getKey()->willReturn('sulu_io');
@@ -95,8 +98,6 @@ class RedirectEnhancerTest extends TestCase
             'http'
         )->willReturn('sulu.io/test');
 
-        $request->getQueryString()->willReturn('param=1');
-
         $enhancer = new RedirectEnhancer($webspaceManager->reveal());
 
         $defaults = $enhancer->enhance(
@@ -111,6 +112,54 @@ class RedirectEnhancerTest extends TestCase
                 '_environment' => 'prod',
                 '_controller' => 'sulu_website.redirect_controller:redirectAction',
                 'url' => 'sulu.io/test?param=1',
+            ],
+            $defaults
+        );
+    }
+
+    public function testEnhanceWithRequestFormatAndQueryString()
+    {
+        $request = $this->prophesize(Request::class);
+        $request->getHost()->willReturn('sulu.io');
+        $request->getScheme()->willReturn('http');
+        $request->getRequestFormat(null)->willReturn('json');
+        $request->getQueryString()->willReturn('param=1');
+
+        $webspace = $this->prophesize(Webspace::class);
+        $webspace->getKey()->willReturn('sulu_io');
+
+        $customUrl = $this->prophesize(CustomUrlDocument::class);
+        $customUrl->isRedirect()->willReturn(true);
+        $customUrl->getTargetLocale()->willReturn('de');
+
+        $target = $this->prophesize(PageDocument::class);
+        $target->getResourceSegment()->willReturn('/test');
+        $customUrl->getTargetDocument()->willReturn($target);
+
+        $webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
+        $webspaceManager->findUrlByResourceLocator(
+            '/test',
+            'prod',
+            'de',
+            'sulu_io',
+            'sulu.io',
+            'http'
+        )->willReturn('sulu.io/test');
+
+        $enhancer = new RedirectEnhancer($webspaceManager->reveal());
+
+        $defaults = $enhancer->enhance(
+            ['_custom_url' => $customUrl->reveal(), '_webspace' => $webspace->reveal(), '_environment' => 'prod'],
+            $request->reveal()
+        );
+
+        $this->assertEquals(
+            [
+                '_custom_url' => $customUrl->reveal(),
+                '_webspace' => $webspace->reveal(),
+                '_environment' => 'prod',
+                '_controller' => 'sulu_website.redirect_controller:redirectAction',
+                'url' => 'sulu.io/test.json?param=1',
             ],
             $defaults
         );

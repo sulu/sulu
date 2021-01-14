@@ -66,13 +66,22 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
         $languageNamespace,
         RequestAnalyzerInterface $requestAnalyzer,
         TargetGroupStoreInterface $targetGroupStore = null,
-        iterable $blockVisitors = []
+        iterable $blockVisitors = null
     ) {
         $this->contentTypeManager = $contentTypeManager;
         $this->languageNamespace = $languageNamespace;
         $this->requestAnalyzer = $requestAnalyzer;
         $this->targetGroupStore = $targetGroupStore;
         $this->blockVisitors = $blockVisitors;
+
+        if (null === $this->blockVisitors) {
+            @\trigger_error(
+                'Instantiating BlockContentType without the $blockVisitors argument is deprecated.',
+                \E_USER_DEPRECATED
+            );
+
+            $this->blockVisitors = [];
+        }
     }
 
     public function read(
