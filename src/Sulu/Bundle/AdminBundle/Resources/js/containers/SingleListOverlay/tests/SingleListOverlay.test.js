@@ -346,6 +346,52 @@ test('Should only select a single item at a time', () => {
     expect(singleListOverlay.instance().listStore.select).toBeCalledWith({id: 5});
 });
 
+test('Should clear ListStore if the excludedIds prop is changed', () => {
+    const singleListOverlay = shallow(
+        <SingleListOverlay
+            adapter="table"
+            excludedIds={['id-1', 'id-2']}
+            listKey="snippets"
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={true}
+            resourceKey="snippets"
+            title="test"
+        />
+    );
+
+    expect(singleListOverlay.instance().listStore.clear).not.toBeCalled();
+
+    singleListOverlay.setProps({
+        excludedIds: ['id-3'],
+    });
+
+    expect(singleListOverlay.instance().listStore.clear).toBeCalled();
+});
+
+test('Should not clear ListStore if new value of excludedIds prop is equal to old value', () => {
+    const singleListOverlay = shallow(
+        <SingleListOverlay
+            adapter="table"
+            excludedIds={['id-1', 'id-2']}
+            listKey="snippets"
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={true}
+            resourceKey="snippets"
+            title="test"
+        />
+    );
+
+    expect(singleListOverlay.instance().listStore.clear).not.toBeCalled();
+
+    singleListOverlay.setProps({
+        excludedIds: ['id-1', 'id-2'],
+    });
+
+    expect(singleListOverlay.instance().listStore.clear).not.toBeCalled();
+});
+
 test('Should destroy listStore and autorun when unmounted', () => {
     const singleListOverlay = shallow(
         <SingleListOverlay
