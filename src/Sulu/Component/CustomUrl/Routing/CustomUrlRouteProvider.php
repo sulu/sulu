@@ -139,7 +139,10 @@ class CustomUrlRouteProvider implements RouteProviderInterface
             $this->getRoutesPath($webspaceKey)
         );
 
-        $url = \sprintf('%s://%s', $request->getScheme(), $resourceSegment);
+        $requestFormat = $request->getRequestFormat(null);
+        $requestFormatSuffix = $requestFormat ? '.' . $requestFormat : '';
+
+        $url = \sprintf('%s://%s%s', $request->getScheme(), $resourceSegment, $requestFormatSuffix);
 
         $collection->add(
             \uniqid('custom_url_route_', true),
