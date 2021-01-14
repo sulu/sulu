@@ -24,6 +24,7 @@ use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Document\Subscriber\PHPCR\SuluNode;
 use Sulu\Component\Content\Exception\UnexpectedPropertyType;
 use Sulu\Component\Content\PreResolvableContentTypeInterface;
+use Sulu\Component\Content\Types\Block\BlockVisitorInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
 /**
@@ -43,24 +44,42 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
 
     /**
      * @var RequestAnalyzerInterface
+     *
+     * @deprecated This property is not needed anymore and will be removed in Sulu 3.0
      */
     private $requestAnalyzer;
 
     /**
      * @var ?TargetGroupStoreInterface
+     *
+     * @deprecated This property is not needed anymore and will be removed in Sulu 3.0
      */
     private $targetGroupStore;
+
+    /**
+     * @var BlockVisitorInterface[]|null
+     */
+    private $blockVisitors;
 
     public function __construct(
         ContentTypeManagerInterface $contentTypeManager,
         $languageNamespace,
         RequestAnalyzerInterface $requestAnalyzer,
-        TargetGroupStoreInterface $targetGroupStore = null
+        TargetGroupStoreInterface $targetGroupStore = null,
+        iterable $blockVisitors = null
     ) {
         $this->contentTypeManager = $contentTypeManager;
         $this->languageNamespace = $languageNamespace;
         $this->requestAnalyzer = $requestAnalyzer;
         $this->targetGroupStore = $targetGroupStore;
+        $this->blockVisitors = $blockVisitors;
+
+        if (null === $this->blockVisitors) {
+            @\trigger_error(
+                'Instantiating BlockContentType without the $blockVisitors argument is deprecated.',
+                \E_USER_DEPRECATED
+            );
+        }
     }
 
     public function read(
@@ -369,39 +388,65 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
             $blockProperty = $blockProperty->getProperty();
         }
 
-        $data = [];
+        $blockPropertyTypes = [];
         for ($i = 0; $i < $blockProperty->getLength(); ++$i) {
             $blockPropertyType = $blockProperty->getProperties($i);
-            $blockPropertyTypeSettings = $blockPropertyType->getSettings();
 
-            if (
-                \is_array($blockPropertyTypeSettings)
-                && !empty($blockPropertyTypeSettings['hidden'])
-            ) {
+            if (null === $this->blockVisitors) {
+                $blockPropertyTypeSettings = $blockPropertyType->getSettings();
+
+                if (
+                    \is_array($blockPropertyTypeSettings)
+                    && !empty($blockPropertyTypeSettings['hidden'])
+                ) {
+                    $blockPropertyType = null;
+                }
+
+                if (\is_array($blockPropertyTypeSettings)) {
+                    $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
+                    $segment = $this->requestAnalyzer->getSegment();
+                    if (isset($blockPropertyTypeSettings['segment_enabled'])
+                        && $blockPropertyTypeSettings['segment_enabled']
+                        && isset($blockPropertyTypeSettings['segments'][$webspaceKey])
+                        && $segment
+                        && $blockPropertyTypeSettings['segments'][$webspaceKey] !== $segment->getKey()
+                    ) {
+                        $blockPropertyType = null;
+                    }
+
+                    if (isset($blockPropertyTypeSettings['target_groups_enabled'])
+                        && $blockPropertyTypeSettings['target_groups_enabled']
+                        && isset($blockPropertyTypeSettings['target_groups'])
+                        && $this->targetGroupStore
+                        && !\in_array($this->targetGroupStore->getTargetGroupId(), $blockPropertyTypeSettings['target_groups'])
+                    ) {
+                        $blockPropertyType = null;
+                    }
+                }
+
+                if ($blockPropertyType) {
+                    $blockPropertyTypes[] = $blockPropertyType;
+                }
+
                 continue;
             }
 
-            if (\is_array($blockPropertyTypeSettings)) {
-                $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
-                $segment = $this->requestAnalyzer->getSegment();
-                if (isset($blockPropertyTypeSettings['segment_enabled'])
-                    && $blockPropertyTypeSettings['segment_enabled']
-                    && isset($blockPropertyTypeSettings['segments'][$webspaceKey])
-                    && $segment
-                    && $blockPropertyTypeSettings['segments'][$webspaceKey] !== $segment->getKey()
-                ) {
-                    continue;
-                }
+            foreach ($this->blockVisitors as $blockVisitor) {
+                $blockPropertyType = $blockVisitor->visit($blockPropertyType);
 
-                if (isset($blockPropertyTypeSettings['target_groups_enabled'])
-                    && $blockPropertyTypeSettings['target_groups_enabled']
-                    && isset($blockPropertyTypeSettings['target_groups'])
-                    && $this->targetGroupStore
-                    && !\in_array($this->targetGroupStore->getTargetGroupId(), $blockPropertyTypeSettings['target_groups'])
-                ) {
-                    continue;
+                if (!$blockPropertyType) {
+                    break;
                 }
             }
+
+            if ($blockPropertyType) {
+                $blockPropertyTypes[] = $blockPropertyType;
+            }
+        }
+
+        $data = [];
+        foreach ($blockPropertyTypes as $blockPropertyType) {
+            $blockPropertyTypeSettings = $blockPropertyType->getSettings();
 
             $blockData = [];
 

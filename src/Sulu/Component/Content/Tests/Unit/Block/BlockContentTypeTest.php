@@ -25,6 +25,7 @@ use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\ContentTypeManager;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
+use Sulu\Component\Content\Types\Block\BlockVisitorInterface;
 use Sulu\Component\Content\Types\BlockContentType;
 use Sulu\Component\Content\Types\TextArea;
 use Sulu\Component\Content\Types\TextLine;
@@ -1045,6 +1046,71 @@ class BlockContentTypeTest extends TestCase
         );
     }
 
+    public function testGetContentDataWithVisitors()
+    {
+        $this->prepareSingleBlockProperty();
+
+        $data = [
+            [
+                'type' => 'type1',
+                'title' => 'Test-Title-1',
+                'article' => [
+                    'Test-Article-1-1',
+                    'Test-Article-1-2',
+                ],
+                'sub-block' => [
+                    [
+                        'type' => 'subType1',
+                        'title' => 'Test-Title-Sub-1',
+                        'article' => 'Test-Article-Sub-1',
+                        'settings' => [],
+                    ],
+                ],
+                'settings' => [],
+            ],
+            [
+                'type' => 'type2',
+                'name' => 'Test-Name-2',
+                'settings' => [],
+            ],
+            [
+                'type' => 'type2',
+                'name' => 'Test-Name-3',
+                'settings' => [],
+            ],
+        ];
+
+        $this->blockProperty->setValue($data);
+        $blockPropertyType1 = $this->blockProperty->getProperties(0);
+        $blockPropertyType2 = $this->blockProperty->getProperties(1);
+        $blockPropertyType3 = $this->blockProperty->getProperties(2);
+
+        $blockVisitor1 = $this->prophesize(BlockVisitorInterface::class);
+        $blockVisitor1->visit($blockPropertyType1)->willReturn(null);
+        $blockVisitor1->visit($blockPropertyType2)->willReturn($blockPropertyType2);
+        $blockVisitor1->visit($blockPropertyType3)->willReturn($blockPropertyType3);
+
+        $blockVisitor2 = $this->prophesize(BlockVisitorInterface::class);
+        $blockVisitor2->visit($blockPropertyType1)->willReturn($blockPropertyType1);
+        $blockVisitor2->visit($blockPropertyType2)->willReturn(null);
+        $blockVisitor2->visit($blockPropertyType3)->willReturn($blockPropertyType3);
+
+        $blockContentType = new BlockContentType(
+            $this->contentTypeManager->reveal(),
+            'not in use',
+            $this->requestAnalyzer->reveal(),
+            $this->targetGroupStore->reveal(),
+            [
+                $blockVisitor1->reveal(),
+                $blockVisitor2->reveal(),
+            ]
+        );
+
+        $result = $blockContentType->getContentData($this->blockProperty);
+
+        $this->assertEquals([['type' => 'type2', 'name' => 'Test-Name-3', 'settings' => []]], $result);
+    }
+
     public function testGetViewData()
     {
         $this->prepareSingleBlockProperty();
@@ -1113,6 +1179,75 @@ class BlockContentTypeTest extends TestCase
                             'article' => [],
                         ],
                     ],
+                ],
+            ],
+            $result
+        );
+    }
+
+    public function testGetViewDataWithVisitors()
+    {
+        $this->prepareSingleBlockProperty();
+
+        $data = [
+            [
+                'type' => 'type1',
+                'title' => 'Test-Title-1',
+                'article' => [
+                    'Test-Article-1-1',
+                    'Test-Article-1-2',
+                ],
+                'sub-block' => [
+                    'type' => 'subType1',
+                    'title' => 'Test-Title-Sub-1',
+                    'article' => 'Test-Article-Sub-1',
+                    'settings' => [],
+                ],
+                'settings' => [],
+            ],
+            [
+                'type' => 'type2',
+                'name' => 'Test-Name-2',
+                'settings' => [],
+            ],
+            [
+                'type' => 'type2',
+                'name' => 'Test-Name-3',
+                'settings' => [],
+            ],
+        ];
+
+        $this->blockProperty->setValue($data);
+        $blockPropertyType1 = $this->blockProperty->getProperties(0);
+        $blockPropertyType2 = $this->blockProperty->getProperties(1);
+        $blockPropertyType3 = $this->blockProperty->getProperties(2);
+
+        $blockVisitor1 = $this->prophesize(BlockVisitorInterface::class);
+        $blockVisitor1->visit($blockPropertyType1)->willReturn(null);
+        $blockVisitor1->visit($blockPropertyType2)->willReturn($blockPropertyType2);
+        $blockVisitor1->visit($blockPropertyType3)->willReturn($blockPropertyType3);
+
+        $blockVisitor2 = $this->prophesize(BlockVisitorInterface::class);
+        $blockVisitor2->visit($blockPropertyType1)->willReturn($blockPropertyType1);
+        $blockVisitor2->visit($blockPropertyType2)->willReturn(null);
+        $blockVisitor2->visit($blockPropertyType3)->willReturn($blockPropertyType3);
+
+        $blockContentType = new BlockContentType(
+            $this->contentTypeManager->reveal(),
+            'not in use',
+            $this->requestAnalyzer->reveal(),
+            $this->targetGroupStore->reveal(),
+            [
+                $blockVisitor1->reveal(),
+                $blockVisitor2->reveal(),
+            ]
+        );
+
+        $result = $blockContentType->getViewData($this->blockProperty);
+        $this->assertEquals(
+            [
+                [
+                    'name' => [],
                 ],
             ],
             $result
