@@ -49,7 +49,10 @@ class SingleListOverlay extends React.Component<Props> {
     constructor(props: Props) {
         super(props);
 
-        const excludedIds = computed(() => this.props.excludedIds.length ? this.props.excludedIds : undefined);
+        const excludedIds = computed(
+            () => this.props.excludedIds.length ? this.props.excludedIds : undefined,
+            {equals: comparer.structural}
+        );
         this.excludedIdsDisposer = excludedIds.observe(() => this.listStore.clear());
 
         const {listKey, locale, metadataOptions, options, preSelectedItem, resourceKey} = this.props;

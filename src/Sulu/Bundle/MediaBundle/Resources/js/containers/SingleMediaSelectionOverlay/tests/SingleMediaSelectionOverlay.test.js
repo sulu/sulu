@@ -134,6 +134,46 @@ test('Should pass correct props to media-selection-overlay', () => {
     expect(mediaSelectionOverlay.prop('onClose')).toEqual(onClose);
 });
 
+test('Should clear media ListStore if the excludedIds prop is changed', () => {
+    const singleMediaSelectionOverlay = shallow(
+        <SingleMediaSelectionOverlay
+            excludedIds={[11, 22]}
+            locale={mockObservable.box('en')}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={true}
+        />
+    );
+
+    expect(singleMediaSelectionOverlay.instance().mediaListStore.clear).not.toBeCalled();
+
+    singleMediaSelectionOverlay.setProps({
+        excludedIds: [33],
+    });
+
+    expect(singleMediaSelectionOverlay.instance().mediaListStore.clear).toBeCalled();
+});
+
+test('Should not clear media ListStore if new value of excludedIds prop is equal to old value', () => {
+    const singleMediaSelectionOverlay = shallow(
+        <SingleMediaSelectionOverlay
+            excludedIds={[11, 22]}
+            locale={mockObservable.box('en')}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={true}
+        />
+    );
+
+    expect(singleMediaSelectionOverlay.instance().mediaListStore.clear).not.toBeCalled();
+
+    singleMediaSelectionOverlay.setProps({
+        excludedIds: [11, 22],
+    });
+
+    expect(singleMediaSelectionOverlay.instance().mediaListStore.clear).not.toBeCalled();
+});
+
 test('Should destroy list-stores on unmount', () => {
     const singleMediaSelectionOverlay = shallow(
         <SingleMediaSelectionOverlay

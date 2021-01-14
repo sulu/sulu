@@ -61,10 +61,17 @@ class CustomUrlRequestProcessor implements RequestProcessorInterface
 
     public function process(Request $request, RequestAttributes $requestAttributes)
     {
-        $url = $this->decodeUrl(\rtrim(\sprintf('%s%s', $request->getHost(), $request->getRequestUri()), '/'));
-        if ('.html' === \substr($url, -5, 5)) {
-            $url = \substr($url, 0, -5);
+        $pathInfo = $request->getPathInfo();
+        if (\strrpos($pathInfo, '.')) {
+            $pathInfo = \substr($pathInfo, 0, \strrpos($pathInfo, '.'));
         }
+
+        $queryString = $request->getQueryString();
+        if (!empty($queryString)) {
+            $queryString = '?' . $queryString;
+        }
+
+        $url = $this->decodeUrl(\rtrim(\sprintf('%s%s%s', $request->getHost(), $pathInfo, $queryString), '/'));
         $portalInformations = $this->webspaceManager->findPortalInformationsByUrl($url, $this->environment);
 
         if (0 === \count($portalInformations)) {

@@ -11,7 +11,8 @@
 
 namespace Sulu\Component\DocumentManager\Subscriber\Behavior\Path;
 
-use Doctrine\Common\Inflector\Inflector;
+use Doctrine\Inflector\Inflector;
+use Doctrine\Inflector\InflectorFactory;
 use PHPCR\SessionInterface;
 use Sulu\Component\DocumentManager\Behavior\Path\AliasFilingBehavior;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
@@ -28,6 +29,11 @@ class AliasFilingSubscriber extends AbstractFilingSubscriber
      */
     private $metadataFactory;
 
+    /**
+     * @var Inflector
+     */
+    private $inflector;
+
     public function __construct(
         SessionInterface $defaultSession,
         SessionInterface $liveSession,
@@ -35,6 +41,7 @@ class AliasFilingSubscriber extends AbstractFilingSubscriber
     ) {
         parent::__construct($defaultSession, $liveSession);
         $this->metadataFactory = $metadataFactory;
+        $this->inflector = InflectorFactory::create()->build();
     }
 
     public static function getSubscribedEvents()
@@ -54,7 +61,7 @@ class AliasFilingSubscriber extends AbstractFilingSubscriber
         }
         $parentName = $this->getParentName($document);
 
-        return \sprintf('%s/%s', $currentPath, Inflector::pluralize($parentName));
+        return \sprintf('%s/%s', $currentPath, $this->inflector->pluralize($parentName));
     }
 
     /**

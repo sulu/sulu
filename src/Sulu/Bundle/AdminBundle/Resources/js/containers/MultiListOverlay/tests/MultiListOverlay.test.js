@@ -115,6 +115,54 @@ test('Should not update options of ListStore if new value of options prop is equ
     expect(multiListOverlay.instance().listStore.reset).not.toBeCalled();
 });
 
+test('Should clear ListStore if the excludedIds prop is changed', () => {
+    const multiListOverlay = shallow(
+        <MultiListOverlay
+            adapter="table"
+            excludedIds={['id-1', 'id-2']}
+            listKey="snippets_list"
+            locale={observable.box('en')}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={false}
+            resourceKey="snippets"
+            title="Selection"
+        />
+    );
+
+    expect(multiListOverlay.instance().listStore.clear).not.toBeCalled();
+
+    multiListOverlay.setProps({
+        excludedIds: ['id-3'],
+    });
+
+    expect(multiListOverlay.instance().listStore.clear).toBeCalled();
+});
+
+test('Should not clear ListStore if new value of excludedIds prop is equal to old value', () => {
+    const multiListOverlay = shallow(
+        <MultiListOverlay
+            adapter="table"
+            excludedIds={['id-1', 'id-2']}
+            listKey="snippets_list"
+            locale={observable.box('en')}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={false}
+            resourceKey="snippets"
+            title="Selection"
+        />
+    );
+
+    expect(multiListOverlay.instance().listStore.clear).not.toBeCalled();
+
+    multiListOverlay.setProps({
+        excludedIds: ['id-1', 'id-2'],
+    });
+
+    expect(multiListOverlay.instance().listStore.clear).not.toBeCalled();
+});
+
 test('Should instantiate the ListStore without locale, excluded-ids and options', () => {
     const multiListOverlay = shallow(
         <MultiListOverlay
