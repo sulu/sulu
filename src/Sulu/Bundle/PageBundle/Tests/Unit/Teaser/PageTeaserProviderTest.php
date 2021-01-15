@@ -53,9 +53,18 @@ class PageTeaserProviderTest extends TestCase
 
         $this->translator->trans(Argument::cetera())->willReturnArgument(0);
 
-        $this->searchManager->getIndexNames()->willReturn(['page_sulu_io_published']);
+        $this->searchManager->getIndexNames()->willReturn([
+            'page_sulu_io',
+            'page_sulu_io_published',
+            'page_example',
+            'page_example_published',
+        ]);
 
-        $this->pageTeaserProvider = new PageTeaserProvider($this->searchManager->reveal(), $this->translator->reveal());
+        $this->pageTeaserProvider = new PageTeaserProvider(
+            $this->searchManager->reveal(),
+            $this->translator->reveal(),
+            false
+        );
     }
 
     public function testConfiguration()
@@ -111,7 +120,8 @@ class PageTeaserProviderTest extends TestCase
                 }
             )
         )->willReturn($this->search->reveal())->shouldBeCalled();
-        $this->search->indexes(['page_sulu_io_published'])->willReturn($this->search->reveal())->shouldBeCalled();
+        $this->search->indexes(['page_sulu_io_published', 'page_example_published'])
+            ->willReturn($this->search->reveal())->shouldBeCalled();
         $this->search->locale('de')->willReturn($this->search->reveal())->shouldBeCalled();
         $this->search->setLimit(2)->willReturn($this->search->reveal())->shouldBeCalled();
         $this->search->execute()->willReturn(
@@ -124,6 +134,50 @@ class PageTeaserProviderTest extends TestCase
 
         $this->assertTeaser($ids[0], $data[$ids[0]], $result[0]);
         $this->assertTeaser($ids[1], $data[$ids[1]], $result[1]);
+    }
+
+    public function testFindShowDrafts()
+    {
+        $pageTeaserProvider = new PageTeaserProvider(
+            $this->searchManager->reveal(),
+            $this->translator->reveal(),
+            true
+        );
+
+        $data = [
+            '123-123-123' => [
+                'title' => 'Test 1',
+                'excerptTitle' => 'Excerpt 1',
+                'excerptDescription' => 'This is a test',
+                'excerptMore' => 'Read more ...',
+                '__url' => '/test/1',
+                'excerptImages' => \json_encode(['ids' => [1, 2, 3]]),
+                '_structure_type' => 'default',
+                '_teaser_description' => '',
+                'webspace_key' => 'sulu_test',
+            ],
+        ];
+        $ids = \array_keys($data);
+
+        $this->searchManager->createSearch(
+            Argument::that(
+                function($searchQuery) use ($ids) {
+                    return 0 <= \strpos($searchQuery, \sprintf('__id:"%s"', $ids[0]));
+                }
+            )
+        )->willReturn($this->search->reveal())->shouldBeCalled();
+        $this->search->indexes(['page_sulu_io', 'page_example'])->willReturn($this->search->reveal())->shouldBeCalled();
+        $this->search->locale('de')->willReturn($this->search->reveal())->shouldBeCalled();
+        $this->search->setLimit(1)->willReturn($this->search->reveal())->shouldBeCalled();
+        $this->search->execute()->willReturn(
+            [$this->createQueryHit($ids[0], $data[$ids[0]])]
+        );
+
+        $result = $pageTeaserProvider->find($ids, 'de');
+
+        $this->assertCount(1, $result);
+
+        $this->assertTeaser($ids[0], $data[$ids[0]], $result[0]);
     }
 
     private function createQueryHit($id, array $data)
