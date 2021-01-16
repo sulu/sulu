@@ -58,7 +58,7 @@
         "massive/build-bundle": "^0.3 || ^0.4 || ^0.5",
         "massive/search-bundle": "^2.0",
         "ocramius/proxy-manager": "^2.1",
-        "oro/doctrine-extensions": "^1.0",
+        "oro/doctrine-extensions": "^1.0 || ^2.0",
         "pagerfanta/pagerfanta": "^1.0.4 || ^2.0",
         "php-http/client-common": "^1.1.0 || ^2.0",
         "php-http/guzzle6-adapter": "^1.1 || ^2.0",
