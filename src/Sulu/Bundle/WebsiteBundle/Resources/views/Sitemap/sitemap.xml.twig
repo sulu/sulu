@@ -1,12 +1,10 @@
 {% apply spaceless %}
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xhtml="http://www.w3.org/1999/xhtml" {% block namespaces %}xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"{% endblock %}>
-    {% set registrableDomain = sulu_util_domain_info(domain).registrableDomain %}
-
     {% for entry in entries %}
         {% set location = entry.loc %}
 
-        {% if sulu_util_domain_info(location).registrableDomain == registrableDomain %}
+        {% if domain in location %}
             <url>
                 {% block url %}
                     <loc>{{ location }}</loc>
@@ -25,7 +23,7 @@
                     {% if entry.alternateLinks|length > 1 %}
                         {% for alternateLink in entry.alternateLinks %}
                             {% set href = alternateLink.href %}
-                            {% if href is not empty and sulu_util_domain_info(href).registrableDomain == registrableDomain %}
+                            {% if href is not empty and domain in href %}
                                 <xhtml:link rel="alternate" hreflang="{{ alternateLink.locale|replace({'_': '-'}) }}" href="{{ href }}"/>
                                 {% set amount = amount + 1 %}
                                 {% if entry.defaultLocale == alternateLink.locale %}
