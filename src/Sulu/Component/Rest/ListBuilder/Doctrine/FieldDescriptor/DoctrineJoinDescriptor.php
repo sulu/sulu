@@ -19,6 +19,7 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\EncodeAliasTrait;
 class DoctrineJoinDescriptor
 {
     use EncodeAliasTrait;
+
     const JOIN_METHOD_LEFT = 'LEFT';
 
     const JOIN_METHOD_INNER = 'INNER';
