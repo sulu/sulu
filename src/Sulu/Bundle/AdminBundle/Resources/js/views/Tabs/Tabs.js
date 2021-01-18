@@ -7,6 +7,7 @@ import TabsComponent from '../../components/Tabs';
 import type {ViewProps} from '../../containers/ViewRenderer';
 import {translate} from '../../utils/Translator';
 import {Route} from '../../services/Router';
+import Badge from '../../containers/Badge/Badge';
 import tabsStyles from './tabs.scss';
 
 type Props<T> = {
@@ -118,7 +119,7 @@ class Tabs<T> extends React.Component<Props<T>> {
     };
 
     render() {
-        const {children, childrenProps, header, selectedIndex} = this.props;
+        const {children, childrenProps, header, router, selectedIndex} = this.props;
 
         const childComponent = children ? children(childrenProps) : null;
 
@@ -134,8 +135,26 @@ class Tabs<T> extends React.Component<Props<T>> {
                     <TabsComponent onSelect={this.handleSelect} selectedIndex={selectedTabIndex}>
                         {this.sortedTabRoutes.map((tabRoute) => {
                             const tabTitle = tabRoute.options.tabTitle;
+
+                            let badges = undefined;
+                            if (tabRoute.options.tabBadges) {
+                                badges = tabRoute.options.tabBadges.map((badge, index) => {
+                                    return (
+                                        <Badge
+                                            attributesToRequest={badge.attributesToRequest}
+                                            dataPath={badge.dataPath}
+                                            key={index}
+                                            routeName={badge.routeName}
+                                            router={router}
+                                            routerAttributesToRequest={badge.routerAttributesToRequest}
+                                            visibleCondition={badge.visibleCondition}
+                                        />
+                                    );
+                                });
+                            }
+
                             return (
-                                <TabsComponent.Tab key={tabRoute.name}>
+                                <TabsComponent.Tab badges={badges} key={tabRoute.name}>
                                     {tabTitle ? translate(tabTitle) : tabRoute.name}
                                 </TabsComponent.Tab>
                             );

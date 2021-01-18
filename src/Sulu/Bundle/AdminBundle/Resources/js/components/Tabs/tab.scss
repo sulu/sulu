@@ -52,3 +52,11 @@ $buttonHorizontalPadding: 20px;
         }
     }
 }
+
+.badges {
+    margin-left: 4px;
+    display: inline-flex;
+    vertical-align: text-top;
+    gap: 1px;
+    transform: translateY(-3px);
+}

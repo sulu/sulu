@@ -25,6 +25,8 @@ interface ListViewBuilderInterface extends ViewBuilderInterface
 
     public function setTabOrder(int $tabOrder): self;
 
+    public function setTabPriority(int $tabPriority): self;
+
     public function setTabCondition(string $tabCondition): self;
 
     /**
@@ -86,4 +88,6 @@ interface ListViewBuilderInterface extends ViewBuilderInterface
     public function addResourceStorePropertiesToListMetadata(array $resourceStorePropertiesToListMetadata): self;
 
     public function addRequestParameters(array $requestParameters): self;
+
+    public function addTabBadge(Badge $badge): self;
 }

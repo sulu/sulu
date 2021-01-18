@@ -163,6 +163,13 @@ class FormViewBuilder implements FormViewBuilderInterface
         return $this;
     }
 
+    public function addTabBadge(Badge $badge): FormViewBuilderInterface
+    {
+        $this->addTabBadgeToView($this->view, $badge);
+
+        return $this;
+    }
+
     public function getView(): View
     {
         if (!$this->view->getOption('resourceKey')) {

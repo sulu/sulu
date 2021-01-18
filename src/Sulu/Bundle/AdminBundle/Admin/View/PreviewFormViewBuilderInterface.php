@@ -60,4 +60,6 @@ interface PreviewFormViewBuilderInterface extends ViewBuilderInterface
     public function setPreviewCondition(string $previewCondition): self;
 
     public function setTitleVisible(bool $titleVisible): self;
+
+    public function addTabBadge(Badge $badge): self;
 }

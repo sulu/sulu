@@ -170,6 +170,13 @@ class PreviewFormViewBuilder implements PreviewFormViewBuilderInterface
         return $this;
     }
 
+    public function addTabBadge(Badge $badge): PreviewFormViewBuilderInterface
+    {
+        $this->addTabBadgeToView($this->view, $badge);
+
+        return $this;
+    }
+
     public function getView(): View
     {
         if (!$this->view->getOption('resourceKey')) {

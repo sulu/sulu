@@ -66,6 +66,13 @@ class ListViewBuilder implements ListViewBuilderInterface
         return $this;
     }
 
+    public function setTabPriority(int $tabPriority): ListViewBuilderInterface
+    {
+        $this->setTabPriorityToView($this->view, $tabPriority);
+
+        return $this;
+    }
+
     public function setTabCondition(string $tabCondition): ListViewBuilderInterface
     {
         $this->setTabConditionToView($this->view, $tabCondition);
@@ -195,6 +202,13 @@ class ListViewBuilder implements ListViewBuilderInterface
     public function addRequestParameters(array $requestParameters): ListViewBuilderInterface
     {
         $this->addRequestParametersToView($this->view, $requestParameters);
+
+        return $this;
+    }
+
+    public function addTabBadge(Badge $badge): ListViewBuilderInterface
+    {
+        $this->addTabBadgeToView($this->view, $badge);
 
         return $this;
     }

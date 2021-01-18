@@ -99,6 +99,13 @@ class FormOverlayListViewBuilder implements FormOverlayListViewBuilderInterface
         return $this;
     }
 
+    public function setTabPriority(int $tabPriority): FormOverlayListViewBuilderInterface
+    {
+        $this->setTabPriorityToView($this->view, $tabPriority);
+
+        return $this;
+    }
+
     public function setTabCondition(string $tabCondition): FormOverlayListViewBuilderInterface
     {
         $this->setTabConditionToView($this->view, $tabCondition);
@@ -230,6 +237,13 @@ class FormOverlayListViewBuilder implements FormOverlayListViewBuilderInterface
     public function addMetadataRequestParameters(array $metadataRequestParameters): FormOverlayListViewBuilderInterface
     {
         $this->addMetadataRequestParametersToView($this->view, $metadataRequestParameters);
+
+        return $this;
+    }
+
+    public function addTabBadge(Badge $badge): FormOverlayListViewBuilderInterface
+    {
+        $this->addTabBadgeToView($this->view, $badge);
 
         return $this;
     }

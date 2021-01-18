@@ -1,0 +1,12 @@
+@import '../../containers/Application/colors.scss';
+
+.badge {
+    border-radius: 2px;
+    background: $persianRed;
+    color: white;
+    padding: 2px 4px;
+    width: min-content;
+    height: min-content;
+    font-size: 9px;
+    font-weight: bold;
+}
