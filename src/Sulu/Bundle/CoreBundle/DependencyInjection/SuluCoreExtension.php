@@ -153,6 +153,12 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         }
 
         if ($container->hasExtension('doctrine')) {
+            // depending on the gedmo version it is in gedmo lib or src folder
+            // we use the autoloader to detect the correct directory
+            // see also: https://github.com/sulu/sulu/pull/5753
+            $reflection = new \ReflectionClass(\Gedmo\Exception::class);
+            $gedmoDirectory = \dirname($reflection->getFileName());
+
             $container->prependExtensionConfig(
                 'doctrine',
                 [
@@ -161,7 +167,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
                             'gedmo_tree' => [
                                 'type' => 'xml',
                                 'prefix' => 'Gedmo\\Tree\\Entity',
-                                'dir' => '%kernel.project_dir%/vendor/gedmo/doctrine-extensions/lib/Gedmo/Tree/Entity',
+                                'dir' => $gedmoDirectory . '/Tree/Entity',
                                 'alias' => 'GedmoTree',
                                 'is_bundle' => false,
                             ],

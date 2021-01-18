@@ -45,9 +45,13 @@ class WebspaceImportTest extends SuluTestCase
 
     protected $distPathRU = __DIR__ . '/../../fixtures/import/export_ru.xliff.dist';
 
+    protected $distPathBlockInBlock = __DIR__ . '/../../fixtures/import/export_block_in_block.xliff.dist';
+
     protected $path = __DIR__ . '/../../fixtures/import/export.xliff';
 
     protected $pathRU = __DIR__ . '/../../fixtures/import/export_ru.xliff';
+
+    protected $pathBlockInBlock = __DIR__ . '/../../fixtures/import/export_block_in_block.xliff';
 
     /**
      * Setup data for import.
@@ -220,6 +224,70 @@ class WebspaceImportTest extends SuluTestCase
     }
 
     /**
+     * Run tests for language "block-in-block" import:
+     * - import data
+     * - get documents
+     * - test document data.
+     */
+    public function testImport12XliffWithBlockInBlock()
+    {
+        // run language import
+        // import it to FR (because RU isn't initialized)
+        $importData = [
+            'webspaceKey' => 'sulu_io',
+            'locale' => 'fr',
+            'format' => '1.2.xliff',
+            'filePath' => $this->pathBlockInBlock,
+        ];
+
+        $this->webspaceImporter->import(
+            $importData['webspaceKey'],
+            $importData['locale'],
+            $importData['filePath'],
+            null,
+            $importData['format'],
+            '',
+            false
+        );
+
+        // testing imported data
+        $loadedDocuments = [];
+
+        /* @var BasePageDocument $document */
+        $loadedDocuments[0] = $this->documentManager->find(
+            $this->pages[0]->getUuid(),
+            'fr',
+            [
+                'type' => 'page',
+                'load_ghost_content' => false,
+            ]
+        );
+
+        $data = $loadedDocuments[0]->getStructure()->toArray();
+        $this->assertEquals('Sulu is awesome', $data['title']);
+        $this->assertEquals('/sulu-is-awesome', $data['url']);
+
+        $this->assertEquals('block', $data['blocks'][0]['type']);
+        $this->assertEquals('innerBlock', $data['blocks'][0]['innerBlocks'][0]['type']);
+        $this->assertEquals('For Developers', $data['blocks'][0]['innerBlocks'][0]['title']);
+        $this->assertEquals('innerBlock', $data['blocks'][0]['innerBlocks'][1]['type']);
+        $this->assertEquals('For Editors', $data['blocks'][0]['innerBlocks'][1]['title']);
+        $this->assertEquals('innerBlock', $data['blocks'][0]['innerBlocks'][2]['type']);
+        $this->assertEquals('For Marketers', $data['blocks'][0]['innerBlocks'][2]['title']);
+
+        $this->assertEquals('block', $data['blocks'][1]['type']);
+        $this->assertEquals('innerBlock', $data['blocks'][1]['innerBlocks'][0]['type']);
+        $this->assertEquals('By Developers', $data['blocks'][1]['innerBlocks'][0]['title']);
+        $this->assertEquals('innerBlock', $data['blocks'][1]['innerBlocks'][1]['type']);
+        $this->assertEquals('By Editors', $data['blocks'][1]['innerBlocks'][1]['title']);
+        $this->assertEquals('innerBlock', $data['blocks'][1]['innerBlocks'][2]['type']);
+        $this->assertEquals('By Marketers', $data['blocks'][1]['innerBlocks'][2]['title']);
+
+        $this->assertEquals('block2', $data['blocks'][2]['type']);
+        $this->assertEquals('Great Tool', $data['blocks'][2]['title']);
+    }
+
+    /**
      * Removes the created export.xliff file.
      */
     private function removeImportFile()
@@ -229,6 +297,7 @@ class WebspaceImportTest extends SuluTestCase
 
             $fs->remove($this->path);
             $fs->remove($this->pathRU);
+            $fs->remove($this->pathBlockInBlock);
         } catch (IOExceptionInterface $e) {
             echo 'An error occurred while creating your directory at ' . $e->getPath();
         }
@@ -279,6 +348,25 @@ class WebspaceImportTest extends SuluTestCase
             );
 
             \file_put_contents($this->pathRU, $newContent);
+        } catch (IOExceptionInterface $e) {
+            echo 'An error occurred while creating your directory at ' . $e->getPath();
+        }
+
+        try {
+            $fs->copy($this->distPathBlockInBlock, $this->pathBlockInBlock);
+
+            $distContent = \file_get_contents($this->pathBlockInBlock, true);
+            $newContent = \str_replace(
+                [
+                    '%uuid_page_0%',
+                ],
+                [
+                    $this->pages[0]->getUuid(),
+                ],
+                $distContent
+            );
+
+            \file_put_contents($this->pathBlockInBlock, $newContent);
         } catch (IOExceptionInterface $e) {
             echo 'An error occurred while creating your directory at ' . $e->getPath();
         }
