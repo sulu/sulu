@@ -148,7 +148,7 @@ class RouteProvider implements RouteProviderInterface
 
         if ($routeObject instanceof ExtensionBehavior) {
             $portal = $attributes->getAttribute('portal');
-            $documentSegments = $routeObject->getExtensionsData()['excerpt']['segments'];
+            $documentSegments = $routeObject->getExtensionsData()['excerpt']['segments'] ?? [];
             $documentSegmentKey = $documentSegments[$portal->getWebspace()->getKey()] ?? null;
             $segment = $this->requestAnalyzer->getSegment();
 
