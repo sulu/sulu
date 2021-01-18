@@ -18,6 +18,8 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\EncodeAliasTrait;
  */
 class DoctrineJoinDescriptor
 {
+    use EncodeAliasTrait;
+
     const JOIN_METHOD_LEFT = 'LEFT';
 
     const JOIN_METHOD_INNER = 'INNER';
@@ -25,8 +27,6 @@ class DoctrineJoinDescriptor
     const JOIN_CONDITION_METHOD_ON = 'ON';
 
     const JOIN_CONDITION_METHOD_WITH = 'WITH';
-
-    use EncodeAliasTrait;
 
     /**
      * The name of the entity to join.

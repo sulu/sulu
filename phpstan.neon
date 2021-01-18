@@ -34,3 +34,4 @@ parameters:
     ignoreErrors:
         - '#has invalid typehint type Symfony\\Bundle\\FrameworkBundle\\Controller\\ControllerNameParser#'
         - '#has invalid typehint type Symfony\\Bundle\\TwigBundle\\Controller\\ExceptionController#'
+        - '#Function tld_extract not found.#'
