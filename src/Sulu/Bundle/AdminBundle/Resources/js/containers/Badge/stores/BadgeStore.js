@@ -48,13 +48,15 @@ export default class BadgeStore {
         } = this;
 
         let requestAttributes = {};
-        Object.entries(routerAttributesToRequest).forEach(([routerAttributeKey, requestAttributeKey]) => {
-            const attributeName = isNaN(routerAttributeKey)
-                ? routerAttributeKey
-                : routerAttributesToRequest[routerAttributeKey];
+        Object.keys(routerAttributesToRequest)
+            .forEach((routerAttributeKey) => {
+                const requestAttributeKey = routerAttributesToRequest[routerAttributeKey];
+                const attributeName = isNaN(routerAttributeKey)
+                    ? routerAttributeKey
+                    : requestAttributeKey;
 
-            requestAttributes[requestAttributeKey] = routerAttributes[attributeName];
-        });
+                requestAttributes[requestAttributeKey] = routerAttributes[attributeName];
+            });
         requestAttributes = {...requestAttributes, ...attributesToRequest};
 
         const url = symfonyRouting.generate(routeName, requestAttributes);

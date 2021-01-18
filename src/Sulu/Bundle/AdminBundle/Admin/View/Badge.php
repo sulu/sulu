@@ -76,7 +76,7 @@ class Badge
     }
 
     /**
-     * @param array<string, mixed> $routerAttributesToRequest
+     * @param array<string|int, string> $routerAttributesToRequest
      */
     public function addRouterAttributesToRequest(array $routerAttributesToRequest): self
     {
