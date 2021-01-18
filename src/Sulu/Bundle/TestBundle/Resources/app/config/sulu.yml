@@ -12,13 +12,6 @@ doctrine:
         auto_generate_proxy_classes: "%kernel.debug%"
         naming_strategy: doctrine.orm.naming_strategy.underscore
         auto_mapping: true
-        mappings:
-            gedmo_tree:
-                type: xml
-                prefix: Gedmo\Tree\Entity
-                dir: '%kernel.project_dir%/../../../../../../vendor/gedmo/doctrine-extensions/lib/Gedmo/Tree/Entity'
-                alias: GedmoTree
-                is_bundle: false
     dbal:
         url: '%database.url%'
         charset: '%database.charset%'
