@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\Admin\View;
 
 use PHPUnit\Framework\TestCase;
+use Sulu\Bundle\AdminBundle\Admin\View\Badge;
 use Sulu\Bundle\AdminBundle\Admin\View\PreviewFormViewBuilder;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 
@@ -303,5 +304,56 @@ class PreviewFormViewBuilderTest extends TestCase
             ->setFormKey('roles')
             ->setEditView('sulu_role.list')
             ->getView();
+    }
+
+    public function testBuildAddTabBadge()
+    {
+        $fooBadge = new Badge('sulu_foo.get_foo_badge');
+        $barBadge = new Badge('sulu_bar.get_bar_badge');
+        $bazBadge = (new Badge('sulu_baz.get_baz_badge', '/total'))
+            ->setVisibleCondition('text != 0')
+            ->addAttributesToRequest([
+                'limit' => 0,
+                'entityClass' => 'Sulu\Bundle\BazBundle\Entity\Baz',
+            ])
+            ->addRouterAttributesToRequest([
+                'locale',
+                'id' => 'entityId',
+            ]);
+
+        $view = (new PreviewFormViewBuilder('sulu_role.list', '/roles'))
+            ->setResourceKey('roles')
+            ->setFormKey('roles')
+            ->setEditView('sulu_role.list')
+            ->addTabBadge($fooBadge)
+            ->addTabBadge($barBadge, 'abc')
+            ->addTabBadge($bazBadge, 'abc')
+            ->getView();
+
+        $this->assertEquals(
+            [
+                [
+                    'routeName' => 'sulu_foo.get_foo_badge',
+                    'dataPath' => null,
+                    'visibleCondition' => null,
+                    'attributesToRequest' => [],
+                    'routerAttributesToRequest' => [],
+                ],
+                'abc' => [
+                    'routeName' => 'sulu_baz.get_baz_badge',
+                    'dataPath' => '/total',
+                    'visibleCondition' => 'text != 0',
+                    'attributesToRequest' => [
+                        'limit' => 0,
+                        'entityClass' => 'Sulu\Bundle\BazBundle\Entity\Baz',
+                    ],
+                    'routerAttributesToRequest' => [
+                        'locale',
+                        'id' => 'entityId',
+                    ],
+                ],
+            ],
+            $view->getOption('tabBadges')
+        );
     }
 }

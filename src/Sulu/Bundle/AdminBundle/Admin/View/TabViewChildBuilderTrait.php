@@ -33,10 +33,15 @@ trait TabViewChildBuilderTrait
         $view->setOption('tabPriority', $tabPriority);
     }
 
-    private function addTabBadgeToView(View $view, Badge $badge): void
+    private function addTabBadgeToView(View $view, Badge $badge, ?string $key = null): void
     {
         $tabBadges = $view->getOption('tabBadges') ?? [];
-        $tabBadges[] = $badge->getConfiguration();
+
+        if (null === $key) {
+            $tabBadges[] = $badge->getConfiguration();
+        } else {
+            $tabBadges[$key] = $badge->getConfiguration();
+        }
 
         $view->setOption('tabBadges', $tabBadges);
     }

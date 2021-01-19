@@ -170,9 +170,9 @@ class PreviewFormViewBuilder implements PreviewFormViewBuilderInterface
         return $this;
     }
 
-    public function addTabBadge(Badge $badge): PreviewFormViewBuilderInterface
+    public function addTabBadge(Badge $badge, string $key = null): PreviewFormViewBuilderInterface
     {
-        $this->addTabBadgeToView($this->view, $badge);
+        $this->addTabBadgeToView($this->view, $badge, $key);
 
         return $this;
     }

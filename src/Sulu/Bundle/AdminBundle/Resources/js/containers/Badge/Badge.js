@@ -52,11 +52,11 @@ class Badge extends React.Component<Props> {
     }
 
     render() {
-        if (!this.store || this.store.data === null || this.store.data === undefined) {
+        if (!this.store || this.store.text === null || this.store.text === undefined) {
             return null;
         }
 
-        return <BadgeComponent>{this.store.data}</BadgeComponent>;
+        return <BadgeComponent>{this.store.text}</BadgeComponent>;
     }
 }
 

@@ -241,9 +241,9 @@ class FormOverlayListViewBuilder implements FormOverlayListViewBuilderInterface
         return $this;
     }
 
-    public function addTabBadge(Badge $badge): FormOverlayListViewBuilderInterface
+    public function addTabBadge(Badge $badge, string $key = null): FormOverlayListViewBuilderInterface
     {
-        $this->addTabBadgeToView($this->view, $badge);
+        $this->addTabBadgeToView($this->view, $badge, $key);
 
         return $this;
     }

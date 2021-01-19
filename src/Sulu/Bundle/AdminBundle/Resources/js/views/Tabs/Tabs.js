@@ -10,6 +10,14 @@ import {Route} from '../../services/Router';
 import Badge from '../../containers/Badge/Badge';
 import tabsStyles from './tabs.scss';
 
+type BadgeType = {
+    attributesToRequest: Object,
+    dataPath: ?string,
+    routeName: string,
+    routerAttributesToRequest: Object,
+    visibleCondition: ?string,
+};
+
 type Props<T> = {
     ...ViewProps,
     children?: (T) => Element<*> | null,
@@ -135,10 +143,11 @@ class Tabs<T> extends React.Component<Props<T>> {
                     <TabsComponent onSelect={this.handleSelect} selectedIndex={selectedTabIndex}>
                         {this.sortedTabRoutes.map((tabRoute) => {
                             const tabTitle = tabRoute.options.tabTitle;
+                            const tabBadges = tabRoute.options.tabBadges;
 
                             let badges = undefined;
-                            if (tabRoute.options.tabBadges) {
-                                badges = tabRoute.options.tabBadges.map((badge, index) => {
+                            if (tabBadges) {
+                                badges = (Object.values(tabBadges): any).map((badge: BadgeType, index: number) => {
                                     return (
                                         <Badge
                                             attributesToRequest={badge.attributesToRequest}

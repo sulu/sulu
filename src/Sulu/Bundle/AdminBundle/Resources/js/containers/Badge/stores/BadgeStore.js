@@ -1,6 +1,5 @@
 // @flow
 import {observable, action, autorun} from 'mobx';
-import log from 'loglevel';
 import jexl from 'jexl';
 import jsonPointer from 'json-pointer';
 import symfonyRouting from 'fos-jsrouting/router';
@@ -14,7 +13,7 @@ export default class BadgeStore {
     visibleCondition: ?string;
     attributesToRequest: Object;
     routerAttributesToRequest: Object;
-    @observable data: ?any = null;
+    @observable text: ?string = null;
     disposer: () => {};
 
     constructor(
@@ -63,9 +62,6 @@ export default class BadgeStore {
         Requester.get(url)
             .then((response: Object) => {
                 this.setData(response);
-            })
-            .catch((response: Object) => {
-                log.error(response.message);
             });
     };
 
@@ -82,13 +78,13 @@ export default class BadgeStore {
             const result = jexl.evalSync(visibleCondition, {text});
 
             if (!result) {
-                this.data = null;
+                this.text = null;
 
                 return;
             }
         }
 
-        this.data = text;
+        this.text = text;
     }
 
     destroy = () => {

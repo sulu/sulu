@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\Admin\View;
 
 use PHPUnit\Framework\TestCase;
+use Sulu\Bundle\AdminBundle\Admin\View\Badge;
 use Sulu\Bundle\AdminBundle\Admin\View\FormOverlayListViewBuilder;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 
@@ -381,6 +382,19 @@ class FormOverlayListViewBuilderTest extends TestCase
         $this->assertEquals(5, $route->getOption('tabOrder'));
     }
 
+    public function testBuildListSetTabPriority()
+    {
+        $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles'))
+            ->setResourceKey('roles')
+            ->setListKey('roles')
+            ->setFormKey('role_details')
+            ->addListAdapters(['tree'])
+            ->setTabPriority(5)
+            ->getView();
+
+        $this->assertEquals(5, $route->getOption('tabPriority'));
+    }
+
     public function testBuildListSetTabCondition()
     {
         $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles'))
@@ -459,6 +473,58 @@ class FormOverlayListViewBuilderTest extends TestCase
         $this->assertEquals(
             [$linkItemAction, $exportItemAction, $downloadItemAction],
             $route->getOption('itemActions')
+        );
+    }
+
+    public function testBuildAddTabBadge()
+    {
+        $fooBadge = new Badge('sulu_foo.get_foo_badge');
+        $barBadge = new Badge('sulu_bar.get_bar_badge');
+        $bazBadge = (new Badge('sulu_baz.get_baz_badge', '/total'))
+            ->setVisibleCondition('text != 0')
+            ->addAttributesToRequest([
+                'limit' => 0,
+                'entityClass' => 'Sulu\Bundle\BazBundle\Entity\Baz',
+            ])
+            ->addRouterAttributesToRequest([
+                'locale',
+                'id' => 'entityId',
+            ]);
+
+        $view = (new FormOverlayListViewBuilder('sulu_role.list', '/roles'))
+            ->setResourceKey('roles')
+            ->setListKey('roles')
+            ->setFormKey('roles')
+            ->addListAdapters(['tree'])
+            ->addTabBadge($fooBadge)
+            ->addTabBadge($barBadge, 'abc')
+            ->addTabBadge($bazBadge, 'abc')
+            ->getView();
+
+        $this->assertEquals(
+            [
+                [
+                    'routeName' => 'sulu_foo.get_foo_badge',
+                    'dataPath' => null,
+                    'visibleCondition' => null,
+                    'attributesToRequest' => [],
+                    'routerAttributesToRequest' => [],
+                ],
+                'abc' => [
+                    'routeName' => 'sulu_baz.get_baz_badge',
+                    'dataPath' => '/total',
+                    'visibleCondition' => 'text != 0',
+                    'attributesToRequest' => [
+                        'limit' => 0,
+                        'entityClass' => 'Sulu\Bundle\BazBundle\Entity\Baz',
+                    ],
+                    'routerAttributesToRequest' => [
+                        'locale',
+                        'id' => 'entityId',
+                    ],
+                ],
+            ],
+            $view->getOption('tabBadges')
         );
     }
 }
