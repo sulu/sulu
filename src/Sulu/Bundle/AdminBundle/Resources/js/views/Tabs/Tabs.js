@@ -7,7 +7,7 @@ import TabsComponent from '../../components/Tabs';
 import type {ViewProps} from '../../containers/ViewRenderer';
 import {translate} from '../../utils/Translator';
 import {Route} from '../../services/Router';
-import Badge from '../../containers/Badge/Badge';
+import Badge from '../../containers/Badge';
 import tabsStyles from './tabs.scss';
 
 type BadgeType = {
