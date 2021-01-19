@@ -28,23 +28,13 @@ jobs:
               with:
                   node-version: ${{ matrix.node-version }}
 
-            - name: Get npm cache directory
-              id: npm-cache-dir
-              run: echo "::set-output name=dir::$(npm config get cache)"
-
-            - name: Cache dependencies
-              uses: actions/cache@v2
-              with:
-                  path: ${{ steps.npm-cache-dir.outputs.dir }}
-                  key: ${{ runner.os }}-npm-${{ hashFiles('**/package.json', '**/package-lock.json') }}
-                  restore-keys: |
-                      ${{ runner.os }}-npm-
-
             - name: Assert error when using yarn
               run: tests/js/check-yarn-warning.sh
 
-            - name: Install dependencies
-              run: npm install --ignore-optional
+            - name: Install npm dependencies
+              uses: bahmutov/npm-install@v1
+              with:
+                  useLockFile: false
 
             - name: Lint JavaScript and CSS code
               run: |
