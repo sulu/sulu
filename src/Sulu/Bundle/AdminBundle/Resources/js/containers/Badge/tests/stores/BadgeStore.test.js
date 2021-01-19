@@ -39,7 +39,7 @@ test('Should load data using the Requester', () => {
         }
     );
 
-    expect(Requester.get).toBeCalledWith('foo?locale=en&entityId=5&limit=0&entityClass=Foo');
+    expect(Requester.get).toBeCalledWith('foo?entityId=5&locale=en&limit=0&entityClass=Foo');
 
     return promise.then(() => {
         expect(badgeStore.text).toEqual('2');
@@ -70,7 +70,7 @@ test('Should load data without datapath', () => {
         }
     );
 
-    expect(Requester.get).toBeCalledWith('foo?locale=en&entityId=5&limit=0&entityClass=Foo');
+    expect(Requester.get).toBeCalledWith('foo?entityId=5&locale=en&limit=0&entityClass=Foo');
 
     return promise.then(() => {
         expect(badgeStore.text).toEqual('hello');
@@ -101,7 +101,7 @@ test('Should load data which does not pass the visibleCondition', () => {
         }
     );
 
-    expect(Requester.get).toBeCalledWith('foo?locale=en&entityId=5&limit=0&entityClass=Foo');
+    expect(Requester.get).toBeCalledWith('foo?entityId=5&locale=en&limit=0&entityClass=Foo');
 
     return promise.then(() => {
         expect(badgeStore.text).toEqual(null);

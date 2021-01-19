@@ -340,7 +340,6 @@ class FormViewBuilderTest extends TestCase
         $view = (new FormViewBuilder('sulu_role.list', '/roles'))
             ->setResourceKey('roles')
             ->setFormKey('roles')
-            ->setEditView('sulu_role.list')
             ->addTabBadge($fooBadge)
             ->addTabBadge($barBadge, 'abc')
             ->addTabBadge($bazBadge, 'abc')
