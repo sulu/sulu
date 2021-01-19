@@ -87,7 +87,7 @@ jobs:
                     - php-version: '7.2'
                       database: postgres
                       phpcr-transport: jackrabbit
-                      dependency-versions: 'highest'
+                      dependency-versions: 'lowest'
                       php-extensions: 'ctype, iconv, mysql, gd'
                       tools: 'composer:v1'
                       lint: false
@@ -101,7 +101,7 @@ jobs:
                     - php-version: '7.4'
                       database: mysql
                       phpcr-transport: doctrinedbal
-                      dependency-versions: 'lowest'
+                      dependency-versions: 'highest'
                       php-extensions: 'ctype, iconv, mysql, imagick'
                       tools: 'composer:v2'
                       lint: true
