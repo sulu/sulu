@@ -1,0 +1,85 @@
+<?php
+
+/*
+ * This file is part of Sulu.
+ *
+ * (c) Sulu GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+namespace Sulu\Bundle\MediaBundle\Tests\Unit\Media\PropertiesProvider;
+
+use Imagine\Image\Box;
+use Imagine\Image\ImageInterface;
+use Imagine\Image\ImagineInterface;
+use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
+use Sulu\Bundle\MediaBundle\Media\PropertiesProvider\ImagePropertiesProvider;
+use Sulu\Bundle\MediaBundle\Tests\Functional\Traits\CreateUploadedFileTrait;
+
+class ImagePropertiesProviderTest extends TestCase
+{
+    use CreateUploadedFileTrait;
+
+    /**
+     * @var ObjectProphecy|ImagineInterface
+     */
+    private $imagine;
+
+    /**
+     * @var ImagePropertiesProvider
+     */
+    private $imagePropertiesProvider;
+
+    protected function setUp(): void
+    {
+        $this->imagine = $this->prophesize(ImagineInterface::class);
+
+        $this->imagePropertiesProvider = new ImagePropertiesProvider(
+            $this->imagine->reveal()
+        );
+    }
+
+    public function testSupportsVideo(): void
+    {
+        $uploadedFile = $this->createUploadedFileVideo();
+
+        $this->assertFalse($this->imagePropertiesProvider->supports($uploadedFile));
+    }
+
+    public function testSupportsImage(): void
+    {
+        $uploadedFile = $this->createUploadedFileImage();
+
+        $this->assertTrue($this->imagePropertiesProvider->supports($uploadedFile));
+    }
+
+    public function testProvide(): void
+    {
+        // prepare data
+        $uploadedFile = $this->createUploadedFileImage();
+
+        // prepare expected service calls
+        $image = $this->prophesize(ImageInterface::class);
+        $this->imagine->open(Argument::any())
+            ->shouldBeCalledOnce()
+            ->willReturn($image->reveal());
+
+        $size = new Box(360, 240);
+        $image->getSize()
+            ->shouldBeCalledOnce()
+            ->willReturn($size);
+
+        // test function
+        $this->assertSame(
+            [
+                'width' => 360,
+                'height' => 240,
+            ],
+            $this->imagePropertiesProvider->provide($uploadedFile)
+        );
+    }
+}

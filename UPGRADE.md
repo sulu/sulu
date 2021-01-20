@@ -2,6 +2,10 @@
 
 ## dev-master
 
+### Deprecated constructing `sulu_media.media_manager` with the `sulu_media.ffprobe` service
+
+Instead of the `sulu_media.ffprobe` the new `sulu_media.media_properties_provider` service should be injected into the `sulu_media.media_manager` service.
+
 ### Deprecated service `sulu_location.geolocator.guzzle.client` and parameter `sulu_location.guzzle.client.class`
 
 Because `NominatimGeolocator` and `GoogleGeolocator` now use the symfony http client the `sulu_location.geolocator.guzzle.client` is now deprecated

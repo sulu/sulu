@@ -20,6 +20,7 @@ use Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\FormatNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\FormatOptionsMissingParameterException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
+use Sulu\Bundle\MediaBundle\Media\PropertiesProvider\PropertiesProviderInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
@@ -354,6 +355,9 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
         $this->configurePersistence($config['objects'], $container);
         $this->configureStorage($config, $container, $loader);
         $this->configureFileValidator($config, $container);
+
+        $container->registerForAutoconfiguration(PropertiesProviderInterface::class)
+            ->addTag('sulu_media.media_properties_provider');
     }
 
     private function configureStorage(array $config, ContainerBuilder $container, LoaderInterface $loader)
