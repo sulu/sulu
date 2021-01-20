@@ -228,9 +228,7 @@
             "bin/websiteconsole lint:container --env prod"
         ],
         "lint-doctrine": [
-            "bin/adminconsole doctrine:database:create --if-not-exists",
-            "bin/adminconsole doctrine:schema:update --force",
-            "bin/adminconsole doctrine:schema:validate",
+            "bin/adminconsole doctrine:schema:validate --skip-sync",
             "bin/adminconsole doctrine:ensure-production-settings --env prod"
         ]
     },
