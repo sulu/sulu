@@ -13,11 +13,7 @@ namespace Sulu\Bundle\MediaBundle\Media\Manager;
 
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
-use FFMpeg\Exception\ExecutableNotFoundException;
 use FFMpeg\FFProbe;
-use Imagine\Exception\InvalidArgumentException;
-use Imagine\Exception\RuntimeException;
-use Imagine\Image\ImagineInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Api\Media;
@@ -34,6 +30,9 @@ use Sulu\Bundle\MediaBundle\Media\Exception\InvalidMediaTypeException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\FileValidator\FileValidatorInterface;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
+use Sulu\Bundle\MediaBundle\Media\PropertiesProvider\MediaPropertiesProvider;
+use Sulu\Bundle\MediaBundle\Media\PropertiesProvider\MediaPropertiesProviderInterface;
+use Sulu\Bundle\MediaBundle\Media\PropertiesProvider\VideoPropertiesProvider;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\MediaBundle\Media\TypeManager\TypeManagerInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
@@ -139,11 +138,6 @@ class MediaManager implements MediaManagerInterface
     private $downloadPath;
 
     /**
-     * @var FFProbe
-     */
-    private $ffprobe;
-
-    /**
      * @var array
      */
     private $permissions;
@@ -159,11 +153,12 @@ class MediaManager implements MediaManagerInterface
     private $adminDownloadPath;
 
     /**
-     * @var ImagineInterface
+     * @var MediaPropertiesProviderInterface[]
      */
-    private $imagine;
+    private $propertiesProvider;
 
     /**
+     * @param null|FFprobe|MediaPropertiesProviderInterface $propertiesProvider
      * @param array $permissions
      * @param string $downloadPath
      * @param string $maxFileSize
@@ -183,13 +178,12 @@ class MediaManager implements MediaManagerInterface
         PathCleanupInterface $pathCleaner,
         TokenStorageInterface $tokenStorage = null,
         SecurityCheckerInterface $securityChecker = null,
-        FFProbe $ffprobe = null,
+        $propertiesProvider = null,
         $permissions,
         $downloadPath,
         $maxFileSize,
         TargetGroupRepositoryInterface $targetGroupRepository = null,
-        $adminDownloadPath = null,
-        ?ImagineInterface $imagine = null
+        $adminDownloadPath = null
     ) {
         $this->mediaRepository = $mediaRepository;
         $this->collectionRepository = $collectionRepository;
@@ -205,7 +199,6 @@ class MediaManager implements MediaManagerInterface
         $this->pathCleaner = $pathCleaner;
         $this->tokenStorage = $tokenStorage;
         $this->securityChecker = $securityChecker;
-        $this->ffprobe = $ffprobe;
         $this->permissions = $permissions;
         $this->downloadPath = $downloadPath;
         $this->maxFileSize = $maxFileSize;
@@ -222,17 +215,25 @@ class MediaManager implements MediaManagerInterface
 
         $this->adminDownloadPath = $adminDownloadPath ?: '/admin' . $this->downloadPath;
 
-        if (!$imagine) {
+        if (!$propertiesProvider instanceof MediaPropertiesProviderInterface) {
             @\trigger_error(
                 \sprintf(
-                    'The usage of the "%s" without setting "$imagine" is deprecated and will not longer work in Sulu 3.0.',
+                    'The usage of the "%s" without setting "$propertiesProvider" is deprecated and will not longer work in Sulu 3.0.',
                     MediaManager::class
                 ),
                 \E_USER_DEPRECATED
             );
+
+            if ($propertiesProvider instanceof FFProbe) {
+                $propertiesProvider = new MediaPropertiesProvider([
+                    new VideoPropertiesProvider($propertiesProvider),
+                ]);
+            } else {
+                $propertiesProvider = new MediaPropertiesProvider([]);
+            }
         }
 
-        $this->imagine = $imagine;
+        $this->propertiesProvider = $propertiesProvider;
     }
 
     public function getById($id, $locale)
@@ -310,44 +311,11 @@ class MediaManager implements MediaManagerInterface
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     private function getProperties(UploadedFile $uploadedFile)
     {
-        $mimeType = $uploadedFile->getMimeType();
-        $properties = [];
-
-        // if the file is a video we add the duration
-        if (\fnmatch('video/*', $mimeType) && $this->ffprobe) {
-            try {
-                $properties['duration'] = $this->ffprobe->format($uploadedFile->getPathname())->get('duration');
-
-                // Dimensions
-                try {
-                    $dimensions = $this->ffprobe->streams($uploadedFile->getPathname())->videos()->first()->getDimensions();
-                    $properties['width'] = $dimensions->getWidth();
-                    $properties['height'] = $dimensions->getHeight();
-                } catch (\InvalidArgumentException $e) {
-                    // Exception is thrown if the video stream could not be obtained
-                } catch (\RuntimeException $e) {
-                    // Exception is thrown if the dimension could not be extracted
-                }
-            } catch (ExecutableNotFoundException $e) {
-                // Exception is thrown if ffmpeg is not installed -> video properties are not set
-            }
-        } elseif (\fnmatch('image/*', $mimeType)) {
-            if ($this->imagine) {
-                try {
-                    $image = $this->imagine->open($uploadedFile->getPathname());
-                    $properties['width'] = $image->getSize()->getWidth();
-                    $properties['height'] = $image->getSize()->getHeight();
-                } catch (InvalidArgumentException | RuntimeException $exception) {
-                    // Exception is thrown -> image properties are not set
-                }
-            }
-        }
-
-        return $properties;
+        return $this->propertiesProvider->provide($uploadedFile);
     }
 
     /**

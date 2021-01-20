@@ -23,5 +23,11 @@
             </argument>
             <argument id="logger" type="service" on-invalid="null"/>
         </service>
+
+        <service id="sulu_media.video_properties_provider" class="Sulu\Bundle\MediaBundle\Media\PropertiesProvider\VideoPropertiesProvider">
+            <argument type="service" id="sulu_media.ffprobe"/>
+
+            <tag name="sulu_media.media_properties_provider"/>
+        </service>
     </services>
 </container>

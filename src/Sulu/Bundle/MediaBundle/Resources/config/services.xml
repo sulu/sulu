@@ -264,13 +264,23 @@
             <argument type="service" id="sulu.content.path_cleaner" />
             <argument type="service" id="security.token_storage" on-invalid="null" />
             <argument type="service" id="sulu_security.security_checker" on-invalid="null" />
-            <argument type="service" id="sulu_media.ffprobe" on-invalid="null" />
+            <argument type="service" id="sulu_media.media_properties_provider" />
             <argument>%sulu_security.permissions%</argument>
             <argument type="string">%sulu_media.media_manager.media_download_path%</argument>
             <argument>%sulu_media.media.max_file_size%</argument>
             <argument type="service" id="sulu.repository.target_group" on-invalid="null"/>
             <argument type="string">%sulu_media.media_manager.media_download_path_admin%</argument>
             <argument type="service" id="sulu_media.adapter"/>
+        </service>
+
+        <service id="sulu_media.media_properties_provider" class="Sulu\Bundle\MediaBundle\Media\PropertiesProvider\MediaPropertiesProvider">
+            <argument type="tagged_iterator" tag="sulu_media.media_properties_provider"/>
+        </service>
+
+        <service id="sulu_media.image_properties_provider" class="Sulu\Bundle\MediaBundle\Media\PropertiesProvider\ImagePropertiesProvider">
+            <argument type="service" id="sulu_media.adapter"/>
+
+            <tag name="sulu_media.media_properties_provider"/>
         </service>
 
         <service id="Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface" alias="sulu_media.media_manager"/>
