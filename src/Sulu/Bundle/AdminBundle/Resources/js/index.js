@@ -28,6 +28,7 @@ import List, {
     DeleteToolbarAction as ListDeleteToolbarAction,
     MoveToolbarAction as ListMoveToolbarAction,
     ExportToolbarAction as ListExportToolbarAction,
+    UploadToolbarAction as ListUploadToolbarAction,
 } from './views/List';
 import Tabs from './views/Tabs';
 import CKEditor5 from './containers/TextEditor/adapters/CKEditor5';
@@ -309,6 +310,7 @@ function registerListToolbarActions() {
     listToolbarActionRegistry.add('sulu_admin.delete', ListDeleteToolbarAction);
     listToolbarActionRegistry.add('sulu_admin.move', ListMoveToolbarAction);
     listToolbarActionRegistry.add('sulu_admin.export', ListExportToolbarAction);
+    listToolbarActionRegistry.add('sulu_admin.upload', ListUploadToolbarAction);
 }
 
 function processConfig(config: Object) {

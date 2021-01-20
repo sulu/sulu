@@ -9,6 +9,7 @@ import AddToolbarAction from './toolbarActions/AddToolbarAction';
 import DeleteToolbarAction from './toolbarActions/DeleteToolbarAction';
 import MoveToolbarAction from './toolbarActions/MoveToolbarAction';
 import ExportToolbarAction from './toolbarActions/ExportToolbarAction';
+import UploadToolbarAction from './toolbarActions/UploadToolbarAction';
 
 export default List;
 
@@ -22,4 +23,5 @@ export {
     LinkItemAction,
     MoveToolbarAction,
     ExportToolbarAction,
+    UploadToolbarAction,
 };

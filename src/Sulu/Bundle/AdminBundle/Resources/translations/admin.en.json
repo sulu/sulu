@@ -160,5 +160,11 @@
     "sulu_admin.hide_block": "Hide this block on website",
     "sulu_admin.segment": "Segment",
     "sulu_admin.missing_type_dialog_title": "Choose new template",
-    "sulu_admin.missing_type_dialog_description": "The template for the copied page does not exist in this webspace."
+    "sulu_admin.missing_type_dialog_description": "The template for the copied page does not exist in this webspace.",
+    "sulu_admin.upload": "Upload",
+    "sulu_admin.an_error_occurred": "An error occurred",
+    "sulu_admin.dropzone_error_file-invalid-type": "{fileName, select, undefined{File} other{{fileName}}} has invalid type{allowedTypes, select, undefined{} other{. Allowed types are ({allowedTypes})}}",
+    "sulu_admin.dropzone_error_file-too-large": "{fileName, select, undefined{File} other{{fileName}}} is {maxSize, select, undefined{too large} other{larger than {maxSize}}}",
+    "sulu_admin.dropzone_error_file-too-small": "{fileName, select, undefined{File} other{{fileName}}} is {minSize, select, undefined{too small} other{smaller than {minSize}}}",
+    "sulu_admin.dropzone_error_too-many-files": "Too many files{maxFiles, select, undefined{} other{. Maximum allowed files: {maxFiles}}}"
 }
