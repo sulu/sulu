@@ -34,7 +34,6 @@ trait TabViewChildBuilderTrait
     }
 
     /**
-     * @param View $view
      * @param Badge[] $badges
      */
     private function addTabBadgesToView(View $view, array $badges): void
