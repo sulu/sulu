@@ -59,5 +59,7 @@ interface FormViewBuilderInterface extends ViewBuilderInterface
 
     public function setTitleVisible(bool $titleVisible): self;
 
-    public function addTabBadge(Badge $badge, string $key = null): self;
+    public function addTabBadge(Badge $badge): self;
+
+    public function setTabBadge(string $key, Badge $badge): self;
 }

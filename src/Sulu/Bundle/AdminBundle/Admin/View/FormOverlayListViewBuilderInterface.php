@@ -93,5 +93,7 @@ interface FormOverlayListViewBuilderInterface extends ViewBuilderInterface
 
     public function addMetadataRequestParameters(array $metadataRequestParameters): self;
 
-    public function addTabBadge(Badge $badge, string $key = null): self;
+    public function addTabBadge(Badge $badge): self;
+
+    public function setTabBadge(string $key, Badge $badge): self;
 }

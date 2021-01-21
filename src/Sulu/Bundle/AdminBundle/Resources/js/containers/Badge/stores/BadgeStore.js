@@ -1,6 +1,5 @@
 // @flow
-import {observable, action, autorun} from 'mobx';
-import jexl from 'jexl';
+import {action, autorun, observable, computed} from 'mobx';
 import jsonPointer from 'json-pointer';
 import symfonyRouting from 'fos-jsrouting/router';
 import Router from '../../../services/Router';
@@ -10,43 +9,42 @@ export default class BadgeStore {
     router: Router;
     routeName: string;
     dataPath: ?string;
-    visibleCondition: ?string;
-    attributesToRequest: Object;
+    requestParameters: Object;
     routerAttributesToRequest: Object;
-    @observable text: ?string = null;
+    @observable value: ?string = null;
     disposer: () => {};
 
     constructor(
         router: Router,
         routeName: string,
         dataPath: ?string,
-        visibleCondition: ?string,
-        attributesToRequest: Object,
+        requestParameters: Object,
         routerAttributesToRequest: Object
     ) {
         this.router = router;
         this.routeName = routeName;
         this.dataPath = dataPath;
-        this.visibleCondition = visibleCondition;
-        this.attributesToRequest = attributesToRequest;
+        this.requestParameters = requestParameters;
         this.routerAttributesToRequest = routerAttributesToRequest;
 
         this.disposer = autorun(() => {
+            // Needed to tell autorun to listen on route changes
+            this.router.route;
+
             this.load();
         });
     }
 
-    load = () => {
+    @computed get evaluatedRequestParameters() {
         const {
             router: {
                 attributes: routerAttributes,
             },
-            routeName,
-            attributesToRequest,
+            requestParameters: attributesToRequest,
             routerAttributesToRequest,
         } = this;
 
-        let requestAttributes = {};
+        const requestParameters = {};
         Object.keys(routerAttributesToRequest)
             .forEach((routerAttributeKey) => {
                 const requestAttributeKey = routerAttributesToRequest[routerAttributeKey];
@@ -54,38 +52,34 @@ export default class BadgeStore {
                     ? routerAttributeKey
                     : requestAttributeKey;
 
-                requestAttributes[requestAttributeKey] = routerAttributes[attributeName];
+                requestParameters[requestAttributeKey] = routerAttributes[attributeName];
             });
-        requestAttributes = {...requestAttributes, ...attributesToRequest};
 
-        const url = symfonyRouting.generate(routeName, requestAttributes);
-        Requester.get(url)
-            .then((response: Object) => {
-                this.setData(response);
-            });
-    };
+        return {...requestParameters, ...attributesToRequest};
+    }
+
+    @computed get url() {
+        const {routeName} = this;
+
+        return symfonyRouting.generate(routeName, this.evaluatedRequestParameters);
+    }
 
     @action setData(data: any) {
-        const {dataPath, visibleCondition} = this;
+        const {dataPath} = this;
 
         let enhancedData = data;
-        if (dataPath !== null) {
+        if (dataPath) {
             enhancedData = jsonPointer.get(data, dataPath);
         }
-        const text = enhancedData.toString();
 
-        if (visibleCondition !== null) {
-            const result = jexl.evalSync(visibleCondition, {text});
-
-            if (!result) {
-                this.text = null;
-
-                return;
-            }
-        }
-
-        this.text = text;
+        this.value = enhancedData.toString();
     }
+
+    load = () => {
+        Requester.get(this.url).then((response: Object) => {
+            this.setData(response);
+        });
+    };
 
     destroy = () => {
         this.disposer();

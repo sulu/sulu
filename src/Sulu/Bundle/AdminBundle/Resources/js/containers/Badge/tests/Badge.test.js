@@ -17,25 +17,25 @@ jest.mock('../../../services/Router', () => jest.fn(function() {
     };
 }));
 
-test('Should create a new BadgeStore', () => {
+test('Should create new BadgeStore', () => {
     const router = new Router({});
 
-    const promise = Promise.resolve('hello');
+    const promise = Promise.resolve({data: 'foo'});
     Requester.get.mockReturnValue(promise);
 
     const badge = mount(
         <Badge
-            attributesToRequest={{
+            dataPath="/data"
+            requestParameters={{
                 limit: 0,
             }}
-            dataPath="/bar"
             routeName="foo"
             router={router}
             routerAttributesToRequest={{
                 id: 'entityId',
                 locale: 'locale',
             }}
-            visibleCondition="text != 0"
+            visibleCondition="value != 0"
         />
     );
 
@@ -43,13 +43,73 @@ test('Should create a new BadgeStore', () => {
 
     expect(store).toBeInstanceOf(BadgeStore);
     expect(store.routeName).toBe('foo');
-    expect(store.dataPath).toBe('/bar');
-    expect(store.visibleCondition).toBe('text != 0');
-    expect(store.attributesToRequest).toEqual({
+    expect(store.dataPath).toBe('/data');
+    expect(store.requestParameters).toEqual({
         limit: 0,
     });
     expect(store.routerAttributesToRequest).toEqual({
         id: 'entityId',
         locale: 'locale',
+    });
+
+    return promise.then(() => {
+        expect(store.value).toBe('foo');
+    });
+});
+
+test('Should pass correct props to badge component', () => {
+    const router = new Router({});
+
+    const promise = Promise.resolve('hello');
+    Requester.get.mockReturnValue(promise);
+
+    const badge = mount(
+        <Badge
+            dataPath={null}
+            requestParameters={{
+                limit: 0,
+            }}
+            routeName="foo"
+            router={router}
+            routerAttributesToRequest={{
+                id: 'entityId',
+                locale: 'locale',
+            }}
+            visibleCondition="value != 0"
+        />
+    );
+
+    return promise.then(() => {
+        badge.update();
+        expect(badge.children().find('Badge').length).toBe(1);
+        expect(badge.children().find('Badge').text()).toBe('hello');
+    });
+});
+
+test('Should not render Badge component if visibleCondition fails', () => {
+    const router = new Router({});
+
+    const promise = Promise.resolve({data: 0});
+    Requester.get.mockReturnValue(promise);
+
+    const badge = mount(
+        <Badge
+            dataPath="/data"
+            requestParameters={{
+                limit: 0,
+            }}
+            routeName="foo"
+            router={router}
+            routerAttributesToRequest={{
+                id: 'entityId',
+                locale: 'locale',
+            }}
+            visibleCondition="value != 0"
+        />
+    );
+
+    return promise.then(() => {
+        badge.update();
+        expect(badge.children().find('Badge').length).toBe(0);
     });
 });

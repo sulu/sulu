@@ -312,7 +312,7 @@ class PreviewFormViewBuilderTest extends TestCase
         $barBadge = new Badge('sulu_bar.get_bar_badge');
         $bazBadge = (new Badge('sulu_baz.get_baz_badge', '/total'))
             ->setVisibleCondition('text != 0')
-            ->addAttributesToRequest([
+            ->addRequestParameters([
                 'limit' => 0,
                 'entityClass' => 'Sulu\Bundle\BazBundle\Entity\Baz',
             ])

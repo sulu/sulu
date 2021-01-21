@@ -28,7 +28,6 @@ test('Should load data using the Requester', () => {
         router,
         'foo',
         '/value',
-        'text != 0',
         {
             limit: 0,
             entityClass: 'Foo',
@@ -42,7 +41,7 @@ test('Should load data using the Requester', () => {
     expect(Requester.get).toBeCalledWith('foo?entityId=5&locale=en&limit=0&entityClass=Foo');
 
     return promise.then(() => {
-        expect(badgeStore.text).toEqual('2');
+        expect(badgeStore.value).toEqual('2');
     });
 });
 
@@ -59,7 +58,6 @@ test('Should load data without datapath', () => {
         router,
         'foo',
         null,
-        'text != 0',
         {
             limit: 0,
             entityClass: 'Foo',
@@ -73,37 +71,6 @@ test('Should load data without datapath', () => {
     expect(Requester.get).toBeCalledWith('foo?entityId=5&locale=en&limit=0&entityClass=Foo');
 
     return promise.then(() => {
-        expect(badgeStore.text).toEqual('hello');
-    });
-});
-
-test('Should load data which does not pass the visibleCondition', () => {
-    SymfonyRouting.generate.mockImplementation((routeName, params) => {
-        return routeName + '?' + Object.keys(params).map((key) => key + '=' + params[key]).join('&');
-    });
-
-    const promise = Promise.resolve({value: 0});
-    Requester.get.mockReturnValue(promise);
-
-    const router = new Router({});
-    const badgeStore = new BadgeStore(
-        router,
-        'foo',
-        '/value',
-        'text != 0',
-        {
-            limit: 0,
-            entityClass: 'Foo',
-        },
-        {
-            id: 'entityId',
-            locale: 'locale',
-        }
-    );
-
-    expect(Requester.get).toBeCalledWith('foo?entityId=5&locale=en&limit=0&entityClass=Foo');
-
-    return promise.then(() => {
-        expect(badgeStore.text).toEqual(null);
+        expect(badgeStore.value).toEqual('hello');
     });
 });

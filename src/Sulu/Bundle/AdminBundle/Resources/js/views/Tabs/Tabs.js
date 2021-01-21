@@ -7,16 +7,8 @@ import TabsComponent from '../../components/Tabs';
 import type {ViewProps} from '../../containers/ViewRenderer';
 import {translate} from '../../utils/Translator';
 import {Route} from '../../services/Router';
-import Badge from '../../containers/Badge';
+import Badge, {type BadgeOptions} from '../../containers/Badge';
 import tabsStyles from './tabs.scss';
-
-type BadgeType = {
-    attributesToRequest: Object,
-    dataPath: ?string,
-    routeName: string,
-    routerAttributesToRequest: Object,
-    visibleCondition: ?string,
-};
 
 type Props<T> = {
     ...ViewProps,
@@ -143,24 +135,27 @@ class Tabs<T> extends React.Component<Props<T>> {
                     <TabsComponent onSelect={this.handleSelect} selectedIndex={selectedTabIndex}>
                         {this.sortedTabRoutes.map((tabRoute) => {
                             const tabTitle = tabRoute.options.tabTitle;
-                            const tabBadges = tabRoute.options.tabBadges;
+                            const tabBadges = tabRoute.options.tabBadges || [];
 
-                            let badges = undefined;
-                            if (tabBadges) {
-                                badges = (Object.values(tabBadges): any).map((badge: BadgeType, index: number) => {
-                                    return (
-                                        <Badge
-                                            attributesToRequest={badge.attributesToRequest}
-                                            dataPath={badge.dataPath}
-                                            key={index}
-                                            routeName={badge.routeName}
-                                            router={router}
-                                            routerAttributesToRequest={badge.routerAttributesToRequest}
-                                            visibleCondition={badge.visibleCondition}
-                                        />
+                            const badges = (Object.values(tabBadges): any).map((badge: BadgeOptions, index: number) => {
+                                if (typeof badge !== 'object') {
+                                    throw new Error(
+                                        'Badges need to be of type object. This should not happen and is likely a bug.'
                                     );
-                                });
-                            }
+                                }
+
+                                return (
+                                    <Badge
+                                        dataPath={badge.dataPath}
+                                        key={index}
+                                        requestParameters={badge.requestParameters}
+                                        routeName={badge.routeName}
+                                        router={router}
+                                        routerAttributesToRequest={badge.routerAttributesToRequest}
+                                        visibleCondition={badge.visibleCondition}
+                                    />
+                                );
+                            });
 
                             return (
                                 <TabsComponent.Tab badges={badges} key={tabRoute.name}>

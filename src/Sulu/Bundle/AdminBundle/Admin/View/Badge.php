@@ -11,66 +11,63 @@
 
 namespace Sulu\Bundle\AdminBundle\Admin\View;
 
+use JMS\Serializer\Annotation as Serializer;
+
 class Badge
 {
     /**
      * @var string
+     *
+     * @Serializer\Expose()
+     * @Serializer\Groups({"fullView"})
      */
     private $routeName;
 
     /**
      * @var string|null
+     *
+     * @Serializer\Expose()
+     * @Serializer\Groups({"fullView"})
      */
     private $dataPath;
 
     /**
      * @var string|null
+     *
+     * @Serializer\Expose()
+     * @Serializer\Groups({"fullView"})
      */
     private $visibleCondition;
 
     /**
      * @var array<string, mixed>
+     *
+     * @Serializer\Expose()
+     * @Serializer\Groups({"fullView"})
      */
-    private $attributesToRequest = [];
+    private $requestParameters = [];
 
     /**
      * @var array<string, mixed>
+     *
+     * @Serializer\Expose()
+     * @Serializer\Groups({"fullView"})
      */
     private $routerAttributesToRequest = [];
 
-    public function __construct(string $routeName, ?string $dataPath = null)
+    public function __construct(string $routeName, ?string $dataPath = null, ?string $visibleCondition = null)
     {
         $this->routeName = $routeName;
         $this->dataPath = $dataPath;
-    }
-
-    public function setRouteName(string $routeName): self
-    {
-        $this->routeName = $routeName;
-
-        return $this;
-    }
-
-    public function setDataPath(?string $dataPath): self
-    {
-        $this->dataPath = $dataPath;
-
-        return $this;
-    }
-
-    public function setVisibleCondition(?string $visibleCondition): self
-    {
         $this->visibleCondition = $visibleCondition;
-
-        return $this;
     }
 
     /**
-     * @param array<string, mixed> $attributesToRequest
+     * @param array<string, mixed> $requestParameters
      */
-    public function addAttributesToRequest(array $attributesToRequest): self
+    public function addRequestParameters(array $requestParameters): self
     {
-        $this->attributesToRequest = \array_merge($this->attributesToRequest, $attributesToRequest);
+        $this->requestParameters = \array_merge($this->requestParameters, $requestParameters);
 
         return $this;
     }
@@ -83,21 +80,5 @@ class Badge
         $this->routerAttributesToRequest = \array_merge($this->routerAttributesToRequest, $routerAttributesToRequest);
 
         return $this;
-    }
-
-    /**
-     * @internal
-     *
-     * @return array<string, mixed>
-     */
-    public function getConfiguration(): array
-    {
-        return [
-            'routeName' => $this->routeName,
-            'dataPath' => $this->dataPath,
-            'visibleCondition' => $this->visibleCondition,
-            'attributesToRequest' => $this->attributesToRequest,
-            'routerAttributesToRequest' => $this->routerAttributesToRequest,
-        ];
     }
 }
