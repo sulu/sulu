@@ -80,27 +80,25 @@ export default class UploadToolbarAction extends AbstractListToolbarAction {
     };
 
     @action handleConfirm = (files: File[]) => {
+        const formData = new FormData();
+
         for (const file of files) {
-            const formData = new FormData();
-            formData.append('redirectRoutes', file);
-
-            fetch(this.url, {
-                method: 'POST',
-                body: formData,
-            })
-                .then((response) => {
-                    if (!response.ok) {
-                        const error = this.errorMapping[response.status] || 'sulu_admin.an_error_occurred';
-                        this.addError(translate(error, {
-                            statusText: response.statusText,
-                        }));
-
-                        return;
-                    }
-
-                    this.listStore.setShouldReload(true);
-                });
+            formData.append('files[]', file);
         }
+
+        fetch(this.url, {method: 'POST', body: formData}).then((response) => {
+            if (!response.ok) {
+                this.addError(
+                    translate(this.errorMapping[response.status] || 'sulu_admin.an_error_occurred', {
+                        statusText: response.statusText,
+                    })
+                );
+
+                return;
+            }
+
+            this.listStore.setShouldReload(true);
+        });
     };
 
     @computed get label(): string {
