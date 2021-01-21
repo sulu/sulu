@@ -191,7 +191,7 @@ class FormatManager implements FormatManagerInterface
             foreach ($extensions as $extension) {
                 $formatUrl = $this->formatCache->getMediaUrl(
                     $id,
-                    $this->replaceExtension($fileName, $extension),
+                    "$fileName.$extension",
                     $format['key'],
                     $version,
                     $subVersion
