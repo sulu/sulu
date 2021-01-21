@@ -89,7 +89,8 @@ interface ListViewBuilderInterface extends ViewBuilderInterface
 
     public function addRequestParameters(array $requestParameters): self;
 
-    public function addTabBadge(Badge $badge): self;
-
-    public function setTabBadge(string $key, Badge $badge): self;
+    /**
+     * @param Badge[] $badges
+     */
+    public function addTabBadges(array $badges): self;
 }

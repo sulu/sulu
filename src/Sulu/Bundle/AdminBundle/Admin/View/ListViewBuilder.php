@@ -206,16 +206,9 @@ class ListViewBuilder implements ListViewBuilderInterface
         return $this;
     }
 
-    public function addTabBadge(Badge $badge): ListViewBuilderInterface
+    public function addTabBadges(array $badges): ListViewBuilderInterface
     {
-        $this->addTabBadgeToView($this->view, $badge);
-
-        return $this;
-    }
-
-    public function setTabBadge(string $key, Badge $badge): ListViewBuilderInterface
-    {
-        $this->setTabBadgeToView($this->view, $key, $badge);
+        $this->addTabBadgesToView($this->view, $badges);
 
         return $this;
     }
