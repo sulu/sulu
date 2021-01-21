@@ -59,7 +59,7 @@ test('Should correctly render node', () => {
         accept: ['text/csv'],
         minSize: 1000,
         maxSize: 9999,
-        maxFiles: 1,
+        multiple: false,
     });
 
     expect(render(uploadToolbarAction.getNode())).toMatchSnapshot();
@@ -134,7 +134,7 @@ test('Should make xhr request on confirm', () => {
 test('Should display errors if dropzone error occurs', () => {
     const uploadToolbarAction = createUploadToolbarAction({
         routeName: 'foo',
-        maxFiles: 2,
+        multiple: true,
         minSize: 3000,
         maxSize: 4000,
     });

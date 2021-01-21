@@ -80,10 +80,17 @@ export default class UploadToolbarAction extends AbstractListToolbarAction {
     };
 
     @action handleConfirm = (files: File[]) => {
+        const {multiple, requestPropertyName} = this;
         const formData = new FormData();
 
         for (const file of files) {
-            formData.append('files[]', file);
+            if (!multiple) {
+                formData.append(requestPropertyName, file);
+
+                break;
+            }
+
+            formData.append(requestPropertyName + '[]', file);
         }
 
         fetch(this.url, {method: 'POST', body: formData}).then((response) => {
@@ -222,24 +229,32 @@ export default class UploadToolbarAction extends AbstractListToolbarAction {
         return maxSize;
     }
 
-    @computed get maxFiles(): ?number {
-        const {maxFiles} = this.options;
+    @computed get multiple(): boolean {
+        const {multiple = false} = this.options;
 
-        if (maxFiles === undefined || maxFiles === null) {
-            return undefined;
+        if (typeof multiple !== 'boolean') {
+            throw new Error('The "multiple" option must be a boolean!');
         }
 
-        if (typeof maxFiles !== 'number') {
-            throw new Error('The "maxFiles" option must be a number!');
-        }
-
-        return maxFiles;
+        return multiple;
     }
 
-    @computed get multiple(): boolean {
-        const {maxFiles} = this;
+    @computed get maxFiles(): ?number {
+        return this.multiple ? undefined : 1;
+    }
 
-        return maxFiles !== 1;
+    @computed get requestPropertyName(): string {
+        const {requestPropertyName} = this.options;
+
+        if (!requestPropertyName) {
+            return this.multiple ? 'files' : 'file';
+        }
+
+        if (typeof requestPropertyName !== 'string') {
+            throw new Error('The "requestPropertyName" option must be a string!');
+        }
+
+        return requestPropertyName;
     }
 
     getToolbarItemConfig() {
