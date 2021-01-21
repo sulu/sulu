@@ -326,8 +326,7 @@ class FormViewBuilderTest extends TestCase
     {
         $fooBadge = new Badge('sulu_foo.get_foo_badge');
         $barBadge = new Badge('sulu_bar.get_bar_badge');
-        $bazBadge = (new Badge('sulu_baz.get_baz_badge', '/total'))
-            ->setVisibleCondition('text != 0')
+        $bazBadge = (new Badge('sulu_baz.get_baz_badge', '/total', 'value != 0'))
             ->addRequestParameters([
                 'limit' => 0,
                 'entityClass' => 'Sulu\Bundle\BazBundle\Entity\Baz',
@@ -340,9 +339,8 @@ class FormViewBuilderTest extends TestCase
         $view = (new FormViewBuilder('sulu_role.list', '/roles'))
             ->setResourceKey('roles')
             ->setFormKey('roles')
-            ->addTabBadge($fooBadge)
-            ->addTabBadge($barBadge, 'abc')
-            ->addTabBadge($bazBadge, 'abc')
+            ->addTabBadges([$fooBadge, 'abc' => $barBadge])
+            ->addTabBadges(['abc' => $bazBadge])
             ->getView();
 
         $this->assertEquals(
