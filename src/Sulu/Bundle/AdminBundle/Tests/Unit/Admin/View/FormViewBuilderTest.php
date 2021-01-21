@@ -345,26 +345,8 @@ class FormViewBuilderTest extends TestCase
 
         $this->assertEquals(
             [
-                [
-                    'routeName' => 'sulu_foo.get_foo_badge',
-                    'dataPath' => null,
-                    'visibleCondition' => null,
-                    'attributesToRequest' => [],
-                    'routerAttributesToRequest' => [],
-                ],
-                'abc' => [
-                    'routeName' => 'sulu_baz.get_baz_badge',
-                    'dataPath' => '/total',
-                    'visibleCondition' => 'text != 0',
-                    'attributesToRequest' => [
-                        'limit' => 0,
-                        'entityClass' => 'Sulu\Bundle\BazBundle\Entity\Baz',
-                    ],
-                    'routerAttributesToRequest' => [
-                        'locale',
-                        'id' => 'entityId',
-                    ],
-                ],
+                $fooBadge,
+                'abc' => $bazBadge,
             ],
             $view->getOption('tabBadges')
         );
