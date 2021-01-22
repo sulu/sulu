@@ -473,6 +473,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals('2', $response['downloadCounter']);
         $this->assertEquals($this->mediaDefaultDescription, $response['description']);
         $this->assertNotEmpty($response['url']);
+        $this->assertNotEmpty($response['adminUrl']);
         $this->assertNotEmpty($response['thumbnails']);
         $this->assertNull($response['previewImageId']);
 
@@ -525,6 +526,24 @@ class MediaControllerTest extends SuluTestCase
 
         $this->assertNotEmpty($response);
         $this->assertEquals(2, $response->total);
+    }
+
+    public function testCgetAdminUrl()
+    {
+        $media = $this->createMedia('photo');
+
+        $this->client->jsonRequest(
+            'GET',
+            '/api/media?locale=en-gb'
+        );
+
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
+
+        $this->assertSame(
+            '/admin/media/' . $media->getId() . '/download/photo.jpeg?v=1',
+            $response['_embedded']['media'][0]['adminUrl']
+        );
     }
 
     public function testCgetWithPreview()
