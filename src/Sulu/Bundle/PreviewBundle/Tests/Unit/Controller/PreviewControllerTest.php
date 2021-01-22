@@ -68,7 +68,7 @@ class PreviewControllerTest extends TestCase
 
         $this->preview->start('test-provider', '123-123-123', 42, [], ['locale' => 'de'])->shouldBeCalled()->willReturn('test-token');
 
-        $response = $this->previewController->startAction($request->reveal());
+        $response = $this->previewController->startAction($request);
         $this->assertEquals(\json_encode(['token' => 'test-token']), $response->getContent());
     }
 
