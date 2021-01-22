@@ -50,7 +50,7 @@ class Select<T> extends React.Component<Props<T>> {
 
     @observable focusedElementIndex: number = -1;
 
-    @observable open: boolean;
+    @observable open: boolean = false;
 
     @computed get buttonTextsByIndex(): Map<number, string> {
         return Array.from(this.buttonRefsByIndex.entries())
@@ -110,6 +110,10 @@ class Select<T> extends React.Component<Props<T>> {
 
     @action closeOptionList = () => {
         const {onClose} = this.props;
+
+        if (!this.open) {
+            return;
+        }
 
         if (onClose) {
             onClose();
