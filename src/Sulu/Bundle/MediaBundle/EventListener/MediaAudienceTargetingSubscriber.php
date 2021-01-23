@@ -12,9 +12,9 @@
 namespace Sulu\Bundle\MediaBundle\EventListener;
 
 use Doctrine\Common\EventSubscriber;
-use Doctrine\Common\Persistence\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
+use Doctrine\Persistence\Event\LoadClassMetadataEventArgs;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 
 /**

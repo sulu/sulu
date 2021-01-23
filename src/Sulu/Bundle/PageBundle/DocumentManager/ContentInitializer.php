@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\PageBundle\DocumentManager;
 
-use Doctrine\Common\Persistence\ConnectionRegistry;
+use Doctrine\Persistence\ConnectionRegistry;
 use PHPCR\WorkspaceInterface;
 use Sulu\Bundle\DocumentManagerBundle\Initializer\InitializerInterface;
 use Sulu\Component\PHPCR\NodeTypes\Base\SuluNodeType;

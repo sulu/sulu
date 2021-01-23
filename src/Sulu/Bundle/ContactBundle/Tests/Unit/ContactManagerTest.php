@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\ContactBundle\Tests\Unit;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\ContactBundle\Contact\ContactManager;
 use Sulu\Bundle\ContactBundle\Entity\AccountRepositoryInterface;
