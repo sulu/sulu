@@ -31,9 +31,10 @@ class MediaCardAdapter extends React.Component<Props> {
         const baseURL = window.location.origin;
         const {thumbnails} = item;
         const imageSizes = [];
+        const adminUrl = item.adminUrl || item.url;
 
         imageSizes.push({
-            url: baseURL + item.adminUrl,
+            url: baseURL + adminUrl,
             label: translate('sulu_media.copy_masterfile_url'),
         });
 
@@ -55,7 +56,7 @@ class MediaCardAdapter extends React.Component<Props> {
             imageSizes,
             onDownload: this.handleDownload,
             downloadCopyText: translate('sulu_media.copy_url'),
-            downloadUrl: baseURL + item.adminUrl,
+            downloadUrl: baseURL + adminUrl,
             downloadText: translate('sulu_media.download_masterfile'),
         };
     }
