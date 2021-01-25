@@ -52,11 +52,11 @@ class PreviewController
     {
         $id = $this->getRequestParameter($request, 'id', true);
         $provider = $this->getRequestParameter($request, 'provider', true);
-        $locale = $this->getRequestParameter($request, 'locale', true, null);
+        $options = $this->getOptionsFromRequest($request);
 
         return new JsonResponse(
             [
-                'token' => $this->preview->start($provider, $id, $this->getUserId()),
+                'token' => $this->preview->start($provider, $id, $this->getUserId(), [], $options),
             ]
         );
     }
@@ -70,7 +70,7 @@ class PreviewController
         $options = $this->getOptionsFromRequest($request);
 
         if (!$this->preview->exists($token)) {
-            $token = $this->preview->start($provider, $id, $this->getUserId(), $options);
+            $token = $this->preview->start($provider, $id, $this->getUserId(), [], $options);
         }
 
         $content = $this->preview->render($token, $options);
@@ -90,7 +90,7 @@ class PreviewController
         $options = $this->getOptionsFromRequest($request);
 
         if (!$this->preview->exists($token)) {
-            $token = $this->preview->start($provider, $id, $this->getUserId(), $options);
+            $token = $this->preview->start($provider, $id, $this->getUserId(), [], $options);
         }
 
         $content = $this->preview->update(
@@ -112,7 +112,7 @@ class PreviewController
         $options = $this->getOptionsFromRequest($request);
 
         if (!$this->preview->exists($token)) {
-            $token = $this->preview->start($provider, $id, $this->getUserId(), $options);
+            $token = $this->preview->start($provider, $id, $this->getUserId(), [], $options);
         }
 
         $content = $this->preview->updateContext(

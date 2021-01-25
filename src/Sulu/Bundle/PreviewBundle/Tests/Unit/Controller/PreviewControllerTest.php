@@ -58,14 +58,17 @@ class PreviewControllerTest extends TestCase
 
     public function testStart()
     {
-        $request = $this->prophesize(Request::class);
-        $request->get('id', null)->willReturn('123-123-123');
-        $request->get('provider', null)->willReturn('test-provider');
-        $request->get('locale', null)->willReturn('de');
+        $request = new Request(
+            [
+                'id' => '123-123-123',
+                'provider' => 'test-provider',
+                'locale' => 'de',
+            ]
+        );
 
-        $this->preview->start('test-provider', '123-123-123', 42)->shouldBeCalled()->willReturn('test-token');
+        $this->preview->start('test-provider', '123-123-123', 42, [], ['locale' => 'de'])->shouldBeCalled()->willReturn('test-token');
 
-        $response = $this->previewController->startAction($request->reveal());
+        $response = $this->previewController->startAction($request);
         $this->assertEquals(\json_encode(['token' => 'test-token']), $response->getContent());
     }
 
@@ -118,6 +121,7 @@ class PreviewControllerTest extends TestCase
             'test-provider',
             '123-123-123',
             42,
+            [],
             ['webspaceKey' => 'sulu_io', 'locale' => 'de', 'segmentKey' => 'w', 'targetGroupId' => 1]
         )->willReturn('test-token');
         $this->preview->render(
