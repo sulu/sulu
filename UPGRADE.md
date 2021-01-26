@@ -4,11 +4,13 @@
 
 ### Doctrine changes for PHP 8 Support
 
-If sulu is upgraded with all dependencies `doctrine/persistence` and `doctrine/dbal` maybe install a new major
-version. In most cases this can be done by replace the `Doctrine/Common/Persistence` namespace in the code base
-with `Doctrine/Persistence`. If you don't want to upgrade the doctrine packages set `doctrine/persistence`
-to `^1.3` and `doctrine/dbal` to `^2.6` in the `composer.json`. Upgrade to the newer version is required
-when you want to use PHP 8.
+To prepare for PHP8 support, the version constraints of the `doctrine/persistence` package and the `doctrine/dbal` package were updated 
+to include a new major version. If you update these packages in your project, you might need to adjust the code of the project to be compatible with 
+the new major version. To do this, it is enough to replace the `Doctrine/Common/Persistence` namespace with `Doctrine/Persistence` in most cases. 
+
+Alternatively, if you want to prevent the upgrade of the packages, you can set the version constraint of the `doctrine/persistence` to `^1.3` 
+and the `doctrine/dbal` package to `^2.6` in the `composer.json` of your project. But keep in mind that this means that your project will 
+use outdated dependencies and will not be compatible with new PHP versions in this case.
 
 ## 2.1.8
 
