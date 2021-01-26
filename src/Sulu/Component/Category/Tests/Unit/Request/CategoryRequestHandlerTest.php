@@ -86,7 +86,7 @@ class CategoryRequestHandlerTest extends TestCase
         $this->assertEquals($url . '?' . $parameter . '=' . \urlencode($expected), $result);
     }
 
-    public function removeProvider()
+    public function removeSingleProvider()
     {
         return [
             ['c', '/test', '1,2,3', '1,2'],
@@ -101,7 +101,7 @@ class CategoryRequestHandlerTest extends TestCase
     }
 
     /**
-     * @dataProvider removeProvider
+     * @dataProvider removeSingleProvider
      */
     public function testRemoveToUrl($parameter, $url, $queryString, $expected)
     {
