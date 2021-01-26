@@ -62,6 +62,8 @@ class CategoryTwigExtension extends AbstractExtension
             new TwigFunction('sulu_categories', [$this, 'getCategoriesFunction']),
             new TwigFunction('sulu_category_url', [$this, 'setCategoryUrlFunction']),
             new TwigFunction('sulu_category_url_append', [$this, 'appendCategoryUrlFunction']),
+            new TwigFunction('sulu_category_url_remove', [$this, 'removeCategoryUrlFunction']),
+            new TwigFunction('sulu_category_url_toggle', [$this, 'toggleCategoryUrlFunction']),
             new TwigFunction('sulu_category_url_clear', [$this, 'clearCategoryUrlFunction']),
         ];
     }
@@ -102,6 +104,32 @@ class CategoryTwigExtension extends AbstractExtension
     public function appendCategoryUrlFunction($category, $categoriesParameter = 'categories')
     {
         return $this->categoryRequestHandler->appendCategoryToUrl($category, $categoriesParameter);
+    }
+
+    /**
+     * Removes given category from current url.
+     *
+     * @param array $category will be removed from the URL
+     * @param string $categoriesParameter GET parameter name
+     *
+     * @return string
+     */
+    public function removeCategoryUrlFunction($category, $categoriesParameter = 'categories')
+    {
+        return $this->categoryRequestHandler->removeCategoryFromUrl($category, $categoriesParameter);
+    }
+
+    /**
+     * Toggles given category in current URL.
+     *
+     * @param array $category will be toggled in the URL
+     * @param string $categoriesParameter GET parameter name
+     *
+     * @return string
+     */
+    public function toggleCategoryUrlFunction($category, $categoriesParameter = 'categories')
+    {
+        return $this->categoryRequestHandler->toggleCategoryInUrl($category, $categoriesParameter);
     }
 
     /**

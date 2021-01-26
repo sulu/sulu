@@ -86,6 +86,78 @@ class CategoryRequestHandlerTest extends TestCase
         $this->assertEquals($url . '?' . $parameter . '=' . \urlencode($expected), $result);
     }
 
+    public function removeProvider()
+    {
+        return [
+            ['c', '/test', '1,2,3', '1,2'],
+            ['c', '/asdf', '1,2', '1,2'],
+            ['c', '/asdf', '3', ''],
+            ['categories', '/asdf', '1,2', '1,2'],
+            ['categories', '/test', '1,3,2', '1,2'],
+            ['categories', '/test', '3,1', '1'],
+            ['categories', '/test', '1,3', '1'],
+            ['categories', '/test', '', ''],
+        ];
+    }
+
+    /**
+     * @dataProvider removeProvider
+     */
+    public function testRemoveToUrl($parameter, $url, $queryString, $expected)
+    {
+        $category = ['id' => 3, 'name' => 'test'];
+
+        $requestStack = $this->prophesize(RequestStack::class);
+        $request = $this->prophesize(Request::class);
+
+        $requestReveal = $request->reveal();
+        $requestReveal->query = new ParameterBag([$parameter => $queryString]);
+        $requestStack->getCurrentRequest()->willReturn($requestReveal);
+        $request->get($parameter, '')->willReturn($queryString);
+        $request->getPathInfo()->willReturn($url);
+
+        $handler = new CategoryRequestHandler($requestStack->reveal());
+        $result = $handler->removeCategoryFromUrl($category, $parameter);
+
+        $this->assertEquals($url . '?' . $parameter . '=' . \urlencode($expected), $result);
+    }
+
+    public function toggleProvider()
+    {
+        return [
+            ['c', '/test', '1,2', '1,2,3'],
+            ['c', '/asdf', '1,3', '1'],
+            ['c', '/asdf', '2,1', '2,1,3'],
+            ['categories', '/asdf', '1,2', '1,2,3'],
+            ['categories', '/test', '3,2', '2'],
+            ['categories', '/test', '1,3', '1'],
+            ['categories', '/test', '3', ''],
+            ['categories', '/test', '', '3'],
+        ];
+    }
+
+    /**
+     * @dataProvider toggleProvider
+     */
+    public function testToggleToUrl($parameter, $url, $queryString, $expected)
+    {
+        $category = ['id' => 3, 'name' => 'test'];
+
+        $requestStack = $this->prophesize(RequestStack::class);
+        $request = $this->prophesize(Request::class);
+
+        $requestReveal = $request->reveal();
+        $requestReveal->query = new ParameterBag([$parameter => $queryString]);
+        $requestStack->getCurrentRequest()->willReturn($requestReveal);
+        $request->get($parameter, '')->willReturn($queryString);
+        $request->getPathInfo()->willReturn($url);
+
+        $handler = new CategoryRequestHandler($requestStack->reveal());
+        $result = $handler->toggleCategoryInUrl($category, $parameter);
+
+        $this->assertEquals($url . '?' . $parameter . '=' . \urlencode($expected), $result);
+    }
+
     public function setProvider()
     {
         return [
