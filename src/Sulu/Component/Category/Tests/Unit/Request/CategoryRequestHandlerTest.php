@@ -103,7 +103,7 @@ class CategoryRequestHandlerTest extends TestCase
     /**
      * @dataProvider removeSingleProvider
      */
-    public function testRemoveToUrl($parameter, $url, $queryString, $expected)
+    public function testRemoveSingleFromUrl($parameter, $url, $queryString, $expected)
     {
         $category = ['id' => 3, 'name' => 'test'];
 
