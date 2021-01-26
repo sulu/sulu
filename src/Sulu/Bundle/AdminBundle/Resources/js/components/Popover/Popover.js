@@ -73,8 +73,10 @@ class Popover extends React.Component<Props> {
     }
 
     close = () => {
-        if (this.props.onClose) {
-            this.props.onClose();
+        const {open, onClose} = this.props;
+
+        if (open && onClose) {
+            onClose();
         }
     };
 
