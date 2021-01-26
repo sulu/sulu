@@ -101,7 +101,7 @@ test('The popover should request to be closed when the backdrop is clicked', () 
     expect(onCloseSpy).toBeCalled();
 });
 
-test('The popover should not request to be closed if it\' already closed', () => {
+test('The popover should not request to be closed if it is already closed', () => {
     const onCloseSpy = jest.fn();
     const popover = shallow(
         <Popover
