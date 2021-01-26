@@ -1,5 +1,15 @@
 # Upgrade
 
+## 2.1.x
+
+### Doctrine changes for PHP 8 Support
+
+If sulu is upgraded with all dependencies `doctrine/persistence` and `doctrine/dbal` maybe install a new major
+version. In most cases this can be done by replace the `Doctrine/Common/Persistence` namespace in the code base
+with `Doctrine/Persistence`. If you don't want to upgrade the doctrine packages set `doctrine/persistence`
+to `^1.3` and `doctrine/dbal` to `^2.6` in the `composer.json`. Upgrade to the newer version is required
+when you want to use PHP 8.
+
 ## 2.1.8
 
 ### Increased maximum length of contact position name
