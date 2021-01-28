@@ -408,7 +408,11 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
         $definition = $container->getDefinition('sulu_media.file_validator');
         $definition->addMethodCall('setMaxFileSize', [$config['upload']['max_filesize'] . 'MB']);
 
-        $blockedFileTypes = $config['format_manager']['blocked_file_types'];
+        $blockedFileTypes = $config['upload']['blocked_file_types'];
+        if (0 === \count($blockedFileTypes)) {
+            $blockedFileTypes = $config['format_manager']['blocked_file_types'];
+        }
+
         $definition->addMethodCall('setBlockedMimeTypes', [$blockedFileTypes]);
     }
 }
