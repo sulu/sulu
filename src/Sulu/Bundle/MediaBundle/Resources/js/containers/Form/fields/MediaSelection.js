@@ -1,9 +1,10 @@
 // @flow
 import React from 'react';
 import {observer} from 'mobx-react';
+import log from 'loglevel';
 import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 import userStore from 'sulu-admin-bundle/stores/userStore';
-import {isArrayLike, observable} from 'mobx';
+import {computed, isArrayLike, observable} from 'mobx';
 import {
     convertDisplayOptionsFromParams,
     convertMediaTypesFromParams,
@@ -18,20 +19,13 @@ class MediaSelection extends React.Component<FieldTypeProps<Value>> {
     constructor(props: FieldTypeProps<Value>) {
         super(props);
 
-        const {onChange, schemaOptions, value} = this.props;
+        const {onChange, schemaOptions} = this.props;
 
         const {
             defaultDisplayOption: {
                 value: defaultDisplayOption,
             } = {},
         } = schemaOptions;
-
-        if (value !== undefined && value !== null && (typeof value !== 'object' || !isArrayLike(value.ids))) {
-            throw new Error(
-                'The "MediaSelection" field expects an object with an "ids" property and '
-                + 'an optional "displayOption" property as value.'
-            );
-        }
 
         if (!defaultDisplayOption) {
             return;
@@ -44,9 +38,36 @@ class MediaSelection extends React.Component<FieldTypeProps<Value>> {
             );
         }
 
-        if (value === undefined) {
+        if (!this.value === undefined) {
             onChange({ids: [], displayOption: defaultDisplayOption});
         }
+    }
+
+    @computed get value(): ?Value {
+        let {value} = this.props;
+
+        if (value && isArrayLike(value)) {
+            log.warn(
+                'The "MediaSelection" field expects an object with an "ids" property as value but received '
+                + 'an array instead. Is it possible that your API returns an array of ids or an array serialized '
+                + 'objects?'
+                + '\n\nThe Sulu form view expects that your API returns the data in the same format as it is sent '
+                + 'to the server when submitting the form. '
+                + '\nSulu will try to extract the required data from the given array heuristically. '
+                + 'This decreases performance and might lead to errors or other unexpected behaviour.'
+            );
+
+            value = {ids: value.map((item) => item && typeof item === 'object' ? item.id : item)};
+        }
+
+        if (value && (typeof value !== 'object' || !isArrayLike(value.ids))) {
+            throw new Error(
+                'The "MediaSelection" field expects an object with an "ids" property and '
+                + 'an optional "displayOption" property as value.'
+            );
+        }
+
+        return value;
     }
 
     handleChange = (value: Value) => {
@@ -69,7 +90,7 @@ class MediaSelection extends React.Component<FieldTypeProps<Value>> {
     };
 
     render() {
-        const {disabled, formInspector, schemaOptions, value} = this.props;
+        const {disabled, formInspector, schemaOptions} = this.props;
         const {
             displayOptions: {
                 value: displayOptions,
@@ -101,7 +122,7 @@ class MediaSelection extends React.Component<FieldTypeProps<Value>> {
                 onChange={this.handleChange}
                 onItemClick={this.handleItemClick}
                 types={mediaTypeValues}
-                value={value ? value : undefined}
+                value={this.value ? this.value : undefined}
             />
         );
     }
