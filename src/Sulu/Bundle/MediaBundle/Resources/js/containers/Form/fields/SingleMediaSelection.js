@@ -43,12 +43,15 @@ class SingleMediaSelection extends React.Component<FieldTypeProps<Value>> {
     }
 
     @computed get value(): ?Value {
-        const {value} = this.props;
+        const {value, dataPath} = this.props;
 
         if (value && typeof value !== 'object') {
             throw new Error(
-                'The "SingleMediaSelection" field expects an object with an "id" property and '
-                + 'an optional "displayOption" property as value.'
+                'The "SingleMediaSelection" field with the path "' + dataPath + '" expects an object with an "id" '
+                + 'property and an optional "displayOption" property as value. Is it possible that your API returns '
+                + 'something else?'
+                + '\n\nThe Sulu form view expects that your API returns the data in the same format as it is sent '
+                + 'to the server when submitting the form.'
             );
         }
 

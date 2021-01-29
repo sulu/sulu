@@ -3,6 +3,7 @@ import React from 'react';
 import {computed, observable} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import jsonpointer from 'json-pointer';
+import log from 'loglevel';
 import type {FieldTypeProps} from '../../../types';
 import ResourceSingleSelect from '../../../containers/ResourceSingleSelect';
 import SingleAutoComplete from '../../../containers/SingleAutoComplete';
@@ -10,7 +11,8 @@ import SingleSelectionContainer from '../../../containers/SingleSelection';
 import userStore from '../../../stores/userStore';
 import {translate} from '../../../utils/Translator';
 
-type Props = FieldTypeProps<?Object | string | number>;
+type Value = Object | string | number;
+type Props = FieldTypeProps<Value>;
 
 export default class SingleSelection extends React.Component<Props>
 {
@@ -25,12 +27,43 @@ export default class SingleSelection extends React.Component<Props>
         }
     }
 
-    handleChange = (value: ?Object | string | number) => {
+    handleChange = (value: ?Value) => {
         const {onChange, onFinish} = this.props;
 
         onChange(value);
         onFinish();
     };
+
+    @computed get value(): ?Value {
+        const {value, dataPath} = this.props;
+
+        if (this.type === 'auto_complete') {
+            // TODO: implement support for id value in auto_complete type
+            if (value && typeof value !== 'object') {
+                throw new Error(
+                    'The "SingleSelection" field of the "auto_complete" type with the path "' + dataPath + '" expects '
+                    + 'a serialized object as value. Is it possible that your API returns something else?'
+                    + '\n\nThe Sulu form view expects that your API returns the data in the same format as it is sent '
+                    + 'to the server when submitting the form.'
+                );
+            }
+        } else {
+            if (value && typeof value === 'object') {
+                log.warn(
+                    'The "SingleSelection" field with the path "' + dataPath + '" expects an id as value but '
+                    + 'received an object instead. Is it possible that your API returns a serialized object?'
+                    + '\n\nThe Sulu form view expects that your API returns the data in the same format as it is sent '
+                    + 'to the server when submitting the form. '
+                    + '\nSulu will try to extract the id from the given object heuristically. '
+                    + 'This decreases performance and might lead to errors or other unexpected behaviour.'
+                );
+
+                return value.id;
+            }
+        }
+
+        return value;
+    }
 
     @computed get type() {
         const defaultType = this.props.fieldTypeOptions.default_type;
@@ -152,15 +185,7 @@ export default class SingleSelection extends React.Component<Props>
                     value: requestParameters = [],
                 } = {},
             } = {},
-            value,
         } = this.props;
-
-        if (value !== null && typeof value === 'object') {
-            // TODO implement object value support for overlay type
-            throw new Error(
-                'The "list_overlay" type of the SingleSelection field type supports only an ID value until now.'
-            );
-        }
 
         if (types !== undefined && typeof types !== 'string') {
             throw new Error('The "types" schema option must be a string if given!');
@@ -231,7 +256,7 @@ export default class SingleSelection extends React.Component<Props>
                 onItemClick={this.viewName && this.resultToView && this.handleItemClick}
                 overlayTitle={translate(overlayTitle)}
                 resourceKey={resourceKey}
-                value={value}
+                value={this.value}
             />
         );
     }
@@ -254,15 +279,7 @@ export default class SingleSelection extends React.Component<Props>
                     value: editable,
                 } = {},
             } = {},
-            value,
         } = this.props;
-
-        if (typeof value === 'object') {
-            // TODO implement object value support for single_select type
-            throw new Error(
-                'The "single_select" type of the SingleSelection field type supports only an ID value until now.'
-            );
-        }
 
         if (typeof displayProperty !== 'string') {
             throw new Error('The "display_property" field-type option must be a string!');
@@ -281,7 +298,7 @@ export default class SingleSelection extends React.Component<Props>
                 onChange={this.handleChange}
                 overlayTitle={translate(overlayTitle)}
                 resourceKey={resourceKey}
-                value={value}
+                value={this.value}
             />
         );
     }
@@ -297,15 +314,7 @@ export default class SingleSelection extends React.Component<Props>
                     value: dataPathToAutoComplete = [],
                 } = {},
             },
-            value,
         } = this.props;
-
-        if (typeof value === 'string' || typeof value === 'number') {
-            // TODO implement id value support for auto_complete type
-            throw new Error(
-                'The "auto_complete" type of the SingleSelection field type supports only an object value until now.'
-            );
-        }
 
         if (!fieldTypeOptions.types.auto_complete) {
             throw new Error(
@@ -350,7 +359,7 @@ export default class SingleSelection extends React.Component<Props>
                 options={options}
                 resourceKey={resourceKey}
                 searchProperties={searchProperties}
-                value={value}
+                value={this.value}
             />
         );
     }

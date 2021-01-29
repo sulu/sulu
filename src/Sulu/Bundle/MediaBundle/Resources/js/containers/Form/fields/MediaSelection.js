@@ -38,26 +38,27 @@ class MediaSelection extends React.Component<FieldTypeProps<Value>> {
             );
         }
 
-        if (!this.value === undefined) {
+        if (this.value === undefined) {
             onChange({ids: [], displayOption: defaultDisplayOption});
         }
     }
 
     @computed get value(): ?Value {
-        let {value} = this.props;
+        const {value, dataPath} = this.props;
 
         if (value && isArrayLike(value)) {
             log.warn(
-                'The "MediaSelection" field expects an object with an "ids" property as value but received '
-                + 'an array instead. Is it possible that your API returns an array of ids or an array serialized '
-                + 'objects?'
+                'The "MediaSelection" field with the path "' + dataPath + '" expects an object with an "ids" '
+                + 'property as value but received an array instead. Is it possible that your API returns an array of '
+                + 'ids or an array serialized objects?'
                 + '\n\nThe Sulu form view expects that your API returns the data in the same format as it is sent '
                 + 'to the server when submitting the form. '
                 + '\nSulu will try to extract the required data from the given array heuristically. '
                 + 'This decreases performance and might lead to errors or other unexpected behaviour.'
             );
 
-            value = {ids: value.map((item) => item && typeof item === 'object' ? item.id : item)};
+            // $FlowFixMe: flow does recognize that isArrayLike(value) means that value is an array
+            return {ids: value.map((item) => item && typeof item === 'object' ? item.id : item)};
         }
 
         if (value && (typeof value !== 'object' || !isArrayLike(value.ids))) {
