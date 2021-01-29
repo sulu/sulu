@@ -171,6 +171,20 @@ class ListViewBuilder implements ListViewBuilderInterface
         return $this;
     }
 
+    public function enablePagination(): ListViewBuilderInterface
+    {
+        $this->setPaginationToView($this->view, true);
+
+        return $this;
+    }
+
+    public function disablePagination(): ListViewBuilderInterface
+    {
+        $this->setPaginationToView($this->view, false);
+
+        return $this;
+    }
+
     public function addRouterAttributesToListRequest(array $routerAttributesToListRequest): ListViewBuilderInterface
     {
         $this->addRouterAttributesToListRequestToView($this->view, $routerAttributesToListRequest);

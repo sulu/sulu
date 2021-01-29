@@ -6,15 +6,22 @@ import Table from '../../../components/Table';
 import Loader from '../../../components/Loader';
 import TreeStructureStrategy from '../structureStrategies/TreeStructureStrategy';
 import FullLoadingStrategy from '../loadingStrategies/FullLoadingStrategy';
+import Pagination from '../../../components/Pagination';
+import PaginatedLoadingStrategy from '../loadingStrategies/PaginatedLoadingStrategy';
+import type {LoadingStrategyInterface} from '../types';
 import AbstractTableAdapter from './AbstractTableAdapter';
 
 @observer
 class TreeTableAdapter extends AbstractTableAdapter {
-    static LoadingStrategy = FullLoadingStrategy;
-
     static StructureStrategy = TreeStructureStrategy;
 
+    static paginatable = true;
+
     static icon = 'su-tree-list';
+
+    static getLoadingStrategy(options: Object = {}): Class<LoadingStrategyInterface> {
+        return this.paginatable && options.pagination ? PaginatedLoadingStrategy : FullLoadingStrategy;
+    }
 
     @action handleRowCollapse = (rowId: string | number) => {
         this.props.onItemDeactivate(rowId);
@@ -98,23 +105,39 @@ class TreeTableAdapter extends AbstractTableAdapter {
         return rows;
     }
 
+    handleOnPageChange = (page: number) => {
+        const {
+            onPageChange,
+            onItemActivate,
+        } = this.props;
+
+        onItemActivate(undefined);
+
+        onPageChange(page);
+    };
+
     render() {
         const {
             active,
             data,
+            limit,
             loading,
             onAllSelectionChange,
             onItemSelectionChange,
+            onLimitChange,
             options: {
                 showHeader = true,
             },
+            page,
+            pageCount,
+            pagination,
         } = this.props;
 
         if (!active && loading) {
             return <Loader />;
         }
 
-        return (
+        const table = (
             <Table
                 buttons={this.getButtons()}
                 onAllSelectionChange={onAllSelectionChange}
@@ -133,6 +156,23 @@ class TreeTableAdapter extends AbstractTableAdapter {
                     {this.renderRows(data)}
                 </Table.Body>
             </Table>
+        );
+
+        if (!pagination || pageCount === undefined || (page === 1 && data.length === 0)) {
+            return table;
+        }
+
+        return (
+            <Pagination
+                currentLimit={limit}
+                currentPage={page}
+                loading={loading}
+                onLimitChange={onLimitChange}
+                onPageChange={this.handleOnPageChange}
+                totalPages={pageCount}
+            >
+                {table}
+            </Pagination>
         );
     }
 }

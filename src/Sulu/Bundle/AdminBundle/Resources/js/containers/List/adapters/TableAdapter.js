@@ -6,15 +6,21 @@ import Pagination from '../../../components/Pagination';
 import Table from '../../../components/Table';
 import PaginatedLoadingStrategy from '../loadingStrategies/PaginatedLoadingStrategy';
 import FlatStructureStrategy from '../structureStrategies/FlatStructureStrategy';
+import type {LoadingStrategyInterface} from '../types';
+import FullLoadingStrategy from '../loadingStrategies/FullLoadingStrategy';
 import AbstractTableAdapter from './AbstractTableAdapter';
 
 @observer
 class TableAdapter extends AbstractTableAdapter {
-    static LoadingStrategy = PaginatedLoadingStrategy;
-
     static StructureStrategy = FlatStructureStrategy;
 
+    static paginatable = true;
+
     static icon = 'su-align-justify';
+
+    static getLoadingStrategy(options: Object = {}): Class<LoadingStrategyInterface> {
+        return this.paginatable && options.pagination ? PaginatedLoadingStrategy : FullLoadingStrategy;
+    }
 
     getButtons = (item: ?Object) => {
         const {

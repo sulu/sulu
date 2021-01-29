@@ -361,6 +361,7 @@ class List extends React.Component<Props> {
                         itemDisabledCondition,
                         searchable,
                         selectable,
+                        pagination,
                         title: routeTitle,
                     },
                 },
@@ -379,6 +380,7 @@ class List extends React.Component<Props> {
                     itemDisabledCondition={itemDisabledCondition}
                     onItemAdd={onItemAdd || addView ? this.addItem : undefined}
                     onItemClick={onItemClick || editView ? this.handleItemClick : undefined}
+                    pagination={pagination}
                     ref={this.setListRef}
                     searchable={searchable}
                     selectable={selectable}

@@ -6,19 +6,25 @@ import Pagination from '../../../components/Pagination';
 import {translate} from '../../../utils/Translator';
 import PaginatedLoadingStrategy from '../loadingStrategies/PaginatedLoadingStrategy';
 import FlatStructureStrategy from '../structureStrategies/FlatStructureStrategy';
+import type {LoadingStrategyInterface} from '../types';
+import FullLoadingStrategy from '../loadingStrategies/FullLoadingStrategy';
 import AbstractAdapter from './AbstractAdapter';
 
 @observer
 class FolderAdapter extends AbstractAdapter {
-    static LoadingStrategy = PaginatedLoadingStrategy;
-
     static StructureStrategy = FlatStructureStrategy;
+
+    static paginatable = true;
 
     static icon = 'su-folder';
 
     static defaultProps = {
         data: [],
     };
+
+    static getLoadingStrategy(options: Object = {}): Class<LoadingStrategyInterface> {
+        return this.paginatable && options.pagination ? PaginatedLoadingStrategy : FullLoadingStrategy;
+    }
 
     static getInfoText(item: Object) {
         const label = (item.objectCount === 1)

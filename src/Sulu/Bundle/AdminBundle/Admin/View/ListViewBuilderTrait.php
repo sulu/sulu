@@ -67,6 +67,11 @@ trait ListViewBuilderTrait
         $route->setOption('selectable', $selectable);
     }
 
+    private function setPaginationToView(View $route, bool $pagination): void
+    {
+        $route->setOption('pagination', $pagination);
+    }
+
     private function addRouterAttributesToListRequestToView(View $route, array $routerAttributesToListRequest): void
     {
         $oldRouterAttributesToListRequest = $route->getOption('routerAttributesToListRequest');

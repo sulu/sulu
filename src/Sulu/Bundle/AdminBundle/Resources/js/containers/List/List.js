@@ -48,6 +48,7 @@ type Props = {|
     onItemAdd?: (id: ?string | number) => void,
     onItemClick?: (itemId: string | number) => void,
     orderable: boolean,
+    pagination: boolean,
     searchable: boolean,
     selectable: boolean,
     showColumnOptions: boolean,
@@ -68,6 +69,7 @@ class List extends React.Component<Props> {
         disabledIds: [],
         movable: true,
         orderable: true,
+        pagination: true,
         searchable: true,
         selectable: true,
         showColumnOptions: true,
@@ -176,8 +178,10 @@ class List extends React.Component<Props> {
     @action setCurrentAdapterKey = (adapter: string) => {
         this.currentAdapterKey = adapter;
 
-        if (!(this.props.store.loadingStrategy instanceof this.currentAdapter.LoadingStrategy)) {
-            this.props.store.updateLoadingStrategy(new this.currentAdapter.LoadingStrategy());
+        const options = {pagination: this.props.pagination};
+        const loadingStrategy = this.currentAdapter.getLoadingStrategy(options);
+        if (!(this.props.store.loadingStrategy instanceof loadingStrategy)) {
+            this.props.store.updateLoadingStrategy(new loadingStrategy());
         }
 
         if (!(this.props.store.structureStrategy instanceof this.currentAdapter.StructureStrategy)) {
@@ -485,6 +489,7 @@ class List extends React.Component<Props> {
             movable,
             onItemClick,
             onItemAdd,
+            pagination,
             orderable,
             selectable,
             store,
@@ -597,6 +602,7 @@ class List extends React.Component<Props> {
                             options={this.currentAdapterOptions}
                             page={store.getPage()}
                             pageCount={store.pageCount}
+                            pagination={pagination}
                             schema={store.userSchema}
                             selections={store.selectionIds}
                             sortColumn={store.sortColumn.get()}
