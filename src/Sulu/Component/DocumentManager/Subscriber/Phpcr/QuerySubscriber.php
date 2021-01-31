@@ -19,8 +19,8 @@ use Sulu\Component\DocumentManager\Event\QueryCreateEvent;
 use Sulu\Component\DocumentManager\Event\QueryExecuteEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\Query\Query;
+use Sulu\Component\DocumentManager\Subscriber\EventSubscriberInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Handles creation of query and query builder objects.

@@ -19,7 +19,7 @@ use Sulu\Component\DocumentManager\Event\MoveEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\NodeHelperInterface;
 use Sulu\Component\DocumentManager\NodeManager;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Sulu\Component\DocumentManager\Subscriber\EventSubscriberInterface;
 
 /**
  * This class aggregates some basic repository operations.

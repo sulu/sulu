@@ -15,7 +15,7 @@ use PHPCR\Util\UUIDHelper;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Sulu\Component\DocumentManager\Subscriber\EventSubscriberInterface;
 
 class MixinSubscriber implements EventSubscriberInterface
 {

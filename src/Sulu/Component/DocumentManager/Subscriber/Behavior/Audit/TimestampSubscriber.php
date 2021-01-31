@@ -22,7 +22,7 @@ use Sulu\Component\DocumentManager\Event\PublishEvent;
 use Sulu\Component\DocumentManager\Event\RestoreEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\PropertyEncoder;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Sulu\Component\DocumentManager\Subscriber\EventSubscriberInterface;
 
 /**
  * Manage the timestamp (created, changed) fields on documents before they are persisted.

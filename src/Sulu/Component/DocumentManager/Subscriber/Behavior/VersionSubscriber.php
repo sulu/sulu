@@ -25,8 +25,8 @@ use Sulu\Component\DocumentManager\Event\RestoreEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\Exception\VersionNotFoundException;
 use Sulu\Component\DocumentManager\PropertyEncoder;
+use Sulu\Component\DocumentManager\Subscriber\EventSubscriberInterface;
 use Sulu\Component\DocumentManager\Version;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * This subscriber is responsible for creating versions of a document.
