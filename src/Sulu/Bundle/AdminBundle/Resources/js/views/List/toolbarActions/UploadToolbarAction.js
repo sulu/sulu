@@ -104,7 +104,7 @@ export default class UploadToolbarAction extends AbstractListToolbarAction {
                 return;
             }
 
-            this.listStore.setShouldReload(true);
+            this.listStore.reload();
         });
     };
 
@@ -173,7 +173,7 @@ export default class UploadToolbarAction extends AbstractListToolbarAction {
                 const requestAttributeKey = routerAttributesToRequest[routerAttributeKey];
 
                 if (typeof requestAttributeKey !== 'string') {
-                    throw new Error('The values "routerAttributesToRequest" must be strings!');
+                    throw new Error('The "routerAttributesToRequest" option must contain strings!');
                 }
 
                 const attributeName = isNaN(routerAttributeKey)
@@ -182,9 +182,8 @@ export default class UploadToolbarAction extends AbstractListToolbarAction {
 
                 requestParameters[requestAttributeKey] = routerAttributes[attributeName];
             });
-        requestParameters = {...requestParameters, ...attributesToRequest};
 
-        return requestParameters;
+        return {...requestParameters, ...attributesToRequest};
     }
 
     @computed get accept(): ?$ReadOnlyArray<any> {
