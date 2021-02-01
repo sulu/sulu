@@ -53,7 +53,7 @@ test('Should correctly render node', () => {
             '0': 'locale',
             'locale': 'locale2',
         },
-        errorMapping: {
+        errorCodeMapping: {
             '400': 'sulu_admin.bad_request',
         },
         accept: ['text/csv'],
@@ -203,7 +203,7 @@ test('Should display errors if dropzone error occurs', () => {
         'sulu_admin.dropzone_error_file-invalid-type',
         'sulu_admin.dropzone_error_file-too-large',
         'sulu_admin.dropzone_error_file-too-small',
-        'sulu_admin.an_error_occurred',
+        'sulu_admin.unexpected_upload_error',
         'sulu_admin.dropzone_error_too-many-files',
     ]);
 
@@ -211,7 +211,7 @@ test('Should display errors if dropzone error occurs', () => {
         'sulu_admin.dropzone_error_file-invalid-type',
         'sulu_admin.dropzone_error_file-too-large',
         'sulu_admin.dropzone_error_file-too-small',
-        'sulu_admin.an_error_occurred',
+        'sulu_admin.unexpected_upload_error',
         'sulu_admin.dropzone_error_too-many-files',
     ]);
 
@@ -254,11 +254,11 @@ test('Should display error if server error occurs', () => {
 
     return promise.then(() => {
         expect(uploadToolbarAction.errors).toEqual([
-            'sulu_admin.an_error_occurred',
+            'sulu_admin.unexpected_upload_error',
         ]);
 
         expect(uploadToolbarAction.list.errors).toEqual([
-            'sulu_admin.an_error_occurred',
+            'sulu_admin.unexpected_upload_error',
         ]);
 
         uploadToolbarAction.setDropzoneRef({open: jest.fn()});
@@ -285,7 +285,7 @@ test('Should display custom error if server error occurs', () => {
 
     const uploadToolbarAction = createUploadToolbarAction({
         routeName: 'foo',
-        errorMapping: {
+        errorCodeMapping: {
             '400': 'sulu_admin.bad_request',
         },
     });

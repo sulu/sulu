@@ -162,7 +162,7 @@
     "sulu_admin.missing_type_dialog_title": "Neues Template auswählen",
     "sulu_admin.missing_type_dialog_description": "Das Template der kopierten Seite steht in diesem Webspace nicht zur Verfügung.",
     "sulu_admin.upload": "Hochladen",
-    "sulu_admin.an_error_occurred": "Ein Fehler ist aufgetreten",
+    "sulu_admin.unexpected_upload_error": "Unerwarteter Fehler beim Hochladen {fileName, select, undefined{einer Datei} other{von {fileName}}} auf den Server.",
     "sulu_admin.dropzone_error_file-invalid-type": "Dateityp{fileName, select, undefined{} other{ von {fileName}}} ist nicht erlaubt{allowedTypes, select, undefined{} other{. Erlaubt sind ({allowedTypes})}}",
     "sulu_admin.dropzone_error_file-too-large": "{fileName, select, undefined{Datei} other{{fileName}}} ist {maxSize, select, undefined{zu groß} other{größer als {maxSize}}}",
     "sulu_admin.dropzone_error_file-too-small": "{fileName, select, undefined{Datei} other{{fileName}}} ist {minSize, select, undefined{zu klein} other{kleiner als {minSize}}}",

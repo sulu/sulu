@@ -3,7 +3,7 @@ import React from 'react';
 import {action, computed, observable} from 'mobx';
 import Dropzone, {DropzoneRef, FileRejection} from 'react-dropzone';
 import symfonyRouting from 'fos-jsrouting/router';
-import {translate} from '../../../utils/Translator';
+import {translate, transformBytesToReadableString} from '../../../utils';
 import AbstractListToolbarAction from './AbstractListToolbarAction';
 
 export default class UploadToolbarAction extends AbstractListToolbarAction {
@@ -55,13 +55,13 @@ export default class UploadToolbarAction extends AbstractListToolbarAction {
                     case 'file-too-large':
                         error = translate('sulu_admin.dropzone_error_file-too-large', {
                             fileName: fileRejection.file.name,
-                            maxSize: this.maxSize ? this.getReadableFileSizeString(this.maxSize) : undefined,
+                            maxSize: this.maxSize ? transformBytesToReadableString(this.maxSize) : undefined,
                         });
                         break;
                     case 'file-too-small':
                         error = translate('sulu_admin.dropzone_error_file-too-small', {
                             fileName: fileRejection.file.name,
-                            minSize: this.minSize ? this.getReadableFileSizeString(this.minSize) : undefined,
+                            minSize: this.minSize ? transformBytesToReadableString(this.minSize) : undefined,
                         });
                         break;
                     case 'too-many-files':
@@ -71,7 +71,9 @@ export default class UploadToolbarAction extends AbstractListToolbarAction {
                         });
                         break;
                     default:
-                        error = translate('sulu_admin.an_error_occurred');
+                        error = translate('sulu_admin.unexpected_upload_error', {
+                            fileName: fileRejection.file.name,
+                        });
                 }
 
                 this.addError(error);
@@ -96,7 +98,7 @@ export default class UploadToolbarAction extends AbstractListToolbarAction {
         fetch(this.url, {method: 'POST', body: formData}).then((response) => {
             if (!response.ok) {
                 this.addError(
-                    translate(this.errorMapping[response.status] || 'sulu_admin.an_error_occurred', {
+                    translate(this.errorCodeMapping[response.status] || 'sulu_admin.unexpected_upload_error', {
                         statusText: response.statusText,
                     })
                 );
@@ -138,14 +140,14 @@ export default class UploadToolbarAction extends AbstractListToolbarAction {
         return symfonyRouting.generate(routeName, this.requestParameters);
     }
 
-    @computed get errorMapping(): $ReadOnly<Object> {
-        const {errorMapping = {}} = this.options;
+    @computed get errorCodeMapping(): $ReadOnly<Object> {
+        const {errorCodeMapping = {}} = this.options;
 
-        if (typeof errorMapping !== 'object') {
-            throw new Error('The "errorMapping" option must be an object!');
+        if (typeof errorCodeMapping !== 'object') {
+            throw new Error('The "errorCodeMapping" option must be an object!');
         }
 
-        return errorMapping;
+        return errorCodeMapping;
     }
 
     @computed get requestParameters(): $ReadOnly<Object> {
@@ -167,7 +169,7 @@ export default class UploadToolbarAction extends AbstractListToolbarAction {
             throw new Error('The "routerAttributesToRequest" option must be an object!');
         }
 
-        let requestParameters = {};
+        const requestParameters = {};
         Object.keys(routerAttributesToRequest)
             .forEach((routerAttributeKey) => {
                 const requestAttributeKey = routerAttributesToRequest[routerAttributeKey];
@@ -291,16 +293,4 @@ export default class UploadToolbarAction extends AbstractListToolbarAction {
             </Dropzone>
         );
     }
-
-    // Method copied from https://stackoverflow.com/q/10420352/7733374
-    getReadableFileSizeString = (fileSizeInBytes: number): string => {
-        var i = -1;
-        var byteUnits = [' kB', ' MB', ' GB', ' TB', ' PB', ' EB', ' ZB', ' YB'];
-        do {
-            fileSizeInBytes = fileSizeInBytes / 1024;
-            i++;
-        } while (fileSizeInBytes > 1024);
-
-        return Math.max(fileSizeInBytes, 0.1).toFixed(1) + byteUnits[i];
-    };
 }
