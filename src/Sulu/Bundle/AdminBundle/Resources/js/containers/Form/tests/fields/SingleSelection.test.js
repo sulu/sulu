@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import log from 'loglevel';
 import {mount, shallow} from 'enzyme';
 import {observable} from 'mobx';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
@@ -11,6 +12,10 @@ import FormInspector from '../../FormInspector';
 import ResourceFormStore from '../../stores/ResourceFormStore';
 import SingleSelection from '../../fields/SingleSelection';
 import SingleSelectionComponent from '../../../../containers/SingleSelection';
+
+jest.mock('loglevel', () => ({
+    warn: jest.fn(),
+}));
 
 jest.mock('../../../../containers/SingleListOverlay', () => jest.fn(() => null));
 
@@ -182,37 +187,6 @@ test('Pass correct props with schema-options type to SingleAutoComplete', () => 
     }));
 });
 
-test('Pass null as value to SingleSelection for list_overlay', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
-    const value = null;
-
-    const fieldTypeOptions = {
-        default_type: 'list_overlay',
-        resource_key: 'accounts',
-        types: {
-            list_overlay: {
-                adapter: 'table',
-                display_properties: ['name'],
-                empty_text: 'sulu_contact.nothing',
-                icon: 'su-account',
-                overlay_title: 'sulu_contact.overlay_title',
-            },
-        },
-    };
-
-    const singleSelection = shallow(
-        <SingleSelection
-            {...fieldTypeDefaultProps}
-            disabled={true}
-            fieldTypeOptions={fieldTypeOptions}
-            formInspector={formInspector}
-            value={null}
-        />
-    );
-
-    expect(singleSelection.find('SingleSelection').prop('value')).toEqual(expect.objectContaining(value));
-});
-
 test('Call onChange and onFinish when SingleAutoComplete changes', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const changeSpy = jest.fn();
@@ -248,6 +222,32 @@ test('Call onChange and onFinish when SingleAutoComplete changes', () => {
 
     expect(changeSpy).toBeCalledWith(undefined);
     expect(finishSpy).toBeCalledWith();
+});
+
+test('Throw an error if id instead of object is passed to the auto_complete type', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+
+    const fieldTypeOptions = {
+        default_type: 'auto_complete',
+        resource_key: 'accounts',
+        types: {
+            auto_complete: {
+                display_property: 'name',
+                search_properties: ['name', 'number'],
+            },
+        },
+    };
+
+    expect(
+        () => shallow(
+            <SingleSelection
+                {...fieldTypeDefaultProps}
+                fieldTypeOptions={fieldTypeOptions}
+                formInspector={formInspector}
+                value={55}
+            />
+        )
+    ).toThrow(/expects a serialized object as value/);
 });
 
 test('Throw an error if the auto_complete configuration was omitted', () => {
@@ -457,6 +457,67 @@ test('Pass resourceKey as listKey to SingleItemSelection if no listKey is given'
     );
 
     expect(singleSelection.find(SingleSelectionComponent).prop('listKey')).toEqual('accounts');
+});
+
+test('Pass null as value to SingleSelection for list_overlay', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+
+    const fieldTypeOptions = {
+        default_type: 'list_overlay',
+        resource_key: 'accounts',
+        types: {
+            list_overlay: {
+                adapter: 'table',
+                display_properties: ['name'],
+                empty_text: 'sulu_contact.nothing',
+                icon: 'su-account',
+                overlay_title: 'sulu_contact.overlay_title',
+            },
+        },
+    };
+
+    const singleSelection = shallow(
+        <SingleSelection
+            {...fieldTypeDefaultProps}
+            disabled={true}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            value={null}
+        />
+    );
+
+    expect(singleSelection.find('SingleSelection').prop('value')).toEqual(null);
+});
+
+test('Should log warning and use id of object if given value is an object instad of an id', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+
+    const fieldTypeOptions = {
+        default_type: 'list_overlay',
+        resource_key: 'accounts',
+        types: {
+            list_overlay: {
+                adapter: 'table',
+                display_properties: ['name'],
+                empty_text: 'sulu_contact.nothing',
+                icon: 'su-account',
+                overlay_title: 'sulu_contact.overlay_title',
+            },
+        },
+    };
+
+    const singleSelection = shallow(
+        <SingleSelection
+            {...fieldTypeDefaultProps}
+            disabled={true}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            value={{id: 125}}
+        />
+    );
+
+    expect(singleSelection.find('SingleSelection').prop('value')).toEqual(125);
+    expect(log.warn).toBeCalledWith(expect.stringContaining('expects an id as value but received an object'));
 });
 
 test('Throw an error if form_options_to_list_options schema option is not an array', () => {
