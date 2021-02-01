@@ -14,7 +14,7 @@ jest.mock('../../../../utils/Translator', () => ({
 }));
 
 jest.mock('../../../../containers/List/stores/ListStore', () => jest.fn(function() {
-    this.setShouldReload = jest.fn();
+    this.reload = jest.fn();
 }));
 
 jest.mock('../../../../views/List/List', () => jest.fn(function() {
@@ -127,7 +127,7 @@ test('Should make xhr request on confirm', () => {
     }));
 
     return promise.then(() => {
-        expect(uploadToolbarAction.listStore.setShouldReload).toBeCalledWith(true);
+        expect(uploadToolbarAction.listStore.reload).toBeCalled();
     });
 });
 
