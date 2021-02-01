@@ -140,7 +140,7 @@ class Tabs<T> extends React.Component<Props<T>> {
                             const badges = (Object.values(tabBadges): any).map((badge: BadgeOptions, index: number) => {
                                 if (typeof badge !== 'object') {
                                     throw new Error(
-                                        'Badges need to be of type object. This should not happen and is likely a bug.'
+                                        'The value of a badge entry must be an object, but ' + typeof badge + ' was given!'
                                     );
                                 }
 

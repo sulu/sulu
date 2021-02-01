@@ -72,7 +72,7 @@ export default class BadgeStore {
             enhancedData = jsonPointer.get(data, dataPath);
         }
 
-        this.value = enhancedData.toString();
+        this.value = String(enhancedData);
     }
 
     load = () => {
