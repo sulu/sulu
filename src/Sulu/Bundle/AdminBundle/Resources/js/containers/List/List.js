@@ -152,7 +152,7 @@ class List extends React.Component<Props> {
         }
 
         if (store !== prevProps.store) {
-            store.updateLoadingStrategy(new this.currentAdapter.LoadingStrategy());
+            store.updateLoadingStrategy(new (this.currentAdapter.getLoadingStrategy())());
             store.updateStructureStrategy(new this.currentAdapter.StructureStrategy());
         }
     }
@@ -442,7 +442,7 @@ class List extends React.Component<Props> {
         this.setCurrentAdapterKey(adapter);
     };
 
-    handleItemActivate = (id: string | number) => {
+    handleItemActivate = (id: ?string | number) => {
         const {allowActivateForDisabledItems, store} = this.props;
 
         if (!allowActivateForDisabledItems && this.disabledIds.includes(id)) {

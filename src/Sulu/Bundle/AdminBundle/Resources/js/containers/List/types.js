@@ -44,7 +44,7 @@ export type ListAdapterProps = {|
     limit: number,
     loading: boolean,
     onAllSelectionChange: ?(selected?: boolean) => void,
-    onItemActivate: (itemId: string | number) => void,
+    onItemActivate: (itemId: ?string | number) => void,
     onItemAdd: ?(id: ?string | number) => void,
     onItemClick: ?(itemId: string | number) => void,
     onItemDeactivate: (itemId: string | number) => void,

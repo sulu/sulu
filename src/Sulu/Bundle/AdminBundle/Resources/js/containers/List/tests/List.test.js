@@ -14,6 +14,7 @@ import AbstractAdapter from '../adapters/AbstractAdapter';
 import TableAdapter from '../adapters/TableAdapter';
 import FolderAdapter from '../adapters/FolderAdapter';
 import StringFieldTransformer from '../fieldTransformers/StringFieldTransformer';
+import type {LoadingStrategyInterface} from '../types';
 
 let mockStructureStrategyData;
 let mockStructureStrategyVisibleItems;
@@ -164,11 +165,14 @@ class StructureStrategy {
 }
 
 class TestAdapter extends AbstractAdapter {
-    static LoadingStrategy = LoadingStrategy;
-
     static StructureStrategy = StructureStrategy;
 
     static icon = 'su-th-large';
+
+    // eslint-disable-next-line no-unused-vars
+    static getLoadingStrategy(options: Object = {}): Class<LoadingStrategyInterface> {
+        return LoadingStrategy;
+    }
 
     render() {
         return (
@@ -384,10 +388,14 @@ test('Render the adapter in non-searchable mode', () => {
 
 test('Render the adapter in non-searchable mode if searchable is set to true but adapter does not support it', () => {
     class TestAdapter extends AbstractAdapter {
-        static LoadingStrategy = LoadingStrategy;
         static StructureStrategy = StructureStrategy;
         static icon = 'su-th-large';
         static searchable = false;
+
+        // eslint-disable-next-line no-unused-vars
+        static getLoadingStrategy(options: Object = {}): Class<LoadingStrategyInterface> {
+            return LoadingStrategy;
+        }
 
         render() {
             return (
@@ -792,20 +800,14 @@ test('ListStore should be initialized correctly on init and update', () => {
         }
     });
     mount(<List adapters={['table', 'folder']} store={listStore} />);
-    expect(listStore.updateLoadingStrategy).toBeCalledWith(expect.any(TableAdapter.LoadingStrategy));
+    expect(listStore.updateLoadingStrategy).toBeCalledWith(
+        expect.any(TableAdapter.getLoadingStrategy({pagination: true}))
+    );
     expect(listStore.updateStructureStrategy).toBeCalledWith(expect.any(TableAdapter.StructureStrategy));
 });
 
 test('ListStore should be updated with current active element', () => {
     listAdapterRegistry.get.mockReturnValue(class TestAdapter extends AbstractAdapter {
-        static LoadingStrategy = class {
-            destroy = jest.fn();
-            initialize = jest.fn();
-            load = jest.fn();
-            reset = jest.fn();
-            setStructureStrategy = jest.fn();
-        };
-
         static StructureStrategy = class {
             data = [];
             visibleItems = [];
@@ -817,6 +819,17 @@ test('ListStore should be updated with current active element', () => {
         };
 
         static icon = 'su-th-large';
+
+        // eslint-disable-next-line no-unused-vars
+        static getLoadingStrategy(options: Object = {}): Class<LoadingStrategyInterface> {
+            return class {
+                destroy = jest.fn();
+                initialize = jest.fn();
+                load = jest.fn();
+                reset = jest.fn();
+                setStructureStrategy = jest.fn();
+            };
+        }
 
         constructor(props: *) {
             super(props);

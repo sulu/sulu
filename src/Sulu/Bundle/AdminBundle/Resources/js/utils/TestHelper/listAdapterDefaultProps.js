@@ -30,6 +30,7 @@ const listAdapterDefaultProps = {
     pageCount: undefined,
     schema: {},
     selections: [],
+    pagination: false,
     sortColumn: undefined,
     sortOrder: undefined,
 };

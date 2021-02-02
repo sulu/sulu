@@ -4,6 +4,7 @@ import React from 'react';
 import AdapterSwitch from '../AdapterSwitch';
 import AbstractAdapter from '../adapters/AbstractAdapter';
 import listAdapterRegistry from '../registries/listAdapterRegistry';
+import type {LoadingStrategyInterface} from '../types';
 
 jest.mock('../registries/listAdapterRegistry', () => ({
     add: jest.fn(),
@@ -31,11 +32,14 @@ class StructureStrategy {
 }
 
 class TestAdapter extends AbstractAdapter {
-    static LoadingStrategy = LoadingStrategy;
-
     static StructureStrategy = StructureStrategy;
 
     static icon = 'su-th-large';
+
+    // eslint-disable-next-line no-unused-vars
+    static getLoadingStrategy(options: Object = {}): Class<LoadingStrategyInterface> {
+        return LoadingStrategy;
+    }
 
     render() {
         return (
