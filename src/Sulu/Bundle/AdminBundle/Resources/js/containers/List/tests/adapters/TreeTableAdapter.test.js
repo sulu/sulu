@@ -194,6 +194,7 @@ test('Render data without header', () => {
             options={{showHeader: false}}
             page={1}
             pageCount={2}
+            pagination={false}
             schema={schema}
         />
     );
@@ -832,7 +833,6 @@ test('Pagination should be passed correct props', () => {
             onPageChange={pageChangeSpy}
             page={2}
             pageCount={7}
-            pagination={true}
         />
     );
     expect(treeTableAdapter.find('Pagination').get(0).props).toEqual({
@@ -885,7 +885,6 @@ test('Pagination should not be rendered if API is not paginated', () => {
             onPageChange={pageChangeSpy}
             page={1}
             pageCount={undefined}
-            pagination={true}
         />
     );
     expect(treeTableAdapter.find('Pagination')).toHaveLength(0);
@@ -900,21 +899,18 @@ test('Pagination should not be rendered if no data is available', () => {
             onLimitChange={limitChangeSpy}
             onPageChange={pageChangeSpy}
             page={1}
-            pagination={true}
         />
     );
     expect(treeTableAdapter.find('Pagination')).toHaveLength(0);
 });
 
 test('Pagination should not be rendered if pagination is false', () => {
-    const pageChangeSpy = jest.fn();
-    const limitChangeSpy = jest.fn();
     const treeTableAdapter = shallow(
         <TreeTableAdapter
             {...listAdapterDefaultProps}
-            onLimitChange={limitChangeSpy}
-            onPageChange={pageChangeSpy}
-            page={1}
+            limit={10}
+            page={2}
+            pageCount={7}
             pagination={false}
         />
     );
@@ -985,7 +981,6 @@ test('Next page should call onItemActiveate with undefined', () => {
             onPageChange={onPageChangeSpy}
             page={1}
             pageCount={2}
-            pagination={true}
             schema={schema}
         />
     );

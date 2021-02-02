@@ -43,6 +43,7 @@ class FolderAdapter extends AbstractAdapter {
             onLimitChange,
             onPageChange,
             page,
+            pagination,
             pageCount,
         } = this.props;
 
@@ -60,7 +61,7 @@ class FolderAdapter extends AbstractAdapter {
             </FolderList>
         );
 
-        if (page === 1 && data.length === 0) {
+        if (!pagination || (page === 1 && data.length === 0)) {
             return folderList;
         }
 

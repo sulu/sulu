@@ -109,3 +109,16 @@ test('Pagination should be passed correct props', () => {
         children: expect.anything(),
     });
 });
+
+test('Pagination should not be rendered if pagination is false', () => {
+    const folderAdapter = shallow(
+        <FolderAdapter
+            {...listAdapterDefaultProps}
+            limit={10}
+            page={2}
+            pageCount={7}
+            pagination={false}
+        />
+    );
+    expect(folderAdapter.find('Pagination')).toHaveLength(0);
+});

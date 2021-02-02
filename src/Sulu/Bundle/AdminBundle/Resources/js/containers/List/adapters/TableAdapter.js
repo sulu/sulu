@@ -79,6 +79,7 @@ class TableAdapter extends AbstractTableAdapter {
             onItemSelectionChange,
             onLimitChange,
             onPageChange,
+            pagination,
             options: {
                 skin = 'dark',
             },
@@ -103,7 +104,7 @@ class TableAdapter extends AbstractTableAdapter {
             </Table>
         );
 
-        if (page === 1 && data.length === 0) {
+        if (!pagination || (page === 1 && data.length === 0)) {
             return table;
         }
 
