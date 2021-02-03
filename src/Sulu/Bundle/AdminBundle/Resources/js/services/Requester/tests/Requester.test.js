@@ -17,6 +17,7 @@ test('Should execute GET request and reject with response when the response cont
     expect(window.fetch).toBeCalledWith('/some-url', {
         credentials: 'same-origin',
         headers: {'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest'},
+        method: 'GET',
         signal: expect.any(AbortSignal),
     });
 });
@@ -89,6 +90,7 @@ test('Should execute GET request and replace null with undefined', () => {
     expect(window.fetch).toBeCalledWith('/some-url', {
         credentials: 'same-origin',
         headers: {'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest'},
+        method: 'GET',
         signal: expect.any(AbortSignal),
     });
 
