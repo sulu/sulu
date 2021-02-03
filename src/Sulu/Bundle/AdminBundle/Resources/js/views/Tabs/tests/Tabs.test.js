@@ -3,6 +3,12 @@ import React from 'react';
 import {mount, render} from 'enzyme';
 import Router, {Route} from '../../../services/Router';
 import Tabs from '../Tabs';
+import Requester from '../../../services/Requester';
+
+jest.mock('../../../services/Requester', () => ({
+    get: jest.fn(),
+}));
+Requester.handleResponseHooks = [];
 
 jest.mock('../../../services/Router/Router', () => jest.fn());
 
@@ -58,6 +64,10 @@ test('Should render the children after the tabs', () => {
 });
 
 test('Should render the tab badges', () => {
+    const promise = Promise.resolve({count: 2});
+    Requester.get.mockReturnValue(promise);
+    Requester.handleResponseHooks = [];
+
     const childRoute1 = new Route({
         name: 'route1',
         options: {
@@ -74,7 +84,7 @@ test('Should render the tab badges', () => {
                         locale: 'locale',
                         id: 'entityId',
                     },
-                    visibleCondition: 'value > 0',
+                    visibleCondition: 'value != 0',
                 },
             ],
         },
@@ -107,7 +117,15 @@ test('Should render the tab badges', () => {
     const router = new Router({});
 
     const Child = () => (<h1>Child</h1>);
-    expect(render(<Tabs route={route} router={router}>{() => (<Child />)}</Tabs>)).toMatchSnapshot();
+    const tabs = mount(<Tabs route={route} router={router}>{() => (<Child />)}</Tabs>);
+
+    return promise.then(() => {
+        tabs.update();
+
+        const badgeContainer = tabs.children().find('Badge');
+        expect(badgeContainer.children().find('Badge').length).toBe(1);
+        expect(badgeContainer.children().find('Badge').text()).toBe('2');
+    });
 });
 
 test('Should render the header between children and tabs', () => {

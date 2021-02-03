@@ -43,7 +43,6 @@ test('Should create new BadgeStore', () => {
     );
 
     const store = badge.instance().store;
-    store.load();
 
     expect(store).toBeInstanceOf(BadgeStore);
     expect(store.routeName).toBe('foo');
@@ -83,9 +82,6 @@ test('Should pass correct props to badge component', () => {
             visibleCondition="value != 0"
         />
     );
-
-    const store = badge.instance().store;
-    store.load();
 
     return promise.then(() => {
         badge.update();

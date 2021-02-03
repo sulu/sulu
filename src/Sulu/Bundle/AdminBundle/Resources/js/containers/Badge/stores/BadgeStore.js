@@ -29,6 +29,8 @@ export default class BadgeStore {
         this.requestParameters = requestParameters;
         this.routerAttributesToRequest = routerAttributesToRequest;
 
+        this.load();
+
         // Needed to tell autorun to listen on route changes
         this.routeChangeDisposer = reaction(() => this.router.route, () => {
             this.load();

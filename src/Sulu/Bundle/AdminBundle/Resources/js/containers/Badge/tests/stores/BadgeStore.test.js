@@ -1,5 +1,5 @@
 // @flow
-import 'whatwg-fetch';
+import {extendObservable as mockExtendObservable} from 'mobx';
 import SymfonyRouting from 'fos-jsrouting/router';
 import BadgeStore from '../../stores/BadgeStore';
 import Router from '../../../../services/Router';
@@ -18,6 +18,10 @@ jest.mock('../../../../services/Router', () => jest.fn(function() {
         id: 5,
         locale: 'en',
     };
+
+    mockExtendObservable(this, {
+        route: {},
+    });
 }));
 
 test('Should load data using the Requester', () => {
@@ -43,7 +47,6 @@ test('Should load data using the Requester', () => {
             locale: 'locale',
         }
     );
-    badgeStore.load();
 
     expect(Requester.get).toBeCalledWith('foo?entityId=5&locale=en&limit=0&entityClass=Foo');
 
@@ -75,13 +78,43 @@ test('Should load data without datapath', () => {
             locale: 'locale',
         }
     );
-    badgeStore.load();
 
     expect(Requester.get).toBeCalledWith('foo?entityId=5&locale=en&limit=0&entityClass=Foo');
 
     return promise.then(() => {
         expect(badgeStore.value).toEqual('hello');
     });
+});
+
+test('Should load data if route changes', () => {
+    SymfonyRouting.generate.mockImplementation((routeName, params) => {
+        return routeName + '?' + Object.keys(params).map((key) => key + '=' + params[key]).join('&');
+    });
+
+    const promise = Promise.resolve('hello');
+    Requester.get.mockReturnValue(promise);
+    Requester.handleResponseHooks = [];
+
+    const router = new Router({});
+    new BadgeStore(
+        router,
+        'foo',
+        null,
+        {
+            limit: 0,
+            entityClass: 'Foo',
+        },
+        {
+            id: 'entityId',
+            locale: 'locale',
+        }
+    );
+
+    expect(Requester.get).toHaveBeenNthCalledWith(1, 'foo?entityId=5&locale=en&limit=0&entityClass=Foo');
+
+    router.route = ({property: 'value'}: any);
+
+    expect(Requester.get).toHaveBeenNthCalledWith(2, 'foo?entityId=5&locale=en&limit=0&entityClass=Foo');
 });
 
 test('Should load data on response hook callback', () => {
@@ -107,7 +140,6 @@ test('Should load data on response hook callback', () => {
             locale: 'locale',
         }
     );
-    badgeStore.load();
 
     expect(Requester.handleResponseHooks).toHaveLength(1);
 
@@ -116,8 +148,7 @@ test('Should load data on response hook callback', () => {
     expect(Requester.get).toHaveBeenNthCalledWith(1, 'foo?entityId=5&locale=en&limit=0&entityClass=Foo');
 
     // Should not perform request because of a "GET" request
-    const response1 = new Response();
-    response1.url = 'http://sulu.lo/admin/api/anything';
+    const response1: any = {url: 'http://sulu.lo/admin/api/anything'};
     Requester.handleResponseHooks[0](
         response1,
         {method: 'GET'}
@@ -125,8 +156,7 @@ test('Should load data on response hook callback', () => {
     expect(Requester.get).toHaveBeenCalledTimes(1);
 
     // Should perform request
-    const response2 = new Response();
-    response2.url = 'http://sulu.lo/admin/api/anything';
+    const response2: any = {url: 'http://sulu.lo/admin/api/anything'};
     Requester.handleResponseHooks[0](
         response2,
         {method: 'POST'}
@@ -135,8 +165,7 @@ test('Should load data on response hook callback', () => {
     expect(Requester.get).toHaveBeenNthCalledWith(2, 'foo?entityId=5&locale=en&limit=0&entityClass=Foo');
 
     // Should perform request
-    const response3 = new Response();
-    response3.url = 'http://sulu.lo/admin/api/anything';
+    const response3: any = {url: 'http://sulu.lo/admin/api/anything'};
     Requester.handleResponseHooks[0](
         response3,
         {method: 'PUT'}
@@ -145,8 +174,7 @@ test('Should load data on response hook callback', () => {
     expect(Requester.get).toHaveBeenNthCalledWith(3, 'foo?entityId=5&locale=en&limit=0&entityClass=Foo');
 
     // Should perform request
-    const response4 = new Response();
-    response4.url = 'http://sulu.lo/admin/api/anything';
+    const response4: any = {url: 'http://sulu.lo/admin/api/anything'};
     Requester.handleResponseHooks[0](
         response4,
         {method: 'PATCH'}
@@ -155,8 +183,7 @@ test('Should load data on response hook callback', () => {
     expect(Requester.get).toHaveBeenNthCalledWith(4, 'foo?entityId=5&locale=en&limit=0&entityClass=Foo');
 
     // Should perform request
-    const response5 = new Response();
-    response5.url = 'http://sulu.lo/admin/api/anything';
+    const response5: any = {url: 'http://sulu.lo/admin/api/anything'};
     Requester.handleResponseHooks[0](
         response5,
         {method: 'DELETE'}
@@ -165,8 +192,7 @@ test('Should load data on response hook callback', () => {
     expect(Requester.get).toHaveBeenNthCalledWith(5, 'foo?entityId=5&locale=en&limit=0&entityClass=Foo');
 
     // Should not perform request because of a collaboration request
-    const response6 = new Response();
-    response6.url = 'http://sulu.lo/admin/api/collaborations?id=1234&resourceKey=pages';
+    const response6: any = {url: 'http://sulu.lo/admin/api/collaborations?id=1234&resourceKey=pages'};
     Requester.handleResponseHooks[0](
         response6,
         {method: 'PUT'}
@@ -174,8 +200,7 @@ test('Should load data on response hook callback', () => {
     expect(Requester.get).toHaveBeenCalledTimes(5);
 
     // Should not perform request because of a preview request
-    const response7 = new Response();
-    response7.url = 'https://fullsulu.lo/admin/preview/update?id=1234&locale=en&provider=pages';
+    const response7: any = {url: 'https://fullsulu.lo/admin/preview/update?id=1234&locale=en&provider=pages'};
     Requester.handleResponseHooks[0](
         response7,
         {method: 'POST'}

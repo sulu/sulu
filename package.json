@@ -88,8 +88,7 @@
         "webpack": "^4.20.2",
         "webpack-clean-obsolete-chunks": "^0.4.0",
         "webpack-cli": "^3.1.1",
-        "webpack-manifest-plugin": "^2.0.2",
-        "whatwg-fetch": "^3.5.0"
+        "webpack-manifest-plugin": "^2.0.2"
     },
     "jest": {
         "moduleNameMapper": {

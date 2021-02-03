@@ -323,3 +323,21 @@ test('Should execute DELETE request and return empty object if status code was 2
         expect(data).toEqual({});
     });
 });
+
+test('Shold call response hooks', () => {
+    const handleResponseHook = jest.fn();
+    Requester.handleResponseHooks.push(handleResponseHook);
+
+    const promise = Promise.resolve({
+        ok: true,
+        status: 204,
+    });
+
+    window.fetch = jest.fn();
+    window.fetch.mockReturnValue(promise);
+
+    return Requester.get('/some-url').then(() => {
+        expect(handleResponseHook).toHaveBeenCalledTimes(1);
+        Requester.handleResponseHooks = [];
+    });
+});
