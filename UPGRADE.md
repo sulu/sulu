@@ -2,9 +2,9 @@
 
 ## dev-release/2.1
 
-### Contact's position length
+### Increased maximum length of contact position name
 
-Change the possible length of a contact's position.
+To allow for longer contact position names, the length of the database column was increased. To do this in your project, you can use the following statement:
 
 ```SQL
 ALTER TABLE co_positions CHANGE position position VARCHAR(191) NOT NULL;
