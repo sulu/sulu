@@ -3,7 +3,7 @@ import React from 'react';
 import {observer} from 'mobx-react';
 import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 import userStore from 'sulu-admin-bundle/stores/userStore';
-import {observable} from 'mobx';
+import {computed, observable} from 'mobx';
 import {
     convertDisplayOptionsFromParams,
     convertMediaTypesFromParams,
@@ -18,7 +18,7 @@ class SingleMediaSelection extends React.Component<FieldTypeProps<Value>> {
     constructor(props: FieldTypeProps<Value>) {
         super(props);
 
-        const {onChange, schemaOptions, value} = this.props;
+        const {onChange, schemaOptions} = this.props;
 
         const {
             defaultDisplayOption: {
@@ -37,9 +37,25 @@ class SingleMediaSelection extends React.Component<FieldTypeProps<Value>> {
             );
         }
 
-        if (value === undefined) {
+        if (this.value === undefined) {
             onChange({id: undefined, displayOption: defaultDisplayOption});
         }
+    }
+
+    @computed get value(): ?Value {
+        const {value, dataPath} = this.props;
+
+        if (value && typeof value !== 'object') {
+            throw new Error(
+                'The "SingleMediaSelection" field with the path "' + dataPath + '" expects an object with an "id" '
+                + 'property and an optional "displayOption" property as value. Is it possible that your API returns '
+                + 'something else?'
+                + '\n\nThe Sulu form view expects that your API returns the data in the same format as it is sent '
+                + 'to the server when submitting the form.'
+            );
+        }
+
+        return value;
     }
 
     handleChange = (value: Value) => {
@@ -62,7 +78,7 @@ class SingleMediaSelection extends React.Component<FieldTypeProps<Value>> {
     };
 
     render() {
-        const {disabled, error, formInspector, schemaOptions, value} = this.props;
+        const {disabled, error, formInspector, schemaOptions} = this.props;
         const {
             displayOptions: {
                 value: displayOptions,
@@ -94,7 +110,7 @@ class SingleMediaSelection extends React.Component<FieldTypeProps<Value>> {
                 onItemClick={this.handleItemClick}
                 types={mediaTypeValues}
                 valid={!error}
-                value={value ? value : undefined}
+                value={this.value ? this.value : undefined}
             />
         );
     }

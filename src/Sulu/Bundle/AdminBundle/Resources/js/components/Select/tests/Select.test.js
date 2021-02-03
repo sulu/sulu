@@ -308,3 +308,58 @@ test('The component should focus children matching keyboard input', () => {
     select.simulate('keypress', {key: 'a', preventDefault: jest.fn()});
     expect(select.find('Option[value="option-abc"] button').is(':focus')).toBe(true);
 });
+
+test('The component should focus itself after closing option list', () => {
+    const onSelect = jest.fn();
+    const isOptionSelected = jest.fn().mockReturnValue(false);
+    const select = mount(
+        <Select
+            displayValue="My text"
+            isOptionSelected={isOptionSelected}
+            onSelect={onSelect}
+        >
+            <Option value="option-abc">ABC</Option>
+            <Option value="option-def">DEF</Option>
+            <Option value="option-ghi">GHI</Option>
+        </Select>
+    );
+
+    const focusSpy = jest.fn();
+    select.instance().displayValueRef = {
+        getBoundingClientRect: jest.fn().mockReturnValue({
+            width: 200,
+        }),
+        focus: focusSpy,
+    };
+
+    select.instance().handleDisplayValueClick();
+    select.simulate('keydown', {key: 'Escape', preventDefault: jest.fn()});
+    expect(focusSpy).toBeCalledTimes(1);
+});
+
+test('The component should not focus itself after closing already closed option list', () => {
+    const onSelect = jest.fn();
+    const isOptionSelected = jest.fn().mockReturnValue(false);
+    const select = mount(
+        <Select
+            displayValue="My text"
+            isOptionSelected={isOptionSelected}
+            onSelect={onSelect}
+        >
+            <Option value="option-abc">ABC</Option>
+            <Option value="option-def">DEF</Option>
+            <Option value="option-ghi">GHI</Option>
+        </Select>
+    );
+
+    const focusSpy = jest.fn();
+    select.instance().displayValueRef = {
+        getBoundingClientRect: jest.fn().mockReturnValue({
+            width: 200,
+        }),
+        focus: focusSpy,
+    };
+
+    select.simulate('keydown', {key: 'Escape', preventDefault: jest.fn()});
+    expect(focusSpy).toBeCalledTimes(0);
+});

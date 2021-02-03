@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import log from 'loglevel';
 import {extendObservable as mockExtendObservable, observable, toJS} from 'mobx';
 import {mount, shallow} from 'enzyme';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
@@ -12,6 +13,10 @@ import List from '../../../List';
 import Selection from '../../fields/Selection';
 import FormInspector from '../../FormInspector';
 import ResourceFormStore from '../../stores/ResourceFormStore';
+
+jest.mock('loglevel', () => ({
+    warn: jest.fn(),
+}));
 
 jest.mock('../../../../stores/MultiSelectionStore', () => jest.fn(
     function(resourceKey, selectedItemIds, locale, idFilterParameter) {
@@ -594,6 +599,32 @@ test('Should navigate to view when MultiSelection item is clicked with configure
     selection.find('MultiItemSelection Item .content').at(1).prop('onClick')();
     expect(router.navigate).toHaveBeenLastCalledWith('sulu_page.page_edit_form', {locale: 'de', uuid: 2});
 });
+
+test('Should log warning and use ids of objects if given value is an array of objects', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'pages'));
+    const fieldTypeOptions = {
+        default_type: 'list_overlay',
+        resource_key: 'test',
+        types: {
+            list_overlay: {
+                adapter: 'table',
+            },
+        },
+    };
+
+    const selection = shallow(
+        <Selection
+            {...fieldTypeDefaultProps}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            value={([{id: 55}, {id: 66}]: any)}
+        />
+    );
+
+    expect(selection.find('MultiSelection').prop('value')).toEqual([55, 66]);
+    expect(log.warn).toBeCalledWith(expect.stringContaining('expects an array of ids as value'));
+});
+
 test('Should throw an error if "types" schema option is not a string', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'pages'));
     const fieldTypeOptions = {

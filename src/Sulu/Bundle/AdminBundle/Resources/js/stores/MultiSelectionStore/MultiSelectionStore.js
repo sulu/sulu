@@ -72,7 +72,11 @@ export default class MultiSelectionStore<T = string | number, U: {id: T} = Objec
             limit: undefined,
             page: 1,
         }).then(action((data) => {
-            this.set(data._embedded[this.resourceKey]);
+            const items = data._embedded[this.resourceKey];
+            // TODO use metadata instead of hardcoded id
+            items.sort((item1, item2) => itemIds.indexOf(item1.id) - itemIds.indexOf(item2.id));
+
+            this.set(items);
             this.setLoading(false);
         }));
     }

@@ -96,6 +96,30 @@ test('The popover should request to be closed when the backdrop is clicked', () 
     expect(onCloseSpy).toBeCalled();
 });
 
+test('The popover should not request to be closed if it is already closed', () => {
+    const windowListeners = {};
+    window.addEventListener = jest.fn((event, cb) => windowListeners[event] = cb);
+    const onCloseSpy = jest.fn();
+    mount(
+        <Popover
+            anchorElement={getMockedAnchorEl()}
+            onClose={onCloseSpy}
+            open={false}
+        >
+            {
+                (setPopoverRef, styles) => (
+                    <div ref={setPopoverRef} style={styles}>
+                        <div>My item 1</div>
+                    </div>
+                )
+            }
+        </Popover>
+    );
+    expect(windowListeners.blur).toBeDefined();
+    windowListeners.blur();
+    expect(onCloseSpy).not.toBeCalled();
+});
+
 test('The popover should request to be closed when the window is blurred', () => {
     const windowListeners = {};
     window.addEventListener = jest.fn((event, cb) => windowListeners[event] = cb);
