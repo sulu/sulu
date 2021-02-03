@@ -126,6 +126,14 @@ abstract class BaseDataProvider implements DataProviderInterface
 
     /**
      * Resolves filters.
+     *
+     * @param string $locale
+     * @param int|null $limit
+     * @param int $page
+     * @param int|null $pageSize
+     * @param array $options
+     *
+     * @return array
      */
     private function resolveFilters(
         array $filters,
@@ -135,7 +143,14 @@ abstract class BaseDataProvider implements DataProviderInterface
         $pageSize = null,
         $options = []
     ) {
-        $result = $this->repository->findByFilters($filters, $page, $pageSize, $limit, $locale, $options);
+        $result = $this->repository->findByFilters(
+            $filters,
+            $page,
+            $pageSize,
+            $limit,
+            $locale,
+            $options
+        );
 
         $hasNextPage = false;
         if (null !== $pageSize && \count($result) > $pageSize) {
