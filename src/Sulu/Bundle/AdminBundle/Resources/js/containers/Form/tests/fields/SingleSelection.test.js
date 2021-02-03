@@ -3,7 +3,6 @@ import React from 'react';
 import log from 'loglevel';
 import {mount, shallow} from 'enzyme';
 import {observable} from 'mobx';
-import log from 'loglevel';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
 import Router from '../../../../services/Router';
 import ResourceStore from '../../../../stores/ResourceStore';
