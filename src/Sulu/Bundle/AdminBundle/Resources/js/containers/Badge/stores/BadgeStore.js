@@ -1,9 +1,11 @@
 // @flow
-import {action, autorun, observable, computed} from 'mobx';
+import {action, reaction, observable, computed} from 'mobx';
 import jsonPointer from 'json-pointer';
+import debounce from 'debounce';
 import symfonyRouting from 'fos-jsrouting/router';
 import Router from '../../../services/Router';
 import Requester from '../../../services/Requester';
+import type {HandleResponseHook} from '../../../services/Requester/types';
 
 export default class BadgeStore {
     router: Router;
@@ -26,13 +28,6 @@ export default class BadgeStore {
         this.dataPath = dataPath;
         this.requestParameters = requestParameters;
         this.routerAttributesToRequest = routerAttributesToRequest;
-
-        this.disposer = autorun(() => {
-            // Needed to tell autorun to listen on route changes
-            this.router.route;
-
-            this.load();
-        });
     }
 
     @computed get evaluatedRequestParameters() {
@@ -75,13 +70,53 @@ export default class BadgeStore {
         this.value = String(enhancedData);
     }
 
-    load = () => {
+    load = debounce(() => {
         Requester.get(this.url).then((response: Object) => {
             this.setData(response);
         });
+    }, 3000, true);
+
+    responseHook: HandleResponseHook = (response: Response, options: ?Object) => {
+        if (!options || typeof options.method === 'undefined') {
+            return;
+        }
+
+        if (response.url.includes(this.url)) {
+            return;
+        }
+
+        if (response.url.includes('/admin/api/collaborations')) {
+            return;
+        }
+
+        if (response.url.includes('/admin/preview/')) {
+            return;
+        }
+
+        if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(options.method.toUpperCase())) {
+            this.load();
+        }
+    };
+
+    initialize = () => {
+        this.load();
+
+        // Needed to tell autorun to listen on route changes
+        this.disposer = reaction(() => this.router.route, () => {
+            this.load();
+        });
+
+        if (!Requester.handleResponseHooks.includes(this.responseHook)) {
+            Requester.handleResponseHooks.push(this.responseHook);
+        }
     };
 
     destroy = () => {
-        this.disposer();
+        if (Requester.handleResponseHooks.includes(this.responseHook)) {
+            Requester.handleResponseHooks.splice(
+                Requester.handleResponseHooks.indexOf(this.responseHook),
+                1
+            );
+        }
     };
 }

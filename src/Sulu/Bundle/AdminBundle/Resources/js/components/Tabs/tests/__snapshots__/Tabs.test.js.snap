@@ -34,7 +34,7 @@ exports[`Render a Tabs component 1`] = `
 </ul>
 `;
 
-exports[`Render a Tabs component with a selected tab 1`] = `
+exports[`Render a Tabs component with a selected tab and a badge 1`] = `
 <ul
   class="tabs"
 >
@@ -55,6 +55,15 @@ exports[`Render a Tabs component with a selected tab 1`] = `
       title="Tab 2"
     >
       Tab 2
+      <div
+        class="badges"
+      >
+        <div
+          class="badge"
+        >
+          1
+        </div>
+      </div>
     </button>
   </li>
   <li
@@ -64,6 +73,20 @@ exports[`Render a Tabs component with a selected tab 1`] = `
       title="Tab 3"
     >
       Tab 3
+      <div
+        class="badges"
+      >
+        <div
+          class="badge"
+        >
+          2
+        </div>
+        <div
+          class="badge"
+        >
+          3
+        </div>
+      </div>
     </button>
   </li>
 </ul>

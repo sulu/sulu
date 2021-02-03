@@ -15,6 +15,9 @@ Array [
           title="tabTitle1"
         >
           tabTitle1
+          <div
+            class="badges"
+          />
         </button>
       </li>
       <li
@@ -24,6 +27,9 @@ Array [
           title="tabTitle2"
         >
           tabTitle2
+          <div
+            class="badges"
+          />
         </button>
       </li>
     </ul>
@@ -49,6 +55,9 @@ Array [
           title="tabTitle1"
         >
           tabTitle1
+          <div
+            class="badges"
+          />
         </button>
       </li>
     </ul>
@@ -74,6 +83,9 @@ Array [
           title="tabTitle1"
         >
           tabTitle1
+          <div
+            class="badges"
+          />
         </button>
       </li>
     </ul>
@@ -84,5 +96,33 @@ Array [
   <h2>
     Child
   </h2>,
+]
+`;
+
+exports[`Should render the tab badges 1`] = `
+Array [
+  <div
+    class="tabsContainer"
+  >
+    <ul
+      class="tabs"
+    >
+      <li
+        class="tab"
+      >
+        <button
+          title="tabTitle1"
+        >
+          tabTitle1
+          <div
+            class="badges"
+          />
+        </button>
+      </li>
+    </ul>
+  </div>,
+  <h1>
+    Child
+  </h1>,
 ]
 `;

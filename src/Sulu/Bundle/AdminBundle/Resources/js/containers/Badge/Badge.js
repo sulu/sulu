@@ -47,6 +47,10 @@ class Badge extends React.Component<Props> {
         );
     }
 
+    componentDidMount() {
+        this.store.initialize();
+    }
+
     @computed get badgeVisible() {
         const {
             props: {

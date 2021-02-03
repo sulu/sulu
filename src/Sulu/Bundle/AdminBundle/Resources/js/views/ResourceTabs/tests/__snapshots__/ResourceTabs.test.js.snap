@@ -11,6 +11,9 @@ exports[`Should mark the currently active child route as selected tab 1`] = `
       title="Tab Titel 1"
     >
       Tab Titel 1
+      <div
+        class="badges"
+      />
     </button>
   </li>
   <li
@@ -21,6 +24,9 @@ exports[`Should mark the currently active child route as selected tab 1`] = `
       title="Tab Titel 2"
     >
       Tab Titel 2
+      <div
+        class="badges"
+      />
     </button>
   </li>
 </ul>
@@ -43,6 +49,9 @@ exports[`Should render the child components after the tabs 1`] = `
       title="Tab Titel 1"
     >
       Tab Titel 1
+      <div
+        class="badges"
+      />
     </button>
   </li>
   <li
@@ -52,6 +61,9 @@ exports[`Should render the child components after the tabs 1`] = `
       title="Tab Titel 2"
     >
       Tab Titel 2
+      <div
+        class="badges"
+      />
     </button>
   </li>
 </ul>

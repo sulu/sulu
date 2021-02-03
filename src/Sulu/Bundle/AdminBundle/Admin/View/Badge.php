@@ -11,47 +11,48 @@
 
 namespace Sulu\Bundle\AdminBundle\Admin\View;
 
-use JMS\Serializer\Annotation as Serializer;
+use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\Groups;
 
 class Badge
 {
     /**
      * @var string
      *
-     * @Serializer\Expose()
-     * @Serializer\Groups({"fullView"})
+     * @Expose()
+     * @Groups({"fullView"})
      */
     private $routeName;
 
     /**
      * @var string|null
      *
-     * @Serializer\Expose()
-     * @Serializer\Groups({"fullView"})
+     * @Expose()
+     * @Groups({"fullView"})
      */
     private $dataPath;
 
     /**
      * @var string|null
      *
-     * @Serializer\Expose()
-     * @Serializer\Groups({"fullView"})
+     * @Expose()
+     * @Groups({"fullView"})
      */
     private $visibleCondition;
 
     /**
      * @var array<string, mixed>
      *
-     * @Serializer\Expose()
-     * @Serializer\Groups({"fullView"})
+     * @Expose()
+     * @Groups({"fullView"})
      */
     private $requestParameters = [];
 
     /**
      * @var array<string, mixed>
      *
-     * @Serializer\Expose()
-     * @Serializer\Groups({"fullView"})
+     * @Expose()
+     * @Groups({"fullView"})
      */
     private $routerAttributesToRequest = [];
 
