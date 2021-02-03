@@ -62,7 +62,7 @@ class AccessControlManager implements AccessControlManagerInterface
         MaskConverterInterface $maskConverter,
         EventDispatcherInterface $eventDispatcher,
         SystemStoreInterface $systemStore,
-        iterable $descendantProviders = [],
+        iterable $descendantProviders,
         RoleRepositoryInterface $roleRepository
     ) {
         $this->maskConverter = $maskConverter;
