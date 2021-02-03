@@ -10,6 +10,8 @@ jest.mock('../../../services/Requester', () => ({
     get: jest.fn(),
 }));
 
+Requester.handleResponseHooks = [];
+
 jest.mock('../../../services/Router', () => jest.fn(function() {
     this.attributes = {
         id: 5,
@@ -22,6 +24,7 @@ test('Should create new BadgeStore', () => {
 
     const promise = Promise.resolve({data: 'foo'});
     Requester.get.mockReturnValue(promise);
+    Requester.handleResponseHooks = [];
 
     const badge = mount(
         <Badge
@@ -40,6 +43,7 @@ test('Should create new BadgeStore', () => {
     );
 
     const store = badge.instance().store;
+    store.load();
 
     expect(store).toBeInstanceOf(BadgeStore);
     expect(store.routeName).toBe('foo');
@@ -62,6 +66,7 @@ test('Should pass correct props to badge component', () => {
 
     const promise = Promise.resolve('hello');
     Requester.get.mockReturnValue(promise);
+    Requester.handleResponseHooks = [];
 
     const badge = mount(
         <Badge
@@ -79,6 +84,9 @@ test('Should pass correct props to badge component', () => {
         />
     );
 
+    const store = badge.instance().store;
+    store.load();
+
     return promise.then(() => {
         badge.update();
         expect(badge.children().find('Badge').length).toBe(1);
@@ -91,6 +99,7 @@ test('Should not render Badge component if visibleCondition fails', () => {
 
     const promise = Promise.resolve({data: 0});
     Requester.get.mockReturnValue(promise);
+    Requester.handleResponseHooks = [];
 
     const badge = mount(
         <Badge

@@ -55,15 +55,6 @@ exports[`Render a Tabs component with a selected tab and a badge 1`] = `
       title="Tab 2"
     >
       Tab 2
-      <div
-        class="badges"
-      >
-        <div
-          class="badge"
-        >
-          1
-        </div>
-      </div>
     </button>
   </li>
   <li
@@ -79,12 +70,12 @@ exports[`Render a Tabs component with a selected tab and a badge 1`] = `
         <div
           class="badge"
         >
-          2
+          1
         </div>
         <div
           class="badge"
         >
-          3
+          2
         </div>
       </div>
     </button>

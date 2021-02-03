@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import tabStyles from './tab.scss';
 
 type Props = {
-    badges: ?(Element<*>[] | Element<*>),
+    badges: Element<*>[],
     children: string,
     index?: number,
     onClick?: (index: ?number) => void,
@@ -14,7 +14,7 @@ type Props = {
 
 export default class Tab extends React.PureComponent<Props> {
     static defaultProps = {
-        badges: null,
+        badges: [],
         selected: false,
     };
 
@@ -50,7 +50,7 @@ export default class Tab extends React.PureComponent<Props> {
                     title={children}
                 >
                     {children}
-                    {!!badges &&
+                    {!!badges && !!badges.length &&
                         <div className={tabStyles.badges}>
                             {badges}
                         </div>

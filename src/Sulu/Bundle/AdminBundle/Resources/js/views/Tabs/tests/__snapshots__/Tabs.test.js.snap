@@ -15,9 +15,6 @@ Array [
           title="tabTitle1"
         >
           tabTitle1
-          <div
-            class="badges"
-          />
         </button>
       </li>
       <li
@@ -27,9 +24,6 @@ Array [
           title="tabTitle2"
         >
           tabTitle2
-          <div
-            class="badges"
-          />
         </button>
       </li>
     </ul>
@@ -55,9 +49,6 @@ Array [
           title="tabTitle1"
         >
           tabTitle1
-          <div
-            class="badges"
-          />
         </button>
       </li>
     </ul>
@@ -83,9 +74,6 @@ Array [
           title="tabTitle1"
         >
           tabTitle1
-          <div
-            class="badges"
-          />
         </button>
       </li>
     </ul>

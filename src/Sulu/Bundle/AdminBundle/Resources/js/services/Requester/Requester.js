@@ -99,7 +99,7 @@ function transformRequestData(data: Object | Array<Object>) {
     return transformRequestObject(data);
 }
 
-function handleResponse(response: Response, options): Promise<Object | Array<Object>> {
+function handleResponse(response: Response, options: ?Object): Promise<Object | Array<Object>> {
     for (const handleResponseHook of Requester.handleResponseHooks) {
         handleResponseHook(response, options);
     }
@@ -122,7 +122,7 @@ function handleResponse(response: Response, options): Promise<Object | Array<Obj
     });
 }
 
-function handleObjectResponse(response: Response, options): Promise<Object> {
+function handleObjectResponse(response: Response, options: ?Object): Promise<Object> {
     return handleResponse(response, options).then((response) => {
         if (Array.isArray(response)) {
             throw Error('Response was expected to be an object, but an array was given');
@@ -132,7 +132,7 @@ function handleObjectResponse(response: Response, options): Promise<Object> {
     });
 }
 
-function createFetchCall(url, options): RequestPromise<*> {
+function createFetchCall(url, options: ?Object): RequestPromise<*> {
     let promiseResolve, promiseReject;
     const requestPromise = new RequestPromise(function(resolve, reject) {
         promiseResolve = resolve;

@@ -31,10 +31,10 @@ test('Render a Tabs component with a selected tab and a badge', () => {
             <Tabs.Tab>
                 Tab 1
             </Tabs.Tab>
-            <Tabs.Tab badges={<Badge key="badge1">1</Badge>}>
+            <Tabs.Tab>
                 Tab 2
             </Tabs.Tab>
-            <Tabs.Tab badges={[<Badge key="badge2">2</Badge>, <Badge key="badge3">3</Badge>]}>
+            <Tabs.Tab badges={[<Badge key="badge1">1</Badge>, <Badge key="badge2">2</Badge>]}>
                 Tab 3
             </Tabs.Tab>
         </Tabs>

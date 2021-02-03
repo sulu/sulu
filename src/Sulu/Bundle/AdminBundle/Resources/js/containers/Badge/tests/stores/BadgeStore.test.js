@@ -1,4 +1,5 @@
 // @flow
+import 'whatwg-fetch';
 import SymfonyRouting from 'fos-jsrouting/router';
 import BadgeStore from '../../stores/BadgeStore';
 import Router from '../../../../services/Router';
@@ -42,7 +43,7 @@ test('Should load data using the Requester', () => {
             locale: 'locale',
         }
     );
-    badgeStore.initialize();
+    badgeStore.load();
 
     expect(Requester.get).toBeCalledWith('foo?entityId=5&locale=en&limit=0&entityClass=Foo');
 
@@ -74,7 +75,7 @@ test('Should load data without datapath', () => {
             locale: 'locale',
         }
     );
-    badgeStore.initialize();
+    badgeStore.load();
 
     expect(Requester.get).toBeCalledWith('foo?entityId=5&locale=en&limit=0&entityClass=Foo');
 
@@ -106,9 +107,8 @@ test('Should load data on response hook callback', () => {
             locale: 'locale',
         }
     );
+    badgeStore.load();
 
-    expect(Requester.handleResponseHooks).toHaveLength(0);
-    badgeStore.initialize();
     expect(Requester.handleResponseHooks).toHaveLength(1);
 
     // Initial request

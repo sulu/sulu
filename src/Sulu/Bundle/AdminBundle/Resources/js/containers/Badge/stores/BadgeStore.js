@@ -14,7 +14,7 @@ export default class BadgeStore {
     requestParameters: Object;
     routerAttributesToRequest: Object;
     @observable value: ?string = null;
-    disposer: () => {};
+    routeChangeDisposer: () => {};
 
     constructor(
         router: Router,
@@ -28,6 +28,15 @@ export default class BadgeStore {
         this.dataPath = dataPath;
         this.requestParameters = requestParameters;
         this.routerAttributesToRequest = routerAttributesToRequest;
+
+        // Needed to tell autorun to listen on route changes
+        this.routeChangeDisposer = reaction(() => this.router.route, () => {
+            this.load();
+        });
+
+        if (!Requester.handleResponseHooks.includes(this.responseHook)) {
+            Requester.handleResponseHooks.push(this.responseHook);
+        }
     }
 
     @computed get evaluatedRequestParameters() {
@@ -98,20 +107,9 @@ export default class BadgeStore {
         }
     };
 
-    initialize = () => {
-        this.load();
-
-        // Needed to tell autorun to listen on route changes
-        this.disposer = reaction(() => this.router.route, () => {
-            this.load();
-        });
-
-        if (!Requester.handleResponseHooks.includes(this.responseHook)) {
-            Requester.handleResponseHooks.push(this.responseHook);
-        }
-    };
-
     destroy = () => {
+        this.routeChangeDisposer();
+
         if (Requester.handleResponseHooks.includes(this.responseHook)) {
             Requester.handleResponseHooks.splice(
                 Requester.handleResponseHooks.indexOf(this.responseHook),

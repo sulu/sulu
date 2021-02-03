@@ -63,6 +63,29 @@ class Badge
         $this->visibleCondition = $visibleCondition;
     }
 
+    public function getRouteName(): string
+    {
+        return $this->routeName;
+    }
+
+    public function getDataPath(): ?string
+    {
+        return $this->dataPath;
+    }
+
+    public function getVisibleCondition(): ?string
+    {
+        return $this->visibleCondition;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getRequestParameters(): array
+    {
+        return $this->requestParameters;
+    }
+
     /**
      * @param array<string, mixed> $requestParameters
      */
@@ -71,6 +94,14 @@ class Badge
         $this->requestParameters = \array_merge($this->requestParameters, $requestParameters);
 
         return $this;
+    }
+
+    /**
+     * @return array<string|int, string>
+     */
+    public function getRouterAttributesToRequest(): array
+    {
+        return $this->routerAttributesToRequest;
     }
 
     /**
