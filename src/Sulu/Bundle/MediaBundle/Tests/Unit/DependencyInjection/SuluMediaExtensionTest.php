@@ -94,13 +94,11 @@ class SuluMediaExtensionTest extends AbstractExtensionTestCase
     {
         $this->container->setParameter('kernel.bundles', []);
         $this->load([
-            'format_manager' => [
+            'upload' => [
+                'max_filesize' => 16,
                 'blocked_file_types' => [
                     'file/exe',
                 ],
-            ],
-            'upload' => [
-                'max_filesize' => 16,
             ],
         ]);
 
@@ -114,6 +112,49 @@ class SuluMediaExtensionTest extends AbstractExtensionTestCase
             'sulu_media.file_validator',
             'setBlockedMimeTypes',
             [['file/exe']]
+        );
+    }
+
+    public function testConfigureFileValidatorWithDeprecatedOptions()
+    {
+        $this->container->setParameter('kernel.bundles', []);
+        $this->load([
+            'format_manager' => [
+                'blocked_file_types' => [
+                    'file/exe',
+                ],
+            ],
+        ]);
+
+        $this->assertContainerBuilderHasService('sulu_media.file_validator');
+        $this->assertContainerBuilderHasServiceDefinitionWithMethodCall(
+            'sulu_media.file_validator',
+            'setBlockedMimeTypes',
+            [['file/exe']]
+        );
+    }
+
+    public function testConfigureFileValidatorWithDeprecatedAndCorrectOptions()
+    {
+        $this->container->setParameter('kernel.bundles', []);
+        $this->load([
+            'format_manager' => [
+                'blocked_file_types' => [
+                    'file/exe',
+                ],
+            ],
+            'upload' => [
+                'blocked_file_types' => [
+                    'image/jpeg',
+                ],
+            ],
+        ]);
+
+        $this->assertContainerBuilderHasService('sulu_media.file_validator');
+        $this->assertContainerBuilderHasServiceDefinitionWithMethodCall(
+            'sulu_media.file_validator',
+            'setBlockedMimeTypes',
+            [['image/jpeg']]
         );
     }
 }
