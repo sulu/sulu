@@ -2,6 +2,14 @@
 
 ## dev-release/2.1
 
+### Contact's position length
+
+Change the possible length of a contact's position.
+
+```SQL
+ALTER TABLE co_positions CHANGE position position VARCHAR(191) NOT NULL;
+```
+
 ### DateTime filter type
 
 The DateTime filter type does now support time by default. If you want to reuse the "old" behaviour we have introduced
