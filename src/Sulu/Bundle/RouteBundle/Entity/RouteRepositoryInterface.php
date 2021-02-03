@@ -31,7 +31,7 @@ interface RouteRepositoryInterface
      * @param string $path
      * @param string $locale
      *
-     * @return RouteInterface
+     * @return RouteInterface|null
      */
     public function findByPath($path, $locale);
 
@@ -40,7 +40,7 @@ interface RouteRepositoryInterface
      *
      * @param int $id
      *
-     * @return RouteInterface
+     * @return RouteInterface|null
      */
     public function find($id);
 
@@ -51,7 +51,7 @@ interface RouteRepositoryInterface
      * @param string $entityId
      * @param string $locale
      *
-     * @return RouteInterface
+     * @return RouteInterface|null
      */
     public function findByEntity($entityClass, $entityId, $locale);
 

@@ -262,6 +262,14 @@ Mind the change of the `locale` query parameter and the addition of the `src` pa
 functionality with some of your custom entities, you need to adjust your API so that they work with the new query
 parameters.
 
+### Increased maximum length of contact position name
+
+To allow for longer contact position names, the length of the database column was increased. To do this in your project, you can use the following statement:
+
+```SQL
+ALTER TABLE co_positions CHANGE position position VARCHAR(191) NOT NULL;
+```
+
 ### DateTime filter type
 
 The DateTime filter type does now support time by default. If you want to reuse the "old" behaviour we have introduced

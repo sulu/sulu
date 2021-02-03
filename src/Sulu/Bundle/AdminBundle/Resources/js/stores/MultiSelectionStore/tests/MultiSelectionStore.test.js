@@ -80,6 +80,45 @@ test('Should return undefined if the given ID does not exist', () => {
     expect(selectionStore.getById(5)).toEqual(undefined);
 });
 
+test('Should sort items to match order of given ids after loading items when being constructed', () => {
+    const listPromise = Promise.resolve({
+        _embedded: {
+            snippets: [
+                {id: 1},
+                {id: 2},
+                {id: 3},
+            ],
+        },
+    });
+
+    ResourceRequester.getList.mockReturnValue(listPromise);
+
+    const selectionStore = new MultiSelectionStore(
+        'snippets',
+        [3, 1, 2],
+        observable.box('en'),
+        'ids'
+    );
+
+    expect(ResourceRequester.getList).toBeCalledWith(
+        'snippets',
+        {
+            ids: '3,1,2',
+            limit: undefined,
+            locale: 'en',
+            page: 1,
+        }
+    );
+
+    return listPromise.then(() => {
+        expect(toJS(selectionStore.items)).toEqual([
+            {id: 3},
+            {id: 1},
+            {id: 2},
+        ]);
+    });
+});
+
 test('Should load items with different filterParameter when being constructed', () => {
     const listPromise = Promise.resolve({
         _embedded: {
@@ -226,19 +265,19 @@ test('Should remove an item from the store', () => {
         _embedded: {
             snippets: [
                 {id: 1},
-                {id: 2},
+                {id: 3},
             ],
         },
     });
 
     ResourceRequester.getList.mockReturnValue(listPromise);
 
-    const selectionStore = new MultiSelectionStore('snippets', [1, 3, 4], observable.box('en'));
+    const selectionStore = new MultiSelectionStore('snippets', [1, 3], observable.box('en'));
 
     expect(ResourceRequester.getList).toBeCalledWith(
         'snippets',
         {
-            ids: '1,3,4',
+            ids: '1,3',
             limit: undefined,
             locale: 'en',
             page: 1,
@@ -248,12 +287,12 @@ test('Should remove an item from the store', () => {
     return listPromise.then(() => {
         expect(toJS(selectionStore.items)).toEqual([
             {id: 1},
-            {id: 2},
+            {id: 3},
         ]);
 
         selectionStore.removeById(1);
 
-        expect(toJS(selectionStore.items)).toEqual([{id: 2}]);
+        expect(toJS(selectionStore.items)).toEqual([{id: 3}]);
     });
 });
 

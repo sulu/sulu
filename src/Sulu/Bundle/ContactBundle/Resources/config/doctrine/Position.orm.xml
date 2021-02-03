@@ -7,7 +7,7 @@
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>
-        <field name="position" type="string" column="position" length="60"/>
+        <field name="position" type="string" column="position" length="191"/>
         <unique-constraints>
             <unique-constraint columns="position" />
         </unique-constraints>

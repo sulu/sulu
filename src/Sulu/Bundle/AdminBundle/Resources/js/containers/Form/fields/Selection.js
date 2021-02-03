@@ -1,10 +1,11 @@
 // @flow
 import React from 'react';
-import {computed, observable, intercept, toJS, reaction} from 'mobx';
+import {computed, observable, intercept, toJS, reaction, isArrayLike} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import equals from 'fast-deep-equal';
 import {observer} from 'mobx-react';
 import jsonpointer from 'json-pointer';
+import log from 'loglevel';
 import FormInspector from '../FormInspector';
 import List from '../../../containers/List';
 import ListStore from '../../../containers/List/stores/ListStore';
@@ -17,7 +18,8 @@ import type {FieldTypeProps} from '../../../types';
 import type {SchemaOption} from '../types';
 import selectionStyles from './selection.scss';
 
-type Props = FieldTypeProps<Array<string | number>>;
+type Value = Array<string | number>;
+type Props = FieldTypeProps<Value>;
 
 const USER_SETTINGS_KEY = 'selection';
 
@@ -103,7 +105,6 @@ class Selection extends React.Component<Props> {
                         },
                     },
                 },
-                value,
             } = this.props;
 
             this.listStore = new ListStore(
@@ -113,7 +114,7 @@ class Selection extends React.Component<Props> {
                 {locale: this.locale, page: observable.box()},
                 this.requestOptions,
                 undefined,
-                value
+                this.value
             );
 
             this.changeListDisposer = reaction(
@@ -145,11 +146,9 @@ class Selection extends React.Component<Props> {
                 return change;
             });
         } else if (this.type === 'auto_complete') {
-            const {value} = this.props;
-
             this.autoCompleteSelectionStore = new MultiSelectionStore(
                 resourceKey,
-                value || [],
+                this.value || [],
                 this.locale,
                 this.autoCompleteFilterParameter
             );
@@ -164,17 +163,15 @@ class Selection extends React.Component<Props> {
     }
 
     componentDidUpdate() {
-        const {value} = this.props;
-
         if (
             this.type === 'auto_complete'
             && this.autoCompleteSelectionStore
             && !equals(
                 this.autoCompleteSelectionStore.items.map((item) => item[this.autoCompleteIdProperty]),
-                toJS(value)
+                toJS(this.value)
             )
         ) {
-            this.autoCompleteSelectionStore.loadItems(value);
+            this.autoCompleteSelectionStore.loadItems(this.value);
         }
     }
 
@@ -198,6 +195,26 @@ class Selection extends React.Component<Props> {
         if (this.listStore) {
             this.listStore.destroy();
         }
+    }
+
+    @computed get value(): ?Value {
+        const {value, dataPath} = this.props;
+
+        if (value && isArrayLike(value) && value.length > 0 && typeof value[0] === 'object') {
+            log.warn(
+                'The "Selection" field with the path "' + dataPath + '" expects an array of ids as value but '
+                + 'received an array of objects instead. Is it possible that your API returns an array serialized '
+                + 'objects?'
+                + '\n\nThe Sulu form view expects that your API returns the data in the same format as it is sent '
+                + 'to the server when submitting the form. '
+                + '\nSulu will try to extract the ids from the given array of objects heuristically. '
+                + 'This decreases performance and might lead to errors or other unexpected behaviour.'
+            );
+
+            return value.map((item) => item && typeof item === 'object' ? item.id : item);
+        }
+
+        return value;
     }
 
     @computed get locale(): IObservableValue<string> {
@@ -361,7 +378,6 @@ class Selection extends React.Component<Props> {
                     value: allowDeselectForDisabledItems = true,
                 } = {},
             },
-            value,
         } = this.props;
 
         if (types !== undefined && typeof types !== 'string') {
@@ -394,7 +410,7 @@ class Selection extends React.Component<Props> {
                 displayProperties={displayProperties}
                 icon={icon}
                 itemDisabledCondition={itemDisabledCondition}
-                label={translate(label, {count: value ? value.length : 0})}
+                label={translate(label, {count: this.value ? this.value.length : 0})}
                 listKey={listKey || resourceKey}
                 locale={this.locale}
                 onChange={this.handleMultiSelectionChange}
@@ -402,12 +418,12 @@ class Selection extends React.Component<Props> {
                 options={options}
                 overlayTitle={translate(overlayTitle)}
                 resourceKey={resourceKey}
-                value={value || []}
+                value={this.value || []}
             />
         );
     }
 
-    handleMultiSelectionChange = (selectedIds: Array<string | number>) => {
+    handleMultiSelectionChange = (selectedIds: Value) => {
         const {onChange, onFinish} = this.props;
 
         onChange(selectedIds);
@@ -497,8 +513,8 @@ class Selection extends React.Component<Props> {
         );
     }
 
-    handleListSelectionChange = (selectedIds: Array<string | number>) => {
-        const {onChange, onFinish, value} = this.props;
+    handleListSelectionChange = (selectedIds: Value) => {
+        const {onChange, onFinish} = this.props;
 
         if (!this.listStore) {
             throw new Error(
@@ -510,14 +526,14 @@ class Selection extends React.Component<Props> {
             return;
         }
 
-        if (!equals(toJS(value), toJS(selectedIds))) {
+        if (!equals(toJS(this.value), toJS(selectedIds))) {
             onChange(selectedIds);
             onFinish();
         }
     };
 
-    handleAutoCompleteSelectionChange = (selectedIds: Array<string | number>) => {
-        const {onChange, onFinish, value} = this.props;
+    handleAutoCompleteSelectionChange = (selectedIds: Value) => {
+        const {onChange, onFinish} = this.props;
 
         if (!this.autoCompleteSelectionStore) {
             throw new Error(
@@ -529,7 +545,7 @@ class Selection extends React.Component<Props> {
             return;
         }
 
-        if (!equals(toJS(value) || [], toJS(selectedIds))) {
+        if (!equals(toJS(this.value) || [], toJS(selectedIds))) {
             onChange(selectedIds);
             onFinish();
         }
