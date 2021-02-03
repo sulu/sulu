@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import log from 'loglevel';
 import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import {mount, shallow} from 'enzyme';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
@@ -9,6 +10,10 @@ import ResourceStore from 'sulu-admin-bundle/stores/ResourceStore';
 import Router from 'sulu-admin-bundle/services/Router';
 import MediaSelection from '../../fields/MediaSelection';
 import MultiMediaSelection from '../../../MultiMediaSelection';
+
+jest.mock('loglevel', () => ({
+    warn: jest.fn(),
+}));
 
 jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn(function(resourceKey, id, observableOptions) {
     this.locale = observableOptions.locale;
@@ -250,6 +255,44 @@ test('Should navigate to media if a media is clicked', () => {
     expect(router.navigate).toHaveBeenLastCalledWith('sulu_media.form', {id: 66, locale: 'en'});
 });
 
+test('Should throw an error if given value does not have an ids property', () => {
+    const formInspector = new FormInspector(
+        new ResourceFormStore(
+            new ResourceStore('test', undefined, {locale: observable.box('en')}),
+            'test'
+        )
+    );
+
+    expect(() => shallow(
+        <MediaSelection
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            value={({unrelatedProperty: 123}: any)}
+        />
+    )).toThrow(/"ids" property/);
+});
+
+test('Should log warning and use ids of objects if given value is an array of objects', () => {
+    const formInspector = new FormInspector(
+        new ResourceFormStore(
+            new ResourceStore('test', undefined, {locale: observable.box('en')}),
+            'test'
+        )
+    );
+
+    const mediaSelection = shallow(
+        <MediaSelection
+            {...fieldTypeDefaultProps}
+            disabled={true}
+            formInspector={formInspector}
+            value={([{id: 55}, {id: 66}, {id: 77}]: any)}
+        />
+    );
+
+    expect(mediaSelection.find(MultiMediaSelection).props().value).toEqual({ids: [55, 66, 77]});
+    expect(log.warn).toBeCalledWith(expect.stringContaining('expects an object with an "ids" property as value'));
+});
+
 test('Should throw an error if displayOptions schemaOption is given but not an array', () => {
     const formInspector = new FormInspector(
         new ResourceFormStore(
@@ -282,23 +325,6 @@ test('Should throw an error if given value is not an object', () => {
             value={(true: any)}
         />
     )).toThrow(/expects an object/);
-});
-
-test('Should throw an error if given value does not have an ids property', () => {
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test', undefined, {locale: observable.box('en')}),
-            'test'
-        )
-    );
-
-    expect(() => shallow(
-        <MediaSelection
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            value={({unrelatedProperty: 123}: any)}
-        />
-    )).toThrow(/"ids" property/);
 });
 
 test('Should throw an error if displayOptions schemaOption is given but not an array', () => {

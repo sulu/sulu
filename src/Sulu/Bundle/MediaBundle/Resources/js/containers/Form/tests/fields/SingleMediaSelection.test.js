@@ -231,6 +231,23 @@ test('Should call onItemClick if item is clicked', () => {
     expect(router.navigate).toBeCalledWith('sulu_media.form', {id: 6, locale: 'de'});
 });
 
+test('Should throw an error if given value is not an object', () => {
+    const formInspector = new FormInspector(
+        new ResourceFormStore(
+            new ResourceStore('test', undefined, {locale: observable.box('en')}),
+            'test'
+        )
+    );
+
+    expect(() => shallow(
+        <SingleMediaSelection
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            value={(55: any)}
+        />
+    )).toThrow(/expects an object with an "id" property/);
+});
+
 test('Should throw an error if displayOptions schemaOption is given but not an array', () => {
     const formInspector = new FormInspector(
         new ResourceFormStore(
