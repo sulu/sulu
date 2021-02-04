@@ -5,7 +5,8 @@ $urlBorderColor: $silver;
 $urlButtonColor: $dustyGray;
 $urlInputColor: $black;
 $urlErrorBorderColor: $persianRed;
-
+$urlHeight: 30px;
+$urlBorderWidth: 1px;
 $urlInputDisabledColor: $gray;
 $urlInputDisabledBackgroundColor: $wildSand;
 
@@ -13,9 +14,9 @@ $urlInputDisabledBackgroundColor: $wildSand;
     display: flex;
     align-items: center;
     width: 100%;
-    height: 30px;
+    height: $urlHeight;
     border-radius: 3px;
-    border: 1px solid $urlBorderColor;
+    border: $urlBorderWidth solid $urlBorderColor;
     background-color: $urlBackgroundColor;
     font-size: 12px;
     overflow: hidden;
@@ -35,6 +36,7 @@ $urlInputDisabledBackgroundColor: $wildSand;
         border: none;
         padding: 0 10px;
         width: 0;
+        height: calc($urlHeight - 2 * $urlBorderWidth);
 
         &:disabled {
             color: $urlInputDisabledColor;
