@@ -1,8 +1,8 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import {mount, render, shallow} from 'enzyme';
 import React from 'react';
-import Badge from '../../Badge/Badge';
 import debounce from 'debounce';
+import Badge from '../../Badge/Badge';
 import Tabs from '../Tabs.js';
 
 jest.mock('debounce', () => jest.fn((callback) => callback));
