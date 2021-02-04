@@ -38,6 +38,26 @@ interface CategoryRequestHandlerInterface
     public function appendCategoryToUrl($category, $categoriesParameter = 'categories');
 
     /**
+     * Removes given category from current URL.
+     *
+     * @param array|CategoryInterface $category will be removed from the URL
+     * @param string $categoriesParameter GET parameter name
+     *
+     * @return string
+     */
+    public function removeCategoryFromUrl($category, $categoriesParameter = 'categories');
+
+    /**
+     * Toggles given category in current URL.
+     *
+     * @param array|CategoryInterface $category will be toggled in the URL
+     * @param string $categoriesParameter GET parameter name
+     *
+     * @return string
+     */
+    public function toggleCategoryInUrl($category, $categoriesParameter = 'categories');
+
+    /**
      * Set category to current URL.
      *
      * @param array|CategoryInterface $category will be included in the URL
