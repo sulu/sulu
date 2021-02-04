@@ -1,10 +1,11 @@
 // @flow
 import React from 'react';
-import type {ElementRef} from 'react';
+import type {Element, ElementRef} from 'react';
 import classNames from 'classnames';
 import tabStyles from './tab.scss';
 
 type Props = {
+    badges: Element<*>[],
     children: string,
     hidden: boolean,
     index?: number,
@@ -16,6 +17,7 @@ type Props = {
 
 class Tab extends React.PureComponent<Props> {
     static defaultProps = {
+        badges: [],
         hidden: false,
         selected: false,
         small: false,
@@ -39,6 +41,7 @@ class Tab extends React.PureComponent<Props> {
 
     render() {
         const {
+            badges,
             children,
             hidden,
             small,
@@ -62,6 +65,11 @@ class Tab extends React.PureComponent<Props> {
                     title={children}
                 >
                     {children}
+                    {!!badges && !!badges.length &&
+                        <div className={tabStyles.badges}>
+                            {badges}
+                        </div>
+                    }
                 </button>
             </li>
         );

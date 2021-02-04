@@ -1,6 +1,7 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import {mount, render, shallow} from 'enzyme';
 import React from 'react';
+import Badge from '../../Badge/Badge';
 import debounce from 'debounce';
 import Tabs from '../Tabs.js';
 
@@ -54,7 +55,7 @@ test('Render a Tabs component with small modifier', () => {
     )).toMatchSnapshot();
 });
 
-test('Render a Tabs component with a selected tab', () => {
+test('Render a Tabs component with a selected tab and a badge', () => {
     const changeSpy = jest.fn();
     const selectedTabIndex = 0;
 
@@ -62,7 +63,7 @@ test('Render a Tabs component with a selected tab', () => {
         <Tabs onSelect={changeSpy} selectedIndex={selectedTabIndex}>
             <Tabs.Tab>Tab 1</Tabs.Tab>
             <Tabs.Tab>Tab 2</Tabs.Tab>
-            <Tabs.Tab>Tab 3</Tabs.Tab>
+            <Tabs.Tab badges={[<Badge key="badge1">1</Badge>, <Badge key="badge2">2</Badge>]}>Tab 3</Tabs.Tab>
         </Tabs>
     )).toMatchSnapshot();
 });

@@ -7,6 +7,7 @@ import TabsComponent from '../../components/Tabs';
 import type {ViewProps} from '../../containers/ViewRenderer';
 import {translate} from '../../utils/Translator';
 import {Route} from '../../services/Router';
+import Badge, {type BadgeOptions} from '../../containers/Badge';
 import tabsStyles from './tabs.scss';
 
 type Props<T> = {
@@ -118,7 +119,7 @@ class Tabs<T> extends React.Component<Props<T>> {
     };
 
     render() {
-        const {children, childrenProps, header, selectedIndex} = this.props;
+        const {children, childrenProps, header, router, selectedIndex} = this.props;
 
         const childComponent = children ? children(childrenProps) : null;
 
@@ -134,8 +135,30 @@ class Tabs<T> extends React.Component<Props<T>> {
                     <TabsComponent onSelect={this.handleSelect} selectedIndex={selectedTabIndex}>
                         {this.sortedTabRoutes.map((tabRoute) => {
                             const tabTitle = tabRoute.options.tabTitle;
+                            const tabBadges = tabRoute.options.tabBadges || [];
+
+                            const badges = (Object.values(tabBadges): any).map((badge: BadgeOptions, index: number) => {
+                                if (typeof badge !== 'object') {
+                                    throw new Error(
+                                        `The value of a badge entry must be an object, but ${typeof badge} was given!`
+                                    );
+                                }
+
+                                return (
+                                    <Badge
+                                        dataPath={badge.dataPath}
+                                        key={index}
+                                        requestParameters={badge.requestParameters}
+                                        routeName={badge.routeName}
+                                        router={router}
+                                        routerAttributesToRequest={badge.routerAttributesToRequest}
+                                        visibleCondition={badge.visibleCondition}
+                                    />
+                                );
+                            });
+
                             return (
-                                <TabsComponent.Tab key={tabRoute.name}>
+                                <TabsComponent.Tab badges={badges} key={tabRoute.name}>
                                     {tabTitle ? translate(tabTitle) : tabRoute.name}
                                 </TabsComponent.Tab>
                             );

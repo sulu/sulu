@@ -99,9 +99,9 @@ function transformRequestData(data: Object | Array<Object>) {
     return transformRequestObject(data);
 }
 
-function handleResponse(response: Response): Promise<Object | Array<Object>> {
+function handleResponse(response: Response, options: ?Object): Promise<Object | Array<Object>> {
     for (const handleResponseHook of Requester.handleResponseHooks) {
-        handleResponseHook(response);
+        handleResponseHook(response, options);
     }
 
     if (!response.ok) {
@@ -122,8 +122,8 @@ function handleResponse(response: Response): Promise<Object | Array<Object>> {
     });
 }
 
-function handleObjectResponse(response: Response): Promise<Object> {
-    return handleResponse(response).then((response) => {
+function handleObjectResponse(response: Response, options: ?Object): Promise<Object> {
+    return handleResponse(response, options).then((response) => {
         if (Array.isArray(response)) {
             throw Error('Response was expected to be an object, but an array was given');
         }
@@ -132,7 +132,7 @@ function handleObjectResponse(response: Response): Promise<Object> {
     });
 }
 
-function createFetchCall(url, options): RequestPromise<*> {
+function createFetchCall(url, options: ?Object): RequestPromise<*> {
     let promiseResolve, promiseReject;
     const requestPromise = new RequestPromise(function(resolve, reject) {
         promiseResolve = resolve;
@@ -153,29 +153,48 @@ export default class Requester {
     static handleResponseHooks: Array<HandleResponseHook> = [];
 
     static get(url: string): RequestPromise<Object> {
-        return createFetchCall(url).then(handleObjectResponse);
+        const options = {method: 'GET'};
+        return createFetchCall(url, options)
+            .then((response) => handleObjectResponse(response, options));
     }
 
     static post(url: string, data: ?Object): RequestPromise<Object> {
+        const options = {
+            ...defaultOptions,
+            method: 'POST',
+            body: data ? JSON.stringify(transformRequestData(data)) : undefined,
+        };
+
         return createFetchCall(
             url,
-            {...defaultOptions, method: 'POST', body: data ? JSON.stringify(transformRequestData(data)) : undefined}
-        ).then(handleObjectResponse);
+            options
+        ).then((response) => handleObjectResponse(response, options));
     }
 
     static put(url: string, data: Object): RequestPromise<Object> {
+        const options = {
+            ...defaultOptions,
+            method: 'PUT',
+            body: data ? JSON.stringify(transformRequestData(data)) : undefined,
+        };
+
         return createFetchCall(
             url,
-            {...defaultOptions, method: 'PUT', body: data ? JSON.stringify(transformRequestData(data)) : undefined}
-        ).then(handleObjectResponse);
+            options
+        ).then((response) => handleObjectResponse(response, options));
     }
 
     static patch(url: string, data: Array<Object> | Object): RequestPromise<Array<Object> | Object> {
-        return createFetchCall(url, {method: 'PATCH', body: JSON.stringify(transformRequestData(data))})
-            .then(handleResponse);
+        const options = {method: 'PATCH', body: JSON.stringify(transformRequestData(data))};
+
+        return createFetchCall(url, options)
+            .then((response) => handleResponse(response, options));
     }
 
     static delete(url: string): RequestPromise<Object> {
-        return createFetchCall(url, {method: 'DELETE'}).then(handleObjectResponse);
+        const options = {method: 'DELETE'};
+
+        return createFetchCall(url, options)
+            .then((response) => handleObjectResponse(response, options));
     }
 }

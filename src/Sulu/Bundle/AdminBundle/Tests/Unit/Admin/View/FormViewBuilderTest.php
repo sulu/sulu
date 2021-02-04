@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\Admin\View;
 
 use PHPUnit\Framework\TestCase;
+use Sulu\Bundle\AdminBundle\Admin\View\Badge;
 use Sulu\Bundle\AdminBundle\Admin\View\FormViewBuilder;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 
@@ -319,5 +320,35 @@ class FormViewBuilderTest extends TestCase
             ->setFormKey('roles')
             ->setEditView('sulu_role.list')
             ->getView();
+    }
+
+    public function testBuildAddTabBadge()
+    {
+        $fooBadge = new Badge('sulu_foo.get_foo_badge');
+        $barBadge = new Badge('sulu_bar.get_bar_badge');
+        $bazBadge = (new Badge('sulu_baz.get_baz_badge', '/total', 'value != 0'))
+            ->addRequestParameters([
+                'limit' => 0,
+                'entityClass' => 'Sulu\Bundle\BazBundle\Entity\Baz',
+            ])
+            ->addRouterAttributesToRequest([
+                'locale',
+                'id' => 'entityId',
+            ]);
+
+        $view = (new FormViewBuilder('sulu_role.list', '/roles'))
+            ->setResourceKey('roles')
+            ->setFormKey('roles')
+            ->addTabBadges([$fooBadge, 'abc' => $barBadge])
+            ->addTabBadges(['abc' => $bazBadge])
+            ->getView();
+
+        $this->assertEquals(
+            [
+                $fooBadge,
+                'abc' => $bazBadge,
+            ],
+            $view->getOption('tabBadges')
+        );
     }
 }

@@ -338,8 +338,8 @@ class WebspaceManager implements WebspaceManagerInterface
     {
         $localizations = [];
 
+        /** @var Webspace $webspace */
         foreach ($this->getWebspaceCollection() as $webspace) {
-            /** @var Webspace $webspace */
             foreach ($webspace->getAllLocalizations() as $localization) {
                 $localizations[$localization->getLocale()] = $localization;
             }

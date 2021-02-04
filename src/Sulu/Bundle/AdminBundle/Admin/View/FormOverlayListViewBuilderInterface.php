@@ -29,6 +29,8 @@ interface FormOverlayListViewBuilderInterface extends ViewBuilderInterface
 
     public function setTabOrder(int $tabOrder): self;
 
+    public function setTabPriority(int $tabPriority): self;
+
     public function setTabCondition(string $tabCondition): self;
 
     /**
@@ -90,4 +92,9 @@ interface FormOverlayListViewBuilderInterface extends ViewBuilderInterface
     public function setOverlaySize(string $overlaySize): self;
 
     public function addMetadataRequestParameters(array $metadataRequestParameters): self;
+
+    /**
+     * @param Badge[] $badges
+     */
+    public function addTabBadges(array $badges): self;
 }
