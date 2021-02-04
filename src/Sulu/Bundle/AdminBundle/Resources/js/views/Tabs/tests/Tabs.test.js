@@ -3,6 +3,12 @@ import React from 'react';
 import {mount, render} from 'enzyme';
 import Router, {Route} from '../../../services/Router';
 import Tabs from '../Tabs';
+import Requester from '../../../services/Requester';
+
+jest.mock('../../../services/Requester', () => ({
+    get: jest.fn(),
+}));
+Requester.handleResponseHooks = [];
 
 jest.mock('debounce', () => jest.fn((callback) => callback));
 
@@ -62,6 +68,71 @@ test('Should render the children after the tabs', () => {
 
     const Child = () => (<h1>Child</h1>);
     expect(render(<Tabs route={route} router={router}>{() => (<Child />)}</Tabs>)).toMatchSnapshot();
+});
+
+test('Should render the tab badges', () => {
+    const promise = Promise.resolve({count: 2});
+    Requester.get.mockReturnValue(promise);
+    Requester.handleResponseHooks = [];
+
+    const childRoute1 = new Route({
+        name: 'route1',
+        options: {
+            tabTitle: 'tabTitle1',
+            tabBadges: [
+                {
+                    dataPath: '/count',
+                    requestParameters: {
+                        foo: 'bar',
+                        bar: 'baz',
+                    },
+                    routeName: 'app.notification_count',
+                    routerAttributesToRequest: {
+                        locale: 'locale',
+                        id: 'entityId',
+                    },
+                    visibleCondition: 'value != 0',
+                },
+            ],
+        },
+        path: '/route1',
+        type: 'route1',
+    });
+
+    const route = new Route({
+        name: 'parent',
+        options: {
+            resourceKey: 'test',
+        },
+        path: '/parent',
+        type: 'route1',
+    });
+
+    route.children.push(childRoute1);
+
+    const attributes = {
+        id: 1,
+    };
+
+    // $FlowFixMe
+    Router.mockImplementation(function() {
+        this.attributes = attributes;
+        this.redirect = jest.fn();
+        this.route = route;
+    });
+
+    const router = new Router({});
+
+    const Child = () => (<h1>Child</h1>);
+    const tabs = mount(<Tabs route={route} router={router}>{() => (<Child />)}</Tabs>);
+
+    return promise.then(() => {
+        tabs.update();
+
+        const badgeContainer = tabs.children().find('Badge');
+        expect(badgeContainer.children().find('Badge').length).toBe(1);
+        expect(badgeContainer.children().find('Badge').text()).toBe('2');
+    });
 });
 
 test('Should render the header between children and tabs', () => {

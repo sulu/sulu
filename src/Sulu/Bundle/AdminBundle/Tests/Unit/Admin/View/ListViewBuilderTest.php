@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\Admin\View;
 
 use PHPUnit\Framework\TestCase;
+use Sulu\Bundle\AdminBundle\Admin\View\Badge;
 use Sulu\Bundle\AdminBundle\Admin\View\ListViewBuilder;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Bundle\TestBundle\Testing\ReadObjectAttributeTrait;
@@ -368,6 +369,18 @@ class ListViewBuilderTest extends TestCase
         $this->assertSame(5, $view->getOption('tabOrder'));
     }
 
+    public function testBuildListSetTabPriority()
+    {
+        $view = (new ListViewBuilder('sulu_role.list', '/roles'))
+            ->setResourceKey('roles')
+            ->setListKey('roles')
+            ->addListAdapters(['tree'])
+            ->setTabPriority(5)
+            ->getView();
+
+        $this->assertSame(5, $view->getOption('tabPriority'));
+    }
+
     public function testBuildListSetTabCondition()
     {
         $view = (new ListViewBuilder('sulu_role.list', '/roles'))
@@ -441,6 +454,37 @@ class ListViewBuilderTest extends TestCase
         $this->assertEquals(
             [$linkItemAction, $exportItemAction, $downloadItemAction],
             $view->getOption('itemActions')
+        );
+    }
+
+    public function testBuildAddTabBadge()
+    {
+        $fooBadge = new Badge('sulu_foo.get_foo_badge');
+        $barBadge = new Badge('sulu_bar.get_bar_badge');
+        $bazBadge = (new Badge('sulu_baz.get_baz_badge', '/total', 'value != 0'))
+            ->addRequestParameters([
+                'limit' => 0,
+                'entityClass' => 'Sulu\Bundle\BazBundle\Entity\Baz',
+            ])
+            ->addRouterAttributesToRequest([
+                'locale',
+                'id' => 'entityId',
+            ]);
+
+        $view = (new ListViewBuilder('sulu_role.list', '/roles'))
+            ->setResourceKey('roles')
+            ->setListKey('roles')
+            ->addListAdapters(['tree'])
+            ->addTabBadges([$fooBadge, 'abc' => $barBadge])
+            ->addTabBadges(['abc' => $bazBadge])
+            ->getView();
+
+        $this->assertEquals(
+            [
+                $fooBadge,
+                'abc' => $bazBadge,
+            ],
+            $view->getOption('tabBadges')
         );
     }
 }

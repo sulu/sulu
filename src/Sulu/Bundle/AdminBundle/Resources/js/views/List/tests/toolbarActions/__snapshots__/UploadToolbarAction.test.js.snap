@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Should correctly render node 1`] = `
+<div>
+  <input
+    accept="text/csv"
+    autocomplete="off"
+    style="display:none"
+    tabindex="-1"
+    type="file"
+  />
+</div>
+`;

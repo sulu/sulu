@@ -176,8 +176,6 @@ class FormatManager implements FormatManagerInterface
 
     public function getFormats($id, $fileName, $version, $subVersion, $mimeType)
     {
-        $fileName = \pathinfo($fileName)['filename'];
-
         $formats = [];
 
         $extensions = $this->converter->getSupportedOutputImageFormats($mimeType);

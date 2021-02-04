@@ -58,4 +58,9 @@ interface FormViewBuilderInterface extends ViewBuilderInterface
     public function setIdQueryParameter(string $idQueryParameter): self;
 
     public function setTitleVisible(bool $titleVisible): self;
+
+    /**
+     * @param Badge[] $badges
+     */
+    public function addTabBadges(array $badges): self;
 }

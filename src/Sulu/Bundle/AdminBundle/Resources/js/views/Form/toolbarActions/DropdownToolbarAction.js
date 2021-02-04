@@ -77,7 +77,7 @@ export default class DropdownToolbarAction extends AbstractFormToolbarAction {
         }
 
         if (typeof icon !== 'string') {
-            throw new Error('The "label" option must be a string!');
+            throw new Error('The "icon" option must be a string!');
         }
 
         const options: Array<DropdownOption> = this.toolbarActions

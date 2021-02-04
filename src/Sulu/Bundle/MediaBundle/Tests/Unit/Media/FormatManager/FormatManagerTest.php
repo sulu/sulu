@@ -219,6 +219,22 @@ class FormatManagerTest extends TestCase
         $this->assertEquals([], $result);
     }
 
+    public function testGetFormatsWithMultipleDotsInFilename()
+    {
+        $this->formatCache->getMediaUrl(1, 'dummy.bak.jpg', '640x480', 1, 2)->shouldBeCalled();
+        $this->formatCache->getMediaUrl(1, 'dummy.bak.jpg', '50x50', 1, 2)->shouldBeCalled();
+
+        $this->imageConverter->getSupportedOutputImageFormats(Argument::any())->willReturn(['jpg'])->shouldBeCalled();
+
+        $this->formatManager->getFormats(
+            1,
+            'dummy.bak.jpg',
+            1,
+            2,
+            'jpg'
+        );
+    }
+
     public function testGetFormatDefinition()
     {
         $format = $this->formatManager->getFormatDefinition('640x480', 'en', ['my-option' => 'my-value']);
