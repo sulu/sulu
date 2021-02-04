@@ -172,7 +172,7 @@
     "sulu_admin.dropzone_error_file-invalid-type": "{fileName, select, undefined{File} other{{fileName}}} has invalid type{allowedTypes, select, undefined{} other{. Allowed types are ({allowedTypes})}}",
     "sulu_admin.dropzone_error_file-too-large": "{fileName, select, undefined{File} other{{fileName}}} is {maxSize, select, undefined{too large} other{larger than {maxSize}}}",
     "sulu_admin.dropzone_error_file-too-small": "{fileName, select, undefined{File} other{{fileName}}} is {minSize, select, undefined{too small} other{smaller than {minSize}}}",
-    "sulu_admin.dropzone_error_too-many-files": "Too many files{maxFiles, select, undefined{} other{. Maximum allowed files: {maxFiles}}}"
+    "sulu_admin.dropzone_error_too-many-files": "Too many files{maxFiles, select, undefined{} other{. Maximum allowed files: {maxFiles}}}",
     "sulu_admin.weekly": "Weekly",
     "sulu_admin.fixed": "Fixed time period",
     "sulu_admin.weekdays": "Weekdays",
