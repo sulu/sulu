@@ -26,5 +26,6 @@ $textareaColor: $black;
     &.disabled {
         color: $textareaDisabledColor;
         background-color: $textareaDisabledBackgroundColor;
+        -webkit-text-fill-color: $textareaDisabledColor; /* Necessary for Safari and iOS */
     }
 }

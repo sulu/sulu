@@ -5,6 +5,7 @@ $chipPrimaryColor: $white;
 $chipSecondaryBackgroundColor: $wildSand;
 $chipSecondaryColor: $black;
 $chipDisabledBackgroundColor: $silver;
+$chipDisabledColor: $gray;
 
 .chip {
     border: none;
@@ -31,6 +32,7 @@ $chipDisabledBackgroundColor: $silver;
 
 .disabled {
     background-color: $chipDisabledBackgroundColor;
+    color: $chipDisabledColor;
 }
 
 .primary {
@@ -44,6 +46,10 @@ $chipDisabledBackgroundColor: $silver;
     &.chip {
         background-color: $chipSecondaryBackgroundColor;
         color: $chipSecondaryColor;
+
+        &.disabled {
+            color: $chipDisabledColor;
+        }
     }
 }
 
