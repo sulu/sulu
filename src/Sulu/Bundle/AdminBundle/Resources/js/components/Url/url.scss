@@ -39,6 +39,7 @@ $urlInputDisabledBackgroundColor: $wildSand;
         &:disabled {
             color: $urlInputDisabledColor;
             background-color: $urlInputDisabledBackgroundColor;
+            -webkit-text-fill-color: $urlInputDisabledColor; /* Necessary for Safari and iOS */
         }
     }
 }
