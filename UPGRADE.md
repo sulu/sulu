@@ -1,5 +1,15 @@
 # Upgrade
 
+## 2.2.4
+
+### Increased maximum length of contact position name
+
+To allow for longer contact position names, the length of the database column was increased. To do this in your project, you can use the following statement:
+
+```SQL
+ALTER TABLE co_positions CHANGE position position VARCHAR(191) NOT NULL;
+```
+
 ## 2.2.2
 
 ### Added default value to anonymous column of se_roles table
@@ -123,6 +133,16 @@ imports:
     - { resource: '../prod/sulu_http_cache.yaml' }
 ```
 
+## 2.1.8
+
+### Increased maximum length of contact position name
+
+To allow for longer contact position names, the length of the database column was increased. To do this in your project, you can use the following statement:
+
+```SQL
+ALTER TABLE co_positions CHANGE position position VARCHAR(191) NOT NULL;
+```
+
 ## 2.1.6
 
 ### Smartcontent Type Filtering
@@ -178,14 +198,6 @@ After:
 Mind the change of the `locale` query parameter and the addition of the `src` parameter. In case you have reused that
 functionality with some of your custom entities, you need to adjust your API so that they work with the new query
 parameters.
-
-### Increased maximum length of contact position name
-
-To allow for longer contact position names, the length of the database column was increased. To do this in your project, you can use the following statement:
-
-```SQL
-ALTER TABLE co_positions CHANGE position position VARCHAR(191) NOT NULL;
-```
 
 ### DateTime filter type
 
