@@ -28,6 +28,7 @@ $buttonHorizontalPadding: 20px;
         background-color: transparent;
         font-size: 12px;
         border: 0;
+        white-space: nowrap;
 
         /* Needed because we want to prevent the jump on font-weight changes */
         &::after {
@@ -51,4 +52,12 @@ $buttonHorizontalPadding: 20px;
             transform: scaleX(1);
         }
     }
+}
+
+.badges {
+    margin-left: 4px;
+    display: inline-flex;
+    vertical-align: text-top;
+    gap: 1px;
+    transform: translateY(-5px);
 }

@@ -32,4 +32,16 @@ trait TabViewChildBuilderTrait
     {
         $view->setOption('tabPriority', $tabPriority);
     }
+
+    /**
+     * @param Badge[] $badges
+     */
+    private function addTabBadgesToView(View $view, array $badges): void
+    {
+        $oldBadges = $view->getOption('tabBadges');
+        $newBadges = $oldBadges
+            ? \array_merge($oldBadges, $badges)
+            : $badges;
+        $view->setOption('tabBadges', $newBadges);
+    }
 }

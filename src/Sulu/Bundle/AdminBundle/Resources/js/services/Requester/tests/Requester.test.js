@@ -17,6 +17,7 @@ test('Should execute GET request and reject with response when the response cont
     expect(window.fetch).toBeCalledWith('/some-url', {
         credentials: 'same-origin',
         headers: {'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest'},
+        method: 'GET',
         signal: expect.any(AbortSignal),
     });
 });
@@ -89,6 +90,7 @@ test('Should execute GET request and replace null with undefined', () => {
     expect(window.fetch).toBeCalledWith('/some-url', {
         credentials: 'same-origin',
         headers: {'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest'},
+        method: 'GET',
         signal: expect.any(AbortSignal),
     });
 
@@ -319,5 +321,23 @@ test('Should execute DELETE request and return empty object if status code was 2
 
     return Requester.delete('/some-url').then((data) => {
         expect(data).toEqual({});
+    });
+});
+
+test('Shold call response hooks', () => {
+    const handleResponseHook = jest.fn();
+    Requester.handleResponseHooks.push(handleResponseHook);
+
+    const promise = Promise.resolve({
+        ok: true,
+        status: 204,
+    });
+
+    window.fetch = jest.fn();
+    window.fetch.mockReturnValue(promise);
+
+    return Requester.get('/some-url').then(() => {
+        expect(handleResponseHook).toHaveBeenCalledTimes(1);
+        Requester.handleResponseHooks = [];
     });
 });

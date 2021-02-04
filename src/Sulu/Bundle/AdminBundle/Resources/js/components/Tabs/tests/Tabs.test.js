@@ -1,6 +1,7 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import {mount, render} from 'enzyme';
 import React from 'react';
+import Badge from '../../Badge/Badge';
 import Tabs from '../Tabs.js';
 
 test('Render a Tabs component', () => {
@@ -21,7 +22,7 @@ test('Render a Tabs component', () => {
     )).toMatchSnapshot();
 });
 
-test('Render a Tabs component with a selected tab', () => {
+test('Render a Tabs component with a selected tab and a badge', () => {
     const changeSpy = jest.fn();
     const selectedTabIndex = 0;
 
@@ -33,7 +34,7 @@ test('Render a Tabs component with a selected tab', () => {
             <Tabs.Tab>
                 Tab 2
             </Tabs.Tab>
-            <Tabs.Tab>
+            <Tabs.Tab badges={[<Badge key="badge1">1</Badge>, <Badge key="badge2">2</Badge>]}>
                 Tab 3
             </Tabs.Tab>
         </Tabs>
