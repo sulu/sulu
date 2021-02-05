@@ -83,6 +83,9 @@ class CustomUrlAdmin extends Admin
                     ->setFormKey('custom_url_details')
                     ->setTabTitle('sulu_custom_url.custom_urls')
                     ->addToolbarActions($listToolbarActions)
+                    ->addErrorCodeMessages([
+                        9001 => 'sulu_custom_url.title_used_for_other_url'
+                    ])
                     ->setTabOrder(1024)
                     ->setParent(PageAdmin::WEBSPACE_TABS_VIEW)
                     ->addRerenderAttribute('webspace')
