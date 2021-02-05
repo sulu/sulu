@@ -145,20 +145,32 @@ class MediaOverview extends React.Component<ViewProps> {
     };
 
     @action handleUploadError= (errors: Array<Object>) => {
-        let errorMessageKey = 'sulu_media.upload_server_error';
+        if (errors.length !== 1) {
+            this.errors.push(translate('sulu_media.upload_server_error'));
 
-        if (errors.length === 1) {
-            switch (errors[0].code) {
-                case 5003:
-                    errorMessageKey = 'sulu_media.upload_exceeds_max_filesize';
-                    break;
-                case 5004:
-                    errorMessageKey = 'sulu_media.upload_filetype_blocked';
-                    break;
-            }
+            return;
         }
 
-        this.errors.push(translate(errorMessageKey));
+        switch (errors[0].code) {
+            case 5001:
+                this.errors.push(translate('sulu_media.file_upload_error'));
+                break;
+
+            case 5002:
+                this.errors.push(translate('sulu_media.upload_file_not_found'));
+                break;
+
+            case 5003:
+                this.errors.push(translate('sulu_media.upload_exceeds_max_filesize'));
+                break;
+
+            case 5004:
+                this.errors.push(translate('sulu_media.upload_filetype_blocked'));
+                break;
+
+            default:
+                this.errors.push(translate('sulu_media.upload_server_error'));
+        }
     };
 
     @action handleUploadOverlayOpen = () => {
