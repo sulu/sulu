@@ -44,6 +44,8 @@
     "sulu_media.all_collections": "All collections",
     "sulu_media.move_media": "Move media",
     "sulu_media.upload_server_error": "There was an error while uploading one or multiple files to the server.",
+    "sulu_media.upload_exceeds_max_filesize": "The uploaded file exceeds the configured maximum filesize.",
+    "sulu_media.upload_filetype_blocked": "The filetype of the uploaded file is configured to be blocked.",
     "sulu_media.set_focus_point": "Set focus point",
     "sulu_media.define_crops": "Define crops",
     "sulu_media.upload_preview_image": "Upload preview image",

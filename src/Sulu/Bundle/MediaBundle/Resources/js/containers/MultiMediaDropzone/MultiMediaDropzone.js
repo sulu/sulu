@@ -17,7 +17,7 @@ type Props = {
     onClose: () => void,
     onOpen: () => void,
     onUpload: (media: Array<Object>) => void,
-    onUploadError: (errorResponses: Array<string>) => void,
+    onUploadError: (errors: Array<Object>) => void,
     open: boolean,
 };
 
@@ -91,7 +91,11 @@ class MultiMediaDropzone extends React.Component<Props> {
                 if (result.status === 'fulfilled') {
                     uploadedMedias.push(result.value);
                 } else {
-                    errorResponses.push(result.reason);
+                    try {
+                        errorResponses.push(JSON.parse(result.reason));
+                    } catch (e) {
+                        errorResponses.push(result);
+                    }
                 }
             });
 
