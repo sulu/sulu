@@ -6,4 +6,5 @@ export type NavigationItem = {
     items?: Array<NavigationItem>,
     label: string,
     view: string,
+    visible: boolean,
 };

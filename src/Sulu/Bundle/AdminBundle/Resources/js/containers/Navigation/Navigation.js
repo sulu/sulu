@@ -87,21 +87,21 @@ class Navigation extends React.Component<Props> {
                 userImage={this.userImage}
                 username={this.username}
             >
-                {navigationItems.map((navigationItem: NavigationItem) => (
+                {navigationItems.filter((item: NavigationItem) => item.visible).map((item: NavigationItem) => (
                     <NavigationComponent.Item
-                        active={this.isItemActive(navigationItem)}
-                        icon={navigationItem.icon}
-                        key={navigationItem.id}
-                        title={navigationItem.label}
-                        value={navigationItem.id}
+                        active={this.isItemActive(item)}
+                        icon={item.icon}
+                        key={item.id}
+                        title={item.label}
+                        value={item.id}
                     >
-                        {Array.isArray(navigationItem.items) &&
-                            navigationItem.items.map((subNavigationItem) => (
+                        {Array.isArray(item.items) &&
+                            item.items.filter((subItem: NavigationItem) => subItem.visible).map((subItem) => (
                                 <NavigationComponent.Item
-                                    active={this.isItemActive(subNavigationItem)}
-                                    key={subNavigationItem.id}
-                                    title={subNavigationItem.label}
-                                    value={subNavigationItem.id}
+                                    active={this.isItemActive(subItem)}
+                                    key={subItem.id}
+                                    title={subItem.label}
+                                    value={subItem.id}
                                 />
                             ))
                         }
