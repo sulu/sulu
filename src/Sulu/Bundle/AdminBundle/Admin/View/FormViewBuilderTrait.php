@@ -116,4 +116,12 @@ trait FormViewBuilderTrait
     {
         $view->setOption('requestParameters', $requestParameters);
     }
+
+    private function addErrorCodeMessagesToView(View $route, array $errorCodeMessages): void
+    {
+        $oldErrorCodeMessages = $route->getOption('errorCodeMessages');
+        $newErrorCodeMessages = $oldErrorCodeMessages ? \array_merge($oldErrorCodeMessages, $requestParameters) : $errorCodeMessages;
+
+        $route->setOption('errorCodeMessages', $newErrorCodeMessages);
+    }
 }

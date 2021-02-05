@@ -396,15 +396,32 @@ class Form extends React.Component<Props> {
                 if (error.code === HAS_CHANGED_ERROR_CODE) {
                     this.showHasChangedWarning = true;
                     this.postponedSaveOptions = options;
+
                     return;
                 }
 
-                this.errors.push(translate('sulu_admin.form_save_server_error'));
+                this.handleSaveError(error);
             }));
     };
 
-    handleError = () => {
+    handleFormError = () => {
         this.errors.push(translate('sulu_admin.form_contains_invalid_values'));
+    };
+
+    handleSaveError = (error: Object) => {
+        const {
+            route: {
+                options: {
+                    errorCodeMessages = {},
+                },
+            },
+        } = this.props.router;
+
+        const errorMessage = (error.code && errorCodeMessages[error.code])
+            ? errorCodeMessages[error.code]
+            : 'sulu_admin.form_save_server_error';
+
+        this.errors.push(translate(errorMessage));
     };
 
     @action clearErrors = () => {
@@ -460,7 +477,7 @@ class Form extends React.Component<Props> {
             <div className={formStyles.form}>
                 {titleVisible && title && <h1>{title}</h1>}
                 <FormContainer
-                    onError={this.handleError}
+                    onError={this.handleFormError}
                     onSubmit={this.handleSubmit}
                     onSuccess={this.handleSuccess}
                     ref={this.setFormRef}

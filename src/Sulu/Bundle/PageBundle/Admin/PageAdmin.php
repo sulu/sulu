@@ -163,6 +163,10 @@ class PageAdmin extends Admin
 
         $previewCondition = 'nodeType == 1';
 
+        $errorCodeMessages = [
+            1103 => 'sulu_page.url_assigned_to_other_page'
+        ];
+
         // This view has to be registered even if permissions for pages are missing
         // Otherwise the application breaks when other bundles try to add child views to this one
         $viewCollection->add(
@@ -203,6 +207,7 @@ class PageAdmin extends Admin
                     ->addToolbarActions($formToolbarActionsWithType)
                     ->addRouterAttributesToFormRequest($routerAttributesToFormRequest)
                     ->addRouterAttributesToFormMetadata($routerAttributesToFormMetdata)
+                    ->addErrorCodeMessages($errorCodeMessages)
                     ->setParent(static::ADD_FORM_VIEW)
             );
             $viewCollection->add(
@@ -227,6 +232,7 @@ class PageAdmin extends Admin
                     ->addToolbarActions($formToolbarActionsWithType)
                     ->addRouterAttributesToFormRequest($routerAttributesToFormRequest)
                     ->addRouterAttributesToFormMetadata($routerAttributesToFormMetdata)
+                    ->addErrorCodeMessages($errorCodeMessages)
                     ->setPreviewCondition($previewCondition)
                     ->setTabOrder(1024)
                     ->setParent(static::EDIT_FORM_VIEW)
@@ -241,6 +247,7 @@ class PageAdmin extends Admin
                     ->setTabCondition('nodeType == 1 && shadowOn == false')
                     ->addToolbarActions($formToolbarActionsWithoutType)
                     ->addRouterAttributesToFormRequest($routerAttributesToFormRequest)
+                    ->addErrorCodeMessages($errorCodeMessages)
                     ->setPreviewCondition($previewCondition)
                     ->setTitleVisible(true)
                     ->setTabOrder(2048)
@@ -256,6 +263,7 @@ class PageAdmin extends Admin
                     ->setTabCondition('(nodeType == 1 || nodeType == 4) && shadowOn == false')
                     ->addToolbarActions($formToolbarActionsWithoutType)
                     ->addRouterAttributesToFormRequest($routerAttributesToFormRequest)
+                    ->addErrorCodeMessages($errorCodeMessages)
                     ->setPreviewCondition($previewCondition)
                     ->setTitleVisible(true)
                     ->setTabOrder(3072)
@@ -271,6 +279,7 @@ class PageAdmin extends Admin
                     ->setTabPriority(512)
                     ->addToolbarActions($formToolbarActionsWithoutType)
                     ->addRouterAttributesToFormRequest($routerAttributesToFormRequest)
+                    ->addErrorCodeMessages($errorCodeMessages)
                     ->setPreviewCondition($previewCondition)
                     ->setTitleVisible(true)
                     ->setTabOrder(4096)
