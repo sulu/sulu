@@ -39,7 +39,7 @@ class DeviceDetectorSubscriber implements EventSubscriberInterface
 
     public function setUserAgent(RequestEvent $event)
     {
-        $this->deviceDetector->setUserAgent($event->getRequest()->headers->get('User-Agent'));
+        $this->deviceDetector->setUserAgent($event->getRequest()->headers->get('User-Agent') ?? '');
         $this->deviceDetector->parse();
     }
 }
