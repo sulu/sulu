@@ -61,7 +61,7 @@ jobs:
                   npm run build
 
     php:
-        name: "PHP ${{ matrix.php-version }} (${{ matrix.database }}, ${{ matrix.phpcr-transport }}, ${{ matrix.dependency-versions }})"
+        name: "PHP ${{ matrix.php-version }} (${{ matrix.database }}, ${{ matrix.phpcr-transport }}, ${{ matrix.dependency-versions }}, Lint ${{ matrix.lint }})"
         runs-on: ubuntu-latest
 
         env:
@@ -88,7 +88,7 @@ jobs:
                           DATABASE_CHARSET: UTF8
                           DATABASE_COLLATE:
 
-                    - php-version: '7.4'
+                    - php-version: '8.0'
                       database: mysql
                       phpcr-transport: doctrinedbal
                       dependency-versions: 'highest'
