@@ -1,10 +1,22 @@
 // @flow
 import React from 'react';
+import log from 'loglevel';
 import {action, computed, observable} from 'mobx';
 import Dropzone, {DropzoneRef, FileRejection} from 'react-dropzone';
 import symfonyRouting from 'fos-jsrouting/router';
 import {translate, transformBytesToReadableString} from '../../../utils';
+import ResourceStore from '../../../stores/ResourceStore';
+import Router from '../../../services/Router';
+import List from '../../../views/List/List';
+import ListStore from '../../../containers/List/stores/ListStore';
 import AbstractListToolbarAction from './AbstractListToolbarAction';
+
+const defaultOptions = {
+    credentials: 'same-origin',
+    headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+    },
+};
 
 export default class UploadToolbarAction extends AbstractListToolbarAction {
     @observable dropzoneRef: ?DropzoneRef;
@@ -27,18 +39,6 @@ export default class UploadToolbarAction extends AbstractListToolbarAction {
 
             if (!options.route_name) {
                 options.route_name = options.routeName;
-            }
-        }
-
-        if (options.errorCodeMapping) {
-            // @deprecated
-            log.warn(
-                'The "errorCodeMapping" option is deprecated and will be removed. ' +
-                'Use the "error_code_messages" option instead.'
-            );
-
-            if (!options.error_code_messages) {
-                options.error_code_messages = options.errorCodeMapping;
             }
         }
 
@@ -102,8 +102,15 @@ export default class UploadToolbarAction extends AbstractListToolbarAction {
             }
         }
 
-        super(listStore, list, router, locales, resourceStore, options);
+        if (options.errorCodeMapping) {
+            // @deprecated
+            log.warn(
+                'The "errorCodeMapping" option is deprecated and will be removed. ' +
+                'The API can return a specific error message in the "detail" property of the response instead.'
+            );
+        }
 
+        super(listStore, list, router, locales, resourceStore, options);
     }
 
     @action setDropzoneRef = (ref: ?DropzoneRef) => {
@@ -191,13 +198,15 @@ export default class UploadToolbarAction extends AbstractListToolbarAction {
             formData.append(requestPropertyName + '[]', file);
         }
 
-        fetch(this.url, {method: 'POST', body: formData}).then((response) => {
+        fetch(this.url, {...defaultOptions, method: 'POST', body: formData}).then((response) => {
             if (!response.ok) {
-                this.addError(
-                    translate(this.errorCodeMessages[response.status] || 'sulu_admin.unexpected_upload_error', {
-                        statusText: response.statusText,
-                    })
-                );
+                const translationKey = this.errorCodeMapping[response.status] || 'sulu_admin.unexpected_upload_error';
+
+                response.json().then((error) => {
+                    this.addError(error.detail || translate(translationKey, {statusText: response.statusText}));
+                }).catch(() => {
+                    this.addError(translate(translationKey, {statusText: response.statusText}));
+                });
 
                 return;
             }
@@ -236,11 +245,11 @@ export default class UploadToolbarAction extends AbstractListToolbarAction {
         return symfonyRouting.generate(routeName, this.requestParameters);
     }
 
-    @computed get errorCodeMessages(): $ReadOnly<Object> {
-        const {error_code_messages: errorCodeMapping = {}} = this.options;
+    @computed get errorCodeMapping(): $ReadOnly<Object> {
+        const {errorCodeMapping = {}} = this.options;
 
         if (typeof errorCodeMapping !== 'object') {
-            throw new Error('The "error_code_messages" option must be an object!');
+            throw new Error('The "errorCodeMapping" option must be an object!');
         }
 
         return errorCodeMapping;
