@@ -248,13 +248,6 @@ class FormOverlayListViewBuilder implements FormOverlayListViewBuilderInterface
         return $this;
     }
 
-    public function addErrorCodeMessages(array $errorCodeMessages): FormOverlayListViewBuilderInterface
-    {
-        $this->addErrorCodeMessagesToView($this->view, $errorCodeMessages);
-
-        return $this;
-    }
-
     public function getView(): View
     {
         if (!$this->view->getOption('resourceKey')) {

@@ -63,6 +63,4 @@ interface FormViewBuilderInterface extends ViewBuilderInterface
      * @param Badge[] $badges
      */
     public function addTabBadges(array $badges): self;
-
-    public function addErrorCodeMessages(array $errorCodeMessages): self;
 }

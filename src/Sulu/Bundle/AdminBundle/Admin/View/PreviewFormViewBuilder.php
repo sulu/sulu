@@ -177,13 +177,6 @@ class PreviewFormViewBuilder implements PreviewFormViewBuilderInterface
         return $this;
     }
 
-    public function addErrorCodeMessages(array $errorCodeMessages): PreviewFormViewBuilderInterface
-    {
-        $this->addErrorCodeMessagesToView($this->view, $errorCodeMessages);
-
-        return $this;
-    }
-
     public function getView(): View
     {
         if (!$this->view->getOption('resourceKey')) {

@@ -170,13 +170,6 @@ class FormViewBuilder implements FormViewBuilderInterface
         return $this;
     }
 
-    public function addErrorCodeMessages(array $errorCodeMessages): FormViewBuilderInterface
-    {
-        $this->addErrorCodeMessagesToView($this->view, $errorCodeMessages);
-
-        return $this;
-    }
-
     public function getView(): View
     {
         if (!$this->view->getOption('resourceKey')) {
