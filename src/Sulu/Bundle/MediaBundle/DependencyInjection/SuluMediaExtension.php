@@ -19,6 +19,7 @@ use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\FormatNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\FormatOptionsMissingParameterException;
+use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
@@ -115,6 +116,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
                             FileVersionNotFoundException::class => 404,
                             FormatNotFoundException::class => 404,
                             FormatOptionsMissingParameterException::class => 400,
+                            MediaException::class => 400,
                         ],
                     ],
                 ]

@@ -11,7 +11,9 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\Exception;
 
-class MaxFileSizeExceededException extends UploadFileException
+use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
+
+class MaxFileSizeExceededException extends UploadFileException implements TranslationErrorMessageExceptionInterface
 {
     /**
      * @param string $message
@@ -19,5 +21,15 @@ class MaxFileSizeExceededException extends UploadFileException
     public function __construct($message)
     {
         parent::__construct($message, self::EXCEPTION_CODE_MAX_FILE_SIZE);
+    }
+
+    public function getMessageTranslationKey(): string
+    {
+        return 'sulu_media.upload_exceeds_max_filesize';
+    }
+
+    public function getMessageTranslationParameters(): array
+    {
+        return [];
     }
 }

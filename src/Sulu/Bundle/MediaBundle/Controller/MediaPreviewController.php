@@ -100,8 +100,6 @@ class MediaPreviewController extends AbstractMediaController implements ClassRes
             $view = $this->view($media, 200);
         } catch (MediaNotFoundException $e) {
             $view = $this->view($e->toArray(), 404);
-        } catch (MediaException $e) {
-            $view = $this->view($e->toArray(), 400);
         }
 
         return $this->handleView($view);
@@ -135,8 +133,6 @@ class MediaPreviewController extends AbstractMediaController implements ClassRes
             $view = $this->view($media, 200);
         } catch (MediaNotFoundException $e) {
             $view = $this->view($e->toArray(), 404);
-        } catch (MediaException $e) {
-            $view = $this->view($e->toArray(), 400);
         }
 
         return $this->handleView($view);

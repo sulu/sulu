@@ -207,8 +207,6 @@ class MediaController extends AbstractMediaController implements
             );
         } catch (MediaNotFoundException $e) {
             $view = $this->view($e->toArray(), 404);
-        } catch (MediaException $e) {
-            $view = $this->view($e->toArray(), 400);
         }
 
         return $this->handleView($view);
@@ -437,8 +435,6 @@ class MediaController extends AbstractMediaController implements
                 $this->mediaManager->delete($id, true);
             } catch (MediaNotFoundException $e) {
                 throw new EntityNotFoundException($this->mediaClass, $id); // will throw 404 Entity not found
-            } catch (MediaException $e) {
-                throw new RestException($e->getMessage(), $e->getCode()); // will throw 400 Bad Request
             }
         };
 
@@ -539,8 +535,6 @@ class MediaController extends AbstractMediaController implements
             $view = $this->view($media, 200);
         } catch (MediaNotFoundException $e) {
             $view = $this->view($e->toArray(), 404);
-        } catch (MediaException $e) {
-            $view = $this->view($e->toArray(), 400);
         }
 
         return $this->handleView($view);
@@ -562,8 +556,6 @@ class MediaController extends AbstractMediaController implements
             $view = $this->view($media, 200);
         } catch (MediaNotFoundException $e) {
             $view = $this->view($e->toArray(), 404);
-        } catch (MediaException $e) {
-            $view = $this->view($e->toArray(), 400);
         }
 
         return $this->handleView($view);
