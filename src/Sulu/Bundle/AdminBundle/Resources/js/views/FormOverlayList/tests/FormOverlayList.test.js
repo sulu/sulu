@@ -371,7 +371,7 @@ test('Should save ResoureFormStore, close overlay and reload List view on submit
     });
 });
 
-test('Should display Snackbar if an error happens during saving of ResourceFormStore', (done) => {
+test('Should display Snackbar with generic error message if an error when submitting form', (done) => {
     const route: Route = ({}: any);
     const router: Router = ({
         route: {
@@ -409,6 +409,49 @@ test('Should display Snackbar if an error happens during saving of ResourceFormS
         expect(formOverlayList.find(Snackbar).exists).toBeTruthy();
         expect(formOverlayList.find(Snackbar).prop('visible')).toBeTruthy();
         expect(formOverlayList.find(Snackbar).prop('message')).toEqual('sulu_admin.form_save_server_error');
+
+        done();
+    });
+});
+
+test('Should display Snackbar with error message from server if an error when submitting form', (done) => {
+    const route: Route = ({}: any);
+    const router: Router = ({
+        route: {
+            options: {
+                formKey: 'test-form-key',
+            },
+        },
+    }: any);
+
+    const formOverlayList = mount(<FormOverlayList route={route} router={router} />);
+
+    // open form overlay for new item
+    formOverlayList.find(List).props().onItemAdd();
+    formOverlayList.update();
+
+    const savePromise = Promise.reject({code: 100, detail: 'URL is already assigned to another page.'});
+    const saveSpy = jest.fn(() => savePromise);
+    const destroySpy = jest.fn();
+    formOverlayList.instance().formStore.save = saveSpy;
+    formOverlayList.instance().formStore.destroy = destroySpy;
+
+    const reloadSpy = jest.fn();
+    formOverlayList.find(List).instance().reload = reloadSpy;
+
+    formOverlayList.find(Form).props().onSubmit();
+
+    // wait until rejection of savePromise was handled by component with setTimeout
+    setTimeout(() => {
+        expect(saveSpy).toBeCalled();
+        expect(destroySpy).not.toBeCalled();
+        expect(reloadSpy).not.toBeCalled();
+
+        formOverlayList.update();
+        expect(formOverlayList.find(Overlay).exists()).toBeTruthy();
+        expect(formOverlayList.find(Snackbar).exists).toBeTruthy();
+        expect(formOverlayList.find(Snackbar).prop('visible')).toBeTruthy();
+        expect(formOverlayList.find(Snackbar).prop('message')).toEqual('URL is already assigned to another page.');
 
         done();
     });
