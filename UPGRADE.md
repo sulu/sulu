@@ -6,7 +6,12 @@
 
 To prepare for PHP8 support, the version constraints of the `doctrine/persistence` package and the `doctrine/dbal` package were updated 
 to include a new major version. If you update these packages in your project, you might need to adjust the code of the project to be compatible with 
-the new major version. To do this, it is enough to replace the `Doctrine/Common/Persistence` namespace with `Doctrine/Persistence` in most cases. 
+the new major version. To do this, it is enough to replace the `Doctrine/Common/Persistence` namespace with `Doctrine/Persistence` in most cases:
+
+```diff
+-    use Doctrine\Common\Persistence\ObjectManager;
++    use Doctrine\Persistence\ObjectManager;
+```
 
 Alternatively, if you want to prevent the upgrade of the packages, you can set the version constraint of the `doctrine/persistence` to `^1.3` 
 and the `doctrine/dbal` package to `^2.6` in the `composer.json` of your project. But keep in mind that this means that your project will 
