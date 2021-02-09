@@ -11,8 +11,10 @@
 
 namespace Sulu\Component\Rest;
 
+use Sulu\Component\Rest\Exception\ErrorMessageExceptionInterface;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @internal the following class is only for internal use don't use it in your project
@@ -29,18 +31,30 @@ class FlattenExceptionNormalizer implements NormalizerInterface
      */
     private $debug;
 
-    public function __construct(NormalizerInterface $normalizer, string $debug)
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    public function __construct(NormalizerInterface $normalizer, string $debug, TranslatorInterface $translator)
     {
         $this->normalizer = $normalizer;
         $this->debug = $debug;
+        $this->translator = $translator;
     }
 
     public function normalize($exception, $format = null, array $context = [])
     {
         $data = $this->normalizer->normalize($exception, $format, $context);
+        $data['code'] = $exception->getCode();
 
-        if (\is_array($data)) {
-            $data['code'] = $exception->getCode();
+        $contextException = $context['exception'] ?? null;
+        if ($contextException instanceof ErrorMessageExceptionInterface) {
+            $data['detail'] = $this->translator->trans(
+                $contextException->getMessageTranslationKey(),
+                $contextException->getMessageTranslationParameters(),
+                'admin'
+            );
         }
 
         if ($this->debug) {

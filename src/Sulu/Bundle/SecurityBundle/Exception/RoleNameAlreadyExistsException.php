@@ -11,10 +11,12 @@
 
 namespace Sulu\Bundle\SecurityBundle\Exception;
 
+use Sulu\Component\Rest\Exception\ErrorMessageExceptionInterface;
+
 /**
  * Exception is thrown when a Role is created or updated with an already existing name.
  */
-class RoleNameAlreadyExistsException extends \Exception
+class RoleNameAlreadyExistsException extends \Exception implements ErrorMessageExceptionInterface
 {
     /**
      * @var string
@@ -38,5 +40,13 @@ class RoleNameAlreadyExistsException extends \Exception
     public function getName()
     {
         return $this->name;
+    }
+
+    public function getMessageTranslationKey(): string {
+        return 'sulu_security.name_assigned_to_other_role';
+    }
+
+    public function getMessageTranslationParameters(): array {
+        return ['%name%' => $this->name];
     }
 }

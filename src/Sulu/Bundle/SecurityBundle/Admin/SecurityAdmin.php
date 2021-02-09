@@ -125,10 +125,6 @@ class SecurityAdmin extends Admin
 
     public function configureViews(ViewCollection $viewCollection): void
     {
-        $errorCodeMessages = [
-            1101 => 'sulu_security.name_or_key_assigned_to_other_role'
-        ];
-
         $formToolbarActions = [];
         $listToolbarActions = [];
 
@@ -173,7 +169,6 @@ class SecurityAdmin extends Admin
                     ->setTabTitle('sulu_admin.details')
                     ->setEditView(static::EDIT_FORM_VIEW)
                     ->addToolbarActions($formToolbarActions)
-                    ->addErrorCodeMessages($errorCodeMessages)
                     ->setParent(static::ADD_FORM_VIEW)
             );
             $viewCollection->add(
@@ -189,7 +184,6 @@ class SecurityAdmin extends Admin
                     ->setFormKey('role_details')
                     ->setTabTitle('sulu_admin.details')
                     ->addToolbarActions($formToolbarActions)
-                    ->addErrorCodeMessages($errorCodeMessages)
                     ->setParent(static::EDIT_FORM_VIEW)
             );
         }

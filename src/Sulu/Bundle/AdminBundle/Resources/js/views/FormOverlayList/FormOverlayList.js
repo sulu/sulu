@@ -54,14 +54,6 @@ class FormOverlayList extends React.Component<Props> {
             throw new Error('The FormStore has not been initialized! This should not happen and is likely a bug.');
         }
 
-        const {
-            route: {
-                options: {
-                    errorCodeMessages = {},
-                },
-            },
-        } = this.props.router;
-
         this.formStore.save()
             .then(() => {
                 this.destroyFormOverlay();
@@ -70,11 +62,7 @@ class FormOverlayList extends React.Component<Props> {
                 }
             })
             .catch(action((error) => {
-                const errorMessage = (error.code && errorCodeMessages[error.code])
-                    ? errorCodeMessages[error.code]
-                    : 'sulu_admin.form_save_server_error';
-
-                this.formErrors.push(translate(errorMessage));
+                this.formErrors.push(error.detail || translate('sulu_admin.form_save_server_error'));
             }));
     };
 

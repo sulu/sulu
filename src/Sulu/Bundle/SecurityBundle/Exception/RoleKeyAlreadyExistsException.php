@@ -11,10 +11,12 @@
 
 namespace Sulu\Bundle\SecurityBundle\Exception;
 
+use Sulu\Component\Rest\Exception\ErrorMessageExceptionInterface;
+
 /**
  * Exception is thrown when a Role is created or updated with an already existing key.
  */
-class RoleKeyAlreadyExistsException extends \Exception
+class RoleKeyAlreadyExistsException extends \Exception implements ErrorMessageExceptionInterface
 {
     /**
      * @var string
@@ -38,5 +40,13 @@ class RoleKeyAlreadyExistsException extends \Exception
     public function getKey()
     {
         return $this->key;
+    }
+
+    public function getMessageTranslationKey(): string {
+        return 'sulu_security.key_assigned_to_other_role';
+    }
+
+    public function getMessageTranslationParameters(): array {
+        return ['%key%' => $this->key];
     }
 }
