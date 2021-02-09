@@ -11,10 +11,6 @@
 
 namespace Sulu\Component\Rest\Exception;
 
-use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
-use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
-use Traversable;
-
 interface ErrorMessageExceptionInterface
 {
     public function getMessageTranslationKey(): string;

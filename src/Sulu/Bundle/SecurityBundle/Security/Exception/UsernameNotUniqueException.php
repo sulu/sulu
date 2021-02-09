@@ -36,11 +36,13 @@ class UsernameNotUniqueException extends SecurityException implements ErrorMessa
         return $this->username;
     }
 
-    public function getMessageTranslationKey(): string {
+    public function getMessageTranslationKey(): string
+    {
         return 'sulu_security.username_assigned_to_other_user';
     }
 
-    public function getMessageTranslationParameters(): array {
+    public function getMessageTranslationParameters(): array
+    {
         return ['%username%' => $this->username];
     }
 

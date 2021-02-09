@@ -31,11 +31,13 @@ class EmailNotUniqueException extends SecurityException implements ErrorMessageE
         return $this->email;
     }
 
-    public function getMessageTranslationKey(): string {
+    public function getMessageTranslationKey(): string
+    {
         return 'sulu_security.email_assigned_to_other_user';
     }
 
-    public function getMessageTranslationParameters(): array {
+    public function getMessageTranslationParameters(): array
+    {
         return ['%email%' => $this->email];
     }
 

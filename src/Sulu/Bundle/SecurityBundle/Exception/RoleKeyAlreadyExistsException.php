@@ -42,11 +42,13 @@ class RoleKeyAlreadyExistsException extends \Exception implements ErrorMessageEx
         return $this->key;
     }
 
-    public function getMessageTranslationKey(): string {
+    public function getMessageTranslationKey(): string
+    {
         return 'sulu_security.key_assigned_to_other_role';
     }
 
-    public function getMessageTranslationParameters(): array {
+    public function getMessageTranslationParameters(): array
+    {
         return ['%key%' => $this->key];
     }
 }

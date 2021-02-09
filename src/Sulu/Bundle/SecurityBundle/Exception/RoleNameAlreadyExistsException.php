@@ -42,11 +42,13 @@ class RoleNameAlreadyExistsException extends \Exception implements ErrorMessageE
         return $this->name;
     }
 
-    public function getMessageTranslationKey(): string {
+    public function getMessageTranslationKey(): string
+    {
         return 'sulu_security.name_assigned_to_other_role';
     }
 
-    public function getMessageTranslationParameters(): array {
+    public function getMessageTranslationParameters(): array
+    {
         return ['%name%' => $this->name];
     }
 }

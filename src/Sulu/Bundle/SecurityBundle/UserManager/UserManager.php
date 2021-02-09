@@ -681,7 +681,7 @@ class UserManager implements UserManagerInterface
             }
         } else {
             if (null !== $email) {
-                if (strtolower($email) !== strtolower($user->getEmail()) &&
+                if (\strtolower($email) !== \strtolower($user->getEmail()) &&
                     !$this->isEmailUnique($email)
                 ) {
                     throw new EmailNotUniqueException($email);

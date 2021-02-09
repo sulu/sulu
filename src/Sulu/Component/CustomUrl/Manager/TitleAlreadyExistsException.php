@@ -39,11 +39,13 @@ class TitleAlreadyExistsException extends RestException implements ErrorMessageE
         return $this->title;
     }
 
-    public function getMessageTranslationKey(): string {
+    public function getMessageTranslationKey(): string
+    {
         return 'sulu_custom_url.title_used_for_other_url';
     }
 
-    public function getMessageTranslationParameters(): array {
+    public function getMessageTranslationParameters(): array
+    {
         return ['%title%' => $this->title];
     }
 }

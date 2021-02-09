@@ -61,11 +61,13 @@ class ResourceLocatorAlreadyExistsException extends \Exception implements ErrorM
         return $this->path;
     }
 
-    public function getMessageTranslationKey(): string {
+    public function getMessageTranslationKey(): string
+    {
         return 'sulu_page.resource_locator_assigned_to_other_page';
     }
 
-    public function getMessageTranslationParameters(): array {
+    public function getMessageTranslationParameters(): array
+    {
         return ['%resourceLocator%' => $this->resourceLocator];
     }
 }
