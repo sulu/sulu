@@ -11,7 +11,9 @@
 
 namespace Sulu\Component\Content\Exception;
 
-class ResourceLocatorAlreadyExistsException extends \Exception
+use Sulu\Component\Rest\Exception\ErrorMessageExceptionInterface;
+
+class ResourceLocatorAlreadyExistsException extends \Exception implements ErrorMessageExceptionInterface
 {
     /**
      * @var string
@@ -57,5 +59,13 @@ class ResourceLocatorAlreadyExistsException extends \Exception
     public function getPath()
     {
         return $this->path;
+    }
+
+    public function getMessageTranslationKey(): string {
+        return 'sulu_page.resource_locator_assigned_to_other_page';
+    }
+
+    public function getMessageTranslationParameters(): array {
+        return ['%resourceLocator%' => $this->resourceLocator];
     }
 }

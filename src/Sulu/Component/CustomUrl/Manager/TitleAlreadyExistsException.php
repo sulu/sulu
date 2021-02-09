@@ -11,12 +11,13 @@
 
 namespace Sulu\Component\CustomUrl\Manager;
 
+use Sulu\Component\Rest\Exception\ErrorMessageExceptionInterface;
 use Sulu\Component\Rest\Exception\RestException;
 
 /**
  * Thrown when a title already exists.
  */
-class TitleAlreadyExistsException extends RestException
+class TitleAlreadyExistsException extends RestException implements ErrorMessageExceptionInterface
 {
     /**
      * @var string
@@ -36,5 +37,13 @@ class TitleAlreadyExistsException extends RestException
     public function getTitle()
     {
         return $this->title;
+    }
+
+    public function getMessageTranslationKey(): string {
+        return 'sulu_custom_url.title_used_for_other_url';
+    }
+
+    public function getMessageTranslationParameters(): array {
+        return ['%title%' => $this->title];
     }
 }

@@ -207,10 +207,6 @@ class SecurityAdmin extends Admin
                             'unlock'
                         ),
                     ])
-                    ->addErrorCodeMessages([
-                        1001 => 'sulu_security.username_assigned_to_other_user',
-                        1004 => 'sulu_security.email_assigned_to_other_user'
-                    ])
                     ->setIdQueryParameter('contactId')
                     ->setTitleVisible(true)
                     ->setTabOrder(3072)

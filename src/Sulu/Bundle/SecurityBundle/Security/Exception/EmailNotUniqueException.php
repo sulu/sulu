@@ -11,10 +11,12 @@
 
 namespace Sulu\Bundle\SecurityBundle\Security\Exception;
 
+use Sulu\Component\Rest\Exception\ErrorMessageExceptionInterface;
+
 /**
  * This Exception is thrown if the email for a user is not unique.
  */
-class EmailNotUniqueException extends SecurityException
+class EmailNotUniqueException extends SecurityException implements ErrorMessageExceptionInterface
 {
     private $email;
 
@@ -27,6 +29,14 @@ class EmailNotUniqueException extends SecurityException
     public function getEmail()
     {
         return $this->email;
+    }
+
+    public function getMessageTranslationKey(): string {
+        return 'sulu_security.email_assigned_to_other_user';
+    }
+
+    public function getMessageTranslationParameters(): array {
+        return ['%email%' => $this->email];
     }
 
     public function toArray()
