@@ -11,7 +11,7 @@
 
 namespace Sulu\Component\Rest\Listing;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Request;
 
 /**

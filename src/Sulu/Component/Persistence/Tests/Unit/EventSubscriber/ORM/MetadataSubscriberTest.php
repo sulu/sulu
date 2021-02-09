@@ -130,8 +130,8 @@ class MetadataSubscriberTest extends TestCase
         $this->entityManager->getConfiguration()->willReturn($this->configuration->reveal());
         $this->configuration->getNamingStrategy()->willReturn(null);
 
-        /** @var \Doctrine\Common\Persistence\Mapping\Driver\MappingDriver $mappingDriver */
-        $mappingDriver = $this->prophesize('Doctrine\Common\Persistence\Mapping\Driver\MappingDriver');
+        /** @var \Doctrine\Persistence\Mapping\Driver\MappingDriver $mappingDriver */
+        $mappingDriver = $this->prophesize('Doctrine\Persistence\Mapping\Driver\MappingDriver');
         $this->configuration->getMetadataDriverImpl()->willReturn($mappingDriver->reveal());
         $mappingDriver->getAllClassNames()->willReturn([\get_class($this->parentObject->reveal())]);
         $mappingDriver->loadMetadataForClass(

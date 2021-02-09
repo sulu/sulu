@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\TagBundle\Tests\Unit\Tag;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TagBundle\Tag\TagManager;
@@ -73,7 +73,7 @@ class TagManagerTest extends TestCase
         );
 
         $this->em = $this->getMockForAbstractClass(
-            'Doctrine\Common\Persistence\ObjectManager',
+            'Doctrine\Persistence\ObjectManager',
             [],
             '',
             false

@@ -11,7 +11,7 @@
 
 namespace Sulu\Component\Security\Authorization\AccessControl;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use ReflectionClass;
 use ReflectionException;
 use Sulu\Bundle\SecurityBundle\Entity\AccessControl;

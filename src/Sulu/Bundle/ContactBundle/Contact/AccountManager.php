@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\ContactBundle\Contact;
 
 use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Sulu\Bundle\ContactBundle\Api\Account as AccountApi;
 use Sulu\Bundle\ContactBundle\Api\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Account;
