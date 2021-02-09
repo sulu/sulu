@@ -9,14 +9,14 @@ environment:
     MAILER_URL: null://localhost
     SULU_ADMIN_EMAIL:
     PHPCR_TRANSPORT: doctrinedbal
-    DATABASE_URL: mysql://root:root@127.0.0.1/sulu_test?serverVersion=5.7
+    DATABASE_URL: mysql://root:root@127.0.0.1/sulu_test?serverVersion=8.0.17
     DATABASE_CHARSET: utf8mb4
     DATABASE_COLLATE: utf8mb4_unicode_ci
     SYMFONY_DEPRECATIONS_HELPER: weak
     MYSQL_VERSION: 8.0.17
     NODEJS_VERSION: "12"
     matrix:
-        - PHP_VERSION: 7.2.5
+        - PHP_VERSION: 7.4.14
 
 hosts:
     localhost: 127.0.0.1
@@ -59,7 +59,7 @@ install:
     # install composer
     - IF NOT EXIST C:\tools\composer.phar (
           cd C:\tools
-          && appveyor DownloadFile https://getcomposer.org/download/1.10.7/composer.phar
+          && appveyor DownloadFile https://getcomposer.org/composer.phar
       )
     - php -dmemory_limit=-1 C:\tools\composer.phar self-update
 
