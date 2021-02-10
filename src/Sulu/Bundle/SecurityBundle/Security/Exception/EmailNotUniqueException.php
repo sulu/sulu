@@ -11,12 +11,12 @@
 
 namespace Sulu\Bundle\SecurityBundle\Security\Exception;
 
-use Sulu\Component\Rest\Exception\ErrorMessageExceptionInterface;
+use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
 
 /**
  * This Exception is thrown if the email for a user is not unique.
  */
-class EmailNotUniqueException extends SecurityException implements ErrorMessageExceptionInterface
+class EmailNotUniqueException extends SecurityException implements TranslationErrorMessageExceptionInterface
 {
     private $email;
 

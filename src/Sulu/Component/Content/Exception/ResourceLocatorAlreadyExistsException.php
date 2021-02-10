@@ -11,9 +11,9 @@
 
 namespace Sulu\Component\Content\Exception;
 
-use Sulu\Component\Rest\Exception\ErrorMessageExceptionInterface;
+use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
 
-class ResourceLocatorAlreadyExistsException extends \Exception implements ErrorMessageExceptionInterface
+class ResourceLocatorAlreadyExistsException extends \Exception implements TranslationErrorMessageExceptionInterface
 {
     /**
      * @var string

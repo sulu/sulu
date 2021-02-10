@@ -11,12 +11,12 @@
 
 namespace Sulu\Bundle\SecurityBundle\Security\Exception;
 
-use Sulu\Component\Rest\Exception\ErrorMessageExceptionInterface;
+use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
 
 /**
  * This exception is thrown when the username is not unique.
  */
-class UsernameNotUniqueException extends SecurityException implements ErrorMessageExceptionInterface
+class UsernameNotUniqueException extends SecurityException implements TranslationErrorMessageExceptionInterface
 {
     /**
      * The username which is not unique.

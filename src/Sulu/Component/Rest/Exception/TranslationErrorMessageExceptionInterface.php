@@ -11,7 +11,7 @@
 
 namespace Sulu\Component\Rest\Exception;
 
-interface ErrorMessageExceptionInterface
+interface TranslationErrorMessageExceptionInterface
 {
     public function getMessageTranslationKey(): string;
 

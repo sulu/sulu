@@ -11,13 +11,13 @@
 
 namespace Sulu\Component\CustomUrl\Manager;
 
-use Sulu\Component\Rest\Exception\ErrorMessageExceptionInterface;
+use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
 use Sulu\Component\Rest\Exception\RestException;
 
 /**
  * Thrown when a title already exists.
  */
-class TitleAlreadyExistsException extends RestException implements ErrorMessageExceptionInterface
+class TitleAlreadyExistsException extends RestException implements TranslationErrorMessageExceptionInterface
 {
     /**
      * @var string

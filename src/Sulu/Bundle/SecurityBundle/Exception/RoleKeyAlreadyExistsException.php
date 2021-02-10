@@ -11,12 +11,12 @@
 
 namespace Sulu\Bundle\SecurityBundle\Exception;
 
-use Sulu\Component\Rest\Exception\ErrorMessageExceptionInterface;
+use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
 
 /**
  * Exception is thrown when a Role is created or updated with an already existing key.
  */
-class RoleKeyAlreadyExistsException extends \Exception implements ErrorMessageExceptionInterface
+class RoleKeyAlreadyExistsException extends \Exception implements TranslationErrorMessageExceptionInterface
 {
     /**
      * @var string

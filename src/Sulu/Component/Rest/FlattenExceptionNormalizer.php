@@ -11,7 +11,7 @@
 
 namespace Sulu\Component\Rest;
 
-use Sulu\Component\Rest\Exception\ErrorMessageExceptionInterface;
+use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -49,7 +49,7 @@ class FlattenExceptionNormalizer implements NormalizerInterface
         $data['code'] = $exception->getCode();
 
         $contextException = $context['exception'] ?? null;
-        if ($contextException instanceof ErrorMessageExceptionInterface) {
+        if ($contextException instanceof TranslationErrorMessageExceptionInterface) {
             // set error message to detail property of response to match rfc 7807
             $data['detail'] = $this->translator->trans(
                 $contextException->getMessageTranslationKey(),
