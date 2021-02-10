@@ -62,7 +62,7 @@ class FormOverlayList extends React.Component<Props> {
                 }
             })
             .catch(action((error) => {
-                this.formErrors.push(error.detail || translate('sulu_admin.form_save_server_error'));
+                this.formErrors.push(error.detail || error.title || translate('sulu_admin.form_save_server_error'));
             }));
     };
 

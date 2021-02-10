@@ -50,6 +50,7 @@ class FlattenExceptionNormalizer implements NormalizerInterface
 
         $contextException = $context['exception'] ?? null;
         if ($contextException instanceof ErrorMessageExceptionInterface) {
+            // set error message to detail property of response to match rfc 7807
             $data['detail'] = $this->translator->trans(
                 $contextException->getMessageTranslationKey(),
                 $contextException->getMessageTranslationParameters(),

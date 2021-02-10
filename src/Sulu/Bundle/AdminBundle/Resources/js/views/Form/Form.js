@@ -400,7 +400,7 @@ class Form extends React.Component<Props> {
                     return;
                 }
 
-                this.errors.push(error.detail || translate('sulu_admin.form_save_server_error'));
+                this.errors.push(error.detail || error.title || translate('sulu_admin.form_save_server_error'));
             }));
     };
 
