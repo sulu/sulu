@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\DocumentManagerBundle\Initializer;
 
-use Doctrine\Common\Persistence\ConnectionRegistry;
+use Doctrine\Persistence\ConnectionRegistry;
 use PHPCR\RepositoryException;
 use Symfony\Component\Console\Output\OutputInterface;
 

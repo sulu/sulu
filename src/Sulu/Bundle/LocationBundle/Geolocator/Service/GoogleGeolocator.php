@@ -12,10 +12,12 @@
 namespace Sulu\Bundle\LocationBundle\Geolocator\Service;
 
 use GuzzleHttp\ClientInterface;
+use Psr\Http\Message\ResponseInterface;
 use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorInterface;
 use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorLocation;
 use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorResponse;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
  * Geolocator which uses the google geocoding API.
@@ -27,7 +29,7 @@ class GoogleGeolocator implements GeolocatorInterface
     const ENDPOINT = 'https://maps.googleapis.com/maps/api/geocode/json';
 
     /**
-     * @var ClientInterface
+     * @var HttpClientInterface|ClientInterface
      */
     protected $client;
 
@@ -36,8 +38,24 @@ class GoogleGeolocator implements GeolocatorInterface
      */
     protected $apiKey;
 
-    public function __construct(ClientInterface $client, string $apiKey)
-    {
+    public function __construct(
+        $client,
+        string $apiKey
+    ) {
+        if ($client instanceof ClientInterface) {
+            @\trigger_error(
+                \sprintf(
+                    'Instantiating GoogleGeolocator with %s as first argument is deprecated, please use %s instead.',
+                    ClientInterface::class, HttpClientInterface::class
+                ),
+                \E_USER_DEPRECATED
+            );
+        } elseif (!($client instanceof HttpClientInterface)) {
+            throw new \InvalidArgumentException(
+                \sprintf('Please provide a %s as client', HttpClientInterface::class)
+            );
+        }
+
         $this->client = $client;
         $this->apiKey = $apiKey;
     }
@@ -66,7 +84,13 @@ class GoogleGeolocator implements GeolocatorInterface
             );
         }
 
-        $googleResponse = \json_decode($response->getBody(), true);
+        if ($response instanceof ResponseInterface) {
+            // BC to support for guzzle client
+            $googleResponse = \json_decode($response->getBody(), true);
+        } else {
+            $googleResponse = $response->toArray();
+        }
+
         $response = new GeolocatorResponse();
         if ('OK' != $googleResponse['status']) {
             return $response;

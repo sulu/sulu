@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\DocumentManagerBundle\Tests\Unit\Initialalizer;
 
-use Doctrine\Common\Persistence\ConnectionRegistry;
+use Doctrine\Persistence\ConnectionRegistry;
 use PHPCR\NodeInterface;
 use PHPCR\RepositoryException;
 use PHPCR\SessionInterface;

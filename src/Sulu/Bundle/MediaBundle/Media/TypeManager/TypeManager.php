@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\TypeManager;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaTypeNotFoundException;
 

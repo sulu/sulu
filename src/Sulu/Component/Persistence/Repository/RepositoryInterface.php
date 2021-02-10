@@ -11,7 +11,7 @@
 
 namespace Sulu\Component\Persistence\Repository;
 
-use Doctrine\Common\Persistence\ObjectRepository;
+use Doctrine\Persistence\ObjectRepository;
 
 /**
  * Repository interface.

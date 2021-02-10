@@ -11,8 +11,8 @@
 
 namespace Sulu\Bundle\CategoryBundle\Tests\Unit\Category;
 
-use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ObjectManager;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\CategoryBundle\Api\Category;

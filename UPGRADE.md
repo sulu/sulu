@@ -1,5 +1,31 @@
 # Upgrade
 
+## 2.2.x
+
+### Deprecated service `sulu_location.geolocator.guzzle.client` and parameter `sulu_location.guzzle.client.class`
+
+Because `NominatimGeolocator` and `GoogleGeolocator` now use the symfony http client the `sulu_location.geolocator.guzzle.client` is now deprecated
+as is the parameter `sulu_location.guzzle.client.class`.
+
+### The constructor of the `NominatimGeolocator` and `GoogleGeolocator` requires a `Symfony\Contracts\HttpClient\HttpClientInterface` for the `$client` argument
+
+Constructing `NominatimGeolocator` and `GoogleGeolocator` with the previous `GuzzleHttp\ClientInterface` is deprecated. 
+
+### Doctrine changes for PHP 8 Support
+
+To prepare for PHP8 support, the version constraints of the `doctrine/persistence` package and the `doctrine/dbal` package were updated 
+to include a new major version. If you update these packages in your project, you might need to adjust the code of the project to be compatible with 
+the new major version. To do this, it is enough to replace the `Doctrine/Common/Persistence` namespace with `Doctrine/Persistence` in most cases:
+
+```diff
+-    use Doctrine\Common\Persistence\ObjectManager;
++    use Doctrine\Persistence\ObjectManager;
+```
+
+Alternatively, if you want to prevent the upgrade of the packages, you can set the version constraint of the `doctrine/persistence` to `^1.3` 
+and the `doctrine/dbal` package to `^2.6` in the `composer.json` of your project. But keep in mind that this means that your project will 
+use outdated dependencies and will not be compatible with new PHP versions in this case.
+
 ## 2.2.4
 
 ### Increased maximum length of contact position name
@@ -132,6 +158,32 @@ Additionally a `sulu_http_cache` configuration for the `stage` environment shoul
 imports:
     - { resource: '../prod/sulu_http_cache.yaml' }
 ```
+
+## 2.1.x
+
+### Deprecated service `sulu_location.geolocator.guzzle.client` and parameter `sulu_location.guzzle.client.class`
+
+Because `NominatimGeolocator` and `GoogleGeolocator` now use the symfony http client the `sulu_location.geolocator.guzzle.client` is now deprecated
+as is the parameter `sulu_location.guzzle.client.class`.
+
+### The constructor of the `NominatimGeolocator` and `GoogleGeolocator` requires a `Symfony\Contracts\HttpClient\HttpClientInterface` for the `$client` argument
+
+Constructing `NominatimGeolocator` and `GoogleGeolocator` with the previous `GuzzleHttp\ClientInterface` is deprecated. 
+
+### Doctrine changes for PHP 8 Support
+
+To prepare for PHP8 support, the version constraints of the `doctrine/persistence` package and the `doctrine/dbal` package were updated 
+to include a new major version. If you update these packages in your project, you might need to adjust the code of the project to be compatible with 
+the new major version. To do this, it is enough to replace the `Doctrine/Common/Persistence` namespace with `Doctrine/Persistence` in most cases:
+
+```diff
+-    use Doctrine\Common\Persistence\ObjectManager;
++    use Doctrine\Persistence\ObjectManager;
+```
+
+Alternatively, if you want to prevent the upgrade of the packages, you can set the version constraint of the `doctrine/persistence` to `^1.3` 
+and the `doctrine/dbal` package to `^2.6` in the `composer.json` of your project. But keep in mind that this means that your project will 
+use outdated dependencies and will not be compatible with new PHP versions in this case.
 
 ## 2.1.8
 
