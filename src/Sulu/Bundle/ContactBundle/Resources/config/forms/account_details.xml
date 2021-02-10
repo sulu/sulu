@@ -47,6 +47,10 @@
                     <meta>
                         <title>sulu_contact.parent_company</title>
                     </meta>
+
+                    <params>
+                        <param name="use_deprecated_object_data_format" value="true" />
+                    </params>
                 </property>
 
                 <property name="uid" type="text_line" colspan="6">
@@ -62,6 +66,7 @@
 
                     <params>
                         <param name="type" value="auto_complete" />
+                        <param name="use_deprecated_object_data_format" value="true" />
                         <param name="data_path_to_auto_complete" type="collection">
                             <param name="id" value="accountId" />
                         </param>

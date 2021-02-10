@@ -86,6 +86,10 @@
                     <meta>
                         <title>sulu_contact.organization</title>
                     </meta>
+
+                    <params>
+                        <param name="use_deprecated_object_data_format" value="true" />
+                    </params>
                 </property>
 
                 <property

@@ -18,7 +18,6 @@ use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\PreResolvableContentTypeInterface;
-use Sulu\Component\Rest\Exception\EntityNotFoundException;
 
 class SingleAccountSelection extends ComplexContentType implements PreResolvableContentTypeInterface
 {
@@ -44,19 +43,7 @@ class SingleAccountSelection extends ComplexContentType implements PreResolvable
     {
         $value = null;
         if ($node->hasProperty($property->getName())) {
-            try {
-                $account = $this->accountManager->getById(
-                    $node->getPropertyValue($property->getName()),
-                    $property->getStructure()->getLanguageCode()
-                );
-
-                $value = [
-                    'id' => $account->getId(),
-                    'name' => $account->getName(),
-                ];
-            } catch (EntityNotFoundException $e) {
-                $value = null;
-            }
+            $value = $node->getPropertyValue($property->getName());
         }
 
         $property->setValue($value);
@@ -70,9 +57,9 @@ class SingleAccountSelection extends ComplexContentType implements PreResolvable
         $languageCode,
         $segmentKey
     ) {
-        $account = $property->getValue();
-        if (null != $account) {
-            $node->setProperty($property->getName(), $account['id']);
+        $value = $property->getValue();
+        if (null != $value) {
+            $node->setProperty($property->getName(), is_array($value) ? $value['id'] : $value);
         } else {
             $this->remove($node, $property, $webspaceKey, $languageCode, $segmentKey);
         }
@@ -88,22 +75,22 @@ class SingleAccountSelection extends ComplexContentType implements PreResolvable
 
     public function getContentData(PropertyInterface $property): ?Account
     {
-        $account = $property->getValue();
+        $id = $property->getValue();
 
-        if (!isset($account['id'])) {
+        if (!$id) {
             return null;
         }
 
-        return $this->accountManager->getById($account['id'], $property->getStructure()->getLanguageCode());
+        return $this->accountManager->getById($id, $property->getStructure()->getLanguageCode());
     }
 
     public function preResolve(PropertyInterface $property)
     {
-        $account = $property->getValue();
-        if (!$account || !\array_key_exists('id', $account)) {
+        $id = $property->getValue();
+        if (!$id) {
             return;
         }
 
-        $this->accountReferenceStore->add($account['id']);
+        $this->accountReferenceStore->add($id);
     }
 }

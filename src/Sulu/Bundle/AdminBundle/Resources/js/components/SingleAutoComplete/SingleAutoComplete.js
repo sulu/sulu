@@ -1,8 +1,9 @@
 // @flow
 import React from 'react';
+import equals from 'fast-deep-equal';
 import type {ElementRef} from 'react';
 import {observer} from 'mobx-react';
-import {action, computed, observable} from 'mobx';
+import {action, computed, observable, toJS} from 'mobx';
 import debounce from 'debounce';
 import Input from '../Input';
 import AutoCompletePopover from '../AutoCompletePopover';
@@ -38,12 +39,13 @@ class SingleAutoComplete extends React.Component<Props> {
 
     overrideValue: boolean = false;
 
-    componentDidUpdate() {
-        if (this.overrideValue) {
-            const {
-                displayProperty,
-                value,
-            } = this.props;
+    componentDidUpdate(prevProps: Props) {
+        const {
+            displayProperty,
+            value,
+        } = this.props;
+
+        if (this.overrideValue || !equals(toJS(prevProps.value), toJS(value))){
             this.overrideValue = false;
             this.setInputValue(value ? value[displayProperty] : undefined);
         }
