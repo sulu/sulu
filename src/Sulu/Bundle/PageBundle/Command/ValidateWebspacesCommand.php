@@ -16,6 +16,10 @@ use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\StructureProvider\WebspaceStructureProvider;
 use Sulu\Component\Webspace\Webspace;
+use Sylius\Bundle\ThemeBundle\Context\SettableThemeContext;
+use Sylius\Bundle\ThemeBundle\Context\ThemeContextInterface;
+use Sylius\Bundle\ThemeBundle\Model\Theme;
+use Sylius\Bundle\ThemeBundle\Repository\ThemeRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -62,14 +66,24 @@ class ValidateWebspacesCommand extends Command
     private $errors = [];
 
     /**
-     * @var string
+     * @var WebspaceManagerInterface
+     */
+    private $webspaceManager;
+
+    /**
+     * @var ThemeRepositoryInterface
+     */
+    private $themeRepository;
+
+    /**
+     * @var Theme|null
      */
     private $activeTheme;
 
     /**
-     * @var WebspaceManagerInterface
+     * @var ThemeContextInterface|null
      */
-    private $webspaceManager;
+    private $themeContext;
 
     public function __construct(
         Environment $twig,
@@ -78,7 +92,8 @@ class ValidateWebspacesCommand extends Command
         StructureManagerInterface $structureManager,
         WebspaceStructureProvider $structureProvider,
         WebspaceManagerInterface $webspaceManager,
-        $activeTheme = null
+        ?ThemeRepositoryInterface $themeRepository,
+        ?ThemeContextInterface $themeContext
     ) {
         parent::__construct();
 
@@ -87,8 +102,9 @@ class ValidateWebspacesCommand extends Command
         $this->controllerNameConverter = $controllerNameConverter;
         $this->structureManager = $structureManager;
         $this->structureProvider = $structureProvider;
-        $this->activeTheme = $activeTheme;
         $this->webspaceManager = $webspaceManager;
+        $this->themeRepository = $themeRepository;
+        $this->themeContext = $themeContext;
     }
 
     protected function configure()
@@ -106,10 +122,9 @@ class ValidateWebspacesCommand extends Command
         $messages = '';
 
         foreach ($webspaces as $webspace) {
-            if (null !== $this->activeTheme) {
-                $this->activeTheme->setName($webspace->getTheme());
+            if ($this->themeRepository) {
+                $this->activeTheme = $this->themeRepository->findOneByName($webspace->getTheme());
             }
-
             $this->outputWebspace($webspace);
         }
 
@@ -315,6 +330,9 @@ class ValidateWebspacesCommand extends Command
      */
     private function validateTwigTemplate($template)
     {
+        if ($this->activeTheme && class_exists(SettableThemeContext::class) && $this->themeContext instanceof SettableThemeContext) {
+            $this->themeContext->setTheme($this->activeTheme);
+        }
         $loader = $this->twig->getLoader();
         if (!$loader->exists($template)) {
             throw new \Exception(\sprintf(
