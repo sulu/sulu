@@ -102,10 +102,8 @@ class ProfileControllerTest extends SuluTestCase
 
         $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertHttpStatusCode(409, $this->client->getResponse());
-        $this->assertEquals(
-            'The email "" is not unique!',
-            $response->message
-        );
+        $this->assertEquals(1004, $response->code);
+        $this->assertEquals('The email address "" is already assigned to another contact.', $response->detail);
     }
 
     public function testPutUsernameNotUnique()

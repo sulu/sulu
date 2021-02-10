@@ -620,7 +620,7 @@ class UserControllerTest extends SuluTestCase
         $this->assertEquals('en', $response->userGroups[1]->locales[0]);
     }
 
-    public function testPostNonUniqueName()
+    public function testPostNonUniqueUserame()
     {
         $this->client->jsonRequest(
             'POST',
@@ -638,11 +638,11 @@ class UserControllerTest extends SuluTestCase
         $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertHttpStatusCode(409, $this->client->getResponse());
-        $this->assertEquals('admin', $response->username);
         $this->assertEquals(1001, $response->code);
+        $this->assertEquals('The username "admin" is already assigned to another contact.', $response->detail);
     }
 
-    public function testPutNonUniqueName()
+    public function testPutNonUniqueUsername()
     {
         $this->client->jsonRequest(
             'POST',
@@ -673,8 +673,8 @@ class UserControllerTest extends SuluTestCase
         $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertHttpStatusCode(409, $this->client->getResponse());
-        $this->assertEquals('admin', $response->username);
         $this->assertEquals(1001, $response->code);
+        $this->assertEquals('The username "admin" is already assigned to another contact.', $response->detail);
     }
 
     public function testPatch()
@@ -722,7 +722,7 @@ class UserControllerTest extends SuluTestCase
         $this->assertEquals($this->contact1->getId(), $response->contact->id);
     }
 
-    public function testPatchNonUniqueName()
+    public function testPatchNonUniqueUsername()
     {
         $this->client->jsonRequest(
             'POST',
@@ -748,8 +748,8 @@ class UserControllerTest extends SuluTestCase
         $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertHttpStatusCode(409, $this->client->getResponse());
-        $this->assertEquals('admin', $response->username);
         $this->assertEquals(1001, $response->code);
+        $this->assertEquals('The username "admin" is already assigned to another contact.', $response->detail);
     }
 
     public function testPutWithMissingUsername()

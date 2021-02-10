@@ -13,5 +13,6 @@
     "sulu_custom_url.no_index_info": "The page will not be indexed by search engines.",
     "sulu_custom_url.no_follow": "No Follow",
     "sulu_custom_url.no_follow_info": "The links on the page will not be followed by search engines.",
+    "sulu_custom_url.title_used_for_other_url": "The title \"%title%\" is already used for another custom URL.",
     "sulu_custom_url.target_title": "Target page"
 }
