@@ -24,28 +24,24 @@ class FlattenExceptionNormalizer implements NormalizerInterface
     /**
      * @var NormalizerInterface
      */
-    private $normalizer;
-
-    /**
-     * @var bool
-     */
-    private $debug;
+    private $decoratedNormalizer;
 
     /**
      * @var TranslatorInterface
      */
     private $translator;
 
-    public function __construct(NormalizerInterface $normalizer, string $debug, TranslatorInterface $translator)
-    {
-        $this->normalizer = $normalizer;
-        $this->debug = $debug;
+    public function __construct(
+        NormalizerInterface $decoratedNormalizer,
+        TranslatorInterface $translator
+    ) {
+        $this->decoratedNormalizer = $decoratedNormalizer;
         $this->translator = $translator;
     }
 
     public function normalize($exception, $format = null, array $context = [])
     {
-        $data = $this->normalizer->normalize($exception, $format, $context);
+        $data = $this->decoratedNormalizer->normalize($exception, $format, $context);
         $data['code'] = $exception->getCode();
 
         $contextException = $context['exception'] ?? null;
@@ -58,7 +54,7 @@ class FlattenExceptionNormalizer implements NormalizerInterface
             );
         }
 
-        if ($this->debug) {
+        if ($context['debug'] ?? false) {
             if ($exception instanceof FlattenException) {
                 $errors = $exception->getAsString();
             } else {
@@ -73,6 +69,6 @@ class FlattenExceptionNormalizer implements NormalizerInterface
 
     public function supportsNormalization($data, $format = null)
     {
-        return $this->normalizer->supportsNormalization($data, $format);
+        return $this->decoratedNormalizer->supportsNormalization($data, $format);
     }
 }

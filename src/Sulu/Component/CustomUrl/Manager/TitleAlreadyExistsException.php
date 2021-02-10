@@ -11,8 +11,8 @@
 
 namespace Sulu\Component\CustomUrl\Manager;
 
-use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
 use Sulu\Component\Rest\Exception\RestException;
+use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
 
 /**
  * Thrown when a title already exists.
