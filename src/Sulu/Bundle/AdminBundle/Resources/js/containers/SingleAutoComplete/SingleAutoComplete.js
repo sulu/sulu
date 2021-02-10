@@ -5,17 +5,17 @@ import SingleAutoCompleteComponent from '../../components/SingleAutoComplete';
 import SearchStore from '../../stores/SearchStore';
 import SingleSelectionStore from '../../stores/SingleSelectionStore';
 
-type Props = {|
+type Props<T> = {|
     disabled: boolean,
     displayProperty: string,
     id?: string,
     options: Object,
     searchProperties: Array<string>,
-    selectionStore: SingleSelectionStore<string | number>,
+    selectionStore: SingleSelectionStore<T>,
 |};
 
 @observer
-class SingleAutoComplete extends React.Component<Props> {
+class SingleAutoComplete<T: string | number> extends React.Component<Props<T>> {
     static defaultProps = {
         disabled: false,
         options: {},
@@ -23,7 +23,7 @@ class SingleAutoComplete extends React.Component<Props> {
 
     searchStore: SearchStore;
 
-    constructor(props: Props) {
+    constructor(props: Props<T>) {
         super(props);
 
         const {options, selectionStore, searchProperties} = this.props;
