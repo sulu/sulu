@@ -94,11 +94,11 @@ export default class UploadToolbarAction extends AbstractListToolbarAction {
             // @deprecated
             log.warn(
                 'The "routerAttributesToRequest" option is deprecated and will be removed. ' +
-                'Use the "router_attrbites_to_request" option instead.'
+                'Use the "router_attributes_to_request" option instead.'
             );
 
-            if (!options.router_attrbites_to_request) {
-                options.router_attrbites_to_request = options.routerAttributesToRequest;
+            if (!options.router_attributes_to_request) {
+                options.router_attributes_to_request = options.routerAttributesToRequest;
             }
         }
 
@@ -106,7 +106,7 @@ export default class UploadToolbarAction extends AbstractListToolbarAction {
             // @deprecated
             log.warn(
                 'The "errorCodeMapping" option is deprecated and will be removed. ' +
-                'The API can return a specific error message in the "detail" property of the response instead.'
+                'The API should return a specific error message in the "detail" property of the response instead.'
             );
         }
 
@@ -200,12 +200,15 @@ export default class UploadToolbarAction extends AbstractListToolbarAction {
 
         fetch(this.url, {...defaultOptions, method: 'POST', body: formData}).then((response) => {
             if (!response.ok) {
-                const translationKey = this.errorCodeMapping[response.status] || 'sulu_admin.unexpected_upload_error';
+                const translatedErrorMessage = translate(
+                    this.errorCodeMapping[response.status] || 'sulu_admin.unexpected_upload_error',
+                    {statusText: response.statusText}
+                );
 
                 response.json().then((error) => {
-                    this.addError(error.detail || translate(translationKey, {statusText: response.statusText}));
+                    this.addError(error.detail || error.title || translatedErrorMessage);
                 }).catch(() => {
-                    this.addError(translate(translationKey, {statusText: response.statusText}));
+                    this.addError(translatedErrorMessage);
                 });
 
                 return;
@@ -259,7 +262,7 @@ export default class UploadToolbarAction extends AbstractListToolbarAction {
         const {
             options: {
                 request_parameters: attributesToRequest = {},
-                router_attrbites_to_request: routerAttributesToRequest = {},
+                router_attributes_to_request: routerAttributesToRequest = {},
             },
             router: {
                 attributes: routerAttributes,
@@ -271,7 +274,7 @@ export default class UploadToolbarAction extends AbstractListToolbarAction {
         }
 
         if (!routerAttributesToRequest || typeof routerAttributesToRequest !== 'object') {
-            throw new Error('The "router_attrbites_to_request" option must be an object!');
+            throw new Error('The "router_attributes_to_request" option must be an object!');
         }
 
         const requestParameters = {};
