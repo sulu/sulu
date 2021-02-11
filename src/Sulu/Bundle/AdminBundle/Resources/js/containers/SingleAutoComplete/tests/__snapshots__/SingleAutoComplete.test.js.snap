@@ -33,39 +33,7 @@ exports[`Render in disabled state 1`] = `
 </div>
 `;
 
-exports[`Render in loading state 1`] = `
-<div
-  class="singleAutoComplete"
->
-  <label
-    class="input default left"
-  >
-    <div
-      class="prependedContainer default"
-    >
-      <div
-        class="spinner"
-        style="width:20px;height:20px"
-      >
-        <div
-          class="doubleBounce1"
-        />
-        <div
-          class="doubleBounce2"
-        />
-      </div>
-    </div>
-    <input
-      autocomplete="off"
-      class="mousetrap"
-      type="text"
-      value=""
-    />
-  </label>
-</div>
-`;
-
-exports[`Render with given value 1`] = `
+exports[`Render with value of given SingleSelectionStore 1`] = `
 <div
   class="singleAutoComplete"
 >
