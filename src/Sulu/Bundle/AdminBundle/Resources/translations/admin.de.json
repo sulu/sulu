@@ -33,6 +33,7 @@
     "sulu_admin.error_minitems": "Dieses Feld hat zu wenig Zuweisungen",
     "sulu_admin.error_maxitems": "Dieses Feld hat zu viele Zuweisungen",
     "sulu_admin.error_pattern": "Dieses Feld erfüllt nicht das angegebene Muster",
+    "sulu_admin.error_format": "Dieses Feld erfüllt nicht das angegebene Format",
     "sulu_admin.welcome": "Willkommen",
     "sulu_admin.reset_password": "Passwort zurücksetzen",
     "sulu_admin.reset_password_error": "Die Passwörter stimmen nicht überein",

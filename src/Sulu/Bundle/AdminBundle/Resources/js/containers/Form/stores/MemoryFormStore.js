@@ -1,12 +1,12 @@
 // @flow
 import {action, observable} from 'mobx';
 import type {IObservableValue} from 'mobx';
-import Ajv from 'ajv';
 import jsonpointer from 'json-pointer';
+import {createAjv} from '../../../utils';
 import type {FormStoreInterface, Schema, SchemaType} from '../types';
 import AbstractFormStore from './AbstractFormStore';
 
-const ajv = new Ajv({allErrors: true, jsonPointers: true});
+const ajv = createAjv();
 
 export default class MemoryFormStore extends AbstractFormStore implements FormStoreInterface {
     id = undefined;

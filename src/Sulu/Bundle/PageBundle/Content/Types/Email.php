@@ -11,15 +11,48 @@
 
 namespace Sulu\Bundle\PageBundle\Content\Types;
 
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\AnyOfsMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\EmptyStringMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\NullMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapperInterface;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\StringMetadata;
+use Sulu\Component\Content\Metadata\PropertyMetadata as ContentPropertyMetadata;
 use Sulu\Component\Content\SimpleContentType;
 
 /**
  * ContentType for Email.
  */
-class Email extends SimpleContentType
+class Email extends SimpleContentType implements PropertyMetadataMapperInterface
 {
     public function __construct()
     {
         parent::__construct('Email', '');
+    }
+
+    public function mapPropertyMetadata(ContentPropertyMetadata $propertyMetadata): PropertyMetadata
+    {
+        $mandatory = $propertyMetadata->isRequired();
+
+        $emailMetadata = new StringMetadata(
+            null,
+            null,
+            null,
+            'idn-email'
+        );
+
+        if (!$mandatory) {
+            $emailMetadata = new AnyOfsMetadata([
+                new NullMetadata(),
+                new EmptyStringMetadata(),
+                $emailMetadata,
+            ]);
+        }
+
+        return new PropertyMetadata(
+            $propertyMetadata->getName(),
+            $mandatory,
+            $emailMetadata
+        );
     }
 }

@@ -33,6 +33,7 @@
     "sulu_admin.error_minitems": "This field has too few selections",
     "sulu_admin.error_maxitems": "This field has too many selections",
     "sulu_admin.error_pattern": "This field does not match the specified pattern",
+    "sulu_admin.error_format": "This field does not match the specified format",
     "sulu_admin.welcome": "Welcome",
     "sulu_admin.reset_password": "Reset password",
     "sulu_admin.reset_password_error": "The passwords do not match",
