@@ -91,11 +91,7 @@ class MultiMediaDropzone extends React.Component<Props> {
                 if (result.status === 'fulfilled') {
                     uploadedMedias.push(result.value);
                 } else {
-                    try {
-                        errorResponses.push(JSON.parse(result.reason));
-                    } catch (e) {
-                        errorResponses.push(result);
-                    }
+                    errorResponses.push(result.reason);
                 }
             });
 
