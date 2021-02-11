@@ -72,10 +72,40 @@ class NavigationItemTest extends TestCase
         $this->assertEquals('OtherNavigationItem', $this->navigationItem->getName());
     }
 
+    public function testLabel()
+    {
+        $this->navigationItem->setLabel('label');
+        $this->assertEquals('label', $this->navigationItem->getLabel());
+    }
+
     public function testIcon()
     {
         $this->navigationItem->setIcon('icon');
         $this->assertEquals('icon', $this->navigationItem->getIcon());
+    }
+
+    public function testView()
+    {
+        $this->navigationItem->setView('view');
+        $this->assertEquals('view', $this->navigationItem->getView());
+    }
+
+    public function testPosition()
+    {
+        $this->navigationItem->setPosition(110);
+        $this->assertEquals(110, $this->navigationItem->getPosition());
+    }
+
+    public function testDisabled()
+    {
+        $this->navigationItem->setDisabled(true);
+        $this->assertEquals(true, $this->navigationItem->getDisabled());
+    }
+
+    public function testVisible()
+    {
+        $this->navigationItem->setVisible(false);
+        $this->assertEquals(false, $this->navigationItem->getVisible());
     }
 
     public function testChildren()
@@ -136,6 +166,25 @@ class NavigationItemTest extends TestCase
         $array = $this->item2->toArray();
 
         $this->assertNotContains('header', \array_keys($array));
+    }
+
+    public function testToArrayWithoutChildre()
+    {
+        $item = new NavigationItem('Navigation Item');
+        $item->setId('test-id');
+        $item->setLabel('test-label');
+        $item->setIcon('test-icon');
+        $item->setView('test-view');
+
+        $this->assertEquals([
+            'title' => 'Navigation Item',
+            'label' => 'test-label',
+            'icon' => 'test-icon',
+            'view' => 'test-view',
+            'id' => 'test-id',
+            'disabled' => false,
+            'visible' => true,
+        ], $item->toArray());
     }
 
     public function testToArrayWithPosition()

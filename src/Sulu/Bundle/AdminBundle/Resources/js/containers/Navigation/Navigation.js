@@ -41,13 +41,14 @@ class Navigation extends React.Component<Props> {
 
     handleNavigationItemClick = (value: string) => {
         const navigationItem = navigationRegistry.get(value);
+        const view = navigationItem.view;
 
-        if (!navigationItem.view) {
+        if (!view) {
             return;
         }
 
-        this.props.router.navigate(navigationItem.view);
-        this.props.onNavigate(navigationItem.view);
+        this.props.router.navigate(view);
+        this.props.onNavigate(view);
     };
 
     handleProfileEditClick = () => {
