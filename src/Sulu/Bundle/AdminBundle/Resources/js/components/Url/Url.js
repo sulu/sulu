@@ -4,7 +4,7 @@ import {observer} from 'mobx-react';
 import {action, computed, observable} from 'mobx';
 import classNames from 'classnames';
 import log from 'loglevel';
-import Isemail from 'isemail';
+import IsEmail from 'isemail';
 import SingleSelect from '../SingleSelect';
 import urlStyles from './url.scss';
 
@@ -20,15 +20,13 @@ type Props = {|
     value: ?string,
 |};
 
-// eslint-disable-next-line max-len
-const URL_REGEX = /^(?:(?:https?|ftps?):\/\/)(?:\S+(?::\S*)?@)?(?:(?!127(?:\.\d{1,3}){3})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]+-?)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,})?(?:\/[^\s]*)?$/iu;
-const URL_PROTOCOLS = ['http://', 'https://', 'ftp://', 'ftps://'];
+const URL_PROTOCOLS = ['http://', 'https://', 'ftp://', 'ftps://', 'mailto:', 'tel:'];
 
 @observer
 class Url extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
-        protocols: [...URL_PROTOCOLS, 'mailto:', 'tel:'],
+        protocols: URL_PROTOCOLS,
         valid: true,
     };
 
@@ -60,11 +58,7 @@ class Url extends React.Component<Props> {
         }
 
         if (this.selectedProtocol === 'mailto:') {
-            return Isemail.validate(url.substring(7));
-        }
-
-        if (URL_PROTOCOLS.includes(this.selectedProtocol)) {
-            return URL_REGEX.test(url);
+            return IsEmail.validate(url.substring(7));
         }
 
         return true;
