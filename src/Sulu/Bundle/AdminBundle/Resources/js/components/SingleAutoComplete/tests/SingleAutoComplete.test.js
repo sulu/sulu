@@ -122,3 +122,26 @@ test('Should call the onFinish callback when the Input lost focus', () => {
 
     expect(finishSpy).toBeCalledWith();
 });
+
+test('Should update value of Input when the value prop is updated', () => {
+    const finishSpy = jest.fn();
+    const suggestions = [
+        {id: 1, name: 'Suggestion 1'},
+    ];
+
+    const singleAutoComplete = shallow(
+        <SingleAutoComplete
+            displayProperty="name"
+            onChange={jest.fn()}
+            onFinish={finishSpy}
+            onSearch={jest.fn()}
+            searchProperties={['name']}
+            suggestions={suggestions}
+            value={{name: 'Test'}}
+        />
+    );
+
+    expect(singleAutoComplete.find('Input').prop('value')).toEqual('Test');
+    singleAutoComplete.setProps({value: {name: 'new value'}});
+    expect(singleAutoComplete.find('Input').prop('value')).toEqual('new value');
+});
