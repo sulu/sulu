@@ -250,7 +250,8 @@ class SuluNodeHelper
         $newPath = PathHelper::getParentPath($path);
         $newPath = \substr($newPath, \strlen($snippetsPath));
 
-        if (false === $newPath) {
+        // $newPath can be false or empty because of return difference of substr depending on php version (<= 7.4, 8.0)
+        if (!$newPath) {
             throw new \InvalidArgumentException(
                 \sprintf(
                     'Cannot extract snippet template type from path "%s"',

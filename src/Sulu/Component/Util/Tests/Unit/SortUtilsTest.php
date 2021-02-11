@@ -105,16 +105,26 @@ class SortUtilsTest extends TestCase
                 '[foo]', ['2', '1', '3'],
             ],
 
-            // multi dimensional array missing key
+            // multi dimensional array missing key asc
             [
                 [
                     ['foo' => '1', 'baz' => ['bar' => 'bbb']],
                     ['foo' => '2', 'baz' => ['sad' => 'aaa']],
-                    ['foo' => '3', 'baz' => ['bad' => 'ccc']],
                 ],
                 '[baz][bar]',
                 'asc',
-                '[foo]', ['3', '2', '1'],
+                '[foo]', ['2', '1'],
+            ],
+
+            // multi dimensional array missing key desc
+            [
+                [
+                    ['foo' => '1', 'baz' => ['bar' => 'bbb']],
+                    ['foo' => '2', 'baz' => ['sad' => 'aaa']],
+                ],
+                '[baz][bar]',
+                'desc',
+                '[foo]', ['1', '2'],
             ],
         ];
     }
