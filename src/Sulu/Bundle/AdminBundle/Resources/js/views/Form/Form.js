@@ -416,10 +416,11 @@ class Form extends React.Component<Props> {
                 if (error.code === HAS_CHANGED_ERROR_CODE) {
                     this.showHasChangedWarning = true;
                     this.postponedSaveOptions = options;
+
                     return;
                 }
 
-                this.errors.push(translate('sulu_admin.form_save_server_error'));
+                this.errors.push(error.detail || error.title || translate('sulu_admin.form_save_server_error'));
             }));
     };
 

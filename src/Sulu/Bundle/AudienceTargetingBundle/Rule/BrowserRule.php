@@ -44,7 +44,12 @@ class BrowserRule implements RuleInterface
             return false;
         }
 
-        $browser = Browser::getBrowserFamily($this->deviceDetector->getClient('short_name'));
+        $clientShortName = $this->deviceDetector->getClient('short_name');
+        if (!$clientShortName) {
+            return false;
+        }
+
+        $browser = Browser::getBrowserFamily($clientShortName);
 
         return $browser == $options[static::BROWSER];
     }

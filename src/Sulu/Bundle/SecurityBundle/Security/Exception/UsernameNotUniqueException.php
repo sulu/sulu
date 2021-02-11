@@ -11,10 +11,12 @@
 
 namespace Sulu\Bundle\SecurityBundle\Security\Exception;
 
+use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
+
 /**
  * This exception is thrown when the username is not unique.
  */
-class UsernameNotUniqueException extends SecurityException
+class UsernameNotUniqueException extends SecurityException implements TranslationErrorMessageExceptionInterface
 {
     /**
      * The username which is not unique.
@@ -32,6 +34,16 @@ class UsernameNotUniqueException extends SecurityException
     public function getUsername()
     {
         return $this->username;
+    }
+
+    public function getMessageTranslationKey(): string
+    {
+        return 'sulu_security.username_assigned_to_other_user';
+    }
+
+    public function getMessageTranslationParameters(): array
+    {
+        return ['%username%' => $this->username];
     }
 
     public function toArray()

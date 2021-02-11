@@ -13,6 +13,8 @@ namespace Sulu\Bundle\ContactBundle\DependencyInjection;
 
 use Sulu\Bundle\ContactBundle\Admin\ContactAdmin;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
+use Sulu\Bundle\SecurityBundle\Security\Exception\EmailNotUniqueException;
+use Sulu\Bundle\SecurityBundle\Security\Exception\UsernameNotUniqueException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
@@ -253,17 +255,21 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
                     'routes_to_expose' => [
                         'sulu_contact.delete_contact_medias',
                         'sulu_contact.delete_account_medias',
+                        'sulu_contact.delete_account_contacts',
                     ],
                 ]
             );
         }
 
-        if ($container->hasExtension('fos_js_routing')) {
+        if ($container->hasExtension('fos_rest')) {
             $container->prependExtensionConfig(
-                'fos_js_routing',
+                'fos_rest',
                 [
-                    'routes_to_expose' => [
-                        'sulu_contact.delete_account_contacts',
+                    'exception' => [
+                        'codes' => [
+                            UsernameNotUniqueException::class => 409,
+                            EmailNotUniqueException::class => 409,
+                        ],
                     ],
                 ]
             );
