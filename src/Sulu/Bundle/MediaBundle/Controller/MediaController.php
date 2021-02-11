@@ -17,7 +17,6 @@ use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\Media;
-use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\ListBuilderFactory\MediaListBuilderFactory;
@@ -207,8 +206,6 @@ class MediaController extends AbstractMediaController implements
             );
         } catch (MediaNotFoundException $e) {
             $view = $this->view($e->toArray(), 404);
-        } catch (MediaException $e) {
-            $view = $this->view($e->toArray(), 400);
         }
 
         return $this->handleView($view);
@@ -437,8 +434,6 @@ class MediaController extends AbstractMediaController implements
                 $this->mediaManager->delete($id, true);
             } catch (MediaNotFoundException $e) {
                 throw new EntityNotFoundException($this->mediaClass, $id); // will throw 404 Entity not found
-            } catch (MediaException $e) {
-                throw new RestException($e->getMessage(), $e->getCode()); // will throw 400 Bad Request
             }
         };
 
@@ -539,8 +534,6 @@ class MediaController extends AbstractMediaController implements
             $view = $this->view($media, 200);
         } catch (MediaNotFoundException $e) {
             $view = $this->view($e->toArray(), 404);
-        } catch (MediaException $e) {
-            $view = $this->view($e->toArray(), 400);
         }
 
         return $this->handleView($view);
@@ -562,8 +555,6 @@ class MediaController extends AbstractMediaController implements
             $view = $this->view($media, 200);
         } catch (MediaNotFoundException $e) {
             $view = $this->view($e->toArray(), 404);
-        } catch (MediaException $e) {
-            $view = $this->view($e->toArray(), 400);
         }
 
         return $this->handleView($view);

@@ -11,7 +11,9 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\Exception;
 
-class InvalidFileTypeException extends UploadFileException
+use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
+
+class InvalidFileTypeException extends UploadFileException implements TranslationErrorMessageExceptionInterface
 {
     /**
      * @param string $message
@@ -19,5 +21,15 @@ class InvalidFileTypeException extends UploadFileException
     public function __construct($message, \Throwable $previous = null)
     {
         parent::__construct($message, self::EXCEPTION_CODE_BLOCKED_FILE_TYPE, $previous);
+    }
+
+    public function getMessageTranslationKey(): string
+    {
+        return 'sulu_media.upload_filetype_blocked';
+    }
+
+    public function getMessageTranslationParameters(): array
+    {
+        return [];
     }
 }

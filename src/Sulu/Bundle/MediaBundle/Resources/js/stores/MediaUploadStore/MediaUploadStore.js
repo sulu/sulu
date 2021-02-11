@@ -174,13 +174,18 @@ export default class MediaUploadStore {
             xhr.open('POST', url);
 
             xhr.onload = (event: any) => {
+                // mimic ok property of fetch response: https://developer.mozilla.org/en-US/docs/Web/API/Response/ok
                 if (event.target.status >= 200 && event.target.status <= 299) {
                     resolve(JSON.parse(event.target.response));
                 } else {
-                    reject(event.target.response);
+                    try {
+                        reject(JSON.parse(event.target.response));
+                    } catch (e) {
+                        reject(event.target);
+                    }
                 }
             };
-            xhr.onerror = (event: any) => reject(event.target.response);
+            xhr.onerror = (event: any) => reject(event.target);
 
             if (xhr.upload) {
                 xhr.upload.onprogress = (event) => this.setProgress(event.loaded / event.total * 100);

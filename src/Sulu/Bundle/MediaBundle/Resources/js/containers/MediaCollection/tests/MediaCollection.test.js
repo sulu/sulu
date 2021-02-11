@@ -617,9 +617,23 @@ test('Reload medias and fire onUploadError callback if an error happens while up
 
     expect(onUploadErrorSpy).not.toBeCalled();
 
-    mediaCollection.find('MultiMediaDropzone').props().onUploadError(['wrong-file-extension-error']);
+    mediaCollection.find('MultiMediaDropzone').props().onUploadError(
+        [
+            {
+                'code': 5003,
+                'detail': 'The uploaded file exceeds the configured maximum filesize.',
+            },
+        ]
+    );
 
-    expect(onUploadErrorSpy).toBeCalledWith(['wrong-file-extension-error']);
+    expect(onUploadErrorSpy).toBeCalledWith(
+        [
+            {
+                'code': 5003,
+                'detail': 'The uploaded file exceeds the configured maximum filesize.',
+            },
+        ]
+    );
     expect(mediaListStore.reset).toBeCalled();
     expect(mediaListStore.reload).toBeCalled();
 });

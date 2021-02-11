@@ -144,8 +144,12 @@ class MediaOverview extends React.Component<ViewProps> {
         this.collectionId.set(collectionId);
     };
 
-    @action handleUploadError= () => {
-        this.errors.push(translate('sulu_media.upload_server_error'));
+    @action handleUploadError= (errors: Array<Object>) => {
+        if (errors.length === 1) {
+            this.errors.push(errors[0].detail || errors[0].title || translate('sulu_media.upload_server_error'));
+        } else {
+            this.errors.push(translate('sulu_media.upload_server_error'));
+        }
     };
 
     @action handleUploadOverlayOpen = () => {
