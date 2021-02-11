@@ -11,7 +11,7 @@
 
 namespace Sulu\Component\Security\Authentication;
 
-use Doctrine\Common\Persistence\ObjectRepository;
+use Doctrine\Persistence\ObjectRepository;
 
 /**
  * Describes how the user settings are retrieved from the database.

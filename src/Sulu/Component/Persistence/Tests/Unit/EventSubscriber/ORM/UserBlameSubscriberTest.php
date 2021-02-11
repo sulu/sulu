@@ -11,11 +11,11 @@
 
 namespace Sulu\Component\Persistence\Tests\Unit\EventSubscriber\ORM;
 
-use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\UnitOfWork;
+use Doctrine\Persistence\Mapping\ClassMetadata;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\SecurityBundle\Entity\User;

@@ -17,9 +17,7 @@ use FOS\RestBundle\View\ViewHandlerInterface;
 use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\FormatOptions\FormatOptionsManagerInterface;
-use Sulu\Bundle\SecurityBundle\Security\Exception\EmailNotUniqueException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\MissingPasswordException;
-use Sulu\Bundle\SecurityBundle\Security\Exception\UsernameNotUniqueException;
 use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
@@ -165,12 +163,8 @@ class UserController extends AbstractRestController implements ClassResourceInte
             $data['contactId'] = $request->query->get('contactId');
             $user = $this->userManager->save($data, $locale);
             $view = $this->view($user, 200);
-        } catch (UsernameNotUniqueException $exc) {
-            $view = $this->view($exc->toArray(), 409);
         } catch (MissingPasswordException $exc) {
             $view = $this->view($exc->toArray(), 400);
-        } catch (EmailNotUniqueException $exc) {
-            $view = $this->view($exc->toArray(), 409);
         } catch (RestException $re) {
             $view = $this->view($re->toArray(), 400);
         }
@@ -231,10 +225,6 @@ class UserController extends AbstractRestController implements ClassResourceInte
             $view = $this->view($user, 200);
         } catch (EntityNotFoundException $exc) {
             $view = $this->view($exc->toArray(), 404);
-        } catch (UsernameNotUniqueException $exc) {
-            $view = $this->view($exc->toArray(), 409);
-        } catch (EmailNotUniqueException $exc) {
-            $view = $this->view($exc->toArray(), 409);
         } catch (RestException $exc) {
             $view = $this->view($exc->toArray(), 400);
         }
@@ -259,10 +249,6 @@ class UserController extends AbstractRestController implements ClassResourceInte
             $view = $this->view($user, 200);
         } catch (EntityNotFoundException $exc) {
             $view = $this->view($exc->toArray(), 404);
-        } catch (UsernameNotUniqueException $exc) {
-            $view = $this->view($exc->toArray(), 409);
-        } catch (EmailNotUniqueException $exc) {
-            $view = $this->view($exc->toArray(), 409);
         } catch (RestException $exc) {
             $view = $this->view($exc->toArray(), 400);
         }

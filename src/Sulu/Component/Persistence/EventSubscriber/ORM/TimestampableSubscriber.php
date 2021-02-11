@@ -12,9 +12,9 @@
 namespace Sulu\Component\Persistence\EventSubscriber\ORM;
 
 use Doctrine\Common\EventSubscriber;
-use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
-use Doctrine\Common\Persistence\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Events;
+use Doctrine\Persistence\Event\LifecycleEventArgs;
+use Doctrine\Persistence\Event\LoadClassMetadataEventArgs;
 use Sulu\Component\Persistence\Model\TimestampableInterface;
 
 /**

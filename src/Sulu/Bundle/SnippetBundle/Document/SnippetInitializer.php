@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\SnippetBundle\Document;
 
-use Doctrine\Common\Persistence\ConnectionRegistry;
+use Doctrine\Persistence\ConnectionRegistry;
 use PHPCR\SessionInterface;
 use Sulu\Bundle\DocumentManagerBundle\Initializer\InitializerInterface;
 use Sulu\Component\DocumentManager\PathBuilder;

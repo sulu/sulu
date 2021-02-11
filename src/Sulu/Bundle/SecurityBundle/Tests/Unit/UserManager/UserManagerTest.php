@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\SecurityBundle\Tests\Unit\UserManager;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\SecurityBundle\UserManager\UserManager;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;

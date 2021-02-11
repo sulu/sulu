@@ -13,7 +13,7 @@ namespace Sulu\Bundle\ContactBundle\DataFixtures\ORM;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Sulu\Bundle\ContactBundle\Entity\AddressType;
 use Sulu\Bundle\ContactBundle\Entity\EmailType;
 use Sulu\Bundle\ContactBundle\Entity\FaxType;

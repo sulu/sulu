@@ -66,6 +66,10 @@ class SuluLocationExtension extends Extension implements PrependExtensionInterfa
 
         $loader->load('geolocator.xml');
 
+        if (\class_exists('GuzzleHttp\Client')) {
+            $loader->load('guzzle.xml');
+        }
+
         $container->setParameter('sulu_location.geolocator.name', $geolocatorName);
         $container->setAlias('sulu_location.geolocator', 'sulu_location.geolocator.service.' . $geolocatorName);
 

@@ -11,8 +11,10 @@
 
 namespace Sulu\Component\Rest;
 
+use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @internal the following class is only for internal use don't use it in your project
@@ -22,28 +24,37 @@ class FlattenExceptionNormalizer implements NormalizerInterface
     /**
      * @var NormalizerInterface
      */
-    private $normalizer;
+    private $decoratedNormalizer;
 
     /**
-     * @var bool
+     * @var TranslatorInterface
      */
-    private $debug;
+    private $translator;
 
-    public function __construct(NormalizerInterface $normalizer, string $debug)
-    {
-        $this->normalizer = $normalizer;
-        $this->debug = $debug;
+    public function __construct(
+        NormalizerInterface $decoratedNormalizer,
+        TranslatorInterface $translator
+    ) {
+        $this->decoratedNormalizer = $decoratedNormalizer;
+        $this->translator = $translator;
     }
 
     public function normalize($exception, $format = null, array $context = [])
     {
-        $data = $this->normalizer->normalize($exception, $format, $context);
+        $data = $this->decoratedNormalizer->normalize($exception, $format, $context);
+        $data['code'] = $exception->getCode();
 
-        if (\is_array($data)) {
-            $data['code'] = $exception->getCode();
+        $contextException = $context['exception'] ?? null;
+        if ($contextException instanceof TranslationErrorMessageExceptionInterface) {
+            // set error message to detail property of response to match rfc 7807
+            $data['detail'] = $this->translator->trans(
+                $contextException->getMessageTranslationKey(),
+                $contextException->getMessageTranslationParameters(),
+                'admin'
+            );
         }
 
-        if ($this->debug) {
+        if ($context['debug'] ?? false) {
             if ($exception instanceof FlattenException) {
                 $errors = $exception->getAsString();
             } else {
@@ -58,6 +69,6 @@ class FlattenExceptionNormalizer implements NormalizerInterface
 
     public function supportsNormalization($data, $format = null)
     {
-        return $this->normalizer->supportsNormalization($data, $format);
+        return $this->decoratedNormalizer->supportsNormalization($data, $format);
     }
 }

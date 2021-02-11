@@ -11,7 +11,7 @@
 
 namespace Sulu\Component\Security\Tests\Unit\Authorization\AccessControl;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\SecurityBundle\Entity\AccessControl;

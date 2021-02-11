@@ -1711,12 +1711,8 @@ test('Should clear errors if form has been saved', () => {
     });
 });
 
-test('Should keep errors after form submission has failed', (done) => {
+test('Should display generic error message if form submission fails', (done) => {
     const ResourceRequester = require('../../../services/ResourceRequester');
-    const error = {code: 100, message: 'Something went wrong'};
-    const errorPromise = Promise.resolve(error);
-    const putPromise = Promise.reject({json: jest.fn().mockReturnValue(errorPromise)});
-    ResourceRequester.put.mockReturnValue(putPromise);
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
     const metadataStore = require('../../../containers/Form/stores/metadataStore');
@@ -1727,6 +1723,11 @@ test('Should keep errors after form submission has failed', (done) => {
 
     const jsonSchemaPromise = Promise.resolve({});
     metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
+
+    const error = {code: 100, message: 'Something went wrong'};
+    const errorPromise = Promise.resolve(error);
+    const putPromise = Promise.reject({json: jest.fn().mockReturnValue(errorPromise)});
+    ResourceRequester.put.mockReturnValue(putPromise);
 
     const route = {
         options: {
@@ -1755,6 +1756,55 @@ test('Should keep errors after form submission has failed', (done) => {
         expect(resourceStore.destroy).not.toBeCalled();
         expect(ResourceRequester.put).toBeCalledWith('snippets', {value: 'Value'}, {id: 8, locale: 'en'});
         expect(form.instance().errors).toEqual(['sulu_admin.form_save_server_error']);
+        done();
+    });
+});
+
+test('Should display error message from server if server returns error message when submitting form', (done) => {
+    const ResourceRequester = require('../../../services/ResourceRequester');
+    const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const metadataStore = require('../../../containers/Form/stores/metadataStore');
+    const resourceStore = new ResourceStore('snippets', 8, {locale: observable.box()});
+
+    const schemaPromise = Promise.resolve({});
+    metadataStore.getSchema.mockReturnValue(schemaPromise);
+
+    const jsonSchemaPromise = Promise.resolve({});
+    metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
+
+    const error = {code: 100, message: 'Something went wrong', detail: 'URL is already assigned to another page.'};
+    const errorPromise = Promise.resolve(error);
+    const putPromise = Promise.reject({json: jest.fn().mockReturnValue(errorPromise)});
+    ResourceRequester.put.mockReturnValue(putPromise);
+
+    const route = {
+        options: {
+            formKey: 'snippets',
+            locales: [],
+            toolbarActions: [],
+        },
+    };
+    const router = {
+        addUpdateRouteHook: jest.fn(),
+        bind: jest.fn(),
+        navigate: jest.fn(),
+        route,
+        attributes: {
+            id: 8,
+        },
+    };
+    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+
+    resourceStore.locale.set('en');
+    resourceStore.data = {value: 'Value'};
+    resourceStore.loading = false;
+    resourceStore.destroy = jest.fn();
+
+    form.find('Form').at(1).instance().submit().then(() => {
+        expect(resourceStore.destroy).not.toBeCalled();
+        expect(ResourceRequester.put).toBeCalledWith('snippets', {value: 'Value'}, {id: 8, locale: 'en'});
+        expect(form.instance().errors).toEqual(['URL is already assigned to another page.']);
         done();
     });
 });
