@@ -59,7 +59,16 @@ class SingleAccountSelection extends ComplexContentType implements PreResolvable
     ) {
         $value = $property->getValue();
         if (null != $value) {
-            $node->setProperty($property->getName(), is_array($value) ? $value['id'] : $value);
+            if (\is_array($value)) {
+                @\trigger_error(
+                    'Passing a serialized account to the SingleAccountSelection deprecated. Please use an id instead.',
+                    \E_USER_DEPRECATED
+                );
+
+                $node->setProperty($property->getName(), $value['id']);
+            } else {
+                $node->setProperty($property->getName(), $value);
+            }
         } else {
             $this->remove($node, $property, $webspaceKey, $languageCode, $segmentKey);
         }
