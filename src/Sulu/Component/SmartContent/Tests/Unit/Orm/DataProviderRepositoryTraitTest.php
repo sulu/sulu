@@ -103,12 +103,12 @@ class DataProviderRepositoryTraitTest extends TestCase
                 $this->queryBuilder = $queryBuilder;
             }
 
-            public function createQueryBuilder()
+            public function createQueryBuilder($alias, $indexBy = null)
             {
                 return $this->queryBuilder;
             }
 
-            public function appendJoins()
+            public function appendJoins(QueryBuilder $queryBuilder, $alias, $locale)
             {
             }
         };
