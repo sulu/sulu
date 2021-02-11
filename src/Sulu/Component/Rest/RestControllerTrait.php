@@ -214,7 +214,7 @@ trait RestControllerTrait
         // FIXME: this is just a hack to avoid relations that start with index != 0
         // FIXME: otherwise deserialization process will parse relations as object instead of an array
         // reindex entities
-        if (\count($entities) > 0 && \method_exists($entities, 'getValues')) {
+        if (\count($entities) > 0 && \is_object($entities) && \method_exists($entities, 'getValues')) {
             $newEntities = $entities->getValues();
             $entities->clear();
             foreach ($newEntities as $value) {

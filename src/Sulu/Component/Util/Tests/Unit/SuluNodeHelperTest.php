@@ -179,6 +179,7 @@ class SuluNodeHelperTest extends TestCase
         return [
             ['/cmf/snippets/foobar/snippet1', 'foobar'],
             ['/cmf/snippets/bar-foo/snippet2', 'bar-foo'],
+            ['/cmf', null, false],
             ['/cmf/snippets', null, false],
             ['/cmf/snippets/bar', null, false],
             ['/cmf/snippets/animal/elephpant', 'animal'],

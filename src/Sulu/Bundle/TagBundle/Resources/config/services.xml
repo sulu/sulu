@@ -60,5 +60,8 @@
 
             <tag name="sulu.context" context="admin"/>
         </service>
+
+        <!--PERSISTENCE BUNDLE REPOSITORIES-->
+        <service id="Sulu\Bundle\TagBundle\Tag\TagRepositoryInterface" alias="sulu.repository.tag"/>
     </services>
 </container>

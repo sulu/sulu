@@ -464,5 +464,8 @@
                  class="Sulu\Bundle\MediaBundle\Metadata\ImageMapFieldMetadataValidator">
             <tag name="sulu_admin.field_metadata_validator"/>
         </service>
+
+        <!--PERSISTENCE BUNDLE REPOSITORIES-->
+        <service id="Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface" alias="sulu.repository.media"/>
     </services>
 </container>

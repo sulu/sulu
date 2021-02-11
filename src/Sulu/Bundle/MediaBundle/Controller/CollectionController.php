@@ -18,7 +18,6 @@ use Sulu\Bundle\MediaBundle\Api\RootCollection;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
 use Sulu\Bundle\MediaBundle\Entity\Collection as CollectionEntity;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
-use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
 use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
 use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
@@ -194,8 +193,6 @@ class CollectionController extends AbstractRestController implements ClassResour
             );
         } catch (CollectionNotFoundException $cnf) {
             $view = $this->view($cnf->toArray(), 404);
-        } catch (MediaException $e) {
-            $view = $this->view($e->toArray(), 400);
         }
 
         return $this->handleView($view);
@@ -272,8 +269,6 @@ class CollectionController extends AbstractRestController implements ClassResour
             $view = $this->view($list, 200);
         } catch (CollectionNotFoundException $cnf) {
             $view = $this->view($cnf->toArray(), 404);
-        } catch (MediaException $me) {
-            $view = $this->view($me->toArray(), 400);
         }
 
         return $this->handleView($view);
@@ -317,8 +312,6 @@ class CollectionController extends AbstractRestController implements ClassResour
                 $this->collectionManager->delete($id);
             } catch (CollectionNotFoundException $cnf) {
                 throw new EntityNotFoundException(self::$entityName, $id); // will throw 404 Entity not found
-            } catch (MediaException $me) {
-                throw new RestException($me->getMessage(), $me->getCode()); // will throw 400 Bad Request
             }
         };
 
@@ -410,8 +403,6 @@ class CollectionController extends AbstractRestController implements ClassResour
             $view = $this->view($collection, 200);
         } catch (CollectionNotFoundException $e) {
             $view = $this->view($e->toArray(), 404);
-        } catch (MediaException $e) {
-            $view = $this->view($e->toArray(), 400);
         }
 
         return $this->handleView($view);

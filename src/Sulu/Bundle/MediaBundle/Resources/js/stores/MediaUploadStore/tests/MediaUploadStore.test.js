@@ -102,9 +102,14 @@ test('Promise returned by "update" method should be rejected if request has erro
 
     const updatePromise = mediaUploadStore.update(fileData);
 
-    window.XMLHttpRequest.mock.instances[0].onload({target: {status: 400, response: 'invalid-format'}});
+    window.XMLHttpRequest.mock.instances[0].onload({
+        target: {
+            status: 400,
+            response: '{"code":5003,"message":"Bad Request"}',
+        },
+    });
 
-    return expect(updatePromise).rejects.toEqual('invalid-format');
+    return expect(updatePromise).rejects.toEqual({code: 5003, message: 'Bad Request'});
 });
 
 test('Promise returned by "update" method should be rejected if request is not successful', () => {
@@ -126,9 +131,9 @@ test('Promise returned by "update" method should be rejected if request is not s
 
     const updatePromise = mediaUploadStore.update(fileData);
 
-    window.XMLHttpRequest.mock.instances[0].onerror({target: {response: 'network-error'}});
+    window.XMLHttpRequest.mock.instances[0].onerror({target: {status: 'network-error'}});
 
-    return expect(updatePromise).rejects.toEqual('network-error');
+    return expect(updatePromise).rejects.toEqual({status: 'network-error'});
 });
 
 test('Calling the "create" method should make a "POST" request to the media update api', () => {

@@ -332,5 +332,11 @@
             <argument type="service" id="sulu_security.access_control_manager" />
             <tag name="doctrine.event_subscriber"/>
         </service>
+
+        <!--PERSISTENCE BUNDLE REPOSITORIES-->
+        <service id="Sulu\Component\Security\Authentication\UserRepositoryInterface" alias="sulu.repository.user"/>
+        <service id="Sulu\Component\Security\Authentication\RoleRepositoryInterface" alias="sulu.repository.role"/>
+        <service id="Sulu\Component\Security\Authentication\RoleSettingRepositoryInterface" alias="sulu.repository.role_setting"/>
+        <service id="Sulu\Component\Security\Authorization\AccessControl\AccessControlRepositoryInterface" alias="sulu.repository.access_control"/>
     </services>
 </container>
