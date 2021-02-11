@@ -13,18 +13,21 @@ test('Set and clear all from NavigationRegistry', () => {
                 label: 'Test 1',
                 icon: 'su-webspace',
                 view: 'sulu_page.webspaces',
+                visible: true,
             },
             {
                 id: '222',
                 label: 'Test 2',
                 icon: 'su-webspace',
                 view: 'sulu_page.webspaces',
+                visible: true,
             },
             {
                 id: '333',
                 label: 'Test 3',
                 icon: 'su-webspace',
                 view: 'sulu_page.webspaces',
+                visible: true,
             },
         ]
     );
@@ -41,18 +44,21 @@ test('Set and get all from NavigationRegistry', () => {
             label: 'Test 1',
             icon: 'su-webspace',
             view: 'sulu_page.webspaces',
+            visible: true,
         },
         {
             id: '222',
             label: 'Test 2',
             icon: 'su-webspace',
             view: 'sulu_page.webspaces',
+            visible: true,
         },
         {
             id: '333',
             label: 'Test 3',
             icon: 'su-webspace',
             view: 'sulu_page.webspaces',
+            visible: true,
         },
     ];
 
@@ -68,30 +74,35 @@ test('Get should return the correct item', () => {
             label: 'Test 1',
             icon: 'su-webspace',
             view: 'sulu_page.webspaces',
+            visible: true,
         },
         {
             id: '222',
             label: 'Test 2',
             icon: 'su-webspace',
             view: 'sulu_page.webspaces',
+            visible: true,
         },
         {
             id: '333',
             label: 'Test 3',
             icon: 'su-webspace',
             view: 'sulu_page.webspaces',
+            visible: true,
             items: [
                 {
                     id: '444',
                     label: 'Test 4',
                     icon: 'su-webspace',
                     view: 'sulu_page.webspaces',
+                    visible: true,
                 },
                 {
                     id: '555',
                     label: 'Test 5',
                     icon: 'su-webspace',
                     view: 'sulu_page.webspaces',
+                    visible: true,
                 },
             ],
         },

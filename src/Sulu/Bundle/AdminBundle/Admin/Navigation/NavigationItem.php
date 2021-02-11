@@ -75,7 +75,14 @@ class NavigationItem implements \Iterator
      *
      * @var bool
      */
-    protected $disabled;
+    protected $disabled = false;
+
+    /**
+     * Defines if item is visible in the navigation.
+     *
+     * @var bool
+     */
+    protected $visible = true;
 
     /**
      * @param string $name The name of the item
@@ -83,7 +90,6 @@ class NavigationItem implements \Iterator
     public function __construct($name)
     {
         $this->name = $name;
-        $this->disabled = false;
     }
 
     /**
@@ -247,6 +253,22 @@ class NavigationItem implements \Iterator
     }
 
     /**
+     * @param bool $visible
+     */
+    public function setVisible($visible)
+    {
+        $this->visible = $visible;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getVisible()
+    {
+        return $this->visible;
+    }
+
+    /**
      * Returns a copy of this navigation item without its children.
      *
      * @return NavigationItem
@@ -400,6 +422,7 @@ class NavigationItem implements \Iterator
             'icon' => $this->getIcon(),
             'view' => $this->getView(),
             'disabled' => $this->getDisabled(),
+            'visible' => $this->getVisible(),
             'id' => (null != $this->getId()) ? $this->getId() : \str_replace('.', '', \uniqid('', true)), //FIXME don't use uniqid()
         ];
 
