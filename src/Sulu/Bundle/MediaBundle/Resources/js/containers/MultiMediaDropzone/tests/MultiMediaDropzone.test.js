@@ -22,7 +22,10 @@ jest.mock('sulu-admin-bundle/utils', () => ({
 jest.mock('../../../stores/MediaUploadStore', () => jest.fn(function() {
     this.create = jest.fn((_, file) => {
         if (file.name === 'invalid-file') {
-            return Promise.reject('error-while-uploading-file');
+            return Promise.reject({
+                'code': 5003,
+                'detail': 'The uploaded file exceeds the configured maximum filesize.',
+            });
         }
 
         return Promise.resolve({
@@ -172,6 +175,7 @@ test('Should fire onClose and onUploadError callback if an error happens when up
     const dropPromise = multiMediaDropzone.find('Dropzone').props().onDrop([
         new File([''], 'fileA'),
         new File([''], 'invalid-file'),
+        new File([''], 'invalid-file'),
     ]);
 
     expect(closeSpy).not.toBeCalled();
@@ -181,7 +185,18 @@ test('Should fire onClose and onUploadError callback if an error happens when up
 
         expect(closeSpy).toBeCalledWith();
         expect(multiMediaDropzone.instance().mediaUploadStores.length).toBe(0);
-        expect(uploadErrorSpy).toBeCalledWith(['error-while-uploading-file']);
+        expect(uploadErrorSpy).toBeCalledWith(
+            [
+                {
+                    'code': 5003,
+                    'detail': 'The uploaded file exceeds the configured maximum filesize.',
+                },
+                {
+                    'code': 5003,
+                    'detail': 'The uploaded file exceeds the configured maximum filesize.',
+                },
+            ]
+        );
     });
 });
 
