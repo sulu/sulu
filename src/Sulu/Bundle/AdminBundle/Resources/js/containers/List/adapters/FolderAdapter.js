@@ -61,7 +61,7 @@ class FolderAdapter extends AbstractAdapter {
             </FolderList>
         );
 
-        if (!pagination || (page === 1 && data.length === 0)) {
+        if (!pagination || data.length === 0) {
             return folderList;
         }
 

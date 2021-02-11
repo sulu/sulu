@@ -158,7 +158,7 @@ class TreeTableAdapter extends AbstractTableAdapter {
             </Table>
         );
 
-        if (!pagination || pageCount === undefined || (page === 1 && data.length === 0)) {
+        if (!pagination || pageCount === undefined || data.length === 0) {
             return table;
         }
 
