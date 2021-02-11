@@ -18,6 +18,7 @@ use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\PreResolvableContentTypeInterface;
+use Sulu\Component\Rest\Exception\EntityNotFoundException;
 
 class SingleAccountSelection extends ComplexContentType implements PreResolvableContentTypeInterface
 {
@@ -90,7 +91,11 @@ class SingleAccountSelection extends ComplexContentType implements PreResolvable
             return null;
         }
 
-        return $this->accountManager->getById($id, $property->getStructure()->getLanguageCode());
+        try {
+            return $this->accountManager->getById($id, $property->getStructure()->getLanguageCode());
+        } catch (EntityNotFoundException $e) {
+            return null;
+        }
     }
 
     public function preResolve(PropertyInterface $property)
