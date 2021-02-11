@@ -825,9 +825,21 @@ test('Click on itemAction should execute its callback', () => {
 test('Pagination should be passed correct props', () => {
     const pageChangeSpy = jest.fn();
     const limitChangeSpy = jest.fn();
+
+    const item1 = {
+        data: {
+            id: 2,
+            title: 'Test1',
+        },
+        children: [],
+        hasChildren: false,
+    };
+    const data = [item1];
+
     const treeTableAdapter = shallow(
         <TreeTableAdapter
             {...listAdapterDefaultProps}
+            data={data}
             limit={10}
             onLimitChange={limitChangeSpy}
             onPageChange={pageChangeSpy}
