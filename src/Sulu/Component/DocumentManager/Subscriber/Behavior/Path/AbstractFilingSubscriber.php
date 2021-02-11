@@ -16,7 +16,7 @@ use PHPCR\SessionInterface;
 use PHPCR\Util\UUIDHelper;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Events;
-use Sulu\Component\DocumentManager\Subscriber\EventSubscriberInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Automatically set the parent at a pre-determined location.

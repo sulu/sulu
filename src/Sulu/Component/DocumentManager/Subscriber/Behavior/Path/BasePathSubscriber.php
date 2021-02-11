@@ -15,7 +15,7 @@ use Sulu\Component\DocumentManager\Behavior\Path\BasePathBehavior;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\NodeManager;
-use Sulu\Component\DocumentManager\Subscriber\EventSubscriberInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Sets the base path for the node.

@@ -17,8 +17,8 @@ use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\RefreshEvent;
 use Sulu\Component\DocumentManager\Event\RemoveDraftEvent;
 use Sulu\Component\DocumentManager\Events;
-use Sulu\Component\DocumentManager\Subscriber\EventSubscriberInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class RefreshSubscriber implements EventSubscriberInterface
 {
