@@ -20,13 +20,13 @@ type Props = {|
     value: ?string,
 |};
 
-const URL_PROTOCOLS = ['http://', 'https://', 'ftp://', 'ftps://', 'mailto:', 'tel:'];
+const DEFAULT_PROTOCOLS = ['http://', 'https://', 'ftp://', 'ftps://', 'mailto:', 'tel:'];
 
 @observer
 class Url extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
-        protocols: URL_PROTOCOLS,
+        protocols: DEFAULT_PROTOCOLS,
         valid: true,
     };
 
