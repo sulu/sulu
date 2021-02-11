@@ -154,5 +154,11 @@
             <argument type="service" id="sulu_audience_targeting.target_group_store"/>
             <tag name="sulu_content.block_visitor" />
         </service>
+
+        <!--PERSISTENCE BUNDLE REPOSITORIES-->
+        <service id="Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface" alias="sulu.repository.target_group"/>
+        <service id="Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupConditionRepositoryInterface" alias="sulu.repository.target_group_condition"/>
+        <service id="Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleRepositoryInterface" alias="sulu.repository.target_group_rule"/>
+        <service id="Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupWebspaceRepositoryInterface" alias="sulu.repository.target_group_webspace"/>
     </services>
 </container>

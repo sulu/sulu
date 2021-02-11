@@ -21,7 +21,7 @@ type Props = {|
     mediaListStore: ListStore,
     onCollectionNavigate: (collectionId: ?string | number) => void,
     onMediaNavigate?: (mediaId: string | number) => void,
-    onUploadError?: (errorResponses: Array<string>) => void,
+    onUploadError?: (errors: Array<Object>) => void,
     onUploadOverlayClose: () => void,
     onUploadOverlayOpen: () => void,
     overlayType: OverlayType,
@@ -63,7 +63,7 @@ class MediaCollection extends React.Component<Props> {
         );
     };
 
-    @action handleUploadError = (errorResponses: Array<string>) => {
+    @action handleUploadError = (errorResponses: Array<Object>) => {
         const {mediaListStore, onUploadError} = this.props;
 
         if (onUploadError) {

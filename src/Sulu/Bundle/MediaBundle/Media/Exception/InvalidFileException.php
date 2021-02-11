@@ -11,7 +11,9 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\Exception;
 
-class InvalidFileException extends UploadFileException
+use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
+
+class InvalidFileException extends UploadFileException implements TranslationErrorMessageExceptionInterface
 {
     /**
      * @param string $message
@@ -19,5 +21,15 @@ class InvalidFileException extends UploadFileException
     public function __construct($message)
     {
         parent::__construct($message, self::EXCEPTION_CODE_UPLOAD_ERROR);
+    }
+
+    public function getMessageTranslationKey(): string
+    {
+        return 'sulu_media.file_upload_error';
+    }
+
+    public function getMessageTranslationParameters(): array
+    {
+        return [];
     }
 }

@@ -691,7 +691,7 @@ test('Media should be moved when overlay is confirmed', () => {
     });
 });
 
-test('Should show error if upload via MediaCollection fails', () => {
+test('Should show generic error if upload of multiple files fails in MediaCollection', () => {
     const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
     const MediaOverview = require('../MediaOverview').default;
     const toolbarFunction = findWithHighOrderFunction(withToolbar, MediaOverview);
@@ -719,7 +719,60 @@ test('Should show error if upload via MediaCollection fails', () => {
 
     expect(toolbarFunction.call(mediaOverview.instance()).errors).toEqual([]);
 
-    mediaOverview.find('MediaCollection').props().onUploadError(['invalid-file']);
+    mediaOverview.find('MediaCollection').props().onUploadError(
+        [
+            {
+                'code': 5003,
+                'detail': 'The uploaded file exceeds the configured maximum filesize.',
+            },
+            {
+                'code': 5003,
+                'detail': 'The uploaded file exceeds the configured maximum filesize.',
+            },
+        ]
+    );
 
     expect(toolbarFunction.call(mediaOverview.instance()).errors).toEqual(['sulu_media.upload_server_error']);
+});
+
+test('Should show error message from serve if upload of a single files fails in MediaCollection', () => {
+    const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
+    const MediaOverview = require('../MediaOverview').default;
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, MediaOverview);
+
+    const router = {
+        restore: jest.fn(),
+        bind: jest.fn(),
+        route: {
+            options: {
+                locales: ['de'],
+                permissions: {
+                    add: true,
+                    delete: true,
+                    edit: true,
+                },
+            },
+        },
+        attributes: {
+            id: 4,
+        },
+    };
+    const mediaOverview = mount(<MediaOverview router={router} />);
+    mediaOverview.instance().collectionId.set(4);
+    mediaOverview.instance().locale.set('de');
+
+    expect(toolbarFunction.call(mediaOverview.instance()).errors).toEqual([]);
+
+    mediaOverview.find('MediaCollection').props().onUploadError(
+        [
+            {
+                'code': 5003,
+                'detail': 'The uploaded file exceeds the configured maximum filesize.',
+            },
+        ]
+    );
+
+    expect(toolbarFunction.call(mediaOverview.instance()).errors).toEqual(
+        ['The uploaded file exceeds the configured maximum filesize.']
+    );
 });
