@@ -1,19 +1,20 @@
 // @flow
 import React from 'react';
 import {mount, shallow, render} from 'enzyme';
-import {extendObservable as mockExtendObservable} from 'mobx';
+import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import SingleAutoComplete from '../SingleAutoComplete';
 import SingleAutoCompleteComponent from '../../../components/SingleAutoComplete';
 import SearchStore from '../../../stores/SearchStore';
 import SingleSelectionStore from '../../../stores/SingleSelectionStore';
 
 jest.mock('../../../stores/SearchStore', () => jest.fn());
-jest.mock('../../../stores/SingleSelectionStore', () => jest.fn(function(resourceKey) {
+jest.mock('../../../stores/SingleSelectionStore', () => jest.fn(function(resourceKey, selectedItemId, locale) {
     this.resourceKey = resourceKey;
+    this.locale = locale;
     this.set = jest.fn();
     this.loading = false;
 
-    mockExtendObservable(this, {item: undefined});
+    mockExtendObservable(this, {item: selectedItemId ? {id: selectedItemId} : undefined});
 }));
 
 test('Render in loading state when SearchStore is loading', () => {
@@ -188,7 +189,8 @@ test('Construct SearchStore with correct parameters on mount', () => {
         this.search = jest.fn();
     });
 
-    const selectionStore = new SingleSelectionStore('tags');
+    const locale = observable.box('cz');
+    const selectionStore = new SingleSelectionStore('tags', undefined, locale);
 
     shallow(
         <SingleAutoComplete
@@ -199,5 +201,5 @@ test('Construct SearchStore with correct parameters on mount', () => {
         />
     );
 
-    expect(SearchStore).toBeCalledWith('tags', ['firstName', 'lastName'], {country: 'US'});
+    expect(SearchStore).toBeCalledWith('tags', ['firstName', 'lastName'], {country: 'US'}, locale);
 });

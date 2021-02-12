@@ -1,19 +1,23 @@
 // @flow
 import React from 'react';
 import {mount, shallow, render} from 'enzyme';
-import {extendObservable as mockExtendObservable} from 'mobx';
+import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import MultiAutoComplete from '../MultiAutoComplete';
 import MultiAutoCompleteComponent from '../../../components/MultiAutoComplete';
 import SearchStore from '../../../stores/SearchStore';
 import MultiSelectionStore from '../../../stores/MultiSelectionStore';
 
 jest.mock('../../../stores/SearchStore', () => jest.fn());
-jest.mock('../../../stores/MultiSelectionStore', () => jest.fn(function(resourceKey) {
+jest.mock('../../../stores/MultiSelectionStore', () => jest.fn(function(resourceKey, selectedItemIds, locale) {
     this.resourceKey = resourceKey;
+    this.locale = locale;
     this.set = jest.fn();
     this.loading = false;
 
-    mockExtendObservable(this, {ids: [], items: []});
+    mockExtendObservable(this, {
+        ids: [],
+        items: [],
+    });
 }));
 
 test('Render in loading state', () => {
@@ -299,7 +303,8 @@ test('Construct SearchStore with correct parameters on mount', () => {
     // $FlowFixMe
     SearchStore.mockImplementation(function() {});
 
-    const selectionStore = new MultiSelectionStore('contact', []);
+    const locale = observable.box('de');
+    const selectionStore = new MultiSelectionStore('contact', [], locale);
 
     shallow(
         <MultiAutoComplete
@@ -312,5 +317,5 @@ test('Construct SearchStore with correct parameters on mount', () => {
         />
     );
 
-    expect(SearchStore).toBeCalledWith('contact', ['firstName', 'lastName'], {country: 'US'});
+    expect(SearchStore).toBeCalledWith('contact', ['firstName', 'lastName'], {country: 'US'}, locale);
 });

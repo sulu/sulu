@@ -28,7 +28,12 @@ class SingleAutoComplete<T: string | number> extends React.Component<Props<T>> {
 
         const {options, selectionStore, searchProperties} = this.props;
 
-        this.searchStore = new SearchStore(selectionStore.resourceKey, searchProperties, options);
+        this.searchStore = new SearchStore(
+            selectionStore.resourceKey,
+            searchProperties,
+            options,
+            selectionStore.locale
+        );
     }
 
     handleChange = (value: ?Object) => {
