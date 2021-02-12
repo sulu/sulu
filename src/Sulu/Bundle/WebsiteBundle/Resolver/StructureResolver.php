@@ -96,7 +96,7 @@ class StructureResolver implements StructureResolverInterface
 
         // pre-resolve content-types
         foreach ($structure->getProperties(true) as $property) {
-            if ($includedProperties === null || in_array($property->getName(), $includedProperties)) {
+            if (null === $includedProperties || \in_array($property->getName(), $includedProperties)) {
                 $contentType = $this->contentTypeManager->get($property->getContentTypeName());
 
                 if ($contentType instanceof PreResolvableContentTypeInterface) {
@@ -106,7 +106,7 @@ class StructureResolver implements StructureResolverInterface
         }
 
         foreach ($structure->getProperties(true) as $property) {
-            if ($includedProperties === null || in_array($property->getName(), $includedProperties)) {
+            if (null === $includedProperties || \in_array($property->getName(), $includedProperties)) {
                 $contentType = $this->contentTypeManager->get($property->getContentTypeName());
                 $data['view'][$property->getName()] = $contentType->getViewData($property);
                 $data['content'][$property->getName()] = $contentType->getContentData($property);
