@@ -77,7 +77,7 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
         ];
     }
 
-    public function load($uuid, bool $includeExtensions = true, array $includedProperties = null)
+    public function load($uuid, array $properties = null)
     {
         if (!$uuid) {
             return;
@@ -90,7 +90,40 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
                 $this->requestAnalyzer->getCurrentLocalization()->getLocale()
             );
 
-            return $this->structureResolver->resolve($contentStructure, $includeExtensions, $includedProperties);
+            if ($properties === null) {
+                return $this->structureResolver->resolve($contentStructure);
+            } else {
+                $contentProperties = [];
+                $extensionProperties = [];
+                foreach ($properties as $targetProperty => $sourceProperty) {
+                    if (!\is_string($targetProperty)) {
+                        $targetProperty = $sourceProperty;
+                    }
+
+                    if (strpos($sourceProperty, '.')) {
+                        $extensionProperties[$targetProperty] = $sourceProperty;
+                    } else {
+                        $contentProperties[$targetProperty] = $sourceProperty;
+                    }
+                }
+
+                $resolvedStructure = $this->structureResolver->resolve(
+                    $contentStructure,
+                    !empty($extensionProperties),
+                    array_values($contentProperties)
+                );
+
+                foreach ($extensionProperties as $targetProperty => $sourceProperty) {
+                    [$extensionName, $propertyName] = explode('.', $sourceProperty);
+                    $propertyValue = $resolvedStructure['extension'][$extensionName][$propertyName];
+
+                    $resolvedStructure['content'][$targetProperty] =  $propertyValue;
+                    $resolvedStructure['view'][$targetProperty] = [];
+                }
+                unset($resolvedStructure['extension']);
+
+                return $resolvedStructure;
+            }
         } catch (DocumentNotFoundException $e) {
             $this->logger->error((string) $e);
 
@@ -98,7 +131,7 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
         }
     }
 
-    public function loadParent($uuid, bool $includeExtensions = true, array $includedProperties = null)
+    public function loadParent($uuid, array $properties = null)
     {
         $session = $this->sessionManager->getSession();
         $contentsNode = $this->sessionManager->getContentNode($this->requestAnalyzer->getWebspace()->getKey());
@@ -108,6 +141,6 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
             throw new ParentNotFoundException($uuid);
         }
 
-        return $this->load($node->getParent()->getIdentifier(), $includeExtensions, $includedProperties);
+        return $this->load($node->getParent()->getIdentifier(), $properties);
     }
 }
