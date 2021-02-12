@@ -43,7 +43,7 @@ class StructureResolver implements StructureResolverInterface
         $this->extensionManager = $structureManager;
     }
 
-    public function resolve(StructureInterface $structure, bool $loadExcerpt = true)
+    public function resolve(StructureInterface $structure, bool $loadExcerpt = true, array $includedProperties = null)
     {
         $data = [
             'view' => [],
@@ -96,17 +96,21 @@ class StructureResolver implements StructureResolverInterface
 
         // pre-resolve content-types
         foreach ($structure->getProperties(true) as $property) {
-            $contentType = $this->contentTypeManager->get($property->getContentTypeName());
+            if ($includedProperties === null || in_array($property->getName(), $includedProperties)) {
+                $contentType = $this->contentTypeManager->get($property->getContentTypeName());
 
-            if ($contentType instanceof PreResolvableContentTypeInterface) {
-                $contentType->preResolve($property);
+                if ($contentType instanceof PreResolvableContentTypeInterface) {
+                    $contentType->preResolve($property);
+                }
             }
         }
 
         foreach ($structure->getProperties(true) as $property) {
-            $contentType = $this->contentTypeManager->get($property->getContentTypeName());
-            $data['view'][$property->getName()] = $contentType->getViewData($property);
-            $data['content'][$property->getName()] = $contentType->getContentData($property);
+            if ($includedProperties === null || in_array($property->getName(), $includedProperties)) {
+                $contentType = $this->contentTypeManager->get($property->getContentTypeName());
+                $data['view'][$property->getName()] = $contentType->getViewData($property);
+                $data['content'][$property->getName()] = $contentType->getContentData($property);
+            }
         }
 
         return $data;

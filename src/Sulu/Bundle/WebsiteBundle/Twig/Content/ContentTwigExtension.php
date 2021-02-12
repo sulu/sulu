@@ -77,7 +77,7 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
         ];
     }
 
-    public function load($uuid)
+    public function load($uuid, bool $includeExtensions = true, array $includedProperties = null)
     {
         if (!$uuid) {
             return;
@@ -90,7 +90,7 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
                 $this->requestAnalyzer->getCurrentLocalization()->getLocale()
             );
 
-            return $this->structureResolver->resolve($contentStructure);
+            return $this->structureResolver->resolve($contentStructure, $includeExtensions, $includedProperties);
         } catch (DocumentNotFoundException $e) {
             $this->logger->error((string) $e);
 
@@ -98,7 +98,7 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
         }
     }
 
-    public function loadParent($uuid)
+    public function loadParent($uuid, bool $includeExtensions = true, array $includedProperties = null)
     {
         $session = $this->sessionManager->getSession();
         $contentsNode = $this->sessionManager->getContentNode($this->requestAnalyzer->getWebspace()->getKey());
@@ -108,6 +108,6 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
             throw new ParentNotFoundException($uuid);
         }
 
-        return $this->load($node->getParent()->getIdentifier());
+        return $this->load($node->getParent()->getIdentifier(), $includeExtensions, $includedProperties);
     }
 }
