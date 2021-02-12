@@ -49,7 +49,7 @@ test('SingleAutoComplete should be disabled when in disabled state', () => {
     expect(singleAutoComplete.find('input').prop('disabled')).toEqual(true);
 });
 
-test('Clicking on a suggestion should call the onChange handler with the value of the selected Suggestion', () => {
+test('Selecting suggestion should fire onChange callback and update value of Input with selected value', () => {
     const changeSpy = jest.fn();
 
     const suggestions = [
@@ -70,8 +70,11 @@ test('Clicking on a suggestion should call the onChange handler with the value o
         />
     );
 
+    expect(singleAutoComplete.find('Input').prop('value')).toEqual('Test');
+
     singleAutoComplete.find('Suggestion button').at(0).simulate('click');
 
+    expect(singleAutoComplete.find('Input').prop('value')).toEqual('Suggestion 1');
     expect(changeSpy).toHaveBeenCalledWith(suggestions[0]);
 });
 

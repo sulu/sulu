@@ -45,8 +45,7 @@ class SingleAutoComplete extends React.Component<Props> {
             value,
         } = this.props;
 
-        if (this.overrideValue || !equals(toJS(prevProps.value), toJS(value))){
-            this.overrideValue = false;
+        if (!equals(toJS(prevProps.value), toJS(value))){
             this.setInputValue(value ? value[displayProperty] : undefined);
         }
     }
@@ -74,8 +73,13 @@ class SingleAutoComplete extends React.Component<Props> {
     }, DEBOUNCE_TIME);
 
     handleSelect = (value: Object) => {
-        this.overrideValue = true;
-        this.props.onChange(value);
+        const {
+            displayProperty,
+            onChange,
+        } = this.props;
+
+        this.setInputValue(value ? value[displayProperty] : undefined);
+        onChange(value);
     };
 
     handleInputChange = (value: ?string) => {

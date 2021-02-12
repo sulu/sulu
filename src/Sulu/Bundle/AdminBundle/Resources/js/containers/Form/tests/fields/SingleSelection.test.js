@@ -2,7 +2,7 @@
 import React from 'react';
 import log from 'loglevel';
 import {mount, shallow} from 'enzyme';
-import {observable} from 'mobx';
+import {observable, extendObservable as mockExtendObservable} from 'mobx';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
 import Router from '../../../../services/Router';
 import ResourceStore from '../../../../stores/ResourceStore';
@@ -29,7 +29,14 @@ jest.mock('../../../../stores/ResourceStore', () => jest.fn(function(resourceKey
     this.locale = locale;
 }));
 
-jest.mock('../../../../stores/SingleSelectionStore', () => jest.fn());
+jest.mock('../../../../stores/SingleSelectionStore', () => jest.fn(function(resourceKey, selectedItemId, locale) {
+    this.resourceKey = resourceKey;
+    this.locale = locale;
+    this.set = jest.fn();
+    this.loading = false;
+
+    mockExtendObservable(this, {item: selectedItemId ? {id: selectedItemId} : undefined});
+}));
 
 jest.mock('../../../../stores/userStore', () => ({}));
 
@@ -53,11 +60,14 @@ jest.mock('../../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
-test('Pass correct props to SingleAutoComplete', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
-    const value = {
-        test: 'value',
-    };
+test('Pass correct props and SingleSelectionStore to SingleAutoComplete container', () => {
+    const locale = observable.box('en');
+    const formInspector = new FormInspector(
+        new ResourceFormStore(
+            new ResourceStore('test', undefined, locale),
+            'test'
+        )
+    );
 
     const fieldTypeOptions = {
         default_type: 'auto_complete',
@@ -76,7 +86,7 @@ test('Pass correct props to SingleAutoComplete', () => {
             disabled={true}
             fieldTypeOptions={fieldTypeOptions}
             formInspector={formInspector}
-            value={value}
+            value="entity-id"
         />
     );
 
@@ -84,17 +94,15 @@ test('Pass correct props to SingleAutoComplete', () => {
         disabled: true,
         displayProperty: 'name',
         options: {},
-        resourceKey: 'accounts',
         searchProperties: ['name', 'number'],
-        value,
+        selectionStore: singleSelection.instance().autoCompleteSelectionStore,
     }));
+
+    expect(SingleSelectionStore).toBeCalledWith('accounts', 'entity-id', locale);
 });
 
-test('Pass correct options to SingleAutoComplete based on data_path_to_auto_complete schema option', () => {
+test('Pass correct options to SingleAutoComplete with deprecated data_path_to_auto_complete schema option', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
-    const value = {
-        test: 'value',
-    };
 
     const fieldTypeOptions = {
         default_type: 'auto_complete',
@@ -125,7 +133,7 @@ test('Pass correct options to SingleAutoComplete based on data_path_to_auto_comp
             fieldTypeOptions={fieldTypeOptions}
             formInspector={formInspector}
             schemaOptions={schemaOptions}
-            value={value}
+            value="entitiy-id"
         />
     );
 
@@ -138,11 +146,15 @@ test('Pass correct options to SingleAutoComplete based on data_path_to_auto_comp
     expect(log.warn).toBeCalledWith(expect.stringContaining('The "data_path_to_auto_complete" option is deprecated'));
 });
 
-test('Pass correct props with schema-options type to SingleAutoComplete', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
-    const value = {
-        test: 'value',
-    };
+test('Use locale from userStore and pass correct props with schema-options type to SingleAutoComplete', () => {
+    userStore.contentLocale = 'en';
+
+    const formInspector = new FormInspector(
+        new ResourceFormStore(
+            new ResourceStore('test', undefined, undefined),
+            'test'
+        )
+    );
 
     const fieldTypeOptions = {
         default_type: 'list_overlay',
@@ -176,27 +188,32 @@ test('Pass correct props with schema-options type to SingleAutoComplete', () => 
             fieldTypeOptions={fieldTypeOptions}
             formInspector={formInspector}
             schemaOptions={schemaOptions}
-            value={value}
+            value="entity-id"
         />
     );
 
     expect(singleSelection.find('SingleAutoComplete').props()).toEqual(expect.objectContaining({
         disabled: true,
         displayProperty: 'name',
-        resourceKey: 'accounts',
+        options: {},
         searchProperties: ['name', 'number'],
-        value,
+        selectionStore: singleSelection.instance().autoCompleteSelectionStore,
     }));
+
+    expect(singleSelection.find('SingleAutoComplete').props().selectionStore.resourceKey).toEqual('accounts');
+    expect(singleSelection.find('SingleAutoComplete').props().selectionStore.item).toEqual({id: 'entity-id'});
+    expect(singleSelection.find('SingleAutoComplete').props().selectionStore.locale.get()).toEqual('en');
 });
 
-test('Call onChange and onFinish when SingleAutoComplete changes', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+test('Call onChange and onFinish when item of auto_complete SingleSelectionStore changes', () => {
+    const formInspector = new FormInspector(
+        new ResourceFormStore(
+            new ResourceStore('test', undefined, undefined),
+            'test'
+        )
+    );
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
-
-    const value = {
-        test: 'value',
-    };
 
     const fieldTypeOptions = {
         default_type: 'auto_complete',
@@ -216,18 +233,25 @@ test('Call onChange and onFinish when SingleAutoComplete changes', () => {
             formInspector={formInspector}
             onChange={changeSpy}
             onFinish={finishSpy}
-            value={value}
+            value="entity-id"
         />
     );
 
-    singleSelection.find('SingleAutoComplete').simulate('change', undefined);
+    singleSelection.instance().autoCompleteSelectionStore.item = {id: 'new-entity-id'};
 
-    expect(changeSpy).toBeCalledWith(undefined);
+    expect(changeSpy).toBeCalledWith('new-entity-id');
     expect(finishSpy).toBeCalledWith();
 });
 
-test('Throw an error if id instead of object is passed to the auto_complete type', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+test('Handle object without warning when "use_deprecated_object_data_format" option of auto_complete is set', () => {
+    const formInspector = new FormInspector(
+        new ResourceFormStore(
+            new ResourceStore('test', undefined, undefined),
+            'test'
+        )
+    );
+    const changeSpy = jest.fn();
+    const finishSpy = jest.fn();
 
     const fieldTypeOptions = {
         default_type: 'auto_complete',
@@ -240,16 +264,30 @@ test('Throw an error if id instead of object is passed to the auto_complete type
         },
     };
 
-    expect(
-        () => shallow(
-            <SingleSelection
-                {...fieldTypeDefaultProps}
-                fieldTypeOptions={fieldTypeOptions}
-                formInspector={formInspector}
-                value={55}
-            />
-        )
-    ).toThrow(/expects a serialized object as value/);
+    const schemaOptions = {
+        use_deprecated_object_data_format: {name: 'use_deprecated_object_data_format', value: true},
+    };
+
+    const singleSelection = shallow(
+        <SingleSelection
+            {...fieldTypeDefaultProps}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            onChange={changeSpy}
+            onFinish={finishSpy}
+            schemaOptions={schemaOptions}
+            value={{id: 'old-entity-id'}}
+        />
+    );
+
+    expect(singleSelection.find('SingleAutoComplete').props().selectionStore.item).toEqual({id: 'old-entity-id'});
+    expect(log.warn).toBeCalledWith(expect.stringContaining('"use_deprecated_object_data_format" param is deprecated'));
+    expect(log.warn).not.toBeCalledWith(expect.stringContaining('expects an id as value but received an object'));
+
+    singleSelection.instance().autoCompleteSelectionStore.item = {id: 'new-entity-id'};
+
+    expect(changeSpy).toBeCalledWith({id: 'new-entity-id'});
+    expect(finishSpy).toBeCalledWith();
 });
 
 test('Throw an error if the auto_complete configuration was omitted', () => {
@@ -493,7 +531,7 @@ test('Pass null as value to SingleSelection for list_overlay', () => {
     expect(singleSelection.find('SingleSelection').prop('value')).toEqual(null);
 });
 
-test('Should log warning and use id of object if given value is an object instad of an id', () => {
+test('Should log warning and use id of object if given value is an object instead of an id', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
 
     const fieldTypeOptions = {
