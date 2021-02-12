@@ -147,14 +147,15 @@ test('Pass correct options to SingleAutoComplete with deprecated data_path_to_au
 });
 
 test('Use locale from userStore and pass correct props with schema-options type to SingleAutoComplete', () => {
-    userStore.contentLocale = 'en';
-
     const formInspector = new FormInspector(
         new ResourceFormStore(
             new ResourceStore('test', undefined, undefined),
             'test'
         )
     );
+
+    // $FlowFixMe
+    userStore.contentLocale = 'en';
 
     const fieldTypeOptions = {
         default_type: 'list_overlay',
@@ -276,7 +277,7 @@ test('Handle object without warning when "use_deprecated_object_data_format" opt
             onChange={changeSpy}
             onFinish={finishSpy}
             schemaOptions={schemaOptions}
-            value={{id: 'old-entity-id'}}
+            value={({id: 'old-entity-id'}: any)}
         />
     );
 
@@ -554,7 +555,7 @@ test('Should log warning and use id of object if given value is an object instea
             disabled={true}
             fieldTypeOptions={fieldTypeOptions}
             formInspector={formInspector}
-            value={{id: 125}}
+            value={({id: 125}: any)}
         />
     );
 

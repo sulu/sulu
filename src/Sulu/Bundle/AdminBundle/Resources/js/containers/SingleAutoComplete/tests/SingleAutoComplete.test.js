@@ -96,7 +96,7 @@ test('Render with value of given SingleSelectionStore', () => {
     });
 
     const selectionStore = new SingleSelectionStore('tags');
-    selectionStore.item = {name: 'James Bond', number: '007'};
+    selectionStore.item = {id: 7, name: 'James Bond', number: '007'};
 
     expect(render(
         <SingleAutoComplete
@@ -115,7 +115,7 @@ test('Render in disabled state', () => {
     });
 
     const selectionStore = new SingleSelectionStore('tags');
-    selectionStore.item = {name: 'James Bond', number: '007'};
+    selectionStore.item = {id: 7, name: 'James Bond', number: '007'};
 
     expect(render(
         <SingleAutoComplete
