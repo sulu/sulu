@@ -45,7 +45,7 @@ class StructureResolver implements StructureResolverInterface
 
     public function resolve(StructureInterface $structure, bool $loadExcerpt = true/*, array $includedProperties = null*/)
     {
-        $includedProperties = (\func_num_args() > 2) ? null : \func_get_arg(2);
+        $includedProperties = (\func_num_args() > 2) ? \func_get_arg(2) : null;
 
         $data = [
             'view' => [],
