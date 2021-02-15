@@ -1,14 +1,117 @@
 // @flow
 import React from 'react';
+import log from 'loglevel';
 import {action, computed, observable} from 'mobx';
 import Dropzone, {DropzoneRef, FileRejection} from 'react-dropzone';
 import symfonyRouting from 'fos-jsrouting/router';
 import {translate, transformBytesToReadableString} from '../../../utils';
+import ResourceStore from '../../../stores/ResourceStore';
+import Router from '../../../services/Router';
+import List from '../../../views/List/List';
+import ListStore from '../../../containers/List/stores/ListStore';
 import AbstractListToolbarAction from './AbstractListToolbarAction';
+
+const defaultOptions = {
+    credentials: 'same-origin',
+    headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+    },
+};
 
 export default class UploadToolbarAction extends AbstractListToolbarAction {
     @observable dropzoneRef: ?DropzoneRef;
     @observable errors: string[] = [];
+
+    constructor(
+        listStore: ListStore,
+        list: List,
+        router: Router,
+        locales?: Array<string>,
+        resourceStore?: ResourceStore,
+        options: {[key: string]: mixed}
+    ) {
+        if (options.routeName) {
+            // @deprecated
+            log.warn(
+                'The "routeName" option is deprecated and will be removed. ' +
+                'Use the "route_name" option instead.'
+            );
+
+            if (!options.route_name) {
+                options.route_name = options.routeName;
+            }
+        }
+
+        if (options.minSize) {
+            // @deprecated
+            log.warn(
+                'The "minSize" option is deprecated and will be removed. ' +
+                'Use the "min_size" option instead.'
+            );
+
+            if (!options.min_size) {
+                options.min_size = options.minSize;
+            }
+        }
+
+        if (options.maxSize) {
+            // @deprecated
+            log.warn(
+                'The "maxSize" option is deprecated and will be removed. ' +
+                'Use the "max_size" option instead.'
+            );
+
+            if (!options.max_size) {
+                options.max_size = options.maxSize;
+            }
+        }
+
+        if (options.requestPropertyName) {
+            // @deprecated
+            log.warn(
+                'The "requestPropertyName" option is deprecated and will be removed. ' +
+                'Use the "request_property_name" option instead.'
+            );
+
+            if (!options.request_property_name) {
+                options.request_property_name = options.requestPropertyName;
+            }
+        }
+
+        if (options.requestParameters) {
+            // @deprecated
+            log.warn(
+                'The "requestParameters" option is deprecated and will be removed. ' +
+                'Use the "request_parameters" option instead.'
+            );
+
+            if (!options.request_parameters) {
+                options.request_parameters = options.requestParameters;
+            }
+        }
+
+        if (options.routerAttributesToRequest) {
+            // @deprecated
+            log.warn(
+                'The "routerAttributesToRequest" option is deprecated and will be removed. ' +
+                'Use the "router_attributes_to_request" option instead.'
+            );
+
+            if (!options.router_attributes_to_request) {
+                options.router_attributes_to_request = options.routerAttributesToRequest;
+            }
+        }
+
+        if (options.errorCodeMapping) {
+            // @deprecated
+            log.warn(
+                'The "errorCodeMapping" option is deprecated and will be removed. ' +
+                'The API should return a specific error message in the "detail" property of the response instead.'
+            );
+        }
+
+        super(listStore, list, router, locales, resourceStore, options);
+    }
 
     @action setDropzoneRef = (ref: ?DropzoneRef) => {
         this.dropzoneRef = ref;
@@ -95,13 +198,18 @@ export default class UploadToolbarAction extends AbstractListToolbarAction {
             formData.append(requestPropertyName + '[]', file);
         }
 
-        fetch(this.url, {method: 'POST', body: formData}).then((response) => {
+        fetch(this.url, {...defaultOptions, method: 'POST', body: formData}).then((response) => {
             if (!response.ok) {
-                this.addError(
-                    translate(this.errorCodeMapping[response.status] || 'sulu_admin.unexpected_upload_error', {
-                        statusText: response.statusText,
-                    })
+                const translatedErrorMessage = translate(
+                    this.errorCodeMapping[response.status] || 'sulu_admin.unexpected_upload_error',
+                    {statusText: response.statusText}
                 );
+
+                response.json().then((error) => {
+                    this.addError(error.detail || error.title || translatedErrorMessage);
+                }).catch(() => {
+                    this.addError(translatedErrorMessage);
+                });
 
                 return;
             }
@@ -131,10 +239,10 @@ export default class UploadToolbarAction extends AbstractListToolbarAction {
     }
 
     @computed get url(): string {
-        const {routeName} = this.options;
+        const {route_name: routeName} = this.options;
 
         if (typeof routeName !== 'string') {
-            throw new Error('The "routeName" option must be a string!');
+            throw new Error('The "route_name" option must be a string!');
         }
 
         return symfonyRouting.generate(routeName, this.requestParameters);
@@ -153,8 +261,8 @@ export default class UploadToolbarAction extends AbstractListToolbarAction {
     @computed get requestParameters(): $ReadOnly<Object> {
         const {
             options: {
-                requestParameters: attributesToRequest = {},
-                routerAttributesToRequest = {},
+                request_parameters: attributesToRequest = {},
+                router_attributes_to_request: routerAttributesToRequest = {},
             },
             router: {
                 attributes: routerAttributes,
@@ -162,11 +270,11 @@ export default class UploadToolbarAction extends AbstractListToolbarAction {
         } = this;
 
         if (!attributesToRequest || typeof attributesToRequest !== 'object') {
-            throw new Error('The "attributesToRequest" option must be an object!');
+            throw new Error('The "request_parameters" option must be an object!');
         }
 
         if (!routerAttributesToRequest || typeof routerAttributesToRequest !== 'object') {
-            throw new Error('The "routerAttributesToRequest" option must be an object!');
+            throw new Error('The "router_attributes_to_request" option must be an object!');
         }
 
         const requestParameters = {};
@@ -203,28 +311,28 @@ export default class UploadToolbarAction extends AbstractListToolbarAction {
     }
 
     @computed get minSize(): ?number {
-        const {minSize} = this.options;
+        const {min_size: minSize} = this.options;
 
         if (minSize === undefined || minSize === null) {
             return undefined;
         }
 
         if (typeof minSize !== 'number') {
-            throw new Error('The "minSize" option must be a number!');
+            throw new Error('The "min_size" option must be a number!');
         }
 
         return minSize;
     }
 
     @computed get maxSize(): ?number {
-        const {maxSize} = this.options;
+        const {max_size: maxSize} = this.options;
 
         if (maxSize === undefined || maxSize === null) {
             return undefined;
         }
 
         if (typeof maxSize !== 'number') {
-            throw new Error('The "maxSize" option must be a number!');
+            throw new Error('The "max_size" option must be a number!');
         }
 
         return maxSize;
@@ -245,14 +353,14 @@ export default class UploadToolbarAction extends AbstractListToolbarAction {
     }
 
     @computed get requestPropertyName(): string {
-        const {requestPropertyName} = this.options;
+        const {request_property_name: requestPropertyName} = this.options;
 
         if (!requestPropertyName) {
             return this.multiple ? 'files' : 'file';
         }
 
         if (typeof requestPropertyName !== 'string') {
-            throw new Error('The "requestPropertyName" option must be a string!');
+            throw new Error('The "request_property_name" option must be a string!');
         }
 
         return requestPropertyName;

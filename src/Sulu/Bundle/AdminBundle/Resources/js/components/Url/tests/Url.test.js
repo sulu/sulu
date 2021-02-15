@@ -52,11 +52,11 @@ test('Should log a warning if a not available protocol has been given', () => {
     expect(log.warn).toBeCalled();
 });
 
-test('Show error when invalid URL was passed via updated prop', () => {
+test('Show error when invalid email was passed via updated prop', () => {
     const url = shallow(<Url onChange={jest.fn()} value={undefined} />);
     expect(url.find('.error')).toHaveLength(0);
 
-    url.setProps({value: 'http://su lu.at'});
+    url.setProps({value: 'mailto:invalid-url'});
 
     expect(url.find('.error')).toHaveLength(1);
 });
@@ -71,22 +71,22 @@ test('Should not reset value of protocol select when undefined value is passed',
     expect(url.find('input').prop('value')).toEqual('');
 });
 
-test('Remove error when valid URL was passed via updated prop', () => {
-    const url = shallow(<Url onChange={jest.fn()} value="http://su lu.at" />);
+test('Remove error when valid email was passed via updated prop', () => {
+    const url = shallow(<Url onChange={jest.fn()} value="mailto:invalid-email" />);
     expect(url.find('.error')).toHaveLength(1);
 
-    url.setProps({value: 'http://sulu.at'});
+    url.setProps({value: 'mailto:hello@sulu.io'});
 
     expect(url.find('.error')).toHaveLength(0);
 });
 
-test('Remove error when valid URL was changed using the text field', () => {
-    const url = shallow(<Url onChange={jest.fn()} value="http://su lu.at" />);
+test('Remove error when valid email was changed using the text field', () => {
+    const url = shallow(<Url onChange={jest.fn()} value="mailto:invalid-email" />);
     expect(url.find('.error')).toHaveLength(1);
 
     url.find('input').prop('onChange')({
         currentTarget: {
-            value: 'sulu.at',
+            value: 'hello@sulu.io',
         },
     });
     url.find('input').prop('onBlur')();
@@ -140,7 +140,7 @@ test('Call onChange callback when path was changed but not blurred', () => {
     expect(changeSpy).toBeCalledWith('https://sulu.at');
 });
 
-test('Call onChange callback with undefined when path was changed to invalid url but not blurred', () => {
+test('Call onChange callback when path was changed to invalid url but not blurred', () => {
     const changeSpy = jest.fn();
     const url = shallow(<Url onChange={changeSpy} value="https://www.sulu.io" />);
     url.find('input').prop('onChange')({
@@ -149,10 +149,10 @@ test('Call onChange callback with undefined when path was changed to invalid url
         },
     });
 
-    expect(changeSpy).toBeCalledWith(undefined);
+    expect(changeSpy).toBeCalledWith('https://sulu.a');
 });
 
-test('Call onChange callback with undefined if URL is not valid but leave the current value', () => {
+test('Call onChange callback if url is not valid but leave the current value', () => {
     const changeSpy = jest.fn();
     const url = shallow(<Url onChange={changeSpy} value="https://www.sulu.io" />);
     url.find('input').prop('onChange')({
@@ -162,9 +162,25 @@ test('Call onChange callback with undefined if URL is not valid but leave the cu
     });
     url.find('input').prop('onBlur')();
 
-    expect(changeSpy).toBeCalledWith(undefined);
+    expect(changeSpy).toBeCalledWith('https://su lu.at');
     expect(url.find('SingleSelect').prop('value')).toEqual('https://');
     expect(url.find('input').prop('value')).toEqual('su lu.at');
+    expect(url.find('.error')).toHaveLength(0);
+});
+
+test('Call onChange callback with undefined if email is not valid but leave the current value', () => {
+    const changeSpy = jest.fn();
+    const url = shallow(<Url onChange={changeSpy} value="mailto:hello@sulu.io" />);
+    url.find('input').prop('onChange')({
+        currentTarget: {
+            value: 'invalid-email',
+        },
+    });
+    url.find('input').prop('onBlur')();
+
+    expect(changeSpy).toBeCalledWith(undefined);
+    expect(url.find('SingleSelect').prop('value')).toEqual('mailto:');
+    expect(url.find('input').prop('value')).toEqual('invalid-email');
     expect(url.find('.error')).toHaveLength(1);
 });
 
