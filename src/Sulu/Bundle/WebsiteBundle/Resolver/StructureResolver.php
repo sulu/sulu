@@ -43,8 +43,10 @@ class StructureResolver implements StructureResolverInterface
         $this->extensionManager = $structureManager;
     }
 
-    public function resolve(StructureInterface $structure, bool $loadExcerpt = true, array $includedProperties = null)
+    public function resolve(StructureInterface $structure, bool $loadExcerpt = true/*, array $includedProperties = null*/)
     {
+        $includedProperties = (\func_num_args() > 2) ? null : \func_get_arg(2);
+
         $data = [
             'view' => [],
             'content' => [],
