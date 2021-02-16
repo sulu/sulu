@@ -15,16 +15,12 @@ use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
-use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolver;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Bundle\WebsiteBundle\Twig\Content\ContentTwigExtension;
-use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Compat\Structure\StructureBridge;
-use Sulu\Component\Content\ContentTypeManagerInterface;
-use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Sulu\Component\Content\Types\TextLine;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
@@ -34,57 +30,47 @@ use Sulu\Component\Webspace\Webspace;
 class ContentTwigExtensionTest extends TestCase
 {
     /**
-     * @var StructureResolverInterface
+     * @var StructureResolverInterface|ObjectProphecy
      */
     private $structureResolver;
 
     /**
-     * @var ContentMapperInterface
+     * @var ContentMapperInterface|ObjectProphecy
      */
     private $contentMapper;
 
     /**
-     * @var RequestAnalyzerInterface
+     * @var RequestAnalyzerInterface|ObjectProphecy
      */
     private $requestAnalyzer;
 
     /**
-     * @var ExtensionManagerInterface
-     */
-    private $extensionManager;
-
-    /**
-     * @var ContentTypeManagerInterface
-     */
-    private $contentTypeManager;
-
-    /**
-     * @var SessionManagerInterface
+     * @var SessionManagerInterface|ObjectProphecy
      */
     private $sessionManager;
 
     /**
-     * @var SessionInterface
+     * @var SessionInterface|ObjectProphecy
      */
     private $session;
 
     /**
-     * @var NodeInterface
+     * @var NodeInterface|ObjectProphecy
      */
     private $node;
 
     /**
-     * @var NodeInterface
+     * @var NodeInterface|ObjectProphecy
      */
     private $parentNode;
 
     /**
-     * @var NodeInterface
+     * @var NodeInterface|ObjectProphecy
      */
     private $startPageNode;
 
     /**
-     * @var LoggerInterface
+     * @var LoggerInterface|ObjectProphecy
      */
     private $logger;
 
@@ -97,10 +83,9 @@ class ContentTwigExtensionTest extends TestCase
     {
         parent::setUp();
 
+        $this->structureResolver = $this->prophesize(StructureResolverInterface::class);
         $this->contentMapper = $this->prophesize(ContentMapperInterface::class);
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
-        $this->contentTypeManager = $this->prophesize(ContentTypeManagerInterface::class);
-        $this->extensionManager = $this->prophesize(ExtensionManagerInterface::class);
         $this->sessionManager = $this->prophesize(SessionManagerInterface::class);
         $this->session = $this->prophesize(SessionInterface::class);
         $this->node = $this->prophesize(NodeInterface::class);
@@ -118,8 +103,6 @@ class ContentTwigExtensionTest extends TestCase
         $this->requestAnalyzer->getWebspace()->willReturn($webspace);
         $this->requestAnalyzer->getCurrentLocalization()->willReturn($locale);
 
-        $this->contentTypeManager->get('text_line')->willReturn(new TextLine(''));
-
         $this->sessionManager->getSession()->willReturn($this->session->reveal());
         $this->sessionManager->getContentNode('sulu_test')->willReturn($this->startPageNode->reveal());
 
@@ -135,52 +118,169 @@ class ContentTwigExtensionTest extends TestCase
 
         $this->startPageNode->getDepth()->willReturn(3);
 
-        $this->structureResolver = new StructureResolver(
-            $this->contentTypeManager->reveal(),
-            $this->extensionManager->reveal()
-        );
-
         $this->extension = new ContentTwigExtension(
             $this->contentMapper->reveal(),
-            $this->structureResolver,
+            $this->structureResolver->reveal(),
             $this->sessionManager->reveal(),
             $this->requestAnalyzer->reveal()
         );
     }
 
-    public function testLoad()
+    public function testLoadWithoutProperties()
     {
         $testStructure = $this->prophesize(StructureBridge::class);
-        $testStructure->getKey()->willReturn('test');
-        $testStructure->getPath()->willReturn(null);
-        $testStructure->getUuid()->willReturn('123-123-123');
-        $testStructure->getCreator()->willReturn(1);
-        $testStructure->getChanger()->willReturn(1);
-        $testStructure->getCreated()->willReturn(null);
-        $testStructure->getChanged()->willReturn(null);
-        $testStructure->getDocument()->willReturn(null);
 
-        $titleProperty = new Property('title', [], 'text_line');
-        $titleProperty->setValue('test');
-        $testStructure->getProperties(true)->willReturn([$titleProperty]);
+        $this->contentMapper->load('123-123-123', 'sulu_test', 'en_us')
+            ->willReturn($testStructure->reveal());
 
-        $this
-            ->contentMapper
-            ->load('123-123-123', 'sulu_test', 'en_us')
-            ->willReturn($testStructure);
+        $resolvedStructure = [
+            'id' => 'some-uuid',
+            'template' => 'test',
+            'view' => [
+                'property-1' => 'view',
+                'property-2' => 'view',
+            ],
+            'content' => [
+                'property-1' => 'content',
+                'property-2' => 'content',
+            ],
+            'extension' => [
+                'excerpt' => ['test1' => 'test1'],
+            ],
+        ];
+        $this->structureResolver->resolve($testStructure->reveal())->willReturn($resolvedStructure);
 
         $result = $this->extension->load('123-123-123');
 
-        // uuid
-        $this->assertEquals('123-123-123', $result['uuid']);
+        $this->assertSame($resolvedStructure, $result);
+    }
 
-        // metadata
-        $this->assertEquals(1, $result['creator']);
-        $this->assertEquals(1, $result['changer']);
+    public function testLoadWithProperties()
+    {
+        $testStructure = $this->prophesize(StructureBridge::class);
 
-        // content
-        $this->assertEquals(['title' => 'test'], $result['content']);
-        $this->assertEquals(['title' => []], $result['view']);
+        $this->contentMapper->load('123-123-123', 'sulu_test', 'en_us')
+            ->willReturn($testStructure->reveal());
+
+        $this->structureResolver->resolve(
+            $testStructure->reveal(),
+            false,
+            ['property-1', 'invalid-property-name']
+        )->willReturn([
+            'id' => 'some-uuid',
+            'template' => 'test',
+            'view' => [
+                'property-1' => 'view',
+            ],
+            'content' => [
+                'property-1' => 'content',
+            ],
+        ]);
+
+        $result = $this->extension->load('123-123-123', ['property-1', 'invalid-property-name']);
+
+        $this->assertSame(
+            [
+                'id' => 'some-uuid',
+                'template' => 'test',
+                'view' => [
+                    'property-1' => 'view',
+                ],
+                'content' => [
+                    'property-1' => 'content',
+                ],
+            ],
+            $result
+        );
+    }
+
+    public function testLoadWithPropertiesWithKeys()
+    {
+        $testStructure = $this->prophesize(StructureBridge::class);
+
+        $this->contentMapper->load('123-123-123', 'sulu_test', 'en_us')
+            ->willReturn($testStructure->reveal());
+
+        $this->structureResolver->resolve(
+            $testStructure->reveal(),
+            false,
+            ['property-1', 'invalid-property-name']
+        )->willReturn([
+            'id' => 'some-uuid',
+            'template' => 'test',
+            'view' => [
+                'property-1' => 'view',
+            ],
+            'content' => [
+                'property-1' => 'content',
+            ],
+        ]);
+
+        $result = $this->extension->load(
+            '123-123-123',
+            ['myTemplateProperty' => 'property-1', 'invalidProperty' => 'invalid-property-name']
+        );
+
+        $this->assertSame(
+            [
+                'id' => 'some-uuid',
+                'template' => 'test',
+                'view' => [
+                    'myTemplateProperty' => 'view',
+                ],
+                'content' => [
+                    'myTemplateProperty' => 'content',
+                ],
+            ],
+            $result
+        );
+    }
+
+    public function testLoadWithPropertiesIncludingExcerpt()
+    {
+        $testStructure = $this->prophesize(StructureBridge::class);
+
+        $this->contentMapper->load('123-123-123', 'sulu_test', 'en_us')
+            ->willReturn($testStructure->reveal());
+
+        $this->structureResolver->resolve(
+            $testStructure->reveal(),
+            true,
+            ['property-1']
+        )->willReturn([
+            'id' => 'some-uuid',
+            'template' => 'test',
+            'view' => [
+                'property-1' => 'view',
+            ],
+            'content' => [
+                'property-1' => 'content',
+            ],
+            'extension' => [
+                'excerpt' => ['title' => 'test-title', 'description' => 'test-description'],
+            ],
+        ]);
+
+        $result = $this->extension->load(
+            '123-123-123',
+            ['myTemplateProperty' => 'property-1', 'excerptTitle' => 'excerpt.title']
+        );
+
+        $this->assertSame(
+            [
+                'id' => 'some-uuid',
+                'template' => 'test',
+                'view' => [
+                    'myTemplateProperty' => 'view',
+                    'excerptTitle' => [],
+                ],
+                'content' => [
+                    'myTemplateProperty' => 'content',
+                    'excerptTitle' => 'test-title',
+                ],
+            ],
+            $result
+        );
     }
 
     public function testLoadNull()
@@ -206,39 +306,76 @@ class ContentTwigExtensionTest extends TestCase
         $this->assertNull($this->extension->load('999-999-999'));
     }
 
-    public function testLoadParent()
+    public function testLoadParentWithoutProperties()
     {
         $testStructure = $this->prophesize(StructureBridge::class);
-        $testStructure->getKey()->willReturn('test');
-        $testStructure->getPath()->willReturn(null);
-        $testStructure->getUuid()->willReturn('321-321-321');
-        $testStructure->getCreator()->willReturn(1);
-        $testStructure->getChanger()->willReturn(1);
-        $testStructure->getCreated()->willReturn(null);
-        $testStructure->getChanged()->willReturn(null);
-        $testStructure->getDocument()->willReturn(null);
 
-        $titleProperty = new Property('title', [], 'text_line');
-        $titleProperty->setValue('test');
-        $testStructure->getProperties(true)->willReturn([$titleProperty]);
-
-        $this
-            ->contentMapper
-            ->load('321-321-321', 'sulu_test', 'en_us')
+        $this->contentMapper->load('321-321-321', 'sulu_test', 'en_us')
             ->willReturn($testStructure);
+
+        $resolvedStructure = [
+            'id' => 'some-uuid',
+            'template' => 'test',
+            'view' => [
+                'property-1' => 'view',
+                'property-2' => 'view',
+            ],
+            'content' => [
+                'property-1' => 'content',
+                'property-2' => 'content',
+            ],
+            'extension' => [
+                'excerpt' => ['test1' => 'test1'],
+            ],
+        ];
+        $this->structureResolver->resolve($testStructure->reveal())->willReturn($resolvedStructure);
 
         $result = $this->extension->loadParent('123-123-123');
 
-        // uuid
-        $this->assertEquals('321-321-321', $result['uuid']);
+        $this->assertSame($resolvedStructure, $result);
+    }
 
-        // metadata
-        $this->assertEquals(1, $result['creator']);
-        $this->assertEquals(1, $result['changer']);
+    public function testLoadParentWithProperties()
+    {
+        $testStructure = $this->prophesize(StructureBridge::class);
 
-        // content
-        $this->assertEquals(['title' => 'test'], $result['content']);
-        $this->assertEquals(['title' => []], $result['view']);
+        $this->contentMapper->load('321-321-321', 'sulu_test', 'en_us')
+            ->willReturn($testStructure);
+
+        $this->structureResolver->resolve($testStructure->reveal(), true, ['property-1'])->willReturn([
+            'id' => 'some-uuid',
+            'template' => 'test',
+            'view' => [
+                'property-1' => 'view',
+            ],
+            'content' => [
+                'property-1' => 'content',
+            ],
+            'extension' => [
+                'excerpt' => ['title' => 'test-title', 'description' => 'test-description'],
+            ],
+        ]);
+
+        $result = $this->extension->loadParent(
+            '123-123-123',
+            ['myTemplateProperty' => 'property-1', 'excerptTitle' => 'excerpt.title']
+        );
+
+        $this->assertSame(
+            [
+                'id' => 'some-uuid',
+                'template' => 'test',
+                'view' => [
+                    'myTemplateProperty' => 'view',
+                    'excerptTitle' => [],
+                ],
+                'content' => [
+                    'myTemplateProperty' => 'content',
+                    'excerptTitle' => 'test-title',
+                ],
+            ],
+            $result
+        );
     }
 
     public function testLoadParentStartPage()
