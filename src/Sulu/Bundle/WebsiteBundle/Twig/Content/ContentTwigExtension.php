@@ -16,6 +16,7 @@ use Psr\Log\NullLogger;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Bundle\WebsiteBundle\Twig\Exception\ParentNotFoundException;
+use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
@@ -98,7 +99,7 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
         ];
     }
 
-    public function load($uuid)
+    public function load($uuid, array $properties = null)
     {
         if (!$uuid) {
             return;
@@ -112,16 +113,15 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
                 $this->requestAnalyzer->getWebspace()->getKey(),
                 $locale
             );
+        } catch (DocumentNotFoundException $e) {
+            $this->logger->error((string) $e);
 
-            $document = $contentStructure->getDocument();
+            return;
+        }
 
-            if (!$this->securityChecker
-                || !$document instanceof WebspaceBehavior
-                || !$document instanceof SecurityBehavior
-            ) {
-                return $this->structureResolver->resolve($contentStructure);
-            }
+        $document = $contentStructure->getDocument();
 
+        if ($this->securityChecker && $document instanceof WebspaceBehavior && $document instanceof SecurityBehavior) {
             $targetWebspace = $this->webspaceManager->findWebspaceByKey($contentStructure->getWebspaceKey());
             $security = $targetWebspace->getSecurity();
             $system = $security ? $security->getSystem() : null;
@@ -140,16 +140,21 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
             ) {
                 return null;
             }
+        }
+
+        if (null === $properties) {
+            @\trigger_error(
+                'Calling the "sulu_content_load" function without a properties parameter is deprecated and has a negative impact on performance.',
+                \E_USER_DEPRECATED
+            );
 
             return $this->structureResolver->resolve($contentStructure);
-        } catch (DocumentNotFoundException $e) {
-            $this->logger->error((string) $e);
-
-            return;
         }
+
+        return $this->resolveProperties($contentStructure, $properties);
     }
 
-    public function loadParent($uuid)
+    public function loadParent($uuid, array $properties = null)
     {
         $session = $this->sessionManager->getSession();
         $contentsNode = $this->sessionManager->getContentNode($this->requestAnalyzer->getWebspace()->getKey());
@@ -159,6 +164,51 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
             throw new ParentNotFoundException($uuid);
         }
 
-        return $this->load($node->getParent()->getIdentifier());
+        return $this->load($node->getParent()->getIdentifier(), $properties);
+    }
+
+    private function resolveProperties(StructureInterface $contentStructure, array $properties): array
+    {
+        $contentProperties = [];
+        $extensionProperties = [];
+
+        foreach ($properties as $targetProperty => $sourceProperty) {
+            if (!\is_string($targetProperty)) {
+                $targetProperty = $sourceProperty;
+            }
+
+            if (!\strpos($sourceProperty, '.')) {
+                $contentProperties[$targetProperty] = $sourceProperty;
+            } else {
+                $extensionProperties[$targetProperty] = $sourceProperty;
+            }
+        }
+
+        $resolvedStructure = $this->structureResolver->resolve(
+            $contentStructure,
+            !empty($extensionProperties),
+            \array_values($contentProperties)
+        );
+
+        foreach ($contentProperties as $targetProperty => $sourceProperty) {
+            if (isset($resolvedStructure['content'][$sourceProperty]) && $sourceProperty !== $targetProperty) {
+                $resolvedStructure['content'][$targetProperty] = $resolvedStructure['content'][$sourceProperty];
+                $resolvedStructure['view'][$targetProperty] = $resolvedStructure['view'][$sourceProperty] ?? [];
+
+                unset($resolvedStructure['content'][$sourceProperty]);
+                unset($resolvedStructure['view'][$sourceProperty]);
+            }
+        }
+
+        foreach ($extensionProperties as $targetProperty => $sourceProperty) {
+            [$extensionName, $propertyName] = \explode('.', $sourceProperty);
+            $propertyValue = $resolvedStructure['extension'][$extensionName][$propertyName];
+
+            $resolvedStructure['content'][$targetProperty] = $propertyValue;
+            $resolvedStructure['view'][$targetProperty] = [];
+        }
+        unset($resolvedStructure['extension']);
+
+        return $resolvedStructure;
     }
 }
