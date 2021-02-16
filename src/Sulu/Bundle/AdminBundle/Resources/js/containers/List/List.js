@@ -146,13 +146,13 @@ class List extends React.Component<Props> {
     }
 
     componentDidUpdate(prevProps: Props) {
-        const {adapters, store} = this.props;
+        const {adapters, store, paginated} = this.props;
         if (!equal(adapters, prevProps.adapters)) {
             this.validateAdapters();
         }
 
         if (store !== prevProps.store) {
-            store.updateLoadingStrategy(new (this.currentAdapter.getLoadingStrategy())());
+            store.updateLoadingStrategy(new this.currentAdapter.LoadingStrategy(paginated));
             store.updateStructureStrategy(new this.currentAdapter.StructureStrategy());
         }
     }
@@ -178,10 +178,8 @@ class List extends React.Component<Props> {
     @action setCurrentAdapterKey = (adapter: string) => {
         this.currentAdapterKey = adapter;
 
-        const options = {pagination: this.props.pagination};
-        const loadingStrategy = this.currentAdapter.getLoadingStrategy(options);
-        if (!(this.props.store.loadingStrategy instanceof loadingStrategy)) {
-            this.props.store.updateLoadingStrategy(new loadingStrategy());
+        if (!(this.props.store.loadingStrategy instanceof this.currentAdapter.LoadingStrategy)) {
+            this.props.store.updateLoadingStrategy(new this.currentAdapter.LoadingStrategy(this.props.paginated));
         }
 
         if (!(this.props.store.structureStrategy instanceof this.currentAdapter.StructureStrategy)) {
@@ -489,7 +487,7 @@ class List extends React.Component<Props> {
             movable,
             onItemClick,
             onItemAdd,
-            pagination,
+            paginated,
             orderable,
             selectable,
             store,

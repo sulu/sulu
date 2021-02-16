@@ -80,7 +80,7 @@ export type LoadOptions = {
 };
 
 export interface LoadingStrategyInterface {
-    constructor(): void,
+    constructor(paginated: boolean): void,
     load(resourceKey: string, options: LoadOptions, parentId: ?string | number): RequestPromise<Object>,
     setStructureStrategy(structureStrategy: StructureStrategyInterface): void,
 }

@@ -4,27 +4,21 @@ import React from 'react';
 import FolderList from '../../../components/FolderList';
 import Pagination from '../../../components/Pagination';
 import {translate} from '../../../utils/Translator';
-import PaginatedLoadingStrategy from '../loadingStrategies/PaginatedLoadingStrategy';
 import FlatStructureStrategy from '../structureStrategies/FlatStructureStrategy';
-import type {LoadingStrategyInterface} from '../types';
 import FullLoadingStrategy from '../loadingStrategies/FullLoadingStrategy';
 import AbstractAdapter from './AbstractAdapter';
 
 @observer
 class FolderAdapter extends AbstractAdapter {
-    static StructureStrategy = FlatStructureStrategy;
+    static LoadingStrategy = FullLoadingStrategy;
 
-    static paginatable = true;
+    static StructureStrategy = FlatStructureStrategy;
 
     static icon = 'su-folder';
 
     static defaultProps = {
         data: [],
     };
-
-    static getLoadingStrategy(options: Object = {}): Class<LoadingStrategyInterface> {
-        return this.paginatable && options.pagination ? PaginatedLoadingStrategy : FullLoadingStrategy;
-    }
 
     static getInfoText(item: Object) {
         const label = (item.objectCount === 1)
@@ -43,7 +37,7 @@ class FolderAdapter extends AbstractAdapter {
             onLimitChange,
             onPageChange,
             page,
-            pagination,
+            paginated,
             pageCount,
         } = this.props;
 
@@ -61,7 +55,11 @@ class FolderAdapter extends AbstractAdapter {
             </FolderList>
         );
 
-        if (!pagination || data.length === 0) {
+        if (!paginated || (page === 1 && data.length === 0)) {
+            return folderList;
+        }
+
+        if (pageCount === undefined) {
             return folderList;
         }
 

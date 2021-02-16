@@ -2,7 +2,6 @@
 import React from 'react';
 import listAdapterRegistry from '../../registries/listAdapterRegistry';
 import AbstractAdapter from '../../adapters/AbstractAdapter';
-import type {LoadingStrategyInterface} from '../../types';
 
 beforeEach(() => {
     listAdapterRegistry.clear();
@@ -28,14 +27,11 @@ class StructureStrategy {
 }
 
 class TestAdapter extends AbstractAdapter {
+    static LoadingStrategy = LoadingStrategy;
+
     static StructureStrategy = StructureStrategy;
 
     static icon = 'su-view';
-
-    // eslint-disable-next-line no-unused-vars
-    static getLoadingStrategy(options: Object = {}): Class<LoadingStrategyInterface> {
-        return LoadingStrategy;
-    }
 
     render() {
         return (
@@ -45,14 +41,11 @@ class TestAdapter extends AbstractAdapter {
 }
 
 class TestAdapter2 extends AbstractAdapter {
+    static LoadingStrategy = LoadingStrategy;
+
     static StructureStrategy = StructureStrategy;
 
     static icon = 'su-view2';
-
-    // eslint-disable-next-line no-unused-vars
-    static getLoadingStrategy(options: Object = {}): Class<LoadingStrategyInterface> {
-        return LoadingStrategy;
-    }
 
     render() {
         return (

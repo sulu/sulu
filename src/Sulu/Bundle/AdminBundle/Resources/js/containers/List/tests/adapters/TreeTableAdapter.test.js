@@ -194,7 +194,7 @@ test('Render data without header', () => {
             options={{showHeader: false}}
             page={1}
             pageCount={2}
-            pagination={false}
+            paginated={false}
             schema={schema}
         />
     );
@@ -923,7 +923,7 @@ test('Pagination should not be rendered if pagination is false', () => {
             limit={10}
             page={2}
             pageCount={7}
-            pagination={false}
+            paginated={false}
         />
     );
     expect(treeTableAdapter.find('Pagination')).toHaveLength(0);

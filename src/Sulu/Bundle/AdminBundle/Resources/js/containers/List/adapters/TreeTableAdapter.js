@@ -7,21 +7,15 @@ import Loader from '../../../components/Loader';
 import TreeStructureStrategy from '../structureStrategies/TreeStructureStrategy';
 import FullLoadingStrategy from '../loadingStrategies/FullLoadingStrategy';
 import Pagination from '../../../components/Pagination';
-import PaginatedLoadingStrategy from '../loadingStrategies/PaginatedLoadingStrategy';
-import type {LoadingStrategyInterface} from '../types';
 import AbstractTableAdapter from './AbstractTableAdapter';
 
 @observer
 class TreeTableAdapter extends AbstractTableAdapter {
+    static LoadingStrategy = FullLoadingStrategy;
+
     static StructureStrategy = TreeStructureStrategy;
 
-    static paginatable = true;
-
     static icon = 'su-tree-list';
-
-    static getLoadingStrategy(options: Object = {}): Class<LoadingStrategyInterface> {
-        return this.paginatable && options.pagination ? PaginatedLoadingStrategy : FullLoadingStrategy;
-    }
 
     @action handleRowCollapse = (rowId: string | number) => {
         this.props.onItemDeactivate(rowId);
@@ -130,7 +124,7 @@ class TreeTableAdapter extends AbstractTableAdapter {
             },
             page,
             pageCount,
-            pagination,
+            paginated,
         } = this.props;
 
         if (!active && loading) {
@@ -158,7 +152,11 @@ class TreeTableAdapter extends AbstractTableAdapter {
             </Table>
         );
 
-        if (!pagination || pageCount === undefined || data.length === 0) {
+        if (!paginated || (page === 1 && data.length === 0)) {
+            return table;
+        }
+
+        if (pageCount === undefined) {
             return table;
         }
 

@@ -9,12 +9,13 @@ import PublishIndicator from '../../../components/PublishIndicator';
 import {translate} from '../../../utils/Translator';
 import FullLoadingStrategy from '../loadingStrategies/FullLoadingStrategy';
 import ColumnStructureStrategy from '../structureStrategies/ColumnStructureStrategy';
-import type {LoadingStrategyInterface} from '../types';
 import AbstractAdapter from './AbstractAdapter';
 import columnListAdapterStyles from './columnListAdapter.scss';
 
 @observer
 class ColumnListAdapter extends AbstractAdapter {
+    static LoadingStrategy = FullLoadingStrategy;
+
     static StructureStrategy = ColumnStructureStrategy;
 
     static icon = 'su-columns';
@@ -24,11 +25,6 @@ class ColumnListAdapter extends AbstractAdapter {
     static defaultProps = {
         data: [],
     };
-
-    // eslint-disable-next-line no-unused-vars
-    static getLoadingStrategy(options: Object = {}): Class<LoadingStrategyInterface> {
-        return FullLoadingStrategy;
-    }
 
     @observable orderColumn: ?number = undefined;
 

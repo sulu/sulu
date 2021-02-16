@@ -900,7 +900,7 @@ test('Pagination should not be rendered if pagination is false', () => {
             limit={10}
             page={2}
             pageCount={7}
-            pagination={false}
+            paginated={false}
         />
     );
     expect(tableAdapter.find('Pagination')).toHaveLength(0);
