@@ -14,7 +14,6 @@ import AbstractAdapter from '../adapters/AbstractAdapter';
 import TableAdapter from '../adapters/TableAdapter';
 import FolderAdapter from '../adapters/FolderAdapter';
 import StringFieldTransformer from '../fieldTransformers/StringFieldTransformer';
-import type {LoadingStrategyInterface} from '../types';
 
 let mockStructureStrategyData;
 let mockStructureStrategyVisibleItems;
