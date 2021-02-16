@@ -18,19 +18,14 @@ use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
-use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolver;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Bundle\WebsiteBundle\Twig\Content\ContentTwigExtension;
-use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Compat\Structure\SnippetBridge;
 use Sulu\Component\Content\Compat\Structure\StructureBridge;
-use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
-use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Sulu\Component\Content\Types\TextLine;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
@@ -58,16 +53,6 @@ class ContentTwigExtensionTest extends TestCase
      * @var RequestAnalyzerInterface|ObjectProphecy
      */
     private $requestAnalyzer;
-
-    /**
-     * @var ExtensionManagerInterface|ObjectProphecy
-     */
-    private $extensionManager;
-
-    /**
-     * @var ContentTypeManagerInterface|ObjectProphecy
-     */
-    private $contentTypeManager;
 
     /**
      * @var SessionManagerInterface|ObjectProphecy
@@ -114,14 +99,18 @@ class ContentTwigExtensionTest extends TestCase
      */
     private $webspaceManager;
 
+    /**
+     * @var Webspace|ObjectProphecy
+     */
+    private $webspace;
+
     protected function setUp(): void
     {
         parent::setUp();
 
+        $this->structureResolver = $this->prophesize(StructureResolverInterface::class);
         $this->contentMapper = $this->prophesize(ContentMapperInterface::class);
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
-        $this->contentTypeManager = $this->prophesize(ContentTypeManagerInterface::class);
-        $this->extensionManager = $this->prophesize(ExtensionManagerInterface::class);
         $this->sessionManager = $this->prophesize(SessionManagerInterface::class);
         $this->session = $this->prophesize(SessionInterface::class);
         $this->node = $this->prophesize(NodeInterface::class);
@@ -129,6 +118,7 @@ class ContentTwigExtensionTest extends TestCase
         $this->startPageNode = $this->prophesize(NodeInterface::class);
         $this->logger = $this->prophesize(LoggerInterface::class);
         $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
+        $this->securityChecker = $this->prophesize(SecurityCheckerInterface::class);
 
         $this->webspace = $this->prophesize(Webspace::class);
         $this->webspace->getKey()
@@ -142,8 +132,6 @@ class ContentTwigExtensionTest extends TestCase
 
         $this->requestAnalyzer->getWebspace()->willReturn($this->webspace->reveal());
         $this->requestAnalyzer->getCurrentLocalization()->willReturn($locale);
-
-        $this->contentTypeManager->get('text_line')->willReturn(new TextLine(''));
 
         $this->sessionManager->getSession()->willReturn($this->session->reveal());
         $this->sessionManager->getContentNode('sulu_test')->willReturn($this->startPageNode->reveal());
@@ -160,16 +148,9 @@ class ContentTwigExtensionTest extends TestCase
 
         $this->startPageNode->getDepth()->willReturn(3);
 
-        $this->structureResolver = new StructureResolver(
-            $this->contentTypeManager->reveal(),
-            $this->extensionManager->reveal()
-        );
-
-        $this->securityChecker = $this->prophesize(SecurityCheckerInterface::class);
-
         $this->extension = new ContentTwigExtension(
             $this->contentMapper->reveal(),
-            $this->structureResolver,
+            $this->structureResolver->reveal(),
             $this->sessionManager->reveal(),
             $this->requestAnalyzer->reveal(),
             null,
@@ -178,121 +159,97 @@ class ContentTwigExtensionTest extends TestCase
         );
     }
 
-    public function testLoad()
+    public function testLoadWithoutProperties()
     {
-        $testStructure = $this->prophesize(StructureBridge::class);
         $pageDocument = $this->prophesize(WebspaceBehavior::class);
         $pageDocument->willImplement(SecurityBehavior::class);
-        $testStructure->getKey()->willReturn('test');
-        $testStructure->getPath()->willReturn(null);
-        $testStructure->getUuid()->willReturn('123-123-123');
-        $testStructure->getCreator()->willReturn(1);
-        $testStructure->getChanger()->willReturn(1);
-        $testStructure->getCreated()->willReturn(null);
-        $testStructure->getChanged()->willReturn(null);
+
+        $testStructure = $this->prophesize(StructureBridge::class);
         $testStructure->getDocument()->willReturn($pageDocument);
         $testStructure->getWebspaceKey()->willReturn('sulu_test');
 
-        $titleProperty = new Property('title', [], 'text_line');
-        $titleProperty->setValue('test');
-        $testStructure->getProperties(true)->willReturn([$titleProperty]);
+        $this->webspace->getSecurity()->willReturn(null)->shouldBeCalled();
+        $this->webspace->hasWebsiteSecurity()->willReturn(false)->shouldBeCalled();
 
-        $this
-            ->contentMapper
-            ->load('123-123-123', 'sulu_test', 'en_us')
-            ->willReturn($testStructure);
+        $this->contentMapper->load('123-123-123', 'sulu_test', 'en_us')->willReturn($testStructure->reveal());
 
-        $this->webspace
-            ->getSecurity()
-            ->willReturn(null)
-            ->shouldBeCalled();
-
-        $this->webspace
-            ->hasWebsiteSecurity()
-            ->willReturn(false)
-            ->shouldBeCalled();
+        $resolvedStructure = [
+            'id' => 'some-uuid',
+            'template' => 'test',
+            'view' => [
+                'property-1' => 'view',
+                'property-2' => 'view',
+            ],
+            'content' => [
+                'property-1' => 'content',
+                'property-2' => 'content',
+            ],
+            'extension' => [
+                'excerpt' => ['test1' => 'test1'],
+            ],
+        ];
+        $this->structureResolver->resolve($testStructure->reveal())->willReturn($resolvedStructure);
 
         $result = $this->extension->load('123-123-123');
 
-        // uuid
-        $this->assertEquals('123-123-123', $result['uuid']);
-
-        // metadata
-        $this->assertEquals(1, $result['creator']);
-        $this->assertEquals(1, $result['changer']);
-
-        // content
-        $this->assertEquals(['title' => 'test'], $result['content']);
-        $this->assertEquals(['title' => []], $result['view']);
+        $this->assertSame($resolvedStructure, $result);
     }
 
-    public function testLoadWithPermissions()
+    public function testLoadWithoutPropertiesWithPermissions()
     {
-        $testStructure = $this->prophesize(StructureBridge::class);
         $pageDocument = $this->prophesize(WebspaceBehavior::class);
         $pageDocument->willImplement(SecurityBehavior::class);
-        $testStructure->getKey()->willReturn('test');
-        $testStructure->getPath()->willReturn(null);
-        $testStructure->getUuid()->willReturn('123-123-123');
-        $testStructure->getCreator()->willReturn(1);
-        $testStructure->getChanger()->willReturn(1);
-        $testStructure->getCreated()->willReturn(null);
-        $testStructure->getChanged()->willReturn(null);
-        $testStructure->getDocument()->willReturn($pageDocument->reveal());
+
+        $testStructure = $this->prophesize(StructureBridge::class);
+        $testStructure->getDocument()->willReturn($pageDocument);
         $testStructure->getWebspaceKey()->willReturn('sulu_test');
 
-        $titleProperty = new Property('title', [], 'text_line');
-        $titleProperty->setValue('test');
-        $testStructure->getProperties(true)->willReturn([$titleProperty]);
-
-        $this->securityChecker
-            ->hasPermission(Argument::any(), Argument::any())
-            ->willReturn(true)
-            ->shouldBeCalledOnce();
+        $this->securityChecker->hasPermission(Argument::cetera())->willReturn(true)->shouldBeCalledOnce();
 
         $security = $this->prophesize(Security::class);
-        $security->getSystem()
-            ->willReturn('Website')
-            ->shouldBeCalled();
+        $security->getSystem()->willReturn('Website')->shouldBeCalled();
 
-        $this->webspace
-            ->getSecurity()
-            ->willReturn($security->reveal())
-            ->shouldBeCalled();
+        $this->webspace->getSecurity()->willReturn($security->reveal())->shouldBeCalled();
+        $this->webspace->hasWebsiteSecurity()->willReturn(true)->shouldBeCalled();
 
-        $this->webspace
-            ->hasWebsiteSecurity()
-            ->willReturn(true)
-            ->shouldBeCalled();
+        $this->contentMapper->load('123-123-123', 'sulu_test', 'en_us')->willReturn($testStructure);
 
-        $this
-            ->contentMapper
-            ->load('123-123-123', 'sulu_test', 'en_us')
-            ->willReturn($testStructure);
+        $resolvedStructure = [
+            'id' => 'some-uuid',
+            'template' => 'test',
+            'view' => [
+                'property-1' => 'view',
+                'property-2' => 'view',
+            ],
+            'content' => [
+                'property-1' => 'content',
+                'property-2' => 'content',
+            ],
+            'extension' => [
+                'excerpt' => ['test1' => 'test1'],
+            ],
+        ];
+        $this->structureResolver->resolve($testStructure->reveal())->willReturn($resolvedStructure);
 
         $result = $this->extension->load('123-123-123');
 
-        $this->assertNotNull($result);
+        $this->assertSame($resolvedStructure, $result);
     }
 
-    public function testLoadWithoutPermissions()
+    public function testLoadWithoutPropertiesWithoutPermissions()
     {
-        $testStructure = $this->prophesize(StructureBridge::class);
         $pageDocument = $this->prophesize(WebspaceBehavior::class);
         $pageDocument->willImplement(SecurityBehavior::class);
-        $testStructure->getKey()->willReturn('test');
-        $testStructure->getPath()->willReturn(null);
-        $testStructure->getUuid()->willReturn('123-123-123');
-        $testStructure->getCreator()->willReturn(1);
-        $testStructure->getChanger()->willReturn(1);
-        $testStructure->getCreated()->willReturn(null);
-        $testStructure->getChanged()->willReturn(null);
+
+        $testStructure = $this->prophesize(StructureBridge::class);
         $testStructure->getDocument()->willReturn($pageDocument);
         $testStructure->getWebspaceKey()->willReturn('sulu_test');
 
-        $titleProperty = new Property('title', [], 'text_line');
-        $titleProperty->setValue('test');
-        $testStructure->getProperties(true)->willReturn([$titleProperty]);
+        $security = $this->prophesize(Security::class);
+        $security->getSystem()->willReturn('Website')->shouldBeCalled();
+
+        $this->webspace->getSecurity()->willReturn($security->reveal())->shouldBeCalled();
+        $this->webspace->hasWebsiteSecurity()->willReturn(true)->shouldBeCalled();
 
         $this->securityChecker->hasPermission(
             new SecurityCondition(
@@ -300,48 +257,206 @@ class ContentTwigExtensionTest extends TestCase
                 'en_us',
                 SecurityBehavior::class,
                 '123-123-123',
-                'website'
+                'Website'
             ),
             PermissionTypes::VIEW
         )
             ->willReturn(false)
             ->shouldBeCalledOnce();
 
-        $security = $this->prophesize(Security::class);
-        $security->getSystem()
-            ->willReturn('Website')
-            ->shouldBeCalled();
-
-        $security->getSystem()
-            ->willReturn('website')
-            ->shouldBeCalled();
-
-        $this->webspace
-            ->getSecurity()
-            ->willReturn($security->reveal())
-            ->shouldBeCalled();
-
-        $this->webspace
-            ->hasWebsiteSecurity()
-            ->willReturn(true)
-            ->shouldBeCalled();
-
-        $this
-            ->contentMapper
-            ->load('123-123-123', 'sulu_test', 'en_us')
-            ->willReturn($testStructure);
+        $this->contentMapper->load('123-123-123', 'sulu_test', 'en_us')->willReturn($testStructure);
 
         $result = $this->extension->load('123-123-123');
 
         $this->assertEquals(null, $result);
     }
 
+    public function testLoadWithoutPropertiesNonWebspaceBehaviorDocument()
+    {
+        $snippetDocument = $this->prophesize(StructureBehavior::class);
+
+        $testStructure = $this->prophesize(SnippetBridge::class);
+        $testStructure->getDocument()->willReturn($snippetDocument);
+
+        $this->securityChecker->hasPermission(Argument::cetera())->shouldNotBeCalled();
+        $this->webspaceManager->findWebspaceByKey(Argument::cetera())->shouldNotBeCalled();
+
+        $this->contentMapper->load('123-123-123', 'sulu_test', 'en_us')->willReturn($testStructure);
+
+        $resolvedStructure = [
+            'id' => 'some-uuid',
+            'template' => 'test',
+            'view' => [
+                'property-1' => 'view',
+                'property-2' => 'view',
+            ],
+            'content' => [
+                'property-1' => 'content',
+                'property-2' => 'content',
+            ],
+            'extension' => [
+                'excerpt' => ['test1' => 'test1'],
+            ],
+        ];
+        $this->structureResolver->resolve($testStructure->reveal())->willReturn($resolvedStructure);
+
+        $result = $this->extension->load('123-123-123');
+
+        $this->assertSame($resolvedStructure, $result);
+    }
+
+    public function testLoadWithProperties()
+    {
+        $pageDocument = $this->prophesize(WebspaceBehavior::class);
+        $pageDocument->willImplement(SecurityBehavior::class);
+
+        $testStructure = $this->prophesize(StructureBridge::class);
+        $testStructure->getDocument()->willReturn($pageDocument);
+        $testStructure->getWebspaceKey()->willReturn('sulu_test');
+
+        $this->webspace->getSecurity()->willReturn(null)->shouldBeCalled();
+        $this->webspace->hasWebsiteSecurity()->willReturn(false)->shouldBeCalled();
+
+        $this->contentMapper->load('123-123-123', 'sulu_test', 'en_us')->willReturn($testStructure->reveal());
+
+        $this->structureResolver->resolve(
+            $testStructure->reveal(),
+            false,
+            ['property-1', 'invalid-property-name']
+        )->willReturn([
+            'id' => 'some-uuid',
+            'template' => 'test',
+            'view' => [
+                'property-1' => 'view',
+            ],
+            'content' => [
+                'property-1' => 'content',
+            ],
+        ]);
+
+        $result = $this->extension->load('123-123-123', ['property-1', 'invalid-property-name']);
+
+        $this->assertSame(
+            [
+                'id' => 'some-uuid',
+                'template' => 'test',
+                'view' => [
+                    'property-1' => 'view',
+                ],
+                'content' => [
+                    'property-1' => 'content',
+                ],
+            ],
+            $result
+        );
+    }
+
+    public function testLoadWithPropertiesWithKeys()
+    {
+        $pageDocument = $this->prophesize(WebspaceBehavior::class);
+        $pageDocument->willImplement(SecurityBehavior::class);
+
+        $testStructure = $this->prophesize(StructureBridge::class);
+        $testStructure->getDocument()->willReturn($pageDocument);
+        $testStructure->getWebspaceKey()->willReturn('sulu_test');
+
+        $this->webspace->getSecurity()->willReturn(null)->shouldBeCalled();
+        $this->webspace->hasWebsiteSecurity()->willReturn(false)->shouldBeCalled();
+
+        $this->contentMapper->load('123-123-123', 'sulu_test', 'en_us')->willReturn($testStructure->reveal());
+
+        $this->structureResolver->resolve(
+            $testStructure->reveal(),
+            false,
+            ['property-1', 'invalid-property-name']
+        )->willReturn([
+            'id' => 'some-uuid',
+            'template' => 'test',
+            'view' => [
+                'property-1' => 'view',
+            ],
+            'content' => [
+                'property-1' => 'content',
+            ],
+        ]);
+
+        $result = $this->extension->load(
+            '123-123-123',
+            ['myTemplateProperty' => 'property-1', 'invalidProperty' => 'invalid-property-name']
+        );
+
+        $this->assertSame(
+            [
+                'id' => 'some-uuid',
+                'template' => 'test',
+                'view' => [
+                    'myTemplateProperty' => 'view',
+                ],
+                'content' => [
+                    'myTemplateProperty' => 'content',
+                ],
+            ],
+            $result
+        );
+    }
+
+    public function testLoadWithPropertiesIncludingExcerpt()
+    {
+        $pageDocument = $this->prophesize(WebspaceBehavior::class);
+        $pageDocument->willImplement(SecurityBehavior::class);
+
+        $testStructure = $this->prophesize(StructureBridge::class);
+        $testStructure->getDocument()->willReturn($pageDocument);
+        $testStructure->getWebspaceKey()->willReturn('sulu_test');
+
+        $this->webspace->getSecurity()->willReturn(null)->shouldBeCalled();
+        $this->webspace->hasWebsiteSecurity()->willReturn(false)->shouldBeCalled();
+
+        $this->contentMapper->load('123-123-123', 'sulu_test', 'en_us')->willReturn($testStructure->reveal());
+
+        $this->structureResolver->resolve(
+            $testStructure->reveal(),
+            true,
+            ['property-1']
+        )->willReturn([
+            'id' => 'some-uuid',
+            'template' => 'test',
+            'view' => [
+                'property-1' => 'view',
+            ],
+            'content' => [
+                'property-1' => 'content',
+            ],
+            'extension' => [
+                'excerpt' => ['title' => 'test-title', 'description' => 'test-description'],
+            ],
+        ]);
+
+        $result = $this->extension->load(
+            '123-123-123',
+            ['myTemplateProperty' => 'property-1', 'excerptTitle' => 'excerpt.title']
+        );
+
+        $this->assertSame(
+            [
+                'id' => 'some-uuid',
+                'template' => 'test',
+                'view' => [
+                    'myTemplateProperty' => 'view',
+                    'excerptTitle' => [],
+                ],
+                'content' => [
+                    'myTemplateProperty' => 'content',
+                    'excerptTitle' => 'test-title',
+                ],
+            ],
+            $result
+        );
+    }
+
     public function testLoadNull()
     {
-        $this
-            ->contentMapper
-            ->load(Argument::cetera())
-            ->shouldNotBeCalled();
+        $this->contentMapper->load(Argument::cetera())->shouldNotBeCalled();
 
         $this->assertNull($this->extension->load(null));
     }
@@ -351,102 +466,95 @@ class ContentTwigExtensionTest extends TestCase
         $documentNotFoundException = $this->prophesize(DocumentNotFoundException::class);
         $documentNotFoundException->__toString()->willReturn('something');
 
-        $this
-            ->contentMapper
-            ->load(Argument::cetera())
-            ->willThrow($documentNotFoundException->reveal());
+        $this->contentMapper->load(Argument::cetera())->willThrow($documentNotFoundException->reveal());
 
         $this->assertNull($this->extension->load('999-999-999'));
     }
 
-    public function testLoadParent()
+    public function testLoadParentWithoutProperties()
     {
-        $testStructure = $this->prophesize(StructureBridge::class);
         $pageDocument = $this->prophesize(WebspaceBehavior::class);
         $pageDocument->willImplement(SecurityBehavior::class);
-        $testStructure->getKey()->willReturn('test');
-        $testStructure->getPath()->willReturn(null);
-        $testStructure->getUuid()->willReturn('321-321-321');
-        $testStructure->getCreator()->willReturn(1);
-        $testStructure->getChanger()->willReturn(1);
-        $testStructure->getCreated()->willReturn(null);
-        $testStructure->getChanged()->willReturn(null);
+
+        $testStructure = $this->prophesize(StructureBridge::class);
         $testStructure->getDocument()->willReturn($pageDocument);
         $testStructure->getWebspaceKey()->willReturn('sulu_test');
 
-        $titleProperty = new Property('title', [], 'text_line');
-        $titleProperty->setValue('test');
-        $testStructure->getProperties(true)->willReturn([$titleProperty]);
+        $this->webspace->getSecurity()->willReturn(null)->shouldBeCalled();
+        $this->webspace->hasWebsiteSecurity()->willReturn(false)->shouldBeCalled();
 
-        $this
-            ->contentMapper
-            ->load('321-321-321', 'sulu_test', 'en_us')
-            ->willReturn($testStructure);
+        $this->contentMapper->load('321-321-321', 'sulu_test', 'en_us')->willReturn($testStructure);
 
-        $this->webspace
-            ->getSecurity()
-            ->willReturn(null)
-            ->shouldBeCalled();
-
-        $this->webspace
-            ->hasWebsiteSecurity()
-            ->willReturn(false)
-            ->shouldBeCalled();
+        $resolvedStructure = [
+            'id' => 'some-uuid',
+            'template' => 'test',
+            'view' => [
+                'property-1' => 'view',
+                'property-2' => 'view',
+            ],
+            'content' => [
+                'property-1' => 'content',
+                'property-2' => 'content',
+            ],
+            'extension' => [
+                'excerpt' => ['test1' => 'test1'],
+            ],
+        ];
+        $this->structureResolver->resolve($testStructure->reveal())->willReturn($resolvedStructure);
 
         $result = $this->extension->loadParent('123-123-123');
 
-        // uuid
-        $this->assertEquals('321-321-321', $result['uuid']);
-
-        // metadata
-        $this->assertEquals(1, $result['creator']);
-        $this->assertEquals(1, $result['changer']);
-
-        // content
-        $this->assertEquals(['title' => 'test'], $result['content']);
-        $this->assertEquals(['title' => []], $result['view']);
+        $this->assertSame($resolvedStructure, $result);
     }
 
-    public function testLoadWithoutWebspaceBehaviorDocument()
+    public function testLoadParentWithProperties()
     {
-        $testStructure = $this->prophesize(SnippetBridge::class);
-        $snippetDocument = $this->prophesize(StructureBehavior::class);
-        $testStructure->getKey()->willReturn('test');
-        $testStructure->getPath()->willReturn(null);
-        $testStructure->getUuid()->willReturn('123-123-123');
-        $testStructure->getCreator()->willReturn(1);
-        $testStructure->getChanger()->willReturn(1);
-        $testStructure->getCreated()->willReturn(null);
-        $testStructure->getChanged()->willReturn(null);
-        $testStructure->getDocument()->willReturn($snippetDocument);
+        $pageDocument = $this->prophesize(WebspaceBehavior::class);
+        $pageDocument->willImplement(SecurityBehavior::class);
 
-        $titleProperty = new Property('title', [], 'text_line');
-        $titleProperty->setValue('test');
-        $testStructure->getProperties(true)->willReturn([$titleProperty]);
+        $testStructure = $this->prophesize(StructureBridge::class);
+        $testStructure->getDocument()->willReturn($pageDocument);
+        $testStructure->getWebspaceKey()->willReturn('sulu_test');
 
-        $this->securityChecker->hasPermission(Argument::any(), Argument::any())
-            ->shouldNotBeCalled();
+        $this->webspace->getSecurity()->willReturn(null)->shouldBeCalled();
+        $this->webspace->hasWebsiteSecurity()->willReturn(false)->shouldBeCalled();
 
-        $this->webspaceManager->findWebspaceByKey(Argument::any())
-            ->shouldNotBeCalled();
+        $this->contentMapper->load('321-321-321', 'sulu_test', 'en_us')->willReturn($testStructure);
 
-        $this
-            ->contentMapper
-            ->load('123-123-123', 'sulu_test', 'en_us')
-            ->willReturn($testStructure);
+        $this->structureResolver->resolve($testStructure->reveal(), true, ['property-1'])->willReturn([
+            'id' => 'some-uuid',
+            'template' => 'test',
+            'view' => [
+                'property-1' => 'view',
+            ],
+            'content' => [
+                'property-1' => 'content',
+            ],
+            'extension' => [
+                'excerpt' => ['title' => 'test-title', 'description' => 'test-description'],
+            ],
+        ]);
 
-        $result = $this->extension->load('123-123-123');
+        $result = $this->extension->loadParent(
+            '123-123-123',
+            ['myTemplateProperty' => 'property-1', 'excerptTitle' => 'excerpt.title']
+        );
 
-        // uuid
-        $this->assertEquals('123-123-123', $result['uuid']);
-
-        // metadata
-        $this->assertEquals(1, $result['creator']);
-        $this->assertEquals(1, $result['changer']);
-
-        // content
-        $this->assertEquals(['title' => 'test'], $result['content']);
-        $this->assertEquals(['title' => []], $result['view']);
+        $this->assertSame(
+            [
+                'id' => 'some-uuid',
+                'template' => 'test',
+                'view' => [
+                    'myTemplateProperty' => 'view',
+                    'excerptTitle' => [],
+                ],
+                'content' => [
+                    'myTemplateProperty' => 'content',
+                    'excerptTitle' => 'test-title',
+                ],
+            ],
+            $result
+        );
     }
 
     public function testLoadParentStartPage()
