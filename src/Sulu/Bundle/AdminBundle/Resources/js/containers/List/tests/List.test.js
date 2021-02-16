@@ -798,6 +798,14 @@ test('ListStore should be initialized correctly on init and update', () => {
 
 test('ListStore should be updated with current active element', () => {
     listAdapterRegistry.get.mockReturnValue(class TestAdapter extends AbstractAdapter {
+        static LoadingStrategy = class {
+            destroy = jest.fn();
+            initialize = jest.fn();
+            load = jest.fn();
+            reset = jest.fn();
+            setStructureStrategy = jest.fn();
+        };
+
         static StructureStrategy = class {
             data = [];
             visibleItems = [];
