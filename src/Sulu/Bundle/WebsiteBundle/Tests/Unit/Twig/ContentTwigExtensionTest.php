@@ -165,7 +165,7 @@ class ContentTwigExtensionTest extends TestCase
         $this->structureResolver->resolve(
             $testStructure->reveal(),
             false,
-            ['property-1']
+            ['property-1', 'invalid-property-name']
         )->willReturn([
             'id' => 'some-uuid',
             'template' => 'test',
@@ -177,7 +177,7 @@ class ContentTwigExtensionTest extends TestCase
             ],
         ]);
 
-        $result = $this->extension->load('123-123-123', ['property-1']);
+        $result = $this->extension->load('123-123-123', ['property-1', 'invalid-property-name']);
 
         $this->assertSame(
             [
@@ -204,7 +204,7 @@ class ContentTwigExtensionTest extends TestCase
         $this->structureResolver->resolve(
             $testStructure->reveal(),
             false,
-            ['property-1']
+            ['property-1', 'invalid-property-name']
         )->willReturn([
             'id' => 'some-uuid',
             'template' => 'test',
@@ -216,17 +216,20 @@ class ContentTwigExtensionTest extends TestCase
             ],
         ]);
 
-        $result = $this->extension->load('123-123-123', ['property-1' => 'myTemplateTitle']);
+        $result = $this->extension->load(
+            '123-123-123',
+            ['myTemplateProperty' => 'property-1', 'invalidProperty' => 'invalid-property-name']
+        );
 
         $this->assertSame(
             [
                 'id' => 'some-uuid',
                 'template' => 'test',
                 'view' => [
-                    'myTemplateTitle' => 'view',
+                    'myTemplateProperty' => 'view',
                 ],
                 'content' => [
-                    'myTemplateTitle' => 'content',
+                    'myTemplateProperty' => 'content',
                 ],
             ],
             $result
@@ -260,7 +263,7 @@ class ContentTwigExtensionTest extends TestCase
 
         $result = $this->extension->load(
             '123-123-123',
-            ['property-1' => 'myTemplateTitle', 'excerpt.title' => 'excerptTitle']
+            ['myTemplateProperty' => 'property-1', 'excerptTitle' => 'excerpt.title']
         );
 
         $this->assertSame(
@@ -268,11 +271,11 @@ class ContentTwigExtensionTest extends TestCase
                 'id' => 'some-uuid',
                 'template' => 'test',
                 'view' => [
-                    'myTemplateTitle' => 'view',
+                    'myTemplateProperty' => 'view',
                     'excerptTitle' => [],
                 ],
                 'content' => [
-                    'myTemplateTitle' => 'content',
+                    'myTemplateProperty' => 'content',
                     'excerptTitle' => 'test-title',
                 ],
             ],
@@ -355,7 +358,7 @@ class ContentTwigExtensionTest extends TestCase
 
         $result = $this->extension->loadParent(
             '123-123-123',
-            ['property-1' => 'myTemplateTitle', 'excerpt.title' => 'excerptTitle']
+            ['myTemplateProperty' => 'property-1', 'excerptTitle' => 'excerpt.title']
         );
 
         $this->assertSame(
@@ -363,11 +366,11 @@ class ContentTwigExtensionTest extends TestCase
                 'id' => 'some-uuid',
                 'template' => 'test',
                 'view' => [
-                    'myTemplateTitle' => 'view',
+                    'myTemplateProperty' => 'view',
                     'excerptTitle' => [],
                 ],
                 'content' => [
-                    'myTemplateTitle' => 'content',
+                    'myTemplateProperty' => 'content',
                     'excerptTitle' => 'test-title',
                 ],
             ],

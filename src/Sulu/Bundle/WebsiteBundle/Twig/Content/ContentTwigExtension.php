@@ -126,35 +126,35 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
         $contentProperties = [];
         $extensionProperties = [];
 
-        foreach ($properties as $sourceProperty => $targetProperty) {
-            if (!\is_string($sourceProperty)) {
-                $sourceProperty = $targetProperty;
+        foreach ($properties as $targetProperty => $sourceProperty) {
+            if (!\is_string($targetProperty)) {
+                $targetProperty = $sourceProperty;
             }
 
             if (!\strpos($sourceProperty, '.')) {
-                $contentProperties[$sourceProperty] = $targetProperty;
+                $contentProperties[$targetProperty] = $sourceProperty;
             } else {
-                $extensionProperties[$sourceProperty] = $targetProperty;
+                $extensionProperties[$targetProperty] = $sourceProperty;
             }
         }
 
         $resolvedStructure = $this->structureResolver->resolve(
             $contentStructure,
             !empty($extensionProperties),
-            \array_keys($contentProperties)
+            \array_values($contentProperties)
         );
 
-        foreach ($contentProperties as $sourceProperty => $targetProperty) {
-            if ($sourceProperty !== $targetProperty) {
+        foreach ($contentProperties as $targetProperty => $sourceProperty) {
+            if (isset($resolvedStructure['content'][$sourceProperty]) && $sourceProperty !== $targetProperty) {
                 $resolvedStructure['content'][$targetProperty] = $resolvedStructure['content'][$sourceProperty];
-                $resolvedStructure['view'][$targetProperty] = $resolvedStructure['view'][$sourceProperty];
+                $resolvedStructure['view'][$targetProperty] = $resolvedStructure['view'][$sourceProperty] ?? [];
 
                 unset($resolvedStructure['content'][$sourceProperty]);
                 unset($resolvedStructure['view'][$sourceProperty]);
             }
         }
 
-        foreach ($extensionProperties as $sourceProperty => $targetProperty) {
+        foreach ($extensionProperties as $targetProperty => $sourceProperty) {
             [$extensionName, $propertyName] = \explode('.', $sourceProperty);
             $propertyValue = $resolvedStructure['extension'][$extensionName][$propertyName];
 
