@@ -5,13 +5,13 @@ import React from 'react';
 import Table from '../../../components/Table';
 import Loader from '../../../components/Loader';
 import TreeStructureStrategy from '../structureStrategies/TreeStructureStrategy';
-import FullLoadingStrategy from '../loadingStrategies/FullLoadingStrategy';
+import DefaultLoadingStrategy from '../loadingStrategies/DefaultLoadingStrategy';
 import Pagination from '../../../components/Pagination';
 import AbstractTableAdapter from './AbstractTableAdapter';
 
 @observer
 class TreeTableAdapter extends AbstractTableAdapter {
-    static LoadingStrategy = FullLoadingStrategy;
+    static LoadingStrategy = DefaultLoadingStrategy;
 
     static StructureStrategy = TreeStructureStrategy;
 

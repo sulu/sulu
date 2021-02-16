@@ -5,12 +5,12 @@ import type {Element} from 'react';
 import Pagination from '../../../components/Pagination';
 import Table from '../../../components/Table';
 import FlatStructureStrategy from '../structureStrategies/FlatStructureStrategy';
-import FullLoadingStrategy from '../loadingStrategies/FullLoadingStrategy';
+import DefaultLoadingStrategy from '../loadingStrategies/DefaultLoadingStrategy';
 import AbstractTableAdapter from './AbstractTableAdapter';
 
 @observer
 class TableAdapter extends AbstractTableAdapter {
-    static LoadingStrategy = FullLoadingStrategy;
+    static LoadingStrategy = DefaultLoadingStrategy;
 
     static StructureStrategy = FlatStructureStrategy;
 

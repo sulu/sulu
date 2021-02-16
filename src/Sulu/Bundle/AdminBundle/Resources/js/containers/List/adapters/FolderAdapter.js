@@ -5,12 +5,12 @@ import FolderList from '../../../components/FolderList';
 import Pagination from '../../../components/Pagination';
 import {translate} from '../../../utils/Translator';
 import FlatStructureStrategy from '../structureStrategies/FlatStructureStrategy';
-import FullLoadingStrategy from '../loadingStrategies/FullLoadingStrategy';
+import DefaultLoadingStrategy from '../loadingStrategies/DefaultLoadingStrategy';
 import AbstractAdapter from './AbstractAdapter';
 
 @observer
 class FolderAdapter extends AbstractAdapter {
-    static LoadingStrategy = FullLoadingStrategy;
+    static LoadingStrategy = DefaultLoadingStrategy;
 
     static StructureStrategy = FlatStructureStrategy;
 

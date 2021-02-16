@@ -1,21 +1,23 @@
 // @flow
 import {action} from 'mobx';
-import log from 'loglevel';
 import ResourceRequester from '../../../services/ResourceRequester';
-import type {LoadOptions} from '../types';
+import type {LoadingStrategyOptions, LoadOptions} from '../types';
 import AbstractLoadingStrategy from './AbstractLoadingStrategy';
 
-export default class PaginatedLoadingStrategy extends AbstractLoadingStrategy {
-    // @deprecated
-    constructor() {
+export default class DefaultLoadingStrategy extends AbstractLoadingStrategy {
+    options: LoadingStrategyOptions;
+
+    constructor(options: LoadingStrategyOptions = {}) {
         super();
-        log.warn(
-            'The "PaginatedLoadingStrategy" is deprecated since 2.1.9 and will be removed. ' +
-            'Use "DefaultLoadingStrategy({paginated: true})" instead.'
-        );
+        this.options = options;
     }
 
     load(resourceKey: string, options: LoadOptions, parentId: ?string | number) {
+        if (!this.options.paginated) {
+            options.page = undefined;
+            options.limit = undefined;
+        }
+
         return ResourceRequester.getList(resourceKey, {...options}).then(action((response) => {
             const responseData = response._embedded[resourceKey];
             this.structureStrategy.clear(parentId);
