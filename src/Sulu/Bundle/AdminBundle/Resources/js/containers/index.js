@@ -14,6 +14,7 @@ import List, {
     FlatStructureStrategy,
     InfiniteLoadingStrategy,
     DefaultLoadingStrategy,
+    PaginatedLoadingStrategy,
 } from './List';
 import type {ListAdapterProps, LoadingStrategyInterface, StructureStrategyInterface} from './List';
 import {blockPreviewTransformerRegistry} from './FieldBlocks';
@@ -64,6 +65,7 @@ export {
     MultiSelection,
     InfiniteLoadingStrategy,
     DefaultLoadingStrategy,
+    PaginatedLoadingStrategy,
     ResourceFormStore,
     ResourceLocator,
     ResourceLocatorHistory,

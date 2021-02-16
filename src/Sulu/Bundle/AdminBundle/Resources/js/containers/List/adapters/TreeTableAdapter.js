@@ -99,7 +99,7 @@ class TreeTableAdapter extends AbstractTableAdapter {
         return rows;
     }
 
-    handleOnPageChange = (page: number) => {
+    handlePageChange = (page: number) => {
         const {
             onPageChange,
             onItemActivate,
@@ -166,7 +166,7 @@ class TreeTableAdapter extends AbstractTableAdapter {
                 currentPage={page}
                 loading={loading}
                 onLimitChange={onLimitChange}
-                onPageChange={this.handleOnPageChange}
+                onPageChange={this.handlePageChange}
                 totalPages={pageCount}
             >
                 {table}

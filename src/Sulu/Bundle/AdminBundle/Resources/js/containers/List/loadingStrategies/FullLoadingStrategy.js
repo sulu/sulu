@@ -11,7 +11,7 @@ export default class FullLoadingStrategy extends AbstractLoadingStrategy {
         super();
         log.warn(
             'The "FullLoadingStrategy" is deprecated since 2.1.9 and will be removed. ' +
-            'Use "DefaultLoadingStrategy()" instead.'
+            'Use "DefaultLoadingStrategy({paginated: false})" instead.'
         );
     }
 

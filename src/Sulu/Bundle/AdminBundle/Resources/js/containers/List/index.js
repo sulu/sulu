@@ -26,6 +26,7 @@ import TableAdapter from './adapters/TableAdapter';
 import FolderAdapter from './adapters/FolderAdapter';
 import AbstractAdapter from './adapters/AbstractAdapter';
 import FlatStructureStrategy from './structureStrategies/FlatStructureStrategy';
+import PaginatedLoadingStrategy from './loadingStrategies/PaginatedLoadingStrategy';
 import DefaultLoadingStrategy from './loadingStrategies/DefaultLoadingStrategy';
 import InfiniteLoadingStrategy from './loadingStrategies/InfiniteLoadingStrategy';
 import type {
@@ -48,6 +49,7 @@ export {
     TableAdapter,
     FolderAdapter,
     FlatStructureStrategy,
+    PaginatedLoadingStrategy,
     DefaultLoadingStrategy,
     InfiniteLoadingStrategy,
     ArrayFieldTransformer,

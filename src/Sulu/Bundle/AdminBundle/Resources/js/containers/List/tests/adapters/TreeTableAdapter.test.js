@@ -853,7 +853,7 @@ test('Pagination should be passed correct props', () => {
         currentLimit: 10,
         loading: false,
         onLimitChange: limitChangeSpy,
-        onPageChange: treeTableAdapter.instance().handleOnPageChange,
+        onPageChange: treeTableAdapter.instance().handlePageChange,
         children: expect.anything(),
     });
 });
