@@ -48,7 +48,7 @@ type Props = {|
     onItemAdd?: (id: ?string | number) => void,
     onItemClick?: (itemId: string | number) => void,
     orderable: boolean,
-    pagination: boolean,
+    paginated: boolean,
     searchable: boolean,
     selectable: boolean,
     showColumnOptions: boolean,
@@ -69,7 +69,7 @@ class List extends React.Component<Props> {
         disabledIds: [],
         movable: true,
         orderable: true,
-        pagination: true,
+        paginated: true,
         searchable: true,
         selectable: true,
         showColumnOptions: true,
@@ -602,7 +602,7 @@ class List extends React.Component<Props> {
                             options={this.currentAdapterOptions}
                             page={store.getPage()}
                             pageCount={store.pageCount}
-                            pagination={pagination}
+                            paginated={paginated}
                             schema={store.userSchema}
                             selections={store.selectionIds}
                             sortColumn={store.sortColumn.get()}

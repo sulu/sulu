@@ -173,14 +173,14 @@ class ListViewBuilder implements ListViewBuilderInterface
 
     public function enablePagination(): ListViewBuilderInterface
     {
-        $this->setPaginationToView($this->view, true);
+        $this->setPaginatedToView($this->view, true);
 
         return $this;
     }
 
     public function disablePagination(): ListViewBuilderInterface
     {
-        $this->setPaginationToView($this->view, false);
+        $this->setPaginatedToView($this->view, false);
 
         return $this;
     }
