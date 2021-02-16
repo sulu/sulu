@@ -1,19 +1,19 @@
 // @flow
 import {action} from 'mobx';
 import ResourceRequester from '../../../services/ResourceRequester';
-import type {LoadOptions} from '../types';
+import type {LoadingStrategyOptions, LoadOptions} from '../types';
 import AbstractLoadingStrategy from './AbstractLoadingStrategy';
 
 export default class FullLoadingStrategy extends AbstractLoadingStrategy {
-    paginated: boolean;
+    options: LoadingStrategyOptions;
 
-    constructor(paginated: boolean = true) {
+    constructor(options: LoadingStrategyOptions = {}) {
         super();
-        this.paginated = paginated;
+        this.options = options;
     }
 
     load(resourceKey: string, options: LoadOptions, parentId: ?string | number) {
-        if (!this.paginated) {
+        if (!this.options.paginated) {
             options.page = undefined;
             options.limit = undefined;
         }

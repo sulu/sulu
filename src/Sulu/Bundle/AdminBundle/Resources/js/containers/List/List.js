@@ -152,7 +152,7 @@ class List extends React.Component<Props> {
         }
 
         if (store !== prevProps.store) {
-            store.updateLoadingStrategy(new this.currentAdapter.LoadingStrategy(paginated));
+            store.updateLoadingStrategy(new this.currentAdapter.LoadingStrategy({paginated}));
             store.updateStructureStrategy(new this.currentAdapter.StructureStrategy());
         }
     }
@@ -179,7 +179,11 @@ class List extends React.Component<Props> {
         this.currentAdapterKey = adapter;
 
         if (!(this.props.store.loadingStrategy instanceof this.currentAdapter.LoadingStrategy)) {
-            this.props.store.updateLoadingStrategy(new this.currentAdapter.LoadingStrategy(this.props.paginated));
+            this.props.store.updateLoadingStrategy(
+                new this.currentAdapter.LoadingStrategy({
+                    paginated: this.props.paginated,
+                })
+            );
         }
 
         if (!(this.props.store.structureStrategy instanceof this.currentAdapter.StructureStrategy)) {
