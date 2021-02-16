@@ -6,18 +6,37 @@ import {ResourceSingleSelect, SingleAutoComplete} from 'sulu-admin-bundle/contai
 import {ResourceRequester} from 'sulu-admin-bundle/services';
 import {translate} from 'sulu-admin-bundle/utils';
 import {AbstractListToolbarAction} from 'sulu-admin-bundle/views';
+import ListStore from 'sulu-admin-bundle/containers/List/stores/ListStore';
+import SingleSelectionStore from 'sulu-admin-bundle/stores/SingleSelectionStore';
+import List from 'sulu-admin-bundle/views/List/List';
+import Router from 'sulu-admin-bundle/services/Router';
+import ResourceStore from 'sulu-admin-bundle/stores/ResourceStore';
 import addContactToolbarActionStyles from './addContactToolbarAction.scss';
 
-class AddMediaToolbarAction extends AbstractListToolbarAction {
+class AddContactToolbarAction extends AbstractListToolbarAction {
     @observable showOverlay: boolean = false;
     @observable saving: boolean = false;
     @observable position: ?number = undefined;
-    @observable contact: ?Object = undefined;
+
+    contactSelectionStore: SingleSelectionStore<number>;
+
+    constructor(
+        listStore: ListStore,
+        list: List,
+        router: Router,
+        locales?: Array<string>,
+        resourceStore?: ResourceStore,
+        options: {[key: string]: mixed}
+    ) {
+        super(listStore, list, router, locales, resourceStore, options);
+
+        this.contactSelectionStore = new SingleSelectionStore('contacts');
+    }
 
     getNode() {
         return (
             <Overlay
-                confirmDisabled={!this.contact}
+                confirmDisabled={!this.contactSelectionStore.item}
                 confirmLoading={this.saving}
                 confirmText={translate('sulu_admin.add')}
                 key="sulu_contact.add_media"
@@ -32,11 +51,9 @@ class AddMediaToolbarAction extends AbstractListToolbarAction {
                         <Form.Field label={translate('sulu_contact.people')}>
                             <SingleAutoComplete
                                 displayProperty="fullName"
-                                onChange={this.handleContactChange}
                                 options={{excludedAccountId: this.listStore.options.accountId, flat: false}}
-                                resourceKey="contacts"
                                 searchProperties={['fullName']}
-                                value={this.contact}
+                                selectionStore={this.contactSelectionStore}
                             />
                         </Form.Field>
                         <Form.Field label={translate('sulu_contact.position')}>
@@ -66,16 +83,12 @@ class AddMediaToolbarAction extends AbstractListToolbarAction {
         };
     }
 
-    @action handleContactChange = (contact: ?Object) => {
-        this.contact = contact;
-    };
-
     @action handlePositionChange = (position: ?number) => {
         this.position = position;
     };
 
     @action handleConfirm = () => {
-        if (!this.contact) {
+        if (!this.contactSelectionStore.item) {
             throw new Error('The contact must be selected in order to confirm the dialog!');
         }
 
@@ -85,7 +98,7 @@ class AddMediaToolbarAction extends AbstractListToolbarAction {
             {
                 position: this.position,
             },
-            {accountId: this.listStore.options.accountId, id: this.contact.id}
+            {accountId: this.listStore.options.accountId, id: this.contactSelectionStore.item.id}
         ).then(action(() => {
             this.saving = false;
             this.showOverlay = false;
@@ -100,9 +113,9 @@ class AddMediaToolbarAction extends AbstractListToolbarAction {
     };
 
     @action resetFields = () => {
-        this.contact = undefined;
+        this.contactSelectionStore.loadItem(undefined);
         this.position = undefined;
     };
 }
 
-export default AddMediaToolbarAction;
+export default AddContactToolbarAction;

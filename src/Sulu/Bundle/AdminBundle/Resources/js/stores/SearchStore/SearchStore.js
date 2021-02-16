@@ -1,18 +1,26 @@
 // @flow
 import {action, observable} from 'mobx';
+import type {IObservableValue} from 'mobx';
 import ResourceRequester from '../../services/ResourceRequester';
 
 export default class SearchStore {
     resourceKey: string;
     searchProperties: Array<string>;
     options: Object;
+    locale: ?IObservableValue<string>;
     @observable searchResults: Array<Object> = [];
     @observable loading: boolean = false;
 
-    constructor(resourceKey: string, searchProperties: Array<string>, options: Object = {}) {
+    constructor(
+        resourceKey: string,
+        searchProperties: Array<string>,
+        options: Object = {},
+        locale: ?IObservableValue<string>
+    ) {
         this.resourceKey = resourceKey;
         this.searchProperties = searchProperties;
         this.options = options;
+        this.locale = locale;
     }
 
     @action clearSearchResults = () => {
@@ -32,6 +40,7 @@ export default class SearchStore {
         return ResourceRequester.getList(resourceKey, {
             ...this.options,
             excludedIds,
+            locale: this.locale ? this.locale.get() : undefined,
             limit: 10,
             page: 1,
             searchFields: searchProperties,

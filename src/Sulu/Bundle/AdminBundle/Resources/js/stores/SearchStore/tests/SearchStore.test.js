@@ -1,4 +1,5 @@
 // @flow
+import {observable} from 'mobx';
 import SearchStore from '../SearchStore';
 import ResourceRequester from '../../../services/ResourceRequester';
 
@@ -31,6 +32,34 @@ test('Send a request using the ResourceRequester when something is being searche
 
     return autoCompletePromise.then(() => {
         expect(ResourceRequester.getList).toBeCalledWith('accounts', {
+            locale: undefined,
+            limit: 10,
+            page: 1,
+            search: 'Sulu',
+            searchFields: ['name', 'number'],
+        });
+        expect(searchStore.searchResults).toEqual(searchResults);
+        expect(searchStore.loading).toEqual(false);
+    });
+});
+
+test('Send a request using the ResourceRequester with given locale when something is being searched', () => {
+    const searchStore = new SearchStore('accounts', ['name', 'number'], {}, observable.box('en'));
+    const searchResults = [{id: 1, name: 'Sulu'}];
+    const searchPromise = Promise.resolve({
+        _embedded: {
+            accounts: searchResults,
+        },
+    });
+
+    ResourceRequester.getList.mockReturnValue(searchPromise);
+
+    const autoCompletePromise = searchStore.search('Sulu');
+    expect(searchStore.loading).toEqual(true);
+
+    return autoCompletePromise.then(() => {
+        expect(ResourceRequester.getList).toBeCalledWith('accounts', {
+            locale: 'en',
             limit: 10,
             page: 1,
             search: 'Sulu',
@@ -58,6 +87,7 @@ test('Send a request using the ResourceRequester with given options when somethi
     return autoCompletePromise.then(() => {
         expect(ResourceRequester.getList).toBeCalledWith('accounts', {
             country: 'US',
+            locale: undefined,
             limit: 10,
             page: 1,
             search: 'Sulu',
@@ -85,6 +115,7 @@ test('Send a request using the ResourceRequester with excludedIds when something
     return autoCompletePromise.then(() => {
         expect(ResourceRequester.getList).toBeCalledWith('accounts', {
             excludedIds: [1, 4],
+            locale: undefined,
             limit: 10,
             page: 1,
             search: 'Sulu',

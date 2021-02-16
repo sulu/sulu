@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {computed, observable, toJS} from 'mobx';
+import {computed, observable, reaction, toJS} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import log from 'loglevel';
 import jsonpointer from 'json-pointer';
@@ -14,14 +14,18 @@ import userStore from '../../../stores/userStore';
 import {translate} from '../../../utils/Translator';
 import type {SchemaOption} from '../types';
 import FormInspector from '../FormInspector';
+import SingleSelectionStore from '../../../stores/SingleSelectionStore';
 
-type Value = Object | string | number;
+type Value = ?(string | number);
 type Props = FieldTypeProps<Value>;
 
 @observer
 class SingleSelection extends React.Component<Props>
 {
     @observable requestOptions: {[string]: mixed};
+
+    autoCompleteSelectionStore: ?SingleSelectionStore<string | number>;
+    changeAutoCompleteSelectionDisposer: ?() => *;
 
     constructor(props: Props) {
         super(props);
@@ -84,6 +88,25 @@ class SingleSelection extends React.Component<Props>
                 }
             }
         });
+
+        if (this.type === 'auto_complete') {
+            this.autoCompleteSelectionStore = new SingleSelectionStore(
+                resourceKey,
+                this.value,
+                this.locale
+            );
+
+            this.changeAutoCompleteSelectionDisposer = reaction(
+                () => this.autoCompleteSelectionStore?.item,
+                this.handleAutoCompleteSelectionChange
+            );
+        }
+    }
+
+    componentWillUnmount() {
+        if (this.changeAutoCompleteSelectionDisposer) {
+            this.changeAutoCompleteSelectionDisposer();
+        }
     }
 
     buildRequestOptions(
@@ -106,39 +129,51 @@ class SingleSelection extends React.Component<Props>
         return requestOptions;
     }
 
-    handleChange = (value: ?Value) => {
+    handleAutoCompleteSelectionChange = (selectedItem: ?{id: Value}) => {
+        if (!this.autoCompleteSelectionStore) {
+            throw new Error(
+                'The SelectionStore has not been initialized! This should not happen and is likely a bug.'
+            );
+        }
+
+        if (this.autoCompleteSelectionStore.loading) {
+            return;
+        }
+
+        if (this.value !== selectedItem?.id) {
+            if (this.useDeprecatedObjectDataFormat) {
+                this.handleChange((selectedItem: any));
+            } else {
+                this.handleChange(selectedItem?.id);
+            }
+        }
+    };
+
+    handleChange = (value: Value) => {
         const {onChange, onFinish} = this.props;
 
         onChange(value);
         onFinish();
     };
 
-    @computed get value(): ?Value {
+    @computed get value(): Value {
         const {value, dataPath} = this.props;
 
-        if (this.type === 'auto_complete') {
-            // TODO: implement support for id value in auto_complete type
-            if (value && typeof value !== 'object') {
-                throw new Error(
-                    'The "SingleSelection" field of the "auto_complete" type with the path "' + dataPath + '" expects '
-                    + 'a serialized object as value. Is it possible that your API returns something else?'
-                    + '\n\nThe Sulu form view expects that your API returns the data in the same format as it is sent '
-                    + 'to the server when submitting the form.'
-                );
-            }
-        } else {
-            if (value && typeof value === 'object') {
-                log.warn(
-                    'The "SingleSelection" field with the path "' + dataPath + '" expects an id as value but '
-                    + 'received an object instead. Is it possible that your API returns a serialized object?'
-                    + '\n\nThe Sulu form view expects that your API returns the data in the same format as it is sent '
-                    + 'to the server when submitting the form. '
-                    + '\nSulu will try to extract the id from the given object heuristically. '
-                    + 'This decreases performance and might lead to errors or other unexpected behaviour.'
-                );
-
+        if (value && typeof value === 'object') {
+            if (this.type === 'auto_complete' && this.useDeprecatedObjectDataFormat) {
                 return value.id;
             }
+
+            log.warn(
+                'The "SingleSelection" field with the path "' + dataPath + '" expects an id as value but '
+                + 'received an object instead. Is it possible that your API returns a serialized object?'
+                + '\n\nThe Sulu form view expects that your API returns the data in the same format as it is sent '
+                + 'to the server when submitting the form. '
+                + '\nSulu will try to extract the id from the given object heuristically. '
+                + 'This decreases performance and might lead to errors or other unexpected behaviour.'
+            );
+
+            return value.id;
         }
 
         return value;
@@ -195,7 +230,27 @@ class SingleSelection extends React.Component<Props>
         return resultToView;
     }
 
-    handleItemClick = (itemId: ?string | number, item: ?Object) => {
+    @computed get useDeprecatedObjectDataFormat() {
+        const {
+            schemaOptions: {
+                use_deprecated_object_data_format: {
+                    value: useDeprecatedObjectDataFormat = false,
+                } = {},
+            } = {},
+        } = this.props;
+
+        if (useDeprecatedObjectDataFormat) {
+            // @deprecated
+            log.warn(
+                'The "use_deprecated_object_data_format" param is deprecated since version 2.3 and will be removed. ' +
+                'You should adjust your API to process an id instead of a serialized object.'
+            );
+        }
+
+        return useDeprecatedObjectDataFormat;
+    }
+
+    handleItemClick = (itemId: Value, item: ?Object) => {
         const {router} = this.props;
 
         const {resultToView, viewName} = this;
@@ -390,7 +445,6 @@ class SingleSelection extends React.Component<Props>
         }
 
         const {
-            resource_key: resourceKey,
             types: {
                 auto_complete: {
                     display_property: displayProperty,
@@ -428,16 +482,18 @@ class SingleSelection extends React.Component<Props>
             ...this.requestOptions,
         };
 
+        if (!this.autoCompleteSelectionStore) {
+            throw new Error('The SelectionStore has not been initialized! This should not happen and is likely a bug.');
+        }
+
         return (
             <SingleAutoComplete
                 disabled={!!disabled}
                 displayProperty={displayProperty}
                 id={dataPath}
-                onChange={this.handleChange}
                 options={options}
-                resourceKey={resourceKey}
                 searchProperties={searchProperties}
-                value={this.value}
+                selectionStore={this.autoCompleteSelectionStore}
             />
         );
     }

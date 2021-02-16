@@ -81,11 +81,11 @@ test('Reset fields if overlay is just closed', () => {
     let addContactOverlay = shallow(addContactToolbarAction.getNode());
     expect(addContactOverlay.instance().props.open).toEqual(true);
 
-    addContactOverlay.find('SingleAutoComplete').prop('onChange')({id: 3});
+    addContactOverlay.find('SingleAutoComplete').prop('selectionStore').set({id: 3});
     addContactOverlay.find('ResourceSingleSelect').prop('onChange')(5);
 
     addContactOverlay = shallow(addContactToolbarAction.getNode());
-    expect(addContactOverlay.find('SingleAutoComplete').prop('value')).toEqual({id: 3});
+    expect(addContactOverlay.find('SingleAutoComplete').prop('selectionStore').item).toEqual({id: 3});
     expect(addContactOverlay.find('ResourceSingleSelect').prop('value')).toEqual(5);
     addContactOverlay.instance().props.onClose();
 
@@ -94,7 +94,7 @@ test('Reset fields if overlay is just closed', () => {
 
     clickHandler();
     addContactOverlay = shallow(addContactToolbarAction.getNode());
-    expect(addContactOverlay.find('SingleAutoComplete').prop('value')).toEqual(undefined);
+    expect(addContactOverlay.find('SingleAutoComplete').prop('selectionStore').item).toEqual(undefined);
     expect(addContactOverlay.find('ResourceSingleSelect').prop('value')).toEqual(undefined);
 
     expect(ResourceRequester.put).not.toBeCalled();
@@ -113,7 +113,7 @@ test('Add selected contact to current account', () => {
     let addContactOverlay = shallow(addContactToolbarAction.getNode());
     expect(addContactOverlay.instance().props.open).toEqual(true);
     expect(addContactOverlay.instance().props.confirmDisabled).toEqual(true);
-    addContactOverlay.find('SingleAutoComplete').prop('onChange')({id: 3});
+    addContactOverlay.find('SingleAutoComplete').prop('selectionStore').set({id: 3});
 
     addContactOverlay = shallow(addContactToolbarAction.getNode());
     expect(addContactOverlay.instance().props.confirmDisabled).toEqual(false);
@@ -156,7 +156,7 @@ test('Add selected contact to current account with position', () => {
     clickHandler();
     let addContactOverlay = shallow(addContactToolbarAction.getNode());
     expect(addContactOverlay.instance().props.open).toEqual(true);
-    addContactOverlay.find('SingleAutoComplete').prop('onChange')({id: 3});
+    addContactOverlay.find('SingleAutoComplete').prop('selectionStore').set({id: 3});
     addContactOverlay.find('ResourceSingleSelect').prop('onChange')(5);
 
     addContactOverlay.instance().props.onConfirm();

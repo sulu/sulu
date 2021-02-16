@@ -3,20 +3,19 @@ import React from 'react';
 import {observer} from 'mobx-react';
 import SingleAutoCompleteComponent from '../../components/SingleAutoComplete';
 import SearchStore from '../../stores/SearchStore';
+import SingleSelectionStore from '../../stores/SingleSelectionStore';
 
-type Props = {|
+type Props<T> = {|
     disabled: boolean,
     displayProperty: string,
     id?: string,
-    onChange: (value: ?Object) => void,
     options: Object,
-    resourceKey: string,
     searchProperties: Array<string>,
-    value: ?Object,
+    selectionStore: SingleSelectionStore<T>,
 |};
 
 @observer
-class SingleAutoComplete extends React.Component<Props> {
+class SingleAutoComplete<T: string | number> extends React.Component<Props<T>> {
     static defaultProps = {
         disabled: false,
         options: {},
@@ -24,16 +23,22 @@ class SingleAutoComplete extends React.Component<Props> {
 
     searchStore: SearchStore;
 
-    constructor(props: Props) {
+    constructor(props: Props<T>) {
         super(props);
 
-        const {options, resourceKey, searchProperties} = this.props;
+        const {options, selectionStore, searchProperties} = this.props;
 
-        this.searchStore = new SearchStore(resourceKey, searchProperties, options);
+        this.searchStore = new SearchStore(
+            selectionStore.resourceKey,
+            searchProperties,
+            options,
+            selectionStore.locale
+        );
     }
 
     handleChange = (value: ?Object) => {
-        this.props.onChange(value);
+        const {selectionStore} = this.props;
+        selectionStore.set(value);
         this.searchStore.clearSearchResults();
     };
 
@@ -47,8 +52,7 @@ class SingleAutoComplete extends React.Component<Props> {
             displayProperty,
             id,
             searchProperties,
-            value,
-
+            selectionStore,
         } = this.props;
 
         return (
@@ -56,12 +60,12 @@ class SingleAutoComplete extends React.Component<Props> {
                 disabled={disabled}
                 displayProperty={displayProperty}
                 id={id}
-                loading={this.searchStore.loading}
+                loading={this.searchStore.loading || selectionStore.loading}
                 onChange={this.handleChange}
                 onSearch={this.handleSearch}
                 searchProperties={searchProperties}
                 suggestions={this.searchStore.searchResults}
-                value={value}
+                value={selectionStore.item}
             />
         );
     }

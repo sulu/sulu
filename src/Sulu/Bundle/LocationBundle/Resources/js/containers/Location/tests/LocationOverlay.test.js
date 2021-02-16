@@ -79,9 +79,7 @@ test('Should pass correct props the the SingleAutoComplete component', () => {
 
     expect(locationOverlay.find(SingleAutoComplete).props()).toEqual(expect.objectContaining({
         displayProperty: 'displayTitle',
-        resourceKey: 'geolocator_locations',
         searchProperties: ['displayTitle'],
-        value: null,
     }));
 });
 
@@ -195,7 +193,7 @@ test('Should pass correct props to the map, marker and input fields after auto-c
         country: 'new-country',
     };
 
-    locationOverlay.find(SingleAutoComplete).props().onChange(autoCompleteResult);
+    locationOverlay.find(SingleAutoComplete).props().selectionStore.set(autoCompleteResult);
     locationOverlay.update();
 
     expect(locationOverlay.find(Number).at(0).props().value).toEqual(autoCompleteResult.latitude); // lat
@@ -240,7 +238,7 @@ test('Should call onConfirm callback when the Overlay is confirmed after auto-co
         country: 'new-country',
     };
 
-    locationOverlay.find(SingleAutoComplete).props().onChange(autoCompleteResult);
+    locationOverlay.find(SingleAutoComplete).props().selectionStore.set(autoCompleteResult);
     locationOverlay.find(Overlay).props().onConfirm();
 
     expect(confirmSpy).toBeCalledWith(expect.objectContaining({

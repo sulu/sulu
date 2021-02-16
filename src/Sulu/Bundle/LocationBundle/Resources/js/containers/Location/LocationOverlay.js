@@ -6,6 +6,7 @@ import {Form, Input, Number, Overlay} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils';
 import {Map, Marker, TileLayer} from 'react-leaflet';
 import {SingleAutoComplete} from 'sulu-admin-bundle/containers';
+import SingleSelectionStore from 'sulu-admin-bundle/stores/SingleSelectionStore';
 import type {Location as LocationValue} from '../../types';
 import locationOverlayStyles from './locationOverlay.scss';
 
@@ -32,10 +33,19 @@ class LocationOverlay extends React.Component<Props> {
     @observable town: ?string;
     @observable country: ?string;
 
+    geolocatorSelectionStore: SingleSelectionStore<string>;
+    updateDataOnGeolocatorSelectDisposer: () => *;
     updateDataOnOpenDisposer: () => *;
 
     constructor(props: Props) {
         super(props);
+
+        this.geolocatorSelectionStore = new SingleSelectionStore('geolocator_locations');
+
+        this.updateDataOnGeolocatorSelectDisposer = reaction(
+            () => this.geolocatorSelectionStore.item,
+            this.handleAutoCompleteChange
+        );
 
         this.updateDataOnOpenDisposer = reaction(() => this.props.open, (newOpenValue) => {
             if (newOpenValue === true) {
@@ -57,6 +67,7 @@ class LocationOverlay extends React.Component<Props> {
     }
 
     componentWillUnmount() {
+        this.updateDataOnGeolocatorSelectDisposer();
         this.updateDataOnOpenDisposer();
     }
 
@@ -201,10 +212,8 @@ class LocationOverlay extends React.Component<Props> {
                         <Form.Field>
                             <SingleAutoComplete
                                 displayProperty="displayTitle"
-                                onChange={this.handleAutoCompleteChange}
-                                resourceKey="geolocator_locations"
                                 searchProperties={['displayTitle']}
-                                value={null}
+                                selectionStore={this.geolocatorSelectionStore}
                             />
                         </Form.Field>
 

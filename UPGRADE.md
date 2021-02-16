@@ -1,6 +1,80 @@
 # Upgrade
 
-## dev-master
+## 2.3
+
+### Changed data-format used by the single_account_selection field-type
+
+The `single_account_selection` field-type was adjusted to process an id instead of a serialized account entity.
+This makes the data-format used by the `single_account_selection` field-type consistent to all other `single_*_selection` field types.
+
+The data that is sent to the server by the field-type was changed like this:
+
+```diff
+{
+-    "single_account_selection_property": {
+-        "id": 1,
+-        "name": "Test Account",
+-        ...
+-    },
++    "single_account_selection_property": 1,
+}
+```
+
+If you have used the `single_account_selection` field-type in a form configuration for your custom entity,
+you should adjust the API of the custom entity to be compatible with the new data-format. 
+If you cannot adjust the API, you can use the `use_deprecated_object_data_format` param to bring back the old behaviour:
+
+```diff
+     <property name="single_account_selection_property" type="single_account_selection">
+         <!-- .. -->
++        <params>
++            <param name="use_deprecated_object_data_format" value="true" />
++        </params>
+     </property>
+```
+
+### Changed data-format used by the auto_complete type of single_selection field-type
+
+The `auto_complete` type of `single_selection` field-type was adjusted to process an id instead of a serialized object.
+This makes the data-format used by the `auto_complete` type consistent to all other `single_selection` types and therefore
+allows to switch between different types.
+
+If you have configured a `single_selection` field-type with the `auto_complete` type for your custom entity, 
+the data that is sent to the server by the field-type is changed like this:
+
+```diff
+{
+-    "auto_complete_single_selection_property": {
+-        "id": 1,
+-        "name": "...",
+-        ...
+-    },
++    "auto_complete_single_selection_property": 1,
+}
+```
+
+If you have used such a field-type in a form configuration for your custom entity, you should adjust the API of the 
+custom entity to be compatible with the new data-format.
+If you cannot adjust the API, you can use the `use_deprecated_object_data_format` param to bring back the old behaviour:
+
+```diff
+     <property name="auto_complete_single_selection_property" type="single_entity_selection">
+         <!-- .. -->
++        <params>
++            <param name="use_deprecated_object_data_format" value="true" />
++        </params>
+     </property>
+```
+
+### Adjusted SingleAutoComplete component to accept SingleSelectionStore
+
+The `SingleAutoComplete` container component was adjusted to accept a `SingleSelectionStore` instance via the `store` prop. 
+Furthermore, the `onChange`, `resourceKey` and `value` prop were replaced by the `store` prop and have been removed.
+This makes the implementation of the `SingleAutoComplete` consistent to the implementation of the `MultiAutoComplete`
+and makes it easier to reuse the component.
+
+If you are using the `SingleAutoComplete` container component in your custom javascript code, you need to adjust your 
+code to instantiate a `SingleSelectionStore` object and pass it to the `store` prop.
 
 ### conditionDataProvider interface changed
 

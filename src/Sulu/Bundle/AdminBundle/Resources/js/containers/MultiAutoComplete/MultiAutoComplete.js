@@ -38,7 +38,12 @@ class MultiAutoComplete extends React.Component<Props> {
             selectionStore,
         } = this.props;
 
-        this.searchStore = new SearchStore(selectionStore.resourceKey, searchProperties, options);
+        this.searchStore = new SearchStore(
+            selectionStore.resourceKey,
+            searchProperties,
+            options,
+            selectionStore.locale
+        );
     }
 
     handleChange = (value: Array<Object>) => {
