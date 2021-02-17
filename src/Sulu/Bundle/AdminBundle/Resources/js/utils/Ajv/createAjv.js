@@ -6,7 +6,7 @@ import type {KeywordDefinition} from 'ajv';
 import customKeywords from './keywords';
 import customFormats from './formats';
 
-const createAjv = (options: Options = {allErrors: true}) => {
+const createAjv = (options: Options = {allErrors: true, allowUnionTypes: true}) => {
     const ajv = new Ajv(options);
 
     applyAjvKeywords(ajv);
