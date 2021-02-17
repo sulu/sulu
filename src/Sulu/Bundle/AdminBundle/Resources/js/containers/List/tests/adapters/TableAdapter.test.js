@@ -998,3 +998,16 @@ test('Pagination should not be rendered if no data is available', () => {
     );
     expect(tableAdapter.find('Pagination')).toHaveLength(0);
 });
+
+test('Pagination should not be rendered if pagination is false', () => {
+    const tableAdapter = shallow(
+        <TableAdapter
+            {...listAdapterDefaultProps}
+            limit={10}
+            page={2}
+            pageCount={7}
+            paginated={false}
+        />
+    );
+    expect(tableAdapter.find('Pagination')).toHaveLength(0);
+});

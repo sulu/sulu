@@ -67,6 +67,10 @@ interface ListViewBuilderInterface extends ViewBuilderInterface
 
     public function disableSelection(): self;
 
+    public function enablePagination(): self;
+
+    public function disablePagination(): self;
+
     /**
      * @param string[] $routerAttributesToListRequest
      */

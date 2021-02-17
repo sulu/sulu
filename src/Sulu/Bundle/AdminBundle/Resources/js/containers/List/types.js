@@ -45,7 +45,7 @@ export type ListAdapterProps = {|
     limit: number,
     loading: boolean,
     onAllSelectionChange: ?(selected?: boolean) => void,
-    onItemActivate: (itemId: string | number) => void,
+    onItemActivate: (itemId: ?string | number) => void,
     onItemAdd: ?(id: ?string | number) => void,
     onItemClick: ?(itemId: string | number) => void,
     onItemDeactivate: (itemId: string | number) => void,
@@ -60,6 +60,7 @@ export type ListAdapterProps = {|
     options: Object,
     page: ?number,
     pageCount: ?number,
+    paginated: boolean,
     schema: Schema,
     selections: Array<number | string>,
     sortColumn: ?string,
@@ -80,9 +81,13 @@ export type LoadOptions = {
 };
 
 export interface LoadingStrategyInterface {
-    constructor(): void,
+    constructor(options: LoadingStrategyOptions): void,
     load(resourceKey: string, options: LoadOptions, parentId: ?string | number): RequestPromise<Object>,
     setStructureStrategy(structureStrategy: StructureStrategyInterface): void,
+}
+
+export type LoadingStrategyOptions = {
+    paginated: boolean,
 }
 
 export interface StructureStrategyInterface {

@@ -1,13 +1,11 @@
 @import 'sulu-admin-bundle/containers/Application/colors.scss';
 
 $listToolbarHeight: 30px;
-$listMarginBottom: 40px;
 
 .list-container {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    padding-bottom: $listMarginBottom;
 }
 
 .list {

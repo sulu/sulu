@@ -9,8 +9,8 @@ jest.mock('sulu-admin-bundle/containers', () => ({
     FlatStructureStrategy: require(
         'sulu-admin-bundle/containers/List/structureStrategies/FlatStructureStrategy'
     ).default,
-    FullLoadingStrategy: require(
-        'sulu-admin-bundle/containers/List/loadingStrategies/FullLoadingStrategy'
+    DefaultLoadingStrategy: require(
+        'sulu-admin-bundle/containers/List/loadingStrategies/DefaultLoadingStrategy'
     ).default,
     List: require('sulu-admin-bundle/containers/List/List').default,
     ListStore: class {

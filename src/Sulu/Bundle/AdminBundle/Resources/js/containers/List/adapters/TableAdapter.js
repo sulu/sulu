@@ -4,13 +4,13 @@ import React from 'react';
 import type {Element} from 'react';
 import Pagination from '../../../components/Pagination';
 import Table from '../../../components/Table';
-import PaginatedLoadingStrategy from '../loadingStrategies/PaginatedLoadingStrategy';
 import FlatStructureStrategy from '../structureStrategies/FlatStructureStrategy';
+import DefaultLoadingStrategy from '../loadingStrategies/DefaultLoadingStrategy';
 import AbstractTableAdapter from './AbstractTableAdapter';
 
 @observer
 class TableAdapter extends AbstractTableAdapter {
-    static LoadingStrategy = PaginatedLoadingStrategy;
+    static LoadingStrategy = DefaultLoadingStrategy;
 
     static StructureStrategy = FlatStructureStrategy;
 
@@ -73,6 +73,7 @@ class TableAdapter extends AbstractTableAdapter {
             onItemSelectionChange,
             onLimitChange,
             onPageChange,
+            paginated,
             options: {
                 skin = 'dark',
             },
@@ -97,7 +98,7 @@ class TableAdapter extends AbstractTableAdapter {
             </Table>
         );
 
-        if (page === 1 && data.length === 0) {
+        if (!paginated || (page === 1 && data.length === 0)) {
             return table;
         }
 
