@@ -47,7 +47,7 @@ exports[`Render ContactDetails with data 1`] = `
           </div>
           <input
             type="email"
-            value=""
+            value="test@example.org"
           />
         </label>
         <span

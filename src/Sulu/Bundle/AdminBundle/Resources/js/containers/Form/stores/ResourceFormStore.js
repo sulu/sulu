@@ -1,8 +1,8 @@
 // @flow
 import {action, autorun, computed, get, observable, when} from 'mobx';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
-import Ajv from 'ajv';
 import jsonpointer from 'json-pointer';
+import {createAjv} from '../../../utils/Ajv';
 import ResourceStore from '../../../stores/ResourceStore';
 import type {FormStoreInterface, Schema, SchemaEntry, SchemaType, SchemaTypes} from '../types';
 import AbstractFormStore from './AbstractFormStore';
@@ -11,7 +11,7 @@ import metadataStore from './metadataStore';
 // TODO do not hardcode "template", use some kind of metadata instead
 const TYPE = 'template';
 
-const ajv = new Ajv({allErrors: true, jsonPointers: true});
+const ajv = createAjv();
 
 export default class ResourceFormStore extends AbstractFormStore implements FormStoreInterface {
     resourceStore: ResourceStore;

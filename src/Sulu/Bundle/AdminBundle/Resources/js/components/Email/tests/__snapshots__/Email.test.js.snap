@@ -38,44 +38,6 @@ exports[`Email should render error 1`] = `
 </label>
 `;
 
-exports[`Email should render error when invalid value is set 1`] = `
-<label
-  class="input default left"
->
-  <div
-    class="prependedContainer default"
-  >
-    <span
-      aria-label="su-envelope"
-      class="su-envelope icon default"
-    />
-  </div>
-  <input
-    type="email"
-    value=""
-  />
-</label>
-`;
-
-exports[`Email should render error when invalid value is set 2`] = `
-<label
-  class="input default left"
->
-  <div
-    class="prependedContainer default"
-  >
-    <span
-      aria-label="su-envelope"
-      class="su-envelope icon default"
-    />
-  </div>
-  <input
-    type="email"
-    value=""
-  />
-</label>
-`;
-
 exports[`Email should render null value as empty string 1`] = `
 <label
   class="input default left"
@@ -112,7 +74,7 @@ exports[`Email should render when disabled 1`] = `
   <input
     disabled=""
     type="email"
-    value=""
+    value="test@test.com"
   />
 </label>
 `;
@@ -153,7 +115,7 @@ exports[`Email should render with value 1`] = `
   </div>
   <input
     type="email"
-    value=""
+    value="test@test.com"
   />
 </label>
 `;

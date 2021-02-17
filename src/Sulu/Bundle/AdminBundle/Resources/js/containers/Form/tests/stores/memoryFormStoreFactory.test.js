@@ -14,7 +14,8 @@ test('Create a MemoryFormStore with schema', (done) => {
         title: {},
     };
     const jsonSchema = {
-        schema: {},
+        type: 'object',
+        required: [],
     };
 
     const schemaPromise = Promise.resolve(schema);

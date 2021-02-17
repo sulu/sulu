@@ -28,11 +28,21 @@ class StringMetadata implements SchemaMetadataInterface
      */
     private $pattern;
 
-    public function __construct(?int $minLength = null, ?int $maxLength = null, ?string $pattern = null)
-    {
+    /**
+     * @var string|null
+     */
+    private $format;
+
+    public function __construct(
+        ?int $minLength = null,
+        ?int $maxLength = null,
+        ?string $pattern = null,
+        ?string $format = null
+    ) {
         $this->minLength = $minLength;
         $this->maxLength = $maxLength;
         $this->pattern = $pattern;
+        $this->format = $format;
     }
 
     public function toJsonSchema(): array
@@ -51,6 +61,10 @@ class StringMetadata implements SchemaMetadataInterface
 
         if (null !== $this->pattern) {
             $jsonSchema['pattern'] = $this->pattern;
+        }
+
+        if (null !== $this->format) {
+            $jsonSchema['format'] = $this->format;
         }
 
         return $jsonSchema;
