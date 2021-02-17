@@ -196,6 +196,7 @@ test('Render data without header', () => {
             options={{showHeader: false}}
             page={1}
             pageCount={2}
+            paginated={false}
             schema={schema}
         />
     );
@@ -839,4 +840,185 @@ test('Click on itemAction should execute its callback', () => {
 
     buttons[1].onClick(1);
     expect(actionClickSpy).toBeCalledWith(1);
+});
+
+test('Pagination should be passed correct props', () => {
+    const pageChangeSpy = jest.fn();
+    const limitChangeSpy = jest.fn();
+
+    const item1 = {
+        data: {
+            id: 2,
+            title: 'Test1',
+        },
+        children: [],
+        hasChildren: false,
+    };
+    const data = [item1];
+
+    const treeTableAdapter = shallow(
+        <TreeTableAdapter
+            {...listAdapterDefaultProps}
+            data={data}
+            limit={10}
+            onLimitChange={limitChangeSpy}
+            onPageChange={pageChangeSpy}
+            page={2}
+            pageCount={7}
+        />
+    );
+    expect(treeTableAdapter.find('Pagination').get(0).props).toEqual({
+        totalPages: 7,
+        currentPage: 2,
+        currentLimit: 10,
+        loading: false,
+        onLimitChange: limitChangeSpy,
+        onPageChange: treeTableAdapter.instance().handlePageChange,
+        children: expect.anything(),
+    });
+});
+
+test('Pagination should not be rendered if API is not paginated', () => {
+    const item1 = {
+        data: {
+            id: 1,
+            title: 'Test1',
+        },
+        children: [],
+        hasChildren: false,
+    };
+
+    const item2 = {
+        data: {
+            id: 2,
+            title: 'Test2',
+        },
+        children: [],
+        hasChildren: false,
+    };
+
+    const item3 = {
+        data: {
+            id: 3,
+            title: 'Test3',
+        },
+        children: [item2],
+        hasChildren: true,
+    };
+    const data = [item1, item3];
+
+    const pageChangeSpy = jest.fn();
+    const limitChangeSpy = jest.fn();
+    const treeTableAdapter = shallow(
+        <TreeTableAdapter
+            {...listAdapterDefaultProps}
+            data={data}
+            onLimitChange={limitChangeSpy}
+            onPageChange={pageChangeSpy}
+            page={1}
+            pageCount={undefined}
+        />
+    );
+    expect(treeTableAdapter.find('Pagination')).toHaveLength(0);
+});
+
+test('Pagination should not be rendered if no data is available', () => {
+    const pageChangeSpy = jest.fn();
+    const limitChangeSpy = jest.fn();
+    const treeTableAdapter = shallow(
+        <TreeTableAdapter
+            {...listAdapterDefaultProps}
+            onLimitChange={limitChangeSpy}
+            onPageChange={pageChangeSpy}
+            page={1}
+        />
+    );
+    expect(treeTableAdapter.find('Pagination')).toHaveLength(0);
+});
+
+test('Pagination should not be rendered if pagination is false', () => {
+    const treeTableAdapter = shallow(
+        <TreeTableAdapter
+            {...listAdapterDefaultProps}
+            limit={10}
+            page={2}
+            pageCount={7}
+            paginated={false}
+        />
+    );
+    expect(treeTableAdapter.find('Pagination')).toHaveLength(0);
+});
+
+test('Next page should call onItemActiveate with undefined', () => {
+    const test1 = {
+        data: {
+            id: 2,
+            title: 'Test1',
+        },
+        children: [],
+        hasChildren: false,
+    };
+    const test21 = {
+        data: {
+            id: 4,
+            title: 'Test2.1',
+        },
+        children: [],
+        hasChildren: false,
+    };
+    const test22 = {
+        data: {
+            id: 5,
+            title: 'Test2.2',
+        },
+        children: [],
+        hasChildren: false,
+    };
+    const test2 = {
+        data: {
+            id: 3,
+            title: 'Test2',
+        },
+        children: [
+            test21,
+            test22,
+        ],
+        hasChildren: true,
+    };
+
+    const data = [
+        test1,
+        test2,
+    ];
+    const schema = {
+        title: {
+            filterType: null,
+            filterTypeParameters: null,
+            transformerTypeParameters: {},
+            type: 'string',
+            sortable: true,
+            visibility: 'yes',
+            label: 'Title',
+        },
+    };
+
+    const onPageChangeSpy = jest.fn();
+    const onItemActivateSpy = jest.fn();
+
+    const treeListAdapter = mount(
+        <TreeTableAdapter
+            {...listAdapterDefaultProps}
+            data={data}
+            onItemActivate={onItemActivateSpy}
+            onPageChange={onPageChangeSpy}
+            page={1}
+            pageCount={2}
+            schema={schema}
+        />
+    );
+
+    // Click next page
+    treeListAdapter.find('Pagination').find('ButtonGroup Button').at(1).simulate('click');
+    expect(onPageChangeSpy).toBeCalledWith(2);
+    expect(onItemActivateSpy).toBeCalledWith(undefined);
 });

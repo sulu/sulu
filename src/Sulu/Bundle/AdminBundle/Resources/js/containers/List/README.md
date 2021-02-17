@@ -28,8 +28,8 @@ have to be cancelled.
 
 The `List` component also takes an `onRowEditClick` callback, which is executed when a row has been clicked with
 the intent of editing it. The callback gets one parameter, which is the ID of the row to edit.
-Furthermore, the `List` allows to configure additional item specific actions via the `itemActionsProvider` callback. 
-The callback is executed for each item and should return an array of item-action configuration-objects. These 
+Furthermore, the `List` allows to configure additional item specific actions via the `itemActionsProvider` callback.
+The callback is executed for each item and should return an array of item-action configuration-objects. These
 configuration-objects are used by the adapters to render elements to execute the respective actions for the item.
 
 ### Adapters
@@ -71,9 +71,8 @@ Sulu is delivered with a few `LoadingStrategy` implementations:
 
 | Name                     | Description                                                        | Pagination Component                    |
 | ------------------------ | ------------------------------------------------------------------ | --------------------------------------- |
-| FullLoadingStrategy      | Does not do any pagination and simply loads all available items    | None                                    |
+| DefaultLoadingStrategy   | Can be configured to have pagination or load all available items.  | [`Pagination`](#pagination) or None                                    |
 | InfiniteLoadingStrategy  | Loads the next few items and appends them to the `data` array      | [`InfiniteScroller`](#infinitescroller) |
-| PaginatedLoadingStrategy | Loads the next few items and replaces the ones in the `data` array | [`Pagination`](#pagination)             |
 
 The list also contains the recommended pagination component to use with each strategy. Make sure that the adapters you
 are developing are using the correct pagination according to their `LoadingStrategy`. Note that it is the

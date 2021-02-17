@@ -89,9 +89,32 @@ test('Pagination should not be rendered if no data is available', () => {
 test('Pagination should be passed correct props', () => {
     const pageChangeSpy = jest.fn();
     const limitChangeSpy = jest.fn();
+
+    const data = [
+        {
+            id: 1,
+            title: 'Title 1',
+            objectCount: 1,
+            description: 'Description 1',
+        },
+        {
+            id: 2,
+            title: 'Title 2',
+            objectCount: 7,
+            description: 'Description 2',
+        },
+        {
+            id: 3,
+            title: 'Title 3',
+            objectCount: 0,
+            description: 'Description 3',
+        },
+    ];
+
     const folderAdapter = shallow(
         <FolderAdapter
             {...listAdapterDefaultProps}
+            data={data}
             limit={10}
             onLimitChange={limitChangeSpy}
             onPageChange={pageChangeSpy}
@@ -108,4 +131,17 @@ test('Pagination should be passed correct props', () => {
         onPageChange: pageChangeSpy,
         children: expect.anything(),
     });
+});
+
+test('Pagination should not be rendered if pagination is false', () => {
+    const folderAdapter = shallow(
+        <FolderAdapter
+            {...listAdapterDefaultProps}
+            limit={10}
+            page={2}
+            pageCount={7}
+            paginated={false}
+        />
+    );
+    expect(folderAdapter.find('Pagination')).toHaveLength(0);
 });

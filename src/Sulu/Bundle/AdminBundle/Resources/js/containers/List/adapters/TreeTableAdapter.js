@@ -5,12 +5,13 @@ import React from 'react';
 import Table from '../../../components/Table';
 import Loader from '../../../components/Loader';
 import TreeStructureStrategy from '../structureStrategies/TreeStructureStrategy';
-import FullLoadingStrategy from '../loadingStrategies/FullLoadingStrategy';
+import DefaultLoadingStrategy from '../loadingStrategies/DefaultLoadingStrategy';
+import Pagination from '../../../components/Pagination';
 import AbstractTableAdapter from './AbstractTableAdapter';
 
 @observer
 class TreeTableAdapter extends AbstractTableAdapter {
-    static LoadingStrategy = FullLoadingStrategy;
+    static LoadingStrategy = DefaultLoadingStrategy;
 
     static StructureStrategy = TreeStructureStrategy;
 
@@ -98,23 +99,39 @@ class TreeTableAdapter extends AbstractTableAdapter {
         return rows;
     }
 
+    handlePageChange = (page: number) => {
+        const {
+            onPageChange,
+            onItemActivate,
+        } = this.props;
+
+        onItemActivate(undefined);
+
+        onPageChange(page);
+    };
+
     render() {
         const {
             active,
             data,
+            limit,
             loading,
             onAllSelectionChange,
             onItemSelectionChange,
+            onLimitChange,
             options: {
                 showHeader = true,
             },
+            page,
+            pageCount,
+            paginated,
         } = this.props;
 
         if (!active && loading) {
             return <Loader />;
         }
 
-        return (
+        const table = (
             <Table
                 buttons={this.getButtons()}
                 onAllSelectionChange={onAllSelectionChange}
@@ -133,6 +150,27 @@ class TreeTableAdapter extends AbstractTableAdapter {
                     {this.renderRows(data)}
                 </Table.Body>
             </Table>
+        );
+
+        if (!paginated || (page === 1 && data.length === 0)) {
+            return table;
+        }
+
+        if (pageCount === undefined) {
+            return table;
+        }
+
+        return (
+            <Pagination
+                currentLimit={limit}
+                currentPage={page}
+                loading={loading}
+                onLimitChange={onLimitChange}
+                onPageChange={this.handlePageChange}
+                totalPages={pageCount}
+            >
+                {table}
+            </Pagination>
         );
     }
 }

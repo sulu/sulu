@@ -7,14 +7,14 @@ import GhostIndicator from '../../../components/GhostIndicator';
 import Icon from '../../../components/Icon';
 import PublishIndicator from '../../../components/PublishIndicator';
 import {translate} from '../../../utils/Translator';
-import FullLoadingStrategy from '../loadingStrategies/FullLoadingStrategy';
+import DefaultLoadingStrategy from '../loadingStrategies/DefaultLoadingStrategy';
 import ColumnStructureStrategy from '../structureStrategies/ColumnStructureStrategy';
 import AbstractAdapter from './AbstractAdapter';
 import columnListAdapterStyles from './columnListAdapter.scss';
 
 @observer
 class ColumnListAdapter extends AbstractAdapter {
-    static LoadingStrategy = FullLoadingStrategy;
+    static LoadingStrategy = DefaultLoadingStrategy;
 
     static StructureStrategy = ColumnStructureStrategy;
 
