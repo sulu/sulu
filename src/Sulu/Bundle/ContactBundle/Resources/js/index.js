@@ -226,6 +226,17 @@ initializer.addUpdateConfigHook('sulu_contact', (config: Object, initialized: bo
                     addOverlayTitle: 'sulu_contact.add_bank_account',
                     editOverlayTitle: 'sulu_contact.edit_bank_account',
                     jsonSchema: {
+                        type: 'object',
+                        properties: {
+                            iban: {
+                                type: 'string',
+                                format: 'iban',
+                            },
+                            bic: {
+                                type: 'string',
+                                format: 'bic',
+                            },
+                        },
                         required: ['iban'],
                     },
                     renderCardContent: function BankCard(card) {
@@ -245,12 +256,10 @@ initializer.addUpdateConfigHook('sulu_contact', (config: Object, initialized: bo
                         iban: {
                             label: translate('sulu_contact.iban'),
                             required: true,
-                            colSpan: 8,
                             type: 'iban',
                         },
                         bic: {
                             label: translate('sulu_contact.bic'),
-                            colSpan: 4,
                             type: 'bic',
                         },
                     },

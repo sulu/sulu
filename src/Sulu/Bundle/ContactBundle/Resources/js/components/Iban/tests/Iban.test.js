@@ -13,8 +13,8 @@ test('Iban should render with placeholder', () => {
 });
 
 test('Iban should render with value', () => {
-    const bic = mount(<Iban onChange={jest.fn()} value="AT61 1904 3002 3457 3201" />);
-    expect(bic.render()).toMatchSnapshot();
+    const iban = mount(<Iban onChange={jest.fn()} value="AT61 1904 3002 3457 3201" />);
+    expect(iban.render()).toMatchSnapshot();
 });
 
 test('Iban should render when disabled', () => {
@@ -25,45 +25,29 @@ test('Iban should render error', () => {
     expect(render(<Iban onChange={jest.fn()} valid={false} value={null} />)).toMatchSnapshot();
 });
 
-test('Iban should render error when invalid value is set', () => {
-    const bic = mount(<Iban onChange={jest.fn()} value={null} />);
-
-    // check if showError is set correctly
-    bic.find('Input').instance().props.onChange('xxx', {target: {value: 'xxx'}});
-    bic.find('Input').instance().props.onBlur();
-    bic.update();
-    expect(bic.instance().showError).toBe(true);
-
-    // now add a valid value
-    bic.find('Input').instance().props.onChange('AT611904300234573201', {target: {value: 'AT611904300234573201'}});
-    bic.find('Input').instance().props.onBlur();
-    bic.update();
-    expect(bic.instance().showError).toBe(false);
-});
-
 test('Iban should trigger callbacks correctly', () => {
     const onChange = jest.fn();
     const onBlur = jest.fn();
-    const bic = mount(<Iban onBlur={onBlur} onChange={onChange} value={null} />);
+    const iban = mount(<Iban onBlur={onBlur} onChange={onChange} value={null} />);
 
     // provide invalid value
-    bic.find('Input').instance().props.onChange('xxx', {target: {value: 'xxx'}});
-    bic.find('Input').instance().props.onBlur();
-    bic.update();
-    expect(onChange).toBeCalledWith(undefined);
+    iban.find('Input').instance().props.onChange('xxx', {target: {value: 'xxx'}});
+    iban.find('Input').instance().props.onBlur();
+    iban.update();
+    expect(onChange).toBeCalledWith('xxx');
     expect(onBlur).toBeCalled();
 
     // provide one more invalid value
-    bic.find('Input').instance().props.onChange('abc', {target: {value: 'abc'}});
-    bic.find('Input').instance().props.onBlur();
-    bic.update();
-    expect(onChange).toBeCalledWith(undefined);
+    iban.find('Input').instance().props.onChange('abc', {target: {value: 'abc'}});
+    iban.find('Input').instance().props.onBlur();
+    iban.update();
+    expect(onChange).toBeCalledWith('abc');
     expect(onBlur).toBeCalled();
 
     // now add a valid value
-    bic.find('Input').instance().props.onChange('AT611904300234573201', {target: {value: 'AT611904300234573201'}});
-    bic.find('Input').instance().props.onBlur();
-    bic.update();
+    iban.find('Input').instance().props.onChange('AT611904300234573201', {target: {value: 'AT611904300234573201'}});
+    iban.find('Input').instance().props.onBlur();
+    iban.update();
     expect(onChange).toBeCalledWith('AT611904300234573201');
     expect(onBlur).toBeCalled();
 

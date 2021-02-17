@@ -25,22 +25,6 @@ test('Bic should render error', () => {
     expect(render(<Bic onChange={jest.fn()} valid={false} value={null} />)).toMatchSnapshot();
 });
 
-test('Bic should render error when invalid value is set', () => {
-    const bic = mount(<Bic onChange={jest.fn()} value={null} />);
-
-    // check if showError is set correctly
-    bic.find('Input').instance().props.onChange('xxx', {target: {value: 'xxx'}});
-    bic.find('Input').instance().props.onBlur();
-    bic.update();
-    expect(bic.instance().showError).toBe(true);
-
-    // now add a valid value
-    bic.find('Input').instance().props.onChange('BBBBCCLLXXX', {target: {value: 'BBBBCCLLXXX'}});
-    bic.find('Input').instance().props.onBlur();
-    bic.update();
-    expect(bic.instance().showError).toBe(false);
-});
-
 test('Bic should trigger callbacks correctly', () => {
     const onChange = jest.fn();
     const onBlur = jest.fn();
@@ -50,14 +34,14 @@ test('Bic should trigger callbacks correctly', () => {
     bic.find('Input').instance().props.onChange('xxx', {target: {value: 'xxx'}});
     bic.find('Input').instance().props.onBlur();
     bic.update();
-    expect(onChange).toHaveBeenLastCalledWith(undefined);
+    expect(onChange).toHaveBeenLastCalledWith('xxx');
     expect(onBlur).toBeCalled();
 
     // provide one more invalid value
     bic.find('Input').instance().props.onChange('BBBBCCLLX', {target: {value: 'BBBCCLLX'}});
     bic.find('Input').instance().props.onBlur();
     bic.update();
-    expect(onChange).toHaveBeenLastCalledWith(undefined);
+    expect(onChange).toHaveBeenLastCalledWith('BBBBCCLLX');
     expect(onBlur).toBeCalled();
 
     // now add a valid value

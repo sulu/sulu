@@ -4,8 +4,7 @@
     "license": "MIT",
     "repository": "https://github.com/sulu/sulu.git",
     "dependencies": {
-        "fast-deep-equal": "^3.1.1",
-        "iban": "^0.0.14"
+        "fast-deep-equal": "^3.1.1"
     },
     "devDependencies": {
         "enzyme": "^3.3.0",

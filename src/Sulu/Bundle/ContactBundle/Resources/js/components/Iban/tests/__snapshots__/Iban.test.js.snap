@@ -53,7 +53,7 @@ exports[`Iban should render when disabled 1`] = `
   <input
     disabled=""
     type="text"
-    value=""
+    value="AT61 1904 3002 3457 3201"
   />
 </label>
 `;

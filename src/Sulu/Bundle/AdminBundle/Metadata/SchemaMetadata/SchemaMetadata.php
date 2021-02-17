@@ -47,9 +47,18 @@ class SchemaMetadata implements SchemaMetadataInterface
 
     public function toJsonSchema(): array
     {
+        $propertiesSchema = $this->propertiesMetadata->toJsonSchema();
+
+        if (!empty($propertiesSchema)) {
+            $propertiesSchema = \array_merge(
+                ['type' => 'object'],
+                $propertiesSchema
+            );
+        }
+
         $jsonSchema = \array_merge(
             [],
-            $this->propertiesMetadata->toJsonSchema(),
+            $propertiesSchema,
             $this->anyOfsMetadata->toJsonSchema(),
             $this->allOfsMetadata->toJsonSchema()
         );
@@ -59,7 +68,10 @@ class SchemaMetadata implements SchemaMetadataInterface
          * empty schema object as array instead of an object and would break
          */
         if (empty($jsonSchema)) {
-            $jsonSchema['required'] = [];
+            return [
+                'type' => 'object',
+                'required' => [],
+            ];
         }
 
         return $jsonSchema;

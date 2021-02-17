@@ -1,8 +1,6 @@
 
 // @flow
 import React from 'react';
-import {observer} from 'mobx-react';
-import {action, computed, observable} from 'mobx';
 import {Input} from 'sulu-admin-bundle/components';
 
 type Props = {|
@@ -16,52 +14,13 @@ type Props = {|
     value: ?string,
 |};
 
-@observer
-class Bic extends React.Component<Props> {
+class Bic extends React.PureComponent<Props> {
     static defaultProps = {
         disabled: false,
         valid: true,
     };
 
-    @observable value: ?string;
-    @observable showError: boolean = false;
-
-    @action setValue(value: ?string) {
-        this.value = value;
-    }
-
-    @action setShowError(showError: boolean) {
-        this.showError = showError;
-    }
-
-    @computed get isValidValue(): boolean {
-        if (!this.value) {
-            return true;
-        }
-
-        return this.value.match(/^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$/) !== null;
-    }
-
-    componentDidMount() {
-        this.setValue(this.props.value);
-    }
-
-    componentDidUpdate() {
-        if (this.value && !this.props.value) {
-            return;
-        }
-
-        this.setValue(this.props.value);
-    }
-
     handleBlur = () => {
-        if (this.isValidValue) {
-            this.setShowError(false);
-        } else {
-            this.props.onChange(undefined);
-            this.setShowError(true);
-        }
-
         const {onBlur} = this.props;
 
         if (onBlur) {
@@ -70,16 +29,9 @@ class Bic extends React.Component<Props> {
     };
 
     handleChange = (value: ?string) => {
-        this.setValue(value);
+        const {onChange} = this.props;
 
-        if (!this.isValidValue) {
-            this.props.onChange(undefined);
-
-            return;
-        }
-
-        this.setShowError(false);
-        this.props.onChange(this.value);
+        onChange(value);
     };
 
     render() {
@@ -89,6 +41,7 @@ class Bic extends React.Component<Props> {
             disabled,
             name,
             placeholder,
+            value,
         } = this.props;
 
         return (
@@ -101,8 +54,8 @@ class Bic extends React.Component<Props> {
                 onChange={this.handleChange}
                 placeholder={placeholder}
                 type="text"
-                valid={valid && !this.showError}
-                value={this.value}
+                valid={valid}
+                value={value}
             />
         );
     }
