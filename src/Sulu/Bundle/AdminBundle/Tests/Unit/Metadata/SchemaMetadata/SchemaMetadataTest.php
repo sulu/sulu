@@ -26,7 +26,10 @@ class SchemaMetadataTest extends TestCase
     {
         $schema = new SchemaMetadata();
 
-        $this->assertEquals(['required' => []], $schema->toJsonSchema());
+        $this->assertEquals([
+            'required' => [],
+            'type' => 'object',
+        ], $schema->toJsonSchema());
     }
 
     public function testNestedJsonSchema()
@@ -73,6 +76,7 @@ class SchemaMetadataTest extends TestCase
                                         'const' => 2,
                                     ],
                                 ],
+                                'type' => 'object',
                             ],
                             [
                                 'properties' => [
@@ -81,13 +85,16 @@ class SchemaMetadataTest extends TestCase
                                         'const' => 4,
                                     ],
                                 ],
+                                'type' => 'object',
                             ],
                         ],
                     ],
                     [
                         'required' => ['article'],
+                        'type' => 'object',
                     ],
                 ],
+                'type' => 'object',
             ],
             $schema->toJsonSchema()
         );

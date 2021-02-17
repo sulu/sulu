@@ -26,21 +26,21 @@ class ArrayMetadataTest extends TestCase
                 null,
                 null,
                 null,
-                ['type' => 'array', 'items' => ['required' => []]],
+                ['type' => 'array', 'items' => ['required' => [], 'type' => 'object']],
             ],
             [
                 new SchemaMetadata([new PropertyMetadata('test1', true), new PropertyMetadata('test2', false)]),
                 1,
                 null,
                 true,
-                ['type' => 'array', 'items' => ['required' => ['test1']], 'minItems' => 1, 'uniqueItems' => true],
+                ['type' => 'array', 'items' => ['required' => ['test1'], 'type' => 'object'], 'minItems' => 1, 'uniqueItems' => true],
             ],
             [
                 new SchemaMetadata([new PropertyMetadata('test1', true), new PropertyMetadata('test2', true)]),
                 2,
                 3,
                 false,
-                ['type' => 'array', 'items' => ['required' => ['test1', 'test2']], 'minItems' => 2, 'maxItems' => 3, 'uniqueItems' => false],
+                ['type' => 'array', 'items' => ['required' => ['test1', 'test2'], 'type' => 'object'], 'minItems' => 2, 'maxItems' => 3, 'uniqueItems' => false],
             ],
         ];
     }
@@ -53,6 +53,6 @@ class ArrayMetadataTest extends TestCase
         $property = new ArrayMetadata($schemaMetadata, $minItems, $maxItems, $uniqueItems);
         $jsonSchema = $property->toJsonSchema();
 
-        $this->assertEquals($jsonSchema, $expectedSchema);
+        $this->assertEquals($expectedSchema, $jsonSchema);
     }
 }

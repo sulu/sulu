@@ -377,6 +377,7 @@ class FormMetadataMapperTest extends TestCase
                 'property2',
                 'property3',
             ],
+            'type' => 'object',
         ], $schema->toJsonSchema());
     }
 
@@ -395,6 +396,7 @@ class FormMetadataMapperTest extends TestCase
                 'property2',
                 'property3',
             ],
+            'type' => 'object',
         ], $schema->toJsonSchema());
     }
 
@@ -431,9 +433,11 @@ class FormMetadataMapperTest extends TestCase
                                         ],
                                     ],
                                     'required' => ['type'],
+                                    'type' => 'object',
                                 ],
                                 'then' => [
                                     'required' => ['property2'],
+                                    'type' => 'object',
                                 ],
                             ],
                             [
@@ -445,15 +449,18 @@ class FormMetadataMapperTest extends TestCase
                                         ],
                                     ],
                                     'required' => ['type'],
+                                    'type' => 'object',
                                 ],
                                 'then' => [
                                     'required' => ['property3'],
+                                    'type' => 'object',
                                 ],
                             ],
                         ],
                     ],
                 ],
             ],
+            'type' => 'object',
         ], $schema->toJsonSchema());
     }
 

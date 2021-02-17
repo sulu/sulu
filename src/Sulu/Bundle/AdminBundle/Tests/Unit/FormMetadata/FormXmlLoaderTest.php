@@ -251,6 +251,7 @@ class FormXmlLoaderTest extends TestCase
                             'first',
                             'third',
                         ],
+                        'type' => 'object',
                     ],
                     [
                         'anyOf' => [
@@ -261,6 +262,7 @@ class FormXmlLoaderTest extends TestCase
                                         'const' => 1,
                                     ],
                                 ],
+                                'type' => 'object',
                             ],
                             [
                                 'properties' => [
@@ -269,6 +271,7 @@ class FormXmlLoaderTest extends TestCase
                                         'const' => 2,
                                     ],
                                 ],
+                                'type' => 'object',
                             ],
                         ],
                         'allOf' => [
@@ -279,6 +282,7 @@ class FormXmlLoaderTest extends TestCase
                                         'const' => 1,
                                     ],
                                 ],
+                                'type' => 'object',
                             ],
                         ],
                     ],
@@ -316,9 +320,11 @@ class FormXmlLoaderTest extends TestCase
                                             ],
                                         ],
                                         'required' => ['type'],
+                                        'type' => 'object',
                                     ],
                                     'then' => [
                                         'required' => ['article'],
+                                        'type' => 'object',
                                     ],
                                 ],
                                 [
@@ -330,15 +336,18 @@ class FormXmlLoaderTest extends TestCase
                                             ],
                                         ],
                                         'required' => ['type'],
+                                        'type' => 'object',
                                     ],
                                     'then' => [
                                         'required' => ['images'],
+                                        'type' => 'object',
                                     ],
                                 ],
                             ],
                         ],
                     ],
                 ],
+                'type' => 'object',
             ],
             $formMetadata->getSchema()->toJsonSchema()
         );
@@ -372,6 +381,7 @@ class FormXmlLoaderTest extends TestCase
                                             ],
                                         ],
                                         'required' => ['type'],
+                                        'type' => 'object',
                                     ],
                                     'then' => [
                                         'properties' => [
@@ -389,9 +399,11 @@ class FormXmlLoaderTest extends TestCase
                                                                     ],
                                                                 ],
                                                                 'required' => ['type'],
+                                                                'type' => 'object',
                                                             ],
                                                             'then' => [
                                                                 'required' => [],
+                                                                'type' => 'object',
                                                             ],
                                                         ],
                                                         [
@@ -403,9 +415,11 @@ class FormXmlLoaderTest extends TestCase
                                                                     ],
                                                                 ],
                                                                 'required' => ['type'],
+                                                                'type' => 'object',
                                                             ],
                                                             'then' => [
                                                                 'required' => [],
+                                                                'type' => 'object',
                                                             ],
                                                         ],
                                                     ],
@@ -413,6 +427,7 @@ class FormXmlLoaderTest extends TestCase
                                             ],
                                         ],
                                         'required' => ['block11'],
+                                        'type' => 'object',
                                     ],
                                 ],
                                 [
@@ -424,6 +439,7 @@ class FormXmlLoaderTest extends TestCase
                                             ],
                                         ],
                                         'required' => ['type'],
+                                        'type' => 'object',
                                     ],
                                     'then' => [
                                         'properties' => [
@@ -441,9 +457,11 @@ class FormXmlLoaderTest extends TestCase
                                                                     ],
                                                                 ],
                                                                 'required' => ['type'],
+                                                                'type' => 'object',
                                                             ],
                                                             'then' => [
                                                                 'required' => [],
+                                                                'type' => 'object',
                                                             ],
                                                         ],
                                                         [
@@ -455,21 +473,25 @@ class FormXmlLoaderTest extends TestCase
                                                                     ],
                                                                 ],
                                                                 'required' => ['type'],
+                                                                'type' => 'object',
                                                             ],
                                                             'then' => [
                                                                 'required' => [],
+                                                                'type' => 'object',
                                                             ],
                                                         ],
                                                     ],
                                                 ],
                                             ],
                                         ],
+                                        'type' => 'object',
                                     ],
                                 ],
                             ],
                         ],
                     ],
                 ],
+                'type' => 'object',
             ],
             $formMetadata->getSchema()->toJsonSchema()
         );
