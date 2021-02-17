@@ -13,6 +13,7 @@ import List, {
     AbstractAdapter,
     FlatStructureStrategy,
     InfiniteLoadingStrategy,
+    DefaultLoadingStrategy,
     PaginatedLoadingStrategy,
 } from './List';
 import type {ListAdapterProps, LoadingStrategyInterface, StructureStrategyInterface} from './List';
@@ -63,6 +64,7 @@ export {
     MultiListOverlay,
     MultiSelection,
     InfiniteLoadingStrategy,
+    DefaultLoadingStrategy,
     PaginatedLoadingStrategy,
     ResourceFormStore,
     ResourceLocator,

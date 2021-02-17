@@ -16,6 +16,7 @@ import listToolbarActionRegistry from './registries/listToolbarActionRegistry';
 import listItemActionRegistry from './registries/listItemActionRegistry';
 import AbstractListToolbarAction from './toolbarActions/AbstractListToolbarAction';
 import AbstractListItemAction from './itemActions/AbstractListItemAction';
+import listStyles from './list.scss';
 
 const DEFAULT_USER_SETTINGS_KEY = 'list';
 const DEFAULT_LIMIT = 10;
@@ -361,6 +362,7 @@ class List extends React.Component<Props> {
                         itemDisabledCondition,
                         searchable,
                         selectable,
+                        paginated,
                         title: routeTitle,
                     },
                 },
@@ -372,20 +374,23 @@ class List extends React.Component<Props> {
 
         return (
             <Fragment>
-                <ListContainer
-                    adapters={adapters}
-                    header={title && <h1>{title}</h1>}
-                    itemActionsProvider={this.getItemActionConfigs}
-                    itemDisabledCondition={itemDisabledCondition}
-                    onItemAdd={onItemAdd || addView ? this.addItem : undefined}
-                    onItemClick={onItemClick || editView ? this.handleItemClick : undefined}
-                    ref={this.setListRef}
-                    searchable={searchable}
-                    selectable={selectable}
-                    store={this.listStore}
-                />
-                {this.toolbarActions.map((toolbarAction) => toolbarAction.getNode())}
-                {this.itemActions.map((itemAction) => itemAction.getNode())}
+                <div className={listStyles.listContainer}>
+                    <ListContainer
+                        adapters={adapters}
+                        header={title && <h1>{title}</h1>}
+                        itemActionsProvider={this.getItemActionConfigs}
+                        itemDisabledCondition={itemDisabledCondition}
+                        onItemAdd={onItemAdd || addView ? this.addItem : undefined}
+                        onItemClick={onItemClick || editView ? this.handleItemClick : undefined}
+                        paginated={paginated}
+                        ref={this.setListRef}
+                        searchable={searchable}
+                        selectable={selectable}
+                        store={this.listStore}
+                    />
+                    {this.toolbarActions.map((toolbarAction) => toolbarAction.getNode())}
+                    {this.itemActions.map((itemAction) => itemAction.getNode())}
+                </div>
             </Fragment>
         );
     }

@@ -796,6 +796,23 @@ test('ListStore should be initialized correctly on init and update', () => {
     expect(listStore.updateStructureStrategy).toBeCalledWith(expect.any(TableAdapter.StructureStrategy));
 });
 
+test('LoadingStrategyOptions should be passed correctly to the LoadingStrategy', () => {
+    const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
+
+    TableAdapter.LoadingStrategy = (jest.fn(): any);
+
+    listAdapterRegistry.get.mockImplementation((adapter) => {
+        switch (adapter) {
+            case 'table':
+                return TableAdapter;
+            case 'folder':
+                return FolderAdapter;
+        }
+    });
+    mount(<List adapters={['table', 'folder']} paginated={true} store={listStore} />);
+    expect(TableAdapter.LoadingStrategy).toBeCalledWith({paginated: true});
+});
+
 test('ListStore should be updated with current active element', () => {
     listAdapterRegistry.get.mockReturnValue(class TestAdapter extends AbstractAdapter {
         static LoadingStrategy = class {

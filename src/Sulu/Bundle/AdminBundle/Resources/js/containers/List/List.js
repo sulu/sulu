@@ -48,6 +48,7 @@ type Props = {|
     onItemAdd?: (id: ?string | number) => void,
     onItemClick?: (itemId: string | number) => void,
     orderable: boolean,
+    paginated: boolean,
     searchable: boolean,
     selectable: boolean,
     showColumnOptions: boolean,
@@ -68,6 +69,7 @@ class List extends React.Component<Props> {
         disabledIds: [],
         movable: true,
         orderable: true,
+        paginated: true,
         searchable: true,
         selectable: true,
         showColumnOptions: true,
@@ -144,13 +146,13 @@ class List extends React.Component<Props> {
     }
 
     componentDidUpdate(prevProps: Props) {
-        const {adapters, store} = this.props;
+        const {adapters, store, paginated} = this.props;
         if (!equal(adapters, prevProps.adapters)) {
             this.validateAdapters();
         }
 
         if (store !== prevProps.store) {
-            store.updateLoadingStrategy(new this.currentAdapter.LoadingStrategy());
+            store.updateLoadingStrategy(new this.currentAdapter.LoadingStrategy({paginated}));
             store.updateStructureStrategy(new this.currentAdapter.StructureStrategy());
         }
     }
@@ -177,7 +179,11 @@ class List extends React.Component<Props> {
         this.currentAdapterKey = adapter;
 
         if (!(this.props.store.loadingStrategy instanceof this.currentAdapter.LoadingStrategy)) {
-            this.props.store.updateLoadingStrategy(new this.currentAdapter.LoadingStrategy());
+            this.props.store.updateLoadingStrategy(
+                new this.currentAdapter.LoadingStrategy({
+                    paginated: this.props.paginated,
+                })
+            );
         }
 
         if (!(this.props.store.structureStrategy instanceof this.currentAdapter.StructureStrategy)) {
@@ -438,7 +444,7 @@ class List extends React.Component<Props> {
         this.setCurrentAdapterKey(adapter);
     };
 
-    handleItemActivate = (id: string | number) => {
+    handleItemActivate = (id: ?string | number) => {
         const {allowActivateForDisabledItems, store} = this.props;
 
         if (!allowActivateForDisabledItems && this.disabledIds.includes(id)) {
@@ -485,6 +491,7 @@ class List extends React.Component<Props> {
             movable,
             onItemClick,
             onItemAdd,
+            paginated,
             orderable,
             selectable,
             store,
@@ -597,6 +604,7 @@ class List extends React.Component<Props> {
                             options={this.currentAdapterOptions}
                             page={store.getPage()}
                             pageCount={store.pageCount}
+                            paginated={paginated}
                             schema={store.userSchema}
                             selections={store.selectionIds}
                             sortColumn={store.sortColumn.get()}

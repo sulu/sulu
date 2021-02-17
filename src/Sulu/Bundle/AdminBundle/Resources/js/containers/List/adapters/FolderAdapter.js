@@ -4,13 +4,13 @@ import React from 'react';
 import FolderList from '../../../components/FolderList';
 import Pagination from '../../../components/Pagination';
 import {translate} from '../../../utils/Translator';
-import PaginatedLoadingStrategy from '../loadingStrategies/PaginatedLoadingStrategy';
 import FlatStructureStrategy from '../structureStrategies/FlatStructureStrategy';
+import DefaultLoadingStrategy from '../loadingStrategies/DefaultLoadingStrategy';
 import AbstractAdapter from './AbstractAdapter';
 
 @observer
 class FolderAdapter extends AbstractAdapter {
-    static LoadingStrategy = PaginatedLoadingStrategy;
+    static LoadingStrategy = DefaultLoadingStrategy;
 
     static StructureStrategy = FlatStructureStrategy;
 
@@ -37,6 +37,7 @@ class FolderAdapter extends AbstractAdapter {
             onLimitChange,
             onPageChange,
             page,
+            paginated,
             pageCount,
         } = this.props;
 
@@ -54,7 +55,11 @@ class FolderAdapter extends AbstractAdapter {
             </FolderList>
         );
 
-        if (page === 1 && data.length === 0) {
+        if (!paginated || (page === 1 && data.length === 0)) {
+            return folderList;
+        }
+
+        if (pageCount === undefined) {
             return folderList;
         }
 

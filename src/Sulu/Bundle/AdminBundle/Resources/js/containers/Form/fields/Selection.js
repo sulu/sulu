@@ -505,6 +505,7 @@ class Selection extends React.Component<Props> {
                     adapters={[adapter]}
                     disabled={!!disabled}
                     itemDisabledCondition={itemDisabledCondition}
+                    paginated={false}
                     searchable={false}
                     showColumnOptions={false}
                     store={this.listStore}
