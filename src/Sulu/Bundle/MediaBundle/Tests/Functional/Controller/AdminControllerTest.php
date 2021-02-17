@@ -82,7 +82,9 @@ class AdminControllerTest extends SuluTestCase
     {
         return [
             'type' => 'array',
-            'items' => ['required' => [], 'type' => 'object'],
+            'items' => [
+                'type' => ['number', 'string', 'boolean', 'object', 'array', 'null'],
+            ],
             'maxItems' => 0,
         ];
     }

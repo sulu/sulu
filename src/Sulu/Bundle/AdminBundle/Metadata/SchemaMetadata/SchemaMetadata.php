@@ -69,8 +69,7 @@ class SchemaMetadata implements SchemaMetadataInterface
          */
         if (empty($jsonSchema)) {
             return [
-                'type' => 'object',
-                'required' => [],
+                'type' => ['number', 'string', 'boolean', 'object', 'array', 'null'],
             ];
         }
 

@@ -449,8 +449,7 @@ class MediaSelectionContentTypeTest extends TestCase
         return [
             'type' => 'array',
             'items' => [
-                'required' => [],
-                'type' => 'object',
+                'type' => ['number', 'string', 'boolean', 'object', 'array', 'null'],
             ],
             'maxItems' => 0,
         ];

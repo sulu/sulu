@@ -402,8 +402,7 @@ class FormXmlLoaderTest extends TestCase
                                                                 'type' => 'object',
                                                             ],
                                                             'then' => [
-                                                                'required' => [],
-                                                                'type' => 'object',
+                                                                'type' => ['number', 'string', 'boolean', 'object', 'array', 'null'],
                                                             ],
                                                         ],
                                                         [
@@ -418,8 +417,7 @@ class FormXmlLoaderTest extends TestCase
                                                                 'type' => 'object',
                                                             ],
                                                             'then' => [
-                                                                'required' => [],
-                                                                'type' => 'object',
+                                                                'type' => ['number', 'string', 'boolean', 'object', 'array', 'null'],
                                                             ],
                                                         ],
                                                     ],
@@ -460,8 +458,7 @@ class FormXmlLoaderTest extends TestCase
                                                                 'type' => 'object',
                                                             ],
                                                             'then' => [
-                                                                'required' => [],
-                                                                'type' => 'object',
+                                                                'type' => ['number', 'string', 'boolean', 'object', 'array', 'null'],
                                                             ],
                                                         ],
                                                         [
@@ -476,8 +473,7 @@ class FormXmlLoaderTest extends TestCase
                                                                 'type' => 'object',
                                                             ],
                                                             'then' => [
-                                                                'required' => [],
-                                                                'type' => 'object',
+                                                                'type' => ['number', 'string', 'boolean', 'object', 'array', 'null'],
                                                             ],
                                                         ],
                                                     ],

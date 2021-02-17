@@ -41,7 +41,10 @@ class PropertyMetadataTest extends TestCase
         return [
             ['title', false, null, null],
             ['article', false, new StringMetadata(), ['name' => 'article', 'type' => 'string']],
-            ['article', true, new SchemaMetadata(), ['name' => 'article', 'required' => [], 'type' => 'object']],
+            ['article', true, new SchemaMetadata(), [
+                'name' => 'article',
+                'type' => ['number', 'string', 'boolean', 'object', 'array', 'null'],
+            ]],
         ];
     }
 

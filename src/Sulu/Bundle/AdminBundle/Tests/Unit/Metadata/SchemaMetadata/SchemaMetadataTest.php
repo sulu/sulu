@@ -27,8 +27,7 @@ class SchemaMetadataTest extends TestCase
         $schema = new SchemaMetadata();
 
         $this->assertEquals([
-            'required' => [],
-            'type' => 'object',
+            'type' => ['number', 'string', 'boolean', 'object', 'array', 'null'],
         ], $schema->toJsonSchema());
     }
 

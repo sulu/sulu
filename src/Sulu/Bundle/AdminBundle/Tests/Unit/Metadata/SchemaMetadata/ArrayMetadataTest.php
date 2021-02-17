@@ -26,7 +26,12 @@ class ArrayMetadataTest extends TestCase
                 null,
                 null,
                 null,
-                ['type' => 'array', 'items' => ['required' => [], 'type' => 'object']],
+                [
+                    'type' => 'array',
+                    'items' => [
+                        'type' => ['number', 'string', 'boolean', 'object', 'array', 'null'],
+                    ],
+                ],
             ],
             [
                 new SchemaMetadata([new PropertyMetadata('test1', true), new PropertyMetadata('test2', false)]),
