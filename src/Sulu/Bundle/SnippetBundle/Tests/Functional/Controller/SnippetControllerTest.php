@@ -521,11 +521,13 @@ class SnippetControllerTest extends SuluTestCase
         $snippet = $this->documentManager->create('snippet');
         $snippet->setStructureType('hotel');
         $snippet->setTitle('Hotel de');
+        $snippet->getStructure()->bind(['description' => 'Hotel description']);
+
         $this->documentManager->persist($snippet, 'de');
         $this->documentManager->publish($snippet, 'de');
         $this->documentManager->flush();
 
-        $this->client->jsonRequest('POST', '/api/snippets/' . $snippet->getUuid() . '?action=copy-locale&dest=en&locale=de');
+        $this->client->jsonRequest('POST', '/api/snippets/' . $snippet->getUuid() . '?action=copy-locale&dest=en&src=de');
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->documentManager->clear();
@@ -534,10 +536,12 @@ class SnippetControllerTest extends SuluTestCase
         $newPage = $this->documentManager->find($snippet->getUuid(), 'en');
         $this->assertEquals(WorkflowStage::PUBLISHED, $newPage->getWorkflowStage());
         $this->assertEquals('Hotel de', $newPage->getTitle());
+        $this->assertEquals('Hotel description', $newPage->getStructure()->getProperty('description')->getValue());
 
         $newPage = $this->documentManager->find($snippet->getUuid(), 'de');
         $this->assertEquals(WorkflowStage::PUBLISHED, $newPage->getWorkflowStage());
         $this->assertEquals('Hotel de', $newPage->getTitle());
+        $this->assertEquals('Hotel description', $newPage->getStructure()->getProperty('description')->getValue());
     }
 
     private function loadFixtures()

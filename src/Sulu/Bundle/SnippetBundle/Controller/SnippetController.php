@@ -309,13 +309,14 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
         try {
             switch ($action) {
                 case 'copy-locale':
+                    $srcLocale = $this->getRequestParameter($request, 'src', false, $locale);
                     $destLocales = \explode(',', $this->getRequestParameter($request, 'dest', true));
 
                     // call repository method
                     $snippet = $this->snippetRepository->copyLocale(
                         $id,
                         $this->getUser()->getId(),
-                        $locale,
+                        $srcLocale,
                         $destLocales
                     );
 
