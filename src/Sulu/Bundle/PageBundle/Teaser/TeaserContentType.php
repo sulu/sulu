@@ -78,7 +78,11 @@ class TeaserContentType extends SimpleContentType implements PreResolvableConten
             return [];
         }
 
-        $result = $this->teaserManager->find($items, $property->getStructure()->getLanguageCode());
+        $result = $this->teaserManager->find(
+            $items,
+            $property->getStructure()->getLanguageCode(),
+            $property->getStructure()->getWebspaceKey()
+        );
 
         $mediaReferenceStore = $this->getMediaReferenceStore();
         if (!$mediaReferenceStore) {

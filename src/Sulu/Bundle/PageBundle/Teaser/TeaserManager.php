@@ -28,8 +28,13 @@ class TeaserManager implements TeaserManagerInterface
         $this->providerPool = $providerPool;
     }
 
-    public function find(array $items, $locale)
+    public function find(array $items, $locale/*, ?string $webspaceKey = null*/)
     {
+        $webspaceKey = null;
+        if (\func_num_args() >= 3) {
+            $webspaceKey = \func_get_arg(2);
+        }
+
         if (0 === \count($items)) {
             return [];
         }
@@ -37,7 +42,7 @@ class TeaserManager implements TeaserManagerInterface
         $result = [];
         list($sortedIds, $positions) = $this->sortItems($items);
         foreach ($sortedIds as $type => $typeIds) {
-            $teasers = $this->providerPool->getProvider($type)->find($typeIds, $locale);
+            $teasers = $this->providerPool->getProvider($type)->find($typeIds, $locale, $webspaceKey);
             $result = $this->sortTeasers($teasers, $result, $positions, $items);
         }
 

@@ -18,6 +18,7 @@ type Props = {|
     onItemClick?: (id: number | string, item: ?TeaserItem) => void,
     presentations?: Array<PresentationItem>,
     value: TeaserSelectionValue,
+    webspaceKey: IObservableValue<string>,
 |};
 
 const ID_SEPERATOR = ';';
@@ -55,9 +56,9 @@ class TeaserSelection extends React.Component<Props> {
         super(props);
 
         action(() => {
-            const {locale, value} = this.props;
+            const {locale, webspaceKey, value} = this.props;
 
-            this.teaserStore = new TeaserStore(locale);
+            this.teaserStore = new TeaserStore(locale, webspaceKey);
 
             value.items.forEach((item) => {
                 this.teaserStore.add(item.type, item.id);

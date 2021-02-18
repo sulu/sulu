@@ -12,39 +12,57 @@
 namespace Sulu\Bundle\PageBundle\Teaser;
 
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
-use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Bundle\PageBundle\Teaser\Configuration\TeaserConfiguration;
 use Sulu\Bundle\PageBundle\Teaser\Provider\TeaserProviderInterface;
-use Sulu\Component\Content\Document\Structure\PropertyValue;
-use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
-use Sulu\Component\DocumentManager\DocumentManagerInterface;
+use Sulu\Component\Content\Compat\PropertyParameter;
+use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
+use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
+use Sulu\Component\Security\Authorization\PermissionTypes;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PHPCRPageTeaserProvider implements TeaserProviderInterface
 {
     /**
-     * @var DocumentManagerInterface
+     * @var ContentQueryExecutorInterface
      */
-    private $documentManager;
+    private $contentQueryExecutor;
 
     /**
-     * @var StructureMetadataFactoryInterface
+     * @var ContentQueryBuilderInterface
      */
-    private $structureMetadataFactory;
+    private $contentQueryBuilder;
 
     /**
      * @var TranslatorInterface
      */
     private $translator;
 
+    /**
+     * @var bool
+     */
+    private $showDrafts;
+
+    /**
+     * @var array<string, int>
+     */
+    private $permissions;
+
+    /**
+     * @param bool $showDrafts Parameter "sulu_document_manager.show_drafts"
+     * @param array<string, int> $permissions Parameter "sulu_security.permissions"
+     */
     public function __construct(
-        DocumentManagerInterface $documentManager,
-        StructureMetadataFactoryInterface $structureMetadataFactory,
-        TranslatorInterface $translator
+        ContentQueryExecutorInterface $contentQueryExecutor,
+        ContentQueryBuilderInterface $contentQueryBuilder,
+        TranslatorInterface $translator,
+        bool $showDrafts,
+        array $permissions
     ) {
-        $this->documentManager = $documentManager;
-        $this->structureMetadataFactory = $structureMetadataFactory;
+        $this->contentQueryExecutor = $contentQueryExecutor;
+        $this->contentQueryBuilder = $contentQueryBuilder;
         $this->translator = $translator;
+        $this->showDrafts = $showDrafts;
+        $this->permissions = $permissions;
     }
 
     public function getConfiguration(): TeaserConfiguration
@@ -66,30 +84,32 @@ class PHPCRPageTeaserProvider implements TeaserProviderInterface
      *
      * @return Teaser[]
      */
-    public function find(array $ids, $locale): array
+    public function find(array $ids, $locale, ?string $webspaceKey = null): array
     {
+        if (null === $webspaceKey) {
+            throw new \InvalidArgumentException(
+                'The "PHPCRPageTeaserProvider" requires as $webspaceKey to work as expected'
+            );
+        }
+
         if (0 === \count($ids)) {
             return [];
         }
 
-        $pages = $this->loadPages($ids, $locale);
+        $pages = $this->loadPages($ids, $locale, $webspaceKey);
         $result = [];
 
-        /** @var BasePageDocument $document */
-        foreach ($pages as $document) {
+        foreach ($pages as $pageData) {
             $result[] = new Teaser(
-                $document->getUuid(),
+                $pageData['id'],
                 'pages',
                 $locale,
-                $this->getExcerptTitleFromDocument($document)
-                    ?: $this->getTitleFromDocument($document),
-                $this->getExcerptDescriptionFromDocument($document)
-                    ?: $this->getTeaserDescriptionFromDocument($document),
-                $this->getExcerptMoreFromDocument($document),
-                $this->getUrlFromDocument($document),
-                $this->getExcerptMediaFromDocument($document)
-                    ?: $this->getTeaserMediaFromDocument($document),
-                $this->getAttributes($document)
+                ($pageData['excerptTitle'] ?? null) ?: $pageData['title'] ?? null,
+                $pageData['excerptDescription'] ?? null,
+                $pageData['excerptMore'] ?? null,
+                $pageData['url'] ?? null,
+                ($media = $pageData['excerptImages'][0] ?? null) ? $media->getId() : null,
+                $this->getAttributes($pageData)
             );
         }
 
@@ -100,98 +120,46 @@ class PHPCRPageTeaserProvider implements TeaserProviderInterface
      * @param string[] $ids
      * @param string $locale
      *
-     * @return iterable<BasePageDocument>
+     * @return mixed[]
      */
-    protected function loadPages(array $ids, $locale): iterable
+    protected function loadPages(array $ids, $locale, string $webspaceKey): array
     {
-        $query = $this->documentManager->createQuery(\sprintf(
-            'SELECT * FROM [nt:unstructured] AS page WHERE ([jcr:mixinTypes] = "sulu:page" OR [jcr:mixinTypes] = "sulu:home") AND (%s)',
-            \implode(' OR ', \array_map(function($uuid) {
-                return \sprintf('[jcr:uuid] = "%s"', $uuid);
-            }, $ids))
-        ));
+        $this->contentQueryBuilder->init(
+            [
+                'ids' => $ids,
+                'properties' => [
+                    new PropertyParameter('excerptTitle', 'excerpt.title'),
+                    new PropertyParameter('excerptDescription', 'excerpt.description'),
+                    new PropertyParameter('excerptMore', 'excerpt.more'),
+                    new PropertyParameter('excerptImages', 'excerpt.images'),
+                ],
+                'published' => !$this->showDrafts,
+            ]
+        );
 
-        $query->setLocale($locale);
-        $query->setMaxResults(\count($ids));
-
-        return $query->execute();
-    }
-
-    protected function getTitleFromDocument(BasePageDocument $document): ?string
-    {
-        return $document->getTitle();
-    }
-
-    protected function getExcerptTitleFromDocument(BasePageDocument $document): ?string
-    {
-        return $document->getExtensionsData()['excerpt']['title'] ?? null;
-    }
-
-    protected function getExcerptDescriptionFromDocument(BasePageDocument $document): ?string
-    {
-        return $document->getExtensionsData()['excerpt']['description'] ?? null;
-    }
-
-    protected function getExcerptMoreFromDocument(BasePageDocument $document): ?string
-    {
-        return $document->getExtensionsData()['excerpt']['more'] ?? null;
-    }
-
-    protected function getUrlFromDocument(BasePageDocument $document): ?string
-    {
-        return $document->getResourceSegment();
-    }
-
-    protected function getExcerptMediaFromDocument(BasePageDocument $document): ?int
-    {
-        return $document->getExtensionsData()['excerpt']['images']['ids'][0] ?? null;
-    }
-
-    protected function getTeaserDescriptionFromDocument(BasePageDocument $document): ?string
-    {
-        $property = $this->getTaggedPropertyFromDocument($document, 'sulu.teaser.description');
-
-        if (null === $property) {
-            return null;
-        }
-
-        return $property->getValue();
-    }
-
-    protected function getTeaserMediaFromDocument(BasePageDocument $document): ?int
-    {
-        $property = $this->getTaggedPropertyFromDocument($document, 'sulu.teaser.media');
-
-        if (null === $property) {
-            return null;
-        }
-
-        $value = $property->getValue();
-
-        return $value['ids'][0] ?? $value['id'] ?? null;
-    }
-
-    protected function getTaggedPropertyFromDocument(BasePageDocument $document, string $tagName): ?PropertyValue
-    {
-        $metadata = $this->structureMetadataFactory->getStructureMetadata('page', $document->getStructureType());
-
-        if (!$metadata->hasPropertyWithTagName($tagName)) {
-            return null;
-        }
-
-        $property = $metadata->getPropertyByTagName($tagName);
-
-        return $document->getStructure()->getProperty($property->getName());
+        return $this->contentQueryExecutor->execute(
+            $webspaceKey,
+            [$locale],
+            $this->contentQueryBuilder,
+            true,
+            -1,
+            null,
+            null,
+            false,
+            $this->permissions[PermissionTypes::VIEW]
+        );
     }
 
     /**
+     * @param array<string, mixed> $pageData
+     *
      * @return array<string, mixed>
      */
-    protected function getAttributes(BasePageDocument $document): array
+    protected function getAttributes(array $pageData): array
     {
         return [
-            'structureType' => $document->getStructureType(),
-            'webspaceKey' => $document->getWebspaceName(),
+            'structureType' => $pageData['template'] ?? null,
+            'webspaceKey' => $pageData['webspaceKey'] ?? null,
         ];
     }
 }

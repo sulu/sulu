@@ -6,13 +6,15 @@ import type {TeaserItem} from '../types';
 
 export default class TeaserStore {
     locale: IObservableValue<string>;
+    webspaceKey: IObservableValue<string>;
     @observable teaserItemIds: Array<{id: number | string, type: string}> = [];
     @observable teaserItems: Array<TeaserItem> = [];
     @observable loading: boolean = false;
     teaserDisposer: () => void;
 
-    constructor(locale: IObservableValue<string>) {
+    constructor(locale: IObservableValue<string>, webspaceKey: IObservableValue<string>) {
         this.locale = locale;
+        this.webspaceKey = webspaceKey;
         this.teaserDisposer = autorun(this.loadTeasers);
     }
 
@@ -27,6 +29,7 @@ export default class TeaserStore {
             {
                 ids: this.teaserItemIds.map((teaserItemId) => teaserItemId.type + ';' + teaserItemId.id),
                 locale: this.locale.get(),
+                webspaceKey: this.webspaceKey.get(),
             }
         ).then(action((response) => {
             this.teaserItems.splice(0, this.teaserItems.length, ...response._embedded.teasers);

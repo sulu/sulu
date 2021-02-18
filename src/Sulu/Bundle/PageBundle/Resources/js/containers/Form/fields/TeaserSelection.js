@@ -17,6 +17,12 @@ class TeaserSelection extends React.Component<FieldTypeProps<TeaserSelectionValu
         return formInspector.locale ? formInspector.locale : observable.box(userStore.contentLocale);
     }
 
+    @computed get webspaceKey(): IObservableValue<?string> {
+        const {formInspector} = this.props;
+
+        return observable.box(formInspector.metadataOptions?.webspace);
+    }
+
     handleItemClick = (itemId: string | number, item: ?TeaserItem) => {
         if (!item) {
             return;
@@ -79,6 +85,7 @@ class TeaserSelection extends React.Component<FieldTypeProps<TeaserSelectionValu
                 onItemClick={this.handleItemClick}
                 presentations={presentations.length > 0 ? presentations : undefined}
                 value={value === null ? undefined : value}
+                webspaceKey={this.webspaceKey}
             />
         );
     }
