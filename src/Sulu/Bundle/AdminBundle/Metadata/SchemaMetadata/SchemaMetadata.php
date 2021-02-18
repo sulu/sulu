@@ -49,7 +49,12 @@ class SchemaMetadata implements SchemaMetadataInterface
     {
         $propertiesSchema = $this->propertiesMetadata->toJsonSchema();
 
+        /*
+         * This is necessary to remove a warning from ajv (because of strict mode,
+         * `properties` or `required` keyword must not appear without {"type": "object"})
+         */
         if (!empty($propertiesSchema)) {
+            //
             $propertiesSchema = \array_merge(
                 ['type' => 'object'],
                 $propertiesSchema
