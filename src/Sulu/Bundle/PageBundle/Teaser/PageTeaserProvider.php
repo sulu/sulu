@@ -37,18 +37,29 @@ class PageTeaserProvider implements TeaserProviderInterface
      */
     private $showDrafts;
 
+    /**
+     * @var TeaserProviderInterface|null
+     */
+    private $phpcrPageTeaserProvider;
+
     public function __construct(
         SearchManagerInterface $searchManager,
         TranslatorInterface $translator,
-        bool $showDrafts = false
+        bool $showDrafts = false,
+        ?TeaserProviderInterface $phpcrPageTeaserProvider = null
     ) {
         $this->searchManager = $searchManager;
         $this->translator = $translator;
         $this->showDrafts = $showDrafts;
+        $this->phpcrPageTeaserProvider = $phpcrPageTeaserProvider;
     }
 
     public function getConfiguration()
     {
+        if (null !== $this->phpcrPageTeaserProvider) {
+            return $this->phpcrPageTeaserProvider->getConfiguration();
+        }
+
         return new TeaserConfiguration(
             $this->translator->trans('sulu_page.page', [], 'admin'),
             'pages',
@@ -62,6 +73,10 @@ class PageTeaserProvider implements TeaserProviderInterface
 
     public function find(array $ids, $locale)
     {
+        if (null !== $this->phpcrPageTeaserProvider) {
+            return $this->phpcrPageTeaserProvider->find($ids, $locale);
+        }
+
         $statements = \array_map(
             function($item) {
                 return \sprintf('__id:"%s"', $item);
