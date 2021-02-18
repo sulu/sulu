@@ -329,6 +329,10 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
                     // flush all published snippets
                     $this->documentManager->flush();
 
+                    if ($srcLocale !== $locale) {
+                        return $this->handleView($this->findDocument($id, $locale));
+                    }
+
                     break;
                 default:
                     throw new RestException('Unrecognized action: ' . $action);

@@ -520,28 +520,65 @@ class SnippetControllerTest extends SuluTestCase
     {
         $snippet = $this->documentManager->create('snippet');
         $snippet->setStructureType('hotel');
-        $snippet->setTitle('Hotel de');
-        $snippet->getStructure()->bind(['description' => 'Hotel description']);
+        $snippet->setTitle('Hotel title DE');
+        $snippet->getStructure()->bind(['description' => 'Hotel description DE']);
 
         $this->documentManager->persist($snippet, 'de');
         $this->documentManager->publish($snippet, 'de');
         $this->documentManager->flush();
 
-        $this->client->jsonRequest('POST', '/api/snippets/' . $snippet->getUuid() . '?action=copy-locale&dest=en&src=de');
+        $this->client->jsonRequest('POST', '/api/snippets/' . $snippet->getUuid() . '?action=copy-locale&dest=en&locale=de');
+        $this->documentManager->clear();
+        $response = $this->client->getResponse();
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        $this->documentManager->clear();
+        $content = \json_decode($response->getContent(), true);
+        $this->assertEquals('Hotel title DE', $content['title']);
+        $this->assertEquals('Hotel description DE', $content['description']);
 
         /** @var SnippetDocument $newPage */
         $newPage = $this->documentManager->find($snippet->getUuid(), 'en');
         $this->assertEquals(WorkflowStage::PUBLISHED, $newPage->getWorkflowStage());
-        $this->assertEquals('Hotel de', $newPage->getTitle());
-        $this->assertEquals('Hotel description', $newPage->getStructure()->getProperty('description')->getValue());
+        $this->assertEquals('Hotel title DE', $newPage->getTitle());
+        $this->assertEquals('Hotel description DE', $newPage->getStructure()->getProperty('description')->getValue());
 
         $newPage = $this->documentManager->find($snippet->getUuid(), 'de');
         $this->assertEquals(WorkflowStage::PUBLISHED, $newPage->getWorkflowStage());
-        $this->assertEquals('Hotel de', $newPage->getTitle());
-        $this->assertEquals('Hotel description', $newPage->getStructure()->getProperty('description')->getValue());
+        $this->assertEquals('Hotel title DE', $newPage->getTitle());
+        $this->assertEquals('Hotel description DE', $newPage->getStructure()->getProperty('description')->getValue());
+    }
+
+    public function testCopyLocaleWithSource()
+    {
+        $snippet = $this->documentManager->create('snippet');
+        $snippet->setStructureType('hotel');
+        $snippet->setTitle('Hotel title DE');
+        $snippet->getStructure()->bind(['description' => 'Hotel description DE']);
+
+        $this->documentManager->persist($snippet, 'de');
+        $this->documentManager->publish($snippet, 'de');
+        $this->documentManager->flush();
+
+        $this->client->jsonRequest('POST', '/api/snippets/' . $snippet->getUuid() . '?action=copy-locale&dest=en&locale=en&src=de');
+        $this->documentManager->clear();
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+
+        $content = \json_decode($response->getContent(), true);
+        $this->assertEquals('Hotel title DE', $content['title']);
+        $this->assertEquals('Hotel description DE', $content['description']);
+        $this->assertEquals('en', $content['locale']);
+
+        /** @var SnippetDocument $newPage */
+        $newPage = $this->documentManager->find($snippet->getUuid(), 'en');
+        $this->assertEquals(WorkflowStage::PUBLISHED, $newPage->getWorkflowStage());
+        $this->assertEquals('Hotel title DE', $newPage->getTitle());
+        $this->assertEquals('Hotel description DE', $newPage->getStructure()->getProperty('description')->getValue());
+
+        $newPage = $this->documentManager->find($snippet->getUuid(), 'de');
+        $this->assertEquals(WorkflowStage::PUBLISHED, $newPage->getWorkflowStage());
+        $this->assertEquals('Hotel title DE', $newPage->getTitle());
+        $this->assertEquals('Hotel description DE', $newPage->getStructure()->getProperty('description')->getValue());
     }
 
     private function loadFixtures()
