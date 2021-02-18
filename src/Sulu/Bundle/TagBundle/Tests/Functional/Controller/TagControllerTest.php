@@ -130,7 +130,38 @@ class TagControllerTest extends SuluTestCase
         $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals(1, $response->total);
+        $this->assertEquals(1, $response->limit);
         $this->assertEquals('tag1', $response->_embedded->tags[0]->name);
+    }
+
+    public function testListFilteredByMultipleNames()
+    {
+        $this->createTag('t1');
+        $this->createTag('t2');
+        $this->createTag('t3');
+        $this->createTag('t4');
+        $this->createTag('t5');
+        $this->createTag('t6');
+        $this->createTag('t7');
+        $this->createTag('t8');
+        $this->createTag('t9');
+        $this->createTag('t10');
+        $this->createTag('t11');
+        $this->em->flush();
+        $this->em->clear();
+
+        $this->client->jsonRequest(
+            'GET',
+            '/api/tags?flat=true&names=t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,t11,t12'
+        );
+
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $response = \json_decode($this->client->getResponse()->getContent());
+
+        $this->assertEquals(11, $response->total);
+        $this->assertEquals(12, $response->limit);
+        $this->assertEquals(1, $response->page);
+        $this->assertEquals(1, $response->pages);
     }
 
     public function testListSearch()
