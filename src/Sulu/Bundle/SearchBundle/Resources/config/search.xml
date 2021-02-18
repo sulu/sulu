@@ -37,5 +37,14 @@
 
         <!-- Custom factory -->
         <service id="sulu_search.search.factory" class="%sulu_search.search.factory.class%"/>
+
+        <service id="Sulu\Bundle\SearchBundle\Search\Converter\StructureConverter">
+            <argument type="service" id="sulu_document_manager.document_manager"/>
+            <argument type="service" id="massive_search.search_manager"/>
+            <argument type="service" id="massive_search.object_to_document_converter"/>
+            <argument type="service" id="event_dispatcher"/>
+
+            <tag name="massive_search.converter" from="structure" />
+        </service>
     </services>
 </container>

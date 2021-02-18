@@ -45,7 +45,7 @@
                 <title lang="en">Categories</title>
             </meta>
 
-            <tag name="sulu.search.field" type="array"/>
+            <tag name="sulu.search.field" type="category"/>
         </property>
 
         <property name="audience_targeting_groups" type="target_group_selection" onInvalid="ignore">

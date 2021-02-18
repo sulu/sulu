@@ -85,6 +85,15 @@
             <tag name="sulu.context" context="admin"/>
         </service>
 
+        <service id="Sulu\Bundle\CategoryBundle\Search\Converter\CategoryConverter">
+            <argument type="service" id="sulu_category.category_manager"/>
+            <argument type="service" id="massive_search.search_manager"/>
+            <argument type="service" id="massive_search.object_to_document_converter"/>
+            <argument type="service" id="event_dispatcher"/>
+
+            <tag name="massive_search.converter" from="category" />
+        </service>
+
         <!--PERSISTENCE BUNDLE REPOSITORIES-->
         <service id="Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface" alias="sulu.repository.category"/>
         <service id="Sulu\Bundle\CategoryBundle\Entity\CategoryMetaRepositoryInterface" alias="sulu.repository.category_meta"/>
