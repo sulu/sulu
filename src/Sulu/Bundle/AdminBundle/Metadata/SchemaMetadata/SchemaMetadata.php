@@ -54,7 +54,6 @@ class SchemaMetadata implements SchemaMetadataInterface
          * `properties` or `required` keyword must not appear without {"type": "object"})
          */
         if (!empty($propertiesSchema)) {
-            //
             $propertiesSchema = \array_merge(
                 ['type' => 'object'],
                 $propertiesSchema
