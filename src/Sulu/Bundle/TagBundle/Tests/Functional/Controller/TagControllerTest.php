@@ -130,7 +130,7 @@ class TagControllerTest extends SuluTestCase
         $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals(1, $response->total);
-        $this->assertEquals(10, $response->limit);
+        $this->assertEquals(1, $response->limit);
         $this->assertEquals('tag1', $response->_embedded->tags[0]->name);
     }
 
