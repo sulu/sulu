@@ -60,16 +60,15 @@ class StructureConverter implements ConverterInterface
 
     public function convert($value, Document $document = null)
     {
+        if (null === $value) {
+            return null;
+        }
+
         if (null === $document) {
             return $value;
         }
 
         $locale = $document->getLocale();
-
-        if (null === $value) {
-            return null;
-        }
-
         $fields = [];
 
         if (\is_string($value)) {

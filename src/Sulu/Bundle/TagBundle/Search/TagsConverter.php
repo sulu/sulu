@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\TagBundle\Search;
 
 use Massive\Bundle\SearchBundle\Search\Converter\ConverterInterface;
+use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Field;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 
@@ -32,7 +33,11 @@ class TagsConverter implements ConverterInterface
 
     public function convert($value/*, Document $document = null*/)
     {
-        if (\count(\func_get_args()) < 2 || false === \func_get_arg(1) || null === \func_get_arg(1)) {
+        if (null === $value) {
+            return null;
+        }
+
+        if (\func_num_args() < 2 || !(\func_get_arg(1) instanceof Document)) {
             // Preserve backward compatibility
             return $this->tagManager->resolveTagNames($value);
         }
