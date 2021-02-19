@@ -71,15 +71,10 @@ class PageTeaserProvider implements TeaserProviderInterface
         );
     }
 
-    public function find(array $ids, $locale/*, ?string $webspaceKey = null*/)
+    public function find(array $ids, $locale)
     {
-        $webspaceKey = null;
-        if (\func_num_args() >= 3) {
-            $webspaceKey = \func_get_arg(2);
-        }
-
-        if (null !== $webspaceKey && null !== $this->phpcrPageTeaserProvider) {
-            return $this->phpcrPageTeaserProvider->find($ids, $locale, $webspaceKey);
+        if (null !== $this->phpcrPageTeaserProvider) {
+            return $this->phpcrPageTeaserProvider->find($ids, $locale);
         }
 
         $statements = \array_map(

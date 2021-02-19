@@ -33,5 +33,5 @@ interface TeaserProviderInterface
      *
      * @return Teaser[]
      */
-    public function find(array $ids, $locale/*, ?string $webspaceKey = null*/);
+    public function find(array $ids, $locale);
 }

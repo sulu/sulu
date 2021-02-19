@@ -56,8 +56,7 @@ class TeaserController extends AbstractRestController implements ClassResourceIn
                 new CollectionRepresentation(
                     $this->teaserManager->find(
                         $ids,
-                        $this->getLocale($request),
-                        $request->query->get('webspaceKey')
+                        $this->getLocale($request)
                     ),
                     'teasers'
                 )
