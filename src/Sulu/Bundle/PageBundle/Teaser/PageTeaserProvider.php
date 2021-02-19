@@ -20,6 +20,9 @@ use Sulu\Bundle\PageBundle\Teaser\Configuration\TeaserConfiguration;
 use Sulu\Bundle\PageBundle\Teaser\Provider\TeaserProviderInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * @deprecated This class will be replaced with the `PHPCRPageTeaserProvider`
+ */
 class PageTeaserProvider implements TeaserProviderInterface
 {
     /**
@@ -42,6 +45,9 @@ class PageTeaserProvider implements TeaserProviderInterface
      */
     private $phpcrPageTeaserProvider;
 
+    /**
+     * @param PHPCRPageTeaserProvider|null $phpcrPageTeaserProvider
+     */
     public function __construct(
         SearchManagerInterface $searchManager,
         TranslatorInterface $translator,
@@ -52,6 +58,13 @@ class PageTeaserProvider implements TeaserProviderInterface
         $this->translator = $translator;
         $this->showDrafts = $showDrafts;
         $this->phpcrPageTeaserProvider = $phpcrPageTeaserProvider;
+
+        if (null === $this->phpcrPageTeaserProvider) {
+            @\trigger_error(
+                'Instantiating a PageTeaserProvider without the $phpcrPageTeaserProvider argument is deprecated!',
+                \E_USER_DEPRECATED
+            );
+        }
     }
 
     public function getConfiguration()
@@ -122,16 +135,25 @@ class PageTeaserProvider implements TeaserProviderInterface
         return $result;
     }
 
+    /**
+     * @deprecated
+     */
     protected function getTitleFromDocument(Document $document)
     {
         return $document->getField('title')->getValue();
     }
 
+    /**
+     * @deprecated
+     */
     protected function getExcerptTitleFromDocument(Document $document)
     {
         return $document->getField('excerptTitle')->getValue();
     }
 
+    /**
+     * @deprecated
+     */
     protected function getExcerptDescritionFromDocument(Document $document)
     {
         return $document->getField('excerptDescription')->getValue();
@@ -183,6 +205,8 @@ class PageTeaserProvider implements TeaserProviderInterface
 
     /**
      * Returns attributes for teaser.
+     *
+     * @deprecated
      *
      * @return array
      */

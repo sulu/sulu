@@ -23,6 +23,9 @@ use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * @deprecated This class will replace the `PageTeaserProvider` and will be renamed to `PageTeaserProvider` afterwards
+ */
 class PHPCRPageTeaserProvider implements TeaserProviderInterface
 {
     /**
