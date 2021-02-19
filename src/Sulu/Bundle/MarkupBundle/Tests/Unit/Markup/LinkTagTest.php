@@ -17,6 +17,9 @@ use Sulu\Bundle\MarkupBundle\Markup\Link\LinkItem;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderInterface;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface;
 use Sulu\Bundle\MarkupBundle\Markup\LinkTag;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\UrlHelper;
+use Symfony\Component\Routing\RequestContext;
 
 class LinkTagTest extends TestCase
 {
@@ -29,6 +32,11 @@ class LinkTagTest extends TestCase
      * @var LinkProviderPoolInterface
      */
     private $providerPool;
+
+    /**
+     * @var UrlHelper
+     */
+    private $urlHelper;
 
     /**
      * @var LinkTag
@@ -48,7 +56,10 @@ class LinkTagTest extends TestCase
             }
         );
 
-        $this->linkTag = new LinkTag($this->providerPool->reveal(), false);
+        $requestContext = new RequestContext('', 'GET', 'sulu.lo');
+        $this->urlHelper = new UrlHelper(new RequestStack(), $requestContext);
+
+        $this->linkTag = new LinkTag($this->providerPool->reveal(), false, $this->urlHelper);
     }
 
     public function provideParseData()
@@ -63,25 +74,25 @@ class LinkTagTest extends TestCase
                     'provider' => 'article',
                 ],
                 [new LinkItem('123-123-123', 'Page-Title', '/de/test', true)],
-                '<a href="/de/test" title="Test-Title">Test-Content</a>',
+                '<a href="http://sulu.lo/de/test" title="Test-Title">Test-Content</a>',
             ],
             [
                 '<sulu-link href="123-123-123" title="Test-Title" provider="article"/>',
                 ['href' => '123-123-123', 'title' => 'Test-Title', 'provider' => 'article'],
                 [new LinkItem('123-123-123', 'Page-Title', '/de/test', true)],
-                '<a href="/de/test" title="Test-Title">Page-Title</a>',
+                '<a href="http://sulu.lo/de/test" title="Test-Title">Page-Title</a>',
             ],
             [
                 '<sulu-link href="123-123-123" title="Test-Title" provider="article"></sulu-link>',
                 ['href' => '123-123-123', 'title' => 'Test-Title', 'provider' => 'article'],
                 [new LinkItem('123-123-123', 'Page-Title', '/de/test', true)],
-                '<a href="/de/test" title="Test-Title">Page-Title</a>',
+                '<a href="http://sulu.lo/de/test" title="Test-Title">Page-Title</a>',
             ],
             [
                 '<sulu-link href="123-123-123" provider="article">Test-Content</sulu-link>',
                 ['href' => '123-123-123', 'content' => 'Test-Content', 'provider' => 'article'],
                 [new LinkItem('123-123-123', 'Page-Title', '/de/test', true)],
-                '<a href="/de/test" title="Page-Title">Test-Content</a>',
+                '<a href="http://sulu.lo/de/test" title="Page-Title">Test-Content</a>',
             ],
             [
                 '<sulu-link href="123-123-123" title="Test-Title" target="_blank" provider="article">Test-Content</sulu-link>',
@@ -93,7 +104,7 @@ class LinkTagTest extends TestCase
                     'provider' => 'article',
                 ],
                 [new LinkItem('123-123-123', 'Page-Title', '/de/test', true)],
-                '<a href="/de/test" title="Test-Title" target="_blank">Test-Content</a>',
+                '<a href="http://sulu.lo/de/test" title="Test-Title" target="_blank">Test-Content</a>',
             ],
             [
                 '<sulu-link href="123-123-123" title="Test-Title" target="_self" provider="article">Test-Content</sulu-link>',
@@ -105,7 +116,7 @@ class LinkTagTest extends TestCase
                     'provider' => 'article',
                 ],
                 [new LinkItem('123-123-123', 'Page-Title', '/de/test', true)],
-                '<a href="/de/test" title="Test-Title" target="_self">Test-Content</a>',
+                '<a href="http://sulu.lo/de/test" title="Test-Title" target="_self">Test-Content</a>',
             ],
             [
                 '<sulu-link href="123-123-123" provider="article" class="test">Test-Content</sulu-link>',
@@ -116,7 +127,7 @@ class LinkTagTest extends TestCase
                     'content' => 'Test-Content',
                 ],
                 [new LinkItem('123-123-123', 'Page-Title', '/de/test', true)],
-                '<a href="/de/test" class="test" title="Page-Title">Test-Content</a>',
+                '<a href="http://sulu.lo/de/test" class="test" title="Page-Title">Test-Content</a>',
             ],
             [
                 '<sulu-link href="123-123-123" title="Test-Title" class="test" provider="article">Test-Content</sulu-link>',
@@ -128,7 +139,7 @@ class LinkTagTest extends TestCase
                     'content' => 'Test-Content',
                 ],
                 [new LinkItem('123-123-123', 'Page-Title', '/de/test', true)],
-                '<a href="/de/test" title="Test-Title" class="test">Test-Content</a>',
+                '<a href="http://sulu.lo/de/test" title="Test-Title" class="test">Test-Content</a>',
             ],
         ];
     }
@@ -144,6 +155,26 @@ class LinkTagTest extends TestCase
         $result = $this->linkTag->parseAll([$tag => $attributes], 'de');
 
         $this->assertEquals([$tag => $expected], $result);
+    }
+
+    public function testParseAllWithoutUrlHelper()
+    {
+        $this->linkTag = new LinkTag($this->providerPool->reveal(), true, null);
+
+        $tag = '<sulu-link href="123-123-123" title="Test-Title" provider="article"/>';
+
+        $this->providers['article']->preload(['123-123-123'], 'de', true)
+            ->willReturn([new LinkItem('123-123-123', 'Page-Title', '/de/test', true)]);
+
+        $result = $this->linkTag->parseAll(
+            [$tag => ['href' => '123-123-123', 'title' => 'Test-Title', 'provider' => 'article']],
+            'de'
+        );
+
+        $this->assertEquals(
+            [$tag => '<a href="/de/test" title="Test-Title">Page-Title</a>'],
+            $result
+        );
     }
 
     public function testParseAllMultipleTags()
@@ -184,10 +215,10 @@ class LinkTagTest extends TestCase
 
         $this->assertEquals(
             [
-                $tag1 => '<a href="/de/test-1" title="Page-Title 1">Test-Content</a>',
-                $tag2 => '<a href="/de/test-2" title="Test-Title">Page-Title 2</a>',
-                $tag3 => '<a href="/de/test-1" title="Test-Title">Test-Content</a>',
-                $tag4 => '<a href="/de/test-1" title="Test-Title" target="_blank">Test-Content</a>',
+                $tag1 => '<a href="http://sulu.lo/de/test-1" title="Page-Title 1">Test-Content</a>',
+                $tag2 => '<a href="http://sulu.lo/de/test-2" title="Test-Title">Page-Title 2</a>',
+                $tag3 => '<a href="http://sulu.lo/de/test-1" title="Test-Title">Test-Content</a>',
+                $tag4 => '<a href="http://sulu.lo/de/test-1" title="Test-Title" target="_blank">Test-Content</a>',
             ],
             $result
         );
@@ -221,8 +252,8 @@ class LinkTagTest extends TestCase
 
         $this->assertEquals(
             [
-                $tag1 => '<a href="/de/test-2" title="Page-Title 2">Page-Title 2</a>',
-                $tag2 => '<a href="/de/test-1" title="Page-Title 1">Page-Title 1</a>',
+                $tag1 => '<a href="http://sulu.lo/de/test-2" title="Page-Title 2">Page-Title 2</a>',
+                $tag2 => '<a href="http://sulu.lo/de/test-1" title="Page-Title 1">Page-Title 1</a>',
             ],
             $result
         );
@@ -256,8 +287,8 @@ class LinkTagTest extends TestCase
 
         $this->assertEquals(
             [
-                $tag1 => '<a href="/de/test-2" title="Page-Title 2">Page-Title 2</a>',
-                $tag2 => '<a href="/de/test-1" title="Page-Title 1">Page-Title 1</a>',
+                $tag1 => '<a href="http://sulu.lo/de/test-2" title="Page-Title 2">Page-Title 2</a>',
+                $tag2 => '<a href="http://sulu.lo/de/test-1" title="Page-Title 1">Page-Title 1</a>',
             ],
             $result
         );
@@ -349,7 +380,7 @@ class LinkTagTest extends TestCase
 
         $this->assertEquals(
             [
-                $tag1 => '<a href="/de/test-1" title="Test-Title" target="_blank">Test-Content</a>',
+                $tag1 => '<a href="http://sulu.lo/de/test-1" title="Test-Title" target="_blank">Test-Content</a>',
                 $tag2 => 'Test-Content',
                 $tag3 => 'Test-Content',
                 $tag4 => 'Test-Content',
@@ -360,7 +391,7 @@ class LinkTagTest extends TestCase
 
     public function testParseAllValidationStateInPreview()
     {
-        $this->linkTag = new LinkTag($this->providerPool->reveal(), true);
+        $this->linkTag = new LinkTag($this->providerPool->reveal(), true, $this->urlHelper);
 
         $this->providers['article']->preload(['123-123-123', '456-123-123', '456-789-123'], 'de', true)
             ->willReturn(
@@ -411,7 +442,7 @@ class LinkTagTest extends TestCase
 
         $this->assertEquals(
             [
-                $tag1 => '<a href="/de/test-1" title="Test-Title" target="_blank">Test-Content</a>',
+                $tag1 => '<a href="http://sulu.lo/de/test-1" title="Test-Title" target="_blank">Test-Content</a>',
                 $tag2 => '<a title="Test-Title" target="_blank">Test-Content</a>',
                 $tag3 => 'Test-Content',
                 $tag4 => 'Test-Content',
