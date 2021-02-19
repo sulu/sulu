@@ -56,7 +56,6 @@ class SelectionPropertyMetadataMapperTest extends TestCase
         $jsonSchema = $this->selectionPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
 
         $this->assertEquals([
-            'name' => 'property-name',
             'anyOf' => [
                 $this->getNullSchema(),
                 $this->getEmptyArraySchema(),
@@ -83,7 +82,6 @@ class SelectionPropertyMetadataMapperTest extends TestCase
         $jsonSchema = $this->selectionPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
 
         $this->assertEquals([
-            'name' => 'property-name',
             'type' => 'array',
             'items' => [
                 'anyOf' => [
@@ -108,7 +106,6 @@ class SelectionPropertyMetadataMapperTest extends TestCase
         $jsonSchema = $this->selectionPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
 
         $this->assertEquals([
-            'name' => 'property-name',
             'anyOf' => [
                 $this->getNullSchema(),
                 $this->getEmptyArraySchema(),
@@ -139,7 +136,6 @@ class SelectionPropertyMetadataMapperTest extends TestCase
         $jsonSchema = $this->selectionPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
 
         $this->assertEquals([
-            'name' => 'property-name',
             'anyOf' => [
                 $this->getNullSchema(),
                 $this->getEmptyArraySchema(),
@@ -169,7 +165,6 @@ class SelectionPropertyMetadataMapperTest extends TestCase
         $jsonSchema = $this->selectionPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
 
         $this->assertEquals([
-            'name' => 'property-name',
             'anyOf' => [
                 $this->getNullSchema(),
                 $this->getEmptyArraySchema(),
@@ -200,7 +195,6 @@ class SelectionPropertyMetadataMapperTest extends TestCase
         $jsonSchema = $this->selectionPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
 
         $this->assertEquals([
-            'name' => 'property-name',
             'anyOf' => [
                 $this->getNullSchema(),
                 $this->getEmptyArraySchema(),

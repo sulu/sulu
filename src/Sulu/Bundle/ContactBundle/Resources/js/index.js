@@ -230,11 +230,11 @@ initializer.addUpdateConfigHook('sulu_contact', (config: Object, initialized: bo
                         properties: {
                             iban: {
                                 type: 'string',
-                                format: 'iban',
+                                pattern: '^[A-Z]{2}[0-9]{2}(?:[ ]?[0-9]{4}){4}(?:[ ]?[0-9]{1,2})?$',
                             },
                             bic: {
                                 type: 'string',
-                                format: 'bic',
+                                pattern: '^([A-Z]{6}[A-Z2-9][A-NP-Z1-9])(X{3}|[A-WY-Z0-9][A-Z0-9]{2})?$',
                             },
                         },
                         required: ['iban'],

@@ -53,7 +53,6 @@ class TextPropertyMetadataMapperTest extends TestCase
         $jsonSchema = $this->textPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
 
         $this->assertEquals([
-            'name' => 'property-name',
             'anyOf' => [
                 $this->getNullSchema(),
                 $this->getEmptyStringSchema(),
@@ -73,7 +72,6 @@ class TextPropertyMetadataMapperTest extends TestCase
         $jsonSchema = $this->textPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
 
         $this->assertEquals([
-            'name' => 'property-name',
             'type' => 'string',
             'minLength' => 1,
         ], $jsonSchema);
@@ -90,7 +88,6 @@ class TextPropertyMetadataMapperTest extends TestCase
         $jsonSchema = $this->textPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
 
         $this->assertEquals([
-            'name' => 'property-name',
             'anyOf' => [
                 $this->getNullSchema(),
                 $this->getEmptyStringSchema(),
@@ -114,7 +111,6 @@ class TextPropertyMetadataMapperTest extends TestCase
         $jsonSchema = $this->textPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
 
         $this->assertEquals([
-            'name' => 'property-name',
             'anyOf' => [
                 $this->getNullSchema(),
                 $this->getEmptyStringSchema(),
@@ -138,7 +134,6 @@ class TextPropertyMetadataMapperTest extends TestCase
         $jsonSchema = $this->textPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
 
         $this->assertEquals([
-            'name' => 'property-name',
             'anyOf' => [
                 $this->getNullSchema(),
                 $this->getEmptyStringSchema(),
@@ -161,7 +156,6 @@ class TextPropertyMetadataMapperTest extends TestCase
         $jsonSchema = $this->textPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
 
         $this->assertEquals([
-            'name' => 'property-name',
             'anyOf' => [
                 $this->getNullSchema(),
                 $this->getEmptyStringSchema(),
@@ -185,7 +179,6 @@ class TextPropertyMetadataMapperTest extends TestCase
         $jsonSchema = $this->textPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
 
         $this->assertEquals([
-            'name' => 'property-name',
             'anyOf' => [
                 $this->getNullSchema(),
                 $this->getEmptyStringSchema(),

@@ -48,10 +48,7 @@ class PropertyMetadata
     public function toJsonSchema(): ?array
     {
         if (null !== $this->schemaMetadata) {
-            $jsonSchema = $this->schemaMetadata->toJsonSchema();
-            $jsonSchema['name'] = $this->name;
-
-            return $jsonSchema;
+            return $this->schemaMetadata->toJsonSchema();
         }
 
         return null;

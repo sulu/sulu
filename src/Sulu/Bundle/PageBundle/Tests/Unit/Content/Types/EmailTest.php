@@ -50,7 +50,6 @@ class EmailTest extends TestCase
         $jsonSchema = $this->contentType->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
 
         $this->assertEquals([
-            'name' => 'property-name',
             'anyOf' => [
                 $this->getNullSchema(),
                 $this->getEmptyStringSchema(),
@@ -71,7 +70,6 @@ class EmailTest extends TestCase
         $jsonSchema = $this->contentType->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
 
         $this->assertEquals([
-            'name' => 'property-name',
             'type' => 'string',
             'format' => 'idn-email',
         ], $jsonSchema);

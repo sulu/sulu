@@ -71,7 +71,6 @@ class SchemaMetadataTest extends TestCase
                             [
                                 'properties' => [
                                     'nodeType' => [
-                                        'name' => 'nodeType',
                                         'const' => 2,
                                     ],
                                 ],
@@ -80,7 +79,6 @@ class SchemaMetadataTest extends TestCase
                             [
                                 'properties' => [
                                     'nodeType' => [
-                                        'name' => 'nodeType',
                                         'const' => 4,
                                     ],
                                 ],

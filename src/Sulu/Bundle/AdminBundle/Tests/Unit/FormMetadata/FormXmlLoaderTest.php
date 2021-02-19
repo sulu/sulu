@@ -258,7 +258,6 @@ class FormXmlLoaderTest extends TestCase
                             [
                                 'properties' => [
                                     'first' => [
-                                        'name' => 'first',
                                         'const' => 1,
                                     ],
                                 ],
@@ -267,7 +266,6 @@ class FormXmlLoaderTest extends TestCase
                             [
                                 'properties' => [
                                     'second' => [
-                                        'name' => 'second',
                                         'const' => 2,
                                     ],
                                 ],
@@ -278,7 +276,6 @@ class FormXmlLoaderTest extends TestCase
                             [
                                 'properties' => [
                                     'first' => [
-                                        'name' => 'first',
                                         'const' => 1,
                                     ],
                                 ],
@@ -307,7 +304,6 @@ class FormXmlLoaderTest extends TestCase
             [
                 'properties' => [
                     'blocks' => [
-                        'name' => 'blocks',
                         'type' => 'array',
                         'items' => [
                             'allOf' => [
@@ -315,7 +311,6 @@ class FormXmlLoaderTest extends TestCase
                                     'if' => [
                                         'properties' => [
                                             'type' => [
-                                                'name' => 'type',
                                                 'const' => 'editor',
                                             ],
                                         ],
@@ -331,7 +326,6 @@ class FormXmlLoaderTest extends TestCase
                                     'if' => [
                                         'properties' => [
                                             'type' => [
-                                                'name' => 'type',
                                                 'const' => 'editor_image',
                                             ],
                                         ],
@@ -368,7 +362,6 @@ class FormXmlLoaderTest extends TestCase
             [
                 'properties' => [
                     'block1' => [
-                        'name' => 'block1',
                         'type' => 'array',
                         'items' => [
                             'allOf' => [
@@ -376,7 +369,6 @@ class FormXmlLoaderTest extends TestCase
                                     'if' => [
                                         'properties' => [
                                             'type' => [
-                                                'name' => 'type',
                                                 'const' => 'type11',
                                             ],
                                         ],
@@ -386,7 +378,6 @@ class FormXmlLoaderTest extends TestCase
                                     'then' => [
                                         'properties' => [
                                             'block11' => [
-                                                'name' => 'block11',
                                                 'type' => 'array',
                                                 'items' => [
                                                     'allOf' => [
@@ -394,7 +385,6 @@ class FormXmlLoaderTest extends TestCase
                                                             'if' => [
                                                                 'properties' => [
                                                                     'type' => [
-                                                                        'name' => 'type',
                                                                         'const' => 'type111',
                                                                     ],
                                                                 ],
@@ -409,7 +399,6 @@ class FormXmlLoaderTest extends TestCase
                                                             'if' => [
                                                                 'properties' => [
                                                                     'type' => [
-                                                                        'name' => 'type',
                                                                         'const' => 'type112',
                                                                     ],
                                                                 ],
@@ -432,7 +421,6 @@ class FormXmlLoaderTest extends TestCase
                                     'if' => [
                                         'properties' => [
                                             'type' => [
-                                                'name' => 'type',
                                                 'const' => 'type12',
                                             ],
                                         ],
@@ -442,7 +430,6 @@ class FormXmlLoaderTest extends TestCase
                                     'then' => [
                                         'properties' => [
                                             'block12' => [
-                                                'name' => 'block12',
                                                 'type' => 'array',
                                                 'items' => [
                                                     'allOf' => [
@@ -450,7 +437,6 @@ class FormXmlLoaderTest extends TestCase
                                                             'if' => [
                                                                 'properties' => [
                                                                     'type' => [
-                                                                        'name' => 'type',
                                                                         'const' => 'type121',
                                                                     ],
                                                                 ],
@@ -465,7 +451,6 @@ class FormXmlLoaderTest extends TestCase
                                                             'if' => [
                                                                 'properties' => [
                                                                     'type' => [
-                                                                        'name' => 'type',
                                                                         'const' => 'type122',
                                                                     ],
                                                                 ],

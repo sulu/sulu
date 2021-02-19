@@ -420,7 +420,6 @@ class FormMetadataMapperTest extends TestCase
         $this->assertEquals([
             'properties' => [
                 'block' => [
-                    'name' => 'block',
                     'type' => 'array',
                     'items' => [
                         'allOf' => [
@@ -428,7 +427,6 @@ class FormMetadataMapperTest extends TestCase
                                 'if' => [
                                     'properties' => [
                                         'type' => [
-                                            'name' => 'type',
                                             'const' => 'component1',
                                         ],
                                     ],
@@ -444,7 +442,6 @@ class FormMetadataMapperTest extends TestCase
                                 'if' => [
                                     'properties' => [
                                         'type' => [
-                                            'name' => 'type',
                                             'const' => 'component2',
                                         ],
                                     ],
