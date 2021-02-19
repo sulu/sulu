@@ -19,6 +19,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\PageBundle\Teaser\Configuration\TeaserConfiguration;
 use Sulu\Bundle\PageBundle\Teaser\PageTeaserProvider;
+use Sulu\Bundle\PageBundle\Teaser\PHPCRPageTeaserProvider;
 use Sulu\Bundle\PageBundle\Teaser\Teaser;
 use Sulu\Bundle\SearchBundle\Search\Document;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -178,6 +179,40 @@ class PageTeaserProviderTest extends TestCase
         $this->assertCount(1, $result);
 
         $this->assertTeaser($ids[0], $data[$ids[0]], $result[0]);
+    }
+
+    public function testGetConfigurationFromPHPCRPageTeaserProvider(): void
+    {
+        $configuration = $this->prophesize(TeaserConfiguration::class);
+
+        $phpcrPageTeaserProvider = $this->prophesize(PHPCRPageTeaserProvider::class);
+        $phpcrPageTeaserProvider->getConfiguration()->willReturn($configuration->reveal());
+
+        $pageTeaserProvider = new PageTeaserProvider(
+            $this->searchManager->reveal(),
+            $this->translator->reveal(),
+            false,
+            $phpcrPageTeaserProvider->reveal()
+        );
+
+        $this->assertSame($configuration->reveal(), $pageTeaserProvider->getConfiguration());
+    }
+
+    public function testFindFromPHPCRPageTeaserProvider(): void
+    {
+        $teaser = $this->prophesize(Teaser::class);
+
+        $phpcrPageTeaserProvider = $this->prophesize(PHPCRPageTeaserProvider::class);
+        $phpcrPageTeaserProvider->find(['abc'], 'en')->willReturn([$teaser->reveal()]);
+
+        $pageTeaserProvider = new PageTeaserProvider(
+            $this->searchManager->reveal(),
+            $this->translator->reveal(),
+            false,
+            $phpcrPageTeaserProvider->reveal()
+        );
+
+        $this->assertSame($teaser->reveal(), $pageTeaserProvider->find(['abc'], 'en')[0]);
     }
 
     private function createQueryHit($id, array $data)
