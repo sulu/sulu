@@ -14,6 +14,7 @@ namespace Sulu\Bundle\MarkupBundle\Markup;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkItem;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface;
 use Sulu\Bundle\MarkupBundle\Tag\TagInterface;
+use Symfony\Component\HttpFoundation\UrlHelper;
 
 class LinkTag implements TagInterface
 {
@@ -33,10 +34,26 @@ class LinkTag implements TagInterface
      */
     private $isPreview;
 
-    public function __construct(LinkProviderPoolInterface $linkProviderPool, bool $isPreview = false)
-    {
+    /**
+     * @var UrlHelper
+     */
+    private $urlHelper;
+
+    public function __construct(
+        LinkProviderPoolInterface $linkProviderPool,
+        bool $isPreview = false,
+        UrlHelper $urlHelper = null
+    ) {
         $this->linkProviderPool = $linkProviderPool;
         $this->isPreview = $isPreview;
+        $this->urlHelper = $urlHelper;
+
+        if (null === $this->urlHelper) {
+            @\trigger_error(
+                'Instantiating the LinkTag class without the $urlHelper argument is deprecated.',
+                \E_USER_DEPRECATED
+            );
+        }
     }
 
     public function parseAll(array $attributesByTag, $locale)
@@ -51,8 +68,13 @@ class LinkTag implements TagInterface
             if (isset($attributes['href']) && \array_key_exists($provider . '-' . $attributes['href'], $contents)) {
                 $item = $contents[$provider . '-' . $attributes['href']];
 
+                $url = $item->getUrl();
+                if ($this->urlHelper) {
+                    $url = $this->urlHelper->getAbsoluteUrl($url);
+                }
+
                 $title = $item->getTitle();
-                $attributes['href'] = $item->getUrl();
+                $attributes['href'] = $url;
                 $attributes['title'] = $this->getValue($attributes, 'title', $item->getTitle());
             } elseif ($this->isPreview && self::VALIDATE_UNPUBLISHED === $validationState) {
                 // render anchor without href to keep styling even if target is not published in preview
