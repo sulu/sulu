@@ -567,15 +567,15 @@ class ContentTypeTest extends TestCase
     public function pageProvider()
     {
         return [
-//            // first page page-size 3 (one page more to check available pages)
-//            [1, 3, 8, '123-123-123', [1, 2, 3], true],
-//            // second page page-size 3 (one page more to check available pages)
-//            [2, 3, 8, '123-123-123', [4, 5, 6], true],
-//            // third page page-size 3 (only two pages because of the limit-result)
-//            [3, 3, 8, '123-123-123', [7, 8], false],
-//            // fourth page page-size 3 (empty result)
-//            [4, 3, 8, '123-123-123', [], false],
-//            [1, 3, 8, '123-123-123', [], false],
+            // first page page-size 3 (one page more to check available pages)
+            [1, 3, 8, '123-123-123', [1, 2, 3], true],
+            // second page page-size 3 (one page more to check available pages)
+            [2, 3, 8, '123-123-123', [4, 5, 6], true],
+            // third page page-size 3 (only two pages because of the limit-result)
+            [3, 3, 8, '123-123-123', [7, 8], false],
+            // fourth page page-size 3 (empty result)
+            [4, 3, 8, '123-123-123', [], false],
+            [1, 3, 8, '123-123-123', [], false],
             [-1, 3, 8, '123-123-123', [1, 2, 3], true],
             [0, 3, 8, '123-123-123', [1, 2, 3], true],
             ['99999999999999999999', 3, 8, '123-123-123', [1, 2, 3], true],
