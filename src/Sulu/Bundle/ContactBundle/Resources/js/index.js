@@ -230,10 +230,14 @@ initializer.addUpdateConfigHook('sulu_contact', (config: Object, initialized: bo
                         properties: {
                             iban: {
                                 type: 'string',
-                                pattern: '^[A-Z]{2}[0-9]{2}(?:[ ]?[0-9]{4}){4}(?:[ ]?[0-9]{1,2})?$',
+                                // regex copied from: https://stackoverflow.com/a/44657292
+                                // eslint-disable-next-line max-len
+                                pattern: '^([A-Z]{2}[ \\-]?[0-9]{2})(?=(?:[ \\-]?[A-Z0-9]){9,30}$)((?:[ \\-]?[A-Z0-9]{3,5}){2,7})([ \\-]?[A-Z0-9]{1,3})?$',
                             },
                             bic: {
                                 type: 'string',
+                                // eslint-disable-next-line max-len
+                                // regex copied from: https://github.com/jquery-validation/jquery-validation/blob/master/src/additional/bic.js
                                 pattern: '^([A-Z]{6}[A-Z2-9][A-NP-Z1-9])(X{3}|[A-WY-Z0-9][A-Z0-9]{2})?$',
                             },
                         },
