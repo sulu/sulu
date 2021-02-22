@@ -47,9 +47,22 @@ class SchemaMetadata implements SchemaMetadataInterface
 
     public function toJsonSchema(): array
     {
+        $propertiesSchema = $this->propertiesMetadata->toJsonSchema();
+
+        /*
+         * This is necessary to remove a warning from ajv (because of strict mode,
+         * `properties` or `required` keyword must not appear without {"type": "object"})
+         */
+        if (!empty($propertiesSchema)) {
+            $propertiesSchema = \array_merge(
+                ['type' => 'object'],
+                $propertiesSchema
+            );
+        }
+
         $jsonSchema = \array_merge(
             [],
-            $this->propertiesMetadata->toJsonSchema(),
+            $propertiesSchema,
             $this->anyOfsMetadata->toJsonSchema(),
             $this->allOfsMetadata->toJsonSchema()
         );
@@ -59,7 +72,9 @@ class SchemaMetadata implements SchemaMetadataInterface
          * empty schema object as array instead of an object and would break
          */
         if (empty($jsonSchema)) {
-            $jsonSchema['required'] = [];
+            return [
+                'type' => ['number', 'string', 'boolean', 'object', 'array', 'null'],
+            ];
         }
 
         return $jsonSchema;

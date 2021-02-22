@@ -377,6 +377,7 @@ class FormMetadataMapperTest extends TestCase
                 'property2',
                 'property3',
             ],
+            'type' => 'object',
         ], $schema->toJsonSchema());
     }
 
@@ -395,6 +396,7 @@ class FormMetadataMapperTest extends TestCase
                 'property2',
                 'property3',
             ],
+            'type' => 'object',
         ], $schema->toJsonSchema());
     }
 
@@ -418,7 +420,6 @@ class FormMetadataMapperTest extends TestCase
         $this->assertEquals([
             'properties' => [
                 'block' => [
-                    'name' => 'block',
                     'type' => 'array',
                     'items' => [
                         'allOf' => [
@@ -426,34 +427,37 @@ class FormMetadataMapperTest extends TestCase
                                 'if' => [
                                     'properties' => [
                                         'type' => [
-                                            'name' => 'type',
                                             'const' => 'component1',
                                         ],
                                     ],
                                     'required' => ['type'],
+                                    'type' => 'object',
                                 ],
                                 'then' => [
                                     'required' => ['property2'],
+                                    'type' => 'object',
                                 ],
                             ],
                             [
                                 'if' => [
                                     'properties' => [
                                         'type' => [
-                                            'name' => 'type',
                                             'const' => 'component2',
                                         ],
                                     ],
                                     'required' => ['type'],
+                                    'type' => 'object',
                                 ],
                                 'then' => [
                                     'required' => ['property3'],
+                                    'type' => 'object',
                                 ],
                             ],
                         ],
                     ],
                 ],
             ],
+            'type' => 'object',
         ], $schema->toJsonSchema());
     }
 

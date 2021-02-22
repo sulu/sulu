@@ -187,7 +187,9 @@ class TeaserContentTypeTest extends TestCase
     {
         return [
             'type' => 'array',
-            'items' => ['required' => []],
+            'items' => [
+                'type' => ['number', 'string', 'boolean', 'object', 'array', 'null'],
+            ],
             'maxItems' => 0,
         ];
     }
@@ -199,23 +201,18 @@ class TeaserContentTypeTest extends TestCase
             'properties' => [
                 'id' => [
                     'type' => 'string',
-                    'name' => 'id',
                 ],
                 'type' => [
                     'type' => 'string',
-                    'name' => 'type',
                 ],
                 'title' => [
                     'type' => 'string',
-                    'name' => 'title',
                 ],
                 'description' => [
                     'type' => 'string',
-                    'name' => 'description',
                 ],
                 'mediaId' => [
                     'type' => 'number',
-                    'name' => 'mediaId',
                 ],
             ],
             'required' => ['id', 'type'],
@@ -230,7 +227,6 @@ class TeaserContentTypeTest extends TestCase
         $jsonSchema = $this->contentType->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
 
         $this->assertEquals([
-            'name' => 'property-name',
             'anyOf' => [
                 $this->getNullSchema(),
                 [
@@ -245,11 +241,9 @@ class TeaserContentTypeTest extends TestCase
                                     'uniqueItems' => true,
                                 ],
                             ],
-                            'name' => 'items',
                         ],
                         'presentAs' => [
                             'type' => 'string',
-                            'name' => 'presentAs',
                         ],
                     ],
                 ],
@@ -266,7 +260,6 @@ class TeaserContentTypeTest extends TestCase
         $jsonSchema = $this->contentType->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
 
         $this->assertEquals([
-            'name' => 'property-name',
             'type' => 'object',
             'properties' => [
                 'items' => [
@@ -274,11 +267,9 @@ class TeaserContentTypeTest extends TestCase
                     'items' => $this->getTeaserItemSchema(),
                     'minItems' => 1,
                     'uniqueItems' => true,
-                    'name' => 'items',
                 ],
                 'presentAs' => [
                     'type' => 'string',
-                    'name' => 'presentAs',
                 ],
             ],
             'required' => ['items'],
@@ -297,7 +288,6 @@ class TeaserContentTypeTest extends TestCase
         $jsonSchema = $this->contentType->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
 
         $this->assertEquals([
-            'name' => 'property-name',
             'anyOf' => [
                 $this->getNullSchema(),
                 [
@@ -314,11 +304,9 @@ class TeaserContentTypeTest extends TestCase
                                     'uniqueItems' => true,
                                 ],
                             ],
-                            'name' => 'items',
                         ],
                         'presentAs' => [
                             'type' => 'string',
-                            'name' => 'presentAs',
                         ],
                     ],
                 ],
@@ -337,7 +325,6 @@ class TeaserContentTypeTest extends TestCase
         $jsonSchema = $this->contentType->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
 
         $this->assertEquals([
-            'name' => 'property-name',
             'anyOf' => [
                 $this->getNullSchema(),
                 [
@@ -353,11 +340,9 @@ class TeaserContentTypeTest extends TestCase
                                     'uniqueItems' => true,
                                 ],
                             ],
-                            'name' => 'items',
                         ],
                         'presentAs' => [
                             'type' => 'string',
-                            'name' => 'presentAs',
                         ],
                     ],
                 ],
@@ -376,7 +361,6 @@ class TeaserContentTypeTest extends TestCase
         $jsonSchema = $this->contentType->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
 
         $this->assertEquals([
-            'name' => 'property-name',
             'anyOf' => [
                 $this->getNullSchema(),
                 [
@@ -392,11 +376,9 @@ class TeaserContentTypeTest extends TestCase
                                     'uniqueItems' => true,
                                 ],
                             ],
-                            'name' => 'items',
                         ],
                         'presentAs' => [
                             'type' => 'string',
-                            'name' => 'presentAs',
                         ],
                     ],
                 ],
@@ -416,7 +398,6 @@ class TeaserContentTypeTest extends TestCase
         $jsonSchema = $this->contentType->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
 
         $this->assertEquals([
-            'name' => 'property-name',
             'anyOf' => [
                 $this->getNullSchema(),
                 [
@@ -433,11 +414,9 @@ class TeaserContentTypeTest extends TestCase
                                     'uniqueItems' => true,
                                 ],
                             ],
-                            'name' => 'items',
                         ],
                         'presentAs' => [
                             'type' => 'string',
-                            'name' => 'presentAs',
                         ],
                     ],
                 ],

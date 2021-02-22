@@ -768,7 +768,6 @@ test('Save the store should validate the current data and skip type errors', (do
     const jsonSchemaPromise = Promise.resolve({
         properties: {
             images: {
-                name: 'images',
                 anyOf: [
                     {
                         type: 'null',
@@ -777,7 +776,6 @@ test('Save the store should validate the current data and skip type errors', (do
                         type: 'object',
                         properties: {
                             ids: {
-                                name: 'ids',
                                 anyOf: [
                                     {
                                         type: 'array',
@@ -795,7 +793,6 @@ test('Save the store should validate the current data and skip type errors', (do
                                 ],
                             },
                             displayOption: {
-                                name: 'displayOption',
                                 type: 'string',
                             },
                         },

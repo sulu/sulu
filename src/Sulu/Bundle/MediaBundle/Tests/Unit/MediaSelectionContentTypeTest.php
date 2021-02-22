@@ -448,7 +448,9 @@ class MediaSelectionContentTypeTest extends TestCase
     {
         return [
             'type' => 'array',
-            'items' => ['required' => []],
+            'items' => [
+                'type' => ['number', 'string', 'boolean', 'object', 'array', 'null'],
+            ],
             'maxItems' => 0,
         ];
     }
@@ -461,7 +463,6 @@ class MediaSelectionContentTypeTest extends TestCase
         $jsonSchema = $this->mediaSelection->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
 
         $this->assertEquals([
-            'name' => 'property-name',
             'anyOf' => [
                 $this->getNullSchema(),
                 [
@@ -478,11 +479,9 @@ class MediaSelectionContentTypeTest extends TestCase
                                     'uniqueItems' => true,
                                 ],
                             ],
-                            'name' => 'ids',
                         ],
                         'displayOption' => [
                             'type' => 'string',
-                            'name' => 'displayOption',
                         ],
                     ],
                 ],
@@ -499,7 +498,6 @@ class MediaSelectionContentTypeTest extends TestCase
         $jsonSchema = $this->mediaSelection->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
 
         $this->assertEquals([
-            'name' => 'property-name',
             'type' => 'object',
             'properties' => [
                 'ids' => [
@@ -509,11 +507,9 @@ class MediaSelectionContentTypeTest extends TestCase
                     ],
                     'minItems' => 1,
                     'uniqueItems' => true,
-                    'name' => 'ids',
                 ],
                 'displayOption' => [
                     'type' => 'string',
-                    'name' => 'displayOption',
                 ],
             ],
             'required' => ['ids'],
@@ -532,7 +528,6 @@ class MediaSelectionContentTypeTest extends TestCase
         $jsonSchema = $this->mediaSelection->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
 
         $this->assertEquals([
-            'name' => 'property-name',
             'anyOf' => [
                 $this->getNullSchema(),
                 [
@@ -551,11 +546,9 @@ class MediaSelectionContentTypeTest extends TestCase
                                     'uniqueItems' => true,
                                 ],
                             ],
-                            'name' => 'ids',
                         ],
                         'displayOption' => [
                             'type' => 'string',
-                            'name' => 'displayOption',
                         ],
                     ],
                 ],
@@ -574,7 +567,6 @@ class MediaSelectionContentTypeTest extends TestCase
         $jsonSchema = $this->mediaSelection->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
 
         $this->assertEquals([
-            'name' => 'property-name',
             'anyOf' => [
                 $this->getNullSchema(),
                 [
@@ -592,11 +584,9 @@ class MediaSelectionContentTypeTest extends TestCase
                                     'uniqueItems' => true,
                                 ],
                             ],
-                            'name' => 'ids',
                         ],
                         'displayOption' => [
                             'type' => 'string',
-                            'name' => 'displayOption',
                         ],
                     ],
                 ],
@@ -615,7 +605,6 @@ class MediaSelectionContentTypeTest extends TestCase
         $jsonSchema = $this->mediaSelection->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
 
         $this->assertEquals([
-            'name' => 'property-name',
             'anyOf' => [
                 $this->getNullSchema(),
                 [
@@ -633,11 +622,9 @@ class MediaSelectionContentTypeTest extends TestCase
                                     'uniqueItems' => true,
                                 ],
                             ],
-                            'name' => 'ids',
                         ],
                         'displayOption' => [
                             'type' => 'string',
-                            'name' => 'displayOption',
                         ],
                     ],
                 ],
@@ -657,7 +644,6 @@ class MediaSelectionContentTypeTest extends TestCase
         $jsonSchema = $this->mediaSelection->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
 
         $this->assertEquals([
-            'name' => 'property-name',
             'anyOf' => [
                 $this->getNullSchema(),
                 [
@@ -676,11 +662,9 @@ class MediaSelectionContentTypeTest extends TestCase
                                     'uniqueItems' => true,
                                 ],
                             ],
-                            'name' => 'ids',
                         ],
                         'displayOption' => [
                             'type' => 'string',
-                            'name' => 'displayOption',
                         ],
                     ],
                 ],

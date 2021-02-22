@@ -40,8 +40,10 @@ class PropertyMetadataTest extends TestCase
     {
         return [
             ['title', false, null, null],
-            ['article', false, new StringMetadata(), ['name' => 'article', 'type' => 'string']],
-            ['article', true, new SchemaMetadata(), ['name' => 'article', 'required' => []]],
+            ['article', false, new StringMetadata(), ['type' => 'string']],
+            ['article', true, new SchemaMetadata(), [
+                'type' => ['number', 'string', 'boolean', 'object', 'array', 'null'],
+            ]],
         ];
     }
 
@@ -53,6 +55,6 @@ class PropertyMetadataTest extends TestCase
         $property = new PropertyMetadata($name, $mandatory, $schemaMetadata);
         $jsonSchema = $property->toJsonSchema();
 
-        $this->assertEquals($jsonSchema, $expectedSchema);
+        $this->assertEquals($expectedSchema, $jsonSchema);
     }
 }

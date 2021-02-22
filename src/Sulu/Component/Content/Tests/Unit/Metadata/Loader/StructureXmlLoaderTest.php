@@ -116,11 +116,13 @@ class StructureXmlLoaderTest extends TestCase
                         'required' => [
                             'article1',
                         ],
+                        'type' => 'object',
                     ],
                     [
                         'required' => [
                             'article2',
                         ],
+                        'type' => 'object',
                     ],
                 ],
             ],

@@ -169,12 +169,10 @@ class AdminControllerTest extends SuluTestCase
         $this->assertCount(2, $overviewType->schema->properties->block->items->allOf);
         $this->assertEquals(['type'], $overviewType->schema->properties->block->items->allOf[0]->if->required);
         $this->assertCount(1, (array) $overviewType->schema->properties->block->items->allOf[0]->if->properties);
-        $this->assertEquals('type', $overviewType->schema->properties->block->items->allOf[0]->if->properties->type->name);
         $this->assertEquals('type1', $overviewType->schema->properties->block->items->allOf[0]->if->properties->type->const);
         $this->assertEquals(['title'], $overviewType->schema->properties->block->items->allOf[0]->then->required);
         $this->assertEquals(['type'], $overviewType->schema->properties->block->items->allOf[1]->if->required);
         $this->assertCount(1, (array) $overviewType->schema->properties->block->items->allOf[1]->if->properties);
-        $this->assertEquals('type', $overviewType->schema->properties->block->items->allOf[1]->if->properties->type->name);
         $this->assertEquals('type2', $overviewType->schema->properties->block->items->allOf[1]->if->properties->type->const);
         $this->assertEquals(['image'], $overviewType->schema->properties->block->items->allOf[1]->then->required);
 

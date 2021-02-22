@@ -50,7 +50,6 @@ class SingleSelectionPropertyMetadataMapperTest extends TestCase
         $jsonSchema = $this->singleSelectionPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
 
         $this->assertEquals([
-            'name' => 'property-name',
             'anyOf' => [
                 $this->getNullSchema(),
                 $this->getEmptyObjectSchema(),
@@ -70,7 +69,6 @@ class SingleSelectionPropertyMetadataMapperTest extends TestCase
         $jsonSchema = $this->singleSelectionPropertyMetadataMapper->mapPropertyMetadata($propertyMetadata)->toJsonSchema();
 
         $this->assertEquals([
-            'name' => 'property-name',
             'anyOf' => [
                 ['type' => 'string'],
                 ['type' => 'number'],
