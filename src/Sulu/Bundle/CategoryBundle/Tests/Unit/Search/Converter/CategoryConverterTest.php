@@ -213,7 +213,7 @@ class CategoryConverterTest extends TestCase
             ->willReturn('de')
             ->shouldBeCalled();
         $category->findTranslationByLocale('de')
-            ->willReturn($object)
+            ->willReturn($object->reveal())
             ->shouldBeCalled();
 
         $indexMetadata = $this->prophesize(ClassMetadata::class);
