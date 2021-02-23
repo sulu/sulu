@@ -26,7 +26,6 @@ use Sulu\Component\SmartContent\DataProviderInterface;
 use Sulu\Component\SmartContent\DataProviderPool;
 use Sulu\Component\SmartContent\DataProviderPoolInterface;
 use Sulu\Component\SmartContent\DataProviderResult;
-use Sulu\Component\SmartContent\Exception\PageOutOfBoundsException;
 use Sulu\Component\Tag\Request\TagRequestHandlerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -575,11 +574,11 @@ class ContentTypeTest extends TestCase
             // third page page-size 3 (only two pages because of the limit-result)
             [3, 3, 8, '123-123-123', [7, 8], false],
             // fourth page page-size 3 (empty result)
-            [4, 3, 8, '123-123-123', [], false, PageOutOfBoundsException::class],
+            [4, 3, 8, '123-123-123', [], false],
             [1, 3, 8, '123-123-123', [], false],
-            [-1, 3, 8, '123-123-123', [1, 2, 3], true, PageOutOfBoundsException::class],
-            [0, 3, 8, '123-123-123', [1, 2, 3], true, PageOutOfBoundsException::class],
-            ['99999999999999999999', 3, 8, '123-123-123', [1, 2, 3], true, PageOutOfBoundsException::class],
+            [-1, 3, 8, '123-123-123', [1, 2, 3], true],
+            [0, 3, 8, '123-123-123', [1, 2, 3], true],
+            ['99999999999999999999', 3, 8, '123-123-123', [1, 2, 3], true],
         ];
     }
 
@@ -592,8 +591,7 @@ class ContentTypeTest extends TestCase
         $limitResult,
         $uuid,
         $expectedData,
-        $hasNextPage,
-        $exception = null
+        $hasNextPage
     ) {
         $smartContent = new SmartContent(
             $this->dataProviderPool,
@@ -604,10 +602,6 @@ class ContentTypeTest extends TestCase
             $this->categoryReferenceStore->reveal(),
             $this->tagReferenceStore->reveal()
         );
-
-        if ($exception) {
-            $this->expectException($exception);
-        }
 
         $property = $this->getMockForAbstractClass(
             PropertyInterface::class,
@@ -622,7 +616,7 @@ class ContentTypeTest extends TestCase
 
         $this->request->expects($this->at(0))->method('get')
             ->with($this->equalTo('p'))
-            ->willReturn($page);
+            ->willReturn((string) $page);
 
         $config = ['limitResult' => $limitResult, 'dataSource' => $uuid];
 
@@ -679,7 +673,7 @@ class ContentTypeTest extends TestCase
             ],
             ['webspaceKey' => 'sulu_io', 'locale' => 'de'],
             $limitResult,
-            $page,
+            $page < 1 ? 1 : ($page > \PHP_INT_MAX ? \PHP_INT_MAX : $page),
             $pageSize
         )->willReturn(new DataProviderResult($expectedData, $hasNextPage));
 
@@ -707,8 +701,7 @@ class ContentTypeTest extends TestCase
         $limitResult,
         $uuid,
         $expectedData,
-        $hasNextPage,
-        $exception = null
+        $hasNextPage
     ) {
         $smartContent = new SmartContent(
             $this->dataProviderPool,
@@ -719,10 +712,6 @@ class ContentTypeTest extends TestCase
             $this->categoryReferenceStore->reveal(),
             $this->tagReferenceStore->reveal()
         );
-
-        if ($exception) {
-            $this->expectException($exception);
-        }
 
         $property = $this->getMockForAbstractClass(
             PropertyInterface::class,
@@ -737,7 +726,7 @@ class ContentTypeTest extends TestCase
 
         $this->request->expects($this->at(0))->method('get')
             ->with($this->equalTo('p'))
-            ->willReturn($page);
+            ->willReturn((string) $page);
 
         $config = ['limitResult' => $limitResult, 'dataSource' => $uuid];
 
