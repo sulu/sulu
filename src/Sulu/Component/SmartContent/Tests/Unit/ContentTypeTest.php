@@ -616,7 +616,7 @@ class ContentTypeTest extends TestCase
 
         $this->request->expects($this->at(0))->method('get')
             ->with($this->equalTo('p'))
-            ->willReturn($page);
+            ->willReturn((string) $page);
 
         $config = ['limitResult' => $limitResult, 'dataSource' => $uuid];
 
@@ -726,7 +726,7 @@ class ContentTypeTest extends TestCase
 
         $this->request->expects($this->at(0))->method('get')
             ->with($this->equalTo('p'))
-            ->willReturn($page);
+            ->willReturn((string) $page);
 
         $config = ['limitResult' => $limitResult, 'dataSource' => $uuid];
 
