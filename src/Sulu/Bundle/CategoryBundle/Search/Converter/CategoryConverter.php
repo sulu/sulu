@@ -102,21 +102,25 @@ class CategoryConverter implements ConverterInterface
     /**
      * @return Field[]
      */
-    private function getFieldsById(int $id, string $locale): ?array
+    private function getFieldsById(int $id, string $locale): array
     {
         try {
             $category = $this->categoryManager->findById($id);
             $categoryTranslation = $category->findTranslationByLocale($locale);
 
             if (false === $categoryTranslation) {
-                return null;
+                $categoryTranslation = $category->findTranslationByLocale($category->getDefaultLocale());
+            }
+
+            if (false === $categoryTranslation) {
+                return [];
             }
 
             $document = $this->convertObjectToDocument($categoryTranslation);
 
             return $document->getFields();
         } catch (CategoryIdNotFoundException $e) {
-            return null;
+            return [];
         }
     }
 
