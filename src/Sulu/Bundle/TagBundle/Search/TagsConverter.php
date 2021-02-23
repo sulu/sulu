@@ -12,6 +12,8 @@
 namespace Sulu\Bundle\TagBundle\Search;
 
 use Massive\Bundle\SearchBundle\Search\Converter\ConverterInterface;
+use Massive\Bundle\SearchBundle\Search\Document;
+use Massive\Bundle\SearchBundle\Search\Field;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 
 /**
@@ -29,8 +31,48 @@ class TagsConverter implements ConverterInterface
         $this->tagManager = $tagManager;
     }
 
-    public function convert($value)
+    public function convert($value/*, Document $document = null*/)
     {
-        return $this->tagManager->resolveTagNames($value);
+        if (null === $value) {
+            return null;
+        }
+
+        if (\func_num_args() < 2 || !(\func_get_arg(1) instanceof Document)) {
+            // Preserve backward compatibility
+            return $this->tagManager->resolveTagNames($value);
+        }
+
+        $resultValue = null;
+        $fields = [];
+
+        if (\is_string($value)) {
+            $tag = $this->tagManager->findByName($value);
+            $resultValue = $tag->getId();
+
+            $fields = [
+                new Field('id', $tag->getId()),
+                new Field('name', $tag->getName()),
+            ];
+        }
+
+        if (\is_array($value)) {
+            $ids = $this->tagManager->resolveTagNames($value);
+            $resultValue = $ids;
+            $tags = \array_combine($ids, $value);
+
+            if (false !== $tags) {
+                $index = 0;
+                foreach ($tags as $id => $tagName) {
+                    $fields[] = new Field($index . '#id', $id);
+                    $fields[] = new Field($index . '#name', $tagName);
+                    ++$index;
+                }
+            }
+        }
+
+        return [
+            'value' => $resultValue,
+            'fields' => $fields,
+        ];
     }
 }

@@ -46,6 +46,7 @@
         <service id="sulu_markup.link_tag" class="Sulu\Bundle\MarkupBundle\Markup\LinkTag">
             <argument type="service" id="sulu_markup.link_tag.provider_pool"/>
             <argument type="expression">container.hasParameter('sulu.preview') ? parameter('sulu.preview') : false</argument>
+            <argument type="service" id="url_helper"/>
 
             <tag name="sulu_markup.tag" tag="link" type="html"/>
         </service>
