@@ -161,6 +161,11 @@ imports:
 
 ## 2.1.x
 
+### Removed PageOutOfBoundsException
+
+The `PageOutOfBoundsException` has been removed in `Sulu\Component\SmartContent\ContentType`, because it
+did not provide any advantage for the developer experience.
+
 ### Deprecated service `sulu_location.geolocator.guzzle.client` and parameter `sulu_location.guzzle.client.class`
 
 Because `NominatimGeolocator` and `GoogleGeolocator` now use the symfony http client the `sulu_location.geolocator.guzzle.client` is now deprecated

@@ -25,6 +25,7 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
 use Sulu\Bundle\CategoryBundle\Entity\Category;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
+use Sulu\Bundle\CategoryBundle\Exception\CategoryIdNotFoundException;
 use Sulu\Bundle\CategoryBundle\Search\Converter\CategoryConverter;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
@@ -194,5 +195,79 @@ class CategoryConverterTest extends TestCase
 
         $this->assertSame('1#' . $secondFields[0]->getName(), $value['fields'][2]->getName());
         $this->assertSame($secondFields[0]->getValue(), $value['fields'][2]->getValue());
+    }
+
+    public function testConvertDefaultCategory()
+    {
+        $id = 1;
+        $locale = 'en';
+
+        $document = $this->prophesize(Document::class);
+        $document->getLocale()->willReturn($locale);
+
+        $category = $this->prophesize(Category::class);
+        $object = $this->prophesize(CategoryTranslation::class);
+        $this->categoryManager->findById($id)->willReturn($category->reveal());
+        $category->findTranslationByLocale($locale)->willReturn(false);
+        $category->getDefaultLocale()
+            ->willReturn('de')
+            ->shouldBeCalled();
+        $category->findTranslationByLocale('de')
+            ->willReturn($object->reveal())
+            ->shouldBeCalled();
+
+        $indexMetadata = $this->prophesize(ClassMetadata::class);
+        $this->searchManager->getMetadata($object->reveal())->willReturn($indexMetadata->reveal());
+
+        $defaultIndexMetadata = $this->prophesize(IndexMetadata::class);
+        $indexMetadata->getIndexMetadata('_default')->willReturn($defaultIndexMetadata->reveal());
+
+        $objectDocument = $this->prophesize(Document::class);
+        $this->objectToDocumentConverter->objectToDocument(
+            $defaultIndexMetadata->reveal(),
+            $object->reveal()
+        )->willReturn($objectDocument->reveal());
+
+        $fieldEvaluator = $this->prophesize(FieldEvaluator::class);
+        $this->objectToDocumentConverter->getFieldEvaluator()->willReturn($fieldEvaluator->reveal());
+
+        $this->eventDispatcher->dispatch(Argument::cetera(), SearchEvents::PRE_INDEX)->shouldBeCalled();
+
+        $fields = [
+            new Field('foo', 'abc'),
+            new Field('bar', 'xyz'),
+        ];
+        $objectDocument->getFields()->willReturn($fields);
+
+        $value = $this->categoryConverter->convert($id, $document->reveal());
+
+        $this->assertSame([
+            'value' => $id,
+            'fields' => $fields,
+        ], $value);
+    }
+
+    public function testConvertCategoryNotFound()
+    {
+        $ids = [1];
+        $locale = 'en';
+
+        $document = $this->prophesize(Document::class);
+        $document->getLocale()->willReturn($locale);
+
+        $this->categoryManager->findById(Argument::any())
+            ->willThrow(new CategoryIdNotFoundException(1));
+
+        $firstIndexMetadata = $this->prophesize(ClassMetadata::class);
+        $firstDefaultIndexMetadata = $this->prophesize(IndexMetadata::class);
+        $firstIndexMetadata->getIndexMetadata('_default')->willReturn($firstDefaultIndexMetadata->reveal());
+
+        $value = $this->categoryConverter->convert($ids, $document->reveal());
+
+        $this->assertArrayHasKey('value', $value);
+        $this->assertSame($ids, $value['value']);
+
+        $this->assertArrayHasKey('fields', $value);
+        $this->assertCount(0, $value['fields']);
     }
 }
