@@ -181,7 +181,7 @@ jobs:
             fail-fast: false
             matrix:
                 include:
-                    - php-version: '7.4'
+                    - php-version: '7.2'
                       phpcr-transport: jackrabbit
                       dependency-versions: 'highest'
                       test-flags: '--jackrabbit-restart' # restart jackrabbit after each suite see: https://github.com/sulu-io/sulu/issues/2137
