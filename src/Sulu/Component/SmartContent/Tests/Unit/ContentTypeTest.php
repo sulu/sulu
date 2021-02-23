@@ -673,7 +673,7 @@ class ContentTypeTest extends TestCase
             ],
             ['webspaceKey' => 'sulu_io', 'locale' => 'de'],
             $limitResult,
-            $page < 1 ? 1 : $page,
+            $page < 1 ? 1 : ($page > \PHP_INT_MAX ? \PHP_INT_MAX : $page),
             $pageSize
         )->willReturn(new DataProviderResult($expectedData, $hasNextPage));
 
@@ -785,7 +785,7 @@ class ContentTypeTest extends TestCase
             ],
             ['webspaceKey' => 'sulu_io', 'locale' => 'de'],
             $limitResult,
-            $page < 1 ? 1 : $page,
+            $page < 1 ? 1 : ($page > \PHP_INT_MAX ? \PHP_INT_MAX : $page),
             $pageSize
         )->willReturn(new DataProviderResult($expectedData, $hasNextPage));
 

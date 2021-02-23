@@ -372,11 +372,15 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
 
         $page = $this->requestStack->getCurrentRequest()->get($pageParameter, 1);
 
-        if ($page < 1) {
+        if ($page <= 1) {
             $page = 1;
         }
 
-        return $page;
+        if ($page > \PHP_INT_MAX) {
+            return \PHP_INT_MAX;
+        }
+
+        return (int) $page;
     }
 
     public function exportData($propertyValue)
