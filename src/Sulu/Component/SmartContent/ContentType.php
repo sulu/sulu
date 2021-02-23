@@ -284,7 +284,7 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
                 $params,
                 $options,
                 (!empty($limit) ? \intval($limit) : null),
-                $page < 1 ? 1 : ($page > \PHP_INT_MAX ? \PHP_INT_MAX : $page),
+                $page,
                 $pageSize
             );
         } else {
@@ -370,7 +370,13 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
             return 1;
         }
 
-        return $this->requestStack->getCurrentRequest()->get($pageParameter, 1);
+        $page = $this->requestStack->getCurrentRequest()->get($pageParameter, 1);
+
+        if ($page < 1) {
+            $page = 1;
+        }
+
+        return $page;
     }
 
     public function exportData($propertyValue)
