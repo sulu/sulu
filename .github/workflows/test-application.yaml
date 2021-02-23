@@ -184,7 +184,6 @@ jobs:
                     - php-version: '7.2'
                       phpcr-transport: jackrabbit
                       dependency-versions: 'highest'
-                      test-flags: '--jackrabbit-restart' # restart jackrabbit after each suite see: https://github.com/sulu-io/sulu/issues/2137
                       php-extensions: 'ctype, iconv, mysql, pdo_mysql, php_fileinfo, imagick'
                       tools: 'composer'
 
@@ -238,4 +237,4 @@ jobs:
                   dependency-versions: ${{ matrix.dependency-versions }}
 
             - name: Run tests
-              run: php bin/runtests -i -a ${{ matrix.test-flags }}
+              run: php bin/runtests -i -a
