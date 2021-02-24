@@ -169,7 +169,7 @@ jobs:
               env: ${{ matrix.env }}
 
     test-windows:
-        name: "PHP ${{ matrix.php-version }} on Windows (MySQL ${{ matrix.mysql-version }}, ${{ matrix.phpcr-transport }}, ${{ matrix.dependency-versions }})"
+        name: "PHP ${{ matrix.php-version }} on Windows (mysql ${{ matrix.mysql-version }}, ${{ matrix.phpcr-transport }}, ${{ matrix.dependency-versions }})"
         runs-on: windows-latest
 
         env:
@@ -199,7 +199,7 @@ jobs:
             - name: Checkout project
               uses: actions/checkout@v2
 
-            - uses: actions/setup-node@v2
+            - uses: Install and configure Node.js
               with:
                   node-version: '14'
 
