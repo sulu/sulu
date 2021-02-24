@@ -168,7 +168,7 @@ jobs:
               run: time composer test
               env: ${{ matrix.env }}
 
-    test-windows:
+    php-windows:
         name: "PHP ${{ matrix.php-version }} on Windows (mysql ${{ matrix.mysql-version }}, ${{ matrix.phpcr-transport }}, ${{ matrix.dependency-versions }})"
         runs-on: windows-latest
 
