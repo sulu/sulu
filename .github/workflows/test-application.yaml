@@ -199,7 +199,8 @@ jobs:
             - name: Checkout project
               uses: actions/checkout@v2
 
-            - uses: Install and configure NodeJS
+            - name: Install and configure Node.js
+              uses: actions/setup-node@v2
               with:
                   node-version: '14'
 
