@@ -67,16 +67,7 @@ class PHPCRPageTeaserProviderTest extends TestCase
             $this->contentQueryBuilder->reveal(),
             $this->structureMetadataFactory->reveal(),
             $this->translator->reveal(),
-            false,
-            [
-                'view' => 64,
-                'add' => 32,
-                'edit' => 16,
-                'delete' => 8,
-                'archive' => 4,
-                'live' => 2,
-                'security' => 1,
-            ]
+            false
         );
     }
 
@@ -222,8 +213,7 @@ class PHPCRPageTeaserProviderTest extends TestCase
             -1,
             null,
             null,
-            false,
-            64
+            false
         )->willReturn($pagesData);
 
         $teasers = $this->phpcrPageTeaserProvider->find($ids, $locale);

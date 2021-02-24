@@ -20,12 +20,8 @@ use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
-use Sulu\Component\Security\Authorization\PermissionTypes;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-/**
- * @deprecated This class will replace the `PageTeaserProvider` and will be renamed to `PageTeaserProvider` afterwards
- */
 class PHPCRPageTeaserProvider implements TeaserProviderInterface
 {
     /**
@@ -54,28 +50,20 @@ class PHPCRPageTeaserProvider implements TeaserProviderInterface
     private $showDrafts;
 
     /**
-     * @var array<string, int>
-     */
-    private $permissions;
-
-    /**
      * @param bool $showDrafts Parameter "sulu_document_manager.show_drafts"
-     * @param array<string, int> $permissions Parameter "sulu_security.permissions"
      */
     public function __construct(
         ContentQueryExecutorInterface $contentQueryExecutor,
         ContentQueryBuilderInterface $contentQueryBuilder,
         StructureMetadataFactoryInterface $structureMetadataFactory,
         TranslatorInterface $translator,
-        bool $showDrafts,
-        array $permissions
+        bool $showDrafts
     ) {
         $this->contentQueryExecutor = $contentQueryExecutor;
         $this->contentQueryBuilder = $contentQueryBuilder;
         $this->structureMetadataFactory = $structureMetadataFactory;
         $this->translator = $translator;
         $this->showDrafts = $showDrafts;
-        $this->permissions = $permissions;
     }
 
     public function getConfiguration(): TeaserConfiguration
@@ -142,8 +130,7 @@ class PHPCRPageTeaserProvider implements TeaserProviderInterface
             -1,
             null,
             null,
-            false,
-            $this->permissions[PermissionTypes::VIEW]
+            false
         );
     }
 
