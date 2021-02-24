@@ -190,9 +190,9 @@ jobs:
                 include:
                     - php-version: '7.4'
                       mysql-version: '8.0'
-                      phpcr-transport: jackrabbit
+                      phpcr-transport: 'jackrabbit'
                       dependency-versions: 'highest'
-                      php-extensions: 'ctype, iconv, mysql, pdo_mysql, php_fileinfo, imagick'
+                      php-extensions: 'ctype, iconv, intl, mysql, pdo_mysql, php_fileinfo, imagick'
                       tools: 'composer'
 
         steps:
