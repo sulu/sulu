@@ -87,7 +87,10 @@ class ExportTest extends SuluTestCase
         $actualHash = \file_get_contents(self::$fixturePath . '/sulu-test.en.xlf');
         $actualHash = $this->removeTranslationIds($actualHash);
 
-        $this->assertSame($expectedHash, $actualHash);
+        $this->assertSame(
+            $this->normalizeLineEndings($expectedHash),
+            $this->normalizeLineEndings($actualHash)
+        );
     }
 
     public function testJsonExport()
@@ -101,7 +104,10 @@ class ExportTest extends SuluTestCase
         $expectedHash = \file_get_contents(self::$fixturePath . '/shouldbes/sulu-test.en.json');
         $actualHash = \file_get_contents(self::$fixturePath . '/sulu-test.en.json');
 
-        $this->assertSame($expectedHash, $actualHash);
+        $this->assertSame(
+            $this->normalizeLineEndings($expectedHash),
+            $this->normalizeLineEndings($actualHash)
+        );
     }
 
     public function testExportWithFrontEnd()
@@ -117,11 +123,32 @@ class ExportTest extends SuluTestCase
         $actualHash = \file_get_contents(self::$fixturePath . '/sulu-test.frontend.en.xlf');
         $actualHash = $this->removeTranslationIds($actualHash);
 
-        $this->assertSame($expectedHash, $actualHash);
+        $this->assertSame(
+            $this->normalizeLineEndings($expectedHash),
+            $this->normalizeLineEndings($actualHash)
+        );
     }
 
     private function removeTranslationIds($hash)
     {
         return \preg_replace('/ id="(\w+)" /', ' ', $hash);
+    }
+
+    /**
+     * See https://stackoverflow.com/a/36525712/7733374.
+     *
+     * @param string $string
+     *
+     * @return string
+     */
+    private function normalizeLineEndings($string)
+    {
+        // Convert all line-endings to UNIX format.
+        $string = \str_replace(["\r\n", "\r", "\n"], "\n", $string);
+
+        // Don't allow out-of-control blank lines.
+        $string = \preg_replace("/\n{3,}/", "\n\n", $string);
+
+        return $string;
     }
 }
