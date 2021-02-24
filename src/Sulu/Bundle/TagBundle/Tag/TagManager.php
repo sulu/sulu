@@ -13,6 +13,9 @@ namespace Sulu\Bundle\TagBundle\Tag;
 
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\Persistence\ObjectManager;
+use Sulu\Bundle\DomainEventBundle\Collector\DoctrineDomainEventCollectorInterface;
+use Sulu\Bundle\DomainEventBundle\Dispatcher\DomainEventDispatcherInterface;
+use Sulu\Bundle\DomainEventBundle\Entity\DomainEvent;
 use Sulu\Bundle\TagBundle\Entity\TagRepository;
 use Sulu\Bundle\TagBundle\Event\TagDeleteEvent;
 use Sulu\Bundle\TagBundle\Event\TagEvents;
@@ -43,14 +46,28 @@ class TagManager implements TagManagerInterface
      */
     private $eventDispatcher;
 
+    /**
+     * @var DomainEventDispatcherInterface
+     */
+    private $domainEventDispatcher;
+
+    /**
+     * @var DoctrineDomainEventCollectorInterface
+     */
+    private $doctrineDomainEventCollector;
+
     public function __construct(
         TagRepositoryInterface $tagRepository,
         ObjectManager $em,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        DomainEventDispatcherInterface $domainEventDispatcher,
+        DoctrineDomainEventCollectorInterface $doctrineDomainEventCollector
     ) {
         $this->tagRepository = $tagRepository;
         $this->em = $em;
         $this->eventDispatcher = $eventDispatcher;
+        $this->domainEventDispatcher = $domainEventDispatcher;
+        $this->doctrineDomainEventCollector = $doctrineDomainEventCollector;
     }
 
     /**
@@ -122,6 +139,17 @@ class TagManager implements TagManagerInterface
 
             $this->em->flush();
 
+            $this->domainEventDispatcher->dispatch(new DomainEvent(
+                $id ? 'modified' : 'created',
+                'tags',
+                $tag->getId(),
+                null,
+                $tag->getName(),
+                'sulu.settings.tags',
+                null,
+                $data
+            ));
+
             return $tag;
         } catch (UniqueConstraintViolationException $exc) {
             throw new TagAlreadyExistsException($name);
@@ -144,6 +172,16 @@ class TagManager implements TagManagerInterface
         }
 
         $this->em->remove($tag);
+
+        $this->doctrineDomainEventCollector->collect(new DomainEvent(
+            'deleted',
+            'tags',
+            $tag->getId(),
+            null,
+            $tag->getName(),
+            'sulu.settings.tags'
+        ));
+
         $this->em->flush();
 
         // throw an tag.delete event
@@ -179,6 +217,20 @@ class TagManager implements TagManagerInterface
             }
 
             $this->em->remove($srcTag);
+
+            $this->doctrineDomainEventCollector->collect(new DomainEvent(
+                'deleted',
+                'tags',
+                $srcTag->getId(),
+                null,
+                $srcTag->getName(),
+                'sulu.settings.tags',
+                null,
+                [
+                    'destinationId' => $destTag->getId(),
+                    'destinationName' => $destTag->getName()
+                ]
+            ));
 
             $srcTags[] = $srcTag;
         }
