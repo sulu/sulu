@@ -1,6 +1,17 @@
 # Upgrade
 
-## 2.2.x
+## 2.2.5
+
+### Deprecated `PageTeaserProvider` class
+
+A new service `PHPCRPageTeaserProvider` has been added and will replace the old `PageTeaserProvider` in the future.
+The constructor of `PageTeaserProvider` has been changed to accept the `PHPCRPageTeaserProvider` service as fourth argument.
+If it's passed, the new `PHPCRPageTeaserProvider` will be used automatically instead of the old `PageTeaserProvider`.
+
+### Removed PageOutOfBoundsException
+
+The `PageOutOfBoundsException` has been removed in `Sulu\Component\SmartContent\ContentType`, because it
+did not provide any advantage for the developer experience.
 
 ### Deprecated service `sulu_location.geolocator.guzzle.client` and parameter `sulu_location.guzzle.client.class`
 
@@ -159,7 +170,7 @@ imports:
     - { resource: '../prod/sulu_http_cache.yaml' }
 ```
 
-## 2.1.x
+## 2.1.9
 
 ### Deprecated `PageTeaserProvider`
 
