@@ -1,8 +1,13 @@
 CHANGELOG for Sulu
 ==================
 
-* 1.6.x
+* 1.6.40 (2020-02-25)
     * ENHANCEMENT #5732  [All]                     Change branch names
+    * ENHANCEMENT #5733  [All]                     Remove duplicated files in the bundles 
+    * ENHANCEMENT #5735  [All]                     Run php-cs-fixer as step inside of test job
+    * ENHANCEMENT #5756  [All]                     Fix code style after php cs update
+    * ENHANCEMENT #5761  [All]                     Use ramsey/composer-install action for installing dependencies
+    * ENHANCEMENT #5837  [All]                     Replace appveyor with github actions
 
 * 1.6.39 (2020-12-18)
     * BUGFIX      #5651  [MediaBundle]             Fix for image height calculation
