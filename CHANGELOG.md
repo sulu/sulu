@@ -8,6 +8,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #5756  [All]                     Fix code style after php cs update
     * ENHANCEMENT #5761  [All]                     Use ramsey/composer-install action for installing dependencies
     * ENHANCEMENT #5837  [All]                     Replace appveyor with github actions
+    * ENHANCEMENT #5846  [All]                     Improve to build 1.6 admin
 
 * 1.6.39 (2020-12-18)
     * BUGFIX      #5651  [MediaBundle]             Fix for image height calculation
