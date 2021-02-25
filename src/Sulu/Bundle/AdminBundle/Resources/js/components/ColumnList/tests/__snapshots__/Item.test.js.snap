@@ -188,7 +188,7 @@ exports[`Should render item with indicators 1`] = `
 
 exports[`Should render item with order input 1`] = `
 <div
-  class="item"
+  class="item orderFieldShown"
   role="button"
 >
   <div

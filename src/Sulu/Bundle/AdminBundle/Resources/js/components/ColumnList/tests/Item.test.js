@@ -34,6 +34,26 @@ test('Should render item with order input', () => {
         .toMatchSnapshot();
 });
 
+test('Should call onDoubleClick', () => {
+    const doubleClickSpy = jest.fn();
+
+    const item = shallow(<Item id={2} onDoubleClick={doubleClickSpy}>Test with indicators</Item>);
+
+    item.find('div.item').simulate('doubleclick');
+
+    expect(doubleClickSpy).toBeCalled();
+});
+
+test('Should not call onDoubleClick if order field is shown', () => {
+    const doubleClickSpy = jest.fn();
+
+    const item = shallow(<Item id={2} onDoubleClick={doubleClickSpy} showOrderField={true}>Test with indicators</Item>);
+
+    item.find('div.item').simulate('doubleclick');
+
+    expect(doubleClickSpy).not.toBeCalled();
+});
+
 test('Should call onOrderChange callback when order has changed', () => {
     const orderChangePromise = Promise.resolve(true);
     const orderChangeSpy = jest.fn().mockReturnValue(orderChangePromise);
