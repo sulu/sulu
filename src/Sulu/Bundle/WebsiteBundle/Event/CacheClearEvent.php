@@ -15,4 +15,18 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class CacheClearEvent extends Event
 {
+    /**
+     * @var string|null
+     */
+    private $webspaceKey;
+
+    public function __construct(?string $webspaceKey = null)
+    {
+        $this->webspaceKey = $webspaceKey;
+    }
+
+    public function getWebspaceKey(): ?string
+    {
+        return $this->webspaceKey;
+    }
 }

@@ -293,6 +293,13 @@
             <argument type="collection"/>
         </service>
 
+        <service id="sulu_website.reference_store.webspace"
+                 class="Sulu\Bundle\WebsiteBundle\ReferenceStore\WebspaceReferenceStore">
+            <argument type="service" id="sulu_core.webspace.request_analyzer" on-invalid="null"/>
+
+            <tag name="sulu_website.reference_store" alias="webspace"/>
+        </service>
+
         <service
             id="sulu_website.url_select_helper"
             class="Sulu\Bundle\WebsiteBundle\Admin\Helper\UrlSelect"

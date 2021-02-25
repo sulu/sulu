@@ -14,6 +14,7 @@ namespace Sulu\Bundle\WebsiteBundle\Cache;
 use Sulu\Bundle\HttpCacheBundle\Cache\CacheManager;
 use Sulu\Bundle\WebsiteBundle\Event\CacheClearEvent;
 use Sulu\Bundle\WebsiteBundle\Events;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\WebspaceReferenceStore;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -69,17 +70,23 @@ class CacheClearer implements CacheClearerInterface
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    public function clear()
+    public function clear(?string $webspaceKey = null)
     {
         if ($this->cacheManager && $this->cacheManager->supportsInvalidate()) {
+            if ($webspaceKey) {
+                $this->cacheManager->invalidateTag(WebspaceReferenceStore::WEBSPACE_REFERENCE_ALIAS . '-' . $webspaceKey);
+                $this->eventDispatcher->dispatch(new CacheClearEvent($webspaceKey), Events::CACHE_CLEAR);
+
+                return;
+            }
+
             $request = $this->requestStack->getCurrentRequest();
             if (!$request) {
                 return;
             }
 
             $this->cacheManager->invalidateDomain($request->getHost());
-
-            $this->eventDispatcher->dispatch(new CacheClearEvent(), Events::CACHE_CLEAR);
+            $this->eventDispatcher->dispatch(new CacheClearEvent($webspaceKey), Events::CACHE_CLEAR);
 
             return;
         }

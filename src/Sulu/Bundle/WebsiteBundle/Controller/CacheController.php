@@ -59,7 +59,8 @@ class CacheController
             return new JsonResponse(null, 403);
         }
 
-        $this->cacheClearer->clear();
+        // TODO webspace-key
+        $this->cacheClearer->clear('sulu');
 
         return new JsonResponse(null, 204);
     }
