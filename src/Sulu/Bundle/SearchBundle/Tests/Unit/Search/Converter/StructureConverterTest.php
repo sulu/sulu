@@ -25,6 +25,7 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Bundle\SearchBundle\Search\Converter\StructureConverter;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
+use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class StructureConverterTest extends TestCase
@@ -121,6 +122,24 @@ class StructureConverterTest extends TestCase
         ], $value);
     }
 
+    public function testConvertStringValueNotFound()
+    {
+        $uuid = 'not-existing-value';
+        $locale = 'en';
+
+        $document = $this->prophesize(Document::class);
+        $document->getLocale()->willReturn($locale);
+
+        $this->documentManager->find($uuid, $locale)->willThrow(new DocumentNotFoundException());
+
+        $value = $this->structureConverter->convert($uuid, $document->reveal());
+
+        $this->assertSame([
+            'value' => $uuid,
+            'fields' => [],
+        ], $value);
+    }
+
     public function testConvertArrayValue()
     {
         $uuids = ['abcd', 'efgh', ['invalid-value']];
@@ -186,5 +205,55 @@ class StructureConverterTest extends TestCase
 
         $this->assertSame('1#' . $secondFields[0]->getName(), $value['fields'][2]->getName());
         $this->assertSame($secondFields[0]->getValue(), $value['fields'][2]->getValue());
+    }
+
+    public function testConvertArrayValueNotFound()
+    {
+        $uuids = ['abcd', 'not-existing-value'];
+        $locale = 'en';
+
+        $document = $this->prophesize(Document::class);
+        $document->getLocale()->willReturn($locale);
+
+        $object = $this->prophesize(BasePageDocument::class);
+        $this->documentManager->find($uuids[0], $locale)->willReturn($object->reveal());
+        $this->documentManager->find($uuids[1], $locale)->willThrow(new DocumentNotFoundException());
+
+        $indexMetadata = $this->prophesize(ClassMetadata::class);
+        $this->searchManager->getMetadata($object->reveal())->willReturn($indexMetadata->reveal());
+
+        $defaultIndexMetadata = $this->prophesize(IndexMetadata::class);
+        $indexMetadata->getIndexMetadata('_default')->willReturn($defaultIndexMetadata->reveal());
+
+        $objectDocument = $this->prophesize(Document::class);
+        $this->objectToDocumentConverter->objectToDocument(
+            $defaultIndexMetadata->reveal(),
+            $object->reveal()
+        )->willReturn($objectDocument->reveal());
+
+        $fieldEvaluator = $this->prophesize(FieldEvaluator::class);
+        $this->objectToDocumentConverter->getFieldEvaluator()->willReturn($fieldEvaluator->reveal());
+
+        $this->eventDispatcher->dispatch(Argument::cetera(), SearchEvents::PRE_INDEX)->shouldBeCalledTimes(1);
+
+        $fields = [
+            new Field('foo', 'abc'),
+            new Field('bar', 'xyz'),
+        ];
+        $objectDocument->getFields()->willReturn($fields);
+
+        $value = $this->structureConverter->convert($uuids, $document->reveal());
+
+        $this->assertArrayHasKey('value', $value);
+        $this->assertSame($uuids, $value['value']);
+
+        $this->assertArrayHasKey('fields', $value);
+        $this->assertCount(2, $value['fields']);
+
+        $this->assertSame('0#' . $fields[0]->getName(), $value['fields'][0]->getName());
+        $this->assertSame($fields[0]->getValue(), $value['fields'][0]->getValue());
+
+        $this->assertSame('0#' . $fields[1]->getName(), $value['fields'][1]->getName());
+        $this->assertSame($fields[1]->getValue(), $value['fields'][1]->getValue());
     }
 }
