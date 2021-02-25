@@ -140,7 +140,7 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
         StructureInterface $structure,
         bool $loadExcerpt = true,
         array $includedProperties = null
-    ): array {
+    ) {
         if (null === $this->requestStack) {
             return $this->structureResolver->resolve($structure, $loadExcerpt, $includedProperties);
         }
