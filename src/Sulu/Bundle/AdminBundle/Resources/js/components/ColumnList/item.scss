@@ -30,6 +30,10 @@ $itemHeight: 40px;
         color: $itemColorDisabled;
     }
 
+    &.order-field-shown {
+        cursor: default;
+    }
+
     &:hover {
         background: $itemBackgroundColorHover;
     }
