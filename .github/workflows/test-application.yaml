@@ -258,8 +258,10 @@ jobs:
             - name: Execute test cases
               run: composer test
 
-            - name: Install javascript dependencies
-              run: npm install
+            - name: Install npm dependencies 
+              uses: bahmutov/npm-install@v1 
+              with: 
+                  useLockFile: false 
 
             - name: Build javascript
               run: npm run build
