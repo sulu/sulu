@@ -60,7 +60,11 @@ class Item extends React.Component<Props> {
     };
 
     handleDoubleClick = () => {
-        const {onDoubleClick, id} = this.props;
+        const {onDoubleClick, id, showOrderField} = this.props;
+
+        if (showOrderField) {
+            return;
+        }
 
         if (onDoubleClick) {
             onDoubleClick(id);
@@ -123,6 +127,7 @@ class Item extends React.Component<Props> {
                 [itemStyles.active]: active,
                 [itemStyles.disabled]: disabled,
                 [itemStyles.selected]: selected,
+                [itemStyles.orderFieldShown]: showOrderField,
             }
         );
 
