@@ -60,7 +60,11 @@ class Item extends React.Component<Props> {
     };
 
     handleDoubleClick = () => {
-        const {onDoubleClick, id} = this.props;
+        const {onDoubleClick, id, showOrderField} = this.props;
+
+        if (showOrderField) {
+            return;
+        }
 
         if (onDoubleClick) {
             onDoubleClick(id);
