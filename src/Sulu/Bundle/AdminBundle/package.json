@@ -2,9 +2,11 @@
   "name": "suluadmin",
   "scripts": {
     "build": "grunt build",
-    "watch": "grunt watch"
+    "watch": "grunt watch",
+    "postinstall": "bower update"
   },
   "devDependencies": {
+    "bower": "^1.8.12",
     "grunt": "0.4.*",
     "grunt-bower-task": "~0.4.0",
     "grunt-cli": "^1.2.0",
