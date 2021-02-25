@@ -151,7 +151,7 @@ class ContentTwigExtensionTest extends TestCase
                 'excerpt' => ['test1' => 'test1'],
             ],
         ];
-        $this->structureResolver->resolve($testStructure->reveal())->willReturn($resolvedStructure);
+        $this->structureResolver->resolve($testStructure->reveal(), true, null)->willReturn($resolvedStructure);
 
         $result = $this->extension->load('123-123-123');
 
@@ -195,9 +195,9 @@ class ContentTwigExtensionTest extends TestCase
         $requestStack->getCurrentRequest()->willReturn($currentRequest->reveal());
         $subRequest = $this->prophesize(Request::class);
         $currentRequest->duplicate([], [], null, null, [])->willReturn($subRequest->reveal());
-        $requestStack->push($subRequest)->shouldBeCalled();
+        $requestStack->push($subRequest->reveal())->shouldBeCalled();
 
-        $this->structureResolver->resolve($testStructure->reveal())->willReturn($resolvedStructure);
+        $this->structureResolver->resolve($testStructure->reveal(), true, null)->willReturn($resolvedStructure);
 
         $requestStack->pop()->shouldBeCalled();
 
@@ -227,9 +227,9 @@ class ContentTwigExtensionTest extends TestCase
         $requestStack->getCurrentRequest()->willReturn($currentRequest->reveal());
         $subRequest = $this->prophesize(Request::class);
         $currentRequest->duplicate([], [], null, null, [])->willReturn($subRequest->reveal());
-        $requestStack->push($subRequest)->shouldBeCalled();
+        $requestStack->push($subRequest->reveal())->shouldBeCalled();
 
-        $this->structureResolver->resolve($testStructure->reveal())->willThrow(new \RuntimeException());
+        $this->structureResolver->resolve($testStructure->reveal(), true, null)->willThrow(new \RuntimeException());
 
         $requestStack->pop()->shouldBeCalled();
 
@@ -410,7 +410,7 @@ class ContentTwigExtensionTest extends TestCase
                 'excerpt' => ['test1' => 'test1'],
             ],
         ];
-        $this->structureResolver->resolve($testStructure->reveal())->willReturn($resolvedStructure);
+        $this->structureResolver->resolve($testStructure->reveal(), true, null)->willReturn($resolvedStructure);
 
         $result = $this->extension->loadParent('123-123-123');
 
