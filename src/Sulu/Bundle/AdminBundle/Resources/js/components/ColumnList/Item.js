@@ -127,6 +127,7 @@ class Item extends React.Component<Props> {
                 [itemStyles.active]: active,
                 [itemStyles.disabled]: disabled,
                 [itemStyles.selected]: selected,
+                [itemStyles.orderFieldShown]: showOrderField,
             }
         );
 
