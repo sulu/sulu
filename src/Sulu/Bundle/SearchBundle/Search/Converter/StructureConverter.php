@@ -103,7 +103,7 @@ class StructureConverter implements ConverterInterface
     /**
      * @return Field[]
      */
-    private function getFieldsById(string $id, string $locale): ?array
+    private function getFieldsById(string $id, string $locale): array
     {
         try {
             $object = $this->documentManager->find($id, $locale);
@@ -111,7 +111,7 @@ class StructureConverter implements ConverterInterface
 
             return $document->getFields();
         } catch (DocumentManagerException $e) {
-            return null;
+            return [];
         }
     }
 
