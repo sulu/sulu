@@ -195,7 +195,7 @@
     },
     "scripts": {
         "bootstrap-test-environment": [
-            "bin/runtests --initialize --no-bundle-tests --no-component-tests"
+            "@php bin/runtests --initialize --no-bundle-tests --no-component-tests"
         ],
         "lint": [
             "@phpstan",
@@ -208,30 +208,30 @@
         ],
         "test": [
             "Composer\\Config::disableProcessTimeout",
-            "bin/runtests --all"
+            "@php bin/runtests --all"
         ],
         "phpstan": [
-            "bin/adminconsole cache:warmup --env=dev",
-            "vendor/bin/phpstan analyse"
+            "@php bin/adminconsole cache:warmup --env=dev",
+            "@php vendor/bin/phpstan analyse"
         ],
-        "php-cs": "vendor/bin/php-cs-fixer fix --verbose --diff --dry-run",
-        "php-cs-fix": "vendor/bin/php-cs-fixer fix",
+        "php-cs": "@php vendor/bin/php-cs-fixer fix --verbose --diff --dry-run",
+        "php-cs-fix": "@php vendor/bin/php-cs-fixer fix",
         "lint-composer": "@composer validate --strict",
-        "lint-twig": "bin/adminconsole lint:twig templates",
-        "lint-yaml": "bin/adminconsole lint:yaml config",
+        "lint-twig": "@php bin/adminconsole lint:twig templates",
+        "lint-yaml": "@php bin/adminconsole lint:yaml config",
         "lint-container": [
-            "bin/adminconsole lint:container --env dev",
-            "bin/websiteconsole lint:container --env dev",
-            "bin/adminconsole lint:container --env test",
-            "bin/websiteconsole lint:container --env test",
-            "bin/adminconsole lint:container --env stage",
-            "bin/websiteconsole lint:container --env stage",
-            "bin/adminconsole lint:container --env prod",
-            "bin/websiteconsole lint:container --env prod"
+            "@php bin/adminconsole lint:container --env dev",
+            "@php bin/websiteconsole lint:container --env dev",
+            "@php bin/adminconsole lint:container --env test",
+            "@php bin/websiteconsole lint:container --env test",
+            "@php bin/adminconsole lint:container --env stage",
+            "@php bin/websiteconsole lint:container --env stage",
+            "@php bin/adminconsole lint:container --env prod",
+            "@php bin/websiteconsole lint:container --env prod"
         ],
         "lint-doctrine": [
-            "bin/adminconsole doctrine:schema:validate --skip-sync",
-            "bin/adminconsole doctrine:ensure-production-settings --env prod"
+            "@php bin/adminconsole doctrine:schema:validate --skip-sync",
+            "@php bin/adminconsole doctrine:ensure-production-settings --env prod"
         ]
     },
     "config": {
