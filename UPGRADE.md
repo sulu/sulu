@@ -309,6 +309,12 @@ imports:
 
 ## 2.1.x
 
+### Deprecated `PageTeaserProvider`
+
+A new service `PHPCRPageTeaserProvider` has been added and will replace the old `PageTeaserProvider` in the future.
+The constructor of `PageTeaserProvider` has been changed to accept the `PHPCRPageTeaserProvider` service as fourth argument.
+If it's passed, the new `PHPCRPageTeaserProvider` will be used automatically instead of the old `PageTeaserProvider`.
+
 ### Removed PageOutOfBoundsException
 
 The `PageOutOfBoundsException` has been removed in `Sulu\Component\SmartContent\ContentType`, because it
