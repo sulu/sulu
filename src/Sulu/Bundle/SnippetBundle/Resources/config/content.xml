@@ -16,6 +16,7 @@
             <argument type="service" id="sulu_document_manager.document_registry"/>
             <argument>%sulu_snippet.areas%</argument>
         </service>
+        <service id="Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManagerInterface" alias="sulu_snippet.default_snippet.manager"/>
 
         <service id="sulu_snippet.resolver" class="Sulu\Bundle\SnippetBundle\Snippet\SnippetResolver" public="true">
             <argument type="service" id="sulu.content.mapper" />
