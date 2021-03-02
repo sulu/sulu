@@ -27,6 +27,8 @@ class SuluHttpCacheExtension extends Extension implements PrependExtensionInterf
     {
         $configs = $container->getExtensionConfig($this->getAlias());
         $configuration = $this->getConfiguration($configs, $container);
+        $resolvingBag = $container->getParameterBag();
+        $configs = $resolvingBag->resolveValue($configs);
         $config = $this->processConfiguration($configuration, $configs);
 
         $fosHttpCacheConfig = [
