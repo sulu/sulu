@@ -2,6 +2,10 @@
 
 ## 2.1.9
 
+### A new argument `$requestStack` has been added to the `ContentTwigExtension`
+
+Instantiating a `ContentTwigExtension` without the `$requestStack` argument is deprecated.
+
 ### Deprecated `PageTeaserProvider`
 
 A new service `PHPCRPageTeaserProvider` has been added and will replace the old `PageTeaserProvider` in the future.

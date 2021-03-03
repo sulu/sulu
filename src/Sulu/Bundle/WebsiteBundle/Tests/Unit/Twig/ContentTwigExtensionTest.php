@@ -26,6 +26,8 @@ use Sulu\Component\Localization\Localization;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Webspace;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class ContentTwigExtensionTest extends TestCase
 {
@@ -122,7 +124,8 @@ class ContentTwigExtensionTest extends TestCase
             $this->contentMapper->reveal(),
             $this->structureResolver->reveal(),
             $this->sessionManager->reveal(),
-            $this->requestAnalyzer->reveal()
+            $this->requestAnalyzer->reveal(),
+            $this->logger->reveal()
         );
     }
 
@@ -148,11 +151,90 @@ class ContentTwigExtensionTest extends TestCase
                 'excerpt' => ['test1' => 'test1'],
             ],
         ];
-        $this->structureResolver->resolve($testStructure->reveal())->willReturn($resolvedStructure);
+        $this->structureResolver->resolve($testStructure->reveal(), true, null)->willReturn($resolvedStructure);
 
         $result = $this->extension->load('123-123-123');
 
         $this->assertSame($resolvedStructure, $result);
+    }
+
+    public function testLoadWithRequestStack()
+    {
+        $requestStack = $this->prophesize(RequestStack::class);
+        $extension = new ContentTwigExtension(
+            $this->contentMapper->reveal(),
+            $this->structureResolver->reveal(),
+            $this->sessionManager->reveal(),
+            $this->requestAnalyzer->reveal(),
+            $this->logger->reveal(),
+            $requestStack->reveal()
+        );
+
+        $testStructure = $this->prophesize(StructureBridge::class);
+
+        $this->contentMapper->load('123-123-123', 'sulu_test', 'en_us')
+            ->willReturn($testStructure->reveal());
+
+        $resolvedStructure = [
+            'id' => 'some-uuid',
+            'template' => 'test',
+            'view' => [
+                'property-1' => 'view',
+                'property-2' => 'view',
+            ],
+            'content' => [
+                'property-1' => 'content',
+                'property-2' => 'content',
+            ],
+            'extension' => [
+                'excerpt' => ['test1' => 'test1'],
+            ],
+        ];
+
+        $currentRequest = $this->prophesize(Request::class);
+        $requestStack->getCurrentRequest()->willReturn($currentRequest->reveal());
+        $subRequest = $this->prophesize(Request::class);
+        $currentRequest->duplicate([], [], null, null, [])->willReturn($subRequest->reveal());
+        $requestStack->push($subRequest->reveal())->shouldBeCalled();
+
+        $this->structureResolver->resolve($testStructure->reveal(), true, null)->willReturn($resolvedStructure);
+
+        $requestStack->pop()->shouldBeCalled();
+
+        $result = $extension->load('123-123-123');
+
+        $this->assertSame($resolvedStructure, $result);
+    }
+
+    public function testLoadWithRequestStackAndException()
+    {
+        $requestStack = $this->prophesize(RequestStack::class);
+        $extension = new ContentTwigExtension(
+            $this->contentMapper->reveal(),
+            $this->structureResolver->reveal(),
+            $this->sessionManager->reveal(),
+            $this->requestAnalyzer->reveal(),
+            $this->logger->reveal(),
+            $requestStack->reveal()
+        );
+
+        $testStructure = $this->prophesize(StructureBridge::class);
+
+        $this->contentMapper->load('123-123-123', 'sulu_test', 'en_us')
+            ->willReturn($testStructure->reveal());
+
+        $currentRequest = $this->prophesize(Request::class);
+        $requestStack->getCurrentRequest()->willReturn($currentRequest->reveal());
+        $subRequest = $this->prophesize(Request::class);
+        $currentRequest->duplicate([], [], null, null, [])->willReturn($subRequest->reveal());
+        $requestStack->push($subRequest->reveal())->shouldBeCalled();
+
+        $this->structureResolver->resolve($testStructure->reveal(), true, null)->willThrow(new \RuntimeException());
+
+        $requestStack->pop()->shouldBeCalled();
+
+        $this->expectException(\RuntimeException::class);
+        $extension->load('123-123-123');
     }
 
     public function testLoadWithProperties()
@@ -328,7 +410,7 @@ class ContentTwigExtensionTest extends TestCase
                 'excerpt' => ['test1' => 'test1'],
             ],
         ];
-        $this->structureResolver->resolve($testStructure->reveal())->willReturn($resolvedStructure);
+        $this->structureResolver->resolve($testStructure->reveal(), true, null)->willReturn($resolvedStructure);
 
         $result = $this->extension->loadParent('123-123-123');
 

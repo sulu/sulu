@@ -20,6 +20,7 @@ use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -54,6 +55,11 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
     private $logger;
 
     /**
+     * @var RequestStack|null
+     */
+    private $requestStack;
+
+    /**
      * Constructor.
      */
     public function __construct(
@@ -61,13 +67,22 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
         StructureResolverInterface $structureResolver,
         SessionManagerInterface $sessionManager,
         RequestAnalyzerInterface $requestAnalyzer,
-        LoggerInterface $logger = null
+        LoggerInterface $logger = null,
+        RequestStack $requestStack = null
     ) {
         $this->contentMapper = $contentMapper;
         $this->structureResolver = $structureResolver;
         $this->sessionManager = $sessionManager;
         $this->requestAnalyzer = $requestAnalyzer;
         $this->logger = $logger ?: new NullLogger();
+        $this->requestStack = $requestStack;
+
+        if (null === $this->requestStack) {
+            @\trigger_error(
+                'Instantiating the "ContentTwigExtension" without the "$requestStack" parameter is deprecated',
+                \E_USER_DEPRECATED
+            );
+        }
     }
 
     public function getFunctions()
@@ -102,7 +117,7 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
                 \E_USER_DEPRECATED
             );
 
-            return $this->structureResolver->resolve($contentStructure);
+            return $this->resolveStructure($contentStructure);
         }
 
         return $this->resolveProperties($contentStructure, $properties);
@@ -119,6 +134,28 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
         }
 
         return $this->load($node->getParent()->getIdentifier(), $properties);
+    }
+
+    private function resolveStructure(
+        StructureInterface $structure,
+        bool $loadExcerpt = true,
+        array $includedProperties = null
+    ) {
+        if (null === $this->requestStack) {
+            return $this->structureResolver->resolve($structure, $loadExcerpt, $includedProperties);
+        }
+
+        $currentRequest = $this->requestStack->getCurrentRequest();
+
+        // This sets query parameters, request parameters and files to an empty array
+        $subRequest = $currentRequest->duplicate([], [], null, null, []);
+        $this->requestStack->push($subRequest);
+
+        try {
+            return $this->structureResolver->resolve($structure, $loadExcerpt, $includedProperties);
+        } finally {
+            $this->requestStack->pop();
+        }
     }
 
     private function resolveProperties(StructureInterface $contentStructure, array $properties): array
@@ -138,7 +175,7 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
             }
         }
 
-        $resolvedStructure = $this->structureResolver->resolve(
+        $resolvedStructure = $this->resolveStructure(
             $contentStructure,
             !empty($extensionProperties),
             \array_values($contentProperties)
