@@ -58,6 +58,16 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
             new webpack.DefinePlugin({
                 SULU_ADMIN_BUILD_VERSION: JSON.stringify(suluVersion),
             }),
+            new webpack.NormalModuleReplacementPlugin(/^@ckeditor/, (resource) => {
+                // npm might install the @ckeditor/* packages multiple times if they are required in a project because
+                // the assets/admin folder is not a parent of the vendor folder. because of this, the packages might be
+                // included in the build multiple times and throw an error. to prevent such duplicated packages in the
+                // build, we load the package that is installed in the assets/admin/node_modules folder if possible
+                const pathInRootNodeModules = path.resolve(nodeModulesPath, resource.request);
+                if (fs.existsSync(path.dirname(pathInRootNodeModules))) {
+                    resource.request = pathInRootNodeModules;
+                }
+            }),
         ],
         resolve: {
             alias: {
@@ -75,7 +85,7 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
             rules: [
                 {
                     test: /\.js$/,
-                    exclude: /node_modules\/(?!(sulu-(.*)-bundle|@ckeditor|lodash-es)\/)/,
+                    exclude: /node_modules[/\\](?!(sulu-(.*)-bundle|@ckeditor|lodash-es)[/\\])/,
                     use: {
                         loader: 'babel-loader',
                         options: {
@@ -86,7 +96,7 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
                 },
                 {
                     test: /\.css/,
-                    exclude: /ckeditor5-[^/]+\/theme\/[\w-/]+\.css$/,
+                    exclude: /ckeditor5-[^/\\]+[/\\]theme[/\\].+\.css$/,
                     use: [
                         MiniCssExtractPlugin.loader,
                         'css-loader',
@@ -110,11 +120,11 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
                     ],
                 },
                 {
-                    test: /ckeditor5-[^/]+\/theme\/icons\/[^/]+\.svg$/,
+                    test: /ckeditor5-[^/\\]+[/\\]theme[/\\]icons[/\\][^/\\]+\.svg$/,
                     use: 'raw-loader',
                 },
                 {
-                    test: /ckeditor5-[^/]+\/theme\/[\w-/]+\.css$/,
+                    test: /ckeditor5-[^/\\]+[/\\]theme[/\\].+\.css$/,
                     use: [
                         MiniCssExtractPlugin.loader,
                         {
@@ -135,7 +145,7 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
                 },
                 {
                     test: /\.(svg|ttf|woff|woff2|eot)(\?.*$|$)/,
-                    exclude: /ckeditor5-[^/]+\/theme\/icons\/[^/]+\.svg$/,
+                    exclude: /ckeditor5-[^/\\]+[/\\]theme[/\\]icons[/\\][^/\\]+\.svg$/,
                     use: [
                         {
                             loader: 'file-loader',
