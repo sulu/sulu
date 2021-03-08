@@ -1,6 +1,7 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
+/* eslint-disable import/no-nodejs-modules */
 
-const { exec } = require('child_process');
+const {exec} = require('child_process'); //
 const path = require('path');
 
 const parameters = process.argv.slice(2);
@@ -12,13 +13,13 @@ const ignoreCheck = parameters.length > 3 && parameters[2] === 'ignoreCheck';
 if (
     ignoreCheck
     || (
-        'admin' === path.basename(process.cwd())
-        && 'assets' === path.basename(path.dirname(process.cwd()))
+        path.basename(process.cwd()) === 'admin'
+        && path.basename(path.dirname(process.cwd())) === 'assets'
     )
 ) {
     exec('npx symlink-dir ' + from + ' ' + to, (error) => {
         if (error) {
-            console.error('Error occured while creating symlink: ' + error);
+            console.error('Error occured while creating symlink: ' + error); // eslint-disable-line no-console
         }
     });
 }
