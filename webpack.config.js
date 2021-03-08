@@ -77,11 +77,12 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
                     test: /\.js$/,
                     exclude: /node_modules\/(?!(sulu-(.*)-bundle|@ckeditor|lodash-es)\/)/,
                     use: {
-                        loader: 'babel-loader',
+                        loader: 'babel-loader'
+                        /*,
                         options: {
                             "cacheDirectory": true,
                             "cacheCompression": false,
-                        }
+                        }*/
                     },
                 },
                 {
