@@ -3,17 +3,17 @@
 const { exec } = require('child_process');
 const path = require('path');
 
-const arguments = process.argv.slice(2);
+const parameters = process.argv.slice(2);
 
-const from = arguments.length > 1 ? arguments[0] : '../../vendor';
-const to = arguments.length > 2 ? arguments[1] : 'node_modules/@sulu/vendor';
-const ignoreCheck = arguments.length > 3 && arguments[2] ==='ignoreCheck';
+const from = parameters.length > 1 ? parameters[0] : '../../vendor';
+const to = parameters.length > 2 ? parameters[1] : 'node_modules/@sulu/vendor';
+const ignoreCheck = parameters.length > 3 && parameters[2] === 'ignoreCheck';
 
 if (
     ignoreCheck
     || (
-        'admin' === path.basename(process.env.PWD)
-        && 'assets' === path.basename(path.dirname(process.env.PWD))
+        'admin' === path.basename(process.cwd())
+        && 'assets' === path.basename(path.dirname(process.cwd()))
     )
 ) {
     exec('npx symlink-dir ' + from + ' ' + to, (error) => {
