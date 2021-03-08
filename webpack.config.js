@@ -58,6 +58,16 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
             new webpack.DefinePlugin({
                 SULU_ADMIN_BUILD_VERSION: JSON.stringify(suluVersion),
             }),
+            new webpack.NormalModuleReplacementPlugin(/^@ckeditor\/.+/, (resource) => {
+                // npm might install the @ckeditor/* packages multiple times if they are required in a project because
+                // the assets/admin folder is not a parent of the vendor folder. because of this, the packages might be
+                // included in the build multiple times and throw an error. to prevent such duplicated packages in the
+                // build, we load the package that is installed in the assets/admin/node_modules folder if possible
+                const pathInRootNodeModules = path.resolve(nodeModulesPath, resource.request);
+                if (fs.existsSync(path.dirname(pathInRootNodeModules))) {
+                    resource.request = pathInRootNodeModules
+                }
+            }),
         ],
         resolve: {
             alias: {
