@@ -113,7 +113,7 @@ class UpdateBuildCommand extends Command
 
         foreach ($renamedFiles as $oldFile => $newFile){
             if ($filesystem->exists($this->projectDir . $oldFile)) {
-                if ('y' !== \strtolower(
+                if ('y' === \strtolower(
                     $ui->ask(\sprintf('The "%s" should be renamed to "%s" should wo do this now?', $oldFile, $newFile), 'y')
                 )) {
                     $filesystem->rename($this->projectDir . $oldFile, $this->projectDir . $newFile);
