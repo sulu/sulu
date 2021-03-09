@@ -75,7 +75,7 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
             rules: [
                 {
                     test: /\.js$/,
-                    exclude: /node_modules\/(?!(sulu-(.*)-bundle|@ckeditor|lodash-es)\/)/,
+                    exclude: /node_modules[/\\](?!(sulu-(.*)-bundle|@ckeditor|lodash-es)[/\\])/,
                     use: {
                         loader: 'babel-loader',
                         options: {
@@ -86,7 +86,7 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
                 },
                 {
                     test: /\.css/,
-                    exclude: /ckeditor5-[^/]+\/theme\/[\w-/]+\.css$/,
+                    exclude: /ckeditor5-[^/\\]+[/\\]theme[/\\].+\.css$/,
                     use: [
                         MiniCssExtractPlugin.loader,
                         'css-loader',
@@ -110,11 +110,11 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
                     ],
                 },
                 {
-                    test: /ckeditor5-[^/]+\/theme\/icons\/[^/]+\.svg$/,
+                    test: /ckeditor5-[^/\\]+[/\\]theme[/\\]icons[/\\][^/\\]+\.svg$/,
                     use: 'raw-loader',
                 },
                 {
-                    test: /ckeditor5-[^/]+\/theme\/[\w-/]+\.css$/,
+                    test: /ckeditor5-[^/\\]+[/\\]theme[/\\].+\.css$/,
                     use: [
                         MiniCssExtractPlugin.loader,
                         {
@@ -135,7 +135,7 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
                 },
                 {
                     test: /\.(svg|ttf|woff|woff2|eot)(\?.*$|$)/,
-                    exclude: /ckeditor5-[^/]+\/theme\/icons\/[^/]+\.svg$/,
+                    exclude: /ckeditor5-[^/\\]+[/\\]theme[/\\]icons[/\\][^/\\]+\.svg$/,
                     use: [
                         {
                             loader: 'file-loader',
