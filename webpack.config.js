@@ -3,7 +3,6 @@
 /* eslint-disable import/no-dynamic-require */
 const fs = require('fs');
 const path = require('path');
-const babelConfig = JSON.parse(fs.readFileSync(path.resolve(__dirname, '.babelrc'))); // eslint-disable-line no-undef
 
 module.exports = (env, argv) => { // eslint-disable-line no-undef
     let publicDir = 'public';
@@ -79,7 +78,10 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
                     exclude: /node_modules\/(?!(sulu-(.*)-bundle|@ckeditor|lodash-es)\/)/,
                     use: {
                         loader: 'babel-loader',
-                        options: babelConfig,
+                        options: {
+                            cacheDirectory: true,
+                            cacheCompression: false,
+                        },
                     },
                 },
                 {

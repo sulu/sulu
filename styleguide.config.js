@@ -30,8 +30,6 @@ const javaScriptFileExists = (path, fileName) => {
     return fs.existsSync(`${path}/${fileName}.js`);
 };
 
-const babelConfig = JSON.parse(fs.readFileSync(path.resolve(__dirname, '.babelrc'))); // eslint-disable-line no-undef
-
 module.exports = { // eslint-disable-line
     title: 'Sulu Javascript Docs',
     require: [
@@ -151,7 +149,10 @@ module.exports = { // eslint-disable-line
                     exclude: /node_modules\/(?!(sulu-(.*)-bundle|@ckeditor|lodash-es)\/)/,
                     use: {
                         loader: 'babel-loader',
-                        options: babelConfig,
+                        options: {
+                            cacheDirectory: true,
+                            cacheCompression: false,
+                        },
                     },
                 },
                 {

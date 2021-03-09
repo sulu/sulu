@@ -82,6 +82,7 @@ class UpdateBuildCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $ui = new SymfonyStyle($input, $output);
+        $filesystem = new Filesystem();
 
         if (!\preg_match(static::VERSION_REGEX, $this->suluVersion)) {
             $ui->warning(
@@ -101,9 +102,24 @@ class UpdateBuildCommand extends Command
             'index.js',
             'package.json',
             'webpack.config.js',
-            '.babelrc',
+            'babel.config.json',
+            '.browserslistrc',
             'postcss.config.js',
         ];
+
+        $renamedFiles = [
+            '.babelrc' => 'babel.config.json',
+        ];
+
+        foreach ($renamedFiles as $oldFile => $newFile) {
+            if ($filesystem->exists($this->projectDir . $oldFile)) {
+                if ('y' === \strtolower(
+                    $ui->ask(\sprintf('The "%s" should be renamed to "%s" should wo do this now?', $oldFile, $newFile), 'y')
+                )) {
+                    $filesystem->rename($this->projectDir . $oldFile, $this->projectDir . $newFile);
+                }
+            }
+        }
 
         $needManualBuild = false;
 
@@ -170,7 +186,6 @@ class UpdateBuildCommand extends Command
         $response = $this->httpClient->request('GET', $this->remoteArchive);
         \file_put_contents($tempFileZip, $response->getContent());
 
-        $filesystem = new Filesystem();
         $zip = new \ZipArchive();
         if ($zip->open($tempFileZip)) {
             $output->writeln('<info>Extract ZIP archive...</info>');
