@@ -14,7 +14,7 @@ const path = require('path');
 // npm versions are not able to dedupe packages that are required by a bundle and in the assets/admin directory.
 // because of this, packages that were not deduped might be included in the webpack build multiple times. this
 // increases the size of the build and will lead to an error in case of the @ckeditor packages:
-// https://ckeditor.com/docs/ckeditor5/latest/framework/guides/support/error-codes.html#error-ckeditor-duplicated-modules
+// http://ckeditor.com/docs/ckeditor5/latest/framework/guides/support/error-codes.html#error-ckeditor-duplicated-modules
 //
 // to prevent these problems, this file creates a assets/admin/node_modules/node_modules/@sulu/vendor symlink and we
 // use the symlinked vendor directory to require the bundles in the assets/admin/package.json.
