@@ -13,8 +13,8 @@ namespace Sulu\Bundle\SnippetBundle\Content;
 
 use ProxyManager\Factory\LazyLoadingValueHolderFactory;
 use ProxyManager\Proxy\LazyLoadingInterface;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadataProvider;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Bundle\SnippetBundle\Admin\SnippetAdmin;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
@@ -77,7 +77,7 @@ class SnippetDataProvider implements DataProviderInterface
     private $hasAudienceTargeting;
 
     /**
-     * @var FormMetadataProvider|null
+     * @var MetadataProviderInterface|null
      */
     private $formMetadataProvider;
 
@@ -94,7 +94,7 @@ class SnippetDataProvider implements DataProviderInterface
         DocumentManagerInterface $documentManager,
         ReferenceStoreInterface $referenceStore,
         bool $hasAudienceTargeting = false,
-        FormMetadataProvider $formMetadataProvider = null,
+        MetadataProviderInterface $formMetadataProvider = null,
         TokenStorageInterface $tokenStorage = null
     ) {
         $this->contentQueryExecutor = $contentQueryExecutor;
