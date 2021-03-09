@@ -111,7 +111,7 @@ class UpdateBuildCommand extends Command
             '.babelrc' => 'babel.config.json',
         ];
 
-        foreach ($renamedFiles as $oldFile => $newFile){
+        foreach ($renamedFiles as $oldFile => $newFile) {
             if ($filesystem->exists($this->projectDir . $oldFile)) {
                 if ('y' === \strtolower(
                     $ui->ask(\sprintf('The "%s" should be renamed to "%s" should wo do this now?', $oldFile, $newFile), 'y')
