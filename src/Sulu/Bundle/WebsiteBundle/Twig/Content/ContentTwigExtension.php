@@ -27,6 +27,7 @@ use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -61,14 +62,19 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
     private $logger;
 
     /**
-     * @var ?SecurityCheckerInterface
+     * @var SecurityCheckerInterface|null
      */
     private $securityChecker;
 
     /**
-     * @var WebspaceManagerInterface
+     * @var WebspaceManagerInterface|null
      */
     private $webspaceManager;
+
+    /**
+     * @var RequestStack|null
+     */
+    private $requestStack;
 
     /**
      * Constructor.
@@ -79,16 +85,36 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
         SessionManagerInterface $sessionManager,
         RequestAnalyzerInterface $requestAnalyzer,
         LoggerInterface $logger = null,
-        SecurityCheckerInterface $securityChecker = null,
-        WebspaceManagerInterface $webspaceManager
+        $securityChecker = null,
+        WebspaceManagerInterface $webspaceManager = null,
+        RequestStack $requestStack = null
     ) {
         $this->contentMapper = $contentMapper;
         $this->structureResolver = $structureResolver;
         $this->sessionManager = $sessionManager;
         $this->requestAnalyzer = $requestAnalyzer;
         $this->logger = $logger ?: new NullLogger();
+
+        if ($securityChecker instanceof RequestStack) {
+            @\trigger_error(
+                'Instantiating the "ContentTwigExtension" without the "$securityChecker" and "$webspaceManager" parameter is deprecated',
+                \E_USER_DEPRECATED
+            );
+
+            $requestStack = $securityChecker;
+            $securityChecker = null;
+        }
+
         $this->securityChecker = $securityChecker;
         $this->webspaceManager = $webspaceManager;
+        $this->requestStack = $requestStack;
+
+        if (null === $this->requestStack) {
+            @\trigger_error(
+                'Instantiating the "ContentTwigExtension" without the "$requestStack" parameter is deprecated',
+                \E_USER_DEPRECATED
+            );
+        }
     }
 
     public function getFunctions()
@@ -148,7 +174,7 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
                 \E_USER_DEPRECATED
             );
 
-            return $this->structureResolver->resolve($contentStructure);
+            return $this->resolveStructure($contentStructure);
         }
 
         return $this->resolveProperties($contentStructure, $properties);
@@ -165,6 +191,28 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
         }
 
         return $this->load($node->getParent()->getIdentifier(), $properties);
+    }
+
+    private function resolveStructure(
+        StructureInterface $structure,
+        bool $loadExcerpt = true,
+        array $includedProperties = null
+    ) {
+        if (null === $this->requestStack) {
+            return $this->structureResolver->resolve($structure, $loadExcerpt, $includedProperties);
+        }
+
+        $currentRequest = $this->requestStack->getCurrentRequest();
+
+        // This sets query parameters, request parameters and files to an empty array
+        $subRequest = $currentRequest->duplicate([], [], null, null, []);
+        $this->requestStack->push($subRequest);
+
+        try {
+            return $this->structureResolver->resolve($structure, $loadExcerpt, $includedProperties);
+        } finally {
+            $this->requestStack->pop();
+        }
     }
 
     private function resolveProperties(StructureInterface $contentStructure, array $properties): array
@@ -184,7 +232,7 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
             }
         }
 
-        $resolvedStructure = $this->structureResolver->resolve(
+        $resolvedStructure = $this->resolveStructure(
             $contentStructure,
             !empty($extensionProperties),
             \array_values($contentProperties)
