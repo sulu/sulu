@@ -36,7 +36,7 @@ if (
 ) {
     exec('npx symlink-dir ' + from + ' ' + to, (error) => {
         if (error) {
-            console.error('Error occured while creating symlink: ' + error); // eslint-disable-line no-console
+            throw new Error('Error occured while creating symlink: ' + error);
         }
     });
 }
