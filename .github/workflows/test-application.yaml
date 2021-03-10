@@ -38,9 +38,8 @@ jobs:
         runs-on: ubuntu-latest
 
         env:
-            JACKRABBIT_VERSION: 2.20.2
             SYMFONY_DEPRECATIONS_HELPER: weak
-            SYMFONY__DATABASE__HOST: 127.0.0.1
+            SYMFONY__PHPCR__TRANSPORT: ${{ matrix.phpcr-transport }}
 
         strategy:
             fail-fast: false
@@ -55,9 +54,9 @@ jobs:
                       tools: 'composer:v1'
                       php-cs-fixer: false
                       env:
-                          SYMFONY__PHPCR__TRANSPORT: doctrinedbal
                           SYMFONY__DATABASE__DRIVER: pdo_mysql
                           SYMFONY__DATABASE__VERSION: 5.7
+                          SYMFONY__DATABASE__HOST: 127.0.0.1
                           SYMFONY__DATABASE__PORT: 3306
 
                     - php-version: '7.0'
@@ -69,23 +68,24 @@ jobs:
                       tools: 'composer:v2'
                       php-cs-fixer: false
                       env:
-                          SYMFONY__PHPCR__TRANSPORT: doctrinedbal
                           SYMFONY__DATABASE__DRIVER: pdo_mysql
                           SYMFONY__DATABASE__VERSION: 5.7
+                          SYMFONY__DATABASE__HOST: 127.0.0.1
                           SYMFONY__DATABASE__PORT: 3306
 
                     - php-version: '7.4'
                       database: postgres
                       phpcr-transport: jackrabbit
+                      jackrabbit-version: '2.20.2'
                       dependency-versions: 'highest'
                       test-flags: '--jackrabbit-restart' # restart jackrabbit after each suite see: https://github.com/sulu-io/sulu/issues/2137
                       php-extensions: 'ctype, iconv, mysql, imagick'
                       tools: 'composer:v2'
                       php-cs-fixer: true
                       env:
-                          SYMFONY__PHPCR__TRANSPORT: jackrabbit
                           SYMFONY__DATABASE__DRIVER: pdo_pgsql
                           SYMFONY__DATABASE__VERSION: 12.5
+                          SYMFONY__DATABASE__HOST: 127.0.0.1
                           SYMFONY__DATABASE__PORT: 5432
                           SYMFONY__DATABASE__USER: postgres
                           SYMFONY__DATABASE__PASSWORD: postgres
@@ -124,7 +124,7 @@ jobs:
               if: ${{ matrix.phpcr-transport == 'jackrabbit' }}
               uses: carlosperate/download-file-action@v1.0.3
               with:
-                  file-url: http://archive.apache.org/dist/jackrabbit/${{ env.JACKRABBIT_VERSION }}/jackrabbit-standalone-${{ env.JACKRABBIT_VERSION }}.jar
+                  file-url: http://archive.apache.org/dist/jackrabbit/${{ matrix.jackrabbit-version }}/jackrabbit-standalone-${{ matrix.jackrabbit-version }}.jar
                   file-name: jackrabbit-standalone.jar
                   location: downloads
 
@@ -159,15 +159,8 @@ jobs:
         runs-on: windows-latest
 
         env:
-            JACKRABBIT_VERSION: 2.20.2
             SYMFONY_DEPRECATIONS_HELPER: weak
-            SYMFONY__PHPCR__TRANSPORT: jackrabbit
-            SYMFONY__DATABASE__DRIVER: pdo_mysql
-            SYMFONY__DATABASE__VERSION: 5.7
-            SYMFONY__DATABASE__HOST: 127.0.0.1
-            SYMFONY__DATABASE__PORT: 3306
-            SYMFONY__DATABASE__USER: root
-            SYMFONY__DATABASE__PASSWORD: root
+            SYMFONY__PHPCR__TRANSPORT: ${{ matrix.phpcr-transport }}
 
         strategy:
             fail-fast: false
@@ -175,9 +168,17 @@ jobs:
                 include:
                     - php-version: '7.2'
                       phpcr-transport: jackrabbit
+                      jackrabbit-version: '2.20.2'
                       dependency-versions: 'highest'
                       php-extensions: 'ctype, iconv, mysql, pdo_mysql, php_fileinfo, imagick'
                       tools: 'composer'
+                      env:
+                          SYMFONY__DATABASE__DRIVER: pdo_mysql
+                          SYMFONY__DATABASE__VERSION: 5.7
+                          SYMFONY__DATABASE__HOST: 127.0.0.1
+                          SYMFONY__DATABASE__PORT: 3306
+                          SYMFONY__DATABASE__USER: root
+                          SYMFONY__DATABASE__PASSWORD: root
 
         steps:
             - name: Checkout project
@@ -201,7 +202,7 @@ jobs:
               if: ${{ matrix.phpcr-transport == 'jackrabbit' }}
               uses: carlosperate/download-file-action@v1.0.3
               with:
-                  file-url: http://archive.apache.org/dist/jackrabbit/${{ env.JACKRABBIT_VERSION }}/jackrabbit-standalone-${{ env.JACKRABBIT_VERSION }}.jar
+                  file-url: http://archive.apache.org/dist/jackrabbit/${{ matrix.jackrabbit-version }}/jackrabbit-standalone-${{ matrix.jackrabbit-version }}.jar
                   file-name: jackrabbit-standalone.jar
                   location: downloads
 
@@ -222,3 +223,4 @@ jobs:
 
             - name: Run tests
               run: php bin/runtests -i -a
+              env: ${{ matrix.env }}
