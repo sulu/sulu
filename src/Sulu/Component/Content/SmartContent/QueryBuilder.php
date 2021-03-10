@@ -359,7 +359,7 @@ class QueryBuilder extends ContentQueryBuilder
     {
         $sql2Where = [];
         foreach ($types as $type) {
-            $sql2Where[] = 'page.[i18n:' . $languageCode . '-template] = ' . $type;
+            $sql2Where[] = \sprintf('page.[i18n:%s-template] = \'%s\'', $languageCode, $type);
         }
 
         if (\count($sql2Where) > 0) {

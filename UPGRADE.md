@@ -1,5 +1,11 @@
 # Upgrade
 
+## 2.2.6
+
+### A new argument `$requestStack` has been added to the `ContentTwigExtension`
+
+Instantiating a `ContentTwigExtension` without the `$requestStack` argument is deprecated.
+
 ## 2.2.5
 
 ### Deprecated `PageTeaserProvider` class
@@ -169,6 +175,12 @@ Additionally a `sulu_http_cache` configuration for the `stage` environment shoul
 imports:
     - { resource: '../prod/sulu_http_cache.yaml' }
 ```
+
+## 2.1.10
+
+### A new argument `$requestStack` has been added to the `ContentTwigExtension`
+
+Instantiating a `ContentTwigExtension` without the `$requestStack` argument is deprecated.
 
 ## 2.1.9
 

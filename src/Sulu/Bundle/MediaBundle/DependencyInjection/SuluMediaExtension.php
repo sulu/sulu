@@ -226,11 +226,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('sulu_media.format_cache.segments', $config['format_cache']['segments']);
 
         // converter
-        $ghostScriptPath = $config['ghost_script']['path'];
-
-        if (\method_exists($container, 'resolveEnvPlaceholders')) {
-            $ghostScriptPath = $container->resolveEnvPlaceholders($ghostScriptPath, true);
-        }
+        $ghostScriptPath = $container->resolveEnvPlaceholders($config['ghost_script']['path'], true);
 
         $container->setParameter('sulu_media.ghost_script.path', $ghostScriptPath);
 
@@ -295,7 +291,8 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
             $hasVipsAdapter = true;
         }
 
-        if ('auto' === $config['adapter']) {
+        $adapter = $container->resolveEnvPlaceholders($config['adapter'], true);
+        if ('auto' === $adapter) {
             $adapter = 'gd';
             if ($hasVipsAdapter) {
                 $adapter = 'vips';
@@ -306,7 +303,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
             $container->setAlias('sulu_media.adapter', 'sulu_media.adapter.' . $adapter);
         } else {
             // set used adapter for imagine
-            $container->setAlias('sulu_media.adapter', 'sulu_media.adapter.' . $config['adapter']);
+            $container->setAlias('sulu_media.adapter', 'sulu_media.adapter.' . $adapter);
         }
 
         // enable search
@@ -324,13 +321,8 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
             $loader->load('audience_targeting.xml');
         }
 
-        $ffmpegBinary = $config['ffmpeg']['ffmpeg_binary'] ?? null;
-        $ffprobeBinary = $config['ffmpeg']['ffprobe_binary'] ?? null;
-
-        if (\method_exists($container, 'resolveEnvPlaceholders')) {
-            $ffmpegBinary = $container->resolveEnvPlaceholders($ffmpegBinary, true);
-            $ffprobeBinary = $container->resolveEnvPlaceholders($ffprobeBinary, true);
-        }
+        $ffmpegBinary = $container->resolveEnvPlaceholders($config['ffmpeg']['ffmpeg_binary'] ?? null, true);
+        $ffprobeBinary = $container->resolveEnvPlaceholders($config['ffmpeg']['ffprobe_binary'] ?? null, true);
 
         if ($ffmpegBinary || $ffprobeBinary) {
             if (!\class_exists(FFMpeg::class)) {
@@ -360,10 +352,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
 
     private function configureStorage(array $config, ContainerBuilder $container, LoaderInterface $loader)
     {
-        $storage = $config['storage'];
-        if (\method_exists($container, 'resolveEnvPlaceholders')) {
-            $storage = $container->resolveEnvPlaceholders($storage, true);
-        }
+        $storage = $container->resolveEnvPlaceholders($config['storage'], true);
         $container->setParameter('sulu_media.media.storage', $storage);
 
         foreach ($config['storages'] as $storageKey => $storageConfig) {
@@ -371,10 +360,8 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
                 if ($storageKey === $storage) {
                     $container->setParameter('sulu_media.media.storage.' . $storageKey . '.' . $key, $value);
                 } else {
-                    if (\method_exists($container, 'resolveEnvPlaceholders')) {
-                        // Resolve unused ENV Variables of other Adapter
-                        $container->resolveEnvPlaceholders($value, true);
-                    }
+                    // Resolve unused ENV Variables of other Adapter
+                    $container->resolveEnvPlaceholders($value, true);
                 }
             }
         }

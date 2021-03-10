@@ -7,6 +7,10 @@ const MAX_LENGTH = 50;
 
 export default class StringBlockPreviewTransformer implements BlockPreviewTransformer {
     transform(value: *): Node {
+        if (typeof value === 'number') {
+            value = String(value);
+        }
+
         if (typeof value !== 'string') {
             return null;
         }

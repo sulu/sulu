@@ -15,8 +15,8 @@ use PHPCR\ItemNotFoundException;
 use PHPCR\SessionInterface;
 use ProxyManager\Factory\LazyLoadingValueHolderFactory;
 use ProxyManager\Proxy\LazyLoadingInterface;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadataProvider;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
@@ -91,7 +91,7 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
     private $hasAudienceTargeting;
 
     /**
-     * @var FormMetadataProvider|null
+     * @var MetadataProviderInterface|null
      */
     private $formMetadataProvider;
 
@@ -110,7 +110,7 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
         $showDrafts,
         $permissions,
         bool $hasAudienceTargeting = false,
-        FormMetadataProvider $formMetadataProvider = null,
+        MetadataProviderInterface $formMetadataProvider = null,
         TokenStorageInterface $tokenStorage = null
     ) {
         $this->contentQueryBuilder = $contentQueryBuilder;
