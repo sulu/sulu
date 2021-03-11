@@ -9,11 +9,11 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\DomainEventBundle\Entity;
+namespace Sulu\Bundle\EventLogBundle\Entity;
 
 use Sulu\Component\Security\Authentication\UserInterface;
 
-class DomainEvent
+class EventRecord
 {
     /**
      * @var int
@@ -75,37 +75,12 @@ class DomainEvent
      */
     private $resourceSecurityType;
 
-    /**
-     * Constructor.
-     */
-    public function __construct(
-        string $eventType,
-        string $resourceKey,
-        string $resourceId,
-        ?string $resourceLocale = null,
-        ?string $resourceTitle = null,
-        ?string $resourceSecurityContext = null,
-        ?string $resourceSecurityType = null,
-        array $eventPayload = []
-    ) {
-        $this->eventType = $eventType;
-        $this->resourceKey = $resourceKey;
-        $this->resourceId = $resourceId;
-        $this->resourceLocale = $resourceLocale;
-        $this->resourceTitle = $resourceTitle;
-        $this->resourceSecurityContext = $resourceSecurityContext;
-        $this->resourceSecurityType = $resourceSecurityType;
-        $this->eventPayload = $eventPayload;
-
-        $this->eventDateTime = new \DateTimeImmutable();
-    }
-
     public function getEventType(): string
     {
         return $this->eventType;
     }
 
-    public function setEventType(string $eventType): DomainEvent
+    public function setEventType(string $eventType): EventRecord
     {
         $this->eventType = $eventType;
 
@@ -117,7 +92,7 @@ class DomainEvent
         return $this->eventPayload;
     }
 
-    public function setEventPayload(array $eventPayload): DomainEvent
+    public function setEventPayload(array $eventPayload): EventRecord
     {
         $this->eventPayload = $eventPayload;
 
@@ -129,7 +104,7 @@ class DomainEvent
         return $this->eventDateTime;
     }
 
-    public function setEventDateTime(\DateTimeImmutable $eventDateTime): DomainEvent
+    public function setEventDateTime(\DateTimeImmutable $eventDateTime): EventRecord
     {
         $this->eventDateTime = $eventDateTime;
 
@@ -141,7 +116,7 @@ class DomainEvent
         return $this->eventBatch;
     }
 
-    public function setEventBatch(?string $eventBatch): DomainEvent
+    public function setEventBatch(?string $eventBatch): EventRecord
     {
         $this->eventBatch = $eventBatch;
 
@@ -153,7 +128,7 @@ class DomainEvent
         return $this->user;
     }
 
-    public function setUser(?UserInterface $user): DomainEvent
+    public function setUser(?UserInterface $user): EventRecord
     {
         $this->user = $user;
 
@@ -165,7 +140,7 @@ class DomainEvent
         return $this->resourceKey;
     }
 
-    public function setResourceKey(string $resourceKey): DomainEvent
+    public function setResourceKey(string $resourceKey): EventRecord
     {
         $this->resourceKey = $resourceKey;
 
@@ -177,7 +152,7 @@ class DomainEvent
         return $this->resourceId;
     }
 
-    public function setResourceId(string $resourceId): DomainEvent
+    public function setResourceId(string $resourceId): EventRecord
     {
         $this->resourceId = $resourceId;
 
@@ -189,7 +164,7 @@ class DomainEvent
         return $this->resourceLocale;
     }
 
-    public function setResourceLocale(?string $resourceLocale): DomainEvent
+    public function setResourceLocale(?string $resourceLocale): EventRecord
     {
         $this->resourceLocale = $resourceLocale;
 
@@ -201,7 +176,7 @@ class DomainEvent
         return $this->resourceTitle;
     }
 
-    public function setResourceTitle(?string $resourceTitle): DomainEvent
+    public function setResourceTitle(?string $resourceTitle): EventRecord
     {
         $this->resourceTitle = $resourceTitle;
 
@@ -213,7 +188,7 @@ class DomainEvent
         return $this->resourceSecurityContext;
     }
 
-    public function setResourceSecurityContext(?string $resourceSecurityContext): DomainEvent
+    public function setResourceSecurityContext(?string $resourceSecurityContext): EventRecord
     {
         $this->resourceSecurityContext = $resourceSecurityContext;
 
@@ -225,7 +200,7 @@ class DomainEvent
         return $this->resourceSecurityType;
     }
 
-    public function setResourceSecurityType(?string $resourceSecurityType): DomainEvent
+    public function setResourceSecurityType(?string $resourceSecurityType): EventRecord
     {
         $this->resourceSecurityType = $resourceSecurityType;
 

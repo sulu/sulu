@@ -9,16 +9,14 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\DomainEventBundle\Collector;
+namespace Sulu\Bundle\EventLogBundle\Collector;
 
 use Doctrine\Common\EventSubscriber;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\OnClearEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
 use Doctrine\ORM\Events;
-use Sulu\Bundle\DomainEventBundle\Dispatcher\DomainEventDispatcherInterface;
-use Sulu\Bundle\DomainEventBundle\Entity\DomainEvent;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Sulu\Bundle\EventLogBundle\Dispatcher\DomainEventDispatcherInterface;
+use Sulu\Bundle\EventLogBundle\Event\DomainEvent;
 
 class DoctrineDomainEventCollector implements DoctrineDomainEventCollectorInterface, EventSubscriber
 {

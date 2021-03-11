@@ -9,14 +9,12 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\DomainEventBundle\Subscriber;
+namespace Sulu\Bundle\EventLogBundle\Subscriber;
 
-use Doctrine\ORM\EntityManagerInterface;
-use Sulu\Bundle\DomainEventBundle\Entity\DomainEvent;
+use Sulu\Bundle\EventLogBundle\Event\DomainEvent;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Security;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class SetDomainEventUserSubscriber implements EventSubscriberInterface
 {

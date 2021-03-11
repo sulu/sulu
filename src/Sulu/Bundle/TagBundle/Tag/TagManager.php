@@ -13,9 +13,9 @@ namespace Sulu\Bundle\TagBundle\Tag;
 
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\Persistence\ObjectManager;
-use Sulu\Bundle\DomainEventBundle\Collector\DoctrineDomainEventCollectorInterface;
-use Sulu\Bundle\DomainEventBundle\Dispatcher\DomainEventDispatcherInterface;
-use Sulu\Bundle\DomainEventBundle\Entity\DomainEvent;
+use Sulu\Bundle\EventLogBundle\Collector\DoctrineDomainEventCollectorInterface;
+use Sulu\Bundle\EventLogBundle\Dispatcher\DomainEventDispatcherInterface;
+use Sulu\Bundle\EventLogBundle\Event\DomainEvent;
 use Sulu\Bundle\TagBundle\Entity\TagRepository;
 use Sulu\Bundle\TagBundle\Event\TagDeleteEvent;
 use Sulu\Bundle\TagBundle\Event\TagEvents;

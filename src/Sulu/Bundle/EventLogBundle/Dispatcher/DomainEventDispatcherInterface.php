@@ -9,9 +9,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\DomainEventBundle\Dispatcher;
+namespace Sulu\Bundle\EventLogBundle\Dispatcher;
 
-use Sulu\Bundle\DomainEventBundle\Entity\DomainEvent;
+use Sulu\Bundle\EventLogBundle\Event\DomainEvent;
 
 interface DomainEventDispatcherInterface
 {

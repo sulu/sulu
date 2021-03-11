@@ -9,9 +9,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\DomainEventBundle\Collector;
+namespace Sulu\Bundle\EventLogBundle\Collector;
 
-use Sulu\Bundle\DomainEventBundle\Entity\DomainEvent;
+use Sulu\Bundle\EventLogBundle\Event\DomainEvent;
 
 interface DoctrineDomainEventCollectorInterface
 {

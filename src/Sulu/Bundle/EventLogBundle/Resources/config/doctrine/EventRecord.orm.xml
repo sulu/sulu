@@ -2,7 +2,7 @@
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-    <entity name="Sulu\Bundle\DomainEventBundle\Entity\DomainEvent" table="de_domain_events">
+    <entity name="Sulu\Bundle\EventLogBundle\Entity\EventRecord" table="el_event_records">
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>

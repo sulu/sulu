@@ -9,14 +9,14 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\DomainEventBundle\DependencyInjection;
+namespace Sulu\Bundle\EventLogBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
-class SuluDomainEventExtension extends Extension
+class SuluEventLogExtension extends Extension
 {
     public function load(array $configs, ContainerBuilder $container)
     {

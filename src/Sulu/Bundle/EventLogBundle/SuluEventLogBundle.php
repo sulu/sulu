@@ -9,10 +9,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\DomainEventBundle;
+namespace Sulu\Bundle\EventLogBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class SuluDomainEventBundle extends Bundle
+class SuluEventLogBundle extends Bundle
 {
 }
