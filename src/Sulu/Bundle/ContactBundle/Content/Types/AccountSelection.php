@@ -53,7 +53,7 @@ class AccountSelection extends SimpleContentType implements PreResolvableContent
         $accounts = $this->accountManager->getByIds($ids, $property->getStructure()->getLanguageCode());
 
         foreach ($accounts as $account) {
-            $contacts[\array_search($account->getId(), $ids)] = $account;
+            $accounts[\array_search($account->getId(), $ids)] = $account;
         }
 
         return $accounts;
