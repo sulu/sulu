@@ -16,6 +16,7 @@
         <service id="Sulu\Bundle\EventLogBundle\Collector\DoctrineDomainEventCollectorInterface" alias="sulu_event_log.doctrine_domain_event_collector"/>
 
         <service id="sulu_event_log.persist_event_record_subscriber" class="Sulu\Bundle\EventLogBundle\Subscriber\PersistEventRecordSubscriber">
+            <argument type="service" id="sulu.repository.event_record"/>
             <argument type="service" id="doctrine.orm.entity_manager"/>
 
             <tag name="kernel.event_subscriber" />
@@ -26,5 +27,8 @@
 
             <tag name="kernel.event_subscriber" />
         </service>
+
+        <!--PERSISTENCE BUNDLE REPOSITORIES-->
+        <service id="Sulu\Bundle\EventLogBundle\Entity\EventRecordRepositoryInterface" alias="sulu.repository.event_record"/>
     </services>
 </container>

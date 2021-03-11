@@ -13,7 +13,7 @@ namespace Sulu\Bundle\EventLogBundle\Entity;
 
 use Sulu\Component\Security\Authentication\UserInterface;
 
-class EventRecord
+class EventRecord implements EventRecordInterface
 {
     /**
      * @var int
@@ -80,7 +80,7 @@ class EventRecord
         return $this->eventType;
     }
 
-    public function setEventType(string $eventType): EventRecord
+    public function setEventType(string $eventType): EventRecordInterface
     {
         $this->eventType = $eventType;
 
@@ -92,7 +92,7 @@ class EventRecord
         return $this->eventPayload;
     }
 
-    public function setEventPayload(array $eventPayload): EventRecord
+    public function setEventPayload(array $eventPayload): EventRecordInterface
     {
         $this->eventPayload = $eventPayload;
 
@@ -104,7 +104,7 @@ class EventRecord
         return $this->eventDateTime;
     }
 
-    public function setEventDateTime(\DateTimeImmutable $eventDateTime): EventRecord
+    public function setEventDateTime(\DateTimeImmutable $eventDateTime): EventRecordInterface
     {
         $this->eventDateTime = $eventDateTime;
 
@@ -116,7 +116,7 @@ class EventRecord
         return $this->eventBatch;
     }
 
-    public function setEventBatch(?string $eventBatch): EventRecord
+    public function setEventBatch(?string $eventBatch): EventRecordInterface
     {
         $this->eventBatch = $eventBatch;
 
@@ -128,7 +128,7 @@ class EventRecord
         return $this->user;
     }
 
-    public function setUser(?UserInterface $user): EventRecord
+    public function setUser(?UserInterface $user): EventRecordInterface
     {
         $this->user = $user;
 
@@ -140,7 +140,7 @@ class EventRecord
         return $this->resourceKey;
     }
 
-    public function setResourceKey(string $resourceKey): EventRecord
+    public function setResourceKey(string $resourceKey): EventRecordInterface
     {
         $this->resourceKey = $resourceKey;
 
@@ -152,7 +152,7 @@ class EventRecord
         return $this->resourceId;
     }
 
-    public function setResourceId(string $resourceId): EventRecord
+    public function setResourceId(string $resourceId): EventRecordInterface
     {
         $this->resourceId = $resourceId;
 
@@ -164,7 +164,7 @@ class EventRecord
         return $this->resourceLocale;
     }
 
-    public function setResourceLocale(?string $resourceLocale): EventRecord
+    public function setResourceLocale(?string $resourceLocale): EventRecordInterface
     {
         $this->resourceLocale = $resourceLocale;
 
@@ -176,7 +176,7 @@ class EventRecord
         return $this->resourceTitle;
     }
 
-    public function setResourceTitle(?string $resourceTitle): EventRecord
+    public function setResourceTitle(?string $resourceTitle): EventRecordInterface
     {
         $this->resourceTitle = $resourceTitle;
 
@@ -188,7 +188,7 @@ class EventRecord
         return $this->resourceSecurityContext;
     }
 
-    public function setResourceSecurityContext(?string $resourceSecurityContext): EventRecord
+    public function setResourceSecurityContext(?string $resourceSecurityContext): EventRecordInterface
     {
         $this->resourceSecurityContext = $resourceSecurityContext;
 
@@ -200,7 +200,7 @@ class EventRecord
         return $this->resourceSecurityType;
     }
 
-    public function setResourceSecurityType(?string $resourceSecurityType): EventRecord
+    public function setResourceSecurityType(?string $resourceSecurityType): EventRecordInterface
     {
         $this->resourceSecurityType = $resourceSecurityType;
 

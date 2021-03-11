@@ -12,20 +12,27 @@
 namespace Sulu\Bundle\EventLogBundle\Subscriber;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Sulu\Bundle\EventLogBundle\Entity\EventRecord;
+use Sulu\Bundle\EventLogBundle\Entity\EventRecordRepositoryInterface;
 use Sulu\Bundle\EventLogBundle\Event\DomainEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class PersistEventRecordSubscriber implements EventSubscriberInterface
 {
     /**
+     * @var EventRecordRepositoryInterface
+     */
+    private $eventRecordRepository;
+
+    /**
      * @var EntityManagerInterface
      */
     private $entityManager;
 
     public function __construct(
+        EventRecordRepositoryInterface $eventRecordRepository,
         EntityManagerInterface $entityManager
     ) {
+        $this->eventRecordRepository = $eventRecordRepository;
         $this->entityManager = $entityManager;
     }
 
@@ -38,19 +45,7 @@ class PersistEventRecordSubscriber implements EventSubscriberInterface
 
     public function persistsEventRecord(DomainEvent $event)
     {
-        $eventRecord = new EventRecord();
-        $eventRecord->setEventType($event->getEventType());
-        $eventRecord->setEventPayload($event->getEventPayload());
-        $eventRecord->setEventDateTime($event->getEventDateTime());
-        $eventRecord->setEventBatch($event->getEventBatch());
-        $eventRecord->setUser($event->getUser());
-        $eventRecord->setResourceKey($event->getResourceKey());
-        $eventRecord->setResourceId($event->getResourceId());
-        $eventRecord->setResourceLocale($event->getResourceLocale());
-        $eventRecord->setResourceTitle($event->getResourceTitle());
-        $eventRecord->setResourceSecurityContext($event->getResourceSecurityContext());
-        $eventRecord->setResourceSecurityType($event->getResourceSecurityType());
-
+        $eventRecord = $this->eventRecordRepository->createForDomainEvent($event);
         $this->entityManager->persist($eventRecord);
         $this->entityManager->flush();
     }

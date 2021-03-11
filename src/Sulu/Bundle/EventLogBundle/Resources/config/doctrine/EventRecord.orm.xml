@@ -2,7 +2,7 @@
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-    <entity name="Sulu\Bundle\EventLogBundle\Entity\EventRecord" table="el_event_records">
+    <mapped-superclass name="Sulu\Bundle\EventLogBundle\Entity\EventRecord" table="el_event_records">
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>
@@ -21,5 +21,5 @@
         <field name="resourceTitle" column="resourceTitle" type="string" nullable="true" length="191"/>
         <field name="resourceSecurityContext" column="resourceSecurityContext" type="string" nullable="true" length="191"/>
         <field name="resourceSecurityType" column="resourceSecurityType" type="string" nullable="true" length="191"/>
-    </entity>
+    </mapped-superclass>
 </doctrine-mapping>
