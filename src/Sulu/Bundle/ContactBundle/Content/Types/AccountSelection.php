@@ -50,7 +50,13 @@ class AccountSelection extends SimpleContentType implements PreResolvableContent
             return [];
         }
 
-        return $this->accountManager->getByIds($ids, $property->getStructure()->getLanguageCode());
+        $accounts = $this->accountManager->getByIds($ids, $property->getStructure()->getLanguageCode());
+
+        foreach ($accounts as $account) {
+            $contacts[\array_search($account->getId(), $ids)] = $account;
+        }
+
+        return $accounts;
     }
 
     public function preResolve(PropertyInterface $property)
