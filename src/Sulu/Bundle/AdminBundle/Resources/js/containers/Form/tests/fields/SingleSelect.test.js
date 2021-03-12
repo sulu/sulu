@@ -84,6 +84,41 @@ test('Pass value if no title is given to SingleSelect', () => {
     }));
 });
 
+test('Pass undefined as option-value if value with empty name is given to SingleSelect', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const schemaOptions = observable({
+        values: {
+            name: 'values',
+            value: [
+                {
+                    name: '',
+                    title: 'No Selection',
+                },
+                {
+                    name: 'ms',
+                    title: 'Miss',
+                },
+            ],
+        },
+    });
+    const singleSelect = shallow(
+        <SingleSelect
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            schemaOptions={schemaOptions}
+        />
+    );
+
+    expect(singleSelect.find('Option').at(0).props()).toEqual(expect.objectContaining({
+        value: undefined,
+        children: 'No Selection',
+    }));
+    expect(singleSelect.find('Option').at(1).props()).toEqual(expect.objectContaining({
+        value: 'ms',
+        children: 'Miss',
+    }));
+});
+
 test('Should throw an exception if defaultValue is of wrong type', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const schemaOptions = {
@@ -175,7 +210,7 @@ test('Should call onFinish callback on every onChange', () => {
     expect(finishSpy).toBeCalledWith();
 });
 
-test('Set default value of null should not call onChange', () => {
+test('Default value of null should not call onChange', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const changeSpy = jest.fn();
     const schemaOptions = {
@@ -190,9 +225,35 @@ test('Set default value of null should not call onChange', () => {
                     name: 'mr',
                     title: 'Mister',
                 },
+            ],
+        },
+    };
+    shallow(
+        <SingleSelect
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            onChange={changeSpy}
+            schemaOptions={schemaOptions}
+        />
+    );
+
+    expect(changeSpy).not.toBeCalled();
+});
+
+test('Default value of empty string should not call onChange', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const changeSpy = jest.fn();
+    const schemaOptions = {
+        default_value: {
+            name: 'default_value',
+            value: '',
+        },
+        values: {
+            name: 'values',
+            value: [
                 {
-                    name: 'ms',
-                    title: 'Miss',
+                    name: 'mr',
+                    title: 'Mister',
                 },
             ],
         },
@@ -277,7 +338,7 @@ test('Set default value to a number of 0 should work', () => {
     expect(changeSpy).toBeCalledWith(0);
 });
 
-test('Throw error if no value option is passed', () => {
+test('Throw error if no values option is passed', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     expect(() => shallow(
         <SingleSelect
@@ -287,7 +348,7 @@ test('Throw error if no value option is passed', () => {
     ).toThrow(/"values"/);
 });
 
-test('Throw error if value option with wrong is passed', () => {
+test('Throw error if values option with wrong type is passed', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     expect(() => shallow(
         <SingleSelect
