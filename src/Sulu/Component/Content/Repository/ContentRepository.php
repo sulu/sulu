@@ -714,9 +714,9 @@ class ContentRepository implements ContentRepositoryInterface
         $linkedContent = $this->find($row->getValue('internalLink'), $locale, $webspaceKey, $mapping);
         $data = $linkedContent->getData();
 
-        // properties which are in the intersection of the data and non
-        // fallback properties should be handled on the original row.
-        $properties = \array_intersect(self::$nonFallbackProperties, \array_keys($data));
+        // return value of source node instead of link destination for title and non-fallback-properties
+        $sourceNodeValueProperties = array_merge(['title'], self::$nonFallbackProperties);
+        $properties = \array_intersect($sourceNodeValueProperties, \array_keys($data));
         foreach ($properties as $property) {
             $data[$property] = $this->resolveProperty($row, $property, $locale);
         }
