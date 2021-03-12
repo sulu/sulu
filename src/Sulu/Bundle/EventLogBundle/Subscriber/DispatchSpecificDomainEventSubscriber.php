@@ -1,0 +1,46 @@
+<?php
+
+/*
+ * This file is part of Sulu.
+ *
+ * (c) Sulu GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+namespace Sulu\Bundle\EventLogBundle\Subscriber;
+
+use Sulu\Bundle\EventLogBundle\Event\DomainEvent;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+
+class DispatchSpecificDomainEventSubscriber implements EventSubscriberInterface
+{
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
+    public function __construct(
+        EventDispatcherInterface $eventDispatcher
+    ) {
+        $this->eventDispatcher = $eventDispatcher;
+    }
+
+    public static function getSubscribedEvents()
+    {
+        return [
+            DomainEvent::class => ['dispatchDomainEventWithSpecificEventName', 0],
+        ];
+    }
+
+    public function dispatchDomainEventWithSpecificEventName(DomainEvent $event)
+    {
+        // the DomainEventDispatcher service uses DomainEvent::class as event-name when dispatching events. this
+        // allows to register listeners that listen to all domain events.
+        // this subscriber additionally dispatches the event with a specific event-name such as TagRemovedEvent::class
+        // to allow for registering listeners for a specific type of event.
+        $this->eventDispatcher->dispatch($event, \get_class($event));
+    }
+}

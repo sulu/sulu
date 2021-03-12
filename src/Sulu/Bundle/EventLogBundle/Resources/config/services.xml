@@ -22,8 +22,14 @@
             <tag name="kernel.event_subscriber" />
         </service>
 
-        <service id="sulu_event_log.set_domain_event_user" class="Sulu\Bundle\EventLogBundle\Subscriber\SetDomainEventUserSubscriber">
+        <service id="sulu_event_log.set_domain_event_user_subscriber" class="Sulu\Bundle\EventLogBundle\Subscriber\SetDomainEventUserSubscriber">
             <argument type="service" id="security.helper"/>
+
+            <tag name="kernel.event_subscriber" />
+        </service>
+
+        <service id="sulu_event_log.dispatch_specific_domain_event_subscriber" class="Sulu\Bundle\EventLogBundle\Subscriber\DispatchSpecificDomainEventSubscriber">
+            <argument type="service" id="event_dispatcher"/>
 
             <tag name="kernel.event_subscriber" />
         </service>

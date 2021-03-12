@@ -29,6 +29,8 @@ class DomainEventDispatcher implements DomainEventDispatcherInterface
 
     public function dispatch(DomainEvent $event): DomainEvent
     {
+        // dispatch event with DomainEvent::class as event-name to allow for listening to all domain events. the
+        // DispatchSpecificDomainEventSubscriber will additionally dispatch the event with a specific event-name.
         /** @var DomainEvent $dispatchedEvent */
         $dispatchedEvent = $this->eventDispatcher->dispatch($event, DomainEvent::class);
 
