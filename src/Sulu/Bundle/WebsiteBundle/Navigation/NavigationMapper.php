@@ -157,7 +157,7 @@ class NavigationMapper implements NavigationMapperInterface
         foreach ($contents as $content) {
             if ($this->inNavigation($content, $context)) {
                 $url = $content->getResourceLocator();
-                $title = $content->getNodeName();
+                $title = $content->getTitle();
                 $children = $recursive ? $this->generateChildNavigation($content, $webspace, $language, $flat, $context) : [];
 
                 if (false === $flat) {
