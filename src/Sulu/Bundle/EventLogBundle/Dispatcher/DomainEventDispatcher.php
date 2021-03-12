@@ -30,7 +30,7 @@ class DomainEventDispatcher implements DomainEventDispatcherInterface
     public function dispatch(DomainEvent $event): DomainEvent
     {
         /** @var DomainEvent $dispatchedEvent */
-        $dispatchedEvent = $this->eventDispatcher->dispatch($event);
+        $dispatchedEvent = $this->eventDispatcher->dispatch($event, DomainEvent::class);
 
         return $dispatchedEvent;
     }

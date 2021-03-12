@@ -11,12 +11,21 @@
 
 namespace Sulu\Bundle\TagBundle\Event;
 
-use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
+@\trigger_error(
+    \sprintf(
+        'The "%s" class is deprecated since Sulu 2.3. Use the "%s" class instead.',
+        TagMergeEvent::class,
+        TagMergedEvent::class
+    ),
+    \E_USER_DEPRECATED
+);
+
 /**
  * An object of this class is thrown along with the tag.merge event.
+ * @deprecated
  */
 class TagMergeEvent extends Event
 {
@@ -47,7 +56,7 @@ class TagMergeEvent extends Event
     /**
      * Returns the Tag which got deleted.
      *
-     * @return TagInterface
+     * @return TagInterface[]
      */
     public function getSrcTags()
     {

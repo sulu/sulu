@@ -21,7 +21,6 @@ class EventRecordRepository extends EntityRepository implements EventRecordRepos
         $eventRecord = $this->createNew();
 
         $eventRecord->setEventType($domainEvent->getEventType());
-        $eventRecord->setEventPayload($domainEvent->getEventPayload());
         $eventRecord->setEventDateTime($domainEvent->getEventDateTime());
         $eventRecord->setEventBatch($domainEvent->getEventBatch());
         $eventRecord->setUser($domainEvent->getUser());

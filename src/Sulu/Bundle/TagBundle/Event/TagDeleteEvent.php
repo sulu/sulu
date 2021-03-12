@@ -11,12 +11,21 @@
 
 namespace Sulu\Bundle\TagBundle\Event;
 
-use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
+@\trigger_error(
+    \sprintf(
+        'The "%s" class is deprecated since Sulu 2.3. Use the "%s" class instead.',
+        TagDeleteEvent::class,
+        TagRemovedEvent::class
+    ),
+    \E_USER_DEPRECATED
+);
+
 /**
  * An object of this class is thrown along with the tag.delete event.
+ * @deprecated
  */
 class TagDeleteEvent extends Event
 {

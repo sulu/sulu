@@ -13,18 +13,8 @@ namespace Sulu\Bundle\EventLogBundle\Event;
 
 use Sulu\Component\Security\Authentication\UserInterface;
 
-class DomainEvent
+abstract class DomainEvent
 {
-    /**
-     * @var string
-     */
-    private $eventType;
-
-    /**
-     * @var array
-     */
-    private $eventPayload;
-
     /**
      * @var \DateTimeImmutable
      */
@@ -40,84 +30,25 @@ class DomainEvent
      */
     private $user;
 
-    /**
-     * @var string
-     */
-    private $resourceKey;
-
-    /**
-     * @var string
-     */
-    private $resourceId;
-
-    /**
-     * @var string|null
-     */
-    private $resourceLocale;
-
-    /**
-     * @var string|null
-     */
-    private $resourceTitle;
-
-    /**
-     * @var string|null
-     */
-    private $resourceSecurityContext;
-
-    /**
-     * @var string|null
-     */
-    private $resourceSecurityType;
-
-    /**
-     * Constructor.
-     */
-    public function __construct(
-        string $eventType,
-        string $resourceKey,
-        string $resourceId,
-        ?string $resourceLocale = null,
-        ?string $resourceTitle = null,
-        ?string $resourceSecurityContext = null,
-        ?string $resourceSecurityType = null,
-        array $eventPayload = []
-    ) {
-        $this->eventType = $eventType;
-        $this->resourceKey = $resourceKey;
-        $this->resourceId = $resourceId;
-        $this->resourceLocale = $resourceLocale;
-        $this->resourceTitle = $resourceTitle;
-        $this->resourceSecurityContext = $resourceSecurityContext;
-        $this->resourceSecurityType = $resourceSecurityType;
-        $this->eventPayload = $eventPayload;
-
+    public function __construct() {
         $this->eventDateTime = new \DateTimeImmutable();
     }
 
-    public function getEventType(): string
-    {
-        return $this->eventType;
-    }
+    abstract public function getEventType(): string;
 
-    public function setEventType(string $eventType): DomainEvent
-    {
-        $this->eventType = $eventType;
+    abstract public function getEventPayload(): array;
 
-        return $this;
-    }
+    abstract public function getResourceKey(): string;
 
-    public function getEventPayload(): array
-    {
-        return $this->eventPayload;
-    }
+    abstract public function getResourceId(): string;
 
-    public function setEventPayload(array $eventPayload): DomainEvent
-    {
-        $this->eventPayload = $eventPayload;
+    abstract public function getResourceLocale(): ?string;
 
-        return $this;
-    }
+    abstract public function getResourceTitle(): ?string;
+
+    abstract public function getResourceSecurityContext(): ?string;
+
+    abstract public function getResourceSecurityType(): ?string;
 
     public function getEventDateTime(): \DateTimeImmutable
     {
@@ -151,78 +82,6 @@ class DomainEvent
     public function setUser(?UserInterface $user): DomainEvent
     {
         $this->user = $user;
-
-        return $this;
-    }
-
-    public function getResourceKey(): string
-    {
-        return $this->resourceKey;
-    }
-
-    public function setResourceKey(string $resourceKey): DomainEvent
-    {
-        $this->resourceKey = $resourceKey;
-
-        return $this;
-    }
-
-    public function getResourceId(): string
-    {
-        return $this->resourceId;
-    }
-
-    public function setResourceId(string $resourceId): DomainEvent
-    {
-        $this->resourceId = $resourceId;
-
-        return $this;
-    }
-
-    public function getResourceLocale(): ?string
-    {
-        return $this->resourceLocale;
-    }
-
-    public function setResourceLocale(?string $resourceLocale): DomainEvent
-    {
-        $this->resourceLocale = $resourceLocale;
-
-        return $this;
-    }
-
-    public function getResourceTitle(): ?string
-    {
-        return $this->resourceTitle;
-    }
-
-    public function setResourceTitle(?string $resourceTitle): DomainEvent
-    {
-        $this->resourceTitle = $resourceTitle;
-
-        return $this;
-    }
-
-    public function getResourceSecurityContext(): ?string
-    {
-        return $this->resourceSecurityContext;
-    }
-
-    public function setResourceSecurityContext(?string $resourceSecurityContext): DomainEvent
-    {
-        $this->resourceSecurityContext = $resourceSecurityContext;
-
-        return $this;
-    }
-
-    public function getResourceSecurityType(): ?string
-    {
-        return $this->resourceSecurityType;
-    }
-
-    public function setResourceSecurityType(?string $resourceSecurityType): DomainEvent
-    {
-        $this->resourceSecurityType = $resourceSecurityType;
 
         return $this;
     }
