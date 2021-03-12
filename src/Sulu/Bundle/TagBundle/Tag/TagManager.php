@@ -133,7 +133,6 @@ class TagManager implements TagManagerInterface
                 $this->doctrineDomainEventCollector->collect(new TagCreatedEvent($tag, $data));
             } else {
                 $this->doctrineDomainEventCollector->collect(new TagModifiedEvent($tag, $data));
-
             }
 
             $this->em->flush();

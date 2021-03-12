@@ -20,12 +20,11 @@ class SuluEventLogBundle extends Bundle
 {
     use PersistenceBundleTrait;
 
-
     public function build(ContainerBuilder $container)
     {
         $this->buildPersistence(
             [
-                EventRecord::class => 'sulu.model.event_record.class'
+                EventRecord::class => 'sulu.model.event_record.class',
             ],
             $container
         );

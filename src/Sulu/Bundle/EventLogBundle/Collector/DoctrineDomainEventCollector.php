@@ -30,7 +30,6 @@ class DoctrineDomainEventCollector implements DoctrineDomainEventCollectorInterf
      */
     private $eventsToBeDispatched = [];
 
-
     public function __construct(
         DomainEventDispatcherInterface $domainEventDispatcher
     ) {
@@ -57,7 +56,7 @@ class DoctrineDomainEventCollector implements DoctrineDomainEventCollectorInterf
 
     public function postFlush(PostFlushEventArgs $args): void
     {
-        $batchIdentifier = uniqid('', true);
+        $batchIdentifier = \uniqid('', true);
         $batchEvents = $this->eventsToBeDispatched;
 
         $this->eventsToBeDispatched = [];
@@ -69,7 +68,5 @@ class DoctrineDomainEventCollector implements DoctrineDomainEventCollectorInterf
 
             $this->domainEventDispatcher->dispatch($domainEvent);
         }
-
     }
-
 }

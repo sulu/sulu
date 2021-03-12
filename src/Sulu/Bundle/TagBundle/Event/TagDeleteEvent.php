@@ -25,6 +25,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * An object of this class is thrown along with the tag.delete event.
+ *
  * @deprecated
  */
 class TagDeleteEvent extends Event

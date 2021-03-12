@@ -29,9 +29,6 @@ class Configuration implements ConfigurationInterface
         return $treeBuilder;
     }
 
-    /**
-     * Adds `objects` section.
-     */
     private function addObjectsSection(ArrayNodeDefinition $node)
     {
         $node->children()

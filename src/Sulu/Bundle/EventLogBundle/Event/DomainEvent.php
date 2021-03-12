@@ -30,7 +30,8 @@ abstract class DomainEvent
      */
     private $user;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->eventDateTime = new \DateTimeImmutable();
     }
 

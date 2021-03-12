@@ -14,7 +14,6 @@ namespace Sulu\Bundle\TagBundle\Event;
 use Sulu\Bundle\EventLogBundle\Event\DomainEvent;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 
-
 class TagModifiedEvent extends DomainEvent
 {
     /**

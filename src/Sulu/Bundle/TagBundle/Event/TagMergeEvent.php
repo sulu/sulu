@@ -25,6 +25,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * An object of this class is thrown along with the tag.merge event.
+ *
  * @deprecated
  */
 class TagMergeEvent extends Event

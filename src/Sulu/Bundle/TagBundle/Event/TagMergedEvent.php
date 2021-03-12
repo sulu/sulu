@@ -14,7 +14,6 @@ namespace Sulu\Bundle\TagBundle\Event;
 use Sulu\Bundle\EventLogBundle\Event\DomainEvent;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 
-
 class TagMergedEvent extends DomainEvent
 {
     /**
@@ -35,7 +34,7 @@ class TagMergedEvent extends DomainEvent
     public function __construct(
         int $sourceTagId,
         string $sourceTagName,
-        TagInterface $destinationTag,
+        TagInterface $destinationTag
     ) {
         parent::__construct();
 
@@ -53,7 +52,7 @@ class TagMergedEvent extends DomainEvent
     {
         return [
             'destinationTagId' => $this->destinationTag->getId(),
-            'destinationTagName' => $this->destinationTag->getName()
+            'destinationTagName' => $this->destinationTag->getName(),
         ];
     }
 
