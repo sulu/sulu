@@ -36,6 +36,20 @@ class CacheManagerTest extends TestCase
         $this->cacheManager = new CacheManager($this->fosCacheManager->reveal());
     }
 
+    public function testSupportsInvalidate()
+    {
+        // proxy client doesn't support tag invalidation
+        $this->fosCacheManager->supports(FOSCacheManager::INVALIDATE)->willReturn(true);
+        $this->assertTrue($this->cacheManager->supportsInvalidate());
+    }
+
+    public function testSupportsInvalidateTag()
+    {
+        // proxy client doesn't support tag invalidation
+        $this->fosCacheManager->supports(FOSCacheManager::TAGS)->willReturn(true);
+        $this->assertTrue($this->cacheManager->supportsInvalidateTag());
+    }
+
     public function testInvalidateTag()
     {
         $tag = '1234-1234-1234';

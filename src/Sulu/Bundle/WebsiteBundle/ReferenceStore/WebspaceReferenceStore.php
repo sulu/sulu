@@ -29,7 +29,7 @@ class WebspaceReferenceStore implements ReferenceStoreInterface
 
     public function add($id)
     {
-        // wont be called
+        throw new \LogicException('Should never be called');
     }
 
     public function getAll()

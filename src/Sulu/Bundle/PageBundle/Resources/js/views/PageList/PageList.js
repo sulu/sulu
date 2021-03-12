@@ -124,7 +124,9 @@ class PageList extends React.Component<Props> {
 
         observableOptions.locale = this.locale;
 
-        this.cacheClearToolbarAction = new CacheClearToolbarAction();
+        this.cacheClearToolbarAction = new CacheClearToolbarAction({
+            webspaceKey,
+        });
 
         this.listStore = new ListStore(
             PAGES_RESOURCE_KEY,

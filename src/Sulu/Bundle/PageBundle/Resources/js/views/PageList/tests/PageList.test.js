@@ -89,7 +89,8 @@ jest.mock('sulu-admin-bundle/containers/List/stores/ListStore', () => jest.fn(fu
 }));
 jest.mock('sulu-admin-bundle/containers/ListOverlay', () => jest.fn().mockReturnValue(null));
 
-jest.mock('sulu-website-bundle/containers/CacheClearToolbarAction', () => jest.fn(function() {
+jest.mock('sulu-website-bundle/containers/CacheClearToolbarAction', () => jest.fn(function(searchParams: Object) {
+    this.searchParams = searchParams;
     this.getNode = jest.fn();
     this.getToolbarItemConfig = jest.fn();
 }));
@@ -345,6 +346,7 @@ test('Should use CacheClearToolbarAction for cache clearing', () => {
 
     const cacheClearToolbarAction: CacheClearToolbarAction = (CacheClearToolbarAction: any).mock.instances[0];
 
+    expect(cacheClearToolbarAction.searchParams).toEqual({webspaceKey});
     expect(cacheClearToolbarAction.getNode).toBeCalledWith();
 
     expect(cacheClearToolbarAction.getToolbarItemConfig).not.toBeCalled();

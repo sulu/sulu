@@ -13,10 +13,12 @@ namespace Sulu\Bundle\WebsiteBundle\Controller;
 
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Bundle\WebsiteBundle\Cache\CacheClearerInterface;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\WebspaceReferenceStore;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Handles http cache actions.
@@ -53,14 +55,21 @@ class CacheController
      *
      * @return JsonResponse
      */
-    public function clearAction()
+    public function clearAction(Request $request)
     {
-        if (!$this->checkLivePermissionForAllWebspaces()) {
+        $webspaceKey = $request->query->get('webspaceKey');
+        if ($webspaceKey && !$this->checkLivePermissionForWebspace($webspaceKey)) {
+            return new JsonResponse(null, 403);
+        } elseif (!$this->checkLivePermissionForAllWebspaces()) {
             return new JsonResponse(null, 403);
         }
 
-        // TODO webspace-key
-        $this->cacheClearer->clear('sulu');
+        $tags = [];
+        if ($webspaceKey) {
+            $tags[] = \sprintf('%s-%s', WebspaceReferenceStore::WEBSPACE_REFERENCE_ALIAS, $webspaceKey);
+        }
+
+        $this->cacheClearer->clear($tags);
 
         return new JsonResponse(null, 204);
     }
@@ -68,8 +77,6 @@ class CacheController
     /**
      * Check the permissions for all webspaces.
      * Returns true if the user has live permission in all webspaces.
-     *
-     * TODO should be replaced with a single webspace cache clear.
      *
      * @return bool
      */
@@ -83,5 +90,13 @@ class CacheController
         }
 
         return true;
+    }
+
+    private function checkLivePermissionForWebspace(string $webspaceKey): bool
+    {
+        return $this->securityChecker->hasPermission(
+            PageAdmin::SECURITY_CONTEXT_PREFIX . $webspaceKey,
+            PermissionTypes::LIVE
+        );
     }
 }

@@ -19,5 +19,5 @@ interface CacheClearerInterface
     /**
      * Clear the website cache.
      */
-    public function clear(/* ?string $webspaceKey = null */);
+    public function clear(/*?array $tags = []*/);
 }

@@ -57,7 +57,7 @@ class SuluHttpCacheExtension extends Extension implements PrependExtensionInterf
                 \count($varnishProxyClient['servers']) ? $varnishProxyClient['servers'] : ['127.0.0.1'];
 
             $fosHttpCacheConfig['proxy_client']['varnish']['tag_mode'] = $varnishProxyClient['tag_mode'];
-            if (array_key_exists('tags_header', $varnishProxyClient)) {
+            if (\array_key_exists('tags_header', $varnishProxyClient)) {
                 $fosHttpCacheConfig['proxy_client']['varnish']['tags_header'] = $varnishProxyClient['tags_header'];
             }
         }

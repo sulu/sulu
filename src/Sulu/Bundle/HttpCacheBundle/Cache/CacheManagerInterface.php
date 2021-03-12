@@ -37,4 +37,9 @@ interface CacheManagerInterface
      * Returns true if current proxy client supports invalidation.
      */
     public function supportsInvalidate(): bool;
+
+    /**
+     * Returns true if current proxy client supports tags-invalidation.
+     */
+    public function supportsInvalidateTag(): bool;
 }

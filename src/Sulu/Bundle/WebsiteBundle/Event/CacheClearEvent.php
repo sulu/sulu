@@ -16,17 +16,23 @@ use Symfony\Contracts\EventDispatcher\Event;
 class CacheClearEvent extends Event
 {
     /**
-     * @var string|null
+     * @var string[]|null
      */
-    private $webspaceKey;
+    private $tags;
 
-    public function __construct(?string $webspaceKey = null)
+    /**
+     * @param string[]|null $tags
+     */
+    public function __construct(?array $tags = [])
     {
-        $this->webspaceKey = $webspaceKey;
+        $this->tags = $tags;
     }
 
-    public function getWebspaceKey(): ?string
+    /**
+     * @return string[]|null
+     */
+    public function getTags(): ?array
     {
-        return $this->webspaceKey;
+        return $this->tags;
     }
 }

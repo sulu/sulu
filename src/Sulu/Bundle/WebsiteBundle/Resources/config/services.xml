@@ -293,7 +293,7 @@
             <argument type="collection"/>
         </service>
 
-        <service id="sulu_website.reference_store.webspace"
+        <service id="sulu_website.webspace_reference_store"
                  class="Sulu\Bundle\WebsiteBundle\ReferenceStore\WebspaceReferenceStore">
             <argument type="service" id="sulu_core.webspace.request_analyzer" on-invalid="null"/>
 

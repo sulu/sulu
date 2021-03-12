@@ -8,8 +8,13 @@ import {translate} from 'sulu-admin-bundle/utils';
 export default class CacheClearToolbarAction {
     static clearCacheEndpoint: string;
 
+    searchParams: Object;
     @observable cacheClearing = false;
     @observable showDialog = false;
+
+    constructor(searchParams: Object) {
+        this.searchParams = searchParams;
+    }
 
     getNode() {
         return (
@@ -44,7 +49,13 @@ export default class CacheClearToolbarAction {
 
     @action handleConfirm = () => {
         this.cacheClearing = true;
-        Requester.delete(CacheClearToolbarAction.clearCacheEndpoint).then(action(() => {
+
+        let url = CacheClearToolbarAction.clearCacheEndpoint;
+        if (this.searchParams) {
+            url += '?' + (new URLSearchParams(this.searchParams)).toString();
+        }
+
+        Requester.delete(url).then(action(() => {
             this.showDialog = false;
             this.cacheClearing = false;
         }));
