@@ -52,9 +52,10 @@ class AccountSelection extends SimpleContentType implements PreResolvableContent
 
         $accounts = $this->accountManager->getByIds($ids, $property->getStructure()->getLanguageCode());
 
-        foreach ($accounts as $account) {
-            $accounts[\array_search($account->getId(), $ids)] = $account;
-        }
+        $idPositions = \array_flip($ids);
+        \usort($accounts, function(Account $a, Account $b) use ($idPositions) {
+            return $idPositions[$a->getId()] - $idPositions[$b->getId()];
+        });
 
         return $accounts;
     }
