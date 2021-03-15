@@ -266,7 +266,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertCount(3, $result);
 
         $this->assertEquals('test-1', $result[0]['title']);
-        $this->assertEquals('test-1', $result[1]['title']);
+        $this->assertEquals('test-2', $result[1]['title']);
         $this->assertEquals(RedirectType::INTERNAL, $result[1]->getNodeType());
         $this->assertEquals('test-3', $result[2]['title']);
     }
@@ -289,7 +289,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertCount(3, $result);
 
         $this->assertEquals('test-1', $result[0]['title']);
-        $this->assertEquals('test-1', $result[1]['title']);
+        $this->assertEquals('test-2', $result[1]['title']);
         $this->assertEquals(RedirectType::INTERNAL, $result[1]->getNodeType());
         $this->assertEmpty($result[1]['published']);
         $this->assertEquals('test-3', $result[2]['title']);
@@ -335,7 +335,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertCount(3, $result);
 
         $this->assertEquals('test-1', $result[0]['title']);
-        $this->assertEquals('test-1', $result[1]['title']);
+        $this->assertEquals('test-2', $result[1]['title']);
         $this->assertEquals(RedirectType::INTERNAL, $result[1]->getNodeType());
         $this->assertEquals('test-3', $result[2]['title']);
     }
@@ -452,7 +452,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertCount(3, $result);
 
         $this->assertEquals('test-1', $result[0]['title']);
-        $this->assertEquals('test-1', $result[1]['title']);
+        $this->assertEquals('test-2', $result[1]['title']);
         $this->assertEquals('test-3', $result[2]['title']);
     }
 
@@ -471,7 +471,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertCount(3, $result);
 
         $this->assertEquals('test-1', $result[0]['title']);
-        $this->assertEquals('test-1', $result[1]['title']);
+        $this->assertEquals('test-2', $result[1]['title']);
         $this->assertEquals('test-3', $result[2]['title']);
     }
 
@@ -563,7 +563,7 @@ class ContentRepositoryTest extends SuluTestCase
 
         $this->assertEquals($page->getUuid(), $result->getId());
         $this->assertEquals('/test-2', $result->getPath());
-        $this->assertEquals('test-1', $result['title']);
+        $this->assertEquals('test-2', $result['title']);
     }
 
     public function testFindWithEmptyInternalLink()
@@ -626,7 +626,7 @@ class ContentRepositoryTest extends SuluTestCase
 
         $this->assertEquals($page->getUuid(), $result->getId());
         $this->assertEquals('/test-2', $result->getPath());
-        $this->assertEquals('test-1', $result['title']);
+        $this->assertEquals('test-2', $result['title']);
     }
 
     public function testFindWithNonFallbackProperties()
@@ -685,7 +685,7 @@ class ContentRepositoryTest extends SuluTestCase
 
         $this->assertEquals($page->getUuid(), $result->getId());
         $this->assertEquals('/test-2', $result->getPath());
-        $this->assertEquals('test-1', $result['title']);
+        $this->assertEquals('test-2', $result['title']);
     }
 
     public function testFindPermissions()
