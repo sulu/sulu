@@ -19,12 +19,12 @@ use Symfony\Component\Security\Core\Security;
 class SetDomainEventUserSubscriber implements EventSubscriberInterface
 {
     /**
-     * @var Security
+     * @var Security|null
      */
     private $security;
 
     public function __construct(
-        Security $security
+        ?Security $security
     ) {
         $this->security = $security;
     }
@@ -38,6 +38,10 @@ class SetDomainEventUserSubscriber implements EventSubscriberInterface
 
     public function setDomainEventUser(DomainEvent $event)
     {
+        if (!$this->security) {
+            return;
+        }
+
         $currentUser = $this->security->getUser();
 
         if ($currentUser instanceof UserInterface && !$event->getUser()) {

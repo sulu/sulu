@@ -23,7 +23,7 @@
         </service>
 
         <service id="sulu_event_log.set_domain_event_user_subscriber" class="Sulu\Bundle\EventLogBundle\Subscriber\SetDomainEventUserSubscriber">
-            <argument type="service" id="security.helper"/>
+            <argument type="service" id="security.helper" on-invalid="null"/>
 
             <tag name="kernel.event_subscriber" />
         </service>
