@@ -50,7 +50,14 @@ class ContactSelection extends SimpleContentType implements PreResolvableContent
             return [];
         }
 
-        return $this->contactRepository->findByIds($ids);
+        $contacts = $this->contactRepository->findByIds($ids);
+
+        $idPositions = \array_flip($ids);
+        \usort($contacts, function(ContactInterface $a, ContactInterface $b) use ($idPositions) {
+            return $idPositions[$a->getId()] - $idPositions[$b->getId()];
+        });
+
+        return $contacts;
     }
 
     public function preResolve(PropertyInterface $property)
