@@ -715,7 +715,8 @@ class ContentRepository implements ContentRepositoryInterface
         $data = $linkedContent->getData();
 
         // return value of source node instead of link destination for title and non-fallback-properties
-        $sourceNodeValueProperties = array_merge(['title'], self::$nonFallbackProperties);
+        $sourceNodeValueProperties = self::$nonFallbackProperties;
+        $sourceNodeValueProperties[] = 'title';
         $properties = \array_intersect($sourceNodeValueProperties, \array_keys($data));
         foreach ($properties as $property) {
             $data[$property] = $this->resolveProperty($row, $property, $locale);
