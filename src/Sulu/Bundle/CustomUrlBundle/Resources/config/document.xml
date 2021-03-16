@@ -19,6 +19,7 @@
             <argument type="service" id="sulu_document_manager.path_builder"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="string">%kernel.environment%</argument>
+            <argument type="service" id="sulu_event_log.document_domain_event_collector"/>
         </service>
 
         <service id="sulu_custom_urls.initializer"
