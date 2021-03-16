@@ -45,6 +45,8 @@ abstract class DomainEvent
 
     abstract public function getResourceLocale(): ?string;
 
+    abstract public function getResourceWebspaceKey(): ?string;
+
     abstract public function getResourceTitle(): ?string;
 
     abstract public function getResourceSecurityContext(): ?string;

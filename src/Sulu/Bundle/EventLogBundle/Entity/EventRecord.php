@@ -58,6 +58,11 @@ class EventRecord implements EventRecordInterface
     /**
      * @var string|null
      */
+    private $resourceWebspaceKey;
+
+    /**
+     * @var string|null
+     */
     private $resourceTitle;
 
     /**
@@ -150,6 +155,18 @@ class EventRecord implements EventRecordInterface
     public function setResourceLocale(?string $resourceLocale): EventRecordInterface
     {
         $this->resourceLocale = $resourceLocale;
+
+        return $this;
+    }
+
+    public function getResourceWebspaceKey(): ?string
+    {
+        return $this->resourceWebspaceKey;
+    }
+
+    public function setResourceWebspaceKey(?string $resourceWebspaceKey): EventRecordInterface
+    {
+        $this->resourceWebspaceKey = $resourceWebspaceKey;
 
         return $this;
     }

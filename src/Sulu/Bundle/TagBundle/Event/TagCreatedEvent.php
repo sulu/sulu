@@ -66,6 +66,11 @@ class TagCreatedEvent extends DomainEvent
         return null;
     }
 
+    public function getResourceWebspaceKey(): ?string
+    {
+        return null;
+    }
+
     public function getResourceTitle(): ?string
     {
         return $this->tag->getName();

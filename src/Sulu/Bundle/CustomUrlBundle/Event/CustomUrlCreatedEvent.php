@@ -56,10 +56,7 @@ class CustomUrlCreatedEvent extends DomainEvent
 
     public function getEventPayload(): array
     {
-        $eventPayload = $this->payload;
-        $eventPayload['webspaceKey'] = $this->webspaceKey;
-
-        return $eventPayload;
+        return $this->payload;
     }
 
     public function getResourceKey(): string
@@ -75,6 +72,11 @@ class CustomUrlCreatedEvent extends DomainEvent
     public function getResourceLocale(): ?string
     {
         return null;
+    }
+
+    public function getResourceWebspaceKey(): ?string
+    {
+        return $this->webspaceKey;
     }
 
     public function getResourceTitle(): ?string

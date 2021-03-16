@@ -43,6 +43,10 @@ interface EventRecordInterface
 
     public function setResourceLocale(?string $resourceLocale): EventRecordInterface;
 
+    public function getResourceWebspaceKey(): ?string;
+
+    public function setResourceWebspaceKey(?string $resourceWebspaceKey): EventRecordInterface;
+
     public function getResourceTitle(): ?string;
 
     public function setResourceTitle(?string $resourceTitle): EventRecordInterface;

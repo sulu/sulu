@@ -56,7 +56,9 @@ class CustomUrlRouteRemovedEvent extends DomainEvent
 
     public function getEventPayload(): array
     {
-        return ['webspaceKey' => $this->webspaceKey, 'routeUuid' => $this->routeUuid];
+        return [
+            'routeUuid' => $this->routeUuid,
+        ];
     }
 
     public function getResourceKey(): string
@@ -72,6 +74,11 @@ class CustomUrlRouteRemovedEvent extends DomainEvent
     public function getResourceLocale(): ?string
     {
         return null;
+    }
+
+    public function getResourceWebspaceKey(): ?string
+    {
+        return $this->webspaceKey;
     }
 
     public function getResourceTitle(): ?string

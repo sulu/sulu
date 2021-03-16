@@ -18,6 +18,7 @@ class EventRecordRepository extends EntityRepository implements EventRecordRepos
 {
     public function createForDomainEvent(DomainEvent $domainEvent): EventRecordInterface
     {
+        /** @var EventRecordInterface $eventRecord */
         $eventRecord = $this->createNew();
 
         $eventRecord->setEventType($domainEvent->getEventType());
@@ -27,6 +28,7 @@ class EventRecordRepository extends EntityRepository implements EventRecordRepos
         $eventRecord->setResourceKey($domainEvent->getResourceKey());
         $eventRecord->setResourceId($domainEvent->getResourceId());
         $eventRecord->setResourceLocale($domainEvent->getResourceLocale());
+        $eventRecord->setResourceWebspaceKey($domainEvent->getResourceWebspaceKey());
         $eventRecord->setResourceTitle($domainEvent->getResourceTitle());
         $eventRecord->setResourceSecurityContext($domainEvent->getResourceSecurityContext());
         $eventRecord->setResourceSecurityType($domainEvent->getResourceSecurityType());

@@ -18,6 +18,7 @@
         <field name="resourceKey" column="resourceKey" type="string" nullable="true" length="191"/>
         <field name="resourceId" column="resourceId" type="string" nullable="true" length="191"/>
         <field name="resourceLocale" column="resourceLocale" type="string" nullable="true" length="191"/>
+        <field name="resourceWebspaceKey" column="resourceWebspaceKey" type="string" nullable="true" length="191"/>
         <field name="resourceTitle" column="resourceTitle" type="string" nullable="true" length="191"/>
         <field name="resourceSecurityContext" column="resourceSecurityContext" type="string" nullable="true" length="191"/>
         <field name="resourceSecurityType" column="resourceSecurityType" type="string" nullable="true" length="191"/>
