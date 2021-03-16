@@ -61,16 +61,6 @@ class TagModifiedEvent extends DomainEvent
         return (string) $this->tag->getId();
     }
 
-    public function getResourceLocale(): ?string
-    {
-        return null;
-    }
-
-    public function getResourceWebspaceKey(): ?string
-    {
-        return null;
-    }
-
     public function getResourceTitle(): ?string
     {
         return $this->tag->getName();
@@ -79,10 +69,5 @@ class TagModifiedEvent extends DomainEvent
     public function getResourceSecurityContext(): ?string
     {
         return 'sulu.settings.tags';
-    }
-
-    public function getResourceSecurityType(): ?string
-    {
-        return null;
     }
 }

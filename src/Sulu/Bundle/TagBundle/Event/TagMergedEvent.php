@@ -66,16 +66,6 @@ class TagMergedEvent extends DomainEvent
         return (string) $this->sourceTagId;
     }
 
-    public function getResourceLocale(): ?string
-    {
-        return null;
-    }
-
-    public function getResourceWebspaceKey(): ?string
-    {
-        return null;
-    }
-
     public function getResourceTitle(): ?string
     {
         return $this->sourceTagName;
@@ -84,10 +74,5 @@ class TagMergedEvent extends DomainEvent
     public function getResourceSecurityContext(): ?string
     {
         return 'sulu.settings.tags';
-    }
-
-    public function getResourceSecurityType(): ?string
-    {
-        return null;
     }
 }

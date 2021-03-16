@@ -69,11 +69,6 @@ class CustomUrlCreatedEvent extends DomainEvent
         return (string) $this->customUrlDocument->getUuid();
     }
 
-    public function getResourceLocale(): ?string
-    {
-        return null;
-    }
-
     public function getResourceWebspaceKey(): ?string
     {
         return $this->webspaceKey;
@@ -87,10 +82,5 @@ class CustomUrlCreatedEvent extends DomainEvent
     public function getResourceSecurityContext(): ?string
     {
         return CustomUrlAdmin::getCustomUrlSecurityContext($this->webspaceKey);
-    }
-
-    public function getResourceSecurityType(): ?string
-    {
-        return null;
     }
 }

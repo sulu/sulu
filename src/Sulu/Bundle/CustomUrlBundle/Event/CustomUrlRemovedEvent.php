@@ -48,11 +48,6 @@ class CustomUrlRemovedEvent extends DomainEvent
         return 'removed';
     }
 
-    public function getEventPayload(): array
-    {
-        return [];
-    }
-
     public function getResourceKey(): string
     {
         return 'custom_urls';
@@ -61,11 +56,6 @@ class CustomUrlRemovedEvent extends DomainEvent
     public function getResourceId(): string
     {
         return $this->customUrlUuid;
-    }
-
-    public function getResourceLocale(): ?string
-    {
-        return null;
     }
 
     public function getResourceWebspaceKey(): ?string
@@ -81,10 +71,5 @@ class CustomUrlRemovedEvent extends DomainEvent
     public function getResourceSecurityContext(): ?string
     {
         return CustomUrlAdmin::getCustomUrlSecurityContext($this->webspaceKey);
-    }
-
-    public function getResourceSecurityType(): ?string
-    {
-        return null;
     }
 }

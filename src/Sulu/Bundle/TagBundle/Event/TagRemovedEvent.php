@@ -40,11 +40,6 @@ class TagRemovedEvent extends DomainEvent
         return 'removed';
     }
 
-    public function getEventPayload(): array
-    {
-        return [];
-    }
-
     public function getResourceKey(): string
     {
         return 'tags';
@@ -55,16 +50,6 @@ class TagRemovedEvent extends DomainEvent
         return (string) $this->tagId;
     }
 
-    public function getResourceLocale(): ?string
-    {
-        return null;
-    }
-
-    public function getResourceWebspaceKey(): ?string
-    {
-        return null;
-    }
-
     public function getResourceTitle(): ?string
     {
         return $this->tagName;
@@ -73,10 +58,5 @@ class TagRemovedEvent extends DomainEvent
     public function getResourceSecurityContext(): ?string
     {
         return 'sulu.settings.tags';
-    }
-
-    public function getResourceSecurityType(): ?string
-    {
-        return null;
     }
 }
