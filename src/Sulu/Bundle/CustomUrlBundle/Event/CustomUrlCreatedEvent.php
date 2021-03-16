@@ -44,6 +44,11 @@ class CustomUrlCreatedEvent extends DomainEvent
         $this->payload = $payload;
     }
 
+    public function getCustomUrlDocument(): CustomUrlDocument
+    {
+        return $this->customUrlDocument;
+    }
+
     public function getEventType(): string
     {
         return 'created';
@@ -51,7 +56,10 @@ class CustomUrlCreatedEvent extends DomainEvent
 
     public function getEventPayload(): array
     {
-        return $this->payload;
+        $eventPayload = $this->payload;
+        $eventPayload['webspaceKey'] = $this->webspaceKey;
+
+        return $eventPayload;
     }
 
     public function getResourceKey(): string

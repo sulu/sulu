@@ -50,7 +50,7 @@ class CustomUrlRemovedEvent extends DomainEvent
 
     public function getEventPayload(): array
     {
-        return [];
+        return ['webspaceKey' => $this->webspaceKey];
     }
 
     public function getResourceKey(): string

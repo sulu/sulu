@@ -36,6 +36,11 @@ class TagModifiedEvent extends DomainEvent
         $this->payload = $payload;
     }
 
+    public function getTag(): TagInterface
+    {
+        return $this->tag;
+    }
+
     public function getEventType(): string
     {
         return 'modified';
