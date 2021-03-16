@@ -18,7 +18,7 @@ use Doctrine\ORM\Events;
 use Sulu\Bundle\EventLogBundle\Dispatcher\DomainEventDispatcherInterface;
 use Sulu\Bundle\EventLogBundle\Event\DomainEvent;
 
-class DoctrineDomainEventCollector implements DoctrineDomainEventCollectorInterface, EventSubscriber
+class DomainEventCollector implements DomainEventCollectorInterface, EventSubscriber
 {
     /**
      * @var DomainEventDispatcherInterface

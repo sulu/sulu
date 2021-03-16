@@ -13,7 +13,7 @@ namespace Sulu\Bundle\TagBundle\Tag;
 
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\Persistence\ObjectManager;
-use Sulu\Bundle\EventLogBundle\Collector\DoctrineDomainEventCollectorInterface;
+use Sulu\Bundle\EventLogBundle\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\TagBundle\Entity\TagRepository;
 use Sulu\Bundle\TagBundle\Event\TagCreatedEvent;
 use Sulu\Bundle\TagBundle\Event\TagDeleteEvent;
@@ -49,20 +49,20 @@ class TagManager implements TagManagerInterface
     private $eventDispatcher;
 
     /**
-     * @var DoctrineDomainEventCollectorInterface
+     * @var DomainEventCollectorInterface
      */
-    private $doctrineDomainEventCollector;
+    private $domainEventCollector;
 
     public function __construct(
         TagRepositoryInterface $tagRepository,
         ObjectManager $em,
         EventDispatcherInterface $eventDispatcher,
-        DoctrineDomainEventCollectorInterface $doctrineDomainEventCollector
+        DomainEventCollectorInterface $domainEventCollector
     ) {
         $this->tagRepository = $tagRepository;
         $this->em = $em;
         $this->eventDispatcher = $eventDispatcher;
-        $this->doctrineDomainEventCollector = $doctrineDomainEventCollector;
+        $this->domainEventCollector = $domainEventCollector;
     }
 
     /**
@@ -130,9 +130,9 @@ class TagManager implements TagManagerInterface
 
             if (!$id) {
                 $this->em->persist($tag);
-                $this->doctrineDomainEventCollector->collect(new TagCreatedEvent($tag, $data));
+                $this->domainEventCollector->collect(new TagCreatedEvent($tag, $data));
             } else {
-                $this->doctrineDomainEventCollector->collect(new TagModifiedEvent($tag, $data));
+                $this->domainEventCollector->collect(new TagModifiedEvent($tag, $data));
             }
 
             $this->em->flush();
@@ -159,7 +159,7 @@ class TagManager implements TagManagerInterface
         }
 
         $this->em->remove($tag);
-        $this->doctrineDomainEventCollector->collect(new TagRemovedEvent($tag->getId(), $tag->getName()));
+        $this->domainEventCollector->collect(new TagRemovedEvent($tag->getId(), $tag->getName()));
 
         $this->em->flush();
 
@@ -196,9 +196,7 @@ class TagManager implements TagManagerInterface
             }
 
             $this->em->remove($srcTag);
-            $this->doctrineDomainEventCollector->collect(
-                new TagMergedEvent($srcTag->getId(), $srcTag->getName(), $destTag)
-            );
+            $this->domainEventCollector->collect(new TagMergedEvent($srcTag->getId(), $srcTag->getName(), $destTag));
 
             $srcTags[] = $srcTag;
         }

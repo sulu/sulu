@@ -14,7 +14,7 @@
             <argument type="service" id="sulu.repository.tag"/>
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="event_dispatcher"/>
-            <argument type="service" id="sulu_event_log.doctrine_domain_event_collector"/>
+            <argument type="service" id="sulu_event_log.domain_event_collector"/>
         </service>
         <service id="Sulu\Bundle\TagBundle\Tag\TagManagerInterface" alias="sulu_tag.tag_manager"/>
 

@@ -13,7 +13,7 @@ namespace Sulu\Bundle\EventLogBundle\Collector;
 
 use Sulu\Bundle\EventLogBundle\Event\DomainEvent;
 
-interface DoctrineDomainEventCollectorInterface
+interface DomainEventCollectorInterface
 {
     public function collect(DomainEvent $domainEvent): void;
 }

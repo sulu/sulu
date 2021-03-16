@@ -8,12 +8,12 @@
         </service>
         <service id="Sulu\Bundle\EventLogBundle\Dispatcher\DomainEventDispatcherInterface" alias="sulu_event_log.domain_event_dispatcher"/>
 
-        <service id="sulu_event_log.doctrine_domain_event_collector" class="Sulu\Bundle\EventLogBundle\Collector\DoctrineDomainEventCollector">
+        <service id="sulu_event_log.domain_event_collector" class="Sulu\Bundle\EventLogBundle\Collector\DomainEventCollector">
             <argument type="service" id="sulu_event_log.domain_event_dispatcher"/>
 
             <tag name="doctrine.event_subscriber" />
         </service>
-        <service id="Sulu\Bundle\EventLogBundle\Collector\DoctrineDomainEventCollectorInterface" alias="sulu_event_log.doctrine_domain_event_collector"/>
+        <service id="Sulu\Bundle\EventLogBundle\Collector\DomainEventCollectorInterface" alias="sulu_event_log.domain_event_collector"/>
 
         <service id="sulu_event_log.persist_event_record_subscriber" class="Sulu\Bundle\EventLogBundle\Subscriber\PersistEventRecordSubscriber">
             <argument type="service" id="sulu.repository.event_record"/>
