@@ -22,12 +22,11 @@ type Props = {
     listStore: ListStore,
     locale: IObservableValue<string>,
     onCollectionNavigate: (collectionId: ?string | number) => void,
+    onOpenDropZone: () => void,
     overlayType: OverlayType,
     resourceStore: ResourceStore,
     securable: boolean,
-
     uploadable: boolean,
-    onOpenDropZone: () => void,
 };
 
 @observer
@@ -196,11 +195,11 @@ class CollectionSection extends React.Component<Props> {
             editable,
             listStore,
             locale,
+            onOpenDropZone,
             overlayType,
             resourceStore,
             securable,
             uploadable,
-            onOpenDropZone,
         } = this.props;
 
         const operationType = this.openedCollectionOperationOverlayType;
