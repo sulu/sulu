@@ -22,6 +22,7 @@ class EventRecordRepository extends EntityRepository implements EventRecordRepos
         $eventRecord = $this->createNew();
 
         $eventRecord->setEventType($domainEvent->getEventType());
+        $eventRecord->setEventContext($domainEvent->getEventContext());
         $eventRecord->setEventDateTime($domainEvent->getEventDateTime());
         $eventRecord->setEventBatch($domainEvent->getEventBatch());
         $eventRecord->setUser($domainEvent->getUser());
@@ -34,5 +35,15 @@ class EventRecordRepository extends EntityRepository implements EventRecordRepos
         $eventRecord->setResourceSecurityType($domainEvent->getResourceSecurityType());
 
         return $eventRecord;
+    }
+
+    public function add(EventRecordInterface $eventRecord): void
+    {
+        $this->getEntityManager()->persist($eventRecord);
+    }
+
+    public function commit(): void
+    {
+        $this->getEntityManager()->flush();
     }
 }

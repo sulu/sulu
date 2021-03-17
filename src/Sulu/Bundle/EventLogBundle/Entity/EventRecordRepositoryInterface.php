@@ -12,9 +12,12 @@
 namespace Sulu\Bundle\EventLogBundle\Entity;
 
 use Sulu\Bundle\EventLogBundle\Event\DomainEvent;
-use Sulu\Component\Persistence\Repository\RepositoryInterface;
 
-interface EventRecordRepositoryInterface extends RepositoryInterface
+interface EventRecordRepositoryInterface
 {
     public function createForDomainEvent(DomainEvent $domainEvent): EventRecordInterface;
+
+    public function add(EventRecordInterface $eventRecord): void;
+
+    public function commit(): void;
 }

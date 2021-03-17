@@ -54,7 +54,7 @@ class CustomUrlRouteRemovedEvent extends DomainEvent
         return 'route_removed';
     }
 
-    public function getEventPayload(): array
+    public function getEventContext(): array
     {
         return [
             'routeUuid' => $this->routeUuid,

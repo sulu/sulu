@@ -26,6 +26,11 @@ class EventRecord implements EventRecordInterface
     private $eventType;
 
     /**
+     * @var array
+     */
+    private $eventContext;
+
+    /**
      * @var \DateTimeImmutable
      */
     private $eventDateTime;
@@ -83,6 +88,18 @@ class EventRecord implements EventRecordInterface
     public function setEventType(string $eventType): EventRecordInterface
     {
         $this->eventType = $eventType;
+
+        return $this;
+    }
+
+    public function getEventContext(): array
+    {
+        return $this->eventContext;
+    }
+
+    public function setEventContext(array $eventContext): EventRecordInterface
+    {
+        $this->eventContext = $eventContext;
 
         return $this;
     }

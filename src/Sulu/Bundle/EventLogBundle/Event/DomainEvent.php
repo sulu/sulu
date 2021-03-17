@@ -37,38 +37,14 @@ abstract class DomainEvent
 
     abstract public function getEventType(): string;
 
-    public function getEventPayload(): array
+    public function getEventContext(): array
     {
         return [];
     }
 
-    abstract public function getResourceKey(): string;
-
-    abstract public function getResourceId(): string;
-
-    public function getResourceLocale(): ?string
+    public function getEventPayload(): array
     {
-        return null;
-    }
-
-    public function getResourceWebspaceKey(): ?string
-    {
-        return null;
-    }
-
-    public function getResourceTitle(): ?string
-    {
-        return null;
-    }
-
-    public function getResourceSecurityContext(): ?string
-    {
-        return null;
-    }
-
-    public function getResourceSecurityType(): ?string
-    {
-        return null;
+        return [];
     }
 
     public function getEventDateTime(): \DateTimeImmutable
@@ -105,5 +81,34 @@ abstract class DomainEvent
         $this->user = $user;
 
         return $this;
+    }
+
+    abstract public function getResourceKey(): string;
+
+    abstract public function getResourceId(): string;
+
+    public function getResourceLocale(): ?string
+    {
+        return null;
+    }
+
+    public function getResourceWebspaceKey(): ?string
+    {
+        return null;
+    }
+
+    public function getResourceTitle(): ?string
+    {
+        return null;
+    }
+
+    public function getResourceSecurityContext(): ?string
+    {
+        return null;
+    }
+
+    public function getResourceSecurityType(): ?string
+    {
+        return null;
     }
 }

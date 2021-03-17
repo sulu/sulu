@@ -46,7 +46,7 @@ class PersistEventRecordSubscriber implements EventSubscriberInterface
     public function persistsEventRecord(DomainEvent $event)
     {
         $eventRecord = $this->eventRecordRepository->createForDomainEvent($event);
-        $this->entityManager->persist($eventRecord);
-        $this->entityManager->flush();
+        $this->eventRecordRepository->add($eventRecord);
+        $this->eventRecordRepository->commit();
     }
 }

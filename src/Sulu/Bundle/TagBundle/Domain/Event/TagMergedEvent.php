@@ -48,7 +48,7 @@ class TagMergedEvent extends DomainEvent
         return 'merged';
     }
 
-    public function getEventPayload(): array
+    public function getEventContext(): array
     {
         return [
             'destinationTagId' => $this->destinationTag->getId(),

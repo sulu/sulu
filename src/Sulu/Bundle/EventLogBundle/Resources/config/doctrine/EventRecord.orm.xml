@@ -8,6 +8,7 @@
         </id>
 
         <field name="eventType" column="eventType" type="string" nullable="false" length="191"/>
+        <field name="eventContext" column="eventContext" type="json" nullable="false"/>
         <field name="eventDateTime" column="eventDateTime" type="datetime_immutable" nullable="false"/>
         <field name="eventBatch" column="eventBatch" type="string" nullable="true" length="191"/>
 
