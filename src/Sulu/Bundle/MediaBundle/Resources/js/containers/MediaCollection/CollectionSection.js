@@ -25,6 +25,9 @@ type Props = {
     overlayType: OverlayType,
     resourceStore: ResourceStore,
     securable: boolean,
+
+    uploadable: boolean,
+    onOpenDropZone: () => void,
 };
 
 @observer
@@ -196,6 +199,8 @@ class CollectionSection extends React.Component<Props> {
             overlayType,
             resourceStore,
             securable,
+            uploadable,
+            onOpenDropZone,
         } = this.props;
 
         const operationType = this.openedCollectionOperationOverlayType;
@@ -216,6 +221,11 @@ class CollectionSection extends React.Component<Props> {
                                 {addable &&
                                     <Button icon="su-plus" onClick={this.handleAddCollectionClick} />
                                 }
+
+                                {uploadable && (
+                                    <Button icon="su-upload" onClick={onOpenDropZone} />
+                                )}
+
                                 {!!resourceStore.id && (editable || deletable || editable || securable) &&
                                     <DropdownButton icon="su-cog">
                                         {editable &&

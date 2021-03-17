@@ -97,6 +97,8 @@ class MediaCollection extends React.Component<Props> {
         const securable = !locked
             && (permissions.security !== undefined ? permissions.security : MediaCollection.securable);
 
+        const hasCollectionId = ['string', 'number'].includes(typeof collectionStore.id);
+
         return (
             <MultiMediaDropzone
                 collectionId={addable ? collectionStore.id : undefined}
@@ -117,6 +119,9 @@ class MediaCollection extends React.Component<Props> {
                     overlayType={overlayType}
                     resourceStore={collectionStore.resourceStore}
                     securable={securable}
+
+                    uploadable={addable && hasCollectionId}
+                    onOpenDropZone={onUploadOverlayOpen}
                 />
                 <Divider />
                 <div>
