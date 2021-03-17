@@ -16,7 +16,7 @@ use Sulu\Bundle\EventLogBundle\Entity\EventRecordRepositoryInterface;
 use Sulu\Bundle\EventLogBundle\Event\DomainEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class PersistEventRecordSubscriber implements EventSubscriberInterface
+class StoreEventRecordSubscriber implements EventSubscriberInterface
 {
     /**
      * @var EventRecordRepositoryInterface
@@ -39,11 +39,11 @@ class PersistEventRecordSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            DomainEvent::class => ['persistsEventRecord', -256],
+            DomainEvent::class => ['storeEventRecord', -256],
         ];
     }
 
-    public function persistsEventRecord(DomainEvent $event)
+    public function storeEventRecord(DomainEvent $event)
     {
         $eventRecord = $this->eventRecordRepository->createForDomainEvent($event);
         $this->eventRecordRepository->add($eventRecord);

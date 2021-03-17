@@ -21,7 +21,7 @@
             <tag name="sulu_document_manager.event_subscriber"/>
         </service>
 
-        <service id="sulu_event_log.persist_event_record_subscriber" class="Sulu\Bundle\EventLogBundle\Subscriber\PersistEventRecordSubscriber">
+        <service id="sulu_event_log.store_event_record_subscriber" class="Sulu\Bundle\EventLogBundle\Subscriber\StoreEventRecordSubscriber">
             <argument type="service" id="sulu.repository.event_record"/>
             <argument type="service" id="doctrine.orm.entity_manager"/>
 
