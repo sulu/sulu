@@ -32,9 +32,9 @@ class TagMergedEvent extends DomainEvent
     private $destinationTag;
 
     public function __construct(
+        TagInterface $destinationTag,
         int $sourceTagId,
-        string $sourceTagName,
-        TagInterface $destinationTag
+        string $sourceTagName
     ) {
         parent::__construct();
 
@@ -51,8 +51,8 @@ class TagMergedEvent extends DomainEvent
     public function getEventContext(): array
     {
         return [
-            'destinationTagId' => $this->destinationTag->getId(),
-            'destinationTagName' => $this->destinationTag->getName(),
+            'sourceTagId' => $this->sourceTagId,
+            'sourceTagName' => $this->sourceTagName,
         ];
     }
 
@@ -63,12 +63,12 @@ class TagMergedEvent extends DomainEvent
 
     public function getResourceId(): string
     {
-        return (string) $this->sourceTagId;
+        return (string) $this->destinationTag->getId();
     }
 
     public function getResourceTitle(): ?string
     {
-        return $this->sourceTagName;
+        return $this->destinationTag->getName();
     }
 
     public function getResourceSecurityContext(): ?string

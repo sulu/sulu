@@ -25,19 +25,33 @@ class TagRemovedEvent extends DomainEvent
      */
     private $tagName;
 
+    /**
+     * @var bool
+     */
+    private $tagWasMerged;
+
     public function __construct(
         int $tagId,
-        string $tagName
+        string $tagName,
+        bool $tagWasMerged = false
     ) {
         parent::__construct();
 
         $this->tagId = $tagId;
         $this->tagName = $tagName;
+        $this->tagWasMerged = $tagWasMerged;
     }
 
     public function getEventType(): string
     {
         return 'removed';
+    }
+
+    public function getEventContext(): array
+    {
+        return [
+            'tagWasMerged' => $this->tagWasMerged,
+        ];
     }
 
     public function getResourceKey(): string

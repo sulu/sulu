@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\TagBundle\Event;
 
+use Sulu\Bundle\TagBundle\Domain\Event\TagRemovedEvent;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
