@@ -38,6 +38,7 @@ type Props = {|
     adapters: Array<string>,
     allowActivateForDisabledItems: boolean,
     copyable: boolean,
+    customButtons?: Array<Node>,
     deletable: boolean,
     disabled: boolean,
     disabledIds: Array<string | number>,
@@ -65,6 +66,7 @@ class List extends React.Component<Props> {
     static defaultProps = {
         allowActivateForDisabledItems: true,
         copyable: true,
+        customButtons: [],
         deletable: true,
         disabled: false,
         disabledIds: [],
