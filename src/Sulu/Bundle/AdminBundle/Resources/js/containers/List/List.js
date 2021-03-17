@@ -515,6 +515,7 @@ class List extends React.Component<Props> {
             adapterOptions,
             adapters,
             copyable,
+            customButtons,
             deletable,
             disabled,
             header,
@@ -601,7 +602,7 @@ class List extends React.Component<Props> {
                             </Fragment>
                         }
 
-                        {this.props.customButtons}
+                        {customButtons}
 
                         <AdapterSwitch
                             adapters={adapters}
