@@ -116,11 +116,9 @@ class MediaCollection extends React.Component<Props> {
                     listStore={collectionListStore}
                     locale={locale}
                     onCollectionNavigate={this.handleCollectionNavigate}
-                    onOpenDropZone={onUploadOverlayOpen}
                     overlayType={overlayType}
                     resourceStore={collectionStore.resourceStore}
                     securable={securable}
-                    uploadable={addable && hasCollectionId}
                 />
                 <Divider />
                 <div>
@@ -129,6 +127,8 @@ class MediaCollection extends React.Component<Props> {
                         listStore={mediaListStore}
                         mediaListRef={mediaListRef}
                         onMediaClick={this.handleMediaClick}
+                        onUploadOverlayOpen={onUploadOverlayOpen}
+                        uploadable={addable && hasCollectionId}
                     />
                 </div>
             </MultiMediaDropzone>

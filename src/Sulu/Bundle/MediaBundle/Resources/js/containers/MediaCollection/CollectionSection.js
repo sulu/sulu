@@ -22,11 +22,9 @@ type Props = {
     listStore: ListStore,
     locale: IObservableValue<string>,
     onCollectionNavigate: (collectionId: ?string | number) => void,
-    onOpenDropZone: () => void,
     overlayType: OverlayType,
     resourceStore: ResourceStore,
     securable: boolean,
-    uploadable: boolean,
 };
 
 @observer
@@ -195,11 +193,9 @@ class CollectionSection extends React.Component<Props> {
             editable,
             listStore,
             locale,
-            onOpenDropZone,
             overlayType,
             resourceStore,
             securable,
-            uploadable,
         } = this.props;
 
         const operationType = this.openedCollectionOperationOverlayType;
@@ -218,13 +214,10 @@ class CollectionSection extends React.Component<Props> {
                         <div className={collectionSectionStyles.right}>
                             <ButtonGroup>
                                 {addable &&
-                                    <Button icon="su-plus" onClick={this.handleAddCollectionClick} />
+                                    <Button icon="su-plus" onClick={this.handleAddCollectionClick}>
+                                        Add folder
+                                    </Button>
                                 }
-
-                                {uploadable && (
-                                    <Button icon="su-upload" onClick={onOpenDropZone} />
-                                )}
-
                                 {!!resourceStore.id && (editable || deletable || editable || securable) &&
                                     <DropdownButton icon="su-cog">
                                         {editable &&

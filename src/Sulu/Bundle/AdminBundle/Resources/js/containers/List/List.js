@@ -598,6 +598,9 @@ class List extends React.Component<Props> {
                                 />
                             </Fragment>
                         }
+
+                        {this.props.customButtons}
+
                         <AdapterSwitch
                             adapters={adapters}
                             currentAdapter={this.currentAdapterKey}

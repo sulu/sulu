@@ -91,12 +91,19 @@ export default class Button<T> extends React.PureComponent<Props<T>> {
                 {icon &&
                     <Icon className={iconClass} name={icon} />
                 }
+
+                {icon && children && (
+                    <span className={buttonStyles.spacer} />
+                )}
+
                 {children &&
                     <span className={buttonStyles.buttonText}>{children}</span>
                 }
+
                 {showDropdownIcon &&
                     <Icon className={buttonStyles.dropdownIcon} name="su-angle-down" />
                 }
+
                 {loading &&
                     <div className={buttonStyles.loader}>
                         <Loader size={LOADER_SIZE} />

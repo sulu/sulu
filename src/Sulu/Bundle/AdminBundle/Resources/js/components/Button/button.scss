@@ -114,6 +114,10 @@ $iconColorActive: $white;
     }
 }
 
+.spacer {
+    margin: auto 5px;
+}
+
 .text {
     padding: 0;
     border: 0;
@@ -146,7 +150,7 @@ $iconColorActive: $white;
     color: $iconBorderColor;
     cursor: pointer;
     font-size: $iconFontSize;
-    padding: 0 5px;
+    padding: 0 10px;
 
     &:hover:not(:disabled) {
         background-color: $silver;
