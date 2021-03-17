@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\TagBundle\Event;
+namespace Sulu\Bundle\TagBundle\Domain\Event;
 
 use Sulu\Bundle\EventLogBundle\Event\DomainEvent;
 

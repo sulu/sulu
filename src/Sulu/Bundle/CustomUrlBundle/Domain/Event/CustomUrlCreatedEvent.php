@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\CustomUrlBundle\Event;
+namespace Sulu\Bundle\CustomUrlBundle\Domain\Event;
 
 use Sulu\Bundle\CustomUrlBundle\Admin\CustomUrlAdmin;
 use Sulu\Bundle\EventLogBundle\Event\DomainEvent;

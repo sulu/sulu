@@ -12,10 +12,10 @@
 namespace Sulu\Component\CustomUrl\Manager;
 
 use PHPCR\Util\PathHelper;
-use Sulu\Bundle\CustomUrlBundle\Event\CustomUrlCreatedEvent;
-use Sulu\Bundle\CustomUrlBundle\Event\CustomUrlModifiedEvent;
-use Sulu\Bundle\CustomUrlBundle\Event\CustomUrlRemovedEvent;
-use Sulu\Bundle\CustomUrlBundle\Event\CustomUrlRouteRemovedEvent;
+use Sulu\Bundle\CustomUrlBundle\Domain\Event\CustomUrlCreatedEvent;
+use Sulu\Bundle\CustomUrlBundle\Domain\Event\CustomUrlModifiedEvent;
+use Sulu\Bundle\CustomUrlBundle\Domain\Event\CustomUrlRemovedEvent;
+use Sulu\Bundle\CustomUrlBundle\Domain\Event\CustomUrlRouteRemovedEvent;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\EventLogBundle\Collector\DomainEventCollectorInterface;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;

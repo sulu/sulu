@@ -9,46 +9,51 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\TagBundle\Event;
+namespace Sulu\Bundle\TagBundle\Domain\Event;
 
 use Sulu\Bundle\EventLogBundle\Event\DomainEvent;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 
-class TagCreatedEvent extends DomainEvent
+class TagMergedEvent extends DomainEvent
 {
+    /**
+     * @var int
+     */
+    private $sourceTagId;
+
+    /**
+     * @var int
+     */
+    private $sourceTagName;
+
     /**
      * @var TagInterface
      */
-    private $tag;
-
-    /**
-     * @var array
-     */
-    private $payload;
+    private $destinationTag;
 
     public function __construct(
-        TagInterface $tag,
-        array $payload
+        int $sourceTagId,
+        string $sourceTagName,
+        TagInterface $destinationTag
     ) {
         parent::__construct();
 
-        $this->tag = $tag;
-        $this->payload = $payload;
-    }
-
-    public function getTag(): TagInterface
-    {
-        return $this->tag;
+        $this->sourceTagId = $sourceTagId;
+        $this->sourceTagName = $sourceTagName;
+        $this->destinationTag = $destinationTag;
     }
 
     public function getEventType(): string
     {
-        return 'created';
+        return 'merged';
     }
 
     public function getEventPayload(): array
     {
-        return $this->payload;
+        return [
+            'destinationTagId' => $this->destinationTag->getId(),
+            'destinationTagName' => $this->destinationTag->getName(),
+        ];
     }
 
     public function getResourceKey(): string
@@ -58,12 +63,12 @@ class TagCreatedEvent extends DomainEvent
 
     public function getResourceId(): string
     {
-        return (string) $this->tag->getId();
+        return (string) $this->sourceTagId;
     }
 
     public function getResourceTitle(): ?string
     {
-        return $this->tag->getName();
+        return $this->sourceTagName;
     }
 
     public function getResourceSecurityContext(): ?string

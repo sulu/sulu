@@ -9,43 +9,54 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\CustomUrlBundle\Event;
+namespace Sulu\Bundle\CustomUrlBundle\Domain\Event;
 
 use Sulu\Bundle\CustomUrlBundle\Admin\CustomUrlAdmin;
 use Sulu\Bundle\EventLogBundle\Event\DomainEvent;
+use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 
-class CustomUrlRemovedEvent extends DomainEvent
+class CustomUrlModifiedEvent extends DomainEvent
 {
     /**
-     * @var string
+     * @var CustomUrlDocument
      */
-    private $customUrlUuid;
-
-    /**
-     * @var string
-     */
-    private $customUrlTitle;
+    private $customUrlDocument;
 
     /**
      * @var string
      */
     private $webspaceKey;
 
+    /**
+     * @var array
+     */
+    private $payload;
+
     public function __construct(
-        string $customUrlUuid,
-        string $customUrlTitle,
-        string $webspaceKey
+        CustomUrlDocument $customUrlDocument,
+        string $webspaceKey,
+        array $payload
     ) {
         parent::__construct();
 
-        $this->customUrlUuid = $customUrlUuid;
-        $this->customUrlTitle = $customUrlTitle;
+        $this->customUrlDocument = $customUrlDocument;
         $this->webspaceKey = $webspaceKey;
+        $this->payload = $payload;
+    }
+
+    public function getCustomUrlDocument(): CustomUrlDocument
+    {
+        return $this->customUrlDocument;
     }
 
     public function getEventType(): string
     {
-        return 'removed';
+        return 'modified';
+    }
+
+    public function getEventPayload(): array
+    {
+        return $this->payload;
     }
 
     public function getResourceKey(): string
@@ -55,7 +66,7 @@ class CustomUrlRemovedEvent extends DomainEvent
 
     public function getResourceId(): string
     {
-        return $this->customUrlUuid;
+        return (string) $this->customUrlDocument->getUuid();
     }
 
     public function getResourceWebspaceKey(): ?string
@@ -65,7 +76,7 @@ class CustomUrlRemovedEvent extends DomainEvent
 
     public function getResourceTitle(): ?string
     {
-        return $this->customUrlTitle;
+        return $this->customUrlDocument->getTitle();
     }
 
     public function getResourceSecurityContext(): ?string
