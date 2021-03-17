@@ -24,16 +24,12 @@ export default class MediaSection extends React.PureComponent<Props> {
             listStore,
             mediaListRef,
             onUploadOverlayOpen,
-            uploadable
+            uploadable,
         } = this.props;
 
         return (
             <List
                 adapters={adapters}
-                onItemClick={this.handleMediaClick}
-                ref={mediaListRef}
-                store={listStore}
-
                 customButtons={[
                     uploadable && (
                         <ButtonGroup key="upload-media">
@@ -41,8 +37,12 @@ export default class MediaSection extends React.PureComponent<Props> {
                                 Upload File
                             </Button>
                         </ButtonGroup>
-                    )
+                    ),
                 ]}
+
+                onItemClick={this.handleMediaClick}
+                ref={mediaListRef}
+                store={listStore}
             />
         );
     }
