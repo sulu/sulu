@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\EventLogBundle\DependencyInjection;
 
+use Sulu\Bundle\EventLogBundle\Entity\EventRecordRepositoryInterface;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -30,5 +31,19 @@ class SuluEventLogExtension extends Extension
         $loader->load('services.xml');
 
         $this->configurePersistence($config['objects'], $container);
+        $container->setAlias('sulu_event_log.event_record_repository.doctrine', 'sulu.repository.event_record');
+
+        $storageAdapter = $container->resolveEnvPlaceholders($config['storage']['adapter'], true);
+        $container->setParameter('sulu_event_log.storage.adapter', $storageAdapter);
+
+        $storagePersistPayload = $container->resolveEnvPlaceholders($config['storage']['persist_payload'], true);
+        $container->setParameter('sulu_event_log.storage.persist_payload', $storagePersistPayload);
+
+        // set sulu_event_log.event_record_repository service based on configured storage adapter
+        $eventRecordRepositoryService = $storageAdapter
+            ? 'sulu_event_log.event_record_repository.' . $storageAdapter
+            : 'sulu_event_log.event_record_repository.null';
+        $container->setAlias('sulu_event_log.event_record_repository', $eventRecordRepositoryService);
+        $container->setAlias(EventRecordRepositoryInterface::class,'sulu_event_log.event_record_repository');
     }
 }

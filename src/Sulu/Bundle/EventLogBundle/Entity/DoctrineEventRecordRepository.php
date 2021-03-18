@@ -14,7 +14,7 @@ namespace Sulu\Bundle\EventLogBundle\Entity;
 use Sulu\Bundle\EventLogBundle\Event\DomainEvent;
 use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
 
-class EventRecordRepository extends EntityRepository implements EventRecordRepositoryInterface
+class DoctrineEventRecordRepository extends EntityRepository implements EventRecordRepositoryInterface
 {
     public function createForDomainEvent(DomainEvent $domainEvent): EventRecordInterface
     {

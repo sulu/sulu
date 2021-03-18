@@ -23,17 +23,10 @@ class StoreEventRecordSubscriber implements EventSubscriberInterface
      */
     private $eventRecordRepository;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
     public function __construct(
-        EventRecordRepositoryInterface $eventRecordRepository,
-        EntityManagerInterface $entityManager
+        EventRecordRepositoryInterface $eventRecordRepository
     ) {
         $this->eventRecordRepository = $eventRecordRepository;
-        $this->entityManager = $entityManager;
     }
 
     public static function getSubscribedEvents()
