@@ -97,7 +97,9 @@ class MediaCollection extends React.Component<Props> {
         const securable = !locked
             && (permissions.security !== undefined ? permissions.security : MediaCollection.securable);
 
-        const hasCollectionId = ['string', 'number'].includes(typeof collectionStore.id);
+        const onUploadClick = (addable && collectionStore.id)
+            ? onUploadOverlayOpen
+            : null;
 
         return (
             <MultiMediaDropzone
@@ -127,8 +129,7 @@ class MediaCollection extends React.Component<Props> {
                         listStore={mediaListStore}
                         mediaListRef={mediaListRef}
                         onMediaClick={this.handleMediaClick}
-                        onUploadOverlayOpen={onUploadOverlayOpen}
-                        uploadable={addable && hasCollectionId}
+                        onUploadClick={onUploadClick}
                     />
                 </div>
             </MultiMediaDropzone>
