@@ -37,8 +37,8 @@ type Props = {|
     adapterOptions?: {[adapterKey: string]: {[key: string]: mixed}},
     adapters: Array<string>,
     allowActivateForDisabledItems: boolean,
+    buttons?: Array<Node>,
     copyable: boolean,
-    customButtons?: Array<Node>,
     deletable: boolean,
     disabled: boolean,
     disabledIds: Array<string | number>,
@@ -65,8 +65,8 @@ const USER_SETTING_ADAPTER = 'adapter';
 class List extends React.Component<Props> {
     static defaultProps = {
         allowActivateForDisabledItems: true,
+        buttons: [],
         copyable: true,
-        customButtons: [],
         deletable: true,
         disabled: false,
         disabledIds: [],
@@ -514,8 +514,8 @@ class List extends React.Component<Props> {
         const {
             adapterOptions,
             adapters,
+            buttons,
             copyable,
-            customButtons,
             deletable,
             disabled,
             header,
@@ -602,7 +602,7 @@ class List extends React.Component<Props> {
                             </Fragment>
                         }
 
-                        {customButtons}
+                        {buttons}
 
                         <AdapterSwitch
                             adapters={adapters}
