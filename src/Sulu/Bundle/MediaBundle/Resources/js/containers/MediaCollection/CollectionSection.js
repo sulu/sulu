@@ -215,7 +215,7 @@ class CollectionSection extends React.Component<Props> {
                             <ButtonGroup>
                                 {addable &&
                                     <Button icon="su-plus" onClick={this.handleAddCollectionClick}>
-                                        Add folder
+                                        {translate('sulu_media.add_collection')}
                                     </Button>
                                 }
                                 {!!resourceStore.id && (editable || deletable || editable || securable) &&
