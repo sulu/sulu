@@ -30,8 +30,7 @@ export default class MediaSection extends React.PureComponent<Props> {
         return (
             <List
                 adapters={adapters}
-                customButtons={[
-                    uploadable && (
+                buttons={[
                         <ButtonGroup key="upload-media">
                             <Button icon="su-upload" onClick={onUploadOverlayOpen}>
                                 Upload File
