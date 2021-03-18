@@ -146,10 +146,5 @@
         <service id="sulu_audience_targeting.target_group_store"
                  class="Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStore" public="true">
         </service>
-        <!--PERSISTENCE BUNDLE REPOSITORIES-->
-        <service id="Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface" alias="sulu.repository.target_group"/>
-        <service id="Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupConditionRepositoryInterface" alias="sulu.repository.target_group_condition"/>
-        <service id="Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleRepositoryInterface" alias="sulu.repository.target_group_rule"/>
-        <service id="Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupWebspaceRepositoryInterface" alias="sulu.repository.target_group_webspace"/>
     </services>
 </container>

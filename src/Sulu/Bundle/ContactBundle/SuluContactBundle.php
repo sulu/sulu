@@ -12,7 +12,9 @@
 namespace Sulu\Bundle\ContactBundle;
 
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
+use Sulu\Bundle\ContactBundle\Entity\AccountRepositoryInterface;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
+use Sulu\Bundle\ContactBundle\Entity\ContactRepositoryInterface;
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -31,6 +33,13 @@ class SuluContactBundle extends Bundle
                 AccountInterface::class => 'sulu.model.account.class',
             ],
             $container
+        );
+
+        $container->addAliases(
+            [
+                ContactRepositoryInterface::class => 'sulu.repository.contact',
+                AccountRepositoryInterface::class => 'sulu.repository.account',
+            ]
         );
     }
 }

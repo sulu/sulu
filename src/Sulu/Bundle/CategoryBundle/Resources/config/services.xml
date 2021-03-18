@@ -93,11 +93,5 @@
 
             <tag name="massive_search.converter" from="category" />
         </service>
-
-        <!--PERSISTENCE BUNDLE REPOSITORIES-->
-        <service id="Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface" alias="sulu.repository.category"/>
-        <service id="Sulu\Bundle\CategoryBundle\Entity\CategoryMetaRepositoryInterface" alias="sulu.repository.category_meta"/>
-        <service id="Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationRepositoryInterface" alias="sulu.repository.category_translation"/>
-        <service id="Sulu\Bundle\CategoryBundle\Entity\KeywordRepositoryInterface" alias="sulu.repository.keyword"/>
     </services>
 </container>

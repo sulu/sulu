@@ -15,6 +15,14 @@ use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
 use Sulu\Bundle\SecurityBundle\DependencyInjection\Compiler\AccessControlProviderPass;
 use Sulu\Bundle\SecurityBundle\DependencyInjection\Compiler\AliasForSecurityEncoderCompilerPass;
 use Sulu\Bundle\SecurityBundle\DependencyInjection\Compiler\UserManagerCompilerPass;
+use Sulu\Component\Security\Authentication\RoleInterface;
+use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
+use Sulu\Component\Security\Authentication\RoleSettingInterface;
+use Sulu\Component\Security\Authentication\RoleSettingRepositoryInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
+use Sulu\Component\Security\Authentication\UserRepositoryInterface;
+use Sulu\Component\Security\Authorization\AccessControl\AccessControlInterface;
+use Sulu\Component\Security\Authorization\AccessControl\AccessControlRepositoryInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -26,12 +34,21 @@ class SuluSecurityBundle extends Bundle
     {
         $this->buildPersistence(
             [
-                'Sulu\Component\Security\Authentication\UserInterface' => 'sulu.model.user.class',
-                'Sulu\Component\Security\Authentication\RoleInterface' => 'sulu.model.role.class',
-                'Sulu\Component\Security\Authentication\RoleSettingInterface' => 'sulu.model.role_setting.class',
-                'Sulu\Component\Security\Authorization\AccessControl\AccessControlInterface' => 'sulu.model.access_control.class',
+                UserInterface::class => 'sulu.model.user.class',
+                RoleInterface::class => 'sulu.model.role.class',
+                RoleSettingInterface::class => 'sulu.model.role_setting.class',
+                AccessControlInterface::class => 'sulu.model.access_control.class',
             ],
             $container
+        );
+
+        $container->addAliases(
+            [
+                UserRepositoryInterface::class => 'sulu.repository.user',
+                RoleRepositoryInterface::class => 'sulu.repository.role',
+                RoleSettingRepositoryInterface::class => 'sulu.repository.role_setting',
+                AccessControlRepositoryInterface::class => 'sulu.repository.access_control',
+            ]
         );
 
         $container->addCompilerPass(new UserManagerCompilerPass());

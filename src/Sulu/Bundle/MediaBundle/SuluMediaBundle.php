@@ -15,6 +15,7 @@ use Sulu\Bundle\MediaBundle\DependencyInjection\FormatCacheClearerCompilerPass;
 use Sulu\Bundle\MediaBundle\DependencyInjection\ImageFormatCompilerPass;
 use Sulu\Bundle\MediaBundle\DependencyInjection\ImageTransformationCompilerPass;
 use Sulu\Bundle\MediaBundle\DependencyInjection\S3ClientCompilerPass;
+use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -30,6 +31,12 @@ class SuluMediaBundle extends Bundle
                 'Sulu\Bundle\MediaBundle\Entity\MediaInterface' => 'sulu.model.media.class',
             ],
             $container
+        );
+
+        $container->addAliases(
+            [
+                MediaRepositoryInterface::class => 'sulu.repository.media',
+            ]
         );
 
         $container->addCompilerPass(new FormatCacheClearerCompilerPass());
