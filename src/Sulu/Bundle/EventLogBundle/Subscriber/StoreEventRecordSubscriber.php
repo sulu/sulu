@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\EventLogBundle\Subscriber;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\EventLogBundle\Entity\EventRecordRepositoryInterface;
 use Sulu\Bundle\EventLogBundle\Event\DomainEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;

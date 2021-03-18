@@ -50,7 +50,7 @@ class TimestampableSubscriber implements EventSubscriber
                 $metadata->mapField([
                     'fieldName' => self::CREATED_FIELD,
                     'type' => 'datetime',
-                    'notnull' => true,
+                    'nullable' => false,
                 ]);
             }
 
@@ -58,7 +58,7 @@ class TimestampableSubscriber implements EventSubscriber
                 $metadata->mapField([
                     'fieldName' => self::CHANGED_FIELD,
                     'type' => 'datetime',
-                    'notnull' => true,
+                    'nullable' => false,
                 ]);
             }
         }

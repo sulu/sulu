@@ -25,6 +25,12 @@
             <argument>%sulu.model.event_record.class%</argument>
         </service>
 
+        <service id="sulu_event_log.event_record_metadata_subscriber" class="Sulu\Bundle\EventLogBundle\Doctrine\EventRecordMetadataSubscriber">
+            <argument>%sulu_event_log.storage.persist_payload%</argument>
+
+            <tag name="doctrine.event_subscriber" priority="256"/>
+        </service>
+
         <service id="sulu_event_log.store_event_record_subscriber" class="Sulu\Bundle\EventLogBundle\Subscriber\StoreEventRecordSubscriber">
             <argument type="service" id="sulu_event_log.event_record_repository"/>
 

@@ -42,9 +42,9 @@ abstract class DomainEvent
         return [];
     }
 
-    public function getEventPayload(): array
+    public function getEventPayload(): ?array
     {
-        return [];
+        return null;
     }
 
     public function getEventDateTime(): \DateTimeImmutable

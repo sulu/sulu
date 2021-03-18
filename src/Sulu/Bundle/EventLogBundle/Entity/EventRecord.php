@@ -31,6 +31,11 @@ class EventRecord implements EventRecordInterface
     private $eventContext;
 
     /**
+     * @var array|null
+     */
+    private $eventPayload;
+
+    /**
      * @var \DateTimeImmutable
      */
     private $eventDateTime;
@@ -100,6 +105,18 @@ class EventRecord implements EventRecordInterface
     public function setEventContext(array $eventContext): EventRecordInterface
     {
         $this->eventContext = $eventContext;
+
+        return $this;
+    }
+
+    public function getEventPayload(): ?array
+    {
+        return $this->eventPayload;
+    }
+
+    public function setEventPayload(?array $eventPayload): EventRecordInterface
+    {
+        $this->eventPayload = $eventPayload;
 
         return $this;
     }

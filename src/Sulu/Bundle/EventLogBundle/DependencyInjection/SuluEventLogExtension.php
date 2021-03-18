@@ -44,6 +44,6 @@ class SuluEventLogExtension extends Extension
             ? 'sulu_event_log.event_record_repository.' . $storageAdapter
             : 'sulu_event_log.event_record_repository.null';
         $container->setAlias('sulu_event_log.event_record_repository', $eventRecordRepositoryService);
-        $container->setAlias(EventRecordRepositoryInterface::class,'sulu_event_log.event_record_repository');
+        $container->setAlias(EventRecordRepositoryInterface::class, 'sulu_event_log.event_record_repository');
     }
 }

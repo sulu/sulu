@@ -23,6 +23,7 @@ class DoctrineEventRecordRepository extends EntityRepository implements EventRec
 
         $eventRecord->setEventType($domainEvent->getEventType());
         $eventRecord->setEventContext($domainEvent->getEventContext());
+        $eventRecord->setEventPayload($domainEvent->getEventPayload());
         $eventRecord->setEventDateTime($domainEvent->getEventDateTime());
         $eventRecord->setEventBatch($domainEvent->getEventBatch());
         $eventRecord->setUser($domainEvent->getUser());

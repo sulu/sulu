@@ -19,6 +19,14 @@ interface EventRecordInterface
 
     public function setEventType(string $eventType): EventRecordInterface;
 
+    public function getEventContext(): array;
+
+    public function setEventContext(array $eventContext): EventRecordInterface;
+
+    public function getEventPayload(): ?array;
+
+    public function setEventPayload(?array $eventPayload): EventRecordInterface;
+
     public function getEventDateTime(): \DateTimeImmutable;
 
     public function setEventDateTime(\DateTimeImmutable $eventDateTime): EventRecordInterface;
