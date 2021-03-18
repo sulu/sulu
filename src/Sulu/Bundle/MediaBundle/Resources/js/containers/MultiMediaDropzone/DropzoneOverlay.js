@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import type {ChildrenArray, Element} from 'react';
+import type {ChildrenArray, Element, ElementRef} from 'react';
 import {observer} from 'mobx-react';
 import Mousetrap from 'mousetrap';
 import {Portal} from 'react-portal';
@@ -78,8 +78,12 @@ class DropzoneOverlay extends React.Component<Props> {
                 <div
                     className={dropzoneOverlayStyles.dropzoneOverlay}
                     onClick={this.handleClose}
-                    onDragLeave={onDragLeave}
                     role="button"
+
+                    onDragLeave={(e) => {
+                        console.log('onDragLeave', e.target)
+                        onDragLeave();
+                    }}
                 >
                     <div className={dropzoneOverlayStyles.dropArea}>
                         <div className={dropzoneOverlayStyles.uploadInfoContainer}>
