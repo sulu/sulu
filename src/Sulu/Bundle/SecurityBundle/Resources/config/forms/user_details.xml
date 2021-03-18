@@ -57,7 +57,7 @@
                 <title>sulu_security.permissions</title>
             </meta>
             <properties>
-                <property name="userRoles" mandatory="true" type="role_assignments">
+                <property name="userRoles" type="role_assignments">
                     <meta>
                         <title>sulu_security.roles</title>
                     </meta>
