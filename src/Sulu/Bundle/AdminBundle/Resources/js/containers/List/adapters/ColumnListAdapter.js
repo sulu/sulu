@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, observable} from 'mobx';
+import {action, observable, toJS} from 'mobx';
 import {observer} from 'mobx-react';
 import ColumnList from '../../../components/ColumnList';
 import GhostIndicator from '../../../components/GhostIndicator';
@@ -43,6 +43,26 @@ class ColumnListAdapter extends AbstractAdapter {
         if (onItemActivate) {
             onItemActivate(id);
             this.orderColumn = undefined;
+        }
+    };
+
+    @action handleItemDoubleClick = (id: string | number) => {
+        const {
+            data,
+            onItemClick,
+        } = this.props;
+
+        // TODO: Don't access id directly but use some kind of metadata instead
+        const clickedItem: Object = data.map((column) => toJS(column)).flat().find((item: any) => item.id === id) || {};
+
+        const {
+            _permissions: {
+                view: viewPermission = true,
+            } = {},
+        } = clickedItem;
+
+        if (onItemClick && viewPermission) {
+            onItemClick(id);
         }
     };
 
@@ -295,7 +315,6 @@ class ColumnListAdapter extends AbstractAdapter {
             activeItems,
             disabledIds,
             loading,
-            onItemClick,
             selections,
         } = this.props;
 
@@ -303,7 +322,7 @@ class ColumnListAdapter extends AbstractAdapter {
             <div className={columnListAdapterStyles.columnListAdapter}>
                 <ColumnList
                     onItemClick={this.handleItemClick}
-                    onItemDoubleClick={onItemClick}
+                    onItemDoubleClick={this.handleItemDoubleClick}
                     toolbarItemsProvider={this.getToolbarItems}
                 >
                     {this.props.data.map((items, index) => (
