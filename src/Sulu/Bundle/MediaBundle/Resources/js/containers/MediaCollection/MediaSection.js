@@ -29,17 +29,20 @@ export default class MediaSection extends React.PureComponent<Props> {
             adapters,
             listStore,
             mediaListRef,
+            onUploadClick,
         } = this.props;
 
         return (
             <List
                 adapters={adapters}
                 buttons={[
-                    <ButtonGroup key="upload-media">
-                        <Button icon="su-upload" onClick={this.handleUploadClick}>
-                            {translate('sulu_media.upload')}
-                        </Button>
-                    </ButtonGroup>,
+                    onUploadClick && (
+                        <ButtonGroup key="upload-media">
+                            <Button icon="su-upload" onClick={this.handleUploadClick}>
+                                {translate('sulu_media.upload')}
+                            </Button>
+                        </ButtonGroup>
+                    ),
                 ]}
 
                 onItemClick={this.handleMediaClick}
