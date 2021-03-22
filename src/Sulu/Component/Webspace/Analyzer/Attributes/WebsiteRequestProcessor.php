@@ -77,7 +77,7 @@ class WebsiteRequestProcessor implements RequestProcessorInterface
 
         \usort(
             $portalInformations,
-            function(PortalInformation $a, PortalInformation $b) {
+            function (PortalInformation $a, PortalInformation $b) {
                 if ($a->getPriority() === $b->getPriority()) {
                     return \strlen($a->getUrl()) < \strlen($b->getUrl());
                 }

@@ -159,7 +159,7 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
             }
         }
 
-        $mixinTypeWhere = \implode(' OR ', \array_map(function($mixinType) {
+        $mixinTypeWhere = \implode(' OR ', \array_map(function ($mixinType) {
             return 'page.[jcr:mixinTypes] = "' . $mixinType . '"';
         }, static::$mixinTypes));
 

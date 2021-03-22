@@ -110,7 +110,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     {
         if ($arrayCollection && !$arrayCollection->isEmpty()) {
             return $arrayCollection->forAll(
-                function($index, $entry) {
+                function ($index, $entry) {
                     if (true === $entry->getMain()) {
                         $entry->setMain(false);
 
@@ -145,7 +145,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     {
         if ($arrayCollection && !$arrayCollection->isEmpty()) {
             return $arrayCollection->exists(
-                function($index, $entity) {
+                function ($index, $entity) {
                     $mainEntity = $entity;
 
                     return true === $entity->getMain();
@@ -480,7 +480,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     public function getBillingAddress($entity, $force = false)
     {
         /* @var Address $address */
-        $conditionCallback = function($address) {
+        $conditionCallback = function ($address) {
             return $address->getBillingAddress();
         };
 
@@ -497,7 +497,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     public function getDeliveryAddress($entity, $force = false)
     {
         /* @var Address $address */
-        $conditionCallback = function($address) {
+        $conditionCallback = function ($address) {
             return $address->getDeliveryAddress();
         };
 
@@ -672,21 +672,21 @@ abstract class AbstractContactManager implements ContactManagerInterface
      */
     public function processEmails($contact, $emails)
     {
-        $get = function($email) {
+        $get = function ($email) {
             /* @var Email $email */
 
             return $email->getId();
         };
 
-        $delete = function($email) use ($contact) {
+        $delete = function ($email) use ($contact) {
             return $contact->removeEmail($email);
         };
 
-        $update = function($email, $matchedEntry) {
+        $update = function ($email, $matchedEntry) {
             return $this->updateEmail($email, $matchedEntry);
         };
 
-        $add = function($email) use ($contact) {
+        $add = function ($email) use ($contact) {
             return $this->addEmail($contact, $email);
         };
 
@@ -781,19 +781,19 @@ abstract class AbstractContactManager implements ContactManagerInterface
      */
     public function processUrls($contact, $urls)
     {
-        $get = function($url) {
+        $get = function ($url) {
             return $url->getId();
         };
 
-        $delete = function($url) use ($contact) {
+        $delete = function ($url) use ($contact) {
             return $contact->removeUrl($url);
         };
 
-        $update = function($url, $matchedEntry) {
+        $update = function ($url, $matchedEntry) {
             return $this->updateUrl($url, $matchedEntry);
         };
 
-        $add = function($url) use ($contact) {
+        $add = function ($url) use ($contact) {
             return $this->addUrl($contact, $url);
         };
 
@@ -826,15 +826,15 @@ abstract class AbstractContactManager implements ContactManagerInterface
      */
     public function processCategories($contact, $categories)
     {
-        $get = function($category) {
+        $get = function ($category) {
             return $category->getId();
         };
 
-        $delete = function($category) use ($contact) {
+        $delete = function ($category) use ($contact) {
             return $contact->removeCategory($category);
         };
 
-        $add = function($category) use ($contact) {
+        $add = function ($category) use ($contact) {
             return $this->addCategories($contact, $category);
         };
 
@@ -952,19 +952,19 @@ abstract class AbstractContactManager implements ContactManagerInterface
      */
     public function processPhones($contact, $phones)
     {
-        $get = function($phone) {
+        $get = function ($phone) {
             return $phone->getId();
         };
 
-        $delete = function($phone) use ($contact) {
+        $delete = function ($phone) use ($contact) {
             return $contact->removePhone($phone);
         };
 
-        $update = function($phone, $matchedEntry) {
+        $update = function ($phone, $matchedEntry) {
             return $this->updatePhone($phone, $matchedEntry);
         };
 
-        $add = function($phone) use ($contact) {
+        $add = function ($phone) use ($contact) {
             return $this->addPhone($contact, $phone);
         };
 
@@ -1057,21 +1057,21 @@ abstract class AbstractContactManager implements ContactManagerInterface
      */
     public function processFaxes($contact, $faxes)
     {
-        $get = function($fax) {
+        $get = function ($fax) {
             return $fax->getId();
         };
 
-        $delete = function($fax) use ($contact) {
+        $delete = function ($fax) use ($contact) {
             $contact->removeFax($fax);
 
             return true;
         };
 
-        $update = function($fax, $matchedEntry) {
+        $update = function ($fax, $matchedEntry) {
             return $this->updateFax($fax, $matchedEntry);
         };
 
-        $add = function($fax) use ($contact) {
+        $add = function ($fax) use ($contact) {
             $this->addFax($contact, $fax);
 
             return true;
@@ -1157,21 +1157,21 @@ abstract class AbstractContactManager implements ContactManagerInterface
      */
     public function processSocialMediaProfiles($contact, $socialMediaProfiles)
     {
-        $get = function($socialMediaProfile) {
+        $get = function ($socialMediaProfile) {
             return $socialMediaProfile->getId();
         };
 
-        $delete = function($socialMediaProfile) use ($contact) {
+        $delete = function ($socialMediaProfile) use ($contact) {
             $contact->removeSocialMediaProfile($socialMediaProfile);
 
             return true;
         };
 
-        $update = function($socialMediaProfile, $matchedEntry) {
+        $update = function ($socialMediaProfile, $matchedEntry) {
             return $this->updateSocialMediaProfile($socialMediaProfile, $matchedEntry);
         };
 
-        $add = function($socialMediaProfile) use ($contact) {
+        $add = function ($socialMediaProfile) use ($contact) {
             $this->addSocialMediaProfile($contact, $socialMediaProfile);
 
             return true;
@@ -1440,21 +1440,21 @@ abstract class AbstractContactManager implements ContactManagerInterface
      */
     public function processNotes($contact, $notes)
     {
-        $get = function($note) {
+        $get = function ($note) {
             return $note->getId();
         };
 
-        $delete = function($note) use ($contact) {
+        $delete = function ($note) use ($contact) {
             $contact->removeNote($note);
 
             return true;
         };
 
-        $update = function($note, $matchedEntry) {
+        $update = function ($note, $matchedEntry) {
             return $this->updateNote($note, $matchedEntry);
         };
 
-        $add = function($note) use ($contact) {
+        $add = function ($note) use ($contact) {
             return $this->addNote($contact, $note);
         };
 
@@ -1527,19 +1527,19 @@ abstract class AbstractContactManager implements ContactManagerInterface
      */
     public function processTags($contact, $tags)
     {
-        $get = function($tag) {
+        $get = function ($tag) {
             return $tag->getId();
         };
 
-        $delete = function($tag) use ($contact) {
+        $delete = function ($tag) use ($contact) {
             return $contact->removeTag($tag);
         };
 
-        $update = function() {
+        $update = function () {
             return true;
         };
 
-        $add = function($tag) use ($contact) {
+        $add = function ($tag) use ($contact) {
             return $this->addTag($contact, $tag);
         };
 
@@ -1586,21 +1586,21 @@ abstract class AbstractContactManager implements ContactManagerInterface
      */
     public function processBankAccounts($contact, $bankAccounts)
     {
-        $get = function($bankAccount) {
+        $get = function ($bankAccount) {
             return $bankAccount->getId();
         };
 
-        $delete = function($bankAccounts) use ($contact) {
+        $delete = function ($bankAccounts) use ($contact) {
             $contact->removeBankAccount($bankAccounts);
 
             return true;
         };
 
-        $update = function($bankAccounts, $matchedEntry) {
+        $update = function ($bankAccounts, $matchedEntry) {
             return $this->updateBankAccount($bankAccounts, $matchedEntry);
         };
 
-        $add = function($bankAccounts) use ($contact) {
+        $add = function ($bankAccounts) use ($contact) {
             return $this->addBankAccount($contact, $bankAccounts);
         };
 
@@ -1680,17 +1680,17 @@ abstract class AbstractContactManager implements ContactManagerInterface
      */
     public function processAddresses($contact, $addresses)
     {
-        $getAddressId = function($addressRelation) {
+        $getAddressId = function ($addressRelation) {
             return $addressRelation->getAddress()->getId();
         };
 
-        $delete = function($addressRelation) use ($contact) {
+        $delete = function ($addressRelation) use ($contact) {
             $this->removeAddressRelation($contact, $addressRelation);
 
             return true;
         };
 
-        $update = function($addressRelation, $matchedEntry) use ($contact) {
+        $update = function ($addressRelation, $matchedEntry) use ($contact) {
             $address = $addressRelation->getAddress();
             $result = $this->updateAddress($address, $matchedEntry, $isMain);
             if ($isMain) {
@@ -1701,7 +1701,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
             return $result;
         };
 
-        $add = function($addressData) use ($contact) {
+        $add = function ($addressData) use ($contact) {
             $address = $this->createAddress($addressData, $isMain);
             $this->addAddress($contact, $address, $isMain);
 

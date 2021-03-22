@@ -55,7 +55,7 @@ class LinkTag implements TagInterface
             $attributes['title'] = $this->getValue($attributes, 'title', $item->getTitle());
 
             $htmlAttributes = \array_map(
-                function($value, $name) {
+                function ($value, $name) {
                     if (\in_array($name, ['provider', 'content', 'validation-state']) || empty($value)) {
                         return;
                     }

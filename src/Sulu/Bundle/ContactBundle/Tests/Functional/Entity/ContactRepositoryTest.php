@@ -449,7 +449,7 @@ class ContactRepositoryTest extends SuluTestCase
         // if tags isset replace the array indexes with database id
         if (\array_key_exists('tags', $filters)) {
             $filters['tags'] = \array_map(
-                function($tag) {
+                function ($tag) {
                     return $this->tags[$tag]->getId();
                 },
                 $filters['tags']
@@ -459,7 +459,7 @@ class ContactRepositoryTest extends SuluTestCase
         // if website tags isset replace the array indexes with database id
         if (\array_key_exists('websiteTags', $filters)) {
             $filters['websiteTags'] = \array_map(
-                function($tag) {
+                function ($tag) {
                     return $this->tags[$tag]->getId();
                 },
                 $filters['websiteTags']
@@ -469,7 +469,7 @@ class ContactRepositoryTest extends SuluTestCase
         // if categories isset replace the array indexes with database id
         if (\array_key_exists('categories', $filters)) {
             $filters['categories'] = \array_map(
-                function($category) {
+                function ($category) {
                     return $this->categories[$category]->getId();
                 },
                 $filters['categories']
@@ -479,7 +479,7 @@ class ContactRepositoryTest extends SuluTestCase
         // if website categories isset replace the array indexes with database id
         if (\array_key_exists('websiteCategories', $filters)) {
             $filters['websiteCategories'] = \array_map(
-                function($category) {
+                function ($category) {
                     return $this->categories[$category]->getId();
                 },
                 $filters['websiteCategories']

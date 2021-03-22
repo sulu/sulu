@@ -936,13 +936,13 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
 
         $this->targetGroupStore->getTargetGroupId()->willReturn(1);
         $this->contentDataProvider->resolveResourceItems(
-            Argument::that(function($value) {
+            Argument::that(function ($value) {
                 return 1 === $value['targetGroupId'];
             }),
             Argument::cetera()
         )->willReturn(new DataProviderResult([], false));
 
-        $property->setValue(Argument::that(function($value) {
+        $property->setValue(Argument::that(function ($value) {
             return 1 === $value['targetGroupId'];
         }))->shouldBeCalled();
 
@@ -976,13 +976,13 @@ class ContentTypeTest extends \PHPUnit_Framework_TestCase
 
         $this->targetGroupStore->getTargetGroupId()->shouldNotBeCalled();
         $this->contentDataProvider->resolveResourceItems(
-            Argument::that(function($value) {
+            Argument::that(function ($value) {
                 return !\array_key_exists('targetGroupId', $value);
             }),
             Argument::cetera()
         )->willReturn(new DataProviderResult([], false));
 
-        $property->setValue(Argument::that(function($value) {
+        $property->setValue(Argument::that(function ($value) {
             return !\array_key_exists('targetGroupId', $value);
         }))->shouldBeCalled();
 

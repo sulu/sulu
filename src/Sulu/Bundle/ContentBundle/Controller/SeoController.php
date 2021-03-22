@@ -58,7 +58,7 @@ class SeoController extends RestController implements ClassResourceInterface
 
         $view = $this->responseGetById(
             $uuid,
-            function($id) use ($language, $webspace) {
+            function ($id) use ($language, $webspace) {
                 try {
                     return $this->getRepository()->loadExtensionData(
                         $id,
