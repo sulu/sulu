@@ -8,11 +8,11 @@ The `ContentRepository` service was changed to return the title of the source pa
 page for internal links. This makes the behaviour consistent with external links and the `ContentMapper` service. 
 This change only affects you if you are using the `ContentRepository` service with a mapping that includes the `title` property.
 
-## 2.1.9
-
 ### A new argument `$requestStack` has been added to the `ContentTwigExtension`
 
 Instantiating a `ContentTwigExtension` without the `$requestStack` argument is deprecated.
+
+## 2.1.9
 
 ### Deprecated `PageTeaserProvider`
 
