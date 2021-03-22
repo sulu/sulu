@@ -364,7 +364,7 @@ class PageLinkProviderTest extends TestCase
             [1, 2, 3],
             $this->locale,
             Argument::that(
-                function(MappingInterface $mapping) {
+                function (MappingInterface $mapping) {
                     return $mapping->resolveUrl()
                         && !$mapping->shouldHydrateGhost()
                         && $mapping->onlyPublished()
