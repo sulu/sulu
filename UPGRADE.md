@@ -219,6 +219,12 @@ ALTER TABLE `se_roles` CHANGE `anonymous` `anonymous` TINYINT(1) NOT NULL DEFAUL
 
 ## 2.2.0-RC1
 
+### Changed default value for single_select properties from empty string to null
+
+The default value for properties with the type `single_select` was changed from an empty string (`''`) to `null` to
+be consistent with the `*_single_selection` property types. If you depend on the default value being an empty string
+in your twig template, you need to adjust your template.
+
 ### CKeditor update
 
 Due to the update of the CKEditor you have to make sure that you are also using the latest ckeditor packages in your

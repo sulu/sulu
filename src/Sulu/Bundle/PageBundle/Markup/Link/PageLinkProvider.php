@@ -120,6 +120,10 @@ class PageLinkProvider implements LinkProviderInterface
             $security = $targetWebspace->getSecurity();
             $system = $security ? $security->getSystem() : null;
 
+            if (!$targetWebspace->hasWebsiteSecurity()) {
+                return true;
+            }
+
             $userPermissions = $this->accessControlManager->getUserPermissionByArray(
                 $content->getLocale(),
                 PageAdmin::SECURITY_CONTEXT_PREFIX . $webspaceKey,

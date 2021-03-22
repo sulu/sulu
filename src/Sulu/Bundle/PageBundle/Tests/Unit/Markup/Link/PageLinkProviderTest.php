@@ -253,13 +253,14 @@ class PageLinkProviderTest extends TestCase
         $this->assertEquals(!empty($contents[0]->getPropertyWithDefault('published')), $result[0]->isPublished());
     }
 
-    public function testPreloadWithSecurity()
+    public function testPreloadWithSecurityAndWebsiteSecurityEnabled()
     {
         $this->requestStack->getCurrentRequest()->willReturn($this->request->reveal());
         $webspace = new Webspace();
         $security = new Security();
         $security->setSystem('website');
         $webspace->setSecurity($security);
+        $security->setPermissionCheck(true);
         $this->webspaceManager->findWebspaceByKey('sulu_io')->willReturn($webspace);
 
         $user = new User();
@@ -312,6 +313,70 @@ class PageLinkProviderTest extends TestCase
         $result = $this->pageLinkProvider->preload([1, 2, 3], $this->locale, true);
 
         $this->assertCount(2, $result);
+
+        $this->assertEquals($contents[0]->getId(), $result[0]->getId());
+        $this->assertEquals($contents[2]->getId(), $result[2]->getId());
+    }
+
+    public function testPreloadWithSecurity()
+    {
+        $this->requestStack->getCurrentRequest()->willReturn($this->request->reveal());
+        $webspace = new Webspace();
+        $security = new Security();
+        $security->setSystem('website');
+        $webspace->setSecurity($security);
+        $this->webspaceManager->findWebspaceByKey('sulu_io')->willReturn($webspace);
+
+        $user = new User();
+        $token = $this->prophesize(TokenInterface::class);
+        $token->getUser()->willReturn($user);
+        $this->tokenStorage->getToken()->willReturn($token->reveal());
+
+        $contents = [
+            $this->createContent(1, 'Test 1', '/test-1', null, 'sulu.io', 'sulu_io', []),
+            $this->createContent(2, 'Test 2', '/test-2', null, 'sulu.io', 'sulu_io', [1 => ['view' => false]]),
+            $this->createContent(3, 'Test 3', '/test-3', null, 'sulu.io', 'sulu_io', [1 => ['view' => true]]),
+        ];
+
+        $this->accessControlManager
+            ->getUserPermissionByArray($this->locale, 'sulu.webspaces.sulu_io', [], $user, 'website')
+            ->willReturn([]);
+        $this->accessControlManager
+            ->getUserPermissionByArray(
+                $this->locale,
+                'sulu.webspaces.sulu_io',
+                [1 => ['view' => false]],
+                $user,
+                'website'
+            )
+            ->willReturn(['view' => false]);
+        $this->accessControlManager
+            ->getUserPermissionByArray(
+                $this->locale,
+                'sulu.webspaces.sulu_io',
+                [1 => ['view' => true]],
+                $user,
+                'website'
+            )
+            ->willReturn(['view' => true]);
+
+        $this->contentRepository->findByUuids(
+            [1, 2, 3],
+            $this->locale,
+            Argument::that(
+                function (MappingInterface $mapping) {
+                    return $mapping->resolveUrl()
+                        && !$mapping->shouldHydrateGhost()
+                        && $mapping->onlyPublished()
+                        && ['title', 'published'] === $mapping->getProperties();
+                }
+            )
+        )->shouldBeCalledTimes(1)->willReturn($contents);
+
+        /** @var LinkItem[] $result */
+        $result = $this->pageLinkProvider->preload([1, 2, 3], $this->locale, true);
+
+        $this->assertCount(3, $result);
 
         $this->assertEquals($contents[0]->getId(), $result[0]->getId());
         $this->assertEquals($contents[2]->getId(), $result[2]->getId());
