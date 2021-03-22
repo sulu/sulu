@@ -61,7 +61,7 @@ class BrowserRule implements RuleInterface
 
     public function getType()
     {
-        return new SingleSelect(static::BROWSER, \array_map(function($browser) {
+        return new SingleSelect(static::BROWSER, \array_map(function ($browser) {
             return [
                 'id' => $browser,
                 'name' => $browser,

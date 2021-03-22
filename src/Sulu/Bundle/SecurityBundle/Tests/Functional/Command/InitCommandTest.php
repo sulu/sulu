@@ -97,14 +97,14 @@ class InitCommandTest extends SuluTestCase
         $this->assertCount(2, $permissions);
 
         /** @var Permission|null $webspacePermission */
-        $webspacePermission = $permissions->filter(function(Permission $permission) {
+        $webspacePermission = $permissions->filter(function (Permission $permission) {
             return 'sulu.webspaces.sulu_io' === $permission->getContext();
         })->first();
         $this->assertNotNull($webspacePermission);
         $this->assertSame(127, $webspacePermission->getPermissions());
 
         /** @var Permission|null $pagePermissions */
-        $collectionPermissions = $permissions->filter(function(Permission $permission) {
+        $collectionPermissions = $permissions->filter(function (Permission $permission) {
             return 'sulu.media.collections' === $permission->getContext();
         })->first();
         $this->assertNotNull($collectionPermissions);

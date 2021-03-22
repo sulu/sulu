@@ -157,7 +157,7 @@ class PreviewController
 
     private function getOptionsFromRequest(Request $request)
     {
-        return \array_filter($request->query->all(), function($key) {
+        return \array_filter($request->query->all(), function ($key) {
             switch ($key) {
                 case 'id':
                 case 'provider':

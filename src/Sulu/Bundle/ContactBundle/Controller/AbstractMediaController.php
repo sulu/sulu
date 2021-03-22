@@ -191,7 +191,7 @@ abstract class AbstractMediaController extends AbstractRestController
     protected function removeMediaFromEntity($entityName, $id, $mediaId)
     {
         try {
-            $delete = function() use ($entityName, $id, $mediaId) {
+            $delete = function () use ($entityName, $id, $mediaId) {
                 $entity = $this->entityManager->getRepository($entityName)->find($id);
                 $media = $this->mediaRepository->find($mediaId);
 

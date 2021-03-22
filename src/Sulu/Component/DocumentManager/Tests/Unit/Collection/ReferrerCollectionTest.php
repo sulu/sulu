@@ -48,7 +48,7 @@ class ReferrerCollectionTest extends TestCase
         $this->reference->getParent()->willReturn($this->referrerNode->reveal());
         $this->referrerNode->getIdentifier()->willReturn('1234');
 
-        $this->dispatcher->dispatch(Argument::type('Sulu\Component\DocumentManager\Event\HydrateEvent'), Events::HYDRATE)->will(function($args) {
+        $this->dispatcher->dispatch(Argument::type('Sulu\Component\DocumentManager\Event\HydrateEvent'), Events::HYDRATE)->will(function ($args) {
             $args[0]->setDocument(new \stdClass());
 
             return $args[0];

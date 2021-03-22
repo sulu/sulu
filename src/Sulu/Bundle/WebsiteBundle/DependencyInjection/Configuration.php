@@ -47,8 +47,8 @@ class Configuration implements ConfigurationInterface
                             ->booleanNode('urls')
                                 ->defaultTrue()
                                 ->beforeNormalization()
-                                    ->ifTrue(function($v) { return false !== $v; })
-                                    ->then(function($v) {
+                                    ->ifTrue(function ($v) { return false !== $v; })
+                                    ->then(function ($v) {
                                         @\trigger_error('Enabling the "urls" parameter is deprecated since sulu/sulu 2.2.', \E_USER_DEPRECATED);
 
                                         return $v;
@@ -58,8 +58,8 @@ class Configuration implements ConfigurationInterface
                             ->booleanNode('path')
                                 ->defaultTrue()
                                 ->beforeNormalization()
-                                    ->ifTrue(function($v) { return false !== $v; })
-                                    ->then(function($v) {
+                                    ->ifTrue(function ($v) { return false !== $v; })
+                                    ->then(function ($v) {
                                         @\trigger_error('Enabling the "path" parameter is deprecated since sulu/sulu 2.3.', \E_USER_DEPRECATED);
 
                                         return $v;

@@ -58,7 +58,7 @@ class Version201903271333 implements VersionInterface, ContainerAwareInterface
                     if (false !== \strpos($propertyValue, '<sulu:media')) {
                         $propertyValue = \preg_replace_callback(
                             '/<sulu:media (.*?)>(.*?)<\/sulu:media>/',
-                            function($match) {
+                            function ($match) {
                                 return '<sulu-link provider="media" '
                                     . \str_replace('id=', 'href=', $match[1]) . '>'
                                     . $match[2]
@@ -101,7 +101,7 @@ class Version201903271333 implements VersionInterface, ContainerAwareInterface
                     if (false !== \strpos($propertyValue, '<sulu-link provider="media"')) {
                         $propertyValue = \preg_replace_callback(
                             '/<sulu-link provider="media" href="(.*?)">(.*?)<\/sulu-link>/',
-                            function($match) {
+                            function ($match) {
                                 return '<sulu:media id="' . $match[1] . '">' . $match[2] . '</sulu:media>';
                             },
                             $propertyValue

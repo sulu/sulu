@@ -87,7 +87,7 @@ class PhpcrAccessControlProvider implements AccessControlProviderInterface
 
         return \array_filter(
             $documentPermissions,
-            function($roleId) use ($systemRoleIds) {
+            function ($roleId) use ($systemRoleIds) {
                 return \in_array($roleId, $systemRoleIds);
             },
             \ARRAY_FILTER_USE_KEY

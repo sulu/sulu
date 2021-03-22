@@ -240,7 +240,7 @@ class Analytics
             return null;
         }
 
-        return $this->domains->map(function(Domain $domain) {
+        return $this->domains->map(function (Domain $domain) {
             return $domain->getUrl();
         });
     }

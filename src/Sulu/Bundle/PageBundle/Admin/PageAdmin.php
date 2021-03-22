@@ -418,7 +418,7 @@ class PageAdmin extends Admin
     public function getConfig(): ?array
     {
         $webspaces = $this->webspaceManager->getWebspaceCollection()->getWebspaces();
-        \uasort($webspaces, function($w1, $w2) {
+        \uasort($webspaces, function ($w1, $w2) {
             return \strcmp($w1->getName(), $w2->getName());
         });
 

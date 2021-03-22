@@ -100,7 +100,7 @@ class TeaserContentTypeTest extends TestCase
         ];
 
         $teasers = \array_map(
-            function($item) {
+            function ($item) {
                 $teaser = $this->prophesize(Teaser::class);
                 $teaser->getType()->willReturn($item['type']);
                 $teaser->getId()->willReturn($item['id']);

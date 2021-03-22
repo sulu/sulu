@@ -335,7 +335,7 @@ class UpdateBuildCommand extends Command
     {
         $process = Process::fromShellCommandline($command, $this->projectDir . static::ASSETS_DIR);
         $process->setTimeout(3600);
-        $process->run(function($type, $buffer) use ($ui) {
+        $process->run(function ($type, $buffer) use ($ui) {
             $ui->write($buffer, false, OutputInterface::OUTPUT_RAW);
         });
 

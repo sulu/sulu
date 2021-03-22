@@ -20,7 +20,7 @@ trait EncodeAliasTrait
     {
         return \preg_replace_callback(
             '/(?:"[^"]+")|([\\\])|(?<=\S)(:)/',
-            function($matches) {
+            function ($matches) {
                 if (false !== \strpos($matches[0], '"')) {
                     return $matches[0];
                 }

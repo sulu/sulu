@@ -174,7 +174,7 @@ trait RestControllerTrait
         $success = true;
         // default for entityIdCallback
         if (null === $entityIdCallback) {
-            $entityIdCallback = function($entity) {
+            $entityIdCallback = function ($entity) {
                 return $entity->getId();
             };
         }

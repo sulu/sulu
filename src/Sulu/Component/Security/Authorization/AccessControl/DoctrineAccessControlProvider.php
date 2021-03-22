@@ -68,7 +68,7 @@ class DoctrineAccessControlProvider implements AccessControlProviderInterface
 
         foreach ($permissions as $roleId => $rolePermissions) {
             $filteredAccessControl = \array_values(
-                \array_filter($accessControls, function($accessControl) use ($roleId) {
+                \array_filter($accessControls, function ($accessControl) use ($roleId) {
                     return $accessControl->getRole()->getId() === $roleId;
                 })
             );

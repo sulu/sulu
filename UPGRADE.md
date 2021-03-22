@@ -150,6 +150,12 @@ If you have implemented this interface in your project, you need to add the para
 
 ## 2.2.6
 
+### Changed ContentRepository to return title of source instead of link destination for internal link pages
+
+The `ContentRepository` service was changed to return the title of the source page instead of the title of the destination
+page for internal links. This makes the behaviour consistent with external links and the `ContentMapper` service. 
+This change only affects you if you are using the `ContentRepository` service with a mapping that includes the `title` property.
+
 ### A new argument `$requestStack` has been added to the `ContentTwigExtension`
 
 Instantiating a `ContentTwigExtension` without the `$requestStack` argument is deprecated.
@@ -325,6 +331,12 @@ imports:
 ```
 
 ## 2.1.10
+
+### Changed ContentRepository to return title of source instead of link destination for internal link pages
+
+The `ContentRepository` service was changed to return the title of the source page instead of the title of the destination
+page for internal links. This makes the behaviour consistent with external links and the `ContentMapper` service. 
+This change only affects you if you are using the `ContentRepository` service with a mapping that includes the `title` property.
 
 ### A new argument `$requestStack` has been added to the `ContentTwigExtension`
 

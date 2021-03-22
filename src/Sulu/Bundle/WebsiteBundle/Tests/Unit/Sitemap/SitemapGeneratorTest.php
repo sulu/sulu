@@ -290,7 +290,7 @@ class SitemapGeneratorTest extends SuluTestCase
         $result = $this->sitemapGenerator->generateAllLocals('test_io', true)->getSitemap();
 
         $result = \array_map(
-            function($item) {
+            function ($item) {
                 return [$item['title'], $item['url'], $item['nodeType']];
             },
             $result

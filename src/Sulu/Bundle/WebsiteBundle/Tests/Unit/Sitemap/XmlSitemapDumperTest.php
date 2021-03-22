@@ -101,7 +101,7 @@ class XmlSitemapDumperTest extends TestCase
 
         $this->providerPool->getProviders()->willReturn(
             \array_map(
-                function($provider) {
+                function ($provider) {
                     return $provider->reveal();
                 },
                 $providers
@@ -163,7 +163,7 @@ class XmlSitemapDumperTest extends TestCase
 
         $this->providerPool->getProviders()->willReturn(
             \array_map(
-                function($provider) {
+                function ($provider) {
                     return $provider->reveal();
                 },
                 $providers

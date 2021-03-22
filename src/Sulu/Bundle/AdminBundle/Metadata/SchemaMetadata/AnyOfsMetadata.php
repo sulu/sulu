@@ -30,7 +30,7 @@ class AnyOfsMetadata implements SchemaMetadataInterface
     {
         if (!empty($this->anyOfs)) {
             return [
-                'anyOf' => \array_map(function(SchemaMetadataInterface $schema) {
+                'anyOf' => \array_map(function (SchemaMetadataInterface $schema) {
                     return $schema->toJsonSchema();
                 }, $this->anyOfs),
             ];

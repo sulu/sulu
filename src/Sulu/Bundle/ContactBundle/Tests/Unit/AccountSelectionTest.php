@@ -65,7 +65,9 @@ class AccountSelectionTest extends TestCase
         $this->accountManager = $this->prophesize(AccountManager::class);
         $this->accountReferenceStore = $this->prophesize(ReferenceStore::class);
         $this->account1 = $this->prophesize(Account::class);
+        $this->account1->getId()->willReturn(123);
         $this->account2 = $this->prophesize(Account::class);
+        $this->account2->getId()->willReturn(789);
         $this->node = $this->prophesize(NodeInterface::class);
         $this->property = $this->prophesize(PropertyInterface::class);
         $this->accountSelection = new AccountSelection(
@@ -79,7 +81,7 @@ class AccountSelectionTest extends TestCase
         $this->node->hasProperty('accounts')->willReturn(true);
         $this->node->getPropertyValue('accounts')->willReturn([123, 789]);
 
-        $this->assertEquals(
+        $this->assertSame(
             [123, 789],
             $this->accountSelection->read(
                 $this->node->reveal(),
@@ -129,7 +131,7 @@ class AccountSelectionTest extends TestCase
 
     public function testDefaultParams()
     {
-        $this->assertEquals(
+        $this->assertSame(
             [],
             $this->accountSelection->getDefaultParams(new Property('accounts', [], 'account_selection'))
         );
@@ -137,7 +139,7 @@ class AccountSelectionTest extends TestCase
 
     public function testViewDataEmpty()
     {
-        $this->assertEquals(
+        $this->assertSame(
             [],
             $this->accountSelection->getViewData(new Property('accounts', [], 'account_selection'))
         );
@@ -148,7 +150,7 @@ class AccountSelectionTest extends TestCase
         $property = new Property('accounts', [], 'account_selection');
         $property->setValue([123, 789]);
 
-        $this->assertEquals(
+        $this->assertSame(
             [],
             $this->accountSelection->getViewData($property)
         );
@@ -156,7 +158,7 @@ class AccountSelectionTest extends TestCase
 
     public function testContentDataEmpty()
     {
-        $this->assertEquals(
+        $this->assertSame(
             [],
             $this->accountSelection->getContentData(new Property('accounts', [], 'account_selection'))
         );
@@ -174,7 +176,25 @@ class AccountSelectionTest extends TestCase
         $result = [$this->account1->reveal(), $this->account2->reveal()];
         $this->accountManager->getByIds([123, 789], 'de')->willReturn($result);
 
-        $this->assertEquals($result, $this->accountSelection->getContentData($property));
+        $this->assertSame($result, $this->accountSelection->getContentData($property));
+    }
+
+    public function testContentDataWithSorting()
+    {
+        $structure = $this->prophesize(StructureInterface::class);
+        $structure->getLanguageCode()->willReturn('de');
+
+        $property = new Property('accounts', [], 'account_selection');
+        $property->setValue([789, 123]);
+        $property->setStructure($structure->reveal());
+
+        $this->accountManager->getByIds([789, 123], 'de')
+            ->willReturn([$this->account1->reveal(), $this->account2->reveal()]);
+
+        $this->assertSame(
+            [$this->account2->reveal(), $this->account1->reveal()],
+            $this->accountSelection->getContentData($property)
+        );
     }
 
     public function testPreResolveEmpty()

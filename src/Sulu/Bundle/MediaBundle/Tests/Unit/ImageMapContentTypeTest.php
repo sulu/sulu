@@ -132,7 +132,7 @@ class ImageMapContentTypeTest extends TestCase
 
         $this->textLineContentType->read(
             $node->reveal(),
-            Argument::that(function($blockProperty) use ($property) {
+            Argument::that(function ($blockProperty) use ($property) {
                 return $blockProperty instanceof BlockPropertyWrapper
                     && 'imageId' === $blockProperty->getProperty()->getName()
                     && $blockProperty->getBlock() === $property
@@ -141,14 +141,14 @@ class ImageMapContentTypeTest extends TestCase
             $webspaceKey,
             $languageCode,
             $segmentKey
-        )->will(function($arguments) use ($value) {
+        )->will(function ($arguments) use ($value) {
             [$node, $property] = $arguments;
             $property->setValue($value['imageId']);
         })->shouldBeCalled();
 
         $this->textLineContentType->read(
             $node->reveal(),
-            Argument::that(function($blockProperty) use ($property) {
+            Argument::that(function ($blockProperty) use ($property) {
                 return $blockProperty instanceof BlockPropertyWrapper
                     && 'length' === $blockProperty->getProperty()->getName()
                     && $blockProperty->getBlock() === $property
@@ -157,14 +157,14 @@ class ImageMapContentTypeTest extends TestCase
             $webspaceKey,
             $languageCode,
             $segmentKey
-        )->will(function($arguments) use ($value) {
+        )->will(function ($arguments) use ($value) {
             [$node, $property] = $arguments;
             $property->setValue(\count($value['hotspots']));
         })->shouldBeCalled();
 
         $this->textLineContentType->read(
             $node->reveal(),
-            Argument::that(function($blockProperty) use ($property) {
+            Argument::that(function ($blockProperty) use ($property) {
                 return $blockProperty instanceof BlockPropertyWrapper
                     && 'type' === $blockProperty->getProperty()->getName()
                     && $blockProperty->getBlock() === $property
@@ -173,14 +173,14 @@ class ImageMapContentTypeTest extends TestCase
             $webspaceKey,
             $languageCode,
             $segmentKey
-        )->will(function($arguments) use ($value) {
+        )->will(function ($arguments) use ($value) {
             [$node, $property] = $arguments;
             $property->setValue($value['hotspots'][0]['type']);
         })->shouldBeCalled();
 
         $this->textLineContentType->read(
             $node->reveal(),
-            Argument::that(function($blockProperty) use ($property) {
+            Argument::that(function ($blockProperty) use ($property) {
                 return $blockProperty instanceof BlockPropertyWrapper
                     && 'hotspot' === $blockProperty->getProperty()->getName()
                     && $blockProperty->getBlock() === $property
@@ -189,7 +189,7 @@ class ImageMapContentTypeTest extends TestCase
             $webspaceKey,
             $languageCode,
             $segmentKey
-        )->will(function($arguments) use ($value) {
+        )->will(function ($arguments) use ($value) {
             [$node, $property] = $arguments;
             $property->setValue(\json_encode($value['hotspots'][0]['hotspot']));
         })->shouldBeCalled();
@@ -198,7 +198,7 @@ class ImageMapContentTypeTest extends TestCase
         foreach ($propertyType['children'] as $childName => $childType) {
             $this->textLineContentType->read(
                 $node->reveal(),
-                Argument::that(function($blockProperty) use ($property, $childName) {
+                Argument::that(function ($blockProperty) use ($property, $childName) {
                     return $blockProperty instanceof BlockPropertyWrapper
                         && $blockProperty->getProperty()->getName() === $childName
                         && $blockProperty->getBlock() === $property
@@ -207,7 +207,7 @@ class ImageMapContentTypeTest extends TestCase
                 $webspaceKey,
                 $languageCode,
                 $segmentKey
-            )->will(function($arguments) use ($value, $childName) {
+            )->will(function ($arguments) use ($value, $childName) {
                 [$node, $property] = $arguments;
                 $property->setValue($value['hotspots'][0][$childName]);
             })->shouldBeCalled();
@@ -215,7 +215,7 @@ class ImageMapContentTypeTest extends TestCase
 
         $this->textLineContentType->read(
             $node->reveal(),
-            Argument::that(function($blockProperty) use ($property) {
+            Argument::that(function ($blockProperty) use ($property) {
                 return $blockProperty instanceof BlockPropertyWrapper
                     && 'type' === $blockProperty->getProperty()->getName()
                     && $blockProperty->getBlock() === $property
@@ -224,14 +224,14 @@ class ImageMapContentTypeTest extends TestCase
             $webspaceKey,
             $languageCode,
             $segmentKey
-        )->will(function($arguments) use ($value) {
+        )->will(function ($arguments) use ($value) {
             [$node, $property] = $arguments;
             $property->setValue($value['hotspots'][1]['type']);
         })->shouldBeCalled();
 
         $this->textLineContentType->read(
             $node->reveal(),
-            Argument::that(function($blockProperty) use ($property) {
+            Argument::that(function ($blockProperty) use ($property) {
                 return $blockProperty instanceof BlockPropertyWrapper
                     && 'hotspot' === $blockProperty->getProperty()->getName()
                     && $blockProperty->getBlock() === $property
@@ -240,7 +240,7 @@ class ImageMapContentTypeTest extends TestCase
             $webspaceKey,
             $languageCode,
             $segmentKey
-        )->will(function($arguments) use ($value) {
+        )->will(function ($arguments) use ($value) {
             [$node, $property] = $arguments;
             $property->setValue(\json_encode($value['hotspots'][1]['hotspot']));
         })->shouldBeCalled();
@@ -249,7 +249,7 @@ class ImageMapContentTypeTest extends TestCase
         foreach ($propertyType['children'] as $childName => $childType) {
             $this->textLineContentType->read(
                 $node->reveal(),
-                Argument::that(function($blockProperty) use ($property, $childName) {
+                Argument::that(function ($blockProperty) use ($property, $childName) {
                     return $blockProperty instanceof BlockPropertyWrapper
                         && $blockProperty->getProperty()->getName() === $childName
                         && $blockProperty->getBlock() === $property
@@ -258,7 +258,7 @@ class ImageMapContentTypeTest extends TestCase
                 $webspaceKey,
                 $languageCode,
                 $segmentKey
-            )->will(function($arguments) use ($value, $childName) {
+            )->will(function ($arguments) use ($value, $childName) {
                 [$node, $property] = $arguments;
                 $property->setValue($value['hotspots'][1][$childName]);
             })->shouldBeCalled();
@@ -292,7 +292,7 @@ class ImageMapContentTypeTest extends TestCase
 
         $this->textLineContentType->hasValue(
             $node->reveal(),
-            Argument::that(function($blockProperty) use ($property) {
+            Argument::that(function ($blockProperty) use ($property) {
                 return $blockProperty instanceof BlockPropertyWrapper
                     && 'imageId' === $blockProperty->getProperty()->getName()
                     && $blockProperty->getBlock() === $property
@@ -390,7 +390,7 @@ class ImageMapContentTypeTest extends TestCase
 
         $this->textLineContentType->write(
             Argument::type(SuluNode::class),
-            Argument::that(function($blockProperty) use ($property, $value) {
+            Argument::that(function ($blockProperty) use ($property, $value) {
                 return $blockProperty instanceof BlockPropertyWrapper
                     && 'imageId' === $blockProperty->getProperty()->getName()
                     && $blockProperty->getBlock() === $property
@@ -405,7 +405,7 @@ class ImageMapContentTypeTest extends TestCase
 
         $this->textLineContentType->write(
             Argument::type(SuluNode::class),
-            Argument::that(function($blockProperty) use ($property, $value) {
+            Argument::that(function ($blockProperty) use ($property, $value) {
                 return $blockProperty instanceof BlockPropertyWrapper
                     && 'length' === $blockProperty->getProperty()->getName()
                     && $blockProperty->getBlock() === $property
@@ -420,7 +420,7 @@ class ImageMapContentTypeTest extends TestCase
 
         $this->textLineContentType->write(
             Argument::type(SuluNode::class),
-            Argument::that(function($blockProperty) use ($property, $value) {
+            Argument::that(function ($blockProperty) use ($property, $value) {
                 return $blockProperty instanceof BlockPropertyWrapper
                     && 'type' === $blockProperty->getProperty()->getName()
                     && $blockProperty->getBlock() === $property
@@ -435,7 +435,7 @@ class ImageMapContentTypeTest extends TestCase
 
         $this->textLineContentType->write(
             Argument::type(SuluNode::class),
-            Argument::that(function($blockProperty) use ($property, $value) {
+            Argument::that(function ($blockProperty) use ($property, $value) {
                 return $blockProperty instanceof BlockPropertyWrapper
                     && 'hotspot' === $blockProperty->getProperty()->getName()
                     && $blockProperty->getBlock() === $property
@@ -452,7 +452,7 @@ class ImageMapContentTypeTest extends TestCase
         foreach ($propertyType['children'] as $childName => $childType) {
             $this->textLineContentType->write(
                 Argument::type(SuluNode::class),
-                Argument::that(function($blockProperty) use ($property, $value, $childName) {
+                Argument::that(function ($blockProperty) use ($property, $value, $childName) {
                     return $blockProperty instanceof BlockPropertyWrapper
                         && $blockProperty->getProperty()->getName() === $childName
                         && $blockProperty->getBlock() === $property
@@ -468,7 +468,7 @@ class ImageMapContentTypeTest extends TestCase
 
         $this->textLineContentType->write(
             Argument::type(SuluNode::class),
-            Argument::that(function($blockProperty) use ($property, $value) {
+            Argument::that(function ($blockProperty) use ($property, $value) {
                 return $blockProperty instanceof BlockPropertyWrapper
                     && 'type' === $blockProperty->getProperty()->getName()
                     && $blockProperty->getBlock() === $property
@@ -483,7 +483,7 @@ class ImageMapContentTypeTest extends TestCase
 
         $this->textLineContentType->write(
             Argument::type(SuluNode::class),
-            Argument::that(function($blockProperty) use ($property, $value) {
+            Argument::that(function ($blockProperty) use ($property, $value) {
                 return $blockProperty instanceof BlockPropertyWrapper
                     && 'hotspot' === $blockProperty->getProperty()->getName()
                     && $blockProperty->getBlock() === $property
@@ -500,7 +500,7 @@ class ImageMapContentTypeTest extends TestCase
         foreach ($propertyType['children'] as $childName => $childType) {
             $this->textLineContentType->write(
                 Argument::type(SuluNode::class),
-                Argument::that(function($blockProperty) use ($property, $value, $childName) {
+                Argument::that(function ($blockProperty) use ($property, $value, $childName) {
                     return $blockProperty instanceof BlockPropertyWrapper
                         && $blockProperty->getProperty()->getName() === $childName
                         && $blockProperty->getBlock() === $property
@@ -638,7 +638,7 @@ class ImageMapContentTypeTest extends TestCase
 
         $this->textLineContentType->importData(
             Argument::type(SuluNode::class),
-            Argument::that(function($blockProperty) use ($property, $value) {
+            Argument::that(function ($blockProperty) use ($property, $value) {
                 return $blockProperty instanceof BlockPropertyWrapper
                     && 'imageId' === $blockProperty->getProperty()->getName()
                     && $blockProperty->getBlock() === $property
@@ -654,7 +654,7 @@ class ImageMapContentTypeTest extends TestCase
 
         $this->textLineContentType->importData(
             Argument::type(SuluNode::class),
-            Argument::that(function($blockProperty) use ($property, $value) {
+            Argument::that(function ($blockProperty) use ($property, $value) {
                 return $blockProperty instanceof BlockPropertyWrapper
                     && 'length' === $blockProperty->getProperty()->getName()
                     && $blockProperty->getBlock() === $property
@@ -670,7 +670,7 @@ class ImageMapContentTypeTest extends TestCase
 
         $this->textLineContentType->importData(
             Argument::type(SuluNode::class),
-            Argument::that(function($blockProperty) use ($property, $value) {
+            Argument::that(function ($blockProperty) use ($property, $value) {
                 return $blockProperty instanceof BlockPropertyWrapper
                     && 'type' === $blockProperty->getProperty()->getName()
                     && $blockProperty->getBlock() === $property
@@ -686,7 +686,7 @@ class ImageMapContentTypeTest extends TestCase
 
         $this->textLineContentType->importData(
             Argument::type(SuluNode::class),
-            Argument::that(function($blockProperty) use ($property, $value) {
+            Argument::that(function ($blockProperty) use ($property, $value) {
                 return $blockProperty instanceof BlockPropertyWrapper
                     && 'hotspot' === $blockProperty->getProperty()->getName()
                     && $blockProperty->getBlock() === $property
@@ -704,7 +704,7 @@ class ImageMapContentTypeTest extends TestCase
         foreach ($propertyType['children'] as $childName => $childType) {
             $this->textLineContentType->importData(
                 Argument::type(SuluNode::class),
-                Argument::that(function($blockProperty) use ($property, $value, $childName) {
+                Argument::that(function ($blockProperty) use ($property, $value, $childName) {
                     return $blockProperty instanceof BlockPropertyWrapper
                         && $blockProperty->getProperty()->getName() === $childName
                         && $blockProperty->getBlock() === $property
@@ -721,7 +721,7 @@ class ImageMapContentTypeTest extends TestCase
 
         $this->textLineContentType->importData(
             Argument::type(SuluNode::class),
-            Argument::that(function($blockProperty) use ($property, $value) {
+            Argument::that(function ($blockProperty) use ($property, $value) {
                 return $blockProperty instanceof BlockPropertyWrapper
                     && 'type' === $blockProperty->getProperty()->getName()
                     && $blockProperty->getBlock() === $property
@@ -737,7 +737,7 @@ class ImageMapContentTypeTest extends TestCase
 
         $this->textLineContentType->importData(
             Argument::type(SuluNode::class),
-            Argument::that(function($blockProperty) use ($property, $value) {
+            Argument::that(function ($blockProperty) use ($property, $value) {
                 return $blockProperty instanceof BlockPropertyWrapper
                     && 'hotspot' === $blockProperty->getProperty()->getName()
                     && $blockProperty->getBlock() === $property
@@ -755,7 +755,7 @@ class ImageMapContentTypeTest extends TestCase
         foreach ($propertyType['children'] as $childName => $childType) {
             $this->textLineContentType->importData(
                 Argument::type(SuluNode::class),
-                Argument::that(function($blockProperty) use ($property, $value, $childName) {
+                Argument::that(function ($blockProperty) use ($property, $value, $childName) {
                     return $blockProperty instanceof BlockPropertyWrapper
                         && $blockProperty->getProperty()->getName() === $childName
                         && $blockProperty->getBlock() === $property
@@ -855,7 +855,7 @@ class ImageMapContentTypeTest extends TestCase
         $image = $this->prophesize(Media::class);
 
         $this->singleMediaSelectionContentType->getContentData(
-            Argument::that(function($property) use ($value) {
+            Argument::that(function ($property) use ($value) {
                 return $property instanceof Property
                     && 'image' === $property->getName()
                     && $property->getValue() === ['id' => $value['imageId']];
@@ -865,12 +865,12 @@ class ImageMapContentTypeTest extends TestCase
         $propertyType = $types[$value['hotspots'][0]['type']];
         foreach ($propertyType['children'] as $childName => $childType) {
             $this->textLineContentType->getContentData(
-                Argument::that(function($property) use ($childName, $value) {
+                Argument::that(function ($property) use ($childName, $value) {
                     return $property instanceof Property
                         && $property->getName() === $childName
                         && $property->getValue() === $value['hotspots'][0][$childName];
                 })
-            )->will(function($arguments) {
+            )->will(function ($arguments) {
                 return $arguments[0]->getValue();
             })->shouldBeCalled();
         }
@@ -878,12 +878,12 @@ class ImageMapContentTypeTest extends TestCase
         $propertyType = $types[$value['hotspots'][1]['type']];
         foreach ($propertyType['children'] as $childName => $childType) {
             $this->textLineContentType->getContentData(
-                Argument::that(function($property) use ($childName, $value) {
+                Argument::that(function ($property) use ($childName, $value) {
                     return $property instanceof Property
                         && $property->getName() === $childName
                         && $property->getValue() === $value['hotspots'][1][$childName];
                 })
-            )->will(function($arguments) {
+            )->will(function ($arguments) {
                 return $arguments[0]->getValue();
             })->shouldBeCalled();
         }
@@ -923,7 +923,7 @@ class ImageMapContentTypeTest extends TestCase
         );
 
         $this->singleMediaSelectionContentType->getContentData(
-            Argument::that(function($property) use ($value) {
+            Argument::that(function ($property) use ($value) {
                 return $property instanceof Property
                     && 'image' === $property->getName()
                     && $property->getValue() === ['id' => $value['imageId']];
@@ -1002,7 +1002,7 @@ class ImageMapContentTypeTest extends TestCase
         }
 
         $this->singleMediaSelectionContentType->getViewData(
-            Argument::that(function($property) use ($value) {
+            Argument::that(function ($property) use ($value) {
                 return $property instanceof Property
                     && 'image' === $property->getName()
                     && $property->getValue() === ['id' => $value['imageId']];
@@ -1012,7 +1012,7 @@ class ImageMapContentTypeTest extends TestCase
         $propertyType = $types[$value['hotspots'][0]['type']];
         foreach ($propertyType['children'] as $childName => $childType) {
             $this->textLineContentType->getViewData(
-                Argument::that(function($property) use ($childName, $value) {
+                Argument::that(function ($property) use ($childName, $value) {
                     return $property instanceof Property
                         && $property->getName() === $childName
                         && $property->getValue() === $value['hotspots'][0][$childName];
@@ -1023,7 +1023,7 @@ class ImageMapContentTypeTest extends TestCase
         $propertyType = $types[$value['hotspots'][1]['type']];
         foreach ($propertyType['children'] as $childName => $childType) {
             $this->textLineContentType->getViewData(
-                Argument::that(function($property) use ($childName, $value) {
+                Argument::that(function ($property) use ($childName, $value) {
                     return $property instanceof Property
                         && $property->getName() === $childName
                         && $property->getValue() === $value['hotspots'][1][$childName];
@@ -1033,14 +1033,14 @@ class ImageMapContentTypeTest extends TestCase
 
         $expectedViewData = [
             'image' => [],
-            'hotspots' => \array_map(function($hotspot) {
+            'hotspots' => \array_map(function ($hotspot) {
                 return \array_map(
-                    function() {
+                    function () {
                         return [];
                     },
                     \array_filter(
                         $hotspot,
-                        function($key) {
+                        function ($key) {
                             return 'type' !== $key && 'hotspot' !== $key;
                         },
                         \ARRAY_FILTER_USE_KEY
@@ -1124,7 +1124,7 @@ class ImageMapContentTypeTest extends TestCase
         }
 
         $this->singleMediaSelectionContentType->preResolve(
-            Argument::that(function($property) use ($value) {
+            Argument::that(function ($property) use ($value) {
                 return $property instanceof Property
                     && 'image' === $property->getName()
                     && $property->getValue() === ['id' => $value['imageId']];

@@ -138,7 +138,7 @@ class WebspaceManager implements WebspaceManagerInterface
 
         return \array_filter(
             $this->getWebspaceCollection()->getPortalInformations($environment),
-            function(PortalInformation $portalInformation) use ($host) {
+            function (PortalInformation $portalInformation) use ($host) {
                 $portalHost = $portalInformation->getHost();
 
                 // add a slash to avoid problems with "example.co" and "example.com"
@@ -155,7 +155,7 @@ class WebspaceManager implements WebspaceManagerInterface
 
         return \array_filter(
             $this->getWebspaceCollection()->getPortalInformations($environment),
-            function(PortalInformation $portalInformation) use ($url) {
+            function (PortalInformation $portalInformation) use ($url) {
                 return $this->matchUrl($url, $portalInformation->getUrl());
             }
         );
@@ -172,7 +172,7 @@ class WebspaceManager implements WebspaceManagerInterface
 
         return \array_filter(
             $this->getWebspaceCollection()->getPortalInformations($environment),
-            function(PortalInformation $portalInformation) use ($webspaceKey, $locale) {
+            function (PortalInformation $portalInformation) use ($webspaceKey, $locale) {
                 return $portalInformation->getWebspace()->getKey() === $webspaceKey
                     && $portalInformation->getLocale() === $locale;
             }
@@ -190,7 +190,7 @@ class WebspaceManager implements WebspaceManagerInterface
 
         return \array_filter(
             $this->getWebspaceCollection()->getPortalInformations($environment),
-            function(PortalInformation $portalInformation) use ($portalKey, $locale) {
+            function (PortalInformation $portalInformation) use ($portalKey, $locale) {
                 return $portalInformation->getPortal()
                     && $portalInformation->getPortal()->getKey() === $portalKey
                     && $portalInformation->getLocale() === $locale;
@@ -328,7 +328,7 @@ class WebspaceManager implements WebspaceManagerInterface
 
         return \array_filter(
             $this->getWebspaceCollection()->getPortalInformations($environment),
-            function(PortalInformation $portal) use ($webspaceKey) {
+            function (PortalInformation $portal) use ($webspaceKey) {
                 return $portal->getWebspaceKey() === $webspaceKey;
             }
         );
@@ -352,7 +352,7 @@ class WebspaceManager implements WebspaceManagerInterface
     {
         return \array_values(
             \array_map(
-                function(Localization $localization) {
+                function (Localization $localization) {
                     return $localization->getLocale();
                 },
                 $this->getAllLocalizations()
@@ -390,7 +390,7 @@ class WebspaceManager implements WebspaceManagerInterface
 
             if (!$cache->isFresh()) {
                 $availableTemplates = \array_map(
-                    function(StructureMetadata $structure) {
+                    function (StructureMetadata $structure) {
                         return $structure->getName();
                     },
                     $this->structureMetadataFactory->getStructures('page')

@@ -148,7 +148,7 @@ class ContactAccountSelection extends ComplexContentType implements ContentTypeE
         $result = \array_merge($accounts, $contacts);
         @\usort(
             $result,
-            function($a, $b) use ($value) {
+            function ($a, $b) use ($value) {
                 $typeA = $a instanceof Contact ? self::PREFIX_CONTACT : self::PREFIX_ACCOUNT;
                 $typeB = $b instanceof Contact ? self::PREFIX_CONTACT : self::PREFIX_ACCOUNT;
 
@@ -157,7 +157,7 @@ class ContactAccountSelection extends ComplexContentType implements ContentTypeE
         );
 
         return \array_map(
-            function($entity) {
+            function ($entity) {
                 $groups = ['fullContact', 'partialAccount'];
                 if ($entity instanceof Account) {
                     $groups = ['fullAccount', 'partialContact'];

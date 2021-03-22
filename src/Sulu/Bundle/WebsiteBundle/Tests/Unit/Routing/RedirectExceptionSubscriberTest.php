@@ -348,7 +348,7 @@ class RedirectExceptionSubscriberTest extends TestCase
 
         $this->router->matchRequest(
             Argument::that(
-                function(Request $request) {
+                function (Request $request) {
                     return 'http://sulu.lo/de-at' === $request->getUri();
                 }
             )

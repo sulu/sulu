@@ -102,7 +102,7 @@ class DownloadLanguageCommand extends Command
 
         $composerJson = \json_decode(\file_get_contents($this->projectDir . \DIRECTORY_SEPARATOR . 'composer.json'), true);
         $packages = \array_keys($composerJson['require']);
-        $suluPackages = \array_filter($packages, function($package) {
+        $suluPackages = \array_filter($packages, function ($package) {
             return 0 === \strpos($package, 'sulu/');
         });
 

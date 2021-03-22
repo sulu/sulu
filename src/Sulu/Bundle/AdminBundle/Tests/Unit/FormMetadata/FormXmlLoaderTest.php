@@ -49,7 +49,7 @@ class FormXmlLoaderTest extends TestCase
 
         $propertyMetadataMapperRegistry = $this->prophesize(PropertyMetadataMapperRegistry::class);
         $propertyMetadataMapperRegistry->has(Argument::cetera())->willReturn(false);
-        $propertyMetadataMapperRegistry->get(Argument::cetera())->will(function($arguments) {
+        $propertyMetadataMapperRegistry->get(Argument::cetera())->will(function ($arguments) {
             throw new PropertyMetadataMapperNotFoundException($arguments[0]);
         });
 

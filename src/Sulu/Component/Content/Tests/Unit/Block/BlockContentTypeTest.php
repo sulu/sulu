@@ -93,8 +93,8 @@ class BlockContentTypeTest extends TestCase
         $this->blockVisitor1 = $this->prophesize(BlockVisitorInterface::class);
         $this->blockVisitor2 = $this->prophesize(BlockVisitorInterface::class);
 
-        $this->blockVisitor1->visit(Argument::any())->will(function($arguments) {return $arguments[0]; });
-        $this->blockVisitor2->visit(Argument::any())->will(function($arguments) {return $arguments[0]; });
+        $this->blockVisitor1->visit(Argument::any())->will(function ($arguments) {return $arguments[0]; });
+        $this->blockVisitor2->visit(Argument::any())->will(function ($arguments) {return $arguments[0]; });
 
         $this->blockContentType = new BlockContentType(
             $this->contentTypeManager->reveal(),
@@ -384,7 +384,7 @@ class BlockContentTypeTest extends TestCase
         $this->node = $this->prophesize(Node::class);
         $this->node->getPropertyValueWithDefault(Argument::any(), null)->willReturn(null);
         $this->node->setProperty(Argument::cetera())->will(
-            function($arguments) use (&$result) {
+            function ($arguments) use (&$result) {
                 $result[$arguments[0]] = $arguments[1];
             }
         );
@@ -523,7 +523,7 @@ class BlockContentTypeTest extends TestCase
         $this->node = $this->prophesize(Node::class);
         $this->node->getPropertyValueWithDefault(Argument::any(), null)->willReturn(null);
         $this->node->setProperty(Argument::cetera())->will(
-            function($arguments) use (&$result) {
+            function ($arguments) use (&$result) {
                 $result[$arguments[0]] = $arguments[1];
             }
         );
@@ -673,7 +673,7 @@ class BlockContentTypeTest extends TestCase
         $this->node = $this->prophesize(Node::class);
         $this->node->getPropertyValueWithDefault(Argument::any(), null)->willReturn(null);
         $this->node->setProperty(Argument::cetera())->will(
-            function($arguments) use (&$result) {
+            function ($arguments) use (&$result) {
                 $result[$arguments[0]] = $arguments[1];
             }
         );

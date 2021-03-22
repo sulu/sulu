@@ -101,7 +101,7 @@ class PropertiesXmlParser
         $result['meta'] = $this->loadMeta($xpath, $node);
         $result['types'] = $this->loadTypes($tags, $xpath, $node, $formKey);
 
-        $typeNames = \array_map(function($type) {
+        $typeNames = \array_map(function ($type) {
             return $type['name'];
         }, $result['types']);
 

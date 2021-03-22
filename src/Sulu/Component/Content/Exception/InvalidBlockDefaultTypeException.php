@@ -44,7 +44,7 @@ class InvalidBlockDefaultTypeException extends \Exception
             $defaultType,
             \implode(
                 ', ',
-                \array_map(function($availableType) {
+                \array_map(function ($availableType) {
                     return '"' . $availableType . '"';
                 }, $availableTypes)
             )
