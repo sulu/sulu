@@ -292,7 +292,7 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
     {
         return $this->prepareData(
             $property,
-            function(ContentTypeInterface $contentType, $property) {
+            function (ContentTypeInterface $contentType, $property) {
                 return $contentType->getViewData($property);
             },
             false
@@ -303,7 +303,7 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
     {
         return $this->prepareData(
             $property,
-            function(ContentTypeInterface $contentType, $property) {
+            function (ContentTypeInterface $contentType, $property) {
                 return $contentType->getContentData($property);
             }
         );
@@ -369,7 +369,7 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
     {
         $this->prepareData(
             $property,
-            function(ContentTypeInterface $contentType, $property) {
+            function (ContentTypeInterface $contentType, $property) {
                 if (!$contentType instanceof PreResolvableContentTypeInterface) {
                     return;
                 }

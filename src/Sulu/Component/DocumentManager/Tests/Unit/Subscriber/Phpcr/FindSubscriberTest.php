@@ -91,7 +91,7 @@ class FindSubscriberTest extends TestCase
         $this->nodeManager->find($path)->willReturn($this->node->reveal());
         $this->eventDispatcher
             ->dispatch(Argument::type(HydrateEvent::class), Events::HYDRATE)
-            ->will(function($args) {
+            ->will(function ($args) {
                 $args[0]->setDocument(new \stdClass());
 
                 return $args[0];

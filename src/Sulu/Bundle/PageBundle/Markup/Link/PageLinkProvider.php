@@ -97,7 +97,7 @@ class PageLinkProvider implements LinkProviderInterface
         );
 
         return \array_map(
-            function(Content $content) use ($locale, $scheme, $domain) {
+            function (Content $content) use ($locale, $scheme, $domain) {
                 return $this->getLinkItem($content, $locale, $scheme, $domain);
             },
             $contents

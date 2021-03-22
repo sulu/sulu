@@ -99,7 +99,7 @@ class SecuredEntitySubscriberTest extends TestCase
             $permission
         );
 
-        $this->visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
+        $this->visitor->visitProperty(Argument::that(function (StaticPropertyMetadata $metadata) {
             return '_permissions' === $metadata->name;
         }), $permission)->shouldBeCalled();
 
@@ -122,7 +122,7 @@ class SecuredEntitySubscriberTest extends TestCase
             $permission
         );
 
-        $this->visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
+        $this->visitor->visitProperty(Argument::that(function (StaticPropertyMetadata $metadata) {
             return '_permissions' === $metadata->name;
         }), $permission)->shouldBeCalled();
 

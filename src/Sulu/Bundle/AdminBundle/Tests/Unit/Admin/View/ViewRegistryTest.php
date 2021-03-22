@@ -64,11 +64,11 @@ class ViewRegistryTest extends TestCase
         $viewBuilder2->setOption('value', 'test2');
         $viewBuilder3 = new ViewBuilder('test3', '/test3', 'test3');
         $viewBuilder3->setOption('value', 'test3');
-        $this->admin1->configureViews(Argument::any())->will(function($arguments) use ($viewBuilder1) {
+        $this->admin1->configureViews(Argument::any())->will(function ($arguments) use ($viewBuilder1) {
             $arguments[0]->add($viewBuilder1);
         });
         $this->admin2->configureViews(Argument::any())->will(
-            function($arguments) use ($viewBuilder2, $viewBuilder3) {
+            function ($arguments) use ($viewBuilder2, $viewBuilder3) {
                 $arguments[0]->add($viewBuilder2);
                 $arguments[0]->add($viewBuilder3);
             }
@@ -95,12 +95,12 @@ class ViewRegistryTest extends TestCase
         $viewBuilder3->setOption('value', 'test3');
 
         $this->admin1->configureViews(Argument::any())->will(
-            function($arguments) use ($viewBuilder1) {
+            function ($arguments) use ($viewBuilder1) {
                 $arguments[0]->add($viewBuilder1);
             }
         )->shouldBeCalledTimes(1);
         $this->admin2->configureViews(Argument::any())->will(
-            function($arguments) use ($viewBuilder2, $viewBuilder3) {
+            function ($arguments) use ($viewBuilder2, $viewBuilder3) {
                 $arguments[0]->add($viewBuilder2);
                 $arguments[0]->add($viewBuilder3);
             }
@@ -122,12 +122,12 @@ class ViewRegistryTest extends TestCase
         $viewBuilder3 = new ViewBuilder('test3', '/test3', 'test3');
         $viewBuilder3->setOption('value', 'test3');
         $this->admin1->configureViews(Argument::any())->will(
-            function($arguments) use ($viewBuilder1) {
+            function ($arguments) use ($viewBuilder1) {
                 $arguments[0]->add($viewBuilder1);
             }
         )->shouldBeCalledTimes(1);
         $this->admin2->configureViews(Argument::any())->will(
-            function($arguments) use ($viewBuilder2, $viewBuilder3) {
+            function ($arguments) use ($viewBuilder2, $viewBuilder3) {
                 $arguments[0]->add($viewBuilder2);
                 $arguments[0]->add($viewBuilder3);
             }
@@ -145,7 +145,7 @@ class ViewRegistryTest extends TestCase
 
         $viewBuilder = new ViewBuilder('test1', '/test1', 'test1');
         $viewBuilder->setParent('not-existing');
-        $this->admin1->configureViews(Argument::any())->will(function($arguments) use ($viewBuilder) {
+        $this->admin1->configureViews(Argument::any())->will(function ($arguments) use ($viewBuilder) {
             $arguments[0]->add($viewBuilder);
         });
 
@@ -168,7 +168,7 @@ class ViewRegistryTest extends TestCase
         $viewBuilder2->setOption('value', 'test');
 
         $this->admin1->configureViews(Argument::any())->will(
-            function($arguments) use ($viewBuilder1, $viewBuilder1_1, $viewBuilder1_1_1, $viewBuilder2) {
+            function ($arguments) use ($viewBuilder1, $viewBuilder1_1, $viewBuilder1_1_1, $viewBuilder2) {
                 $arguments[0]->add($viewBuilder1);
                 $arguments[0]->add($viewBuilder1_1);
                 $arguments[0]->add($viewBuilder1_1_1);

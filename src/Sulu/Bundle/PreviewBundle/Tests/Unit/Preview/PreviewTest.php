@@ -107,7 +107,7 @@ class PreviewTest extends TestCase
         $this->cache->save(
             $token,
             Argument::that(
-                function($json) use ($expectedData) {
+                function ($json) use ($expectedData) {
                     $this->assertEquals($expectedData, \json_decode($json, true));
 
                     return true;
@@ -142,7 +142,7 @@ class PreviewTest extends TestCase
         $this->cache->save(
             $token,
             Argument::that(
-                function($json) use ($expectedData) {
+                function ($json) use ($expectedData) {
                     $this->assertEquals($expectedData, \json_decode($json, true));
 
                     return true;
@@ -229,7 +229,7 @@ class PreviewTest extends TestCase
         $this->cache->save(
             $token,
             Argument::that(
-                function($json) use ($expectedData) {
+                function ($json) use ($expectedData) {
                     $this->assertEquals($expectedData, \json_decode($json, true));
 
                     return true;
@@ -382,7 +382,7 @@ class PreviewTest extends TestCase
         $this->cache->save(
             $token,
             Argument::that(
-                function($json) use ($expectedData) {
+                function ($json) use ($expectedData) {
                     $this->assertEquals($expectedData, \json_decode($json, true));
 
                     return true;
@@ -522,7 +522,7 @@ class PreviewTest extends TestCase
         $this->cache->save(
             $token,
             Argument::that(
-                function($json) use ($expectedData) {
+                function ($json) use ($expectedData) {
                     $this->assertEquals($expectedData, \json_decode($json, true));
 
                     return true;
@@ -580,7 +580,7 @@ class PreviewTest extends TestCase
         $this->cache->save(
             $token,
             Argument::that(
-                function($json) use ($expectedData) {
+                function ($json) use ($expectedData) {
                     $this->assertEquals($expectedData, \json_decode($json, true));
 
                     return true;
@@ -638,7 +638,7 @@ class PreviewTest extends TestCase
         $this->cache->save(
             $token,
             Argument::that(
-                function($json) use ($expectedData) {
+                function ($json) use ($expectedData) {
                     $this->assertEquals($expectedData, \json_decode($json, true));
 
                     return true;

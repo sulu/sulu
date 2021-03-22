@@ -46,7 +46,7 @@ class SchemaMetadata
 
         $jsonSchema['required'] = \array_values(
             \array_filter(
-                \array_map(function(PropertyMetadata $property) {
+                \array_map(function (PropertyMetadata $property) {
                     if ($property->isMandatory()) {
                         return $property->getName();
                     }
@@ -70,13 +70,13 @@ class SchemaMetadata
         }
 
         if (\count($this->anyOfs) > 0) {
-            $jsonSchema['anyOf'] = \array_map(function(SchemaMetadata $schema) {
+            $jsonSchema['anyOf'] = \array_map(function (SchemaMetadata $schema) {
                 return $schema->toJsonSchema();
             }, $this->anyOfs);
         }
 
         if (\count($this->allOfs) > 0) {
-            $jsonSchema['allOf'] = \array_map(function(SchemaMetadata $schema) {
+            $jsonSchema['allOf'] = \array_map(function (SchemaMetadata $schema) {
                 return $schema->toJsonSchema();
             }, $this->allOfs);
         }

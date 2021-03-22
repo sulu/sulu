@@ -37,7 +37,7 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
     public function setUp(): void
     {
         $locator = $this->prophesize(FileLocatorInterface::class);
-        $locator->locate(Argument::any())->will(function($arguments) {
+        $locator->locate(Argument::any())->will(function ($arguments) {
             return $arguments[0];
         });
 

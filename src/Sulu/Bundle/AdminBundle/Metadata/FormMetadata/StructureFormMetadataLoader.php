@@ -129,7 +129,7 @@ class StructureFormMetadataLoader implements FormMetadataLoaderInterface, CacheW
                 $configCache = $this->getConfigCache($structureType, $locale);
                 $configCache->write(
                     \serialize($structure),
-                    \array_map(function(ContentStructureMetadata $structureMetadata) {
+                    \array_map(function (ContentStructureMetadata $structureMetadata) {
                         return new FileResource($structureMetadata->getResource());
                     }, $structuresMetadata)
                 );

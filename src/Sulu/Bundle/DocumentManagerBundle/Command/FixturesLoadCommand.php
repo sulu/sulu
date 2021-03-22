@@ -109,7 +109,7 @@ EOT
             if ($input->getOption('verbose')) {
                 $output->writeln(\sprintf(
                     'Found fixtures: <comment>"</comment>%s<comment>"</comment>',
-                        \implode('<comment>", "</comment>', \array_map(function($fixture) {
+                        \implode('<comment>", "</comment>', \array_map(function ($fixture) {
                             return \get_class($fixture);
                         }, \iterator_to_array($this->fixtures)))
                 ));

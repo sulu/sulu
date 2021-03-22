@@ -137,7 +137,7 @@ class PermissionControllerTest extends TestCase
 
         \array_walk(
             $permissions,
-            function(&$permissionLine) {
+            function (&$permissionLine) {
                 $permissionLine = 'true' === $permissionLine || true === $permissionLine;
             }
         );

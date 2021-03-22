@@ -571,7 +571,7 @@ class QueryBuilderTest extends SuluTestCase
 
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
         $titles = \array_map(
-            function($item) {
+            function ($item) {
                 return $item['title'];
             },
             $result
@@ -1116,7 +1116,7 @@ class QueryBuilderTest extends SuluTestCase
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
 
         $paths = \array_map(
-            function($item) {
+            function ($item) {
                 return $item['path'];
             },
             $result

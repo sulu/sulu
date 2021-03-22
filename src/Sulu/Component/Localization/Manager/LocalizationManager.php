@@ -43,7 +43,7 @@ class LocalizationManager implements LocalizationManagerInterface
     {
         return \array_values(
             \array_map(
-                function(Localization $localization) {
+                function (Localization $localization) {
                     return $localization->getLocale();
                 },
                 $this->getLocalizations()

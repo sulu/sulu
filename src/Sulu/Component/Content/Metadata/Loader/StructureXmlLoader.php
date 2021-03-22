@@ -183,7 +183,7 @@ class StructureXmlLoader extends AbstractLoader
             throw new ReservedPropertyNameException($result['key'], $reservedProperty);
         }
 
-        $result['properties'] = \array_filter($result['properties'], function($property) {
+        $result['properties'] = \array_filter($result['properties'], function ($property) {
             if (!$property instanceof PropertyMetadata) {
                 return true;
             }
@@ -238,7 +238,7 @@ class StructureXmlLoader extends AbstractLoader
 
             $result = \array_filter(
                 $result,
-                function($value) {
+                function ($value) {
                     return null !== $value;
                 }
             );
@@ -268,7 +268,7 @@ class StructureXmlLoader extends AbstractLoader
 
             $result = \array_filter(
                 $result,
-                function($value) {
+                function ($value) {
                     return null !== $value;
                 }
             );

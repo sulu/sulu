@@ -142,7 +142,7 @@ class DoctrineListBuilder extends AbstractListBuilder
         parent::setSelectFields($fieldDescriptors);
         $this->selectFields = \array_filter(
             $this->selectFields,
-            function(FieldDescriptorInterface $fieldDescriptor) {
+            function (FieldDescriptorInterface $fieldDescriptor) {
                 return $fieldDescriptor instanceof DoctrineFieldDescriptorInterface;
             }
         );
@@ -282,7 +282,7 @@ class DoctrineListBuilder extends AbstractListBuilder
         }
 
         $ids = \array_map(
-            function($array) {
+            function ($array) {
                 return $array[$this->idField->getName()];
             },
             $ids
@@ -387,7 +387,7 @@ class DoctrineListBuilder extends AbstractListBuilder
             $fields = \array_merge($fields, $this->selectFields);
         }
 
-        return \array_filter($fields, function(FieldDescriptorInterface $fieldDescriptor) {
+        return \array_filter($fields, function (FieldDescriptorInterface $fieldDescriptor) {
             return $fieldDescriptor instanceof DoctrineFieldDescriptorInterface;
         });
     }

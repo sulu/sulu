@@ -43,7 +43,7 @@ trait MemoizeTwigExtensionTrait
 
             $result[] = new TwigFunction(
                 $name,
-                function() use ($callable, $name) {
+                function () use ($callable, $name) {
                     return $this->memoizeCache->memoizeById($name, \func_get_args(), $callable, $this->lifeTime);
                 }
             );

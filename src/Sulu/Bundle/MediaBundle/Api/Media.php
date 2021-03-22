@@ -911,7 +911,7 @@ class Media extends ApiWrapper
         $metaCollection = $this->getFileVersion()->getMeta();
 
         // get meta only with this locale
-        $metaCollectionFiltered = $metaCollection->filter(function($meta) use ($locale) {
+        $metaCollectionFiltered = $metaCollection->filter(function ($meta) use ($locale) {
             /** @var FileVersionMeta $meta */
             if ($meta->getLocale() == $locale) {
                 return true;
@@ -1004,7 +1004,7 @@ class Media extends ApiWrapper
         $fileVersion = $this->getFileVersion();
         $categories = $fileVersion->getCategories();
 
-        return \array_map(function(CategoryEntity $category) {
+        return \array_map(function (CategoryEntity $category) {
             return $category->getId();
         }, $categories->toArray());
     }
@@ -1050,7 +1050,7 @@ class Media extends ApiWrapper
             return [];
         }
 
-        return \array_map(function(TargetGroupInterface $targetGroup) {
+        return \array_map(function (TargetGroupInterface $targetGroup) {
             return $targetGroup->getId();
         }, $this->getFileVersion()->getTargetGroups()->toArray());
     }

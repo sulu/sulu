@@ -138,7 +138,7 @@ class CreateRoleCommand extends Command
         if (!$input->getArgument('name')) {
             $question = new Question('Please choose a rolename: ');
             $question->setValidator(
-                function($name) {
+                function ($name) {
                     if (empty($name)) {
                         throw new \InvalidArgumentException('Rolename cannot be empty');
                     }

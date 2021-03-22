@@ -107,7 +107,7 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
         $contacts = $this->contactRepository->findByIds($ids);
 
         return \array_map(
-            function($contact) use ($locale) {
+            function ($contact) use ($locale) {
                 return $this->getApiObject($contact, $locale);
             },
             $contacts
@@ -127,7 +127,7 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
          * iteration the logic was just moved from the Controller
          * to this class due to better reusability.
          */
-        $delete = function($id) {
+        $delete = function ($id) {
             /** @var Contact $contact */
             $contact = $this->contactRepository->findByIdAndDelete($id);
 
@@ -575,7 +575,7 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
     {
         $foundMedias = $this->mediaRepository->findById($mediaIds);
         $foundMediaIds = \array_map(
-            function($mediaEntity) {
+            function ($mediaEntity) {
                 return $mediaEntity->getId();
             },
             $foundMedias
@@ -669,7 +669,7 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
         $entities = $this->contactRepository->findByFilters($filters, $page, $pageSize, $limit, $locale, $options);
 
         return \array_map(
-            function($contact) use ($locale) {
+            function ($contact) use ($locale) {
                 return $this->getApiObject($contact, $locale);
             },
             $entities

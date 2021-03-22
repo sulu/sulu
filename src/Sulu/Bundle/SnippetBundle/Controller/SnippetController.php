@@ -154,7 +154,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
         $types = null;
 
         if ($request->query->has('areas')) {
-            $types = \array_map(function($area) {
+            $types = \array_map(function ($area) {
                 return $this->defaultSnippetManager->getTypeForArea($area);
             }, \explode(',', $request->query->get('areas')));
         } elseif ($request->query->has('types')) {

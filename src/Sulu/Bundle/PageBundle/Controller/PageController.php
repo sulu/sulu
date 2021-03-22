@@ -143,7 +143,7 @@ class PageController extends AbstractRestController implements ClassResourceInte
 
         $view = $this->responseGetById(
             $id,
-            function($id) use ($locale, $ghostContent, $template, $request) {
+            function ($id) use ($locale, $ghostContent, $template, $request) {
                 try {
                     $document = $this->documentManager->find(
                         $id,
@@ -366,7 +366,7 @@ class PageController extends AbstractRestController implements ClassResourceInte
         if (!$force) {
             $references = \array_filter(
                 $this->nodeRepository->getReferences($id),
-                function(PropertyInterface $reference) {
+                function (PropertyInterface $reference) {
                     return $reference->getParent()->isNodeType('sulu:page');
                 }
             );
@@ -394,7 +394,7 @@ class PageController extends AbstractRestController implements ClassResourceInte
 
         $view = $this->responseDelete(
             $id,
-            function($id) use ($request) {
+            function ($id) use ($request) {
                 try {
                     $document = $this->documentManager->find($id);
 
