@@ -2214,7 +2214,7 @@ class ContactControllerTest extends SuluTestCase
         ];
 
         $filteredAddresses = \array_map(
-            function($address) use ($filterKeys) {
+            function ($address) use ($filterKeys) {
                 return \array_intersect_key($address, \array_flip($filterKeys));
             },
             $addresses
@@ -2381,7 +2381,7 @@ class ContactControllerTest extends SuluTestCase
 
     public function sortAddressesPrimaryLast()
     {
-        return function($a, $b) {
+        return function ($a, $b) {
             if (true === $a->primaryAddress && false === $b->primaryAddress) {
                 return true;
             }

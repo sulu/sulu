@@ -434,7 +434,7 @@ class NavigationItem implements \Iterator
 
         \usort(
             $children,
-            function(NavigationItem $a, NavigationItem $b) {
+            function (NavigationItem $a, NavigationItem $b) {
                 $aPosition = $a->getPosition() ?? \PHP_INT_MAX;
                 $bPosition = $b->getPosition() ?? \PHP_INT_MAX;
 

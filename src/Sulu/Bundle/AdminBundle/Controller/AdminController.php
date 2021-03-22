@@ -244,12 +244,12 @@ class AdminController
                 'fieldTypeOptions' => $this->fieldTypeOptionRegistry->toArray(),
                 'internalLinkTypes' => $this->linkProviderPool->getConfiguration(),
                 'localizations' => \array_values($this->localizationManager->getLocalizations()),
-                'navigation' => \array_map(function(NavigationItem $navigationItem) {
+                'navigation' => \array_map(function (NavigationItem $navigationItem) {
                     return $navigationItem->toArray();
                 }, \array_values($this->navigationRegistry->getNavigationItems())),
                 'routes' => $this->viewRegistry->getViews(),
                 'resources' => $this->resources,
-                'smartContent' => \array_map(function(DataProviderInterface $dataProvider) {
+                'smartContent' => \array_map(function (DataProviderInterface $dataProvider) {
                     return $dataProvider->getConfiguration();
                 }, $this->dataProviderPool->getAll()),
                 'user' => $user,

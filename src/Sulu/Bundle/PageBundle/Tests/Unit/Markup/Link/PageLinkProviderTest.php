@@ -151,7 +151,7 @@ class PageLinkProviderTest extends TestCase
             [1, 2, 3],
             $this->locale,
             Argument::that(
-                function(MappingInterface $mapping) {
+                function (MappingInterface $mapping) {
                     return $mapping->resolveUrl()
                         && !$mapping->shouldHydrateGhost()
                         && $mapping->onlyPublished()
@@ -195,7 +195,7 @@ class PageLinkProviderTest extends TestCase
             [1, 2, 3],
             $this->locale,
             Argument::that(
-                function(MappingInterface $mapping) {
+                function (MappingInterface $mapping) {
                     return $mapping->resolveUrl()
                         && !$mapping->shouldHydrateGhost()
                         && $mapping->onlyPublished()
@@ -233,7 +233,7 @@ class PageLinkProviderTest extends TestCase
             [1],
             $this->locale,
             Argument::that(
-                function(MappingInterface $mapping) {
+                function (MappingInterface $mapping) {
                     return $mapping->resolveUrl()
                     && !$mapping->shouldHydrateGhost()
                     && $mapping->onlyPublished()
@@ -299,7 +299,7 @@ class PageLinkProviderTest extends TestCase
             [1, 2, 3],
             $this->locale,
             Argument::that(
-                function(MappingInterface $mapping) {
+                function (MappingInterface $mapping) {
                     return $mapping->resolveUrl()
                         && !$mapping->shouldHydrateGhost()
                         && $mapping->onlyPublished()
@@ -354,7 +354,7 @@ class PageLinkProviderTest extends TestCase
             $domain,
             $this->scheme
         )->will(
-            function($arguments) {
+            function ($arguments) {
                 return \sprintf('/%s%s', $arguments[2], $arguments[0]);
             }
         );

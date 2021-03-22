@@ -49,7 +49,7 @@ class AdminPool
     public function getSecurityContexts()
     {
         $contexts = [];
-        $this->iterateAdmins(function(Admin $admin) use (&$contexts) {
+        $this->iterateAdmins(function (Admin $admin) use (&$contexts) {
             $contexts = \array_merge_recursive($contexts, $admin->getSecurityContexts());
         });
 
@@ -59,7 +59,7 @@ class AdminPool
     public function getSecurityContextsWithPlaceholder()
     {
         $contexts = [];
-        $this->iterateAdmins(function(Admin $admin) use (&$contexts) {
+        $this->iterateAdmins(function (Admin $admin) use (&$contexts) {
             $contexts = \array_merge_recursive($contexts, $admin->getSecurityContextsWithPlaceholder());
         });
 

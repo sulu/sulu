@@ -64,7 +64,9 @@ class ContactSelectionTest extends TestCase
         $this->contactRepository = $this->prophesize(ContactRepositoryInterface::class);
         $this->contactReferenceStore = $this->prophesize(ReferenceStore::class);
         $this->contact1 = $this->prophesize(ContactInterface::class);
+        $this->contact1->getId()->willReturn(123);
         $this->contact2 = $this->prophesize(ContactInterface::class);
+        $this->contact2->getId()->willReturn(789);
         $this->node = $this->prophesize(NodeInterface::class);
         $this->property = $this->prophesize(PropertyInterface::class);
         $this->contactSelection = new ContactSelection(
@@ -78,7 +80,7 @@ class ContactSelectionTest extends TestCase
         $this->node->hasProperty('contacts')->willReturn(true);
         $this->node->getPropertyValue('contacts')->willReturn([123, 789]);
 
-        $this->assertEquals(
+        $this->assertSame(
             [123, 789],
             $this->contactSelection->read(
                 $this->node->reveal(),
@@ -128,7 +130,7 @@ class ContactSelectionTest extends TestCase
 
     public function testDefaultParams()
     {
-        $this->assertEquals(
+        $this->assertSame(
             [],
             $this->contactSelection->getDefaultParams(new Property('contacts', [], 'contact_selection'))
         );
@@ -136,7 +138,7 @@ class ContactSelectionTest extends TestCase
 
     public function testViewDataEmpty()
     {
-        $this->assertEquals(
+        $this->assertSame(
             [],
             $this->contactSelection->getViewData(new Property('contacts', [], 'contact_selection'))
         );
@@ -147,7 +149,7 @@ class ContactSelectionTest extends TestCase
         $property = new Property('contacts', [], 'contact_selection');
         $property->setValue([123, 789]);
 
-        $this->assertEquals(
+        $this->assertSame(
             [],
             $this->contactSelection->getViewData($property)
         );
@@ -155,7 +157,7 @@ class ContactSelectionTest extends TestCase
 
     public function testContentDataEmpty()
     {
-        $this->assertEquals(
+        $this->assertSame(
             [],
             $this->contactSelection->getContentData(new Property('contacts', [], 'contact_selection'))
         );
@@ -169,7 +171,21 @@ class ContactSelectionTest extends TestCase
         $result = [$this->contact1->reveal(), $this->contact2->reveal()];
         $this->contactRepository->findByIds([123, 789])->willReturn($result);
 
-        $this->assertEquals($result, $this->contactSelection->getContentData($property));
+        $this->assertSame($result, $this->contactSelection->getContentData($property));
+    }
+
+    public function testContentDataWithSorting()
+    {
+        $property = new Property('contacts', [], 'contact_selection');
+        $property->setValue([789, 123]);
+
+        $this->contactRepository->findByIds([789, 123])
+            ->willReturn([$this->contact1->reveal(), $this->contact2->reveal()]);
+
+        $this->assertSame(
+            [$this->contact2->reveal(), $this->contact1->reveal()],
+            $this->contactSelection->getContentData($property)
+        );
     }
 
     public function testPreResolveEmpty()

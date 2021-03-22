@@ -73,7 +73,7 @@ class SuluLocationExtension extends Extension implements PrependExtensionInterfa
         $container->setParameter('sulu_location.geolocator.name', $geolocatorName);
         $container->setAlias('sulu_location.geolocator', 'sulu_location.geolocator.service.' . $geolocatorName);
 
-        $nominatim = function(array $geolocators, ContainerBuilder $container) {
+        $nominatim = function (array $geolocators, ContainerBuilder $container) {
             $apiKey = $geolocators['nominatim']['api_key'];
             $container->setParameter('sulu_location.geolocator.service.nominatim.api_key', $apiKey);
 
@@ -81,7 +81,7 @@ class SuluLocationExtension extends Extension implements PrependExtensionInterfa
             $container->setParameter('sulu_location.geolocator.service.nominatim.endpoint', $endpoint);
         };
 
-        $google = function(array $geolocators, ContainerBuilder $container) {
+        $google = function (array $geolocators, ContainerBuilder $container) {
             $apiKey = $geolocators['google']['api_key'];
             $container->setParameter('sulu_location.geolocator.service.google.api_key', $apiKey);
         };

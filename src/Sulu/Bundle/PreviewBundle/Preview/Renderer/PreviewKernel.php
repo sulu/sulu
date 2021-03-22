@@ -36,7 +36,7 @@ class PreviewKernel extends Kernel
     {
         parent::registerContainerConfiguration($loader);
 
-        $loader->load(function(ContainerBuilder $container) use ($loader) {
+        $loader->load(function (ContainerBuilder $container) use ($loader) {
             // disable web_profiler toolbar in preview if the web_profiler extension exist
             if ($container->hasExtension('web_profiler')) {
                 $loader->load(

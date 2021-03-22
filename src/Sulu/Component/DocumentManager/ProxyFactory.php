@@ -85,7 +85,7 @@ class ProxyFactory
             return $document;
         }
 
-        $initializer = function(LazyLoadingInterface $document, $method, array $parameters, &$initializer) use (
+        $initializer = function (LazyLoadingInterface $document, $method, array $parameters, &$initializer) use (
             $targetNode,
             $options,
             $locale

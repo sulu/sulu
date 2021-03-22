@@ -78,7 +78,7 @@ class DateTest extends TestCase
         $node->setProperty(
             'test',
             Argument::that(
-                function(\DateTime $value) use ($dateValue) {
+                function (\DateTime $value) use ($dateValue) {
                     // let there a delta of 2 seconds is ok
                     $this->assertEqualsWithDelta($dateValue->getTimestamp(), $value->getTimestamp(), 60);
 

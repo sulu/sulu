@@ -66,7 +66,7 @@ class CollaborationController implements ClassResourceInterface
 
         $collaborations = \array_values(\array_filter(
             $this->collaborationRepository->update($collaboration),
-            function(Collaboration $collaboration) use ($request) {
+            function (Collaboration $collaboration) use ($request) {
                 return $collaboration->getConnectionId() !== $this->getConnectionId($request);
             }
         ));

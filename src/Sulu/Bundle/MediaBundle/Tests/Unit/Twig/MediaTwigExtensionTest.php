@@ -29,7 +29,7 @@ class MediaTwigExtensionTest extends TestCase
         $mediaManager = $this->prophesize(MediaManagerInterface::class);
         $mediaManager->getById(Argument::any(), Argument::any())->shouldNotBeCalled();
         $mediaManager->addFormatsAndUrl(Argument::type(MediaApi::class))->will(
-            function($args) {
+            function ($args) {
                 return $args[0];
             }
         );
@@ -47,7 +47,7 @@ class MediaTwigExtensionTest extends TestCase
         $mediaManager = $this->prophesize(MediaManagerInterface::class);
         $mediaManager->getById(Argument::any(), Argument::any())->shouldNotBeCalled();
         $mediaManager->addFormatsAndUrl(Argument::type(MediaApi::class))->will(
-            function($args) {
+            function ($args) {
                 return $args[0];
             }
         );
@@ -77,7 +77,7 @@ class MediaTwigExtensionTest extends TestCase
         $mediaManager = $this->prophesize(MediaManagerInterface::class);
         $mediaManager->getByIds(Argument::any(), Argument::any())->shouldNotBeCalled();
         $mediaManager->addFormatsAndUrl(Argument::type(MediaApi::class))->will(
-            function($args) {
+            function ($args) {
                 return $args[0];
             }
         );
@@ -97,7 +97,7 @@ class MediaTwigExtensionTest extends TestCase
         $mediaManager = $this->prophesize(MediaManagerInterface::class);
         $mediaManager->getByIds(Argument::any(), Argument::any())->shouldNotBeCalled();
         $mediaManager->addFormatsAndUrl(Argument::type(MediaApi::class))->will(
-            function($args) {
+            function ($args) {
                 return $args[0];
             }
         );
@@ -145,7 +145,7 @@ class MediaTwigExtensionTest extends TestCase
         $mediaManager = $this->prophesize(MediaManagerInterface::class);
         $mediaManager->getByIds([3], 'de')->willReturn([$apiEntity3]);
         $mediaManager->addFormatsAndUrl(Argument::type(MediaApi::class))->will(
-            function($args) {
+            function ($args) {
                 return $args[0];
             }
         );
@@ -171,7 +171,7 @@ class MediaTwigExtensionTest extends TestCase
     {
         $mediaManager = $this->prophesize(MediaManagerInterface::class);
         $extension = new MediaTwigExtension($mediaManager->reveal());
-        $mediaManager->getById(404, 'en')->will(function($args) {
+        $mediaManager->getById(404, 'en')->will(function ($args) {
             throw new MediaNotFoundException($args[0]);
         });
 

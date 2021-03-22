@@ -138,7 +138,7 @@ class UserController extends AbstractRestController implements ClassResourceInte
      */
     public function getAction($id)
     {
-        $find = function($id) {
+        $find = function ($id) {
             return $this->userManager->getUserById($id);
         };
 

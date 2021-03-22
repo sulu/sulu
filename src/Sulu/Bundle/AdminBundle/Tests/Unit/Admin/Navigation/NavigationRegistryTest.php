@@ -77,7 +77,7 @@ class NavigationRegistryTest extends TestCase
         $navigationItem1 = new NavigationItem('navigation_1');
         $navigationItem1->setView('view1');
 
-        $this->admin1->configureNavigationItems(Argument::any())->will(function($arguments) use ($navigationItem1) {
+        $this->admin1->configureNavigationItems(Argument::any())->will(function ($arguments) use ($navigationItem1) {
             $arguments[0]->add($navigationItem1);
         });
 
@@ -89,7 +89,7 @@ class NavigationRegistryTest extends TestCase
         $navigationItem2->addChild($navigationChildItem1);
         $navigationItem2->addChild($navigationChildItem2);
 
-        $this->admin2->configureNavigationItems(Argument::any())->will(function($arguments) use ($navigationItem2) {
+        $this->admin2->configureNavigationItems(Argument::any())->will(function ($arguments) use ($navigationItem2) {
             $arguments[0]->add($navigationItem2);
         });
 
@@ -161,11 +161,11 @@ class NavigationRegistryTest extends TestCase
         $navigationItem1 = new NavigationItem('navigation_1');
         $navigationItem1->setView('view1');
 
-        $this->admin1->configureNavigationItems(Argument::any())->will(function($arguments) use ($navigationItem1) {
+        $this->admin1->configureNavigationItems(Argument::any())->will(function ($arguments) use ($navigationItem1) {
             $arguments[0]->add($navigationItem1);
         })->shouldBeCalledTimes(1);
 
-        $this->admin2->configureNavigationItems(Argument::any())->will(function($arguments) use ($navigationItem1) {
+        $this->admin2->configureNavigationItems(Argument::any())->will(function ($arguments) use ($navigationItem1) {
             $arguments[0]->add($navigationItem1);
         })->shouldBeCalledTimes(1);
 
@@ -199,7 +199,7 @@ class NavigationRegistryTest extends TestCase
         $view21->getPath()->willReturn('/view2/view1');
         $view21->getName()->willReturn('view2_1');
 
-        $this->admin1->configureNavigationItems(Argument::any())->will(function($arguments) use ($navigationItem1) {
+        $this->admin1->configureNavigationItems(Argument::any())->will(function ($arguments) use ($navigationItem1) {
             $arguments[0]->add($navigationItem1);
         });
 
@@ -220,7 +220,7 @@ class NavigationRegistryTest extends TestCase
         $navigationItem2->setView('view2');
 
         $this->admin1->configureNavigationItems(Argument::any())
-             ->will(function($arguments) use ($navigationItem1, $navigationItem2) {
+             ->will(function ($arguments) use ($navigationItem1, $navigationItem2) {
                  $arguments[0]->add($navigationItem1);
                  $arguments[0]->add($navigationItem2);
              });

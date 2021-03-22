@@ -367,7 +367,7 @@ class BlockContentTypeTest extends TestCase
         $this->node = $this->prophesize(Node::class);
         $this->node->getPropertyValueWithDefault(Argument::any(), null)->willReturn(null);
         $this->node->setProperty(Argument::cetera())->will(
-            function($arguments) use (&$result) {
+            function ($arguments) use (&$result) {
                 $result[$arguments[0]] = $arguments[1];
             }
         );
@@ -506,7 +506,7 @@ class BlockContentTypeTest extends TestCase
         $this->node = $this->prophesize(Node::class);
         $this->node->getPropertyValueWithDefault(Argument::any(), null)->willReturn(null);
         $this->node->setProperty(Argument::cetera())->will(
-            function($arguments) use (&$result) {
+            function ($arguments) use (&$result) {
                 $result[$arguments[0]] = $arguments[1];
             }
         );
@@ -656,7 +656,7 @@ class BlockContentTypeTest extends TestCase
         $this->node = $this->prophesize(Node::class);
         $this->node->getPropertyValueWithDefault(Argument::any(), null)->willReturn(null);
         $this->node->setProperty(Argument::cetera())->will(
-            function($arguments) use (&$result) {
+            function ($arguments) use (&$result) {
                 $result[$arguments[0]] = $arguments[1];
             }
         );

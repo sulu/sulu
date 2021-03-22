@@ -138,7 +138,7 @@ class CustomUrlRouteControllerTest extends SuluTestCase
 
         $uuids = [];
         foreach ($delete as $item) {
-            $customUrlRoute = \array_filter($customUrlRoutes, function($customUrlRoute) use ($item) {
+            $customUrlRoute = \array_filter($customUrlRoutes, function ($customUrlRoute) use ($item) {
                 return $customUrlRoute['resourcelocator'] === $item;
             });
 
@@ -172,7 +172,7 @@ class CustomUrlRouteControllerTest extends SuluTestCase
 
         $this->assertEquals(
             $excpected,
-            \array_map(function($route) {
+            \array_map(function ($route) {
                 return $route['resourcelocator'];
             }, $customUrlRoutes['_embedded']['custom_url_routes'])
         );

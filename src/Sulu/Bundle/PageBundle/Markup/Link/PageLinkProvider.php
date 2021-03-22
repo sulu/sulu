@@ -114,7 +114,7 @@ class PageLinkProvider implements LinkProviderInterface
                 ->getMapping()
         );
 
-        $contents = \array_filter($contents, function(Content $content) {
+        $contents = \array_filter($contents, function (Content $content) {
             $webspaceKey = $content->getWebspaceKey();
             $targetWebspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
             $security = $targetWebspace->getSecurity();
@@ -132,7 +132,7 @@ class PageLinkProvider implements LinkProviderInterface
         });
 
         return \array_map(
-            function(Content $content) use ($locale, $scheme, $domain) {
+            function (Content $content) use ($locale, $scheme, $domain) {
                 return $this->getLinkItem($content, $locale, $scheme, $domain);
             },
             $contents

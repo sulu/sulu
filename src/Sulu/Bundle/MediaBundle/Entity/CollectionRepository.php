@@ -400,7 +400,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             ->andWhere('subCollection.lft > collection.lft AND subCollection.rgt < collection.rgt')
             ->setParameter('id', $id);
 
-        return \array_map(function($collection) {
+        return \array_map(function ($collection) {
             return (int) $collection['id'];
         }, $queryBuilder->getQuery()->getScalarResult());
     }

@@ -98,11 +98,11 @@ class SecuredEntitySubscriberTest extends TestCase
         $this->accessControlManager->getUserPermissionByArray(null, 'sulu.example', $permissions, $this->user->reveal())
             ->willReturn($userPermission);
 
-        $this->visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
+        $this->visitor->visitProperty(Argument::that(function (StaticPropertyMetadata $metadata) {
             return '_permissions' === $metadata->name;
         }), $userPermission)->shouldBeCalled();
 
-        $this->visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
+        $this->visitor->visitProperty(Argument::that(function (StaticPropertyMetadata $metadata) {
             return '_hasPermissions' === $metadata->name;
         }), true)->shouldBeCalled();
 
@@ -125,11 +125,11 @@ class SecuredEntitySubscriberTest extends TestCase
         $this->accessControlManager->getUserPermissionByArray(null, 'sulu.example', $permissions, $this->user->reveal())
             ->willReturn($userPermission);
 
-        $this->visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
+        $this->visitor->visitProperty(Argument::that(function (StaticPropertyMetadata $metadata) {
             return '_permissions' === $metadata->name;
         }), $userPermission)->shouldBeCalled();
 
-        $this->visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
+        $this->visitor->visitProperty(Argument::that(function (StaticPropertyMetadata $metadata) {
             return '_hasPermissions' === $metadata->name;
         }), true)->shouldBeCalled();
 

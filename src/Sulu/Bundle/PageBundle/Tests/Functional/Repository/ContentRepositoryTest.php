@@ -345,7 +345,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertCount(3, $result);
 
         $this->assertEquals('test-1', $result[0]['title']);
-        $this->assertEquals('test-1', $result[1]['title']);
+        $this->assertEquals('test-2', $result[1]['title']);
         $this->assertEquals(RedirectType::INTERNAL, $result[1]->getNodeType());
         $this->assertEquals('test-3', $result[2]['title']);
     }
@@ -368,7 +368,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertCount(3, $result);
 
         $this->assertEquals('test-1', $result[0]['title']);
-        $this->assertEquals('test-1', $result[1]['title']);
+        $this->assertEquals('test-2', $result[1]['title']);
         $this->assertEquals(RedirectType::INTERNAL, $result[1]->getNodeType());
         $this->assertEmpty($result[1]['published']);
         $this->assertEquals('test-3', $result[2]['title']);
@@ -414,7 +414,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertCount(3, $result);
 
         $this->assertEquals('test-1', $result[0]['title']);
-        $this->assertEquals('test-1', $result[1]['title']);
+        $this->assertEquals('test-2', $result[1]['title']);
         $this->assertEquals(RedirectType::INTERNAL, $result[1]->getNodeType());
         $this->assertEquals('test-3', $result[2]['title']);
     }
@@ -590,7 +590,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertCount(3, $result);
 
         $this->assertEquals('test-1', $result[0]['title']);
-        $this->assertEquals('test-1', $result[1]['title']);
+        $this->assertEquals('test-2', $result[1]['title']);
         $this->assertEquals('test-3', $result[2]['title']);
     }
 
@@ -609,7 +609,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertCount(3, $result);
 
         $this->assertEquals('test-1', $result[0]['title']);
-        $this->assertEquals('test-1', $result[1]['title']);
+        $this->assertEquals('test-2', $result[1]['title']);
         $this->assertEquals('test-3', $result[2]['title']);
     }
 
@@ -701,7 +701,7 @@ class ContentRepositoryTest extends SuluTestCase
 
         $this->assertEquals($page->getUuid(), $result->getId());
         $this->assertEquals('/test-2', $result->getPath());
-        $this->assertEquals('test-1', $result['title']);
+        $this->assertEquals('test-2', $result['title']);
     }
 
     public function testFindWithEmptyInternalLink()
@@ -764,7 +764,7 @@ class ContentRepositoryTest extends SuluTestCase
 
         $this->assertEquals($page->getUuid(), $result->getId());
         $this->assertEquals('/test-2', $result->getPath());
-        $this->assertEquals('test-1', $result['title']);
+        $this->assertEquals('test-2', $result['title']);
     }
 
     public function testFindWithNonFallbackProperties()
@@ -823,7 +823,7 @@ class ContentRepositoryTest extends SuluTestCase
 
         $this->assertEquals($page->getUuid(), $result->getId());
         $this->assertEquals('/test-2', $result->getPath());
-        $this->assertEquals('test-1', $result['title']);
+        $this->assertEquals('test-2', $result['title']);
     }
 
     public function testFindPermissions()
@@ -1131,7 +1131,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertCount(3, $result);
 
         $items = \array_map(
-            function(Content $content) {
+            function (Content $content) {
                 return [
                     'uuid' => $content->getId(),
                     'hasChildren' => $content->hasChildren(),
@@ -1215,7 +1215,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertCount(2, $result);
 
         $items = \array_map(
-            function(Content $content) {
+            function (Content $content) {
                 return [
                     'uuid' => $content->getId(),
                     'hasChildren' => $content->hasChildren(),
@@ -1297,7 +1297,7 @@ class ContentRepositoryTest extends SuluTestCase
         );
 
         $paths = \array_map(
-            function(Content $content) {
+            function (Content $content) {
                 return $content->getPath();
             },
             $result
@@ -1310,7 +1310,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertContains('/test-3', $paths);
 
         $permissions = \array_map(
-            function(Content $content) {
+            function (Content $content) {
                 return $content->getPermissions();
             },
             $result
@@ -1348,7 +1348,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertCount(1, $result);
 
         $paths = \array_map(
-            function(Content $content) {
+            function (Content $content) {
                 return $content->getPath();
             },
             $result
@@ -1389,7 +1389,7 @@ class ContentRepositoryTest extends SuluTestCase
             $user->reveal()
         );
 
-        \usort($result, function($content1, $content2) {
+        \usort($result, function ($content1, $content2) {
             return \strcmp($content1->getPath(), $content2->getPath());
         });
 

@@ -32,18 +32,18 @@ class ContainerExpressionLanguageProvider implements ExpressionFunctionProviderI
         return [
             new ExpressionFunction(
                 'service',
-                function() {
+                function () {
                 },
-                function(array $variables, $value) {
+                function (array $variables, $value) {
                     return $this->container->get($value);
                 }
             ),
 
             new ExpressionFunction(
                 'parameter',
-                function() {
+                function () {
                 },
-                function(array $variables, $value) {
+                function (array $variables, $value) {
                     return $this->container->getParameter($value);
                 }
             ),

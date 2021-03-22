@@ -61,7 +61,7 @@ class RefreshSubscriberTest extends TestCase
         $node->revert()->shouldBeCalled();
         $this->documentRegistry->getLocaleForDocument($document)->willReturn('fr');
 
-        $this->eventDispatcher->dispatch(Argument::that(function(HydrateEvent $event) use ($node) {
+        $this->eventDispatcher->dispatch(Argument::that(function (HydrateEvent $event) use ($node) {
             return $node->reveal() === $event->getNode()
                 && 'fr' === $event->getLocale();
         }), Events::HYDRATE)

@@ -251,7 +251,7 @@ class ContentRouteProviderTest extends TestCase
         $pageBridge->setDocument($document->reveal())->shouldBeCalled();
 
         $securityChecker = $this->prophesize(SecurityCheckerInterface::class);
-        $securityChecker->checkPermission(Argument::that(function(SecurityCondition $securityCondition) use ($document) {
+        $securityChecker->checkPermission(Argument::that(function (SecurityCondition $securityCondition) use ($document) {
             $this->assertSame('some-uuid', $securityCondition->getObjectId());
             $this->assertSame(\get_class($document->reveal()), $securityCondition->getObjectType());
             $this->assertSame('de', $securityCondition->getLocale());

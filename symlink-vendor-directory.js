@@ -10,14 +10,13 @@ const path = require('path');
 //
 // unfortunately this setup causes various problems in the javascript ecosystem because the assets/admin directory
 // is not an ancestor of the vendor/sulu/sulu directory which is used to require the code of bundles. for example,
-// npm 7 does not install the dependencies of the bundle packages (https://github.com/npm/cli/issues/2339) and older
-// npm versions are not able to dedupe packages that are required by a bundle and in the assets/admin directory.
+// npm is not able to correctly dedupe packages that are required by a bundle and also in the assets/admin directory.
 // because of this, packages that were not deduped might be included in the webpack build multiple times. this
 // increases the size of the build and will lead to an error in case of the @ckeditor packages:
 // http://ckeditor.com/docs/ckeditor5/latest/framework/guides/support/error-codes.html#error-ckeditor-duplicated-modules
 //
-// to prevent these problems, this file creates a assets/admin/node_modules/node_modules/@sulu/vendor symlink and we
-// use the symlinked vendor directory to require the bundles in the assets/admin/package.json.
+// to prevent these problems, this file creates a assets/admin/node_modules/@sulu/vendor symlink and we use the
+// symlinked vendor directory to require the bundles in the assets/admin/package.json.
 // this makes the directory that is used for requiring the bundles a descendant of the assets/admin directory and
 // allows npm to correctly dedupe the installed packages.
 

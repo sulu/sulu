@@ -91,7 +91,7 @@ class PageObjectProviderTest extends TestCase
             $object->reveal(),
             'json',
             Argument::that(
-                function(SerializationContext $context) {
+                function (SerializationContext $context) {
                     return $context->shouldSerializeNull()
                            && $context->getAttribute('groups') === ['preview'];
                 }
@@ -110,7 +110,7 @@ class PageObjectProviderTest extends TestCase
             \get_class($object->reveal()),
             'json',
             Argument::that(
-                function(DeserializationContext $context) {
+                function (DeserializationContext $context) {
                     return $context->getAttribute('groups') === ['preview'];
                 }
             )

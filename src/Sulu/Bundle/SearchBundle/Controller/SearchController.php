@@ -95,10 +95,10 @@ class SearchController
         $indexes = \array_filter(
             $index
                 ? [$index]
-                : \array_map(function(IndexConfiguration $index) {
+                : \array_map(function (IndexConfiguration $index) {
                     return $index->getIndexName();
                 }, $this->getAllowedIndexes()),
-            function(string $indexName) use ($indexNames) {
+            function (string $indexName) use ($indexNames) {
                 return false !== \array_search($indexName, $indexNames);
             }
         );
@@ -160,7 +160,7 @@ class SearchController
     {
         return \array_filter(
             $this->indexConfigurationProvider->getIndexConfigurations(),
-            function(IndexConfiguration $indexConfiguration) {
+            function (IndexConfiguration $indexConfiguration) {
                 $securityContext = $indexConfiguration->getSecurityContext();
                 $contexts = $indexConfiguration->getContexts();
 
