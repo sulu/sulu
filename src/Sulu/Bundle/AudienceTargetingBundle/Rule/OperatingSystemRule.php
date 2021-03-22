@@ -56,7 +56,7 @@ class OperatingSystemRule implements RuleInterface
 
     public function getType()
     {
-        return new Select(static::OPERATING_SYSTEM, \array_map(function($operatingSystem) {
+        return new Select(static::OPERATING_SYSTEM, \array_map(function ($operatingSystem) {
             return [
                 'id' => $operatingSystem,
                 'name' => $operatingSystem,

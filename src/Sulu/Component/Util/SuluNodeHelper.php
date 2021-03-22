@@ -210,7 +210,7 @@ class SuluNodeHelper
         try {
             return $this->session->getNode($this->getBaseSnippetPath($type))->getIdentifier();
         } catch (PathNotFoundException $e) {
-            $snippetStructures = \array_map(function(StructureMetadata $structureMetadata) {
+            $snippetStructures = \array_map(function (StructureMetadata $structureMetadata) {
                 return $structureMetadata->getName();
             }, $this->structureMetadataFactory->getStructures('snippet'));
 

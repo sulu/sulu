@@ -75,7 +75,7 @@ class ContentTeaserProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->searchManager->createSearch(
             Argument::that(
-                function($searchQuery) use ($ids) {
+                function ($searchQuery) use ($ids) {
                     return 0 <= \strpos($searchQuery, \sprintf('__id:"%s"', $ids[0]))
                         && 0 <= \strpos($searchQuery, \sprintf('__id:"%s"', $ids[1]));
                 }
@@ -107,7 +107,7 @@ class ContentTeaserProviderTest extends \PHPUnit_Framework_TestCase
         }
 
         $document->hasField(Argument::any())->will(
-            function($arguments) use ($data) {
+            function ($arguments) use ($data) {
                 return \in_array($arguments[0], \array_keys($data));
             }
         );

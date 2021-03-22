@@ -48,7 +48,7 @@ class VersionController extends FOSRestController implements
         $locale = $this->getRequestParameter($request, 'language', true);
 
         $document = $this->get('sulu_document_manager.document_manager')->find($uuid, $request->query->get('language'));
-        $versions = \array_reverse(\array_filter($document->getVersions(), function($version) use ($locale) {
+        $versions = \array_reverse(\array_filter($document->getVersions(), function ($version) use ($locale) {
             /* @var Version $version */
             return $version->getLocale() === $locale;
         }));
@@ -59,7 +59,7 @@ class VersionController extends FOSRestController implements
 
         $versions = \array_slice($versions, $listRestHelper->getOffset(), $limit);
 
-        $userIds = \array_unique(\array_map(function($version) {
+        $userIds = \array_unique(\array_map(function ($version) {
             /* @var Version $version */
             return $version->getAuthor();
         }, $versions));

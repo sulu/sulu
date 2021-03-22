@@ -111,7 +111,7 @@ class TargetGroupController extends RestController implements ClassResourceInter
      */
     public function getAction($id)
     {
-        $findCallback = function($id) {
+        $findCallback = function ($id) {
             $targetGroup = $this->getTargetGroupRepository()->find($id);
 
             return $targetGroup;

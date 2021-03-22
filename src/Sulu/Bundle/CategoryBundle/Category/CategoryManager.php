@@ -340,7 +340,7 @@ class CategoryManager implements CategoryManagerInterface
             $translationEntity = $this->findOrCreateCategoryTranslation($categoryEntity, $categoryWrapper, $locale);
             $translationEntity->setMedias(
                 \array_map(
-                    function($item) {
+                    function ($item) {
                         return $this->em->getReference(MediaInterface::class, $item);
                     },
                     $this->getProperty($data, 'medias', [])
@@ -462,7 +462,7 @@ class CategoryManager implements CategoryManagerInterface
     public function getApiObjects($entities, $locale)
     {
         return \array_map(
-            function($entity) use ($locale) {
+            function ($entity) use ($locale) {
                 return $this->getApiObject($entity, $locale);
             },
             $entities

@@ -166,7 +166,7 @@ class SnippetDataProvider implements DataProviderInterface
     private function decorateDataItems(array $data, $locale)
     {
         return \array_map(
-            function($item) use ($locale) {
+            function ($item) use ($locale) {
                 return new ContentDataItem($item, $this->getResource($item['uuid'], $locale));
             },
             $data
@@ -183,7 +183,7 @@ class SnippetDataProvider implements DataProviderInterface
     private function decorateResourceItems(array $data, $locale)
     {
         return \array_map(
-            function($item) use ($locale) {
+            function ($item) use ($locale) {
                 $this->referenceStore->add($item['uuid']);
 
                 return new ArrayAccessItem($item['uuid'], $item, $this->getResource($item['uuid'], $locale));
@@ -204,7 +204,7 @@ class SnippetDataProvider implements DataProviderInterface
     {
         return $this->proxyFactory->createProxy(
             SnippetDocument::class,
-            function(
+            function (
                 &$wrappedObject,
                 LazyLoadingInterface $proxy,
                 $method,
