@@ -489,6 +489,93 @@ test('Execute onItemActivate callback when an item is clicked with the correct p
     expect(itemActivateSpy).toBeCalledWith(2);
 });
 
+test('Execute onItemClick callback when an item is double-clicked', () => {
+    const itemClickSpy = jest.fn();
+
+    const data = [
+        [
+            {
+                id: 1,
+                title: 'Page 1',
+                hasChildren: true,
+            },
+            {
+                id: 2,
+                title: 'Page 2',
+                hasChildren: false,
+            },
+        ],
+        [
+            {
+                id: 3,
+                title: 'Page 1.1',
+                hasChildren: false,
+            },
+        ],
+    ];
+
+    const columnListAdapter = mount(
+        <ColumnListAdapter
+            {...listAdapterDefaultProps}
+            activeItems={[1, 3]}
+            data={data}
+            onItemClick={itemClickSpy}
+        />
+    );
+
+    columnListAdapter.find('Item').at(1).simulate('dblclick');
+
+    expect(itemClickSpy).toBeCalledWith(2);
+});
+
+test('Do not execute onItemClick callback when an item without view permissions is double-clicked', () => {
+    const itemClickSpy = jest.fn();
+
+    const data = [
+        [
+            {
+                id: 1,
+                title: 'Page 1',
+                hasChildren: true,
+                _permissions: {
+                    view: true,
+                },
+            },
+            {
+                id: 2,
+                title: 'Page 2',
+                hasChildren: false,
+                _permissions: {
+                    view: false,
+                },
+            },
+        ],
+        [
+            {
+                id: 3,
+                title: 'Page 1.1',
+                hasChildren: false,
+                _permissions: {
+                    view: true,
+                },
+            },
+        ],
+    ];
+
+    const columnListAdapter = mount(
+        <ColumnListAdapter
+            {...listAdapterDefaultProps}
+            activeItems={[1, 3]}
+            data={data}
+            onItemClick={itemClickSpy}
+        />
+    );
+
+    columnListAdapter.find('Item').at(1).simulate('dblclick');
+
+    expect(itemClickSpy).not.toBeCalled();
+});
+
 test('Show all setting buttons', () => {
     const data = [
         [

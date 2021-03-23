@@ -16,7 +16,7 @@ export default class SingleSelect extends React.Component<FieldTypeProps<string 
             } = {},
         } = schemaOptions;
 
-        if (defaultValue === undefined || defaultValue === null) {
+        if (defaultValue === undefined || defaultValue === null || defaultValue === '') {
             return;
         }
 
@@ -41,7 +41,7 @@ export default class SingleSelect extends React.Component<FieldTypeProps<string 
         const values = toJS(schemaOptions.values);
 
         if (!values || !Array.isArray(values.value)) {
-            throw new Error('The "values" option has to be set for the SingleSelect FieldType');
+            throw new Error('The "values" schema option of the SingleSelect field-type must be an array!');
         }
 
         return (
@@ -53,8 +53,12 @@ export default class SingleSelect extends React.Component<FieldTypeProps<string 
                         );
                     }
 
+                    // it is not possible to define a param without a name in a form xml. to allow for creating an
+                    // empty option, we use undefined as value if the name of a param is an empty string in the xml
+                    const normalizedValue = value === '' ? undefined : value;
+
                     return (
-                        <SingleSelectComponent.Option key={index} value={value}>
+                        <SingleSelectComponent.Option key={index} value={normalizedValue}>
                             {title || value}
                         </SingleSelectComponent.Option>
                     );
