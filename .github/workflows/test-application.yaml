@@ -55,7 +55,6 @@ jobs:
                   php-version: '7.4'
                   tools: 'composer:v2'
                   coverage: none
-                  ini-values: 'memory_limit=-1,realpath_cache_size=4096K,realpath_cache_ttl=600,opcache.enable=1,opcache.enable_cli=1,opcache.validate_timestamps=1,opcache.memory_consumption=256,opcache.max_accelerated_files=32000'
 
             - name: Test application build
               run: |
@@ -144,7 +143,6 @@ jobs:
                   extensions: ${{ matrix.php-extensions }}
                   tools: ${{ matrix.tools }}
                   coverage: none
-                  ini-values: 'memory_limit=-1,realpath_cache_size=4096K,realpath_cache_ttl=600,opcache.enable=1,opcache.enable_cli=1,opcache.validate_timestamps=1,opcache.memory_consumption=256,opcache.max_accelerated_files=32000'
 
             - name: Require jackrabbit dependencies
               if: ${{ matrix.phpcr-transport == 'jackrabbit' }}
@@ -208,7 +206,7 @@ jobs:
                   extensions: ${{ matrix.php-extensions }}
                   tools: ${{ matrix.tools }}
                   coverage: none
-                  ini-values: 'memory_limit=-1,realpath_cache_size=4096K,realpath_cache_ttl=600,opcache.enable=1,opcache.enable_cli=1,opcache.validate_timestamps=1,opcache.memory_consumption=256,opcache.max_accelerated_files=32000'
+                  ini-values: 'memory_limit=-1,realpath_cache_size=4096K,realpath_cache_ttl=600,opcache.enable=1,opcache.enable_cli=1,opcache.validate_timestamps=0,opcache.memory_consumption=256,opcache.max_accelerated_files=32000'
 
             - name: Install and configure MySQL
               uses: shogo82148/actions-setup-mysql@v1.0.1
