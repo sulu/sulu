@@ -162,19 +162,25 @@
 
             <params>
                 <param name="values" type="collection">
+                    <param name="">
+                        <meta>
+                            <title lang="en">No selection</title>
+                            <title lang="de">Keine Auswahl</title>
+                        </meta>
+                    </param>
                     <param name="value-1">
                         <meta>
                             <title lang="en">Value 1</title>
                             <title lang="de">Wert 1</title>
                         </meta>
                     </param>
-                    <param name="value-2" value="Value 2">
+                    <param name="value-2">
                         <meta>
                             <title lang="en">Value 2</title>
                             <title lang="de">Wert 2</title>
                         </meta>
                     </param>
-                    <param name="value-3" value="Value 3">
+                    <param name="value-3">
                         <meta>
                             <title lang="en">Value 3</title>
                             <title lang="de">Wert 3</title>
