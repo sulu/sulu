@@ -17,7 +17,7 @@ use Sulu\Bundle\CustomUrlBundle\Domain\Event\CustomUrlModifiedEvent;
 use Sulu\Bundle\CustomUrlBundle\Domain\Event\CustomUrlRemovedEvent;
 use Sulu\Bundle\CustomUrlBundle\Domain\Event\CustomUrlRouteRemovedEvent;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
-use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Bundle\DocumentManagerBundle\Collector\DocumentDomainEventCollectorInterface;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 use Sulu\Component\CustomUrl\Document\RouteDocument;
 use Sulu\Component\CustomUrl\Repository\CustomUrlRepository;
@@ -74,7 +74,7 @@ class CustomUrlManager implements CustomUrlManagerInterface
     private $environment;
 
     /**
-     * @var DomainEventCollectorInterface
+     * @var DocumentDomainEventCollectorInterface
      */
     private $documentDomainEventCollector;
 
@@ -86,7 +86,7 @@ class CustomUrlManager implements CustomUrlManagerInterface
         PathBuilder $pathBuilder,
         WebspaceManagerInterface $webspaceManager,
         $environment,
-        DomainEventCollectorInterface $documentDomainEventCollector
+        DocumentDomainEventCollectorInterface $documentDomainEventCollector
     ) {
         $this->documentManager = $documentManager;
         $this->documentInspector = $documentInspector;

@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\EventLogBundle\Application\Collector;
+namespace Sulu\Bundle\DocumentManagerBundle\Collector;
 
 use Sulu\Bundle\EventLogBundle\Application\Dispatcher\DomainEventDispatcherInterface;
 use Sulu\Bundle\EventLogBundle\Domain\Event\DomainEvent;
@@ -18,7 +18,7 @@ use Sulu\Component\DocumentManager\Event\FlushEvent;
 use Sulu\Component\DocumentManager\Events;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class DocumentDomainEventCollector implements DomainEventCollectorInterface, EventSubscriberInterface
+class DocumentDomainEventCollector implements DocumentDomainEventCollectorInterface, EventSubscriberInterface
 {
     /**
      * @var DomainEventDispatcherInterface

@@ -15,12 +15,6 @@
         </service>
         <service id="Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface" alias="sulu_event_log.domain_event_collector"/>
 
-        <service id="sulu_event_log.document_domain_event_collector" class="Sulu\Bundle\EventLogBundle\Application\Collector\DocumentDomainEventCollector">
-            <argument type="service" id="sulu_event_log.domain_event_dispatcher"/>
-
-            <tag name="sulu_document_manager.event_subscriber"/>
-        </service>
-
         <service id="sulu_event_log.event_record_repository.null" class="Sulu\Bundle\EventLogBundle\Domain\Repository\NullEventRecordRepository">
             <argument>%sulu.model.event_record.class%</argument>
         </service>
