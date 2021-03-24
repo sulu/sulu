@@ -14,10 +14,8 @@ namespace Sulu\Component\DocumentManager\Tests\Unit\Subscriber\Behavior;
 use Jackalope\Version\Version as JackalopeVersion;
 use Jackalope\Workspace;
 use PHPCR\NodeInterface;
-use PHPCR\NodeType\NodeDefinitionInterface;
 use PHPCR\PropertyInterface;
 use PHPCR\SessionInterface;
-use PHPCR\Version\OnParentVersionAction;
 use PHPCR\Version\VersionHistoryInterface;
 use PHPCR\Version\VersionInterface;
 use PHPCR\Version\VersionManagerInterface;
@@ -394,135 +392,6 @@ class VersionSubscriberTest extends TestCase
         $node->setProperty('i18n:de-test', 'Title')->shouldBeCalled();
         $node->setProperty('non-translatable-test', 'Article')->shouldBeCalled();
         $node->setProperty('jcr:uuid', 'asdf')->shouldNotBeCalled();
-
-        $this->versionSubscriber->restoreProperties($event->reveal());
-    }
-
-    public function testRestoreChildren()
-    {
-        $event = $this->prophesize(RestoreEvent::class);
-        $document = $this->prophesize(VersionBehavior::class);
-        $node = $this->prophesize(NodeInterface::class);
-        $versionHistory = $this->prophesize(VersionHistoryInterface::class);
-        $version = $this->prophesize(JackalopeVersion::class);
-        $frozenNode = $this->prophesize(NodeInterface::class);
-
-        $node->getPath()->willReturn('/node');
-        $node->getProperties()->willReturn([]);
-        $node->hasNode('child1')->willReturn(false);
-        $node->hasNode('child2')->willReturn(true);
-        $node->hasNode('child3')->willReturn(true);
-
-        $definition = $this->prophesize(NodeDefinitionInterface::class);
-        $definition->getOnParentVersion()->willReturn(OnParentVersionAction::COPY);
-
-        $newChild2Node = $this->prophesize(NodeInterface::class);
-        $newChild2Node->getName()->willReturn('child2');
-        $newChild2Node->getProperties()->willReturn([]);
-        $newChild2Node->getNodes()->willReturn([]);
-        $newChild2Node->getDefinition()->willReturn($definition->reveal());
-
-        $newChild3Node = $this->prophesize(NodeInterface::class);
-        $newChild3Node->getName()->willReturn('child3');
-        $newChild3Node->getDefinition()->willReturn($definition->reveal());
-        $newChild3Node->remove()->shouldBeCalled();
-
-        $newChild1Node = $this->prophesize(NodeInterface::class);
-        $newChild1Node->getName()->willReturn('child1');
-        $newChild1Node->setMixins(['jcr:referencable'])->shouldBeCalled();
-        $newChild1Node->getProperties()->willReturn([]);
-        $newChild1Node->getNodes()->willReturn([]);
-        $newChild1Node->getDefinition()->willReturn($definition->reveal());
-        $node->addNode('child1')->will(
-            function () use ($node, $newChild1Node, $newChild2Node, $newChild3Node) {
-                $node->getNode('child1')->willReturn($newChild1Node->reveal());
-                $node->getNodes()->willReturn(
-                    [$newChild1Node->reveal(), $newChild2Node->reveal(), $newChild3Node->reveal()]
-                );
-
-                return $newChild1Node->reveal();
-            }
-        );
-
-        $node->getNode('child2')->willReturn($newChild2Node->reveal());
-        $node->getNode('child3')->willReturn($newChild3Node->reveal());
-        $node->getNodes()->willReturn([$newChild2Node->reveal(), $newChild3Node->reveal()]);
-
-        $this->propertyEncoder->localizedContentName('', 'de')->willReturn('i18n:de-');
-        $this->propertyEncoder->localizedSystemName('', 'de')->willReturn('i18n:de-');
-
-        $child1 = $this->prophesize(NodeInterface::class);
-        $child1->getName()->willReturn('child1');
-        $child1->getPropertyValueWithDefault('jcr:frozenMixinTypes', [])->willReturn(['jcr:referencable']);
-        $child1->getPropertiesValues()->willReturn([]);
-        $child1->getNodes()->willReturn([]);
-        $child2 = $this->prophesize(NodeInterface::class);
-        $child2->getName()->willReturn('child2');
-        $child2->getPropertiesValues()->willReturn([]);
-        $child2->getNodes()->willReturn([]);
-
-        $frozenNode->getNodes()->willReturn([$child1->reveal(), $child2->reveal()]);
-        $frozenNode->getPropertiesValues()->willReturn([]);
-        $frozenNode->hasNode('child1')->willReturn(true);
-        $frozenNode->hasNode('child2')->willReturn(true);
-        $frozenNode->hasNode('child3')->willReturn(false);
-
-        $event->getDocument()->willReturn($document->reveal());
-        $event->getNode()->willReturn($node->reveal());
-        $event->getVersion()->willReturn('1.0');
-        $event->getLocale()->willReturn('de');
-
-        $this->versionManager->getVersionHistory('/node')->willReturn($versionHistory->reveal());
-        $versionHistory->getVersion('1.0')->willReturn($version->reveal());
-        $version->getFrozenNode()->willReturn($frozenNode->reveal());
-
-        $this->versionSubscriber->restoreProperties($event->reveal());
-    }
-
-    public function testRestoreIgnoreChildren()
-    {
-        $event = $this->prophesize(RestoreEvent::class);
-        $document = $this->prophesize(VersionBehavior::class);
-        $node = $this->prophesize(NodeInterface::class);
-        $versionHistory = $this->prophesize(VersionHistoryInterface::class);
-        $version = $this->prophesize(JackalopeVersion::class);
-        $frozenNode = $this->prophesize(NodeInterface::class);
-
-        $node->getPath()->willReturn('/node');
-        $node->getProperties()->willReturn([]);
-        $node->hasNode('child')->willReturn(true);
-
-        $definition = $this->prophesize(NodeDefinitionInterface::class);
-        $definition->getOnParentVersion()->willReturn(OnParentVersionAction::IGNORE);
-
-        $childNode = $this->prophesize(NodeInterface::class);
-        $childNode->getName()->willReturn('child');
-        $childNode->getProperties()->willReturn([]);
-        $childNode->getNodes()->willReturn([]);
-        $childNode->getDefinition()->willReturn($definition->reveal());
-
-        $node->getNode('child')->willReturn($childNode->reveal());
-        $node->getNodes()->willReturn([$childNode->reveal()]);
-
-        $this->propertyEncoder->localizedContentName('', 'de')->willReturn('i18n:de-');
-        $this->propertyEncoder->localizedSystemName('', 'de')->willReturn('i18n:de-');
-
-        $frozenNode->getNodes()->willReturn([]);
-        $frozenNode->getPropertiesValues()->willReturn([]);
-        $frozenNode->hasNode(Argument::type('string'))->willReturn(false);
-
-        $event->getDocument()->willReturn($document->reveal());
-        $event->getNode()->willReturn($node->reveal());
-        $event->getVersion()->willReturn('1.0');
-        $event->getLocale()->willReturn('de');
-
-        $this->versionManager->getVersionHistory('/node')->willReturn($versionHistory->reveal());
-        $versionHistory->getVersion('1.0')->willReturn($version->reveal());
-        $version->getFrozenNode()->willReturn($frozenNode->reveal());
-
-        // the child-node should not be touched
-        $childNode->remove()->shouldNotBeCalled();
-        $childNode->setProperty(Argument::cetera())->shouldNotBeCalled();
 
         $this->versionSubscriber->restoreProperties($event->reveal());
     }
