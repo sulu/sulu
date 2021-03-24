@@ -9,12 +9,14 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\EventLogBundle\Entity;
+namespace Sulu\Bundle\EventLogBundle\Infrastructure\Doctrine\Repository;
 
-use Sulu\Bundle\EventLogBundle\Event\DomainEvent;
+use Sulu\Bundle\EventLogBundle\Domain\Event\DomainEvent;
+use Sulu\Bundle\EventLogBundle\Domain\Model\EventRecordInterface;
+use Sulu\Bundle\EventLogBundle\Domain\Repository\EventRecordRepositoryInterface;
 use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
 
-class DoctrineEventRecordRepository extends EntityRepository implements EventRecordRepositoryInterface
+class EventRecordRepository extends EntityRepository implements EventRecordRepositoryInterface
 {
     public function createForDomainEvent(DomainEvent $domainEvent): EventRecordInterface
     {

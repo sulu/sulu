@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\CustomUrlBundle\Domain\Event;
 
 use Sulu\Bundle\CustomUrlBundle\Admin\CustomUrlAdmin;
-use Sulu\Bundle\EventLogBundle\Event\DomainEvent;
+use Sulu\Bundle\EventLogBundle\Domain\Event\DomainEvent;
 
 class CustomUrlRemovedEvent extends DomainEvent
 {

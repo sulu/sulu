@@ -17,7 +17,7 @@ use Sulu\Bundle\CustomUrlBundle\Domain\Event\CustomUrlModifiedEvent;
 use Sulu\Bundle\CustomUrlBundle\Domain\Event\CustomUrlRemovedEvent;
 use Sulu\Bundle\CustomUrlBundle\Domain\Event\CustomUrlRouteRemovedEvent;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
-use Sulu\Bundle\EventLogBundle\Collector\DomainEventCollectorInterface;
+use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 use Sulu\Component\CustomUrl\Document\RouteDocument;
 use Sulu\Component\CustomUrl\Repository\CustomUrlRepository;

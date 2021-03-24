@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\EventLogBundle\Entity;
+namespace Sulu\Bundle\EventLogBundle\Domain\Model;
 
 use Sulu\Component\Security\Authentication\UserInterface;
 

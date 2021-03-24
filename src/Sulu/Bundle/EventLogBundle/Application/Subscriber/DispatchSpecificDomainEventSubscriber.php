@@ -9,9 +9,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\EventLogBundle\Subscriber;
+namespace Sulu\Bundle\EventLogBundle\Application\Subscriber;
 
-use Sulu\Bundle\EventLogBundle\Event\DomainEvent;
+use Sulu\Bundle\EventLogBundle\Domain\Event\DomainEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 

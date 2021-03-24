@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\TagBundle\Domain\Event;
 
-use Sulu\Bundle\EventLogBundle\Event\DomainEvent;
+use Sulu\Bundle\EventLogBundle\Domain\Event\DomainEvent;
 
 class TagRemovedEvent extends DomainEvent
 {

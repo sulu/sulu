@@ -9,10 +9,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\EventLogBundle\Collector;
+namespace Sulu\Bundle\EventLogBundle\Application\Collector;
 
-use Sulu\Bundle\EventLogBundle\Dispatcher\DomainEventDispatcherInterface;
-use Sulu\Bundle\EventLogBundle\Event\DomainEvent;
+use Sulu\Bundle\EventLogBundle\Application\Dispatcher\DomainEventDispatcherInterface;
+use Sulu\Bundle\EventLogBundle\Domain\Event\DomainEvent;
 use Sulu\Component\DocumentManager\Event\ClearEvent;
 use Sulu\Component\DocumentManager\Event\FlushEvent;
 use Sulu\Component\DocumentManager\Events;

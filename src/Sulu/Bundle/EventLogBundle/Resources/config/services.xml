@@ -3,47 +3,47 @@
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
-        <service id="sulu_event_log.domain_event_dispatcher" class="Sulu\Bundle\EventLogBundle\Dispatcher\DomainEventDispatcher">
+        <service id="sulu_event_log.domain_event_dispatcher" class="Sulu\Bundle\EventLogBundle\Application\Dispatcher\DomainEventDispatcher">
             <argument type="service" id="event_dispatcher"/>
         </service>
-        <service id="Sulu\Bundle\EventLogBundle\Dispatcher\DomainEventDispatcherInterface" alias="sulu_event_log.domain_event_dispatcher"/>
+        <service id="Sulu\Bundle\EventLogBundle\Application\Dispatcher\DomainEventDispatcherInterface" alias="sulu_event_log.domain_event_dispatcher"/>
 
-        <service id="sulu_event_log.domain_event_collector" class="Sulu\Bundle\EventLogBundle\Collector\DomainEventCollector">
+        <service id="sulu_event_log.domain_event_collector" class="Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollector">
             <argument type="service" id="sulu_event_log.domain_event_dispatcher"/>
 
             <tag name="doctrine.event_subscriber" priority="-256"/>
         </service>
-        <service id="Sulu\Bundle\EventLogBundle\Collector\DomainEventCollectorInterface" alias="sulu_event_log.domain_event_collector"/>
+        <service id="Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface" alias="sulu_event_log.domain_event_collector"/>
 
-        <service id="sulu_event_log.document_domain_event_collector" class="Sulu\Bundle\EventLogBundle\Collector\DocumentDomainEventCollector">
+        <service id="sulu_event_log.document_domain_event_collector" class="Sulu\Bundle\EventLogBundle\Application\Collector\DocumentDomainEventCollector">
             <argument type="service" id="sulu_event_log.domain_event_dispatcher"/>
 
             <tag name="sulu_document_manager.event_subscriber"/>
         </service>
 
-        <service id="sulu_event_log.event_record_repository.null" class="Sulu\Bundle\EventLogBundle\Entity\NullEventRecordRepository">
+        <service id="sulu_event_log.event_record_repository.null" class="Sulu\Bundle\EventLogBundle\Domain\Repository\NullEventRecordRepository">
             <argument>%sulu.model.event_record.class%</argument>
         </service>
 
-        <service id="sulu_event_log.event_record_metadata_subscriber" class="Sulu\Bundle\EventLogBundle\Doctrine\EventRecordMetadataSubscriber">
+        <service id="sulu_event_log.event_record_metadata_subscriber" class="Sulu\Bundle\EventLogBundle\Infrastructure\Doctrine\Subscriber\EventRecordMetadataSubscriber">
             <argument>%sulu_event_log.storage.persist_payload%</argument>
 
             <tag name="doctrine.event_subscriber" priority="256"/>
         </service>
 
-        <service id="sulu_event_log.store_event_record_subscriber" class="Sulu\Bundle\EventLogBundle\Subscriber\StoreEventRecordSubscriber">
+        <service id="sulu_event_log.store_event_record_subscriber" class="Sulu\Bundle\EventLogBundle\Application\Subscriber\StoreEventRecordSubscriber">
             <argument type="service" id="sulu_event_log.event_record_repository"/>
 
             <tag name="kernel.event_subscriber" />
         </service>
 
-        <service id="sulu_event_log.set_domain_event_user_subscriber" class="Sulu\Bundle\EventLogBundle\Subscriber\SetDomainEventUserSubscriber">
+        <service id="sulu_event_log.set_domain_event_user_subscriber" class="Sulu\Bundle\EventLogBundle\Application\Subscriber\SetDomainEventUserSubscriber">
             <argument type="service" id="security.helper" on-invalid="null"/>
 
             <tag name="kernel.event_subscriber" />
         </service>
 
-        <service id="sulu_event_log.dispatch_specific_domain_event_subscriber" class="Sulu\Bundle\EventLogBundle\Subscriber\DispatchSpecificDomainEventSubscriber">
+        <service id="sulu_event_log.dispatch_specific_domain_event_subscriber" class="Sulu\Bundle\EventLogBundle\Application\Subscriber\DispatchSpecificDomainEventSubscriber">
             <argument type="service" id="event_dispatcher"/>
 
             <tag name="kernel.event_subscriber" />

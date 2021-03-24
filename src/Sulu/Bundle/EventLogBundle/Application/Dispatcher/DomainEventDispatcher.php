@@ -9,9 +9,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\EventLogBundle\Dispatcher;
+namespace Sulu\Bundle\EventLogBundle\Application\Dispatcher;
 
-use Sulu\Bundle\EventLogBundle\Event\DomainEvent;
+use Sulu\Bundle\EventLogBundle\Domain\Event\DomainEvent;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class DomainEventDispatcher implements DomainEventDispatcherInterface

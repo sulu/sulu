@@ -9,25 +9,47 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\EventLogBundle\DependencyInjection;
+namespace Sulu\Bundle\EventLogBundle\Infrastructure\Symfony\DependencyInjection;
 
-use Sulu\Bundle\EventLogBundle\Entity\EventRecordRepositoryInterface;
+use Sulu\Bundle\EventLogBundle\Domain\Repository\EventRecordRepositoryInterface;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
-class SuluEventLogExtension extends Extension
+class SuluEventLogExtension extends Extension implements PrependExtensionInterface
 {
     use PersistenceExtensionTrait;
+
+    public function prepend(ContainerBuilder $container)
+    {
+        if ($container->hasExtension('doctrine')) {
+            $container->prependExtensionConfig(
+                'doctrine',
+                [
+                    'orm' => [
+                        'mappings' => [
+                            'SuluEventLogBundle' => [
+                                'type' => 'xml',
+                                'dir' => __DIR__ . '/../../../Resources/config/doctrine',
+                                'prefix' => 'Sulu\Bundle\EventLogBundle\Domain\Model',
+                                'alias' => 'SuluEventLogBundle',
+                            ],
+                        ],
+                    ],
+                ]
+            );
+        }
+    }
 
     public function load(array $configs, ContainerBuilder $container)
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../../../Resources/config'));
         $loader->load('services.xml');
 
         $this->configurePersistence($config['objects'], $container);

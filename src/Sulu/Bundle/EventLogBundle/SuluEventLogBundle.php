@@ -11,7 +11,8 @@
 
 namespace Sulu\Bundle\EventLogBundle;
 
-use Sulu\Bundle\EventLogBundle\Entity\EventRecord;
+use Sulu\Bundle\EventLogBundle\Domain\Model\EventRecord;
+use Sulu\Bundle\EventLogBundle\Infrastructure\Symfony\DependencyInjection\SuluEventLogExtension;
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -28,5 +29,10 @@ class SuluEventLogBundle extends Bundle
             ],
             $container
         );
+    }
+
+    public function getContainerExtension()
+    {
+        return new SuluEventLogExtension();
     }
 }

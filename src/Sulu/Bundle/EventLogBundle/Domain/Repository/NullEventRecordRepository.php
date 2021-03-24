@@ -9,9 +9,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\EventLogBundle\Entity;
+namespace Sulu\Bundle\EventLogBundle\Domain\Repository;
 
-use Sulu\Bundle\EventLogBundle\Event\DomainEvent;
+use Sulu\Bundle\EventLogBundle\Domain\Event\DomainEvent;
+use Sulu\Bundle\EventLogBundle\Domain\Model\EventRecordInterface;
 
 class NullEventRecordRepository implements EventRecordRepositoryInterface
 {

@@ -13,7 +13,7 @@ namespace Sulu\Bundle\TagBundle\Tag;
 
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\Persistence\ObjectManager;
-use Sulu\Bundle\EventLogBundle\Collector\DomainEventCollectorInterface;
+use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\TagBundle\Domain\Event\TagCreatedEvent;
 use Sulu\Bundle\TagBundle\Domain\Event\TagMergedEvent;
 use Sulu\Bundle\TagBundle\Domain\Event\TagModifiedEvent;

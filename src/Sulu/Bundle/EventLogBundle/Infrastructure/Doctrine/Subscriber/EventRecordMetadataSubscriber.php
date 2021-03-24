@@ -9,12 +9,12 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\EventLogBundle\Doctrine;
+namespace Sulu\Bundle\EventLogBundle\Infrastructure\Doctrine\Subscriber;
 
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Events;
 use Doctrine\Persistence\Event\LoadClassMetadataEventArgs;
-use Sulu\Bundle\EventLogBundle\Entity\EventRecordInterface;
+use Sulu\Bundle\EventLogBundle\Domain\Model\EventRecordInterface;
 
 class EventRecordMetadataSubscriber implements EventSubscriber
 {
