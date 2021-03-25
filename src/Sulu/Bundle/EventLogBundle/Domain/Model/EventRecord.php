@@ -28,7 +28,7 @@ class EventRecord implements EventRecordInterface
     /**
      * @var array
      */
-    private $eventContext;
+    private $eventContext = [];
 
     /**
      * @var array|null
