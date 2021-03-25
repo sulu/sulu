@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\EventLogBundle\Infrastructure\Symfony\DependencyInjection;
 
 use Sulu\Bundle\EventLogBundle\Domain\Model\EventRecord;
-use Sulu\Bundle\EventLogBundle\Infrastructure\Doctrine\Repository\EventRecordRepository;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -47,7 +46,6 @@ class Configuration implements ConfigurationInterface
                         ->addDefaultsIfNotSet()
                         ->children()
                             ->scalarNode('model')->defaultValue(EventRecord::class)->end()
-                            ->scalarNode('repository')->defaultValue(EventRecordRepository::class)->end()
                         ->end()
                     ->end()
                 ->end()

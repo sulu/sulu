@@ -53,7 +53,6 @@ class SuluEventLogExtension extends Extension implements PrependExtensionInterfa
         $loader->load('services.xml');
 
         $this->configurePersistence($config['objects'], $container);
-        $container->setAlias('sulu_event_log.event_record_repository.doctrine', 'sulu.repository.event_record');
 
         $storageAdapter = $container->resolveEnvPlaceholders($config['storage']['adapter'], true);
         $container->setParameter('sulu_event_log.storage.adapter', $storageAdapter);

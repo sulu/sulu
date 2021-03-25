@@ -11,18 +11,38 @@
 
 namespace Sulu\Bundle\EventLogBundle\Infrastructure\Doctrine\Repository;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\EventLogBundle\Domain\Event\DomainEvent;
 use Sulu\Bundle\EventLogBundle\Domain\Model\EventRecordInterface;
 use Sulu\Bundle\EventLogBundle\Domain\Repository\EventRecordRepositoryInterface;
 use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
 
-class EventRecordRepository extends EntityRepository implements EventRecordRepositoryInterface
+class EventRecordRepository implements EventRecordRepositoryInterface
 {
+    /**
+     * @var EntityManagerInterface
+     */
+    protected $entityManager;
+
+    /**
+     * @var EntityRepository<EventRecordInterface>
+     */
+    protected $entityRepository;
+
+    public function __construct(
+        EntityManagerInterface $entityManager
+    ) {
+        $this->entityManager = $entityManager;
+        $this->entityRepository = $entityManager->getRepository(EventRecordInterface::class);
+    }
+
     public function createForDomainEvent(DomainEvent $domainEvent): EventRecordInterface
     {
-        /** @var EventRecordInterface $eventRecord */
-        $eventRecord = $this->createNew();
+        /** @var class-string<EventRecordInterface> $className */
+        $className = $this->entityRepository->getClassName();
 
+        /** @var EventRecordInterface $eventRecord */
+        $eventRecord = new $className();
         $eventRecord->setEventType($domainEvent->getEventType());
         $eventRecord->setEventContext($domainEvent->getEventContext());
         $eventRecord->setEventPayload($domainEvent->getEventPayload());
@@ -42,11 +62,11 @@ class EventRecordRepository extends EntityRepository implements EventRecordRepos
 
     public function add(EventRecordInterface $eventRecord): void
     {
-        $this->getEntityManager()->persist($eventRecord);
+        $this->entityManager->persist($eventRecord);
     }
 
     public function commit(): void
     {
-        $this->getEntityManager()->flush();
+        $this->entityManager->flush();
     }
 }
