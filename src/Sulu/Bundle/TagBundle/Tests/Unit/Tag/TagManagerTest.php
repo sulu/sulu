@@ -13,6 +13,7 @@ namespace Sulu\Bundle\TagBundle\Tests\Unit\Tag;
 
 use Doctrine\Persistence\ObjectManager;
 use PHPUnit\Framework\TestCase;
+use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TagBundle\Tag\TagManager;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
@@ -49,6 +50,11 @@ class TagManagerTest extends TestCase
     protected $eventDispatcher;
 
     /**
+     * @var DomainEventCollectorInterface
+     */
+    private $domainEventCollector;
+
+    /**
      * @var TagManagerInterface
      */
     private $tagManager;
@@ -56,7 +62,7 @@ class TagManagerTest extends TestCase
     public function setUp(): void
     {
         $this->tagRepository = $this->getMockForAbstractClass(
-            'Sulu\Bundle\TagBundle\Tag\TagRepositoryInterface',
+            TagRepositoryInterface::class,
             [],
             '',
             false,
@@ -66,21 +72,28 @@ class TagManagerTest extends TestCase
         );
 
         $this->fieldDescriptorFactory = $this->getMockForAbstractClass(
-            'Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface',
+            FieldDescriptorFactoryInterface::class,
             [],
             '',
             false
         );
 
         $this->em = $this->getMockForAbstractClass(
-            'Doctrine\Persistence\ObjectManager',
+            ObjectManager::class,
             [],
             '',
             false
         );
 
         $this->eventDispatcher = $this->getMockForAbstractClass(
-            'Symfony\Component\EventDispatcher\EventDispatcherInterface',
+            EventDispatcherInterface::class,
+            [],
+            '',
+            false
+        );
+
+        $this->domainEventCollector = $this->getMockForAbstractClass(
+            DomainEventCollectorInterface::class,
             [],
             '',
             false
@@ -107,7 +120,8 @@ class TagManagerTest extends TestCase
         $this->tagManager = new TagManager(
             $this->tagRepository,
             $this->em,
-            $this->eventDispatcher
+            $this->eventDispatcher,
+            $this->domainEventCollector
         );
     }
 
