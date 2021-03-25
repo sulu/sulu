@@ -39,8 +39,8 @@ class DocumentDomainEventCollector implements DocumentDomainEventCollectorInterf
     public static function getSubscribedEvents()
     {
         return [
-            Events::CLEAR => ['clearCollectedEvents', -256],
-            Events::FLUSH => ['dispatchCollectedEvents', -256],
+            Events::CLEAR => ['onClear', -256],
+            Events::FLUSH => ['onFlush', -256],
         ];
     }
 
@@ -49,12 +49,12 @@ class DocumentDomainEventCollector implements DocumentDomainEventCollectorInterf
         $this->eventsToBeDispatched[] = $domainEvent;
     }
 
-    public function clearCollectedEvents(ClearEvent $event): void
+    public function onClear(ClearEvent $event): void
     {
         $this->eventsToBeDispatched = [];
     }
 
-    public function dispatchCollectedEvents(FlushEvent $event): void
+    public function onFlush(FlushEvent $event): void
     {
         $batchIdentifier = \uniqid('', true);
         $batchEvents = $this->eventsToBeDispatched;
