@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\TagBundle\Tests\Unit\Application\Dispatcher;
+namespace Sulu\Bundle\EventLogBundle\Tests\Unit\Application\Dispatcher;
 
 use Doctrine\ORM\Event\OnClearEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;

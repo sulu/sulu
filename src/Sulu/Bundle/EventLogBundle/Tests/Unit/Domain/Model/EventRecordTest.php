@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\TagBundle\Tests\Unit\Model\Event;
+namespace Sulu\Bundle\EventLogBundle\Tests\Unit\Model\Event;
 
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\EventLogBundle\Domain\Model\EventRecord;
