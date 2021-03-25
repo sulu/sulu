@@ -43,6 +43,11 @@ class TagMergedEvent extends DomainEvent
         $this->destinationTag = $destinationTag;
     }
 
+    public function getDestinationTag(): TagInterface
+    {
+        return $this->destinationTag;
+    }
+
     public function getEventType(): string
     {
         return 'merged';
