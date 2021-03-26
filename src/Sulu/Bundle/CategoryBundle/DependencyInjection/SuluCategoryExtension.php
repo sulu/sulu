@@ -173,7 +173,7 @@ class SuluCategoryExtension extends Extension implements PrependExtensionInterfa
                                     'locale' => 'locale',
                                 ],
                             ],
-                            'security_context' => 'sulu.settings.categories',
+                            'security_context' => CategoryAdmin::SECURITY_CONTEXT,
                         ],
                     ],
                 ]

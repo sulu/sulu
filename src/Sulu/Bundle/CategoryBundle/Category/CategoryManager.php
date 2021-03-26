@@ -14,6 +14,10 @@ namespace Sulu\Bundle\CategoryBundle\Category;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\CategoryBundle\Api\Category as CategoryWrapper;
+use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryCreatedEvent;
+use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryModifiedEvent;
+use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryMovedEvent;
+use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryRemovedEvent;
 use Sulu\Bundle\CategoryBundle\Entity\Category;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryMetaRepositoryInterface;
@@ -26,6 +30,7 @@ use Sulu\Bundle\CategoryBundle\Exception\CategoryIdNotFoundException;
 use Sulu\Bundle\CategoryBundle\Exception\CategoryKeyNotFoundException;
 use Sulu\Bundle\CategoryBundle\Exception\CategoryKeyNotUniqueException;
 use Sulu\Bundle\CategoryBundle\Exception\CategoryNameMissingException;
+use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
@@ -73,9 +78,9 @@ class CategoryManager implements CategoryManagerInterface
     private $keywordManager;
 
     /**
-     * @var DoctrineFieldDescriptor[]
+     * @var DomainEventCollectorInterface
      */
-    private $fieldDescriptors;
+    private $domainEventCollector;
 
     public function __construct(
         CategoryRepositoryInterface $categoryRepository,
@@ -84,7 +89,8 @@ class CategoryManager implements CategoryManagerInterface
         UserRepositoryInterface $userRepository,
         KeywordManagerInterface $keywordManager,
         EntityManagerInterface $em,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        DomainEventCollectorInterface $domainEventCollector
     ) {
         $this->em = $em;
         $this->userRepository = $userRepository;
@@ -93,6 +99,7 @@ class CategoryManager implements CategoryManagerInterface
         $this->categoryTranslationRepository = $categoryTranslationRepository;
         $this->eventDispatcher = $eventDispatcher;
         $this->keywordManager = $keywordManager;
+        $this->domainEventCollector = $domainEventCollector;
     }
 
     public function findById($id)
@@ -160,7 +167,9 @@ class CategoryManager implements CategoryManagerInterface
 
     public function save($data, $userId, $locale, $patch = false)
     {
-        if ($this->getProperty($data, 'id')) {
+        $isNewCategory = !$this->getProperty($data, 'id');
+
+        if (!$isNewCategory) {
             $categoryEntity = $this->findById($this->getProperty($data, 'id'));
         } else {
             $categoryEntity = $this->categoryRepository->createNew();
@@ -231,6 +240,12 @@ class CategoryManager implements CategoryManagerInterface
         $categoryEntity = $categoryWrapper->getEntity();
         $this->em->persist($categoryEntity);
 
+        if ($isNewCategory) {
+            $this->domainEventCollector->collect(new CategoryCreatedEvent($categoryWrapper, $data));
+        } else {
+            $this->domainEventCollector->collect(new CategoryModifiedEvent($categoryWrapper, $data));
+        }
+
         try {
             $this->em->flush();
         } catch (UniqueConstraintViolationException $e) {
@@ -250,10 +265,14 @@ class CategoryManager implements CategoryManagerInterface
         foreach ($entity->getTranslations() as $translation) {
             foreach ($translation->getKeywords() as $keyword) {
                 $this->keywordManager->delete($keyword, $entity);
+                // TODO: collect keyword_removed events
             }
         }
 
+        $defaultTranslation = $entity->findTranslationByLocale($entity->getDefaultLocale());
+
         $this->em->remove($entity);
+        $this->domainEventCollector->collect(new CategoryRemovedEvent($id, $defaultTranslation->getTranslation()));
         $this->em->flush();
 
         // throw a category.delete event
@@ -272,7 +291,10 @@ class CategoryManager implements CategoryManagerInterface
             throw new CategoryIdNotFoundException($parent);
         }
 
+        $previousParentId = $category->getParent()->getId();
         $category->setParent($parentCategory);
+        $this->domainEventCollector->collect(new CategoryMovedEvent($category, $previousParentId));
+
         $this->em->flush();
 
         return $category;
