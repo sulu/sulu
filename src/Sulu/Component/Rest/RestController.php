@@ -11,14 +11,14 @@
 
 namespace Sulu\Component\Rest;
 
-use FOS\RestBundle\Controller\FOSRestController;
+use FOS\RestBundle\Controller\AbstractFOSRestController;
 
 /**
  * Abstract Controller for extracting some required rest functionality.
  *
  * @deprecated since Sulu 2.0, use {@see AbstractRestController} instead
  */
-abstract class RestController extends FOSRestController
+abstract class RestController extends AbstractFOSRestController
 {
     use RestControllerTrait;
 }
