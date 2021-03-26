@@ -22,10 +22,13 @@ class TagCreatedEvent extends DomainEvent
     private $tag;
 
     /**
-     * @var array
+     * @var mixed[]
      */
     private $payload;
 
+    /**
+     * @param mixed[] $payload
+     */
     public function __construct(
         TagInterface $tag,
         array $payload
@@ -46,7 +49,7 @@ class TagCreatedEvent extends DomainEvent
         return 'created';
     }
 
-    public function getEventPayload(): array
+    public function getEventPayload(): ?array
     {
         return $this->payload;
     }

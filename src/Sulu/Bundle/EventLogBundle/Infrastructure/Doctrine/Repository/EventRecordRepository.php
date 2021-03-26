@@ -12,10 +12,10 @@
 namespace Sulu\Bundle\EventLogBundle\Infrastructure\Doctrine\Repository;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
 use Sulu\Bundle\EventLogBundle\Domain\Event\DomainEvent;
 use Sulu\Bundle\EventLogBundle\Domain\Model\EventRecordInterface;
 use Sulu\Bundle\EventLogBundle\Domain\Repository\EventRecordRepositoryInterface;
-use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
 
 class EventRecordRepository implements EventRecordRepositoryInterface
 {

@@ -37,11 +37,17 @@ abstract class DomainEvent
 
     abstract public function getEventType(): string;
 
+    /**
+     * @return mixed[]
+     */
     public function getEventContext(): array
     {
         return [];
     }
 
+    /**
+     * @return mixed[]|null
+     */
     public function getEventPayload(): ?array
     {
         return null;

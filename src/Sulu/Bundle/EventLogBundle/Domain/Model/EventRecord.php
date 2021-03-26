@@ -26,12 +26,12 @@ class EventRecord implements EventRecordInterface
     private $eventType;
 
     /**
-     * @var array
+     * @var mixed[]
      */
     private $eventContext = [];
 
     /**
-     * @var array|null
+     * @var mixed[]|null
      */
     private $eventPayload;
 

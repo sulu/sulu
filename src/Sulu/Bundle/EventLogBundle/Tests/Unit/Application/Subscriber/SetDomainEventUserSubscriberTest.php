@@ -31,7 +31,7 @@ class SetDomainEventUserSubscriberTest extends TestCase
         $this->security = $this->prophesize(Security::class);
     }
 
-    public function testSetDomainEventUser()
+    public function testSetDomainEventUser(): void
     {
         $subscriber = $this->createSetDomainEventUserSubscriber();
 
@@ -45,7 +45,7 @@ class SetDomainEventUserSubscriberTest extends TestCase
         $subscriber->setDomainEventUser($event->reveal());
     }
 
-    public function testSetDomainEventUserNoUser()
+    public function testSetDomainEventUserNoUser(): void
     {
         $subscriber = $this->createSetDomainEventUserSubscriber();
 
@@ -57,7 +57,7 @@ class SetDomainEventUserSubscriberTest extends TestCase
         $subscriber->setDomainEventUser($event->reveal());
     }
 
-    public function testSetDomainEventUserUserAlreadySet()
+    public function testSetDomainEventUserUserAlreadySet(): void
     {
         $subscriber = new SetDomainEventUserSubscriber(null);
 
@@ -67,7 +67,7 @@ class SetDomainEventUserSubscriberTest extends TestCase
         $subscriber->setDomainEventUser($event->reveal());
     }
 
-    public function testSetDomainEventUserNoSecurity()
+    public function testSetDomainEventUserNoSecurity(): void
     {
         $subscriber = $this->createSetDomainEventUserSubscriber();
 

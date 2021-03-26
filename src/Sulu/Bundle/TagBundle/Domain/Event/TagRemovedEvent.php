@@ -21,7 +21,7 @@ class TagRemovedEvent extends DomainEvent
     private $tagId;
 
     /**
-     * @var int
+     * @var string
      */
     private $tagName;
 

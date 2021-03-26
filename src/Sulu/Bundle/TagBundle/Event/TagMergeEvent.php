@@ -15,15 +15,6 @@ use Sulu\Bundle\TagBundle\Domain\Event\TagMergedEvent;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
-@\trigger_error(
-    \sprintf(
-        'The "%s" class is deprecated since Sulu 2.3. Use the "%s" class instead.',
-        TagMergeEvent::class,
-        TagMergedEvent::class
-    ),
-    \E_USER_DEPRECATED
-);
-
 /**
  * An object of this class is thrown along with the tag.merge event.
  *
@@ -51,6 +42,15 @@ class TagMergeEvent extends Event
      */
     public function __construct(array $srcTags, TagInterface $destTag)
     {
+        @\trigger_error(
+            \sprintf(
+                'The "%s" class is deprecated since Sulu 2.3. Use the "%s" class instead.',
+                TagMergeEvent::class,
+                TagMergedEvent::class
+            ),
+            \E_USER_DEPRECATED
+        );
+
         $this->srcTags = $srcTags;
         $this->destTag = $destTag;
     }

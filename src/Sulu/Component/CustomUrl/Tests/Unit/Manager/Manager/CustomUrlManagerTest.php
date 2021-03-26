@@ -13,6 +13,7 @@ namespace Sulu\Component\CustomUrl\Tests\Unit\Manager;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\CustomUrlBundle\Domain\Event\CustomUrlCreatedEvent;
 use Sulu\Bundle\CustomUrlBundle\Domain\Event\CustomUrlModifiedEvent;
 use Sulu\Bundle\CustomUrlBundle\Domain\Event\CustomUrlRemovedEvent;
@@ -40,32 +41,32 @@ use Sulu\Component\Webspace\Webspace;
 class CustomUrlManagerTest extends TestCase
 {
     /**
-     * @var DocumentManagerInterface
+     * @var DocumentManagerInterface|ObjectProphecy
      */
     private $documentManager;
 
     /**
-     * @var DocumentInspector
+     * @var DocumentInspector|ObjectProphecy
      */
     private $documentInspector;
 
     /**
-     * @var CustomUrlRepository
+     * @var CustomUrlRepository|ObjectProphecy
      */
     private $customUrlRepository;
 
     /**
-     * @var MetadataFactoryInterface
+     * @var MetadataFactoryInterface|ObjectProphecy
      */
     private $metadataFactory;
 
     /**
-     * @var PathBuilder
+     * @var PathBuilder|ObjectProphecy
      */
     private $pathBuilder;
 
     /**
-     * @var WebspaceManagerInterface
+     * @var WebspaceManagerInterface|ObjectProphecy
      */
     private $webspaceManager;
 
@@ -75,7 +76,7 @@ class CustomUrlManagerTest extends TestCase
     private $environment;
 
     /**
-     * @var DocumentDomainEventCollectorInterface
+     * @var DocumentDomainEventCollectorInterface|ObjectProphecy
      */
     private $documentDomainEventCollector;
 
@@ -85,7 +86,7 @@ class CustomUrlManagerTest extends TestCase
     private $targetDocument;
 
     /**
-     * @var Metadata
+     * @var Metadata|ObjectProphecy
      */
     private $metadata;
 

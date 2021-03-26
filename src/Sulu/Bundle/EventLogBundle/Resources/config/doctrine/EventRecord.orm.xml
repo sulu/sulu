@@ -17,8 +17,8 @@
             <join-column name="userId" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
         </many-to-one>
 
-        <field name="resourceKey" column="resourceKey" type="string" nullable="true" length="191"/>
-        <field name="resourceId" column="resourceId" type="string" nullable="true" length="191"/>
+        <field name="resourceKey" column="resourceKey" type="string" nullable="false" length="191"/>
+        <field name="resourceId" column="resourceId" type="string" nullable="false" length="191"/>
         <field name="resourceLocale" column="resourceLocale" type="string" nullable="true" length="191"/>
         <field name="resourceWebspaceKey" column="resourceWebspaceKey" type="string" nullable="true" length="191"/>
         <field name="resourceTitle" column="resourceTitle" type="string" nullable="true" length="191"/>

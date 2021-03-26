@@ -16,28 +16,28 @@ use Sulu\Bundle\CustomUrlBundle\Domain\Event\CustomUrlRemovedEvent;
 
 class CustomUrlRemovedEventTest extends TestCase
 {
-    public function testGetEventType()
+    public function testGetEventType(): void
     {
         $event = $this->createCustomUrlRemovedEvent();
 
         static::assertSame('removed', $event->getEventType());
     }
 
-    public function testGetResourceKey()
+    public function testGetResourceKey(): void
     {
         $event = $this->createCustomUrlRemovedEvent();
 
         static::assertSame('custom_urls', $event->getResourceKey());
     }
 
-    public function testGetResourceId()
+    public function testGetResourceId(): void
     {
         $event = $this->createCustomUrlRemovedEvent('custom-url-1234-1234');
 
         static::assertSame('custom-url-1234-1234', $event->getResourceId());
     }
 
-    public function testGetResourceWebspaceKey()
+    public function testGetResourceWebspaceKey(): void
     {
         $event = $this->createCustomUrlRemovedEvent(
             'custom-url-id-1234-1234',
@@ -48,7 +48,7 @@ class CustomUrlRemovedEventTest extends TestCase
         static::assertSame('test-io', $event->getResourceWebspaceKey());
     }
 
-    public function testGetResourceTitle()
+    public function testGetResourceTitle(): void
     {
         $event = $this->createCustomUrlRemovedEvent(
             'custom-url-id-1234-1234',
@@ -58,7 +58,7 @@ class CustomUrlRemovedEventTest extends TestCase
         static::assertSame('custom-url-title-123', $event->getResourceTitle());
     }
 
-    public function testGetResourceSecurityContext()
+    public function testGetResourceSecurityContext(): void
     {
         $event = $this->createCustomUrlRemovedEvent(
             'custom-url-id-1234-1234',

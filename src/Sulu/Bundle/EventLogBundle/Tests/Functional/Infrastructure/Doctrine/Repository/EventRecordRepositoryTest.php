@@ -11,7 +11,8 @@
 
 namespace Sulu\Bundle\EventLogBundle\Tests\Functional\Infrastructure\Doctrine\Repository;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\EventLogBundle\Domain\Event\DomainEvent;
 use Sulu\Bundle\EventLogBundle\Domain\Model\EventRecordInterface;
 use Sulu\Bundle\EventLogBundle\Infrastructure\Doctrine\Repository\EventRecordRepository;
@@ -27,12 +28,12 @@ class EventRecordRepositoryTest extends SuluTestCase
     private $repository;
 
     /**
-     * @var EntityManager
+     * @var EntityManagerInterface
      */
     private $entityManager;
 
     /**
-     * @var DomainEvent
+     * @var DomainEvent|ObjectProphecy
      */
     private $domainEvent;
 
@@ -58,7 +59,7 @@ class EventRecordRepositoryTest extends SuluTestCase
         $this->domainEvent->getResourceSecurityType()->willReturn(SecurityBehavior::class);
     }
 
-    public function testCreateForDomainEvent()
+    public function testCreateForDomainEvent(): void
     {
         $dateTime = new \DateTimeImmutable('2020-01-01');
         $user = $this->prophesize(UserInterface::class);
@@ -83,7 +84,7 @@ class EventRecordRepositoryTest extends SuluTestCase
         static::assertSame(SecurityBehavior::class, $eventRecord->getResourceSecurityType());
     }
 
-    public function testAddAndCommit()
+    public function testAddAndCommit(): void
     {
         $entityRepository = $this->entityManager->getRepository(EventRecordInterface::class);
 

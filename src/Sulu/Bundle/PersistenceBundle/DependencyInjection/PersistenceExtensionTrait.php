@@ -22,6 +22,11 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 trait PersistenceExtensionTrait
 {
+    /**
+     * @param array<string, array{model: class-string, repository?: class-string}> $objects
+     *
+     * @return void
+     */
     protected function configurePersistence(array $objects, ContainerBuilder $container)
     {
         $this->defineRepositories($objects, $container);
@@ -31,19 +36,18 @@ trait PersistenceExtensionTrait
         $configObjects = ['sulu' => $objects];
 
         if ($container->hasParameter('sulu.persistence.objects')) {
-            $configObjects = \array_merge_recursive(
-                $configObjects,
-                $container->getParameter('sulu.persistence.objects')
-            );
+            /** @var mixed[] $existingConfigObjects */
+            $existingConfigObjects = $container->getParameter('sulu.persistence.objects');
+            $configObjects = \array_merge_recursive($configObjects, $existingConfigObjects);
         }
 
         $container->setParameter('sulu.persistence.objects', $configObjects);
     }
 
     /**
-     * Define repositories.
+     * @param array<string, array{model: class-string, repository?: class-string}> $objects
      */
-    private function defineRepositories(array $objects, ContainerBuilder $container)
+    private function defineRepositories(array $objects, ContainerBuilder $container): void
     {
         foreach ($objects as $object => $services) {
             if (\array_key_exists('model', $services)) {
@@ -60,6 +64,7 @@ trait PersistenceExtensionTrait
      * Get the repository service definition.
      *
      * @param string $object
+     * @param array{model: class-string, repository?: class-string} $services
      *
      * @return Definition
      */
@@ -71,6 +76,7 @@ trait PersistenceExtensionTrait
         $repositoryClass = 'Sulu\Component\Persistence\Repository\ORM\EntityRepository';
 
         if ($container->hasParameter($repositoryKey)) {
+            /** @var class-string $repositoryClass */
             $repositoryClass = $container->getParameter($repositoryKey);
         }
 
@@ -99,6 +105,8 @@ trait PersistenceExtensionTrait
     }
 
     /**
+     * @param class-string $model
+     *
      * @return Definition
      */
     private function getClassMetadataDefinition($model)
@@ -116,9 +124,9 @@ trait PersistenceExtensionTrait
     }
 
     /**
-     * Remap object parameters.
+     * @param array<string, array{model: class-string, repository?: class-string}> $objects
      */
-    private function remapObjectParameters(array $objects, ContainerBuilder $container)
+    private function remapObjectParameters(array $objects, ContainerBuilder $container): void
     {
         foreach ($objects as $object => $services) {
             foreach ($services as $service => $class) {

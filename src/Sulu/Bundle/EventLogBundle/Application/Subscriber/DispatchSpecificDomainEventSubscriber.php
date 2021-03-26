@@ -35,7 +35,7 @@ class DispatchSpecificDomainEventSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function dispatchDomainEventWithSpecificEventName(DomainEvent $event)
+    public function dispatchDomainEventWithSpecificEventName(DomainEvent $event): void
     {
         // the DomainEventDispatcher service uses DomainEvent::class as event-name when dispatching events. this
         // allows to register listeners that listen to all domain events.

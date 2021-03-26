@@ -35,7 +35,7 @@ class StoreEventRecordSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function storeEventRecord(DomainEvent $event)
+    public function storeEventRecord(DomainEvent $event): void
     {
         $eventRecord = $this->eventRecordRepository->createForDomainEvent($event);
         $this->eventRecordRepository->add($eventRecord);

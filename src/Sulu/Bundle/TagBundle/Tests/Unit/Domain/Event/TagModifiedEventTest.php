@@ -28,35 +28,35 @@ class TagModifiedEventTest extends TestCase
         $this->tag = $this->prophesize(TagInterface::class);
     }
 
-    public function testGetTag()
+    public function testGetTag(): void
     {
         $event = $this->createTagModifiedEvent();
 
         static::assertSame($this->tag->reveal(), $event->getTag());
     }
 
-    public function testGetEventType()
+    public function testGetEventType(): void
     {
         $event = $this->createTagModifiedEvent();
 
         static::assertSame('modified', $event->getEventType());
     }
 
-    public function testGetEventPayload()
+    public function testGetEventPayload(): void
     {
         $event = $this->createTagModifiedEvent(['name' => 'test-name']);
 
         static::assertSame(['name' => 'test-name'], $event->getEventPayload());
     }
 
-    public function testGetResourceKey()
+    public function testGetResourceKey(): void
     {
         $event = $this->createTagModifiedEvent();
 
         static::assertSame('tags', $event->getResourceKey());
     }
 
-    public function testGetResourceId()
+    public function testGetResourceId(): void
     {
         $event = $this->createTagModifiedEvent();
         $this->tag->getId()->willReturn(1234);
@@ -64,7 +64,7 @@ class TagModifiedEventTest extends TestCase
         static::assertSame('1234', $event->getResourceId());
     }
 
-    public function testGetResourceTitle()
+    public function testGetResourceTitle(): void
     {
         $event = $this->createTagModifiedEvent();
         $this->tag->getName()->willReturn('tag-name');
@@ -72,13 +72,16 @@ class TagModifiedEventTest extends TestCase
         static::assertSame('tag-name', $event->getResourceTitle());
     }
 
-    public function testGetResourceSecurityContext()
+    public function testGetResourceSecurityContext(): void
     {
         $event = $this->createTagModifiedEvent();
 
         static::assertSame('sulu.settings.tags', $event->getResourceSecurityContext());
     }
 
+    /**
+     * @param mixed[] $payload
+     */
     private function createTagModifiedEvent(
         array $payload = []
     ): TagModifiedEvent {

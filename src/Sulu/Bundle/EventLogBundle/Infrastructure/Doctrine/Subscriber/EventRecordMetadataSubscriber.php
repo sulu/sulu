@@ -13,6 +13,7 @@ namespace Sulu\Bundle\EventLogBundle\Infrastructure\Doctrine\Subscriber;
 
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Events;
+use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Doctrine\Persistence\Event\LoadClassMetadataEventArgs;
 use Sulu\Bundle\EventLogBundle\Domain\Model\EventRecordInterface;
 
@@ -37,8 +38,9 @@ class EventRecordMetadataSubscriber implements EventSubscriber
         ];
     }
 
-    public function loadClassMetadata(LoadClassMetadataEventArgs $event)
+    public function loadClassMetadata(LoadClassMetadataEventArgs $event): void
     {
+        /** @var ClassMetadataInfo $metadata */
         $metadata = $event->getClassMetadata();
         $reflection = $metadata->getReflectionClass();
 

@@ -18,7 +18,7 @@ use Sulu\Component\Security\Authentication\UserInterface;
 
 class EventRecordTest extends TestCase
 {
-    public function testEventType()
+    public function testEventType(): void
     {
         $event = $this->createEventRecord();
 
@@ -26,7 +26,7 @@ class EventRecordTest extends TestCase
         static::assertSame('created', $event->getEventType());
     }
 
-    public function testEventContext()
+    public function testEventContext(): void
     {
         $event = $this->createEventRecord();
 
@@ -35,16 +35,17 @@ class EventRecordTest extends TestCase
         static::assertSame(['relatedPageId' => 'page-123'], $event->getEventContext());
     }
 
-    public function testEventPayload()
+    public function testEventPayload(): void
     {
         $event = $this->createEventRecord();
 
         static::assertNull($event->getEventPayload());
         static::assertSame($event, $event->setEventPayload(['name' => 'name-123', 'description' => 'description-123']));
+        static::assertNotNull($event->getEventPayload());
         static::assertSame(['name' => 'name-123', 'description' => 'description-123'], $event->getEventPayload());
     }
 
-    public function testEventDateTime()
+    public function testEventDateTime(): void
     {
         $event = $this->createEventRecord();
         $dateTime = new \DateTimeImmutable('2020-01-01');
@@ -53,7 +54,7 @@ class EventRecordTest extends TestCase
         static::assertSame($dateTime, $event->getEventDateTime());
     }
 
-    public function testEventBatch()
+    public function testEventBatch(): void
     {
         $event = $this->createEventRecord();
 
@@ -62,17 +63,18 @@ class EventRecordTest extends TestCase
         static::assertSame('batch-1234', $event->getEventBatch());
     }
 
-    public function testUser()
+    public function testUser(): void
     {
         $event = $this->createEventRecord();
         $user = $this->prophesize(UserInterface::class);
 
         static::assertNull($event->getUser());
         static::assertSame($event, $event->setUser($user->reveal()));
+        static::assertNotNull($event->getUser());
         static::assertSame($user->reveal(), $event->getUser());
     }
 
-    public function testResourceKey()
+    public function testResourceKey(): void
     {
         $event = $this->createEventRecord();
 
@@ -80,7 +82,7 @@ class EventRecordTest extends TestCase
         static::assertSame('pages', $event->getResourceKey());
     }
 
-    public function testResourceId()
+    public function testResourceId(): void
     {
         $event = $this->createEventRecord();
 
@@ -88,7 +90,7 @@ class EventRecordTest extends TestCase
         static::assertSame('1234-1234-1234-1234', $event->getResourceId());
     }
 
-    public function testResourceLocale()
+    public function testResourceLocale(): void
     {
         $event = $this->createEventRecord();
 
@@ -97,7 +99,7 @@ class EventRecordTest extends TestCase
         static::assertSame('en', $event->getResourceLocale());
     }
 
-    public function testResourceWebspaceKey()
+    public function testResourceWebspaceKey(): void
     {
         $event = $this->createEventRecord();
 
@@ -106,7 +108,7 @@ class EventRecordTest extends TestCase
         static::assertSame('sulu-io', $event->getResourceWebspaceKey());
     }
 
-    public function testResourceTitle()
+    public function testResourceTitle(): void
     {
         $event = $this->createEventRecord();
 
@@ -115,7 +117,7 @@ class EventRecordTest extends TestCase
         static::assertSame('title-1234', $event->getResourceTitle());
     }
 
-    public function testResourceSecurityContext()
+    public function testResourceSecurityContext(): void
     {
         $event = $this->createEventRecord();
 
@@ -124,7 +126,7 @@ class EventRecordTest extends TestCase
         static::assertSame('sulu.webspaces.sulu-io', $event->getResourceSecurityContext());
     }
 
-    public function testResourceSecurityType()
+    public function testResourceSecurityType(): void
     {
         $event = $this->createEventRecord();
 

@@ -100,6 +100,7 @@ class CustomUrlManager implements CustomUrlManagerInterface
 
     public function create($webspaceKey, array $data)
     {
+        /** @var CustomUrlDocument $document */
         $document = $this->documentManager->create('custom_url');
         $this->bind($document, $data);
 
@@ -288,7 +289,7 @@ class CustomUrlManager implements CustomUrlManagerInterface
         $routeDocument = $this->findRoute($uuid);
 
         $customUrlDocument = $routeDocument->getTargetDocument();
-        while ($customUrlDocument instanceof RouteDocument) {
+        while (!$customUrlDocument instanceof CustomUrlDocument) {
             $customUrlDocument = $customUrlDocument->getTargetDocument();
         }
 

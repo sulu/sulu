@@ -28,35 +28,35 @@ class CustomUrlRouteRemovedEventTest extends TestCase
         $this->customUrlDocument = $this->prophesize(CustomUrlDocument::class);
     }
 
-    public function testGetCustomUrlDocument()
+    public function testGetCustomUrlDocument(): void
     {
         $event = $this->createCustomUrlRouteRemovedEvent();
 
         static::assertSame($this->customUrlDocument->reveal(), $event->getCustomUrlDocument());
     }
 
-    public function testGetEventType()
+    public function testGetEventType(): void
     {
         $event = $this->createCustomUrlRouteRemovedEvent();
 
         static::assertSame('route_removed', $event->getEventType());
     }
 
-    public function testGetEventContext()
+    public function testGetEventContext(): void
     {
         $event = $this->createCustomUrlRouteRemovedEvent('sulu-io', 'route-1234-1234');
 
         static::assertSame(['routeUuid' => 'route-1234-1234'], $event->getEventContext());
     }
 
-    public function testGetResourceKey()
+    public function testGetResourceKey(): void
     {
         $event = $this->createCustomUrlRouteRemovedEvent();
 
         static::assertSame('custom_urls', $event->getResourceKey());
     }
 
-    public function testGetResourceId()
+    public function testGetResourceId(): void
     {
         $event = $this->createCustomUrlRouteRemovedEvent();
         $this->customUrlDocument->getUuid()->willReturn('1234-1234-1234-1234');
@@ -64,14 +64,14 @@ class CustomUrlRouteRemovedEventTest extends TestCase
         static::assertSame('1234-1234-1234-1234', $event->getResourceId());
     }
 
-    public function testGetResourceWebspaceKey()
+    public function testGetResourceWebspaceKey(): void
     {
         $event = $this->createCustomUrlRouteRemovedEvent('test-io');
 
         static::assertSame('test-io', $event->getResourceWebspaceKey());
     }
 
-    public function testGetResourceTitle()
+    public function testGetResourceTitle(): void
     {
         $event = $this->createCustomUrlRouteRemovedEvent();
         $this->customUrlDocument->getTitle()->willReturn('custom-url-title');
@@ -79,7 +79,7 @@ class CustomUrlRouteRemovedEventTest extends TestCase
         static::assertSame('custom-url-title', $event->getResourceTitle());
     }
 
-    public function testGetResourceSecurityContext()
+    public function testGetResourceSecurityContext(): void
     {
         $event = $this->createCustomUrlRouteRemovedEvent('test-io');
 

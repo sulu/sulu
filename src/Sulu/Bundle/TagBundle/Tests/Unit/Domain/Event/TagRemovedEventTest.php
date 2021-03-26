@@ -16,14 +16,14 @@ use Sulu\Bundle\TagBundle\Domain\Event\TagRemovedEvent;
 
 class TagRemovedEventTest extends TestCase
 {
-    public function testGetEventType()
+    public function testGetEventType(): void
     {
         $event = $this->createTagRemovedEvent();
 
         static::assertSame('removed', $event->getEventType());
     }
 
-    public function testGetEventContext()
+    public function testGetEventContext(): void
     {
         $event = $this->createTagRemovedEvent(
             1234,
@@ -34,28 +34,28 @@ class TagRemovedEventTest extends TestCase
         static::assertSame(['tagWasMerged' => true], $event->getEventContext());
     }
 
-    public function testGetResourceKey()
+    public function testGetResourceKey(): void
     {
         $event = $this->createTagRemovedEvent();
 
         static::assertSame('tags', $event->getResourceKey());
     }
 
-    public function testGetResourceId()
+    public function testGetResourceId(): void
     {
         $event = $this->createTagRemovedEvent(5678);
 
         static::assertSame('5678', $event->getResourceId());
     }
 
-    public function testGetResourceTitle()
+    public function testGetResourceTitle(): void
     {
         $event = $this->createTagRemovedEvent(1234, 'tag-name-456');
 
         static::assertSame('tag-name-456', $event->getResourceTitle());
     }
 
-    public function testGetResourceSecurityContext()
+    public function testGetResourceSecurityContext(): void
     {
         $event = $this->createTagRemovedEvent();
 

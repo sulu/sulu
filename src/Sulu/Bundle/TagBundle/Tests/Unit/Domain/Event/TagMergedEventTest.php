@@ -28,35 +28,35 @@ class TagMergedEventTest extends TestCase
         $this->destinationTag = $this->prophesize(TagInterface::class);
     }
 
-    public function testGetDestinationTag()
+    public function testGetDestinationTag(): void
     {
         $event = $this->createTagMergedEvent();
 
         static::assertSame($this->destinationTag->reveal(), $event->getDestinationTag());
     }
 
-    public function testGetEventType()
+    public function testGetEventType(): void
     {
         $event = $this->createTagMergedEvent();
 
         static::assertSame('merged', $event->getEventType());
     }
 
-    public function testGetEventContext()
+    public function testGetEventContext(): void
     {
         $event = $this->createTagMergedEvent(5678, 'source-tag-123');
 
         static::assertSame(['sourceTagId' => 5678, 'sourceTagName' => 'source-tag-123'], $event->getEventContext());
     }
 
-    public function testGetResourceKey()
+    public function testGetResourceKey(): void
     {
         $event = $this->createTagMergedEvent();
 
         static::assertSame('tags', $event->getResourceKey());
     }
 
-    public function testGetResourceId()
+    public function testGetResourceId(): void
     {
         $event = $this->createTagMergedEvent();
         $this->destinationTag->getId()->willReturn(1234);
@@ -64,7 +64,7 @@ class TagMergedEventTest extends TestCase
         static::assertSame('1234', $event->getResourceId());
     }
 
-    public function testGetResourceTitle()
+    public function testGetResourceTitle(): void
     {
         $event = $this->createTagMergedEvent();
         $this->destinationTag->getName()->willReturn('tag-name');
@@ -72,7 +72,7 @@ class TagMergedEventTest extends TestCase
         static::assertSame('tag-name', $event->getResourceTitle());
     }
 
-    public function testGetResourceSecurityContext()
+    public function testGetResourceSecurityContext(): void
     {
         $event = $this->createTagMergedEvent();
 

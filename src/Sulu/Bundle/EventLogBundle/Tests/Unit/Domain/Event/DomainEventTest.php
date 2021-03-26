@@ -17,28 +17,28 @@ use Sulu\Component\Security\Authentication\UserInterface;
 
 class DomainEventTest extends TestCase
 {
-    public function testEventType()
+    public function testEventType(): void
     {
         $event = $this->createTestDomainEvent();
 
         static::assertSame('test', $event->getEventType());
     }
 
-    public function testEventContext()
+    public function testEventContext(): void
     {
         $event = $this->createTestDomainEvent();
 
         static::assertSame([], $event->getEventContext());
     }
 
-    public function testEventPayload()
+    public function testEventPayload(): void
     {
         $event = $this->createTestDomainEvent();
 
         static::assertNull($event->getEventPayload());
     }
 
-    public function testEventDateTime()
+    public function testEventDateTime(): void
     {
         $event = $this->createTestDomainEvent();
         $dateTime = new \DateTimeImmutable('2020-01-01');
@@ -48,7 +48,7 @@ class DomainEventTest extends TestCase
         static::assertSame($dateTime, $event->getEventDateTime());
     }
 
-    public function testEventBatch()
+    public function testEventBatch(): void
     {
         $event = $this->createTestDomainEvent();
 
@@ -57,59 +57,60 @@ class DomainEventTest extends TestCase
         static::assertSame('batch-1234', $event->getEventBatch());
     }
 
-    public function testUser()
+    public function testUser(): void
     {
         $event = $this->createTestDomainEvent();
         $user = $this->prophesize(UserInterface::class);
 
         static::assertNull($event->getUser());
         static::assertSame($event, $event->setUser($user->reveal()));
+        static::assertNotNull($event->getUser());
         static::assertSame($user->reveal(), $event->getUser());
     }
 
-    public function testResourceKey()
+    public function testResourceKey(): void
     {
         $event = $this->createTestDomainEvent();
 
         static::assertSame('test', $event->getResourceKey());
     }
 
-    public function testResourceId()
+    public function testResourceId(): void
     {
         $event = $this->createTestDomainEvent();
 
         static::assertSame('test', $event->getResourceId());
     }
 
-    public function testResourceLocale()
+    public function testResourceLocale(): void
     {
         $event = $this->createTestDomainEvent();
 
         static::assertNull($event->getResourceLocale());
     }
 
-    public function testResourceWebspaceKey()
+    public function testResourceWebspaceKey(): void
     {
         $event = $this->createTestDomainEvent();
 
         static::assertNull($event->getResourceWebspaceKey());
     }
 
-    public function testResourceTitle()
+    public function testResourceTitle(): void
     {
         $event = $this->createTestDomainEvent();
 
         static::assertNull($event->getResourceTitle());
     }
 
-    public function testResourceSecurityContext()
+    public function testResourceSecurityContext(): void
     {
         $event = $this->createTestDomainEvent();
 
         static::assertNull($event->getResourceSecurityContext());
     }
 
-    public function testResourceSecurityType()
+    public function testResourceSecurityType(): void
     {
         $event = $this->createTestDomainEvent();
 

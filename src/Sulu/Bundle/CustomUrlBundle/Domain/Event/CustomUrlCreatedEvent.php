@@ -28,10 +28,13 @@ class CustomUrlCreatedEvent extends DomainEvent
     private $webspaceKey;
 
     /**
-     * @var array
+     * @var mixed[]
      */
     private $payload;
 
+    /**
+     * @param mixed[] $payload
+     */
     public function __construct(
         CustomUrlDocument $customUrlDocument,
         string $webspaceKey,
@@ -54,7 +57,7 @@ class CustomUrlCreatedEvent extends DomainEvent
         return 'created';
     }
 
-    public function getEventPayload(): array
+    public function getEventPayload(): ?array
     {
         return $this->payload;
     }

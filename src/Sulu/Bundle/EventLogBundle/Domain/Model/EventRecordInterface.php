@@ -19,12 +19,24 @@ interface EventRecordInterface
 
     public function setEventType(string $eventType): EventRecordInterface;
 
+    /**
+     * @return mixed[]
+     */
     public function getEventContext(): array;
 
+    /**
+     * @param mixed[] $eventContext
+     */
     public function setEventContext(array $eventContext): EventRecordInterface;
 
+    /**
+     * @return mixed[]|null
+     */
     public function getEventPayload(): ?array;
 
+    /**
+     * @param mixed[]|null $eventPayload
+     */
     public function setEventPayload(?array $eventPayload): EventRecordInterface;
 
     public function getEventDateTime(): \DateTimeImmutable;

@@ -21,7 +21,7 @@ use Sulu\Bundle\EventLogBundle\Infrastructure\Doctrine\Subscriber\EventRecordMet
 
 class EventRecordMetadataSubscriberTest extends TestCase
 {
-    public function testLoadClassMetadataPersistPayloadEnabled()
+    public function testLoadClassMetadataPersistPayloadEnabled(): void
     {
         $subscriber = $this->createEventRecordMetadataSubscriber(true);
 
@@ -45,7 +45,7 @@ class EventRecordMetadataSubscriberTest extends TestCase
         $subscriber->loadClassMetadata($loadClassMetadataEvent->reveal());
     }
 
-    public function testLoadClassMetadataPersistPayloadEnabledUnrelatedClass()
+    public function testLoadClassMetadataPersistPayloadEnabledUnrelatedClass(): void
     {
         $subscriber = $this->createEventRecordMetadataSubscriber(true);
 
@@ -64,7 +64,7 @@ class EventRecordMetadataSubscriberTest extends TestCase
         $subscriber->loadClassMetadata($loadClassMetadataEvent->reveal());
     }
 
-    public function testLoadClassMetadataPersistPayloadDisabled()
+    public function testLoadClassMetadataPersistPayloadDisabled(): void
     {
         $subscriber = $this->createEventRecordMetadataSubscriber(false);
 

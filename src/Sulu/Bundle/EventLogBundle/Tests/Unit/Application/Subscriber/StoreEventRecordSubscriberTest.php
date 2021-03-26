@@ -30,7 +30,7 @@ class StoreEventRecordSubscriberTest extends TestCase
         $this->eventRecordRepository = $this->prophesize(EventRecordRepositoryInterface::class);
     }
 
-    public function testStoreEventRecord()
+    public function testStoreEventRecord(): void
     {
         $subscriber = $this->createStoreEventRecordSubscriber();
 

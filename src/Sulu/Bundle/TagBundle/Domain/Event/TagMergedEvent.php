@@ -22,7 +22,7 @@ class TagMergedEvent extends DomainEvent
     private $sourceTagId;
 
     /**
-     * @var int
+     * @var string
      */
     private $sourceTagName;
 

@@ -30,7 +30,7 @@ class DomainEventDispatcherTest extends TestCase
         $this->innerEventDispatcher = $this->prophesize(EventDispatcherInterface::class);
     }
 
-    public function testDispatch()
+    public function testDispatch(): void
     {
         $dispatcher = $this->createDomainEventDispatcher();
 

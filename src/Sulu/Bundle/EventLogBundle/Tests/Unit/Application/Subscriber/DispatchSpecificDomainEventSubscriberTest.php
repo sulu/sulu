@@ -29,7 +29,7 @@ class DispatchSpecificDomainEventSubscriberTest extends TestCase
         $this->eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
     }
 
-    public function testDispatchDomainEventWithSpecificEventName()
+    public function testDispatchDomainEventWithSpecificEventName(): void
     {
         $subscriber = $this->createDispatchSpecificDomainEventSubscriber();
 

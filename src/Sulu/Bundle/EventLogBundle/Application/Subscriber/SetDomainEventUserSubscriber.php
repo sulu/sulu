@@ -36,7 +36,7 @@ class SetDomainEventUserSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function setDomainEventUser(DomainEvent $event)
+    public function setDomainEventUser(DomainEvent $event): void
     {
         if (!$this->security) {
             return;
