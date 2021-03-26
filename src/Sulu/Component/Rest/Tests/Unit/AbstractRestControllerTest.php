@@ -22,7 +22,7 @@ use Sulu\Component\Rest\Exception\RestException;
 class AbstractRestControllerTest extends TestCase
 {
     /**
-     * @var \Sulu\Component\Rest\RestController
+     * @var AbstractRestController
      */
     protected $controller;
 

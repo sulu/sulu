@@ -13,7 +13,7 @@ parameters:
     paths:
         - .
     level: max
-    excludes_analyse:
+    excludePaths:
         - %currentWorkingDirectory%/node_modules/*
         - %currentWorkingDirectory%/var/*
         - %currentWorkingDirectory%/vendor/*
@@ -22,6 +22,8 @@ parameters:
         - %currentWorkingDirectory%/*/Tests/Application/var/*
         - %currentWorkingDirectory%/*/Tests/app/cache/*
         - %currentWorkingDirectory%/*/Tests/app/var/*
+        # RestController extends FOSRestController which was removed in friendsofsymfony/rest-bundle:3.0
+        - %currentWorkingDirectory%/src/Sulu/Component/Rest/RestController.php
     symfony:
         container_xml_path: %currentWorkingDirectory%/var/cache/admin/dev/App_KernelDevDebugContainer.xml
         console_application_loader: tests/phpstan/console-application.php
