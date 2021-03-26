@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\Admin;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Symfony\Component\Console\Command\Command;
@@ -24,12 +25,12 @@ class AdminPoolTest extends TestCase
     protected $adminPool;
 
     /**
-     * @var Admin
+     * @var Admin|ObjectProphecy
      */
     protected $admin1;
 
     /**
-     * @var Admin
+     * @var Admin|ObjectProphecy
      */
     protected $admin2;
 

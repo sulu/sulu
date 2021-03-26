@@ -1,37 +1,31 @@
 includes:
+    - phpstan-baseline.neon
+    - vendor/jangregor/phpstan-prophecy/extension.neon
     - vendor/phpstan/phpstan-symfony/extension.neon
+    - vendor/phpstan/phpstan-doctrine/extension.neon
+    - vendor/phpstan/phpstan-doctrine/rules.neon
+    - vendor/phpstan/phpstan-phpunit/extension.neon
+    - vendor/phpstan/phpstan-phpunit/rules.neon
+    - vendor/phpstan/phpstan-webmozart-assert/extension.neon
+    - vendor/thecodingmachine/phpstan-strict-rules/phpstan-strict-rules.neon
+
 parameters:
     paths:
-        - ./
-    level: 1
-    symfony:
-        container_xml_path: %rootDir%/../../../var/cache/admin/dev/App_KernelDevDebugContainer.xml
-    excludes_analyse:
-        - %currentWorkingDirectory%/config/*
-        - %currentWorkingDirectory%/flow_types/*
+        - .
+    level: max
+    excludePaths:
         - %currentWorkingDirectory%/node_modules/*
-        - %currentWorkingDirectory%/public/*
-        - %currentWorkingDirectory%/styleguide/*
-        - %currentWorkingDirectory%/templates/*
-        - %currentWorkingDirectory%/tests/app/cache/*
-        - %currentWorkingDirectory%/tests/Resources/cache/*
         - %currentWorkingDirectory%/var/*
         - %currentWorkingDirectory%/vendor/*
-        - %currentWorkingDirectory%/*/phpcr-migrations/*
+        - %currentWorkingDirectory%/tests/Resources/cache/*
+        - %currentWorkingDirectory%/*/node_modules/*
+        - %currentWorkingDirectory%/*/Tests/Application/var/*
         - %currentWorkingDirectory%/*/Tests/app/cache/*
-        - %currentWorkingDirectory%/*/Tests/app/log/*
-        - %currentWorkingDirectory%/*/Tests/var/cache/*
-        - %currentWorkingDirectory%/*/Tests/var/log/*
-        - %currentWorkingDirectory%/*/vendor/*
-        - %currentWorkingDirectory%/bin/console
-        - %currentWorkingDirectory%/src/Sulu/Bundle/TestBundle/Resources/app/config/config.php
-        # the following files are excluded because of autoloader error which cant be add to ignoreErrors
+        - %currentWorkingDirectory%/*/Tests/app/var/*
+        # RestController extends FOSRestController which was removed in friendsofsymfony/rest-bundle:3.0
         - %currentWorkingDirectory%/src/Sulu/Component/Rest/RestController.php
-        - %currentWorkingDirectory%/src/Sulu/Bundle/CoreBundle/DependencyInjection/Compiler/ExceptionHandlerCompilerPass.php
-        - %currentWorkingDirectory%/src/Sulu/Component/Rest/ExceptionSerializerHandler.php
-        # The following should be removed at some point
-        - %currentWorkingDirectory%/*/Tests/*
-    ignoreErrors:
-        - '#has invalid typehint type Symfony\\Bundle\\FrameworkBundle\\Controller\\ControllerNameParser#'
-        - '#has invalid typehint type Symfony\\Bundle\\TwigBundle\\Controller\\ExceptionController#'
-        - '#Function tld_extract not found.#'
+    symfony:
+        container_xml_path: %currentWorkingDirectory%/var/cache/admin/dev/App_KernelDevDebugContainer.xml
+        console_application_loader: tests/phpstan/console-application.php
+    doctrine:
+        objectManagerLoader: tests/phpstan/object-manager.php
