@@ -14,7 +14,6 @@ namespace Sulu\Component\DocumentManager\Subscriber\Behavior;
 use Jackalope\Version\VersionManager;
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
-use PHPCR\Version\OnParentVersionAction;
 use PHPCR\Version\VersionException;
 use Sulu\Component\DocumentManager\Behavior\VersionBehavior;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
@@ -196,8 +195,8 @@ class VersionSubscriber implements EventSubscriberInterface
             );
         }
 
-        foreach ($nodes as $uuid => $node) {
-            $node->setProperty(static::VERSION_PROPERTY, $nodeVersions[$uuid]);
+        foreach ($nodes as $path => $node) {
+            $node->setProperty(static::VERSION_PROPERTY, $nodeVersions[$path]);
         }
 
         $this->defaultSession->save();
@@ -227,7 +226,7 @@ class VersionSubscriber implements EventSubscriberInterface
 
             $frozenNode = $version->getFrozenNode();
 
-            $this->restoreNode($node, $frozenNode, $contentPropertyPrefix, $systemPropertyPrefix);
+            $this->restoreNodeProperties($node, $frozenNode, $contentPropertyPrefix, $systemPropertyPrefix);
         } catch (VersionException $exception) {
             throw new VersionNotFoundException($event->getDocument(), $event->getVersion());
         }
@@ -240,7 +239,7 @@ class VersionSubscriber implements EventSubscriberInterface
      * @param string $contentPropertyPrefix
      * @param string $systemPropertyPrefix
      */
-    private function restoreNode(
+    private function restoreNodeProperties(
         NodeInterface $node,
         NodeInterface $frozenNode,
         $contentPropertyPrefix,
@@ -258,33 +257,6 @@ class VersionSubscriber implements EventSubscriberInterface
             if ($this->isRestoreProperty($name, $contentPropertyPrefix, $systemPropertyPrefix)) {
                 $node->setProperty($name, $value);
             }
-        }
-
-        /** @var NodeInterface $childNode */
-        foreach ($frozenNode->getNodes() as $childNode) {
-            // create new node if it not exists
-            if (!$node->hasNode($childNode->getName())) {
-                $newNode = $node->addNode($childNode->getName());
-                $newNode->setMixins($childNode->getPropertyValueWithDefault('jcr:frozenMixinTypes', []));
-            }
-
-            $this->restoreNode(
-                $node->getNode($childNode->getName()),
-                $childNode,
-                $contentPropertyPrefix,
-                $systemPropertyPrefix
-            );
-        }
-
-        // remove child-nodes which do not exists in frozen-node
-        foreach ($node->getNodes() as $childNode) {
-            if (OnParentVersionAction::COPY !== $childNode->getDefinition()->getOnParentVersion()
-                || $frozenNode->hasNode($childNode->getName())
-            ) {
-                continue;
-            }
-
-            $childNode->remove();
         }
     }
 
