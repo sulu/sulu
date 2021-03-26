@@ -137,7 +137,8 @@
         "symfony/phpunit-bridge": "^4.4 || ^5.0",
         "symfony/stopwatch": "^4.4 || ^5.0",
         "symfony/var-dumper": "^4.4 || ^5.0",
-        "symfony/web-profiler-bundle": "^4.4 || ^5.0"
+        "symfony/web-profiler-bundle": "^4.4 || ^5.0",
+        "thecodingmachine/phpstan-strict-rules": "^0.12.1"
     },
     "conflict": {
         "doctrine/dbal": "2.7.0",
