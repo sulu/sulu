@@ -155,10 +155,10 @@ class MediaManager implements MediaManagerInterface
     /**
      * @var MediaPropertiesProviderInterface[]
      */
-    private $propertiesProvider;
+    private $mediaPropertiesProviders;
 
     /**
-     * @param null|FFprobe|MediaPropertiesProviderInterface $propertiesProvider
+     * @param null|FFprobe|MediaPropertiesProviderInterface[] $mediaPropertiesProviders
      * @param array $permissions
      * @param string $downloadPath
      * @param string $maxFileSize
@@ -178,7 +178,7 @@ class MediaManager implements MediaManagerInterface
         PathCleanupInterface $pathCleaner,
         TokenStorageInterface $tokenStorage = null,
         SecurityCheckerInterface $securityChecker = null,
-        $propertiesProvider = null,
+        $mediaPropertiesProviders = null,
         $permissions,
         $downloadPath,
         $maxFileSize,
@@ -215,25 +215,25 @@ class MediaManager implements MediaManagerInterface
 
         $this->adminDownloadPath = $adminDownloadPath ?: '/admin' . $this->downloadPath;
 
-        if (!$propertiesProvider instanceof MediaPropertiesProviderInterface) {
+        if (!is_iterable($mediaPropertiesProviders)) {
             @\trigger_error(
                 \sprintf(
-                    'The usage of the "%s" without setting "$propertiesProvider" is deprecated and will not longer work in Sulu 3.0.',
+                    'The usage of the "%s" without setting "$mediaPropertiesProviders" is deprecated and will not longer work in Sulu 3.0.',
                     MediaManager::class
                 ),
                 \E_USER_DEPRECATED
             );
 
-            if ($propertiesProvider instanceof FFProbe) {
-                $propertiesProvider = new MediaPropertiesProvider([
-                    new VideoPropertiesProvider($propertiesProvider),
-                ]);
+            if ($mediaPropertiesProviders instanceof FFProbe) {
+                $mediaPropertiesProviders = [
+                    new VideoPropertiesProvider($mediaPropertiesProviders),
+                ];
             } else {
-                $propertiesProvider = new MediaPropertiesProvider([]);
+                $mediaPropertiesProviders = [];
             }
         }
 
-        $this->propertiesProvider = $propertiesProvider;
+        $this->mediaPropertiesProviders = $mediaPropertiesProviders;
     }
 
     public function getById($id, $locale)
@@ -315,7 +315,15 @@ class MediaManager implements MediaManagerInterface
      */
     private function getProperties(UploadedFile $uploadedFile)
     {
-        return $this->propertiesProvider->provide($uploadedFile);
+        $properties = [];
+        foreach ($this->mediaPropertiesProviders as $mediaPropertiesProvider) {
+            $properties = \array_merge(
+                $properties,
+                $mediaPropertiesProvider->provide($uploadedFile)
+            );
+        }
+
+        return $properties;
     }
 
     /**

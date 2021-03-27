@@ -15,7 +15,7 @@ use FFMpeg\Exception\ExecutableNotFoundException;
 use FFMpeg\FFProbe;
 use Symfony\Component\HttpFoundation\File\File;
 
-class VideoPropertiesProvider implements PropertiesProviderInterface
+class VideoPropertiesProvider implements MediaPropertiesProviderInterface
 {
     /**
      * @var FFProbe

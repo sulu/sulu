@@ -16,7 +16,7 @@ use Imagine\Exception\RuntimeException;
 use Imagine\Image\ImagineInterface;
 use Symfony\Component\HttpFoundation\File\File;
 
-class ImagePropertiesProvider implements PropertiesProviderInterface
+class ImagePropertiesProvider implements MediaPropertiesProviderInterface
 {
     /**
      * @var ImagineInterface
