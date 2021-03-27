@@ -16,8 +16,12 @@ class CollectionNotFoundException extends MediaException
     /**
      * @param string $id
      */
-    public function __construct($id)
+    public function __construct($id, \Throwable $previous = null)
     {
-        parent::__construct('Collection with the ID ' . $id . ' was not found', self::EXCEPTION_CODE_COLLECTION_NOT_FOUND);
+        parent::__construct(
+            'Collection with the ID ' . $id . ' was not found',
+            self::EXCEPTION_CODE_COLLECTION_NOT_FOUND,
+            $previous
+        );
     }
 }

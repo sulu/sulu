@@ -44,21 +44,19 @@ class VideoPropertiesProviderTest extends TestCase
         );
     }
 
-    public function testSupportsVideo(): void
+    public function testProvideImage(): void
     {
-        $uploadedFile = $this->createUploadedFileVideo();
-
-        $this->assertTrue($this->videoPropertiesProvider->supports($uploadedFile));
-    }
-
-    public function testSupportsImage(): void
-    {
+        // prepare data
         $uploadedFile = $this->createUploadedFileImage();
 
-        $this->assertFalse($this->videoPropertiesProvider->supports($uploadedFile));
+        // test function
+        $this->assertSame(
+            [],
+            $this->videoPropertiesProvider->provide($uploadedFile)
+        );
     }
 
-    public function testProvide(): void
+    public function testProvideVideo(): void
     {
         // prepare data
         $uploadedFile = $this->createUploadedFileVideo();

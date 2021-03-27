@@ -12,8 +12,6 @@
 namespace Sulu\Bundle\MediaBundle\Media\Manager;
 
 use Doctrine\ORM\EntityManager;
-use FFMpeg\Exception\ExecutableNotFoundException;
-use FFMpeg\FFProbe;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -21,7 +19,7 @@ use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
-use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
+use Sulu\Bundle\MediaBundle\Entity\CollectionRepository;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
@@ -55,82 +53,82 @@ class MediaManagerTest extends TestCase
     private $mediaManager;
 
     /**
-     * @var ObjectProphecy
+     * @var MediaRepositoryInterface|ObjectProphecy
      */
     private $mediaRepository;
 
     /**
-     * @var ObjectProphecy
+     * @var CollectionRepository|ObjectProphecy
      */
     private $collectionRepository;
 
     /**
-     * @var ObjectProphecy
+     * @var UserRepositoryInterface|ObjectProphecy
      */
     private $userRepository;
 
     /**
-     * @var CategoryRepositoryInterface
+     * @var CategoryRepositoryInterface|ObjectProphecy
      */
     private $categoryRepository;
 
     /**
-     * @var TargetGroupRepositoryInterface
+     * @var TargetGroupRepositoryInterface|ObjectProphecy
      */
     private $targetGroupRepository;
 
     /**
-     * @var ObjectProphecy
+     * @var EntityManager|ObjectProphecy
      */
     private $em;
 
     /**
-     * @var ObjectProphecy
+     * @var StorageInterface|ObjectProphecy
      */
     private $storage;
 
     /**
-     * @var ObjectProphecy
+     * @var FileValidatorInterface|ObjectProphecy
      */
     private $validator;
 
     /**
-     * @var ObjectProphecy
+     * @var FormatManagerInterface|ObjectProphecy
      */
     private $formatManager;
 
     /**
-     * @var ObjectProphecy
+     * @var TagManagerInterface|ObjectProphecy
      */
     private $tagManager;
 
     /**
-     * @var ObjectProphecy
+     * @var TypeManagerInterface|ObjectProphecy
      */
     private $typeManager;
 
     /**
-     * @var PathCleanupInterface
+     * @var PathCleanupInterface|ObjectProphecy
      */
     private $pathCleaner;
 
     /**
-     * @var TokenStorageInterface
+     * @var TokenStorageInterface|ObjectProphecy
      */
     private $tokenStorage;
 
     /**
-     * @var SecurityCheckerInterface
+     * @var SecurityCheckerInterface|ObjectProphecy
      */
     private $securityChecker;
 
     /**
-     * @var MediaPropertiesProviderInterface
+     * @var MediaPropertiesProviderInterface|ObjectProphecy
      */
     private $mediaPropertiesProvider;
 
     /**
-     * @var ObjectProphecy
+     * @var CategoryManagerInterface|ObjectProphecy
      */
     private $categoryManager;
 
@@ -139,7 +137,7 @@ class MediaManagerTest extends TestCase
         parent::setUp();
 
         $this->mediaRepository = $this->prophesize(MediaRepositoryInterface::class);
-        $this->collectionRepository = $this->prophesize(CollectionRepositoryInterface::class);
+        $this->collectionRepository = $this->prophesize(CollectionRepository::class);
         $this->userRepository = $this->prophesize(UserRepositoryInterface::class);
         $this->categoryRepository = $this->prophesize(CategoryRepositoryInterface::class);
         $this->targetGroupRepository = $this->prophesize(TargetGroupRepositoryInterface::class);
@@ -444,7 +442,7 @@ class MediaManagerTest extends TestCase
         $this->mediaManager->save(null, ['id' => 1, 'locale' => 'en', 'focusPointX' => 1, 'focusPointY' => 2], 1);
     }
 
-    public function testMediaPropertiesProvider()
+    public function testMediaPropertiesProvider(): void
     {
         $uploadedFile = $this->prophesize(UploadedFile::class)->willBeConstructedWith([__DIR__ . \DIRECTORY_SEPARATOR . 'test.txt', 1, null, null, 1, true]);
         $uploadedFile->getClientOriginalName()->willReturn('test.ogg');

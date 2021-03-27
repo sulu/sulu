@@ -30,6 +30,12 @@ class ImagePropertiesProvider implements MediaPropertiesProviderInterface
 
     public function provide(File $file): array
     {
+        $mimeType = $file->getMimeType();
+
+        if (!$mimeType || !\fnmatch('image/*', $mimeType)) {
+            return [];
+        }
+
         $properties = [];
 
         try {
@@ -38,14 +44,9 @@ class ImagePropertiesProvider implements MediaPropertiesProviderInterface
             $properties['width'] = $size->getWidth();
             $properties['height'] = $size->getHeight();
         } catch (InvalidArgumentException | RuntimeException $exception) {
-            // Exception is thrown -> image properties are not set
+            // @ignoreException
         }
 
         return $properties;
-    }
-
-    public static function supports(File $file): bool
-    {
-        return \fnmatch('image/*', $file->getMimeType());
     }
 }

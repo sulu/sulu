@@ -12,12 +12,13 @@
 namespace Sulu\Bundle\MediaBundle\Media\Manager;
 
 use Doctrine\DBAL\DBALException;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use FFMpeg\FFProbe;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
+use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepository;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\File;
@@ -30,7 +31,6 @@ use Sulu\Bundle\MediaBundle\Media\Exception\InvalidMediaTypeException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\FileValidator\FileValidatorInterface;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
-use Sulu\Bundle\MediaBundle\Media\PropertiesProvider\MediaPropertiesProvider;
 use Sulu\Bundle\MediaBundle\Media\PropertiesProvider\MediaPropertiesProviderInterface;
 use Sulu\Bundle\MediaBundle\Media\PropertiesProvider\VideoPropertiesProvider;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
@@ -51,6 +51,9 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class MediaManager implements MediaManagerInterface
 {
+    /**
+     * @deprecated This const is deprecated and will be removed in Sulu 3.0 use the CollectionInterface::class instead.
+     */
     const ENTITY_NAME_COLLECTION = 'SuluMediaBundle:Collection';
 
     /**
@@ -78,7 +81,7 @@ class MediaManager implements MediaManagerInterface
     protected $targetGroupRepository;
 
     /**
-     * @var EntityManager
+     * @var EntityManagerInterface
      */
     private $em;
 
@@ -158,10 +161,11 @@ class MediaManager implements MediaManagerInterface
     private $mediaPropertiesProviders;
 
     /**
+     * @param CollectionRepository $collectionRepository
      * @param null|FFprobe|MediaPropertiesProviderInterface[] $mediaPropertiesProviders
      * @param array $permissions
      * @param string $downloadPath
-     * @param string $maxFileSize
+     * @param int $maxFileSize Unused parameter replaced by FileValidatorInterface
      * @param string $adminDownloadPath
      */
     public function __construct(
@@ -169,20 +173,20 @@ class MediaManager implements MediaManagerInterface
         CollectionRepositoryInterface $collectionRepository,
         UserRepositoryInterface $userRepository,
         CategoryRepositoryInterface $categoryRepository,
-        EntityManager $em,
+        EntityManagerInterface $em,
         StorageInterface $storage,
         FileValidatorInterface $validator,
         FormatManagerInterface $formatManager,
         TagManagerInterface $tagManager,
         TypeManagerInterface $typeManager,
         PathCleanupInterface $pathCleaner,
-        TokenStorageInterface $tokenStorage = null,
-        SecurityCheckerInterface $securityChecker = null,
-        $mediaPropertiesProviders = null,
+        ?TokenStorageInterface $tokenStorage,
+        ?SecurityCheckerInterface $securityChecker,
+        $mediaPropertiesProviders,
         $permissions,
         $downloadPath,
         $maxFileSize,
-        TargetGroupRepositoryInterface $targetGroupRepository = null,
+        ?TargetGroupRepositoryInterface $targetGroupRepository,
         $adminDownloadPath = null
     ) {
         $this->mediaRepository = $mediaRepository;
@@ -729,13 +733,15 @@ class MediaManager implements MediaManagerInterface
                 throw new MediaNotFoundException($id);
             }
 
-            $mediaEntity->setCollection($this->em->getReference(self::ENTITY_NAME_COLLECTION, $destCollection));
+            /** @var CollectionInterface $collection */
+            $collection = $this->em->getReference(CollectionInterface::class, $destCollection);
+            $mediaEntity->setCollection($collection);
 
             $this->em->flush();
 
             return $this->addFormatsAndUrl(new Media($mediaEntity, $locale, null));
         } catch (DBALException $ex) {
-            throw new CollectionNotFoundException($destCollection);
+            throw new CollectionNotFoundException($destCollection, $ex);
         }
     }
 
