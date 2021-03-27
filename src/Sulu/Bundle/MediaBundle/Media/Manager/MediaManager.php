@@ -219,7 +219,7 @@ class MediaManager implements MediaManagerInterface
 
         $this->adminDownloadPath = $adminDownloadPath ?: '/admin' . $this->downloadPath;
 
-        if (!is_iterable($mediaPropertiesProviders)) {
+        if (!\is_iterable($mediaPropertiesProviders)) {
             @\trigger_error(
                 \sprintf(
                     'The usage of the "%s" without setting "$mediaPropertiesProviders" is deprecated and will not longer work in Sulu 3.0.',
