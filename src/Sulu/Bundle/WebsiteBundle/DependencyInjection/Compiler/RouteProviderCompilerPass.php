@@ -24,7 +24,9 @@ class RouteProviderCompilerPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        if (SuluKernel::CONTEXT_WEBSITE === $container->getParameter('sulu.context')) {
+        if (SuluKernel::CONTEXT_WEBSITE === $container->getParameter('sulu.context')
+            || $container->getParameter('sulu.context_definition_disabled')
+        ) {
             $container->setDefinition(
                 'sulu_website.provider.content',
                 new Definition('Sulu\Bundle\WebsiteBundle\Routing\ContentRouteProvider', [

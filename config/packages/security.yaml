@@ -24,9 +24,10 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+
         admin:
-            pattern: ^/
-            anonymous: ~
+            pattern: ^/admin
+            anonymous: lazy
             provider: sulu
             entry_point: sulu_security.authentication_entry_point
             json_login:
@@ -36,6 +37,21 @@ security:
             logout:
                 path: sulu_admin.logout
                 success_handler: sulu_security.logout_success_handler
+
+        sulu-test:
+            pattern: ^/
+            anonymous: lazy
+            provider: sulu
+            form_login:
+                login_path: login
+                check_path: login
+            logout:
+                path: logout
+                target: /
+            remember_me:
+                secret:   "%kernel.secret%"
+                lifetime: 604800 # 1 week in seconds
+                path:     /
 
 sulu_security:
     checker:

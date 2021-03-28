@@ -415,7 +415,9 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
      */
     private function initListBuilder(ContainerBuilder $container, XmlFileLoader $loader)
     {
-        if (SuluKernel::CONTEXT_ADMIN === $container->getParameter('sulu.context')) {
+        if (SuluKernel::CONTEXT_ADMIN === $container->getParameter('sulu.context')
+            || $container->getParameter('sulu.context_definition_disabled')
+        ) {
             $loader->load('list_builder.xml');
         }
     }

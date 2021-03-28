@@ -25,6 +25,11 @@ use Symfony\Component\Routing\RouteCollectionBuilder;
  */
 abstract class SuluKernel extends Kernel
 {
+    /**
+     * @var bool
+     */
+    public static $SULU_CONTEXT_DEFINITION_DISABLED = false;
+
     use MicroKernelTrait;
 
     const CONTEXT_ADMIN = 'admin';
@@ -68,9 +73,9 @@ abstract class SuluKernel extends Kernel
         foreach ($contents as $class => $envs) {
             if (
                 // if is all or current environment
-                (isset($envs['all']) || isset($envs[$this->environment]))
+                (isset($envs['all']) || isset($envs[$this->environment]) || (static::$SULU_CONTEXT_DEFINITION_DISABLED && isset($envs[$this->reversedContext])))
                 // and if not registered for other context.
-                && !isset($envs[$this->reversedContext])
+                && (static::$SULU_CONTEXT_DEFINITION_DISABLED || !isset($envs[$this->reversedContext]))
             ) {
                 yield new $class();
             }
@@ -143,7 +148,7 @@ abstract class SuluKernel extends Kernel
         $excludedConfigFiles = $this->glob($confDir, $pattern . $reversedConfigExtensions);
 
         foreach ($configFiles as $resource) {
-            if (!\in_array($resource, $excludedConfigFiles)) {
+            if (static::$SULU_CONTEXT_DEFINITION_DISABLED || !\in_array($resource, $excludedConfigFiles)) {
                 $loader->load($resource);
             }
         }
@@ -161,7 +166,7 @@ abstract class SuluKernel extends Kernel
         $excludedConfigFiles = $this->glob($confDir, $pattern . $reversedConfigExtensions);
 
         foreach ($configFiles as $resource) {
-            if (!\in_array($resource, $excludedConfigFiles)) {
+            if (static::$SULU_CONTEXT_DEFINITION_DISABLED || !\in_array($resource, $excludedConfigFiles)) {
                 $routes->import($resource);
             }
         }
@@ -234,6 +239,7 @@ abstract class SuluKernel extends Kernel
             parent::getKernelParameters(),
             [
                 'sulu.context' => $this->context,
+                'sulu.context_definition_disabled' => static::$SULU_CONTEXT_DEFINITION_DISABLED,
                 'sulu.common_cache_dir' => $this->getCommonCacheDir(),
             ]
         );

@@ -69,11 +69,13 @@ class CacheCommandSubscriber implements EventSubscriberInterface
             return;
         }
 
+        /* TODO FIXME currently not possible to clear preview and admin cache
         $previewKernel = $this->kernelFactory->create($this->environment);
 
         $application = $this->application ?: new Application($previewKernel);
         $application->setAutoExit(false);
         $application->run($event->getInput(), $event->getOutput());
+        */
     }
 
     /**

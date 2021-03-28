@@ -8,5 +8,9 @@ security:
             http_basic:
                 provider: testprovider
 
+        sulu-test:
+            http_basic:
+                provider: testprovider
+
 sulu_test:
     enable_test_user_provider: true

@@ -31,7 +31,11 @@ class SuluCoreBundle extends Bundle
 
         $container->addCompilerPass(new RegisterContentTypesCompilerPass());
         $container->addCompilerPass(new RegisterLocalizationProvidersPass());
-        $container->addCompilerPass(new RemoveForeignContextServicesPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 1024);
+
+        if (!$container->getParameter('sulu.context_definition_disabled')) {
+            $container->addCompilerPass(new RemoveForeignContextServicesPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 1024);
+        }
+
         $container->addCompilerPass(new ReplacersCompilerPass(__DIR__ . '/DataFixtures/replacers.xml'));
         $container->addCompilerPass(new ListBuilderMetadataProviderCompilerPass());
         $container->addCompilerPass(

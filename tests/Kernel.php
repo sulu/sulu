@@ -29,6 +29,8 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 class Kernel extends SuluKernel implements HttpCacheProvider
 {
+    public static $SULU_CONTEXT_DEFINITION_DISABLED = true;
+
     /**
      * @var HttpKernelInterface|null
      */
@@ -40,6 +42,7 @@ class Kernel extends SuluKernel implements HttpCacheProvider
         // if you are using symfony/dependency-injection 4.0+ as it's the default behavior
         $container->setParameter('container.autowiring.strict_mode', true);
         $container->setParameter('container.dumper.inline_class_loader', true);
+        $container->setParameter('sulu.context_disabled', true);
 
         parent::configureContainer($container, $loader);
     }

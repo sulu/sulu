@@ -21,6 +21,8 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class SuluTestKernel extends SuluKernel
 {
+    public static $SULU_CONTEXT_DEFINITION_DISABLED = true;
+
     /**
      * @var string
      */
@@ -92,11 +94,11 @@ class SuluTestKernel extends SuluKernel
             $bundles[] = new \FOS\HttpCacheBundle\FOSHttpCacheBundle();
         }
 
-        if (self::CONTEXT_WEBSITE === $this->getContext()) {
+        if (self::CONTEXT_WEBSITE === $this->getContext() || static::$SULU_CONTEXT_DEFINITION_DISABLED) {
             $bundles[] = new \Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle();
         }
 
-        if (self::CONTEXT_ADMIN === $this->getContext()) {
+        if (self::CONTEXT_ADMIN === $this->getContext() || static::$SULU_CONTEXT_DEFINITION_DISABLED) {
             $bundles[] = new \Symfony\Bundle\SecurityBundle\SecurityBundle();
             $bundles[] = new \Sulu\Bundle\AdminBundle\SuluAdminBundle();
             $bundles[] = new \Sulu\Bundle\PreviewBundle\SuluPreviewBundle();

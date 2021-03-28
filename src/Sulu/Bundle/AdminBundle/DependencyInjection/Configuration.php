@@ -28,7 +28,7 @@ class Configuration implements ConfigurationInterface
         $treeBuilder->getRootNode()
             ->children()
                 ->scalarNode('name')->defaultValue('Sulu Admin')->end()
-                ->scalarNode('email')->isRequired()->end()
+                ->scalarNode('email')->defaultValue('')->end()
                 ->scalarNode('user_data_service')->defaultValue('sulu_security.user_manager')->end()
                 ->arrayNode('resources')
                     ->useAttributeAsKey('resourceKey')

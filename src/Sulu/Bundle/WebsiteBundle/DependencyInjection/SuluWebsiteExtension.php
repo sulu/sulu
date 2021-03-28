@@ -62,7 +62,9 @@ class SuluWebsiteExtension extends Extension implements PrependExtensionInterfac
             );
         }
 
-        if (SuluKernel::CONTEXT_WEBSITE !== $container->getParameter('sulu.context')) {
+        if (SuluKernel::CONTEXT_WEBSITE !== $container->getParameter('sulu.context')
+            && !$container->getParameter('sulu.context_definition_disabled')
+        ) {
             return;
         }
 
@@ -79,11 +81,13 @@ class SuluWebsiteExtension extends Extension implements PrependExtensionInterfac
             ],
         ]);
 
-        $container->prependExtensionConfig('fos_rest', [
-            'exception' => [
-                'enabled' => false,
-            ],
-        ]);
+        if (SuluKernel::CONTEXT_WEBSITE !== $container->getParameter('sulu.context')) {
+            $container->prependExtensionConfig('fos_rest', [
+                'exception' => [
+                    'enabled' => false,
+                ],
+            ]);
+        }
     }
 
     public function load(array $configs, ContainerBuilder $container)
@@ -135,7 +139,9 @@ class SuluWebsiteExtension extends Extension implements PrependExtensionInterfac
             $loader->load('analytics.xml');
         }
 
-        if (SuluKernel::CONTEXT_WEBSITE == $container->getParameter('sulu.context')) {
+        if (SuluKernel::CONTEXT_WEBSITE == $container->getParameter('sulu.context')
+            || $container->getParameter('sulu.context_definition_disabled')
+        ) {
             $loader->load('website.xml');
 
             // default local provider
