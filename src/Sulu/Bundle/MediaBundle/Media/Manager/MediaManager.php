@@ -12,16 +12,13 @@
 namespace Sulu\Bundle\MediaBundle\Media\Manager;
 
 use Doctrine\DBAL\DBALException;
-use Doctrine\ORM\EntityManager;
-use FFMpeg\Exception\ExecutableNotFoundException;
+use Doctrine\ORM\EntityManagerInterface;
 use FFMpeg\FFProbe;
-use Imagine\Exception\InvalidArgumentException;
-use Imagine\Exception\RuntimeException;
-use Imagine\Image\ImagineInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
+use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepository;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\File;
@@ -34,6 +31,8 @@ use Sulu\Bundle\MediaBundle\Media\Exception\InvalidMediaTypeException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\FileValidator\FileValidatorInterface;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
+use Sulu\Bundle\MediaBundle\Media\PropertiesProvider\MediaPropertiesProviderInterface;
+use Sulu\Bundle\MediaBundle\Media\PropertiesProvider\VideoPropertiesProvider;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\MediaBundle\Media\TypeManager\TypeManagerInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
@@ -52,6 +51,9 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class MediaManager implements MediaManagerInterface
 {
+    /**
+     * @deprecated This const is deprecated and will be removed in Sulu 3.0 use the CollectionInterface::class instead.
+     */
     const ENTITY_NAME_COLLECTION = 'SuluMediaBundle:Collection';
 
     /**
@@ -79,7 +81,7 @@ class MediaManager implements MediaManagerInterface
     protected $targetGroupRepository;
 
     /**
-     * @var EntityManager
+     * @var EntityManagerInterface
      */
     private $em;
 
@@ -139,11 +141,6 @@ class MediaManager implements MediaManagerInterface
     private $downloadPath;
 
     /**
-     * @var FFProbe
-     */
-    private $ffprobe;
-
-    /**
      * @var array
      */
     private $permissions;
@@ -159,14 +156,16 @@ class MediaManager implements MediaManagerInterface
     private $adminDownloadPath;
 
     /**
-     * @var ImagineInterface
+     * @var MediaPropertiesProviderInterface[]
      */
-    private $imagine;
+    private $mediaPropertiesProviders;
 
     /**
+     * @param CollectionRepository $collectionRepository
+     * @param null|FFprobe|MediaPropertiesProviderInterface[] $mediaPropertiesProviders
      * @param array $permissions
      * @param string $downloadPath
-     * @param string $maxFileSize
+     * @param int $maxFileSize Unused parameter replaced by FileValidatorInterface
      * @param string $adminDownloadPath
      */
     public function __construct(
@@ -174,22 +173,21 @@ class MediaManager implements MediaManagerInterface
         CollectionRepositoryInterface $collectionRepository,
         UserRepositoryInterface $userRepository,
         CategoryRepositoryInterface $categoryRepository,
-        EntityManager $em,
+        EntityManagerInterface $em,
         StorageInterface $storage,
         FileValidatorInterface $validator,
         FormatManagerInterface $formatManager,
         TagManagerInterface $tagManager,
         TypeManagerInterface $typeManager,
         PathCleanupInterface $pathCleaner,
-        TokenStorageInterface $tokenStorage = null,
-        SecurityCheckerInterface $securityChecker = null,
-        FFProbe $ffprobe = null,
+        ?TokenStorageInterface $tokenStorage,
+        ?SecurityCheckerInterface $securityChecker,
+        $mediaPropertiesProviders,
         $permissions,
         $downloadPath,
         $maxFileSize,
-        TargetGroupRepositoryInterface $targetGroupRepository = null,
-        $adminDownloadPath = null,
-        ?ImagineInterface $imagine = null
+        ?TargetGroupRepositoryInterface $targetGroupRepository,
+        $adminDownloadPath = null
     ) {
         $this->mediaRepository = $mediaRepository;
         $this->collectionRepository = $collectionRepository;
@@ -205,7 +203,6 @@ class MediaManager implements MediaManagerInterface
         $this->pathCleaner = $pathCleaner;
         $this->tokenStorage = $tokenStorage;
         $this->securityChecker = $securityChecker;
-        $this->ffprobe = $ffprobe;
         $this->permissions = $permissions;
         $this->downloadPath = $downloadPath;
         $this->maxFileSize = $maxFileSize;
@@ -222,17 +219,25 @@ class MediaManager implements MediaManagerInterface
 
         $this->adminDownloadPath = $adminDownloadPath ?: '/admin' . $this->downloadPath;
 
-        if (!$imagine) {
+        if (!\is_iterable($mediaPropertiesProviders)) {
             @\trigger_error(
                 \sprintf(
-                    'The usage of the "%s" without setting "$imagine" is deprecated and will not longer work in Sulu 3.0.',
+                    'The usage of the "%s" without setting "$mediaPropertiesProviders" is deprecated and will not longer work in Sulu 3.0.',
                     MediaManager::class
                 ),
                 \E_USER_DEPRECATED
             );
+
+            if ($mediaPropertiesProviders instanceof FFProbe) {
+                $mediaPropertiesProviders = [
+                    new VideoPropertiesProvider($mediaPropertiesProviders),
+                ];
+            } else {
+                $mediaPropertiesProviders = [];
+            }
         }
 
-        $this->imagine = $imagine;
+        $this->mediaPropertiesProviders = $mediaPropertiesProviders;
     }
 
     public function getById($id, $locale)
@@ -310,41 +315,16 @@ class MediaManager implements MediaManagerInterface
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     private function getProperties(UploadedFile $uploadedFile)
     {
-        $mimeType = $uploadedFile->getMimeType();
         $properties = [];
-
-        // if the file is a video we add the duration
-        if (\fnmatch('video/*', $mimeType) && $this->ffprobe) {
-            try {
-                $properties['duration'] = $this->ffprobe->format($uploadedFile->getPathname())->get('duration');
-
-                // Dimensions
-                try {
-                    $dimensions = $this->ffprobe->streams($uploadedFile->getPathname())->videos()->first()->getDimensions();
-                    $properties['width'] = $dimensions->getWidth();
-                    $properties['height'] = $dimensions->getHeight();
-                } catch (\InvalidArgumentException $e) {
-                    // Exception is thrown if the video stream could not be obtained
-                } catch (\RuntimeException $e) {
-                    // Exception is thrown if the dimension could not be extracted
-                }
-            } catch (ExecutableNotFoundException $e) {
-                // Exception is thrown if ffmpeg is not installed -> video properties are not set
-            }
-        } elseif (\fnmatch('image/*', $mimeType)) {
-            if ($this->imagine) {
-                try {
-                    $image = $this->imagine->open($uploadedFile->getPathname());
-                    $properties['width'] = $image->getSize()->getWidth();
-                    $properties['height'] = $image->getSize()->getHeight();
-                } catch (InvalidArgumentException | RuntimeException $exception) {
-                    // Exception is thrown -> image properties are not set
-                }
-            }
+        foreach ($this->mediaPropertiesProviders as $mediaPropertiesProvider) {
+            $properties = \array_merge(
+                $properties,
+                $mediaPropertiesProvider->provide($uploadedFile)
+            );
         }
 
         return $properties;
@@ -753,13 +733,15 @@ class MediaManager implements MediaManagerInterface
                 throw new MediaNotFoundException($id);
             }
 
-            $mediaEntity->setCollection($this->em->getReference(self::ENTITY_NAME_COLLECTION, $destCollection));
+            /** @var CollectionInterface $collection */
+            $collection = $this->em->getReference(CollectionInterface::class, $destCollection);
+            $mediaEntity->setCollection($collection);
 
             $this->em->flush();
 
             return $this->addFormatsAndUrl(new Media($mediaEntity, $locale, null));
         } catch (DBALException $ex) {
-            throw new CollectionNotFoundException($destCollection);
+            throw new CollectionNotFoundException($destCollection, $ex);
         }
     }
 

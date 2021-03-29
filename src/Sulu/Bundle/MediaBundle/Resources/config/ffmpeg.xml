@@ -2,7 +2,6 @@
 <container xmlns="http://symfony.com/schema/dic/services"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
-
     <services>
         <service id="sulu_media.ffmpeg" class="FFMpeg\FFMpeg" lazy="true">
             <factory class="FFMpeg\FFMpeg" method="create"/>
@@ -22,6 +21,12 @@
                 <argument key="ffprobe.binaries">%sulu_media.ffprobe.binary%</argument>
             </argument>
             <argument id="logger" type="service" on-invalid="null"/>
+        </service>
+
+        <service id="sulu_media.video_properties_provider" class="Sulu\Bundle\MediaBundle\Media\PropertiesProvider\VideoPropertiesProvider">
+            <argument type="service" id="sulu_media.ffprobe"/>
+
+            <tag name="sulu_media.media_properties_provider"/>
         </service>
     </services>
 </container>

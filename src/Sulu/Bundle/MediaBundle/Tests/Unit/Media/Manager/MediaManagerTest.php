@@ -12,8 +12,6 @@
 namespace Sulu\Bundle\MediaBundle\Media\Manager;
 
 use Doctrine\ORM\EntityManager;
-use FFMpeg\Exception\ExecutableNotFoundException;
-use FFMpeg\FFProbe;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -21,7 +19,7 @@ use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
-use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
+use Sulu\Bundle\MediaBundle\Entity\CollectionRepository;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
@@ -32,6 +30,7 @@ use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidMediaTypeException;
 use Sulu\Bundle\MediaBundle\Media\FileValidator\FileValidatorInterface;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
+use Sulu\Bundle\MediaBundle\Media\PropertiesProvider\MediaPropertiesProviderInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\MediaBundle\Media\TypeManager\TypeManagerInterface;
 use Sulu\Bundle\SecurityBundle\Entity\User;
@@ -54,82 +53,82 @@ class MediaManagerTest extends TestCase
     private $mediaManager;
 
     /**
-     * @var ObjectProphecy
+     * @var MediaRepositoryInterface|ObjectProphecy
      */
     private $mediaRepository;
 
     /**
-     * @var ObjectProphecy
+     * @var CollectionRepository|ObjectProphecy
      */
     private $collectionRepository;
 
     /**
-     * @var ObjectProphecy
+     * @var UserRepositoryInterface|ObjectProphecy
      */
     private $userRepository;
 
     /**
-     * @var CategoryRepositoryInterface
+     * @var CategoryRepositoryInterface|ObjectProphecy
      */
     private $categoryRepository;
 
     /**
-     * @var TargetGroupRepositoryInterface
+     * @var TargetGroupRepositoryInterface|ObjectProphecy
      */
     private $targetGroupRepository;
 
     /**
-     * @var ObjectProphecy
+     * @var EntityManager|ObjectProphecy
      */
     private $em;
 
     /**
-     * @var ObjectProphecy
+     * @var StorageInterface|ObjectProphecy
      */
     private $storage;
 
     /**
-     * @var ObjectProphecy
+     * @var FileValidatorInterface|ObjectProphecy
      */
     private $validator;
 
     /**
-     * @var ObjectProphecy
+     * @var FormatManagerInterface|ObjectProphecy
      */
     private $formatManager;
 
     /**
-     * @var ObjectProphecy
+     * @var TagManagerInterface|ObjectProphecy
      */
     private $tagManager;
 
     /**
-     * @var ObjectProphecy
+     * @var TypeManagerInterface|ObjectProphecy
      */
     private $typeManager;
 
     /**
-     * @var PathCleanupInterface
+     * @var PathCleanupInterface|ObjectProphecy
      */
     private $pathCleaner;
 
     /**
-     * @var TokenStorageInterface
+     * @var TokenStorageInterface|ObjectProphecy
      */
     private $tokenStorage;
 
     /**
-     * @var SecurityCheckerInterface
+     * @var SecurityCheckerInterface|ObjectProphecy
      */
     private $securityChecker;
 
     /**
-     * @var FFProbe
+     * @var MediaPropertiesProviderInterface|ObjectProphecy
      */
-    private $ffprobe;
+    private $mediaPropertiesProvider;
 
     /**
-     * @var ObjectProphecy
+     * @var CategoryManagerInterface|ObjectProphecy
      */
     private $categoryManager;
 
@@ -138,7 +137,7 @@ class MediaManagerTest extends TestCase
         parent::setUp();
 
         $this->mediaRepository = $this->prophesize(MediaRepositoryInterface::class);
-        $this->collectionRepository = $this->prophesize(CollectionRepositoryInterface::class);
+        $this->collectionRepository = $this->prophesize(CollectionRepository::class);
         $this->userRepository = $this->prophesize(UserRepositoryInterface::class);
         $this->categoryRepository = $this->prophesize(CategoryRepositoryInterface::class);
         $this->targetGroupRepository = $this->prophesize(TargetGroupRepositoryInterface::class);
@@ -152,7 +151,7 @@ class MediaManagerTest extends TestCase
         $this->pathCleaner = $this->prophesize(PathCleanupInterface::class);
         $this->tokenStorage = $this->prophesize(TokenStorageInterface::class);
         $this->securityChecker = $this->prophesize(SecurityCheckerInterface::class);
-        $this->ffprobe = $this->prophesize(FFProbe::class);
+        $this->mediaPropertiesProvider = $this->prophesize(MediaPropertiesProviderInterface::class);
 
         $this->mediaManager = new MediaManager(
             $this->mediaRepository->reveal(),
@@ -168,7 +167,9 @@ class MediaManagerTest extends TestCase
             $this->pathCleaner->reveal(),
             $this->tokenStorage->reveal(),
             $this->securityChecker->reveal(),
-            $this->ffprobe->reveal(),
+            [
+                $this->mediaPropertiesProvider->reveal(),
+            ],
             [],
             '/download/{id}/media/{slug}',
             0,
@@ -304,7 +305,7 @@ class MediaManagerTest extends TestCase
      */
     public function testSpecialCharacterFileName($fileName, $cleanUpArgument, $cleanUpResult, $extension)
     {
-        /** @var UploadedFile $uploadedFile */
+        /** @var UploadedFile|ObjectProphecy $uploadedFile */
         $uploadedFile = $this->prophesize(UploadedFile::class)->willBeConstructedWith([__DIR__ . \DIRECTORY_SEPARATOR . 'test.txt', 1, null, null, 1, true]);
         $uploadedFile->getClientOriginalName()->willReturn($fileName);
         $uploadedFile->getPathname()->willReturn('');
@@ -317,6 +318,10 @@ class MediaManagerTest extends TestCase
         $this->mediaRepository->createNew()->willReturn(new Media());
 
         $this->storage->save('', $cleanUpResult . $extension)->shouldBeCalled();
+        $this->mediaPropertiesProvider
+            ->provide($uploadedFile->reveal())
+            ->willReturn([])
+            ->shouldBeCalled();
 
         $this->pathCleaner->cleanup(Argument::exact($cleanUpArgument))->shouldBeCalled()->willReturn($cleanUpResult);
         $media = $this->mediaManager->save($uploadedFile->reveal(), ['locale' => 'en', 'title' => 'my title'], 1);
@@ -437,21 +442,24 @@ class MediaManagerTest extends TestCase
         $this->mediaManager->save(null, ['id' => 1, 'locale' => 'en', 'focusPointX' => 1, 'focusPointY' => 2], 1);
     }
 
-    public function testVideoUploadWithoutFFmpeg()
+    public function testMediaPropertiesProvider(): void
     {
         $uploadedFile = $this->prophesize(UploadedFile::class)->willBeConstructedWith([__DIR__ . \DIRECTORY_SEPARATOR . 'test.txt', 1, null, null, 1, true]);
         $uploadedFile->getClientOriginalName()->willReturn('test.ogg');
         $uploadedFile->getPathname()->willReturn('');
         $uploadedFile->getSize()->willReturn('123');
         $uploadedFile->getMimeType()->willReturn('video/ogg');
-        $this->ffprobe->format(Argument::any())->willThrow(ExecutableNotFoundException::class)->shouldBeCalled();
-
         $this->mediaRepository->createNew()->willReturn(new Media());
 
         $this->storage->save(Argument::cetera())->willReturn([]);
+        $this->mediaPropertiesProvider
+            ->provide($uploadedFile->reveal())
+            ->willReturn(['key' => 'value'])
+            ->shouldBeCalled();
 
         $media = $this->mediaManager->save($uploadedFile->reveal(), ['locale' => 'en', 'title' => 'test'], null);
         $this->assertNotNull($media);
+        $this->assertSame(['key' => 'value'], $media->getProperties());
     }
 
     public function provideGetByIds()

@@ -2,6 +2,11 @@
 
 ## 2.3
 
+### Deprecated constructing `sulu_media.media_manager` with the `sulu_media.ffprobe` service
+
+Instead of the `sulu_media.ffprobe` the new [`tagged_iterator`](https://symfony.com/doc/4.4/service_container/tags.html#reference-tagged-services)
+of `sulu_media.media_properties_provider` should be injected into the `sulu_media.media_manager` service.
+
 ### Changed data-format used by the single_account_selection field-type
 
 The `single_account_selection` field-type was adjusted to process an id instead of a serialized account entity.
