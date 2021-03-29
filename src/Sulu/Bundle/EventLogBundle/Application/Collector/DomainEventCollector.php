@@ -11,14 +11,10 @@
 
 namespace Sulu\Bundle\EventLogBundle\Application\Collector;
 
-use Doctrine\Common\EventSubscriber;
-use Doctrine\ORM\Event\OnClearEventArgs;
-use Doctrine\ORM\Event\PostFlushEventArgs;
-use Doctrine\ORM\Events;
 use Sulu\Bundle\EventLogBundle\Application\Dispatcher\DomainEventDispatcherInterface;
 use Sulu\Bundle\EventLogBundle\Domain\Event\DomainEvent;
 
-class DomainEventCollector implements DomainEventCollectorInterface, EventSubscriber
+class DomainEventCollector implements DomainEventCollectorInterface
 {
     /**
      * @var DomainEventDispatcherInterface
@@ -36,25 +32,17 @@ class DomainEventCollector implements DomainEventCollectorInterface, EventSubscr
         $this->domainEventDispatcher = $domainEventDispatcher;
     }
 
-    public function getSubscribedEvents()
-    {
-        return [
-            Events::onClear,
-            Events::postFlush,
-        ];
-    }
-
     public function collect(DomainEvent $domainEvent): void
     {
         $this->eventsToBeDispatched[] = $domainEvent;
     }
 
-    public function onClear(OnClearEventArgs $args): void
+    public function clear(): void
     {
         $this->eventsToBeDispatched = [];
     }
 
-    public function postFlush(PostFlushEventArgs $args): void
+    public function dispatch(): void
     {
         $batchIdentifier = \uniqid('', true);
         $batchEvents = $this->eventsToBeDispatched;

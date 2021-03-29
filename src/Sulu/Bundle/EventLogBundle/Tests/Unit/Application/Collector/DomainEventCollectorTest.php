@@ -11,8 +11,6 @@
 
 namespace Sulu\Bundle\EventLogBundle\Tests\Unit\Application\Dispatcher;
 
-use Doctrine\ORM\Event\OnClearEventArgs;
-use Doctrine\ORM\Event\PostFlushEventArgs;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -32,7 +30,7 @@ class DomainEventCollectorTest extends TestCase
         $this->domainEventDispatcher = $this->prophesize(DomainEventDispatcherInterface::class);
     }
 
-    public function testCollectAndFlush(): void
+    public function testCollectAndDispatch(): void
     {
         $collector = $this->createDomainEventCollector();
 
@@ -57,11 +55,10 @@ class DomainEventCollectorTest extends TestCase
         $event3->setEventBatch(Argument::cetera())->shouldNotBeCalled();
         $this->domainEventDispatcher->dispatch($event3->reveal())->shouldBeCalled();
 
-        $postFlushEvent = $this->prophesize(PostFlushEventArgs::class);
-        $collector->postFlush($postFlushEvent->reveal());
+        $collector->dispatch();
     }
 
-    public function testCollectWithFlushAfterClear(): void
+    public function testCollectWithDispatchAfterClear(): void
     {
         $collector = $this->createDomainEventCollector();
 
@@ -73,14 +70,12 @@ class DomainEventCollectorTest extends TestCase
 
         $this->domainEventDispatcher->dispatch(Argument::cetera())->shouldNotBeCalled();
 
-        $onClearEventArgs = $this->prophesize(OnClearEventArgs::class);
-        $collector->onClear($onClearEventArgs->reveal());
+        $collector->clear();
 
-        $postFlushEvent = $this->prophesize(PostFlushEventArgs::class);
-        $collector->postFlush($postFlushEvent->reveal());
+        $collector->dispatch();
     }
 
-    public function testCollectWithoutFlush(): void
+    public function testCollectWithoutDispatch(): void
     {
         $collector = $this->createDomainEventCollector();
 
@@ -93,14 +88,13 @@ class DomainEventCollectorTest extends TestCase
         $this->domainEventDispatcher->dispatch(Argument::cetera())->shouldNotBeCalled();
     }
 
-    public function testFlushWithoutCollect(): void
+    public function testDispatchWithoutCollect(): void
     {
         $collector = $this->createDomainEventCollector();
 
         $this->domainEventDispatcher->dispatch(Argument::cetera())->shouldNotBeCalled();
 
-        $postFlushEvent = $this->prophesize(PostFlushEventArgs::class);
-        $collector->postFlush($postFlushEvent->reveal());
+        $collector->dispatch();
     }
 
     private function createDomainEventCollector(): DomainEventCollector

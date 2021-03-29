@@ -6,13 +6,13 @@
         <service id="sulu_event_log.domain_event_dispatcher" class="Sulu\Bundle\EventLogBundle\Application\Dispatcher\DomainEventDispatcher">
             <argument type="service" id="event_dispatcher"/>
         </service>
+
         <service id="Sulu\Bundle\EventLogBundle\Application\Dispatcher\DomainEventDispatcherInterface" alias="sulu_event_log.domain_event_dispatcher"/>
 
         <service id="sulu_event_log.domain_event_collector" class="Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollector">
             <argument type="service" id="sulu_event_log.domain_event_dispatcher"/>
-
-            <tag name="doctrine.event_subscriber" priority="-256"/>
         </service>
+
         <service id="Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface" alias="sulu_event_log.domain_event_collector"/>
 
         <service id="sulu_event_log.event_record_repository.null" class="Sulu\Bundle\EventLogBundle\Domain\Repository\NullEventRecordRepository">
@@ -27,6 +27,12 @@
             <argument>%sulu_event_log.storage.persist_payload%</argument>
 
             <tag name="doctrine.event_subscriber" priority="256"/>
+        </service>
+
+        <service id="sulu_event_log.domain_event_collector_subscriber" class="Sulu\Bundle\EventLogBundle\Infrastructure\Doctrine\Subscriber\DomainEventCollectorSubscriber">
+            <argument type="service" id="sulu_event_log.domain_event_collector"/>
+
+            <tag name="doctrine.event_subscriber" priority="-256"/>
         </service>
 
         <service id="sulu_event_log.store_event_record_subscriber" class="Sulu\Bundle\EventLogBundle\Application\Subscriber\StoreEventRecordSubscriber">
