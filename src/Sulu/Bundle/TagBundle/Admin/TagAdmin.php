@@ -17,6 +17,7 @@ use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
+use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
@@ -84,7 +85,7 @@ class TagAdmin extends Admin
         if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
             $viewCollection->add(
                 $this->viewBuilderFactory->createListViewBuilder(static::LIST_VIEW, '/tags')
-                    ->setResourceKey('tags')
+                    ->setResourceKey(TagInterface::RESOURCE_KEY)
                     ->setListKey('tags')
                     ->setTitle('sulu_tag.tags')
                     ->addListAdapters(['table'])
@@ -94,12 +95,12 @@ class TagAdmin extends Admin
             );
             $viewCollection->add(
                 $this->viewBuilderFactory->createResourceTabViewBuilder(static::ADD_FORM_VIEW, '/tags/add')
-                    ->setResourceKey('tags')
+                    ->setResourceKey(TagInterface::RESOURCE_KEY)
                     ->setBackView(static::LIST_VIEW)
             );
             $viewCollection->add(
                 $this->viewBuilderFactory->createFormViewBuilder('sulu_tag.add_form.details', '/details')
-                    ->setResourceKey('tags')
+                    ->setResourceKey(TagInterface::RESOURCE_KEY)
                     ->setFormKey('tag_details')
                     ->setTabTitle('sulu_admin.details')
                     ->setEditView(static::EDIT_FORM_VIEW)
@@ -108,13 +109,13 @@ class TagAdmin extends Admin
             );
             $viewCollection->add(
                 $this->viewBuilderFactory->createResourceTabViewBuilder(static::EDIT_FORM_VIEW, '/tags/:id')
-                    ->setResourceKey('tags')
+                    ->setResourceKey(TagInterface::RESOURCE_KEY)
                     ->setBackView(static::LIST_VIEW)
                     ->setTitleProperty('name')
             );
             $viewCollection->add(
                 $this->viewBuilderFactory->createFormViewBuilder('sulu_tag.edit_form.details', '/details')
-                    ->setResourceKey('tags')
+                    ->setResourceKey(TagInterface::RESOURCE_KEY)
                     ->setFormKey('tag_details')
                     ->setTabTitle('sulu_admin.details')
                     ->addToolbarActions($formToolbarActions)

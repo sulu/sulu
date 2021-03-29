@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\TagBundle\Domain\Event;
 
 use Sulu\Bundle\EventLogBundle\Domain\Event\DomainEvent;
+use Sulu\Bundle\TagBundle\Admin\TagAdmin;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 
 class TagMergedEvent extends DomainEvent
@@ -63,7 +64,7 @@ class TagMergedEvent extends DomainEvent
 
     public function getResourceKey(): string
     {
-        return 'tags';
+        return TagInterface::RESOURCE_KEY;
     }
 
     public function getResourceId(): string
@@ -78,6 +79,6 @@ class TagMergedEvent extends DomainEvent
 
     public function getResourceSecurityContext(): ?string
     {
-        return 'sulu.settings.tags';
+        return TagAdmin::SECURITY_CONTEXT;
     }
 }
