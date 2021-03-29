@@ -23,7 +23,7 @@
     </filter>
 
     <php>
-        <env name="APP_ENV" value="test"/>
+        <server name="APP_ENV" value="test" force="true"/>
         <env name="KERNEL_CLASS" value="Sulu\Bundle\SearchBundle\Tests\Application\Kernel"/>
         <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak"/>
     </php>
