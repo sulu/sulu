@@ -20,6 +20,21 @@
     <tag name="test2" test="test-value2"/>
     <tag name="test3" value="test-value"/>
 
+    <schema>
+        <anyOf>
+            <schema>
+                <properties>
+                    <property name="blog" mandatory="true"/>
+                </properties>
+            </schema>
+            <schema>
+                <properties>
+                    <property name="localized_blog" mandatory="true"/>
+                </properties>
+            </schema>
+        </anyOf>
+    </schema>
+
     <properties>
         <property name="title" type="text_line" mandatory="true">
             <meta>
