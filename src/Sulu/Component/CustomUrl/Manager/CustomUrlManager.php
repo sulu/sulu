@@ -288,6 +288,7 @@ class CustomUrlManager implements CustomUrlManagerInterface
     {
         $routeDocument = $this->findRoute($uuid);
 
+        // target of route is a another route for history routes, therefore loop until we find the custom url
         $customUrlDocument = $routeDocument->getTargetDocument();
         while (!$customUrlDocument instanceof CustomUrlDocument) {
             $customUrlDocument = $customUrlDocument->getTargetDocument();

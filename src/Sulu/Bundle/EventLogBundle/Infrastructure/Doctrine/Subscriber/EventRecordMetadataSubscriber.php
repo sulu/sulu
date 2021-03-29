@@ -17,6 +17,9 @@ use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Doctrine\Persistence\Event\LoadClassMetadataEventArgs;
 use Sulu\Bundle\EventLogBundle\Domain\Model\EventRecordInterface;
 
+/**
+ * @internal
+ */
 class EventRecordMetadataSubscriber implements EventSubscriber
 {
     const EVENT_PAYLOAD_FIELD = 'eventPayload';
