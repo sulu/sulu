@@ -28,10 +28,19 @@ class TagRemovedEventTest extends TestCase
         $event = $this->createTagRemovedEvent(
             1234,
          'tag-name-123',
-         true
+            [
+                'wasMerged' => true,
+                'destinationTagId' => 5566,
+            ]
         );
 
-        static::assertSame(['tagWasMerged' => true], $event->getEventContext());
+        static::assertSame(
+            [
+                'wasMerged' => true,
+                'destinationTagId' => 5566,
+            ],
+            $event->getEventContext()
+        );
     }
 
     public function testGetResourceKey(): void
@@ -62,15 +71,18 @@ class TagRemovedEventTest extends TestCase
         static::assertSame('sulu.settings.tags', $event->getResourceSecurityContext());
     }
 
+    /**
+     * @param mixed[] $context
+     */
     private function createTagRemovedEvent(
         int $tagId = 1234,
         string $tagName = 'tag-name',
-        bool $tagWasMerged = false
+        array $context = []
     ): TagRemovedEvent {
         return new TagRemovedEvent(
             $tagId,
             $tagName,
-            $tagWasMerged
+            $context
         );
     }
 }

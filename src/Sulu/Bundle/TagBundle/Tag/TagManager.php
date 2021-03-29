@@ -197,8 +197,11 @@ class TagManager implements TagManagerInterface
 
             $this->em->remove($srcTag);
 
-            $this->domainEventCollector->collect(new TagRemovedEvent($srcTag->getId(), $srcTag->getName(), true));
             $this->domainEventCollector->collect(new TagMergedEvent($destTag, $srcTag->getId(), $srcTag->getName()));
+            $this->domainEventCollector->collect(new TagRemovedEvent($srcTag->getId(), $srcTag->getName(), [
+                'wasMerged' => true,
+                'destinationTagId' => $destTag->getId(),
+            ]));
 
             $srcTags[] = $srcTag;
         }
