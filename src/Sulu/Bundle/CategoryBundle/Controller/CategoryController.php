@@ -16,6 +16,7 @@ use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\CategoryBundle\Admin\CategoryAdmin;
 use Sulu\Bundle\CategoryBundle\Api\RootCategory;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
 use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\Exception\RestException;
@@ -73,6 +74,9 @@ class CategoryController extends AbstractRestController implements ClassResource
      */
     private $categoryClass;
 
+    /**
+     * @deprecated Use the CategoryInterface::RESOURCE_KEY constant instead
+     */
     protected static $entityKey = 'categories';
 
     public function __construct(
@@ -135,11 +139,11 @@ class CategoryController extends AbstractRestController implements ClassResource
         } elseif ($request->query->has('ids')) {
             $entities = $this->categoryManager->findByIds(\explode(',', $request->query->get('ids')));
             $categories = $this->categoryManager->getApiObjects($entities, $locale);
-            $list = new CollectionRepresentation($categories, self::$entityKey);
+            $list = new CollectionRepresentation($categories, CategoryInterface::RESOURCE_KEY);
         } else {
             $entities = $this->categoryManager->findChildrenByParentKey($rootKey);
             $categories = $this->categoryManager->getApiObjects($entities, $locale);
-            $list = new CollectionRepresentation($categories, self::$entityKey);
+            $list = new CollectionRepresentation($categories, CategoryInterface::RESOURCE_KEY);
         }
 
         return $this->handleView($this->view($list, 200));
@@ -303,7 +307,7 @@ class CategoryController extends AbstractRestController implements ClassResource
                 }
 
                 $category['_embedded'] = [
-                    self::$entityKey => $categoriesByParentId[$category['id']],
+                    CategoryInterface::RESOURCE_KEY => $categoriesByParentId[$category['id']],
                 ];
             }
 
@@ -321,7 +325,7 @@ class CategoryController extends AbstractRestController implements ClassResource
 
         return new ListRepresentation(
             $categories,
-            self::$entityKey,
+            CategoryInterface::RESOURCE_KEY,
             'sulu_category.get_categories',
             $request->query->all(),
             $listBuilder->getCurrentPage(),
@@ -332,7 +336,7 @@ class CategoryController extends AbstractRestController implements ClassResource
 
     private function initializeListBuilder($locale)
     {
-        $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors(self::$entityKey);
+        $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors(CategoryInterface::RESOURCE_KEY);
 
         $listBuilder = $this->listBuilderFactory->create($this->categoryClass);
         $listBuilder->setParameter('locale', $locale);

@@ -61,7 +61,7 @@ class CategoryCreatedEvent extends DomainEvent
 
     public function getResourceKey(): string
     {
-        return 'categories';
+        return CategoryInterface::RESOURCE_KEY;
     }
 
     public function getResourceId(): string

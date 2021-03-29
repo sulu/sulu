@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\CategoryBundle\Domain\Event;
 
 use Sulu\Bundle\CategoryBundle\Admin\CategoryAdmin;
-use Sulu\Bundle\CategoryBundle\Api\Category;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\EventLogBundle\Domain\Event\DomainEvent;
 
@@ -58,7 +57,7 @@ class CategoryMovedEvent extends DomainEvent
 
     public function getResourceKey(): string
     {
-        return 'categories';
+        return CategoryInterface::RESOURCE_KEY;
     }
 
     public function getResourceId(): string

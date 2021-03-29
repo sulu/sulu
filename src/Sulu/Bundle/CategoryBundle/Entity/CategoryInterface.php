@@ -20,6 +20,8 @@ use Sulu\Component\Security\Authentication\UserInterface;
  */
 interface CategoryInterface extends AuditableInterface
 {
+    const RESOURCE_KEY = 'categories';
+
     /**
      * Set id.
      *

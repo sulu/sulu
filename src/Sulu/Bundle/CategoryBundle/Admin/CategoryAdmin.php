@@ -17,6 +17,7 @@ use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
@@ -95,7 +96,7 @@ class CategoryAdmin extends Admin
         if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
             $listViewBuilder = $this->viewBuilderFactory
                 ->createListViewBuilder(static::LIST_VIEW, '/categories/:locale')
-                ->setResourceKey('categories')
+                ->setResourceKey(CategoryInterface::RESOURCE_KEY)
                 ->setListKey('categories')
                 ->setTitle('sulu_category.categories')
                 ->addListAdapters(['tree_table'])
@@ -113,14 +114,14 @@ class CategoryAdmin extends Admin
             $viewCollection->add(
                 $this->viewBuilderFactory
                     ->createResourceTabViewBuilder(static::ADD_FORM_VIEW, '/categories/:locale/add')
-                    ->setResourceKey('categories')
+                    ->setResourceKey(CategoryInterface::RESOURCE_KEY)
                     ->addLocales($locales)
                     ->setBackView(static::LIST_VIEW)
             );
             $viewCollection->add(
                 $this->viewBuilderFactory
                     ->createFormViewBuilder('sulu_category.add_form.details', '/details')
-                    ->setResourceKey('categories')
+                    ->setResourceKey(CategoryInterface::RESOURCE_KEY)
                     ->setFormKey('category_details')
                     ->setTabTitle('sulu_admin.details')
                     ->addToolbarActions($formToolbarActions)
@@ -131,7 +132,7 @@ class CategoryAdmin extends Admin
             $viewCollection->add(
                 $this->viewBuilderFactory
                     ->createResourceTabViewBuilder(static::EDIT_FORM_VIEW, '/categories/:locale/:id')
-                    ->setResourceKey('categories')
+                    ->setResourceKey(CategoryInterface::RESOURCE_KEY)
                     ->addLocales($locales)
                     ->setBackView(static::LIST_VIEW)
                     ->addRouterAttributesToBackView(['id' => 'active'])
@@ -140,7 +141,7 @@ class CategoryAdmin extends Admin
             $viewCollection->add(
                 $this->viewBuilderFactory
                     ->createFormViewBuilder('sulu_category.edit_form.details', '/details')
-                    ->setResourceKey('categories')
+                    ->setResourceKey(CategoryInterface::RESOURCE_KEY)
                     ->setFormKey('category_details')
                     ->setTabTitle('sulu_admin.details')
                     ->addToolbarActions($formToolbarActions)

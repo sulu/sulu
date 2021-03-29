@@ -32,7 +32,6 @@ use Sulu\Bundle\CategoryBundle\Exception\CategoryKeyNotUniqueException;
 use Sulu\Bundle\CategoryBundle\Exception\CategoryNameMissingException;
 use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
-use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -241,9 +240,9 @@ class CategoryManager implements CategoryManagerInterface
         $this->em->persist($categoryEntity);
 
         if ($isNewCategory) {
-            $this->domainEventCollector->collect(new CategoryCreatedEvent($categoryWrapper, $data));
+            $this->domainEventCollector->collect(new CategoryCreatedEvent($categoryEntity, $locale, $data));
         } else {
-            $this->domainEventCollector->collect(new CategoryModifiedEvent($categoryWrapper, $data));
+            $this->domainEventCollector->collect(new CategoryModifiedEvent($categoryEntity, $locale, $data));
         }
 
         try {
