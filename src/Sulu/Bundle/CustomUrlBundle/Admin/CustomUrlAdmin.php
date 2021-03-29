@@ -16,6 +16,7 @@ use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
+use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
@@ -28,6 +29,8 @@ class CustomUrlAdmin extends Admin
 {
     /**
      * Returns security context for custom-urls in given webspace.
+     *
+     * @final
      *
      * @param string $webspaceKey
      *
@@ -74,7 +77,7 @@ class CustomUrlAdmin extends Admin
             $viewCollection->add(
                 $this->viewBuilderFactory
                     ->createFormOverlayListViewBuilder('sulu_custom_url.custom_urls_list', '/custom-urls')
-                    ->setResourceKey('custom_urls')
+                    ->setResourceKey(CustomUrlDocument::RESOURCE_KEY)
                     ->setListKey('custom_urls')
                     ->addListAdapters(['table_light'])
                     ->addRouterAttributesToListRequest(['webspace'])

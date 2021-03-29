@@ -15,6 +15,7 @@ use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use HandcraftedInTheAlps\RestRoutingBundle\Controller\Annotations\RouteResource;
 use Sulu\Bundle\CustomUrlBundle\Admin\CustomUrlAdmin;
+use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 use Sulu\Component\CustomUrl\Manager\CustomUrlManagerInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Rest\AbstractRestController;
@@ -33,8 +34,6 @@ use Symfony\Component\HttpFoundation\Response;
 class CustomUrlController extends AbstractRestController implements SecuredControllerInterface
 {
     use RequestParametersTrait;
-
-    private static $relationName = 'custom_urls';
 
     /**
      * @var CustomUrlManagerInterface
@@ -74,7 +73,7 @@ class CustomUrlController extends AbstractRestController implements SecuredContr
     {
         $result = $this->customUrlManager->findList($webspace);
 
-        $list = new CollectionRepresentation($result, self::$relationName);
+        $list = new CollectionRepresentation($result, CustomUrlDocument::RESOURCE_KEY);
 
         return $this->handleView($this->view($list));
     }

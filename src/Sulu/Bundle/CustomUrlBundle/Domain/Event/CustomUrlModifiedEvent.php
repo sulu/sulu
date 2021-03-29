@@ -64,7 +64,7 @@ class CustomUrlModifiedEvent extends DomainEvent
 
     public function getResourceKey(): string
     {
-        return 'custom_urls';
+        return CustomUrlDocument::RESOURCE_KEY;
     }
 
     public function getResourceId(): string
