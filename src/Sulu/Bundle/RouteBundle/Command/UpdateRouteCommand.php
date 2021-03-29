@@ -67,7 +67,7 @@ class UpdateRouteCommand extends Command
     {
         $this->addArgument('entity', InputArgument::REQUIRED)
             ->addArgument('locale', InputArgument::REQUIRED)
-            ->addOption('batch-size', null, InputOption::VALUE_REQUIRED, '', 1000)
+            ->addOption('batch-size', null, InputOption::VALUE_REQUIRED, '', '1000')
             ->setDescription('Update the routes for all entities.')
             ->setHelp(
                 <<<'EOT'
@@ -82,7 +82,7 @@ EOT
     {
         $this->translator->setLocale($input->getArgument('locale'));
 
-        $batchSize = $input->getOption('batch-size');
+        $batchSize = (int) $input->getOption('batch-size');
 
         /** @var EntityRepository $repository */
         $repository = $this->entityManager->getRepository($input->getArgument('entity'));

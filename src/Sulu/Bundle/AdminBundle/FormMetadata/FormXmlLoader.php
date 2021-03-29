@@ -112,9 +112,9 @@ class FormXmlLoader extends AbstractLoader
         $form->setItems($this->formMetadataMapper->mapChildren($formMetadata->getChildren(), $locale));
 
         $schema = $this->formMetadataMapper->mapSchema($formMetadata->getProperties());
-        $formSchema = $formMetadata->getSchema();
-        if ($formSchema) {
-            $schema = $schema->merge($formSchema);
+        $xmlSchema = $formMetadata->getSchema();
+        if ($xmlSchema) {
+            $schema = $schema->merge($xmlSchema);
         }
 
         $form->setSchema($schema);
