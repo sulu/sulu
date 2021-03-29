@@ -2,6 +2,17 @@
 
 ## 2.3
 
+### Changed constructor of multiple services to integrate them with the SuluEventLogBundle
+
+The `SuluEventLogBundle` provides a central place for dispatching events that happen in the application. To integrate
+the bundle with existing services, the constructor of the following services was adjusted. 
+
+If you have extended one of these services in your project, you need to adjust your `parent::__construct` call to pass 
+the correct parameters:
+
+- `Sulu\Component\CustomUrl\Manager\CustomUrlManager`
+- `Sulu\Bundle\TagBundle\Tag\TagManager`
+
 ### Deprecated constructing `sulu_media.media_manager` with the `sulu_media.ffprobe` service
 
 Instead of the `sulu_media.ffprobe` the new [`tagged_iterator`](https://symfony.com/doc/4.4/service_container/tags.html#reference-tagged-services)
