@@ -17,8 +17,6 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Collector\DocumentDomainEventCollector;
 use Sulu\Bundle\EventLogBundle\Application\Dispatcher\DomainEventDispatcherInterface;
 use Sulu\Bundle\EventLogBundle\Domain\Event\DomainEvent;
-use Sulu\Component\DocumentManager\Event\ClearEvent;
-use Sulu\Component\DocumentManager\Event\FlushEvent;
 
 class DocumentDomainEventCollectorTest extends TestCase
 {
@@ -32,7 +30,7 @@ class DocumentDomainEventCollectorTest extends TestCase
         $this->domainEventDispatcher = $this->prophesize(DomainEventDispatcherInterface::class);
     }
 
-    public function testCollectAndFlush(): void
+    public function testCollectAndDispatch(): void
     {
         $collector = $this->createDocumentDomainEventCollector();
 
@@ -57,11 +55,10 @@ class DocumentDomainEventCollectorTest extends TestCase
         $event3->setEventBatch(Argument::cetera())->shouldNotBeCalled();
         $this->domainEventDispatcher->dispatch($event3->reveal())->shouldBeCalled();
 
-        $flushEvent = $this->prophesize(FlushEvent::class);
-        $collector->onFlush($flushEvent->reveal());
+        $collector->dispatch();
     }
 
-    public function testCollectWithFlushAfterClear(): void
+    public function testCollectWithDispatchAfterClear(): void
     {
         $collector = $this->createDocumentDomainEventCollector();
 
@@ -73,14 +70,12 @@ class DocumentDomainEventCollectorTest extends TestCase
 
         $this->domainEventDispatcher->dispatch(Argument::cetera())->shouldNotBeCalled();
 
-        $clearEvent = $this->prophesize(ClearEvent::class);
-        $collector->onClear($clearEvent->reveal());
+        $collector->clear();
 
-        $flushEvent = $this->prophesize(FlushEvent::class);
-        $collector->onFlush($flushEvent->reveal());
+        $collector->dispatch();
     }
 
-    public function testCollectWithoutFlush(): void
+    public function testCollectWithoutDispatch(): void
     {
         $collector = $this->createDocumentDomainEventCollector();
 
@@ -93,14 +88,13 @@ class DocumentDomainEventCollectorTest extends TestCase
         $this->domainEventDispatcher->dispatch(Argument::cetera())->shouldNotBeCalled();
     }
 
-    public function testFlushWithoutCollect(): void
+    public function testDispatchWithoutCollect(): void
     {
         $collector = $this->createDocumentDomainEventCollector();
 
         $this->domainEventDispatcher->dispatch(Argument::cetera())->shouldNotBeCalled();
 
-        $flushEvent = $this->prophesize(FlushEvent::class);
-        $collector->onFlush($flushEvent->reveal());
+        $collector->dispatch();
     }
 
     private function createDocumentDomainEventCollector(): DocumentDomainEventCollector

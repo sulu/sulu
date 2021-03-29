@@ -64,10 +64,15 @@
 
         <service id="sulu_document_manager.document_domain_event_collector" class="Sulu\Bundle\DocumentManagerBundle\Collector\DocumentDomainEventCollector">
             <argument type="service" id="sulu_event_log.domain_event_dispatcher"/>
+        </service>
+
+        <service id="Sulu\Bundle\DocumentManagerBundle\Collector\DocumentDomainEventCollectorInterface" alias="sulu_document_manager.document_domain_event_collector"/>
+
+        <service id="sulu_document_manager.document_domain_event_collector_subscriber" class="Sulu\Bundle\DocumentManagerBundle\Collector\DocumentDomainEventCollectorSubscriber">
+            <argument type="service" id="sulu_document_manager.document_domain_event_collector"/>
 
             <tag name="sulu_document_manager.event_subscriber"/>
         </service>
-        <service id="Sulu\Bundle\DocumentManagerBundle\Collector\DocumentDomainEventCollectorInterface" alias="sulu_document_manager.document_domain_event_collector"/>
 
         <!-- Utilities -->
         <service id="sulu_document_manager.path_segment_registry" class="Sulu\Component\DocumentManager\PathSegmentRegistry">

@@ -16,4 +16,8 @@ use Sulu\Bundle\EventLogBundle\Domain\Event\DomainEvent;
 interface DocumentDomainEventCollectorInterface
 {
     public function collect(DomainEvent $domainEvent): void;
+
+    public function clear(): void;
+
+    public function dispatch(): void;
 }
