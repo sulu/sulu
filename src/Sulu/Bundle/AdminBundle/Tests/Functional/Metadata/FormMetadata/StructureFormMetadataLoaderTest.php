@@ -52,6 +52,10 @@ class StructureFormMetadataLoaderTest extends KernelTestCase
         $this->assertNotNull($overviewForm->getSchema());
         $this->assertInstanceOf(SchemaMetadata::class, $overviewForm->getSchema());
 
+        $overviewFormSchema = $overviewForm->getSchema()->toJsonSchema();
+        $this->assertArrayNotHasKey('anyOf', $overviewFormSchema);
+        $this->assertArrayNotHasKey('allOf', $overviewFormSchema);
+
         $defaultForm = $typedForm->getForms()['default'];
         $this->assertInstanceOf(FormMetadata::class, $defaultForm);
         $this->assertEquals('default', $defaultForm->getName());
@@ -60,6 +64,12 @@ class StructureFormMetadataLoaderTest extends KernelTestCase
         $this->assertCount(3, $defaultForm->getTags());
         $this->assertNotNull($defaultForm->getSchema());
         $this->assertInstanceOf(SchemaMetadata::class, $defaultForm->getSchema());
+
+        // default template has <schema> node in xml, therefore the metadata should contain 2 schemas in allOf
+        $defaultFormSchema = $defaultForm->getSchema()->toJsonSchema();
+        $this->assertArrayNotHasKey('anyOf', $defaultFormSchema);
+        $this->assertArrayHasKey('allOf', $defaultFormSchema);
+        $this->assertCount(2, $defaultFormSchema['allOf']);
     }
 
     public function testGetMetadataGerman()
