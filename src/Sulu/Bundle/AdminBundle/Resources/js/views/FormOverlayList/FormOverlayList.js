@@ -5,14 +5,11 @@ import {action, observable, toJS} from 'mobx';
 import type {ElementRef} from 'react';
 import type {IObservableValue} from 'mobx';
 import type {ViewProps} from '../../containers/ViewRenderer';
-import Overlay from '../../components/Overlay';
 import {translate} from '../../utils/Translator';
-import Form from '../../containers/Form';
+import FormOverlay from '../../containers/FormOverlay';
 import ResourceStore from '../../stores/ResourceStore';
 import List from '../List';
 import ResourceFormStore from '../../containers/Form/stores/ResourceFormStore';
-import Snackbar from '../../components/Snackbar';
-import formOverlayListStyles from './formOverlayList.scss';
 
 type Props = ViewProps & {
     resourceStore?: ResourceStore,
@@ -24,10 +21,8 @@ class FormOverlayList extends React.Component<Props> {
     locale: IObservableValue<string> = observable.box();
 
     listRef: ?ElementRef<typeof List>;
-    formRef: ?ElementRef<typeof Form>;
 
     @observable formStore: ?ResourceFormStore;
-    @observable formErrors: Array<string> = [];
 
     handleItemAdd = () => {
         this.createFormOverlay(undefined);
@@ -38,40 +33,14 @@ class FormOverlayList extends React.Component<Props> {
     };
 
     handleFormOverlayConfirm = () => {
-        if (!this.formRef) {
-            throw new Error('The Form ref has not been set! This should not happen and is likely a bug.');
+        this.destroyFormStore();
+        if (this.listRef) {
+            this.listRef.reload();
         }
-
-        this.formRef.submit();
     };
 
     handleFormOverlayClose = () => {
-        this.destroyFormOverlay();
-    };
-
-    handleFormSubmit = () => {
-        if (!this.formStore) {
-            throw new Error('The FormStore has not been initialized! This should not happen and is likely a bug.');
-        }
-
-        this.formStore.save()
-            .then(() => {
-                this.destroyFormOverlay();
-                if (this.listRef) {
-                    this.listRef.reload();
-                }
-            })
-            .catch(action((error) => {
-                this.formErrors.push(error.detail || error.title || translate('sulu_admin.form_save_server_error'));
-            }));
-    };
-
-    @action handleErrorSnackbarClose = () => {
-        this.formErrors.pop();
-    };
-
-    handleFormError = () => {
-        this.formErrors.push(translate('sulu_admin.form_contains_invalid_values'));
+        this.destroyFormStore();
     };
 
     @action createFormOverlay = (itemId: ?string | number) => {
@@ -111,9 +80,7 @@ class FormOverlayList extends React.Component<Props> {
         this.formStore = new ResourceFormStore(resourceStore, formKey, formStoreOptions, metadataRequestParameters);
     };
 
-    @action destroyFormOverlay = () => {
-        this.formErrors = [];
-
+    @action destroyFormStore = () => {
         if (this.formStore) {
             this.formStore.destroy();
             this.formStore = undefined;
@@ -152,16 +119,12 @@ class FormOverlayList extends React.Component<Props> {
         return formStoreOptions;
     }
 
-    setFormRef = (formRef: ?ElementRef<typeof Form>) => {
-        this.formRef = formRef;
-    };
-
     setListRef = (listRef: ?ElementRef<typeof List>) => {
         this.listRef = listRef;
     };
 
     componentWillUnmount() {
-        this.destroyFormOverlay();
+        this.destroyFormStore();
     }
 
     render() {
@@ -178,8 +141,6 @@ class FormOverlayList extends React.Component<Props> {
             },
         } = this.props;
 
-        const {formStore} = this;
-
         const overlayTitle = this.formStore && this.formStore.id
             ? translate(editOverlayTitle || 'sulu_admin.edit')
             : translate(addOverlayTitle || 'sulu_admin.create');
@@ -193,33 +154,15 @@ class FormOverlayList extends React.Component<Props> {
                     onItemClick={formKey && this.handleItemClick}
                     ref={this.setListRef}
                 />
-                {!!formStore &&
-                    <Overlay
-                        confirmDisabled={!formStore.dirty}
-                        confirmLoading={formStore.saving}
-                        confirmText={translate('sulu_admin.save')}
-                        onClose={this.handleFormOverlayClose}
-                        onConfirm={this.handleFormOverlayConfirm}
-                        open={!!this.formStore}
-                        size={overlaySize ? overlaySize : 'small'}
-                        title={overlayTitle}
-                    >
-                        <Snackbar
-                            message={this.formErrors[this.formErrors.length - 1]}
-                            onCloseClick={this.handleErrorSnackbarClose}
-                            type="error"
-                            visible={!!this.formErrors.length}
-                        />
-                        <div className={formOverlayListStyles.form}>
-                            <Form
-                                onError={this.handleFormError}
-                                onSubmit={this.handleFormSubmit}
-                                ref={this.setFormRef}
-                                store={formStore}
-                            />
-                        </div>
-                    </Overlay>
-                }
+                <FormOverlay
+                    confirmText={translate('sulu_admin.save')}
+                    formStore={this.formStore}
+                    onClose={this.handleFormOverlayClose}
+                    onConfirm={this.handleFormOverlayConfirm}
+                    open={!!this.formStore}
+                    size={overlaySize ? overlaySize : 'small'}
+                    title={overlayTitle}
+                />
             </Fragment>
         );
     }
