@@ -8,6 +8,7 @@ import {translate} from '../../utils';
 import Snackbar from '../../components/Snackbar';
 import Form from '../Form';
 import type {FormStoreInterface} from '../Form/types';
+import type {ResourceFormStore} from '../Form';
 import type {Size} from '../../components/Overlay/types';
 import formOverlayStyles from './formOverlay.scss';
 
@@ -15,7 +16,7 @@ type Props = {|
     confirmDisabled: boolean,
     confirmLoading: boolean,
     confirmText: string,
-    formStore: FormStoreInterface,
+    formStore: FormStoreInterface | ResourceFormStore,
     onClose: () => void,
     onConfirm: () => void,
     open: boolean,
@@ -44,8 +45,7 @@ class FormOverlay extends React.Component<Props> {
         const {confirmLoading, formStore} = this.props;
 
         // disable confirm button while saving if formstore is instance of ResourceFormStore
-        // $FlowFixMe
-        const formStoreSaving = formStore.hasOwnProperty('saving') && formStore.saving;
+        const formStoreSaving = (typeof formStore.saving === 'boolean') && formStore.saving;
 
         return confirmLoading || formStoreSaving;
     }
@@ -74,7 +74,7 @@ class FormOverlay extends React.Component<Props> {
         } = this.props;
 
         // save data before calling onConfirm callback if formstore is instance of ResourceFormStore
-        if (formStore.hasOwnProperty('save')) {
+        if (typeof formStore.save === 'function') {
             // $FlowFixMe
             formStore.save()
                 .then(() => {
