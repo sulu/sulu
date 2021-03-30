@@ -21,7 +21,7 @@ const SETTINGS_TAG = 'sulu.block_setting_icon';
 
 @observer
 class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
-    @observable blockSettingsOpen: ?number;
+    @observable openedBlockSettingsIndex: ?number;
     @observable blockSettingsFormStore: ?FormStoreInterface;
     @observable value: Object;
 
@@ -356,7 +356,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
             this.props.formInspector.options
         );
 
-        this.blockSettingsOpen = index;
+        this.openedBlockSettingsIndex = index;
     };
 
     handleSettingsOverlayClose = () => {
@@ -369,23 +369,23 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
     };
 
     @action closeSettingsOverlay = () => {
-        this.blockSettingsOpen = undefined;
+        this.openedBlockSettingsIndex = undefined;
     };
 
     applySettingsFromOverlay = () => {
         const {onChange} = this.props;
         const oldValues = this.value || [];
 
-        const {blockSettingsFormStore, blockSettingsOpen} = this;
+        const {blockSettingsFormStore, openedBlockSettingsIndex} = this;
 
-        if (!blockSettingsFormStore || blockSettingsOpen === undefined || !oldValues) {
+        if (!blockSettingsFormStore || openedBlockSettingsIndex === undefined || !oldValues) {
             return;
         }
 
         const newValue = [
-            ...oldValues.slice(0, blockSettingsOpen),
-            {...oldValues[blockSettingsOpen], [SETTINGS_KEY]: blockSettingsFormStore.data},
-            ...oldValues.slice(blockSettingsOpen + 1),
+            ...oldValues.slice(0, openedBlockSettingsIndex),
+            {...oldValues[openedBlockSettingsIndex], [SETTINGS_KEY]: blockSettingsFormStore.data},
+            ...oldValues.slice(openedBlockSettingsIndex + 1),
         ];
 
         this.setValue(newValue);
@@ -440,7 +440,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
                     types={blockTypes}
                     value={value}
                 />
-                {this.blockSettingsOpen && blockSettingsFormStore && (
+                {this.openedBlockSettingsIndex !== undefined && blockSettingsFormStore && (
                     <FormOverlay
                         confirmText={translate('sulu_admin.apply')}
                         formStore={blockSettingsFormStore}
