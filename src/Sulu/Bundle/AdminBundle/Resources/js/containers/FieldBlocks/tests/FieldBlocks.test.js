@@ -1258,8 +1258,8 @@ test('Should open and close block settings overlay when confirm button is clicke
         },
     };
     const value = [
-        {type: 'default'},
-        {type: 'default'},
+        {type: 'default', settings: {setting: false}},
+        {type: 'default', settings: {setting: false}},
     ];
     formInspector.getSchemaEntryByPath.mockReturnValue({types});
 
@@ -1299,9 +1299,16 @@ test('Should open and close block settings overlay when confirm button is clicke
         expect(fieldBlocks.exists('FormOverlay')).toEqual(true);
 
         fieldBlocks.find('Checkbox[dataPath="/setting"]').prop('onChange')(true);
+        // should not change value of fieldBlocks until overlay is confirmed
+        expect(changeSpy).not.toBeCalled();
+        expect(fieldBlocks.instance().value[1].settings.setting).toEqual(false);
+
         fieldBlocks.find('FormOverlay Button[children="sulu_admin.apply"]').simulate('click');
         expect(fieldBlocks.exists('FormOverlay')).toEqual(false);
-        expect(changeSpy).toBeCalledWith([{type: 'default'}, {settings: {setting: true}, type: 'default'}]);
+        expect(changeSpy).toBeCalledWith(
+            [{type: 'default', settings: {setting: false}}, {type: 'default', settings: {setting: true}}]
+        );
+        expect(fieldBlocks.instance().value[1].settings.setting).toEqual(true);
     });
 });
 

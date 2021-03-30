@@ -350,7 +350,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
         this.blockSettingsFormStore?.destroy();
         this.blockSettingsFormStore = memoryFormStoreFactory.createFromFormKey(
             settingsFormKey,
-            this.value[index][SETTINGS_KEY],
+            {...this.value[index][SETTINGS_KEY]},
             this.props.formInspector.locale,
             undefined,
             this.props.formInspector.options
