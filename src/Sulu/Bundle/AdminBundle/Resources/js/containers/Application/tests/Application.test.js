@@ -8,15 +8,6 @@ jest.mock('../../../services/Router/Router', () => jest.fn(function() {
     this.attributes = {};
 }));
 
-jest.mock('sulu-admin-bundle/services/ResourceRequester/ResourceRequester', () => ({
-    get: jest.fn().mockReturnValue(Promise.resolve()),
-}));
-
-jest.mock('sulu-admin-bundle/containers/Form/stores/metadataStore', () => ({
-    getSchema: jest.fn(),
-    getJsonSchema: jest.fn(),
-}));
-
 jest.mock('sulu-admin-bundle/containers/Form/stores/MemoryFormStore', () => jest.fn((memoryStore) =>({memoryStore})));
 
 const mockInitializerInitialized = jest.fn();
@@ -75,6 +66,12 @@ jest.mock('../../ViewRenderer', () => function Test(props) {
             <h1>Test</h1>
             <h2>{props.router.route.type}</h2>
         </div>
+    );
+});
+
+jest.mock('../../ProfileFormOverlay', () => function Test() {
+    return (
+        <div>ProfileFormOverlay Mock</div>
     );
 });
 
