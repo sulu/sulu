@@ -82,8 +82,8 @@ test('Should pass correct props to Overlay component', () => {
     const closeSpy = jest.fn();
 
     const formOverlay = shallow(<FormOverlay
-        confirmDisabled={false}
-        confirmLoading={false}
+        confirmDisabled={true}
+        confirmLoading={true}
         confirmText="confirm-text"
         formStore={formStore}
         onClose={closeSpy}
@@ -96,12 +96,40 @@ test('Should pass correct props to Overlay component', () => {
     const overlay = formOverlay.find(Overlay);
 
     expect(overlay.props()).toEqual(expect.objectContaining({
+        confirmDisabled: true,
+        confirmLoading: true,
+        confirmText: 'confirm-text',
+        onClose: closeSpy,
+        open: true,
+        size: 'small',
+        title: 'overlay-title',
+    }));
+});
+
+test('Should pass correct props to Overlay component when using default values', () => {
+    const formStore = new MemoryFormStore({}, {}, undefined, undefined);
+    formStore.dirty = true;
+
+    const closeSpy = jest.fn();
+
+    const formOverlay = shallow(<FormOverlay
+        confirmText="confirm-text"
+        formStore={formStore}
+        onClose={closeSpy}
+        onConfirm={jest.fn()}
+        open={true}
+        title="overlay-title"
+    />);
+
+    const overlay = formOverlay.find(Overlay);
+
+    expect(overlay.props()).toEqual(expect.objectContaining({
         confirmDisabled: false,
         confirmLoading: false,
         confirmText: 'confirm-text',
         onClose: closeSpy,
         open: true,
-        size: 'small',
+        size: undefined,
         title: 'overlay-title',
     }));
 });
@@ -128,7 +156,7 @@ test('Should pass correct props to Form component', () => {
     }));
 });
 
-test('Should disable confirm button if FromStore is not dirty', () => {
+test('Should disable confirm button if FormStore is not dirty', () => {
     const formStore = new MemoryFormStore({}, {}, undefined, undefined);
 
     const formOverlay = shallow(<FormOverlay
@@ -150,7 +178,7 @@ test('Should disable confirm button if FromStore is not dirty', () => {
     expect(formOverlay.find(Overlay).props().confirmDisabled).toEqual(false);
 });
 
-test('Should display confirm button as loading if FromStore is saving', () => {
+test('Should display confirm button as loading if FormStore is saving', () => {
     const formStore = new ResourceFormStore(new ResourceStore('test'), 'test');
 
     const formOverlay = shallow(<FormOverlay
