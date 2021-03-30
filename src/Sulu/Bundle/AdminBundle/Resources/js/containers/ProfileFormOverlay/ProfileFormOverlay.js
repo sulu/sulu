@@ -43,6 +43,7 @@ class ProfileFormOverlay extends React.Component<Props> {
             this.formStore.destroy();
         }
 
+        // pass "-" as placeholder-id to the ResourceStore to load the existing profile data from the server
         this.formStore = new ResourceFormStore(new ResourceStore(RESOURCE_KEY, '-'), FORM_KEY);
     }
 
