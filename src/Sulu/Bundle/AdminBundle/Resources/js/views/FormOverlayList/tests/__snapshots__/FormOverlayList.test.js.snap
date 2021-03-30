@@ -16,7 +16,7 @@ Array [
     role="button"
   />,
   <div
-    class="container isDown"
+    class="container"
   >
     <div
       class="overlay small"

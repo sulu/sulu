@@ -46,7 +46,10 @@ class FormOverlay extends React.Component<Props> {
 
     @computed get confirmLoading() {
         const {confirmLoading, formStore} = this.props;
-        const formStoreSaving = (formStore instanceof ResourceFormStore) ? formStore.saving : false;
+
+        // disable confirm button while saving if formstore is instance of ResourceFormStore
+        // $FlowFixMe
+        const formStoreSaving = (formStore && formStore.hasOwnProperty('saving')) ? formStore.saving : false;
 
         return confirmLoading || formStoreSaving;
     }
@@ -82,7 +85,9 @@ class FormOverlay extends React.Component<Props> {
             onConfirm,
         } = this.props;
 
-        if (formStore instanceof ResourceFormStore) {
+        // save data before calling onConfirm callback if formstore is instance of ResourceFormStore
+        if (formStore && formStore.hasOwnProperty('saving')) {
+            // $FlowFixMe
             formStore.save()
                 .then(() => {
                     onConfirm();

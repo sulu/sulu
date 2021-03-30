@@ -7,9 +7,8 @@ import List from '../../List';
 import Overlay from '../../../components/Overlay';
 import ResourceStore from '../../../stores/ResourceStore';
 import ResourceFormStore from '../../../containers/Form/stores/ResourceFormStore';
-import Form from '../../../containers/Form';
+import FormOverlay from '../../../containers/FormOverlay';
 import Router, {Route} from '../../../services/Router';
-import Snackbar from '../../../components/Snackbar';
 
 const React = mockReact;
 
@@ -195,7 +194,7 @@ test('Should construct ResourceStore and ResourceFormStore with correct paramete
     }, {});
 });
 
-test('Should pass metadataRequestParameters options to Form View', () => {
+test('Should pass metadataRequestParameters options to FormStore', () => {
     const metadataRequestParameters = {
         'testParam': 'testValue',
     };
@@ -226,7 +225,7 @@ test('Should pass metadataRequestParameters options to Form View', () => {
     expect(formStore.metadataOptions).toEqual(metadataRequestParameters);
 });
 
-test('Should open Overlay with correct props when List fires the item-add callback', () => {
+test('Should open FormOverlay with correct props when List fires the item-add callback', () => {
     const route: Route = ({}: any);
     const router: Router = ({
         route: {
@@ -242,19 +241,18 @@ test('Should open Overlay with correct props when List fires the item-add callba
     formOverlayList.find(List).props().onItemAdd();
 
     formOverlayList.update();
-    const overlay = formOverlayList.find(Overlay);
+    const overlay = formOverlayList.find(FormOverlay);
 
     expect(overlay.props()).toEqual(expect.objectContaining({
-        confirmDisabled: true,
-        confirmLoading: false,
         confirmText: 'sulu_admin.save',
+        formStore: formOverlayList.instance().formStore,
         open: true,
         size: 'large',
         title: 'app.add_overlay_title',
     }));
 });
 
-test('Should open Overlay with correct props when List fires the item-click callback', () => {
+test('Should open FormOverlay with correct props when List fires the item-click callback', () => {
     const route: Route = ({}: any);
     const router: Router = ({
         route: {
@@ -269,19 +267,18 @@ test('Should open Overlay with correct props when List fires the item-click call
     formOverlayList.find(List).props().onItemClick('item-id');
 
     formOverlayList.update();
-    const overlay = formOverlayList.find(Overlay);
+    const overlay = formOverlayList.find(FormOverlay);
 
     expect(overlay.props()).toEqual(expect.objectContaining({
-        confirmDisabled: true,
-        confirmLoading: false,
         confirmText: 'sulu_admin.save',
+        formStore: formOverlayList.instance().formStore,
         open: true,
         size: 'small',
         title: 'app.edit_overlay_title',
     }));
 });
 
-test('Should submit Form container when Overlay is confirmed', () => {
+test('Should destroy ResourceFormStore without reloading List when FormOverlay is closed', () => {
     const route: Route = ({}: any);
     const router: Router = ({
         route: {
@@ -297,44 +294,18 @@ test('Should submit Form container when Overlay is confirmed', () => {
     formOverlayList.find(List).props().onItemAdd();
     formOverlayList.update();
 
-    const submitSpy = jest.fn();
-    formOverlayList.find(Form).instance().submit = submitSpy;
-
-    formOverlayList.find(Overlay).props().onConfirm();
-
-    expect(submitSpy).toBeCalled();
-});
-
-test('Should destroy ResourceFormStore without saving when Overlay is closed', () => {
-    const route: Route = ({}: any);
-    const router: Router = ({
-        route: {
-            options: {
-                formKey: 'test-form-key',
-            },
-        },
-    }: any);
-
-    const formOverlayList = mount(<FormOverlayList route={route} router={router} />);
-
-    // open form overlay for new item
-    formOverlayList.find(List).props().onItemAdd();
-    formOverlayList.update();
-
-    const saveSpy = jest.fn();
     const destroySpy = jest.fn();
-    formOverlayList.instance().formStore.save = saveSpy;
     formOverlayList.instance().formStore.destroy = destroySpy;
 
-    formOverlayList.find(Overlay).props().onClose();
-    formOverlayList.update();
+    const reloadSpy = jest.fn();
+    formOverlayList.find(List).instance().reload = reloadSpy;
 
-    expect(saveSpy).not.toBeCalled();
+    formOverlayList.find(FormOverlay).props().onClose();
     expect(destroySpy).toBeCalled();
-    expect(formOverlayList.find(Overlay).exists()).toBeFalsy();
+    expect(reloadSpy).not.toBeCalled();
 });
 
-test('Should save ResoureFormStore, close overlay and reload List view on submit of Form', () => {
+test('Should destroy ResourceFormStore and reload List view when FormOverlay is confirmed', () => {
     const route: Route = ({}: any);
     const router: Router = ({
         route: {
@@ -350,174 +321,15 @@ test('Should save ResoureFormStore, close overlay and reload List view on submit
     formOverlayList.find(List).props().onItemAdd();
     formOverlayList.update();
 
-    const savePromise = Promise.resolve();
-    const saveSpy = jest.fn(() => savePromise);
     const destroySpy = jest.fn();
-    formOverlayList.instance().formStore.save = saveSpy;
     formOverlayList.instance().formStore.destroy = destroySpy;
 
     const reloadSpy = jest.fn();
     formOverlayList.find(List).instance().reload = reloadSpy;
 
-    formOverlayList.find(Form).props().onSubmit();
-
-    return savePromise.finally(() => {
-        expect(saveSpy).toBeCalled();
-        expect(destroySpy).toBeCalled();
-        expect(reloadSpy).toBeCalled();
-
-        formOverlayList.update();
-        expect(formOverlayList.find(Overlay).exists()).toBeFalsy();
-    });
-});
-
-test('Should display Snackbar with generic error message if an error when submitting form', (done) => {
-    const route: Route = ({}: any);
-    const router: Router = ({
-        route: {
-            options: {
-                formKey: 'test-form-key',
-            },
-        },
-    }: any);
-
-    const formOverlayList = mount(<FormOverlayList route={route} router={router} />);
-
-    // open form overlay for new item
-    formOverlayList.find(List).props().onItemAdd();
-    formOverlayList.update();
-
-    const savePromise = Promise.reject('error');
-    const saveSpy = jest.fn(() => savePromise);
-    const destroySpy = jest.fn();
-    formOverlayList.instance().formStore.save = saveSpy;
-    formOverlayList.instance().formStore.destroy = destroySpy;
-
-    const reloadSpy = jest.fn();
-    formOverlayList.find(List).instance().reload = reloadSpy;
-
-    formOverlayList.find(Form).props().onSubmit();
-
-    // wait until rejection of savePromise was handled by component with setTimeout
-    setTimeout(() => {
-        expect(saveSpy).toBeCalled();
-        expect(destroySpy).not.toBeCalled();
-        expect(reloadSpy).not.toBeCalled();
-
-        formOverlayList.update();
-        expect(formOverlayList.find(Overlay).exists()).toBeTruthy();
-        expect(formOverlayList.find(Snackbar).exists).toBeTruthy();
-        expect(formOverlayList.find(Snackbar).prop('visible')).toBeTruthy();
-        expect(formOverlayList.find(Snackbar).prop('message')).toEqual('sulu_admin.form_save_server_error');
-
-        done();
-    });
-});
-
-test('Should display Snackbar with error message from server if an error when submitting form', (done) => {
-    const route: Route = ({}: any);
-    const router: Router = ({
-        route: {
-            options: {
-                formKey: 'test-form-key',
-            },
-        },
-    }: any);
-
-    const formOverlayList = mount(<FormOverlayList route={route} router={router} />);
-
-    // open form overlay for new item
-    formOverlayList.find(List).props().onItemAdd();
-    formOverlayList.update();
-
-    const savePromise = Promise.reject({code: 100, detail: 'URL is already assigned to another page.'});
-    const saveSpy = jest.fn(() => savePromise);
-    const destroySpy = jest.fn();
-    formOverlayList.instance().formStore.save = saveSpy;
-    formOverlayList.instance().formStore.destroy = destroySpy;
-
-    const reloadSpy = jest.fn();
-    formOverlayList.find(List).instance().reload = reloadSpy;
-
-    formOverlayList.find(Form).props().onSubmit();
-
-    // wait until rejection of savePromise was handled by component with setTimeout
-    setTimeout(() => {
-        expect(saveSpy).toBeCalled();
-        expect(destroySpy).not.toBeCalled();
-        expect(reloadSpy).not.toBeCalled();
-
-        formOverlayList.update();
-        expect(formOverlayList.find(Overlay).exists()).toBeTruthy();
-        expect(formOverlayList.find(Snackbar).exists).toBeTruthy();
-        expect(formOverlayList.find(Snackbar).prop('visible')).toBeTruthy();
-        expect(formOverlayList.find(Snackbar).prop('message')).toEqual('URL is already assigned to another page.');
-
-        done();
-    });
-});
-
-test('Should display Snackbar if an form is not valid', (done) => {
-    const route: Route = ({}: any);
-    const router: Router = ({
-        route: {
-            options: {
-                formKey: 'test-form-key',
-            },
-        },
-    }: any);
-
-    const formOverlayList = mount(<FormOverlayList route={route} router={router} />);
-
-    // open form overlay for new item
-    formOverlayList.find(List).props().onItemAdd();
-    formOverlayList.update();
-
-    const destroySpy = jest.fn();
-
-    const reloadSpy = jest.fn();
-    formOverlayList.find(List).instance().reload = reloadSpy;
-
-    formOverlayList.find(Form).props().onError();
-
-    // wait until rejection of savePromise was handled by component with setTimeout
-    setTimeout(() => {
-        expect(destroySpy).not.toBeCalled();
-        expect(reloadSpy).not.toBeCalled();
-
-        formOverlayList.update();
-        expect(formOverlayList.find(Overlay).exists()).toBeTruthy();
-        expect(formOverlayList.find(Snackbar).exists).toBeTruthy();
-        expect(formOverlayList.find(Snackbar).prop('visible')).toBeTruthy();
-        expect(formOverlayList.find(Snackbar).prop('message')).toEqual('sulu_admin.form_contains_invalid_values');
-
-        done();
-    });
-});
-
-test('Should hide Snackbar when closeClick callback of Snackbar is fired', () => {
-    const route: Route = ({}: any);
-    const router: Router = ({
-        route: {
-            options: {
-                formKey: 'test-form-key',
-            },
-        },
-    }: any);
-
-    const formOverlayList = mount(<FormOverlayList route={route} router={router} />);
-
-    // open form overlay for new item
-    formOverlayList.find(List).props().onItemAdd();
-    formOverlayList.update();
-
-    formOverlayList.instance().formErrors.push('error 1');
-    formOverlayList.update();
-    expect(formOverlayList.find(Snackbar).props().visible).toBeTruthy();
-
-    formOverlayList.find(Snackbar).props().onCloseClick();
-    formOverlayList.update();
-    expect(formOverlayList.find(Snackbar).props().visible).toBeFalsy();
+    formOverlayList.find(FormOverlay).props().onConfirm();
+    expect(destroySpy).toBeCalled();
+    expect(reloadSpy).toBeCalled();
 });
 
 test('Should destroy ResourceFormStore when component is unmounted', () => {
