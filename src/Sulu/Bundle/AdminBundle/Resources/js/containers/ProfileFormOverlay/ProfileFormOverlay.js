@@ -2,16 +2,11 @@
 import {observable, action} from 'mobx';
 import {observer} from 'mobx-react';
 import React from 'react';
-import Loader from '../../components/Loader/Loader';
-import Overlay from '../../components/Overlay';
-import Form from '../../containers/Form';
-import ResourceRequester from '../../services/ResourceRequester';
+import FormOverlay from '../../containers/FormOverlay';
 import userStore from '../../stores/userStore';
 import {translate} from '../../utils/Translator';
-import MemoryFormStore from '../Form/stores/MemoryFormStore';
-import metadataStore from '../Form/stores/metadataStore';
-import type {RawSchema} from '../Form/types';
-import profileFormOverlayStyles from './profileFormOverlay.scss';
+import ResourceFormStore from '../Form/stores/ResourceFormStore';
+import ResourceStore from '../../stores/ResourceStore';
 
 type Props = {
     onClose: () => void,
@@ -23,71 +18,56 @@ const RESOURCE_KEY = 'profile';
 
 @observer
 class ProfileFormOverlay extends React.Component<Props> {
-    formRef: ?Form;
-    title: string;
-    @observable formStore: MemoryFormStore;
-    saving: boolean = false;
+    @observable formStore: ResourceFormStore;
 
-    constructor(props: Props) {
-        super(props);
-
-        Promise.all([
-            metadataStore.getSchema(FORM_KEY),
-            metadataStore.getJsonSchema(FORM_KEY),
-            ResourceRequester.get(RESOURCE_KEY),
-        ]).then(this.handleResponse);
+    componentDidMount() {
+        this.updateFormStoreInstance();
     }
 
-    @action handleResponse = ([schema, jsonSchema, data]: [RawSchema, Object, Object]) => {
-        this.formStore = new MemoryFormStore(data, schema, jsonSchema);
-    };
+    componentDidUpdate(prevProps: Props) {
+        const {open} = this.props;
 
-    setFormRef = (formRef: ?Form) => {
-        this.formRef = formRef;
-    };
+        if (prevProps.open === false && open === true) {
+            this.updateFormStoreInstance();
+        }
+    }
+
+    componentWillUnmount() {
+        if (this.formStore) {
+            this.formStore.destroy();
+        }
+    }
+
+    @action updateFormStoreInstance() {
+        if (this.formStore) {
+            this.formStore.destroy();
+        }
+
+        this.formStore = new ResourceFormStore(new ResourceStore(RESOURCE_KEY, '-'), FORM_KEY);
+    }
 
     handleConfirm = () => {
-        if (this.formRef) {
-            this.formRef.submit();
-        }
-    };
-
-    handleClose = () => {
+        userStore.setFullName(this.formStore.data.firstName + ' ' + this.formStore.data.lastName);
         this.props.onClose();
     };
 
-    handleSubmit = () => {
-        this.saving = true;
-        ResourceRequester.put(RESOURCE_KEY, this.formStore.data).then(() => {
-            userStore.setFullName(this.formStore.data.firstName + ' ' + this.formStore.data.lastName);
-            this.props.onClose();
-            this.saving = false;
-        });
-    };
-
     render() {
+        const {onClose, open} = this.props;
+
+        if (!this.formStore) {
+            return null;
+        }
+
         return (
-            <Overlay
-                confirmLoading={!this.formStore || this.saving}
+            <FormOverlay
                 confirmText={translate('sulu_admin.save')}
-                onClose={this.handleClose}
+                formStore={this.formStore}
+                onClose={onClose}
                 onConfirm={this.handleConfirm}
-                open={this.props.open}
+                open={open}
                 size="large"
                 title={translate('sulu_admin.edit_profile')}
-            >
-                {this.formStore !== undefined
-                    ? <div className={profileFormOverlayStyles.overlay}>
-                        <Form
-                            onSubmit={this.handleSubmit}
-                            ref={this.setFormRef}
-                            store={this.formStore}
-                        />
-                    </div>
-                    : <Loader />
-                }
-
-            </Overlay>
+            />
         );
     }
 }
