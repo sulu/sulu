@@ -1232,73 +1232,14 @@ test('Should open and close block settings overlay close button is clicked', () 
         />
     );
 
-    expect(fieldBlocks.find('Overlay').prop('open')).toEqual(false);
+    expect(fieldBlocks.exists('FormOverlay')).toEqual(false);
+
     fieldBlocks.find('Block').at(0).simulate('click');
     fieldBlocks.find('Block').at(0).find('Icon[name="su-cog"]').simulate('click');
-    expect(fieldBlocks.find('Overlay').prop('open')).toEqual(true);
+    expect(fieldBlocks.find('FormOverlay').prop('open')).toEqual(true);
 
-    fieldBlocks.find('Overlay Icon[name="su-times"]').simulate('click');
-    expect(fieldBlocks.find('Overlay').prop('open')).toEqual(false);
-});
-
-test('Should open and close block settings overlay when confirm button is clicked', () => {
-    const changeSpy = jest.fn();
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
-    const types = {
-        default: {
-            title: 'Default',
-            form: {
-                text: {
-                    label: 'Text',
-                    type: 'text_line',
-                    visible: true,
-                },
-            },
-        },
-    };
-    const value = [
-        {type: 'default'},
-        {type: 'default'},
-    ];
-    formInspector.getSchemaEntryByPath.mockReturnValue({types});
-
-    const schemaPromise = Promise.resolve({
-        setting: {
-            tags: [],
-            type: 'checkbox',
-        },
-    });
-    const jsonSchemaPromise = Promise.resolve({});
-    metadataStore.getSchema.mockReturnValue(schemaPromise);
-    metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
-
-    const fieldBlocks = mount(
-        <FieldBlocks
-            {...fieldTypeDefaultProps}
-            defaultType="editor"
-            formInspector={formInspector}
-            onChange={changeSpy}
-            schemaOptions={{settings_form_key: {name: 'settings_form_key', value: 'page_block_settings'}}}
-            types={types}
-            value={value}
-        />
-    );
-
-    expect(fieldBlocks.find('Overlay').prop('open')).toEqual(false);
-    fieldBlocks.find('Block').at(1).simulate('click');
-    fieldBlocks.find('Block').at(1).find('Icon[name="su-cog"]').simulate('click');
-    expect(fieldBlocks.find('Overlay').prop('open')).toEqual(true);
-    expect(metadataStore.getSchema).toBeCalledWith('page_block_settings', undefined, undefined);
-    expect(metadataStore.getJsonSchema).toBeCalledWith('page_block_settings', undefined, undefined);
-
-    return Promise.all([schemaPromise, jsonSchemaPromise]).then(() => {
-        fieldBlocks.update();
-        expect(changeSpy).not.toBeCalled();
-
-        fieldBlocks.find('Overlay Button[children="sulu_admin.apply"]').simulate('click');
-        expect(fieldBlocks.find('Overlay').prop('open')).toEqual(false);
-        expect(changeSpy).toBeCalledWith([{type: 'default'}, {settings: {}, type: 'default'}]);
-    });
+    fieldBlocks.find('FormOverlay header Icon[name="su-times"]').simulate('click');
+    expect(fieldBlocks.exists('FormOverlay')).toEqual(false);
 });
 
 test('Should open and close block settings overlay when confirm button is clicked with changed data', () => {
@@ -1317,8 +1258,8 @@ test('Should open and close block settings overlay when confirm button is clicke
         },
     };
     const value = [
-        {type: 'default'},
-        {type: 'default'},
+        {type: 'default', settings: {setting: false}},
+        {type: 'default', settings: {setting: false}},
     ];
     formInspector.getSchemaEntryByPath.mockReturnValue({types});
 
@@ -1344,25 +1285,81 @@ test('Should open and close block settings overlay when confirm button is clicke
         />
     );
 
-    expect(fieldBlocks.find('Overlay').prop('open')).toEqual(false);
-    fieldBlocks.find('Block').at(1).simulate('click');
-    fieldBlocks.find('Block').at(1).find('Icon[name="su-cog"]').simulate('click');
-    expect(fieldBlocks.find('Overlay').prop('open')).toEqual(true);
     expect(metadataStore.getSchema).toBeCalledWith('page_block_settings', undefined, undefined);
     expect(metadataStore.getJsonSchema).toBeCalledWith('page_block_settings', undefined, undefined);
+    expect(fieldBlocks.exists('FormOverlay')).toEqual(false);
+
+    fieldBlocks.find('Block').at(1).simulate('click');
+    fieldBlocks.find('Block').at(1).find('Icon[name="su-cog"]').simulate('click');
+    expect(fieldBlocks.find('FormOverlay').prop('open')).toEqual(true);
 
     return Promise.all([schemaPromise, jsonSchemaPromise]).then(() => {
         fieldBlocks.update();
         expect(changeSpy).not.toBeCalled();
-        fieldBlocks.find('Checkbox[dataPath="/setting"]').prop('onChange')(true);
+        expect(fieldBlocks.exists('FormOverlay')).toEqual(true);
 
-        fieldBlocks.find('Overlay Button[children="sulu_admin.apply"]').simulate('click');
-        expect(fieldBlocks.find('Overlay').prop('open')).toEqual(false);
-        expect(changeSpy).toBeCalledWith([{type: 'default'}, {settings: {setting: true}, type: 'default'}]);
+        fieldBlocks.find('Checkbox[dataPath="/setting"]').prop('onChange')(true);
+        // should not change value of fieldBlocks until overlay is confirmed
+        expect(changeSpy).not.toBeCalled();
+        expect(fieldBlocks.instance().value[1].settings.setting).toEqual(false);
+
+        fieldBlocks.find('FormOverlay Button[children="sulu_admin.apply"]').simulate('click');
+        expect(fieldBlocks.exists('FormOverlay')).toEqual(false);
+        expect(changeSpy).toBeCalledWith(
+            [{type: 'default', settings: {setting: false}}, {type: 'default', settings: {setting: true}}]
+        );
+        expect(fieldBlocks.instance().value[1].settings.setting).toEqual(true);
     });
 });
 
-test('Should update block settings on submit and immediately show the icon', () => {
+test('Should destroy create new formstore when block settings overlay is opened for another block', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const types = {
+        default: {
+            title: 'Default',
+            form: {
+                text: {
+                    label: 'Text',
+                    type: 'text_line',
+                    visible: true,
+                },
+            },
+        },
+    };
+    const value = [
+        {type: 'default'},
+        {type: 'default'},
+    ];
+    formInspector.getSchemaEntryByPath.mockReturnValue({types});
+
+    const fieldBlocks = mount(
+        <FieldBlocks
+            {...fieldTypeDefaultProps}
+            defaultType="editor"
+            formInspector={formInspector}
+            schemaOptions={{settings_form_key: {name: 'settings_form_key', value: 'page_block_settings'}}}
+            types={types}
+            value={value}
+        />
+    );
+
+    expect(fieldBlocks.exists('FormOverlay')).toEqual(false);
+
+    fieldBlocks.find('Block').at(0).simulate('click');
+    fieldBlocks.find('Block').at(0).find('Icon[name="su-cog"]').simulate('click');
+    expect(fieldBlocks.find('FormOverlay').prop('open')).toEqual(true);
+    const firstFormStore = fieldBlocks.find('FormOverlay').prop('formStore');
+
+    fieldBlocks.find('FormOverlay header Icon[name="su-times"]').simulate('click');
+    expect(fieldBlocks.exists('FormOverlay')).toEqual(false);
+
+    fieldBlocks.find('Block').at(1).simulate('click');
+    fieldBlocks.find('Block').at(1).find('Icon[name="su-cog"]').simulate('click');
+    expect(fieldBlocks.find('FormOverlay').prop('open')).toEqual(true);
+    expect(fieldBlocks.find('FormOverlay').prop('formStore')).not.toBe(firstFormStore);
+});
+
+test('Should display and update correct icons based on block settings data and schema', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
 
     const types = {
@@ -1421,16 +1418,16 @@ test('Should update block settings on submit and immediately show the icon', () 
 
     return Promise.all([schemaPromise, jsonSchemaPromise]).then(() => {
         fieldBlocks.update();
-        expect(fieldBlocks.find('Icon[name="su-hide"]').exists()).toBe(true);
+        expect(fieldBlocks.find('Block').at(0).find('Icon[name="su-hide"]').exists()).toBe(true);
 
         fieldBlocks.find('Checkbox[dataPath="/setting"]').prop('onChange')(false);
-        fieldBlocks.find('Overlay Button[children="sulu_admin.apply"]').simulate('click');
+        fieldBlocks.find('FormOverlay Button[children="sulu_admin.apply"]').simulate('click');
 
-        expect(fieldBlocks.find('Icon[name="su-hide"]').exists()).toBe(false);
+        expect(fieldBlocks.find('Block').at(0).find('Icon[name="su-hide"]').exists()).toBe(false);
     });
 });
 
-test('Destroy store on unmount', () => {
+test('Should destroy the block settings form-store on unmount', () => {
     const types = {
         default: {
             title: 'Default',
