@@ -129,19 +129,22 @@ class FormOverlayList extends React.Component<Props> {
 
     render() {
         const {
-            router: {
-                route: {
-                    options: {
-                        addOverlayTitle,
-                        editOverlayTitle,
-                        formKey,
-                        overlaySize,
+            formStore,
+            props: {
+                router: {
+                    route: {
+                        options: {
+                            addOverlayTitle,
+                            editOverlayTitle,
+                            formKey,
+                            overlaySize,
+                        },
                     },
                 },
             },
-        } = this.props;
+        } = this;
 
-        const overlayTitle = this.formStore && this.formStore.id
+        const overlayTitle = formStore && formStore.id
             ? translate(editOverlayTitle || 'sulu_admin.edit')
             : translate(addOverlayTitle || 'sulu_admin.create');
 
@@ -154,15 +157,17 @@ class FormOverlayList extends React.Component<Props> {
                     onItemClick={formKey && this.handleItemClick}
                     ref={this.setListRef}
                 />
-                <FormOverlay
-                    confirmText={translate('sulu_admin.save')}
-                    formStore={this.formStore}
-                    onClose={this.handleFormOverlayClose}
-                    onConfirm={this.handleFormOverlayConfirm}
-                    open={!!this.formStore}
-                    size={overlaySize ? overlaySize : 'small'}
-                    title={overlayTitle}
-                />
+                {!!formStore && (
+                    <FormOverlay
+                        confirmText={translate('sulu_admin.save')}
+                        formStore={formStore}
+                        onClose={this.handleFormOverlayClose}
+                        onConfirm={this.handleFormOverlayConfirm}
+                        open={!!formStore}
+                        size={overlaySize ? overlaySize : 'small'}
+                        title={overlayTitle}
+                    />
+                )}
             </Fragment>
         );
     }

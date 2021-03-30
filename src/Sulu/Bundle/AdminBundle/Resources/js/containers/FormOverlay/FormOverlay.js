@@ -6,8 +6,7 @@ import {observer} from 'mobx-react';
 import Overlay from '../../components/Overlay';
 import {translate} from '../../utils';
 import Snackbar from '../../components/Snackbar';
-import Loader from '../../components/Loader';
-import Form, {ResourceFormStore} from '../Form';
+import Form from '../Form';
 import type {FormStoreInterface} from '../Form/types';
 import type {Size} from '../../components/Overlay/types';
 import formOverlayStyles from './formOverlay.scss';
@@ -16,8 +15,7 @@ type Props = {|
     confirmDisabled: boolean,
     confirmLoading: boolean,
     confirmText: string,
-    formStore?: ?FormStoreInterface,
-    loading: boolean,
+    formStore: FormStoreInterface,
     onClose: () => void,
     onConfirm: () => void,
     open: boolean,
@@ -30,7 +28,6 @@ class FormOverlay extends React.Component<Props> {
     static defaultProps = {
         confirmDisabled: false,
         confirmLoading: false,
-        loading: false,
     };
 
     formRef: ?ElementRef<typeof Form>;
@@ -39,9 +36,8 @@ class FormOverlay extends React.Component<Props> {
 
     @computed get confirmDisabled() {
         const {confirmDisabled, formStore} = this.props;
-        const formStoreDirty = formStore ? formStore.dirty : false;
 
-        return confirmDisabled || !formStoreDirty;
+        return confirmDisabled || !formStore.dirty;
     }
 
     @computed get confirmLoading() {
@@ -49,7 +45,7 @@ class FormOverlay extends React.Component<Props> {
 
         // disable confirm button while saving if formstore is instance of ResourceFormStore
         // $FlowFixMe
-        const formStoreSaving = (formStore && formStore.hasOwnProperty('saving')) ? formStore.saving : false;
+        const formStoreSaving = formStore.hasOwnProperty('saving') && formStore.saving;
 
         return confirmLoading || formStoreSaving;
     }
@@ -71,14 +67,6 @@ class FormOverlay extends React.Component<Props> {
         this.formRef.submit();
     };
 
-    handleOverlayClose = () => {
-        const {
-            onClose,
-        } = this.props;
-
-        onClose();
-    };
-
     handleFormSubmit = () => {
         const {
             formStore,
@@ -86,7 +74,7 @@ class FormOverlay extends React.Component<Props> {
         } = this.props;
 
         // save data before calling onConfirm callback if formstore is instance of ResourceFormStore
-        if (formStore && formStore.hasOwnProperty('saving')) {
+        if (formStore.hasOwnProperty('save')) {
             // $FlowFixMe
             formStore.save()
                 .then(() => {
@@ -116,7 +104,7 @@ class FormOverlay extends React.Component<Props> {
         const {
             confirmText,
             formStore,
-            loading,
+            onClose,
             open,
             size,
             title,
@@ -127,7 +115,7 @@ class FormOverlay extends React.Component<Props> {
                 confirmDisabled={this.confirmDisabled}
                 confirmLoading={this.confirmLoading}
                 confirmText={confirmText}
-                onClose={this.handleOverlayClose}
+                onClose={onClose}
                 onConfirm={this.handleOverlayConfirm}
                 open={open}
                 size={size}
@@ -140,17 +128,12 @@ class FormOverlay extends React.Component<Props> {
                     visible={!!this.formErrors.length}
                 />
                 <div className={formOverlayStyles.form}>
-                    {loading && (
-                        <Loader />
-                    )}
-                    {!loading && formStore && (
-                        <Form
-                            onError={this.handleFormError}
-                            onSubmit={this.handleFormSubmit}
-                            ref={this.setFormRef}
-                            store={formStore}
-                        />
-                    )}
+                    <Form
+                        onError={this.handleFormError}
+                        onSubmit={this.handleFormSubmit}
+                        ref={this.setFormRef}
+                        store={formStore}
+                    />
                 </div>
             </Overlay>
         );

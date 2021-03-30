@@ -4,7 +4,6 @@ import {mount} from 'enzyme';
 import {observable} from 'mobx';
 import FormOverlayList from '../FormOverlayList';
 import List from '../../List';
-import Overlay from '../../../components/Overlay';
 import ResourceStore from '../../../stores/ResourceStore';
 import ResourceFormStore from '../../../containers/Form/stores/ResourceFormStore';
 import FormOverlay from '../../../containers/FormOverlay';
@@ -18,7 +17,7 @@ jest.mock('../../List', () => class ListMock extends mockReact.Component<*> {
     }
 });
 
-jest.mock('../../../containers/Form', () => class ListMock extends mockReact.Component<*> {
+jest.mock('../../../containers/Form', () => class FormMock extends mockReact.Component<*> {
     render() {
         return <div>form container mock</div>;
     }
