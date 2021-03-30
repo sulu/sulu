@@ -51,7 +51,7 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
                     'cache' => [
                         'pools' => [
                             'sulu_admin.collaboration_cache' => [
-                                'adapter' => 'cache.adapter.filesystem',
+                                'adapter' => 'cache.app',
                             ],
                         ],
                     ],
