@@ -15,8 +15,7 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 
 /**
- * Repository for the User, implementing some additional functions
- * for querying objects.
+ * @deprecated The group functionality was deprecated in Sulu 2.1 and will be removed in Sulu 3.0
  */
 class GroupRepository extends EntityRepository
 {

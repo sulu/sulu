@@ -17,7 +17,7 @@ use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 use Sulu\Component\Security\Authentication\UserInterface;
 
 /**
- * UserGroup.
+ * @deprecated The group functionality was deprecated in Sulu 2.1 and will be removed in Sulu 3.0
  */
 class UserGroup extends ApiEntity
 {

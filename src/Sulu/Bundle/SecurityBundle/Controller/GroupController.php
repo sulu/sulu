@@ -31,6 +31,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Makes the groups accessible through a REST-API.
+ *
+ * @deprecated The group functionality was deprecated in Sulu 2.1 and will be removed in Sulu 3.0
  */
 class GroupController extends AbstractRestController implements ClassResourceInterface, SecuredControllerInterface
 {
