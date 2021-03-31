@@ -1,3 +1,9 @@
+# Required vendor routes
+fos_js_routing:
+    prefix: /admin
+    resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
+
+# Sulu Routes
 sulu_admin:
     resource: "@SuluAdminBundle/Resources/config/routing.yml"
     prefix: /admin
@@ -6,6 +12,10 @@ sulu_admin_api:
     resource: "@SuluAdminBundle/Resources/config/routing_api.yml"
     type: rest
     prefix: /admin/api
+
+sulu_security:
+    resource: "@SuluSecurityBundle/Resources/config/routing.yml"
+    prefix: /admin/security
 
 sulu_security_api:
     type: rest
