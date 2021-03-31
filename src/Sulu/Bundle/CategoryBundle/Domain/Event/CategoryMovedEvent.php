@@ -51,7 +51,7 @@ class CategoryMovedEvent extends DomainEvent
     {
         return [
             'previousParentId' => $this->previousParentId,
-            'newParentId' => $this->category->getParentId(),
+            'newParentId' => $this->category->getParent()->getId(),
         ];
     }
 

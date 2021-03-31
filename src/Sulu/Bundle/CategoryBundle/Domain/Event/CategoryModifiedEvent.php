@@ -28,10 +28,13 @@ class CategoryModifiedEvent extends DomainEvent
     private $locale;
 
     /**
-     * @var array
+     * @var mixed[]
      */
     private $payload;
 
+    /**
+     * @param mixed[] $payload
+     */
     public function __construct(
         CategoryInterface $category,
         string $locale,
@@ -54,7 +57,7 @@ class CategoryModifiedEvent extends DomainEvent
         return 'modified';
     }
 
-    public function getEventPayload(): array
+    public function getEventPayload(): ?array
     {
         return $this->payload;
     }
