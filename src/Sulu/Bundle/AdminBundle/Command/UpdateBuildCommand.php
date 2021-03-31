@@ -104,6 +104,7 @@ class UpdateBuildCommand extends Command
             'webpack.config.js',
             'babel.config.json',
             '.browserslistrc',
+            '.npmrc',
             'postcss.config.js',
         ];
 
