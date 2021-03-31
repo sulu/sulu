@@ -1,0 +1,7 @@
+@import '../Application/variables.scss';
+
+.form {
+    margin: $viewPaddingVertical $viewPaddingHorizontal;
+    overflow: hidden;
+    position: relative;
+}
