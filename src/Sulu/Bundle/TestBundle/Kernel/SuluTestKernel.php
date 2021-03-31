@@ -15,6 +15,7 @@ use Sulu\Bundle\TestBundle\SuluTestBundle;
 use Sulu\Component\HttpKernel\SuluKernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 
 /**
  * Represents a kernel for sulu-application tests.
@@ -31,6 +32,9 @@ class SuluTestKernel extends SuluKernel
         parent::__construct($environment, $debug, $suluContext);
     }
 
+    /**
+     * @return BundleInterface[]
+     */
     public function registerBundles()
     {
         $bundles = [
@@ -66,6 +70,7 @@ class SuluTestKernel extends SuluKernel
             new \Sulu\Bundle\LocationBundle\SuluLocationBundle(),
             new \Sulu\Bundle\DocumentManagerBundle\SuluDocumentManagerBundle(),
             new \Sulu\Bundle\HashBundle\SuluHashBundle(),
+            new \Sulu\Bundle\EventLogBundle\SuluEventLogBundle(),
             new \Sulu\Bundle\CustomUrlBundle\SuluCustomUrlBundle(),
             new \Sulu\Bundle\RouteBundle\SuluRouteBundle(),
             new \Sulu\Bundle\MarkupBundle\SuluMarkupBundle(),
@@ -103,6 +108,7 @@ class SuluTestKernel extends SuluKernel
             $bundles[] = new \FOS\JsRoutingBundle\FOSJsRoutingBundle();
         }
 
+        // @phpstan-ignore-next-line
         return $bundles;
     }
 

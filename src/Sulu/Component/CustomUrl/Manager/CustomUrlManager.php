@@ -12,7 +12,12 @@
 namespace Sulu\Component\CustomUrl\Manager;
 
 use PHPCR\Util\PathHelper;
+use Sulu\Bundle\CustomUrlBundle\Domain\Event\CustomUrlCreatedEvent;
+use Sulu\Bundle\CustomUrlBundle\Domain\Event\CustomUrlModifiedEvent;
+use Sulu\Bundle\CustomUrlBundle\Domain\Event\CustomUrlRemovedEvent;
+use Sulu\Bundle\CustomUrlBundle\Domain\Event\CustomUrlRouteRemovedEvent;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Bundle\DocumentManagerBundle\Collector\DocumentDomainEventCollectorInterface;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 use Sulu\Component\CustomUrl\Document\RouteDocument;
 use Sulu\Component\CustomUrl\Repository\CustomUrlRepository;
@@ -68,6 +73,11 @@ class CustomUrlManager implements CustomUrlManagerInterface
      */
     private $environment;
 
+    /**
+     * @var DocumentDomainEventCollectorInterface
+     */
+    private $documentDomainEventCollector;
+
     public function __construct(
         DocumentManagerInterface $documentManager,
         DocumentInspector $documentInspector,
@@ -75,7 +85,8 @@ class CustomUrlManager implements CustomUrlManagerInterface
         MetadataFactoryInterface $metadataFactory,
         PathBuilder $pathBuilder,
         WebspaceManagerInterface $webspaceManager,
-        $environment
+        $environment,
+        DocumentDomainEventCollectorInterface $documentDomainEventCollector
     ) {
         $this->documentManager = $documentManager;
         $this->documentInspector = $documentInspector;
@@ -84,10 +95,12 @@ class CustomUrlManager implements CustomUrlManagerInterface
         $this->pathBuilder = $pathBuilder;
         $this->webspaceManager = $webspaceManager;
         $this->environment = $environment;
+        $this->documentDomainEventCollector = $documentDomainEventCollector;
     }
 
     public function create($webspaceKey, array $data)
     {
+        /** @var CustomUrlDocument $document */
         $document = $this->documentManager->create('custom_url');
         $this->bind($document, $data);
 
@@ -102,6 +115,7 @@ class CustomUrlManager implements CustomUrlManagerInterface
                 ]
             );
             $this->documentManager->publish($document, LOCALE);
+            $this->documentDomainEventCollector->collect(new CustomUrlCreatedEvent($document, $webspaceKey, $data));
         } catch (NodeNameAlreadyExistsException $ex) {
             throw new TitleAlreadyExistsException($document->getTitle());
         }
@@ -245,6 +259,9 @@ class CustomUrlManager implements CustomUrlManagerInterface
                 ]
             );
             $this->documentManager->publish($document, LOCALE);
+            $this->documentDomainEventCollector->collect(
+                new CustomUrlModifiedEvent($document, $this->documentInspector->getWebspace($document), $data)
+            );
         } catch (NodeNameAlreadyExistsException $ex) {
             throw new TitleAlreadyExistsException($document->getTitle());
         }
@@ -255,7 +272,14 @@ class CustomUrlManager implements CustomUrlManagerInterface
     public function delete($uuid)
     {
         $document = $this->find($uuid);
+        $webspaceKey = $this->documentInspector->getWebspace($document);
         $this->documentManager->remove($document);
+
+        $this->documentDomainEventCollector->collect(new CustomUrlRemovedEvent(
+            $document->getUuid(),
+            $document->getTitle(),
+            $webspaceKey
+        ));
 
         return $document;
     }
@@ -264,13 +288,25 @@ class CustomUrlManager implements CustomUrlManagerInterface
     {
         $routeDocument = $this->findRoute($uuid);
 
+        // target of route is a another route for history routes, therefore loop until we find the custom url
+        $customUrlDocument = $routeDocument->getTargetDocument();
+        while (!$customUrlDocument instanceof CustomUrlDocument) {
+            $customUrlDocument = $customUrlDocument->getTargetDocument();
+        }
+
         if (!$routeDocument->isHistory()) {
             $route = PathHelper::relativizePath($routeDocument->getPath(), $this->getRoutesPath($webspaceKey));
 
-            throw new RouteNotRemovableException($route, $routeDocument, $routeDocument->getTargetDocument());
+            throw new RouteNotRemovableException($route, $routeDocument, $customUrlDocument);
         }
 
         $this->documentManager->remove($routeDocument);
+
+        $this->documentDomainEventCollector->collect(new CustomUrlRouteRemovedEvent(
+            $customUrlDocument,
+            $webspaceKey,
+            $routeDocument->getUuid()
+        ));
 
         return $routeDocument;
     }

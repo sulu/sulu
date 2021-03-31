@@ -30,6 +30,8 @@ class CustomUrlDocument implements
     ParentBehavior,
     AutoNameBehavior
 {
+    const RESOURCE_KEY = 'custom_urls';
+
     /**
      * @var string
      */

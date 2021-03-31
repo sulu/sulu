@@ -38,6 +38,7 @@ return [
     Sulu\Bundle\HttpCacheBundle\SuluHttpCacheBundle::class => ['all' => true],
     Sulu\Bundle\DocumentManagerBundle\SuluDocumentManagerBundle::class => ['all' => true],
     Sulu\Bundle\HashBundle\SuluHashBundle::class => ['all' => true],
+    Sulu\Bundle\EventLogBundle\SuluEventLogBundle::class => ['all' => true],
     Sulu\Bundle\CustomUrlBundle\SuluCustomUrlBundle::class => ['all' => true],
     Sulu\Bundle\RouteBundle\SuluRouteBundle::class => ['all' => true],
     Sulu\Bundle\MarkupBundle\SuluMarkupBundle::class => ['all' => true],

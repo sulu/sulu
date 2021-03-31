@@ -13,6 +13,11 @@ namespace Sulu\Bundle\TagBundle\Tag;
 
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\Persistence\ObjectManager;
+use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Bundle\TagBundle\Domain\Event\TagCreatedEvent;
+use Sulu\Bundle\TagBundle\Domain\Event\TagMergedEvent;
+use Sulu\Bundle\TagBundle\Domain\Event\TagModifiedEvent;
+use Sulu\Bundle\TagBundle\Domain\Event\TagRemovedEvent;
 use Sulu\Bundle\TagBundle\Entity\TagRepository;
 use Sulu\Bundle\TagBundle\Event\TagDeleteEvent;
 use Sulu\Bundle\TagBundle\Event\TagEvents;
@@ -43,14 +48,21 @@ class TagManager implements TagManagerInterface
      */
     private $eventDispatcher;
 
+    /**
+     * @var DomainEventCollectorInterface
+     */
+    private $domainEventCollector;
+
     public function __construct(
         TagRepositoryInterface $tagRepository,
         ObjectManager $em,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        DomainEventCollectorInterface $domainEventCollector
     ) {
         $this->tagRepository = $tagRepository;
         $this->em = $em;
         $this->eventDispatcher = $eventDispatcher;
+        $this->domainEventCollector = $domainEventCollector;
     }
 
     /**
@@ -118,6 +130,9 @@ class TagManager implements TagManagerInterface
 
             if (!$id) {
                 $this->em->persist($tag);
+                $this->domainEventCollector->collect(new TagCreatedEvent($tag, $data));
+            } else {
+                $this->domainEventCollector->collect(new TagModifiedEvent($tag, $data));
             }
 
             $this->em->flush();
@@ -144,6 +159,8 @@ class TagManager implements TagManagerInterface
         }
 
         $this->em->remove($tag);
+        $this->domainEventCollector->collect(new TagRemovedEvent($tag->getId(), $tag->getName()));
+
         $this->em->flush();
 
         // throw an tag.delete event
@@ -179,6 +196,12 @@ class TagManager implements TagManagerInterface
             }
 
             $this->em->remove($srcTag);
+
+            $this->domainEventCollector->collect(new TagMergedEvent($destTag, $srcTag->getId(), $srcTag->getName()));
+            $this->domainEventCollector->collect(new TagRemovedEvent($srcTag->getId(), $srcTag->getName(), [
+                'wasMerged' => true,
+                'destinationTagId' => $destTag->getId(),
+            ]));
 
             $srcTags[] = $srcTag;
         }

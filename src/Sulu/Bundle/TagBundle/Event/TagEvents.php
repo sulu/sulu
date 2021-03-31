@@ -11,6 +11,17 @@
 
 namespace Sulu\Bundle\TagBundle\Event;
 
+@\trigger_error(
+    \sprintf(
+        'The "%s" class is deprecated since Sulu 2.3. Use the respective event class directly instead.',
+        TagEvents::class
+    ),
+    \E_USER_DEPRECATED
+);
+
+/**
+ * @deprecated
+ */
 final class TagEvents
 {
     /**

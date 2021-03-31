@@ -12,7 +12,14 @@
 namespace Sulu\Component\CustomUrl\Tests\Unit\Manager;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
+use Sulu\Bundle\CustomUrlBundle\Domain\Event\CustomUrlCreatedEvent;
+use Sulu\Bundle\CustomUrlBundle\Domain\Event\CustomUrlModifiedEvent;
+use Sulu\Bundle\CustomUrlBundle\Domain\Event\CustomUrlRemovedEvent;
+use Sulu\Bundle\CustomUrlBundle\Domain\Event\CustomUrlRouteRemovedEvent;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Bundle\DocumentManagerBundle\Collector\DocumentDomainEventCollectorInterface;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 use Sulu\Component\CustomUrl\Document\RouteDocument;
@@ -34,32 +41,32 @@ use Sulu\Component\Webspace\Webspace;
 class CustomUrlManagerTest extends TestCase
 {
     /**
-     * @var DocumentManagerInterface
+     * @var DocumentManagerInterface|ObjectProphecy
      */
     private $documentManager;
 
     /**
-     * @var DocumentInspector
+     * @var DocumentInspector|ObjectProphecy
      */
     private $documentInspector;
 
     /**
-     * @var CustomUrlRepository
+     * @var CustomUrlRepository|ObjectProphecy
      */
     private $customUrlRepository;
 
     /**
-     * @var MetadataFactoryInterface
+     * @var MetadataFactoryInterface|ObjectProphecy
      */
     private $metadataFactory;
 
     /**
-     * @var PathBuilder
+     * @var PathBuilder|ObjectProphecy
      */
     private $pathBuilder;
 
     /**
-     * @var WebspaceManagerInterface
+     * @var WebspaceManagerInterface|ObjectProphecy
      */
     private $webspaceManager;
 
@@ -69,12 +76,17 @@ class CustomUrlManagerTest extends TestCase
     private $environment;
 
     /**
+     * @var DocumentDomainEventCollectorInterface|ObjectProphecy
+     */
+    private $documentDomainEventCollector;
+
+    /**
      * @var PageDocument
      */
     private $targetDocument;
 
     /**
-     * @var Metadata
+     * @var Metadata|ObjectProphecy
      */
     private $metadata;
 
@@ -91,6 +103,7 @@ class CustomUrlManagerTest extends TestCase
         $this->metadataFactory = $this->prophesize(MetadataFactoryInterface::class);
         $this->pathBuilder = $this->prophesize(PathBuilder::class);
         $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
+        $this->documentDomainEventCollector = $this->prophesize(DocumentDomainEventCollectorInterface::class);
 
         $this->targetDocument = $this->prophesize(PageDocument::class)->reveal();
         $this->metadata = $this->prophesize(Metadata::class);
@@ -102,7 +115,8 @@ class CustomUrlManagerTest extends TestCase
             $this->metadataFactory->reveal(),
             $this->pathBuilder->reveal(),
             $this->webspaceManager->reveal(),
-            $this->environment
+            $this->environment,
+            $this->documentDomainEventCollector->reveal()
         );
     }
 
@@ -113,15 +127,16 @@ class CustomUrlManagerTest extends TestCase
 
         $testDocument = new CustomUrlDocument();
         $this->documentManager->create('custom_url')->willReturn($testDocument);
+        $this->documentManager->find('123-123-123', 'en', ['load_ghost_content' => true])
+            ->willReturn($this->targetDocument);
+
         $this->documentManager->persist(
             $testDocument,
             'en',
             ['parent_path' => '/cmf/sulu_io/custom_urls/items', 'load_ghost_content' => true, 'auto_rename' => false]
         )->shouldBeCalledTimes(1);
         $this->documentManager->publish($testDocument, 'en')->shouldBeCalled();
-        $this->documentManager->find('123-123-123', 'en', ['load_ghost_content' => true])->willReturn(
-                $this->targetDocument
-            );
+        $this->documentDomainEventCollector->collect(Argument::type(CustomUrlCreatedEvent::class))->shouldBeCalled();
 
         $this->pathBuilder->build(['%base%', 'sulu_io', '%custom_urls%', '%custom_urls_items%'])
             ->willReturn('/cmf/sulu_io/custom_urls/items');
@@ -292,6 +307,8 @@ class CustomUrlManagerTest extends TestCase
         $document->setDomainParts(['test-1', 'test-1', 'test-2'])->shouldBeCalled();
         $document->setTargetDocument($targetDocument->reveal())->shouldBeCalled();
 
+        $this->documentInspector->getWebspace($document->reveal())->willReturn('sulu_io');
+
         $this->metadata->getFieldMappings()->willReturn($this->getMapping());
         $this->metadataFactory->getMetadataForAlias('custom_url')->willReturn($this->metadata->reveal());
 
@@ -310,6 +327,7 @@ class CustomUrlManagerTest extends TestCase
             ]
         )->shouldBeCalledTimes(1);
         $this->documentManager->publish($document, 'en')->shouldBeCalledTimes(1);
+        $this->documentDomainEventCollector->collect(Argument::type(CustomUrlModifiedEvent::class))->shouldBeCalled();
 
         $result = $this->manager->save(
             '312-312-312',
@@ -344,6 +362,8 @@ class CustomUrlManagerTest extends TestCase
         $document->setBaseDomain('*.sulu.io')->shouldBeCalled();
         $document->setDomainParts(['test-1', 'test-1', 'test-2'])->shouldBeCalled();
         $document->setTargetDocument($targetDocument->reveal())->shouldBeCalled();
+
+        $this->documentInspector->getWebspace($document->reveal())->willReturn('sulu_io');
 
         $this->metadata->getFieldMappings()->willReturn($this->getMapping());
         $this->metadataFactory->getMetadataForAlias('custom_url')->willReturn($this->metadata->reveal());
@@ -384,27 +404,33 @@ class CustomUrlManagerTest extends TestCase
     public function testDelete()
     {
         $document = $this->prophesize(CustomUrlDocument::class);
+        $document->getUuid()->willReturn('1234-1234-1234-1234');
+        $document->getTitle()->willReturn('Test-1');
+        $this->documentInspector->getWebspace($document->reveal())->willReturn('sulu_io');
 
         $this->documentManager->find('123-123-123', 'en', ['load_ghost_content' => true])->willReturn($document->reveal());
         $this->documentManager->remove($document->reveal())->shouldBeCalled();
+        $this->documentDomainEventCollector->collect(Argument::type(CustomUrlRemovedEvent::class))->shouldBeCalled();
 
         $this->manager->delete('123-123-123');
     }
 
     public function testDeleteRoute()
     {
-        $document = $this->prophesize(RouteDocument::class);
+        $routeDocument = $this->prophesize(RouteDocument::class);
         $customUrlDocument = $this->prophesize(CustomUrlDocument::class);
 
-        $document->isHistory()->willReturn(true);
-        $document->getPath()->willReturn('/cmf/sulu_io/custom_urls/routes/sulu.io/test');
-        $document->getTargetDocument()->willReturn($customUrlDocument->reveal());
+        $routeDocument->getUuid()->willReturn('1234-1234-1234-1234');
+        $routeDocument->isHistory()->willReturn(true);
+        $routeDocument->getPath()->willReturn('/cmf/sulu_io/custom_urls/routes/sulu.io/test');
+        $routeDocument->getTargetDocument()->willReturn($customUrlDocument->reveal());
 
-        $this->documentManager->find('123-123-123')->willReturn($document->reveal());
-        $this->documentManager->remove($document->reveal())->shouldBeCalled();
+        $this->documentManager->find('123-123-123')->willReturn($routeDocument->reveal());
+        $this->documentManager->remove($routeDocument->reveal())->shouldBeCalled();
+        $this->documentDomainEventCollector->collect(Argument::type(CustomUrlRouteRemovedEvent::class))->shouldBeCalled();
 
         $result = $this->manager->deleteRoute('sulu_io', '123-123-123');
-        $this->assertEquals($document->reveal(), $result);
+        $this->assertEquals($routeDocument->reveal(), $result);
     }
 
     public function testDeleteHistory()

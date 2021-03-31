@@ -19,6 +19,7 @@ use Sulu\Bundle\TagBundle\Admin\TagAdmin;
 use Sulu\Bundle\TagBundle\Controller\Exception\ConstraintViolationException;
 use Sulu\Bundle\TagBundle\Tag\Exception\TagAlreadyExistsException;
 use Sulu\Bundle\TagBundle\Tag\Exception\TagNotFoundException;
+use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
@@ -41,6 +42,9 @@ class TagController extends AbstractRestController implements ClassResourceInter
 {
     protected static $entityName = 'SuluTagBundle:Tag';
 
+    /**
+     * @deprecated Use the TagInterface::RESOURCE_KEY constant instead
+     */
     protected static $entityKey = 'tags';
 
     protected $unsortable = [];
@@ -146,7 +150,7 @@ class TagController extends AbstractRestController implements ClassResourceInter
 
             $list = new ListRepresentation(
                 $listBuilder->execute(),
-                self::$entityKey,
+                TagInterface::RESOURCE_KEY,
                 'sulu_tag.get_tags',
                 $request->query->all(),
                 $listBuilder->getCurrentPage(),
@@ -155,7 +159,7 @@ class TagController extends AbstractRestController implements ClassResourceInter
             );
             $view = $this->view($list, 200);
         } else {
-            $list = new CollectionRepresentation($this->tagManager->findAll(), self::$entityKey);
+            $list = new CollectionRepresentation($this->tagManager->findAll(), TagInterface::RESOURCE_KEY);
 
             $context = new Context();
             $context->setGroups(['partialTag']);

@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\TagBundle\DependencyInjection;
 
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
+use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
@@ -42,7 +43,7 @@ class SuluTagExtension extends Extension implements PrependExtensionInterface
                         ],
                     ],
                     'resources' => [
-                        'tags' => [
+                        TagInterface::RESOURCE_KEY => [
                             'routes' => [
                                 'list' => 'sulu_tag.get_tags',
                                 'detail' => 'sulu_tag.get_tag',
@@ -53,7 +54,7 @@ class SuluTagExtension extends Extension implements PrependExtensionInterface
                         'selection' => [
                             'tag_selection' => [
                                 'default_type' => 'auto_complete',
-                                'resource_key' => 'tags',
+                                'resource_key' => TagInterface::RESOURCE_KEY,
                                 'types' => [
                                     'auto_complete' => [
                                         'allow_add' => true,
