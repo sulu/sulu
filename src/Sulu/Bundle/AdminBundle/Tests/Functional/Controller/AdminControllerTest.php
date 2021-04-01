@@ -56,6 +56,52 @@ class AdminControllerTest extends SuluTestCase
         $this->assertEquals('de_at', $response->sulu_admin->localizations[3]->localization);
     }
 
+    public function testTemplateConfig(): void
+    {
+        $this->initPhpcr();
+        $collectionType = new LoadCollectionTypes();
+        $collectionType->load($this->getEntityManager());
+
+        $this->client->request('GET', '/admin/');
+
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+        $html = $response->getContent();
+        $this->assertIsString($html);
+
+        // extract json from html
+        $html = \explode('SULU_CONFIG = Object.freeze(', $html, 2)[1] ?? null;
+        $this->assertIsString($html, 'Could not extract "Sulu_CONFIG" from response object.');
+        $json = \explode(');', $html, 2)[0] ?? null;
+        $this->assertIsString($json, 'Could not find end of "SULU_CONFIG" in the response content.');
+        $config = \json_decode($json, true);
+
+        // test config object
+        $this->assertIsArray($config, 'Extracted "SULU_CONFIG" is not a valid json object.');
+        $this->assertSame([
+            'initialLoginState' => true,
+            'translations' => [
+                'de',
+                'en',
+            ],
+            'fallbackLocale' => 'en',
+            'endpoints' => [
+                'config' => '/admin/config',
+                'items' => '/admin/api/items',
+                'loginCheck' => '/admin/login',
+                'logout' => '/admin/logout',
+                'profileSettings' => '/admin/api/profile/settings',
+                'forgotPasswordReset' => '/admin/security/reset/email',
+                'resetPassword' => '/admin/security/reset',
+                'translations' => '/admin/translations',
+                'generateUrl' => '/admin/api/resourcelocators?action=generate',
+                'routing' => '/admin/js/routing',
+            ],
+            'suluVersion' => '_._._',
+            'appVersion' => null,
+        ], $config);
+    }
+
     public function testGetNotExistingMetdata()
     {
         $this->client->jsonRequest('GET', '/admin/metadata/test1/test');
