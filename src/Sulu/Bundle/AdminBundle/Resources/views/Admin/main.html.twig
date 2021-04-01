@@ -1,30 +1,37 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <title>SULU</title>
-
-        {# We do not preload the files because of problems with big files on http push in Chrome #}
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>SULU</title>
+    {% block style %}
+        {#- We do not preload the files because of problems with big files on http push in Chrome -#}
         <link rel="stylesheet" href="{{ asset('main.css', 'sulu_admin') }}">
-    </head>
-    <body>
-        <div id="application">
-        </div>
-        <script>
-            {% autoescape false %}
-            const SULU_CONFIG = Object.freeze({
-                initialLoginState: {{ is_granted('IS_AUTHENTICATED_REMEMBERED') ? 'true' : 'false' }},
-                translations: {{ translations|json_encode }},
-                fallbackLocale: '{{ fallback_locale }}',
-                endpoints: {{ endpoints|json_encode }},
-                suluVersion: '{{ sulu_version }}',
-                appVersion: '{{ app_version }}'
-            });
-            {% endautoescape %}
-        </script>
+    {%- endblock ~%}
+</head>
+<body>
+    {% block application -%}
+        <div id="application"></div>
+    {% endblock %}
 
-        {# We do not preload the files because of problems with big files on http push in Chrome #}
+    <script>
+        {%- set config = {
+            initialLoginState: is_granted('IS_AUTHENTICATED_REMEMBERED'),
+            translations: translations,
+            fallbackLocale: fallback_locale,
+            endpoints: endpoints,
+            suluVersion: sulu_version,
+            appVersion: app_version,
+        } -%}
+
+        {%- block config -%}
+            const SULU_CONFIG = Object.freeze({{ config|json_encode(constant('JSON_PRETTY_PRINT'))|raw }});
+        {%- endblock -%}
+    </script>
+
+    {% block javascript %}
+        {#- We do not preload the files because of problems with big files on http push in Chrome -#}
         <script src="{{ asset('main.js', 'sulu_admin') }}"></script>
-    </body>
+    {%- endblock %}
+</body>
 </html>
