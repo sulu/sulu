@@ -238,7 +238,7 @@ class MediaManager implements MediaManagerInterface
             ['pagination' => false, 'ids' => $ids],
             null,
             null,
-            $this->getCurrentUser(),
+            $permission ? $this->getCurrentUser() : null,
             $permission
         );
         $this->count = \count($mediaEntities);
@@ -260,7 +260,7 @@ class MediaManager implements MediaManagerInterface
             $filter,
             $limit,
             $offset,
-            $this->getCurrentUser(),
+            $permission ? $this->getCurrentUser() : null,
             $permission
         );
         $this->count = $this->mediaRepository->count($filter);
@@ -912,8 +912,6 @@ class MediaManager implements MediaManagerInterface
         if ($user instanceof UserInterface) {
             return $user;
         }
-
-        return;
     }
 
     /**
