@@ -769,7 +769,9 @@ exports[`Render the MediaCollection for all media 1`] = `
   </div>
   <div
     class="divider"
-  />
+  >
+    sulu_media.recently_added
+  </div>
   <div>
     <div
       class="listContainer"
