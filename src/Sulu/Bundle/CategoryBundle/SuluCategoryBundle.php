@@ -14,12 +14,8 @@ namespace Sulu\Bundle\CategoryBundle;
 use Sulu\Bundle\CategoryBundle\DependencyInjection\DeprecationCompilerPass;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryMetaInterface;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryMetaRepositoryInterface;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\KeywordInterface;
-use Sulu\Bundle\CategoryBundle\Entity\KeywordRepositoryInterface;
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -41,15 +37,6 @@ class SuluCategoryBundle extends Bundle
                 KeywordInterface::class => 'sulu.model.keyword.class',
             ],
             $container
-        );
-
-        $container->addAliases(
-            [
-                CategoryRepositoryInterface::class => 'sulu.repository.category',
-                CategoryMetaRepositoryInterface::class => 'sulu.repository.category_meta',
-                CategoryTranslationRepositoryInterface::class => 'sulu.repository.category_translation',
-                KeywordRepositoryInterface::class => 'sulu.repository.keyword',
-            ]
         );
 
         $container->addCompilerPass(new DeprecationCompilerPass());

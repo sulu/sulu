@@ -13,7 +13,6 @@ namespace Sulu\Bundle\RouteBundle;
 
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
 use Sulu\Bundle\RouteBundle\DependencyInjection\RouteGeneratorCompilerPass;
-use Sulu\Bundle\RouteBundle\Entity\RouteRepositoryInterface;
 use Sulu\Bundle\RouteBundle\Model\RouteInterface;
 use Sulu\Component\Route\RouteDefaultOptionsCompilerPass;
 use Sulu\Component\Symfony\CompilerPass\TaggedServiceCollectorCompilerPass;
@@ -45,12 +44,6 @@ class SuluRouteBundle extends Bundle
                 RouteInterface::class => 'sulu.model.route.class',
             ],
             $container
-        );
-
-        $container->addAliases(
-            [
-                RouteRepositoryInterface::class => 'sulu.repository.route',
-            ]
         );
     }
 }

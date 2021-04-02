@@ -13,13 +13,9 @@ namespace Sulu\Bundle\AudienceTargetingBundle;
 
 use Sulu\Bundle\AudienceTargetingBundle\DependencyInjection\Compiler\AddRulesPass;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupConditionInterface;
-use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupConditionRepositoryInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
-use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleInterface;
-use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleRepositoryInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupWebspaceInterface;
-use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupWebspaceRepositoryInterface;
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -42,15 +38,6 @@ class SuluAudienceTargetingBundle extends Bundle
                 TargetGroupWebspaceInterface::class => 'sulu.model.target_group_webspace.class',
             ],
             $container
-        );
-
-        $container->addAliases(
-            [
-                TargetGroupRepositoryInterface::class => 'sulu.repository.target_group',
-                TargetGroupConditionRepositoryInterface::class => 'sulu.repository.target_group_condition',
-                TargetGroupRuleRepositoryInterface::class => 'sulu.repository.target_group_rule',
-                TargetGroupWebspaceRepositoryInterface::class => 'sulu.repository.target_group_webspace',
-            ]
         );
 
         $container->addCompilerPass(new AddRulesPass());

@@ -13,7 +13,6 @@ namespace Sulu\Bundle\TagBundle;
 
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
-use Sulu\Bundle\TagBundle\Tag\TagRepositoryInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -31,12 +30,6 @@ class SuluTagBundle extends Bundle
                 TagInterface::class => 'sulu.model.tag.class',
             ],
             $container
-        );
-
-        $container->addAliases(
-            [
-                TagRepositoryInterface::class => 'sulu.repository.tag',
-            ]
         );
     }
 }
