@@ -29,6 +29,9 @@ class SecurityAdmin extends Admin
 {
     const ROLE_SECURITY_CONTEXT = 'sulu.security.roles';
 
+    /**
+     * @deprecated The group functionality was deprecated in Sulu 2.1 and will be removed in Sulu 3.0
+     */
     const GROUP_SECURITY_CONTEXT = 'sulu.security.groups';
 
     const USER_SECURITY_CONTEXT = 'sulu.security.users';
@@ -112,12 +115,6 @@ class SecurityAdmin extends Admin
             self::SULU_ADMIN_SECURITY_SYSTEM => [
                 'Security' => [
                     static::ROLE_SECURITY_CONTEXT => [
-                        PermissionTypes::VIEW,
-                        PermissionTypes::ADD,
-                        PermissionTypes::EDIT,
-                        PermissionTypes::DELETE,
-                    ],
-                    static::GROUP_SECURITY_CONTEXT => [
                         PermissionTypes::VIEW,
                         PermissionTypes::ADD,
                         PermissionTypes::EDIT,

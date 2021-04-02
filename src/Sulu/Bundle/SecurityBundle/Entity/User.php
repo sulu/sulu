@@ -132,6 +132,8 @@ class User extends ApiEntity implements UserInterface, Serializable, EquatableIn
     protected $userRoles;
 
     /**
+     * @deprecated The group functionality was deprecated in Sulu 2.1 and will be removed in Sulu 3.0
+     *
      * @var Collection|UserGroup[]
      * @Expose
      */
@@ -607,6 +609,8 @@ class User extends ApiEntity implements UserInterface, Serializable, EquatableIn
     /**
      * Add userGroups.
      *
+     * @deprecated The group functionality was deprecated in Sulu 2.1 and will be removed in Sulu 3.0
+     *
      * @return self
      */
     public function addUserGroup(UserGroup $userGroups)
@@ -618,6 +622,8 @@ class User extends ApiEntity implements UserInterface, Serializable, EquatableIn
 
     /**
      * Remove userGroups.
+     *
+     * @deprecated The group functionality was deprecated in Sulu 2.1 and will be removed in Sulu 3.0
      */
     public function removeUserGroup(UserGroup $userGroups)
     {
@@ -626,6 +632,8 @@ class User extends ApiEntity implements UserInterface, Serializable, EquatableIn
 
     /**
      * Get userGroups.
+     *
+     * @deprecated The group functionality was deprecated in Sulu 2.1 and will be removed in Sulu 3.0
      *
      * @return ArrayCollection
      */

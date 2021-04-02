@@ -66,6 +66,8 @@ class Role implements RoleInterface
     private $userRoles;
 
     /**
+     * @deprecated The group functionality was deprecated in Sulu 2.1 and will be removed in Sulu 3.0
+     *
      * @var Collection|Group[]
      *
      * @Exclude
@@ -276,6 +278,8 @@ class Role implements RoleInterface
     /**
      * Add groups.
      *
+     * @deprecated The group functionality was deprecated in Sulu 2.1 and will be removed in Sulu 3.0
+     *
      * @return Role
      */
     public function addGroup(Group $groups)
@@ -287,6 +291,8 @@ class Role implements RoleInterface
 
     /**
      * Remove groups.
+     *
+     * @deprecated The group functionality was deprecated in Sulu 2.1 and will be removed in Sulu 3.0
      */
     public function removeGroup(Group $groups)
     {
@@ -297,6 +303,8 @@ class Role implements RoleInterface
      * Get groups.
      *
      * @return Collection|Group[]
+     *
+     * @deprecated The group functionality was deprecated in Sulu 2.1 and will be removed in Sulu 3.0
      */
     public function getGroups()
     {
