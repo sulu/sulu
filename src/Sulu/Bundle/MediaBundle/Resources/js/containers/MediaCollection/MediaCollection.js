@@ -6,12 +6,12 @@ import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import {observer} from 'mobx-react';
 import {Divider} from 'sulu-admin-bundle/components';
 import {List, ListStore} from 'sulu-admin-bundle/containers';
+import {translate} from "sulu-admin-bundle/utils/Translator";
 import CollectionStore from '../../stores/CollectionStore';
 import MultiMediaDropzone from '../MultiMediaDropzone';
 import type {OverlayType} from './types';
 import CollectionSection from './CollectionSection';
 import MediaSection from './MediaSection';
-import {translate} from "sulu-admin-bundle/utils/Translator";
 
 type Props = {|
     collectionListStore: ListStore,
