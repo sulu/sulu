@@ -21,7 +21,7 @@ use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 
 /**
- * Group.
+ * @deprecated The group functionality was deprecated in Sulu 2.1 and will be removed in Sulu 3.0
  */
 class Group extends ApiEntity implements AuditableInterface
 {
