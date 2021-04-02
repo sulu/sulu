@@ -11,6 +11,7 @@ import MultiMediaDropzone from '../MultiMediaDropzone';
 import type {OverlayType} from './types';
 import CollectionSection from './CollectionSection';
 import MediaSection from './MediaSection';
+import {translate} from "sulu-admin-bundle/utils/Translator";
 
 type Props = {|
     collectionListStore: ListStore,
@@ -118,7 +119,7 @@ class MediaCollection extends React.Component<Props> {
                     resourceStore={collectionStore.resourceStore}
                     securable={securable}
                 />
-                <Divider />
+                <Divider>{collectionStore.id ? undefined : translate('sulu_media.recently_added') }</Divider>
                 <div>
                     <MediaSection
                         adapters={mediaListAdapters}
