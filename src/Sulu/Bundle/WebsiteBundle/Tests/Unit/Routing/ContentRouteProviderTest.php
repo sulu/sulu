@@ -464,7 +464,7 @@ class ContentRouteProviderTest extends TestCase
 
         $this->assertCount(1, $routes);
         $route = $routes->getIterator()->current();
-        $this->assertEquals('sulu_website.redirect_controller:redirectAction', $route->getDefaults()['_controller']);
+        $this->assertEquals('sulu_website.redirect_controller::redirectAction', $route->getDefaults()['_controller']);
         $this->assertEquals('sulu.io/de/other-test', $route->getDefaults()['url']);
     }
 
@@ -522,7 +522,7 @@ class ContentRouteProviderTest extends TestCase
 
         $this->assertCount(1, $routes);
         $route = $routes->getIterator()->current();
-        $this->assertEquals('sulu_website.redirect_controller:redirectAction', $route->getDefaults()['_controller']);
+        $this->assertEquals('sulu_website.redirect_controller::redirectAction', $route->getDefaults()['_controller']);
         $this->assertEquals('sulu.io/de/other-test?test1=value1', $route->getDefaults()['url']);
     }
 
@@ -560,7 +560,7 @@ class ContentRouteProviderTest extends TestCase
 
         $this->assertCount(1, $routes);
         $route = $routes->getIterator()->current();
-        $this->assertEquals('sulu_website.redirect_controller:redirectAction', $route->getDefaults()['_controller']);
+        $this->assertEquals('sulu_website.redirect_controller::redirectAction', $route->getDefaults()['_controller']);
         $this->assertEquals('/de/new-test.json', $route->getDefaults()['url']);
     }
 
@@ -607,7 +607,7 @@ class ContentRouteProviderTest extends TestCase
 
         $this->assertCount(1, $routes);
         $route = $routes->getIterator()->current();
-        $this->assertEquals('sulu_website.redirect_controller:redirectAction', $route->getDefaults()['_controller']);
+        $this->assertEquals('sulu_website.redirect_controller::redirectAction', $route->getDefaults()['_controller']);
         $this->assertEquals('http://www.example.org', $route->getDefaults()['url']);
     }
 
@@ -645,7 +645,7 @@ class ContentRouteProviderTest extends TestCase
 
         $this->assertCount(1, $routes);
         $route = $routes->getIterator()->current();
-        $this->assertEquals('sulu_website.redirect_controller:redirectAction', $route->getDefaults()['_controller']);
+        $this->assertEquals('sulu_website.redirect_controller::redirectAction', $route->getDefaults()['_controller']);
         $this->assertEquals('/de/new-test', $route->getDefaults()['url']);
     }
 
@@ -738,7 +738,7 @@ class ContentRouteProviderTest extends TestCase
 
         $this->assertCount(1, $routes);
         $route = $routes->getIterator()->current();
-        $this->assertEquals('sulu_website.redirect_controller:redirectAction', $route->getDefaults()['_controller']);
+        $this->assertEquals('sulu_website.redirect_controller::redirectAction', $route->getDefaults()['_controller']);
         $this->assertEquals('/de/qwertz', $route->getDefaults()['url']);
     }
 
@@ -782,7 +782,7 @@ class ContentRouteProviderTest extends TestCase
         $routes = $this->contentRouteProvider->getRouteCollectionForRequest($request);
         $this->assertCount(1, $routes);
         $route = $routes->getIterator()->current();
-        $this->assertEquals('sulu_website.redirect_controller:redirectAction', $route->getDefaults()['_controller']);
+        $this->assertEquals('sulu_website.redirect_controller::redirectAction', $route->getDefaults()['_controller']);
         $this->assertEquals('/de/foo?bar=baz', $route->getDefaults()['url']);
     }
 
@@ -822,7 +822,7 @@ class ContentRouteProviderTest extends TestCase
 
         $this->assertCount(1, $routes);
         $route = $routes->getIterator()->current();
-        $this->assertEquals('sulu_website.redirect_controller:redirectAction', $route->getDefaults()['_controller']);
+        $this->assertEquals('sulu_website.redirect_controller::redirectAction', $route->getDefaults()['_controller']);
         $this->assertEquals('/qwertz', $route->getDefaults()['url']);
     }
 
@@ -864,7 +864,7 @@ class ContentRouteProviderTest extends TestCase
 
         $this->assertCount(1, $routes);
         $route = $routes->getIterator()->current();
-        $this->assertEquals('sulu_website.redirect_controller:redirectAction', $route->getDefaults()['_controller']);
+        $this->assertEquals('sulu_website.redirect_controller::redirectAction', $route->getDefaults()['_controller']);
         $this->assertEquals('/de', $route->getDefaults()['url']);
     }
 

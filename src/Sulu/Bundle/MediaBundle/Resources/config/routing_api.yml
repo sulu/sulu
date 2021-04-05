@@ -7,7 +7,7 @@ sulu_media.post_collection_trigger:
     path: /collections/{id}.{_format}
     methods: POST
     defaults:
-        _controller: sulu_media.collection_controller:postTriggerAction
+        _controller: sulu_media.collection_controller::postTriggerAction
         _format: json
 
 sulu_media.media:
@@ -19,7 +19,7 @@ sulu_media.post_media_trigger:
     path: /media/{id}.{_format}
     methods: POST
     defaults:
-        _controller: sulu_media.media_controller:postTriggerAction
+        _controller: sulu_media.media_controller::postTriggerAction
         _format: json
 
 sulu_media.media_preview:
@@ -32,7 +32,7 @@ sulu_media.post_media_preview:
     path: /media/{id}/preview.{_format}
     methods: POST
     defaults:
-        _controller: sulu_media.media_preview_controller:postAction
+        _controller: sulu_media.media_preview_controller::postAction
         _format: json
 
 sulu_media.format:

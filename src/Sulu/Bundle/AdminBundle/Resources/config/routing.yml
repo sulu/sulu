@@ -1,22 +1,22 @@
 sulu_admin:
     path:  /
     defaults:
-        _controller: sulu_admin.admin_controller:indexAction
+        _controller: sulu_admin.admin_controller::indexAction
 
 sulu_admin.config:
     path: /config
     defaults:
-        _controller: sulu_admin.admin_controller:configAction
+        _controller: sulu_admin.admin_controller::configAction
 
 sulu_admin.metadata:
     path: /metadata/{type}/{key}
     defaults:
-        _controller: sulu_admin.admin_controller:metadataAction
+        _controller: sulu_admin.admin_controller::metadataAction
 
 sulu_admin.translation:
     path: /translations
     defaults:
-        _controller: sulu_admin.admin_controller:translationsAction
+        _controller: sulu_admin.admin_controller::translationsAction
 
 sulu_admin.login_check:
     path: /login
@@ -26,4 +26,4 @@ sulu_admin.logout:
 
 sulu_admin.reset:
     path: /reset/{token}
-    defaults: { _controller: SuluAdminBundle:Security:reset }
+    defaults: { _controller: SuluAdminBundle::Security:reset }

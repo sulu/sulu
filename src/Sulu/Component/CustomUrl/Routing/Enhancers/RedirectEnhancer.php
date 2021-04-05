@@ -58,7 +58,7 @@ class RedirectEnhancer extends AbstractEnhancer
         $queryStringSuffix = $queryString ? '?' . $queryString : '';
 
         return [
-            '_controller' => 'sulu_website.redirect_controller:redirectAction',
+            '_controller' => 'sulu_website.redirect_controller::redirectAction',
             'url' => $url . $requestFormatSuffix . $queryStringSuffix,
         ];
     }
