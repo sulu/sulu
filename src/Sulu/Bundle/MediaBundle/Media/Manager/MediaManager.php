@@ -111,11 +111,6 @@ class MediaManager implements MediaManagerInterface
     private $userRepository;
 
     /**
-     * @var int
-     */
-    private $maxFileSize;
-
-    /**
      * @var TagManagerInterface
      */
     private $tagManager;
@@ -141,13 +136,6 @@ class MediaManager implements MediaManagerInterface
     private $downloadPath;
 
     /**
-     * @var array
-     *
-     * @deprecated
-     */
-    private $permissions;
-
-    /**
      * @var int
      */
     public $count;
@@ -165,9 +153,7 @@ class MediaManager implements MediaManagerInterface
     /**
      * @param CollectionRepository $collectionRepository
      * @param null|FFprobe|MediaPropertiesProviderInterface[] $mediaPropertiesProviders
-     * @param array $permissions
      * @param string $downloadPath
-     * @param int $maxFileSize Unused parameter replaced by FileValidatorInterface
      * @param string $adminDownloadPath
      */
     public function __construct(
@@ -185,9 +171,7 @@ class MediaManager implements MediaManagerInterface
         ?TokenStorageInterface $tokenStorage,
         ?SecurityCheckerInterface $securityChecker,
         $mediaPropertiesProviders,
-        $permissions,
         $downloadPath,
-        $maxFileSize,
         ?TargetGroupRepositoryInterface $targetGroupRepository,
         $adminDownloadPath = null
     ) {
@@ -205,10 +189,7 @@ class MediaManager implements MediaManagerInterface
         $this->pathCleaner = $pathCleaner;
         $this->tokenStorage = $tokenStorage;
         $this->securityChecker = $securityChecker;
-        // TODO permissions are deprecated and should be removed in 2.3
-        $this->permissions = $permissions;
         $this->downloadPath = $downloadPath;
-        $this->maxFileSize = $maxFileSize;
 
         if (!$adminDownloadPath) {
             @\trigger_error(

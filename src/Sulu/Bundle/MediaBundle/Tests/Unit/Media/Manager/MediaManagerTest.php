@@ -170,9 +170,7 @@ class MediaManagerTest extends TestCase
             [
                 $this->mediaPropertiesProvider->reveal(),
             ],
-            [],
             '/download/{id}/media/{slug}',
-            0,
             $this->targetGroupRepository->reveal()
         );
     }
