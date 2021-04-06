@@ -11,6 +11,10 @@
 
 namespace Sulu\Bundle\AudienceTargetingBundle\DependencyInjection;
 
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupConditionRepositoryInterface;
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleRepositoryInterface;
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupWebspaceRepositoryInterface;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -59,6 +63,14 @@ class SuluAudienceTargetingExtension extends Extension implements PrependExtensi
         $loader->load('services.xml');
 
         $this->configurePersistence($config['objects'], $container);
+        $container->addAliases(
+            [
+                TargetGroupRepositoryInterface::class => 'sulu.repository.target_group',
+                TargetGroupConditionRepositoryInterface::class => 'sulu.repository.target_group_condition',
+                TargetGroupRuleRepositoryInterface::class => 'sulu.repository.target_group_rule',
+                TargetGroupWebspaceRepositoryInterface::class => 'sulu.repository.target_group_webspace',
+            ]
+        );
     }
 
     public function prepend(ContainerBuilder $container)

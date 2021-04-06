@@ -50,8 +50,5 @@
 
             <tag name="sulu.context" context="admin"/>
         </service>
-
-        <!--PERSISTENCE BUNDLE REPOSITORIES-->
-        <service id="Sulu\Bundle\RouteBundle\Entity\RouteRepositoryInterface" alias="sulu.repository.route"/>
     </services>
 </container>

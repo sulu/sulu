@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\TagBundle\DependencyInjection;
 
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
+use Sulu\Bundle\TagBundle\Tag\TagRepositoryInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
@@ -77,6 +78,11 @@ class SuluTagExtension extends Extension implements PrependExtensionInterface
         $config = $this->processConfiguration($configuration, $configs);
 
         $this->configurePersistence($config['objects'], $container);
+        $container->addAliases(
+            [
+                TagRepositoryInterface::class => 'sulu.repository.tag',
+            ]
+        );
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');

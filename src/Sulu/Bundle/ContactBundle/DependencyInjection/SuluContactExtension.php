@@ -12,6 +12,8 @@
 namespace Sulu\Bundle\ContactBundle\DependencyInjection;
 
 use Sulu\Bundle\ContactBundle\Admin\ContactAdmin;
+use Sulu\Bundle\ContactBundle\Entity\AccountRepositoryInterface;
+use Sulu\Bundle\ContactBundle\Entity\ContactRepositoryInterface;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Sulu\Bundle\SecurityBundle\Security\Exception\EmailNotUniqueException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\UsernameNotUniqueException;
@@ -306,6 +308,12 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
         );
 
         $this->configurePersistence($config['objects'], $container);
+        $container->addAliases(
+            [
+                ContactRepositoryInterface::class => 'sulu.repository.contact',
+                AccountRepositoryInterface::class => 'sulu.repository.account',
+            ]
+        );
     }
 
     /**
