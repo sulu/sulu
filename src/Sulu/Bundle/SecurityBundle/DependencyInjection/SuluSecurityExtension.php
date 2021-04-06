@@ -17,6 +17,10 @@ use Sulu\Bundle\SecurityBundle\Exception\RoleNameAlreadyExistsException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\EmailNotUniqueException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\UsernameNotUniqueException;
 use Sulu\Component\HttpKernel\SuluKernel;
+use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
+use Sulu\Component\Security\Authentication\RoleSettingRepositoryInterface;
+use Sulu\Component\Security\Authentication\UserRepositoryInterface;
+use Sulu\Component\Security\Authorization\AccessControl\AccessControlRepositoryInterface;
 use Sulu\Component\Security\Authorization\AccessControl\DescendantProviderInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -55,6 +59,14 @@ class SuluSecurityExtension extends Extension implements PrependExtensionInterfa
         }
 
         $this->configurePersistence($config['objects'], $container);
+        $container->addAliases(
+            [
+                UserRepositoryInterface::class => 'sulu.repository.user',
+                RoleRepositoryInterface::class => 'sulu.repository.role',
+                RoleSettingRepositoryInterface::class => 'sulu.repository.role_setting',
+                AccessControlRepositoryInterface::class => 'sulu.repository.access_control',
+            ]
+        );
     }
 
     public function prepend(ContainerBuilder $container)

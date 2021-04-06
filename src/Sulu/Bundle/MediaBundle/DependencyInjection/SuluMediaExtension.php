@@ -16,6 +16,7 @@ use FFMpeg\FFMpeg;
 use Imagine\Vips\Imagine as VipsImagine;
 use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
+use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\FormatNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\FormatOptionsMissingParameterException;
@@ -347,6 +348,12 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('sulu_media.format_manager.mime_types', $mimeTypes);
 
         $this->configurePersistence($config['objects'], $container);
+        $container->addAliases(
+            [
+                MediaRepositoryInterface::class => 'sulu.repository.media',
+            ]
+        );
+
         $this->configureStorage($config, $container, $loader);
         $this->configureFileValidator($config, $container);
 

@@ -110,9 +110,9 @@ class MediaSelectionContainer implements ArrayableInterface
     {
         if (!empty($this->ids)) {
             return $this->mediaManager->getByIds($this->ids, $locale, $this->permission);
-        } else {
-            return [];
         }
+
+        return [];
     }
 
     /**
@@ -161,7 +161,7 @@ class MediaSelectionContainer implements ArrayableInterface
                 return $this->getTypes();
         }
 
-        return;
+        return null;
     }
 
     public function __isset($name)

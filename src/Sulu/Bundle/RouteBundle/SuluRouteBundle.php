@@ -38,6 +38,12 @@ class SuluRouteBundle extends Bundle
         $container->addCompilerPass(
             new TaggedServiceCollectorCompilerPass('sulu_route.routing.defaults_provider', 'sulu_route.defaults_provider')
         );
-        $this->buildPersistence([RouteInterface::class => 'sulu.model.route.class'], $container);
+
+        $this->buildPersistence(
+            [
+                RouteInterface::class => 'sulu.model.route.class',
+            ],
+            $container
+        );
     }
 }
