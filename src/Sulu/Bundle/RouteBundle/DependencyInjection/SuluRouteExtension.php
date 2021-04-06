@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\RouteBundle\DependencyInjection;
 
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
+use Sulu\Bundle\RouteBundle\Entity\RouteRepositoryInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -94,5 +95,10 @@ class SuluRouteExtension extends Extension implements PrependExtensionInterface
         );
 
         $this->configurePersistence($config['objects'], $container);
+        $container->addAliases(
+            [
+                RouteRepositoryInterface::class => 'sulu.repository.route',
+            ]
+        );
     }
 }

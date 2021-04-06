@@ -12,6 +12,10 @@
 namespace Sulu\Bundle\CategoryBundle;
 
 use Sulu\Bundle\CategoryBundle\DependencyInjection\DeprecationCompilerPass;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryMetaInterface;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface;
+use Sulu\Bundle\CategoryBundle\Entity\KeywordInterface;
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -27,10 +31,10 @@ class SuluCategoryBundle extends Bundle
     {
         $this->buildPersistence(
             [
-                'Sulu\Bundle\CategoryBundle\Entity\CategoryInterface' => 'sulu.model.category.class',
-                'Sulu\Bundle\CategoryBundle\Entity\CategoryMetaInterface' => 'sulu.model.category_meta.class',
-                'Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface' => 'sulu.model.category_translation.class',
-                'Sulu\Bundle\CategoryBundle\Entity\KeywordInterface' => 'sulu.model.keyword.class',
+                CategoryInterface::class => 'sulu.model.category.class',
+                CategoryMetaInterface::class => 'sulu.model.category_meta.class',
+                CategoryTranslationInterface::class => 'sulu.model.category_translation.class',
+                KeywordInterface::class => 'sulu.model.keyword.class',
             ],
             $container
         );
