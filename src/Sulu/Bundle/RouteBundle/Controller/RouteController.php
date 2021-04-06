@@ -26,6 +26,8 @@ use Sulu\Component\Rest\RequestParametersTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Contracts\Translation\LocaleAwareInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Provides api to handle routes.
@@ -59,13 +61,19 @@ class RouteController extends AbstractRestController implements ClassResourceInt
      */
     private $conflictResolver;
 
+    /**
+     * @var TranslatorInterface|null
+     */
+    private $translator;
+
     public function __construct(
         ViewHandlerInterface $viewHandler,
         RouteRepositoryInterface $routeRepository,
         EntityManagerInterface $entityManager,
         RouteGeneratorInterface $routeGenerator,
         array $resourceKeyMappings,
-        ConflictResolverInterface $conflictResolver = null
+        ConflictResolverInterface $conflictResolver = null,
+        TranslatorInterface $translator = null
     ) {
         parent::__construct($viewHandler);
 
@@ -74,10 +82,18 @@ class RouteController extends AbstractRestController implements ClassResourceInt
         $this->routeGenerator = $routeGenerator;
         $this->resourceKeyMappings = $resourceKeyMappings;
         $this->conflictResolver = $conflictResolver;
+        $this->translator = $translator;
 
         if (null === $this->conflictResolver) {
             @\trigger_error(
                 'Instantiating RouteController without the $conflictResolver argument is deprecated.',
+                \E_USER_DEPRECATED
+            );
+        }
+
+        if (null === $this->translator) {
+            @\trigger_error(
+                'Instantiating RouteController without the $translator argument is deprecated.',
                 \E_USER_DEPRECATED
             );
         }
@@ -167,6 +183,7 @@ class RouteController extends AbstractRestController implements ClassResourceInt
     private function generateUrlResponse(Request $request)
     {
         $resourceKey = $this->getRequestParameter($request, 'resourceKey');
+        $locale = $this->getRequestParameter($request, 'locale');
         $resourceKeyMapping = $this->resourceKeyMappings[$resourceKey] ?? null;
 
         /** @var array $parts */
@@ -174,13 +191,13 @@ class RouteController extends AbstractRestController implements ClassResourceInt
 
         $route = '/' . \implode('-', $parts);
         if ($resourceKeyMapping) {
-            $route = $this->routeGenerator->generate($parts, $this->resourceKeyMappings[$resourceKey]['options']);
+            $route = $this->generateUrl($locale, $parts, $this->resourceKeyMappings[$resourceKey]['options']);
 
             if ($this->conflictResolver) {
                 // create temporary route that is not persisted to resolve possible conflicts with existing routes
                 $tempRouteEntity = $this->routeRepository->createNew()
                     ->setPath($route)
-                    ->setLocale($this->getRequestParameter($request, 'locale'))
+                    ->setLocale($locale)
                     ->setEntityClass($this->resourceKeyMappings[$resourceKey]['entityClass'])
                     ->setEntityId($this->getRequestParameter($request, 'id'));
                 $tempRouteEntity = $this->conflictResolver->resolve($tempRouteEntity);
@@ -190,5 +207,20 @@ class RouteController extends AbstractRestController implements ClassResourceInt
         }
 
         return $this->handleView($this->view(['resourcelocator' => $route]));
+    }
+
+    private function generateUrl(string $locale, array $parts, array $options): string
+    {
+        if (!$this->translator || !$this->translator instanceof LocaleAwareInterface){
+            return $this->routeGenerator->generate($parts, $options);
+        }
+
+        $originalLocale = $this->translator->getLocale();
+        $this->translator->setLocale($locale);
+        $route = $this->routeGenerator->generate($parts, $options);
+
+        $this->translator->setLocale($originalLocale);
+
+        return $route;
     }
 }
