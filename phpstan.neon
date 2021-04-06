@@ -13,6 +13,8 @@ parameters:
     paths:
         - .
     level: max
+    parallel:
+        processTimeout: 300.0
     excludePaths:
         - %currentWorkingDirectory%/node_modules/*
         - %currentWorkingDirectory%/var/*
