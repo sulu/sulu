@@ -114,7 +114,7 @@ class MediaManagerTest extends TestCase
     private $pathCleaner;
 
     /**
-     * @var TokenStorageInterface
+     * @var TokenStorageInterface|ObjectProphecy
      */
     private $tokenStorage;
 
@@ -179,25 +179,42 @@ class MediaManagerTest extends TestCase
     /**
      * @dataProvider provideGetByIds
      */
-    public function testGetByIds($ids, $user, $media, $result)
+    public function testGetByIds($ids, $user, $permissions, $media, $result)
     {
+        /** @var TokenInterface|ObjectProphecy $token */
         $token = $this->prophesize(TokenInterface::class);
-        $token->getUser()->willReturn($user);
-        $this->tokenStorage->getToken()->willReturn($token->reveal());
+
+        if (!$permissions) {
+            $this->tokenStorage->getToken()->shouldNotBeCalled();
+            $token->getUser()->shouldNotBeCalled();
+        } else {
+            $token->getUser()->shouldBeCalled()->willReturn($user);
+            $this->tokenStorage->getToken()->shouldBeCalled()->willReturn($token->reveal());
+        }
 
         $this->mediaRepository->findMedia(
             ['pagination' => false, 'ids' => $ids],
             null,
             null,
-            $user,
-            null
-        )->willReturn($media);
+            $permissions ? $user : null,
+            $permissions
+        )->shouldBeCalled()->willReturn($media);
         $this->formatManager->getFormats(Argument::cetera())->willReturn(null);
-        $medias = $this->mediaManager->getByIds($ids, 'en');
+        $medias = $this->mediaManager->getByIds($ids, 'en', $permissions);
 
-        for ($i = 0; $i < \count($medias); ++$i) {
+        $count = \count($medias);
+        for ($i = 0; $i < $count; ++$i) {
             $this->assertEquals($result[$i]->getId(), $medias[$i]->getId());
         }
+    }
+
+    public function testGetWithoutPermission(): void
+    {
+        $this->tokenStorage->getToken()->shouldNotBeCalled();
+        $this->mediaRepository->findMedia(Argument::cetera())->willReturn([])->shouldBeCalled();
+        $this->mediaRepository->count(Argument::cetera())->shouldBeCalled();
+
+        $this->mediaManager->get(1);
     }
 
     public function testGetWithoutToken()
@@ -206,7 +223,7 @@ class MediaManagerTest extends TestCase
         $this->mediaRepository->findMedia(Argument::cetera())->willReturn([])->shouldBeCalled();
         $this->mediaRepository->count(Argument::cetera())->shouldBeCalled();
 
-        $this->mediaManager->get(1);
+        $this->mediaManager->get(1, [], null, null, 64);
     }
 
     public function testGetWithoutSuluUser()
@@ -463,9 +480,9 @@ class MediaManagerTest extends TestCase
         $user = $this->prophesize(SuluUserInterface::class);
 
         return [
-            [[1, 2, 3], null, [$media1, $media2, $media3], [$media1, $media2, $media3]],
-            [[2, 1, 3], $user->reveal(), [$media1, $media2, $media3], [$media2, $media1, $media3]],
-            [[4, 1, 2], null, [$media1, $media2], [$media1, $media2]],
+            [[1, 2, 3], null, null, [$media1, $media2, $media3], [$media1, $media2, $media3]],
+            [[2, 1, 3], $user->reveal(), 64, [$media1, $media2, $media3], [$media2, $media1, $media3]],
+            [[4, 1, 2], null, null, [$media1, $media2], [$media1, $media2]],
         ];
     }
 

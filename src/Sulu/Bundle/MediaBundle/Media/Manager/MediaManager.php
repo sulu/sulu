@@ -142,6 +142,8 @@ class MediaManager implements MediaManagerInterface
 
     /**
      * @var array
+     *
+     * @deprecated
      */
     private $permissions;
 
@@ -197,6 +199,7 @@ class MediaManager implements MediaManagerInterface
         $this->tokenStorage = $tokenStorage;
         $this->securityChecker = $securityChecker;
         $this->ffprobe = $ffprobe;
+        // TODO permissions are deprecated and should be removed in 2.3
         $this->permissions = $permissions;
         $this->downloadPath = $downloadPath;
         $this->maxFileSize = $maxFileSize;
@@ -238,7 +241,7 @@ class MediaManager implements MediaManagerInterface
             ['pagination' => false, 'ids' => $ids],
             null,
             null,
-            $this->getCurrentUser(),
+            $permission ? $this->getCurrentUser() : null,
             $permission
         );
         $this->count = \count($mediaEntities);
@@ -260,7 +263,7 @@ class MediaManager implements MediaManagerInterface
             $filter,
             $limit,
             $offset,
-            $this->getCurrentUser(),
+            $permission ? $this->getCurrentUser() : null,
             $permission
         );
         $this->count = $this->mediaRepository->count($filter);
@@ -895,17 +898,17 @@ class MediaManager implements MediaManagerInterface
     /**
      * Returns current user or null if no user is loggedin.
      *
-     * @return UserInterface|void
+     * @return UserInterface|null
      */
     protected function getCurrentUser()
     {
         if (!$this->tokenStorage) {
-            return;
+            return null;
         }
 
         $token = $this->tokenStorage->getToken();
         if (!$token) {
-            return;
+            return null;
         }
 
         $user = $token->getUser();
@@ -913,7 +916,7 @@ class MediaManager implements MediaManagerInterface
             return $user;
         }
 
-        return;
+        return null;
     }
 
     /**
