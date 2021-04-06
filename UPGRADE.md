@@ -2,12 +2,6 @@
 
 ## 2.3
 
-### MediaManager constructor cleaned up
-
-Due to the breaking change through the `SuluEventLogBundle`, we also removed all unnecessary properties from
-the `MediaManager`. The `permissions` as well as the `maxFileSize` properties have been removed, because they
-were not used anymore in the codebase.
-
 ### Changed constructor of multiple services to integrate them with the SuluEventLogBundle
 
 To integrate the `SuluEventLogBundle` with the existing services, the constructor of the following services was 
@@ -16,6 +10,7 @@ call to pass the correct parameters:
 
 - `Sulu\Component\CustomUrl\Manager\CustomUrlManager`
 - `Sulu\Bundle\TagBundle\Tag\TagManager`
+- `Sulu\Bundle\MediaBundle\Media\Manager\MediaManager`
 - `Sulu\Bundle\CategoryBundle\Category\CategoryManager`
 - `Sulu\Bundle\CategoryBundle\Category\KeywordManager`
 
