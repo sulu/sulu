@@ -23,7 +23,3 @@ sulu_admin.login_check:
 
 sulu_admin.logout:
     path: /logout
-
-sulu_admin.reset:
-    path: /reset/{token}
-    defaults: { _controller: SuluAdminBundle::Security:reset }
