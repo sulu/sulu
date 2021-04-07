@@ -132,7 +132,7 @@ class WebspaceCollectionBuilder
             \uksort(
                 $this->portalInformations[$environment],
                 function ($a, $b) {
-                    return \strlen($a) < \strlen($b);
+                    return \strlen($a) < \strlen($b) ? 1 : -1;
                 }
             );
         }
