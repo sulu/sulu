@@ -32,7 +32,7 @@ class TrailingHTMLEnhancer extends AbstractEnhancer
 
         return [
             '_finalized' => true,
-            '_controller' => 'sulu_website.redirect_controller:redirectAction',
+            '_controller' => 'sulu_website.redirect_controller::redirectAction',
             'url' => \substr($request->getUri(), 0, -5),
         ];
     }

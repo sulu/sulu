@@ -7,7 +7,7 @@ sulu_snippet.post_snippet_trigger:
     path: /snippets/{id}.{_format}
     methods: POST
     defaults:
-        _controller: sulu_snippet.controller.snippet:postTriggerAction
+        _controller: sulu_snippet.controller.snippet::postTriggerAction
         _format: json
 
 sulu_snippet.snippet-areas:
