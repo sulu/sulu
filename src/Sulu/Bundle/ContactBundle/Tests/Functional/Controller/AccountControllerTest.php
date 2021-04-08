@@ -2422,7 +2422,7 @@ class AccountControllerTest extends SuluTestCase
 
     public function sortAddressesPrimaryLast()
     {
-        return function ($a, $b) {
+        return function($a, $b) {
             if (true === $a->primaryAddress && false === $b->primaryAddress) {
                 return true;
             }
@@ -2458,7 +2458,7 @@ class AccountControllerTest extends SuluTestCase
 
         // Get ids of new accounts.
         $ids = \array_map(
-            function ($account) {
+            function($account) {
                 return $account->getId();
             },
             $accounts
@@ -2492,7 +2492,7 @@ class AccountControllerTest extends SuluTestCase
 
         // Get ids of new accounts.
         $ids = \array_map(
-            function ($account) {
+            function($account) {
                 return $account->getId();
             },
             $accounts

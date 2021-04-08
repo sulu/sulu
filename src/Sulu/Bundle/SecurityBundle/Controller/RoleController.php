@@ -184,7 +184,7 @@ class RoleController extends RestController implements ClassResourceInterface, S
      */
     public function getAction($id)
     {
-        $find = function ($id) {
+        $find = function($id) {
             /** @var RoleInterface $role */
             $role = $this->getRoleRepository()->findRoleById($id);
 
@@ -308,7 +308,7 @@ class RoleController extends RestController implements ClassResourceInterface, S
      */
     public function deleteAction($id)
     {
-        $delete = function ($id) {
+        $delete = function($id) {
             $role = $this->getRoleRepository()->findRoleById($id);
 
             if (!$role) {
@@ -338,21 +338,21 @@ class RoleController extends RestController implements ClassResourceInterface, S
         /** @var RestHelperInterface $restHelper */
         $restHelper = $this->get('sulu_core.doctrine_rest_helper');
 
-        $get = function ($entity) {
+        $get = function($entity) {
             /* @var Permission $entity */
 
             return $entity->getId();
         };
 
-        $delete = function ($permission) {
+        $delete = function($permission) {
             $this->getDoctrine()->getManager()->remove($permission);
         };
 
-        $update = function ($permission, $permissionData) {
+        $update = function($permission, $permissionData) {
             return $this->updatePermission($permission, $permissionData);
         };
 
-        $add = function ($permission) use ($role) {
+        $add = function($permission) use ($role) {
             return $this->addPermission($role, $permission);
         };
 

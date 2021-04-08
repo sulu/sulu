@@ -26,7 +26,7 @@ class XmlFormatLoader11Test extends WebspaceTestCase
     {
         $locator = $this->prophesize(FileLocatorInterface::class);
         $locator->locate(Argument::any())->will(
-            function ($arguments) {
+            function($arguments) {
                 return $arguments[0];
             }
         );

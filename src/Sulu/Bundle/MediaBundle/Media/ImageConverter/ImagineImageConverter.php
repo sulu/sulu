@@ -166,7 +166,7 @@ class ImagineImageConverter implements ImageConverterInterface
             }
             $image = $this->modifyAllLayers(
                 $image,
-                function (ImageInterface $layer) use ($transformation) {
+                function(ImageInterface $layer) use ($transformation) {
                     return $this->transformationPool->get($transformation['effect'])->execute(
                         $layer,
                         $transformation['parameters']
@@ -190,7 +190,7 @@ class ImagineImageConverter implements ImageConverterInterface
     {
         return $this->modifyAllLayers(
             $image,
-            function (ImageInterface $layer) use ($cropParameters) {
+            function(ImageInterface $layer) use ($cropParameters) {
                 return $this->cropper->crop(
                     $layer,
                     $cropParameters['x'],
@@ -211,7 +211,7 @@ class ImagineImageConverter implements ImageConverterInterface
     {
         return $this->modifyAllLayers(
             $image,
-            function (ImageInterface $layer) use ($fileVersion, $scale) {
+            function(ImageInterface $layer) use ($fileVersion, $scale) {
                 return $this->focus->focus(
                     $layer,
                     $fileVersion->getFocusPointX(),
@@ -234,7 +234,7 @@ class ImagineImageConverter implements ImageConverterInterface
     {
         return $this->modifyAllLayers(
             $image,
-            function (ImageInterface $layer) use ($scale) {
+            function(ImageInterface $layer) use ($scale) {
                 return $this->scaler->scale(
                     $layer,
                     $scale['x'],

@@ -87,7 +87,7 @@ class GoogleGeolocatorTest extends \PHPUnit_Framework_TestCase
         $stack = HandlerStack::create($mockHandler);
         $stack->push(
             Middleware::mapRequest(
-                function (Request $request) {
+                function(Request $request) {
                     $this->assertContains('key=foobar', $request->getUri()->getQuery());
 
                     return $request;

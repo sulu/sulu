@@ -66,7 +66,7 @@ class DefaultControllerTest extends \PHPUnit_Framework_TestCase
 
     public function testInvalidTemplate()
     {
-        $this->setExpectedException(HttpException::class, function (HttpException $exception) {
+        $this->setExpectedException(HttpException::class, function(HttpException $exception) {
             $this->assertSame(406, $exception->getStatusCode());
         });
 

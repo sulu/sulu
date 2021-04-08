@@ -45,7 +45,7 @@ class SeoStructureExtensionTest extends \PHPUnit_Framework_TestCase
     {
         $content = [];
         $this->node->setProperty(Argument::any(), Argument::any())->will(
-            function ($arguments) use (&$content) {
+            function($arguments) use (&$content) {
                 $content[$arguments[0]] = $arguments[1];
             }
         );
@@ -80,7 +80,7 @@ class SeoStructureExtensionTest extends \PHPUnit_Framework_TestCase
     {
         $content = [];
         $this->node->setProperty(Argument::any(), Argument::any())->will(
-            function ($arguments) use (&$content) {
+            function($arguments) use (&$content) {
                 $content[$arguments[0]] = $arguments[1];
             }
         );
@@ -126,7 +126,7 @@ class SeoStructureExtensionTest extends \PHPUnit_Framework_TestCase
         ];
 
         $this->node->getPropertyValueWithDefault(Argument::any(), Argument::any())->will(
-            function ($arguments) use (&$content) {
+            function($arguments) use (&$content) {
                 if (isset($content[$arguments[0]])) {
                     return $content[$arguments[0]];
                 } else {
@@ -157,7 +157,7 @@ class SeoStructureExtensionTest extends \PHPUnit_Framework_TestCase
         $content = [];
 
         $this->node->getPropertyValueWithDefault(Argument::any(), Argument::any())->will(
-            function ($arguments) use (&$content) {
+            function($arguments) use (&$content) {
                 if (isset($content[$arguments[0]])) {
                     return $content[$arguments[0]];
                 } else {

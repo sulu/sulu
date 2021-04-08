@@ -246,7 +246,7 @@ class DoctrineListBuilder extends AbstractListBuilder
         }
 
         $ids = \array_map(
-            function ($array) {
+            function($array) {
                 return $array[$this->idField->getName()];
             },
             $ids

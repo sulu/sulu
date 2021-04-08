@@ -114,7 +114,7 @@ class CollectionController extends RestController implements ClassResourceInterf
 
             $view = $this->responseGetById(
                 $id,
-                function ($id) use ($locale, $collectionManager, $depth, $breadcrumb, $filter, $sortBy, $sortOrder) {
+                function($id) use ($locale, $collectionManager, $depth, $breadcrumb, $filter, $sortBy, $sortOrder) {
                     $collection = $collectionManager->getById(
                         $id,
                         $locale,
@@ -247,7 +247,7 @@ class CollectionController extends RestController implements ClassResourceInterf
      */
     public function deleteAction($id)
     {
-        $delete = function ($id) {
+        $delete = function($id) {
             try {
                 $collectionManager = $this->getCollectionManager();
                 $collectionManager->delete($id);

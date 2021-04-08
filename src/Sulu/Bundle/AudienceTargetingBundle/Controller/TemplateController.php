@@ -83,7 +83,7 @@ class TemplateController extends Controller
      */
     public function conditionTypesAction()
     {
-        $ruleTemplates = \array_map(function (RuleInterface $rule) {
+        $ruleTemplates = \array_map(function(RuleInterface $rule) {
             return $rule->getType()->getTemplate();
         }, $this->get('sulu_audience_targeting.rules_collection')->getRules());
 

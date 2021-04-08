@@ -77,7 +77,7 @@ class MediaDataProviderRepository implements DataProviderRepositoryInterface
         $entities = $this->parentFindByFilters($filters, $page, $pageSize, $limit, $locale, $options);
 
         return \array_map(
-            function (Media $media) use ($locale) {
+            function(Media $media) use ($locale) {
                 return $this->mediaManager->addFormatsAndUrl(new MediaApi($media, $locale));
             },
             $entities

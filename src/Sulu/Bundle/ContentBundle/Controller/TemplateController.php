@@ -70,7 +70,7 @@ class TemplateController extends Controller
             }
         }
 
-        \usort($templates, function ($a, $b) {
+        \usort($templates, function($a, $b) {
             return \strcmp($a['title'], $b['title']);
         });
 

@@ -96,7 +96,7 @@ class WebspaceManager implements WebspaceManagerInterface
     {
         return \array_filter(
             $this->getWebspaceCollection()->getPortalInformations($environment),
-            function (PortalInformation $portalInformation) use ($url) {
+            function(PortalInformation $portalInformation) use ($url) {
                 return $this->matchUrl($url, $portalInformation->getUrl());
             }
         );
@@ -106,7 +106,7 @@ class WebspaceManager implements WebspaceManagerInterface
     {
         return \array_filter(
             $this->getWebspaceCollection()->getPortalInformations($environment),
-            function (PortalInformation $portalInformation) use ($webspaceKey, $locale) {
+            function(PortalInformation $portalInformation) use ($webspaceKey, $locale) {
                 return $portalInformation->getWebspace()->getKey() === $webspaceKey
                     && $portalInformation->getLocale() === $locale;
             }
@@ -117,7 +117,7 @@ class WebspaceManager implements WebspaceManagerInterface
     {
         return \array_filter(
             $this->getWebspaceCollection()->getPortalInformations($environment),
-            function (PortalInformation $portalInformation) use ($portalKey, $locale) {
+            function(PortalInformation $portalInformation) use ($portalKey, $locale) {
                 return $portalInformation->getPortal()
                     && $portalInformation->getPortal()->getKey() === $portalKey
                     && $portalInformation->getLocale() === $locale;
@@ -226,7 +226,7 @@ class WebspaceManager implements WebspaceManagerInterface
     {
         return \array_filter(
             $this->getWebspaceCollection()->getPortalInformations($environment),
-            function (PortalInformation $portal) use ($webspaceKey) {
+            function(PortalInformation $portal) use ($webspaceKey) {
                 return $portal->getWebspaceKey() === $webspaceKey;
             }
         );

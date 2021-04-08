@@ -215,7 +215,7 @@ class PreviewRendererTest extends \PHPUnit_Framework_TestCase
 
         $this->httpKernel->handle(
             Argument::that(
-                function (Request $request) use ($expectedScheme, $expectedHost, $expectedPort) {
+                function(Request $request) use ($expectedScheme, $expectedHost, $expectedPort) {
                     return $request->getHost() === $expectedHost
                         && $request->getPort() === $expectedPort
                         && $request->getScheme() === $expectedScheme;
@@ -577,7 +577,7 @@ class PreviewRendererTest extends \PHPUnit_Framework_TestCase
 
         $this->httpKernel->handle(
             Argument::that(
-                function (Request $request) use ($server) {
+                function(Request $request) use ($server) {
                     foreach ($server as $key => $expectedValue) {
                         $value = $request->server->get($key);
 

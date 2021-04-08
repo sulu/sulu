@@ -911,7 +911,7 @@ class Media extends ApiWrapper
         $metaCollection = $this->getFileVersion()->getMeta();
 
         // get meta only with this locale
-        $metaCollectionFiltered = $metaCollection->filter(function ($meta) use ($locale) {
+        $metaCollectionFiltered = $metaCollection->filter(function($meta) use ($locale) {
             /** @var FileVersionMeta $meta */
             if ($meta->getLocale() == $locale) {
                 return true;

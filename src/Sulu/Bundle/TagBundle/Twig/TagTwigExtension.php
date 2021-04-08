@@ -69,7 +69,7 @@ class TagTwigExtension extends \Twig_Extension
         return $this->memoizeCache->memoizeById(
             'sulu_tags',
             \func_get_args(),
-            function () {
+            function() {
                 $tags = $this->tagManager->findAll();
 
                 $context = SerializationContext::create();

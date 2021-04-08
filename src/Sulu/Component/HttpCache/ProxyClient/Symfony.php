@@ -125,9 +125,9 @@ class Symfony implements ProxyClientInterface, PurgeInterface
                 ]
             );
             $promise->then(
-                function (ResponseInterface $res) {
+                function(ResponseInterface $res) {
                 },
-                function (RequestException $exception) use ($collection) {
+                function(RequestException $exception) use ($collection) {
                     if ($exception instanceof ConnectException) {
                         // Caching proxy unreachable
                         $collection->add(

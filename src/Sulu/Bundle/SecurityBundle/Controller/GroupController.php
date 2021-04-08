@@ -102,7 +102,7 @@ class GroupController extends RestController implements ClassResourceInterface, 
      */
     public function getAction($id)
     {
-        $find = function ($id) {
+        $find = function($id) {
             /** @var Group $group */
             $group = $this->getDoctrine()
                 ->getRepository(static::$entityName)
@@ -208,20 +208,20 @@ class GroupController extends RestController implements ClassResourceInterface, 
         /** @var RestHelperInterface $restHelper */
         $restHelper = $this->get('sulu_core.doctrine_rest_helper');
 
-        $get = function ($entity) {
+        $get = function($entity) {
             /* @var RoleInterface $entity */
             return $entity->getId();
         };
 
-        $delete = function ($role) {
+        $delete = function($role) {
             $this->getDoctrine()->getManager()->remove($role);
         };
 
-        $update = function ($role, $roleData) {
+        $update = function($role, $roleData) {
             return $this->updateRole($role, $roleData);
         };
 
-        $add = function ($role) use ($group) {
+        $add = function($role) use ($group) {
             return $this->addRole($group, $role);
         };
 
@@ -237,7 +237,7 @@ class GroupController extends RestController implements ClassResourceInterface, 
      */
     public function deleteAction($id)
     {
-        $delete = function ($id) {
+        $delete = function($id) {
             $group = $this->getDoctrine()
                 ->getRepository(static::$entityName)
                 ->findGroupById($id);

@@ -35,7 +35,7 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
         $method->setAccessible(true);
 
         $id = 1;
-        $findCallback = function ($id) {
+        $findCallback = function($id) {
             return ['id' => $id];
         };
 
@@ -52,7 +52,7 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
         $method->setAccessible(true);
 
         $id = 1;
-        $findCallback = function ($id) {
+        $findCallback = function($id) {
             return;
         };
 
@@ -64,15 +64,15 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
 
     public function testProcessPutEmpty()
     {
-        $delete = function () {
+        $delete = function() {
             $this->fail('delete should not be called');
         };
 
-        $update = function () {
+        $update = function() {
             $this->fail('update should not be called');
         };
 
-        $add = function () {
+        $add = function() {
             $this->fail('add should not be called');
         };
 
@@ -85,15 +85,15 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
     public function testProcessPutWithDelete()
     {
         $deleteCalled = false;
-        $delete = function () use (&$deleteCalled) {
+        $delete = function() use (&$deleteCalled) {
             $deleteCalled = true;
         };
 
-        $update = function () {
+        $update = function() {
             $this->fail('update should not be called');
         };
 
-        $add = function () {
+        $add = function() {
             $this->fail('add should not be called');
         };
 
@@ -119,16 +119,16 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
 
     public function testProcessPutWithUpdate()
     {
-        $delete = function () {
+        $delete = function() {
             $this->fail('delete should not be called');
         };
 
         $updateCalled = false;
-        $update = function () use (&$updateCalled) {
+        $update = function() use (&$updateCalled) {
             $updateCalled = true;
         };
 
-        $add = function () {
+        $add = function() {
             $this->fail('add should not be called');
         };
 
@@ -158,16 +158,16 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
 
     public function testProcessPutWithAdd()
     {
-        $delete = function () {
+        $delete = function() {
             $this->fail('delete should not be called');
         };
 
-        $update = function () {
+        $update = function() {
             $this->fail('update shoudl not be called');
         };
 
         $addCalled = false;
-        $add = function () use (&$addCalled) {
+        $add = function() use (&$addCalled) {
             $addCalled = true;
         };
 
@@ -196,7 +196,7 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
         $method->setAccessible(true);
 
         $id = 1;
-        $deleteCallBack = function ($id) {
+        $deleteCallBack = function($id) {
             return true;
         };
 
@@ -213,7 +213,7 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
         $method->setAccessible(true);
 
         $id = 1;
-        $deleteCallBack = function ($id) {
+        $deleteCallBack = function($id) {
             throw new EntityNotFoundException('SuluCoreBundle:Example', 7);
         };
 
@@ -229,7 +229,7 @@ class RestControllerTest extends \PHPUnit_Framework_TestCase
         $method->setAccessible(true);
 
         $id = 1;
-        $deleteCallBack = function ($id) {
+        $deleteCallBack = function($id) {
             throw new RestException();
         };
 

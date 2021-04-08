@@ -88,7 +88,7 @@ class SuluTestKernel extends SuluKernel
         // @see https://github.com/symfony/symfony/issues/7555
         $envParameters = $this->getEnvParameters();
 
-        $loader->load(function ($container) use ($envParameters) {
+        $loader->load(function($container) use ($envParameters) {
             $container->getParameterBag()->add($envParameters);
         });
     }

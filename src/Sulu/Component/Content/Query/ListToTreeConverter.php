@@ -60,7 +60,7 @@ class ListToTreeConverter
 
         \uksort(
             $map,
-            function ($a, $b) use ($map) {
+            function($a, $b) use ($map) {
                 $depthDifference = \substr_count($a, '/') - \substr_count($b, '/');
                 if ($depthDifference > 0) {
                     return 1;
