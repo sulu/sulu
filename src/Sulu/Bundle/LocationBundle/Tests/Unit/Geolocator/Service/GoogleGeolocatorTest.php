@@ -141,7 +141,7 @@ class GoogleGeolocatorTest extends TestCase
         $stack = HandlerStack::create($mockHandler);
         $stack->push(
             Middleware::mapRequest(
-                function (Request $request) {
+                function(Request $request) {
                     $this->assertStringContainsString('key=foobar', $request->getUri()->getQuery());
 
                     return $request;

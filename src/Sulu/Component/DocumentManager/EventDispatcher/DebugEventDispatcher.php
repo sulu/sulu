@@ -78,7 +78,7 @@ class DebugEventDispatcher extends EventDispatcher
     {
         $parts = \explode('\\', $className);
         $last = \array_pop($parts);
-        $parts = \array_map(function ($part) {
+        $parts = \array_map(function($part) {
             return \substr($part, 0, 1);
         }, $parts);
 

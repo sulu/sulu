@@ -132,7 +132,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     {
         $this->selectFields = \array_filter(
             $fieldDescriptors,
-            function (FieldDescriptorInterface $fieldDescriptor) {
+            function(FieldDescriptorInterface $fieldDescriptor) {
                 if (null === $fieldDescriptor->getMetadata()) {
                     return true;
                 }

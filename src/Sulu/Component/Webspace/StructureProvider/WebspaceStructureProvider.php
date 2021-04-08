@@ -56,7 +56,7 @@ class WebspaceStructureProvider implements WebspaceStructureProviderInterface
         $keys = $this->cache->fetch($webspaceKey);
 
         return \array_map(
-            function ($key) {
+            function($key) {
                 return $this->structureManager->getStructure($key);
             },
             $keys

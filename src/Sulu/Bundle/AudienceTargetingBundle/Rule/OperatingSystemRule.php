@@ -61,7 +61,7 @@ class OperatingSystemRule implements RuleInterface
 
     public function getType()
     {
-        return new SingleSelect(static::OPERATING_SYSTEM, \array_map(function ($operatingSystem) {
+        return new SingleSelect(static::OPERATING_SYSTEM, \array_map(function($operatingSystem) {
             return [
                 'id' => $operatingSystem,
                 'name' => $operatingSystem,

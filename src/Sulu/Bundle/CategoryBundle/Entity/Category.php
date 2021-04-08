@@ -262,7 +262,7 @@ class Category implements CategoryInterface
     public function findTranslationByLocale($locale)
     {
         return $this->translations->filter(
-            function (CategoryTranslationInterface $translation) use ($locale) {
+            function(CategoryTranslationInterface $translation) use ($locale) {
                 return $translation->getLocale() === $locale;
             }
         )->first();

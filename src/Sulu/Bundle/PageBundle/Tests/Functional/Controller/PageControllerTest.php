@@ -59,7 +59,7 @@ class PageControllerTest extends SuluTestCase
         $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertCount(2, $response->_embedded->pages);
 
-        $titles = \array_map(function ($page) {
+        $titles = \array_map(function($page) {
             return $page->title;
         }, $response->_embedded->pages);
 

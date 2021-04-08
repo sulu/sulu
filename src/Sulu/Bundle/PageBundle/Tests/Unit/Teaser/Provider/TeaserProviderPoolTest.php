@@ -39,7 +39,7 @@ class TeaserProviderPoolTest extends TestCase
 
         $this->teaserProviderPool = new TeaserProviderPool(
             \array_map(
-                function ($provider) {
+                function($provider) {
                     return $provider->reveal();
                 },
                 $this->providers

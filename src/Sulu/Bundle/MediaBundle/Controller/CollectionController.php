@@ -144,7 +144,7 @@ class CollectionController extends AbstractRestController implements ClassResour
 
             $view = $this->responseGetById(
                 $id,
-                function ($id) use ($locale, $depth, $breadcrumb, $filter, $sortBy, $sortOrder, $children) {
+                function($id) use ($locale, $depth, $breadcrumb, $filter, $sortBy, $sortOrder, $children) {
                     $collection = $this->collectionManager->getById(
                         $id,
                         $locale,
@@ -280,7 +280,7 @@ class CollectionController extends AbstractRestController implements ClassResour
 
         $this->checkSystemCollection($id, $parent);
 
-        $delete = function ($id) {
+        $delete = function($id) {
             try {
                 $this->collectionManager->delete($id);
             } catch (CollectionNotFoundException $cnf) {

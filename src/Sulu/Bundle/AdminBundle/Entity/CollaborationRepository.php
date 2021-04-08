@@ -59,7 +59,7 @@ class CollaborationRepository
         $value = $cacheItem->get() ?? [];
         $value[$collaboration->getConnectionId()] = $collaboration;
 
-        $value = \array_filter($value, function (Collaboration $collaboration) {
+        $value = \array_filter($value, function(Collaboration $collaboration) {
             return $collaboration->getChanged() > \time() - $this->threshold;
         });
 
@@ -76,7 +76,7 @@ class CollaborationRepository
     public function delete(Collaboration $collaboration): array
     {
         $cacheItem = $this->cache->getItem($this->getCacheIdFromCollaboration($collaboration));
-        $value = \array_filter($cacheItem->get() ?? [], function (Collaboration $cachedCollaboration) use ($collaboration) {
+        $value = \array_filter($cacheItem->get() ?? [], function(Collaboration $cachedCollaboration) use ($collaboration) {
             return $collaboration->getConnectionId() !== $cachedCollaboration->getConnectionId();
         });
         $cacheItem->set($value);

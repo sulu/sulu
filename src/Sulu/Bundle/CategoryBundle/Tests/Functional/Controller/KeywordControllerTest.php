@@ -92,7 +92,7 @@ class KeywordControllerTest extends SuluTestCase
         $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(2, $response->total);
 
-        \usort($response->_embedded->category_keywords, function ($key1, $key2) {
+        \usort($response->_embedded->category_keywords, function($key1, $key2) {
             return $key1->id > $key2->id;
         });
 

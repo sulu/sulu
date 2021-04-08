@@ -106,7 +106,7 @@ class UserManager implements UserManagerInterface
      */
     public function delete()
     {
-        $delete = function ($id) {
+        $delete = function($id) {
             $user = $this->userRepository->findUserById($id);
             if (!$user) {
                 throw new EntityNotFoundException($this->userRepository->getClassName(), $id);
@@ -387,21 +387,21 @@ class UserManager implements UserManagerInterface
      */
     public function processUserRoles(UserInterface $user, $userRoles)
     {
-        $get = function ($entity) {
+        $get = function($entity) {
             /* @var UserInterface $entity */
             return $entity->getId();
         };
 
-        $delete = function ($userRole) use ($user) {
+        $delete = function($userRole) use ($user) {
             $user->removeUserRole($userRole);
             $this->em->remove($userRole);
         };
 
-        $update = function ($userRole, $userRoleData) {
+        $update = function($userRole, $userRoleData) {
             return $this->updateUserRole($userRole, $userRoleData);
         };
 
-        $add = function ($userRole) use ($user) {
+        $add = function($userRole) use ($user) {
             return $this->addUserRole($user, $userRole);
         };
 
@@ -432,21 +432,21 @@ class UserManager implements UserManagerInterface
      */
     protected function processUserGroups(UserInterface $user, $userGroups)
     {
-        $get = function ($entity) {
+        $get = function($entity) {
             /* @var UserInterface $entity */
             return $entity->getId();
         };
 
-        $delete = function ($userGroup) use ($user) {
+        $delete = function($userGroup) use ($user) {
             $user->removeUserGroup($userGroup);
             $this->em->remove($userGroup);
         };
 
-        $update = function ($userGroup, $userGroupData) {
+        $update = function($userGroup, $userGroupData) {
             return $this->updateUserGroup($userGroup, $userGroupData);
         };
 
-        $add = function ($userGroup) use ($user) {
+        $add = function($userGroup) use ($user) {
             return $this->addUserGroup($user, $userGroup);
         };
 

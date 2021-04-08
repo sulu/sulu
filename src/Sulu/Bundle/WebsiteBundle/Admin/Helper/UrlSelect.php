@@ -34,7 +34,7 @@ class UrlSelect
     public function getValues(): array
     {
         return \array_map(
-            function (string $url) {
+            function(string $url) {
                 return [
                     'name' => $url,
                     'title' => $url,

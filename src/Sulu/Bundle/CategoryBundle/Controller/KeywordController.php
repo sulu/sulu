@@ -126,7 +126,7 @@ class KeywordController extends AbstractRestController implements ClassResourceI
 
         $categoryTranslation = $category->findTranslationByLocale($request->get('locale'));
 
-        if ($categoryTranslation == false) {
+        if (false == $categoryTranslation) {
             return $this->handleView($this->view(null, 404));
         }
 

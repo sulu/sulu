@@ -135,7 +135,7 @@ class TargetGroupController extends AbstractRestController implements ClassResou
      */
     public function getAction($id)
     {
-        $findCallback = function ($id) {
+        $findCallback = function($id) {
             $targetGroup = $this->targetGroupRepository->find($id);
 
             return $targetGroup;
@@ -233,7 +233,7 @@ class TargetGroupController extends AbstractRestController implements ClassResou
     private function convertFromRequest(array $data)
     {
         if ($data['webspaceKeys']) {
-            $data['webspaces'] = \array_map(function ($webspaceKey) {
+            $data['webspaces'] = \array_map(function($webspaceKey) {
                 return ['webspaceKey' => $webspaceKey];
             }, $data['webspaceKeys']);
         } else {

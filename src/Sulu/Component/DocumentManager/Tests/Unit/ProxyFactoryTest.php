@@ -131,7 +131,7 @@ class ProxyFactoryTest extends TestCase
 
         $this->dispatcher->dispatch(
             Argument::that(
-                function ($event) use ($options) {
+                function($event) use ($options) {
                     return $event->getOptions() === $options;
                 }
             ),
@@ -153,7 +153,7 @@ class ProxyFactoryTest extends TestCase
 
         $dispatcher->dispatch(
             Argument::that(
-                function (HydrateEvent $arg) {
+                function(HydrateEvent $arg) {
                     return 'de' === $arg->getLocale();
                 }
             ),

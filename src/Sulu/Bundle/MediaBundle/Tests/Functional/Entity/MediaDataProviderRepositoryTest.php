@@ -576,7 +576,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
         // if tags isset replace the array indexes with database id
         if (\array_key_exists('tags', $filters)) {
             $filters['tags'] = \array_map(
-                function ($tag) {
+                function($tag) {
                     return $this->tags[$tag]->getId();
                 },
                 $filters['tags']
@@ -586,7 +586,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
         // if tags isset replace the array indexes with database id
         if (\array_key_exists('websiteTags', $filters)) {
             $filters['websiteTags'] = \array_map(
-                function ($tag) {
+                function($tag) {
                     return $this->tags[$tag]->getId();
                 },
                 $filters['websiteTags']
@@ -651,11 +651,11 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
             ->get('sulu_media_test.smart_content.data_provider.media.repository')
             ->findByFilters($filters, 1, 100, 100, 'de');
 
-        $mediaIds = \array_map(function (MediaApi $media) {
+        $mediaIds = \array_map(function(MediaApi $media) {
             return $media->getId();
         }, $mediaResults);
 
-        $expectedMediaIds = \array_map(function ($expectedIndex) use ($medias) {
+        $expectedMediaIds = \array_map(function($expectedIndex) use ($medias) {
             return $medias[$expectedIndex]->getId();
         }, $expectedIndexes);
 

@@ -123,7 +123,7 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
             }
 
             $configCache = $this->getConfigCache($listKey);
-            $configCache->write(\serialize($fieldDescriptors), \array_map(function (ListMetadata $listMetadata) {
+            $configCache->write(\serialize($fieldDescriptors), \array_map(function(ListMetadata $listMetadata) {
                 return new FileResource($listMetadata->getResource());
             }, $listsMetadata));
         }
@@ -227,7 +227,7 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
     ): DoctrineConcatenationFieldDescriptor {
         return new DoctrineConcatenationFieldDescriptor(
             \array_map(
-                function (FieldMetadata $fieldMetadata) use ($propertyMetadata, $options) {
+                function(FieldMetadata $fieldMetadata) use ($propertyMetadata, $options) {
                     return $this->getFieldDescriptor($propertyMetadata, $fieldMetadata, $options);
                 },
                 $propertyMetadata->getFields()

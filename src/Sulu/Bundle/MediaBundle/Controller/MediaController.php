@@ -180,7 +180,7 @@ class MediaController extends AbstractMediaController implements
             $locale = $this->getRequestParameter($request, 'locale', true);
             $view = $this->responseGetById(
                 $id,
-                function ($id) use ($locale) {
+                function($id) use ($locale) {
                     $media = $this->mediaManager->getById($id, $locale);
                     $collection = $media->getEntity()->getCollection();
 
@@ -429,7 +429,7 @@ class MediaController extends AbstractMediaController implements
      */
     public function deleteAction($id)
     {
-        $delete = function ($id) {
+        $delete = function($id) {
             try {
                 $this->mediaManager->delete($id, true);
             } catch (MediaNotFoundException $e) {

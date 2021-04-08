@@ -1069,7 +1069,7 @@ class Account extends ApiWrapper
      */
     public function getCategories()
     {
-        return \array_map(function ($category) {
+        return \array_map(function($category) {
             return $category->getId();
         }, $this->entity->getCategories()->toArray());
     }

@@ -117,7 +117,7 @@ class CustomUrlManager implements CustomUrlManagerInterface
         $customUrls = $webspace->getPortals()[0]->getEnvironment($this->environment)->getCustomUrls();
 
         $baseDomains = \array_map(
-            function (CustomUrl $customUrl) {
+            function(CustomUrl $customUrl) {
                 return $customUrl->getUrl();
             },
             $customUrls
@@ -137,7 +137,7 @@ class CustomUrlManager implements CustomUrlManagerInterface
 
         $routeDocuments = $this->findReferrer($customUrlDocument, $webspaceKey);
 
-        return \array_filter($routeDocuments, function ($routeDocument) {
+        return \array_filter($routeDocuments, function($routeDocument) {
             return $routeDocument->isHistory();
         });
     }

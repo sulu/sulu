@@ -696,7 +696,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertNotEmpty($response);
 
         $medias = \array_map(
-            function ($item) {
+            function($item) {
                 return [
                     'id' => $item->id,
                     'name' => $item->name,
@@ -768,7 +768,7 @@ class MediaControllerTest extends SuluTestCase
         $response = \json_decode($this->client->getResponse()->getContent());
 
         $medias = \array_map(
-            function ($item) {
+            function($item) {
                 return ['id' => $item->id, 'name' => $item->name];
             },
             $response->_embedded->media
@@ -800,7 +800,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertCount(2, $response['_embedded']['media']);
 
         $titles = \array_map(
-            function ($media) {
+            function($media) {
                 return $media['name'];
             },
             $response['_embedded']['media']

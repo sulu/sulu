@@ -41,7 +41,7 @@ class ListXmlLoader
 
         $xmlDocument = XmlUtils::loadFile(
             $resource,
-            function (\DOMDocument $dom) use ($resource) {
+            function(\DOMDocument $dom) use ($resource) {
                 $dom->documentURI = $resource;
                 $dom->xinclude();
 

@@ -163,7 +163,7 @@ class ContactDataProviderTest extends TestCase
         $hasNextPage,
         $items
     ) {
-        $serializeCallback = function (Contact $contact) {
+        $serializeCallback = function(Contact $contact) {
             return $this->serialize($contact);
         };
 
@@ -174,7 +174,7 @@ class ContactDataProviderTest extends TestCase
         $serializer = $this->prophesize(ArraySerializerInterface::class);
         $serializer->serialize(Argument::type(Contact::class), $context)
             ->will(
-                function ($args) use ($serializeCallback) {
+                function($args) use ($serializeCallback) {
                     return $serializeCallback($args[0]);
                 }
             );

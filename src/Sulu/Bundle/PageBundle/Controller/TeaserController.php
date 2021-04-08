@@ -43,7 +43,7 @@ class TeaserController extends AbstractRestController implements ClassResourceIn
     public function cgetAction(Request $request)
     {
         $ids = \array_map(
-            function ($item) {
+            function($item) {
                 $parts = \explode(';', $item);
 
                 return ['type' => $parts[0], 'id' => $parts[1]];
