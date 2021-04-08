@@ -155,11 +155,11 @@ interface CategoryInterface extends AuditableInterface
     public function getTranslations();
 
     /**
-     * Get single meta by locale.
+     * Get single meta by locale or false if does not exists.
      *
      * @param string $locale
      *
-     * @return CategoryTranslationInterface
+     * @return CategoryTranslationInterface|false
      */
     public function findTranslationByLocale($locale);
 
