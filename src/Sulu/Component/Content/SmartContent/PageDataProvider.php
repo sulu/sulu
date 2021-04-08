@@ -394,7 +394,7 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
     private function decorateDataItems(array $data, $locale)
     {
         return \array_map(
-            function ($item) use ($locale) {
+            function($item) use ($locale) {
                 return new ContentDataItem($item, $this->getResource($item['id'], $locale));
             },
             $data
@@ -411,7 +411,7 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
     private function decorateResourceItems(array $data, $locale)
     {
         return \array_map(
-            function ($item) use ($locale) {
+            function($item) use ($locale) {
                 $this->referenceStore->add($item['id']);
 
                 if (!($this->enabledTwigAttributes['path'] ?? true)) {
@@ -436,7 +436,7 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
     {
         return $this->proxyFactory->createProxy(
             PageDocument::class,
-            function (
+            function(
                 &$wrappedObject,
                 LazyLoadingInterface $proxy,
                 $method,

@@ -57,7 +57,7 @@ class HashSerializeEventSubscriberTest extends TestCase
         $object = $this->prophesize(AuditableInterface::class);
         $this->objectEvent->getObject()->willReturn($object);
 
-        $this->visitor->visitProperty(Argument::that(function (StaticPropertyMetadata $metadata) {
+        $this->visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
             return '_hash' === $metadata->name;
         }), Argument::any())->shouldBeCalled();
         $this->hashSerializeEventSubscriber->onPostSerialize($this->objectEvent->reveal());
@@ -68,7 +68,7 @@ class HashSerializeEventSubscriberTest extends TestCase
         $object = new \stdClass();
         $this->objectEvent->getObject()->willReturn($object);
 
-        $this->visitor->visitProperty(Argument::that(function (StaticPropertyMetadata $metadata) {
+        $this->visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
             return '_hash' === $metadata->name;
         }), Argument::any())->shouldNotBeCalled();
         $this->hashSerializeEventSubscriber->onPostSerialize($this->objectEvent->reveal());
@@ -81,7 +81,7 @@ class HashSerializeEventSubscriberTest extends TestCase
         $this->objectEvent->getObject()->willReturn($object);
         $this->objectEvent->getVisitor()->willReturn($xmlVisitor->reveal());
 
-        $this->visitor->visitProperty(Argument::that(function (StaticPropertyMetadata $metadata) {
+        $this->visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
             return '_hash' === $metadata->name;
         }), Argument::any())->shouldNotBeCalled();
 

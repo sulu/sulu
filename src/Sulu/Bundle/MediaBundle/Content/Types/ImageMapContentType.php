@@ -342,7 +342,7 @@ class ImageMapContentType extends ComplexContentType implements ContentTypeExpor
     {
         return $this->prepareData(
             $property,
-            function (ContentTypeInterface $contentType, $property) {
+            function(ContentTypeInterface $contentType, $property) {
                 return $contentType->getViewData($property);
             },
             false
@@ -353,7 +353,7 @@ class ImageMapContentType extends ComplexContentType implements ContentTypeExpor
     {
         $data = $this->prepareData(
             $property,
-            function (ContentTypeInterface $contentType, $property) {
+            function(ContentTypeInterface $contentType, $property) {
                 return $contentType->getContentData($property);
             }
         );
@@ -434,7 +434,7 @@ class ImageMapContentType extends ComplexContentType implements ContentTypeExpor
     {
         $this->prepareData(
             $property,
-            function (ContentTypeInterface $contentType, $property) {
+            function(ContentTypeInterface $contentType, $property) {
                 if (!$contentType instanceof PreResolvableContentTypeInterface) {
                     return;
                 }

@@ -335,7 +335,7 @@ class ContactController extends AbstractRestController implements ClassResourceI
             // the @ is necessary in case of a PHP bug https://bugs.php.net/bug.php?id=50688
             @\usort(
                 $listResponse,
-                function ($a, $b) use ($ids) {
+                function($a, $b) use ($ids) {
                     return $this->indexComparator->compare($a['id'], $b['id'], $ids);
                 }
             );
@@ -377,7 +377,7 @@ class ContactController extends AbstractRestController implements ClassResourceI
         try {
             $view = $this->responseGetById(
                 $id,
-                function ($id) use ($locale) {
+                function($id) use ($locale) {
                     return $this->contactManager->getById($id, $locale);
                 }
             );

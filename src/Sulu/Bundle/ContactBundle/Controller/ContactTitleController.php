@@ -63,7 +63,7 @@ class ContactTitleController extends AbstractRestController implements ClassReso
     {
         $view = $this->responseGetById(
             $id,
-            function ($id) {
+            function($id) {
                 return $this->contactTitleRepository->find($id);
             }
         );
@@ -192,7 +192,7 @@ class ContactTitleController extends AbstractRestController implements ClassReso
     public function deleteAction($id)
     {
         try {
-            $delete = function ($id) {
+            $delete = function($id) {
                 /* @var ContactTitle $title */
                 $title = $this->contactTitleRepository->find($id);
 

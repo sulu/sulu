@@ -91,7 +91,7 @@ class PageTeaserProvider implements TeaserProviderInterface
         }
 
         $statements = \array_map(
-            function ($item) {
+            function($item) {
                 return \sprintf('__id:"%s"', $item);
             },
             $ids
@@ -186,14 +186,14 @@ class PageTeaserProvider implements TeaserProviderInterface
     {
         $allPageIndexNames = \array_filter(
             $this->searchManager->getIndexNames(),
-            function ($index) {
+            function($index) {
                 return \preg_match('/page_(.+)/', $index) > 0;
             }
         );
 
         $publishedPageIndexNames = \array_filter(
             $allPageIndexNames,
-            function ($index) {
+            function($index) {
                 return \preg_match('/page_(.+)_published/', $index) > 0;
             }
         );

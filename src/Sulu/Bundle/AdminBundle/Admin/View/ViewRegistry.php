@@ -71,7 +71,7 @@ class ViewRegistry
             $admin->configureViews($viewCollection);
         }
 
-        $views = \array_map(function (ViewBuilderInterface $viewBuilder) {
+        $views = \array_map(function(ViewBuilderInterface $viewBuilder) {
             return $viewBuilder->getView();
         }, $viewCollection->all());
 
@@ -95,7 +95,7 @@ class ViewRegistry
      */
     private function validateViews(array $views): void
     {
-        $viewNames = \array_map(function (View $view) {
+        $viewNames = \array_map(function(View $view) {
             return $view->getName();
         }, $views);
 
@@ -115,7 +115,7 @@ class ViewRegistry
     private function mergeViewOptions(array $views, string $parent = null): array
     {
         /** @var View[] $childViews */
-        $childViews = \array_filter($views, function (View $view) use ($parent) {
+        $childViews = \array_filter($views, function(View $view) use ($parent) {
             return $view->getParent() === $parent;
         });
 
@@ -124,7 +124,7 @@ class ViewRegistry
         }
 
         /** @var View[] $parentViews */
-        $parentViews = \array_values(\array_filter($views, function (View $view) use ($parent) {
+        $parentViews = \array_values(\array_filter($views, function(View $view) use ($parent) {
             return $view->getName() === $parent;
         }));
         $parentView = $parentViews[0] ?? null;

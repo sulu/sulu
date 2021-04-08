@@ -98,7 +98,7 @@ class CategoryController extends AbstractRestController implements ClassResource
     public function getAction($id, Request $request)
     {
         $locale = $this->getRequestParameter($request, 'locale', true);
-        $findCallback = function ($id) use ($locale) {
+        $findCallback = function($id) use ($locale) {
             $entity = $this->categoryManager->findById($id);
 
             return $this->categoryManager->getApiObject($entity, $locale);
@@ -195,7 +195,7 @@ class CategoryController extends AbstractRestController implements ClassResource
 
     public function deleteAction($id)
     {
-        $deleteCallback = function ($id) {
+        $deleteCallback = function($id) {
             $this->categoryManager->delete($id);
         };
 

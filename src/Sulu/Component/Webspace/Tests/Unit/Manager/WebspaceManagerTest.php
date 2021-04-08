@@ -66,7 +66,7 @@ class WebspaceManagerTest extends WebspaceTestCase
         }
 
         $locator = $this->prophesize(FileLocatorInterface::class);
-        $locator->locate(Argument::any())->will(function ($arguments) {
+        $locator->locate(Argument::any())->will(function($arguments) {
             return $arguments[0];
         });
 
@@ -919,7 +919,7 @@ class WebspaceManagerTest extends WebspaceTestCase
 
         \array_walk(
             $localizations,
-            function (&$localization) {
+            function(&$localization) {
                 $localization = $localization->toArray();
                 unset($localization['children']);
                 unset($localization['localization']);
@@ -990,7 +990,7 @@ class WebspaceManagerTest extends WebspaceTestCase
         foreach ($webspacesLocales as &$webspaceLocales) {
             \array_walk(
                 $webspaceLocales,
-                function (&$webspaceLocale) {
+                function(&$webspaceLocale) {
                     $webspaceLocale = $webspaceLocale->toArray();
                     unset($webspaceLocale['children']);
                     unset($webspaceLocale['localization']);

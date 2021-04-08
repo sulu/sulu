@@ -68,7 +68,7 @@ final class SortUtils
         $values = (array) $values;
         $paths = (array) $paths;
 
-        \usort($values, function ($a, $b) use ($accessor, $paths) {
+        \usort($values, function($a, $b) use ($accessor, $paths) {
             foreach ($paths as $i => $path) {
                 $aOrder = $accessor->getValue($a, $path);
                 $bOrder = $accessor->getValue($b, $path);

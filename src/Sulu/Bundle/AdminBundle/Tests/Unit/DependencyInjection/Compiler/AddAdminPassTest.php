@@ -54,13 +54,13 @@ class AddAdminPassTest extends TestCase
         $admins = [];
 
         $poolDefinition->addMethodCall('addAdmin', [$adminDefinition1->reveal()])->will(
-            function () use (&$admins, $adminDefinition1) {
+            function() use (&$admins, $adminDefinition1) {
                 $admins[] = $adminDefinition1;
             }
         )->shouldBeCalled();
 
         $poolDefinition->addMethodCall('addAdmin', [$adminDefinition2->reveal()])->will(
-            function () use (&$admins, $adminDefinition2) {
+            function() use (&$admins, $adminDefinition2) {
                 $admins[] = $adminDefinition2;
             }
         )->shouldBeCalled();

@@ -132,7 +132,7 @@ class GroupController extends AbstractRestController implements ClassResourceInt
      */
     public function getAction($id)
     {
-        $find = function ($id) {
+        $find = function($id) {
             /** @var Group $group */
             $group = $this->entityManager->getRepository(static::$entityName)->findGroupById($id);
 
@@ -227,20 +227,20 @@ class GroupController extends AbstractRestController implements ClassResourceInt
      */
     protected function processRoles(Group $group, $roles)
     {
-        $get = function ($entity) {
+        $get = function($entity) {
             /* @var RoleInterface $entity */
             return $entity->getId();
         };
 
-        $delete = function ($role) {
+        $delete = function($role) {
             $this->entityManager->remove($role);
         };
 
-        $update = function ($role, $roleData) {
+        $update = function($role, $roleData) {
             return $this->updateRole($role, $roleData);
         };
 
-        $add = function ($role) use ($group) {
+        $add = function($role) use ($group) {
             return $this->addRole($group, $role);
         };
 
@@ -256,7 +256,7 @@ class GroupController extends AbstractRestController implements ClassResourceInt
      */
     public function deleteAction($id)
     {
-        $delete = function ($id) {
+        $delete = function($id) {
             $group = $this->entityManager->getRepository(static::$entityName)->findGroupById($id);
 
             if (!$group) {

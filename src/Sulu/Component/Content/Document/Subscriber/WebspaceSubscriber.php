@@ -87,7 +87,7 @@ class WebspaceSubscriber implements EventSubscriberInterface
 
         $webspace = $this->webspaceManager->findWebspaceByKey($this->documentInspector->getWebspace($copiedDocument));
 
-        $webspaceLocales = \array_map(function ($localization) {
+        $webspaceLocales = \array_map(function($localization) {
             return $localization->getLocale();
         }, $webspace->getAllLocalizations());
         $documentLocales = $this->documentInspector->getLocales($copiedDocument);

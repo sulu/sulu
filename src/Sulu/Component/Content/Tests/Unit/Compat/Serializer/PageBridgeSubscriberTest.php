@@ -56,15 +56,15 @@ class PageBridgeSubscriberTest extends TestCase
 
         $pageBridgeSubscriber->onPostSerialize($event);
 
-        $visitor->visitProperty(Argument::that(function (StaticPropertyMetadata $metadata) {
+        $visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
             return 'document' === $metadata->name;
         }), $document->reveal())->shouldBeCalled();
 
-        $visitor->visitProperty(Argument::that(function (StaticPropertyMetadata $metadata) {
+        $visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
             return 'documentClass' === $metadata->name;
         }), \get_class($document->reveal()))->shouldBeCalled();
 
-        $visitor->visitProperty(Argument::that(function (StaticPropertyMetadata $metadata) {
+        $visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
             return 'structure' === $metadata->name;
         }), 'test')->shouldBeCalled();
     }

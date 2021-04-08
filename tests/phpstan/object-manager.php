@@ -34,7 +34,7 @@ $objectManager = $container->get('doctrine')->getManager();
 // this is a workaround for the following phpstan issue: https://github.com/phpstan/phpstan-doctrine/issues/98
 $resolveTargetEntityListener = \current(\array_filter(
     $objectManager->getEventManager()->getListeners('loadClassMetadata'),
-    static function ($listener) {
+    static function($listener) {
         return $listener instanceof ResolveTargetEntityListener;
     }
 ));

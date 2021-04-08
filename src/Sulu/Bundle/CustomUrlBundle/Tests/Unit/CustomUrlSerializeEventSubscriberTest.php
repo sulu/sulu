@@ -73,23 +73,23 @@ class CustomUrlSerializeEventSubscriberTest extends TestCase
 
         $subscriber->onPostSerialize($event->reveal());
 
-        $visitor->visitProperty(Argument::that(function (StaticPropertyMetadata $metadata) {
+        $visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
             return 'targetDocument' === $metadata->name;
         }), 'some-uuid')->shouldBeCalled();
 
-        $visitor->visitProperty(Argument::that(function (StaticPropertyMetadata $metadata) {
+        $visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
             return 'targetTitle' === $metadata->name;
         }), 'test')->shouldBeCalled();
 
-        $visitor->visitProperty(Argument::that(function (StaticPropertyMetadata $metadata) {
+        $visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
             return 'customUrl' === $metadata->name;
         }), 'test.sulu.io')->shouldBeCalled();
 
-        $visitor->visitProperty(Argument::that(function (StaticPropertyMetadata $metadata) {
+        $visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
             return 'creatorFullName' === $metadata->name;
         }), 'test1')->shouldBeCalled();
 
-        $visitor->visitProperty(Argument::that(function (StaticPropertyMetadata $metadata) {
+        $visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
             return 'changerFullName' === $metadata->name;
         }), 'test2')->shouldBeCalled();
     }
@@ -138,19 +138,19 @@ class CustomUrlSerializeEventSubscriberTest extends TestCase
 
         $subscriber->onPostSerialize($event->reveal());
 
-        $visitor->visitProperty(Argument::that(function (StaticPropertyMetadata $metadata) {
+        $visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
             return 'targetTitle' === $metadata->name;
         }), Argument::any())->shouldNotBeCalled();
 
-        $visitor->visitProperty(Argument::that(function (StaticPropertyMetadata $metadata) {
+        $visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
             return 'customUrl' === $metadata->name;
         }), 'test.sulu.io')->shouldBeCalled();
 
-        $visitor->visitProperty(Argument::that(function (StaticPropertyMetadata $metadata) {
+        $visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
             return 'creatorFullName' === $metadata->name;
         }), 'test1')->shouldBeCalled();
 
-        $visitor->visitProperty(Argument::that(function (StaticPropertyMetadata $metadata) {
+        $visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
             return 'changerFullName' === $metadata->name;
         }), 'test2')->shouldBeCalled();
     }
@@ -183,23 +183,23 @@ class CustomUrlSerializeEventSubscriberTest extends TestCase
 
         $subscriber->onPostSerialize($event->reveal());
 
-        $visitor->visitProperty(Argument::that(function (StaticPropertyMetadata $metadata) {
+        $visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
             return 'targetDocument' === $metadata->name;
         }), 'some-uuid')->shouldBeCalled();
 
-        $visitor->visitProperty(Argument::that(function (StaticPropertyMetadata $metadata) {
+        $visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
             return 'targetTitle' === $metadata->name;
         }), 'test')->shouldBeCalled();
 
-        $visitor->visitProperty(Argument::that(function (StaticPropertyMetadata $metadata) {
+        $visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
             return 'customUrl' === $metadata->name;
         }), 'test.sulu.io')->shouldBeCalled();
 
-        $visitor->visitProperty(Argument::that(function (StaticPropertyMetadata $metadata) {
+        $visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
             return 'creatorFullName' === $metadata->name;
         }), null)->shouldBeCalled();
 
-        $visitor->visitProperty(Argument::that(function (StaticPropertyMetadata $metadata) {
+        $visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
             return 'changerFullName' === $metadata->name;
         }), null)->shouldBeCalled();
     }

@@ -42,7 +42,7 @@ class MediaStreamControllerAdminTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
 
         $securityChecker = $this->prophesize(SecurityCheckerInterface::class);
-        $securityChecker->checkPermission(Argument::that(function (SecurityCondition $securityCondition) use ($media) {
+        $securityChecker->checkPermission(Argument::that(function(SecurityCondition $securityCondition) use ($media) {
             $this->assertSame(MediaAdmin::SECURITY_CONTEXT, $securityCondition->getSecurityContext());
             $this->assertSame(null, $securityCondition->getLocale());
             $this->assertSame(Collection::class, $securityCondition->getObjectType());

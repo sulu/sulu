@@ -234,7 +234,7 @@ class RouteProvider implements RouteProviderInterface
             return new Route(
                 $routePath,
                 [
-                    '_controller' => 'sulu_website.redirect_controller:redirectAction',
+                    '_controller' => 'sulu_website.redirect_controller::redirectAction',
                     'url' => $request->getSchemeAndHttpHost()
                         . $attributes->getAttribute('resourceLocatorPrefix')
                         . $route->getTarget()->getPath()
@@ -247,7 +247,7 @@ class RouteProvider implements RouteProviderInterface
 
         $symfonyRoute = $this->proxyFactory->createProxy(
             Route::class,
-            function (&$wrappedObject, LazyLoadingInterface $proxy, $method, array $parameters, &$initializer) use (
+            function(&$wrappedObject, LazyLoadingInterface $proxy, $method, array $parameters, &$initializer) use (
                 $routePath,
                 $route,
                 $request

@@ -287,7 +287,7 @@ class BaseDataProviderTest extends TestCase
         $items
     ) {
         $mockedItems = \array_map(
-            function ($item) {
+            function($item) {
                 $mock = $this->prophesize(ResourceItemInterface::class);
                 $mock->getId()->willReturn($item['id']);
 
@@ -306,7 +306,7 @@ class BaseDataProviderTest extends TestCase
             Argument::type(ResourceItemInterface::class),
             Argument::type(SerializationContext::class)
         )->will(
-            function ($args) {
+            function($args) {
                 return ['id' => $args[0]->getId()];
             }
         );
@@ -439,7 +439,7 @@ class BaseDataProviderTest extends TestCase
         $items
     ) {
         $mockedItems = \array_map(
-            function ($item) {
+            function($item) {
                 $mock = $this->prophesize(ResourceItemInterface::class);
                 $mock->getId()->willReturn($item['id']);
 
@@ -458,7 +458,7 @@ class BaseDataProviderTest extends TestCase
             Argument::type(ResourceItemInterface::class),
             Argument::type(SerializationContext::class)
         )->will(
-            function ($args) {
+            function($args) {
                 return ['id' => $args[0]->getId()];
             }
         );

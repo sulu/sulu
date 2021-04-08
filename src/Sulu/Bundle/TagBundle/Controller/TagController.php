@@ -117,7 +117,7 @@ class TagController extends AbstractRestController implements ClassResourceInter
     {
         $view = $this->responseGetById(
             $id,
-            function ($id) {
+            function($id) {
                 return $this->tagManager->findById($id);
             }
         );
@@ -258,7 +258,7 @@ class TagController extends AbstractRestController implements ClassResourceInter
      */
     public function deleteAction($id)
     {
-        $delete = function ($id) {
+        $delete = function($id) {
             try {
                 $this->tagManager->delete($id);
             } catch (TagNotFoundException $tnfe) {

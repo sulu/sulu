@@ -143,7 +143,7 @@ class PHPCRPageTeaserProviderTest extends TestCase
         $ids = ['abc', 'def', 'ghi'];
         $locale = 'en';
 
-        $this->contentQueryBuilder->init(Argument::that(function ($options) use ($ids) {
+        $this->contentQueryBuilder->init(Argument::that(function($options) use ($ids) {
             $expectedOptions = \json_decode(\json_encode([
                 'ids' => $ids,
                 'properties' => [

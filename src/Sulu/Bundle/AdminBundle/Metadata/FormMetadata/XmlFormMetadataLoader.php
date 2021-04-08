@@ -102,7 +102,7 @@ class XmlFormMetadataLoader implements FormMetadataLoaderInterface, CacheWarmerI
                 $configCache = $this->getConfigCache($key, $locale);
                 $configCache->write(
                     \serialize($formMetadata),
-                    \array_map(function (string $resource) {
+                    \array_map(function(string $resource) {
                         return new FileResource($resource);
                     }, $formsMetadataResources[$key])
                 );

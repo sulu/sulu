@@ -312,7 +312,7 @@ class AccessControlManager implements AccessControlManagerInterface
             if ($checkPermissionType) {
                 $userPermission = $this->maskConverter->convertPermissionsToArray($permission->getPermissions());
             } else {
-                \array_walk($userPermission, function (&$permission) {
+                \array_walk($userPermission, function(&$permission) {
                     $permission = true;
                 });
             }
@@ -364,7 +364,7 @@ class AccessControlManager implements AccessControlManagerInterface
      */
     private function cumulatePermissions(array $userPermission, array $permissions)
     {
-        return $this->mapPermissions($userPermission, $permissions, function ($permission1, $permission2) {
+        return $this->mapPermissions($userPermission, $permissions, function($permission1, $permission2) {
             return $permission1 || $permission2;
         });
     }
@@ -377,7 +377,7 @@ class AccessControlManager implements AccessControlManagerInterface
      */
     private function restrictPermissions(array $userPermission, array $permissions)
     {
-        return $this->mapPermissions($userPermission, $permissions, function ($permission1, $permission2) {
+        return $this->mapPermissions($userPermission, $permissions, function($permission1, $permission2) {
             return $permission1 && $permission2;
         });
     }

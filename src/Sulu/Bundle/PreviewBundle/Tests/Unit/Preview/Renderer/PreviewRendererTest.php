@@ -187,7 +187,7 @@ class PreviewRendererTest extends TestCase
 
         $this->httpKernel->handle(
             Argument::that(
-                function (Request $request) use ($expectedScheme, $expectedHost, $expectedPort) {
+                function(Request $request) use ($expectedScheme, $expectedHost, $expectedPort) {
                     return $request->getHost() === $expectedHost
                         && $request->getPort() === $expectedPort
                         && $request->getScheme() === $expectedScheme;
@@ -236,7 +236,7 @@ class PreviewRendererTest extends TestCase
         $this->requestStack->getCurrentRequest()->willReturn($request);
 
         $this->httpKernel->handle(
-            Argument::that(function (Request $request) {
+            Argument::that(function(Request $request) {
                 return 2 == $request->headers->get('X-Sulu-Target-Group');
             }),
             HttpKernelInterface::MASTER_REQUEST,
@@ -282,7 +282,7 @@ class PreviewRendererTest extends TestCase
         $this->requestStack->getCurrentRequest()->willReturn($request);
 
         $this->httpKernel->handle(
-            Argument::that(function (Request $request) use ($segment) {
+            Argument::that(function(Request $request) use ($segment) {
                 return $request->attributes->get('_sulu')->getAttribute('segment') === $segment;
             }),
             HttpKernelInterface::MASTER_REQUEST,
@@ -327,7 +327,7 @@ class PreviewRendererTest extends TestCase
         $dateTimeString = '2020-12-10T18:29:15';
 
         $this->httpKernel->handle(
-            Argument::that(function (Request $request) use ($dateTimeString) {
+            Argument::that(function(Request $request) use ($dateTimeString) {
                 $dateTime = $request->attributes->get('_sulu')->getAttribute('dateTime');
 
                 return $dateTime->getTimestamp() === (new \DateTime($dateTimeString))->getTimestamp();
@@ -623,7 +623,7 @@ class PreviewRendererTest extends TestCase
 
         $this->httpKernel->handle(
             Argument::that(
-                function (Request $request) use ($server) {
+                function(Request $request) use ($server) {
                     foreach ($server as $key => $expectedValue) {
                         $value = $request->server->get($key);
 

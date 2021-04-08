@@ -30,7 +30,7 @@ class AllOfsMetadata implements SchemaMetadataInterface
     {
         if (!empty($this->allOfs)) {
             return [
-                'allOf' => \array_map(function (SchemaMetadataInterface $schema) {
+                'allOf' => \array_map(function(SchemaMetadataInterface $schema) {
                     return $schema->toJsonSchema();
                 }, $this->allOfs),
             ];

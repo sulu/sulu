@@ -42,7 +42,7 @@ class IndexComparatorTest extends TestCase
         // the @ is necessary in case of a PHP bug https://bugs.php.net/bug.php?id=50688
         @\usort(
             $array,
-            function ($a, $b) use ($ids, $comparator) {
+            function($a, $b) use ($ids, $comparator) {
                 return $comparator->compare($a, $b, $ids);
             }
         );

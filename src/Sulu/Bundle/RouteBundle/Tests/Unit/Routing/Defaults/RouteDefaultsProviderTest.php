@@ -34,7 +34,7 @@ class RouteDefaultsProviderTest extends TestCase
 
         $this->defaultsProvider = new RouteDefaultsProvider(
             \array_map(
-                function ($provider) {
+                function($provider) {
                     return $provider->reveal();
                 },
                 $this->providers

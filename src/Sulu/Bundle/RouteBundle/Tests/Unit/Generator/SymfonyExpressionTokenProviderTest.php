@@ -27,7 +27,7 @@ class SymfonyExpressionTokenProviderTest extends TestCase
         $entity = $this->prophesize(RoutableInterface::class);
         $entity->getLocale()->willReturn('en');
 
-        $entity->getLocale = function () {
+        $entity->getLocale = function() {
             return 'en';
         };
         $entity->name = 'TEST';
@@ -44,7 +44,7 @@ class SymfonyExpressionTokenProviderTest extends TestCase
         $entity = $this->prophesize(RoutableInterface::class);
         $entity->getLocale()->willReturn('en');
 
-        $entity->getLocale = function () {
+        $entity->getLocale = function() {
             return 'en';
         };
         $provider = new SymfonyExpressionTokenProvider($translator->reveal());

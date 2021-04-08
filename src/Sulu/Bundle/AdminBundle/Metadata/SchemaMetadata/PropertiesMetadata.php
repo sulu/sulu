@@ -46,12 +46,12 @@ class PropertiesMetadata implements SchemaMetadataInterface
 
         $required = \array_values(
             \array_map(
-                function (PropertyMetadata $propertyMetadata) {
+                function(PropertyMetadata $propertyMetadata) {
                     return $propertyMetadata->getName();
                 },
                 \array_filter(
                     $this->properties,
-                    function (PropertyMetadata $propertyMetadata) {
+                    function(PropertyMetadata $propertyMetadata) {
                         return $propertyMetadata->isMandatory();
                     }
                 )

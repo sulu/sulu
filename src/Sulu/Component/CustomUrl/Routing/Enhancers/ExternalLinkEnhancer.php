@@ -35,7 +35,7 @@ class ExternalLinkEnhancer implements RouteEnhancerInterface
         return \array_merge(
             $defaults,
             [
-                '_controller' => 'sulu_website.redirect_controller:redirectAction',
+                '_controller' => 'sulu_website.redirect_controller::redirectAction',
                 'url' => $structure->getResourceLocator(),
             ]
         );

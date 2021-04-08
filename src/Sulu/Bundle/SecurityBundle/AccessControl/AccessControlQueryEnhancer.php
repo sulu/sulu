@@ -63,7 +63,7 @@ class AccessControlQueryEnhancer
 
         $roleIds = [];
         if ($user) {
-            $roleIds = \array_map(function (RoleInterface $role) {
+            $roleIds = \array_map(function(RoleInterface $role) {
                 return $role->getId();
             }, $user->getRoleObjects());
         } else {

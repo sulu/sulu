@@ -214,7 +214,7 @@ class FormMetadataMapper
      */
     private function mapSchemaProperties(array $itemsMetadata): array
     {
-        return \array_filter(\array_map(function (ContentItemMetadata $itemMetadata) {
+        return \array_filter(\array_map(function(ContentItemMetadata $itemMetadata) {
             if ($itemMetadata instanceof ContentSectionMetadata) {
                 return $this->mapSchemaProperties($itemMetadata->getChildren());
             }
