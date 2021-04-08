@@ -38,7 +38,7 @@ function tryParse(value: ?string) {
         }
     }
 
-    if (isNaN(value)) {
+    if (isNaN(value) || (value && value.match(/0+[^.].*/))) {
         return value;
     }
 
