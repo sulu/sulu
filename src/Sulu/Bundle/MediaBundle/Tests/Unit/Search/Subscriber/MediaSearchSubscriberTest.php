@@ -114,7 +114,7 @@ class MediaSearchSubscriberTest extends TestCase
         );
         $imageUrl = 'foo';
 
-        $this->mediaManager->addFormatsAndUrl(Argument::any())->will(function ($args) use ($imageUrl) {
+        $this->mediaManager->addFormatsAndUrl(Argument::any())->will(function($args) use ($imageUrl) {
             $mediaApi = $args[0];
             $mediaApi->setFormats([
                 'test_format' => $imageUrl,
@@ -140,7 +140,7 @@ class MediaSearchSubscriberTest extends TestCase
             321
         );
 
-        $this->mediaManager->addFormatsAndUrl(Argument::any())->will(function ($args) {
+        $this->mediaManager->addFormatsAndUrl(Argument::any())->will(function($args) {
             $mediaApi = $args[0];
             $mediaApi->setFormats([
                 'for' => '/fo',
@@ -168,7 +168,7 @@ class MediaSearchSubscriberTest extends TestCase
             321
         );
 
-        $this->mediaManager->addFormatsAndUrl(Argument::any())->will(function ($args) {
+        $this->mediaManager->addFormatsAndUrl(Argument::any())->will(function($args) {
             $mediaApi = $args[0];
             $mediaApi->setFormats([]);
         });

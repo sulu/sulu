@@ -160,7 +160,7 @@ class UserRepositoryTest extends SuluTestCase
 
         $this->assertCount(2, $users);
 
-        $userIds = \array_map(function ($user) {
+        $userIds = \array_map(function($user) {
             return $user->getId();
         }, $users);
 

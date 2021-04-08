@@ -124,10 +124,16 @@ class KeywordController extends AbstractRestController implements ClassResourceI
         $listBuilder = $this->listBuilderFactory->create($this->keywordClass);
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptor);
 
+        $categoryTranslation = $category->findTranslationByLocale($request->get('locale'));
+
+        if (false == $categoryTranslation) {
+            return $this->handleView($this->view(null, 404));
+        }
+
         $listBuilder->where($fieldDescriptor['locale'], $request->get('locale'));
         $listBuilder->where(
             $fieldDescriptor['categoryTranslationIds'],
-            $category->findTranslationByLocale($request->get('locale'))
+            $categoryTranslation
         );
 
         // should eliminate duplicates

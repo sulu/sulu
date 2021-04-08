@@ -92,7 +92,7 @@ interface CategoryRepositoryInterface extends RepositoryInterface
      * Returns the whole category graph. Children are available through children-properties of parents.
      * If parentId is set, only the sub-graph below the category which is assigned to the given id is returned.
      *
-     * @param null $parentId
+     * @param int|null $parentId
      *
      * @return CategoryInterface[]
      */
@@ -115,7 +115,7 @@ interface CategoryRepositoryInterface extends RepositoryInterface
      * Returns the whole category graph. Children are available through children-properties of parents.
      * If parentKey is set, only the sub-graph below the category which is assigned to the given key is returned.
      *
-     * @param null $parentKey
+     * @param string|null $parentKey
      *
      * @return CategoryInterface[]
      */

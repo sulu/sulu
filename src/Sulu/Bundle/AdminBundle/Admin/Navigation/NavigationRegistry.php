@@ -75,7 +75,7 @@ class NavigationRegistry
             $admin->configureNavigationItems($navigationItemCollection);
         }
 
-        $navigationItems = \array_filter($navigationItemCollection->all(), function ($navigationItem) {
+        $navigationItems = \array_filter($navigationItemCollection->all(), function($navigationItem) {
             return $navigationItem->getChildren() || $navigationItem->getView();
         });
 
@@ -85,7 +85,7 @@ class NavigationRegistry
 
         \usort(
             $navigationItems,
-            function (NavigationItem $a, NavigationItem $b) {
+            function(NavigationItem $a, NavigationItem $b) {
                 $aPosition = $a->getPosition() ?? \PHP_INT_MAX;
                 $bPosition = $b->getPosition() ?? \PHP_INT_MAX;
 

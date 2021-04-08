@@ -221,7 +221,7 @@ abstract class BaseDataProvider implements DataProviderInterface
     protected function decorateResourceItems(array $data, $locale)
     {
         return \array_map(
-            function ($item) {
+            function($item) {
                 $itemData = $this->serializer->serialize($item, $this->getSerializationContext());
                 $id = $this->getIdForItem($item);
 

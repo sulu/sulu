@@ -130,8 +130,8 @@ class WebspaceCollectionBuilder
             // sort all portal informations by length
             \uksort(
                 $this->portalInformations[$environment],
-                function ($a, $b) {
-                    return \strlen($a) < \strlen($b);
+                function($a, $b) {
+                    return \strlen($a) < \strlen($b) ? 1 : -1;
                 }
             );
         }

@@ -118,7 +118,7 @@ class WebspaceSerializeEventSubscriberTest extends TestCase
 
         $graphNavigator->accept(\array_values($portalInformation))->willReturn('[{}, {}]')->shouldBeCalled();
         $visitor->visitProperty(
-            Argument::that(function (StaticPropertyMetadata $metadata) {
+            Argument::that(function(StaticPropertyMetadata $metadata) {
                 return 'portalInformation' === $metadata->name;
             }),
             '[{}, {}]'
@@ -195,7 +195,7 @@ class WebspaceSerializeEventSubscriberTest extends TestCase
         $webspace = $this->prophesize(Webspace::class);
         $webspace->getPortals()->willReturn(
             \array_map(
-                function ($portal) {
+                function($portal) {
                     return $portal->reveal();
                 },
                 $portals

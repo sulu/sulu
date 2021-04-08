@@ -35,7 +35,7 @@ class DelegatingTagExtractorTest extends TestCase
 
         $extractor = new DelegatingTagExtractor(
             \array_map(
-                function ($extrator) {
+                function($extrator) {
                     return $extrator->reveal();
                 },
                 $extractors
@@ -71,7 +71,7 @@ class DelegatingTagExtractorTest extends TestCase
 
         $extractor = new DelegatingTagExtractor(
             \array_map(
-                function ($extrator) {
+                function($extrator) {
                     return $extrator->reveal();
                 },
                 $extractors

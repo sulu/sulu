@@ -89,7 +89,7 @@ class LinkTag implements TagInterface
             }
 
             $htmlAttributes = \array_map(
-                function ($value, $name) {
+                function($value, $name) {
                     if (\in_array($name, ['provider', 'content', 'sulu-validation-state']) || empty($value)) {
                         return;
                     }

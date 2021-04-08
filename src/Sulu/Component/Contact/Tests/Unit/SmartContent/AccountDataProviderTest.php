@@ -158,7 +158,7 @@ class AccountDataProviderTest extends TestCase
         $hasNextPage,
         $items
     ) {
-        $serializeCallback = function (Account $account) {
+        $serializeCallback = function(Account $account) {
             return $this->serialize($account);
         };
 
@@ -168,7 +168,7 @@ class AccountDataProviderTest extends TestCase
 
         $this->serializer->serialize(Argument::type(Account::class), $context)
             ->will(
-                function ($args) use ($serializeCallback) {
+                function($args) use ($serializeCallback) {
                     return $serializeCallback($args[0]);
                 }
             );

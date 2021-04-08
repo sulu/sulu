@@ -756,7 +756,7 @@ class AccountController extends AbstractRestController implements ClassResourceI
             return $this->handleView($this->view($data, 409));
         }
 
-        $delete = function ($id) use ($request) {
+        $delete = function($id) use ($request) {
             $account = $this->accountRepository->findAccountByIdAndDelete($id);
 
             if (!$account) {
@@ -908,7 +908,7 @@ class AccountController extends AbstractRestController implements ClassResourceI
         try {
             $view = $this->responseGetById(
                 $id,
-                function ($id) use ($includes, $locale) {
+                function($id) use ($includes, $locale) {
                     return $this->accountManager->getByIdAndInclude($id, $locale, $includes);
                 }
             );

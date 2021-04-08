@@ -265,7 +265,7 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
 
         $result = $this->resolveQueryBuilder($queryBuilder, $locale, $locales, $mapping, $user);
 
-        \usort($result, function ($a, $b) use ($uuids) {
+        \usort($result, function($a, $b) use ($uuids) {
             return \array_search($a->getId(), $uuids) < \array_search($b->getId(), $uuids) ? -1 : 1;
         });
 
@@ -325,7 +325,7 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
             ->where($this->qomFactory->descendantNode('node', $path));
 
         return \array_map(
-            function (Row $row) {
+            function(Row $row) {
                 return $row->getNode()->getIdentifier();
             },
             \iterator_to_array($descendantQueryBuilder->execute())
@@ -435,7 +435,7 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
         return \array_values(
             \array_filter(
                 \array_map(
-                    function (Row $row, $index) use ($mapping, $locale, $locales, $user, $permissions) {
+                    function(Row $row, $index) use ($mapping, $locale, $locales, $user, $permissions) {
                         return $this->resolveContent(
                             $row,
                             $locale,
@@ -538,7 +538,7 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
         $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
 
         return \array_map(
-            function (Localization $localization) {
+            function(Localization $localization) {
                 return $localization->getLocale();
             },
             $webspace->getAllLocalizations()
@@ -557,7 +557,7 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
         $portal = $this->webspaceManager->findPortalByKey($portalKey);
 
         return \array_map(
-            function (Localization $localization) {
+            function(Localization $localization) {
                 return $localization->getLocale();
             },
             $portal->getLocalizations()
@@ -735,7 +735,7 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
             $urls = [];
             \array_walk(
                 $locales,
-                function ($item) use (&$urls, $row) {
+                function($item) use (&$urls, $row) {
                     $urls[$item] = $this->resolveUrl($row, $item);
                 }
             );

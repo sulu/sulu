@@ -63,7 +63,7 @@ class PositionController extends AbstractRestController implements ClassResource
     {
         $view = $this->responseGetById(
             $id,
-            function ($id) {
+            function($id) {
                 return $this->positionRepository->find($id);
             }
         );
@@ -200,7 +200,7 @@ class PositionController extends AbstractRestController implements ClassResource
     public function deleteAction($id)
     {
         try {
-            $delete = function ($id) {
+            $delete = function($id) {
                 /* @var Position $position */
                 $position = $this->positionRepository->find($id);
 

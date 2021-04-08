@@ -163,7 +163,7 @@ class AudienceTargetingAdmin extends Admin
     public function getConfig(): ?array
     {
         return [
-            'targetGroupRules' => \array_map(function (RuleInterface $rule) {
+            'targetGroupRules' => \array_map(function(RuleInterface $rule) {
                 $type = $rule->getType();
 
                 return [

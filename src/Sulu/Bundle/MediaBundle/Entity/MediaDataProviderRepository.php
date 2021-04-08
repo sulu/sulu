@@ -105,7 +105,7 @@ class MediaDataProviderRepository implements DataProviderRepositoryInterface
         );
 
         return \array_map(
-            function (Media $media) use ($locale) {
+            function(Media $media) use ($locale) {
                 return $this->mediaManager->addFormatsAndUrl(new MediaApi($media, $locale));
             },
             $entities

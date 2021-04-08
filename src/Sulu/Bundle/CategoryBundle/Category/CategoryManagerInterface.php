@@ -98,7 +98,7 @@ interface CategoryManagerInterface
      * Returns the whole category graph.
      * If parentKey is set, only the sub-graph below the category which is assigned to the given key is returned.
      *
-     * @param null $parentKey
+     * @param string|null $parentKey
      *
      * @return array
      *

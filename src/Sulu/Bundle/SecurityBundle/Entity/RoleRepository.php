@@ -109,7 +109,7 @@ class RoleRepository extends EntityRepository implements RoleRepositoryInterface
             ->getQuery()
             ->getResult();
 
-        return \array_map(function ($role) {
+        return \array_map(function($role) {
             return $role['id'];
         }, $result);
     }

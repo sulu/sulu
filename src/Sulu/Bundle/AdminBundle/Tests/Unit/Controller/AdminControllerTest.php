@@ -280,7 +280,7 @@ class AdminControllerTest extends TestCase
 
         $this->viewHandler->handle(
             Argument::that(
-                function (View $view) use ($dataProviders, $fieldTypeOptions, $views, $admin1Config, $admin2Config) {
+                function(View $view) use ($dataProviders, $fieldTypeOptions, $views, $admin1Config, $admin2Config) {
                     $data = $view->getData();
 
                     return 'json' === $view->getFormat()
@@ -310,7 +310,7 @@ class AdminControllerTest extends TestCase
         $metadataProvider->getMetadata('pages', 'en', [])->willReturn($form);
         $this->metadataProviderRegistry->getMetadataProvider('form')->willReturn($metadataProvider);
 
-        $this->viewHandler->handle(Argument::that(function (View $view) use ($form) {
+        $this->viewHandler->handle(Argument::that(function(View $view) use ($form) {
             return $form === $view->getData();
         }))->shouldBeCalled()->willReturn(new Response());
 
@@ -327,7 +327,7 @@ class AdminControllerTest extends TestCase
         $metadataProvider->getMetadata('pages', 'en', ['id' => 1])->willReturn($form);
         $this->metadataProviderRegistry->getMetadataProvider('form')->willReturn($metadataProvider);
 
-        $this->viewHandler->handle(Argument::that(function (View $view) use ($form) {
+        $this->viewHandler->handle(Argument::that(function(View $view) use ($form) {
             return $form === $view->getData();
         }))->shouldBeCalled()->willReturn(new Response());
 

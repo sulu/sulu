@@ -49,7 +49,7 @@ class Builder implements BuilderInterface
     {
         $this->configuration->setTypes(
             \array_map(
-                function ($type) {
+                function($type) {
                     return new PropertyParameter($type['title'], $type['type']);
                 },
                 $types
@@ -107,7 +107,7 @@ class Builder implements BuilderInterface
     {
         $this->configuration->setSorting(
             \array_map(
-                function ($item) {
+                function($item) {
                     return new PropertyParameter($item['column'], $item['title'] ?: \ucfirst($item['column']));
                 },
                 $sorting

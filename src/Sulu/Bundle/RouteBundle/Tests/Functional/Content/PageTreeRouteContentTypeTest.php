@@ -271,7 +271,7 @@ class PageTreeRouteContentTypeTest extends TestCase
         $route->getPath()->willReturn('/test-custom-child');
 
         $route->setPath('/test-page/test-custom-child')->shouldBeCalled()->will(
-            function () use ($route) {
+            function() use ($route) {
                 $route->getPath()->willReturn('/test-page/test-custom-child');
             }
         );
@@ -320,7 +320,7 @@ class PageTreeRouteContentTypeTest extends TestCase
         $route->getPath()->willReturn('/test-custom-child');
 
         $route->setPath('/test-custom-child')->shouldBeCalled()->will(
-            function () use ($route) {
+            function() use ($route) {
                 $route->getPath()->willReturn('/test-custom-child');
             }
         );

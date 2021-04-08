@@ -36,7 +36,7 @@ class PropertyEncoderTest extends TestCase
         ];
 
         $this->namespaceRegistry = $this->prophesize(NamespaceRegistry::class);
-        $this->namespaceRegistry->getPrefix(Argument::type('string'))->will(function ($args) use ($map) {
+        $this->namespaceRegistry->getPrefix(Argument::type('string'))->will(function($args) use ($map) {
             return $map[$args[0]];
         });
         $this->encoder = new PropertyEncoder($this->namespaceRegistry->reveal());
