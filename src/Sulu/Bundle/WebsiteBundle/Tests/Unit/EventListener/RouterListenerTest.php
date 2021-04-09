@@ -13,6 +13,7 @@ namespace Unit\Sulu\Bundle\WebsiteBundle\EventListener;
 
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\WebsiteBundle\EventListener\RouterListener;
+use Sulu\Component\Webspace\Analyzer\Exception\UrlMatchNotFoundException;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -91,6 +92,18 @@ class RouterListenerTest extends TestCase
         $this->requestAnalyzer->validate($request)->shouldBeCalled();
 
         $this->routerListener->onKernelRequest($event);
+    }
+
+    public function testDisableAnalyzerIfUrlNotMatch(): void
+    {
+        $request = new Request([], [], ['_requestAnalyzer' => true]);
+        $event = $this->createRequestEvent($request);
+
+        $this->requestAnalyzer->analyze($request)->shouldBeCalled();
+        $this->requestAnalyzer->validate($request)->willThrow(UrlMatchNotFoundException::class);
+
+        $this->routerListener->onKernelRequest($event);
+        $this->assertFalse($request->attributes->get('_requestAnalyzer'));
     }
 
     private function createRequestEvent(Request $request): RequestEvent

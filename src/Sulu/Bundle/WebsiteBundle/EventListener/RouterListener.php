@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\WebsiteBundle\EventListener;
 
+use Sulu\Component\Webspace\Analyzer\Exception\UrlMatchNotFoundException;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\FinishRequestEvent;
@@ -56,7 +57,11 @@ class RouterListener implements EventSubscriberInterface
         $this->requestAnalyzer->analyze($request);
         $this->baseRouteListener->onKernelRequest($event);
         if (false !== $request->attributes->getBoolean(static::REQUEST_ANALYZER, true)) {
-            $this->requestAnalyzer->validate($request);
+            try {
+                $this->requestAnalyzer->validate($request);
+            } catch (UrlMatchNotFoundException $exception) {
+                $request->attributes->set(self::REQUEST_ANALYZER, false);
+            }
         }
     }
 
