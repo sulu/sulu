@@ -12,63 +12,71 @@
 namespace Sulu\Bundle\CategoryBundle\Tests\Unit\Category;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ObjectManager;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\CategoryBundle\Api\Category;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManager;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
 use Sulu\Bundle\CategoryBundle\Category\KeywordManagerInterface;
+use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryMovedEvent;
+use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryRemovedEvent;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryMetaRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\KeywordInterface;
+use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class CategoryManagerTest extends TestCase
 {
     /**
-     * @var CategoryRepositoryInterface
+     * @var CategoryRepositoryInterface|ObjectProphecy
      */
     protected $categoryRepository;
 
     /**
-     * @var CategoryMetaRepositoryInterface
+     * @var CategoryMetaRepositoryInterface|ObjectProphecy
      */
     protected $categoryMetaRepository;
 
     /**
-     * @var CategoryTranslationRepositoryInterface
+     * @var CategoryTranslationRepositoryInterface|ObjectProphecy
      */
     protected $categoryTranslateRepository;
 
     /**
-     * @var UserRepositoryInterface
+     * @var UserRepositoryInterface|ObjectProphecy
      */
     protected $userRepository;
 
     /**
-     * @var ObjectManager
+     * @var EntityManagerInterface|ObjectProphecy
      */
     protected $entityManager;
 
     /**
-     * @var EventDispatcherInterface
+     * @var EventDispatcherInterface|ObjectProphecy
      */
     protected $eventDispatcher;
+
+    /**
+     * @var KeywordManagerInterface|ObjectProphecy
+     */
+    private $keywordManager;
+
+    /**
+     * @var DomainEventCollectorInterface|ObjectProphecy
+     */
+    private $domainEventCollector;
 
     /**
      * @var CategoryManagerInterface
      */
     private $categoryManager;
-
-    /**
-     * @var KeywordManagerInterface
-     */
-    private $keywordManager;
 
     public function setUp(): void
     {
@@ -81,6 +89,7 @@ class CategoryManagerTest extends TestCase
         $this->eventDispatcher->dispatch(Argument::any(), Argument::any())
             ->willReturnArgument(0);
         $this->keywordManager = $this->prophesize(KeywordManagerInterface::class);
+        $this->domainEventCollector = $this->prophesize(DomainEventCollectorInterface::class);
 
         $this->categoryManager = new CategoryManager(
             $this->categoryRepository->reveal(),
@@ -89,7 +98,8 @@ class CategoryManagerTest extends TestCase
             $this->userRepository->reveal(),
             $this->keywordManager->reveal(),
             $this->entityManager->reveal(),
-            $this->eventDispatcher->reveal()
+            $this->eventDispatcher->reveal(),
+            $this->domainEventCollector->reveal()
         );
     }
 
@@ -132,16 +142,23 @@ class CategoryManagerTest extends TestCase
     {
         $id = 1;
 
-        $translation = $this->prophesize(CategoryTranslationInterface::class);
         $keyword1 = $this->prophesize(KeywordInterface::class);
         $keyword2 = $this->prophesize(KeywordInterface::class);
-        $category = $this->prophesize(CategoryInterface::class);
+
+        $translation = $this->prophesize(CategoryTranslationInterface::class);
+        $translation->getTranslation()->willReturn('category-translation');
         $translation->getKeywords()->willReturn([$keyword1->reveal(), $keyword2->reveal()]);
+
+        $category = $this->prophesize(CategoryInterface::class);
+        $category->getDefaultLocale()->willReturn('de');
         $category->getTranslations()->willReturn([$translation->reveal()]);
+        $category->findTranslationByLocale('de')->willReturn($translation->reveal());
 
         $this->categoryRepository->findCategoryById($id)->willReturn($category->reveal());
         $this->keywordManager->delete($keyword1->reveal(), $category->reveal())->shouldBeCalledTimes(1);
         $this->keywordManager->delete($keyword2->reveal(), $category->reveal())->shouldBeCalledTimes(1);
+
+        $this->domainEventCollector->collect(Argument::type(CategoryRemovedEvent::class))->shouldBeCalled();
 
         $this->categoryManager->delete($id);
     }
@@ -149,12 +166,15 @@ class CategoryManagerTest extends TestCase
     public function testMove($id = 1, $parentId = 2)
     {
         $category = $this->prophesize(CategoryInterface::class);
-        $parentCategory = $this->prophesize(CategoryInterface::class);
+        $newParentCategory = $this->prophesize(CategoryInterface::class);
 
         $this->categoryRepository->findCategoryById($id)->willReturn($category->reveal());
-        $this->categoryRepository->findCategoryById($parentId)->willReturn($parentCategory->reveal());
+        $this->categoryRepository->findCategoryById($parentId)->willReturn($newParentCategory->reveal());
 
-        $category->setParent($parentCategory->reveal())->shouldBeCalled();
+        $category->getParent()->willReturn(null)->shouldBeCalled();
+        $category->setParent($newParentCategory->reveal())->shouldBeCalled();
+
+        $this->domainEventCollector->collect(Argument::type(CategoryMovedEvent::class))->shouldBeCalled();
 
         $result = $this->categoryManager->move($id, $parentId);
         $this->assertEquals($category->reveal(), $result);
@@ -163,11 +183,15 @@ class CategoryManagerTest extends TestCase
     public function testMoveToRoot($id = 1, $parentId = null)
     {
         $category = $this->prophesize(CategoryInterface::class);
+        $previousParentCategory = $this->prophesize(CategoryInterface::class);
 
         $this->categoryRepository->findCategoryById($id)->willReturn($category->reveal());
         $this->categoryRepository->findCategoryById($parentId)->shouldNotBeCalled();
 
+        $category->getParent()->willReturn($previousParentCategory->reveal())->shouldBeCalled();
         $category->setParent(null)->shouldBeCalled();
+
+        $this->domainEventCollector->collect(Argument::type(CategoryMovedEvent::class))->shouldBeCalled();
 
         $result = $this->categoryManager->move($id, $parentId);
         $this->assertEquals($category->reveal(), $result);

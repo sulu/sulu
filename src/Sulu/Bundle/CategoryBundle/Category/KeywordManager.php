@@ -85,10 +85,13 @@ class KeywordManager implements KeywordManagerInterface
             $keyword = $this->handleOverwrite($keyword, $category);
         }
 
-        if (null === $keyword->getId()) {
-            $this->domainEventCollector->collect(new CategoryKeywordCreatedEvent($category, $keyword));
-        } else {
-            $this->domainEventCollector->collect(new CategoryKeywordModifiedEvent($category, $keyword));
+        /** @var CategoryTranslationInterface $categoryTranslation */
+        foreach ($keyword->getCategoryTranslations() as $categoryTranslation) {
+            $event = $keyword->getId()
+                ? new CategoryKeywordModifiedEvent($categoryTranslation->getCategory(), $keyword)
+                : new CategoryKeywordCreatedEvent($categoryTranslation->getCategory(), $keyword);
+
+            $this->domainEventCollector->collect($event);
         }
 
         return $keyword;
@@ -171,12 +174,15 @@ class KeywordManager implements KeywordManagerInterface
             $category->setChanged(new \DateTime());
             $categoryTranslation->setChanged(new \DateTime());
 
-            $this->domainEventCollector->collect(new CategoryKeywordRemovedEvent(
-                $category,
-                $categoryTranslation->getLocale(),
-                $keyword->getId(),
-                $keyword->getKeyword()
-            ));
+            // dispatch event only if keyword was flushed and therefore has an id
+            if ($keyword->getId()) {
+                $this->domainEventCollector->collect(new CategoryKeywordRemovedEvent(
+                    $category,
+                    $keyword->getLocale(),
+                    $keyword->getId(),
+                    $keyword->getKeyword()
+                ));
+            }
         }
 
         if ($keyword->isReferenced()) {

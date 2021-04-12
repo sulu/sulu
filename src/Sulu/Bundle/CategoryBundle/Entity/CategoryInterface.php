@@ -205,7 +205,7 @@ interface CategoryInterface extends AuditableInterface
     /**
      * Set parent.
      *
-     * @param CategoryInterface $parent
+     * @param CategoryInterface|null $parent
      *
      * @return CategoryInterface
      */
@@ -214,7 +214,7 @@ interface CategoryInterface extends AuditableInterface
     /**
      * Get parent.
      *
-     * @return CategoryInterface
+     * @return CategoryInterface|null
      */
     public function getParent();
 

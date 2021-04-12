@@ -49,9 +49,11 @@ class CategoryMovedEvent extends DomainEvent
 
     public function getEventContext(): array
     {
+        $previousParent = $this->category->getParent();
+
         return [
             'previousParentId' => $this->previousParentId,
-            'newParentId' => $this->category->getParent()->getId(),
+            'newParentId' => $previousParent ? $previousParent->getId() : null,
         ];
     }
 

@@ -264,7 +264,6 @@ class CategoryManager implements CategoryManagerInterface
         foreach ($entity->getTranslations() as $translation) {
             foreach ($translation->getKeywords() as $keyword) {
                 $this->keywordManager->delete($keyword, $entity);
-                // TODO: collect keyword_removed events
             }
         }
 
@@ -291,9 +290,12 @@ class CategoryManager implements CategoryManagerInterface
             throw new CategoryIdNotFoundException($parent);
         }
 
-        $previousParentId = $category->getParent()->getId();
+        $previousParent = $category->getParent();
         $category->setParent($parentCategory);
-        $this->domainEventCollector->collect(new CategoryMovedEvent($category, $previousParentId));
+
+        $this->domainEventCollector->collect(
+            new CategoryMovedEvent($category, $previousParent ? $previousParent->getId() : null)
+        );
 
         $this->em->flush();
 
