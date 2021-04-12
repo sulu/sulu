@@ -23,13 +23,13 @@ class CategoryRemovedEvent extends DomainEvent
     private $categoryId;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $categoryName;
 
     public function __construct(
         int $categoryId,
-        string $categoryName
+        ?string $categoryName
     ) {
         parent::__construct();
 

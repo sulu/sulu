@@ -79,7 +79,9 @@ class CategoryCreatedEvent extends DomainEvent
 
     public function getResourceTitle(): ?string
     {
-        return $this->category->findTranslationByLocale($this->locale)->getTranslation();
+        $translation = $this->category->findTranslationByLocale($this->locale);
+
+        return $translation ? $translation->getTranslation() : null;
     }
 
     public function getResourceSecurityContext(): ?string
