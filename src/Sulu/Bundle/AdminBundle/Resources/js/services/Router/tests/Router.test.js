@@ -595,6 +595,22 @@ test('Navigate to route using URL with search parameters', () => {
     expect(history.location.search).toBe('?page=1&sort=date');
 });
 
+test('Navigate to route using a number with leading zeroes', () => {
+    routeRegistry.getAll.mockReturnValue({
+        page: new Route({
+            name: 'page',
+            type: 'form',
+            path: '/pages/:uuid',
+        }),
+    });
+
+    const history = createMemoryHistory();
+    const router = new Router(history);
+
+    router.navigate('page', {uuid: '012345'});
+    expect(history.location.pathname).toBe('/pages/012345');
+});
+
 test('Navigate to route changing only parameters', () => {
     routeRegistry.getAll.mockReturnValue({
         page: new Route({
