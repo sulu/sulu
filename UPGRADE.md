@@ -11,6 +11,7 @@ call to pass the correct parameters:
 - `Sulu\Component\CustomUrl\Manager\CustomUrlManager`
 - `Sulu\Bundle\TagBundle\Tag\TagManager`
 - `Sulu\Bundle\CategoryBundle\Category\CategoryManager`
+- `Sulu\Bundle\CategoryBundle\Category\KeywordManager`
 
 ### Added SuluEventLogBundle for dispatching and recording events that happen in the application
 

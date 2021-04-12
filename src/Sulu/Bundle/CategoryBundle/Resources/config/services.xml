@@ -57,6 +57,7 @@
             <argument type="service" id="sulu.repository.keyword"/>
             <argument type="service" id="sulu.repository.category_translation"/>
             <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="sulu_event_log.domain_event_collector"/>
         </service>
 
         <service id="sulu_category.reference_store.category"

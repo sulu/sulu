@@ -25,7 +25,7 @@ class CategoryRemovedEvent extends DomainEvent
     /**
      * @var string|null
      */
-    private $categoryName;
+    private $categoryTitle;
 
     public function __construct(
         int $categoryId,
@@ -34,7 +34,7 @@ class CategoryRemovedEvent extends DomainEvent
         parent::__construct();
 
         $this->categoryId = $categoryId;
-        $this->categoryName = $categoryName;
+        $this->categoryTitle = $categoryName;
     }
 
     public function getEventType(): string
@@ -54,7 +54,7 @@ class CategoryRemovedEvent extends DomainEvent
 
     public function getResourceTitle(): ?string
     {
-        return $this->categoryName;
+        return $this->categoryTitle;
     }
 
     public function getResourceSecurityContext(): ?string

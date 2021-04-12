@@ -12,6 +12,9 @@
 namespace Sulu\Bundle\CategoryBundle\Category;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryKeywordCreatedEvent;
+use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryKeywordModifiedEvent;
+use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryKeywordRemovedEvent;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationRepositoryInterface;
@@ -19,6 +22,7 @@ use Sulu\Bundle\CategoryBundle\Entity\KeywordInterface;
 use Sulu\Bundle\CategoryBundle\Entity\KeywordRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Exception\KeywordIsMultipleReferencedException;
 use Sulu\Bundle\CategoryBundle\Exception\KeywordNotUniqueException;
+use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface;
 
 /**
  * Manages keyword for categories.
@@ -40,14 +44,21 @@ class KeywordManager implements KeywordManagerInterface
      */
     private $entityManager;
 
+    /**
+     * @var DomainEventCollectorInterface
+     */
+    private $domainEventCollector;
+
     public function __construct(
         KeywordRepositoryInterface $keywordRepository,
         CategoryTranslationRepositoryInterface $categoryTranslationRepository,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+                DomainEventCollectorInterface $domainEventCollector
     ) {
         $this->keywordRepository = $keywordRepository;
         $this->categoryTranslationRepository = $categoryTranslationRepository;
         $this->entityManager = $entityManager;
+        $this->domainEventCollector = $domainEventCollector;
     }
 
     public function save(KeywordInterface $keyword, CategoryInterface $category, $force = null)
@@ -69,10 +80,18 @@ class KeywordManager implements KeywordManagerInterface
         }
 
         if (self::FORCE_DETACH === $force || self::FORCE_MERGE === $force) {
-            return $this->handleDetach($keyword, $category);
+            $keyword = $this->handleDetach($keyword, $category);
+        } else {
+            $keyword = $this->handleOverwrite($keyword, $category);
         }
 
-        return $this->handleOverwrite($keyword, $category);
+        if (null === $keyword->getId()) {
+            $this->domainEventCollector->collect(new CategoryKeywordCreatedEvent($category, $keyword));
+        } else {
+            $this->domainEventCollector->collect(new CategoryKeywordModifiedEvent($category, $keyword));
+        }
+
+        return $keyword;
     }
 
     /**
@@ -151,6 +170,13 @@ class KeywordManager implements KeywordManagerInterface
             // FIXME category and meta will not be updated if only keyword was changed
             $category->setChanged(new \DateTime());
             $categoryTranslation->setChanged(new \DateTime());
+
+            $this->domainEventCollector->collect(new CategoryKeywordRemovedEvent(
+                $category,
+                $categoryTranslation->getLocale(),
+                $keyword->getId(),
+                $keyword->getKeyword()
+            ));
         }
 
         if ($keyword->isReferenced()) {
