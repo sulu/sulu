@@ -1,5 +1,6 @@
 // @flow
 import {Requester} from 'sulu-admin-bundle/services';
+import {observable} from 'mobx';
 import PreviewStore from '../../stores/PreviewStore';
 
 PreviewStore.endpoints = {
@@ -16,7 +17,8 @@ jest.mock('sulu-admin-bundle/services/Requester', () => ({
 }));
 
 test('Should request server on start preview', () => {
-    const previewStore = new PreviewStore('pages', '123-123-123', 'en', 'sulu_io');
+    const locale = observable.box('en');
+    const previewStore = new PreviewStore('pages', '123-123-123', locale, 'sulu_io');
 
     const requestPromise = Promise.resolve({token: '123-123-123'});
     Requester.post.mockReturnValue(requestPromise);
@@ -28,8 +30,22 @@ test('Should request server on start preview', () => {
     });
 });
 
+test('Should request server without locale on start preview', () => {
+    const previewStore = new PreviewStore('pages', '123-123-123', undefined, 'sulu_io');
+
+    const requestPromise = Promise.resolve({token: '123-123-123'});
+    Requester.post.mockReturnValue(requestPromise);
+
+    previewStore.start();
+
+    return requestPromise.then(() => {
+        expect(Requester.post).toBeCalledWith('/start?id=123-123-123&provider=pages');
+    });
+});
+
 test('Should request server on update preview', () => {
-    const previewStore = new PreviewStore('pages', '123-123-123', 'en', 'sulu_io');
+    const locale = observable.box('en');
+    const previewStore = new PreviewStore('pages', '123-123-123', locale, 'sulu_io');
 
     const postPromise = Promise.resolve({content: '<h1>Sulu is awesome</h1>'});
     Requester.post.mockReturnValue(postPromise);
@@ -48,7 +64,8 @@ test('Should request server on update preview', () => {
 });
 
 test('Should request server on update preview with target group', () => {
-    const previewStore = new PreviewStore('pages', '123-123-123', 'en', 'sulu_io');
+    const locale = observable.box('en');
+    const previewStore = new PreviewStore('pages', '123-123-123', locale, 'sulu_io');
 
     const postPromise = Promise.resolve({content: '<h1>Sulu is awesome</h1>'});
     Requester.post.mockReturnValue(postPromise);
@@ -68,7 +85,8 @@ test('Should request server on update preview with target group', () => {
 });
 
 test('Should request server on update preview with date time', () => {
-    const previewStore = new PreviewStore('pages', '123-123-123', 'en', 'sulu_io');
+    const locale = observable.box('en');
+    const previewStore = new PreviewStore('pages', '123-123-123', locale, 'sulu_io');
 
     const postPromise = Promise.resolve({content: '<h1>Sulu is awesome</h1>'});
     Requester.post.mockReturnValue(postPromise);
@@ -89,7 +107,8 @@ test('Should request server on update preview with date time', () => {
 });
 
 test('Should request server on update preview with segment', () => {
-    const previewStore = new PreviewStore('pages', '123-123-123', 'en', 'sulu_io');
+    const locale = observable.box('en');
+    const previewStore = new PreviewStore('pages', '123-123-123', locale, 'sulu_io');
 
     const postPromise = Promise.resolve({content: '<h1>Sulu is awesome</h1>'});
     Requester.post.mockReturnValue(postPromise);
@@ -109,7 +128,8 @@ test('Should request server on update preview with segment', () => {
 });
 
 test('Should request server on update-context preview', () => {
-    const previewStore = new PreviewStore('pages', '123-123-123', 'en', 'sulu_io');
+    const locale = observable.box('en');
+    const previewStore = new PreviewStore('pages', '123-123-123', locale, 'sulu_io');
 
     const postPromise = Promise.resolve({content: '<h1>Sulu is awesome</h1>'});
     Requester.post.mockReturnValue(postPromise);
@@ -129,7 +149,8 @@ test('Should request server on update-context preview', () => {
 });
 
 test('Should request server on update-context preview with target group', () => {
-    const previewStore = new PreviewStore('pages', '123-123-123', 'en', 'sulu_io');
+    const locale = observable.box('en');
+    const previewStore = new PreviewStore('pages', '123-123-123', locale, 'sulu_io');
 
     const postPromise = Promise.resolve({content: '<h1>Sulu is awesome</h1>'});
     Requester.post.mockReturnValue(postPromise);
@@ -150,7 +171,8 @@ test('Should request server on update-context preview with target group', () => 
 });
 
 test('Should request server on update-context preview with datetime', () => {
-    const previewStore = new PreviewStore('pages', '123-123-123', 'en', 'sulu_io');
+    const locale = observable.box('en');
+    const previewStore = new PreviewStore('pages', '123-123-123', locale, 'sulu_io');
 
     const postPromise = Promise.resolve({content: '<h1>Sulu is awesome</h1>'});
     Requester.post.mockReturnValue(postPromise);
@@ -172,7 +194,8 @@ test('Should request server on update-context preview with datetime', () => {
 });
 
 test('Should request server on update-context preview with segment', () => {
-    const previewStore = new PreviewStore('pages', '123-123-123', 'en', 'sulu_io');
+    const locale = observable.box('en');
+    const previewStore = new PreviewStore('pages', '123-123-123', locale, 'sulu_io');
 
     const postPromise = Promise.resolve({content: '<h1>Sulu is awesome</h1>'});
     Requester.post.mockReturnValue(postPromise);
@@ -194,7 +217,8 @@ test('Should request server on update-context preview with segment', () => {
 });
 
 test('Should request server on stop preview', () => {
-    const previewStore = new PreviewStore('pages', '123-123-123', 'en', 'sulu_io');
+    const locale = observable.box('en');
+    const previewStore = new PreviewStore('pages', '123-123-123', locale, 'sulu_io');
 
     const postPromise = Promise.resolve({content: '<h1>Sulu is awesome</h1>'});
 
@@ -208,7 +232,8 @@ test('Should request server on stop preview', () => {
 });
 
 test('Should set webspace', () => {
-    const previewStore = new PreviewStore('pages', '123-123-123', 'en', 'sulu_io');
+    const locale = observable.box('en');
+    const previewStore = new PreviewStore('pages', '123-123-123', locale, 'sulu_io');
     expect(previewStore.webspace).toEqual('sulu_io');
 
     previewStore.setWebspace('example');
