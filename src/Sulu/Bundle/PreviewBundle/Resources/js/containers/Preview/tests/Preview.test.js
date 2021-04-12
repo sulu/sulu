@@ -51,13 +51,25 @@ jest.mock('sulu-admin-bundle/services/Requester', () => ({
     post: jest.fn().mockReturnValue(Promise.resolve()),
 }));
 
-jest.mock('sulu-admin-bundle/containers/Form/stores/ResourceFormStore', () => jest.fn());
+jest.mock('sulu-admin-bundle/containers/Form/stores/ResourceFormStore', () => jest.fn(
+    (resourceStore) => {
+        return {
+            locale: resourceStore.observableOptions?.locale,
+        };
+    }
+));
 
 jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
     getList: jest.fn(),
 }));
 
-jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn());
+jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn(
+    (resourceKey, id, observableOptions) => {
+        return {
+            observableOptions,
+        };
+    }
+));
 
 jest.mock('sulu-page-bundle/stores/webspaceStore', () => ({
     grantedWebspaces: [{key: 'sulu_io'}, {key: 'example'}],
@@ -66,7 +78,7 @@ jest.mock('sulu-page-bundle/stores/webspaceStore', () => ({
 
 jest.mock('sulu-admin-bundle/services/Router/Router', () => jest.fn(function(history) {
     this.history = history;
-    this.attributes = {locale: 'de'};
+    this.attributes = {};
     this.route = {options: {}};
 }));
 
@@ -84,7 +96,7 @@ beforeEach(() => {
 });
 
 test('Render correct preview', () => {
-    const resourceStore = new ResourceStore('pages', 1, {title: 'Test'});
+    const resourceStore = new ResourceStore('pages', 1);
     const formStore = new ResourceFormStore(resourceStore, 'pages');
     const router = new Router({});
 
@@ -114,7 +126,7 @@ test('Render correct preview with target groups', () => {
     const targetGroupsPromise = Promise.resolve({_embedded: {target_groups: []}});
     ResourceRequester.getList.mockReturnValue(targetGroupsPromise);
 
-    const resourceStore = new ResourceStore('pages', 1, {title: 'Test'});
+    const resourceStore = new ResourceStore('pages', 1);
     const formStore = new ResourceFormStore(resourceStore, 'pages');
     const router = new Router({});
 
@@ -135,7 +147,7 @@ test('Render correct preview with target groups', () => {
 });
 
 test('Render button to start preview', () => {
-    const resourceStore = new ResourceStore('pages', 1, {title: 'Test'});
+    const resourceStore = new ResourceStore('pages', 1);
     const formStore = new ResourceFormStore(resourceStore, 'pages');
     const router = new Router({});
 
@@ -148,7 +160,7 @@ test('Render nothing if separate window is opened and rerender if it is closed',
     const previewWindow = {addEventListener: jest.fn()};
     window.open.mockReturnValue(previewWindow);
 
-    const resourceStore = new ResourceStore('pages', 1, {title: 'Test'});
+    const resourceStore = new ResourceStore('pages', 1);
     const formStore = new ResourceFormStore(resourceStore, 'pages');
     const router = new Router({});
 
@@ -173,7 +185,7 @@ test('Render nothing if separate window is opened and rerender if it is closed',
 });
 
 test('Change css class when selection of device has changed', () => {
-    const resourceStore = new ResourceStore('pages', 1, {title: 'Test'});
+    const resourceStore = new ResourceStore('pages', 1);
     const formStore = new ResourceFormStore(resourceStore, 'pages');
     const router = new Router({});
 
@@ -213,7 +225,8 @@ test('Change css class when selection of device has changed', () => {
 });
 
 test('Change webspace in PreviewStore when selection of webspace has changed', () => {
-    const resourceStore = new ResourceStore('pages', 1, {title: 'Test'});
+    const locale = observable.box('de');
+    const resourceStore = new ResourceStore('pages', 1, {locale});
     const formStore = new ResourceFormStore(resourceStore, 'pages');
     const router = new Router({});
 
@@ -227,7 +240,7 @@ test('Change webspace in PreviewStore when selection of webspace has changed', (
     preview.instance().handleStartClick();
 
     return startPromise.then(() => {
-        expect(PreviewStore).toBeCalledWith(undefined, undefined, 'de', 'sulu_io', undefined);
+        expect(PreviewStore).toBeCalledWith(undefined, undefined, locale, 'sulu_io', undefined);
 
         preview.find('Select').at(1).prop('onChange')('example');
         expect(previewStore.setWebspace).toBeCalledWith('example');
@@ -235,7 +248,8 @@ test('Change webspace in PreviewStore when selection of webspace has changed', (
 });
 
 test('Use router attribute to determine webspace', () => {
-    const resourceStore = new ResourceStore('pages', 1, {title: 'Test'});
+    const locale = observable.box('ru');
+    const resourceStore = new ResourceStore('pages', 1, {locale});
     const formStore = new ResourceFormStore(resourceStore, 'pages');
     const router = new Router({});
     router.attributes.webspace = 'example';
@@ -250,12 +264,12 @@ test('Use router attribute to determine webspace', () => {
     preview.instance().handleStartClick();
 
     return startPromise.then(() => {
-        expect(PreviewStore).toBeCalledWith(undefined, undefined, 'de', 'example', undefined);
+        expect(PreviewStore).toBeCalledWith(undefined, undefined, locale, 'example', undefined);
     });
 });
 
 test('Change segment in PreviewStore when selection of segment has changed', () => {
-    const resourceStore = new ResourceStore('pages', 1, {title: 'Test'});
+    const resourceStore = new ResourceStore('pages', 1);
     const formStore = new ResourceFormStore(resourceStore, 'pages');
     const router = new Router({});
 
@@ -276,7 +290,7 @@ test('Change segment in PreviewStore when selection of segment has changed', () 
     preview.instance().handleStartClick();
 
     return startPromise.then(() => {
-        expect(PreviewStore).toBeCalledWith(undefined, undefined, 'de', 'sulu_io', 'w');
+        expect(PreviewStore).toBeCalledWith(undefined, undefined, undefined, 'sulu_io', 'w');
 
         preview.find('Select').at(2).prop('onChange')('s');
         expect(previewStore.setSegment).toBeCalledWith('s');
@@ -284,7 +298,7 @@ test('Change segment in PreviewStore when selection of segment has changed', () 
 });
 
 test('React and update preview when data is changed', () => {
-    const resourceStore = new ResourceStore('pages', 1, {title: 'Test'});
+    const resourceStore = new ResourceStore('pages', 1);
     const formStore = new ResourceFormStore(resourceStore, 'pages');
 
     // $FlowFixMe
@@ -318,7 +332,7 @@ test('React and update preview when data is changed', () => {
 });
 
 test('React and update preview in external window when data is changed', () => {
-    const resourceStore = new ResourceStore('pages', 1, {title: 'Test'});
+    const resourceStore = new ResourceStore('pages', 1);
     const formStore = new ResourceFormStore(resourceStore, 'pages');
 
     const previewWindow = {
@@ -368,7 +382,7 @@ test('React and update preview in external window when data is changed', () => {
 });
 
 test('Dont react or update preview when data is changed during formstore is loading', () => {
-    const resourceStore = new ResourceStore('pages', 1, {title: 'Test'});
+    const resourceStore = new ResourceStore('pages', 1);
     const formStore = new ResourceFormStore(resourceStore, 'pages');
 
     // $FlowFixMe
@@ -402,7 +416,7 @@ test('Dont react or update preview when data is changed during formstore is load
 });
 
 test('Dont react or update preview when data is changed during preview-store is starting', () => {
-    const resourceStore = new ResourceStore('pages', 1, {title: 'Test'});
+    const resourceStore = new ResourceStore('pages', 1);
     const formStore = new ResourceFormStore(resourceStore, 'pages');
 
     // $FlowFixMe
@@ -436,7 +450,7 @@ test('Dont react or update preview when data is changed during preview-store is 
 });
 
 test('React and update-context when type is changed', () => {
-    const resourceStore = new ResourceStore('pages', 1, {title: 'Test'});
+    const resourceStore = new ResourceStore('pages', 1);
     const formStore = new ResourceFormStore(resourceStore, 'pages');
 
     // $FlowFixMe
@@ -468,7 +482,8 @@ test('React and update-context when type is changed', () => {
 });
 
 test('Change target group in PreviewStore when selection of target group has changed', () => {
-    const resourceStore = new ResourceStore('pages', 1, {title: 'Test'});
+    const locale = observable.box('de');
+    const resourceStore = new ResourceStore('pages', 1, {locale});
     const formStore = new ResourceFormStore(resourceStore, 'pages');
     const router = new Router({});
 
@@ -484,7 +499,7 @@ test('Change target group in PreviewStore when selection of target group has cha
     preview.instance().handleStartClick();
 
     return startPromise.then(() => {
-        expect(PreviewStore).toBeCalledWith(undefined, undefined, 'de', 'sulu_io', undefined);
+        expect(PreviewStore).toBeCalledWith(undefined, undefined, locale, 'sulu_io', undefined);
 
         preview.find('Select').at(2).prop('onChange')(4);
         expect(previewStore.setTargetGroup).toBeCalledWith(4);
@@ -493,7 +508,7 @@ test('Change target group in PreviewStore when selection of target group has cha
 });
 
 test('Change dateTime in PreviewStore when DatePicker changed', () => {
-    const resourceStore = new ResourceStore('pages', 1, {title: 'Test'});
+    const resourceStore = new ResourceStore('pages', 1);
     const formStore = new ResourceFormStore(resourceStore, 'pages');
     const router = new Router({});
 
@@ -508,7 +523,7 @@ test('Change dateTime in PreviewStore when DatePicker changed', () => {
 
     return startPromise.then(() => {
         preview.update();
-        expect(PreviewStore).toBeCalledWith(undefined, undefined, 'de', 'sulu_io', undefined);
+        expect(PreviewStore).toBeCalledWith(undefined, undefined, undefined, 'sulu_io', undefined);
 
         const date = new Date();
         preview.find('Button[icon="su-calendar"]').simulate('click');

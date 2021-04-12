@@ -74,20 +74,10 @@ class Preview extends React.Component<Props> {
 
         const {
             formStore,
-            router: {
-                attributes: {
-                    locale,
-                },
-            },
         } = this.props;
 
-        if (locale !== undefined && typeof locale !== 'string') {
-            throw new Error('The "locale" router attribute must be a string if set!');
-        }
-
         if (Preview.audienceTargeting) {
-            const targetGroupsStore = new ResourceListStore('target_groups');
-            this.targetGroupsStore = targetGroupsStore;
+            this.targetGroupsStore = new ResourceListStore('target_groups');
         }
 
         this.webspaceOptions = webspaceStore.grantedWebspaces.map((webspace): Object => ({
@@ -98,7 +88,7 @@ class Preview extends React.Component<Props> {
         this.previewStore = new PreviewStore(
             formStore.resourceKey,
             formStore.id,
-            locale,
+            formStore.locale,
             this.webspaceKey,
             this.segments.find((segment) => segment.default === true)?.key
         );

@@ -3,6 +3,7 @@ import queryString from 'query-string';
 import {action, computed, observable} from 'mobx';
 import {Requester} from 'sulu-admin-bundle/services';
 import {transformDateForUrl} from 'sulu-admin-bundle/utils';
+import type {IObservableValue} from 'mobx';
 import type {PreviewRouteName} from './../types';
 
 const generateRoute = (name: PreviewRouteName, options: Object): string => {
@@ -19,7 +20,7 @@ export default class PreviewStore {
 
     resourceKey: string;
     id: ?string | number;
-    locale: ?string;
+    locale: ?IObservableValue<string>;
     @observable webspace: string;
     @observable segment: ?string;
     @observable targetGroup: number = -1;
@@ -27,7 +28,17 @@ export default class PreviewStore {
 
     @observable token: ?string;
 
-    constructor(resourceKey: string, id: ?string | number, locale: ?string, webspace: string, segment: ?string) {
+    constructor(
+        resourceKey: string,
+        id: ?string | number,
+        locale: ?IObservableValue<string>,
+        webspace: string,
+        segment: ?string
+    ) {
+        // keep backwards compatibility to previous versions where locale was passed as string
+        if (typeof locale === 'string') {
+            locale = observable.box(locale);
+        }
         this.resourceKey = resourceKey;
         this.id = id;
         this.locale = locale;
