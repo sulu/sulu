@@ -600,15 +600,28 @@ test('Navigate to route using a number with leading zeroes', () => {
         page: new Route({
             name: 'page',
             type: 'form',
-            path: '/pages/:uuid',
+            path: '/pages/:code',
         }),
     });
 
     const history = createMemoryHistory();
     const router = new Router(history);
 
-    router.navigate('page', {uuid: '012345'});
+    router.navigate('page', {code: '12345'});
+    expect(history.location.pathname).toBe('/pages/12345');
+    expect(router.attributes.code).toBe(12345);
+
+    router.navigate('page', {code: '012345'});
     expect(history.location.pathname).toBe('/pages/012345');
+    expect(router.attributes.code).toBe('012345');
+
+    router.navigate('page', {code: '0.12345'});
+    expect(history.location.pathname).toBe('/pages/0.12345');
+    expect(router.attributes.code).toBe(0.12345);
+
+    router.navigate('page', {code: '00.12345'});
+    expect(history.location.pathname).toBe('/pages/00.12345');
+    expect(router.attributes.code).toBe('00.12345');
 });
 
 test('Navigate to route changing only parameters', () => {
