@@ -3,6 +3,7 @@ import {resourceRouteRegistry} from 'sulu-admin-bundle/services/ResourceRequeste
 import {fieldRegistry, ResourceLocator} from 'sulu-admin-bundle/containers';
 import initializer from 'sulu-admin-bundle/services/initializer';
 import PageTreeRoute from './containers/Form/fields/PageTreeRoute';
+import type {FieldTypeProps} from "../../../AdminBundle/Resources/js/containers/Form/types";
 
 initializer.addUpdateConfigHook('sulu_admin', (config: Object, initialized: boolean) => {
     if (initialized) {
@@ -16,8 +17,16 @@ initializer.addUpdateConfigHook('sulu_admin', (config: Object, initialized: bool
         ResourceLocator,
         {
             historyResourceKey: 'routes',
-            modeResolver: () => {
-                return Promise.resolve('full');
+            modeResolver: (props: FieldTypeProps<?string>) => {
+                const {
+                    schemaOptions: {
+                        mode: {
+                            value: mode = 'full',
+                        } = {},
+                    },
+                } = props;
+
+                return Promise.resolve(mode);
             },
             generationUrl: routeGenerationUrl,
             options: {history: true},
