@@ -390,7 +390,8 @@ class ImageMapContentType extends ComplexContentType implements ContentTypeExpor
             'hotspots' => [],
         ];
 
-        foreach ($value['hotspots'] as $i => $hotspot) {
+        $hotspots = $value['hotspots'] ?? [];
+        foreach ($hotspots as $i => $hotspot) {
             $hotspotData = [];
 
             $propertyType = $property->initProperties($i, $hotspot['type']);

@@ -935,6 +935,37 @@ class ImageMapContentTypeTest extends TestCase
         $this->assertNull($this->imageMapContentType->getContentData($property));
     }
 
+    public function testGetContentDataNullValue(): void
+    {
+        $value = null;
+
+        $property = new Property(
+            'imageMap',
+            '',
+            'image_map',
+            false,
+            true,
+            1,
+            1,
+            [],
+            [],
+            null,
+            'text'
+        );
+
+        $this->singleMediaSelectionContentType->getContentData(
+            Argument::that(function ($property) {
+                return $property instanceof Property
+                    && 'image' === $property->getName()
+                    && $property->getValue() === ['id' => null];
+            })
+        )->willReturn(null)->shouldBeCalled();
+
+        $property->setValue($value);
+
+        $this->assertNull($this->imageMapContentType->getContentData($property));
+    }
+
     public function testGetViewData(): void
     {
         $types = [
