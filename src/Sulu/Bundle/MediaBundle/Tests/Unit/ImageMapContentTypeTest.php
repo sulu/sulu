@@ -954,7 +954,7 @@ class ImageMapContentTypeTest extends TestCase
         );
 
         $this->singleMediaSelectionContentType->getContentData(
-            Argument::that(function ($property) {
+            Argument::that(function($property) {
                 return $property instanceof Property
                     && 'image' === $property->getName()
                     && $property->getValue() === ['id' => null];
