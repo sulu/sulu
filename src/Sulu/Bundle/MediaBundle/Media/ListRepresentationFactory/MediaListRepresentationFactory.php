@@ -42,6 +42,7 @@ class MediaListRepresentationFactory
         array $parameters
     ): ListRepresentation {
         $listBuilder->setParameter('locale', $locale);
+        $listBuilder->distinct(true);
         $listResponse = $listBuilder->execute();
 
         for ($i = 0, $length = \count($listResponse); $i < $length; ++$i) {
