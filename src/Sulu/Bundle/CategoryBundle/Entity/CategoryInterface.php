@@ -20,6 +20,8 @@ use Sulu\Component\Security\Authentication\UserInterface;
  */
 interface CategoryInterface extends AuditableInterface
 {
+    const RESOURCE_KEY = 'categories';
+
     /**
      * Set id.
      *
@@ -203,7 +205,7 @@ interface CategoryInterface extends AuditableInterface
     /**
      * Set parent.
      *
-     * @param CategoryInterface $parent
+     * @param CategoryInterface|null $parent
      *
      * @return CategoryInterface
      */
@@ -212,7 +214,7 @@ interface CategoryInterface extends AuditableInterface
     /**
      * Get parent.
      *
-     * @return CategoryInterface
+     * @return CategoryInterface|null
      */
     public function getParent();
 

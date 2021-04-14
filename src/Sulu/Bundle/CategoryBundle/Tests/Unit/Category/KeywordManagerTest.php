@@ -15,11 +15,15 @@ use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\CategoryBundle\Category\KeywordManager;
+use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryKeywordCreatedEvent;
+use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryKeywordModifiedEvent;
+use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryKeywordRemovedEvent;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\KeywordInterface;
 use Sulu\Bundle\CategoryBundle\Entity\KeywordRepositoryInterface;
+use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface;
 
 class KeywordManagerTest extends TestCase
 {
@@ -41,6 +45,7 @@ class KeywordManagerTest extends TestCase
         $repository = $this->prophesize(KeywordRepositoryInterface::class);
         $categoryTranslationRepository = $this->prophesize(CategoryTranslationRepositoryInterface::class);
         $entityManager = $this->prophesize(EntityManagerInterface::class);
+        $domainEventCollector = $this->prophesize(DomainEventCollectorInterface::class);
 
         $otherKeyword = null;
         if ($exists) {
@@ -64,23 +69,32 @@ class KeywordManagerTest extends TestCase
 
         $category = $this->prophesize(CategoryInterface::class);
         $category->findTranslationByLocale($locale)->willReturn($categoryTranslation->reveal());
+        $categoryTranslation->getCategory()->willReturn($category->reveal());
 
         $categoryTranslation->setChanged(Argument::any())->willReturn(null);
         $category->setChanged(Argument::any())->willReturn(null);
 
         if ($exists) {
-            $otherKeyword->addCategoryTranslation($categoryTranslation->reveal())->shouldBeCalledTimes($has ? 0 : 1);
             $keyword->removeCategoryTranslation($categoryTranslation->reveal())->shouldBeCalled();
             $keyword->isReferenced()->willReturn(true);
             $categoryTranslation->removeKeyword($keyword->reveal())->shouldBeCalled();
+
+            $otherKeyword->addCategoryTranslation($categoryTranslation->reveal())->shouldBeCalledTimes($has ? 0 : 1);
+            $otherKeyword->getCategoryTranslations()->willReturn([$categoryTranslation->reveal()]);
+
+            $domainEventCollector->collect(Argument::type(CategoryKeywordModifiedEvent::class))->shouldBeCalled();
         } else {
             $keyword->addCategoryTranslation($categoryTranslation->reveal())->shouldBeCalledTimes($has ? 0 : 1);
+            $keyword->getCategoryTranslations()->willReturn([$categoryTranslation->reveal()]);
+
+            $domainEventCollector->collect(Argument::type(CategoryKeywordCreatedEvent::class))->shouldBeCalled();
         }
 
         $manager = new KeywordManager(
             $repository->reveal(),
             $categoryTranslationRepository->reveal(),
-            $entityManager->reveal()
+            $entityManager->reveal(),
+            $domainEventCollector->reveal()
         );
         $result = $manager->save($keyword->reveal(), $category->reveal());
 
@@ -92,29 +106,45 @@ class KeywordManagerTest extends TestCase
         $repository = $this->prophesize(KeywordRepositoryInterface::class);
         $categoryTranslationRepository = $this->prophesize(CategoryTranslationRepositoryInterface::class);
         $entityManager = $this->prophesize(EntityManagerInterface::class);
+        $domainEventCollector = $this->prophesize(DomainEventCollectorInterface::class);
+
         $keywordString = 'my-keyword';
         $locale = 'it';
 
         $repository->findByKeyword($keywordString, $locale)->willReturn(null);
 
         $keyword = $this->prophesize(KeywordInterface::class);
-        $keyword->addCategoryTranslation(Argument::type(CategoryTranslationInterface::class))->willReturn(null);
+        $category = $this->prophesize(CategoryInterface::class);
+
+        $categoryTranslation = $this->prophesize(CategoryTranslationInterface::class);
+        $categoryTranslationRepository->createNew()->willReturn($categoryTranslation->reveal());
+
+        $categoryTranslation->setLocale('it')->shouldBeCalled();
+        $categoryTranslation->setTranslation('')->shouldBeCalled();
+        $categoryTranslation->setCategory($category->reveal())->shouldBeCalled();
+        $categoryTranslation->setChanged(Argument::any())->willReturn(null);
+        $categoryTranslation->getCategory()->willReturn($category->reveal());
+        $categoryTranslation->hasKeyword($keyword->reveal())->willReturn(false);
+        $categoryTranslation->addKeyword($keyword->reveal())->shouldBeCalled();
+
+        $keyword->addCategoryTranslation($categoryTranslation->reveal())->willReturn($keyword->reveal());
+        $keyword->getCategoryTranslations()->willReturn([$categoryTranslation->reveal()]);
         $keyword->getKeyword()->willReturn($keywordString);
         $keyword->getLocale()->willReturn($locale);
         $keyword->isReferencedMultiple()->willReturn(false);
         $keyword->getId()->willReturn(null);
 
-        $categoryTranslationRepository->createNew()->willReturn($this->prophesize(CategoryTranslationInterface::class));
-
-        $category = $this->prophesize(CategoryInterface::class);
-        $category->addTranslation(Argument::type(CategoryTranslationInterface::class))->willReturn(null);
+        $category->addTranslation($categoryTranslation->reveal())->willReturn($category->reveal());
         $category->findTranslationByLocale($locale)->willReturn(false);
         $category->setChanged(Argument::any())->willReturn(null);
+
+        $domainEventCollector->collect(Argument::type(CategoryKeywordCreatedEvent::class))->shouldBeCalled();
 
         $manager = new KeywordManager(
             $repository->reveal(),
             $categoryTranslationRepository->reveal(),
-            $entityManager->reveal()
+            $entityManager->reveal(),
+            $domainEventCollector->reveal()
         );
         $result = $manager->save($keyword->reveal(), $category->reveal());
 
@@ -137,11 +167,12 @@ class KeywordManagerTest extends TestCase
         $repository = $this->prophesize(KeywordRepositoryInterface::class);
         $categoryTranslationRepository = $this->prophesize(CategoryTranslationRepositoryInterface::class);
         $entityManager = $this->prophesize(EntityManagerInterface::class);
+        $domainEventCollector = $this->prophesize(DomainEventCollectorInterface::class);
 
         $keyword = $this->prophesize(KeywordInterface::class);
         $keyword->getKeyword()->willReturn($keywordString);
         $keyword->getLocale()->willReturn($locale);
-        $keyword->getId()->shouldNotBeCalled();
+        $keyword->getId()->willReturn(1234);
         $keyword->isReferenced()->willReturn($referenced);
 
         $categoryTranslation = $this->prophesize(CategoryTranslationInterface::class);
@@ -153,6 +184,8 @@ class KeywordManagerTest extends TestCase
         $category->findTranslationByLocale($locale)->willReturn($categoryTranslation->reveal());
         $category->setChanged(Argument::any())->shouldBeCalled();
 
+        $domainEventCollector->collect(Argument::type(CategoryKeywordRemovedEvent::class))->shouldBeCalled();
+
         $keyword->removeCategoryTranslation($categoryTranslation->reveal())->shouldBeCalled();
 
         if (!$referenced) {
@@ -162,7 +195,8 @@ class KeywordManagerTest extends TestCase
         $manager = new KeywordManager(
             $repository->reveal(),
             $categoryTranslationRepository->reveal(),
-            $entityManager->reveal()
+            $entityManager->reveal(),
+            $domainEventCollector->reveal()
         );
         $result = $manager->delete($keyword->reveal(), $category->reveal());
 

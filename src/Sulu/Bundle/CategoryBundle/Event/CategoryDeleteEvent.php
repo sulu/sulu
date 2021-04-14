@@ -11,11 +11,14 @@
 
 namespace Sulu\Bundle\CategoryBundle\Event;
 
+use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryRemovedEvent;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * An object of this class is thrown along with the category.delete event.
+ *
+ * @deprecated
  */
 class CategoryDeleteEvent extends Event
 {
@@ -29,6 +32,15 @@ class CategoryDeleteEvent extends Event
      */
     public function __construct(CategoryInterface $category)
     {
+        @\trigger_error(
+            \sprintf(
+                'The "%s" class is deprecated since Sulu 2.3. Use the "%s" class instead.',
+                CategoryDeleteEvent::class,
+                CategoryRemovedEvent::class
+            ),
+            \E_USER_DEPRECATED
+        );
+
         $this->category = $category;
     }
 

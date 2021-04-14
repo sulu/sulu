@@ -73,7 +73,7 @@ interface KeywordInterface extends AuditableInterface
     /**
      * Get categories.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return \Doctrine\Common\Collections\Collection<CategoryTranslationInterface>
      */
     public function getCategoryTranslations();
 
