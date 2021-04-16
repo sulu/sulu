@@ -248,6 +248,8 @@
             <joins ref="fileVersionMeta"/>
         </property>
 
+        <!-- tagId property is only used for filtering and should never be included as column in a list -->
+        <!-- when as as column, the property will lead to duplicated rows for entities with multiple tags -->
         <property
             name="tagId"
             visibility="never"
@@ -271,6 +273,8 @@
             </filter>
         </property>
 
+        <!-- categoryId property is only used for filtering and should never be included as column in a list -->
+        <!-- when used as column, the property will lead to duplicated rows for entities with multiple categories -->
         <property
             name="categoryId"
             visibility="never"
