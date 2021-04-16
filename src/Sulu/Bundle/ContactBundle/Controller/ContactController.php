@@ -296,9 +296,10 @@ class ContactController extends AbstractRestController implements ClassResourceI
      */
     private function getList(Request $request, $locale)
     {
-        $fieldDescriptors = $this->getFieldDescriptors();
+        /** @var DoctrineListBuilder $listBuilder */
         $listBuilder = $this->listBuilderFactory->create($this->contactClass);
         $listBuilder->distinct(true);
+        $fieldDescriptors = $this->getFieldDescriptors();
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
         $account = $request->get('accountId');

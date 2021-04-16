@@ -389,9 +389,9 @@ class AccountController extends AbstractRestController implements ClassResourceI
         $locale = $this->getUser()->getLocale();
 
         if ('true' == $request->get('flat')) {
-            $fieldDescriptors = $this->getFieldDescriptors();
             $listBuilder = $this->generateFlatListBuilder();
             $listBuilder->distinct(true);
+            $fieldDescriptors = $this->getFieldDescriptors();
             $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
             $this->applyRequestParameters($request, $listBuilder);
 

@@ -271,6 +271,29 @@
             </filter>
         </property>
 
+        <property
+            name="categoryId"
+            visibility="never"
+            translation="sulu_category.categories"
+        >
+            <field-name>id</field-name>
+            <entity-name>SuluCategoryBundle:Category</entity-name>
+
+            <joins ref="fileVersion">
+                <join>
+                    <entity-name>SuluCategoryBundle:Category</entity-name>
+                    <field-name>SuluMediaBundle:FileVersion.categories</field-name>
+                </join>
+            </joins>
+
+            <filter type="selection">
+                <params>
+                    <param name="displayProperty" value="name" />
+                    <param name="resourceKey" value="categories" />
+                </params>
+            </filter>
+        </property>
+
         <property name="lft" visibility="never">
             <field-name>lft</field-name>
             <entity-name>%sulu.model.collection.class%</entity-name>
