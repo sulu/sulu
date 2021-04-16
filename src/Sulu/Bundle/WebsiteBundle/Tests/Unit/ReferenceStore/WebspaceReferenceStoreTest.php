@@ -23,7 +23,7 @@ class WebspaceReferenceStoreTest extends TestCase
         return new WebspaceReferenceStore($requestAnalyzer);
     }
 
-    public function testAdd()
+    public function testAdd(): void
     {
         $this->expectException(\LogicException::class);
 
@@ -32,14 +32,14 @@ class WebspaceReferenceStoreTest extends TestCase
         $store->add('123-123-123');
     }
 
-    public function testGetAllWithoutRequestAnalyzer()
+    public function testGetAllWithoutRequestAnalyzer(): void
     {
         $store = $this->createReferenceStore();
 
         $this->assertEquals([], $store->getAll());
     }
 
-    public function testGetAllWithoutWebspace()
+    public function testGetAllWithoutWebspace(): void
     {
         $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
         $requestAnalyzer->getWebspace()->willReturn(null);
@@ -49,7 +49,7 @@ class WebspaceReferenceStoreTest extends TestCase
         $this->assertEquals([], $store->getAll());
     }
 
-    public function testGetAll()
+    public function testGetAll(): void
     {
         $webspace = $this->prophesize(Webspace::class);
         $webspace->getKey()->willReturn('sulu');

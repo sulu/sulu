@@ -111,7 +111,7 @@ class AnalyticsController extends AbstractRestController implements ClassResourc
 
         $entity = $this->analyticsManager->create($webspace, $data);
         $this->entityManager->flush();
-        $this->cacheClearer->clear([\sprintf('%s-%s', WebspaceReferenceStore::WEBSPACE_REFERENCE_ALIAS, $webspace)]);
+        $this->cacheClearer->clear([WebspaceReferenceStore::generateTagByWebspaceKey($webspace)]);
 
         return $this->handleView($this->view($entity, 200));
     }
@@ -131,7 +131,7 @@ class AnalyticsController extends AbstractRestController implements ClassResourc
 
         $entity = $this->analyticsManager->update($id, $data);
         $this->entityManager->flush();
-        $this->cacheClearer->clear([\sprintf('%s-%s', WebspaceReferenceStore::WEBSPACE_REFERENCE_ALIAS, $webspace)]);
+        $this->cacheClearer->clear([WebspaceReferenceStore::generateTagByWebspaceKey($webspace)]);
 
         return $this->handleView($this->view($entity, 200));
     }
@@ -148,7 +148,7 @@ class AnalyticsController extends AbstractRestController implements ClassResourc
     {
         $this->analyticsManager->remove($id);
         $this->entityManager->flush();
-        $this->cacheClearer->clear([\sprintf('%s-%s', WebspaceReferenceStore::WEBSPACE_REFERENCE_ALIAS, $webspace)]);
+        $this->cacheClearer->clear([WebspaceReferenceStore::generateTagByWebspaceKey($webspace)]);
 
         return $this->handleView($this->view(null, 204));
     }
@@ -166,7 +166,7 @@ class AnalyticsController extends AbstractRestController implements ClassResourc
 
         $this->analyticsManager->removeMultiple($ids);
         $this->entityManager->flush();
-        $this->cacheClearer->clear([\sprintf('%s-%s', WebspaceReferenceStore::WEBSPACE_REFERENCE_ALIAS, $webspace)]);
+        $this->cacheClearer->clear([WebspaceReferenceStore::generateTagByWebspaceKey($webspace)]);
 
         return $this->handleView($this->view(null, 204));
     }

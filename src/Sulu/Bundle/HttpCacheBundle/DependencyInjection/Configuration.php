@@ -86,7 +86,7 @@ class Configuration implements ConfigurationInterface
                                     ->info('Default host name and optional path for path based invalidation.')
                                 ->end()
                                 ->enumNode('tag_mode')
-                                    ->info('If you can enable the xkey module in Varnish, use the purgekeys mode for more efficient tag handling')
+                                    ->info('Use the purgekeys mode for more efficient tag handling, if your Varnish server supports the xkey module')
                                     ->values(['ban', 'purgekeys'])
                                     ->defaultValue('ban')
                                 ->end()

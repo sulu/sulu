@@ -12,10 +12,16 @@
 namespace Sulu\Bundle\WebsiteBundle\ReferenceStore;
 
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Sulu\Component\Webspace\Webspace;
 
 class WebspaceReferenceStore implements ReferenceStoreInterface
 {
     const WEBSPACE_REFERENCE_ALIAS = 'webspace';
+
+    public static function generateTagByWebspaceKey(string $webspaceKey): string
+    {
+        return \sprintf('%s-%s', self::WEBSPACE_REFERENCE_ALIAS, $webspaceKey);
+    }
 
     /**
      * @var RequestAnalyzerInterface|null
@@ -27,17 +33,24 @@ class WebspaceReferenceStore implements ReferenceStoreInterface
         $this->requestAnalyzer = $requestAnalyzer;
     }
 
-    public function add($id)
+    /**
+     * @param string $id
+     */
+    public function add($id): void
     {
-        throw new \LogicException('Should never be called');
+        throw new \LogicException('Webspace tags cannot be set manually. They are set to match the current webspace automatically.');
     }
 
+    /**
+     * @return string[]
+     */
     public function getAll()
     {
         if (!$this->requestAnalyzer) {
             return [];
         }
 
+        /** @var Webspace|null $webspace */
         $webspace = $this->requestAnalyzer->getWebspace();
         if (!$webspace) {
             return [];

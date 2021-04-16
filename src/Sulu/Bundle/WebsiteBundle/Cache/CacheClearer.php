@@ -69,12 +69,19 @@ class CacheClearer implements CacheClearerInterface
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    public function clear(/*?array $tags = []*/)
+    public function clear(/*?array $tags = null*/)
     {
+        if (0 === \func_num_args()) {
+            @\trigger_error(
+                \sprintf('Calling "%s()" without $tags parameter is deprecated.', __METHOD__),
+                \E_USER_DEPRECATED
+            );
+        }
+
         $tags = \func_num_args() >= 1 ? \func_get_arg(0) : null;
 
         if ($this->cacheManager && $this->cacheManager->supportsInvalidate()) {
-            if (!empty($tags) && $this->cacheManager->supportsInvalidateTag()) {
+            if (null !== $tags && $this->cacheManager->supportsTags()) {
                 foreach ($tags as $tag) {
                     $this->cacheManager->invalidateTag($tag);
                 }

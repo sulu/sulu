@@ -36,36 +36,32 @@ class CacheManagerTest extends TestCase
         $this->cacheManager = new CacheManager($this->fosCacheManager->reveal());
     }
 
-    public function testSupportsInvalidate()
+    public function testSupportsInvalidate(): void
     {
-        // proxy client doesn't support tag invalidation
         $this->fosCacheManager->supports(FOSCacheManager::INVALIDATE)->willReturn(true);
         $this->assertTrue($this->cacheManager->supportsInvalidate());
     }
 
-    public function testSupportsInvalidateTag()
+    public function testSupportsTags(): void
     {
-        // proxy client doesn't support tag invalidation
         $this->fosCacheManager->supports(FOSCacheManager::TAGS)->willReturn(true);
-        $this->assertTrue($this->cacheManager->supportsInvalidateTag());
+        $this->assertTrue($this->cacheManager->supportsTags());
     }
 
-    public function testInvalidateTag()
+    public function testInvalidateTag(): void
     {
         $tag = '1234-1234-1234';
 
-        // proxy client doesn't support tag invalidation
         $this->fosCacheManager->supports(FOSCacheManager::TAGS)->willReturn(false);
         $this->fosCacheManager->invalidateTags([$tag])->shouldNotBeCalled();
         $this->cacheManager->invalidateTag($tag);
 
-        // proxy client supports tag invalidation
         $this->fosCacheManager->supports(FOSCacheManager::TAGS)->willReturn(true);
         $this->fosCacheManager->invalidateTags([$tag])->shouldBeCalled();
         $this->cacheManager->invalidateTag($tag);
     }
 
-    public function testInvalidatePath()
+    public function testInvalidatePath(): void
     {
         $this->fosCacheManager->supports(FOSCacheManager::PATH)->willReturn(true);
         $this->fosCacheManager->invalidatePath('http://sulu.lo/test', Argument::cetera())->shouldBeCalled();
@@ -76,23 +72,21 @@ class CacheManagerTest extends TestCase
         $this->cacheManager->invalidatePath('http://sulu.lo/test');
     }
 
-    public function testInvalidatePathWithoutSupport()
+    public function testInvalidatePathWithoutSupport(): void
     {
         $this->fosCacheManager->supports(FOSCacheManager::PATH)->willReturn(false);
         $this->fosCacheManager->invalidatePath(Argument::any())->shouldNotBeCalled();
         $this->cacheManager->invalidatePath('http://sulu.lo/test');
     }
 
-    public function testInvalidateDomain()
+    public function testInvalidateDomain(): void
     {
         $domain = 'sulu.io';
 
-        // proxy client doesn't support ban invalidation
         $this->fosCacheManager->supports(FOSCacheManager::INVALIDATE)->willReturn(false);
         $this->fosCacheManager->invalidatePath(Argument::any())->shouldNotBeCalled();
         $this->cacheManager->invalidateDomain($domain);
 
-        // proxy client doesn't support ban invalidation
         $this->fosCacheManager->supports(FOSCacheManager::INVALIDATE)->willReturn(true);
         $this->fosCacheManager->invalidateRegex(
             BanCapable::REGEX_MATCH_ALL,
@@ -102,7 +96,7 @@ class CacheManagerTest extends TestCase
         $this->cacheManager->invalidateDomain($domain);
     }
 
-    public function testInvalidateReference()
+    public function testInvalidateReference(): void
     {
         $this->fosCacheManager->supports(FOSCacheManager::TAGS)->willReturn(true);
         $this->fosCacheManager->invalidateTags(['test-1'])->shouldBeCalled();
@@ -110,7 +104,7 @@ class CacheManagerTest extends TestCase
         $this->cacheManager->invalidateReference('test', 1);
     }
 
-    public function testInvalidateUuidReference()
+    public function testInvalidateUuidReference(): void
     {
         $tag = '72a31676-282d-11e8-b467-0ed5f89f718b';
 

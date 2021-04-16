@@ -66,10 +66,10 @@ class CacheController
 
         $tags = [];
         if ($webspaceKey) {
-            $tags[] = \sprintf('%s-%s', WebspaceReferenceStore::WEBSPACE_REFERENCE_ALIAS, $webspaceKey);
+            $tags[] = WebspaceReferenceStore::generateTagByWebspaceKey($webspaceKey);
         }
 
-        $this->cacheClearer->clear($tags);
+        $this->cacheClearer->clear(empty($tags) ? null : $tags);
 
         return new JsonResponse(null, 204);
     }

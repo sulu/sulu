@@ -123,7 +123,7 @@ class CacheClearerTest extends TestCase
     {
         $cacheManager = $this->prophesize(CacheManager::class);
         $cacheManager->supportsInvalidate()->willReturn(true);
-        $cacheManager->supportsInvalidateTag()->willReturn(true);
+        $cacheManager->supportsTags()->willReturn(true);
         $cacheManager->invalidateTag('webspace-sulu')->shouldBeCalled();
 
         $this->eventDispatcher->dispatch(
@@ -147,7 +147,7 @@ class CacheClearerTest extends TestCase
 
         $cacheManager = $this->prophesize(CacheManager::class);
         $cacheManager->supportsInvalidate()->willReturn(true);
-        $cacheManager->supportsInvalidateTag()->willReturn(false);
+        $cacheManager->supportsTags()->willReturn(false);
         $cacheManager->invalidateDomain('sulu.io')->shouldBeCalled();
 
         $this->eventDispatcher->dispatch(
