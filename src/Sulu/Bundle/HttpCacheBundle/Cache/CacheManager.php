@@ -79,4 +79,9 @@ class CacheManager implements CacheManagerInterface
     {
         return $this->fosCacheManager->supports(FOSCacheManager::INVALIDATE);
     }
+
+    public function supportsTags(): bool
+    {
+        return $this->fosCacheManager->supports(FOSCacheManager::TAGS);
+    }
 }

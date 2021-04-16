@@ -3,13 +3,18 @@ import React from 'react';
 import {action, observable} from 'mobx';
 import {Dialog} from 'sulu-admin-bundle/components';
 import {Requester} from 'sulu-admin-bundle/services';
-import {translate} from 'sulu-admin-bundle/utils';
+import {buildQueryString, translate} from 'sulu-admin-bundle/utils';
 
 export default class CacheClearToolbarAction {
     static clearCacheEndpoint: string;
 
+    requestParameters: Object;
     @observable cacheClearing = false;
     @observable showDialog = false;
+
+    constructor(requestParameters: Object) {
+        this.requestParameters = requestParameters;
+    }
 
     getNode() {
         return (
@@ -44,7 +49,10 @@ export default class CacheClearToolbarAction {
 
     @action handleConfirm = () => {
         this.cacheClearing = true;
-        Requester.delete(CacheClearToolbarAction.clearCacheEndpoint).then(action(() => {
+
+        const url = CacheClearToolbarAction.clearCacheEndpoint + buildQueryString(this.requestParameters);
+
+        Requester.delete(url).then(action(() => {
             this.showDialog = false;
             this.cacheClearing = false;
         }));

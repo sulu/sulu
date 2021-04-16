@@ -119,6 +119,46 @@ class CacheClearerTest extends TestCase
         $cacheClearer->clear();
     }
 
+    public function testClearOnCacheManagerWithTags(): void
+    {
+        $cacheManager = $this->prophesize(CacheManager::class);
+        $cacheManager->supportsInvalidate()->willReturn(true);
+        $cacheManager->supportsTags()->willReturn(true);
+        $cacheManager->invalidateTag('webspace-sulu')->shouldBeCalled();
+
+        $this->eventDispatcher->dispatch(
+            Argument::type(CacheClearEvent::class),
+            Events::CACHE_CLEAR
+        )->shouldBeCalled();
+
+        $cacheClearer = $this->createCacheClearer($cacheManager->reveal());
+        $cacheClearer->clear(['webspace-sulu']);
+    }
+
+    public function testClearOnCacheManagerWithTagsNotSupporting(): void
+    {
+        $this->requestStack->getCurrentRequest()
+            ->willReturn($this->request->reveal())
+            ->shouldBeCalled();
+
+        $this->request->getHost()
+            ->willReturn('sulu.io')
+            ->shouldBeCalled();
+
+        $cacheManager = $this->prophesize(CacheManager::class);
+        $cacheManager->supportsInvalidate()->willReturn(true);
+        $cacheManager->supportsTags()->willReturn(false);
+        $cacheManager->invalidateDomain('sulu.io')->shouldBeCalled();
+
+        $this->eventDispatcher->dispatch(
+            Argument::type(CacheClearEvent::class),
+            Events::CACHE_CLEAR
+        )->shouldBeCalled();
+
+        $cacheClearer = $this->createCacheClearer($cacheManager->reveal());
+        $cacheClearer->clear(['webspace-sulu']);
+    }
+
     private function createCacheClearer(?CacheManager $cacheManager = null): CacheClearer
     {
         return new CacheClearer(

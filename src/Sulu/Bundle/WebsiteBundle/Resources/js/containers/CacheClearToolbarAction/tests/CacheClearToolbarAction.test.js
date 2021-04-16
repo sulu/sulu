@@ -62,6 +62,7 @@ test('Close dialog on cancel click', () => {
 
 test('Call delete when dialog is confirmed', () => {
     const cacheClearToolbarAction = new CacheClearToolbarAction();
+    CacheClearToolbarAction.clearCacheEndpoint = '/cache';
 
     const deletePromise = Promise.resolve();
     Requester.delete.mockReturnValue(deletePromise);
@@ -76,7 +77,38 @@ test('Call delete when dialog is confirmed', () => {
 
     expect(element.instance().props.confirmLoading).toEqual(false);
     element.find('Button[skin="primary"]').simulate('click');
-    expect(Requester.delete).toBeCalledWith(undefined);
+    expect(Requester.delete).toBeCalledWith('/cache');
+
+    element = shallow(cacheClearToolbarAction.getNode());
+    expect(element.instance().props.confirmLoading).toEqual(true);
+
+    return deletePromise.then(() => {
+        element = shallow(cacheClearToolbarAction.getNode());
+        expect(element.instance().props.confirmLoading).toEqual(false);
+        expect(element.instance().props).toEqual(expect.objectContaining({
+            open: false,
+        }));
+    });
+});
+
+test('Call delete when dialog is confirmed with query parameter', () => {
+    const cacheClearToolbarAction = new CacheClearToolbarAction({webspaceKey: 'sulu'});
+    CacheClearToolbarAction.clearCacheEndpoint = '/cache';
+
+    const deletePromise = Promise.resolve();
+    Requester.delete.mockReturnValue(deletePromise);
+
+    const toolbarItemConfig = cacheClearToolbarAction.getToolbarItemConfig();
+    toolbarItemConfig.onClick();
+
+    let element = shallow(cacheClearToolbarAction.getNode());
+    expect(element.instance().props).toEqual(expect.objectContaining({
+        open: true,
+    }));
+
+    expect(element.instance().props.confirmLoading).toEqual(false);
+    element.find('Button[skin="primary"]').simulate('click');
+    expect(Requester.delete).toBeCalledWith('/cache?webspaceKey=sulu');
 
     element = shallow(cacheClearToolbarAction.getNode());
     expect(element.instance().props.confirmLoading).toEqual(true);

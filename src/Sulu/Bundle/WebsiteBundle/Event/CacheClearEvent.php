@@ -15,4 +15,24 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class CacheClearEvent extends Event
 {
+    /**
+     * @var string[]|null
+     */
+    private $tags;
+
+    /**
+     * @param string[]|null $tags
+     */
+    public function __construct(?array $tags = [])
+    {
+        $this->tags = $tags;
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getTags(): ?array
+    {
+        return $this->tags;
+    }
 }

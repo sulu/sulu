@@ -17,6 +17,7 @@ use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\WebsiteBundle\Admin\WebsiteAdmin;
 use Sulu\Bundle\WebsiteBundle\Analytics\AnalyticsManagerInterface;
 use Sulu\Bundle\WebsiteBundle\Cache\CacheClearerInterface;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\WebspaceReferenceStore;
 use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\Security\SecuredControllerInterface;
@@ -110,7 +111,7 @@ class AnalyticsController extends AbstractRestController implements ClassResourc
 
         $entity = $this->analyticsManager->create($webspace, $data);
         $this->entityManager->flush();
-        $this->cacheClearer->clear();
+        $this->cacheClearer->clear([WebspaceReferenceStore::generateTagByWebspaceKey($webspace)]);
 
         return $this->handleView($this->view($entity, 200));
     }
@@ -130,7 +131,7 @@ class AnalyticsController extends AbstractRestController implements ClassResourc
 
         $entity = $this->analyticsManager->update($id, $data);
         $this->entityManager->flush();
-        $this->cacheClearer->clear();
+        $this->cacheClearer->clear([WebspaceReferenceStore::generateTagByWebspaceKey($webspace)]);
 
         return $this->handleView($this->view($entity, 200));
     }
@@ -147,7 +148,7 @@ class AnalyticsController extends AbstractRestController implements ClassResourc
     {
         $this->analyticsManager->remove($id);
         $this->entityManager->flush();
-        $this->cacheClearer->clear();
+        $this->cacheClearer->clear([WebspaceReferenceStore::generateTagByWebspaceKey($webspace)]);
 
         return $this->handleView($this->view(null, 204));
     }
@@ -165,7 +166,7 @@ class AnalyticsController extends AbstractRestController implements ClassResourc
 
         $this->analyticsManager->removeMultiple($ids);
         $this->entityManager->flush();
-        $this->cacheClearer->clear();
+        $this->cacheClearer->clear([WebspaceReferenceStore::generateTagByWebspaceKey($webspace)]);
 
         return $this->handleView($this->view(null, 204));
     }
