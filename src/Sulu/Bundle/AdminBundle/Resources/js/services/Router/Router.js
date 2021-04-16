@@ -43,6 +43,10 @@ function tryParse(value: ?string) {
         return value;
     }
 
+    if (value && value.match(/0[^.].*/)) {
+        return value; // do not parse as number if string starts with 0 and does not contain a dot
+    }
+
     return parseFloat(value);
 }
 
