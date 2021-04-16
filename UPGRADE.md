@@ -2,6 +2,13 @@
 
 ## 2.3
 
+### Added removeFileVersion method to MediaManagerInterface
+
+The `MediaManagerInterface` declares a new method `removeFileVersion`.
+If you have overridden this service in your project without extending from Sulu's `MediaManager`,
+you need to implement this new method in order for the `MediaVersionRemovedEvent` to be thrown.
+Not implementing this method is deprecated and will lead to errors in Sulu 3.0.
+
 ### Sync object permissions stored in phpcr to doctrine
 
 To enable permission checking on database level for resources with object permissions stored in phpcr,
@@ -71,9 +78,12 @@ call to pass the correct parameters:
 
 - `Sulu\Component\CustomUrl\Manager\CustomUrlManager`
 - `Sulu\Bundle\TagBundle\Tag\TagManager`
-- `Sulu\Bundle\MediaBundle\Media\Manager\MediaManager`
 - `Sulu\Bundle\CategoryBundle\Category\CategoryManager`
 - `Sulu\Bundle\CategoryBundle\Category\KeywordManager`
+- `Sulu\Bundle\MediaBundle\Media\Manager\MediaManager`
+- `Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManager`
+- `Sulu\Bundle\MediaBundle\Media\FormatOptions\FormatOptionsManager`
+- `Sulu\Bundle\MediaBundle\Controller\MediaPreviewController`
 
 ### Added SuluEventLogBundle for dispatching and recording events that happen in the application
 

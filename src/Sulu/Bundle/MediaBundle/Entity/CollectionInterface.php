@@ -21,6 +21,8 @@ use Sulu\Component\Security\Authorization\AccessControl\SecuredEntityInterface;
  */
 interface CollectionInterface extends AuditableInterface, SecuredEntityInterface
 {
+    const RESOURCE_KEY = 'collections';
+
     /**
      * Get id.
      *

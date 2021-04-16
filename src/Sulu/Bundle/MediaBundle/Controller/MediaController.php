@@ -14,13 +14,16 @@ namespace Sulu\Bundle\MediaBundle\Controller;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
+use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\Media;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\ListBuilderFactory\MediaListBuilderFactory;
 use Sulu\Bundle\MediaBundle\Media\ListRepresentationFactory\MediaListRepresentationFactory;
+use Sulu\Bundle\MediaBundle\Media\Manager\MediaManager;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
@@ -57,9 +60,11 @@ class MediaController extends AbstractMediaController implements
     use RequestParametersTrait;
 
     /**
+     * @deprecated Use the MediaInterface::RESOURCE_KEY constant instead
+     *
      * @var string
      */
-    protected static $entityKey = 'media';
+    protected static $entityKey = MediaInterface::RESOURCE_KEY;
 
     /**
      * @var MediaManagerInterface
@@ -240,7 +245,7 @@ class MediaController extends AbstractMediaController implements
             $listRepresentation = $this->mediaListRepresentationFactory->getListRepresentation(
                 $listBuilder,
                 $locale,
-                static::$entityKey,
+                MediaInterface::RESOURCE_KEY,
                 'sulu_media.cget_media',
                 $request->query->all()
             );
@@ -305,7 +310,7 @@ class MediaController extends AbstractMediaController implements
 
         return new ListRepresentation(
             $listResponse,
-            self::$entityKey,
+            MediaInterface::RESOURCE_KEY,
             'sulu_media.cget_media',
             $request->query->all(),
             $listBuilder->getCurrentPage(),
@@ -456,8 +461,32 @@ class MediaController extends AbstractMediaController implements
      */
     public function deleteVersionAction(Request $request, $id, $version)
     {
-        $locale = $this->getRequestParameter($request, 'locale', true);
-        $media = $this->mediaManager->getById($id, $locale);
+        if (!\method_exists($this->mediaManager, 'removeFileVersion')) {
+            @\trigger_error(
+                \sprintf(
+                    'The "%s" should implement the "removeFileVersion" method of the "%s".',
+                    \get_class($this->mediaManager),
+                    MediaManagerInterface::class
+                ),
+                \E_USER_DEPRECATED
+            );
+
+            $locale = $this->getRequestParameter($request, 'locale', true);
+            $this->removeFileVersion($id, $version, $locale);
+        } else {
+            $this->mediaManager->removeFileVersion((int) $id, (int) $version);
+        }
+
+        return new Response('', 204);
+    }
+
+    /**
+     * @deprecated
+     * @see MediaManager::removeFileVersion()
+     */
+    private function removeFileVersion($mediaId, $version, $locale)
+    {
+        $media = $this->mediaManager->getById($mediaId, $locale);
 
         if ($media->getVersion() === (int) $version) {
             throw new BadRequestHttpException('Can\'t delete active version of a media.');
@@ -465,7 +494,6 @@ class MediaController extends AbstractMediaController implements
 
         $currentFileVersion = null;
 
-        /** @var Media $mediaEntity */
         foreach ($media->getFile()->getFileVersions() as $fileVersion) {
             if ($fileVersion->getVersion() === (int) $version) {
                 $currentFileVersion = $fileVersion;
@@ -474,19 +502,20 @@ class MediaController extends AbstractMediaController implements
         }
 
         if (!$currentFileVersion) {
-            throw new NotFoundHttpException(\sprintf(
-                'Version "%s" for Media "%s"',
-                $version,
-                $id
-            ));
+            throw new NotFoundHttpException(
+                \sprintf(
+                    'Version "%s" for Media "%s not found."',
+                    $version,
+                    $mediaId
+                )
+            );
         }
 
         $this->entityManager->remove($currentFileVersion);
         $this->entityManager->flush();
+
         // After successfully delete in the database remove file from storage
         $this->storage->remove($currentFileVersion->getStorageOptions());
-
-        return new Response('', 204);
     }
 
     /**
@@ -568,7 +597,7 @@ class MediaController extends AbstractMediaController implements
 
     public function getSecurityContext()
     {
-        return 'sulu.media.collections';
+        return MediaAdmin::SECURITY_CONTEXT;
     }
 
     /**
