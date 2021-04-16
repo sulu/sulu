@@ -12,9 +12,9 @@
 namespace Sulu\Bundle\WebsiteBundle\Resolver;
 
 use Sulu\Component\Content\Compat\StructureInterface;
-use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -37,7 +37,7 @@ class ParameterResolver implements ParameterResolverInterface
      */
     private $webspaceManager;
 
-    /*
+    /**
      * @var RequestStack
      */
     private $requestStack;
@@ -85,6 +85,10 @@ class ParameterResolver implements ParameterResolverInterface
             $structureData = [];
         }
 
+        if (!$requestAnalyzer) {
+            return \array_merge($parameter, $structureData);
+        }
+
         $requestAnalyzerData = $this->requestAnalyzerResolver->resolve($requestAnalyzer);
         $webspace = $requestAnalyzer->getWebspace();
 
@@ -102,7 +106,6 @@ class ParameterResolver implements ParameterResolverInterface
         $localizations = [];
 
         foreach ($allLocalizations as $localization) {
-            /* @var Localization $localization */
             $locale = $localization->getLocale();
 
             if (\array_key_exists($locale, $pageUrls)) {
@@ -114,6 +117,7 @@ class ParameterResolver implements ParameterResolverInterface
             $localizations[$locale] = [
                 'locale' => $locale,
                 'url' => $url,
+                'country' => $localization->getCountry(),
             ];
         }
 
@@ -128,7 +132,10 @@ class ParameterResolver implements ParameterResolverInterface
 
         $structureData['localizations'] = $localizations;
 
-        $url = $this->requestStack->getCurrentRequest()->getUri();
+        /** @var Request $request */
+        $request = $this->requestStack->getCurrentRequest();
+
+        $url = $request->getUri();
 
         $segments = [];
         foreach ($webspace->getSegments() as $segment) {
