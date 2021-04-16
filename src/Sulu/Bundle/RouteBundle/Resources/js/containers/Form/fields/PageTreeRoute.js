@@ -2,7 +2,7 @@
 import React, {Component, Fragment} from 'react';
 import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 import {observer} from 'mobx-react';
-import {action, observable} from 'mobx';
+import {action, computed, observable} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import {userStore} from 'sulu-admin-bundle/stores';
 import {Grid} from 'sulu-admin-bundle/components';
@@ -35,7 +35,7 @@ class PageTreeRoute extends Component<Props> {
     get locale(): IObservableValue<string> {
         const {formInspector} = this.props;
 
-        return formInspector.locale ? formInspector.locale : observable.box(userStore.contentLocale);
+        return formInspector.locale ? formInspector.locale : computed(() => userStore.contentLocale);
     }
 
     get pageValue(): ?string {

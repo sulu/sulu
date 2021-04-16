@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {computed, observable} from 'mobx';
+import {computed} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import jsonpointer from 'json-pointer';
@@ -14,7 +14,7 @@ class TeaserSelection extends React.Component<FieldTypeProps<TeaserSelectionValu
     @computed get locale(): IObservableValue<string> {
         const {formInspector} = this.props;
 
-        return formInspector.locale ? formInspector.locale : observable.box(userStore.contentLocale);
+        return formInspector.locale ? formInspector.locale : computed(() => userStore.contentLocale);
     }
 
     handleItemClick = (itemId: string | number, item: ?TeaserItem) => {

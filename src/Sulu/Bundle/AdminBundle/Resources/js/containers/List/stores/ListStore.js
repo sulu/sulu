@@ -1,5 +1,5 @@
 // @flow
-import {action, autorun, computed, intercept, observable, untracked} from 'mobx';
+import {action, autorun, computed, intercept, observable, reaction, untracked} from 'mobx';
 import type {IObservableValue, IValueWillChange} from 'mobx';
 import equals from 'fast-deep-equal';
 import log from 'loglevel';
@@ -167,10 +167,14 @@ export default class ListStore {
 
         const {locale} = this.observableOptions;
         if (locale) {
-            this.localeDisposer = intercept(locale, '', (change: IValueWillChange<*>) => {
-                callResetForChangedObservable(change);
-                return change;
-            });
+            this.localeDisposer = reaction(
+                () => locale.get(),
+                () => {
+                    if (this.initialized) {
+                        this.reset();
+                    }
+                }
+            );
         }
 
         this.searchDisposer = intercept(this.searchTerm, '', (change: IValueWillChange<*>) => {

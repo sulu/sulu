@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {observable} from 'mobx';
+import {computed} from 'mobx';
 import TextEditorContainer from '../../../containers/TextEditor';
 import type {FieldTypeProps} from '../../../types';
 import userStore from '../../../stores/userStore';
@@ -9,7 +9,7 @@ export default class TextEditor extends React.Component<FieldTypeProps<?string>>
     render() {
         const {disabled, formInspector, onChange, onFinish, schemaOptions, value} = this.props;
 
-        const locale = formInspector.locale ? formInspector.locale : observable.box(userStore.contentLocale);
+        const locale = formInspector.locale ? formInspector.locale : computed(() => userStore.contentLocale);
 
         return (
             <TextEditorContainer

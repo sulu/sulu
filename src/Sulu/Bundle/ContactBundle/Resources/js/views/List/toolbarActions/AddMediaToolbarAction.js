@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, observable} from 'mobx';
+import {action, computed, observable} from 'mobx';
 import userStore from 'sulu-admin-bundle/stores/userStore';
 import {ResourceRequester} from 'sulu-admin-bundle/services';
 import {translate} from 'sulu-admin-bundle/utils';
@@ -17,7 +17,7 @@ class AddMediaToolbarAction extends AbstractListToolbarAction {
                 confirmLoading={this.patching}
                 excludedIds={this.resourceStore ? this.resourceStore.data.medias : []}
                 key="sulu_contact.add_media"
-                locale={observable.box(userStore.contentLocale)}
+                locale={computed(() => userStore.contentLocale)}
                 onClose={this.handleClose}
                 onConfirm={this.handleConfirm}
                 open={this.showOverlay}

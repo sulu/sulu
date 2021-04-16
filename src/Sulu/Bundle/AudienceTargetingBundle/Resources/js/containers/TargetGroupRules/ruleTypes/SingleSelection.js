@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {observable} from 'mobx';
+import {computed} from 'mobx';
 import {SingleSelection as SingleSelectionComponent} from 'sulu-admin-bundle/containers';
 import userStore from 'sulu-admin-bundle/stores/userStore';
 import type {RuleTypeProps} from '../types';
@@ -38,7 +38,7 @@ export default class SingleSelection extends React.Component<RuleTypeProps> {
                 emptyText={emptyText}
                 icon={icon}
                 listKey={resourceKey}
-                locale={observable.box(userStore.contentLocale)}
+                locale={computed(() => userStore.contentLocale)}
                 onChange={this.handleChange}
                 overlayTitle={overlayTitle}
                 resourceKey={resourceKey}

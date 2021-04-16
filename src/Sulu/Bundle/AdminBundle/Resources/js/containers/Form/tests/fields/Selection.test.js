@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import log from 'loglevel';
-import {extendObservable as mockExtendObservable, observable, toJS} from 'mobx';
+import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import {mount, shallow} from 'enzyme';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
 import {translate} from '../../../../utils/Translator';
@@ -238,7 +238,7 @@ test('Should pass locale from userStore to MultiSelection component if form has 
 
     expect(translate).toBeCalledWith('sulu_snippet.selection_label', {count: 3});
 
-    expect(toJS(selection.find('MultiSelection').prop('locale'))).toEqual('de');
+    expect(selection.find('MultiSelection').prop('locale').get()).toEqual('de');
 });
 
 test('Should pass props with schema-options correctly to MultiSelection component', () => {
@@ -1028,7 +1028,7 @@ test('Should pass locale from userStore to listStore if form has no locale', () 
         />
     );
 
-    expect(toJS(selection.instance().listStore.locale)).toEqual('en');
+    expect(selection.instance().listStore.locale.get()).toEqual('en');
 });
 
 test('Should call onChange and onFinish prop when list selection changes', () => {

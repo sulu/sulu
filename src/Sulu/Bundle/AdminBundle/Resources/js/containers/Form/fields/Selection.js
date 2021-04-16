@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {computed, observable, intercept, toJS, reaction, isArrayLike} from 'mobx';
+import {computed, observable, toJS, reaction, isArrayLike} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import equals from 'fast-deep-equal';
 import {observer} from 'mobx-react';
@@ -138,13 +138,14 @@ class Selection extends React.Component<Props> {
                 }
             );
 
-            this.changeLocaleDisposer = intercept(this.locale, '', (change) => {
-                if (this.listStore) {
-                    this.listStore.sendRequestDisposer();
+            this.changeLocaleDisposer = reaction(
+                () => this.locale.get(),
+                () => {
+                    if (this.listStore) {
+                        this.listStore.sendRequestDisposer();
+                    }
                 }
-
-                return change;
-            });
+            );
         } else if (this.type === 'auto_complete') {
             this.autoCompleteSelectionStore = new MultiSelectionStore(
                 resourceKey,
@@ -220,7 +221,7 @@ class Selection extends React.Component<Props> {
     @computed get locale(): IObservableValue<string> {
         const {formInspector} = this.props;
 
-        return formInspector.locale ? formInspector.locale : observable.box(userStore.contentLocale);
+        return formInspector.locale ? formInspector.locale : computed(() => userStore.contentLocale);
     }
 
     @computed get type() {

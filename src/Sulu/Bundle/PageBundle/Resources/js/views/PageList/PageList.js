@@ -1,5 +1,5 @@
 // @flow
-import {action, intercept, observable} from 'mobx';
+import {action, intercept, observable, reaction} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import React from 'react';
@@ -137,11 +137,12 @@ class PageList extends React.Component<Props> {
             return change;
         });
 
-        this.webspaceKeyDisposer = intercept(webspaceKey, '', (change) => {
-            this.listStore.destroy();
-            this.listStore.active.set(undefined);
-            return change;
-        });
+        this.webspaceKeyDisposer = reaction(
+            () => webspaceKey.get(),
+            () => {
+                this.listStore.destroy();
+                this.listStore.active.set(undefined);
+            });
     }
 
     componentWillUnmount() {

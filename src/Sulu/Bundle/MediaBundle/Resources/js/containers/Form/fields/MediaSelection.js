@@ -4,7 +4,7 @@ import {observer} from 'mobx-react';
 import log from 'loglevel';
 import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 import userStore from 'sulu-admin-bundle/stores/userStore';
-import {computed, isArrayLike, observable} from 'mobx';
+import {computed, isArrayLike} from 'mobx';
 import {
     convertDisplayOptionsFromParams,
     convertMediaTypesFromParams,
@@ -101,7 +101,7 @@ class MediaSelection extends React.Component<FieldTypeProps<Value>> {
             } = {},
         } = schemaOptions;
 
-        const locale = formInspector.locale ? formInspector.locale : observable.box(userStore.contentLocale);
+        const locale = formInspector.locale ? formInspector.locale : computed(() => userStore.contentLocale);
 
         if (displayOptions !== undefined && displayOptions !== null && !Array.isArray(displayOptions)) {
             throw new Error('The "displayOptions" option has to be an Array if set.');

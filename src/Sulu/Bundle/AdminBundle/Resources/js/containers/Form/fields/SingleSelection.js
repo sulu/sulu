@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {computed, observable} from 'mobx';
+import {computed} from 'mobx';
 import type {IObservableValue} from 'mobx';
 import jsonpointer from 'json-pointer';
 import log from 'loglevel';
@@ -89,7 +89,7 @@ export default class SingleSelection extends React.Component<Props>
     @computed get locale(): IObservableValue<string> {
         const {formInspector} = this.props;
 
-        return formInspector.locale ? formInspector.locale : observable.box(userStore.contentLocale);
+        return formInspector.locale ? formInspector.locale : computed(() => userStore.contentLocale);
     }
 
     @computed get viewName() {

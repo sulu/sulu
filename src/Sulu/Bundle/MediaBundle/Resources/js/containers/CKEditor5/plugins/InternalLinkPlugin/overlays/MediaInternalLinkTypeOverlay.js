@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {observable} from 'mobx';
+import {computed} from 'mobx';
 import {Dialog, Input, Form} from 'sulu-admin-bundle/components';
 import {userStore} from 'sulu-admin-bundle/stores';
 import {translate} from 'sulu-admin-bundle/utils';
@@ -35,7 +35,7 @@ export default class MediaInternalLinkTypeOverlay extends React.Component<Intern
                 <Form>
                     <Form.Field label={translate('sulu_admin.link_url')} required={true}>
                         <SingleMediaSelection
-                            locale={locale || observable.box(userStore.contentLocale)}
+                            locale={locale || computed(() => userStore.contentLocale)}
                             onChange={this.handleChange}
                             value={{displayOption: undefined, id}}
                         />

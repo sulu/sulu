@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, observable, toJS} from 'mobx';
+import {action, computed, observable, toJS} from 'mobx';
 import {observer} from 'mobx-react';
 import ResourceLocatorComponent from '../../../components/ResourceLocator';
 import ResourceLocatorHistory from '../../../containers/ResourceLocatorHistory';
@@ -146,7 +146,7 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
                     <ResourceLocatorComponent
                         disabled={!!disabled}
                         id={dataPath}
-                        locale={formInspector.locale ? formInspector.locale : observable.box(userStore.contentLocale)}
+                        locale={formInspector.locale ? formInspector.locale : computed(() => userStore.contentLocale)}
                         mode={this.mode}
                         onBlur={this.handleBlur}
                         onChange={onChange}
