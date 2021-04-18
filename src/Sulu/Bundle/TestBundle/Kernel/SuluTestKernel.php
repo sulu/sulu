@@ -55,6 +55,7 @@ class SuluTestKernel extends SuluKernel
             new \Massive\Bundle\SearchBundle\MassiveSearchBundle(),
 
             // Sulu
+            new \Sulu\Bundle\AdminBundle\SuluAdminBundle(),
             new \Sulu\Bundle\SearchBundle\SuluSearchBundle(),
             new \Sulu\Bundle\PersistenceBundle\SuluPersistenceBundle(),
             new \Sulu\Bundle\PageBundle\SuluPageBundle(),
@@ -103,7 +104,6 @@ class SuluTestKernel extends SuluKernel
 
         if (self::CONTEXT_ADMIN === $this->getContext()) {
             $bundles[] = new \Symfony\Bundle\SecurityBundle\SecurityBundle();
-            $bundles[] = new \Sulu\Bundle\AdminBundle\SuluAdminBundle();
             $bundles[] = new \Sulu\Bundle\PreviewBundle\SuluPreviewBundle();
             $bundles[] = new \FOS\JsRoutingBundle\FOSJsRoutingBundle();
         }
