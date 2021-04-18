@@ -69,6 +69,44 @@ class AddAdminPassTest extends TestCase
 
         $this->assertEquals([$adminDefinition1, $adminDefinition2], $admins);
     }
+
+    public function testProcessOne(): void
+    {
+        $adminPass = new AddAdminPass();
+
+        $poolDefinition = $this->prophesize(Definition::class);
+
+        $container = $this->prophesize(ContainerBuilder::class);
+        $container->getDefinition(AddAdminPass::ADMIN_POOL_DEFINITION_ID)->willReturn($poolDefinition->reveal());
+
+        $adminDefinition1 = $this->prophesize(Definition::class);
+        $adminDefinition1->getClass()->willReturn(TestAdmin1::class);
+
+        $container->findTaggedServiceIds(AddAdminPass::ADMIN_TAG)->willReturn(
+            [
+                'test_admin1' => [],
+            ]
+        );
+
+        $container->getDefinition('test_admin1')->willReturn($adminDefinition1->reveal());
+
+        $parameterBag = $this->prophesize(ParameterBag::class);
+        $container->getParameterBag()->willReturn($parameterBag->reveal());
+
+        $parameterBag->resolveValue(TestAdmin1::class)->willReturn(TestAdmin1::class);
+
+        $admins = [];
+
+        $poolDefinition->addMethodCall('addAdmin', [$adminDefinition1->reveal()])->will(
+            function () use (&$admins, $adminDefinition1) {
+                $admins[] = $adminDefinition1;
+            }
+        )->shouldBeCalled();
+
+        $adminPass->process($container->reveal());
+
+        $this->assertEquals([$adminDefinition1], $admins);
+    }
 }
 
 class TestAdmin1 extends Admin

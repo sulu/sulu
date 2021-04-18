@@ -27,6 +27,7 @@ class AddAdminPass implements CompilerPassInterface
         $pool = $container->getDefinition(self::ADMIN_POOL_DEFINITION_ID);
 
         $adminServiceDefinitions = [];
+
         foreach ($container->findTaggedServiceIds(self::ADMIN_TAG) as $id => $tags) {
             $serviceDefinition = $container->getDefinition($id);
 
@@ -40,10 +41,11 @@ class AddAdminPass implements CompilerPassInterface
         }
 
         \krsort($adminServiceDefinitions);
-        $adminServiceDefinitions = \array_merge(...$adminServiceDefinitions);
 
-        foreach ($adminServiceDefinitions as $id => $serviceDefinition) {
-            $pool->addMethodCall('addAdmin', [$serviceDefinition]);
+        foreach ($adminServiceDefinitions as $priority => $serviceDefinitions) {
+            foreach ($serviceDefinitions as $serviceDefinition) {
+                $pool->addMethodCall('addAdmin', [$serviceDefinition]);
+            }
         }
     }
 }
