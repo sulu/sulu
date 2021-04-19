@@ -25,7 +25,6 @@ use Sulu\Bundle\MediaBundle\Entity\FormatOptions;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\FormatNotFoundException;
-use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManager;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\FormatOptions\FormatOptionsManager;
 use Sulu\Bundle\MediaBundle\Media\FormatOptions\FormatOptionsManagerInterface;
