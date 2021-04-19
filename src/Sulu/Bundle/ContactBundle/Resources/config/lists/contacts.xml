@@ -331,6 +331,31 @@
             </filter>
         </property>
 
+        <!-- categoryId property is only used for filtering and should never be included as column in a list -->
+        <!-- when used as column, the property will lead to duplicated rows for entities with multiple categories -->
+        <property
+            name="categoryId"
+            visibility="never"
+            translation="sulu_category.categories"
+        >
+            <field-name>id</field-name>
+            <entity-name>SuluCategoryBundle:Category</entity-name>
+
+            <joins>
+                <join>
+                    <entity-name>SuluCategoryBundle:Category</entity-name>
+                    <field-name>%sulu.model.contact.class%.categories</field-name>
+                </join>
+            </joins>
+
+            <filter type="selection">
+                <params>
+                    <param name="displayProperty" value="name" />
+                    <param name="resourceKey" value="categories" />
+                </params>
+            </filter>
+        </property>
+
         <property name="user" visibility="no" searchability="yes" translation="sulu_security.user_name">
             <field-name>username</field-name>
             <entity-name>%sulu.model.user.class%</entity-name>
