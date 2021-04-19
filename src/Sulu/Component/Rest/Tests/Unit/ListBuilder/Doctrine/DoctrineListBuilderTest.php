@@ -232,7 +232,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->findIdsByGivenCriteria->invoke($this->doctrineListBuilder);
     }
 
-    public function testPreselectWithJoins()
+    public function testPreselectWithJoinsBecauseOfInnerJoin()
     {
         $this->doctrineListBuilder->addSelectField(
             new DoctrineFieldDescriptor(
