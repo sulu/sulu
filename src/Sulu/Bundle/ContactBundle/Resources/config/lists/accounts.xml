@@ -22,6 +22,13 @@
         </join>
     </joins>
 
+    <joins name="tags">
+        <join>
+            <entity-name>SuluTagBundle:Tag</entity-name>
+            <field-name>%sulu.model.account.class%.tags</field-name>
+        </join>
+    </joins>
+
     <properties>
         <property name="logo" visibility="always" translation="sulu_contact.logo" sortable="false">
             <field-name>id</field-name>
@@ -238,12 +245,27 @@
             <field-name>id</field-name>
             <entity-name>SuluTagBundle:Tag</entity-name>
 
-            <joins>
-                <join>
-                    <entity-name>SuluTagBundle:Tag</entity-name>
-                    <field-name>%sulu.model.account.class%.tags</field-name>
-                </join>
-            </joins>
+            <joins ref="tags"/>
         </group-concat-property>
+
+        <!-- tagId property is only used for filtering and should never be included as column in a list -->
+        <!-- when used as column, the property will lead to duplicated rows for entities with multiple tags -->
+        <property
+            name="tagId"
+            visibility="never"
+            translation="sulu_tag.tags"
+        >
+            <field-name>id</field-name>
+            <entity-name>SuluTagBundle:Tag</entity-name>
+
+            <joins ref="tags"/>
+
+            <filter type="selection">
+                <params>
+                    <param name="displayProperty" value="name" />
+                    <param name="resourceKey" value="tags" />
+                </params>
+            </filter>
+        </property>
     </properties>
 </list>

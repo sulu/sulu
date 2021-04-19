@@ -248,6 +248,31 @@
             <joins ref="fileVersionMeta"/>
         </property>
 
+        <!-- tagId property is only used for filtering and should never be included as column in a list -->
+        <!-- when used as column, the property will lead to duplicated rows for entities with multiple tags -->
+        <property
+            name="tagId"
+            visibility="never"
+            translation="sulu_tag.tags"
+        >
+            <field-name>id</field-name>
+            <entity-name>SuluTagBundle:Tag</entity-name>
+
+            <joins ref="fileVersion">
+                <join>
+                    <entity-name>SuluTagBundle:Tag</entity-name>
+                    <field-name>SuluMediaBundle:FileVersion.tags</field-name>
+                </join>
+            </joins>
+
+            <filter type="selection">
+                <params>
+                    <param name="displayProperty" value="name" />
+                    <param name="resourceKey" value="tags" />
+                </params>
+            </filter>
+        </property>
+
         <property name="lft" visibility="never">
             <field-name>lft</field-name>
             <entity-name>%sulu.model.collection.class%</entity-name>
