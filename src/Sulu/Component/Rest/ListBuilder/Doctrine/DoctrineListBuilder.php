@@ -198,7 +198,7 @@ class DoctrineListBuilder extends AbstractListBuilder
         $this->expressionFields = $this->getUniqueExpressionFieldDescriptors($this->expressions);
 
         if (!$this->limit && empty($this->expressions)) {
-            $queryBuilder = $this->createFullQueryBuilder($this->createQueryBuilder());
+            $queryBuilder = $this->createFullQueryBuilder($this->createQueryBuilder($this->getJoins(true)));
             $this->assignParameters($queryBuilder);
 
             return $queryBuilder->getQuery()->getArrayResult();
@@ -218,7 +218,7 @@ class DoctrineListBuilder extends AbstractListBuilder
         );
 
         // now select all data
-        $this->assignJoins($this->queryBuilder);
+        $this->assignJoins($this->queryBuilder, $this->getJoins(false));
 
         // use ids previously selected ids for query
         $select = $this->idField->getSelect();
@@ -354,12 +354,18 @@ class DoctrineListBuilder extends AbstractListBuilder
     /**
      * Returns all the joins required for the query.
      *
+     * @param bool $includeFilterFields Define if joins of filtering FieldDescriptors should be returned
+     *
      * @return DoctrineJoinDescriptor[]
      */
-    protected function getJoins()
+    protected function getJoins($includeFilterFields = true)
     {
         $joins = [];
-        $fields = \array_merge($this->sortFields, $this->selectFields, $this->searchFields, $this->expressionFields);
+        $fields = \array_merge($this->sortFields, $this->selectFields);
+
+        if ($includeFilterFields) {
+            $fields = \array_merge($fields, $this->searchFields, $this->expressionFields);
+        }
 
         foreach ($fields as $field) {
             $joins = \array_merge($joins, $field->getJoins());
@@ -435,7 +441,7 @@ class DoctrineListBuilder extends AbstractListBuilder
      *
      * @param string[] $necessaryEntityNames
      *
-     * @return DoctrineFieldDescriptorInterface[]
+     * @return DoctrineJoinDescriptor[]
      */
     protected function getNecessaryJoins($necessaryEntityNames)
     {
@@ -510,7 +516,7 @@ class DoctrineListBuilder extends AbstractListBuilder
     /**
      * Creates Querybuilder.
      *
-     * @param array|null $joins Define which joins should be made
+     * @param DoctrineJoinDescriptor[]|null $joins Define which joins should be made
      *
      * @return \Doctrine\ORM\QueryBuilder
      */
@@ -554,12 +560,12 @@ class DoctrineListBuilder extends AbstractListBuilder
     /**
      * Adds joins to querybuilder.
      *
-     * @param array $joins
+     * @param DoctrineJoinDescriptor[]|null $joins
      */
     protected function assignJoins(QueryBuilder $queryBuilder, array $joins = null)
     {
         if (null === $joins) {
-            $joins = $this->getJoins();
+            $joins = $this->getJoins(true);
         }
 
         foreach ($joins as $entity => $join) {
