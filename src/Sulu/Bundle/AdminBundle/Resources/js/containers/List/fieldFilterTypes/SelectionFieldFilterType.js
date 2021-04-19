@@ -34,7 +34,7 @@ class SelectionFieldFilterType extends AbstractFieldFilterType<?Array<string | n
         this.selectionStore = new MultiSelectionStore(
             this.resourceKey,
             [],
-            computed(() => userStore.contentLocale)
+            observable.box(userStore.contentLocale)
         );
 
         this.selectionStoreDisposer = autorun(() => {
