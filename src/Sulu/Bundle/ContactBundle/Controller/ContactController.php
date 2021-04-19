@@ -298,7 +298,6 @@ class ContactController extends AbstractRestController implements ClassResourceI
     {
         /** @var DoctrineListBuilder $listBuilder */
         $listBuilder = $this->listBuilderFactory->create($this->contactClass);
-        $listBuilder->distinct(true);
         $fieldDescriptors = $this->getFieldDescriptors();
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 

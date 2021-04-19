@@ -226,7 +226,7 @@ class DoctrineListBuilder extends AbstractListBuilder
         );
 
         // now select all data
-        $this->assignJoins($this->queryBuilder);
+        $this->assignJoins($this->queryBuilder, $this->getJoins(false));
 
         // use ids previously selected ids for query
         $select = $this->idField->getSelect();
@@ -362,12 +362,18 @@ class DoctrineListBuilder extends AbstractListBuilder
     /**
      * Returns all the joins required for the query.
      *
+     * @param bool $includeFilterFields Define if joins of filtering FieldDescriptors should be returned
+     *
      * @return DoctrineJoinDescriptor[]
      */
-    protected function getJoins()
+    protected function getJoins($includeFilterFields = true)
     {
         $joins = [];
-        $fields = \array_merge($this->sortFields, $this->selectFields, $this->searchFields, $this->expressionFields);
+        $fields = \array_merge($this->sortFields, $this->selectFields);
+
+        if ($includeFilterFields) {
+            $fields = \array_merge($fields, $this->searchFields, $this->expressionFields);
+        }
 
         foreach ($fields as $field) {
             $joins = \array_merge($joins, $field->getJoins());
