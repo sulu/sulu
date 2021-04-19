@@ -197,7 +197,7 @@ class DoctrineListBuilder extends AbstractListBuilder
         $this->eventDispatcher->dispatch($event, ListBuilderEvents::LISTBUILDER_CREATE);
         $this->expressionFields = $this->getUniqueExpressionFieldDescriptors($this->expressions);
 
-        if (!$this->limit && empty($this->expressions)) {
+        if (!$this->limit && !$this->search && empty($this->expressions)) {
             $queryBuilder = $this->createFullQueryBuilder($this->createQueryBuilder());
             $this->assignParameters($queryBuilder);
 
@@ -359,7 +359,8 @@ class DoctrineListBuilder extends AbstractListBuilder
     protected function getJoins()
     {
         $joins = [];
-        $fields = \array_merge($this->sortFields, $this->selectFields, $this->searchFields, $this->expressionFields);
+        /** @var DoctrineFieldDescriptorInterface[] $fields */
+        $fields = \array_merge($this->sortFields, $this->selectFields);
 
         foreach ($fields as $field) {
             $joins = \array_merge($joins, $field->getJoins());
@@ -435,7 +436,7 @@ class DoctrineListBuilder extends AbstractListBuilder
      *
      * @param string[] $necessaryEntityNames
      *
-     * @return DoctrineFieldDescriptorInterface[]
+     * @return DoctrineJoinDescriptor[]
      */
     protected function getNecessaryJoins($necessaryEntityNames)
     {
@@ -510,7 +511,7 @@ class DoctrineListBuilder extends AbstractListBuilder
     /**
      * Creates Querybuilder.
      *
-     * @param array|null $joins Define which joins should be made
+     * @param DoctrineJoinDescriptor[]|null $joins Define which joins should be made
      *
      * @return \Doctrine\ORM\QueryBuilder
      */
@@ -554,7 +555,7 @@ class DoctrineListBuilder extends AbstractListBuilder
     /**
      * Adds joins to querybuilder.
      *
-     * @param array $joins
+     * @param DoctrineJoinDescriptor[]|null $joins
      */
     protected function assignJoins(QueryBuilder $queryBuilder, array $joins = null)
     {

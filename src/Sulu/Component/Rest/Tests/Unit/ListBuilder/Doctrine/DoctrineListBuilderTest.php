@@ -17,6 +17,7 @@ use Doctrine\ORM\Query\Expr\Select;
 use Doctrine\ORM\QueryBuilder;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\SecurityBundle\Entity\AccessControl;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
@@ -42,12 +43,12 @@ class DoctrineListBuilderTest extends TestCase
     use ReadObjectAttributeTrait;
 
     /**
-     * @var EventDispatcherInterface
+     * @var ObjectProphecy|EventDispatcherInterface
      */
     private $eventDispatcher;
 
     /**
-     * @var FilterTypeRegistry
+     * @var ObjectProphecy|FilterTypeRegistry
      */
     private $filterTypeRegistry;
 
@@ -57,17 +58,17 @@ class DoctrineListBuilderTest extends TestCase
     private $doctrineListBuilder;
 
     /**
-     * @var EntityManager
+     * @var ObjectProphecy|EntityManager
      */
     private $entityManager;
 
     /**
-     * @var QueryBuilder
+     * @var ObjectProphecy|QueryBuilder
      */
     private $queryBuilder;
 
     /**
-     * @var AbstractQuery
+     * @var ObjectProphecy|AbstractQuery
      */
     private $query;
 
@@ -140,7 +141,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->findIdsByGivenCriteria->setAccessible(true);
     }
 
-    public function testSetFields()
+    public function testSetFields(): void
     {
         $this->doctrineListBuilder->setSelectFields(
             [
@@ -155,7 +156,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->execute();
     }
 
-    public function testSetFieldsWithStandardFieldDescriptor()
+    public function testSetFieldsWithStandardFieldDescriptor(): void
     {
         $this->doctrineListBuilder->setSelectFields(
             [
@@ -172,14 +173,14 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->execute();
     }
 
-    public function testIdSelect()
+    public function testIdSelect(): void
     {
         $this->queryBuilder->select(self::$entityNameAlias . '.id AS id')->shouldBeCalled()->willReturn($this->queryBuilder->reveal());
 
         $this->doctrineListBuilder->execute();
     }
 
-    public function testPreselectWithNoJoins()
+    public function testPreselectWithNoJoins(): void
     {
         $this->doctrineListBuilder->addSelectField(
             new DoctrineFieldDescriptor(
@@ -209,7 +210,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->findIdsByGivenCriteria->invoke($this->doctrineListBuilder);
     }
 
-    public function testPreselectWithJoinsBecauseOfInnerJoin()
+    public function testPreselectWithJoinsBecauseOfInnerJoin(): void
     {
         $this->doctrineListBuilder->addSelectField(
             new DoctrineFieldDescriptor(
@@ -251,7 +252,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->findIdsByGivenCriteria->invoke($this->doctrineListBuilder);
     }
 
-    public function testPreselectWithConditions()
+    public function testPreselectWithConditions(): void
     {
         $fieldDescriptor = new DoctrineFieldDescriptor(
             'name',
@@ -293,7 +294,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->findIdsByGivenCriteria->invoke($this->doctrineListBuilder);
     }
 
-    public function testAddField()
+    public function testAddField(): void
     {
         $this->doctrineListBuilder->addSelectField(new DoctrineFieldDescriptor('name', 'name_alias', self::$entityName));
         $this->doctrineListBuilder->addSelectField(new DoctrineFieldDescriptor('desc', 'desc_alias', self::$entityName));
@@ -304,7 +305,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->execute();
     }
 
-    public function testAddStandardField()
+    public function testAddStandardField(): void
     {
         $this->doctrineListBuilder->addSelectField(new DoctrineFieldDescriptor('name', 'name_alias', self::$entityName));
         $this->doctrineListBuilder->addSelectField(new DoctrineFieldDescriptor('desc', 'desc_alias', self::$entityName));
@@ -317,7 +318,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->execute();
     }
 
-    public function testAddFieldWithJoin()
+    public function testAddFieldWithJoin(): void
     {
         $this->doctrineListBuilder->addSelectField(
             new DoctrineFieldDescriptor(
@@ -340,7 +341,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->execute();
     }
 
-    public function testAssignParametersForExecute()
+    public function testAssignParametersForExecute(): void
     {
         $this->queryBuilder->getDQL()->willReturn('SELECT * FROM table WHERE locale = :locale AND parent = :parent');
 
@@ -355,7 +356,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->execute();
     }
 
-    public function testAssignParametersForCount()
+    public function testAssignParametersForCount(): void
     {
         $this->queryBuilder->getDQL()->willReturn('SELECT * FROM table WHERE locale = :locale AND parent = :parent');
 
@@ -373,11 +374,11 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->count();
     }
 
-    public function testSearchFieldWithJoin()
+    public function testSearchFieldWithJoin(): void
     {
         $this->doctrineListBuilder->addSearchField(
             new DoctrineFieldDescriptor(
-                'desc', 'desc_alias', self::$translationEntityName, 'translation', [
+                'name', 'name', self::$translationEntityName, 'translation', [
                     self::$translationEntityName => new DoctrineJoinDescriptor(
                             self::$translationEntityName, self::$entityNameAlias . '.translations'
                         ),
@@ -385,17 +386,69 @@ class DoctrineListBuilderTest extends TestCase
             )
         );
 
+        // join is only needed in the preselect query, not in the main query. therefore it should be added a one time
         $this->queryBuilder->leftJoin(
             self::$entityNameAlias . '.translations',
             self::$translationEntityNameAlias,
             'WITH',
             ''
-        )->shouldBeCalled();
+        )->shouldBeCalledTimes(1);
 
         $this->doctrineListBuilder->execute();
     }
 
-    public function testSortFieldWithJoin()
+    public function testWhereWithJoin(): void
+    {
+        $this->doctrineListBuilder->where(
+            new DoctrineFieldDescriptor(
+                'name', 'name', self::$translationEntityName, 'translation', [
+                    self::$translationEntityName => new DoctrineJoinDescriptor(
+                        self::$translationEntityName, self::$entityNameAlias . '.translations'
+                    ),
+                ]
+            ),
+            'test-name'
+        );
+
+        // join is only needed in the preselect query, not in the main query. therefore it should be added a one time
+        $this->queryBuilder->leftJoin(
+            self::$entityNameAlias . '.translations',
+            self::$translationEntityNameAlias,
+            'WITH',
+            ''
+        )->shouldBeCalledTimes(1);
+
+        $this->queryBuilder->andWhere(Argument::containingString('.name = :name'))->shouldBeCalled();
+        $this->queryBuilder->setParameter(Argument::containingString('name'), 'test-name')->shouldBeCalled();
+
+        $this->doctrineListBuilder->execute();
+    }
+
+    public function testSelectFieldWithJoin(): void
+    {
+        $this->doctrineListBuilder->addSelectField(
+            new DoctrineFieldDescriptor(
+                'name', 'name', self::$translationEntityName, 'translation', [
+                    self::$translationEntityName => new DoctrineJoinDescriptor(
+                        self::$translationEntityName, self::$entityNameAlias . '.translations'
+                    ),
+                ]
+            )
+        );
+
+        // join is only needed in the main query, not in the preselect query. therefore it should be added a one time
+        $this->queryBuilder->leftJoin(
+            self::$entityNameAlias . '.translations',
+            self::$translationEntityNameAlias,
+            'WITH',
+            ''
+        )->shouldBeCalledTimes(1);
+        $this->queryBuilder->addSelect('SuluCoreBundle_ExampleTranslation.name AS name')->shouldBeCalledTimes(1);
+
+        $this->doctrineListBuilder->execute();
+    }
+
+    public function testSortFieldWithJoin(): void
     {
         $this->doctrineListBuilder->sort(
             new DoctrineFieldDescriptor(
@@ -407,24 +460,25 @@ class DoctrineListBuilderTest extends TestCase
             )
         );
 
+        // join should be added two times: one time in the preselect query and one time in the main query
         $this->queryBuilder->leftJoin(
             self::$entityNameAlias . '.translations',
             self::$translationEntityNameAlias,
             'WITH',
             ''
-        )->shouldBeCalled();
+        )->shouldBeCalledTimes(2);
 
         $this->queryBuilder->getDQLPart('select')->willReturn([]);
+        // will be called for preselect query
+        $this->queryBuilder->addSelect('SuluCoreBundle_ExampleTranslation.desc AS desc_alias')->shouldBeCalled();
         // will be called for result (should not be displayed)
         $this->queryBuilder->addSelect('SuluCoreBundle_ExampleTranslation.desc AS HIDDEN desc_alias')->shouldBeCalled();
-        // will be called for id query
-        $this->queryBuilder->addSelect('SuluCoreBundle_ExampleTranslation.desc AS desc_alias')->shouldBeCalled();
         $this->queryBuilder->addOrderBy('desc_alias', 'ASC')->shouldBeCalled();
 
         $this->doctrineListBuilder->execute();
     }
 
-    public function testSearch()
+    public function testSearch(): void
     {
         $this->doctrineListBuilder->addSearchField(
             new DoctrineFieldDescriptor('desc', 'desc', self::$translationEntityName)
@@ -442,7 +496,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->execute();
     }
 
-    public function testSearchWithPlaceholder()
+    public function testSearchWithPlaceholder(): void
     {
         $this->doctrineListBuilder->addSearchField(
             new DoctrineFieldDescriptor('desc', 'desc', self::$translationEntityName)
@@ -461,7 +515,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->execute();
     }
 
-    public function testFilter()
+    public function testFilter(): void
     {
         $filterType = $this->prophesize(FilterTypeInterface::class);
         $this->filterTypeRegistry->getFilterType('text')->willReturn($filterType->reveal());
@@ -481,7 +535,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->execute();
     }
 
-    public function testSearchWithoutSearchFields()
+    public function testSearchWithoutSearchFields(): void
     {
         $this->expectException(InvalidSearchException::class);
 
@@ -491,7 +545,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->execute();
     }
 
-    public function testSort()
+    public function testSort(): void
     {
         $this->doctrineListBuilder->sort(new DoctrineFieldDescriptor('desc', 'desc', self::$entityName));
 
@@ -505,7 +559,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->execute();
     }
 
-    public function testSortWithExistingSelect()
+    public function testSortWithExistingSelect(): void
     {
         $this->doctrineListBuilder->sort(new DoctrineFieldDescriptor('desc', 'desc', self::$entityName));
 
@@ -522,7 +576,7 @@ class DoctrineListBuilderTest extends TestCase
     /**
      * Test if multiple calls to sort with same field descriptor will lead to multiple order by calls.
      */
-    public function testSortWithMultipleSort()
+    public function testSortWithMultipleSort(): void
     {
         $this->queryBuilder->getDQLPart('select')->willReturn([new Select('SuluCoreBundle_Example.desc AS desc')]);
 
@@ -538,7 +592,7 @@ class DoctrineListBuilderTest extends TestCase
     /**
      * Test if sort is correnctly overwritten, when field descriptor is provided multiple times.
      */
-    public function testChangeSortOrder()
+    public function testChangeSortOrder(): void
     {
         $this->queryBuilder->getDQLPart('select')->willReturn([new Select('SuluCoreBundle_Example.desc AS desc')]);
 
@@ -551,7 +605,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->execute();
     }
 
-    public function testSortWithoutDefault()
+    public function testSortWithoutDefault(): void
     {
         // when no sort is applied, results should be orderd by id by default
         $this->queryBuilder->addOrderBy(self::$entityNameAlias . '.id', 'ASC')->shouldBeCalled();
@@ -559,7 +613,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->execute();
     }
 
-    public function testSortConcat()
+    public function testSortConcat(): void
     {
         $select = 'CONCAT(SuluCoreBundle_Example.name, CONCAT(\' \', SuluCoreBundle_Example.desc)) AS name_desc';
 
@@ -584,7 +638,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->queryBuilder->addOrderBy('name_desc', 'ASC')->shouldHaveBeenCalledTimes(2);
     }
 
-    public function testLimit()
+    public function testLimit(): void
     {
         $this->doctrineListBuilder->limit(5);
 
@@ -594,7 +648,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->execute();
     }
 
-    public function testSetIds()
+    public function testSetIds(): void
     {
         $this->doctrineListBuilder->setIds([11, 22]);
 
@@ -606,7 +660,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->execute();
     }
 
-    public function testSetIdsEmpty()
+    public function testSetIdsEmpty(): void
     {
         $this->doctrineListBuilder->setIds([]);
 
@@ -617,7 +671,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->execute();
     }
 
-    public function testSetIdsNull()
+    public function testSetIdsNull(): void
     {
         $this->doctrineListBuilder->setIds(null);
 
@@ -628,7 +682,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->execute();
     }
 
-    public function testSetExcludedIds()
+    public function testSetExcludedIds(): void
     {
         $this->doctrineListBuilder->setExcludedIds([55, 99]);
 
@@ -640,7 +694,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->execute();
     }
 
-    public function testSetExcludedIdsEmpty()
+    public function testSetExcludedIdsEmpty(): void
     {
         $this->doctrineListBuilder->setExcludedIds([]);
 
@@ -651,7 +705,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->execute();
     }
 
-    public function testSetExcludedIdsNull()
+    public function testSetExcludedIdsNull(): void
     {
         $this->doctrineListBuilder->setExcludedIds(null);
 
@@ -662,7 +716,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->execute();
     }
 
-    public function testCount()
+    public function testCount(): void
     {
         $this->doctrineListBuilder->setSelectFields(
             [
@@ -694,7 +748,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->count();
     }
 
-    public function testSetWhereWithSameName()
+    public function testSetWhereWithSameName(): void
     {
         $fieldDescriptors = [
             'title_id' => new DoctrineFieldDescriptor('id', 'title_id', self::$entityName),
@@ -733,7 +787,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->execute();
     }
 
-    public function testSetWhereWithNull()
+    public function testSetWhereWithNull(): void
     {
         $fieldDescriptors = [
             'title_id' => new DoctrineFieldDescriptor('id', 'title_id', self::$entityName),
@@ -756,7 +810,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->execute();
     }
 
-    public function testSetWhereWithNotNull()
+    public function testSetWhereWithNotNull(): void
     {
         $fieldDescriptors = [
             'title_id' => new DoctrineFieldDescriptor('id', 'title_id', self::$entityName),
@@ -779,7 +833,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->execute();
     }
 
-    public function testSetWhereNot()
+    public function testSetWhereNot(): void
     {
         $fieldDescriptors = [
             'title_id' => new DoctrineFieldDescriptor('id', 'title_id', self::$entityName),
@@ -818,7 +872,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->execute();
     }
 
-    public function testSetIn()
+    public function testSetIn(): void
     {
         $fieldDescriptor = new DoctrineFieldDescriptor('id', 'title_id', self::$entityName);
 
@@ -834,7 +888,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->execute();
     }
 
-    public function testJoinMethods()
+    public function testJoinMethods(): void
     {
         $fieldDescriptors = [
             'id1' => new DoctrineFieldDescriptor(
@@ -869,7 +923,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->execute();
     }
 
-    public function testJoinWithoutFieldName()
+    public function testJoinWithoutFieldName(): void
     {
         $fieldDescriptors = [
             'name' => new DoctrineFieldDescriptor(
@@ -901,7 +955,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->execute();
     }
 
-    public function testJoinWithoutFieldNameByGivenEntity()
+    public function testJoinWithoutFieldNameByGivenEntity(): void
     {
         $fieldDescriptors = [
             'name' => new DoctrineFieldDescriptor(
@@ -933,7 +987,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->execute();
     }
 
-    public function testJoinConditions()
+    public function testJoinConditions(): void
     {
         $fieldDescriptors = [
             'id1' => new DoctrineFieldDescriptor(
@@ -983,7 +1037,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->execute();
     }
 
-    public function testGroupBy()
+    public function testGroupBy(): void
     {
         $nameFieldDescriptor = new DoctrineFieldDescriptor('name', 'name_alias', self::$entityName);
 
@@ -1001,7 +1055,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->execute();
     }
 
-    public function testBetween()
+    public function testBetween(): void
     {
         $nameFieldDescriptor = new DoctrineFieldDescriptor('name', 'name_alias', self::$entityName);
 
@@ -1023,7 +1077,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->execute();
     }
 
-    public function testDistinct()
+    public function testDistinct(): void
     {
         $this->doctrineListBuilder->distinct(true);
 
@@ -1032,14 +1086,14 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->execute();
     }
 
-    public function testNoDistinct()
+    public function testNoDistinct(): void
     {
         $this->queryBuilder->distinct(false)->shouldBeCalled();
 
         $this->doctrineListBuilder->execute();
     }
 
-    public function testIdField()
+    public function testIdField(): void
     {
         $idField = $this->prophesize(DoctrineFieldDescriptorInterface::class);
         $idField->getSelect()->willReturn('example.id');
@@ -1053,7 +1107,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->execute();
     }
 
-    public function testIdFieldChanged()
+    public function testIdFieldChanged(): void
     {
         $idField = $this->prophesize(DoctrineFieldDescriptorInterface::class);
         $idField->getSelect()->willReturn('example.uuid');
@@ -1078,7 +1132,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->execute();
     }
 
-    public function testNoIdField()
+    public function testNoIdField(): void
     {
         $this->queryBuilder
             ->select('SuluCoreBundle_Example.id AS id')
@@ -1092,7 +1146,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->execute();
     }
 
-    public function testSetPermissionCheck()
+    public function testSetPermissionCheck(): void
     {
         $user = $this->prophesize(User::class);
         $role = $this->prophesize(Role::class);
@@ -1122,7 +1176,7 @@ class DoctrineListBuilderTest extends TestCase
     /**
      * Check if only one query is executed when no limit and no expressions.
      */
-    public function testSingleQuery()
+    public function testSingleQuery(): void
     {
         $this->entityManager->createQueryBuilder()->shouldBeCalledTimes(1)->willReturn($this->queryBuilder->reveal());
 
@@ -1130,7 +1184,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->execute();
     }
 
-    public function testSetPermissionCheckWithSecuredEntityName()
+    public function testSetPermissionCheckWithSecuredEntityName(): void
     {
         $user = $this->prophesize(User::class);
         $role = $this->prophesize(Role::class);
@@ -1157,7 +1211,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->execute();
     }
 
-    public function testSetPermissionCheckWithSecuredEntityNameAndAdditionalJoins()
+    public function testSetPermissionCheckWithSecuredEntityNameAndAdditionalJoins(): void
     {
         $user = $this->prophesize(User::class);
         $role = $this->prophesize(Role::class);
