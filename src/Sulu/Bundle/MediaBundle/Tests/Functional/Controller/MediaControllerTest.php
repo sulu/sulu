@@ -128,7 +128,7 @@ class MediaControllerTest extends SuluTestCase
         $this->setUpMedia();
     }
 
-    protected function cleanImage()
+    protected function cleanImage(): void
     {
         if ($this->getContainer()) {
             $configPath = $this->getContainer()->getParameter('sulu_media.media.storage.local.path');
@@ -139,7 +139,7 @@ class MediaControllerTest extends SuluTestCase
         }
     }
 
-    public function recursiveRemoveDirectory($directory, $counter = 0)
+    public function recursiveRemoveDirectory($directory, $counter = 0): void
     {
         foreach (\glob($directory . '/*') as $file) {
             if (\is_dir($file)) {
@@ -157,7 +157,7 @@ class MediaControllerTest extends SuluTestCase
     /**
      * set up two categories.
      */
-    private function setUpCategory()
+    private function setUpCategory(): void
     {
         /* First Category
         -------------------------------------*/
@@ -211,7 +211,7 @@ class MediaControllerTest extends SuluTestCase
         $this->em->flush();
     }
 
-    protected function setUpMedia()
+    protected function setUpMedia(): void
     {
         // Create Media Type
         $this->documentType = new MediaType();
@@ -337,7 +337,7 @@ class MediaControllerTest extends SuluTestCase
         return $media;
     }
 
-    protected function setUpCollection()
+    protected function setUpCollection(): void
     {
         $this->collection = new Collection();
         $style = [
@@ -378,7 +378,7 @@ class MediaControllerTest extends SuluTestCase
     /**
      * Test Media DownloadCounter.
      */
-    public function test404ResponseHeader()
+    public function test404ResponseHeader(): void
     {
         $this->client->jsonRequest(
             'GET',
@@ -393,7 +393,7 @@ class MediaControllerTest extends SuluTestCase
     /**
      * Test Header dispositionType attachment.
      */
-    public function testDownloadHeaderAttachment()
+    public function testDownloadHeaderAttachment(): void
     {
         $media = $this->createMedia('photo');
 
@@ -412,7 +412,7 @@ class MediaControllerTest extends SuluTestCase
     /**
      * Test Header dispositionType inline.
      */
-    public function testDownloadHeaderInline()
+    public function testDownloadHeaderInline(): void
     {
         $media = $this->createMedia('photo');
 
@@ -431,7 +431,7 @@ class MediaControllerTest extends SuluTestCase
     /**
      * Test Header dispositionType umlauts in name.
      */
-    public function testDownloadHeaderUmlauts()
+    public function testDownloadHeaderUmlauts(): void
     {
         $media = $this->createMedia('wöchentlich');
 
@@ -450,7 +450,7 @@ class MediaControllerTest extends SuluTestCase
     /**
      * Test Media GET by ID.
      */
-    public function testGetById()
+    public function testGetById(): void
     {
         $media = $this->createMedia('photo');
 
@@ -483,7 +483,7 @@ class MediaControllerTest extends SuluTestCase
     /**
      * Test Media GET by ID, without passing a locale.
      */
-    public function testGetByIdWithNoLocale()
+    public function testGetByIdWithNoLocale(): void
     {
         $media = $this->createMedia('photo');
 
@@ -495,7 +495,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(400, $this->client->getResponse());
     }
 
-    public function testGetByIdWithFallback()
+    public function testGetByIdWithFallback(): void
     {
         $media = $this->createMedia('photo');
 
@@ -510,7 +510,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals('en-gb', $response['fallbackLocale']);
     }
 
-    public function testCget()
+    public function testCget(): void
     {
         $this->createMedia('photo');
         $this->createMedia('photo2');
@@ -527,7 +527,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals(2, $response->total);
     }
 
-    public function testCgetWithPreview()
+    public function testCgetWithPreview(): void
     {
         $preview1 = $this->createMedia('preview-image-1');
         $preview2 = $this->createMedia('preview-image-2');
@@ -568,7 +568,7 @@ class MediaControllerTest extends SuluTestCase
         );
     }
 
-    public function testCgetExcludedIds()
+    public function testCgetExcludedIds(): void
     {
         $media = $this->createMedia('photo');
         $this->createMedia('photo1');
@@ -589,7 +589,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals(2, $response->total);
     }
 
-    public function testCgetWithNoLocale()
+    public function testCgetWithNoLocale(): void
     {
         $this->client->jsonRequest(
             'GET',
@@ -599,7 +599,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(400, $this->client->getResponse());
     }
 
-    public function testCgetCollection()
+    public function testCgetCollection(): void
     {
         $media = $this->createMedia('photo');
 
@@ -619,7 +619,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals('photo.jpeg', $response->_embedded->media[0]->name);
     }
 
-    public function testcGetCollectionTypes()
+    public function testcGetCollectionTypes(): void
     {
         $media = $this->createMedia('photo');
         $document = $this->createMedia('document', 'en-gb', 'document');
@@ -640,7 +640,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals('photo.jpeg', $response->_embedded->media[0]->name);
     }
 
-    public function testcGetCollectionTypesNotExisting()
+    public function testcGetCollectionTypesNotExisting(): void
     {
         $this->client->jsonRequest(
             'GET',
@@ -656,7 +656,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals(0, $response->total);
     }
 
-    public function testcGetCollectionTypesMultiple()
+    public function testcGetCollectionTypesMultiple(): void
     {
         $media = $this->createMedia('photo');
         $audio = $this->createMedia('audio', 'en-gb', 'audio');
@@ -681,7 +681,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals('audio.mp3', $response->_embedded->media[1]->name);
     }
 
-    public function testcGetFallbacks()
+    public function testcGetFallbacks(): void
     {
         $mediaEN = $this->createMedia('test-en', 'en');
         $mediaDE = $this->createMedia('test-de', 'de');
@@ -732,7 +732,7 @@ class MediaControllerTest extends SuluTestCase
         );
     }
 
-    public function testcGetIds()
+    public function testcGetIds(): void
     {
         $media = $this->createMedia('photo');
 
@@ -752,7 +752,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals('photo.jpeg', $response->_embedded->media[0]->name);
     }
 
-    public function testcGetMultipleIds()
+    public function testcGetMultipleIds(): void
     {
         $media1 = $this->createMedia('photo1');
         $media2 = $this->createMedia('photo2');
@@ -781,7 +781,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals(['id' => $media2->getId(), 'name' => 'photo2.jpeg'], $medias[0]);
     }
 
-    public function testCgetSearch()
+    public function testCgetSearch(): void
     {
         $this->createMedia('photo1');
         $this->createMedia('photo2');
@@ -810,7 +810,51 @@ class MediaControllerTest extends SuluTestCase
         $this->assertContains('photo1.jpeg', $titles);
     }
 
-    public function testcGetNotExistingIds()
+    public function testCgetFilterByTag(): void
+    {
+        $media1 = $this->createMedia('photo1');
+        $media1->getFiles()[0]->getLatestFileVersion()->removeTags();
+
+        $media2 = $this->createMedia('photo2');
+        $media2->getFiles()[0]->getLatestFileVersion()->removeTags();
+        $media2->getFiles()[0]->getLatestFileVersion()->addTag($this->tag1);
+
+        $media3 = $this->createMedia('photo3');
+        $media3->getFiles()[0]->getLatestFileVersion()->removeTags();
+        $media3->getFiles()[0]->getLatestFileVersion()->addTag($this->tag2);
+
+        $media4 = $this->createMedia('photo4');
+        $media4->getFiles()[0]->getLatestFileVersion()->removeTags();
+        $media4->getFiles()[0]->getLatestFileVersion()->addTag($this->tag1);
+        $media4->getFiles()[0]->getLatestFileVersion()->addTag($this->tag2);
+
+        $this->em->flush();
+        $this->em->clear();
+
+        $this->client->jsonRequest(
+            'GET',
+            '/api/media?locale=en-gb&filter[tagId]=' . $this->tag1->getId()
+        );
+
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
+
+        $this->assertEquals(2, $response['total']);
+        $this->assertCount(2, $response['_embedded']['media']);
+
+        $titles = \array_map(
+            function($media) {
+                return $media['name'];
+            },
+            $response['_embedded']['media']
+        );
+
+        $this->assertContains('photo2.jpeg', $titles);
+        $this->assertContains('photo4.jpeg', $titles);
+    }
+
+    public function testcGetNotExistingIds(): void
     {
         $this->client->jsonRequest(
             'GET',
@@ -826,7 +870,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals(0, $response->total);
     }
 
-    public function testGetByIdNotExisting()
+    public function testGetByIdNotExisting(): void
     {
         $this->client->jsonRequest(
             'GET',
@@ -840,7 +884,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertTrue(isset($response->message));
     }
 
-    public function testPost()
+    public function testPost(): void
     {
         /** @var TargetGroupRepositoryInterface $targetGroupRepository */
         $targetGroupRepository = $this->getContainer()->get('sulu.repository.target_group');
@@ -945,7 +989,7 @@ class MediaControllerTest extends SuluTestCase
     /**
      * @group postWithoutDetails
      */
-    public function testPostWithoutDetails()
+    public function testPostWithoutDetails(): void
     {
         $imagePath = $this->getImagePath();
         $this->assertTrue(\file_exists($imagePath));
@@ -977,7 +1021,7 @@ class MediaControllerTest extends SuluTestCase
     /**
      * @group postWithoutDetails
      */
-    public function testPostWithoutExtension()
+    public function testPostWithoutExtension(): void
     {
         $imagePath = $this->getImagePath();
         $this->assertTrue(\file_exists($imagePath));
@@ -1009,7 +1053,7 @@ class MediaControllerTest extends SuluTestCase
     /**
      * @group postWithoutDetails
      */
-    public function testPostWithSmallFile()
+    public function testPostWithSmallFile(): void
     {
         $filePath = $this->getFilePath();
         $this->assertTrue(\file_exists($filePath));
@@ -1038,7 +1082,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertNotNull($response->id);
     }
 
-    public function testFileVersionUpdate()
+    public function testFileVersionUpdate(): void
     {
         $media = $this->createMedia('photo');
 
@@ -1103,7 +1147,7 @@ class MediaControllerTest extends SuluTestCase
         );
     }
 
-    public function testFileVersionDelete()
+    public function testFileVersionDelete(): void
     {
         $media = $this->createMedia('photo');
         $mediaId = $media->getId();
@@ -1142,7 +1186,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals(2, $response->version);
     }
 
-    public function testFileVersionDeleteCurrentShould400()
+    public function testFileVersionDeleteCurrentShould400(): void
     {
         $media = $this->createMedia('photo');
 
@@ -1154,7 +1198,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(400, $this->client->getResponse());
     }
 
-    public function testFileVersionDeleteNotExistShould400()
+    public function testFileVersionDeleteNotExistShould400(): void
     {
         $media = $this->createMedia('photo');
 
@@ -1166,7 +1210,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
-    public function testFileVersionDeleteActiveShould400()
+    public function testFileVersionDeleteActiveShould400(): void
     {
         $media = $this->createMedia('photo');
 
@@ -1194,7 +1238,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(400, $this->client->getResponse());
     }
 
-    public function testPutRemovingMetadata()
+    public function testPutRemovingMetadata(): void
     {
         $media = $this->createMedia('image', 'de');
 
@@ -1214,7 +1258,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertSame(null, $response['credits']);
     }
 
-    public function testPutRemovingTargetGroups()
+    public function testPutRemovingTargetGroups(): void
     {
         /** @var TargetGroupRepositoryInterface $targetGroupRepository */
         $targetGroupRepository = $this->getContainer()->get('sulu.repository.target_group');
@@ -1246,7 +1290,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals([], $response->targetGroups);
     }
 
-    public function testPutWithoutFile()
+    public function testPutWithoutFile(): void
     {
         $media = $this->createMedia('photo');
 
@@ -1310,7 +1354,7 @@ class MediaControllerTest extends SuluTestCase
         );
     }
 
-    public function testTagRemove()
+    public function testTagRemove(): void
     {
         $media = $this->createMedia('photo');
         $mediaId = $media->getId();
@@ -1330,7 +1374,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals(['Tag 2'], $response->tags);
     }
 
-    public function testFileVersionUpdateWithoutDetails()
+    public function testFileVersionUpdateWithoutDetails(): void
     {
         $media = $this->createMedia('photo');
 
@@ -1365,7 +1409,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertNotEmpty($response->thumbnails);
     }
 
-    public function testDeleteById()
+    public function testDeleteById(): void
     {
         $media = $this->createMedia('photo');
         $mediaId = $media->getId();
@@ -1388,7 +1432,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertFileNotExists($this->getStoragePath() . '/1/photo.jpeg');
     }
 
-    public function testDeleteCollection()
+    public function testDeleteCollection(): void
     {
         $media = $this->createMedia('photo');
         $this->getEntityManager()->clear();
@@ -1409,7 +1453,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertTrue(isset($response->message));
     }
 
-    public function testDeleteByIdNotExisting()
+    public function testDeleteByIdNotExisting(): void
     {
         $media = $this->createMedia('photo');
 
@@ -1421,7 +1465,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals(1, $response->total);
     }
 
-    public function testDownloadCounter()
+    public function testDownloadCounter(): void
     {
         $media = $this->createMedia('photo');
 
@@ -1452,7 +1496,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals($this->mediaDefaultDescription, $response->description);
     }
 
-    public function testMove()
+    public function testMove(): void
     {
         $destCollection = new Collection();
         $style = [
@@ -1480,7 +1524,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals($this->mediaDefaultTitle, $response['title']);
     }
 
-    public function testMoveWithNoLocale()
+    public function testMoveWithNoLocale(): void
     {
         $destCollection = new Collection();
         $style = [
@@ -1505,7 +1549,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(400, $this->client->getResponse());
     }
 
-    public function testMoveNonExistingCollection()
+    public function testMoveNonExistingCollection(): void
     {
         $media = $this->createMedia('photo');
 
@@ -1514,14 +1558,14 @@ class MediaControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(400, $this->client->getResponse());
     }
 
-    public function testMoveNonExistingMedia()
+    public function testMoveNonExistingMedia(): void
     {
         $this->client->jsonRequest('POST', '/api/media/404?locale=en-gb&action=move&destination=' . $this->collection->getId());
 
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
-    public function testMoveNonExistingAction()
+    public function testMoveNonExistingAction(): void
     {
         $media = $this->createMedia('photo');
 
