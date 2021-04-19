@@ -13,8 +13,8 @@ namespace Sulu\Bundle\MediaBundle\Domain\Event;
 
 use Sulu\Bundle\EventLogBundle\Domain\Event\DomainEvent;
 use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
-use Sulu\Bundle\MediaBundle\Api\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
+use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 
 class CollectionCreatedEvent extends DomainEvent
 {
@@ -80,9 +80,17 @@ class CollectionCreatedEvent extends DomainEvent
 
     public function getResourceTitle(): ?string
     {
-        $collection = new Collection($this->collection, $this->locale);
+        /** @var CollectionMeta|null $meta */
+        $meta = $this->collection->getDefaultMeta();
+        foreach ($this->collection->getMeta() as $collectionMeta) {
+            if ($collectionMeta->getLocale() === $this->locale) {
+                $meta = $collectionMeta;
 
-        return $collection->getTitle();
+                break;
+            }
+        }
+
+        return $meta ? $meta->getTitle() : null;
     }
 
     public function getResourceSecurityContext(): ?string

@@ -13,7 +13,6 @@ namespace Sulu\Bundle\MediaBundle\Domain\Event;
 
 use Sulu\Bundle\EventLogBundle\Domain\Event\DomainEvent;
 use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
-use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 
 class MediaPreviewImageModifiedEvent extends DomainEvent
@@ -80,9 +79,11 @@ class MediaPreviewImageModifiedEvent extends DomainEvent
 
     public function getResourceTitle(): ?string
     {
-        $media = new Media($this->media, null);
+        $file = $this->media->getFiles()[0] ?? null;
+        $fileVersion = $file ? $file->getLatestFileVersion() : null;
+        $defaultMeta = $fileVersion ? $fileVersion->getDefaultMeta() : null;
 
-        return $media->getTitle();
+        return $defaultMeta ? $defaultMeta->getTitle() : null;
     }
 
     public function getResourceSecurityContext(): ?string

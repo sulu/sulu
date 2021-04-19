@@ -92,9 +92,11 @@ class MediaPreviewController extends AbstractMediaController implements ClassRes
             // Unset id to not overwrite original file
             unset($data['id']);
 
+            /** @var MediaInterface|null $oldPreviewImage */
+            $oldPreviewImage = $mediaEntity->getPreviewImage();
             $oldPreviewImageId = null;
-            if (null !== $mediaEntity->getPreviewImage()) {
-                $oldPreviewImageId = $mediaEntity->getPreviewImage()->getId();
+            if (null !== $oldPreviewImage) {
+                $oldPreviewImageId = $oldPreviewImage->getId();
                 $data['id'] = $oldPreviewImageId;
             }
 

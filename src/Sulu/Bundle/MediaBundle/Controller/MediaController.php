@@ -483,8 +483,12 @@ class MediaController extends AbstractMediaController implements
     /**
      * @deprecated
      * @see MediaManager::removeFileVersion()
+     *
+     * @param int $mediaId
+     * @param string $version
+     * @param string $locale
      */
-    private function removeFileVersion($mediaId, $version, $locale)
+    private function removeFileVersion($mediaId, $version, $locale): void
     {
         $media = $this->mediaManager->getById($mediaId, $locale);
 

@@ -30,6 +30,7 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionRepository;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException;
@@ -125,11 +126,6 @@ class MediaManager implements MediaManagerInterface
     private $tagManager;
 
     /**
-     * @var DomainEventCollectorInterface
-     */
-    private $domainEventCollector;
-
-    /**
      * @var TokenStorageInterface
      */
     private $tokenStorage;
@@ -143,6 +139,11 @@ class MediaManager implements MediaManagerInterface
      * @var PathCleanupInterface
      */
     private $pathCleaner;
+
+    /**
+     * @var DomainEventCollectorInterface
+     */
+    private $domainEventCollector;
 
     /**
      * @var string
@@ -536,6 +537,10 @@ class MediaManager implements MediaManagerInterface
             new MediaCreatedEvent($mediaEntity, $media->getLocale(), $data)
         );
 
+        $this->domainEventCollector->collect(
+            new MediaVersionCreatedEvent($mediaEntity, 1)
+        );
+
         $this->em->flush();
 
         return $media;
@@ -698,8 +703,7 @@ class MediaManager implements MediaManagerInterface
     {
         $mediaEntity = $this->getEntityById($id);
 
-        $media = new Media($mediaEntity, null);
-        $mediaTitle = $media->getTitle();
+        $mediaTitle = $this->getDefaultMediaTitle($mediaEntity);
 
         if ($checkSecurity) {
             $this->securityChecker->checkPermission(
@@ -979,15 +983,12 @@ class MediaManager implements MediaManagerInterface
 
     public function removeFileVersion(int $mediaId, int $version): void
     {
-        $media = $this->getById($mediaId, null);
-
-        if ($media->getVersion() === $version) {
-            throw new BadRequestHttpException('Can\'t delete active version of a media.');
-        }
+        $mediaEntity = $this->getEntityById($mediaId);
+        $file = $mediaEntity->getFiles()[0];
 
         $currentFileVersion = null;
 
-        foreach ($media->getFile()->getFileVersions() as $fileVersion) {
+        foreach ($file->getFileVersions() as $fileVersion) {
             if ($fileVersion->getVersion() === $version) {
                 $currentFileVersion = $fileVersion;
                 break;
@@ -1004,15 +1005,28 @@ class MediaManager implements MediaManagerInterface
             );
         }
 
-        $this->entityManager->remove($currentFileVersion);
+        if ($currentFileVersion === $file->getLatestFileVersion()) {
+            throw new BadRequestHttpException('Can\'t delete active version of a media.');
+        }
+
+        $this->em->remove($currentFileVersion);
 
         $this->domainEventCollector->collect(
-            new MediaVersionRemovedEvent($media->getEntity(), $version)
+            new MediaVersionRemovedEvent($mediaEntity, $version)
         );
 
-        $this->entityManager->flush();
+        $this->em->flush();
 
         // After successfully delete in the database remove file from storage
         $this->storage->remove($currentFileVersion->getStorageOptions());
+    }
+
+    private function getDefaultMediaTitle(MediaInterface $media): ?string
+    {
+        $file = $media->getFiles()[0] ?? null;
+        $fileVersion = $file ? $file->getLatestFileVersion() : null;
+        $defaultMeta = $fileVersion ? $fileVersion->getDefaultMeta() : null;
+
+        return $defaultMeta ? $defaultMeta->getTitle() : null;
     }
 }

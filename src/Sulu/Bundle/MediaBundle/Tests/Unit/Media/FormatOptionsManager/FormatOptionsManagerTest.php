@@ -15,6 +15,10 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
+use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Bundle\MediaBundle\Domain\Event\MediaCropModifiedEvent;
+use Sulu\Bundle\MediaBundle\Domain\Event\MediaCropRemovedEvent;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FormatOptions;
@@ -30,24 +34,29 @@ use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 class FormatOptionsManagerTest extends TestCase
 {
     /**
-     * @var EntityManagerInterface
+     * @var EntityManagerInterface|ObjectProphecy
      */
     private $em;
 
     /**
-     * @var EntityRepository
+     * @var EntityRepository|ObjectProphecy
      */
     private $formatOptionsRepository;
 
     /**
-     * @var MediaManagerInterface
+     * @var MediaManagerInterface|ObjectProphecy
      */
     private $mediaManager;
 
     /**
-     * @var FormatManagerInterface
+     * @var FormatManagerInterface|ObjectProphecy
      */
     private $formatManager;
+
+    /**
+     * @var DomainEventCollectorInterface|ObjectProphecy
+     */
+    private $domainEventCollector;
 
     /**
      * @var MediaInterface[]
@@ -69,16 +78,17 @@ class FormatOptionsManagerTest extends TestCase
         parent::setUp();
 
         $this->em = $this->prophesize(EntityManagerInterface::class);
-
         $this->formatOptionsRepository = $this->prophesize(EntityRepository::class);
         $this->mediaManager = $this->prophesize(MediaManagerInterface::class);
-        $this->formatManager = $this->prophesize(FormatManager::class);
+        $this->formatManager = $this->prophesize(FormatManagerInterface::class);
+        $this->domainEventCollector = $this->prophesize(DomainEventCollectorInterface::class);
 
         $this->formatOptionsManager = new FormatOptionsManager(
             $this->em->reveal(),
             $this->formatOptionsRepository->reveal(),
             $this->mediaManager->reveal(),
             $this->formatManager->reveal(),
+            $this->domainEventCollector->reveal(),
             [
                 'sulu-50x50' => [],
                 'sulu-100x100' => [],
@@ -204,6 +214,7 @@ class FormatOptionsManagerTest extends TestCase
         );
 
         $this->em->persist(Argument::type(FormatOptions::class))->shouldHaveBeenCalled();
+        $this->domainEventCollector->collect(Argument::type(MediaCropModifiedEvent::class))->shouldHaveBeenCalled();
         $this->formatManager->purge(42, Argument::any(), Argument::any(), Argument::any())->shouldHaveBeenCalled();
 
         $this->assertEquals(10, $formatOptions->getCropX());
@@ -229,6 +240,7 @@ class FormatOptionsManagerTest extends TestCase
         );
 
         $this->em->persist(Argument::type(FormatOptions::class))->shouldNotHaveBeenCalled();
+        $this->domainEventCollector->collect(Argument::type(MediaCropModifiedEvent::class))->shouldNotHaveBeenCalled();
         $this->formatManager->purge(42, Argument::any(), Argument::any(), Argument::any())->shouldNotHaveBeenCalled();
     }
 
@@ -239,6 +251,7 @@ class FormatOptionsManagerTest extends TestCase
         $this->formatOptionsManager->delete(42, 'sulu-100x100');
 
         $this->em->remove(Argument::type(FormatOptions::class))->shouldHaveBeenCalled();
+        $this->domainEventCollector->collect(Argument::type(MediaCropRemovedEvent::class))->shouldHaveBeenCalled();
         $this->formatManager->purge(42, Argument::any(), Argument::any(), Argument::any())->shouldHaveBeenCalled();
     }
 
@@ -249,6 +262,7 @@ class FormatOptionsManagerTest extends TestCase
         $this->formatOptionsManager->delete(42, 'sulu-50x50');
 
         $this->em->remove(Argument::type(FormatOptions::class))->shouldNotHaveBeenCalled();
+        $this->domainEventCollector->collect(Argument::type(MediaCropRemovedEvent::class))->shouldNotHaveBeenCalled();
         $this->formatManager->purge(42, Argument::any(), Argument::any(), Argument::any())->shouldNotHaveBeenCalled();
     }
 }

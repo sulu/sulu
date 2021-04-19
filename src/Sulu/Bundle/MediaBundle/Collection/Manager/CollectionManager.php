@@ -22,6 +22,7 @@ use Sulu\Bundle\MediaBundle\Domain\Event\CollectionMovedEvent;
 use Sulu\Bundle\MediaBundle\Domain\Event\CollectionRemovedEvent;
 use Sulu\Bundle\MediaBundle\Entity\Collection as CollectionEntity;
 use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
+use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
@@ -552,9 +553,10 @@ class CollectionManager implements CollectionManagerInterface
             throw new CollectionNotFoundException($id);
         }
 
-        $collection = new Collection($collectionEntity, null);
         $collectionId = $collectionEntity->getId();
-        $collectionTitle = $collection->getTitle();
+        /** @var CollectionMeta|null $collectionMeta */
+        $collectionMeta = $collectionEntity->getDefaultMeta();
+        $collectionTitle = $collectionMeta ? $collectionMeta->getTitle() : null;
 
         $this->em->remove($collectionEntity);
 
