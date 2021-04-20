@@ -4,7 +4,7 @@
 
 ### Added resourceTitleLocale field to EventRecord
 
-Becase a new `resourceTitleLocale` field has been added to the `EventRecord` entity,
+Because a new `resourceTitleLocale` field has been added to the `EventRecord` entity,
 you need to update your database schema:
 
 ```sql
