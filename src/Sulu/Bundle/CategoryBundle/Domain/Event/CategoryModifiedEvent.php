@@ -72,16 +72,21 @@ class CategoryModifiedEvent extends DomainEvent
         return (string) $this->category->getId();
     }
 
-    public function getResourceLocale(): ?string
+    public function getResourceLocale(): string
     {
         return $this->locale;
     }
 
     public function getResourceTitle(): ?string
     {
-        $translation = $this->category->findTranslationByLocale($this->locale);
+        $translation = $this->category->findTranslationByLocale($this->getResourceTitleLocale());
 
         return $translation ? $translation->getTranslation() : null;
+    }
+
+    public function getResourceTitleLocale(): string
+    {
+        return $this->getResourceLocale();
     }
 
     public function getResourceSecurityContext(): ?string

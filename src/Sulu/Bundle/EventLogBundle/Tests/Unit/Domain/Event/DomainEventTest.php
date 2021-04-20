@@ -103,6 +103,13 @@ class DomainEventTest extends TestCase
         static::assertNull($event->getResourceTitle());
     }
 
+    public function testResourceTitleLocale(): void
+    {
+        $event = $this->createTestDomainEvent();
+
+        static::assertNull($event->getResourceTitleLocale());
+    }
+
     public function testResourceSecurityContext(): void
     {
         $event = $this->createTestDomainEvent();

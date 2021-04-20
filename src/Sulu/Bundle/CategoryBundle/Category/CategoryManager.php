@@ -267,11 +267,12 @@ class CategoryManager implements CategoryManagerInterface
             }
         }
 
-        $defaultTranslation = $entity->findTranslationByLocale($entity->getDefaultLocale());
+        $defaultLocale = $entity->getDefaultLocale();
+        $defaultTranslation = $entity->findTranslationByLocale($defaultLocale);
         $categoryName = $defaultTranslation ? $defaultTranslation->getTranslation() : null;
 
         $this->em->remove($entity);
-        $this->domainEventCollector->collect(new CategoryRemovedEvent($id, $categoryName));
+        $this->domainEventCollector->collect(new CategoryRemovedEvent($id, $categoryName, $defaultLocale));
         $this->em->flush();
 
         // throw a category.delete event

@@ -79,6 +79,13 @@ class CustomUrlCreatedEventTest extends TestCase
         static::assertSame('custom-url-title', $event->getResourceTitle());
     }
 
+    public function testGetResourceTitleLocale(): void
+    {
+        $event = $this->createCustomUrlCreatedEvent();
+
+        static::assertNull($event->getResourceTitleLocale());
+    }
+
     public function testGetResourceSecurityContext(): void
     {
         $event = $this->createCustomUrlCreatedEvent('test-io');

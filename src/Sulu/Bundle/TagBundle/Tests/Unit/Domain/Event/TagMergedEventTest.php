@@ -72,6 +72,13 @@ class TagMergedEventTest extends TestCase
         static::assertSame('tag-name', $event->getResourceTitle());
     }
 
+    public function testGetResourceTitleLocale(): void
+    {
+        $event = $this->createTagMergedEvent();
+
+        static::assertNull($event->getResourceTitleLocale());
+    }
+
     public function testGetResourceSecurityContext(): void
     {
         $event = $this->createTagMergedEvent();

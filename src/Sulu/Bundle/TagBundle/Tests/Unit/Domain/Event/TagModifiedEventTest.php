@@ -72,6 +72,13 @@ class TagModifiedEventTest extends TestCase
         static::assertSame('tag-name', $event->getResourceTitle());
     }
 
+    public function testGetResourceTitleLocale(): void
+    {
+        $event = $this->createTagModifiedEvent();
+
+        static::assertNull($event->getResourceTitleLocale());
+    }
+
     public function testGetResourceSecurityContext(): void
     {
         $event = $this->createTagModifiedEvent();

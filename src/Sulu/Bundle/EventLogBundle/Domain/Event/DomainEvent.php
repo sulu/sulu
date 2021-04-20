@@ -93,6 +93,10 @@ abstract class DomainEvent
 
     abstract public function getResourceId(): string;
 
+    /**
+     * This method should return the locale of a resource, which is affected by the current event.
+     * If all locales of a resource are effected by the current event, this method should return null.
+     */
     public function getResourceLocale(): ?string
     {
         return null;
@@ -104,6 +108,15 @@ abstract class DomainEvent
     }
 
     public function getResourceTitle(): ?string
+    {
+        return null;
+    }
+
+    /**
+     * This method should return the locale in which the resource title is stored.
+     * If the resource title is not localized (e.g. a tag name), this method should return null.
+     */
+    public function getResourceTitleLocale(): ?string
     {
         return null;
     }

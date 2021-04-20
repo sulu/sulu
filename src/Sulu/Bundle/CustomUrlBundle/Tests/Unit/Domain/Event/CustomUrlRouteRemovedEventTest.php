@@ -79,6 +79,13 @@ class CustomUrlRouteRemovedEventTest extends TestCase
         static::assertSame('custom-url-title', $event->getResourceTitle());
     }
 
+    public function testGetResourceTitleLocale(): void
+    {
+        $event = $this->createCustomUrlRouteRemovedEvent();
+
+        static::assertNull($event->getResourceTitleLocale());
+    }
+
     public function testGetResourceSecurityContext(): void
     {
         $event = $this->createCustomUrlRouteRemovedEvent('test-io');
