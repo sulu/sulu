@@ -71,6 +71,10 @@ interface EventRecordInterface
 
     public function setResourceTitle(?string $resourceTitle): EventRecordInterface;
 
+    public function getResourceTitleLocale(): ?string;
+
+    public function setResourceTitleLocale(?string $resourceTitleLocale): EventRecordInterface;
+
     public function getResourceSecurityContext(): ?string;
 
     public function setResourceSecurityContext(?string $resourceSecurityContext): EventRecordInterface;

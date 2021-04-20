@@ -117,6 +117,15 @@ class EventRecordTest extends TestCase
         static::assertSame('title-1234', $event->getResourceTitle());
     }
 
+    public function testResourceTitleLocale(): void
+    {
+        $event = $this->createEventRecord();
+
+        static::assertNull($event->getResourceTitleLocale());
+        static::assertSame($event, $event->setResourceTitleLocale('en'));
+        static::assertSame('en', $event->getResourceTitleLocale());
+    }
+
     public function testResourceSecurityContext(): void
     {
         $event = $this->createEventRecord();

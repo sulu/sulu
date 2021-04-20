@@ -64,6 +64,13 @@ class TagRemovedEventTest extends TestCase
         static::assertSame('tag-name-456', $event->getResourceTitle());
     }
 
+    public function testGetResourceTitleLocale(): void
+    {
+        $event = $this->createTagRemovedEvent();
+
+        static::assertNull($event->getResourceTitleLocale());
+    }
+
     public function testGetResourceSecurityContext(): void
     {
         $event = $this->createTagRemovedEvent();

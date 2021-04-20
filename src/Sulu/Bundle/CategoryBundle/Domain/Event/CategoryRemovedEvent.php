@@ -27,14 +27,21 @@ class CategoryRemovedEvent extends DomainEvent
      */
     private $categoryTitle;
 
+    /**
+     * @var string|null
+     */
+    private $categoryTitleLocale;
+
     public function __construct(
         int $categoryId,
-        ?string $categoryName
+        ?string $categoryTitle,
+        ?string $categoryTitleLocale
     ) {
         parent::__construct();
 
         $this->categoryId = $categoryId;
-        $this->categoryTitle = $categoryName;
+        $this->categoryTitle = $categoryTitle;
+        $this->categoryTitleLocale = $categoryTitleLocale;
     }
 
     public function getEventType(): string
@@ -55,6 +62,11 @@ class CategoryRemovedEvent extends DomainEvent
     public function getResourceTitle(): ?string
     {
         return $this->categoryTitle;
+    }
+
+    public function getResourceTitleLocale(): ?string
+    {
+        return $this->categoryTitleLocale;
     }
 
     public function getResourceSecurityContext(): ?string

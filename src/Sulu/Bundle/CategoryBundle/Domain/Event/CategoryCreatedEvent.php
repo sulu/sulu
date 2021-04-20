@@ -72,7 +72,7 @@ class CategoryCreatedEvent extends DomainEvent
         return (string) $this->category->getId();
     }
 
-    public function getResourceLocale(): ?string
+    public function getResourceLocale(): string
     {
         return $this->locale;
     }

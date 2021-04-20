@@ -69,9 +69,14 @@ class CategoryMovedEvent extends DomainEvent
 
     public function getResourceTitle(): ?string
     {
-        $defaultTranslation = $this->category->findTranslationByLocale($this->category->getDefaultLocale());
+        $translation = $this->category->findTranslationByLocale($this->category->getDefaultLocale());
 
-        return $defaultTranslation ? $defaultTranslation->getTranslation() : null;
+        return $translation ? $translation->getTranslation() : null;
+    }
+
+    public function getResourceTitleLocale(): ?string
+    {
+        return $this->category->getDefaultLocale();
     }
 
     public function getResourceSecurityContext(): ?string

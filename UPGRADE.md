@@ -2,6 +2,15 @@
 
 ## 2.3
 
+### Added resourceTitleLocale field to EventRecord
+
+Because a new `resourceTitleLocale` field has been added to the `EventRecord` entity,
+you need to update your database schema:
+
+```sql
+ALTER TABLE el_event_records ADD resourceTitleLocale VARCHAR(191) DEFAULT NULL;
+```
+
 ### Changed constructor of multiple services to integrate them with the SuluEventLogBundle
 
 To integrate the `SuluEventLogBundle` with the existing services, the constructor of the following services was 
