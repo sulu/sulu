@@ -14,7 +14,6 @@ namespace Sulu\Bundle\CategoryBundle\Domain\Event;
 use Sulu\Bundle\CategoryBundle\Admin\CategoryAdmin;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\EventLogBundle\Domain\Event\DomainEvent;
-use Webmozart\Assert\Assert;
 
 class CategoryMovedEvent extends DomainEvent
 {
@@ -70,10 +69,7 @@ class CategoryMovedEvent extends DomainEvent
 
     public function getResourceTitle(): ?string
     {
-        $resourceTitleLocale = $this->getResourceTitleLocale();
-        Assert::notNull($resourceTitleLocale);
-
-        $translation = $this->category->findTranslationByLocale($resourceTitleLocale);
+        $translation = $this->category->findTranslationByLocale($this->category->getDefaultLocale());
 
         return $translation ? $translation->getTranslation() : null;
     }
