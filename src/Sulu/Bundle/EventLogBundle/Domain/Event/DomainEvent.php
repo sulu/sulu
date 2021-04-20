@@ -118,7 +118,7 @@ abstract class DomainEvent
      */
     public function getResourceTitleLocale(): ?string
     {
-        return null;
+        return $this->getResourceLocale();
     }
 
     public function getResourceSecurityContext(): ?string
