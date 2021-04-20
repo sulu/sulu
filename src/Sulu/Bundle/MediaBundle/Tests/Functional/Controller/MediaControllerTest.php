@@ -360,7 +360,6 @@ class MediaControllerTest extends SuluTestCase
         $this->collectionMeta->setCollection($this->collection);
 
         $this->collection->addMeta($this->collectionMeta);
-        $this->collection->setDefaultMeta($this->collectionMeta);
 
         // Collection Meta 2
         $collectionMeta2 = new CollectionMeta();
@@ -374,6 +373,7 @@ class MediaControllerTest extends SuluTestCase
         $this->em->persist($this->collection);
         $this->em->persist($this->collectionMeta);
         $this->em->persist($collectionMeta2);
+        $this->collection->setDefaultMeta($this->collectionMeta);
     }
 
     /**

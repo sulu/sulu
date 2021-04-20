@@ -559,6 +559,9 @@ class CollectionManager implements CollectionManagerInterface
         $collectionTitle = $collectionMeta ? $collectionMeta->getTitle() : null;
 
         $this->em->remove($collectionEntity);
+        foreach ($collectionEntity->getMeta() as $meta) {
+            $this->em->remove($meta);
+        }
 
         $this->domainEventCollector->collect(
             new CollectionRemovedEvent($collectionId, $collectionTitle)

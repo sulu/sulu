@@ -127,6 +127,7 @@ class FormatOptionsManager implements FormatOptionsManagerInterface
         $media = $this->mediaManager->getEntityById($mediaId);
         $fileVersion = $this->getFileVersionForMedia($media);
 
+        /** @var FormatOptions|null $formatOptions */
         $formatOptions = $fileVersion->getFormatOptions()->get($formatKey);
         if (!isset($formatOptions)) {
             $formatOptions = new FormatOptions();
@@ -159,6 +160,7 @@ class FormatOptionsManager implements FormatOptionsManagerInterface
         $media = $this->mediaManager->getEntityById($mediaId);
         $fileVersion = $this->getFileVersionForMedia($media);
 
+        /** @var FormatOptions|null $formatOptions */
         $formatOptions = $fileVersion->getFormatOptions()->get($formatKey);
         if (isset($formatOptions)) {
             $fileVersion->getFormatOptions()->remove($formatKey);

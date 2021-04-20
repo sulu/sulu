@@ -1010,6 +1010,9 @@ class MediaManager implements MediaManagerInterface
         }
 
         $this->em->remove($currentFileVersion);
+        foreach ($currentFileVersion->getFormatOptions() as $formatOptions) {
+            $this->em->remove($formatOptions);
+        }
 
         $this->domainEventCollector->collect(
             new MediaVersionRemovedEvent($mediaEntity, $version)
