@@ -365,6 +365,8 @@ class List extends React.Component<Props> {
                         searchable,
                         selectable,
                         paginated,
+                        showHeader,
+                        showColumnOptions,
                         title: routeTitle,
                     },
                 },
@@ -388,6 +390,8 @@ class List extends React.Component<Props> {
                         ref={this.setListRef}
                         searchable={searchable}
                         selectable={selectable}
+                        showColumnOptions={showColumnOptions}
+                        showHeader={showHeader}
                         store={this.listStore}
                     />
                     {this.toolbarActions.map((toolbarAction) => toolbarAction.getNode())}

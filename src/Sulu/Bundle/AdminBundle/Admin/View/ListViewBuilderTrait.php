@@ -72,6 +72,16 @@ trait ListViewBuilderTrait
         $route->setOption('paginated', $paginated);
     }
 
+    private function setHeaderToView(View $route, bool $showHeader): void
+    {
+        $route->setOption('showHeader', $showHeader);
+    }
+
+    private function setColumnOptionsToView(View $route, bool $showColumnOptions): void
+    {
+        $route->setOption('showColumnOptions', $showColumnOptions);
+    }
+
     private function addRouterAttributesToListRequestToView(View $route, array $routerAttributesToListRequest): void
     {
         $oldRouterAttributesToListRequest = $route->getOption('routerAttributesToListRequest');

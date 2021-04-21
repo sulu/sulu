@@ -63,6 +63,7 @@ export type ListAdapterProps = {|
     paginated: boolean,
     schema: Schema,
     selections: Array<number | string>,
+    showHeader: boolean,
     sortColumn: ?string,
     sortOrder: ?SortOrder,
 |};

@@ -53,6 +53,7 @@ type Props = {|
     searchable: boolean,
     selectable: boolean,
     showColumnOptions: boolean,
+    showHeader: boolean,
     store: ListStore,
     toolbarClassName?: string,
 |};
@@ -74,6 +75,7 @@ class List extends React.Component<Props> {
         searchable: true,
         selectable: true,
         showColumnOptions: true,
+        showHeader: true,
     };
 
     @observable currentAdapterKey: string;
@@ -521,6 +523,7 @@ class List extends React.Component<Props> {
             onItemClick,
             onItemAdd,
             paginated,
+            showHeader,
             orderable,
             selectable,
             store,
@@ -636,6 +639,7 @@ class List extends React.Component<Props> {
                             paginated={paginated}
                             schema={store.userSchema}
                             selections={store.selectionIds}
+                            showHeader={showHeader}
                             sortColumn={store.sortColumn.get()}
                             sortOrder={store.sortOrder.get()}
                         />
