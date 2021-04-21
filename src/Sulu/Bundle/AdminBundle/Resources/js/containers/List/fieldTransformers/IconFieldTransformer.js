@@ -7,12 +7,15 @@ import type {FieldTransformer} from '../types';
 import iconFieldTransformerStyles from './iconFieldTransformer.scss';
 
 export default class IconFieldTransformer implements FieldTransformer {
-    transform(value: *, parameters: {[string]: mixed}): Node {
+    transform(value: *, parameters: { [string]: mixed }): Node {
         if (!value) {
             return value;
         }
 
-        const {mapping} = parameters;
+        const {
+            mapping,
+            skin,
+        } = parameters;
         if (!mapping) {
             return value;
         }
@@ -30,12 +33,16 @@ export default class IconFieldTransformer implements FieldTransformer {
             return value;
         }
 
+        if (skin && !iconFieldTransformerStyles['listIcon' + skin[0].toUpperCase() + skin.slice(1)]){
+            log.warn(`There is no skin "${skin}" available. Default skin is used instead.`);
+        }
+
         if (typeof iconConfig === 'object') {
-            return this.transformObjectConfig(value, iconConfig);
+            return this.transformObjectConfig(value, iconConfig, skin);
         }
 
         if (typeof iconConfig === 'string') {
-            return this.transformStringConfig(iconConfig);
+            return this.transformStringConfig(iconConfig, skin);
         }
 
         log.error(`Transformer parameter "mapping/${value}" needs to be either of type string or collection.`);
@@ -43,7 +50,7 @@ export default class IconFieldTransformer implements FieldTransformer {
         return null;
     }
 
-    transformObjectConfig(value: *, iconConfig: Object): Node {
+    transformObjectConfig(value: *, iconConfig: Object, skin: ?string): Node {
         const {icon, color} = iconConfig;
 
         if (!icon || typeof icon !== 'string') {
@@ -64,10 +71,23 @@ export default class IconFieldTransformer implements FieldTransformer {
             style.color = color;
         }
 
-        return <Icon className={iconFieldTransformerStyles.listIcon} name={icon} style={style} />;
+        return (
+            <Icon className={this.getClassName(skin)} name={icon} style={style} />
+        );
     }
 
-    transformStringConfig(iconConfig: Object): Node {
-        return <Icon className={iconFieldTransformerStyles.listIcon} name={iconConfig} />;
+    transformStringConfig(iconConfig: string, skin: ?string): Node {
+        return (
+            <Icon className={this.getClassName(skin)} name={iconConfig} />
+        );
+    }
+
+    getClassName(skin: ?string): Object {
+        if (skin){
+            skin = skin[0].toUpperCase() + skin.slice(1);
+            return iconFieldTransformerStyles.listIcon + ' ' + iconFieldTransformerStyles['listIcon' + skin];
+        }
+
+        return iconFieldTransformerStyles.listIcon;
     }
 }
