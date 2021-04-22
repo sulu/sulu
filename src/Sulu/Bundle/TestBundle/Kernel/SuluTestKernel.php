@@ -143,7 +143,7 @@ class SuluTestKernel extends SuluKernel implements CompilerPassInterface
         });
     }
 
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         $container->getDefinition('sulu_event_log.set_domain_event_user_subscriber')->setClass(SetDomainEventUserSubscriber::class);
     }
