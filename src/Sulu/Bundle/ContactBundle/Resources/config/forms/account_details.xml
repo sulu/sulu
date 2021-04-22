@@ -8,7 +8,7 @@
     <properties>
         <section name="logo" colspan="4">
             <properties>
-                <property name="logo" type="single_media_upload">
+                <property name="logo" type="single_media_upload" colspan="11" spaceAfter="1">
                     <params>
                         <param name="upload_text">
                             <meta>
