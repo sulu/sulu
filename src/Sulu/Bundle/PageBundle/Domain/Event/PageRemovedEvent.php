@@ -68,7 +68,7 @@ class PageRemovedEvent extends DomainEvent
         return $this->pageId;
     }
 
-    public function getResourceWebspaceKey(): ?string
+    public function getResourceWebspaceKey(): string
     {
         return $this->webspaceKey;
     }

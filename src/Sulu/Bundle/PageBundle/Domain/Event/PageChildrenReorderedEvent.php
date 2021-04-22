@@ -53,7 +53,7 @@ class PageChildrenReorderedEvent extends DomainEvent
         return (string) $this->pageDocument->getUuid();
     }
 
-    public function getResourceWebspaceKey(): ?string
+    public function getResourceWebspaceKey(): string
     {
         return $this->pageDocument->getWebspaceName();
     }

@@ -15,7 +15,6 @@ namespace Sulu\Bundle\PageBundle\EventListener;
 
 use PHPCR\NodeInterface;
 use Sulu\Bundle\DocumentManagerBundle\Collector\DocumentDomainEventCollectorInterface;
-use Sulu\Bundle\EventLogBundle\Domain\Event\DomainEvent;
 use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\PageBundle\Domain\Event\PageChildrenReorderedEvent;
@@ -30,6 +29,7 @@ use Sulu\Bundle\PageBundle\Domain\Event\PagePublishedEvent;
 use Sulu\Bundle\PageBundle\Domain\Event\PageRemovedEvent;
 use Sulu\Bundle\PageBundle\Domain\Event\PageUnpublishedEvent;
 use Sulu\Bundle\PageBundle\Domain\Event\PageVersionRestoredEvent;
+use Sulu\Component\Content\Document\Extension\ExtensionContainer;
 use Sulu\Component\Content\Document\Subscriber\SecuritySubscriber;
 use Sulu\Component\Content\Document\Subscriber\StructureSubscriber;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
@@ -68,7 +68,7 @@ class DocumentManagerEventSubscriber implements EventSubscriberInterface
     private $propertyEncoder;
 
     /**
-     * @var DomainEvent[]
+     * @var array<array<string, mixed>>
      */
     private $eventsToBeDispatchedAfterFlush = [];
 
@@ -81,6 +81,11 @@ class DocumentManagerEventSubscriber implements EventSubscriberInterface
      * @var array<string, bool>
      */
     private $persistEventsWithNewLocale = [];
+
+    /**
+     * @var array<string, array<string, mixed>>
+     */
+    private $moveEventsWithPreviousParentDocument = [];
 
     public function __construct(
         DocumentDomainEventCollectorInterface $domainEventCollector,
@@ -107,7 +112,10 @@ class DocumentManagerEventSubscriber implements EventSubscriberInterface
             Events::REMOVE => ['handleRemove', -10000],
             Events::REMOVE_LOCALE => ['handleRemoveLocale', -10000],
             Events::COPY => ['handleCopy', -10000],
-            Events::MOVE => ['handleMove', -10000],
+            Events::MOVE => [
+                ['handlePreMove', 10000], // Priority needs to be higher than ParentSubscriber::handleMove (0)
+                ['handleMove', -10000],
+            ],
             Events::PUBLISH => ['handlePublish', -10000],
             Events::UNPUBLISH => ['handleUnpublish', -10000],
             Events::REMOVE_DRAFT => ['handleRemoveDraft', -10000],
@@ -154,7 +162,7 @@ class DocumentManagerEventSubscriber implements EventSubscriberInterface
                     $copiedPageTitle = $options['copiedPageTitle'] ?? null;
                     Assert::notNull($copiedPageTitle);
 
-                    /** @var BasePageDocument $document */
+                    /** @var PageDocument $document */
                     $document = $this->documentManager->find($pagePath, $locale);
 
                     $this->domainEventCollector->collect(
@@ -202,7 +210,6 @@ class DocumentManagerEventSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $node = $event->getNode();
         $document = $event->getDocument();
         $locale = $event->getLocale();
 
@@ -278,7 +285,7 @@ class DocumentManagerEventSubscriber implements EventSubscriberInterface
     {
         $document = $event->getDocument();
 
-        if (!$document instanceof BasePageDocument) {
+        if (!$document instanceof PageDocument) {
             return;
         }
 
@@ -294,18 +301,46 @@ class DocumentManagerEventSubscriber implements EventSubscriberInterface
         ];
     }
 
+    public function handlePreMove(MoveEvent $event): void
+    {
+        $document = $event->getDocument();
+
+        if (!$document instanceof PageDocument) {
+            return;
+        }
+
+        $eventHash = \spl_object_hash($event);
+
+        /** @var BasePageDocument $parent */
+        $parent = $document->getParent();
+
+        $this->moveEventsWithPreviousParentDocument[$eventHash] = [
+            'parentId' => $parent->getUuid(),
+            'parentWebspaceKey' => $parent->getWebspaceName(),
+            'parentTitle' => $parent->getTitle(),
+            'parentTitleLocale' => $parent->getLocale(),
+        ];
+    }
+
     public function handleMove(MoveEvent $event): void
     {
         $document = $event->getDocument();
 
-        if (!$document instanceof BasePageDocument) {
+        if (!$document instanceof PageDocument) {
             return;
         }
+
+        $eventHash = \spl_object_hash($event);
+        $previousParentData = $this->moveEventsWithPreviousParentDocument[$eventHash] ?? [];
+        unset($this->moveEventsWithPreviousParentDocument[$eventHash]);
 
         $this->domainEventCollector->collect(
             new PageMovedEvent(
                 $document,
-                $event->getDestId()
+                $previousParentData['parentId'] ?? null,
+                $previousParentData['parentWebspaceKey'] ?? null,
+                $previousParentData['parentTitle'] ?? null,
+                $previousParentData['parentTitleLocale'] ?? null
             )
         );
     }
@@ -390,7 +425,7 @@ class DocumentManagerEventSubscriber implements EventSubscriberInterface
 
         $parentDocument = $document->getParent();
 
-        if (!$document instanceof BasePageDocument) {
+        if (!$parentDocument instanceof BasePageDocument) {
             return;
         }
 
@@ -401,19 +436,33 @@ class DocumentManagerEventSubscriber implements EventSubscriberInterface
         );
     }
 
+    /**
+     * @return mixed[]
+     */
     private function getPayloadFromPageDocument(BasePageDocument $pageDocument): array
     {
         $data = $pageDocument->getStructure()->toArray();
-        $data['ext'] = $pageDocument->getExtensionsData()->toArray();
+
+        /** @var ExtensionContainer|mixed[] $extensionData */
+        $extensionData = $pageDocument->getExtensionsData();
+
+        if ($extensionData instanceof ExtensionContainer) {
+            $extensionData = $extensionData->toArray();
+        }
+
+        $data['ext'] = $extensionData;
 
         return $data;
     }
 
     /**
+     * @param NodeInterface<mixed> $node
+     *
      * @see SecuritySubscriber::handlePersistCreate()
      */
     private function isNewNode(NodeInterface $node): bool
     {
+        /** @var \Countable $properties */
         $properties = $node->getProperties(
             $this->propertyEncoder->encode(
                 'system_localized',
@@ -425,8 +474,12 @@ class DocumentManagerEventSubscriber implements EventSubscriberInterface
         return 0 === \count($properties);
     }
 
+    /**
+     * @param NodeInterface<mixed> $node
+     */
     private function isNewLocale(NodeInterface $node, string $locale): bool
     {
+        /** @var \Countable $localizedProperties */
         $localizedProperties = $node->getProperties(
             $this->propertyEncoder->localizedContentName('*', $locale)
         );

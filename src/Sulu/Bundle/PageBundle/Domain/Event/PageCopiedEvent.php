@@ -15,13 +15,13 @@ namespace Sulu\Bundle\PageBundle\Domain\Event;
 
 use Sulu\Bundle\EventLogBundle\Domain\Event\DomainEvent;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
-use Sulu\Bundle\PageBundle\Document\BasePageDocument;
+use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\PageBundle\Domain\PageInterface;
 
 class PageCopiedEvent extends DomainEvent
 {
     /**
-     * @var BasePageDocument
+     * @var PageDocument
      */
     private $pageDocument;
 
@@ -46,7 +46,7 @@ class PageCopiedEvent extends DomainEvent
     private $copiedPageTitleLocale;
 
     public function __construct(
-        BasePageDocument $pageDocument,
+        PageDocument $pageDocument,
         string $copiedPageId,
         string $copiedPageWebspaceKey,
         ?string $copiedPageTitle,
@@ -61,7 +61,7 @@ class PageCopiedEvent extends DomainEvent
         $this->copiedPageTitleLocale = $copiedPageTitleLocale;
     }
 
-    public function getPageDocument(): BasePageDocument
+    public function getPageDocument(): PageDocument
     {
         return $this->pageDocument;
     }
@@ -91,7 +91,7 @@ class PageCopiedEvent extends DomainEvent
         return (string) $this->pageDocument->getUuid();
     }
 
-    public function getResourceWebspaceKey(): ?string
+    public function getResourceWebspaceKey(): string
     {
         return $this->pageDocument->getWebspaceName();
     }

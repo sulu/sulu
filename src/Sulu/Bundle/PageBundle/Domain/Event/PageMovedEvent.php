@@ -16,12 +16,13 @@ namespace Sulu\Bundle\PageBundle\Domain\Event;
 use Sulu\Bundle\EventLogBundle\Domain\Event\DomainEvent;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Bundle\PageBundle\Document\BasePageDocument;
+use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\PageBundle\Domain\PageInterface;
 
 class PageMovedEvent extends DomainEvent
 {
     /**
-     * @var BasePageDocument
+     * @var PageDocument
      */
     private $pageDocument;
 
@@ -30,17 +31,38 @@ class PageMovedEvent extends DomainEvent
      */
     private $previousParentId;
 
+    /**
+     * @var string|null
+     */
+    private $previousParentWebspaceKey;
+
+    /**
+     * @var string|null
+     */
+    private $previousParentTitle;
+
+    /**
+     * @var string|null
+     */
+    private $previousParentTitleLocale;
+
     public function __construct(
-        BasePageDocument $pageDocument,
-        ?string $previousParentId
+        PageDocument $pageDocument,
+        ?string $previousParentId,
+        ?string $previousParentWebspaceKey,
+        ?string $previousParentTitle,
+        ?string $previousParentTitleLocale
     ) {
         parent::__construct();
 
         $this->pageDocument = $pageDocument;
         $this->previousParentId = $previousParentId;
+        $this->previousParentWebspaceKey = $previousParentWebspaceKey;
+        $this->previousParentTitle = $previousParentTitle;
+        $this->previousParentTitleLocale = $previousParentTitleLocale;
     }
 
-    public function getPageDocument(): BasePageDocument
+    public function getPageDocument(): PageDocument
     {
         return $this->pageDocument;
     }
@@ -57,7 +79,13 @@ class PageMovedEvent extends DomainEvent
 
         return [
             'previousParentId' => $this->previousParentId,
+            'previousParentWebspaceKey' => $this->previousParentWebspaceKey,
+            'previousParentTitle' => $this->previousParentTitle,
+            'previousParentTitleLocale' => $this->previousParentTitleLocale,
             'newParentId' => $newParent ? $newParent->getUuid() : null,
+            'newParentWebspaceKey' => $newParent ? $newParent->getWebspaceName() : null,
+            'newParentTitle' => $newParent ? $newParent->getTitle() : null,
+            'newParentTitleLocale' => $newParent ? $newParent->getLocale() : null,
         ];
     }
 
@@ -71,7 +99,7 @@ class PageMovedEvent extends DomainEvent
         return (string) $this->pageDocument->getUuid();
     }
 
-    public function getResourceWebspaceKey(): ?string
+    public function getResourceWebspaceKey(): string
     {
         return $this->pageDocument->getWebspaceName();
     }
