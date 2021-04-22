@@ -38,10 +38,8 @@ export default class DateTimeFieldTransformer implements FieldTransformer {
 
         if (skin && typeof skin !== 'string') {
             log.error(`Transformer parameter "skin" needs to be of type string, ${typeof skin} given.`);
-        }
 
-        if (skin && !dateTimeFieldTransformerStyles['dateTime' + skin]) {
-            log.warn(`There is no skin "${skin}" available. Default skin is used instead.`);
+            return null;
         }
 
         return (
@@ -65,9 +63,9 @@ export default class DateTimeFieldTransformer implements FieldTransformer {
         };
 
         return momentObject.calendar({
-            sameDay: '[' + translate('sulu_admin.sameDay') + '\n] HH:mm:ss',
-            lastDay: '[' + translate('sulu_admin.lastDay') + '\n] HH:mm:ss',
-            nextDay: '[' + translate('sulu_admin.nextDay') + '\n] HH:mm:ss',
+            sameDay: '[' + translate('sulu_admin.sameDay') + '] HH:mm:ss',
+            lastDay: '[' + translate('sulu_admin.lastDay') + '] HH:mm:ss',
+            nextDay: '[' + translate('sulu_admin.nextDay') + '] HH:mm:ss',
             nextWeek: defaultFct(),
             lastWeek: defaultFct(),
             sameElse: defaultFct(),

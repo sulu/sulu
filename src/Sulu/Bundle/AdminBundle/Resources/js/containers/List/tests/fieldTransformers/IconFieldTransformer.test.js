@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import log from 'loglevel';
+import classNames from 'classnames';
 import Icon from '../../../../components/Icon';
 import IconFieldTransformer from '../../fieldTransformers/IconFieldTransformer';
 import iconFieldTransformerStyles from '../../fieldTransformers/iconFieldTransformer.scss';
@@ -78,4 +79,16 @@ test('Test icon object with color', () => {
     expect(iconFieldTransformer.transform('failed', {mapping: {failed: {icon: 'su-ban', color: 'red'}}})).toEqual(
         <Icon className={iconFieldTransformerStyles.listIcon} name="su-ban" style={{color: 'red'}} />
     );
+});
+
+test('Test dark skin', () => {
+    expect(iconFieldTransformer.transform('failed', {skin: 'dark', mapping: {failed: 'su-ban'}})).toEqual(
+        <Icon className={classNames(iconFieldTransformerStyles.listIcon, iconFieldTransformerStyles.dark)} name="su-ban" />
+    );
+});
+
+test('Test invalid skin type', () => {
+    iconFieldTransformer.transform('failed', {skin: 123, mapping: {failed: 'su-ban'}});
+
+    expect(log.error).toBeCalledWith('Transformer parameter "skin" needs to be of type string, number given.');
 });

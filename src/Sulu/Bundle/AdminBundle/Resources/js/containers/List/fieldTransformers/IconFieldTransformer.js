@@ -39,10 +39,8 @@ export default class IconFieldTransformer implements FieldTransformer {
 
         if (skin && typeof skin !== 'string') {
             log.error(`Transformer parameter "skin" needs to be of type string, ${typeof skin} given.`);
-        }
 
-        if (skin && !iconFieldTransformerStyles[skin]) {
-            log.warn(`There is no skin "${skin}" available. Default skin is used instead.`);
+            return null;
         }
 
         if (typeof iconConfig === 'object') {
