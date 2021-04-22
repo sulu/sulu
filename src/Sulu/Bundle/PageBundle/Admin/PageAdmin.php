@@ -20,7 +20,7 @@ use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\View;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
-use Sulu\Bundle\PageBundle\Domain\PageInterface;
+use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Bundle\PageBundle\Teaser\Provider\TeaserProviderPoolInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
@@ -209,12 +209,12 @@ class PageAdmin extends Admin
                 )
                     ->setOption('backView', static::PAGES_VIEW)
                     ->setOption('routerAttributesToBackView', ['webspace'])
-                    ->setOption('resourceKey', PageInterface::RESOURCE_KEY)
+                    ->setOption('resourceKey', BasePageDocument::RESOURCE_KEY)
             );
             $viewCollection->add(
                 $this->viewBuilderFactory
                     ->createFormViewBuilder('sulu_page.page_add_form.details', '/details')
-                    ->setResourceKey(PageInterface::RESOURCE_KEY)
+                    ->setResourceKey(BasePageDocument::RESOURCE_KEY)
                     ->setFormKey('page')
                     ->setTabTitle('sulu_admin.details')
                     ->setEditView(static::EDIT_FORM_VIEW)
@@ -232,13 +232,13 @@ class PageAdmin extends Admin
                 )
                     ->setOption('backView', static::PAGES_VIEW)
                     ->setOption('routerAttributesToBackView', ['id' => 'active', 'webspace'])
-                    ->setOption('resourceKey', PageInterface::RESOURCE_KEY)
+                    ->setOption('resourceKey', BasePageDocument::RESOURCE_KEY)
             );
             $viewCollection->add(
                 $this->viewBuilderFactory
                     ->createPreviewFormViewBuilder('sulu_page.page_edit_form.details', '/details')
                     ->disablePreviewWebspaceChooser()
-                    ->setResourceKey(PageInterface::RESOURCE_KEY)
+                    ->setResourceKey(BasePageDocument::RESOURCE_KEY)
                     ->setFormKey('page')
                     ->setTabTitle('sulu_admin.details')
                     ->setTabPriority(1024)
@@ -254,7 +254,7 @@ class PageAdmin extends Admin
                 $this->viewBuilderFactory
                     ->createPreviewFormViewBuilder('sulu_page.page_edit_form.seo', '/seo')
                     ->disablePreviewWebspaceChooser()
-                    ->setResourceKey(PageInterface::RESOURCE_KEY)
+                    ->setResourceKey(BasePageDocument::RESOURCE_KEY)
                     ->setFormKey('page_seo')
                     ->setTabTitle('sulu_page.seo')
                     ->setTabCondition('nodeType == 1 && shadowOn == false')
@@ -269,7 +269,7 @@ class PageAdmin extends Admin
                 $this->viewBuilderFactory
                     ->createPreviewFormViewBuilder('sulu_page.page_edit_form.excerpt', '/excerpt')
                     ->disablePreviewWebspaceChooser()
-                    ->setResourceKey(PageInterface::RESOURCE_KEY)
+                    ->setResourceKey(BasePageDocument::RESOURCE_KEY)
                     ->setFormKey('page_excerpt')
                     ->setTabTitle('sulu_page.excerpt')
                     ->setTabCondition('(nodeType == 1 || nodeType == 4) && shadowOn == false')
@@ -285,7 +285,7 @@ class PageAdmin extends Admin
                 $this->viewBuilderFactory
                     ->createPreviewFormViewBuilder('sulu_page.page_edit_form.settings', '/settings')
                     ->disablePreviewWebspaceChooser()
-                    ->setResourceKey(PageInterface::RESOURCE_KEY)
+                    ->setResourceKey(BasePageDocument::RESOURCE_KEY)
                     ->setFormKey('page_settings')
                     ->setTabTitle('sulu_page.settings')
                     ->setTabPriority(512)
@@ -301,7 +301,7 @@ class PageAdmin extends Admin
                     ->createFormViewBuilder('sulu_page.page_edit_form.permissions', '/permissions')
                     ->setResourceKey('permissions')
                     ->setFormKey('permission_details')
-                    ->addRequestParameters(['resourceKey' => PageInterface::RESOURCE_KEY])
+                    ->addRequestParameters(['resourceKey' => BasePageDocument::RESOURCE_KEY])
                     ->setTabCondition('_permissions.security')
                     ->setTabTitle('sulu_security.permissions')
                     ->addToolbarActions([

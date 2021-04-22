@@ -15,8 +15,8 @@ namespace Sulu\Bundle\PageBundle\Domain\Event;
 
 use Sulu\Bundle\EventLogBundle\Domain\Event\DomainEvent;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
+use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
-use Sulu\Bundle\PageBundle\Domain\PageInterface;
 
 class PageCopiedEvent extends DomainEvent
 {
@@ -83,7 +83,7 @@ class PageCopiedEvent extends DomainEvent
 
     public function getResourceKey(): string
     {
-        return PageInterface::RESOURCE_KEY;
+        return BasePageDocument::RESOURCE_KEY;
     }
 
     public function getResourceId(): string

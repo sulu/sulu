@@ -16,7 +16,7 @@ use FOS\RestBundle\View\ViewHandlerInterface;
 use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use PHPCR\ItemNotFoundException;
 use PHPCR\PropertyInterface;
-use Sulu\Bundle\PageBundle\Domain\PageInterface;
+use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Bundle\PageBundle\Repository\NodeRepositoryInterface;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Form\Exception\InvalidFormException;
@@ -57,11 +57,11 @@ class PageController extends AbstractRestController implements ClassResourceInte
     const WEBSPACE_NODES_ALL = 'all';
 
     /**
-     * @deprecated Use the PageInterface::RESOURCE_KEY constant instead
+     * @deprecated Use the BasePageDocument::RESOURCE_KEY constant instead
      *
      * @var string
      */
-    protected static $relationName = PageInterface::RESOURCE_KEY;
+    protected static $relationName = BasePageDocument::RESOURCE_KEY;
 
     /**
      * @var SecurityCheckerInterface
@@ -518,7 +518,7 @@ class PageController extends AbstractRestController implements ClassResourceInte
             }
         }
 
-        $list = new CollectionRepresentation($contents, PageInterface::RESOURCE_KEY);
+        $list = new CollectionRepresentation($contents, BasePageDocument::RESOURCE_KEY);
         $view = $this->view($list);
 
         return $this->handleView($view);
@@ -554,7 +554,7 @@ class PageController extends AbstractRestController implements ClassResourceInte
             $contents = $this->getWebspaceNode($mapping, $contents, $webspaceKey, $locale, $user);
         }
 
-        $view = $this->view(new CollectionRepresentation($contents, PageInterface::RESOURCE_KEY));
+        $view = $this->view(new CollectionRepresentation($contents, BasePageDocument::RESOURCE_KEY));
 
         return $this->handleView($view);
     }

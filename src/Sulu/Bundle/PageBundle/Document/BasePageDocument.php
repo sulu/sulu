@@ -60,6 +60,8 @@ class BasePageDocument implements
     VersionBehavior,
     LocalizedAuthorBehavior
 {
+    const RESOURCE_KEY = 'pages';
+
     /**
      * The name of this node.
      *
