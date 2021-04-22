@@ -11,7 +11,6 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
-use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
@@ -23,6 +22,7 @@ use Sulu\Component\DocumentManager\Behavior\Mapping\ParentBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\TitleBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 use Sulu\Component\DocumentManager\DocumentAccessor;
+use Sulu\Component\DocumentManager\DocumentInspector;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Event\CopyLocaleEvent;
 use Sulu\Component\DocumentManager\Events;
@@ -78,7 +78,7 @@ class CopyLocaleSubscriber implements EventSubscriberInterface
 
         $webspaceKey = null;
         $resourceLocatorStrategy = null;
-        if ($document instanceof ResourceSegmentBehavior && $document instanceof WebspaceBehavior) {
+        if ($document instanceof WebspaceBehavior) {
             $webspaceKey = $document->getWebspaceName();
             $resourceLocatorStrategy = $this->resourceLocatorStrategyPool->getStrategyByWebspaceKey($webspaceKey);
         }
