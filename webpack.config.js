@@ -5,6 +5,9 @@ const fs = require('fs');
 const path = require('path');
 
 module.exports = (env, argv) => { // eslint-disable-line no-undef
+    env = env ? env : {};
+    argv = argv ? argv : {};
+
     let publicDir = 'public';
     const outputPath = env && env.output_path ? env.output_path : path.join('build', 'admin');
     // eslint-disable-next-line no-undef
@@ -101,9 +104,9 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
                             options: {
                                 modules: {
                                     localIdentName: '[local]--[hash:base64:10]',
+                                    exportLocalsConvention: 'camelCase',
                                 },
                                 importLoaders: 1,
-                                localsConvention: 'camelCase',
                             },
                         },
                         'postcss-loader',
