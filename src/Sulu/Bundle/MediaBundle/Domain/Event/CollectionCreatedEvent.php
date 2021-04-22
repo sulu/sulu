@@ -80,6 +80,20 @@ class CollectionCreatedEvent extends DomainEvent
 
     public function getResourceTitle(): ?string
     {
+        $collectionMeta = $this->getCollectionMeta();
+
+        return $collectionMeta ? $collectionMeta->getTitle() : null;
+    }
+
+    public function getResourceTitleLocale(): ?string
+    {
+        $collectionMeta = $this->getCollectionMeta();
+
+        return $collectionMeta ? $collectionMeta->getLocale() : null;
+    }
+
+    private function getCollectionMeta(): ?CollectionMeta
+    {
         /** @var CollectionMeta|null $meta */
         $meta = $this->collection->getDefaultMeta();
         foreach ($this->collection->getMeta() as $collectionMeta) {
@@ -90,7 +104,7 @@ class CollectionCreatedEvent extends DomainEvent
             }
         }
 
-        return $meta ? $meta->getTitle() : null;
+        return $meta;
     }
 
     public function getResourceSecurityContext(): ?string

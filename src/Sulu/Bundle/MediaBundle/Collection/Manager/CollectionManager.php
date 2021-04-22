@@ -17,6 +17,7 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\MediaBundle\Api\Collection;
 use Sulu\Bundle\MediaBundle\Domain\Event\CollectionCreatedEvent;
+use Sulu\Bundle\MediaBundle\Domain\Event\CollectionLocaleAddedEvent;
 use Sulu\Bundle\MediaBundle\Domain\Event\CollectionModifiedEvent;
 use Sulu\Bundle\MediaBundle\Domain\Event\CollectionMovedEvent;
 use Sulu\Bundle\MediaBundle\Domain\Event\CollectionRemovedEvent;
@@ -409,21 +410,39 @@ class CollectionManager implements CollectionManagerInterface
 
     private function modifyCollection($data, $user, $breadcrumb): Collection
     {
-        $collection = $this->getById($data['id'], $data['locale']);
+        $locale = $data['locale'];
+        $collection = $this->getById($data['id'], $locale);
         $data['changer'] = $user;
         $data['changed'] = new \DateTime();
+
+        /** @var CollectionInterface $collectionEntity */
+        $collectionEntity = $collection->getEntity();
+        $isNewLocale = true;
+
+        foreach ($collectionEntity->getMeta() as $meta) {
+            if ($meta->getLocale() === $locale) {
+                $isNewLocale = false;
+
+                break;
+            }
+        }
 
         $collection = $this->setDataToCollection(
             $collection,
             $data
         );
 
-        $collectionEntity = $collection->getEntity();
         $this->em->persist($collectionEntity);
 
-        $this->domainEventCollector->collect(
-            new CollectionModifiedEvent($collectionEntity, $collection->getLocale(), $data)
-        );
+        if ($isNewLocale) {
+            $this->domainEventCollector->collect(
+                new CollectionLocaleAddedEvent($collectionEntity, $collection->getLocale(), $data)
+            );
+        } else {
+            $this->domainEventCollector->collect(
+                new CollectionModifiedEvent($collectionEntity, $collection->getLocale(), $data)
+            );
+        }
 
         $this->em->flush();
 
@@ -557,6 +576,7 @@ class CollectionManager implements CollectionManagerInterface
         /** @var CollectionMeta|null $collectionMeta */
         $collectionMeta = $collectionEntity->getDefaultMeta();
         $collectionTitle = $collectionMeta ? $collectionMeta->getTitle() : null;
+        $locale = $collectionMeta ? $collectionMeta->getLocale() : null;
 
         $this->em->remove($collectionEntity);
         foreach ($collectionEntity->getMeta() as $meta) {
@@ -564,7 +584,7 @@ class CollectionManager implements CollectionManagerInterface
         }
 
         $this->domainEventCollector->collect(
-            new CollectionRemovedEvent($collectionId, $collectionTitle)
+            new CollectionRemovedEvent($collectionId, $collectionTitle, $locale)
         );
 
         $this->em->flush();

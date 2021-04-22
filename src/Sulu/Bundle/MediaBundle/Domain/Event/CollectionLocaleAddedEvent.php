@@ -16,7 +16,7 @@ use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 
-class CollectionMovedEvent extends DomainEvent
+class CollectionLocaleAddedEvent extends DomainEvent
 {
     /**
      * @var CollectionInterface
@@ -24,18 +24,28 @@ class CollectionMovedEvent extends DomainEvent
     private $collection;
 
     /**
-     * @var int|null
+     * @var string
      */
-    private $previousParentId;
+    private $locale;
 
+    /**
+     * @var mixed[]
+     */
+    private $payload;
+
+    /**
+     * @param mixed[] $payload
+     */
     public function __construct(
         CollectionInterface $collection,
-        ?int $previousParentId
+        string $locale,
+        array $payload
     ) {
         parent::__construct();
 
         $this->collection = $collection;
-        $this->previousParentId = $previousParentId;
+        $this->locale = $locale;
+        $this->payload = $payload;
     }
 
     public function getCollection(): CollectionInterface
@@ -45,18 +55,12 @@ class CollectionMovedEvent extends DomainEvent
 
     public function getEventType(): string
     {
-        return 'moved';
+        return 'locale_added';
     }
 
-    public function getEventContext(): array
+    public function getEventPayload(): ?array
     {
-        /** @var CollectionInterface|null $newParent */
-        $newParent = $this->collection->getParent();
-
-        return [
-            'previousParentId' => $this->previousParentId,
-            'newParentId' => $newParent ? $newParent->getId() : null,
-        ];
+        return $this->payload;
     }
 
     public function getResourceKey(): string
@@ -67,6 +71,11 @@ class CollectionMovedEvent extends DomainEvent
     public function getResourceId(): string
     {
         return (string) $this->collection->getId();
+    }
+
+    public function getResourceLocale(): ?string
+    {
+        return $this->locale;
     }
 
     public function getResourceTitle(): ?string
@@ -85,10 +94,17 @@ class CollectionMovedEvent extends DomainEvent
 
     private function getCollectionMeta(): ?CollectionMeta
     {
-        /** @var CollectionMeta|null $collectionMeta */
-        $collectionMeta = $this->collection->getDefaultMeta();
+        /** @var CollectionMeta|null $meta */
+        $meta = $this->collection->getDefaultMeta();
+        foreach ($this->collection->getMeta() as $collectionMeta) {
+            if ($collectionMeta->getLocale() === $this->locale) {
+                $meta = $collectionMeta;
 
-        return $collectionMeta;
+                break;
+            }
+        }
+
+        return $meta;
     }
 
     public function getResourceSecurityContext(): ?string

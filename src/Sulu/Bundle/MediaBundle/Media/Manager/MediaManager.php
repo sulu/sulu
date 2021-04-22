@@ -19,6 +19,7 @@ use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
 use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Domain\Event\MediaCreatedEvent;
+use Sulu\Bundle\MediaBundle\Domain\Event\MediaLocaleAddedEvent;
 use Sulu\Bundle\MediaBundle\Domain\Event\MediaModifiedEvent;
 use Sulu\Bundle\MediaBundle\Domain\Event\MediaMovedEvent;
 use Sulu\Bundle\MediaBundle\Domain\Event\MediaRemovedEvent;
@@ -30,6 +31,7 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionRepository;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
+use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
@@ -334,7 +336,7 @@ class MediaManager implements MediaManagerInterface
     /**
      * Modifies an existing media.
      *
-     * @param UploadedFile $uploadedFile
+     * @param UploadedFile|null $uploadedFile
      * @param array $data
      * @param UserInterface $user
      *
@@ -367,6 +369,8 @@ class MediaManager implements MediaManagerInterface
         if (!$currentFileVersion) {
             throw new FileVersionNotFoundException($mediaEntity->getId(), $version);
         }
+
+        $shouldThrowModifiedEvent = true;
 
         if ($uploadedFile) {
             // new uploaded file
@@ -409,6 +413,8 @@ class MediaManager implements MediaManagerInterface
                 new MediaVersionCreatedEvent($mediaEntity, $version)
             );
 
+            $shouldThrowModifiedEvent = false;
+
             // delete old fileversion from cache
             $this->formatManager->purge(
                 $mediaEntity->getId(),
@@ -437,7 +443,21 @@ class MediaManager implements MediaManagerInterface
             }
         }
 
-        $media = new Media($mediaEntity, $data['locale'], null);
+        $locale = $data['locale'];
+        $media = new Media($mediaEntity, $locale, null);
+
+        $isNewLocale = true;
+        $latestFileVersion = $mediaEntity->getFiles()[0]->getLatestFileVersion();
+
+        if (null !== $latestFileVersion) {
+            foreach ($latestFileVersion->getMeta() as $fileVersionMeta) {
+                if ($fileVersionMeta->getLocale() === $locale) {
+                    $isNewLocale = false;
+
+                    break;
+                }
+            }
+        }
 
         $media = $this->setDataToMedia(
             $media,
@@ -447,9 +467,17 @@ class MediaManager implements MediaManagerInterface
 
         $this->em->persist($media->getEntity());
 
-        $this->domainEventCollector->collect(
-            new MediaModifiedEvent($mediaEntity, $media->getLocale(), $data)
-        );
+        if ($shouldThrowModifiedEvent) {
+            if ($isNewLocale) {
+                $this->domainEventCollector->collect(
+                    new MediaLocaleAddedEvent($mediaEntity, $media->getLocale(), $data)
+                );
+            } else {
+                $this->domainEventCollector->collect(
+                    new MediaModifiedEvent($mediaEntity, $media->getLocale(), $data)
+                );
+            }
+        }
 
         $this->em->flush();
 
@@ -535,10 +563,6 @@ class MediaManager implements MediaManagerInterface
 
         $this->domainEventCollector->collect(
             new MediaCreatedEvent($mediaEntity, $media->getLocale(), $data)
-        );
-
-        $this->domainEventCollector->collect(
-            new MediaVersionCreatedEvent($mediaEntity, 1)
         );
 
         $this->em->flush();
@@ -703,7 +727,9 @@ class MediaManager implements MediaManagerInterface
     {
         $mediaEntity = $this->getEntityById($id);
 
-        $mediaTitle = $this->getDefaultMediaTitle($mediaEntity);
+        $defaultFileVersionMeta = $this->getDefaultFileVersionMeta($mediaEntity);
+        $mediaTitle = $defaultFileVersionMeta ? $defaultFileVersionMeta->getTitle() : null;
+        $locale = $defaultFileVersionMeta ? $defaultFileVersionMeta->getLocale() : null;
 
         if ($checkSecurity) {
             $this->securityChecker->checkPermission(
@@ -744,7 +770,7 @@ class MediaManager implements MediaManagerInterface
         $this->em->remove($mediaEntity);
 
         $this->domainEventCollector->collect(
-            new MediaRemovedEvent($mediaEntity->getId(), $mediaTitle)
+            new MediaRemovedEvent($mediaEntity->getId(), $mediaTitle, $locale)
         );
 
         $this->em->flush();
@@ -1024,12 +1050,11 @@ class MediaManager implements MediaManagerInterface
         $this->storage->remove($currentFileVersion->getStorageOptions());
     }
 
-    private function getDefaultMediaTitle(MediaInterface $media): ?string
+    private function getDefaultFileVersionMeta(MediaInterface $media): ?FileVersionMeta
     {
         $file = $media->getFiles()[0] ?? null;
         $fileVersion = $file ? $file->getLatestFileVersion() : null;
-        $defaultMeta = $fileVersion ? $fileVersion->getDefaultMeta() : null;
 
-        return $defaultMeta ? $defaultMeta->getTitle() : null;
+        return $fileVersion ? $fileVersion->getDefaultMeta() : null;
     }
 }

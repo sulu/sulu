@@ -27,14 +27,21 @@ class CollectionRemovedEvent extends DomainEvent
      */
     private $collectionTitle;
 
+    /**
+     * @var string|null
+     */
+    private $collectionTitleLocale;
+
     public function __construct(
         int $collectionId,
-        ?string $collectionTitle
+        ?string $collectionTitle,
+        ?string $collectionTitleLocale
     ) {
         parent::__construct();
 
         $this->collectionId = $collectionId;
         $this->collectionTitle = $collectionTitle;
+        $this->collectionTitleLocale = $collectionTitleLocale;
     }
 
     public function getEventType(): string
@@ -55,6 +62,11 @@ class CollectionRemovedEvent extends DomainEvent
     public function getResourceTitle(): ?string
     {
         return $this->collectionTitle;
+    }
+
+    public function getResourceTitleLocale(): ?string
+    {
+        return $this->collectionTitleLocale;
     }
 
     public function getResourceSecurityContext(): ?string

@@ -27,14 +27,21 @@ class MediaRemovedEvent extends DomainEvent
      */
     private $mediaTitle;
 
+    /**
+     * @var string|null
+     */
+    private $mediaTitleLocale;
+
     public function __construct(
         int $mediaId,
-        ?string $mediaTitle
+        ?string $mediaTitle,
+        ?string $mediaTitleLocale
     ) {
         parent::__construct();
 
         $this->mediaId = $mediaId;
         $this->mediaTitle = $mediaTitle;
+        $this->mediaTitleLocale = $mediaTitleLocale;
     }
 
     public function getEventType(): string
@@ -55,6 +62,11 @@ class MediaRemovedEvent extends DomainEvent
     public function getResourceTitle(): ?string
     {
         return $this->mediaTitle;
+    }
+
+    public function getResourceTitleLocale(): ?string
+    {
+        return $this->mediaTitleLocale;
     }
 
     public function getResourceSecurityContext(): ?string

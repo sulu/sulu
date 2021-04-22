@@ -13,15 +13,15 @@ namespace Sulu\Bundle\MediaBundle\Domain\Event;
 
 use Sulu\Bundle\EventLogBundle\Domain\Event\DomainEvent;
 use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
-use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
-use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
+use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 
-class CollectionModifiedEvent extends DomainEvent
+class MediaLocaleAddedEvent extends DomainEvent
 {
     /**
-     * @var CollectionInterface
+     * @var MediaInterface
      */
-    private $collection;
+    private $media;
 
     /**
      * @var string
@@ -37,25 +37,25 @@ class CollectionModifiedEvent extends DomainEvent
      * @param mixed[] $payload
      */
     public function __construct(
-        CollectionInterface $collection,
+        MediaInterface $media,
         string $locale,
         array $payload
     ) {
         parent::__construct();
 
-        $this->collection = $collection;
+        $this->media = $media;
         $this->locale = $locale;
         $this->payload = $payload;
     }
 
-    public function getCollection(): CollectionInterface
+    public function getMedia(): MediaInterface
     {
-        return $this->collection;
+        return $this->media;
     }
 
     public function getEventType(): string
     {
-        return 'modified';
+        return 'locale_added';
     }
 
     public function getEventPayload(): ?array
@@ -65,12 +65,12 @@ class CollectionModifiedEvent extends DomainEvent
 
     public function getResourceKey(): string
     {
-        return CollectionInterface::RESOURCE_KEY;
+        return MediaInterface::RESOURCE_KEY;
     }
 
     public function getResourceId(): string
     {
-        return (string) $this->collection->getId();
+        return (string) $this->media->getId();
     }
 
     public function getResourceLocale(): ?string
@@ -80,27 +80,31 @@ class CollectionModifiedEvent extends DomainEvent
 
     public function getResourceTitle(): ?string
     {
-        $collectionMeta = $this->getCollectionMeta();
+        $fileVersionMeta = $this->getFileVersionMeta();
 
-        return $collectionMeta ? $collectionMeta->getTitle() : null;
+        return $fileVersionMeta ? $fileVersionMeta->getTitle() : null;
     }
 
     public function getResourceTitleLocale(): ?string
     {
-        $collectionMeta = $this->getCollectionMeta();
+        $fileVersionMeta = $this->getFileVersionMeta();
 
-        return $collectionMeta ? $collectionMeta->getLocale() : null;
+        return $fileVersionMeta ? $fileVersionMeta->getLocale() : null;
     }
 
-    private function getCollectionMeta(): ?CollectionMeta
+    private function getFileVersionMeta(): ?FileVersionMeta
     {
-        /** @var CollectionMeta|null $meta */
-        $meta = $this->collection->getDefaultMeta();
-        foreach ($this->collection->getMeta() as $collectionMeta) {
-            if ($collectionMeta->getLocale() === $this->locale) {
-                $meta = $collectionMeta;
+        $file = $this->media->getFiles()[0] ?? null;
+        $fileVersion = $file ? $file->getLatestFileVersion() : null;
+        $meta = $fileVersion ? $fileVersion->getDefaultMeta() : null;
 
-                break;
+        if (null !== $fileVersion) {
+            foreach ($fileVersion->getMeta() as $fileVersionMeta) {
+                if ($fileVersionMeta->getLocale() === $this->locale) {
+                    $meta = $fileVersionMeta;
+
+                    break;
+                }
             }
         }
 
