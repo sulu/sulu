@@ -233,16 +233,17 @@ class PageController extends AbstractRestController implements ClassResourceInte
                     break;
                 case 'copy-locale':
                     $srcLocale = $this->getRequestParameter($request, 'src', false, $locale);
-                    $destLocale = $this->getRequestParameter($request, 'dest', true);
-                    $webspace = $this->getWebspace($request);
+                    $destLocales = $this->getRequestParameter($request, 'dest', true);
 
-                    // call repository method
-                    $data = $this->nodeRepository->copyLocale($id, $userId, $webspace, $srcLocale, \explode(',', $destLocale));
+                    $document = $this->documentManager->find($id, $srcLocale);
 
-                    if ($srcLocale !== $locale) {
-                        $data = $this->nodeRepository->getNode($id, $webspace, $locale);
+                    $this->documentManager->copyLocale($document, $srcLocale, $destLocales);
+                    $this->documentManager->flush();
+
+                    $data = $document;
+                    if ($locale !== $srcLocale) {
+                        $data = $this->documentManager->find($id, $locale);
                     }
-
                     break;
                 case 'unpublish':
                     $document = $this->documentManager->find($id, $locale);

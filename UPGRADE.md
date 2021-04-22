@@ -2,6 +2,11 @@
 
 ## 2.3
 
+### Extend DocumentManagerInterface
+
+The `DocumentManagerInterface` has been extended with a new method `copyLocale`. If you have overridden this service
+in your project, you have to implement that method as well.
+
 ### Added resourceTitleLocale field to EventRecord
 
 Because a new `resourceTitleLocale` field has been added to the `EventRecord` entity,

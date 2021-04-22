@@ -189,6 +189,9 @@ interface NodeRepositoryInterface
     public function orderAt($uuid, $position, $webspaceKey, $languageCode, $userId);
 
     /**
+     * @deprecated
+     * @see DocumentManagerInterface::copyLocale()
+     *
      * @param string $uuid
      * @param int $userId
      * @param string $webspaceKey
