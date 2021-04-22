@@ -30,7 +30,6 @@ use Sulu\Component\Content\Mapper\ContentMapper;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\PHPCR\SessionManager\SessionManager;
-use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
@@ -97,7 +96,7 @@ class ContentMapperTest extends SuluTestCase
 
         $this->tokenStorage = $this->getContainer()->get('security.token_storage');
 
-        $token = $this->createUserTokenWithId(1);
+        $token = $this->createUserToken();
         $this->tokenStorage->setToken($token);
 
         foreach ($this->extensions as $extension) {
@@ -2233,10 +2232,10 @@ class ContentMapperTest extends SuluTestCase
 
     public function testOrderAt()
     {
-        $this->tokenStorage->setToken($this->createUserTokenWithId(17));
+        $this->tokenStorage->setToken($this->createUserToken());
         $data = $this->prepareOrderAtData();
 
-        $result = $this->mapper->orderAt($data[2]->getUuid(), 3, 17, 'sulu_io', 'en');
+        $result = $this->mapper->orderAt($data[2]->getUuid(), 3, 1, 'sulu_io', 'en');
         $this->assertEquals($data[2]->getUuid(), $result->getUuid());
         $this->assertEquals('/page-1/page-1-2', $result->getPath());
 
@@ -2249,7 +2248,7 @@ class ContentMapperTest extends SuluTestCase
 
     public function testOrderAtInternalLink()
     {
-        $this->tokenStorage->setToken($this->createUserTokenWithId(17));
+        $this->tokenStorage->setToken($this->createUserToken());
         $data = $this->prepareOrderAtData();
 
         $this->documentManager->clear();
@@ -2273,7 +2272,7 @@ class ContentMapperTest extends SuluTestCase
 
         $this->documentManager->clear();
 
-        $result = $this->mapper->orderAt($site->getUuid(), 3, 17, 'sulu_io', 'en');
+        $result = $this->mapper->orderAt($site->getUuid(), 3, 1, 'sulu_io', 'en');
         $this->assertEquals($site->getUuid(), $result->getUuid());
         $this->assertEquals('/page-1/test', $result->getPath());
 
@@ -2632,14 +2631,9 @@ class ContentMapperTest extends SuluTestCase
         $this->assertArrayNotHasKey('es', $urls);
     }
 
-    private function createUserTokenWithId($id)
+    private function createUserToken(): UsernamePasswordToken
     {
-        $user = $this->prophesize(UserInterface::class);
-        $user->getId()->willReturn($id);
-        $userToken = new UsernamePasswordToken('test', 'testpass', 'fake_provider');
-        $userToken->setUser($user->reveal());
-
-        return $userToken;
+        return new UsernamePasswordToken($this->getTestUser(), 'testpass', 'fake_provider');
     }
 
     private function getHomeUuid()

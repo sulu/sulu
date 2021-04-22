@@ -12,17 +12,15 @@
 namespace Sulu\Bundle\TestBundle\Kernel;
 
 use Sulu\Bundle\TestBundle\SuluTestBundle;
-use Sulu\Bundle\TestBundle\Testing\SetDomainEventUserSubscriber;
 use Sulu\Component\HttpKernel\SuluKernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
-use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 
 /**
  * Represents a kernel for sulu-application tests.
  */
-class SuluTestKernel extends SuluKernel implements CompilerPassInterface
+class SuluTestKernel extends SuluKernel
 {
     /**
      * @var string
@@ -141,13 +139,5 @@ class SuluTestKernel extends SuluKernel implements CompilerPassInterface
                 true
             ));
         });
-    }
-
-    /**
-     * @return void
-     */
-    public function process(ContainerBuilder $container)
-    {
-        $container->getDefinition('sulu_event_log.set_domain_event_user_subscriber')->setClass(SetDomainEventUserSubscriber::class);
     }
 }
