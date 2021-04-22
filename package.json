@@ -121,7 +121,7 @@
             ]
         },
         "transformIgnorePatterns": [
-            "node_modules/(?!(@ckeditor|lodash-es)/)"
+            "node_modules/(?!(@ckeditor|ckeditor5|lodash-es)/)"
         ],
         "testPathIgnorePatterns": [
             "vendor/friendsofsymfony"
