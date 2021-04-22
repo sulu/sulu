@@ -27,7 +27,6 @@ class AddAdminPass implements CompilerPassInterface
         $pool = $container->getDefinition(self::ADMIN_POOL_DEFINITION_ID);
 
         $adminServiceDefinitions = [];
-
         foreach ($container->findTaggedServiceIds(self::ADMIN_TAG) as $id => $tags) {
             $serviceDefinition = $container->getDefinition($id);
 
