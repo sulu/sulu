@@ -3,7 +3,7 @@ import React from 'react';
 import {mount} from 'enzyme';
 import {Input, Number, Overlay} from 'sulu-admin-bundle/components';
 import {SingleAutoComplete} from 'sulu-admin-bundle/containers';
-import {Map, Marker} from 'react-leaflet';
+import {MapContainer, Marker} from 'react-leaflet';
 import LocationOverlay from '../LocationOverlay';
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
@@ -93,7 +93,7 @@ test('Should pass correct props the Map component and Marker component when no i
         />
     );
 
-    expect(locationOverlay.find(Map).props()).toEqual(expect.objectContaining({
+    expect(locationOverlay.find(MapContainer).props()).toEqual(expect.objectContaining({
         attributionControl: false,
         center: [0, 0],
         zoom: 1,
@@ -127,7 +127,7 @@ test('Should pass correct props the Map component and Marker component when an i
         />
     );
 
-    expect(locationOverlay.find(Map).props()).toEqual(expect.objectContaining({
+    expect(locationOverlay.find(MapContainer).props()).toEqual(expect.objectContaining({
         attributionControl: false,
         center: [22, 33],
         zoom: 5,
@@ -206,8 +206,8 @@ test('Should pass correct props to the map, marker and input fields after auto-c
     expect(locationOverlay.find(Input).at(8).props().value).toEqual(autoCompleteResult.town); // town
     expect(locationOverlay.find(Input).at(9).props().value).toEqual(autoCompleteResult.country); // country
 
-    expect(locationOverlay.find(Map).props().zoom).toEqual(1);
-    expect(locationOverlay.find(Map).props().center).toEqual(
+    expect(locationOverlay.find(MapContainer).props().zoom).toEqual(1);
+    expect(locationOverlay.find(MapContainer).props().center).toEqual(
         [autoCompleteResult.latitude, autoCompleteResult.longitude]
     );
     expect(locationOverlay.find(Marker).props().position).toEqual(
@@ -264,11 +264,11 @@ test('Should pass correct props to the map and input fields after map was zoomed
         />
     );
 
-    locationOverlay.find(Map).props().onZoomAnim({zoom: 10});
+    locationOverlay.find(MapContainer).props().onZoomAnim({zoom: 10});
     locationOverlay.update();
 
     expect(locationOverlay.find(Number).at(2).props().value).toEqual(10); // zoom
-    expect(locationOverlay.find(Map).props().zoom).toEqual(10);
+    expect(locationOverlay.find(MapContainer).props().zoom).toEqual(10);
 });
 
 test('Should call onConfirm callback when the Overlay is confirmed after map was zoomed', () => {
@@ -294,7 +294,7 @@ test('Should call onConfirm callback when the Overlay is confirmed after map was
         />
     );
 
-    locationOverlay.find(Map).props().onZoomAnim({zoom: 10});
+    locationOverlay.find(MapContainer).props().onZoomAnim({zoom: 10});
     locationOverlay.find(Overlay).props().onConfirm();
 
     expect(confirmSpy).toBeCalledWith(expect.objectContaining({
@@ -328,7 +328,7 @@ test('Should pass correct props to the map, marker and input fields while marker
     expect(locationOverlay.find(Marker).props().position).toEqual([22, 11]);
 
     // props of map should not be updated before drag-end event
-    expect(locationOverlay.find(Map).props().center).toEqual([0, 0]);
+    expect(locationOverlay.find(MapContainer).props().center).toEqual([0, 0]);
 });
 
 test('Should pass correct props to the map, marker and input fields after marker was dragged', () => {
@@ -348,7 +348,7 @@ test('Should pass correct props to the map, marker and input fields after marker
     expect(locationOverlay.find(Number).at(0).props().value).toEqual(22); // lat
     expect(locationOverlay.find(Number).at(1).props().value).toEqual(11); // long
     expect(locationOverlay.find(Marker).props().position).toEqual([22, 11]);
-    expect(locationOverlay.find(Map).props().center).toEqual([22, 11]);
+    expect(locationOverlay.find(MapContainer).props().center).toEqual([22, 11]);
 });
 
 test('Should call onConfirm callback when the Overlay is confirmed after marker was dragged', () => {
@@ -466,8 +466,8 @@ test('Should pass correct props to the map, marker and input fields after reset'
     expect(locationOverlay.find(Input).at(8).props().value).toBeNull(); // town
     expect(locationOverlay.find(Input).at(9).props().value).toBeNull(); // country
 
-    expect(locationOverlay.find(Map).props().zoom).toEqual(1);
-    expect(locationOverlay.find(Map).props().center).toEqual([0, 0]);
+    expect(locationOverlay.find(MapContainer).props().zoom).toEqual(1);
+    expect(locationOverlay.find(MapContainer).props().center).toEqual([0, 0]);
     expect(locationOverlay.find(Marker).props().position).toEqual([0, 0]);
 });
 
@@ -531,8 +531,8 @@ test('Should pass correct props to the map, marker and input fields after input 
     expect(locationOverlay.find(Input).at(8).props().value).toEqual('new-town'); // town
     expect(locationOverlay.find(Input).at(9).props().value).toEqual('new-country'); // country
 
-    expect(locationOverlay.find(Map).props().zoom).toEqual(12);
-    expect(locationOverlay.find(Map).props().center).toEqual([10, 20]);
+    expect(locationOverlay.find(MapContainer).props().zoom).toEqual(12);
+    expect(locationOverlay.find(MapContainer).props().center).toEqual([10, 20]);
     expect(locationOverlay.find(Marker).props().position).toEqual([10, 20]);
 });
 

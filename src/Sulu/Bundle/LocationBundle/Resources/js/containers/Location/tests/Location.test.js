@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {shallow, mount} from 'enzyme';
-import {Map, Marker, Tooltip} from 'react-leaflet';
+import {MapContainer, Marker, Tooltip} from 'react-leaflet';
 import Location from '../Location';
 import LocationOverlay from '../LocationOverlay';
 
@@ -78,7 +78,7 @@ test('Component should render a map, a marker and a tooltip with correct props a
         />
     );
 
-    expect(location.find(Map).props()).toEqual(expect.objectContaining({
+    expect(location.find(MapContainer).props()).toEqual(expect.objectContaining({
         attributionControl: false,
         center: [22, 33],
         doubleClickZoom: false,

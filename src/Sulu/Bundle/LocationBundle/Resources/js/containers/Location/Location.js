@@ -4,7 +4,7 @@ import {observer} from 'mobx-react';
 import {action, observable, computed} from 'mobx';
 import {CroppedText, Icon} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils';
-import {Map, Marker, TileLayer, Tooltip} from 'react-leaflet';
+import {MapContainer, Marker, TileLayer, Tooltip} from 'react-leaflet';
 import classNames from 'classnames';
 import type {Location as LocationValue} from '../../types';
 import locationStyles from './location.scss';
@@ -83,7 +83,7 @@ class Location extends React.Component<Props> {
                     </div>
                 </div>
                 {value &&
-                    <Map
+                    <MapContainer
                         attributionControl={false}
                         center={[value.lat, value.long]}
                         className={locationStyles.locationMap}
@@ -106,7 +106,7 @@ class Location extends React.Component<Props> {
                                 </Tooltip>
                             }
                         </Marker>
-                    </Map>
+                    </MapContainer>
                 }
                 <LocationOverlay
                     onClose={this.handleOverlayClose}

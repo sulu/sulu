@@ -4,7 +4,7 @@ import {action, observable, reaction} from 'mobx';
 import {observer} from 'mobx-react';
 import {Form, Input, Number, Overlay} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils';
-import {Map, Marker, TileLayer} from 'react-leaflet';
+import {MapContainer, Marker, TileLayer} from 'react-leaflet';
 import {SingleAutoComplete} from 'sulu-admin-bundle/containers';
 import SingleSelectionStore from 'sulu-admin-bundle/stores/SingleSelectionStore';
 import type {Location as LocationValue} from '../../types';
@@ -218,7 +218,7 @@ class LocationOverlay extends React.Component<Props> {
                         </Form.Field>
 
                         <Form.Field>
-                            <Map
+                            <MapContainer
                                 attributionControl={false}
                                 center={[this.mapLat, this.mapLong]}
                                 className={locationOverlayStyles.map}
@@ -232,7 +232,7 @@ class LocationOverlay extends React.Component<Props> {
                                     onDragEnd={this.handleMarkerDragEnd}
                                     position={[this.markerLat || 0, this.markerLong || 0]}
                                 />
-                            </Map>
+                            </MapContainer>
                         </Form.Field>
 
                         <Form.Field colSpan={4} label={translate('sulu_location.latitude')} required={true}>
