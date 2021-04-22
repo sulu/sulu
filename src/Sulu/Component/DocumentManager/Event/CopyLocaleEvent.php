@@ -14,32 +14,28 @@ namespace Sulu\Component\DocumentManager\Event;
 class CopyLocaleEvent extends AbstractMappingEvent
 {
     /**
-     * @var string[]
+     * @var string
      */
-    private $destLocales;
+    private $destLocale;
 
     /**
      * @param object $document
      * @param string $locale
-     * @param string|string[] $destLocales
+     * @param string $destLocale
      */
-    public function __construct($document, $locale, $destLocales)
+    public function __construct($document, $locale, $destLocale)
     {
         $this->document = $document;
         $this->locale = $locale;
 
-        if (!\is_array($destLocales)) {
-            $destLocales = [$destLocales];
-        }
-
-        $this->destLocales = $destLocales;
+        $this->destLocale = $destLocale;
     }
 
     /**
-     * @return string[]
+     * @return string
      */
-    public function getDestLocales()
+    public function getDestLocale()
     {
-        return $this->destLocales;
+        return $this->destLocale;
     }
 }

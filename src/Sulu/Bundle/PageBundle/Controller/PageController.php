@@ -238,7 +238,10 @@ class PageController extends AbstractRestController implements ClassResourceInte
 
                     $document = $this->documentManager->find($id, $srcLocale);
 
-                    $this->documentManager->copyLocale($document, $srcLocale, $destLocales);
+                    foreach ($destLocales as $destLocale) {
+                        $this->documentManager->copyLocale($document, $srcLocale, $destLocale);
+                    }
+
                     $this->documentManager->flush();
 
                     $data = $document;

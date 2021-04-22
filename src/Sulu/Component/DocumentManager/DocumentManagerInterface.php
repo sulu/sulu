@@ -85,11 +85,11 @@ interface DocumentManagerInterface
      *
      * @param object $document
      * @param string $srcLocale
-     * @param string|string[] $destLocales
+     * @param string $destLocale
      *
      * @return void
      */
-    public function copyLocale($document, $srcLocale, $destLocales);
+    public function copyLocale($document, $srcLocale, $destLocale);
 
     /**
      * Re-Order node before or after a specific node.

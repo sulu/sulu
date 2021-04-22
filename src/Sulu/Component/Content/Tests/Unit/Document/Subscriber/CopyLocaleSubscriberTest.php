@@ -61,7 +61,7 @@ class CopyLocaleSubscriberTest extends SubscriberTestCase
         /** @var CopyLocaleEvent|ObjectProphecy $event */
         $event = $this->prophesize(CopyLocaleEvent::class);
         $event->getLocale()->willReturn('en');
-        $event->getDestLocales()->willReturn(['de']);
+        $event->getDestLocale()->willReturn('de');
 
         $structureData = [
             'foo' => 'bar',

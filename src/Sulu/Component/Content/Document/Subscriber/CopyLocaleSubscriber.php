@@ -73,7 +73,7 @@ class CopyLocaleSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $destLocales = $event->getDestLocales();
+        $destLocale = $event->getDestLocale();
         $uuid = $document->getUuid();
 
         $webspaceKey = null;
@@ -92,51 +92,49 @@ class CopyLocaleSubscriber implements EventSubscriberInterface
             }
         }
 
-        foreach ($destLocales as $destLocale) {
-            $destDocument = $this->documentManager->find(
-                $uuid,
+        $destDocument = $this->documentManager->find(
+            $uuid,
+            $destLocale
+        );
+
+        if ($destDocument instanceof LocaleBehavior) {
+            $destDocument->setLocale($destLocale);
+        }
+
+        if ($destDocument instanceof TitleBehavior && $document instanceof TitleBehavior) {
+            $destDocument->setTitle($document->getTitle());
+        }
+
+        if ($destDocument instanceof StructureBehavior && $document instanceof StructureBehavior) {
+            $destDocument->setStructureType($document->getStructureType());
+            $destDocument->getStructure()->bind($document->getStructure()->toArray());
+        }
+
+        if ($destDocument instanceof WorkflowStageBehavior) {
+            $documentAccessor = new DocumentAccessor($destDocument);
+            $documentAccessor->set(WorkflowStageSubscriber::PUBLISHED_FIELD, null);
+        }
+
+        if ($destDocument instanceof ExtensionBehavior && $document instanceof ExtensionBehavior) {
+            $destDocument->setExtensionsData($document->getExtensionsData());
+        }
+
+        // TODO: This can be removed if RoutingAuto replaces the ResourceLocator code.
+        if ($destDocument instanceof ResourceSegmentBehavior
+            && $destDocument instanceof TitleBehavior
+            && null !== $resourceLocatorStrategy
+            && null !== $parentUuid
+            && null !== $webspaceKey) {
+            $resourceLocator = $resourceLocatorStrategy->generate(
+                $destDocument->getTitle(),
+                $parentUuid,
+                $webspaceKey,
                 $destLocale
             );
 
-            if ($destDocument instanceof LocaleBehavior) {
-                $destDocument->setLocale($destLocale);
-            }
-
-            if ($destDocument instanceof TitleBehavior && $document instanceof TitleBehavior) {
-                $destDocument->setTitle($document->getTitle());
-            }
-
-            if ($destDocument instanceof StructureBehavior && $document instanceof StructureBehavior) {
-                $destDocument->setStructureType($document->getStructureType());
-                $destDocument->getStructure()->bind($document->getStructure()->toArray());
-            }
-
-            if ($destDocument instanceof WorkflowStageBehavior) {
-                $documentAccessor = new DocumentAccessor($destDocument);
-                $documentAccessor->set(WorkflowStageSubscriber::PUBLISHED_FIELD, null);
-            }
-
-            if ($destDocument instanceof ExtensionBehavior && $document instanceof ExtensionBehavior) {
-                $destDocument->setExtensionsData($document->getExtensionsData());
-            }
-
-            // TODO: This can be removed if RoutingAuto replaces the ResourceLocator code.
-            if ($destDocument instanceof ResourceSegmentBehavior
-                && $destDocument instanceof TitleBehavior
-                && null !== $resourceLocatorStrategy
-                && null !== $parentUuid
-                && null !== $webspaceKey) {
-                $resourceLocator = $resourceLocatorStrategy->generate(
-                    $destDocument->getTitle(),
-                    $parentUuid,
-                    $webspaceKey,
-                    $destLocale
-                );
-
-                $destDocument->setResourceSegment($resourceLocator);
-            }
-
-            $this->documentManager->persist($destDocument, $destLocale);
+            $destDocument->setResourceSegment($resourceLocator);
         }
+
+        $this->documentManager->persist($destDocument, $destLocale);
     }
 }

@@ -83,9 +83,9 @@ class DocumentManager implements DocumentManagerInterface
         return $event->getCopiedPath();
     }
 
-    public function copyLocale($document, $srcLocale, $destLocales)
+    public function copyLocale($document, $srcLocale, $destLocale)
     {
-        $event = new Event\CopyLocaleEvent($document, $srcLocale, $destLocales);
+        $event = new Event\CopyLocaleEvent($document, $srcLocale, $destLocale);
         $this->eventDispatcher->dispatch($event, Events::COPY_LOCALE);
     }
 
