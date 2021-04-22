@@ -52,7 +52,7 @@ class CopyLocaleSubscriberTest extends SubscriberTestCase
         $this->subscriber = new CopyLocaleSubscriber(
             $this->documentManager->reveal(),
             $this->documentInspector->reveal(),
-            $this->resourceLocatorStrategyPool->reveal(),
+            $this->resourceLocatorStrategyPool->reveal()
         );
     }
 
