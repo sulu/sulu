@@ -2,12 +2,13 @@
 import React from 'react';
 import type {Node} from 'react';
 import log from 'loglevel';
+import classNames from 'classnames';
 import Icon from '../../../components/Icon';
 import type {FieldTransformer} from '../types';
 import iconFieldTransformerStyles from './iconFieldTransformer.scss';
 
 export default class IconFieldTransformer implements FieldTransformer {
-    transform(value: *, parameters: { [string]: mixed }): Node {
+    transform(value: *, parameters: { [string]: any }): Node {
         if (!value) {
             return value;
         }
@@ -15,6 +16,9 @@ export default class IconFieldTransformer implements FieldTransformer {
         const {
             mapping,
             skin,
+        }: {
+            mapping: mixed[],
+            skin: ?string,
         } = parameters;
         if (!mapping) {
             return value;
@@ -33,7 +37,11 @@ export default class IconFieldTransformer implements FieldTransformer {
             return value;
         }
 
-        if (skin && !iconFieldTransformerStyles['listIcon' + skin[0].toUpperCase() + skin.slice(1)]){
+        if (skin && typeof skin !== 'string') {
+            log.error(`Transformer parameter "skin" needs to be of type string, ${typeof skin} given.`);
+        }
+
+        if (skin && !iconFieldTransformerStyles[skin]) {
             log.warn(`There is no skin "${skin}" available. Default skin is used instead.`);
         }
 
@@ -83,9 +91,8 @@ export default class IconFieldTransformer implements FieldTransformer {
     }
 
     getClassName(skin: ?string): Object {
-        if (skin){
-            skin = skin[0].toUpperCase() + skin.slice(1);
-            return iconFieldTransformerStyles.listIcon + ' ' + iconFieldTransformerStyles['listIcon' + skin];
+        if (skin) {
+            return classNames(iconFieldTransformerStyles.listIcon, iconFieldTransformerStyles[skin]);
         }
 
         return iconFieldTransformerStyles.listIcon;

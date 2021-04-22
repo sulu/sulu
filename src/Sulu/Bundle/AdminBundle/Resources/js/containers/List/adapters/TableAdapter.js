@@ -90,9 +90,12 @@ class TableAdapter extends AbstractTableAdapter {
                 selectMode={onItemSelectionChange ? 'multiple' : undefined}
                 skin={skin}
             >
-                {showHeader && <Table.Header>
-                    {this.renderHeaderCells()}
-                </Table.Header>
+                {
+                    showHeader ?
+                        <Table.Header>
+                            {this.renderHeaderCells()}
+                        </Table.Header>
+                        : null
                 }
                 <Table.Body>
                     {this.renderRows()}

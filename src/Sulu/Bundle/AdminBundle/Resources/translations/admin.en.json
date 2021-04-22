@@ -187,5 +187,8 @@
     "sulu_admin.start": "Start",
     "sulu_admin.end": "End",
     "sulu_admin.preview_date_time": "Time/Date for page preview",
-    "sulu_admin.preview_date_time_description": "Clear input to use the current date."
+    "sulu_admin.preview_date_time_description": "Clear input to use the current date.",
+    "sulu_admin.lastDay": "Yesterday",
+    "sulu_admin.nextDay": "Tomorrow",
+    "sulu_admin.sameDay": "Today"
 }
