@@ -173,12 +173,8 @@ class CategoryManager implements CategoryManagerInterface
         if (!$isNewCategory) {
             $categoryEntity = $this->findById($this->getProperty($data, 'id'));
 
-            foreach ($categoryEntity->getTranslations() as $translation) {
-                if ($translation->getLocale() === $locale) {
-                    $isNewLocale = false;
-
-                    break;
-                }
+            if (false !== $categoryEntity->findTranslationByLocale($locale)) {
+                $isNewLocale = false;
             }
         } else {
             $categoryEntity = $this->categoryRepository->createNew();
