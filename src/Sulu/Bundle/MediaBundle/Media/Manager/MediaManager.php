@@ -730,6 +730,7 @@ class MediaManager implements MediaManagerInterface
         $defaultFileVersionMeta = $this->getDefaultFileVersionMeta($mediaEntity);
         $mediaTitle = $defaultFileVersionMeta ? $defaultFileVersionMeta->getTitle() : null;
         $locale = $defaultFileVersionMeta ? $defaultFileVersionMeta->getLocale() : null;
+        $collectionId = $mediaEntity->getCollection()->getId();
 
         if ($checkSecurity) {
             $this->securityChecker->checkPermission(
@@ -770,7 +771,7 @@ class MediaManager implements MediaManagerInterface
         $this->em->remove($mediaEntity);
 
         $this->domainEventCollector->collect(
-            new MediaRemovedEvent($mediaEntity->getId(), $mediaTitle, $locale)
+            new MediaRemovedEvent($mediaEntity->getId(), $collectionId, $mediaTitle, $locale)
         );
 
         $this->em->flush();

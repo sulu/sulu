@@ -13,6 +13,7 @@ namespace Sulu\Bundle\MediaBundle\Domain\Event;
 
 use Sulu\Bundle\EventLogBundle\Domain\Event\DomainEvent;
 use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
+use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 
 class MediaRemovedEvent extends DomainEvent
@@ -21,6 +22,11 @@ class MediaRemovedEvent extends DomainEvent
      * @var int
      */
     private $mediaId;
+
+    /**
+     * @var int
+     */
+    private $collectionId;
 
     /**
      * @var string|null
@@ -34,12 +40,14 @@ class MediaRemovedEvent extends DomainEvent
 
     public function __construct(
         int $mediaId,
+        int $collectionId,
         ?string $mediaTitle,
         ?string $mediaTitleLocale
     ) {
         parent::__construct();
 
         $this->mediaId = $mediaId;
+        $this->collectionId = $collectionId;
         $this->mediaTitle = $mediaTitle;
         $this->mediaTitleLocale = $mediaTitleLocale;
     }
@@ -72,5 +80,15 @@ class MediaRemovedEvent extends DomainEvent
     public function getResourceSecurityContext(): ?string
     {
         return MediaAdmin::SECURITY_CONTEXT;
+    }
+
+    public function getResourceSecurityType(): ?string
+    {
+        return Collection::class;
+    }
+
+    public function getResourceSecurityObjectId(): ?string
+    {
+        return (string) $this->collectionId;
     }
 }
