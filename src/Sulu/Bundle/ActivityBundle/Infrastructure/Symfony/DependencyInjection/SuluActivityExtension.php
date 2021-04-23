@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\ActivityBundle\Infrastructure\Symfony\DependencyInjection;
 
+use Sulu\Bundle\ActivityBundle\Domain\Model\ActivityInterface;
 use Sulu\Bundle\ActivityBundle\Domain\Repository\ActivityRepositoryInterface;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Symfony\Component\Config\FileLocator;
@@ -36,6 +37,26 @@ class SuluActivityExtension extends Extension implements PrependExtensionInterfa
                                 'dir' => __DIR__ . '/../../../Resources/config/doctrine',
                                 'prefix' => 'Sulu\Bundle\ActivityBundle\Domain\Model',
                                 'alias' => 'SuluActivityBundle',
+                            ],
+                        ],
+                    ],
+                ]
+            );
+        }
+
+        if ($container->hasExtension('sulu_admin')) {
+            $container->prependExtensionConfig(
+                'sulu_admin',
+                [
+                    'lists' => [
+                        'directories' => [
+                            __DIR__ . '/../../../Resources/config/lists',
+                        ],
+                    ],
+                    'resources' => [
+                        ActivityInterface::RESOURCE_KEY => [
+                            'routes' => [
+                                'list' => 'sulu_activity.get_activities',
                             ],
                         ],
                     ],

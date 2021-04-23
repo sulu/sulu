@@ -15,9 +15,11 @@ use Sulu\Component\Security\Authentication\UserInterface;
 
 interface ActivityInterface
 {
+    const RESOURCE_KEY = 'activities';
+
     public function getType(): string;
 
-    public function setType(string $eventType): ActivityInterface;
+    public function setType(string $type): ActivityInterface;
 
     /**
      * @return mixed[]
@@ -25,9 +27,9 @@ interface ActivityInterface
     public function getContext(): array;
 
     /**
-     * @param mixed[] $eventContext
+     * @param mixed[] $context
      */
-    public function setContext(array $eventContext): ActivityInterface;
+    public function setContext(array $context): ActivityInterface;
 
     /**
      * @return mixed[]|null
@@ -35,17 +37,17 @@ interface ActivityInterface
     public function getPayload(): ?array;
 
     /**
-     * @param mixed[]|null $eventPayload
+     * @param mixed[]|null $payload
      */
-    public function setPayload(?array $eventPayload): ActivityInterface;
+    public function setPayload(?array $payload): ActivityInterface;
 
     public function getTimestamp(): \DateTimeImmutable;
 
-    public function setTimestamp(\DateTimeImmutable $eventDateTime): ActivityInterface;
+    public function setTimestamp(\DateTimeImmutable $timestamp): ActivityInterface;
 
     public function getBatch(): ?string;
 
-    public function setBatch(?string $eventBatch): ActivityInterface;
+    public function setBatch(?string $batch): ActivityInterface;
 
     public function getUser(): ?UserInterface;
 
