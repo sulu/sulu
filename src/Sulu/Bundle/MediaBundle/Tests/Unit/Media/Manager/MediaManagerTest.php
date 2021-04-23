@@ -297,6 +297,7 @@ class MediaManagerTest extends TestCase
 
         $fileVersionMeta = $this->prophesize(FileVersionMeta::class);
         $fileVersionMeta->getTitle()->willReturn('Test image');
+        $fileVersionMeta->getLocale()->willReturn('en');
         $fileVersion->getMeta()->willReturn([$fileVersionMeta->reveal()]);
         $fileVersion->getDefaultMeta()->willReturn($fileVersionMeta->reveal());
 
@@ -360,7 +361,6 @@ class MediaManagerTest extends TestCase
         $this->pathCleaner->cleanup(Argument::exact($cleanUpArgument))->shouldBeCalled()->willReturn($cleanUpResult);
 
         $this->domainEventCollector->collect(Argument::type(MediaCreatedEvent::class))->shouldBeCalled();
-        $this->domainEventCollector->collect(Argument::type(MediaVersionCreatedEvent::class))->shouldBeCalled();
 
         $media = $this->mediaManager->save($uploadedFile->reveal(), ['locale' => 'en', 'title' => 'my title'], 1);
 
@@ -425,8 +425,12 @@ class MediaManagerTest extends TestCase
         $fileVersion->getProperties()->willReturn([]);
         $fileVersion->getFocusPointX()->willReturn(null);
         $fileVersion->getFocusPointY()->willReturn(null);
+        $fileVersionMeta = $this->prophesize(FileVersionMeta::class);
+        $fileVersionMeta->getLocale()->willReturn('en');
+        $fileVersion->getMeta()->willReturn([$fileVersionMeta]);
         $file->getFileVersion(1)->willReturn($fileVersion->reveal());
         $file->getFileVersions()->willReturn([$fileVersion->reveal()]);
+        $file->getLatestFileVersion()->willReturn($fileVersion->reveal());
         $file->getVersion()->willReturn(1);
         $media->getFiles()->willReturn([$file->reveal()]);
         $this->mediaRepository->findMediaById(1)->willReturn($media);
@@ -464,8 +468,12 @@ class MediaManagerTest extends TestCase
         $fileVersion->getProperties()->willReturn([]);
         $fileVersion->getFocusPointX()->willReturn(1);
         $fileVersion->getFocusPointY()->willReturn(2);
+        $fileVersionMeta = $this->prophesize(FileVersionMeta::class);
+        $fileVersionMeta->getLocale()->willReturn('en');
+        $fileVersion->getMeta()->willReturn([$fileVersionMeta]);
         $file->getFileVersion(1)->willReturn($fileVersion->reveal());
         $file->getFileVersions()->willReturn([$fileVersion->reveal()]);
+        $file->getLatestFileVersion()->willReturn($fileVersion->reveal());
         $file->getVersion()->willReturn(1);
         $media->getFiles()->willReturn([$file->reveal()]);
         $this->mediaRepository->findMediaById(1)->willReturn($media);
