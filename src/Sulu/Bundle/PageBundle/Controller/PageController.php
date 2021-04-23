@@ -496,7 +496,8 @@ class PageController extends AbstractRestController implements ClassResourceInte
             }
 
             if ($webspaceNodes === static::WEBSPACE_NODES_ALL) {
-                $contents = $this->getWebspaceNodes($mapping, $contents, $locale, $user);
+                $contents = $this->
+                    ($mapping, $contents, $locale, $user);
             } elseif ($webspaceNodes === static::WEBSPACE_NODE_SINGLE) {
                 $contents = $this->getWebspaceNode($mapping, $contents, $webspaceKey, $locale, $user);
             }
@@ -624,7 +625,14 @@ class PageController extends AbstractRestController implements ClassResourceInte
             if (null === $webspace->getLocalization($locale)) {
                 continue;
             }
-
+            if (
+                false === $this->securityChecker->hasPermission(
+                    new SecurityCondition('sulu.webspaces.' . $webspace->getKey(), $locale, SecurityBehavior::class),
+                    'view'
+                )
+            ) {
+                continue;
+            }
             $paths[] = $this->sessionManager->getContentPath($webspace->getKey());
             $webspaces[$webspace->getKey()] = $webspace;
         }
