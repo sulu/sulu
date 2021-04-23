@@ -622,15 +622,10 @@ class PageController extends AbstractRestController implements ClassResourceInte
         $webspaces = [];
         /** @var Webspace $webspace */
         foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
-            if (null === $webspace->getLocalization($locale)) {
-                continue;
-            }
-            if (
-                false === $this->securityChecker->hasPermission(
+            if (false === $this->securityChecker->hasPermission(
                     new SecurityCondition('sulu.webspaces.' . $webspace->getKey(), $locale, SecurityBehavior::class),
                     'view'
-                )
-            ) {
+                ) || null === $webspace->getLocalization($locale)) {
                 continue;
             }
             $paths[] = $this->sessionManager->getContentPath($webspace->getKey());
