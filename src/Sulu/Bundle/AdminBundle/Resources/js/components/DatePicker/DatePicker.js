@@ -209,8 +209,8 @@ class DatePicker extends React.Component<Props> {
                                 <ReactDatetime
                                     {...fieldOptions}
                                     inputProps={inputProps}
-                                    onBlur={this.handleCloseOverlay}
                                     onChange={this.handleDatepickerChange}
+                                    onClose={this.handleCloseOverlay}
                                     open={this.open}
                                     renderInput={this.renderInput}
                                     value={this.value}

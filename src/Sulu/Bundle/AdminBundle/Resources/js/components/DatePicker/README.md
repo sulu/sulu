@@ -1,4 +1,4 @@
-The DatePicker component builds on the top of the [react-datetime](https://github.com/YouCanBookMe/react-datetime) library. 
+The DatePicker component builds on the top of the [react-datetime](https://github.com/arqex/react-datetime) library. 
 
 ```javascript
 const [value, setValue] = React.useState(null);
