@@ -15,6 +15,7 @@ use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\CategoryBundle\Api\Category as CategoryWrapper;
 use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryCreatedEvent;
+use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryLocaleAddedEvent;
 use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryModifiedEvent;
 use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryMovedEvent;
 use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryRemovedEvent;
@@ -167,9 +168,18 @@ class CategoryManager implements CategoryManagerInterface
     public function save($data, $userId, $locale, $patch = false)
     {
         $isNewCategory = !$this->getProperty($data, 'id');
+        $isNewLocale = true;
 
         if (!$isNewCategory) {
             $categoryEntity = $this->findById($this->getProperty($data, 'id'));
+
+            foreach ($categoryEntity->getTranslations() as $translation) {
+                if ($translation->getLocale() === $locale) {
+                    $isNewLocale = false;
+
+                    break;
+                }
+            }
         } else {
             $categoryEntity = $this->categoryRepository->createNew();
         }
@@ -241,6 +251,8 @@ class CategoryManager implements CategoryManagerInterface
 
         if ($isNewCategory) {
             $this->domainEventCollector->collect(new CategoryCreatedEvent($categoryEntity, $locale, $data));
+        } elseif ($isNewLocale) {
+            $this->domainEventCollector->collect(new CategoryLocaleAddedEvent($categoryEntity, $locale, $data));
         } else {
             $this->domainEventCollector->collect(new CategoryModifiedEvent($categoryEntity, $locale, $data));
         }
