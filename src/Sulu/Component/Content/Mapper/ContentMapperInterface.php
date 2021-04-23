@@ -16,6 +16,7 @@ use PHPCR\Query\QueryInterface;
 use PHPCR\Query\QueryResultInterface;
 use Sulu\Component\Content\BreadcrumbItemInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Localization\Localization;
 
 /**
@@ -158,6 +159,9 @@ interface ContentMapperInterface
 
     /**
      * Copies the content from one node from one localization to the other.
+     *
+     * @deprecated
+     * @see DocumentManagerInterface::copyLocale()
      *
      * @param string $uuid
      * @param string $userId

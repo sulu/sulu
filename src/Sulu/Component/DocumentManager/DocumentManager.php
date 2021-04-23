@@ -83,6 +83,12 @@ class DocumentManager implements DocumentManagerInterface
         return $event->getCopiedPath();
     }
 
+    public function copyLocale($document, $srcLocale, $destLocale)
+    {
+        $event = new Event\CopyLocaleEvent($document, $srcLocale, $destLocale);
+        $this->eventDispatcher->dispatch($event, Events::COPY_LOCALE);
+    }
+
     public function reorder($document, $destId)
     {
         $event = new Event\ReorderEvent($document, $destId);

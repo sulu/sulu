@@ -709,6 +709,12 @@ class NodeRepository implements NodeRepositoryInterface
 
     public function copyLocale($uuid, $userId, $webspaceKey, $srcLocale, $destLocales)
     {
+        @\trigger_error(
+            'The NodeRepository::copyLocale method is deprecated and will be removed in the future.'
+            . ' Use DocumentManagerInterface::copyLocale instead.',
+            \E_USER_DEPRECATED
+        );
+
         try {
             // call mapper function
             $structure = $this->getMapper()->copyLanguage($uuid, $userId, $webspaceKey, $srcLocale, $destLocales);
