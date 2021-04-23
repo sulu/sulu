@@ -22,6 +22,7 @@ use Sulu\Bundle\PageBundle\Domain\Event\PageCopiedEvent;
 use Sulu\Bundle\PageBundle\Domain\Event\PageCreatedEvent;
 use Sulu\Bundle\PageBundle\Domain\Event\PageDraftRemovedEvent;
 use Sulu\Bundle\PageBundle\Domain\Event\PageLocaleAddedEvent;
+use Sulu\Bundle\PageBundle\Domain\Event\PageLocaleCopiedEvent;
 use Sulu\Bundle\PageBundle\Domain\Event\PageLocaleRemovedEvent;
 use Sulu\Bundle\PageBundle\Domain\Event\PageModifiedEvent;
 use Sulu\Bundle\PageBundle\Domain\Event\PageMovedEvent;
@@ -35,6 +36,7 @@ use Sulu\Component\Content\Document\Subscriber\StructureSubscriber;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Event\ConfigureOptionsEvent;
 use Sulu\Component\DocumentManager\Event\CopyEvent;
+use Sulu\Component\DocumentManager\Event\CopyLocaleEvent;
 use Sulu\Component\DocumentManager\Event\FlushEvent;
 use Sulu\Component\DocumentManager\Event\MoveEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
@@ -111,6 +113,7 @@ class DocumentManagerEventSubscriber implements EventSubscriberInterface
             ],
             Events::REMOVE => ['handleRemove', -10000],
             Events::REMOVE_LOCALE => ['handleRemoveLocale', -10000],
+            Events::COPY_LOCALE => ['handleCopyLocale', -10000],
             Events::COPY => ['handleCopy', -10000],
             Events::MOVE => [
                 ['handlePreMove', 10000], // Priority needs to be higher than ParentSubscriber::handleMove (0)
@@ -277,6 +280,34 @@ class DocumentManagerEventSubscriber implements EventSubscriberInterface
             new PageLocaleRemovedEvent(
                 $document,
                 $locale
+            )
+        );
+    }
+
+    public function handleCopyLocale(CopyLocaleEvent $event): void
+    {
+        $document = $event->getDocument();
+
+        if (!$document instanceof BasePageDocument) {
+            return;
+        }
+
+        $destDocument = $event->getDestDocument();
+
+        if (!$destDocument instanceof BasePageDocument) {
+            return;
+        }
+
+        $destLocale = $event->getDestLocale();
+        $fromLocale = $event->getLocale();
+        $payload = $this->getPayloadFromPageDocument($destDocument);
+
+        $this->domainEventCollector->collect(
+            new PageLocaleCopiedEvent(
+                $destDocument,
+                $destLocale,
+                $fromLocale,
+                $payload
             )
         );
     }
