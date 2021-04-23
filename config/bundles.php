@@ -24,6 +24,7 @@ return [
     JMS\SerializerBundle\JMSSerializerBundle::class => ['all' => true],
     Massive\Bundle\SearchBundle\MassiveSearchBundle::class => ['all' => true],
     FOS\HttpCacheBundle\FOSHttpCacheBundle::class => ['all' => true],
+    Sulu\Bundle\AdminBundle\SuluAdminBundle::class => ['all' => true],
     Sulu\Bundle\SearchBundle\SuluSearchBundle::class => ['all' => true],
     Sulu\Bundle\PersistenceBundle\SuluPersistenceBundle::class => ['all' => true],
     Sulu\Bundle\ContactBundle\SuluContactBundle::class => ['all' => true],
@@ -48,11 +49,8 @@ return [
     Symfony\Bundle\WebProfilerBundle\WebProfilerBundle::class => ['dev' => true, 'test' => true],
     Sulu\Bundle\TestBundle\SuluTestBundle::class => ['dev' => true, 'test' => true],
     Symfony\Bundle\DebugBundle\DebugBundle::class => ['dev' => true, 'test' => true],
-    // Admin
     Symfony\Bundle\SecurityBundle\SecurityBundle::class => ['all' => true],
-    Sulu\Bundle\AdminBundle\SuluAdminBundle::class => ['all' => true, 'admin' => true],
     Sulu\Bundle\PreviewBundle\SuluPreviewBundle::class => ['all' => true, 'admin' => true],
     FOS\JsRoutingBundle\FOSJsRoutingBundle::class => ['all' => true, 'admin' => true],
-    // Website
     Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle::class => ['all' => true, 'website' => true],
 ];
