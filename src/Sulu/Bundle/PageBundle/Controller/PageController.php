@@ -496,8 +496,7 @@ class PageController extends AbstractRestController implements ClassResourceInte
             }
 
             if ($webspaceNodes === static::WEBSPACE_NODES_ALL) {
-                $contents = $this->
-                    ($mapping, $contents, $locale, $user);
+                $contents = $this->getWebspaceNodes($mapping, $contents, $locale, $user);
             } elseif ($webspaceNodes === static::WEBSPACE_NODE_SINGLE) {
                 $contents = $this->getWebspaceNode($mapping, $contents, $webspaceKey, $locale, $user);
             }
