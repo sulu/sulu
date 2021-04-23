@@ -80,6 +80,16 @@ class DatePicker extends React.Component<Props> {
         this.props.onChange(date);
 
         this.setShowError(!!this.value && !date);
+
+        // can be removed when is fixed the following is fixed:
+        // https://github.com/arqex/react-datetime/pull/741
+        if (
+            (!this.value && date) ||
+            (this.value && !date) ||
+            !moment(this.value).isSame(date, 'day')
+        ) {
+            this.setOpen(false);
+        }
     };
 
     handleDatepickerChange = (date: string | Moment) => {
