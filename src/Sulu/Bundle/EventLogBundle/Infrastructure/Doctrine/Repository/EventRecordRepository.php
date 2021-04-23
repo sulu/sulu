@@ -57,6 +57,7 @@ class EventRecordRepository implements EventRecordRepositoryInterface
         $eventRecord->setResourceTitleLocale($domainEvent->getResourceTitleLocale());
         $eventRecord->setResourceSecurityContext($domainEvent->getResourceSecurityContext());
         $eventRecord->setResourceSecurityType($domainEvent->getResourceSecurityType());
+        $eventRecord->setResourceSecurityObjectId($domainEvent->getResourceSecurityObjectId());
 
         return $eventRecord;
     }

@@ -124,6 +124,13 @@ class DomainEventTest extends TestCase
         static::assertNull($event->getResourceSecurityType());
     }
 
+    public function testResourceSecurityObjectId(): void
+    {
+        $event = $this->createTestDomainEvent();
+
+        static::assertSame('test', $event->getResourceSecurityObjectId());
+    }
+
     private function createTestDomainEvent(): TestDomainEvent
     {
         return new TestDomainEvent();

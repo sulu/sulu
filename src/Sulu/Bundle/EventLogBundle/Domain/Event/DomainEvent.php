@@ -130,4 +130,9 @@ abstract class DomainEvent
     {
         return null;
     }
+
+    public function getResourceSecurityObjectId(): ?string
+    {
+        return $this->getResourceId();
+    }
 }

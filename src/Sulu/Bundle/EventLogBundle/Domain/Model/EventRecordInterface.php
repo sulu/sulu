@@ -82,4 +82,8 @@ interface EventRecordInterface
     public function getResourceSecurityType(): ?string;
 
     public function setResourceSecurityType(?string $resourceSecurityType): EventRecordInterface;
+
+    public function getResourceSecurityObjectId(): ?string;
+
+    public function setResourceSecurityObjectId(?string $resourceSecurityObjectId): EventRecordInterface;
 }

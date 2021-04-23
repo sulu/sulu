@@ -90,6 +90,11 @@ class EventRecord implements EventRecordInterface
      */
     private $resourceSecurityType;
 
+    /**
+     * @var string|null
+     */
+    private $resourceSecurityObjectId;
+
     public function getEventType(): string
     {
         return $this->eventType;
@@ -254,6 +259,18 @@ class EventRecord implements EventRecordInterface
     public function setResourceSecurityType(?string $resourceSecurityType): EventRecordInterface
     {
         $this->resourceSecurityType = $resourceSecurityType;
+
+        return $this;
+    }
+
+    public function getResourceSecurityObjectId(): ?string
+    {
+        return $this->resourceSecurityObjectId;
+    }
+
+    public function setResourceSecurityObjectId(?string $resourceSecurityObjectId): EventRecordInterface
+    {
+        $this->resourceSecurityObjectId = $resourceSecurityObjectId;
 
         return $this;
     }

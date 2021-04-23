@@ -144,6 +144,15 @@ class EventRecordTest extends TestCase
         static::assertSame(SecurityBehavior::class, $event->getResourceSecurityType());
     }
 
+    public function testResourceSecurityObjectId(): void
+    {
+        $event = $this->createEventRecord();
+
+        static::assertNull($event->getResourceSecurityObjectId());
+        static::assertSame($event, $event->setResourceSecurityObjectId('1'));
+        static::assertSame('1', $event->getResourceSecurityObjectId());
+    }
+
     private function createEventRecord(): EventRecord
     {
         return new EventRecord();

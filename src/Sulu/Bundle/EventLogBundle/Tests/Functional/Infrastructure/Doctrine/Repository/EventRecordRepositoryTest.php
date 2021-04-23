@@ -58,6 +58,7 @@ class EventRecordRepositoryTest extends SuluTestCase
         $this->domainEvent->getResourceTitleLocale()->willReturn('en');
         $this->domainEvent->getResourceSecurityContext()->willReturn('sulu.webspaces.sulu-io');
         $this->domainEvent->getResourceSecurityType()->willReturn(SecurityBehavior::class);
+        $this->domainEvent->getResourceSecurityObjectId()->willReturn('1234-1234-1234-1234');
     }
 
     public function testCreateForDomainEvent(): void
@@ -84,6 +85,7 @@ class EventRecordRepositoryTest extends SuluTestCase
         static::assertSame('en', $eventRecord->getResourceTitleLocale());
         static::assertSame('sulu.webspaces.sulu-io', $eventRecord->getResourceSecurityContext());
         static::assertSame(SecurityBehavior::class, $eventRecord->getResourceSecurityType());
+        static::assertSame('1234-1234-1234-1234', $eventRecord->getResourceSecurityObjectId());
     }
 
     public function testAddAndCommit(): void
