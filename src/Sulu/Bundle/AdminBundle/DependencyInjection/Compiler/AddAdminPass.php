@@ -40,10 +40,11 @@ class AddAdminPass implements CompilerPassInterface
         }
 
         \krsort($adminServiceDefinitions);
-        $adminServiceDefinitions = \array_merge(...$adminServiceDefinitions);
 
-        foreach ($adminServiceDefinitions as $id => $serviceDefinition) {
-            $pool->addMethodCall('addAdmin', [$serviceDefinition]);
+        foreach ($adminServiceDefinitions as $priority => $serviceDefinitions) {
+            foreach ($serviceDefinitions as $serviceDefinition) {
+                $pool->addMethodCall('addAdmin', [$serviceDefinition]);
+            }
         }
     }
 }

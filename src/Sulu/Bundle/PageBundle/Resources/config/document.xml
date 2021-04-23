@@ -139,6 +139,14 @@
             <tag name="sulu_document_manager.event_subscriber"/>
         </service>
 
+        <service id="sulu_document_manager.document.subscriber.copy_locale"
+                 class="Sulu\Component\Content\Document\Subscriber\CopyLocaleSubscriber">
+            <argument type="service" id="sulu_document_manager.document_manager"/>
+            <argument type="service" id="sulu_document_manager.document_inspector"/>
+            <argument type="service" id="sulu.content.resource_locator.strategy_pool"/>
+            <tag name="sulu_document_manager.event_subscriber"/>
+        </service>
+
         <!-- Compat -->
         <service id="sulu_document_manager.document.subscriber.compat.content_mapper"
                  class="Sulu\Component\Content\Document\Subscriber\Compat\ContentMapperSubscriber">

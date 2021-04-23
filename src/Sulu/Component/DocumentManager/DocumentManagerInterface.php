@@ -81,6 +81,17 @@ interface DocumentManagerInterface
     public function copy($document, $destPath);
 
     /**
+     * Copy a specific locale of a document.
+     *
+     * @param object $document
+     * @param string $srcLocale
+     * @param string $destLocale
+     *
+     * @return void
+     */
+    public function copyLocale($document, $srcLocale, $destLocale);
+
+    /**
      * Re-Order node before or after a specific node.
      *
      * @param object $document

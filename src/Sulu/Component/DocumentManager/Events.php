@@ -37,6 +37,11 @@ class Events
     const REMOVE_LOCALE = 'sulu_document_manager.remove_locale';
 
     /**
+     * Fired when a document localization is copied via the document manager.
+     */
+    const COPY_LOCALE = 'sulu_document_manager.copy_locale';
+
+    /**
      * Fired when a document should be refreshed.
      */
     const REFRESH = 'sulu_document_manager.refresh';
