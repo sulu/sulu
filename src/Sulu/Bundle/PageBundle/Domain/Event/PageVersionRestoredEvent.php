@@ -16,6 +16,7 @@ namespace Sulu\Bundle\PageBundle\Domain\Event;
 use Sulu\Bundle\EventLogBundle\Domain\Event\DomainEvent;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Bundle\PageBundle\Document\BasePageDocument;
+use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 
 class PageVersionRestoredEvent extends DomainEvent
 {
@@ -96,5 +97,10 @@ class PageVersionRestoredEvent extends DomainEvent
     public function getResourceSecurityContext(): ?string
     {
         return PageAdmin::getPageSecurityContext(static::getResourceWebspaceKey());
+    }
+
+    public function getResourceSecurityType(): ?string
+    {
+        return SecurityBehavior::class;
     }
 }

@@ -17,6 +17,7 @@ use Sulu\Bundle\EventLogBundle\Domain\Event\DomainEvent;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
+use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 
 class PageCopiedEvent extends DomainEvent
 {
@@ -109,5 +110,10 @@ class PageCopiedEvent extends DomainEvent
     public function getResourceSecurityContext(): ?string
     {
         return PageAdmin::getPageSecurityContext(static::getResourceWebspaceKey());
+    }
+
+    public function getResourceSecurityType(): ?string
+    {
+        return SecurityBehavior::class;
     }
 }
