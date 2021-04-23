@@ -120,6 +120,8 @@ class CopyLocaleSubscriberTest extends SubscriberTestCase
 
         $this->documentManager->persist($destDocument->reveal(), 'de', ['omit_modified_domain_event' => true])->shouldBeCalled();
 
+        $event->setDestDocument($destDocument->reveal())->shouldBeCalled();
+
         $this->subscriber->handleCopyLocale($event->reveal());
     }
 }
