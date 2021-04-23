@@ -75,7 +75,7 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
             rules: [
                 {
                     test: /\.js$/,
-                    exclude: /node_modules[/\\](?!(sulu-(.*)-bundle|@ckeditor|lodash-es)[/\\])/,
+                    exclude: /node_modules[/\\](?!(sulu-(.*)-bundle|@ckeditor|ckeditor5|lodash-es)[/\\])/,
                     use: {
                         loader: 'babel-loader',
                         options: {

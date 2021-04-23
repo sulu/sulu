@@ -2,6 +2,21 @@
 
 ## 2.3
 
+### JS Dependencies updated
+
+We always try to keep sulu compatible with newest dependencies in this release
+we did update the following JS packages to a newer major version:
+
+**CKeditor**
+
+If you use a custom ckeditor plugin make sure that it is compatible to `^27.1.0` of the
+`@ckeditor` package in your `assets/admin/package.json`.
+
+```json
+    "@ckeditor/ckeditor5-dev-utils": "^24.2.1",
+    "@ckeditor/ckeditor5-theme-lark": "^27.1.0",
+```
+
 ### Extend DocumentManagerInterface
 
 The `DocumentManagerInterface` has been extended with a new method `copyLocale`. If you have overridden this service
