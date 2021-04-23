@@ -195,9 +195,9 @@ module.exports = { // eslint-disable-line
                             loader: 'css-loader',
                             options: {
                                 importLoaders: 1,
-                                localsConvention: 'camelCase',
                                 modules: {
                                     localIdentName: '[local]--[hash:base64:10]',
+                                    exportLocalsConvention: 'camelCase',
                                 },
                             },
                         },
