@@ -191,8 +191,13 @@ class DocumentManagerEventSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $node = $event->getNode();
+        /** @var string|null $locale */
         $locale = $event->getLocale();
+        $node = $event->getNode();
+
+        if (null === $locale) {
+            return;
+        }
 
         $eventHash = \spl_object_hash($event);
 
@@ -213,10 +218,11 @@ class DocumentManagerEventSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $document = $event->getDocument();
+        /** @var string|null $locale */
         $locale = $event->getLocale();
+        $document = $event->getDocument();
 
-        if (!$document instanceof BasePageDocument) {
+        if (null === $locale || !$document instanceof BasePageDocument) {
             return;
         }
 
