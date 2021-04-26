@@ -298,6 +298,8 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     {
         $this->user = $user;
         $this->permission = $permission;
+
+        return $this;
     }
 
     public function where(FieldDescriptorInterface $fieldDescriptor, $value, $comparator = self::WHERE_COMPARATOR_EQUAL)

@@ -40,9 +40,13 @@ class AccessControlQueryEnhancer
         QueryBuilder $queryBuilder,
         UserInterface $user = null,
         int $permission,
-        string $entityClass,
-        string $entityAlias
+        ?string $entityClass,
+        string $entityAlias,
+        ?string $entityClassField = null,
+        ?string $entityIdField = 'id'
     ) {
+        $entityIdField = $entityIdField ?? 'id';
+
         $systemRoleQueryBuilder = $this->entityManager->createQueryBuilder()
             ->from(RoleInterface::class, 'systemRoles')
             ->select('systemRoles.id')
@@ -52,8 +56,10 @@ class AccessControlQueryEnhancer
             AccessControl::class,
             'accessControl',
             'WITH',
-            'accessControl.entityClass = :entityClass '
-            . 'AND accessControl.entityId = ' . $entityAlias . '.id '
+            (null !== $entityClassField
+                ? 'accessControl.entityClass = ' . $entityAlias . '.' . $entityClassField . ' '
+                : 'accessControl.entityClass = :entityClass ')
+            . 'AND accessControl.entityId = ' . $entityAlias . '.' . $entityIdField . ' '
             . 'AND accessControl.role IN (' . $systemRoleQueryBuilder->getDQL() . ')'
         );
         $queryBuilder->leftJoin('accessControl.role', 'role');
@@ -73,8 +79,11 @@ class AccessControlQueryEnhancer
 
         $queryBuilder->andWhere('role.id IN(:roleIds) OR role.id IS NULL');
         $queryBuilder->setParameter('roleIds', $roleIds);
-        $queryBuilder->setParameter('entityClass', $entityClass);
         $queryBuilder->setParameter('permission', $permission);
         $queryBuilder->setParameter('system', $this->systemStore->getSystem());
+
+        if (null === $entityClassField) {
+            $queryBuilder->setParameter('entityClass', $entityClass);
+        }
     }
 }

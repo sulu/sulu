@@ -110,6 +110,16 @@ class DoctrineListBuilder extends AbstractListBuilder
     private $securedEntityName;
 
     /**
+     * @var string|null
+     */
+    private $securedEntityNameField = null;
+
+    /**
+     * @var string|null
+     */
+    private $securedEntityIdField = null;
+
+    /**
      * Array of unique field descriptors needed for secure-check.
      *
      * @var array
@@ -165,11 +175,26 @@ class DoctrineListBuilder extends AbstractListBuilder
         return $this;
     }
 
-    public function setPermissionCheck(UserInterface $user, $permission, $securedEntityName = null)
-    {
+    /**
+     * @param int $permission
+     * @param string|null $securedEntityName
+     * @param string|null $securedEntityNameField
+     * @param string|null $securedEntityIdField
+     */
+    public function setPermissionCheck(
+        UserInterface $user,
+        $permission,
+        $securedEntityName = null,
+        $securedEntityNameField = null,
+        $securedEntityIdField = 'id'
+    ) {
         parent::setPermissionCheck($user, $permission);
 
         $this->securedEntityName = $securedEntityName ?: $this->entityName;
+        $this->securedEntityNameField = $securedEntityNameField;
+        $this->securedEntityIdField = $securedEntityIdField;
+
+        return $this;
     }
 
     public function addPermissionCheckField(DoctrineFieldDescriptor $fieldDescriptor)
@@ -433,7 +458,9 @@ class DoctrineListBuilder extends AbstractListBuilder
                     $this->user,
                     $this->permissions[$this->permission],
                     $this->securedEntityName,
-                    $this->encodeAlias($this->securedEntityName)
+                    $this->encodeAlias($this->securedEntityName),
+                    $this->securedEntityNameField,
+                    $this->securedEntityIdField
                 );
             } else {
                 $this->addAccessControl(
