@@ -15,7 +15,7 @@ use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\CategoryBundle\Api\Category as CategoryWrapper;
 use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryCreatedEvent;
-use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryLocaleAddedEvent;
+use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryTranslationAddedEvent;
 use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryModifiedEvent;
 use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryMovedEvent;
 use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryRemovedEvent;
@@ -248,7 +248,7 @@ class CategoryManager implements CategoryManagerInterface
         if ($isNewCategory) {
             $this->domainEventCollector->collect(new CategoryCreatedEvent($categoryEntity, $locale, $data));
         } elseif ($isNewLocale) {
-            $this->domainEventCollector->collect(new CategoryLocaleAddedEvent($categoryEntity, $locale, $data));
+            $this->domainEventCollector->collect(new CategoryTranslationAddedEvent($categoryEntity, $locale, $data));
         } else {
             $this->domainEventCollector->collect(new CategoryModifiedEvent($categoryEntity, $locale, $data));
         }

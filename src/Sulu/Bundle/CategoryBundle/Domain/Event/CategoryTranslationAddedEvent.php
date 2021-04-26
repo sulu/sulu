@@ -15,7 +15,7 @@ use Sulu\Bundle\CategoryBundle\Admin\CategoryAdmin;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\EventLogBundle\Domain\Event\DomainEvent;
 
-class CategoryLocaleAddedEvent extends DomainEvent
+class CategoryTranslationAddedEvent extends DomainEvent
 {
     /**
      * @var CategoryInterface
@@ -54,7 +54,7 @@ class CategoryLocaleAddedEvent extends DomainEvent
 
     public function getEventType(): string
     {
-        return 'locale_added';
+        return 'translation_added';
     }
 
     public function getEventPayload(): ?array
