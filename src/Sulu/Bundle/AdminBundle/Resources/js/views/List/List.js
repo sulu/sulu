@@ -365,7 +365,7 @@ class List extends React.Component<Props> {
                         searchable,
                         selectable,
                         paginated,
-                        showHeader,
+                        adapterOptions,
                         showColumnOptions,
                         title: routeTitle,
                     },
@@ -380,6 +380,7 @@ class List extends React.Component<Props> {
             <Fragment>
                 <div className={listStyles.listContainer}>
                     <ListContainer
+                        adapterOptions={adapterOptions}
                         adapters={adapters}
                         header={title && <h1>{title}</h1>}
                         itemActionsProvider={this.getItemActionConfigs}
@@ -391,7 +392,6 @@ class List extends React.Component<Props> {
                         searchable={searchable}
                         selectable={selectable}
                         showColumnOptions={showColumnOptions}
-                        showHeader={showHeader}
                         store={this.listStore}
                     />
                     {this.toolbarActions.map((toolbarAction) => toolbarAction.getNode())}

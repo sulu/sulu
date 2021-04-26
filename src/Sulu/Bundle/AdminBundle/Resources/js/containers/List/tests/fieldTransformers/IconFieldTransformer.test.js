@@ -83,7 +83,10 @@ test('Test icon object with color', () => {
 
 test('Test dark skin', () => {
     expect(iconFieldTransformer.transform('failed', {skin: 'dark', mapping: {failed: 'su-ban'}})).toEqual(
-        <Icon className={classNames(iconFieldTransformerStyles.listIcon, iconFieldTransformerStyles.dark)} name="su-ban" />
+        <Icon
+            className={classNames(iconFieldTransformerStyles.listIcon, iconFieldTransformerStyles.dark)}
+            name="su-ban"
+        />
     );
 });
 

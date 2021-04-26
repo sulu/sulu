@@ -74,13 +74,17 @@ class TableAdapter extends AbstractTableAdapter {
             onLimitChange,
             onPageChange,
             paginated,
-            showHeader,
-            options: {
-                skin = 'dark',
-            },
+            adapterOptions: {
+                showHeader = true,
+            } = {},
             page,
             pageCount,
         } = this.props;
+
+        let skin = this.props.adapterOptions?.skin;
+        if (skin === undefined || typeof skin !== 'string'){
+            skin = 'dark';
+        }
 
         const table = (
             <Table
@@ -91,11 +95,10 @@ class TableAdapter extends AbstractTableAdapter {
                 skin={skin}
             >
                 {
-                    showHeader ?
-                        <Table.Header>
+                    !showHeader ? null
+                        : <Table.Header>
                             {this.renderHeaderCells()}
                         </Table.Header>
-                        : null
                 }
                 <Table.Body>
                     {this.renderRows()}

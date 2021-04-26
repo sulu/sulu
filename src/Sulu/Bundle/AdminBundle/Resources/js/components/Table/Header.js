@@ -4,7 +4,7 @@ import React, {Fragment} from 'react';
 import Checkbox from '../Checkbox';
 import Icon from '../Icon';
 import HeaderCell from './HeaderCell';
-import type {ButtonConfig, SelectMode, Skin} from './types';
+import type {ButtonConfig, SelectMode} from './types';
 import tableStyles from './table.scss';
 
 type Props = {
@@ -17,7 +17,7 @@ type Props = {
     selectInFirstCell: boolean,
     /** @ignore */
     selectMode?: SelectMode,
-    skin: Skin,
+    skin: string,
 };
 
 export default class Header extends React.PureComponent<Props> {

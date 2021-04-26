@@ -33,7 +33,6 @@ const listAdapterDefaultProps = {
     paginated: true,
     sortColumn: undefined,
     sortOrder: undefined,
-    showHeader: true,
 };
 
 export default listAdapterDefaultProps;

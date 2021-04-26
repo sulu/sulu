@@ -190,6 +190,26 @@ class FormOverlayListViewBuilder implements FormOverlayListViewBuilderInterface
         return $this;
     }
 
+    public function enableColumnOptions(): FormOverlayListViewBuilderInterface
+    {
+        $this->setColumnOptionsToView($this->view, true);
+
+        return $this;
+    }
+
+    public function disableColumnOptions(): FormOverlayListViewBuilderInterface
+    {
+        $this->setColumnOptionsToView($this->view, false);
+
+        return $this;
+    }
+
+    public function setAdapterOptions(array $adapterOptions): FormOverlayListViewBuilderInterface {
+        $this->setAdapterOptionsToView($this->view, $adapterOptions);
+
+        return $this;
+    }
+
     public function addRouterAttributesToListRequest(array $routerAttributesToListRequest): FormOverlayListViewBuilderInterface
     {
         $this->addRouterAttributesToListRequestToView($this->view, $routerAttributesToListRequest);

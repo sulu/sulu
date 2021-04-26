@@ -8,5 +8,3 @@ export type ButtonConfig = {|
     icon: string,
     onClick: ?(rowId: string | number, index: number) => void,
 |};
-
-export type Skin = 'dark' | 'light';

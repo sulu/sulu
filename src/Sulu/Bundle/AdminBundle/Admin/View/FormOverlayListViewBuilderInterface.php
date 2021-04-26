@@ -67,6 +67,15 @@ interface FormOverlayListViewBuilderInterface extends ViewBuilderInterface
 
     public function disableSelection(): self;
 
+    public function enableColumnOptions(): self;
+
+    public function disableColumnOptions(): self;
+
+    /**
+     * @param array<string, array<string, mixed>> $adapterOptions
+     */
+    public function setAdapterOptions(array $adapterOptions): self;
+
     /**
      * @param string[] $routerAttributesToListRequest
      */

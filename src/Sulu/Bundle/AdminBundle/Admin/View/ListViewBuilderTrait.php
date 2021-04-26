@@ -37,6 +37,25 @@ trait ListViewBuilderTrait
 
     private function addListAdaptersToView(View $route, array $listAdapters): void
     {
+        $adapterModifiers = [
+            '_light' => [
+                'skin' => 'light'
+            ],
+            '_slim' => [
+                'showHeader' => false,
+            ],
+        ];
+
+        foreach ($listAdapters as $index => $adapter) {
+            foreach ($adapterModifiers as $key => $options) {
+                if (substr_compare($adapter, $key, -strlen($key)) === 0) {
+                    $adapter = str_replace($key, '', $adapter);
+                    $this->addAdapterOptionsToView($route, [$adapter => $options]);
+                    $listAdapters[$index] = $adapter;
+                }
+            }
+        }
+
         $oldListAdapters = $route->getOption('adapters');
         $newListAdapters = $oldListAdapters ? \array_merge($oldListAdapters, $listAdapters) : $listAdapters;
         $route->setOption('adapters', $newListAdapters);
@@ -72,14 +91,21 @@ trait ListViewBuilderTrait
         $route->setOption('paginated', $paginated);
     }
 
-    private function setHeaderToView(View $route, bool $showHeader): void
-    {
-        $route->setOption('showHeader', $showHeader);
-    }
-
     private function setColumnOptionsToView(View $route, bool $showColumnOptions): void
     {
         $route->setOption('showColumnOptions', $showColumnOptions);
+    }
+
+    private function setAdapterOptionsToView(View $route, array $adapterOptions): void
+    {
+        $route->setOption('adapterOptions', $adapterOptions);
+    }
+
+    private function addAdapterOptionsToView(View $route, array $adapterOptions): void
+    {
+        $oldAdapterOptions = $route->getOption('adapterOptions');
+        $newAdapterOptions = $oldAdapterOptions ? \array_merge_recursive($oldAdapterOptions, $adapterOptions) : $adapterOptions;
+        $route->setOption('adapterOptions', $newAdapterOptions);
     }
 
     private function addRouterAttributesToListRequestToView(View $route, array $routerAttributesToListRequest): void

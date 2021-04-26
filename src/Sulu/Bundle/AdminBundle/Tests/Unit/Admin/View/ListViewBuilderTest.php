@@ -487,4 +487,39 @@ class ListViewBuilderTest extends TestCase
             $view->getOption('tabBadges')
         );
     }
+
+    public function testBuildAddDeprecatedAdapter()
+    {
+        $view = (new ListViewBuilder('sulu_role.list', '/roles'))
+            ->setResourceKey('roles')
+            ->setListKey('roles')
+            ->addListAdapters(['table_light', 'tree_table_slim'])
+            ->getView();
+
+        $this->assertSame(['table', 'tree_table'], $view->getOption('adapters'));
+        $this->assertSame(
+            [
+                'table' => ['skin' => 'light'],
+                'tree_table' => ['showHeader' => false]
+            ], $view->getOption('adapterOptions')
+        );
+    }
+
+    public function testBuildAddDeprecatedAdapterWithOptions()
+    {
+        $view = (new ListViewBuilder('sulu_role.list', '/roles'))
+            ->setResourceKey('roles')
+            ->setListKey('roles')
+            ->setAdapterOptions(['table' => ['showHeader' => false], 'tree_table' => ['skin' => 'flat']])
+            ->addListAdapters(['table_light', 'tree_table_slim'])
+            ->getView();
+
+        $this->assertSame(['table', 'tree_table'], $view->getOption('adapters'));
+        $this->assertSame(
+            [
+                'table' => ['showHeader' => false, 'skin' => 'light'],
+                'tree_table' => ['skin' => 'flat', 'showHeader' => false]
+            ], $view->getOption('adapterOptions')
+        );
+    }
 }

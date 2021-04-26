@@ -53,7 +53,6 @@ type Props = {|
     searchable: boolean,
     selectable: boolean,
     showColumnOptions: boolean,
-    showHeader: boolean,
     store: ListStore,
     toolbarClassName?: string,
 |};
@@ -75,7 +74,6 @@ class List extends React.Component<Props> {
         searchable: true,
         selectable: true,
         showColumnOptions: true,
-        showHeader: true,
     };
 
     @observable currentAdapterKey: string;
@@ -512,7 +510,6 @@ class List extends React.Component<Props> {
 
     render() {
         const {
-            adapterOptions,
             adapters,
             copyable,
             deletable,
@@ -523,7 +520,6 @@ class List extends React.Component<Props> {
             onItemClick,
             onItemAdd,
             paginated,
-            showHeader,
             orderable,
             selectable,
             store,
@@ -538,6 +534,12 @@ class List extends React.Component<Props> {
         } = store;
 
         const Adapter = this.currentAdapter;
+
+        const adapterOptions = this.props.adapterOptions ?
+            this.props.adapterOptions[this.currentAdapterKey] ?
+                this.props.adapterOptions[this.currentAdapterKey]
+                : {}
+            : {};
 
         const listClass = classNames(
             listStyles.list,
@@ -614,7 +616,7 @@ class List extends React.Component<Props> {
                         : <Adapter
                             active={store.active.get()}
                             activeItems={store.activeItems}
-                            adapterOptions={adapterOptions ? adapterOptions[this.currentAdapterKey] : undefined}
+                            adapterOptions={adapterOptions}
                             data={store.data}
                             disabledIds={this.disabledIds}
                             itemActionsProvider={itemActionsProvider}
@@ -639,7 +641,6 @@ class List extends React.Component<Props> {
                             paginated={paginated}
                             schema={store.userSchema}
                             selections={store.selectionIds}
-                            showHeader={showHeader}
                             sortColumn={store.sortColumn.get()}
                             sortOrder={store.sortOrder.get()}
                         />
