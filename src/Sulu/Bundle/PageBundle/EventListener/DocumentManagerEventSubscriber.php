@@ -21,13 +21,13 @@ use Sulu\Bundle\PageBundle\Domain\Event\PageChildrenReorderedEvent;
 use Sulu\Bundle\PageBundle\Domain\Event\PageCopiedEvent;
 use Sulu\Bundle\PageBundle\Domain\Event\PageCreatedEvent;
 use Sulu\Bundle\PageBundle\Domain\Event\PageDraftRemovedEvent;
-use Sulu\Bundle\PageBundle\Domain\Event\PageLocaleAddedEvent;
-use Sulu\Bundle\PageBundle\Domain\Event\PageLocaleCopiedEvent;
-use Sulu\Bundle\PageBundle\Domain\Event\PageLocaleRemovedEvent;
 use Sulu\Bundle\PageBundle\Domain\Event\PageModifiedEvent;
 use Sulu\Bundle\PageBundle\Domain\Event\PageMovedEvent;
 use Sulu\Bundle\PageBundle\Domain\Event\PagePublishedEvent;
 use Sulu\Bundle\PageBundle\Domain\Event\PageRemovedEvent;
+use Sulu\Bundle\PageBundle\Domain\Event\PageTranslationAddedEvent;
+use Sulu\Bundle\PageBundle\Domain\Event\PageTranslationCopiedEvent;
+use Sulu\Bundle\PageBundle\Domain\Event\PageTranslationRemovedEvent;
 use Sulu\Bundle\PageBundle\Domain\Event\PageUnpublishedEvent;
 use Sulu\Bundle\PageBundle\Domain\Event\PageVersionRestoredEvent;
 use Sulu\Component\Content\Document\Extension\ExtensionContainer;
@@ -207,7 +207,7 @@ class DocumentManagerEventSubscriber implements EventSubscriberInterface
             return;
         }
 
-        if ($this->isNewLocale($node, $locale)) {
+        if ($this->isNewTranslation($node, $locale)) {
             $this->persistEventsWithNewLocale[$eventHash] = true;
         }
     }
@@ -244,7 +244,7 @@ class DocumentManagerEventSubscriber implements EventSubscriberInterface
             unset($this->persistEventsWithNewLocale[$eventHash]);
 
             $this->domainEventCollector->collect(
-                new PageLocaleAddedEvent($document, $locale, $payload)
+                new PageTranslationAddedEvent($document, $locale, $payload)
             );
 
             return;
@@ -283,7 +283,7 @@ class DocumentManagerEventSubscriber implements EventSubscriberInterface
         }
 
         $this->domainEventCollector->collect(
-            new PageLocaleRemovedEvent(
+            new PageTranslationRemovedEvent(
                 $document,
                 $locale
             )
@@ -309,7 +309,7 @@ class DocumentManagerEventSubscriber implements EventSubscriberInterface
         $payload = $this->getPayloadFromPageDocument($destDocument);
 
         $this->domainEventCollector->collect(
-            new PageLocaleCopiedEvent(
+            new PageTranslationCopiedEvent(
                 $destDocument,
                 $destLocale,
                 $fromLocale,
@@ -514,7 +514,7 @@ class DocumentManagerEventSubscriber implements EventSubscriberInterface
     /**
      * @param NodeInterface<mixed> $node
      */
-    private function isNewLocale(NodeInterface $node, string $locale): bool
+    private function isNewTranslation(NodeInterface $node, string $locale): bool
     {
         /** @var \Countable $localizedProperties */
         $localizedProperties = $node->getProperties(

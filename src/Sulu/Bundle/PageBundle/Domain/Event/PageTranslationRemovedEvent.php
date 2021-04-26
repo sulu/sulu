@@ -18,7 +18,7 @@ use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 
-class PageLocaleRemovedEvent extends DomainEvent
+class PageTranslationRemovedEvent extends DomainEvent
 {
     /**
      * @var BasePageDocument
@@ -47,7 +47,7 @@ class PageLocaleRemovedEvent extends DomainEvent
 
     public function getEventType(): string
     {
-        return 'locale_removed';
+        return 'translation_removed';
     }
 
     public function getResourceKey(): string

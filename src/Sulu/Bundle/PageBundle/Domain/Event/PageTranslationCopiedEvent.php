@@ -18,7 +18,7 @@ use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 
-class PageLocaleAddedEvent extends DomainEvent
+class PageTranslationCopiedEvent extends DomainEvent
 {
     /**
      * @var BasePageDocument
@@ -31,6 +31,11 @@ class PageLocaleAddedEvent extends DomainEvent
     private $locale;
 
     /**
+     * @var string
+     */
+    private $fromLocale;
+
+    /**
      * @var mixed[]
      */
     private $payload;
@@ -41,12 +46,14 @@ class PageLocaleAddedEvent extends DomainEvent
     public function __construct(
         BasePageDocument $pageDocument,
         string $locale,
+        string $fromLocale,
         array $payload
     ) {
         parent::__construct();
 
         $this->pageDocument = $pageDocument;
         $this->locale = $locale;
+        $this->fromLocale = $fromLocale;
         $this->payload = $payload;
     }
 
@@ -57,7 +64,14 @@ class PageLocaleAddedEvent extends DomainEvent
 
     public function getEventType(): string
     {
-        return 'locale_added';
+        return 'translation_copied';
+    }
+
+    public function getEventContext(): array
+    {
+        return [
+            'fromLocale' => $this->fromLocale,
+        ];
     }
 
     public function getEventPayload(): ?array
