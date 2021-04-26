@@ -204,7 +204,8 @@ class FormOverlayListViewBuilder implements FormOverlayListViewBuilderInterface
         return $this;
     }
 
-    public function setAdapterOptions(array $adapterOptions): FormOverlayListViewBuilderInterface {
+    public function setAdapterOptions(array $adapterOptions): FormOverlayListViewBuilderInterface
+    {
         $this->setAdapterOptionsToView($this->view, $adapterOptions);
 
         return $this;

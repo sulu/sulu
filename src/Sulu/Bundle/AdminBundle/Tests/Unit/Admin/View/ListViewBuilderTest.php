@@ -488,7 +488,7 @@ class ListViewBuilderTest extends TestCase
         );
     }
 
-    public function testBuildAddDeprecatedAdapter()
+    public function testBuildAddDeprecatedAdapter(): void
     {
         $view = (new ListViewBuilder('sulu_role.list', '/roles'))
             ->setResourceKey('roles')
@@ -500,12 +500,12 @@ class ListViewBuilderTest extends TestCase
         $this->assertSame(
             [
                 'table' => ['skin' => 'light'],
-                'tree_table' => ['showHeader' => false]
+                'tree_table' => ['showHeader' => false],
             ], $view->getOption('adapterOptions')
         );
     }
 
-    public function testBuildAddDeprecatedAdapterWithOptions()
+    public function testBuildAddDeprecatedAdapterWithOptions(): void
     {
         $view = (new ListViewBuilder('sulu_role.list', '/roles'))
             ->setResourceKey('roles')
@@ -518,7 +518,7 @@ class ListViewBuilderTest extends TestCase
         $this->assertSame(
             [
                 'table' => ['showHeader' => false, 'skin' => 'light'],
-                'tree_table' => ['skin' => 'flat', 'showHeader' => false]
+                'tree_table' => ['skin' => 'flat', 'showHeader' => false],
             ], $view->getOption('adapterOptions')
         );
     }

@@ -35,11 +35,14 @@ trait ListViewBuilderTrait
         $route->setOption('title', $title);
     }
 
+    /**
+     * @param string[] $listAdapters
+     */
     private function addListAdaptersToView(View $route, array $listAdapters): void
     {
         $adapterModifiers = [
             '_light' => [
-                'skin' => 'light'
+                'skin' => 'light',
             ],
             '_slim' => [
                 'showHeader' => false,
@@ -48,12 +51,14 @@ trait ListViewBuilderTrait
 
         foreach ($listAdapters as $index => $adapter) {
             foreach ($adapterModifiers as $key => $options) {
-                if (substr_compare($adapter, $key, -strlen($key)) === 0) {
-                    $adapter = str_replace($key, '', $adapter);
+                if (0 === \substr_compare($adapter, $key, -\strlen($key))) {
+                    $adapter = \str_replace($key, '', $adapter);
                     $this->addAdapterOptionsToView($route, [$adapter => $options]);
                     $listAdapters[$index] = $adapter;
                 }
             }
+
+            trigger_deprecation('sulu/sulu', '2.3.0', $adapter . ' is deprecated, please use adapterOptions');
         }
 
         $oldListAdapters = $route->getOption('adapters');
@@ -96,11 +101,17 @@ trait ListViewBuilderTrait
         $route->setOption('showColumnOptions', $showColumnOptions);
     }
 
+    /**
+     * @param array<string, array<string, mixed>> $adapterOptions
+     */
     private function setAdapterOptionsToView(View $route, array $adapterOptions): void
     {
         $route->setOption('adapterOptions', $adapterOptions);
     }
 
+    /**
+     * @param array<string, array<string, mixed>> $adapterOptions
+     */
     private function addAdapterOptionsToView(View $route, array $adapterOptions): void
     {
         $oldAdapterOptions = $route->getOption('adapterOptions');

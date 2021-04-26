@@ -213,7 +213,8 @@ class ListViewBuilder implements ListViewBuilderInterface
         return $this;
     }
 
-    public function setAdapterOptions(array $adapterOptions): ListViewBuilderInterface {
+    public function setAdapterOptions(array $adapterOptions): ListViewBuilderInterface
+    {
         $this->setAdapterOptionsToView($this->view, $adapterOptions);
 
         return $this;
