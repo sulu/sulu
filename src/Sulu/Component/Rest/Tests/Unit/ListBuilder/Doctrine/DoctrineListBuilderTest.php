@@ -11,6 +11,8 @@
 
 namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Doctrine;
 
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\Expr\Select;
@@ -111,6 +113,14 @@ class DoctrineListBuilderTest extends TestCase
         $this->systemRoleQueryBuilder = $this->prophesize(QueryBuilder::class);
         $this->queryBuilder = $this->prophesize(QueryBuilder::class);
         $this->query = $this->prophesize(AbstractQuery::class);
+
+        /** @var Connection|ObjectProphecy $connection */
+        $connection = $this->prophesize(Connection::class);
+        /** @var AbstractPlatform|ObjectProphecy $databasePlatform */
+        $databasePlatform = $this->prophesize(AbstractPlatform::class);
+        $databasePlatform->getName()->willReturn('mysql');
+        $connection->getDatabasePlatform()->willReturn($databasePlatform->reveal());
+        $this->entityManager->getConnection()->willReturn($connection->reveal());
 
         $this->entityManager->createQueryBuilder()->willReturn($this->queryBuilder->reveal());
 

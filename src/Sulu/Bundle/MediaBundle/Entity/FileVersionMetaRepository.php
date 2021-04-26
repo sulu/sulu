@@ -20,6 +20,11 @@ class FileVersionMetaRepository extends EntityRepository implements FileVersionM
 {
     public function findLatestWithoutSecurity()
     {
+        $entityIdCondition = 'accessControl.entityId = collection.id';
+        if ('postgresql' === $this->getDatabasePlatformName()) {
+            $entityIdCondition = 'accessControl.entityId = CAST(collection.id AS VARCHAR)';
+        }
+
         $queryBuilder = $this->createQueryBuilder('fileVersionMeta')
             ->addSelect('fileVersion')
             ->addSelect('file')
@@ -33,7 +38,8 @@ class FileVersionMetaRepository extends EntityRepository implements FileVersionM
                 AccessControl::class,
                 'accessControl',
                 'WITH',
-                'accessControl.entityClass = :entityClass AND accessControl.entityId = collection.id'
+                'accessControl.entityClass = :entityClass '
+                . 'AND ' . $entityIdCondition
             )
             ->where('file.version = fileVersion.version')
             ->andWhere('accessControl.id is null');
@@ -48,6 +54,11 @@ class FileVersionMetaRepository extends EntityRepository implements FileVersionM
      */
     public function getQueryBuilderWithoutSecurity(QueryBuilder $queryBuilder)
     {
+        $entityIdCondition = 'accessControl.entityId = collection.id';
+        if ('postgresql' === $this->getDatabasePlatformName()) {
+            $entityIdCondition = 'accessControl.entityId = CAST(collection.id AS VARCHAR)';
+        }
+
         $queryBuilder->addSelect('fileVersion')
             ->addSelect('file')
             ->addSelect('media')
@@ -60,7 +71,8 @@ class FileVersionMetaRepository extends EntityRepository implements FileVersionM
                 AccessControl::class,
                 'accessControl',
                 'WITH',
-                'accessControl.entityClass = :entityClass AND accessControl.entityId = collection.id'
+                'accessControl.entityClass = :entityClass '
+                . 'AND ' . $entityIdCondition
             )
             ->where('file.version = fileVersion.version')
             ->andWhere('accessControl.id is null')
@@ -81,5 +93,10 @@ class FileVersionMetaRepository extends EntityRepository implements FileVersionM
         $queryBuilder->setParameter('collectionId', $collectionId);
 
         return $queryBuilder->getQuery()->getResult();
+    }
+
+    private function getDatabasePlatformName(): string
+    {
+        return $this->_em->getConnection()->getDatabasePlatform()->getName();
     }
 }

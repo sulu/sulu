@@ -2,6 +2,16 @@
 
 ## 2.3
 
+### Change entityId field in AccessControl entity to string
+
+To allow entities with uuid's instead of auto generated ids to have object permissions,
+the `entityId` field of the `AccessControl` entity had to be changed from `integer` to `string`.
+Therefore the following sql statement needs to be executed.
+
+```sql
+ALTER TABLE se_access_controls CHANGE entityId entityId VARCHAR(36) NOT NULL;
+```
+
 ### Added resourceSecurityObjectId field to EventRecord
 
 Because a new `resourceSecurityObjectId` field has been added to the `EventRecord` entity
