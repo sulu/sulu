@@ -109,7 +109,7 @@ class RouteController extends AbstractRestController implements ClassResourceInt
         // optional parameter
         $history = $this->getBooleanRequestParameter($request, 'history', false, false);
         $mapping = $this->resourceKeyMappings[$resourceKey] ?? [];
-        $entityClass = $mapping['entityClass'] ?? null;
+        $entityClass = $this->getRequestParameter($request, 'entityClass') ?? $mapping['entityClass'] ?? null;
 
         if (!$entityClass) {
             throw new NotFoundHttpException(\sprintf('No route mapping configured for resourceKey "%s"', $resourceKey));
@@ -168,15 +168,20 @@ class RouteController extends AbstractRestController implements ClassResourceInt
     {
         $resourceKey = $this->getRequestParameter($request, 'resourceKey');
         $locale = $this->getRequestParameter($request, 'locale');
-        $resourceKeyMapping = $this->resourceKeyMappings[$resourceKey] ?? null;
+
+        $mapping = $this->resourceKeyMappings[$resourceKey] ?? [];
+        $entityClass = $this->getRequestParameter($request, 'entityClass') ?? $mapping['entityClass'] ?? null;
+        $routeSchema = $this->getRequestParameter($request, 'routeSchema') ?? $mapping['options']['route_schema'] ?? null;
 
         /** @var array $parts */
         $parts = $this->getRequestParameter($request, 'parts', true);
-
         $route = '/' . \implode('-', $parts);
-        if ($resourceKeyMapping) {
-            $options = $this->resourceKeyMappings[$resourceKey]['options'];
+
+        if ($entityClass && $routeSchema) {
+            $options = $mapping['options'] ?? [];
+            $options['route_schema'] = $routeSchema;
             $options['locale'] = $locale;
+
             $route = $this->routeGenerator->generate($parts, $options);
 
             if ($this->conflictResolver) {
@@ -184,7 +189,7 @@ class RouteController extends AbstractRestController implements ClassResourceInt
                 $tempRouteEntity = $this->routeRepository->createNew()
                     ->setPath($route)
                     ->setLocale($locale)
-                    ->setEntityClass($this->resourceKeyMappings[$resourceKey]['entityClass'])
+                    ->setEntityClass($entityClass)
                     ->setEntityId($this->getRequestParameter($request, 'id'));
                 $tempRouteEntity = $this->conflictResolver->resolve($tempRouteEntity);
 
