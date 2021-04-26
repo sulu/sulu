@@ -52,13 +52,17 @@ trait ListViewBuilderTrait
         foreach ($listAdapters as $index => $adapter) {
             foreach ($adapterModifiers as $key => $options) {
                 if (0 === \substr_compare($adapter, $key, -\strlen($key))) {
-                    $adapter = \str_replace($key, '', $adapter);
-                    $this->addAdapterOptionsToView($route, [$adapter => $options]);
-                    $listAdapters[$index] = $adapter;
+                    $defaultAdapter = \str_replace($key, '', $adapter);
+                    $this->addAdapterOptionsToView($route, [$defaultAdapter => $options]);
+                    $listAdapters[$index] = $defaultAdapter;
+
+                    @\trigger_error(
+                        'The usage of the "' . $adapter . '" is deprecated.
+                                    Please use "' . $defaultAdapter . '"  with adapterOptions instead.',
+                        \E_USER_DEPRECATED
+                    );
                 }
             }
-
-            trigger_deprecation('sulu/sulu', '2.3.0', $adapter . ' is deprecated, please use adapterOptions');
         }
 
         $oldListAdapters = $route->getOption('adapters');
