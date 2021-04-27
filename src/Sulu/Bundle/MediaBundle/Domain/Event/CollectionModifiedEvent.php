@@ -113,7 +113,7 @@ class CollectionModifiedEvent extends DomainEvent
         return MediaAdmin::SECURITY_CONTEXT;
     }
 
-    public function getResourceSecurityType(): ?string
+    public function getResourceSecurityObjectType(): ?string
     {
         return Collection::class;
     }
