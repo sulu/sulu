@@ -54,7 +54,7 @@ class AccessControlQueryEnhancer
         $queryBuilder->setParameter('entityClass', $entityClass);
     }
 
-    public function enhanceWithDynamicFields(
+    public function enhanceWithDynamicEntityClass(
         QueryBuilder $queryBuilder,
         ?UserInterface $user,
         int $permission,
