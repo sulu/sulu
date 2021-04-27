@@ -135,13 +135,13 @@ class EventRecordTest extends TestCase
         static::assertSame('sulu.webspaces.sulu-io', $event->getResourceSecurityContext());
     }
 
-    public function testResourceSecurityType(): void
+    public function testResourceSecurityObjectType(): void
     {
         $event = $this->createEventRecord();
 
-        static::assertNull($event->getResourceSecurityType());
-        static::assertSame($event, $event->setResourceSecurityType(SecurityBehavior::class));
-        static::assertSame(SecurityBehavior::class, $event->getResourceSecurityType());
+        static::assertNull($event->getResourceSecurityObjectType());
+        static::assertSame($event, $event->setResourceSecurityObjectType(SecurityBehavior::class));
+        static::assertSame(SecurityBehavior::class, $event->getResourceSecurityObjectType());
     }
 
     public function testResourceSecurityObjectId(): void

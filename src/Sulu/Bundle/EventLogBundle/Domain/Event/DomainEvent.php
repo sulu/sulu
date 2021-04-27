@@ -126,7 +126,7 @@ abstract class DomainEvent
         return null;
     }
 
-    public function getResourceSecurityType(): ?string
+    public function getResourceSecurityObjectType(): ?string
     {
         return null;
     }

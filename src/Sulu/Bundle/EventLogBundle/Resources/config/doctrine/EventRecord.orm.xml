@@ -24,7 +24,7 @@
         <field name="resourceTitle" column="resourceTitle" type="string" nullable="true" length="191"/>
         <field name="resourceTitleLocale" column="resourceTitleLocale" type="string" nullable="true" length="191"/>
         <field name="resourceSecurityContext" column="resourceSecurityContext" type="string" nullable="true" length="191"/>
-        <field name="resourceSecurityType" column="resourceSecurityType" type="string" nullable="true" length="191"/>
+        <field name="resourceSecurityObjectType" column="resourceSecurityObjectType" type="string" nullable="true" length="191"/>
         <field name="resourceSecurityObjectId" column="resourceSecurityObjectId" type="string" nullable="true" length="191"/>
     </mapped-superclass>
 </doctrine-mapping>

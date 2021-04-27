@@ -4,11 +4,12 @@
 
 ### Added resourceSecurityObjectId field to EventRecord
 
-Because a new `resourceSecurityObjectId` field has been added to the `EventRecord` entity,
+Because a new `resourceSecurityObjectId` field has been added to the `EventRecord` entity
+and the existing `resourceSecurityType` field has been renamed to `resourceSecurityObjectType`,
 you need to update your database schema:
 
 ```sql
-ALTER TABLE el_event_records ADD resourceSecurityObjectId VARCHAR(191) DEFAULT NULL;
+ALTER TABLE el_event_records ADD resourceSecurityObjectId VARCHAR(191) DEFAULT NULL, CHANGE resourceSecurityType resourceSecurityObjectType VARCHAR(191) DEFAULT NULL;
 ```
 
 ### JS Dependencies updated
