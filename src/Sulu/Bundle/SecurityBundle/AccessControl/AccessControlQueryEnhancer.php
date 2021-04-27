@@ -38,15 +38,46 @@ class AccessControlQueryEnhancer
 
     public function enhance(
         QueryBuilder $queryBuilder,
-        UserInterface $user = null,
+        ?UserInterface $user,
         int $permission,
-        ?string $entityClass,
-        string $entityAlias,
-        ?string $entityClassField = null,
-        ?string $entityIdField = 'id'
-    ) {
-        $entityIdField = $entityIdField ?? 'id';
+        string $entityClass,
+        string $entityAlias
+    ): void {
+        $this->enhanceQueryWithAccessControl(
+            $queryBuilder,
+            $user,
+            $permission,
+            'accessControl.entityClass = :entityClass',
+            'accessControl.entityId = ' . $entityAlias . '.id'
+        );
 
+        $queryBuilder->setParameter('entityClass', $entityClass);
+    }
+
+    public function enhanceWithDynamicFields(
+        QueryBuilder $queryBuilder,
+        ?UserInterface $user,
+        int $permission,
+        string $entityClassField,
+        string $entityIdField,
+        string $entityAlias
+    ): void {
+        $this->enhanceQueryWithAccessControl(
+            $queryBuilder,
+            $user,
+            $permission,
+            'accessControl.entityClass = ' . $entityAlias . '.' . $entityClassField,
+            'accessControl.entityId = ' . $entityAlias . '.' . $entityIdField
+        );
+    }
+
+    private function enhanceQueryWithAccessControl(
+        QueryBuilder $queryBuilder,
+        ?UserInterface $user,
+        int $permission,
+        string $entityClassCondition,
+        string $entityIdCondition
+    ): void {
         $systemRoleQueryBuilder = $this->entityManager->createQueryBuilder()
             ->from(RoleInterface::class, 'systemRoles')
             ->select('systemRoles.id')
@@ -56,10 +87,7 @@ class AccessControlQueryEnhancer
             AccessControl::class,
             'accessControl',
             'WITH',
-            (null !== $entityClassField
-                ? 'accessControl.entityClass = ' . $entityAlias . '.' . $entityClassField . ' '
-                : 'accessControl.entityClass = :entityClass ')
-            . 'AND accessControl.entityId = ' . $entityAlias . '.' . $entityIdField . ' '
+            $entityClassCondition . ' AND ' . $entityIdCondition . ' '
             . 'AND accessControl.role IN (' . $systemRoleQueryBuilder->getDQL() . ')'
         );
         $queryBuilder->leftJoin('accessControl.role', 'role');
@@ -67,7 +95,6 @@ class AccessControlQueryEnhancer
             'BIT_AND(accessControl.permissions, :permission) = :permission OR accessControl.permissions IS NULL'
         );
 
-        $roleIds = [];
         if ($user) {
             $roleIds = \array_map(function(RoleInterface $role) {
                 return $role->getId();
@@ -81,9 +108,5 @@ class AccessControlQueryEnhancer
         $queryBuilder->setParameter('roleIds', $roleIds);
         $queryBuilder->setParameter('permission', $permission);
         $queryBuilder->setParameter('system', $this->systemStore->getSystem());
-
-        if (null === $entityClassField) {
-            $queryBuilder->setParameter('entityClass', $entityClass);
-        }
     }
 }

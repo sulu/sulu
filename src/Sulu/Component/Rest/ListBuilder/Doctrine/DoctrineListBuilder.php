@@ -105,17 +105,22 @@ class DoctrineListBuilder extends AbstractListBuilder
     private $idField;
 
     /**
+     * @var bool
+     */
+    private $permissionCheckWithDynamicFields = false;
+
+    /**
      * @var string
      */
     private $securedEntityName;
 
     /**
-     * @var string|null
+     * @var string
      */
     private $securedEntityNameField = null;
 
     /**
-     * @var string|null
+     * @var string
      */
     private $securedEntityIdField = null;
 
@@ -178,19 +183,31 @@ class DoctrineListBuilder extends AbstractListBuilder
     /**
      * @param int $permission
      * @param string|null $securedEntityName
-     * @param string|null $securedEntityNameField
-     * @param string|null $securedEntityIdField
+     *
+     * @return self
      */
     public function setPermissionCheck(
         UserInterface $user,
         $permission,
-        $securedEntityName = null,
-        $securedEntityNameField = null,
-        $securedEntityIdField = 'id'
+        $securedEntityName = null
     ) {
         parent::setPermissionCheck($user, $permission);
 
+        $this->permissionCheckWithDynamicFields = false;
         $this->securedEntityName = $securedEntityName ?: $this->entityName;
+
+        return $this;
+    }
+
+    public function setPermissionCheckWithDynamicFields(
+        UserInterface $user,
+        int $permission,
+        string $securedEntityNameField,
+        string $securedEntityIdField
+    ): self {
+        parent::setPermissionCheck($user, $permission);
+
+        $this->permissionCheckWithDynamicFields = true;
         $this->securedEntityNameField = $securedEntityNameField;
         $this->securedEntityIdField = $securedEntityIdField;
 
@@ -452,15 +469,22 @@ class DoctrineListBuilder extends AbstractListBuilder
         $queryBuilder = $this->createQueryBuilder($addJoins)->select($select);
 
         if ($this->user && $this->permission && \array_key_exists($this->permission, $this->permissions)) {
-            if ($this->accessControlQueryEnhancer) {
+            if ($this->accessControlQueryEnhancer && $this->permissionCheckWithDynamicFields) {
+                $this->accessControlQueryEnhancer->enhanceWithDynamicFields(
+                    $queryBuilder,
+                    $this->user,
+                    $this->permissions[$this->permission],
+                    $this->securedEntityNameField,
+                    $this->securedEntityIdField,
+                    $this->encodeAlias($this->securedEntityName)
+                );
+            } elseif ($this->accessControlQueryEnhancer) {
                 $this->accessControlQueryEnhancer->enhance(
                     $queryBuilder,
                     $this->user,
                     $this->permissions[$this->permission],
                     $this->securedEntityName,
-                    $this->encodeAlias($this->securedEntityName),
-                    $this->securedEntityNameField,
-                    $this->securedEntityIdField
+                    $this->encodeAlias($this->securedEntityName)
                 );
             } else {
                 $this->addAccessControl(
