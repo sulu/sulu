@@ -85,7 +85,7 @@ class PagePublishedEvent extends DomainEvent
         return PageAdmin::getPageSecurityContext(static::getResourceWebspaceKey());
     }
 
-    public function getResourceSecurityType(): ?string
+    public function getResourceSecurityObjectType(): ?string
     {
         return SecurityBehavior::class;
     }
