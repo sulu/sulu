@@ -181,7 +181,7 @@ class DoctrineListBuilder extends AbstractListBuilder
     }
 
     /**
-     * @param int $permission
+     * @param string $permission
      * @param string|null $securedEntityName
      *
      * @return self
@@ -201,7 +201,7 @@ class DoctrineListBuilder extends AbstractListBuilder
 
     public function setPermissionCheckWithDynamicFields(
         UserInterface $user,
-        int $permission,
+        string $permission,
         string $securedEntityNameField,
         string $securedEntityIdField
     ): self {

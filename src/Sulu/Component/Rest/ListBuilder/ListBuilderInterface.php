@@ -196,7 +196,7 @@ interface ListBuilderInterface
      * Sets the permission check for the ListBuilder.
      *
      * @param UserInterface $user The user for which the permission must be granted
-     * @param int $permission A value from the PermissionTypes
+     * @param string $permission A value from the PermissionTypes
      *
      * @return ListBuilderInterface
      */
