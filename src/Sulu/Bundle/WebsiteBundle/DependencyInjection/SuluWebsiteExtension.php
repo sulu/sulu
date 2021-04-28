@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\WebsiteBundle\DependencyInjection;
 
+use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Sulu\Bundle\WebsiteBundle\Controller\DefaultController;
 use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapProviderInterface;
 use Sulu\Component\HttpKernel\SuluKernel;
@@ -28,6 +29,8 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  */
 class SuluWebsiteExtension extends Extension implements PrependExtensionInterface
 {
+    use PersistenceExtensionTrait;
+
     public function prepend(ContainerBuilder $container)
     {
         if ($container->hasExtension('twig') && \class_exists(ExceptionController::class)) {
@@ -149,5 +152,7 @@ class SuluWebsiteExtension extends Extension implements PrependExtensionInterfac
                 $loader->load('exception_controller.xml');
             }
         }
+
+        $this->configurePersistence($config['objects'], $container);
     }
 }

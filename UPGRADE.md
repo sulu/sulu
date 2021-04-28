@@ -42,6 +42,7 @@ call to pass the correct parameters:
 - `Sulu\Bundle\MediaBundle\Media\Manager\MediaManager`
 - `Sulu\Bundle\CategoryBundle\Category\CategoryManager`
 - `Sulu\Bundle\CategoryBundle\Category\KeywordManager`
+- `Sulu\Bundle\WebsiteBundle\Analytics\AnalyticsManager`
 
 ### Added SuluEventLogBundle for dispatching and recording events that happen in the application
 

@@ -11,8 +11,8 @@
 
 namespace Sulu\Bundle\WebsiteBundle\EventListener;
 
-use Sulu\Bundle\WebsiteBundle\Entity\Analytics;
-use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsRepository;
+use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsInterface;
+use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsRepositoryInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Twig\Environment;
@@ -52,7 +52,7 @@ class AppendAnalyticsListener
     private $requestAnalyzer;
 
     /**
-     * @var AnalyticsRepository
+     * @var AnalyticsRepositoryInterface
      */
     private $analyticsRepository;
 
@@ -72,7 +72,7 @@ class AppendAnalyticsListener
     public function __construct(
         Environment $engine,
         RequestAnalyzerInterface $requestAnalyzer,
-        AnalyticsRepository $analyticsRepository,
+        AnalyticsRepositoryInterface $analyticsRepository,
         $environment,
         bool $preview = false
     ) {
@@ -123,7 +123,7 @@ class AppendAnalyticsListener
      *
      * @return array
      */
-    protected function generateAnalyticsContent(array $analyticsContent, Analytics $analytics)
+    protected function generateAnalyticsContent(array $analyticsContent, AnalyticsInterface $analytics)
     {
         foreach (\array_keys(self::$positions) as $position) {
             $template = '@SuluWebsite/Analytics/' . $analytics->getType() . '/' . $position . '.html.twig';

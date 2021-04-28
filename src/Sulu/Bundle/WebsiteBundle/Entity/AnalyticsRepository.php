@@ -11,34 +11,14 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Entity;
 
-use Doctrine\ORM\EntityRepository;
+use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
 
 /**
  * Repository for analytics.
  */
-class AnalyticsRepository extends EntityRepository
+class AnalyticsRepository extends EntityRepository implements AnalyticsRepositoryInterface
 {
-    /**
-     * @var string
-     */
-    protected $environment;
-
-    /**
-     * @param string $environment
-     */
-    public function setEnvironment($environment)
-    {
-        $this->environment = $environment;
-    }
-
-    /**
-     * Returns list of analytics filterd by webspace key and environment.
-     *
-     * @param string $webspaceKey
-     *
-     * @return Analytics[]
-     */
-    public function findByWebspaceKey($webspaceKey)
+    public function findByWebspaceKey(string $webspaceKey, string $environment): array
     {
         $queryBuilder = $this->createQueryBuilder('a')
             ->addSelect('domains')
@@ -49,19 +29,12 @@ class AnalyticsRepository extends EntityRepository
 
         $query = $queryBuilder->getQuery();
         $query->setParameter('webspaceKey', $webspaceKey);
-        $query->setParameter('environment', $this->environment);
+        $query->setParameter('environment', $environment);
 
         return $query->getResult();
     }
 
-    /**
-     * Returns analytics by id.
-     *
-     * @param int $id
-     *
-     * @return Analytics
-     */
-    public function findById($id)
+    public function findById(int $id): AnalyticsInterface
     {
         $queryBuilder = $this->createQueryBuilder('a')
             ->addSelect('domains')
@@ -74,16 +47,7 @@ class AnalyticsRepository extends EntityRepository
         return $query->getSingleResult();
     }
 
-    /**
-     * Returns analytics by url.
-     *
-     * @param string $url
-     * @param string $webspaceKey
-     * @param string $environment
-     *
-     * @return Analytics[]
-     */
-    public function findByUrl($url, $webspaceKey, $environment)
+    public function findByUrl(string $url, string $webspaceKey, string $environment): array
     {
         $queryBuilder = $this->createQueryBuilder('a')
             ->addSelect('domains')

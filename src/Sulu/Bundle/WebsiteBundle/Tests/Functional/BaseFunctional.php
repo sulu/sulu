@@ -12,9 +12,12 @@
 namespace Sulu\Bundle\WebsiteBundle\Tests\Functional;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
+use Sulu\Bundle\EventLogBundle\Domain\Model\EventRecordInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\WebsiteBundle\Analytics\AnalyticsManagerInterface;
-use Sulu\Bundle\WebsiteBundle\Entity\Analytics;
+use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsInterface;
+use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsRepositoryInterface;
 use Sulu\Bundle\WebsiteBundle\Entity\Domain;
 use Sulu\Bundle\WebsiteBundle\Entity\DomainRepository;
 
@@ -24,6 +27,11 @@ class BaseFunctional extends SuluTestCase
      * @var AnalyticsManagerInterface
      */
     protected $analyticsManager;
+
+    /**
+     * @var AnalyticsRepositoryInterface
+     */
+    protected $analyticsRepository;
 
     /**
      * @var EntityManagerInterface
@@ -39,33 +47,26 @@ class BaseFunctional extends SuluTestCase
     {
         $this->entityManager = $this->getContainer()->get('doctrine.orm.entity_manager');
         $this->analyticsManager = $this->getContainer()->get('sulu_website.analytics.manager');
-        $this->domainRepository = $this->getContainer()->get('sulu_website_test.domains.repository');
+
+        /** @var AnalyticsRepositoryInterface $analyticsRepository */
+        $analyticsRepository = $this->getContainer()->get('sulu_website_test.analytics.repository');
+        $this->analyticsRepository = $analyticsRepository;
+
+        /** @var DomainRepository $domainRepository */
+        $domainRepository = $this->getContainer()->get('sulu_website_test.domains.repository');
+        $this->domainRepository = $domainRepository;
     }
 
-    /**
-     * Create new analytics.
-     *
-     * @param string $webspaceKey
-     *
-     * @return Analytics
-     */
-    protected function create($webspaceKey, array $data)
+    protected function create(string $webspaceKey, array $data): AnalyticsInterface
     {
-        $entity = $this->setData(new Analytics(), $webspaceKey, $data);
+        $entity = $this->setData($this->analyticsRepository->createNew(), $webspaceKey, $data);
         $this->entityManager->persist($entity);
         $this->entityManager->flush();
 
         return $entity;
     }
 
-    /**
-     * Set data to given key.
-     *
-     * @param string $webspaceKey
-     *
-     * @return Analytics
-     */
-    protected function setData(Analytics $analytics, $webspaceKey, array $data)
+    protected function setData(AnalyticsInterface $analytics, string $webspaceKey, array $data): AnalyticsInterface
     {
         $analytics->setTitle($this->getValue($data, 'title'));
         $analytics->setType($this->getValue($data, 'type'));
@@ -119,5 +120,16 @@ class BaseFunctional extends SuluTestCase
         }
 
         return $data[$name];
+    }
+
+    /**
+     * @return EntityRepository<EventRecordInterface>
+     */
+    protected function getEventLogRepository(): EntityRepository
+    {
+        /** @var EntityRepository<EventRecordInterface> $repository */
+        $repository = $this->getEntityManager()->getRepository(EventRecordInterface::class);
+
+        return $repository;
     }
 }
