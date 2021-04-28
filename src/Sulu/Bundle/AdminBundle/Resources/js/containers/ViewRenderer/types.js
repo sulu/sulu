@@ -5,6 +5,7 @@ import type {AttributeMap} from '../../services/Router';
 
 export type ViewProps = {
     children?: (?Object) => Element<*> | null,
+    isRootView ?: boolean,
     route: Route,
     router: Router,
 };

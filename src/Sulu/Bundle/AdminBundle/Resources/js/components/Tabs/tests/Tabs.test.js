@@ -47,7 +47,7 @@ test('Render a Tabs component with small modifier', () => {
     const changeSpy = jest.fn();
 
     expect(render(
-        <Tabs onSelect={changeSpy} selectedIndex={null} small={true}>
+        <Tabs onSelect={changeSpy} selectedIndex={null} skin="small">
             <Tabs.Tab>Tab 1</Tabs.Tab>
             <Tabs.Tab>Tab 2</Tabs.Tab>
             <Tabs.Tab>Tab 3</Tabs.Tab>

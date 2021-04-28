@@ -56,6 +56,7 @@ class HotspotsFormRenderer extends React.Component<Props> {
 
     render() {
         const {children, disabled, onHotspotAdd, onHotspotSelect, selectedIndex, types, value} = this.props;
+        const tabType = 'inline';
 
         return (
             <Form>
@@ -74,11 +75,10 @@ class HotspotsFormRenderer extends React.Component<Props> {
                                 className={hotspotsFormRendererStyles.tabs}
                                 onSelect={onHotspotSelect}
                                 selectedIndex={selectedIndex}
-                                skin="transparent"
-                                small={true}
+                                type={tabType}
                             >
                                 {value.map((hotspot, index) => (
-                                    <Tabs.Tab key={index}>{'#' + (index + 1)}</Tabs.Tab>
+                                    <Tabs.Tab key={index} type={tabType}>{'#' + (index + 1)}</Tabs.Tab>
                                 ))}
                             </Tabs>
                         </div>

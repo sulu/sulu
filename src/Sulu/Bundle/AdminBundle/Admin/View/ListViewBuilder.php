@@ -185,6 +185,20 @@ class ListViewBuilder implements ListViewBuilderInterface
         return $this;
     }
 
+    public function enableTabGap(): ListViewBuilderInterface
+    {
+        $this->setTabGapToView($this->view, true);
+
+        return $this;
+    }
+
+    public function disableTabGap(): ListViewBuilderInterface
+    {
+        $this->setTabGapToView($this->view, false);
+
+        return $this;
+    }
+
     public function addRouterAttributesToListRequest(array $routerAttributesToListRequest): ListViewBuilderInterface
     {
         $this->addRouterAttributesToListRequestToView($this->view, $routerAttributesToListRequest);

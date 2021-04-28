@@ -2,4 +2,12 @@
 
 .tabs-container {
     margin: -$viewPaddingVertical -$viewPaddingHorizontal $viewPaddingVertical;
+
+    &--root-view {
+        margin: $viewPaddingVertical 0;
+    }
+
+    &--no-gap {
+        margin: $viewPaddingVertical 0 0;
+    }
 }

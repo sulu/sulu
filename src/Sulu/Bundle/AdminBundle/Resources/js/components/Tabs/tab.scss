@@ -59,7 +59,7 @@ $buttonSmallHorizontalPadding: 10px;
         pointer-events: none;
     }
 
-    &.small {
+    &.inline {
         button {
             padding: 10px $buttonSmallHorizontalPadding;
         }

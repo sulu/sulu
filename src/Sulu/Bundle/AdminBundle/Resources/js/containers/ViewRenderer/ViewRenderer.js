@@ -42,7 +42,12 @@ class ViewRenderer extends React.Component<Props> {
         const View = this.getView(route);
 
         const element = (
-            <View key={getViewKeyFromRoute(route, router.attributes)} route={route} router={router}>
+            <View
+                isRootView={!route.parent}
+                key={getViewKeyFromRoute(route, router.attributes)}
+                route={route}
+                router={router}
+            >
                 {(props) => child ? React.cloneElement(child, props) : null}
             </View>
         );
