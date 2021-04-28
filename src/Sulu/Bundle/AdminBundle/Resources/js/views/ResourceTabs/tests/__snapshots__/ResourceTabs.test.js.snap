@@ -2,7 +2,7 @@
 
 exports[`Should mark the currently active child route as selected tab 1`] = `
 <div
-  class="tabs default"
+  class="tabs nested"
 >
   <div
     class="tabsContainerWrapper"
@@ -11,7 +11,7 @@ exports[`Should mark the currently active child route as selected tab 1`] = `
       class="tabsContainer"
     >
       <li
-        class="tab"
+        class="tab nested"
       >
         <button
           title="Tab Titel 1"
@@ -20,7 +20,7 @@ exports[`Should mark the currently active child route as selected tab 1`] = `
         </button>
       </li>
       <li
-        class="tab selected"
+        class="tab nested selected"
       >
         <button
           disabled=""
@@ -42,7 +42,7 @@ exports[`Should mark the currently active child route as selected tab 2`] = `
 
 exports[`Should render the child components after the tabs 1`] = `
 <div
-  class="tabs default"
+  class="tabs root"
 >
   <div
     class="tabsContainerWrapper"
@@ -51,7 +51,7 @@ exports[`Should render the child components after the tabs 1`] = `
       class="tabsContainer"
     >
       <li
-        class="tab"
+        class="tab root"
       >
         <button
           title="Tab Titel 1"
@@ -60,7 +60,7 @@ exports[`Should render the child components after the tabs 1`] = `
         </button>
       </li>
       <li
-        class="tab"
+        class="tab root"
       >
         <button
           title="Tab Titel 2"

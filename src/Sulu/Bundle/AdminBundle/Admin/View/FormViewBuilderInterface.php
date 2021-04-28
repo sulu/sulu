@@ -64,5 +64,7 @@ interface FormViewBuilderInterface extends ViewBuilderInterface
      */
     public function addTabBadges(array $badges): self;
 
+    public function enableTabGap(): self;
+
     public function disableTabGap(): self;
 }

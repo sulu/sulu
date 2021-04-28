@@ -1,12 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Should render the children after the tabs 1`] = `
+exports[`Should render the active child with disabledGap option 1`] = `
 Array [
   <div
-    class="tabsContainer"
+    class="tabsContainer nested disableGap"
   >
     <div
-      class="tabs default"
+      class="tabs nested"
     >
       <div
         class="tabsContainerWrapper"
@@ -15,7 +15,50 @@ Array [
           class="tabsContainer"
         >
           <li
-            class="tab"
+            class="tab nested selected"
+          >
+            <button
+              disabled=""
+              title="tabTitle1"
+            >
+              tabTitle1
+            </button>
+          </li>
+          <li
+            class="tab nested"
+          >
+            <button
+              title="tabTitle2"
+            >
+              tabTitle2
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>,
+  <h1>
+    Child
+  </h1>,
+]
+`;
+
+exports[`Should render the children after the tabs 1`] = `
+Array [
+  <div
+    class="tabsContainer root"
+  >
+    <div
+      class="tabs root"
+    >
+      <div
+        class="tabsContainerWrapper"
+      >
+        <ul
+          class="tabsContainer"
+        >
+          <li
+            class="tab root"
           >
             <button
               title="tabTitle1"
@@ -24,7 +67,7 @@ Array [
             </button>
           </li>
           <li
-            class="tab"
+            class="tab root"
           >
             <button
               title="tabTitle2"
@@ -45,10 +88,10 @@ Array [
 exports[`Should render the children with the passed props 1`] = `
 Array [
   <div
-    class="tabsContainer"
+    class="tabsContainer root"
   >
     <div
-      class="tabs default"
+      class="tabs root"
     >
       <div
         class="tabsContainerWrapper"
@@ -57,7 +100,7 @@ Array [
           class="tabsContainer"
         >
           <li
-            class="tab"
+            class="tab root"
           >
             <button
               title="tabTitle1"
@@ -78,10 +121,10 @@ Array [
 exports[`Should render the header between children and tabs 1`] = `
 Array [
   <div
-    class="tabsContainer"
+    class="tabsContainer root"
   >
     <div
-      class="tabs default"
+      class="tabs root"
     >
       <div
         class="tabsContainerWrapper"
@@ -90,7 +133,7 @@ Array [
           class="tabsContainer"
         >
           <li
-            class="tab"
+            class="tab root"
           >
             <button
               title="tabTitle1"

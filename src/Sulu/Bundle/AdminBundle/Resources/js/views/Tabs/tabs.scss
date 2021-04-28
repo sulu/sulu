@@ -3,11 +3,11 @@
 .tabs-container {
     margin: -$viewPaddingVertical -$viewPaddingHorizontal $viewPaddingVertical;
 
-    &--root-view {
+    &.nested {
         margin: $viewPaddingVertical 0;
     }
 
-    &--no-gap {
+    &.disableGap {
         margin: $viewPaddingVertical 0 0;
     }
 }

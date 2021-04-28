@@ -131,20 +131,20 @@ class Tabs<T> extends React.Component<Props<T>> {
                 ? this.sortedTabRoutes.findIndex((childRoute) => childRoute === childComponent.props.route)
                 : undefined;
 
-        const disableHideGap = selectedIndex !== undefined
-            ? this.sortedTabRoutes[selectedIndex].options.tabGap === false
+        const disableGap = selectedIndex !== undefined
+            ? this.sortedTabRoutes[selectedIndex]?.options?.tabGap === false
             : false;
-
-        const className = classNames(
-            tabsStyles.tabsContainer,
-            {
-                [tabsStyles.tabsContainerRootView]: !isRootView,
-                [tabsStyles.tabsContainerNoGap]: disableHideGap,
-            }
-        );
 
         const showTabs = isRootView || this.sortedTabRoutes.length > 1;
         const tabType = isRootView ? 'root' : 'nested';
+
+        const className = classNames(
+            tabsStyles.tabsContainer,
+            tabsStyles[tabType],
+            {
+                [tabsStyles.disableGap]: disableGap,
+            }
+        );
 
         return (
             <Fragment>

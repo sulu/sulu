@@ -19,11 +19,11 @@ Object.defineProperty(window, 'getComputedStyle', {
     }),
 });
 
-test('Render a Tabs component', () => {
+test('Render a Tabs component with type root', () => {
     const changeSpy = jest.fn();
 
     expect(render(
-        <Tabs onSelect={changeSpy} selectedIndex={null}>
+        <Tabs onSelect={changeSpy} selectedIndex={null} type="root">
             <Tabs.Tab>Tab 1</Tabs.Tab>
             <Tabs.Tab>Tab 2</Tabs.Tab>
             <Tabs.Tab>Tab 3</Tabs.Tab>
@@ -31,11 +31,11 @@ test('Render a Tabs component', () => {
     )).toMatchSnapshot();
 });
 
-test('Render a Tabs component with transparent skin', () => {
+test('Render a Tabs component with type nested', () => {
     const changeSpy = jest.fn();
 
     expect(render(
-        <Tabs onSelect={changeSpy} selectedIndex={null} skin="transparent">
+        <Tabs onSelect={changeSpy} selectedIndex={null} type="nested">
             <Tabs.Tab>Tab 1</Tabs.Tab>
             <Tabs.Tab>Tab 2</Tabs.Tab>
             <Tabs.Tab>Tab 3</Tabs.Tab>
@@ -43,11 +43,23 @@ test('Render a Tabs component with transparent skin', () => {
     )).toMatchSnapshot();
 });
 
-test('Render a Tabs component with small modifier', () => {
+test('Render a Tabs component type inline', () => {
     const changeSpy = jest.fn();
 
     expect(render(
-        <Tabs onSelect={changeSpy} selectedIndex={null} skin="small">
+        <Tabs onSelect={changeSpy} selectedIndex={null} type="inline">
+            <Tabs.Tab>Tab 1</Tabs.Tab>
+            <Tabs.Tab>Tab 2</Tabs.Tab>
+            <Tabs.Tab>Tab 3</Tabs.Tab>
+        </Tabs>
+    )).toMatchSnapshot();
+});
+
+test('Render a Tabs component with inline type', () => {
+    const changeSpy = jest.fn();
+
+    expect(render(
+        <Tabs onSelect={changeSpy} selectedIndex={null} type="inline">
             <Tabs.Tab>Tab 1</Tabs.Tab>
             <Tabs.Tab>Tab 2</Tabs.Tab>
             <Tabs.Tab>Tab 3</Tabs.Tab>
@@ -60,7 +72,7 @@ test('Render a Tabs component with a selected tab and a badge', () => {
     const selectedTabIndex = 0;
 
     expect(render(
-        <Tabs onSelect={changeSpy} selectedIndex={selectedTabIndex}>
+        <Tabs onSelect={changeSpy} selectedIndex={selectedTabIndex} type="root">
             <Tabs.Tab>Tab 1</Tabs.Tab>
             <Tabs.Tab>Tab 2</Tabs.Tab>
             <Tabs.Tab badges={[<Badge key="badge1">1</Badge>, <Badge key="badge2">2</Badge>]}>Tab 3</Tabs.Tab>
