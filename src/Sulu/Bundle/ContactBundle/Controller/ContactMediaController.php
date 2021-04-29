@@ -16,6 +16,7 @@ use FOS\RestBundle\View\ViewHandlerInterface;
 use HandcraftedInTheAlps\RestRoutingBundle\Controller\Annotations\RouteResource;
 use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\ContactBundle\Contact\AbstractContactManager;
+use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\ListBuilderFactory\MediaListBuilderFactory;
 use Sulu\Bundle\MediaBundle\Media\ListRepresentationFactory\MediaListRepresentationFactory;
@@ -58,7 +59,8 @@ class ContactMediaController extends AbstractMediaController implements ClassRes
         string $mediaClass,
         MediaListBuilderFactory $mediaListBuilderFactory = null,
         MediaListRepresentationFactory $mediaListRepresentationFactory = null,
-        FieldDescriptorFactoryInterface $fieldDescriptorFactory = null
+        FieldDescriptorFactoryInterface $fieldDescriptorFactory = null,
+        DomainEventCollectorInterface $domainEventCollector = null
     ) {
         parent::__construct(
             $viewHandler,
@@ -71,7 +73,8 @@ class ContactMediaController extends AbstractMediaController implements ClassRes
             $mediaClass,
             $mediaListBuilderFactory,
             $mediaListRepresentationFactory,
-            $fieldDescriptorFactory
+            $fieldDescriptorFactory,
+            $domainEventCollector
         );
 
         $this->contactManager = $contactManager;

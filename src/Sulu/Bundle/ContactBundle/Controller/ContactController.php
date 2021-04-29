@@ -16,6 +16,7 @@ use FOS\RestBundle\View\ViewHandlerInterface;
 use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
+use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\ContactBundle\Entity\ContactRepositoryInterface;
 use Sulu\Bundle\ContactBundle\Util\IndexComparatorInterface;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
@@ -43,7 +44,13 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class ContactController extends AbstractRestController implements ClassResourceInterface, SecuredControllerInterface
 {
-    protected static $entityKey = 'contacts';
+    /**
+     * @deprecated
+     * @see ContactInterface::RESOURCE_KEY
+     *
+     * @var string
+     */
+    protected static $entityKey = ContactInterface::RESOURCE_KEY;
 
     protected static $accountContactEntityName = 'SuluContactBundle:AccountContact';
 
@@ -272,7 +279,7 @@ class ContactController extends AbstractRestController implements ClassResourceI
                 $apiContacts[] = $this->contactManager->getContact($contact, $locale);
             }
 
-            $list = new CollectionRepresentation($apiContacts, self::$entityKey);
+            $list = new CollectionRepresentation($apiContacts, ContactInterface::RESOURCE_KEY);
         }
 
         $view = $this->view($list, 200);
@@ -309,7 +316,7 @@ class ContactController extends AbstractRestController implements ClassResourceI
 
         return new ListRepresentation(
             $listResponse,
-            self::$entityKey,
+            ContactInterface::RESOURCE_KEY,
             'sulu_contact.get_contacts',
             $request->query->all(),
             $listBuilder->getCurrentPage(),

@@ -14,6 +14,9 @@ namespace Sulu\Bundle\ContactBundle\Contact;
 use DateTime;
 use Doctrine\Persistence\ObjectManager;
 use Sulu\Bundle\ContactBundle\Api\Contact as ContactApi;
+use Sulu\Bundle\ContactBundle\Domain\Event\ContactCreatedEvent;
+use Sulu\Bundle\ContactBundle\Domain\Event\ContactModifiedEvent;
+use Sulu\Bundle\ContactBundle\Domain\Event\ContactRemovedEvent;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\Entity\AccountRepositoryInterface;
 use Sulu\Bundle\ContactBundle\Entity\Address;
@@ -149,6 +152,9 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
             /** @var Contact $contact */
             $contact = $this->contactRepository->findByIdAndDelete($id);
 
+            $contactId = $contact->getId();
+            $contactFullName = $contact->getFullName();
+
             if (!$contact) {
                 throw new EntityNotFoundException($this->contactRepository->getClassName(), $id);
             }
@@ -212,11 +218,16 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
 
             $this->em->remove($contact);
 
+            $this->domainEventCollector->collect(
+                new ContactRemovedEvent($contactId, $contactFullName)
+            );
+
             /** @var UserInterface|null $user */
             $user = $this->userRepository->findUserByContact($contact->getId());
             if ($user) {
                 $this->domainEventCollector->collect(new UserRemovedEvent($user->getId(), $user->getUsername()));
             }
+
             $this->em->flush();
         };
 
@@ -249,6 +260,7 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
          */
 
         $contactDetailsData = $this->getProperty($data, 'contactDetails', []);
+        $isNewContact = false;
 
         if ($id) {
             /** @var Contact $contact */
@@ -295,6 +307,7 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
             }
         } else {
             $contact = $this->contactRepository->createNew();
+            $isNewContact = true;
         }
 
         if (!$patch || null !== $this->getProperty($data, 'firstName')) {
@@ -383,6 +396,16 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
         }
 
         $this->em->persist($contact);
+
+        if ($isNewContact) {
+            $this->domainEventCollector->collect(
+                new ContactCreatedEvent($contact, $data)
+            );
+        } else {
+            $this->domainEventCollector->collect(
+                new ContactModifiedEvent($contact, $data)
+            );
+        }
 
         if ($flush) {
             $this->em->flush();
