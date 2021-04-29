@@ -222,45 +222,6 @@ test('Render data with skin', () => {
     expect(tableAdapter).toMatchSnapshot();
 });
 
-test('Render data with multiple skin', () => {
-    const data = [];
-
-    const schema = {
-        title: {
-            filterType: null,
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            type: 'string',
-            sortable: true,
-            visibility: 'no',
-            label: 'Title',
-        },
-        description: {
-            filterType: null,
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            type: 'string',
-            sortable: true,
-            visibility: 'yes',
-            label: 'Description',
-        },
-    };
-    const tableAdapter = render(
-        <TableAdapter
-            {...listAdapterDefaultProps}
-            adapterOptions={{
-                skin: 'light flat',
-            }}
-            data={data}
-            page={2}
-            pageCount={5}
-            schema={schema}
-        />
-    );
-
-    expect(tableAdapter).toMatchSnapshot();
-});
-
 test('Render data without header', () => {
     const data = [];
 

@@ -361,6 +361,7 @@ class List extends React.Component<Props> {
                         adapters,
                         addView,
                         editView,
+                        filterable,
                         itemDisabledCondition,
                         searchable,
                         selectable,
@@ -382,6 +383,7 @@ class List extends React.Component<Props> {
                     <ListContainer
                         adapterOptions={adapterOptions}
                         adapters={adapters}
+                        filterable={filterable}
                         header={title && <h1>{title}</h1>}
                         itemActionsProvider={this.getItemActionConfigs}
                         itemDisabledCondition={itemDisabledCondition}

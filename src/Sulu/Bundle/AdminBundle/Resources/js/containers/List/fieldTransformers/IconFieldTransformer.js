@@ -4,7 +4,7 @@ import type {Node} from 'react';
 import log from 'loglevel';
 import classNames from 'classnames';
 import Icon from '../../../components/Icon';
-import type {FieldTransformer} from '../types';
+import type {FieldTransformer, IconSkin} from '../types';
 import iconFieldTransformerStyles from './iconFieldTransformer.scss';
 
 export default class IconFieldTransformer implements FieldTransformer {
@@ -18,7 +18,7 @@ export default class IconFieldTransformer implements FieldTransformer {
             skin,
         }: {
             mapping: mixed[],
-            skin: ?string,
+            skin: ?IconSkin,
         } = parameters;
         if (!mapping) {
             return value;
@@ -56,7 +56,7 @@ export default class IconFieldTransformer implements FieldTransformer {
         return null;
     }
 
-    transformObjectConfig(value: *, iconConfig: Object, skin: ?string): Node {
+    transformObjectConfig(value: *, iconConfig: Object, skin: ?IconSkin): Node {
         const {icon, color} = iconConfig;
 
         if (!icon || typeof icon !== 'string') {
@@ -82,17 +82,18 @@ export default class IconFieldTransformer implements FieldTransformer {
         );
     }
 
-    transformStringConfig(iconConfig: string, skin: ?string): Node {
+    transformStringConfig(iconConfig: string, skin: ?IconSkin): Node {
         return (
             <Icon className={this.getClassName(skin)} name={iconConfig} />
         );
     }
 
-    getClassName(skin: ?string): Object {
-        if (skin) {
-            return classNames(iconFieldTransformerStyles.listIcon, iconFieldTransformerStyles[skin]);
-        }
-
-        return iconFieldTransformerStyles.listIcon;
+    getClassName(skin: ?IconSkin): Object {
+        return classNames(
+            iconFieldTransformerStyles.listIcon,
+            {
+                [iconFieldTransformerStyles[skin]]: skin !== undefined,
+            }
+        );
     }
 }

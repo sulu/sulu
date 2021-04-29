@@ -290,9 +290,6 @@ Array [
                       />
                     </label>
                     <div
-                      class="fieldFilter"
-                    />
-                    <div
                       class="buttonGroup"
                     >
                       <button
@@ -941,9 +938,6 @@ Array [
                         value=""
                       />
                     </label>
-                    <div
-                      class="fieldFilter"
-                    />
                     <div
                       class="buttonGroup"
                     >

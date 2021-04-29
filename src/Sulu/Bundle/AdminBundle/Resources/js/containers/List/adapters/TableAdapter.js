@@ -76,15 +76,11 @@ class TableAdapter extends AbstractTableAdapter {
             paginated,
             adapterOptions: {
                 showHeader = true,
+                skin = 'dark',
             } = {},
             page,
             pageCount,
         } = this.props;
-
-        let skin = this.props.adapterOptions?.skin;
-        if (skin === undefined || typeof skin !== 'string'){
-            skin = 'dark';
-        }
 
         const table = (
             <Table

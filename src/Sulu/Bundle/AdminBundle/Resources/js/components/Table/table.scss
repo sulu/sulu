@@ -246,6 +246,18 @@ $borderRadius: 3px;
 }
 
 .flat {
+    .header {
+        color: $headerTextDarkColor;
+    }
+
+    .header-cell {
+        background-color: $headerCellDarkBackgroundColor;
+    }
+
+    .header-button-cell {
+        border-right: $borderWidth solid $headerButtonCellDarkBorderColor;
+    }
+
     .table {
         border-spacing: 0 1px;
     }

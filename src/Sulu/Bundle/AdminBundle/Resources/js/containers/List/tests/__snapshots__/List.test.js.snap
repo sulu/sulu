@@ -26,9 +26,6 @@ exports[`Do not render Loader instead of Adapter if no page count is given 1`] =
         value=""
       />
     </label>
-    <div
-      class="fieldFilter"
-    />
   </div>
   <div
     class="list"
@@ -66,9 +63,6 @@ exports[`Render Loader instead of Adapter if nothing was loaded yet 1`] = `
         value=""
       />
     </label>
-    <div
-      class="fieldFilter"
-    />
   </div>
   <div
     class="list"
@@ -133,9 +127,6 @@ exports[`Render the adapter in disabled state 1`] = `
         value=""
       />
     </label>
-    <div
-      class="fieldFilter"
-    />
   </div>
   <div
     class="list disabled"
@@ -261,6 +252,46 @@ exports[`Render the adapter with filters 1`] = `
         </button>
       </span>
     </div>
+  </div>
+  <div
+    class="list disabled"
+  >
+    <div>
+      Test Adapter
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render the adapter with filters but filterable disabled 1`] = `
+<div
+  class="listContainer"
+>
+  <h1>
+    Title
+  </h1>
+  <div
+    class="toolbar"
+  >
+    <label
+      class="input dark left collapsed hasAppendIcon"
+    >
+      <div
+        class="prependedContainer dark collapsed"
+      >
+        <span
+          aria-label="su-search"
+          class="su-search clickable icon dark iconClickable collapsed"
+          role="button"
+          tabindex="0"
+        />
+      </div>
+      <input
+        placeholder="sulu_admin.list_search_placeholder"
+        type="text"
+        value=""
+      />
+    </label>
   </div>
   <div
     class="list disabled"

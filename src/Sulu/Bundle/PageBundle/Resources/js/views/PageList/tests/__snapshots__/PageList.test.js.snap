@@ -11,9 +11,6 @@ exports[`Render PageList 1`] = `
       class="toolbar listToolbar"
     >
       <div
-        class="fieldFilter"
-      />
-      <div
         class="buttonGroup"
       >
         <button

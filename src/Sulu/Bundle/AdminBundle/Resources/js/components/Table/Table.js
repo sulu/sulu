@@ -9,7 +9,7 @@ import Body from './Body';
 import Row from './Row';
 import Cell from './Cell';
 import HeaderCell from './HeaderCell';
-import type {ButtonConfig, SelectMode} from './types';
+import type {ButtonConfig, SelectMode, Skin} from './types';
 import tableStyles from './table.scss';
 
 const PLACEHOLDER_ICON = 'su-battery-low';
@@ -24,7 +24,7 @@ type Props<T: string | number> = {
     placeholderText?: string,
     selectInFirstCell?: boolean,
     selectMode?: SelectMode,
-    skin: string,
+    skin: Skin,
 };
 
 @observer
@@ -169,8 +169,10 @@ class Table<T: string | number> extends React.Component<Props<T>> {
         const allRowsSelected = (clonedBody && !emptyBody) ? this.checkAllRowsSelected(clonedBody) : false;
         const clonedHeader = this.cloneHeader(header, allRowsSelected);
 
-        const tableClass = classNames(tableStyles.tableContainer,
-            skin?.split(' ').map((skin) => tableStyles[skin]).join(' '));
+        const tableClass = classNames(
+            tableStyles.tableContainer,
+            tableStyles[skin]
+        );
         return (
             <div className={tableClass}>
                 <table className={tableStyles.table}>

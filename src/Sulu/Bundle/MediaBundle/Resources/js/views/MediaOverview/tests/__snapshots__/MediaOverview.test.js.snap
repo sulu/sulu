@@ -264,9 +264,6 @@ exports[`Render a simple MediaOverview 1`] = `
             />
           </label>
           <div
-            class="fieldFilter"
-          />
-          <div
             class="buttonGroup"
           >
             <button

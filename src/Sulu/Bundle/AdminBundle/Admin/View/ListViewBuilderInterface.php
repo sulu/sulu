@@ -79,6 +79,10 @@ interface ListViewBuilderInterface extends ViewBuilderInterface
 
     public function disableColumnOptions(): self;
 
+    public function enableFiltering(): self;
+
+    public function disableFiltering(): self;
+
     /**
      * @param array<string, array<string, mixed>> $adapterOptions
      */

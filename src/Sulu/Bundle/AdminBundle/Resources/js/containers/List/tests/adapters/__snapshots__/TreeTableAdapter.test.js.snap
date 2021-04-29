@@ -504,7 +504,7 @@ exports[`Render data with schema and selections 1`] = `
 
 exports[`Render data with skin 1`] = `
 <div
-  class="tableContainer dark flat"
+  class="tableContainer flat"
 >
   <table
     class="table"

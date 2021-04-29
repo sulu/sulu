@@ -5,7 +5,7 @@ import log from 'loglevel';
 import type {Node} from 'react';
 import {Moment} from 'moment/moment';
 import classNames from 'classnames';
-import type {FieldTransformer} from '../types';
+import type {DateTimeSkin, FieldTransformer} from '../types';
 import {translate} from '../../../utils';
 import dateTimeFieldTransformerStyles from './dateTimeFieldTransformer.scss';
 
@@ -27,7 +27,7 @@ export default class DateTimeFieldTransformer implements FieldTransformer {
             format = 'default',
         }: {
             format: string,
-            skin: ?string,
+            skin: ?DateTimeSkin,
         } = parameters || {};
 
         if (!momentObject.isValid()) {
@@ -42,19 +42,18 @@ export default class DateTimeFieldTransformer implements FieldTransformer {
             return null;
         }
 
+        const className = classNames(
+            dateTimeFieldTransformerStyles.dateTime,
+            {
+                [dateTimeFieldTransformerStyles[skin]]: skin !== undefined,
+            }
+        );
+
         return (
-            <span className={this.getClassName(skin)}>
+            <span className={className}>
                 {this.formats[format](momentObject, this.formats)}
             </span>
         );
-    }
-
-    getClassName(skin: ?string): string {
-        if (skin) {
-            return classNames(dateTimeFieldTransformerStyles.dateTime, dateTimeFieldTransformerStyles[skin]);
-        }
-
-        return dateTimeFieldTransformerStyles.dateTime;
     }
 
     getRelativeDateTime(momentObject: Moment) {

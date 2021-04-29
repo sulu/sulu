@@ -122,17 +122,13 @@ class TreeTableAdapter extends AbstractTableAdapter {
             onLimitChange,
             adapterOptions: {
                 showHeader = true,
+                skin = 'dark',
             } = {},
             options,
             page,
             pageCount,
             paginated,
         }: ListAdapterProps = this.props;
-
-        let skin = this.props.adapterOptions?.skin;
-        if (skin === undefined || typeof skin !== 'string'){
-            skin = 'dark';
-        }
 
         if (!active && loading) {
             return <Loader />;

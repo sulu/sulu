@@ -105,6 +105,11 @@ trait ListViewBuilderTrait
         $route->setOption('showColumnOptions', $showColumnOptions);
     }
 
+    private function setFilterableToView(View $route, bool $filterable): void
+    {
+        $route->setOption('filterable', $filterable);
+    }
+
     /**
      * @param array<string, array<string, mixed>> $adapterOptions
      */

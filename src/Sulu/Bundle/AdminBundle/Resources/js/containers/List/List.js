@@ -16,6 +16,7 @@ import userStore from '../../stores/userStore';
 import SingleListOverlay from '../SingleListOverlay';
 import {translate} from '../../utils/Translator';
 import type {
+    AdapterOptions,
     ItemActionsProvider,
     ResolveCopyArgument,
     ResolveDeleteArgument,
@@ -34,13 +35,14 @@ import ColumnOptionsOverlay from './ColumnOptionsOverlay';
 import FieldFilter from './FieldFilter';
 
 type Props = {|
-    adapterOptions?: {[adapterKey: string]: {[key: string]: mixed}},
+    adapterOptions?: {[adapterKey: string]: AdapterOptions},
     adapters: Array<string>,
     allowActivateForDisabledItems: boolean,
     copyable: boolean,
     deletable: boolean,
     disabled: boolean,
     disabledIds: Array<string | number>,
+    filterable: boolean,
     header?: Node,
     itemActionsProvider?: ItemActionsProvider,
     itemDisabledCondition?: ?string,
@@ -68,6 +70,7 @@ class List extends React.Component<Props> {
         deletable: true,
         disabled: false,
         disabledIds: [],
+        filterable: true,
         movable: true,
         orderable: true,
         paginated: true,
@@ -554,7 +557,7 @@ class List extends React.Component<Props> {
         );
 
         const searchable = this.props.searchable && Adapter.searchable;
-        const filterable = filterableFields && Object.keys(filterableFields).length > 0;
+        const filterable = this.props.filterable && filterableFields && Object.keys(filterableFields).length > 0;
 
         if (store.forbidden) {
             return <PermissionHint />;
@@ -568,11 +571,13 @@ class List extends React.Component<Props> {
                         {searchable &&
                             <Search onSearch={this.handleSearch} value={store.searchTerm.get()} />
                         }
-                        <FieldFilter
-                            fields={filterableFields || {}}
-                            onChange={this.handleFilterChange}
-                            value={store.filterOptions.get()}
-                        />
+                        {filterable &&
+                            <FieldFilter
+                                fields={filterableFields || {}}
+                                onChange={this.handleFilterChange}
+                                value={store.filterOptions.get()}
+                            />
+                        }
                         {this.showColumnOptions &&
                             <Fragment>
                                 <ArrowMenu

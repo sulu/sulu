@@ -33,7 +33,7 @@ the `adapterOptions`.
 +    ->addListAdapters(['tree_table'])
 +    ->setAdapterOptions(
 +        [
-+            'table' => [
++            'tree_table' => [
 +                'showHeader' => false,
 +            ],
 +        ]

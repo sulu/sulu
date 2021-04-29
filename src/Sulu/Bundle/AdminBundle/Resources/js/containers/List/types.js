@@ -2,6 +2,7 @@
 import type {Node} from 'react';
 import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import {RequestPromise} from '../../services/Requester';
+import type {Skin} from '../../components/Table/types';
 
 export type DataItem = {
     id: string | number,
@@ -35,10 +36,21 @@ export type ItemActionConfig = {|
 
 export type ItemActionsProvider = (item: ?Object) => Array<ItemActionConfig>;
 
+export type IconSkin = 'dark';
+
+export type DateTimeSkin = 'light';
+
+export type AdapterOptions = {|
+    display_root_level_toolbar?: mixed,
+    get_indicators?: mixed,
+    showHeader?: boolean,
+    skin?: Skin,
+|};
+
 export type ListAdapterProps = {|
     active: ?string | number,
     activeItems: ?Array<?string | number>,
-    adapterOptions?: {[key: string]: mixed},
+    adapterOptions?: AdapterOptions,
     data: Array<*>,
     disabledIds: Array<string | number>,
     itemActionsProvider?: ItemActionsProvider,

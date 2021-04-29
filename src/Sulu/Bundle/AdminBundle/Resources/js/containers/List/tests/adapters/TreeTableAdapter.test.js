@@ -258,7 +258,7 @@ test('Render data with skin', () => {
     const treeListAdapter = render(
         <TreeTableAdapter
             {...listAdapterDefaultProps}
-            adapterOptions={{showHeader: false, skin: 'dark flat'}}
+            adapterOptions={{showHeader: false, skin: 'flat'}}
             data={data}
             page={1}
             pageCount={2}

@@ -213,6 +213,20 @@ class ListViewBuilder implements ListViewBuilderInterface
         return $this;
     }
 
+    public function enableFiltering(): ListViewBuilderInterface
+    {
+        $this->setFilterableToView($this->view, true);
+
+        return $this;
+    }
+
+    public function disableFiltering(): ListViewBuilderInterface
+    {
+        $this->setFilterableToView($this->view, false);
+
+        return $this;
+    }
+
     public function setAdapterOptions(array $adapterOptions): ListViewBuilderInterface
     {
         $this->setAdapterOptionsToView($this->view, $adapterOptions);
