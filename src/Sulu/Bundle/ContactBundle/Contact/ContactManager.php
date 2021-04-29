@@ -26,12 +26,16 @@ use Sulu\Bundle\ContactBundle\Entity\Fax;
 use Sulu\Bundle\ContactBundle\Entity\Note;
 use Sulu\Bundle\ContactBundle\Entity\SocialMediaProfile;
 use Sulu\Bundle\ContactBundle\Entity\Url;
+use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\PageBundle\Content\Types\Email;
 use Sulu\Bundle\PageBundle\Content\Types\Phone;
+use Sulu\Bundle\SecurityBundle\Domain\Event\UserRemovedEvent;
+use Sulu\Bundle\SecurityBundle\Entity\UserRepository;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 
 /**
@@ -59,6 +63,16 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
      */
     protected $mediaRepository;
 
+    /**
+     * @var DomainEventCollectorInterface
+     */
+    protected $domainEventCollector;
+
+    /**
+     * @var UserRepository
+     */
+    protected $userRepository;
+
     public function __construct(
         ObjectManager $em,
         TagManagerInterface $tagManager,
@@ -66,13 +80,17 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
         AccountRepositoryInterface $accountRepository,
         ContactTitleRepository $contactTitleRepository,
         ContactRepository $contactRepository,
-        MediaRepositoryInterface $mediaRepository
+        MediaRepositoryInterface $mediaRepository,
+        DomainEventCollectorInterface $domainEventCollector,
+        UserRepository $userRepository
     ) {
         parent::__construct($em, $tagManager, $mediaManager);
         $this->accountRepository = $accountRepository;
         $this->contactTitleRepository = $contactTitleRepository;
         $this->contactRepository = $contactRepository;
         $this->mediaRepository = $mediaRepository;
+        $this->domainEventCollector = $domainEventCollector;
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -193,6 +211,12 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
             }
 
             $this->em->remove($contact);
+
+            /** @var UserInterface|null $user */
+            $user = $this->userRepository->findUserByContact($contact->getId());
+            if ($user) {
+                $this->domainEventCollector->collect(new UserRemovedEvent($user->getId()));
+            }
             $this->em->flush();
         };
 

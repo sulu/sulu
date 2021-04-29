@@ -13,6 +13,8 @@ namespace Sulu\Bundle\SecurityBundle\Tests\Unit\UserManager;
 
 use Doctrine\Persistence\ObjectManager;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
+use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\SecurityBundle\UserManager\UserManager;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 
@@ -24,14 +26,20 @@ class UserManagerTest extends TestCase
     private $userManager;
 
     /**
-     * @var UserRepositoryInterface
+     * @var ObjectProphecy|UserRepositoryInterface
      */
     private $userRepository;
+
+    /**
+     * @var ObjectProphecy|DomainEventCollectorInterface
+     */
+    private $eventCollector;
 
     public function setUp(): void
     {
         $this->objectManager = $this->prophesize(ObjectManager::class);
         $this->userRepository = $this->prophesize(UserRepositoryInterface::class);
+        $this->eventCollector = $this->prophesize(DomainEventCollectorInterface::class);
 
         $this->userManager = new UserManager(
             $this->objectManager->reveal(),
@@ -40,7 +48,8 @@ class UserManagerTest extends TestCase
             null,
             null,
             null,
-            $this->userRepository->reveal()
+            $this->userRepository->reveal(),
+            $this->eventCollector->reveal()
         );
     }
 

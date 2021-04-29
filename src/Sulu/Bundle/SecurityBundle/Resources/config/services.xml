@@ -53,6 +53,7 @@
             <argument type="service" id="sulu.repository.user"/>
             <argument type="service" id="router"/>
             <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="sulu_event_log.domain_event_collector"/>
             <argument>%sulu_security.system%</argument>
             <argument>%sulu_security.reset_password.mail.sender%</argument>
             <argument>%sulu_security.reset_password.mail.subject%</argument>
