@@ -53,7 +53,7 @@ trait SecuredEntityRepositoryTrait
             'accessControl',
             'WITH',
             'accessControl.entityClass = :entityClass '
-            . 'AND accessControl.entityId = CAST(' . $entityAlias . '.id AS VARCHAR)'
+            . 'AND accessControl.entityId = CAST(' . $entityAlias . '.id AS CHAR(36))'
         );
         $queryBuilder->leftJoin('accessControl.role', 'role');
         $queryBuilder->andWhere(

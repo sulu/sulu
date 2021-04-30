@@ -48,7 +48,7 @@ class AccessControlQueryEnhancer
             $user,
             $permission,
             'accessControl.entityClass = :entityClass',
-            'accessControl.entityId = CAST(' . $entityAlias . '.id AS VARCHAR)'
+            'accessControl.entityId = CAST(' . $entityAlias . '.id AS CHAR(36))'
         );
 
         $queryBuilder->setParameter('entityClass', $entityClass);
@@ -67,7 +67,7 @@ class AccessControlQueryEnhancer
             $user,
             $permission,
             'accessControl.entityClass = ' . $entityAlias . '.' . $entityClassField,
-            'accessControl.entityId = CAST(' . $entityAlias . '.' . $entityIdField . ' AS VARCHAR)'
+            'accessControl.entityId = CAST(' . $entityAlias . '.' . $entityIdField . ' AS CHAR(36))'
         );
     }
 
