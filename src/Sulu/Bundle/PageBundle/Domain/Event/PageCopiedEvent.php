@@ -29,37 +29,37 @@ class PageCopiedEvent extends DomainEvent
     /**
      * @var string
      */
-    private $copiedPageId;
+    private $sourcePageId;
 
     /**
      * @var string
      */
-    private $copiedPageWebspaceKey;
+    private $sourcePageWebspaceKey;
 
     /**
      * @var string|null
      */
-    private $copiedPageTitle;
+    private $sourcePageTitle;
 
     /**
      * @var string|null
      */
-    private $copiedPageTitleLocale;
+    private $sourcePageTitleLocale;
 
     public function __construct(
         PageDocument $pageDocument,
-        string $copiedPageId,
-        string $copiedPageWebspaceKey,
-        ?string $copiedPageTitle,
-        ?string $copiedPageTitleLocale
+        string $sourcePageId,
+        string $sourcePageWebspaceKey,
+        ?string $sourcePageTitle,
+        ?string $sourcePageTitleLocale
     ) {
         parent::__construct();
 
         $this->pageDocument = $pageDocument;
-        $this->copiedPageId = $copiedPageId;
-        $this->copiedPageWebspaceKey = $copiedPageWebspaceKey;
-        $this->copiedPageTitle = $copiedPageTitle;
-        $this->copiedPageTitleLocale = $copiedPageTitleLocale;
+        $this->sourcePageId = $sourcePageId;
+        $this->sourcePageWebspaceKey = $sourcePageWebspaceKey;
+        $this->sourcePageTitle = $sourcePageTitle;
+        $this->sourcePageTitleLocale = $sourcePageTitleLocale;
     }
 
     public function getPageDocument(): PageDocument
@@ -75,10 +75,10 @@ class PageCopiedEvent extends DomainEvent
     public function getEventContext(): array
     {
         return [
-            'copiedPageId' => $this->copiedPageId,
-            'copiedPageWebspaceKey' => $this->copiedPageWebspaceKey,
-            'copiedPageTitle' => $this->copiedPageTitle,
-            'copiedPageTitleLocale' => $this->copiedPageTitleLocale,
+            'sourcePageId' => $this->sourcePageId,
+            'sourcePageWebspaceKey' => $this->sourcePageWebspaceKey,
+            'sourcePageTitle' => $this->sourcePageTitle,
+            'sourcePageTitleLocale' => $this->sourcePageTitleLocale,
         ];
     }
 

@@ -33,7 +33,7 @@ class PageTranslationCopiedEvent extends DomainEvent
     /**
      * @var string
      */
-    private $fromLocale;
+    private $sourceLocale;
 
     /**
      * @var mixed[]
@@ -46,14 +46,14 @@ class PageTranslationCopiedEvent extends DomainEvent
     public function __construct(
         BasePageDocument $pageDocument,
         string $locale,
-        string $fromLocale,
+        string $sourceLocale,
         array $payload
     ) {
         parent::__construct();
 
         $this->pageDocument = $pageDocument;
         $this->locale = $locale;
-        $this->fromLocale = $fromLocale;
+        $this->sourceLocale = $sourceLocale;
         $this->payload = $payload;
     }
 
@@ -70,7 +70,7 @@ class PageTranslationCopiedEvent extends DomainEvent
     public function getEventContext(): array
     {
         return [
-            'fromLocale' => $this->fromLocale,
+            'sourceLocale' => $this->sourceLocale,
         ];
     }
 

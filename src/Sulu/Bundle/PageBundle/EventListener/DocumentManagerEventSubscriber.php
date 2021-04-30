@@ -158,12 +158,12 @@ class DocumentManagerEventSubscriber implements EventSubscriberInterface
                     Assert::notNull($pagePath);
                     $locale = $options['locale'] ?? null;
                     Assert::notNull($locale);
-                    $copiedPageId = $options['copiedPageId'] ?? null;
-                    Assert::notNull($copiedPageId);
-                    $copiedPageWebspaceKey = $options['copiedPageWebspaceKey'] ?? null;
-                    Assert::notNull($copiedPageWebspaceKey);
-                    $copiedPageTitle = $options['copiedPageTitle'] ?? null;
-                    Assert::notNull($copiedPageTitle);
+                    $sourcePageId = $options['sourcePageId'] ?? null;
+                    Assert::notNull($sourcePageId);
+                    $sourcePageWebspaceKey = $options['sourcePageWebspaceKey'] ?? null;
+                    Assert::notNull($sourcePageWebspaceKey);
+                    $sourcePageTitle = $options['sourcePageTitle'] ?? null;
+                    Assert::notNull($sourcePageTitle);
 
                     /** @var PageDocument $document */
                     $document = $this->documentManager->find($pagePath, $locale);
@@ -171,9 +171,9 @@ class DocumentManagerEventSubscriber implements EventSubscriberInterface
                     $this->domainEventCollector->collect(
                         new PageCopiedEvent(
                             $document,
-                            $copiedPageId,
-                            $copiedPageWebspaceKey,
-                            $copiedPageTitle,
+                            $sourcePageId,
+                            $sourcePageWebspaceKey,
+                            $sourcePageTitle,
                             $locale
                         )
                     );
@@ -305,14 +305,14 @@ class DocumentManagerEventSubscriber implements EventSubscriberInterface
         }
 
         $destLocale = $event->getDestLocale();
-        $fromLocale = $event->getLocale();
+        $sourceLocale = $event->getLocale();
         $payload = $this->getPayloadFromPageDocument($destDocument);
 
         $this->domainEventCollector->collect(
             new PageTranslationCopiedEvent(
                 $destDocument,
                 $destLocale,
-                $fromLocale,
+                $sourceLocale,
                 $payload
             )
         );
@@ -331,9 +331,9 @@ class DocumentManagerEventSubscriber implements EventSubscriberInterface
             'options' => [
                 'pagePath' => $event->getCopiedPath(),
                 'locale' => $document->getLocale(),
-                'copiedPageId' => $document->getUuid(),
-                'copiedPageWebspaceKey' => $document->getWebspaceName(),
-                'copiedPageTitle' => $document->getTitle(),
+                'sourcePageId' => $document->getUuid(),
+                'sourcePageWebspaceKey' => $document->getWebspaceName(),
+                'sourcePageTitle' => $document->getTitle(),
             ],
         ];
     }
