@@ -57,7 +57,7 @@ class SyncPhpcrPermissionsCommand extends Command
 
     public function configure(): void
     {
-        $this->setDescription('Sync object permissions from phpcr into database');
+        $this->setDescription('Sync existing object permissions from phpcr into database to make them usable in database queries');
         $this->setHelp(
             'The <info>%command.name%</info> command syncs the object permissions of phpcr documents into the database.'
         );
