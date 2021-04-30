@@ -48,17 +48,12 @@ trait SecuredEntityRepositoryTrait
             \E_USER_DEPRECATED
         );
 
-        $entityIdCondition = 'accessControl.entityId = ' . $entityAlias . '.id';
-        if ('postgresql' === $this->getDatabasePlatformName($queryBuilder)) {
-            $entityIdCondition = 'accessControl.entityId = CAST(' . $entityAlias . '.id AS VARCHAR)';
-        }
-
         $queryBuilder->leftJoin(
             AccessControl::class,
             'accessControl',
             'WITH',
             'accessControl.entityClass = :entityClass '
-            . 'AND ' . $entityIdCondition
+            . 'AND accessControl.entityId = CAST(' . $entityAlias . '.id AS VARCHAR)'
         );
         $queryBuilder->leftJoin('accessControl.role', 'role');
         $queryBuilder->andWhere(
@@ -74,10 +69,5 @@ trait SecuredEntityRepositoryTrait
         $queryBuilder->setParameter('roleIds', $roleIds);
         $queryBuilder->setParameter('entityClass', $entityClass);
         $queryBuilder->setParameter('permission', $permission);
-    }
-
-    private function getDatabasePlatformName(QueryBuilder $queryBuilder): string
-    {
-        return $queryBuilder->getEntityManager()->getConnection()->getDatabasePlatform()->getName();
     }
 }

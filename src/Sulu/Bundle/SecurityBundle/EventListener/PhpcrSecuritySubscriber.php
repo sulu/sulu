@@ -57,6 +57,7 @@ class PhpcrSecuritySubscriber implements EventSubscriberInterface
             return;
         }
 
+        // sync permissions stored in phpcr to doctrine to make them usable in doctrine queries and the list builder
         $this->doctrineAccessControlProvider->setPermissions($type, $identifier, $permissions);
     }
 }
