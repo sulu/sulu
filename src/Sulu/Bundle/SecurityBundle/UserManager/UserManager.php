@@ -127,7 +127,7 @@ class UserManager implements UserManagerInterface
             }
 
             $this->em->remove($user);
-            $this->domainEventCollector->collect(new UserRemovedEvent($user->getId()));
+            $this->domainEventCollector->collect(new UserRemovedEvent($id));
             $this->em->flush();
         };
 

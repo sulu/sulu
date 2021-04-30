@@ -51,7 +51,6 @@ class UserManagerCompilerPassTest extends TestCase
                     new Reference('sulu_contact.contact_manager'),
                     new Reference('sulu_security.salt_generator'),
                     new Reference('sulu.repository.user'),
-                    new Reference('sulu.repository.user'),
                     new Reference('sulu_event_log.domain_event_collector'),
                 ]
             ))->setPublic(true)
