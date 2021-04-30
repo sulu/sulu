@@ -11,10 +11,10 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Entity;
 
-use Sulu\Component\Persistence\Repository\RepositoryInterface;
-
-interface AnalyticsRepositoryInterface extends RepositoryInterface
+interface AnalyticsRepositoryInterface
 {
+    public function createNew();
+
     /**
      * Returns list of analytics filtered by webspace key and environment.
      *
