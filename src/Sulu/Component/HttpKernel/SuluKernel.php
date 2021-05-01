@@ -18,7 +18,6 @@ use Symfony\Component\Config\Resource\GlobResource;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
-use Symfony\Component\Routing\RouteCollectionBuilder;
 
 /**
  * Base class for all Sulu kernels.
@@ -125,7 +124,7 @@ abstract class SuluKernel extends Kernel
         return $class;
     }
 
-    protected function configureRoutes(RouteCollectionBuilder $routes)
+    protected function configureRoutes(RoutingConfigurator $routes)
     {
         $confDir = $this->getProjectDir() . '/config';
 
@@ -150,7 +149,9 @@ abstract class SuluKernel extends Kernel
     }
 
     /**
-     * @param RouteCollectionBuilder|RoutingConfigurator $routes Is a RouteCollectionBuilder for Symfony <= 4.4
+     * @param RoutingConfigurator $routes
+     * @param $confDir
+     * @param $pattern
      */
     protected function import($routes, $confDir, $pattern)
     {
