@@ -124,6 +124,9 @@ abstract class SuluKernel extends Kernel
         return $class;
     }
 
+    /**
+     * * @param RouteCollectionBuilder|RoutingConfigurator $routes Is a RouteCollectionBuilder for Symfony <= 4.4
+     */
     protected function configureRoutes(RoutingConfigurator $routes)
     {
         $confDir = $this->getProjectDir() . '/config';
@@ -149,7 +152,7 @@ abstract class SuluKernel extends Kernel
     }
 
     /**
-     * @param RoutingConfigurator $routes
+     * @param RouteCollectionBuilder|RoutingConfigurator $routes Is a RouteCollectionBuilder for Symfony <= 4.4
      */
     protected function import($routes, $confDir, $pattern)
     {
