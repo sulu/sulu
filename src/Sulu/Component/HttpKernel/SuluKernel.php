@@ -150,8 +150,6 @@ abstract class SuluKernel extends Kernel
 
     /**
      * @param RoutingConfigurator $routes
-     * @param $confDir
-     * @param $pattern
      */
     protected function import($routes, $confDir, $pattern)
     {
