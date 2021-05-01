@@ -158,13 +158,13 @@ jobs:
               run: composer bootstrap-test-environment
               env: ${{ matrix.env }}
 
+            - name: Execute test cases
+              run: time composer test
+              env: ${{ matrix.env }}
+
             - name: Lint code
               if: ${{ matrix.lint }}
               run: composer lint
-              env: ${{ matrix.env }}
-
-            - name: Execute test cases
-              run: time composer test
               env: ${{ matrix.env }}
 
     php-windows:
