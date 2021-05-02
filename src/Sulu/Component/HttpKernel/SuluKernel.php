@@ -125,7 +125,7 @@ abstract class SuluKernel extends Kernel
     }
 
     /**
-     * * @param RouteCollectionBuilder|RoutingConfigurator $routes Is a RouteCollectionBuilder for Symfony <= 4.4
+     * @param RouteCollectionBuilder|RoutingConfigurator $routes Is a RouteCollectionBuilder for Symfony <= 4.4
      */
     protected function configureRoutes(RoutingConfigurator $routes)
     {
