@@ -29,7 +29,7 @@ class ContactAddress
     private $id;
 
     /**
-     * @var \Sulu\Bundle\ContactBundle\Entity\Address
+     * @var Address
      */
     private $address;
 
@@ -88,7 +88,7 @@ class ContactAddress
     /**
      * Get address.
      *
-     * @return \Sulu\Bundle\ContactBundle\Entity\Address
+     * @return Address
      */
     public function getAddress()
     {

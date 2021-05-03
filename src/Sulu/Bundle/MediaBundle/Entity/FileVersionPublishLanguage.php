@@ -27,7 +27,7 @@ class FileVersionPublishLanguage
     private $id;
 
     /**
-     * @var \Sulu\Bundle\MediaBundle\Entity\FileVersion
+     * @var FileVersion
      */
     private $fileVersion;
 
@@ -82,7 +82,7 @@ class FileVersionPublishLanguage
     /**
      * Set fileVersion.
      *
-     * @param \Sulu\Bundle\MediaBundle\Entity\FileVersion $fileVersion
+     * @param FileVersion $fileVersion
      *
      * @return FileVersionPublishLanguage
      */
@@ -96,7 +96,7 @@ class FileVersionPublishLanguage
     /**
      * Get fileVersion.
      *
-     * @return \Sulu\Bundle\MediaBundle\Entity\FileVersion
+     * @return FileVersion
      */
     public function getFileVersion()
     {

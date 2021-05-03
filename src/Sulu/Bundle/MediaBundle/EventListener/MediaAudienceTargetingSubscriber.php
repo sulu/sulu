@@ -15,6 +15,7 @@ use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Doctrine\Persistence\Event\LoadClassMetadataEventArgs;
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 
 /**
@@ -48,7 +49,7 @@ class MediaAudienceTargetingSubscriber implements EventSubscriber
         if ($reflection && FileVersion::class === $reflection->getName()) {
             $metadata->mapManyToMany([
                 'fieldName' => 'targetGroups',
-                'targetEntity' => $this->targetGroupClass,
+                'targetEntity' => TargetGroupInterface::class,
                 'joinTable' => [
                     'name' => 'me_file_version_target_groups',
                     'joinColumns' => [

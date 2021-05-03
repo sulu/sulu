@@ -46,7 +46,7 @@ class MediaDataItem implements ItemInterface
      */
     public function getTitle()
     {
-        return $this->entity->getTitle();
+        return $this->entity->getTitle() ?: '';
     }
 
     /**

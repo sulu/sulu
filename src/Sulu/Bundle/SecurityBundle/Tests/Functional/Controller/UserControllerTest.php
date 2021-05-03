@@ -494,7 +494,7 @@ class UserControllerTest extends SuluTestCase
                 'locale' => 'en',
                 'contact' => [
                     'id' => $this->contact1->getId(),
-                    'emails' => [['email' => $this->contact1->getEmails()[0]->getEmail()]],
+                    'emails' => [['email' => 'contact.unique@test.com']],
                 ],
                 'userRoles' => [
                     [
@@ -512,7 +512,7 @@ class UserControllerTest extends SuluTestCase
         $this->assertEquals('hikari', $response->username);
         $this->assertEquals('contact.unique@test.com', $response->email);
         $this->assertEquals($this->contact1->getId(), $response->contact->id);
-        $this->assertEquals($this->contact1->getEmails()[0]->getEmail(), $response->contact->emails[0]->email);
+        $this->assertEquals('contact.unique@test.com', $response->contact->emails[0]->email);
     }
 
     public function testDelete()

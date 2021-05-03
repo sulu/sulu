@@ -95,7 +95,7 @@ interface ContactInterface
     /**
      * Set position.
      *
-     * @param string $position
+     * @param Position|null $position
      *
      * @return ContactInterface
      */
@@ -104,7 +104,7 @@ interface ContactInterface
     /**
      * Get position.
      *
-     * @return string
+     * @return string|null
      */
     public function getPosition();
 
@@ -120,7 +120,7 @@ interface ContactInterface
     /**
      * Get birthday.
      *
-     * @return \DateTime
+     * @return \DateTime|null
      */
     public function getBirthday();
 
@@ -133,13 +133,15 @@ interface ContactInterface
 
     /**
      * Remove locale.
+     *
+     * @return void
      */
     public function removeLocale(ContactLocale $locale);
 
     /**
      * Get locales.
      *
-     * @return Collection|ContactLocale[]
+     * @return Collection<int, ContactLocale>
      */
     public function getLocales();
 
@@ -152,13 +154,15 @@ interface ContactInterface
 
     /**
      * Remove note.
+     *
+     * @return void
      */
     public function removeNote(Note $note);
 
     /**
      * Get notes.
      *
-     * @return Collection|Note[]
+     * @return Collection<int, Note>
      */
     public function getNotes();
 
@@ -171,13 +175,15 @@ interface ContactInterface
 
     /**
      * Remove email.
+     *
+     * @return void
      */
     public function removeEmail(Email $email);
 
     /**
      * Get emails.
      *
-     * @return Collection|Email[]
+     * @return Collection<int, Email>
      */
     public function getEmails();
 
@@ -190,13 +196,15 @@ interface ContactInterface
 
     /**
      * Remove phone.
+     *
+     * @return void
      */
     public function removePhone(Phone $phone);
 
     /**
      * Get phones.
      *
-     * @return Collection|Phone[]
+     * @return Collection<int, Phone>
      */
     public function getPhones();
 
@@ -209,13 +217,15 @@ interface ContactInterface
 
     /**
      * Remove fax.
+     *
+     * @return void
      */
     public function removeFax(Fax $fax);
 
     /**
      * Get faxes.
      *
-     * @return Collection|Fax[]
+     * @return Collection<int, Fax>
      */
     public function getFaxes();
 
@@ -228,13 +238,15 @@ interface ContactInterface
 
     /**
      * Remove social media profile.
+     *
+     * @return void
      */
     public function removeSocialMediaProfile(SocialMediaProfile $socialMediaProfile);
 
     /**
      * Get social media profiles.
      *
-     * @return Collection|SocialMediaProfile[]
+     * @return Collection<int, SocialMediaProfile>
      */
     public function getSocialMediaProfiles();
 
@@ -247,13 +259,15 @@ interface ContactInterface
 
     /**
      * Remove url.
+     *
+     * @return void
      */
     public function removeUrl(Url $url);
 
     /**
      * Get urls.
      *
-     * @return Collection|Url[]
+     * @return Collection<int, Url>
      */
     public function getUrls();
 
@@ -282,20 +296,22 @@ interface ContactInterface
 
     /**
      * Remove tag.
+     *
+     * @return void
      */
     public function removeTag(TagInterface $tag);
 
     /**
      * Get tags.
      *
-     * @return Collection|TagInterface[]
+     * @return Collection<int, TagInterface>
      */
     public function getTags();
 
     /**
      * Parse tags to array containing tag names.
      *
-     * @return array
+     * @return string[]
      */
     public function getTagNameArray();
 
@@ -311,7 +327,7 @@ interface ContactInterface
     /**
      * Get salutation.
      *
-     * @return string
+     * @return string|null
      */
     public function getSalutation();
 
@@ -324,13 +340,15 @@ interface ContactInterface
 
     /**
      * Remove account contact.
+     *
+     * @return void
      */
     public function removeAccountContact(AccountContact $accountContact);
 
     /**
      * Get account contacts.
      *
-     * @return Collection|AccountContact[]
+     * @return Collection<int, AccountContact>
      */
     public function getAccountContacts();
 
@@ -362,7 +380,7 @@ interface ContactInterface
     /**
      * Get gender.
      *
-     * @return string
+     * @return string|null
      */
     public function getGender();
 
@@ -446,23 +464,29 @@ interface ContactInterface
 
     /**
      * Remove contact address.
+     *
+     * @return void
      */
     public function removeContactAddress(ContactAddress $contactAddress);
 
     /**
      * Get contact addresses.
      *
-     * @return Collection|ContactAddress[]
+     * @return Collection<int, ContactAddress>
      */
     public function getContactAddresses();
 
     /**
      * Returns addresses.
+     *
+     * @return Address[]
      */
     public function getAddresses();
 
     /**
      * Returns the main address.
+     *
+     * @return Address|null
      */
     public function getMainAddress();
 
@@ -475,13 +499,15 @@ interface ContactInterface
 
     /**
      * Remove media.
+     *
+     * @return void
      */
     public function removeMedia(MediaInterface $media);
 
     /**
      * Get medias.
      *
-     * @return Collection|MediaInterface[]
+     * @return Collection<int, MediaInterface>
      */
     public function getMedias();
 
@@ -496,6 +522,8 @@ interface ContactInterface
      * Sets the avatar for the contact.
      *
      * @param MediaInterface|null $avatar
+     *
+     * @return void
      */
     public function setAvatar($avatar);
 
@@ -508,13 +536,15 @@ interface ContactInterface
 
     /**
      * Remove category.
+     *
+     * @return void
      */
     public function removeCategory(CategoryInterface $category);
 
     /**
      * Get categories.
      *
-     * @return Collection|CategoryInterface[]
+     * @return Collection<int, CategoryInterface>
      */
     public function getCategories();
 
@@ -527,13 +557,15 @@ interface ContactInterface
 
     /**
      * Remove bank account.
+     *
+     * @return void
      */
     public function removeBankAccount(BankAccount $bankAccount);
 
     /**
      * Get bankAccounts.
      *
-     * @return Collection|BankAccount[]
+     * @return Collection<int, BankAccount>
      */
     public function getBankAccounts();
 

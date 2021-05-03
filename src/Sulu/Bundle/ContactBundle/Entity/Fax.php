@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Groups;
@@ -39,13 +40,13 @@ class Fax
     private $faxType;
 
     /**
-     * @var Collection|ContactInterface[]
+     * @var Collection<int, ContactInterface>
      * @Exclude
      */
     private $contacts;
 
     /**
-     * @var Collection|AccountInterface[]
+     * @var Collection<int, AccountInterface>
      * @Exclude
      */
     private $accounts;
@@ -55,8 +56,8 @@ class Fax
      */
     public function __construct()
     {
-        $this->contacts = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->accounts = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->contacts = new ArrayCollection();
+        $this->accounts = new ArrayCollection();
     }
 
     /**
@@ -138,7 +139,7 @@ class Fax
     /**
      * Get contacts.
      *
-     * @return Collection|ContactInterface[]
+     * @return Collection<int, ContactInterface>
      */
     public function getContacts()
     {
@@ -168,7 +169,7 @@ class Fax
     /**
      * Get accounts.
      *
-     * @return Collection|AccountInterface[]
+     * @return Collection<int, AccountInterface>
      */
     public function getAccounts()
     {

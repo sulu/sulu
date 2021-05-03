@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\CategoryBundle\Entity;
 
+use Doctrine\Common\Collections\Collection;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 
@@ -67,33 +68,43 @@ interface KeywordInterface extends AuditableInterface
 
     /**
      * Remove category-translation.
+     *
+     * @return void
      */
     public function removeCategoryTranslation(CategoryTranslationInterface $categoryTranslation);
 
     /**
      * Get categories.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection<int, CategoryTranslationInterface>
      */
     public function getCategoryTranslations();
 
     /**
-     * @param UserInterface $creator
+     * @param UserInterface|null $creator
+     *
+     * @return void
      */
     public function setCreator($creator);
 
     /**
-     * @param UserInterface $changer
+     * @param UserInterface|null $changer
+     *
+     * @return void
      */
     public function setChanger($changer);
 
     /**
      * @param \DateTime $created
+     *
+     * @return void
      */
     public function setCreated($created);
 
     /**
      * @param \DateTime $changed
+     *
+     * @return void
      */
     public function setChanged($changed);
 

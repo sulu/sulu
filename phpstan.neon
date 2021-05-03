@@ -29,5 +29,6 @@ parameters:
     symfony:
         container_xml_path: %currentWorkingDirectory%/var/cache/admin/dev/App_KernelDevDebugContainer.xml
         console_application_loader: tests/phpstan/console-application.php
+        constant_hassers: false
     doctrine:
         objectManagerLoader: tests/phpstan/object-manager.php

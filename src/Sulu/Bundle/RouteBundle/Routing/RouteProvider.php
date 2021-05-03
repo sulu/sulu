@@ -217,14 +217,15 @@ class RouteProvider implements RouteProviderInterface
     {
         $routePath = $this->decodePathInfo($request->getPathInfo());
 
-        if ($route->isHistory()) {
+        $target = $route->getTarget();
+        if ($route->isHistory() && $target) {
             return new Route(
                 $routePath,
                 [
                     '_controller' => 'sulu_website.redirect_controller::redirectAction',
                     'url' => $request->getSchemeAndHttpHost()
                         . $attributes->getAttribute('resourceLocatorPrefix')
-                        . $route->getTarget()->getPath()
+                        . $target->getPath()
                         . ($request->getQueryString() ? ('?' . $request->getQueryString()) : ''),
                 ],
                 [],

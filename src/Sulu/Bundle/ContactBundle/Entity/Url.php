@@ -11,6 +11,8 @@
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Groups;
 
@@ -32,19 +34,19 @@ class Url
     private $id;
 
     /**
-     * @var \Sulu\Bundle\ContactBundle\Entity\UrlType
+     * @var UrlType
      * @Groups({"fullAccount", "fullContact"})
      */
     private $urlType;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection<int, AccountInterface>
      * @Exclude
      */
     private $accounts;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection<int, ContactInterface>
      * @Exclude
      */
     private $contacts;
@@ -54,7 +56,8 @@ class Url
      */
     public function __construct()
     {
-        $this->accounts = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->accounts = new ArrayCollection();
+        $this->contacts = new ArrayCollection();
     }
 
     /**
@@ -106,7 +109,7 @@ class Url
     /**
      * Get urlType.
      *
-     * @return \Sulu\Bundle\ContactBundle\Entity\UrlType
+     * @return UrlType
      */
     public function getUrlType()
     {
@@ -136,7 +139,7 @@ class Url
     /**
      * Get accounts.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection<int, AccountInterface>
      */
     public function getAccounts()
     {
@@ -166,7 +169,7 @@ class Url
     /**
      * Get contacts.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection<int, ContactInterface>
      */
     public function getContacts()
     {

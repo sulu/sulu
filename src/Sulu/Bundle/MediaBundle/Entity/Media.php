@@ -29,7 +29,7 @@ class Media implements MediaInterface
     protected $id;
 
     /**
-     * @var DoctrineCollection
+     * @var DoctrineCollection<int, File>
      */
     protected $files;
 
@@ -45,7 +45,7 @@ class Media implements MediaInterface
     protected $type;
 
     /**
-     * @var Media
+     * @var MediaInterface|null
      */
     protected $previewImage;
 
@@ -57,21 +57,11 @@ class Media implements MediaInterface
         $this->files = new ArrayCollection();
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
     public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * Add files.
-     *
-     * @return Media
-     */
     public function addFile(File $files)
     {
         $this->files[] = $files;
@@ -79,29 +69,16 @@ class Media implements MediaInterface
         return $this;
     }
 
-    /**
-     * Remove files.
-     */
     public function removeFile(File $files)
     {
         $this->files->removeElement($files);
     }
 
-    /**
-     * Get files.
-     *
-     * @return File[]
-     */
     public function getFiles()
     {
         return $this->files;
     }
 
-    /**
-     * Set collection.
-     *
-     * @return Media
-     */
     public function setCollection(CollectionInterface $collection)
     {
         $this->collection = $collection;
@@ -109,21 +86,11 @@ class Media implements MediaInterface
         return $this;
     }
 
-    /**
-     * Get collectionInterface.
-     *
-     * @return CollectionInterface
-     */
     public function getCollection()
     {
         return $this->collection;
     }
 
-    /**
-     * Set type.
-     *
-     * @return Media
-     */
     public function setType(MediaType $type)
     {
         $this->type = $type;
@@ -131,35 +98,18 @@ class Media implements MediaInterface
         return $this;
     }
 
-    /**
-     * Get type.
-     *
-     * @return MediaType
-     */
     public function getType()
     {
         return $this->type;
     }
 
-    /**
-     * Set preview image.
-     *
-     * @param Media $previewImage
-     *
-     * @return Media
-     */
-    public function setPreviewImage(self $previewImage = null)
+    public function setPreviewImage(MediaInterface $previewImage = null)
     {
         $this->previewImage = $previewImage;
 
         return $this;
     }
 
-    /**
-     * Get preview image.
-     *
-     * @return Media
-     */
     public function getPreviewImage()
     {
         return $this->previewImage;

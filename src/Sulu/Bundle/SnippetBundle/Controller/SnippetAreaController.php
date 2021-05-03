@@ -119,9 +119,12 @@ class SnippetAreaController implements ClassResourceInterface
                 $areaData['valid'] = false;
 
                 $uuid = $this->defaultSnippetManager->loadIdentifier($webspaceKey, $key);
-                $snippet = $this->documentManager->find($uuid, $this->getUser()->getLocale());
-                $areaData['defaultUuid'] = $snippet ? $snippet->getUuid() : null;
-                $areaData['defaultTitle'] = $snippet ? $snippet->getTitle() : null;
+
+                if ($uuid) {
+                    $snippet = $this->documentManager->find($uuid, $this->getUser()->getLocale());
+                    $areaData['defaultUuid'] = $snippet ? $snippet->getUuid() : null;
+                    $areaData['defaultTitle'] = $snippet ? $snippet->getTitle() : null;
+                }
             }
 
             $dataList[$key] = $areaData;

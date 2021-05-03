@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\RouteBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\VirtualProperty;
@@ -67,12 +68,12 @@ class Route implements RouteInterface, AuditableInterface
     private $history = false;
 
     /**
-     * @var RouteInterface
+     * @var RouteInterface|null
      */
     private $target;
 
     /**
-     * @var RouteInterface[]
+     * @var Collection<int, RouteInterface>
      */
     protected $histories;
 

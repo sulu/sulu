@@ -42,12 +42,12 @@ class SocialMediaProfile
     private $socialMediaProfileType;
 
     /**
-     * @var Collection|ContactInterface[]
+     * @var Collection<int, ContactInterface>
      */
     private $contacts;
 
     /**
-     * @var Collection|AccountInterface[]
+     * @var Collection<int, AccountInterface>
      */
     private $accounts;
 
@@ -135,7 +135,7 @@ class SocialMediaProfile
     }
 
     /**
-     * @return Collection|ContactInterface[]
+     * @return Collection<int, ContactInterface>
      */
     public function getContacts()
     {
@@ -158,7 +158,7 @@ class SocialMediaProfile
     }
 
     /**
-     * @return Collection|AccountInterface[]
+     * @return Collection<int, AccountInterface>
      */
     public function getAccounts()
     {

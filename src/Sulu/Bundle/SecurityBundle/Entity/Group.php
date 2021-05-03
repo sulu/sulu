@@ -59,34 +59,34 @@ class Group extends ApiEntity implements AuditableInterface
     private $id;
 
     /**
-     * @var Collection|self[]
+     * @var Collection<int, self>
      */
     private $children;
 
     /**
-     * @var Collection|UserGroup[]
+     * @var Collection<int, UserGroup>
      */
     private $userGroups;
 
     /**
-     * @var Group
+     * @var Group|null
      */
     private $parent;
 
     /**
-     * @var Collection|RoleInterface[]
+     * @var Collection<int, RoleInterface>
      */
     private $roles;
 
     /**
-     * @var UserInterface
+     * @var UserInterface|null
      *
      * @Exclude
      */
     protected $changer;
 
     /**
-     * @var UserInterface
+     * @var UserInterface|null
      *
      * @Exclude
      */
@@ -223,6 +223,8 @@ class Group extends ApiEntity implements AuditableInterface
      * Remove children.
      *
      * @param Group $children
+     *
+     * @return void
      */
     public function removeChildren(self $children)
     {
@@ -232,7 +234,7 @@ class Group extends ApiEntity implements AuditableInterface
     /**
      * Get children.
      *
-     * @return Collection|self[]
+     * @return Collection<int, self>
      */
     public function getChildren()
     {
@@ -253,6 +255,8 @@ class Group extends ApiEntity implements AuditableInterface
 
     /**
      * Remove userGroups.
+     *
+     * @return void
      */
     public function removeUserGroup(UserGroup $userGroups)
     {
@@ -262,7 +266,7 @@ class Group extends ApiEntity implements AuditableInterface
     /**
      * Get userGroups.
      *
-     * @return Collection|UserGroup[]
+     * @return Collection<int, UserGroup>
      */
     public function getUserGroups()
     {
@@ -272,7 +276,7 @@ class Group extends ApiEntity implements AuditableInterface
     /**
      * Set parent.
      *
-     * @param Group $parent
+     * @param Group|null $parent
      *
      * @return Group
      */
@@ -286,7 +290,7 @@ class Group extends ApiEntity implements AuditableInterface
     /**
      * Get parent.
      *
-     * @return Group
+     * @return Group|null
      */
     public function getParent()
     {
@@ -307,6 +311,8 @@ class Group extends ApiEntity implements AuditableInterface
 
     /**
      * Remove roles.
+     *
+     * @return void
      */
     public function removeRole(RoleInterface $roles)
     {
@@ -316,7 +322,7 @@ class Group extends ApiEntity implements AuditableInterface
     /**
      * Get roles.
      *
-     * @return Collection|RoleInterface[]
+     * @return Collection<int, RoleInterface>
      */
     public function getRoles()
     {

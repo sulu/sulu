@@ -101,7 +101,7 @@ interface AccountInterface extends AuditableInterface
     public function setNote(?string $note): self;
 
     /**
-     * @return Collection|Url[]
+     * @return Collection<int, Url>
      */
     public function getUrls(): Collection;
 
@@ -110,7 +110,7 @@ interface AccountInterface extends AuditableInterface
     public function removePhone(Phone $phone): self;
 
     /**
-     * @return Collection|Phone[]
+     * @return Collection<int, Phone>
      */
     public function getPhones(): Collection;
 
@@ -119,12 +119,12 @@ interface AccountInterface extends AuditableInterface
     public function removeEmail(Email $emails): self;
 
     /**
-     * @return Collection|Email[]
+     * @return Collection<int, Email>
      */
     public function getEmails(): Collection;
 
     /**
-     * @return Collection|AccountInterface[]
+     * @return Collection<int, AccountInterface>
      */
     public function getChildren(): Collection;
 
@@ -133,7 +133,7 @@ interface AccountInterface extends AuditableInterface
     public function removeFax(Fax $fax): self;
 
     /**
-     * @return Collection|Fax[]
+     * @return Collection<int, Fax>
      */
     public function getFaxes(): Collection;
 
@@ -142,7 +142,7 @@ interface AccountInterface extends AuditableInterface
     public function removeSocialMediaProfile(SocialMediaProfile $socialMediaProfile): self;
 
     /**
-     * @return Collection|SocialMediaProfile[]
+     * @return Collection<int, SocialMediaProfile>
      */
     public function getSocialMediaProfiles(): Collection;
 
@@ -151,7 +151,7 @@ interface AccountInterface extends AuditableInterface
     public function removeBankAccount(BankAccount $bankAccount): self;
 
     /**
-     * @return Collection|BankAccount[]
+     * @return Collection<int, BankAccount>
      */
     public function getBankAccounts(): Collection;
 
@@ -160,7 +160,7 @@ interface AccountInterface extends AuditableInterface
     public function removeTag(TagInterface $tag): self;
 
     /**
-     * @return Collection|TagInterface[]
+     * @return Collection<int, TagInterface>
      */
     public function getTags(): Collection;
 
@@ -169,12 +169,12 @@ interface AccountInterface extends AuditableInterface
     public function removeAccountContact(AccountContact $accountContact): self;
 
     /**
-     * @return Collection|AccountContact[]
+     * @return Collection<int, AccountContact>
      */
     public function getAccountContacts(): Collection;
 
     /**
-     * @return Collection|AccountAddress[]
+     * @return Collection<int, AccountAddress>
      */
     public function getAccountAddresses(): Collection;
 
@@ -190,7 +190,7 @@ interface AccountInterface extends AuditableInterface
     public function removeMedia(MediaInterface $media): self;
 
     /**
-     * @return Collection|MediaInterface[]
+     * @return Collection<int, MediaInterface>
      */
     public function getMedias(): Collection;
 
@@ -207,7 +207,7 @@ interface AccountInterface extends AuditableInterface
     public function removeCategory(CategoryInterface $category): self;
 
     /**
-     * @return Collection|CategoryInterface[]
+     * @return Collection<int, CategoryInterface>
      */
     public function getCategories(): Collection;
 }
