@@ -370,7 +370,7 @@ class MediaManager implements MediaManagerInterface
             throw new FileVersionNotFoundException($mediaEntity->getId(), $version);
         }
 
-        $shouldThrowModifiedEvent = true;
+        $shouldEmitModifiedEvent = true;
 
         if ($uploadedFile) {
             // new uploaded file
@@ -413,7 +413,7 @@ class MediaManager implements MediaManagerInterface
                 new MediaVersionAddedEvent($mediaEntity, $version)
             );
 
-            $shouldThrowModifiedEvent = false;
+            $shouldEmitModifiedEvent = false;
 
             // delete old fileversion from cache
             $this->formatManager->purge(
@@ -467,7 +467,7 @@ class MediaManager implements MediaManagerInterface
 
         $this->em->persist($media->getEntity());
 
-        if ($shouldThrowModifiedEvent) {
+        if ($shouldEmitModifiedEvent) {
             if ($isNewLocale) {
                 $this->domainEventCollector->collect(
                     new MediaTranslationAddedEvent($mediaEntity, $media->getLocale(), $data)
