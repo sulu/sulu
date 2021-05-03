@@ -4,9 +4,9 @@
 
 ### React Tabs skin was removed
 
-Previously the `tabs` had a `skin` property. This property was replaced with the `type` property.
-Currently there are three `types` available: `root`, `nested` and `inline`. If you have used one
-of the skins, be sure to replace them with the corresponding type. 
+The `skin` prop and `small` prop of the `Tabs` component was replaced with a `type` prop.
+Currently there are three `types` available: `root`, `nested` and `inline`. If you have used 
+the `Tabs` component with a skin, be sure to replace them with the corresponding type. 
 
 `root` is the same as `skin='default'`.
 
