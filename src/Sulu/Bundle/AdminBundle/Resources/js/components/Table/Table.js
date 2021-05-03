@@ -24,7 +24,7 @@ type Props<T: string | number> = {
     placeholderText?: string,
     selectInFirstCell?: boolean,
     selectMode?: SelectMode,
-    skin: Skin | any,
+    skin: Skin,
 };
 
 @observer

@@ -88,7 +88,7 @@ class TableAdapter extends AbstractTableAdapter {
                 onAllSelectionChange={onAllSelectionChange}
                 onRowSelectionChange={onItemSelectionChange}
                 selectMode={onItemSelectionChange ? 'multiple' : undefined}
-                skin={skin}
+                skin={(skin: any)}
             >
                 {
                     !show_header ? null

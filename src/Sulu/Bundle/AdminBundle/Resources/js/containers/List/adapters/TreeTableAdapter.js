@@ -145,7 +145,7 @@ class TreeTableAdapter extends AbstractTableAdapter {
                 onRowSelectionChange={onItemSelectionChange}
                 selectInFirstCell={true}
                 selectMode="multiple"
-                skin={skin}
+                skin={(skin: any)}
             >
                 {showHeaderAdapterOption && showHeaderOption ?
                     <Table.Header>
