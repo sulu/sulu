@@ -33,7 +33,10 @@
 
             <tag name="sulu.context" context="admin"/>
         </service>
-        <service id="sulu_admin.admin_pool" class="%sulu_admin.admin_pool.class%" public="true"/>
+
+        <service id="sulu_admin.admin_pool" class="%sulu_admin.admin_pool.class%" public="true">
+            <tag name="sulu.context" context="admin"/>
+        </service>
 
         <service
             id="sulu_admin.metadata_provider_registry"
@@ -142,12 +145,16 @@
 
         <service id="sulu_admin.view_registry" class="Sulu\Bundle\AdminBundle\Admin\View\ViewRegistry">
             <argument type="service" id="sulu_admin.admin_pool"/>
+
+            <tag name="sulu.context" context="admin"/>
         </service>
 
         <service id="sulu_admin.navigation_registry" class="Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationRegistry">
             <argument type="service" id="translator"/>
             <argument type="service" id="sulu_admin.admin_pool"/>
             <argument type="service" id="sulu_admin.view_registry"/>
+
+            <tag name="sulu.context" context="admin"/>
         </service>
 
         <service

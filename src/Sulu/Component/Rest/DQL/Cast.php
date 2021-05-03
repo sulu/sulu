@@ -14,6 +14,10 @@ namespace Sulu\Component\Rest\DQL;
 use Doctrine\ORM\Query\AST\Functions\FunctionNode;
 use Doctrine\ORM\Query\Lexer;
 
+/**
+ * @deprecated
+ * @see \Oro\ORM\Query\AST\Functions\Cast
+ */
 class Cast extends FunctionNode
 {
     public $firstDateExpression = null;

@@ -13,10 +13,12 @@ namespace Sulu\Bundle\MediaBundle\Controller;
 
 use FOS\RestBundle\View\ViewHandlerInterface;
 use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
+use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Api\Collection;
 use Sulu\Bundle\MediaBundle\Api\RootCollection;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
 use Sulu\Bundle\MediaBundle\Entity\Collection as CollectionEntity;
+use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
 use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
 use Sulu\Component\Rest\AbstractRestController;
@@ -50,8 +52,10 @@ class CollectionController extends AbstractRestController implements ClassResour
 
     /**
      * @var string
+     *
+     * @deprecated Use CollectionInterface::RESOURCE_KEY instead
      */
-    protected static $entityKey = 'collections';
+    protected static $entityKey = CollectionInterface::RESOURCE_KEY;
 
     /**
      * @var ListRestHelperInterface
@@ -143,7 +147,7 @@ class CollectionController extends AbstractRestController implements ClassResour
 
             return $this->handleView(
                 $this->view(
-                    new CollectionRepresentation($collections, 'collections')
+                    new CollectionRepresentation($collections, CollectionInterface::RESOURCE_KEY)
                 )
             );
         }
@@ -258,7 +262,7 @@ class CollectionController extends AbstractRestController implements ClassResour
 
             $list = new ListRepresentation(
                 $collections,
-                self::$entityKey,
+                CollectionInterface::RESOURCE_KEY,
                 'sulu_media.get_collections',
                 $request->query->all(),
                 $this->listRestHelper->getPage(),
@@ -432,7 +436,7 @@ class CollectionController extends AbstractRestController implements ClassResour
      */
     public function getSecurityContext()
     {
-        return 'sulu.media.collections';
+        return MediaAdmin::SECURITY_CONTEXT;
     }
 
     public function getSecuredClass()

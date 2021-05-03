@@ -13,6 +13,9 @@ namespace Sulu\Bundle\MediaBundle\Media\FormatOptions;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Bundle\MediaBundle\Domain\Event\MediaCropModifiedEvent;
+use Sulu\Bundle\MediaBundle\Domain\Event\MediaCropRemovedEvent;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FormatOptions;
@@ -49,6 +52,11 @@ class FormatOptionsManager implements FormatOptionsManagerInterface
     private $formatManager;
 
     /**
+     * @var DomainEventCollectorInterface
+     */
+    private $domainEventCollector;
+
+    /**
      * @var array
      */
     private $formats;
@@ -58,12 +66,14 @@ class FormatOptionsManager implements FormatOptionsManagerInterface
         EntityRepository $formatOptionsRepository,
         MediaManagerInterface $mediaManager,
         FormatManagerInterface $formatManager,
+        DomainEventCollectorInterface $domainEventCollector,
         array $formats
     ) {
         $this->em = $em;
         $this->formatOptionsRepository = $formatOptionsRepository;
         $this->mediaManager = $mediaManager;
         $this->formatManager = $formatManager;
+        $this->domainEventCollector = $domainEventCollector;
         $this->formats = $formats;
     }
 
@@ -117,6 +127,7 @@ class FormatOptionsManager implements FormatOptionsManagerInterface
         $media = $this->mediaManager->getEntityById($mediaId);
         $fileVersion = $this->getFileVersionForMedia($media);
 
+        /** @var FormatOptions|null $formatOptions */
         $formatOptions = $fileVersion->getFormatOptions()->get($formatKey);
         if (!isset($formatOptions)) {
             $formatOptions = new FormatOptions();
@@ -130,6 +141,10 @@ class FormatOptionsManager implements FormatOptionsManagerInterface
 
         $this->em->persist($formatOptions);
         $this->em->persist($fileVersion);
+
+        $this->domainEventCollector->collect(
+            new MediaCropModifiedEvent($media, $formatKey, $data)
+        );
 
         $this->purgeMedia($mediaId, $fileVersion);
 
@@ -145,12 +160,18 @@ class FormatOptionsManager implements FormatOptionsManagerInterface
         $media = $this->mediaManager->getEntityById($mediaId);
         $fileVersion = $this->getFileVersionForMedia($media);
 
+        /** @var FormatOptions|null $formatOptions */
         $formatOptions = $fileVersion->getFormatOptions()->get($formatKey);
         if (isset($formatOptions)) {
             $fileVersion->getFormatOptions()->remove($formatKey);
             $fileVersion->increaseSubVersion();
             $this->em->remove($formatOptions);
             $this->em->persist($fileVersion);
+
+            $this->domainEventCollector->collect(
+                new MediaCropRemovedEvent($media, $formatKey)
+            );
+
             $this->purgeMedia($mediaId, $fileVersion);
         }
     }

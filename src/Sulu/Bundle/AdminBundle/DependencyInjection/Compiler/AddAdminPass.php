@@ -24,6 +24,10 @@ class AddAdminPass implements CompilerPassInterface
 
     public function process(ContainerBuilder $container)
     {
+        if (!$container->hasDefinition(self::ADMIN_POOL_DEFINITION_ID)) {
+            return;
+        }
+
         $pool = $container->getDefinition(self::ADMIN_POOL_DEFINITION_ID);
 
         $adminServiceDefinitions = [];

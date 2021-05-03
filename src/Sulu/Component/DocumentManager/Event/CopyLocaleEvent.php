@@ -11,12 +11,19 @@
 
 namespace Sulu\Component\DocumentManager\Event;
 
+use Sulu\Component\DocumentManager\DocumentHelper;
+
 class CopyLocaleEvent extends AbstractMappingEvent
 {
     /**
      * @var string
      */
     private $destLocale;
+
+    /**
+     * @var object|null
+     */
+    private $destDocument = null;
 
     /**
      * @param object $document
@@ -37,5 +44,39 @@ class CopyLocaleEvent extends AbstractMappingEvent
     public function getDestLocale()
     {
         return $this->destLocale;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasDestDocument()
+    {
+        return null !== $this->destDocument;
+    }
+
+    /**
+     * @return object
+     */
+    public function getDestDocument()
+    {
+        if (!$this->destDocument) {
+            throw new \RuntimeException(\sprintf(
+                'Trying to retrieve destination document, but it has not been set. An event ' .
+                'listener should have set the destination document when copying locale from document "%s"',
+                DocumentHelper::getDebugTitle($this->document)
+            ));
+        }
+
+        return $this->destDocument;
+    }
+
+    /**
+     * @param object $destDocument
+     *
+     * @return void
+     */
+    public function setDestDocument($destDocument)
+    {
+        $this->destDocument = $destDocument;
     }
 }

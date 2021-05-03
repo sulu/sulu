@@ -5,8 +5,7 @@
     "repository": "https://github.com/sulu/sulu.git",
     "dependencies": {
         "classnames": "^2.2.5",
-        "debounce": "^1.0.2",
-        "query-string": "^7.0.0"
+        "debounce": "^1.0.2"
     },
     "devDependencies": {
         "enzyme": "^3.3.0",

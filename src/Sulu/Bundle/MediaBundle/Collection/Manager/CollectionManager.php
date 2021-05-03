@@ -14,9 +14,16 @@ namespace Sulu\Bundle\MediaBundle\Collection\Manager;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\MediaBundle\Api\Collection;
+use Sulu\Bundle\MediaBundle\Domain\Event\CollectionCreatedEvent;
+use Sulu\Bundle\MediaBundle\Domain\Event\CollectionModifiedEvent;
+use Sulu\Bundle\MediaBundle\Domain\Event\CollectionMovedEvent;
+use Sulu\Bundle\MediaBundle\Domain\Event\CollectionRemovedEvent;
+use Sulu\Bundle\MediaBundle\Domain\Event\CollectionTranslationAddedEvent;
 use Sulu\Bundle\MediaBundle\Entity\Collection as CollectionEntity;
 use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
+use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
@@ -72,6 +79,11 @@ class CollectionManager implements CollectionManagerInterface
     protected $em;
 
     /**
+     * @var DomainEventCollectorInterface
+     */
+    private $domainEventCollector;
+
+    /**
      * @var TokenStorageInterface
      */
     private $tokenStorage;
@@ -102,6 +114,7 @@ class CollectionManager implements CollectionManagerInterface
         FormatManagerInterface $formatManager,
         UserRepositoryInterface $userRepository,
         EntityManager $em,
+        DomainEventCollectorInterface $domainEventCollector,
         TokenStorageInterface $tokenStorage = null,
         $collectionPreviewFormat,
         $permissions
@@ -111,6 +124,7 @@ class CollectionManager implements CollectionManagerInterface
         $this->formatManager = $formatManager;
         $this->userRepository = $userRepository;
         $this->em = $em;
+        $this->domainEventCollector = $domainEventCollector;
         $this->tokenStorage = $tokenStorage;
         $this->collectionPreviewFormat = $collectionPreviewFormat;
         $this->permissions = $permissions;
@@ -396,17 +410,40 @@ class CollectionManager implements CollectionManagerInterface
 
     private function modifyCollection($data, $user, $breadcrumb): Collection
     {
-        $collection = $this->getById($data['id'], $data['locale']);
+        $locale = $data['locale'];
+        $collection = $this->getById($data['id'], $locale);
         $data['changer'] = $user;
         $data['changed'] = new \DateTime();
+
+        /** @var CollectionInterface $collectionEntity */
+        $collectionEntity = $collection->getEntity();
+        $isNewLocale = true;
+
+        foreach ($collectionEntity->getMeta() as $meta) {
+            if ($meta->getLocale() === $locale) {
+                $isNewLocale = false;
+
+                break;
+            }
+        }
 
         $collection = $this->setDataToCollection(
             $collection,
             $data
         );
 
-        $collectionEntity = $collection->getEntity();
         $this->em->persist($collectionEntity);
+
+        if ($isNewLocale) {
+            $this->domainEventCollector->collect(
+                new CollectionTranslationAddedEvent($collectionEntity, $collection->getLocale(), $data)
+            );
+        } else {
+            $this->domainEventCollector->collect(
+                new CollectionModifiedEvent($collectionEntity, $collection->getLocale(), $data)
+            );
+        }
+
         $this->em->flush();
 
         return $collection;
@@ -429,6 +466,11 @@ class CollectionManager implements CollectionManagerInterface
         $collectionEntity->setDefaultMeta($collectionEntity->getMeta()->first());
 
         $this->em->persist($collectionEntity);
+
+        $this->domainEventCollector->collect(
+            new CollectionCreatedEvent($collectionEntity, $collection->getLocale(), $data)
+        );
+
         $this->em->flush();
 
         return $collection;
@@ -530,7 +572,21 @@ class CollectionManager implements CollectionManagerInterface
             throw new CollectionNotFoundException($id);
         }
 
+        $collectionId = $collectionEntity->getId();
+        /** @var CollectionMeta|null $collectionMeta */
+        $collectionMeta = $collectionEntity->getDefaultMeta();
+        $collectionTitle = $collectionMeta ? $collectionMeta->getTitle() : null;
+        $locale = $collectionMeta ? $collectionMeta->getLocale() : null;
+
         $this->em->remove($collectionEntity);
+        foreach ($collectionEntity->getMeta() as $meta) {
+            $this->em->remove($meta);
+        }
+
+        $this->domainEventCollector->collect(
+            new CollectionRemovedEvent($collectionId, $collectionTitle, $locale)
+        );
+
         $this->em->flush();
     }
 
@@ -543,12 +599,19 @@ class CollectionManager implements CollectionManagerInterface
                 throw new CollectionNotFoundException($id);
             }
 
+            $previousParentId = $collectionEntity->getParentId();
+
             $destinationEntity = null;
             if (null !== $destinationId) {
                 $destinationEntity = $this->collectionRepository->findCollectionById($destinationId);
             }
 
             $collectionEntity->setParent($destinationEntity);
+
+            $this->domainEventCollector->collect(
+                new CollectionMovedEvent($collectionEntity, $previousParentId)
+            );
+
             $this->em->flush();
 
             return $this->getApiEntity($collectionEntity, $locale);

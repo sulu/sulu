@@ -15,6 +15,10 @@ use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use HandcraftedInTheAlps\RestRoutingBundle\Controller\Annotations\RouteResource;
 use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
+use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Bundle\MediaBundle\Domain\Event\MediaPreviewImageAddedEvent;
+use Sulu\Bundle\MediaBundle\Domain\Event\MediaPreviewImageModifiedEvent;
+use Sulu\Bundle\MediaBundle\Domain\Event\MediaPreviewImageRemovedEvent;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
@@ -44,18 +48,25 @@ class MediaPreviewController extends AbstractMediaController implements ClassRes
      */
     private $entityManager;
 
+    /**
+     * @var DomainEventCollectorInterface
+     */
+    private $domainEventCollector;
+
     public function __construct(
         ViewHandlerInterface $viewHandler,
         TokenStorageInterface $tokenStorage,
         MediaManagerInterface $mediaManager,
         SystemCollectionManagerInterface $systemCollectionManager,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        DomainEventCollectorInterface $domainEventCollector
     ) {
         parent::__construct($viewHandler, $tokenStorage);
 
         $this->mediaManager = $mediaManager;
         $this->systemCollectionManager = $systemCollectionManager;
         $this->entityManager = $entityManager;
+        $this->domainEventCollector = $domainEventCollector;
     }
 
     /**
@@ -81,9 +92,14 @@ class MediaPreviewController extends AbstractMediaController implements ClassRes
             // Unset id to not overwrite original file
             unset($data['id']);
 
-            if (null !== $mediaEntity->getPreviewImage()) {
-                $data['id'] = $mediaEntity->getPreviewImage()->getId();
+            /** @var MediaInterface|null $previousPreviewImage */
+            $previousPreviewImage = $mediaEntity->getPreviewImage();
+            $previousPreviewImageId = null;
+            if (null !== $previousPreviewImage) {
+                $previousPreviewImageId = $previousPreviewImage->getId();
+                $data['id'] = $previousPreviewImageId;
             }
+
             $data['collection'] = $this->systemCollectionManager->getSystemCollection('sulu_media.preview_image');
             $data['locale'] = $locale;
             $data['title'] = $media->getTitle();
@@ -93,6 +109,12 @@ class MediaPreviewController extends AbstractMediaController implements ClassRes
 
             $mediaEntity->setPreviewImage($previewImage->getEntity());
             $this->mediaManager->addFormatsAndUrl($media);
+
+            // Because the `MediaManager::save()` method calls `$entityManager->flush()` itself, the `created` event of
+            // the preview image and the `preview_image_modified` event are not in the same batch.
+            $this->domainEventCollector->collect(
+                new MediaPreviewImageModifiedEvent($mediaEntity, $previewImage->getEntity(), $previousPreviewImageId)
+            );
 
             $this->entityManager->flush();
 
@@ -121,12 +143,16 @@ class MediaPreviewController extends AbstractMediaController implements ClassRes
             $mediaEntity = $media->getEntity();
 
             if (null !== $mediaEntity->getPreviewImage()) {
-                $oldPreviewImageId = $mediaEntity->getPreviewImage()->getId();
+                $previousPreviewImageId = $mediaEntity->getPreviewImage()->getId();
 
                 $mediaEntity->setPreviewImage(null);
                 $this->mediaManager->addFormatsAndUrl($media);
 
-                $this->mediaManager->delete($oldPreviewImageId);
+                $this->domainEventCollector->collect(
+                    new MediaPreviewImageRemovedEvent($mediaEntity, $previousPreviewImageId)
+                );
+
+                $this->mediaManager->delete($previousPreviewImageId);
             }
 
             $view = $this->view($media, 200);

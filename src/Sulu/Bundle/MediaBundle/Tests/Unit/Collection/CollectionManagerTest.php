@@ -15,8 +15,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
+use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManager;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
+use Sulu\Bundle\MediaBundle\Domain\Event\CollectionModifiedEvent;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepository;
@@ -27,29 +30,34 @@ use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 class CollectionManagerTest extends TestCase
 {
     /**
-     * @var CollectionRepository
+     * @var CollectionRepository|ObjectProphecy
      */
     private $collectionRepository;
 
     /**
-     * @var MediaRepository
+     * @var MediaRepository|ObjectProphecy
      */
     private $mediaRepository;
 
     /**
-     * @var FormatManagerInterface
+     * @var FormatManagerInterface|ObjectProphecy
      */
     private $formatManager;
 
     /**
-     * @var UserRepositoryInterface
+     * @var UserRepositoryInterface|ObjectProphecy
      */
     private $userRepository;
 
     /**
-     * @var EntityManager
+     * @var EntityManager|ObjectProphecy
      */
     private $entityManager;
+
+    /**
+     * @var DomainEventCollectorInterface|ObjectProphecy
+     */
+    private $domainEventCollector;
 
     /**
      * @var CollectionManagerInterface
@@ -63,6 +71,7 @@ class CollectionManagerTest extends TestCase
         $this->formatManager = $this->prophesize(FormatManagerInterface::class);
         $this->userRepository = $this->prophesize(UserRepositoryInterface::class);
         $this->entityManager = $this->prophesize(EntityManager::class);
+        $this->domainEventCollector = $this->prophesize(DomainEventCollectorInterface::class);
 
         $this->collectionManager = new CollectionManager(
             $this->collectionRepository->reveal(),
@@ -70,6 +79,7 @@ class CollectionManagerTest extends TestCase
             $this->formatManager->reveal(),
             $this->userRepository->reveal(),
             $this->entityManager->reveal(),
+            $this->domainEventCollector->reveal(),
             null,
             'sulu-50x50',
             ['view' => 64]
@@ -180,6 +190,10 @@ class CollectionManagerTest extends TestCase
         $this->collectionRepository->countSubCollections($collectionEntity)->willReturn(0);
         $this->mediaRepository->findMedia(Argument::cetera())->willReturn([]);
 
+        $this->entityManager->persist($collectionEntity)->shouldBeCalled();
+        $this->domainEventCollector->collect(Argument::type(CollectionModifiedEvent::class))->shouldBeCalled();
+        $this->entityManager->flush()->shouldBeCalled();
+
         $this->collectionManager->save(
             [
                 'id' => 1,
@@ -187,8 +201,5 @@ class CollectionManagerTest extends TestCase
             ],
             null
         );
-
-        $this->entityManager->persist($collectionEntity)->shouldBeCalled();
-        $this->entityManager->flush()->shouldBeCalled();
     }
 }

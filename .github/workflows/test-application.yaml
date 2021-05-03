@@ -61,7 +61,7 @@ jobs:
                   npm run build
 
     php:
-        name: "PHP ${{ matrix.php-version }} (${{ matrix.database }}, ${{ matrix.phpcr-transport }}, ${{ matrix.dependency-versions }}, Lint ${{ matrix.lint }})"
+        name: "PHP ${{ matrix.php-version }} (${{ matrix.database }}, ${{ matrix.phpcr-transport }}, ${{ matrix.dependency-versions }})"
         runs-on: ubuntu-latest
 
         env:
@@ -81,7 +81,6 @@ jobs:
                       dependency-versions: 'lowest'
                       php-extensions: 'ctype, iconv, mysql, gd'
                       tools: 'composer:v1'
-                      lint: false
                       env:
                           SYMFONY_DEPRECATIONS_HELPER: disabled
                           DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/sulu_test?serverVersion=12.5
@@ -94,7 +93,6 @@ jobs:
                       dependency-versions: 'highest'
                       php-extensions: 'ctype, iconv, mysql, imagick'
                       tools: 'composer:v2'
-                      lint: true
                       env:
                           SYMFONY_DEPRECATIONS_HELPER: weak
                           DATABASE_URL: mysql://root:root@127.0.0.1:3306/sulu_test?serverVersion=5.7
@@ -158,14 +156,39 @@ jobs:
               run: composer bootstrap-test-environment
               env: ${{ matrix.env }}
 
-            - name: Lint code
-              if: ${{ matrix.lint }}
-              run: composer lint
-              env: ${{ matrix.env }}
-
             - name: Execute test cases
               run: time composer test
               env: ${{ matrix.env }}
+
+    php-lint:
+        name: "PHP Lint"
+        runs-on: ubuntu-latest
+
+        env:
+            APP_ENV: test
+            APP_SECRET: a448d1dfcaa563fce56c2fd9981f662b
+            MAILER_URL: null://localhost
+            SULU_ADMIN_EMAIL:
+
+        steps:
+            - name: Checkout project
+              uses: actions/checkout@v2
+
+            - name: Install and configure PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.0'
+                  extensions: 'ctype, iconv, mysql, imagick'
+                  tools: 'composer:v2'
+                  coverage: none
+
+            - name: Install composer dependencies
+              uses: ramsey/composer-install@v1
+              with:
+                  dependency-versions: highest
+
+            - name: Lint code
+              run: composer lint
 
     php-windows:
         name: "PHP ${{ matrix.php-version }} on Windows (mysql ${{ matrix.mysql-version }}, ${{ matrix.phpcr-transport }}, ${{ matrix.dependency-versions }})"

@@ -13,6 +13,9 @@ namespace Sulu\Bundle\SecurityBundle\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NoResultException;
+use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Bundle\SecurityBundle\Domain\Event\UserPasswordResettedEvent;
+use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Exception\UserNotInSystemException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\EmailTemplateException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\InvalidTokenException;
@@ -101,6 +104,11 @@ class ResettingController
     private $entityManager;
 
     /**
+     * @var DomainEventCollectorInterface
+     */
+    private $domainEventCollector;
+
+    /**
      * @var string
      */
     protected $suluSecuritySystem;
@@ -152,6 +160,7 @@ class ResettingController
         UserRepositoryInterface $userRepository,
         UrlGeneratorInterface $router,
         EntityManagerInterface $entityManager,
+        DomainEventCollectorInterface $domainEventCollector,
         string $suluSecuritySystem,
         string $sender,
         string $subject,
@@ -172,6 +181,7 @@ class ResettingController
         $this->userRepository = $userRepository;
         $this->router = $router;
         $this->entityManager = $entityManager;
+        $this->domainEventCollector = $domainEventCollector;
 
         $this->suluSecuritySystem = $suluSecuritySystem;
         $this->sender = $sender;
@@ -238,7 +248,7 @@ class ResettingController
                 throw new NoTokenFoundException();
             }
 
-            /** @var UserInterface $user */
+            /** @var User $user */
             $user = $this->findUserByValidToken($this->generateTokenHash($token));
             $this->changePassword($user, $request->get('password', ''));
             $this->deleteToken($user);
@@ -450,13 +460,15 @@ class ResettingController
      *
      * @throws MissingPasswordException
      */
-    private function changePassword(UserInterface $user, $password)
+    private function changePassword(User $user, $password)
     {
         if ('' === $password) {
             throw new MissingPasswordException();
         }
         $user->setPassword($this->encodePassword($user, $password, $user->getSalt()));
         $this->entityManager->persist($user);
+
+        $this->domainEventCollector->collect(new UserPasswordResettedEvent($user));
         $this->entityManager->flush();
     }
 

@@ -27,29 +27,48 @@ class AddAdminPassTest extends TestCase
         $poolDefinition = $this->prophesize(Definition::class);
 
         $container = $this->prophesize(ContainerBuilder::class);
-        $container->getDefinition(AddAdminPass::ADMIN_POOL_DEFINITION_ID)->willReturn($poolDefinition->reveal());
+        $container->hasDefinition(AddAdminPass::ADMIN_POOL_DEFINITION_ID)
+            ->willReturn(true)
+            ->shouldBeCalled();
+        $container->getDefinition(AddAdminPass::ADMIN_POOL_DEFINITION_ID)
+            ->willReturn($poolDefinition->reveal())
+            ->shouldBeCalled();
 
         $adminDefinition1 = $this->prophesize(Definition::class);
-        $adminDefinition1->getClass()->willReturn(TestAdmin1::class);
+        $adminDefinition1->getClass()
+            ->willReturn(TestAdmin1::class)
+            ->shouldBeCalled();
 
         $adminDefinition2 = $this->prophesize(Definition::class);
-        $adminDefinition2->getClass()->willReturn('%class2%');
+        $adminDefinition2->getClass()
+            ->willReturn('%class2%')
+            ->shouldBeCalled();
 
         $container->findTaggedServiceIds(AddAdminPass::ADMIN_TAG)->willReturn(
             [
                 'test_admin1' => [],
                 'test_admin2' => [],
             ]
-        );
+        )->shouldBeCalled();
 
-        $container->getDefinition('test_admin1')->willReturn($adminDefinition1->reveal());
-        $container->getDefinition('test_admin2')->willReturn($adminDefinition2->reveal());
+        $container->getDefinition('test_admin1')
+            ->willReturn($adminDefinition1->reveal())
+            ->shouldBeCalled();
+        $container->getDefinition('test_admin2')
+            ->willReturn($adminDefinition2->reveal())
+            ->shouldBeCalled();
 
         $parameterBag = $this->prophesize(ParameterBag::class);
-        $container->getParameterBag()->willReturn($parameterBag->reveal());
+        $container->getParameterBag()
+            ->willReturn($parameterBag->reveal())
+            ->shouldBeCalled();
 
-        $parameterBag->resolveValue(TestAdmin1::class)->willReturn(TestAdmin1::class);
-        $parameterBag->resolveValue('%class2%')->willReturn(TestAdmin2::class);
+        $parameterBag->resolveValue(TestAdmin1::class)
+            ->willReturn(TestAdmin1::class)
+            ->shouldBeCalled();
+        $parameterBag->resolveValue('%class2%')
+            ->willReturn(TestAdmin2::class)
+            ->shouldBeCalled();
 
         $admins = [];
 
@@ -77,21 +96,32 @@ class AddAdminPassTest extends TestCase
         $poolDefinition = $this->prophesize(Definition::class);
 
         $container = $this->prophesize(ContainerBuilder::class);
-        $container->getDefinition(AddAdminPass::ADMIN_POOL_DEFINITION_ID)->willReturn($poolDefinition->reveal());
+        $container->hasDefinition(AddAdminPass::ADMIN_POOL_DEFINITION_ID)
+            ->willReturn(true)
+            ->shouldBeCalled();
+        $container->getDefinition(AddAdminPass::ADMIN_POOL_DEFINITION_ID)
+            ->willReturn($poolDefinition->reveal())
+            ->shouldBeCalled();
 
         $adminDefinition1 = $this->prophesize(Definition::class);
-        $adminDefinition1->getClass()->willReturn(TestAdmin1::class);
+        $adminDefinition1->getClass()
+            ->willReturn(TestAdmin1::class)
+            ->shouldBeCalled();
 
         $container->findTaggedServiceIds(AddAdminPass::ADMIN_TAG)->willReturn(
             [
                 'test_admin1' => [],
             ]
-        );
+        )->shouldBeCalled();
 
-        $container->getDefinition('test_admin1')->willReturn($adminDefinition1->reveal());
+        $container->getDefinition('test_admin1')
+            ->willReturn($adminDefinition1->reveal())
+            ->shouldBeCalled();
 
         $parameterBag = $this->prophesize(ParameterBag::class);
-        $container->getParameterBag()->willReturn($parameterBag->reveal());
+        $container->getParameterBag()
+            ->willReturn($parameterBag->reveal())
+            ->shouldBeCalled();
 
         $parameterBag->resolveValue(TestAdmin1::class)->willReturn(TestAdmin1::class);
 

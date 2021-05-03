@@ -19,6 +19,8 @@ use Sulu\Component\Security\Authentication\UserInterface;
  */
 interface MediaInterface extends AuditableInterface
 {
+    const RESOURCE_KEY = 'media';
+
     /**
      * Get id.
      *
