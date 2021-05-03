@@ -52,6 +52,9 @@ call to pass the correct parameters:
 - `Sulu\Bundle\MediaBundle\Media\Manager\MediaManager`
 - `Sulu\Bundle\CategoryBundle\Category\CategoryManager`
 - `Sulu\Bundle\CategoryBundle\Category\KeywordManager`
+- `Sulu\Bundle\ContactBundle\Contact\Contactmanager`
+- `Sulu\Bundle\SecurityBundle\Controller\ResettingController`
+- `Sulu\Bundle\SecurityBundle\UserManager\UserManager`
 
 ### Added SuluEventLogBundle for dispatching and recording events that happen in the application
 

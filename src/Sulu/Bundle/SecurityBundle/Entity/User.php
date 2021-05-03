@@ -772,9 +772,4 @@ class User extends ApiEntity implements UserInterface, Serializable, EquatableIn
 
         return $this;
     }
-
-    public function __toString()
-    {
-        return $this->getFirstName();
-    }
 }
