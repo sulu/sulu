@@ -44,6 +44,11 @@ class MediaVersionRemovedEvent extends DomainEvent
         return $this->media;
     }
 
+    public function getVersion(): int
+    {
+        return $this->version;
+    }
+
     public function getEventType(): string
     {
         return 'version_removed';

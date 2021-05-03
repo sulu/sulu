@@ -19,7 +19,6 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * @method string getAdminUrl($id, $fileName, $version);
- * @method void removeFileVersion(int $mediaId, int $version);
  */
 interface MediaManagerInterface
 {
@@ -137,4 +136,6 @@ interface MediaManagerInterface
      * @return string
      */
     public function getUrl($id, $fileName, $version);
+
+    public function removeFileVersion(int $mediaId, int $version): void;
 }

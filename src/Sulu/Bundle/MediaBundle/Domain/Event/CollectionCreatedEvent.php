@@ -99,9 +99,7 @@ class CollectionCreatedEvent extends DomainEvent
         $meta = $this->collection->getDefaultMeta();
         foreach ($this->collection->getMeta() as $collectionMeta) {
             if ($collectionMeta->getLocale() === $this->locale) {
-                $meta = $collectionMeta;
-
-                break;
+                return $collectionMeta;
             }
         }
 

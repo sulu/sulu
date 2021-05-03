@@ -23,7 +23,6 @@ use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\ListBuilderFactory\MediaListBuilderFactory;
 use Sulu\Bundle\MediaBundle\Media\ListRepresentationFactory\MediaListRepresentationFactory;
-use Sulu\Bundle\MediaBundle\Media\Manager\MediaManager;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
@@ -45,8 +44,6 @@ use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -459,67 +456,11 @@ class MediaController extends AbstractMediaController implements
      *
      * @throws \Sulu\Component\Rest\Exception\MissingParameterException
      */
-    public function deleteVersionAction(Request $request, $id, $version)
+    public function deleteVersionAction($id, $version)
     {
-        if (!\method_exists($this->mediaManager, 'removeFileVersion')) {
-            @\trigger_error(
-                \sprintf(
-                    'The "%s" should implement the "removeFileVersion" method of the "%s".',
-                    \get_class($this->mediaManager),
-                    MediaManagerInterface::class
-                ),
-                \E_USER_DEPRECATED
-            );
-
-            $locale = $this->getRequestParameter($request, 'locale', true);
-            $this->removeFileVersion($id, $version, $locale);
-        } else {
-            $this->mediaManager->removeFileVersion((int) $id, (int) $version);
-        }
+        $this->mediaManager->removeFileVersion((int) $id, (int) $version);
 
         return new Response('', 204);
-    }
-
-    /**
-     * @deprecated
-     * @see MediaManager::removeFileVersion()
-     *
-     * @param int $mediaId
-     * @param string $version
-     * @param string $locale
-     */
-    private function removeFileVersion($mediaId, $version, $locale): void
-    {
-        $media = $this->mediaManager->getById($mediaId, $locale);
-
-        if ($media->getVersion() === (int) $version) {
-            throw new BadRequestHttpException('Can\'t delete active version of a media.');
-        }
-
-        $currentFileVersion = null;
-
-        foreach ($media->getFile()->getFileVersions() as $fileVersion) {
-            if ($fileVersion->getVersion() === (int) $version) {
-                $currentFileVersion = $fileVersion;
-                break;
-            }
-        }
-
-        if (!$currentFileVersion) {
-            throw new NotFoundHttpException(
-                \sprintf(
-                    'Version "%s" for Media "%s not found."',
-                    $version,
-                    $mediaId
-                )
-            );
-        }
-
-        $this->entityManager->remove($currentFileVersion);
-        $this->entityManager->flush();
-
-        // After successfully delete in the database remove file from storage
-        $this->storage->remove($currentFileVersion->getStorageOptions());
     }
 
     /**

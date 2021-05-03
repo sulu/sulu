@@ -44,6 +44,11 @@ class CollectionMovedEvent extends DomainEvent
         return $this->collection;
     }
 
+    public function getPreviousParentId(): ?int
+    {
+        return $this->previousParentId;
+    }
+
     public function getEventType(): string
     {
         return 'moved';

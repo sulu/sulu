@@ -54,6 +54,11 @@ class MediaCropModifiedEvent extends DomainEvent
         return $this->media;
     }
 
+    public function getFormatKey(): string
+    {
+        return $this->formatKey;
+    }
+
     public function getEventType(): string
     {
         return 'crop_modified';

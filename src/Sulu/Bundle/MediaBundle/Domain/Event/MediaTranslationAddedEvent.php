@@ -17,7 +17,7 @@ use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 
-class MediaPreviewImageCreatedEvent extends DomainEvent
+class MediaTranslationAddedEvent extends DomainEvent
 {
     /**
      * @var MediaInterface
@@ -25,18 +25,28 @@ class MediaPreviewImageCreatedEvent extends DomainEvent
     private $media;
 
     /**
-     * @var MediaInterface
+     * @var string
      */
-    private $previewImage;
+    private $locale;
 
+    /**
+     * @var mixed[]
+     */
+    private $payload;
+
+    /**
+     * @param mixed[] $payload
+     */
     public function __construct(
         MediaInterface $media,
-        MediaInterface $previewImage
+        string $locale,
+        array $payload
     ) {
         parent::__construct();
 
         $this->media = $media;
-        $this->previewImage = $previewImage;
+        $this->locale = $locale;
+        $this->payload = $payload;
     }
 
     public function getMedia(): MediaInterface
@@ -44,21 +54,14 @@ class MediaPreviewImageCreatedEvent extends DomainEvent
         return $this->media;
     }
 
-    public function getPreviewImage(): MediaInterface
-    {
-        return $this->previewImage;
-    }
-
     public function getEventType(): string
     {
-        return 'preview_image_created';
+        return 'translation_added';
     }
 
-    public function getEventContext(): array
+    public function getEventPayload(): ?array
     {
-        return [
-            'previewImageId' => $this->previewImage->getId(),
-        ];
+        return $this->payload;
     }
 
     public function getResourceKey(): string
@@ -69,6 +72,11 @@ class MediaPreviewImageCreatedEvent extends DomainEvent
     public function getResourceId(): string
     {
         return (string) $this->media->getId();
+    }
+
+    public function getResourceLocale(): ?string
+    {
+        return $this->locale;
     }
 
     public function getResourceTitle(): ?string
@@ -89,8 +97,17 @@ class MediaPreviewImageCreatedEvent extends DomainEvent
     {
         $file = $this->media->getFiles()[0] ?? null;
         $fileVersion = $file ? $file->getLatestFileVersion() : null;
+        $meta = $fileVersion ? $fileVersion->getDefaultMeta() : null;
 
-        return $fileVersion ? $fileVersion->getDefaultMeta() : null;
+        if (null !== $fileVersion) {
+            foreach ($fileVersion->getMeta() as $fileVersionMeta) {
+                if ($fileVersionMeta->getLocale() === $this->locale) {
+                    return $fileVersionMeta;
+                }
+            }
+        }
+
+        return $meta;
     }
 
     public function getResourceSecurityContext(): ?string

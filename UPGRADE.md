@@ -6,8 +6,7 @@
 
 The `MediaManagerInterface` declares a new method `removeFileVersion`.
 If you have overridden this service in your project without extending from Sulu's `MediaManager`,
-you need to implement this new method in order for the `MediaVersionRemovedEvent` to be thrown.
-Not implementing this method is deprecated and will lead to errors in Sulu 3.0.
+you need to implement this new method in order for the `MediaVersionRemovedEvent` to be emitted.
 
 ### Sync object permissions stored in phpcr to doctrine
 

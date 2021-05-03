@@ -17,7 +17,7 @@ use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 
-class MediaVersionCreatedEvent extends DomainEvent
+class MediaVersionAddedEvent extends DomainEvent
 {
     /**
      * @var MediaInterface
@@ -44,9 +44,14 @@ class MediaVersionCreatedEvent extends DomainEvent
         return $this->media;
     }
 
+    public function getVersion(): int
+    {
+        return $this->version;
+    }
+
     public function getEventType(): string
     {
-        return 'version_created';
+        return 'version_added';
     }
 
     public function getEventContext(): array

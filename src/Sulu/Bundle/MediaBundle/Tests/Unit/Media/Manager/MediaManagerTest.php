@@ -22,7 +22,7 @@ use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterfa
 use Sulu\Bundle\MediaBundle\Domain\Event\MediaCreatedEvent;
 use Sulu\Bundle\MediaBundle\Domain\Event\MediaModifiedEvent;
 use Sulu\Bundle\MediaBundle\Domain\Event\MediaRemovedEvent;
-use Sulu\Bundle\MediaBundle\Domain\Event\MediaVersionCreatedEvent;
+use Sulu\Bundle\MediaBundle\Domain\Event\MediaVersionAddedEvent;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepository;
 use Sulu\Bundle\MediaBundle\Entity\File;
@@ -448,7 +448,7 @@ class MediaManagerTest extends TestCase
         $this->formatManager->purge(1, 'test', 'image/jpeg')->shouldBeCalled();
 
         $this->domainEventCollector->collect(Argument::type(MediaModifiedEvent::class))->shouldBeCalled();
-        $this->domainEventCollector->collect(Argument::type(MediaVersionCreatedEvent::class))->shouldNotBeCalled();
+        $this->domainEventCollector->collect(Argument::type(MediaVersionAddedEvent::class))->shouldNotBeCalled();
 
         $this->mediaManager->save(null, ['id' => 1, 'locale' => 'en', 'focusPointX' => 1, 'focusPointY' => 2], 1);
     }
@@ -489,7 +489,7 @@ class MediaManagerTest extends TestCase
         $fileVersion->increaseSubVersion()->shouldNotBeCalled();
 
         $this->domainEventCollector->collect(Argument::type(MediaModifiedEvent::class))->shouldBeCalled();
-        $this->domainEventCollector->collect(Argument::type(MediaVersionCreatedEvent::class))->shouldNotBeCalled();
+        $this->domainEventCollector->collect(Argument::type(MediaVersionAddedEvent::class))->shouldNotBeCalled();
 
         $this->mediaManager->save(null, ['id' => 1, 'locale' => 'en', 'focusPointX' => 1, 'focusPointY' => 2], 1);
     }

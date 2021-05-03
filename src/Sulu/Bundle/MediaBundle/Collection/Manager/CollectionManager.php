@@ -17,10 +17,10 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\MediaBundle\Api\Collection;
 use Sulu\Bundle\MediaBundle\Domain\Event\CollectionCreatedEvent;
-use Sulu\Bundle\MediaBundle\Domain\Event\CollectionLocaleAddedEvent;
 use Sulu\Bundle\MediaBundle\Domain\Event\CollectionModifiedEvent;
 use Sulu\Bundle\MediaBundle\Domain\Event\CollectionMovedEvent;
 use Sulu\Bundle\MediaBundle\Domain\Event\CollectionRemovedEvent;
+use Sulu\Bundle\MediaBundle\Domain\Event\CollectionTranslationAddedEvent;
 use Sulu\Bundle\MediaBundle\Entity\Collection as CollectionEntity;
 use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
@@ -436,7 +436,7 @@ class CollectionManager implements CollectionManagerInterface
 
         if ($isNewLocale) {
             $this->domainEventCollector->collect(
-                new CollectionLocaleAddedEvent($collectionEntity, $collection->getLocale(), $data)
+                new CollectionTranslationAddedEvent($collectionEntity, $collection->getLocale(), $data)
             );
         } else {
             $this->domainEventCollector->collect(

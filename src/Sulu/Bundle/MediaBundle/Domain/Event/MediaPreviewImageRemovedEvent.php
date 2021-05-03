@@ -44,6 +44,11 @@ class MediaPreviewImageRemovedEvent extends DomainEvent
         return $this->media;
     }
 
+    public function getPreviewImageId(): int
+    {
+        return $this->previewImageId;
+    }
+
     public function getEventType(): string
     {
         return 'preview_image_removed';

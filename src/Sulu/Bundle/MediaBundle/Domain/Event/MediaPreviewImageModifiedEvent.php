@@ -32,18 +32,18 @@ class MediaPreviewImageModifiedEvent extends DomainEvent
     /**
      * @var int
      */
-    private $oldPreviewImageId;
+    private $previousPreviewImageId;
 
     public function __construct(
         MediaInterface $media,
         MediaInterface $newPreviewImage,
-        int $oldPreviewImageId
+        int $previousPreviewImageId
     ) {
         parent::__construct();
 
         $this->media = $media;
         $this->newPreviewImage = $newPreviewImage;
-        $this->oldPreviewImageId = $oldPreviewImageId;
+        $this->previousPreviewImageId = $previousPreviewImageId;
     }
 
     public function getMedia(): MediaInterface
@@ -56,6 +56,11 @@ class MediaPreviewImageModifiedEvent extends DomainEvent
         return $this->newPreviewImage;
     }
 
+    public function getPreviousPreviewImageId(): int
+    {
+        return $this->previousPreviewImageId;
+    }
+
     public function getEventType(): string
     {
         return 'preview_image_modified';
@@ -64,7 +69,7 @@ class MediaPreviewImageModifiedEvent extends DomainEvent
     public function getEventContext(): array
     {
         return [
-            'oldPreviewImageId' => $this->oldPreviewImageId,
+            'previousPreviewImageId' => $this->previousPreviewImageId,
             'newPreviewImageId' => $this->newPreviewImage->getId(),
         ];
     }

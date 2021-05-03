@@ -44,6 +44,11 @@ class MediaMovedEvent extends DomainEvent
         return $this->media;
     }
 
+    public function getPreviousCollectionId(): int
+    {
+        return $this->previousCollectionId;
+    }
+
     public function getEventType(): string
     {
         return 'moved';

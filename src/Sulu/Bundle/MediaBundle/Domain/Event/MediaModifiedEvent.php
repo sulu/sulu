@@ -102,9 +102,7 @@ class MediaModifiedEvent extends DomainEvent
         if (null !== $fileVersion) {
             foreach ($fileVersion->getMeta() as $fileVersionMeta) {
                 if ($fileVersionMeta->getLocale() === $this->locale) {
-                    $meta = $fileVersionMeta;
-
-                    break;
+                    return $fileVersionMeta;
                 }
             }
         }

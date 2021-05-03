@@ -16,7 +16,7 @@ use FOS\RestBundle\View\ViewHandlerInterface;
 use HandcraftedInTheAlps\RestRoutingBundle\Controller\Annotations\RouteResource;
 use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface;
-use Sulu\Bundle\MediaBundle\Domain\Event\MediaPreviewImageCreatedEvent;
+use Sulu\Bundle\MediaBundle\Domain\Event\MediaPreviewImageAddedEvent;
 use Sulu\Bundle\MediaBundle\Domain\Event\MediaPreviewImageModifiedEvent;
 use Sulu\Bundle\MediaBundle\Domain\Event\MediaPreviewImageRemovedEvent;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
@@ -111,14 +111,14 @@ class MediaPreviewController extends AbstractMediaController implements ClassRes
             $this->mediaManager->addFormatsAndUrl($media);
 
             // Because the `MediaManager::save()` method calls `$entityManager->flush()` itself, the `created` event of
-            // the preview image and the `preview_image_created`/`preview_image_modified` event are not in the same badge.
+            // the preview image and the `preview_image_added`/`preview_image_modified` event are not in the same batch.
             if (null !== $oldPreviewImageId) {
                 $this->domainEventCollector->collect(
                     new MediaPreviewImageModifiedEvent($mediaEntity, $previewImage->getEntity(), $oldPreviewImageId)
                 );
             } else {
                 $this->domainEventCollector->collect(
-                    new MediaPreviewImageCreatedEvent($mediaEntity, $previewImage->getEntity())
+                    new MediaPreviewImageAddedEvent($mediaEntity, $previewImage->getEntity())
                 );
             }
 

@@ -19,11 +19,11 @@ use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
 use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Domain\Event\MediaCreatedEvent;
-use Sulu\Bundle\MediaBundle\Domain\Event\MediaLocaleAddedEvent;
 use Sulu\Bundle\MediaBundle\Domain\Event\MediaModifiedEvent;
 use Sulu\Bundle\MediaBundle\Domain\Event\MediaMovedEvent;
 use Sulu\Bundle\MediaBundle\Domain\Event\MediaRemovedEvent;
-use Sulu\Bundle\MediaBundle\Domain\Event\MediaVersionCreatedEvent;
+use Sulu\Bundle\MediaBundle\Domain\Event\MediaTranslationAddedEvent;
+use Sulu\Bundle\MediaBundle\Domain\Event\MediaVersionAddedEvent;
 use Sulu\Bundle\MediaBundle\Domain\Event\MediaVersionRemovedEvent;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
@@ -410,7 +410,7 @@ class MediaManager implements MediaManagerInterface
             $file->addFileVersion($fileVersion);
 
             $this->domainEventCollector->collect(
-                new MediaVersionCreatedEvent($mediaEntity, $version)
+                new MediaVersionAddedEvent($mediaEntity, $version)
             );
 
             $shouldThrowModifiedEvent = false;
@@ -470,7 +470,7 @@ class MediaManager implements MediaManagerInterface
         if ($shouldThrowModifiedEvent) {
             if ($isNewLocale) {
                 $this->domainEventCollector->collect(
-                    new MediaLocaleAddedEvent($mediaEntity, $media->getLocale(), $data)
+                    new MediaTranslationAddedEvent($mediaEntity, $media->getLocale(), $data)
                 );
             } else {
                 $this->domainEventCollector->collect(
