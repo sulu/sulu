@@ -292,42 +292,6 @@ class ContactAdmin extends Admin
                     ->setParent(static::ACCOUNT_EDIT_FORM_VIEW)
             );
         }
-
-
-        $viewCollection->add(
-            $this->viewBuilderFactory
-                ->createResourceTabViewBuilder(static::CONTACT_EDIT_FORM_VIEW . '_nested_tab', '/contacts/:id')
-                ->setResourceKey('contacts')
-                ->setTitleProperty('fullName')
-                ->setParent(static::CONTACT_EDIT_FORM_VIEW)
-        );
-
-        $viewCollection->add(
-            $this->viewBuilderFactory
-                ->createFormViewBuilder('sulu_contact.contact_edit_form.details_nested_tab', '/details')
-                ->setResourceKey('contacts')
-                ->setFormKey('contact_details')
-                ->setTabTitle('sulu_admin.details')
-                ->disableTabGap()
-                ->addToolbarActions($contactFormToolbarActions)
-                ->setTabOrder(1024)
-                ->setParent(static::CONTACT_EDIT_FORM_VIEW . '_nested_tab')
-        );
-        $viewCollection->add(
-            $this->viewBuilderFactory
-                ->createListViewBuilder('sulu_contact.contact_documents_list_nested_tab', '/documents')
-                ->setResourceKey('contact_media')
-                ->setListKey('media')
-                ->setUserSettingsKey('contact_media')
-                ->setTabTitle('sulu_contact.documents')
-                ->addListAdapters(['table'])
-                ->disableTabGap()
-                ->addToolbarActions($contactDocumentsToolbarActions)
-                ->addItemActions($contactDocumentsItemActions)
-                ->addRouterAttributesToListRequest(['id' => 'contactId'])
-                ->setTabOrder(2048)
-                ->setParent(static::CONTACT_EDIT_FORM_VIEW . '_nested_tab')
-        );
     }
 
     public function getSecurityContexts()
