@@ -16,6 +16,8 @@ use FFMpeg\FFMpeg;
 use Imagine\Vips\Imagine as VipsImagine;
 use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
+use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\FormatNotFoundException;
@@ -55,7 +57,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
                 'sulu_search',
                 [
                     'indexes' => [
-                        'media' => [
+                        MediaInterface::RESOURCE_KEY => [
                             'name' => 'sulu_media.media',
                             'icon' => 'su-image',
                             'view' => [
@@ -140,7 +142,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
                         ],
                     ],
                     'resources' => [
-                        'media' => [
+                        MediaInterface::RESOURCE_KEY => [
                             'routes' => [
                                 'list' => 'sulu_media.cget_media',
                                 'detail' => 'sulu_media.get_media',
@@ -164,7 +166,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
                                 'detail' => 'sulu_media.delete_media_version',
                             ],
                         ],
-                        'collections' => [
+                        CollectionInterface::RESOURCE_KEY => [
                             'routes' => [
                                 'list' => 'sulu_media.get_collections',
                                 'detail' => 'sulu_media.get_collection',

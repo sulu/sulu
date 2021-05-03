@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\CategoryBundle\Category;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryKeywordCreatedEvent;
+use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryKeywordAddedEvent;
 use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryKeywordModifiedEvent;
 use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryKeywordRemovedEvent;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
@@ -89,7 +89,7 @@ class KeywordManager implements KeywordManagerInterface
         foreach ($keyword->getCategoryTranslations() as $categoryTranslation) {
             $event = $keyword->getId()
                 ? new CategoryKeywordModifiedEvent($categoryTranslation->getCategory(), $keyword)
-                : new CategoryKeywordCreatedEvent($categoryTranslation->getCategory(), $keyword);
+                : new CategoryKeywordAddedEvent($categoryTranslation->getCategory(), $keyword);
 
             $this->domainEventCollector->collect($event);
         }

@@ -18,6 +18,11 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
+use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Bundle\MediaBundle\Domain\Event\MediaCreatedEvent;
+use Sulu\Bundle\MediaBundle\Domain\Event\MediaModifiedEvent;
+use Sulu\Bundle\MediaBundle\Domain\Event\MediaRemovedEvent;
+use Sulu\Bundle\MediaBundle\Domain\Event\MediaVersionAddedEvent;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepository;
 use Sulu\Bundle\MediaBundle\Entity\File;
@@ -113,6 +118,11 @@ class MediaManagerTest extends TestCase
     private $pathCleaner;
 
     /**
+     * @var DomainEventCollectorInterface|ObjectProphecy
+     */
+    private $domainEventCollector;
+
+    /**
      * @var TokenStorageInterface|ObjectProphecy
      */
     private $tokenStorage;
@@ -149,6 +159,7 @@ class MediaManagerTest extends TestCase
         $this->categoryManager = $this->prophesize(CategoryManagerInterface::class);
         $this->typeManager = $this->prophesize(TypeManagerInterface::class);
         $this->pathCleaner = $this->prophesize(PathCleanupInterface::class);
+        $this->domainEventCollector = $this->prophesize(DomainEventCollectorInterface::class);
         $this->tokenStorage = $this->prophesize(TokenStorageInterface::class);
         $this->securityChecker = $this->prophesize(SecurityCheckerInterface::class);
         $this->mediaPropertiesProvider = $this->prophesize(MediaPropertiesProviderInterface::class);
@@ -165,6 +176,7 @@ class MediaManagerTest extends TestCase
             $this->tagManager->reveal(),
             $this->typeManager->reveal(),
             $this->pathCleaner->reveal(),
+            $this->domainEventCollector->reveal(),
             $this->tokenStorage->reveal(),
             $this->securityChecker->reveal(),
             [
@@ -256,6 +268,7 @@ class MediaManagerTest extends TestCase
         $collection = $this->prophesize(Collection::class);
         $collection->getId()->willReturn(2);
         $media = $this->prophesize(Media::class);
+        $media->getId()->willReturn(1);
         $media->getCollection()->willReturn($collection);
         $media->getFiles()->willReturn([]);
 
@@ -276,13 +289,17 @@ class MediaManagerTest extends TestCase
         $file = $this->prophesize(File::class);
         $fileVersion = $this->prophesize(FileVersion::class);
         $file->getFileVersions()->willReturn([$fileVersion->reveal()]);
+        $file->getLatestFileVersion()->willReturn($fileVersion->reveal());
         $fileVersion->getId()->willReturn(1);
         $fileVersion->getName()->willReturn('test');
         $fileVersion->getMimeType()->willReturn('image/png');
         $fileVersion->getStorageOptions()->willReturn(['segment' => '01', 'fileName' => 'test.jpg']);
 
         $fileVersionMeta = $this->prophesize(FileVersionMeta::class);
+        $fileVersionMeta->getTitle()->willReturn('Test image');
+        $fileVersionMeta->getLocale()->willReturn('en');
         $fileVersion->getMeta()->willReturn([$fileVersionMeta->reveal()]);
+        $fileVersion->getDefaultMeta()->willReturn($fileVersionMeta->reveal());
 
         $formatOptions = $this->prophesize(FormatOptions::class);
         $fileVersion->getFormatOptions()->willReturn([$formatOptions->reveal()]);
@@ -310,6 +327,9 @@ class MediaManagerTest extends TestCase
         $this->em->remove($fileVersionMeta->reveal())->shouldBeCalled();
         $this->em->detach($formatOptions->reveal())->shouldBeCalled();
         $this->em->remove($media->reveal())->shouldBeCalled();
+
+        $this->domainEventCollector->collect(Argument::type(MediaRemovedEvent::class))->shouldBeCalled();
+
         $this->em->flush()->shouldBeCalled();
 
         $this->mediaManager->delete(1, true);
@@ -339,6 +359,9 @@ class MediaManagerTest extends TestCase
             ->shouldBeCalled();
 
         $this->pathCleaner->cleanup(Argument::exact($cleanUpArgument))->shouldBeCalled()->willReturn($cleanUpResult);
+
+        $this->domainEventCollector->collect(Argument::type(MediaCreatedEvent::class))->shouldBeCalled();
+
         $media = $this->mediaManager->save($uploadedFile->reveal(), ['locale' => 'en', 'title' => 'my title'], 1);
 
         $this->assertEquals($fileName, $media->getName());
@@ -402,8 +425,12 @@ class MediaManagerTest extends TestCase
         $fileVersion->getProperties()->willReturn([]);
         $fileVersion->getFocusPointX()->willReturn(null);
         $fileVersion->getFocusPointY()->willReturn(null);
+        $fileVersionMeta = $this->prophesize(FileVersionMeta::class);
+        $fileVersionMeta->getLocale()->willReturn('en');
+        $fileVersion->getMeta()->willReturn([$fileVersionMeta]);
         $file->getFileVersion(1)->willReturn($fileVersion->reveal());
         $file->getFileVersions()->willReturn([$fileVersion->reveal()]);
+        $file->getLatestFileVersion()->willReturn($fileVersion->reveal());
         $file->getVersion()->willReturn(1);
         $media->getFiles()->willReturn([$file->reveal()]);
         $this->mediaRepository->findMediaById(1)->willReturn($media);
@@ -419,6 +446,9 @@ class MediaManagerTest extends TestCase
         $fileVersion->setFocusPointY(2)->shouldBeCalled();
         $fileVersion->increaseSubVersion()->shouldBeCalled();
         $this->formatManager->purge(1, 'test', 'image/jpeg')->shouldBeCalled();
+
+        $this->domainEventCollector->collect(Argument::type(MediaModifiedEvent::class))->shouldBeCalled();
+        $this->domainEventCollector->collect(Argument::type(MediaVersionAddedEvent::class))->shouldNotBeCalled();
 
         $this->mediaManager->save(null, ['id' => 1, 'locale' => 'en', 'focusPointX' => 1, 'focusPointY' => 2], 1);
     }
@@ -438,8 +468,12 @@ class MediaManagerTest extends TestCase
         $fileVersion->getProperties()->willReturn([]);
         $fileVersion->getFocusPointX()->willReturn(1);
         $fileVersion->getFocusPointY()->willReturn(2);
+        $fileVersionMeta = $this->prophesize(FileVersionMeta::class);
+        $fileVersionMeta->getLocale()->willReturn('en');
+        $fileVersion->getMeta()->willReturn([$fileVersionMeta]);
         $file->getFileVersion(1)->willReturn($fileVersion->reveal());
         $file->getFileVersions()->willReturn([$fileVersion->reveal()]);
+        $file->getLatestFileVersion()->willReturn($fileVersion->reveal());
         $file->getVersion()->willReturn(1);
         $media->getFiles()->willReturn([$file->reveal()]);
         $this->mediaRepository->findMediaById(1)->willReturn($media);
@@ -453,6 +487,9 @@ class MediaManagerTest extends TestCase
         $fileVersion->setProperties([])->shouldBeCalled();
         $fileVersion->setChanged(Argument::any())->shouldBeCalled();
         $fileVersion->increaseSubVersion()->shouldNotBeCalled();
+
+        $this->domainEventCollector->collect(Argument::type(MediaModifiedEvent::class))->shouldBeCalled();
+        $this->domainEventCollector->collect(Argument::type(MediaVersionAddedEvent::class))->shouldNotBeCalled();
 
         $this->mediaManager->save(null, ['id' => 1, 'locale' => 'en', 'focusPointX' => 1, 'focusPointY' => 2], 1);
     }

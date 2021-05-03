@@ -201,5 +201,15 @@
 
             <tag name="sulu.sitemap.provider"/>
         </service>
+
+        <!-- domain events -->
+        <service id="sulu_page.document_manager.event_subscriber"
+                 class="Sulu\Bundle\PageBundle\EventListener\DomainEventSubscriber">
+            <argument type="service" id="sulu_document_manager.document_domain_event_collector"/>
+            <argument type="service" id="sulu_document_manager.document_manager"/>
+            <argument type="service" id="sulu_document_manager.property_encoder"/>
+
+            <tag name="sulu_document_manager.event_subscriber" />
+        </service>
     </services>
 </container>

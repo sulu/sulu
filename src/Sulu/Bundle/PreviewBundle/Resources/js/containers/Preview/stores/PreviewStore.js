@@ -1,18 +1,12 @@
 // @flow
-import queryString from 'query-string';
 import {action, computed, observable} from 'mobx';
 import {Requester} from 'sulu-admin-bundle/services';
-import {transformDateForUrl} from 'sulu-admin-bundle/utils';
+import {buildQueryString, transformDateForUrl} from 'sulu-admin-bundle/utils';
 import type {IObservableValue} from 'mobx';
 import type {PreviewRouteName} from './../types';
 
 const generateRoute = (name: PreviewRouteName, options: Object): string => {
-    const query = queryString.stringify(options);
-    if (query.length === 0) {
-        return PreviewStore.endpoints[name];
-    }
-
-    return PreviewStore.endpoints[name] + '?' + query;
+    return PreviewStore.endpoints[name] + buildQueryString(options);
 };
 
 export default class PreviewStore {

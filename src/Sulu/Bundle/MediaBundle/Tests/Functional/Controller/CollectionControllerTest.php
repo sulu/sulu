@@ -183,7 +183,6 @@ class CollectionControllerTest extends SuluTestCase
         $collectionMeta->setLocale('en-gb');
         $collectionMeta->setCollection($collection);
 
-        $collection->setDefaultMeta($collectionMeta);
         $collection->addMeta($collectionMeta);
 
         // Collection Meta 2
@@ -201,6 +200,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->em->persist($collectionType);
         $this->em->persist($collectionMeta);
         $this->em->persist($collectionMeta2);
+        $collection->setDefaultMeta($collectionMeta);
 
         $this->em->flush();
 
@@ -1192,6 +1192,8 @@ class CollectionControllerTest extends SuluTestCase
     public function testDeleteById()
     {
         $collection1Id = $this->collection1->getId();
+
+        $this->em->clear();
 
         $this->client->jsonRequest('DELETE', '/api/collections/' . $collection1Id);
         $this->assertHttpStatusCode(204, $this->client->getResponse());

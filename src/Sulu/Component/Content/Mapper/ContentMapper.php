@@ -531,7 +531,7 @@ class ContentMapper implements ContentMapperInterface
                 $destDocument->setResourceSegment($resourceLocator);
             }
 
-            $this->documentManager->persist($destDocument, $destLocale);
+            $this->documentManager->persist($destDocument, $destLocale, ['omit_modified_domain_event' => true]);
         }
         $this->documentManager->flush();
 

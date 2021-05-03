@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\MediaBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Sulu\Bundle\SecurityBundle\Entity\AccessControl;
 
@@ -33,7 +32,8 @@ class FileVersionMetaRepository extends EntityRepository implements FileVersionM
                 AccessControl::class,
                 'accessControl',
                 'WITH',
-                'accessControl.entityClass = :entityClass AND accessControl.entityId = collection.id'
+                'accessControl.entityClass = :entityClass '
+                . 'AND CAST(accessControl.entityId AS STRING) = CAST(collection.id AS STRING)'
             )
             ->where('file.version = fileVersion.version')
             ->andWhere('accessControl.id is null');
@@ -60,7 +60,8 @@ class FileVersionMetaRepository extends EntityRepository implements FileVersionM
                 AccessControl::class,
                 'accessControl',
                 'WITH',
-                'accessControl.entityClass = :entityClass AND accessControl.entityId = collection.id'
+                'accessControl.entityClass = :entityClass '
+                . 'AND CAST(accessControl.entityId AS STRING) = CAST(collection.id AS STRING)'
             )
             ->where('file.version = fileVersion.version')
             ->andWhere('accessControl.id is null')

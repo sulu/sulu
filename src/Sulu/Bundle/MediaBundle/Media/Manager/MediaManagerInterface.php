@@ -136,4 +136,6 @@ interface MediaManagerInterface
      * @return string
      */
     public function getUrl($id, $fileName, $version);
+
+    public function removeFileVersion(int $mediaId, int $version): void;
 }

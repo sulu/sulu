@@ -44,12 +44,12 @@ interface AccessControlInterface
     public function setPermissions($permissions);
 
     /**
-     * @return int
+     * @return string|int
      */
     public function getEntityId();
 
     /**
-     * @param int $entityId
+     * @param string|int $entityId
      */
     public function setEntityId($entityId);
 

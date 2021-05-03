@@ -15,7 +15,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\CategoryBundle\Category\KeywordManager;
-use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryKeywordCreatedEvent;
+use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryKeywordAddedEvent;
 use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryKeywordModifiedEvent;
 use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryKeywordRemovedEvent;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
@@ -87,7 +87,7 @@ class KeywordManagerTest extends TestCase
             $keyword->addCategoryTranslation($categoryTranslation->reveal())->shouldBeCalledTimes($has ? 0 : 1);
             $keyword->getCategoryTranslations()->willReturn([$categoryTranslation->reveal()]);
 
-            $domainEventCollector->collect(Argument::type(CategoryKeywordCreatedEvent::class))->shouldBeCalled();
+            $domainEventCollector->collect(Argument::type(CategoryKeywordAddedEvent::class))->shouldBeCalled();
         }
 
         $manager = new KeywordManager(
@@ -138,7 +138,7 @@ class KeywordManagerTest extends TestCase
         $category->findTranslationByLocale($locale)->willReturn(false);
         $category->setChanged(Argument::any())->willReturn(null);
 
-        $domainEventCollector->collect(Argument::type(CategoryKeywordCreatedEvent::class))->shouldBeCalled();
+        $domainEventCollector->collect(Argument::type(CategoryKeywordAddedEvent::class))->shouldBeCalled();
 
         $manager = new KeywordManager(
             $repository->reveal(),

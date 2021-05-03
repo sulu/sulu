@@ -17,10 +17,13 @@ use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredEntityInterface;
 
 /**
- * CollectionInterface.
+ * @method CollectionMeta getDefaultMeta();
+ * @method DoctrineCollection|CollectionMeta[] getMeta();
  */
 interface CollectionInterface extends AuditableInterface, SecuredEntityInterface
 {
+    const RESOURCE_KEY = 'collections';
+
     /**
      * Get id.
      *
