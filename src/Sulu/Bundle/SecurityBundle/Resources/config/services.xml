@@ -332,5 +332,12 @@
             <argument type="service" id="sulu_security.access_control_manager" />
             <tag name="doctrine.event_subscriber"/>
         </service>
+
+        <service id="sulu_security.phpcr_security_subscriber" class="Sulu\Bundle\SecurityBundle\EventListener\PhpcrSecuritySubscriber">
+            <argument type="service" id="sulu_security.phpcr_access_control_provider" />
+            <argument type="service" id="sulu_security.doctrine_access_control_provider" />
+
+            <tag name="kernel.event_subscriber"/>
+        </service>
     </services>
 </container>

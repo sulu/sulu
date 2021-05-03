@@ -38,7 +38,7 @@ class AccessControl implements AccessControlInterface
     /**
      * The id of the model this access control rule applies to.
      *
-     * @var int
+     * @var string
      */
     private $entityId;
 
@@ -76,12 +76,16 @@ class AccessControl implements AccessControlInterface
 
     public function getEntityId()
     {
+        if (\is_numeric($this->entityId)) {
+            return (int) $this->entityId;
+        }
+
         return $this->entityId;
     }
 
     public function setEntityId($entityId)
     {
-        $this->entityId = $entityId;
+        $this->entityId = (string) $entityId;
     }
 
     public function getEntityClass()

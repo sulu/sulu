@@ -29,20 +29,20 @@ class PermissionUpdateEvent extends Event
     private $identifier;
 
     /**
-     * @var string
+     * @var mixed[]
      */
-    private $securityIdentity;
+    private $permissions;
 
     /**
      * @param string $type
      * @param string $identifier
-     * @param string $securityIdentity
+     * @param mixed[] $permissions
      */
-    public function __construct($type, $identifier, $securityIdentity)
+    public function __construct($type, $identifier, $permissions)
     {
         $this->type = $type;
         $this->identifier = $identifier;
-        $this->securityIdentity = $securityIdentity;
+        $this->permissions = $permissions;
     }
 
     /**
@@ -66,12 +66,23 @@ class PermissionUpdateEvent extends Event
     }
 
     /**
+     * @deprecated
+     * @see PermissionUpdateEvent::getPermissions()
+     *
      * Returns the security identifier for which the permissions have been updated.
      *
-     * @return string
+     * @return mixed[]
      */
     public function getSecurityIdentity()
     {
-        return $this->securityIdentity;
+        return $this->permissions;
+    }
+
+    /**
+     * @return mixed[]
+     */
+    public function getPermissions()
+    {
+        return $this->permissions;
     }
 }

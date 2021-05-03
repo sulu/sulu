@@ -61,7 +61,7 @@
         "matomo/device-detector": "^3.7 || ^4.0.1",
         "nyholm/psr7": "^1.0",
         "ocramius/proxy-manager": "^2.1",
-        "oro/doctrine-extensions": "^1.0 || ^2.0",
+        "oro/doctrine-extensions": "^1.0.8 || ^2.0",
         "pagerfanta/pagerfanta": "^1.0.4 || ^2.0",
         "ramsey/uuid": "^3.1 || ^4.0",
         "swiftmailer/swiftmailer": "^6.1.3",

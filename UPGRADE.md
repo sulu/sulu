@@ -2,6 +2,28 @@
 
 ## 2.3
 
+### Sync object permissions stored in phpcr to doctrine
+
+To enable permission checking on database level for resources with object permissions stored in phpcr,
+you need to sync these permissions into doctrine. A command is available for that:
+
+```bash
+bin/adminconsole sulu:security:sync-phpcr-permissions
+```
+
+This command needs to be executed just once when upgrading sulu to 2.3,
+in the future the permissions are being synced automatically.
+
+### Change entityId field in AccessControl entity to string
+
+To allow entities with uuid's instead of auto generated ids to have object permissions,
+the `entityId` field of the `AccessControl` entity had to be changed from `integer` to `string`.
+Therefore the following sql statement needs to be executed.
+
+```sql
+ALTER TABLE se_access_controls CHANGE entityId entityId VARCHAR(36) NOT NULL;
+```
+
 ### Added resourceSecurityObjectId field to EventRecord
 
 Because a new `resourceSecurityObjectId` field has been added to the `EventRecord` entity
