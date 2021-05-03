@@ -204,13 +204,13 @@
             "@php bin/runtests --initialize --no-bundle-tests --no-component-tests"
         ],
         "lint": [
-            "@phpstan",
-            "@php-cs",
             "@lint-twig",
             "@lint-yaml",
             "@lint-container",
             "@lint-composer",
-            "@lint-doctrine"
+            "@lint-doctrine",
+            "@php-cs",
+            "@phpstan"
         ],
         "test": [
             "Composer\\Config::disableProcessTimeout",
