@@ -22,11 +22,17 @@ class UserRemovedEvent extends DomainEvent
      */
     private $userId;
 
-    public function __construct(int $userId)
+    /**
+     * @var string
+     */
+    private $username;
+
+    public function __construct(int $userId, string $username)
     {
         parent::__construct();
 
         $this->userId = $userId;
+        $this->username = $username;
     }
 
     public function getEventType(): string
@@ -47,5 +53,10 @@ class UserRemovedEvent extends DomainEvent
     public function getResourceSecurityContext(): ?string
     {
         return SecurityAdmin::USER_SECURITY_CONTEXT;
+    }
+
+    public function getResourceTitle(): ?string
+    {
+        return $this->username;
     }
 }

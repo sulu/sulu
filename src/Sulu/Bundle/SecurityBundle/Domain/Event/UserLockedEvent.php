@@ -20,13 +20,13 @@ class UserLockedEvent extends DomainEvent
     /**
      * @var UserInterface
      */
-    private $user;
+    private $resourceUser;
 
-    public function __construct(UserInterface $user)
+    public function __construct(UserInterface $resourceUser)
     {
         parent::__construct();
 
-        $this->user = $user;
+        $this->resourceUser = $resourceUser;
     }
 
     public function getEventType(): string
@@ -41,11 +41,21 @@ class UserLockedEvent extends DomainEvent
 
     public function getResourceId(): string
     {
-        return (string) $this->user->getId();
+        return (string) $this->resourceUser->getId();
     }
 
     public function getResourceSecurityContext(): ?string
     {
         return SecurityAdmin::USER_SECURITY_CONTEXT;
+    }
+
+    public function getResourceUser(): UserInterface
+    {
+        return $this->resourceUser;
+    }
+
+    public function getResourceTitle(): ?string
+    {
+        return $this->resourceUser->getUsername();
     }
 }

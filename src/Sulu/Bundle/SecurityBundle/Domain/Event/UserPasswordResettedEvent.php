@@ -15,18 +15,18 @@ use Sulu\Bundle\EventLogBundle\Domain\Event\DomainEvent;
 use Sulu\Bundle\SecurityBundle\Admin\SecurityAdmin;
 use Sulu\Component\Security\Authentication\UserInterface;
 
-class UserPasswordResetEvent extends DomainEvent
+class UserPasswordResettedEvent extends DomainEvent
 {
     /**
      * @var UserInterface
      */
-    private $user;
+    private $resourceUser;
 
-    public function __construct(UserInterface $user)
+    public function __construct(UserInterface $resourceUser)
     {
         parent::__construct();
 
-        $this->user = $user;
+        $this->resourceUser = $resourceUser;
     }
 
     public function getEventType(): string
@@ -41,7 +41,7 @@ class UserPasswordResetEvent extends DomainEvent
 
     public function getResourceId(): string
     {
-        return (string) $this->user->getId();
+        return (string) $this->resourceUser->getId();
     }
 
     public function getResourceSecurityContext(): ?string

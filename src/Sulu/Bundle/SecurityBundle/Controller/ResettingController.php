@@ -14,7 +14,7 @@ namespace Sulu\Bundle\SecurityBundle\Controller;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NoResultException;
 use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface;
-use Sulu\Bundle\SecurityBundle\Domain\Event\UserPasswordResetEvent;
+use Sulu\Bundle\SecurityBundle\Domain\Event\UserPasswordResettedEvent;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Exception\UserNotInSystemException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\EmailTemplateException;
@@ -468,7 +468,7 @@ class ResettingController
         $user->setPassword($this->encodePassword($user, $password, $user->getSalt()));
         $this->entityManager->persist($user);
 
-        $this->domainEventCollector->collect(new UserPasswordResetEvent($user));
+        $this->domainEventCollector->collect(new UserPasswordResettedEvent($user));
         $this->entityManager->flush();
     }
 

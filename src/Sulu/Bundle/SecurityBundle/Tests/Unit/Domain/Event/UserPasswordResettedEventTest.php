@@ -12,15 +12,15 @@
 namespace Sulu\Bundle\SecurityBundle\Tests\Unit\Domain\Event;
 
 use PHPUnit\Framework\TestCase;
-use Sulu\Bundle\SecurityBundle\Domain\Event\UserPasswordResetEvent;
+use Sulu\Bundle\SecurityBundle\Domain\Event\UserPasswordResettedEvent;
 use Sulu\Component\Security\Authentication\UserInterface;
 
-class UserPasswordResetEventTest extends TestCase
+class UserPasswordResettedEventTest extends TestCase
 {
     public function testGetEventType(): void
     {
         $user = $this->prophesize(UserInterface::class);
-        $event = new UserPasswordResetEvent($user->reveal());
+        $event = new UserPasswordResettedEvent($user->reveal());
 
         $this->assertSame($event->getEventType(), 'password_resetted');
     }
@@ -28,7 +28,7 @@ class UserPasswordResetEventTest extends TestCase
     public function testGetResourceKey(): void
     {
         $user = $this->prophesize(UserInterface::class);
-        $event = new UserPasswordResetEvent($user->reveal());
+        $event = new UserPasswordResettedEvent($user->reveal());
 
         $this->assertSame('users', $event->getResourceKey());
     }
@@ -37,7 +37,7 @@ class UserPasswordResetEventTest extends TestCase
     {
         $user = $this->prophesize(UserInterface::class);
         $user->getId()->shouldBeCalled()->willReturn(1);
-        $event = new UserPasswordResetEvent($user->reveal());
+        $event = new UserPasswordResettedEvent($user->reveal());
 
         $this->assertSame('1', $event->getResourceId());
     }
@@ -45,7 +45,7 @@ class UserPasswordResetEventTest extends TestCase
     public function testGetResourceSecurityContext(): void
     {
         $user = $this->prophesize(UserInterface::class);
-        $event = new UserPasswordResetEvent($user->reveal());
+        $event = new UserPasswordResettedEvent($user->reveal());
 
         $this->assertSame('sulu.security.users', $event->getResourceSecurityContext());
     }

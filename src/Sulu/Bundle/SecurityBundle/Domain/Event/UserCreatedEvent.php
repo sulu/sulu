@@ -20,7 +20,7 @@ class UserCreatedEvent extends DomainEvent
     /**
      * @var UserInterface
      */
-    private $user;
+    private $resourceUser;
 
     /**
      * @var mixed[]|null
@@ -30,11 +30,11 @@ class UserCreatedEvent extends DomainEvent
     /**
      * @param mixed[] $payload
      */
-    public function __construct(UserInterface $user, array $payload)
+    public function __construct(UserInterface $resourceUser, array $payload)
     {
         parent::__construct();
 
-        $this->user = $user;
+        $this->resourceUser = $resourceUser;
         $this->payload = $payload;
     }
 
@@ -58,11 +58,21 @@ class UserCreatedEvent extends DomainEvent
 
     public function getResourceId(): string
     {
-        return (string) $this->user->getId();
+        return (string) $this->resourceUser->getId();
     }
 
     public function getResourceSecurityContext(): ?string
     {
         return SecurityAdmin::USER_SECURITY_CONTEXT;
+    }
+
+    public function getResourceUser(): UserInterface
+    {
+        return $this->resourceUser;
+    }
+
+    public function getResourceTitle(): ?string
+    {
+        return $this->resourceUser->getUsername();
     }
 }

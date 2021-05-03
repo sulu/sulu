@@ -18,28 +18,28 @@ class UserRemovedEventTest extends TestCase
 {
     public function testGetEventType(): void
     {
-        $event = new UserRemovedEvent(1);
+        $event = new UserRemovedEvent(1, 'admin');
 
         $this->assertSame($event->getEventType(), 'removed');
     }
 
     public function testGetResourceKey(): void
     {
-        $event = new UserRemovedEvent(1);
+        $event = new UserRemovedEvent(1, 'admin');
 
         $this->assertSame('users', $event->getResourceKey());
     }
 
     public function testGetResourceId(): void
     {
-        $event = new UserRemovedEvent(1);
+        $event = new UserRemovedEvent(1, 'admin');
 
         $this->assertSame('1', $event->getResourceId());
     }
 
     public function testGetResourceSecurityContext(): void
     {
-        $event = new UserRemovedEvent(1);
+        $event = new UserRemovedEvent(1, 'admin');
 
         $this->assertSame('sulu.security.users', $event->getResourceSecurityContext());
     }

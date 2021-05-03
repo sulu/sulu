@@ -22,7 +22,7 @@ class UserCreatedEventTest extends TestCase
         $user = $this->prophesize(UserInterface::class);
         $event = new UserCreatedEvent($user->reveal(), []);
 
-        $this->assertSame($event->getEventType(), 'created');
+        $this->assertSame('created', $event->getEventType());
     }
 
     public function testGetPayload(): void
