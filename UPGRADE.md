@@ -8,11 +8,8 @@ The `skin` prop and `small` prop of the `Tabs` component was replaced with a `ty
 Currently there are three `types` available: `root`, `nested` and `inline`. If you have used 
 the `Tabs` component with a skin, be sure to replace them with the corresponding type. 
 
-`root` is the same as `skin='default'`.
-
-`nested` is a new type, which is used for `nested` tabs.
-
-`inline` is similar to `Tabs` with property `small=true` and `skin='transparent'`.
+- `type='root'` is the same as `skin='default'`.
+- `type='inline'` is similar to `small=true` and `skin='transparent'`.
 
 ### Added removeFileVersion method to MediaManagerInterface
 
