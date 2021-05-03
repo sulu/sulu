@@ -52,7 +52,10 @@ use Sulu\Component\DocumentManager\PropertyEncoder;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Webmozart\Assert\Assert;
 
-class DocumentManagerEventSubscriber implements EventSubscriberInterface
+/**
+ * @internal
+ */
+class DomainEventSubscriber implements EventSubscriberInterface
 {
     /**
      * @var DocumentDomainEventCollectorInterface
