@@ -17,6 +17,7 @@ use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
@@ -130,13 +131,13 @@ class MediaAdmin extends Admin
             $viewCollection->add(
                 $this->viewBuilderFactory
                     ->createResourceTabViewBuilder(static::EDIT_FORM_VIEW, '/media/:locale/:id')
-                    ->setResourceKey('media')
+                    ->setResourceKey(MediaInterface::RESOURCE_KEY)
                     ->addLocales($mediaLocales)
                     ->setTitleProperty('title')
             );
             $viewCollection->add(
                 $this->viewBuilderFactory->createFormViewBuilder(static::EDIT_FORM_DETAILS_VIEW, '/details')
-                    ->setResourceKey('media')
+                    ->setResourceKey(MediaInterface::RESOURCE_KEY)
                     ->setFormKey('media_details')
                     ->setTabTitle('sulu_media.information_taxonomy')
                     ->addToolbarActions($toolbarActions)
