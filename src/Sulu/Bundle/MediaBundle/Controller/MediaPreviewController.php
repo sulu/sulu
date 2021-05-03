@@ -92,12 +92,12 @@ class MediaPreviewController extends AbstractMediaController implements ClassRes
             // Unset id to not overwrite original file
             unset($data['id']);
 
-            /** @var MediaInterface|null $oldPreviewImage */
-            $oldPreviewImage = $mediaEntity->getPreviewImage();
-            $oldPreviewImageId = null;
-            if (null !== $oldPreviewImage) {
-                $oldPreviewImageId = $oldPreviewImage->getId();
-                $data['id'] = $oldPreviewImageId;
+            /** @var MediaInterface|null $previousPreviewImage */
+            $previousPreviewImage = $mediaEntity->getPreviewImage();
+            $previousPreviewImageId = null;
+            if (null !== $previousPreviewImage) {
+                $previousPreviewImageId = $previousPreviewImage->getId();
+                $data['id'] = $previousPreviewImageId;
             }
 
             $data['collection'] = $this->systemCollectionManager->getSystemCollection('sulu_media.preview_image');
@@ -111,16 +111,10 @@ class MediaPreviewController extends AbstractMediaController implements ClassRes
             $this->mediaManager->addFormatsAndUrl($media);
 
             // Because the `MediaManager::save()` method calls `$entityManager->flush()` itself, the `created` event of
-            // the preview image and the `preview_image_added`/`preview_image_modified` event are not in the same batch.
-            if (null !== $oldPreviewImageId) {
-                $this->domainEventCollector->collect(
-                    new MediaPreviewImageModifiedEvent($mediaEntity, $previewImage->getEntity(), $oldPreviewImageId)
-                );
-            } else {
-                $this->domainEventCollector->collect(
-                    new MediaPreviewImageAddedEvent($mediaEntity, $previewImage->getEntity())
-                );
-            }
+            // the preview image and the `preview_image_modified` event are not in the same batch.
+            $this->domainEventCollector->collect(
+                new MediaPreviewImageModifiedEvent($mediaEntity, $previewImage->getEntity(), $previousPreviewImageId)
+            );
 
             $this->entityManager->flush();
 
@@ -149,16 +143,16 @@ class MediaPreviewController extends AbstractMediaController implements ClassRes
             $mediaEntity = $media->getEntity();
 
             if (null !== $mediaEntity->getPreviewImage()) {
-                $oldPreviewImageId = $mediaEntity->getPreviewImage()->getId();
+                $previousPreviewImageId = $mediaEntity->getPreviewImage()->getId();
 
                 $mediaEntity->setPreviewImage(null);
                 $this->mediaManager->addFormatsAndUrl($media);
 
                 $this->domainEventCollector->collect(
-                    new MediaPreviewImageRemovedEvent($mediaEntity, $oldPreviewImageId)
+                    new MediaPreviewImageRemovedEvent($mediaEntity, $previousPreviewImageId)
                 );
 
-                $this->mediaManager->delete($oldPreviewImageId);
+                $this->mediaManager->delete($previousPreviewImageId);
             }
 
             $view = $this->view($media, 200);

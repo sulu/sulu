@@ -30,14 +30,14 @@ class MediaPreviewImageModifiedEvent extends DomainEvent
     private $newPreviewImage;
 
     /**
-     * @var int
+     * @var int|null
      */
     private $previousPreviewImageId;
 
     public function __construct(
         MediaInterface $media,
         MediaInterface $newPreviewImage,
-        int $previousPreviewImageId
+        ?int $previousPreviewImageId
     ) {
         parent::__construct();
 
@@ -56,7 +56,7 @@ class MediaPreviewImageModifiedEvent extends DomainEvent
         return $this->newPreviewImage;
     }
 
-    public function getPreviousPreviewImageId(): int
+    public function getPreviousPreviewImageId(): ?int
     {
         return $this->previousPreviewImageId;
     }
