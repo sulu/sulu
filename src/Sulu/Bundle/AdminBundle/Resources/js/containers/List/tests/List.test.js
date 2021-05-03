@@ -528,7 +528,7 @@ test('Pass given disabledIds and ids of items that fulfill given itemDisabledCon
 });
 
 test('Pass adapterOptions to the adapter', () => {
-    const adapterOptions = {table: {showHeader: true}, test: {skin: 'light'}};
+    const adapterOptions = {table: {show_header: true}, test: {skin: 'light'}};
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
     const list = shallow(<List adapterOptions={adapterOptions} adapters={['test']} store={listStore} />);
 

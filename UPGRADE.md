@@ -15,7 +15,7 @@ the `adapterOptions`.
 {
 -    ->addListAdapters(['table_light'])
 +    ->addListAdapters(['table'])
-+    ->setAdapterOptions(
++    ->addAdapterOptions(
 +        [
 +            'table' => [
 +                'skin' => 'light',
@@ -31,10 +31,10 @@ the `adapterOptions`.
 {
 -    ->addListAdapters(['tree_table_slim'])
 +    ->addListAdapters(['tree_table'])
-+    ->setAdapterOptions(
++    ->addAdapterOptions(
 +        [
 +            'tree_table' => [
-+                'showHeader' => false,
++                'show_header' => false,
 +            ],
 +        ]
 +   )

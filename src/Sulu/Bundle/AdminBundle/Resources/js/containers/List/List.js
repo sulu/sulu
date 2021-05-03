@@ -571,12 +571,13 @@ class List extends React.Component<Props> {
                         {searchable &&
                             <Search onSearch={this.handleSearch} value={store.searchTerm.get()} />
                         }
-                        {filterable &&
+                        {filterable ?
                             <FieldFilter
                                 fields={filterableFields || {}}
                                 onChange={this.handleFilterChange}
                                 value={store.filterOptions.get()}
-                            />
+                            /> :
+                            <div style={{flexGrow: 1}} />
                         }
                         {this.showColumnOptions &&
                             <Fragment>

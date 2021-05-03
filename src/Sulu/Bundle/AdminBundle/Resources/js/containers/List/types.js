@@ -36,16 +36,11 @@ export type ItemActionConfig = {|
 
 export type ItemActionsProvider = (item: ?Object) => Array<ItemActionConfig>;
 
-export type IconSkin = 'dark';
+export type IconSkin = 'default' | 'dark';
 
-export type DateTimeSkin = 'light';
+export type DateTimeSkin = 'default' | 'light';
 
-export type AdapterOptions = {|
-    display_root_level_toolbar?: mixed,
-    get_indicators?: mixed,
-    showHeader?: boolean,
-    skin?: Skin,
-|};
+export type AdapterOptions = {[key: string]: mixed};
 
 export type ListAdapterProps = {|
     active: ?string | number,

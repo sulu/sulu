@@ -249,7 +249,7 @@ test('Render data without header', () => {
         <TableAdapter
             {...listAdapterDefaultProps}
             adapterOptions={{
-                showHeader: false,
+                show_header: false,
             }}
             data={data}
             page={2}

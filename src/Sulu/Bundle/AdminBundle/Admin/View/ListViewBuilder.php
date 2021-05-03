@@ -201,14 +201,14 @@ class ListViewBuilder implements ListViewBuilderInterface
 
     public function enableColumnOptions(): ListViewBuilderInterface
     {
-        $this->setColumnOptionsToView($this->view, true);
+        $this->setHideColumnOptionsToView($this->view, false);
 
         return $this;
     }
 
     public function disableColumnOptions(): ListViewBuilderInterface
     {
-        $this->setColumnOptionsToView($this->view, false);
+        $this->setHideColumnOptionsToView($this->view, true);
 
         return $this;
     }
@@ -227,9 +227,9 @@ class ListViewBuilder implements ListViewBuilderInterface
         return $this;
     }
 
-    public function setAdapterOptions(array $adapterOptions): ListViewBuilderInterface
+    public function addAdapterOptions(array $adapterOptions): ListViewBuilderInterface
     {
-        $this->setAdapterOptionsToView($this->view, $adapterOptions);
+        $this->addAdapterOptionsToView($this->view, $adapterOptions);
 
         return $this;
     }

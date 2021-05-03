@@ -40,12 +40,15 @@ trait ListViewBuilderTrait
      */
     private function addListAdaptersToView(View $route, array $listAdapters): void
     {
+        /**
+         * @deprecated this is only a BC-layer, should be removed in 3.0
+         */
         $adapterModifiers = [
             '_light' => [
                 'skin' => 'light',
             ],
             '_slim' => [
-                'showHeader' => false,
+                'show_header' => false,
             ],
         ];
 
@@ -100,22 +103,14 @@ trait ListViewBuilderTrait
         $route->setOption('paginated', $paginated);
     }
 
-    private function setColumnOptionsToView(View $route, bool $showColumnOptions): void
+    private function setHideColumnOptionsToView(View $route, bool $hideColumnOptions): void
     {
-        $route->setOption('showColumnOptions', $showColumnOptions);
+        $route->setOption('hideColumnOptions', $hideColumnOptions);
     }
 
     private function setFilterableToView(View $route, bool $filterable): void
     {
         $route->setOption('filterable', $filterable);
-    }
-
-    /**
-     * @param array<string, array<string, mixed>> $adapterOptions
-     */
-    private function setAdapterOptionsToView(View $route, array $adapterOptions): void
-    {
-        $route->setOption('adapterOptions', $adapterOptions);
     }
 
     /**

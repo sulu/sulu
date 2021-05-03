@@ -290,6 +290,9 @@ Array [
                       />
                     </label>
                     <div
+                      style="flex-grow: 1;"
+                    />
+                    <div
                       class="buttonGroup"
                     >
                       <button
@@ -938,6 +941,9 @@ Array [
                         value=""
                       />
                     </label>
+                    <div
+                      style="flex-grow: 1;"
+                    />
                     <div
                       class="buttonGroup"
                     >

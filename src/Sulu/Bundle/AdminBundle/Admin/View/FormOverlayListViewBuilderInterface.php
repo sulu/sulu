@@ -71,10 +71,14 @@ interface FormOverlayListViewBuilderInterface extends ViewBuilderInterface
 
     public function disableColumnOptions(): self;
 
+    public function enableFiltering(): self;
+
+    public function disableFiltering(): self;
+
     /**
      * @param array<string, array<string, mixed>> $adapterOptions
      */
-    public function setAdapterOptions(array $adapterOptions): self;
+    public function addAdapterOptions(array $adapterOptions): self;
 
     /**
      * @param string[] $routerAttributesToListRequest

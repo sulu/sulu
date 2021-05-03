@@ -121,10 +121,12 @@ class TreeTableAdapter extends AbstractTableAdapter {
             onItemSelectionChange,
             onLimitChange,
             adapterOptions: {
-                showHeader = true,
+                show_header: showHeaderAdapterOption = true,
                 skin = 'dark',
             } = {},
-            options,
+            options: {
+                showHeader: showHeaderOption = true,
+            },
             page,
             pageCount,
             paginated,
@@ -145,7 +147,7 @@ class TreeTableAdapter extends AbstractTableAdapter {
                 selectMode="multiple"
                 skin={skin}
             >
-                {(options.showHeader !== undefined ? options.showHeader : showHeader) ?
+                {showHeaderAdapterOption && showHeaderOption ?
                     <Table.Header>
                         {this.renderHeaderCells()}
                     </Table.Header>

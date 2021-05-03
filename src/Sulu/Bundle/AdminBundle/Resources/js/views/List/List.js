@@ -367,7 +367,7 @@ class List extends React.Component<Props> {
                         selectable,
                         paginated,
                         adapterOptions,
-                        showColumnOptions,
+                        hideColumnOptions,
                         title: routeTitle,
                     },
                 },
@@ -393,7 +393,7 @@ class List extends React.Component<Props> {
                         ref={this.setListRef}
                         searchable={searchable}
                         selectable={selectable}
-                        showColumnOptions={showColumnOptions}
+                        showColumnOptions={!hideColumnOptions}
                         store={this.listStore}
                     />
                     {this.toolbarActions.map((toolbarAction) => toolbarAction.getNode())}

@@ -22,36 +22,43 @@ export default class DateTimeFieldTransformer implements FieldTransformer {
 
         const momentObject = moment(value, moment.ISO_8601);
 
-        const {
-            skin,
-            format = 'default',
-        }: {
-            format: string,
-            skin: ?DateTimeSkin,
-        } = parameters || {};
-
         if (!momentObject.isValid()) {
             log.error('Invalid date given: "' + value + '". Format needs to be in "ISO 8601"');
 
             return null;
         }
 
-        if (skin && typeof skin !== 'string') {
+        const {
+            skin = 'default',
+            format = 'default',
+        }: {
+            format: string,
+            skin: DateTimeSkin,
+        } = parameters || {};
+
+        if (typeof skin !== 'string') {
             log.error(`Transformer parameter "skin" needs to be of type string, ${typeof skin} given.`);
 
             return null;
         }
 
+        let formattedDate;
+        switch (format){
+            case 'relative':
+                formattedDate = this.getRelativeDateTime(momentObject);
+                break;
+            default:
+                formattedDate = this.getDefaultDateTime(momentObject);
+                break;
+        }
+
         const className = classNames(
             dateTimeFieldTransformerStyles.dateTime,
-            {
-                [dateTimeFieldTransformerStyles[skin]]: skin !== undefined,
-            }
+            dateTimeFieldTransformerStyles[skin]
         );
-
         return (
             <span className={className}>
-                {this.formats[format](momentObject, this.formats)}
+                {formattedDate}
             </span>
         );
     }

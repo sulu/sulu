@@ -11,6 +11,9 @@ exports[`Render PageList 1`] = `
       class="toolbar listToolbar"
     >
       <div
+        style="flex-grow: 1;"
+      />
+      <div
         class="buttonGroup"
       >
         <button

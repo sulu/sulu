@@ -79,7 +79,7 @@ class WebsiteAdmin extends Admin
                     ->setResourceKey(AnalyticsInterface::RESOURCE_KEY)
                     ->setListKey(AnalyticsInterface::LIST_KEY)
                     ->addListAdapters(['table'])
-                    ->setAdapterOptions(['table' => ['skin' => 'light']])
+                    ->addAdapterOptions(['table' => ['skin' => 'light']])
                     ->addRouterAttributesToListRequest(['webspace'])
                     ->addRouterAttributesToFormRequest(['webspace'])
                     ->disableSearching()

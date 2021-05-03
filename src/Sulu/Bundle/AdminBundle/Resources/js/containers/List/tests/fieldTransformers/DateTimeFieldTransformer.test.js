@@ -31,7 +31,7 @@ test('Test invalid format', () => {
 test('Test valid example', () => {
     expect(
         dateTimeFieldTransformer.transform('2018-03-10T14:09:04+01:00', {})
-    ).toEqual(<span className="dateTime">March 10, 2018 2:09 PM</span>);
+    ).toEqual(<span className="dateTime default">March 10, 2018 2:09 PM</span>);
 });
 
 test('Test light skin example', () => {

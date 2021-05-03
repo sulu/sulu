@@ -80,7 +80,7 @@ class CustomUrlAdmin extends Admin
                     ->setResourceKey(CustomUrlDocument::RESOURCE_KEY)
                     ->setListKey('custom_urls')
                     ->addListAdapters(['table'])
-                    ->setAdapterOptions(['table' => ['skin' => 'light']])
+                    ->addAdapterOptions(['table' => ['skin' => 'light']])
                     ->addRouterAttributesToListRequest(['webspace'])
                     ->addRouterAttributesToFormRequest(['webspace'])
                     ->disableSearching()

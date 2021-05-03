@@ -75,7 +75,7 @@ class TableAdapter extends AbstractTableAdapter {
             onPageChange,
             paginated,
             adapterOptions: {
-                showHeader = true,
+                show_header = true,
                 skin = 'dark',
             } = {},
             page,
@@ -91,7 +91,7 @@ class TableAdapter extends AbstractTableAdapter {
                 skin={skin}
             >
                 {
-                    !showHeader ? null
+                    !show_header ? null
                         : <Table.Header>
                             {this.renderHeaderCells()}
                         </Table.Header>

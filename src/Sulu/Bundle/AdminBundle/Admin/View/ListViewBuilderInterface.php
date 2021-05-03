@@ -86,7 +86,7 @@ interface ListViewBuilderInterface extends ViewBuilderInterface
     /**
      * @param array<string, array<string, mixed>> $adapterOptions
      */
-    public function setAdapterOptions(array $adapterOptions): self;
+    public function addAdapterOptions(array $adapterOptions): self;
 
     /**
      * @param string[] $routerAttributesToListRequest

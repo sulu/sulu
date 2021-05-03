@@ -264,6 +264,9 @@ exports[`Render a simple MediaOverview 1`] = `
             />
           </label>
           <div
+            style="flex-grow:1"
+          />
+          <div
             class="buttonGroup"
           >
             <button

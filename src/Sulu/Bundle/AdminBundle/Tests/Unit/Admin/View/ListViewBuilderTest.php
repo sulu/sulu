@@ -500,7 +500,7 @@ class ListViewBuilderTest extends TestCase
         $this->assertSame(
             [
                 'table' => ['skin' => 'light'],
-                'tree_table' => ['showHeader' => false],
+                'tree_table' => ['show_header' => false],
             ], $view->getOption('adapterOptions')
         );
     }
@@ -510,15 +510,15 @@ class ListViewBuilderTest extends TestCase
         $view = (new ListViewBuilder('sulu_role.list', '/roles'))
             ->setResourceKey('roles')
             ->setListKey('roles')
-            ->setAdapterOptions(['table' => ['showHeader' => false], 'tree_table' => ['skin' => 'flat']])
+            ->addAdapterOptions(['table' => ['show_header' => false], 'tree_table' => ['skin' => 'flat']])
             ->addListAdapters(['table_light', 'tree_table_slim'])
             ->getView();
 
         $this->assertSame(['table', 'tree_table'], $view->getOption('adapters'));
         $this->assertSame(
             [
-                'table' => ['showHeader' => false, 'skin' => 'light'],
-                'tree_table' => ['skin' => 'flat', 'showHeader' => false],
+                'table' => ['show_header' => false, 'skin' => 'light'],
+                'tree_table' => ['skin' => 'flat', 'show_header' => false],
             ], $view->getOption('adapterOptions')
         );
     }

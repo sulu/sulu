@@ -15,10 +15,10 @@ export default class IconFieldTransformer implements FieldTransformer {
 
         const {
             mapping,
-            skin,
+            skin = 'default',
         }: {
             mapping: mixed[],
-            skin: ?IconSkin,
+            skin: IconSkin,
         } = parameters;
         if (!mapping) {
             return value;
@@ -91,9 +91,7 @@ export default class IconFieldTransformer implements FieldTransformer {
     getClassName(skin: ?IconSkin): Object {
         return classNames(
             iconFieldTransformerStyles.listIcon,
-            {
-                [iconFieldTransformerStyles[skin]]: skin !== undefined,
-            }
+            iconFieldTransformerStyles[skin]
         );
     }
 }

@@ -192,7 +192,7 @@ test('Render data without header', () => {
     const treeListAdapter = render(
         <TreeTableAdapter
             {...listAdapterDefaultProps}
-            adapterOptions={{showHeader: false}}
+            adapterOptions={{show_header: false}}
             data={data}
             page={1}
             pageCount={2}
@@ -258,7 +258,7 @@ test('Render data with skin', () => {
     const treeListAdapter = render(
         <TreeTableAdapter
             {...listAdapterDefaultProps}
-            adapterOptions={{showHeader: false, skin: 'flat'}}
+            adapterOptions={{show_header: false, skin: 'flat'}}
             data={data}
             page={1}
             pageCount={2}

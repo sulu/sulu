@@ -256,6 +256,9 @@ exports[`Render the MediaCollection 1`] = `
             value=""
           />
         </label>
+        <div
+          style="flex-grow:1"
+        />
       </div>
       <div
         class="list"
@@ -793,6 +796,9 @@ exports[`Render the MediaCollection for all media 1`] = `
             value=""
           />
         </label>
+        <div
+          style="flex-grow:1"
+        />
       </div>
       <div
         class="list"
