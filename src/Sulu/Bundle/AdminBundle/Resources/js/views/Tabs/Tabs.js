@@ -132,15 +132,15 @@ class Tabs<T> extends React.Component<Props<T>> {
                 : undefined;
 
         const disableGap = selectedIndex !== undefined
-            ? this.sortedTabRoutes[selectedIndex]?.options?.tabGap === false
+            ? this.sortedTabRoutes[selectedIndex]?.options?.disableTabGap
             : false;
 
         const showTabs = isRootView || this.sortedTabRoutes.length > 1;
-        const tabType = isRootView ? 'root' : 'nested';
+        const type = isRootView ? 'root' : 'nested';
 
         const className = classNames(
             tabsStyles.tabsContainer,
-            tabsStyles[tabType],
+            tabsStyles[type],
             {
                 [tabsStyles.disableGap]: disableGap,
             }
@@ -154,7 +154,7 @@ class Tabs<T> extends React.Component<Props<T>> {
                         <TabsComponent
                             onSelect={this.handleSelect}
                             selectedIndex={selectedTabIndex}
-                            type={tabType}
+                            type={type}
                         >
                             {this.sortedTabRoutes.map((tabRoute) => {
                                 const tabTitle = tabRoute.options.tabTitle;
@@ -183,7 +183,7 @@ class Tabs<T> extends React.Component<Props<T>> {
                                     });
 
                                 return (
-                                    <TabsComponent.Tab badges={badges} key={tabRoute.name} type={tabType}>
+                                    <TabsComponent.Tab badges={badges} key={tabRoute.name} type={type}>
                                         {tabTitle ? translate(tabTitle) : tabRoute.name}
                                     </TabsComponent.Tab>
                                 );

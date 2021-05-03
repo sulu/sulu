@@ -43,19 +43,7 @@ test('Render a Tabs component with type nested', () => {
     )).toMatchSnapshot();
 });
 
-test('Render a Tabs component type inline', () => {
-    const changeSpy = jest.fn();
-
-    expect(render(
-        <Tabs onSelect={changeSpy} selectedIndex={null} type="inline">
-            <Tabs.Tab>Tab 1</Tabs.Tab>
-            <Tabs.Tab>Tab 2</Tabs.Tab>
-            <Tabs.Tab>Tab 3</Tabs.Tab>
-        </Tabs>
-    )).toMatchSnapshot();
-});
-
-test('Render a Tabs component with inline type', () => {
+test('Render a Tabs component with type inline', () => {
     const changeSpy = jest.fn();
 
     expect(render(

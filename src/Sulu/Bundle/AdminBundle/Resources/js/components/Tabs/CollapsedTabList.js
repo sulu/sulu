@@ -4,11 +4,11 @@ import type {ChildrenArray, Element} from 'react';
 import classNames from 'classnames';
 import CollapsedTab from './CollapsedTab';
 import collapsedTabListStyles from './collapsedTabList.scss';
-import type {TabType} from './types';
+import type {Type} from './types';
 
 type Props = {
     children: ChildrenArray<Element<typeof CollapsedTab> | false>,
-    type: TabType,
+    type: Type,
 };
 
 export default class CollapsedTabList extends React.PureComponent<Props> {

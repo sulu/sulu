@@ -229,12 +229,12 @@ test('Should render the children with the passed props', () => {
     )).toMatchSnapshot();
 });
 
-test('Should render the active child with disabledGap option', () => {
+test('Should render the active child with disabledTabGap option', () => {
     const childRoute1 = new Route({
         name: 'route1',
         options: {
             tabTitle: 'tabTitle1',
-            tabGap: false,
+            disableTabGap: true,
         },
         path: '/route1',
         type: 'route1',

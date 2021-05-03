@@ -33,9 +33,9 @@ trait TabViewChildBuilderTrait
         $view->setOption('tabPriority', $tabPriority);
     }
 
-    private function setTabGapToView(View $view, bool $enableTabGap): void
+    private function setDisableTabGapToView(View $view, bool $disableTabGap): void
     {
-        $view->setOption('tabGap', $enableTabGap);
+        $view->setOption('disableTabGap', $disableTabGap);
     }
 
     /**

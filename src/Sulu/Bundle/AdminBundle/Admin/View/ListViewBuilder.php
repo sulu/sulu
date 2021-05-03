@@ -187,14 +187,14 @@ class ListViewBuilder implements ListViewBuilderInterface
 
     public function enableTabGap(): ListViewBuilderInterface
     {
-        $this->setTabGapToView($this->view, true);
+        $this->setDisableTabGapToView($this->view, false);
 
         return $this;
     }
 
     public function disableTabGap(): ListViewBuilderInterface
     {
-        $this->setTabGapToView($this->view, false);
+        $this->setDisableTabGapToView($this->view, true);
 
         return $this;
     }

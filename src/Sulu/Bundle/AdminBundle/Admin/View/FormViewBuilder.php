@@ -172,14 +172,14 @@ class FormViewBuilder implements FormViewBuilderInterface
 
     public function enableTabGap(): FormViewBuilderInterface
     {
-        $this->setTabGapToView($this->view, true);
+        $this->setDisableTabGapToView($this->view, false);
 
         return $this;
     }
 
     public function disableTabGap(): FormViewBuilderInterface
     {
-        $this->setTabGapToView($this->view, false);
+        $this->setDisableTabGapToView($this->view, true);
 
         return $this;
     }

@@ -1,47 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render a Tabs component type inline 1`] = `
-<div
-  class="tabs inline"
->
-  <div
-    class="tabsContainerWrapper"
-  >
-    <ul
-      class="tabsContainer"
-    >
-      <li
-        class="tab inline"
-      >
-        <button
-          title="Tab 1"
-        >
-          Tab 1
-        </button>
-      </li>
-      <li
-        class="tab inline"
-      >
-        <button
-          title="Tab 2"
-        >
-          Tab 2
-        </button>
-      </li>
-      <li
-        class="tab inline"
-      >
-        <button
-          title="Tab 3"
-        >
-          Tab 3
-        </button>
-      </li>
-    </ul>
-  </div>
-</div>
-`;
-
 exports[`Render a Tabs component with a selected tab and a badge 1`] = `
 <div
   class="tabs root"
@@ -99,7 +57,7 @@ exports[`Render a Tabs component with a selected tab and a badge 1`] = `
 </div>
 `;
 
-exports[`Render a Tabs component with inline type 1`] = `
+exports[`Render a Tabs component with type inline 1`] = `
 <div
   class="tabs inline"
 >

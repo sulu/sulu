@@ -7,7 +7,7 @@ import classNames from 'classnames';
 import debounce from 'debounce';
 import Popover from '../Popover';
 import Icon from '../Icon';
-import type {TabType} from './types';
+import type {Type} from './types';
 import Tab from './Tab';
 import CollapsedTabList from './CollapsedTabList';
 import CollapsedTab from './CollapsedTab';
@@ -18,17 +18,13 @@ type Props = {
     className?: string,
     onSelect: (tabIndex: number) => void,
     selectedIndex: ?number,
-    type: TabType,
+    type: Type,
 };
 
 const DEBOUNCE_TIME = 200;
 
 @observer
 class Tabs extends React.Component<Props> {
-    static defaultProps = {
-        type: 'nested',
-    };
-
     @observable tabsWidth: number = 0;
     @observable tabsContainerWrapperWidth: number = 0;
     @observable tabsContainerWidth: number = 0;

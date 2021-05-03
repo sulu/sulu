@@ -3,7 +3,7 @@ import React from 'react';
 import type {Element, ElementRef} from 'react';
 import classNames from 'classnames';
 import tabStyles from './tab.scss';
-import type {TabType} from './types';
+import type {Type} from './types';
 
 type Props = {
     badges: Element<*>[],
@@ -13,7 +13,7 @@ type Props = {
     onClick?: (index: ?number) => void,
     selected: boolean,
     tabRef?: (index: ?number, ref: ?ElementRef<'li'>) => void,
-    type: TabType,
+    type?: Type,
 };
 
 class Tab extends React.PureComponent<Props> {

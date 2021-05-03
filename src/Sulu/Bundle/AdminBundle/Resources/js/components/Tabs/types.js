@@ -1,2 +1,2 @@
 // @flow
-export type TabType = 'root' | 'nested' | 'inline';
+export type Type = 'root' | 'nested' | 'inline';

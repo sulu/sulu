@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Should render the active child with disabledGap option 1`] = `
+exports[`Should render the active child with disabledTabGap option 1`] = `
 Array [
   <div
     class="tabsContainer nested disableGap"
