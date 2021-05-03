@@ -1,50 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render a Tabs component 1`] = `
-<div
-  class="tabs default"
->
-  <div
-    class="tabsContainerWrapper"
-  >
-    <ul
-      class="tabsContainer"
-    >
-      <li
-        class="tab"
-      >
-        <button
-          title="Tab 1"
-        >
-          Tab 1
-        </button>
-      </li>
-      <li
-        class="tab"
-      >
-        <button
-          title="Tab 2"
-        >
-          Tab 2
-        </button>
-      </li>
-      <li
-        class="tab"
-      >
-        <button
-          title="Tab 3"
-        >
-          Tab 3
-        </button>
-      </li>
-    </ul>
-  </div>
-</div>
-`;
-
 exports[`Render a Tabs component with a selected tab and a badge 1`] = `
 <div
-  class="tabs default"
+  class="tabs root"
 >
   <div
     class="tabsContainerWrapper"
@@ -53,7 +11,7 @@ exports[`Render a Tabs component with a selected tab and a badge 1`] = `
       class="tabsContainer"
     >
       <li
-        class="tab selected"
+        class="tab root selected"
       >
         <button
           disabled=""
@@ -63,7 +21,7 @@ exports[`Render a Tabs component with a selected tab and a badge 1`] = `
         </button>
       </li>
       <li
-        class="tab"
+        class="tab root"
       >
         <button
           title="Tab 2"
@@ -72,7 +30,7 @@ exports[`Render a Tabs component with a selected tab and a badge 1`] = `
         </button>
       </li>
       <li
-        class="tab"
+        class="tab root"
       >
         <button
           title="Tab 3"
@@ -99,9 +57,9 @@ exports[`Render a Tabs component with a selected tab and a badge 1`] = `
 </div>
 `;
 
-exports[`Render a Tabs component with small modifier 1`] = `
+exports[`Render a Tabs component with type inline 1`] = `
 <div
-  class="tabs default small"
+  class="tabs inline"
 >
   <div
     class="tabsContainerWrapper"
@@ -110,7 +68,7 @@ exports[`Render a Tabs component with small modifier 1`] = `
       class="tabsContainer"
     >
       <li
-        class="tab small"
+        class="tab inline"
       >
         <button
           title="Tab 1"
@@ -119,7 +77,7 @@ exports[`Render a Tabs component with small modifier 1`] = `
         </button>
       </li>
       <li
-        class="tab small"
+        class="tab inline"
       >
         <button
           title="Tab 2"
@@ -128,7 +86,7 @@ exports[`Render a Tabs component with small modifier 1`] = `
         </button>
       </li>
       <li
-        class="tab small"
+        class="tab inline"
       >
         <button
           title="Tab 3"
@@ -141,9 +99,9 @@ exports[`Render a Tabs component with small modifier 1`] = `
 </div>
 `;
 
-exports[`Render a Tabs component with transparent skin 1`] = `
+exports[`Render a Tabs component with type nested 1`] = `
 <div
-  class="tabs transparent"
+  class="tabs nested"
 >
   <div
     class="tabsContainerWrapper"
@@ -152,7 +110,7 @@ exports[`Render a Tabs component with transparent skin 1`] = `
       class="tabsContainer"
     >
       <li
-        class="tab"
+        class="tab nested"
       >
         <button
           title="Tab 1"
@@ -161,7 +119,7 @@ exports[`Render a Tabs component with transparent skin 1`] = `
         </button>
       </li>
       <li
-        class="tab"
+        class="tab nested"
       >
         <button
           title="Tab 2"
@@ -170,7 +128,49 @@ exports[`Render a Tabs component with transparent skin 1`] = `
         </button>
       </li>
       <li
-        class="tab"
+        class="tab nested"
+      >
+        <button
+          title="Tab 3"
+        >
+          Tab 3
+        </button>
+      </li>
+    </ul>
+  </div>
+</div>
+`;
+
+exports[`Render a Tabs component with type root 1`] = `
+<div
+  class="tabs root"
+>
+  <div
+    class="tabsContainerWrapper"
+  >
+    <ul
+      class="tabsContainer"
+    >
+      <li
+        class="tab root"
+      >
+        <button
+          title="Tab 1"
+        >
+          Tab 1
+        </button>
+      </li>
+      <li
+        class="tab root"
+      >
+        <button
+          title="Tab 2"
+        >
+          Tab 2
+        </button>
+      </li>
+      <li
+        class="tab root"
       >
         <button
           title="Tab 3"

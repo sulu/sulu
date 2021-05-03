@@ -46,7 +46,7 @@ test('Render webspace select with children when webspaces are not loaded yet', (
     });
 
     const webspaceTabs = mount(
-        <WebspaceTabs route={route} router={router}>
+        <WebspaceTabs isRootView={true} route={route} router={router}>
             {(props) => <h1>{props && props.webspace && props.webspace.key}</h1>}
         </WebspaceTabs>
     );

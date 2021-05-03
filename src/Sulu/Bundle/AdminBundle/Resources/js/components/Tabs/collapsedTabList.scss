@@ -14,12 +14,12 @@ $collapsedTabListTransparentBoxShadowColor: rgba($alto, .5);
     max-height: 70vh;
     overflow: auto;
 
-    &.default {
+    &.root {
         background-color: $collapsedTabListBackgroundColor;
         box-shadow: 2px 6px 12px 0 $collapsedTabListBoxShadowColor;
     }
 
-    &.transparent {
+    &.inline {
         background-color: $collapsedTabListTransparentBackgroundColor;
         box-shadow: 2px 6px 12px 0 $collapsedTabListTransparentBoxShadowColor;
     }

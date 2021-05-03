@@ -33,6 +33,11 @@ trait TabViewChildBuilderTrait
         $view->setOption('tabPriority', $tabPriority);
     }
 
+    private function setDisableTabGapToView(View $view, bool $disableTabGap): void
+    {
+        $view->setOption('disableTabGap', $disableTabGap);
+    }
+
     /**
      * @param Badge[] $badges
      */

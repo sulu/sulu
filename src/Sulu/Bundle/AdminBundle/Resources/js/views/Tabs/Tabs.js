@@ -3,6 +3,7 @@ import React, {Fragment} from 'react';
 import type {Element, Node} from 'react';
 import {autorun, computed} from 'mobx';
 import {observer} from 'mobx-react';
+import classNames from 'classnames';
 import TabsComponent from '../../components/Tabs';
 import type {ViewProps} from '../../containers/ViewRenderer';
 import {translate} from '../../utils/Translator';
@@ -17,6 +18,7 @@ type Props<T> = {
     header?: Node,
     routeChildren?: Array<Route>,
     selectedIndex?: number,
+    title?: string,
 };
 
 @observer
@@ -119,7 +121,7 @@ class Tabs<T> extends React.Component<Props<T>> {
     };
 
     render() {
-        const {children, childrenProps, header, router, selectedIndex} = this.props;
+        const {children, childrenProps, header, router, selectedIndex, title, isRootView} = this.props;
 
         const childComponent = children ? children(childrenProps) : null;
 
@@ -129,41 +131,65 @@ class Tabs<T> extends React.Component<Props<T>> {
                 ? this.sortedTabRoutes.findIndex((childRoute) => childRoute === childComponent.props.route)
                 : undefined;
 
+        const disableGap = selectedIndex !== undefined
+            ? this.sortedTabRoutes[selectedIndex]?.options?.disableTabGap
+            : false;
+
+        const showTabs = isRootView || this.sortedTabRoutes.length > 1;
+        const type = isRootView ? 'root' : 'nested';
+
+        const className = classNames(
+            tabsStyles.tabsContainer,
+            tabsStyles[type],
+            {
+                [tabsStyles.disableGap]: disableGap && !isRootView,
+            }
+        );
+
         return (
             <Fragment>
-                <div className={tabsStyles.tabsContainer}>
-                    <TabsComponent onSelect={this.handleSelect} selectedIndex={selectedTabIndex}>
-                        {this.sortedTabRoutes.map((tabRoute) => {
-                            const tabTitle = tabRoute.options.tabTitle;
-                            const tabBadges = tabRoute.options.tabBadges || [];
+                {title && <h1>{title}</h1>}
+                <div className={className}>
+                    {showTabs &&
+                        <TabsComponent
+                            onSelect={this.handleSelect}
+                            selectedIndex={selectedTabIndex}
+                            type={type}
+                        >
+                            {this.sortedTabRoutes.map((tabRoute) => {
+                                const tabTitle = tabRoute.options.tabTitle;
+                                const tabBadges = tabRoute.options.tabBadges || [];
 
-                            const badges = (Object.values(tabBadges): any).map((badge: BadgeOptions, index: number) => {
-                                if (typeof badge !== 'object') {
-                                    throw new Error(
-                                        `The value of a badge entry must be an object, but ${typeof badge} was given!`
-                                    );
-                                }
+                                const badges = (Object.values(tabBadges): any).map(
+                                    (badge: BadgeOptions, index: number) => {
+                                        if (typeof badge !== 'object') {
+                                            throw new Error(
+                                                `The value of a badge entry must be an object,
+                                            but ${typeof badge} was given!`
+                                            );
+                                        }
+
+                                        return (
+                                            <Badge
+                                                dataPath={badge.dataPath}
+                                                key={index}
+                                                requestParameters={badge.requestParameters}
+                                                routeName={badge.routeName}
+                                                router={router}
+                                                routerAttributesToRequest={badge.routerAttributesToRequest}
+                                                visibleCondition={badge.visibleCondition}
+                                            />
+                                        );
+                                    });
 
                                 return (
-                                    <Badge
-                                        dataPath={badge.dataPath}
-                                        key={index}
-                                        requestParameters={badge.requestParameters}
-                                        routeName={badge.routeName}
-                                        router={router}
-                                        routerAttributesToRequest={badge.routerAttributesToRequest}
-                                        visibleCondition={badge.visibleCondition}
-                                    />
+                                    <TabsComponent.Tab badges={badges} key={tabRoute.name} type={type}>
+                                        {tabTitle ? translate(tabTitle) : tabRoute.name}
+                                    </TabsComponent.Tab>
                                 );
-                            });
-
-                            return (
-                                <TabsComponent.Tab badges={badges} key={tabRoute.name}>
-                                    {tabTitle ? translate(tabTitle) : tabRoute.name}
-                                </TabsComponent.Tab>
-                            );
-                        })}
-                    </TabsComponent>
+                            })}
+                        </TabsComponent>
+                    }
                 </div>
                 {header}
                 {childComponent}

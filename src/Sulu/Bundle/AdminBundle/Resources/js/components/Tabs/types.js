@@ -1,2 +1,2 @@
 // @flow
-export type Skin = 'default' | 'transparent';
+export type Type = 'root' | 'nested' | 'inline';

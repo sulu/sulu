@@ -2,29 +2,25 @@
 import React from 'react';
 import type {ChildrenArray, Element} from 'react';
 import classNames from 'classnames';
-import type {Skin} from './types';
 import CollapsedTab from './CollapsedTab';
 import collapsedTabListStyles from './collapsedTabList.scss';
+import type {Type} from './types';
 
 type Props = {
     children: ChildrenArray<Element<typeof CollapsedTab> | false>,
-    skin: Skin,
+    type: Type,
 };
 
 export default class CollapsedTabList extends React.PureComponent<Props> {
-    static defaultProps = {
-        skin: 'default',
-    };
-
     render() {
         const {
             children,
-            skin,
+            type,
         } = this.props;
 
         const collapsedTabListClass = classNames(
             collapsedTabListStyles.collapsedTabList,
-            collapsedTabListStyles[skin]
+            collapsedTabListStyles[type]
         );
 
         return (

@@ -170,6 +170,20 @@ class FormViewBuilder implements FormViewBuilderInterface
         return $this;
     }
 
+    public function enableTabGap(): FormViewBuilderInterface
+    {
+        $this->setDisableTabGapToView($this->view, false);
+
+        return $this;
+    }
+
+    public function disableTabGap(): FormViewBuilderInterface
+    {
+        $this->setDisableTabGapToView($this->view, true);
+
+        return $this;
+    }
+
     public function getView(): View
     {
         if (!$this->view->getOption('resourceKey')) {

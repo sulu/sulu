@@ -261,7 +261,9 @@ test('Should render the child components after the tabs', (done) => {
 
     const Child = () => (<h1>Child</h1>);
 
-    const resourceTabs = mount(<ResourceTabs route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
+    const resourceTabs = mount(
+        <ResourceTabs isRootView={true} route={route} router={router}>{() => (<Child />)}</ResourceTabs>
+    );
 
     setTimeout(() => {
         expect(resourceTabs.find('Loader')).toHaveLength(0);
@@ -463,7 +465,9 @@ test('Should hide tabs which do not match the tab condition', (done) => {
     const Child = () => (<h1>Child</h1>);
 
     const resourceTabs = mount(
-        <ResourceTabs route={route} router={router}>{() => (<Child route={route.children[1]} />)}</ResourceTabs>
+        <ResourceTabs isRootView={true} route={route} router={router}>
+            {() => (<Child route={route.children[1]} />)}
+        </ResourceTabs>
     );
 
     resourceTabs.instance().resourceStore.data = {test: 1};

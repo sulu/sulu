@@ -2,6 +2,15 @@
 
 ## 2.3
 
+### React Tabs skin was removed
+
+The `skin` prop and `small` prop of the `Tabs` component was replaced with a `type` prop.
+Currently there are three `types` available: `root`, `nested` and `inline`. If you have used 
+the `Tabs` component with a skin, be sure to replace them with the corresponding type. 
+
+- `type='root'` is the same as `skin='default'`.
+- `type='inline'` is similar to `small=true` and `skin='transparent'`.
+
 ### Added removeFileVersion method to MediaManagerInterface
 
 The `MediaManagerInterface` declares a new method `removeFileVersion`.

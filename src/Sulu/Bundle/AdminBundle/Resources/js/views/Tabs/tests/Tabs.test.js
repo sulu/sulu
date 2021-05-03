@@ -67,7 +67,7 @@ test('Should render the children after the tabs', () => {
     const router = new Router({});
 
     const Child = () => (<h1>Child</h1>);
-    expect(render(<Tabs route={route} router={router}>{() => (<Child />)}</Tabs>)).toMatchSnapshot();
+    expect(render(<Tabs isRootView={true} route={route} router={router}>{() => (<Child />)}</Tabs>)).toMatchSnapshot();
 });
 
 test('Should render the tab badges', () => {
@@ -124,7 +124,7 @@ test('Should render the tab badges', () => {
     const router = new Router({});
 
     const Child = () => (<h1>Child</h1>);
-    const tabs = mount(<Tabs route={route} router={router}>{() => (<Child />)}</Tabs>);
+    const tabs = mount(<Tabs isRootView={true} route={route} router={router}>{() => (<Child />)}</Tabs>);
 
     return promise.then(() => {
         tabs.update();
@@ -170,8 +170,16 @@ test('Should render the header between children and tabs', () => {
     const router = new Router({});
 
     const Child = () => (<h2>Child</h2>);
-    expect(render(<Tabs header={<h1>Header</h1>} route={route} router={router}>{() => (<Child />)}</Tabs>))
-        .toMatchSnapshot();
+    expect(render(
+        <Tabs
+            header={<h1>Header</h1>}
+            isRootView={true}
+            route={route}
+            router={router}
+        >
+            {() => (<Child />)}
+        </Tabs>
+    )).toMatchSnapshot();
 });
 
 test('Should render the children with the passed props', () => {
@@ -210,7 +218,72 @@ test('Should render the children with the passed props', () => {
 
     const Child = ({test}) => (<h2>{test}</h2>);
     expect(render(
-        <Tabs childrenProps={{test: 'Value'}} route={route} router={router}>{(props) => (<Child {...props} />)}</Tabs>
+        <Tabs
+            childrenProps={{test: 'Value'}}
+            isRootView={true}
+            route={route}
+            router={router}
+        >
+            {(props) => (<Child {...props} />)}
+        </Tabs>
+    )).toMatchSnapshot();
+});
+
+test('Should render the active child with disabledTabGap option', () => {
+    const childRoute1 = new Route({
+        name: 'route1',
+        options: {
+            tabTitle: 'tabTitle1',
+            disableTabGap: true,
+        },
+        path: '/route1',
+        type: 'route1',
+    });
+    const childRoute2 = new Route({
+        name: 'route2',
+        options: {
+            tabTitle: 'tabTitle2',
+        },
+        path: '/route2',
+        type: 'route1',
+    });
+
+    const route = new Route({
+        name: 'parent',
+        options: {
+            resourceKey: 'test',
+        },
+        path: '/parent',
+        type: 'route1',
+    });
+
+    route.children.push(childRoute1);
+    route.children.push(childRoute2);
+
+    const attributes = {
+        id: 1,
+    };
+
+    const activeRoute = route.children[1];
+
+    // $FlowFixMe
+    Router.mockImplementation(function() {
+        this.attributes = attributes;
+        this.redirect = jest.fn();
+        this.route = activeRoute;
+    });
+
+    const router = new Router({});
+
+    const Child = () => (<h1>Child</h1>);
+    expect(render(
+        <Tabs
+            route={route}
+            router={router}
+            selectedIndex={0}
+        >
+            {() => (<Child route={activeRoute} />)}
+        </Tabs>
     )).toMatchSnapshot();
 });
 

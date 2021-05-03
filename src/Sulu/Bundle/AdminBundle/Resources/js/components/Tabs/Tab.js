@@ -3,6 +3,7 @@ import React from 'react';
 import type {Element, ElementRef} from 'react';
 import classNames from 'classnames';
 import tabStyles from './tab.scss';
+import type {Type} from './types';
 
 type Props = {
     badges: Element<*>[],
@@ -11,8 +12,8 @@ type Props = {
     index?: number,
     onClick?: (index: ?number) => void,
     selected: boolean,
-    small: boolean,
     tabRef?: (index: ?number, ref: ?ElementRef<'li'>) => void,
+    type?: Type,
 };
 
 class Tab extends React.PureComponent<Props> {
@@ -20,7 +21,6 @@ class Tab extends React.PureComponent<Props> {
         badges: [],
         hidden: false,
         selected: false,
-        small: false,
     };
 
     setTabRef = (ref: ?ElementRef<'li'>) => {
@@ -44,16 +44,16 @@ class Tab extends React.PureComponent<Props> {
             badges,
             children,
             hidden,
-            small,
+            type,
             selected,
         } = this.props;
 
         const tabClass = classNames(
             tabStyles.tab,
+            tabStyles[type],
             {
                 [tabStyles.hidden]: hidden,
                 [tabStyles.selected]: selected,
-                [tabStyles.small]: small,
             }
         );
 

@@ -7,7 +7,7 @@ import classNames from 'classnames';
 import debounce from 'debounce';
 import Popover from '../Popover';
 import Icon from '../Icon';
-import type {Skin} from './types';
+import type {Type} from './types';
 import Tab from './Tab';
 import CollapsedTabList from './CollapsedTabList';
 import CollapsedTab from './CollapsedTab';
@@ -18,19 +18,13 @@ type Props = {
     className?: string,
     onSelect: (tabIndex: number) => void,
     selectedIndex: ?number,
-    skin: Skin,
-    small: boolean,
+    type: Type,
 };
 
 const DEBOUNCE_TIME = 200;
 
 @observer
 class Tabs extends React.Component<Props> {
-    static defaultProps = {
-        skin: 'default',
-        small: false,
-    };
-
     @observable tabsWidth: number = 0;
     @observable tabsContainerWrapperWidth: number = 0;
     @observable tabsContainerWidth: number = 0;
@@ -255,7 +249,7 @@ class Tabs extends React.Component<Props> {
     }
 
     createTabItems(tabs: Array<Element<typeof Tab> | false>, indices: number[], hidden: boolean) {
-        const {small} = this.props;
+        const {type} = this.props;
 
         return React.Children.map(tabs, (tab, localIndex) => {
             const index = indices[localIndex];
@@ -273,7 +267,7 @@ class Tabs extends React.Component<Props> {
                     hidden,
                     index,
                     selected,
-                    small,
+                    type,
                     onClick: this.handleTabClick,
                     tabRef: this.setTabRef,
                 }
@@ -335,18 +329,14 @@ class Tabs extends React.Component<Props> {
 
     render() {
         const {
-            skin,
-            small,
+            type,
             className,
         } = this.props;
 
         const tabsClass = classNames(
             tabsStyles.tabs,
-            className,
-            tabsStyles[skin],
-            {
-                [tabsStyles.small]: small,
-            }
+            tabsStyles[type],
+            className
         );
 
         return (
@@ -375,7 +365,7 @@ class Tabs extends React.Component<Props> {
                             {
                                 (setPopoverRef, styles) => (
                                     <div ref={setPopoverRef} style={styles}>
-                                        <CollapsedTabList skin={skin}>
+                                        <CollapsedTabList type={type}>
                                             {this.createCollapsedTabs()}
                                         </CollapsedTabList>
                                     </div>
