@@ -4,7 +4,6 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
         <service id="sulu_website.analytics.repository" alias="sulu.repository.analytics"/>
-        <service id="Sulu\Bundle\WebsiteBundle\Entity\AnalyticsRepositoryInterface" alias="sulu.repository.analytics"/>
 
         <service id="sulu_website.domains.repository"
                  class="Sulu\Bundle\WebsiteBundle\Entity\DomainRepository">
