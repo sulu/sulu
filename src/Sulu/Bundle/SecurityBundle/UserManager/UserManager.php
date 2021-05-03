@@ -24,7 +24,6 @@ use Sulu\Bundle\SecurityBundle\Domain\Event\UserModifiedEvent;
 use Sulu\Bundle\SecurityBundle\Domain\Event\UserRemovedEvent;
 use Sulu\Bundle\SecurityBundle\Domain\Event\UserUnlockedEvent;
 use Sulu\Bundle\SecurityBundle\Entity\GroupRepository;
-use Sulu\Bundle\SecurityBundle\Entity\RoleRepository;
 use Sulu\Bundle\SecurityBundle\Entity\UserGroup;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\SecurityBundle\Security\Exception\EmailNotUniqueException;
@@ -32,6 +31,7 @@ use Sulu\Bundle\SecurityBundle\Security\Exception\MissingPasswordException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\UsernameNotUniqueException;
 use Sulu\Component\Persistence\RelationTrait;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
 use Sulu\Component\Security\Authentication\SaltGenerator;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
@@ -52,7 +52,7 @@ class UserManager implements UserManagerInterface
     protected $em;
 
     /**
-     * @var RoleRepository
+     * @var RoleRepositoryInterface
      */
     private $roleRepository;
 
@@ -72,7 +72,7 @@ class UserManager implements UserManagerInterface
     private $saltGenerator;
 
     /**
-     * @var EncoderFactory
+     * @var EncoderFactory|null
      */
     private $encoderFactory;
 
@@ -84,11 +84,11 @@ class UserManager implements UserManagerInterface
     public function __construct(
         ObjectManager $em,
         EncoderFactory $encoderFactory = null,
-        RoleRepository $roleRepository = null,
-        GroupRepository $groupRepository = null,
-        ContactManager $contactManager = null,
-        SaltGenerator $saltGenerator = null,
-        UserRepositoryInterface $userRepository = null,
+        RoleRepositoryInterface $roleRepository,
+        GroupRepository $groupRepository,
+        ContactManager $contactManager,
+        SaltGenerator $saltGenerator,
+        UserRepositoryInterface $userRepository,
         DomainEventCollectorInterface $domainEventCollector
     ) {
         $this->em = $em;
