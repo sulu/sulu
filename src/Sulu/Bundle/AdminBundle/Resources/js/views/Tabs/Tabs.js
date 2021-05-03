@@ -142,7 +142,7 @@ class Tabs<T> extends React.Component<Props<T>> {
             tabsStyles.tabsContainer,
             tabsStyles[type],
             {
-                [tabsStyles.disableGap]: disableGap,
+                [tabsStyles.disableGap]: disableGap && !isRootView,
             }
         );
 
