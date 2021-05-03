@@ -33,7 +33,7 @@ class FileVersionMetaRepository extends EntityRepository implements FileVersionM
                 'accessControl',
                 'WITH',
                 'accessControl.entityClass = :entityClass '
-                . 'AND accessControl.entityId = CAST(collection.id AS CHAR(36))'
+                . 'AND accessControl.entityId = CAST(collection.id AS STRING)'
             )
             ->where('file.version = fileVersion.version')
             ->andWhere('accessControl.id is null');
@@ -61,7 +61,7 @@ class FileVersionMetaRepository extends EntityRepository implements FileVersionM
                 'accessControl',
                 'WITH',
                 'accessControl.entityClass = :entityClass '
-                . 'AND accessControl.entityId = CAST(collection.id AS CHAR(36))'
+                . 'AND accessControl.entityId = CAST(collection.id AS STRING)'
             )
             ->where('file.version = fileVersion.version')
             ->andWhere('accessControl.id is null')
