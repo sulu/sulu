@@ -79,6 +79,9 @@ call to pass the correct parameters:
 - `Sulu\Bundle\TagBundle\Tag\TagManager`
 - `Sulu\Bundle\CategoryBundle\Category\CategoryManager`
 - `Sulu\Bundle\CategoryBundle\Category\KeywordManager`
+- `Sulu\Bundle\ContactBundle\Contact\ContactManager`
+- `Sulu\Bundle\SecurityBundle\Controller\ResettingController`
+- `Sulu\Bundle\SecurityBundle\UserManager\UserManager`
 - `Sulu\Bundle\MediaBundle\Media\Manager\MediaManager`
 - `Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManager`
 - `Sulu\Bundle\MediaBundle\Media\FormatOptions\FormatOptionsManager`

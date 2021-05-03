@@ -20,6 +20,7 @@ use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
 use Sulu\Bundle\ContactBundle\Admin\ContactAdmin;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -201,7 +202,7 @@ class SecurityAdmin extends Admin
             $viewCollection->add(
                 $this->viewBuilderFactory
                     ->createFormViewBuilder('sulu_security.form.permissions', '/permissions')
-                    ->setResourceKey('users')
+                    ->setResourceKey(UserInterface::RESOURCE_KEY)
                     ->setFormKey('user_details')
                     ->setTabTitle('sulu_security.permissions')
                     ->addToolbarActions([

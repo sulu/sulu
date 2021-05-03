@@ -16,6 +16,13 @@ use Doctrine\Persistence\ObjectManager;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Sulu\Bundle\ContactBundle\Contact\ContactManager;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
+use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Bundle\SecurityBundle\Domain\Event\UserCreatedEvent;
+use Sulu\Bundle\SecurityBundle\Domain\Event\UserEnabledEvent;
+use Sulu\Bundle\SecurityBundle\Domain\Event\UserLockedEvent;
+use Sulu\Bundle\SecurityBundle\Domain\Event\UserModifiedEvent;
+use Sulu\Bundle\SecurityBundle\Domain\Event\UserRemovedEvent;
+use Sulu\Bundle\SecurityBundle\Domain\Event\UserUnlockedEvent;
 use Sulu\Bundle\SecurityBundle\Entity\GroupRepository;
 use Sulu\Bundle\SecurityBundle\Entity\RoleRepository;
 use Sulu\Bundle\SecurityBundle\Entity\UserGroup;
@@ -69,6 +76,11 @@ class UserManager implements UserManagerInterface
      */
     private $encoderFactory;
 
+    /**
+     * @var DomainEventCollectorInterface
+     */
+    private $domainEventCollector;
+
     public function __construct(
         ObjectManager $em,
         EncoderFactory $encoderFactory = null,
@@ -76,7 +88,8 @@ class UserManager implements UserManagerInterface
         GroupRepository $groupRepository = null,
         ContactManager $contactManager = null,
         SaltGenerator $saltGenerator = null,
-        UserRepositoryInterface $userRepository = null
+        UserRepositoryInterface $userRepository = null,
+        DomainEventCollectorInterface $domainEventCollector
     ) {
         $this->em = $em;
         $this->encoderFactory = $encoderFactory;
@@ -85,6 +98,7 @@ class UserManager implements UserManagerInterface
         $this->contactManager = $contactManager;
         $this->saltGenerator = $saltGenerator;
         $this->userRepository = $userRepository;
+        $this->domainEventCollector = $domainEventCollector;
     }
 
     /**
@@ -113,6 +127,7 @@ class UserManager implements UserManagerInterface
             }
 
             $this->em->remove($user);
+            $this->domainEventCollector->collect(new UserRemovedEvent($id, $user->getUsername()));
             $this->em->flush();
         };
 
@@ -158,8 +173,10 @@ class UserManager implements UserManagerInterface
         $locked = $this->getProperty($data, 'locked');
         $user = null;
 
+        $isNewUser = !$id;
+
         try {
-            if ($id) {
+            if (!$isNewUser) {
                 // update user
                 $user = $this->userRepository->findUserById($id);
                 if (!$user) {
@@ -178,7 +195,7 @@ class UserManager implements UserManagerInterface
 
             // check if username is already in database and the current user is not the user with this username
             if (!$patch || null !== $username) {
-                if ($user->getUsername() != $username &&
+                if ($user->getUsername() !== $username &&
                     !$this->isUsernameUnique($username)
                 ) {
                     throw new UsernameNotUniqueException($username);
@@ -189,9 +206,10 @@ class UserManager implements UserManagerInterface
             // check if password is valid
             if (!$patch || null !== $password) {
                 if ($this->isValidPassword($password)) {
-                    $user->setSalt($this->generateSalt());
+                    $salt = $this->generateSalt();
+                    $user->setSalt($salt);
                     $user->setPassword(
-                        $this->encodePassword($user, $password, $user->getSalt())
+                        $this->encodePassword($user, $password, $salt)
                     );
                 }
             }
@@ -216,7 +234,7 @@ class UserManager implements UserManagerInterface
                         \E_USER_DEPRECATED
                     );
                 }
-                $user->setContact($this->getContact($contactId ? $contactId : $contact['id']));
+                $user->setContact($this->getContact($contactId ?: $contact['id']));
             }
 
             if (!$patch || null !== $locale) {
@@ -240,6 +258,13 @@ class UserManager implements UserManagerInterface
 
         $this->em->persist($user);
         if ($flush) {
+            unset($data['password']);
+            if ($isNewUser) {
+                $this->domainEventCollector->collect(new UserCreatedEvent($user, $data));
+            } else {
+                $this->domainEventCollector->collect(new UserModifiedEvent($user, $data));
+            }
+
             $this->em->flush();
         }
 
@@ -329,6 +354,8 @@ class UserManager implements UserManagerInterface
         $user = $this->userRepository->findUserById($id);
         $user->setEnabled(true);
         $this->em->persist($user);
+
+        $this->domainEventCollector->collect(new UserEnabledEvent($user));
         $this->em->flush();
 
         return $user;
@@ -345,6 +372,8 @@ class UserManager implements UserManagerInterface
         $user = $this->userRepository->findUserById($id);
         $user->setLocked(true);
         $this->em->persist($user);
+
+        $this->domainEventCollector->collect(new UserLockedEvent($user));
         $this->em->flush();
 
         return $user;
@@ -361,6 +390,8 @@ class UserManager implements UserManagerInterface
         $user = $this->userRepository->findUserById($id);
         $user->setLocked(false);
         $this->em->persist($user);
+
+        $this->domainEventCollector->collect(new UserUnlockedEvent($user));
         $this->em->flush();
 
         return $user;

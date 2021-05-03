@@ -28,6 +28,7 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescri
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestHelperInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -38,6 +39,9 @@ class UserController extends AbstractRestController implements ClassResourceInte
 {
     use RequestParametersTrait;
 
+    /**
+     * @deprecated Use the UserInterface::RESOURCE_KEY constant instead
+     */
     protected static $entityKey = 'users';
 
     /**
@@ -314,7 +318,7 @@ class UserController extends AbstractRestController implements ClassResourceInte
 
             $list = new ListRepresentation(
                 $listBuilder->execute(),
-                static::$entityKey,
+                UserInterface::RESOURCE_KEY,
                 'sulu_security.get_users',
                 $request->query->all(),
                 $listBuilder->getCurrentPage(),
@@ -331,7 +335,7 @@ class UserController extends AbstractRestController implements ClassResourceInte
                 $view = $this->view($user ?? new \stdClass(), 200);
             } else {
                 $entities = $this->userManager->findAll();
-                $list = new CollectionRepresentation($entities, static::$entityKey);
+                $list = new CollectionRepresentation($entities, UserInterface::RESOURCE_KEY);
                 $view = $this->view($list, 200);
             }
         }
