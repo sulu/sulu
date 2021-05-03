@@ -11,7 +11,9 @@
 
 namespace Sulu\Bundle\WebsiteBundle;
 
+use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
 use Sulu\Bundle\WebsiteBundle\DependencyInjection\Compiler\DeregisterDefaultRouteListenerCompilerPass;
+use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsInterface;
 use Sulu\Component\Route\RouteDefaultOptionsCompilerPass;
 use Sulu\Component\Symfony\CompilerPass\TaggedServiceCollectorCompilerPass;
 use Sulu\Component\Util\SuluVersionPass;
@@ -20,6 +22,8 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class SuluWebsiteBundle extends Bundle
 {
+    use PersistenceBundleTrait;
+
     public function build(ContainerBuilder $container)
     {
         parent::build($container);
@@ -37,6 +41,13 @@ class SuluWebsiteBundle extends Bundle
                 0,
                 'alias'
             )
+        );
+
+        $this->buildPersistence(
+            [
+                AnalyticsInterface::class => 'sulu.model.analytics.class',
+            ],
+            $container
         );
     }
 }

@@ -135,6 +135,8 @@ class CopyLocaleSubscriber implements EventSubscriberInterface
             $destDocument->setResourceSegment($resourceLocator);
         }
 
-        $this->documentManager->persist($destDocument, $destLocale);
+        $this->documentManager->persist($destDocument, $destLocale, ['omit_modified_domain_event' => true]);
+
+        $event->setDestDocument($destDocument);
     }
 }

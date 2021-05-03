@@ -373,6 +373,7 @@ class MediaControllerTest extends SuluTestCase
         $this->em->persist($this->collection);
         $this->em->persist($this->collectionMeta);
         $this->em->persist($collectionMeta2);
+        $this->collection->setDefaultMeta($this->collectionMeta);
     }
 
     /**
@@ -1177,7 +1178,7 @@ class MediaControllerTest extends SuluTestCase
 
         $this->client->request(
             'POST',
-            '/api/media/' . $media->getId() . '?action=new-version',
+            '/api/media/' . $media->getId() . '?locale=en&action=new-version',
             [],
             [
                 'fileVersion' => $photo,
@@ -1239,7 +1240,7 @@ class MediaControllerTest extends SuluTestCase
 
         $this->client->request(
             'POST',
-            '/api/media/' . $media->getId() . '?action=new-version',
+            '/api/media/' . $media->getId() . '?locale=en&action=new-version',
             [],
             [
                 'fileVersion' => $photo,
@@ -1298,7 +1299,7 @@ class MediaControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'PUT',
-            '/api/media/' . $media->getId(),
+            '/api/media/' . $media->getId() . '?locale=en',
             [
                 'targetGroups' => [],
             ]
@@ -1403,7 +1404,7 @@ class MediaControllerTest extends SuluTestCase
 
         $this->client->request(
             'POST',
-            '/api/media/' . $media->getId() . '?action=new-version',
+            '/api/media/' . $media->getId() . '?locale=en&action=new-version',
             [
                 'collection' => $this->collection->getId(),
             ],

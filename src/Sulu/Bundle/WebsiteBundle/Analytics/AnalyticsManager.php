@@ -12,8 +12,12 @@
 namespace Sulu\Bundle\WebsiteBundle\Analytics;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Sulu\Bundle\WebsiteBundle\Entity\Analytics;
-use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsRepository;
+use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Bundle\WebsiteBundle\Domain\Event\AnalyticsCreatedEvent;
+use Sulu\Bundle\WebsiteBundle\Domain\Event\AnalyticsModifiedEvent;
+use Sulu\Bundle\WebsiteBundle\Domain\Event\AnalyticsRemovedEvent;
+use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsInterface;
+use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsRepositoryInterface;
 use Sulu\Bundle\WebsiteBundle\Entity\Domain;
 use Sulu\Bundle\WebsiteBundle\Entity\DomainRepository;
 
@@ -28,7 +32,7 @@ class AnalyticsManager implements AnalyticsManagerInterface
     private $entityManager;
 
     /**
-     * @var AnalyticsRepository
+     * @var AnalyticsRepositoryInterface
      */
     private $analyticsRepository;
 
@@ -42,21 +46,28 @@ class AnalyticsManager implements AnalyticsManagerInterface
      */
     private $environment;
 
+    /**
+     * @var DomainEventCollectorInterface
+     */
+    private $domainEventCollector;
+
     public function __construct(
         EntityManagerInterface $entityManager,
-        AnalyticsRepository $analyticsRepository,
+        AnalyticsRepositoryInterface $analyticsRepository,
         DomainRepository $domainRepository,
-        string $environment
+        string $environment,
+        DomainEventCollectorInterface $domainEventCollector
     ) {
         $this->entityManager = $entityManager;
         $this->analyticsRepository = $analyticsRepository;
         $this->domainRepository = $domainRepository;
         $this->environment = $environment;
+        $this->domainEventCollector = $domainEventCollector;
     }
 
     public function findAll($webspaceKey)
     {
-        return $this->analyticsRepository->findByWebspaceKey($webspaceKey);
+        return $this->analyticsRepository->findByWebspaceKey($webspaceKey, $this->environment);
     }
 
     public function find($id)
@@ -66,10 +77,13 @@ class AnalyticsManager implements AnalyticsManagerInterface
 
     public function create($webspaceKey, $data)
     {
-        $entity = new Analytics();
+        /** @var AnalyticsInterface $entity */
+        $entity = $this->analyticsRepository->createNew();
         $this->setData($entity, $webspaceKey, $data);
 
         $this->entityManager->persist($entity);
+
+        $this->domainEventCollector->collect(new AnalyticsCreatedEvent($entity, $data));
 
         return $entity;
     }
@@ -79,18 +93,23 @@ class AnalyticsManager implements AnalyticsManagerInterface
         $entity = $this->find($id);
         $this->setData($entity, $entity->getWebspaceKey(), $data);
 
+        $this->domainEventCollector->collect(new AnalyticsModifiedEvent($entity, $data));
+
         return $entity;
     }
 
     public function remove($id)
     {
-        $this->entityManager->remove($this->entityManager->getReference(Analytics::class, $id));
+        $entity = $this->find($id);
+        $this->entityManager->remove($entity);
+
+        $this->domainEventCollector->collect(new AnalyticsRemovedEvent($id, $entity->getWebspaceKey()));
     }
 
     public function removeMultiple(array $ids)
     {
         foreach ($ids as $id) {
-            $this->entityManager->remove($this->entityManager->getReference(Analytics::class, $id));
+            $this->remove($id);
         }
     }
 
@@ -100,7 +119,7 @@ class AnalyticsManager implements AnalyticsManagerInterface
      * @param string $webspaceKey
      * @param array $data
      */
-    private function setData(Analytics $analytics, $webspaceKey, $data)
+    private function setData(AnalyticsInterface $analytics, $webspaceKey, $data)
     {
         $analytics->setTitle($this->getValue($data, 'title'));
         $analytics->setType($this->getValue($data, 'type'));
@@ -108,13 +127,31 @@ class AnalyticsManager implements AnalyticsManagerInterface
         $analytics->setAllDomains($this->getValue($data, 'allDomains', false));
         $analytics->setWebspaceKey($webspaceKey);
 
-        $analytics->clearDomains();
+        if ($analytics->isAllDomains()) {
+            $analytics->clearDomains();
 
-        if (!$analytics->isAllDomains()) {
-            foreach ($this->getValue($data, 'domains', []) as $domain) {
-                $domainEntity = $this->findOrCreateNewDomain($domain);
-                $analytics->addDomain($domainEntity);
+            return;
+        }
+
+        $domains = [];
+        $domainCollection = $analytics->getDomains();
+        if ($domainCollection) {
+            $domains = $domainCollection->toArray();
+        }
+        foreach ($this->getValue($data, 'domains', []) as $domain) {
+            if (\in_array($domain, $domains)) {
+                unset($domains[\array_search($domain, $domains)]);
+
+                continue;
             }
+
+            $domainEntity = $this->findOrCreateNewDomain($domain);
+            $analytics->addDomain($domainEntity);
+        }
+
+        foreach ($domains as $domain) {
+            $domainEntity = $this->findOrCreateNewDomain($domain);
+            $analytics->removeDomain($domainEntity);
         }
     }
 

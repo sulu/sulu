@@ -13,7 +13,7 @@ namespace Sulu\Bundle\TestBundle\Testing;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-abstract class SuluTestCase extends WebTestCase
+class SuluTestCase extends WebTestCase
 {
     use ContainerTrait;
     use KernelTrait;

@@ -13,7 +13,7 @@ namespace Sulu\Bundle\WebsiteBundle\Tests\Functional\Controller;
 
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\WebsiteBundle\Analytics\AnalyticsManagerInterface;
-use Sulu\Bundle\WebsiteBundle\Entity\Analytics;
+use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class AnalyticsControllerTest extends SuluTestCase
@@ -24,7 +24,7 @@ class AnalyticsControllerTest extends SuluTestCase
     private $analyticsManager;
 
     /**
-     * @var Analytics[]
+     * @var AnalyticsInterface[]
      */
     private $entities = [];
 

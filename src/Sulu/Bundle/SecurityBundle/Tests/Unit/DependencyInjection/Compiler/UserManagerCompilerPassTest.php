@@ -13,6 +13,7 @@ namespace Sulu\Bundle\SecurityBundle\Tests\Unit\DependencyInjection\Compiler;
 
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\SecurityBundle\DependencyInjection\Compiler\UserManagerCompilerPass;
+use Sulu\Bundle\SecurityBundle\UserManager\UserManager;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
@@ -41,7 +42,7 @@ class UserManagerCompilerPassTest extends TestCase
         $this->containerBuilder->setDefinition(
             'sulu_security.user_manager',
             (new Definition(
-                'Sulu\Bundle\SecurityBundle\UserManager\UserManager',
+                UserManager::class,
                 [
                     new Reference('doctrine.orm.entity_manager'),
                     new Reference('security.encoder_factory'),
@@ -50,6 +51,7 @@ class UserManagerCompilerPassTest extends TestCase
                     new Reference('sulu_contact.contact_manager'),
                     new Reference('sulu_security.salt_generator'),
                     new Reference('sulu.repository.user'),
+                    new Reference('sulu_event_log.domain_event_collector'),
                 ]
             ))->setPublic(true)
         )->shouldBeCalled();
@@ -62,7 +64,7 @@ class UserManagerCompilerPassTest extends TestCase
         $this->containerBuilder->setDefinition(
             'sulu_security.user_manager',
             (new Definition(
-                'Sulu\Bundle\SecurityBundle\UserManager\UserManager',
+                UserManager::class,
                 [
                     new Reference('doctrine.orm.entity_manager'),
                     null,
@@ -71,6 +73,7 @@ class UserManagerCompilerPassTest extends TestCase
                     new Reference('sulu_contact.contact_manager'),
                     new Reference('sulu_security.salt_generator'),
                     new Reference('sulu.repository.user'),
+                    new Reference('sulu_event_log.domain_event_collector'),
                 ]
             ))->setPublic(true)
         )->shouldBeCalled();

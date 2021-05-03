@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\SecurityBundle\DependencyInjection\Compiler;
 
+use Sulu\Bundle\SecurityBundle\UserManager\UserManager;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -21,7 +22,7 @@ class UserManagerCompilerPass implements CompilerPassInterface
     public function process(ContainerBuilder $container)
     {
         $definition = new Definition(
-            'Sulu\Bundle\SecurityBundle\UserManager\UserManager',
+            UserManager::class,
             [
                 new Reference('doctrine.orm.entity_manager'),
                 $container->hasDefinition('security.token_storage') ? new Reference('security.encoder_factory') : null,
@@ -30,6 +31,7 @@ class UserManagerCompilerPass implements CompilerPassInterface
                 new Reference('sulu_contact.contact_manager'),
                 new Reference('sulu_security.salt_generator'),
                 new Reference('sulu.repository.user'),
+                new Reference('sulu_event_log.domain_event_collector'),
             ]
         );
         $definition->setPublic(true);

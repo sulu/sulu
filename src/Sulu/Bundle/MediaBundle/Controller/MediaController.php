@@ -14,9 +14,11 @@ namespace Sulu\Bundle\MediaBundle\Controller;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
+use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\Media;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\ListBuilderFactory\MediaListBuilderFactory;
@@ -42,8 +44,6 @@ use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -57,9 +57,11 @@ class MediaController extends AbstractMediaController implements
     use RequestParametersTrait;
 
     /**
+     * @deprecated Use the MediaInterface::RESOURCE_KEY constant instead
+     *
      * @var string
      */
-    protected static $entityKey = 'media';
+    protected static $entityKey = MediaInterface::RESOURCE_KEY;
 
     /**
      * @var MediaManagerInterface
@@ -240,7 +242,7 @@ class MediaController extends AbstractMediaController implements
             $listRepresentation = $this->mediaListRepresentationFactory->getListRepresentation(
                 $listBuilder,
                 $locale,
-                static::$entityKey,
+                MediaInterface::RESOURCE_KEY,
                 'sulu_media.cget_media',
                 $request->query->all()
             );
@@ -305,7 +307,7 @@ class MediaController extends AbstractMediaController implements
 
         return new ListRepresentation(
             $listResponse,
-            self::$entityKey,
+            MediaInterface::RESOURCE_KEY,
             'sulu_media.cget_media',
             $request->query->all(),
             $listBuilder->getCurrentPage(),
@@ -454,37 +456,9 @@ class MediaController extends AbstractMediaController implements
      *
      * @throws \Sulu\Component\Rest\Exception\MissingParameterException
      */
-    public function deleteVersionAction(Request $request, $id, $version)
+    public function deleteVersionAction($id, $version)
     {
-        $locale = $this->getRequestParameter($request, 'locale', true);
-        $media = $this->mediaManager->getById($id, $locale);
-
-        if ($media->getVersion() === (int) $version) {
-            throw new BadRequestHttpException('Can\'t delete active version of a media.');
-        }
-
-        $currentFileVersion = null;
-
-        /** @var Media $mediaEntity */
-        foreach ($media->getFile()->getFileVersions() as $fileVersion) {
-            if ($fileVersion->getVersion() === (int) $version) {
-                $currentFileVersion = $fileVersion;
-                break;
-            }
-        }
-
-        if (!$currentFileVersion) {
-            throw new NotFoundHttpException(\sprintf(
-                'Version "%s" for Media "%s"',
-                $version,
-                $id
-            ));
-        }
-
-        $this->entityManager->remove($currentFileVersion);
-        $this->entityManager->flush();
-        // After successfully delete in the database remove file from storage
-        $this->storage->remove($currentFileVersion->getStorageOptions());
+        $this->mediaManager->removeFileVersion((int) $id, (int) $version);
 
         return new Response('', 204);
     }
@@ -568,7 +542,7 @@ class MediaController extends AbstractMediaController implements
 
     public function getSecurityContext()
     {
-        return 'sulu.media.collections';
+        return MediaAdmin::SECURITY_CONTEXT;
     }
 
     /**

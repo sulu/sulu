@@ -11,23 +11,10 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Tests\Functional\Entity;
 
-use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsRepository;
 use Sulu\Bundle\WebsiteBundle\Tests\Functional\BaseFunctional;
 
 class AnalyticsRepositoryTest extends BaseFunctional
 {
-    /**
-     * @var AnalyticsRepository
-     */
-    private $analyticsRepository;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->analyticsRepository = $this->getContainer()->get('sulu_website_test.analytics.repository');
-    }
-
     public function testFindByWebspaceKey()
     {
         $this->purgeDatabase();
@@ -50,13 +37,13 @@ class AnalyticsRepositoryTest extends BaseFunctional
             ]
         );
 
-        $result = $this->analyticsRepository->findByWebspaceKey('sulu_io');
+        $result = $this->analyticsRepository->findByWebspaceKey('sulu_io', 'test');
         $this->assertCount(2, $result);
 
         $this->assertEquals('test-1', $result[0]->getTitle());
         $this->assertEquals('test-2', $result[1]->getTitle());
 
-        $result = $this->analyticsRepository->findByWebspaceKey('test_io');
+        $result = $this->analyticsRepository->findByWebspaceKey('test_io', 'test');
         $this->assertEmpty($result);
     }
 
@@ -72,7 +59,9 @@ class AnalyticsRepositoryTest extends BaseFunctional
             ]
         );
 
-        $result = $this->analyticsRepository->findById($entity->getId());
+        $id = $entity->getId();
+        $this->assertNotNull($id);
+        $result = $this->analyticsRepository->findById($id);
         $this->assertEquals('test-1', $result->getTitle());
     }
 

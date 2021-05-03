@@ -11,14 +11,15 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Tests\Functional\Analytics;
 
-use Sulu\Bundle\WebsiteBundle\Entity\Analytics;
+use Sulu\Bundle\EventLogBundle\Domain\Model\EventRecord;
+use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsInterface;
 use Sulu\Bundle\WebsiteBundle\Tests\Functional\BaseFunctional;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
 class AnalyticsManagerTest extends BaseFunctional
 {
     /**
-     * @var Analytics[]
+     * @var AnalyticsInterface[]
      */
     private $entities = [];
 
@@ -109,13 +110,18 @@ class AnalyticsManagerTest extends BaseFunctional
 
     public function testFind()
     {
-        $result = $this->analyticsManager->find($this->entities[0]->getId());
+        $id = $this->entities[0]->getId();
+        $this->assertNotNull($id);
+        $result = $this->analyticsManager->find($id);
 
         $this->assertEquals('test-1', $result->getTitle());
         $this->assertEquals('google', $result->getType());
         $this->assertEquals('UA123-123', $result->getContent());
 
-        $domains = $result->getDomains();
+        $domainCollection = $result->getDomains();
+        $this->assertNotNull($domainCollection);
+        $domains = $domainCollection->getValues();
+
         $this->assertCount(1, $domains);
         $this->assertEquals('www.sulu.io/{localization}', $domains[0]);
     }
@@ -167,7 +173,15 @@ class AnalyticsManagerTest extends BaseFunctional
     public function testCreate($webspaceKey, array $data)
     {
         $result = $this->analyticsManager->create($webspaceKey, $data);
-        $this->getContainer()->get('doctrine.orm.entity_manager')->flush();
+        $this->getEntityManager()->flush();
+
+        $eventLogRepository = $this->getEventLogRepository();
+
+        /** @var EventRecord[] $events */
+        $events = $eventLogRepository->findAll();
+        $this->assertCount(1, $events);
+        $this->assertSame((string) $result->getId(), $events[0]->getResourceId());
+        $this->assertSame('created', $events[0]->getEventType());
 
         $accessor = PropertyAccess::createPropertyAccessor();
         foreach ($data as $key => $value) {
@@ -177,9 +191,11 @@ class AnalyticsManagerTest extends BaseFunctional
             $this->assertEquals($value, $accessor->getValue($result, $key));
         }
 
-        if ($result->getDomains()) {
-            for ($i = 0; $i < \count($result->getDomains()); ++$i) {
-                $this->assertEquals($data['domains'][0], $result->getDomains()[0]);
+        $domainCollection = $result->getDomains();
+        if ($domainCollection) {
+            $domains = $domainCollection->getValues();
+            for ($i = 0; $i < \count($domains); ++$i) {
+                $this->assertEquals($data['domains'][0], $domains[0]);
             }
         }
 
@@ -187,7 +203,7 @@ class AnalyticsManagerTest extends BaseFunctional
             1,
             \array_filter(
                 $this->analyticsManager->findAll($webspaceKey),
-                function(Analytics $analytics) use ($result) {
+                function(AnalyticsInterface $analytics) use ($result) {
                     return $analytics->getId() === $result->getId();
                 }
             )
@@ -199,8 +215,19 @@ class AnalyticsManagerTest extends BaseFunctional
      */
     public function testUpdate($webspaceKey, array $data)
     {
-        $result = $this->analyticsManager->update($this->entities[0]->getId(), $data);
-        $this->getContainer()->get('doctrine.orm.entity_manager')->flush();
+        $id = $this->entities[0]->getId();
+        $this->assertNotNull($id);
+
+        $result = $this->analyticsManager->update($id, $data);
+        $this->getEntityManager()->flush();
+
+        $eventLogRepository = $this->getEventLogRepository();
+
+        /** @var EventRecord[] $events */
+        $events = $eventLogRepository->findAll();
+        $this->assertCount(1, $events);
+        $this->assertSame((string) $result->getId(), $events[0]->getResourceId());
+        $this->assertSame('modified', $events[0]->getEventType());
 
         $accessor = PropertyAccess::createPropertyAccessor();
         foreach ($data as $key => $value) {
@@ -210,17 +237,20 @@ class AnalyticsManagerTest extends BaseFunctional
             $this->assertEquals($value, $accessor->getValue($result, $key));
         }
 
-        if ($result->getDomains()) {
-            for ($i = 0; $i < \count($result->getDomains()); ++$i) {
-                $this->assertEquals($data['domains'][0], $result->getDomains()[0]);
+        $domains = $result->getDomains();
+        if ($domains) {
+            $domains = \array_values($domains->toArray());
+            $this->assertCount(\count($data['domains']), $domains);
+            for ($i = 0; $i < \count($domains); ++$i) {
+                $this->assertContains($domains[$i], $data['domains']);
             }
         }
 
         $this->assertCount(
             1,
             \array_filter(
-                $this->analyticsManager->findAll('sulu_io'),
-                function(Analytics $analytics) use ($result) {
+                $this->analyticsManager->findAll($result->getWebspaceKey()),
+                function(AnalyticsInterface $analytics) use ($result) {
                     return $analytics->getTitle() === $result->getTitle();
                 }
             )
@@ -240,7 +270,7 @@ class AnalyticsManagerTest extends BaseFunctional
                 ],
             ]
         );
-        $this->getContainer()->get('doctrine.orm.entity_manager')->flush();
+        $this->getEntityManager()->flush();
 
         $this->assertCount(1, $this->domainRepository->findBy(['url' => 'www.sulu.at', 'environment' => 'test']));
         $this->assertCount(
@@ -252,15 +282,18 @@ class AnalyticsManagerTest extends BaseFunctional
 
     public function testUpdateWithExistingUrl()
     {
+        $id = $this->entities[0]->getId();
+        $this->assertNotNull($id);
+
         $this->analyticsManager->update(
-            $this->entities[0]->getId(),
+            $id,
             [
                 'title' => 'test-1',
                 'type' => 'google',
                 'domains' => ['www.sulu.at', 'www.sulu.io/{localization}'],
             ]
         );
-        $this->getContainer()->get('doctrine.orm.entity_manager')->flush();
+        $this->getEntityManager()->flush();
 
         $this->assertCount(1, $this->domainRepository->findBy(['url' => 'www.sulu.at', 'environment' => 'test']));
         $this->assertCount(
@@ -272,13 +305,24 @@ class AnalyticsManagerTest extends BaseFunctional
 
     public function testRemove()
     {
-        $this->analyticsManager->remove($this->entities[0]->getId());
-        $this->getContainer()->get('doctrine.orm.entity_manager')->flush();
+        $id = $this->entities[0]->getId();
+        $this->assertNotNull($id);
+
+        $this->analyticsManager->remove($id);
+        $this->getEntityManager()->flush();
+
+        $eventLogRepository = $this->getEventLogRepository();
+
+        /** @var EventRecord[] $events */
+        $events = $eventLogRepository->findAll();
+        $this->assertCount(1, $events);
+        $this->assertSame((string) $id, $events[0]->getResourceId());
+        $this->assertSame('removed', $events[0]->getEventType());
 
         $this->assertEmpty(
             \array_filter(
                 $this->analyticsManager->findAll('sulu_io'),
-                function(Analytics $analytics) {
+                function(AnalyticsInterface $analytics) {
                     return $analytics->getId() === $this->entities[0]->getId();
                 }
             )
@@ -287,14 +331,20 @@ class AnalyticsManagerTest extends BaseFunctional
 
     public function testRemoveMultiple()
     {
-        $ids = [$this->entities[0]->getId(), $this->entities[1]->getId()];
+        $id1 = $this->entities[0]->getId();
+        $this->assertNotNull($id1);
+
+        $id2 = $this->entities[1]->getId();
+        $this->assertNotNull($id2);
+
+        $ids = [$id1, $id2];
         $this->analyticsManager->removeMultiple($ids);
-        $this->getContainer()->get('doctrine.orm.entity_manager')->flush();
+        $this->getEntityManager()->flush();
 
         $this->assertEmpty(
             \array_filter(
                 $this->analyticsManager->findAll('sulu_io'),
-                function(Analytics $analytics) use ($ids) {
+                function(AnalyticsInterface $analytics) use ($ids) {
                     return \in_array($analytics->getId(), $ids);
                 }
             )

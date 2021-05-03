@@ -18,6 +18,8 @@ use Symfony\Component\Security\Core\User\UserInterface as BaseUserInterface;
  */
 interface UserInterface extends BaseUserInterface
 {
+    public const RESOURCE_KEY = 'users';
+
     /**
      * Returns the ID of the User.
      *

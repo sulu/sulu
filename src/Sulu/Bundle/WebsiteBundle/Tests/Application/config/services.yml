@@ -4,7 +4,7 @@ services:
         public: true
 
     sulu_website_test.analytics.repository:
-        alias: sulu_website.analytics.repository
+        alias: sulu.repository.analytics
         public: true
 
     sulu_website_test.test_sitemap_provider:

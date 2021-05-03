@@ -16,10 +16,7 @@ use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\VirtualProperty;
 
-/**
- * Analytics.
- */
-class Analytics
+class Analytics implements AnalyticsInterface
 {
     /**
      * @var int
@@ -37,7 +34,7 @@ class Analytics
     private $allDomains;
 
     /**
-     * @var string
+     * @var mixed
      *
      * @Exclude
      */
@@ -65,142 +62,72 @@ class Analytics
         $this->domains = new ArrayCollection();
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * Set title.
-     *
-     * @param string $title
-     *
-     * @return self
-     */
-    public function setTitle($title)
+    public function setTitle(string $title): AnalyticsInterface
     {
         $this->title = $title;
 
         return $this;
     }
 
-    /**
-     * Get title.
-     *
-     * @return string
-     */
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->title;
     }
 
-    /**
-     * Set allDomains.
-     *
-     * @param bool $allDomains
-     *
-     * @return self
-     */
-    public function setAllDomains($allDomains)
+    public function setAllDomains(bool $allDomains): AnalyticsInterface
     {
         $this->allDomains = $allDomains;
 
         return $this;
     }
 
-    /**
-     * Get allDomains.
-     *
-     * @return bool
-     */
-    public function isAllDomains()
+    public function isAllDomains(): bool
     {
         return $this->allDomains;
     }
 
-    /**
-     * Set content.
-     *
-     * @param string $content
-     *
-     * @return self
-     */
-    public function setContent($content)
+    public function setContent($content): AnalyticsInterface
     {
         $this->content = $content;
 
         return $this;
     }
 
-    /**
-     * Get content.
-     *
-     * @return string
-     */
     public function getContent()
     {
         return $this->content;
     }
 
-    /**
-     * Set type.
-     *
-     * @param string $type
-     *
-     * @return self
-     */
-    public function setType($type)
+    public function setType(string $type): AnalyticsInterface
     {
         $this->type = $type;
 
         return $this;
     }
 
-    /**
-     * Get type.
-     *
-     * @return string
-     */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
 
-    /**
-     * Set webspace-key.
-     *
-     * @param string $webspaceKey
-     *
-     * @return self
-     */
-    public function setWebspaceKey($webspaceKey)
+    public function setWebspaceKey(string $webspaceKey): AnalyticsInterface
     {
         $this->webspaceKey = $webspaceKey;
 
         return $this;
     }
 
-    /**
-     * Get webspace-key.
-     *
-     * @return string
-     */
-    public function getWebspaceKey()
+    public function getWebspaceKey(): string
     {
         return $this->webspaceKey;
     }
 
-    /**
-     * Add domain.
-     *
-     * @return self
-     */
-    public function addDomain(Domain $domain)
+    public function addDomain(Domain $domain): AnalyticsInterface
     {
         if ($this->domains->contains($domain)) {
             return $this;
@@ -211,30 +138,24 @@ class Analytics
         return $this;
     }
 
-    /**
-     * Remove domain.
-     */
-    public function removeDomain(Domain $domain)
+    public function removeDomain(Domain $domain): AnalyticsInterface
     {
         $this->domains->removeElement($domain);
+
+        return $this;
     }
 
-    /**
-     * Removes all domains.
-     */
-    public function clearDomains()
+    public function clearDomains(): AnalyticsInterface
     {
         $this->domains->clear();
+
+        return $this;
     }
 
     /**
-     * Get domains.
-     *
-     * @return Collection|Domain[]|null
-     *
      * @VirtualProperty
      */
-    public function getDomains()
+    public function getDomains(): ?Collection
     {
         if (0 === \count($this->domains)) {
             return null;

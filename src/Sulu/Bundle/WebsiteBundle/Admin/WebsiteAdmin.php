@@ -16,6 +16,7 @@ use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
+use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
@@ -26,12 +27,8 @@ class WebsiteAdmin extends Admin
 {
     /**
      * Returns security context for analytics in given webspace.
-     *
-     * @param string $webspaceKey
-     *
-     * @return string
      */
-    public static function getAnalyticsSecurityContext($webspaceKey)
+    public static function getAnalyticsSecurityContext(string $webspaceKey): string
     {
         return \sprintf('%s%s.%s', PageAdmin::SECURITY_CONTEXT_PREFIX, $webspaceKey, 'analytics');
     }
@@ -79,8 +76,8 @@ class WebsiteAdmin extends Admin
             $viewCollection->add(
                 $this->viewBuilderFactory
                     ->createFormOverlayListViewBuilder('sulu_webspace.analytics_list', '/analytics')
-                    ->setResourceKey('analytics')
-                    ->setListKey('analytics')
+                    ->setResourceKey(AnalyticsInterface::RESOURCE_KEY)
+                    ->setListKey(AnalyticsInterface::LIST_KEY)
                     ->addListAdapters(['table_light'])
                     ->addRouterAttributesToListRequest(['webspace'])
                     ->addRouterAttributesToFormRequest(['webspace'])

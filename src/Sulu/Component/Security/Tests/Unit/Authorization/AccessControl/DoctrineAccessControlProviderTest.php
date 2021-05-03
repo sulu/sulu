@@ -76,13 +76,13 @@ class DoctrineAccessControlProviderTest extends TestCase
 
         $accessControl1 = new AccessControl();
         $accessControl1->setEntityClass('AcmeBundle\Example');
-        $accessControl1->setEntityId(1);
+        $accessControl1->setEntityId('1');
         $accessControl1->setPermissions(64);
         $accessControl1->setRole($role1->reveal());
 
         $accessControl2 = new AccessControl();
         $accessControl2->setEntityClass('AcmeBundle\Example');
-        $accessControl2->setEntityId(1);
+        $accessControl2->setEntityId('1');
         $accessControl2->setPermissions(96);
         $accessControl2->setRole($role2->reveal());
 
@@ -117,13 +117,13 @@ class DoctrineAccessControlProviderTest extends TestCase
 
         $accessControl1 = new AccessControl();
         $accessControl1->setEntityClass('AcmeBundle\Example');
-        $accessControl1->setEntityId(1);
+        $accessControl1->setEntityId('1');
         $accessControl1->setPermissions(64);
         $accessControl1->setRole($role1->reveal());
 
         $accessControl2 = new AccessControl();
         $accessControl2->setEntityClass('AcmeBundle\Example');
-        $accessControl2->setEntityId(1);
+        $accessControl2->setEntityId('1');
         $accessControl2->setPermissions(96);
         $accessControl2->setRole($role2->reveal());
 

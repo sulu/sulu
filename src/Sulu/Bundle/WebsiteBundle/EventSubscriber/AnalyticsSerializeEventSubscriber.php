@@ -17,6 +17,7 @@ use JMS\Serializer\EventDispatcher\ObjectEvent;
 use JMS\Serializer\Metadata\StaticPropertyMetadata;
 use JMS\Serializer\Visitor\SerializationVisitorInterface;
 use Sulu\Bundle\WebsiteBundle\Entity\Analytics;
+use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsInterface;
 
 /**
  * Extends analytics serialization process.
@@ -38,7 +39,7 @@ class AnalyticsSerializeEventSubscriber implements EventSubscriberInterface
     {
         $analytics = $event->getObject();
 
-        if (!($analytics instanceof Analytics)) {
+        if (!($analytics instanceof AnalyticsInterface)) {
             return;
         }
 

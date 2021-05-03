@@ -13,13 +13,16 @@ namespace Sulu\Bundle\ContactBundle\Tests\Unit;
 
 use Doctrine\Persistence\ObjectManager;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ContactBundle\Contact\ContactManager;
 use Sulu\Bundle\ContactBundle\Entity\AccountRepositoryInterface;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\ContactRepository;
 use Sulu\Bundle\ContactBundle\Entity\ContactTitleRepository;
+use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
+use Sulu\Bundle\SecurityBundle\Entity\UserRepository;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 
@@ -31,39 +34,49 @@ class ContactManagerTest extends TestCase
     private $contactManager;
 
     /**
-     * @var ObjectManager
+     * @var ObjectProphecy|ObjectManager
      */
     private $em;
 
     /**
-     * @var TagManagerInterface
+     * @var ObjectProphecy|TagManagerInterface
      */
     private $tagManager;
 
     /**
-     * @var MediaManagerInterface
+     * @var ObjectProphecy|MediaManagerInterface
      */
     private $mediaManager;
 
     /**
-     * @var AccountRepositoryInterface
+     * @var ObjectProphecy|AccountRepositoryInterface
      */
     private $accountRepository;
 
     /**
-     * @var ContactTitleRepository
+     * @var ObjectProphecy|ContactTitleRepository
      */
     private $contactTitleRepository;
 
     /**
-     * @var ContactRepository
+     * @var ObjectProphecy|ContactRepository
      */
     private $contactRepository;
 
     /**
-     * @var MediaRepositoryInterface
+     * @var ObjectProphecy|MediaRepositoryInterface
      */
     private $mediaRepository;
+
+    /**
+     * @var ObjectProphecy|DomainEventCollectorInterface
+     */
+    private $eventCollector;
+
+    /**
+     * @var ObjectProphecy|UserRepository
+     */
+    private $userRepository;
 
     protected function setUp(): void
     {
@@ -74,6 +87,8 @@ class ContactManagerTest extends TestCase
         $this->contactTitleRepository = $this->prophesize(ContactTitleRepository::class);
         $this->contactRepository = $this->prophesize(ContactRepository::class);
         $this->mediaRepository = $this->prophesize(MediaRepositoryInterface::class);
+        $this->eventCollector = $this->prophesize(DomainEventCollectorInterface::class);
+        $this->userRepository = $this->prophesize(UserRepository::class);
 
         $this->contactManager = new ContactManager(
             $this->em->reveal(),
@@ -82,7 +97,9 @@ class ContactManagerTest extends TestCase
             $this->accountRepository->reveal(),
             $this->contactTitleRepository->reveal(),
             $this->contactRepository->reveal(),
-            $this->mediaRepository->reveal()
+            $this->mediaRepository->reveal(),
+            $this->eventCollector->reveal(),
+            $this->userRepository->reveal()
         );
     }
 
