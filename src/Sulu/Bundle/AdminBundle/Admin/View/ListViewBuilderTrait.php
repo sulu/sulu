@@ -60,8 +60,8 @@ trait ListViewBuilderTrait
                     $listAdapters[$index] = $defaultAdapter;
 
                     @\trigger_error(
-                        'The usage of the "' . $adapter . '" is deprecated.
-                                    Please use "' . $defaultAdapter . '"  with adapterOptions instead.',
+                        'The usage of the "' . $adapter . '" is deprecated.' .
+                        'Please use "' . $defaultAdapter . '"  with adapterOptions instead.',
                         \E_USER_DEPRECATED
                     );
                 }

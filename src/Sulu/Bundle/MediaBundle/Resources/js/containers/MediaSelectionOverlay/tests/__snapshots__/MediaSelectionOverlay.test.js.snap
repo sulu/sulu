@@ -270,57 +270,62 @@ Array [
                   <div
                     class="toolbar"
                   >
-                    <label
-                      class="input dark left collapsed hasAppendIcon"
+                    <div
+                      class="toolbarLeft"
+                    >
+                      <label
+                        class="input dark left collapsed hasAppendIcon"
+                      >
+                        <div
+                          class="prependedContainer dark collapsed"
+                        >
+                          <span
+                            aria-label="su-search"
+                            class="su-search clickable icon dark iconClickable collapsed"
+                            role="button"
+                            tabindex="0"
+                          />
+                        </div>
+                        <input
+                          placeholder="sulu_admin.list_search_placeholder"
+                          type="text"
+                          value=""
+                        />
+                      </label>
+                    </div>
+                    <div
+                      class="toolbarRight"
                     >
                       <div
-                        class="prependedContainer dark collapsed"
+                        class="buttonGroup"
                       >
-                        <span
-                          aria-label="su-search"
-                          class="su-search clickable icon dark iconClickable collapsed"
-                          role="button"
-                          tabindex="0"
-                        />
+                        <button
+                          class="button icon active button"
+                          type="button"
+                        >
+                          <span
+                            class="buttonText"
+                          >
+                            <span
+                              aria-label="su-th-large"
+                              class="su-th-large"
+                            />
+                          </span>
+                        </button>
+                        <button
+                          class="button icon button"
+                          type="button"
+                        >
+                          <span
+                            class="buttonText"
+                          >
+                            <span
+                              aria-label="su-align-justify"
+                              class="su-align-justify"
+                            />
+                          </span>
+                        </button>
                       </div>
-                      <input
-                        placeholder="sulu_admin.list_search_placeholder"
-                        type="text"
-                        value=""
-                      />
-                    </label>
-                    <div
-                      style="flex-grow: 1;"
-                    />
-                    <div
-                      class="buttonGroup"
-                    >
-                      <button
-                        class="button icon active button"
-                        type="button"
-                      >
-                        <span
-                          class="buttonText"
-                        >
-                          <span
-                            aria-label="su-th-large"
-                            class="su-th-large"
-                          />
-                        </span>
-                      </button>
-                      <button
-                        class="button icon button"
-                        type="button"
-                      >
-                        <span
-                          class="buttonText"
-                        >
-                          <span
-                            aria-label="su-align-justify"
-                            class="su-align-justify"
-                          />
-                        </span>
-                      </button>
                     </div>
                   </div>
                   <div
@@ -922,57 +927,62 @@ Array [
                   <div
                     class="toolbar"
                   >
-                    <label
-                      class="input dark left collapsed hasAppendIcon"
+                    <div
+                      class="toolbarLeft"
+                    >
+                      <label
+                        class="input dark left collapsed hasAppendIcon"
+                      >
+                        <div
+                          class="prependedContainer dark collapsed"
+                        >
+                          <span
+                            aria-label="su-search"
+                            class="su-search clickable icon dark iconClickable collapsed"
+                            role="button"
+                            tabindex="0"
+                          />
+                        </div>
+                        <input
+                          placeholder="sulu_admin.list_search_placeholder"
+                          type="text"
+                          value=""
+                        />
+                      </label>
+                    </div>
+                    <div
+                      class="toolbarRight"
                     >
                       <div
-                        class="prependedContainer dark collapsed"
+                        class="buttonGroup"
                       >
-                        <span
-                          aria-label="su-search"
-                          class="su-search clickable icon dark iconClickable collapsed"
-                          role="button"
-                          tabindex="0"
-                        />
+                        <button
+                          class="button icon active button"
+                          type="button"
+                        >
+                          <span
+                            class="buttonText"
+                          >
+                            <span
+                              aria-label="su-th-large"
+                              class="su-th-large"
+                            />
+                          </span>
+                        </button>
+                        <button
+                          class="button icon button"
+                          type="button"
+                        >
+                          <span
+                            class="buttonText"
+                          >
+                            <span
+                              aria-label="su-align-justify"
+                              class="su-align-justify"
+                            />
+                          </span>
+                        </button>
                       </div>
-                      <input
-                        placeholder="sulu_admin.list_search_placeholder"
-                        type="text"
-                        value=""
-                      />
-                    </label>
-                    <div
-                      style="flex-grow: 1;"
-                    />
-                    <div
-                      class="buttonGroup"
-                    >
-                      <button
-                        class="button icon active button"
-                        type="button"
-                      >
-                        <span
-                          class="buttonText"
-                        >
-                          <span
-                            aria-label="su-th-large"
-                            class="su-th-large"
-                          />
-                        </span>
-                      </button>
-                      <button
-                        class="button icon button"
-                        type="button"
-                      >
-                        <span
-                          class="buttonText"
-                        >
-                          <span
-                            aria-label="su-align-justify"
-                            class="su-align-justify"
-                          />
-                        </span>
-                      </button>
                     </div>
                   </div>
                   <div

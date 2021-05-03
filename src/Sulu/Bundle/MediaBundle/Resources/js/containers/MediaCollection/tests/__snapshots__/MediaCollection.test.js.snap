@@ -237,27 +237,31 @@ exports[`Render the MediaCollection 1`] = `
       <div
         class="toolbar"
       >
-        <label
-          class="input dark left collapsed hasAppendIcon"
-        >
-          <div
-            class="prependedContainer dark collapsed"
-          >
-            <span
-              aria-label="su-search"
-              class="su-search clickable icon dark iconClickable collapsed"
-              role="button"
-              tabindex="0"
-            />
-          </div>
-          <input
-            placeholder="sulu_admin.list_search_placeholder"
-            type="text"
-            value=""
-          />
-        </label>
         <div
-          style="flex-grow:1"
+          class="toolbarLeft"
+        >
+          <label
+            class="input dark left collapsed hasAppendIcon"
+          >
+            <div
+              class="prependedContainer dark collapsed"
+            >
+              <span
+                aria-label="su-search"
+                class="su-search clickable icon dark iconClickable collapsed"
+                role="button"
+                tabindex="0"
+              />
+            </div>
+            <input
+              placeholder="sulu_admin.list_search_placeholder"
+              type="text"
+              value=""
+            />
+          </label>
+        </div>
+        <div
+          class="toolbarRight"
         />
       </div>
       <div
@@ -777,27 +781,31 @@ exports[`Render the MediaCollection for all media 1`] = `
       <div
         class="toolbar"
       >
-        <label
-          class="input dark left collapsed hasAppendIcon"
-        >
-          <div
-            class="prependedContainer dark collapsed"
-          >
-            <span
-              aria-label="su-search"
-              class="su-search clickable icon dark iconClickable collapsed"
-              role="button"
-              tabindex="0"
-            />
-          </div>
-          <input
-            placeholder="sulu_admin.list_search_placeholder"
-            type="text"
-            value=""
-          />
-        </label>
         <div
-          style="flex-grow:1"
+          class="toolbarLeft"
+        >
+          <label
+            class="input dark left collapsed hasAppendIcon"
+          >
+            <div
+              class="prependedContainer dark collapsed"
+            >
+              <span
+                aria-label="su-search"
+                class="su-search clickable icon dark iconClickable collapsed"
+                role="button"
+                tabindex="0"
+              />
+            </div>
+            <input
+              placeholder="sulu_admin.list_search_placeholder"
+              type="text"
+              value=""
+            />
+          </label>
+        </div>
+        <div
+          class="toolbarRight"
         />
       </div>
       <div

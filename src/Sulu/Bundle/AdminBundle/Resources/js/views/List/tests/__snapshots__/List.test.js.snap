@@ -273,41 +273,46 @@ exports[`Should render the list with a title 1`] = `
     <div
       class="toolbar"
     >
-      <label
-        class="input dark left collapsed hasAppendIcon"
-      >
-        <div
-          class="prependedContainer dark collapsed"
-        >
-          <span
-            aria-label="su-search"
-            class="su-search clickable icon dark iconClickable collapsed"
-            role="button"
-            tabindex="0"
-          />
-        </div>
-        <input
-          type="text"
-          value=""
-        />
-      </label>
       <div
-        style="flex-grow:1"
-      />
-      <div>
-        <button
-          class="button icon"
-          type="button"
+        class="toolbarLeft"
+      >
+        <label
+          class="input dark left collapsed hasAppendIcon"
         >
-          <span
-            aria-label="su-sort"
-            class="su-sort buttonIcon"
+          <div
+            class="prependedContainer dark collapsed"
+          >
+            <span
+              aria-label="su-search"
+              class="su-search clickable icon dark iconClickable collapsed"
+              role="button"
+              tabindex="0"
+            />
+          </div>
+          <input
+            type="text"
+            value=""
           />
-          <span
-            aria-label="su-angle-down"
-            class="su-angle-down dropdownIcon"
-          />
-        </button>
+        </label>
+      </div>
+      <div
+        class="toolbarRight"
+      >
+        <div>
+          <button
+            class="button icon"
+            type="button"
+          >
+            <span
+              aria-label="su-sort"
+              class="su-sort buttonIcon"
+            />
+            <span
+              aria-label="su-angle-down"
+              class="su-angle-down dropdownIcon"
+            />
+          </button>
+        </div>
       </div>
     </div>
     <div
@@ -541,41 +546,46 @@ exports[`Should render the list with nodes of given ListItemActions 1`] = `
     <div
       class="toolbar"
     >
-      <label
-        class="input dark left collapsed hasAppendIcon"
-      >
-        <div
-          class="prependedContainer dark collapsed"
-        >
-          <span
-            aria-label="su-search"
-            class="su-search clickable icon dark iconClickable collapsed"
-            role="button"
-            tabindex="0"
-          />
-        </div>
-        <input
-          type="text"
-          value=""
-        />
-      </label>
       <div
-        style="flex-grow: 1;"
-      />
-      <div>
-        <button
-          class="button icon"
-          type="button"
+        class="toolbarLeft"
+      >
+        <label
+          class="input dark left collapsed hasAppendIcon"
         >
-          <span
-            aria-label="su-sort"
-            class="su-sort buttonIcon"
+          <div
+            class="prependedContainer dark collapsed"
+          >
+            <span
+              aria-label="su-search"
+              class="su-search clickable icon dark iconClickable collapsed"
+              role="button"
+              tabindex="0"
+            />
+          </div>
+          <input
+            type="text"
+            value=""
           />
-          <span
-            aria-label="su-angle-down"
-            class="su-angle-down dropdownIcon"
-          />
-        </button>
+        </label>
+      </div>
+      <div
+        class="toolbarRight"
+      >
+        <div>
+          <button
+            class="button icon"
+            type="button"
+          >
+            <span
+              aria-label="su-sort"
+              class="su-sort buttonIcon"
+            />
+            <span
+              aria-label="su-angle-down"
+              class="su-angle-down dropdownIcon"
+            />
+          </button>
+        </div>
       </div>
     </div>
     <div
@@ -851,41 +861,46 @@ exports[`Should render the list with nodes of given ToolbarActions 1`] = `
     <div
       class="toolbar"
     >
-      <label
-        class="input dark left collapsed hasAppendIcon"
-      >
-        <div
-          class="prependedContainer dark collapsed"
-        >
-          <span
-            aria-label="su-search"
-            class="su-search clickable icon dark iconClickable collapsed"
-            role="button"
-            tabindex="0"
-          />
-        </div>
-        <input
-          type="text"
-          value=""
-        />
-      </label>
       <div
-        style="flex-grow: 1;"
-      />
-      <div>
-        <button
-          class="button icon"
-          type="button"
+        class="toolbarLeft"
+      >
+        <label
+          class="input dark left collapsed hasAppendIcon"
         >
-          <span
-            aria-label="su-sort"
-            class="su-sort buttonIcon"
+          <div
+            class="prependedContainer dark collapsed"
+          >
+            <span
+              aria-label="su-search"
+              class="su-search clickable icon dark iconClickable collapsed"
+              role="button"
+              tabindex="0"
+            />
+          </div>
+          <input
+            type="text"
+            value=""
           />
-          <span
-            aria-label="su-angle-down"
-            class="su-angle-down dropdownIcon"
-          />
-        </button>
+        </label>
+      </div>
+      <div
+        class="toolbarRight"
+      >
+        <div>
+          <button
+            class="button icon"
+            type="button"
+          >
+            <span
+              aria-label="su-sort"
+              class="su-sort buttonIcon"
+            />
+            <span
+              aria-label="su-angle-down"
+              class="su-angle-down dropdownIcon"
+            />
+          </button>
+        </div>
       </div>
     </div>
     <div
@@ -1123,41 +1138,46 @@ exports[`Should render the list with the correct resourceKey 1`] = `
     <div
       class="toolbar"
     >
-      <label
-        class="input dark left collapsed hasAppendIcon"
-      >
-        <div
-          class="prependedContainer dark collapsed"
-        >
-          <span
-            aria-label="su-search"
-            class="su-search clickable icon dark iconClickable collapsed"
-            role="button"
-            tabindex="0"
-          />
-        </div>
-        <input
-          type="text"
-          value=""
-        />
-      </label>
       <div
-        style="flex-grow:1"
-      />
-      <div>
-        <button
-          class="button icon"
-          type="button"
+        class="toolbarLeft"
+      >
+        <label
+          class="input dark left collapsed hasAppendIcon"
         >
-          <span
-            aria-label="su-sort"
-            class="su-sort buttonIcon"
+          <div
+            class="prependedContainer dark collapsed"
+          >
+            <span
+              aria-label="su-search"
+              class="su-search clickable icon dark iconClickable collapsed"
+              role="button"
+              tabindex="0"
+            />
+          </div>
+          <input
+            type="text"
+            value=""
           />
-          <span
-            aria-label="su-angle-down"
-            class="su-angle-down dropdownIcon"
-          />
-        </button>
+        </label>
+      </div>
+      <div
+        class="toolbarRight"
+      >
+        <div>
+          <button
+            class="button icon"
+            type="button"
+          >
+            <span
+              aria-label="su-sort"
+              class="su-sort buttonIcon"
+            />
+            <span
+              aria-label="su-angle-down"
+              class="su-angle-down dropdownIcon"
+            />
+          </button>
+        </div>
       </div>
     </div>
     <div

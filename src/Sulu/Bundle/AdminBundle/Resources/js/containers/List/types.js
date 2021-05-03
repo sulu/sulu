@@ -35,10 +35,6 @@ export type ItemActionConfig = {|
 
 export type ItemActionsProvider = (item: ?Object) => Array<ItemActionConfig>;
 
-export type IconSkin = 'default' | 'dark';
-
-export type DateTimeSkin = 'default' | 'light';
-
 export type AdapterOptions = {[key: string]: mixed};
 
 export type ListAdapterProps = {|

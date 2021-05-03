@@ -5,16 +5,13 @@ import log from 'loglevel';
 import type {Node} from 'react';
 import {Moment} from 'moment/moment';
 import classNames from 'classnames';
-import type {DateTimeSkin, FieldTransformer} from '../types';
+import type {FieldTransformer} from '../types';
 import {translate} from '../../../utils';
 import dateTimeFieldTransformerStyles from './dateTimeFieldTransformer.scss';
 
-export default class DateTimeFieldTransformer implements FieldTransformer {
-    formats = {
-        'default': this.getDefaultDateTime,
-        'relative': this.getRelativeDateTime.bind(this),
-    };
+export type Skin = 'default' | 'light';
 
+export default class DateTimeFieldTransformer implements FieldTransformer {
     transform(value: *, parameters: { [string]: any }): Node {
         if (!value) {
             return null;
@@ -33,7 +30,7 @@ export default class DateTimeFieldTransformer implements FieldTransformer {
             format = 'default',
         }: {
             format: string,
-            skin: DateTimeSkin,
+            skin: Skin,
         } = parameters || {};
 
         if (typeof skin !== 'string') {
@@ -53,7 +50,6 @@ export default class DateTimeFieldTransformer implements FieldTransformer {
         }
 
         const className = classNames(
-            dateTimeFieldTransformerStyles.dateTime,
             dateTimeFieldTransformerStyles[skin]
         );
         return (

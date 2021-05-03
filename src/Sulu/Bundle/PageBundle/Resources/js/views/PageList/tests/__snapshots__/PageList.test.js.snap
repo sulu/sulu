@@ -11,37 +11,41 @@ exports[`Render PageList 1`] = `
       class="toolbar listToolbar"
     >
       <div
-        style="flex-grow: 1;"
+        class="toolbarLeft"
       />
       <div
-        class="buttonGroup"
+        class="toolbarRight"
       >
-        <button
-          class="button icon active button"
-          type="button"
+        <div
+          class="buttonGroup"
         >
-          <span
-            class="buttonText"
+          <button
+            class="button icon active button"
+            type="button"
           >
             <span
-              aria-label="su-columns"
-              class="su-columns"
-            />
-          </span>
-        </button>
-        <button
-          class="button icon button"
-          type="button"
-        >
-          <span
-            class="buttonText"
+              class="buttonText"
+            >
+              <span
+                aria-label="su-columns"
+                class="su-columns"
+              />
+            </span>
+          </button>
+          <button
+            class="button icon button"
+            type="button"
           >
             <span
-              aria-label="su-columns"
-              class="su-columns"
-            />
-          </span>
-        </button>
+              class="buttonText"
+            >
+              <span
+                aria-label="su-columns"
+                class="su-columns"
+              />
+            </span>
+          </button>
+        </div>
       </div>
     </div>
     <div

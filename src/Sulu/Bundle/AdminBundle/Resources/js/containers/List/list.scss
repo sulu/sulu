@@ -21,9 +21,14 @@ $listToolbarHeight: 30px;
 
 .toolbar {
     display: flex;
+    margin-bottom: 20px;
+}
+
+.toolbar-left,
+.toolbar-right {
+    display: flex;
     justify-content: flex-end;
     align-items: center;
-    margin-bottom: 20px;
 
     & > * {
         height: $listToolbarHeight;
@@ -34,4 +39,12 @@ $listToolbarHeight: 30px;
             margin-right: 0;
         }
     }
+}
+
+.toolbar-left {
+    margin-right: auto;
+}
+
+.toolbar-right {
+    margin-left: auto;
 }

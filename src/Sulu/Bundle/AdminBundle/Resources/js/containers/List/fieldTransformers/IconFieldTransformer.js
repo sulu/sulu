@@ -4,8 +4,10 @@ import type {Node} from 'react';
 import log from 'loglevel';
 import classNames from 'classnames';
 import Icon from '../../../components/Icon';
-import type {FieldTransformer, IconSkin} from '../types';
+import type {FieldTransformer} from '../types';
 import iconFieldTransformerStyles from './iconFieldTransformer.scss';
+
+export type Skin = 'default' | 'dark';
 
 export default class IconFieldTransformer implements FieldTransformer {
     transform(value: *, parameters: { [string]: any }): Node {
@@ -18,7 +20,7 @@ export default class IconFieldTransformer implements FieldTransformer {
             skin = 'default',
         }: {
             mapping: mixed[],
-            skin: IconSkin,
+            skin: Skin,
         } = parameters;
         if (!mapping) {
             return value;
@@ -56,7 +58,7 @@ export default class IconFieldTransformer implements FieldTransformer {
         return null;
     }
 
-    transformObjectConfig(value: *, iconConfig: Object, skin: ?IconSkin): Node {
+    transformObjectConfig(value: *, iconConfig: Object, skin: Skin): Node {
         const {icon, color} = iconConfig;
 
         if (!icon || typeof icon !== 'string') {
@@ -82,13 +84,13 @@ export default class IconFieldTransformer implements FieldTransformer {
         );
     }
 
-    transformStringConfig(iconConfig: string, skin: ?IconSkin): Node {
+    transformStringConfig(iconConfig: string, skin: Skin): Node {
         return (
             <Icon className={this.getClassName(skin)} name={iconConfig} />
         );
     }
 
-    getClassName(skin: ?IconSkin): Object {
+    getClassName(skin: Skin): Object {
         return classNames(
             iconFieldTransformerStyles.listIcon,
             iconFieldTransformerStyles[skin]

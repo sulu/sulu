@@ -535,12 +535,12 @@ test('Pass adapterOptions to the adapter', () => {
     expect(list.find('TestAdapter').prop('adapterOptions')).toEqual({skin: 'light'});
 });
 
-test('Pass empty object as adapterOptions to the adapter if no options for current adapter are passed', () => {
+test('Pass undefined as adapterOptions to the adapter if no options for current adapter are passed', () => {
     const adapterOptions = {table: {skin: 'flat'}};
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
     const list = shallow(<List adapterOptions={adapterOptions} adapters={['test']} store={listStore} />);
 
-    expect(list.find('TestAdapter').prop('adapterOptions')).toEqual({});
+    expect(list.find('TestAdapter').prop('adapterOptions')).toEqual(undefined);
 });
 
 test('Call activate on store if item is activated', () => {
