@@ -16,7 +16,7 @@ use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\KeywordInterface;
 use Sulu\Bundle\EventLogBundle\Domain\Event\DomainEvent;
 
-class CategoryKeywordCreatedEvent extends DomainEvent
+class CategoryKeywordAddedEvent extends DomainEvent
 {
     /**
      * @var CategoryInterface
@@ -50,7 +50,7 @@ class CategoryKeywordCreatedEvent extends DomainEvent
 
     public function getEventType(): string
     {
-        return 'keyword_created';
+        return 'keyword_added';
     }
 
     public function getEventContext(): array
