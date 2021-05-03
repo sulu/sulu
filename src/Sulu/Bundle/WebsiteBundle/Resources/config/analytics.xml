@@ -3,16 +3,7 @@
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
-        <service id="sulu_website.analytics.repository"
-                 class="Sulu\Bundle\WebsiteBundle\Entity\AnalyticsRepository">
-            <factory service="doctrine.orm.entity_manager" method="getRepository"/>
-
-            <argument type="string">SuluWebsiteBundle:Analytics</argument>
-
-            <call method="setEnvironment">
-                <argument>%kernel.environment%</argument>
-            </call>
-        </service>
+        <service id="sulu_website.analytics.repository" alias="sulu.repository.analytics"/>
 
         <service id="sulu_website.domains.repository"
                  class="Sulu\Bundle\WebsiteBundle\Entity\DomainRepository">
@@ -24,16 +15,17 @@
         <service id="sulu_website.analytics.manager"
                  class="Sulu\Bundle\WebsiteBundle\Analytics\AnalyticsManager" public="true">
             <argument type="service" id="doctrine.orm.entity_manager"/>
-            <argument type="service" id="sulu_website.analytics.repository"/>
+            <argument type="service" id="sulu.repository.analytics"/>
             <argument type="service" id="sulu_website.domains.repository"/>
             <argument>%kernel.environment%</argument>
+            <argument type="service" id="sulu_event_log.domain_event_collector"/>
         </service>
 
         <service id="sulu_website.analytics.response_listener"
                  class="Sulu\Bundle\WebsiteBundle\EventListener\AppendAnalyticsListener">
             <argument type="service" id="twig"/>
             <argument type="service" id="sulu_core.webspace.request_analyzer"/>
-            <argument type="service" id="sulu_website.analytics.repository"/>
+            <argument type="service" id="sulu.repository.analytics"/>
             <argument>%kernel.environment%</argument>
             <argument type="expression">container.hasParameter('sulu.preview') ? parameter('sulu.preview') : ''</argument>
 

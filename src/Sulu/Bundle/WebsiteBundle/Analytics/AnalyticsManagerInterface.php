@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\WebsiteBundle\Analytics;
 
 use Sulu\Bundle\WebsiteBundle\Entity\Analytics;
+use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsInterface;
 
 /**
  * Manages analytics.
@@ -23,7 +24,7 @@ interface AnalyticsManagerInterface
      *
      * @param string $webspaceKey
      *
-     * @return Analytics[]
+     * @return AnalyticsInterface[]
      */
     public function findAll($webspaceKey);
 
@@ -32,7 +33,7 @@ interface AnalyticsManagerInterface
      *
      * @param int $id
      *
-     * @return Analytics
+     * @return AnalyticsInterface
      */
     public function find($id);
 
@@ -42,7 +43,7 @@ interface AnalyticsManagerInterface
      * @param string $webspaceKey
      * @param array $data
      *
-     * @return Analytics
+     * @return AnalyticsInterface
      */
     public function create($webspaceKey, $data);
 
@@ -52,7 +53,7 @@ interface AnalyticsManagerInterface
      * @param int $id
      * @param array $data
      *
-     * @return Analytics
+     * @return AnalyticsInterface
      */
     public function update($id, $data);
 

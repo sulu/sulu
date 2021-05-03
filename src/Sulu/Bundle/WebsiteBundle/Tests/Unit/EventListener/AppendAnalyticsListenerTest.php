@@ -13,8 +13,8 @@ namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\EventListener;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
-use Sulu\Bundle\WebsiteBundle\Entity\Analytics;
-use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsRepository;
+use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsInterface;
+use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsRepositoryInterface;
 use Sulu\Bundle\WebsiteBundle\EventListener\AppendAnalyticsListener;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\PortalInformation;
@@ -43,7 +43,7 @@ class AppendAnalyticsListenerTest extends TestCase
     {
         $engine = $this->prophesize(Environment::class);
         $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
-        $analyticsRepository = $this->prophesize(AnalyticsRepository::class);
+        $analyticsRepository = $this->prophesize(AnalyticsRepositoryInterface::class);
         $listener = new AppendAnalyticsListener(
             $engine->reveal(),
             $requestAnalyzer->reveal(),
@@ -69,7 +69,7 @@ class AppendAnalyticsListenerTest extends TestCase
     {
         $engine = $this->prophesize(Environment::class);
         $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
-        $analyticsRepository = $this->prophesize(AnalyticsRepository::class);
+        $analyticsRepository = $this->prophesize(AnalyticsRepositoryInterface::class);
         $listener = new AppendAnalyticsListener(
             $engine->reveal(),
             $requestAnalyzer->reveal(),
@@ -95,8 +95,8 @@ class AppendAnalyticsListenerTest extends TestCase
     {
         $engine = $this->prophesize(Environment::class);
         $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
-        $analyticsRepository = $this->prophesize(AnalyticsRepository::class);
-        $analytics = $this->prophesize(Analytics::class);
+        $analyticsRepository = $this->prophesize(AnalyticsRepositoryInterface::class);
+        $analytics = $this->prophesize(AnalyticsInterface::class);
 
         $analytics->getType()->willReturn('google');
         $analytics->getContent()->willReturn('<script>var i = 0;</script>');
@@ -151,8 +151,8 @@ class AppendAnalyticsListenerTest extends TestCase
     {
         $engine = $this->prophesize(Environment::class);
         $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
-        $analyticsRepository = $this->prophesize(AnalyticsRepository::class);
-        $analytics = $this->prophesize(Analytics::class);
+        $analyticsRepository = $this->prophesize(AnalyticsRepositoryInterface::class);
+        $analytics = $this->prophesize(AnalyticsInterface::class);
         $analytics->getType()->willReturn('google');
         $analytics->getContent()->willReturn('<script>var i = 0;</script>');
 
@@ -210,8 +210,8 @@ class AppendAnalyticsListenerTest extends TestCase
     {
         $engine = $this->prophesize(Environment::class);
         $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
-        $analyticsRepository = $this->prophesize(AnalyticsRepository::class);
-        $analytics = $this->prophesize(Analytics::class);
+        $analyticsRepository = $this->prophesize(AnalyticsRepositoryInterface::class);
+        $analytics = $this->prophesize(AnalyticsInterface::class);
 
         $analytics->getType()->willReturn('google_tag_manager');
         $analytics->getContent()->willReturn('<script>var i = 0;</script>');
@@ -267,8 +267,8 @@ class AppendAnalyticsListenerTest extends TestCase
     {
         $engine = $this->prophesize(Environment::class);
         $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
-        $analyticsRepository = $this->prophesize(AnalyticsRepository::class);
-        $analytics = $this->prophesize(Analytics::class);
+        $analyticsRepository = $this->prophesize(AnalyticsRepositoryInterface::class);
+        $analytics = $this->prophesize(AnalyticsInterface::class);
 
         $analytics->getType()->willReturn('piwik');
         $analytics->getContent()->willReturn('<script>var i = 0;</script>');
@@ -324,8 +324,8 @@ class AppendAnalyticsListenerTest extends TestCase
     {
         $engine = $this->prophesize(Environment::class);
         $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
-        $analyticsRepository = $this->prophesize(AnalyticsRepository::class);
-        $analytics = $this->prophesize(Analytics::class);
+        $analyticsRepository = $this->prophesize(AnalyticsRepositoryInterface::class);
+        $analytics = $this->prophesize(AnalyticsInterface::class);
 
         $analytics->getType()->willReturn('custom');
         $analytics->getContent()->willReturn('{"position":"headOpen","value":"<script>XYZ</script>"}');
@@ -381,7 +381,7 @@ class AppendAnalyticsListenerTest extends TestCase
     {
         $engine = $this->prophesize(Environment::class);
         $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
-        $analyticsRepository = $this->prophesize(AnalyticsRepository::class);
+        $analyticsRepository = $this->prophesize(AnalyticsRepositoryInterface::class);
 
         $analyticsRepository->findByUrl('1.sulu.lo/2', 'sulu_io', 'prod')->willReturn(['test' => 1]);
         $listener = new AppendAnalyticsListener(

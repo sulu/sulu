@@ -11,6 +11,9 @@
 
 namespace Sulu\Bundle\WebsiteBundle\DependencyInjection;
 
+use Sulu\Bundle\WebsiteBundle\Entity\Analytics;
+use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsRepository;
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -101,6 +104,27 @@ class Configuration implements ConfigurationInterface
                 ->end()
             ->end();
 
+        $this->addObjectsSection($rootNode);
+
         return $treeBuilder;
+    }
+
+    private function addObjectsSection(ArrayNodeDefinition $node): void
+    {
+        $node
+            ->children()
+                ->arrayNode('objects')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->arrayNode('analytics')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->scalarNode('model')->defaultValue(Analytics::class)->end()
+                                ->scalarNode('repository')->defaultValue(AnalyticsRepository::class)->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end();
     }
 }

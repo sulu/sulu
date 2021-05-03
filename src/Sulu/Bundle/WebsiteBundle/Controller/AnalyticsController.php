@@ -17,6 +17,7 @@ use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\WebsiteBundle\Admin\WebsiteAdmin;
 use Sulu\Bundle\WebsiteBundle\Analytics\AnalyticsManagerInterface;
 use Sulu\Bundle\WebsiteBundle\Cache\CacheClearerInterface;
+use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\WebspaceReferenceStore;
 use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
@@ -30,6 +31,9 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class AnalyticsController extends AbstractRestController implements ClassResourceInterface, SecuredControllerInterface
 {
+    /**
+     * @deprecated Use the AnalyticsInterface::RESOURCE_KEY constant instead
+     */
     const RESULT_KEY = 'analytics';
 
     /**
@@ -77,7 +81,7 @@ class AnalyticsController extends AbstractRestController implements ClassResourc
     {
         $entities = $this->analyticsManager->findAll($webspace);
 
-        $list = new CollectionRepresentation($entities, self::RESULT_KEY);
+        $list = new CollectionRepresentation($entities, AnalyticsInterface::RESOURCE_KEY);
 
         return $this->handleView($this->view($list, 200));
     }
