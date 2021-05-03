@@ -336,10 +336,11 @@ class NavigationMapperTest extends SuluTestCase
 
     public function testMainNavigationWithSecuredDocument()
     {
-        $userRole = $this->prophesize(UserRole::class);
-        $userRole->getLocales()->willReturn(['en']);
-        $userRole->getRole()->willReturn($this->grantedRole);
-        $this->user->addUserRole($userRole->reveal());
+        $userRole = new UserRole();
+        $userRole->setLocale((string) \json_encode(['en']));
+        $userRole->setRole($this->grantedRole);
+        $this->getEntityManager()->persist($userRole);
+        $this->user->addUserRole($userRole);
         $this->tokenStorage->setToken(new UsernamePasswordToken($this->user, '', 'test'));
 
         $main = $this->navigationMapper->getRootNavigation(
@@ -454,10 +455,11 @@ class NavigationMapperTest extends SuluTestCase
 
     public function testNavigationExcerpt()
     {
-        $userRole = $this->prophesize(UserRole::class);
-        $userRole->getLocales()->willReturn(['en']);
-        $userRole->getRole()->willReturn($this->grantedRole);
-        $this->user->addUserRole($userRole->reveal());
+        $userRole = new UserRole();
+        $userRole->setLocale((string) \json_encode(['en']));
+        $userRole->setRole($this->grantedRole);
+        $this->getEntityManager()->persist($userRole);
+        $this->user->addUserRole($userRole);
         $this->tokenStorage->setToken(new UsernamePasswordToken($this->user, '', 'test'));
 
         $document = $this->createPageDocument();
