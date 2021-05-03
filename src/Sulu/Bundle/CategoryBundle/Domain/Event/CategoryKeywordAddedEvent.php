@@ -13,6 +13,7 @@ namespace Sulu\Bundle\CategoryBundle\Domain\Event;
 
 use Sulu\Bundle\CategoryBundle\Admin\CategoryAdmin;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface;
 use Sulu\Bundle\CategoryBundle\Entity\KeywordInterface;
 use Sulu\Bundle\EventLogBundle\Domain\Event\DomainEvent;
 
@@ -78,9 +79,25 @@ class CategoryKeywordAddedEvent extends DomainEvent
 
     public function getResourceTitle(): ?string
     {
-        $translation = $this->category->findTranslationByLocale($this->keyword->getLocale());
+        $translation = $this->getCategoryTranslation();
 
         return $translation ? $translation->getTranslation() : null;
+    }
+
+    public function getResourceTitleLocale(): ?string
+    {
+        $translation = $this->getCategoryTranslation();
+
+        return $translation ? $translation->getLocale() : null;
+    }
+
+    private function getCategoryTranslation(): ?CategoryTranslationInterface
+    {
+        if (!$translation = $this->category->findTranslationByLocale($this->keyword->getLocale())) {
+            return $this->category->findTranslationByLocale($this->category->getDefaultLocale()) ?: null;
+        }
+
+        return $translation;
     }
 
     public function getResourceSecurityContext(): ?string

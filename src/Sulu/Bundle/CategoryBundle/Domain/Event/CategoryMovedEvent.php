@@ -13,6 +13,7 @@ namespace Sulu\Bundle\CategoryBundle\Domain\Event;
 
 use Sulu\Bundle\CategoryBundle\Admin\CategoryAdmin;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface;
 use Sulu\Bundle\EventLogBundle\Domain\Event\DomainEvent;
 
 class CategoryMovedEvent extends DomainEvent
@@ -69,14 +70,21 @@ class CategoryMovedEvent extends DomainEvent
 
     public function getResourceTitle(): ?string
     {
-        $translation = $this->category->findTranslationByLocale($this->category->getDefaultLocale());
+        $translation = $this->getCategoryTranslation();
 
         return $translation ? $translation->getTranslation() : null;
     }
 
     public function getResourceTitleLocale(): ?string
     {
-        return $this->category->getDefaultLocale();
+        $translation = $this->getCategoryTranslation();
+
+        return $translation ? $translation->getLocale() : null;
+    }
+
+    private function getCategoryTranslation(): ?CategoryTranslationInterface
+    {
+        return $this->category->findTranslationByLocale($this->category->getDefaultLocale()) ?: null;
     }
 
     public function getResourceSecurityContext(): ?string
