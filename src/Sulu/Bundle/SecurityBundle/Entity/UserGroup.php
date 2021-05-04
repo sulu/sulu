@@ -90,8 +90,6 @@ class UserGroup extends ApiEntity
     /**
      * Set user.
      *
-     * @param UserInterface|null $user
-     *
      * @return UserGroup
      */
     public function setUser(UserInterface $user = null)
@@ -113,8 +111,6 @@ class UserGroup extends ApiEntity
 
     /**
      * Set group.
-     *
-     * @param Group|null $group
      *
      * @return UserGroup
      */
