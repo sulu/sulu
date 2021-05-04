@@ -130,6 +130,7 @@ call to pass the correct parameters:
 - `Sulu\Bundle\WebsiteBundle\Analytics\AnalyticsManager`
 - `Sulu\Bundle\ContactBundle\Contact\ContactManager`
 - `Sulu\Bundle\SecurityBundle\Controller\ResettingController`
+- `Sulu\Bundle\SecurityBundle\Controller\RoleController`
 - `Sulu\Bundle\SecurityBundle\UserManager\UserManager`
 - `Sulu\Bundle\MediaBundle\Media\Manager\MediaManager`
 - `Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManager`
