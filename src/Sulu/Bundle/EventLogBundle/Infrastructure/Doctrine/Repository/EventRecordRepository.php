@@ -65,6 +65,8 @@ class EventRecordRepository implements EventRecordRepositoryInterface
 
     public function addAndCommit(EventRecordInterface $eventRecord): void
     {
+        // use persister to insert only given entity instead of flushing all managed entities via the entity manager
+        // this prevents flushing unrelated changes and allows to call this method in a postFlush event-listener
         $this->entityManager->getUnitOfWork()->computeChangeSet(
             $this->entityManager->getClassMetadata($this->entityRepository->getClassName()),
             $eventRecord
