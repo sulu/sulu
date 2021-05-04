@@ -32,7 +32,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
     use SecuredEntityRepositoryTrait;
 
     /**
-     * @var ?AccessControlQueryEnhancer
+     * @var AccessControlQueryEnhancer|null
      */
     private $accessControlQueryEnhancer;
 
@@ -192,7 +192,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
 
         $queryBuilder->addOrderBy($orderBy, $orderSort);
 
-        if (null !== $permission && $this->accessControlQueryEnhancer) {
+        if (null !== $permission) {
             if ($this->accessControlQueryEnhancer) {
                 $this->accessControlQueryEnhancer->enhance(
                     $queryBuilder,

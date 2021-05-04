@@ -57,7 +57,6 @@ class ContactMediaControllerTest extends SuluTestCase
         $this->contact = new Contact();
         $this->contact->setFirstName('Max');
         $this->contact->setLastName('Mustermann');
-        $this->contact->setPosition('CEO');
         $this->contact->setFormOfAddress(1);
         $this->contact->setSalutation('Sehr geehrter Herr Dr Mustermann');
 

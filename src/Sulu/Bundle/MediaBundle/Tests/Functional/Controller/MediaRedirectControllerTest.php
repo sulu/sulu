@@ -273,7 +273,7 @@ class MediaRedirectControllerTest extends SuluTestCase
             'type' => 'circle', 'color' => '#ffcc00',
         ];
 
-        $this->collection->setStyle(\json_encode($style));
+        $this->collection->setStyle(\json_encode($style) ?: null);
 
         // Create Collection Type
         $this->collectionType = new CollectionType();

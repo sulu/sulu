@@ -18,7 +18,6 @@ use Doctrine\ORM\UnitOfWork;
 use Doctrine\Persistence\Mapping\ClassMetadata;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
-use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Component\Persistence\EventSubscriber\ORM\UserBlameSubscriber;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -100,7 +99,7 @@ class UserBlameSubscriberTest extends TestCase
 
         $this->unitOfWork = $this->getMockBuilder(UnitOfWork::class)->disableOriginalConstructor()->getMock();
 
-        $this->subscriber = new UserBlameSubscriber($this->tokenStorage->reveal(), User::class);
+        $this->subscriber = new UserBlameSubscriber($this->tokenStorage->reveal());
         $this->unitOfWork = $this->getMockBuilder(UnitOfWork::class)->disableOriginalConstructor()->getMock();
 
         $this->tokenStorage->getToken()->willReturn($this->token->reveal());
@@ -263,7 +262,7 @@ class UserBlameSubscriberTest extends TestCase
         $tokenStorage = $this->prophesize(TokenStorageInterface::class);
         $tokenStorage->getToken()->willReturn($token->reveal());
         $token->getUser()->willReturn($symfonyUser->reveal());
-        $subscriber = new UserBlameSubscriber($tokenStorage->reveal(), User::class);
+        $subscriber = new UserBlameSubscriber($tokenStorage->reveal());
 
         $entity = $this->userBlameObject->reveal();
 

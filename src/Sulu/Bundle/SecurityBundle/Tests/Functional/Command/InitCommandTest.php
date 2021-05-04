@@ -34,7 +34,7 @@ class InitCommandTest extends SuluTestCase
     public function setUp(): void
     {
         $this->purgeDatabase();
-        $application = new Application($this->getContainer()->get('kernel'));
+        $application = new Application(static::$kernel);
 
         $this->roleRepository = $this->getContainer()->get('sulu.repository.role');
 
@@ -103,10 +103,9 @@ class InitCommandTest extends SuluTestCase
         $this->assertNotNull($webspacePermission);
         $this->assertSame(127, $webspacePermission->getPermissions());
 
-        /** @var Permission|null $pagePermissions */
         $collectionPermissions = $permissions->filter(function(Permission $permission) {
             return 'sulu.media.collections' === $permission->getContext();
-        })->first();
+        })->first() ?: null;
         $this->assertNotNull($collectionPermissions);
         $this->assertSame(127, $collectionPermissions->getPermissions());
     }

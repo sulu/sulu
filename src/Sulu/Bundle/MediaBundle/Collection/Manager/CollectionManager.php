@@ -426,7 +426,7 @@ class CollectionManager implements CollectionManagerInterface
 
         /** @var CollectionEntity $collectionEntity */
         $collectionEntity = $collection->getEntity();
-        $collectionEntity->setDefaultMeta($collectionEntity->getMeta()->first());
+        $collectionEntity->setDefaultMeta($collectionEntity->getMeta()->first() ?: null);
 
         $this->em->persist($collectionEntity);
         $this->em->flush();

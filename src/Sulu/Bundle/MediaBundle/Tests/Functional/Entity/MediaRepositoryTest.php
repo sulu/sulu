@@ -50,7 +50,7 @@ class MediaRepositoryTest extends SuluTestCase
     private $mediaTypes = [];
 
     /**
-     * @var CollectionType
+     * @var CollectionType[]
      */
     private $collectionTypes = [];
 
@@ -674,12 +674,13 @@ class MediaRepositoryTest extends SuluTestCase
 
         $retrievedMedia = $this->mediaRepository->findMediaByIdForRendering($media->getId(), 'my-format');
 
+        $files = $retrievedMedia->getFiles();
         $this->assertEquals($media->getId(), $retrievedMedia->getId());
-        $this->assertEquals(1, \count($retrievedMedia->getFiles()));
-        $this->assertEquals(1, \count($retrievedMedia->getFiles()->get(0)->getFileVersions()));
+        $this->assertEquals(1, \count($files));
+        $this->assertEquals(1, \count($files->get(0)->getFileVersions()));
 
         /** @var FileVersion $fileVersion */
-        $fileVersion = $retrievedMedia->getFiles()->get(0)->getFileVersions()->get(0);
+        $fileVersion = $files->get(0)->getFileVersions()->get(0);
 
         $this->assertEquals(1, \count($fileVersion->getFormatOptions()));
 

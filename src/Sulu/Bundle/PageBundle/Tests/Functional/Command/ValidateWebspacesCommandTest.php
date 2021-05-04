@@ -35,6 +35,7 @@ class ValidateWebspacesCommandTest extends SuluTestCase
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $controllerNameParser = null;
         if ($this->getContainer()->has('sulu_page.controller_name_converter')) {
+            /** @var \Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser $controllerNameParser */
             $controllerNameParser = $this->getContainer()->get('sulu_page.controller_name_converter');
         }
 

@@ -34,7 +34,7 @@ class File implements AuditableInterface
     private $id;
 
     /**
-     * @var DoctrineCollection
+     * @var DoctrineCollection<int, FileVersion>
      */
     private $fileVersions;
 
@@ -108,7 +108,7 @@ class File implements AuditableInterface
     /**
      * Get fileVersions.
      *
-     * @return DoctrineCollection|FileVersion[]
+     * @return DoctrineCollection<int, FileVersion>
      */
     public function getFileVersions()
     {
@@ -137,7 +137,7 @@ class File implements AuditableInterface
     /**
      * Get latest file version.
      *
-     * @return ?FileVersion
+     * @return FileVersion|null
      */
     public function getLatestFileVersion()
     {

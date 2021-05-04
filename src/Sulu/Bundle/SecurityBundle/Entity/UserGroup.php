@@ -32,12 +32,12 @@ class UserGroup extends ApiEntity
     private $id;
 
     /**
-     * @var UserInterface
+     * @var UserInterface|null
      */
     private $user;
 
     /**
-     * @var Group
+     * @var Group|null
      */
     private $group;
 
@@ -90,8 +90,6 @@ class UserGroup extends ApiEntity
     /**
      * Set user.
      *
-     * @param UserInterface $user
-     *
      * @return UserGroup
      */
     public function setUser(UserInterface $user = null)
@@ -104,7 +102,7 @@ class UserGroup extends ApiEntity
     /**
      * Get user.
      *
-     * @return UserInterface
+     * @return UserInterface|null
      */
     public function getUser()
     {
@@ -113,8 +111,6 @@ class UserGroup extends ApiEntity
 
     /**
      * Set group.
-     *
-     * @param Group $group
      *
      * @return UserGroup
      */
@@ -128,7 +124,7 @@ class UserGroup extends ApiEntity
     /**
      * Get group.
      *
-     * @return Group
+     * @return Group|null
      */
     public function getGroup()
     {

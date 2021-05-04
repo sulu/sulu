@@ -172,7 +172,7 @@ class CollectionControllerTest extends SuluTestCase
             'color' => '#ffcc00',
         ];
 
-        $collection->setStyle(\json_encode($style));
+        $collection->setStyle(\json_encode($style) ?: null);
         $collection->setKey($key);
         $collection->setType($collectionType);
 

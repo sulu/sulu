@@ -51,7 +51,7 @@ class Category implements CategoryInterface
     protected $id;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $key;
 
@@ -61,32 +61,32 @@ class Category implements CategoryInterface
     protected $defaultLocale;
 
     /**
-     * @var CategoryInterface
+     * @var CategoryInterface|null
      */
     protected $parent;
 
     /**
-     * @var UserInterface
+     * @var UserInterface|null
      */
     protected $creator;
 
     /**
-     * @var UserInterface
+     * @var UserInterface|null
      */
     protected $changer;
 
     /**
-     * @var Collection|CategoryMetaInterface[]
+     * @var Collection<int, CategoryMetaInterface>
      */
     protected $meta;
 
     /**
-     * @var Collection|CategoryTranslationInterface[]
+     * @var Collection<int, CategoryTranslationInterface>
      */
     protected $translations;
 
     /**
-     * @var Collection|CategoryInterface[]
+     * @var Collection<int, CategoryInterface>
      */
     protected $children;
 

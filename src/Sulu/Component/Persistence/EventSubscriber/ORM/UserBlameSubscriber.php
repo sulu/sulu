@@ -39,18 +39,11 @@ class UserBlameSubscriber implements EventSubscriber
     private $tokenStorage;
 
     /**
-     * @var string
-     */
-    private $userClass;
-
-    /**
      * @param TokenStorageInterface $tokenStorage
-     * @param string $userClass
      */
-    public function __construct(TokenStorageInterface $tokenStorage = null, $userClass)
+    public function __construct(TokenStorageInterface $tokenStorage = null)
     {
         $this->tokenStorage = $tokenStorage;
-        $this->userClass = $userClass;
     }
 
     public function getSubscribedEvents()
@@ -75,7 +68,7 @@ class UserBlameSubscriber implements EventSubscriber
             if (!$metadata->hasAssociation(self::CREATOR_FIELD)) {
                 $metadata->mapManyToOne([
                     'fieldName' => self::CREATOR_FIELD,
-                    'targetEntity' => $this->userClass,
+                    'targetEntity' => UserInterface::class,
                     'joinColumns' => [
                         [
                             'name' => 'idUsersCreator',
@@ -90,7 +83,7 @@ class UserBlameSubscriber implements EventSubscriber
             if (!$metadata->hasAssociation(self::CHANGER_FIELD)) {
                 $metadata->mapManyToOne([
                     'fieldName' => self::CHANGER_FIELD,
-                    'targetEntity' => $this->userClass,
+                    'targetEntity' => UserInterface::class,
                     'joinColumns' => [
                         [
                             'name' => 'idUsersChanger',

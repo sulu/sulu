@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\ContactBundle\EventListener;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
@@ -24,7 +25,7 @@ use Sulu\Bundle\TagBundle\Tag\TagInterface;
 class CacheInvalidationListener
 {
     /**
-     * @var null|CacheManagerInterface
+     * @var CacheManagerInterface|null
      */
     private $cacheManager;
 
@@ -33,55 +34,75 @@ class CacheInvalidationListener
         $this->cacheManager = $cacheManager;
     }
 
+    /**
+     * @return void
+     */
     public function postPersist(LifecycleEventArgs $eventArgs)
     {
         $this->invalidateEntity($eventArgs->getObject());
     }
 
+    /**
+     * @return void
+     */
     public function postUpdate(LifecycleEventArgs $eventArgs)
     {
         $this->invalidateEntity($eventArgs->getObject());
     }
 
+    /**
+     * @return void
+     */
     public function preRemove(LifecycleEventArgs $eventArgs)
     {
         $this->invalidateEntity($eventArgs->getObject());
     }
 
+    /**
+     * @param object $object
+     *
+     * @return void
+     */
     private function invalidateEntity($object)
     {
-        if (!$this->cacheManager) {
+        $cacheManager = $this->cacheManager;
+
+        if (!$cacheManager) {
             return;
         }
 
         if ($object instanceof ContactInterface) {
-            $this->cacheManager->invalidateReference('contact', $object->getId());
-            $this->invalidateTags($object->getTags());
-            $this->invalidateCategories($object->getCategories());
+            $cacheManager->invalidateReference('contact', (string) $object->getId());
+            $this->invalidateTags($cacheManager, $object->getTags());
+            $this->invalidateCategories($cacheManager, $object->getCategories());
         } elseif ($object instanceof AccountInterface) {
-            $this->cacheManager->invalidateReference('account', $object->getId());
-            $this->invalidateTags($object->getTags());
-            $this->invalidateCategories($object->getCategories());
+            $cacheManager->invalidateReference('account', (string) $object->getId());
+            $this->invalidateTags($cacheManager, $object->getTags());
+            $this->invalidateCategories($cacheManager, $object->getCategories());
         }
     }
 
     /**
-     * @param TagInterface[] $tags
+     * @param Collection<int, TagInterface> $tags
+     *
+     * @return void
      */
-    private function invalidateTags($tags)
+    private function invalidateTags(CacheManagerInterface $cacheManager, $tags)
     {
         foreach ($tags as $tag) {
-            $this->cacheManager->invalidateReference('tag', $tag->getId());
+            $cacheManager->invalidateReference('tag', (string) $tag->getId());
         }
     }
 
     /**
-     * @param CategoryInterface[] $categories
+     * @param Collection<int, CategoryInterface> $categories
+     *
+     * @return void
      */
-    private function invalidateCategories($categories)
+    private function invalidateCategories(CacheManagerInterface $cacheManager, $categories)
     {
         foreach ($categories as $category) {
-            $this->cacheManager->invalidateReference('category', $category->getId());
+            $cacheManager->invalidateReference('category', (string) $category->getId());
         }
     }
 }

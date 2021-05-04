@@ -47,12 +47,12 @@ class Tag implements TagInterface
     private $changed;
 
     /**
-     * @var UserInterface
+     * @var UserInterface|null
      */
     private $changer;
 
     /**
-     * @var UserInterface
+     * @var UserInterface|null
      */
     private $creator;
 
@@ -90,6 +90,9 @@ class Tag implements TagInterface
         return $this->changed;
     }
 
+    /**
+     * @return $this
+     */
     public function setChanger(UserInterface $changer = null)
     {
         $this->changer = $changer;
@@ -102,6 +105,9 @@ class Tag implements TagInterface
         return $this->changer;
     }
 
+    /**
+     * @return $this
+     */
     public function setCreator(UserInterface $creator = null)
     {
         $this->creator = $creator;

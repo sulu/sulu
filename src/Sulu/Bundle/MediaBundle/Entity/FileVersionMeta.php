@@ -27,17 +27,17 @@ class FileVersionMeta
     private $title;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $description;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $copyright;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $credits;
 
@@ -88,7 +88,7 @@ class FileVersionMeta
     /**
      * Set description.
      *
-     * @param string $description
+     * @param string|null $description
      *
      * @return FileVersionMeta
      */
@@ -102,7 +102,7 @@ class FileVersionMeta
     /**
      * Get description.
      *
-     * @return string
+     * @return string|null
      */
     public function getDescription()
     {
@@ -112,7 +112,7 @@ class FileVersionMeta
     /**
      * Set copyright.
      *
-     * @param string $copyright
+     * @param string|null $copyright
      *
      * @return FileVersionMeta
      */
@@ -126,7 +126,7 @@ class FileVersionMeta
     /**
      * Get copyright.
      *
-     * @return string
+     * @return string|null
      */
     public function getCopyright()
     {
@@ -136,7 +136,7 @@ class FileVersionMeta
     /**
      * Set credits.
      *
-     * @param string $credits
+     * @param string|null $credits
      *
      * @return FileVersionMeta
      */
@@ -150,7 +150,7 @@ class FileVersionMeta
     /**
      * Get credits.
      *
-     * @return string
+     * @return string|null
      */
     public function getCredits()
     {
