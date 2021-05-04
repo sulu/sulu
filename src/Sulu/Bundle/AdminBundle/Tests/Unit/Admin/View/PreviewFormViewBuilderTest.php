@@ -15,13 +15,14 @@ use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Admin\View\Badge;
 use Sulu\Bundle\AdminBundle\Admin\View\PreviewFormViewBuilder;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
+use Sulu\Component\Security\Authentication\RoleInterface;
 
 class PreviewFormViewBuilderTest extends TestCase
 {
     public function testBuildPreviewFormViewWithClone()
     {
         $viewBuilder = (new PreviewFormViewBuilder('sulu_role.add_form', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setFormKey('roles');
 
         $this->assertNotSame($viewBuilder->getView(), $viewBuilder->getView());
@@ -169,7 +170,7 @@ class PreviewFormViewBuilderTest extends TestCase
         $deleteToolbarAction = new ToolbarAction('sulu_admin.delete');
 
         $view = (new PreviewFormViewBuilder('sulu_role.add_form', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setFormKey('roles')
             ->addToolbarActions([$saveToolbarAction, $typesToolbarAction])
             ->addToolbarActions([$deleteToolbarAction])
@@ -184,7 +185,7 @@ class PreviewFormViewBuilderTest extends TestCase
     public function testBuildFormWithRouterAttributesToFormRequest()
     {
         $view = (new PreviewFormViewBuilder('sulu_role.add_form', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setFormKey('roles')
             ->addRouterAttributesToFormRequest(['webspace' => 'webspaceId', 'parent' => 'parentId'])
             ->addRouterAttributesToFormRequest(['locale'])
@@ -199,7 +200,7 @@ class PreviewFormViewBuilderTest extends TestCase
     public function testBuildFormWithRouterAttributesToEditView()
     {
         $view = (new PreviewFormViewBuilder('sulu_role.add_form', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setFormKey('roles')
             ->addRouterAttributesToEditView(['webspace', 'parent'])
             ->addRouterAttributesToEditView(['locale'])
@@ -214,7 +215,7 @@ class PreviewFormViewBuilderTest extends TestCase
     public function testBuildFormWithIdQueryParameter()
     {
         $view = (new PreviewFormViewBuilder('sulu_security.add_form', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setFormKey('roles')
             ->setIdQueryParameter('contactId')
             ->getView();
@@ -239,7 +240,7 @@ class PreviewFormViewBuilderTest extends TestCase
     public function testBuildFormWithParent()
     {
         $view = (new PreviewFormViewBuilder('sulu_role.add_form', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setFormKey('roles')
             ->setParent('sulu_admin.test')
             ->getView();
@@ -250,7 +251,7 @@ class PreviewFormViewBuilderTest extends TestCase
     public function testBuildFormWithOption()
     {
         $view = (new PreviewFormViewBuilder('sulu_role.add_form', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setFormKey('roles')
             ->setOption('resourceKey', 'test')
             ->getView();
@@ -261,7 +262,7 @@ class PreviewFormViewBuilderTest extends TestCase
     public function testBuildFormWithLocales()
     {
         $view = (new PreviewFormViewBuilder('sulu_role.add_form', '/roles/:locale'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setFormKey('roles')
             ->addLocales(['de', 'en'])
             ->addLocales(['nl', 'fr'])
@@ -276,7 +277,7 @@ class PreviewFormViewBuilderTest extends TestCase
         $this->expectExceptionMessageRegExp('":locale"');
 
         $view = (new PreviewFormViewBuilder('sulu_role.list', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setFormKey('roles')
             ->addLocales(['de', 'en'])
             ->addLocales(['nl', 'fr'])
@@ -289,7 +290,7 @@ class PreviewFormViewBuilderTest extends TestCase
         $this->expectExceptionMessageRegExp('":locale"');
 
         $view = (new PreviewFormViewBuilder('sulu_role.list', '/roles/:locale'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setFormKey('roles')
             ->getView();
     }
@@ -300,7 +301,7 @@ class PreviewFormViewBuilderTest extends TestCase
         $this->expectExceptionMessageRegExp('"editView"');
 
         $view = (new PreviewFormViewBuilder('sulu_role.list', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setFormKey('roles')
             ->setEditView('sulu_role.list')
             ->getView();
@@ -321,7 +322,7 @@ class PreviewFormViewBuilderTest extends TestCase
             ]);
 
         $view = (new PreviewFormViewBuilder('sulu_role.list', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setFormKey('roles')
             ->addTabBadges([$fooBadge, 'abc' => $barBadge])
             ->addTabBadges(['abc' => $bazBadge])

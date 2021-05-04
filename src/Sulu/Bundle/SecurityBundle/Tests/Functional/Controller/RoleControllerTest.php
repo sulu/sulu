@@ -12,6 +12,9 @@
 namespace Sulu\Bundle\SecurityBundle\Tests\Functional\Controller;
 
 use Doctrine\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectRepository;
+use Sulu\Bundle\EventLogBundle\Domain\Event\DomainEvent;
+use Sulu\Bundle\EventLogBundle\Domain\Model\EventRecord;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\SecurityType;
@@ -55,10 +58,16 @@ class RoleControllerTest extends SuluTestCase
      */
     private $client;
 
+    /**
+     * @var ObjectRepository<EventRecord>
+     */
+    private $eventRepository;
+
     public function setUp(): void
     {
         $this->client = $this->createAuthenticatedClient();
         $this->em = $this->getEntityManager();
+        $this->eventRepository = $this->em->getRepository(EventRecord::class);
         $this->purgeDatabase();
 
         $this->securityType1 = new SecurityType();
@@ -348,6 +357,10 @@ class RoleControllerTest extends SuluTestCase
         $this->assertEquals(true, $response->permissions[2]->permissions->security);
         $this->assertEquals('Security Type 2', $response->securityType->name);
 
+        /** @var DomainEvent $event */
+        $event = $this->eventRepository->findOneBy(['eventType' => 'modified']);
+        $this->assertSame((string) $this->role1->getId(), $event->getResourceId());
+
         $this->client->jsonRequest(
             'GET',
             '/api/roles/' . $this->role1->getId()
@@ -586,6 +599,9 @@ class RoleControllerTest extends SuluTestCase
         );
 
         $this->assertHttpStatusCode(204, $this->client->getResponse());
+        /** @var DomainEvent $event */
+        $event = $this->eventRepository->findOneBy(['eventType' => 'removed']);
+        $this->assertSame((string) $this->role1->getId(), $event->getResourceId());
 
         $this->client->jsonRequest(
             'GET',

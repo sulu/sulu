@@ -156,4 +156,9 @@ class Permission
     {
         return $this->module;
     }
+
+    public function __toString()
+    {
+        return $this->context;
+    }
 }

@@ -20,6 +20,7 @@ use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
 use Sulu\Bundle\ContactBundle\Admin\ContactAdmin;
+use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
@@ -156,7 +157,7 @@ class SecurityAdmin extends Admin
         if ($this->securityChecker->hasPermission(static::ROLE_SECURITY_CONTEXT, PermissionTypes::EDIT)) {
             $viewCollection->add(
                 $this->viewBuilderFactory->createListViewBuilder(static::LIST_VIEW, '/roles')
-                    ->setResourceKey('roles')
+                    ->setResourceKey(RoleInterface::RESOURCE_KEY)
                     ->setListKey('roles')
                     ->setTitle('sulu_security.roles')
                     ->addListAdapters(['table'])
@@ -166,13 +167,13 @@ class SecurityAdmin extends Admin
             );
             $viewCollection->add(
                 $this->viewBuilderFactory->createResourceTabViewBuilder(static::ADD_FORM_VIEW, '/roles/add')
-                    ->setResourceKey('roles')
+                    ->setResourceKey(RoleInterface::RESOURCE_KEY)
                     ->setBackView(static::LIST_VIEW)
             );
             $viewCollection->add(
                 $this->viewBuilderFactory
                     ->createFormViewBuilder('sulu_security.role_add_form.details', '/details')
-                    ->setResourceKey('roles')
+                    ->setResourceKey(RoleInterface::RESOURCE_KEY)
                     ->setFormKey('role_details')
                     ->setTabTitle('sulu_admin.details')
                     ->setEditView(static::EDIT_FORM_VIEW)
@@ -181,14 +182,14 @@ class SecurityAdmin extends Admin
             );
             $viewCollection->add(
                 $this->viewBuilderFactory->createResourceTabViewBuilder(static::EDIT_FORM_VIEW, '/roles/:id')
-                    ->setResourceKey('roles')
+                    ->setResourceKey(RoleInterface::RESOURCE_KEY)
                     ->setBackView(static::LIST_VIEW)
                     ->setTitleProperty('name')
             );
             $viewCollection->add(
                 $this->viewBuilderFactory
                     ->createFormViewBuilder('sulu_security.role_edit_form.details', '/details')
-                    ->setResourceKey('roles')
+                    ->setResourceKey(RoleInterface::RESOURCE_KEY)
                     ->setFormKey('role_details')
                     ->setTabTitle('sulu_admin.details')
                     ->addToolbarActions($formToolbarActions)
