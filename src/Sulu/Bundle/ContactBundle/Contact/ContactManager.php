@@ -641,6 +641,8 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
 
         foreach ($contact->getMedias() as $media) {
             if (!\in_array($media->getId(), $foundMediaIds)) {
+                $contact->removeMedia($media);
+
                 $this->domainEventCollector->collect(
                     new ContactMediaRemovedEvent($contact, $media)
                 );
