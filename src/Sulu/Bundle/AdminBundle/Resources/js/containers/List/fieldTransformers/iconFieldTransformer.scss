@@ -1,3 +1,13 @@
+@import '../../Application/colors.scss';
+
 .list-icon {
     font-size: 18px;
+}
+
+.dark {
+    font-size: 14px;
+    color: $white;
+    background: $blueZodiac;
+    border-radius: 50%;
+    padding: 5px;
 }

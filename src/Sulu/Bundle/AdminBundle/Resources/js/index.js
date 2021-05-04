@@ -187,9 +187,11 @@ function registerListAdapters() {
     listAdapterRegistry.add('column_list', ColumnListAdapter);
     listAdapterRegistry.add('folder', FolderAdapter);
     listAdapterRegistry.add('table', TableAdapter);
+    // @deprecated use adapterOptions to set the correct skin
     listAdapterRegistry.add('table_light', TableAdapter, {skin: 'light'});
     listAdapterRegistry.add('tree_table', TreeTableAdapter);
-    listAdapterRegistry.add('tree_table_slim', TreeTableAdapter, {showHeader: false});
+    // @deprecated use adapterOptions to set the correct skin
+    listAdapterRegistry.add('tree_table_slim', TreeTableAdapter, {show_header: false});
 }
 
 function registerListFieldFilterTypes() {

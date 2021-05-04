@@ -16,6 +16,7 @@ import userStore from '../../stores/userStore';
 import SingleListOverlay from '../SingleListOverlay';
 import {translate} from '../../utils/Translator';
 import type {
+    AdapterOptions,
     ItemActionsProvider,
     ResolveCopyArgument,
     ResolveDeleteArgument,
@@ -34,13 +35,14 @@ import ColumnOptionsOverlay from './ColumnOptionsOverlay';
 import FieldFilter from './FieldFilter';
 
 type Props = {|
-    adapterOptions?: {[adapterKey: string]: {[key: string]: mixed}},
+    adapterOptions?: {[adapterKey: string]: AdapterOptions},
     adapters: Array<string>,
     allowActivateForDisabledItems: boolean,
     copyable: boolean,
     deletable: boolean,
     disabled: boolean,
     disabledIds: Array<string | number>,
+    filterable: boolean,
     header?: Node,
     itemActionsProvider?: ItemActionsProvider,
     itemDisabledCondition?: ?string,
@@ -68,6 +70,7 @@ class List extends React.Component<Props> {
         deletable: true,
         disabled: false,
         disabledIds: [],
+        filterable: true,
         movable: true,
         orderable: true,
         paginated: true,
@@ -510,7 +513,6 @@ class List extends React.Component<Props> {
 
     render() {
         const {
-            adapterOptions,
             adapters,
             copyable,
             deletable,
@@ -522,6 +524,7 @@ class List extends React.Component<Props> {
             onItemAdd,
             paginated,
             orderable,
+            adapterOptions,
             selectable,
             store,
             toolbarClassName,
@@ -549,7 +552,7 @@ class List extends React.Component<Props> {
         );
 
         const searchable = this.props.searchable && Adapter.searchable;
-        const filterable = filterableFields && Object.keys(filterableFields).length > 0;
+        const filterable = this.props.filterable && filterableFields && Object.keys(filterableFields).length > 0;
 
         if (store.forbidden) {
             return <PermissionHint />;
@@ -560,49 +563,55 @@ class List extends React.Component<Props> {
                 {header}
                 {!schemaLoading && (searchable || adapters.length > 1 || filterable || this.showColumnOptions) &&
                     <div className={toolbarClass}>
-                        {searchable &&
-                            <Search onSearch={this.handleSearch} value={store.searchTerm.get()} />
-                        }
-                        <FieldFilter
-                            fields={filterableFields || {}}
-                            onChange={this.handleFilterChange}
-                            value={store.filterOptions.get()}
-                        />
-                        {this.showColumnOptions &&
-                            <Fragment>
-                                <ArrowMenu
-                                    anchorElement={
-                                        <div>
-                                            <Button
-                                                icon="su-sort"
-                                                onClick={this.handleAdapterOptionsButtonClick}
-                                                showDropdownIcon={true}
-                                                skin="icon"
-                                            />
-                                        </div>
-                                    }
-                                    onClose={this.handleAdapterOptionsClose}
-                                    open={this.adapterOptionsOpen}
-                                >
-                                    <ArrowMenu.Section>
-                                        <ArrowMenu.Action onClick={this.handleColumnOptionsOpen}>
-                                            {translate('sulu_admin.column_options')}
-                                        </ArrowMenu.Action>
-                                    </ArrowMenu.Section>
-                                </ArrowMenu>
-                                <ColumnOptionsOverlay
-                                    onClose={this.handleColumnOptionsClose}
-                                    onConfirm={this.handleColumnOptionsChange}
-                                    open={this.columnOptionsOpen}
-                                    schema={userSchema}
+                        <div className={listStyles.toolbarLeft}>
+                            {searchable &&
+                                <Search onSearch={this.handleSearch} value={store.searchTerm.get()} />
+                            }
+                            {filterable &&
+                                <FieldFilter
+                                    fields={filterableFields || {}}
+                                    onChange={this.handleFilterChange}
+                                    value={store.filterOptions.get()}
                                 />
-                            </Fragment>
-                        }
-                        <AdapterSwitch
-                            adapters={adapters}
-                            currentAdapter={this.currentAdapterKey}
-                            onAdapterChange={this.handleAdapterChange}
-                        />
+                            }
+                        </div>
+                        <div className={listStyles.toolbarRight}>
+                            {this.showColumnOptions &&
+                                <Fragment>
+                                    <ArrowMenu
+                                        anchorElement={
+                                            <div>
+                                                <Button
+                                                    icon="su-sort"
+                                                    onClick={this.handleAdapterOptionsButtonClick}
+                                                    showDropdownIcon={true}
+                                                    skin="icon"
+                                                />
+                                            </div>
+                                        }
+                                        onClose={this.handleAdapterOptionsClose}
+                                        open={this.adapterOptionsOpen}
+                                    >
+                                        <ArrowMenu.Section>
+                                            <ArrowMenu.Action onClick={this.handleColumnOptionsOpen}>
+                                                {translate('sulu_admin.column_options')}
+                                            </ArrowMenu.Action>
+                                        </ArrowMenu.Section>
+                                    </ArrowMenu>
+                                    <ColumnOptionsOverlay
+                                        onClose={this.handleColumnOptionsClose}
+                                        onConfirm={this.handleColumnOptionsChange}
+                                        open={this.columnOptionsOpen}
+                                        schema={userSchema}
+                                    />
+                                </Fragment>
+                            }
+                            <AdapterSwitch
+                                adapters={adapters}
+                                currentAdapter={this.currentAdapterKey}
+                                onAdapterChange={this.handleAdapterChange}
+                            />
+                        </div>
                     </div>
                 }
                 <div className={listClass}>

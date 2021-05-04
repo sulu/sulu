@@ -199,6 +199,41 @@ class ListViewBuilder implements ListViewBuilderInterface
         return $this;
     }
 
+    public function enableColumnOptions(): ListViewBuilderInterface
+    {
+        $this->setHideColumnOptionsToView($this->view, false);
+
+        return $this;
+    }
+
+    public function disableColumnOptions(): ListViewBuilderInterface
+    {
+        $this->setHideColumnOptionsToView($this->view, true);
+
+        return $this;
+    }
+
+    public function enableFiltering(): ListViewBuilderInterface
+    {
+        $this->setFilterableToView($this->view, true);
+
+        return $this;
+    }
+
+    public function disableFiltering(): ListViewBuilderInterface
+    {
+        $this->setFilterableToView($this->view, false);
+
+        return $this;
+    }
+
+    public function addAdapterOptions(array $adapterOptions): ListViewBuilderInterface
+    {
+        $this->addAdapterOptionsToView($this->view, $adapterOptions);
+
+        return $this;
+    }
+
     public function addRouterAttributesToListRequest(array $routerAttributesToListRequest): ListViewBuilderInterface
     {
         $this->addRouterAttributesToListRequestToView($this->view, $routerAttributesToListRequest);

@@ -35,10 +35,12 @@ export type ItemActionConfig = {|
 
 export type ItemActionsProvider = (item: ?Object) => Array<ItemActionConfig>;
 
+export type AdapterOptions = {[key: string]: mixed};
+
 export type ListAdapterProps = {|
     active: ?string | number,
     activeItems: ?Array<?string | number>,
-    adapterOptions?: {[key: string]: mixed},
+    adapterOptions?: AdapterOptions,
     data: Array<*>,
     disabledIds: Array<string | number>,
     itemActionsProvider?: ItemActionsProvider,

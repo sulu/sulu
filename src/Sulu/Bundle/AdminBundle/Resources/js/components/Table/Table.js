@@ -169,8 +169,10 @@ class Table<T: string | number> extends React.Component<Props<T>> {
         const allRowsSelected = (clonedBody && !emptyBody) ? this.checkAllRowsSelected(clonedBody) : false;
         const clonedHeader = this.cloneHeader(header, allRowsSelected);
 
-        const tableClass = classNames(tableStyles.tableContainer, tableStyles[skin]);
-
+        const tableClass = classNames(
+            tableStyles.tableContainer,
+            tableStyles[skin]
+        );
         return (
             <div className={tableClass}>
                 <table className={tableStyles.table}>

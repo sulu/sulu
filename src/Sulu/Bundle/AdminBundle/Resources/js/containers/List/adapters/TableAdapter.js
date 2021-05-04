@@ -74,9 +74,10 @@ class TableAdapter extends AbstractTableAdapter {
             onLimitChange,
             onPageChange,
             paginated,
-            options: {
+            adapterOptions: {
+                show_header = true,
                 skin = 'dark',
-            },
+            } = {},
             page,
             pageCount,
         } = this.props;
@@ -87,11 +88,14 @@ class TableAdapter extends AbstractTableAdapter {
                 onAllSelectionChange={onAllSelectionChange}
                 onRowSelectionChange={onItemSelectionChange}
                 selectMode={onItemSelectionChange ? 'multiple' : undefined}
-                skin={skin}
+                skin={(skin: any)}
             >
-                <Table.Header>
-                    {this.renderHeaderCells()}
-                </Table.Header>
+                {
+                    !show_header ? null
+                        : <Table.Header>
+                            {this.renderHeaderCells()}
+                        </Table.Header>
+                }
                 <Table.Body>
                     {this.renderRows()}
                 </Table.Body>

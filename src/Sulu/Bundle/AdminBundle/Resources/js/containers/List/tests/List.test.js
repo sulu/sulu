@@ -444,6 +444,48 @@ test('Render the adapter with filters', () => {
     ).toMatchSnapshot();
 });
 
+test('Render the adapter with filters but filterable disabled', () => {
+    const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
+
+    // $FlowFixMe
+    listStore.filterableFields = {
+        title: {
+            filterType: 'text',
+            label: 'Title',
+        },
+        created: {
+            filterType: 'datetime',
+            label: 'Created at',
+        },
+        changed: {
+            label: 'Changed at',
+        },
+    };
+
+    listFieldFilterTypeRegistry.get.mockImplementation((key) => {
+        switch (key) {
+            case 'datetime':
+            case 'text':
+                return class {
+                    getFormNode = jest.fn();
+                    getValueNode = jest.fn();
+                    setValue = jest.fn();
+                };
+        }
+    });
+
+    listStore.filterOptions.get.mockReturnValue({
+        title: undefined,
+        created: undefined,
+    });
+
+    expect(
+        mount(
+            <List adapters={['test']} disabled={true} filterable={false} header={<h1>Title</h1>} store={listStore} />
+        ).render()
+    ).toMatchSnapshot();
+});
+
 test('Pass the given disabledIds to the adapter', () => {
     const disabledIds = [1, 3];
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
@@ -486,15 +528,15 @@ test('Pass given disabledIds and ids of items that fulfill given itemDisabledCon
 });
 
 test('Pass adapterOptions to the adapter', () => {
-    const adapterOptions = {table: {option1: 'value1'}, test: {option2: 'value2'}};
+    const adapterOptions = {table: {show_header: true}, test: {skin: 'light'}};
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
     const list = shallow(<List adapterOptions={adapterOptions} adapters={['test']} store={listStore} />);
 
-    expect(list.find('TestAdapter').prop('adapterOptions')).toEqual({option2: 'value2'});
+    expect(list.find('TestAdapter').prop('adapterOptions')).toEqual({skin: 'light'});
 });
 
 test('Pass undefined as adapterOptions to the adapter if no options for current adapter are passed', () => {
-    const adapterOptions = {table: {option1: 'value1'}};
+    const adapterOptions = {table: {skin: 'flat'}};
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
     const list = shallow(<List adapterOptions={adapterOptions} adapters={['test']} store={listStore} />);
 

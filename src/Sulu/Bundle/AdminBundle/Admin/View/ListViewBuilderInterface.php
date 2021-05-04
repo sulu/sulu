@@ -75,6 +75,19 @@ interface ListViewBuilderInterface extends ViewBuilderInterface
 
     public function disableTabGap(): self;
 
+    public function enableColumnOptions(): self;
+
+    public function disableColumnOptions(): self;
+
+    public function enableFiltering(): self;
+
+    public function disableFiltering(): self;
+
+    /**
+     * @param array<string, array<string, mixed>> $adapterOptions
+     */
+    public function addAdapterOptions(array $adapterOptions): self;
+
     /**
      * @param string[] $routerAttributesToListRequest
      */

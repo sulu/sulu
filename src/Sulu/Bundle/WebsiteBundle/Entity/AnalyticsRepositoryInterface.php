@@ -13,6 +13,9 @@ namespace Sulu\Bundle\WebsiteBundle\Entity;
 
 interface AnalyticsRepositoryInterface
 {
+    /**
+     * @return AnalyticsInterface
+     */
     public function createNew();
 
     /**

@@ -244,3 +244,43 @@ $borderRadius: 3px;
         border-right: $borderWidth solid $headerButtonCellBrightBorderColor;
     }
 }
+
+.flat {
+    .header {
+        color: $headerTextDarkColor;
+    }
+
+    .header-cell {
+        background-color: $headerCellDarkBackgroundColor;
+    }
+
+    .header-button-cell {
+        border-right: $borderWidth solid $headerButtonCellDarkBorderColor;
+    }
+
+    .table {
+        border-spacing: 0 1px;
+    }
+
+    .row {
+        &:hover {
+            .cell {
+                border-color: transparent;
+            }
+        }
+    }
+
+    .header-cell,
+    .cell,
+    .button-cell {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+
+    .cell,
+    .header-cell {
+        width: min-content;
+    }
+}

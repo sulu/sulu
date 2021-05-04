@@ -35,8 +35,39 @@ trait ListViewBuilderTrait
         $route->setOption('title', $title);
     }
 
+    /**
+     * @param string[] $listAdapters
+     */
     private function addListAdaptersToView(View $route, array $listAdapters): void
     {
+        /**
+         * @deprecated this is only a BC-layer, should be removed in 3.0
+         */
+        $adapterModifiers = [
+            '_light' => [
+                'skin' => 'light',
+            ],
+            '_slim' => [
+                'show_header' => false,
+            ],
+        ];
+
+        foreach ($listAdapters as $index => $adapter) {
+            foreach ($adapterModifiers as $key => $options) {
+                if (0 === \substr_compare($adapter, $key, -\strlen($key))) {
+                    $defaultAdapter = \str_replace($key, '', $adapter);
+                    $this->addAdapterOptionsToView($route, [$defaultAdapter => $options]);
+                    $listAdapters[$index] = $defaultAdapter;
+
+                    @\trigger_error(
+                        'The usage of the "' . $adapter . '" is deprecated.' .
+                        'Please use "' . $defaultAdapter . '"  with adapterOptions instead.',
+                        \E_USER_DEPRECATED
+                    );
+                }
+            }
+        }
+
         $oldListAdapters = $route->getOption('adapters');
         $newListAdapters = $oldListAdapters ? \array_merge($oldListAdapters, $listAdapters) : $listAdapters;
         $route->setOption('adapters', $newListAdapters);
@@ -70,6 +101,26 @@ trait ListViewBuilderTrait
     private function setPaginatedToView(View $route, bool $paginated): void
     {
         $route->setOption('paginated', $paginated);
+    }
+
+    private function setHideColumnOptionsToView(View $route, bool $hideColumnOptions): void
+    {
+        $route->setOption('hideColumnOptions', $hideColumnOptions);
+    }
+
+    private function setFilterableToView(View $route, bool $filterable): void
+    {
+        $route->setOption('filterable', $filterable);
+    }
+
+    /**
+     * @param array<string, array<string, mixed>> $adapterOptions
+     */
+    private function addAdapterOptionsToView(View $route, array $adapterOptions): void
+    {
+        $oldAdapterOptions = $route->getOption('adapterOptions');
+        $newAdapterOptions = $oldAdapterOptions ? \array_merge_recursive($oldAdapterOptions, $adapterOptions) : $adapterOptions;
+        $route->setOption('adapterOptions', $newAdapterOptions);
     }
 
     private function addRouterAttributesToListRequestToView(View $route, array $routerAttributesToListRequest): void

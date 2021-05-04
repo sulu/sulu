@@ -192,8 +192,140 @@ test('Render data without header', () => {
     const treeListAdapter = render(
         <TreeTableAdapter
             {...listAdapterDefaultProps}
+            adapterOptions={{show_header: false}}
             data={data}
-            options={{showHeader: false}}
+            page={1}
+            pageCount={2}
+            paginated={false}
+            schema={schema}
+        />
+    );
+
+    expect(treeListAdapter).toMatchSnapshot();
+});
+
+test('Render data with skin', () => {
+    const test1 = {
+        data: {
+            id: 2,
+            title: 'Test1',
+        },
+        children: [],
+        hasChildren: false,
+    };
+    const test2 = {
+        data: {
+            id: 3,
+            title: 'Test2',
+        },
+        children: [],
+        hasChildren: true,
+    };
+    const test3 = {
+        data: {
+            id: 6,
+            title: 'Test3',
+        },
+        children: [
+            {
+                data: {
+                    id: 7,
+                    title: 'Test4',
+                },
+                children: [],
+                hasChildren: false,
+            },
+        ],
+        hasChildren: true,
+    };
+
+    const data = [
+        test1,
+        test2,
+        test3,
+    ];
+    const schema = {
+        title: {
+            filterType: null,
+            filterTypeParameters: null,
+            transformerTypeParameters: {},
+            label: 'Title',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+    };
+    const treeListAdapter = render(
+        <TreeTableAdapter
+            {...listAdapterDefaultProps}
+            adapterOptions={{skin: 'flat'}}
+            data={data}
+            page={1}
+            pageCount={2}
+            paginated={false}
+            schema={schema}
+        />
+    );
+
+    expect(treeListAdapter).toMatchSnapshot();
+});
+
+test('Render data without header', () => {
+    const test1 = {
+        data: {
+            id: 2,
+            title: 'Test1',
+        },
+        children: [],
+        hasChildren: false,
+    };
+    const test2 = {
+        data: {
+            id: 3,
+            title: 'Test2',
+        },
+        children: [],
+        hasChildren: true,
+    };
+    const test3 = {
+        data: {
+            id: 6,
+            title: 'Test3',
+        },
+        children: [
+            {
+                data: {
+                    id: 7,
+                    title: 'Test4',
+                },
+                children: [],
+                hasChildren: false,
+            },
+        ],
+        hasChildren: true,
+    };
+
+    const data = [
+        test1,
+        test2,
+        test3,
+    ];
+    const schema = {
+        title: {
+            filterType: null,
+            filterTypeParameters: null,
+            transformerTypeParameters: {},
+            label: 'Title',
+            sortable: true,
+            type: 'string',
+            visibility: 'yes',
+        },
+    };
+    const treeListAdapter = render(
+        <TreeTableAdapter
+            {...listAdapterDefaultProps}
+            adapterOptions={{show_header: false}}
+            data={data}
             page={1}
             pageCount={2}
             paginated={false}

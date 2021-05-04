@@ -2,6 +2,45 @@
 
 ## 2.3
 
+### Deprecated table adapters `table_light` and `tree_table_slim`
+
+The two adapters `table_light` and `tree_table_slim` are deprecated and will be removed in `3.0`.
+
+If you have used these adapters, you should use the default adapter and add the modifications through
+the `adapterOptions`. 
+
+#### table_light
+
+```diff
+{
+-    ->addListAdapters(['table_light'])
++    ->addListAdapters(['table'])
++    ->addAdapterOptions(
++        [
++            'table' => [
++                'skin' => 'light',
++            ],
++        ]
++   )
+}
+```
+
+#### tree_table_slim
+
+```diff
+{
+-    ->addListAdapters(['tree_table_slim'])
++    ->addListAdapters(['tree_table'])
++    ->addAdapterOptions(
++        [
++            'tree_table' => [
++                'show_header' => false,
++            ],
++        ]
++   )
+}
+```
+
 ### React Tabs skin was removed
 
 The `skin` prop and `small` prop of the `Tabs` component was replaced with a `type` prop.

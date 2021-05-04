@@ -502,6 +502,105 @@ exports[`Render data with schema and selections 1`] = `
 </div>
 `;
 
+exports[`Render data with skin 1`] = `
+<div
+  class="tableContainer flat"
+>
+  <table
+    class="table"
+  >
+    <thead
+      class="header"
+    >
+      <tr>
+        <th
+          class="headerCell clickable"
+        >
+          <button>
+            Title
+          </button>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        class="row"
+      >
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            Test1
+          </div>
+        </td>
+      </tr>
+      <tr
+        class="row"
+      >
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            <span
+              class="toggleIcon"
+            >
+              <span
+                aria-label="su-angle-right"
+                class="su-angle-right clickable"
+                role="button"
+                tabindex="0"
+              />
+            </span>
+            Test2
+          </div>
+        </td>
+      </tr>
+      <tr
+        class="row"
+      >
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            <span
+              class="toggleIcon"
+            >
+              <span
+                aria-label="su-angle-down"
+                class="su-angle-down clickable"
+                role="button"
+                tabindex="0"
+              />
+            </span>
+            Test3
+          </div>
+        </td>
+      </tr>
+      <tr
+        class="row"
+      >
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+            style="padding-left:25px"
+          >
+            Test4
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
+
 exports[`Render data with two columns 1`] = `
 <div
   class="tableContainer dark"
@@ -622,6 +721,92 @@ exports[`Render data with two columns 1`] = `
 `;
 
 exports[`Render data without header 1`] = `
+<div
+  class="tableContainer dark"
+>
+  <table
+    class="table"
+  >
+    <tbody>
+      <tr
+        class="row"
+      >
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            Test1
+          </div>
+        </td>
+      </tr>
+      <tr
+        class="row"
+      >
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            <span
+              class="toggleIcon"
+            >
+              <span
+                aria-label="su-angle-right"
+                class="su-angle-right clickable"
+                role="button"
+                tabindex="0"
+              />
+            </span>
+            Test2
+          </div>
+        </td>
+      </tr>
+      <tr
+        class="row"
+      >
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            <span
+              class="toggleIcon"
+            >
+              <span
+                aria-label="su-angle-down"
+                class="su-angle-down clickable"
+                role="button"
+                tabindex="0"
+              />
+            </span>
+            Test3
+          </div>
+        </td>
+      </tr>
+      <tr
+        class="row"
+      >
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+            style="padding-left:25px"
+          >
+            Test4
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
+
+exports[`Render data without header 2`] = `
 <div
   class="tableContainer dark"
 >

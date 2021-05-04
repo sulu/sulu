@@ -7,6 +7,7 @@ import Loader from '../../../components/Loader';
 import TreeStructureStrategy from '../structureStrategies/TreeStructureStrategy';
 import DefaultLoadingStrategy from '../loadingStrategies/DefaultLoadingStrategy';
 import Pagination from '../../../components/Pagination';
+import type {ListAdapterProps} from '../types';
 import AbstractTableAdapter from './AbstractTableAdapter';
 
 @observer
@@ -119,13 +120,17 @@ class TreeTableAdapter extends AbstractTableAdapter {
             onAllSelectionChange,
             onItemSelectionChange,
             onLimitChange,
+            adapterOptions: {
+                show_header: showHeaderAdapterOption = true,
+                skin = 'dark',
+            } = {},
             options: {
-                showHeader = true,
+                showHeader: showHeaderOption = true,
             },
             page,
             pageCount,
             paginated,
-        } = this.props;
+        }: ListAdapterProps = this.props;
 
         if (!active && loading) {
             return <Loader />;
@@ -140,11 +145,13 @@ class TreeTableAdapter extends AbstractTableAdapter {
                 onRowSelectionChange={onItemSelectionChange}
                 selectInFirstCell={true}
                 selectMode="multiple"
+                skin={(skin: any)}
             >
-                {showHeader &&
+                {showHeaderAdapterOption && showHeaderOption ?
                     <Table.Header>
                         {this.renderHeaderCells()}
                     </Table.Header>
+                    : null
                 }
                 <Table.Body>
                     {this.renderRows(data)}
