@@ -516,6 +516,7 @@ class RouteProviderTest extends TestCase
         $routeEntity->getId()->willReturn(1);
         $routeEntity->getPath()->willReturn('/test');
         $routeEntity->isHistory()->willReturn(false);
+        $routeEntity->getTarget()->willReturn(null);
         $routeEntity->getLocale()->willReturn('de');
 
         $routeObject = $this->prophesize(ExtensionBehavior::class);
@@ -573,6 +574,7 @@ class RouteProviderTest extends TestCase
         $routeEntity->getId()->willReturn(1);
         $routeEntity->getPath()->willReturn('/test');
         $routeEntity->isHistory()->willReturn(false);
+        $routeEntity->getTarget()->willReturn(null);
         $routeEntity->getLocale()->willReturn('de');
 
         $routeObject = $this->prophesize(ExtensionBehavior::class);
