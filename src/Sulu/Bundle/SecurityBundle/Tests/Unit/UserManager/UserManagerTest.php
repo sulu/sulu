@@ -14,8 +14,12 @@ namespace Sulu\Bundle\SecurityBundle\Tests\Unit\UserManager;
 use Doctrine\Persistence\ObjectManager;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
+use Sulu\Bundle\ContactBundle\Contact\ContactManager;
 use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Bundle\SecurityBundle\Entity\GroupRepository;
 use Sulu\Bundle\SecurityBundle\UserManager\UserManager;
+use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
+use Sulu\Component\Security\Authentication\SaltGenerator;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 
 class UserManagerTest extends TestCase
@@ -35,19 +39,48 @@ class UserManagerTest extends TestCase
      */
     private $eventCollector;
 
+    /**
+     * @var ObjectProphecy|ObjectManager
+     */
+    private $objectManager;
+
+    /**
+     * @var ObjectProphecy|RoleRepositoryInterface
+     */
+    private $roleRepository;
+
+    /**
+     * @var ObjectProphecy|GroupRepository
+     */
+    private $groupRepository;
+
+    /**
+     * @var ObjectProphecy|SaltGenerator
+     */
+    private $saltGenerator;
+
+    /**
+     * @var ObjectProphecy|ContactManager
+     */
+    private $contactManager;
+
     public function setUp(): void
     {
         $this->objectManager = $this->prophesize(ObjectManager::class);
         $this->userRepository = $this->prophesize(UserRepositoryInterface::class);
         $this->eventCollector = $this->prophesize(DomainEventCollectorInterface::class);
+        $this->roleRepository = $this->prophesize(RoleRepositoryInterface::class);
+        $this->groupRepository = $this->prophesize(GroupRepository::class);
+        $this->contactManager = $this->prophesize(ContactManager::class);
+        $this->saltGenerator = $this->prophesize(SaltGenerator::class);
 
         $this->userManager = new UserManager(
             $this->objectManager->reveal(),
             null,
-            null,
-            null,
-            null,
-            null,
+            $this->roleRepository->reveal(),
+            $this->groupRepository->reveal(),
+            $this->contactManager->reveal(),
+            $this->saltGenerator->reveal(),
             $this->userRepository->reveal(),
             $this->eventCollector->reveal()
         );

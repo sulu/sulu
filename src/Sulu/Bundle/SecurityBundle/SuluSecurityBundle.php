@@ -14,7 +14,6 @@ namespace Sulu\Bundle\SecurityBundle;
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
 use Sulu\Bundle\SecurityBundle\DependencyInjection\Compiler\AccessControlProviderPass;
 use Sulu\Bundle\SecurityBundle\DependencyInjection\Compiler\AliasForSecurityEncoderCompilerPass;
-use Sulu\Bundle\SecurityBundle\DependencyInjection\Compiler\UserManagerCompilerPass;
 use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authentication\RoleSettingInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
@@ -38,7 +37,6 @@ class SuluSecurityBundle extends Bundle
             $container
         );
 
-        $container->addCompilerPass(new UserManagerCompilerPass());
         $container->addCompilerPass(new AccessControlProviderPass());
         $container->addCompilerPass(new AliasForSecurityEncoderCompilerPass());
 
