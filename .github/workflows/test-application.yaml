@@ -78,7 +78,7 @@ jobs:
                     - php-version: '7.2'
                       database: postgres
                       phpcr-transport: jackrabbit
-                      dependency-versions: 'lowest'
+                      dependency-versions: 'highest'
                       php-extensions: 'ctype, iconv, mysql, gd'
                       tools: 'composer:v1'
                       env:
