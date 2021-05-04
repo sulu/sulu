@@ -14,7 +14,6 @@ namespace Sulu\Bundle\EventLogBundle\Infrastructure\Doctrine\Repository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Sulu\Bundle\EventLogBundle\Domain\Event\DomainEvent;
-use Sulu\Bundle\EventLogBundle\Domain\Model\EventRecord;
 use Sulu\Bundle\EventLogBundle\Domain\Model\EventRecordInterface;
 use Sulu\Bundle\EventLogBundle\Domain\Repository\EventRecordRepositoryInterface;
 
@@ -72,7 +71,8 @@ class EventRecordRepository implements EventRecordRepositoryInterface
             $eventRecord
         );
 
-        $this->entityManager->getUnitOfWork()->getEntityPersister(EventRecord::class)->addInsert($eventRecord);
-        $this->entityManager->getUnitOfWork()->getEntityPersister(EventRecord::class)->executeInserts();
+        $entityPersister = $this->entityManager->getUnitOfWork()->getEntityPersister($this->entityRepository->getClassName());
+        $entityPersister->addInsert($eventRecord);
+        $entityPersister->executeInserts();
     }
 }
