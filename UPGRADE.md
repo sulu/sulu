@@ -110,6 +110,9 @@ call to pass the correct parameters:
 - `Sulu\Bundle\CategoryBundle\Category\KeywordManager`
 - `Sulu\Bundle\WebsiteBundle\Analytics\AnalyticsManager`
 - `Sulu\Bundle\ContactBundle\Contact\ContactManager`
+- `Sulu\Bundle\ContactBundle\Controller\ContactMediaController`
+- `Sulu\Bundle\ContactBundle\Controller\PositionController`
+- `Sulu\Bundle\ContactBundle\Controller\ContactTitleController`
 - `Sulu\Bundle\SecurityBundle\Controller\ResettingController`
 - `Sulu\Bundle\SecurityBundle\Controller\RoleController`
 - `Sulu\Bundle\SecurityBundle\UserManager\UserManager`

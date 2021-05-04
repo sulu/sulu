@@ -165,12 +165,12 @@
             <argument type="service" id="sulu.repository.media"/>
             <argument type="service" id="sulu_media.media_manager"/>
             <argument type="service" id="sulu_contact.contact_manager"/>
+            <argument type="service" id="sulu_event_log.domain_event_collector"/>
             <argument>%sulu.model.contact.class%</argument>
             <argument>%sulu.model.media.class%</argument>
             <argument type="service" id="sulu_media.media_list_builder_factory" />
             <argument type="service" id="sulu_media.media_list_representation_factory" />
             <argument type="service" id="sulu_core.list_builder.field_descriptor_factory"/>
-            <argument type="service" id="sulu_event_log.domain_event_collector"/>
 
             <tag name="sulu.context" context="admin"/>
         </service>
@@ -181,6 +181,7 @@
             <argument type="service" id="fos_rest.view_handler"/>
             <argument type="service" id="sulu_contact.contact_title_repository"/>
             <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="sulu_event_log.domain_event_collector"/>
 
             <tag name="sulu.context" context="admin"/>
         </service>
@@ -191,6 +192,7 @@
             <argument type="service" id="fos_rest.view_handler"/>
             <argument type="service" id="sulu_contact.position_repository"/>
             <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="sulu_event_log.domain_event_collector"/>
 
             <tag name="sulu.context" context="admin"/>
         </service>

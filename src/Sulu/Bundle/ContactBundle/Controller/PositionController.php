@@ -15,8 +15,12 @@ use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use HandcraftedInTheAlps\RestRoutingBundle\Controller\Annotations\RouteResource;
 use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
+use Sulu\Bundle\ContactBundle\Domain\Event\ContactPositionCreatedEvent;
+use Sulu\Bundle\ContactBundle\Domain\Event\ContactPositionModifiedEvent;
+use Sulu\Bundle\ContactBundle\Domain\Event\ContactPositionRemovedEvent;
 use Sulu\Bundle\ContactBundle\Entity\Position;
 use Sulu\Bundle\ContactBundle\Entity\PositionRepository;
+use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
@@ -30,7 +34,13 @@ class PositionController extends AbstractRestController implements ClassResource
 {
     protected static $entityName = 'SuluContactBundle:Position';
 
-    protected static $entityKey = 'contact_positions';
+    /**
+     * @var string
+     *
+     * @deprecated
+     * @see Position::RESOURCE_KEY
+     */
+    protected static $entityKey = Position::RESOURCE_KEY;
 
     /**
      * @var PositionRepository
@@ -42,14 +52,21 @@ class PositionController extends AbstractRestController implements ClassResource
      */
     private $entityManager;
 
+    /**
+     * @var DomainEventCollectorInterface
+     */
+    private $domainEventCollector;
+
     public function __construct(
         ViewHandlerInterface $viewHandler,
         PositionRepository $positionRepository,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        DomainEventCollectorInterface $domainEventCollector
     ) {
         parent::__construct($viewHandler);
         $this->positionRepository = $positionRepository;
         $this->entityManager = $entityManager;
+        $this->domainEventCollector = $domainEventCollector;
     }
 
     /**
@@ -88,7 +105,7 @@ class PositionController extends AbstractRestController implements ClassResource
 
         $list = new CollectionRepresentation(
             $this->positionRepository->findBy($filter, ['position' => 'ASC']),
-            self::$entityKey
+            Position::RESOURCE_KEY
         );
 
         $view = $this->view($list, 200);
@@ -116,6 +133,11 @@ class PositionController extends AbstractRestController implements ClassResource
             $position->setPosition($name);
 
             $this->entityManager->persist($position);
+
+            $this->domainEventCollector->collect(
+                new ContactPositionCreatedEvent($position, $request->request->all())
+            );
+
             $this->entityManager->flush();
 
             $view = $this->view($position, 200);
@@ -151,6 +173,10 @@ class PositionController extends AbstractRestController implements ClassResource
                 } else {
                     $position->setPosition($name);
 
+                    $this->domainEventCollector->collect(
+                        new ContactPositionModifiedEvent($position, $request->request->all())
+                    );
+
                     $this->entityManager->flush();
                     $view = $this->view($position, 200);
                 }
@@ -170,14 +196,21 @@ class PositionController extends AbstractRestController implements ClassResource
 
         try {
             foreach ($ids as $id) {
-                /* @var Position $title */
-                $title = $this->positionRepository->find($id);
+                /* @var Position $position */
+                $position = $this->positionRepository->find($id);
 
-                if (!$title) {
+                if (!$position) {
                     throw new EntityNotFoundException(self::$entityName, $id);
                 }
 
-                $this->entityManager->remove($title);
+                $positionId = $position->getId();
+                $positionName = $position->getPosition();
+
+                $this->entityManager->remove($position);
+
+                $this->domainEventCollector->collect(
+                    new ContactPositionRemovedEvent($positionId, $positionName)
+                );
             }
 
             $this->entityManager->flush();
@@ -208,7 +241,15 @@ class PositionController extends AbstractRestController implements ClassResource
                     throw new EntityNotFoundException(self::$entityName, $id);
                 }
 
+                $positionId = $position->getId();
+                $positionName = $position->getPosition();
+
                 $this->entityManager->remove($position);
+
+                $this->domainEventCollector->collect(
+                    new ContactPositionRemovedEvent($positionId, $positionName)
+                );
+
                 $this->entityManager->flush();
             };
 
@@ -238,7 +279,7 @@ class PositionController extends AbstractRestController implements ClassResource
                     );
                 }
 
-                $data[] = $this->addAndUpdateTitles($item);
+                $data[] = $this->addAndUpdatePositions($item);
                 ++$i;
             }
 
@@ -256,13 +297,13 @@ class PositionController extends AbstractRestController implements ClassResource
     /**
      * Helper function for patch action.
      *
-     * @param array $item
+     * @param mixed[] $item
      *
-     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
+     * @throws EntityNotFoundException
      *
      * @return Position added or updated entity
      */
-    private function addAndUpdateTitles($item)
+    private function addAndUpdatePositions($item)
     {
         if (isset($item['id']) && !empty($item['id'])) {
             /* @var Position $position */
@@ -272,11 +313,19 @@ class PositionController extends AbstractRestController implements ClassResource
                 throw new EntityNotFoundException(self::$entityName, $item['id']);
             } else {
                 $position->setPosition($item['position']);
+
+                $this->domainEventCollector->collect(
+                    new ContactPositionModifiedEvent($position, $item)
+                );
             }
         } else {
             $position = new Position();
             $position->setPosition($item['position']);
             $this->entityManager->persist($position);
+
+            $this->domainEventCollector->collect(
+                new ContactPositionCreatedEvent($position, $item)
+            );
         }
 
         return $position;

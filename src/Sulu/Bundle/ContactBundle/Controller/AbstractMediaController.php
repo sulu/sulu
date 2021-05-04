@@ -14,10 +14,6 @@ namespace Sulu\Bundle\ContactBundle\Controller;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Bundle\ContactBundle\Contact\AbstractContactManager;
-use Sulu\Bundle\ContactBundle\Domain\Event\ContactMediaAddedEvent;
-use Sulu\Bundle\ContactBundle\Domain\Event\ContactMediaRemovedEvent;
-use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
-use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\ListBuilderFactory\MediaListBuilderFactory;
@@ -101,11 +97,6 @@ abstract class AbstractMediaController extends AbstractRestController
      */
     private $fieldDescriptorFactory;
 
-    /**
-     * @var DomainEventCollectorInterface|null
-     */
-    private $domainEventCollector;
-
     public function __construct(
         ViewHandlerInterface $viewHandler,
         TokenStorageInterface $tokenStorage,
@@ -117,8 +108,7 @@ abstract class AbstractMediaController extends AbstractRestController
         string $mediaClass,
         MediaListBuilderFactory $mediaListBuilderFactory = null,
         MediaListRepresentationFactory $mediaListRepresentationFactory = null,
-        FieldDescriptorFactoryInterface $fieldDescriptorFactory = null,
-        DomainEventCollectorInterface $domainEventCollector = null
+        FieldDescriptorFactoryInterface $fieldDescriptorFactory = null
     ) {
         parent::__construct($viewHandler, $tokenStorage);
         $this->restHelper = $restHelper;
@@ -130,32 +120,10 @@ abstract class AbstractMediaController extends AbstractRestController
         $this->mediaListBuilderFactory = $mediaListBuilderFactory;
         $this->mediaListRepresentationFactory = $mediaListRepresentationFactory;
         $this->fieldDescriptorFactory = $fieldDescriptorFactory;
-        $this->domainEventCollector = $domainEventCollector;
 
-        if (null === $this->mediaListBuilderFactory) {
+        if (null === $this->mediaListBuilderFactory || null === $this->mediaListRepresentationFactory || null === $this->fieldDescriptorFactory) {
             @\trigger_error(
-                'Instantiating AbstractMediaController without the $mediaListBuilderFactory argument is deprecated.',
-                \E_USER_DEPRECATED
-            );
-        }
-
-        if (null === $this->mediaListRepresentationFactory) {
-            @\trigger_error(
-                'Instantiating AbstractMediaController without the $mediaListRepresentationFactory argument is deprecated.',
-                \E_USER_DEPRECATED
-            );
-        }
-
-        if (null === $this->fieldDescriptorFactory) {
-            @\trigger_error(
-                'Instantiating AbstractMediaController without the $fieldDescriptorFactory argument is deprecated.',
-                \E_USER_DEPRECATED
-            );
-        }
-
-        if (null === $this->domainEventCollector) {
-            @\trigger_error(
-                'Instantiating AbstractMediaController without the $domainEventCollector argument is deprecated.',
+                'Instantiating AbstractMediaController without the $mediaListBuilderFactory, $mediaListRepresentationFactory or $fieldDescriptorFactory argument is deprecated.',
                 \E_USER_DEPRECATED
             );
         }
@@ -167,10 +135,11 @@ abstract class AbstractMediaController extends AbstractRestController
      * @param string $entityName
      * @param string $id
      * @param string $mediaId
+     * @param callable|null $dispatchDomainEvent
      *
      * @return Media
      */
-    protected function addMediaToEntity($entityName, $id, $mediaId)
+    protected function addMediaToEntity($entityName, $id, $mediaId, $dispatchDomainEvent = null)
     {
         try {
             $em = $this->entityManager;
@@ -191,10 +160,8 @@ abstract class AbstractMediaController extends AbstractRestController
 
             $entity->addMedia($media);
 
-            if ($entity instanceof ContactInterface && null !== $this->domainEventCollector) {
-                $this->domainEventCollector->collect(
-                    new ContactMediaAddedEvent($entity, $media)
-                );
+            if (null !== $dispatchDomainEvent) {
+                $dispatchDomainEvent($entity, $media);
             }
 
             $em->flush();
@@ -224,13 +191,14 @@ abstract class AbstractMediaController extends AbstractRestController
      * @param string $entityName
      * @param string $id
      * @param string $mediaId
+     * @param callable|null $dispatchDomainEvent
      *
      * @return Response
      */
-    protected function removeMediaFromEntity($entityName, $id, $mediaId)
+    protected function removeMediaFromEntity($entityName, $id, $mediaId, $dispatchDomainEvent = null)
     {
         try {
-            $delete = function() use ($entityName, $id, $mediaId) {
+            $delete = function() use ($entityName, $id, $mediaId, $dispatchDomainEvent) {
                 $entity = $this->entityManager->getRepository($entityName)->find($id);
                 $media = $this->mediaRepository->find($mediaId);
 
@@ -251,10 +219,8 @@ abstract class AbstractMediaController extends AbstractRestController
 
                 $entity->removeMedia($media);
 
-                if ($entity instanceof ContactInterface && null !== $this->domainEventCollector) {
-                    $this->domainEventCollector->collect(
-                        new ContactMediaRemovedEvent($entity, $media)
-                    );
+                if (null !== $dispatchDomainEvent) {
+                    $dispatchDomainEvent($entity, $media);
                 }
 
                 $this->entityManager->flush();

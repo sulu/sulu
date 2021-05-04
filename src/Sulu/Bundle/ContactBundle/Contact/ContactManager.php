@@ -15,6 +15,8 @@ use DateTime;
 use Doctrine\Persistence\ObjectManager;
 use Sulu\Bundle\ContactBundle\Api\Contact as ContactApi;
 use Sulu\Bundle\ContactBundle\Domain\Event\ContactCreatedEvent;
+use Sulu\Bundle\ContactBundle\Domain\Event\ContactMediaAddedEvent;
+use Sulu\Bundle\ContactBundle\Domain\Event\ContactMediaRemovedEvent;
 use Sulu\Bundle\ContactBundle\Domain\Event\ContactModifiedEvent;
 use Sulu\Bundle\ContactBundle\Domain\Event\ContactRemovedEvent;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
@@ -30,6 +32,7 @@ use Sulu\Bundle\ContactBundle\Entity\Note;
 use Sulu\Bundle\ContactBundle\Entity\SocialMediaProfile;
 use Sulu\Bundle\ContactBundle\Entity\Url;
 use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\PageBundle\Content\Types\Email;
@@ -152,12 +155,12 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
             /** @var Contact $contact */
             $contact = $this->contactRepository->findByIdAndDelete($id);
 
-            $contactId = $contact->getId();
-            $contactFullName = $contact->getFullName();
-
             if (!$contact) {
                 throw new EntityNotFoundException($this->contactRepository->getClassName(), $id);
             }
+
+            $contactId = $contact->getId();
+            $contactFullName = $contact->getFullName();
 
             $addresses = $contact->getAddresses();
             /** @var Address $address */
@@ -323,7 +326,9 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
             $contact->setNote($this->getProperty($data, 'note'));
         }
         if (!$patch || null !== $this->getProperty($data, 'medias')) {
-            $this->setMedias($contact, $this->getProperty($data, 'medias', []));
+            /** @var int[] $medias */
+            $medias = $this->getProperty($data, 'medias', []);
+            $this->setMedias($contact, $medias);
         }
 
         if (!$patch || $this->getProperty($data, 'title')) {
@@ -614,13 +619,15 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
      * Sets the medias of the given contact to the given medias.
      * Currently associated medias are replaced.
      *
-     * @param array $mediaIds
+     * @param int[] $mediaIds
      *
      * @throws EntityNotFoundException
      */
     private function setMedias(Contact $contact, $mediaIds)
     {
+        /** @var MediaInterface[] $foundMedias */
         $foundMedias = $this->mediaRepository->findById($mediaIds);
+        /** @var int[] $foundMediaIds */
         $foundMediaIds = \array_map(
             function($mediaEntity) {
                 return $mediaEntity->getId();
@@ -632,9 +639,22 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
             throw new EntityNotFoundException($this->mediaRepository->getClassName(), \reset($missingMediaIds));
         }
 
-        $contact->getMedias()->clear();
+        foreach ($contact->getMedias() as $media) {
+            if (!\in_array($media->getId(), $foundMediaIds)) {
+                $this->domainEventCollector->collect(
+                    new ContactMediaRemovedEvent($contact, $media)
+                );
+            }
+        }
+
         foreach ($foundMedias as $media) {
-            $contact->addMedia($media);
+            if (!$contact->getMedias()->contains($media)) {
+                $contact->addMedia($media);
+
+                $this->domainEventCollector->collect(
+                    new ContactMediaAddedEvent($contact, $media)
+                );
+            }
         }
     }
 

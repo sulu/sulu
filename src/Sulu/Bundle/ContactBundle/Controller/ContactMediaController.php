@@ -16,7 +16,11 @@ use FOS\RestBundle\View\ViewHandlerInterface;
 use HandcraftedInTheAlps\RestRoutingBundle\Controller\Annotations\RouteResource;
 use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\ContactBundle\Contact\AbstractContactManager;
+use Sulu\Bundle\ContactBundle\Domain\Event\ContactMediaAddedEvent;
+use Sulu\Bundle\ContactBundle\Domain\Event\ContactMediaRemovedEvent;
+use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\ListBuilderFactory\MediaListBuilderFactory;
 use Sulu\Bundle\MediaBundle\Media\ListRepresentationFactory\MediaListRepresentationFactory;
@@ -46,6 +50,11 @@ class ContactMediaController extends AbstractMediaController implements ClassRes
      */
     private $contactClass;
 
+    /**
+     * @var DomainEventCollectorInterface
+     */
+    private $domainEventCollector;
+
     public function __construct(
         ViewHandlerInterface $viewHandler,
         TokenStorageInterface $tokenStorage,
@@ -55,12 +64,12 @@ class ContactMediaController extends AbstractMediaController implements ClassRes
         MediaRepositoryInterface $mediaRepository,
         MediaManagerInterface $mediaManager,
         AbstractContactManager $contactManager,
+        DomainEventCollectorInterface $domainEventCollector,
         string $contactClass,
         string $mediaClass,
         MediaListBuilderFactory $mediaListBuilderFactory = null,
         MediaListRepresentationFactory $mediaListRepresentationFactory = null,
-        FieldDescriptorFactoryInterface $fieldDescriptorFactory = null,
-        DomainEventCollectorInterface $domainEventCollector = null
+        FieldDescriptorFactoryInterface $fieldDescriptorFactory = null
     ) {
         parent::__construct(
             $viewHandler,
@@ -73,22 +82,36 @@ class ContactMediaController extends AbstractMediaController implements ClassRes
             $mediaClass,
             $mediaListBuilderFactory,
             $mediaListRepresentationFactory,
-            $fieldDescriptorFactory,
-            $domainEventCollector
+            $fieldDescriptorFactory
         );
 
         $this->contactManager = $contactManager;
         $this->contactClass = $contactClass;
+        $this->domainEventCollector = $domainEventCollector;
     }
 
     public function deleteAction(int $contactId, int $id)
     {
-        return $this->removeMediaFromEntity($this->contactClass, $contactId, $id);
+        $dispatchDomainEvent = function(ContactInterface $contact, MediaInterface $media) {
+            $this->domainEventCollector->collect(
+                new ContactMediaRemovedEvent($contact, $media)
+            );
+        };
+
+        return $this->removeMediaFromEntity($this->contactClass, $contactId, $id, $dispatchDomainEvent);
     }
 
     public function postAction(int $contactId, Request $request)
     {
-        return $this->addMediaToEntity($this->contactClass, $contactId, $request->get('mediaId', ''));
+        $mediaId = $request->get('mediaId', '');
+
+        $dispatchDomainEvent = function(ContactInterface $contact, MediaInterface $media) {
+            $this->domainEventCollector->collect(
+                new ContactMediaAddedEvent($contact, $media)
+            );
+        };
+
+        return $this->addMediaToEntity($this->contactClass, $contactId, $mediaId, $dispatchDomainEvent);
     }
 
     public function cgetAction(int $contactId, Request $request)
