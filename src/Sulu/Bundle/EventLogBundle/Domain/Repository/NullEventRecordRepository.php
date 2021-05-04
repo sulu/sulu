@@ -31,11 +31,7 @@ class NullEventRecordRepository implements EventRecordRepositoryInterface
         return new $this->eventRecordClass();
     }
 
-    public function add(EventRecordInterface $eventRecord): void
-    {
-    }
-
-    public function commit(): void
+    public function addAndCommit(EventRecordInterface $eventRecord): void
     {
     }
 }

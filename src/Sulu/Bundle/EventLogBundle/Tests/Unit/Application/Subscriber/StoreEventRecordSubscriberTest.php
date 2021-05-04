@@ -39,8 +39,7 @@ class StoreEventRecordSubscriberTest extends TestCase
 
         $this->eventRecordRepository->createForDomainEvent($event->reveal())
             ->willReturn($eventRecord->reveal());
-        $this->eventRecordRepository->add($eventRecord->reveal())->shouldBeCalled();
-        $this->eventRecordRepository->commit()->shouldBeCalled();
+        $this->eventRecordRepository->addAndCommit($eventRecord->reveal())->shouldBeCalled();
 
         $subscriber->storeEventRecord($event->reveal());
     }

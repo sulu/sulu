@@ -95,10 +95,7 @@ class EventRecordRepositoryTest extends SuluTestCase
         $eventRecord = $this->repository->createForDomainEvent($this->domainEvent->reveal());
         static::assertCount(0, $entityRepository->findAll());
 
-        $this->repository->add($eventRecord);
-        static::assertCount(0, $entityRepository->findAll());
-
-        $this->repository->commit();
+        $this->repository->addAndCommit($eventRecord);
         static::assertCount(1, $entityRepository->findAll());
     }
 }
