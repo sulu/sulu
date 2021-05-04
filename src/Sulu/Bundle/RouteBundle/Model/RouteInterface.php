@@ -11,6 +11,8 @@
 
 namespace Sulu\Bundle\RouteBundle\Model;
 
+use Doctrine\Common\Collections\Collection;
+
 /**
  * Represents a concrete route in the route-pool.
  */
@@ -106,7 +108,7 @@ interface RouteInterface
     /**
      * Get target.
      *
-     * @return RouteInterface
+     * @return RouteInterface|null
      */
     public function getTarget();
 
@@ -129,7 +131,7 @@ interface RouteInterface
     /**
      * Get histories.
      *
-     * @return RouteInterface[]
+     * @return Collection<int, RouteInterface>
      */
     public function getHistories();
 

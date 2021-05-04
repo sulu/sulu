@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use JMS\Serializer\Annotation\Exclude;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
@@ -69,38 +69,38 @@ class FileVersion implements AuditableInterface
     private $id;
 
     /**
-     * @var Collection|FileVersionContentLanguage[]
+     * @var DoctrineCollection<int, FileVersionContentLanguage>
      */
-    private $contentLanguages = [];
+    private $contentLanguages;
 
     /**
-     * @var Collection|FileVersionPublishLanguage[]
+     * @var DoctrineCollection<int, FileVersionPublishLanguage>
      */
-    private $publishLanguages = [];
+    private $publishLanguages;
 
     /**
-     * @var Collection|FileVersionMeta[]
+     * @var DoctrineCollection<int, FileVersionMeta>
      */
-    private $meta = [];
+    private $meta;
 
     /**
-     * @var Collection|FormatOptions[]
+     * @var DoctrineCollection<string, FormatOptions>
      */
-    private $formatOptions = [];
+    private $formatOptions;
 
     /**
-     * @var \Sulu\Bundle\MediaBundle\Entity\File
+     * @var File
      * @Exclude
      */
     private $file;
 
     /**
-     * @var Collection|TagInterface[]
+     * @var DoctrineCollection<int, TagInterface>
      */
-    private $tags = [];
+    private $tags;
 
     /**
-     * @var \Sulu\Bundle\MediaBundle\Entity\FileVersionMeta
+     * @var FileVersionMeta
      */
     private $defaultMeta;
 
@@ -110,12 +110,12 @@ class FileVersion implements AuditableInterface
     private $properties = '{}';
 
     /**
-     * @var Collection|CategoryInterface[]
+     * @var DoctrineCollection<int, CategoryInterface>
      */
-    private $categories = [];
+    private $categories;
 
     /**
-     * @var Collection|TargetGroupInterface[]
+     * @var DoctrineCollection<int, TargetGroupInterface>
      */
     private $targetGroups;
 
@@ -287,6 +287,9 @@ class FileVersion implements AuditableInterface
         return $this;
     }
 
+    /**
+     * @return mixed[]
+     */
     public function getStorageOptions(): array
     {
         $storageOptions = \json_decode($this->storageOptions, true);
@@ -354,7 +357,7 @@ class FileVersion implements AuditableInterface
     /**
      * Get contentLanguages.
      *
-     * @return Collection|FileVersionContentLanguage[]
+     * @return DoctrineCollection<int, FileVersionContentLanguage>
      */
     public function getContentLanguages()
     {
@@ -384,7 +387,7 @@ class FileVersion implements AuditableInterface
     /**
      * Get publishLanguages.
      *
-     * @return Collection
+     * @return DoctrineCollection<int, FileVersionPublishLanguage>
      */
     public function getPublishLanguages()
     {
@@ -414,7 +417,7 @@ class FileVersion implements AuditableInterface
     /**
      * Get meta.
      *
-     * @return FileVersionMeta[]
+     * @return DoctrineCollection<int, FileVersionMeta>
      */
     public function getMeta()
     {
@@ -436,7 +439,7 @@ class FileVersion implements AuditableInterface
     /**
      * Get formatOptions.
      *
-     * @return Collection
+     * @return DoctrineCollection<string, FormatOptions>
      */
     public function getFormatOptions()
     {
@@ -446,7 +449,7 @@ class FileVersion implements AuditableInterface
     /**
      * Set file.
      *
-     * @param \Sulu\Bundle\MediaBundle\Entity\File $file
+     * @param File $file
      *
      * @return FileVersion
      */
@@ -460,7 +463,7 @@ class FileVersion implements AuditableInterface
     /**
      * Get file.
      *
-     * @return \Sulu\Bundle\MediaBundle\Entity\File
+     * @return File
      */
     public function getFile()
     {
@@ -498,7 +501,7 @@ class FileVersion implements AuditableInterface
     /**
      * Get tags.
      *
-     * @return Collection
+     * @return DoctrineCollection<int, TagInterface>
      */
     public function getTags()
     {
@@ -508,7 +511,7 @@ class FileVersion implements AuditableInterface
     /**
      * Set defaultMeta.
      *
-     * @param \Sulu\Bundle\MediaBundle\Entity\FileVersionMeta $defaultMeta
+     * @param FileVersionMeta $defaultMeta
      *
      * @return FileVersion
      */
@@ -522,7 +525,7 @@ class FileVersion implements AuditableInterface
     /**
      * Get defaultMeta.
      *
-     * @return \Sulu\Bundle\MediaBundle\Entity\FileVersionMeta
+     * @return FileVersionMeta
      */
     public function getDefaultMeta()
     {
@@ -608,7 +611,7 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public function getProperties()
     {
@@ -648,7 +651,7 @@ class FileVersion implements AuditableInterface
     /**
      * Get categories.
      *
-     * @return Collection|CategoryInterface[]
+     * @return DoctrineCollection<int, CategoryInterface>
      */
     public function getCategories()
     {
@@ -674,7 +677,7 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * @return TargetGroupInterface[]
+     * @return DoctrineCollection<int, TargetGroupInterface>
      */
     public function getTargetGroups()
     {

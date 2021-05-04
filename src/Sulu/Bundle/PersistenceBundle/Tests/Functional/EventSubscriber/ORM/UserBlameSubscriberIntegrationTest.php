@@ -53,7 +53,6 @@ class UserBlameSubscriberIntegrationTest extends SuluTestCase
         $contact = new Contact();
         $contact->setFirstName('Max');
         $contact->setLastName('Mustermann');
-        $contact->setPosition('CEO');
         $contact->setSalutation('Sehr geehrter Herr Dr Mustermann');
         $this->getEntityManager()->persist($contact);
         $this->getEntityManager()->flush();
@@ -75,7 +74,6 @@ class UserBlameSubscriberIntegrationTest extends SuluTestCase
         $contact = new Contact();
         $contact->setFirstName('Max');
         $contact->setLastName('Mustermann');
-        $contact->setPosition('CEO');
         $contact->setSalutation('Sehr geehrter Herr Dr Mustermann');
 
         $this->getEntityManager()->persist($contact);
@@ -134,7 +132,6 @@ class UserBlameSubscriberIntegrationTest extends SuluTestCase
         $contact = new Contact();
         $contact->setFirstName('Max');
         $contact->setLastName('Mustermann');
-        $contact->setPosition('CEO');
         $contact->setSalutation('Sehr geehrter Herr Dr Mustermann');
         $contact->setCreator($otherUser);
         $contact->setChanger($otherUser);

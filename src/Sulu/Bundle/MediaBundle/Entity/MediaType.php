@@ -11,6 +11,8 @@
 
 namespace Sulu\Bundle\MediaBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use JMS\Serializer\Annotation\Exclude;
 
 /**
@@ -24,7 +26,7 @@ class MediaType
     private $name;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $description;
 
@@ -34,7 +36,7 @@ class MediaType
     private $id;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var DoctrineCollection<int, MediaInterface>
      * @Exclude
      */
     private $media;
@@ -44,7 +46,7 @@ class MediaType
      */
     public function __construct()
     {
-        $this->media = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->media = new ArrayCollection();
     }
 
     /**
@@ -74,7 +76,7 @@ class MediaType
     /**
      * Set description.
      *
-     * @param string $description
+     * @param string|null $description
      *
      * @return MediaType
      */
@@ -88,7 +90,7 @@ class MediaType
     /**
      * Get description.
      *
-     * @return string
+     * @return string|null
      */
     public function getDescription()
     {
@@ -99,6 +101,8 @@ class MediaType
      * To force id = 1 in load fixtures.
      *
      * @param int $id
+     *
+     * @return void
      */
     public function setId($id)
     {
@@ -129,6 +133,8 @@ class MediaType
 
     /**
      * Remove media.
+     *
+     * @return void
      */
     public function removeMedia(MediaInterface $media)
     {
@@ -138,7 +144,7 @@ class MediaType
     /**
      * Get media.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return DoctrineCollection<int, MediaInterface>
      */
     public function getMedia()
     {

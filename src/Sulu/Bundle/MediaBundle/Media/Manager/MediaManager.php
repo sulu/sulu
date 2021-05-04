@@ -482,7 +482,7 @@ class MediaManager implements MediaManagerInterface
             $user
         );
 
-        $fileVersion->setDefaultMeta($fileVersion->getMeta()->first());
+        $fileVersion->setDefaultMeta($fileVersion->getMeta()->first() ?: null);
 
         $mediaEntity = $media->getEntity();
         $this->em->persist($mediaEntity);

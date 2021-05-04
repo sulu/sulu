@@ -60,7 +60,7 @@ interface DefaultSnippetManagerInterface
      * @param string $webspaceKey
      * @param string $type
      *
-     * @return string
+     * @return string|null
      */
     public function loadIdentifier($webspaceKey, $type);
 

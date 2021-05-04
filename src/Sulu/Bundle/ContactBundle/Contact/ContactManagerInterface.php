@@ -47,7 +47,7 @@ interface ContactManagerInterface
      *
      * @param DoctrineEntity $entity
      *
-     * @return AddressRelationEntity
+     * @return iterable<AddressRelationEntity>
      */
     public function getAddressRelations($entity);
 

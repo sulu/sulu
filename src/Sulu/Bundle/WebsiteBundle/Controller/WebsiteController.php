@@ -168,7 +168,10 @@ abstract class WebsiteController extends AbstractController
             return null;
         }
 
-        return $this->get('sulu_http_cache.cache_lifetime.enhancer');
+        /** @var CacheLifetimeEnhancer $cacheLifetimeEnhancer */
+        $cacheLifetimeEnhancer = $this->get('sulu_http_cache.cache_lifetime.enhancer');
+
+        return $cacheLifetimeEnhancer;
     }
 
     public static function getSubscribedServices()

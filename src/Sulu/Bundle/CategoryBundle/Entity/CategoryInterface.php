@@ -80,14 +80,14 @@ interface CategoryInterface extends AuditableInterface
     /**
      * Get key.
      *
-     * @return string
+     * @return string|null
      */
     public function getKey();
 
     /**
      * Set key.
      *
-     * @param string $key
+     * @param string|null $key
      *
      * @return CategoryInterface
      */
@@ -125,13 +125,15 @@ interface CategoryInterface extends AuditableInterface
 
     /**
      * Remove meta.
+     *
+     * @return void
      */
     public function removeMeta(CategoryMetaInterface $meta);
 
     /**
      * Get meta.
      *
-     * @return Collection|CategoryMetaInterface[]
+     * @return Collection<int, CategoryMetaInterface>
      */
     public function getMeta();
 
@@ -144,13 +146,15 @@ interface CategoryInterface extends AuditableInterface
 
     /**
      * Remove translations.
+     *
+     * @return void
      */
     public function removeTranslation(CategoryTranslationInterface $translations);
 
     /**
      * Get translations.
      *
-     * @return Collection|CategoryTranslationInterface[]
+     * @return Collection<int, CategoryTranslationInterface>
      */
     public function getTranslations();
 
@@ -167,6 +171,8 @@ interface CategoryInterface extends AuditableInterface
      * {@see Category::addChild}.
      *
      * @deprecated use Category::addChild instead
+     *
+     * @return void
      */
     public function addChildren(self $child);
 
@@ -183,6 +189,8 @@ interface CategoryInterface extends AuditableInterface
      * {@see Category::removeChild}.
      *
      * @deprecated use Category::removeChild instead
+     *
+     * @return void
      */
     public function removeChildren(self $child);
 
@@ -190,20 +198,22 @@ interface CategoryInterface extends AuditableInterface
      * Remove children.
      *
      * @param CategoryInterface $child
+     *
+     * @return void
      */
     public function removeChild(self $child);
 
     /**
      * Get children.
      *
-     * @return Collection|self[]
+     * @return Collection<int, CategoryInterface>
      */
     public function getChildren();
 
     /**
      * Set parent.
      *
-     * @param CategoryInterface $parent
+     * @param CategoryInterface|null $parent
      *
      * @return CategoryInterface
      */
@@ -212,15 +222,13 @@ interface CategoryInterface extends AuditableInterface
     /**
      * Get parent.
      *
-     * @return CategoryInterface
+     * @return CategoryInterface|null
      */
     public function getParent();
 
     /**
      * Set creator.
      * Note: This property is set automatically by the UserBlameSubscriber if not set manually.
-     *
-     * @param UserInterface $creator
      *
      * @return CategoryInterface
      */
@@ -229,8 +237,6 @@ interface CategoryInterface extends AuditableInterface
     /**
      * Set changer.
      * Note: This property is set automatically by the UserBlameSubscriber if not set manually.
-     *
-     * @param UserInterface $changer
      *
      * @return CategoryInterface
      */

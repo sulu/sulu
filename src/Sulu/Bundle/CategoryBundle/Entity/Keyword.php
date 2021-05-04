@@ -36,12 +36,12 @@ class Keyword implements KeywordInterface
     protected $locale;
 
     /**
-     * @var UserInterface
+     * @var UserInterface|null
      */
     protected $creator;
 
     /**
-     * @var UserInterface
+     * @var UserInterface|null
      */
     protected $changer;
 
@@ -56,7 +56,7 @@ class Keyword implements KeywordInterface
     protected $changed;
 
     /**
-     * @var Collection|CategoryTranslationInterface[]
+     * @var Collection<int, CategoryTranslationInterface>
      */
     protected $categoryTranslations;
 

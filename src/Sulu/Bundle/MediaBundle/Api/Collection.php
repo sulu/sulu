@@ -227,14 +227,14 @@ class Collection extends ApiWrapper
     }
 
     /**
-     * @param array $style
+     * @param array|string|null $style
      *
      * @return $this
      */
     public function setStyle($style)
     {
         if (!\is_string($style)) {
-            $style = \json_encode($style);
+            $style = \json_encode($style) ?: null;
         }
         $this->entity->setStyle($style);
 
@@ -245,11 +245,17 @@ class Collection extends ApiWrapper
      * @VirtualProperty
      * @SerializedName("style")
      *
-     * @return array
+     * @return array|null
      */
     public function getStyle()
     {
-        return \json_decode($this->entity->getStyle(), true);
+        $style = $this->entity->getStyle();
+
+        if (!$style) {
+            return null;
+        }
+
+        return \json_decode($style, true);
     }
 
     /**

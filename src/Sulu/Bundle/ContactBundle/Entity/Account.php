@@ -59,13 +59,13 @@ class Account implements AccountInterface
     private $changed;
 
     /**
-     * @var UserInterface
+     * @var UserInterface|null
      * @Exclude
      */
     private $changer;
 
     /**
-     * @var UserInterface
+     * @var UserInterface|null
      * @Exclude
      */
     private $creator;
@@ -131,7 +131,7 @@ class Account implements AccountInterface
     protected $logo;
 
     /**
-     * @var Collection|AccountInterface[]
+     * @var Collection<int, AccountInterface>
      * @Exclude
      */
     protected $children;
@@ -148,72 +148,72 @@ class Account implements AccountInterface
     protected $addresses;
 
     /**
-     * @var Collection|Url[]
+     * @var Collection<int, Url>
      */
     protected $urls;
 
     /**
-     * @var Collection|Phone[]
+     * @var Collection<int, Phone>
      */
     protected $phones;
 
     /**
-     * @var Collection|SocialMediaProfile[]
+     * @var Collection<int, SocialMediaProfile>
      */
     protected $socialMediaProfiles;
 
     /**
-     * @var Collection|Email[]
+     * @var Collection<int, Email>
      */
     protected $emails;
 
     /**
-     * @var Collection|Note[]
+     * @var Collection<int, Note>
      *
      * @deprecated
      */
     protected $notes;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $note;
 
     /**
-     * @var Collection|Fax[]
+     * @var Collection<int, Fax>
      */
     protected $faxes;
 
     /**
-     * @var Collection|BankAccount[]
+     * @var Collection<int, BankAccount>
      */
     protected $bankAccounts;
 
     /**
-     * @var Collection|TagInterface[]
+     * @var Collection<int, TagInterface>
      * @Accessor(getter="getTagNameArray")
      * @Type("array")
      */
     protected $tags;
 
     /**
-     * @var Collection|AccountContact[]
+     * @var Collection<int, AccountContact>
      */
     protected $accountContacts;
 
     /**
-     * @var Collection|AccountAddress[]
+     * @var Collection<int, AccountAddress>
      * @Exclude
      */
     protected $accountAddresses;
 
     /**
-     * @var Collection|MediaInterface[]
+     * @var Collection<int, MediaInterface>
      */
     protected $medias;
 
     /**
-     * @var Collection|CategoryInterface[]
+     * @var Collection<int, CategoryInterface>
      */
     protected $categories;
 
@@ -370,6 +370,9 @@ class Account implements AccountInterface
         return $this;
     }
 
+    /**
+     * @return Collection<int, Note>
+     */
     public function getNotes(): Collection
     {
         return $this->notes;
@@ -476,10 +479,8 @@ class Account implements AccountInterface
     public function getTagNameArray(): array
     {
         $tags = [];
-        if (!\is_null($this->getTags())) {
-            foreach ($this->getTags() as $tag) {
-                $tags[] = $tag->getName();
-            }
+        foreach ($this->getTags() as $tag) {
+            $tags[] = $tag->getName();
         }
 
         return $tags;
@@ -531,13 +532,11 @@ class Account implements AccountInterface
         $accountAddresses = $this->getAccountAddresses();
         $addresses = [];
 
-        if (!\is_null($accountAddresses)) {
-            /* @var ContactAddress $contactAddress */
-            foreach ($accountAddresses as $accountAddress) {
-                $address = $accountAddress->getAddress();
-                $address->setPrimaryAddress($accountAddress->getMain());
-                $addresses[] = $address;
-            }
+        /* @var ContactAddress $contactAddress */
+        foreach ($accountAddresses as $accountAddress) {
+            $address = $accountAddress->getAddress();
+            $address->setPrimaryAddress($accountAddress->getMain());
+            $addresses[] = $address;
         }
 
         return $addresses;
@@ -547,12 +546,10 @@ class Account implements AccountInterface
     {
         $accountAddresses = $this->getAccountAddresses();
 
-        if (!\is_null($accountAddresses)) {
-            /** @var AccountAddress $accountAddress */
-            foreach ($accountAddresses as $accountAddress) {
-                if ($accountAddress->getMain()) {
-                    return $accountAddress->getAddress();
-                }
+        /** @var AccountAddress $accountAddress */
+        foreach ($accountAddresses as $accountAddress) {
+            if ($accountAddress->getMain()) {
+                return $accountAddress->getAddress();
             }
         }
 
@@ -567,11 +564,9 @@ class Account implements AccountInterface
         $accountContacts = $this->getAccountContacts();
         $contacts = [];
 
-        if (!\is_null($accountContacts)) {
-            /** @var AccountContact $accountContact */
-            foreach ($accountContacts as $accountContact) {
-                $contacts[] = $accountContact->getContact();
-            }
+        /** @var AccountContact $accountContact */
+        foreach ($accountContacts as $accountContact) {
+            $contacts[] = $accountContact->getContact();
         }
 
         return $contacts;
@@ -629,6 +624,9 @@ class Account implements AccountInterface
         return $this->categories;
     }
 
+    /**
+     * @param int $id
+     */
     public function setId($id): AccountInterface
     {
         $this->id = $id;
@@ -814,7 +812,7 @@ class Account implements AccountInterface
         return $this->changer;
     }
 
-    public function setChanger(UserInterface $changer): AccountInterface
+    public function setChanger(?UserInterface $changer): AccountInterface
     {
         $this->changer = $changer;
 
@@ -826,6 +824,9 @@ class Account implements AccountInterface
         return $this->creator;
     }
 
+    /**
+     * @param UserInterface|null $creator
+     */
     public function setCreator($creator): AccountInterface
     {
         $this->creator = $creator;

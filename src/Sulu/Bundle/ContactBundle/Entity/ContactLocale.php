@@ -27,7 +27,7 @@ class ContactLocale
     private $id;
 
     /**
-     * @var \Sulu\Bundle\ContactBundle\Entity\ContactInterface
+     * @var ContactInterface
      */
     private $contact;
 
@@ -80,7 +80,7 @@ class ContactLocale
     /**
      * Get contact.
      *
-     * @return \Sulu\Bundle\ContactBundle\Entity\ContactInterface
+     * @return ContactInterface
      */
     public function getContact()
     {

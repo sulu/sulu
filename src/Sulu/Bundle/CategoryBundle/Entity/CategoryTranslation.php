@@ -51,12 +51,12 @@ class CategoryTranslation implements CategoryTranslationInterface
     protected $category;
 
     /**
-     * @var UserInterface
+     * @var UserInterface|null
      */
     protected $creator;
 
     /**
-     * @var UserInterface
+     * @var UserInterface|null
      */
     protected $changer;
 

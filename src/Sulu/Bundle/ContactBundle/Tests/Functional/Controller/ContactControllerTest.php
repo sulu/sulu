@@ -2422,7 +2422,6 @@ class ContactControllerTest extends SuluTestCase
         $contact = new Contact();
         $contact->setFirstName($firstName);
         $contact->setLastName($lastName);
-        $contact->setPosition($positionName);
         $contact->setBirthday($birthday);
         $contact->setFormOfAddress($formOfAddress);
         $contact->setSalutation($salutation);

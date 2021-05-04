@@ -65,13 +65,13 @@ class Collection implements CollectionInterface
     protected $type;
 
     /**
-     * @var UserInterface
+     * @var UserInterface|null
      * @Exclude
      */
     protected $changer;
 
     /**
-     * @var UserInterface
+     * @var UserInterface|null
      * @Exclude
      */
     protected $creator;
@@ -127,8 +127,6 @@ class Collection implements CollectionInterface
     /**
      * Set changer.
      *
-     * @param UserInterface $changer
-     *
      * @return CollectionInterface
      */
     public function setChanger(UserInterface $changer = null)
@@ -141,7 +139,7 @@ class Collection implements CollectionInterface
     /**
      * Get changer.
      *
-     * @return UserInterface
+     * @return UserInterface|null
      */
     public function getChanger()
     {
@@ -150,8 +148,6 @@ class Collection implements CollectionInterface
 
     /**
      * Set creator.
-     *
-     * @param UserInterface $creator
      *
      * @return CollectionInterface
      */
@@ -165,7 +161,7 @@ class Collection implements CollectionInterface
     /**
      * Get creator.
      *
-     * @return UserInterface
+     * @return UserInterface|null
      */
     public function getCreator()
     {

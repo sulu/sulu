@@ -32,6 +32,7 @@ class RouteGeneratorCompilerPass implements CompilerPassInterface
             return;
         }
 
+        /** @var mixed[] $config */
         $config = $container->getParameter(self::PARAMETER_NAME);
 
         $generators = [];

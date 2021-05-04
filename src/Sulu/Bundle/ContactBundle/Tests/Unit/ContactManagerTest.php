@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\ContactBundle\Tests\Unit;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Persistence\ObjectManager;
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\ContactBundle\Contact\ContactManager;
@@ -88,12 +89,11 @@ class ContactManagerTest extends TestCase
 
     public function testAddTag()
     {
-        /** @var Contact $contact */
         $contact = $this->prophesize(Contact::class);
         $tag = $this->prophesize(TagInterface::class);
 
-        $contact->getContactAddresses()->willReturn([]);
-        $contact->getTags()->willReturn([]);
+        $contact->getContactAddresses()->willReturn(new ArrayCollection());
+        $contact->getTags()->willReturn(new ArrayCollection());
         $this->tagManager->findOrCreateByName('testtag')->willReturn($tag->reveal());
         $contact->addTag($tag->reveal())->shouldBeCalled();
 
