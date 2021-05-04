@@ -23,16 +23,6 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersion;
  */
 class MediaAudienceTargetingSubscriber implements EventSubscriber
 {
-    /**
-     * @var string
-     */
-    private $targetGroupClass;
-
-    public function __construct($targetGroupClass)
-    {
-        $this->targetGroupClass = $targetGroupClass;
-    }
-
     public function getSubscribedEvents()
     {
         return [

@@ -16,7 +16,7 @@
 
         <service id="sulu.persistence.event_subscriber.orm.user_blame" class="%sulu.persistence.event_subscriber.orm.user_blame.class%">
             <argument type="service" id="security.token_storage" on-invalid="null"/>
-            <argument>%sulu.model.user.class%</argument>
+
             <!-- Priority 50 as the MetadataLoader need to be before the ResolveTargetEntityListener of Doctrine -->
             <tag name="doctrine.event_subscriber" priority="50"/>
         </service>
