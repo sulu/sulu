@@ -125,6 +125,7 @@ class RouteProviderTest extends TestCase
         $routeEntity->getId()->willReturn(1);
         $routeEntity->getEntityClass()->willReturn('Example');
         $routeEntity->isHistory()->willReturn(false);
+        $routeEntity->getTarget()->willReturn(null);
 
         $this->routeRepository->findByPath('/test', 'de')->willReturn($routeEntity->reveal());
         $this->defaultsProvider->supports('Example')->willReturn(false);
@@ -153,6 +154,7 @@ class RouteProviderTest extends TestCase
         $routeEntity->getId()->willReturn(1);
         $routeEntity->getPath()->willReturn('/test');
         $routeEntity->isHistory()->willReturn(false);
+        $routeEntity->getTarget()->willReturn(null);
         $routeEntity->getLocale()->willReturn('de');
 
         $this->routeRepository->findByPath('/test', 'de')->willReturn($routeEntity->reveal());
@@ -183,6 +185,7 @@ class RouteProviderTest extends TestCase
         $routeEntity->getId()->willReturn(1);
         $routeEntity->getPath()->willReturn('/test');
         $routeEntity->isHistory()->willReturn(false);
+        $routeEntity->getTarget()->willReturn(null);
         $routeEntity->getLocale()->willReturn('de');
 
         $this->routeRepository->findByPath('/test', 'de')->willReturn($routeEntity->reveal());
@@ -218,6 +221,7 @@ class RouteProviderTest extends TestCase
         $routeEntity->getId()->willReturn(1);
         $routeEntity->getPath()->willReturn('/test');
         $routeEntity->isHistory()->willReturn(false);
+        $routeEntity->getTarget()->willReturn(null);
         $routeEntity->getLocale()->willReturn('de');
 
         $this->routeRepository->findByPath('/test', 'de')->willReturn($routeEntity->reveal());
@@ -253,6 +257,7 @@ class RouteProviderTest extends TestCase
         $routeEntity->getId()->willReturn(1);
         $routeEntity->getPath()->willReturn('/käße');
         $routeEntity->isHistory()->willReturn(false);
+        $routeEntity->getTarget()->willReturn(null);
         $routeEntity->getLocale()->willReturn('de');
 
         $this->routeRepository->findByPath('/käße', 'de')->willReturn($routeEntity->reveal());
@@ -288,6 +293,7 @@ class RouteProviderTest extends TestCase
         $routeEntity->getId()->willReturn(1);
         $routeEntity->getPath()->willReturn('/test');
         $routeEntity->isHistory()->willReturn(false);
+        $routeEntity->getTarget()->willReturn(null);
         $routeEntity->getLocale()->willReturn('de');
 
         $this->routeRepository->findByPath('/test', 'de')->willReturn($routeEntity->reveal())->shouldBeCalledTimes(1);
@@ -412,6 +418,7 @@ class RouteProviderTest extends TestCase
         $routeEntity->getId()->willReturn(1);
         $routeEntity->getPath()->willReturn('/test');
         $routeEntity->isHistory()->willReturn(false);
+        $routeEntity->getTarget()->willReturn(null);
         $routeEntity->getLocale()->willReturn('de');
 
         $this->routeRepository->findByPath('/test', 'de')->willReturn($routeEntity->reveal());
@@ -465,6 +472,7 @@ class RouteProviderTest extends TestCase
         $routeEntity->getId()->willReturn(1);
         $routeEntity->getPath()->willReturn('/test');
         $routeEntity->isHistory()->willReturn(false);
+        $routeEntity->getTarget()->willReturn(null);
         $routeEntity->getLocale()->willReturn('de');
 
         $this->routeRepository->findByPath('/test', 'de')->willReturn($routeEntity->reveal());

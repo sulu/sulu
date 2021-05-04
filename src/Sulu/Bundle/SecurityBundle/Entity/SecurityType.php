@@ -11,6 +11,8 @@
 
 namespace Sulu\Bundle\SecurityBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Sulu\Component\Security\Authentication\RoleInterface;
 
 /**
@@ -29,7 +31,7 @@ class SecurityType
     private $id;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection<int, RoleInterface>
      */
     private $roles;
 
@@ -38,7 +40,7 @@ class SecurityType
      */
     public function __construct()
     {
-        $this->roles = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->roles = new ArrayCollection();
     }
 
     /**
@@ -79,6 +81,8 @@ class SecurityType
      * Set id.
      *
      * @param int $id
+     *
+     * @return void
      */
     public function setId($id)
     {
@@ -99,6 +103,8 @@ class SecurityType
 
     /**
      * Remove roles.
+     *
+     * @return void
      */
     public function removeRole(RoleInterface $roles)
     {
@@ -108,7 +114,7 @@ class SecurityType
     /**
      * Get roles.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection<int, RoleInterface>
      */
     public function getRoles()
     {

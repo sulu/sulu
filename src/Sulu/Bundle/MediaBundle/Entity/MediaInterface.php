@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Entity;
 
+use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 
@@ -40,26 +41,28 @@ interface MediaInterface extends AuditableInterface
     /**
      * Add files.
      *
-     * @return Media
+     * @return MediaInterface
      */
     public function addFile(File $files);
 
     /**
      * Remove files.
+     *
+     * @return void
      */
     public function removeFile(File $files);
 
     /**
      * Get files.
      *
-     * @return File[]
+     * @return DoctrineCollection<int, File>
      */
     public function getFiles();
 
     /**
      * Set collection.
      *
-     * @return Media
+     * @return MediaInterface
      */
     public function setCollection(CollectionInterface $collection);
 
@@ -73,7 +76,7 @@ interface MediaInterface extends AuditableInterface
     /**
      * Set type.
      *
-     * @return Media
+     * @return MediaInterface
      */
     public function setType(MediaType $type);
 
@@ -87,34 +90,32 @@ interface MediaInterface extends AuditableInterface
     /**
      * Set changer.
      *
-     * @param UserInterface $changer
+     * @param UserInterface|null $changer
      *
-     * @return Media
+     * @return MediaInterface
      */
     public function setChanger($changer);
 
     /**
      * Set creator.
      *
-     * @param UserInterface $creator
+     * @param UserInterface|null $creator
      *
-     * @return Media
+     * @return MediaInterface
      */
     public function setCreator($creator);
 
     /**
      * Set preview image.
      *
-     * @param Media $previewImage
-     *
-     * @return Media
+     * @return MediaInterface|null
      */
-    public function setPreviewImage(Media $previewImage = null);
+    public function setPreviewImage(self $previewImage = null);
 
     /**
      * Get preview image.
      *
-     * @return Media
+     * @return MediaInterface|null
      */
     public function getPreviewImage();
 }

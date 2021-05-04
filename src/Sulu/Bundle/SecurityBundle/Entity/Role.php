@@ -37,7 +37,7 @@ class Role implements RoleInterface
     private $name;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $key;
 
@@ -47,19 +47,19 @@ class Role implements RoleInterface
     private $system;
 
     /**
-     * @var SecurityType
+     * @var SecurityType|null
      */
     private $securityType;
 
     /**
-     * @var Collection|Permission[]
-     * @var Collection
+     * @var Collection<int, Permission>
+     *
      * @Groups({"fullRole"})
      */
     private $permissions;
 
     /**
-     * @var Collection|UserRole[]
+     * @var Collection<int, UserRole>
      *
      * @Exclude
      */
@@ -68,14 +68,14 @@ class Role implements RoleInterface
     /**
      * @deprecated The group functionality was deprecated in Sulu 2.1 and will be removed in Sulu 3.0
      *
-     * @var Collection|Group[]
+     * @var Collection<int, Group>
      *
      * @Exclude
      */
     private $groups;
 
     /**
-     * @var Collection|RoleSettingInterface[]
+     * @var Collection<string, RoleSettingInterface>
      */
     private $settings;
 
@@ -107,6 +107,8 @@ class Role implements RoleInterface
 
     /**
      * @deprecated since 2.1 and will be removed in 3.0. Use "getIdentifier" instead.
+     *
+     * @return string
      */
     public function getRole()
     {
@@ -131,13 +133,6 @@ class Role implements RoleInterface
         return 'ROLE_SULU_' . \strtoupper($key);
     }
 
-    /**
-     * Set name.
-     *
-     * @param string $name
-     *
-     * @return Role
-     */
     public function setName($name)
     {
         $this->name = $name;
@@ -145,11 +140,6 @@ class Role implements RoleInterface
         return $this;
     }
 
-    /**
-     * Get name.
-     *
-     * @return string
-     */
     public function getName()
     {
         return $this->name;
@@ -167,13 +157,6 @@ class Role implements RoleInterface
         return $this;
     }
 
-    /**
-     * Set system.
-     *
-     * @param string $system
-     *
-     * @return Role
-     */
     public function setSystem($system)
     {
         $this->system = $system;
@@ -181,23 +164,11 @@ class Role implements RoleInterface
         return $this;
     }
 
-    /**
-     * Get system.
-     *
-     * @return string
-     */
     public function getSystem()
     {
         return $this->system;
     }
 
-    /**
-     * Set securityType.
-     *
-     * @param SecurityType $securityType
-     *
-     * @return Role
-     */
     public function setSecurityType(SecurityType $securityType = null)
     {
         $this->securityType = $securityType;
@@ -205,21 +176,11 @@ class Role implements RoleInterface
         return $this;
     }
 
-    /**
-     * Get securityType.
-     *
-     * @return SecurityType
-     */
     public function getSecurityType()
     {
         return $this->securityType;
     }
 
-    /**
-     * Add permissions.
-     *
-     * @return Role
-     */
     public function addPermission(Permission $permissions)
     {
         $this->permissions[] = $permissions;
@@ -227,29 +188,16 @@ class Role implements RoleInterface
         return $this;
     }
 
-    /**
-     * Remove permissions.
-     */
     public function removePermission(Permission $permissions)
     {
         $this->permissions->removeElement($permissions);
     }
 
-    /**
-     * Get permissions.
-     *
-     * @return Collection|Permission[]
-     */
     public function getPermissions()
     {
         return $this->permissions;
     }
 
-    /**
-     * Add userRoles.
-     *
-     * @return Role
-     */
     public function addUserRole(UserRole $userRoles)
     {
         $this->userRoles[] = $userRoles;
@@ -257,31 +205,16 @@ class Role implements RoleInterface
         return $this;
     }
 
-    /**
-     * Remove userRoles.
-     */
     public function removeUserRole(UserRole $userRoles)
     {
         $this->userRoles->removeElement($userRoles);
     }
 
-    /**
-     * Get userRoles.
-     *
-     * @return Collection|UserRole[]
-     */
     public function getUserRoles()
     {
         return $this->userRoles;
     }
 
-    /**
-     * Add groups.
-     *
-     * @deprecated The group functionality was deprecated in Sulu 2.1 and will be removed in Sulu 3.0
-     *
-     * @return Role
-     */
     public function addGroup(Group $groups)
     {
         $this->groups[] = $groups;
@@ -289,32 +222,18 @@ class Role implements RoleInterface
         return $this;
     }
 
-    /**
-     * Remove groups.
-     *
-     * @deprecated The group functionality was deprecated in Sulu 2.1 and will be removed in Sulu 3.0
-     */
     public function removeGroup(Group $groups)
     {
         $this->groups->removeElement($groups);
     }
 
-    /**
-     * Get groups.
-     *
-     * @return Collection|Group[]
-     *
-     * @deprecated The group functionality was deprecated in Sulu 2.1 and will be removed in Sulu 3.0
-     */
     public function getGroups()
     {
         return $this->groups;
     }
 
     /**
-     * Add setting.
-     *
-     * @return Role
+     * @return $this
      */
     public function addSetting(RoleSettingInterface $setting)
     {
@@ -324,7 +243,7 @@ class Role implements RoleInterface
     }
 
     /**
-     * Remove setting.
+     * @return void
      */
     public function removeSetting(RoleSettingInterface $setting)
     {
@@ -334,7 +253,7 @@ class Role implements RoleInterface
     /**
      * Get settings.
      *
-     * @return Collection|RoleSettingInterface[]
+     * @return Collection<string, RoleSettingInterface>
      */
     public function getSettings()
     {

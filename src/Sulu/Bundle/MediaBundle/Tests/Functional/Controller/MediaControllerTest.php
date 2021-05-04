@@ -344,7 +344,7 @@ class MediaControllerTest extends SuluTestCase
             'type' => 'circle', 'color' => '#ffcc00',
         ];
 
-        $this->collection->setStyle(\json_encode($style));
+        $this->collection->setStyle(\json_encode($style) ?: null);
 
         // Create Collection Type
         $collectionTypeFixtures = new LoadCollectionTypes();
@@ -1524,7 +1524,7 @@ class MediaControllerTest extends SuluTestCase
             'color' => '#ffcc00',
         ];
 
-        $destCollection->setStyle(\json_encode($style));
+        $destCollection->setStyle(\json_encode($style) ?: null);
         $destCollection->setType($this->getEntityManager()->getReference(CollectionType::class, 1));
         $destCollection->addMeta($this->collectionMeta);
 
@@ -1552,7 +1552,7 @@ class MediaControllerTest extends SuluTestCase
             'color' => '#ffcc00',
         ];
 
-        $destCollection->setStyle(\json_encode($style));
+        $destCollection->setStyle(\json_encode($style) ?: null);
         $destCollection->setType($this->getEntityManager()->getReference(CollectionType::class, 1));
         $destCollection->addMeta($this->collectionMeta);
 

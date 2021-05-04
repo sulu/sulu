@@ -28,7 +28,7 @@ class Collection implements CollectionInterface, PermissionInheritanceInterface
     protected $id;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $style;
 
@@ -66,40 +66,40 @@ class Collection implements CollectionInterface, PermissionInheritanceInterface
     protected $type;
 
     /**
-     * @var UserInterface
+     * @var UserInterface|null
      * @Exclude
      */
     protected $changer;
 
     /**
-     * @var UserInterface
+     * @var UserInterface|null
      * @Exclude
      */
     protected $creator;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $key;
 
     /**
-     * @var DoctrineCollection|CollectionMeta[]
+     * @var DoctrineCollection<int, CollectionMeta>
      */
     private $meta;
 
     /**
-     * @var DoctrineCollection|MediaInterface[]
+     * @var DoctrineCollection<int, MediaInterface>
      * @Exclude
      */
     private $media;
 
     /**
-     * @var DoctrineCollection|CollectionInterface[]
+     * @var DoctrineCollection<int, CollectionInterface>
      */
     private $children;
 
     /**
-     * @var CollectionInterface
+     * @var CollectionInterface|null
      */
     private $parent;
 
@@ -128,8 +128,6 @@ class Collection implements CollectionInterface, PermissionInheritanceInterface
     /**
      * Set changer.
      *
-     * @param UserInterface $changer
-     *
      * @return CollectionInterface
      */
     public function setChanger(UserInterface $changer = null)
@@ -142,7 +140,7 @@ class Collection implements CollectionInterface, PermissionInheritanceInterface
     /**
      * Get changer.
      *
-     * @return UserInterface
+     * @return UserInterface|null
      */
     public function getChanger()
     {
@@ -151,8 +149,6 @@ class Collection implements CollectionInterface, PermissionInheritanceInterface
 
     /**
      * Set creator.
-     *
-     * @param UserInterface $creator
      *
      * @return CollectionInterface
      */
@@ -166,7 +162,7 @@ class Collection implements CollectionInterface, PermissionInheritanceInterface
     /**
      * Get creator.
      *
-     * @return UserInterface
+     * @return UserInterface|null
      */
     public function getCreator()
     {
@@ -176,7 +172,7 @@ class Collection implements CollectionInterface, PermissionInheritanceInterface
     /**
      * Set style.
      *
-     * @param string $style
+     * @param string|null $style
      *
      * @return CollectionInterface
      */
@@ -190,7 +186,7 @@ class Collection implements CollectionInterface, PermissionInheritanceInterface
     /**
      * Get style.
      *
-     * @return string
+     * @return string|null
      */
     public function getStyle()
     {
@@ -314,7 +310,7 @@ class Collection implements CollectionInterface, PermissionInheritanceInterface
     /**
      * Set key.
      *
-     * @return string
+     * @return string|null
      */
     public function getKey()
     {
@@ -324,7 +320,7 @@ class Collection implements CollectionInterface, PermissionInheritanceInterface
     /**
      * Get key.
      *
-     * @param string $key
+     * @param string|null $key
      *
      * @return CollectionInterface
      */
@@ -336,7 +332,7 @@ class Collection implements CollectionInterface, PermissionInheritanceInterface
     }
 
     /**
-     * @return DoctrineCollection
+     * @return DoctrineCollection<int, self>
      */
     public function getChildren()
     {
@@ -351,7 +347,7 @@ class Collection implements CollectionInterface, PermissionInheritanceInterface
     /**
      * Set parent.
      *
-     * @param CollectionInterface $parent
+     * @param CollectionInterface|null $parent
      *
      * @return CollectionInterface
      */
@@ -365,18 +361,23 @@ class Collection implements CollectionInterface, PermissionInheritanceInterface
     /**
      * Get parent.
      *
-     * @return CollectionInterface
+     * @return CollectionInterface|null
      */
     public function getParent()
     {
         return $this->parent;
     }
 
+    /**
+     * @return int|null
+     */
     public function getParentId()
     {
         if ($this->parent) {
             return $this->parent->getId();
         }
+
+        return null;
     }
 
     /**
@@ -393,6 +394,8 @@ class Collection implements CollectionInterface, PermissionInheritanceInterface
 
     /**
      * Remove meta.
+     *
+     * @return void
      */
     public function removeMeta(CollectionMeta $meta)
     {
@@ -402,7 +405,7 @@ class Collection implements CollectionInterface, PermissionInheritanceInterface
     /**
      * Get meta.
      *
-     * @return DoctrineCollection|CollectionMeta[]
+     * @return DoctrineCollection<int, CollectionMeta>
      */
     public function getMeta()
     {
@@ -423,6 +426,8 @@ class Collection implements CollectionInterface, PermissionInheritanceInterface
 
     /**
      * Remove media.
+     *
+     * @return void
      */
     public function removeMedia(MediaInterface $media)
     {
@@ -432,7 +437,7 @@ class Collection implements CollectionInterface, PermissionInheritanceInterface
     /**
      * Get media.
      *
-     * @return DoctrineCollection|MediaInterface[]
+     * @return DoctrineCollection<int, MediaInterface>
      */
     public function getMedia()
     {
@@ -453,6 +458,8 @@ class Collection implements CollectionInterface, PermissionInheritanceInterface
 
     /**
      * Remove children.
+     *
+     * @return void
      */
     public function removeChildren(CollectionInterface $children)
     {

@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use JMS\Serializer\Annotation\Exclude;
 
 /**
@@ -36,12 +36,12 @@ class CollectionType
     private $key;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $description;
 
     /**
-     * @var Collection
+     * @var DoctrineCollection<int, CollectionInterface>
      * @Exclude
      */
     private $collections;
@@ -81,7 +81,7 @@ class CollectionType
     /**
      * Set description.
      *
-     * @param string $description
+     * @param string|null $description
      *
      * @return $this
      */
@@ -95,7 +95,7 @@ class CollectionType
     /**
      * Get description.
      *
-     * @return string
+     * @return string|null
      */
     public function getDescription()
     {
@@ -131,9 +131,9 @@ class CollectionType
      *
      * @return $this
      */
-    public function addCollection(Collection $collections)
+    public function addCollection(CollectionInterface $collections)
     {
-        $this->collections[] = $collections;
+        $this->collections->add($collections);
 
         return $this;
     }
@@ -143,7 +143,7 @@ class CollectionType
      *
      * @return $this
      */
-    public function removeCollection(Collection $collections)
+    public function removeCollection(CollectionInterface $collections)
     {
         $this->collections->removeElement($collections);
 
@@ -153,7 +153,7 @@ class CollectionType
     /**
      * Get collections.
      *
-     * @return Collection|CollectionInterface[]
+     * @return DoctrineCollection<int, CollectionInterface>
      */
     public function getCollections()
     {

@@ -57,7 +57,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     protected $title;
 
     /**
-     * @var \DateTime
+     * @var \DateTime|null
      */
     protected $birthday;
 
@@ -72,29 +72,29 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     protected $changed;
 
     /**
-     * @var Collection|ContactLocale[]
+     * @var Collection<int, ContactLocale>
      */
     protected $locales;
 
     /**
-     * @var UserInterface
+     * @var UserInterface|null
      * @Groups({"fullContact"})
      */
     protected $changer;
 
     /**
-     * @var UserInterface
+     * @var UserInterface|null
      * @Groups({"fullContact"})
      */
     protected $creator;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $note;
 
     /**
-     * @var Collection|Note[]
+     * @var Collection<int, Note>
      * @Groups({"fullContact"})
      *
      * @deprecated
@@ -102,25 +102,25 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     protected $notes;
 
     /**
-     * @var Collection|Email[]
+     * @var Collection<int, Email>
      * @Groups({"fullContact", "partialContact"})
      */
     protected $emails;
 
     /**
-     * @var Collection|Phone[]
+     * @var Collection<int, Phone>
      * @Groups({"fullContact"})
      */
     protected $phones;
 
     /**
-     * @var Collection|Fax[]
+     * @var Collection<int, Fax>
      * @Groups({"fullContact"})
      */
     protected $faxes;
 
     /**
-     * @var Collection|SocialMediaProfile[]
+     * @var Collection<int, SocialMediaProfile>
      * @Groups({"fullContact"})
      */
     protected $socialMediaProfiles;
@@ -131,12 +131,12 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     protected $formOfAddress = 0;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $salutation;
 
     /**
-     * @var Collection|TagInterface[]
+     * @var Collection<int, TagInterface>
      * @Accessor(getter="getTagNameArray")
      * @Groups({"fullContact"})
      * @Type("array")
@@ -162,7 +162,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     protected $addresses;
 
     /**
-     * @var Collection|AccountContact[]
+     * @var Collection<int, AccountContact>
      * @Exclude
      */
     protected $accountContacts;
@@ -173,7 +173,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     protected $newsletter;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $gender;
 
@@ -198,31 +198,31 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     protected $mainUrl;
 
     /**
-     * @var Collection|ContactAddress[]
+     * @var Collection<int, ContactAddress>
      * @Exclude
      */
     protected $contactAddresses;
 
     /**
-     * @var Collection|MediaInterface[]
+     * @var Collection<int, MediaInterface>
      * @Groups({"fullContact"})
      */
     protected $medias;
 
     /**
-     * @var Collection|CategoryInterface[]
+     * @var Collection<int, CategoryInterface>
      * @Groups({"fullContact"})
      */
     protected $categories;
 
     /**
-     * @var Collection|Url[]
+     * @var Collection<int, Url>
      * @Groups({"fullContact"})
      */
     protected $urls;
 
     /**
-     * @var Collection|BankAccount[]
+     * @var Collection<int, BankAccount>
      * @Groups({"fullContact"})
      */
     protected $bankAccounts;
@@ -342,7 +342,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
             return $mainAccountContact->getPosition();
         }
 
-        return;
+        return null;
     }
 
     public function setBirthday($birthday)
@@ -581,10 +581,8 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     {
         $tags = [];
 
-        if (!\is_null($this->getTags())) {
-            foreach ($this->getTags() as $tag) {
-                $tags[] = $tag->getName();
-            }
+        foreach ($this->getTags() as $tag) {
+            $tags[] = $tag->getName();
         }
 
         return $tags;
@@ -638,7 +636,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
             return $mainAccountContact->getAccount();
         }
 
-        return;
+        return null;
     }
 
     /**
@@ -648,16 +646,14 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     {
         $accountContacts = $this->getAccountContacts();
 
-        if (!\is_null($accountContacts)) {
-            /** @var AccountContact $accountContact */
-            foreach ($accountContacts as $accountContact) {
-                if ($accountContact->getMain()) {
-                    return $accountContact;
-                }
+        /** @var AccountContact $accountContact */
+        foreach ($accountContacts as $accountContact) {
+            if ($accountContact->getMain()) {
+                return $accountContact;
             }
         }
 
-        return;
+        return null;
     }
 
     public function getAddresses()
@@ -665,13 +661,11 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
         $contactAddresses = $this->getContactAddresses();
         $addresses = [];
 
-        if (!\is_null($contactAddresses)) {
-            /** @var ContactAddress $contactAddress */
-            foreach ($contactAddresses as $contactAddress) {
-                $address = $contactAddress->getAddress();
-                $address->setPrimaryAddress($contactAddress->getMain());
-                $addresses[] = $address;
-            }
+        /** @var ContactAddress $contactAddress */
+        foreach ($contactAddresses as $contactAddress) {
+            $address = $contactAddress->getAddress();
+            $address->setPrimaryAddress($contactAddress->getMain());
+            $addresses[] = $address;
         }
 
         return $addresses;
@@ -746,16 +740,14 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     {
         $contactAddresses = $this->getContactAddresses();
 
-        if (!\is_null($contactAddresses)) {
-            /** @var ContactAddress $contactAddress */
-            foreach ($contactAddresses as $contactAddress) {
-                if ((bool) $contactAddress->getMain()) {
-                    return $contactAddress->getAddress();
-                }
+        /** @var ContactAddress $contactAddress */
+        foreach ($contactAddresses as $contactAddress) {
+            if ($contactAddress->getMain()) {
+                return $contactAddress->getAddress();
             }
         }
 
-        return;
+        return null;
     }
 
     public function addMedia(MediaInterface $media)
@@ -815,7 +807,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     }
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public function toArray()
     {

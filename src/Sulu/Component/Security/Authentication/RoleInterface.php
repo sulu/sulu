@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Security\Authentication;
 
+use Doctrine\Common\Collections\Collection;
 use Sulu\Bundle\SecurityBundle\Entity\Group;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\SecurityType;
@@ -52,7 +53,7 @@ interface RoleInterface extends AuditableInterface, SecurityIdentityInterface
     /**
      * Get key.
      *
-     * @return string
+     * @return string|null
      */
     public function getKey();
 
@@ -106,32 +107,36 @@ interface RoleInterface extends AuditableInterface, SecurityIdentityInterface
 
     /**
      * Remove permissions.
+     *
+     * @return void
      */
     public function removePermission(Permission $permissions);
 
     /**
      * Get permissions.
      *
-     * @return Permission[]
+     * @return Collection<int, Permission>
      */
     public function getPermissions();
 
     /**
      * Add userRoles.
      *
-     * @return UserRole
+     * @return $this
      */
     public function addUserRole(UserRole $userRoles);
 
     /**
      * Remove userRoles.
+     *
+     * @return void
      */
     public function removeUserRole(UserRole $userRoles);
 
     /**
      * Get userRoles.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection<int, UserRole>
      */
     public function getUserRoles();
 
@@ -139,25 +144,33 @@ interface RoleInterface extends AuditableInterface, SecurityIdentityInterface
      * Add groups.
      *
      * @return RoleInterface
+     *
+     * @deprecated The group functionality was deprecated in Sulu 2.1 and will be removed in Sulu 3.0
      */
     public function addGroup(Group $groups);
 
     /**
      * Remove groups.
+     *
+     * @return void
+     *
+     * @deprecated The group functionality was deprecated in Sulu 2.1 and will be removed in Sulu 3.0
      */
     public function removeGroup(Group $groups);
 
     /**
      * Get groups.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection<int, Group>
+     *
+     * @deprecated The group functionality was deprecated in Sulu 2.1 and will be removed in Sulu 3.0
      */
     public function getGroups();
 
     /**
      * Set securityType.
      *
-     * @param SecurityType $securityType
+     * @param SecurityType|null $securityType
      *
      * @return RoleInterface
      */
@@ -166,7 +179,7 @@ interface RoleInterface extends AuditableInterface, SecurityIdentityInterface
     /**
      * Get securityType.
      *
-     * @return SecurityType
+     * @return SecurityType|null
      */
     public function getSecurityType();
 
@@ -187,6 +200,8 @@ interface RoleInterface extends AuditableInterface, SecurityIdentityInterface
 
     /**
      * Set if the role is IS_ANONYMOUS.
+     *
+     * @return void
      */
     public function setAnonymous(bool $anonymous);
 }

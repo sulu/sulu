@@ -19,7 +19,7 @@ interface PermissionInheritanceInterface
     public function getId();
 
     /**
-     * @return ?string|int
+     * @return string|int|null
      */
     public function getParentId();
 }

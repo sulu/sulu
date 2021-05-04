@@ -12,4 +12,6 @@ export default class AbstractAdapter extends React.Component<ListAdapterProps> {
     static hasColumnOptions: boolean = false;
 
     static searchable: boolean = true;
+
+    static paginatable: boolean = true;
 }

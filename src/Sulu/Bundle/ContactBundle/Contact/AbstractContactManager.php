@@ -20,6 +20,7 @@ use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\AddressType;
 use Sulu\Bundle\ContactBundle\Entity\BankAccount;
+use Sulu\Bundle\ContactBundle\Entity\ContactAddress;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\EmailType;
@@ -107,7 +108,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * unsets main of all elements of an ArrayCollection | PersistanceCollection.
      *
-     * @param Collection<AddressRelationEntity> $arrayCollection
+     * @param Collection<int, AddressRelationEntity> $arrayCollection
      *
      * @return bool returns true if a element was unset
      */
@@ -133,19 +134,22 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * sets the first element to main, if none is set.
      *
-     * @param Collection<AddressRelationEntity> $arrayCollection
+     * @param Collection<int, AddressRelationEntity>|Collection<int, AccountContact> $arrayCollection
      */
     public function setMainForCollection($arrayCollection)
     {
         if ($arrayCollection && !$arrayCollection->isEmpty() && !$this->hasMain($arrayCollection)) {
-            $arrayCollection->first()->setMain(true);
+            $firstElement = $arrayCollection->first();
+            if ($firstElement) {
+                $firstElement->setMain(true);
+            }
         }
     }
 
     /**
      * checks if a collection for main attribute.
      *
-     * @param Collection<AddressRelationEntity> $arrayCollection
+     * @param Collection<int, AddressRelationEntity>|Collection<int, AccountContact> $arrayCollection
      * @param mixed $mainEntity will be set, if found
      *
      * @return bool
@@ -527,7 +531,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
      *
      * @param DoctrineEntity $entity
      *
-     * @return \Doctrine\Common\Collections\Collection|null
+     * @return Collection<int, ContactAddress|AccountAddress>|null
      */
     private function getAddresses($entity)
     {
@@ -1721,7 +1725,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * Sets main address.
      *
-     * @param Collection<AddressRelationEntity> $addresses
+     * @param Collection<int, AddressRelationEntity> $addresses
      */
     protected function checkAndSetMainAddress($addresses)
     {

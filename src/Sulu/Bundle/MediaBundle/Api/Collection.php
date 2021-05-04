@@ -157,7 +157,7 @@ class Collection extends ApiWrapper
      * @VirtualProperty
      * @SerializedName("description")
      *
-     * @return string
+     * @return string|null
      */
     public function getDescription()
     {
@@ -166,7 +166,7 @@ class Collection extends ApiWrapper
             return $meta->getDescription();
         }
 
-        return;
+        return null;
     }
 
     /**
@@ -227,14 +227,14 @@ class Collection extends ApiWrapper
     }
 
     /**
-     * @param array $style
+     * @param array|string|null $style
      *
      * @return $this
      */
     public function setStyle($style)
     {
         if (!\is_string($style)) {
-            $style = \json_encode($style);
+            $style = \json_encode($style) ?: null;
         }
         $this->entity->setStyle($style);
 
@@ -245,11 +245,17 @@ class Collection extends ApiWrapper
      * @VirtualProperty
      * @SerializedName("style")
      *
-     * @return array
+     * @return array|null
      */
     public function getStyle()
     {
-        return \json_decode($this->entity->getStyle(), true);
+        $style = $this->entity->getStyle();
+
+        if (!$style) {
+            return null;
+        }
+
+        return \json_decode($style, true);
     }
 
     /**
@@ -323,7 +329,7 @@ class Collection extends ApiWrapper
      * @VirtualProperty
      * @SerializedName("title")
      *
-     * @return string
+     * @return string|null
      */
     public function getTitle()
     {
@@ -332,7 +338,7 @@ class Collection extends ApiWrapper
             return $meta->getTitle();
         }
 
-        return;
+        return null;
     }
 
     /**
@@ -351,7 +357,7 @@ class Collection extends ApiWrapper
      * @VirtualProperty
      * @SerializedName("key")
      *
-     * @return string
+     * @return string|null
      */
     public function getKey()
     {
@@ -405,7 +411,7 @@ class Collection extends ApiWrapper
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getChanger()
     {
@@ -414,7 +420,7 @@ class Collection extends ApiWrapper
             return $user->getFullName();
         }
 
-        return;
+        return null;
     }
 
     /**
@@ -441,7 +447,7 @@ class Collection extends ApiWrapper
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getCreator()
     {
@@ -450,7 +456,7 @@ class Collection extends ApiWrapper
             return $user->getFullName();
         }
 
-        return;
+        return null;
     }
 
     /**

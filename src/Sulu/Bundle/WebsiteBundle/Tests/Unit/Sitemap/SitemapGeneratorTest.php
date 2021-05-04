@@ -46,7 +46,7 @@ class SitemapGeneratorTest extends SuluTestCase
     private $webspace;
 
     /**
-     * @var SitemapGeneratorInterface
+     * @var SitemapGenerator
      */
     private $sitemapGenerator;
 

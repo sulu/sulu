@@ -34,21 +34,21 @@ interface CollectionInterface extends AuditableInterface, SecuredEntityInterface
     /**
      * Get key.
      *
-     * @return string
+     * @return string|null
      */
     public function getKey();
 
     /**
      * Set key.
      *
-     * @param string $key
+     * @param string|null $key
+     *
+     * @return CollectionInterface
      */
     public function setKey($key);
 
     /**
      * Set changer.
-     *
-     * @param UserInterface $changer
      *
      * @return CollectionInterface
      */
@@ -64,8 +64,6 @@ interface CollectionInterface extends AuditableInterface, SecuredEntityInterface
     /**
      * Set creator.
      *
-     * @param UserInterface $creator
-     *
      * @return CollectionInterface
      */
     public function setCreator(UserInterface $creator = null);
@@ -80,7 +78,7 @@ interface CollectionInterface extends AuditableInterface, SecuredEntityInterface
     /**
      * Set style.
      *
-     * @param string $style
+     * @param string|null $style
      *
      * @return CollectionInterface
      */
@@ -89,7 +87,7 @@ interface CollectionInterface extends AuditableInterface, SecuredEntityInterface
     /**
      * Get style.
      *
-     * @return string
+     * @return string|null
      */
     public function getStyle();
 
@@ -158,7 +156,7 @@ interface CollectionInterface extends AuditableInterface, SecuredEntityInterface
     /**
      * Set parent.
      *
-     * @param CollectionInterface $parent
+     * @param CollectionInterface|null $parent
      *
      * @return CollectionInterface
      */
@@ -167,7 +165,7 @@ interface CollectionInterface extends AuditableInterface, SecuredEntityInterface
     /**
      * Get parent.
      *
-     * @return CollectionInterface
+     * @return CollectionInterface|null
      */
     public function getParent();
 
@@ -185,5 +183,10 @@ interface CollectionInterface extends AuditableInterface, SecuredEntityInterface
      */
     public function getType();
 
+    /**
+     * @param DoctrineCollection<int, CollectionInterface> $children
+     *
+     * @return void
+     */
     public function setChildren(DoctrineCollection $children);
 }

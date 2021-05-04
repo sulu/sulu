@@ -248,19 +248,19 @@ class Media extends ApiWrapper
      * @VirtualProperty
      * @SerializedName("title")
      *
-     * @return string
+     * @return string|null
      */
     public function getTitle()
     {
         if (!$this->getLocalizedMeta()) {
-            return;
+            return null;
         }
 
         return $this->getLocalizedMeta()->getTitle();
     }
 
     /**
-     * @param string $description
+     * @param string|null $description
      *
      * @return $this
      */
@@ -275,19 +275,19 @@ class Media extends ApiWrapper
      * @VirtualProperty
      * @SerializedName("description")
      *
-     * @return string
+     * @return string|null
      */
     public function getDescription()
     {
         if (!$this->getLocalizedMeta()) {
-            return;
+            return null;
         }
 
         return $this->getLocalizedMeta()->getDescription();
     }
 
     /**
-     * @param string $copyright
+     * @param string|null $copyright
      *
      * @return $this
      */
@@ -304,21 +304,21 @@ class Media extends ApiWrapper
      * @VirtualProperty
      * @SerializedName("copyright")
      *
-     * @return string
+     * @return string|null
      *
      * @throws FileVersionNotFoundException
      */
     public function getCopyright()
     {
         if (!$this->getLocalizedMeta()) {
-            return;
+            return null;
         }
 
         return $this->getLocalizedMeta()->getCopyright();
     }
 
     /**
-     * @param string $credits
+     * @param string|null $credits
      *
      * @return $this
      */
@@ -335,14 +335,14 @@ class Media extends ApiWrapper
      * @VirtualProperty
      * @SerializedName("credits")
      *
-     * @return string
+     * @return string|null
      *
      * @throws FileVersionNotFoundException
      */
     public function getCredits()
     {
         if (!$this->getLocalizedMeta()) {
-            return;
+            return null;
         }
 
         return $this->getLocalizedMeta()->getCredits();
@@ -659,7 +659,7 @@ class Media extends ApiWrapper
      * @VirtualProperty
      * @SerializedName("tags")
      *
-     * @return array
+     * @return string[]
      */
     public function getTags()
     {
@@ -763,7 +763,7 @@ class Media extends ApiWrapper
      * @VirtualProperty
      * @SerializedName("changed")
      *
-     * @return string
+     * @return \DateTime
      */
     public function getChanged()
     {
@@ -771,7 +771,7 @@ class Media extends ApiWrapper
     }
 
     /**
-     * @param UserInterface $changer
+     * @param UserInterface|null $changer
      *
      * @return $this
      */
@@ -786,7 +786,7 @@ class Media extends ApiWrapper
      * @VirtualProperty
      * @SerializedName("changer")
      *
-     * @return string
+     * @return string|null
      */
     public function getChanger()
     {
@@ -795,12 +795,14 @@ class Media extends ApiWrapper
             return $user->getFullName();
         }
 
-        return;
+        return null;
     }
 
     /**
      * @VirtualProperty
      * @SerializedName("created")
+     *
+     * @return \DateTime
      */
     public function getCreated()
     {
@@ -808,7 +810,7 @@ class Media extends ApiWrapper
     }
 
     /**
-     * @param UserInterface $creator
+     * @param UserInterface|null $creator
      *
      * @return $this
      */
@@ -823,7 +825,7 @@ class Media extends ApiWrapper
      * @VirtualProperty
      * @SerializedName("creator")
      *
-     * @return string
+     * @return string|null
      */
     public function getCreator()
     {
@@ -832,7 +834,7 @@ class Media extends ApiWrapper
             return $user->getFullName();
         }
 
-        return;
+        return null;
     }
 
     /**
@@ -862,7 +864,7 @@ class Media extends ApiWrapper
      * @VirtualProperty
      * @SerializedName("downloadCounter")
      *
-     * @return string
+     * @return int
      */
     public function getDownloadCounter()
     {
@@ -1025,7 +1027,7 @@ class Media extends ApiWrapper
      * @VirtualProperty
      * @SerializedName("categories")
      *
-     * @return Category[]
+     * @return int[]
      */
     public function getCategories()
     {
@@ -1071,7 +1073,7 @@ class Media extends ApiWrapper
      * @SerializedName("targetGroups")
      * @Groups({"fullMediaAudienceTargeting"})
      *
-     * @return TargetGroupInterface[]
+     * @return int[]
      */
     public function getTargetGroups()
     {

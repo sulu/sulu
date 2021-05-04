@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation\Exclude;
 
 /**
@@ -45,13 +46,13 @@ class BankAccount
     private $id;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection<int, AccountInterface>
      * @Exclude
      */
     private $accounts;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection<int, ContactInterface>
      */
     private $contacts;
 
@@ -169,7 +170,7 @@ class BankAccount
     /**
      * Get accounts.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection<int, AccountInterface>
      */
     public function getAccounts()
     {
@@ -223,7 +224,7 @@ class BankAccount
     /**
      * Get contacts.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection<int, ContactInterface>
      */
     public function getContacts()
     {

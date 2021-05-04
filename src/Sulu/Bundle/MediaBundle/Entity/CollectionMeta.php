@@ -22,7 +22,7 @@ class CollectionMeta
     private $title;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $description;
 
@@ -78,7 +78,7 @@ class CollectionMeta
     /**
      * Set description.
      *
-     * @param string $description
+     * @param string|null $description
      *
      * @return CollectionMeta
      */
@@ -92,7 +92,7 @@ class CollectionMeta
     /**
      * Get description.
      *
-     * @return string
+     * @return string|null
      */
     public function getDescription()
     {

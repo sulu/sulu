@@ -11,8 +11,10 @@
 
 namespace Sulu\Component\Security\Tests\Unit\Authorization\AccessControl;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
@@ -39,32 +41,32 @@ class AccessControlManagerTest extends TestCase
     private $accessControlManager;
 
     /**
-     * @var MaskConverterInterface
+     * @var ObjectProphecy<MaskConverterInterface>
      */
     private $maskConverter;
 
     /**
-     * @var EventDispatcherInterface
+     * @var ObjectProphecy<EventDispatcherInterface>
      */
     private $eventDispatcher;
 
     /**
-     * @var DescendantProviderInterface
+     * @var ObjectProphecy<DescendantProviderInterface>
      */
     private $descendantProvider1;
 
     /**
-     * @var DescendantProviderInterface
+     * @var ObjectProphecy<DescendantProviderInterface>
      */
     private $descendantProvider2;
 
     /**
-     * @var SystemStoreInterface
+     * @var ObjectProphecy<SystemStoreInterface>
      */
     private $systemStore;
 
     /**
-     * @var RoleRepositoryInterface
+     * @var ObjectProphecy<RoleRepositoryInterface>
      */
     private $roleRepository;
 
@@ -234,44 +236,36 @@ class AccessControlManagerTest extends TestCase
     ) {
         $this->systemStore->getSystem()->willReturn($system);
 
-        /** @var AccessControlProviderInterface $accessControlProvider */
         $accessControlProvider = $this->prophesize(AccessControlProviderInterface::class);
         $accessControlProvider->supports(\stdClass::class)->willReturn(true);
         $accessControlProvider->getPermissions(\stdClass::class, '1', $system)->willReturn($rolePermissions);
         $this->accessControlManager->addAccessControlProvider($accessControlProvider->reveal());
 
         // create role for given role permissions from data provider
-        /** @var Permission $permission1 */
         $permission1 = $this->prophesize(Permission::class);
         $permission1->getPermissions()->willReturn($securityContextPermissions);
         $permission1->getContext()->willReturn('example');
-        /** @var Role $role1 */
         $role1 = $this->prophesize(Role::class);
-        $role1->getPermissions()->willReturn([$permission1->reveal()]);
+        $role1->getPermissions()->willReturn(new ArrayCollection([$permission1->reveal()]));
         $role1->getSystem()->willReturn($system);
         $role1->getId()->willReturn(1);
-        /** @var UserRole $userRole1 */
         $userRole1 = $this->prophesize(UserRole::class);
         $userRole1->getRole()->willReturn($role1->reveal());
         $userRole1->getLocales()->willReturn($userLocales);
 
         // add a role which should not influence the security context check
-        /** @var Permission $permission */
         $permission2 = $this->prophesize(Permission::class);
         $permission2->getPermissions()->willReturn(127);
         $permission2->getContext()->willReturn('not-important');
-        /** @var Role $role */
         $role2 = $this->prophesize(Role::class);
         $role2->getPermissions()->willReturn([$permission2->reveal()]);
         $role2->getSystem()->willReturn($system);
         $role2->getId()->willReturn(2);
-        /** @var UserRole $userRole */
         $userRole2 = $this->prophesize(UserRole::class);
         $userRole2->getRole()->willReturn($role2->reveal());
         $userRole2->getLocales()->willReturn($userLocales);
 
         // return the user with the above definitions
-        /** @var User $user */
         $user = $this->prophesize(User::class);
         $user->getUserRoles()->willReturn([$userRole1->reveal(), $userRole2->reveal()]);
         $user->getRoleObjects()->willReturn([$role1->reveal(), $role2->reveal()]);
@@ -288,7 +282,6 @@ class AccessControlManagerTest extends TestCase
     {
         $this->systemStore->getSystem()->willReturn('Sulu');
 
-        /** @var AccessControlProviderInterface $accessControlProvider */
         $accessControlProvider = $this->prophesize(AccessControlProviderInterface::class);
         $accessControlProvider->supports(\stdClass::class)->willReturn(true);
         $accessControlProvider->getPermissions(\stdClass::class, '1', 'Sulu')
@@ -296,22 +289,18 @@ class AccessControlManagerTest extends TestCase
         $this->accessControlManager->addAccessControlProvider($accessControlProvider->reveal());
 
         // create role for given role permissions from data provider
-        /** @var Permission $permission1 */
         $permission1 = $this->prophesize(Permission::class);
         $permission1->getPermissions()->willReturn(64);
         $permission1->getContext()->willReturn('example');
-        /** @var Role $role1 */
         $role1 = $this->prophesize(Role::class);
-        $role1->getPermissions()->willReturn([$permission1->reveal()]);
+        $role1->getPermissions()->willReturn(new ArrayCollection([$permission1->reveal()]));
         $role1->getSystem()->willReturn('Sulu');
         $role1->getId()->willReturn(1);
-        /** @var UserRole $userRole1 */
         $userRole1 = $this->prophesize(UserRole::class);
         $userRole1->getRole()->willReturn($role1->reveal());
         $userRole1->getLocales()->willReturn(['de', 'en']);
 
         // return the user with the above definitions
-        /** @var User $user */
         $user = $this->prophesize(User::class);
         $user->getUserRoles()->willReturn([$userRole1->reveal()]);
         $user->getRoleObjects()->willReturn([$role1->reveal()]);
@@ -328,20 +317,17 @@ class AccessControlManagerTest extends TestCase
     {
         $this->systemStore->getSystem()->willReturn('Sulu');
 
-        /** @var AccessControlProviderInterface $accessControlProvider */
         $accessControlProvider = $this->prophesize(AccessControlProviderInterface::class);
         $accessControlProvider->supports(\stdClass::class)->willReturn(true);
         $accessControlProvider->getPermissions(\stdClass::class, '1', 'Sulu')
             ->willReturn([2 => ['view' => true, 'edit' => true]]);
         $this->accessControlManager->addAccessControlProvider($accessControlProvider->reveal());
 
-        /** @var Permission $permission1 */
         $permission1 = $this->prophesize(Permission::class);
         $permission1->getPermissions()->willReturn(64);
         $permission1->getContext()->willReturn('example');
-        /** @var Role $role1 */
         $anonymousRole = $this->prophesize(Role::class);
-        $anonymousRole->getPermissions()->willReturn([$permission1->reveal()]);
+        $anonymousRole->getPermissions()->willReturn(new ArrayCollection([$permission1->reveal()]));
         $anonymousRole->getSystem()->willReturn('Sulu');
         $anonymousRole->getId()->willReturn(1);
 
@@ -359,7 +345,6 @@ class AccessControlManagerTest extends TestCase
     {
         $this->systemStore->getSystem()->willReturn(null);
 
-        /** @var AccessControlProviderInterface $accessControlProvider */
         $accessControlProvider = $this->prophesize(AccessControlProviderInterface::class);
         $accessControlProvider->supports(\stdClass::class)->willReturn(true);
         $accessControlProvider->getPermissions(Argument::cetera())->shouldNotBeCalled();
@@ -385,27 +370,22 @@ class AccessControlManagerTest extends TestCase
     {
         $this->systemStore->getSystem()->willReturn('system1');
 
-        /** @var AccessControlProviderInterface $accessControlProvider */
         $accessControlProvider = $this->prophesize(AccessControlProviderInterface::class);
         $accessControlProvider->supports(\stdClass::class)->willReturn(true);
         $accessControlProvider->getPermissions(\stdClass::class, '1', 'system2')->shouldBeCalled();
         $this->accessControlManager->addAccessControlProvider($accessControlProvider->reveal());
 
-        /** @var Permission $permission1 */
         $permission1 = $this->prophesize(Permission::class);
         $permission1->getPermissions()->willReturn(64);
         $permission1->getContext()->willReturn('example');
-        /** @var Role $anonymousRole1 */
         $anonymousRole1 = $this->prophesize(Role::class);
-        $anonymousRole1->getPermissions()->willReturn([$permission1->reveal()]);
+        $anonymousRole1->getPermissions()->willReturn(new ArrayCollection([$permission1->reveal()]));
         $anonymousRole1->getSystem()->willReturn('system1');
         $anonymousRole1->getId()->willReturn(1);
 
-        /** @var Permission $permission2 */
         $permission2 = $this->prophesize(Permission::class);
         $permission2->getPermissions()->willReturn(32);
         $permission2->getContext()->willReturn('example');
-        /** @var Role $anonymousRole2 */
         $anonymousRole2 = $this->prophesize(Role::class);
         $anonymousRole2->getPermissions()->willReturn([$permission2->reveal()]);
         $anonymousRole2->getSystem()->willReturn('system2');
@@ -428,23 +408,19 @@ class AccessControlManagerTest extends TestCase
     {
         $this->systemStore->getSystem()->willReturn('system1');
 
-        /** @var Permission $permission1 */
         $permission1 = $this->prophesize(Permission::class);
         $permission1->getPermissions()->willReturn(64);
         $permission1->getContext()->willReturn('example');
-        /** @var Role $anonymousRole1 */
         $anonymousRole1 = $this->prophesize(Role::class);
-        $anonymousRole1->getPermissions()->willReturn([$permission1->reveal()]);
+        $anonymousRole1->getPermissions()->willReturn(new ArrayCollection([$permission1->reveal()]));
         $anonymousRole1->getSystem()->willReturn('system1');
         $anonymousRole1->getId()->willReturn(1);
 
-        /** @var Permission $permission2 */
         $permission2 = $this->prophesize(Permission::class);
         $permission2->getPermissions()->willReturn(32);
         $permission2->getContext()->willReturn('example');
-        /** @var Role $anonymousRole2 */
         $anonymousRole2 = $this->prophesize(Role::class);
-        $anonymousRole2->getPermissions()->willReturn([$permission2->reveal()]);
+        $anonymousRole2->getPermissions()->willReturn(new ArrayCollection([$permission2->reveal()]));
         $anonymousRole2->getSystem()->willReturn('system2');
         $anonymousRole2->getId()->willReturn(2);
 
@@ -477,23 +453,19 @@ class AccessControlManagerTest extends TestCase
     {
         $this->systemStore->getSystem()->willReturn('system1');
 
-        /** @var Permission $permission1 */
         $permission1 = $this->prophesize(Permission::class);
         $permission1->getPermissions()->willReturn(64);
         $permission1->getContext()->willReturn('example');
-        /** @var Role $anonymousRole1 */
         $anonymousRole1 = $this->prophesize(Role::class);
-        $anonymousRole1->getPermissions()->willReturn([$permission1->reveal()]);
+        $anonymousRole1->getPermissions()->willReturn(new ArrayCollection([$permission1->reveal()]));
         $anonymousRole1->getSystem()->willReturn('system1');
         $anonymousRole1->getId()->willReturn(1);
 
-        /** @var Permission $permission2 */
         $permission2 = $this->prophesize(Permission::class);
         $permission2->getPermissions()->willReturn(32);
         $permission2->getContext()->willReturn('example');
-        /** @var Role $anonymousRole2 */
         $anonymousRole2 = $this->prophesize(Role::class);
-        $anonymousRole2->getPermissions()->willReturn([$permission2->reveal()]);
+        $anonymousRole2->getPermissions()->willReturn(new ArrayCollection([$permission2->reveal()]));
         $anonymousRole2->getSystem()->willReturn('system2');
         $anonymousRole2->getId()->willReturn(2);
 
@@ -547,18 +519,15 @@ class AccessControlManagerTest extends TestCase
     {
         $this->systemStore->getSystem()->willReturn('Sulu');
 
-        /** @var AccessControlProviderInterface $accessControlProvider */
         $accessControlProvider = $this->prophesize(AccessControlProviderInterface::class);
         $accessControlProvider->supports(\stdClass::class)->willReturn(true);
         $accessControlProvider->getPermissions(\stdClass::class, '1', 'Sulu')
             ->willReturn([2 => ['view' => true, 'edit' => true]]);
         $this->accessControlManager->addAccessControlProvider($accessControlProvider->reveal());
 
-        /** @var Permission $permission1 */
         $permission1 = $this->prophesize(Permission::class);
         $permission1->getPermissions()->willReturn(64);
         $permission1->getContext()->willReturn('example');
-        /** @var Role $role1 */
         $anonymousRole = $this->prophesize(Role::class);
         $anonymousRole->getPermissions()->willReturn([$permission1->reveal()]);
         $anonymousRole->getSystem()->willReturn('Sulu');

@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\EventListener;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\HttpCacheBundle\Cache\CacheManagerInterface;
@@ -35,57 +36,77 @@ class CacheInvalidationListener
         $this->cacheManager = $cacheManager;
     }
 
+    /**
+     * @return void
+     */
     public function postPersist(LifecycleEventArgs $eventArgs)
     {
         $this->invalidateEntity($eventArgs->getObject());
     }
 
+    /**
+     * @return void
+     */
     public function postUpdate(LifecycleEventArgs $eventArgs)
     {
         $this->invalidateEntity($eventArgs->getObject());
     }
 
+    /**
+     * @return void
+     */
     public function preRemove(LifecycleEventArgs $eventArgs)
     {
         $this->invalidateEntity($eventArgs->getObject());
     }
 
+    /**
+     * @param object $object
+     *
+     * @return void
+     */
     private function invalidateEntity($object)
     {
-        if (!$this->cacheManager) {
+        $cacheManager = $this->cacheManager;
+
+        if (!$cacheManager) {
             return;
         }
 
         if ($object instanceof MediaInterface) {
-            $this->cacheManager->invalidateReference('media', $object->getId());
+            $cacheManager->invalidateReference('media', (string) $object->getId());
         } elseif ($object instanceof File) {
             $this->invalidateEntity($object->getMedia());
         } elseif ($object instanceof FileVersion) {
             $this->invalidateEntity($object->getFile());
-            $this->invalidateTags($object->getTags());
-            $this->invalidateCategories($object->getCategories());
+            $this->invalidateTags($cacheManager, $object->getTags());
+            $this->invalidateCategories($cacheManager, $object->getCategories());
         } elseif ($object instanceof FileVersionMeta) {
             $this->invalidateEntity($object->getFileVersion());
         }
     }
 
     /**
-     * @param TagInterface[] $tags
+     * @param Collection<int, TagInterface> $tags
+     *
+     * @return void
      */
-    private function invalidateTags($tags)
+    private function invalidateTags(CacheManagerInterface $cacheManager, $tags)
     {
         foreach ($tags as $tag) {
-            $this->cacheManager->invalidateReference('tag', $tag->getId());
+            $cacheManager->invalidateReference('tag', (string) $tag->getId());
         }
     }
 
     /**
-     * @param CategoryInterface[] $categories
+     * @param Collection<int, CategoryInterface> $categories
+     *
+     * @return void
      */
-    private function invalidateCategories($categories)
+    private function invalidateCategories(CacheManagerInterface $cacheManager, $categories)
     {
         foreach ($categories as $category) {
-            $this->cacheManager->invalidateReference('category', $category->getId());
+            $cacheManager->invalidateReference('category', (string) $category->getId());
         }
     }
 }

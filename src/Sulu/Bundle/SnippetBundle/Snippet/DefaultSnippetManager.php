@@ -64,10 +64,9 @@ class DefaultSnippetManager implements DefaultSnippetManagerInterface
 
     public function save($webspaceKey, $type, $uuid, $locale)
     {
-        /** @var SnippetDocument $document */
         $document = $this->documentManager->find($uuid, $locale);
 
-        if (!$document) {
+        if (!$document instanceof SnippetDocument) {
             throw new SnippetNotFoundException($uuid);
         }
 
@@ -157,13 +156,19 @@ class DefaultSnippetManager implements DefaultSnippetManagerInterface
 
     public function loadIdentifier($webspaceKey, $type)
     {
+        /** @var array{key: string, template: string, title: array<string, string>}|null $area */
         $area = $this->areas->get($type);
+
+        if (!$area) {
+            return null;
+        }
 
         return $this->settingsManager->loadString($webspaceKey, 'snippets-' . $area['key']);
     }
 
     public function getTypeForArea(string $area): ?string
     {
+        /** @var array{key: string, template: string, title: array<string, string>}|null $area */
         $area = $this->areas->get($area);
 
         if (!$area) {
@@ -183,7 +188,12 @@ class DefaultSnippetManager implements DefaultSnippetManagerInterface
      */
     private function checkTemplate($document, $type)
     {
+        /** @var array{key: string, template: string, title: array<string, string>}|null $area */
         $area = $this->areas->get($type);
+
+        if (!$area) {
+            return false;
+        }
 
         return $document->getStructureType() === $area['template'];
     }

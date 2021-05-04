@@ -463,7 +463,7 @@ class CollectionManager implements CollectionManagerInterface
 
         /** @var CollectionEntity $collectionEntity */
         $collectionEntity = $collection->getEntity();
-        $collectionEntity->setDefaultMeta($collectionEntity->getMeta()->first());
+        $collectionEntity->setDefaultMeta($collectionEntity->getMeta()->first() ?: null);
 
         $this->em->persist($collectionEntity);
 
@@ -616,7 +616,7 @@ class CollectionManager implements CollectionManagerInterface
 
             return $this->getApiEntity($collectionEntity, $locale);
         } catch (DBALException $ex) {
-            throw new CollectionNotFoundException($destinationId);
+            throw new CollectionNotFoundException($destinationId, $ex);
         }
     }
 

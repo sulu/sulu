@@ -22,6 +22,8 @@ class ColumnListAdapter extends AbstractAdapter {
 
     static searchable = false;
 
+    static paginatable = false;
+
     static defaultProps = {
         data: [],
     };
