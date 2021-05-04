@@ -347,8 +347,6 @@ class Collection implements CollectionInterface, PermissionInheritanceInterface
     /**
      * Set parent.
      *
-     * @param CollectionInterface|null $parent
-     *
      * @return CollectionInterface
      */
     public function setParent(CollectionInterface $parent = null)
