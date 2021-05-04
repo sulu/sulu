@@ -29,11 +29,16 @@ class EventRecordRepository implements EventRecordRepositoryInterface
      */
     protected $entityRepository;
 
-    public function __construct(
-        EntityManagerInterface $entityManager
-    ) {
+    /**
+     * @var bool
+     */
+    private $shouldPersistPayload;
+
+    public function __construct(EntityManagerInterface $entityManager, bool $shouldPersistPayload)
+    {
         $this->entityManager = $entityManager;
         $this->entityRepository = $entityManager->getRepository(EventRecordInterface::class);
+        $this->shouldPersistPayload = $shouldPersistPayload;
     }
 
     public function createForDomainEvent(DomainEvent $domainEvent): EventRecordInterface
@@ -66,13 +71,37 @@ class EventRecordRepository implements EventRecordRepositoryInterface
     {
         // use persister to insert only given entity instead of flushing all managed entities via the entity manager
         // this prevents flushing unrelated changes and allows to call this method in a postFlush event-listener
-        $this->entityManager->getUnitOfWork()->computeChangeSet(
-            $this->entityManager->getClassMetadata($this->entityRepository->getClassName()),
-            $eventRecord
-        );
 
-        $entityPersister = $this->entityManager->getUnitOfWork()->getEntityPersister($this->entityRepository->getClassName());
-        $entityPersister->addInsert($eventRecord);
-        $entityPersister->executeInserts();
+        $userId = null;
+        if ($eventRecord->getUser()) {
+            $userId = $eventRecord->getUser()->getId();
+        }
+
+        $queryBuilder = $this->entityManager->getConnection()->createQueryBuilder();
+        $queryBuilder
+            ->insert('el_event_records')
+            ->values(
+                [
+                    'eventType' => $queryBuilder->createNamedParameter($eventRecord->getEventType()),
+                    'eventContext' => $queryBuilder->createNamedParameter(\json_encode($eventRecord->getEventContext(), true)),
+                    'eventDateTime' => $queryBuilder->createNamedParameter($eventRecord->getEventDateTime()->format('Y-m-d H:i:s')),
+                    'eventBatch' => $queryBuilder->createNamedParameter($eventRecord->getEventBatch()),
+                    'resourceKey' => $queryBuilder->createNamedParameter($eventRecord->getResourceKey()),
+                    'resourceId' => $queryBuilder->createNamedParameter($eventRecord->getResourceId()),
+                    'resourceLocale' => $queryBuilder->createNamedParameter($eventRecord->getResourceLocale()),
+                    'resourceWebspaceKey' => $queryBuilder->createNamedParameter($eventRecord->getResourceWebspaceKey()),
+                    'resourceTitle' => $queryBuilder->createNamedParameter($eventRecord->getResourceTitle()),
+                    'resourceTitleLocale' => $queryBuilder->createNamedParameter($eventRecord->getResourceTitleLocale()),
+                    'resourceSecurityContext' => $queryBuilder->createNamedParameter($eventRecord->getResourceSecurityContext()),
+                    'resourceSecurityObjectType' => $queryBuilder->createNamedParameter($eventRecord->getResourceSecurityObjectType()),
+                    'resourceSecurityObjectId' => $queryBuilder->createNamedParameter($eventRecord->getResourceSecurityObjectId()),
+                    'userId' => $queryBuilder->createNamedParameter($userId),
+                ]);
+
+        if ($this->shouldPersistPayload) {
+            $queryBuilder->setValue('eventPayload', $queryBuilder->createNamedParameter(\json_encode($eventRecord->getEventPayload(), true)));
+        }
+
+        $queryBuilder->execute();
     }
 }
