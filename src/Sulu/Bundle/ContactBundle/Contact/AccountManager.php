@@ -15,12 +15,15 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Persistence\ObjectManager;
 use Sulu\Bundle\ContactBundle\Api\Account as AccountApi;
 use Sulu\Bundle\ContactBundle\Api\Contact;
+use Sulu\Bundle\ContactBundle\Domain\Event\AccountMediaAddedEvent;
+use Sulu\Bundle\ContactBundle\Domain\Event\AccountMediaRemovedEvent;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\AccountAddress as AccountAddressEntity;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\Entity\AccountRepositoryInterface;
 use Sulu\Bundle\ContactBundle\Entity\Address as AddressEntity;
 use Sulu\Bundle\ContactBundle\Entity\ContactRepository;
+use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
@@ -56,6 +59,11 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
      */
     protected $mediaRepository;
 
+    /**
+     * @var DomainEventCollectorInterface
+     */
+    protected $domainEventCollector;
+
     public function __construct(
         ObjectManager $em,
         TagManagerInterface $tagManager,
@@ -63,13 +71,15 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
         AccountFactory $accountFactory,
         AccountRepositoryInterface $accountRepository,
         ContactRepository $contactRepository,
-        MediaRepositoryInterface $mediaRepository
+        MediaRepositoryInterface $mediaRepository,
+        DomainEventCollectorInterface $domainEventCollector
     ) {
         parent::__construct($em, $tagManager, $mediaManager);
         $this->accountFactory = $accountFactory;
         $this->accountRepository = $accountRepository;
         $this->contactRepository = $contactRepository;
         $this->mediaRepository = $mediaRepository;
+        $this->domainEventCollector = $domainEventCollector;
     }
 
     /**
@@ -285,9 +295,24 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
             throw new EntityNotFoundException($this->mediaRepository->getClassName(), \reset($missingMediaIds));
         }
 
-        $account->getMedias()->clear();
+        foreach ($account->getMedias() as $media) {
+            if (!\in_array($media->getId(), $foundMediaIds)) {
+                $account->removeMedia($media);
+
+                $this->domainEventCollector->collect(
+                    new AccountMediaRemovedEvent($account, $media)
+                );
+            }
+        }
+
         foreach ($foundMedias as $media) {
-            $account->addMedia($media);
+            if (!$account->getMedias()->contains($media)) {
+                $account->addMedia($media);
+
+                $this->domainEventCollector->collect(
+                    new AccountMediaAddedEvent($account, $media)
+                );
+            }
         }
     }
 

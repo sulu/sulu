@@ -18,7 +18,7 @@ use FOS\RestBundle\View\ViewHandlerInterface;
 use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\ContactBundle\Contact\AccountFactoryInterface;
 use Sulu\Bundle\ContactBundle\Contact\AccountManager;
-use Sulu\Bundle\ContactBundle\Domain\Event\AccountContactCreatedEvent;
+use Sulu\Bundle\ContactBundle\Domain\Event\AccountContactAddedEvent;
 use Sulu\Bundle\ContactBundle\Domain\Event\AccountContactRemovedEvent;
 use Sulu\Bundle\ContactBundle\Domain\Event\AccountCreatedEvent;
 use Sulu\Bundle\ContactBundle\Domain\Event\AccountModifiedEvent;
@@ -191,7 +191,7 @@ class AccountController extends AbstractRestController implements ClassResourceI
      */
     public function getContactsAction($id, Request $request)
     {
-        if ('true' === $request->get('flat')) {
+        if ('true' == $request->get('flat')) {
             /* @var AccountInterface $account */
             $account = $this->accountRepository->findById($id);
 
@@ -328,7 +328,7 @@ class AccountController extends AbstractRestController implements ClassResourceI
             }
 
             $this->entityManager->persist($accountContact);
-            $this->domainEventCollector->collect(new AccountContactCreatedEvent($accountContact));
+            $this->domainEventCollector->collect(new AccountContactAddedEvent($accountContact));
             $this->entityManager->flush();
 
             $isMainContact = false;
@@ -389,7 +389,7 @@ class AccountController extends AbstractRestController implements ClassResourceI
             }
 
             $this->entityManager->remove($accountContact);
-            $this->domainEventCollector->collect(new AccountContactRemovedEvent($accountContact->getId()));
+            $this->domainEventCollector->collect(new AccountContactRemovedEvent($accountContact->getAccount()->getId()));
             $this->entityManager->flush();
 
             $view = $this->view($id, 200);
@@ -695,8 +695,6 @@ class AccountController extends AbstractRestController implements ClassResourceI
                 throw new EntityNotFoundException($this->getAccountEntityName(), $id);
             } else {
                 $this->doPatch($account, $request, $this->entityManager);
-                $this->domainEventCollector->collect(new AccountModifiedEvent($account, $request->request->all()));
-                $this->entityManager->flush();
 
                 // get api entity
                 $locale = $this->getUser()->getLocale();

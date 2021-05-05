@@ -13,9 +13,10 @@ namespace Sulu\Bundle\ContactBundle\Domain\Event;
 
 use Sulu\Bundle\ContactBundle\Admin\ContactAdmin;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact;
+use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\EventLogBundle\Domain\Event\DomainEvent;
 
-class AccountContactCreatedEvent extends DomainEvent
+class AccountContactAddedEvent extends DomainEvent
 {
     /**
      * @var AccountContact
@@ -36,17 +37,17 @@ class AccountContactCreatedEvent extends DomainEvent
 
     public function getEventType(): string
     {
-        return 'created';
+        return 'contact_added';
     }
 
     public function getResourceKey(): string
     {
-        return AccountContact::RESOURCE_KEY;
+        return AccountInterface::RESOURCE_KEY;
     }
 
     public function getResourceId(): string
     {
-        return (string) $this->accountContact->getId();
+        return (string) $this->accountContact->getAccount()->getId();
     }
 
     public function getResourceSecurityContext(): ?string

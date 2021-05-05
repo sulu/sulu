@@ -1262,8 +1262,9 @@ class AccountControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         /** @var DomainEvent $event */
-        $event = $this->eventRepository->findOneBy(['eventType' => 'created']);
-        $this->assertSame('account_contacts', $event->getResourceKey());
+        $event = $this->eventRepository->findOneBy(['eventType' => 'contact_added']);
+        $this->assertSame('accounts', $event->getResourceKey());
+        $this->assertSame('accounts', $event->getResourceKey());
 
         $this->client->jsonRequest('GET', '/api/accounts/' . $account->getId() . '/contacts?flat=true');
         $this->assertHttpStatusCode(200, $this->client->getResponse());

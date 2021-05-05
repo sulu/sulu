@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\ContactBundle\Domain\Event;
 
 use Sulu\Bundle\ContactBundle\Admin\ContactAdmin;
-use Sulu\Bundle\ContactBundle\Entity\AccountContact;
+use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\EventLogBundle\Domain\Event\DomainEvent;
 
 class AccountContactRemovedEvent extends DomainEvent
@@ -20,28 +20,28 @@ class AccountContactRemovedEvent extends DomainEvent
     /**
      * @var int
      */
-    private $accountContactId;
+    private $accountId;
 
-    public function __construct(int $accountContactId)
+    public function __construct(int $accountId)
     {
         parent::__construct();
 
-        $this->accountContactId = $accountContactId;
+        $this->accountId = $accountId;
     }
 
     public function getEventType(): string
     {
-        return 'removed';
+        return 'contact_removed';
     }
 
     public function getResourceKey(): string
     {
-        return AccountContact::RESOURCE_KEY;
+        return AccountInterface::RESOURCE_KEY;
     }
 
     public function getResourceId(): string
     {
-        return (string) $this->accountContactId;
+        return (string) $this->accountId;
     }
 
     public function getResourceSecurityContext(): ?string
