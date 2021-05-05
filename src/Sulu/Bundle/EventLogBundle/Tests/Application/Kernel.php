@@ -12,7 +12,18 @@
 namespace Sulu\Bundle\EventLogBundle\Tests\Application;
 
 use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
+use Symfony\Component\Config\Loader\LoaderInterface;
 
 class Kernel extends SuluTestKernel
 {
+    public function registerContainerConfiguration(LoaderInterface $loader): void
+    {
+        parent::registerContainerConfiguration($loader);
+
+        $envSpecificFile = __DIR__ . '/config/' . $this->getEnvironment() . '/config.yaml';
+
+        if (\file_exists($envSpecificFile)) {
+            $loader->load($envSpecificFile);
+        }
+    }
 }

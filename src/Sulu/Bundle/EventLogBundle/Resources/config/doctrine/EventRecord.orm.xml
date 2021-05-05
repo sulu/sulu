@@ -11,7 +11,7 @@
         <field name="eventContext" column="eventContext" type="json" nullable="false"/>
         <field name="eventDateTime" column="eventDateTime" type="datetime_immutable" nullable="false"/>
         <field name="eventBatch" column="eventBatch" type="string" nullable="true" length="191"/>
-        <!-- eventPayload field is mapped in EventRecordMetadataSubscriber if enabled in configuration -->
+        <field name="eventPayload" column="eventPayload" type="json" nullable="true"/>
 
         <many-to-one field="user" target-entity="Sulu\Component\Security\Authentication\UserInterface">
             <join-column name="userId" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>

@@ -65,6 +65,10 @@ class EventRecordRepository implements EventRecordRepositoryInterface
         $eventRecord->setResourceSecurityObjectType($domainEvent->getResourceSecurityObjectType());
         $eventRecord->setResourceSecurityObjectId($domainEvent->getResourceSecurityObjectId());
 
+        if ($this->shouldPersistPayload) {
+            $eventRecord->setEventPayload($domainEvent->getEventPayload());
+        }
+
         return $eventRecord;
     }
 

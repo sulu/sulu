@@ -96,7 +96,28 @@ class EventRecordRepositoryTest extends SuluTestCase
         static::assertCount(0, $entityRepository->findAll());
 
         $this->repository->addAndCommit($eventRecord);
-        static::assertCount(1, $entityRepository->findAll());
+        $eventRecords = $entityRepository->findAll();
+        static::assertCount(1, $eventRecords);
+        static::assertNull($eventRecords[0]->getEventPayload());
+
+        $this->repository->addAndCommit($eventRecord);
+        static::assertCount(2, $entityRepository->findAll());
+    }
+
+    public function testAddAndCommitWithPayload(): void
+    {
+        static::bootKernel(['environment' => 'with_payload']);
+        $this->setUp();
+
+        $entityRepository = $this->entityManager->getRepository(EventRecordInterface::class);
+
+        $eventRecord = $this->repository->createForDomainEvent($this->domainEvent->reveal());
+        static::assertCount(0, $entityRepository->findAll());
+
+        $this->repository->addAndCommit($eventRecord);
+        $eventRecords = $entityRepository->findAll();
+        static::assertCount(1, $eventRecords);
+        static::assertSame(['name' => 'name-123', 'description' => 'description-123'], $eventRecords[0]->getEventPayload());
 
         $this->repository->addAndCommit($eventRecord);
         static::assertCount(2, $entityRepository->findAll());
