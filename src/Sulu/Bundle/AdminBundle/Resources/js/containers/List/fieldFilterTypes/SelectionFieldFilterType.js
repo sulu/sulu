@@ -3,6 +3,7 @@ import React from 'react';
 import type {ElementRef} from 'react';
 import {action, autorun, computed, observable, toJS, untracked, when} from 'mobx';
 import equals from 'fast-deep-equal';
+import userStore from '../../../stores/userStore';
 import MultiSelectionStore from '../../../stores/MultiSelectionStore';
 import MultiAutoComplete from '../../MultiAutoComplete';
 import ResourceCheckboxGroup from '../../ResourceCheckboxGroup';
@@ -30,7 +31,11 @@ class SelectionFieldFilterType extends AbstractFieldFilterType<?Array<string | n
     ) {
         super(onChange, parameters, value);
 
-        this.selectionStore = new MultiSelectionStore(this.resourceKey, []);
+        this.selectionStore = new MultiSelectionStore(
+            this.resourceKey,
+            [],
+            observable.box(userStore.contentLocale)
+        );
 
         this.selectionStoreDisposer = autorun(() => {
             const {onChange, selectionStore} = this;

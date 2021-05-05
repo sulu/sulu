@@ -2,8 +2,10 @@
 import {extendObservable as mockExtendObservable} from 'mobx';
 import {shallow} from 'enzyme';
 import SelectionFieldFilterType from '../../fieldFilterTypes/SelectionFieldFilterType';
+import MultiSelectionStore from '../../../../stores/MultiSelectionStore';
+import userStore from '../../../../stores/userStore';
 
-jest.mock('../../../../stores/MultiSelectionStore', () => function() {
+jest.mock('../../../../stores/MultiSelectionStore', () => jest.fn(function() {
     this.loadItems = jest.fn();
     this.getById = jest.fn();
 
@@ -12,7 +14,9 @@ jest.mock('../../../../stores/MultiSelectionStore', () => function() {
         ids: [],
         items: [],
     });
-});
+}));
+
+jest.mock('../../../../stores/userStore', () => ({}));
 
 test.each([
     [undefined, 'parameters'],
@@ -23,17 +27,25 @@ test.each([
 });
 
 test('Pass correct props to MultiAutoComplete', () => {
+    // $FlowFixMe
+    userStore.contentLocale = 'ru';
+
     const selectionFieldFilterType = new SelectionFieldFilterType(
         jest.fn(),
         {displayProperty: 'name', resourceKey: 'accounts'},
         undefined
     );
 
+    expect(MultiSelectionStore).toBeCalledWith('accounts', [], expect.anything());
+    // $FlowFixMe
+    expect(MultiSelectionStore.mock.calls[0][2].get()).toEqual('ru');
+
     const selectionFieldFilterTypeForm = shallow(selectionFieldFilterType.getFormNode());
 
     expect(selectionFieldFilterTypeForm.find('MultiAutoComplete').props()).toEqual(expect.objectContaining({
         displayProperty: 'name',
         searchProperties: ['name'],
+        selectionStore: selectionFieldFilterType.selectionStore,
     }));
 });
 
