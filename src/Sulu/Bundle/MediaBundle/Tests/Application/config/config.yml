@@ -17,12 +17,6 @@ framework:
     assets: ~
     router: { resource: '%kernel.project_dir%/config/routing_admin.yml' }
 
-# Doctrine Configuration
-doctrine:
-    orm:
-        resolve_target_entities:
-            Sulu\Bundle\MediaBundle\Entity\CollectionInterface: Sulu\Bundle\MediaBundle\Entity\Collection
-
 services:
     sulu_document_manager_test.node_manager:
         alias: sulu_document_manager.node_manager

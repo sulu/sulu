@@ -15,6 +15,8 @@ use Sulu\Bundle\MediaBundle\DependencyInjection\FormatCacheClearerCompilerPass;
 use Sulu\Bundle\MediaBundle\DependencyInjection\ImageFormatCompilerPass;
 use Sulu\Bundle\MediaBundle\DependencyInjection\ImageTransformationCompilerPass;
 use Sulu\Bundle\MediaBundle\DependencyInjection\S3ClientCompilerPass;
+use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -27,7 +29,8 @@ class SuluMediaBundle extends Bundle
     {
         $this->buildPersistence(
             [
-                'Sulu\Bundle\MediaBundle\Entity\MediaInterface' => 'sulu.model.media.class',
+                MediaInterface::class => 'sulu.model.media.class',
+                CollectionInterface::class => 'sulu.model.collection.class',
             ],
             $container
         );
