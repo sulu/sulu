@@ -1,6 +1,6 @@
 // @flow
 import {action, autorun, computed, get, observable, when} from 'mobx';
-import type {IObservableValue} from 'mobx';
+import type {IObservableValue} from 'mobx/lib/mobx';
 import jsonpointer from 'json-pointer';
 import {createAjv} from '../../../utils/Ajv';
 import ResourceStore from '../../../stores/ResourceStore';

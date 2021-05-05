@@ -60,7 +60,7 @@ class SortableBlockList<T: string, U: {type: T}> extends React.Component<Props<T
         }
     };
 
-    handleTypeChange = (type: T, index: number) => {
+    handleTypeChange: (type: T, index: number) => void = (type, index) => {
         const {onTypeChange} = this.props;
 
         if (onTypeChange) {

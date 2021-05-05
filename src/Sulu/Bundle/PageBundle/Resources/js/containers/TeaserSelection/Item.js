@@ -1,7 +1,7 @@
 // @flow
 import React, {Fragment} from 'react';
 import {action, observable} from 'mobx';
-import type {IObservableValue} from 'mobx';
+import type {IObservableValue} from 'mobx/lib/mobx';
 import {observer} from 'mobx-react';
 import textVersion from 'textversionjs';
 import {MimeTypeIndicator} from 'sulu-media-bundle/components';

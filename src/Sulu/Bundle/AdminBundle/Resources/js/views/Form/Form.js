@@ -1,7 +1,7 @@
 // @flow
 import type {ElementRef} from 'react';
 import React from 'react';
-import type {IObservableValue} from 'mobx';
+import type {IObservableValue} from 'mobx/lib/mobx';
 import {action, computed, toJS, isObservableArray, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import equals from 'fast-deep-equal';

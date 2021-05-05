@@ -1,7 +1,7 @@
 // @flow
 import React, {Fragment} from 'react';
 import {action, reaction, observable, toJS} from 'mobx';
-import type {IObservableValue} from 'mobx';
+import type {IObservableValue} from 'mobx/lib/mobx';
 import {observer} from 'mobx-react';
 import jexl from 'jexl';
 import SingleItemSelection from '../../components/SingleItemSelection';

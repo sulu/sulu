@@ -2,7 +2,7 @@
 import {FormatValidator} from 'ajv';
 import idnEmailValidator from './idnEmailValidator';
 
-const formats: {[string]: FormatValidator} = {
+const formats: {[string]: typeof FormatValidator} = {
     'idn-email': idnEmailValidator,
 };
 

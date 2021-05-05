@@ -62,14 +62,14 @@ class MultiItemSelection<T, U: string | number, V: string | number, W> extends R
 
     static Item = Item;
 
-    handleItemEdit = (itemId: T) => {
+    handleItemEdit: (itemId: T) => void = (itemId) => {
         const {onItemEdit} = this.props;
         if (onItemEdit) {
             onItemEdit(itemId);
         }
     };
 
-    handleItemRemove = (itemId: T) => {
+    handleItemRemove: (itemId: T) => void = (itemId) => {
         const {onItemRemove} = this.props;
         if (onItemRemove) {
             onItemRemove(itemId);

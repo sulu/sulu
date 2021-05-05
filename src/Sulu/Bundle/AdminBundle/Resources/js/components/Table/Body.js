@@ -48,21 +48,21 @@ export default class Body<T: number | string> extends React.PureComponent<Props<
         ));
     };
 
-    handleRowSelectionChange = (rowId: T, selected?: boolean) => {
+    handleRowSelectionChange: (rowId: T, selected?: boolean) => void = (rowId, selected) => {
         const {onRowSelectionChange} = this.props;
         if (onRowSelectionChange) {
             onRowSelectionChange(rowId, selected);
         }
     };
 
-    handleRowExpand = (rowId: T) => {
+    handleRowExpand: (rowId: T) => void = (rowId) => {
         const {onRowExpand} = this.props;
         if (onRowExpand) {
             onRowExpand(rowId);
         }
     };
 
-    handleRowCollapse = (rowId: T) => {
+    handleRowCollapse: (rowId: T) => void = (rowId) => {
         const {onRowCollapse} = this.props;
         if (onRowCollapse) {
             onRowCollapse(rowId);

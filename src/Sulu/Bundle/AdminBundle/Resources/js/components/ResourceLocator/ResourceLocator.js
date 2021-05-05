@@ -2,7 +2,7 @@
 import React from 'react';
 import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
-import type {IObservableValue} from 'mobx';
+import type {IObservableValue} from 'mobx/lib/mobx';
 import Input from '../Input';
 import resourceLocatorStyles from './resourceLocator.scss';
 

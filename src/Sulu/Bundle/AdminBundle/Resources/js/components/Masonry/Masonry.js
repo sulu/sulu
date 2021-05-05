@@ -17,7 +17,7 @@ type Props = {
 export default class Masonry extends React.PureComponent<Props> {
     masonryRef: ?ElementRef<'div'>;
 
-    masonry: MasonryLayout;
+    masonry: typeof MasonryLayout;
 
     layoutedChildNodes: HTMLElement[];
 

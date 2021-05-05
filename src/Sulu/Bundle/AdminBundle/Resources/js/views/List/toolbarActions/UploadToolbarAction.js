@@ -19,7 +19,7 @@ const defaultOptions = {
 };
 
 export default class UploadToolbarAction extends AbstractListToolbarAction {
-    @observable dropzoneRef: ?DropzoneRef;
+    @observable dropzoneRef: ?(typeof DropzoneRef);
     @observable errors: string[] = [];
 
     constructor(
@@ -113,7 +113,7 @@ export default class UploadToolbarAction extends AbstractListToolbarAction {
         super(listStore, list, router, locales, resourceStore, options);
     }
 
-    @action setDropzoneRef = (ref: ?DropzoneRef) => {
+    @action setDropzoneRef = (ref: ?(typeof DropzoneRef)) => {
         this.dropzoneRef = ref;
     };
 
@@ -144,7 +144,7 @@ export default class UploadToolbarAction extends AbstractListToolbarAction {
         this.list.errors = [...this.list.errors, error];
     };
 
-    handleError = (fileRejections: FileRejection[]) => {
+    handleError = (fileRejections: (typeof FileRejection)[]) => {
         for (const fileRejection of fileRejections) {
             for (const {code} of fileRejection.errors) {
                 let error;

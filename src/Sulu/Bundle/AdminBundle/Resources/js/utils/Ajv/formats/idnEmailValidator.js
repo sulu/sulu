@@ -2,7 +2,7 @@
 import IsEmail from 'isemail';
 import {FormatValidator} from 'ajv';
 
-const idnEmailValidator: FormatValidator = (data: string): boolean => {
+const idnEmailValidator: typeof FormatValidator = (data: string): boolean => {
     return IsEmail.validate(data);
 };
 

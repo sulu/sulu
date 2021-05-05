@@ -2,7 +2,7 @@
 import {action, computed, observable} from 'mobx';
 import {Requester} from 'sulu-admin-bundle/services';
 import {buildQueryString, transformDateForUrl} from 'sulu-admin-bundle/utils';
-import type {IObservableValue} from 'mobx';
+import type {IObservableValue} from 'mobx/lib/mobx';
 import type {PreviewRouteName} from './../types';
 
 const generateRoute = (name: PreviewRouteName, options: Object): string => {

@@ -3,7 +3,7 @@ import React from 'react';
 import type {ElementRef, Node} from 'react';
 import {observer, Observer} from 'mobx-react';
 import {action, observable} from 'mobx';
-import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
+import type {IObservableValue} from 'mobx/lib/mobx';
 import Dropzone from 'react-dropzone';
 import MediaUploadStore from '../../stores/MediaUploadStore';
 import MediaItem from './MediaItem';
@@ -23,11 +23,11 @@ type Props = {
 
 @observer
 class MultiMediaDropzone extends React.Component<Props> {
-    dropzoneRef: ElementRef<Dropzone>;
+    dropzoneRef: ElementRef<typeof Dropzone>;
 
     @observable mediaUploadStores: Array<MediaUploadStore> = [];
 
-    setDropzoneRef = (ref: Dropzone) => {
+    setDropzoneRef = (ref: typeof Dropzone) => {
         this.dropzoneRef = ref;
     };
 

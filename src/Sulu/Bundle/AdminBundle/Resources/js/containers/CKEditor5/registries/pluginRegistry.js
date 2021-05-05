@@ -2,7 +2,7 @@
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
 
 class PluginRegistry {
-    plugins: Array<Class<Plugin>>;
+    plugins: Array<Class<typeof Plugin>>;
 
     constructor() {
         this.clear();
@@ -12,7 +12,7 @@ class PluginRegistry {
         this.plugins = [];
     }
 
-    add(plugin: Class<Plugin>) {
+    add(plugin: Class<typeof Plugin>) {
         this.plugins.push(plugin);
     }
 }

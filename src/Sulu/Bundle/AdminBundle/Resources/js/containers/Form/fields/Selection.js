@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {computed, observable, intercept, toJS, reaction, isArrayLike} from 'mobx';
-import type {IObservableValue} from 'mobx';
+import type {IObservableValue} from 'mobx/lib/mobx';
 import equals from 'fast-deep-equal';
 import {observer} from 'mobx-react';
 import jsonpointer from 'json-pointer';

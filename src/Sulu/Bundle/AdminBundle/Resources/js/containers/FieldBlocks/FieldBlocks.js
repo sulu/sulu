@@ -412,7 +412,11 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
 
         const {blockSettingsFormStore, openedBlockSettingsIndex} = this;
 
-        if (!blockSettingsFormStore || openedBlockSettingsIndex === undefined || !oldValues) {
+        if (!blockSettingsFormStore
+            || openedBlockSettingsIndex === undefined
+            || openedBlockSettingsIndex === null
+            || !oldValues)
+        {
             return;
         }
 

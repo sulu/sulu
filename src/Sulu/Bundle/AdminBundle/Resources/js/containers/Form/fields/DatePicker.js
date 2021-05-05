@@ -14,7 +14,7 @@ function createStringValue(value: ?Date, format: string) {
     return moment(value).format(format);
 }
 
-function getValue(value: ?string, format: string): ?moment {
+function getValue(value: ?string, format: string): ?Date {
     if (!value) {
         return undefined;
     }

@@ -144,7 +144,7 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         }
     };
 
-    @action handleTypeChange = (type: T, index: number) => {
+    @action handleTypeChange: (type: T, index: number) => void = (type, index) => {
         const {onChange, value} = this.props;
         const newValue = toJS(value);
         newValue[index].type = type;

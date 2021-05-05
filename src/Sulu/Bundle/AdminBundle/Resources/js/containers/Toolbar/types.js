@@ -1,6 +1,6 @@
 // @flow
 import type {Node} from 'react';
-import type {IObservableValue} from 'mobx';
+import type {IObservableValue} from 'mobx/lib/mobx';
 import type {Button, Dropdown, Select, Toggler} from '../../components/Toolbar/types';
 
 export type {Button, Dropdown, Select, Toggler};

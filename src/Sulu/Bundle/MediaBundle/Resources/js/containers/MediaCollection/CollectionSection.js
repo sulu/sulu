@@ -1,7 +1,7 @@
 //@flow
 import React from 'react';
 import {action, computed, observable, get} from 'mobx';
-import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
+import type {IObservableValue} from 'mobx/lib/mobx';
 import {observer} from 'mobx-react';
 import {List, ListStore, SingleListOverlay} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';

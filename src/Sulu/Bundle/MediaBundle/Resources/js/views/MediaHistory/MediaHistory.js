@@ -1,7 +1,7 @@
 // @flow
 import React, {Fragment} from 'react';
 import {action, computed, observable} from 'mobx';
-import type {IObservableValue} from 'mobx';
+import type {IObservableValue} from 'mobx/lib/mobx';
 import {observer} from 'mobx-react';
 import {Dialog, Loader, Table} from 'sulu-admin-bundle/components';
 import {withToolbar} from 'sulu-admin-bundle/containers';

@@ -1,7 +1,7 @@
 // @flow
 import React, {Fragment} from 'react';
 import {action, computed, observable} from 'mobx';
-import type {IObservableValue} from 'mobx';
+import type {IObservableValue} from 'mobx/lib/mobx';
 import {observer} from 'mobx-react';
 import {MultiItemSelection} from 'sulu-admin-bundle/components';
 import {MultiListOverlay} from 'sulu-admin-bundle/containers';

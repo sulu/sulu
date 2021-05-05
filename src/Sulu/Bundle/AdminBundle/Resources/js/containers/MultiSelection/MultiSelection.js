@@ -1,7 +1,7 @@
 // @flow
 import React, {Fragment} from 'react';
 import {action, comparer, observable, reaction, toJS} from 'mobx';
-import type {IObservableValue} from 'mobx';
+import type {IObservableValue} from 'mobx/lib/mobx';
 import {observer} from 'mobx-react';
 import equals from 'fast-deep-equal';
 import jexl from 'jexl';

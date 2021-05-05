@@ -55,7 +55,7 @@ class Field<T: string | number> extends React.Component<Props<T>> {
         this.open = false;
     };
 
-    @action handleTypeChange = (type: T) => {
+    @action handleTypeChange: (type: T) => void = (type) => {
         const {onTypeChange} = this.props;
 
         if (!onTypeChange) {

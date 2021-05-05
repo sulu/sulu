@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import type {ElementRef} from 'react';
-import type {IObservableValue} from 'mobx';
+import type {IObservableValue} from 'mobx/lib/mobx';
 import log from 'loglevel';
 import AlignmentPlugin from '@ckeditor/ckeditor5-alignment/src/alignment';
 import BoldPlugin from '@ckeditor/ckeditor5-basic-styles/src/bold';

@@ -83,11 +83,9 @@ class DatePicker extends React.Component<Props> {
 
         // can be removed when is fixed the following is fixed:
         // https://github.com/arqex/react-datetime/pull/741
-        if (
-            (!this.value && date) ||
-            (this.value && !date) ||
-            !moment(this.value, this.getFormat()).isSame(moment(date, this.getFormat()), 'day')
-        ) {
+        const currentValue = typeof this.value === 'string' ? moment(this.value, this.getFormat()) : moment(this.value);
+
+        if ((!this.value && date) || (this.value && !date) || !currentValue.isSame(moment(date), 'day')) {
             this.setOpen(false);
         }
     };

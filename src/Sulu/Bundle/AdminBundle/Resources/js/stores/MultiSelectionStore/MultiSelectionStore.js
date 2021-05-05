@@ -1,6 +1,6 @@
 // @flow
 import {action, computed, observable} from 'mobx';
-import type {IObservableValue} from 'mobx';
+import type {IObservableValue} from 'mobx/lib/mobx';
 import {arrayMove} from '../../utils';
 import {ResourceRequester} from '../../services';
 
@@ -36,7 +36,7 @@ export default class MultiSelectionStore<T = string | number, U: {id: T} = Objec
         this.items = items;
     }
 
-    getById(id: T) {
+    getById(id: T): ?U {
         // TODO use metadata instead of hardcoded id
         return this.items.find((item) => item.id === id);
     }

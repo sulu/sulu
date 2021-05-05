@@ -39,15 +39,11 @@ export default class SingleSelect<T: string | number> extends React.PureComponen
         return displayValue;
     }
 
-    // TODO: Remove explicit type annotation when flow bug is fixed
-    // https://github.com/facebook/flow/issues/6978
     isOptionSelected: (option: Element<Class<SingleSelect.Option<T>>>) => boolean = (option) => {
         return option.props.value === this.props.value && !option.props.disabled;
     };
 
-    // TODO: Remove explicit type annotation when flow bug is fixed
-    // https://github.com/facebook/flow/issues/6978
-    handleSelect: (value: T) => void = (value: T) => {
+    handleSelect: (value: T) => void = (value) => {
         if (this.props.onChange) {
             this.props.onChange(value);
         }

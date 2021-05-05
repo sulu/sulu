@@ -1,5 +1,5 @@
 // @flow
-import type {IObservableValue} from 'mobx';
+import type {IObservableValue} from 'mobx/lib/mobx';
 
 export type InternalLinkTypeOverlayProps = {|
     id: ?string | number,
