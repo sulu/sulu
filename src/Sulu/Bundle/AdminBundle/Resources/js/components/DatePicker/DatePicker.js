@@ -86,7 +86,7 @@ class DatePicker extends React.Component<Props> {
         if (
             (!this.value && date) ||
             (this.value && !date) ||
-            !moment(this.value).isSame(date, 'day')
+            !moment(this.value, this.getFormat()).isSame(moment(date, this.getFormat()), 'day')
         ) {
             this.setOpen(false);
         }
@@ -189,7 +189,6 @@ class DatePicker extends React.Component<Props> {
         const {className, disabled, options, placeholder, valid} = this.props;
 
         const fieldOptions = {
-            closeOnSelect: true,
             ...options,
             dateFormat: this.getDateFormat() || false,
             timeFormat: this.getTimeFormat() || false,

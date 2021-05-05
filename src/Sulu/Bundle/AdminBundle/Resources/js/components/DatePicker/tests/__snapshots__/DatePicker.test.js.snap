@@ -106,43 +106,57 @@ exports[`DatePicker should render 2`] = `
           <tr>
             <td
               class="rdtDay rdtOld"
+              data-month="2"
               data-value="26"
+              data-year="2017"
             >
               26
             </td>
             <td
               class="rdtDay rdtOld"
+              data-month="2"
               data-value="27"
+              data-year="2017"
             >
               27
             </td>
             <td
               class="rdtDay rdtOld"
+              data-month="2"
               data-value="28"
+              data-year="2017"
             >
               28
             </td>
             <td
               class="rdtDay rdtOld"
+              data-month="2"
               data-value="29"
+              data-year="2017"
             >
               29
             </td>
             <td
               class="rdtDay rdtOld"
+              data-month="2"
               data-value="30"
+              data-year="2017"
             >
               30
             </td>
             <td
               class="rdtDay rdtOld"
+              data-month="2"
               data-value="31"
+              data-year="2017"
             >
               31
             </td>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="1"
+              data-year="2017"
             >
               1
             </td>
@@ -150,43 +164,57 @@ exports[`DatePicker should render 2`] = `
           <tr>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="2"
+              data-year="2017"
             >
               2
             </td>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="3"
+              data-year="2017"
             >
               3
             </td>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="4"
+              data-year="2017"
             >
               4
             </td>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="5"
+              data-year="2017"
             >
               5
             </td>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="6"
+              data-year="2017"
             >
               6
             </td>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="7"
+              data-year="2017"
             >
               7
             </td>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="8"
+              data-year="2017"
             >
               8
             </td>
@@ -194,43 +222,57 @@ exports[`DatePicker should render 2`] = `
           <tr>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="9"
+              data-year="2017"
             >
               9
             </td>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="10"
+              data-year="2017"
             >
               10
             </td>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="11"
+              data-year="2017"
             >
               11
             </td>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="12"
+              data-year="2017"
             >
               12
             </td>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="13"
+              data-year="2017"
             >
               13
             </td>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="14"
+              data-year="2017"
             >
               14
             </td>
             <td
               class="rdtDay rdtToday"
+              data-month="3"
               data-value="15"
+              data-year="2017"
             >
               15
             </td>
@@ -238,43 +280,57 @@ exports[`DatePicker should render 2`] = `
           <tr>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="16"
+              data-year="2017"
             >
               16
             </td>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="17"
+              data-year="2017"
             >
               17
             </td>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="18"
+              data-year="2017"
             >
               18
             </td>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="19"
+              data-year="2017"
             >
               19
             </td>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="20"
+              data-year="2017"
             >
               20
             </td>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="21"
+              data-year="2017"
             >
               21
             </td>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="22"
+              data-year="2017"
             >
               22
             </td>
@@ -282,43 +338,57 @@ exports[`DatePicker should render 2`] = `
           <tr>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="23"
+              data-year="2017"
             >
               23
             </td>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="24"
+              data-year="2017"
             >
               24
             </td>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="25"
+              data-year="2017"
             >
               25
             </td>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="26"
+              data-year="2017"
             >
               26
             </td>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="27"
+              data-year="2017"
             >
               27
             </td>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="28"
+              data-year="2017"
             >
               28
             </td>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="29"
+              data-year="2017"
             >
               29
             </td>
@@ -326,43 +396,57 @@ exports[`DatePicker should render 2`] = `
           <tr>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="30"
+              data-year="2017"
             >
               30
             </td>
             <td
               class="rdtDay rdtNew"
+              data-month="4"
               data-value="1"
+              data-year="2017"
             >
               1
             </td>
             <td
               class="rdtDay rdtNew"
+              data-month="4"
               data-value="2"
+              data-year="2017"
             >
               2
             </td>
             <td
               class="rdtDay rdtNew"
+              data-month="4"
               data-value="3"
+              data-year="2017"
             >
               3
             </td>
             <td
               class="rdtDay rdtNew"
+              data-month="4"
               data-value="4"
+              data-year="2017"
             >
               4
             </td>
             <td
               class="rdtDay rdtNew"
+              data-month="4"
               data-value="5"
+              data-year="2017"
             >
               5
             </td>
             <td
               class="rdtDay rdtNew"
+              data-month="4"
               data-value="6"
+              data-year="2017"
             >
               6
             </td>
@@ -530,43 +614,57 @@ exports[`DatePicker should render date picker with time picker 2`] = `
           <tr>
             <td
               class="rdtDay rdtOld"
+              data-month="2"
               data-value="26"
+              data-year="2017"
             >
               26
             </td>
             <td
               class="rdtDay rdtOld"
+              data-month="2"
               data-value="27"
+              data-year="2017"
             >
               27
             </td>
             <td
               class="rdtDay rdtOld"
+              data-month="2"
               data-value="28"
+              data-year="2017"
             >
               28
             </td>
             <td
               class="rdtDay rdtOld"
+              data-month="2"
               data-value="29"
+              data-year="2017"
             >
               29
             </td>
             <td
               class="rdtDay rdtOld"
+              data-month="2"
               data-value="30"
+              data-year="2017"
             >
               30
             </td>
             <td
               class="rdtDay rdtOld"
+              data-month="2"
               data-value="31"
+              data-year="2017"
             >
               31
             </td>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="1"
+              data-year="2017"
             >
               1
             </td>
@@ -574,43 +672,57 @@ exports[`DatePicker should render date picker with time picker 2`] = `
           <tr>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="2"
+              data-year="2017"
             >
               2
             </td>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="3"
+              data-year="2017"
             >
               3
             </td>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="4"
+              data-year="2017"
             >
               4
             </td>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="5"
+              data-year="2017"
             >
               5
             </td>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="6"
+              data-year="2017"
             >
               6
             </td>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="7"
+              data-year="2017"
             >
               7
             </td>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="8"
+              data-year="2017"
             >
               8
             </td>
@@ -618,43 +730,57 @@ exports[`DatePicker should render date picker with time picker 2`] = `
           <tr>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="9"
+              data-year="2017"
             >
               9
             </td>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="10"
+              data-year="2017"
             >
               10
             </td>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="11"
+              data-year="2017"
             >
               11
             </td>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="12"
+              data-year="2017"
             >
               12
             </td>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="13"
+              data-year="2017"
             >
               13
             </td>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="14"
+              data-year="2017"
             >
               14
             </td>
             <td
               class="rdtDay rdtToday"
+              data-month="3"
               data-value="15"
+              data-year="2017"
             >
               15
             </td>
@@ -662,43 +788,57 @@ exports[`DatePicker should render date picker with time picker 2`] = `
           <tr>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="16"
+              data-year="2017"
             >
               16
             </td>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="17"
+              data-year="2017"
             >
               17
             </td>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="18"
+              data-year="2017"
             >
               18
             </td>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="19"
+              data-year="2017"
             >
               19
             </td>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="20"
+              data-year="2017"
             >
               20
             </td>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="21"
+              data-year="2017"
             >
               21
             </td>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="22"
+              data-year="2017"
             >
               22
             </td>
@@ -706,43 +846,57 @@ exports[`DatePicker should render date picker with time picker 2`] = `
           <tr>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="23"
+              data-year="2017"
             >
               23
             </td>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="24"
+              data-year="2017"
             >
               24
             </td>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="25"
+              data-year="2017"
             >
               25
             </td>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="26"
+              data-year="2017"
             >
               26
             </td>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="27"
+              data-year="2017"
             >
               27
             </td>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="28"
+              data-year="2017"
             >
               28
             </td>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="29"
+              data-year="2017"
             >
               29
             </td>
@@ -750,43 +904,57 @@ exports[`DatePicker should render date picker with time picker 2`] = `
           <tr>
             <td
               class="rdtDay"
+              data-month="3"
               data-value="30"
+              data-year="2017"
             >
               30
             </td>
             <td
               class="rdtDay rdtNew"
+              data-month="4"
               data-value="1"
+              data-year="2017"
             >
               1
             </td>
             <td
               class="rdtDay rdtNew"
+              data-month="4"
               data-value="2"
+              data-year="2017"
             >
               2
             </td>
             <td
               class="rdtDay rdtNew"
+              data-month="4"
               data-value="3"
+              data-year="2017"
             >
               3
             </td>
             <td
               class="rdtDay rdtNew"
+              data-month="4"
               data-value="4"
+              data-year="2017"
             >
               4
             </td>
             <td
               class="rdtDay rdtNew"
+              data-month="4"
               data-value="5"
+              data-year="2017"
             >
               5
             </td>
             <td
               class="rdtDay rdtNew"
+              data-month="4"
               data-value="6"
+              data-year="2017"
             >
               6
             </td>
