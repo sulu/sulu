@@ -13,8 +13,8 @@ namespace Sulu\Bundle\SnippetBundle\Snippet;
 
 use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
-use Sulu\Bundle\SnippetBundle\Domain\Event\DefaultSnippetModifiedEvent;
-use Sulu\Bundle\SnippetBundle\Domain\Event\DefaultSnippetRemovedEvent;
+use Sulu\Bundle\SnippetBundle\Domain\Event\WebspaceDefaultSnippetModifiedEvent;
+use Sulu\Bundle\SnippetBundle\Domain\Event\WebspaceDefaultSnippetRemovedEvent;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
@@ -91,7 +91,7 @@ class DefaultSnippetManager implements DefaultSnippetManagerInterface
         );
 
         $this->domainEventCollector->collect(
-            new DefaultSnippetModifiedEvent($webspaceKey, $type, $document)
+            new WebspaceDefaultSnippetModifiedEvent($webspaceKey, $type, $document)
         );
 
         $this->domainEventCollector->dispatch();
@@ -104,7 +104,7 @@ class DefaultSnippetManager implements DefaultSnippetManagerInterface
         $this->settingsManager->remove($webspaceKey, 'snippets-' . $type);
 
         $this->domainEventCollector->collect(
-            new DefaultSnippetRemovedEvent($webspaceKey, $type)
+            new WebspaceDefaultSnippetRemovedEvent($webspaceKey, $type)
         );
 
         $this->domainEventCollector->dispatch();

@@ -16,8 +16,8 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
-use Sulu\Bundle\SnippetBundle\Domain\Event\DefaultSnippetModifiedEvent;
-use Sulu\Bundle\SnippetBundle\Domain\Event\DefaultSnippetRemovedEvent;
+use Sulu\Bundle\SnippetBundle\Domain\Event\WebspaceDefaultSnippetModifiedEvent;
+use Sulu\Bundle\SnippetBundle\Domain\Event\WebspaceDefaultSnippetRemovedEvent;
 use Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManager;
 use Sulu\Bundle\SnippetBundle\Snippet\SnippetNotFoundException;
 use Sulu\Bundle\SnippetBundle\Snippet\WrongSnippetTypeException;
@@ -124,7 +124,7 @@ class DefaultSnippetManagerTest extends TestCase
         $settingsManager->save($webspaceKey, 'snippets-' . $defaultType, Argument::type(NodeInterface::class))
             ->shouldBeCalledTimes($exists && $sameType ? 1 : 0);
 
-        $domainEventCollector->collect(Argument::type(DefaultSnippetModifiedEvent::class))
+        $domainEventCollector->collect(Argument::type(WebspaceDefaultSnippetModifiedEvent::class))
             ->shouldBeCalledTimes($exists && $sameType ? 1 : 0);
         $domainEventCollector->dispatch()
             ->shouldBeCalledTimes($exists && $sameType ? 1 : 0);
@@ -153,7 +153,7 @@ class DefaultSnippetManagerTest extends TestCase
 
         $settingsManager->remove('sulu_io', 'snippets-test')->shouldBeCalledTimes(1);
 
-        $domainEventCollector->collect(Argument::type(DefaultSnippetRemovedEvent::class))->shouldBeCalled();
+        $domainEventCollector->collect(Argument::type(WebspaceDefaultSnippetRemovedEvent::class))->shouldBeCalled();
         $domainEventCollector->dispatch()->shouldBeCalled();
 
         $manager->remove('sulu_io', 'test');

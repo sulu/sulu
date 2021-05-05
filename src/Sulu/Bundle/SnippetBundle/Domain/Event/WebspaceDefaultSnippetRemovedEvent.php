@@ -13,9 +13,8 @@ namespace Sulu\Bundle\SnippetBundle\Domain\Event;
 
 use Sulu\Bundle\EventLogBundle\Domain\Event\DomainEvent;
 use Sulu\Bundle\SnippetBundle\Admin\SnippetAdmin;
-use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 
-class DefaultSnippetModifiedEvent extends DomainEvent
+class WebspaceDefaultSnippetRemovedEvent extends DomainEvent
 {
     /**
      * @var string
@@ -27,21 +26,14 @@ class DefaultSnippetModifiedEvent extends DomainEvent
      */
     private $snippetAreaKey;
 
-    /**
-     * @var SnippetDocument
-     */
-    private $snippet;
-
     public function __construct(
         string $webspaceKey,
-        string $snippetAreaKey,
-        SnippetDocument $snippet
+        string $snippetAreaKey
     ) {
         parent::__construct();
 
         $this->webspaceKey = $webspaceKey;
         $this->snippetAreaKey = $snippetAreaKey;
-        $this->snippet = $snippet;
     }
 
     public function getSnippetAreaKey(): string
@@ -49,23 +41,15 @@ class DefaultSnippetModifiedEvent extends DomainEvent
         return $this->snippetAreaKey;
     }
 
-    public function getSnippet(): SnippetDocument
-    {
-        return $this->snippet;
-    }
-
     public function getEventType(): string
     {
-        return 'default_snippet_modified';
+        return 'default_snippet_removed';
     }
 
     public function getEventContext(): array
     {
         return [
             'snippetAreaKey' => $this->snippetAreaKey,
-            'snippetId' => $this->snippet->getUuid(),
-            'snippetTitle' => $this->snippet->getTitle(),
-            'snippetTitleLocale' => $this->snippet->getLocale(),
         ];
     }
 
