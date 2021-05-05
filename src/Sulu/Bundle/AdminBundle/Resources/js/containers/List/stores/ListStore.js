@@ -1,6 +1,6 @@
 // @flow
 import {action, autorun, computed, intercept, observable, untracked} from 'mobx';
-import type {IObservableValue, IValueWillChange} from 'mobx';
+import type {IObservableValue, IValueWillChange} from 'mobx/lib/mobx';
 import equals from 'fast-deep-equal';
 import log from 'loglevel';
 import ResourceRequester, {RequestPromise} from '../../../services/ResourceRequester';

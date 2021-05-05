@@ -1,4 +1,5 @@
 [options]
+types_first=false
 esproposal.decorators=ignore
 esproposal.optional_chaining=enable
 module.name_mapper='.+\.s?css' -> 'empty/object'

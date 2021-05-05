@@ -3,7 +3,7 @@ import React, {Fragment} from 'react';
 import {observer} from 'mobx-react';
 import {action, observable, toJS} from 'mobx';
 import type {ElementRef} from 'react';
-import type {IObservableValue} from 'mobx';
+import type {IObservableValue} from 'mobx/lib/mobx';
 import type {ViewProps} from '../../containers/ViewRenderer';
 import {translate} from '../../utils/Translator';
 import {ResourceFormStore, resourceFormStoreFactory} from '../../containers/Form';

@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {action, computed, intercept, observable} from 'mobx';
-import type {IObservableValue} from 'mobx';
+import type {IObservableValue} from 'mobx/lib/mobx';
 import {observer} from 'mobx-react';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
 import type {AttributeMap} from 'sulu-admin-bundle/services';

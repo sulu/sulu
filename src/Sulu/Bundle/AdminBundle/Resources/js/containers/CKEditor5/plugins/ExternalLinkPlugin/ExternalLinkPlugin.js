@@ -33,7 +33,7 @@ export default class ExternalLinkPlugin extends Plugin {
     @observable target: ?string = DEFAULT_TARGET;
     @observable title: ?string;
     @observable url: ?string;
-    balloon: ContextualBalloon;
+    balloon: typeof ContextualBalloon;
 
     init() {
         this.externalLinkOverlayElement = document.createElement('div');

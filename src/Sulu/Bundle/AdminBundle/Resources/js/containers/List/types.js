@@ -1,6 +1,6 @@
 // @flow
 import type {Node} from 'react';
-import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
+import type {IObservableValue} from 'mobx/lib/mobx';
 import {RequestPromise} from '../../services/Requester';
 
 export type DataItem = {

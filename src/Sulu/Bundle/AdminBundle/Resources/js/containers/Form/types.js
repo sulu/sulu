@@ -1,5 +1,5 @@
 // @flow
-import type {IObservableValue} from 'mobx';
+import type {IObservableValue} from 'mobx/lib/mobx';
 import Router from '../../services/Router';
 import type {ColSpan} from '../../components/Grid';
 import FormInspector from './FormInspector';

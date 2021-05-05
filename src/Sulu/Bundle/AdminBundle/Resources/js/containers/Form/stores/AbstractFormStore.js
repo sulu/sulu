@@ -1,6 +1,6 @@
 // @flow
 import {action, computed, isObservableArray, observable, set, toJS} from 'mobx';
-import type {IObservableValue} from 'mobx';
+import type {IObservableValue} from 'mobx/lib/mobx';
 import jsonpointer from 'json-pointer';
 import log from 'loglevel';
 import type {Schema, SchemaEntry} from '../types';

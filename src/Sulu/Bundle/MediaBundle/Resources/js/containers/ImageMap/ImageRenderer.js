@@ -2,7 +2,7 @@
 import React from 'react';
 import type {ElementRef} from 'react';
 import {action, observable, toJS, computed} from 'mobx';
-import type {IObservableValue} from 'mobx';
+import type {IObservableValue} from 'mobx/lib/mobx';
 import {observer} from 'mobx-react';
 import debounce from 'debounce';
 import {CircleSelection, RectangleSelection} from 'sulu-admin-bundle/components';

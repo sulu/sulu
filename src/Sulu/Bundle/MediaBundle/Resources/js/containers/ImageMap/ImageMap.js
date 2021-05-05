@@ -1,7 +1,7 @@
 // @flow
 import React, {Fragment} from 'react';
 import {observer} from 'mobx-react';
-import type {IObservableValue} from 'mobx';
+import type {IObservableValue} from 'mobx/lib/mobx';
 import {action, computed, observable, toJS} from 'mobx';
 import classNames from 'classnames';
 import type {Value as ImageValue} from '../SingleMediaSelection/types';

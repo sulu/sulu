@@ -1,6 +1,6 @@
 // @flow
 import {action, computed, observable} from 'mobx';
-import type {IObservableValue} from 'mobx';
+import type {IObservableValue} from 'mobx/lib/mobx';
 import {arrayMove} from '../../utils';
 import {ResourceRequester} from '../../services';
 

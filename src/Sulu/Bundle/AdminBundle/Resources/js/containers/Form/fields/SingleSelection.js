@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {computed, observable, reaction, toJS} from 'mobx';
-import type {IObservableValue} from 'mobx';
+import type {IObservableValue} from 'mobx/lib/mobx';
 import log from 'loglevel';
 import jsonpointer from 'json-pointer';
 import equals from 'fast-deep-equal';

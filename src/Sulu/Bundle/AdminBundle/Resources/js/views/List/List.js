@@ -1,5 +1,5 @@
 // @flow
-import type {IObservableValue} from 'mobx';
+import type {IObservableValue} from 'mobx/lib/mobx';
 import {action, computed, observable, toJS} from 'mobx';
 import {observer} from 'mobx-react';
 import type {ElementRef} from 'react';

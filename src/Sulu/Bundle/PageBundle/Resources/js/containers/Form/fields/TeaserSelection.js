@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {computed, observable} from 'mobx';
-import type {IObservableValue} from 'mobx';
+import type {IObservableValue} from 'mobx/lib/mobx';
 import {observer} from 'mobx-react';
 import jsonpointer from 'json-pointer';
 import type {FieldTypeProps} from 'sulu-admin-bundle/types';

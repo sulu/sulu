@@ -1,6 +1,6 @@
 // @flow
 import {action, intercept, observable} from 'mobx';
-import type {IObservableValue} from 'mobx';
+import type {IObservableValue} from 'mobx/lib/mobx';
 import {observer} from 'mobx-react';
 import React from 'react';
 import {Loader, Icon} from 'sulu-admin-bundle/components';

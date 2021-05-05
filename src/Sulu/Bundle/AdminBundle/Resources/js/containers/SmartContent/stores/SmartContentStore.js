@@ -1,6 +1,6 @@
 // @flow
 import {action, autorun, computed, observable, toJS} from 'mobx';
-import type {IObservableValue} from 'mobx';
+import type {IObservableValue} from 'mobx/lib/mobx';
 import equals from 'fast-deep-equal';
 import Requester from '../../../services/Requester';
 import Config from '../../../services/Config';

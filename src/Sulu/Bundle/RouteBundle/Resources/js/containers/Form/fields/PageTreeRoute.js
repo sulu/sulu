@@ -3,7 +3,7 @@ import React, {Component, Fragment} from 'react';
 import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 import {observer} from 'mobx-react';
 import {action, observable} from 'mobx';
-import type {IObservableValue} from 'mobx';
+import type {IObservableValue} from 'mobx/lib/mobx';
 import {userStore} from 'sulu-admin-bundle/stores';
 import {Grid} from 'sulu-admin-bundle/components';
 import {SingleSelection, ResourceLocator} from 'sulu-admin-bundle/containers';

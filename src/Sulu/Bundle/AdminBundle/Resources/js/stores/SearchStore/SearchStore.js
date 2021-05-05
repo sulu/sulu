@@ -1,6 +1,6 @@
 // @flow
 import {action, observable} from 'mobx';
-import type {IObservableValue} from 'mobx';
+import type {IObservableValue} from 'mobx/lib/mobx';
 import ResourceRequester from '../../services/ResourceRequester';
 
 export default class SearchStore {

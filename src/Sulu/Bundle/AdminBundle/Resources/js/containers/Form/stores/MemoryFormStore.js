@@ -1,6 +1,6 @@
 // @flow
 import {action, observable} from 'mobx';
-import type {IObservableValue} from 'mobx';
+import type {IObservableValue} from 'mobx/lib/mobx';
 import jsonpointer from 'json-pointer';
 import {createAjv} from '../../../utils/Ajv';
 import type {FormStoreInterface, Schema, SchemaType} from '../types';

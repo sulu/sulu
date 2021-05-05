@@ -42,7 +42,7 @@ export default class InternalLinkPlugin extends Plugin {
     @observable id: ?string | number = undefined;
     @observable title: ?string;
     defaultText: ?string;
-    balloon: ContextualBalloon;
+    balloon: typeof ContextualBalloon;
 
     init() {
         this.internalLinkElement = document.createElement('div');
