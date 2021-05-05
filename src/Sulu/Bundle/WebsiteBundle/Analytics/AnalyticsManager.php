@@ -103,11 +103,11 @@ class AnalyticsManager implements AnalyticsManagerInterface
         $entity = $this->find($id);
 
         $webspaceKey = $entity->getWebspaceKey();
-        $title = $entity->getTitle();
+        $analyticsTitle = $entity->getTitle();
 
         $this->entityManager->remove($entity);
 
-        $this->domainEventCollector->collect(new AnalyticsRemovedEvent($id, $webspaceKey, $title));
+        $this->domainEventCollector->collect(new AnalyticsRemovedEvent($id, $webspaceKey, $analyticsTitle));
     }
 
     public function removeMultiple(array $ids)

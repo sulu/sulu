@@ -30,18 +30,18 @@ class AnalyticsRemovedEvent extends DomainEvent
     /**
      * @var string|null
      */
-    private $title;
+    private $analyticsTitle;
 
     public function __construct(
         int $id,
         string $webspaceKey,
-        ?string $title
+        ?string $analyticsTitle
     ) {
         parent::__construct();
 
         $this->id = $id;
         $this->webspaceKey = $webspaceKey;
-        $this->title = $title;
+        $this->analyticsTitle = $analyticsTitle;
     }
 
     public function getId(): int
@@ -71,7 +71,7 @@ class AnalyticsRemovedEvent extends DomainEvent
 
     public function getResourceTitle(): ?string
     {
-        return $this->title;
+        return $this->analyticsTitle;
     }
 
     public function getResourceSecurityContext(): ?string
