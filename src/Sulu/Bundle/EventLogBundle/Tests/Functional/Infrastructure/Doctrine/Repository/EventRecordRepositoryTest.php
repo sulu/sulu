@@ -106,6 +106,7 @@ class EventRecordRepositoryTest extends SuluTestCase
 
     public function testAddAndCommitWithPayload(): void
     {
+        // boot kernel with additional configuration and update variables that are set in setUp method
         static::bootKernel(['environment' => 'with_payload']);
         $this->setUp();
 

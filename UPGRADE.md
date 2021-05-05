@@ -78,16 +78,6 @@ Therefore the following sql statement needs to be executed.
 ALTER TABLE se_access_controls CHANGE entityId entityId VARCHAR(36) NOT NULL;
 ```
 
-### Added resourceSecurityObjectId field to EventRecord
-
-Because a new `resourceSecurityObjectId` field has been added to the `EventRecord` entity
-and the existing `resourceSecurityType` field has been renamed to `resourceSecurityObjectType`,
-you need to update your database schema:
-
-```sql
-ALTER TABLE el_event_records ADD resourceSecurityObjectId VARCHAR(191) DEFAULT NULL, CHANGE resourceSecurityType resourceSecurityObjectType VARCHAR(191) DEFAULT NULL;
-```
-
 ### JS Dependencies updated
 
 We always try to keep sulu compatible with newest dependencies in this release
@@ -107,15 +97,6 @@ If you use a custom ckeditor plugin make sure that it is compatible to `^27.1.0`
 
 The `DocumentManagerInterface` has been extended with a new method `copyLocale`. If you have overridden this service
 in your project, you have to implement that method as well.
-
-### Added resourceTitleLocale field to EventRecord
-
-Because a new `resourceTitleLocale` field has been added to the `EventRecord` entity,
-you need to update your database schema:
-
-```sql
-ALTER TABLE el_event_records ADD resourceTitleLocale VARCHAR(191) DEFAULT NULL;
-```
 
 ### Changed constructor of multiple services to integrate them with the SuluEventLogBundle
 
@@ -149,7 +130,7 @@ to add the bundle to your `config/bundles.php` file:
 Additionally, you need to update your database schema to include the tables that are used by the bundle:
 
 ```sql
-CREATE TABLE el_event_records (id INT AUTO_INCREMENT NOT NULL, eventType VARCHAR(191) NOT NULL, eventContext JSON NOT NULL, eventDateTime DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)', eventBatch VARCHAR(191) DEFAULT NULL, resourceKey VARCHAR(191) NOT NULL, resourceId VARCHAR(191) NOT NULL, resourceLocale VARCHAR(191) DEFAULT NULL, resourceWebspaceKey VARCHAR(191) DEFAULT NULL, resourceTitle VARCHAR(191) DEFAULT NULL, resourceSecurityContext VARCHAR(191) DEFAULT NULL, resourceSecurityType VARCHAR(191) DEFAULT NULL, userId INT DEFAULT NULL, INDEX IDX_CF493FC364B64DCC (userId), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
+CREATE TABLE el_event_records (id INT AUTO_INCREMENT NOT NULL, eventType VARCHAR(191) NOT NULL, eventContext JSON NOT NULL, eventDateTime DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)', eventBatch VARCHAR(191) DEFAULT NULL, eventPayload JSON NOT NULL, resourceKey VARCHAR(191) NOT NULL, resourceId VARCHAR(191) NOT NULL, resourceLocale VARCHAR(191) DEFAULT NULL, resourceWebspaceKey VARCHAR(191) DEFAULT NULL, resourceTitle VARCHAR(191) DEFAULT NULL, resourceTitleLocale VARCHAR(191) DEFAULT NULL, resourceSecurityContext VARCHAR(191) DEFAULT NULL, resourceSecurityObjectType VARCHAR(191) DEFAULT NULL, resourceSecurityObjectId VARCHAR(191) DEFAULT NULL, userId INT DEFAULT NULL, INDEX IDX_CF493FC364B64DCC (userId), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
 
 ALTER TABLE el_event_records ADD CONSTRAINT FK_CF493FC364B64DCC FOREIGN KEY (userId) REFERENCES se_users (id) ON DELETE SET NULL;
 ```

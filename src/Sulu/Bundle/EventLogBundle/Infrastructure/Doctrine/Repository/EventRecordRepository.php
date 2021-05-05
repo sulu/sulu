@@ -33,7 +33,7 @@ class EventRecordRepository implements EventRecordRepositoryInterface
     /**
      * @var bool
      */
-    private $shouldPersistPayload;
+    protected $shouldPersistPayload;
 
     public function __construct(EntityManager $entityManager, bool $shouldPersistPayload)
     {
