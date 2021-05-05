@@ -312,13 +312,10 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
                     $srcLocale = $this->getRequestParameter($request, 'src', false, $locale);
                     $destLocales = \explode(',', $this->getRequestParameter($request, 'dest', true));
 
-                    // call repository method
-                    $snippet = $this->snippetRepository->copyLocale(
-                        $id,
-                        $this->getUser()->getId(),
-                        $srcLocale,
-                        $destLocales
-                    );
+                    $document = $this->documentManager->find($id, $srcLocale);
+                    foreach ($destLocales as $destLocale) {
+                        $this->documentManager->copyLocale($document, $srcLocale, $destLocale);
+                    }
 
                     // publish the snippet in every dest locale, otherwise it's not in the live workspace.
                     foreach ($destLocales as $destLocale) {
@@ -338,11 +335,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
                     throw new RestException('Unrecognized action: ' . $action);
             }
 
-            // prepare view
-            $view = View::create(
-                $this->decorateSnippet($snippet->toArray(), $locale),
-                null !== $snippet ? 200 : 204
-            );
+            $view = View::create($this->findDocument($id, $locale));
         } catch (RestException $exc) {
             $view = View::create($exc->toArray(), 400);
         }

@@ -22,7 +22,6 @@ use Sulu\Bundle\SnippetBundle\Domain\Event\SnippetTranslationAddedEvent;
 use Sulu\Bundle\SnippetBundle\Domain\Event\SnippetTranslationCopiedEvent;
 use Sulu\Bundle\SnippetBundle\Domain\Event\SnippetTranslationRemovedEvent;
 use Sulu\Component\Content\Document\Extension\ExtensionContainer;
-use Sulu\Component\Content\Document\Subscriber\SecuritySubscriber;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Event\CopyEvent;
 use Sulu\Component\DocumentManager\Event\CopyLocaleEvent;
@@ -316,8 +315,6 @@ class DomainEventSubscriber implements EventSubscriberInterface
 
     /**
      * @param NodeInterface<mixed> $node
-     *
-     * @see SecuritySubscriber::handlePersistCreate()
      */
     private function isNewNode(NodeInterface $node): bool
     {
