@@ -25,14 +25,14 @@ class RoleRemovedEvent extends DomainEvent
     /**
      * @var string
      */
-    private $name;
+    private $roleName;
 
-    public function __construct(int $roleId, string $name)
+    public function __construct(int $roleId, string $roleName)
     {
         parent::__construct();
 
         $this->roleId = $roleId;
-        $this->name = $name;
+        $this->roleName = $roleName;
     }
 
     public function getEventType(): string
@@ -57,6 +57,6 @@ class RoleRemovedEvent extends DomainEvent
 
     public function getResourceTitle(): ?string
     {
-        return $this->name;
+        return $this->roleName;
     }
 }
