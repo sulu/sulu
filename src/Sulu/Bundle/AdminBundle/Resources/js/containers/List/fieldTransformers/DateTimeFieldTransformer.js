@@ -3,7 +3,6 @@ import React from 'react';
 import moment from 'moment';
 import log from 'loglevel';
 import type {Node} from 'react';
-import {Moment} from 'moment/moment';
 import classNames from 'classnames';
 import type {FieldTransformer} from '../types';
 import {translate} from '../../../utils';
@@ -59,7 +58,7 @@ export default class DateTimeFieldTransformer implements FieldTransformer {
         );
     }
 
-    getRelativeDateTime(momentObject: Moment) {
+    getRelativeDateTime(momentObject: moment) {
         const defaultFct = () => {
             return '[' + this.getDefaultDateTime(momentObject) + ']';
         };
@@ -74,7 +73,7 @@ export default class DateTimeFieldTransformer implements FieldTransformer {
         });
     }
 
-    getDefaultDateTime(momentObject: Moment): string {
+    getDefaultDateTime(momentObject: moment): string {
         return momentObject.format('LLL');
     }
 }

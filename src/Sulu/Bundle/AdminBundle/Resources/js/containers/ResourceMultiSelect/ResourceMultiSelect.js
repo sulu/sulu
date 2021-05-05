@@ -62,9 +62,7 @@ class ResourceMultiSelect<T: string | number> extends React.Component<Props<T>> 
         this.resourceListStore = new ResourceListStore(resourceKey, parameters, idProperty);
     };
 
-    // TODO: Remove explicit type annotation when flow bug is fixed
-    // https://github.com/facebook/flow/issues/6978
-    handleChange: (Array<T>) => void = (values: Array<T>) => {
+    handleChange: (Array<T>) => void = (values) => {
         const {
             onChange,
             idProperty,

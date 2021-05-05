@@ -110,14 +110,14 @@ class Table<T: string | number> extends React.Component<Props<T>> {
         );
     };
 
-    handleRowExpand = (rowId: T) => {
+    handleRowExpand: (rowId: T) => void = (rowId) => {
         const {onRowExpand} = this.props;
         if (onRowExpand) {
             onRowExpand(rowId);
         }
     };
 
-    handleRowCollapse = (rowId: T) => {
+    handleRowCollapse: (rowId: T) => void = (rowId) => {
         const {onRowCollapse} = this.props;
         if (onRowCollapse) {
             onRowCollapse(rowId);
@@ -131,7 +131,7 @@ class Table<T: string | number> extends React.Component<Props<T>> {
         }
     };
 
-    handleRowSelectionChange = (rowId: T, selected?: boolean) => {
+    handleRowSelectionChange: (rowId: T, selected?: boolean) => void = (rowId, selected) => {
         const {onRowSelectionChange} = this.props;
         if (onRowSelectionChange) {
             onRowSelectionChange(rowId, selected);

@@ -16,7 +16,7 @@ export default class CheckboxGroup<T: string | number> extends React.PureCompone
         disabled: false,
     };
 
-    handleChange = (checked: boolean, changedValue: ?T) => {
+    handleChange: (checked: boolean, changedValue: ?T) => void = (checked, changedValue) => {
         const {onChange, values} = this.props;
 
         if (checked && changedValue) {

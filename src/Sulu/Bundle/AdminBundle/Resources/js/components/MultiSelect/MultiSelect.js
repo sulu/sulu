@@ -62,15 +62,11 @@ export default class MultiSelect<T: string | number> extends React.PureComponent
         return selectedValues.join(', ');
     }
 
-    // TODO: Remove explicit type annotation when flow bug is fixed
-    // https://github.com/facebook/flow/issues/6978
     isOptionSelected: (option: Element<Class<MultiSelect.Option<T>>>) => boolean = (option) => {
         return this.props.values.includes(option.props.value);
     };
 
-    // TODO: Remove explicit type annotation when flow bug is fixed
-    // https://github.com/facebook/flow/issues/6978
-    handleSelect: (value: T) => void = (value: T) => {
+    handleSelect: (value: T) => void = (value) => {
         const newValues = [...this.props.values];
         const index = newValues.indexOf(value);
 

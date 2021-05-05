@@ -158,7 +158,7 @@ class Select<T> extends React.Component<Props<T>> {
         }
     };
 
-    handleOptionClick = (value: T) => {
+    handleOptionClick: (value: T) => void = (value) => {
         this.props.onSelect(value);
 
         if (this.props.closeOnSelect) {

@@ -18,7 +18,7 @@ class Select<T: ?string | number> extends React.Component<SelectProps<T>> {
         });
     }
 
-    handleOptionClick = (option: SelectOption<T>) => {
+    handleOptionClick: (option: SelectOption<T>) => void = (option) => {
         this.props.onChange(option.value);
     };
 

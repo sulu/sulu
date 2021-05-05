@@ -49,7 +49,7 @@ class ImageRenderer extends React.Component<Props> {
             return undefined;
         }
 
-        return '/admin/media/redirect/media/' + imageId + '?locale=' + locale;
+        return '/admin/media/redirect/media/' + imageId + '?locale=' + locale.get();
     }
 
     @action setImageWrapperSize = () => {
