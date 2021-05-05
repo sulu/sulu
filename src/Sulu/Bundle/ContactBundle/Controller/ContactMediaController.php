@@ -92,26 +92,26 @@ class ContactMediaController extends AbstractMediaController implements ClassRes
 
     public function deleteAction(int $contactId, int $id)
     {
-        $dispatchDomainEvent = function(ContactInterface $contact, MediaInterface $media) {
+        $dispatchDomainEventCallback = function(ContactInterface $contact, MediaInterface $media) {
             $this->domainEventCollector->collect(
                 new ContactMediaRemovedEvent($contact, $media)
             );
         };
 
-        return $this->removeMediaFromEntity($this->contactClass, $contactId, $id, $dispatchDomainEvent);
+        return $this->removeMediaFromEntity($this->contactClass, $contactId, $id, $dispatchDomainEventCallback);
     }
 
     public function postAction(int $contactId, Request $request)
     {
         $mediaId = $request->get('mediaId', '');
 
-        $dispatchDomainEvent = function(ContactInterface $contact, MediaInterface $media) {
+        $dispatchDomainEventCallback = function(ContactInterface $contact, MediaInterface $media) {
             $this->domainEventCollector->collect(
                 new ContactMediaAddedEvent($contact, $media)
             );
         };
 
-        return $this->addMediaToEntity($this->contactClass, $contactId, $mediaId, $dispatchDomainEvent);
+        return $this->addMediaToEntity($this->contactClass, $contactId, $mediaId, $dispatchDomainEventCallback);
     }
 
     public function cgetAction(int $contactId, Request $request)
