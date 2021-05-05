@@ -109,6 +109,7 @@
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="sulu_contact.account_manager"/>
             <argument type="service" id="sulu_contact.account_factory"/>
+            <argument type="service" id="sulu_event_log.domain_event_collector"/>
             <argument>%sulu.model.account.class%</argument>
             <argument>%sulu.model.contact.class%</argument>
 
@@ -126,6 +127,7 @@
             <argument type="service" id="sulu.repository.media"/>
             <argument type="service" id="sulu_media.media_manager"/>
             <argument type="service" id="sulu_contact.account_manager"/>
+            <argument type="service" id="sulu_event_log.domain_event_collector"/>
             <argument>%sulu.model.account.class%</argument>
             <argument>%sulu.model.media.class%</argument>
             <argument type="service" id="sulu_media.media_list_builder_factory" />

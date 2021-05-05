@@ -16,6 +16,8 @@ namespace Sulu\Bundle\ContactBundle\Entity;
  */
 class AccountContact
 {
+    const RESOURCE_KEY = 'account_contacts';
+
     /**
      * @var bool
      */

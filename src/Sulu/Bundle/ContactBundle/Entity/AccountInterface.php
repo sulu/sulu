@@ -22,6 +22,8 @@ use Sulu\Component\Persistence\Model\AuditableInterface;
  */
 interface AccountInterface extends AuditableInterface
 {
+    public const RESOURCE_KEY = 'accounts';
+
     public function setName(string $name): self;
 
     public function getName(): string;
