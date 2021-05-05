@@ -128,6 +128,15 @@ class UserManager implements UserManagerInterface
 
             $this->em->remove($user);
             $this->domainEventCollector->collect(new UserRemovedEvent($id, $user->getUsername()));
+
+            foreach ($user->getRoleObjects() as $role) {
+                $this->em->detach($role);
+
+                foreach ($role->getUserRoles() as $userRole) {
+                    $this->em->detach($userRole);
+                }
+            }
+
             $this->em->flush();
         };
 

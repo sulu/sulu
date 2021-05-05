@@ -16,6 +16,7 @@ use Sulu\Bundle\AdminBundle\Admin\View\Badge;
 use Sulu\Bundle\AdminBundle\Admin\View\ListViewBuilder;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Bundle\TestBundle\Testing\ReadObjectAttributeTrait;
+use Sulu\Component\Security\Authentication\RoleInterface;
 
 class ListViewBuilderTest extends TestCase
 {
@@ -24,7 +25,7 @@ class ListViewBuilderTest extends TestCase
     public function testBuildListViewWithClone()
     {
         $viewBuilder = (new ListViewBuilder('sulu_role.add_form', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setListKey('roles')
             ->addListAdapters(['table']);
 
@@ -127,7 +128,7 @@ class ListViewBuilderTest extends TestCase
     public function testBuildListViewAddingAdaptersTwice()
     {
         $view = (new ListViewBuilder('sulu_role.list', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setListKey('roles')
             ->addListAdapters(['table', 'column_list'])
             ->addListAdapters(['tree'])
@@ -139,7 +140,7 @@ class ListViewBuilderTest extends TestCase
     public function testBuildListWithLocales()
     {
         $view = (new ListViewBuilder('sulu_role.list', '/roles/:locale'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setListKey('roles')
             ->addListAdapters(['table'])
             ->addLocales(['de', 'en'])
@@ -157,7 +158,7 @@ class ListViewBuilderTest extends TestCase
         $this->expectExceptionMessageRegExp('":locale"');
 
         $view = (new ListViewBuilder('sulu_role.list', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setListKey('roles')
             ->addListAdapters(['table'])
             ->addLocales(['de', 'en'])
@@ -172,7 +173,7 @@ class ListViewBuilderTest extends TestCase
         $this->expectExceptionMessageRegExp('":locale"');
 
         $view = (new ListViewBuilder('sulu_role.list', '/roles/:locale'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setListKey('roles')
             ->addListAdapters(['table'])
             ->getView();
@@ -184,7 +185,7 @@ class ListViewBuilderTest extends TestCase
         $this->expectExceptionMessageRegExp('"listKey"');
 
         $view = (new ListViewBuilder('sulu_role.list', '/roles/:locale'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->addListAdapters(['table'])
             ->getView();
     }
@@ -192,7 +193,7 @@ class ListViewBuilderTest extends TestCase
     public function testBuildListViewWithSearch()
     {
         $view = (new ListViewBuilder('sulu_role.list', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setListKey('roles')
             ->addListAdapters(['tree'])
             ->disableSearching()
@@ -205,7 +206,7 @@ class ListViewBuilderTest extends TestCase
     public function testBuildListViewWithoutSearch()
     {
         $view = (new ListViewBuilder('sulu_role.list', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setListKey('roles')
             ->addListAdapters(['tree'])
             ->enableSearching()
@@ -218,7 +219,7 @@ class ListViewBuilderTest extends TestCase
     public function testBuildListViewWithSelection()
     {
         $view = (new ListViewBuilder('sulu_role.list', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setListKey('roles')
             ->addListAdapters(['tree'])
             ->disableSelection()
@@ -231,7 +232,7 @@ class ListViewBuilderTest extends TestCase
     public function testBuildListViewWithoutSelection()
     {
         $view = (new ListViewBuilder('sulu_role.list', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setListKey('roles')
             ->addListAdapters(['tree'])
             ->enableSelection()
@@ -244,7 +245,7 @@ class ListViewBuilderTest extends TestCase
     public function testBuildListWithViewrAttributesToListRequest()
     {
         $view = (new ListViewBuilder('sulu_role.list', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setListKey('roles')
             ->addListAdapters(['tree'])
             ->addRouterAttributesToListRequest(['webspace' => 'webspaceId', 'parent' => 'parentId'])
@@ -260,7 +261,7 @@ class ListViewBuilderTest extends TestCase
     public function testBuildListWithRouterAttributesToListMetadata()
     {
         $view = (new ListViewBuilder('sulu_role.list', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setListKey('roles')
             ->addListAdapters(['tree'])
             ->addRouterAttributesToListMetadata(['webspace' => 'webspaceId', 'parent' => 'parentId', 'id' => 1])
@@ -276,7 +277,7 @@ class ListViewBuilderTest extends TestCase
     public function testBuildListWithResourceStorePropertiesToListRequest()
     {
         $view = (new ListViewBuilder('sulu_role.datagrid', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setListKey('roles')
             ->addListAdapters(['tree'])
             ->addResourceStorePropertiesToListRequest(['id' => 'dimensionId', 'parent' => 'parentId'])
@@ -292,7 +293,7 @@ class ListViewBuilderTest extends TestCase
     public function testBuildListWithResourceStorePropertiesToMetadataRequest()
     {
         $view = (new ListViewBuilder('sulu_role.datagrid', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setListKey('roles')
             ->addListAdapters(['tree'])
             ->addResourceStorePropertiesToListMetadata(['id' => 'dimensionId', 'parent' => 'parentId'])
@@ -308,7 +309,7 @@ class ListViewBuilderTest extends TestCase
     public function testBuildListWithRequestParameters()
     {
         $view = (new ListViewBuilder('sulu_role.datagrid', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setListKey('roles')
             ->addListAdapters(['tree'])
             ->addRequestParameters(['resourceKey' => 'pages', 'flat' => 'true'])
@@ -324,7 +325,7 @@ class ListViewBuilderTest extends TestCase
     public function testBuildListSetParent()
     {
         $view = (new ListViewBuilder('sulu_role.list', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setListKey('roles')
             ->addListAdapters(['tree'])
             ->setParent('sulu_role.parent_view')
@@ -336,7 +337,7 @@ class ListViewBuilderTest extends TestCase
     public function testBuildListSetOption()
     {
         $view = (new ListViewBuilder('sulu_role.list', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setListKey('roles')
             ->addListAdapters(['tree'])
             ->setOption('resourceKey', 'test')
@@ -348,7 +349,7 @@ class ListViewBuilderTest extends TestCase
     public function testBuildListSetTabTitle()
     {
         $view = (new ListViewBuilder('sulu_role.list', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setListKey('roles')
             ->addListAdapters(['tree'])
             ->setTabTitle('sulu_role.title')
@@ -360,7 +361,7 @@ class ListViewBuilderTest extends TestCase
     public function testBuildListSetTabOrder()
     {
         $view = (new ListViewBuilder('sulu_role.list', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setListKey('roles')
             ->addListAdapters(['tree'])
             ->setTabOrder(5)
@@ -372,7 +373,7 @@ class ListViewBuilderTest extends TestCase
     public function testBuildListSetTabPriority()
     {
         $view = (new ListViewBuilder('sulu_role.list', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setListKey('roles')
             ->addListAdapters(['tree'])
             ->setTabPriority(5)
@@ -384,7 +385,7 @@ class ListViewBuilderTest extends TestCase
     public function testBuildListSetTabCondition()
     {
         $view = (new ListViewBuilder('sulu_role.list', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setListKey('roles')
             ->addListAdapters(['tree'])
             ->setTabCondition('state == 1')
@@ -396,7 +397,7 @@ class ListViewBuilderTest extends TestCase
     public function testBuildListSetBackView()
     {
         $view = (new ListViewBuilder('sulu_role.list', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setListKey('roles')
             ->addListAdapters(['tree'])
             ->setBackView('sulu_category.edit_form')
@@ -408,7 +409,7 @@ class ListViewBuilderTest extends TestCase
     public function testBuildListSetItemDisabledCondition()
     {
         $view = (new ListViewBuilder('sulu_role.list', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setListKey('roles')
             ->addListAdapters(['tree'])
             ->setItemDisabledCondition('(_permissions && !_permissions.delete)')
@@ -424,7 +425,7 @@ class ListViewBuilderTest extends TestCase
         $deleteToolbarAction = new ToolbarAction('sulu_admin.delete');
 
         $view = (new ListViewBuilder('sulu_role.list', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setListKey('roles')
             ->addListAdapters(['tree'])
             ->addToolbarActions([$saveToolbarAction, $typesToolbarAction])
@@ -444,7 +445,7 @@ class ListViewBuilderTest extends TestCase
         $downloadItemAction = new ToolbarAction('sulu_admin.download');
 
         $view = (new ListViewBuilder('sulu_role.list', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setListKey('roles')
             ->addListAdapters(['tree'])
             ->addItemActions([$linkItemAction, $exportItemAction])
@@ -472,7 +473,7 @@ class ListViewBuilderTest extends TestCase
             ]);
 
         $view = (new ListViewBuilder('sulu_role.list', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setListKey('roles')
             ->addListAdapters(['tree'])
             ->addTabBadges([$fooBadge, 'abc' => $barBadge])
@@ -491,7 +492,7 @@ class ListViewBuilderTest extends TestCase
     public function testBuildAddDeprecatedAdapter(): void
     {
         $view = (new ListViewBuilder('sulu_role.list', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setListKey('roles')
             ->addListAdapters(['table_light', 'tree_table_slim'])
             ->getView();
@@ -508,7 +509,7 @@ class ListViewBuilderTest extends TestCase
     public function testBuildAddDeprecatedAdapterWithOptions(): void
     {
         $view = (new ListViewBuilder('sulu_role.list', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setListKey('roles')
             ->addAdapterOptions(['table' => ['show_header' => false], 'tree_table' => ['skin' => 'flat']])
             ->addListAdapters(['table_light', 'tree_table_slim'])

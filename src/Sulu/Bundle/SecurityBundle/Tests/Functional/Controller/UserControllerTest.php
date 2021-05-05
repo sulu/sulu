@@ -530,14 +530,14 @@ class UserControllerTest extends SuluTestCase
 
     public function testDelete()
     {
-        $this->client->jsonRequest('DELETE', '/api/users/' . $this->user2->getId());
+        $this->client->jsonRequest('DELETE', '/api/users/' . $this->user1->getId());
 
         $this->assertHttpStatusCode(204, $this->client->getResponse());
         /** @var DomainEvent $event */
         $event = $this->eventRepository->findOneBy(['eventType' => 'removed']);
-        $this->assertSame((string) $this->user2->getId(), $event->getResourceId());
+        $this->assertSame((string) $this->user1->getId(), $event->getResourceId());
 
-        $this->client->jsonRequest('GET', '/api/users/' . $this->user2->getId());
+        $this->client->jsonRequest('GET', '/api/users/' . $this->user1->getId());
 
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }

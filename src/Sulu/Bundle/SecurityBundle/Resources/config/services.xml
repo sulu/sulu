@@ -202,6 +202,7 @@
             <argument type="service" id="sulu_security.mask_converter" />
             <argument type="service" id="sulu.repository.role" />
             <argument type="service" id="doctrine.orm.entity_manager" />
+            <argument type="service" id="sulu_event_log.domain_event_collector" />
             <argument>%sulu.model.role.class%</argument>
 
             <tag name="sulu.context" context="admin"/>

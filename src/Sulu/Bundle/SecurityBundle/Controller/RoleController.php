@@ -15,6 +15,10 @@ use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
+use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Bundle\SecurityBundle\Domain\Event\RoleCreatedEvent;
+use Sulu\Bundle\SecurityBundle\Domain\Event\RoleModifiedEvent;
+use Sulu\Bundle\SecurityBundle\Domain\Event\RoleRemovedEvent;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Exception\RoleKeyAlreadyExistsException;
 use Sulu\Bundle\SecurityBundle\Exception\RoleNameAlreadyExistsException;
@@ -38,9 +42,12 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class RoleController extends AbstractRestController implements ClassResourceInterface, SecuredControllerInterface
 {
+    /**
+     * @deprecated Use the RoleInterface::RESOURCE_KEY constant instead
+     */
     protected static $entityKey = 'roles';
 
-    const ENTITY_NAME_PERMISSION = 'SuluSecurityBundle:Permission';
+    public const ENTITY_NAME_PERMISSION = 'SuluSecurityBundle:Permission';
 
     protected $bundlePrefix = 'security.roles.';
 
@@ -80,6 +87,11 @@ class RoleController extends AbstractRestController implements ClassResourceInte
     private $entityManager;
 
     /**
+     * @var DomainEventCollectorInterface
+     */
+    private $eventCollector;
+
+    /**
      * @var string
      */
     private $roleClass;
@@ -92,6 +104,7 @@ class RoleController extends AbstractRestController implements ClassResourceInte
         MaskConverterInterface $maskConverter,
         RoleRepositoryInterface $roleRepository,
         EntityManagerInterface $entityManager,
+        DomainEventCollectorInterface $eventCollector,
         string $roleClass
     ) {
         parent::__construct($viewHandler);
@@ -102,6 +115,7 @@ class RoleController extends AbstractRestController implements ClassResourceInte
         $this->maskConverter = $maskConverter;
         $this->roleRepository = $roleRepository;
         $this->entityManager = $entityManager;
+        $this->eventCollector = $eventCollector;
         $this->roleClass = $roleClass;
     }
 
@@ -139,7 +153,7 @@ class RoleController extends AbstractRestController implements ClassResourceInte
 
             $list = new ListRepresentation(
                 $listBuilder->execute(),
-                static::$entityKey,
+                RoleInterface::RESOURCE_KEY,
                 'sulu_security.get_roles',
                 $request->query->all(),
                 $listBuilder->getCurrentPage(),
@@ -158,7 +172,7 @@ class RoleController extends AbstractRestController implements ClassResourceInte
                     \array_push($convertedRoles, $this->convertRole($role));
                 }
             }
-            $list = new CollectionRepresentation($convertedRoles, static::$entityKey);
+            $list = new CollectionRepresentation($convertedRoles, RoleInterface::RESOURCE_KEY);
         }
         $view = $this->view($list, 200);
 
@@ -228,6 +242,7 @@ class RoleController extends AbstractRestController implements ClassResourceInte
 
             try {
                 $this->entityManager->persist($role);
+                $this->eventCollector->collect(new RoleCreatedEvent($role, $request->request->all()));
                 $this->entityManager->flush();
 
                 $view = $this->view($this->convertRole($role), 200);
@@ -279,6 +294,7 @@ class RoleController extends AbstractRestController implements ClassResourceInte
                     $role->setSecurityType(null);
                 }
 
+                $this->eventCollector->collect(new RoleModifiedEvent($role, $request->request->all()));
                 $this->entityManager->flush();
                 $view = $this->view($this->convertRole($role), 200);
             }
@@ -311,6 +327,12 @@ class RoleController extends AbstractRestController implements ClassResourceInte
 
             if (!$role) {
                 throw new EntityNotFoundException($this->roleRepository->getClassName(), $id);
+            }
+
+            $this->eventCollector->collect(new RoleRemovedEvent($id, $role->getName()));
+
+            foreach ($role->getPermissions() as $permission) {
+                $this->entityManager->detach($permission);
             }
 
             $this->entityManager->remove($role);

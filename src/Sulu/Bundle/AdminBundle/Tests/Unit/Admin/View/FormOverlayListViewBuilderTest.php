@@ -15,13 +15,14 @@ use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Admin\View\Badge;
 use Sulu\Bundle\AdminBundle\Admin\View\FormOverlayListViewBuilder;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
+use Sulu\Component\Security\Authentication\RoleInterface;
 
 class FormOverlayListViewBuilderTest extends TestCase
 {
     public function testBuildFormOverlayListViewWithClone()
     {
         $routeBuilder = (new FormOverlayListViewBuilder('sulu_role.add_form', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setListKey('roles')
             ->setFormKey('role_details')
             ->addListAdapters(['table']);
@@ -127,7 +128,7 @@ class FormOverlayListViewBuilderTest extends TestCase
     public function testBuildFormOverlayListViewAddingAdaptersTwice()
     {
         $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setListKey('roles')
             ->setFormKey('role_details')
             ->addListAdapters(['table', 'column_list'])
@@ -140,7 +141,7 @@ class FormOverlayListViewBuilderTest extends TestCase
     public function testBuildListWithLocales()
     {
         $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles/:locale'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setListKey('roles')
             ->setFormKey('role_details')
             ->addListAdapters(['table'])
@@ -159,7 +160,7 @@ class FormOverlayListViewBuilderTest extends TestCase
         $this->expectExceptionMessageRegExp('":locale"');
 
         $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setListKey('roles')
             ->setFormKey('role_details')
             ->addListAdapters(['table'])
@@ -175,7 +176,7 @@ class FormOverlayListViewBuilderTest extends TestCase
         $this->expectExceptionMessageRegExp('":locale"');
 
         $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles/:locale'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setListKey('roles')
             ->setFormKey('role_details')
             ->addListAdapters(['table'])
@@ -188,7 +189,7 @@ class FormOverlayListViewBuilderTest extends TestCase
         $this->expectExceptionMessageRegExp('"listKey"');
 
         $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles/:locale'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->addListAdapters(['table'])
             ->getView();
     }
@@ -199,7 +200,7 @@ class FormOverlayListViewBuilderTest extends TestCase
         $this->expectExceptionMessageRegExp('"formKey"');
 
         $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles/:locale'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setListKey('roles')
             ->addListAdapters(['table'])
             ->getView();
@@ -208,7 +209,7 @@ class FormOverlayListViewBuilderTest extends TestCase
     public function testBuildFormOverlayListViewWithSearch()
     {
         $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setListKey('roles')
             ->setFormKey('role_details')
             ->addListAdapters(['tree'])
@@ -222,7 +223,7 @@ class FormOverlayListViewBuilderTest extends TestCase
     public function testBuildFormOverlayListViewWithoutSearch()
     {
         $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setListKey('roles')
             ->setFormKey('role_details')
             ->addListAdapters(['tree'])
@@ -236,7 +237,7 @@ class FormOverlayListViewBuilderTest extends TestCase
     public function testBuildFormOverlayListViewWithSelection()
     {
         $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setListKey('roles')
             ->setFormKey('role_details')
             ->addListAdapters(['tree'])
@@ -250,7 +251,7 @@ class FormOverlayListViewBuilderTest extends TestCase
     public function testBuildFormOverlayListViewWithoutSelection()
     {
         $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setListKey('roles')
             ->setFormKey('role_details')
             ->addListAdapters(['tree'])
@@ -264,7 +265,7 @@ class FormOverlayListViewBuilderTest extends TestCase
     public function testBuildListWithRouterAttributesToListRequest()
     {
         $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setListKey('roles')
             ->setFormKey('role_details')
             ->addListAdapters(['tree'])
@@ -281,7 +282,7 @@ class FormOverlayListViewBuilderTest extends TestCase
     public function testBuildFormWithRouterAttributesToFormRequest()
     {
         $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setListKey('roles')
             ->setFormKey('role_details')
             ->addListAdapters(['tree'])
@@ -298,7 +299,7 @@ class FormOverlayListViewBuilderTest extends TestCase
     public function testBuildWithResourceStorePropertiesToListRequest()
     {
         $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setListKey('roles')
             ->setFormKey('role_details')
             ->addListAdapters(['tree'])
@@ -315,7 +316,7 @@ class FormOverlayListViewBuilderTest extends TestCase
     public function testBuildWithResourceStorePropertiesToFormRequest()
     {
         $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setListKey('roles')
             ->setFormKey('role_details')
             ->addListAdapters(['tree'])
@@ -332,7 +333,7 @@ class FormOverlayListViewBuilderTest extends TestCase
     public function testBuildListSetParent()
     {
         $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setListKey('roles')
             ->setFormKey('role_details')
             ->addListAdapters(['tree'])
@@ -345,7 +346,7 @@ class FormOverlayListViewBuilderTest extends TestCase
     public function testBuildListSetOption()
     {
         $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setListKey('roles')
             ->setFormKey('role_details')
             ->addListAdapters(['tree'])
@@ -359,7 +360,7 @@ class FormOverlayListViewBuilderTest extends TestCase
     public function testBuildListSetTabTitle()
     {
         $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setListKey('roles')
             ->setFormKey('role_details')
             ->addListAdapters(['tree'])
@@ -372,7 +373,7 @@ class FormOverlayListViewBuilderTest extends TestCase
     public function testBuildListSetTabOrder()
     {
         $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setListKey('roles')
             ->setFormKey('role_details')
             ->addListAdapters(['tree'])
@@ -385,7 +386,7 @@ class FormOverlayListViewBuilderTest extends TestCase
     public function testBuildListSetTabPriority()
     {
         $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setListKey('roles')
             ->setFormKey('role_details')
             ->addListAdapters(['tree'])
@@ -398,7 +399,7 @@ class FormOverlayListViewBuilderTest extends TestCase
     public function testBuildListSetTabCondition()
     {
         $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setListKey('roles')
             ->setFormKey('role_details')
             ->addListAdapters(['tree'])
@@ -411,7 +412,7 @@ class FormOverlayListViewBuilderTest extends TestCase
     public function testBuildListSetBackView()
     {
         $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setListKey('roles')
             ->setFormKey('role_details')
             ->addListAdapters(['tree'])
@@ -424,7 +425,7 @@ class FormOverlayListViewBuilderTest extends TestCase
     public function testBuildListSetItemDisabledCondition()
     {
         $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setListKey('roles')
             ->setFormKey('role_details')
             ->addListAdapters(['tree'])
@@ -441,7 +442,7 @@ class FormOverlayListViewBuilderTest extends TestCase
         $deleteToolbarAction = new ToolbarAction('sulu_admin.delete');
 
         $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setListKey('roles')
             ->setFormKey('role_details')
             ->addListAdapters(['tree'])
@@ -462,7 +463,7 @@ class FormOverlayListViewBuilderTest extends TestCase
         $downloadItemAction = new ToolbarAction('sulu_admin.download');
 
         $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setListKey('roles')
             ->setFormKey('role_details')
             ->addListAdapters(['tree'])
@@ -491,7 +492,7 @@ class FormOverlayListViewBuilderTest extends TestCase
             ]);
 
         $view = (new FormOverlayListViewBuilder('sulu_role.list', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setListKey('roles')
             ->setFormKey('roles')
             ->addListAdapters(['tree'])

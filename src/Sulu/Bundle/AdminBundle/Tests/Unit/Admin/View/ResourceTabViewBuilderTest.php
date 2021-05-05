@@ -13,13 +13,14 @@ namespace Sulu\Bundle\AdminBundle\Tests\Unit\Admin\View;
 
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Admin\View\ResourceTabViewBuilder;
+use Sulu\Component\Security\Authentication\RoleInterface;
 
 class ResourceTabViewBuilderTest extends TestCase
 {
     public function testBuildResourceTabViewWithClone()
     {
         $viewBuilder = (new ResourceTabViewBuilder('sulu_role.add_form', '/roles'))
-            ->setResourceKey('roles');
+            ->setResourceKey(RoleInterface::RESOURCE_KEY);
 
         $this->assertNotSame($viewBuilder->getView(), $viewBuilder->getView());
     }
@@ -137,7 +138,7 @@ class ResourceTabViewBuilderTest extends TestCase
     public function testBuildFormWithParent()
     {
         $view = (new ResourceTabViewBuilder('sulu_role.add_form', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setParent('sulu_admin.test')
             ->getView();
 
@@ -147,7 +148,7 @@ class ResourceTabViewBuilderTest extends TestCase
     public function testBuildFormWithOption()
     {
         $view = (new ResourceTabViewBuilder('sulu_role.add_form', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->setOption('resourceKey', 'test')
             ->getView();
 
@@ -157,7 +158,7 @@ class ResourceTabViewBuilderTest extends TestCase
     public function testBuildResourceTabWithLocales()
     {
         $view = (new ResourceTabViewBuilder('sulu_role.add_form', '/roles/:locale'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->addLocales(['de', 'en'])
             ->addLocales(['nl', 'fr'])
             ->getView();
@@ -171,7 +172,7 @@ class ResourceTabViewBuilderTest extends TestCase
         $this->expectExceptionMessageRegExp('":locale"');
 
         $view = (new ResourceTabViewBuilder('sulu_role.list', '/roles'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->addLocales(['de', 'en'])
             ->addLocales(['nl', 'fr'])
             ->getView();
@@ -183,7 +184,7 @@ class ResourceTabViewBuilderTest extends TestCase
         $this->expectExceptionMessageRegExp('":locale"');
 
         $view = (new ResourceTabViewBuilder('sulu_role.list', '/roles/:locale'))
-            ->setResourceKey('roles')
+            ->setResourceKey(RoleInterface::RESOURCE_KEY)
             ->getView();
     }
 }
