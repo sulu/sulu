@@ -43,7 +43,7 @@ class RouteControllerTest extends SuluTestCase
         $this->purgeDatabase();
     }
 
-    public function testGenerate()
+    public function testGenerate(): void
     {
         $this->client->jsonRequest(
             'POST',
@@ -64,7 +64,30 @@ class RouteControllerTest extends SuluTestCase
         $this->assertEquals('/prefix/2019/test', $result['resourcelocator']);
     }
 
-    public function testGenerateWithConflict()
+    public function testGenerateWithConfigFromParameter(): void
+    {
+        $this->client->jsonRequest(
+            'POST',
+            '/api/routes?action=generate',
+            [
+                'locale' => self::TEST_LOCALE,
+                'resourceKey' => 'resource-key-without-route-bundle-config',
+                'entityClass' => 'some-entity-class',
+                'routeSchema' => '/{object["year"]}/custom-part/{object["title"]}',
+                'parts' => [
+                    'title' => 'test',
+                    'year' => '2019',
+                ],
+            ]
+        );
+
+        $result = \json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+
+        $this->assertEquals('/2019/custom-part/test', $result['resourcelocator']);
+    }
+
+    public function testGenerateWithConflict(): void
     {
         $this->createRoute('/prefix/2019/test');
         $this->entityManager->flush();
@@ -89,7 +112,7 @@ class RouteControllerTest extends SuluTestCase
         $this->assertEquals('/prefix/2019/test-1', $result['resourcelocator']);
     }
 
-    public function testGenerateWithConflictSameEntity()
+    public function testGenerateWithConflictSameEntity(): void
     {
         $this->createRoute('/prefix/2019/test');
         $this->entityManager->flush();
@@ -115,7 +138,7 @@ class RouteControllerTest extends SuluTestCase
         $this->assertEquals('/prefix/2019/test', $result['resourcelocator']);
     }
 
-    public function testCGetAction()
+    public function testCGetAction(): void
     {
         $routes = [
             $this->createRoute('/test-1'),
@@ -148,7 +171,39 @@ class RouteControllerTest extends SuluTestCase
         $this->assertEquals($routes[0]->getPath(), $items[0]['path']);
     }
 
-    public function testCGetActionNotExistingResourceKey()
+    public function testCGetActionWithEntityClassParameter(): void
+    {
+        $entityRoute1 = $this->createRoute('/test-1', null, 'some-entity-class', 1);
+        $this->createRoute('/test-1-1', $entityRoute1, 'some-entity-class', 1);
+
+        $otherRoute1 = $this->createRoute('/test-2');
+        $this->createRoute('/test-2-1', $otherRoute1);
+
+        $this->entityManager->flush();
+        $this->entityManager->clear();
+
+        $this->client->jsonRequest(
+            'GET',
+            \sprintf(
+                '/api/routes?resourceKey=%s&entityClass=%s&id=%s&locale=%s',
+                'resource-key-without-route-bundle-config',
+                'some-entity-class',
+                1,
+                self::TEST_LOCALE
+            )
+        );
+
+        $result = \json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+
+        $this->assertCount(1, $result['_embedded']['routes']);
+
+        $items = $result['_embedded']['routes'];
+        $this->assertEquals($entityRoute1->getId(), $items[0]['id']);
+        $this->assertEquals($entityRoute1->getPath(), $items[0]['path']);
+    }
+
+    public function testCGetActionNotExistingResourceKey(): void
     {
         $this->client->jsonRequest(
             'GET',
@@ -164,7 +219,7 @@ class RouteControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
-    public function testCGetActionHistory()
+    public function testCGetActionHistory(): void
     {
         $targetRoute = $this->createRoute('/test');
         $routes = [
@@ -206,7 +261,7 @@ class RouteControllerTest extends SuluTestCase
         }
     }
 
-    public function testDelete()
+    public function testDelete(): void
     {
         $targetRoute = $this->createRoute('/test');
         $routes = [
@@ -237,7 +292,7 @@ class RouteControllerTest extends SuluTestCase
         $this->assertCount(0, $result['_embedded']['routes']);
     }
 
-    public function testDeleteHistory()
+    public function testDeleteHistory(): void
     {
         $targetRoute = $this->createRoute('/test');
         $routes = [
@@ -286,7 +341,7 @@ class RouteControllerTest extends SuluTestCase
         Route $target = null,
         $entityClass = self::TEST_ENTITY,
         $entityId = self::TEST_ID
-    ) {
+    ): Route {
         $route = new Route($path, $entityId, $entityClass, self::TEST_LOCALE);
         if ($target) {
             $route->setTarget($target);
