@@ -45,7 +45,7 @@ class EventRecordRepository implements EventRecordRepositoryInterface
     public function createForDomainEvent(DomainEvent $domainEvent): EventRecordInterface
     {
         /** @var class-string<EventRecordInterface> $className */
-        $className = $this->getClassName();
+        $className = $this->entityRepository->getClassName();
 
         /** @var EventRecordInterface $eventRecord */
         $eventRecord = new $className();
@@ -68,23 +68,11 @@ class EventRecordRepository implements EventRecordRepositoryInterface
         return $eventRecord;
     }
 
-    protected function getClassName(): string
+    protected function getInsertQueryBuilder(EventRecordInterface $eventRecord): QueryBuilder
     {
-        return $this->entityRepository->getClassName();
-    }
+        $classMetadata = $this->entityManager->getClassMetadata($this->entityRepository->getClassName());
 
-    protected function getQueryBuilder(): QueryBuilder
-    {
-        return $this->entityManager->getConnection()->createQueryBuilder();
-    }
-
-    public function addAndCommit(EventRecordInterface $eventRecord): void
-    {
-        // use query-builder to insert only given entity instead of flushing all managed entities via the entity-manager
-        // this prevents flushing unrelated changes and allows to call this method in a postFlush event-listener
-        $classMetadata = $this->entityManager->getClassMetadata($this->getClassName());
-
-        $queryBuilder = $this->getQueryBuilder();
+        $queryBuilder = $this->entityManager->getConnection()->createQueryBuilder();
         $queryBuilder
             ->insert($classMetadata->getTableName())
             ->setValue($classMetadata->getColumnName('eventType'), $queryBuilder->createNamedParameter($eventRecord->getEventType()))
@@ -106,13 +94,21 @@ class EventRecordRepository implements EventRecordRepositoryInterface
         }
 
         if ($this->shouldPersistPayload) {
-            $queryBuilder->setValue('eventPayload', $queryBuilder->createNamedParameter(\json_encode($eventRecord->getEventPayload())));
+            $queryBuilder->setValue($classMetadata->getColumnName('eventPayload'), $queryBuilder->createNamedParameter(\json_encode($eventRecord->getEventPayload())));
         }
 
         if (!$classMetadata->idGenerator->isPostInsertGenerator()) {
-            $queryBuilder->setValue('id', $classMetadata->idGenerator->generate($this->entityManager, $eventRecord));
+            $queryBuilder->setValue($classMetadata->getColumnName('id'), $classMetadata->idGenerator->generate($this->entityManager, $eventRecord));
         }
 
+        return $queryBuilder;
+    }
+
+    public function addAndCommit(EventRecordInterface $eventRecord): void
+    {
+        // use query-builder to insert only given entity instead of flushing all managed entities via the entity-manager
+        // this prevents flushing unrelated changes and allows to call this method in a postFlush event-listener
+        $queryBuilder = $this->getInsertQueryBuilder($eventRecord);
         $queryBuilder->execute();
     }
 }
