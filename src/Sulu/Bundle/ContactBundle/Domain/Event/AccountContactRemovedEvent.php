@@ -31,7 +31,7 @@ class AccountContactRemovedEvent extends DomainEvent
 
     public function getEventType(): string
     {
-        return 'created';
+        return 'removed';
     }
 
     public function getResourceKey(): string
