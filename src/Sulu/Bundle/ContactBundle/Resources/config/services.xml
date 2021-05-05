@@ -45,7 +45,6 @@
             <argument type="service" id="sulu.repository.media" />
             <argument type="service" id="sulu_event_log.domain_event_collector" />
             <argument type="service" id="sulu.repository.user" />
-            <argument type="string">%sulu.model.account.class%</argument>
         </service>
         <service id="sulu_contact.twig.cache" class="Doctrine\Common\Cache\ArrayCache"/>
         <service id="sulu_contact.twig" class="Sulu\Bundle\ContactBundle\Twig\ContactTwigExtension">
@@ -166,6 +165,7 @@
             <argument type="service" id="sulu.repository.media"/>
             <argument type="service" id="sulu_media.media_manager"/>
             <argument type="service" id="sulu_contact.contact_manager"/>
+            <argument type="service" id="sulu_event_log.domain_event_collector"/>
             <argument>%sulu.model.contact.class%</argument>
             <argument>%sulu.model.media.class%</argument>
             <argument type="service" id="sulu_media.media_list_builder_factory" />
@@ -181,6 +181,7 @@
             <argument type="service" id="fos_rest.view_handler"/>
             <argument type="service" id="sulu_contact.contact_title_repository"/>
             <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="sulu_event_log.domain_event_collector"/>
 
             <tag name="sulu.context" context="admin"/>
         </service>
@@ -191,6 +192,7 @@
             <argument type="service" id="fos_rest.view_handler"/>
             <argument type="service" id="sulu_contact.position_repository"/>
             <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="sulu_event_log.domain_event_collector"/>
 
             <tag name="sulu.context" context="admin"/>
         </service>

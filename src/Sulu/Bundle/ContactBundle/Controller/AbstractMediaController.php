@@ -135,10 +135,11 @@ abstract class AbstractMediaController extends AbstractRestController
      * @param string $entityName
      * @param string $id
      * @param string $mediaId
+     * @param callable|null $dispatchDomainEventCallback
      *
      * @return Media
      */
-    protected function addMediaToEntity($entityName, $id, $mediaId)
+    protected function addMediaToEntity($entityName, $id, $mediaId, $dispatchDomainEventCallback = null)
     {
         try {
             $em = $this->entityManager;
@@ -158,6 +159,11 @@ abstract class AbstractMediaController extends AbstractRestController
             }
 
             $entity->addMedia($media);
+
+            if (null !== $dispatchDomainEventCallback) {
+                $dispatchDomainEventCallback($entity, $media);
+            }
+
             $em->flush();
 
             $view = $this->view(
@@ -185,13 +191,14 @@ abstract class AbstractMediaController extends AbstractRestController
      * @param string $entityName
      * @param string $id
      * @param string $mediaId
+     * @param callable|null $dispatchDomainEventCallback
      *
      * @return Response
      */
-    protected function removeMediaFromEntity($entityName, $id, $mediaId)
+    protected function removeMediaFromEntity($entityName, $id, $mediaId, $dispatchDomainEventCallback = null)
     {
         try {
-            $delete = function() use ($entityName, $id, $mediaId) {
+            $delete = function() use ($entityName, $id, $mediaId, $dispatchDomainEventCallback) {
                 $entity = $this->entityManager->getRepository($entityName)->find($id);
                 $media = $this->mediaRepository->find($mediaId);
 
@@ -211,6 +218,11 @@ abstract class AbstractMediaController extends AbstractRestController
                 }
 
                 $entity->removeMedia($media);
+
+                if (null !== $dispatchDomainEventCallback) {
+                    $dispatchDomainEventCallback($entity, $media);
+                }
+
                 $this->entityManager->flush();
             };
 

@@ -15,8 +15,12 @@ use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use HandcraftedInTheAlps\RestRoutingBundle\Controller\Annotations\RouteResource;
 use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
+use Sulu\Bundle\ContactBundle\Domain\Event\ContactTitleCreatedEvent;
+use Sulu\Bundle\ContactBundle\Domain\Event\ContactTitleModifiedEvent;
+use Sulu\Bundle\ContactBundle\Domain\Event\ContactTitleRemovedEvent;
 use Sulu\Bundle\ContactBundle\Entity\ContactTitle;
 use Sulu\Bundle\ContactBundle\Entity\ContactTitleRepository;
+use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
@@ -30,7 +34,13 @@ class ContactTitleController extends AbstractRestController implements ClassReso
 {
     protected static $entityName = 'SuluContactBundle:ContactTitle';
 
-    protected static $entityKey = 'contact_titles';
+    /**
+     * @var string
+     *
+     * @deprecated
+     * @see ContactTitle::RESOURCE_KEY
+     */
+    protected static $entityKey = ContactTitle::RESOURCE_KEY;
 
     /**
      * @var ContactTitleRepository
@@ -42,14 +52,21 @@ class ContactTitleController extends AbstractRestController implements ClassReso
      */
     private $entityManager;
 
+    /**
+     * @var DomainEventCollectorInterface
+     */
+    private $domainEventCollector;
+
     public function __construct(
         ViewHandlerInterface $viewHandler,
         ContactTitleRepository $contactTitleRepository,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        DomainEventCollectorInterface $domainEventCollector
     ) {
         parent::__construct($viewHandler);
         $this->contactTitleRepository = $contactTitleRepository;
         $this->entityManager = $entityManager;
+        $this->domainEventCollector = $domainEventCollector;
     }
 
     /**
@@ -81,7 +98,7 @@ class ContactTitleController extends AbstractRestController implements ClassReso
     {
         $list = new CollectionRepresentation(
             $this->contactTitleRepository->findBy([], ['title' => 'ASC']),
-            self::$entityKey
+            ContactTitle::RESOURCE_KEY
         );
 
         $view = $this->view($list, 200);
@@ -109,6 +126,11 @@ class ContactTitleController extends AbstractRestController implements ClassReso
             $title->setTitle($name);
 
             $this->entityManager->persist($title);
+
+            $this->domainEventCollector->collect(
+                new ContactTitleCreatedEvent($title, $request->request->all())
+            );
+
             $this->entityManager->flush();
 
             $view = $this->view($title, 200);
@@ -144,6 +166,10 @@ class ContactTitleController extends AbstractRestController implements ClassReso
                 } else {
                     $title->setTitle($name);
 
+                    $this->domainEventCollector->collect(
+                        new ContactTitleModifiedEvent($title, $request->request->all())
+                    );
+
                     $this->entityManager->flush();
                     $view = $this->view($title, 200);
                 }
@@ -169,7 +195,15 @@ class ContactTitleController extends AbstractRestController implements ClassReso
                 if (!$title) {
                     throw new EntityNotFoundException(self::$entityName, $id);
                 }
+
+                $titleId = $title->getId();
+                $titleName = $title->getTitle();
+
                 $this->entityManager->remove($title);
+
+                $this->domainEventCollector->collect(
+                    new ContactTitleRemovedEvent($titleId, $titleName)
+                );
             }
 
             $this->entityManager->flush();
@@ -200,7 +234,15 @@ class ContactTitleController extends AbstractRestController implements ClassReso
                     throw new EntityNotFoundException(self::$entityName, $id);
                 }
 
+                $titleId = $title->getId();
+                $titleName = $title->getTitle();
+
                 $this->entityManager->remove($title);
+
+                $this->domainEventCollector->collect(
+                    new ContactTitleRemovedEvent($titleId, $titleName)
+                );
+
                 $this->entityManager->flush();
             };
 
@@ -248,9 +290,9 @@ class ContactTitleController extends AbstractRestController implements ClassReso
     /**
      * Helper function for patch action.
      *
-     * @param array $item
+     * @param mixed[] $item
      *
-     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
+     * @throws EntityNotFoundException
      *
      * @return ContactTitle added or updated entity
      */
@@ -264,11 +306,19 @@ class ContactTitleController extends AbstractRestController implements ClassReso
                 throw new EntityNotFoundException(self::$entityName, $item['id']);
             } else {
                 $title->setTitle($item['title']);
+
+                $this->domainEventCollector->collect(
+                    new ContactTitleModifiedEvent($title, $item)
+                );
             }
         } else {
             $title = new ContactTitle();
             $title->setTitle($item['title']);
             $this->entityManager->persist($title);
+
+            $this->domainEventCollector->collect(
+                new ContactTitleCreatedEvent($title, $item)
+            );
         }
 
         return $title;

@@ -19,6 +19,7 @@ use Sulu\Bundle\AdminBundle\Admin\View\ListItemAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
+use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Symfony\Component\Intl\Countries;
@@ -124,7 +125,7 @@ class ContactAdmin extends Admin
 
             $viewCollection->add(
                 $this->viewBuilderFactory->createListViewBuilder(static::CONTACT_LIST_VIEW, '/contacts')
-                    ->setResourceKey('contacts')
+                    ->setResourceKey(ContactInterface::RESOURCE_KEY)
                     ->setListKey('contacts')
                     ->setTitle('sulu_contact.people')
                     ->addListAdapters(['table'])
@@ -135,20 +136,20 @@ class ContactAdmin extends Admin
             $viewCollection->add(
                 $this->viewBuilderFactory
                     ->createResourceTabViewBuilder(static::CONTACT_ADD_FORM_VIEW, '/contacts/add')
-                    ->setResourceKey('contacts')
+                    ->setResourceKey(ContactInterface::RESOURCE_KEY)
                     ->setBackView(static::CONTACT_LIST_VIEW)
             );
             $viewCollection->add(
                 $this->viewBuilderFactory
                     ->createResourceTabViewBuilder(static::CONTACT_EDIT_FORM_VIEW, '/contacts/:id')
-                    ->setResourceKey('contacts')
+                    ->setResourceKey(ContactInterface::RESOURCE_KEY)
                     ->setBackView(static::CONTACT_LIST_VIEW)
                     ->setTitleProperty('fullName')
             );
             $viewCollection->add(
                 $this->viewBuilderFactory
                     ->createFormViewBuilder('sulu_contact.contact_add_form.details', '/details')
-                    ->setResourceKey('contacts')
+                    ->setResourceKey(ContactInterface::RESOURCE_KEY)
                     ->setFormKey('contact_details')
                     ->setTabTitle('sulu_admin.details')
                     ->setEditView(static::CONTACT_EDIT_FORM_VIEW)
@@ -158,7 +159,7 @@ class ContactAdmin extends Admin
             $viewCollection->add(
                 $this->viewBuilderFactory
                     ->createFormViewBuilder('sulu_contact.contact_edit_form.details', '/details')
-                    ->setResourceKey('contacts')
+                    ->setResourceKey(ContactInterface::RESOURCE_KEY)
                     ->setFormKey('contact_details')
                     ->setTabTitle('sulu_admin.details')
                     ->addToolbarActions($contactFormToolbarActions)
