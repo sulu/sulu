@@ -124,8 +124,10 @@ class DefaultSnippetManagerTest extends TestCase
         $settingsManager->save($webspaceKey, 'snippets-' . $defaultType, Argument::type(NodeInterface::class))
             ->shouldBeCalledTimes($exists && $sameType ? 1 : 0);
 
-        $domainEventCollector->collect(Argument::type(DefaultSnippetModifiedEvent::class))->shouldBeCalled();
-        $domainEventCollector->dispatch()->shouldBeCalled();
+        $domainEventCollector->collect(Argument::type(DefaultSnippetModifiedEvent::class))
+            ->shouldBeCalledTimes($exists && $sameType ? 1 : 0);
+        $domainEventCollector->dispatch()
+            ->shouldBeCalledTimes($exists && $sameType ? 1 : 0);
 
         $result = $manager->save($webspaceKey, $defaultType, $uuid, $locale);
 
