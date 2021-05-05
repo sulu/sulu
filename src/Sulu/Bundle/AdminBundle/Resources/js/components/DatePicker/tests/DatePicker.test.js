@@ -17,7 +17,8 @@ test('DatePicker should render', () => {
     const datePicker = mount(<DatePicker className="date-picker" onChange={onChange} value={null} />);
 
     expect(datePicker.render()).toMatchSnapshot();
-    expect(datePicker.find('DateTime').render()).toMatchSnapshot();
+
+    expect(datePicker.find(ReactDatetime).render()).toMatchSnapshot();
 });
 
 test('DatePicker should show disabled Input when disabled', () => {
@@ -40,18 +41,18 @@ test('DatePicker should open overlay on icon-click', () => {
     const onChange = jest.fn();
     const datePicker = mount(<DatePicker onChange={onChange} value={null} />);
 
-    expect(datePicker.find('DateTime').props().open).toBeFalsy();
+    expect(datePicker.find(ReactDatetime).props().open).toBeFalsy();
     datePicker.find('Icon').simulate('click');
-    expect(datePicker.find('DateTime').props().open).toBeTruthy();
+    expect(datePicker.find(ReactDatetime).props().open).toBeTruthy();
 });
 
 test('DatePicker should not open overlay on icon-click when disabled', () => {
     const onChange = jest.fn();
     const datePicker = mount(<DatePicker disabled={true} onChange={onChange} value={null} />);
 
-    expect(datePicker.find('DateTime').props().open).toBeFalsy();
+    expect(datePicker.find(ReactDatetime).props().open).toBeFalsy();
     datePicker.find('Icon').simulate('click');
-    expect(datePicker.find('DateTime').props().open).toBeFalsy();
+    expect(datePicker.find(ReactDatetime).props().open).toBeFalsy();
 });
 
 test('DatePicker should render with placeholder', () => {
@@ -132,7 +133,7 @@ test('DatePicker should render date picker with time picker', () => {
     const datePicker = mount(<DatePicker onChange={onChange} options={options} value={null} />);
 
     expect(datePicker.render()).toMatchSnapshot();
-    expect(datePicker.find('DateTime').render()).toMatchSnapshot();
+    expect(datePicker.find(ReactDatetime).render()).toMatchSnapshot();
 });
 
 test('DatePicker should render error', () => {
