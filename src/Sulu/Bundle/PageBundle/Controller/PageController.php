@@ -16,6 +16,7 @@ use FOS\RestBundle\View\ViewHandlerInterface;
 use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use PHPCR\ItemNotFoundException;
 use PHPCR\PropertyInterface;
+use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Bundle\PageBundle\Repository\NodeRepositoryInterface;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Form\Exception\InvalidFormException;
@@ -406,7 +407,7 @@ class PageController extends AbstractRestController implements ClassResourceInte
                     $this->documentManager->remove($document);
                     $this->documentManager->flush();
                 } catch (DocumentNotFoundException $ex) {
-                    throw new EntityNotFoundException('Content', $id);
+                    throw new EntityNotFoundException('Content', $id, $ex);
                 }
             }
             );
@@ -621,10 +622,10 @@ class PageController extends AbstractRestController implements ClassResourceInte
         $webspaces = [];
         /** @var Webspace $webspace */
         foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
-            if (false === $this->securityChecker->hasPermission(
-                    new SecurityCondition('sulu.webspaces.' . $webspace->getKey(), $locale, SecurityBehavior::class),
-                    'view'
-                ) || null === $webspace->getLocalization($locale)) {
+            if (null === $webspace->getLocalization($locale) || false === $this->securityChecker->hasPermission(
+                new SecurityCondition(PageAdmin::getPageSecurityContext($webspace->getKey()), $locale, SecurityBehavior::class),
+                'view'
+            )) {
                 continue;
             }
             $paths[] = $this->sessionManager->getContentPath($webspace->getKey());
@@ -644,7 +645,15 @@ class PageController extends AbstractRestController implements ClassResourceInte
         string $locale,
         UserInterface $user
     ) {
+        /** @var Webspace $webspace */
         $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
+        if (null === $webspace->getLocalization($locale) || false === $this->securityChecker->hasPermission(
+            new SecurityCondition(PageAdmin::getPageSecurityContext($webspace->getKey()), $locale, SecurityBehavior::class),
+            'view'
+        )) {
+            return [];
+        }
+
         $paths = [$this->sessionManager->getContentPath($webspace->getKey())];
         $webspaces = [$webspace->getKey() => $webspace];
 
@@ -704,7 +713,7 @@ class PageController extends AbstractRestController implements ClassResourceInte
     private function getSecurityCondition(Request $request, $document = null)
     {
         return new SecurityCondition(
-            'sulu.webspaces.' . $document->getWebspaceName(),
+            PageAdmin::getPageSecurityContext($document->getWebspaceName()),
             $this->getLocale($request),
             SecurityBehavior::class,
             $request->get('id')
