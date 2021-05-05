@@ -11,7 +11,8 @@
 
 namespace Sulu\Bundle\EventLogBundle\Infrastructure\Doctrine\Repository;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\DBAL\Query\QueryBuilder;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Sulu\Bundle\EventLogBundle\Domain\Event\DomainEvent;
 use Sulu\Bundle\EventLogBundle\Domain\Model\EventRecordInterface;
@@ -20,7 +21,7 @@ use Sulu\Bundle\EventLogBundle\Domain\Repository\EventRecordRepositoryInterface;
 class EventRecordRepository implements EventRecordRepositoryInterface
 {
     /**
-     * @var EntityManagerInterface
+     * @var EntityManager
      */
     protected $entityManager;
 
@@ -34,7 +35,7 @@ class EventRecordRepository implements EventRecordRepositoryInterface
      */
     private $shouldPersistPayload;
 
-    public function __construct(EntityManagerInterface $entityManager, bool $shouldPersistPayload)
+    public function __construct(EntityManager $entityManager, bool $shouldPersistPayload)
     {
         $this->entityManager = $entityManager;
         $this->entityRepository = $entityManager->getRepository(EventRecordInterface::class);
@@ -44,7 +45,7 @@ class EventRecordRepository implements EventRecordRepositoryInterface
     public function createForDomainEvent(DomainEvent $domainEvent): EventRecordInterface
     {
         /** @var class-string<EventRecordInterface> $className */
-        $className = $this->entityRepository->getClassName();
+        $className = $this->getClassName();
 
         /** @var EventRecordInterface $eventRecord */
         $eventRecord = new $className();
@@ -67,39 +68,49 @@ class EventRecordRepository implements EventRecordRepositoryInterface
         return $eventRecord;
     }
 
+    protected function getClassName(): string
+    {
+        return $this->entityRepository->getClassName();
+    }
+
+    protected function getQueryBuilder(): QueryBuilder
+    {
+        return $this->entityManager->getConnection()->createQueryBuilder();
+    }
+
     public function addAndCommit(EventRecordInterface $eventRecord): void
     {
-        // use persister to insert only given entity instead of flushing all managed entities via the entity manager
+        // use query-builder to insert only given entity instead of flushing all managed entities via the entity-manager
         // this prevents flushing unrelated changes and allows to call this method in a postFlush event-listener
+        $classMetadata = $this->entityManager->getClassMetadata($this->getClassName());
 
-        $userId = null;
-        if ($eventRecord->getUser()) {
-            $userId = $eventRecord->getUser()->getId();
+        $queryBuilder = $this->getQueryBuilder();
+        $queryBuilder
+            ->insert($classMetadata->getTableName())
+            ->setValue($classMetadata->getColumnName('eventType'), $queryBuilder->createNamedParameter($eventRecord->getEventType()))
+            ->setValue($classMetadata->getColumnName('eventContext'), $queryBuilder->createNamedParameter(\json_encode($eventRecord->getEventContext())))
+            ->setValue($classMetadata->getColumnName('eventDateTime'), $queryBuilder->createNamedParameter($eventRecord->getEventDateTime()->format('Y-m-d H:i:s')))
+            ->setValue($classMetadata->getColumnName('eventBatch'), $queryBuilder->createNamedParameter($eventRecord->getEventBatch()))
+            ->setValue($classMetadata->getColumnName('resourceKey'), $queryBuilder->createNamedParameter($eventRecord->getResourceKey()))
+            ->setValue($classMetadata->getColumnName('resourceId'), $queryBuilder->createNamedParameter($eventRecord->getResourceId()))
+            ->setValue($classMetadata->getColumnName('resourceLocale'), $queryBuilder->createNamedParameter($eventRecord->getResourceLocale()))
+            ->setValue($classMetadata->getColumnName('resourceWebspaceKey'), $queryBuilder->createNamedParameter($eventRecord->getResourceWebspaceKey()))
+            ->setValue($classMetadata->getColumnName('resourceTitle'), $queryBuilder->createNamedParameter($eventRecord->getResourceTitle()))
+            ->setValue($classMetadata->getColumnName('resourceTitleLocale'), $queryBuilder->createNamedParameter($eventRecord->getResourceTitleLocale()))
+            ->setValue($classMetadata->getColumnName('resourceSecurityContext'), $queryBuilder->createNamedParameter($eventRecord->getResourceSecurityContext()))
+            ->setValue($classMetadata->getColumnName('resourceSecurityObjectType'), $queryBuilder->createNamedParameter($eventRecord->getResourceSecurityObjectType()))
+            ->setValue($classMetadata->getColumnName('resourceSecurityObjectId'), $queryBuilder->createNamedParameter($eventRecord->getResourceSecurityObjectId()));
+
+        if (null !== $eventRecord->getUser()) {
+            $queryBuilder->setValue($classMetadata->getColumnName('userId'), $queryBuilder->createNamedParameter($eventRecord->getUser()->getId()));
         }
 
-        $queryBuilder = $this->entityManager->getConnection()->createQueryBuilder();
-        $queryBuilder
-            ->insert('el_event_records')
-            ->values(
-                [
-                    'eventType' => $queryBuilder->createNamedParameter($eventRecord->getEventType()),
-                    'eventContext' => $queryBuilder->createNamedParameter(\json_encode($eventRecord->getEventContext(), true)),
-                    'eventDateTime' => $queryBuilder->createNamedParameter($eventRecord->getEventDateTime()->format('Y-m-d H:i:s')),
-                    'eventBatch' => $queryBuilder->createNamedParameter($eventRecord->getEventBatch()),
-                    'resourceKey' => $queryBuilder->createNamedParameter($eventRecord->getResourceKey()),
-                    'resourceId' => $queryBuilder->createNamedParameter($eventRecord->getResourceId()),
-                    'resourceLocale' => $queryBuilder->createNamedParameter($eventRecord->getResourceLocale()),
-                    'resourceWebspaceKey' => $queryBuilder->createNamedParameter($eventRecord->getResourceWebspaceKey()),
-                    'resourceTitle' => $queryBuilder->createNamedParameter($eventRecord->getResourceTitle()),
-                    'resourceTitleLocale' => $queryBuilder->createNamedParameter($eventRecord->getResourceTitleLocale()),
-                    'resourceSecurityContext' => $queryBuilder->createNamedParameter($eventRecord->getResourceSecurityContext()),
-                    'resourceSecurityObjectType' => $queryBuilder->createNamedParameter($eventRecord->getResourceSecurityObjectType()),
-                    'resourceSecurityObjectId' => $queryBuilder->createNamedParameter($eventRecord->getResourceSecurityObjectId()),
-                    'userId' => $queryBuilder->createNamedParameter($userId),
-                ]);
-
         if ($this->shouldPersistPayload) {
-            $queryBuilder->setValue('eventPayload', $queryBuilder->createNamedParameter(\json_encode($eventRecord->getEventPayload(), true)));
+            $queryBuilder->setValue('eventPayload', $queryBuilder->createNamedParameter(\json_encode($eventRecord->getEventPayload())));
+        }
+
+        if (!$classMetadata->idGenerator->isPostInsertGenerator()) {
+            $queryBuilder->setValue('id', $classMetadata->idGenerator->generate($this->entityManager, $eventRecord));
         }
 
         $queryBuilder->execute();
