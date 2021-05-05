@@ -101,6 +101,7 @@ class EventRecordRepository implements EventRecordRepositoryInterface
             $queryBuilder->setValue($classMetadata->getColumnName('eventPayload'), $queryBuilder->createNamedParameter(\json_encode($eventRecord->getEventPayload())));
         }
 
+        // set value of id explicitly if class has a pre-insert identity-generator to be compatible with postgresql
         if (!$classMetadata->idGenerator->isPostInsertGenerator()) {
             $queryBuilder->setValue($classMetadata->getColumnName('id'), $classMetadata->idGenerator->generate($this->entityManager, $eventRecord));
         }
