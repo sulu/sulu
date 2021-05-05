@@ -194,7 +194,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
 
         $data = new ListRepresentation(
             $snippets,
-            'snippets',
+            SnippetDocument::RESOURCE_KEY,
             'sulu_snippet.get_snippets',
             $request->query->all(),
             $this->listRestHelper->getPage(),

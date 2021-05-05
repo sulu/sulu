@@ -18,6 +18,7 @@ use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
+use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
@@ -122,8 +123,8 @@ class SnippetAdmin extends Admin
         if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
             $viewCollection->add(
                 $this->viewBuilderFactory->createListViewBuilder(static::LIST_VIEW, '/snippets/:locale')
-                    ->setResourceKey('snippets')
-                    ->setListKey('snippets')
+                    ->setResourceKey(SnippetDocument::RESOURCE_KEY)
+                    ->setListKey(SnippetDocument::LIST_KEY)
                     ->setTitle('sulu_snippet.snippets')
                     ->addListAdapters(['table'])
                     ->addLocales($snippetLocales)
@@ -134,13 +135,13 @@ class SnippetAdmin extends Admin
             $viewCollection->add(
                 $this->viewBuilderFactory
                     ->createResourceTabViewBuilder(static::ADD_FORM_VIEW, '/snippets/:locale/add')
-                    ->setResourceKey('snippets')
+                    ->setResourceKey(SnippetDocument::RESOURCE_KEY)
                     ->addLocales($snippetLocales)
                     ->setBackView(static::LIST_VIEW)
             );
             $viewCollection->add(
                 $this->viewBuilderFactory->createFormViewBuilder('sulu_snippet.add_form.details', '/details')
-                    ->setResourceKey('snippets')
+                    ->setResourceKey(SnippetDocument::RESOURCE_KEY)
                     ->setFormKey('snippet')
                     ->setTabTitle('sulu_admin.details')
                     ->setEditView(static::EDIT_FORM_VIEW)
@@ -150,14 +151,14 @@ class SnippetAdmin extends Admin
             $viewCollection->add(
                 $this->viewBuilderFactory
                     ->createResourceTabViewBuilder(static::EDIT_FORM_VIEW, '/snippets/:locale/:id')
-                    ->setResourceKey('snippets')
+                    ->setResourceKey(SnippetDocument::RESOURCE_KEY)
                     ->addLocales($snippetLocales)
                     ->setBackView(static::LIST_VIEW)
                     ->setTitleProperty('title')
             );
             $viewCollection->add(
                 $this->viewBuilderFactory->createFormViewBuilder('sulu_snippet.edit_form.details', '/details')
-                    ->setResourceKey('snippets')
+                    ->setResourceKey(SnippetDocument::RESOURCE_KEY)
                     ->setFormKey('snippet')
                     ->setTabTitle('sulu_admin.details')
                     ->addToolbarActions($formToolbarActionsWithType)
@@ -166,7 +167,7 @@ class SnippetAdmin extends Admin
             $viewCollection->add(
                 $this->viewBuilderFactory
                     ->createFormViewBuilder('sulu_snippet.edit_form.taxonomies', '/taxonomies')
-                    ->setResourceKey('snippets')
+                    ->setResourceKey(SnippetDocument::RESOURCE_KEY)
                     ->setFormKey('snippet_taxonomies')
                     ->setTabTitle('sulu_snippet.taxonomies')
                     ->addToolbarActions($formToolbarActionsWithoutType)
