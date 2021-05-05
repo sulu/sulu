@@ -12,10 +12,6 @@
 namespace Sulu\Bundle\CoreBundle\DependencyInjection;
 
 use Oro\ORM\Query\AST\Functions\String\GroupConcat;
-use Sulu\Bundle\ContactBundle\Entity\Account;
-use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
-use Sulu\Bundle\MediaBundle\Entity\Collection;
-use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
 use Sulu\Component\HttpKernel\SuluKernel;
 use Sulu\Component\Rest\Csv\ObjectNotSupportedException;
 use Sulu\Component\Rest\DQL\Cast;
@@ -176,10 +172,6 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
                                 'group_concat' => GroupConcat::class,
                                 'CAST' => Cast::class,
                             ],
-                        ],
-                        'resolve_target_entities' => [
-                            CollectionInterface::class => Collection::class,
-                            AccountInterface::class => Account::class,
                         ],
                     ],
                 ]
