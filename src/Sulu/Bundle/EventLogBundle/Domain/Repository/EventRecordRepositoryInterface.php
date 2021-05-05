@@ -18,7 +18,5 @@ interface EventRecordRepositoryInterface
 {
     public function createForDomainEvent(DomainEvent $domainEvent): EventRecordInterface;
 
-    public function add(EventRecordInterface $eventRecord): void;
-
-    public function commit(): void;
+    public function addAndCommit(EventRecordInterface $eventRecord): void;
 }

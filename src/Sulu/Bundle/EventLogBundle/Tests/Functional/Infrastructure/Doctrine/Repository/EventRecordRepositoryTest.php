@@ -95,10 +95,32 @@ class EventRecordRepositoryTest extends SuluTestCase
         $eventRecord = $this->repository->createForDomainEvent($this->domainEvent->reveal());
         static::assertCount(0, $entityRepository->findAll());
 
-        $this->repository->add($eventRecord);
+        $this->repository->addAndCommit($eventRecord);
+        $eventRecords = $entityRepository->findAll();
+        static::assertCount(1, $eventRecords);
+        static::assertNull($eventRecords[0]->getEventPayload());
+
+        $this->repository->addAndCommit($eventRecord);
+        static::assertCount(2, $entityRepository->findAll());
+    }
+
+    public function testAddAndCommitWithPayload(): void
+    {
+        // boot kernel with additional configuration and update variables that are set in setUp method
+        static::bootKernel(['environment' => 'with_payload']);
+        $this->setUp();
+
+        $entityRepository = $this->entityManager->getRepository(EventRecordInterface::class);
+
+        $eventRecord = $this->repository->createForDomainEvent($this->domainEvent->reveal());
         static::assertCount(0, $entityRepository->findAll());
 
-        $this->repository->commit();
-        static::assertCount(1, $entityRepository->findAll());
+        $this->repository->addAndCommit($eventRecord);
+        $eventRecords = $entityRepository->findAll();
+        static::assertCount(1, $eventRecords);
+        static::assertSame(['name' => 'name-123', 'description' => 'description-123'], $eventRecords[0]->getEventPayload());
+
+        $this->repository->addAndCommit($eventRecord);
+        static::assertCount(2, $entityRepository->findAll());
     }
 }

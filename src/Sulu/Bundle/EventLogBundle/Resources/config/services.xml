@@ -21,12 +21,7 @@
 
         <service id="sulu_event_log.event_record_repository.doctrine" class="Sulu\Bundle\EventLogBundle\Infrastructure\Doctrine\Repository\EventRecordRepository">
             <argument type="service" id="doctrine.orm.entity_manager"/>
-        </service>
-
-        <service id="sulu_event_log.event_record_metadata_subscriber" class="Sulu\Bundle\EventLogBundle\Infrastructure\Doctrine\Subscriber\EventRecordMetadataSubscriber">
             <argument>%sulu_event_log.storage.persist_payload%</argument>
-
-            <tag name="doctrine.event_subscriber" priority="256"/>
         </service>
 
         <service id="sulu_event_log.domain_event_collector_subscriber" class="Sulu\Bundle\EventLogBundle\Infrastructure\Doctrine\Subscriber\DomainEventCollectorSubscriber">
