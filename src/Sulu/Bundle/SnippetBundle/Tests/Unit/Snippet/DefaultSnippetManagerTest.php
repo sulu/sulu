@@ -14,7 +14,10 @@ namespace Sulu\Bundle\SnippetBundle\Tests\Unit\Snippet;
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
+use Sulu\Bundle\SnippetBundle\Domain\Event\DefaultSnippetModifiedEvent;
+use Sulu\Bundle\SnippetBundle\Domain\Event\DefaultSnippetRemovedEvent;
 use Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManager;
 use Sulu\Bundle\SnippetBundle\Snippet\SnippetNotFoundException;
 use Sulu\Bundle\SnippetBundle\Snippet\WrongSnippetTypeException;
@@ -88,12 +91,14 @@ class DefaultSnippetManagerTest extends TestCase
         $documentManager = $this->prophesize(DocumentManagerInterface::class);
         $webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
         $registry = $this->prophesize(DocumentRegistry::class);
+        $domainEventCollector = $this->prophesize(DomainEventCollectorInterface::class);
 
         $manager = new DefaultSnippetManager(
             $settingsManager->reveal(),
             $documentManager->reveal(),
             $webspaceManager->reveal(),
             $registry->reveal(),
+            $domainEventCollector->reveal(),
             $this->defaultTypes
         );
 
@@ -119,6 +124,9 @@ class DefaultSnippetManagerTest extends TestCase
         $settingsManager->save($webspaceKey, 'snippets-' . $defaultType, Argument::type(NodeInterface::class))
             ->shouldBeCalledTimes($exists && $sameType ? 1 : 0);
 
+        $domainEventCollector->collect(Argument::type(DefaultSnippetModifiedEvent::class))->shouldBeCalled();
+        $domainEventCollector->dispatch()->shouldBeCalled();
+
         $result = $manager->save($webspaceKey, $defaultType, $uuid, $locale);
 
         $this->assertEquals($result, $document);
@@ -130,16 +138,21 @@ class DefaultSnippetManagerTest extends TestCase
         $documentManager = $this->prophesize(DocumentManagerInterface::class);
         $webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
         $registry = $this->prophesize(DocumentRegistry::class);
+        $domainEventCollector = $this->prophesize(DomainEventCollectorInterface::class);
 
         $manager = new DefaultSnippetManager(
             $settingsManager->reveal(),
             $documentManager->reveal(),
             $webspaceManager->reveal(),
             $registry->reveal(),
+            $domainEventCollector->reveal(),
             $this->defaultTypes
         );
 
         $settingsManager->remove('sulu_io', 'snippets-test')->shouldBeCalledTimes(1);
+
+        $domainEventCollector->collect(Argument::type(DefaultSnippetRemovedEvent::class))->shouldBeCalled();
+        $domainEventCollector->dispatch()->shouldBeCalled();
 
         $manager->remove('sulu_io', 'test');
     }
@@ -163,12 +176,14 @@ class DefaultSnippetManagerTest extends TestCase
         $documentManager = $this->prophesize(DocumentManagerInterface::class);
         $webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
         $registry = $this->prophesize(DocumentRegistry::class);
+        $domainEventCollector = $this->prophesize(DomainEventCollectorInterface::class);
 
         $manager = new DefaultSnippetManager(
             $settingsManager->reveal(),
             $documentManager->reveal(),
             $webspaceManager->reveal(),
             $registry->reveal(),
+            $domainEventCollector->reveal(),
             $this->defaultTypes
         );
 
@@ -207,12 +222,14 @@ class DefaultSnippetManagerTest extends TestCase
         $documentManager = $this->prophesize(DocumentManagerInterface::class);
         $webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
         $registry = $this->prophesize(DocumentRegistry::class);
+        $domainEventCollector = $this->prophesize(DomainEventCollectorInterface::class);
 
         $manager = new DefaultSnippetManager(
             $settingsManager->reveal(),
             $documentManager->reveal(),
             $webspaceManager->reveal(),
             $registry->reveal(),
+            $domainEventCollector->reveal(),
             $this->defaultTypes
         );
 
@@ -230,12 +247,14 @@ class DefaultSnippetManagerTest extends TestCase
         $documentManager = $this->prophesize(DocumentManagerInterface::class);
         $webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
         $registry = $this->prophesize(DocumentRegistry::class);
+        $domainEventCollector = $this->prophesize(DomainEventCollectorInterface::class);
 
         $manager = new DefaultSnippetManager(
             $settingsManager->reveal(),
             $documentManager->reveal(),
             $webspaceManager->reveal(),
             $registry->reveal(),
+            $domainEventCollector->reveal(),
             $this->defaultTypes
         );
 
@@ -262,12 +281,14 @@ class DefaultSnippetManagerTest extends TestCase
         $documentManager = $this->prophesize(DocumentManagerInterface::class);
         $webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
         $registry = $this->prophesize(DocumentRegistry::class);
+        $domainEventCollector = $this->prophesize(DomainEventCollectorInterface::class);
 
         $manager = new DefaultSnippetManager(
             $settingsManager->reveal(),
             $documentManager->reveal(),
             $webspaceManager->reveal(),
             $registry->reveal(),
+            $domainEventCollector->reveal(),
             $this->defaultTypes
         );
 
@@ -295,12 +316,14 @@ class DefaultSnippetManagerTest extends TestCase
         $documentManager = $this->prophesize(DocumentManagerInterface::class);
         $webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
         $registry = $this->prophesize(DocumentRegistry::class);
+        $domainEventCollector = $this->prophesize(DomainEventCollectorInterface::class);
 
         $manager = new DefaultSnippetManager(
             $settingsManager->reveal(),
             $documentManager->reveal(),
             $webspaceManager->reveal(),
             $registry->reveal(),
+            $domainEventCollector->reveal(),
             $this->defaultTypes
         );
 
@@ -328,12 +351,14 @@ class DefaultSnippetManagerTest extends TestCase
         $documentManager = $this->prophesize(DocumentManagerInterface::class);
         $webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
         $registry = $this->prophesize(DocumentRegistry::class);
+        $domainEventCollector = $this->prophesize(DomainEventCollectorInterface::class);
 
         $manager = new DefaultSnippetManager(
             $settingsManager->reveal(),
             $documentManager->reveal(),
             $webspaceManager->reveal(),
             $registry->reveal(),
+            $domainEventCollector->reveal(),
             $this->defaultTypes
         );
 

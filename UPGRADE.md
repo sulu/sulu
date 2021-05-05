@@ -120,6 +120,7 @@ call to pass the correct parameters:
 - `Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManager`
 - `Sulu\Bundle\MediaBundle\Media\FormatOptions\FormatOptionsManager`
 - `Sulu\Bundle\MediaBundle\Controller\MediaPreviewController`
+- `Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManager`
 
 ### Added SuluEventLogBundle for dispatching and recording events that happen in the application
 

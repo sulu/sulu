@@ -11,7 +11,10 @@
 
 namespace Sulu\Bundle\SnippetBundle\Snippet;
 
+use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
+use Sulu\Bundle\SnippetBundle\Domain\Event\DefaultSnippetModifiedEvent;
+use Sulu\Bundle\SnippetBundle\Domain\Event\DefaultSnippetRemovedEvent;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
@@ -44,6 +47,11 @@ class DefaultSnippetManager implements DefaultSnippetManagerInterface
     private $registry;
 
     /**
+     * @var DomainEventCollectorInterface
+     */
+    private $domainEventCollector;
+
+    /**
      * @var FrozenParameterBag
      */
     private $areas;
@@ -53,12 +61,14 @@ class DefaultSnippetManager implements DefaultSnippetManagerInterface
         DocumentManagerInterface $documentManager,
         WebspaceManagerInterface $webspaceManager,
         DocumentRegistry $registry,
+        DomainEventCollectorInterface $domainEventCollector,
         array $areas
     ) {
         $this->settingsManager = $settingsManager;
         $this->documentManager = $documentManager;
         $this->webspaceManager = $webspaceManager;
         $this->registry = $registry;
+        $this->domainEventCollector = $domainEventCollector;
         $this->areas = new FrozenParameterBag($areas);
     }
 
@@ -80,12 +90,24 @@ class DefaultSnippetManager implements DefaultSnippetManagerInterface
             $this->registry->getNodeForDocument($document)
         );
 
+        $this->domainEventCollector->collect(
+            new DefaultSnippetModifiedEvent($webspaceKey, $type, $document)
+        );
+
+        $this->domainEventCollector->dispatch();
+
         return $document;
     }
 
     public function remove($webspaceKey, $type)
     {
         $this->settingsManager->remove($webspaceKey, 'snippets-' . $type);
+
+        $this->domainEventCollector->collect(
+            new DefaultSnippetRemovedEvent($webspaceKey, $type)
+        );
+
+        $this->domainEventCollector->dispatch();
     }
 
     public function load($webspaceKey, $type, $locale)
