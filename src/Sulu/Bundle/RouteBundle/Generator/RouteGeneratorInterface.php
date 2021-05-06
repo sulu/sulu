@@ -21,7 +21,8 @@ interface RouteGeneratorInterface
     /**
      * Generates route by route-schema for given entity.
      *
-     * @param object $entity
+     * @param object|mixed[] $entity
+     * @param mixed[] $options
      *
      * @return string
      */
@@ -29,6 +30,8 @@ interface RouteGeneratorInterface
 
     /**
      * Returns options-resolver for validating options.
+     *
+     * @param mixed[] $options
      *
      * @return OptionsResolver
      */
