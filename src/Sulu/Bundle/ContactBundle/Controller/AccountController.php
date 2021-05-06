@@ -248,7 +248,7 @@ class AccountController extends AbstractRestController implements ClassResourceI
      */
     public function getAddressesAction($id, Request $request)
     {
-        if ('true' === $request->get('flat')) {
+        if ('true' == $request->get('flat')) {
             $listBuilder = $this->listBuilderFactory->create($this->getAccountEntityName());
 
             $this->restHelper->initializeListBuilder($listBuilder, $this->getAccountAddressesFieldDescriptors());
@@ -410,7 +410,7 @@ class AccountController extends AbstractRestController implements ClassResourceI
     {
         $locale = $this->getUser()->getLocale();
 
-        if ('true' === $request->get('flat')) {
+        if ('true' == $request->get('flat')) {
             $fieldDescriptors = $this->getFieldDescriptors();
             $listBuilder = $this->generateFlatListBuilder();
             $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
