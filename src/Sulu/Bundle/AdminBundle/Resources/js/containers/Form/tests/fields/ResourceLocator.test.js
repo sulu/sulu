@@ -137,6 +137,9 @@ test('Pass correct options to ResourceLocatorHistory if entity already existed',
                 options: {history: true},
             }}
             formInspector={formInspector}
+            schemaOptions={{
+                entity_class: {name: 'entity_class', value: 'entity-class-value'},
+            }}
         />
     );
 
@@ -144,7 +147,7 @@ test('Pass correct options to ResourceLocatorHistory if entity already existed',
         resourceLocator.update();
         expect(resourceLocator.find('ResourceLocatorHistory')).toHaveLength(1);
         expect(resourceLocator.find('ResourceLocatorHistory').prop('options'))
-            .toEqual({history: true, webspace: 'sulu', resourceKey: 'test'});
+            .toEqual({entityClass: 'entity-class-value', history: true, webspace: 'sulu', resourceKey: 'test'});
         expect(resourceLocator.find('ResourceLocatorHistory').prop('resourceKey')).toEqual('page_resourcelocators');
         expect(resourceLocator.find('ResourceLocatorHistory').prop('id')).toEqual(1);
     });
@@ -332,7 +335,7 @@ test('Should automatically request new URL when part field is finished on add fo
     });
 });
 
-test('Should request URL with FormInspector options and resourceStorePropertiesToRequest field-type-option', () => {
+test('Should request URL with parameters from FormInspector options, fieldTypeOptions and schemaOptions', () => {
     const resourceStore = new ResourceStore('test', undefined, {locale: observable.box('en')});
     const formInspector = new FormInspector(
         new ResourceFormStore(
@@ -364,6 +367,10 @@ test('Should request URL with FormInspector options and resourceStorePropertiesT
             }}
             formInspector={formInspector}
             onChange={changeSpy}
+            schemaOptions={{
+                entity_class: {name: 'entity_class', value: 'entity-class-value'},
+                route_schema: {name: 'entity_class', value: '/events/{implode("-", object)}'},
+            }}
             schemaPath="/url"
         />
     );
@@ -391,6 +398,8 @@ test('Should request URL with FormInspector options and resourceStorePropertiesT
             locale: 'en',
             parts: {title: 'title-value', subtitle: 'subtitle-value'},
             resourceKey: 'test',
+            entityClass: 'entity-class-value',
+            routeSchema: '/events/{implode("-", object)}',
             webspace: 'example',
             requestParamKey: 'property-value',
         }
