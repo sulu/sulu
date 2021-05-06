@@ -8,7 +8,8 @@ The `User` entity was extended with `creator`, `changer`, `created` and `changed
 For this the following database migration is needed:
 
 ```sql
-ALTER TABLE se_users ADD created DATETIME NOT NULL, ADD changed DATETIME NOT NULL, ADD idUsersCreator INT DEFAULT NULL, ADD idUsersChanger INT DEFAULT NULL;
+ALTER TABLE se_users ADD created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(), ADD changed DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(), ADD idUsersCreator INT DEFAULT NULL, ADD idUsersChanger INT DEFAULT NULL;
+ALTER TABLE se_users CHANGE created created DATETIME NOT NULL, CHANGE changed changed DATETIME NOT NULL;
 ALTER TABLE se_users ADD CONSTRAINT FK_B10AC28EDBF11E1D FOREIGN KEY (idUsersCreator) REFERENCES se_users (id) ON DELETE SET NULL;
 ALTER TABLE se_users ADD CONSTRAINT FK_B10AC28E30D07CD5 FOREIGN KEY (idUsersChanger) REFERENCES se_users (id) ON DELETE SET NULL;
 CREATE INDEX IDX_B10AC28EDBF11E1D ON se_users (idUsersCreator);
