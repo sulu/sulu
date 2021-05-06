@@ -50,6 +50,7 @@ class SuluTestKernel extends SuluKernel
             new \Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle(),
             new \FOS\RestBundle\FOSRestBundle(),
             new \HandcraftedInTheAlps\RestRoutingBundle\RestRoutingBundle(),
+            new \FOS\JsRoutingBundle\FOSJsRoutingBundle(),
 
             // Massive
             new \Massive\Bundle\SearchBundle\MassiveSearchBundle(),
@@ -105,7 +106,6 @@ class SuluTestKernel extends SuluKernel
 
         if (self::CONTEXT_ADMIN === $this->getContext()) {
             $bundles[] = new \Symfony\Bundle\SecurityBundle\SecurityBundle();
-            $bundles[] = new \FOS\JsRoutingBundle\FOSJsRoutingBundle();
         }
 
         // @phpstan-ignore-next-line
