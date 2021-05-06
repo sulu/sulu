@@ -27,12 +27,21 @@ class AnalyticsRemovedEvent extends DomainEvent
      */
     private $webspaceKey;
 
-    public function __construct(int $id, string $webspaceKey)
-    {
+    /**
+     * @var string|null
+     */
+    private $analyticsTitle;
+
+    public function __construct(
+        int $id,
+        string $webspaceKey,
+        ?string $analyticsTitle
+    ) {
         parent::__construct();
 
         $this->id = $id;
         $this->webspaceKey = $webspaceKey;
+        $this->analyticsTitle = $analyticsTitle;
     }
 
     public function getId(): int
@@ -45,14 +54,24 @@ class AnalyticsRemovedEvent extends DomainEvent
         return 'removed';
     }
 
+    public function getResourceKey(): string
+    {
+        return AnalyticsInterface::RESOURCE_KEY;
+    }
+
     public function getResourceId(): string
     {
         return (string) $this->id;
     }
 
-    public function getResourceKey(): string
+    public function getResourceWebspaceKey(): string
     {
-        return AnalyticsInterface::RESOURCE_KEY;
+        return $this->webspaceKey;
+    }
+
+    public function getResourceTitle(): ?string
+    {
+        return $this->analyticsTitle;
     }
 
     public function getResourceSecurityContext(): ?string

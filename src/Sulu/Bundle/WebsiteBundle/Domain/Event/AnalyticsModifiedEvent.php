@@ -65,6 +65,11 @@ class AnalyticsModifiedEvent extends DomainEvent
         return (string) $this->analytics->getId();
     }
 
+    public function getResourceWebspaceKey(): string
+    {
+        return $this->analytics->getWebspaceKey();
+    }
+
     public function getResourceTitle(): ?string
     {
         return $this->analytics->getTitle();
