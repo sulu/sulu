@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\CustomUrlBundle\Domain\Event;
 
 use Sulu\Bundle\CustomUrlBundle\Admin\CustomUrlAdmin;
-use Sulu\Bundle\EventLogBundle\Domain\Event\DomainEvent;
+use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 
 class CustomUrlModifiedEvent extends DomainEvent

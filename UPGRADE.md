@@ -145,7 +145,7 @@ and recording events that happen in the application. To register the services of
 to add the bundle to your `config/bundles.php` file:
 
 ```diff
-+    Sulu\Bundle\EventLogBundle\SuluEventLogBundle::class => ['all' => true],
++    Sulu\Bundle\ActivityBundle\SuluEventLogBundle::class => ['all' => true],
 ```
 
 Additionally, you need to update your database schema to include the tables that are used by the bundle:

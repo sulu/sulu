@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Tests\Functional\Analytics;
 
-use Sulu\Bundle\EventLogBundle\Domain\Model\EventRecord;
+use Sulu\Bundle\ActivityBundle\Domain\Model\EventRecord;
 use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsInterface;
 use Sulu\Bundle\WebsiteBundle\Tests\Functional\BaseFunctional;
 use Symfony\Component\PropertyAccess\PropertyAccess;

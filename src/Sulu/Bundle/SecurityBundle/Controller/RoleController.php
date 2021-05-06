@@ -15,7 +15,7 @@ use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
-use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\SecurityBundle\Domain\Event\RoleCreatedEvent;
 use Sulu\Bundle\SecurityBundle\Domain\Event\RoleModifiedEvent;
 use Sulu\Bundle\SecurityBundle\Domain\Event\RoleRemovedEvent;

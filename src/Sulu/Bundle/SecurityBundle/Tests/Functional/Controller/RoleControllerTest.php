@@ -13,8 +13,8 @@ namespace Sulu\Bundle\SecurityBundle\Tests\Functional\Controller;
 
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\ObjectRepository;
-use Sulu\Bundle\EventLogBundle\Domain\Event\DomainEvent;
-use Sulu\Bundle\EventLogBundle\Domain\Model\EventRecord;
+use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
+use Sulu\Bundle\ActivityBundle\Domain\Model\EventRecord;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\SecurityType;

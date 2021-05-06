@@ -15,7 +15,7 @@ use Sulu\Bundle\CategoryBundle\Admin\CategoryAdmin;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface;
 use Sulu\Bundle\CategoryBundle\Entity\KeywordInterface;
-use Sulu\Bundle\EventLogBundle\Domain\Event\DomainEvent;
+use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
 
 class CategoryKeywordAddedEvent extends DomainEvent
 {

@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\SnippetBundle\Domain\Event;
 
-use Sulu\Bundle\EventLogBundle\Domain\Event\DomainEvent;
+use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
 use Sulu\Bundle\SnippetBundle\Admin\SnippetAdmin;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 

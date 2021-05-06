@@ -13,8 +13,8 @@ namespace Sulu\Bundle\SnippetBundle\Tests\Functional\Controller;
 
 use Doctrine\Persistence\ObjectRepository;
 use PHPCR\SessionInterface;
-use Sulu\Bundle\EventLogBundle\Domain\Event\DomainEvent;
-use Sulu\Bundle\EventLogBundle\Domain\Model\EventRecord;
+use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
+use Sulu\Bundle\ActivityBundle\Domain\Model\EventRecord;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManagerInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;

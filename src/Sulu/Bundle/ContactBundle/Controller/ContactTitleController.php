@@ -20,7 +20,7 @@ use Sulu\Bundle\ContactBundle\Domain\Event\ContactTitleModifiedEvent;
 use Sulu\Bundle\ContactBundle\Domain\Event\ContactTitleRemovedEvent;
 use Sulu\Bundle\ContactBundle\Entity\ContactTitle;
 use Sulu\Bundle\ContactBundle\Entity\ContactTitleRepository;
-use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;

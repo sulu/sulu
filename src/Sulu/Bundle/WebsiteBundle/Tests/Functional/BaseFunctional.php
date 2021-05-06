@@ -13,7 +13,7 @@ namespace Sulu\Bundle\WebsiteBundle\Tests\Functional;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
-use Sulu\Bundle\EventLogBundle\Domain\Model\EventRecordInterface;
+use Sulu\Bundle\ActivityBundle\Domain\Model\EventRecordInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\WebsiteBundle\Analytics\AnalyticsManagerInterface;
 use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsInterface;

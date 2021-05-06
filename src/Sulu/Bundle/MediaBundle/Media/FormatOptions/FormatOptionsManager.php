@@ -13,7 +13,7 @@ namespace Sulu\Bundle\MediaBundle\Media\FormatOptions;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
-use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\MediaBundle\Domain\Event\MediaCropModifiedEvent;
 use Sulu\Bundle\MediaBundle\Domain\Event\MediaCropRemovedEvent;
 use Sulu\Bundle\MediaBundle\Entity\File;

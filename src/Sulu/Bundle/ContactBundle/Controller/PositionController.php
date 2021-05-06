@@ -20,7 +20,7 @@ use Sulu\Bundle\ContactBundle\Domain\Event\ContactPositionModifiedEvent;
 use Sulu\Bundle\ContactBundle\Domain\Event\ContactPositionRemovedEvent;
 use Sulu\Bundle\ContactBundle\Entity\Position;
 use Sulu\Bundle\ContactBundle\Entity\PositionRepository;
-use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;

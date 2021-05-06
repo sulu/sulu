@@ -15,8 +15,8 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Collector\DocumentDomainEventCollector;
-use Sulu\Bundle\EventLogBundle\Application\Dispatcher\DomainEventDispatcherInterface;
-use Sulu\Bundle\EventLogBundle\Domain\Event\DomainEvent;
+use Sulu\Bundle\ActivityBundle\Application\Dispatcher\DomainEventDispatcherInterface;
+use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
 
 class DocumentDomainEventCollectorTest extends TestCase
 {

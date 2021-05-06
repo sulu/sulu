@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\DocumentManagerBundle\Collector;
 
-use Sulu\Bundle\EventLogBundle\Domain\Event\DomainEvent;
+use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
 
 interface DocumentDomainEventCollectorInterface
 {
