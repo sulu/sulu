@@ -19,6 +19,8 @@ use Sulu\Bundle\AdminBundle\Admin\View\ListItemAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
+use Sulu\Bundle\ContactBundle\Entity\AccountContact;
+use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
@@ -219,7 +221,7 @@ class ContactAdmin extends Admin
 
             $viewCollection->add(
                 $this->viewBuilderFactory->createListViewBuilder(static::ACCOUNT_LIST_VIEW, '/accounts')
-                    ->setResourceKey('accounts')
+                    ->setResourceKey(AccountInterface::RESOURCE_KEY)
                     ->setListKey('accounts')
                     ->setTitle('sulu_contact.organizations')
                     ->addListAdapters(['table'])
@@ -230,13 +232,13 @@ class ContactAdmin extends Admin
             $viewCollection->add(
                 $this->viewBuilderFactory
                     ->createResourceTabViewBuilder(static::ACCOUNT_ADD_FORM_VIEW, '/accounts/add')
-                    ->setResourceKey('accounts')
+                    ->setResourceKey(AccountInterface::RESOURCE_KEY)
                     ->setBackView(static::ACCOUNT_LIST_VIEW)
             );
             $viewCollection->add(
                 $this->viewBuilderFactory
                     ->createFormViewBuilder('sulu_contact.account_add_form.details', '/details')
-                    ->setResourceKey('accounts')
+                    ->setResourceKey(AccountInterface::RESOURCE_KEY)
                     ->setFormKey('account_details')
                     ->setTabTitle('sulu_admin.details')
                     ->setEditView(static::ACCOUNT_EDIT_FORM_VIEW)
@@ -246,7 +248,7 @@ class ContactAdmin extends Admin
             $viewCollection->add(
                 $this->viewBuilderFactory
                     ->createResourceTabViewBuilder(static::ACCOUNT_EDIT_FORM_VIEW, '/accounts/:id')
-                    ->setResourceKey('accounts')
+                    ->setResourceKey(AccountInterface::RESOURCE_KEY)
                     ->setBackView(static::ACCOUNT_LIST_VIEW)
                     ->setTitleProperty('name')
                     ->addRouterAttributesToBlacklist(['active', 'filter', 'limit', 'page', 'search', 'sortColumn', 'sortOrder'])
@@ -254,7 +256,7 @@ class ContactAdmin extends Admin
             $viewCollection->add(
                 $this->viewBuilderFactory
                     ->createFormViewBuilder('sulu_contact.account_edit_form.details', '/details')
-                    ->setResourceKey('accounts')
+                    ->setResourceKey(AccountInterface::RESOURCE_KEY)
                     ->setFormKey('account_details')
                     ->setTabTitle('sulu_admin.details')
                     ->addToolbarActions($accountFormToolbarActions)
@@ -264,7 +266,7 @@ class ContactAdmin extends Admin
             $viewCollection->add(
                 $this->viewBuilderFactory
                     ->createListViewBuilder('sulu_contact.account_contacts_list', '/contacts')
-                    ->setResourceKey('account_contacts')
+                    ->setResourceKey(AccountContact::RESOURCE_KEY)
                     ->setListKey('account_contacts')
                     ->setTabTitle('sulu_contact.people')
                     ->addListAdapters(['table'])

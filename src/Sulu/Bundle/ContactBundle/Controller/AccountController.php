@@ -18,11 +18,18 @@ use FOS\RestBundle\View\ViewHandlerInterface;
 use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\ContactBundle\Contact\AccountFactoryInterface;
 use Sulu\Bundle\ContactBundle\Contact\AccountManager;
+use Sulu\Bundle\ContactBundle\Domain\Event\AccountContactAddedEvent;
+use Sulu\Bundle\ContactBundle\Domain\Event\AccountContactRemovedEvent;
+use Sulu\Bundle\ContactBundle\Domain\Event\AccountCreatedEvent;
+use Sulu\Bundle\ContactBundle\Domain\Event\AccountModifiedEvent;
+use Sulu\Bundle\ContactBundle\Domain\Event\AccountRemovedEvent;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact as AccountContactEntity;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\Entity\AccountRepositoryInterface;
 use Sulu\Bundle\ContactBundle\Entity\Address as AddressEntity;
 use Sulu\Bundle\ContactBundle\Entity\Contact as ContactEntity;
+use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
+use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
@@ -48,10 +55,16 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class AccountController extends AbstractRestController implements ClassResourceInterface, SecuredControllerInterface
 {
+    /**
+     * @deprecated Use the AccountInterface::RESOURCE_KEY constant instead
+     */
     protected static $entityKey = 'accounts';
 
     protected static $positionEntityName = 'SuluContactBundle:Position';
 
+    /**
+     * @deprecated Use the ContactInterface::RESOURCE_KEY constant instead
+     */
     protected static $contactEntityKey = 'contacts';
 
     protected static $accountContactEntityName = 'SuluContactBundle:AccountContact';
@@ -125,6 +138,11 @@ class AccountController extends AbstractRestController implements ClassResourceI
     private $accountFactory;
 
     /**
+     * @var DomainEventCollectorInterface
+     */
+    private $domainEventCollector;
+
+    /**
      * @var string
      */
     private $accountClass;
@@ -145,6 +163,7 @@ class AccountController extends AbstractRestController implements ClassResourceI
         EntityManagerInterface $entityManager,
         AccountManager $accountManager,
         AccountFactoryInterface $accountFactory,
+        DomainEventCollectorInterface $domainEventCollector,
         string $accountClass,
         string $contactClass
     ) {
@@ -157,6 +176,7 @@ class AccountController extends AbstractRestController implements ClassResourceI
         $this->entityManager = $entityManager;
         $this->accountManager = $accountManager;
         $this->accountFactory = $accountFactory;
+        $this->domainEventCollector = $domainEventCollector;
         $this->accountClass = $accountClass;
         $this->contactClass = $contactClass;
     }
@@ -211,7 +231,7 @@ class AccountController extends AbstractRestController implements ClassResourceI
         } else {
             $locale = $this->getUser()->getLocale();
             $contacts = $this->accountManager->findContactsByAccountId($id, $locale, false);
-            $list = new CollectionRepresentation($contacts, self::$contactEntityKey);
+            $list = new CollectionRepresentation($contacts, ContactInterface::RESOURCE_KEY);
         }
         $view = $this->view($list, 200);
 
@@ -308,6 +328,7 @@ class AccountController extends AbstractRestController implements ClassResourceI
             }
 
             $this->entityManager->persist($accountContact);
+            $this->domainEventCollector->collect(new AccountContactAddedEvent($accountContact));
             $this->entityManager->flush();
 
             $isMainContact = false;
@@ -368,6 +389,9 @@ class AccountController extends AbstractRestController implements ClassResourceI
             }
 
             $this->entityManager->remove($accountContact);
+            $this->domainEventCollector->collect(
+                new AccountContactRemovedEvent($accountContact->getAccount(), $accountContact->getContact())
+            );
             $this->entityManager->flush();
 
             $view = $this->view($id, 200);
@@ -399,7 +423,7 @@ class AccountController extends AbstractRestController implements ClassResourceI
 
             $list = new ListRepresentation(
                 $listResponse,
-                self::$entityKey,
+                AccountInterface::RESOURCE_KEY,
                 'sulu_contact.get_accounts',
                 $request->query->all(),
                 $listBuilder->getCurrentPage(),
@@ -410,7 +434,7 @@ class AccountController extends AbstractRestController implements ClassResourceI
         } else {
             $filter = $this->retrieveFilter($request);
             $accounts = $this->accountManager->findAll($locale, $filter);
-            $list = new CollectionRepresentation($accounts, self::$entityKey);
+            $list = new CollectionRepresentation($accounts, AccountInterface::RESOURCE_KEY);
             $view = $this->view($list, 200);
         }
 
@@ -480,12 +504,13 @@ class AccountController extends AbstractRestController implements ClassResourceI
         $name = $request->get('name');
 
         try {
-            if (null == $name) {
+            if (null === $name) {
                 throw new RestException('There is no name for the account given');
             }
 
             $account = $this->doPost($request);
             $this->entityManager->persist($account);
+            $this->domainEventCollector->collect(new AccountCreatedEvent($account, $request->request->all()));
             $this->entityManager->flush();
 
             $locale = $this->getUser()->getLocale();
@@ -562,6 +587,7 @@ class AccountController extends AbstractRestController implements ClassResourceI
             } else {
                 $this->doPut($account, $request, $this->entityManager);
 
+                $this->domainEventCollector->collect(new AccountModifiedEvent($account, $request->request->all()));
                 $this->entityManager->flush();
 
                 // get api entity
@@ -644,7 +670,7 @@ class AccountController extends AbstractRestController implements ClassResourceI
      */
     private function setParent($parentData, AccountInterface $account)
     {
-        if (null != $parentData && isset($parentData['id']) && 'null' != $parentData['id'] && '' != $parentData['id']) {
+        if (null != $parentData && isset($parentData['id']) && 'null' !== $parentData['id'] && '' !== $parentData['id']) {
             $parent = $this->accountRepository->findAccountById($parentData['id']);
             if (!$parent) {
                 throw new EntityNotFoundException($this->getAccountEntityName(), $parentData['id']);
@@ -671,7 +697,6 @@ class AccountController extends AbstractRestController implements ClassResourceI
                 throw new EntityNotFoundException($this->getAccountEntityName(), $id);
             } else {
                 $this->doPatch($account, $request, $this->entityManager);
-
                 $this->entityManager->flush();
 
                 // get api entity
@@ -700,20 +725,26 @@ class AccountController extends AbstractRestController implements ClassResourceI
     {
         $accountManager = $this->accountManager;
 
+        $accountModified = false;
         if (null !== $request->get('uid')) {
             $account->setUid($request->get('uid'));
+            $accountModified = true;
         }
         if (null !== $request->get('registerNumber')) {
             $account->setRegisterNumber($request->get('registerNumber'));
+            $accountModified = true;
         }
         if (null !== $request->get('number')) {
             $account->setNumber($request->get('number'));
+            $accountModified = true;
         }
         if (null !== $request->get('placeOfJurisdiction')) {
             $account->setPlaceOfJurisdiction($request->get('placeOfJurisdiction'));
+            $accountModified = true;
         }
         if (\array_key_exists('id', $request->get('logo', []))) {
             $accountManager->setLogo($account, $request->get('logo')['id']);
+            $accountModified = true;
         }
         if (null !== $request->get('medias')) {
             $accountManager->setMedias($account, $request->get('medias'));
@@ -721,15 +752,19 @@ class AccountController extends AbstractRestController implements ClassResourceI
 
         $mainContact = null;
         if (null !== ($mainContactRequest = $request->get('mainContact'))) {
-            $mainContact = $entityManager->getRepository(
-                $this->contactClass
-            )->find($mainContactRequest['id']);
+            $mainContact = $entityManager->getRepository($this->contactClass)->find($mainContactRequest['id']);
+            $accountModified = true;
+        }
+
+        if (null !== $request->get('bankAccounts')) {
+            $accountManager->processBankAccounts($account, $request->get('bankAccounts', []));
+            $accountModified = true;
         }
 
         $account->setMainContact($mainContact);
 
-        if (null !== $request->get('bankAccounts')) {
-            $accountManager->processBankAccounts($account, $request->get('bankAccounts', []));
+        if ($accountModified) {
+            $this->domainEventCollector->collect(new AccountModifiedEvent($account, $request->request->all()));
         }
     }
 
@@ -781,6 +816,7 @@ class AccountController extends AbstractRestController implements ClassResourceI
             }
 
             $this->entityManager->remove($account);
+            $this->domainEventCollector->collect(new AccountRemovedEvent($account->getId(), $account->getName()));
             $this->entityManager->flush();
         };
 
@@ -838,7 +874,7 @@ class AccountController extends AbstractRestController implements ClassResourceI
 
         $account = $this->accountRepository->findChildrenAndContacts($id);
 
-        if (null != $account) {
+        if (null !== $account) {
             // Return a maximum of 3 accounts.
             $slicedContacts = [];
             $accountContacts = $account->getAccountContacts();

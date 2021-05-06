@@ -11,7 +11,10 @@
 
 namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 
+use Doctrine\Persistence\ObjectRepository;
 use Sulu\Bundle\ContactBundle\Entity\Account;
+use Sulu\Bundle\EventLogBundle\Domain\Event\DomainEvent;
+use Sulu\Bundle\EventLogBundle\Domain\Model\EventRecord;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\File;
@@ -53,10 +56,16 @@ class AccountMediaControllerTest extends SuluTestCase
      */
     protected $collection;
 
+    /**
+     * @var ObjectRepository<EventRecord>
+     */
+    private $eventRepository;
+
     public function setUp(): void
     {
         $this->client = $this->createAuthenticatedClient();
         $this->em = $this->getEntityManager();
+        $this->eventRepository = $this->em->getRepository(EventRecord::class);
         $this->purgeDatabase();
 
         $this->account = new Account();
@@ -124,6 +133,10 @@ class AccountMediaControllerTest extends SuluTestCase
         $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertNotNull($response->id);
 
+        /** @var DomainEvent $event */
+        $event = $this->eventRepository->findOneBy(['eventType' => 'media_added']);
+        $this->assertSame((string) $this->account->getId(), $event->getResourceId());
+
         $this->client->jsonRequest(
             'GET',
             '/api/accounts/' . $this->account->getId()
@@ -182,6 +195,10 @@ class AccountMediaControllerTest extends SuluTestCase
         );
 
         $this->assertHttpStatusCode(204, $this->client->getResponse());
+
+        /** @var DomainEvent $event */
+        $event = $this->eventRepository->findOneBy(['eventType' => 'media_removed']);
+        $this->assertSame((string) $this->account->getId(), $event->getResourceId());
 
         $this->client->jsonRequest(
             'GET',

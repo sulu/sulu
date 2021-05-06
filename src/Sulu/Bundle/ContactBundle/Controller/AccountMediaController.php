@@ -16,6 +16,11 @@ use FOS\RestBundle\View\ViewHandlerInterface;
 use HandcraftedInTheAlps\RestRoutingBundle\Controller\Annotations\RouteResource;
 use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\ContactBundle\Contact\AbstractContactManager;
+use Sulu\Bundle\ContactBundle\Domain\Event\AccountMediaAddedEvent;
+use Sulu\Bundle\ContactBundle\Domain\Event\AccountMediaRemovedEvent;
+use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
+use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\ListBuilderFactory\MediaListBuilderFactory;
 use Sulu\Bundle\MediaBundle\Media\ListRepresentationFactory\MediaListRepresentationFactory;
@@ -45,6 +50,11 @@ class AccountMediaController extends AbstractMediaController implements ClassRes
      */
     private $accountClass;
 
+    /**
+     * @var DomainEventCollectorInterface
+     */
+    private $domainEventCollector;
+
     public function __construct(
         ViewHandlerInterface $viewHandler,
         TokenStorageInterface $tokenStorage,
@@ -54,6 +64,7 @@ class AccountMediaController extends AbstractMediaController implements ClassRes
         MediaRepositoryInterface $mediaRepository,
         MediaManagerInterface $mediaManager,
         AbstractContactManager $accountManager,
+        DomainEventCollectorInterface $domainEventCollector,
         string $accountClass,
         string $mediaClass,
         MediaListBuilderFactory $mediaListBuilderFactory = null,
@@ -76,16 +87,31 @@ class AccountMediaController extends AbstractMediaController implements ClassRes
 
         $this->accountManager = $accountManager;
         $this->accountClass = $accountClass;
+        $this->domainEventCollector = $domainEventCollector;
     }
 
     public function deleteAction(int $contactId, int $id)
     {
-        return $this->removeMediaFromEntity($this->accountClass, $contactId, $id);
+        $dispatchDomainEventCallback = function(AccountInterface $account, MediaInterface $media) {
+            $this->domainEventCollector->collect(
+                new AccountMediaRemovedEvent($account, $media)
+            );
+        };
+
+        return $this->removeMediaFromEntity($this->accountClass, $contactId, $id, $dispatchDomainEventCallback);
     }
 
     public function postAction(int $contactId, Request $request)
     {
-        return $this->addMediaToEntity($this->accountClass, $contactId, $request->get('mediaId', ''));
+        $dispatchDomainEventCallback = function(AccountInterface $account, MediaInterface $media) {
+            $this->domainEventCollector->collect(
+                new AccountMediaAddedEvent($account, $media)
+            );
+        };
+
+        $mediaId = $request->get('mediaId', '');
+
+        return $this->addMediaToEntity($this->accountClass, $contactId, $mediaId, $dispatchDomainEventCallback);
     }
 
     public function cgetAction(int $contactId, Request $request)
