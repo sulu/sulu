@@ -13,7 +13,7 @@ namespace Sulu\Bundle\ActivityBundle\Domain\Model;
 
 use Sulu\Component\Security\Authentication\UserInterface;
 
-class EventRecord implements EventRecordInterface
+class Activity implements ActivityInterface
 {
     /**
      * @var int
@@ -100,7 +100,7 @@ class EventRecord implements EventRecordInterface
         return $this->eventType;
     }
 
-    public function setEventType(string $eventType): EventRecordInterface
+    public function setEventType(string $eventType): ActivityInterface
     {
         $this->eventType = $eventType;
 
@@ -112,7 +112,7 @@ class EventRecord implements EventRecordInterface
         return $this->eventContext;
     }
 
-    public function setEventContext(array $eventContext): EventRecordInterface
+    public function setEventContext(array $eventContext): ActivityInterface
     {
         $this->eventContext = $eventContext;
 
@@ -124,7 +124,7 @@ class EventRecord implements EventRecordInterface
         return $this->eventPayload;
     }
 
-    public function setEventPayload(?array $eventPayload): EventRecordInterface
+    public function setEventPayload(?array $eventPayload): ActivityInterface
     {
         $this->eventPayload = $eventPayload;
 
@@ -136,7 +136,7 @@ class EventRecord implements EventRecordInterface
         return $this->eventDateTime;
     }
 
-    public function setEventDateTime(\DateTimeImmutable $eventDateTime): EventRecordInterface
+    public function setEventDateTime(\DateTimeImmutable $eventDateTime): ActivityInterface
     {
         $this->eventDateTime = $eventDateTime;
 
@@ -148,7 +148,7 @@ class EventRecord implements EventRecordInterface
         return $this->eventBatch;
     }
 
-    public function setEventBatch(?string $eventBatch): EventRecordInterface
+    public function setEventBatch(?string $eventBatch): ActivityInterface
     {
         $this->eventBatch = $eventBatch;
 
@@ -160,7 +160,7 @@ class EventRecord implements EventRecordInterface
         return $this->user;
     }
 
-    public function setUser(?UserInterface $user): EventRecordInterface
+    public function setUser(?UserInterface $user): ActivityInterface
     {
         $this->user = $user;
 
@@ -172,7 +172,7 @@ class EventRecord implements EventRecordInterface
         return $this->resourceKey;
     }
 
-    public function setResourceKey(string $resourceKey): EventRecordInterface
+    public function setResourceKey(string $resourceKey): ActivityInterface
     {
         $this->resourceKey = $resourceKey;
 
@@ -184,7 +184,7 @@ class EventRecord implements EventRecordInterface
         return $this->resourceId;
     }
 
-    public function setResourceId(string $resourceId): EventRecordInterface
+    public function setResourceId(string $resourceId): ActivityInterface
     {
         $this->resourceId = $resourceId;
 
@@ -196,7 +196,7 @@ class EventRecord implements EventRecordInterface
         return $this->resourceLocale;
     }
 
-    public function setResourceLocale(?string $resourceLocale): EventRecordInterface
+    public function setResourceLocale(?string $resourceLocale): ActivityInterface
     {
         $this->resourceLocale = $resourceLocale;
 
@@ -208,7 +208,7 @@ class EventRecord implements EventRecordInterface
         return $this->resourceWebspaceKey;
     }
 
-    public function setResourceWebspaceKey(?string $resourceWebspaceKey): EventRecordInterface
+    public function setResourceWebspaceKey(?string $resourceWebspaceKey): ActivityInterface
     {
         $this->resourceWebspaceKey = $resourceWebspaceKey;
 
@@ -220,7 +220,7 @@ class EventRecord implements EventRecordInterface
         return $this->resourceTitle;
     }
 
-    public function setResourceTitle(?string $resourceTitle): EventRecordInterface
+    public function setResourceTitle(?string $resourceTitle): ActivityInterface
     {
         $this->resourceTitle = $resourceTitle;
 
@@ -232,7 +232,7 @@ class EventRecord implements EventRecordInterface
         return $this->resourceTitleLocale;
     }
 
-    public function setResourceTitleLocale(?string $resourceTitleLocale): EventRecordInterface
+    public function setResourceTitleLocale(?string $resourceTitleLocale): ActivityInterface
     {
         $this->resourceTitleLocale = $resourceTitleLocale;
 
@@ -244,7 +244,7 @@ class EventRecord implements EventRecordInterface
         return $this->resourceSecurityContext;
     }
 
-    public function setResourceSecurityContext(?string $resourceSecurityContext): EventRecordInterface
+    public function setResourceSecurityContext(?string $resourceSecurityContext): ActivityInterface
     {
         $this->resourceSecurityContext = $resourceSecurityContext;
 
@@ -256,7 +256,7 @@ class EventRecord implements EventRecordInterface
         return $this->resourceSecurityObjectType;
     }
 
-    public function setResourceSecurityObjectType(?string $resourceSecurityObjectType): EventRecordInterface
+    public function setResourceSecurityObjectType(?string $resourceSecurityObjectType): ActivityInterface
     {
         $this->resourceSecurityObjectType = $resourceSecurityObjectType;
 
@@ -268,7 +268,7 @@ class EventRecord implements EventRecordInterface
         return $this->resourceSecurityObjectId;
     }
 
-    public function setResourceSecurityObjectId(?string $resourceSecurityObjectId): EventRecordInterface
+    public function setResourceSecurityObjectId(?string $resourceSecurityObjectId): ActivityInterface
     {
         $this->resourceSecurityObjectId = $resourceSecurityObjectId;
 

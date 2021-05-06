@@ -14,16 +14,16 @@ namespace Sulu\Bundle\ActivityBundle\Tests\Functional\Infrastructure\Doctrine\Re
 use Doctrine\ORM\EntityManagerInterface;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
-use Sulu\Bundle\ActivityBundle\Domain\Model\EventRecordInterface;
-use Sulu\Bundle\ActivityBundle\Infrastructure\Doctrine\Repository\EventRecordRepository;
+use Sulu\Bundle\ActivityBundle\Domain\Model\ActivityInterface;
+use Sulu\Bundle\ActivityBundle\Infrastructure\Doctrine\Repository\ActivityRepository;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Security\Authentication\UserInterface;
 
-class EventRecordRepositoryTest extends SuluTestCase
+class ActivityRepositoryTest extends SuluTestCase
 {
     /**
-     * @var EventRecordRepository
+     * @var ActivityRepository
      */
     private $repository;
 
@@ -41,7 +41,7 @@ class EventRecordRepositoryTest extends SuluTestCase
     {
         static::purgeDatabase();
         $this->entityManager = static::getEntityManager();
-        $this->repository = static::getContainer()->get('sulu_event_log.event_record_repository.doctrine');
+        $this->repository = static::getContainer()->get('sulu_activity.activity_repository.doctrine');
 
         $this->domainEvent = $this->prophesize(DomainEvent::class);
         $this->domainEvent->getEventType()->willReturn('created');
@@ -69,38 +69,38 @@ class EventRecordRepositoryTest extends SuluTestCase
         $this->domainEvent->getEventDateTime()->willReturn($dateTime);
         $this->domainEvent->getUser()->willReturn($user->reveal());
 
-        $eventRecord = $this->repository->createForDomainEvent($this->domainEvent->reveal());
+        $activity = $this->repository->createForDomainEvent($this->domainEvent->reveal());
 
-        static::assertSame('created', $eventRecord->getEventType());
-        static::assertSame(['relatedPageId' => 'page-123'], $eventRecord->getEventContext());
-        static::assertSame(['name' => 'name-123', 'description' => 'description-123'], $eventRecord->getEventPayload());
-        static::assertSame($dateTime, $eventRecord->getEventDateTime());
-        static::assertSame('batch-1234', $eventRecord->getEventBatch());
-        static::assertSame($user->reveal(), $eventRecord->getUser());
-        static::assertSame('pages', $eventRecord->getResourceKey());
-        static::assertSame('1234-1234-1234-1234', $eventRecord->getResourceId());
-        static::assertSame('en', $eventRecord->getResourceLocale());
-        static::assertSame('sulu-io', $eventRecord->getResourceWebspaceKey());
-        static::assertSame('Test Page 1234', $eventRecord->getResourceTitle());
-        static::assertSame('en', $eventRecord->getResourceTitleLocale());
-        static::assertSame('sulu.webspaces.sulu-io', $eventRecord->getResourceSecurityContext());
-        static::assertSame(SecurityBehavior::class, $eventRecord->getResourceSecurityObjectType());
-        static::assertSame('1234-1234-1234-1234', $eventRecord->getResourceSecurityObjectId());
+        static::assertSame('created', $activity->getEventType());
+        static::assertSame(['relatedPageId' => 'page-123'], $activity->getEventContext());
+        static::assertSame(['name' => 'name-123', 'description' => 'description-123'], $activity->getEventPayload());
+        static::assertSame($dateTime, $activity->getEventDateTime());
+        static::assertSame('batch-1234', $activity->getEventBatch());
+        static::assertSame($user->reveal(), $activity->getUser());
+        static::assertSame('pages', $activity->getResourceKey());
+        static::assertSame('1234-1234-1234-1234', $activity->getResourceId());
+        static::assertSame('en', $activity->getResourceLocale());
+        static::assertSame('sulu-io', $activity->getResourceWebspaceKey());
+        static::assertSame('Test Page 1234', $activity->getResourceTitle());
+        static::assertSame('en', $activity->getResourceTitleLocale());
+        static::assertSame('sulu.webspaces.sulu-io', $activity->getResourceSecurityContext());
+        static::assertSame(SecurityBehavior::class, $activity->getResourceSecurityObjectType());
+        static::assertSame('1234-1234-1234-1234', $activity->getResourceSecurityObjectId());
     }
 
     public function testAddAndCommit(): void
     {
-        $entityRepository = $this->entityManager->getRepository(EventRecordInterface::class);
+        $entityRepository = $this->entityManager->getRepository(ActivityInterface::class);
 
-        $eventRecord = $this->repository->createForDomainEvent($this->domainEvent->reveal());
+        $activity = $this->repository->createForDomainEvent($this->domainEvent->reveal());
         static::assertCount(0, $entityRepository->findAll());
 
-        $this->repository->addAndCommit($eventRecord);
-        $eventRecords = $entityRepository->findAll();
-        static::assertCount(1, $eventRecords);
-        static::assertNull($eventRecords[0]->getEventPayload());
+        $this->repository->addAndCommit($activity);
+        $activities = $entityRepository->findAll();
+        static::assertCount(1, $activities);
+        static::assertNull($activities[0]->getEventPayload());
 
-        $this->repository->addAndCommit($eventRecord);
+        $this->repository->addAndCommit($activity);
         static::assertCount(2, $entityRepository->findAll());
     }
 
@@ -110,17 +110,17 @@ class EventRecordRepositoryTest extends SuluTestCase
         static::bootKernel(['environment' => 'with_payload']);
         $this->setUp();
 
-        $entityRepository = $this->entityManager->getRepository(EventRecordInterface::class);
+        $entityRepository = $this->entityManager->getRepository(ActivityInterface::class);
 
-        $eventRecord = $this->repository->createForDomainEvent($this->domainEvent->reveal());
+        $activity = $this->repository->createForDomainEvent($this->domainEvent->reveal());
         static::assertCount(0, $entityRepository->findAll());
 
-        $this->repository->addAndCommit($eventRecord);
-        $eventRecords = $entityRepository->findAll();
-        static::assertCount(1, $eventRecords);
-        static::assertSame(['name' => 'name-123', 'description' => 'description-123'], $eventRecords[0]->getEventPayload());
+        $this->repository->addAndCommit($activity);
+        $activities = $entityRepository->findAll();
+        static::assertCount(1, $activities);
+        static::assertSame(['name' => 'name-123', 'description' => 'description-123'], $activities[0]->getEventPayload());
 
-        $this->repository->addAndCommit($eventRecord);
+        $this->repository->addAndCommit($activity);
         static::assertCount(2, $entityRepository->findAll());
     }
 }

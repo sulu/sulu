@@ -12,15 +12,15 @@
 namespace Sulu\Bundle\ActivityBundle\Tests\Unit\Model\Event;
 
 use PHPUnit\Framework\TestCase;
-use Sulu\Bundle\ActivityBundle\Domain\Model\EventRecord;
+use Sulu\Bundle\ActivityBundle\Domain\Model\Activity;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Security\Authentication\UserInterface;
 
-class EventRecordTest extends TestCase
+class ActivityTest extends TestCase
 {
     public function testEventType(): void
     {
-        $event = $this->createEventRecord();
+        $event = $this->createActivity();
 
         static::assertSame($event, $event->setEventType('created'));
         static::assertSame('created', $event->getEventType());
@@ -28,7 +28,7 @@ class EventRecordTest extends TestCase
 
     public function testEventContext(): void
     {
-        $event = $this->createEventRecord();
+        $event = $this->createActivity();
 
         static::assertSame([], $event->getEventContext());
         static::assertSame($event, $event->setEventContext(['relatedPageId' => 'page-123']));
@@ -37,7 +37,7 @@ class EventRecordTest extends TestCase
 
     public function testEventPayload(): void
     {
-        $event = $this->createEventRecord();
+        $event = $this->createActivity();
 
         static::assertNull($event->getEventPayload());
         static::assertSame($event, $event->setEventPayload(['name' => 'name-123', 'description' => 'description-123']));
@@ -47,7 +47,7 @@ class EventRecordTest extends TestCase
 
     public function testEventDateTime(): void
     {
-        $event = $this->createEventRecord();
+        $event = $this->createActivity();
         $dateTime = new \DateTimeImmutable('2020-01-01');
 
         static::assertSame($event, $event->setEventDateTime($dateTime));
@@ -56,7 +56,7 @@ class EventRecordTest extends TestCase
 
     public function testEventBatch(): void
     {
-        $event = $this->createEventRecord();
+        $event = $this->createActivity();
 
         static::assertNull($event->getEventBatch());
         static::assertSame($event, $event->setEventBatch('batch-1234'));
@@ -65,7 +65,7 @@ class EventRecordTest extends TestCase
 
     public function testUser(): void
     {
-        $event = $this->createEventRecord();
+        $event = $this->createActivity();
         $user = $this->prophesize(UserInterface::class);
 
         static::assertNull($event->getUser());
@@ -76,7 +76,7 @@ class EventRecordTest extends TestCase
 
     public function testResourceKey(): void
     {
-        $event = $this->createEventRecord();
+        $event = $this->createActivity();
 
         static::assertSame($event, $event->setResourceKey('pages'));
         static::assertSame('pages', $event->getResourceKey());
@@ -84,7 +84,7 @@ class EventRecordTest extends TestCase
 
     public function testResourceId(): void
     {
-        $event = $this->createEventRecord();
+        $event = $this->createActivity();
 
         static::assertSame($event, $event->setResourceId('1234-1234-1234-1234'));
         static::assertSame('1234-1234-1234-1234', $event->getResourceId());
@@ -92,7 +92,7 @@ class EventRecordTest extends TestCase
 
     public function testResourceLocale(): void
     {
-        $event = $this->createEventRecord();
+        $event = $this->createActivity();
 
         static::assertNull($event->getResourceLocale());
         static::assertSame($event, $event->setResourceLocale('en'));
@@ -101,7 +101,7 @@ class EventRecordTest extends TestCase
 
     public function testResourceWebspaceKey(): void
     {
-        $event = $this->createEventRecord();
+        $event = $this->createActivity();
 
         static::assertNull($event->getResourceWebspaceKey());
         static::assertSame($event, $event->setResourceWebspaceKey('sulu-io'));
@@ -110,7 +110,7 @@ class EventRecordTest extends TestCase
 
     public function testResourceTitle(): void
     {
-        $event = $this->createEventRecord();
+        $event = $this->createActivity();
 
         static::assertNull($event->getResourceTitle());
         static::assertSame($event, $event->setResourceTitle('title-1234'));
@@ -119,7 +119,7 @@ class EventRecordTest extends TestCase
 
     public function testResourceTitleLocale(): void
     {
-        $event = $this->createEventRecord();
+        $event = $this->createActivity();
 
         static::assertNull($event->getResourceTitleLocale());
         static::assertSame($event, $event->setResourceTitleLocale('en'));
@@ -128,7 +128,7 @@ class EventRecordTest extends TestCase
 
     public function testResourceSecurityContext(): void
     {
-        $event = $this->createEventRecord();
+        $event = $this->createActivity();
 
         static::assertNull($event->getResourceSecurityContext());
         static::assertSame($event, $event->setResourceSecurityContext('sulu.webspaces.sulu-io'));
@@ -137,7 +137,7 @@ class EventRecordTest extends TestCase
 
     public function testResourceSecurityObjectType(): void
     {
-        $event = $this->createEventRecord();
+        $event = $this->createActivity();
 
         static::assertNull($event->getResourceSecurityObjectType());
         static::assertSame($event, $event->setResourceSecurityObjectType(SecurityBehavior::class));
@@ -146,15 +146,15 @@ class EventRecordTest extends TestCase
 
     public function testResourceSecurityObjectId(): void
     {
-        $event = $this->createEventRecord();
+        $event = $this->createActivity();
 
         static::assertNull($event->getResourceSecurityObjectId());
         static::assertSame($event, $event->setResourceSecurityObjectId('1'));
         static::assertSame('1', $event->getResourceSecurityObjectId());
     }
 
-    private function createEventRecord(): EventRecord
+    private function createActivity(): Activity
     {
-        return new EventRecord();
+        return new Activity();
     }
 }

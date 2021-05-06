@@ -11,13 +11,13 @@
 
 namespace Sulu\Bundle\ActivityBundle;
 
-use Sulu\Bundle\ActivityBundle\Domain\Model\EventRecordInterface;
-use Sulu\Bundle\ActivityBundle\Infrastructure\Symfony\DependencyInjection\SuluEventLogExtension;
+use Sulu\Bundle\ActivityBundle\Domain\Model\ActivityInterface;
+use Sulu\Bundle\ActivityBundle\Infrastructure\Symfony\DependencyInjection\SuluActivityExtension;
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class SuluEventLogBundle extends Bundle
+class SuluActivityBundle extends Bundle
 {
     use PersistenceBundleTrait;
 
@@ -25,7 +25,7 @@ class SuluEventLogBundle extends Bundle
     {
         $this->buildPersistence(
             [
-                EventRecordInterface::class => 'sulu.model.event_record.class',
+                ActivityInterface::class => 'sulu.model.activity.class',
             ],
             $container
         );
@@ -33,6 +33,6 @@ class SuluEventLogBundle extends Bundle
 
     public function getContainerExtension()
     {
-        return new SuluEventLogExtension();
+        return new SuluActivityExtension();
     }
 }

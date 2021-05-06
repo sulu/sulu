@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Tests\Functional\Analytics;
 
-use Sulu\Bundle\ActivityBundle\Domain\Model\EventRecord;
+use Sulu\Bundle\ActivityBundle\Domain\Model\Activity;
 use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsInterface;
 use Sulu\Bundle\WebsiteBundle\Tests\Functional\BaseFunctional;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -175,13 +175,13 @@ class AnalyticsManagerTest extends BaseFunctional
         $result = $this->analyticsManager->create($webspaceKey, $data);
         $this->getEntityManager()->flush();
 
-        $eventLogRepository = $this->getEventLogRepository();
+        $activityRepository = $this->getActivityRepository();
 
-        /** @var EventRecord[] $events */
-        $events = $eventLogRepository->findAll();
-        $this->assertCount(1, $events);
-        $this->assertSame((string) $result->getId(), $events[0]->getResourceId());
-        $this->assertSame('created', $events[0]->getEventType());
+        /** @var Activity[] $activities */
+        $activities = $activityRepository->findAll();
+        $this->assertCount(1, $activities);
+        $this->assertSame((string) $result->getId(), $activities[0]->getResourceId());
+        $this->assertSame('created', $activities[0]->getEventType());
 
         $accessor = PropertyAccess::createPropertyAccessor();
         foreach ($data as $key => $value) {
@@ -221,13 +221,13 @@ class AnalyticsManagerTest extends BaseFunctional
         $result = $this->analyticsManager->update($id, $data);
         $this->getEntityManager()->flush();
 
-        $eventLogRepository = $this->getEventLogRepository();
+        $activityRepository = $this->getActivityRepository();
 
-        /** @var EventRecord[] $events */
-        $events = $eventLogRepository->findAll();
-        $this->assertCount(1, $events);
-        $this->assertSame((string) $result->getId(), $events[0]->getResourceId());
-        $this->assertSame('modified', $events[0]->getEventType());
+        /** @var Activity[] $activities */
+        $activities = $activityRepository->findAll();
+        $this->assertCount(1, $activities);
+        $this->assertSame((string) $result->getId(), $activities[0]->getResourceId());
+        $this->assertSame('modified', $activities[0]->getEventType());
 
         $accessor = PropertyAccess::createPropertyAccessor();
         foreach ($data as $key => $value) {
@@ -311,13 +311,13 @@ class AnalyticsManagerTest extends BaseFunctional
         $this->analyticsManager->remove($id);
         $this->getEntityManager()->flush();
 
-        $eventLogRepository = $this->getEventLogRepository();
+        $activityRepository = $this->getActivityRepository();
 
-        /** @var EventRecord[] $events */
-        $events = $eventLogRepository->findAll();
-        $this->assertCount(1, $events);
-        $this->assertSame((string) $id, $events[0]->getResourceId());
-        $this->assertSame('removed', $events[0]->getEventType());
+        /** @var Activity[] $activities */
+        $activities = $activityRepository->findAll();
+        $this->assertCount(1, $activities);
+        $this->assertSame((string) $id, $activities[0]->getResourceId());
+        $this->assertSame('removed', $activities[0]->getEventType());
 
         $this->assertEmpty(
             \array_filter(

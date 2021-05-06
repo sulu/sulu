@@ -13,7 +13,7 @@ namespace Sulu\Bundle\WebsiteBundle\Tests\Functional;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
-use Sulu\Bundle\ActivityBundle\Domain\Model\EventRecordInterface;
+use Sulu\Bundle\ActivityBundle\Domain\Model\ActivityInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\WebsiteBundle\Analytics\AnalyticsManagerInterface;
 use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsInterface;
@@ -123,12 +123,12 @@ class BaseFunctional extends SuluTestCase
     }
 
     /**
-     * @return EntityRepository<EventRecordInterface>
+     * @return EntityRepository<ActivityInterface>
      */
-    protected function getEventLogRepository(): EntityRepository
+    protected function getActivityRepository(): EntityRepository
     {
-        /** @var EntityRepository<EventRecordInterface> $repository */
-        $repository = $this->getEntityManager()->getRepository(EventRecordInterface::class);
+        /** @var EntityRepository<ActivityInterface> $repository */
+        $repository = $this->getEntityManager()->getRepository(ActivityInterface::class);
 
         return $repository;
     }

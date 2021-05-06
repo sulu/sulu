@@ -13,9 +13,10 @@ namespace Sulu\Bundle\CategoryBundle\Tests\Functional\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
+use Sulu\Bundle\ActivityBundle\Domain\Model\ActivityInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
-use Sulu\Bundle\ActivityBundle\Domain\Model\EventRecord;
+use Sulu\Bundle\ActivityBundle\Domain\Model\Activity;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\File;
@@ -39,16 +40,16 @@ class CategoryControllerTest extends SuluTestCase
     private $client;
 
     /**
-     * @var ObjectRepository<EventRecord>
+     * @var ObjectRepository<Activity>
      */
-    private $eventRepository;
+    private $activityRepository;
 
     public function setUp(): void
     {
         $this->client = $this->createAuthenticatedClient();
         $this->purgeDatabase();
         $this->em = $this->getEntityManager();
-        $this->eventRepository = $this->em->getRepository(EventRecord::class);
+        $this->activityRepository = $this->em->getRepository(ActivityInterface::class);
     }
 
     public function testGetById()
@@ -972,9 +973,9 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertEquals('myKey', $response->meta[0]->key);
         $this->assertEquals('myValue', $response->meta[0]->value);
 
-        /** @var DomainEvent $event */
-        $event = $this->eventRepository->findOneBy(['eventType' => 'created']);
-        $this->assertSame((string) $response->id, $event->getResourceId());
+        /** @var ActivityInterface $activity */
+        $activity = $this->activityRepository->findOneBy(['eventType' => 'created']);
+        $this->assertSame((string) $response->id, $activity->getResourceId());
 
         $this->client->jsonRequest(
             'GET',
@@ -1148,9 +1149,9 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertTrue('newMeta' === $response->meta[1]->key);
         $this->assertTrue('This meta got added' === $response->meta[1]->value);
 
-        /** @var DomainEvent $event */
-        $event = $this->eventRepository->findOneBy(['eventType' => 'modified']);
-        $this->assertSame((string) $response->id, $event->getResourceId());
+        /** @var ActivityInterface $activity */
+        $activity = $this->activityRepository->findOneBy(['eventType' => 'modified']);
+        $this->assertSame((string) $response->id, $activity->getResourceId());
 
         $this->client->jsonRequest(
             'GET',
@@ -1451,9 +1452,9 @@ class CategoryControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(204, $this->client->getResponse());
 
-        /** @var DomainEvent $event */
-        $event = $this->eventRepository->findOneBy(['eventType' => 'removed']);
-        $this->assertSame((string) $categoryId, $event->getResourceId());
+        /** @var ActivityInterface $activity */
+        $activity = $this->activityRepository->findOneBy(['eventType' => 'removed']);
+        $this->assertSame((string) $categoryId, $activity->getResourceId());
 
         $this->client->jsonRequest(
             'GET',

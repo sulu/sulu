@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\ActivityBundle\Infrastructure\Symfony\DependencyInjection;
 
-use Sulu\Bundle\ActivityBundle\Domain\Model\EventRecord;
+use Sulu\Bundle\ActivityBundle\Domain\Model\Activity;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -20,7 +20,7 @@ class Configuration implements ConfigurationInterface
 {
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder('sulu_event_log');
+        $treeBuilder = new TreeBuilder('sulu_activity');
         $rootNode = $treeBuilder->getRootNode();
         $rootNode->children()
             ->arrayNode('storage')
@@ -42,10 +42,10 @@ class Configuration implements ConfigurationInterface
             ->arrayNode('objects')
                 ->addDefaultsIfNotSet()
                 ->children()
-                    ->arrayNode('event_record')
+                    ->arrayNode('activity')
                         ->addDefaultsIfNotSet()
                         ->children()
-                            ->scalarNode('model')->defaultValue(EventRecord::class)->end()
+                            ->scalarNode('model')->defaultValue(Activity::class)->end()
                         ->end()
                     ->end()
                 ->end()

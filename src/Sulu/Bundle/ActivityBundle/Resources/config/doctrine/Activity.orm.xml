@@ -2,7 +2,7 @@
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-    <mapped-superclass name="Sulu\Bundle\ActivityBundle\Domain\Model\EventRecord" table="el_event_records">
+    <mapped-superclass name="Sulu\Bundle\ActivityBundle\Domain\Model\Activity" table="ac_activities">
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>

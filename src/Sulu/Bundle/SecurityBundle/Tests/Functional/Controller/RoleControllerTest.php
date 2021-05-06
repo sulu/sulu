@@ -14,7 +14,8 @@ namespace Sulu\Bundle\SecurityBundle\Tests\Functional\Controller;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\ObjectRepository;
 use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
-use Sulu\Bundle\ActivityBundle\Domain\Model\EventRecord;
+use Sulu\Bundle\ActivityBundle\Domain\Model\Activity;
+use Sulu\Bundle\ActivityBundle\Domain\Model\ActivityInterface;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\SecurityType;
@@ -59,15 +60,15 @@ class RoleControllerTest extends SuluTestCase
     private $client;
 
     /**
-     * @var ObjectRepository<EventRecord>
+     * @var ObjectRepository<Activity>
      */
-    private $eventRepository;
+    private $activityRepository;
 
     public function setUp(): void
     {
         $this->client = $this->createAuthenticatedClient();
         $this->em = $this->getEntityManager();
-        $this->eventRepository = $this->em->getRepository(EventRecord::class);
+        $this->activityRepository = $this->em->getRepository(ActivityInterface::class);
         $this->purgeDatabase();
 
         $this->securityType1 = new SecurityType();
@@ -357,9 +358,9 @@ class RoleControllerTest extends SuluTestCase
         $this->assertEquals(true, $response->permissions[2]->permissions->security);
         $this->assertEquals('Security Type 2', $response->securityType->name);
 
-        /** @var DomainEvent $event */
-        $event = $this->eventRepository->findOneBy(['eventType' => 'modified']);
-        $this->assertSame((string) $this->role1->getId(), $event->getResourceId());
+        /** @var ActivityInterface $activity */
+        $activity = $this->activityRepository->findOneBy(['eventType' => 'modified']);
+        $this->assertSame((string) $this->role1->getId(), $activity->getResourceId());
 
         $this->client->jsonRequest(
             'GET',
@@ -599,9 +600,9 @@ class RoleControllerTest extends SuluTestCase
         );
 
         $this->assertHttpStatusCode(204, $this->client->getResponse());
-        /** @var DomainEvent $event */
-        $event = $this->eventRepository->findOneBy(['eventType' => 'removed']);
-        $this->assertSame((string) $this->role1->getId(), $event->getResourceId());
+        /** @var ActivityInterface $activity */
+        $activity = $this->activityRepository->findOneBy(['eventType' => 'removed']);
+        $this->assertSame((string) $this->role1->getId(), $activity->getResourceId());
 
         $this->client->jsonRequest(
             'GET',

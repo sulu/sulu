@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\ActivityBundle\Infrastructure\Symfony\DependencyInjection;
 
-use Sulu\Bundle\ActivityBundle\Domain\Repository\EventRecordRepositoryInterface;
+use Sulu\Bundle\ActivityBundle\Domain\Repository\ActivityRepositoryInterface;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
-class SuluEventLogExtension extends Extension implements PrependExtensionInterface
+class SuluActivityExtension extends Extension implements PrependExtensionInterface
 {
     use PersistenceExtensionTrait;
 
@@ -31,11 +31,11 @@ class SuluEventLogExtension extends Extension implements PrependExtensionInterfa
                 [
                     'orm' => [
                         'mappings' => [
-                            'SuluEventLogBundle' => [
+                            'SuluActivityBundle' => [
                                 'type' => 'xml',
                                 'dir' => __DIR__ . '/../../../Resources/config/doctrine',
                                 'prefix' => 'Sulu\Bundle\ActivityBundle\Domain\Model',
-                                'alias' => 'SuluEventLogBundle',
+                                'alias' => 'SuluActivityBundle',
                             ],
                         ],
                     ],
@@ -55,16 +55,16 @@ class SuluEventLogExtension extends Extension implements PrependExtensionInterfa
         $this->configurePersistence($config['objects'], $container);
 
         $storageAdapter = $container->resolveEnvPlaceholders($config['storage']['adapter'], true);
-        $container->setParameter('sulu_event_log.storage.adapter', $storageAdapter);
+        $container->setParameter('sulu_activity.storage.adapter', $storageAdapter);
 
         $storagePersistPayload = $container->resolveEnvPlaceholders($config['storage']['persist_payload'], true);
-        $container->setParameter('sulu_event_log.storage.persist_payload', $storagePersistPayload);
+        $container->setParameter('sulu_activity.storage.persist_payload', $storagePersistPayload);
 
-        // set sulu_event_log.event_record_repository service based on configured storage adapter
-        $eventRecordRepositoryService = $storageAdapter
-            ? 'sulu_event_log.event_record_repository.' . $storageAdapter
-            : 'sulu_event_log.event_record_repository.null';
-        $container->setAlias('sulu_event_log.event_record_repository', $eventRecordRepositoryService);
-        $container->setAlias(EventRecordRepositoryInterface::class, 'sulu_event_log.event_record_repository');
+        // set sulu_activity.activity_repository service based on configured storage adapter
+        $activityRepositoryService = $storageAdapter
+            ? 'sulu_activity.activity_repository.' . $storageAdapter
+            : 'sulu_activity.activity_repository.null';
+        $container->setAlias('sulu_activity.activity_repository', $activityRepositoryService);
+        $container->setAlias(ActivityRepositoryInterface::class, 'sulu_activity.activity_repository');
     }
 }

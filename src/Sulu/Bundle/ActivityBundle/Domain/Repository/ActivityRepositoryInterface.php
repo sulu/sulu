@@ -12,11 +12,11 @@
 namespace Sulu\Bundle\ActivityBundle\Domain\Repository;
 
 use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
-use Sulu\Bundle\ActivityBundle\Domain\Model\EventRecordInterface;
+use Sulu\Bundle\ActivityBundle\Domain\Model\ActivityInterface;
 
-interface EventRecordRepositoryInterface
+interface ActivityRepositoryInterface
 {
-    public function createForDomainEvent(DomainEvent $domainEvent): EventRecordInterface;
+    public function createForDomainEvent(DomainEvent $domainEvent): ActivityInterface;
 
-    public function addAndCommit(EventRecordInterface $eventRecord): void;
+    public function addAndCommit(ActivityInterface $activity): void;
 }
