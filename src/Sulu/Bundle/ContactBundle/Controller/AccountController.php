@@ -808,7 +808,7 @@ class AccountController extends AbstractRestController implements ClassResourceI
 
             // Remove related contacts if removeContacts is true.
             if (null !== $request->get('removeContacts') &&
-                'true' === $request->get('removeContacts')
+                'true' == $request->get('removeContacts')
             ) {
                 foreach ($account->getAccountContacts() as $accountContact) {
                     $this->entityManager->remove($accountContact->getContact());
