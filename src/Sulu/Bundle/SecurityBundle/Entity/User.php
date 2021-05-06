@@ -21,6 +21,8 @@ use JMS\Serializer\Annotation\VirtualProperty;
 use Serializable;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
+use Sulu\Component\Persistence\Model\AuditableInterface;
+use Sulu\Component\Persistence\Model\AuditableTrait;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\UserInterface as SymfonyUserInterface;
@@ -30,8 +32,10 @@ use Symfony\Component\Security\Core\User\UserInterface as SymfonyUserInterface;
  *
  * @ExclusionPolicy("all")
  */
-class User extends ApiEntity implements UserInterface, Serializable, EquatableInterface
+class User extends ApiEntity implements UserInterface, Serializable, EquatableInterface, AuditableInterface
 {
+    use AuditableTrait;
+
     /**
      * @var int
      * @Expose
