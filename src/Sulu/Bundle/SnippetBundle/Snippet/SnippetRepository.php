@@ -164,9 +164,6 @@ class SnippetRepository
     /**
      * Copy snippet from src-locale to dest-locale.
      *
-     * TODO: We currently need the content mapper to copy the locale, it should be
-     *       removed, see https://github.com/sulu-io/sulu/issues/1998
-     *
      * @param string $uuid
      * @param int $userId
      * @param string $srcLocale
@@ -176,6 +173,12 @@ class SnippetRepository
      */
     public function copyLocale($uuid, $userId, $srcLocale, $destLocales)
     {
+        @\trigger_error(
+            'The SnippetRepository::copyLocale method is deprecated and will be removed in the future.'
+            . ' Use DocumentManagerInterface::copyLocale instead.',
+            \E_USER_DEPRECATED
+        );
+
         return $this->contentMapper->copyLanguage(
             $uuid,
             $userId,
