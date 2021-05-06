@@ -390,13 +390,7 @@ class AccountController extends AbstractRestController implements ClassResourceI
 
             $this->entityManager->remove($accountContact);
             $this->domainEventCollector->collect(
-                new AccountContactRemovedEvent(
-                    $accountContact->getAccount()->getId(),
-                    $accountContact->getContact()->getId(),
-                    $accountContact->getAccount()->getName(),
-                    $accountContact->getContact()->getFirstName() . ' ' .
-                    $accountContact->getContact()->getLastName()
-                )
+                new AccountContactRemovedEvent($accountContact->getAccount(), $accountContact->getContact())
             );
             $this->entityManager->flush();
 

@@ -612,13 +612,7 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
                 if ($accountContact->getAccount()->getMainContact() === $contact) {
                     $accountContact->getAccount()->setMainContact(null);
                     $this->domainEventCollector->collect(
-                        new AccountContactRemovedEvent(
-                            $accountContact->getAccount()->getId(),
-                            $accountContact->getContact()->getId(),
-                            $accountContact->getAccount()->getName(),
-                            $accountContact->getContact()->getFirstName() . ' ' .
-                            $accountContact->getContact()->getLastName()
-                        )
+                        new AccountContactRemovedEvent($accountContact->getAccount(), $accountContact->getContact())
                     );
                 }
 

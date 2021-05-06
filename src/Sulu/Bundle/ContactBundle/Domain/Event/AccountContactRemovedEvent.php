@@ -13,35 +13,27 @@ namespace Sulu\Bundle\ContactBundle\Domain\Event;
 
 use Sulu\Bundle\ContactBundle\Admin\ContactAdmin;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
+use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\EventLogBundle\Domain\Event\DomainEvent;
 
 class AccountContactRemovedEvent extends DomainEvent
 {
     /**
-     * @var int
+     * @var AccountInterface
      */
-    private $accountId;
-    /**
-     * @var int
-     */
-    private $contactId;
-    /**
-     * @var string
-     */
-    private $accountname;
-    /**
-     * @var string
-     */
-    private $contactName;
+    private $account;
 
-    public function __construct(int $accountId, int $contactId, string $accountName, string $contactName)
+    /**
+     * @var ContactInterface
+     */
+    private $contact;
+
+    public function __construct(AccountInterface $account, ContactInterface $contact)
     {
         parent::__construct();
 
-        $this->accountId = $accountId;
-        $this->contactId = $contactId;
-        $this->accountname = $accountName;
-        $this->contactName = $contactName;
+        $this->account = $account;
+        $this->contact = $contact;
     }
 
     public function getEventType(): string
@@ -56,19 +48,19 @@ class AccountContactRemovedEvent extends DomainEvent
 
     public function getResourceId(): string
     {
-        return (string) $this->accountId;
+        return (string) $this->account->getId();
     }
 
     public function getResourceTitle(): ?string
     {
-        return $this->accountname;
+        return $this->account->getName();
     }
 
     public function getEventContext(): array
     {
         return [
-            'contactId' => $this->contactId,
-            'name' => $this->contactName,
+            'contactId' => $this->contact->getId(),
+            'name' => $this->contact->getFirstName() . ' ' . $this->contact->getLastName(),
         ];
     }
 
@@ -77,18 +69,13 @@ class AccountContactRemovedEvent extends DomainEvent
         return ContactAdmin::ACCOUNT_SECURITY_CONTEXT;
     }
 
-    public function getContactId(): int
+    public function getAccount(): AccountInterface
     {
-        return $this->contactId;
+        return $this->account;
     }
 
-    public function getAccountname(): string
+    public function getContact(): ContactInterface
     {
-        return $this->accountname;
-    }
-
-    public function getContactName(): string
-    {
-        return $this->contactName;
+        return $this->contact;
     }
 }
