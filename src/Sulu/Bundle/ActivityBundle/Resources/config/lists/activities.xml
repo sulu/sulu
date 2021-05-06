@@ -6,13 +6,27 @@
         <property name="timestamp" visibility="always" searchability="never" sortable="false">
             <field-name>timestamp</field-name>
             <entity-name>%sulu.model.activity.class%</entity-name>
-            <transformer type="datetime"/>
+
+            <transformer type="datetime">
+                <params>
+                    <param name="skin" value="light"/>
+                    <param name="format" value="relative"/>
+                </params>
+            </transformer>
         </property>
 
-        <property name="type" visibility="no" searchability="never" sortable="false">
+        <property name="type" visibility="always" searchability="never" sortable="false">
             <field-name>type</field-name>
             <entity-name>%sulu.model.activity.class%</entity-name>
-            <transformer type="string"/>
+
+            <transformer type="icon">
+                <params>
+                    <param name="skin" value="dark"/>
+                    <param name="mapping" type="collection">
+                        <param name="modified" value="su-pen"/>
+                    </param>
+                </params>
+            </transformer>
         </property>
 
         <property name="text" visibility="always" searchability="never" sortable="false"/>
