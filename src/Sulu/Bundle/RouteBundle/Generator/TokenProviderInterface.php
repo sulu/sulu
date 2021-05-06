@@ -19,11 +19,12 @@ interface TokenProviderInterface
     /**
      * Returns resolved token for entity.
      *
+     * @param object|mixed[] $entity
      * @param string $name
      *
      * @return string
      *
      * @throws CannotEvaluateTokenException
      */
-    public function provide($entity, $name);
+    public function provide($entity, $name/*, array $options = [] */);
 }
