@@ -54,4 +54,19 @@ class AccountContactAddedEvent extends DomainEvent
     {
         return ContactAdmin::ACCOUNT_SECURITY_CONTEXT;
     }
+
+    public function getResourceTitle(): ?string
+    {
+        return $this->accountContact->getAccount()->getName();
+    }
+
+    public function getEventContext(): array
+    {
+        $contact = $this->accountContact->getContact();
+
+        return [
+            'contactId' => $contact->getId(),
+            'name' => $contact->getFirstName() . ' ' . $contact->getLastName(),
+        ];
+    }
 }

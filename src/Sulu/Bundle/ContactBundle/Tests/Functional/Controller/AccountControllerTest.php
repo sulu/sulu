@@ -1263,7 +1263,7 @@ class AccountControllerTest extends SuluTestCase
 
         /** @var DomainEvent $event */
         $event = $this->eventRepository->findOneBy(['eventType' => 'contact_added']);
-        $this->assertSame('accounts', $event->getResourceKey());
+        $this->assertSame($account->getId(), $event->getResourceId());
         $this->assertSame('accounts', $event->getResourceKey());
 
         $this->client->jsonRequest('GET', '/api/accounts/' . $account->getId() . '/contacts?flat=true');

@@ -14,6 +14,8 @@ namespace Sulu\Bundle\ContactBundle\Contact;
 use DateTime;
 use Doctrine\Persistence\ObjectManager;
 use Sulu\Bundle\ContactBundle\Api\Contact as ContactApi;
+use Sulu\Bundle\ContactBundle\Domain\Event\AccountContactAddedEvent;
+use Sulu\Bundle\ContactBundle\Domain\Event\AccountContactRemovedEvent;
 use Sulu\Bundle\ContactBundle\Domain\Event\ContactCreatedEvent;
 use Sulu\Bundle\ContactBundle\Domain\Event\ContactMediaAddedEvent;
 use Sulu\Bundle\ContactBundle\Domain\Event\ContactMediaRemovedEvent;
@@ -265,6 +267,7 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
         $contactDetailsData = $this->getProperty($data, 'contactDetails', []);
         $isNewContact = false;
 
+        $contactModified = false;
         if ($id) {
             /** @var Contact $contact */
             $contact = $this->contactRepository->findById($id);
@@ -274,39 +277,50 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
             }
             if (!$patch || $this->getProperty($data, 'account')) {
                 $this->setMainAccount($contact, $data);
+                $contactModified = true;
             }
             if (!$patch || $this->getProperty($contactDetailsData, 'emails')) {
                 $this->processEmails($contact, $this->getProperty($contactDetailsData, 'emails', []));
+                $contactModified = true;
             }
             if (!$patch || $this->getProperty($contactDetailsData, 'phones')) {
                 $this->processPhones($contact, $this->getProperty($contactDetailsData, 'phones', []));
+                $contactModified = true;
             }
             if (!$patch || $this->getProperty($data, 'addresses')) {
                 $this->processAddresses($contact, $this->getProperty($data, 'addresses', []));
+                $contactModified = true;
             }
             if (!$patch || $this->getProperty($data, 'notes')) {
                 $this->processNotes($contact, $this->getProperty($data, 'notes', []));
+                $contactModified = true;
             }
             if (!$patch || $this->getProperty($contactDetailsData, 'faxes')) {
                 $this->processFaxes($contact, $this->getProperty($contactDetailsData, 'faxes', []));
+                $contactModified = true;
             }
             if (!$patch || $this->getProperty($contactDetailsData, 'socialMedia')) {
                 $this->processSocialMediaProfiles(
                     $contact,
                     $this->getProperty($contactDetailsData, 'socialMedia', [])
                 );
+                $contactModified = true;
             }
             if (!$patch || $this->getProperty($data, 'tags')) {
                 $this->processTags($contact, $this->getProperty($data, 'tags', []));
+                $contactModified = true;
             }
             if (!$patch || $this->getProperty($contactDetailsData, 'websites')) {
                 $this->processUrls($contact, $this->getProperty($contactDetailsData, 'websites', []));
+                $contactModified = true;
             }
             if (!$patch || $this->getProperty($data, 'categories')) {
                 $this->processCategories($contact, $this->getProperty($data, 'categories', []));
+                $contactModified = true;
             }
             if (!$patch || $this->getProperty($data, 'bankAccounts')) {
                 $this->processBankAccounts($contact, $this->getProperty($data, 'bankAccounts', []));
+                $contactModified = true;
             }
         } else {
             $contact = $this->contactRepository->createNew();
@@ -315,15 +329,19 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
 
         if (!$patch || null !== $this->getProperty($data, 'firstName')) {
             $contact->setFirstName($this->getProperty($data, 'firstName'));
+            $contactModified = true;
         }
         if (!$patch || null !== $this->getProperty($data, 'lastName')) {
             $contact->setLastName($this->getProperty($data, 'lastName'));
+            $contactModified = true;
         }
         if (!$patch || null !== $this->getProperty($data, 'avatar')) {
             $this->setAvatar($contact, $this->getProperty($data, 'avatar'));
+            $contactModified = true;
         }
         if (!$patch || null !== $this->getProperty($data, 'note')) {
             $contact->setNote($this->getProperty($data, 'note'));
+            $contactModified = true;
         }
         if (!$patch || null !== $this->getProperty($data, 'medias')) {
             /** @var int[] $medias */
@@ -333,6 +351,7 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
 
         if (!$patch || $this->getProperty($data, 'title')) {
             $this->setTitleOnContact($contact, $this->getProperty($data, 'title'));
+            $contactModified = true;
         }
 
         if (!$patch || $this->getProperty($data, 'formOfAddress')) {
@@ -340,6 +359,7 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
 
             if (\is_numeric($formOfAddress) || \is_string($formOfAddress)) {
                 $contact->setFormOfAddress($formOfAddress);
+                $contactModified = true;
             }
 
             if (!\is_null($formOfAddress) && \is_array($formOfAddress) && \array_key_exists('id', $formOfAddress)) {
@@ -348,11 +368,13 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
                     \E_USER_DEPRECATED
                 );
                 $contact->setFormOfAddress($formOfAddress['id']);
+                $contactModified = true;
             }
         }
 
         if (!$patch || $this->getProperty($data, 'salutation')) {
             $contact->setSalutation($this->getProperty($data, 'salutation'));
+            $contactModified = true;
         }
 
         if (!$patch || $this->getProperty($data, 'birthday')) {
@@ -363,6 +385,7 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
                 $birthday = null;
             }
             $contact->setBirthday($birthday);
+            $contactModified = true;
         }
 
         if (!$id) {
@@ -406,7 +429,7 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
             $this->domainEventCollector->collect(
                 new ContactCreatedEvent($contact, $data)
             );
-        } else {
+        } elseif ($contactModified) {
             $this->domainEventCollector->collect(
                 new ContactModifiedEvent($contact, $data)
             );
@@ -579,7 +602,8 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
                 $accountContact->setPosition($position);
             } else {
                 // else create new one
-                $this->createMainAccountContact($contact, $account, $position);
+                $accountContact = $this->createMainAccountContact($contact, $account, $position);
+                $this->domainEventCollector->collect(new AccountContactAddedEvent($accountContact));
             }
         } else {
             // if a main account exists - remove it
@@ -587,6 +611,15 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
                 // if this contact is the main-Contact - set mainContact to null
                 if ($accountContact->getAccount()->getMainContact() === $contact) {
                     $accountContact->getAccount()->setMainContact(null);
+                    $this->domainEventCollector->collect(
+                        new AccountContactRemovedEvent(
+                            $accountContact->getAccount()->getId(),
+                            $accountContact->getContact()->getId(),
+                            $accountContact->getAccount()->getName(),
+                            $accountContact->getContact()->getFirstName() . ' ' .
+                            $accountContact->getContact()->getLastName()
+                        )
+                    );
                 }
 
                 $this->em->remove($accountContact);

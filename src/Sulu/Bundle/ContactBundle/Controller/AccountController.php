@@ -723,20 +723,26 @@ class AccountController extends AbstractRestController implements ClassResourceI
     {
         $accountManager = $this->accountManager;
 
+        $accountModified = false;
         if (null !== $request->get('uid')) {
             $account->setUid($request->get('uid'));
+            $accountModified = true;
         }
         if (null !== $request->get('registerNumber')) {
             $account->setRegisterNumber($request->get('registerNumber'));
+            $accountModified = true;
         }
         if (null !== $request->get('number')) {
             $account->setNumber($request->get('number'));
+            $accountModified = true;
         }
         if (null !== $request->get('placeOfJurisdiction')) {
             $account->setPlaceOfJurisdiction($request->get('placeOfJurisdiction'));
+            $accountModified = true;
         }
         if (\array_key_exists('id', $request->get('logo', []))) {
             $accountManager->setLogo($account, $request->get('logo')['id']);
+            $accountModified = true;
         }
         if (null !== $request->get('medias')) {
             $accountManager->setMedias($account, $request->get('medias'));
@@ -744,15 +750,19 @@ class AccountController extends AbstractRestController implements ClassResourceI
 
         $mainContact = null;
         if (null !== ($mainContactRequest = $request->get('mainContact'))) {
-            $mainContact = $entityManager->getRepository(
-                $this->contactClass
-            )->find($mainContactRequest['id']);
+            $mainContact = $entityManager->getRepository($this->contactClass)->find($mainContactRequest['id']);
+            $accountModified = true;
+        }
+
+        if (null !== $request->get('bankAccounts')) {
+            $accountManager->processBankAccounts($account, $request->get('bankAccounts', []));
+            $accountModified = true;
         }
 
         $account->setMainContact($mainContact);
 
-        if (null !== $request->get('bankAccounts')) {
-            $accountManager->processBankAccounts($account, $request->get('bankAccounts', []));
+        if ($accountModified) {
+            $this->domainEventCollector->collect(new AccountModifiedEvent($account, $request->request->all()));
         }
     }
 
