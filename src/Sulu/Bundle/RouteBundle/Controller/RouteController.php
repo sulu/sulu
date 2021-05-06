@@ -167,6 +167,7 @@ class RouteController extends AbstractRestController implements ClassResourceInt
     private function generateUrlResponse(Request $request)
     {
         $resourceKey = $this->getRequestParameter($request, 'resourceKey');
+        $locale = $this->getRequestParameter($request, 'locale');
         $resourceKeyMapping = $this->resourceKeyMappings[$resourceKey] ?? null;
 
         /** @var array $parts */
@@ -174,13 +175,15 @@ class RouteController extends AbstractRestController implements ClassResourceInt
 
         $route = '/' . \implode('-', $parts);
         if ($resourceKeyMapping) {
-            $route = $this->routeGenerator->generate($parts, $this->resourceKeyMappings[$resourceKey]['options']);
+            $options = $this->resourceKeyMappings[$resourceKey]['options'];
+            $options['locale'] = $locale;
+            $route = $this->routeGenerator->generate($parts, $options);
 
             if ($this->conflictResolver) {
                 // create temporary route that is not persisted to resolve possible conflicts with existing routes
                 $tempRouteEntity = $this->routeRepository->createNew()
                     ->setPath($route)
-                    ->setLocale($this->getRequestParameter($request, 'locale'))
+                    ->setLocale($locale)
                     ->setEntityClass($this->resourceKeyMappings[$resourceKey]['entityClass'])
                     ->setEntityId($this->getRequestParameter($request, 'id'));
                 $tempRouteEntity = $this->conflictResolver->resolve($tempRouteEntity);

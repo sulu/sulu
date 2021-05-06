@@ -22,7 +22,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class SymfonyExpressionTokenProvider implements TokenProviderInterface
 {
     /**
-     * @var TranslatorInterface
+     * @var TranslatorInterface&LocaleAwareInterface
      */
     private $translator;
 
@@ -49,17 +49,28 @@ class SymfonyExpressionTokenProvider implements TokenProviderInterface
         $this->expressionLanguage->addFunction(ExpressionFunction::fromPhp('is_array'));
     }
 
-    public function provide($entity, $name)
+    public function provide($entity, $name/*, $options = [] */)
     {
+        $options = \func_num_args() > 2 ? \func_get_arg(2) : [];
         $locale = $this->translator->getLocale();
 
         try {
+            $entityLocale = null;
             if (\is_object($entity) && \method_exists($entity, 'getLocale')) {
-                $this->translator->setLocale($entity->getLocale());
+                $entityLocale = $entity->getLocale();
+            } elseif (isset($options['locale'])) {
+                $entityLocale = $options['locale'];
             }
 
-            $result = $this->expressionLanguage->evaluate($name, ['object' => $entity, 'translator' => $this->translator]);
-            $this->translator->setLocale($locale);
+            if ($entityLocale) {
+                $this->translator->setLocale($entityLocale);
+            }
+
+            $result = $this->expressionLanguage->evaluate($name, [
+                'object' => $entity,
+                'translator' => $this->translator,
+                'locale' => $entityLocale,
+            ]);
 
             return $result;
         } catch (\Exception $e) {

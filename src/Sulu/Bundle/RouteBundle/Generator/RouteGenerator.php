@@ -48,7 +48,7 @@ class RouteGenerator implements RouteGeneratorInterface
 
         foreach ($tokenNames as $index => $name) {
             $tokenName = '{' . $name . '}';
-            $tokenValue = $this->tokenProvider->provide($entity, $name);
+            $tokenValue = $this->tokenProvider->provide($entity, $name, $options);
 
             $tokens[$tokenName] = $this->slugifier->slugify($tokenValue);
         }
@@ -59,7 +59,7 @@ class RouteGenerator implements RouteGeneratorInterface
                 \sprintf(
                     'Generated path "%s" for object "%s" has to start with a slash',
                     $path,
-                    \get_class($entity)
+                    \is_object($entity) ? \get_class($entity) : \json_encode($entity)
                 )
             );
         }
