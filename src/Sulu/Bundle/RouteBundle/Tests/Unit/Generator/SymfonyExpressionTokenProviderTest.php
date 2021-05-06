@@ -67,6 +67,27 @@ class SymfonyExpressionTokenProviderTest extends TestCase
         );
     }
 
+    public function testResolveWithLocale(): void
+    {
+        $translator = $this->prophesize(Translator::class);
+        $translator->getLocale()->willReturn('de');
+        $translator->setLocale('de')->shouldBeCalled();
+        $translator->setLocale('es')->shouldBeCalled();
+        $translator->trans('test-key')->willReturn('TEST');
+
+        $entity = [
+            'title',
+            'subtitle',
+        ];
+
+        $provider = new SymfonyExpressionTokenProvider($translator->reveal());
+
+        $this->assertEquals(
+            'TEST',
+            $provider->provide($entity, 'translator.trans("test-key")', ['locale' => 'es'])
+        );
+    }
+
     public function testResolveWithIsArray()
     {
         $translator = $this->prophesize(Translator::class);

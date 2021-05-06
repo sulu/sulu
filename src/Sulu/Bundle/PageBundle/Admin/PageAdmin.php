@@ -332,7 +332,7 @@ class PageAdmin extends Admin
         $webspaceContexts = [];
         foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
             /* @var Webspace $webspace */
-            $webspaceContexts[self::SECURITY_CONTEXT_PREFIX . $webspace->getKey()] = [
+            $webspaceContexts[self::getPageSecurityContext($webspace->getKey())] = [
                 PermissionTypes::VIEW,
                 PermissionTypes::ADD,
                 PermissionTypes::EDIT,
@@ -419,7 +419,7 @@ class PageAdmin extends Admin
     {
         foreach ($this->webspaceManager->getWebspaceCollection()->getWebspaces() as $webspace) {
             $hasWebspacePermission = $this->securityChecker->hasPermission(
-                self::SECURITY_CONTEXT_PREFIX . $webspace->getKey(),
+                self::getPageSecurityContext($webspace->getKey()),
                 PermissionTypes::EDIT
             );
 
@@ -429,5 +429,15 @@ class PageAdmin extends Admin
         }
 
         return false;
+    }
+
+    /**
+     * Returns security context for pages in given webspace.
+     *
+     * @final
+     */
+    public static function getPageSecurityContext(string $webspaceKey): string
+    {
+        return \sprintf('%s%s', self::SECURITY_CONTEXT_PREFIX, $webspaceKey);
     }
 }

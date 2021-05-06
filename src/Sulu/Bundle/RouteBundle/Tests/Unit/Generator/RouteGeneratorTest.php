@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\RouteBundle\Tests\Unit\Generator;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Sulu\Bundle\RouteBundle\Generator\RouteGenerator;
 use Sulu\Bundle\RouteBundle\Generator\TokenProviderInterface;
 use Sulu\Bundle\RouteBundle\Model\RoutableInterface;
@@ -46,8 +47,8 @@ class RouteGeneratorTest extends TestCase
     {
         $entity = $this->prophesize(RoutableInterface::class);
 
-        $this->tokenProvider->provide($entity->reveal(), 'object.getTitle()')->willReturn('Test Title');
-        $this->tokenProvider->provide($entity->reveal(), 'object.getId()')->willReturn(1);
+        $this->tokenProvider->provide($entity->reveal(), 'object.getTitle()', Argument::any())->willReturn('Test Title');
+        $this->tokenProvider->provide($entity->reveal(), 'object.getId()', Argument::any())->willReturn(1);
 
         $this->slugifier->slugify('Test Title')->willReturn('test-title');
         $this->slugifier->slugify(1)->willReturn('1');
