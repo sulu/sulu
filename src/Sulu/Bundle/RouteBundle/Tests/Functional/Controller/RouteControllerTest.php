@@ -87,6 +87,47 @@ class RouteControllerTest extends SuluTestCase
         $this->assertEquals('/2019/custom-part/test', $result['resourcelocator']);
     }
 
+    public function testGenerateWithTranslationInSchema(): void
+    {
+        // test english translation
+        $this->client->jsonRequest(
+            'POST',
+            '/api/routes?action=generate',
+            [
+                'locale' => 'en',
+                'resourceKey' => 'event-resource-key',
+                'entityClass' => 'event-class',
+                'routeSchema' => '/{translator.trans("app.event")}/{object["title"]}',
+                'parts' => [
+                    'title' => 'Tomorrowland',
+                ],
+            ]
+        );
+
+        $result = \json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $this->assertEquals('/event/tomorrowland', $result['resourcelocator']);
+
+        // test german translation
+        $this->client->jsonRequest(
+            'POST',
+            '/api/routes?action=generate',
+            [
+                'locale' => 'de',
+                'resourceKey' => 'event-resource-key',
+                'entityClass' => 'event-class',
+                'routeSchema' => '/{translator.trans("app.event")}/{object["title"]}',
+                'parts' => [
+                    'title' => 'Tomorrowland',
+                ],
+            ]
+        );
+
+        $result = \json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $this->assertEquals('/veranstaltung/tomorrowland', $result['resourcelocator']);
+    }
+
     public function testGenerateWithConflict(): void
     {
         $this->createRoute('/prefix/2019/test');
