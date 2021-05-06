@@ -13,9 +13,8 @@ namespace Sulu\Bundle\SecurityBundle\Tests\Functional\Controller;
 
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\ObjectRepository;
+use Sulu\Bundle\ActivityBundle\Domain\Model\ActivityInterface;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
-use Sulu\Bundle\EventLogBundle\Domain\Event\DomainEvent;
-use Sulu\Bundle\EventLogBundle\Domain\Model\EventRecord;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
@@ -45,15 +44,15 @@ class ResettingControllerTest extends SuluTestCase
     private $client;
 
     /**
-     * @var ObjectRepository<EventRecord>
+     * @var ObjectRepository<ActivityInterface>
      */
-    private $eventRepository;
+    private $activityRepository;
 
     public function setUp(): void
     {
         $this->client = $this->createAuthenticatedClient();
         $this->em = $this->getEntityManager();
-        $this->eventRepository = $this->em->getRepository(EventRecord::class);
+        $this->activityRepository = $this->em->getRepository(ActivityInterface::class);
         $this->purgeDatabase();
 
         $this->role = $this->createRole('Sulu');
@@ -315,9 +314,9 @@ class ResettingControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        /** @var DomainEvent $event */
-        $event = $this->eventRepository->findOneBy(['eventType' => 'password_resetted']);
-        $this->assertSame((string) $this->users[2]->getId(), $event->getResourceId());
+        /** @var ActivityInterface $activity */
+        $activity = $this->activityRepository->findOneBy(['type' => 'password_resetted']);
+        $this->assertSame((string) $this->users[2]->getId(), $activity->getResourceId());
 
         $encoder = $this->getContainer()->get('sulu_security.encoder_factory')->getEncoder($user);
         $this->assertEquals($encoder->encodePassword($newPassword, $user->getSalt()), $user->getPassword());

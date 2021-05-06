@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\WebsiteBundle\Analytics;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\WebsiteBundle\Domain\Event\AnalyticsCreatedEvent;
 use Sulu\Bundle\WebsiteBundle\Domain\Event\AnalyticsModifiedEvent;
 use Sulu\Bundle\WebsiteBundle\Domain\Event\AnalyticsRemovedEvent;

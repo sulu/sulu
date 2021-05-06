@@ -13,7 +13,7 @@ namespace Sulu\Bundle\TagBundle\Tests\Unit\Tag;
 
 use Doctrine\Persistence\ObjectManager;
 use PHPUnit\Framework\TestCase;
-use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TagBundle\Tag\TagManager;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;

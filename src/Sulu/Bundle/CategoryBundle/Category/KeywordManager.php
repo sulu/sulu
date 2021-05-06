@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\CategoryBundle\Category;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryKeywordAddedEvent;
 use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryKeywordModifiedEvent;
 use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryKeywordRemovedEvent;
@@ -22,7 +23,6 @@ use Sulu\Bundle\CategoryBundle\Entity\KeywordInterface;
 use Sulu\Bundle\CategoryBundle\Entity\KeywordRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Exception\KeywordIsMultipleReferencedException;
 use Sulu\Bundle\CategoryBundle\Exception\KeywordNotUniqueException;
-use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface;
 
 /**
  * Manages keyword for categories.

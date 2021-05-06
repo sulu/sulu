@@ -16,7 +16,7 @@ use Doctrine\ORM\EntityRepository;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
-use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\MediaBundle\Domain\Event\MediaCropModifiedEvent;
 use Sulu\Bundle\MediaBundle\Domain\Event\MediaCropRemovedEvent;
 use Sulu\Bundle\MediaBundle\Entity\File;

@@ -63,7 +63,7 @@
         <service id="sulu_document_manager.name_resolver" class="Sulu\Component\DocumentManager\NameResolver" public="false" />
 
         <service id="sulu_document_manager.document_domain_event_collector" class="Sulu\Bundle\DocumentManagerBundle\Collector\DocumentDomainEventCollector">
-            <argument type="service" id="sulu_event_log.domain_event_dispatcher"/>
+            <argument type="service" id="sulu_activity.domain_event_dispatcher"/>
         </service>
 
         <service id="Sulu\Bundle\DocumentManagerBundle\Collector\DocumentDomainEventCollectorInterface" alias="sulu_document_manager.document_domain_event_collector"/>

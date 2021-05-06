@@ -18,7 +18,7 @@
             <argument type="service" id="sulu.repository.analytics"/>
             <argument type="service" id="sulu_website.domains.repository"/>
             <argument>%kernel.environment%</argument>
-            <argument type="service" id="sulu_event_log.domain_event_collector"/>
+            <argument type="service" id="sulu_activity.domain_event_collector"/>
         </service>
 
         <service id="sulu_website.analytics.response_listener"

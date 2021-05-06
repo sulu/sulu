@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <service id="sulu_activity.domain_event_dispatcher" class="Sulu\Bundle\ActivityBundle\Application\Dispatcher\DomainEventDispatcher">
+            <argument type="service" id="event_dispatcher"/>
+        </service>
+
+        <service id="Sulu\Bundle\ActivityBundle\Application\Dispatcher\DomainEventDispatcherInterface" alias="sulu_activity.domain_event_dispatcher"/>
+
+        <service id="sulu_activity.domain_event_collector" class="Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollector">
+            <argument type="service" id="sulu_activity.domain_event_dispatcher"/>
+        </service>
+
+        <service id="Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface" alias="sulu_activity.domain_event_collector"/>
+
+        <service id="sulu_activity.activity_repository.null" class="Sulu\Bundle\ActivityBundle\Domain\Repository\NullActivityRepository">
+            <argument>%sulu.model.activity.class%</argument>
+        </service>
+
+        <service id="sulu_activity.activity_repository.doctrine" class="Sulu\Bundle\ActivityBundle\Infrastructure\Doctrine\Repository\ActivityRepository">
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument>%sulu_activity.storage.persist_payload%</argument>
+        </service>
+
+        <service id="sulu_activity.domain_event_collector_subscriber" class="Sulu\Bundle\ActivityBundle\Infrastructure\Doctrine\Subscriber\DomainEventCollectorSubscriber">
+            <argument type="service" id="sulu_activity.domain_event_collector"/>
+
+            <tag name="doctrine.event_subscriber" priority="-256"/>
+        </service>
+
+        <service id="sulu_activity.store_activity_subscriber" class="Sulu\Bundle\ActivityBundle\Application\Subscriber\StoreActivitySubscriber">
+            <argument type="service" id="sulu_activity.activity_repository"/>
+
+            <tag name="kernel.event_subscriber" />
+        </service>
+
+        <service id="sulu_activity.set_domain_event_user_subscriber" class="Sulu\Bundle\ActivityBundle\Application\Subscriber\SetDomainEventUserSubscriber">
+            <argument type="service" id="security.helper" on-invalid="null"/>
+
+            <tag name="kernel.event_subscriber" />
+        </service>
+
+        <service id="sulu_activity.dispatch_specific_domain_event_subscriber" class="Sulu\Bundle\ActivityBundle\Application\Subscriber\DispatchSpecificDomainEventSubscriber">
+            <argument type="service" id="event_dispatcher"/>
+
+            <tag name="kernel.event_subscriber" />
+        </service>
+    </services>
+</container>

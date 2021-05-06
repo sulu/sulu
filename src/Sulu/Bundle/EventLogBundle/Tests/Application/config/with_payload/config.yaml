@@ -1,3 +1,0 @@
-sulu_event_log:
-    storage:
-        persist_payload: true

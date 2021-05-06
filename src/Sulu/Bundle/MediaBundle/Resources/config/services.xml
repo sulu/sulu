@@ -85,7 +85,7 @@
             <argument type="service" id="sulu_media.media_manager" />
             <argument type="service" id="sulu_media.system_collections.manager" />
             <argument type="service" id="doctrine.orm.entity_manager" />
-            <argument type="service" id="sulu_event_log.domain_event_collector" />
+            <argument type="service" id="sulu_activity.domain_event_collector" />
 
             <tag name="sulu.context" context="admin"/>
         </service>
@@ -263,7 +263,7 @@
             <argument type="service" id="sulu_tag.tag_manager" />
             <argument type="service" id="sulu_media.type_manager" />
             <argument type="service" id="sulu.content.path_cleaner" />
-            <argument type="service" id="sulu_event_log.domain_event_collector"/>
+            <argument type="service" id="sulu_activity.domain_event_collector"/>
             <argument type="service" id="security.token_storage" on-invalid="null" />
             <argument type="service" id="sulu_security.security_checker" on-invalid="null" />
             <argument type="tagged_iterator" tag="sulu_media.media_properties_provider"/>
@@ -299,7 +299,7 @@
             <argument type="service" id="sulu_media.format_options_repository" />
             <argument type="service" id="sulu_media.media_manager" />
             <argument type="service" id="sulu_media.format_manager" />
-            <argument type="service" id="sulu_event_log.domain_event_collector" />
+            <argument type="service" id="sulu_activity.domain_event_collector" />
             <argument>%sulu_media.image.formats%</argument>
         </service>
 
@@ -349,7 +349,7 @@
             <argument type="service" id="sulu_media.format_manager" />
             <argument type="service" id="sulu.repository.user" />
             <argument type="service" id="doctrine.orm.entity_manager" />
-            <argument type="service" id="sulu_event_log.domain_event_collector"/>
+            <argument type="service" id="sulu_activity.domain_event_collector"/>
             <argument type="service" id="security.token_storage" on-invalid="null"/>
             <argument type="string">%sulu_media.collection.previews.format%</argument>
             <argument>%sulu_security.permissions%</argument>

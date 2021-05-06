@@ -19,7 +19,7 @@
             <argument type="service" id="sulu_category.keyword_manager"/>
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="event_dispatcher"/>
-            <argument type="service" id="sulu_event_log.domain_event_collector"/>
+            <argument type="service" id="sulu_activity.domain_event_collector"/>
         </service>
         <service id="Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface" alias="sulu_category.category_manager"/>
 
@@ -57,7 +57,7 @@
             <argument type="service" id="sulu.repository.keyword"/>
             <argument type="service" id="sulu.repository.category_translation"/>
             <argument type="service" id="doctrine.orm.entity_manager"/>
-            <argument type="service" id="sulu_event_log.domain_event_collector"/>
+            <argument type="service" id="sulu_activity.domain_event_collector"/>
         </service>
 
         <service id="sulu_category.reference_store.category"

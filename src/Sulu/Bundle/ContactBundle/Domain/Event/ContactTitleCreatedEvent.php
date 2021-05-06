@@ -11,9 +11,9 @@
 
 namespace Sulu\Bundle\ContactBundle\Domain\Event;
 
+use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
 use Sulu\Bundle\ContactBundle\Admin\ContactAdmin;
 use Sulu\Bundle\ContactBundle\Entity\ContactTitle;
-use Sulu\Bundle\EventLogBundle\Domain\Event\DomainEvent;
 
 class ContactTitleCreatedEvent extends DomainEvent
 {

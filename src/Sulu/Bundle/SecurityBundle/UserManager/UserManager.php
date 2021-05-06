@@ -13,10 +13,10 @@ namespace Sulu\Bundle\SecurityBundle\UserManager;
 
 use Doctrine\ORM\NoResultException;
 use Doctrine\Persistence\ObjectManager;
+use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Sulu\Bundle\ContactBundle\Contact\ContactManager;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
-use Sulu\Bundle\EventLogBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\SecurityBundle\Domain\Event\UserCreatedEvent;
 use Sulu\Bundle\SecurityBundle\Domain\Event\UserEnabledEvent;
 use Sulu\Bundle\SecurityBundle\Domain\Event\UserLockedEvent;

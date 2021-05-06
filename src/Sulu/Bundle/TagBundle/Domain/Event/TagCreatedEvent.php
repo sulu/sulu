@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\TagBundle\Domain\Event;
 
-use Sulu\Bundle\EventLogBundle\Domain\Event\DomainEvent;
+use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
 use Sulu\Bundle\TagBundle\Admin\TagAdmin;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 

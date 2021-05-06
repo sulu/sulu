@@ -13,8 +13,7 @@ namespace Sulu\Bundle\SnippetBundle\Tests\Functional\Controller;
 
 use Doctrine\Persistence\ObjectRepository;
 use PHPCR\SessionInterface;
-use Sulu\Bundle\EventLogBundle\Domain\Event\DomainEvent;
-use Sulu\Bundle\EventLogBundle\Domain\Model\EventRecord;
+use Sulu\Bundle\ActivityBundle\Domain\Model\ActivityInterface;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManagerInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
@@ -57,9 +56,9 @@ class SnippetControllerTest extends SuluTestCase
     private $defaultSnippetManager;
 
     /**
-     * @var ObjectRepository<EventRecord>
+     * @var ObjectRepository<ActivityInterface>
      */
-    private $eventRepository;
+    private $activityRepository;
 
     public function setUp(): void
     {
@@ -69,7 +68,7 @@ class SnippetControllerTest extends SuluTestCase
         $this->phpcrSession = $this->getContainer()->get('doctrine_phpcr')->getConnection();
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->defaultSnippetManager = $this->getContainer()->get('sulu_snippet.default_snippet.manager');
-        $this->eventRepository = $this->getEntityManager()->getRepository(EventRecord::class);
+        $this->activityRepository = $this->getEntityManager()->getRepository(ActivityInterface::class);
         $this->loadFixtures();
     }
 
@@ -337,9 +336,9 @@ class SnippetControllerTest extends SuluTestCase
             $this->fail('Document was not persisted');
         }
 
-        /** @var DomainEvent $event */
-        $event = $this->eventRepository->findOneBy(['eventType' => 'created']);
-        $this->assertNotNull($event);
+        /** @var ActivityInterface $activity */
+        $activity = $this->activityRepository->findOneBy(['type' => 'created']);
+        $this->assertNotNull($activity);
     }
 
     /**
@@ -399,9 +398,9 @@ class SnippetControllerTest extends SuluTestCase
         $this->assertEquals($data['title'], $document->getTitle());
         $this->assertEquals($data['description'], $document->getStructure()->getProperty('description')->getValue());
 
-        /** @var DomainEvent $event */
-        $event = $this->eventRepository->findOneBy(['eventType' => 'modified']);
-        $this->assertSame((string) $this->hotel1->getUuid(), $event->getResourceId());
+        /** @var ActivityInterface $activity */
+        $activity = $this->activityRepository->findOneBy(['type' => 'modified']);
+        $this->assertSame((string) $this->hotel1->getUuid(), $activity->getResourceId());
     }
 
     public function testPutPublished()
@@ -532,9 +531,9 @@ class SnippetControllerTest extends SuluTestCase
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        /** @var DomainEvent $event */
-        $event = $this->eventRepository->findOneBy(['eventType' => 'removed']);
-        $this->assertSame((string) $this->hotel1->getUuid(), $event->getResourceId());
+        /** @var ActivityInterface $activity */
+        $activity = $this->activityRepository->findOneBy(['type' => 'removed']);
+        $this->assertSame((string) $this->hotel1->getUuid(), $activity->getResourceId());
     }
 
     public function testCopyLocale()
@@ -568,9 +567,9 @@ class SnippetControllerTest extends SuluTestCase
         $this->assertEquals('Hotel title DE', $newPage->getTitle());
         $this->assertEquals('Hotel description DE', $newPage->getStructure()->getProperty('description')->getValue());
 
-        /** @var DomainEvent $event */
-        $event = $this->eventRepository->findOneBy(['eventType' => 'translation_copied']);
-        $this->assertSame((string) $snippet->getUuid(), $event->getResourceId());
+        /** @var ActivityInterface $activity */
+        $activity = $this->activityRepository->findOneBy(['type' => 'translation_copied']);
+        $this->assertSame((string) $snippet->getUuid(), $activity->getResourceId());
     }
 
     public function testCopyLocaleWithSource()
