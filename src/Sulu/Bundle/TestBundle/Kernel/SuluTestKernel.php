@@ -75,6 +75,7 @@ class SuluTestKernel extends SuluKernel
             new \Sulu\Bundle\CustomUrlBundle\SuluCustomUrlBundle(),
             new \Sulu\Bundle\RouteBundle\SuluRouteBundle(),
             new \Sulu\Bundle\MarkupBundle\SuluMarkupBundle(),
+            new \Sulu\Bundle\PreviewBundle\SuluPreviewBundle(),
             new \Sulu\Bundle\AudienceTargetingBundle\SuluAudienceTargetingBundle(),
         ];
 
@@ -104,7 +105,6 @@ class SuluTestKernel extends SuluKernel
 
         if (self::CONTEXT_ADMIN === $this->getContext()) {
             $bundles[] = new \Symfony\Bundle\SecurityBundle\SecurityBundle();
-            $bundles[] = new \Sulu\Bundle\PreviewBundle\SuluPreviewBundle();
             $bundles[] = new \FOS\JsRoutingBundle\FOSJsRoutingBundle();
         }
 
