@@ -695,6 +695,7 @@ class AccountController extends AbstractRestController implements ClassResourceI
                 throw new EntityNotFoundException($this->getAccountEntityName(), $id);
             } else {
                 $this->doPatch($account, $request, $this->entityManager);
+                $this->entityManager->flush();
 
                 // get api entity
                 $locale = $this->getUser()->getLocale();
