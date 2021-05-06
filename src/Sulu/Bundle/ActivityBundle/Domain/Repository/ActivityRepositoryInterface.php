@@ -16,7 +16,7 @@ use Sulu\Bundle\ActivityBundle\Domain\Model\ActivityInterface;
 
 interface ActivityRepositoryInterface
 {
-    public function createForDomainEvent(DomainEvent $domainEvent): ActivityInterface;
+    public function createFromDomainEvent(DomainEvent $domainEvent): ActivityInterface;
 
     public function addAndCommit(ActivityInterface $activity): void;
 }

@@ -7,11 +7,11 @@
             <generator strategy="AUTO"/>
         </id>
 
-        <field name="eventType" column="eventType" type="string" nullable="false" length="191"/>
-        <field name="eventContext" column="eventContext" type="json" nullable="false"/>
-        <field name="eventDateTime" column="eventDateTime" type="datetime_immutable" nullable="false"/>
-        <field name="eventBatch" column="eventBatch" type="string" nullable="true" length="191"/>
-        <field name="eventPayload" column="eventPayload" type="json" nullable="true"/>
+        <field name="type" column="type" type="string" nullable="false" length="191"/>
+        <field name="context" column="context" type="json" nullable="false"/>
+        <field name="timestamp" column="timestamp" type="datetime_immutable" nullable="false"/>
+        <field name="batch" column="batch" type="string" nullable="true" length="191"/>
+        <field name="payload" column="payload" type="json" nullable="true"/>
 
         <many-to-one field="user" target-entity="Sulu\Component\Security\Authentication\UserInterface">
             <join-column name="userId" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>

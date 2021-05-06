@@ -15,37 +15,37 @@ use Sulu\Component\Security\Authentication\UserInterface;
 
 interface ActivityInterface
 {
-    public function getEventType(): string;
+    public function getType(): string;
 
-    public function setEventType(string $eventType): ActivityInterface;
+    public function setType(string $eventType): ActivityInterface;
 
     /**
      * @return mixed[]
      */
-    public function getEventContext(): array;
+    public function getContext(): array;
 
     /**
      * @param mixed[] $eventContext
      */
-    public function setEventContext(array $eventContext): ActivityInterface;
+    public function setContext(array $eventContext): ActivityInterface;
 
     /**
      * @return mixed[]|null
      */
-    public function getEventPayload(): ?array;
+    public function getPayload(): ?array;
 
     /**
      * @param mixed[]|null $eventPayload
      */
-    public function setEventPayload(?array $eventPayload): ActivityInterface;
+    public function setPayload(?array $eventPayload): ActivityInterface;
 
-    public function getEventDateTime(): \DateTimeImmutable;
+    public function getTimestamp(): \DateTimeImmutable;
 
-    public function setEventDateTime(\DateTimeImmutable $eventDateTime): ActivityInterface;
+    public function setTimestamp(\DateTimeImmutable $eventDateTime): ActivityInterface;
 
-    public function getEventBatch(): ?string;
+    public function getBatch(): ?string;
 
-    public function setEventBatch(?string $eventBatch): ActivityInterface;
+    public function setBatch(?string $eventBatch): ActivityInterface;
 
     public function getUser(): ?UserInterface;
 

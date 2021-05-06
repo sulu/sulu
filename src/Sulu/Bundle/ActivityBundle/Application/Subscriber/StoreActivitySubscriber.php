@@ -37,7 +37,7 @@ class StoreActivitySubscriber implements EventSubscriberInterface
 
     public function storeActivity(DomainEvent $event): void
     {
-        $activity = $this->activityRepository->createForDomainEvent($event);
+        $activity = $this->activityRepository->createFromDomainEvent($event);
         $this->activityRepository->addAndCommit($activity);
     }
 }

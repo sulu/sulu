@@ -13,6 +13,7 @@ namespace Sulu\Bundle\CategoryBundle\Category;
 
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
+use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\CategoryBundle\Api\Category as CategoryWrapper;
 use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryCreatedEvent;
 use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryModifiedEvent;
@@ -31,7 +32,6 @@ use Sulu\Bundle\CategoryBundle\Exception\CategoryIdNotFoundException;
 use Sulu\Bundle\CategoryBundle\Exception\CategoryKeyNotFoundException;
 use Sulu\Bundle\CategoryBundle\Exception\CategoryKeyNotUniqueException;
 use Sulu\Bundle\CategoryBundle\Exception\CategoryNameMissingException;
-use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;

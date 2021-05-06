@@ -37,7 +37,7 @@ class StoreActivitySubscriberTest extends TestCase
         $event = $this->prophesize(DomainEvent::class);
         $activity = $this->prophesize(ActivityInterface::class);
 
-        $this->activityRepository->createForDomainEvent($event->reveal())
+        $this->activityRepository->createFromDomainEvent($event->reveal())
             ->willReturn($activity->reveal());
         $this->activityRepository->addAndCommit($activity->reveal())->shouldBeCalled();
 

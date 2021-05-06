@@ -181,7 +181,7 @@ class AnalyticsManagerTest extends BaseFunctional
         $activities = $activityRepository->findAll();
         $this->assertCount(1, $activities);
         $this->assertSame((string) $result->getId(), $activities[0]->getResourceId());
-        $this->assertSame('created', $activities[0]->getEventType());
+        $this->assertSame('created', $activities[0]->getType());
 
         $accessor = PropertyAccess::createPropertyAccessor();
         foreach ($data as $key => $value) {
@@ -227,7 +227,7 @@ class AnalyticsManagerTest extends BaseFunctional
         $activities = $activityRepository->findAll();
         $this->assertCount(1, $activities);
         $this->assertSame((string) $result->getId(), $activities[0]->getResourceId());
-        $this->assertSame('modified', $activities[0]->getEventType());
+        $this->assertSame('modified', $activities[0]->getType());
 
         $accessor = PropertyAccess::createPropertyAccessor();
         foreach ($data as $key => $value) {
@@ -317,7 +317,7 @@ class AnalyticsManagerTest extends BaseFunctional
         $activities = $activityRepository->findAll();
         $this->assertCount(1, $activities);
         $this->assertSame((string) $id, $activities[0]->getResourceId());
-        $this->assertSame('removed', $activities[0]->getEventType());
+        $this->assertSame('removed', $activities[0]->getType());
 
         $this->assertEmpty(
             \array_filter(

@@ -23,27 +23,27 @@ class Activity implements ActivityInterface
     /**
      * @var string
      */
-    private $eventType;
+    private $type;
 
     /**
      * @var mixed[]
      */
-    private $eventContext = [];
+    private $context = [];
 
     /**
      * @var mixed[]|null
      */
-    private $eventPayload;
+    private $payload;
 
     /**
      * @var \DateTimeImmutable
      */
-    private $eventDateTime;
+    private $timestamp;
 
     /**
      * @var string|null
      */
-    private $eventBatch;
+    private $batch;
 
     /**
      * @var UserInterface|null
@@ -95,62 +95,62 @@ class Activity implements ActivityInterface
      */
     private $resourceSecurityObjectId;
 
-    public function getEventType(): string
+    public function getType(): string
     {
-        return $this->eventType;
+        return $this->type;
     }
 
-    public function setEventType(string $eventType): ActivityInterface
+    public function setType(string $type): ActivityInterface
     {
-        $this->eventType = $eventType;
+        $this->type = $type;
 
         return $this;
     }
 
-    public function getEventContext(): array
+    public function getContext(): array
     {
-        return $this->eventContext;
+        return $this->context;
     }
 
-    public function setEventContext(array $eventContext): ActivityInterface
+    public function setContext(array $context): ActivityInterface
     {
-        $this->eventContext = $eventContext;
+        $this->context = $context;
 
         return $this;
     }
 
-    public function getEventPayload(): ?array
+    public function getPayload(): ?array
     {
-        return $this->eventPayload;
+        return $this->payload;
     }
 
-    public function setEventPayload(?array $eventPayload): ActivityInterface
+    public function setPayload(?array $payload): ActivityInterface
     {
-        $this->eventPayload = $eventPayload;
+        $this->payload = $payload;
 
         return $this;
     }
 
-    public function getEventDateTime(): \DateTimeImmutable
+    public function getTimestamp(): \DateTimeImmutable
     {
-        return $this->eventDateTime;
+        return $this->timestamp;
     }
 
-    public function setEventDateTime(\DateTimeImmutable $eventDateTime): ActivityInterface
+    public function setTimestamp(\DateTimeImmutable $timestamp): ActivityInterface
     {
-        $this->eventDateTime = $eventDateTime;
+        $this->timestamp = $timestamp;
 
         return $this;
     }
 
-    public function getEventBatch(): ?string
+    public function getBatch(): ?string
     {
-        return $this->eventBatch;
+        return $this->batch;
     }
 
-    public function setEventBatch(?string $eventBatch): ActivityInterface
+    public function setBatch(?string $batch): ActivityInterface
     {
-        $this->eventBatch = $eventBatch;
+        $this->batch = $batch;
 
         return $this;
     }

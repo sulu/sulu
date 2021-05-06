@@ -13,12 +13,11 @@ namespace Sulu\Bundle\SecurityBundle\Tests\Functional\Controller;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\Persistence\ObjectRepository;
+use Sulu\Bundle\ActivityBundle\Domain\Model\Activity;
 use Sulu\Bundle\ActivityBundle\Domain\Model\ActivityInterface;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\EmailType;
-use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
-use Sulu\Bundle\ActivityBundle\Domain\Model\Activity;
 use Sulu\Bundle\SecurityBundle\Entity\Group;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;

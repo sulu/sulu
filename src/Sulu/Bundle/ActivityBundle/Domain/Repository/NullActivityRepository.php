@@ -26,7 +26,7 @@ class NullActivityRepository implements ActivityRepositoryInterface
         $this->activityClass = $activityClass;
     }
 
-    public function createForDomainEvent(DomainEvent $domainEvent): ActivityInterface
+    public function createFromDomainEvent(DomainEvent $domainEvent): ActivityInterface
     {
         return new $this->activityClass();
     }

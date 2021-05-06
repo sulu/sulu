@@ -11,10 +11,10 @@
 
 namespace Sulu\Bundle\CategoryBundle\Domain\Event;
 
+use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
 use Sulu\Bundle\CategoryBundle\Admin\CategoryAdmin;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface;
-use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
 
 class CategoryModifiedEvent extends DomainEvent
 {

@@ -69,13 +69,13 @@ class ActivityRepositoryTest extends SuluTestCase
         $this->domainEvent->getEventDateTime()->willReturn($dateTime);
         $this->domainEvent->getUser()->willReturn($user->reveal());
 
-        $activity = $this->repository->createForDomainEvent($this->domainEvent->reveal());
+        $activity = $this->repository->createFromDomainEvent($this->domainEvent->reveal());
 
-        static::assertSame('created', $activity->getEventType());
-        static::assertSame(['relatedPageId' => 'page-123'], $activity->getEventContext());
-        static::assertSame(['name' => 'name-123', 'description' => 'description-123'], $activity->getEventPayload());
-        static::assertSame($dateTime, $activity->getEventDateTime());
-        static::assertSame('batch-1234', $activity->getEventBatch());
+        static::assertSame('created', $activity->getType());
+        static::assertSame(['relatedPageId' => 'page-123'], $activity->getContext());
+        static::assertSame(['name' => 'name-123', 'description' => 'description-123'], $activity->getPayload());
+        static::assertSame($dateTime, $activity->getTimestamp());
+        static::assertSame('batch-1234', $activity->getBatch());
         static::assertSame($user->reveal(), $activity->getUser());
         static::assertSame('pages', $activity->getResourceKey());
         static::assertSame('1234-1234-1234-1234', $activity->getResourceId());
@@ -92,13 +92,13 @@ class ActivityRepositoryTest extends SuluTestCase
     {
         $entityRepository = $this->entityManager->getRepository(ActivityInterface::class);
 
-        $activity = $this->repository->createForDomainEvent($this->domainEvent->reveal());
+        $activity = $this->repository->createFromDomainEvent($this->domainEvent->reveal());
         static::assertCount(0, $entityRepository->findAll());
 
         $this->repository->addAndCommit($activity);
         $activities = $entityRepository->findAll();
         static::assertCount(1, $activities);
-        static::assertNull($activities[0]->getEventPayload());
+        static::assertNull($activities[0]->getPayload());
 
         $this->repository->addAndCommit($activity);
         static::assertCount(2, $entityRepository->findAll());
@@ -112,13 +112,13 @@ class ActivityRepositoryTest extends SuluTestCase
 
         $entityRepository = $this->entityManager->getRepository(ActivityInterface::class);
 
-        $activity = $this->repository->createForDomainEvent($this->domainEvent->reveal());
+        $activity = $this->repository->createFromDomainEvent($this->domainEvent->reveal());
         static::assertCount(0, $entityRepository->findAll());
 
         $this->repository->addAndCommit($activity);
         $activities = $entityRepository->findAll();
         static::assertCount(1, $activities);
-        static::assertSame(['name' => 'name-123', 'description' => 'description-123'], $activities[0]->getEventPayload());
+        static::assertSame(['name' => 'name-123', 'description' => 'description-123'], $activities[0]->getPayload());
 
         $this->repository->addAndCommit($activity);
         static::assertCount(2, $entityRepository->findAll());

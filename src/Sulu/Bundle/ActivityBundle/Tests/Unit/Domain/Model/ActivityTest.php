@@ -18,49 +18,49 @@ use Sulu\Component\Security\Authentication\UserInterface;
 
 class ActivityTest extends TestCase
 {
-    public function testEventType(): void
+    public function testType(): void
     {
         $event = $this->createActivity();
 
-        static::assertSame($event, $event->setEventType('created'));
-        static::assertSame('created', $event->getEventType());
+        static::assertSame($event, $event->setType('created'));
+        static::assertSame('created', $event->getType());
     }
 
-    public function testEventContext(): void
+    public function testContext(): void
     {
         $event = $this->createActivity();
 
-        static::assertSame([], $event->getEventContext());
-        static::assertSame($event, $event->setEventContext(['relatedPageId' => 'page-123']));
-        static::assertSame(['relatedPageId' => 'page-123'], $event->getEventContext());
+        static::assertSame([], $event->getContext());
+        static::assertSame($event, $event->setContext(['relatedPageId' => 'page-123']));
+        static::assertSame(['relatedPageId' => 'page-123'], $event->getContext());
     }
 
-    public function testEventPayload(): void
+    public function testPayload(): void
     {
         $event = $this->createActivity();
 
-        static::assertNull($event->getEventPayload());
-        static::assertSame($event, $event->setEventPayload(['name' => 'name-123', 'description' => 'description-123']));
-        static::assertNotNull($event->getEventPayload());
-        static::assertSame(['name' => 'name-123', 'description' => 'description-123'], $event->getEventPayload());
+        static::assertNull($event->getPayload());
+        static::assertSame($event, $event->setPayload(['name' => 'name-123', 'description' => 'description-123']));
+        static::assertNotNull($event->getPayload());
+        static::assertSame(['name' => 'name-123', 'description' => 'description-123'], $event->getPayload());
     }
 
-    public function testEventDateTime(): void
+    public function testTimestamp(): void
     {
         $event = $this->createActivity();
         $dateTime = new \DateTimeImmutable('2020-01-01');
 
-        static::assertSame($event, $event->setEventDateTime($dateTime));
-        static::assertSame($dateTime, $event->getEventDateTime());
+        static::assertSame($event, $event->setTimestamp($dateTime));
+        static::assertSame($dateTime, $event->getTimestamp());
     }
 
-    public function testEventBatch(): void
+    public function testBatch(): void
     {
         $event = $this->createActivity();
 
-        static::assertNull($event->getEventBatch());
-        static::assertSame($event, $event->setEventBatch('batch-1234'));
-        static::assertSame('batch-1234', $event->getEventBatch());
+        static::assertNull($event->getBatch());
+        static::assertSame($event, $event->setBatch('batch-1234'));
+        static::assertSame('batch-1234', $event->getBatch());
     }
 
     public function testUser(): void

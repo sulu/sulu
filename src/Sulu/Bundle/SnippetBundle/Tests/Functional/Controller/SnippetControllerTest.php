@@ -13,7 +13,6 @@ namespace Sulu\Bundle\SnippetBundle\Tests\Functional\Controller;
 
 use Doctrine\Persistence\ObjectRepository;
 use PHPCR\SessionInterface;
-use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
 use Sulu\Bundle\ActivityBundle\Domain\Model\Activity;
 use Sulu\Bundle\ActivityBundle\Domain\Model\ActivityInterface;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;

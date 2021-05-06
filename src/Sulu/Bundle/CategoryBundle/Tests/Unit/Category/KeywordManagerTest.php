@@ -14,6 +14,7 @@ namespace Sulu\Bundle\CategoryBundle\Tests\Unit\Category;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\CategoryBundle\Category\KeywordManager;
 use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryKeywordAddedEvent;
 use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryKeywordModifiedEvent;
@@ -23,7 +24,6 @@ use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\KeywordInterface;
 use Sulu\Bundle\CategoryBundle\Entity\KeywordRepositoryInterface;
-use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 
 class KeywordManagerTest extends TestCase
 {

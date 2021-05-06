@@ -42,18 +42,18 @@ class ActivityRepository implements ActivityRepositoryInterface
         $this->shouldPersistPayload = $shouldPersistPayload;
     }
 
-    public function createForDomainEvent(DomainEvent $domainEvent): ActivityInterface
+    public function createFromDomainEvent(DomainEvent $domainEvent): ActivityInterface
     {
         /** @var class-string<ActivityInterface> $className */
         $className = $this->entityRepository->getClassName();
 
         /** @var ActivityInterface $activity */
         $activity = new $className();
-        $activity->setEventType($domainEvent->getEventType());
-        $activity->setEventContext($domainEvent->getEventContext());
-        $activity->setEventPayload($domainEvent->getEventPayload());
-        $activity->setEventDateTime($domainEvent->getEventDateTime());
-        $activity->setEventBatch($domainEvent->getEventBatch());
+        $activity->setType($domainEvent->getEventType());
+        $activity->setContext($domainEvent->getEventContext());
+        $activity->setPayload($domainEvent->getEventPayload());
+        $activity->setTimestamp($domainEvent->getEventDateTime());
+        $activity->setBatch($domainEvent->getEventBatch());
         $activity->setUser($domainEvent->getUser());
         $activity->setResourceKey($domainEvent->getResourceKey());
         $activity->setResourceId($domainEvent->getResourceId());
@@ -66,7 +66,7 @@ class ActivityRepository implements ActivityRepositoryInterface
         $activity->setResourceSecurityObjectId($domainEvent->getResourceSecurityObjectId());
 
         if ($this->shouldPersistPayload) {
-            $activity->setEventPayload($domainEvent->getEventPayload());
+            $activity->setPayload($domainEvent->getEventPayload());
         }
 
         return $activity;
@@ -79,10 +79,10 @@ class ActivityRepository implements ActivityRepositoryInterface
         $queryBuilder = $this->entityManager->getConnection()->createQueryBuilder();
         $queryBuilder
             ->insert($classMetadata->getTableName())
-            ->setValue($classMetadata->getColumnName('eventType'), $queryBuilder->createNamedParameter($activity->getEventType()))
-            ->setValue($classMetadata->getColumnName('eventContext'), $queryBuilder->createNamedParameter(\json_encode($activity->getEventContext())))
-            ->setValue($classMetadata->getColumnName('eventDateTime'), $queryBuilder->createNamedParameter($activity->getEventDateTime()->format('Y-m-d H:i:s')))
-            ->setValue($classMetadata->getColumnName('eventBatch'), $queryBuilder->createNamedParameter($activity->getEventBatch()))
+            ->setValue($classMetadata->getColumnName('type'), $queryBuilder->createNamedParameter($activity->getType()))
+            ->setValue($classMetadata->getColumnName('context'), $queryBuilder->createNamedParameter(\json_encode($activity->getContext())))
+            ->setValue($classMetadata->getColumnName('dateTime'), $queryBuilder->createNamedParameter($activity->getTimestamp()->format('Y-m-d H:i:s')))
+            ->setValue($classMetadata->getColumnName('batch'), $queryBuilder->createNamedParameter($activity->getBatch()))
             ->setValue($classMetadata->getColumnName('resourceKey'), $queryBuilder->createNamedParameter($activity->getResourceKey()))
             ->setValue($classMetadata->getColumnName('resourceId'), $queryBuilder->createNamedParameter($activity->getResourceId()))
             ->setValue($classMetadata->getColumnName('resourceLocale'), $queryBuilder->createNamedParameter($activity->getResourceLocale()))
@@ -98,7 +98,7 @@ class ActivityRepository implements ActivityRepositoryInterface
         }
 
         if ($this->shouldPersistPayload) {
-            $queryBuilder->setValue($classMetadata->getColumnName('eventPayload'), $queryBuilder->createNamedParameter(\json_encode($activity->getEventPayload())));
+            $queryBuilder->setValue($classMetadata->getColumnName('payload'), $queryBuilder->createNamedParameter(\json_encode($activity->getPayload())));
         }
 
         // set value of id explicitly if class has a pre-insert identity-generator to be compatible with postgresql

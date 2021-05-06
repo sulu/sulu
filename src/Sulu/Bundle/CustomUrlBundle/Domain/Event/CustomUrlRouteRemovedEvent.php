@@ -11,8 +11,8 @@
 
 namespace Sulu\Bundle\CustomUrlBundle\Domain\Event;
 
-use Sulu\Bundle\CustomUrlBundle\Admin\CustomUrlAdmin;
 use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
+use Sulu\Bundle\CustomUrlBundle\Admin\CustomUrlAdmin;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 
 class CustomUrlRouteRemovedEvent extends DomainEvent

@@ -13,6 +13,7 @@ namespace Sulu\Bundle\ContactBundle\Contact;
 
 use DateTime;
 use Doctrine\Persistence\ObjectManager;
+use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\ContactBundle\Api\Contact as ContactApi;
 use Sulu\Bundle\ContactBundle\Domain\Event\AccountContactAddedEvent;
 use Sulu\Bundle\ContactBundle\Domain\Event\AccountContactRemovedEvent;
@@ -33,7 +34,6 @@ use Sulu\Bundle\ContactBundle\Entity\Fax;
 use Sulu\Bundle\ContactBundle\Entity\Note;
 use Sulu\Bundle\ContactBundle\Entity\SocialMediaProfile;
 use Sulu\Bundle\ContactBundle\Entity\Url;
-use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;

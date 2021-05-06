@@ -13,6 +13,7 @@ namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
+use Sulu\Bundle\ActivityBundle\Domain\Model\Activity;
 use Sulu\Bundle\ActivityBundle\Domain\Model\ActivityInterface;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\AccountAddress;
@@ -31,8 +32,6 @@ use Sulu\Bundle\ContactBundle\Entity\PhoneType;
 use Sulu\Bundle\ContactBundle\Entity\Position;
 use Sulu\Bundle\ContactBundle\Entity\Url;
 use Sulu\Bundle\ContactBundle\Entity\UrlType;
-use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
-use Sulu\Bundle\ActivityBundle\Domain\Model\Activity;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\File;
