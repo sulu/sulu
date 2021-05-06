@@ -66,7 +66,7 @@ class AccountContactAddedEvent extends DomainEvent
 
         return [
             'contactId' => $contact->getId(),
-            'name' => $contact->getFirstName() . ' ' . $contact->getLastName(),
+            'contactName' => $contact->getFirstName() . ' ' . $contact->getLastName(),
         ];
     }
 }

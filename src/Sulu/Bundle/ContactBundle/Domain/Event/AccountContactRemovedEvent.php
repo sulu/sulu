@@ -60,7 +60,7 @@ class AccountContactRemovedEvent extends DomainEvent
     {
         return [
             'contactId' => $this->contact->getId(),
-            'name' => $this->contact->getFirstName() . ' ' . $this->contact->getLastName(),
+            'contactName' => $this->contact->getFirstName() . ' ' . $this->contact->getLastName(),
         ];
     }
 
