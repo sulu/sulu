@@ -112,9 +112,9 @@ If you use a custom ckeditor plugin make sure that it is compatible to `^27.1.0`
 The `DocumentManagerInterface` has been extended with a new method `copyLocale`. If you have overridden this service
 in your project, you have to implement that method as well.
 
-### Changed constructor of multiple services to integrate them with the SuluEventLogBundle
+### Changed constructor of multiple services to integrate them with the SuluActivityBundle
 
-To integrate the `SuluEventLogBundle` with the existing services, the constructor of the following services was 
+To integrate the `SuluActivityBundle` with the existing services, the constructor of the following services was 
 adjusted. If you have extended one of these services in your project, you need to adjust your `parent::__construct` 
 call to pass the correct parameters:
 
@@ -138,22 +138,22 @@ call to pass the correct parameters:
 - `Sulu\Bundle\MediaBundle\Controller\MediaPreviewController`
 - `Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManager`
 
-### Added SuluEventLogBundle for dispatching and recording events that happen in the application
+### Added SuluActivityBundle for recording activities in the application
 
-A new bundle was added to the `sulu/sulu` package. The `SuluEventLogBundle` implements a central hub for dispatching
-and recording events that happen in the application. To register the services of the bundle in your project, you need
+A new bundle was added to the `sulu/sulu` package. The `SuluActivityBundle` implements a central hub for dispatching
+events and recording activities in the application. To register the services of the bundle in your project, you need
 to add the bundle to your `config/bundles.php` file:
 
 ```diff
-+    Sulu\Bundle\ActivityBundle\SuluEventLogBundle::class => ['all' => true],
++    Sulu\Bundle\ActivityBundle\SuluActivityBundle::class => ['all' => true],
 ```
 
 Additionally, you need to update your database schema to include the tables that are used by the bundle:
 
 ```sql
-CREATE TABLE el_event_records (id INT AUTO_INCREMENT NOT NULL, eventType VARCHAR(191) NOT NULL, eventContext JSON NOT NULL, eventDateTime DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)', eventBatch VARCHAR(191) DEFAULT NULL, eventPayload JSON NOT NULL, resourceKey VARCHAR(191) NOT NULL, resourceId VARCHAR(191) NOT NULL, resourceLocale VARCHAR(191) DEFAULT NULL, resourceWebspaceKey VARCHAR(191) DEFAULT NULL, resourceTitle VARCHAR(191) DEFAULT NULL, resourceTitleLocale VARCHAR(191) DEFAULT NULL, resourceSecurityContext VARCHAR(191) DEFAULT NULL, resourceSecurityObjectType VARCHAR(191) DEFAULT NULL, resourceSecurityObjectId VARCHAR(191) DEFAULT NULL, userId INT DEFAULT NULL, INDEX IDX_CF493FC364B64DCC (userId), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
+CREATE TABLE ac_activities (id INT AUTO_INCREMENT NOT NULL, type VARCHAR(191) NOT NULL, context JSON NOT NULL, timestamp DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)', batch VARCHAR(191) DEFAULT NULL, payload JSON DEFAULT NULL, resourceKey VARCHAR(191) NOT NULL, resourceId VARCHAR(191) NOT NULL, resourceLocale VARCHAR(191) DEFAULT NULL, resourceWebspaceKey VARCHAR(191) DEFAULT NULL, resourceTitle VARCHAR(191) DEFAULT NULL, resourceTitleLocale VARCHAR(191) DEFAULT NULL, resourceSecurityContext VARCHAR(191) DEFAULT NULL, resourceSecurityObjectType VARCHAR(191) DEFAULT NULL, resourceSecurityObjectId VARCHAR(191) DEFAULT NULL, userId INT DEFAULT NULL, INDEX IDX_3EE015D064B64DCC (userId), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
 
-ALTER TABLE el_event_records ADD CONSTRAINT FK_CF493FC364B64DCC FOREIGN KEY (userId) REFERENCES se_users (id) ON DELETE SET NULL;
+ALTER TABLE ac_activities ADD CONSTRAINT FK_3EE015D064B64DCC FOREIGN KEY (userId) REFERENCES se_users (id) ON DELETE SET NULL;
 ```
 
 ### Deprecated constructing `sulu_media.media_manager` with the `sulu_media.ffprobe` service

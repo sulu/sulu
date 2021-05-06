@@ -13,7 +13,6 @@ namespace Sulu\Bundle\SecurityBundle\Tests\Functional\Controller;
 
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\ObjectRepository;
-use Sulu\Bundle\ActivityBundle\Domain\Model\Activity;
 use Sulu\Bundle\ActivityBundle\Domain\Model\ActivityInterface;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
@@ -59,7 +58,7 @@ class RoleControllerTest extends SuluTestCase
     private $client;
 
     /**
-     * @var ObjectRepository<Activity>
+     * @var ObjectRepository<ActivityInterface>
      */
     private $activityRepository;
 
@@ -358,7 +357,7 @@ class RoleControllerTest extends SuluTestCase
         $this->assertEquals('Security Type 2', $response->securityType->name);
 
         /** @var ActivityInterface $activity */
-        $activity = $this->activityRepository->findOneBy(['eventType' => 'modified']);
+        $activity = $this->activityRepository->findOneBy(['type' => 'modified']);
         $this->assertSame((string) $this->role1->getId(), $activity->getResourceId());
 
         $this->client->jsonRequest(
@@ -600,7 +599,7 @@ class RoleControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(204, $this->client->getResponse());
         /** @var ActivityInterface $activity */
-        $activity = $this->activityRepository->findOneBy(['eventType' => 'removed']);
+        $activity = $this->activityRepository->findOneBy(['type' => 'removed']);
         $this->assertSame((string) $this->role1->getId(), $activity->getResourceId());
 
         $this->client->jsonRequest(

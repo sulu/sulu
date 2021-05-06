@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 
 use Doctrine\Persistence\ObjectRepository;
-use Sulu\Bundle\ActivityBundle\Domain\Model\Activity;
 use Sulu\Bundle\ActivityBundle\Domain\Model\ActivityInterface;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
@@ -57,7 +56,7 @@ class AccountMediaControllerTest extends SuluTestCase
     protected $collection;
 
     /**
-     * @var ObjectRepository<Activity>
+     * @var ObjectRepository<ActivityInterface>
      */
     private $activityRepository;
 
@@ -134,7 +133,7 @@ class AccountMediaControllerTest extends SuluTestCase
         $this->assertNotNull($response->id);
 
         /** @var ActivityInterface $activity */
-        $activity = $this->activityRepository->findOneBy(['eventType' => 'media_added']);
+        $activity = $this->activityRepository->findOneBy(['type' => 'media_added']);
         $this->assertSame((string) $this->account->getId(), $activity->getResourceId());
 
         $this->client->jsonRequest(
@@ -197,7 +196,7 @@ class AccountMediaControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(204, $this->client->getResponse());
 
         /** @var ActivityInterface $activity */
-        $activity = $this->activityRepository->findOneBy(['eventType' => 'media_removed']);
+        $activity = $this->activityRepository->findOneBy(['type' => 'media_removed']);
         $this->assertSame((string) $this->account->getId(), $activity->getResourceId());
 
         $this->client->jsonRequest(

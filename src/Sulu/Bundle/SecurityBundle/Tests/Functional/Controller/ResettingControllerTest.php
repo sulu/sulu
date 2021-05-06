@@ -13,7 +13,6 @@ namespace Sulu\Bundle\SecurityBundle\Tests\Functional\Controller;
 
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\ObjectRepository;
-use Sulu\Bundle\ActivityBundle\Domain\Model\Activity;
 use Sulu\Bundle\ActivityBundle\Domain\Model\ActivityInterface;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
@@ -45,7 +44,7 @@ class ResettingControllerTest extends SuluTestCase
     private $client;
 
     /**
-     * @var ObjectRepository<Activity>
+     * @var ObjectRepository<ActivityInterface>
      */
     private $activityRepository;
 
@@ -316,7 +315,7 @@ class ResettingControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         /** @var ActivityInterface $activity */
-        $activity = $this->activityRepository->findOneBy(['eventType' => 'password_resetted']);
+        $activity = $this->activityRepository->findOneBy(['type' => 'password_resetted']);
         $this->assertSame((string) $this->users[2]->getId(), $activity->getResourceId());
 
         $encoder = $this->getContainer()->get('sulu_security.encoder_factory')->getEncoder($user);

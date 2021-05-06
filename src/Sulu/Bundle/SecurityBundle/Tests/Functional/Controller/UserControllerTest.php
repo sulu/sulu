@@ -13,7 +13,6 @@ namespace Sulu\Bundle\SecurityBundle\Tests\Functional\Controller;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\Persistence\ObjectRepository;
-use Sulu\Bundle\ActivityBundle\Domain\Model\Activity;
 use Sulu\Bundle\ActivityBundle\Domain\Model\ActivityInterface;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Email;
@@ -89,7 +88,7 @@ class UserControllerTest extends SuluTestCase
     private $client;
 
     /**
-     * @var ObjectRepository<Activity>
+     * @var ObjectRepository<ActivityInterface>
      */
     private $activityRepository;
 
@@ -349,7 +348,7 @@ class UserControllerTest extends SuluTestCase
         $response = \json_decode($this->client->getResponse()->getContent());
 
         /** @var ActivityInterface $activity */
-        $activity = $this->activityRepository->findOneBy(['eventType' => 'created']);
+        $activity = $this->activityRepository->findOneBy(['type' => 'created']);
         $this->assertSame((string) $response->id, $activity->getResourceId());
 
         $this->assertEquals('manager', $response->username);
@@ -534,7 +533,7 @@ class UserControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(204, $this->client->getResponse());
         /** @var ActivityInterface $activity */
-        $activity = $this->activityRepository->findOneBy(['eventType' => 'removed']);
+        $activity = $this->activityRepository->findOneBy(['type' => 'removed']);
         $this->assertSame((string) $this->user1->getId(), $activity->getResourceId());
 
         $this->client->jsonRequest('GET', '/api/users/' . $this->user1->getId());
@@ -613,7 +612,7 @@ class UserControllerTest extends SuluTestCase
         $this->assertEquals('en', $response->userGroups[1]->locales[0]);
 
         /** @var ActivityInterface $activity */
-        $activity = $this->activityRepository->findOneBy(['eventType' => 'modified']);
+        $activity = $this->activityRepository->findOneBy(['type' => 'modified']);
         $this->assertSame((string) $this->user1->getId(), $activity->getResourceId());
 
         $this->client->jsonRequest(
@@ -710,7 +709,7 @@ class UserControllerTest extends SuluTestCase
         $this->assertEquals('en', $response->locale);
 
         /** @var ActivityInterface $activity */
-        $activity = $this->activityRepository->findOneBy(['eventType' => 'modified']);
+        $activity = $this->activityRepository->findOneBy(['type' => 'modified']);
         $this->assertSame((string) $this->user1->getId(), $activity->getResourceId());
 
         $this->client->jsonRequest(
@@ -1111,7 +1110,7 @@ class UserControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         /** @var ActivityInterface $activity */
-        $activity = $this->activityRepository->findOneBy(['eventType' => 'enabled']);
+        $activity = $this->activityRepository->findOneBy(['type' => 'enabled']);
         $this->assertSame((string) $this->user2->getId(), $activity->getResourceId());
 
         $response = \json_decode($this->client->getResponse()->getContent());
@@ -1131,7 +1130,7 @@ class UserControllerTest extends SuluTestCase
         $this->assertEquals(true, $response->locked);
 
         /** @var ActivityInterface $activity */
-        $activity = $this->activityRepository->findOneBy(['eventType' => 'locked']);
+        $activity = $this->activityRepository->findOneBy(['type' => 'locked']);
         $this->assertSame((string) $this->user1->getId(), $activity->getResourceId());
     }
 
@@ -1147,7 +1146,7 @@ class UserControllerTest extends SuluTestCase
         $this->assertEquals(false, $response->locked);
 
         /** @var ActivityInterface $activity */
-        $activity = $this->activityRepository->findOneBy(['eventType' => 'unlocked']);
+        $activity = $this->activityRepository->findOneBy(['type' => 'unlocked']);
         $this->assertSame((string) $this->user3->getId(), $activity->getResourceId());
     }
 }

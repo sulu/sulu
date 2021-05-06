@@ -13,7 +13,6 @@ namespace Sulu\Bundle\CategoryBundle\Tests\Functional\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
-use Sulu\Bundle\ActivityBundle\Domain\Model\Activity;
 use Sulu\Bundle\ActivityBundle\Domain\Model\ActivityInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
@@ -39,7 +38,7 @@ class CategoryControllerTest extends SuluTestCase
     private $client;
 
     /**
-     * @var ObjectRepository<Activity>
+     * @var ObjectRepository<ActivityInterface>
      */
     private $activityRepository;
 
@@ -973,7 +972,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertEquals('myValue', $response->meta[0]->value);
 
         /** @var ActivityInterface $activity */
-        $activity = $this->activityRepository->findOneBy(['eventType' => 'created']);
+        $activity = $this->activityRepository->findOneBy(['type' => 'created']);
         $this->assertSame((string) $response->id, $activity->getResourceId());
 
         $this->client->jsonRequest(
@@ -1149,7 +1148,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertTrue('This meta got added' === $response->meta[1]->value);
 
         /** @var ActivityInterface $activity */
-        $activity = $this->activityRepository->findOneBy(['eventType' => 'modified']);
+        $activity = $this->activityRepository->findOneBy(['type' => 'modified']);
         $this->assertSame((string) $response->id, $activity->getResourceId());
 
         $this->client->jsonRequest(
@@ -1452,7 +1451,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(204, $this->client->getResponse());
 
         /** @var ActivityInterface $activity */
-        $activity = $this->activityRepository->findOneBy(['eventType' => 'removed']);
+        $activity = $this->activityRepository->findOneBy(['type' => 'removed']);
         $this->assertSame((string) $categoryId, $activity->getResourceId());
 
         $this->client->jsonRequest(

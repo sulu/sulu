@@ -81,7 +81,7 @@ class ActivityRepository implements ActivityRepositoryInterface
             ->insert($classMetadata->getTableName())
             ->setValue($classMetadata->getColumnName('type'), $queryBuilder->createNamedParameter($activity->getType()))
             ->setValue($classMetadata->getColumnName('context'), $queryBuilder->createNamedParameter(\json_encode($activity->getContext())))
-            ->setValue($classMetadata->getColumnName('dateTime'), $queryBuilder->createNamedParameter($activity->getTimestamp()->format('Y-m-d H:i:s')))
+            ->setValue($classMetadata->getColumnName('timestamp'), $queryBuilder->createNamedParameter($activity->getTimestamp()->format('Y-m-d H:i:s')))
             ->setValue($classMetadata->getColumnName('batch'), $queryBuilder->createNamedParameter($activity->getBatch()))
             ->setValue($classMetadata->getColumnName('resourceKey'), $queryBuilder->createNamedParameter($activity->getResourceKey()))
             ->setValue($classMetadata->getColumnName('resourceId'), $queryBuilder->createNamedParameter($activity->getResourceId()))

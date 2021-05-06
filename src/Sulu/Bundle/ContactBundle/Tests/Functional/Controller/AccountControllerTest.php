@@ -13,7 +13,6 @@ namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
-use Sulu\Bundle\ActivityBundle\Domain\Model\Activity;
 use Sulu\Bundle\ActivityBundle\Domain\Model\ActivityInterface;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\AccountAddress;
@@ -56,7 +55,7 @@ class AccountControllerTest extends SuluTestCase
     private $client;
 
     /**
-     * @var ObjectRepository<Activity>
+     * @var ObjectRepository<ActivityInterface>
      */
     private $activityRepository;
 
@@ -495,7 +494,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         /** @var ActivityInterface $activity */
-        $activity = $this->activityRepository->findOneBy(['eventType' => 'created']);
+        $activity = $this->activityRepository->findOneBy(['type' => 'created']);
         $this->assertSame((string) $response->id, $activity->getResourceId());
 
         $this->assertEquals('ExampleCompany', $response->name);
@@ -1023,7 +1022,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         /** @var ActivityInterface $activity */
-        $activity = $this->activityRepository->findOneBy(['eventType' => 'modified']);
+        $activity = $this->activityRepository->findOneBy(['type' => 'modified']);
         $this->assertSame((string) $response->id, $activity->getResourceId());
 
         $this->assertEquals('ExampleCompany', $response->name);
@@ -1262,7 +1261,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         /** @var ActivityInterface $activity */
-        $activity = $this->activityRepository->findOneBy(['eventType' => 'contact_added']);
+        $activity = $this->activityRepository->findOneBy(['type' => 'contact_added']);
         $this->assertSame((string) $account->getId(), $activity->getResourceId());
         $this->assertSame('accounts', $activity->getResourceKey());
 
@@ -1413,7 +1412,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(204, $this->client->getResponse());
 
         /** @var ActivityInterface $activity */
-        $activity = $this->activityRepository->findOneBy(['eventType' => 'removed']);
+        $activity = $this->activityRepository->findOneBy(['type' => 'removed']);
         $this->assertSame((string) $account->getId(), $activity->getResourceId());
     }
 
@@ -1516,7 +1515,7 @@ class AccountControllerTest extends SuluTestCase
         $response = \json_decode($this->client->getResponse()->getContent());
 
         /** @var ActivityInterface $activity */
-        $activity = $this->activityRepository->findOneBy(['eventType' => 'removed']);
+        $activity = $this->activityRepository->findOneBy(['type' => 'removed']);
         $this->assertSame((string) $account->getId(), $activity->getResourceId());
 
         $this->client->jsonRequest('GET', '/api/contacts?flat=true');

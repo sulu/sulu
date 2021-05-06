@@ -13,7 +13,6 @@ namespace Sulu\Bundle\SnippetBundle\Tests\Functional\Controller;
 
 use Doctrine\Persistence\ObjectRepository;
 use PHPCR\SessionInterface;
-use Sulu\Bundle\ActivityBundle\Domain\Model\Activity;
 use Sulu\Bundle\ActivityBundle\Domain\Model\ActivityInterface;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManagerInterface;
@@ -57,7 +56,7 @@ class SnippetControllerTest extends SuluTestCase
     private $defaultSnippetManager;
 
     /**
-     * @var ObjectRepository<Activity>
+     * @var ObjectRepository<ActivityInterface>
      */
     private $activityRepository;
 
@@ -338,7 +337,7 @@ class SnippetControllerTest extends SuluTestCase
         }
 
         /** @var ActivityInterface $activity */
-        $activity = $this->activityRepository->findOneBy(['eventType' => 'created']);
+        $activity = $this->activityRepository->findOneBy(['type' => 'created']);
         $this->assertNotNull($activity);
     }
 
@@ -400,7 +399,7 @@ class SnippetControllerTest extends SuluTestCase
         $this->assertEquals($data['description'], $document->getStructure()->getProperty('description')->getValue());
 
         /** @var ActivityInterface $activity */
-        $activity = $this->activityRepository->findOneBy(['eventType' => 'modified']);
+        $activity = $this->activityRepository->findOneBy(['type' => 'modified']);
         $this->assertSame((string) $this->hotel1->getUuid(), $activity->getResourceId());
     }
 
@@ -533,7 +532,7 @@ class SnippetControllerTest extends SuluTestCase
         $this->assertEquals(200, $response->getStatusCode());
 
         /** @var ActivityInterface $activity */
-        $activity = $this->activityRepository->findOneBy(['eventType' => 'removed']);
+        $activity = $this->activityRepository->findOneBy(['type' => 'removed']);
         $this->assertSame((string) $this->hotel1->getUuid(), $activity->getResourceId());
     }
 
@@ -569,7 +568,7 @@ class SnippetControllerTest extends SuluTestCase
         $this->assertEquals('Hotel description DE', $newPage->getStructure()->getProperty('description')->getValue());
 
         /** @var ActivityInterface $activity */
-        $activity = $this->activityRepository->findOneBy(['eventType' => 'translation_copied']);
+        $activity = $this->activityRepository->findOneBy(['type' => 'translation_copied']);
         $this->assertSame((string) $snippet->getUuid(), $activity->getResourceId());
     }
 
