@@ -16,8 +16,6 @@ use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Massive\Bundle\SearchBundle\Search\Metadata\ProviderInterface;
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
-use Pagerfanta\Adapter\ArrayAdapter;
-use Pagerfanta\Pagerfanta;
 use Sulu\Bundle\SearchBundle\Search\Configuration\IndexConfiguration;
 use Sulu\Bundle\SearchBundle\Search\Configuration\IndexConfigurationProviderInterface;
 use Sulu\Component\Rest\ListBuilder\ListRestHelperInterface;
@@ -88,7 +86,7 @@ class SearchController
 
         $page = $this->listRestHelper->getPage();
         $limit = $this->listRestHelper->getLimit();
-        $startTime = \microtime(true);
+        $offset = $this->listRestHelper->getOffset() ?: 0;
 
         $indexNames = $this->searchManager->getIndexNames();
 
@@ -110,21 +108,24 @@ class SearchController
         }
 
         $query->indexes($indexes);
-        $query->setLimit($limit);
+        $query->setLimit((int) $limit);
+        $query->setOffset($offset);
 
-        $time = \microtime(true) - $startTime;
+        $result = $query->execute();
+        $total = $result->getTotal();
 
-        $adapter = new ArrayAdapter(\iterator_to_array($query->execute()));
-        $pager = new Pagerfanta($adapter);
-        $pager->setMaxPerPage($limit);
-        $pager->setCurrentPage($page);
+        // FIXME
+        //    zend_lucene seems not to have any pagination implemented and will return here
+        //    the total query hits we paginate in php here to return the correct results
+        $result = \iterator_to_array($result);
+        $result = \array_slice($result, $offset, $limit);
 
         $representation = new PaginatedRepresentation(
-            $pager->getCurrentPageResults(),
+            $result,
             'result',
             (int) $page,
             (int) $limit,
-            $adapter->getNbResults()
+            $total
         );
 
         $view = View::create($representation);

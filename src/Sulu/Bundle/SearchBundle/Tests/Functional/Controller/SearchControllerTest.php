@@ -155,6 +155,46 @@ class SearchControllerTest extends SuluTestCase
                     'total' => 2,
                 ],
             ],
+            [
+                [
+                    'q' => 'Xeon',
+                    'indexes' => ['Product'],
+                    'locale' => 'fr',
+                    'limit' => 1,
+                    'page' => 1,
+                ],
+                [
+                    'page' => 1,
+                    'limit' => 1,
+                    'pages' => 2,
+                    '_embedded' => [
+                        'result' => [
+                            [
+                                'id' => null,
+                                'document' => [
+                                    'id' => 6,
+                                    'title' => 'Bike Xeon',
+                                    'description' => 'To be or not to be, that is the question',
+                                    'url' => '/foobar',
+                                    'locale' => 'fr',
+                                    'imageUrl' => null,
+                                    'index' => 'product',
+                                    'created' => '2015-04-10T00:00:00+00:00',
+                                    'changed' => '2015-04-12T00:00:00+00:00',
+                                    'creatorName' => 'dantleech',
+                                    'changerName' => 'dantleech',
+                                    'properties' => [
+                                        'title' => 'Bike Xeon',
+                                        'body' => 'To be or not to be, that is the question',
+                                    ],
+                                ],
+                                'score' => -1,
+                            ],
+                        ],
+                    ],
+                    'total' => 2,
+                ],
+            ],
         ];
     }
 
