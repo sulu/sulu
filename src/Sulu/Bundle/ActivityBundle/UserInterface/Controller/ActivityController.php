@@ -349,7 +349,7 @@ class ActivityController extends AbstractRestController implements ClassResource
     {
         $translationParameters = $this->getTranslationParameters($activity);
 
-        $user = $activity['user'] ?? $this->translator->trans('sulu_activity.someone', [], 'admin', $translationLocale);
+        $user = $activity['userFullName'] ?? $this->translator->trans('sulu_activity.someone', [], 'admin', $translationLocale);
 
         $resourceTitleLocale = $activity['resourceTitleLocale'] ?? null;
         $resourceTitle = '"' . $activity['resourceTitle'] . '"';
@@ -358,7 +358,7 @@ class ActivityController extends AbstractRestController implements ClassResource
             $resourceTitle .= ' [' . \strtoupper($resourceTitleLocale) . ']';
         }
 
-        $translationParameters['{user}'] = $user;
+        $translationParameters['{userFullName}'] = $user;
         $translationParameters['{resourceTitle}'] = $resourceTitle;
 
         return $this->translator->trans(
@@ -403,8 +403,8 @@ class ActivityController extends AbstractRestController implements ClassResource
             'resourceSecurityContext' => $this->createFieldDescriptor('resourceSecurityContext'),
             'resourceSecurityObjectType' => $this->createFieldDescriptor('resourceSecurityObjectType'),
             'resourceSecurityObjectId' => $this->createFieldDescriptor('resourceSecurityObjectId'),
-            'user' => $this->createConcatenationFieldDescriptor(
-                'user',
+            'userFullName' => $this->createConcatenationFieldDescriptor(
+                'userFullName',
                 [
                     $this->createFieldDescriptor('firstName', null, $this->contactClass, $userJoins),
                     $this->createFieldDescriptor('lastName', null, $this->contactClass, $userJoins),
