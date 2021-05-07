@@ -191,7 +191,7 @@ function registerListAdapters() {
     listAdapterRegistry.add('table_light', TableAdapter, {skin: 'light'});
     listAdapterRegistry.add('tree_table', TreeTableAdapter);
     // @deprecated use adapterOptions to set the correct skin
-    listAdapterRegistry.add('tree_table_slim', TreeTableAdapter, {show_header: false});
+    listAdapterRegistry.add('tree_table_slim', TreeTableAdapter, {showHeader: false});
 }
 
 function registerListFieldFilterTypes() {
