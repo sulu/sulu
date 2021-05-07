@@ -1,6 +1,6 @@
 // @flow
 import 'url-search-params-polyfill';
-import {observable, when} from 'mobx';
+import {observable} from 'mobx';
 import {resourceRouteRegistry, ResourceRequester} from 'sulu-admin-bundle/services';
 import MediaUploadStore from '../MediaUploadStore';
 
@@ -66,16 +66,26 @@ test('Promise returned by "update" method should be resolved if request is succe
         {id: 1, locale: 'en', mimeType: 'image/jpeg', title: 'test', thumbnails: {}, url: ''},
         observable.box('en')
     );
+    mediaUploadStore.error = {detail: 'previous-upload-error'};
     const fileData = new File([''], 'fileName');
 
     const updatePromise = mediaUploadStore.update(fileData);
 
-    window.XMLHttpRequest.mock.instances[0].onload({target: {status: 200, response: '{"title": "test1"}'}});
+    window.XMLHttpRequest.mock.instances[0].onload({target: {status: 200, response: '{"title": "updated-title"}'}});
 
-    return expect(updatePromise).resolves.toEqual({title: 'test1'});
+    expect(updatePromise).resolves.toEqual({title: 'updated-title'});
+
+    return updatePromise.then(() => {
+        expect(mediaUploadStore.uploading).toEqual(false);
+        expect(mediaUploadStore.progress).toEqual(0);
+        expect(mediaUploadStore.media).toEqual(
+            {id: 1, locale: 'en', mimeType: 'image/jpeg', title: 'updated-title', thumbnails: {}, url: ''}
+        );
+        expect(mediaUploadStore.error).toEqual(undefined);
+    });
 });
 
-test('Promise returned by "update" method should be rejected if request has error status', () => {
+test('Promise returned by "update" method should be rejected if request has error status', (done) => {
     resourceRouteRegistry.getDetailUrl.mockReturnValue('/media/1?action=new-version&locale=en');
 
     window.XMLHttpRequest = jest.fn(function() {
@@ -101,10 +111,22 @@ test('Promise returned by "update" method should be rejected if request has erro
         },
     });
 
-    return expect(updatePromise).rejects.toEqual({code: 5003, message: 'Bad Request'});
+    expect(updatePromise).rejects.toEqual({code: 5003, message: 'Bad Request'});
+
+    // wait until rejection of updatePromise was handled by component with setTimeout
+    setTimeout(() => {
+        expect(mediaUploadStore.uploading).toEqual(false);
+        expect(mediaUploadStore.progress).toEqual(0);
+        expect(mediaUploadStore.media).toEqual(
+            {id: 1, locale: 'en', mimeType: 'image/jpeg', title: 'test', thumbnails: {}, url: ''}
+        );
+        expect(mediaUploadStore.error).toEqual({code: 5003, message: 'Bad Request'});
+
+        done();
+    });
 });
 
-test('Promise returned by "update" method should be rejected if request is not successful', () => {
+test('Promise returned by "update" method should be rejected if request is not successful', (done) => {
     resourceRouteRegistry.getDetailUrl.mockReturnValue('/media/1?action=new-version&locale=en');
 
     window.XMLHttpRequest = jest.fn(function() {
@@ -125,7 +147,19 @@ test('Promise returned by "update" method should be rejected if request is not s
 
     window.XMLHttpRequest.mock.instances[0].onerror({target: {status: 'network-error'}});
 
-    return expect(updatePromise).rejects.toEqual({status: 'network-error'});
+    expect(updatePromise).rejects.toEqual({status: 'network-error'});
+
+    // wait until rejection of updatePromise was handled by component with setTimeout
+    setTimeout(() => {
+        expect(mediaUploadStore.uploading).toEqual(false);
+        expect(mediaUploadStore.progress).toEqual(0);
+        expect(mediaUploadStore.media).toEqual(
+            {id: 1, locale: 'en', mimeType: 'image/jpeg', title: 'test', thumbnails: {}, url: ''}
+        );
+        expect(mediaUploadStore.error).toEqual({status: 'network-error'});
+
+        done();
+    });
 });
 
 test('Calling the "create" method should make a "POST" request to the media update api', () => {
@@ -225,7 +259,7 @@ test('Calling the "updatePreviewImage" method should make a "POST" request to th
     expect(openSpy).toBeCalledWith('POST', '/media/1/preview?locale=en');
 });
 
-test('After the "update" call request was successful the progress will be reset', (done) => {
+test('After the "update" call request was successful the progress will be reset', () => {
     window.XMLHttpRequest = jest.fn(function() {
         this.open = jest.fn();
         this.onerror = jest.fn();
@@ -239,25 +273,23 @@ test('After the "update" call request was successful the progress will be reset'
     );
     const fileData = new File([''], 'fileName');
 
-    mediaUploadStore.update(fileData);
+    const updatePromise = mediaUploadStore.update(fileData);
     mediaUploadStore.progress = 4;
     expect(mediaUploadStore.uploading).toEqual(true);
-
-    when(
-        () => !mediaUploadStore.uploading,
-        (): void => {
-            expect(mediaUploadStore.uploading).toEqual(false);
-            expect(mediaUploadStore.progress).toEqual(0);
-            expect(mediaUploadStore.media)
-                .toEqual({id: 1, locale: 'en', mimeType: 'image/jpeg', title: 'test1', thumbnails: {}, url: ''});
-            done();
-        }
-    );
 
     window.XMLHttpRequest.mock.instances[0].onload({target: {status: 200, response: '{"title": "test1"}'}});
+
+    return updatePromise.then(() => {
+        expect(mediaUploadStore.uploading).toEqual(false);
+        expect(mediaUploadStore.progress).toEqual(0);
+        expect(mediaUploadStore.media).toEqual(
+            {id: 1, locale: 'en', mimeType: 'image/jpeg', title: 'test1', thumbnails: {}, url: ''}
+        );
+        expect(mediaUploadStore.error).toEqual(undefined);
+    });
 });
 
-test('After the "updatePreviewImage" call request was successful the progress will be reset', (done) => {
+test('After the "updatePreviewImage" call request was successful the progress will be reset', () => {
     window.XMLHttpRequest = jest.fn(function() {
         this.open = jest.fn();
         this.onerror = jest.fn();
@@ -271,31 +303,28 @@ test('After the "updatePreviewImage" call request was successful the progress wi
     );
     const fileData = new File([''], 'fileName');
 
-    mediaUploadStore.updatePreviewImage(fileData);
+    const updatePreviewPromise = mediaUploadStore.updatePreviewImage(fileData);
     mediaUploadStore.progress = 4;
     expect(mediaUploadStore.uploading).toEqual(true);
-
-    when(
-        () => !mediaUploadStore.uploading,
-        (): void => {
-            expect(mediaUploadStore.uploading).toEqual(false);
-            expect(mediaUploadStore.progress).toEqual(0);
-            expect(mediaUploadStore.media).toEqual({
-                id: 1,
-                locale: 'en',
-                mimeType: 'image/jpeg',
-                title: 'test',
-                thumbnails: {'50x50': 'image.jpg'},
-                url: '',
-            });
-            done();
-        }
-    );
 
     const response =
         '{"id": 1, "mimeType": "image/jpeg", "title": "test", "thumbnails": {"50x50": "image.jpg"}, "url": ""}';
 
     window.XMLHttpRequest.mock.instances[0].onload({target: {status: 200, response}});
+
+    return updatePreviewPromise.then(() => {
+        expect(mediaUploadStore.uploading).toEqual(false);
+        expect(mediaUploadStore.progress).toEqual(0);
+        expect(mediaUploadStore.media).toEqual({
+            id: 1,
+            locale: 'en',
+            mimeType: 'image/jpeg',
+            title: 'test',
+            thumbnails: {'50x50': 'image.jpg'},
+            url: '',
+        });
+        expect(mediaUploadStore.error).toEqual(undefined);
+    });
 });
 
 test('Should return thumbnail path if available', () => {
