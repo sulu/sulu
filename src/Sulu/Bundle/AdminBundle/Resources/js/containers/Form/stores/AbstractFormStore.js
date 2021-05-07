@@ -145,14 +145,14 @@ export default class AbstractFormStore
                     case 'required':
                         jsonpointer.set(
                             errors,
-                            error.dataPath + '/' + error.params.missingProperty,
+                            error.instancePath + '/' + error.params.missingProperty,
                             {keyword: error.keyword, parameters: error.params}
                         );
                         break;
                     default:
                         jsonpointer.set(
                             errors,
-                            error.dataPath,
+                            error.instancePath,
                             {keyword: error.keyword, parameters: error.params}
                         );
                 }
