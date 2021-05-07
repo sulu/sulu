@@ -6,6 +6,7 @@ $uploadIndicatorBackgroundColor: rgba($alabaster, .8);
 $imageBorderColor: $silver;
 $emptyBackgroundColor: $white;
 $emptyColor: $alto;
+$errorTextColor: $persianRed;
 
 /* $dropzoneSize + 2 * $viewPaddingHorizontal because calc doesn't work for media-queries */
 $mediaContainerBreakpoint: 520px;
@@ -115,4 +116,10 @@ $mediaContainerBreakpoint: 520px;
     &.media-container {
         border-radius: 50%;
     }
+}
+
+.errorText {
+    margin-top: 10px;
+    color: $errorTextColor;
+    text-align: center;
 }

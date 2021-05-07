@@ -1,6 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
-import {action, observable} from 'mobx';
+import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Button, Dialog} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils';
@@ -33,6 +33,16 @@ class SingleMediaUpload extends React.Component<Props> {
 
     @observable showDeleteDialog: boolean = false;
     @observable deleting: boolean = false;
+
+    @computed get errorMessage(): ?string {
+        const error = this.props.mediaUploadStore.error;
+
+        if (!error) {
+            return undefined;
+        }
+
+        return error.detail || error.title || translate('sulu_media.upload_server_error');
+    }
 
     constructor(props: Props) {
         super(props);
@@ -115,6 +125,7 @@ class SingleMediaUpload extends React.Component<Props> {
                 <SingleMediaDropzone
                     disabled={disabled}
                     emptyIcon={emptyIcon}
+                    errorText={this.errorMessage}
                     image={mediaUploadStore.getThumbnail(imageSize)}
                     mimeType={mimeType}
                     onDrop={this.handleMediaDrop}
