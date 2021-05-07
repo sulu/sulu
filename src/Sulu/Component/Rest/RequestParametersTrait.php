@@ -54,7 +54,7 @@ trait RequestParametersTrait
      *
      * @return bool
      */
-    protected function getBooleanRequestParameter($request, $name, $force = false, $default = null)
+    protected function getBooleanRequestParameter($request, $name, $force = false, $default = false)
     {
         $value = $this->getRequestParameter($request, $name, $force, $default);
         if ('true' === $value || true === $value) {
