@@ -93,3 +93,8 @@ sulu_audience_targeting_api:
     type: rest
     resource: "@SuluAudienceTargetingBundle/Resources/config/routing_api.yml"
     prefix: /admin/api
+
+sulu_activity_api:
+    resource: "@SuluActivityBundle/Resources/config/routing_api.yml"
+    type: rest
+    prefix: /admin/api
