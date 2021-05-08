@@ -156,6 +156,15 @@ CREATE TABLE ac_activities (id INT AUTO_INCREMENT NOT NULL, type VARCHAR(191) NO
 ALTER TABLE ac_activities ADD CONSTRAINT FK_3EE015D064B64DCC FOREIGN KEY (userId) REFERENCES se_users (id) ON DELETE SET NULL;
 ```
 
+Finally, you need to include the routes of the bundle in your `config/routes/sulu_admin.yaml`:
+
+```yaml
+sulu_activity_api:
+    resource: "@SuluActivityBundle/Resources/config/routing_api.yml"
+    type: rest
+    prefix: /admin/api
+```
+
 ### Deprecated constructing `sulu_media.media_manager` with the `sulu_media.ffprobe` service
 
 Instead of the `sulu_media.ffprobe` the new [`tagged_iterator`](https://symfony.com/doc/4.4/service_container/tags.html#reference-tagged-services)
