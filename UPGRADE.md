@@ -156,7 +156,7 @@ CREATE TABLE ac_activities (id INT AUTO_INCREMENT NOT NULL, type VARCHAR(191) NO
 ALTER TABLE ac_activities ADD CONSTRAINT FK_3EE015D064B64DCC FOREIGN KEY (userId) REFERENCES se_users (id) ON DELETE SET NULL;
 ```
 
-Finally, you need to include the routes of the bundle in your `config/routes/sulu_admin.yml`:
+Finally, you need to include the routes of the bundle in your `config/routes/sulu_admin.yaml`:
 
 ```yaml
 sulu_activity_api:
