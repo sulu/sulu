@@ -445,7 +445,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
             $data['items'][] = [
                 'name' => $this->translator->trans(
                     'sulu_snippet.webspace_default_snippet',
-                    ['%webspaceKey%' => $defaultSnippetWebspace->getName()],
+                    ['{webspaceKey}' => $defaultSnippetWebspace->getName()],
                     'admin'
                 ),
             ];

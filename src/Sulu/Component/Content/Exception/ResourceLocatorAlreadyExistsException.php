@@ -68,6 +68,6 @@ class ResourceLocatorAlreadyExistsException extends \Exception implements Transl
 
     public function getMessageTranslationParameters(): array
     {
-        return ['%resourceLocator%' => $this->resourceLocator];
+        return ['{resourceLocator}' => $this->resourceLocator];
     }
 }

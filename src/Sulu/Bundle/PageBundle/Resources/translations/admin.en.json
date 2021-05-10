@@ -21,7 +21,7 @@
     "sulu_page.link_title": "Link Title",
     "sulu_page.linked_content": "Linked Content",
     "sulu_page.url": "URL",
-    "sulu_page.resource_locator_assigned_to_other_page": "The URL \"%resourceLocator%\" is already assigned to another page.",
+    "sulu_page.resource_locator_assigned_to_other_page": "The URL \"{resourceLocator}\" is already assigned to another page.",
     "sulu_page.shadow_page": "Shadow Page",
     "sulu_page.enable_shadow_page": "Enable Shadow Page",
     "sulu_page.enable_shadow_page_info_text": "This function is disabled if the current locale is already used as shadow locale.",

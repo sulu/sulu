@@ -38,7 +38,7 @@ class EmailNotUniqueException extends SecurityException implements TranslationEr
 
     public function getMessageTranslationParameters(): array
     {
-        return ['%email%' => $this->email];
+        return ['{email}' => $this->email];
     }
 
     public function toArray()
