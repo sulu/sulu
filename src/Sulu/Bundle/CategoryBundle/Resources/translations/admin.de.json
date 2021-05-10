@@ -12,7 +12,7 @@
     "sulu_activity.text.categories.modified": "{userFullName} hat die Kategorie \"{resourceTitle}\" geändert",
     "sulu_activity.text.categories.moved": "{userFullName} hat die Kategorie \"{resourceTitle}\" verschoben",
     "sulu_activity.text.categories.removed": "{userFullName} hat die Kategorie \"{resourceTitle}\" gelöscht",
-    "sulu_activity.text.categories.translation_added": "{userFullName} hat eine neue Sprachvariante für \"{resourceLocale}\" zur Kategorie \"{resourceTitle}\" hinzugefügt",
+    "sulu_activity.text.categories.translation_added": "{userFullName} hat eine Übersetzung für \"{resourceLocale}\" zur Kategorie \"{resourceTitle}\" hinzugefügt",
     "sulu_activity.text.categories.keyword_added": "{userFullName} hat das Schlüsselwort \"{context_keywordTitle}\" zur Kategorie \"{resourceTitle}\" hinzugefügt",
     "sulu_activity.text.categories.keyword_modified": "{userFullName} hat das Schlüsselwort \"{context_keywordTitle}\" der Kategorie \"{resourceTitle}\" geändert",
     "sulu_activity.text.categories.keyword_removed": "{userFullName} hat das Schlüsselwort \"{context_keywordTitle}\" der Kategorie \"{resourceTitle}\" gelöscht"
