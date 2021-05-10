@@ -61,5 +61,18 @@
     "sulu_page.target_groups_description": "Der Block wird nur den ausgewählten Zielgruppen angezeigt.",
     "sulu_page.add_schedule": "Zeitfenster hinzufügen",
     "sulu_page.schedules_label": "Zeitfenster zuweisen",
-    "sulu_page.schedules_description": "Der Block wird nur angezeigt, wenn mindestens einer der Bedingungen erfüllt wird."
+    "sulu_page.schedules_description": "Der Block wird nur angezeigt, wenn mindestens einer der Bedingungen erfüllt wird.",
+    "sulu_activity.text.pages.created": "{userFullName} hat die Seite \"{resourceTitle}\" erstellt",
+    "sulu_activity.text.pages.modified": "{userFullName} hat die Seite \"{resourceTitle}\" geändert",
+    "sulu_activity.text.pages.removed": "{userFullName} hat die Seite \"{resourceTitle}\" gelöscht",
+    "sulu_activity.text.pages.published": "{userFullName} hat die Seite \"{resourceTitle}\" veröffentlicht",
+    "sulu_activity.text.pages.unpublished": "{userFullName} hat die Seite \"{resourceTitle}\" nicht mehr veröffentlicht",
+    "sulu_activity.text.pages.draft_removed": "{userFullName} hat den Entwurf der Seite \"{resourceTitle}\" verworfen",
+    "sulu_activity.text.pages.copied": "{userFullName} hat die Seite \"{resourceTitle}\" kopiert",
+    "sulu_activity.text.pages.moved": "{userFullName} hat die Seite \"{resourceTitle}\" von \"{context_previousParentTitle}\" nach \"{context_newParentTitle}\" verschoben",
+    "sulu_activity.text.pages.children_reordered": "{userFullName} hat die Kinder der Seite \"{resourceTitle}\" sortiert",
+    "sulu_activity.text.pages.translation_added": "{userFullName} hat eine neue Sprachvariante für \"{resourceLocale}\" zur Seite \"{resourceTitle}\" hinzugefügt",
+    "sulu_activity.text.pages.translation_copied": "{userFullName} hat die Sprachvariante für \"{context_sourceLocale}\" der Seite \"{resourceTitle}\" nach \"{resourceLocale}\" kopiert",
+    "sulu_activity.text.pages.translation_removed": "{userFullName} hat die Sprachvariante für \"{resourceLocale}\" der Seite \"{resourceTitle}\" entfernt",
+    "sulu_activity.text.pages.version_restored": "{userFullName} hat die Version \"{context_version}\" der Seite \"{resourceTitle}\" wiederhergestellt"
 }

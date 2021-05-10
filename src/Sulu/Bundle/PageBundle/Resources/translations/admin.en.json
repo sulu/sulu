@@ -61,5 +61,18 @@
     "sulu_page.target_groups_description": "The block will only be visible for the selected target groups.",
     "sulu_page.add_schedule": "Add schedule",
     "sulu_page.schedules_label": "Assign time schedule",
-    "sulu_page.schedules_description": "The block will only be visible if at least one condition is valid."
+    "sulu_page.schedules_description": "The block will only be visible if at least one condition is valid.",
+    "sulu_activity.text.pages.created": "{userFullName} has created the page \"{resourceTitle}\"",
+    "sulu_activity.text.pages.modified": "{userFullName} has changed the page \"{resourceTitle}\"",
+    "sulu_activity.text.pages.removed": "{userFullName} has removed the page \"{resourceTitle}\"",
+    "sulu_activity.text.pages.published": "{userFullName} has published the page \"{resourceTitle}\"",
+    "sulu_activity.text.pages.unpublished": "{userFullName} has unpublished the page \"{resourceTitle}\"",
+    "sulu_activity.text.pages.draft_removed": "{userFullName} has discarded the draft of the page \"{resourceTitle}\"",
+    "sulu_activity.text.pages.copied": "{userFullName} has copied the page \"{resourceTitle}\"",
+    "sulu_activity.text.pages.moved": "{userFullName} has moved the page \"{resourceTitle}\" from \"{context_previousParentTitle}\" to \"{context_newParentTitle}\"",
+    "sulu_activity.text.pages.children_reordered": "{userFullName} has reordered the children of the page \"{resourceTitle}\"",
+    "sulu_activity.text.pages.translation_added": "{userFullName} has added a new translation \"{resourceLocale}\" to the page \"{resourceTitle}\"",
+    "sulu_activity.text.pages.translation_copied": "{userFullName} has copied the \"{context_sourceLocale}\" translation of the page \"{resourceTitle}\" into \"{resourceLocale}\"",
+    "sulu_activity.text.pages.translation_removed": "{userFullName} has removed the \"{resourceLocale}\" translation of the page \"{resourceTitle}\"",
+    "sulu_activity.text.pages.version_restored": "{userFullName} has restored the version \"{context_version}\" of the page \"{resourceTitle}\""
 }

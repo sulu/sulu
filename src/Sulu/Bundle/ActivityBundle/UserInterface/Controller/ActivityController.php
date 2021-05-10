@@ -320,7 +320,7 @@ class ActivityController extends AbstractRestController implements ClassResource
      *
      * @return array<string, mixed>
      */
-    private function getTranslationParameters(array $array, string $prefix = '{', string $suffix = '}'): array
+    private function getTranslationParameters(array $array, string $translationLocale, string $prefix = '{', string $suffix = '}'): array
     {
         $translationParameters = [];
         foreach ($array as $key => $value) {
@@ -331,10 +331,19 @@ class ActivityController extends AbstractRestController implements ClassResource
             } elseif (\is_numeric($value)) {
                 $translationParameters[$prefix . $key . $suffix] = $value;
             } elseif (\is_scalar($value)) {
-                $translationParameters[$prefix . $key . $suffix] = (string) $value;
+                $value = (string) $value;
+
+                if (\array_key_exists($key . 'Locale', $array)) {
+                    $valueLocale = $array[$key . 'Locale'] ?? null;
+                    $valueLocale = $valueLocale ? (string) $valueLocale : null;
+
+                    $value = $this->getLocalizedValue($value, $valueLocale, $translationLocale);
+                }
+
+                $translationParameters[$prefix . $key . $suffix] = $value;
             } elseif (\is_array($value)) {
-                foreach ($this->getTranslationParameters($value, '', '') as $translationParameterKey => $translationParameterValue) {
-                    $translationParameters[$prefix . $key . '.' . $translationParameterKey . $suffix] = $translationParameterValue;
+                foreach ($this->getTranslationParameters($value, $translationLocale, '', '') as $translationParameterKey => $translationParameterValue) {
+                    $translationParameters[$prefix . $key . '_' . $translationParameterKey . $suffix] = $translationParameterValue;
                 }
             }
         }
@@ -347,16 +356,15 @@ class ActivityController extends AbstractRestController implements ClassResource
      */
     private function getActivityText(array $activity, string $translationLocale): string
     {
-        $translationParameters = $this->getTranslationParameters($activity);
+        $translationParameters = $this->getTranslationParameters($activity, $translationLocale);
 
         $user = $activity['userFullName'] ?? $this->translator->trans('sulu_activity.someone', [], 'admin', $translationLocale);
 
-        $resourceTitleLocale = $activity['resourceTitleLocale'] ?? null;
-        $resourceTitle = '"' . $activity['resourceTitle'] . '"';
-
-        if (null !== $resourceTitleLocale && $translationLocale !== $resourceTitleLocale) {
-            $resourceTitle .= ' [' . \strtoupper($resourceTitleLocale) . ']';
-        }
+        $resourceTitle = $this->getLocalizedValue(
+            $activity['resourceTitle'],
+            $activity['resourceTitleLocale'] ?? null,
+            $translationLocale
+        );
 
         $translationParameters['{userFullName}'] = $user;
         $translationParameters['{resourceTitle}'] = $resourceTitle;
@@ -371,6 +379,15 @@ class ActivityController extends AbstractRestController implements ClassResource
             'admin',
             $translationLocale
         );
+    }
+
+    private function getLocalizedValue(string $value, ?string $valueLocale, string $translationLocale): string
+    {
+        if (null !== $valueLocale && $translationLocale !== $valueLocale) {
+            return $value . ' [' . \strtoupper($valueLocale) . ']';
+        }
+
+        return $value;
     }
 
     /**
