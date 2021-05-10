@@ -14,6 +14,10 @@ namespace Sulu\Component\Webspace\Tests\Unit\Loader;
 use Prophecy\Argument;
 use Sulu\Component\Webspace\Exception\InvalidWebspaceException;
 use Sulu\Component\Webspace\Loader\Exception\InvalidCustomUrlException;
+use Sulu\Component\Webspace\Loader\Exception\InvalidUrlDefinitionException;
+use Sulu\Component\Webspace\Loader\Exception\InvalidWebspaceDefaultLocalizationException;
+use Sulu\Component\Webspace\Loader\Exception\PortalDefaultLocalizationNotFoundException;
+use Sulu\Component\Webspace\Loader\Exception\WebspaceDefaultSegmentNotFoundException;
 use Sulu\Component\Webspace\Loader\XmlFileLoader11;
 use Sulu\Component\Webspace\Tests\Unit\WebspaceTestCase;
 use Symfony\Component\Config\FileLocatorInterface;
@@ -352,7 +356,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
 
     public function testLoadWithIncorrectUrlDefinition()
     {
-        $this->expectException('\Sulu\Component\Webspace\Loader\Exception\InvalidUrlDefinitionException');
+        $this->expectException(InvalidUrlDefinitionException::class);
 
         $this->loader->load(
             $this->getResourceDirectory() . '/DataFixtures/Webspace/invalid/massiveart_withIncorrectUrls.xml'
@@ -368,9 +372,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
 
     public function testLoadWithNotExistingDefault()
     {
-        $this->expectException(
-            '\Sulu\Component\Webspace\Loader\Exception\PortalDefaultLocalizationNotFoundException'
-        );
+        $this->expectException(PortalDefaultLocalizationNotFoundException::class);
 
         $this->loader->load(
             $this->getResourceDirectory() . '/DataFixtures/Webspace/invalid/massiveart_withNotExistingDefault.xml'
@@ -379,9 +381,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
 
     public function testLoadWithoutDefaultSegment()
     {
-        $this->expectException(
-            '\Sulu\Component\Webspace\Loader\Exception\WebspaceDefaultSegmentNotFoundException'
-        );
+        $this->expectException(WebspaceDefaultSegmentNotFoundException::class);
 
         $this->loader->load(
             $this->getResourceDirectory() . '/DataFixtures/Webspace/invalid/massiveart_withNotExistingDefaultSegment.xml'
@@ -390,9 +390,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
 
     public function testLoadWithTwoDefaultLocalization()
     {
-        $this->expectException(
-            '\Sulu\Component\Webspace\Loader\Exception\InvalidWebspaceDefaultLocalizationException'
-        );
+        $this->expectException(InvalidWebspaceDefaultLocalizationException::class);
 
         $this->loader->load(
             $this->getResourceDirectory() . '/DataFixtures/Webspace/invalid/massiveart_withTwoDefaultLocalizations.xml'
