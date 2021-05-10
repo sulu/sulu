@@ -41,7 +41,7 @@ test('Test icon wrong type', () => {
     );
 });
 
-test('Test default_icon wrong type', () => {
+test('Test parameters/default wrong type', () => {
     expect(iconFieldTransformer.transform('default_failed', {
         mapping: {failed: 'su-fail'},
         default_mapping: 1}
@@ -92,7 +92,7 @@ test('Test icon object', () => {
     );
 });
 
-test('Test default_icon string', () => {
+test('Test parameters/default string', () => {
     expect(iconFieldTransformer.transform('default_failed', {
         default_mapping: 'su-default-ban',
         mapping: {failed: 'su-ban'},
@@ -104,7 +104,7 @@ test('Test default_icon string', () => {
     );
 });
 
-test('Test default_icon object', () => {
+test('Test parameters/default object', () => {
     expect(iconFieldTransformer.transform('default_failed', {
         default_mapping: {
             icon: 'su-default-ban',
