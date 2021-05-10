@@ -123,6 +123,15 @@ class ListXmlLoader
             XmlUtil::getBooleanValueFromXPath('@sortable', $xpath, $propertyNode, true)
         );
 
+        $propertyMetadata->setWidth(
+            XmlUtil::getValueFromXPath(
+                '@width',
+                $xpath,
+                $propertyNode,
+                FieldDescriptorInterface::WIDTH_AUTO
+            )
+        );
+
         if (null !== $type = XmlUtil::getValueFromXPath('x:transformer/@type', $xpath, $propertyNode)) {
             $propertyMetadata->setType($type);
         } elseif (null !== $type = XmlUtil::getValueFromXPath('@type', $xpath, $propertyNode)) {

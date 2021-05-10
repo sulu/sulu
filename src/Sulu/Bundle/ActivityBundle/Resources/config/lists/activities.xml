@@ -3,7 +3,7 @@
     <key>activities</key>
 
     <properties>
-        <property name="timestamp" visibility="always" searchability="never" sortable="false">
+        <property name="timestamp" visibility="always" searchability="never" sortable="false" width="shrink">
             <field-name>timestamp</field-name>
             <entity-name>%sulu.model.activity.class%</entity-name>
 
@@ -15,7 +15,7 @@
             </transformer>
         </property>
 
-        <property name="type" visibility="always" searchability="never" sortable="false">
+        <property name="type" visibility="always" searchability="never" sortable="false" width="shrink">
             <field-name>type</field-name>
             <entity-name>%sulu.model.activity.class%</entity-name>
 

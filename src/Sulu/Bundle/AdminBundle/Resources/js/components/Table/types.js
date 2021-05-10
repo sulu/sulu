@@ -10,3 +10,5 @@ export type ButtonConfig = {|
 |};
 
 export type Skin = 'dark' | 'light' | 'flat';
+
+export type Width = 'auto' | 'shrink';

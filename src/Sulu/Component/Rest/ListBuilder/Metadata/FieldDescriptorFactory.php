@@ -181,7 +181,8 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
                 $propertyMetadata->getVisibility(),
                 $propertyMetadata->getSearchability(),
                 $propertyMetadata->getType(),
-                $propertyMetadata->isSortable()
+                $propertyMetadata->isSortable(),
+                $propertyMetadata->getWidth()
             );
         }
 
@@ -192,7 +193,8 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
             $propertyMetadata->getVisibility(),
             $propertyMetadata->getSearchability(),
             $propertyMetadata->getType(),
-            $propertyMetadata->isSortable()
+            $propertyMetadata->isSortable(),
+            $propertyMetadata->getWidth()
         );
     }
 
@@ -221,7 +223,8 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
             $propertyMetadata->getSearchability(),
             $propertyMetadata->getType(),
             $propertyMetadata->isSortable(),
-            $this->resolveOptions($propertyMetadata->getDistinct(), $options)
+            $this->resolveOptions($propertyMetadata->getDistinct(), $options),
+            $propertyMetadata->getWidth()
         );
     }
 
@@ -242,7 +245,8 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
             $propertyMetadata->getVisibility(),
             $propertyMetadata->getSearchability(),
             $propertyMetadata->getType(),
-            $propertyMetadata->isSortable()
+            $propertyMetadata->isSortable(),
+            $propertyMetadata->getWidth()
         );
     }
 
@@ -259,7 +263,8 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
             $propertyMetadata->getSearchability(),
             $propertyMetadata->getType(),
             $propertyMetadata->isSortable(),
-            $this->resolveOptions($propertyMetadata->getDistinct(), $options)
+            $this->resolveOptions($propertyMetadata->getDistinct(), $options),
+            $propertyMetadata->getWidth()
         );
     }
 
@@ -278,7 +283,8 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
             $propertyMetadata->getVisibility(),
             $propertyMetadata->getSearchability(),
             $propertyMetadata->getType(),
-            $propertyMetadata->isSortable()
+            $propertyMetadata->isSortable(),
+            $propertyMetadata->getWidth()
         );
     }
 
@@ -305,7 +311,8 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
             $propertyMetadata->getVisibility(),
             $propertyMetadata->getSearchability(),
             $propertyMetadata->getType(),
-            $propertyMetadata->isSortable()
+            $propertyMetadata->isSortable(),
+            $propertyMetadata->getWidth()
         );
     }
 
@@ -317,7 +324,8 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
             $generalMetadata->getVisibility(),
             $generalMetadata->getSearchability(),
             $generalMetadata->getType(),
-            $generalMetadata->isSortable()
+            $generalMetadata->isSortable(),
+            $generalMetadata->getWidth()
         );
     }
 

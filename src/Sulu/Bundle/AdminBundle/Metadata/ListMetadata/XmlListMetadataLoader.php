@@ -54,6 +54,7 @@ class XmlListMetadataLoader implements ListMetadataLoaderInterface
             $field->setTransformerTypeParameters($fieldDescriptor->getMetadata()->getTransformerTypeParameters());
             $field->setFilterType($fieldDescriptor->getMetadata()->getFilterType());
             $field->setFilterTypeParameters($fieldDescriptor->getMetadata()->getFilterTypeParameters());
+            $field->setWidth($fieldDescriptor->getWidth());
 
             $list->addField($field);
         }

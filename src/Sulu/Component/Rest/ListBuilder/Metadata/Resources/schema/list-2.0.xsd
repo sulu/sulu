@@ -186,6 +186,16 @@
         <xs:attribute type="xs:string" name="name" use="required"/>
         <xs:attribute type="xs:string" name="type" default="string"/>
         <xs:attribute type="xs:boolean" name="sortable" default="true"/>
+
+        <xs:attribute name="width" default="auto">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="auto" />
+                    <xs:enumeration value="shrink" />
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+
         <xs:attribute name="visibility" default="no">
             <xs:simpleType>
                 <xs:restriction base="xs:string">

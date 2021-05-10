@@ -69,7 +69,7 @@ export default class AbstractTableAdapter extends AbstractAdapter {
             }
 
             return (
-                <Table.Cell key={item.id + schemaKey}>
+                <Table.Cell key={item.id + schemaKey} width={this.schema[schemaKey].width}>
                     {indicators}
                     {value}
                 </Table.Cell>

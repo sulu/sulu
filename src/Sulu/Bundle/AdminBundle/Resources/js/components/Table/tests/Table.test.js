@@ -62,6 +62,30 @@ test('Render the Table component with a skin', () => {
     )).toMatchSnapshot();
 });
 
+test('Render the Table component with shrunken cells', () => {
+    expect(render(
+        <Table>
+            <Header>
+                <HeaderCell>Column Title</HeaderCell>
+                <HeaderCell>Column Title</HeaderCell>
+                <HeaderCell>Column Title</HeaderCell>
+            </Header>
+            <Body>
+                <Row>
+                    <Cell width="shrink">Column Text</Cell>
+                    <Cell width="shrink">Column Text</Cell>
+                    <Cell width="shrink">Column Text</Cell>
+                </Row>
+                <Row>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                    <Cell>Column Text</Cell>
+                </Row>
+            </Body>
+        </Table>
+    )).toMatchSnapshot();
+});
+
 test('Render the Table component in tree structure', () => {
     expect(render(
         <Table>

@@ -32,6 +32,10 @@ interface FieldDescriptorInterface
 
     const SEARCHABILITY_NO = 'no';
 
+    const WIDTH_AUTO = 'auto';
+
+    const WIDTH_SHRINK = 'shrink';
+
     /**
      * Returns the name of the field.
      *
@@ -79,6 +83,8 @@ interface FieldDescriptorInterface
      * @return string
      */
     public function getSearchability();
+
+    public function getWidth(): string;
 
     /**
      * @return AbstractPropertyMetadata

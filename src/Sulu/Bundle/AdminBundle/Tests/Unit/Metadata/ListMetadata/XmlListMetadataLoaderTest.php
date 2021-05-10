@@ -58,7 +58,8 @@ class XmlListMetadataLoaderTest extends TestCase
             FieldDescriptorInterface::VISIBILITY_YES,
             FieldDescriptorInterface::SEARCHABILITY_NEVER,
             'string',
-            true
+            true,
+            FieldDescriptorInterface::WIDTH_SHRINK
         );
 
         $firstNameMetadata = new SinglePropertyMetadata('firstName');
@@ -115,6 +116,7 @@ class XmlListMetadataLoaderTest extends TestCase
         $this->assertEquals('string', $contactListFields['firstName']->getFilterType());
         $this->assertEquals(null, $contactListFields['firstName']->getFilterTypeParameters());
         $this->assertEquals([], $contactListFields['firstName']->getTransformerTypeParameters());
+        $this->assertEquals(FieldDescriptorInterface::WIDTH_SHRINK, $contactListFields['firstName']->getWidth());
 
         $this->assertEquals('lastName', $contactListFields['lastName']->getName());
         $this->assertEquals('Last name', $contactListFields['lastName']->getLabel());

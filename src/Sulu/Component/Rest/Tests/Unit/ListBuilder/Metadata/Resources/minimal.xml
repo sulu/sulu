@@ -8,7 +8,7 @@
             <transformer type="integer"/>
         </property>
 
-        <property name="firstName" translation="contact.contacts.firstName" searchability="yes" visibility="always">
+        <property name="firstName" translation="contact.contacts.firstName" searchability="yes" visibility="always" width="shrink">
             <field-name>firstName</field-name>
             <entity-name>%sulu.model.contact.class%</entity-name>
         </property>

@@ -165,7 +165,7 @@ $borderRadius: 3px;
     color: $cellTextColor;
     background-color: $cellBackgroundColor;
 
-    &.small {
+    &.shrink {
         width: 1px;
     }
 }
@@ -277,10 +277,5 @@ $borderRadius: 3px;
         border-bottom-left-radius: 0;
         border-top-right-radius: 0;
         border-bottom-right-radius: 0;
-    }
-
-    .cell,
-    .header-cell {
-        width: min-content;
     }
 }

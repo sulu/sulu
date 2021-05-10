@@ -62,6 +62,13 @@ class FieldDescriptor implements FieldDescriptorInterface
     private $sortable;
 
     /**
+     * @var string
+     *
+     * @Expose
+     */
+    private $width;
+
+    /**
      * The type of the field (only used for special fields like dates).
      *
      * @var string
@@ -81,7 +88,8 @@ class FieldDescriptor implements FieldDescriptorInterface
         string $visibility = FieldDescriptorInterface::VISIBILITY_YES,
         string $searchability = FieldDescriptorInterface::SEARCHABILITY_NEVER,
         string $type = '',
-        bool $sortable = true
+        bool $sortable = true,
+        string $width = FieldDescriptorInterface::WIDTH_AUTO
     ) {
         $this->name = $name;
         $this->visibility = $visibility;
@@ -89,6 +97,7 @@ class FieldDescriptor implements FieldDescriptorInterface
         $this->sortable = $sortable;
         $this->type = $type;
         $this->translation = null == $translation ? $name : $translation;
+        $this->width = $width;
     }
 
     public function getName()
@@ -141,6 +150,11 @@ class FieldDescriptor implements FieldDescriptorInterface
     public function getSortable()
     {
         return $this->sortable;
+    }
+
+    public function getWidth(): string
+    {
+        return $this->width;
     }
 
     public function getMetadata()

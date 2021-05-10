@@ -47,7 +47,8 @@ class DoctrineGroupConcatFieldDescriptor extends AbstractDoctrineFieldDescriptor
         string $searchability = FieldDescriptorInterface::SEARCHABILITY_NEVER,
         string $type = '',
         bool $sortable = true,
-        bool $distinct = false
+        bool $distinct = false,
+        string $width = FieldDescriptorInterface::WIDTH_AUTO
     ) {
         parent::__construct(
             $name,
@@ -55,7 +56,8 @@ class DoctrineGroupConcatFieldDescriptor extends AbstractDoctrineFieldDescriptor
             $visibility,
             $searchability,
             $type,
-            $sortable
+            $sortable,
+            $width
         );
 
         $this->fieldDescriptor = $fieldDescriptor;

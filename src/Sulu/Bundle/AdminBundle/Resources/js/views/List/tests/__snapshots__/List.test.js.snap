@@ -362,7 +362,7 @@ exports[`Should render the list with a title 1`] = `
                 class="row"
               >
                 <td
-                  class="cell small"
+                  class="cell shrink"
                 >
                   <div
                     class="cellContent"
@@ -397,7 +397,7 @@ exports[`Should render the list with a title 1`] = `
                 class="row"
               >
                 <td
-                  class="cell small"
+                  class="cell shrink"
                 >
                   <div
                     class="cellContent"
@@ -660,7 +660,7 @@ exports[`Should render the list with nodes of given ListItemActions 1`] = `
                   </div>
                 </td>
                 <td
-                  class="cell small"
+                  class="cell shrink"
                 >
                   <div
                     class="cellContent"
@@ -709,7 +709,7 @@ exports[`Should render the list with nodes of given ListItemActions 1`] = `
                   </div>
                 </td>
                 <td
-                  class="cell small"
+                  class="cell shrink"
                 >
                   <div
                     class="cellContent"
@@ -951,7 +951,7 @@ exports[`Should render the list with nodes of given ToolbarActions 1`] = `
                 class="row"
               >
                 <td
-                  class="cell small"
+                  class="cell shrink"
                 >
                   <div
                     class="cellContent"
@@ -986,7 +986,7 @@ exports[`Should render the list with nodes of given ToolbarActions 1`] = `
                 class="row"
               >
                 <td
-                  class="cell small"
+                  class="cell shrink"
                 >
                   <div
                     class="cellContent"
@@ -1227,7 +1227,7 @@ exports[`Should render the list with the correct resourceKey 1`] = `
                 class="row"
               >
                 <td
-                  class="cell small"
+                  class="cell shrink"
                 >
                   <div
                     class="cellContent"
@@ -1262,7 +1262,7 @@ exports[`Should render the list with the correct resourceKey 1`] = `
                 class="row"
               >
                 <td
-                  class="cell small"
+                  class="cell shrink"
                 >
                   <div
                     class="cellContent"

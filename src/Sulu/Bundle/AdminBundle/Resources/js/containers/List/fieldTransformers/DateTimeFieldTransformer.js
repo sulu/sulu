@@ -64,9 +64,9 @@ export default class DateTimeFieldTransformer implements FieldTransformer {
         };
 
         return momentObject.calendar({
-            sameDay: '[' + translate('sulu_admin.sameDay') + '] HH:mm:ss',
-            lastDay: '[' + translate('sulu_admin.lastDay') + '] HH:mm:ss',
-            nextDay: '[' + translate('sulu_admin.nextDay') + '] HH:mm:ss',
+            sameDay: '[' + translate('sulu_admin.sameDay') + '] HH:mm',
+            lastDay: '[' + translate('sulu_admin.lastDay') + '] HH:mm',
+            nextDay: '[' + translate('sulu_admin.nextDay') + '] HH:mm',
             nextWeek: defaultFct(),
             lastWeek: defaultFct(),
             sameElse: defaultFct(),
