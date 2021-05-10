@@ -24,5 +24,15 @@
     "sulu_security.inherit_permissions_title": "Berechtigung vererben?",
     "sulu_security.inherit_permissions_label": "Berechtigungen an Unterelementen vererben",
     "sulu_security.move_permission_title": "Hinweis",
-    "sulu_security.move_permission_warning": "Die Berechtigungen des übergeordneten Elements werden nicht übernommen."
+    "sulu_security.move_permission_warning": "Die Berechtigungen des übergeordneten Elements werden nicht übernommen.",
+    "sulu_activity.text.roles.created": "{userFullName} hat die Benutzerrolle \"{resourceTitle}\" erstellt",
+    "sulu_activity.text.roles.modified": "{userFullName} hat die Benutzerrolle \"{resourceTitle}\" geändert",
+    "sulu_activity.text.roles.removed": "{userFullName} hat die Benutzerrolle \"{resourceTitle}\" gelöscht",
+    "sulu_activity.text.users.created": "{userFullName} hat den Benutzer \"{resourceTitle}\" erstellt",
+    "sulu_activity.text.users.modified": "{userFullName} hat den Benutzer \"{resourceTitle}\" geändert",
+    "sulu_activity.text.users.removed": "{userFullName} hat den Benutzer \"{resourceTitle}\" gelöscht",
+    "sulu_activity.text.users.enabled": "{userFullName} hat den Benutzer \"{resourceTitle}\" aktiviert",
+    "sulu_activity.text.users.locked": "{userFullName} hat den Benutzer \"{resourceTitle}\" gesperrt",
+    "sulu_activity.text.users.unlocked": "{userFullName} hat den Benutzer \"{resourceTitle}\" entsperrt",
+    "sulu_activity.text.users.password_resetted": "{userFullName} hat das Passwort des Benutzers \"{resourceTitle}\" zurückgesetzt"
 }
