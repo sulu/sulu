@@ -343,7 +343,7 @@ class ActivityController extends AbstractRestController implements ClassResource
                 $translationParameters[$prefix . $key . $suffix] = $value;
             } elseif (\is_array($value)) {
                 foreach ($this->getTranslationParameters($value, $translationLocale, '', '') as $translationParameterKey => $translationParameterValue) {
-                    $translationParameters[$prefix . $key . '.' . $translationParameterKey . $suffix] = $translationParameterValue;
+                    $translationParameters[$prefix . $key . '_' . $translationParameterKey . $suffix] = $translationParameterValue;
                 }
             }
         }

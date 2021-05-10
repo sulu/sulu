@@ -69,10 +69,10 @@
     "sulu_activity.text.pages.unpublished": "{userFullName} hat die Seite \"{resourceTitle}\" nicht mehr veröffentlicht",
     "sulu_activity.text.pages.draft_removed": "{userFullName} hat den Entwurf der Seite \"{resourceTitle}\" verworfen",
     "sulu_activity.text.pages.copied": "{userFullName} hat die Seite \"{resourceTitle}\" kopiert",
-    "sulu_activity.text.pages.moved": "{userFullName} hat die Seite \"{resourceTitle}\" von \"{context.previousParentTitle}\" nach \"{context.newParentTitle}\" verschoben",
+    "sulu_activity.text.pages.moved": "{userFullName} hat die Seite \"{resourceTitle}\" von \"{context_previousParentTitle}\" nach \"{context_newParentTitle}\" verschoben",
     "sulu_activity.text.pages.children_reordered": "{userFullName} hat die Kinder der Seite \"{resourceTitle}\" sortiert",
     "sulu_activity.text.pages.translation_added": "{userFullName} hat eine neue Sprachvariante für \"{resourceLocale}\" zur Seite \"{resourceTitle}\" hinzugefügt",
-    "sulu_activity.text.pages.translation_copied": "{userFullName} hat die Sprachvariante für \"{context.sourceLocale}\" der Seite \"{resourceTitle}\" nach \"{resourceLocale}\" kopiert",
+    "sulu_activity.text.pages.translation_copied": "{userFullName} hat die Sprachvariante für \"{context_sourceLocale}\" der Seite \"{resourceTitle}\" nach \"{resourceLocale}\" kopiert",
     "sulu_activity.text.pages.translation_removed": "{userFullName} hat die Sprachvariante für \"{resourceLocale}\" der Seite \"{resourceTitle}\" entfernt",
-    "sulu_activity.text.pages.version_restored": "{userFullName} hat die Version \"{context.version}\" der Seite \"{resourceTitle}\" wiederhergestellt"
+    "sulu_activity.text.pages.version_restored": "{userFullName} hat die Version \"{context_version}\" der Seite \"{resourceTitle}\" wiederhergestellt"
 }
