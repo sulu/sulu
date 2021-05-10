@@ -19,6 +19,7 @@ use Doctrine\Persistence\Mapping\ClassMetadata;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Component\Persistence\EventSubscriber\ORM\UserBlameSubscriber;
+use Sulu\Component\Persistence\Model\UserBlameInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -84,17 +85,17 @@ class UserBlameSubscriberTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->loadClassMetadataEvent = $this->prophesize('Doctrine\ORM\Event\LoadClassMetadataEventArgs');
+        $this->loadClassMetadataEvent = $this->prophesize(LoadClassMetadataEventArgs::class);
 
-        $this->onFlushEvent = $this->prophesize('Doctrine\ORM\Event\OnFlushEventArgs');
+        $this->onFlushEvent = $this->prophesize(OnFlushEventArgs::class);
 
-        $this->userBlameObject = $this->prophesize('\stdClass')
-            ->willImplement('Sulu\Component\Persistence\Model\UserBlameInterface');
-        $this->classMetadata = $this->prophesize('Doctrine\ORM\Mapping\ClassMetadata');
-        $this->refl = $this->prophesize('\ReflectionClass');
-        $this->entityManager = $this->prophesize('Doctrine\ORM\EntityManager');
-        $this->user = $this->prophesize('Sulu\Component\Security\Authentication\UserInterface');
-        $this->token = $this->prophesize('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
+        $this->userBlameObject = $this->prophesize(\stdClass::class)
+            ->willImplement(UserBlameInterface::class);
+        $this->classMetadata = $this->prophesize(\Doctrine\ORM\Mapping\ClassMetadata::class);
+        $this->refl = $this->prophesize(\ReflectionClass::class);
+        $this->entityManager = $this->prophesize(EntityManager::class);
+        $this->user = $this->prophesize(UserInterface::class);
+        $this->token = $this->prophesize(TokenInterface::class);
         $this->tokenStorage = $this->prophesize(TokenStorageInterface::class);
 
         $this->unitOfWork = $this->getMockBuilder(UnitOfWork::class)->disableOriginalConstructor()->getMock();
@@ -112,7 +113,7 @@ class UserBlameSubscriberTest extends TestCase
     {
         $this->loadClassMetadataEvent->getClassMetadata()->willReturn($this->classMetadata->reveal());
         $this->classMetadata->getReflectionClass()->willReturn($this->refl->reveal());
-        $this->refl->implementsInterface('Sulu\Component\Persistence\Model\UserBlameInterface')->willReturn(true);
+        $this->refl->implementsInterface(UserBlameInterface::class)->willReturn(true);
 
         $this->classMetadata->hasAssociation('creator')->shouldBeCalled();
         $this->classMetadata->hasAssociation('changer')->shouldBeCalled();

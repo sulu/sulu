@@ -23,6 +23,7 @@ use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\WorkflowStage;
+use Sulu\Component\Content\Exception\MandatoryPropertyException;
 use Sulu\Component\Content\Extension\AbstractExtension;
 use Sulu\Component\Content\Extension\ExtensionInterface;
 use Sulu\Component\Content\Extension\ExtensionManager;
@@ -1276,7 +1277,7 @@ class ContentMapperTest extends SuluTestCase
         ];
 
         $this->expectException(
-            '\Sulu\Component\Content\Exception\MandatoryPropertyException',
+            MandatoryPropertyException::class,
             'Property "mandatory" in structure "mandatory" is required but no value was given.'
         );
 
