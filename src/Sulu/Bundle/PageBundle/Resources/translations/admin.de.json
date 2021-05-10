@@ -73,6 +73,6 @@
     "sulu_activity.text.pages.children_reordered": "{userFullName} hat die Kinder der Seite \"{resourceTitle}\" sortiert",
     "sulu_activity.text.pages.translation_added": "{userFullName} hat eine neue Sprachvariante für \"{resourceLocale}\" zur Seite \"{resourceTitle}\" hinzugefügt",
     "sulu_activity.text.pages.translation_copied": "{userFullName} hat die Sprachvariante für \"{context_sourceLocale}\" der Seite \"{resourceTitle}\" nach \"{resourceLocale}\" kopiert",
-    "sulu_activity.text.pages.translation_removed": "{userFullName} hat die Sprachvariante für \"{resourceLocale}\" der Seite \"{resourceTitle}\" entfernt",
+    "sulu_activity.text.pages.translation_removed": "{userFullName} hat die Sprachvariante für \"{resourceLocale}\" der Seite \"{resourceTitle}\" gelöscht",
     "sulu_activity.text.pages.version_restored": "{userFullName} hat die Version \"{context_version}\" der Seite \"{resourceTitle}\" wiederhergestellt"
 }
