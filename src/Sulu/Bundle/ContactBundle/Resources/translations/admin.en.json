@@ -86,9 +86,9 @@
     "sulu_activity.text.accounts.contact_added": "{userFullName} has added the contact \"{context_contactName}\" to the organization \"{resourceTitle}\"",
     "sulu_activity.text.accounts.contact_removed": "{userFullName} has removed the contact \"{context_contactName}\" from the organization \"{resourceTitle}\"",
     "sulu_activity.text.contact_positions.created": "{userFullName} has created the contact position \"{resourceTitle}\"",
-    "sulu_activity.text.contact_positions.modified": "{userFullName} has created the contact position \"{resourceTitle}\"",
-    "sulu_activity.text.contact_positions.removed": "{userFullName} has created the contact position \"{resourceTitle}\"",
+    "sulu_activity.text.contact_positions.modified": "{userFullName} has changed the contact position \"{resourceTitle}\"",
+    "sulu_activity.text.contact_positions.removed": "{userFullName} has removed the contact position \"{resourceTitle}\"",
     "sulu_activity.text.contact_titles.created": "{userFullName} has created the contact title \"{resourceTitle}\"",
-    "sulu_activity.text.contact_titles.modified": "{userFullName} has created the contact title \"{resourceTitle}\"",
-    "sulu_activity.text.contact_titles.removed": "{userFullName} has created the contact title \"{resourceTitle}\""
+    "sulu_activity.text.contact_titles.modified": "{userFullName} has changed the contact title \"{resourceTitle}\"",
+    "sulu_activity.text.contact_titles.removed": "{userFullName} has removed the contact title \"{resourceTitle}\""
 }

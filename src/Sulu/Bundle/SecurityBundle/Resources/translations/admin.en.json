@@ -34,5 +34,5 @@
     "sulu_activity.text.users.enabled": "{userFullName} has enabled the user \"{resourceTitle}\"",
     "sulu_activity.text.users.locked": "{userFullName} has locked the user \"{resourceTitle}\"",
     "sulu_activity.text.users.unlocked": "{userFullName} has unlocked the user \"{resourceTitle}\"",
-    "sulu_activity.text.users.password_resetted": "{userFullName} has resetted the password of the the user \"{resourceTitle}\""
+    "sulu_activity.text.users.password_resetted": "{userFullName} has resetted the password of the user \"{resourceTitle}\""
 }
