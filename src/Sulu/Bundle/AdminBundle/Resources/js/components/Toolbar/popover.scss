@@ -12,6 +12,11 @@ $popoverShadowColor: $silver;
     position: relative;
 }
 
+.content-container {
+    /* Fix popover calculation for children with negative margins */
+    overflow: hidden;
+}
+
 .light {
     background-color: $popoverBackgroundLightColor;
     color: $popoverTextLightColor;

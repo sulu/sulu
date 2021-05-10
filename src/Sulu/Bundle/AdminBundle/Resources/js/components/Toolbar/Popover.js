@@ -91,7 +91,9 @@ class Popover extends React.Component<PopoverProps> {
                     {
                         (setPopoverElementRef, popoverStyle) => (
                             <div className={popoverStyles[skin]} ref={setPopoverElementRef} style={popoverStyle}>
-                                {children(this.close)}
+                                <div className={popoverStyles.contentContainer}>
+                                    {children(this.close)}
+                                </div>
                             </div>
                         )
                     }
