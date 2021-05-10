@@ -17,11 +17,14 @@ export default class IconFieldTransformer implements FieldTransformer {
 
         const {
             mapping,
+            default: defaultIcon,
             skin = 'default',
         }: {
+            default: Object | string,
             mapping: mixed[],
             skin: Skin,
         } = parameters;
+
         if (!mapping) {
             return value;
         }
@@ -32,11 +35,26 @@ export default class IconFieldTransformer implements FieldTransformer {
             return null;
         }
 
-        const iconConfig = mapping[value];
+        let iconConfig = mapping[value];
         if (!iconConfig) {
-            log.warn(`There was no icon specified in the "mapping" transformer parameter for the value "${value}".`);
+            if (!defaultIcon) {
+                log.warn(
+                    `There was no icon specified in the "mapping" transformer parameter for the value "${value}".`
+                );
 
-            return value;
+                return value;
+            }
+
+            if (typeof defaultIcon !== 'string' && typeof defaultIcon !== 'object') {
+                log.warn(
+                    'Transformer parameter "default" needs to be of type string or collection, ' +
+                    `${typeof defaultIcon} given.`
+                );
+
+                return value;
+            }
+
+            iconConfig = defaultIcon;
         }
 
         if (skin && typeof skin !== 'string') {
