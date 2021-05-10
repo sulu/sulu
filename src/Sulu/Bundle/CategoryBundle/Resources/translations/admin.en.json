@@ -7,5 +7,13 @@
     "sulu_category.multiple_usage": "Multiple Usage",
     "sulu_category.all_categories": "All categories",
     "sulu_category.no_category_selected": "No category selected",
-    "sulu_category.single_category_selection_overlay_title": "Choose category"
+    "sulu_category.single_category_selection_overlay_title": "Choose category",
+    "sulu_activity.text.categories.created": "{userFullName} has created the category \"{resourceTitle}\"",
+    "sulu_activity.text.categories.modified": "{userFullName} has changed the category \"{resourceTitle}\"",
+    "sulu_activity.text.categories.moved": "{userFullName} has moved the category \"{resourceTitle}\"",
+    "sulu_activity.text.categories.removed": "{userFullName} has removed the category \"{resourceTitle}\"",
+    "sulu_activity.text.categories.translation_added": "{userFullName} has added a new translation \"{resourceLocale}\" to the category \"{resourceTitle}\"",
+    "sulu_activity.text.categories.keyword_added": "{userFullName} has added the keyword \"{context_keywordTitle}\" to the category \"{resourceTitle}\"",
+    "sulu_activity.text.categories.keyword_modified": "{userFullName} has changed the keyword \"{context_keywordTitle}\" of the category \"{resourceTitle}\"",
+    "sulu_activity.text.categories.keyword_removed": "{userFullName} has removed the keyword \"{context_keywordTitle}\" from the category \"{resourceTitle}\""
 }
