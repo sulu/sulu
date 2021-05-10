@@ -16,6 +16,7 @@ use Sulu\Bundle\WebsiteBundle\Routing\PortalLoader;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\PortalInformation;
+use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\Routing\Route;
@@ -50,13 +51,14 @@ class PortalLoaderTest extends TestCase
 
     public function setUp(): void
     {
-        parent::setUp();
-
         $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
         $this->loaderResolver = $this->prophesize(LoaderResolverInterface::class);
         $this->loader = $this->prophesize(LoaderInterface::class);
 
-        $this->portalLoader = new PortalLoader($this->webspaceManager->reveal());
+        $this->portalLoader = new PortalLoader(
+            $this->webspaceManager->reveal(),
+            new FileLocator()
+        );
         $this->portalLoader->setResolver($this->loaderResolver->reveal());
 
         $de = new Localization();
