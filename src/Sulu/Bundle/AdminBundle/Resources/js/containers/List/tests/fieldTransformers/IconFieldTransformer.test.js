@@ -44,10 +44,10 @@ test('Test icon wrong type', () => {
 test('Test parameters/default wrong type', () => {
     expect(iconFieldTransformer.transform('default_failed', {
         mapping: {failed: 'su-fail'},
-        default_mapping: 1}
+        default: 1}
     )).toBe('default_failed');
     expect(log.warn).toBeCalledWith(
-        'Transformer parameter "default_mapping" needs to be of type string or collection, number given.'
+        'Transformer parameter "default" needs to be of type string or collection, number given.'
     );
 });
 
@@ -94,7 +94,7 @@ test('Test icon object', () => {
 
 test('Test parameters/default string', () => {
     expect(iconFieldTransformer.transform('default_failed', {
-        default_mapping: 'su-default-ban',
+        default: 'su-default-ban',
         mapping: {failed: 'su-ban'},
     })).toEqual(
         <Icon
@@ -106,7 +106,7 @@ test('Test parameters/default string', () => {
 
 test('Test parameters/default object', () => {
     expect(iconFieldTransformer.transform('default_failed', {
-        default_mapping: {
+        default: {
             icon: 'su-default-ban',
             color: 'red',
         },
