@@ -279,7 +279,7 @@ class RequestAnalyzerTest extends TestCase
         $this->webspaceManager->findPortalInformationsByUrl(Argument::any(), Argument::any())->willReturn([]);
         $this->webspaceManager->getPortalInformations(Argument::any())->willReturn([]);
 
-        $request = $this->getMockBuilder('\Symfony\Component\HttpFoundation\Request')->getMock();
+        $request = $this->getMockBuilder(Request::class)->getMock();
         $request->request = new ParameterBag(['post' => 1]);
         $request->query = new ParameterBag(['get' => 1]);
         $request->attributes = new ParameterBag();

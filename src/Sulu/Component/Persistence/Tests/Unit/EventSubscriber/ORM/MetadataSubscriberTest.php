@@ -11,8 +11,14 @@
 
 namespace Sulu\Component\Persistence\Tests\Unit\EventSubscriber\ORM;
 
+use Doctrine\ORM\Configuration;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
+use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\Persistence\Mapping\Driver\MappingDriver;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Sulu\Bundle\ContactBundle\Entity\ContactRepository;
 use Sulu\Component\Persistence\EventSubscriber\ORM\MetadataSubscriber;
 
 class MetadataSubscriberTest extends TestCase
@@ -60,20 +66,20 @@ class MetadataSubscriberTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->loadClassMetadataEvent = $this->prophesize('Doctrine\ORM\Event\LoadClassMetadataEventArgs');
+        $this->loadClassMetadataEvent = $this->prophesize(LoadClassMetadataEventArgs::class);
 
-        $this->parentObject = $this->prophesize('\stdClass');
-        $this->object = $this->prophesize('\stdClass')
+        $this->parentObject = $this->prophesize(\stdClass::class);
+        $this->object = $this->prophesize(\stdClass::class)
             ->willExtend(\get_class($this->parentObject->reveal()));
 
         $objects = [
             'sulu' => [
                 'contact' => [
-                    'model' => '\stdClass',
-                    'repository' => '\Sulu\Bundle\ContactBundle\Entity\ContactRepository',
+                    'model' => \stdClass::class,
+                    'repository' => ContactRepository::class,
                 ],
                 'member' => [
-                    'model' => '\Closure',
+                    'model' => \Closure::class,
                 ],
                 'user' => [
                     'model' => \get_class($this->object->reveal()),
@@ -81,10 +87,10 @@ class MetadataSubscriberTest extends TestCase
             ],
         ];
 
-        $this->classMetadata = $this->prophesize('Doctrine\ORM\Mapping\ClassMetadata');
-        $this->reflection = $this->prophesize('\ReflectionClass');
-        $this->entityManager = $this->prophesize('Doctrine\ORM\EntityManager');
-        $this->configuration = $this->prophesize('Doctrine\ORM\Configuration');
+        $this->classMetadata = $this->prophesize(ClassMetadata::class);
+        $this->reflection = $this->prophesize(\ReflectionClass::class);
+        $this->entityManager = $this->prophesize(EntityManager::class);
+        $this->configuration = $this->prophesize(Configuration::class);
 
         $this->subscriber = new MetadataSubscriber($objects);
     }
@@ -92,10 +98,10 @@ class MetadataSubscriberTest extends TestCase
     public function testLoadClassMetadataWithCustomRepository()
     {
         $this->loadClassMetadataEvent->getClassMetadata()->willReturn($this->classMetadata->reveal());
-        $this->classMetadata->getName()->willReturn('\stdClass');
+        $this->classMetadata->getName()->willReturn(\stdClass::class);
 
         $this->classMetadata
-            ->setCustomRepositoryClass('\Sulu\Bundle\ContactBundle\Entity\ContactRepository')
+            ->setCustomRepositoryClass(ContactRepository::class)
             ->shouldBeCalled();
         $this->loadClassMetadataEvent->getEntityManager()->willReturn($this->entityManager->reveal());
         $this->entityManager->getConfiguration()->willReturn($this->configuration->reveal());
@@ -106,10 +112,10 @@ class MetadataSubscriberTest extends TestCase
     public function testLoadClassMetadataWithoutCustomRepository()
     {
         $this->loadClassMetadataEvent->getClassMetadata()->willReturn($this->classMetadata->reveal());
-        $this->classMetadata->getName()->willReturn('\Closure');
+        $this->classMetadata->getName()->willReturn(\Closure::class);
 
         $this->classMetadata
-            ->setCustomRepositoryClass('Sulu\Bundle\ContactBundle\Entity\ContactRepository')
+            ->setCustomRepositoryClass(ContactRepository::class)
             ->shouldNotBeCalled();
         $this->loadClassMetadataEvent->getEntityManager()->willReturn($this->entityManager->reveal());
         $this->entityManager->getConfiguration()->willReturn($this->configuration->reveal());
@@ -123,20 +129,20 @@ class MetadataSubscriberTest extends TestCase
         $this->classMetadata->getName()->willReturn(\get_class($this->object->reveal()));
 
         $this->classMetadata
-            ->setCustomRepositoryClass('Sulu\Bundle\ContactBundle\Entity\ContactRepository')
+            ->setCustomRepositoryClass(ContactRepository::class)
             ->shouldNotBeCalled();
         $this->loadClassMetadataEvent->getEntityManager()->willReturn($this->entityManager->reveal());
 
         $this->entityManager->getConfiguration()->willReturn($this->configuration->reveal());
         $this->configuration->getNamingStrategy()->willReturn(null);
 
-        /** @var \Doctrine\Persistence\Mapping\Driver\MappingDriver $mappingDriver */
-        $mappingDriver = $this->prophesize('Doctrine\Persistence\Mapping\Driver\MappingDriver');
+        /** @var MappingDriver $mappingDriver */
+        $mappingDriver = $this->prophesize(MappingDriver::class);
         $this->configuration->getMetadataDriverImpl()->willReturn($mappingDriver->reveal());
         $mappingDriver->getAllClassNames()->willReturn([\get_class($this->parentObject->reveal())]);
         $mappingDriver->loadMetadataForClass(
             \get_class($this->parentObject->reveal()),
-            Argument::type('Doctrine\ORM\Mapping\ClassMetadata')
+            Argument::type(ClassMetadata::class)
         )->shouldBeCalled();
 
         $this->subscriber->loadClassMetadata($this->loadClassMetadataEvent->reveal());
