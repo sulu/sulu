@@ -193,7 +193,7 @@ class SuluNodeHelperTest extends TestCase
     public function testExtractSnippetTypeFromPath($path, $expected, $valid = true)
     {
         if (false === $valid) {
-            $this->expectException('\InvalidArgumentException');
+            $this->expectException(\InvalidArgumentException::class);
         }
 
         $res = $this->helper->extractSnippetTypeFromPath($path);

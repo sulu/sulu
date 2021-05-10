@@ -11,22 +11,27 @@
 
 namespace Sulu\Component\Persistence\Tests\Unit\EventSubscriber\ORM;
 
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Component\Persistence\EventSubscriber\ORM\TimestampableSubscriber;
+use Sulu\Component\Persistence\Model\TimestampableInterface;
 
 class TimestampableSubscriberTest extends TestCase
 {
     public function setUp(): void
     {
         parent::setUp();
-        $this->loadClassMetadataEvent = $this->prophesize('Doctrine\ORM\Event\LoadClassMetadataEventArgs');
-        $this->lifecycleEvent = $this->prophesize('Doctrine\ORM\Event\LifecycleEventArgs');
-        $this->timestampableObject = $this->prophesize('\stdClass')
-            ->willImplement('Sulu\Component\Persistence\Model\TimestampableInterface');
-        $this->classMetadata = $this->prophesize('Doctrine\ORM\Mapping\ClassMetadata');
-        $this->refl = $this->prophesize('\ReflectionClass');
-        $this->entityManager = $this->prophesize('Doctrine\ORM\EntityManager');
+        $this->loadClassMetadataEvent = $this->prophesize(LoadClassMetadataEventArgs::class);
+        $this->lifecycleEvent = $this->prophesize(LifecycleEventArgs::class);
+        $this->timestampableObject = $this->prophesize(\stdClass::class)
+            ->willImplement(TimestampableInterface::class);
+        $this->classMetadata = $this->prophesize(ClassMetadata::class);
+        $this->refl = $this->prophesize(\ReflectionClass::class);
+        $this->entityManager = $this->prophesize(EntityManager::class);
 
         $this->subscriber = new TimestampableSubscriber();
     }
@@ -35,7 +40,7 @@ class TimestampableSubscriberTest extends TestCase
     {
         $this->loadClassMetadataEvent->getClassMetadata()->willReturn($this->classMetadata->reveal());
         $this->classMetadata->getReflectionClass()->willReturn($this->refl->reveal());
-        $this->refl->implementsInterface('Sulu\Component\Persistence\Model\TimestampableInterface')->willReturn(true);
+        $this->refl->implementsInterface(TimestampableInterface::class)->willReturn(true);
 
         $this->classMetadata->mapField(Argument::any())->shouldBeCalled();
         $this->classMetadata->hasField('created')->willReturn(false);
