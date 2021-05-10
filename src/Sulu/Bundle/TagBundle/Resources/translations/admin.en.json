@@ -1,5 +1,9 @@
 {
     "sulu_tag.tags": "Tags",
     "sulu_tag.tag": "Tag",
-    "sulu_tag.no_commas_allowed": "There are no commas allowed in this field"
+    "sulu_tag.no_commas_allowed": "There are no commas allowed in this field",
+    "sulu_activity.text.tags.created": "{userFullName} has created the tag \"{resourceTitle}\"",
+    "sulu_activity.text.tags.modified": "{userFullName} has modified the tag \"{resourceTitle}\"",
+    "sulu_activity.text.tags.removed": "{userFullName} has removed the tag \"{resourceTitle}\"",
+    "sulu_activity.text.tags.merged": "{userFullName} has merged the tag \"{context_sourceTagName}\" into \"{resourceTitle}\""
 }
