@@ -11,8 +11,8 @@
         "depcruise": "depcruise src/Sulu/Bundle/*/Resources/js -c dependency-cruiser.json",
         "styleguide": "styleguidist server",
         "styleguide:build": "styleguidist build",
-        "build": "webpack -p",
-        "watch": "webpack -d -w"
+        "build": "webpack --mode production",
+        "watch": "webpack --mode development --watch"
     },
     "dependencies": {
         "sulu-admin-bundle": "file:src/Sulu/Bundle/AdminBundle/Resources/js",
