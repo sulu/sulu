@@ -48,8 +48,8 @@ class LocationOverlay extends React.Component<Props> {
 
         this.updateDataOnOpenDisposer = reaction(() => this.props.open, (newOpenValue) => {
             if (newOpenValue === true) {
-                this.lat = this.props.value ? this.props.value.lat : 0;
-                this.long = this.props.value ? this.props.value.long : 0;
+                this.lat = this.props.value ? this.props.value.lat : null;
+                this.long = this.props.value ? this.props.value.long : null;
                 this.zoom = this.props.value ? this.props.value.zoom : 1;
                 this.updateMapToData();
 
@@ -133,8 +133,8 @@ class LocationOverlay extends React.Component<Props> {
     };
 
     @action handleResetLocation = () => {
-        this.long = 0;
-        this.lat = 0;
+        this.long = null;
+        this.lat = null;
         this.zoom = 1;
         this.updateMapToData();
 

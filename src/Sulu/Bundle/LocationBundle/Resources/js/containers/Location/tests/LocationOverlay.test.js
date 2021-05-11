@@ -182,6 +182,9 @@ test('Should pass correct props to the map, marker and input fields after auto-c
         />
     );
 
+    const mockedMap = {setView: jest.fn(), on: jest.fn()};
+    locationOverlay.find(MapContainer).props().whenCreated(mockedMap);
+
     const autoCompleteResult = {
         latitude: 10,
         longitude: 20,
@@ -206,10 +209,7 @@ test('Should pass correct props to the map, marker and input fields after auto-c
     expect(locationOverlay.find(Input).at(8).props().value).toEqual(autoCompleteResult.town); // town
     expect(locationOverlay.find(Input).at(9).props().value).toEqual(autoCompleteResult.country); // country
 
-    expect(locationOverlay.find(MapContainer).props().zoom).toEqual(1);
-    expect(locationOverlay.find(MapContainer).props().center).toEqual(
-        [autoCompleteResult.latitude, autoCompleteResult.longitude]
-    );
+    expect(mockedMap.setView).toBeCalledWith([autoCompleteResult.latitude, autoCompleteResult.longitude], 1);
     expect(locationOverlay.find(Marker).props().position).toEqual(
         [autoCompleteResult.latitude, autoCompleteResult.longitude]
     );
@@ -264,7 +264,12 @@ test('Should pass correct props to the map and input fields after map was zoomed
         />
     );
 
-    locationOverlay.find(MapContainer).props().onZoomAnim({zoom: 10});
+    const mockedMap = {setView: jest.fn(), on: jest.fn((event, handler) => {
+        if (event === 'zoomanim') {
+            handler({zoom: 10});
+        }
+    })};
+    locationOverlay.find(MapContainer).props().whenCreated(mockedMap);
     locationOverlay.update();
 
     expect(locationOverlay.find(Number).at(2).props().value).toEqual(10); // zoom
@@ -294,7 +299,13 @@ test('Should call onConfirm callback when the Overlay is confirmed after map was
         />
     );
 
-    locationOverlay.find(MapContainer).props().onZoomAnim({zoom: 10});
+    const mockedMap = {setView: jest.fn(), on: jest.fn((event, handler) => {
+        if (event === 'zoomanim') {
+            handler({zoom: 10});
+        }
+    })};
+    locationOverlay.find(MapContainer).props().whenCreated(mockedMap);
+
     locationOverlay.find(Overlay).props().onConfirm();
 
     expect(confirmSpy).toBeCalledWith(expect.objectContaining({
@@ -310,7 +321,7 @@ test('Should call onConfirm callback when the Overlay is confirmed after map was
     }));
 });
 
-test('Should pass correct props to the map, marker and input fields while marker is dragged', () => {
+test('Should pass correct props to the map, marker and input fields when marker is dragged', () => {
     const locationOverlay = mount(
         <LocationOverlay
             onClose={jest.fn()}
@@ -320,35 +331,24 @@ test('Should pass correct props to the map, marker and input fields while marker
         />
     );
 
-    locationOverlay.find(Marker).props().onDrag({latlng: {lng: 11, lat: 22}});
+    const mockedMap = {setView: jest.fn(), on: jest.fn()};
+    locationOverlay.find(MapContainer).props().whenCreated(mockedMap);
+
+    locationOverlay.find(Marker).props().eventHandlers.drag({latlng: {lng: 11, lat: 22}});
     locationOverlay.update();
 
     expect(locationOverlay.find(Number).at(0).props().value).toEqual(22); // lat
     expect(locationOverlay.find(Number).at(1).props().value).toEqual(11); // long
     expect(locationOverlay.find(Marker).props().position).toEqual([22, 11]);
+    expect(mockedMap.setView).not.toBeCalled();
 
-    // props of map should not be updated before drag-end event
-    expect(locationOverlay.find(MapContainer).props().center).toEqual([0, 0]);
-});
-
-test('Should pass correct props to the map, marker and input fields after marker was dragged', () => {
-    const locationOverlay = mount(
-        <LocationOverlay
-            onClose={jest.fn()}
-            onConfirm={jest.fn()}
-            open={true}
-            value={null}
-        />
-    );
-
-    locationOverlay.find(Marker).props().onDrag({latlng: {lng: 11, lat: 22}});
-    locationOverlay.find(Marker).props().onDragEnd();
+    locationOverlay.find(Marker).props().eventHandlers.dragend();
     locationOverlay.update();
 
     expect(locationOverlay.find(Number).at(0).props().value).toEqual(22); // lat
     expect(locationOverlay.find(Number).at(1).props().value).toEqual(11); // long
     expect(locationOverlay.find(Marker).props().position).toEqual([22, 11]);
-    expect(locationOverlay.find(MapContainer).props().center).toEqual([22, 11]);
+    expect(mockedMap.setView).toBeCalledWith([22, 11], 1);
 });
 
 test('Should call onConfirm callback when the Overlay is confirmed after marker was dragged', () => {
@@ -374,8 +374,8 @@ test('Should call onConfirm callback when the Overlay is confirmed after marker 
         />
     );
 
-    locationOverlay.find(Marker).props().onDrag({latlng: {lng: 11, lat: 22}});
-    locationOverlay.find(Marker).props().onDragEnd();
+    locationOverlay.find(Marker).props().eventHandlers.drag({latlng: {lng: 11, lat: 22}});
+    locationOverlay.find(Marker).props().eventHandlers.dragend();
     locationOverlay.find(Overlay).props().onConfirm();
 
     expect(confirmSpy).toBeCalledWith(expect.objectContaining({
@@ -453,6 +453,9 @@ test('Should pass correct props to the map, marker and input fields after reset'
         />
     );
 
+    const mockedMap = {setView: jest.fn(), on: jest.fn()};
+    locationOverlay.find(MapContainer).props().whenCreated(mockedMap);
+
     locationOverlay.find(Overlay).props().actions[0].onClick();
     locationOverlay.update();
 
@@ -466,8 +469,7 @@ test('Should pass correct props to the map, marker and input fields after reset'
     expect(locationOverlay.find(Input).at(8).props().value).toBeNull(); // town
     expect(locationOverlay.find(Input).at(9).props().value).toBeNull(); // country
 
-    expect(locationOverlay.find(MapContainer).props().zoom).toEqual(1);
-    expect(locationOverlay.find(MapContainer).props().center).toEqual([0, 0]);
+    expect(mockedMap.setView).toBeCalledWith([0, 0], 1);
     expect(locationOverlay.find(Marker).props().position).toEqual([0, 0]);
 });
 
@@ -510,6 +512,9 @@ test('Should pass correct props to the map, marker and input fields after input 
         />
     );
 
+    const mockedMap = {setView: jest.fn(), on: jest.fn()};
+    locationOverlay.find(MapContainer).props().whenCreated(mockedMap);
+
     locationOverlay.find(Number).at(0).props().onChange(10); // lat
     locationOverlay.find(Number).at(1).props().onChange(20); // long
     locationOverlay.find(Number).at(2).props().onChange(12); // zoom
@@ -531,8 +536,7 @@ test('Should pass correct props to the map, marker and input fields after input 
     expect(locationOverlay.find(Input).at(8).props().value).toEqual('new-town'); // town
     expect(locationOverlay.find(Input).at(9).props().value).toEqual('new-country'); // country
 
-    expect(locationOverlay.find(MapContainer).props().zoom).toEqual(12);
-    expect(locationOverlay.find(MapContainer).props().center).toEqual([10, 20]);
+    expect(mockedMap.setView).toBeCalledWith([10, 20], 12);
     expect(locationOverlay.find(Marker).props().position).toEqual([10, 20]);
 });
 
