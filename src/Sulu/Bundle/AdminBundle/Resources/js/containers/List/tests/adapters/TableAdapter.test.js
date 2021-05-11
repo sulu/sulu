@@ -222,6 +222,61 @@ test('Render data with skin', () => {
     expect(tableAdapter).toMatchSnapshot();
 });
 
+test('Render data with shrunken cell', () => {
+    const data = [
+        {
+            title: '1',
+            description: 'planned',
+        },
+        {
+            title: '2',
+            description: 'running',
+        },
+        {
+            title: '3',
+            description: 'succeeded',
+        },
+        {
+            title: '4',
+            description: 'failed',
+        },
+    ];
+
+    const schema = {
+        title: {
+            filterType: null,
+            filterTypeParameters: null,
+            transformerTypeParameters: {},
+            type: 'string',
+            sortable: true,
+            visibility: 'yes',
+            label: 'Title',
+            width: 'shrink',
+        },
+        description: {
+            filterType: null,
+            filterTypeParameters: null,
+            transformerTypeParameters: {},
+            type: 'string',
+            sortable: true,
+            visibility: 'yes',
+            label: 'Description',
+            width: 'auto',
+        },
+    };
+    const tableAdapter = render(
+        <TableAdapter
+            {...listAdapterDefaultProps}
+            data={data}
+            page={2}
+            pageCount={5}
+            schema={schema}
+        />
+    );
+
+    expect(tableAdapter).toMatchSnapshot();
+});
+
 test('Render data without header', () => {
     const data = [];
 

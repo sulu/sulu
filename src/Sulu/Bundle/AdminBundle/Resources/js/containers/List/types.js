@@ -2,6 +2,7 @@
 import type {Node} from 'react';
 import type {IObservableValue} from 'mobx/lib/mobx';
 import {RequestPromise} from '../../services/Requester';
+import type {Width} from '../../components/Table/types';
 
 export type DataItem = {
     id: string | number,
@@ -19,6 +20,7 @@ export type SchemaEntry = {
     transformerTypeParameters: {[string]: mixed},
     type: string,
     visibility: 'always' | 'yes' | 'no' | 'never',
+    width?: Width,
 };
 
 export type Schema = {

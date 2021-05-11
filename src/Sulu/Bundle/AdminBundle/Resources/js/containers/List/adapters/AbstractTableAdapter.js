@@ -69,7 +69,7 @@ export default class AbstractTableAdapter extends AbstractAdapter {
             }
 
             return (
-                <Table.Cell key={item.id + schemaKey}>
+                <Table.Cell key={item.id + schemaKey} width={this.schema[schemaKey].width}>
                     {indicators}
                     {value}
                 </Table.Cell>
@@ -91,6 +91,7 @@ export default class AbstractTableAdapter extends AbstractAdapter {
                     name={schemaKey}
                     onClick={columnSchema.sortable ? onSort : undefined}
                     sortOrder={sortColumn === schemaKey ? sortOrder : undefined}
+                    width={this.schema[schemaKey].width}
                 >
                     {label}
                 </Table.HeaderCell>

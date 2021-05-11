@@ -35,7 +35,8 @@ class DoctrineCountFieldDescriptor extends DoctrineFieldDescriptor
         string $searchability = FieldDescriptorInterface::SEARCHABILITY_NEVER,
         string $type = '',
         bool $sortable = true,
-        bool $distinct = false
+        bool $distinct = false,
+        string $width = FieldDescriptorInterface::WIDTH_AUTO
     ) {
         parent::__construct(
             $fieldName,
@@ -46,7 +47,8 @@ class DoctrineCountFieldDescriptor extends DoctrineFieldDescriptor
             $visibility,
             $searchability,
             $type,
-            $sortable
+            $sortable,
+            $width
         );
 
         $this->distinct = $distinct;

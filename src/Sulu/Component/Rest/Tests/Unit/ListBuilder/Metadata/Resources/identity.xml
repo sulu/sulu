@@ -2,7 +2,7 @@
     <key>identity</key>
 
     <properties>
-        <identity-property name="tags">
+        <identity-property name="tags" width="shrink">
             <field-name>tags</field-name>
             <entity-name>%sulu.model.contact.class%</entity-name>
 

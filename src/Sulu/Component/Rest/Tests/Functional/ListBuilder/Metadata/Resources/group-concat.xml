@@ -2,7 +2,7 @@
     <key>group-concat</key>
 
     <properties>
-        <group-concat-property name="tags" glue=",">
+        <group-concat-property name="tags" glue="," width="shrink">
             <field-name>name</field-name>
             <entity-name>SuluTagBundle:Tag</entity-name>
 

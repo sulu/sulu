@@ -1086,3 +1086,105 @@ exports[`Render the Table component with a skin 1`] = `
   </table>
 </div>
 `;
+
+exports[`Render the Table component with shrunken cells 1`] = `
+<div
+  class="tableContainer dark"
+>
+  <table
+    class="table"
+  >
+    <thead
+      class="header"
+    >
+      <tr>
+        <th
+          class="headerCell"
+        >
+          <span>
+            Column Title
+          </span>
+        </th>
+        <th
+          class="headerCell"
+        >
+          <span>
+            Column Title
+          </span>
+        </th>
+        <th
+          class="headerCell"
+        >
+          <span>
+            Column Title
+          </span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        class="row"
+      >
+        <td
+          class="cell shrink"
+        >
+          <div
+            class="cellContent"
+          >
+            Column Text
+          </div>
+        </td>
+        <td
+          class="cell shrink"
+        >
+          <div
+            class="cellContent"
+          >
+            Column Text
+          </div>
+        </td>
+        <td
+          class="cell shrink"
+        >
+          <div
+            class="cellContent"
+          >
+            Column Text
+          </div>
+        </td>
+      </tr>
+      <tr
+        class="row"
+      >
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            Column Text
+          </div>
+        </td>
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            Column Text
+          </div>
+        </td>
+        <td
+          class="cell"
+        >
+          <div
+            class="cellContent"
+          >
+            Column Text
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;

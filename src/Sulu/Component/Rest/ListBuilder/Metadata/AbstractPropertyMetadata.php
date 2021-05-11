@@ -63,6 +63,11 @@ abstract class AbstractPropertyMetadata
      */
     private $filterTypeParameters;
 
+    /**
+     * @var string
+     */
+    private $width;
+
     public function __construct($name)
     {
         $this->name = $name;
@@ -204,5 +209,15 @@ abstract class AbstractPropertyMetadata
     public function setFilterTypeParameters($parameters)
     {
         $this->filterTypeParameters = $parameters;
+    }
+
+    public function setWidth(string $width): void
+    {
+        $this->width = $width;
+    }
+
+    public function getWidth(): string
+    {
+        return $this->width;
     }
 }

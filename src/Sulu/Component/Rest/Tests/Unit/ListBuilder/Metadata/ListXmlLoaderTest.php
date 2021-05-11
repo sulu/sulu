@@ -163,6 +163,7 @@ class ListXmlLoaderTest extends TestCase
                 'visibility' => FieldDescriptorInterface::VISIBILITY_ALWAYS,
                 'searchability' => FieldDescriptorInterface::SEARCHABILITY_YES,
                 'entityName' => 'SuluContactBundle:Contact',
+                'width' => FieldDescriptorInterface::WIDTH_SHRINK,
             ],
             $propertiesMetadata[1]
         );
@@ -394,6 +395,7 @@ class ListXmlLoaderTest extends TestCase
                         'test2' => 'test',
                     ],
                 ],
+                'width' => FieldDescriptorInterface::WIDTH_SHRINK,
             ],
             $propertiesMetadata[0]
         );
@@ -466,6 +468,7 @@ class ListXmlLoaderTest extends TestCase
                 'transformer-type-params' => null,
                 'entityName' => null,
                 'joins' => [],
+                'width' => FieldDescriptorInterface::WIDTH_AUTO,
             ],
             $expected
         );
@@ -477,6 +480,7 @@ class ListXmlLoaderTest extends TestCase
         $this->assertEquals($expected['transformer-type-params'], $metadata->getTransformerTypeParameters());
         $this->assertEquals($expected['visibility'], $metadata->getVisibility());
         $this->assertEquals($expected['searchability'], $metadata->getSearchability());
+        $this->assertEquals($expected['width'], $metadata->getWidth());
 
         $this->assertEquals($expected['type'], $metadata->getType());
         $this->assertEquals($expected['sortable'], $metadata->isSortable());

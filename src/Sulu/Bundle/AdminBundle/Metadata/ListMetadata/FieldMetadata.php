@@ -53,6 +53,11 @@ class FieldMetadata
      */
     protected $filterTypeParameters;
 
+    /**
+     * @var string
+     */
+    protected $width;
+
     public function __construct(string $name)
     {
         $this->name = $name;
@@ -131,5 +136,15 @@ class FieldMetadata
     public function getFilterTypeParameters(): ?array
     {
         return $this->filterTypeParameters;
+    }
+
+    public function setWidth(string $width): void
+    {
+        $this->width = $width;
+    }
+
+    public function getWidth(): string
+    {
+        return $this->width;
     }
 }

@@ -88,6 +88,10 @@ $borderRadius: 3px;
     overflow: hidden;
     max-width: 250px;
     text-align: left;
+
+    &.shrink {
+        width: 1px;
+    }
 }
 
 .cell-content {
@@ -151,6 +155,10 @@ $borderRadius: 3px;
 .button-cell,
 .header-button-cell {
     width: 56px;
+
+    &.shrink {
+        width: 1px;
+    }
 }
 
 .cell,
@@ -164,10 +172,6 @@ $borderRadius: 3px;
     border-color: $cellBorderColor;
     color: $cellTextColor;
     background-color: $cellBackgroundColor;
-
-    &.small {
-        width: 1px;
-    }
 }
 
 .button-cell {
@@ -277,10 +281,5 @@ $borderRadius: 3px;
         border-bottom-left-radius: 0;
         border-top-right-radius: 0;
         border-bottom-right-radius: 0;
-    }
-
-    .cell,
-    .header-cell {
-        width: min-content;
     }
 }

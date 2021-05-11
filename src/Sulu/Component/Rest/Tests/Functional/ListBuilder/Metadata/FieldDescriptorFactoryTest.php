@@ -104,8 +104,6 @@ class FieldDescriptorFactoryTest extends TestCase
                 'disabled' => true,
                 'sortable' => false,
                 'class' => 'test-class',
-                'minWidth' => '50px',
-                'width' => '100px',
             ],
             'city' => ['name' => 'city', 'translation' => 'contact.address.city', 'default' => true],
             'extension' => ['name' => 'extension', 'translation' => 'extension.extension', 'default' => true],
@@ -122,7 +120,7 @@ class FieldDescriptorFactoryTest extends TestCase
 
         $expected = [
             'id' => ['name' => 'id', 'translation' => 'public.id', 'disabled' => true, 'type' => 'integer'],
-            'firstName' => ['name' => 'firstName', 'translation' => 'contact.contacts.firstName', 'default' => true],
+            'firstName' => ['name' => 'firstName', 'translation' => 'contact.contacts.firstName', 'default' => true, 'width' => 'shrink'],
             'lastName' => ['name' => 'lastName', 'translation' => 'contact.contacts.lastName', 'default' => true],
         ];
 
@@ -141,6 +139,7 @@ class FieldDescriptorFactoryTest extends TestCase
                 'translation' => 'Tags',
                 'instance' => DoctrineGroupConcatFieldDescriptor::class,
                 'disabled' => true,
+                'width' => 'shrink',
             ],
         ];
 
@@ -159,6 +158,7 @@ class FieldDescriptorFactoryTest extends TestCase
                 'translation' => 'Tag',
                 'instance' => DoctrineCaseFieldDescriptor::class,
                 'disabled' => true,
+                'width' => 'shrink',
             ],
         ];
 
@@ -182,6 +182,7 @@ class FieldDescriptorFactoryTest extends TestCase
                 'translation' => 'Tags',
                 'instance' => DoctrineIdentityFieldDescriptor::class,
                 'disabled' => true,
+                'width' => 'shrink',
             ],
         ];
 
@@ -231,6 +232,7 @@ class FieldDescriptorFactoryTest extends TestCase
                 'translation' => 'Tags',
                 'instance' => DoctrineCountFieldDescriptor::class,
                 'disabled' => true,
+                'width' => 'shrink',
             ],
         ];
 
@@ -275,6 +277,7 @@ class FieldDescriptorFactoryTest extends TestCase
                 'default' => false,
                 'type' => 'string',
                 'sortable' => true,
+                'width' => 'auto',
             ],
             $expected
         );
@@ -286,6 +289,7 @@ class FieldDescriptorFactoryTest extends TestCase
         $this->assertEquals($expected['default'], $fieldDescriptor->getDefault());
         $this->assertEquals($expected['type'], $fieldDescriptor->getType());
         $this->assertEquals($expected['sortable'], $fieldDescriptor->getSortable());
+        $this->assertEquals($expected['width'], $fieldDescriptor->getWidth());
 
         if (\array_key_exists('joins', $expected)) {
             foreach ($expected['joins'] as $name => $joinExpected) {

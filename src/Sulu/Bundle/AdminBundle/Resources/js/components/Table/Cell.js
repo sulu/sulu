@@ -3,21 +3,21 @@ import type {Node} from 'react';
 import React from 'react';
 import classNames from 'classnames';
 import tableStyles from './table.scss';
+import type {Width} from './types';
 
 type Props = {
     children?: Node,
     className?: string,
     colSpan?: number,
     depth?: number,
-    /** If set to true, the cell will not stretch and stay at minimal width */
-    small: boolean,
+    width?: Width,
 };
 
 const DEPTH_PADDING = 25;
 
 export default class Cell extends React.PureComponent<Props> {
     static defaultProps = {
-        small: false,
+        width: 'auto',
     };
 
     render() {
@@ -26,13 +26,13 @@ export default class Cell extends React.PureComponent<Props> {
             children,
             className,
             depth,
-            small,
+            width,
         } = this.props;
         const cellClass = classNames(
             className,
             tableStyles.cell,
             {
-                [tableStyles.small]: small,
+                [tableStyles[width]]: width !== 'auto',
             }
         );
         const style = {};

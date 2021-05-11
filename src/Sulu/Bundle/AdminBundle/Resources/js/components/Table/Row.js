@@ -76,7 +76,7 @@ export default class Row extends React.PureComponent<Props> {
 
             if (select) {
                 prependedCells.push(
-                    <Cell key="choice" small={true}>
+                    <Cell key="choice" width="shrink">
                         {select}
                     </Cell>
                 );

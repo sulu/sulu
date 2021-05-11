@@ -110,7 +110,7 @@ Array [
             </div>
           </td>
           <td
-            class="cell small"
+            class="cell shrink"
           >
             <div
               class="cellContent"
@@ -177,7 +177,7 @@ Array [
             </div>
           </td>
           <td
-            class="cell small"
+            class="cell shrink"
           >
             <div
               class="cellContent"
@@ -244,7 +244,7 @@ Array [
             </div>
           </td>
           <td
-            class="cell small"
+            class="cell shrink"
           >
             <div
               class="cellContent"

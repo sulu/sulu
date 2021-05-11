@@ -4,7 +4,7 @@ import React from 'react';
 import classNames from 'classnames';
 import Icon from '../Icon';
 import tableStyles from './table.scss';
-import type {SortOrder} from './types';
+import type {SortOrder, Width} from './types';
 
 const ASCENDING_ICON = 'su-angle-up';
 const DESCENDING_ICON = 'su-angle-down';
@@ -17,9 +17,14 @@ type Props = {|
     onClick?: (sortColumn: string, sortOrder: SortOrder) => void, // TODO extract order to own type file
     /** If set, an indicator will show up */
     sortOrder?: ?SortOrder,
+    width?: Width,
 |};
 
 export default class HeaderCell extends React.PureComponent<Props> {
+    static defaultProps = {
+        width: 'auto',
+    };
+
     getSortOrderIcon = () => {
         const {sortOrder} = this.props;
 
@@ -45,12 +50,16 @@ export default class HeaderCell extends React.PureComponent<Props> {
             onClick,
             children,
             className,
+            width,
         } = this.props;
         const headerCellClass = classNames(
             className,
             tableStyles.headerCell,
             {
                 [tableStyles.clickable]: !!onClick,
+            },
+            {
+                [tableStyles[width]]: width !== 'auto',
             }
         );
 
