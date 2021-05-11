@@ -62,6 +62,7 @@
     "sulu_page.add_schedule": "Zeitfenster hinzufügen",
     "sulu_page.schedules_label": "Zeitfenster zuweisen",
     "sulu_page.schedules_description": "Der Block wird nur angezeigt, wenn mindestens einer der Bedingungen erfüllt wird.",
+    "sulu_activity.resource.pages": "Seite",
     "sulu_activity.text.pages.created": "{userFullName} hat die Seite \"{resourceTitle}\" erstellt",
     "sulu_activity.text.pages.modified": "{userFullName} hat die Seite \"{resourceTitle}\" geändert",
     "sulu_activity.text.pages.removed": "{userFullName} hat die Seite \"{resourceTitle}\" gelöscht",

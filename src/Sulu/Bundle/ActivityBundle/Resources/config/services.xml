@@ -75,5 +75,16 @@
             <tag name="sulu.admin"/>
             <tag name="sulu.context" context="admin"/>
         </service>
+
+        <service
+            id="sulu_activity.list_metadata_provider"
+            class="Sulu\Bundle\ActivityBundle\Infrastructure\Sulu\Metadata\ActivityListMetadataProvider"
+            decorates="sulu_admin.list_metadata_provider"
+        >
+            <argument type="service" id=".inner"/>
+
+            <tag name="sulu_admin.metadata_provider" type="list" />
+            <tag name="sulu.context" context="admin" />
+        </service>
     </services>
 </container>
