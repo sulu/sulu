@@ -43,7 +43,7 @@ class UsernameNotUniqueException extends SecurityException implements Translatio
 
     public function getMessageTranslationParameters(): array
     {
-        return ['%username%' => $this->username];
+        return ['{username}' => $this->username];
     }
 
     public function toArray()

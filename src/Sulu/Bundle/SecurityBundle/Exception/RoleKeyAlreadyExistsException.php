@@ -49,6 +49,6 @@ class RoleKeyAlreadyExistsException extends \Exception implements TranslationErr
 
     public function getMessageTranslationParameters(): array
     {
-        return ['%key%' => $this->key];
+        return ['{key}' => $this->key];
     }
 }
