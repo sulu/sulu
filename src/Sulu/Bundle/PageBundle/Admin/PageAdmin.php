@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\PageBundle\Admin;
 
-use Sulu\Bundle\ActivityBundle\Domain\Model\ActivityInterface;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
@@ -47,8 +46,6 @@ class PageAdmin extends Admin
     const ADD_FORM_VIEW = 'sulu_page.page_add_form';
 
     const EDIT_FORM_VIEW = 'sulu_page.page_edit_form';
-
-    const EDIT_FORM_ACTIVITY_VERSION_TAB_VIEW = 'sulu_page.page_edit_form.activity_version_tab';
 
     /**
      * @var ViewBuilderFactoryInterface
@@ -318,39 +315,6 @@ class PageAdmin extends Admin
                     ->setTitleVisible(true)
                     ->setTabOrder(5120)
                     ->setParent(static::EDIT_FORM_VIEW)
-            );
-
-            $viewCollection->add(
-                $this->viewBuilderFactory
-                    ->createResourceTabViewBuilder(static::EDIT_FORM_ACTIVITY_VERSION_TAB_VIEW, '/history')
-                    ->setResourceKey(BasePageDocument::RESOURCE_KEY)
-                    ->setTabOrder(6144)
-                    ->setTabTitle($this->versioningEnabled ? 'sulu_admin.activity_versions' : 'sulu_admin.activity')
-                    ->setParent(static::EDIT_FORM_VIEW)
-            );
-
-            $viewCollection->add(
-                $this->viewBuilderFactory
-                    ->createListViewBuilder(static::EDIT_FORM_ACTIVITY_VERSION_TAB_VIEW . '.activity', '/activity')
-                    ->setTabTitle('sulu_admin.activity')
-                    ->setResourceKey(ActivityInterface::RESOURCE_KEY)
-                    ->setListKey('activities')
-                    ->addListAdapters(['table'])
-                    ->addAdapterOptions([
-                        'table' => [
-                            'skin' => 'flat',
-                            'show_header' => false,
-                        ],
-                    ])
-                    ->disableTabGap()
-                    ->disableSearching()
-                    ->disableSelection()
-                    ->disableColumnOptions()
-                    ->disableFiltering()
-                    ->addResourceStorePropertiesToListRequest(['id' => 'resourceId'])
-                    ->addRequestParameters(['resourceKey' => BasePageDocument::RESOURCE_KEY])
-                    ->addRouterAttributesToListRequest(['locale'])
-                    ->setParent(static::EDIT_FORM_ACTIVITY_VERSION_TAB_VIEW)
             );
         }
     }
