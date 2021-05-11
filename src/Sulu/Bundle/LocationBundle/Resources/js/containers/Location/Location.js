@@ -1,10 +1,12 @@
 // @flow
 import React from 'react';
 import {observer} from 'mobx-react';
-import {action, observable, computed} from 'mobx';
+import {action, observable, computed, toJS} from 'mobx';
 import {CroppedText, Icon} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils';
 import {MapContainer, Marker, TileLayer, Tooltip} from 'react-leaflet';
+import {Map} from 'leaflet';
+import equals from 'fast-deep-equal';
 import classNames from 'classnames';
 import type {Location as LocationValue} from '../../types';
 import locationStyles from './location.scss';
@@ -20,18 +22,7 @@ type Props = {|
 class Location extends React.Component<Props> {
     @observable overlayOpen: boolean = false;
 
-    @action handleEditButtonClick = () => {
-        this.overlayOpen = true;
-    };
-
-    @action handleOverlayConfirm = (newValue: ?LocationValue) => {
-        this.overlayOpen = false;
-        this.props.onChange(newValue);
-    };
-
-    @action handleOverlayClose = () => {
-        this.overlayOpen = false;
-    };
+    map: ?(typeof Map);
 
     @computed get label() {
         const {value} = this.props;
@@ -54,6 +45,32 @@ class Location extends React.Component<Props> {
 
         return value.code || value.country || value.number || value.street || value.title || value.town;
     }
+
+    componentDidUpdate(prevProps: Props) {
+        const prevValue = toJS(prevProps.value);
+        const newValue = toJS(this.props.value);
+
+        if (!equals(prevValue, newValue) && newValue && this.map) {
+            this.map.setView([newValue.lat || 0, newValue.long || 0], newValue.zoom || 1);
+        }
+    }
+
+    setLeafletMap = (map: typeof Map) => {
+        this.map = map;
+    };
+
+    @action handleEditButtonClick = () => {
+        this.overlayOpen = true;
+    };
+
+    @action handleOverlayConfirm = (newValue: ?LocationValue) => {
+        this.overlayOpen = false;
+        this.props.onChange(newValue);
+    };
+
+    @action handleOverlayClose = () => {
+        this.overlayOpen = false;
+    };
 
     render() {
         const {
@@ -92,6 +109,7 @@ class Location extends React.Component<Props> {
                         keyboard={false}
                         scrollWheelZoom={false}
                         tap={false}
+                        whenCreated={this.setLeafletMap}
                         zoom={value.zoom}
                         zoomControl={false}
                     >
