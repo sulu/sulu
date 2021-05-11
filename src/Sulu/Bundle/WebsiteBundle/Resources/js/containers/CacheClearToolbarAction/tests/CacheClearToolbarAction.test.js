@@ -12,7 +12,7 @@ jest.mock('sulu-admin-bundle/utils/Translator', () => ({
 }));
 
 test('Return item config with correct icon, type and label and return closed dialog', () => {
-    const cacheClearToolbarAction = new CacheClearToolbarAction();
+    const cacheClearToolbarAction = new CacheClearToolbarAction({webspaceKey: 'sulu'});
 
     expect(cacheClearToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
         icon: 'su-paint',
@@ -31,7 +31,7 @@ test('Return item config with correct icon, type and label and return closed dia
 });
 
 test('Open dialog on toolbar item click', () => {
-    const cacheClearToolbarAction = new CacheClearToolbarAction();
+    const cacheClearToolbarAction = new CacheClearToolbarAction({webspaceKey: 'sulu'});
 
     const toolbarItemConfig = cacheClearToolbarAction.getToolbarItemConfig();
     toolbarItemConfig.onClick();
@@ -43,7 +43,7 @@ test('Open dialog on toolbar item click', () => {
 });
 
 test('Close dialog on cancel click', () => {
-    const cacheClearToolbarAction = new CacheClearToolbarAction();
+    const cacheClearToolbarAction = new CacheClearToolbarAction({webspaceKey: 'sulu'});
 
     const toolbarItemConfig = cacheClearToolbarAction.getToolbarItemConfig();
     toolbarItemConfig.onClick();
@@ -61,7 +61,7 @@ test('Close dialog on cancel click', () => {
 });
 
 test('Call delete when dialog is confirmed', () => {
-    const cacheClearToolbarAction = new CacheClearToolbarAction();
+    const cacheClearToolbarAction = new CacheClearToolbarAction({webspaceKey: 'sulu'});
     CacheClearToolbarAction.clearCacheEndpoint = '/cache';
 
     const deletePromise = Promise.resolve();
@@ -77,7 +77,7 @@ test('Call delete when dialog is confirmed', () => {
 
     expect(element.instance().props.confirmLoading).toEqual(false);
     element.find('Button[skin="primary"]').simulate('click');
-    expect(Requester.delete).toBeCalledWith('/cache');
+    expect(Requester.delete).toBeCalledWith('/cache?webspaceKey=sulu');
 
     element = shallow(cacheClearToolbarAction.getNode());
     expect(element.instance().props.confirmLoading).toEqual(true);

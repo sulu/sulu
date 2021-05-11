@@ -280,6 +280,14 @@
             <tag name="kernel.event_subscriber"/>
         </service>
 
+        <service id="sulu_website.event_subscriber.cache_clear"
+                 class="Sulu\Bundle\WebsiteBundle\EventSubscriber\DomainEventEventSubscriber">
+            <argument type="service" id="sulu_activity.domain_event_collector"/>
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+
+            <tag name="kernel.event_subscriber"/>
+        </service>
+
         <!-- preview -->
         <service id="sulu_website.event_listener.translator"
                  class="Sulu\Bundle\WebsiteBundle\EventListener\TranslatorListener">
