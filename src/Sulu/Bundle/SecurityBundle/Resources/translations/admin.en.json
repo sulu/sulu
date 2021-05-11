@@ -24,5 +24,15 @@
     "sulu_security.inherit_permissions_title": "Inherit permissions?",
     "sulu_security.inherit_permissions_label": "Override permissions of sub elements",
     "sulu_security.move_permission_title": "Notice",
-    "sulu_security.move_permission_warning": "Permissions from the parent element will not be transferred."
+    "sulu_security.move_permission_warning": "Permissions from the parent element will not be transferred.",
+    "sulu_activity.text.roles.created": "{userFullName} has created the role \"{resourceTitle}\"",
+    "sulu_activity.text.roles.modified": "{userFullName} has changed the role \"{resourceTitle}\"",
+    "sulu_activity.text.roles.removed": "{userFullName} has removed the role \"{resourceTitle}\"",
+    "sulu_activity.text.users.created": "{userFullName} has created the user \"{resourceTitle}\"",
+    "sulu_activity.text.users.modified": "{userFullName} has changed the user \"{resourceTitle}\"",
+    "sulu_activity.text.users.removed": "{userFullName} has removed the user \"{resourceTitle}\"",
+    "sulu_activity.text.users.enabled": "{userFullName} has enabled the user \"{resourceTitle}\"",
+    "sulu_activity.text.users.locked": "{userFullName} has locked the user \"{resourceTitle}\"",
+    "sulu_activity.text.users.unlocked": "{userFullName} has unlocked the user \"{resourceTitle}\"",
+    "sulu_activity.text.users.password_resetted": "{userFullName} has resetted the password of the user \"{resourceTitle}\""
 }

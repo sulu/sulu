@@ -71,5 +71,21 @@
     "sulu_media.form_type": "Form type",
     "sulu_media.circle": "Circle",
     "sulu_media.point": "Point",
-    "sulu_media.rectangle": "Rectangle"
+    "sulu_media.rectangle": "Rectangle",
+    "sulu_activity.text.collections.created": "{userFullName} has created the collection \"{resourceTitle}\"",
+    "sulu_activity.text.collections.modified": "{userFullName} has changed the collection \"{resourceTitle}\"",
+    "sulu_activity.text.collections.moved": "{userFullName} has moved the collection \"{resourceTitle}\"",
+    "sulu_activity.text.collections.removed": "{userFullName} has removed the collection \"{resourceTitle}\"",
+    "sulu_activity.text.collections.translation_added": "{userFullName} has added a translation \"{resourceLocale}\" to the collection \"{resourceTitle}\"",
+    "sulu_activity.text.media.created": "{userFullName} has created the media \"{resourceTitle}\"",
+    "sulu_activity.text.media.modified": "{userFullName} has changed the media \"{resourceTitle}\"",
+    "sulu_activity.text.media.moved": "{userFullName} has moved the media \"{resourceTitle}\"",
+    "sulu_activity.text.media.removed": "{userFullName} has removed the media \"{resourceTitle}\"",
+    "sulu_activity.text.media.translation_added": "{userFullName} has added a translation \"{resourceLocale}\" to the media \"{resourceTitle}\"",
+    "sulu_activity.text.media.crop_modified": "{userFullName} has changed the crop for the \"{context_formatKey}\" format of the media \"{resourceTitle}\"",
+    "sulu_activity.text.media.crop_removed": "{userFullName} has removed the crop for the \"{context_formatKey}\" format from the media \"{resourceTitle}\"",
+    "sulu_activity.text.media.preview_image_modified": "{userFullName} has changed the preview image of the media \"{resourceTitle}\"",
+    "sulu_activity.text.media.preview_image_removed": "{userFullName} has removed the preview image from the media \"{resourceTitle}\"",
+    "sulu_activity.text.media.version_added": "{userFullName} has added a new version for the media \"{resourceTitle}\"",
+    "sulu_activity.text.media.version_removed": "{userFullName} has removed a version from the media \"{resourceTitle}\""
 }

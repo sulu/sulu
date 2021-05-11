@@ -8,5 +8,14 @@
     "sulu_snippet.default_snippets": "Default Snippets",
     "sulu_snippet.snippet_area": "Type or area",
     "sulu_snippet.taxonomies": "Taxonomies",
-    "sulu_snippet.webspace_default_snippet": "%webspaceKey% default snippet"
+    "sulu_snippet.webspace_default_snippet": "%webspaceKey% default snippet",
+    "sulu_activity.text.snippets.created": "{userFullName} has created the snippet \"{resourceTitle}\"",
+    "sulu_activity.text.snippets.modified": "{userFullName} has changed the snippet \"{resourceTitle}\"",
+    "sulu_activity.text.snippets.copied": "{userFullName} has copied the snippet \"{resourceTitle}\"",
+    "sulu_activity.text.snippets.removed": "{userFullName} has removed the snippet \"{resourceTitle}\"",
+    "sulu_activity.text.snippets.translation_added": "{userFullName} has added a new translation \"{resourceLocale}\" to the snippet \"{resourceTitle}\"",
+    "sulu_activity.text.snippets.translation_copied": "{userFullName} has copied the \"{context_sourceLocale}\" translation of the snippet \"{resourceTitle}\" into \"{resourceLocale}\"",
+    "sulu_activity.text.snippets.translation_removed": "{userFullName} has removed the \"{resourceLocale}\" translation of the snippet \"{resourceTitle}\"",
+    "sulu_activity.text.webspaces.default_snippet_modified": "{userFullName} has changed the default snippet for the area \"{context_snippetAreaKey}\" of the webspace \"{resourceTitle}\"",
+    "sulu_activity.text.webspaces.default_snippet_removed": "{userFullName} has removed the default snippet for the area \"{context_snippetAreaKey}\" of the webspace \"{resourceTitle}\""
 }

@@ -71,5 +71,21 @@
     "sulu_media.form_type": "Formular-Typ",
     "sulu_media.circle": "Kreis",
     "sulu_media.point": "Punkt",
-    "sulu_media.rectangle": "Rechteck"
+    "sulu_media.rectangle": "Rechteck",
+    "sulu_activity.text.collections.created": "{userFullName} hat den Ordner \"{resourceTitle}\" erstellt",
+    "sulu_activity.text.collections.modified": "{userFullName} hat den Ordner \"{resourceTitle}\" geändert",
+    "sulu_activity.text.collections.moved": "{userFullName} hat den Ordner \"{resourceTitle}\" verschoben",
+    "sulu_activity.text.collections.removed": "{userFullName} hat den Ordner \"{resourceTitle}\" gelöscht",
+    "sulu_activity.text.collections.translation_added": "{userFullName} hat eine Übersetzung für \"{resourceLocale}\" zum Ordner \"{resourceTitle}\" hinzugefügt",
+    "sulu_activity.text.media.created": "{userFullName} hat das Medium \"{resourceTitle}\" erstellt",
+    "sulu_activity.text.media.modified": "{userFullName} hat das Medium \"{resourceTitle}\" geändert",
+    "sulu_activity.text.media.moved": "{userFullName} hat das Medium \"{resourceTitle}\" verschoben",
+    "sulu_activity.text.media.removed": "{userFullName} hat das Medium \"{resourceTitle}\" gelöscht",
+    "sulu_activity.text.media.translation_added": "{userFullName} hat eine Übersetzung für \"{resourceLocale}\" zum Medium \"{resourceTitle}\" hinzugefügt",
+    "sulu_activity.text.media.crop_modified": "{userFullName} hat den Ausschnitt für das Format \"{context_formatKey}\" des Mediums \"{resourceTitle}\" geändert",
+    "sulu_activity.text.media.crop_removed": "{userFullName} hat den Ausschnitt für das Format \"{context_formatKey}\" des Mediums \"{resourceTitle}\" gelöscht",
+    "sulu_activity.text.media.preview_image_modified": "{userFullName} hat das Vorschaubild des Mediums \"{resourceTitle}\" geändert",
+    "sulu_activity.text.media.preview_image_removed": "{userFullName} hat das Vorschaubild des Mediums \"{resourceTitle}\" gelöscht",
+    "sulu_activity.text.media.version_added": "{userFullName} hat eine neue Version für das Medium \"{resourceTitle}\" hinzugefügt",
+    "sulu_activity.text.media.version_removed": "{userFullName} hat die Version {context_version} des Mediums \"{resourceTitle}\" gelöscht"
 }
