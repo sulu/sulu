@@ -599,7 +599,11 @@ class CollectionManager implements CollectionManagerInterface
                 throw new CollectionNotFoundException($id);
             }
 
-            $previousParentId = $collectionEntity->getParentId();
+            $previousParent = $collectionEntity->getParent();
+            $previousParentId = $previousParent ? $previousParent->getId() : null;
+            $previousParentMeta = $previousParent ? $this->getCollectionMeta($previousParent, $locale) : null;
+            $previousParentTitle = $previousParentMeta ? $previousParentMeta->getTitle() : null;
+            $previousParentTitleLocale = $previousParentMeta ? $previousParentMeta->getLocale() : null;
 
             $destinationEntity = null;
             if (null !== $destinationId) {
@@ -609,7 +613,12 @@ class CollectionManager implements CollectionManagerInterface
             $collectionEntity->setParent($destinationEntity);
 
             $this->domainEventCollector->collect(
-                new CollectionMovedEvent($collectionEntity, $previousParentId)
+                new CollectionMovedEvent(
+                    $collectionEntity,
+                    $previousParentId,
+                    $previousParentTitle,
+                    $previousParentTitleLocale
+                )
             );
 
             $this->em->flush();
@@ -770,5 +779,18 @@ class CollectionManager implements CollectionManagerInterface
         }
 
         return;
+    }
+
+    private function getCollectionMeta(CollectionInterface $collection, ?string $locale): ?CollectionMeta
+    {
+        /** @var CollectionMeta|null $meta */
+        $meta = $collection->getDefaultMeta();
+        foreach ($collection->getMeta() as $collectionMeta) {
+            if ($collectionMeta->getLocale() === $locale) {
+                return $collectionMeta;
+            }
+        }
+
+        return $meta;
     }
 }

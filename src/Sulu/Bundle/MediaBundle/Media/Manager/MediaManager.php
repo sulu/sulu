@@ -27,6 +27,7 @@ use Sulu\Bundle\MediaBundle\Domain\Event\MediaVersionAddedEvent;
 use Sulu\Bundle\MediaBundle\Domain\Event\MediaVersionRemovedEvent;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
+use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepository;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\File;
@@ -786,14 +787,23 @@ class MediaManager implements MediaManagerInterface
                 throw new MediaNotFoundException($id);
             }
 
-            $previousCollectionId = $mediaEntity->getCollection()->getId();
+            $previousCollection = $mediaEntity->getCollection();
+            $previousCollectionId = $previousCollection->getId();
+            $previousCollectionMeta = $this->getCollectionMeta($previousCollection, $locale);
+            $previousCollectionTitle = $previousCollectionMeta ? $previousCollectionMeta->getTitle() : null;
+            $previousCollectionTitleLocale = $previousCollectionMeta ? $previousCollectionMeta->getLocale() : null;
 
             /** @var CollectionInterface $collection */
             $collection = $this->em->getReference(CollectionInterface::class, $destCollection);
             $mediaEntity->setCollection($collection);
 
             $this->domainEventCollector->collect(
-                new MediaMovedEvent($mediaEntity, $previousCollectionId)
+                new MediaMovedEvent(
+                    $mediaEntity,
+                    $previousCollectionId,
+                    $previousCollectionTitle,
+                    $previousCollectionTitleLocale
+                )
             );
 
             $this->em->flush();
@@ -1057,5 +1067,18 @@ class MediaManager implements MediaManagerInterface
         $fileVersion = $file ? $file->getLatestFileVersion() : null;
 
         return $fileVersion ? $fileVersion->getDefaultMeta() : null;
+    }
+
+    private function getCollectionMeta(CollectionInterface $collection, ?string $locale): ?CollectionMeta
+    {
+        /** @var CollectionMeta|null $meta */
+        $meta = $collection->getDefaultMeta();
+        foreach ($collection->getMeta() as $collectionMeta) {
+            if ($collectionMeta->getLocale() === $locale) {
+                return $collectionMeta;
+            }
+        }
+
+        return $meta;
     }
 }

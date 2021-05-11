@@ -300,10 +300,20 @@ class CategoryManager implements CategoryManagerInterface
         }
 
         $previousParent = $category->getParent();
+        $previousParentId = $previousParent ? $previousParent->getId() : null;
+        $previousParentTranslation = $previousParent ? $this->getCategoryTranslation($previousParent) : null;
+        $previousParentTitle = $previousParentTranslation ? $previousParentTranslation->getTranslation() : null;
+        $previousParentTitleLocale = $previousParentTranslation ? $previousParentTranslation->getLocale() : null;
+
         $category->setParent($parentCategory);
 
         $this->domainEventCollector->collect(
-            new CategoryMovedEvent($category, $previousParent ? $previousParent->getId() : null)
+            new CategoryMovedEvent(
+                $category,
+                $previousParentId,
+                $previousParentTitle,
+                $previousParentTitleLocale
+            )
         );
 
         $this->em->flush();
@@ -389,5 +399,10 @@ class CategoryManager implements CategoryManagerInterface
         );
 
         return $this->categoryRepository->findChildren($key, $sortBy, $sortOrder);
+    }
+
+    private function getCategoryTranslation(CategoryInterface $category): ?CategoryTranslationInterface
+    {
+        return $category->findTranslationByLocale($category->getDefaultLocale()) ?: null;
     }
 }
