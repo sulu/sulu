@@ -23,6 +23,13 @@ class WebspaceReferenceStore implements ReferenceStoreInterface
         return \sprintf('%s-%s', self::WEBSPACE_REFERENCE_ALIAS, $webspaceKey);
     }
 
+    public static function getWebspaceKeyFromTag(string $tag): string
+    {
+        $position = \strpos($tag, '-');
+
+        return \substr($tag, $position + 1);
+    }
+
     /**
      * @var RequestAnalyzerInterface|null
      */

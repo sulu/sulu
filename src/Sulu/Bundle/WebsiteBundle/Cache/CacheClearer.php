@@ -112,6 +112,6 @@ class CacheClearer implements CacheClearerInterface
             $this->filesystem->remove($path);
         }
 
-        $this->eventDispatcher->dispatch(new CacheClearEvent(), Events::CACHE_CLEAR);
+        $this->eventDispatcher->dispatch(new CacheClearEvent($tags), Events::CACHE_CLEAR);
     }
 }
