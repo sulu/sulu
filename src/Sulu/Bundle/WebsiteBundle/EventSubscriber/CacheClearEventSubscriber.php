@@ -20,7 +20,7 @@ use Sulu\Bundle\WebsiteBundle\ReferenceStore\WebspaceReferenceStore;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Adds the X-Generator header.
+ * @internal
  */
 class CacheClearEventSubscriber implements EventSubscriberInterface
 {
