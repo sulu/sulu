@@ -156,9 +156,11 @@ class SettingsVersions extends React.Component<Props> {
             <Fragment>
                 <List
                     adapters={['table']}
+                    filterable={false}
                     itemActionsProvider={this.getListItemActions}
                     searchable={false}
                     selectable={false}
+                    showColumnOptions={false}
                     store={this.listStore}
                 />
                 <Dialog

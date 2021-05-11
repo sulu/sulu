@@ -131,8 +131,8 @@ class Tabs<T> extends React.Component<Props<T>> {
                 ? this.sortedTabRoutes.findIndex((childRoute) => childRoute === childComponent.props.route)
                 : undefined;
 
-        const disableGap = selectedIndex !== undefined
-            ? this.sortedTabRoutes[selectedIndex]?.options?.disableTabGap
+        const disableGap = selectedTabIndex !== undefined
+            ? this.sortedTabRoutes[selectedTabIndex]?.options?.disableTabGap
             : false;
 
         const showTabs = isRootView || this.sortedTabRoutes.length > 1;

@@ -190,5 +190,8 @@
     "sulu_admin.preview_date_time_description": "Clear input to use the current date.",
     "sulu_admin.lastDay": "Yesterday",
     "sulu_admin.nextDay": "Tomorrow",
-    "sulu_admin.sameDay": "Today"
+    "sulu_admin.sameDay": "Today",
+    "sulu_admin.activity": "Activity",
+    "sulu_admin.versions": "Versions",
+    "sulu_admin.activity_versions": "Activity & Versions"
 }

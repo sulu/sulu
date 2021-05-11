@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Admin;
 
+use Sulu\Bundle\ActivityBundle\Domain\Model\ActivityInterface;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
@@ -39,6 +40,8 @@ class MediaAdmin extends Admin
     const EDIT_FORM_FORMATS_VIEW = 'sulu_media.form.formats';
 
     const EDIT_FORM_HISTORY_VIEW = 'sulu_media.form.history';
+
+    const EDIT_FORM_ACTIVITY_VIEW = 'sulu_media.form.activity';
 
     /**
      * @var ViewBuilderFactoryInterface
@@ -150,10 +153,35 @@ class MediaAdmin extends Admin
                     ->setOption('tabTitle', 'sulu_media.formats')
                     ->setParent(static::EDIT_FORM_VIEW)
             );
+
             $viewCollection->add(
                 $this->viewBuilderFactory
                     ->createViewBuilder(static::EDIT_FORM_HISTORY_VIEW, '/history', 'sulu_media.history')
                     ->setOption('tabTitle', 'sulu_media.history')
+                    ->setParent(static::EDIT_FORM_VIEW)
+            );
+
+            $viewCollection->add(
+                $this->viewBuilderFactory
+                    ->createListViewBuilder(static::EDIT_FORM_ACTIVITY_VIEW, '/activity')
+                    ->setTabTitle('sulu_admin.activity')
+                    ->setResourceKey(ActivityInterface::RESOURCE_KEY)
+                    ->setListKey('activities')
+                    ->addListAdapters(['table'])
+                    ->addAdapterOptions([
+                        'table' => [
+                            'skin' => 'flat',
+                            'show_header' => false,
+                        ],
+                    ])
+                    ->disableTabGap()
+                    ->disableSearching()
+                    ->disableSelection()
+                    ->disableColumnOptions()
+                    ->disableFiltering()
+                    ->addResourceStorePropertiesToListRequest(['id' => 'resourceId'])
+                    ->addRequestParameters(['resourceKey' => MediaInterface::RESOURCE_KEY])
+                    ->addRouterAttributesToListRequest(['locale'])
                     ->setParent(static::EDIT_FORM_VIEW)
             );
         }

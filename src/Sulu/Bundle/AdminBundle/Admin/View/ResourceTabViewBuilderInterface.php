@@ -33,4 +33,12 @@ interface ResourceTabViewBuilderInterface extends ViewBuilderInterface
     public function addRouterAttributesToBlacklist(array $routerAttributesToBlacklist): self;
 
     public function setTitleProperty(string $titleProperty): self;
+
+    public function setTabTitle(string $tabTitle): self;
+
+    public function setTabOrder(int $tabOrder): self;
+
+    public function setTabPriority(int $tabPriority): self;
+
+    public function setTabCondition(string $tabCondition): self;
 }
