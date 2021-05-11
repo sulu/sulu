@@ -60,6 +60,7 @@
             <field-name>created</field-name>
             <entity-name>%sulu.model.role.class%</entity-name>
 
+            <transformer type="datetime"/>
             <filter type="datetime" />
         </property>
 

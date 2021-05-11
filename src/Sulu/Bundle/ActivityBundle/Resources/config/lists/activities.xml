@@ -22,10 +22,13 @@
             <transformer type="icon">
                 <params>
                     <param name="skin" value="dark"/>
+                    <param name="default" value="su-pen"/>
+
                     <param name="mapping" type="collection">
                         <param name="created" value="su-plus"/>
                         <param name="modified" value="su-pen"/>
                         <param name="removed" value="su-trash-alt"/>
+                        <param name="cache_cleared" value="su-paint"/>
                         <param name="moved" value="su-arrows-alt"/>
                         <param name="copied" value="su-copy"/>
                         <param name="published" value="su-upload"/>

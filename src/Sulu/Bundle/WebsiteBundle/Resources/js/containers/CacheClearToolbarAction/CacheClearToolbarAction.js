@@ -28,7 +28,7 @@ export default class CacheClearToolbarAction {
                 title={translate('sulu_website.cache_clear_warning_title')}
             >
                 {translate('sulu_website.cache_clear_warning_text', {
-                    webspace: this.requestParameters.webspaceKey.value,
+                    webspace: String(this.requestParameters.webspaceKey),
                 })}
             </Dialog>
         );

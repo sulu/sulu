@@ -56,8 +56,24 @@ class DomainEventEventSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $webspaceKey = WebspaceReferenceStore::getWebspaceKeyFromTag(\reset($tags));
-        $this->domainEventCollector->collect(new CacheClearedEvent($webspaceKey, $tags));
+        foreach ($tags as $tag) {
+            $webspaceKey = $this->getWebspaceKeyFromTag($tag);
+            if ($webspaceKey) {
+                $this->domainEventCollector->collect(new CacheClearedEvent($webspaceKey, $tags));
+            }
+        }
+
         $this->entityManager->flush();
+    }
+
+    private function getWebspaceKeyFromTag(string $tag): ?string
+    {
+        $parts = \explode('-', $tag, 2);
+
+        if (!isset($parts[1]) || WebspaceReferenceStore::WEBSPACE_REFERENCE_ALIAS !== $parts[0]) {
+            return null;
+        }
+
+        return $parts[1];
     }
 }
