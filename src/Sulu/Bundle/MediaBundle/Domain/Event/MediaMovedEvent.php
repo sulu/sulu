@@ -14,6 +14,8 @@ namespace Sulu\Bundle\MediaBundle\Domain\Event;
 use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
 use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
+use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
+use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 
@@ -29,14 +31,28 @@ class MediaMovedEvent extends DomainEvent
      */
     private $previousCollectionId;
 
+    /**
+     * @var string|null
+     */
+    private $previousCollectionTitle;
+
+    /**
+     * @var string|null
+     */
+    private $previousCollectionTitleLocale;
+
     public function __construct(
         MediaInterface $media,
-        int $previousCollectionId
+        int $previousCollectionId,
+        ?string $previousCollectionTitle,
+        ?string $previousCollectionTitleLocale
     ) {
         parent::__construct();
 
         $this->media = $media;
         $this->previousCollectionId = $previousCollectionId;
+        $this->previousCollectionTitle = $previousCollectionTitle;
+        $this->previousCollectionTitleLocale = $previousCollectionTitleLocale;
     }
 
     public function getMedia(): MediaInterface
@@ -49,6 +65,16 @@ class MediaMovedEvent extends DomainEvent
         return $this->previousCollectionId;
     }
 
+    public function getPreviousCollectionTitle(): ?string
+    {
+        return $this->previousCollectionTitle;
+    }
+
+    public function getPreviousCollectionTitleLocale(): ?string
+    {
+        return $this->previousCollectionTitleLocale;
+    }
+
     public function getEventType(): string
     {
         return 'moved';
@@ -56,11 +82,22 @@ class MediaMovedEvent extends DomainEvent
 
     public function getEventContext(): array
     {
+        $fileVersionMeta = $this->getFileVersionMeta();
+        $locale = $fileVersionMeta ? $fileVersionMeta->getLocale() : null;
+
         $newCollection = $this->media->getCollection();
+        $newCollectionId = $newCollection->getId();
+        $newCollectionMeta = $this->getCollectionMeta($newCollection, $locale);
+        $newCollectionTitle = $newCollectionMeta ? $newCollectionMeta->getTitle() : null;
+        $newCollectionTitleLocale = $newCollectionMeta ? $newCollectionMeta->getLocale() : null;
 
         return [
             'previousCollectionId' => $this->previousCollectionId,
-            'newCollectionId' => $newCollection->getId(),
+            'previousCollectionTitle' => $this->previousCollectionTitle,
+            'previousCollectionTitleLocale' => $this->previousCollectionTitleLocale,
+            'newCollectionId' => $newCollectionId,
+            'newCollectionTitle' => $newCollectionTitle,
+            'newCollectionTitleLocale' => $newCollectionTitleLocale,
         ];
     }
 
@@ -109,5 +146,18 @@ class MediaMovedEvent extends DomainEvent
     public function getResourceSecurityObjectId(): ?string
     {
         return (string) $this->getMedia()->getCollection()->getId();
+    }
+
+    private function getCollectionMeta(CollectionInterface $collection, ?string $locale): ?CollectionMeta
+    {
+        /** @var CollectionMeta|null $meta */
+        $meta = $collection->getDefaultMeta();
+        foreach ($collection->getMeta() as $collectionMeta) {
+            if ($collectionMeta->getLocale() === $locale) {
+                return $collectionMeta;
+            }
+        }
+
+        return $meta;
     }
 }

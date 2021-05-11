@@ -28,19 +28,48 @@ class CategoryMovedEvent extends DomainEvent
      */
     private $previousParentId;
 
+    /**
+     * @var string|null
+     */
+    private $previousParentTitle;
+
+    /**
+     * @var string|null
+     */
+    private $previousParentTitleLocale;
+
     public function __construct(
         CategoryInterface $category,
-        ?int $previousParentId
+        ?int $previousParentId,
+        ?string $previousParentTitle,
+        ?string $previousParentTitleLocale
     ) {
         parent::__construct();
 
         $this->category = $category;
         $this->previousParentId = $previousParentId;
+        $this->previousParentTitle = $previousParentTitle;
+        $this->previousParentTitleLocale = $previousParentTitleLocale;
     }
 
     public function getCategory(): CategoryInterface
     {
         return $this->category;
+    }
+
+    public function getPreviousParentId(): ?int
+    {
+        return $this->previousParentId;
+    }
+
+    public function getPreviousParentTitle(): ?string
+    {
+        return $this->previousParentTitle;
+    }
+
+    public function getPreviousParentTitleLocale(): ?string
+    {
+        return $this->previousParentTitleLocale;
     }
 
     public function getEventType(): string
@@ -50,11 +79,22 @@ class CategoryMovedEvent extends DomainEvent
 
     public function getEventContext(): array
     {
-        $previousParent = $this->category->getParent();
+        $previousParentTitle = null !== $this->previousParentId ? $this->previousParentTitle : 'ROOT';
+        $previousParentTitleLocale = null !== $this->previousParentId ? $this->previousParentTitleLocale : null;
+
+        $newParent = $this->category->getParent();
+        $newParentId = $newParent ? $newParent->getId() : null;
+        $newParentTranslation = $newParent ? $this->getCategoryTranslation($newParent) : null;
+        $newParentTitle = $newParentId ? ($newParentTranslation ? $newParentTranslation->getTranslation() : null) : 'ROOT';
+        $newParentTitleLocale = $newParentTranslation ? $newParentTranslation->getLocale() : null;
 
         return [
             'previousParentId' => $this->previousParentId,
-            'newParentId' => $previousParent ? $previousParent->getId() : null,
+            'previousParentTitle' => $previousParentTitle,
+            'previousParentTitleLocale' => $previousParentTitleLocale,
+            'newParentId' => $newParentId,
+            'newParentTitle' => $newParentTitle,
+            'newParentTitleLocale' => $newParentTitleLocale,
         ];
     }
 
@@ -70,25 +110,25 @@ class CategoryMovedEvent extends DomainEvent
 
     public function getResourceTitle(): ?string
     {
-        $translation = $this->getCategoryTranslation();
+        $translation = $this->getCategoryTranslation($this->category);
 
         return $translation ? $translation->getTranslation() : null;
     }
 
     public function getResourceTitleLocale(): ?string
     {
-        $translation = $this->getCategoryTranslation();
+        $translation = $this->getCategoryTranslation($this->category);
 
         return $translation ? $translation->getLocale() : null;
-    }
-
-    private function getCategoryTranslation(): ?CategoryTranslationInterface
-    {
-        return $this->category->findTranslationByLocale($this->category->getDefaultLocale()) ?: null;
     }
 
     public function getResourceSecurityContext(): ?string
     {
         return CategoryAdmin::SECURITY_CONTEXT;
+    }
+
+    private function getCategoryTranslation(CategoryInterface $category): ?CategoryTranslationInterface
+    {
+        return $category->findTranslationByLocale($category->getDefaultLocale()) ?: null;
     }
 }

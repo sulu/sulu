@@ -29,14 +29,28 @@ class CollectionMovedEvent extends DomainEvent
      */
     private $previousParentId;
 
+    /**
+     * @var string|null
+     */
+    private $previousParentTitle;
+
+    /**
+     * @var string|null
+     */
+    private $previousParentTitleLocale;
+
     public function __construct(
         CollectionInterface $collection,
-        ?int $previousParentId
+        ?int $previousParentId,
+        ?string $previousParentTitle,
+        ?string $previousParentTitleLocale
     ) {
         parent::__construct();
 
         $this->collection = $collection;
         $this->previousParentId = $previousParentId;
+        $this->previousParentTitle = $previousParentTitle;
+        $this->previousParentTitleLocale = $previousParentTitleLocale;
     }
 
     public function getCollection(): CollectionInterface
@@ -49,6 +63,16 @@ class CollectionMovedEvent extends DomainEvent
         return $this->previousParentId;
     }
 
+    public function getPreviousParentTitle(): ?string
+    {
+        return $this->previousParentTitle;
+    }
+
+    public function getPreviousParentTitleLocale(): ?string
+    {
+        return $this->previousParentTitleLocale;
+    }
+
     public function getEventType(): string
     {
         return 'moved';
@@ -56,12 +80,23 @@ class CollectionMovedEvent extends DomainEvent
 
     public function getEventContext(): array
     {
+        $previousParentTitle = null !== $this->previousParentId ? $this->previousParentTitle : 'ROOT';
+        $previousParentTitleLocale = null !== $this->previousParentId ? $this->previousParentTitleLocale : null;
+
         /** @var CollectionInterface|null $newParent */
         $newParent = $this->collection->getParent();
+        $newParentId = $newParent ? $newParent->getId() : null;
+        $newParentMeta = $newParent ? $this->getCollectionMeta($newParent) : null;
+        $newParentTitle = $newParentId ? ($newParentMeta ? $newParentMeta->getTitle() : null) : 'ROOT';
+        $newParentTitleLocale = $newParentMeta ? $newParentMeta->getLocale() : null;
 
         return [
             'previousParentId' => $this->previousParentId,
-            'newParentId' => $newParent ? $newParent->getId() : null,
+            'previousParentTitle' => $previousParentTitle,
+            'previousParentTitleLocale' => $previousParentTitleLocale,
+            'newParentId' => $newParentId,
+            'newParentTitle' => $newParentTitle,
+            'newParentTitleLocale' => $newParentTitleLocale,
         ];
     }
 
@@ -77,24 +112,16 @@ class CollectionMovedEvent extends DomainEvent
 
     public function getResourceTitle(): ?string
     {
-        $collectionMeta = $this->getCollectionMeta();
+        $collectionMeta = $this->getCollectionMeta($this->collection);
 
         return $collectionMeta ? $collectionMeta->getTitle() : null;
     }
 
     public function getResourceTitleLocale(): ?string
     {
-        $collectionMeta = $this->getCollectionMeta();
+        $collectionMeta = $this->getCollectionMeta($this->collection);
 
         return $collectionMeta ? $collectionMeta->getLocale() : null;
-    }
-
-    private function getCollectionMeta(): ?CollectionMeta
-    {
-        /** @var CollectionMeta|null $collectionMeta */
-        $collectionMeta = $this->collection->getDefaultMeta();
-
-        return $collectionMeta;
     }
 
     public function getResourceSecurityContext(): ?string
@@ -105,5 +132,13 @@ class CollectionMovedEvent extends DomainEvent
     public function getResourceSecurityObjectType(): ?string
     {
         return Collection::class;
+    }
+
+    private function getCollectionMeta(CollectionInterface $collection): ?CollectionMeta
+    {
+        /** @var CollectionMeta|null $meta */
+        $meta = $collection->getDefaultMeta();
+
+        return $meta;
     }
 }
