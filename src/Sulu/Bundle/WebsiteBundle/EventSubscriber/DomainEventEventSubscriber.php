@@ -22,7 +22,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 /**
  * @internal
  */
-class CacheClearEventSubscriber implements EventSubscriberInterface
+class DomainEventEventSubscriber implements EventSubscriberInterface
 {
     /**
      * @var DomainEventCollectorInterface

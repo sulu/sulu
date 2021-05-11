@@ -21,4 +21,6 @@
     "sulu_activity.text.analytics.created": "{userFullName} hat den Analytics Eintrag \"{resourceTitle}\" erstellt",
     "sulu_activity.text.analytics.modified": "{userFullName} hat den Analytics Eintrag \"{resourceTitle}\" geändert",
     "sulu_activity.text.analytics.removed": "{userFullName} hat den Analytics Eintrag \"{resourceTitle}\" gelöscht"
+    "sulu_website.cache_clear_warning_text": "Diese Operation leert den gesamten Cache für den Webspace \"{webspace}\". Wollen Sie wirklich fortfahren?",
+    "sulu_activity.text.webspaces.cache_cleared": "{userFullName} hat den Webseiten Cache für den Webspace \"{resourceTitle}\" geleert."
 }

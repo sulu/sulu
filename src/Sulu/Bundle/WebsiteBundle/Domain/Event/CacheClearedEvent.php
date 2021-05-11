@@ -24,17 +24,17 @@ class CacheClearedEvent extends DomainEvent
     /**
      * @var mixed[]
      */
-    private $payload;
+    private $tags;
 
     /**
-     * @param mixed[]|null $payload
+     * @param mixed[]|null $tags
      */
-    public function __construct(string $webspaceKey, ?array $payload)
+    public function __construct(string $webspaceKey, ?array $tags)
     {
         parent::__construct();
 
         $this->webspaceKey = $webspaceKey;
-        $this->payload = $payload ?? [];
+        $this->tags = $tags ?? [];
     }
 
     public function getEventType(): string
@@ -42,9 +42,11 @@ class CacheClearedEvent extends DomainEvent
         return 'cache_cleared';
     }
 
-    public function getEventPayload(): ?array
+    public function getEventContext(): array
     {
-        return $this->payload;
+        return [
+            'tags' => $this->tags,
+        ];
     }
 
     public function getResourceKey(): string

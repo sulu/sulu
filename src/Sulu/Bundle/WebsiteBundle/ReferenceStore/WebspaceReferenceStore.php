@@ -25,9 +25,15 @@ class WebspaceReferenceStore implements ReferenceStoreInterface
 
     public static function getWebspaceKeyFromTag(string $tag): string
     {
-        $position = \strpos($tag, '-');
+        $parts = \explode('-', $tag, 2);
 
-        return \substr($tag, $position + 1);
+        if (!isset($parts[1]) || $parts[0] !== static::WEBSPACE_REFERENCE_ALIAS) {
+            throw new \InvalidArgumentException(
+                'Tag must be set and has to start with "' . static::WEBSPACE_REFERENCE_ALIAS . '-".'
+            );
+        }
+
+        return $parts[1];
     }
 
     /**
