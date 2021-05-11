@@ -49,6 +49,6 @@ class RoleNameAlreadyExistsException extends \Exception implements TranslationEr
 
     public function getMessageTranslationParameters(): array
     {
-        return ['%name%' => $this->name];
+        return ['{name}' => $this->name];
     }
 }

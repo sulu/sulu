@@ -46,6 +46,6 @@ class TitleAlreadyExistsException extends RestException implements TranslationEr
 
     public function getMessageTranslationParameters(): array
     {
-        return ['%title%' => $this->title];
+        return ['{title}' => $this->title];
     }
 }
