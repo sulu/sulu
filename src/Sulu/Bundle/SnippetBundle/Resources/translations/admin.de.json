@@ -8,5 +8,5 @@
     "sulu_snippet.default_snippets": "Standard Schnipsel",
     "sulu_snippet.snippet_area": "Typ oder Bereich",
     "sulu_snippet.taxonomies": "Taxonomien",
-    "sulu_snippet.webspace_default_snippet": "%webspaceKey% Standard Schnipsel"
+    "sulu_snippet.webspace_default_snippet": "{webspaceKey} Standard Schnipsel"
 }
