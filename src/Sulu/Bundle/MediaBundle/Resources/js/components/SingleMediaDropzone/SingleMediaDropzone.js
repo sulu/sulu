@@ -13,6 +13,7 @@ const UPLOAD_ICON = 'su-upload';
 type Props = {|
     disabled: boolean,
     emptyIcon: string,
+    errorText?: ?string,
     image: ?string,
     mimeType: ?string,
     onDrop: (data: File) => void,
@@ -96,6 +97,7 @@ class SingleMediaDropzone extends React.Component<Props> {
         const {
             disabled,
             emptyIcon,
+            errorText,
             image,
             mimeType,
             progress,
@@ -114,64 +116,73 @@ class SingleMediaDropzone extends React.Component<Props> {
         );
 
         return (
-            <Dropzone
-                disabled={disabled}
-                multiple={false}
-                noClick={uploading}
-                onDragEnter={this.handleDragEnter}
-                onDragLeave={this.handleDragLeave}
-                onDrop={this.handleDrop}
-            >
-                {({getInputProps, getRootProps}) => (
-                    <Observer>
-                        {() => (
-                            <div {...getRootProps({className: mediaContainerClass})}>
-                                {image && !this.imageError &&
-                                    <Fragment>
-                                        <img className={singleMediaDropzoneStyles.thumbnail} key={image} src={image} />
-                                        {this.imageLoading && <Loader />}
-                                    </Fragment>
-                                }
-                                {(!image || this.imageError) && mimeType &&
-                                    <div className={singleMediaDropzoneStyles.mimeTypeIndicator}>
-                                        <MimeTypeIndicator iconSize={100} mimeType={mimeType} />
-                                    </div>
-                                }
-                                {!image && !mimeType &&
-                                    <div className={singleMediaDropzoneStyles.emptyIndicator}>
-                                        <Icon name={emptyIcon} />
-                                    </div>
-                                }
+            <>
+                <Dropzone
+                    disabled={disabled}
+                    multiple={false}
+                    noClick={uploading}
+                    onDragEnter={this.handleDragEnter}
+                    onDragLeave={this.handleDragLeave}
+                    onDrop={this.handleDrop}
+                >
+                    {({getInputProps, getRootProps}) => (
+                        <Observer>
+                            {() => (
+                                <div {...getRootProps({className: mediaContainerClass})}>
+                                    {image && !this.imageError &&
+                                        <Fragment>
+                                            <img
+                                                className={singleMediaDropzoneStyles.thumbnail}
+                                                key={image}
+                                                src={image}
+                                            />
+                                            {this.imageLoading && <Loader />}
+                                        </Fragment>
+                                    }
+                                    {(!image || this.imageError) && mimeType &&
+                                        <div className={singleMediaDropzoneStyles.mimeTypeIndicator}>
+                                            <MimeTypeIndicator iconSize={100} mimeType={mimeType} />
+                                        </div>
+                                    }
+                                    {!image && !mimeType &&
+                                        <div className={singleMediaDropzoneStyles.emptyIndicator}>
+                                            <Icon name={emptyIcon} />
+                                        </div>
+                                    }
 
-                                {!uploading
-                                    ? <div className={singleMediaDropzoneStyles.uploadIndicatorContainer}>
-                                        <div className={singleMediaDropzoneStyles.uploadIndicator}>
-                                            <div>
-                                                <Icon
-                                                    className={singleMediaDropzoneStyles.uploadIcon}
-                                                    name={UPLOAD_ICON}
-                                                />
-                                                {uploadText &&
-                                                    <div className={singleMediaDropzoneStyles.uploadInfoText}>
-                                                        {uploadText}
-                                                    </div>
-                                                }
+                                    {!uploading
+                                        ? <div className={singleMediaDropzoneStyles.uploadIndicatorContainer}>
+                                            <div className={singleMediaDropzoneStyles.uploadIndicator}>
+                                                <div>
+                                                    <Icon
+                                                        className={singleMediaDropzoneStyles.uploadIcon}
+                                                        name={UPLOAD_ICON}
+                                                    />
+                                                    {uploadText &&
+                                                        <div className={singleMediaDropzoneStyles.uploadInfoText}>
+                                                            {uploadText}
+                                                        </div>
+                                                    }
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    : <div className={singleMediaDropzoneStyles.progressbar}>
-                                        <CircularProgressbar
-                                            percentage={progress}
-                                            size={200}
-                                        />
-                                    </div>
-                                }
-                                <input {...getInputProps()} />
-                            </div>
-                        )}
-                    </Observer>
+                                        : <div className={singleMediaDropzoneStyles.progressbar}>
+                                            <CircularProgressbar
+                                                percentage={progress}
+                                                size={200}
+                                            />
+                                        </div>
+                                    }
+                                    <input {...getInputProps()} />
+                                </div>
+                            )}
+                        </Observer>
+                    )}
+                </Dropzone>
+                {errorText && (
+                    <div className={singleMediaDropzoneStyles.errorText}>{errorText}</div>
                 )}
-            </Dropzone>
+            </>
         );
     }
 }

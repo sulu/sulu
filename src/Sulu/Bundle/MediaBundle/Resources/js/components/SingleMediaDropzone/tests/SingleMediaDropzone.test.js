@@ -22,6 +22,17 @@ test('Render a SingleMediaDropzone with the passed empty icon', () => {
     expect(render(<SingleMediaDropzone emptyIcon="su-user" image={undefined} onDrop={jest.fn()} />)).toMatchSnapshot();
 });
 
+test('Render a SingleMediaDropzone with an error text', () => {
+    expect(render(
+        <SingleMediaDropzone
+            emptyIcon="su-user"
+            errorText="some-custom-error-message"
+            image={undefined}
+            onDrop={jest.fn()}
+        />
+    )).toMatchSnapshot();
+});
+
 test('Render a SingleMediaDropzone with a loader if image has not been loaded yet', () => {
     const singleMediaDropzone = mount(<SingleMediaDropzone emptyIcon="su-user" image="test.jpg" onDrop={jest.fn()} />);
     expect(singleMediaDropzone.render()).toMatchSnapshot();

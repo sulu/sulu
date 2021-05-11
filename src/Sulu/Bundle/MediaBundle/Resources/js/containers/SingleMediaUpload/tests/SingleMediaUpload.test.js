@@ -62,6 +62,27 @@ test('Render a SingleMediaUpload in disabled state', () => {
     )).toMatchSnapshot();
 });
 
+test('Render a SingleMediaUpload with an error message from the MediaUploadStore', () => {
+    const mediaUploadStore = new MediaUploadStore(
+        {id: 1, locale: 'en', mimeType: 'image/jpeg', title: 'test', thumbnails: {}, url: ''},
+        observable.box('en')
+    );
+
+    mediaUploadStore.error = {
+        'code': 5003,
+        'detail': 'The uploaded file exceeds the configured maximum filesize.',
+    };
+
+    expect(render(
+        <SingleMediaUpload
+            collectionId={5}
+            disabled={true}
+            mediaUploadStore={mediaUploadStore}
+            uploadText="Upload media"
+        />
+    )).toMatchSnapshot();
+});
+
 test('Render a SingleMediaUpload with an empty icon if no image is passed', () => {
     const mediaUploadStore = new MediaUploadStore(
         undefined,

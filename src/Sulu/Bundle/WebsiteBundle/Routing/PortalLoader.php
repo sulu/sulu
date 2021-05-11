@@ -12,23 +12,40 @@
 namespace Sulu\Bundle\WebsiteBundle\Routing;
 
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
-use Symfony\Component\Config\Loader\Loader;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Config\FileLocatorInterface;
+use Symfony\Component\Config\Loader\FileLoader;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
  * This route loader is responsible for loading routes from a routing file, and adjust the routes in a way, so that
  * there will be an own route for every portal registered.
+ *
+ * @internal this class is internal and should not be instantiated or extended by any application or library
  */
-class PortalLoader extends Loader
+class PortalLoader extends FileLoader
 {
     /**
      * @var WebspaceManagerInterface
      */
     private $webspaceManager;
 
-    public function __construct(WebspaceManagerInterface $webspaceManager)
-    {
+    public function __construct(
+        WebspaceManagerInterface $webspaceManager,
+        ?FileLocatorInterface $fileLocator = null
+    ) {
+        if (!$fileLocator) {
+            @\trigger_error(
+                'Initializing "' . __CLASS__ . '" without file locator is deprecated.',
+                \E_USER_DEPRECATED
+            );
+
+            $fileLocator = new FileLocator();
+        }
+
+        parent::__construct($fileLocator);
+
         $this->webspaceManager = $webspaceManager;
     }
 
@@ -36,8 +53,7 @@ class PortalLoader extends Loader
     {
         $collection = new RouteCollection();
 
-        /** @var Route[] $importedRoutes */
-        $importedRoutes = $this->import($resource, null);
+        $importedRoutes = $this->importResourceRoutes($resource);
 
         $prefixes = [];
         foreach ($this->webspaceManager->getPortalInformations() as $portalInformation) {
@@ -67,5 +83,22 @@ class PortalLoader extends Loader
     public function supports($resource, $type = null)
     {
         return 'portal' === $type;
+    }
+
+    /**
+     * @param mixed $resource
+     *
+     * @return Route[]
+     */
+    private function importResourceRoutes($resource)
+    {
+        // remove resource from loading map before loading it to prevent FileLoaderImportCircularReferenceException
+        try {
+            unset(self::$loading[$resource]);
+
+            return $this->import($resource, null);
+        } finally {
+            self::$loading[$resource] = true;
+        }
     }
 }
