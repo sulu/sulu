@@ -6,10 +6,11 @@
     "dependencies": {
         "classnames": "^2.2.5",
         "leaflet": "^1.5.1",
-        "react-leaflet": "^2.4.0"
+        "react-leaflet": "^3.1.0"
     },
     "devDependencies": {
         "enzyme": "^3.3.0",
+        "fast-deep-equal": "^3.1.1",
         "sulu-admin-bundle": "file:../../../AdminBundle/Resources/js"
     },
     "peerDependencies": {

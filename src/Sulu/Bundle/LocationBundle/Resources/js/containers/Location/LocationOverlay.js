@@ -4,7 +4,8 @@ import {action, observable, reaction} from 'mobx';
 import {observer} from 'mobx-react';
 import {Form, Input, Number, Overlay} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils';
-import {Map, Marker, TileLayer} from 'react-leaflet';
+import {MapContainer, Marker, TileLayer} from 'react-leaflet';
+import {Map} from 'leaflet';
 import {SingleAutoComplete} from 'sulu-admin-bundle/containers';
 import SingleSelectionStore from 'sulu-admin-bundle/stores/SingleSelectionStore';
 import type {Location as LocationValue} from '../../types';
@@ -19,12 +20,9 @@ type Props = {
 
 @observer
 class LocationOverlay extends React.Component<Props> {
-    @observable mapLat: number;
-    @observable mapLong: number;
-    @observable mapZoom: number;
-
-    @observable markerLat: ?number;
-    @observable markerLong: ?number;
+    @observable lat: ?number;
+    @observable long: ?number;
+    @observable zoom: number;
 
     @observable title: ?string;
     @observable street: ?string;
@@ -33,6 +31,7 @@ class LocationOverlay extends React.Component<Props> {
     @observable town: ?string;
     @observable country: ?string;
 
+    map: ?(typeof Map);
     geolocatorSelectionStore: SingleSelectionStore<string>;
     updateDataOnGeolocatorSelectDisposer: () => *;
     updateDataOnOpenDisposer: () => *;
@@ -49,12 +48,10 @@ class LocationOverlay extends React.Component<Props> {
 
         this.updateDataOnOpenDisposer = reaction(() => this.props.open, (newOpenValue) => {
             if (newOpenValue === true) {
-                this.mapLat = this.props.value ? this.props.value.lat : 0;
-                this.mapLong = this.props.value ? this.props.value.long : 0;
-                this.mapZoom = this.props.value ? this.props.value.zoom : 1;
-
-                this.markerLat = this.props.value ? this.props.value.lat : null;
-                this.markerLong = this.props.value ? this.props.value.long : null;
+                this.lat = this.props.value ? this.props.value.lat : null;
+                this.long = this.props.value ? this.props.value.long : null;
+                this.zoom = this.props.value ? this.props.value.zoom : 1;
+                this.updateMapToData();
 
                 this.title = this.props.value ? this.props.value.title : null;
                 this.street = this.props.value ? this.props.value.street : null;
@@ -71,11 +68,22 @@ class LocationOverlay extends React.Component<Props> {
         this.updateDataOnOpenDisposer();
     }
 
+    setLeafletMap = (map: typeof Map) => {
+        map.on('zoomanim', this.handleMapZoom);
+        this.map = map;
+    };
+
+    updateMapToData = () => {
+        if (this.map) {
+            this.map.setView([this.lat || 0, this.long || 0], this.zoom || 1);
+        }
+    };
+
     handleConfirm = () => {
         const {onConfirm} = this.props;
-        const {title, street, number, code, town, country, markerLat, markerLong, mapZoom} = this;
+        const {title, street, number, code, town, country, lat, long, zoom} = this;
 
-        if (markerLat === null || markerLat === undefined || markerLong === null || markerLong === undefined) {
+        if (lat === null || lat === undefined || long === null || long === undefined) {
             onConfirm(null);
 
             return;
@@ -88,9 +96,9 @@ class LocationOverlay extends React.Component<Props> {
             code,
             town,
             country,
-            lat: markerLat,
-            long: markerLong,
-            zoom: mapZoom,
+            lat,
+            long,
+            zoom,
         });
     };
 
@@ -99,11 +107,9 @@ class LocationOverlay extends React.Component<Props> {
             return;
         }
 
-        this.mapLat = data.latitude || 0;
-        this.mapLong = data.longitude || 0;
-
-        this.markerLat = data.latitude;
-        this.markerLong = data.longitude;
+        this.lat = data.latitude;
+        this.long = data.longitude;
+        this.updateMapToData();
 
         this.title = data.displayTitle;
         this.street = data.street;
@@ -114,26 +120,23 @@ class LocationOverlay extends React.Component<Props> {
     };
 
     @action handleMapZoom = (event: Object) => {
-        this.mapZoom = event.zoom;
+        this.zoom = event.zoom;
     };
 
     @action handleMarkerDrag = (event: Object) => {
-        this.markerLong = event.latlng.lng;
-        this.markerLat = event.latlng.lat;
+        this.long = event.latlng.lng;
+        this.lat = event.latlng.lat;
     };
 
     @action handleMarkerDragEnd = () => {
-        this.mapLong = this.markerLong || 0;
-        this.mapLat = this.markerLat || 0;
+        this.updateMapToData();
     };
 
     @action handleResetLocation = () => {
-        this.mapLat = 0;
-        this.mapLong = 0;
-        this.mapZoom = 1;
-
-        this.markerLong = null;
-        this.markerLat = null;
+        this.long = null;
+        this.lat = null;
+        this.zoom = 1;
+        this.updateMapToData();
 
         this.title = null;
         this.street = null;
@@ -168,17 +171,18 @@ class LocationOverlay extends React.Component<Props> {
     };
 
     @action handleLatChange = (lat: ?number) => {
-        this.mapLat = lat || 0;
-        this.markerLat = lat;
+        this.lat = lat;
+        this.updateMapToData();
     };
 
     @action handleLongChange = (long: ?number) => {
-        this.mapLong = long || 0;
-        this.markerLong = long;
+        this.long = long;
+        this.updateMapToData();
     };
 
     @action handleZoomChange = (zoom: ?number) => {
-        this.mapZoom = zoom || 1;
+        this.zoom = zoom || 1;
+        this.updateMapToData();
     };
 
     render() {
@@ -188,8 +192,8 @@ class LocationOverlay extends React.Component<Props> {
         } = this.props;
 
         // enable confirm button if all marker properties are set or no property is set in case of a reset
-        const confirmEnabled = (this.markerLat !== null && this.markerLong !== null)
-            || (this.markerLat === null && this.markerLong === null);
+        const confirmEnabled = (this.lat !== null && this.long !== null)
+            || (this.lat === null && this.long === null);
 
         return (
             <Overlay
@@ -218,31 +222,33 @@ class LocationOverlay extends React.Component<Props> {
                         </Form.Field>
 
                         <Form.Field>
-                            <Map
+                            <MapContainer
                                 attributionControl={false}
-                                center={[this.mapLat, this.mapLong]}
+                                center={[this.lat || 0, this.long || 0]}
                                 className={locationOverlayStyles.map}
-                                onZoomAnim={this.handleMapZoom}
-                                zoom={this.mapZoom}
+                                whenCreated={this.setLeafletMap}
+                                zoom={this.zoom}
                             >
                                 <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                                 <Marker
                                     draggable={true}
-                                    onDrag={this.handleMarkerDrag}
-                                    onDragEnd={this.handleMarkerDragEnd}
-                                    position={[this.markerLat || 0, this.markerLong || 0]}
+                                    eventHandlers={{
+                                        drag: this.handleMarkerDrag,
+                                        dragend: this.handleMarkerDragEnd,
+                                    }}
+                                    position={[this.lat || 0, this.long || 0]}
                                 />
-                            </Map>
+                            </MapContainer>
                         </Form.Field>
 
                         <Form.Field colSpan={4} label={translate('sulu_location.latitude')} required={true}>
-                            <Number onChange={this.handleLatChange} step={0.001} value={this.markerLat} />
+                            <Number onChange={this.handleLatChange} step={0.001} value={this.lat} />
                         </Form.Field>
                         <Form.Field colSpan={4} label={translate('sulu_location.longitude')} required={true}>
-                            <Number onChange={this.handleLongChange} step={0.001} value={this.markerLong} />
+                            <Number onChange={this.handleLongChange} step={0.001} value={this.long} />
                         </Form.Field>
                         <Form.Field colSpan={4} label={translate('sulu_location.zoom')} required={true}>
-                            <Number max={18} min={0} onChange={this.handleZoomChange} value={this.mapZoom} />
+                            <Number max={18} min={0} onChange={this.handleZoomChange} value={this.zoom} />
                         </Form.Field>
 
                         <Form.Section label={translate('sulu_location.additional_information')}>
