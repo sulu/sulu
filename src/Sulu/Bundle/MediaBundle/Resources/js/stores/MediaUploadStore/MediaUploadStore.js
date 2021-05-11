@@ -14,6 +14,7 @@ export default class MediaUploadStore {
     @observable uploading: boolean;
     @observable progress: number;
     @observable media: ?Media;
+    @observable error: ?Object;
     locale: IObservableValue<string>;
 
     constructor(media: ?Media, locale: IObservableValue<string>) {
@@ -89,7 +90,9 @@ export default class MediaUploadStore {
         return ResourceRequester.delete(RESOURCE_KEY, {id: this.id})
             .then(action(() => {
                 this.media = undefined;
-            }));
+                this.error = undefined;
+            }))
+            .catch(this.handleError);
     }
 
     update(file: File): Promise<*> {
@@ -111,7 +114,8 @@ export default class MediaUploadStore {
         this.setUploading(true);
 
         return this.upload(file, url, MEDIA_FORM_NAME)
-            .then(this.handleResponse);
+            .then(this.handleResponse)
+            .catch(this.handleError);
     }
 
     create(collectionId: string | number, file: File): Promise<*> {
@@ -126,7 +130,8 @@ export default class MediaUploadStore {
         this.setUploading(true);
 
         return this.upload(file, url, MEDIA_FORM_NAME)
-            .then(this.handleResponse);
+            .then(this.handleResponse)
+            .catch(this.handleError);
     }
 
     updatePreviewImage(file: File): Promise<*> {
@@ -147,7 +152,8 @@ export default class MediaUploadStore {
         this.setUploading(true);
 
         return this.upload(file, url, PREVIEW_MEDIA_FORM_NAME)
-            .then(this.handleResponse);
+            .then(this.handleResponse)
+            .catch(this.handleError);
     }
 
     deletePreviewImage(): Promise<*> {
@@ -158,7 +164,9 @@ export default class MediaUploadStore {
         return ResourceRequester.delete(PREVIEW_RESOURCE_KEY, {id: this.id})
             .then(action((media) => {
                 Object.assign(this.media, media);
-            }));
+                this.error = undefined;
+            }))
+            .catch(this.handleError);
     }
 
     @action handleResponse = (media: Object) => {
@@ -166,8 +174,18 @@ export default class MediaUploadStore {
         this.setProgress(0);
 
         this.media = Object.assign(this.media || {}, media);
+        this.error = undefined;
 
         return media;
+    };
+
+    @action handleError = (error: Object) => {
+        this.setUploading(false);
+        this.setProgress(0);
+
+        this.error = error;
+
+        throw error;
     };
 
     upload(file: File, url: string, formName: string): Promise<*> {

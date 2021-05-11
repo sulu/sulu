@@ -197,13 +197,13 @@ class UserManager implements UserManagerInterface
             }
 
             if (!$patch || null !== $this->getProperty($data, 'userRoles')) {
-                if (!$this->processUserRoles($user, $this->getProperty($data, 'userRoles', []))) {
+                if (!$this->processUserRoles($user, $this->getProperty($data, 'userRoles') ?: [])) {
                     throw new \Exception('Could not update dependencies!');
                 }
             }
 
             if (!$patch || null !== $this->getProperty($data, 'userGroups')) {
-                if (!$this->processUserGroups($user, $this->getProperty($data, 'userGroups', []))) {
+                if (!$this->processUserGroups($user, $this->getProperty($data, 'userGroups') ?: [])) {
                     throw new \Exception('Could not update dependencies!');
                 }
             }
