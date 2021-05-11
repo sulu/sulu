@@ -87,7 +87,7 @@ class UpdateBuildCommand extends Command
             );
 
             if ('y' !== \strtolower(
-                $ui->ask('Do you want to continue updating your "assets/admin" directory the latest sulu/skeleton version?', 'y')
+                $ui->ask('Do you want to update your "assets/admin" folder to match the "sulu/skeleton"?', 'y')
             )) {
                 return 0;
             }
@@ -179,7 +179,7 @@ class UpdateBuildCommand extends Command
                     $remoteRepository
                 ));
             } else {
-                $ui->warning('You are not using a tagged version, you need to create the JavaScript build by yourself.');
+                $ui->warning('You are not using a tagged version of the "sulu/sulu" package and therefore need to create the JavaScript build by yourself.');
             }
 
             return $this->doManualBuild($ui);
