@@ -16,6 +16,6 @@
     "sulu_activity.text.snippets.translation_added": "{userFullName} hat eine neue Sprachvariante für \"{resourceLocale}\" zum Schnipsel \"{resourceTitle}\" hinzugefügt",
     "sulu_activity.text.snippets.translation_copied": "{userFullName} hat die Sprachvariante für \"{context_sourceLocale}\" des Schnipsels \"{resourceTitle}\" nach \"{resourceLocale}\" kopiert",
     "sulu_activity.text.snippets.translation_removed": "{userFullName} hat die Sprachvariante für \"{resourceLocale}\" des Schnipsels \"{resourceTitle}\" gelöscht",
-    "sulu_activity.text.webspaces.default_snippet_modified": "{userFullName} has das Standardschnipsel für den Bereich \"{context_snippetAreaKey}\" des Webspaces \"{resourceTitle}\" geändert",
-    "sulu_activity.text.webspaces.default_snippet_removed": "{userFullName} has das Standardschnipsel für den Bereich \"{context_snippetAreaKey}\" des Webspaces \"{resourceTitle}\" gelöscht"
+    "sulu_activity.text.webspaces.default_snippet_modified": "{userFullName} hat das Standardschnipsel für den Bereich \"{context_snippetAreaKey}\" im Webspace \"{resourceTitle}\" geändert",
+    "sulu_activity.text.webspaces.default_snippet_removed": "{userFullName} hat das Standardschnipsel für den Bereich \"{context_snippetAreaKey}\" im Webspace \"{resourceTitle}\" gelöscht"
 }

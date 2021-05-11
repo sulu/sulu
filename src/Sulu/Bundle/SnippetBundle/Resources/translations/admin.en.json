@@ -16,6 +16,6 @@
     "sulu_activity.text.snippets.translation_added": "{userFullName} has added a new translation \"{resourceLocale}\" to the snippet \"{resourceTitle}\"",
     "sulu_activity.text.snippets.translation_copied": "{userFullName} has copied the \"{context_sourceLocale}\" translation of the snippet \"{resourceTitle}\" into \"{resourceLocale}\"",
     "sulu_activity.text.snippets.translation_removed": "{userFullName} has removed the \"{resourceLocale}\" translation of the snippet \"{resourceTitle}\"",
-    "sulu_activity.text.webspaces.default_snippet_modified": "{userFullName} has modified the default snippet of the area \"{context_snippetAreaKey}\" of the webspace \"{resourceTitle}\"",
+    "sulu_activity.text.webspaces.default_snippet_modified": "{userFullName} has modified the default snippet for the area \"{context_snippetAreaKey}\" of the webspace \"{resourceTitle}\"",
     "sulu_activity.text.webspaces.default_snippet_removed": "{userFullName} has removed the default snippet for the area \"{context_snippetAreaKey}\" of the webspace \"{resourceTitle}\""
 }

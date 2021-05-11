@@ -87,5 +87,5 @@
     "sulu_activity.text.media.preview_image_modified": "{userFullName} hat das Vorschaubild des Mediums \"{resourceTitle}\" geändert",
     "sulu_activity.text.media.preview_image_removed": "{userFullName} hat das Vorschaubild des Mediums \"{resourceTitle}\" gelöscht",
     "sulu_activity.text.media.version_added": "{userFullName} hat eine neue Version für das Medium \"{resourceTitle}\" hinzugefügt",
-    "sulu_activity.text.media.version_removed": "{userFullName} hat eine Version des Mediums \"{resourceTitle}\" gelöscht"
+    "sulu_activity.text.media.version_removed": "{userFullName} hat die Version {context_version} des Mediums \"{resourceTitle}\" gelöscht"
 }
