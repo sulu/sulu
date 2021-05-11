@@ -1753,6 +1753,13 @@ exports[`Render data with shrunken cell 1`] = `
       >
         <tr>
           <th
+            class="headerCell clickable shrink"
+          >
+            <button>
+              Title
+            </button>
+          </th>
+          <th
             class="headerCell clickable"
           >
             <button>
@@ -1770,7 +1777,18 @@ exports[`Render data with shrunken cell 1`] = `
           >
             <div
               class="cellContent"
-            />
+            >
+              1
+            </div>
+          </td>
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              planned
+            </div>
           </td>
         </tr>
         <tr
@@ -1781,7 +1799,18 @@ exports[`Render data with shrunken cell 1`] = `
           >
             <div
               class="cellContent"
-            />
+            >
+              2
+            </div>
+          </td>
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              running
+            </div>
           </td>
         </tr>
         <tr
@@ -1792,7 +1821,18 @@ exports[`Render data with shrunken cell 1`] = `
           >
             <div
               class="cellContent"
-            />
+            >
+              3
+            </div>
+          </td>
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              succeeded
+            </div>
           </td>
         </tr>
         <tr
@@ -1803,7 +1843,18 @@ exports[`Render data with shrunken cell 1`] = `
           >
             <div
               class="cellContent"
-            />
+            >
+              4
+            </div>
+          </td>
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              failed
+            </div>
           </td>
         </tr>
       </tbody>

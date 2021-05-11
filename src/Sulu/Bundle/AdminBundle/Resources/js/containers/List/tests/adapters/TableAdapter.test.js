@@ -225,20 +225,20 @@ test('Render data with skin', () => {
 test('Render data with shrunken cell', () => {
     const data = [
         {
-            id: 1,
-            status: 'planned',
+            title: '1',
+            description: 'planned',
         },
         {
-            id: 2,
-            status: 'running',
+            title: '2',
+            description: 'running',
         },
         {
-            id: 3,
-            status: 'succeeded',
+            title: '3',
+            description: 'succeeded',
         },
         {
-            id: 4,
-            status: 'failed',
+            title: '4',
+            description: 'failed',
         },
     ];
 
@@ -249,7 +249,7 @@ test('Render data with shrunken cell', () => {
             transformerTypeParameters: {},
             type: 'string',
             sortable: true,
-            visibility: 'no',
+            visibility: 'yes',
             label: 'Title',
             width: 'shrink',
         },
@@ -261,7 +261,7 @@ test('Render data with shrunken cell', () => {
             sortable: true,
             visibility: 'yes',
             label: 'Description',
-            width: 'shrink',
+            width: 'auto',
         },
     };
     const tableAdapter = render(
