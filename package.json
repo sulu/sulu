@@ -81,7 +81,7 @@
         "regenerator-runtime": "^0.13.3",
         "style-loader": "^2.0.0",
         "stylelint": "^13.2.1",
-        "stylelint-config-standard": "^21.0.0",
+        "stylelint-config-standard": "^22.0.0",
         "url-search-params-polyfill": "^8.0.0",
         "webpack": "^4.27.0",
         "webpack-clean-obsolete-chunks": "^0.4.0",
