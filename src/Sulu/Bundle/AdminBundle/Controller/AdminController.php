@@ -153,6 +153,11 @@ class AdminController
      */
     private $collaborationInterval;
 
+    /**
+     * @var bool
+     */
+    private $collaborationEnabled;
+
     public function __construct(
         UrlGeneratorInterface $urlGenerator,
         TokenStorageInterface $tokenStorage,
@@ -176,7 +181,8 @@ class AdminController
         array $locales,
         array $translations,
         string $fallbackLocale,
-        string $collaborationInterval
+        string $collaborationInterval,
+        bool $collaborationEnabled = null
     ) {
         $this->urlGenerator = $urlGenerator;
         $this->tokenStorage = $tokenStorage;
@@ -201,6 +207,12 @@ class AdminController
         $this->translations = $translations;
         $this->fallbackLocale = $fallbackLocale;
         $this->collaborationInterval = $collaborationInterval;
+
+        if (null === $collaborationEnabled) {
+            @trigger_error('Instantiating the AdminController without the $collaborationEnabled argument is deprecated!', \E_USER_DEPRECATED);
+        }
+
+        $this->collaborationEnabled = $collaborationEnabled ?? true;
     }
 
     public function indexAction()
@@ -254,6 +266,7 @@ class AdminController
                 }, $this->dataProviderPool->getAll()),
                 'user' => $user,
                 'contact' => $contact,
+                'collaborationEnabled' => $this->collaborationEnabled,
                 'collaborationInterval' => $this->collaborationInterval * 1000,
             ],
         ];

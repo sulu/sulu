@@ -131,15 +131,16 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
         );
     }
 
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
-        $configuration = new Configuration();
+        $configuration = $this->getConfiguration($configs, $container);
         $config = $this->processConfiguration($configuration, $configs);
 
         $container->setParameter($this->getAlias() . '.name', $config['name']);
         $container->setParameter($this->getAlias() . '.email', $config['email']);
         $container->setParameter($this->getAlias() . '.user_data_service', $config['user_data_service']);
         $container->setParameter($this->getAlias() . '.resources', $config['resources']);
+        $container->setParameter($this->getAlias() . '.collaboration_enabled', $config['collaboration']['enabled']);
         $container->setParameter($this->getAlias() . '.collaboration_interval', $config['collaboration']['interval']);
         $container->setParameter($this->getAlias() . '.collaboration_threshold', $config['collaboration']['threshold']);
 
@@ -168,5 +169,10 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
                 $fieldTypeOptionRegistry->addMethodCall('add', [$fieldTypeName, $baseFieldType, $fieldTypeConfig]);
             }
         }
+    }
+
+    public function getConfiguration(array $config, ContainerBuilder $container)
+    {
+        return new Configuration($container->getParameter('kernel.debug'));
     }
 }

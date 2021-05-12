@@ -10,6 +10,7 @@ jest.mock('../../../services/ResourceRequester', () => ({
 }));
 
 beforeEach(() => {
+    CollaborationStore.enabled = true;
     CollaborationStore.interval = 10000;
 });
 
@@ -69,4 +70,12 @@ test('Load collaborators repeatedly and stop when destroyed', () => {
             expect(ResourceRequester.delete).toHaveBeenLastCalledWith('collaborations', {id: 1, resourceKey: 'pages'});
         });
     });
+});
+
+test('Do not send collaboration request if disabled', () => {
+    CollaborationStore.enabled = false;
+
+    const collaborationStore = new CollaborationStore('pages', 1);
+
+    expect(ResourceRequester.put).not.toHaveBeenCalled();
 });
