@@ -65,8 +65,8 @@
             </transformer>
         </property>
 
-        <!-- For the general view the visibility of this property is set to 'yes' in the ActivityListMetadataProvider -->
-        <property name="resource" visibility="never" searchability="yes" sortable="false" width="shrink"/>
+        <!-- Visibility of this property is set to 'yes' in the ActivityListMetadataProvider based on the given metadata-options -->
+        <property name="resource" visibility="never" searchability="never" sortable="false" width="shrink"/>
 
         <property name="text" visibility="always" searchability="never" sortable="false" />
     </properties>

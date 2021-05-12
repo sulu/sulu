@@ -15,7 +15,7 @@ use Sulu\Bundle\AdminBundle\Metadata\ListMetadata\ListMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 
-class ActivityListMetadataProvider implements MetadataProviderInterface
+class ActivitesListMetadataProvider implements MetadataProviderInterface
 {
     /**
      * @var MetadataProviderInterface
@@ -42,7 +42,7 @@ class ActivityListMetadataProvider implements MetadataProviderInterface
             return $metaData;
         }
 
-        if ('true' === $metadataOptions['showResource']) {
+        if ($metadataOptions['showResource'] ?? false) {
             $resourceField = $metaData->getFields()['resource'];
             $resourceField->setVisibility('yes');
         }
