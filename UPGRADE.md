@@ -129,6 +129,7 @@ call to pass the correct parameters:
 - `Sulu\Bundle\ContactBundle\Controller\ContactTitleController`
 - `Sulu\Bundle\ContactBundle\Controller\AccountMediaController`
 - `Sulu\Bundle\ContactBundle\Controller\AccountController`
+- `Sulu\Bundle\ContactBundle\Contact\AccountManager`
 - `Sulu\Bundle\SecurityBundle\Controller\ResettingController`
 - `Sulu\Bundle\SecurityBundle\Controller\RoleController`
 - `Sulu\Bundle\SecurityBundle\UserManager\UserManager`
