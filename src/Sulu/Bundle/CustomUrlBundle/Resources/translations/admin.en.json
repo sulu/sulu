@@ -15,6 +15,7 @@
     "sulu_custom_url.no_follow_info": "The links on the page will not be followed by search engines.",
     "sulu_custom_url.title_used_for_other_url": "The title \"{title}\" is already used for another custom URL.",
     "sulu_custom_url.target_title": "Target page",
+    "sulu_activity.resource.custom_urls": "Custom URL",
     "sulu_activity.text.custom_urls.created": "{userFullName} has created the custom url \"{resourceTitle}\"",
     "sulu_activity.text.custom_urls.modified": "{userFullName} has changed the custom url \"{resourceTitle}\"",
     "sulu_activity.text.custom_urls.removed": "{userFullName} has removed the custom url \"{resourceTitle}\"",

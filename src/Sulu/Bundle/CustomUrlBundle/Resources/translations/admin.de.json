@@ -15,6 +15,7 @@
     "sulu_custom_url.no_follow_info": "Die in der Seite enthaltenen Links werden von der Suchmaschine nicht verfolgt",
     "sulu_custom_url.title_used_for_other_url": "Der Titel \"{title}\" wird bereits für eine andere benutzerdefinierte URL verwendet.",
     "sulu_custom_url.target_title": "Zielseite",
+    "sulu_activity.resource.custom_urls": "Benutzerdefinierte URL",
     "sulu_activity.text.custom_urls.created": "{userFullName} hat die benutzerdefinierte URL \"{resourceTitle}\" erstellt",
     "sulu_activity.text.custom_urls.modified": "{userFullName} hat die benutzerdefinierte URL \"{resourceTitle}\" geändert",
     "sulu_activity.text.custom_urls.removed": "{userFullName} hat die benutzerdefinierte URL \"{resourceTitle}\" gelöscht",

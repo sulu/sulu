@@ -18,8 +18,10 @@
     "sulu_website.cache_clear": "Clear website cache",
     "sulu_website.cache_clear_warning_title": "Clear website cache?",
     "sulu_website.cache_clear_warning_text": "This operation will clear the entire cache for the webspace \"{webspace}\". Do you really wish to proceed?",
+    "sulu_activity.resource.analytics": "Analytics",
     "sulu_activity.text.analytics.created": "{userFullName} has created the analytics item \"{resourceTitle}\"",
     "sulu_activity.text.analytics.modified": "{userFullName} has changed the analytics item \"{resourceTitle}\"",
     "sulu_activity.text.analytics.removed": "{userFullName} has removed the analytics item \"{resourceTitle}\"",
+    "sulu_activity.resource.webspaces": "Webspace",
     "sulu_activity.text.webspaces.cache_cleared": "{userFullName} has cleared the website cache for the webspace \"{resourceTitle}\"."
 }

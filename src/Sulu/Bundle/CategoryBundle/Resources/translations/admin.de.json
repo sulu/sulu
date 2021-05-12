@@ -8,6 +8,7 @@
     "sulu_category.all_categories": "Alle Kategorien",
     "sulu_category.no_category_selected": "Keine Kategorie ausgewählt",
     "sulu_category.single_category_selection_overlay_title": "Kategorie auswählen",
+    "sulu_activity.resource.categories": "Kategorie",
     "sulu_activity.text.categories.created": "{userFullName} hat die Kategorie \"{resourceTitle}\" erstellt",
     "sulu_activity.text.categories.modified": "{userFullName} hat die Kategorie \"{resourceTitle}\" geändert",
     "sulu_activity.text.categories.moved": "{userFullName} hat die Kategorie \"{resourceTitle}\" von \"{context_previousParentTitle}\" nach \"{context_newParentTitle}\" verschoben",

@@ -9,6 +9,7 @@
     "sulu_snippet.snippet_area": "Typ oder Bereich",
     "sulu_snippet.taxonomies": "Taxonomien",
     "sulu_snippet.webspace_default_snippet": "{webspaceKey} Standard Schnipsel",
+    "sulu_activity.resource.snippets": "Schnipsel",
     "sulu_activity.text.snippets.created": "{userFullName} hat das Schnipsel \"{resourceTitle}\" erstellt",
     "sulu_activity.text.snippets.modified": "{userFullName} hat das Schnipsel \"{resourceTitle}\" geändert",
     "sulu_activity.text.snippets.copied": "{userFullName} hat das Schnipsel \"{resourceTitle}\" kopiert",
