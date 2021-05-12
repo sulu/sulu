@@ -98,7 +98,7 @@ class ActivityAdmin extends Admin
         if ($viewCollection->has(PageAdmin::EDIT_FORM_VIEW)) {
             $viewCollection->add(
                 $this->viewBuilderFactory
-                    ->createResourceTabViewBuilder(static::EDIT_FORM_ACTIVITY_VERSION_TAB_VIEW, '/history')
+                    ->createResourceTabViewBuilder(static::EDIT_FORM_ACTIVITY_VERSION_TAB_VIEW, '/activity')
                     ->setResourceKey(BasePageDocument::RESOURCE_KEY)
                     ->setTabOrder(6144)
                     ->setTabTitle($this->versioningEnabled ? 'sulu_admin.activity_versions' : 'sulu_admin.activity')
