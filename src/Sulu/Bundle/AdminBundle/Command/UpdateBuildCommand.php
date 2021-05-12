@@ -92,7 +92,13 @@ class UpdateBuildCommand extends Command
                 return 0;
             }
 
-            $suluVersion = \substr($suluVersion, 0, 3);
+            // if `2.3@dev` is set it will need to convert `2.x-dev` into `2.x`
+            // if `2.2.*@dev` is set it will need to convert `2.2.x-dev` into `2.2`
+            $suluVersion = \str_replace('-dev', '', $suluVersion);
+            if (3 !== \strlen($suluVersion)) {
+                $suluVersion = \str_replace('.x', '', $suluVersion);
+            }
+
             $needManualBuild = true;
         }
 
