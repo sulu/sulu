@@ -100,8 +100,7 @@ class ActivityController extends AbstractRestController implements ClassResource
         array $permissions,
         ViewHandlerInterface $viewHandler,
         ?TokenStorageInterface $tokenStorage = null
-    )
-    {
+    ) {
         parent::__construct($viewHandler, $tokenStorage);
 
         $this->fieldDescriptorFactory = $fieldDescriptorFactory;
@@ -160,7 +159,7 @@ class ActivityController extends AbstractRestController implements ClassResource
 
         $activities = $listBuilder->execute();
         $activities = \array_map(
-            function (array $activity) use ($translationLocale, $configurationFieldDescriptors) {
+            function(array $activity) use ($translationLocale, $configurationFieldDescriptors) {
                 $text = $this->getActivityText($activity, $translationLocale);
                 $resource = $this->getActivityResource($activity);
 
@@ -169,11 +168,11 @@ class ActivityController extends AbstractRestController implements ClassResource
                         $activity,
                         [
                             'text' => $text,
-                            'resource' => $resource
+                            'resource' => $resource,
                         ]
                     ),
-                    function (string $key) use ($configurationFieldDescriptors) {
-                        return array_key_exists($key, $configurationFieldDescriptors);
+                    function(string $key) use ($configurationFieldDescriptors) {
+                        return \array_key_exists($key, $configurationFieldDescriptors);
                     },
                     \ARRAY_FILTER_USE_KEY
                 );
@@ -203,8 +202,7 @@ class ActivityController extends AbstractRestController implements ClassResource
         DoctrineListBuilder $listBuilder,
         array $fieldDescriptors,
         UserInterface $user
-    ): void
-    {
+    ): void {
         /** @var DoctrineFieldDescriptor $resourceSecurityContextFieldDescriptor */
         $resourceSecurityContextFieldDescriptor = $fieldDescriptors['resourceSecurityContext'];
         $listBuilder->addPermissionCheckField($resourceSecurityContextFieldDescriptor);
@@ -246,8 +244,7 @@ class ActivityController extends AbstractRestController implements ClassResource
         DoctrineListBuilder $listBuilder,
         array $fieldDescriptors,
         UserInterface $user
-    ): void
-    {
+    ): void {
         /** @var DoctrineFieldDescriptor $resourceSecurityObjectIdFieldDescriptor */
         $resourceSecurityObjectIdFieldDescriptor = $fieldDescriptors['resourceSecurityObjectId'];
         $listBuilder->addPermissionCheckField($resourceSecurityObjectIdFieldDescriptor);
@@ -271,8 +268,7 @@ class ActivityController extends AbstractRestController implements ClassResource
         DoctrineListBuilder $listBuilder,
         array $fieldDescriptors,
         string $resourceLocale
-    ): void
-    {
+    ): void {
         $listBuilder->addExpression(
             $listBuilder->createOrExpression(
                 [
@@ -298,8 +294,7 @@ class ActivityController extends AbstractRestController implements ClassResource
         DoctrineListBuilder $listBuilder,
         array $fieldDescriptors,
         string $resourceKey
-    ): void
-    {
+    ): void {
         $listBuilder->where(
             $fieldDescriptors['resourceKey'],
             $resourceKey,
@@ -314,8 +309,7 @@ class ActivityController extends AbstractRestController implements ClassResource
         DoctrineListBuilder $listBuilder,
         array $fieldDescriptors,
         string $resourceId
-    ): void
-    {
+    ): void {
         $listBuilder->where(
             $fieldDescriptors['resourceId'],
             $resourceId,
@@ -339,11 +333,11 @@ class ActivityController extends AbstractRestController implements ClassResource
             } elseif (\is_numeric($value)) {
                 $translationParameters[$prefix . $key . $suffix] = $value;
             } elseif (\is_scalar($value)) {
-                $value = (string)$value;
+                $value = (string) $value;
 
                 if (\array_key_exists($key . 'Locale', $array)) {
                     $valueLocale = $array[$key . 'Locale'] ?? null;
-                    $valueLocale = $valueLocale ? (string)$valueLocale : null;
+                    $valueLocale = $valueLocale ? (string) $valueLocale : null;
 
                     $value = $this->getLocalizedValue($value, $valueLocale, $translationLocale);
                 }
@@ -359,6 +353,9 @@ class ActivityController extends AbstractRestController implements ClassResource
         return $translationParameters;
     }
 
+    /**
+     * @param array<string, mixed> $activity
+     */
     private function getActivityResource(array $activity): string
     {
         return $this->translator->trans(
@@ -459,8 +456,7 @@ class ActivityController extends AbstractRestController implements ClassResource
         ?string $entityName = null,
         ?array $joins = null,
         ?string $type = null
-    ): DoctrineFieldDescriptor
-    {
+    ): DoctrineFieldDescriptor {
         $fieldName = $fieldName ?? $name;
         $entityName = $entityName ?? $this->activityClass;
         $joins = $joins ?? [];
@@ -487,8 +483,7 @@ class ActivityController extends AbstractRestController implements ClassResource
         array $fieldDescriptors,
         ?string $glue = null,
         ?string $type = null
-    ): DoctrineConcatenationFieldDescriptor
-    {
+    ): DoctrineConcatenationFieldDescriptor {
         $glue = $glue ?? ' ';
         $type = $type ?? 'string';
 

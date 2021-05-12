@@ -1,9 +1,17 @@
 <?php
 
+/*
+ * This file is part of Sulu.
+ *
+ * (c) Sulu GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Bundle\ActivityBundle\Infrastructure\Sulu\Metadata;
 
-
-use Sulu\Bundle\AdminBundle\Metadata\ListMetadata\FieldMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\ListMetadata\ListMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 
@@ -22,18 +30,23 @@ class ActivityListMetadataProvider implements MetadataProviderInterface
         $this->listMetadataProvider = $listMetadataProvider;
     }
 
+    /**
+     * @param array<integer|string, mixed> $metadataOptions
+     */
     public function getMetadata(string $key, string $locale, array $metadataOptions): MetadataInterface
     {
-        $metadataOptions = $this->listMetadataProvider->getMetadata($key, $locale, $metadataOptions);
+        /** @var ListMetadata $metaData */
+        $metaData = $this->listMetadataProvider->getMetadata($key, $locale, $metadataOptions);
 
-        if ($key !== 'activities') {
-            return $metadataOptions;
+        if (!$metaData instanceof ListMetadata || 'activities' !== $key) {
+            return $metaData;
         }
 
-        /** @var FieldMetadata $resourceField */
-        $resourceField = $metadataOptions->getFields()['resource'];
-        $resourceField->setVisibility('yes');
+        if ('true' === $metadataOptions['showResource']) {
+            $resourceField = $metaData->getFields()['resource'];
+            $resourceField->setVisibility('yes');
+        }
 
-        return $metadataOptions;
+        return $metaData;
     }
 }

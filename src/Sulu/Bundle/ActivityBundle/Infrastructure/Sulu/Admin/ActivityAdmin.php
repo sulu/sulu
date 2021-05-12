@@ -86,6 +86,7 @@ class ActivityAdmin extends Admin
                 ->disableSelection()
                 ->disableColumnOptions()
                 ->disableFiltering()
+                ->addMetadataRequestParameters(['showResource' => true])
                 ->addAdapterOptions([
                     'table' => [
                         'skin' => 'flat',

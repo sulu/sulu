@@ -248,6 +248,13 @@ class ListViewBuilder implements ListViewBuilderInterface
         return $this;
     }
 
+    public function addMetadataRequestParameters(array $metadataRequestParameters): ListViewBuilderInterface
+    {
+        $this->addMetadataRequestParametersToView($this->view, $metadataRequestParameters);
+
+        return $this;
+    }
+
     public function addResourceStorePropertiesToListRequest(array $resourceStorePropertiesToListRequest): ListViewBuilderInterface
     {
         $this->addResourceStorePropertiesToListRequestToView($this->view, $resourceStorePropertiesToListRequest);
