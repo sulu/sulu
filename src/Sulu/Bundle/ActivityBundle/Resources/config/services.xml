@@ -78,10 +78,10 @@
 
         <service
             id="sulu_activity.list_metadata_provider"
-            class="Sulu\Bundle\ActivityBundle\Infrastructure\Sulu\Metadata\ActivityListMetadataProvider"
+            class="Sulu\Bundle\ActivityBundle\Infrastructure\Sulu\Metadata\ActivitiesListMetadataProvider"
             decorates="sulu_admin.list_metadata_provider"
         >
-            <argument type="service" id=".inner"/>
+            <argument type="service" id="sulu_activity.list_metadata_provider.inner"/>
 
             <tag name="sulu_admin.metadata_provider" type="list" />
             <tag name="sulu.context" context="admin" />
