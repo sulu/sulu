@@ -161,16 +161,18 @@ class ActivityController extends AbstractRestController implements ClassResource
         $activities = \array_map(
             function(array $activity) use ($translationLocale, $configurationFieldDescriptors) {
                 $text = $this->getActivityText($activity, $translationLocale);
+                $resource = $this->getActivityResource($activity);
 
                 return \array_filter(
                     \array_merge(
                         $activity,
                         [
                             'text' => $text,
+                            'resource' => $resource,
                         ]
                     ),
                     function(string $key) use ($configurationFieldDescriptors) {
-                        return \in_array($key, \array_keys($configurationFieldDescriptors), true);
+                        return \array_key_exists($key, $configurationFieldDescriptors);
                     },
                     \ARRAY_FILTER_USE_KEY
                 );
@@ -349,6 +351,21 @@ class ActivityController extends AbstractRestController implements ClassResource
         }
 
         return $translationParameters;
+    }
+
+    /**
+     * @param array<string, mixed> $activity
+     */
+    private function getActivityResource(array $activity): string
+    {
+        return $this->translator->trans(
+            \sprintf(
+                'sulu_activity.resource.%s',
+                $activity['resourceKey']
+            ),
+            [],
+            'admin'
+        );
     }
 
     /**

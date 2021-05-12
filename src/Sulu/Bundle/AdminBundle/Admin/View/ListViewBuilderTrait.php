@@ -184,6 +184,17 @@ trait ListViewBuilderTrait
         $route->setOption('resourceStorePropertiesToListMetadata', $newResourceStorePropertiesToListMetadata);
     }
 
+    /**
+     * @param mixed[] $metadataRequestParameters
+     */
+    private function addMetadataRequestParametersToView(View $route, array $metadataRequestParameters): void
+    {
+        $oldMetadataRequestParameters = $route->getOption('metadataRequestParameters');
+        $newMetadataRequestParameters = $oldMetadataRequestParameters ? \array_merge($oldMetadataRequestParameters, $metadataRequestParameters) : $metadataRequestParameters;
+
+        $route->setOption('metadataRequestParameters', $newMetadataRequestParameters);
+    }
+
     private function addRequestParametersToView(View $route, array $requestParameters): void
     {
         $oldRequestParameters = $route->getOption('requestParameters');

@@ -161,6 +161,26 @@ class ActivityControllerTest extends SuluTestCase
             'Max Mustermann has created the page "Test Page 1234"',
             $content->_embedded->activities[0]->text
         );
+
+        self::assertSame(
+            'Page',
+            $content->_embedded->activities[0]->resource
+        );
+    }
+
+    public function testCgetActionActivityResource(): void
+    {
+        $this->client->jsonRequest('GET', '/api/activities', [
+            'resourceKey' => 'pages',
+            'resourceId' => 1,
+        ]);
+
+        $content = \json_decode((string) $this->client->getResponse()->getContent());
+
+        self::assertSame(
+            'Page',
+            $content->_embedded->activities[0]->resource
+        );
     }
 
     private static function createActivity(

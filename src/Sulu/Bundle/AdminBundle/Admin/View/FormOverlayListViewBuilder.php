@@ -21,6 +21,7 @@ class FormOverlayListViewBuilder implements FormOverlayListViewBuilderInterface
         ListViewBuilderTrait::addLocalesToView insteadof FormViewBuilderTrait;
         ListViewBuilderTrait::addToolbarActionsToView insteadof FormViewBuilderTrait;
         ListViewBuilderTrait::addRequestParametersToView insteadof FormViewBuilderTrait;
+        FormViewBuilderTrait::addMetadataRequestParametersToView insteadof ListViewBuilderTrait;
     }
     use TabViewChildBuilderTrait;
 

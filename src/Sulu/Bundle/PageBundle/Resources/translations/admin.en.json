@@ -62,6 +62,7 @@
     "sulu_page.add_schedule": "Add schedule",
     "sulu_page.schedules_label": "Assign time schedule",
     "sulu_page.schedules_description": "The block will only be visible if at least one condition is valid.",
+    "sulu_activity.resource.pages": "Page",
     "sulu_activity.text.pages.created": "{userFullName} has created the page \"{resourceTitle}\"",
     "sulu_activity.text.pages.modified": "{userFullName} has changed the page \"{resourceTitle}\"",
     "sulu_activity.text.pages.removed": "{userFullName} has removed the page \"{resourceTitle}\"",

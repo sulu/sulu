@@ -92,6 +92,7 @@ class List extends React.Component<Props> {
                     userSettingsKey = DEFAULT_USER_SETTINGS_KEY,
                     routerAttributesToListMetadata = {},
                     resourceStorePropertiesToListMetadata = {},
+                    metadataRequestParameters = {},
                 },
             },
         } = router;
@@ -132,7 +133,8 @@ class List extends React.Component<Props> {
             attributes,
             routerAttributesToListMetadata,
             resourceStorePropertiesToListMetadata,
-            props.resourceStore
+            props.resourceStore,
+            metadataRequestParameters
         );
 
         this.listStore = new ListStore(
@@ -156,9 +158,10 @@ class List extends React.Component<Props> {
         attributes: Object,
         routerAttributesToListMetadata: {[string | number]: string},
         resourceStorePropertiesToListMetadata: {[string | number]: string},
-        resourceStore: ?ResourceStore
+        resourceStore: ?ResourceStore,
+        metadataRequestParameters: {[string | number]: string}
     ) {
-        const metadataOptions = {};
+        const metadataOptions = {...metadataRequestParameters};
         routerAttributesToListMetadata = toJS(routerAttributesToListMetadata);
 
         Object.keys(routerAttributesToListMetadata).forEach((key) => {

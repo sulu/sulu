@@ -1521,6 +1521,34 @@ test('Should pass router attributes array from router to the ListStore metadataO
     expect(listStore.metadataOptions.title).toBeUndefined();
 });
 
+test('Should pass metadataRequestParameters to metadataOptions', () => {
+    const List = require('../List').default;
+    const router = {
+        bind: jest.fn(),
+        attributes: {
+            id: '123-123-123',
+            locale: 'en',
+            title: 'Sulu is awesome',
+        },
+        route: {
+            options: {
+                adapters: ['table'],
+                requestParameters: {},
+                listKey: 'test',
+                locales: ['en', 'de'],
+                resourceKey: 'test',
+                metadataRequestParameters: {
+                    showResource: true,
+                },
+            },
+        },
+    };
+
+    const list = mount(<List router={router} />);
+    const listStore = list.instance().listStore;
+    expect(listStore.metadataOptions.showResource).toEqual(true);
+});
+
 test('Should pass resource-store properties array from router to the ListStore metadataOptions', () => {
     const List = require('../List').default;
     const router = {
