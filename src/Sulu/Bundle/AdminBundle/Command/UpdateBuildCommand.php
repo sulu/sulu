@@ -42,16 +42,6 @@ class UpdateBuildCommand extends Command
      */
     private $suluVersion;
 
-    /**
-     * @var string
-     */
-    private $remoteRepository;
-
-    /**
-     * @var string
-     */
-    private $remoteArchive;
-
     const ASSETS_DIR = \DIRECTORY_SEPARATOR . 'assets' . \DIRECTORY_SEPARATOR . 'admin' . \DIRECTORY_SEPARATOR;
 
     const BUILD_DIR = \DIRECTORY_SEPARATOR . 'public' . \DIRECTORY_SEPARATOR . 'build' . \DIRECTORY_SEPARATOR . 'admin';
@@ -67,8 +57,6 @@ class UpdateBuildCommand extends Command
         $this->httpClient = $httpClient;
         $this->projectDir = $projectDir;
         $this->suluVersion = $suluVersion;
-        $this->remoteRepository = 'https://raw.githubusercontent.com/sulu/skeleton/' . $suluVersion;
-        $this->remoteArchive = 'https://codeload.github.com/sulu/skeleton/zip/' . $suluVersion;
     }
 
     protected function configure()
@@ -84,17 +72,38 @@ class UpdateBuildCommand extends Command
         $ui = new SymfonyStyle($input, $output);
         $filesystem = new Filesystem();
 
-        if (!\preg_match(static::VERSION_REGEX, $this->suluVersion)) {
+        $needManualBuild = false;
+
+        $suluVersion = $this->suluVersion;
+        $isTaggedVersion = \preg_match(static::VERSION_REGEX, $this->suluVersion);
+
+        if (!$isTaggedVersion) {
             $ui->warning(
                 'This command can only download the official build for tagged versions of the "sulu/sulu" '
                 . 'package, not for branches etc. Your version is "' . $this->suluVersion . '".' . \PHP_EOL
-                . 'When not using a tagged version, you need to create the JavaScript build by yourself. '
+                . 'When not using a tagged version, you need to create the JavaScript build by yourself.' . \PHP_EOL
                 . 'Please make sure that the content of your "assets/admin" folder is compatible with '
                 . 'your "sulu/sulu" package.'
             );
 
-            return $this->doManualBuild($ui);
+            if ('y' !== \strtolower(
+                $ui->ask('Do you want to update your "assets/admin" folder to match the "sulu/skeleton"?', 'y')
+            )) {
+                return 0;
+            }
+
+            // if `2.3@dev` is set it will need to convert `2.x-dev` into `2.x`
+            // if `2.2.*@dev` is set it will need to convert `2.2.x-dev` into `2.2`
+            $suluVersion = \str_replace('-dev', '', $suluVersion);
+            if (3 !== \strlen($suluVersion)) {
+                $suluVersion = \str_replace('.x', '', $suluVersion);
+            }
+
+            $needManualBuild = true;
         }
+
+        $remoteRepository = 'https://raw.githubusercontent.com/sulu/skeleton/' . $suluVersion;
+        $remoteArchive = 'https://codeload.github.com/sulu/skeleton/zip/' . $suluVersion;
 
         $output->writeln('<info>Checking for changed files...</info>');
 
@@ -122,13 +131,11 @@ class UpdateBuildCommand extends Command
             }
         }
 
-        $needManualBuild = false;
-
         foreach ($assetFiles as $file) {
             $filePath = static::ASSETS_DIR . $file;
             $ui->section('Checking: ' . $filePath);
             $localContent = $this->getLocalFile($filePath);
-            $remoteContent = $this->getRemoteFile($filePath);
+            $remoteContent = $this->getRemoteFile($remoteRepository, $filePath);
 
             if ($this->hash($localContent) !== $this->hash($remoteContent)) {
                 $ui->writeln('Differences between local and remote version of the file found:');
@@ -169,13 +176,17 @@ class UpdateBuildCommand extends Command
         }
 
         if ($needManualBuild) {
-            $ui->warning(\sprintf(
-                'The files in the local "%s" folder do not match the ones in the remote repository "%s".' . \PHP_EOL
-                . 'If you have added custom JavaScript to the administration interface, you need to create '
-                . 'the JavaScript build by yourself.',
-                static::ASSETS_DIR,
-                $this->remoteRepository
-            ));
+            if ($isTaggedVersion) {
+                $ui->warning(\sprintf(
+                    'The files in the local "%s" folder do not match the ones in the remote repository "%s".' . \PHP_EOL
+                    . 'If you have added custom JavaScript to the administration interface, you need to create '
+                    . 'the JavaScript build by yourself.',
+                    static::ASSETS_DIR,
+                    $remoteRepository
+                ));
+            } else {
+                $ui->warning('You are not using a tagged version of the "sulu/sulu" package and therefore need to create the JavaScript build by yourself.');
+            }
 
             return $this->doManualBuild($ui);
         }
@@ -184,7 +195,7 @@ class UpdateBuildCommand extends Command
         $tempFileZip = $tempDirectory . '.zip';
 
         $output->writeln('<info>Download remote repository...</info>');
-        $response = $this->httpClient->request('GET', $this->remoteArchive);
+        $response = $this->httpClient->request('GET', $remoteArchive);
         \file_put_contents($tempFileZip, $response->getContent());
 
         $zip = new \ZipArchive();
@@ -194,7 +205,7 @@ class UpdateBuildCommand extends Command
             $zip->close();
 
             $buildDir = $this->projectDir . static::BUILD_DIR;
-            $extractedFolderName = static::REPOSITORY_NAME . '-' . $this->suluVersion;
+            $extractedFolderName = static::REPOSITORY_NAME . '-' . $suluVersion;
             $tempProjectDir = $tempDirectory . \DIRECTORY_SEPARATOR . $extractedFolderName;
 
             $output->writeln('<info>Delete old build folder...</info>');
@@ -225,10 +236,10 @@ class UpdateBuildCommand extends Command
         return \file_get_contents($this->projectDir . $path);
     }
 
-    private function getRemoteFile(string $path)
+    private function getRemoteFile(string $remoteRepository, string $path)
     {
         $path = \str_replace(\DIRECTORY_SEPARATOR, '/', $path);
-        $response = $this->httpClient->request('GET', $this->remoteRepository . $path);
+        $response = $this->httpClient->request('GET', $remoteRepository . $path);
 
         return $response->getContent();
     }
