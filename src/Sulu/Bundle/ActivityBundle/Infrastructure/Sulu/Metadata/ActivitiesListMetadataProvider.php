@@ -15,6 +15,9 @@ use Sulu\Bundle\AdminBundle\Metadata\ListMetadata\ListMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 
+/**
+ * @internal
+ */
 class ActivitiesListMetadataProvider implements MetadataProviderInterface
 {
     /**
