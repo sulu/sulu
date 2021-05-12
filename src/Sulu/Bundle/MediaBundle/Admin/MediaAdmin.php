@@ -150,6 +150,7 @@ class MediaAdmin extends Admin
                     ->setOption('tabTitle', 'sulu_media.formats')
                     ->setParent(static::EDIT_FORM_VIEW)
             );
+
             $viewCollection->add(
                 $this->viewBuilderFactory
                     ->createViewBuilder(static::EDIT_FORM_HISTORY_VIEW, '/history', 'sulu_media.history')

@@ -17,4 +17,12 @@ interface TabViewBuilderInterface extends ViewBuilderInterface
      * @param string[] $routerAttributesToBlacklist
      */
     public function addRouterAttributesToBlacklist(array $routerAttributesToBlacklist): self;
+
+    public function setTabTitle(string $tabTitle): self;
+
+    public function setTabOrder(int $tabOrder): self;
+
+    public function setTabPriority(int $tabPriority): self;
+
+    public function setTabCondition(string $tabCondition): self;
 }

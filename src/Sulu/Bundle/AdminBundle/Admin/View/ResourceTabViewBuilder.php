@@ -15,7 +15,14 @@ class ResourceTabViewBuilder implements ResourceTabViewBuilderInterface
 {
     use ViewBuilderTrait;
     use FormViewBuilderTrait;
-    use TabViewBuilderTrait;
+    use TabViewChildBuilderTrait, TabViewBuilderTrait {
+        TabViewChildBuilderTrait::setTabTitleToView insteadof TabViewBuilderTrait;
+        TabViewChildBuilderTrait::setTabConditionToView insteadof TabViewBuilderTrait;
+        TabViewChildBuilderTrait::setTabOrderToView insteadof TabViewBuilderTrait;
+        TabViewChildBuilderTrait::setTabPriorityToView insteadof TabViewBuilderTrait;
+        TabViewChildBuilderTrait::addTabBadgesToView insteadof TabViewBuilderTrait;
+        TabViewChildBuilderTrait::setDisableTabGapToView insteadof TabViewBuilderTrait;
+    }
 
     const TYPE = 'sulu_admin.resource_tabs';
 
@@ -93,5 +100,33 @@ class ResourceTabViewBuilder implements ResourceTabViewBuilderInterface
         }
 
         return clone $this->view;
+    }
+
+    public function setTabTitle(string $tabTitle): ResourceTabViewBuilderInterface
+    {
+        $this->setTabTitleToView($this->view, $tabTitle);
+
+        return $this;
+    }
+
+    public function setTabOrder(int $tabOrder): ResourceTabViewBuilderInterface
+    {
+        $this->setTabOrderToView($this->view, $tabOrder);
+
+        return $this;
+    }
+
+    public function setTabPriority(int $tabPriority): ResourceTabViewBuilderInterface
+    {
+        $this->setTabPriorityToView($this->view, $tabPriority);
+
+        return $this;
+    }
+
+    public function setTabCondition(string $tabCondition): ResourceTabViewBuilderInterface
+    {
+        $this->setTabConditionToView($this->view, $tabCondition);
+
+        return $this;
     }
 }

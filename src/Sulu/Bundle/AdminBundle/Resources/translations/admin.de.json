@@ -189,5 +189,8 @@
     "sulu_admin.preview_date_time_description": "Eingabfeld löschen um das aktuelle Datum zu verwenden.",
     "sulu_admin.lastDay": "Gestern",
     "sulu_admin.nextDay": "Morgen",
-    "sulu_admin.sameDay": "Heute"
+    "sulu_admin.sameDay": "Heute",
+    "sulu_admin.activity": "Aktivität",
+    "sulu_admin.versions": "Versionierung",
+    "sulu_admin.activity_version": "Aktivität & Versionierung"
 }

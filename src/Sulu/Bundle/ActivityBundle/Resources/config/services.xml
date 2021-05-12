@@ -70,6 +70,7 @@
                  class="Sulu\Bundle\ActivityBundle\Infrastructure\Sulu\Admin\ActivityAdmin">
             <argument type="service" id="sulu_admin.view_builder_factory"/>
             <argument type="service" id="sulu_security.security_checker"/>
+            <argument>%sulu_document_manager.versioning.enabled%</argument>
 
             <tag name="sulu.admin"/>
             <tag name="sulu.context" context="admin"/>
