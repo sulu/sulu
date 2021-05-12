@@ -76,6 +76,8 @@ test('Do not send collaboration request if disabled', () => {
     CollaborationStore.enabled = false;
 
     const collaborationStore = new CollaborationStore('pages', 1);
+    collaborationStore.destroy();
 
     expect(ResourceRequester.put).not.toHaveBeenCalled();
+    expect(ResourceRequester.delete).not.toHaveBeenCalled();
 });
