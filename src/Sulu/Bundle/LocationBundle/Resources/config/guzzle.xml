@@ -8,7 +8,7 @@
     <services>
         <!-- Guzzle client -->
         <service id="sulu_location.geolocator.guzzle.client" class="%sulu_location.guzzle.client.class%">
-            <deprecated />
+            <deprecated package="sulu/sulu" version="2.2" />
         </service>
     </services>
 </container>
