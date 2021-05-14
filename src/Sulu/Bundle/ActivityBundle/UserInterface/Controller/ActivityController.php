@@ -132,6 +132,7 @@ class ActivityController extends AbstractRestController implements ClassResource
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
         $listBuilder->setSelectFields($fieldDescriptors);
         $listBuilder->sort($fieldDescriptors['timestamp'], ListBuilderInterface::SORTORDER_DESC);
+        $listBuilder->sort($fieldDescriptors['id'], ListBuilderInterface::SORTORDER_DESC);
 
         $translationLocale = $user->getLocale();
 
@@ -424,6 +425,7 @@ class ActivityController extends AbstractRestController implements ClassResource
         ];
 
         return [
+            'id' => $this->createFieldDescriptor('id'),
             'type' => $this->createFieldDescriptor('type'),
             'context' => $this->createFieldDescriptor('context'),
             'timestamp' => $this->createFieldDescriptor('timestamp'),
