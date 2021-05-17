@@ -2,8 +2,8 @@
 import {action} from 'mobx';
 import log from 'loglevel';
 import ResourceRequester from '../../../services/ResourceRequester';
-import type {LoadOptions} from '../types';
 import AbstractLoadingStrategy from './AbstractLoadingStrategy';
+import type {LoadOptions} from '../types';
 
 export default class PaginatedLoadingStrategy extends AbstractLoadingStrategy {
     // @deprecated

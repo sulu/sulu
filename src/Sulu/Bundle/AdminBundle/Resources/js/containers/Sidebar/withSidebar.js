@@ -1,12 +1,12 @@
 // @flow
 import {autorun} from 'mobx';
-import type {Component} from 'react';
 import log from 'loglevel';
 import {getViewKeyFromRoute} from '../../services/Router';
 import {buildHocDisplayName} from '../../utils/react';
+import sidebarStore from './stores/sidebarStore';
 import type {ViewProps} from '../index';
 import type {SidebarConfig} from './types';
-import sidebarStore from './stores/sidebarStore';
+import type {Component} from 'react';
 
 const UPDATE_ROUTE_HOOK_PRIORITY = 1024;
 

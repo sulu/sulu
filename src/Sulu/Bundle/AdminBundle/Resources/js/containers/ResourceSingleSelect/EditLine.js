@@ -1,9 +1,9 @@
 // @flow
 import React from 'react';
-import type {ElementRef} from 'react';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import editLineStyles from './editLine.scss';
+import type {ElementRef} from 'react';
 
 type Props<T> = {|
     id: T,

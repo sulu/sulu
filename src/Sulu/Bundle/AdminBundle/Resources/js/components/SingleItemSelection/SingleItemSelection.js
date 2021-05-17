@@ -1,11 +1,11 @@
 // @flow
 import React from 'react';
 import classNames from 'classnames';
-import type {Node} from 'react';
 import Icon from '../Icon';
 import Loader from '../Loader/Loader';
 import singleItemSelectionStyles from './singleItemSelection.scss';
 import Button from './Button';
+import type {Node} from 'react';
 import type {Button as ButtonConfig} from './types';
 
 type Props<T, U> = {|

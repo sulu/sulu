@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
 import {computed, observable, intercept, toJS, reaction, isArrayLike} from 'mobx';
-import type {IObservableValue} from 'mobx';
 import equals from 'fast-deep-equal';
 import {observer} from 'mobx-react';
 import jsonpointer from 'json-pointer';
@@ -14,9 +13,10 @@ import MultiAutoComplete from '../../../containers/MultiAutoComplete';
 import {translate} from '../../../utils/Translator';
 import MultiSelectionComponent from '../../MultiSelection';
 import userStore from '../../../stores/userStore';
+import selectionStyles from './selection.scss';
 import type {FieldTypeProps} from '../../../types';
 import type {SchemaOption} from '../types';
-import selectionStyles from './selection.scss';
+import type {IObservableValue} from 'mobx';
 
 type Value = Array<string | number>;
 type Props = FieldTypeProps<Value>;

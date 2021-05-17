@@ -1,8 +1,8 @@
 // @flow
-import type {IObservableValue} from 'mobx';
-import type {RawSchema} from '../types';
 import MemoryFormStore from './MemoryFormStore';
 import SchemaFormStoreDecorator from './SchemaFormStoreDecorator';
+import type {IObservableValue} from 'mobx';
+import type {RawSchema} from '../types';
 
 class MemoryFormStoreFactory {
     createFromFormKey(

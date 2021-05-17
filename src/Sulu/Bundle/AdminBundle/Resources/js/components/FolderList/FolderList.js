@@ -1,8 +1,8 @@
 // @flow
 import React from 'react';
-import type {ChildrenArray, Element} from 'react';
 import Folder from './Folder';
 import folderListStyles from './folderList.scss';
+import type {ChildrenArray, Element} from 'react';
 
 type Props = {
     children: ChildrenArray<Element<typeof Folder>>,

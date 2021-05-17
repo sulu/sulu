@@ -1,8 +1,8 @@
 // @flow
 import React from 'react';
+import {translate} from '../../../utils/Translator';
 import type {Node} from 'react';
 import type {BlockPreviewTransformer} from '../types';
-import {translate} from '../../../utils/Translator';
 
 export default class SmartContentBlockPreviewTransformer implements BlockPreviewTransformer {
     transform(value: *): Node {

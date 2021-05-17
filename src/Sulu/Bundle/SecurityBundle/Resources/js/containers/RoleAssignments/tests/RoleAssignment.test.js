@@ -1,9 +1,9 @@
 // @flow
 import React from 'react';
 import {render, shallow} from 'enzyme';
-import type {Localization} from 'sulu-admin-bundle/stores';
 import {MultiSelect} from 'sulu-admin-bundle/components';
 import RoleAssignment from '../RoleAssignment';
+import type {Localization} from 'sulu-admin-bundle/stores';
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: (key) => key,

@@ -3,8 +3,8 @@ import React from 'react';
 import {computed} from 'mobx';
 import {observer} from 'mobx-react';
 import {MultiSelect} from 'sulu-admin-bundle/components';
-import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 import {webspaceStore} from 'sulu-page-bundle/stores';
+import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 
 @observer
 class AnalyticsDomainSelect extends React.Component<FieldTypeProps<Array<string>>> {

@@ -1,8 +1,8 @@
 // @flow
-import type {ChildrenArray, Element} from 'react';
 import React from 'react';
-import type {ButtonConfig, SelectMode} from './types';
 import Row from './Row';
+import type {ChildrenArray, Element} from 'react';
+import type {ButtonConfig, SelectMode} from './types';
 
 type Props<T: number | string> = {
     /** @ignore */

@@ -1,11 +1,11 @@
 // @flow
-import type {ElementRef} from 'react';
 import React from 'react';
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import classNames from 'classnames';
-import type {CircleChange} from './types';
 import modifiableCircleStyles from './modifiableCircle.scss';
+import type {CircleChange} from './types';
+import type {ElementRef} from 'react';
 
 type Props = {
     disabled: boolean,

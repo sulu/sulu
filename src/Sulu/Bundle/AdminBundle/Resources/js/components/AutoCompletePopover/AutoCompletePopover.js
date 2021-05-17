@@ -1,12 +1,12 @@
 // @flow
 import React from 'react';
-import type {ElementRef} from 'react';
 import Mousetrap from 'mousetrap';
 import {computed, observable} from 'mobx';
 import Menu from '../Menu';
 import Popover from '../Popover';
 import Suggestion from './Suggestion';
 import autoCompletePopoverStyles from './autoCompletePopover.scss';
+import type {ElementRef} from 'react';
 
 type Props = {
     anchorElement: ElementRef<*>,

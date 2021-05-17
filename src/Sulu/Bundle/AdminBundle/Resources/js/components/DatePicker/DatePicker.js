@@ -1,15 +1,15 @@
 // @flow
 import React from 'react';
 import ReactDOM from 'react-dom';
-import type {ElementRef} from 'react';
 import ReactDatetime from 'react-datetime';
 import {observer} from 'mobx-react';
 import {action, observable} from 'mobx';
 import 'react-datetime/css/react-datetime.css';
-import type Moment from 'moment';
 import moment from 'moment';
 import Input from '../Input';
 import Popover from '../Popover';
+import type Moment from 'moment';
+import type {ElementRef} from 'react';
 import './datePicker.scss';
 
 type Props = {|

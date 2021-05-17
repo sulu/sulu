@@ -1,8 +1,8 @@
 // @flow
 import React from 'react';
-import type {Element, ElementRef} from 'react';
 import classNames from 'classnames';
 import tabStyles from './tab.scss';
+import type {Element, ElementRef} from 'react';
 
 type Props = {
     badges: Element<*>[],

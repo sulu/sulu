@@ -4,8 +4,8 @@ import {observable} from 'mobx';
 import {Dialog, Input, Form} from 'sulu-admin-bundle/components';
 import {userStore} from 'sulu-admin-bundle/stores';
 import {translate} from 'sulu-admin-bundle/utils';
-import type {InternalLinkTypeOverlayProps} from 'sulu-admin-bundle/types';
 import SingleMediaSelection from '../../../../SingleMediaSelection';
+import type {InternalLinkTypeOverlayProps} from 'sulu-admin-bundle/types';
 import type {Value} from '../../../../SingleMediaSelection/types';
 import type {Media} from '../../../../../types';
 

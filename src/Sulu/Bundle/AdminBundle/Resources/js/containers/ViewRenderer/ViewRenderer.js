@@ -1,9 +1,9 @@
 // @flow
 import React from 'react';
-import type {Element} from 'react';
 import {observer} from 'mobx-react';
 import Router, {getViewKeyFromRoute, Route} from '../../services/Router';
 import viewRegistry from './registries/viewRegistry';
+import type {Element} from 'react';
 import type {View} from './types';
 
 type Props = {

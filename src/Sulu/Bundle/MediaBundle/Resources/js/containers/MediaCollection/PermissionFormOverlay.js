@@ -3,11 +3,11 @@ import React, {Fragment} from 'react';
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Form, memoryFormStoreFactory, resourceFormStoreFactory} from 'sulu-admin-bundle/containers';
-import type {FormStoreInterface} from 'sulu-admin-bundle/containers';
 import {Dialog, Overlay} from 'sulu-admin-bundle/components';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {translate} from 'sulu-admin-bundle/utils';
 import permissionFormOverlayStyles from './permissionFormOverlay.scss';
+import type {FormStoreInterface} from 'sulu-admin-bundle/containers';
 
 type Props = {|
     collectionId: ?number | string,

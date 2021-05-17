@@ -1,6 +1,5 @@
 // @flow
 import React from 'react';
-import type {Node} from 'react';
 import {action, autorun, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import Mousetrap from 'mousetrap';
@@ -12,6 +11,7 @@ import {translate} from '../../utils/Translator';
 import AbstractFieldFilterType from './fieldFilterTypes/AbstractFieldFilterType';
 import listFieldFilterTypeRegistry from './registries/listFieldFilterTypeRegistry';
 import fieldFilterItemStyles from './fieldFilterItem.scss';
+import type {Node} from 'react';
 
 type Props = {|
     column: string,

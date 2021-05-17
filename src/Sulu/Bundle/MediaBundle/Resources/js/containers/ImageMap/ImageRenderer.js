@@ -1,13 +1,13 @@
 // @flow
 import React from 'react';
-import type {ElementRef} from 'react';
 import {action, observable, toJS, computed} from 'mobx';
-import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import debounce from 'debounce';
 import {CircleSelection, RectangleSelection} from 'sulu-admin-bundle/components';
-import type {Hotspot, Value} from './types';
 import imageRendererStyles from './imageRenderer.scss';
+import type {Hotspot, Value} from './types';
+import type {IObservableValue} from 'mobx';
+import type {ElementRef} from 'react';
 
 type Props = {
     disabled: boolean,

@@ -1,10 +1,10 @@
 // @flow
 import React from 'react';
-import type {ElementRef, Node} from 'react';
 import classNames from 'classnames';
 import CroppedText from '../CroppedText';
 import Icon from '../Icon';
 import displayValueStyles from './displayValue.scss';
+import type {ElementRef, Node} from 'react';
 import type {Skin} from './types';
 
 type Props = {|

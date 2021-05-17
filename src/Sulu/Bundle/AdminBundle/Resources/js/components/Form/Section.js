@@ -1,11 +1,11 @@
 // @flow
 import React from 'react';
-import type {ChildrenArray, Element} from 'react';
 import Divider from '../Divider';
 import Grid from '../Grid';
-import type {ColSpan} from '../Grid';
 import Field from './Field';
 import gridStyles from './grid.scss';
+import type {ColSpan} from '../Grid';
+import type {ChildrenArray, Element} from 'react';
 
 type Props = {|
     children: ?ChildrenArray<?Element<typeof Field | typeof Section>>,

@@ -1,15 +1,15 @@
 // @flow
 import React, {Fragment} from 'react';
 import {action, computed, observable} from 'mobx';
-import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import {Dialog, Loader, Table} from 'sulu-admin-bundle/components';
 import {withToolbar} from 'sulu-admin-bundle/containers';
-import type {ViewProps} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {ResourceRequester} from 'sulu-admin-bundle/services';
 import {translate} from 'sulu-admin-bundle/utils';
 import mediaHistoryStyles from './mediaHistory.scss';
+import type {ViewProps} from 'sulu-admin-bundle/containers';
+import type {IObservableValue} from 'mobx';
 
 const COLLECTION_ROUTE = 'sulu_media.overview';
 

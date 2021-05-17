@@ -1,9 +1,9 @@
 // @flow
-import type {ChildrenArray, Node, ElementRef} from 'react';
 import React from 'react';
 import imagesLoaded from 'imagesloaded';
 import MasonryLayout from 'masonry-layout';
 import masonryStyles from './masonry.scss';
+import type {ChildrenArray, Node, ElementRef} from 'react';
 
 const MASONRY_OPTIONS = {
     gutter: 30,

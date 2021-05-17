@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
-import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 import SegmentSelectContainer from '../../SegmentSelect';
+import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 import type {Value} from '../../SegmentSelect/types';
 
 export default class SegmentSelect extends React.Component<FieldTypeProps<Value>> {

@@ -1,9 +1,9 @@
 // @flow
 import React from 'react';
-import type {Node} from 'react';
 import {computed} from 'mobx';
 import {observer} from 'mobx-react';
 import HeadingComponent from '../../../components/Heading';
+import type {Node} from 'react';
 import type {FieldTypeProps} from '../../../types';
 
 type Props<T> = {

@@ -1,9 +1,9 @@
 // @flow
 import React from 'react';
-import type {ChildrenArray, Element} from 'react';
 import Icon from '../Icon';
 import Item from './Item';
 import breadcrumbStyles from './breadcrumb.scss';
+import type {ChildrenArray, Element} from 'react';
 
 const ICON_ANGLE_RIGHT = 'su-angle-right';
 

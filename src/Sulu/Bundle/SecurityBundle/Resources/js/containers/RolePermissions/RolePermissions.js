@@ -5,8 +5,8 @@ import {observer} from 'mobx-react';
 import {Loader} from 'sulu-admin-bundle/components';
 import {ResourceRequester} from 'sulu-admin-bundle/services';
 import securityContextStore from '../../stores/securityContextStore';
-import type {Role} from '../../types';
 import SystemRolePermissions from './SystemRolePermissions';
+import type {Role} from '../../types';
 import type {RolePermissions as RolePermissionsType} from './types';
 
 type Props = {|

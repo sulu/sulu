@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
 import {action, autorun, observable} from 'mobx';
-import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import {ListStore} from 'sulu-admin-bundle/containers';
 import {Overlay} from 'sulu-admin-bundle/components';
@@ -9,6 +8,7 @@ import {translate} from 'sulu-admin-bundle/utils';
 import MediaCollection from '../MediaCollection';
 import CollectionStore from '../../stores/CollectionStore';
 import mediaSelectionOverlayStyles from './mediaSelectionOverlay.scss';
+import type {IObservableValue} from 'mobx';
 
 const MEDIA_RESOURCE_KEY = 'media';
 const COLLECTIONS_RESOURCE_KEY = 'collections';

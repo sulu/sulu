@@ -6,8 +6,8 @@ import {Overlay} from 'sulu-admin-bundle/components';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {translate} from 'sulu-admin-bundle/utils';
 import ImageFocusPoint from '../../components/ImageFocusPoint';
-import type {Point} from '../../components/ImageFocusPoint';
 import focusPointOverlayStyles from './focusPointOverlay.scss';
+import type {Point} from '../../components/ImageFocusPoint';
 
 type Props = {|
     onClose: () => void,

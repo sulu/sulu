@@ -1,8 +1,8 @@
 // @flow
 import React from 'react';
 import Router from '../../services/Router';
-import type {ErrorCollection} from '../Form/types';
 import {FormInspector, Renderer} from '../Form';
+import type {ErrorCollection} from '../Form/types';
 import type {Schema} from '../Form';
 
 type Props = {|

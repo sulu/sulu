@@ -1,8 +1,8 @@
 // @flow
 import React from 'react';
-import type {Node} from 'react';
 import Icon from '../Icon';
 import cardStyles from './card.scss';
+import type {Node} from 'react';
 
 type Props<T> = {|
     children: Node,

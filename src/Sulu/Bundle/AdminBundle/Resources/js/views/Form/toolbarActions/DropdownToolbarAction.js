@@ -1,12 +1,12 @@
 // @flow
 import React, {Fragment} from 'react';
 import {ResourceFormStore} from '../../../containers/Form';
-import type {DropdownOption} from '../../../components/Toolbar/types';
 import Router from '../../../services/Router';
 import ResourceStore from '../../../stores/ResourceStore';
 import formToolbarActionRegistry from '../registries/formToolbarActionRegistry';
 import Form from '../Form';
 import AbstractFormToolbarAction from './AbstractFormToolbarAction';
+import type {DropdownOption} from '../../../components/Toolbar/types';
 
 export default class DropdownToolbarAction extends AbstractFormToolbarAction {
     toolbarActions: Array<AbstractFormToolbarAction> = [];

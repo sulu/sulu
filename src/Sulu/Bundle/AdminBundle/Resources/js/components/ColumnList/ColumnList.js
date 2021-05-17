@@ -2,13 +2,13 @@
 import {observer} from 'mobx-react';
 import {action, observable} from 'mobx';
 import React from 'react';
-import type {ChildrenArray, Element, ElementRef} from 'react';
 import classNames from 'classnames';
 import Column from './Column';
 import Item from './Item';
 import Toolbar from './Toolbar';
-import type {ToolbarItemConfig} from './types';
 import columnListStyles from './columnList.scss';
+import type {ToolbarItemConfig} from './types';
+import type {ChildrenArray, Element, ElementRef} from 'react';
 
 type Props = {|
     children: ChildrenArray<Element<typeof Column>>,

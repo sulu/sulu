@@ -1,7 +1,6 @@
 // @flow
 import {observer} from 'mobx-react';
 import React from 'react';
-import type {ChildrenArray, Element} from 'react';
 import classNames from 'classnames';
 import Icon from '../Icon';
 import Header from './Header';
@@ -9,8 +8,9 @@ import Body from './Body';
 import Row from './Row';
 import Cell from './Cell';
 import HeaderCell from './HeaderCell';
-import type {ButtonConfig, SelectMode, Skin} from './types';
 import tableStyles from './table.scss';
+import type {ButtonConfig, SelectMode, Skin} from './types';
+import type {ChildrenArray, Element} from 'react';
 
 const PLACEHOLDER_ICON = 'su-battery-low';
 

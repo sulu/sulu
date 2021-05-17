@@ -1,10 +1,10 @@
 // @flow
 import React from 'react';
 import {comparer, computed, observable, reaction} from 'mobx';
-import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import ListStore from '../../containers/List/stores/ListStore';
 import ListOverlay from '../ListOverlay';
+import type {IObservableValue} from 'mobx';
 import type {OverlayType} from '../ListOverlay';
 
 const USER_SETTINGS_KEY = 'multi_list_overlay';

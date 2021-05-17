@@ -1,10 +1,10 @@
 // @flow
 import React from 'react';
-import type {Node} from 'react';
 import log from 'loglevel';
 import Icon from '../../../components/Icon';
-import type {FieldTransformer} from '../types';
 import iconFieldTransformerStyles from './iconFieldTransformer.scss';
+import type {FieldTransformer} from '../types';
+import type {Node} from 'react';
 
 export default class IconFieldTransformer implements FieldTransformer {
     transform(value: *, parameters: {[string]: mixed}): Node {

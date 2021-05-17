@@ -1,9 +1,9 @@
 // @flow
 import React from 'react';
 import classNames from 'classnames';
-import type {ChildrenArray, Element} from 'react';
 import Icon from '../Icon';
 import itemStyles from './item.scss';
+import type {ChildrenArray, Element} from 'react';
 
 type Props = {
     active?: boolean,

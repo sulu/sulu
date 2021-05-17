@@ -1,10 +1,10 @@
 // @flow
-import type {ChildrenArray, Element} from 'react';
 import React from 'react';
 import classNames from 'classnames';
 import Loader from '../Loader';
 import Item from './Item';
 import columnStyles from './column.scss';
+import type {ChildrenArray, Element} from 'react';
 
 type Props = {|
     children?: ChildrenArray<Element<typeof Item>>,

@@ -1,19 +1,19 @@
 // @flow
 import React from 'react';
 import {computed, observable, toJS} from 'mobx';
-import type {IObservableValue} from 'mobx';
 import log from 'loglevel';
 import jsonpointer from 'json-pointer';
 import equals from 'fast-deep-equal';
 import {observer} from 'mobx-react';
-import type {FieldTypeProps} from '../../../types';
 import ResourceSingleSelect from '../../../containers/ResourceSingleSelect';
 import SingleAutoComplete from '../../../containers/SingleAutoComplete';
 import SingleSelectionContainer from '../../../containers/SingleSelection';
 import userStore from '../../../stores/userStore';
 import {translate} from '../../../utils/Translator';
-import type {SchemaOption} from '../types';
 import FormInspector from '../FormInspector';
+import type {SchemaOption} from '../types';
+import type {FieldTypeProps} from '../../../types';
+import type {IObservableValue} from 'mobx';
 
 type Value = Object | string | number;
 type Props = FieldTypeProps<Value>;

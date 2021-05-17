@@ -4,9 +4,9 @@ import log from 'loglevel';
 import {observer} from 'mobx-react';
 import React from 'react';
 import RectangleSelection from '../RectangleSelection';
-import type {SelectionData} from '../RectangleSelection';
 import withContainerSize from '../withContainerSize';
 import imageRectangleSelectionStyles from './imageRectangleSelection.scss';
+import type {SelectionData} from '../RectangleSelection';
 
 type Props = {|
     containerHeight: number,

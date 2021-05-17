@@ -2,8 +2,8 @@
 import React from 'react';
 import classNames from 'classnames';
 import Switch from '../Switch';
-import type {SwitchProps} from '../Switch';
 import checkboxStyles from './checkbox.scss';
+import type {SwitchProps} from '../Switch';
 
 type Props<T> = {|
     ...SwitchProps<T>,

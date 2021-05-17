@@ -3,12 +3,12 @@ import React, {Fragment} from 'react';
 import {Portal} from 'react-portal';
 import {observer} from 'mobx-react';
 import {action, computed, observable} from 'mobx';
-import type {ElementRef, Node} from 'react';
 import {afterElementsRendered} from '../../utils/DOM';
 import Backdrop from '../Backdrop';
-import type {PopoverDimensions} from './types';
 import PopoverPositioner from './PopoverPositioner';
 import popoverStyles from './popover.scss';
+import type {PopoverDimensions} from './types';
+import type {ElementRef, Node} from 'react';
 
 type Props = {
     /** This element will be used to position the popover */

@@ -1,14 +1,14 @@
 // @flow
 import React from 'react';
-import type {ElementRef} from 'react';
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import classNames from 'classnames';
 import Popover from '../Popover';
-import type {DropdownOption, Dropdown as DropdownProps} from './types';
 import Button from './Button';
 import OptionList from './OptionList';
 import dropdownStyles from './dropdown.scss';
+import type {DropdownOption, Dropdown as DropdownProps} from './types';
+import type {ElementRef} from 'react';
 
 @observer
 class Dropdown extends React.Component<DropdownProps> {

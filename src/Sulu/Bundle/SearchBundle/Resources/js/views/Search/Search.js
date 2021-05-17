@@ -1,8 +1,8 @@
 // @flow
 import React from 'react';
 import {withToolbar} from 'sulu-admin-bundle/containers';
-import type {ViewProps} from 'sulu-admin-bundle/containers';
 import SearchContainer from '../../containers/Search';
+import type {ViewProps} from 'sulu-admin-bundle/containers';
 
 class Search extends React.Component<ViewProps> {
     render() {

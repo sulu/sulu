@@ -2,8 +2,8 @@
 import React from 'react';
 import classNames from 'classnames';
 import {Icon} from 'sulu-admin-bundle/components';
-import type {ArrowDirection, Point} from './types';
 import imageFocusPointCellStyles from './imageFocusPointCell.scss';
+import type {ArrowDirection, Point} from './types';
 
 const ICON_UP = 'su-angle-up';
 

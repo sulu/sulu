@@ -1,10 +1,10 @@
 // @flow
 import React from 'react';
-import type {ChildrenArray, Element} from 'react';
 import classNames from 'classnames';
-import type {Skin} from './types';
 import CollapsedTab from './CollapsedTab';
 import collapsedTabListStyles from './collapsedTabList.scss';
+import type {Skin} from './types';
+import type {ChildrenArray, Element} from 'react';
 
 type Props = {
     children: ChildrenArray<Element<typeof CollapsedTab> | false>,

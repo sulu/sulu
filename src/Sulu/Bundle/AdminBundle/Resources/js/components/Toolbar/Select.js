@@ -1,14 +1,14 @@
 // @flow
 import React from 'react';
-import type {ElementRef} from 'react';
 import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import classNames from 'classnames';
 import Popover from '../Popover';
-import type {SelectOption, Select as SelectProps} from './types';
 import Button from './Button';
 import OptionList from './OptionList';
 import selectStyles from './select.scss';
+import type {SelectOption, Select as SelectProps} from './types';
+import type {ElementRef} from 'react';
 
 @observer
 class Select<T: ?string | number> extends React.Component<SelectProps<T>> {

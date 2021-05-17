@@ -1,9 +1,9 @@
 // @flow
 import React from 'react';
 import {observer} from 'mobx-react';
-import type {ViewProps} from 'sulu-admin-bundle/containers';
 import {ResourceTabs} from 'sulu-admin-bundle/views';
 import webspaceStore from '../../stores/webspaceStore';
+import type {ViewProps} from 'sulu-admin-bundle/containers';
 
 @observer
 class PageTabs extends React.Component<ViewProps> {

@@ -2,9 +2,9 @@
 import React from 'react';
 import classNames from 'classnames';
 import Loader from '../Loader';
-import type {Button as ButtonConfig} from './types';
 import Button from './Button';
 import headerStyles from './header.scss';
+import type {Button as ButtonConfig} from './types';
 
 const LOADER_SIZE = 24;
 

@@ -1,9 +1,9 @@
 // @flow
 import React from 'react';
 import log from 'loglevel';
+import colorFieldTransformerStyles from './colorFieldTransformer.scss';
 import type {Node} from 'react';
 import type {FieldTransformer} from '../types';
-import colorFieldTransformerStyles from './colorFieldTransformer.scss';
 
 export default class ColorFieldTransformer implements FieldTransformer {
     transform(value: *): Node {

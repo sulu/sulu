@@ -1,8 +1,8 @@
 // @flow
 import React from 'react';
 import Button from '../Button';
-import type {Action} from './types';
 import actionsStyles from './actions.scss';
+import type {Action} from './types';
 
 type Props = {
     actions: Array<Action>,

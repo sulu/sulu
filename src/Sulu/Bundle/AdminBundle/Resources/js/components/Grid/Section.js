@@ -1,11 +1,11 @@
 // @flow
 import React from 'react';
-import type {ChildrenArray, Element} from 'react';
 import classNames from 'classnames';
-import type {BaseItemProps} from './types';
 import BaseItem from './BaseItem';
 import Item from './Item';
 import sectionStyles from './section.scss';
+import type {BaseItemProps} from './types';
+import type {ChildrenArray, Element} from 'react';
 
 type Props = {|
     ...BaseItemProps,

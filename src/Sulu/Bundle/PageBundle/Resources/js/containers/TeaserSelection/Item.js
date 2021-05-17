@@ -1,17 +1,17 @@
 // @flow
 import React, {Fragment} from 'react';
 import {action, observable} from 'mobx';
-import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import textVersion from 'textversionjs';
 import {MimeTypeIndicator} from 'sulu-media-bundle/components';
 import {SingleMediaSelectionOverlay} from 'sulu-media-bundle/containers';
-import type {Media} from 'sulu-media-bundle/types';
 import {Button, Icon, Input} from 'sulu-admin-bundle/components';
 import {TextEditor} from 'sulu-admin-bundle/containers';
 import {translate} from 'sulu-admin-bundle/utils';
 import teaserProviderRegistry from './registries/teaserProviderRegistry';
 import itemStyles from './item.scss';
+import type {Media} from 'sulu-media-bundle/types';
+import type {IObservableValue} from 'mobx';
 import type {TeaserItem} from './types';
 
 type Props = {|

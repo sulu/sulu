@@ -3,8 +3,8 @@ import React from 'react';
 import {SingleSelect} from 'sulu-admin-bundle/components';
 import fieldStyles from 'sulu-admin-bundle/components/Form/field.scss';
 import {translate} from 'sulu-admin-bundle/utils';
-import type {Webspace} from '../../stores/webspaceStore/types';
 import webspaceSegmentSelectStyles from './webspaceSegmentSelect.scss';
+import type {Webspace} from '../../stores/webspaceStore/types';
 
 export default class WebspaceSegmentSelect extends React.Component<{
     disabled: boolean,

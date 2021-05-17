@@ -1,8 +1,8 @@
 // @flow
 import React, {Fragment} from 'react';
-import type {Node} from 'react';
 import Icon from '../Icon';
 import headingStyles from './heading.scss';
+import type {Node} from 'react';
 
 type Props = {|
     children?: Node,

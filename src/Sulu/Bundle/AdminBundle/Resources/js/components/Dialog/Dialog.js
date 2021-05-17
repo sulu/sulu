@@ -3,12 +3,12 @@ import classNames from 'classnames';
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import React, {Fragment} from 'react';
-import type {Node} from 'react';
 import {Portal} from 'react-portal';
 import {afterElementsRendered} from '../../utils/DOM';
 import Backdrop from '../Backdrop';
 import Button from '../Button';
 import dialogStyles from './dialog.scss';
+import type {Node} from 'react';
 
 type Props = {|
     align: 'left' | 'center',

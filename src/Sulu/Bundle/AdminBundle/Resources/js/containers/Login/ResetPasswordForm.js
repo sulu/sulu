@@ -1,6 +1,5 @@
 // @flow
 import React, {Fragment} from 'react';
-import type {ElementRef} from 'react';
 import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import classNames from 'classnames';
@@ -9,6 +8,7 @@ import Button from '../../components/Button/index';
 import Input from '../../components/Input/index';
 import formStyles from './form.scss';
 import Header from './Header';
+import type {ElementRef} from 'react';
 
 type Props = {|
     loading: boolean,

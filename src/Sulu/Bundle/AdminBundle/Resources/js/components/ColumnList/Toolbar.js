@@ -1,12 +1,12 @@
 // @flow
 import React from 'react';
-import type {ElementRef} from 'react';
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import ToolbarDropdown from './ToolbarDropdown';
 import ToolbarButton from './ToolbarButton';
-import type {ToolbarItemConfig} from './types';
 import toolbarStyles from './toolbar.scss';
+import type {ToolbarItemConfig} from './types';
+import type {ElementRef} from 'react';
 
 type Props = {|
     toolbarItems: Array<ToolbarItemConfig>,

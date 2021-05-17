@@ -1,11 +1,11 @@
 // @flow
 import {action, computed, isObservableArray, observable, set, toJS, untracked, when} from 'mobx';
-import type {IObservableValue} from 'mobx';
 import jexl from 'jexl';
 import jsonpointer from 'json-pointer';
 import log from 'loglevel';
-import type {RawSchema, RawSchemaEntry, Schema, SchemaEntry} from '../types';
 import conditionDataProviderRegistry from '../registries/conditionDataProviderRegistry';
+import type {RawSchema, RawSchemaEntry, Schema, SchemaEntry} from '../types';
+import type {IObservableValue} from 'mobx';
 
 const SECTION_TYPE = 'section';
 

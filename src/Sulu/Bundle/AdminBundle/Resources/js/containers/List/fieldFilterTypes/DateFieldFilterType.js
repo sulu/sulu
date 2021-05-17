@@ -1,10 +1,10 @@
 // @flow
 import React, {Fragment} from 'react';
-import type {ElementRef} from 'react';
 import DatePicker from '../../../components/DatePicker';
 import {translate} from '../../../utils/Translator';
 import AbstractFieldFilterType from './AbstractFieldFilterType';
 import dateFieldFilterTypeStyles from './dateFieldFilterType.scss';
+import type {ElementRef} from 'react';
 
 function formatDate(date: ?Date) {
     if (!date) {

@@ -1,8 +1,8 @@
 // @flow
 import React from 'react';
-import type {ElementRef} from 'react';
 import Input from '../../../components/Input';
 import AbstractFieldFilterType from './AbstractFieldFilterType';
+import type {ElementRef} from 'react';
 
 class TextFieldFilterType extends AbstractFieldFilterType<?{eq: string}> {
     handleChange = (value: ?string) => {

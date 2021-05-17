@@ -1,7 +1,7 @@
 //@flow
 import React from 'react';
-import type {ElementRef} from 'react';
 import {List, ListStore} from 'sulu-admin-bundle/containers';
+import type {ElementRef} from 'react';
 
 type Props = {|
     adapters: Array<string>,

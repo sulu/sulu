@@ -2,8 +2,8 @@
 import React from 'react';
 import {observable} from 'mobx';
 import TextEditorContainer from '../../../containers/TextEditor';
-import type {FieldTypeProps} from '../../../types';
 import userStore from '../../../stores/userStore';
+import type {FieldTypeProps} from '../../../types';
 
 export default class TextEditor extends React.Component<FieldTypeProps<?string>> {
     render() {
