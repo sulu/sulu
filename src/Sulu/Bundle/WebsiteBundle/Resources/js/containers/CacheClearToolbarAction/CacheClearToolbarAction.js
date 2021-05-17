@@ -8,12 +8,12 @@ import {buildQueryString, translate} from 'sulu-admin-bundle/utils';
 export default class CacheClearToolbarAction {
     static clearCacheEndpoint: string;
 
-    requestParameters: Object;
+    webspaceKey: ?string;
     @observable cacheClearing = false;
     @observable showDialog = false;
 
-    constructor(requestParameters: Object) {
-        this.requestParameters = requestParameters;
+    constructor(webspaceKey: ?string) {
+        this.webspaceKey = webspaceKey;
     }
 
     getNode() {
@@ -27,9 +27,10 @@ export default class CacheClearToolbarAction {
                 open={this.showDialog}
                 title={translate('sulu_website.cache_clear_warning_title')}
             >
-                {translate('sulu_website.cache_clear_warning_text', {
-                    webspace: String(this.requestParameters.webspaceKey),
-                })}
+                {this.webspaceKey
+                    ? translate('sulu_website.cache_clear_warning_text_webspace', {webspace: this.webspaceKey})
+                    : translate('sulu_website.cache_clear_warning_text')
+                }
             </Dialog>
         );
     }
@@ -52,7 +53,7 @@ export default class CacheClearToolbarAction {
     @action handleConfirm = () => {
         this.cacheClearing = true;
 
-        const url = CacheClearToolbarAction.clearCacheEndpoint + buildQueryString(this.requestParameters);
+        const url = CacheClearToolbarAction.clearCacheEndpoint + buildQueryString({webspaceKey: this.webspaceKey});
 
         Requester.delete(url).then(action(() => {
             this.showDialog = false;
