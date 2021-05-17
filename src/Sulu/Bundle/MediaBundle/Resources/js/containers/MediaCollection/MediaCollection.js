@@ -7,7 +7,6 @@ import {List, ListStore} from 'sulu-admin-bundle/containers';
 import CollectionStore from '../../stores/CollectionStore';
 import MultiMediaDropzone from '../MultiMediaDropzone';
 import CollectionSection from './CollectionSection';
-import MediaSection from './MediaSection';
 import type {OverlayType} from './types';
 import type {IObservableValue} from 'mobx/lib/mobx';
 import type {ElementRef} from 'react';
@@ -119,14 +118,12 @@ class MediaCollection extends React.Component<Props> {
                     securable={securable}
                 />
                 <Divider />
-                <div>
-                    <MediaSection
-                        adapters={mediaListAdapters}
-                        listStore={mediaListStore}
-                        mediaListRef={mediaListRef}
-                        onMediaClick={this.handleMediaClick}
-                    />
-                </div>
+                <List
+                    adapters={mediaListAdapters}
+                    onItemClick={this.handleMediaClick}
+                    ref={mediaListRef}
+                    store={mediaListStore}
+                />
             </MultiMediaDropzone>
         );
     }
