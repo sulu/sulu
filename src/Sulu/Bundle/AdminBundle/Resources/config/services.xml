@@ -71,6 +71,8 @@
             class="Sulu\Bundle\AdminBundle\Metadata\ListMetadata\ListMetadataProvider"
         >
             <argument type="tagged" tag="sulu_admin.list_metadata_loader"/>
+            <argument type="tagged" tag="sulu_admin.list_metadata_visitor"/>
+
             <tag name="sulu_admin.metadata_provider" type="list" />
         </service>
 

@@ -15,32 +15,52 @@ use Sulu\Bundle\AdminBundle\Exception\MetadataNotFoundException;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 
+/**
+ * @internal This class should not be extended or initialized by any application outside of sulu.
+ *           Inject instead custom loader or visitors into it.
+ */
 class ListMetadataProvider implements MetadataProviderInterface
 {
     /**
-     * @var ListMetadataLoaderInterface[]
+     * @var iterable<ListMetadataLoaderInterface>
      */
     private $listMetadataLoaders;
 
-    public function __construct(iterable $listMetadataLoaders)
-    {
+    /**
+     * @var iterable<ListMetadataVisitorInterface>
+     */
+    private $listMetadataVisitors;
+
+    /**
+     * @param iterable<ListMetadataLoaderInterface> $listMetadataLoaders
+     * @param iterable<ListMetadataVisitorInterface>|null $listMetadataVisitors
+     */
+    public function __construct(
+        iterable $listMetadataLoaders,
+        ?iterable $listMetadataVisitors = null
+    ) {
         $this->listMetadataLoaders = $listMetadataLoaders;
+        $this->listMetadataVisitors = $listMetadataVisitors ?: [];
     }
 
     public function getMetadata(string $key, string $locale, array $metadataOptions = []): MetadataInterface
     {
-        $list = null;
+        $listMetadata = null;
         foreach ($this->listMetadataLoaders as $listMetadataLoader) {
-            $list = $listMetadataLoader->getMetadata($key, $locale, $metadataOptions);
-            if ($list) {
+            $listMetadata = $listMetadataLoader->getMetadata($key, $locale, $metadataOptions);
+            if ($listMetadata) {
                 break;
             }
         }
 
-        if (!$list) {
+        if (!$listMetadata instanceof ListMetadata) {
             throw new MetadataNotFoundException('list', $key);
         }
 
-        return $list;
+        foreach ($this->listMetadataVisitors as $listMetadataVisitor) {
+            $listMetadataVisitor->visitListMetadata($listMetadata, $key, $locale, $metadataOptions);
+        }
+
+        return $listMetadata;
     }
 }
