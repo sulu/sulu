@@ -32,7 +32,7 @@ class SnippetAreas extends React.Component<ViewProps> {
         }
 
         this.snippetAreaStore = new SnippetAreaStore(webspace);
-        this.cacheClearToolbarAction = new CacheClearToolbarAction();
+        this.cacheClearToolbarAction = new CacheClearToolbarAction(webspace);
     }
 
     @action handleSnippetClick = (snippetUuid: string) => {

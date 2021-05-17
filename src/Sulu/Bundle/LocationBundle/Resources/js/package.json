@@ -6,7 +6,9 @@
     "dependencies": {
         "classnames": "^2.2.5",
         "leaflet": "^1.5.1",
-        "react-leaflet": "^3.1.0"
+        "react-leaflet": ">=3.1.0 <3.2.0 || ^3.2.1",
+        "@react-leaflet/core": ">=1.0.0 <1.1.0 || ^1.1.1"
+
     },
     "devDependencies": {
         "enzyme": "^3.3.0",
