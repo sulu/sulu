@@ -1,7 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
 import {action, reaction, observable, toJS} from 'mobx';
-import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import jexl from 'jexl';
 import SingleItemSelection from '../../components/SingleItemSelection';
@@ -9,6 +8,7 @@ import PublishIndicator from '../../components/PublishIndicator';
 import SingleSelectionStore from '../../stores/SingleSelectionStore';
 import SingleListOverlay from '../SingleListOverlay';
 import singleSelectionStyles from './singleSelection.scss';
+import type {IObservableValue} from 'mobx';
 
 type Props = {|
     adapter: string,

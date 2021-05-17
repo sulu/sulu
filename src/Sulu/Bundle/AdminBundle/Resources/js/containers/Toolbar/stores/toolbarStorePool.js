@@ -1,6 +1,6 @@
 // @flow
-import type {ToolbarConfig} from '../types';
 import ToolbarStore from './ToolbarStore';
+import type {ToolbarConfig} from '../types';
 
 export const DEFAULT_STORE_KEY = 'default';
 

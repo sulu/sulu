@@ -1,10 +1,10 @@
 // @flow
 import React from 'react';
-import type {Element} from 'react';
 import classNames from 'classnames';
 import ToolbarDropdownListOption from './ToolbarDropdownListOption';
-import type {ToolbarDropdownOptionConfig} from './types';
 import toolbarDropdownStyles from './toolbarDropdown.scss';
+import type {ToolbarDropdownOptionConfig} from './types';
+import type {Element} from 'react';
 
 type Props = {|
     onClick: () => void,

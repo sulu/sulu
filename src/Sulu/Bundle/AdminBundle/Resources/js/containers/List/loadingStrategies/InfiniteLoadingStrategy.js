@@ -1,8 +1,8 @@
 // @flow
 import {action} from 'mobx';
 import ResourceRequester from '../../../services/ResourceRequester';
-import type {LoadOptions} from '../types';
 import AbstractLoadingStrategy from './AbstractLoadingStrategy';
+import type {LoadOptions} from '../types';
 
 export default class InfiniteLoadingStrategy extends AbstractLoadingStrategy {
     load(resourceKey: string, options: LoadOptions, parentId: ?string | number) {

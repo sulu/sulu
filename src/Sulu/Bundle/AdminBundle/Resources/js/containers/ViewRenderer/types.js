@@ -1,6 +1,6 @@
 // @flow
-import type {Component, Element} from 'react';
 import Router, {Route} from '../../services/Router';
+import type {Component, Element} from 'react';
 import type {AttributeMap} from '../../services/Router';
 
 export type ViewProps = {

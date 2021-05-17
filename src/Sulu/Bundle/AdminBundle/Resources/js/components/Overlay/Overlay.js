@@ -3,16 +3,16 @@ import classNames from 'classnames';
 import Mousetrap from 'mousetrap';
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
-import type {Node} from 'react';
 import React, {Fragment} from 'react';
 import {Portal} from 'react-portal';
 import Icon from '../Icon';
 import Button from '../Button';
 import {afterElementsRendered} from '../../utils/DOM';
 import Backdrop from '../Backdrop';
-import type {Action, Size} from './types';
 import Actions from './Actions';
 import overlayStyles from './overlay.scss';
+import type {Action, Size} from './types';
+import type {Node} from 'react';
 
 type Props = {
     actions: Array<Action>,

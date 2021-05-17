@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
-import type {ChildrenArray, Element} from 'react';
 import Checkbox from './Checkbox';
+import type {ChildrenArray, Element} from 'react';
 
 type Props<T> = {|
     children: ChildrenArray<Element<typeof Checkbox>>,

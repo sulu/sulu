@@ -1,7 +1,7 @@
 // @flow
 import {computed} from 'mobx';
-import type {IObservableValue} from 'mobx';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
+import type {IObservableValue} from 'mobx';
 
 const COLLECTIONS_RESOURCE_KEY = 'collections';
 

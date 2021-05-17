@@ -1,14 +1,14 @@
 // @flow
 import React, {Fragment} from 'react';
-import type {Element, Node} from 'react';
 import {autorun, computed} from 'mobx';
 import {observer} from 'mobx-react';
 import TabsComponent from '../../components/Tabs';
-import type {ViewProps} from '../../containers/ViewRenderer';
 import {translate} from '../../utils/Translator';
 import {Route} from '../../services/Router';
 import Badge, {type BadgeOptions} from '../../containers/Badge';
 import tabsStyles from './tabs.scss';
+import type {ViewProps} from '../../containers/ViewRenderer';
+import type {Element, Node} from 'react';
 
 type Props<T> = {
     ...ViewProps,

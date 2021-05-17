@@ -1,12 +1,12 @@
 // @flow
 import React from 'react';
-import type {ChildrenArray, Element} from 'react';
 import {SortableContainer, SortableElement} from 'react-sortable-hoc';
 import classNames from 'classnames';
-import type {Button} from './types';
 import Header from './Header';
 import Item from './Item';
 import multiItemSelectionStyles from './multiItemSelection.scss';
+import type {Button} from './types';
+import type {ChildrenArray, Element} from 'react';
 
 type Props<T, U, V, W> = {|
     children?: ChildrenArray<Element<typeof Item>>,

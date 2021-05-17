@@ -1,7 +1,7 @@
 // @flow
 import jexl from 'jexl';
-import type {ToolbarItemConfig} from '../../../containers/Toolbar/types';
 import AbstractFormToolbarAction from './AbstractFormToolbarAction';
+import type {ToolbarItemConfig} from '../../../containers/Toolbar/types';
 
 export default class TypeToolbarAction extends AbstractFormToolbarAction {
     getToolbarItemConfig(): ?ToolbarItemConfig<string> {

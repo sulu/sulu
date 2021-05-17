@@ -1,8 +1,8 @@
 // @flow
 import React from 'react';
-import type {Node} from 'react';
 import moment from 'moment';
 import log from 'loglevel';
+import type {Node} from 'react';
 import type {BlockPreviewTransformer} from '../types';
 
 const format = 'HH:mm:ss';

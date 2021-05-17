@@ -1,9 +1,9 @@
 // @flow
-import type {ChildrenArray} from 'react';
 import React from 'react';
 import classNames from 'classnames';
-import type {Group, Item, Skin} from './types';
 import controlsStyles from './controls.scss';
+import type {Group, Item, Skin} from './types';
+import type {ChildrenArray} from 'react';
 
 type Props = {|
     children: ChildrenArray<Item | Group | false>,

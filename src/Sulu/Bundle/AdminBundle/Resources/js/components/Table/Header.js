@@ -1,11 +1,11 @@
 // @flow
-import type {ChildrenArray, Element} from 'react';
 import React, {Fragment} from 'react';
 import Checkbox from '../Checkbox';
 import Icon from '../Icon';
 import HeaderCell from './HeaderCell';
-import type {ButtonConfig, SelectMode, Skin} from './types';
 import tableStyles from './table.scss';
+import type {ButtonConfig, SelectMode, Skin} from './types';
+import type {ChildrenArray, Element} from 'react';
 
 type Props = {
     allSelected: boolean,

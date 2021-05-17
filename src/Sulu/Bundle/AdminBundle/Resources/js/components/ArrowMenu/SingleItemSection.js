@@ -1,8 +1,8 @@
 // @flow
 import React from 'react';
-import type {ChildrenArray, Element} from 'react';
 import Item from './Item';
 import Section from './Section';
+import type {ChildrenArray, Element} from 'react';
 
 type Props = {
     children: ChildrenArray<Element<typeof Item> | false>,

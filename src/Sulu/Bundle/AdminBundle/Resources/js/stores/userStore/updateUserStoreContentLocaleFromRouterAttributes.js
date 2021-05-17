@@ -1,6 +1,6 @@
 // @flow
-import type {UpdateRouteHook} from '../../services/Router/types';
 import userStore from './userStore';
+import type {UpdateRouteHook} from '../../services/Router/types';
 
 const updateUserStoreContentLocaleFromRouterAttributes: UpdateRouteHook = function(newRoute, newAttributes) {
     if (!newRoute || !newAttributes) {

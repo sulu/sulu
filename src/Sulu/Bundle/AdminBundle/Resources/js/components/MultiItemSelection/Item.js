@@ -1,10 +1,10 @@
 // @flow
 import React from 'react';
-import type {Node} from 'react';
 import {SortableHandle} from 'react-sortable-hoc';
 import classNames from 'classnames';
 import Icon from '../Icon';
 import itemStyles from './item.scss';
+import type {Node} from 'react';
 
 const DRAG_ICON = 'su-more';
 

@@ -6,8 +6,8 @@ import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {Form, ResourceFormStore} from 'sulu-admin-bundle/containers';
 import {translate} from 'sulu-admin-bundle/utils';
 import {Dialog, Overlay} from 'sulu-admin-bundle/components';
-import type {OverlayType, OperationType} from './types';
 import collectionFormOverlayStyles from './collectionFormOverlay.scss';
+import type {OverlayType, OperationType} from './types';
 
 type Props = {
     onClose: () => void,

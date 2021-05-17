@@ -1,6 +1,6 @@
 // @flow
-import type {Node} from 'react';
 import {action, observable} from 'mobx';
+import type {Node} from 'react';
 
 export default class AbstractFieldFilterType<T> {
     onChange: (value: T) => void;

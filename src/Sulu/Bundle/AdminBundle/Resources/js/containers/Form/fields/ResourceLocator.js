@@ -5,9 +5,9 @@ import {observer} from 'mobx-react';
 import ResourceLocatorComponent from '../../../components/ResourceLocator';
 import ResourceLocatorHistory from '../../../containers/ResourceLocatorHistory';
 import Requester from '../../../services/Requester';
-import type {FieldTypeProps} from '../../../types';
 import userStore from '../../../stores/userStore';
 import resourceLocatorStyles from './resourceLocator.scss';
+import type {FieldTypeProps} from '../../../types';
 
 const PART_TAG = 'sulu.rlp.part';
 

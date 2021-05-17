@@ -1,8 +1,8 @@
 // @flow
 import React from 'react';
-import type {Node} from 'react';
 import classNames from 'classnames';
 import headerStyles from './header.scss';
+import type {Node} from 'react';
 
 type Props = {
     children: Node,

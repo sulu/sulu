@@ -1,12 +1,12 @@
 // @flow
 import {action, autorun, computed, observable, when} from 'mobx';
-import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import Ajv from 'ajv';
 import jsonpointer from 'json-pointer';
 import ResourceStore from '../../../stores/ResourceStore';
-import type {FormStoreInterface, RawSchema, SchemaEntry, SchemaType, SchemaTypes} from '../types';
 import AbstractFormStore from './AbstractFormStore';
 import metadataStore from './metadataStore';
+import type {FormStoreInterface, RawSchema, SchemaEntry, SchemaType, SchemaTypes} from '../types';
+import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 
 // TODO do not hardcode "template", use some kind of metadata instead
 const TYPE = 'template';

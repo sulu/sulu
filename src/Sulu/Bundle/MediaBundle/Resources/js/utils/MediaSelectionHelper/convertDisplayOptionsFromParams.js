@@ -1,7 +1,7 @@
 //@flow
+import validateDisplayOption from './validateDisplayOption';
 import type {SchemaOption} from 'sulu-admin-bundle/containers';
 import type {DisplayOption} from '../../types';
-import validateDisplayOption from './validateDisplayOption';
 
 export default function convertDisplayOptionsFromParams(displayOptions: ?Array<SchemaOption>): Array<DisplayOption> {
     if (!displayOptions) {

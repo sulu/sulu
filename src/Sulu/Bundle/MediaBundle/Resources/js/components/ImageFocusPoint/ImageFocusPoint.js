@@ -1,12 +1,12 @@
 // @flow
 import React from 'react';
-import type {ElementRef} from 'react';
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Loader} from 'sulu-admin-bundle/components';
-import type {Point} from './types';
 import ImageFocusPointCell from './ImageFocusPointCell';
 import imageFocusPointStyles from './imageFocusPoint.scss';
+import type {Point} from './types';
+import type {ElementRef} from 'react';
 
 const FOCUS_POINT_MATRIX_SIZE = 3;
 

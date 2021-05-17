@@ -1,15 +1,15 @@
 // @flow
 import React from 'react';
 import {computed, observable} from 'mobx';
-import type {IObservableValue} from 'mobx';
 import jsonpointer from 'json-pointer';
 import log from 'loglevel';
-import type {FieldTypeProps} from '../../../types';
 import ResourceSingleSelect from '../../../containers/ResourceSingleSelect';
 import SingleAutoComplete from '../../../containers/SingleAutoComplete';
 import SingleSelectionContainer from '../../../containers/SingleSelection';
 import userStore from '../../../stores/userStore';
 import {translate} from '../../../utils/Translator';
+import type {FieldTypeProps} from '../../../types';
+import type {IObservableValue} from 'mobx';
 
 type Value = Object | string | number;
 type Props = FieldTypeProps<Value>;

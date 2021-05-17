@@ -1,15 +1,15 @@
 // @flow
 import React, {Fragment} from 'react';
-import type {ChildrenArray, Element} from 'react';
 import classNames from 'classnames';
 import Checkbox from '../Checkbox';
 import {Radio} from '../Radio';
 import Icon from '../Icon/Icon';
 import Loader from '../Loader/Loader';
-import type {ButtonConfig, SelectMode} from './types';
 import ButtonCell from './ButtonCell';
 import Cell from './Cell';
 import tableStyles from './table.scss';
+import type {ButtonConfig, SelectMode} from './types';
+import type {ChildrenArray, Element} from 'react';
 
 type Props = {
     /** @ignore */

@@ -5,11 +5,11 @@ import {observer} from 'mobx-react';
 import copyToClipboard from 'copy-to-clipboard';
 import {Loader, Table} from 'sulu-admin-bundle/components';
 import {withToolbar} from 'sulu-admin-bundle/containers';
-import type {ViewProps} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {translate} from 'sulu-admin-bundle/utils';
 import formatStore from '../../stores/formatStore';
 import mediaFormatsStyles from './mediaFormats.scss';
+import type {ViewProps} from 'sulu-admin-bundle/containers';
 
 const COLLECTION_ROUTE = 'sulu_media.overview';
 

@@ -10,8 +10,8 @@ import searchStore from './stores/searchStore';
 import indexStore from './stores/indexStore';
 import SearchField from './SearchField';
 import SearchResult from './SearchResult';
-import type {Index} from './types';
 import searchStyles from './search.scss';
+import type {Index} from './types';
 
 type Props = {|
     router: Router,

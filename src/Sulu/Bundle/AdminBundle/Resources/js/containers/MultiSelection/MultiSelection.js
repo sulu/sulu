@@ -1,7 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
 import {action, comparer, observable, reaction, toJS} from 'mobx';
-import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import equals from 'fast-deep-equal';
 import jexl from 'jexl';
@@ -12,6 +11,7 @@ import PublishIndicator from '../../components/PublishIndicator';
 import MultiSelectionStore from '../../stores/MultiSelectionStore';
 import MultiListOverlay from '../MultiListOverlay';
 import multiSelectionStyles from './multiSelection.scss';
+import type {IObservableValue} from 'mobx';
 
 type Props = {|
     adapter: string,

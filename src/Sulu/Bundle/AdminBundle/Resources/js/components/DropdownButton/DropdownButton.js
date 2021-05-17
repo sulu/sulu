@@ -1,10 +1,10 @@
 // @flow
 import React from 'react';
-import type {ChildrenArray, Element} from 'react';
 import {observer} from 'mobx-react';
 import {action, observable} from 'mobx';
 import ArrowMenu from '../ArrowMenu';
 import Button from '../Button';
+import type {ChildrenArray, Element} from 'react';
 
 type Props = {|
     children: ChildrenArray<Element<typeof ArrowMenu.Action> | false>,

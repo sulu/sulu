@@ -1,10 +1,10 @@
 // @flow
 import React from 'react';
 import {comparer, computed, observable} from 'mobx';
-import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import {ListStore} from 'sulu-admin-bundle/containers';
 import MediaSelectionOverlay from '../MediaSelectionOverlay';
+import type {IObservableValue} from 'mobx';
 
 type Props = {|
     confirmLoading: boolean,

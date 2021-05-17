@@ -1,8 +1,8 @@
 // @flow
 import React from 'react';
 import {Input} from 'sulu-admin-bundle/components';
-import type {RuleTypeProps} from '../types';
 import keyValueStyles from './keyValue.scss';
+import type {RuleTypeProps} from '../types';
 
 export default class KeyValue extends React.Component<RuleTypeProps> {
     handleParameterChange = (parameter: ?string) => {

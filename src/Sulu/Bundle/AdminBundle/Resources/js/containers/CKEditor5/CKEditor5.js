@@ -1,7 +1,5 @@
 // @flow
 import React from 'react';
-import type {ElementRef} from 'react';
-import type {IObservableValue} from 'mobx';
 import log from 'loglevel';
 import AlignmentPlugin from '@ckeditor/ckeditor5-alignment/src/alignment';
 import BoldPlugin from '@ckeditor/ckeditor5-basic-styles/src/bold';
@@ -23,6 +21,8 @@ import ExternalLinkPlugin from './plugins/ExternalLinkPlugin';
 import InternalLinkPlugin from './plugins/InternalLinkPlugin';
 import configRegistry from './registries/configRegistry';
 import pluginRegistry from './registries/pluginRegistry';
+import type {IObservableValue} from 'mobx';
+import type {ElementRef} from 'react';
 import './ckeditor5.scss';
 
 type Props = {|

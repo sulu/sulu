@@ -1,6 +1,5 @@
 // @flow
 import React, {Fragment} from 'react';
-import type {Element} from 'react';
 import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import ResourceListStore from '../../stores/ResourceListStore';
@@ -8,6 +7,7 @@ import Loader from '../../components/Loader';
 import SingleSelect from '../../components/SingleSelect';
 import {translate} from '../../utils/Translator';
 import EditOverlay from './EditOverlay';
+import type {Element} from 'react';
 
 type Props<T> = {|
     disabled: boolean,

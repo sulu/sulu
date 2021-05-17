@@ -1,8 +1,8 @@
 // @flow
-import type {Node} from 'react';
 import React from 'react';
 import classNames from 'classnames';
 import tableStyles from './table.scss';
+import type {Node} from 'react';
 
 type Props = {
     children?: Node,

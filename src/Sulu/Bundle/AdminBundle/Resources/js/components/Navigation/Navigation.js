@@ -1,12 +1,12 @@
 // @flow
 import React from 'react';
-import type {ChildrenArray, Element} from 'react';
 import {observer} from 'mobx-react';
 import {action, observable} from 'mobx';
 import classNames from 'classnames';
 import Icon from '../Icon';
 import Item from './Item';
 import navigationStyles from './navigation.scss';
+import type {ChildrenArray, Element} from 'react';
 
 type Props = {|
     appVersion: ?string,

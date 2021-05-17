@@ -1,8 +1,8 @@
 // @flow
 import React from 'react';
-import type {Node} from 'react';
 import Dropzone from 'react-dropzone';
 import Button from '../Button';
+import type {Node} from 'react';
 import type {ButtonSkin} from '../Button';
 
 type Props = {|

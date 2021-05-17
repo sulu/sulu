@@ -1,10 +1,10 @@
 // @flow
 import {action, autorun, observable} from 'mobx';
-import type {IObservableValue} from 'mobx';
 import Ajv from 'ajv';
 import jsonpointer from 'json-pointer';
-import type {FormStoreInterface, RawSchema} from '../types';
 import AbstractFormStore from './AbstractFormStore';
+import type {FormStoreInterface, RawSchema} from '../types';
+import type {IObservableValue} from 'mobx';
 
 const ajv = new Ajv({allErrors: true, jsonPointers: true});
 

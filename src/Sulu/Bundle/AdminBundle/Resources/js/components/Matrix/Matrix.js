@@ -1,11 +1,11 @@
 // @flow
-import type {ChildrenArray, Element} from 'react';
 import React from 'react';
 import classNames from 'classnames';
 import Row from './Row';
 import Item from './Item';
-import type {MatrixValues} from './types';
 import matrixStyles from './matrix.scss';
+import type {MatrixValues} from './types';
+import type {ChildrenArray, Element} from 'react';
 
 type Props = {|
     children: ChildrenArray<Element<typeof Row>>,

@@ -1,7 +1,5 @@
 // @flow
-import type {ElementRef} from 'react';
 import React from 'react';
-import type {IObservableValue} from 'mobx';
 import {action, computed, toJS, isObservableArray, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import equals from 'fast-deep-equal';
@@ -9,8 +7,6 @@ import Dialog from '../../components/Dialog';
 import PublishIndicator from '../../components/PublishIndicator';
 import {default as FormContainer, ResourceFormStore} from '../../containers/Form';
 import {withToolbar} from '../../containers/Toolbar';
-import type {ViewProps} from '../../containers/ViewRenderer';
-import type {AttributeMap, UpdateRouteMethod} from '../../services/Router/types';
 import ResourceStore from '../../stores/ResourceStore';
 import CollaborationStore from '../../stores/CollaborationStore';
 import {translate} from '../../utils/Translator';
@@ -18,6 +14,10 @@ import {Route} from '../../services/Router';
 import formToolbarActionRegistry from './registries/formToolbarActionRegistry';
 import AbstractFormToolbarAction from './toolbarActions/AbstractFormToolbarAction';
 import formStyles from './form.scss';
+import type {AttributeMap, UpdateRouteMethod} from '../../services/Router/types';
+import type {ViewProps} from '../../containers/ViewRenderer';
+import type {IObservableValue} from 'mobx';
+import type {ElementRef} from 'react';
 
 type Props = {
     ...ViewProps,

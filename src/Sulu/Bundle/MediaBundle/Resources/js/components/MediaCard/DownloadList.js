@@ -1,9 +1,9 @@
 // @flow
 import React from 'react';
-import type {ElementRef} from 'react';
 import {Menu, Popover} from 'sulu-admin-bundle/components';
-import type {DownloadItemsList} from './types';
 import DownloadListItem from './DownloadListItem';
+import type {ElementRef} from 'react';
+import type {DownloadItemsList} from './types';
 
 type Props = {
     buttonRef: ?ElementRef<'button'>,

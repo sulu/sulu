@@ -1,10 +1,10 @@
 // @flow
 import React from 'react';
-import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 import userStore from 'sulu-admin-bundle/stores/userStore';
 import {observable} from 'mobx';
 import MediaUploadStore from '../../../stores/MediaUploadStore';
 import SingleMediaUploadComponent from '../../SingleMediaUpload';
+import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 import type {Media} from '../../../types';
 
 export default class SingleMediaUpload extends React.Component<FieldTypeProps<Media>> {
