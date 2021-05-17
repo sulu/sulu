@@ -19,7 +19,7 @@ type Props<T> = {|
     icon?: string,
     iconClassName?: string,
     loading: boolean,
-    onClick?: (value: T) => void,
+    onClick?: ?(value: T) => void,
     showDropdownIcon: boolean,
     size: 'small' | 'large',
     skin: ButtonSkin,

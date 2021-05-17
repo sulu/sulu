@@ -89,6 +89,7 @@ class MediaCollection extends React.Component<Props> {
         } = this.props;
 
         const {locked, permissions} = collectionStore;
+        const listActions = [];
 
         const addable = !locked && (permissions.add !== undefined ? permissions.add : MediaCollection.addable);
         const editable = !locked && (permissions.edit !== undefined ? permissions.edit : MediaCollection.editable);
@@ -96,6 +97,15 @@ class MediaCollection extends React.Component<Props> {
             && (permissions.delete !== undefined ? permissions.delete : MediaCollection.deletable);
         const securable = !locked
             && (permissions.security !== undefined ? permissions.security : MediaCollection.securable);
+
+        if (addable) {
+            listActions.push({
+                disabled: !collectionStore.id || collectionStore.loading || locked,
+                icon: 'su-upload',
+                label: translate('sulu_media.upload_file'),
+                onClick: onUploadOverlayOpen,
+            });
+        }
 
         return (
             <MultiMediaDropzone
@@ -120,12 +130,7 @@ class MediaCollection extends React.Component<Props> {
                 />
                 <Divider />
                 <List
-                    actions={[{
-                        disabled: !collectionStore.id || collectionStore.loading || locked,
-                        icon: 'su-upload',
-                        label: translate('sulu_media.upload_file'),
-                        onClick: onUploadOverlayOpen,
-                    }]}
+                    actions={listActions}
                     adapters={mediaListAdapters}
                     onItemClick={this.handleMediaClick}
                     ref={mediaListRef}

@@ -2,6 +2,7 @@
     "sulu_admin.add": "Hinzufügen",
     "sulu_admin.add_block": "Block hinzufügen",
     "sulu_admin.delete": "Löschen",
+    "sulu_admin.delete_selected": "Ausgewählte löschen",
     "sulu_admin.delete_locale": "Aktuelle Sprache löschen",
     "sulu_admin.move": "Verschieben",
     "sulu_admin.move_items": "Datensätze verschieben",

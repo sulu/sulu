@@ -235,7 +235,6 @@ export default withToolbar(MediaOverview, function() {
             options: {
                 locales,
                 permissions: {
-                    add: routeAddPermission,
                     delete: routeDeletePermission,
                     edit: routeEditPermission,
                 },
@@ -260,33 +259,18 @@ export default withToolbar(MediaOverview, function() {
 
     const {
         permissions: collectionPermissions = {},
-        loading: collectionLoading,
-        locked: collectionLocked,
     } = this.collectionStore;
 
-    const addPermission = collectionPermissions.add !== undefined ? collectionPermissions.add : routeAddPermission;
     const deletePermission = collectionPermissions.delete !== undefined
         ? collectionPermissions.delete
         : routeDeletePermission;
     const editPermission = collectionPermissions.edit !== undefined ? collectionPermissions.edit : routeEditPermission;
 
-    if (addPermission) {
-        items.push({
-            disabled: !this.collectionId.get() || collectionLoading || collectionLocked,
-            icon: 'su-upload',
-            label: translate('sulu_media.upload'),
-            onClick: action(() => {
-                this.showMediaUploadOverlay = true;
-            }),
-            type: 'button',
-        });
-    }
-
     if (deletePermission) {
         items.push({
             disabled: this.mediaListStore.selectionIds.length === 0,
             icon: 'su-trash-alt',
-            label: translate('sulu_admin.delete'),
+            label: translate('sulu_admin.delete_selected'),
             loading: this.mediaListStore.deletingSelection,
             onClick: this.mediaList.requestSelectionDelete,
             type: 'button',
