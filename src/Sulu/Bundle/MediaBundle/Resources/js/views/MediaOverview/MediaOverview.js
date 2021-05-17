@@ -259,6 +259,7 @@ export default withToolbar(MediaOverview, function() {
 
     const {
         permissions: collectionPermissions = {},
+        locked: collectionLocked,
     } = this.collectionStore;
 
     const deletePermission = collectionPermissions.delete !== undefined

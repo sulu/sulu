@@ -100,7 +100,7 @@ class MediaCollection extends React.Component<Props> {
 
         if (addable) {
             listActions.push({
-                disabled: !collectionStore.id || collectionStore.loading || locked,
+                disabled: collectionStore.loading,
                 icon: 'su-upload',
                 label: translate('sulu_media.upload_file'),
                 onClick: onUploadOverlayOpen,
@@ -109,7 +109,7 @@ class MediaCollection extends React.Component<Props> {
 
         return (
             <MultiMediaDropzone
-                collectionId={addable ? collectionStore.id : undefined}
+                collectionId={!collectionStore.loading && addable ? collectionStore.id : undefined}
                 locale={locale}
                 onClose={onUploadOverlayClose}
                 onOpen={onUploadOverlayOpen}
