@@ -191,7 +191,7 @@ class MediaOverview extends React.Component<ViewProps> {
 
     render() {
         return (
-            <div>
+            <>
                 <MediaCollection
                     collectionListStore={this.collectionListStore}
                     collectionStore={this.collectionStore}
@@ -219,7 +219,7 @@ class MediaOverview extends React.Component<ViewProps> {
                     resourceKey={COLLECTIONS_RESOURCE_KEY}
                     title={translate('sulu_media.move_media')}
                 />
-            </div>
+            </>
         );
     }
 }

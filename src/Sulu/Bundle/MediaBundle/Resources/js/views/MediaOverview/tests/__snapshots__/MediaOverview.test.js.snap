@@ -3,584 +3,582 @@
 exports[`Render a simple MediaOverview 1`] = `
 <div>
   <div>
-    <div>
+    <div
+      class="collectionSection"
+    >
       <div
-        class="collectionSection"
+        class="left"
       >
-        <div
-          class="left"
+        <ul
+          class="breadcrumb"
         >
-          <ul
-            class="breadcrumb"
-          >
-            <li>
-              <button
-                class="item"
-              >
-                sulu_media.all_media
-              </button>
-              <span
-                aria-label="su-angle-right"
-                class="su-angle-right arrow"
-              />
-            </li>
-            <li>
-              <button
-                class="item"
-                disabled=""
-              />
-            </li>
-          </ul>
-        </div>
-        <div
-          class="right"
-        >
-          <div
-            class="buttonGroup"
-          >
+          <li>
             <button
-              class="button icon button"
-              type="button"
+              class="item"
             >
-              <span
-                aria-label="su-plus"
-                class="su-plus buttonIcon"
-              />
+              sulu_media.all_media
             </button>
+            <span
+              aria-label="su-angle-right"
+              class="su-angle-right arrow"
+            />
+          </li>
+          <li>
             <button
-              class="button icon button"
-              type="button"
-            >
-              <span
-                aria-label="su-cog"
-                class="su-cog buttonIcon"
-              />
-              <span
-                aria-label="su-angle-down"
-                class="su-angle-down dropdownIcon"
-              />
-            </button>
-          </div>
-        </div>
+              class="item"
+              disabled=""
+            />
+          </li>
+        </ul>
       </div>
       <div
-        class="listContainer"
+        class="right"
       >
         <div
-          class="list"
+          class="buttonGroup"
         >
-          <section>
-            <ul
-              class="folderList"
-            >
-              <li>
-                <div
-                  class="folder"
-                  role="button"
-                  tabindex="0"
-                >
-                  <div
-                    class="iconContainer"
-                  >
-                    <span
-                      aria-label="su-folder"
-                      class="su-folder"
-                    />
-                  </div>
-                  <div
-                    class="description"
-                  >
-                    <h5
-                      class="title"
-                    >
-                      Title 1
-                    </h5>
-                    <div
-                      class="info"
-                    >
-                      1 sulu_admin.object
-                    </div>
-                  </div>
-                </div>
-              </li>
-              <li>
-                <div
-                  class="folder"
-                  role="button"
-                  tabindex="0"
-                >
-                  <div
-                    class="iconContainer"
-                  >
-                    <span
-                      aria-label="su-folder"
-                      class="su-folder"
-                    />
-                  </div>
-                  <div
-                    class="description"
-                  >
-                    <h5
-                      class="title"
-                    >
-                      Title 2
-                    </h5>
-                    <div
-                      class="info"
-                    >
-                      0 sulu_admin.objects
-                    </div>
-                  </div>
-                </div>
-              </li>
-            </ul>
-            <nav
-              class="pagination"
-            >
-              <span
-                class="display"
-              >
-                sulu_admin.per_page:
-              </span>
-              <span>
-                <div
-                  class="select"
-                  role="none"
-                >
-                  <button
-                    class="displayValue dark"
-                    type="button"
-                  >
-                    <div
-                      aria-label="10"
-                      class="croppedText"
-                      title="10"
-                    >
-                      <div
-                        aria-hidden="true"
-                        class="front"
-                      >
-                        1
-                      </div>
-                      <div
-                        aria-hidden="true"
-                        class="back"
-                      >
-                        <span>
-                          0
-                        </span>
-                      </div>
-                      <div
-                        class="whole"
-                      >
-                        10
-                      </div>
-                    </div>
-                    <span
-                      aria-label="su-angle-down"
-                      class="su-angle-down toggle"
-                    />
-                  </button>
-                </div>
-              </span>
-              <div
-                class="loader"
-              />
-              <span>
-                sulu_admin.page:
-              </span>
-              <span
-                class="inputContainer"
-              >
-                <label
-                  class="input dark center"
-                >
-                  <input
-                    inputmode="numeric"
-                    type="text"
-                    value="1"
-                  />
-                </label>
-              </span>
-              <span
-                class="display"
-              >
-                sulu_admin.of 3
-              </span>
-              <div
-                class="buttonGroup"
-              >
-                <button
-                  class="button icon button"
-                  type="button"
-                >
-                  <span
-                    aria-label="su-angle-left"
-                    class="su-angle-left buttonIcon"
-                  />
-                </button>
-                <button
-                  class="button icon button"
-                  type="button"
-                >
-                  <span
-                    aria-label="su-angle-right"
-                    class="su-angle-right buttonIcon"
-                  />
-                </button>
-              </div>
-            </nav>
-          </section>
+          <button
+            class="button icon button"
+            type="button"
+          >
+            <span
+              aria-label="su-plus"
+              class="su-plus buttonIcon"
+            />
+          </button>
+          <button
+            class="button icon button"
+            type="button"
+          >
+            <span
+              aria-label="su-cog"
+              class="su-cog buttonIcon"
+            />
+            <span
+              aria-label="su-angle-down"
+              class="su-angle-down dropdownIcon"
+            />
+          </button>
         </div>
       </div>
     </div>
     <div
-      class="divider"
-    />
-    <div>
+      class="listContainer"
+    >
       <div
-        class="listContainer"
+        class="list"
       >
-        <div
-          class="toolbar"
-        >
-          <label
-            class="input dark left collapsed hasAppendIcon"
+        <section>
+          <ul
+            class="folderList"
           >
-            <div
-              class="prependedContainer dark collapsed"
-            >
-              <span
-                aria-label="su-search"
-                class="su-search clickable icon dark iconClickable collapsed"
+            <li>
+              <div
+                class="folder"
                 role="button"
                 tabindex="0"
-              />
-            </div>
-            <input
-              placeholder="sulu_admin.list_search_placeholder"
-              type="text"
-              value=""
-            />
-          </label>
-          <div
-            class="fieldFilter"
-          />
-          <div
-            class="buttonGroup"
-          >
-            <button
-              class="button icon active button"
-              type="button"
-            >
-              <span
-                class="buttonText"
               >
-                <span
-                  aria-label="su-th-large"
-                  class="su-th-large"
-                />
-              </span>
-            </button>
-            <button
-              class="button icon button"
-              type="button"
-            >
-              <span
-                class="buttonText"
-              >
-                <span
-                  aria-label="su-align-justify"
-                  class="su-align-justify"
-                />
-              </span>
-            </button>
-          </div>
-        </div>
-        <div
-          class="list"
-        >
-          <section>
-            <div>
-              <div
-                class="masonry"
-              >
-                <li
-                  style="margin-bottom:30px"
+                <div
+                  class="iconContainer"
                 >
-                  <div
-                    class="mediaCard"
-                  >
-                    <div
-                      class="header"
-                    >
-                      <div
-                        class="description"
-                        role="button"
-                      >
-                        <div
-                          class="title"
-                        >
-                          <label
-                            class="label"
-                            tabindex="-1"
-                          >
-                            <span
-                              class="switch checkbox dark checkbox"
-                            >
-                              <input
-                                type="checkbox"
-                                value="1"
-                              />
-                              <span />
-                            </span>
-                            <div>
-                              <div
-                                class="titleText"
-                              >
-                                <div
-                                  aria-label="Title 1"
-                                  class="croppedText"
-                                  title="Title 1"
-                                >
-                                  <div
-                                    aria-hidden="true"
-                                    class="front"
-                                  >
-                                    Titl
-                                  </div>
-                                  <div
-                                    aria-hidden="true"
-                                    class="back"
-                                  >
-                                    <span>
-                                      e 1
-                                    </span>
-                                  </div>
-                                  <div
-                                    class="whole"
-                                  >
-                                    Title 1
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </label>
-                        </div>
-                        <div
-                          class="meta"
-                        >
-                          <div
-                            aria-label="image/png 12.35 KB"
-                            class="croppedText"
-                            title="image/png 12.35 KB"
-                          >
-                            <div
-                              aria-hidden="true"
-                              class="front"
-                            >
-                              image/png
-                            </div>
-                            <div
-                              aria-hidden="true"
-                              class="back"
-                            >
-                              <span>
-                                 12.35 KB
-                              </span>
-                            </div>
-                            <div
-                              class="whole"
-                            >
-                              image/png 12.35 KB
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div>
-                        <button
-                          class="downloadButton"
-                        >
-                          <span
-                            aria-label="su-download"
-                            class="su-download"
-                          />
-                        </button>
-                      </div>
-                    </div>
-                    <div
-                      class="media"
-                      role="button"
-                    >
-                      <img
-                        alt="Title 1"
-                        src="http://lorempixel.com/240/100"
-                      />
-                      <div
-                        class="spinner"
-                        style="width:40px;height:40px"
-                      >
-                        <div
-                          class="doubleBounce1"
-                        />
-                        <div
-                          class="doubleBounce2"
-                        />
-                      </div>
-                      <div
-                        class="cover"
-                      >
-                        <span
-                          aria-label="su-pen"
-                          class="su-pen mediaIcon"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </li>
-                <li
-                  style="margin-bottom:30px"
+                  <span
+                    aria-label="su-folder"
+                    class="su-folder"
+                  />
+                </div>
+                <div
+                  class="description"
                 >
-                  <div
-                    class="mediaCard"
+                  <h5
+                    class="title"
                   >
-                    <div
-                      class="header"
-                    >
-                      <div
-                        class="description"
-                        role="button"
-                      >
-                        <div
-                          class="title"
-                        >
-                          <label
-                            class="label"
-                            tabindex="-1"
-                          >
-                            <span
-                              class="switch checkbox dark checkbox"
-                            >
-                              <input
-                                type="checkbox"
-                                value="2"
-                              />
-                              <span />
-                            </span>
-                            <div>
-                              <div
-                                class="titleText"
-                              >
-                                <div
-                                  aria-label="Title 1"
-                                  class="croppedText"
-                                  title="Title 1"
-                                >
-                                  <div
-                                    aria-hidden="true"
-                                    class="front"
-                                  >
-                                    Titl
-                                  </div>
-                                  <div
-                                    aria-hidden="true"
-                                    class="back"
-                                  >
-                                    <span>
-                                      e 1
-                                    </span>
-                                  </div>
-                                  <div
-                                    class="whole"
-                                  >
-                                    Title 1
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </label>
-                        </div>
-                        <div
-                          class="meta"
-                        >
-                          <div
-                            aria-label="image/jpeg 54.32 KB"
-                            class="croppedText"
-                            title="image/jpeg 54.32 KB"
-                          >
-                            <div
-                              aria-hidden="true"
-                              class="front"
-                            >
-                              image/jpeg
-                            </div>
-                            <div
-                              aria-hidden="true"
-                              class="back"
-                            >
-                              <span>
-                                 54.32 KB
-                              </span>
-                            </div>
-                            <div
-                              class="whole"
-                            >
-                              image/jpeg 54.32 KB
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div>
-                        <button
-                          class="downloadButton"
-                        >
-                          <span
-                            aria-label="su-download"
-                            class="su-download"
-                          />
-                        </button>
-                      </div>
-                    </div>
-                    <div
-                      class="media"
-                      role="button"
-                    >
-                      <img
-                        alt="Title 1"
-                        src="http://lorempixel.com/240/100"
-                      />
-                      <div
-                        class="spinner"
-                        style="width:40px;height:40px"
-                      >
-                        <div
-                          class="doubleBounce1"
-                        />
-                        <div
-                          class="doubleBounce2"
-                        />
-                      </div>
-                      <div
-                        class="cover"
-                      >
-                        <span
-                          aria-label="su-pen"
-                          class="su-pen mediaIcon"
-                        />
-                      </div>
-                    </div>
+                    Title 1
+                  </h5>
+                  <div
+                    class="info"
+                  >
+                    1 sulu_admin.object
                   </div>
-                </li>
+                </div>
               </div>
-            </div>
+            </li>
+            <li>
+              <div
+                class="folder"
+                role="button"
+                tabindex="0"
+              >
+                <div
+                  class="iconContainer"
+                >
+                  <span
+                    aria-label="su-folder"
+                    class="su-folder"
+                  />
+                </div>
+                <div
+                  class="description"
+                >
+                  <h5
+                    class="title"
+                  >
+                    Title 2
+                  </h5>
+                  <div
+                    class="info"
+                  >
+                    0 sulu_admin.objects
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+          <nav
+            class="pagination"
+          >
+            <span
+              class="display"
+            >
+              sulu_admin.per_page:
+            </span>
+            <span>
+              <div
+                class="select"
+                role="none"
+              >
+                <button
+                  class="displayValue dark"
+                  type="button"
+                >
+                  <div
+                    aria-label="10"
+                    class="croppedText"
+                    title="10"
+                  >
+                    <div
+                      aria-hidden="true"
+                      class="front"
+                    >
+                      1
+                    </div>
+                    <div
+                      aria-hidden="true"
+                      class="back"
+                    >
+                      <span>
+                        0
+                      </span>
+                    </div>
+                    <div
+                      class="whole"
+                    >
+                      10
+                    </div>
+                  </div>
+                  <span
+                    aria-label="su-angle-down"
+                    class="su-angle-down toggle"
+                  />
+                </button>
+              </div>
+            </span>
             <div
-              class="indicator"
+              class="loader"
             />
-          </section>
-        </div>
+            <span>
+              sulu_admin.page:
+            </span>
+            <span
+              class="inputContainer"
+            >
+              <label
+                class="input dark center"
+              >
+                <input
+                  inputmode="numeric"
+                  type="text"
+                  value="1"
+                />
+              </label>
+            </span>
+            <span
+              class="display"
+            >
+              sulu_admin.of 3
+            </span>
+            <div
+              class="buttonGroup"
+            >
+              <button
+                class="button icon button"
+                type="button"
+              >
+                <span
+                  aria-label="su-angle-left"
+                  class="su-angle-left buttonIcon"
+                />
+              </button>
+              <button
+                class="button icon button"
+                type="button"
+              >
+                <span
+                  aria-label="su-angle-right"
+                  class="su-angle-right buttonIcon"
+                />
+              </button>
+            </div>
+          </nav>
+        </section>
       </div>
     </div>
-    <input />
   </div>
+  <div
+    class="divider"
+  />
+  <div>
+    <div
+      class="listContainer"
+    >
+      <div
+        class="toolbar"
+      >
+        <label
+          class="input dark left collapsed hasAppendIcon"
+        >
+          <div
+            class="prependedContainer dark collapsed"
+          >
+            <span
+              aria-label="su-search"
+              class="su-search clickable icon dark iconClickable collapsed"
+              role="button"
+              tabindex="0"
+            />
+          </div>
+          <input
+            placeholder="sulu_admin.list_search_placeholder"
+            type="text"
+            value=""
+          />
+        </label>
+        <div
+          class="fieldFilter"
+        />
+        <div
+          class="buttonGroup"
+        >
+          <button
+            class="button icon active button"
+            type="button"
+          >
+            <span
+              class="buttonText"
+            >
+              <span
+                aria-label="su-th-large"
+                class="su-th-large"
+              />
+            </span>
+          </button>
+          <button
+            class="button icon button"
+            type="button"
+          >
+            <span
+              class="buttonText"
+            >
+              <span
+                aria-label="su-align-justify"
+                class="su-align-justify"
+              />
+            </span>
+          </button>
+        </div>
+      </div>
+      <div
+        class="list"
+      >
+        <section>
+          <div>
+            <div
+              class="masonry"
+            >
+              <li
+                style="margin-bottom:30px"
+              >
+                <div
+                  class="mediaCard"
+                >
+                  <div
+                    class="header"
+                  >
+                    <div
+                      class="description"
+                      role="button"
+                    >
+                      <div
+                        class="title"
+                      >
+                        <label
+                          class="label"
+                          tabindex="-1"
+                        >
+                          <span
+                            class="switch checkbox dark checkbox"
+                          >
+                            <input
+                              type="checkbox"
+                              value="1"
+                            />
+                            <span />
+                          </span>
+                          <div>
+                            <div
+                              class="titleText"
+                            >
+                              <div
+                                aria-label="Title 1"
+                                class="croppedText"
+                                title="Title 1"
+                              >
+                                <div
+                                  aria-hidden="true"
+                                  class="front"
+                                >
+                                  Titl
+                                </div>
+                                <div
+                                  aria-hidden="true"
+                                  class="back"
+                                >
+                                  <span>
+                                    e 1
+                                  </span>
+                                </div>
+                                <div
+                                  class="whole"
+                                >
+                                  Title 1
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </label>
+                      </div>
+                      <div
+                        class="meta"
+                      >
+                        <div
+                          aria-label="image/png 12.35 KB"
+                          class="croppedText"
+                          title="image/png 12.35 KB"
+                        >
+                          <div
+                            aria-hidden="true"
+                            class="front"
+                          >
+                            image/png
+                          </div>
+                          <div
+                            aria-hidden="true"
+                            class="back"
+                          >
+                            <span>
+                               12.35 KB
+                            </span>
+                          </div>
+                          <div
+                            class="whole"
+                          >
+                            image/png 12.35 KB
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <button
+                        class="downloadButton"
+                      >
+                        <span
+                          aria-label="su-download"
+                          class="su-download"
+                        />
+                      </button>
+                    </div>
+                  </div>
+                  <div
+                    class="media"
+                    role="button"
+                  >
+                    <img
+                      alt="Title 1"
+                      src="http://lorempixel.com/240/100"
+                    />
+                    <div
+                      class="spinner"
+                      style="width:40px;height:40px"
+                    >
+                      <div
+                        class="doubleBounce1"
+                      />
+                      <div
+                        class="doubleBounce2"
+                      />
+                    </div>
+                    <div
+                      class="cover"
+                    >
+                      <span
+                        aria-label="su-pen"
+                        class="su-pen mediaIcon"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li
+                style="margin-bottom:30px"
+              >
+                <div
+                  class="mediaCard"
+                >
+                  <div
+                    class="header"
+                  >
+                    <div
+                      class="description"
+                      role="button"
+                    >
+                      <div
+                        class="title"
+                      >
+                        <label
+                          class="label"
+                          tabindex="-1"
+                        >
+                          <span
+                            class="switch checkbox dark checkbox"
+                          >
+                            <input
+                              type="checkbox"
+                              value="2"
+                            />
+                            <span />
+                          </span>
+                          <div>
+                            <div
+                              class="titleText"
+                            >
+                              <div
+                                aria-label="Title 1"
+                                class="croppedText"
+                                title="Title 1"
+                              >
+                                <div
+                                  aria-hidden="true"
+                                  class="front"
+                                >
+                                  Titl
+                                </div>
+                                <div
+                                  aria-hidden="true"
+                                  class="back"
+                                >
+                                  <span>
+                                    e 1
+                                  </span>
+                                </div>
+                                <div
+                                  class="whole"
+                                >
+                                  Title 1
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </label>
+                      </div>
+                      <div
+                        class="meta"
+                      >
+                        <div
+                          aria-label="image/jpeg 54.32 KB"
+                          class="croppedText"
+                          title="image/jpeg 54.32 KB"
+                        >
+                          <div
+                            aria-hidden="true"
+                            class="front"
+                          >
+                            image/jpeg
+                          </div>
+                          <div
+                            aria-hidden="true"
+                            class="back"
+                          >
+                            <span>
+                               54.32 KB
+                            </span>
+                          </div>
+                          <div
+                            class="whole"
+                          >
+                            image/jpeg 54.32 KB
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <button
+                        class="downloadButton"
+                      >
+                        <span
+                          aria-label="su-download"
+                          class="su-download"
+                        />
+                      </button>
+                    </div>
+                  </div>
+                  <div
+                    class="media"
+                    role="button"
+                  >
+                    <img
+                      alt="Title 1"
+                      src="http://lorempixel.com/240/100"
+                    />
+                    <div
+                      class="spinner"
+                      style="width:40px;height:40px"
+                    >
+                      <div
+                        class="doubleBounce1"
+                      />
+                      <div
+                        class="doubleBounce2"
+                      />
+                    </div>
+                    <div
+                      class="cover"
+                    >
+                      <span
+                        aria-label="su-pen"
+                        class="su-pen mediaIcon"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </li>
+            </div>
+          </div>
+          <div
+            class="indicator"
+          />
+        </section>
+      </div>
+    </div>
+  </div>
+  <input />
 </div>
 `;
