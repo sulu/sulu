@@ -9,7 +9,7 @@ on:
 
 # This stops all previous ci runs of a pull request, if a new commit has been pushed
 concurrency:
-    group: ${{ github.workflow }}-${{ github.head_ref }}
+    group: ${{ github.workflow }}-${{ github.ref }}
     cancel-in-progress: true
 
 jobs:
