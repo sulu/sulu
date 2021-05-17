@@ -1,6 +1,5 @@
 // @flow
 import React, {Fragment} from 'react';
-import type {ElementRef} from 'react';
 import classNames from 'classnames';
 import {observer} from 'mobx-react';
 import {action, observable} from 'mobx';
@@ -8,6 +7,7 @@ import {Checkbox, CroppedText, GhostIndicator, Icon, Loader} from 'sulu-admin-bu
 import MimeTypeIndicator from '../MimeTypeIndicator';
 import DownloadList from './DownloadList';
 import mediaCardStyles from './mediaCard.scss';
+import type {ElementRef} from 'react';
 
 const DOWNLOAD_ICON = 'su-download';
 

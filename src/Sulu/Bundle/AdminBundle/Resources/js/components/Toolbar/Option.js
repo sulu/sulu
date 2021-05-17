@@ -2,8 +2,8 @@
 import classNames from 'classnames';
 import React from 'react';
 import Icon from '../Icon';
-import type {Skin} from './types';
 import optionStyles from './option.scss';
+import type {Skin} from './types';
 
 const ICON_CHECKMARK = 'su-check';
 

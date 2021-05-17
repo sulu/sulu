@@ -1,9 +1,9 @@
 // @flow
 import React from 'react';
 import {computed} from 'mobx';
-import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 import {webspaceStore} from 'sulu-page-bundle/stores';
 import RolePermissionsContainer from '../../RolePermissions';
+import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 import type {RolePermissions as RolePermissionsType} from '../../RolePermissions/types';
 
 class RolePermissions extends React.Component<FieldTypeProps<RolePermissionsType>> {

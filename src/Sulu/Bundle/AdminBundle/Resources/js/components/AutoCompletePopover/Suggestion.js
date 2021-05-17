@@ -1,8 +1,8 @@
 // @flow
 import React from 'react';
-import type {Node} from 'react';
 import Icon from '../Icon';
 import suggestionStyles from './suggestion.scss';
+import type {Node} from 'react';
 
 type Props = {|
     children: string | (highlight: (text: string) => Node) => Node,

@@ -1,8 +1,8 @@
 // @flow
-import type {ChildrenArray, Element} from 'react';
 import Select from './Select';
 import Action from './Action';
 import Option from './Option';
+import type {ChildrenArray, Element} from 'react';
 
 export type SelectProps<T> = {|
     children: SelectChildren<T>,

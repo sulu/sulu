@@ -1,10 +1,10 @@
 // @flow
 import React, {Fragment} from 'react';
-import type {ChildrenArray, Element} from 'react';
 import {translate} from '../../utils/Translator';
 import Button from '../Button';
 import Card from '../Card';
 import cardCollectionStyles from './cardCollection.scss';
+import type {ChildrenArray, Element} from 'react';
 
 type Props = {|
     children?: ChildrenArray<Element<typeof Card>> | false,

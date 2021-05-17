@@ -1,9 +1,9 @@
 // @flow
 import React from 'react';
-import type {Node} from 'react';
 import classNames from 'classnames';
-import type {BaseItemProps} from './types';
 import baseItemStyles from './baseItem.scss';
+import type {Node} from 'react';
+import type {BaseItemProps} from './types';
 
 type Props = {|
     ...BaseItemProps,

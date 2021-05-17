@@ -1,6 +1,5 @@
 // @flow
 import React from 'react';
-import type {ElementRef} from 'react';
 import {action, autorun, observable, toJS} from 'mobx';
 import {observer} from 'mobx-react';
 import Button from '../../components/Button';
@@ -9,6 +8,7 @@ import ResourceListStore from '../../stores/ResourceListStore';
 import {translate} from '../../utils/Translator';
 import EditLine from './EditLine';
 import editOverlayStyles from './editOverlay.scss';
+import type {ElementRef} from 'react';
 
 type Props = {|
     displayProperty: string,

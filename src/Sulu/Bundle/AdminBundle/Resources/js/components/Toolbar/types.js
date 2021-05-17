@@ -1,5 +1,4 @@
 // @flow
-import type {Element, Node, ElementRef} from 'react';
 import ItemsComponent from './Items';
 import IconsComponent from './Icons';
 import ButtonComponent from './Button';
@@ -7,6 +6,7 @@ import DropdownComponent from './Dropdown';
 import PopoverComponent from './Popover';
 import SelectComponent from './Select';
 import TogglerComponent from './Toggler';
+import type {Element, Node, ElementRef} from 'react';
 
 export type Item =
     Element<typeof ButtonComponent>

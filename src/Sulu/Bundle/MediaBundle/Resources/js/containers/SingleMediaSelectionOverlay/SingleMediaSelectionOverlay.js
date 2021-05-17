@@ -1,10 +1,10 @@
 // @flow
 import React from 'react';
 import {autorun, comparer, computed, observable} from 'mobx';
-import type {IObservableValue} from 'mobx/lib/mobx';
 import {observer} from 'mobx-react';
 import {ListStore} from 'sulu-admin-bundle/containers';
 import MediaSelectionOverlay from '../MediaSelectionOverlay';
+import type {IObservableValue} from 'mobx/lib/mobx';
 
 type Props = {|
     excludedIds: Array<number>,

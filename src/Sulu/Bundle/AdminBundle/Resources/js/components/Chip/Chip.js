@@ -1,9 +1,9 @@
 // @flow
 import React from 'react';
-import type {Node} from 'react';
 import classNames from 'classnames';
 import Icon from '../../components/Icon';
 import chipStyles from './chip.scss';
+import type {Node} from 'react';
 
 type Props<T> = {|
     children: Node,

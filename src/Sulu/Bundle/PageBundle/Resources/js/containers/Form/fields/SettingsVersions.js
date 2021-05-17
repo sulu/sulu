@@ -1,13 +1,13 @@
 // @flow
 import React, {Fragment} from 'react';
 import {action, computed, observable} from 'mobx';
-import type {IObservableValue} from 'mobx/lib/mobx';
 import {observer} from 'mobx-react';
 import {Dialog} from 'sulu-admin-bundle/components';
 import {List, ListStore} from 'sulu-admin-bundle/containers';
 import {ResourceRequester} from 'sulu-admin-bundle/services';
-import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 import {translate} from 'sulu-admin-bundle/utils';
+import type {FieldTypeProps} from 'sulu-admin-bundle/types';
+import type {IObservableValue} from 'mobx/lib/mobx';
 
 type Props = FieldTypeProps<void>;
 

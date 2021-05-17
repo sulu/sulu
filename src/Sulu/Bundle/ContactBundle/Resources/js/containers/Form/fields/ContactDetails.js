@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
-import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 import ContactDetailsComponent from '../../../components/ContactDetails';
+import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 import type {ContactDetailsValue} from '../../../components/ContactDetails/types';
 
 export default class ContactDetails extends React.Component<FieldTypeProps<ContactDetailsValue>> {

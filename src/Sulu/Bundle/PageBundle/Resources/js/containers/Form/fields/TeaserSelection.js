@@ -1,12 +1,12 @@
 // @flow
 import React from 'react';
 import {computed, observable} from 'mobx';
-import type {IObservableValue} from 'mobx/lib/mobx';
 import {observer} from 'mobx-react';
 import jsonpointer from 'json-pointer';
-import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 import {userStore} from 'sulu-admin-bundle/stores';
 import TeaserSelectionComponent, {teaserProviderRegistry} from '../../TeaserSelection';
+import type {FieldTypeProps} from 'sulu-admin-bundle/types';
+import type {IObservableValue} from 'mobx/lib/mobx';
 import type {TeaserItem, TeaserSelectionValue} from '../../TeaserSelection/types';
 
 @observer

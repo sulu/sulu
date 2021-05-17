@@ -8,9 +8,9 @@ import BlockCollection from '../../components/BlockCollection';
 import {translate} from '../../utils/Translator';
 import {memoryFormStoreFactory} from '../Form';
 import FormOverlay from '../FormOverlay';
-import type {BlockError, FieldTypeProps, FormStoreInterface} from '../Form/types';
 import blockPreviewTransformerRegistry from './registries/blockPreviewTransformerRegistry';
 import FieldRenderer from './FieldRenderer';
+import type {BlockError, FieldTypeProps, FormStoreInterface} from '../Form/types';
 import type {BlockEntry} from './types';
 
 const MISSING_BLOCK_ERROR_MESSAGE = 'The "block" field type needs at least one type to be configured!';

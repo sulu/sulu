@@ -4,8 +4,8 @@ import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import classNames from 'classnames';
 import {translate} from '../../utils/Translator';
-import type {RectangleChange} from './types';
 import modifiableRectangleStyles from './modifiableRectangle.scss';
+import type {RectangleChange} from './types';
 
 type Props = {
     backdropSize: number,

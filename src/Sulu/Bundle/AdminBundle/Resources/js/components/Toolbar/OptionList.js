@@ -2,8 +2,8 @@
 import classNames from 'classnames';
 import React from 'react';
 import Option from './Option';
-import type {Skin} from './types';
 import optionListStyles from './optionList.scss';
+import type {Skin} from './types';
 
 type Props = {
     onClose?: () => void,

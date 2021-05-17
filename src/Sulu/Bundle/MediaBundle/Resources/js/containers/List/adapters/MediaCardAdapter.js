@@ -2,9 +2,9 @@
 import {observer} from 'mobx-react';
 import React from 'react';
 import {Masonry, InfiniteScroller} from 'sulu-admin-bundle/components';
-import type {ListAdapterProps} from 'sulu-admin-bundle/containers';
 import {translate} from 'sulu-admin-bundle/utils';
 import MediaCard from '../../../components/MediaCard';
+import type {ListAdapterProps} from 'sulu-admin-bundle/containers';
 
 const THUMBNAIL_SIZE = 'sulu-240x';
 

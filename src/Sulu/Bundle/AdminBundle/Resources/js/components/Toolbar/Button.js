@@ -1,11 +1,11 @@
 // @flow
 import classNames from 'classnames';
 import React from 'react';
-import type {ElementRef} from 'react';
 import Icon from '../Icon';
 import Loader from '../Loader';
-import type {Button as ButtonProps} from './types';
 import buttonStyles from './button.scss';
+import type {Button as ButtonProps} from './types';
+import type {ElementRef} from 'react';
 
 const LOADER_SIZE = 20;
 const ICON_ANGLE_DOWN = 'su-angle-down';

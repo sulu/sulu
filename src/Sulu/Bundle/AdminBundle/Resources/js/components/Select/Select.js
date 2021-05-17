@@ -1,6 +1,5 @@
 // @flow
 import React from 'react';
-import type {Element, ElementRef} from 'react';
 import {action, observable, computed} from 'mobx';
 import {observer} from 'mobx-react';
 import debounce from 'debounce';
@@ -9,9 +8,10 @@ import Popover from '../Popover';
 import Menu from '../Menu';
 import Action from './Action';
 import Option from './Option';
-import type {OptionSelectedVisualization, SelectChildren, SelectProps} from './types';
 import DisplayValue from './DisplayValue';
 import selectStyles from './select.scss';
+import type {OptionSelectedVisualization, SelectChildren, SelectProps} from './types';
+import type {Element, ElementRef} from 'react';
 
 const HORIZONTAL_OFFSET = -20;
 const VERTICAL_OFFSET = 2;

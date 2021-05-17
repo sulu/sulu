@@ -16,11 +16,9 @@ import List, {
     DefaultLoadingStrategy,
     PaginatedLoadingStrategy,
 } from './List';
-import type {ListAdapterProps, LoadingStrategyInterface, StructureStrategyInterface} from './List';
 import FieldBlocks, {blockPreviewTransformerRegistry} from './FieldBlocks';
 import {viewRegistry} from './ViewRenderer';
 import Sidebar, {sidebarStore, sidebarRegistry} from './Sidebar';
-import type {ViewProps} from './ViewRenderer';
 import {withToolbar} from './Toolbar';
 import Form, {
     CardCollection,
@@ -34,7 +32,6 @@ import Form, {
     ResourceLocator,
     Renderer,
 } from './Form';
-import type {FormStoreInterface, Schema, SchemaOption} from './Form/types';
 import ResourceLocatorHistory from './ResourceLocatorHistory';
 import ResourceMultiSelect from './ResourceMultiSelect';
 import ResourceSingleSelect from './ResourceSingleSelect';
@@ -45,6 +42,9 @@ import SingleAutoComplete from './SingleAutoComplete';
 import SingleListOverlay from './SingleListOverlay';
 import SingleSelection from './SingleSelection';
 import TextEditor, {textEditorRegistry} from './TextEditor';
+import type {FormStoreInterface, Schema, SchemaOption} from './Form/types';
+import type {ViewProps} from './ViewRenderer';
+import type {ListAdapterProps, LoadingStrategyInterface, StructureStrategyInterface} from './List';
 
 export type {
     FormStoreInterface,

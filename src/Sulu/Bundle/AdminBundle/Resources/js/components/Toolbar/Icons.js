@@ -1,9 +1,9 @@
 // @flow
 import React from 'react';
-import type {ChildrenArray, Node} from 'react';
 import classNames from 'classnames';
-import type {Skin} from './types';
 import iconsStyles from './icons.scss';
+import type {ChildrenArray, Node} from 'react';
+import type {Skin} from './types';
 
 type Props = {
     children: ChildrenArray<Node>,

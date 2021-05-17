@@ -1,15 +1,15 @@
 // @flow
 import React, {Fragment} from 'react';
 import {observer} from 'mobx-react';
-import type {IObservableValue} from 'mobx/lib/mobx';
 import {action, computed, observable, toJS} from 'mobx';
 import classNames from 'classnames';
-import type {Value as ImageValue} from '../SingleMediaSelection/types';
 import SingleMediaSelection from '../SingleMediaSelection';
-import type {Hotspot, Value, RenderHotspotFormCallback} from './types';
 import ImageRenderer from './ImageRenderer';
 import HotspotsFormRenderer from './HotspotsFormRenderer';
 import imageMapStyles from './imageMap.scss';
+import type {Hotspot, Value, RenderHotspotFormCallback} from './types';
+import type {Value as ImageValue} from '../SingleMediaSelection/types';
+import type {IObservableValue} from 'mobx/lib/mobx';
 
 type Props = {
     defaultFormType: string,

@@ -1,22 +1,22 @@
 // @flow
-import type {IObservableValue} from 'mobx/lib/mobx';
 import {action, computed, observable, toJS} from 'mobx';
 import {observer} from 'mobx-react';
-import type {ElementRef} from 'react';
 import React, {Fragment} from 'react';
 import equals from 'fast-deep-equal';
 import {default as ListContainer, ListStore} from '../../containers/List';
 import {withToolbar} from '../../containers/Toolbar';
-import type {ViewProps} from '../../containers/ViewRenderer';
 import {translate} from '../../utils/Translator';
 import ResourceStore from '../../stores/ResourceStore';
-import type {ItemActionConfig} from '../../containers/List/types';
 import {Route} from '../../services/Router';
 import listToolbarActionRegistry from './registries/listToolbarActionRegistry';
 import listItemActionRegistry from './registries/listItemActionRegistry';
 import AbstractListToolbarAction from './toolbarActions/AbstractListToolbarAction';
 import AbstractListItemAction from './itemActions/AbstractListItemAction';
 import listStyles from './list.scss';
+import type {ItemActionConfig} from '../../containers/List/types';
+import type {ViewProps} from '../../containers/ViewRenderer';
+import type {ElementRef} from 'react';
+import type {IObservableValue} from 'mobx/lib/mobx';
 
 const DEFAULT_USER_SETTINGS_KEY = 'list';
 const DEFAULT_LIMIT = 10;

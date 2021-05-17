@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
-import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 import BicComponent from '../../../components/Bic';
+import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 
 export default class Bic extends React.Component<FieldTypeProps<?string>> {
     render() {

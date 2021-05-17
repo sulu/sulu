@@ -4,8 +4,8 @@ import {computed} from 'mobx';
 import {observer} from 'mobx-react';
 import CheckboxComponent from '../../../components/Checkbox';
 import Toggler from '../../../components/Toggler';
-import type {FieldTypeProps} from '../../../types';
 import Heading from './Heading';
+import type {FieldTypeProps} from '../../../types';
 
 @observer
 class Checkbox extends React.Component<FieldTypeProps<boolean>> {

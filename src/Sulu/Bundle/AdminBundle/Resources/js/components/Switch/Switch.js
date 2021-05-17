@@ -2,8 +2,8 @@
 import React from 'react';
 import classNames from 'classnames';
 import Icon from '../Icon';
-import type {SwitchProps} from './types';
 import switchStyles from './switch.scss';
+import type {SwitchProps} from './types';
 
 type Props<T> = {|
     ...SwitchProps<T>,

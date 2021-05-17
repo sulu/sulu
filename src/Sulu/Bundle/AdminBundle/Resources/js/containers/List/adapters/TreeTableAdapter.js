@@ -7,8 +7,8 @@ import Loader from '../../../components/Loader';
 import TreeStructureStrategy from '../structureStrategies/TreeStructureStrategy';
 import DefaultLoadingStrategy from '../loadingStrategies/DefaultLoadingStrategy';
 import Pagination from '../../../components/Pagination';
-import type {ListAdapterProps} from '../types';
 import AbstractTableAdapter from './AbstractTableAdapter';
+import type {ListAdapterProps} from '../types';
 
 @observer
 class TreeTableAdapter extends AbstractTableAdapter {

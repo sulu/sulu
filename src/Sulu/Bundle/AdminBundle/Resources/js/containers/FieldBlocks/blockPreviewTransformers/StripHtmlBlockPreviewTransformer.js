@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
-import type {Node} from 'react';
 import textVersion from 'textversionjs';
+import type {Node} from 'react';
 import type {BlockPreviewTransformer} from '../types';
 
 const MAX_LENGTH = 50;

@@ -1,7 +1,7 @@
 // @flow
 import {action, computed, observable} from 'mobx';
-import type {FormStoreInterface, Schema, SchemaEntry} from '../types';
 import metadataStore from './metadataStore';
+import type {FormStoreInterface, Schema, SchemaEntry} from '../types';
 
 export default class SchemaFormStoreDecorator implements FormStoreInterface {
     @observable innerFormStore: ?FormStoreInterface;

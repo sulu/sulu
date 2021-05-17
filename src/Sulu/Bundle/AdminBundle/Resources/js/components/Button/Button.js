@@ -1,10 +1,10 @@
 // @flow
 import React from 'react';
-import type {ElementRef, Node} from 'react';
 import classNames from 'classnames';
 import Icon from '../Icon';
 import Loader from '../Loader';
 import buttonStyles from './button.scss';
+import type {ElementRef, Node} from 'react';
 import type {ButtonSkin} from './types';
 
 const LOADER_SIZE = 25;

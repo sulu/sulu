@@ -1,9 +1,7 @@
 // @flow
 import {observer} from 'mobx-react';
 import {action, computed, intercept, observable} from 'mobx';
-import type {IValueWillChange} from 'mobx/lib/mobx';
 import React, {Fragment} from 'react';
-import type {Node} from 'react';
 import equal from 'fast-deep-equal';
 import classNames from 'classnames';
 import jexl from 'jexl';
@@ -15,6 +13,14 @@ import PermissionHint from '../../components/PermissionHint';
 import userStore from '../../stores/userStore';
 import SingleListOverlay from '../SingleListOverlay';
 import {translate} from '../../utils/Translator';
+import ListStore from './stores/ListStore';
+import listAdapterRegistry from './registries/listAdapterRegistry';
+import AbstractAdapter from './adapters/AbstractAdapter';
+import AdapterSwitch from './AdapterSwitch';
+import Search from './Search';
+import listStyles from './list.scss';
+import ColumnOptionsOverlay from './ColumnOptionsOverlay';
+import FieldFilter from './FieldFilter';
 import type {
     AdapterOptions,
     ItemActionsProvider,
@@ -25,14 +31,8 @@ import type {
     Schema,
     SortOrder,
 } from './types';
-import ListStore from './stores/ListStore';
-import listAdapterRegistry from './registries/listAdapterRegistry';
-import AbstractAdapter from './adapters/AbstractAdapter';
-import AdapterSwitch from './AdapterSwitch';
-import Search from './Search';
-import listStyles from './list.scss';
-import ColumnOptionsOverlay from './ColumnOptionsOverlay';
-import FieldFilter from './FieldFilter';
+import type {Node} from 'react';
+import type {IValueWillChange} from 'mobx/lib/mobx';
 
 type Props = {|
     adapterOptions?: {[adapterKey: string]: AdapterOptions},

@@ -1,6 +1,5 @@
 // @flow
 import React from 'react';
-import type {ChildrenArray, Element} from 'react';
 import {observer} from 'mobx-react';
 import Mousetrap from 'mousetrap';
 import {Portal} from 'react-portal';
@@ -8,6 +7,7 @@ import {translate} from 'sulu-admin-bundle/utils';
 import {Icon} from 'sulu-admin-bundle/components';
 import MediaItem from './MediaItem';
 import dropzoneOverlayStyles from './dropzoneOverlay.scss';
+import type {ChildrenArray, Element} from 'react';
 
 type Props = {
     children?: ChildrenArray<Element<typeof MediaItem>>,

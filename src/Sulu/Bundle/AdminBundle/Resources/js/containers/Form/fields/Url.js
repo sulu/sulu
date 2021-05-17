@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
-import type {FieldTypeProps} from '../../../types';
 import UrlComponent from '../../../components/Url';
+import type {FieldTypeProps} from '../../../types';
 
 export default class Url extends React.Component<FieldTypeProps<?string>> {
     constructor(props: FieldTypeProps<?string>) {

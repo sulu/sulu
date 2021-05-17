@@ -1,5 +1,4 @@
 // @flow
-import type {ChildrenArray, Element} from 'react';
 import React from 'react';
 import classNames from 'classnames';
 import Button from './Button';
@@ -10,8 +9,9 @@ import Icons from './Icons';
 import Popover from './Popover';
 import Toggler from './Toggler';
 import Select from './Select';
-import type {Skin} from './types';
 import toolbarStyles from './toolbar.scss';
+import type {Skin} from './types';
+import type {ChildrenArray, Element} from 'react';
 
 type Props = {
     children: ChildrenArray<false | Element<typeof Controls>>,

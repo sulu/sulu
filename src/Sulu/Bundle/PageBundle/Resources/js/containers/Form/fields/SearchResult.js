@@ -1,8 +1,8 @@
 // @flow
 import React from 'react';
 import {observer} from 'mobx-react';
-import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 import SearchResultComponent from '../../../components/SearchResult';
+import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 
 @observer
 class SearchResult extends React.Component<FieldTypeProps<typeof undefined>> {

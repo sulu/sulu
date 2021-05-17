@@ -1,6 +1,5 @@
 // @flow
 import React, {Fragment} from 'react';
-import type {ChildrenArray, Element, ElementRef} from 'react';
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import classNames from 'classnames';
@@ -10,6 +9,7 @@ import Section from './Section';
 import Item from './Item';
 import Action from './Action';
 import arrowMenuStyles from './arrowMenu.scss';
+import type {ChildrenArray, Element, ElementRef} from 'react';
 
 type Props = {
     anchorElement: Element<*>,

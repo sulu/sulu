@@ -3,8 +3,8 @@ import React from 'react';
 import {computed} from 'mobx';
 import {observer} from 'mobx-react';
 import Popover from './Popover';
-import type {SelectOption, Select as SelectProps} from './types';
 import OptionList from './OptionList';
+import type {SelectOption, Select as SelectProps} from './types';
 
 @observer
 class Select<T: ?string | number> extends React.Component<SelectProps<T>> {

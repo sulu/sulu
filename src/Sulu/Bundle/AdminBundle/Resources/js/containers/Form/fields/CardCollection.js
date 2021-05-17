@@ -1,15 +1,15 @@
 // @flow
 import React, {Fragment} from 'react';
-import type {ElementRef} from 'react';
 import {action, observable, toJS} from 'mobx';
 import {observer} from 'mobx-react';
 import CardCollectionComponent from '../../../components/CardCollection';
 import Overlay from '../../../components/Overlay';
 import Form, {memoryFormStoreFactory} from '../../../containers/Form';
-import type {FormStoreInterface} from '../../../containers/Form';
 import {translate} from '../../../utils/Translator';
-import type {FieldTypeProps} from '../../../types';
 import cardCollectionStyles from './cardCollection.scss';
+import type {FormStoreInterface} from '../../../containers/Form';
+import type {FieldTypeProps} from '../../../types';
+import type {ElementRef} from 'react';
 
 @observer
 class CardCollection extends React.Component<FieldTypeProps<Array<Object>>> {

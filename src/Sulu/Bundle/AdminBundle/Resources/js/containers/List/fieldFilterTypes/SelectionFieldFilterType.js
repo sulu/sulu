@@ -1,6 +1,5 @@
 // @flow
 import React from 'react';
-import type {ElementRef} from 'react';
 import {action, autorun, computed, observable, toJS, untracked, when} from 'mobx';
 import equals from 'fast-deep-equal';
 import userStore from '../../../stores/userStore';
@@ -9,6 +8,7 @@ import MultiAutoComplete from '../../MultiAutoComplete';
 import ResourceCheckboxGroup from '../../ResourceCheckboxGroup';
 import AbstractFieldFilterType from './AbstractFieldFilterType';
 import selectionFieldFilterTypeStyles from './selectionFieldFilterType.scss';
+import type {ElementRef} from 'react';
 
 const TYPE_AUTO_COMPLETE = 'auto_complete';
 const TYPE_SELECT = 'select';

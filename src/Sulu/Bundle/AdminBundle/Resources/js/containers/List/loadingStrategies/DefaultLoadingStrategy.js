@@ -1,8 +1,8 @@
 // @flow
 import {action} from 'mobx';
 import ResourceRequester from '../../../services/ResourceRequester';
-import type {LoadingStrategyOptions, LoadOptions} from '../types';
 import AbstractLoadingStrategy from './AbstractLoadingStrategy';
+import type {LoadingStrategyOptions, LoadOptions} from '../types';
 
 export default class DefaultLoadingStrategy extends AbstractLoadingStrategy {
     options: LoadingStrategyOptions;

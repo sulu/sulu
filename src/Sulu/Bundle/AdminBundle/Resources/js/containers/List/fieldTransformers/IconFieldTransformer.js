@@ -1,11 +1,11 @@
 // @flow
 import React from 'react';
-import type {Node} from 'react';
 import log from 'loglevel';
 import classNames from 'classnames';
 import Icon from '../../../components/Icon';
-import type {FieldTransformer} from '../types';
 import iconFieldTransformerStyles from './iconFieldTransformer.scss';
+import type {FieldTransformer} from '../types';
+import type {Node} from 'react';
 
 export type Skin = 'default' | 'dark';
 

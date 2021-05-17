@@ -1,14 +1,14 @@
 // @flow
 import React from 'react';
-import type {ElementRef, Node} from 'react';
 import {observer, Observer} from 'mobx-react';
 import {action, observable} from 'mobx';
-import type {IObservableValue} from 'mobx/lib/mobx';
 import Dropzone from 'react-dropzone';
 import MediaUploadStore from '../../stores/MediaUploadStore';
 import MediaItem from './MediaItem';
 import DropzoneOverlay from './DropzoneOverlay';
 import dropzoneStyles from './dropzone.scss';
+import type {IObservableValue} from 'mobx/lib/mobx';
+import type {ElementRef, Node} from 'react';
 
 type Props = {
     children: Node,

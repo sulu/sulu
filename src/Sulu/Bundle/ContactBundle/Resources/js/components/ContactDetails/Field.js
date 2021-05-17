@@ -1,9 +1,9 @@
 // @flow
 import React from 'react';
-import type {Node} from 'react';
 import {Form, Icon} from 'sulu-admin-bundle/components';
-import type {FormFieldTypes} from 'sulu-admin-bundle/types';
 import fieldStyles from './field.scss';
+import type {Node} from 'react';
+import type {FormFieldTypes} from 'sulu-admin-bundle/types';
 
 type Props = {|
     children: Node,

@@ -2,8 +2,8 @@
 import React from 'react';
 import {computed} from 'mobx';
 import {observer} from 'mobx-react';
-import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 import PermissionsContainer from '../../Permissions';
+import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 import type {ContextPermission} from '../../Permissions';
 
 type Props = FieldTypeProps<?Array<ContextPermission>>;

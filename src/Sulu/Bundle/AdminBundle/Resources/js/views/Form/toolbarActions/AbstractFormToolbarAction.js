@@ -1,10 +1,10 @@
 // @flow
-import type {Node} from 'react';
 import ResourceStore from '../../../stores/ResourceStore';
 import {ResourceFormStore} from '../../../containers/Form';
-import type {ToolbarItemConfig} from '../../../containers/Toolbar/types';
 import Router from '../../../services/Router';
 import Form from '../Form';
+import type {ToolbarItemConfig} from '../../../containers/Toolbar/types';
+import type {Node} from 'react';
 
 export default class AbstractFormToolbarAction {
     resourceFormStore: ResourceFormStore;

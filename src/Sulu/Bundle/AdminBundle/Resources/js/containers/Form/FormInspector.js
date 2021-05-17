@@ -1,7 +1,7 @@
 // @flow
 import {computed} from 'mobx';
-import type {IObservableValue} from 'mobx/lib/mobx';
 import log from 'loglevel';
+import type {IObservableValue} from 'mobx/lib/mobx';
 import type {FinishFieldHandler, FormStoreInterface, SaveHandler} from './types';
 
 export default class FormInspector {

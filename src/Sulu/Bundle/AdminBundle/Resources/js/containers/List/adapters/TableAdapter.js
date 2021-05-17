@@ -1,12 +1,12 @@
 // @flow
 import {observer} from 'mobx-react';
 import React from 'react';
-import type {Element} from 'react';
 import Pagination from '../../../components/Pagination';
 import Table from '../../../components/Table';
 import FlatStructureStrategy from '../structureStrategies/FlatStructureStrategy';
 import DefaultLoadingStrategy from '../loadingStrategies/DefaultLoadingStrategy';
 import AbstractTableAdapter from './AbstractTableAdapter';
+import type {Element} from 'react';
 
 @observer
 class TableAdapter extends AbstractTableAdapter {

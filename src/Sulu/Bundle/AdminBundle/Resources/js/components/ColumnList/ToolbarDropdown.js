@@ -5,9 +5,9 @@ import {observable, action} from 'mobx';
 import {observer} from 'mobx-react';
 import Icon from '../Icon';
 import ArrowMenu from '../ArrowMenu';
-import type {ToolbarDropdown as ToolbarDropdownProps} from './types';
 import toolbarStyles from './toolbar.scss';
 import toolbarDropdownStyles from './toolbarDropdown.scss';
+import type {ToolbarDropdown as ToolbarDropdownProps} from './types';
 
 @observer
 class ToolbarDropdown extends React.Component<ToolbarDropdownProps> {

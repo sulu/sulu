@@ -1,8 +1,8 @@
 // @flow
 import React from 'react';
 import {Router} from 'sulu-admin-bundle/services';
-import type {ErrorCollection} from 'sulu-admin-bundle/types';
 import {FormInspector, Renderer} from 'sulu-admin-bundle/containers';
+import type {ErrorCollection} from 'sulu-admin-bundle/types';
 import type {Schema} from 'sulu-admin-bundle/containers';
 
 type Props = {|

@@ -1,13 +1,13 @@
 // @flow
 import React from 'react';
-import type {ElementRef} from 'react';
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import classNames from 'classnames';
 import PopoverComponent from '../Popover';
-import type {Popover as PopoverProps} from './types';
 import Button from './Button';
 import popoverStyles from './popover.scss';
+import type {Popover as PopoverProps} from './types';
+import type {ElementRef} from 'react';
 
 @observer
 class Popover extends React.Component<PopoverProps> {

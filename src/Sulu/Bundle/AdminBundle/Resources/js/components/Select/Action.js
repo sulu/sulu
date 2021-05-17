@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
-import type {ElementRef} from 'react';
 import actionStyles from './action.scss';
+import type {ElementRef} from 'react';
 
 type Props<T> = {|
     afterAction?: () => void,

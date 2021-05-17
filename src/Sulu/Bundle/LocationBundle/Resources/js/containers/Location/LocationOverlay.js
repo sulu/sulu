@@ -8,8 +8,8 @@ import {MapContainer, Marker, TileLayer} from 'react-leaflet';
 import {Map} from 'leaflet';
 import {SingleAutoComplete} from 'sulu-admin-bundle/containers';
 import SingleSelectionStore from 'sulu-admin-bundle/stores/SingleSelectionStore';
-import type {Location as LocationValue} from '../../types';
 import locationOverlayStyles from './locationOverlay.scss';
+import type {Location as LocationValue} from '../../types';
 
 type Props = {
     onClose: () => void,

@@ -1,6 +1,6 @@
 // @flow
-import type {Node} from 'react';
 import log from 'loglevel';
+import type {Node} from 'react';
 import type {FieldTransformer} from '../types';
 
 export default class NumberFieldTransformer implements FieldTransformer {

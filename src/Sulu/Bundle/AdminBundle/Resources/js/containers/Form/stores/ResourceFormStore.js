@@ -1,12 +1,12 @@
 // @flow
 import {action, autorun, computed, get, observable, when} from 'mobx';
-import type {IObservableValue} from 'mobx/lib/mobx';
 import jsonpointer from 'json-pointer';
 import {createAjv} from '../../../utils/Ajv';
 import ResourceStore from '../../../stores/ResourceStore';
-import type {FormStoreInterface, Schema, SchemaEntry, SchemaType, SchemaTypes} from '../types';
 import AbstractFormStore from './AbstractFormStore';
 import metadataStore from './metadataStore';
+import type {FormStoreInterface, Schema, SchemaEntry, SchemaType, SchemaTypes} from '../types';
+import type {IObservableValue} from 'mobx/lib/mobx';
 
 // TODO do not hardcode "template", use some kind of metadata instead
 const TYPE = 'template';

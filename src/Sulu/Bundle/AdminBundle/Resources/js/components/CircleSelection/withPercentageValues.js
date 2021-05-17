@@ -1,9 +1,9 @@
 // @flow
 import React from 'react';
-import type {ComponentType} from 'react';
 import {observer} from 'mobx-react';
 import {computed} from 'mobx';
 import {buildHocDisplayName} from '../../utils/react';
+import type {ComponentType} from 'react';
 import type {SelectionData} from './types';
 
 type Props = {

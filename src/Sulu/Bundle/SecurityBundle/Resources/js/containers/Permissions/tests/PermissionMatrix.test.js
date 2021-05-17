@@ -1,8 +1,8 @@
 // @flow
 import React from 'react';
 import {mount, render} from 'enzyme';
-import type {MatrixValues} from 'sulu-admin-bundle/components/Matrix/types';
 import PermissionMatrix from '../PermissionMatrix';
+import type {MatrixValues} from 'sulu-admin-bundle/components/Matrix/types';
 import type {ContextPermission} from '../types';
 import type {SecurityContexts} from '../../../stores/securityContextStore/types';
 

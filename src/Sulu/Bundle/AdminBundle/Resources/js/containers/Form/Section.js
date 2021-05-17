@@ -1,6 +1,5 @@
 // @flow
 import React from 'react';
-import type {ChildrenArray, Element} from 'react';
 import {computed} from 'mobx';
 import {observer} from 'mobx-react';
 import jexl from 'jexl';
@@ -8,6 +7,7 @@ import Form from '../../components/Form';
 import conditionDataProviderRegistry from './registries/conditionDataProviderRegistry';
 import FormInspector from './FormInspector';
 import Field from './Field';
+import type {ChildrenArray, Element} from 'react';
 import type {SchemaEntry} from './types';
 
 type Props = {|

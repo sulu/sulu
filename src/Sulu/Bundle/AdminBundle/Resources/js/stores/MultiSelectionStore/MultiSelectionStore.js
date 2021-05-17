@@ -1,8 +1,8 @@
 // @flow
 import {action, computed, observable} from 'mobx';
-import type {IObservableValue} from 'mobx/lib/mobx';
 import {arrayMove} from '../../utils';
 import {ResourceRequester} from '../../services';
+import type {IObservableValue} from 'mobx/lib/mobx';
 
 export default class MultiSelectionStore<T = string | number, U: {id: T} = Object> {
     @observable items: Array<U> = [];

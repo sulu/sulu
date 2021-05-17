@@ -1,16 +1,16 @@
 // @flow
 import React from 'react';
 import {action, computed, observable} from 'mobx';
-import type {ElementRef} from 'react';
 import {observer} from 'mobx-react';
 import Overlay from '../../components/Overlay';
 import {translate} from '../../utils';
 import Snackbar from '../../components/Snackbar';
 import Form from '../Form';
+import formOverlayStyles from './formOverlay.scss';
 import type {FormStoreInterface} from '../Form/types';
 import type {ResourceFormStore} from '../Form';
 import type {Size} from '../../components/Overlay/types';
-import formOverlayStyles from './formOverlay.scss';
+import type {ElementRef} from 'react';
 
 type Props = {|
     confirmDisabled: boolean,

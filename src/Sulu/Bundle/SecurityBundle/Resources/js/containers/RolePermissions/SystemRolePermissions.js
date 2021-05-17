@@ -6,8 +6,8 @@ import {Heading, Matrix, Toggler} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils';
 import securityContextStore from '../../stores/securityContextStore';
 import {getActionIcon} from '../../utils/Permission';
-import type {Role} from '../../types';
 import systemRolePermissionsStyles from './systemRolePermissions.scss';
+import type {Role} from '../../types';
 import type {RolePermissions} from './types';
 
 type Props = {|

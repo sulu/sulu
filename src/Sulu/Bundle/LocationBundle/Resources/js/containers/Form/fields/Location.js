@@ -1,8 +1,8 @@
 // @flow
 import React from 'react';
+import LocationComponent from '../../../containers/Location';
 import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 import type {Location as LocationValue} from '../../../types';
-import LocationComponent from '../../../containers/Location';
 
 export default class Location extends React.Component<FieldTypeProps<?LocationValue>> {
     handleChange = (value: ?LocationValue) => {

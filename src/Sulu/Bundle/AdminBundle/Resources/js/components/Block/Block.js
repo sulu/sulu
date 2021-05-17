@@ -1,10 +1,10 @@
 // @flow
 import React, {Fragment} from 'react';
-import type {Node} from 'react';
 import classNames from 'classnames';
 import Icon from '../Icon';
 import SingleSelect from '../SingleSelect';
 import blockStyles from './block.scss';
+import type {Node} from 'react';
 
 type Props<T: string> = {
     activeType?: T,

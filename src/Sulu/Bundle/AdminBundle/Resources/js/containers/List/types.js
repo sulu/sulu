@@ -1,7 +1,7 @@
 // @flow
+import {RequestPromise} from '../../services/Requester';
 import type {Node} from 'react';
 import type {IObservableValue} from 'mobx/lib/mobx';
-import {RequestPromise} from '../../services/Requester';
 import type {Width} from '../../components/Table/types';
 
 export type DataItem = {

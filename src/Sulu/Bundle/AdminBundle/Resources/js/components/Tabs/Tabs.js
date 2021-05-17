@@ -1,17 +1,17 @@
 // @flow
 import React from 'react';
-import type {ChildrenArray, Element, ElementRef} from 'react';
 import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import classNames from 'classnames';
 import debounce from 'debounce';
 import Popover from '../Popover';
 import Icon from '../Icon';
-import type {Type} from './types';
 import Tab from './Tab';
 import CollapsedTabList from './CollapsedTabList';
 import CollapsedTab from './CollapsedTab';
 import tabsStyles from './tabs.scss';
+import type {Type} from './types';
+import type {ChildrenArray, Element, ElementRef} from 'react';
 
 type Props = {
     children: ChildrenArray<Element<typeof Tab> | false>,

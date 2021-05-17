@@ -2,11 +2,11 @@
 import React from 'react';
 import moment from 'moment';
 import log from 'loglevel';
-import type {Node} from 'react';
 import classNames from 'classnames';
-import type {FieldTransformer} from '../types';
 import {translate} from '../../../utils';
 import dateTimeFieldTransformerStyles from './dateTimeFieldTransformer.scss';
+import type {FieldTransformer} from '../types';
+import type {Node} from 'react';
 
 export type Skin = 'default' | 'light';
 

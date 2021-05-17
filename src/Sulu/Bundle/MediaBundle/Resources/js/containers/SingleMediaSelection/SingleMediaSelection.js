@@ -1,7 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
 import {observer} from 'mobx-react';
-import type {IObservableValue} from 'mobx/lib/mobx';
 import {action, observable, reaction, toJS} from 'mobx';
 import SingleItemSelection from 'sulu-admin-bundle/components/SingleItemSelection';
 import {translate} from 'sulu-admin-bundle/utils/Translator';
@@ -9,9 +8,10 @@ import SingleSelectionStore from 'sulu-admin-bundle/stores/SingleSelectionStore'
 import {getIconForDisplayOption, getTranslationForDisplayOption} from '../../utils/MediaSelectionHelper';
 import SingleMediaSelectionOverlay from '../SingleMediaSelectionOverlay';
 import MimeTypeIndicator from '../../components/MimeTypeIndicator';
+import singleMediaSelectionStyle from './singleMediaSelection.scss';
 import type {DisplayOption, Media} from '../../types';
 import type {Value} from './types';
-import singleMediaSelectionStyle from './singleMediaSelection.scss';
+import type {IObservableValue} from 'mobx/lib/mobx';
 
 type Props = {|
     className?: string,

@@ -3,12 +3,12 @@ import React, {Fragment} from 'react';
 import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {ImageRectangleSelection, Loader, Overlay, SingleSelect} from 'sulu-admin-bundle/components';
-import type {SelectionData} from 'sulu-admin-bundle/types';
 import {translate} from 'sulu-admin-bundle/utils';
 import MediaFormatStore from '../../stores/MediaFormatStore';
-import type {MediaFormat} from '../../stores/MediaFormatStore';
 import formatStore from '../../stores/formatStore';
 import cropOverlayStyles from './cropOverlay.scss';
+import type {MediaFormat} from '../../stores/MediaFormatStore';
+import type {SelectionData} from 'sulu-admin-bundle/types';
 
 type Props = {|
     id: string | number,

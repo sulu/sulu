@@ -6,12 +6,12 @@ import equals from 'fast-deep-equal';
 import {CroppedText, MultiItemSelection} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils';
 import {MultiSelectionStore} from 'sulu-admin-bundle/stores';
-import type {IObservableValue} from 'mobx/lib/mobx';
 import {getIconForDisplayOption, getTranslationForDisplayOption} from '../../utils/MediaSelectionHelper';
 import MultiMediaSelectionOverlay from '../MultiMediaSelectionOverlay';
 import MimeTypeIndicator from '../../components/MimeTypeIndicator';
-import type {DisplayOption, Media} from '../../types';
 import multiMediaSelectionStyle from './multiMediaSelection.scss';
+import type {DisplayOption, Media} from '../../types';
+import type {IObservableValue} from 'mobx/lib/mobx';
 import type {Value} from './types';
 
 type Props = {|

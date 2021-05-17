@@ -1,9 +1,9 @@
 // @flow
 import React from 'react';
-import type {Element} from 'react';
-import type {SelectProps} from '../Select';
 import Select from '../Select';
 import {translate} from '../../utils/Translator';
+import type {Element} from 'react';
+import type {SelectProps} from '../Select';
 
 type Props<T: string | number> = {|
     ...SelectProps<T>,

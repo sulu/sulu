@@ -1,14 +1,14 @@
 // @flow
 import {action, autorun, computed, observable, toJS} from 'mobx';
-import type {IObservableValue} from 'mobx/lib/mobx';
 import equal from 'fast-deep-equal';
 import log from 'loglevel';
 import {compile} from 'path-to-regexp';
 import {parsePath} from 'history';
 import {transformDateForUrl} from '../../utils/Date';
-import type {AttributeMap, UpdateAttributesHook, UpdateRouteHook, UpdateRouteMethod} from './types';
 import routeRegistry from './registries/routeRegistry';
 import Route from './Route';
+import type {AttributeMap, UpdateAttributesHook, UpdateRouteHook, UpdateRouteMethod} from './types';
+import type {IObservableValue} from 'mobx/lib/mobx';
 
 const OBJECT_DELIMITER = '.';
 

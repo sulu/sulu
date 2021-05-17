@@ -2,8 +2,8 @@
 import React, {Fragment} from 'react';
 import {computed} from 'mobx';
 import webspaceStore from '../../stores/webspaceStore';
-import type {Webspace} from '../../stores/webspaceStore/types';
 import WebspaceSegmentSelect from './WebspaceSegmentSelect';
+import type {Webspace} from '../../stores/webspaceStore/types';
 import type {Value} from './types';
 
 type Props = {|

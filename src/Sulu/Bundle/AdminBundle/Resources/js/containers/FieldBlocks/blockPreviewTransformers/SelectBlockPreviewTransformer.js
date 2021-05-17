@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
-import type {Node} from 'react';
 import {isObservableArray} from 'mobx';
+import type {Node} from 'react';
 import type {BlockPreviewTransformer} from '../types';
 import type {SchemaEntry} from '../../Form/types';
 

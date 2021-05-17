@@ -1,12 +1,12 @@
 // @flow
 import React, {Fragment} from 'react';
-import type {ElementRef} from 'react';
 import classNames from 'classnames';
 import CharacterCounter from '../CharacterCounter';
 import Icon from '../Icon';
 import Loader from '../Loader';
 import SegmentCounter from '../SegmentCounter';
 import inputStyles from './input.scss';
+import type {ElementRef} from 'react';
 import type {InputProps} from './types';
 
 const LOADER_SIZE = 20;

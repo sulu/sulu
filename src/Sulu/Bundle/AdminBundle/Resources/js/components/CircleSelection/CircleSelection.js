@@ -1,16 +1,16 @@
 // @flow
 import React from 'react';
-import type {Node} from 'react';
 import {observer} from 'mobx-react';
 import {computed} from 'mobx';
 import withContainerSize from '../withContainerSize';
-import type {Normalizer, SelectionData, CircleChange} from './types';
 import ModifiableCircle from './ModifiableCircle';
 import PositionNormalizer from './normalizers/PositionNormalizer';
 import RoundingNormalizer from './normalizers/RoundingNormalizer';
 import SizeNormalizer from './normalizers/SizeNormalizer';
 import withPercentageValues from './withPercentageValues';
 import circleSelectionStyles from './circleSelection.scss';
+import type {Normalizer, SelectionData, CircleChange} from './types';
+import type {Node} from 'react';
 
 type Props = {
     children?: Node,

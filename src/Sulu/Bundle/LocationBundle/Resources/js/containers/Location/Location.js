@@ -8,9 +8,9 @@ import {MapContainer, Marker, TileLayer, Tooltip} from 'react-leaflet';
 import {Map} from 'leaflet';
 import equals from 'fast-deep-equal';
 import classNames from 'classnames';
-import type {Location as LocationValue} from '../../types';
 import locationStyles from './location.scss';
 import LocationOverlay from './LocationOverlay';
+import type {Location as LocationValue} from '../../types';
 
 type Props = {|
     disabled: boolean,

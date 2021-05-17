@@ -1,16 +1,16 @@
 // @flow
 import React from 'react';
-import type {ElementRef} from 'react';
 import {action, observable} from 'mobx';
 import jexl from 'jexl';
 import Dialog from '../../../components/Dialog';
 import {default as FormContainer, memoryFormStoreFactory, ResourceFormStore} from '../../../containers/Form';
-import type {FormStoreInterface} from '../../../containers/Form';
 import Router from '../../../services/Router';
 import ResourceStore from '../../../stores/ResourceStore';
 import {translate} from '../../../utils/Translator';
 import Form from '../Form';
 import AbstractFormToolbarAction from './AbstractFormToolbarAction';
+import type {FormStoreInterface} from '../../../containers/Form';
+import type {ElementRef} from 'react';
 
 export default class SaveWithFormDialogToolbarAction extends AbstractFormToolbarAction {
     @observable showDialog: boolean = false;

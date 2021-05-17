@@ -1,15 +1,15 @@
 // @flow
 import React from 'react';
-import type {Node} from 'react';
 import {observer} from 'mobx-react';
 import {action, computed, observable} from 'mobx';
 import classNames from 'classnames';
 import ArrowMenu from '../ArrowMenu';
 import Grid from '../Grid';
-import type {ColSpan} from '../Grid';
 import Icon from '../Icon';
 import fieldStyles from './field.scss';
 import gridStyles from './grid.scss';
+import type {ColSpan} from '../Grid';
+import type {Node} from 'react';
 import type {FormFieldTypes} from './types';
 
 type Props<T: string | number> = {|

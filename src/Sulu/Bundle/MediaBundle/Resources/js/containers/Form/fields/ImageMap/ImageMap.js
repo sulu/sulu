@@ -5,10 +5,10 @@ import {observer} from 'mobx-react';
 import equals from 'fast-deep-equal';
 import jsonpointer from 'json-pointer';
 import {userStore} from 'sulu-admin-bundle/stores';
-import type {FieldTypeProps, BlockError} from 'sulu-admin-bundle/types';
 import ImageMapContainer from '../../../ImageMap';
-import type {Value, RenderHotspotFormCallback} from '../../../ImageMap/types';
 import FieldRenderer from './FieldRenderer';
+import type {FieldTypeProps, BlockError} from 'sulu-admin-bundle/types';
+import type {Value, RenderHotspotFormCallback} from '../../../ImageMap/types';
 
 const MISSING_TYPE_ERROR_MESSAGE = 'The "image_map" field type needs at least one type to be configured!';
 

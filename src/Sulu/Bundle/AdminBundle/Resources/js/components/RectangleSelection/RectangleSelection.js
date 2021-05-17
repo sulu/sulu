@@ -1,10 +1,8 @@
 // @flow
 import React from 'react';
-import type {Node} from 'react';
 import {observer} from 'mobx-react';
 import {computed} from 'mobx';
 import withContainerSize from '../withContainerSize';
-import type {Normalizer, RectangleChange, SelectionData} from './types';
 import ModifiableRectangle from './ModifiableRectangle';
 import PositionNormalizer from './normalizers/PositionNormalizer';
 import RatioNormalizer from './normalizers/RatioNormalizer';
@@ -12,6 +10,8 @@ import RoundingNormalizer from './normalizers/RoundingNormalizer';
 import SizeNormalizer from './normalizers/SizeNormalizer';
 import withPercentageValues from './withPercentageValues';
 import rectangleSelectionStyles from './rectangleSelection.scss';
+import type {Normalizer, RectangleChange, SelectionData} from './types';
+import type {Node} from 'react';
 
 type Props = {
     backdrop: boolean,

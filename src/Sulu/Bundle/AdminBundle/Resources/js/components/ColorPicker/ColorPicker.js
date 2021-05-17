@@ -1,12 +1,12 @@
 // @flow
 import React, {Fragment} from 'react';
-import type {ElementRef} from 'react';
 import {SketchPicker} from 'react-color';
 import {observer} from 'mobx-react';
 import {action, computed, observable} from 'mobx';
 import Input from '../Input';
 import Popover from '../Popover';
 import colorPickerStyles from './colorPicker.scss';
+import type {ElementRef} from 'react';
 import './colorPickerGlobal.scss';
 
 type Props = {|

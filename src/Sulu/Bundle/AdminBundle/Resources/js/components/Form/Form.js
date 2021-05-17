@@ -1,10 +1,10 @@
 // @flow
 import React from 'react';
-import type {Node} from 'react';
 import Grid from '../Grid';
 import Field from './Field';
 import Section from './Section';
 import gridStyles from './grid.scss';
+import type {Node} from 'react';
 
 type Props = {|
     children: Node,

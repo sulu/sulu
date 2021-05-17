@@ -1,9 +1,10 @@
 // @flow
 import {action, autorun, computed, intercept, observable, untracked} from 'mobx';
-import type {IObservableValue, IValueWillChange} from 'mobx/lib/mobx';
 import equals from 'fast-deep-equal';
 import log from 'loglevel';
 import ResourceRequester, {RequestPromise} from '../../../services/ResourceRequester';
+import userStore from '../../../stores/userStore';
+import metadataStore from './metadataStore';
 import type {
     LoadingStrategyInterface,
     ObservableOptions,
@@ -11,8 +12,7 @@ import type {
     SortOrder,
     StructureStrategyInterface,
 } from '../types';
-import userStore from '../../../stores/userStore';
-import metadataStore from './metadataStore';
+import type {IObservableValue, IValueWillChange} from 'mobx/lib/mobx';
 
 const USER_SETTING_PREFIX = 'sulu_admin.list_store';
 
