@@ -26,6 +26,11 @@ class ExpressionFormMetadataVisitor implements FormMetadataVisitorInterface, Typ
         $this->expressionLanguage = $expressionLanguage;
     }
 
+    public static function getDefaultPriority(): int
+    {
+        return -90;
+    }
+
     public function visitFormMetadata(FormMetadata $formMetadata, string $locale, array $metadataOptions = []): void
     {
         $expressionContext = $this->getExpressionContext($locale, $metadataOptions);

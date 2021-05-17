@@ -19,6 +19,11 @@ use Sulu\Bundle\AdminBundle\Metadata\ListMetadata\ListMetadataVisitorInterface;
  */
 class ActivitiesListMetadataVisitor implements ListMetadataVisitorInterface
 {
+    public static function getDefaultPriority(): int
+    {
+        return 50;
+    }
+
     public function visitListMetadata(ListMetadata $listMetadata, string $key, string $locale, array $metadataOptions = []): void
     {
         if ('activities' !== $key) {

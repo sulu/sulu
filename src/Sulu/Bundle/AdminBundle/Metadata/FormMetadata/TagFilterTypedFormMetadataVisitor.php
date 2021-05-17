@@ -13,6 +13,11 @@ namespace Sulu\Bundle\AdminBundle\Metadata\FormMetadata;
 
 class TagFilterTypedFormMetadataVisitor implements TypedFormMetadataVisitorInterface
 {
+    public static function getDefaultPriority(): int
+    {
+        return -100;
+    }
+
     public function visitTypedFormMetadata(TypedFormMetadata $formMetadata, string $key, string $locale, array $metadataOptions = []): void
     {
         if (\array_key_exists('tags', $metadataOptions)) {
