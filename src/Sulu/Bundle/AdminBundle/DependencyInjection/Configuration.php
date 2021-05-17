@@ -21,6 +21,16 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
  */
 class Configuration implements ConfigurationInterface
 {
+    /**
+     * @var bool
+     */
+    private $debug;
+
+    public function __construct(bool $debug)
+    {
+        $this->debug = $debug;
+    }
+
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder('sulu_admin');
@@ -48,6 +58,9 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('collaboration')
                     ->addDefaultsIfNotSet()
                     ->children()
+                        ->booleanNode('enabled')
+                            ->defaultValue(!$this->debug)
+                        ->end()
                         ->scalarNode('interval')
                             ->defaultValue(20)
                             ->info('The seconds between the keep alive messages for the collaboration feature')

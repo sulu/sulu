@@ -30,6 +30,7 @@
             <argument>%sulu_core.translations%</argument>
             <argument>%sulu_core.fallback_locale%</argument>
             <argument>%sulu_admin.collaboration_interval%</argument>
+            <argument>%sulu_admin.collaboration_enabled%</argument>
 
             <tag name="sulu.context" context="admin"/>
         </service>
