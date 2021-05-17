@@ -323,6 +323,7 @@ function processConfig(config: Object) {
     navigationRegistry.set(config.navigation);
     resourceRouteRegistry.setEndpoints(config.resources);
     smartContentConfigStore.setConfig(config.smartContent);
+    CollaborationStore.enabled = config.collaborationEnabled;
     CollaborationStore.interval = config.collaborationInterval;
 }
 
