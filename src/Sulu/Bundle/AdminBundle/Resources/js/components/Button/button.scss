@@ -34,6 +34,10 @@ $iconColorActive: $white;
     &:disabled {
         cursor: default;
     }
+
+    .button-icon + .button-text {
+        margin-left: 10px;
+    }
 }
 
 .primary,
@@ -100,10 +104,6 @@ $iconColorActive: $white;
         text-decoration: underline;
     }
 
-    .button-icon + .button-text {
-        margin-left: 10px;
-    }
-
     .dropdown-icon {
         margin-left: 10px;
         font-size: $dropdownFontSize;
@@ -121,10 +121,6 @@ $iconColorActive: $white;
     cursor: pointer;
     font-size: $fontSize;
     color: $textColor;
-
-    .button-icon + .button-text {
-        margin-left: 10px;
-    }
 
     .dropdown-icon {
         margin-left: 10px;
