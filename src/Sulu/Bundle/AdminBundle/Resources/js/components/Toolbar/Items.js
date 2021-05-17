@@ -1,12 +1,12 @@
 // @flow
-import type {ChildrenArray, ElementRef} from 'react';
 import React from 'react';
 import {observer} from 'mobx-react';
 import {action, observable, computed} from 'mobx';
 import classNames from 'classnames';
 import debounce from 'debounce';
-import type {Item, Skin} from './types';
 import itemsStyles from './items.scss';
+import type {Item, Skin} from './types';
+import type {ChildrenArray, ElementRef} from 'react';
 
 type Props = {|
     children: ChildrenArray<false | Item>,

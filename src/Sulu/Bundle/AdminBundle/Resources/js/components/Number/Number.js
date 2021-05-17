@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
-import type {ElementRef} from 'react';
 import Input from '../Input';
+import type {ElementRef} from 'react';
 import type {InputProps} from '../Input';
 
 type Props = {|

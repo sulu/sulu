@@ -1,9 +1,9 @@
 // @flow
 import React from 'react';
-import type {ComponentType} from 'react';
 import {SortableElement} from 'react-sortable-hoc';
 import Block from '../Block';
 import SortableHandle from './SortableHandle';
+import type {ComponentType} from 'react';
 import type {RenderBlockContentCallback} from './types';
 
 type Props = {

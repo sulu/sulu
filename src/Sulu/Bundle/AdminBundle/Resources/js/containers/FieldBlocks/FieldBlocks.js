@@ -5,10 +5,10 @@ import React, {Fragment} from 'react';
 import {action, observable, toJS} from 'mobx';
 import {observer} from 'mobx-react';
 import BlockCollection from '../../components/BlockCollection';
-import type {BlockEntry} from '../../components/BlockCollection/types';
-import type {BlockError, FieldTypeProps} from '../Form/types';
 import blockPreviewTransformerRegistry from './registries/blockPreviewTransformerRegistry';
 import FieldRenderer from './FieldRenderer';
+import type {BlockEntry} from '../../components/BlockCollection/types';
+import type {BlockError, FieldTypeProps} from '../Form/types';
 
 const MISSING_BLOCK_ERROR_MESSAGE = 'The "block" field type needs at least one type to be configured!';
 const BLOCK_PREVIEW_TAG = 'sulu.block_preview';

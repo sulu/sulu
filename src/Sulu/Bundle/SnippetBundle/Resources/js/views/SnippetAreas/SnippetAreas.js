@@ -4,11 +4,11 @@ import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Button, Dialog, Loader, Table} from 'sulu-admin-bundle/components';
 import {SingleListOverlay, withToolbar} from 'sulu-admin-bundle/containers';
-import type {ViewProps} from 'sulu-admin-bundle/containers';
 import {translate} from 'sulu-admin-bundle/utils';
 import {CacheClearToolbarAction} from 'sulu-website-bundle/containers';
 import SnippetAreaStore from './stores/SnippetAreaStore';
 import snippetAreasStyles from './snippetAreas.scss';
+import type {ViewProps} from 'sulu-admin-bundle/containers';
 
 @observer
 class SnippetAreas extends React.Component<ViewProps> {

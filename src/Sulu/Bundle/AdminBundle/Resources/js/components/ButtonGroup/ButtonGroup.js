@@ -1,10 +1,10 @@
 // @flow
 import React from 'react';
 import classNames from 'classnames';
-import type {ChildrenArray, Element} from 'react';
 import Button from '../Button';
 import DropdownButton from '../DropdownButton';
 import buttonGroupStyles from './buttonGroup.scss';
+import type {ChildrenArray, Element} from 'react';
 
 type Props = {
     children: ChildrenArray<Element<typeof Button | typeof DropdownButton> | false>,

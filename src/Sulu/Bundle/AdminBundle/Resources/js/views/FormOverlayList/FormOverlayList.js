@@ -2,14 +2,14 @@
 import React, {Fragment} from 'react';
 import {observer} from 'mobx-react';
 import {action, observable, toJS} from 'mobx';
-import type {ElementRef} from 'react';
-import type {IObservableValue} from 'mobx';
-import type {ViewProps} from '../../containers/ViewRenderer';
 import {translate} from '../../utils/Translator';
 import FormOverlay from '../../containers/FormOverlay';
 import ResourceStore from '../../stores/ResourceStore';
 import List from '../List';
 import ResourceFormStore from '../../containers/Form/stores/ResourceFormStore';
+import type {ViewProps} from '../../containers/ViewRenderer';
+import type {IObservableValue} from 'mobx';
+import type {ElementRef} from 'react';
 
 type Props = ViewProps & {
     resourceStore?: ResourceStore,

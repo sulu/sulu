@@ -7,9 +7,9 @@ import Loader from '../../components/Loader';
 import PermissionHint from '../../components/PermissionHint';
 import Router from '../../services/Router';
 import Renderer from './Renderer';
-import type {FormStoreInterface} from './types';
 import FormInspector from './FormInspector';
 import GhostDialog from './GhostDialog';
+import type {FormStoreInterface} from './types';
 
 type Props = {|
     onError?: (errors: Object) => void,

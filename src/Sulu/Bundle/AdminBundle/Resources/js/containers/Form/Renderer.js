@@ -1,6 +1,5 @@
 // @flow
 import React from 'react';
-import type {Element} from 'react';
 import {action} from 'mobx';
 import {observer} from 'mobx-react';
 import jsonpointer from 'json-pointer';
@@ -8,6 +7,7 @@ import Form from '../../components/Form';
 import Router from '../../services/Router';
 import Field from './Field';
 import FormInspector from './FormInspector';
+import type {Element} from 'react';
 import type {ErrorCollection, Schema, SchemaEntry} from './types';
 
 type Props = {|

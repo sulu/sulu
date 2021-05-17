@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
-import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 import ContactAccountSelectionComponent from '../../ContactAccountSelection';
+import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 
 class ContactAccountSelection extends React.Component<FieldTypeProps<Array<string>>> {
     handleChange = (value: Array<Object>) => {

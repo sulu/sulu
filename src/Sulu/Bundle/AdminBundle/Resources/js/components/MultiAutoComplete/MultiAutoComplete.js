@@ -1,6 +1,5 @@
 // @flow
 import React, {Fragment} from 'react';
-import type {ElementRef} from 'react';
 import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import debounce from 'debounce';
@@ -11,6 +10,7 @@ import Loader from '../Loader';
 import AutoCompletePopover from '../AutoCompletePopover';
 import Chip from '../Chip';
 import multiAutoCompleteStyles from './multiAutoComplete.scss';
+import type {ElementRef} from 'react';
 
 type Props = {|
     allowAdd: boolean,

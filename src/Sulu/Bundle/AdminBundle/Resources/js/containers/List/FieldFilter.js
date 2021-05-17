@@ -5,8 +5,8 @@ import {observer} from 'mobx-react';
 import ArrowMenu from '../../components/ArrowMenu';
 import Button from '../../components/Button';
 import FieldFilterItem from './FieldFilterItem';
-import type {Schema} from './types';
 import fieldFilterStyles from './fieldFilter.scss';
+import type {Schema} from './types';
 
 type Props = {|
     fields: Schema,

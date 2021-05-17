@@ -1,7 +1,7 @@
 // @flow
-import type {Element} from 'react';
 import {Menu} from 'sulu-admin-bundle/components';
 import DownloadListItem from './DownloadListItem';
+import type {Element} from 'react';
 
 type DownloadItem = Element<typeof DownloadListItem>;
 

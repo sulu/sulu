@@ -1,7 +1,7 @@
 // @flow
-import type {Node} from 'react';
 import {action, autorun, computed, observable} from 'mobx';
 import log from 'loglevel';
+import type {Node} from 'react';
 import type {Button, Select, ToolbarConfig, ToolbarItemConfig} from '../types';
 
 const SHOW_SUCCESS_DURATION = 1500;

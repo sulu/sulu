@@ -1,7 +1,6 @@
 //@flow
 import React from 'react';
 import {action, computed, observable} from 'mobx';
-import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import {observer} from 'mobx-react';
 import {List, ListStore, SingleListOverlay} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
@@ -10,8 +9,9 @@ import {Button, ButtonGroup, Dialog, DropdownButton} from 'sulu-admin-bundle/com
 import CollectionFormOverlay from './CollectionFormOverlay';
 import CollectionBreadcrumb from './CollectionBreadcrumb';
 import PermissionFormOverlay from './PermissionFormOverlay';
-import type {OperationType, OverlayType} from './types';
 import collectionSectionStyles from './collectionSection.scss';
+import type {OperationType, OverlayType} from './types';
+import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 
 const COLLECTIONS_RESOURCE_KEY = 'collections';
 

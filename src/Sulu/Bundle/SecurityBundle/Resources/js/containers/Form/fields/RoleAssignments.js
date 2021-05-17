@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
-import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 import RoleAssignmentsContainer from '../../RoleAssignments';
+import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 
 type Props = FieldTypeProps<?Array<Object>>;
 

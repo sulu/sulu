@@ -1,10 +1,10 @@
 // @flow
-import type {Node} from 'react';
-import type {ToolbarItemConfig} from '../../../containers/Toolbar/types';
 import ResourceStore from '../../../stores/ResourceStore';
 import Router from '../../../services/Router';
 import List from '../../../views/List/List';
 import ListStore from '../../../containers/List/stores/ListStore';
+import type {ToolbarItemConfig} from '../../../containers/Toolbar/types';
+import type {Node} from 'react';
 
 export default class AbstractListToolbarAction {
     listStore: ListStore;

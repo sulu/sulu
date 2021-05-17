@@ -2,9 +2,9 @@
 import React from 'react';
 import {observer} from 'mobx-react';
 import {ResourceLocatorHistory} from 'sulu-admin-bundle/containers';
-import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 import CustomUrlComponent from '../../../components/CustomUrl';
 import customUrlStyles from './customUrl.scss';
+import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 
 @observer
 class CustomUrl extends React.Component<FieldTypeProps<Array<?string>>> {

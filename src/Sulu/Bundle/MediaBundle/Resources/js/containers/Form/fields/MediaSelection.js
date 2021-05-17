@@ -2,7 +2,6 @@
 import React from 'react';
 import {observer} from 'mobx-react';
 import log from 'loglevel';
-import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 import userStore from 'sulu-admin-bundle/stores/userStore';
 import {computed, isArrayLike, observable} from 'mobx';
 import {
@@ -11,6 +10,7 @@ import {
     validateDisplayOption,
 } from '../../../utils/MediaSelectionHelper';
 import MultiMediaSelection from '../../MultiMediaSelection';
+import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 import type {Media} from '../../../types';
 import type {Value} from '../../MultiMediaSelection';
 

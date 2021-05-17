@@ -2,8 +2,8 @@
 import React from 'react';
 import {Email as EmailComponent} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils';
-import type {FormFieldTypes} from 'sulu-admin-bundle/types';
 import Field from './Field';
+import type {FormFieldTypes} from 'sulu-admin-bundle/types';
 
 type Props = {|
     email: ?string,

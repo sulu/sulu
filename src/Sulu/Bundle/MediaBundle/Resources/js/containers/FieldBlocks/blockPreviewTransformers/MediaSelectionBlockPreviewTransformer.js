@@ -1,9 +1,9 @@
 // @flow
 import React from 'react';
-import type {Node} from 'react';
 import {isObservableArray} from 'mobx';
-import type {BlockPreviewTransformer} from 'sulu-admin-bundle/types';
 import mediaSelectionBlockPreviewTransformerStyles from './mediaSelectionBlockPreviewTransformer.scss';
+import type {Node} from 'react';
+import type {BlockPreviewTransformer} from 'sulu-admin-bundle/types';
 
 const MAX_LENGTH = 8;
 

@@ -1,9 +1,9 @@
 // @flow
-import type {Node} from 'react';
 import React from 'react';
 import classNames from 'classnames';
 import Icon from '../Icon';
 import tableStyles from './table.scss';
+import type {Node} from 'react';
 import type {SortOrder} from './types';
 
 const ASCENDING_ICON = 'su-angle-up';

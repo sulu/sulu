@@ -1,6 +1,5 @@
 // @flow
 import React from 'react';
-import type {Element, Node} from 'react';
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import classNames from 'classnames';
@@ -8,8 +7,9 @@ import Input from '../Input';
 import CroppedText from '../CroppedText';
 import Icon from '../Icon';
 import ItemButton from './ItemButton';
-import type {ItemButtonConfig} from './types';
 import itemStyles from './item.scss';
+import type {ItemButtonConfig} from './types';
+import type {Element, Node} from 'react';
 
 type Props = {|
     active: boolean,

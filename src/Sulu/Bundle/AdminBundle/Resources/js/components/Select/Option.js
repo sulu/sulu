@@ -1,11 +1,11 @@
 // @flow
 import React from 'react';
-import type {ElementRef} from 'react';
 import classNames from 'classnames';
 import Icon from '../Icon';
 import Checkbox from '../Checkbox';
-import type {OptionSelectedVisualization} from './types';
 import optionStyles from './option.scss';
+import type {OptionSelectedVisualization} from './types';
+import type {ElementRef} from 'react';
 
 type Props<T> = {|
     anchorWidth: number,

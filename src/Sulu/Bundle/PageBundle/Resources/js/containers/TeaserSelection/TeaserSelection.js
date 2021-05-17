@@ -1,7 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
 import {action, computed, observable} from 'mobx';
-import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import {MultiItemSelection} from 'sulu-admin-bundle/components';
 import {MultiListOverlay} from 'sulu-admin-bundle/containers';
@@ -9,6 +8,7 @@ import {arrayMove} from 'sulu-admin-bundle/utils';
 import TeaserStore from './stores/TeaserStore';
 import Item from './Item';
 import teaserProviderRegistry from './registries/teaserProviderRegistry';
+import type {IObservableValue} from 'mobx';
 import type {PresentationItem, TeaserItem, TeaserSelectionValue} from './types';
 
 type Props = {|

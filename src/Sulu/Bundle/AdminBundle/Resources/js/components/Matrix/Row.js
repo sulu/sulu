@@ -2,10 +2,10 @@
 import React from 'react';
 import {observer} from 'mobx-react';
 import {computed} from 'mobx';
-import type {ChildrenArray, Element} from 'react';
 import {translate} from '../../utils/index';
 import Item from './Item';
 import rowStyles from './row.scss';
+import type {ChildrenArray, Element} from 'react';
 import type {MatrixRowValue} from './types';
 
 type Props = {|

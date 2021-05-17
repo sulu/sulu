@@ -5,11 +5,11 @@ import {observer} from 'mobx-react';
 import jexl from 'jexl';
 import Loader from '../../components/Loader';
 import Tabs from '../../views/Tabs';
-import type {ViewProps} from '../../containers/ViewRenderer';
 import ResourceStore from '../../stores/ResourceStore';
 import {Route} from '../../services/Router';
-import type {AttributeMap} from '../../services/Router';
 import resourceTabsStyles from './resourceTabs.scss';
+import type {AttributeMap} from '../../services/Router';
+import type {ViewProps} from '../../containers/ViewRenderer';
 
 type Props = {
     ...ViewProps,

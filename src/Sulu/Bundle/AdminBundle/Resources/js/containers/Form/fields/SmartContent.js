@@ -3,10 +3,10 @@ import React from 'react';
 import {computed, toJS, reaction, when} from 'mobx';
 import equals from 'fast-deep-equal';
 import jsonpointer from 'json-pointer';
-import type {FieldTypeProps} from '../../../types';
 import SmartContentComponent, {smartContentConfigStore, SmartContentStore} from '../../SmartContent';
-import type {FilterCriteria, Presentation} from '../../SmartContent/types';
 import smartContentStorePool from './smartContentStorePool';
+import type {FieldTypeProps} from '../../../types';
+import type {FilterCriteria, Presentation} from '../../SmartContent/types';
 
 type Props = FieldTypeProps<?FilterCriteria>;
 

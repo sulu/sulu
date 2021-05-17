@@ -1,8 +1,8 @@
 // @flow
 import React from 'react';
-import type {ChildrenArray, Element} from 'react';
 import Tab from './Tab';
 import tabsStyles from './tabs.scss';
+import type {ChildrenArray, Element} from 'react';
 
 type Props = {
     children: ChildrenArray<Element<typeof Tab> | false>,

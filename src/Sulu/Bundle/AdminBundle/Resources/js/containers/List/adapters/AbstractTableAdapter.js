@@ -5,9 +5,9 @@ import GhostIndicator from '../../../components/GhostIndicator';
 import PublishIndicator from '../../../components/PublishIndicator';
 import Table from '../../../components/Table';
 import listFieldTransformerRegistry from '../registries/listFieldTransformerRegistry';
-import type {Schema} from '../types';
 import AbstractAdapter from './AbstractAdapter';
 import abstractTableAdapterStyles from './abstractTableAdapter.scss';
+import type {Schema} from '../types';
 
 export default class AbstractTableAdapter extends AbstractAdapter {
     static hasColumnOptions: boolean = true;

@@ -1,5 +1,4 @@
 // @flow
-import type {Element} from 'react';
 import React from 'react';
 import {observable, action} from 'mobx';
 import {observer} from 'mobx-react';
@@ -7,6 +6,7 @@ import equals from 'fast-deep-equal';
 import MultiSelectComponent from '../../components/MultiSelect';
 import ResourceListStore from '../../stores/ResourceListStore';
 import Loader from '../../components/Loader';
+import type {Element} from 'react';
 
 type Props<T: string | number> = {|
     allSelectedText?: string,

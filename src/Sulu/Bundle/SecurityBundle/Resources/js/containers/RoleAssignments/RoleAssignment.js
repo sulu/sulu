@@ -2,9 +2,9 @@
 import React from 'react';
 import {observer} from 'mobx-react';
 import {MultiSelect} from 'sulu-admin-bundle/components';
-import type {Localization} from 'sulu-admin-bundle/stores';
 import classNames from 'classnames';
 import roleAssignmentStyle from './roleAssignment.scss';
+import type {Localization} from 'sulu-admin-bundle/stores';
 
 type Props = {|
     disabled: boolean,

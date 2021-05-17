@@ -5,10 +5,10 @@ import {observer} from 'mobx-react';
 import {Loader, MultiSelect} from 'sulu-admin-bundle/components';
 import {webspaceStore} from 'sulu-page-bundle/stores';
 import securityContextStore from '../../stores/securityContextStore';
-import type {SecurityContextGroups, SecurityContexts} from '../../stores/securityContextStore/types';
-import type {ContextPermission} from './types';
 import permissionsStyle from './permissions.scss';
 import PermissionMatrix from './PermissionMatrix';
+import type {SecurityContextGroups, SecurityContexts} from '../../stores/securityContextStore/types';
+import type {ContextPermission} from './types';
 
 type Props = {|
     disabled: boolean,

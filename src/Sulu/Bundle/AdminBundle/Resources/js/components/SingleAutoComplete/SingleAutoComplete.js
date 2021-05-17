@@ -1,12 +1,12 @@
 // @flow
 import React from 'react';
-import type {ElementRef} from 'react';
 import {observer} from 'mobx-react';
 import {action, computed, observable} from 'mobx';
 import debounce from 'debounce';
 import Input from '../Input';
 import AutoCompletePopover from '../AutoCompletePopover';
 import singleAutoCompleteStyles from './singleAutoComplete.scss';
+import type {ElementRef} from 'react';
 
 const LENS_ICON = 'su-search';
 const DEBOUNCE_TIME = 300;

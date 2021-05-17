@@ -1,11 +1,11 @@
 // @flow
 import React from 'react';
-import type {ElementRef} from 'react';
 import {computed} from 'mobx';
 import Input from '../../../components/Input';
 import SingleSelect from '../../../components/SingleSelect';
 import AbstractFieldFilterType from './AbstractFieldFilterType';
 import numberFieldFilterTypeStyles from './numberFieldFilterType.scss';
+import type {ElementRef} from 'react';
 
 const operatorMapping = {
     lt: '<',

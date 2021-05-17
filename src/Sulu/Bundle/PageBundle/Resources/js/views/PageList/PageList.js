@@ -1,18 +1,18 @@
 // @flow
 import {action, intercept, observable} from 'mobx';
-import type {IObservableValue} from 'mobx';
 import {observer} from 'mobx-react';
 import React from 'react';
 import {List, ListStore, withToolbar} from 'sulu-admin-bundle/containers';
 import userStore from 'sulu-admin-bundle/stores/userStore/userStore';
-import type {Localization} from 'sulu-admin-bundle/stores';
-import type {ViewProps} from 'sulu-admin-bundle/containers';
-import type {AttributeMap} from 'sulu-admin-bundle/services';
 import {translate} from 'sulu-admin-bundle/utils';
 import {CacheClearToolbarAction} from 'sulu-website-bundle/containers';
 import {Route} from 'sulu-admin-bundle/services';
-import type {Webspace} from '../../stores/webspaceStore/types';
 import pageListStyles from './pageList.scss';
+import type {Localization} from 'sulu-admin-bundle/stores';
+import type {ViewProps} from 'sulu-admin-bundle/containers';
+import type {AttributeMap} from 'sulu-admin-bundle/services';
+import type {Webspace} from '../../stores/webspaceStore/types';
+import type {IObservableValue} from 'mobx';
 
 const USER_SETTINGS_KEY = 'page_list';
 const PAGES_RESOURCE_KEY = 'pages';

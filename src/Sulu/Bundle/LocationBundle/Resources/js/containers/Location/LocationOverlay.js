@@ -6,8 +6,8 @@ import {Form, Input, Number, Overlay} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils';
 import {Map, Marker, TileLayer} from 'react-leaflet';
 import {SingleAutoComplete} from 'sulu-admin-bundle/containers';
-import type {Location as LocationValue} from '../../types';
 import locationOverlayStyles from './locationOverlay.scss';
+import type {Location as LocationValue} from '../../types';
 
 type Props = {
     onClose: () => void,

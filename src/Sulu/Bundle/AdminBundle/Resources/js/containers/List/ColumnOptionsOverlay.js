@@ -6,9 +6,9 @@ import classNames from 'classnames';
 import {arrayMove, SortableContainer, SortableElement} from 'react-sortable-hoc';
 import Overlay from '../../components/Overlay';
 import {translate} from '../../utils';
-import type {Schema, SchemaEntry} from './types';
 import ColumnOptionComponent from './ColumnOption';
 import columnOptionsStyles from './columnOptions.scss';
+import type {Schema, SchemaEntry} from './types';
 
 type Props = {|
     onClose: () => void,

@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
 import {observer} from 'mobx-react';
-import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 import userStore from 'sulu-admin-bundle/stores/userStore';
 import {computed, observable} from 'mobx';
 import {
@@ -10,6 +9,7 @@ import {
     validateDisplayOption,
 } from '../../../utils/MediaSelectionHelper';
 import SingleMediaSelectionComponent from '../../SingleMediaSelection';
+import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 import type {Media} from '../../../types';
 import type {Value} from '../../SingleMediaSelection';
 

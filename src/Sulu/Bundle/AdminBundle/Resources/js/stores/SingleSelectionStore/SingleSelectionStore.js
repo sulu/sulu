@@ -1,7 +1,7 @@
 // @flow
 import {action, observable} from 'mobx';
-import type {IObservableValue} from 'mobx';
 import {ResourceRequester} from '../../services';
+import type {IObservableValue} from 'mobx';
 
 export default class SingleSelectionStore<T, U: {id: T} = Object> {
     @observable item: ?U;

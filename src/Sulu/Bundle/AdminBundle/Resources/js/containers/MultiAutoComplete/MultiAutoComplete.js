@@ -1,10 +1,10 @@
 // @flow
 import React from 'react';
-import type {ElementRef} from 'react';
 import {observer} from 'mobx-react';
 import MultiAutoCompleteComponent from '../../components/MultiAutoComplete';
 import SearchStore from '../../stores/SearchStore';
 import MultiSelectionStore from '../../stores/MultiSelectionStore';
+import type {ElementRef} from 'react';
 
 type Props = {|
     allowAdd: boolean,

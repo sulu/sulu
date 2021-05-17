@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
-import type {ChildrenArray, Element} from 'react';
 import Radio from './Radio';
+import type {ChildrenArray, Element} from 'react';
 
 type Props = {|
     children: ChildrenArray<Element<typeof Radio>>,

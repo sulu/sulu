@@ -1,8 +1,8 @@
 // @flow
 import React from 'react';
+import singleMediaSelectionBlockPreviewTransformerStyles from './singleMediaSelectionBlockPreviewTransformer.scss';
 import type {Node} from 'react';
 import type {BlockPreviewTransformer} from 'sulu-admin-bundle/types';
-import singleMediaSelectionBlockPreviewTransformerStyles from './singleMediaSelectionBlockPreviewTransformer.scss';
 
 export default class SingleMediaSelectionBlockPreviewTransformer implements BlockPreviewTransformer {
     imageFormatUrl: string;

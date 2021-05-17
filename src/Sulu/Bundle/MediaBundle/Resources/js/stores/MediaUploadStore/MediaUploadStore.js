@@ -1,7 +1,7 @@
 // @flow
 import {action, computed, observable} from 'mobx';
-import type {IObservableValue} from 'mobx';
 import {ResourceRequester, resourceRouteRegistry} from 'sulu-admin-bundle/services';
+import type {IObservableValue} from 'mobx';
 import type {Media} from '../../types';
 
 const RESOURCE_KEY = 'media';
