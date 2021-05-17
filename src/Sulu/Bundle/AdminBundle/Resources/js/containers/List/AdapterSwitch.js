@@ -38,12 +38,11 @@ export default class AdapterSwitch extends React.PureComponent<Props> {
                     return (
                         <Button
                             active={adapter === currentAdapter}
+                            icon={Adapter.icon}
                             key={index}
                             onClick={this.handleAdapterChange}
                             value={adapter}
-                        >
-                            <Icon name={Adapter.icon} />
-                        </Button>
+                        />
                     );
                 })}
             </ButtonGroup>

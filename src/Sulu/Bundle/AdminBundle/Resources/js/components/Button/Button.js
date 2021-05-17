@@ -71,6 +71,7 @@ export default class Button<T> extends React.PureComponent<Props<T>> {
             {
                 [buttonStyles.loading]: loading,
                 [buttonStyles.active]: active,
+                [buttonStyles.hasText]: !!children,
                 [activeClassName || '']: active && activeClassName,
             },
             className

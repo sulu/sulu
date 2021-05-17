@@ -4,6 +4,7 @@ import {action, when} from 'mobx';
 import {observer} from 'mobx-react';
 import {Divider} from 'sulu-admin-bundle/components';
 import {List, ListStore} from 'sulu-admin-bundle/containers';
+import {translate} from 'sulu-admin-bundle/utils/Translator';
 import CollectionStore from '../../stores/CollectionStore';
 import MultiMediaDropzone from '../MultiMediaDropzone';
 import CollectionSection from './CollectionSection';
@@ -119,6 +120,12 @@ class MediaCollection extends React.Component<Props> {
                 />
                 <Divider />
                 <List
+                    actions={[{
+                        disabled: !collectionStore.id || collectionStore.loading || locked,
+                        icon: 'su-upload',
+                        label: translate('sulu_media.upload_file'),
+                        onClick: onUploadOverlayOpen,
+                    }]}
                     adapters={mediaListAdapters}
                     onItemClick={this.handleMediaClick}
                     ref={mediaListRef}

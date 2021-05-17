@@ -34,10 +34,6 @@ $iconColorActive: $white;
     &:disabled {
         cursor: default;
     }
-
-    .button-icon + .button-text {
-        margin-left: 10px;
-    }
 }
 
 .primary,
@@ -104,6 +100,10 @@ $iconColorActive: $white;
         text-decoration: underline;
     }
 
+    .button-icon + .button-text {
+        margin-left: 10px;
+    }
+
     .dropdown-icon {
         margin-left: 10px;
         font-size: $dropdownFontSize;
@@ -121,6 +121,10 @@ $iconColorActive: $white;
     cursor: pointer;
     font-size: $fontSize;
     color: $textColor;
+
+    .button-icon + .button-text {
+        margin-left: 10px;
+    }
 
     .dropdown-icon {
         margin-left: 10px;
@@ -149,12 +153,23 @@ $iconColorActive: $white;
     }
 
     &:disabled {
+        border-color: $iconDisabledColor;
         color: $iconDisabledColor;
     }
 
     &.active {
         background-color: $iconBorderColor;
         color: $iconColorActive;
+    }
+
+    &.has-text {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .button-icon + .button-text {
+        font-size: $fontSize;
+        margin-left: 10px;
     }
 
     .button-icon,
