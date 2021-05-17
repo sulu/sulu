@@ -15,6 +15,8 @@ use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\DependencyInjection\Compiler\AddAdminPass;
 use Sulu\Bundle\AdminBundle\Exception\MetadataNotFoundException;
 use Sulu\Bundle\AdminBundle\Exception\MetadataProviderNotFoundException;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadataVisitorInterface;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadataVisitorInterface;
 use Sulu\Bundle\AdminBundle\Metadata\ListMetadata\ListMetadataLoaderInterface;
 use Sulu\Bundle\AdminBundle\Metadata\ListMetadata\ListMetadataVisitorInterface;
 use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\RemoveForeignContextServicesPass;
@@ -161,6 +163,12 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
 
         $container->registerForAutoconfiguration(ListMetadataVisitorInterface::class)
             ->addTag('sulu_admin.list_metadata_visitor');
+
+        $container->registerForAutoconfiguration(FormMetadataVisitorInterface::class)
+            ->addTag('sulu_admin.form_metadata_visitor');
+
+        $container->registerForAutoconfiguration(TypedFormMetadataVisitorInterface::class)
+            ->addTag('sulu_admin.typed_form_metadata_visitor');
 
         $this->loadFieldTypeOptions(
             $config['field_type_options'],
