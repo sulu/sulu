@@ -128,6 +128,20 @@ class ActivityAdmin extends Admin
                     ->addRequestParameters(['resourceKey' => BasePageDocument::RESOURCE_KEY])
                     ->setParent(static::EDIT_FORM_ACTIVITY_VERSION_TAB_VIEW)
             );
+
+            if ($this->versioningEnabled) {
+                $viewCollection->add(
+                    $this->viewBuilderFactory
+                        ->createFormViewBuilder(static::EDIT_FORM_ACTIVITY_VERSION_TAB_VIEW . '.versions', '/versions')
+                        ->setTabTitle('sulu_admin.versions')
+                        ->setResourceKey(BasePageDocument::RESOURCE_KEY)
+                        ->setFormKey('page_versions')
+                        ->addToolbarActions([])
+                        ->addRouterAttributesToFormRequest(['webspace'])
+                        ->disableTabGap()
+                        ->setParent(static::EDIT_FORM_ACTIVITY_VERSION_TAB_VIEW)
+                );
+            }
         }
 
         if ($viewCollection->has(MediaAdmin::EDIT_FORM_VIEW)) {
