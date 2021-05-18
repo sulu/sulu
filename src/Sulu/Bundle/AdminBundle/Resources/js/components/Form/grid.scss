@@ -5,7 +5,7 @@
 
 .grid {
     margin-bottom: -$sectionMarginBottom;
-    overflow-y: hidden;
+    contain: layout;
 }
 
 .grid-section {
