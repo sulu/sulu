@@ -24,6 +24,7 @@
     "sulu_media.remove_collection_warning": "This operation deletes a collection and cannot be undone. Do you really wish to proceed?",
     "sulu_media.move_collection": "Move collection",
     "sulu_media.edit_collection": "Edit collection",
+    "sulu_media.select_collection_for_upload": "Select collection for upload",
     "sulu_media.download_media": "Download media",
     "sulu_media.download_counter": "Download count",
     "sulu_media.delete_media": "Delete media",

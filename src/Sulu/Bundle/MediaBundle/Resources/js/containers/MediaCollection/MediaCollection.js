@@ -112,7 +112,8 @@ class MediaCollection extends React.Component<Props> {
 
         return (
             <MultiMediaDropzone
-                collectionId={!collectionStore.loading && addable ? collectionStore.id : undefined}
+                collectionId={collectionStore.id}
+                disabled={collectionStore.loading || !addable}
                 locale={locale}
                 onClose={onUploadOverlayClose}
                 onOpen={onUploadOverlayOpen}
