@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\AdminBundle\Metadata\FormMetadata;
 
 /**
- * @internal this class is internal create an own Visitor when you want to manipulated the metadata
+ * @internal This class is internal. Create a separate visitor if you want to manipulate the metadata in your project.
  */
 class TagFilterTypedFormMetadataVisitor implements TypedFormMetadataVisitorInterface
 {
