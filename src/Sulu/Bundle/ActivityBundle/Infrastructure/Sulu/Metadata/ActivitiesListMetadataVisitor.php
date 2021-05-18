@@ -15,7 +15,7 @@ use Sulu\Bundle\AdminBundle\Metadata\ListMetadata\ListMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\ListMetadata\ListMetadataVisitorInterface;
 
 /**
- * @internal this class is internal create an own Visitor when you want to manipulated the metadata
+ * @internal This class is internal. Create a separate visitor if you want to manipulate the metadata in your project.
  */
 class ActivitiesListMetadataVisitor implements ListMetadataVisitorInterface
 {

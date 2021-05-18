@@ -17,7 +17,7 @@ use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 
 /**
  * @internal This class should not be extended or initialized by any application outside of sulu.
- *           Inject instead custom loader or visitors into it.
+ *           You can inject custom loaders or visitors to adjust the behaviour of the service in your project.
  */
 class FormMetadataProvider implements MetadataProviderInterface
 {

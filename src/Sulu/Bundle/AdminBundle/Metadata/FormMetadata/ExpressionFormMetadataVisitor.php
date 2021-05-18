@@ -14,7 +14,7 @@ namespace Sulu\Bundle\AdminBundle\Metadata\FormMetadata;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 /**
- * @internal this class is internal create an own Visitor when you want to manipulated the metadata
+ * @internal This class is internal. Create a separate visitor if you want to manipulate the metadata in your project.
  */
 class ExpressionFormMetadataVisitor implements FormMetadataVisitorInterface, TypedFormMetadataVisitorInterface
 {
