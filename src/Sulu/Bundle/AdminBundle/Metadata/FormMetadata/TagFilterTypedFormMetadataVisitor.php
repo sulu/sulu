@@ -11,6 +11,9 @@
 
 namespace Sulu\Bundle\AdminBundle\Metadata\FormMetadata;
 
+/**
+ * @internal this class is internal create an own Visitor when you want to manipulated the metadata
+ */
 class TagFilterTypedFormMetadataVisitor implements TypedFormMetadataVisitorInterface
 {
     public static function getDefaultPriority(): int
