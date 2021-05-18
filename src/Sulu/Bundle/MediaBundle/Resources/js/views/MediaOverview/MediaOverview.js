@@ -211,6 +211,7 @@ class MediaOverview extends React.Component<ViewProps> {
                     clearSelectionOnClose={true}
                     confirmLoading={this.mediaMoving}
                     disabledIds={this.collectionStore.id ? [this.collectionStore.id] : []}
+                    itemDisabledCondition="!!locked"
                     listKey={COLLECTIONS_RESOURCE_KEY}
                     locale={this.locale}
                     onClose={this.handleMoveMediaOverlayClose}
@@ -292,7 +293,7 @@ export default withToolbar(MediaOverview, function() {
         });
     }
 
-    if (editPermission) {
+    if (!collectionLocked && editPermission) {
         items.push({
             disabled: this.mediaListStore.selectionIds.length === 0,
             icon: 'su-arrows-alt',
