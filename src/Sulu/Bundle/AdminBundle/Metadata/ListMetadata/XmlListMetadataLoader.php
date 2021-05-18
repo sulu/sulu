@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\AdminBundle\Metadata\ListMetadata;
 
-use Sulu\Bundle\AdminBundle\Metadata\MetadataInterface;
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -35,7 +34,7 @@ class XmlListMetadataLoader implements ListMetadataLoaderInterface
         $this->translator = $translator;
     }
 
-    public function getMetadata(string $key, string $locale, array $metadataOptions = []): ?MetadataInterface
+    public function getMetadata(string $key, string $locale, array $metadataOptions = [])
     {
         $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors($key);
 

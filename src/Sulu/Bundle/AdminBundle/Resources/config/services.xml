@@ -48,9 +48,26 @@
             id="sulu_admin.form_metadata_provider"
             class="Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadataProvider"
         >
-            <argument type="service" id="sulu_core.expression_language" />
             <argument type="tagged" tag="sulu_admin.form_metadata_loader"/>
+            <argument type="tagged" tag="sulu_admin.form_metadata_visitor"/>
+            <argument type="tagged" tag="sulu_admin.typed_form_metadata_visitor"/>
             <tag name="sulu_admin.metadata_provider" type="form" />
+        </service>
+
+        <service
+            id="sulu_admin.expression_form_metadata_visitor"
+            class="Sulu\Bundle\AdminBundle\Metadata\FormMetadata\ExpressionFormMetadataVisitor"
+        >
+            <argument type="service" id="sulu_core.expression_language" />
+            <tag name="sulu_admin.form_metadata_visitor" />
+            <tag name="sulu_admin.typed_form_metadata_visitor" />
+        </service>
+
+        <service
+            id="sulu_admin.tag_filter_typed_form_metadata_visitor"
+            class="Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TagFilterTypedFormMetadataVisitor"
+        >
+            <tag name="sulu_admin.typed_form_metadata_visitor" />
         </service>
 
         <service
@@ -71,6 +88,8 @@
             class="Sulu\Bundle\AdminBundle\Metadata\ListMetadata\ListMetadataProvider"
         >
             <argument type="tagged" tag="sulu_admin.list_metadata_loader"/>
+            <argument type="tagged" tag="sulu_admin.list_metadata_visitor"/>
+
             <tag name="sulu_admin.metadata_provider" type="list" />
         </service>
 

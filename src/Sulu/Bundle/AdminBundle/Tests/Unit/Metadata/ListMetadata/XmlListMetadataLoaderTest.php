@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\Metadata\ListMetadata;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AdminBundle\Metadata\ListMetadata\XmlListMetadataLoader;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
@@ -27,12 +28,12 @@ class XmlListMetadataLoaderTest extends TestCase
     private $xmlListMetadataLoader;
 
     /**
-     * @var TranslatorInterface
+     * @var TranslatorInterface|ObjectProphecy
      */
     private $translator;
 
     /**
-     * @var FieldDescriptorFactoryInterface
+     * @var FieldDescriptorFactoryInterface|ObjectProphecy
      */
     private $fieldDescriptorFactory;
 
@@ -103,6 +104,7 @@ class XmlListMetadataLoaderTest extends TestCase
         $this->fieldDescriptorFactory->getFieldDescriptors('account')->willReturn([$accountFieldDescriptor]);
 
         $contactListMetadata = $this->xmlListMetadataLoader->getMetadata('contact', 'de');
+        $this->assertNotNull($contactListMetadata);
         $contactListFields = $contactListMetadata->getFields();
 
         $this->assertEquals('firstName', $contactListFields['firstName']->getName());
@@ -131,6 +133,7 @@ class XmlListMetadataLoaderTest extends TestCase
         $this->assertEquals([], $contactListFields['lastName']->getTransformerTypeParameters());
 
         $accountListMetadata = $this->xmlListMetadataLoader->getMetadata('account', 'en');
+        $this->assertNotNull($accountListMetadata);
         $accountListFields = $accountListMetadata->getFields();
 
         $this->assertEquals('name', $accountListFields['name']->getName());

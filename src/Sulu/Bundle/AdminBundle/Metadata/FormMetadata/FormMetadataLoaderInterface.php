@@ -15,5 +15,8 @@ use Sulu\Bundle\AdminBundle\Metadata\MetadataInterface;
 
 interface FormMetadataLoaderInterface
 {
+    /**
+     * @param mixed[] $metadataOptions
+     */
     public function getMetadata(string $key, string $locale, array $metadataOptions): ?MetadataInterface;
 }
