@@ -77,7 +77,7 @@ exports[`Render snippet areas with data as table 1`] = `
             class="cellContent"
           >
             <button
-              class="button text titleButton"
+              class="button text hasText titleButton"
               type="button"
             >
               <span

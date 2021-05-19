@@ -128,7 +128,7 @@ Array [
                     sulu_audience_targeting.conditions
                   </label>
                   <button
-                    class="button secondary"
+                    class="button secondary hasText"
                     type="button"
                   >
                     <span
@@ -158,7 +158,7 @@ Array [
           class="footer"
         >
           <button
-            class="button primary"
+            class="button primary hasText"
             type="button"
           >
             <span

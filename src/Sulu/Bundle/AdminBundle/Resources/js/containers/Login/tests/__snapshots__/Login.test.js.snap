@@ -81,7 +81,7 @@ exports[`Should render the Login component when initialized is true 1`] = `
             class="buttons"
           >
             <button
-              class="button link"
+              class="button link hasText"
               type="button"
             >
               <span
@@ -91,7 +91,7 @@ exports[`Should render the Login component when initialized is true 1`] = `
               </span>
             </button>
             <button
-              class="button primary"
+              class="button primary hasText"
               disabled=""
               type="submit"
             >
@@ -179,7 +179,7 @@ exports[`Should render the Login with forgot password view 1`] = `
             class="buttons"
           >
             <button
-              class="button link"
+              class="button link hasText"
               type="button"
             >
               <span
@@ -189,7 +189,7 @@ exports[`Should render the Login with forgot password view 1`] = `
               </span>
             </button>
             <button
-              class="button primary"
+              class="button primary hasText"
               disabled=""
               type="submit"
             >
@@ -277,7 +277,7 @@ exports[`Should render the Login with forgot password with success 1`] = `
             class="buttons"
           >
             <button
-              class="button link"
+              class="button link hasText"
               type="button"
             >
               <span
@@ -287,7 +287,7 @@ exports[`Should render the Login with forgot password with success 1`] = `
               </span>
             </button>
             <button
-              class="button primary"
+              class="button primary hasText"
               disabled=""
               type="submit"
             >
@@ -400,7 +400,7 @@ exports[`Should render the Login with reset password view 1`] = `
             class="buttons"
           >
             <button
-              class="button link"
+              class="button link hasText"
               type="button"
             >
               <span
@@ -410,7 +410,7 @@ exports[`Should render the Login with reset password view 1`] = `
               </span>
             </button>
             <button
-              class="button primary"
+              class="button primary hasText"
               disabled=""
               type="submit"
             >
@@ -523,7 +523,7 @@ exports[`Should render the LoginForm component with error 1`] = `
             class="buttons"
           >
             <button
-              class="button link"
+              class="button link hasText"
               type="button"
             >
               <span
@@ -533,7 +533,7 @@ exports[`Should render the LoginForm component with error 1`] = `
               </span>
             </button>
             <button
-              class="button primary loading"
+              class="button primary loading hasText"
               disabled=""
               type="submit"
             >

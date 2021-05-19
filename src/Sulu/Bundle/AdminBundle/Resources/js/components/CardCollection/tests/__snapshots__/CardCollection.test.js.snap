@@ -9,7 +9,7 @@ Array [
     class="addButtonContainer"
   >
     <button
-      class="button secondary"
+      class="button secondary hasText"
       type="button"
     >
       <span
@@ -64,7 +64,7 @@ Array [
     class="addButtonContainer"
   >
     <button
-      class="button secondary"
+      class="button secondary hasText"
       type="button"
     >
       <span

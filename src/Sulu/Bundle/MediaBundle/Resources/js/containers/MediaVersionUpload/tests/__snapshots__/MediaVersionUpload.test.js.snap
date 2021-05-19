@@ -43,7 +43,7 @@ Array [
     class="buttons"
   >
     <button
-      class="button link"
+      class="button link hasText"
       type="button"
     >
       <span
@@ -57,7 +57,7 @@ Array [
       </span>
     </button>
     <button
-      class="button link"
+      class="button link hasText"
       type="button"
     >
       <span
@@ -120,7 +120,7 @@ Array [
       tabindex="0"
     >
       <button
-        class="button link"
+        class="button link hasText"
         type="button"
       >
         <span
@@ -142,7 +142,7 @@ Array [
       />
     </div>
     <button
-      class="button link"
+      class="button link hasText"
       type="button"
     >
       <span
@@ -205,7 +205,7 @@ Array [
       tabindex="0"
     >
       <button
-        class="button link"
+        class="button link hasText"
         type="button"
       >
         <span
@@ -227,7 +227,7 @@ Array [
       />
     </div>
     <button
-      class="button link"
+      class="button link hasText"
       disabled=""
       type="button"
     >

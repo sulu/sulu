@@ -2,7 +2,7 @@
 
 exports[`Render dropdown button 1`] = `
 <button
-  class="button secondary"
+  class="button secondary hasText"
   type="button"
 >
   <span

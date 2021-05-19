@@ -42,7 +42,7 @@ Array [
             class="actions"
           >
             <button
-              class="button link"
+              class="button link hasText"
               type="button"
             >
               <span
@@ -52,7 +52,7 @@ Array [
               </span>
             </button>
             <button
-              class="button link"
+              class="button link hasText"
               type="button"
             >
               <span
@@ -63,7 +63,7 @@ Array [
             </button>
           </div>
           <button
-            class="button primary"
+            class="button primary hasText"
             type="button"
           >
             <span

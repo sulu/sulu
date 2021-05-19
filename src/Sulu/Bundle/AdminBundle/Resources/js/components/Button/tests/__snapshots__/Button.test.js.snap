@@ -2,7 +2,7 @@
 
 exports[`Should render the button with icon 1`] = `
 <button
-  class="button secondary"
+  class="button secondary hasText"
   type="button"
 >
   <span
