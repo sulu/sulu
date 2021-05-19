@@ -191,7 +191,7 @@ class MediaOverview extends React.Component<ViewProps> {
 
     render() {
         return (
-            <div>
+            <>
                 <MediaCollection
                     collectionListStore={this.collectionListStore}
                     collectionStore={this.collectionStore}
@@ -211,6 +211,7 @@ class MediaOverview extends React.Component<ViewProps> {
                     clearSelectionOnClose={true}
                     confirmLoading={this.mediaMoving}
                     disabledIds={this.collectionStore.id ? [this.collectionStore.id] : []}
+                    itemDisabledCondition="!!locked"
                     listKey={COLLECTIONS_RESOURCE_KEY}
                     locale={this.locale}
                     onClose={this.handleMoveMediaOverlayClose}
@@ -219,7 +220,7 @@ class MediaOverview extends React.Component<ViewProps> {
                     resourceKey={COLLECTIONS_RESOURCE_KEY}
                     title={translate('sulu_media.move_media')}
                 />
-            </div>
+            </>
         );
     }
 }
@@ -292,7 +293,7 @@ export default withToolbar(MediaOverview, function() {
         });
     }
 
-    if (editPermission) {
+    if (!collectionLocked && editPermission) {
         items.push({
             disabled: this.mediaListStore.selectionIds.length === 0,
             icon: 'su-arrows-alt',

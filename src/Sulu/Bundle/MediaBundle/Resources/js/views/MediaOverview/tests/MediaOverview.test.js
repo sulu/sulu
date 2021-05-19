@@ -558,7 +558,7 @@ test('Toolbar buttons should disappear when permissions are missing on current c
     expect(toolbarFunction.call(mediaOverview.instance()).items).toHaveLength(0);
 });
 
-test('Move overlay button should be disabled if nothing is selected', () => {
+test('Move button should be disabled if nothing is selected', () => {
     const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
     const MediaOverview = require('../MediaOverview').default;
     const toolbarFunction = findWithHighOrderFunction(withToolbar, MediaOverview);
@@ -589,6 +589,40 @@ test('Move overlay button should be disabled if nothing is selected', () => {
 
     mediaOverview.mediaListStore.selectionIds.push(8);
     expect(toolbarFunction.call(mediaOverview).items[2].disabled).toEqual(false);
+});
+
+test('Move button should disappear if collection is locked', () => {
+    const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
+    const MediaOverview = require('../MediaOverview').default;
+    const toolbarFunction = findWithHighOrderFunction(withToolbar, MediaOverview);
+
+    const router = {
+        restore: jest.fn(),
+        bind: jest.fn(),
+        route: {
+            options: {
+                locales: ['de'],
+                permissions: {
+                    add: true,
+                    delete: true,
+                    edit: true,
+                },
+            },
+        },
+        attributes: {
+            id: 4,
+        },
+    };
+    const mediaOverview = mount(<MediaOverview router={router} />).at(0).instance();
+    mediaOverview.collectionId.set(4);
+    mediaOverview.locale.set('de');
+
+    expect(toolbarFunction.call(mediaOverview).items).toHaveLength(3);
+    expect(toolbarFunction.call(mediaOverview).items[2].label).toEqual('sulu_admin.move_selected');
+
+    mediaOverview.collectionStore.resourceStore.data.locked = true;
+
+    expect(toolbarFunction.call(mediaOverview).items).toHaveLength(2);
 });
 
 test('Move overlay should disappear when overlay is closed', () => {

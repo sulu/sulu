@@ -281,6 +281,7 @@ class CollectionSection extends React.Component<Props> {
                     clearSelectionOnClose={true}
                     confirmLoading={resourceStore.moving}
                     disabledIds={resourceStore.id ? [resourceStore.id] : []}
+                    itemDisabledCondition="!!locked"
                     listKey={COLLECTIONS_RESOURCE_KEY}
                     locale={locale}
                     onClose={this.handleMoveCollectionClose}
