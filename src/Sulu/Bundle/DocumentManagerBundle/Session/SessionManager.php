@@ -12,11 +12,12 @@
 namespace Sulu\Bundle\DocumentManagerBundle\Session;
 
 use PHPCR\SessionInterface;
+use Symfony\Contracts\Service\ResetInterface;
 
 /**
  * This class knows about the default and the live session, and should be used if data is written on nodes directly.
  */
-class SessionManager implements SessionManagerInterface
+class SessionManager implements SessionManagerInterface, ResetInterface
 {
     /**
      * @var SessionInterface
@@ -56,5 +57,14 @@ class SessionManager implements SessionManagerInterface
     private function setNodePropertyForSession(SessionInterface $session, $nodePath, $propertyName, $value)
     {
         $session->getNode($nodePath)->setProperty($propertyName, $value);
+    }
+
+    /**
+     * @return void
+     */
+    public function reset()
+    {
+        $this->defaultSession->refresh(false);
+        $this->liveSession->refresh(false);
     }
 }
