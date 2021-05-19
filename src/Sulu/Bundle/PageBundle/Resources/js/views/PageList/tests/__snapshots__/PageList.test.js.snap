@@ -24,26 +24,18 @@ exports[`Render PageList 1`] = `
             type="button"
           >
             <span
-              class="buttonText"
-            >
-              <span
-                aria-label="su-columns"
-                class="su-columns"
-              />
-            </span>
+              aria-label="su-columns"
+              class="su-columns buttonIcon"
+            />
           </button>
           <button
             class="button icon button"
             type="button"
           >
             <span
-              class="buttonText"
-            >
-              <span
-                aria-label="su-columns"
-                class="su-columns"
-              />
-            </span>
+              aria-label="su-columns"
+              class="su-columns buttonIcon"
+            />
           </button>
         </div>
       </div>
