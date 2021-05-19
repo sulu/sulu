@@ -560,6 +560,8 @@ class List extends React.Component<Props> {
         const searchable = this.props.searchable && Adapter.searchable;
         const filterable = this.props.filterable && filterableFields && Object.keys(filterableFields).length > 0;
 
+        const hasToolbar = searchable || filterable || actions.length || this.showColumnOptions || adapters.length > 1;
+
         if (store.forbidden) {
             return <PermissionHint />;
         }
@@ -567,7 +569,7 @@ class List extends React.Component<Props> {
         return (
             <div className={listStyles.listContainer}>
                 {header}
-                {!schemaLoading && (searchable || adapters.length > 1 || filterable || this.showColumnOptions) &&
+                {!schemaLoading && hasToolbar &&
                     <div className={toolbarClass}>
                         <div className={listStyles.toolbarLeft}>
                             {searchable &&

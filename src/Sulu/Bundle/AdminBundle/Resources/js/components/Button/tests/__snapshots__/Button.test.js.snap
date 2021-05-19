@@ -43,6 +43,19 @@ exports[`Should render with skin icon and dropdown icon 1`] = `
 </button>
 `;
 
+exports[`Should render with skin icon and text 1`] = `
+<button
+  class="button icon hasText"
+  type="button"
+>
+  <span
+    class="buttonText"
+  >
+    Icon Text
+  </span>
+</button>
+`;
+
 exports[`Should render with skin link 1`] = `
 <button
   class="button link"
