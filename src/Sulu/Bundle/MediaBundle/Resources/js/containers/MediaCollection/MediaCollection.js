@@ -100,7 +100,7 @@ class MediaCollection extends React.Component<Props> {
 
         if (addable) {
             listActions.push({
-                disabled: collectionStore.loading,
+                disabled: collectionStore.loading || !collectionStore.id,
                 icon: 'su-upload',
                 label: translate('sulu_media.upload_file'),
                 onClick: onUploadOverlayOpen,

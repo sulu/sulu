@@ -170,7 +170,6 @@ jest.mock('sulu-admin-bundle/stores', () => {
         this.changeSchema = jest.fn();
         this.load = jest.fn();
         this.reload = jest.fn();
-        this.loading = false;
         this.id = 1;
 
         mockExtendObservable(this, {
@@ -180,6 +179,7 @@ jest.mock('sulu-admin-bundle/stores', () => {
             },
             deleting: false,
             moving: false,
+            loading: false,
         });
     });
 
@@ -687,7 +687,7 @@ test('Render the MediaCollection for all media', () => {
     expect(mediaCollection).toMatchSnapshot();
 });
 
-test('Pass correct options to SingleListOverlay', () => {
+test('Pass correct options to move collection SingleListOverlay', () => {
     const page = observable.box();
     const locale = observable.box();
     const collectionNavigateSpy = jest.fn();
@@ -728,6 +728,7 @@ test('Pass correct options to SingleListOverlay', () => {
         />
     );
 
+    expect(mediaCollection.find(SingleListOverlay).prop('title')).toEqual('sulu_media.move_collection');
     expect(mediaCollection.find(SingleListOverlay).prop('listKey')).toEqual('collections');
     expect(mediaCollection.find(SingleListOverlay).prop('resourceKey')).toEqual('collections');
     expect(mediaCollection.find(SingleListOverlay).prop('reloadOnOpen')).toEqual(true);
@@ -779,7 +780,162 @@ test.each([true, false])('Pass correct hasChildren "%s" option to PermissionForm
     expect(mediaCollection.find('PermissionFormOverlay').prop('hasChildren')).toEqual(hasChildren);
 });
 
-test('Deactive dropzone by passing no collectionId if dropzone should not be shown', () => {
+test('Pass action for uploading new media to media list', () => {
+    const page = observable.box();
+    const locale = observable.box();
+    const collectionNavigateSpy = jest.fn();
+    const ListStore = require('sulu-admin-bundle/containers').ListStore;
+    const List = require('sulu-admin-bundle/containers').List;
+    const mediaListStore = new ListStore(
+        MEDIA_RESOURCE_KEY,
+        SETTINGS_KEY,
+        USER_SETTINGS_KEY,
+        {
+            page,
+            locale,
+        }
+    );
+    const collectionListStore = new ListStore(
+        COLLECTIONS_RESOURCE_KEY,
+        SETTINGS_KEY,
+        USER_SETTINGS_KEY,
+        {
+            page,
+            locale,
+        }
+    );
+    const CollectionStore = require('../../../stores/CollectionStore').default;
+    const collectionStore = new CollectionStore(1, locale);
+
+    const uploadOverlayOpenSpy = jest.fn();
+
+    const mediaCollection = mount(
+        <MediaCollection
+            collectionListStore={collectionListStore}
+            collectionStore={collectionStore}
+            locale={locale}
+            mediaListAdapters={['media_card_overview']}
+            mediaListStore={mediaListStore}
+            onCollectionNavigate={collectionNavigateSpy}
+            onUploadOverlayClose={jest.fn()}
+            onUploadOverlayOpen={uploadOverlayOpenSpy}
+            uploadOverlayOpen={false}
+        />
+    );
+
+    const mediaListActions = mediaCollection.find(List).at(1).prop('actions');
+    expect(mediaListActions).toHaveLength(1);
+    expect(mediaListActions[0].label).toEqual('sulu_media.upload_file');
+    expect(mediaListActions[0].onClick).toEqual(uploadOverlayOpenSpy);
+    expect(mediaListActions[0].disabled).toBeFalsy();
+
+    collectionStore.resourceStore.loading = true;
+    mediaCollection.update();
+
+    expect(mediaCollection.find(List).at(1).prop('actions')[0].disabled).toBeTruthy();
+});
+
+test('Do not pass action for uploading new media to media list if addable permission is set to false', () => {
+    const page = observable.box();
+    const locale = observable.box();
+    const collectionNavigateSpy = jest.fn();
+    const ListStore = require('sulu-admin-bundle/containers').ListStore;
+    const List = require('sulu-admin-bundle/containers').List;
+    const mediaListStore = new ListStore(
+        MEDIA_RESOURCE_KEY,
+        SETTINGS_KEY,
+        USER_SETTINGS_KEY,
+        {
+            page,
+            locale,
+        }
+    );
+    const collectionListStore = new ListStore(
+        COLLECTIONS_RESOURCE_KEY,
+        SETTINGS_KEY,
+        USER_SETTINGS_KEY,
+        {
+            page,
+            locale,
+        }
+    );
+    const CollectionStore = require('../../../stores/CollectionStore').default;
+    const collectionStore = new CollectionStore(1, locale);
+
+    MediaCollection.addable = false;
+    MediaCollection.deletable = true;
+    MediaCollection.editable = true;
+
+    const mediaCollection = mount(
+        <MediaCollection
+            collectionListStore={collectionListStore}
+            collectionStore={collectionStore}
+            locale={locale}
+            mediaListAdapters={['media_card_overview']}
+            mediaListStore={mediaListStore}
+            onCollectionNavigate={collectionNavigateSpy}
+            onUploadOverlayClose={jest.fn()}
+            onUploadOverlayOpen={jest.fn()}
+            uploadOverlayOpen={false}
+        />
+    );
+
+    const mediaListActions = mediaCollection.find(List).at(1).prop('actions');
+    expect(mediaListActions).toHaveLength(0);
+});
+
+test('Do not pass action for uploading new media to media list when collection is a system collection', () => {
+    const page = observable.box();
+    const locale = observable.box();
+    const collectionNavigateSpy = jest.fn();
+    const ListStore = require('sulu-admin-bundle/containers').ListStore;
+    const List = require('sulu-admin-bundle/containers').List;
+    const mediaListStore = new ListStore(
+        MEDIA_RESOURCE_KEY,
+        SETTINGS_KEY,
+        USER_SETTINGS_KEY,
+        {
+            page,
+            locale,
+        }
+    );
+    const collectionListStore = new ListStore(
+        COLLECTIONS_RESOURCE_KEY,
+        SETTINGS_KEY,
+        USER_SETTINGS_KEY,
+        {
+            page,
+            locale,
+        }
+    );
+    const CollectionStore = require('../../../stores/CollectionStore').default;
+    const collectionStore = new CollectionStore(1, locale);
+
+    collectionStore.resourceStore.data = {
+        title: 'Title',
+        locked: true,
+        _permissions: {},
+    };
+
+    const mediaCollection = mount(
+        <MediaCollection
+            collectionListStore={collectionListStore}
+            collectionStore={collectionStore}
+            locale={locale}
+            mediaListAdapters={['media_card_overview']}
+            mediaListStore={mediaListStore}
+            onCollectionNavigate={collectionNavigateSpy}
+            onUploadOverlayClose={jest.fn()}
+            onUploadOverlayOpen={jest.fn()}
+            uploadOverlayOpen={false}
+        />
+    );
+
+    const mediaListActions = mediaCollection.find(List).at(1).prop('actions');
+    expect(mediaListActions).toHaveLength(0);
+});
+
+test('Deactivate dropzone by passing no collectionId if addable permission is set to false', () => {
     const page = observable.box();
     const locale = observable.box();
     const collectionNavigateSpy = jest.fn();
@@ -806,6 +962,54 @@ test('Deactive dropzone by passing no collectionId if dropzone should not be sho
     const collectionStore = new CollectionStore(1, locale);
 
     MediaCollection.addable = false;
+    MediaCollection.deletable = true;
+    MediaCollection.editable = true;
+
+    const mediaCollection = mount(
+        <MediaCollection
+            collectionListStore={collectionListStore}
+            collectionStore={collectionStore}
+            locale={locale}
+            mediaListAdapters={['media_card_overview']}
+            mediaListStore={mediaListStore}
+            onCollectionNavigate={collectionNavigateSpy}
+            onUploadOverlayClose={jest.fn()}
+            onUploadOverlayOpen={jest.fn()}
+            uploadOverlayOpen={false}
+        />
+    );
+
+    expect(mediaCollection.find('MultiMediaDropzone').prop('collectionId')).toEqual(undefined);
+});
+
+test('Deactivate dropzone by passing no collectionId when collection is loading', () => {
+    const page = observable.box();
+    const locale = observable.box();
+    const collectionNavigateSpy = jest.fn();
+    const ListStore = require('sulu-admin-bundle/containers').ListStore;
+    const mediaListStore = new ListStore(
+        MEDIA_RESOURCE_KEY,
+        SETTINGS_KEY,
+        USER_SETTINGS_KEY,
+        {
+            page,
+            locale,
+        }
+    );
+    const collectionListStore = new ListStore(
+        COLLECTIONS_RESOURCE_KEY,
+        SETTINGS_KEY,
+        USER_SETTINGS_KEY,
+        {
+            page,
+            locale,
+        }
+    );
+    const CollectionStore = require('../../../stores/CollectionStore').default;
+    const collectionStore = new CollectionStore(1, locale);
+    collectionStore.resourceStore.loading = true;
+
+    MediaCollection.addable = true;
     MediaCollection.deletable = true;
     MediaCollection.editable = true;
 
