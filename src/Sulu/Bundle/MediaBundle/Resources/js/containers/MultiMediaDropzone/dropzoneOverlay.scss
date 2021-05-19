@@ -14,11 +14,28 @@ $dropAreaInfoColor: $white;
     padding: 30px;
 }
 
+.close-icon {
+    position: absolute;
+    right: 30px;
+    top: 30px;
+    font-size: 32px;
+    cursor: pointer;
+    color: $dropAreaInfoColor;
+    padding: 24px;
+}
+
 .drop-area {
     display: block;
     height: 100%;
     border: 2px dashed $dropzoneBorderColor;
     padding: 20px;
+    cursor: pointer;
+    position: relative;
+
+    /* prevent flickering caused by dragleave event when dragging files over text/icon in drop area */
+    * {
+        pointer-events: none;
+    }
 }
 
 .upload-info-container {
