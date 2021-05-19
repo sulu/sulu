@@ -81,15 +81,15 @@ class DropzoneOverlay extends React.Component<Props> {
                     onDragLeave={onDragLeave}
                     role="button"
                 >
-                    <div className={dropzoneOverlayStyles.dropArea}>
+                    <div
+                        className={dropzoneOverlayStyles.dropArea}
+                        onClick={this.handleClick}
+                        role="button"
+                        tabIndex="0"
+                    >
                         <div className={dropzoneOverlayStyles.uploadInfoContainer}>
                             {children &&
-                                <div
-                                    className={dropzoneOverlayStyles.uploadInfo}
-                                    onClick={this.handleClick}
-                                    role="button"
-                                    tabIndex="0"
-                                >
+                                <div className={dropzoneOverlayStyles.uploadInfo}>
                                     <Icon className={dropzoneOverlayStyles.uploadIcon} name="su-upload" />
                                     <div className={dropzoneOverlayStyles.uploadInfoHeadline}>
                                         {translate('sulu_media.drop_files_to_upload')}
@@ -106,6 +106,11 @@ class DropzoneOverlay extends React.Component<Props> {
                             ))}
                         </ul>
                     </div>
+                    <Icon
+                        className={dropzoneOverlayStyles.closeIcon}
+                        name="su-times"
+                        onClick={this.handleClose}
+                    />
                 </div>
             </Portal>
         );
