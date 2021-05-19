@@ -756,6 +756,13 @@ Existing users need to migrate there system language to EN or DE:
 ```sql
 UPDATE `se_users` SET `locale` = 'en' WHERE `locale` NOT IN ('en', 'de');
 ```
+### Permission key changed
+
+For webspace specific resources the permission key has been changed:
+
+```sql
+UPDATE se_permissions SET context = REPLACE(context, 'sulu.webspace_settings.', 'sulu.webspace.') WHERE context LIKE 'sulu.webspace_settings.%';
+```
 
 ### RequestLocaleTranslator removed
 
