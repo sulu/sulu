@@ -376,16 +376,15 @@ class ActivityController extends AbstractRestController implements ClassResource
     {
         $translationParameters = $this->getTranslationParameters($activity, $translationLocale);
 
-        $user = $activity['userFullName'] ?? $this->translator->trans('sulu_activity.someone', [], 'admin', $translationLocale);
+        $translationParameters['{userFullName}'] = isset($activity['userFullName'])
+            ? \sprintf('<b>%s</b>', $activity['userFullName'])
+            : $this->translator->trans('sulu_activity.someone', [], 'admin', $translationLocale);
 
-        $resourceTitle = $this->getLocalizedValue(
+        $translationParameters['{resourceTitle}'] = $this->getLocalizedValue(
             $activity['resourceTitle'],
             $activity['resourceTitleLocale'] ?? null,
             $translationLocale
         );
-
-        $translationParameters['{userFullName}'] = $user;
-        $translationParameters['{resourceTitle}'] = $resourceTitle;
 
         return $this->translator->trans(
             \sprintf(
