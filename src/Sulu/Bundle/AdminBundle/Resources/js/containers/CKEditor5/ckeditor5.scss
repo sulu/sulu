@@ -51,6 +51,8 @@ $textEditorUnpublishedLinkColor: $gold;
         --ck-color-button-on-background: $textEditorDarkBackgroundColor;
         --ck-color-button-on-hover-background: var(--ck-color-button-on-background);
         --ck-color-button-on-active-background: var(--ck-color-button-on-background);
+        --ck-color-split-button-hover-background: transparent;
+        --ck-color-split-button-hover-border: transparent;
 
         /* panel */
         --ck-color-panel-background: $textEditorPanelBackground;
@@ -133,6 +135,19 @@ $textEditorUnpublishedLinkColor: $gold;
                 > .ck.ck-toolbar {
                     border-bottom-right-radius: 0 !important;
                 }
+            }
+        }
+
+        /* Make the last 5 toolbar items open their dropdown panels on the left side instead of on the right side */
+        .ck.ck-toolbar__items > .ck:nth-last-child(-n + 5) .ck-dropdown__panel_se {
+            border-top-right-radius: 0 !important;
+            border-top-left-radius: $textEditorBorderRadius !important;
+            left: unset !important;
+            right: 0 !important;
+
+            > .ck.ck-toolbar {
+                border-top-right-radius: 0 !important;
+                border-top-left-radius: $textEditorBorderRadius !important;
             }
         }
 
