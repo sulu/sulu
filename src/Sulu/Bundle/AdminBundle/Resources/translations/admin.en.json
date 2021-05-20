@@ -2,6 +2,7 @@
     "sulu_admin.add": "Add",
     "sulu_admin.add_block": "Add block",
     "sulu_admin.delete": "Delete",
+    "sulu_admin.delete_selected": "Delete selected",
     "sulu_admin.delete_locale": "Delete current localization",
     "sulu_admin.move": "Move",
     "sulu_admin.move_items": "Move items",

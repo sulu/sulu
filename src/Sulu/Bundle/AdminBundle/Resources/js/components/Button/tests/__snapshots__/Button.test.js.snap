@@ -2,7 +2,7 @@
 
 exports[`Should render the button with icon 1`] = `
 <button
-  class="button secondary"
+  class="button secondary hasText"
   type="button"
 >
   <span
@@ -40,6 +40,19 @@ exports[`Should render with skin icon and dropdown icon 1`] = `
     aria-label="su-angle-down"
     class="su-angle-down dropdownIcon"
   />
+</button>
+`;
+
+exports[`Should render with skin icon and text 1`] = `
+<button
+  class="button icon hasText"
+  type="button"
+>
+  <span
+    class="buttonText"
+  >
+    Icon Text
+  </span>
 </button>
 `;
 

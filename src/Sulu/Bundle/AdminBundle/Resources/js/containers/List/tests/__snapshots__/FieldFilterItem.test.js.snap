@@ -58,7 +58,7 @@ Array [
               class="buttonContainer"
             >
               <button
-                class="button link"
+                class="button link hasText"
                 type="button"
               >
                 <span

@@ -90,7 +90,7 @@ exports[`Render Item with data as form 1`] = `
     class="buttons"
   >
     <button
-      class="button secondary"
+      class="button secondary hasText"
       type="button"
     >
       <span
@@ -100,7 +100,7 @@ exports[`Render Item with data as form 1`] = `
       </span>
     </button>
     <button
-      class="button link"
+      class="button link hasText"
       type="button"
     >
       <span
@@ -110,7 +110,7 @@ exports[`Render Item with data as form 1`] = `
       </span>
     </button>
     <button
-      class="button primary"
+      class="button primary hasText"
       type="button"
     >
       <span

@@ -63,7 +63,7 @@ exports[`Render data in EditLines 2`] = `
     </button>
   </div>
   <button
-    class="button secondary"
+    class="button secondary hasText"
     type="button"
   >
     <span
@@ -142,7 +142,7 @@ exports[`Render data in EditLines with other properties 2`] = `
     </button>
   </div>
   <button
-    class="button secondary"
+    class="button secondary hasText"
     type="button"
   >
     <span

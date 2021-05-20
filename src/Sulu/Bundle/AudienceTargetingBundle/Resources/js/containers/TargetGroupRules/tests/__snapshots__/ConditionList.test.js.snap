@@ -2,7 +2,7 @@
 
 exports[`Render an empty ConditionList 1`] = `
 <button
-  class="button secondary"
+  class="button secondary hasText"
   type="button"
 >
   <span

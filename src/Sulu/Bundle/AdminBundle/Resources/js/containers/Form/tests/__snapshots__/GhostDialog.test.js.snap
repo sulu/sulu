@@ -90,7 +90,7 @@ Array [
           class="footer"
         >
           <button
-            class="button primary"
+            class="button primary hasText"
             type="button"
           >
             <span
@@ -100,7 +100,7 @@ Array [
             </span>
           </button>
           <button
-            class="button secondary"
+            class="button secondary hasText"
             type="button"
           >
             <span

@@ -337,3 +337,77 @@ exports[`Render the adapter with filters but filterable disabled 1`] = `
   </div>
 </div>
 `;
+
+exports[`Render toolbar with with search field and actions 1`] = `
+<div
+  class="listContainer"
+>
+  <div
+    class="toolbar"
+  >
+    <div
+      class="toolbarLeft"
+    >
+      <label
+        class="input dark left collapsed hasAppendIcon"
+      >
+        <div
+          class="prependedContainer dark collapsed"
+        >
+          <span
+            aria-label="su-search"
+            class="su-search clickable icon dark iconClickable collapsed"
+            role="button"
+            tabindex="0"
+          />
+        </div>
+        <input
+          placeholder="sulu_admin.list_search_placeholder"
+          type="text"
+          value=""
+        />
+      </label>
+    </div>
+    <div
+      class="toolbarRight"
+    >
+      <button
+        class="button icon hasText"
+        disabled=""
+        type="button"
+      >
+        <span
+          aria-label="su-upload"
+          class="su-upload buttonIcon"
+        />
+        <span
+          class="buttonText"
+        >
+          sulu_admin.upload
+        </span>
+      </button>
+      <button
+        class="button icon hasText"
+        type="button"
+      >
+        <span
+          aria-label="su-refresh"
+          class="su-refresh buttonIcon"
+        />
+        <span
+          class="buttonText"
+        >
+          sulu_admin.refresh
+        </span>
+      </button>
+    </div>
+  </div>
+  <div
+    class="list"
+  >
+    <div>
+      Test Adapter
+    </div>
+  </div>
+</div>
+`;

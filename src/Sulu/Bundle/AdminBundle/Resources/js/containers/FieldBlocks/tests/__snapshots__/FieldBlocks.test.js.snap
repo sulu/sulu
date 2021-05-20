@@ -221,7 +221,7 @@ exports[`Render block with schema 1`] = `
     </section>
   </div>
   <button
-    class="button secondary"
+    class="button secondary hasText"
     type="button"
   >
     <span
@@ -480,7 +480,7 @@ exports[`Render block with schema and error on fields already being modified 1`]
     </section>
   </div>
   <button
-    class="button secondary"
+    class="button secondary hasText"
     type="button"
   >
     <span
@@ -742,7 +742,7 @@ exports[`Render block with schema and error on fields already being modified 2`]
     </section>
   </div>
   <button
-    class="button secondary"
+    class="button secondary hasText"
     type="button"
   >
     <span
@@ -857,7 +857,7 @@ exports[`Render collapsed blocks with block previews 1`] = `
     </section>
   </div>
   <button
-    class="button secondary"
+    class="button secondary hasText"
     type="button"
   >
     <span
@@ -974,7 +974,7 @@ exports[`Render collapsed blocks with block previews 2`] = `
     </section>
   </div>
   <button
-    class="button secondary"
+    class="button secondary hasText"
     type="button"
   >
     <span
@@ -1085,7 +1085,7 @@ exports[`Render collapsed blocks with block previews and sections 1`] = `
     </section>
   </div>
   <button
-    class="button secondary"
+    class="button secondary hasText"
     type="button"
   >
     <span
@@ -1202,7 +1202,7 @@ exports[`Render collapsed blocks with block previews without tags 1`] = `
     </section>
   </div>
   <button
-    class="button secondary"
+    class="button secondary hasText"
     type="button"
   >
     <span
@@ -1319,7 +1319,7 @@ exports[`Render collapsed blocks with block previews without tags and with secti
     </section>
   </div>
   <button
-    class="button secondary"
+    class="button secondary hasText"
     type="button"
   >
     <span

@@ -153,12 +153,23 @@ $iconColorActive: $white;
     }
 
     &:disabled {
+        border-color: $iconDisabledColor;
         color: $iconDisabledColor;
     }
 
     &.active {
         background-color: $iconBorderColor;
         color: $iconColorActive;
+    }
+
+    &.has-text {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .button-icon + .button-text {
+        font-size: $fontSize;
+        margin-left: 10px;
     }
 
     .button-icon,

@@ -31,6 +31,10 @@ test('Should render with skin icon', () => {
     expect(render(<Button skin="icon" />)).toMatchSnapshot();
 });
 
+test('Should render with skin icon and text', () => {
+    expect(render(<Button skin="icon">Icon Text</Button>)).toMatchSnapshot();
+});
+
 test('Should render with skin icon and active', () => {
     expect(render(<Button active={true} skin="icon" />)).toMatchSnapshot();
 });

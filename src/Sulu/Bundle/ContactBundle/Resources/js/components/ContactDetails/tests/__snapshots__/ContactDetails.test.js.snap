@@ -337,7 +337,7 @@ exports[`Render ContactDetails with data 1`] = `
         sulu_contact.contact_details
       </label>
       <button
-        class="button secondary"
+        class="button secondary hasText"
         type="button"
       >
         <span
@@ -490,7 +490,7 @@ exports[`Render empty ContactDetails 1`] = `
         sulu_contact.contact_details
       </label>
       <button
-        class="button secondary"
+        class="button secondary hasText"
         type="button"
       >
         <span
@@ -848,7 +848,7 @@ exports[`Render empty phone and email fields even if other values are set 1`] = 
         sulu_contact.contact_details
       </label>
       <button
-        class="button secondary"
+        class="button secondary hasText"
         type="button"
       >
         <span

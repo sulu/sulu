@@ -152,7 +152,7 @@ Array [
           class="footer"
         >
           <button
-            class="button primary"
+            class="button primary hasText"
             type="button"
           >
             <span

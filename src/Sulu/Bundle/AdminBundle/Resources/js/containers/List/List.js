@@ -22,6 +22,7 @@ import listStyles from './list.scss';
 import ColumnOptionsOverlay from './ColumnOptionsOverlay';
 import FieldFilter from './FieldFilter';
 import type {
+    ActionConfig,
     AdapterOptions,
     ItemActionsProvider,
     ResolveCopyArgument,
@@ -35,6 +36,7 @@ import type {Node} from 'react';
 import type {IValueWillChange} from 'mobx/lib/mobx';
 
 type Props = {|
+    actions: Array<ActionConfig>,
     adapterOptions?: {[adapterKey: string]: AdapterOptions},
     adapters: Array<string>,
     allowActivateForDisabledItems: boolean,
@@ -65,6 +67,7 @@ const USER_SETTING_ADAPTER = 'adapter';
 @observer
 class List extends React.Component<Props> {
     static defaultProps = {
+        actions: [],
         allowActivateForDisabledItems: true,
         copyable: true,
         deletable: true,
@@ -515,6 +518,7 @@ class List extends React.Component<Props> {
 
     render() {
         const {
+            actions,
             adapters,
             copyable,
             deletable,
@@ -556,6 +560,8 @@ class List extends React.Component<Props> {
         const searchable = this.props.searchable && Adapter.searchable;
         const filterable = this.props.filterable && filterableFields && Object.keys(filterableFields).length > 0;
 
+        const hasToolbar = searchable || filterable || actions.length || this.showColumnOptions || adapters.length > 1;
+
         if (store.forbidden) {
             return <PermissionHint />;
         }
@@ -563,7 +569,7 @@ class List extends React.Component<Props> {
         return (
             <div className={listStyles.listContainer}>
                 {header}
-                {!schemaLoading && (searchable || adapters.length > 1 || filterable || this.showColumnOptions) &&
+                {!schemaLoading && hasToolbar &&
                     <div className={toolbarClass}>
                         <div className={listStyles.toolbarLeft}>
                             {searchable &&
@@ -578,6 +584,21 @@ class List extends React.Component<Props> {
                             }
                         </div>
                         <div className={listStyles.toolbarRight}>
+                            {actions.map((action, index) => {
+                                const handleClick = action.onClick;
+
+                                return (
+                                    <Button
+                                        disabled={action.disabled}
+                                        icon={action.icon}
+                                        key={index}
+                                        onClick={handleClick}
+                                        skin="icon"
+                                    >
+                                        {action.label}
+                                    </Button>
+                                );
+                            })}
                             {this.showColumnOptions &&
                                 <Fragment>
                                     <ArrowMenu

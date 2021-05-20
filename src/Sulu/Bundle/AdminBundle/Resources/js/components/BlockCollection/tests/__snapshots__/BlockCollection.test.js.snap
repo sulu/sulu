@@ -76,7 +76,7 @@ exports[`Should render a fully filled block list 1`] = `
     </section>
   </div>
   <button
-    class="button secondary"
+    class="button secondary hasText"
     type="button"
   >
     <span
@@ -153,7 +153,7 @@ exports[`Should render a non-movable block list 1`] = `
     </section>
   </div>
   <button
-    class="button secondary"
+    class="button secondary hasText"
     type="button"
   >
     <span

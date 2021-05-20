@@ -214,7 +214,9 @@ class CollectionSection extends React.Component<Props> {
                         <div className={collectionSectionStyles.right}>
                             <ButtonGroup>
                                 {addable &&
-                                    <Button icon="su-plus" onClick={this.handleAddCollectionClick} />
+                                    <Button icon="su-plus" onClick={this.handleAddCollectionClick}>
+                                        {translate('sulu_media.add_collection')}
+                                    </Button>
                                 }
                                 {!!resourceStore.id && (editable || deletable || editable || securable) &&
                                     <DropdownButton icon="su-cog">

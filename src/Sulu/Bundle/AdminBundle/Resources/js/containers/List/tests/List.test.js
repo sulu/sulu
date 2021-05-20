@@ -207,6 +207,26 @@ test('Do not render Loader instead of Adapter if no page count is given', () => 
     expect(render(<List adapters={['table']} store={listStore} />)).toMatchSnapshot();
 });
 
+test('Render toolbar with with search field and actions', () => {
+    const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
+    const listActions = [
+        {
+            disabled: true,
+            icon: 'su-upload',
+            label: translate('sulu_admin.upload'),
+            onClick: jest.fn(),
+        },
+        {
+            disabled: false,
+            icon: 'su-refresh',
+            label: translate('sulu_admin.refresh'),
+            onClick: jest.fn(),
+        },
+    ];
+
+    expect(render(<List actions={listActions} adapters={['table']} store={listStore} />)).toMatchSnapshot();
+});
+
 test('Render toolbar with given toolbar class', () => {
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
     // $FlowFixMe
@@ -244,7 +264,7 @@ test('Do not render toolbar if list is not searchable and adapter has no column 
     expect(list.find('.toolbar').exists()).toBeFalsy();
 });
 
-test('Render toolbar if list is not searchable and adapter has no column options', () => {
+test('Render toolbar if list is not searchable but adapter has column options', () => {
     class NewTestAdapter extends TestAdapter {
         static hasColumnOptions = true;
     }

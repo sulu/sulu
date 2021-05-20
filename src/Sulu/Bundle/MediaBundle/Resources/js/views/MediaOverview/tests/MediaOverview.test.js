@@ -338,9 +338,10 @@ test('The collectionId should be update along with the content when a collection
     expect(mediaOverview.instance().collectionListStore.clear).toBeCalled();
 });
 
-test('Should delete selected items when delete button is clicked', () => {
+test('Delete overlay should be shown when delete button is clicked', () => {
     function getDeleteItem() {
-        return toolbarFunction.call(mediaOverview.instance()).items.find((item) => item.label === 'sulu_admin.delete');
+        return toolbarFunction.call(mediaOverview.instance()).items
+            .find((item) => item.label === 'sulu_admin.delete_selected');
     }
 
     const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
@@ -364,12 +365,12 @@ test('Should delete selected items when delete button is clicked', () => {
     mediaListStore.selectionIds.push(1, 4, 6);
 
     mediaOverview.update();
-    expect(mediaOverview.find('MediaSection Dialog[title="sulu_admin.delete_warning_title"]').at(0).prop('open'))
+    expect(mediaOverview.find('List').at(1).find('Dialog[title="sulu_admin.delete_warning_title"]').at(0).prop('open'))
         .toEqual(false);
 
     getDeleteItem().onClick();
     mediaOverview.update();
-    expect(mediaOverview.find('MediaSection Dialog[title="sulu_admin.delete_warning_title"]').at(0).prop('open'))
+    expect(mediaOverview.find('List').at(1).find('Dialog[title="sulu_admin.delete_warning_title"]').at(0).prop('open'))
         .toEqual(true);
 });
 
@@ -395,7 +396,7 @@ test('Upload button should be disabled if no collection is selected', () => {
     const mediaOverview = mount(<MediaOverview router={router} />).at(0).instance();
     mediaOverview.locale.set('de');
 
-    expect(toolbarFunction.call(mediaOverview).items[0].label).toEqual('sulu_media.upload');
+    expect(toolbarFunction.call(mediaOverview).items[0].label).toEqual('sulu_media.upload_file');
     expect(toolbarFunction.call(mediaOverview).items[0].disabled).toEqual(true);
 
     mediaOverview.collectionId.set(4);
@@ -426,41 +427,10 @@ test('Upload button should be disabled if collection is loading', () => {
     mediaOverview.collectionId.set(4);
 
     mediaOverview.collectionStore.resourceStore.loading = true;
-    expect(toolbarFunction.call(mediaOverview).items[0].label).toEqual('sulu_media.upload');
+    expect(toolbarFunction.call(mediaOverview).items[0].label).toEqual('sulu_media.upload_file');
     expect(toolbarFunction.call(mediaOverview).items[0].disabled).toBeTruthy();
 
     mediaOverview.collectionStore.resourceStore.loading = false;
-    expect(toolbarFunction.call(mediaOverview).items[0].disabled).toBeFalsy();
-});
-
-test('Upload button should be disabled if collection is locked', () => {
-    const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
-    const MediaOverview = require('../MediaOverview').default;
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, MediaOverview);
-
-    const router = {
-        restore: jest.fn(),
-        bind: jest.fn(),
-        route: {
-            options: {
-                locales: ['de'],
-                permissions: {
-                    add: true,
-                    delete: true,
-                    edit: true,
-                },
-            },
-        },
-    };
-    const mediaOverview = mount(<MediaOverview router={router} />).at(0).instance();
-    mediaOverview.locale.set('de');
-    mediaOverview.collectionId.set(4);
-
-    mediaOverview.collectionStore.resourceStore.data.locked = true;
-    expect(toolbarFunction.call(mediaOverview).items[0].label).toEqual('sulu_media.upload');
-    expect(toolbarFunction.call(mediaOverview).items[0].disabled).toBeTruthy();
-
-    mediaOverview.collectionStore.resourceStore.data.locked = false;
     expect(toolbarFunction.call(mediaOverview).items[0].disabled).toBeFalsy();
 });
 
@@ -591,7 +561,7 @@ test('Move button should be disabled if nothing is selected', () => {
     expect(toolbarFunction.call(mediaOverview).items[2].disabled).toEqual(false);
 });
 
-test('Move button should disappear if collection is locked', () => {
+test('Upload and move button should disappear if collection is locked', () => {
     const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
     const MediaOverview = require('../MediaOverview').default;
     const toolbarFunction = findWithHighOrderFunction(withToolbar, MediaOverview);
@@ -617,12 +587,15 @@ test('Move button should disappear if collection is locked', () => {
     mediaOverview.collectionId.set(4);
     mediaOverview.locale.set('de');
 
+    mediaOverview.collectionStore.resourceStore.data.locked = false;
     expect(toolbarFunction.call(mediaOverview).items).toHaveLength(3);
+    expect(toolbarFunction.call(mediaOverview).items[0].label).toEqual('sulu_media.upload_file');
     expect(toolbarFunction.call(mediaOverview).items[2].label).toEqual('sulu_admin.move_selected');
 
     mediaOverview.collectionStore.resourceStore.data.locked = true;
-
-    expect(toolbarFunction.call(mediaOverview).items).toHaveLength(2);
+    expect(toolbarFunction.call(mediaOverview).items).toHaveLength(1);
+    expect(toolbarFunction.call(mediaOverview).items[0].label).not.toEqual('sulu_media.upload_file');
+    expect(toolbarFunction.call(mediaOverview).items[0].label).not.toEqual('sulu_media.move_selected');
 });
 
 test('Move overlay should disappear when overlay is closed', () => {

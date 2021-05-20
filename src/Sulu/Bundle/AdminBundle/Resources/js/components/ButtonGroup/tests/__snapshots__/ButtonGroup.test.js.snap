@@ -5,7 +5,7 @@ exports[`Should render a button and a dropdown button 1`] = `
   class="buttonGroup"
 >
   <button
-    class="button icon button"
+    class="button icon hasText button"
     type="button"
   >
     <span
@@ -34,7 +34,7 @@ exports[`Should render a button with a custom className 1`] = `
   class="buttonGroup"
 >
   <button
-    class="button icon button test"
+    class="button icon hasText button test"
     type="button"
   >
     <span
@@ -54,7 +54,7 @@ exports[`Should render more than two buttons 1`] = `
   class="buttonGroup"
 >
   <button
-    class="button icon button"
+    class="button icon hasText button"
     type="button"
   >
     <span
@@ -67,7 +67,7 @@ exports[`Should render more than two buttons 1`] = `
     </span>
   </button>
   <button
-    class="button icon button"
+    class="button icon hasText button"
     type="button"
   >
     <span
@@ -80,7 +80,7 @@ exports[`Should render more than two buttons 1`] = `
     </span>
   </button>
   <button
-    class="button icon button"
+    class="button icon hasText button"
     type="button"
   >
     <span
@@ -93,7 +93,7 @@ exports[`Should render more than two buttons 1`] = `
     </span>
   </button>
   <button
-    class="button icon button"
+    class="button icon hasText button"
     type="button"
   >
     <span
@@ -113,7 +113,7 @@ exports[`Should render one button 1`] = `
   class="buttonGroup"
 >
   <button
-    class="button icon button"
+    class="button icon hasText button"
     type="button"
   >
     <span
@@ -133,7 +133,7 @@ exports[`Should render one button with a custom className and another one withou
   class="buttonGroup"
 >
   <button
-    class="button icon button test"
+    class="button icon hasText button test"
     type="button"
   >
     <span
@@ -146,7 +146,7 @@ exports[`Should render one button with a custom className and another one withou
     </span>
   </button>
   <button
-    class="button icon button"
+    class="button icon hasText button"
     type="button"
   >
     <span
@@ -166,7 +166,7 @@ exports[`Should render two buttons 1`] = `
   class="buttonGroup"
 >
   <button
-    class="button icon button"
+    class="button icon hasText button"
     type="button"
   >
     <span
@@ -179,7 +179,7 @@ exports[`Should render two buttons 1`] = `
     </span>
   </button>
   <button
-    class="button icon button"
+    class="button icon hasText button"
     type="button"
   >
     <span

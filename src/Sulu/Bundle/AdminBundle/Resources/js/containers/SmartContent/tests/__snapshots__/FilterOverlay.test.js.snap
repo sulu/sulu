@@ -44,7 +44,7 @@ Array [
                 class="source"
               >
                 <button
-                  class="button secondary sourceButton"
+                  class="button secondary hasText sourceButton"
                   type="button"
                 >
                   <span
@@ -87,7 +87,7 @@ Array [
                 class="categories"
               >
                 <button
-                  class="button secondary"
+                  class="button secondary hasText"
                   type="button"
                 >
                   <span
@@ -402,7 +402,7 @@ Array [
             class="actions"
           >
             <button
-              class="button link"
+              class="button link hasText"
               type="button"
             >
               <span
@@ -413,7 +413,7 @@ Array [
             </button>
           </div>
           <button
-            class="button primary"
+            class="button primary hasText"
             type="button"
           >
             <span
@@ -471,7 +471,7 @@ Array [
             class="actions"
           >
             <button
-              class="button link"
+              class="button link hasText"
               type="button"
             >
               <span
@@ -482,7 +482,7 @@ Array [
             </button>
           </div>
           <button
-            class="button primary"
+            class="button primary hasText"
             type="button"
           >
             <span

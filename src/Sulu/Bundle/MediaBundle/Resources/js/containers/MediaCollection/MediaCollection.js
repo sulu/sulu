@@ -4,10 +4,10 @@ import {action, when} from 'mobx';
 import {observer} from 'mobx-react';
 import {Divider} from 'sulu-admin-bundle/components';
 import {List, ListStore} from 'sulu-admin-bundle/containers';
+import {translate} from 'sulu-admin-bundle/utils/Translator';
 import CollectionStore from '../../stores/CollectionStore';
 import MultiMediaDropzone from '../MultiMediaDropzone';
 import CollectionSection from './CollectionSection';
-import MediaSection from './MediaSection';
 import type {OverlayType} from './types';
 import type {IObservableValue} from 'mobx/lib/mobx';
 import type {ElementRef} from 'react';
@@ -15,6 +15,7 @@ import type {ElementRef} from 'react';
 type Props = {|
     collectionListStore: ListStore,
     collectionStore: CollectionStore,
+    hideUploadAction: boolean,
     locale: IObservableValue<string>,
     mediaListAdapters: Array<string>,
     mediaListRef?: (?ElementRef<typeof List>) => void,
@@ -31,6 +32,7 @@ type Props = {|
 @observer
 class MediaCollection extends React.Component<Props> {
     static defaultProps = {
+        hideUploadAction: false,
         overlayType: 'overlay',
     };
 
@@ -78,6 +80,7 @@ class MediaCollection extends React.Component<Props> {
         const {
             collectionListStore,
             collectionStore,
+            hideUploadAction,
             locale,
             overlayType,
             mediaListAdapters,
@@ -89,6 +92,7 @@ class MediaCollection extends React.Component<Props> {
         } = this.props;
 
         const {locked, permissions} = collectionStore;
+        const listActions = [];
 
         const addable = !locked && (permissions.add !== undefined ? permissions.add : MediaCollection.addable);
         const editable = !locked && (permissions.edit !== undefined ? permissions.edit : MediaCollection.editable);
@@ -97,9 +101,18 @@ class MediaCollection extends React.Component<Props> {
         const securable = !locked
             && (permissions.security !== undefined ? permissions.security : MediaCollection.securable);
 
+        if (addable && !hideUploadAction) {
+            listActions.push({
+                disabled: collectionStore.loading || !collectionStore.id,
+                icon: 'su-upload',
+                label: translate('sulu_media.upload_file'),
+                onClick: onUploadOverlayOpen,
+            });
+        }
+
         return (
             <MultiMediaDropzone
-                collectionId={addable ? collectionStore.id : undefined}
+                collectionId={!collectionStore.loading && addable ? collectionStore.id : undefined}
                 locale={locale}
                 onClose={onUploadOverlayClose}
                 onOpen={onUploadOverlayOpen}
@@ -119,14 +132,13 @@ class MediaCollection extends React.Component<Props> {
                     securable={securable}
                 />
                 <Divider />
-                <div>
-                    <MediaSection
-                        adapters={mediaListAdapters}
-                        listStore={mediaListStore}
-                        mediaListRef={mediaListRef}
-                        onMediaClick={this.handleMediaClick}
-                    />
-                </div>
+                <List
+                    actions={listActions}
+                    adapters={mediaListAdapters}
+                    onItemClick={this.handleMediaClick}
+                    ref={mediaListRef}
+                    store={mediaListStore}
+                />
             </MultiMediaDropzone>
         );
     }

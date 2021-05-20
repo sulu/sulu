@@ -29,6 +29,13 @@ export type Schema = {
 
 export type SortOrder = 'asc' | 'desc';
 
+export type ActionConfig = {|
+    disabled?: boolean,
+    icon: string,
+    label?: string,
+    onClick: ?() => void,
+|};
+
 export type ItemActionConfig = {|
     disabled?: boolean,
     icon: string,

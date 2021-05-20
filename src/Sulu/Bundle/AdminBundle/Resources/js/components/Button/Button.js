@@ -19,7 +19,7 @@ type Props<T> = {|
     icon?: string,
     iconClassName?: string,
     loading: boolean,
-    onClick?: (value: T) => void,
+    onClick?: ?(value: T) => void,
     showDropdownIcon: boolean,
     size: 'small' | 'large',
     skin: ButtonSkin,
@@ -71,6 +71,7 @@ export default class Button<T> extends React.PureComponent<Props<T>> {
             {
                 [buttonStyles.loading]: loading,
                 [buttonStyles.active]: active,
+                [buttonStyles.hasText]: !!children,
                 [activeClassName || '']: active && activeClassName,
             },
             className

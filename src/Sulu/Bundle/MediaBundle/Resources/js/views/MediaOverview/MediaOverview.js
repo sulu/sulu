@@ -195,6 +195,7 @@ class MediaOverview extends React.Component<ViewProps> {
                 <MediaCollection
                     collectionListStore={this.collectionListStore}
                     collectionStore={this.collectionStore}
+                    hideUploadAction={true}
                     locale={this.locale}
                     mediaListAdapters={['media_card_overview', 'table']}
                     mediaListRef={this.setMediaListRef}
@@ -270,11 +271,11 @@ export default withToolbar(MediaOverview, function() {
         : routeDeletePermission;
     const editPermission = collectionPermissions.edit !== undefined ? collectionPermissions.edit : routeEditPermission;
 
-    if (addPermission) {
+    if (!collectionLocked && addPermission) {
         items.push({
-            disabled: !this.collectionId.get() || collectionLoading || collectionLocked,
+            disabled: !this.collectionId.get() || collectionLoading,
             icon: 'su-upload',
-            label: translate('sulu_media.upload'),
+            label: translate('sulu_media.upload_file'),
             onClick: action(() => {
                 this.showMediaUploadOverlay = true;
             }),
@@ -286,7 +287,7 @@ export default withToolbar(MediaOverview, function() {
         items.push({
             disabled: this.mediaListStore.selectionIds.length === 0,
             icon: 'su-trash-alt',
-            label: translate('sulu_admin.delete'),
+            label: translate('sulu_admin.delete_selected'),
             loading: this.mediaListStore.deletingSelection,
             onClick: this.mediaList.requestSelectionDelete,
             type: 'button',

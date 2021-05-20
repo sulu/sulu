@@ -5,7 +5,7 @@ exports[`Render a FileUploadButton 1`] = `
   tabindex="0"
 >
   <button
-    class="button secondary"
+    class="button secondary hasText"
     type="button"
   >
     <span
@@ -29,7 +29,7 @@ exports[`Render a FileUploadButton with other skin and icon 1`] = `
   tabindex="0"
 >
   <button
-    class="button link"
+    class="button link hasText"
     type="button"
   >
     <span
@@ -57,7 +57,7 @@ exports[`Render a disabled FileUploadButton 1`] = `
   tabindex="0"
 >
   <button
-    class="button secondary"
+    class="button secondary hasText"
     disabled=""
     type="button"
   >
