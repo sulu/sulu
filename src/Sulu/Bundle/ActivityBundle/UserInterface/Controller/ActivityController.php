@@ -173,7 +173,7 @@ class ActivityController extends AbstractRestController implements ClassResource
                         ]
                     ),
                     function(string $key) use ($configurationFieldDescriptors) {
-                        return \array_key_exists($key, $configurationFieldDescriptors);
+                        return $key === 'id' || \array_key_exists($key, $configurationFieldDescriptors);
                     },
                     \ARRAY_FILTER_USE_KEY
                 );
