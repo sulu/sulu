@@ -835,6 +835,56 @@ test('Pass action for uploading new media to media list', () => {
     expect(mediaCollection.find(List).at(1).prop('actions')[0].disabled).toBeTruthy();
 });
 
+test('Do not pass action for uploading new media to media list if hideUploadAction prop is set to true', () => {
+    const page = observable.box();
+    const locale = observable.box();
+    const collectionNavigateSpy = jest.fn();
+    const ListStore = require('sulu-admin-bundle/containers').ListStore;
+    const List = require('sulu-admin-bundle/containers').List;
+    const mediaListStore = new ListStore(
+        MEDIA_RESOURCE_KEY,
+        SETTINGS_KEY,
+        USER_SETTINGS_KEY,
+        {
+            page,
+            locale,
+        }
+    );
+    const collectionListStore = new ListStore(
+        COLLECTIONS_RESOURCE_KEY,
+        SETTINGS_KEY,
+        USER_SETTINGS_KEY,
+        {
+            page,
+            locale,
+        }
+    );
+    const CollectionStore = require('../../../stores/CollectionStore').default;
+    const collectionStore = new CollectionStore(1, locale);
+
+    const uploadOverlayOpenSpy = jest.fn();
+
+    const mediaCollection = mount(
+        <MediaCollection
+            collectionListStore={collectionListStore}
+            collectionStore={collectionStore}
+            hideUploadAction={false}
+            locale={locale}
+            mediaListAdapters={['media_card_overview']}
+            mediaListStore={mediaListStore}
+            onCollectionNavigate={collectionNavigateSpy}
+            onUploadOverlayClose={jest.fn()}
+            onUploadOverlayOpen={uploadOverlayOpenSpy}
+            uploadOverlayOpen={false}
+        />
+    );
+
+    expect(mediaCollection.find(List).at(1).prop('actions')).toHaveLength(1);
+
+    mediaCollection.setProps({hideUploadAction: true});
+    expect(mediaCollection.find(List).at(1).prop('actions')).toHaveLength(0);
+});
+
 test('Do not pass action for uploading new media to media list if addable permission is set to false', () => {
     const page = observable.box();
     const locale = observable.box();

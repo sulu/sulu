@@ -195,6 +195,7 @@ class MediaOverview extends React.Component<ViewProps> {
                 <MediaCollection
                     collectionListStore={this.collectionListStore}
                     collectionStore={this.collectionStore}
+                    hideUploadAction={true}
                     locale={this.locale}
                     mediaListAdapters={['media_card_overview', 'table']}
                     mediaListRef={this.setMediaListRef}
@@ -235,6 +236,7 @@ export default withToolbar(MediaOverview, function() {
             options: {
                 locales,
                 permissions: {
+                    add: routeAddPermission,
                     delete: routeDeletePermission,
                     edit: routeEditPermission,
                 },
@@ -259,13 +261,27 @@ export default withToolbar(MediaOverview, function() {
 
     const {
         permissions: collectionPermissions = {},
+        loading: collectionLoading,
         locked: collectionLocked,
     } = this.collectionStore;
 
+    const addPermission = collectionPermissions.add !== undefined ? collectionPermissions.add : routeAddPermission;
     const deletePermission = collectionPermissions.delete !== undefined
         ? collectionPermissions.delete
         : routeDeletePermission;
     const editPermission = collectionPermissions.edit !== undefined ? collectionPermissions.edit : routeEditPermission;
+
+    if (!collectionLocked && addPermission) {
+        items.push({
+            disabled: !this.collectionId.get() || collectionLoading,
+            icon: 'su-upload',
+            label: translate('sulu_media.upload_file'),
+            onClick: action(() => {
+                this.showMediaUploadOverlay = true;
+            }),
+            type: 'button',
+        });
+    }
 
     if (deletePermission) {
         items.push({

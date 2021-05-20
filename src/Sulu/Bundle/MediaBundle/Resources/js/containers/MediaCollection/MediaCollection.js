@@ -15,6 +15,7 @@ import type {ElementRef} from 'react';
 type Props = {|
     collectionListStore: ListStore,
     collectionStore: CollectionStore,
+    hideUploadAction: boolean,
     locale: IObservableValue<string>,
     mediaListAdapters: Array<string>,
     mediaListRef?: (?ElementRef<typeof List>) => void,
@@ -31,6 +32,7 @@ type Props = {|
 @observer
 class MediaCollection extends React.Component<Props> {
     static defaultProps = {
+        hideUploadAction: false,
         overlayType: 'overlay',
     };
 
@@ -78,6 +80,7 @@ class MediaCollection extends React.Component<Props> {
         const {
             collectionListStore,
             collectionStore,
+            hideUploadAction,
             locale,
             overlayType,
             mediaListAdapters,
@@ -98,7 +101,7 @@ class MediaCollection extends React.Component<Props> {
         const securable = !locked
             && (permissions.security !== undefined ? permissions.security : MediaCollection.securable);
 
-        if (addable) {
+        if (addable && !hideUploadAction) {
             listActions.push({
                 disabled: collectionStore.loading || !collectionStore.id,
                 icon: 'su-upload',

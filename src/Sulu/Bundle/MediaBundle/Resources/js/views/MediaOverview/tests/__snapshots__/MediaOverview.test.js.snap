@@ -273,20 +273,6 @@ exports[`Render a simple MediaOverview 1`] = `
       <div
         class="toolbarRight"
       >
-        <button
-          class="button icon hasText"
-          type="button"
-        >
-          <span
-            aria-label="su-upload"
-            class="su-upload buttonIcon"
-          />
-          <span
-            class="buttonText"
-          >
-            sulu_media.upload_file
-          </span>
-        </button>
         <div
           class="buttonGroup"
         >
