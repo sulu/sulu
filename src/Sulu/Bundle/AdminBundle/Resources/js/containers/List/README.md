@@ -2,15 +2,15 @@ The `List` is responsible for rendering data in a table view. One of its propert
 created outside, and be passed to the `List`. The `ListStore` is responsible for loading a page from a
 REST API. The presentation of the `List` is handled by its adapters. An adapter is the glue which connects a basic
 component like the `Table` to the `List`. The available adapters for a `List` can be set using the `views`
-property. Keep in mind that an adapter has to be defined and added to the `adapterStore` before it is used by a
-rendered `List`.
+property. Keep in mind that an adapter has to be defined and added to the `listAdapterRegistry` before it is used 
+by a rendered `List`.
 
 ```javascript static
 const TableAdapter = require('./adapters/TableAdapter');
-const adapterStore = require('./stores/AdapterStore');
-const store = new ListStore('snippets');
-
+const listAdapterRegistry = require('./registries/listAdapterRegistry');
 adapterStore.add('table', TableAdapter);
+
+const store = new ListStore('snippets');
 
 <List store={store} views={['table']} />
 
@@ -48,7 +48,7 @@ The adapters are only responsible for displaying the information they get passed
 list functionality is built into the `List` component.
 
 However, the different adapters have slightly different requirements regarding loading and storing the data from the
-server. Therefore the adapters can define which `LoadingStrategy` and which `StructureStrategy` they are using. These
+server. Therefore, the adapters can define which `LoadingStrategy` and which `StructureStrategy` they are using. These
 two interfaces will be explained in the next sections.
 
 #### LoadingStrategies
