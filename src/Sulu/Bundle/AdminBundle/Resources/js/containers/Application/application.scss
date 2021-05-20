@@ -27,9 +27,9 @@
     display: flex;
     width: 100vw;
     min-height: 500px;
-    overflow: hidden;
     will-change: width;
     transition: width $navigationMoveAnimationDuration;
+    contain: layout;
 
     &.with-pinned-navigation {
         width: calc(100vw - $navigationWidth);
