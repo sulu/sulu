@@ -434,11 +434,13 @@ class CollectionManager implements CollectionManagerInterface
 
         $this->em->persist($collectionEntity);
 
+        $isSystemCollection = 2 === $collection->getType()->getId();
+
         if ($isNewLocale) {
             $this->domainEventCollector->collect(
                 new CollectionTranslationAddedEvent($collectionEntity, $collection->getLocale(), $data)
             );
-        } else {
+        } elseif (!$isSystemCollection) {
             $this->domainEventCollector->collect(
                 new CollectionModifiedEvent($collectionEntity, $collection->getLocale(), $data)
             );
