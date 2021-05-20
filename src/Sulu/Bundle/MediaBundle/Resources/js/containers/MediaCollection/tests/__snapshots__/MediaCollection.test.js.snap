@@ -831,7 +831,6 @@ exports[`Render the MediaCollection for all media 1`] = `
       >
         <button
           class="button icon hasText"
-          disabled=""
           type="button"
         >
           <span
