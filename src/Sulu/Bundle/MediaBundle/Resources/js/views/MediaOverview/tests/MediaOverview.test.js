@@ -374,35 +374,6 @@ test('Delete overlay should be shown when delete button is clicked', () => {
         .toEqual(true);
 });
 
-test('Upload button should be disabled if no collection is selected', () => {
-    const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
-    const MediaOverview = require('../MediaOverview').default;
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, MediaOverview);
-
-    const router = {
-        restore: jest.fn(),
-        bind: jest.fn(),
-        route: {
-            options: {
-                locales: ['de'],
-                permissions: {
-                    add: true,
-                    delete: true,
-                    edit: true,
-                },
-            },
-        },
-    };
-    const mediaOverview = mount(<MediaOverview router={router} />).at(0).instance();
-    mediaOverview.locale.set('de');
-
-    expect(toolbarFunction.call(mediaOverview).items[0].label).toEqual('sulu_media.upload_file');
-    expect(toolbarFunction.call(mediaOverview).items[0].disabled).toEqual(true);
-
-    mediaOverview.collectionId.set(4);
-    expect(toolbarFunction.call(mediaOverview).items[0].disabled).toEqual(false);
-});
-
 test('Upload button should be disabled if collection is loading', () => {
     const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
     const MediaOverview = require('../MediaOverview').default;

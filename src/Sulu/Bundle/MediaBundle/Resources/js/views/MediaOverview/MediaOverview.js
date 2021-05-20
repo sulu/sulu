@@ -273,7 +273,7 @@ export default withToolbar(MediaOverview, function() {
 
     if (!collectionLocked && addPermission) {
         items.push({
-            disabled: !this.collectionId.get() || collectionLoading,
+            disabled: collectionLoading,
             icon: 'su-upload',
             label: translate('sulu_media.upload_file'),
             onClick: action(() => {

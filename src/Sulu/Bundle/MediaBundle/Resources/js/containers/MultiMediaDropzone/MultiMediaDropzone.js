@@ -3,6 +3,8 @@ import React from 'react';
 import {observer, Observer} from 'mobx-react';
 import {action, observable} from 'mobx';
 import Dropzone from 'react-dropzone';
+import {SingleListOverlay} from 'sulu-admin-bundle/containers';
+import {translate} from 'sulu-admin-bundle/utils/Translator';
 import MediaUploadStore from '../../stores/MediaUploadStore';
 import MediaItem from './MediaItem';
 import DropzoneOverlay from './DropzoneOverlay';
@@ -10,9 +12,12 @@ import dropzoneStyles from './dropzone.scss';
 import type {IObservableValue} from 'mobx/lib/mobx';
 import type {ElementRef, Node} from 'react';
 
+const COLLECTIONS_RESOURCE_KEY = 'collections';
+
 type Props = {
     children: Node,
     collectionId: ?string | number,
+    disabled: boolean,
     locale: IObservableValue<string>,
     onClose: () => void,
     onOpen: () => void,
@@ -23,8 +28,13 @@ type Props = {
 
 @observer
 class MultiMediaDropzone extends React.Component<Props> {
+    static defaultProps = {
+        disabled: false,
+    };
+
     dropzoneRef: ElementRef<typeof Dropzone>;
 
+    @observable filesScheduledForUpload: Array<File> = [];
     @observable mediaUploadStores: Array<MediaUploadStore> = [];
 
     setDropzoneRef = (ref: typeof Dropzone) => {
@@ -45,35 +55,14 @@ class MultiMediaDropzone extends React.Component<Props> {
         ));
     }
 
-    handleDragEnter = () => {
-        const {collectionId, onOpen} = this.props;
-
-        if (collectionId) {
-            onOpen();
-        }
-    };
-
-    handleDragLeave = () => {
-        this.props.onClose();
-    };
-
-    handleOverlayClose = () => {
-        this.props.onClose();
-    };
-
-    handleDrop = (files: Array<File>) => {
+    uploadFiles = (files: Array<File>, collectionId: string | number) => {
         const {
             locale,
-            collectionId,
             onClose,
             onUpload,
             onUploadError,
         } = this.props;
         const uploadPromises = [];
-
-        if (!collectionId) {
-            return;
-        }
 
         files.forEach((file) => {
             const mediaUploadStore = new MediaUploadStore(undefined, locale);
@@ -108,40 +97,87 @@ class MultiMediaDropzone extends React.Component<Props> {
         });
     };
 
-    handleOverlayClick = () => {
+    handleDragEnter = () => {
+        this.props.onOpen();
+    };
+
+    handleDragLeave = () => {
+        this.props.onClose();
+    };
+
+    handleDropzoneOverlayClose = () => {
+        this.props.onClose();
+    };
+
+    @action handleDrop = (files: Array<File>) => {
+        const {collectionId} = this.props;
+
+        if (collectionId) {
+            this.uploadFiles(files, collectionId);
+        } else {
+            this.filesScheduledForUpload = files;
+        }
+    };
+
+    handleDropzoneOverlayClick = () => {
         this.dropzoneRef.open();
     };
 
+    @action handleSelectCollectionOverlayClose = () => {
+        this.filesScheduledForUpload = [];
+        this.props.onClose();
+    };
+
+    @action handleSelectCollectionOverlayConfirm = (collection: Object) => {
+        this.uploadFiles(this.filesScheduledForUpload, collection.id);
+        this.filesScheduledForUpload = [];
+    };
+
     render() {
-        const {children, open} = this.props;
+        const {children, disabled, locale, open} = this.props;
 
         return (
-            <Dropzone
-                noClick={true}
-                onDragEnter={this.handleDragEnter}
-                onDrop={this.handleDrop}
-                ref={this.setDropzoneRef}
-                style={{}} // to disable default style
-            >
-                {({getInputProps, getRootProps}) => (
-                    <Observer>
-                        {() => (
-                            <div {...getRootProps({className: dropzoneStyles.dropzone})}>
-                                {children}
-                                <input {...getInputProps()} />
-                                <DropzoneOverlay
-                                    onClick={this.handleOverlayClick}
-                                    onClose={this.handleOverlayClose}
-                                    onDragLeave={this.handleDragLeave}
-                                    open={open}
-                                >
-                                    {this.createMediaItems()}
-                                </DropzoneOverlay>
-                            </div>
-                        )}
-                    </Observer>
-                )}
-            </Dropzone>
+            <>
+                <Dropzone
+                    disabled={disabled}
+                    noClick={true}
+                    onDragEnter={this.handleDragEnter}
+                    onDrop={this.handleDrop}
+                    ref={this.setDropzoneRef}
+                    style={{}} // to disable default style
+                >
+                    {({getInputProps, getRootProps}) => (
+                        <Observer>
+                            {() => (
+                                <div {...getRootProps({className: dropzoneStyles.dropzone})}>
+                                    {children}
+                                    <input {...getInputProps()} />
+                                    <DropzoneOverlay
+                                        onClick={this.handleDropzoneOverlayClick}
+                                        onClose={this.handleDropzoneOverlayClose}
+                                        onDragLeave={this.handleDragLeave}
+                                        open={open}
+                                    >
+                                        {this.createMediaItems()}
+                                    </DropzoneOverlay>
+                                </div>
+                            )}
+                        </Observer>
+                    )}
+                </Dropzone>
+                <SingleListOverlay
+                    adapter="column_list"
+                    clearSelectionOnClose={true}
+                    itemDisabledCondition="!!locked"
+                    listKey={COLLECTIONS_RESOURCE_KEY}
+                    locale={locale}
+                    onClose={this.handleSelectCollectionOverlayClose}
+                    onConfirm={this.handleSelectCollectionOverlayConfirm}
+                    open={this.filesScheduledForUpload.length > 0}
+                    resourceKey={COLLECTIONS_RESOURCE_KEY}
+                    title={translate('sulu_media.select_collection_for_upload')}
+                />
+            </>
         );
     }
 }

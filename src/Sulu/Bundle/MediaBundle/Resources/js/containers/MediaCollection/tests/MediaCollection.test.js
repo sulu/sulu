@@ -687,7 +687,7 @@ test('Render the MediaCollection for all media', () => {
     expect(mediaCollection).toMatchSnapshot();
 });
 
-test('Pass correct options to move collection SingleListOverlay', () => {
+test('Pass correct options to SingleListOverlay for moving collections', () => {
     const page = observable.box();
     const locale = observable.box();
     const collectionNavigateSpy = jest.fn();
@@ -728,10 +728,10 @@ test('Pass correct options to move collection SingleListOverlay', () => {
         />
     );
 
-    expect(mediaCollection.find(SingleListOverlay).prop('title')).toEqual('sulu_media.move_collection');
-    expect(mediaCollection.find(SingleListOverlay).prop('listKey')).toEqual('collections');
-    expect(mediaCollection.find(SingleListOverlay).prop('resourceKey')).toEqual('collections');
-    expect(mediaCollection.find(SingleListOverlay).prop('reloadOnOpen')).toEqual(true);
+    const moveCollectionOverlay = mediaCollection.find(SingleListOverlay).find('[title="sulu_media.move_collection"]');
+    expect(moveCollectionOverlay.prop('listKey')).toEqual('collections');
+    expect(moveCollectionOverlay.prop('resourceKey')).toEqual('collections');
+    expect(moveCollectionOverlay.prop('reloadOnOpen')).toEqual(true);
 });
 
 test.each([true, false])('Pass correct hasChildren "%s" option to PermissionFormOverlay', (hasChildren) => {
@@ -985,7 +985,7 @@ test('Do not pass action for uploading new media to media list when collection i
     expect(mediaListActions).toHaveLength(0);
 });
 
-test('Deactivate dropzone by passing no collectionId if addable permission is set to false', () => {
+test('Disable dropzone if addable permission is set to false', () => {
     const page = observable.box();
     const locale = observable.box();
     const collectionNavigateSpy = jest.fn();
@@ -1029,10 +1029,10 @@ test('Deactivate dropzone by passing no collectionId if addable permission is se
         />
     );
 
-    expect(mediaCollection.find('MultiMediaDropzone').prop('collectionId')).toEqual(undefined);
+    expect(mediaCollection.find('MultiMediaDropzone').prop('disabled')).toBeTruthy();
 });
 
-test('Deactivate dropzone by passing no collectionId when collection is loading', () => {
+test('Disable dropzone when collection is loading', () => {
     const page = observable.box();
     const locale = observable.box();
     const collectionNavigateSpy = jest.fn();
@@ -1057,7 +1057,6 @@ test('Deactivate dropzone by passing no collectionId when collection is loading'
     );
     const CollectionStore = require('../../../stores/CollectionStore').default;
     const collectionStore = new CollectionStore(1, locale);
-    collectionStore.resourceStore.loading = true;
 
     MediaCollection.addable = true;
     MediaCollection.deletable = true;
@@ -1077,7 +1076,12 @@ test('Deactivate dropzone by passing no collectionId when collection is loading'
         />
     );
 
-    expect(mediaCollection.find('MultiMediaDropzone').prop('collectionId')).toEqual(undefined);
+    expect(mediaCollection.find('MultiMediaDropzone').prop('disabled')).toBeFalsy();
+
+    collectionStore.resourceStore.loading = true;
+    mediaCollection.update();
+
+    expect(mediaCollection.find('MultiMediaDropzone').prop('disabled')).toBeTruthy();
 });
 
 test('Should send a request to add a new collection via the overlay', () => {
@@ -1419,28 +1423,31 @@ test('Confirming the move dialog should move the item', () => {
             uploadOverlayOpen={false}
         />
     );
+    const getMoveCollectionOverlay = () => {
+        return mediaCollection.find(SingleListOverlay).find('[title="sulu_media.move_collection"]');
+    };
 
     mediaCollection.find('DropdownButton').simulate('click');
     mediaCollection.find('DropdownButton Action').find({children: 'sulu_admin.move'}).simulate('click');
 
     expect(mediaCollection.find('Dialog[title="sulu_media.remove_collection"]').prop('open')).toEqual(false);
     expect(mediaCollection.find('CollectionFormOverlay > Overlay').prop('open')).toEqual(false);
-    expect(mediaCollection.find(SingleListOverlay).prop('open')).toEqual(true);
+    expect(getMoveCollectionOverlay().prop('open')).toEqual(true);
 
-    mediaCollection.find(SingleListOverlay).prop('onConfirm')({id: 7});
+    getMoveCollectionOverlay().prop('onConfirm')({id: 7});
     collectionStore.resourceStore.moving = true;
     mediaCollection.update();
 
     expect(collectionStore.resourceStore.move).toBeCalledWith(7);
-    expect(mediaCollection.find(SingleListOverlay).prop('open')).toEqual(true);
-    expect(mediaCollection.find(SingleListOverlay).prop('options')).toEqual({includeRoot: true});
-    expect(mediaCollection.find(SingleListOverlay).prop('confirmLoading')).toEqual(true);
+    expect(getMoveCollectionOverlay().prop('open')).toEqual(true);
+    expect(getMoveCollectionOverlay().prop('options')).toEqual({includeRoot: true});
+    expect(getMoveCollectionOverlay().prop('confirmLoading')).toEqual(true);
 
     return promise.then(() => {
         collectionStore.resourceStore.moving = false;
         mediaCollection.update();
-        expect(mediaCollection.find(SingleListOverlay).prop('open')).toEqual(false);
-        expect(mediaCollection.find(SingleListOverlay).prop('confirmLoading')).toEqual(false);
+        expect(getMoveCollectionOverlay().prop('open')).toEqual(false);
+        expect(getMoveCollectionOverlay().prop('confirmLoading')).toEqual(false);
         expect(collectionStore.resourceStore.reload).toBeCalledWith();
     });
 });
@@ -1488,19 +1495,22 @@ test('Confirming the move dialog should move the item after confirming the permi
             uploadOverlayOpen={false}
         />
     );
+    const getMoveCollectionOverlay = () => {
+        return mediaCollection.find(SingleListOverlay).find('[title="sulu_media.move_collection"]');
+    };
 
     mediaCollection.find('DropdownButton').simulate('click');
     mediaCollection.find('DropdownButton Action').find({children: 'sulu_admin.move'}).simulate('click');
 
     expect(mediaCollection.find('Dialog[title="sulu_media.remove_collection"]').prop('open')).toEqual(false);
     expect(mediaCollection.find('CollectionFormOverlay > Overlay').prop('open')).toEqual(false);
-    expect(mediaCollection.find(SingleListOverlay).prop('open')).toEqual(true);
+    expect(getMoveCollectionOverlay().prop('open')).toEqual(true);
 
     expect(
         mediaCollection.find('CollectionSection > div > Dialog[title="sulu_security.move_permission_title"]')
             .prop('open')
     ).toEqual(false);
-    mediaCollection.find(SingleListOverlay).prop('onConfirm')({id: 7, _hasPermissions: true});
+    getMoveCollectionOverlay().prop('onConfirm')({id: 7, _hasPermissions: true});
     mediaCollection.update();
     expect(
         mediaCollection.find('CollectionSection > div > Dialog[title="sulu_security.move_permission_title"]')
@@ -1514,15 +1524,15 @@ test('Confirming the move dialog should move the item after confirming the permi
     mediaCollection.update();
 
     expect(collectionStore.resourceStore.move).toBeCalledWith(7);
-    expect(mediaCollection.find(SingleListOverlay).prop('open')).toEqual(true);
-    expect(mediaCollection.find(SingleListOverlay).prop('options')).toEqual({includeRoot: true});
-    expect(mediaCollection.find(SingleListOverlay).prop('confirmLoading')).toEqual(true);
+    expect(getMoveCollectionOverlay().prop('open')).toEqual(true);
+    expect(getMoveCollectionOverlay().prop('options')).toEqual({includeRoot: true});
+    expect(getMoveCollectionOverlay().prop('confirmLoading')).toEqual(true);
 
     return promise.then(() => {
         collectionStore.resourceStore.moving = false;
         mediaCollection.update();
-        expect(mediaCollection.find(SingleListOverlay).prop('open')).toEqual(false);
-        expect(mediaCollection.find(SingleListOverlay).prop('confirmLoading')).toEqual(false);
+        expect(getMoveCollectionOverlay().prop('open')).toEqual(false);
+        expect(getMoveCollectionOverlay().prop('confirmLoading')).toEqual(false);
         expect(collectionStore.resourceStore.reload).toBeCalledWith();
     });
 });
@@ -1570,19 +1580,22 @@ test('Confirming the move dialog should not move the item after denying the perm
             uploadOverlayOpen={false}
         />
     );
+    const getMoveCollectionOverlay = () => {
+        return mediaCollection.find(SingleListOverlay).find('[title="sulu_media.move_collection"]');
+    };
 
     mediaCollection.find('DropdownButton').simulate('click');
     mediaCollection.find('DropdownButton Action').find({children: 'sulu_admin.move'}).simulate('click');
 
     expect(mediaCollection.find('Dialog[title="sulu_media.remove_collection"]').prop('open')).toEqual(false);
     expect(mediaCollection.find('CollectionFormOverlay > Overlay').prop('open')).toEqual(false);
-    expect(mediaCollection.find(SingleListOverlay).prop('open')).toEqual(true);
+    expect(getMoveCollectionOverlay().prop('open')).toEqual(true);
 
     expect(
         mediaCollection.find('CollectionSection > div > Dialog[title="sulu_security.move_permission_title"]')
             .prop('open')
     ).toEqual(false);
-    mediaCollection.find(SingleListOverlay).prop('onConfirm')({id: 7, _hasPermissions: true});
+    getMoveCollectionOverlay().prop('onConfirm')({id: 7, _hasPermissions: true});
     mediaCollection.update();
     expect(
         mediaCollection.find('CollectionSection > div > Dialog[title="sulu_security.move_permission_title"]')
@@ -1598,8 +1611,8 @@ test('Confirming the move dialog should not move the item after denying the perm
         mediaCollection.find('CollectionSection > div > Dialog[title="sulu_security.move_permission_title"]')
             .prop('open')
     ).toEqual(false);
-    expect(mediaCollection.find(SingleListOverlay).prop('open')).toEqual(true);
-    expect(mediaCollection.find(SingleListOverlay).prop('confirmLoading')).toEqual(false);
+    expect(getMoveCollectionOverlay().prop('open')).toEqual(true);
+    expect(getMoveCollectionOverlay().prop('confirmLoading')).toEqual(false);
 });
 
 test('Confirming the permission overlay should save the permissions', () => {

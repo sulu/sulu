@@ -1,17 +1,22 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render a MultiMediaDropzone 1`] = `
-<div
-  class="dropzone"
-  tabindex="0"
->
-  <div />
-  <input
-    autocomplete="off"
-    multiple=""
-    style="display:none"
-    tabindex="-1"
-    type="file"
-  />
-</div>
+Array [
+  <div
+    class="dropzone"
+    tabindex="0"
+  >
+    <div />
+    <input
+      autocomplete="off"
+      multiple=""
+      style="display:none"
+      tabindex="-1"
+      type="file"
+    />
+  </div>,
+  <div>
+    single-list-overlay-mock
+  </div>,
+]
 `;
