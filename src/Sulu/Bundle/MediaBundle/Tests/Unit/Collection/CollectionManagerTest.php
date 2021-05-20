@@ -23,6 +23,7 @@ use Sulu\Bundle\MediaBundle\Domain\Event\CollectionModifiedEvent;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepository;
+use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepository;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
@@ -93,6 +94,9 @@ class CollectionManagerTest extends TestCase
         $entityMeta->getTitle()->willReturn($id . '');
         $entityMeta->getLocale()->willReturn($locale);
         $entity->getMeta()->willReturn(new ArrayCollection([$entityMeta->reveal()]));
+        $collectionType = $this->prophesize(CollectionType::class);
+        $collectionType->getId()->willReturn(1);
+        $entity->getType()->willReturn($collectionType->reveal());
         $entity->getId()->willReturn($id);
 
         if (null !== $parent) {
