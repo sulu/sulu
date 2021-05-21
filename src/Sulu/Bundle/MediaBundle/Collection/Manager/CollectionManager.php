@@ -434,11 +434,15 @@ class CollectionManager implements CollectionManagerInterface
 
         $this->em->persist($collectionEntity);
 
+        $isSystemCollection = 2 === $collection->getType()->getId();
+
         if ($isNewLocale) {
             $this->domainEventCollector->collect(
                 new CollectionTranslationAddedEvent($collectionEntity, $collection->getLocale(), $data)
             );
-        } else {
+        } elseif (!$isSystemCollection) {
+            // do not dispatch modify event for system collections because the current implementation of the SystemCollectionManager
+            // triggers this code for every locale each time the cache of the project is cleared
             $this->domainEventCollector->collect(
                 new CollectionModifiedEvent($collectionEntity, $collection->getLocale(), $data)
             );
