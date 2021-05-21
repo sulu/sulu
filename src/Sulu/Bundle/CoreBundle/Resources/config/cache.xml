@@ -14,6 +14,7 @@
         <service id="sulu_core.cache.memoize" class="%sulu_core.cache.memoize.class%">
             <argument type="service" id="sulu_core.cache.memoize.cache"/>
             <argument type="string">%sulu_core.cache.memoize.default_lifetime%</argument>
+            <tag name="kernel.reset" method="reset" />
         </service>
 
         <service id="sulu_core.proxy_manager.configuration" class="ProxyManager\Configuration" public="false">
