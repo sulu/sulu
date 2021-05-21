@@ -13,8 +13,9 @@ namespace Sulu\Component\DocumentManager;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Contracts\Service\ResetInterface;
 
-class DocumentManager implements DocumentManagerInterface
+class DocumentManager implements DocumentManagerInterface, ResetInterface
 {
     /**
      * @var EventDispatcherInterface
@@ -139,6 +140,14 @@ class DocumentManager implements DocumentManagerInterface
     {
         $event = new Event\ClearEvent();
         $this->eventDispatcher->dispatch($event, Events::CLEAR);
+    }
+
+    /**
+     * @return void
+     */
+    public function reset()
+    {
+        $this->clear();
     }
 
     public function createQuery($query, $locale = null, array $options = [])
