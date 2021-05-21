@@ -639,7 +639,7 @@ class List extends React.Component<Props> {
                 }
                 <div className={listClass}>
                     {loading && store.pageCount === 0
-                        ? <Loader />
+                        ? <Loader className={listStyles.loader} />
                         : <Adapter
                             active={store.active.get()}
                             activeItems={store.activeItems}
