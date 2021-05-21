@@ -15,6 +15,7 @@ use Sulu\Bundle\ActivityBundle\Domain\Model\ActivityInterface;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
+use Sulu\Bundle\AdminBundle\Admin\View\ListItemAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
 use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
@@ -148,6 +149,9 @@ class ActivityAdmin extends Admin
                         ->disableColumnOptions()
                         ->disableFiltering()
                         ->addRouterAttributesToListRequest(['id', 'webspace'])
+                        ->addItemActions([
+                            new ListItemAction('restore_version', ['success_view' => PageAdmin::EDIT_FORM_VIEW])
+                        ])
                         ->setParent(static::EDIT_FORM_ACTIVITY_VERSION_TAB_VIEW)
                 );
 

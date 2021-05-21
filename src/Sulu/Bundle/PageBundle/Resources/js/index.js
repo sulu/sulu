@@ -6,6 +6,7 @@ import {
     viewRegistry,
     ResourceLocator,
 } from 'sulu-admin-bundle/containers';
+import {listItemActionRegistry} from 'sulu-admin-bundle/views';
 import webspaceConditionDataProvider from './containers/Form/conditionDataProviders/webspaceConditionDataProvider';
 import SearchResult from './containers/Form/fields/SearchResult';
 import SegmentSelect from './containers/Form/fields/SegmentSelect';
@@ -19,6 +20,7 @@ import {loadResourceLocatorInputTypeByWebspace} from './utils/Webspace';
 import PageTabs from './views/PageTabs';
 import PageList from './views/PageList';
 import WebspaceTabs from './views/WebspaceTabs';
+import RestoreVersionItemAction from './views/List/itemActions/RestoreVersionItemAction';
 
 initializer.addUpdateConfigHook('sulu_page', (config: Object, initialized: boolean) => {
     // $FlowFixMe
@@ -52,6 +54,8 @@ initializer.addUpdateConfigHook('sulu_page', (config: Object, initialized: boole
             },
         }
     );
+
+    listItemActionRegistry.add('restore_version', RestoreVersionItemAction);
 
     if (config.versioning) {
         fieldRegistry.add('settings_versions', SettingsVersions);
