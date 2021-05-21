@@ -13,7 +13,7 @@ export default class BadgeStore {
     dataPath: ?string;
     requestParameters: Object;
     routerAttributesToRequest: Object;
-    rootRoute: Route;
+    tabViewRoute: Route;
     @observable value: ?string = null;
     routeChangeDisposer: () => {};
 
@@ -23,14 +23,14 @@ export default class BadgeStore {
         dataPath: ?string,
         requestParameters: Object,
         routerAttributesToRequest: Object,
-        rootRoute: Route
+        tabViewRoute: Route
     ) {
         this.router = router;
         this.routeName = routeName;
         this.dataPath = dataPath;
         this.requestParameters = requestParameters;
         this.routerAttributesToRequest = routerAttributesToRequest;
-        this.rootRoute = rootRoute;
+        this.tabViewRoute = tabViewRoute;
 
         this.load();
 
@@ -84,14 +84,22 @@ export default class BadgeStore {
         this.value = String(enhancedData);
     }
 
-    load = debounce(() => {
+    @computed get isChildOrSameRoute() {
         let route: ?Route = this.router.route;
-        while (route !== this.rootRoute) {
+        while (route !== this.tabViewRoute) {
             if (!route) {
-                return;
+                return false;
             }
 
             route = route.parent;
+        }
+
+        return true;
+    }
+
+    load = debounce(() => {
+        if (!this.isChildOrSameRoute) {
+            return;
         }
 
         Requester.get(this.url).then((response: Object) => {

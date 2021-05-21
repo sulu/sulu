@@ -14,7 +14,7 @@ jest.mock('../../../../services/Requester', () => ({
 Requester.handleResponseHooks = [];
 
 // Need to use symbol here, because jest transforms {parent: {}} to {parent: [Getter/Setter]}
-const mockRootRoute = (Symbol(): any);
+const mockTabViewRoute = (Symbol(): any);
 
 jest.mock('../../../../services/Router', () => jest.fn(function() {
     this.attributes = {
@@ -24,7 +24,7 @@ jest.mock('../../../../services/Router', () => jest.fn(function() {
 
     mockExtendObservable(this, {
         route: {
-            parent: mockRootRoute,
+            parent: mockTabViewRoute,
         },
     });
 }));
@@ -51,7 +51,7 @@ test('Should load data using the Requester', () => {
             id: 'entityId',
             locale: 'locale',
         },
-        mockRootRoute
+        mockTabViewRoute
     );
 
     expect(Requester.get).toBeCalledWith('foo?entityId=5&locale=en&limit=0&entityClass=Foo');
@@ -83,7 +83,7 @@ test('Should load data without datapath', () => {
             id: 'entityId',
             locale: 'locale',
         },
-        mockRootRoute
+        mockTabViewRoute
     );
 
     expect(Requester.get).toBeCalledWith('foo?entityId=5&locale=en&limit=0&entityClass=Foo');
@@ -115,12 +115,12 @@ test('Should load data if route changes', () => {
             id: 'entityId',
             locale: 'locale',
         },
-        mockRootRoute
+        mockTabViewRoute
     );
 
     expect(Requester.get).toHaveBeenNthCalledWith(1, 'foo?entityId=5&locale=en&limit=0&entityClass=Foo');
 
-    router.route = ({property: 'value', parent: mockRootRoute}: any);
+    router.route = ({property: 'value', parent: mockTabViewRoute}: any);
 
     expect(Requester.get).toHaveBeenNthCalledWith(2, 'foo?entityId=5&locale=en&limit=0&entityClass=Foo');
 });
@@ -147,7 +147,7 @@ test('Should not load data if route changes to other parent', () => {
             id: 'entityId',
             locale: 'locale',
         },
-        mockRootRoute
+        mockTabViewRoute
     );
 
     expect(Requester.get).toHaveBeenCalledTimes(1);
@@ -180,7 +180,7 @@ test('Should load data on response hook callback', () => {
             id: 'entityId',
             locale: 'locale',
         },
-        mockRootRoute
+        mockTabViewRoute
     );
 
     expect(Requester.handleResponseHooks).toHaveLength(1);

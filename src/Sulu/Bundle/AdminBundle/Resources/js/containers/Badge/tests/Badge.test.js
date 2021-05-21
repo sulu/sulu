@@ -12,7 +12,7 @@ jest.mock('../../../services/Requester', () => ({
 
 Requester.handleResponseHooks = [];
 
-const rootRoute: any = {};
+const tabViewRoute: any = {};
 
 jest.mock('../../../services/Router', () => jest.fn(function() {
     this.attributes = {
@@ -21,7 +21,7 @@ jest.mock('../../../services/Router', () => jest.fn(function() {
     };
 
     this.route = {
-        parent: rootRoute,
+        parent: tabViewRoute,
     };
 }));
 
@@ -38,13 +38,13 @@ test('Should create new BadgeStore', () => {
             requestParameters={{
                 limit: 0,
             }}
-            rootRoute={rootRoute}
             routeName="foo"
             router={router}
             routerAttributesToRequest={{
                 id: 'entityId',
                 locale: 'locale',
             }}
+            tabViewRoute={tabViewRoute}
             visibleCondition="value != 0"
         />
     );
@@ -61,7 +61,7 @@ test('Should create new BadgeStore', () => {
         id: 'entityId',
         locale: 'locale',
     });
-    expect(store.rootRoute).toBe(rootRoute);
+    expect(store.tabViewRoute).toBe(tabViewRoute);
 
     return promise.then(() => {
         expect(store.value).toBe('foo');
@@ -81,13 +81,13 @@ test('Should pass correct props to badge component', () => {
             requestParameters={{
                 limit: 0,
             }}
-            rootRoute={rootRoute}
             routeName="foo"
             router={router}
             routerAttributesToRequest={{
                 id: 'entityId',
                 locale: 'locale',
             }}
+            tabViewRoute={tabViewRoute}
             visibleCondition="value != 0"
         />
     );
@@ -112,13 +112,13 @@ test('Should not render Badge component if visibleCondition fails', () => {
             requestParameters={{
                 limit: 0,
             }}
-            rootRoute={rootRoute}
             routeName="foo"
             router={router}
             routerAttributesToRequest={{
                 id: 'entityId',
                 locale: 'locale',
             }}
+            tabViewRoute={tabViewRoute}
             visibleCondition="value != 0"
         />
     );

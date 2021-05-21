@@ -10,10 +10,10 @@ import BadgeStore from './stores/BadgeStore';
 type Props = {|
     dataPath: ?string,
     requestParameters: Object,
-    rootRoute: Route,
     routeName: string,
     router: Router,
     routerAttributesToRequest: Object,
+    tabViewRoute: Route,
     visibleCondition: ?string,
 |};
 
@@ -37,7 +37,7 @@ class Badge extends React.Component<Props> {
             dataPath,
             requestParameters,
             routerAttributesToRequest,
-            rootRoute,
+            tabViewRoute,
         } = this.props;
 
         this.store = new BadgeStore(
@@ -46,7 +46,7 @@ class Badge extends React.Component<Props> {
             dataPath,
             requestParameters,
             routerAttributesToRequest,
-            rootRoute
+            tabViewRoute
         );
     }
 

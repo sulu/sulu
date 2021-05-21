@@ -149,10 +149,10 @@ class Tabs<T> extends React.Component<Props<T>> {
                                         dataPath={badge.dataPath}
                                         key={index}
                                         requestParameters={badge.requestParameters}
-                                        rootRoute={route}
                                         routeName={badge.routeName}
                                         router={router}
                                         routerAttributesToRequest={badge.routerAttributesToRequest}
+                                        tabViewRoute={route}
                                         visibleCondition={badge.visibleCondition}
                                     />
                                 );
