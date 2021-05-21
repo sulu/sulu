@@ -3,13 +3,14 @@ import React from 'react';
 import {computed} from 'mobx';
 import {observer} from 'mobx-react';
 import jexl from 'jexl';
-import Router from '../../services/Router';
+import Router, {Route} from '../../services/Router';
 import BadgeComponent from '../../components/Badge';
 import BadgeStore from './stores/BadgeStore';
 
 type Props = {|
     dataPath: ?string,
     requestParameters: Object,
+    rootRoute: Route,
     routeName: string,
     router: Router,
     routerAttributesToRequest: Object,
@@ -36,6 +37,7 @@ class Badge extends React.Component<Props> {
             dataPath,
             requestParameters,
             routerAttributesToRequest,
+            rootRoute,
         } = this.props;
 
         this.store = new BadgeStore(
@@ -43,7 +45,8 @@ class Badge extends React.Component<Props> {
             routeName,
             dataPath,
             requestParameters,
-            routerAttributesToRequest
+            routerAttributesToRequest,
+            rootRoute
         );
     }
 

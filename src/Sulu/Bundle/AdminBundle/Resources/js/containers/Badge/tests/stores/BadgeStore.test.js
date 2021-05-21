@@ -13,6 +13,9 @@ jest.mock('../../../../services/Requester', () => ({
 
 Requester.handleResponseHooks = [];
 
+// Need to use symbol here, because jest transforms {parent: {}} to {parent: [Getter/Setter]}
+const mockRootRoute = (Symbol(): any);
+
 jest.mock('../../../../services/Router', () => jest.fn(function() {
     this.attributes = {
         id: 5,
@@ -20,7 +23,9 @@ jest.mock('../../../../services/Router', () => jest.fn(function() {
     };
 
     mockExtendObservable(this, {
-        route: {},
+        route: {
+            parent: mockRootRoute,
+        },
     });
 }));
 
@@ -45,7 +50,8 @@ test('Should load data using the Requester', () => {
         {
             id: 'entityId',
             locale: 'locale',
-        }
+        },
+        mockRootRoute
     );
 
     expect(Requester.get).toBeCalledWith('foo?entityId=5&locale=en&limit=0&entityClass=Foo');
@@ -76,7 +82,8 @@ test('Should load data without datapath', () => {
         {
             id: 'entityId',
             locale: 'locale',
-        }
+        },
+        mockRootRoute
     );
 
     expect(Requester.get).toBeCalledWith('foo?entityId=5&locale=en&limit=0&entityClass=Foo');
@@ -107,14 +114,48 @@ test('Should load data if route changes', () => {
         {
             id: 'entityId',
             locale: 'locale',
-        }
+        },
+        mockRootRoute
     );
 
     expect(Requester.get).toHaveBeenNthCalledWith(1, 'foo?entityId=5&locale=en&limit=0&entityClass=Foo');
 
-    router.route = ({property: 'value'}: any);
+    router.route = ({property: 'value', parent: mockRootRoute}: any);
 
     expect(Requester.get).toHaveBeenNthCalledWith(2, 'foo?entityId=5&locale=en&limit=0&entityClass=Foo');
+});
+
+test('Should not load data if route changes to other parent', () => {
+    SymfonyRouting.generate.mockImplementation((routeName, params) => {
+        return routeName + '?' + Object.keys(params).map((key) => key + '=' + params[key]).join('&');
+    });
+
+    const promise = Promise.resolve('hello');
+    Requester.get.mockReturnValue(promise);
+    Requester.handleResponseHooks = [];
+
+    const router = new Router({});
+    new BadgeStore(
+        router,
+        'foo',
+        null,
+        {
+            limit: 0,
+            entityClass: 'Foo',
+        },
+        {
+            id: 'entityId',
+            locale: 'locale',
+        },
+        mockRootRoute
+    );
+
+    expect(Requester.get).toHaveBeenCalledTimes(1);
+    expect(Requester.get).toHaveBeenNthCalledWith(1, 'foo?entityId=5&locale=en&limit=0&entityClass=Foo');
+
+    router.route = ({property: 'value', parent: {other: true}}: any);
+
+    expect(Requester.get).toHaveBeenCalledTimes(1);
 });
 
 test('Should load data on response hook callback', () => {
@@ -138,7 +179,8 @@ test('Should load data on response hook callback', () => {
         {
             id: 'entityId',
             locale: 'locale',
-        }
+        },
+        mockRootRoute
     );
 
     expect(Requester.handleResponseHooks).toHaveLength(1);

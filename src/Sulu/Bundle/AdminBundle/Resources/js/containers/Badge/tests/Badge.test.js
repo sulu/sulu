@@ -12,10 +12,16 @@ jest.mock('../../../services/Requester', () => ({
 
 Requester.handleResponseHooks = [];
 
+const rootRoute: any = {};
+
 jest.mock('../../../services/Router', () => jest.fn(function() {
     this.attributes = {
         id: 5,
         locale: 'en',
+    };
+
+    this.route = {
+        parent: rootRoute,
     };
 }));
 
@@ -32,6 +38,7 @@ test('Should create new BadgeStore', () => {
             requestParameters={{
                 limit: 0,
             }}
+            rootRoute={rootRoute}
             routeName="foo"
             router={router}
             routerAttributesToRequest={{
@@ -54,6 +61,7 @@ test('Should create new BadgeStore', () => {
         id: 'entityId',
         locale: 'locale',
     });
+    expect(store.rootRoute).toBe(rootRoute);
 
     return promise.then(() => {
         expect(store.value).toBe('foo');
@@ -73,6 +81,7 @@ test('Should pass correct props to badge component', () => {
             requestParameters={{
                 limit: 0,
             }}
+            rootRoute={rootRoute}
             routeName="foo"
             router={router}
             routerAttributesToRequest={{
@@ -103,6 +112,7 @@ test('Should not render Badge component if visibleCondition fails', () => {
             requestParameters={{
                 limit: 0,
             }}
+            rootRoute={rootRoute}
             routeName="foo"
             router={router}
             routerAttributesToRequest={{
