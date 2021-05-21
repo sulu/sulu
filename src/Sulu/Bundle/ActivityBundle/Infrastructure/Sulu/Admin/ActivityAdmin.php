@@ -124,7 +124,7 @@ class ActivityAdmin extends Admin
                     ->disableSelection()
                     ->disableColumnOptions()
                     ->disableFiltering()
-                    ->addResourceStorePropertiesToListRequest(['id' => 'resourceId'])
+                    ->addRouterAttributesToListRequest(['id' => 'resourceId'])
                     ->addRequestParameters(['resourceKey' => BasePageDocument::RESOURCE_KEY])
                     ->setParent(static::EDIT_FORM_ACTIVITY_VERSION_TAB_VIEW)
             );
@@ -132,7 +132,28 @@ class ActivityAdmin extends Admin
             if ($this->versioningEnabled) {
                 $viewCollection->add(
                     $this->viewBuilderFactory
-                        ->createFormViewBuilder(static::EDIT_FORM_ACTIVITY_VERSION_TAB_VIEW . '.versions', '/versions')
+                        ->createListViewBuilder(static::EDIT_FORM_ACTIVITY_VERSION_TAB_VIEW . '.versions', '/versions')
+                        ->setTabTitle('sulu_admin.versions')
+                        ->setResourceKey('page_versions')
+                        ->setListKey('page_versions')
+                        ->addListAdapters(['table'])
+                        ->addAdapterOptions([
+                            'table' => [
+                                'skin' => 'flat',
+                            ],
+                        ])
+                        ->disableTabGap()
+                        ->disableSearching()
+                        ->disableSelection()
+                        ->disableColumnOptions()
+                        ->disableFiltering()
+                        ->addRouterAttributesToListRequest(['id', 'webspace'])
+                        ->setParent(static::EDIT_FORM_ACTIVITY_VERSION_TAB_VIEW)
+                );
+
+                $viewCollection->add(
+                    $this->viewBuilderFactory
+                        ->createFormViewBuilder(static::EDIT_FORM_ACTIVITY_VERSION_TAB_VIEW . '.versions-old', '/versions-old')
                         ->setTabTitle('sulu_admin.versions')
                         ->setResourceKey(BasePageDocument::RESOURCE_KEY)
                         ->setFormKey('page_versions')
