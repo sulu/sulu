@@ -1,6 +1,5 @@
 {#-
  # content array
- # defaultLocale string
  # seo array
  # shadowBaseLocale string
  # localizations array
@@ -75,9 +74,6 @@
     {#- when only one language do not show alternative -#}
     {%- if localizations|length > 1 -%}
         {%- for localization in localizations -%}
-            {%- if defaultLocale == localization.locale -%}
-                <link rel="alternate" href="{{ localization.url }}" hreflang="x-default"/>
-            {%- endif -%}
             <link rel="alternate" href="{{ localization.url }}" hreflang="{{ localization.locale|replace({'_': '-'}) }}"/>
         {%- endfor -%}
     {%- endif -%}

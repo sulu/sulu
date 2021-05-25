@@ -157,6 +157,10 @@ class PagesSitemapProvider extends AbstractSitemapProvider
         );
 
         foreach ($contentPage->getUrls() as $urlLocale => $href) {
+            if (null === $href) {
+                continue;
+            }
+
             $url = $this->webspaceManager->findUrlByResourceLocator(
                 $href,
                 $this->environment,

@@ -58,13 +58,19 @@ class SitemapController
      */
     private $cacheLifeTime;
 
+    /**
+     * @var bool
+     */
+    private $debug;
+
     public function __construct(
         XmlSitemapRendererInterface $xmlSitemapRenderer,
         SitemapProviderPoolInterface $sitemapProviderPool,
         XmlSitemapDumperInterface $xmlSitemapDumper,
         Filesystem $filesystem,
         UrlGeneratorInterface $router,
-        int $cacheLifeTime
+        int $cacheLifeTime,
+        bool $debug = false
     ) {
         $this->xmlSitemapRenderer = $xmlSitemapRenderer;
         $this->sitemapProviderPool = $sitemapProviderPool;
@@ -72,6 +78,7 @@ class SitemapController
         $this->filesystem = $filesystem;
         $this->router = $router;
         $this->cacheLifeTime = $cacheLifeTime;
+        $this->debug = $debug;
     }
 
     /**
@@ -223,6 +230,10 @@ class SitemapController
             SuluHttpCache::HEADER_REVERSE_PROXY_TTL,
             $response->getAge() + $this->cacheLifeTime
         );
+
+        if ($this->debug) {
+            return $response;
+        }
 
         return $response->setMaxAge(240)
             ->setSharedMaxAge(960);

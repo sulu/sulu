@@ -85,7 +85,6 @@ class MetaTwigExtensionTest extends TestCase
         $this->assertEquals(
             [
                 '<link rel="alternate" href="/de/test" hreflang="de" />',
-                '<link rel="alternate" href="/en/test-en" hreflang="x-default" />',
                 '<link rel="alternate" href="/en/test-en" hreflang="en" />',
                 '<link rel="alternate" href="/en/test-en-us" hreflang="en-us" />',
                 '<link rel="alternate" href="/fr/test-fr" hreflang="fr" />',
@@ -120,7 +119,6 @@ class MetaTwigExtensionTest extends TestCase
 
         $this->assertEquals(
             [
-                '<link rel="alternate" href="/de/test" hreflang="x-default" />',
                 '<link rel="alternate" href="/de/test" hreflang="de" />',
                 '<link rel="alternate" href="/en/test-en" hreflang="en" />',
                 '<link rel="alternate" href="/en/test-en-us" hreflang="en-us" />',
@@ -150,7 +148,6 @@ class MetaTwigExtensionTest extends TestCase
         $this->assertEquals(
             [
                 '<link rel="alternate" href="/de/test" hreflang="de" />',
-                '<link rel="alternate" href="/en/test-en" hreflang="x-default" />',
                 '<link rel="alternate" href="/en/test-en" hreflang="en" />',
                 '<link rel="alternate" href="/en/test-en-us" hreflang="en-us" />',
                 '<link rel="alternate" href="/fr/test-fr" hreflang="fr" />',
