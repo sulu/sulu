@@ -598,7 +598,7 @@ class XmlFileLoader10 extends BaseXmlFileLoader
         try {
             $this->validateDefaultLocalization($this->webspace->getLocalizations());
         } catch (InvalidDefaultLocalizationException $ex) {
-            throw new InvalidWebspaceDefaultLocalizationException($this->webspace);
+            throw new InvalidWebspaceDefaultLocalizationException($this->webspace, $ex);
         }
     }
 
@@ -620,7 +620,7 @@ class XmlFileLoader10 extends BaseXmlFileLoader
                     }
                 }
             } catch (InvalidDefaultLocalizationException $ex) {
-                throw new InvalidPortalDefaultLocalizationException($this->webspace, $portal);
+                throw new InvalidPortalDefaultLocalizationException($this->webspace, $portal, $ex);
             }
         }
     }
