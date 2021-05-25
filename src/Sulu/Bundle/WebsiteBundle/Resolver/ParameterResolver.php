@@ -108,9 +108,11 @@ class ParameterResolver implements ParameterResolverInterface
         foreach ($allLocalizations as $localization) {
             $locale = $localization->getLocale();
 
+            $alternate = true;
             if (\array_key_exists($locale, $pageUrls)) {
                 $url = $this->webspaceManager->findUrlByResourceLocator($pageUrls[$locale], null, $locale);
             } else {
+                $alternate = false;
                 $url = $this->webspaceManager->findUrlByResourceLocator('/', null, $locale);
             }
 
@@ -118,6 +120,7 @@ class ParameterResolver implements ParameterResolverInterface
                 'locale' => $locale,
                 'url' => $url,
                 'country' => $localization->getCountry(),
+                'alternate' => $alternate,
             ];
         }
 

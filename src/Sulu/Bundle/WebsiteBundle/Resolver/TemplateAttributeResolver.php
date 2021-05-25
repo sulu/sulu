@@ -97,6 +97,7 @@ class TemplateAttributeResolver implements TemplateAttributeResolverInterface
                 $localizations[$locale] = [
                     'locale' => $locale,
                     'url' => $url,
+                    'alternate' => true,
                 ];
             }
 
