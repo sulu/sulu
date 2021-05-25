@@ -74,7 +74,9 @@
     {#- when only one language do not show alternative -#}
     {%- if localizations|length > 1 -%}
         {%- for localization in localizations -%}
-            <link rel="alternate" href="{{ localization.url }}" hreflang="{{ localization.locale|replace({'_': '-'}) }}"/>
+            {%- if localization.alternate is not defined or localization.alternate -%}
+                <link rel="alternate" href="{{ localization.url }}" hreflang="{{ localization.locale|replace({'_': '-'}) }}"/>
+            {%- endif -%}
         {%- endfor -%}
     {%- endif -%}
 {%- endblock -%}

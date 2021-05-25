@@ -166,10 +166,12 @@ class TemplateAttributeResolverTest extends TestCase
                 'en' => [
                     'locale' => 'en',
                     'url' => 'http://sulu.io/en/test',
+                    'alternate' => true,
                 ],
                 'de' => [
                     'locale' => 'de',
                     'url' => 'http://sulu.io/de/test',
+                    'alternate' => true,
                 ],
             ],
             'request' => [
@@ -217,10 +219,12 @@ class TemplateAttributeResolverTest extends TestCase
                 'en' => [
                     'locale' => 'en',
                     'url' => 'http://sulu.io/en/test',
+                    'alternate' => true,
                 ],
                 'de' => [
                     'locale' => 'de',
                     'url' => 'http://sulu.io/de/test',
+                    'alternate' => true,
                 ],
             ],
             'request' => [
@@ -263,10 +267,12 @@ class TemplateAttributeResolverTest extends TestCase
                 'en' => [
                     'locale' => 'en',
                     'url' => 'http://sulu.io/en/test',
+                    'alternate' => true,
                 ],
                 'de' => [
                     'locale' => 'de',
                     'url' => 'http://sulu.io/de/test',
+                    'alternate' => true,
                 ],
             ],
             'request' => [
