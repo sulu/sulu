@@ -109,7 +109,7 @@ class Content implements \ArrayAccess
     private $url;
 
     /**
-     * @var string[]
+     * @var array<string, string|null>
      */
     private $urls;
 
@@ -341,7 +341,7 @@ class Content implements \ArrayAccess
     }
 
     /**
-     * @return string[]
+     * @return array<string, string|null>
      */
     public function getUrls()
     {
@@ -349,7 +349,7 @@ class Content implements \ArrayAccess
     }
 
     /**
-     * @param string[] $urls
+     * @param array<string, string|null> $urls
      */
     public function setUrls(array $urls)
     {
