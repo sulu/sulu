@@ -62,9 +62,6 @@
     {#- when only one language do not show alternative -#}
     {%- if urls|length > 1 -%}
         {%- for locale, url in urls -%}
-            {%- if defaultLocale == locale -%}
-                <link rel="alternate" href="{{ sulu_content_path(url, null, locale) }}" hreflang="x-default"/>
-            {%- endif -%}
             <link rel="alternate" href="{{ sulu_content_path(url, null, locale) }}" hreflang="{{ locale|replace({'_': '-'}) }}"/>
         {%- endfor -%}
     {%- endif -%}

@@ -65,14 +65,6 @@ class SitemapControllerTest extends WebsiteTestCase
             'http://test.lo/en',
             $crawler->filterXPath('//x:urlset/x:url[1]/xhtml:link[2]')->attr('href')
         );
-        $this->assertEquals(
-            'x-default',
-            $crawler->filterXPath('//x:urlset/x:url[1]/xhtml:link[3]')->attr('hreflang')
-        );
-        $this->assertEquals(
-            'http://test.lo/en',
-            $crawler->filterXPath('//x:urlset/x:url[1]/xhtml:link[3]')->attr('href')
-        );
 
         $this->assertEquals('http://test.lo/en', $crawler->filterXPath('//x:urlset/x:url[2]/x:loc')->text());
         $this->assertEquals(
@@ -90,14 +82,6 @@ class SitemapControllerTest extends WebsiteTestCase
         $this->assertEquals(
             'http://test.lo/en-us',
             $crawler->filterXPath('//x:urlset/x:url[2]/xhtml:link[2]')->attr('href')
-        );
-        $this->assertEquals(
-            'x-default',
-            $crawler->filterXPath('//x:urlset/x:url[2]/xhtml:link[3]')->attr('hreflang')
-        );
-        $this->assertEquals(
-            'http://test.lo/en',
-            $crawler->filterXPath('//x:urlset/x:url[2]/xhtml:link[3]')->attr('href')
         );
 
         $this->assertEquals('http://test.lo/en', $crawler->filterXPath('//x:urlset/x:url[2]/x:loc')->text());

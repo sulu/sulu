@@ -108,6 +108,8 @@ class Localization implements \JsonSerializable, ArrayableInterface
      *
      * @var bool
      * @Groups({"frontend", "Default"})
+     *
+     * @deprecated Use $default instead.
      */
     private $xDefault;
 
@@ -300,9 +302,13 @@ class Localization implements \JsonSerializable, ArrayableInterface
      * Sets if this localization is the x-default one.
      *
      * @param bool $xDefault
+     *
+     * @deprecated Use setDefault to set the default Localization.
      */
     public function setXDefault($xDefault)
     {
+        @\trigger_error(\sprintf('The "%s" method is deprecated on "%s" use "setDefault" instead.', __METHOD__, __CLASS__), \E_USER_DEPRECATED);
+
         $this->xDefault = $xDefault;
     }
 
@@ -320,9 +326,13 @@ class Localization implements \JsonSerializable, ArrayableInterface
      * Returns if this localization is the x-default one.
      *
      * @return bool True if this is the x-default localization, otherwise false
+     *
+     * @deprecated Use getDefault to get the default Localization.
      */
     public function isXDefault()
     {
+        @\trigger_error(\sprintf('The "%s" method is deprecated on "%s" use "isDefault" instead.', __METHOD__, __CLASS__), \E_USER_DEPRECATED);
+
         return $this->xDefault;
     }
 

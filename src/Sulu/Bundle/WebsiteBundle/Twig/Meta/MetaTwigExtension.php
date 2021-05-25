@@ -75,9 +75,6 @@ class MetaTwigExtension extends AbstractExtension
             // url = '/' means that there is no translation for this page
             // the only exception is the homepage where the requested resource-locator is '/'
             if ('/' !== $url || '/' === $this->requestAnalyzer->getResourceLocator()) {
-                if ($locale === $defaultLocale) {
-                    $result[] = $this->getAlternate($url, $webspaceKey, $locale, true);
-                }
                 $result[] = $this->getAlternate($url, $webspaceKey, $locale);
             }
         }
@@ -137,18 +134,17 @@ class MetaTwigExtension extends AbstractExtension
      * @param string $url
      * @param string $webspaceKey
      * @param string $locale
-     * @param bool $default
      *
      * @return string
      */
-    private function getAlternate($url, $webspaceKey, $locale, $default = false)
+    private function getAlternate($url, $webspaceKey, $locale)
     {
         $url = $this->contentPath->getContentPath($url, $webspaceKey, $locale);
 
         return \sprintf(
             '<link rel="alternate" href="%s" hreflang="%s" />',
             $url,
-            !$default ? \str_replace('_', '-', $locale) : 'x-default'
+            \str_replace('_', '-', $locale)
         );
     }
 
