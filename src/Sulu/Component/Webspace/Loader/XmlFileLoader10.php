@@ -258,6 +258,9 @@ class XmlFileLoader10 extends BaseXmlFileLoader
 
         $xDefaultNode = $localizationNode->attributes->getNamedItem('x-default');
         if ($xDefaultNode) {
+            // @deprecated
+            @\trigger_error('Set x-default="true" attribute on the `<localization>` tag in webspace is deprecated use default="true" instead.', \E_USER_DEPRECATED);
+
             $localization->setXDefault('true' == $xDefaultNode->nodeValue);
         } else {
             $localization->setXDefault(false);
@@ -595,7 +598,7 @@ class XmlFileLoader10 extends BaseXmlFileLoader
         try {
             $this->validateDefaultLocalization($this->webspace->getLocalizations());
         } catch (InvalidDefaultLocalizationException $ex) {
-            throw new InvalidWebspaceDefaultLocalizationException($this->webspace);
+            throw new InvalidWebspaceDefaultLocalizationException($this->webspace, $ex);
         }
     }
 
@@ -617,7 +620,7 @@ class XmlFileLoader10 extends BaseXmlFileLoader
                     }
                 }
             } catch (InvalidDefaultLocalizationException $ex) {
-                throw new InvalidPortalDefaultLocalizationException($this->webspace, $portal);
+                throw new InvalidPortalDefaultLocalizationException($this->webspace, $portal, $ex);
             }
         }
     }

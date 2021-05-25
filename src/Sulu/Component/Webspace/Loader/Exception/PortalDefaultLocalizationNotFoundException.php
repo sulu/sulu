@@ -23,13 +23,13 @@ class PortalDefaultLocalizationNotFoundException extends WebspaceException
      */
     private $portal;
 
-    public function __construct(Webspace $webspace, Portal $portal)
+    public function __construct(Webspace $webspace, Portal $portal, \Throwable $previous = null)
     {
         $this->webspace = $webspace;
         $this->portal = $portal;
         $message = 'The portal "' . $portal->getKey() . '" in the webspace definition "' . $webspace->getKey() . '" ' .
             'has not specified the required attributes (a default localization)';
-        parent::__construct($message, 0);
+        parent::__construct($message, 0, $previous);
     }
 
     /**

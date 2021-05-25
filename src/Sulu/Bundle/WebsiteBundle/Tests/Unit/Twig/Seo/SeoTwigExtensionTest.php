@@ -176,7 +176,6 @@ class SeoTwigExtensionTest extends TestCase
                     '<meta name="description" content="SEO description"/>',
                     '<meta name="keywords" content="SEO keywords"/>',
                     '<meta name="robots" content="noIndex,noFollow"/>',
-                    '<link rel="alternate" href="/en/url-en" hreflang="x-default"/>',
                     '<link rel="alternate" href="/en/url-en" hreflang="en"/>',
                     '<link rel="alternate" href="/de/url-de" hreflang="de"/>',
                     '<link rel="canonical" href="/canonical-url"/>',
@@ -205,7 +204,6 @@ class SeoTwigExtensionTest extends TestCase
                 [
                     '<title>Content title</title>',
                     '<meta name="robots" content="index,follow"/>',
-                    '<link rel="alternate" href="/de/url-de" hreflang="x-default"/>',
                     '<link rel="alternate" href="/en/url-en" hreflang="en"/>',
                     '<link rel="alternate" href="/de/url-de" hreflang="de"/>',
                     '<link rel="canonical" href="/en/url-en"/>',
@@ -238,7 +236,6 @@ class SeoTwigExtensionTest extends TestCase
                 [
                     '<title>Content title</title>',
                     '<meta name="robots" content="index,follow"/>',
-                    '<link rel="alternate" href="/de/url-de" hreflang="x-default"/>',
                     '<link rel="alternate" href="/en/url-en" hreflang="en"/>',
                     '<link rel="alternate" href="/de/url-de" hreflang="de"/>',
                 ],
@@ -272,7 +269,6 @@ class SeoTwigExtensionTest extends TestCase
                 [
                     '<title>Content title</title>',
                     '<meta name="robots" content="index,follow"/>',
-                    '<link rel="alternate" href="/de/url-de" hreflang="x-default"/>',
                     '<link rel="alternate" href="/en/url-en" hreflang="en"/>',
                     '<link rel="alternate" href="/de/url-de" hreflang="de"/>',
                     '<link rel="alternate" href="/de-at/url-de-at" hreflang="de-at"/>',
@@ -295,7 +291,6 @@ class SeoTwigExtensionTest extends TestCase
                 'de',
                 [
                     '<link rel="alternate" href="/en/url-en" hreflang="en"/>',
-                    '<link rel="alternate" href="/de/url-de" hreflang="x-default"/>',
                     '<link rel="alternate" href="/de/url-de" hreflang="de"/>',
                 ],
             ],
@@ -311,7 +306,6 @@ class SeoTwigExtensionTest extends TestCase
                 'en',
                 null,
                 [
-                    '<link rel="alternate" href="/en/url-en" hreflang="x-default"/>',
                     '<link rel="alternate" href="/en/url-en" hreflang="en"/>',
                     '<link rel="alternate" href="/de/url-de" hreflang="de"/>',
                 ],
@@ -333,9 +327,7 @@ class SeoTwigExtensionTest extends TestCase
                     // no alternate link if translation is the only one
                 ],
                 [
-                    '<link rel="alternate" href="/de/url-de" hreflang="x-default"/>',
                     '<link rel="alternate" href="/de/url-de" hreflang="de"/>',
-                    '<link rel="alternate" href="/en" hreflang="x-default"/>',
                     '<link rel="alternate" href="/en" hreflang="en"/>',
                 ],
             ],
@@ -353,9 +345,7 @@ class SeoTwigExtensionTest extends TestCase
                     // no alternate link if translation is the only one
                 ],
                 [
-                    '<link rel="alternate" href="/de/url-de" hreflang="x-default"/>',
                     '<link rel="alternate" href="/de/url-de" hreflang="de"/>',
-                    '<link rel="alternate" href="/en" hreflang="x-default"/>',
                     '<link rel="alternate" href="/en" hreflang="en"/>',
                 ],
             ],
@@ -370,7 +360,6 @@ class SeoTwigExtensionTest extends TestCase
                 'en',
                 null,
                 [
-                    '<link rel="alternate" href="/en" hreflang="x-default"/>',
                     '<link rel="alternate" href="/en" hreflang="en"/>',
                     '<link rel="alternate" href="/de" hreflang="de"/>',
                 ],
@@ -402,7 +391,6 @@ class SeoTwigExtensionTest extends TestCase
                     '<meta name="description" content="SEO description"/>',
                     '<meta name="keywords" content="SEO keywords"/>',
                     '<meta name="robots" content="index,follow"/>',
-                    '<link rel="alternate" href="/en/url-en" hreflang="x-default"/>',
                     '<link rel="alternate" href="/en/url-en" hreflang="en"/>',
                     '<link rel="alternate" href="/de/url-de" hreflang="de"/>',
                     '<link rel="canonical" href="/test-url"/>',
