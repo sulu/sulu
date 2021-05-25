@@ -112,7 +112,18 @@
             "error",
             "prefer-double"
         ],
-        "import/order": "error",
+        "import/order": [
+            "error", {
+                "groups": [
+                    "builtin",
+                    "external",
+                    "parent",
+                    "sibling",
+                    "index",
+                    "type"
+                ]
+            }
+        ],
         "import/no-dynamic-require": "error",
         "import/no-webpack-loader-syntax": "error",
         "import/export": "error",
