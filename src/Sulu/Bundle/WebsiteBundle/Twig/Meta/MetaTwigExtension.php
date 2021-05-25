@@ -65,11 +65,6 @@ class MetaTwigExtension extends AbstractExtension
         $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
         $currentPortal = $this->requestAnalyzer->getPortal();
 
-        $defaultLocale = null;
-        if (null !== $currentPortal && null !== ($defaultLocale = $currentPortal->getXDefaultLocalization())) {
-            $defaultLocale = $defaultLocale->getLocale();
-        }
-
         $result = [];
         foreach ($urls as $locale => $url) {
             // url = '/' means that there is no translation for this page

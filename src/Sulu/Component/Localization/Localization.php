@@ -109,7 +109,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
      * @var bool
      * @Groups({"frontend", "Default"})
      *
-     * @deprecated Use $default instead.
+     * @deprecated use $default instead
      */
     private $xDefault;
 
@@ -303,7 +303,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
      *
      * @param bool $xDefault
      *
-     * @deprecated Use setDefault to set the default Localization.
+     * @deprecated use setDefault to set the default Localization
      */
     public function setXDefault($xDefault)
     {
@@ -327,7 +327,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
      *
      * @return bool True if this is the x-default localization, otherwise false
      *
-     * @deprecated Use getDefault to get the default Localization.
+     * @deprecated use getDefault to get the default Localization
      */
     public function isXDefault()
     {

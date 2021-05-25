@@ -51,7 +51,7 @@ class Portal
     /**
      * The x-default localization for this portal.
      *
-     * @deprecated Use $defaultLocalization instead.
+     * @deprecated use $defaultLocalization instead
      *
      * @var Localization
      */
@@ -173,7 +173,7 @@ class Portal
     /**
      * @param Localization $xDefaultLocalization
      *
-     * @deprecated Use setDefaultLocalization instead.
+     * @deprecated use setDefaultLocalization instead
      */
     public function setXDefaultLocalization($xDefaultLocalization)
     {
@@ -185,7 +185,7 @@ class Portal
     /**
      * @return Localization
      *
-     * @deprecated Use getDefaultLocalization instead.
+     * @deprecated use getDefaultLocalization instead
      */
     public function getXDefaultLocalization()
     {
