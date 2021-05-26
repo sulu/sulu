@@ -8,6 +8,10 @@ import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
 import SettingsVersions from '../../fields/SettingsVersions';
 
+jest.mock('loglevel', () => ({
+    warn: jest.fn(),
+}));
+
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
