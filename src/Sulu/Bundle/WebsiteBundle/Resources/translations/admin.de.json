@@ -20,9 +20,9 @@
     "sulu_website.cache_clear_warning_text": "Diese Operation leert den gesamten Cache für jeden Webspace. Wollen Sie wirklich fortfahren?",
     "sulu_website.cache_clear_warning_text_webspace": "Diese Operation leert den gesamten Cache für den Webspace \"{webspace}\". Wollen Sie wirklich fortfahren?",
     "sulu_activity.resource.analytics": "Analytics",
-    "sulu_activity.text.analytics.created": "{userFullName} hat den Analytics Eintrag \"{resourceTitle}\" erstellt",
-    "sulu_activity.text.analytics.modified": "{userFullName} hat den Analytics Eintrag \"{resourceTitle}\" geändert",
-    "sulu_activity.text.analytics.removed": "{userFullName} hat den Analytics Eintrag \"{resourceTitle}\" gelöscht",
+    "sulu_activity.description.analytics.created": "{userFullName} hat den Analytics Eintrag \"{resourceTitle}\" erstellt",
+    "sulu_activity.description.analytics.modified": "{userFullName} hat den Analytics Eintrag \"{resourceTitle}\" geändert",
+    "sulu_activity.description.analytics.removed": "{userFullName} hat den Analytics Eintrag \"{resourceTitle}\" gelöscht",
     "sulu_activity.resource.webspaces": "Webspace",
-    "sulu_activity.text.webspaces.cache_cleared": "{userFullName} hat den Webseiten Cache für den Webspace \"{resourceTitle}\" geleert."
+    "sulu_activity.description.webspaces.cache_cleared": "{userFullName} hat den Webseiten Cache für den Webspace \"{resourceTitle}\" geleert."
 }

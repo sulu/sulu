@@ -159,7 +159,7 @@ class ActivityControllerTest extends SuluTestCase
 
         self::assertSame(
             '<b>Max Mustermann</b> has created the page "Test Page 1234"',
-            $content->_embedded->activities[0]->text
+            $content->_embedded->activities[0]->description
         );
 
         self::assertSame(

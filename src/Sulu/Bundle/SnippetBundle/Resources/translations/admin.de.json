@@ -10,13 +10,13 @@
     "sulu_snippet.taxonomies": "Taxonomien",
     "sulu_snippet.webspace_default_snippet": "{webspaceKey} Standard Schnipsel",
     "sulu_activity.resource.snippets": "Schnipsel",
-    "sulu_activity.text.snippets.created": "{userFullName} hat das Schnipsel \"{resourceTitle}\" erstellt",
-    "sulu_activity.text.snippets.modified": "{userFullName} hat das Schnipsel \"{resourceTitle}\" geändert",
-    "sulu_activity.text.snippets.copied": "{userFullName} hat das Schnipsel \"{resourceTitle}\" kopiert",
-    "sulu_activity.text.snippets.removed": "{userFullName} hat das Schnipsel \"{resourceTitle}\" gelöscht",
-    "sulu_activity.text.snippets.translation_added": "{userFullName} hat eine neue Sprachvariante für \"{resourceLocale}\" zum Schnipsel \"{resourceTitle}\" hinzugefügt",
-    "sulu_activity.text.snippets.translation_copied": "{userFullName} hat die Sprachvariante für \"{context_sourceLocale}\" des Schnipsels \"{resourceTitle}\" nach \"{resourceLocale}\" kopiert",
-    "sulu_activity.text.snippets.translation_removed": "{userFullName} hat die Sprachvariante für \"{resourceLocale}\" des Schnipsels \"{resourceTitle}\" gelöscht",
-    "sulu_activity.text.webspaces.default_snippet_modified": "{userFullName} hat das Standardschnipsel für den Bereich \"{context_snippetAreaKey}\" im Webspace \"{resourceTitle}\" geändert",
-    "sulu_activity.text.webspaces.default_snippet_removed": "{userFullName} hat das Standardschnipsel für den Bereich \"{context_snippetAreaKey}\" im Webspace \"{resourceTitle}\" gelöscht"
+    "sulu_activity.description.snippets.created": "{userFullName} hat das Schnipsel \"{resourceTitle}\" erstellt",
+    "sulu_activity.description.snippets.modified": "{userFullName} hat das Schnipsel \"{resourceTitle}\" geändert",
+    "sulu_activity.description.snippets.copied": "{userFullName} hat das Schnipsel \"{resourceTitle}\" kopiert",
+    "sulu_activity.description.snippets.removed": "{userFullName} hat das Schnipsel \"{resourceTitle}\" gelöscht",
+    "sulu_activity.description.snippets.translation_added": "{userFullName} hat eine neue Sprachvariante für \"{resourceLocale}\" zum Schnipsel \"{resourceTitle}\" hinzugefügt",
+    "sulu_activity.description.snippets.translation_copied": "{userFullName} hat die Sprachvariante für \"{context_sourceLocale}\" des Schnipsels \"{resourceTitle}\" nach \"{resourceLocale}\" kopiert",
+    "sulu_activity.description.snippets.translation_removed": "{userFullName} hat die Sprachvariante für \"{resourceLocale}\" des Schnipsels \"{resourceTitle}\" gelöscht",
+    "sulu_activity.description.webspaces.default_snippet_modified": "{userFullName} hat das Standardschnipsel für den Bereich \"{context_snippetAreaKey}\" im Webspace \"{resourceTitle}\" geändert",
+    "sulu_activity.description.webspaces.default_snippet_removed": "{userFullName} hat das Standardschnipsel für den Bereich \"{context_snippetAreaKey}\" im Webspace \"{resourceTitle}\" gelöscht"
 }

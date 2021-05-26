@@ -3,7 +3,14 @@
     <key>activities</key>
 
     <properties>
-        <property name="timestamp" visibility="always" searchability="never" sortable="false" width="shrink">
+        <property
+            name="timestamp"
+            translation="sulu_admin.timestamp"
+            visibility="always"
+            searchability="never"
+            sortable="false"
+            width="shrink"
+        >
             <field-name>timestamp</field-name>
             <entity-name>%sulu.model.activity.class%</entity-name>
 
@@ -15,7 +22,14 @@
             </transformer>
         </property>
 
-        <property name="type" visibility="always" searchability="never" sortable="false" width="shrink">
+        <property
+            name="type"
+            translation="sulu_admin.type"
+            visibility="always"
+            searchability="never"
+            sortable="false"
+            width="shrink"
+        >
             <field-name>type</field-name>
             <entity-name>%sulu.model.activity.class%</entity-name>
 
@@ -66,8 +80,22 @@
         </property>
 
         <!-- Visibility of this property is set to 'yes' in the ActivitiesListMetadataVisitor based on the given metadata-options -->
-        <property name="resource" visibility="never" searchability="never" sortable="false" width="shrink"/>
+        <property
+            name="resource"
+            translation="sulu_admin.resource"
+            visibility="never"
+            searchability="never"
+            sortable="false"
+            width="shrink"
+        />
 
-        <property name="text" visibility="always" searchability="never" sortable="false" type="html"/>
+        <property
+            name="description"
+            translation="sulu_admin.description"
+            visibility="always"
+            searchability="never"
+            sortable="false"
+            type="html"
+        />
     </properties>
 </list>
