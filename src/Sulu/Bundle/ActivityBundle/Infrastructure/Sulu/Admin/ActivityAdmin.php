@@ -150,7 +150,7 @@ class ActivityAdmin extends Admin
                         ->disableFiltering()
                         ->addRouterAttributesToListRequest(['id', 'webspace'])
                         ->addItemActions([
-                            new ListItemAction('restore_version', ['success_view' => PageAdmin::EDIT_FORM_VIEW])
+                            new ListItemAction('restore_version', ['success_view' => PageAdmin::EDIT_FORM_VIEW]),
                         ])
                         ->setParent(static::EDIT_FORM_ACTIVITY_VERSION_TAB_VIEW)
                 );

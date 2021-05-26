@@ -20,7 +20,7 @@ jest.mock('sulu-admin-bundle/containers/List/stores/ListStore', () => jest.fn(fu
     this.resourceKey = resourceKey;
 }));
 
-jest.mock('sulu-admin-bundle/containers/List', () => jest.fn());
+jest.mock('sulu-admin-bundle/views/List/List', () => jest.fn());
 
 jest.mock('sulu-admin-bundle/services/Router', () => jest.fn(function() {
     this.attributes = {};
