@@ -477,7 +477,7 @@ test('React and update-context when type is changed', () => {
     formStore.type.set('homepage');
 
     return startPromise.then(() => {
-        expect(previewStore.updateContext).toBeCalledWith('homepage');
+        expect(previewStore.updateContext).toBeCalledWith('homepage', observable.map({title: 'Test'}));
     });
 });
 

@@ -51,11 +51,16 @@ interface PreviewInterface
     /**
      * Updates given context and restart preview with given data.
      *
+     * @param mixed[] $context
+     * @param mixed[] $data
+     * @param mixed[] $options
+     *
      * @return string Complete html response
      */
     public function updateContext(
         string $token,
         array $context,
+        array $data,
         array $options = []
     ): string;
 

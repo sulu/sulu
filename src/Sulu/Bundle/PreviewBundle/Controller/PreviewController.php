@@ -108,6 +108,8 @@ class PreviewController
         $provider = $this->getRequestParameter($request, 'provider', true);
         $token = $this->getRequestParameter($request, 'token', true);
         $context = $this->getRequestParameter($request, 'context', true);
+        /** @var mixed[] $data */
+        $data = $this->getRequestParameter($request, 'data', true);
 
         $options = $this->getOptionsFromRequest($request);
 
@@ -118,6 +120,7 @@ class PreviewController
         $content = $this->preview->updateContext(
             $token,
             $context,
+            $data,
             $options
         );
 

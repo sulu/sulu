@@ -237,6 +237,7 @@ class PreviewControllerTest extends TestCase
             ],
             [
                 'context' => ['template' => 'default'],
+                'data' => ['title' => 'test'],
             ]
         );
 
@@ -244,6 +245,7 @@ class PreviewControllerTest extends TestCase
         $this->preview->updateContext(
             'test-token',
             ['template' => 'default'],
+            ['title' => 'test'],
             ['targetGroupId' => 1, 'segmentKey' => 's', 'webspaceKey' => 'sulu_io', 'locale' => 'de']
         )->shouldBeCalled()->willReturn('<html><body><h1>SULU is awesome</h1></body></html>');
 
@@ -268,6 +270,7 @@ class PreviewControllerTest extends TestCase
             ],
             [
                 'context' => ['template' => 'default'],
+                'data' => ['title' => 'test'],
             ]
         );
 
@@ -275,6 +278,7 @@ class PreviewControllerTest extends TestCase
         $this->preview->updateContext(
             'test-token',
             ['template' => 'default'],
+            ['title' => 'test'],
             ['targetGroupId' => 1, 'segmentKey' => 'w', 'webspaceKey' => 'sulu_io', 'locale' => 'de']
         )->shouldBeCalled()->willReturn('<html><body><a href="/test">SULU is awesome</a></body></html>');
 
