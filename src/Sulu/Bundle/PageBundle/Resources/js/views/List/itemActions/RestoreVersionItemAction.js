@@ -47,7 +47,7 @@ export default class RestoreVersionItemAction extends AbstractListItemAction {
     getItemActionConfig(item: ?Object) {
         return {
             icon: 'su-process',
-            onClick: item?.id ? () => this.handleRestoreClick(item.id) : null,
+            onClick: item?.id ? () => this.handleRestoreClick(item.id) : undefined,
             disabled: !item?.id,
         };
     }
