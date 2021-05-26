@@ -13,11 +13,11 @@ export default class LinkItemAction extends AbstractListItemAction {
         } = this.options;
 
         if (typeof icon !== 'string') {
-            throw new Error('The "icon" must have a string value!');
+            throw new Error('The "icon" option cannot be null and must contain a string value!');
         }
 
         if (typeof linkProperty !== 'string') {
-            throw new Error('The "link_property" option cannot be null and must have a string value!');
+            throw new Error('The "link_property" option cannot be null and must contain a string value!');
         }
 
         const linkValue = item ? item[linkProperty] : null;

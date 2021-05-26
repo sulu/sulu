@@ -8,7 +8,7 @@ exports[`Render a MediaFormats view 1`] = `
     Test 2
   </h1>
   <div
-    class="tableContainer dark"
+    class="tableContainer dark hasButtons"
   >
     <table
       class="table"

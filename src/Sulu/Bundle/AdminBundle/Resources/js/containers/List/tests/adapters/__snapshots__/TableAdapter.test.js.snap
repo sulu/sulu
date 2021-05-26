@@ -490,7 +490,7 @@ exports[`Render data with all different visibility types schema 1`] = `
 exports[`Render data with pencil button and given itemActions when onItemEdit callback is passed 1`] = `
 <section>
   <div
-    class="tableContainer dark"
+    class="tableContainer dark hasButtons"
   >
     <table
       class="table"
@@ -755,7 +755,7 @@ exports[`Render data with pencil button and given itemActions when onItemEdit ca
 exports[`Render data with pencil button when onItemEdit callback is passed 1`] = `
 <section>
   <div
-    class="tableContainer dark"
+    class="tableContainer dark hasButtons"
   >
     <table
       class="table"

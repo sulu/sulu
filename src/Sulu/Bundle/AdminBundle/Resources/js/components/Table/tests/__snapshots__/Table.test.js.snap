@@ -48,7 +48,7 @@ exports[`Header cells with a defined sortOrder must show a sort indicator 1`] = 
 
 exports[`Render a table with buttons 1`] = `
 <div
-  class="tableContainer dark"
+  class="tableContainer dark hasButtons"
 >
   <table
     class="table"
@@ -169,7 +169,7 @@ exports[`Render a table with buttons 1`] = `
 
 exports[`Render a table with different buttons for each row 1`] = `
 <div
-  class="tableContainer dark"
+  class="tableContainer dark hasButtons"
 >
   <table
     class="table"
@@ -309,7 +309,7 @@ exports[`Render a table with different buttons for each row 1`] = `
 
 exports[`Render a table with disabled rows 1`] = `
 <div
-  class="tableContainer dark"
+  class="tableContainer dark hasButtons"
 >
   <table
     class="table"

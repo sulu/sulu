@@ -139,7 +139,7 @@ class Table<T: string | number> extends React.Component<Props<T>> {
     };
 
     render() {
-        const {children, skin} = this.props;
+        const {buttons, children, skin} = this.props;
         let body;
         let header;
 
@@ -171,7 +171,10 @@ class Table<T: string | number> extends React.Component<Props<T>> {
 
         const tableClass = classNames(
             tableStyles.tableContainer,
-            tableStyles[skin]
+            tableStyles[skin],
+            {
+                [tableStyles.hasButtons]: buttons.length > 0,
+            }
         );
         return (
             <div className={tableClass}>

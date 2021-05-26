@@ -15,6 +15,7 @@ use Sulu\Bundle\ActivityBundle\Domain\Model\ActivityInterface;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
+use Sulu\Bundle\AdminBundle\Admin\View\ListItemAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
 use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
@@ -124,10 +125,36 @@ class ActivityAdmin extends Admin
                     ->disableSelection()
                     ->disableColumnOptions()
                     ->disableFiltering()
-                    ->addResourceStorePropertiesToListRequest(['id' => 'resourceId'])
+                    ->addRouterAttributesToListRequest(['id' => 'resourceId'])
                     ->addRequestParameters(['resourceKey' => BasePageDocument::RESOURCE_KEY])
                     ->setParent(static::EDIT_FORM_ACTIVITY_VERSION_TAB_VIEW)
             );
+
+            if ($this->versioningEnabled) {
+                $viewCollection->add(
+                    $this->viewBuilderFactory
+                        ->createListViewBuilder(static::EDIT_FORM_ACTIVITY_VERSION_TAB_VIEW . '.versions', '/versions')
+                        ->setTabTitle('sulu_admin.versions')
+                        ->setResourceKey('page_versions')
+                        ->setListKey('page_versions')
+                        ->addListAdapters(['table'])
+                        ->addAdapterOptions([
+                            'table' => [
+                                'skin' => 'flat',
+                            ],
+                        ])
+                        ->disableTabGap()
+                        ->disableSearching()
+                        ->disableSelection()
+                        ->disableColumnOptions()
+                        ->disableFiltering()
+                        ->addRouterAttributesToListRequest(['id', 'webspace'])
+                        ->addItemActions([
+                            new ListItemAction('restore_version', ['success_view' => PageAdmin::EDIT_FORM_VIEW]),
+                        ])
+                        ->setParent(static::EDIT_FORM_ACTIVITY_VERSION_TAB_VIEW)
+                );
+            }
         }
 
         if ($viewCollection->has(MediaAdmin::EDIT_FORM_VIEW)) {

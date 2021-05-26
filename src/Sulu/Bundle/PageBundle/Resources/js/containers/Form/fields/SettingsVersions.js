@@ -6,6 +6,7 @@ import {Dialog} from 'sulu-admin-bundle/components';
 import {List, ListStore} from 'sulu-admin-bundle/containers';
 import {ResourceRequester} from 'sulu-admin-bundle/services';
 import {translate} from 'sulu-admin-bundle/utils';
+import log from 'loglevel';
 import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 import type {IObservableValue} from 'mobx/lib/mobx';
 
@@ -20,6 +21,12 @@ class SettingsVersions extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
+
+        // @deprecated
+        log.warn(
+            'The "SettingsVersions" field-type is deprecated since 2.3 and will be removed. ' +
+            'Use a list view with the the "RestoreVersionItemAction" to restore previous versions instead.'
+        );
 
         const {formInspector} = this.props;
 
