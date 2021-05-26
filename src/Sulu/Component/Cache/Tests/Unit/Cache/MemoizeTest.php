@@ -13,6 +13,7 @@ namespace Sulu\Component\Cache\Tests\Unit;
 
 use Doctrine\Common\Cache\CacheProvider;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Cache\Memoize;
 
 class MemoizeTest extends TestCase
@@ -23,7 +24,7 @@ class MemoizeTest extends TestCase
     private $mem;
 
     /**
-     * @var CacheProvider
+     * @var CacheProvider|ObjectProphecy
      */
     private $cache;
 
