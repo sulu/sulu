@@ -15,6 +15,7 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class SegmentController
 {
@@ -36,11 +37,20 @@ class SegmentController
 
     public function switchAction(Request $request)
     {
-        $webspace = $this->requestAnalyzer->getWebspace();
-        $segments = $webspace->getSegments();
-        $defaultSegment = $webspace->getDefaultSegment();
+        $url = $request->query->get('url', '');
 
-        $url = $request->query->get('url');
+        // only a url with the same host is supported in the segment switcher
+        if (0 !== \strpos($url, $request->getSchemeAndHttpHost())
+            && 0 !== \strpos($url, '/')
+        ) {
+            throw new BadRequestHttpException(\sprintf(
+                'The given "url" query parameter with value "%s" is not supported.',
+                $url
+            ));
+        }
+
+        $webspace = $this->requestAnalyzer->getWebspace();
+        $defaultSegment = $webspace->getDefaultSegment();
         $segmentKey = $request->query->get('segment');
 
         if (!$webspace->getSegment($segmentKey)) {
