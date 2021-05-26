@@ -20,6 +20,8 @@ $buttonCellColorDisabled: $buttonCellBackgroundColorDisabled;
 $buttonCellColorHover: $buttonCellBackgroundColor;
 $emptyMessageColor: $silver;
 $rowHeight: 40px;
+$headerRowHeight: 60px;
+$rowHeightFlat: 48px;
 $paddingCell: 4px;
 $borderWidth: 1px;
 $borderRadius: 3px;
@@ -32,7 +34,7 @@ $borderRadius: 3px;
 }
 
 .header > tr {
-    height: 60px;
+    height: $headerRowHeight;
 }
 
 .header-cell,
@@ -65,7 +67,7 @@ $borderRadius: 3px;
         padding: 0;
 
         button {
-            height: 60px;
+            height: $headerRowHeight;
             padding: 5px 20px;
             color: inherit;
             border: none;
@@ -249,28 +251,31 @@ $borderRadius: 3px;
 }
 
 .flat {
-    .header {
-        color: $headerTextDarkColor;
-    }
-
-    .header-cell {
-        background-color: $headerCellDarkBackgroundColor;
-    }
-
-    .header-button-cell {
-        border-right: $borderWidth solid $headerButtonCellDarkBorderColor;
-    }
-
     .table {
         border-spacing: 0 1px;
     }
 
-    .row {
-        &:hover {
-            .cell {
-                border-color: transparent;
-            }
+    .header {
+       color: $cellTextColor;
+
+        & > tr {
+            height: $rowHeightFlat;
         }
+    }
+
+    .header-cell {
+        background-color: $cellBackgroundColor;
+        font-weight: bold;
+        padding: $paddingCell 20px;
+        border-bottom: 1px solid $alto;
+
+        button {
+            height: $rowHeightFlat;
+        }
+    }
+
+    .row {
+        height: $rowHeightFlat;
     }
 
     .header-cell,
@@ -280,5 +285,14 @@ $borderRadius: 3px;
         border-bottom-left-radius: 0;
         border-top-right-radius: 0;
         border-bottom-right-radius: 0;
+        height: $rowHeightFlat;
+    }
+
+    &:not(.has-buttons) {
+        .row:hover {
+            .cell {
+                border-color: transparent;
+            }
+        }
     }
 }
