@@ -87,12 +87,6 @@ class ActivityAdmin extends Admin
                 ->disableColumnOptions()
                 ->disableFiltering()
                 ->addMetadataRequestParameters(['showResource' => true])
-                ->addAdapterOptions([
-                    'table' => [
-                        'skin' => 'flat',
-                        'show_header' => false,
-                    ],
-                ])
                 ->addToolbarActions([])
         );
 

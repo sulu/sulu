@@ -58,6 +58,8 @@
     "sulu_admin.title": "Titel",
     "sulu_admin.name": "Name",
     "sulu_admin.description": "Beschreibung",
+    "sulu_admin.timestamp": "Zeitpunkt",
+    "sulu_admin.resource": "Ressource",
     "sulu_admin.url": "URL",
     "sulu_admin.creator": "Ersteller",
     "sulu_admin.created": "Erstellt am",

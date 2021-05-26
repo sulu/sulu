@@ -161,14 +161,14 @@ class ActivityController extends AbstractRestController implements ClassResource
         $activities = $listBuilder->execute();
         $activities = \array_map(
             function(array $activity) use ($translationLocale, $configurationFieldDescriptors) {
-                $text = $this->getActivityText($activity, $translationLocale);
+                $description = $this->getActivityDescription($activity, $translationLocale);
                 $resource = $this->getActivityResource($activity);
 
                 return \array_filter(
                     \array_merge(
                         $activity,
                         [
-                            'text' => $text,
+                            'description' => $description,
                             'resource' => $resource,
                         ]
                     ),
@@ -372,7 +372,7 @@ class ActivityController extends AbstractRestController implements ClassResource
     /**
      * @param array<string, mixed> $activity
      */
-    private function getActivityText(array $activity, string $translationLocale): string
+    private function getActivityDescription(array $activity, string $translationLocale): string
     {
         $translationParameters = $this->getTranslationParameters($activity, $translationLocale);
 
@@ -388,7 +388,7 @@ class ActivityController extends AbstractRestController implements ClassResource
 
         return $this->translator->trans(
             \sprintf(
-                'sulu_activity.text.%s.%s',
+                'sulu_activity.description.%s.%s',
                 $activity['resourceKey'],
                 $activity['type']
             ),
