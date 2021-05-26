@@ -33,7 +33,7 @@ To use a Sulu icon just use the `su-` prefix:
 List of all sulu icons:
 
 ```
-const iconSettings = require('./fonts/selection.json');
+const iconSettings = require('./selection.json');
 
 <div style={{display: 'flex', flexWrap: 'wrap'}}>
     {
