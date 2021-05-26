@@ -14,11 +14,13 @@ jest.mock('../../../../stores/ResourceStore', () => function(resourceKey, id, op
     this.resourceKey = resourceKey;
     this.save = jest.fn().mockReturnValue(Promise.resolve());
     this.delete = jest.fn().mockReturnValue(Promise.resolve());
+    this.loadData = jest.fn().mockReturnValue(Promise.resolve());
     this.set = jest.fn();
     this.setMultiple = jest.fn(function(data) {
         Object.assign(this.data, data);
     });
     this.change = jest.fn();
+    this.remove = jest.fn();
     this.copyFromLocale = jest.fn();
     this.data = mockObservable({});
     this.loading = false;

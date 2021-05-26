@@ -139,7 +139,7 @@ class Preview extends React.Component<Props> {
         this.typeDisposer = reaction(
             () => toJS(formStore.schema),
             () => {
-                previewStore.updateContext(formStore.type, formStore.data).then(this.setContent);
+                previewStore.updateContext(toJS(formStore.type), toJS(formStore.data)).then(this.setContent);
             }
         );
     };
