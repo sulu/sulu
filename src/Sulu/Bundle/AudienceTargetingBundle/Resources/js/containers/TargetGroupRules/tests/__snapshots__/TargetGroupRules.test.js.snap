@@ -30,7 +30,7 @@ Array [
     </div>
   </div>,
   <div
-    class="tableContainer dark"
+    class="tableContainer dark hasButtons"
   >
     <table
       class="table"
@@ -327,7 +327,7 @@ Array [
     </div>
   </div>,
   <div
-    class="tableContainer dark"
+    class="tableContainer dark hasButtons"
   >
     <table
       class="table"

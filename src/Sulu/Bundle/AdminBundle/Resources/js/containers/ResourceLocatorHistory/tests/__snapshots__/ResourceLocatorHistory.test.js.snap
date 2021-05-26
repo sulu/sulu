@@ -35,7 +35,7 @@ Array [
             class="resourceLocatorHistoryOverlay"
           >
             <div
-              class="tableContainer dark"
+              class="tableContainer dark hasButtons"
             >
               <table
                 class="table"

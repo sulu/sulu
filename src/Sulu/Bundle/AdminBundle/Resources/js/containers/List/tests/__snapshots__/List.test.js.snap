@@ -82,7 +82,7 @@ exports[`Render Loader instead of Adapter if nothing was loaded yet 1`] = `
     class="list"
   >
     <div
-      class="spinner"
+      class="spinner loader"
       style="width:40px;height:40px"
     >
       <div

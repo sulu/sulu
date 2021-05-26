@@ -593,7 +593,7 @@ exports[`Should render the list with nodes of given ListItemActions 1`] = `
     >
       <section>
         <div
-          class="tableContainer dark"
+          class="tableContainer dark hasButtons"
         >
           <table
             class="table"
