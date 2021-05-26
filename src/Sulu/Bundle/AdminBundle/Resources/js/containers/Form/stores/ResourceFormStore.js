@@ -1,5 +1,5 @@
 // @flow
-import {action, autorun, computed, get, observable, when} from 'mobx';
+import {action, autorun, computed, get, isObservableArray, observable, when} from 'mobx';
 import jsonpointer from 'json-pointer';
 import {createAjv} from '../../../utils/Ajv';
 import ResourceStore from '../../../stores/ResourceStore';
@@ -10,6 +10,7 @@ import type {IObservableValue} from 'mobx/lib/mobx';
 
 // TODO do not hardcode "template", use some kind of metadata instead
 const TYPE = 'template';
+const SECTION_TYPE = 'section';
 
 const ajv = createAjv();
 
@@ -91,10 +92,132 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
         this.validator = jsonSchema ? ajv.compile(jsonSchema) : undefined;
         this.pathsByTag = {};
 
+        if (this.schema && this.type === this.data['originTemplate']){
+            this.loadAndMergeServerData(this.schema, schema);
+        }
+        this.removeObsoleteData(this.schema, schema, this.data);
+
         this.schema = schema;
         this.addMissingSchemaProperties();
         this.setSchemaLoading(false);
     };
+
+    loadAndMergeServerData(oldSchema: Schema, newSchema: Schema) {
+        this.resourceStore.loadData().then((data: Object) => {
+            this.mergeData(oldSchema, newSchema, this.data, data);
+            this.validate();
+        });
+    }
+
+    mergeData(oldSchema: Schema, newSchema: Schema, oldData: Object, newData: Object, parentPath: string[] = []) {
+        if (!oldSchema || !newSchema) {
+            return;
+        }
+
+        for (const key in newSchema) {
+            const {items: newItems, type: newType, types: newTypes} = newSchema[key];
+            const {items: oldItems, type: oldType, types: oldTypes} = oldSchema[key] || {};
+
+            if (newType === SECTION_TYPE && newItems &&
+                oldType === SECTION_TYPE && oldItems) {
+                this.mergeData(
+                    oldItems,
+                    newItems,
+                    oldData,
+                    newData,
+                    parentPath
+                );
+                continue;
+            }
+            if (newTypes && oldTypes
+                && Object.keys(newTypes).length > 0 && Object.keys(oldTypes).length > 0
+                && oldData[key] && newData[key]
+                && (Array.isArray(oldData[key]) || isObservableArray(oldData[key]))
+                && (Array.isArray(newData[key]) || isObservableArray(newData[key]))
+            ) {
+                for (const childKey of newData[key].keys()){
+                    const newChildData = newData[key][childKey];
+                    const oldChildData = oldData[key][childKey] || {};
+
+                    const oldChildSchema = oldTypes[oldChildData.type].form;
+                    const newChildSchema = newTypes[newChildData.type].form;
+
+                    this.mergeData(
+                        oldChildSchema,
+                        newChildSchema,
+                        oldChildData,
+                        newChildData,
+                        parentPath.concat([key, childKey])
+                    );
+                }
+
+                continue;
+            }
+
+            if (!oldData[key] || newSchema[key]['type'] !== oldSchema[key]['type']) {
+                // set serverData
+                this.change(parentPath.concat(key).join('/'), newData[key]);
+            }
+        }
+    }
+
+    removeObsoleteData(oldSchema: Schema, newSchema: Schema, data: Object, parentPath: string[] = []) {
+        if (!oldSchema || !newSchema) {
+            return;
+        }
+
+        for (const key in oldSchema) {
+            const {items: newItems, type: newType, types: newTypes} = newSchema[key] || {};
+            const {items: oldItems, type: oldType, types: oldTypes} = oldSchema[key];
+
+            if (newType === SECTION_TYPE && newItems &&
+                oldType === SECTION_TYPE && oldItems) {
+                this.removeObsoleteData(
+                    oldItems,
+                    newItems,
+                    data,
+                    parentPath
+                );
+                continue;
+            }
+
+            if (newTypes && oldTypes
+                && Object.keys(newTypes).length > 0 && Object.keys(oldTypes).length > 0
+                && data[key]
+                && (Array.isArray(data[key]) || isObservableArray(data[key]))
+            ) {
+                for (const childKey of data[key].keys()) {
+                    const childData = data[key][childKey];
+                    const oldChildSchema = oldTypes[childData.type].form;
+                    let newChildSchema = newTypes[childData.type]?.form;
+
+                    if (!newChildSchema) {
+                        const defaultType = newSchema[key]['defaultType'];
+                        if (defaultType) {
+                            newChildSchema = newTypes[defaultType].form;
+                            //set default type
+                            const path = parentPath.concat([key, childKey]).join('/') + '/type';
+                            this.change(path, defaultType);
+                        }
+                    }
+
+                    this.removeObsoleteData(
+                        oldChildSchema,
+                        newChildSchema,
+                        childData,
+                        parentPath.concat([key, childKey])
+                    );
+                }
+
+                continue;
+            }
+
+            if (!newSchema[key] || newSchema[key]['type'] !== oldSchema[key]['type']) {
+                // remove obsolete data from previous schema
+                this.remove(parentPath.concat(key).join('/'));
+            }
+        }
+    }
 
     @computed get hasTypes(): boolean {
         return Object.keys(this.types).length > 0;
@@ -139,6 +262,10 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
                     this.setType(response[TYPE]);
                 }
             });
+    }
+
+    remove(name: string) {
+        this.resourceStore.remove(name);
     }
 
     set(name: string, value: mixed) {

@@ -1,5 +1,5 @@
 // @flow
-import {action, autorun, observable, toJS, set, when} from 'mobx';
+import {action, autorun, observable, set, toJS, when} from 'mobx';
 import log from 'loglevel';
 import jsonpointer from 'json-pointer';
 import ResourceRequester from '../../services/ResourceRequester';
@@ -62,23 +62,12 @@ export default class ResourceStore {
             return;
         }
 
-        const options = {};
-        if (locale) {
-            options.locale = locale.get();
-        }
-
         log.info('ResourceStore loads "' + this.resourceKey + '" data with the ID "' + id + '"');
 
         this.setLoading(true);
         this.setForbidden(false);
-        const promise = this.idQueryParameter
-            ? ResourceRequester.get(
-                this.resourceKey,
-                {...options, ...this.loadOptions, [this.idQueryParameter]: id}
-            )
-            : ResourceRequester.get(this.resourceKey, {...options, ...this.loadOptions, id});
 
-        promise
+        this.loadData()
             .then(action((response: Object) => {
                 if (this.idQueryParameter) {
                     this.handleIdQueryParameterResponse(response);
@@ -96,6 +85,27 @@ export default class ResourceStore {
                     this.setForbidden(true);
                 }
             }));
+    };
+
+    loadData = () => {
+        const {
+            id,
+            observableOptions: {
+                locale,
+            },
+        } = this;
+
+        const options = {};
+        if (locale) {
+            options.locale = locale.get();
+        }
+
+        return this.idQueryParameter
+            ? ResourceRequester.get(
+                this.resourceKey,
+                {...options, ...this.loadOptions, [this.idQueryParameter]: id}
+            )
+            : ResourceRequester.get(this.resourceKey, {...options, ...this.loadOptions, id});
     };
 
     @action reload = () => {
@@ -253,6 +263,11 @@ export default class ResourceStore {
                 this.setMultiple(response);
                 return response;
             }));
+    }
+
+    @action remove(path: string) {
+        jsonpointer.remove(this.data, '/' + path);
+        this.dirty = true;
     }
 
     @action set(path: string, value: mixed) {

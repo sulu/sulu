@@ -104,7 +104,7 @@ export default class AbstractFormStore
     +metadataOptions: ?{[string]: any};
     +loading: boolean;
     +locale: ?IObservableValue<string>;
-    schema: Schema;
+    @observable schema: Schema;
     modifiedFields: Array<string> = [];
     @observable errors: Object = {};
     validator: ?(data: Object) => boolean;
