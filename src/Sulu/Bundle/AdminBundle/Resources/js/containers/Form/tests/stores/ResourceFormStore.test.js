@@ -277,6 +277,277 @@ test('Change type should update schema and data', (done) => {
     }, 0);
 });
 
+test('Change schema should update data and remove obsolete data', (done) => {
+    const oldSchema = {
+        title: {
+            label: 'Title',
+            type: 'text_line',
+        },
+        description: {
+            label: 'Description',
+            type: 'text_line',
+        },
+    };
+
+    const newSchema = {
+        title: {
+            label: 'Title',
+            type: 'text_line',
+        },
+    };
+    const newSchemaPromise = Promise.resolve(newSchema);
+    const jsonSchemaPromise = Promise.resolve({});
+
+    const resourceStore = new ResourceStore('pages', '1');
+
+    metadataStore.getSchema.mockReturnValue(newSchemaPromise);
+    metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
+    const resourceFormStore = new ResourceFormStore(resourceStore, 'pages');
+    resourceFormStore.type = observable.box('default');
+    resourceFormStore.schema = oldSchema;
+
+    setTimeout(() => {
+        expect(toJS(resourceFormStore.type)).toEqual('default');
+        expect(resourceFormStore.schema).toEqual(newSchema);
+        expect(resourceStore.remove).toBeCalledWith('description');
+        resourceFormStore.destroy();
+        done();
+    }, 0);
+});
+
+test('Change schema should update data and remove obsolete data with blocks', (done) => {
+    const oldSchema = {
+        title: {
+            label: 'Title',
+            type: 'text_line',
+        },
+        description: {
+            label: 'Description',
+            type: 'text_line',
+        },
+        blocks: {
+            defaultType: 'headline',
+            type: 'block',
+            types: {
+                headline: {
+                    name: 'headline',
+                    title: 'Headline',
+                    form: {
+                        title: {
+                            label: 'Title',
+                            type: 'text_line',
+                        },
+                    },
+                },
+                description: {
+                    name: 'description',
+                    title: 'Description',
+                    form: {
+                        description: {
+                            label: 'Description',
+                            type: 'text_area',
+                        },
+                    },
+                },
+            },
+        },
+    };
+
+    const newSchema = {
+        title: {
+            label: 'Title',
+            type: 'text_line',
+        },
+    };
+    const newSchemaPromise = Promise.resolve(newSchema);
+    const jsonSchemaPromise = Promise.resolve({});
+
+    const resourceStore = new ResourceStore('pages', '1');
+
+    metadataStore.getSchema.mockReturnValue(newSchemaPromise);
+    metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
+    const resourceFormStore = new ResourceFormStore(resourceStore, 'pages');
+    resourceFormStore.type = observable.box('default');
+    resourceFormStore.schema = oldSchema;
+
+    setTimeout(() => {
+        expect(toJS(resourceFormStore.type)).toEqual('default');
+        expect(resourceFormStore.schema).toEqual(newSchema);
+        expect(resourceStore.remove).toBeCalledWith('description');
+        expect(resourceStore.remove).toBeCalledWith('blocks');
+        resourceFormStore.destroy();
+        done();
+    }, 0);
+});
+
+test('Change schema should update data and remove obsolete data with blocks in blocks', (done) => {
+    const oldSchema = {
+        title: {
+            label: 'Title',
+            type: 'text_line',
+        },
+        description: {
+            label: 'Description',
+            type: 'text_line',
+        },
+        blocks: {
+            defaultType: 'headline',
+            type: 'block',
+            types: {
+                headline: {
+                    name: 'headline',
+                    title: 'Headline',
+                    form: {
+                        title: {
+                            label: 'Title',
+                            type: 'text_line',
+                        },
+                        description: {
+                            label: 'Description',
+                            type: 'text_area',
+                        },
+                    },
+                },
+                textEditor: {
+                    name: 'textEditor',
+                    title: 'Text Editor',
+                    form: {
+                        text: {
+                            label: 'Text',
+                            type: 'text_editor',
+                        },
+                    },
+                },
+                block_in_block: {
+                    name: 'block_in_block',
+                    title: 'Block in Block',
+                    form: {
+                        inlineBlock: {
+                            defaultType: 'headline',
+                            type: 'block',
+                            types: {
+                                headline: {
+                                    name: 'headline',
+                                    title: 'Headline',
+                                    form: {
+                                        title: {
+                                            label: 'Title',
+                                            type: 'text_line',
+                                        },
+                                        description: {
+                                            label: 'Description',
+                                            type: 'text_area',
+                                        },
+                                    },
+                                },
+                                textBlock: {
+                                    name: 'textBlock',
+                                    title: 'Text Block',
+                                    form: {
+                                        text: {
+                                            label: 'Text',
+                                            type: 'text_editor',
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    };
+
+    const newSchema = {
+        title: {
+            label: 'Title',
+            type: 'text_line',
+        },
+        blocks: {
+            defaultType: 'textEditor',
+            type: 'block',
+            types: {
+                textEditor: {
+                    name: 'textEditor',
+                    title: 'Text Editor',
+                    form: {
+                        text: {
+                            label: 'Text',
+                            type: 'text_editor',
+                        },
+                    },
+                },
+                block_in_block: {
+                    name: 'block_in_block',
+                    title: 'Block in Block',
+                    form: {
+                        inlineBlock: {
+                            defaultType: 'textBlock',
+                            type: 'block',
+                            types: {
+                                textBlock: {
+                                    name: 'textBlock',
+                                    title: 'Text Block',
+                                    form: {
+                                        text: {
+                                            label: 'Text',
+                                            type: 'text_editor',
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    };
+    const newSchemaPromise = Promise.resolve(newSchema);
+    const jsonSchemaPromise = Promise.resolve({});
+
+    const resourceStore = new ResourceStore('pages', '1');
+    resourceStore.data = observable({
+        title: 'Title',
+        blocks: [
+            {title: 'block1_title', description: 'block1_description', type: 'headline'},
+            {title: 'block2_title', description: 'block2_description', type: 'headline'},
+            {text: 'block3_text', type: 'textEditor'},
+            {text: 'block4_text', type: 'textEditor'},
+            {
+                type: 'block_in_block',
+                inlineBlock: [
+                    {title: 'block_in_block1_title', description: 'block_in_block1_description', type: 'headline'},
+                    {title: 'block_in_block2_title', description: 'block_in_block2_description', type: 'headline'},
+                    {text: 'block_in_block3_text', type: 'textBlock'},
+                    {text: 'block_in_block4_text', type: 'textBlock'},
+                ],
+            },
+        ],
+    });
+
+    metadataStore.getSchema.mockReturnValue(newSchemaPromise);
+    metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
+    const resourceFormStore = new ResourceFormStore(resourceStore, 'pages');
+    resourceFormStore.type = observable.box('default');
+    resourceFormStore.schema = oldSchema;
+
+    setTimeout(() => {
+        expect(toJS(resourceFormStore.type)).toEqual('default');
+        expect(resourceFormStore.schema).toEqual(newSchema);
+        expect(resourceStore.remove).toHaveBeenNthCalledWith(1, 'description');
+        expect(resourceStore.remove).toHaveBeenNthCalledWith(2, 'blocks/0/title');
+        expect(resourceStore.remove).toHaveBeenNthCalledWith(3, 'blocks/0/description');
+        expect(resourceStore.remove).toHaveBeenNthCalledWith(4, 'blocks/1/title');
+        expect(resourceStore.remove).toHaveBeenNthCalledWith(5, 'blocks/1/description');
+        expect(resourceStore.remove).toHaveBeenNthCalledWith(6, 'blocks/4/inlineBlock/0/title');
+        expect(resourceStore.remove).toHaveBeenNthCalledWith(7, 'blocks/4/inlineBlock/0/description');
+        expect(resourceStore.remove).toHaveBeenNthCalledWith(8, 'blocks/4/inlineBlock/1/title');
+        expect(resourceStore.remove).toHaveBeenNthCalledWith(9, 'blocks/4/inlineBlock/1/description');
+        resourceFormStore.destroy();
+        done();
+    }, 0);
+});
+
 test('Change type should throw an error if no types are available', () => {
     const promise = Promise.resolve({});
     metadataStore.getSchema.mockReturnValue(promise);
