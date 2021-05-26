@@ -3,6 +3,7 @@ import React from 'react';
 import {observer, Observer} from 'mobx-react';
 import {action, observable} from 'mobx';
 import Dropzone from 'react-dropzone';
+import classNames from 'classnames';
 import MediaUploadStore from '../../stores/MediaUploadStore';
 import MediaItem from './MediaItem';
 import DropzoneOverlay from './DropzoneOverlay';
@@ -12,6 +13,7 @@ import type {ElementRef, Node} from 'react';
 
 type Props = {
     children: Node,
+    className?: string,
     collectionId: ?string | number,
     locale: IObservableValue<string>,
     onClose: () => void,
@@ -113,7 +115,12 @@ class MultiMediaDropzone extends React.Component<Props> {
     };
 
     render() {
-        const {children, open} = this.props;
+        const {children, className, open} = this.props;
+
+        const dropzoneClass = classNames(
+            dropzoneStyles.dropzone,
+            className
+        );
 
         return (
             <Dropzone
@@ -126,7 +133,7 @@ class MultiMediaDropzone extends React.Component<Props> {
                 {({getInputProps, getRootProps}) => (
                     <Observer>
                         {() => (
-                            <div {...getRootProps({className: dropzoneStyles.dropzone})}>
+                            <div {...getRootProps({className: dropzoneClass})}>
                                 {children}
                                 <input {...getInputProps()} />
                                 <DropzoneOverlay

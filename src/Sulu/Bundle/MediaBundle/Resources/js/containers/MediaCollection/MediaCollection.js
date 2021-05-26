@@ -13,6 +13,7 @@ import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
 import type {ElementRef} from 'react';
 
 type Props = {|
+    className?: string,
     collectionListStore: ListStore,
     collectionStore: CollectionStore,
     locale: IObservableValue<string>,
@@ -76,6 +77,7 @@ class MediaCollection extends React.Component<Props> {
 
     render() {
         const {
+            className,
             collectionListStore,
             collectionStore,
             locale,
@@ -99,6 +101,7 @@ class MediaCollection extends React.Component<Props> {
 
         return (
             <MultiMediaDropzone
+                className={className}
                 collectionId={addable ? collectionStore.id : undefined}
                 locale={locale}
                 onClose={onUploadOverlayClose}
