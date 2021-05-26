@@ -14,6 +14,7 @@ namespace Sulu\Bundle\PreviewBundle\Tests\Unit\Preview;
 use Doctrine\Common\Cache\Cache;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\ProviderNotFoundException;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\TokenNotFoundException;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderInterface;
@@ -65,7 +66,7 @@ class PreviewTest extends TestCase
     private $webspaceKey = 'sulu_io';
 
     /**
-     * @var \stdClass
+     * @var \stdClass|ObjectProphecy
      */
     private $object;
 
