@@ -88,25 +88,27 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
         });
     };
 
-    @action handleSchemaResponse = ([schema, jsonSchema]: [Schema, Object]) => {
+    handleSchemaResponse = ([schema, jsonSchema]: [Schema, Object]) => {
         this.validator = jsonSchema ? ajv.compile(jsonSchema) : undefined;
         this.pathsByTag = {};
 
-        if (this.schema && this.type === this.data['originTemplate']){
-            this.loadAndMergeServerData(this.schema, schema);
-        }
-        this.removeObsoleteData(this.schema, schema, this.data);
-
-        this.schema = schema;
-        this.addMissingSchemaProperties();
-        this.setSchemaLoading(false);
+        this.loadAndMergeOriginData(this.schema, schema).then(action(()=> {
+            this.removeObsoleteData(this.schema, schema, this.data);
+            this.schema = schema;
+            this.addMissingSchemaProperties();
+            this.setSchemaLoading(false);
+        }));
     };
 
-    loadAndMergeServerData(oldSchema: Schema, newSchema: Schema) {
-        this.resourceStore.loadData().then((data: Object) => {
-            this.mergeData(oldSchema, newSchema, this.data, data);
-            this.validate();
-        });
+    loadAndMergeOriginData(oldSchema: Schema, newSchema: Schema) {
+        if (oldSchema && this.type === this.data['originTemplate']){
+            return this.resourceStore.loadData().then((data: Object) => {
+                this.mergeData(oldSchema, newSchema, this.data, data);
+                this.validate();
+            });
+        }
+
+        return Promise.resolve();
     }
 
     mergeData(oldSchema: Schema, newSchema: Schema, oldData: Object, newData: Object, parentPath: string[] = []) {
@@ -139,7 +141,7 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
                     const newChildData = newData[key][childKey];
                     const oldChildData = oldData[key][childKey] || {};
 
-                    const oldChildSchema = oldTypes[oldChildData.type].form;
+                    const oldChildSchema = oldTypes[oldChildData.type]?.form;
                     const newChildSchema = newTypes[newChildData.type].form;
 
                     this.mergeData(
@@ -188,7 +190,7 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
             ) {
                 for (const childKey of data[key].keys()) {
                     const childData = data[key][childKey];
-                    const oldChildSchema = oldTypes[childData.type].form;
+                    const oldChildSchema = oldTypes[childData.type]?.form;
                     let newChildSchema = newTypes[childData.type]?.form;
 
                     if (!newChildSchema) {
