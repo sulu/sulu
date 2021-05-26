@@ -3,7 +3,7 @@ import {action, reaction, observable, computed} from 'mobx';
 import jsonPointer from 'json-pointer';
 import debounce from 'debounce';
 import symfonyRouting from 'fos-jsrouting/router';
-import Router from '../../../services/Router';
+import Router, {Route} from '../../../services/Router';
 import Requester from '../../../services/Requester';
 import type {HandleResponseHook} from '../../../services/Requester/types';
 
@@ -13,6 +13,7 @@ export default class BadgeStore {
     dataPath: ?string;
     requestParameters: Object;
     routerAttributesToRequest: Object;
+    tabViewRoute: Route;
     @observable value: ?string = null;
     routeChangeDisposer: () => {};
 
@@ -21,13 +22,15 @@ export default class BadgeStore {
         routeName: string,
         dataPath: ?string,
         requestParameters: Object,
-        routerAttributesToRequest: Object
+        routerAttributesToRequest: Object,
+        tabViewRoute: Route
     ) {
         this.router = router;
         this.routeName = routeName;
         this.dataPath = dataPath;
         this.requestParameters = requestParameters;
         this.routerAttributesToRequest = routerAttributesToRequest;
+        this.tabViewRoute = tabViewRoute;
 
         this.load();
 
@@ -81,7 +84,24 @@ export default class BadgeStore {
         this.value = String(enhancedData);
     }
 
+    @computed get isChildOrSameRoute() {
+        let route: ?Route = this.router.route;
+        while (route !== this.tabViewRoute) {
+            if (!route) {
+                return false;
+            }
+
+            route = route.parent;
+        }
+
+        return true;
+    }
+
     load = debounce(() => {
+        if (!this.isChildOrSameRoute) {
+            return;
+        }
+
         Requester.get(this.url).then((response: Object) => {
             this.setData(response);
         });
