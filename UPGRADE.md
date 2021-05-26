@@ -1,5 +1,10 @@
 # Upgrade
 
+### Preview updateContext method
+
+The method `Preview::updateContext` has been extended with the `data` argument. The argument is necessary
+to make sure that the rendered data are consistent with the template.
+
 ## 2.3.0-RC1
 
 ### Auditable Fields to User
