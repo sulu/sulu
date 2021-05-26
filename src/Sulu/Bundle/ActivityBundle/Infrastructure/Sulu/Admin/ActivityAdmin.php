@@ -154,18 +154,6 @@ class ActivityAdmin extends Admin
                         ])
                         ->setParent(static::EDIT_FORM_ACTIVITY_VERSION_TAB_VIEW)
                 );
-
-                $viewCollection->add(
-                    $this->viewBuilderFactory
-                        ->createFormViewBuilder(static::EDIT_FORM_ACTIVITY_VERSION_TAB_VIEW . '.versions-old', '/versions-old')
-                        ->setTabTitle('sulu_admin.versions')
-                        ->setResourceKey(BasePageDocument::RESOURCE_KEY)
-                        ->setFormKey('page_versions')
-                        ->addToolbarActions([])
-                        ->addRouterAttributesToFormRequest(['webspace'])
-                        ->disableTabGap()
-                        ->setParent(static::EDIT_FORM_ACTIVITY_VERSION_TAB_VIEW)
-                );
             }
         }
 
