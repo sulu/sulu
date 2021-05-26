@@ -31,7 +31,7 @@ class ActivityAdmin extends Admin
 
     const LIST_VIEW = 'sulu_activity.activities.list';
 
-    const EDIT_FORM_ACTIVITY_VERSION_TAB_VIEW = 'sulu_page.page_edit_form.activity_version_tab';
+    const PAGE_EDIT_FORM_ACTIVITY_TAB_VIEW = 'sulu_page.page_edit_form.activity_version_tab';
 
     /**
      * @var ViewBuilderFactoryInterface
@@ -94,7 +94,7 @@ class ActivityAdmin extends Admin
         if ($viewCollection->has(PageAdmin::EDIT_FORM_VIEW)) {
             $viewCollection->add(
                 $this->viewBuilderFactory
-                    ->createResourceTabViewBuilder(static::EDIT_FORM_ACTIVITY_VERSION_TAB_VIEW, '/activity')
+                    ->createResourceTabViewBuilder(static::PAGE_EDIT_FORM_ACTIVITY_TAB_VIEW, '/activity')
                     ->setResourceKey(BasePageDocument::RESOURCE_KEY)
                     ->setTabOrder(6144)
                     ->setTabTitle($this->versioningEnabled ? 'sulu_admin.activity_versions' : 'sulu_admin.activity')
@@ -103,7 +103,7 @@ class ActivityAdmin extends Admin
 
             $viewCollection->add(
                 $this->viewBuilderFactory
-                    ->createListViewBuilder(static::EDIT_FORM_ACTIVITY_VERSION_TAB_VIEW . '.activity', '/activity')
+                    ->createListViewBuilder(static::PAGE_EDIT_FORM_ACTIVITY_TAB_VIEW . '.activity', '/activity')
                     ->setTabTitle('sulu_admin.activity')
                     ->setResourceKey(ActivityInterface::RESOURCE_KEY)
                     ->setListKey('activities')
@@ -121,13 +121,13 @@ class ActivityAdmin extends Admin
                     ->disableFiltering()
                     ->addRouterAttributesToListRequest(['id' => 'resourceId'])
                     ->addRequestParameters(['resourceKey' => BasePageDocument::RESOURCE_KEY])
-                    ->setParent(static::EDIT_FORM_ACTIVITY_VERSION_TAB_VIEW)
+                    ->setParent(static::PAGE_EDIT_FORM_ACTIVITY_TAB_VIEW)
             );
 
             if ($this->versioningEnabled) {
                 $viewCollection->add(
                     $this->viewBuilderFactory
-                        ->createListViewBuilder(static::EDIT_FORM_ACTIVITY_VERSION_TAB_VIEW . '.versions', '/versions')
+                        ->createListViewBuilder(static::PAGE_EDIT_FORM_ACTIVITY_TAB_VIEW . '.versions', '/versions')
                         ->setTabTitle('sulu_admin.versions')
                         ->setResourceKey('page_versions')
                         ->setListKey('page_versions')
@@ -146,7 +146,7 @@ class ActivityAdmin extends Admin
                         ->addItemActions([
                             new ListItemAction('restore_version', ['success_view' => PageAdmin::EDIT_FORM_VIEW]),
                         ])
-                        ->setParent(static::EDIT_FORM_ACTIVITY_VERSION_TAB_VIEW)
+                        ->setParent(static::PAGE_EDIT_FORM_ACTIVITY_TAB_VIEW)
                 );
             }
         }
@@ -172,6 +172,7 @@ class ActivityAdmin extends Admin
                     ->disableFiltering()
                     ->addResourceStorePropertiesToListRequest(['id' => 'resourceId'])
                     ->addRequestParameters(['resourceKey' => MediaInterface::RESOURCE_KEY])
+                    ->setBackView(MediaAdmin::MEDIA_OVERVIEW_VIEW)
                     ->setParent(MediaAdmin::EDIT_FORM_VIEW)
             );
         }
