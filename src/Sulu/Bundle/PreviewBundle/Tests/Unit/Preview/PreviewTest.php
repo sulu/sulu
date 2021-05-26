@@ -394,7 +394,7 @@ class PreviewTest extends TestCase
 
         $this->provider->deserialize($dataJson, $cacheData['objectClass'])->willReturn($this->object->reveal());
         $this->provider->setContext($this->object->reveal(), $this->locale, $context)->willReturn($newObject->reveal());
-        $this->provider->setValues(Argument::cetera())->shouldNotBeCalled();
+        $this->provider->setValues($this->object->reveal(), $this->locale, $data)->shouldBeCalled();
         $this->provider->serialize($newObject->reveal())->willReturn($expectedData['object'])->shouldBeCalled();
 
         $this->renderer->render(
@@ -428,6 +428,7 @@ class PreviewTest extends TestCase
         $result = $this->preview->updateContext(
             $token,
             $context,
+            $data,
             ['webspaceKey' => $this->webspaceKey, 'locale' => $this->locale]
         );
 
@@ -462,6 +463,7 @@ class PreviewTest extends TestCase
         $this->cache->contains($token)->willReturn(true);
         $this->cache->fetch($token)->willReturn(\json_encode($cacheData));
 
+        $this->provider->setValues($this->object->reveal(), $this->locale, $data)->shouldBeCalled();
         $this->provider->deserialize($dataJson, $cacheData['objectClass'])->willReturn($this->object->reveal());
         $this->provider->setContext($this->object->reveal(), $this->locale, $context)->willReturn($newObject->reveal());
 
@@ -475,6 +477,7 @@ class PreviewTest extends TestCase
         $this->preview->updateContext(
             $token,
             $context,
+            $data,
             ['webspaceKey' => $this->webspaceKey, 'locale' => $this->locale]
         );
     }
@@ -500,8 +503,8 @@ class PreviewTest extends TestCase
         $this->cache->fetch($token)->willReturn(\json_encode($cacheData));
 
         $this->provider->deserialize($dataJson, $cacheData['objectClass'])->willReturn($this->object->reveal());
+        $this->provider->setValues($this->object->reveal(), $this->locale, $data)->shouldBeCalled();
         $this->provider->setContext(Argument::cetera())->shouldNotBeCalled();
-        $this->provider->setValues(Argument::cetera())->shouldNotBeCalled();
         $this->provider->serialize(Argument::cetera())->shouldNotBeCalled();
 
         $this->renderer->render(
@@ -518,6 +521,7 @@ class PreviewTest extends TestCase
         $result = $this->preview->updateContext(
             $token,
             $context,
+            $data,
             ['webspaceKey' => $this->webspaceKey, 'locale' => $this->locale]
         );
 
@@ -559,7 +563,7 @@ class PreviewTest extends TestCase
 
         $this->provider->deserialize($dataJson, $cacheData['objectClass'])->willReturn($this->object->reveal());
         $this->provider->setContext($this->object->reveal(), $this->locale, $context)->willReturn($newObject->reveal());
-        $this->provider->setValues(Argument::cetera())->shouldNotBeCalled();
+        $this->provider->setValues($this->object->reveal(), $this->locale, $data)->shouldBeCalled();
         $this->provider->serialize($newObject->reveal())->willReturn($expectedData['object'])->shouldBeCalled();
 
         $this->renderer->render(
@@ -593,6 +597,7 @@ class PreviewTest extends TestCase
         $result = $this->preview->updateContext(
             $token,
             $context,
+            $data,
             ['targetGroupId' => 2, 'segmentKey' => null, 'webspaceKey' => $this->webspaceKey, 'locale' => $this->locale]
         );
 

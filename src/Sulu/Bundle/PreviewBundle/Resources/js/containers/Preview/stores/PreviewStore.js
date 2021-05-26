@@ -106,7 +106,7 @@ export default class PreviewStore {
         });
     }
 
-    updateContext(type: string): Promise<string> {
+    updateContext(type: string, data: Object): Promise<string> {
         const route = generateRoute('update-context', {
             webspaceKey: this.webspace,
             segmentKey: this.segment,
@@ -118,7 +118,7 @@ export default class PreviewStore {
             dateTime: this.dateTime && transformDateForUrl(this.dateTime),
         });
 
-        return Requester.post(route, {context: {template: type}}).then((response) => {
+        return Requester.post(route, {data, context: {template: type}}).then((response) => {
             return response.content;
         });
     }

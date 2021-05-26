@@ -107,12 +107,17 @@ class Preview implements PreviewInterface
     public function updateContext(
         string $token,
         array $context,
+        array $data,
         array $options = []
     ): string {
         $locale = $options['locale'] ?? null;
         $cacheItem = $this->fetch($token);
 
         $provider = $this->getProvider($cacheItem->getProviderKey());
+        if (!empty($data)) {
+            $provider->setValues($cacheItem->getObject(), $locale, $data);
+        }
+
         if (0 === \count($context)) {
             return $this->renderer->render(
                 $cacheItem->getObject(),
