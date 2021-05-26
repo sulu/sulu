@@ -153,6 +153,11 @@ class CategoryAdmin extends Admin
                     ->setResourceKey('category_keywords')
                     ->setListKey('category_keywords')
                     ->addListAdapters(['table'])
+                    ->addAdapterOptions([
+                        'table' => [
+                            'skin' => 'light',
+                        ],
+                    ])
                     ->addRouterAttributesToListRequest(['id' => 'categoryId'])
                     ->setFormKey('category_keywords')
                     ->addRouterAttributesToFormRequest(['id' => 'categoryId'])

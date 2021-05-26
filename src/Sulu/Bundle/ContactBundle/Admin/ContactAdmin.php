@@ -176,6 +176,11 @@ class ContactAdmin extends Admin
                     ->setUserSettingsKey('contact_media')
                     ->setTabTitle('sulu_contact.documents')
                     ->addListAdapters(['table'])
+                    ->addAdapterOptions([
+                        'table' => [
+                            'skin' => 'light',
+                        ],
+                    ])
                     ->addToolbarActions($contactDocumentsToolbarActions)
                     ->addItemActions($contactDocumentsItemActions)
                     ->addRouterAttributesToListRequest(['id' => 'contactId'])
@@ -270,6 +275,11 @@ class ContactAdmin extends Admin
                     ->setListKey('account_contacts')
                     ->setTabTitle('sulu_contact.people')
                     ->addListAdapters(['table'])
+                    ->addAdapterOptions([
+                        'table' => [
+                            'skin' => 'light',
+                        ],
+                    ])
                     ->setEditView(static::CONTACT_EDIT_FORM_VIEW)
                     ->addRouterAttributesToListRequest(['id'])
                     ->addToolbarActions([
@@ -288,6 +298,11 @@ class ContactAdmin extends Admin
                     ->setUserSettingsKey('contact_media')
                     ->setTabTitle('sulu_contact.documents')
                     ->addListAdapters(['table'])
+                    ->addAdapterOptions([
+                        'table' => [
+                            'skin' => 'light',
+                        ],
+                    ])
                     ->addRouterAttributesToListRequest(['id' => 'contactId'])
                     ->addToolbarActions($accountDocumentsToolbarActions)
                     ->addItemActions($accountDocumentsItemActions)
