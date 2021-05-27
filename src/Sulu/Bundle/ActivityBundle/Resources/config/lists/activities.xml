@@ -42,38 +42,38 @@
                         <param name="created" value="su-plus"/>
                         <param name="modified" value="su-pen"/>
                         <param name="removed" value="su-trash-alt"/>
-                        <param name="cache_cleared" value="su-paint"/>
+                        <param name="cache_cleared" value="su-clean"/>
                         <param name="moved" value="su-arrows-alt"/>
                         <param name="copied" value="su-copy"/>
-                        <param name="published" value="su-upload"/>
-                        <param name="unpublished" value="su-download"/>
-                        <param name="merged" value="fa-code-fork"/>
-                        <param name="enabled" value="su-check"/>
+                        <param name="published" value="su-publish"/>
+                        <param name="unpublished" value="su-unpublish"/>
+                        <param name="merged" value="su-merge"/>
+                        <param name="enabled" value="su-toggler-enabled"/>
                         <param name="locked" value="su-lock"/>
-                        <param name="unlocked" value="su-lock"/>
-                        <param name="draft_removed" value="su-clean"/>
-                        <param name="children_reordered" value="su-exchange-up"/>
-                        <param name="translation_added" value="su-language"/>
-                        <param name="translation_copied" value="su-language"/>
-                        <param name="translation_removed" value="su-language"/>
-                        <param name="keyword_added" value="fa-font"/>
-                        <param name="keyword_modified" value="fa-font"/>
-                        <param name="keyword_removed" value="fa-font"/>
-                        <param name="contact_added" value="su-user"/>
-                        <param name="contact_removed" value="su-user"/>
-                        <param name="media_added" value="su-image"/>
-                        <param name="media_removed" value="su-image"/>
-                        <param name="route_removed" value="su-link"/>
-                        <param name="crop_modified" value="su-cut"/>
-                        <param name="crop_removed" value="su-cut"/>
-                        <param name="preview_image_modified" value="su-image"/>
-                        <param name="preview_image_removed" value="su-image"/>
-                        <param name="version_added" value="su-clock"/>
-                        <param name="version_removed" value="su-clock"/>
+                        <param name="unlocked" value="su-lock-open"/>
+                        <param name="draft_removed" value="su-trash-alt"/>
+                        <param name="children_reordered" value="su-exchange"/>
+                        <param name="translation_added" value="su-language-plus"/>
+                        <param name="translation_copied" value="su-language-copy"/>
+                        <param name="translation_removed" value="su-language-minus"/>
+                        <param name="keyword_added" value="su-tag-plus"/>
+                        <param name="keyword_modified" value="su-tag-pen"/>
+                        <param name="keyword_removed" value="su-tag-minus"/>
+                        <param name="contact_added" value="su-user-plus"/>
+                        <param name="contact_removed" value="su-user-minus"/>
+                        <param name="media_added" value="su-image-plus"/>
+                        <param name="media_removed" value="su-image-minus"/>
+                        <param name="route_removed" value="su-link-minus"/>
+                        <param name="crop_modified" value="su-crop-pen"/>
+                        <param name="crop_removed" value="su-crop-minus"/>
+                        <param name="preview_image_modified" value="su-image-pen"/>
+                        <param name="preview_image_removed" value="su-image-minus"/>
+                        <param name="version_added" value="su-process-plus"/>
+                        <param name="version_removed" value="su-process-minus"/>
                         <param name="version_restored" value="su-process"/>
-                        <param name="default_snippet_modified" value="su-snippet"/>
-                        <param name="default_snippet_removed" value="su-snippet"/>
-                        <param name="password_resetted" value="su-sync"/>
+                        <param name="default_snippet_modified" value="su-snippet-pen"/>
+                        <param name="default_snippet_removed" value="su-snippet-minus"/>
+                        <param name="password_resetted" value="su-lock-check"/>
                     </param>
                 </params>
             </transformer>
