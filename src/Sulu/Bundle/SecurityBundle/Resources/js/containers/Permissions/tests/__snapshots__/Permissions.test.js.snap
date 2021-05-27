@@ -538,8 +538,8 @@ exports[`Render with webspace section 3`] = `
               title="sulu_security.live"
             >
               <span
-                aria-label="fa-signal"
-                class="fa fa-signal"
+                aria-label="su-publish"
+                class="su su-publish"
               />
             </div>
             <div
