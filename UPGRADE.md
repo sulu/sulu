@@ -7,6 +7,11 @@
 The method `Preview::updateContext` has been extended with the `data` argument. The argument is necessary
 to make sure that the rendered data are consistent with the template.
 
+### Ocramius/ProxyManager
+
+Since Ocramius/ProxyManager:[`2.12.0`](https://github.com/Ocramius/ProxyManager/pull/700) Composer 2.0.14 is required. 
+You have to upgrade to `composer/composer:2.0.14` or newer:
+
 ## 2.3.0-RC1
 
 ### Auditable Fields to User
