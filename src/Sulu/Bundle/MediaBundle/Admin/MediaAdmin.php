@@ -11,6 +11,8 @@
 
 namespace Sulu\Bundle\MediaBundle\Admin;
 
+use Sulu\Bundle\ActivityBundle\Domain\Model\ActivityInterface;
+use Sulu\Bundle\ActivityBundle\Infrastructure\Sulu\Admin\ActivityAdmin;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
@@ -157,6 +159,32 @@ class MediaAdmin extends Admin
                     ->setOption('tabTitle', 'sulu_media.history')
                     ->setParent(static::EDIT_FORM_VIEW)
             );
+
+            if ($this->securityChecker->hasPermission(ActivityAdmin::SECURITY_CONTEXT, PermissionTypes::VIEW)) {
+                $viewCollection->add(
+                    $this->viewBuilderFactory
+                        ->createListViewBuilder('sulu_media.form.activity', '/activity')
+                        ->setTabTitle('sulu_admin.activity')
+                        ->setResourceKey(ActivityInterface::RESOURCE_KEY)
+                        ->setListKey('activities')
+                        ->addListAdapters(['table'])
+                        ->addAdapterOptions([
+                            'table' => [
+                                'skin' => 'flat',
+                                'show_header' => false,
+                            ],
+                        ])
+                        ->disableTabGap()
+                        ->disableSearching()
+                        ->disableSelection()
+                        ->disableColumnOptions()
+                        ->disableFiltering()
+                        ->addResourceStorePropertiesToListRequest(['id' => 'resourceId'])
+                        ->addRequestParameters(['resourceKey' => MediaInterface::RESOURCE_KEY])
+                        ->setBackView(static::MEDIA_OVERVIEW_VIEW)
+                        ->setParent(static::EDIT_FORM_VIEW)
+                );
+            }
         }
     }
 
