@@ -195,5 +195,5 @@
     "sulu_admin.sameDay": "Heute",
     "sulu_admin.activity": "Aktivität",
     "sulu_admin.versions": "Versionierung",
-    "sulu_admin.activity_version": "Aktivität & Versionierung"
+    "sulu_admin.activity_versions": "Aktivität & Versionierung"
 }
