@@ -1,5 +1,7 @@
 # Upgrade
 
+## 2.3.0
+
 ### Preview updateContext method
 
 The method `Preview::updateContext` has been extended with the `data` argument. The argument is necessary
