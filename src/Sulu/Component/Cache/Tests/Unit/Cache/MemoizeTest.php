@@ -11,8 +11,9 @@
 
 namespace Sulu\Component\Cache\Tests\Unit;
 
-use Doctrine\Common\Cache\Cache;
+use Doctrine\Common\Cache\CacheProvider;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Cache\Memoize;
 
 class MemoizeTest extends TestCase
@@ -23,7 +24,7 @@ class MemoizeTest extends TestCase
     private $mem;
 
     /**
-     * @var Cache
+     * @var CacheProvider|ObjectProphecy
      */
     private $cache;
 
@@ -36,7 +37,7 @@ class MemoizeTest extends TestCase
     {
         parent::setUp();
 
-        $this->cache = $this->prophesize('Doctrine\Common\Cache\Cache');
+        $this->cache = $this->prophesize(CacheProvider::class);
 
         $this->mem = new Memoize($this->cache->reveal(), $this->defaultLifeTime);
     }

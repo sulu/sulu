@@ -11,15 +11,16 @@
 
 namespace Sulu\Component\Cache;
 
-use Doctrine\Common\Cache\Cache;
+use Doctrine\Common\Cache\CacheProvider;
+use Symfony\Contracts\Service\ResetInterface;
 
 /**
  * Memoizer which uses Doctrine Cache to save data.
  */
-class Memoize implements MemoizeInterface
+class Memoize implements MemoizeInterface, ResetInterface
 {
     /**
-     * @var Cache
+     * @var CacheProvider
      */
     protected $cache;
 
@@ -31,7 +32,7 @@ class Memoize implements MemoizeInterface
     /**
      * Constructor.
      */
-    public function __construct(Cache $cache, $defaultLifeTime)
+    public function __construct(CacheProvider $cache, $defaultLifeTime)
     {
         $this->cache = $cache;
         $this->defaultLifeTime = $defaultLifeTime;
@@ -78,5 +79,13 @@ class Memoize implements MemoizeInterface
 
             return $value;
         }
+    }
+
+    /**
+     * @return void
+     */
+    public function reset()
+    {
+        $this->cache->flushAll();
     }
 }

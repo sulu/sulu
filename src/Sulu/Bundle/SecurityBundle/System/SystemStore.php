@@ -13,8 +13,9 @@ namespace Sulu\Bundle\SecurityBundle\System;
 
 use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
+use Symfony\Contracts\Service\ResetInterface;
 
-class SystemStore implements SystemStoreInterface
+class SystemStore implements SystemStoreInterface, ResetInterface
 {
     /**
      * @var RoleRepositoryInterface
@@ -22,7 +23,7 @@ class SystemStore implements SystemStoreInterface
     private $roleRepository;
 
     /**
-     * @var string
+     * @var ?string
      */
     private $system;
 
@@ -56,5 +57,14 @@ class SystemStore implements SystemStoreInterface
         }
 
         return $this->anonymousRole;
+    }
+
+    /**
+     * @return void
+     */
+    public function reset()
+    {
+        $this->system = null;
+        $this->anonymousRole = null;
     }
 }
