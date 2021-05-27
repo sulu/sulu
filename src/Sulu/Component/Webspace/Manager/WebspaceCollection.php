@@ -18,6 +18,8 @@ use Symfony\Component\Config\Resource\FileResource;
 
 /**
  * A collection of all webspaces and portals in a specific sulu installation.
+ *
+ * @implements \IteratorAggregate<Webspace>
  */
 class WebspaceCollection implements \IteratorAggregate
 {
