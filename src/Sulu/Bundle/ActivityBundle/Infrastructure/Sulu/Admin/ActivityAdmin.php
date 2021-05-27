@@ -38,7 +38,7 @@ class ActivityAdmin extends Admin
 
     public function __construct(
         ViewBuilderFactoryInterface $viewBuilderFactory,
-        SecurityCheckerInterface $securityChecker,
+        SecurityCheckerInterface $securityChecker
     ) {
         $this->viewBuilderFactory = $viewBuilderFactory;
         $this->securityChecker = $securityChecker;
