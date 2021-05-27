@@ -539,7 +539,7 @@ exports[`Render with webspace section 3`] = `
             >
               <span
                 aria-label="su-publish"
-                class="su su-publish"
+                class="su-publish"
               />
             </div>
             <div
