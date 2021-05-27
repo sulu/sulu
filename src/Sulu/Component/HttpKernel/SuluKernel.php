@@ -42,6 +42,16 @@ abstract class SuluKernel extends Kernel
     private $reversedContext = self::CONTEXT_WEBSITE;
 
     /**
+     * @var string[]
+     */
+    private $loadedFiles = [];
+
+    /**
+     * @var string[]
+     */
+    private $importedFiles = [];
+
+    /**
      * Overload the parent constructor method to add an additional
      * constructor argument.
      *
@@ -96,6 +106,8 @@ abstract class SuluKernel extends Kernel
         $this->load($loader, $confDir, '/{services}');
         $this->load($loader, $confDir, '/{services}_' . $this->context);
         $this->load($loader, $confDir, '/{services}_' . $this->environment);
+
+        $this->loadedFiles = [];
     }
 
     /**
@@ -145,6 +157,8 @@ abstract class SuluKernel extends Kernel
         $this->import($routes, $confDir, '/{routes}/' . $this->environment . '/*');
         $this->import($routes, $confDir, '/{routes}');
         $this->import($routes, $confDir, '/{routes}_' . $this->context);
+
+        $this->importedFiles = [];
     }
 
     protected function load(LoaderInterface $loader, $confDir, $pattern)
@@ -155,8 +169,10 @@ abstract class SuluKernel extends Kernel
         $excludedConfigFiles = $this->glob($confDir, $pattern . $reversedConfigExtensions);
 
         foreach ($configFiles as $resource) {
-            if (!\in_array($resource, $excludedConfigFiles)) {
+            if (!\in_array($resource, $excludedConfigFiles) && !\in_array($resource, $this->loadedFiles)) {
                 $loader->load($resource);
+
+                $this->loadedFiles[] = $resource;
             }
         }
     }
@@ -173,8 +189,10 @@ abstract class SuluKernel extends Kernel
         $excludedConfigFiles = $this->glob($confDir, $pattern . $reversedConfigExtensions);
 
         foreach ($configFiles as $resource) {
-            if (!\in_array($resource, $excludedConfigFiles)) {
+            if (!\in_array($resource, $excludedConfigFiles) && !\in_array($resource, $this->importedFiles)) {
                 $routes->import($resource);
+
+                $this->importedFiles[] = $resource;
             }
         }
     }
