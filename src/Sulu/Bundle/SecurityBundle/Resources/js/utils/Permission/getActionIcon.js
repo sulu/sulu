@@ -13,7 +13,7 @@ export default function getActionIcon(action: string) {
         case 'security':
             return 'su-lock';
         case 'live':
-            return 'fa-signal';
+            return 'su-publish';
         default:
             throw new Error('No icon defined for "' + action + '"');
     }
