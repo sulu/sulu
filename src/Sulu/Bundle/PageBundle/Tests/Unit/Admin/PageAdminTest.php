@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\PageBundle\Tests\Unit\Admin;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactory;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
@@ -32,27 +33,27 @@ class PageAdminTest extends TestCase
     private $viewBuilderFactory;
 
     /**
-     * @var SecurityChecker
+     * @var SecurityChecker|ObjectProphecy
      */
     private $securityChecker;
 
     /**
-     * @var ObjectProphecy
+     * @var WebspaceCollection|ObjectProphecy
      */
     private $webspaceCollection;
 
     /**
-     * @var WebspaceManagerInterface
+     * @var WebspaceManagerInterface|ObjectProphecy
      */
     private $webspaceManager;
 
     /**
-     * @var SessionManagerInterface
+     * @var SessionManagerInterface|ObjectProphecy
      */
     private $sessionManager;
 
     /**
-     * @var TeaserProviderPoolInterface
+     * @var TeaserProviderPoolInterface|ObjectProphecy
      */
     private $teaserProviderPool;
 
@@ -71,6 +72,7 @@ class PageAdminTest extends TestCase
     public function testGetViews()
     {
         $this->securityChecker->hasPermission('sulu.webspaces.test-1', 'edit')->willReturn(true);
+        $this->securityChecker->hasPermission('sulu.activities.activities', 'view')->willReturn(true);
 
         $localization1 = new Localization('de');
 
@@ -104,13 +106,14 @@ class PageAdminTest extends TestCase
         $admin->configureViews($viewCollection);
 
         $webspaceView = $viewCollection->get('sulu_page.webspaces')->getView();
-        $pageListView = $viewCollection->get('sulu_page.pages_list')->getView();
-
         $this->assertSame('sulu_page.webspaces', $webspaceView->getName());
         $this->assertSame('test-1', $webspaceView->getAttributeDefault('webspace'));
 
+        $pageListView = $viewCollection->get('sulu_page.pages_list')->getView();
         $this->assertSame('sulu_page.pages_list', $pageListView->getName());
         $this->assertSame('de', $pageListView->getAttributeDefault('locale'));
+
+        $this->assertTrue($viewCollection->has('sulu_page.page_edit_form.activity'));
     }
 
     public function testGetConfigWithVersioning()

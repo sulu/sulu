@@ -26,8 +26,6 @@ class ActivityAdmin extends Admin
 
     const LIST_VIEW = 'sulu_activity.activities.list';
 
-    const PAGE_EDIT_FORM_ACTIVITY_TAB_VIEW = 'sulu_page.page_edit_form.activity_version_tab';
-
     /**
      * @var ViewBuilderFactoryInterface
      */
