@@ -363,6 +363,16 @@ test('Change schema should update data and remove obsolete data with blocks', (d
     const jsonSchemaPromise = Promise.resolve({});
 
     const resourceStore = new ResourceStore('pages', '1');
+    resourceStore.data = observable({
+        title: 'Title',
+        description: 'Description',
+        blocks: [
+            {title: 'block1_title', type: 'headline'},
+            {title: 'block2_title', type: 'headline'},
+            {description: 'block3_description', type: 'description'},
+            {description: 'block4_description', type: 'description'},
+        ],
+    });
 
     metadataStore.getSchema.mockReturnValue(newSchemaPromise);
     metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
@@ -543,6 +553,288 @@ test('Change schema should update data and remove obsolete data with blocks in b
         expect(resourceStore.remove).toHaveBeenNthCalledWith(7, 'blocks/4/inlineBlock/0/description');
         expect(resourceStore.remove).toHaveBeenNthCalledWith(8, 'blocks/4/inlineBlock/1/title');
         expect(resourceStore.remove).toHaveBeenNthCalledWith(9, 'blocks/4/inlineBlock/1/description');
+        resourceFormStore.destroy();
+        done();
+    }, 0);
+});
+
+test('Change schema should update data and use default-type for unknown block types', (done) => {
+    const oldSchema = {
+        title: {
+            label: 'Title',
+            type: 'text_line',
+        },
+        blocks: {
+            defaultType: 'headline',
+            type: 'block',
+            types: {
+                headline: {
+                    name: 'headline',
+                    title: 'Headline',
+                    form: {
+                        title: {
+                            label: 'Title',
+                            type: 'text_line',
+                        },
+                    },
+                },
+                description: {
+                    name: 'description',
+                    title: 'Description',
+                    form: {
+                        description: {
+                            label: 'Description',
+                            type: 'text_area',
+                        },
+                    },
+                },
+            },
+        },
+    };
+
+    const newSchema = {
+        title: {
+            label: 'Title',
+            type: 'text_line',
+        },
+        blocks: {
+            defaultType: 'description',
+            type: 'block',
+            types: {
+                description: {
+                    name: 'description',
+                    title: 'Description',
+                    form: {
+                        description: {
+                            label: 'Description',
+                            type: 'text_area',
+                        },
+                    },
+                },
+            },
+        },
+    };
+    const newSchemaPromise = Promise.resolve(newSchema);
+    const jsonSchemaPromise = Promise.resolve({});
+
+    const resourceStore = new ResourceStore('pages', '1');
+    resourceStore.data = observable({
+        title: 'Title',
+        blocks: [
+            {title: 'block1_title', type: 'headline'},
+            {title: 'block2_title', type: 'headline'},
+        ],
+    });
+
+    metadataStore.getSchema.mockReturnValue(newSchemaPromise);
+    metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
+    const resourceFormStore = new ResourceFormStore(resourceStore, 'pages');
+    resourceFormStore.type = observable.box('default');
+    resourceFormStore.schema = oldSchema;
+
+    setTimeout(() => {
+        expect(toJS(resourceFormStore.type)).toEqual('default');
+        expect(resourceFormStore.schema).toEqual(newSchema);
+        expect(resourceStore.change).toHaveBeenNthCalledWith(1, 'blocks/0/type', 'description');
+        expect(resourceStore.change).toHaveBeenNthCalledWith(2, 'blocks/1/type', 'description');
+        resourceFormStore.destroy();
+        done();
+    }, 0);
+});
+
+test('Change schema back to originSchema should merge current and origin data', (done) => {
+    const newSchema = {
+        title: {
+            label: 'Title',
+            type: 'text_line',
+        },
+        description: {
+            label: 'Description',
+            type: 'text_line',
+        },
+        blocks: {
+            defaultType: 'headline',
+            type: 'block',
+            types: {
+                headline: {
+                    name: 'headline',
+                    title: 'Headline',
+                    form: {
+                        title: {
+                            label: 'Title',
+                            type: 'text_line',
+                        },
+                    },
+                },
+                description: {
+                    name: 'description',
+                    title: 'Description',
+                    form: {
+                        description: {
+                            label: 'Description',
+                            type: 'text_area',
+                        },
+                    },
+                },
+            },
+        },
+    };
+
+    const oldSchema = {
+        title: {
+            label: 'Title',
+            type: 'text_line',
+        },
+    };
+    const newSchemaPromise = Promise.resolve(newSchema);
+    const jsonSchemaPromise = Promise.resolve({});
+
+    const resourceStore = new ResourceStore('pages', '1');
+    resourceStore.data = observable({
+        title: 'Title',
+        blocks: [
+            {title: 'block1_title', type: 'headline'},
+            {title: 'block2_title', type: 'headline'},
+        ],
+        originTemplate: 'default',
+    });
+
+    const originData = {
+        title: 'Title',
+        description: 'Origin Description',
+        blocks: [
+            {title: 'block1_title', type: 'headline'},
+            {title: 'block2_title', type: 'headline'},
+            {description: 'block3_description', type: 'description'},
+            {description: 'block4_description', type: 'description'},
+        ],
+    };
+
+    // $FlowFixMe
+    resourceStore.loadData.mockReturnValue(Promise.resolve(originData));
+    metadataStore.getSchema.mockReturnValue(newSchemaPromise);
+    metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
+    const resourceFormStore = new ResourceFormStore(resourceStore, 'pages');
+    resourceFormStore.type = observable.box('default');
+    resourceFormStore.schema = oldSchema;
+
+    setTimeout(() => {
+        expect(toJS(resourceFormStore.type)).toEqual('default');
+        expect(resourceFormStore.schema).toEqual(newSchema);
+        expect(resourceStore.change).toHaveBeenNthCalledWith(1, 'description', 'Origin Description');
+        expect(resourceStore.change).toHaveBeenNthCalledWith(2, 'blocks', [
+            {title: 'block1_title', type: 'headline'},
+            {title: 'block2_title', type: 'headline'},
+            {description: 'block3_description', type: 'description'},
+            {description: 'block4_description', type: 'description'},
+        ]);
+        resourceFormStore.destroy();
+        done();
+    }, 0);
+});
+
+test('Change schema back to originSchema should merge current and origin data partially in block', (done) => {
+    const oldSchema = {
+        title: {
+            label: 'Title',
+            type: 'text_line',
+        },
+        blocks: {
+            defaultType: 'headline',
+            type: 'block',
+            types: {
+                headline: {
+                    name: 'headline',
+                    title: 'Headline',
+                    form: {
+                        title: {
+                            label: 'Title',
+                            type: 'text_line',
+                        },
+                    },
+                },
+            },
+        },
+    };
+
+    const newSchema = {
+        title: {
+            label: 'Title',
+            type: 'text_line',
+        },
+        description: {
+            label: 'Description',
+            type: 'text_line',
+        },
+        blocks: {
+            defaultType: 'headline',
+            type: 'block',
+            types: {
+                headline: {
+                    name: 'headline',
+                    title: 'Headline',
+                    form: {
+                        title: {
+                            label: 'Title',
+                            type: 'text_line',
+                        },
+                    },
+                },
+                description: {
+                    name: 'description',
+                    title: 'Description',
+                    form: {
+                        description: {
+                            label: 'Description',
+                            type: 'text_area',
+                        },
+                    },
+                },
+            },
+        },
+    };
+
+    const newSchemaPromise = Promise.resolve(newSchema);
+    const jsonSchemaPromise = Promise.resolve({});
+
+    const resourceStore = new ResourceStore('pages', '1');
+    resourceStore.data = observable({
+        title: 'Title',
+        blocks: [
+            {title: 'block1_title', type: 'headline'},
+            {title: 'block2_title', type: 'headline'},
+        ],
+        originTemplate: 'default',
+    });
+
+    const originData = {
+        title: 'Title',
+        description: 'Origin Description',
+        blocks: [
+            {title: 'block1_title_origin', type: 'headline'},
+            {title: 'block2_title_origin', type: 'headline'},
+            {description: 'block3_description_origin', type: 'description'},
+            {description: 'block4_description_origin', type: 'description'},
+        ],
+    };
+
+    // $FlowFixMe
+    resourceStore.loadData.mockReturnValue(Promise.resolve(originData));
+    metadataStore.getSchema.mockReturnValue(newSchemaPromise);
+    metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
+    const resourceFormStore = new ResourceFormStore(resourceStore, 'pages');
+    resourceFormStore.type = observable.box('default');
+    resourceFormStore.schema = oldSchema;
+
+    setTimeout(() => {
+        expect(toJS(resourceFormStore.type)).toEqual('default');
+        expect(resourceFormStore.schema).toEqual(newSchema);
+        expect(resourceStore.change).toHaveBeenNthCalledWith(1,
+            'description', 'Origin Description');
+        expect(resourceStore.change).toHaveBeenNthCalledWith(2,
+            'blocks/2', {description: 'block3_description_origin', type: 'description'});
+        expect(resourceStore.change).toHaveBeenNthCalledWith(3,
+            'blocks/3', {description: 'block4_description_origin', type: 'description'});
         resourceFormStore.destroy();
         done();
     }, 0);

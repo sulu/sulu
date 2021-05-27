@@ -1,5 +1,5 @@
 // @flow
-import {action, autorun, computed, get, isObservableArray, observable, when} from 'mobx';
+import {action, autorun, computed, get, isObservableArray, observable, toJS, when} from 'mobx';
 import jsonpointer from 'json-pointer';
 import {createAjv} from '../../../utils/Ajv';
 import ResourceStore from '../../../stores/ResourceStore';
@@ -101,7 +101,7 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
     };
 
     loadAndMergeOriginData(oldSchema: Schema, newSchema: Schema) {
-        if (oldSchema && this.type === this.data['originTemplate']){
+        if (oldSchema && toJS(this.type) === this.data['originTemplate']){
             return this.resourceStore.loadData().then((data: Object) => {
                 this.mergeData(oldSchema, newSchema, this.data, data);
                 this.validate();
@@ -118,7 +118,7 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
 
         for (const key in newSchema) {
             const {items: newItems, type: newType, types: newTypes} = newSchema[key];
-            const {items: oldItems, type: oldType, types: oldTypes} = oldSchema[key] || {};
+            const {items: oldItems, type: oldType, types: oldTypes} = oldSchema ? oldSchema[key] || {} : {};
 
             if (newType === SECTION_TYPE && newItems &&
                 oldType === SECTION_TYPE && oldItems) {
@@ -137,12 +137,18 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
                 && (Array.isArray(oldData[key]) || isObservableArray(oldData[key]))
                 && (Array.isArray(newData[key]) || isObservableArray(newData[key]))
             ) {
-                for (const childKey of newData[key].keys()){
+                for (const childKey of newData[key].keys()) {
                     const newChildData = newData[key][childKey];
-                    const oldChildData = oldData[key][childKey] || {};
+                    const oldChildData = oldData[key].length > childKey ? oldData[key][childKey] || {} : {};
 
                     const oldChildSchema = oldTypes[oldChildData.type]?.form;
                     const newChildSchema = newTypes[newChildData.type].form;
+
+                    if (!this.getValueByPath('/' + parentPath.concat(key, childKey).join('/')) && !oldChildSchema) {
+                        this.change(parentPath.concat(key, childKey).join('/'), newChildData);
+
+                        continue;
+                    }
 
                     this.mergeData(
                         oldChildSchema,
@@ -156,7 +162,7 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
                 continue;
             }
 
-            if (!oldData[key] || newSchema[key]['type'] !== oldSchema[key]['type']) {
+            if (!oldData[key] || newSchema[key].type !== oldSchema[key]?.type) {
                 // set serverData
                 this.change(parentPath.concat(key).join('/'), newData[key]);
             }
@@ -194,7 +200,7 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
                     let newChildSchema = newTypes[childData.type]?.form;
 
                     if (!newChildSchema) {
-                        const defaultType = newSchema[key]['defaultType'];
+                        const defaultType = newSchema[key]?.defaultType;
                         if (defaultType) {
                             newChildSchema = newTypes[defaultType].form;
                             //set default type
