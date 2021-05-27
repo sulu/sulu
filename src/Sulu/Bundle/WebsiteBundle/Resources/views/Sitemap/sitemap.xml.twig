@@ -7,35 +7,38 @@
         {% if domain in location %}
             <url>
                 {% block url %}
-                    <loc>{{ location }}</loc>
-                    {% if entry.lastmod %}
-                        <lastmod>{{ entry.lastmod|date('Y-m-d') }}</lastmod>
-                    {% endif %}
-                    {% if entry.changefreq %}
-                        <changefreq>{{ entry.changefreq }}</changefreq>
-                    {% endif %}
-                    {% if entry.priority %}
-                        <priority>{{ entry.priority }}</priority>
-                    {% endif %}
+                    {% block loc %}
+                        <loc>{{ location }}</loc>
+                    {% endblock %}
 
-                    {% set amount = 0 %}
-                    {% set defaultHref = null %}
-                    {% if entry.alternateLinks|length > 1 %}
-                        {% for alternateLink in entry.alternateLinks %}
-                            {% set href = alternateLink.href %}
-                            {% if href is not empty and domain in href %}
-                                <xhtml:link rel="alternate" hreflang="{{ alternateLink.locale|replace({'_': '-'}) }}" href="{{ href }}"/>
-                                {% set amount = amount + 1 %}
-                                {% if entry.defaultLocale == alternateLink.locale %}
-                                    {% set defaultHref = href %}
+                    {% block lastmod %}
+                        {% if entry.lastmod %}
+                            <lastmod>{{ entry.lastmod|date('Y-m-d') }}</lastmod>
+                        {% endif %}
+                    {% endblock %}
+
+                    {% block changefreq %}
+                        {% if entry.changefreq %}
+                            <changefreq>{{ entry.changefreq }}</changefreq>
+                        {% endif %}
+                    {% endblock %}
+
+                    {% block priority %}
+                        {% if entry.priority %}
+                            <priority>{{ entry.priority }}</priority>
+                        {% endif %}
+                    {% endblock %}
+
+                    {% block alternateLinks %}
+                        {% if entry.alternateLinks|length > 1 %}
+                            {% for alternateLink in entry.alternateLinks %}
+                                {% set href = alternateLink.href %}
+                                {% if href is not empty and domain in href %}
+                                    <xhtml:link rel="alternate" hreflang="{{ alternateLink.locale|replace({'_': '-'}) }}" href="{{ href }}"/>
                                 {% endif %}
-                            {% endif %}
-                        {% endfor %}
-                    {% endif %}
-
-                    {% if defaultHref and amount > 0 %}
-                        <xhtml:link rel="alternate" hreflang="x-default" href="{{ defaultHref }}"/>
-                    {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    {% endblock %}
                 {% endblock %}
             </url>
         {% endif %}

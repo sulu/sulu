@@ -54,6 +54,7 @@
             <argument type="service" id="filesystem"/>
             <argument type="service" id="router"/>
             <argument>%sulu_website.sitemap.cache.lifetime%</argument>
+            <argument>%kernel.debug%</argument>
 
             <tag name="sulu.context" context="website" />
         </service>

@@ -5,6 +5,7 @@ import {action, observable} from 'mobx';
 import Dropzone from 'react-dropzone';
 import {SingleListOverlay} from 'sulu-admin-bundle/containers';
 import {translate} from 'sulu-admin-bundle/utils/Translator';
+import classNames from 'classnames';
 import MediaUploadStore from '../../stores/MediaUploadStore';
 import MediaItem from './MediaItem';
 import DropzoneOverlay from './DropzoneOverlay';
@@ -16,6 +17,7 @@ const COLLECTIONS_RESOURCE_KEY = 'collections';
 
 type Props = {
     children: Node,
+    className?: string,
     collectionId: ?string | number,
     disabled: boolean,
     locale: IObservableValue<string>,
@@ -134,7 +136,12 @@ class MultiMediaDropzone extends React.Component<Props> {
     };
 
     render() {
-        const {children, disabled, locale, open} = this.props;
+        const {children, className, disabled, locale, open} = this.props;
+
+        const dropzoneClass = classNames(
+            dropzoneStyles.dropzone,
+            className
+        );
 
         return (
             <>
@@ -149,7 +156,7 @@ class MultiMediaDropzone extends React.Component<Props> {
                     {({getInputProps, getRootProps}) => (
                         <Observer>
                             {() => (
-                                <div {...getRootProps({className: dropzoneStyles.dropzone})}>
+                                <div {...getRootProps({className: dropzoneClass})}>
                                     {children}
                                     <input {...getInputProps()} />
                                     <DropzoneOverlay

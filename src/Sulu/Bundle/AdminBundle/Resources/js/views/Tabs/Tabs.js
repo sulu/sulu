@@ -121,7 +121,7 @@ class Tabs<T> extends React.Component<Props<T>> {
     };
 
     render() {
-        const {children, childrenProps, header, router, selectedIndex, title, isRootView} = this.props;
+        const {children, childrenProps, header, router, route, selectedIndex, title, isRootView} = this.props;
 
         const childComponent = children ? children(childrenProps) : null;
 
@@ -177,6 +177,7 @@ class Tabs<T> extends React.Component<Props<T>> {
                                                 routeName={badge.routeName}
                                                 router={router}
                                                 routerAttributesToRequest={badge.routerAttributesToRequest}
+                                                tabViewRoute={route}
                                                 visibleCondition={badge.visibleCondition}
                                             />
                                         );

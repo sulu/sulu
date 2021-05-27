@@ -732,11 +732,13 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
 
         if ($mapping->resolveUrl()) {
             $url = $this->resolveUrl($row, $locale);
+            /** @var array<string, string|null> $urls */
             $urls = [];
             \array_walk(
                 $locales,
-                function($item) use (&$urls, $row) {
-                    $urls[$item] = $this->resolveUrl($row, $item);
+                /** @var array<string, string|null> $urls */
+                function($locale) use (&$urls, $row) {
+                    $urls[$locale] = $this->resolveUrl($row, $locale);
                 }
             );
 
@@ -856,22 +858,22 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
      *
      * @param string $locale
      *
-     * @return string
+     * @return string|null
      */
     private function resolveUrl(Row $row, $locale)
     {
         if (WorkflowStage::PUBLISHED !== $this->resolveProperty($row, $locale . 'State', $locale)) {
-            return;
+            return null;
         }
 
         $template = $this->resolveProperty($row, 'template', $locale);
         if (empty($template)) {
-            return;
+            return null;
         }
 
         $structure = $this->structureManager->getStructure($template);
         if (!$structure || !$structure->hasTag('sulu.rlp')) {
-            return;
+            return null;
         }
 
         $propertyName = $structure->getPropertyByTagName('sulu.rlp')->getName();

@@ -12,10 +12,16 @@ jest.mock('../../../services/Requester', () => ({
 
 Requester.handleResponseHooks = [];
 
+const tabViewRoute: any = {};
+
 jest.mock('../../../services/Router', () => jest.fn(function() {
     this.attributes = {
         id: 5,
         locale: 'en',
+    };
+
+    this.route = {
+        parent: tabViewRoute,
     };
 }));
 
@@ -38,6 +44,7 @@ test('Should create new BadgeStore', () => {
                 id: 'entityId',
                 locale: 'locale',
             }}
+            tabViewRoute={tabViewRoute}
             visibleCondition="value != 0"
         />
     );
@@ -54,6 +61,7 @@ test('Should create new BadgeStore', () => {
         id: 'entityId',
         locale: 'locale',
     });
+    expect(store.tabViewRoute).toBe(tabViewRoute);
 
     return promise.then(() => {
         expect(store.value).toBe('foo');
@@ -79,6 +87,7 @@ test('Should pass correct props to badge component', () => {
                 id: 'entityId',
                 locale: 'locale',
             }}
+            tabViewRoute={tabViewRoute}
             visibleCondition="value != 0"
         />
     );
@@ -109,6 +118,7 @@ test('Should not render Badge component if visibleCondition fails', () => {
                 id: 'entityId',
                 locale: 'locale',
             }}
+            tabViewRoute={tabViewRoute}
             visibleCondition="value != 0"
         />
     );

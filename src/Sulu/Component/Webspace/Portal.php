@@ -51,6 +51,8 @@ class Portal
     /**
      * The x-default localization for this portal.
      *
+     * @deprecated use $defaultLocalization instead
+     *
      * @var Localization
      */
     private $xDefaultLocalization;
@@ -170,17 +172,25 @@ class Portal
 
     /**
      * @param Localization $xDefaultLocalization
+     *
+     * @deprecated use setDefaultLocalization instead
      */
     public function setXDefaultLocalization($xDefaultLocalization)
     {
+        @\trigger_error(\sprintf('The "%s" method is deprecated on "%s" use "setDefaultLocalization" instead.', __METHOD__, __CLASS__), \E_USER_DEPRECATED);
+
         $this->xDefaultLocalization = $xDefaultLocalization;
     }
 
     /**
      * @return Localization
+     *
+     * @deprecated use getDefaultLocalization instead
      */
     public function getXDefaultLocalization()
     {
+        @\trigger_error(\sprintf('The "%s" method is deprecated on "%s" use "getDefaultLocalization" instead.', __METHOD__, __CLASS__), \E_USER_DEPRECATED);
+
         return $this->xDefaultLocalization;
     }
 

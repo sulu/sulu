@@ -84,6 +84,8 @@ class SnippetExport extends Export implements SnippetExportInterface
         $snippets = $this->getSnippets();
         $snippetsData = [];
 
+        $this->output->writeln('<info>Loading Data…</info>');
+
         $progress = new ProgressBar($this->output, \count($snippets));
         $progress->start();
 
@@ -118,8 +120,25 @@ class SnippetExport extends Export implements SnippetExportInterface
      */
     protected function getSnippets()
     {
-        $this->output->writeln('<info>Loading Data…</info>');
+        $where = [];
 
-        return $this->snippetManager->getSnippets($this->exportLocale);
+        // only snippets
+        $where[] = '[jcr:mixinTypes] = "sulu:snippet"';
+
+        // filter by webspace key
+        $where[] = 'ISDESCENDANTNODE("/cmf/snippets")';
+
+        // filter by locale
+        $where[] = \sprintf(
+            '[i18n:%s-title] IS NOT NULL',
+            $this->exportLocale
+        );
+
+        $query = $this->documentManager->createQuery(
+            'SELECT * FROM [nt:unstructured] AS a WHERE ' . \implode(' AND ', $where),
+            $this->exportLocale
+        );
+
+        return $query->execute();
     }
 }

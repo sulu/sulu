@@ -13,6 +13,7 @@ import type {IObservableValue} from 'mobx/lib/mobx';
 import type {ElementRef} from 'react';
 
 type Props = {|
+    className?: string,
     collectionListStore: ListStore,
     collectionStore: CollectionStore,
     hideUploadAction: boolean,
@@ -78,6 +79,7 @@ class MediaCollection extends React.Component<Props> {
 
     render() {
         const {
+            className,
             collectionListStore,
             collectionStore,
             hideUploadAction,
@@ -112,6 +114,7 @@ class MediaCollection extends React.Component<Props> {
 
         return (
             <MultiMediaDropzone
+                className={className}
                 collectionId={collectionStore.id}
                 disabled={collectionStore.loading || !addable}
                 locale={locale}
