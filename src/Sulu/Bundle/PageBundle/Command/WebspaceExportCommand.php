@@ -51,7 +51,7 @@ class WebspaceExportCommand extends Command
     {
         $webspaceKey = $input->getArgument('webspace');
         $target = $input->getArgument('target');
-        if (0 === !\strpos($target, '/')) {
+        if (false === \strpos($target, '/')) {
             $target = \getcwd() . '/' . $target;
         }
         $locale = $input->getArgument('locale');
