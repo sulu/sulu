@@ -13,6 +13,7 @@ namespace Sulu\Bundle\PageBundle\Tests\Unit\Admin;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
+use Sulu\Bundle\ActivityBundle\Infrastructure\Sulu\Admin\View\ActivityViewBuilderFactory;
 use Sulu\Bundle\ActivityBundle\Infrastructure\Sulu\Admin\View\ActivityViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactory;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
@@ -72,7 +73,7 @@ class PageAdminTest extends TestCase
         $this->sessionManager = $this->prophesize(SessionManagerInterface::class);
         $this->teaserProviderPool = $this->prophesize(TeaserProviderPoolInterface::class);
 
-        $this->activityViewBuilderFactory = new ViewBuilderFactory(
+        $this->activityViewBuilderFactory = new ActivityViewBuilderFactory(
             $this->viewBuilderFactory,
             $this->securityChecker->reveal()
         );
