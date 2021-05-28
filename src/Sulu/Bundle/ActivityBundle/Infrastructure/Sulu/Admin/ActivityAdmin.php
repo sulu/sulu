@@ -61,7 +61,7 @@ class ActivityAdmin extends Admin
             $viewCollection->add(
                 $this->viewBuilderFactory->createListViewBuilder(static::LIST_VIEW, '/activities')
                     ->setResourceKey(ActivityInterface::RESOURCE_KEY)
-                    ->setListKey('activities')
+                    ->setListKey(ActivityInterface::LIST_KEY)
                     ->setTitle('sulu_activity.activities')
                     ->addListAdapters(['table'])
                     ->disableSearching()

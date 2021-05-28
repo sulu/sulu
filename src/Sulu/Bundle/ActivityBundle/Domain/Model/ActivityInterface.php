@@ -16,6 +16,7 @@ use Sulu\Component\Security\Authentication\UserInterface;
 interface ActivityInterface
 {
     const RESOURCE_KEY = 'activities';
+    const LIST_KEY = 'activities';
 
     public function getType(): string;
 

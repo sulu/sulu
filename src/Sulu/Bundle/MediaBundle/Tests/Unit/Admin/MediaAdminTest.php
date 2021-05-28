@@ -12,6 +12,8 @@
 namespace Sulu\Bundle\MediaBundle\Tests\Unit\Admin;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
+use Sulu\Bundle\ActivityBundle\Infrastructure\Sulu\Admin\View\ActivityViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
 use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
@@ -25,29 +27,34 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class MediaAdminTest extends TestCase
 {
     /**
-     * @var ViewBuilderFactoryInterface
+     * @var ViewBuilderFactoryInterface|ObjectProphecy
      */
     private $viewBuilderFactory;
 
     /**
-     * @var SecurityCheckerInterface
+     * @var SecurityCheckerInterface|ObjectProphecy
      */
     private $securityChecker;
 
     /**
-     * @var LocalizationManagerInterface
+     * @var LocalizationManagerInterface|ObjectProphecy
      */
     private $localizationManager;
 
     /**
-     * @var UrlGeneratorInterface
+     * @var UrlGeneratorInterface|ObjectProphecy
      */
     private $urlGenerator;
 
     /**
-     * @var WebspaceManagerInterface
+     * @var WebspaceManagerInterface|ObjectProphecy
      */
     private $webspaceManager;
+
+    /**
+     * @var ActivityViewBuilderFactoryInterface|ObjectProphecy
+     */
+    private $activityViewBuilderFactory;
 
     /**
      * @var MediaAdmin
@@ -61,13 +68,15 @@ class MediaAdminTest extends TestCase
         $this->localizationManager = $this->prophesize(LocalizationManagerInterface::class);
         $this->urlGenerator = $this->prophesize(UrlGeneratorInterface::class);
         $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
+        $this->activityViewBuilderFactory = $this->prophesize(ActivityViewBuilderFactoryInterface::class);
 
         $this->mediaAdmin = new MediaAdmin(
             $this->viewBuilderFactory->reveal(),
             $this->securityChecker->reveal(),
             $this->localizationManager->reveal(),
             $this->urlGenerator->reveal(),
-            $this->webspaceManager->reveal()
+            $this->webspaceManager->reveal(),
+            $this->activityViewBuilderFactory->reveal()
         );
     }
 

@@ -11,8 +11,7 @@
 
 namespace Sulu\Bundle\PageBundle\Admin;
 
-use Sulu\Bundle\ActivityBundle\Domain\Model\ActivityInterface;
-use Sulu\Bundle\ActivityBundle\Infrastructure\Sulu\Admin\ActivityAdmin;
+use Sulu\Bundle\ActivityBundle\Infrastructure\Sulu\Admin\View\ActivityViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
@@ -80,13 +79,19 @@ class PageAdmin extends Admin
      */
     private $versioningEnabled;
 
+    /**
+     * @var ActivityViewBuilderFactoryInterface
+     */
+    private $activityViewBuilderFactory;
+
     public function __construct(
         ViewBuilderFactoryInterface $viewBuilderFactory,
         WebspaceManagerInterface $webspaceManager,
         SecurityCheckerInterface $securityChecker,
         SessionManagerInterface $sessionManager,
         TeaserProviderPoolInterface $teaserProviderPool,
-        bool $versioningEnabled
+        bool $versioningEnabled,
+        ActivityViewBuilderFactoryInterface $activityViewBuilderFactory
     ) {
         $this->viewBuilderFactory = $viewBuilderFactory;
         $this->webspaceManager = $webspaceManager;
@@ -94,6 +99,7 @@ class PageAdmin extends Admin
         $this->sessionManager = $sessionManager;
         $this->teaserProviderPool = $teaserProviderPool;
         $this->versioningEnabled = $versioningEnabled;
+        $this->activityViewBuilderFactory = $activityViewBuilderFactory;
     }
 
     public function configureNavigationItems(NavigationItemCollection $navigationItemCollection): void
@@ -320,10 +326,12 @@ class PageAdmin extends Admin
                     ->setParent(static::EDIT_FORM_VIEW)
             );
 
-            if ($this->securityChecker->hasPermission(ActivityAdmin::SECURITY_CONTEXT, PermissionTypes::VIEW)) {
+            if ($this->activityViewBuilderFactory->hasPermissionForActivityListView()) {
+                $activityResourceTabViewName = PageAdmin::EDIT_FORM_VIEW . '.activity';
+
                 $viewCollection->add(
                     $this->viewBuilderFactory
-                        ->createResourceTabViewBuilder('sulu_page.page_edit_form.activity', '/activity')
+                        ->createResourceTabViewBuilder($activityResourceTabViewName, '/activity')
                         ->setResourceKey(BasePageDocument::RESOURCE_KEY)
                         ->setTabOrder(6144)
                         ->setTabTitle($this->versioningEnabled ? 'sulu_admin.activity_versions' : 'sulu_admin.activity')
@@ -331,32 +339,17 @@ class PageAdmin extends Admin
                 );
 
                 $viewCollection->add(
-                    $this->viewBuilderFactory
-                        ->createListViewBuilder('sulu_page.page_edit_form.activity.activity', '/activity')
-                        ->setTabTitle('sulu_admin.activity')
-                        ->setResourceKey(ActivityInterface::RESOURCE_KEY)
-                        ->setListKey('activities')
-                        ->addListAdapters(['table'])
-                        ->addAdapterOptions([
-                            'table' => [
-                                'skin' => 'flat',
-                                'show_header' => false,
-                            ],
-                        ])
-                        ->disableTabGap()
-                        ->disableSearching()
-                        ->disableSelection()
-                        ->disableColumnOptions()
-                        ->disableFiltering()
-                        ->addRouterAttributesToListRequest(['id' => 'resourceId'])
-                        ->addRequestParameters(['resourceKey' => BasePageDocument::RESOURCE_KEY])
-                        ->setParent('sulu_page.page_edit_form.activity')
+                    $this->activityViewBuilderFactory
+                        ->createActivityListViewBuilder(
+                            $activityResourceTabViewName,
+                            BasePageDocument::RESOURCE_KEY
+                        )
                 );
 
                 if ($this->versioningEnabled) {
                     $viewCollection->add(
                         $this->viewBuilderFactory
-                            ->createListViewBuilder('sulu_page.page_edit_form.activity.versions', '/versions')
+                            ->createListViewBuilder($activityResourceTabViewName . '.versions', '/versions')
                             ->setTabTitle('sulu_admin.versions')
                             ->setResourceKey('page_versions')
                             ->setListKey('page_versions')
@@ -375,7 +368,7 @@ class PageAdmin extends Admin
                             ->addItemActions([
                                 new ListItemAction('restore_version', ['success_view' => PageAdmin::EDIT_FORM_VIEW]),
                             ])
-                            ->setParent('sulu_page.page_edit_form.activity')
+                            ->setParent($activityResourceTabViewName)
                     );
                 }
             }
