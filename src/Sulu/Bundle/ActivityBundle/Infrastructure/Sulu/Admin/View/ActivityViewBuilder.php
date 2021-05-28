@@ -45,7 +45,7 @@ class ActivityViewBuilder extends ListViewBuilder
         ;
     }
 
-    public static function hasPermission(SecurityCheckerInterface $securityChecker)
+    public static function hasPermission(SecurityCheckerInterface $securityChecker): bool
     {
         return $securityChecker->hasPermission(ActivityAdmin::SECURITY_CONTEXT, PermissionTypes::VIEW);
     }
