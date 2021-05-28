@@ -31,7 +31,7 @@ class ActivityViewBuilder extends ListViewBuilder
             ->addAdapterOptions([
                 'table' => [
                     'skin' => 'flat',
-                    'show_header' => true,
+                    'show_header' => false,
                 ],
             ])
             ->setTabOrder(4096)
