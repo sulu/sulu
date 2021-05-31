@@ -266,8 +266,8 @@ class WebspaceManager implements WebspaceManagerInterface
                 || $portalInformation->getLocalization()->getLocale() === $languageCode
             );
             $sameWebspace = null === $webspaceKey || $portalInformation->getWebspace()->getKey() === $webspaceKey;
-            $url = $this->createResourceLocatorUrl($portalInformation->getUrl(), $resourceLocator, $scheme);
             if ($sameLocalization && $sameWebspace) {
+                $url = $this->createResourceLocatorUrl($portalInformation->getUrl(), $resourceLocator, $scheme);
                 if (RequestAnalyzerInterface::MATCH_TYPE_FULL === $portalInformation->getType()) {
                     if ($this->isFromDomain($url, $domain)) {
                         if ($portalInformation->isMain()) {
