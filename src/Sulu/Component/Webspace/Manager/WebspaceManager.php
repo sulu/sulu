@@ -76,6 +76,11 @@ class WebspaceManager implements WebspaceManagerInterface
      */
     private $structureMetadataFactory;
 
+    /**
+     * @var mixed[]
+     */
+    private $portalUrlCache = [];
+
     public function __construct(
         LoaderInterface $loader,
         ReplacerInterface $urlReplacer,
@@ -247,6 +252,16 @@ class WebspaceManager implements WebspaceManagerInterface
             $webspaceKey = $currentWebspace ? $currentWebspace->getKey() : $webspaceKey;
         }
 
+        if (isset($this->portalUrlCache[$webspaceKey][$domain][$environment][$languageCode])) {
+            $portalUrl = $this->portalUrlCache[$webspaceKey][$domain][$environment][$languageCode];
+
+            if (!$portalUrl) {
+                return null;
+            }
+
+            return $this->createResourceLocatorUrl($portalUrl, $resourceLocator, $scheme);
+        }
+
         $sameDomainUrl = null;
         $fullMatchedUrl = null;
         $partialMatchedUrl = null;
@@ -304,16 +319,22 @@ class WebspaceManager implements WebspaceManagerInterface
         }
 
         if ($sameDomainUrl) {
-            $url = $sameDomainUrl;
+            $portalUrl = $sameDomainUrl;
         } elseif ($fullMatchedUrl) {
-            $url = $fullMatchedUrl;
+            $portalUrl = $fullMatchedUrl;
         } elseif ($partialMatchedUrl) {
-            $url = $partialMatchedUrl;
+            $portalUrl = $partialMatchedUrl;
         } else {
+            $portalUrl = null;
+        }
+
+        $this->portalUrlCache[$webspaceKey][$domain][$environment][$languageCode] = $portalUrl;
+
+        if (!$portalUrl) {
             return null;
         }
 
-        return $this->createResourceLocatorUrl($url, $resourceLocator, $scheme);
+        return $this->createResourceLocatorUrl($portalUrl, $resourceLocator, $scheme);
     }
 
     public function getPortals(): array
