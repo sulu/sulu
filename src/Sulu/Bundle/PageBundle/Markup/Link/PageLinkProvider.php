@@ -103,8 +103,17 @@ class PageLinkProvider implements LinkProviderInterface
             $domain = $request->getHost();
         }
 
+        $uuids = \array_filter(
+            \array_map(
+                function($href) {
+                    return \explode('#', $href, 2)[0] ?? null;
+                },
+                $hrefs
+            )
+        );
+
         $contents = $this->contentRepository->findByUuids(
-            \array_unique(\array_values($hrefs)),
+            \array_unique(\array_values($uuids)),
             $locale,
             MappingBuilder::create()
                 ->setResolveUrl(true)
@@ -135,12 +144,21 @@ class PageLinkProvider implements LinkProviderInterface
             return !isset($userPermissions['view']) || $userPermissions['view'];
         });
 
-        return \array_map(
-            function(Content $content) use ($locale, $scheme, $domain) {
-                return $this->getLinkItem($content, $locale, $scheme, $domain);
-            },
-            $contents
-        );
+        $result = [];
+
+        foreach ($hrefs as $href) {
+            $uuid = \explode('#', $href, 2)[0] ?? null;
+
+            foreach ($contents as $content) {
+                if ($content->getId() === $uuid) {
+                    $result[] = $this->getLinkItem($content, $locale, $scheme, $domain, $href);
+
+                    break;
+                }
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -151,7 +169,7 @@ class PageLinkProvider implements LinkProviderInterface
      *
      * @return LinkItem
      */
-    protected function getLinkItem(Content $content, $locale, $scheme, $domain = null)
+    protected function getLinkItem(Content $content, $locale, $scheme, $domain = null, string $href = null)
     {
         $published = !empty($content->getPropertyWithDefault('published'));
         $url = $this->webspaceManager->findUrlByResourceLocator(
@@ -163,7 +181,18 @@ class PageLinkProvider implements LinkProviderInterface
             $scheme
         );
 
-        return new LinkItem($content->getId(), $content->getPropertyWithDefault('title'), $url, $published);
+        $anchor = \explode('#', $href ?: '', 2)[1] ?? null;
+
+        if ($anchor) {
+            $url .= '#' . $anchor;
+        }
+
+        return new LinkItem(
+            $href ?: $content->getId(),
+            $content->getPropertyWithDefault('title'),
+            $url,
+            $published
+        );
     }
 
     /**

@@ -142,13 +142,13 @@ class PageLinkProviderTest extends TestCase
         $this->webspaceManager->findWebspaceByKey('sulu_io')->willReturn(new Webspace());
 
         $contents = [
-            $this->createContent(1, 'Test 1', '/test-1'),
-            $this->createContent(2, 'Test 2', '/test-2', new \DateTime('-1 day')),
-            $this->createContent(3, 'Test 3', '/test-3', new \DateTime('-2 day')),
+            $this->createContent('1', 'Test 1', '/test-1'),
+            $this->createContent('2', 'Test 2', '/test-2', new \DateTime('-1 day')),
+            $this->createContent('3', 'Test 3', '/test-3', new \DateTime('-2 day')),
         ];
 
         $this->contentRepository->findByUuids(
-            [1, 2, 3],
+            ['1', '2', '3'],
             $this->locale,
             Argument::that(
                 function(MappingInterface $mapping) {
@@ -161,7 +161,7 @@ class PageLinkProviderTest extends TestCase
         )->shouldBeCalledTimes(1)->willReturn($contents);
 
         /** @var LinkItem[] $result */
-        $result = $this->pageLinkProvider->preload([1, 2, 3], $this->locale, true);
+        $result = $this->pageLinkProvider->preload(['1', '2#foo', '3#bar'], $this->locale, true);
 
         $this->assertCount(3, $result);
 
@@ -170,13 +170,13 @@ class PageLinkProviderTest extends TestCase
         $this->assertEquals($contents[0]->getPropertyWithDefault('title'), $result[0]->getTitle());
         $this->assertEquals(!empty($contents[0]->getPropertyWithDefault('published')), $result[0]->isPublished());
 
-        $this->assertEquals($contents[1]->getId(), $result[1]->getId());
-        $this->assertEquals('/' . $this->locale . $contents[1]->getUrl(), $result[1]->getUrl());
+        $this->assertEquals($contents[1]->getId() . '#foo', $result[1]->getId());
+        $this->assertEquals('/' . $this->locale . $contents[1]->getUrl() . '#foo', $result[1]->getUrl());
         $this->assertEquals($contents[1]->getPropertyWithDefault('title'), $result[1]->getTitle());
         $this->assertEquals(!empty($contents[1]->getPropertyWithDefault('published')), $result[1]->isPublished());
 
-        $this->assertEquals($contents[2]->getId(), $result[2]->getId());
-        $this->assertEquals('/' . $this->locale . $contents[2]->getUrl(), $result[2]->getUrl());
+        $this->assertEquals($contents[2]->getId() . '#bar', $result[2]->getId());
+        $this->assertEquals('/' . $this->locale . $contents[2]->getUrl() . '#bar', $result[2]->getUrl());
         $this->assertEquals($contents[2]->getPropertyWithDefault('title'), $result[2]->getTitle());
         $this->assertEquals(!empty($contents[2]->getPropertyWithDefault('published')), $result[2]->isPublished());
     }
@@ -187,12 +187,12 @@ class PageLinkProviderTest extends TestCase
         $this->webspaceManager->findWebspaceByKey('sulu_io')->willReturn(new Webspace());
 
         $contents = [
-            $this->createContent(1, 'Test 1', '/test-1'),
-            $this->createContent(2, 'Test 2', '/test-2', new \DateTime('-1 day')),
+            $this->createContent('1', 'Test 1', '/test-1'),
+            $this->createContent('2', 'Test 2', '/test-2', new \DateTime('-1 day')),
         ];
 
         $this->contentRepository->findByUuids(
-            [1, 2, 3],
+            ['1', '2', '3'],
             $this->locale,
             Argument::that(
                 function(MappingInterface $mapping) {
@@ -205,7 +205,7 @@ class PageLinkProviderTest extends TestCase
         )->shouldBeCalledTimes(1)->willReturn($contents);
 
         /** @var LinkItem[] $result */
-        $result = $this->pageLinkProvider->preload([1, 2, 3], $this->locale, true);
+        $result = $this->pageLinkProvider->preload(['1', '2', '3'], $this->locale, true);
 
         $this->assertCount(2, $result);
 
@@ -226,11 +226,11 @@ class PageLinkProviderTest extends TestCase
         $this->webspaceManager->findWebspaceByKey('sulu_io')->willReturn(new Webspace());
 
         $contents = [
-            $this->createContent(1, 'Test 1', '/test-1', null, null),
+            $this->createContent('1', 'Test 1', '/test-1', null, null),
         ];
 
         $this->contentRepository->findByUuids(
-            [1],
+            ['1'],
             $this->locale,
             Argument::that(
                 function(MappingInterface $mapping) {
@@ -243,7 +243,7 @@ class PageLinkProviderTest extends TestCase
         )->shouldBeCalledTimes(1)->willReturn($contents);
 
         /** @var LinkItem[] $result */
-        $result = $this->pageLinkProvider->preload([1], $this->locale, true);
+        $result = $this->pageLinkProvider->preload(['1'], $this->locale, true);
 
         $this->assertCount(1, $result);
 
@@ -269,9 +269,9 @@ class PageLinkProviderTest extends TestCase
         $this->tokenStorage->getToken()->willReturn($token->reveal());
 
         $contents = [
-            $this->createContent(1, 'Test 1', '/test-1', null, 'sulu.io', 'sulu_io', []),
-            $this->createContent(2, 'Test 2', '/test-2', null, 'sulu.io', 'sulu_io', [1 => ['view' => false]]),
-            $this->createContent(3, 'Test 3', '/test-3', null, 'sulu.io', 'sulu_io', [1 => ['view' => true]]),
+            $this->createContent('1', 'Test 1', '/test-1', null, 'sulu.io', 'sulu_io', []),
+            $this->createContent('2', 'Test 2', '/test-2', null, 'sulu.io', 'sulu_io', [1 => ['view' => false]]),
+            $this->createContent('3', 'Test 3', '/test-3', null, 'sulu.io', 'sulu_io', [1 => ['view' => true]]),
         ];
 
         $this->accessControlManager
@@ -297,7 +297,7 @@ class PageLinkProviderTest extends TestCase
              ->willReturn(['view' => true]);
 
         $this->contentRepository->findByUuids(
-            [1, 2, 3],
+            ['1', '2', '3'],
             $this->locale,
             Argument::that(
                 function(MappingInterface $mapping) {
@@ -310,12 +310,12 @@ class PageLinkProviderTest extends TestCase
         )->shouldBeCalledTimes(1)->willReturn($contents);
 
         /** @var LinkItem[] $result */
-        $result = $this->pageLinkProvider->preload([1, 2, 3], $this->locale, true);
+        $result = $this->pageLinkProvider->preload(['1', '2', '3'], $this->locale, true);
 
         $this->assertCount(2, $result);
 
         $this->assertEquals($contents[0]->getId(), $result[0]->getId());
-        $this->assertEquals($contents[2]->getId(), $result[2]->getId());
+        $this->assertEquals($contents[2]->getId(), $result[1]->getId());
     }
 
     public function testPreloadWithSecurity()
@@ -333,9 +333,9 @@ class PageLinkProviderTest extends TestCase
         $this->tokenStorage->getToken()->willReturn($token->reveal());
 
         $contents = [
-            $this->createContent(1, 'Test 1', '/test-1', null, 'sulu.io', 'sulu_io', []),
-            $this->createContent(2, 'Test 2', '/test-2', null, 'sulu.io', 'sulu_io', [1 => ['view' => false]]),
-            $this->createContent(3, 'Test 3', '/test-3', null, 'sulu.io', 'sulu_io', [1 => ['view' => true]]),
+            $this->createContent('1', 'Test 1', '/test-1', null, 'sulu.io', 'sulu_io', []),
+            $this->createContent('2', 'Test 2', '/test-2', null, 'sulu.io', 'sulu_io', [1 => ['view' => false]]),
+            $this->createContent('3', 'Test 3', '/test-3', null, 'sulu.io', 'sulu_io', [1 => ['view' => true]]),
         ];
 
         $this->accessControlManager
@@ -361,7 +361,7 @@ class PageLinkProviderTest extends TestCase
             ->willReturn(['view' => true]);
 
         $this->contentRepository->findByUuids(
-            [1, 2, 3],
+            ['1', '2', '3'],
             $this->locale,
             Argument::that(
                 function(MappingInterface $mapping) {
@@ -374,7 +374,7 @@ class PageLinkProviderTest extends TestCase
         )->shouldBeCalledTimes(1)->willReturn($contents);
 
         /** @var LinkItem[] $result */
-        $result = $this->pageLinkProvider->preload([1, 2, 3], $this->locale, true);
+        $result = $this->pageLinkProvider->preload(['1', '2', '3'], $this->locale, true);
 
         $this->assertCount(3, $result);
 

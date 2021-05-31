@@ -11,8 +11,10 @@ import type {InternalLinkTypeOverlayProps} from '../types';
 export default class InternalLinkTypeOverlay extends React.Component<InternalLinkTypeOverlayProps> {
     render() {
         const {
+            anchor,
             id,
             locale,
+            onAnchorChange,
             onCancel,
             onConfirm,
             onTargetChange,
@@ -53,6 +55,10 @@ export default class InternalLinkTypeOverlay extends React.Component<InternalLin
                             resourceKey={resourceKey}
                             value={id}
                         />
+                    </Form.Field>
+
+                    <Form.Field label={translate('sulu_admin.link_anchor')}>
+                        <Input onChange={onAnchorChange} value={anchor} />
                     </Form.Field>
 
                     <Form.Field label={translate('sulu_admin.link_target')} required={true}>
