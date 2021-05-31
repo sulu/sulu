@@ -252,37 +252,48 @@ class WebspaceManager implements WebspaceManagerInterface
         $partialMatchedUrls = [];
 
         $portals = $this->getWebspaceCollection()->getPortalInformations(
-            $environment,
-            [
-                RequestAnalyzerInterface::MATCH_TYPE_FULL,
-                RequestAnalyzerInterface::MATCH_TYPE_PARTIAL,
-                RequestAnalyzerInterface::MATCH_TYPE_REDIRECT,
-            ]
+            $environment
         );
 
         foreach ($portals as $portalInformation) {
+            if (!\in_array($portalInformation->getType(), [
+                RequestAnalyzerInterface::MATCH_TYPE_FULL,
+                RequestAnalyzerInterface::MATCH_TYPE_PARTIAL,
+                RequestAnalyzerInterface::MATCH_TYPE_REDIRECT,
+            ])) {
+                continue;
+            }
+
+            $sameWebspace = null === $webspaceKey || $portalInformation->getWebspace()->getKey() === $webspaceKey;
+
+            if (!$sameWebspace) {
+                continue;
+            }
+
             $sameLocalization = (
                 null === $portalInformation->getLocalization()
                 || $portalInformation->getLocalization()->getLocale() === $languageCode
             );
-            $sameWebspace = null === $webspaceKey || $portalInformation->getWebspace()->getKey() === $webspaceKey;
-            if ($sameLocalization && $sameWebspace) {
-                $url = $this->createResourceLocatorUrl($portalInformation->getUrl(), $resourceLocator, $scheme);
-                if (RequestAnalyzerInterface::MATCH_TYPE_FULL === $portalInformation->getType()) {
-                    if ($this->isFromDomain($url, $domain)) {
-                        if ($portalInformation->isMain()) {
-                            \array_unshift($sameDomainUrls, $url);
-                        } else {
-                            $sameDomainUrls[] = $url;
-                        }
-                    } elseif ($portalInformation->isMain()) {
-                        \array_unshift($fullMatchedUrls, $url);
+
+            if (!$sameLocalization) {
+                continue;
+            }
+
+            $url = $this->createResourceLocatorUrl($portalInformation->getUrl(), $resourceLocator, $scheme);
+            if (RequestAnalyzerInterface::MATCH_TYPE_FULL === $portalInformation->getType()) {
+                if ($this->isFromDomain($url, $domain)) {
+                    if ($portalInformation->isMain()) {
+                        \array_unshift($sameDomainUrls, $url);
                     } else {
-                        $fullMatchedUrls[] = $url;
+                        $sameDomainUrls[] = $url;
                     }
+                } elseif ($portalInformation->isMain()) {
+                    \array_unshift($fullMatchedUrls, $url);
                 } else {
-                    $partialMatchedUrls[] = $url;
+                    $fullMatchedUrls[] = $url;
                 }
+            } else {
+                $partialMatchedUrls[] = $url;
             }
         }
 
