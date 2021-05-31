@@ -199,7 +199,7 @@ class ContentRepositoryTest extends TestCase
         $row->getValue('deTemplate')->willReturn('default');
         $row->getValue('deDeState')->willReturn(WorkflowStage::PUBLISHED);
         $row->getValue('de_atDe_atState')->willReturn(WorkflowStage::TEST);
-        $row->getValue('sec:permission')->willReturn('[]');
+        $row->getValue('sec:permissions')->willReturn('[]');
 
         $this->sessionManager->getContentPath('sulu_io')->willReturn('/cmf/sulu_io/contents');
 

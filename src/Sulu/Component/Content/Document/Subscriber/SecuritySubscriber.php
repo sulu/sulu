@@ -32,7 +32,7 @@ class SecuritySubscriber implements EventSubscriberInterface
      */
     const SECURITY_PROPERTY_PREFIX = 'sec:role-';
 
-    const SECURITY_PERMISSION_PROPERTY = 'sec:permission';
+    const SECURITY_PERMISSION_PROPERTY = 'sec:permissions';
 
     /**
      * @var array

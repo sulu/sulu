@@ -90,8 +90,8 @@ class SecuritySubscriberTest extends SubscriberTestCase
         $liveNode->setProperty('sec:role-1', ['view', 'add', 'edit'])->shouldBeCalled();
         $liveProperty->remove()->shouldNotBeCalled();
 
-        $this->node->setProperty('sec:permission', '{"1":["view","add","edit"]}')->shouldBeCalled();
-        $liveNode->setProperty('sec:permission', '{"1":["view","add","edit"]}')->shouldBeCalled();
+        $this->node->setProperty('sec:permissions', '{"1":["view","add","edit"]}')->shouldBeCalled();
+        $liveNode->setProperty('sec:permissions', '{"1":["view","add","edit"]}')->shouldBeCalled();
 
         $this->subscriber->handlePersist($this->persistEvent->reveal());
     }
@@ -117,7 +117,7 @@ class SecuritySubscriberTest extends SubscriberTestCase
         $this->node->setProperty('sec:role-1', ['view', 'add', 'edit'])->shouldBeCalled();
         $property->remove()->shouldNotBeCalled();
 
-        $this->node->setProperty('sec:permission', '{"1":["view","add","edit"]}')->shouldBeCalled();
+        $this->node->setProperty('sec:permissions', '{"1":["view","add","edit"]}')->shouldBeCalled();
 
         $this->subscriber->handlePersist($this->persistEvent->reveal());
     }
@@ -150,8 +150,8 @@ class SecuritySubscriberTest extends SubscriberTestCase
         $liveNode->setProperty('sec:role-1', ['view', 'add', 'edit'])->shouldBeCalled();
         $liveProperty->remove()->shouldBeCalled();
 
-        $this->node->setProperty('sec:permission', '{"1":["view","add","edit"]}')->shouldBeCalled();
-        $liveNode->setProperty('sec:permission', '{"1":["view","add","edit"]}')->shouldBeCalled();
+        $this->node->setProperty('sec:permissions', '{"1":["view","add","edit"]}')->shouldBeCalled();
+        $liveNode->setProperty('sec:permissions', '{"1":["view","add","edit"]}')->shouldBeCalled();
 
         $this->subscriber->handlePersist($this->persistEvent->reveal());
     }
@@ -179,8 +179,8 @@ class SecuritySubscriberTest extends SubscriberTestCase
         $property->remove()->shouldBeCalled();
         $liveProperty->remove()->shouldBeCalled();
 
-        $this->node->setProperty('sec:permission', '[]')->shouldBeCalled();
-        $liveNode->setProperty('sec:permission', '[]')->shouldBeCalled();
+        $this->node->setProperty('sec:permissions', '[]')->shouldBeCalled();
+        $liveNode->setProperty('sec:permissions', '[]')->shouldBeCalled();
 
         $this->subscriber->handlePersist($this->persistEvent->reveal());
     }
@@ -278,11 +278,11 @@ class SecuritySubscriberTest extends SubscriberTestCase
         $document = $this->prophesize(SecurityBehavior::class);
         $node = $this->prophesize(NodeInterface::class);
 
-        $node->hasProperty('sec:permission')
+        $node->hasProperty('sec:permissions')
             ->willReturn(true)
             ->shouldBeCalled();
 
-        $node->getPropertyValue('sec:permission')
+        $node->getPropertyValue('sec:permissions')
             ->willReturn('{
                 "1": ["view", "add", "edit"],
                 "2": ["view", "edit"]
