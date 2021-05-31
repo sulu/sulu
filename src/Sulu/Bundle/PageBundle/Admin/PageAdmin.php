@@ -326,7 +326,7 @@ class PageAdmin extends Admin
                     ->setParent(static::EDIT_FORM_VIEW)
             );
 
-            if ($this->activityViewBuilderFactory->hasPermissionForActivityListView()) {
+            if ($this->activityViewBuilderFactory->hasActivityListPermission()) {
                 $activityResourceTabViewName = PageAdmin::EDIT_FORM_VIEW . '.activity';
 
                 $viewCollection->add(
@@ -341,9 +341,11 @@ class PageAdmin extends Admin
                 $viewCollection->add(
                     $this->activityViewBuilderFactory
                         ->createActivityListViewBuilder(
-                            $activityResourceTabViewName,
+                            $activityResourceTabViewName . '.activity',
+                            '/activities',
                             BasePageDocument::RESOURCE_KEY
                         )
+                        ->setParent($activityResourceTabViewName)
                 );
 
                 if ($this->versioningEnabled) {

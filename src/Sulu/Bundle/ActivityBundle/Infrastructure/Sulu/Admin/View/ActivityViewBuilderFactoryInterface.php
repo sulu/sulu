@@ -16,10 +16,11 @@ use Sulu\Bundle\AdminBundle\Admin\View\ListViewBuilderInterface;
 interface ActivityViewBuilderFactoryInterface
 {
     public function createActivityListViewBuilder(
-        string $parent,
+        string $name,
+        string $path,
         string $resourceKey,
         string $resourceIdRouterAttribute = 'id'
     ): ListViewBuilderInterface;
 
-    public function hasPermissionForActivityListView(): bool;
+    public function hasActivityListPermission(): bool;
 }

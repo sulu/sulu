@@ -166,13 +166,15 @@ class MediaAdmin extends Admin
                     ->setParent(static::EDIT_FORM_VIEW)
             );
 
-            if ($this->activityViewBuilderFactory->hasPermissionForActivityListView()) {
+            if ($this->activityViewBuilderFactory->hasActivityListPermission()) {
                 $viewCollection->add(
                     $this->activityViewBuilderFactory
                         ->createActivityListViewBuilder(
-                            static::EDIT_FORM_VIEW,
+                            static::EDIT_FORM_VIEW . '.activity',
+                            '/activities',
                             MediaInterface::RESOURCE_KEY
                         )
+                        ->setParent(static::EDIT_FORM_VIEW)
                 );
             }
         }

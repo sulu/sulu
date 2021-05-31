@@ -39,13 +39,14 @@ class ActivityViewBuilderFactory implements ActivityViewBuilderFactoryInterface
     }
 
     public function createActivityListViewBuilder(
-        string $parent,
+        string $name,
+        string $path,
         string $resourceKey,
         string $resourceIdRouterAttribute = 'id'
     ): ListViewBuilderInterface {
         /** @var ListViewBuilderInterface $activityListViewBuilder */
         $activityListViewBuilder = $this->viewBuilderFactory
-            ->createListViewBuilder($parent . '.activity', '/activities')
+            ->createListViewBuilder($name, $path)
             ->setResourceKey(ActivityInterface::RESOURCE_KEY)
             ->setListKey(ActivityInterface::LIST_KEY)
             ->setTabTitle('sulu_admin.activity')
@@ -56,20 +57,18 @@ class ActivityViewBuilderFactory implements ActivityViewBuilderFactoryInterface
                     'show_header' => false,
                 ],
             ])
-            ->setTabOrder(4096)
             ->disableTabGap()
             ->disableSearching()
             ->disableSelection()
             ->disableColumnOptions()
             ->disableFiltering()
             ->addRouterAttributesToListRequest([$resourceIdRouterAttribute => 'resourceId'])
-            ->addRequestParameters(['resourceKey' => $resourceKey])
-            ->setParent($parent);
+            ->addRequestParameters(['resourceKey' => $resourceKey]);
 
         return $activityListViewBuilder;
     }
 
-    public function hasPermissionForActivityListView(): bool
+    public function hasActivityListPermission(): bool
     {
         return $this->securityChecker->hasPermission(ActivityAdmin::SECURITY_CONTEXT, PermissionTypes::VIEW);
     }
