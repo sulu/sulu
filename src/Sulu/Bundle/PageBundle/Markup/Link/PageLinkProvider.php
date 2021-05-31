@@ -169,17 +169,17 @@ class PageLinkProvider implements LinkProviderInterface
     /**
      * Returns current user or null if no user is loggedin.
      *
-     * @return UserInterface|void
+     * @return UserInterface|null
      */
     private function getCurrentUser()
     {
         if (!$this->tokenStorage) {
-            return;
+            return null;
         }
 
         $token = $this->tokenStorage->getToken();
         if (!$token) {
-            return;
+            return null;
         }
 
         $user = $token->getUser();
@@ -187,6 +187,6 @@ class PageLinkProvider implements LinkProviderInterface
             return $user;
         }
 
-        return;
+        return null;
     }
 }

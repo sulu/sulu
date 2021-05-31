@@ -22,12 +22,12 @@ class SystemStore implements SystemStoreInterface
     private $roleRepository;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $system;
 
     /**
-     * @var ?RoleInterface
+     * @var RoleInterface|null
      */
     private $anonymousRole;
 
@@ -41,7 +41,7 @@ class SystemStore implements SystemStoreInterface
         return $this->system;
     }
 
-    public function setSystem(string $system): void
+    public function setSystem(?string $system): void
     {
         $this->system = $system;
         $this->anonymousRole = null;

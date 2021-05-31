@@ -12,7 +12,6 @@
 namespace Sulu\Component\Content\Tests\Unit\Repository;
 
 use Jackalope\Query\Row;
-use PHPCR\NodeInterface;
 use PHPCR\Query\QOM\ChildNodeInterface;
 use PHPCR\Query\QOM\ColumnInterface;
 use PHPCR\Query\QOM\ComparisonInterface;
@@ -28,6 +27,7 @@ use PHPCR\SessionInterface;
 use PHPCR\WorkspaceInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\SecurityBundle\System\SystemStoreInterface;
 use Sulu\Component\Content\Compat\LocalizationFinderInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
@@ -47,42 +47,42 @@ use Sulu\Component\Webspace\Webspace;
 class ContentRepositoryTest extends TestCase
 {
     /**
-     * @var SessionInterface
+     * @var ObjectProphecy|SessionInterface
      */
     private $session;
 
     /**
-     * @var SessionManagerInterface
+     * @var ObjectProphecy|SessionManagerInterface
      */
     private $sessionManager;
 
     /**
-     * @var DocumentManagerInterface
+     * @var ObjectProphecy|DocumentManagerInterface
      */
     private $documentManager;
 
     /**
-     * @var PropertyEncoder
+     * @var ObjectProphecy|PropertyEncoder
      */
     private $propertyEncoder;
 
     /**
-     * @var WebspaceManagerInterface
+     * @var ObjectProphecy|WebspaceManagerInterface
      */
     private $webspaceManager;
 
     /**
-     * @var LocalizationFinderInterface
+     * @var ObjectProphecy|LocalizationFinderInterface
      */
     private $localizationFinder;
 
     /**
-     * @var StructureManagerInterface
+     * @var ObjectProphecy|StructureManagerInterface
      */
     private $structureManager;
 
     /**
-     * @var SuluNodeHelper
+     * @var ObjectProphecy|SuluNodeHelper
      */
     private $nodeHelper;
 
@@ -92,12 +92,12 @@ class ContentRepositoryTest extends TestCase
     private $contentRepository;
 
     /**
-     * @var SystemStoreInterface
+     * @var ObjectProphecy|SystemStoreInterface
      */
     private $systemStore;
 
     /**
-     * @var QueryInterface
+     * @var ObjectProphecy|QueryInterface
      */
     private $query;
 
@@ -180,9 +180,8 @@ class ContentRepositoryTest extends TestCase
         $row->getPath()->willReturn('/cmf/sulu_io/contents');
         $this->nodeHelper->extractWebspaceFromPath('/cmf/sulu_io/contents')->willReturn('sulu_io');
 
-        $node = $this->prophesize(NodeInterface::class);
-        $node->getProperties('sec:role-*')->willReturn([]);
-        $row->getNode()->willReturn($node->reveal());
+        // avoid calling getNode to avoid triggering hydration process and node query
+        $row->getNode()->shouldNotBeCalled();
 
         $row->getValues()->willReturn(
             [
@@ -200,6 +199,7 @@ class ContentRepositoryTest extends TestCase
         $row->getValue('deTemplate')->willReturn('default');
         $row->getValue('deDeState')->willReturn(WorkflowStage::PUBLISHED);
         $row->getValue('de_atDe_atState')->willReturn(WorkflowStage::TEST);
+        $row->getValue('sec:permission')->willReturn('[]');
 
         $this->sessionManager->getContentPath('sulu_io')->willReturn('/cmf/sulu_io/contents');
 
