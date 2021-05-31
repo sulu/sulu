@@ -65,17 +65,25 @@ class LinkTag implements TagInterface
             $provider = $this->getValue($attributes, 'provider', self::DEFAULT_PROVIDER);
             $validationState = $attributes['sulu-validation-state'] ?? null;
 
-            if (isset($attributes['href']) && \array_key_exists($provider . '-' . $attributes['href'], $contents)) {
-                $item = $contents[$provider . '-' . $attributes['href']];
+            $hrefParts = $this->getUuidAndAnchorFromHref($attributes['href'] ?? null);
+            $uuid = $hrefParts['uuid'];
+            $anchor = $hrefParts['anchor'];
+
+            if ($uuid && \array_key_exists($provider . '-' . $uuid, $contents)) {
+                $item = $contents[$provider . '-' . $uuid];
 
                 $url = $item->getUrl();
                 if ($this->urlHelper) {
                     $url = $this->urlHelper->getAbsoluteUrl($url);
                 }
 
+                if ($anchor) {
+                    $url .= '#' . $anchor;
+                }
+
                 $title = $item->getTitle();
                 $attributes['href'] = $url;
-                $attributes['title'] = $this->getValue($attributes, 'title', $item->getTitle());
+                $attributes['title'] = $this->getValue($attributes, 'title', $title);
             } elseif ($this->isPreview && self::VALIDATE_UNPUBLISHED === $validationState) {
                 // render anchor without href to keep styling even if target is not published in preview
                 $title = $this->getContent($attributes);
@@ -91,7 +99,7 @@ class LinkTag implements TagInterface
             $htmlAttributes = \array_map(
                 function($value, $name) {
                     if (\in_array($name, ['provider', 'content', 'sulu-validation-state']) || empty($value)) {
-                        return;
+                        return null;
                     }
 
                     return \sprintf('%s="%s"', $name, $value);
@@ -117,11 +125,11 @@ class LinkTag implements TagInterface
         $result = [];
         foreach ($attributesByTag as $tag => $attributes) {
             $provider = $this->getValue($attributes, 'provider', self::DEFAULT_PROVIDER);
-            if (!isset($attributes['href'])
-                || !\array_key_exists($provider . '-' . $attributes['href'], $items)
-            ) {
+            $uuid = $this->getUuidAndAnchorFromHref($attributes['href'] ?? null)['uuid'];
+
+            if (!$uuid || !\array_key_exists($provider . '-' . $uuid, $items)) {
                 $result[$tag] = self::VALIDATE_REMOVED;
-            } elseif (!$items[$provider . '-' . $attributes['href']]->isPublished()) {
+            } elseif (!$items[$provider . '-' . $uuid]->isPublished()) {
                 $result[$tag] = self::VALIDATE_UNPUBLISHED;
             }
         }
@@ -140,22 +148,24 @@ class LinkTag implements TagInterface
      */
     private function preload($attributesByTag, $locale, $published = true)
     {
-        $hrefsByType = [];
+        $uuidsByType = [];
         foreach ($attributesByTag as $attributes) {
             $provider = $this->getValue($attributes, 'provider', self::DEFAULT_PROVIDER);
-            if (!\array_key_exists($provider, $hrefsByType)) {
-                $hrefsByType[$provider] = [];
+            if (!\array_key_exists($provider, $uuidsByType)) {
+                $uuidsByType[$provider] = [];
             }
 
-            if (isset($attributes['href'])) {
-                $hrefsByType[$provider][] = $attributes['href'];
+            $uuid = $this->getUuidAndAnchorFromHref($attributes['href'] ?? null)['uuid'];
+
+            if ($uuid) {
+                $uuidsByType[$provider][] = $uuid;
             }
         }
 
         $result = [];
-        foreach ($hrefsByType as $provider => $hrefs) {
+        foreach ($uuidsByType as $provider => $uuids) {
             $items = $this->linkProviderPool->getProvider($provider)->preload(
-                \array_unique($hrefs),
+                \array_unique($uuids),
                 $locale,
                 $published
             );
@@ -194,5 +204,26 @@ class LinkTag implements TagInterface
         }
 
         return $this->getValue($attributes, 'title', '');
+    }
+
+    /**
+     * @param mixed $href
+     *
+     * @return array{uuid: string|null, anchor: string|null}
+     */
+    private function getUuidAndAnchorFromHref($href): array
+    {
+        $href = (string) $href ?: null;
+
+        /** @var string[] $hrefParts */
+        $hrefParts = $href ? \explode('#', $href, 2) : [];
+
+        $uuid = $hrefParts[0] ?? null;
+        $anchor = $hrefParts[1] ?? null;
+
+        return [
+            'uuid' => $uuid,
+            'anchor' => $anchor,
+        ];
     }
 }
