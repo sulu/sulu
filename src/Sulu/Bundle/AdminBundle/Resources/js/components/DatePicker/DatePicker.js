@@ -132,6 +132,7 @@ class DatePicker extends React.Component<Props> {
     getInputChange = (props: Object) => {
         return (value: ?string, event: SyntheticEvent<HTMLInputElement>) => {
             this.inputChanged = true;
+            this.setValue(value);
             props.onChange(event);
         };
     };
