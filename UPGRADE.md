@@ -1,5 +1,16 @@
 # Upgrade
 
+## 2.2.11
+
+### Migrate role permissions properties
+
+For performance reasons we need to migrate the permission fields into a single field in PHPCR.
+Run the phpcr migration command which will handle migration:
+
+```bash
+bin/console phpcr:migrations:migrate
+```
+
 ## 2.2.6
 
 ### Changed ContentRepository to return title of source instead of link destination for internal link pages
