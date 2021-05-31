@@ -120,7 +120,9 @@ class ActivityController extends AbstractRestController implements ClassResource
         $user = $this->getUser();
 
         /** @var array<string, FieldDescriptorInterface> $configurationFieldDescriptors */
-        $configurationFieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors('activities');
+        $configurationFieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors(
+            ActivityInterface::LIST_KEY
+        );
 
         $fieldDescriptors = \array_merge(
             $this->getRawDataFieldDescriptors(),

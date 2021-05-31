@@ -13,6 +13,8 @@ namespace Sulu\Bundle\PageBundle\Tests\Unit\Admin;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
+use Sulu\Bundle\ActivityBundle\Infrastructure\Sulu\Admin\View\ActivityViewBuilderFactory;
+use Sulu\Bundle\ActivityBundle\Infrastructure\Sulu\Admin\View\ActivityViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactory;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
@@ -57,6 +59,11 @@ class PageAdminTest extends TestCase
      */
     private $teaserProviderPool;
 
+    /**
+     * @var ActivityViewBuilderFactoryInterface
+     */
+    private $activityViewBuilderFactory;
+
     public function setUp(): void
     {
         $this->viewBuilderFactory = new ViewBuilderFactory();
@@ -65,6 +72,11 @@ class PageAdminTest extends TestCase
         $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
         $this->sessionManager = $this->prophesize(SessionManagerInterface::class);
         $this->teaserProviderPool = $this->prophesize(TeaserProviderPoolInterface::class);
+
+        $this->activityViewBuilderFactory = new ActivityViewBuilderFactory(
+            $this->viewBuilderFactory,
+            $this->securityChecker->reveal()
+        );
 
         $this->webspaceManager->getWebspaceCollection()->willReturn($this->webspaceCollection->reveal());
     }
@@ -99,7 +111,8 @@ class PageAdminTest extends TestCase
             $this->securityChecker->reveal(),
             $this->sessionManager->reveal(),
             $this->teaserProviderPool->reveal(),
-            false
+            false,
+            $this->activityViewBuilderFactory
         );
 
         $viewCollection = new ViewCollection();
@@ -124,7 +137,8 @@ class PageAdminTest extends TestCase
             $this->securityChecker->reveal(),
             $this->sessionManager->reveal(),
             $this->teaserProviderPool->reveal(),
-            true
+            true,
+            $this->activityViewBuilderFactory
         );
 
         $webspace1 = new Webspace();
@@ -168,7 +182,8 @@ class PageAdminTest extends TestCase
             $this->securityChecker->reveal(),
             $this->sessionManager->reveal(),
             $this->teaserProviderPool->reveal(),
-            false
+            false,
+            $this->activityViewBuilderFactory
         );
 
         $this->webspaceManager->getWebspaceCollection()->willReturn(new WebspaceCollection([]));
@@ -194,7 +209,8 @@ class PageAdminTest extends TestCase
             $this->securityChecker->reveal(),
             $this->sessionManager->reveal(),
             $this->teaserProviderPool->reveal(),
-            true
+            true,
+            $this->activityViewBuilderFactory
         );
 
         $webspace1 = new Webspace();

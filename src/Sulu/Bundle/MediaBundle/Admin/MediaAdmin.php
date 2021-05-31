@@ -11,8 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Admin;
 
-use Sulu\Bundle\ActivityBundle\Domain\Model\ActivityInterface;
-use Sulu\Bundle\ActivityBundle\Infrastructure\Sulu\Admin\ActivityAdmin;
+use Sulu\Bundle\ActivityBundle\Infrastructure\Sulu\Admin\View\ActivityViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
@@ -67,18 +66,25 @@ class MediaAdmin extends Admin
      */
     private $webspaceManager;
 
+    /**
+     * @var ActivityViewBuilderFactoryInterface
+     */
+    private $activityViewBuilderFactory;
+
     public function __construct(
         ViewBuilderFactoryInterface $viewBuilderFactory,
         SecurityCheckerInterface $securityChecker,
         LocalizationManagerInterface $localizationManager,
         UrlGeneratorInterface $urlGenerator,
-        WebspaceManagerInterface $webspaceManager
+        WebspaceManagerInterface $webspaceManager,
+        ActivityViewBuilderFactoryInterface $activityViewBuilderFactory
     ) {
         $this->viewBuilderFactory = $viewBuilderFactory;
         $this->securityChecker = $securityChecker;
         $this->localizationManager = $localizationManager;
         $this->urlGenerator = $urlGenerator;
         $this->webspaceManager = $webspaceManager;
+        $this->activityViewBuilderFactory = $activityViewBuilderFactory;
     }
 
     public function configureNavigationItems(NavigationItemCollection $navigationItemCollection): void
@@ -136,6 +142,7 @@ class MediaAdmin extends Admin
                     ->setResourceKey(MediaInterface::RESOURCE_KEY)
                     ->addLocales($mediaLocales)
                     ->setTitleProperty('title')
+                    ->setBackView(static::MEDIA_OVERVIEW_VIEW)
             );
             $viewCollection->add(
                 $this->viewBuilderFactory->createFormViewBuilder(static::EDIT_FORM_DETAILS_VIEW, '/details')
@@ -144,7 +151,6 @@ class MediaAdmin extends Admin
                     ->setTabTitle('sulu_media.information_taxonomy')
                     ->addToolbarActions($toolbarActions)
                     ->setParent(static::EDIT_FORM_VIEW)
-                    ->setBackView(static::MEDIA_OVERVIEW_VIEW)
             );
             $viewCollection->add(
                 $this->viewBuilderFactory
@@ -160,28 +166,14 @@ class MediaAdmin extends Admin
                     ->setParent(static::EDIT_FORM_VIEW)
             );
 
-            if ($this->securityChecker->hasPermission(ActivityAdmin::SECURITY_CONTEXT, PermissionTypes::VIEW)) {
+            if ($this->activityViewBuilderFactory->hasActivityListPermission()) {
                 $viewCollection->add(
-                    $this->viewBuilderFactory
-                        ->createListViewBuilder('sulu_media.form.activity', '/activity')
-                        ->setTabTitle('sulu_admin.activity')
-                        ->setResourceKey(ActivityInterface::RESOURCE_KEY)
-                        ->setListKey('activities')
-                        ->addListAdapters(['table'])
-                        ->addAdapterOptions([
-                            'table' => [
-                                'skin' => 'flat',
-                                'show_header' => false,
-                            ],
-                        ])
-                        ->disableTabGap()
-                        ->disableSearching()
-                        ->disableSelection()
-                        ->disableColumnOptions()
-                        ->disableFiltering()
-                        ->addResourceStorePropertiesToListRequest(['id' => 'resourceId'])
-                        ->addRequestParameters(['resourceKey' => MediaInterface::RESOURCE_KEY])
-                        ->setBackView(static::MEDIA_OVERVIEW_VIEW)
+                    $this->activityViewBuilderFactory
+                        ->createActivityListViewBuilder(
+                            static::EDIT_FORM_VIEW . '.activity',
+                            '/activities',
+                            MediaInterface::RESOURCE_KEY
+                        )
                         ->setParent(static::EDIT_FORM_VIEW)
                 );
             }

@@ -1,5 +1,9 @@
 # Upgrade
 
+## 2.3.1
+
+A new argument `$activityViewBuilderFactory` has been added to the constructor of the `MediaAdmin` and `PageAdmin` class.
+
 ## 2.3.0
 
 ### Preview updateContext method
