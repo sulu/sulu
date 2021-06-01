@@ -458,17 +458,22 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
 
         foreach ($result as $index => $row) {
             $permissions[$index] = [];
-            $securityProperties = $row->getNode()->getProperties(SecuritySubscriber::SECURITY_PROPERTY_PREFIX . '*');
 
-            foreach ($securityProperties as $securityProperty) {
-                $roleId = \str_replace(SecuritySubscriber::SECURITY_PROPERTY_PREFIX, '', $securityProperty->getName());
+            $jsonPermission = $row->getValue(SecuritySubscriber::SECURITY_PERMISSION_PROPERTY);
 
+            if (!$jsonPermission) {
+                continue;
+            }
+
+            $rowPermissions = \json_decode($jsonPermission, true);
+
+            foreach ($rowPermissions as $roleId => $rolePermissions) {
                 foreach ($this->permissions as $permissionKey => $permission) {
                     $permissions[$index][$roleId][$permissionKey] = false;
                 }
 
-                foreach ($securityProperty->getValue() as $permission) {
-                    $permissions[$index][$roleId][$permission] = true;
+                foreach ($rolePermissions as $rolePermission) {
+                    $permissions[$index][$roleId][$rolePermission] = true;
                 }
             }
         }
@@ -504,15 +509,11 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
         $this->appendSingleMapping($queryBuilder, 'shadow-on', $locales);
         $this->appendSingleMapping($queryBuilder, 'state', $locales);
 
-        if (null !== $user) {
-            foreach ($user->getRoleObjects() as $role) {
-                $queryBuilder->addSelect(
-                    'node',
-                    \sprintf('sec:%s', 'role-' . $role->getId()),
-                    \sprintf('role%s', $role->getId())
-                );
-            }
-        }
+        $queryBuilder->addSelect(
+            'node',
+            SecuritySubscriber::SECURITY_PERMISSION_PROPERTY,
+            SecuritySubscriber::SECURITY_PERMISSION_PROPERTY
+        );
 
         return $queryBuilder;
     }

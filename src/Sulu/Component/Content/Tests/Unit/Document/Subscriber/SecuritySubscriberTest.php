@@ -15,6 +15,7 @@ use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
 use PHPCR\SessionInterface;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Document\Subscriber\SecuritySubscriber;
 use Sulu\Component\Content\Document\Subscriber\StructureSubscriber;
@@ -25,7 +26,7 @@ use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInte
 class SecuritySubscriberTest extends SubscriberTestCase
 {
     /**
-     * @var ObjectProphecy
+     * @var ObjectProphecy|NodeInterface
      */
     private $liveSession;
 
@@ -35,12 +36,12 @@ class SecuritySubscriberTest extends SubscriberTestCase
     private $subscriber;
 
     /**
-     * @var PropertyEncoder
+     * @var ObjectProphecy|PropertyEncoder
      */
     private $propertyEncoder;
 
     /**
-     * @var AccessControlManagerInterface
+     * @var ObjectProphecy|AccessControlManagerInterface
      */
     private $accessControlManager;
 
@@ -89,6 +90,9 @@ class SecuritySubscriberTest extends SubscriberTestCase
         $liveNode->setProperty('sec:role-1', ['view', 'add', 'edit'])->shouldBeCalled();
         $liveProperty->remove()->shouldNotBeCalled();
 
+        $this->node->setProperty('sec:permissions', '{"1":["view","add","edit"]}')->shouldBeCalled();
+        $liveNode->setProperty('sec:permissions', '{"1":["view","add","edit"]}')->shouldBeCalled();
+
         $this->subscriber->handlePersist($this->persistEvent->reveal());
     }
 
@@ -112,6 +116,8 @@ class SecuritySubscriberTest extends SubscriberTestCase
 
         $this->node->setProperty('sec:role-1', ['view', 'add', 'edit'])->shouldBeCalled();
         $property->remove()->shouldNotBeCalled();
+
+        $this->node->setProperty('sec:permissions', '{"1":["view","add","edit"]}')->shouldBeCalled();
 
         $this->subscriber->handlePersist($this->persistEvent->reveal());
     }
@@ -144,6 +150,9 @@ class SecuritySubscriberTest extends SubscriberTestCase
         $liveNode->setProperty('sec:role-1', ['view', 'add', 'edit'])->shouldBeCalled();
         $liveProperty->remove()->shouldBeCalled();
 
+        $this->node->setProperty('sec:permissions', '{"1":["view","add","edit"]}')->shouldBeCalled();
+        $liveNode->setProperty('sec:permissions', '{"1":["view","add","edit"]}')->shouldBeCalled();
+
         $this->subscriber->handlePersist($this->persistEvent->reveal());
     }
 
@@ -169,6 +178,9 @@ class SecuritySubscriberTest extends SubscriberTestCase
 
         $property->remove()->shouldBeCalled();
         $liveProperty->remove()->shouldBeCalled();
+
+        $this->node->setProperty('sec:permissions', '[]')->shouldBeCalled();
+        $liveNode->setProperty('sec:permissions', '[]')->shouldBeCalled();
 
         $this->subscriber->handlePersist($this->persistEvent->reveal());
     }
@@ -266,17 +278,16 @@ class SecuritySubscriberTest extends SubscriberTestCase
         $document = $this->prophesize(SecurityBehavior::class);
         $node = $this->prophesize(NodeInterface::class);
 
-        /** @var PropertyInterface $roleProperty1 */
-        $roleProperty1 = $this->prophesize(PropertyInterface::class);
-        $roleProperty1->getName()->willReturn('sec:role-1');
-        $roleProperty1->getValue()->willReturn(['view', 'add', 'edit']);
+        $node->hasProperty('sec:permissions')
+            ->willReturn(true)
+            ->shouldBeCalled();
 
-        /** @var PropertyInterface $roleProperty2 */
-        $roleProperty2 = $this->prophesize(PropertyInterface::class);
-        $roleProperty2->getName()->willReturn('sec:role-2');
-        $roleProperty2->getValue()->willReturn(['view', 'edit']);
-
-        $node->getProperties('sec:*')->willReturn([$roleProperty1->reveal(), $roleProperty2->reveal()]);
+        $node->getPropertyValue('sec:permissions')
+            ->willReturn('{
+                "1": ["view", "add", "edit"],
+                "2": ["view", "edit"]
+            }')
+            ->shouldBeCalled();
 
         $this->hydrateEvent->getDocument()->willReturn($document);
         $this->hydrateEvent->getNode()->willReturn($node);

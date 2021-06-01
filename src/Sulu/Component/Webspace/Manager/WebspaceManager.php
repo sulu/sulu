@@ -76,6 +76,11 @@ class WebspaceManager implements WebspaceManagerInterface
      */
     private $structureMetadataFactory;
 
+    /**
+     * @var mixed[]
+     */
+    private $portalUrlCache = [];
+
     public function __construct(
         LoaderInterface $loader,
         ReplacerInterface $urlReplacer,
@@ -247,48 +252,89 @@ class WebspaceManager implements WebspaceManagerInterface
             $webspaceKey = $currentWebspace ? $currentWebspace->getKey() : $webspaceKey;
         }
 
-        $sameDomainUrls = [];
-        $fullMatchedUrls = [];
-        $partialMatchedUrls = [];
+        if (isset($this->portalUrlCache[$webspaceKey][$domain][$environment][$languageCode])) {
+            $portalUrl = $this->portalUrlCache[$webspaceKey][$domain][$environment][$languageCode];
+
+            if (!$portalUrl) {
+                return null;
+            }
+
+            return $this->createResourceLocatorUrl($portalUrl, $resourceLocator, $scheme);
+        }
+
+        $sameDomainUrl = null;
+        $fullMatchedUrl = null;
+        $partialMatchedUrl = null;
 
         $portals = $this->getWebspaceCollection()->getPortalInformations(
-            $environment,
-            [
-                RequestAnalyzerInterface::MATCH_TYPE_FULL,
-                RequestAnalyzerInterface::MATCH_TYPE_PARTIAL,
-                RequestAnalyzerInterface::MATCH_TYPE_REDIRECT,
-            ]
+            $environment
         );
 
         foreach ($portals as $portalInformation) {
-            $sameLocalization = (
-                null === $portalInformation->getLocalization()
-                || $portalInformation->getLocalization()->getLocale() === $languageCode
-            );
+            if (!\in_array($portalInformation->getType(), [
+                RequestAnalyzerInterface::MATCH_TYPE_FULL,
+                RequestAnalyzerInterface::MATCH_TYPE_PARTIAL,
+                RequestAnalyzerInterface::MATCH_TYPE_REDIRECT,
+            ])) {
+                continue;
+            }
+
             $sameWebspace = null === $webspaceKey || $portalInformation->getWebspace()->getKey() === $webspaceKey;
-            $url = $this->createResourceLocatorUrl($portalInformation->getUrl(), $resourceLocator, $scheme);
-            if ($sameLocalization && $sameWebspace) {
-                if (RequestAnalyzerInterface::MATCH_TYPE_FULL === $portalInformation->getType()) {
-                    if ($this->isFromDomain($url, $domain)) {
-                        if ($portalInformation->isMain()) {
-                            \array_unshift($sameDomainUrls, $url);
-                        } else {
-                            $sameDomainUrls[] = $url;
-                        }
-                    } elseif ($portalInformation->isMain()) {
-                        \array_unshift($fullMatchedUrls, $url);
-                    } else {
-                        $fullMatchedUrls[] = $url;
+
+            if (!$sameWebspace) {
+                continue;
+            }
+
+            $portalLocalization = $portalInformation->getLocalization();
+
+            $sameLocalization = (
+                null === $portalLocalization
+                || $portalLocalization->getLocale() === $languageCode
+            );
+
+            if (!$sameLocalization) {
+                continue;
+            }
+
+            $portalUrl = $portalInformation->getUrl();
+            if (RequestAnalyzerInterface::MATCH_TYPE_FULL === $portalInformation->getType()) {
+                if ($this->isFromDomain('http://' . $portalUrl, $domain)) {
+                    if ($portalInformation->isMain()) {
+                        $sameDomainUrl = $portalUrl;
+                    } elseif (!$sameDomainUrl) {
+                        $sameDomainUrl = $portalUrl;
                     }
-                } else {
-                    $partialMatchedUrls[] = $url;
+                } elseif ($sameDomainUrl) {
+                    continue;
+                } elseif ($portalInformation->isMain()) {
+                    $fullMatchedUrl = $portalUrl;
+                } elseif (!$fullMatchedUrl) {
+                    $fullMatchedUrl = $portalUrl;
                 }
+            } elseif ($fullMatchedUrl || $sameDomainUrl) {
+                continue;
+            } elseif (!$partialMatchedUrl) {
+                $partialMatchedUrl = $portalUrl;
             }
         }
 
-        $matchedUrls = \array_merge($sameDomainUrls, $fullMatchedUrls, $partialMatchedUrls);
+        if ($sameDomainUrl) {
+            $portalUrl = $sameDomainUrl;
+        } elseif ($fullMatchedUrl) {
+            $portalUrl = $fullMatchedUrl;
+        } elseif ($partialMatchedUrl) {
+            $portalUrl = $partialMatchedUrl;
+        } else {
+            $portalUrl = null;
+        }
 
-        return \reset($matchedUrls) ?: null;
+        $this->portalUrlCache[$webspaceKey][$domain][$environment][$languageCode] = $portalUrl;
+
+        if (!$portalUrl) {
+            return null;
+        }
+
+        return $this->createResourceLocatorUrl($portalUrl, $resourceLocator, $scheme);
     }
 
     public function getPortals(): array

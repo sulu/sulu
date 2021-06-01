@@ -12,7 +12,6 @@
 namespace Sulu\Component\Content\Document\Subscriber;
 
 use PHPCR\NodeInterface;
-use PHPCR\PropertyInterface;
 use PHPCR\SessionInterface;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\PathBehavior;
@@ -28,7 +27,12 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class SecuritySubscriber implements EventSubscriberInterface
 {
+    /**
+     * @deprecated use the SECURITY_PERMISSION_PROPERTY to access the permissions
+     */
     const SECURITY_PROPERTY_PREFIX = 'sec:role-';
+
+    const SECURITY_PERMISSION_PROPERTY = 'sec:permissions';
 
     /**
      * @var array
@@ -150,13 +154,22 @@ class SecuritySubscriber implements EventSubscriberInterface
             }
         }
 
+        $allowedPermissions = [];
         foreach ($permissions as $roleId => $permission) {
-            $allowedPermissions = $this->getAllowedPermissions($permission);
-            // TODO use PropertyEncoder, once it is refactored
-            $node->setProperty(static::SECURITY_PROPERTY_PREFIX . $roleId, $allowedPermissions);
+            $allowedRolePermissions = $this->getAllowedPermissions($permission);
+            $allowedPermissions[$roleId] = $allowedRolePermissions;
+            // store role permissions in separated properties for backwards compatibility
+            $node->setProperty(static::SECURITY_PROPERTY_PREFIX . $roleId, $allowedRolePermissions);
             if ($liveNode) {
-                $liveNode->setProperty(static::SECURITY_PROPERTY_PREFIX . $roleId, $allowedPermissions);
+                $liveNode->setProperty(static::SECURITY_PROPERTY_PREFIX . $roleId, $allowedRolePermissions);
             }
+        }
+
+        $jsonAllowedPermissions = \json_encode($allowedPermissions);
+
+        $node->setProperty(static::SECURITY_PERMISSION_PROPERTY, $jsonAllowedPermissions);
+        if ($liveNode) {
+            $liveNode->setProperty(static::SECURITY_PERMISSION_PROPERTY, $jsonAllowedPermissions);
         }
     }
 
@@ -172,13 +185,20 @@ class SecuritySubscriber implements EventSubscriberInterface
             return;
         }
 
+        if (!$node->hasProperty(static::SECURITY_PERMISSION_PROPERTY)) {
+            return;
+        }
+
+        $nodePermissionJson = $node->getPropertyValue(static::SECURITY_PERMISSION_PROPERTY);
+
+        if (!$nodePermissionJson) {
+            return;
+        }
+
+        $nodePermissions = \json_decode($nodePermissionJson, true);
+
         $permissions = [];
-        foreach ($node->getProperties('sec:*') as $property) {
-            /** @var PropertyInterface $property */
-            $roleId = \substr($property->getName(), 9); // remove the "sec:role-" prefix
-
-            $allowedPermissions = $property->getValue();
-
+        foreach ($nodePermissions as $roleId => $allowedPermissions) {
             foreach ($this->permissions as $permission => $value) {
                 $permissions[$roleId][$permission] = \in_array($permission, $allowedPermissions);
             }

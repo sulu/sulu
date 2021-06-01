@@ -1,5 +1,20 @@
 # Upgrade
 
+## 2.2.11
+
+### Migrate permissions properties for pages
+
+The role-specific PHPCR properties used for storing page permissions decrease performance when
+used in combination with website security. To mitigate the problem and improve performance, all permissions 
+are now stored in a single property. 
+
+If you use page-specific permissions in your project, you need to migrate the existing data by running the 
+phpcr migration command:
+
+```bash
+bin/console phpcr:migrations:migrate
+```
+
 ## 2.2.6
 
 ### Changed ContentRepository to return title of source instead of link destination for internal link pages
