@@ -157,13 +157,12 @@ class SecuritySubscriber implements EventSubscriberInterface
         $allowedPermissions = [];
         foreach ($permissions as $roleId => $permission) {
             $allowedRolePermissions = $this->getAllowedPermissions($permission);
-            // TODO use PropertyEncoder, once it is refactored
+            $allowedPermissions[$roleId] = $allowedRolePermissions;
+            // store role permissions in separated properties for backwards compatibility
             $node->setProperty(static::SECURITY_PROPERTY_PREFIX . $roleId, $allowedRolePermissions);
             if ($liveNode) {
                 $liveNode->setProperty(static::SECURITY_PROPERTY_PREFIX . $roleId, $allowedRolePermissions);
             }
-
-            $allowedPermissions[$roleId] = $allowedRolePermissions;
         }
 
         $jsonAllowedPermissions = \json_encode($allowedPermissions);
