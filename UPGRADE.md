@@ -2,10 +2,14 @@
 
 ## 2.2.11
 
-### Migrate role permissions properties
+### Migrate permissions properties for pages
 
-For performance reasons we need to migrate the permission fields into a single field in PHPCR.
-Run the phpcr migration command which will handle migration:
+The role-specific PHPCR properties used for storing page permissions decrease performance when
+used in combination with website security. To mitigate the problem and improve performance, all permissions 
+are now stored in a single property. 
+
+If you use page-specific permissions in your project, you need to migrate the existing data by running the 
+phpcr migration command:
 
 ```bash
 bin/console phpcr:migrations:migrate
