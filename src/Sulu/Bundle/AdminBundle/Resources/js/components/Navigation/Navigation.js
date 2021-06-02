@@ -6,6 +6,7 @@ import classNames from 'classnames';
 import Icon from '../Icon';
 import Item from './Item';
 import navigationStyles from './navigation.scss';
+import ProfileButton from './ProfileButton';
 import type {ChildrenArray, Element} from 'react';
 
 type Props = {|
@@ -100,20 +101,6 @@ class Navigation extends React.Component<Props> {
         });
     }
 
-    renderUserImage() {
-        const {userImage, username, onProfileClick} = this.props;
-
-        if (userImage) {
-            return (<img onClick={onProfileClick} src={userImage} title={username} />);
-        }
-
-        return (
-            <button className={navigationStyles.noUserImage} onClick={onProfileClick}>
-                <Icon name="fa-user" />
-            </button>
-        );
-    }
-
     handlePinToggle = () => {
         const {onPinToggle} = this.props;
 
@@ -122,29 +109,11 @@ class Navigation extends React.Component<Props> {
         }
     };
 
-    renderAppVersion() {
-        const {
-            title,
-            appVersion,
-            appVersionLink,
-        } = this.props;
-
-        if (!appVersion) {
-            return null;
-        }
-
-        if (!appVersionLink) {
-            return <div>{title} ({appVersion})</div>;
-        }
-
-        return <div>{title} (<a href={appVersionLink} rel="noopener noreferrer" target="_blank">{appVersion}</a>)</div>;
-    }
-
     render() {
         const {
             pinned,
-            title,
             username,
+            userImage,
             onLogoutClick,
             onProfileClick,
             suluVersion,
@@ -152,46 +121,33 @@ class Navigation extends React.Component<Props> {
             onPinToggle,
         } = this.props;
 
-        const pinClass = classNames(navigationStyles.pin, {[navigationStyles.pinActive]: pinned});
+        const pinClass = classNames(navigationStyles.pin, {[navigationStyles.active]: pinned});
 
         return (
             <div className={navigationStyles.navigation}>
                 <div className={navigationStyles.header}>
-                    <div className={navigationStyles.headerContent}>
-                        <Icon className={navigationStyles.headerIcon} name="su-sulu" />
-                        <span className={navigationStyles.headerTitle}>{title}</span>
-                    </div>
-                </div>
-                <div className={navigationStyles.user}>
-                    <div className={navigationStyles.userContent}>
-                        {this.renderUserImage()}
-                        <div className={navigationStyles.userProfile}>
-                            <button className={navigationStyles.username} onClick={onProfileClick}>{username}</button>
-                            <button
-                                className={navigationStyles.logout}
-                                onClick={onLogoutClick}
-                            >
-                                <Icon name="su-exit" />
-                                Log out
-                            </button>
+                    <Icon className={navigationStyles.logo} name="su-sulu-logo" />
+
+                    {onPinToggle &&
+                        <div className={pinClass} onClick={this.handlePinToggle} role="button">
+                            <Icon className={navigationStyles.pinIcon} name="su-stick-right" />
                         </div>
-                    </div>
+                    }
                 </div>
+
                 <div className={navigationStyles.items}>
                     {this.cloneChildren()}
                 </div>
+
                 <div className={navigationStyles.footer}>
-                    {onPinToggle &&
-                        <button className={pinClass} onClick={this.handlePinToggle} type="button">
-                            <Icon className={navigationStyles.pinIcon} name="fa-thumb-tack" />
-                        </button>
-                    }
-                    <div className={navigationStyles.versions}>
-                        {this.renderAppVersion()}
-                        <div>
-                            Sulu (<a href={suluVersionLink} rel="noopener noreferrer" target="_blank">{suluVersion}</a>)
-                        </div>
-                    </div>
+                    <ProfileButton
+                        onLogoutClick={onLogoutClick}
+                        onProfileClick={onProfileClick}
+                        suluVersion={suluVersion}
+                        suluVersionLink={suluVersionLink}
+                        userImage={userImage}
+                        username={username}
+                    />
                 </div>
             </div>
         );

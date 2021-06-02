@@ -1,0 +1,78 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The component should render with all available props and handle clicks correctly 1`] = `
+<div
+  class="profileButton"
+>
+  <div
+    class="button"
+    role="button"
+  >
+    <div
+      class="userImage"
+    >
+      <img
+        alt="John Travolta"
+        class="image"
+        src="http://lorempixel.com/200/200"
+        title="John Travolta"
+      />
+    </div>
+    <span
+      class="username"
+    >
+      John Travolta
+    </span>
+    <span
+      aria-label="su-angle-up"
+      class="su-angle-up"
+    />
+  </div>
+  <div
+    class="menu"
+  >
+    <button
+      class="button text hasText menuButton"
+      type="button"
+    >
+      <span
+        aria-label="su-user"
+        class="su-user buttonIcon"
+      />
+      <span
+        class="buttonText"
+      >
+        sulu_admin.edit_profile
+      </span>
+    </button>
+    <button
+      class="button text hasText menuButton"
+      type="button"
+    >
+      <span
+        aria-label="su-sulu"
+        class="su-sulu buttonIcon"
+      />
+      <span
+        class="buttonText"
+      >
+        Sulu (2.0.0-RC1)
+      </span>
+    </button>
+    <button
+      class="button text hasText menuButton"
+      type="button"
+    >
+      <span
+        aria-label="su-sign-out-alt"
+        class="su-sign-out-alt buttonIcon"
+      />
+      <span
+        class="buttonText"
+      >
+        sulu_admin.logout
+      </span>
+    </button>
+  </div>
+</div>
+`;
