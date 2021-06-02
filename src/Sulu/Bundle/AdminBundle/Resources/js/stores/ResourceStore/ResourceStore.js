@@ -67,7 +67,7 @@ export default class ResourceStore {
         this.setLoading(true);
         this.setForbidden(false);
 
-        this.loadData()
+        this.requestData()
             .then(action((response: Object) => {
                 if (this.idQueryParameter) {
                     this.handleIdQueryParameterResponse(response);
@@ -87,7 +87,7 @@ export default class ResourceStore {
             }));
     };
 
-    loadData = () => {
+    requestData = () => {
         const {
             id,
             observableOptions: {

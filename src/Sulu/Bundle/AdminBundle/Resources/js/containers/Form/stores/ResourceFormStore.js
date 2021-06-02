@@ -1,5 +1,5 @@
 // @flow
-import {action, autorun, computed, get, isObservableArray, observable, toJS, when} from 'mobx';
+import {action, autorun, computed, get, isArrayLike, observable, toJS, when} from 'mobx';
 import jsonpointer from 'json-pointer';
 import {createAjv} from '../../../utils/Ajv';
 import ResourceStore from '../../../stores/ResourceStore';
@@ -101,8 +101,9 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
     };
 
     loadAndMergeOriginData(oldSchema: Schema, newSchema: Schema) {
-        if (oldSchema && toJS(this.type) === this.data['originTemplate']){
-            return this.resourceStore.loadData().then((data: Object) => {
+        // origin data must be loaded only when switching back to the origin template
+        if (oldSchema && toJS(this.type) === this.data['originTemplate']) {
+            return this.resourceStore.requestData().then((data: Object) => {
                 this.mergeData(oldSchema, newSchema, this.data, data);
                 this.validate();
             });
@@ -118,7 +119,7 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
 
         for (const key in newSchema) {
             const {items: newItems, type: newType, types: newTypes} = newSchema[key];
-            const {items: oldItems, type: oldType, types: oldTypes} = oldSchema ? oldSchema[key] || {} : {};
+            const {items: oldItems, type: oldType, types: oldTypes} = oldSchema[key] || {};
 
             if (newType === SECTION_TYPE && newItems &&
                 oldType === SECTION_TYPE && oldItems) {
@@ -134,8 +135,7 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
             if (newTypes && oldTypes
                 && Object.keys(newTypes).length > 0 && Object.keys(oldTypes).length > 0
                 && oldData[key] && newData[key]
-                && (Array.isArray(oldData[key]) || isObservableArray(oldData[key]))
-                && (Array.isArray(newData[key]) || isObservableArray(newData[key]))
+                && isArrayLike(oldData[key]) && isArrayLike(newData[key])
             ) {
                 for (const childKey of newData[key].keys()) {
                     const newChildData = newData[key][childKey];
@@ -191,8 +191,7 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
 
             if (newTypes && oldTypes
                 && Object.keys(newTypes).length > 0 && Object.keys(oldTypes).length > 0
-                && data[key]
-                && (Array.isArray(data[key]) || isObservableArray(data[key]))
+                && data[key] && isArrayLike(data[key])
             ) {
                 for (const childKey of data[key].keys()) {
                     const childData = data[key][childKey];

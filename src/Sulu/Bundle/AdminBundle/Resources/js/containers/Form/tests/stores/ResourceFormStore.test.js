@@ -14,7 +14,7 @@ jest.mock('../../../../stores/ResourceStore', () => function(resourceKey, id, op
     this.resourceKey = resourceKey;
     this.save = jest.fn().mockReturnValue(Promise.resolve());
     this.delete = jest.fn().mockReturnValue(Promise.resolve());
-    this.loadData = jest.fn().mockReturnValue(Promise.resolve());
+    this.requestData = jest.fn().mockReturnValue(Promise.resolve());
     this.set = jest.fn();
     this.setMultiple = jest.fn(function(data) {
         Object.assign(this.data, data);
@@ -711,7 +711,7 @@ test('Change schema back to originSchema should merge current and origin data', 
     };
 
     // $FlowFixMe
-    resourceStore.loadData.mockReturnValue(Promise.resolve(originData));
+    resourceStore.requestData.mockReturnValue(Promise.resolve(originData));
     metadataStore.getSchema.mockReturnValue(newSchemaPromise);
     metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
     const resourceFormStore = new ResourceFormStore(resourceStore, 'pages');
@@ -819,7 +819,7 @@ test('Change schema back to originSchema should merge current and origin data pa
     };
 
     // $FlowFixMe
-    resourceStore.loadData.mockReturnValue(Promise.resolve(originData));
+    resourceStore.requestData.mockReturnValue(Promise.resolve(originData));
     metadataStore.getSchema.mockReturnValue(newSchemaPromise);
     metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
     const resourceFormStore = new ResourceFormStore(resourceStore, 'pages');
