@@ -143,6 +143,42 @@ class DoctrineAccessControlProviderTest extends TestCase
         );
     }
 
+    /**
+     * Test to ensure https://github.com/sulu/sulu/issues/6095 is fixed.
+     */
+    public function testSetPermissionsIgnorePermissionOfRemovedRoles(): void
+    {
+        $role1 = $this->prophesize(Role::class);
+        $role1->getId()->willReturn(1);
+        $this->roleRepository->findRoleById(1)->willReturn($role1->reveal());
+        $this->roleRepository->findRoleById(2)->willReturn(null);
+
+        $this->maskConverter->convertPermissionsToNumber(['view' => true, 'edit' => false])->willReturn(64);
+        $this->maskConverter->convertPermissionsToNumber(['view' => true, 'edit' => true])->willReturn(96);
+
+        $accessControl1 = new AccessControl();
+        $accessControl1->setEntityClass('AcmeBundle\Example');
+        $accessControl1->setEntityId('1');
+        $accessControl1->setPermissions(64);
+        $accessControl1->setRole($role1->reveal());
+
+        $this->accessControlRepository->findByTypeAndId('AcmeBundle\Example', 1)
+            ->willReturn([]);
+
+        $this->objectManager->persist($accessControl1)->shouldBeCalled();
+        $this->objectManager->persist(Argument::any())->shouldBeCalledTimes(1);
+        $this->objectManager->flush()->shouldBeCalled();
+
+        $this->doctrineAccessControlProvider->setPermissions(
+            'AcmeBundle\Example',
+            1,
+            [
+                1 => ['view' => true, 'edit' => false],
+                2 => ['view' => true, 'edit' => true],
+            ]
+        );
+    }
+
     public function testSetPermissionsWithExistingAccessControl()
     {
         $role1 = $this->prophesize(Role::class);
