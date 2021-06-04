@@ -7,7 +7,7 @@
 
 <br/>
 <p align="center">
-    <a href="https://github.com/sulu/sulu/blob/2.x/LICENSE" target="_blank">
+    <a href="LICENSE" target="_blank">
         <img src="https://img.shields.io/github/license/sulu/sulu.svg" alt="GitHub license">
     </a>
     <a href="https://github.com/sulu/sulu/releases" target="_blank">
@@ -65,7 +65,7 @@ Feel free to **file a new issue** with a respective title and description on the
 
 ## ✅&nbsp; Requirements
 
-Sulu requires a **PHP version higher or equal to 7.2** and is compatible with every **Symfony version starting from 4.3**. Have a look at the `require` section in the [composer.json](https://github.com/sulu/sulu/blob/2.x/composer.json) of the [sulu/sulu](https://github.com/sulu/sulu) core framework to find an **up-to-date list of the requirements** of Sulu content management system.
+Sulu requires a **PHP version higher or equal to 7.2** and is compatible with every **Symfony version starting from 4.3**. Have a look at the `require` section in the [composer.json](composer.json) of the [sulu/sulu](https://github.com/sulu/sulu) core framework to find an **up-to-date list of the requirements** of Sulu content management system.
 
 
 ## 📘&nbsp; License

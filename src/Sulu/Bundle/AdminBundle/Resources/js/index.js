@@ -4,7 +4,6 @@ import log from 'loglevel';
 import React from 'react';
 import {render} from 'react-dom';
 import {configure} from 'mobx';
-import jexl from 'jexl';
 import ResizeObserver from 'resize-observer-polyfill';
 import Requester from './services/Requester';
 import Router, {routeRegistry} from './services/Router';
@@ -113,6 +112,7 @@ import {navigationRegistry} from './containers/Navigation';
 import {smartContentConfigStore} from './containers/SmartContent';
 import PreviewForm from './views/PreviewForm';
 import FormOverlayList from './views/FormOverlayList';
+import {initializeJexl} from './utils/jexl';
 
 configure({enforceActions: 'observed'});
 
@@ -125,9 +125,7 @@ log.setDefaultLevel(process.env.NODE_ENV === 'production' ? log.levels.ERROR : l
 
 Requester.handleResponseHooks.push(logoutOnUnauthorizedResponse);
 
-jexl.addTransform('length', (value: Array<*>) => value.length);
-jexl.addTransform('includes', (value: Array<*>, search) => value.includes(search));
-jexl.addTransform('values', (value: Array<*>) => Object.values(value));
+initializeJexl();
 
 const FIELD_TYPE_BLOCK = 'block';
 const FIELD_TYPE_CHANGELOG_LINE = 'changelog_line';

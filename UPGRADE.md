@@ -2,6 +2,21 @@
 
 ## 2.3.1
 
+### Migrate permissions properties for pages
+
+The role-specific PHPCR properties used for storing page permissions decrease performance when
+used in combination with website security. To mitigate the problem and improve performance, all permissions 
+are now stored in a single property. 
+
+If you use page-specific permissions in your project, you need to migrate the existing data by running the 
+phpcr migration command:
+
+```bash
+bin/console phpcr:migrations:migrate
+```
+
+### MediaAdmin constructor changed
+
 A new argument `$activityViewBuilderFactory` has been added to the constructor of the `MediaAdmin` and `PageAdmin` class.
 
 ## 2.3.0
@@ -327,6 +342,21 @@ parameter. This makes the available parameters consistent to the `RouteManagerIn
 
 If you have implemented this interface in your project, you need to add the parameter to the 
 `createOrUpdateByAttributes` method of your implementation.
+
+## 2.2.11
+
+### Migrate permissions properties for pages
+
+The role-specific PHPCR properties used for storing page permissions decrease performance when
+used in combination with website security. To mitigate the problem and improve performance, all permissions 
+are now stored in a single property. 
+
+If you use page-specific permissions in your project, you need to migrate the existing data by running the 
+phpcr migration command:
+
+```bash
+bin/console phpcr:migrations:migrate
+```
 
 ## 2.2.6
 

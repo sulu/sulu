@@ -52,7 +52,7 @@
             name="navContexts"
             type="page_settings_navigation_select"
             colspan="6"
-            visibleCondition="shadowOn == false &amp;&amp; path != ''"
+            visibleCondition="shadowOn == false AND path != ''"
         >
             <meta>
                 <title>sulu_page.show_page_in</title>
