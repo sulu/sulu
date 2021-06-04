@@ -15,6 +15,7 @@ use Doctrine\Persistence\ObjectManager;
 use ReflectionClass;
 use ReflectionException;
 use Sulu\Bundle\SecurityBundle\Entity\AccessControl;
+use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
 use Sulu\Component\Security\Authorization\MaskConverterInterface;
 
@@ -78,7 +79,12 @@ class DoctrineAccessControlProvider implements AccessControlProviderInterface
                     $this->maskConverter->convertPermissionsToNumber($rolePermissions)
                 );
             } else {
+                /** @var RoleInterface|null $role */
                 $role = $this->roleRepository->findRoleById($roleId);
+
+                if (!$role) {
+                    continue;
+                }
 
                 $accessControl = new AccessControl();
                 $accessControl->setPermissions($this->maskConverter->convertPermissionsToNumber($rolePermissions));
