@@ -19,6 +19,7 @@ jest.mock('../../../../stores/ResourceStore', () => function(resourceKey, id, op
     this.setMultiple = jest.fn(function(data) {
         Object.assign(this.data, data);
     });
+    this.setMultipleRecursive = jest.fn();
     this.change = jest.fn();
     this.remove = jest.fn();
     this.copyFromLocale = jest.fn();
@@ -721,13 +722,29 @@ test('Change schema back to originSchema should merge current and origin data', 
     setTimeout(() => {
         expect(toJS(resourceFormStore.type)).toEqual('default');
         expect(resourceFormStore.schema).toEqual(newSchema);
-        expect(resourceStore.change).toHaveBeenNthCalledWith(1, 'description', 'Origin Description');
-        expect(resourceStore.change).toHaveBeenNthCalledWith(2, 'blocks', [
-            {title: 'block1_title', type: 'headline'},
-            {title: 'block2_title', type: 'headline'},
-            {description: 'block3_description', type: 'description'},
-            {description: 'block4_description', type: 'description'},
-        ]);
+        expect(resourceStore.setMultipleRecursive).toHaveBeenNthCalledWith(1,
+            {
+                description: 'Origin Description',
+                blocks: [
+                    {
+                        title: 'block1_title',
+                        type: 'headline',
+                    },
+                    {
+                        title: 'block2_title',
+                        type: 'headline',
+                    },
+                    {
+                        description: 'block3_description',
+                        type: 'description',
+                    },
+                    {
+                        description: 'block4_description',
+                        type: 'description',
+                    },
+                ],
+            }
+        );
         resourceFormStore.destroy();
         done();
     }, 0);
@@ -829,12 +846,251 @@ test('Change schema back to originSchema should merge current and origin data pa
     setTimeout(() => {
         expect(toJS(resourceFormStore.type)).toEqual('default');
         expect(resourceFormStore.schema).toEqual(newSchema);
-        expect(resourceStore.change).toHaveBeenNthCalledWith(1,
-            'description', 'Origin Description');
-        expect(resourceStore.change).toHaveBeenNthCalledWith(2,
-            'blocks/2', {description: 'block3_description_origin', type: 'description'});
-        expect(resourceStore.change).toHaveBeenNthCalledWith(3,
-            'blocks/3', {description: 'block4_description_origin', type: 'description'});
+        expect(resourceStore.setMultipleRecursive).toHaveBeenNthCalledWith(1,
+            {
+                description: 'Origin Description',
+                blocks: [
+                    undefined,
+                    undefined,
+                    {
+                        description: 'block3_description_origin',
+                        type: 'description',
+                    },
+                    {
+                        description: 'block4_description_origin',
+                        type: 'description',
+                    },
+                ],
+            }
+        );
+        resourceFormStore.destroy();
+        done();
+    }, 0);
+});
+
+test('Change schema back to originSchema should merge current and origin data partially block in blocks', (done) => {
+    const oldSchema = {
+        title: {
+            label: 'Title',
+            type: 'text_line',
+        },
+        description: {
+            label: 'Description',
+            type: 'text_line',
+        },
+        blocks: {
+            defaultType: 'headline',
+            type: 'block',
+            types: {
+                headline: {
+                    name: 'headline',
+                    title: 'Headline',
+                    form: {
+                        title: {
+                            label: 'Title',
+                            type: 'text_line',
+                        },
+                        description: {
+                            label: 'Description',
+                            type: 'text_area',
+                        },
+                    },
+                },
+                textEditor: {
+                    name: 'textEditor',
+                    title: 'Text Editor',
+                    form: {
+                        text: {
+                            label: 'Text',
+                            type: 'text_editor',
+                        },
+                    },
+                },
+                block_in_block: {
+                    name: 'block_in_block',
+                    title: 'Block in Block',
+                    form: {
+                        inlineBlock: {
+                            defaultType: 'headline',
+                            type: 'block',
+                            types: {
+                                headline: {
+                                    name: 'headline',
+                                    title: 'Headline',
+                                    form: {
+                                        title: {
+                                            label: 'Title',
+                                            type: 'text_line',
+                                        },
+                                        description: {
+                                            label: 'Description',
+                                            type: 'text_area',
+                                        },
+                                    },
+                                },
+                                textBlock: {
+                                    name: 'textBlock',
+                                    title: 'Text Block',
+                                    form: {
+                                        text: {
+                                            label: 'Text',
+                                            type: 'text_editor',
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    };
+
+    const newSchema = {
+        title: {
+            label: 'Title',
+            type: 'text_line',
+        },
+        description: {
+            label: 'Description',
+            type: 'text_line',
+        },
+        blocks: {
+            defaultType: 'headline',
+            type: 'block',
+            types: {
+                headline: {
+                    name: 'headline',
+                    title: 'Headline',
+                    form: {
+                        title: {
+                            label: 'Title',
+                            type: 'text_line',
+                        },
+                        description: {
+                            label: 'Description',
+                            type: 'text_area',
+                        },
+                    },
+                },
+                textEditor: {
+                    name: 'textEditor',
+                    title: 'Text Editor',
+                    form: {
+                        text: {
+                            label: 'Text',
+                            type: 'text_editor',
+                        },
+                    },
+                },
+                block_in_block: {
+                    name: 'block_in_block',
+                    title: 'Block in Block',
+                    form: {
+                        inlineBlock: {
+                            defaultType: 'headline',
+                            type: 'block',
+                            types: {
+                                headline: {
+                                    name: 'headline',
+                                    title: 'Headline',
+                                    form: {
+                                        title: {
+                                            label: 'Title',
+                                            type: 'text_line',
+                                        },
+                                        description: {
+                                            label: 'Description',
+                                            type: 'text_area',
+                                        },
+                                    },
+                                },
+                                textBlock: {
+                                    name: 'textBlock',
+                                    title: 'Text Block',
+                                    form: {
+                                        text: {
+                                            label: 'Text',
+                                            type: 'text_editor',
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    };
+
+    const newSchemaPromise = Promise.resolve(newSchema);
+    const jsonSchemaPromise = Promise.resolve({});
+
+    const resourceStore = new ResourceStore('pages', '1');
+    resourceStore.data = observable({
+        originTemplate: 'default',
+        title: 'Title',
+        blocks: [
+            {title: 'block1_title', description: 'block1_description', type: 'headline'},
+            {text: 'block4_text', type: 'textEditor'},
+            {
+                type: 'block_in_block',
+                inlineBlock: [
+                    {text: 'block_in_block4_text', type: 'textBlock'},
+                ],
+            },
+        ],
+    });
+
+    const originData = {
+        title: 'Title',
+        blocks: [
+            {title: 'block1_title', description: 'block1_description', type: 'headline'},
+            {title: 'block2_title', description: 'block2_description', type: 'headline'},
+            {text: 'block3_text', type: 'textEditor'},
+            {text: 'block4_text', type: 'textEditor'},
+            {
+                type: 'block_in_block',
+                inlineBlock: [
+                    {title: 'block_in_block1_title', description: 'block_in_block1_description', type: 'headline'},
+                    {title: 'block_in_block2_title', description: 'block_in_block2_description', type: 'headline'},
+                    {text: 'block_in_block3_text', type: 'textBlock'},
+                    {text: 'block_in_block4_text', type: 'textBlock'},
+                ],
+            },
+        ],
+    };
+
+    // $FlowFixMe
+    resourceStore.requestData.mockReturnValue(Promise.resolve(originData));
+    metadataStore.getSchema.mockReturnValue(newSchemaPromise);
+    metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
+    const resourceFormStore = new ResourceFormStore(resourceStore, 'pages');
+    resourceFormStore.type = observable.box('default');
+    resourceFormStore.schema = oldSchema;
+
+    setTimeout(() => {
+        expect(toJS(resourceFormStore.type)).toEqual('default');
+        expect(resourceFormStore.schema).toEqual(newSchema);
+        expect(resourceStore.setMultipleRecursive).toHaveBeenNthCalledWith(1,
+            {
+                blocks: [
+                    undefined,
+                    undefined,
+                    undefined,
+                    {text: 'block4_text', type: 'textEditor'},
+                    {
+                        type: 'block_in_block',
+                        inlineBlock: [
+                            {title: 'block_in_block1_title', description: 'block_in_block1_description', type: 'headline'},
+                            {title: 'block_in_block2_title', description: 'block_in_block2_description', type: 'headline'},
+                            {text: 'block_in_block3_text', type: 'textBlock'},
+                            {text: 'block_in_block4_text', type: 'textBlock'},
+                        ],
+                    },
+                ],
+            }
+        );
         resourceFormStore.destroy();
         done();
     }, 0);
