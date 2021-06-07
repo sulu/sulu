@@ -726,22 +726,10 @@ test('Change schema back to originSchema should merge current and origin data', 
             {
                 description: 'Origin Description',
                 blocks: [
-                    {
-                        title: 'block1_title',
-                        type: 'headline',
-                    },
-                    {
-                        title: 'block2_title',
-                        type: 'headline',
-                    },
-                    {
-                        description: 'block3_description',
-                        type: 'description',
-                    },
-                    {
-                        description: 'block4_description',
-                        type: 'description',
-                    },
+                    {title: 'block1_title', type: 'headline'},
+                    {title: 'block2_title', type: 'headline'},
+                    {description: 'block3_description', type: 'description'},
+                    {description: 'block4_description', type: 'description'},
                 ],
             }
         );
@@ -852,14 +840,8 @@ test('Change schema back to originSchema should merge current and origin data pa
                 blocks: [
                     undefined,
                     undefined,
-                    {
-                        description: 'block3_description_origin',
-                        type: 'description',
-                    },
-                    {
-                        description: 'block4_description_origin',
-                        type: 'description',
-                    },
+                    {description: 'block3_description_origin', type: 'description'},
+                    {description: 'block4_description_origin', type: 'description'},
                 ],
             }
         );
@@ -1082,8 +1064,14 @@ test('Change schema back to originSchema should merge current and origin data pa
                     {
                         type: 'block_in_block',
                         inlineBlock: [
-                            {title: 'block_in_block1_title', description: 'block_in_block1_description', type: 'headline'},
-                            {title: 'block_in_block2_title', description: 'block_in_block2_description', type: 'headline'},
+                            {
+                                title: 'block_in_block1_title',
+                                description: 'block_in_block1_description', type: 'headline',
+                            },
+                            {
+                                title: 'block_in_block2_title',
+                                description: 'block_in_block2_description', type: 'headline',
+                            },
                             {text: 'block_in_block3_text', type: 'textBlock'},
                             {text: 'block_in_block4_text', type: 'textBlock'},
                         ],
