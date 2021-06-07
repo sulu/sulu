@@ -1,5 +1,5 @@
 // @flow
-import {action, autorun, computed, get, isArrayLike, observable, toJS, when} from 'mobx';
+import {action, autorun, computed, get, isArrayLike, observable, when} from 'mobx';
 import jsonpointer from 'json-pointer';
 import {createAjv} from '../../../utils/Ajv';
 import ResourceStore from '../../../stores/ResourceStore';
@@ -91,26 +91,17 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
         this.validator = jsonSchema ? ajv.compile(jsonSchema) : undefined;
         this.pathsByTag = {};
 
-        this.removeObsoleteData(this.schema, schema, this.data);
-        this.loadAndMergeOriginData(this.schema, schema).then(action(()=> {
+        return this.resourceStore.requestData().then((data: Object) => {
+            this.removeObsoleteData(this.schema, schema, this.data);
+            const result = this.calculateDifference(this.schema, schema, this.data, data);
+            this.setMultiple(result);
+
             this.schema = schema;
             this.addMissingSchemaProperties();
+            this.validate();
             this.setSchemaLoading(false);
-        }));
+        });
     };
-
-    loadAndMergeOriginData(oldSchema: Schema, newSchema: Schema) {
-        // origin data must be loaded only when switching back to the origin template
-        if (oldSchema && toJS(this.type) === this.data['originTemplate']) {
-            return this.resourceStore.requestData().then((data: Object) => {
-                const result = this.calculateDifference(oldSchema, newSchema, this.data, data);
-                this.setMultiple(result);
-                this.validate();
-            });
-        }
-
-        return Promise.resolve();
-    }
 
     calculateDifference(
         oldSchema: Schema,

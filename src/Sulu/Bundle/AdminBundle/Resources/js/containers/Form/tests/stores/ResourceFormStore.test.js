@@ -300,6 +300,13 @@ test('Change schema should update data and remove obsolete data', (done) => {
 
     const resourceStore = new ResourceStore('pages', '1');
 
+    const originData = {
+        title: 'Title',
+        description: 'Description',
+    };
+
+    // $FlowFixMe
+    resourceStore.requestData.mockReturnValue(Promise.resolve(originData));
     metadataStore.getSchema.mockReturnValue(newSchemaPromise);
     metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
     const resourceFormStore = new ResourceFormStore(resourceStore, 'pages');
@@ -374,6 +381,12 @@ test('Change schema should update data and remove obsolete data with blocks', (d
         ],
     });
 
+    const originData = {
+        title: 'Title',
+    };
+
+    // $FlowFixMe
+    resourceStore.requestData.mockReturnValue(Promise.resolve(originData));
     metadataStore.getSchema.mockReturnValue(newSchemaPromise);
     metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
     const resourceFormStore = new ResourceFormStore(resourceStore, 'pages');
@@ -535,6 +548,16 @@ test('Change schema should update data and remove obsolete data with blocks in b
         ],
     });
 
+    const originData = {
+        title: 'Title',
+        blocks: [
+            {text: 'block1_text', type: 'textEditor'},
+            {text: 'block2_text', type: 'textEditor'},
+        ],
+    };
+
+    // $FlowFixMe
+    resourceStore.requestData.mockReturnValue(Promise.resolve(originData));
     metadataStore.getSchema.mockReturnValue(newSchemaPromise);
     metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
     const resourceFormStore = new ResourceFormStore(resourceStore, 'pages');
@@ -626,6 +649,16 @@ test('Change schema should update data and use default-type for unknown block ty
         ],
     });
 
+    const originData = {
+        title: 'Title',
+        blocks: [
+            {title: 'block1_description', type: 'description'},
+            {title: 'block2_description', type: 'description'},
+        ],
+    };
+
+    // $FlowFixMe
+    resourceStore.requestData.mockReturnValue(Promise.resolve(originData));
     metadataStore.getSchema.mockReturnValue(newSchemaPromise);
     metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
     const resourceFormStore = new ResourceFormStore(resourceStore, 'pages');
@@ -642,7 +675,7 @@ test('Change schema should update data and use default-type for unknown block ty
     }, 0);
 });
 
-test('Change schema back to originSchema should merge current and origin data', (done) => {
+test('Change schema should merge current and origin data', (done) => {
     const newSchema = {
         title: {
             label: 'Title',
@@ -696,7 +729,6 @@ test('Change schema back to originSchema should merge current and origin data', 
             {title: 'block1_title', type: 'headline'},
             {title: 'block2_title', type: 'headline'},
         ],
-        originTemplate: 'default',
     });
 
     const originData = {
@@ -737,7 +769,7 @@ test('Change schema back to originSchema should merge current and origin data', 
     }, 0);
 });
 
-test('Change schema back to originSchema should merge current and origin data partially in block', (done) => {
+test('Change schema should merge current and origin data partially in block', (done) => {
     const oldSchema = {
         title: {
             label: 'Title',
@@ -808,7 +840,6 @@ test('Change schema back to originSchema should merge current and origin data pa
             {title: 'block1_title', type: 'headline'},
             {title: 'block2_title', type: 'headline'},
         ],
-        originTemplate: 'default',
     });
 
     const originData = {
@@ -849,7 +880,7 @@ test('Change schema back to originSchema should merge current and origin data pa
     }, 0);
 });
 
-test('Change schema back to originSchema should merge current and origin data partially block in blocks', (done) => {
+test('Change schema should merge current and origin data partially block in blocks', (done) => {
     const oldSchema = {
         title: {
             label: 'Title',
@@ -1009,7 +1040,6 @@ test('Change schema back to originSchema should merge current and origin data pa
 
     const resourceStore = new ResourceStore('pages', '1');
     resourceStore.data = observable({
-        originTemplate: 'default',
         title: 'Title',
         blocks: [
             {title: 'block1_title', description: 'block1_description', type: 'headline'},
