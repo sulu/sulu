@@ -19,7 +19,6 @@ jest.mock('../../../../stores/ResourceStore', () => function(resourceKey, id, op
     this.setMultiple = jest.fn(function(data) {
         Object.assign(this.data, data);
     });
-    this.setMultipleRecursive = jest.fn();
     this.change = jest.fn();
     this.remove = jest.fn();
     this.copyFromLocale = jest.fn();
@@ -722,7 +721,7 @@ test('Change schema back to originSchema should merge current and origin data', 
     setTimeout(() => {
         expect(toJS(resourceFormStore.type)).toEqual('default');
         expect(resourceFormStore.schema).toEqual(newSchema);
-        expect(resourceStore.setMultipleRecursive).toHaveBeenNthCalledWith(1,
+        expect(resourceStore.setMultiple).toHaveBeenNthCalledWith(1,
             {
                 description: 'Origin Description',
                 blocks: [
@@ -834,12 +833,12 @@ test('Change schema back to originSchema should merge current and origin data pa
     setTimeout(() => {
         expect(toJS(resourceFormStore.type)).toEqual('default');
         expect(resourceFormStore.schema).toEqual(newSchema);
-        expect(resourceStore.setMultipleRecursive).toHaveBeenNthCalledWith(1,
+        expect(resourceStore.setMultiple).toHaveBeenNthCalledWith(1,
             {
                 description: 'Origin Description',
                 blocks: [
-                    undefined,
-                    undefined,
+                    {title: 'block1_title', type: 'headline'},
+                    {title: 'block2_title', type: 'headline'},
                     {description: 'block3_description_origin', type: 'description'},
                     {description: 'block4_description_origin', type: 'description'},
                 ],
@@ -1054,23 +1053,30 @@ test('Change schema back to originSchema should merge current and origin data pa
     setTimeout(() => {
         expect(toJS(resourceFormStore.type)).toEqual('default');
         expect(resourceFormStore.schema).toEqual(newSchema);
-        expect(resourceStore.setMultipleRecursive).toHaveBeenNthCalledWith(1,
+        expect(resourceStore.setMultiple).toHaveBeenNthCalledWith(1,
             {
                 blocks: [
-                    undefined,
-                    undefined,
-                    undefined,
+                    {title: 'block1_title', description: 'block1_description', type: 'headline'},
+                    {text: 'block4_text', type: 'textEditor'},
+                    {
+                        type: 'block_in_block',
+                        inlineBlock: [
+                            {text: 'block_in_block4_text', type: 'textBlock'},
+                        ],
+                    },
                     {text: 'block4_text', type: 'textEditor'},
                     {
                         type: 'block_in_block',
                         inlineBlock: [
                             {
                                 title: 'block_in_block1_title',
-                                description: 'block_in_block1_description', type: 'headline',
+                                description: 'block_in_block1_description',
+                                type: 'headline',
                             },
                             {
                                 title: 'block_in_block2_title',
-                                description: 'block_in_block2_description', type: 'headline',
+                                description: 'block_in_block2_description',
+                                type: 'headline',
                             },
                             {text: 'block_in_block3_text', type: 'textBlock'},
                             {text: 'block_in_block4_text', type: 'textBlock'},

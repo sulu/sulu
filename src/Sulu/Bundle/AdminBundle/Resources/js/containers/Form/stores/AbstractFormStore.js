@@ -5,7 +5,7 @@ import log from 'loglevel';
 import type {IObservableValue} from 'mobx/lib/mobx';
 import type {Schema, SchemaEntry} from '../types';
 
-const SECTION_TYPE = 'section';
+export const SECTION_TYPE = 'section';
 
 function addSchemaProperties(data: Object, key: string, schema: Schema) {
     const type = schema[key].type;

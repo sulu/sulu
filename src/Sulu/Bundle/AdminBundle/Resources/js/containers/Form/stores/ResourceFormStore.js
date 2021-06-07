@@ -3,14 +3,13 @@ import {action, autorun, computed, get, isArrayLike, observable, toJS, when} fro
 import jsonpointer from 'json-pointer';
 import {createAjv} from '../../../utils/Ajv';
 import ResourceStore from '../../../stores/ResourceStore';
-import AbstractFormStore from './AbstractFormStore';
+import AbstractFormStore, {SECTION_TYPE} from './AbstractFormStore';
 import metadataStore from './metadataStore';
 import type {FormStoreInterface, Schema, SchemaEntry, SchemaType, SchemaTypes} from '../types';
 import type {IObservableValue} from 'mobx/lib/mobx';
 
 // TODO do not hardcode "template", use some kind of metadata instead
 const TYPE = 'template';
-const SECTION_TYPE = 'section';
 
 const ajv = createAjv();
 
@@ -105,7 +104,7 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
         if (oldSchema && toJS(this.type) === this.data['originTemplate']) {
             return this.resourceStore.requestData().then((data: Object) => {
                 const result = this.calculateDifference(oldSchema, newSchema, this.data, data);
-                this.setMultipleRecursive(result);
+                this.setMultiple(result);
                 this.validate();
             });
         }
@@ -173,7 +172,10 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
                             newChildData,
                             parentPath.concat([key, childKey])
                         );
+
+                        continue;
                     }
+                    result[key][childKey] = oldChildData;
                 }
 
                 continue;
@@ -300,10 +302,6 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
 
     setMultiple(data: Object) {
         this.resourceStore.setMultiple(data);
-    }
-
-    setMultipleRecursive(data: Object) {
-        this.resourceStore.setMultipleRecursive(data);
     }
 
     change(name: string, value: mixed) {
