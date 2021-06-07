@@ -92,8 +92,8 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
         this.validator = jsonSchema ? ajv.compile(jsonSchema) : undefined;
         this.pathsByTag = {};
 
+        this.removeObsoleteData(this.schema, schema, this.data);
         this.loadAndMergeOriginData(this.schema, schema).then(action(()=> {
-            this.removeObsoleteData(this.schema, schema, this.data);
             this.schema = schema;
             this.addMissingSchemaProperties();
             this.setSchemaLoading(false);
@@ -104,7 +104,8 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
         // origin data must be loaded only when switching back to the origin template
         if (oldSchema && toJS(this.type) === this.data['originTemplate']) {
             return this.resourceStore.requestData().then((data: Object) => {
-                this.mergeData(oldSchema, newSchema, this.data, data);
+                const result = this.calculateDifference(oldSchema, newSchema, this.data, data);
+                this.setMultipleRecursive(result);
                 this.validate();
             });
         }
@@ -112,9 +113,16 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
         return Promise.resolve();
     }
 
-    mergeData(oldSchema: Schema, newSchema: Schema, oldData: Object, newData: Object, parentPath: string[] = []) {
+    calculateDifference(
+        oldSchema: Schema,
+        newSchema: Schema,
+        oldData: Object,
+        newData: Object,
+        parentPath: string[] = []
+    ) {
+        let result = {};
         if (!oldSchema || !newSchema) {
-            return;
+            return result;
         }
 
         for (const key in newSchema) {
@@ -123,7 +131,7 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
 
             if (newType === SECTION_TYPE && newItems &&
                 oldType === SECTION_TYPE && oldItems) {
-                this.mergeData(
+                result = this.calculateDifference(
                     oldItems,
                     newItems,
                     oldData,
@@ -144,29 +152,40 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
                     const oldChildSchema = oldTypes[oldChildData.type]?.form;
                     const newChildSchema = newTypes[newChildData.type].form;
 
-                    if (!this.getValueByPath('/' + parentPath.concat(key, childKey).join('/')) && !oldChildSchema) {
-                        this.change(parentPath.concat(key, childKey).join('/'), newChildData);
+                    if (Object.keys(oldChildData).length === 0 && !oldChildSchema) {
+                        // set originData
+                        if (!result[key]) {
+                            result[key] = [];
+                        }
+                        result[key][childKey] = newChildData;
 
                         continue;
                     }
 
-                    this.mergeData(
-                        oldChildSchema,
-                        newChildSchema,
-                        oldChildData,
-                        newChildData,
-                        parentPath.concat([key, childKey])
-                    );
+                    if (!result[key]){
+                        result[key] = [];
+                    }
+                    if (!(oldChildData.type in newTypes)) {
+                        result[key][childKey] = this.calculateDifference(
+                            oldChildSchema,
+                            newChildSchema,
+                            oldChildData,
+                            newChildData,
+                            parentPath.concat([key, childKey])
+                        );
+                    }
                 }
 
                 continue;
             }
 
             if (!oldData[key] || newSchema[key].type !== oldSchema[key]?.type) {
-                // set serverData
-                this.change(parentPath.concat(key).join('/'), newData[key]);
+                // set originData
+                result[key] = newData[key];
             }
         }
+
+        return result;
     }
 
     removeObsoleteData(oldSchema: Schema, newSchema: Schema, data: Object, parentPath: string[] = []) {
@@ -281,6 +300,10 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
 
     setMultiple(data: Object) {
         this.resourceStore.setMultiple(data);
+    }
+
+    setMultipleRecursive(data: Object) {
+        this.resourceStore.setMultipleRecursive(data);
     }
 
     change(name: string, value: mixed) {

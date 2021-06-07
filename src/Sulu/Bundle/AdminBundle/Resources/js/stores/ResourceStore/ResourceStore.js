@@ -1,5 +1,5 @@
 // @flow
-import {action, autorun, observable, set, toJS, when} from 'mobx';
+import {action, autorun, isArrayLike, observable, set, toJS, when} from 'mobx';
 import log from 'loglevel';
 import jsonpointer from 'json-pointer';
 import ResourceRequester from '../../services/ResourceRequester';
@@ -292,6 +292,31 @@ export default class ResourceStore {
             'ResourceStore changed "' + this.resourceKey + '" data with the ID "' + (this.id || 'undefined') + '"',
             this.data
         );
+    }
+
+    @action setMultipleRecursive(data: Object, parentPath: string = '') {
+        if (data.id) {
+            this.id = data.id;
+        }
+
+        Object.keys(data).forEach((path) => {
+            if (isArrayLike(data[path])) {
+                this.setMultipleRecursive(data[path], parentPath + path);
+
+                return;
+            }
+
+            const absolutePath = (parentPath ? parentPath + '/' : '') + path;
+            this.set(absolutePath, data[path]);
+        });
+        set(this.data, this.data);
+
+        if (parentPath === '') {
+            log.info(
+                'ResourceStore changed "' + this.resourceKey + '" data with the ID "' + (this.id || 'undefined') + '"',
+                this.data
+            );
+        }
     }
 
     @action change(path: string, value: mixed) {
