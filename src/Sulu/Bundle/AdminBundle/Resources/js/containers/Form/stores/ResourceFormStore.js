@@ -93,7 +93,7 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
 
         return this.resourceStore.requestData().then((data: Object) => {
             this.removeObsoleteData(this.schema, schema, this.data);
-            const result = this.calculateDifference(this.schema, schema, this.data, data);
+            const result = this.mergeData(this.schema, schema, this.data, data);
             this.setMultiple(result);
 
             this.schema = schema;
@@ -103,7 +103,7 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
         });
     };
 
-    calculateDifference(
+    mergeData(
         oldSchema: Schema,
         newSchema: Schema,
         oldData: Object,
@@ -121,7 +121,7 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
 
             if (newType === SECTION_TYPE && newItems &&
                 oldType === SECTION_TYPE && oldItems) {
-                result = this.calculateDifference(
+                result = this.mergeData(
                     oldItems,
                     newItems,
                     oldData,
@@ -156,7 +156,7 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
                         result[key] = [];
                     }
                     if (!(oldChildData.type in newTypes)) {
-                        result[key][childKey] = this.calculateDifference(
+                        result[key][childKey] = this.mergeData(
                             oldChildSchema,
                             newChildSchema,
                             oldChildData,
