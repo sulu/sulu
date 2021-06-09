@@ -183,9 +183,7 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
                         // $FlowFixMe
                         localTypes[localChildData.type]?.form || localTypes[localDefaultType].form;
 
-                    const remoteChildSchema =
-                        // $FlowFixMe
-                        remoteTypes[resultType].form;
+                    const remoteChildSchema = remoteTypes[resultType].form;
 
                     const resultChildData = this.mergeData(
                         localChildSchema,
