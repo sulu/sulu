@@ -174,13 +174,18 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
                     const remoteChildData = toJS(remoteData[name].length > key ? remoteData[name][key] || {} : {});
                     const localChildData = toJS(localData[name].length > key ? localData[name][key] || {} : {});
 
+                    const localChildDataType = localChildData?.type;
+                    const resultType = localChildDataType && localChildDataType in remoteTypes
+                        ? localChildDataType
+                        : remoteChildData?.type || remoteDefaultType;
+
                     const localChildSchema =
                         // $FlowFixMe
                         localTypes[localChildData.type]?.form || localTypes[localDefaultType].form;
 
                     const remoteChildSchema =
                         // $FlowFixMe
-                        remoteTypes[remoteChildData.type]?.form || remoteTypes[remoteDefaultType].form;
+                        remoteTypes[resultType].form;
 
                     const resultChildData = this.mergeData(
                         localChildSchema,
@@ -194,35 +199,23 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
                     }
 
                     if (Object.keys(resultChildData).length > 0) {
-                        if (!resultChildData?.type) {
-                            const {
-                                defaultType: remoteChildDefaultType,
-                                types: remoteChildTypes,
-                            } = remoteChildSchema;
-                            const localChildDataType = localChildData?.type;
+                        resultChildData.type = resultType;
 
-                            resultChildData.type = localChildDataType && remoteChildTypes &&
-                            localChildDataType in remoteChildTypes ?
-                                localChildData.type :
-                                remoteChildData?.type || remoteChildDefaultType;
-                        }
                         if (resultChildData.settings) {
                             resultChildData.settings = localChildData?.settings || remoteChildData.settings;
                         }
 
-                        result[name][key] = resultChildData;
+                        result[name].push(resultChildData);
                     }
                 }
 
                 continue;
             }
 
-            if (!localData[name] && remoteData[name]) {
+            if (localData[name] && remoteType === localType) {
+                result[name] = localData[name];
+            } else {
                 result[name] = remoteData[name];
-            }
-
-            if (localData[name] && remoteSchema[name].type !== localSchema[name]?.type) {
-                result[name] = undefined;
             }
         }
 

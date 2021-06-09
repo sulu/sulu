@@ -458,20 +458,18 @@ test('Change schema should update data and use remoteData for invalid blocks', (
         expect(toJS(resourceFormStore.type)).toEqual('default');
         expect(resourceFormStore.schema).toEqual(newSchema);
         expect(resourceStore.setMultiple).toHaveBeenCalledWith({
+            title: 'Title',
             blocks: [
                 {text: 'block1_text_remote', type: 'textEditor'},
                 {text: 'block2_text_remote', type: 'textEditor'},
+                {text: 'block3_text', type: 'textEditor'},
+                {text: 'block4_text', type: 'textEditor'},
                 {
                     type: 'block_in_block',
                     inlineBlock: [
                         {
-                            title: 'block_in_block1_title_remote',
                             description: 'block_in_block1_description',
-                            type: 'headline',
-                        },
-                        {
-                            title: 'block_in_block2_title_remote',
-                            description: 'block_in_block2_description',
+                            title: 'block_in_block1_title',
                             type: 'headline',
                         },
                         {text: 'block_in_block3_text', type: 'textBlock'},
@@ -573,7 +571,17 @@ test('Change schema should update data and use default-type for unknown block ty
         expect(toJS(resourceFormStore.type)).toEqual('default');
         expect(resourceFormStore.schema).toEqual(newSchema);
         expect(resourceStore.setMultiple).toHaveBeenCalledWith({
-            'blocks': [],
+            title: 'Title',
+            blocks: [
+                {
+                    description: undefined,
+                    type: 'description',
+                },
+                {
+                    description: undefined,
+                    type: 'description',
+                },
+            ],
         });
         resourceFormStore.destroy();
         done();
@@ -656,6 +664,7 @@ test('Change schema should merge locale and remote data', (done) => {
         expect(resourceFormStore.schema).toEqual(newSchema);
         expect(resourceStore.setMultiple).toHaveBeenNthCalledWith(1,
             {
+                title: 'Title',
                 description: 'Origin Description',
                 blocks: [
                     {title: 'block1_title', type: 'headline'},
@@ -747,8 +756,8 @@ test('Change schema should merge current and origin data partially in block', (d
         title: 'Title',
         description: 'Origin Description',
         blocks: [
-            {title: 'block1_title_origin', type: 'headline'},
-            {title: 'block2_title_origin', type: 'headline'},
+            {title: 'block1_title', type: 'headline'},
+            {title: 'block2_title', type: 'headline'},
             {description: 'block3_description_origin', type: 'description'},
             {description: 'block4_description_origin', type: 'description'},
         ],
@@ -766,10 +775,11 @@ test('Change schema should merge current and origin data partially in block', (d
         expect(toJS(resourceFormStore.type)).toEqual('default');
         expect(resourceFormStore.schema).toEqual(newSchema);
         expect(resourceStore.setMultiple).toHaveBeenCalledWith( {
+            title: 'Title',
             description: 'Origin Description',
             blocks: [
-                undefined,
-                undefined,
+                {title: 'block1_title', type: 'headline'},
+                {title: 'block2_title', type: 'headline'},
                 {description: 'block3_description_origin', type: 'description'},
                 {description: 'block4_description_origin', type: 'description'},
             ],
@@ -991,10 +1001,17 @@ test('Change schema should merge current and origin data partially block in bloc
         expect(toJS(resourceFormStore.type)).toEqual('default');
         expect(resourceFormStore.schema).toEqual(newSchema);
         expect(resourceStore.setMultiple).toHaveBeenCalledWith( {
+            description: undefined,
+            title: 'Title',
             blocks: [
-                undefined,
-                {title: 'block2_title_remote', description: 'block2_description_remote', type: 'headline'},
-                {text: 'block3_text_remote', type: 'textEditor'},
+                {title: 'block1_title', description: 'block1_description', type: 'headline'},
+                {text: 'block4_text', type: 'textEditor'},
+                {
+                    type: 'block_in_block',
+                    inlineBlock: [
+                        {text: 'block_in_block4_text', type: 'textBlock'},
+                    ],
+                },
                 {text: 'block4_text_remote', type: 'textEditor'},
                 {
                     type: 'block_in_block',
