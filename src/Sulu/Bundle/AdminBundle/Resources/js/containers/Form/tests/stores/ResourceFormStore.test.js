@@ -573,10 +573,7 @@ test('Change schema should update data and use default-type for unknown block ty
         expect(toJS(resourceFormStore.type)).toEqual('default');
         expect(resourceFormStore.schema).toEqual(newSchema);
         expect(resourceStore.setMultiple).toHaveBeenCalledWith({
-            'blocks': [
-                {'description': undefined, 'type': 'description'},
-                {'description': undefined, 'type': 'description'},
-            ],
+            'blocks': [],
         });
         resourceFormStore.destroy();
         done();
@@ -771,8 +768,8 @@ test('Change schema should merge current and origin data partially in block', (d
         expect(resourceStore.setMultiple).toHaveBeenCalledWith( {
             description: 'Origin Description',
             blocks: [
-                {title: 'block1_title', type: 'headline'},
-                {title: 'block2_title', type: 'headline'},
+                undefined,
+                undefined,
                 {description: 'block3_description_origin', type: 'description'},
                 {description: 'block4_description_origin', type: 'description'},
             ],
@@ -995,7 +992,7 @@ test('Change schema should merge current and origin data partially block in bloc
         expect(resourceFormStore.schema).toEqual(newSchema);
         expect(resourceStore.setMultiple).toHaveBeenCalledWith( {
             blocks: [
-                {title: 'block1_title', description: 'block1_description', type: 'headline'},
+                undefined,
                 {title: 'block2_title_remote', description: 'block2_description_remote', type: 'headline'},
                 {text: 'block3_text_remote', type: 'textEditor'},
                 {text: 'block4_text_remote', type: 'textEditor'},

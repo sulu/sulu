@@ -91,7 +91,7 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
         this.validator = jsonSchema ? ajv.compile(jsonSchema) : undefined;
         this.pathsByTag = {};
 
-        return this.requestRemoteDataAndMerge(this.schema, schema).then(action(() => {
+        return this.loadAndMergeRemoteData(this.schema, schema).then(action(() => {
             this.schema = schema;
             this.addMissingSchemaProperties();
             this.validate();
@@ -99,7 +99,8 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
         }));
     };
 
-    requestRemoteDataAndMerge = (localSchema: Schema, remoteSchema: Schema) => {
+    loadAndMergeRemoteData = (localSchema: Schema, remoteSchema: Schema) => {
+        // load data only after initial schema was set to prevent duplicate requests during initialization
         if (localSchema) {
             return this.resourceStore.requestRemoteData({template: this.type}).then((data: Object) => {
                 const result = this.mergeData(localSchema, remoteSchema, this.data, data);
@@ -121,8 +122,18 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
         }
 
         for (const name in remoteSchema) {
-            const {items: remoteItems, type: remoteType, types: remoteTypes} = remoteSchema[name];
-            const {items: localItems, type: localType, types: localTypes} = localSchema[name] || {};
+            const {
+                items: remoteItems,
+                defaultType: remoteDefaultType,
+                type: remoteType,
+                types: remoteTypes,
+            } = remoteSchema[name];
+            const {
+                items: localItems,
+                defaultType: localDefaultType,
+                type: localType,
+                types: localTypes,
+            } = localSchema[name] || {};
 
             if (remoteType === SECTION_TYPE && remoteItems &&
                 localType === SECTION_TYPE && localItems) {
@@ -134,22 +145,42 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
                 );
                 continue;
             }
+
+            if (remoteType === SECTION_TYPE && remoteItems) {
+                result = this.mergeData(
+                    localSchema,
+                    remoteItems,
+                    localData,
+                    remoteData
+                );
+                continue;
+            }
+
+            if (localType === SECTION_TYPE && localItems) {
+                result = this.mergeData(
+                    localItems,
+                    remoteSchema,
+                    localData,
+                    remoteData
+                );
+                continue;
+            }
             if (remoteTypes && localTypes
                 && Object.keys(remoteTypes).length > 0 && Object.keys(localTypes).length > 0
                 && localData[name] && remoteData[name]
                 && isArrayLike(localData[name]) && isArrayLike(remoteData[name])
             ) {
-                for (const key of remoteData[name].keys()) {
-                    const remoteChildData = remoteData[name][key];
+                for (let key = 0; key < Math.max(remoteData[name].length, localData[name].length); ++key) {
+                    const remoteChildData = toJS(remoteData[name].length > key ? remoteData[name][key] || {} : {});
                     const localChildData = toJS(localData[name].length > key ? localData[name][key] || {} : {});
 
-                    const localChildSchema = localTypes[localChildData.type]?.form;
-                    const remoteChildSchema = remoteTypes[remoteChildData.type].form;
+                    const localChildSchema =
+                        // $FlowFixMe
+                        localTypes[localChildData.type]?.form || localTypes[localDefaultType].form;
 
-                    if (!(localChildData.type in remoteTypes)) {
-                        //set default type
-                        localChildData.type = remoteSchema[name].defaultType;
-                    }
+                    const remoteChildSchema =
+                        // $FlowFixMe
+                        remoteTypes[remoteChildData.type]?.form || remoteTypes[remoteDefaultType].form;
 
                     const resultChildData = this.mergeData(
                         localChildSchema,
@@ -162,13 +193,12 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
                         result[name] = [];
                     }
 
-                    if (Object.keys(resultChildData).length === 0) {
-                        if (localChildData.type === remoteChildData.type){
-                            result[name][key] = localChildData;
-                        } else {
-                            result[name][key] = remoteChildData;
+                    if (Object.keys(resultChildData).length > 1) {
+                        if (resultChildData.type && !(resultChildData.type in remoteTypes)) {
+                            //set default type
+                            resultChildData.type = remoteDefaultType;
                         }
-                    } else {
+
                         result[name][key] = resultChildData;
                     }
                 }
@@ -176,7 +206,7 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
                 continue;
             }
 
-            if (!localData[name]) {
+            if (!localData[name] && remoteData[name]) {
                 result[name] = remoteData[name];
                 if (remoteData.type) {
                     result.type = remoteData.type;
@@ -238,10 +268,6 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
                     this.setType(response[TYPE]);
                 }
             });
-    }
-
-    remove(name: string) {
-        this.resourceStore.remove(name);
     }
 
     set(name: string, value: mixed) {

@@ -264,11 +264,6 @@ export default class ResourceStore {
             }));
     }
 
-    @action remove(path: string) {
-        jsonpointer.remove(this.data, '/' + path);
-        this.dirty = true;
-    }
-
     @action set(path: string, value: mixed) {
         if (path === 'id' && (typeof value === 'string' || typeof value === 'number')) {
             this.id = value;
