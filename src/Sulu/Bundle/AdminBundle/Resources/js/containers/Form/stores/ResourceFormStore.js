@@ -193,10 +193,21 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
                         result[name] = [];
                     }
 
-                    if (Object.keys(resultChildData).length > 1) {
-                        if (resultChildData.type && !(resultChildData.type in remoteTypes)) {
-                            //set default type
-                            resultChildData.type = remoteDefaultType;
+                    if (Object.keys(resultChildData).length > 0) {
+                        if (!resultChildData?.type) {
+                            const {
+                                defaultType: remoteChildDefaultType,
+                                types: remoteChildTypes,
+                            } = remoteChildSchema;
+                            const localChildDataType = localChildData?.type;
+
+                            resultChildData.type = localChildDataType && remoteChildTypes &&
+                            localChildDataType in remoteChildTypes ?
+                                localChildData.type :
+                                remoteChildData?.type || remoteChildDefaultType;
+                        }
+                        if (resultChildData.settings) {
+                            resultChildData.settings = localChildData?.settings || remoteChildData.settings;
                         }
 
                         result[name][key] = resultChildData;
@@ -208,13 +219,6 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
 
             if (!localData[name] && remoteData[name]) {
                 result[name] = remoteData[name];
-                if (remoteData.type) {
-                    result.type = remoteData.type;
-                }
-
-                if (remoteData.settings) {
-                    result.settings = localData?.settings || remoteData.settings;
-                }
             }
 
             if (localData[name] && remoteSchema[name].type !== localSchema[name]?.type) {
