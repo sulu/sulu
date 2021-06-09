@@ -67,7 +67,7 @@ export default class ResourceStore {
         this.setLoading(true);
         this.setForbidden(false);
 
-        this.requestData()
+        this.requestRemoteData()
             .then(action((response: Object) => {
                 if (this.idQueryParameter) {
                     this.handleIdQueryParameterResponse(response);
@@ -87,7 +87,7 @@ export default class ResourceStore {
             }));
     };
 
-    requestData = () => {
+    requestRemoteData = (options: Object = {}) => {
         const {
             id,
             observableOptions: {
@@ -95,7 +95,6 @@ export default class ResourceStore {
             },
         } = this;
 
-        const options = {};
         if (locale) {
             options.locale = locale.get();
         }

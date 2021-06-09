@@ -14,7 +14,7 @@ jest.mock('../../../../stores/ResourceStore', () => function(resourceKey, id, op
     this.resourceKey = resourceKey;
     this.save = jest.fn().mockReturnValue(Promise.resolve());
     this.delete = jest.fn().mockReturnValue(Promise.resolve());
-    this.requestData = jest.fn().mockReturnValue(Promise.resolve());
+    this.requestRemoteData = jest.fn().mockReturnValue(Promise.resolve());
     this.set = jest.fn();
     this.setMultiple = jest.fn(function(data) {
         Object.assign(this.data, data);
@@ -277,133 +277,7 @@ test('Change type should update schema and data', (done) => {
     }, 0);
 });
 
-test('Change schema should update data and remove obsolete data', (done) => {
-    const oldSchema = {
-        title: {
-            label: 'Title',
-            type: 'text_line',
-        },
-        description: {
-            label: 'Description',
-            type: 'text_line',
-        },
-    };
-
-    const newSchema = {
-        title: {
-            label: 'Title',
-            type: 'text_line',
-        },
-    };
-    const newSchemaPromise = Promise.resolve(newSchema);
-    const jsonSchemaPromise = Promise.resolve({});
-
-    const resourceStore = new ResourceStore('pages', '1');
-
-    const originData = {
-        title: 'Title',
-        description: 'Description',
-    };
-
-    // $FlowFixMe
-    resourceStore.requestData.mockReturnValue(Promise.resolve(originData));
-    metadataStore.getSchema.mockReturnValue(newSchemaPromise);
-    metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
-    const resourceFormStore = new ResourceFormStore(resourceStore, 'pages');
-    resourceFormStore.type = observable.box('default');
-    resourceFormStore.schema = oldSchema;
-
-    setTimeout(() => {
-        expect(toJS(resourceFormStore.type)).toEqual('default');
-        expect(resourceFormStore.schema).toEqual(newSchema);
-        expect(resourceStore.remove).toBeCalledWith('description');
-        resourceFormStore.destroy();
-        done();
-    }, 0);
-});
-
-test('Change schema should update data and remove obsolete data with blocks', (done) => {
-    const oldSchema = {
-        title: {
-            label: 'Title',
-            type: 'text_line',
-        },
-        description: {
-            label: 'Description',
-            type: 'text_line',
-        },
-        blocks: {
-            defaultType: 'headline',
-            type: 'block',
-            types: {
-                headline: {
-                    name: 'headline',
-                    title: 'Headline',
-                    form: {
-                        title: {
-                            label: 'Title',
-                            type: 'text_line',
-                        },
-                    },
-                },
-                description: {
-                    name: 'description',
-                    title: 'Description',
-                    form: {
-                        description: {
-                            label: 'Description',
-                            type: 'text_area',
-                        },
-                    },
-                },
-            },
-        },
-    };
-
-    const newSchema = {
-        title: {
-            label: 'Title',
-            type: 'text_line',
-        },
-    };
-    const newSchemaPromise = Promise.resolve(newSchema);
-    const jsonSchemaPromise = Promise.resolve({});
-
-    const resourceStore = new ResourceStore('pages', '1');
-    resourceStore.data = observable({
-        title: 'Title',
-        description: 'Description',
-        blocks: [
-            {title: 'block1_title', type: 'headline'},
-            {title: 'block2_title', type: 'headline'},
-            {description: 'block3_description', type: 'description'},
-            {description: 'block4_description', type: 'description'},
-        ],
-    });
-
-    const originData = {
-        title: 'Title',
-    };
-
-    // $FlowFixMe
-    resourceStore.requestData.mockReturnValue(Promise.resolve(originData));
-    metadataStore.getSchema.mockReturnValue(newSchemaPromise);
-    metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
-    const resourceFormStore = new ResourceFormStore(resourceStore, 'pages');
-    resourceFormStore.type = observable.box('default');
-    resourceFormStore.schema = oldSchema;
-
-    setTimeout(() => {
-        expect(toJS(resourceFormStore.type)).toEqual('default');
-        expect(resourceFormStore.schema).toEqual(newSchema);
-        expect(resourceStore.remove).toBeCalledWith('description');
-        expect(resourceStore.remove).toBeCalledWith('blocks');
-        resourceFormStore.destroy();
-        done();
-    }, 0);
-});
-
-test('Change schema should update data and remove obsolete data with blocks in blocks', (done) => {
+test('Change schema should update data and use remoteData for invalid blocks', (done) => {
     const oldSchema = {
         title: {
             label: 'Title',
@@ -540,7 +414,6 @@ test('Change schema should update data and remove obsolete data with blocks in b
                 type: 'block_in_block',
                 inlineBlock: [
                     {title: 'block_in_block1_title', description: 'block_in_block1_description', type: 'headline'},
-                    {title: 'block_in_block2_title', description: 'block_in_block2_description', type: 'headline'},
                     {text: 'block_in_block3_text', type: 'textBlock'},
                     {text: 'block_in_block4_text', type: 'textBlock'},
                 ],
@@ -548,16 +421,33 @@ test('Change schema should update data and remove obsolete data with blocks in b
         ],
     });
 
-    const originData = {
-        title: 'Title',
+    const remoteData = {
+        title: 'Title_remote',
         blocks: [
-            {text: 'block1_text', type: 'textEditor'},
-            {text: 'block2_text', type: 'textEditor'},
+            {text: 'block1_text_remote', type: 'textEditor'},
+            {text: 'block2_text_remote', type: 'textEditor'},
+            {
+                type: 'block_in_block',
+                inlineBlock: [
+                    {
+                        title: 'block_in_block1_title_remote',
+                        description: 'block_in_block1_description',
+                        type: 'headline',
+                    },
+                    {
+                        title: 'block_in_block2_title_remote',
+                        description: 'block_in_block2_description',
+                        type: 'headline',
+                    },
+                    {text: 'block_in_block3_text', type: 'textBlock'},
+                    {text: 'block_in_block4_text', type: 'textBlock'},
+                ],
+            },
         ],
     };
 
     // $FlowFixMe
-    resourceStore.requestData.mockReturnValue(Promise.resolve(originData));
+    resourceStore.requestRemoteData.mockReturnValue(Promise.resolve(remoteData));
     metadataStore.getSchema.mockReturnValue(newSchemaPromise);
     metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
     const resourceFormStore = new ResourceFormStore(resourceStore, 'pages');
@@ -567,15 +457,29 @@ test('Change schema should update data and remove obsolete data with blocks in b
     setTimeout(() => {
         expect(toJS(resourceFormStore.type)).toEqual('default');
         expect(resourceFormStore.schema).toEqual(newSchema);
-        expect(resourceStore.remove).toHaveBeenNthCalledWith(1, 'description');
-        expect(resourceStore.remove).toHaveBeenNthCalledWith(2, 'blocks/0/title');
-        expect(resourceStore.remove).toHaveBeenNthCalledWith(3, 'blocks/0/description');
-        expect(resourceStore.remove).toHaveBeenNthCalledWith(4, 'blocks/1/title');
-        expect(resourceStore.remove).toHaveBeenNthCalledWith(5, 'blocks/1/description');
-        expect(resourceStore.remove).toHaveBeenNthCalledWith(6, 'blocks/4/inlineBlock/0/title');
-        expect(resourceStore.remove).toHaveBeenNthCalledWith(7, 'blocks/4/inlineBlock/0/description');
-        expect(resourceStore.remove).toHaveBeenNthCalledWith(8, 'blocks/4/inlineBlock/1/title');
-        expect(resourceStore.remove).toHaveBeenNthCalledWith(9, 'blocks/4/inlineBlock/1/description');
+        expect(resourceStore.setMultiple).toHaveBeenCalledWith({
+            blocks: [
+                {text: 'block1_text_remote', type: 'textEditor'},
+                {text: 'block2_text_remote', type: 'textEditor'},
+                {
+                    type: 'block_in_block',
+                    inlineBlock: [
+                        {
+                            title: 'block_in_block1_title_remote',
+                            description: 'block_in_block1_description',
+                            type: 'headline',
+                        },
+                        {
+                            title: 'block_in_block2_title_remote',
+                            description: 'block_in_block2_description',
+                            type: 'headline',
+                        },
+                        {text: 'block_in_block3_text', type: 'textBlock'},
+                        {text: 'block_in_block4_text', type: 'textBlock'},
+                    ],
+                },
+            ],
+        });
         resourceFormStore.destroy();
         done();
     }, 0);
@@ -649,7 +553,7 @@ test('Change schema should update data and use default-type for unknown block ty
         ],
     });
 
-    const originData = {
+    const remoteData = {
         title: 'Title',
         blocks: [
             {title: 'block1_description', type: 'description'},
@@ -658,7 +562,7 @@ test('Change schema should update data and use default-type for unknown block ty
     };
 
     // $FlowFixMe
-    resourceStore.requestData.mockReturnValue(Promise.resolve(originData));
+    resourceStore.requestRemoteData.mockReturnValue(Promise.resolve(remoteData));
     metadataStore.getSchema.mockReturnValue(newSchemaPromise);
     metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
     const resourceFormStore = new ResourceFormStore(resourceStore, 'pages');
@@ -668,14 +572,18 @@ test('Change schema should update data and use default-type for unknown block ty
     setTimeout(() => {
         expect(toJS(resourceFormStore.type)).toEqual('default');
         expect(resourceFormStore.schema).toEqual(newSchema);
-        expect(resourceStore.change).toHaveBeenNthCalledWith(1, 'blocks/0/type', 'description');
-        expect(resourceStore.change).toHaveBeenNthCalledWith(2, 'blocks/1/type', 'description');
+        expect(resourceStore.setMultiple).toHaveBeenCalledWith({
+            'blocks': [
+                {'description': undefined, 'type': 'description'},
+                {'description': undefined, 'type': 'description'},
+            ],
+        });
         resourceFormStore.destroy();
         done();
     }, 0);
 });
 
-test('Change schema should merge current and origin data', (done) => {
+test('Change schema should merge locale and remote data', (done) => {
     const newSchema = {
         title: {
             label: 'Title',
@@ -725,13 +633,9 @@ test('Change schema should merge current and origin data', (done) => {
     const resourceStore = new ResourceStore('pages', '1');
     resourceStore.data = observable({
         title: 'Title',
-        blocks: [
-            {title: 'block1_title', type: 'headline'},
-            {title: 'block2_title', type: 'headline'},
-        ],
     });
 
-    const originData = {
+    const remoteData = {
         title: 'Title',
         description: 'Origin Description',
         blocks: [
@@ -743,7 +647,7 @@ test('Change schema should merge current and origin data', (done) => {
     };
 
     // $FlowFixMe
-    resourceStore.requestData.mockReturnValue(Promise.resolve(originData));
+    resourceStore.requestRemoteData.mockReturnValue(Promise.resolve(remoteData));
     metadataStore.getSchema.mockReturnValue(newSchemaPromise);
     metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
     const resourceFormStore = new ResourceFormStore(resourceStore, 'pages');
@@ -842,7 +746,7 @@ test('Change schema should merge current and origin data partially in block', (d
         ],
     });
 
-    const originData = {
+    const remoteData = {
         title: 'Title',
         description: 'Origin Description',
         blocks: [
@@ -854,7 +758,7 @@ test('Change schema should merge current and origin data partially in block', (d
     };
 
     // $FlowFixMe
-    resourceStore.requestData.mockReturnValue(Promise.resolve(originData));
+    resourceStore.requestRemoteData.mockReturnValue(Promise.resolve(remoteData));
     metadataStore.getSchema.mockReturnValue(newSchemaPromise);
     metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
     const resourceFormStore = new ResourceFormStore(resourceStore, 'pages');
@@ -864,17 +768,15 @@ test('Change schema should merge current and origin data partially in block', (d
     setTimeout(() => {
         expect(toJS(resourceFormStore.type)).toEqual('default');
         expect(resourceFormStore.schema).toEqual(newSchema);
-        expect(resourceStore.setMultiple).toHaveBeenNthCalledWith(1,
-            {
-                description: 'Origin Description',
-                blocks: [
-                    {title: 'block1_title', type: 'headline'},
-                    {title: 'block2_title', type: 'headline'},
-                    {description: 'block3_description_origin', type: 'description'},
-                    {description: 'block4_description_origin', type: 'description'},
-                ],
-            }
-        );
+        expect(resourceStore.setMultiple).toHaveBeenCalledWith( {
+            description: 'Origin Description',
+            blocks: [
+                {title: 'block1_title', type: 'headline'},
+                {title: 'block2_title', type: 'headline'},
+                {description: 'block3_description_origin', type: 'description'},
+                {description: 'block4_description_origin', type: 'description'},
+            ],
+        } );
         resourceFormStore.destroy();
         done();
     }, 0);
@@ -1053,27 +955,35 @@ test('Change schema should merge current and origin data partially block in bloc
         ],
     });
 
-    const originData = {
+    const remoteData = {
         title: 'Title',
         blocks: [
-            {title: 'block1_title', description: 'block1_description', type: 'headline'},
-            {title: 'block2_title', description: 'block2_description', type: 'headline'},
-            {text: 'block3_text', type: 'textEditor'},
-            {text: 'block4_text', type: 'textEditor'},
+            {title: 'block1_title_remote', description: 'block1_description_remote', type: 'headline'},
+            {title: 'block2_title_remote', description: 'block2_description_remote', type: 'headline'},
+            {text: 'block3_text_remote', type: 'textEditor'},
+            {text: 'block4_text_remote', type: 'textEditor'},
             {
                 type: 'block_in_block',
                 inlineBlock: [
-                    {title: 'block_in_block1_title', description: 'block_in_block1_description', type: 'headline'},
-                    {title: 'block_in_block2_title', description: 'block_in_block2_description', type: 'headline'},
-                    {text: 'block_in_block3_text', type: 'textBlock'},
-                    {text: 'block_in_block4_text', type: 'textBlock'},
+                    {
+                        title: 'block_in_block1_title_remote',
+                        description: 'block_in_block1_description',
+                        type: 'headline',
+                    },
+                    {
+                        title: 'block_in_block2_title_remote',
+                        description: 'block_in_block2_description',
+                        type: 'headline',
+                    },
+                    {text: 'block_in_block3_text_remote', type: 'textBlock'},
+                    {text: 'block_in_block4_text_remote', type: 'textBlock'},
                 ],
             },
         ],
     };
 
     // $FlowFixMe
-    resourceStore.requestData.mockReturnValue(Promise.resolve(originData));
+    resourceStore.requestRemoteData.mockReturnValue(Promise.resolve(remoteData));
     metadataStore.getSchema.mockReturnValue(newSchemaPromise);
     metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
     const resourceFormStore = new ResourceFormStore(resourceStore, 'pages');
@@ -1083,38 +993,31 @@ test('Change schema should merge current and origin data partially block in bloc
     setTimeout(() => {
         expect(toJS(resourceFormStore.type)).toEqual('default');
         expect(resourceFormStore.schema).toEqual(newSchema);
-        expect(resourceStore.setMultiple).toHaveBeenNthCalledWith(1,
-            {
-                blocks: [
-                    {title: 'block1_title', description: 'block1_description', type: 'headline'},
-                    {text: 'block4_text', type: 'textEditor'},
-                    {
-                        type: 'block_in_block',
-                        inlineBlock: [
-                            {text: 'block_in_block4_text', type: 'textBlock'},
-                        ],
-                    },
-                    {text: 'block4_text', type: 'textEditor'},
-                    {
-                        type: 'block_in_block',
-                        inlineBlock: [
-                            {
-                                title: 'block_in_block1_title',
-                                description: 'block_in_block1_description',
-                                type: 'headline',
-                            },
-                            {
-                                title: 'block_in_block2_title',
-                                description: 'block_in_block2_description',
-                                type: 'headline',
-                            },
-                            {text: 'block_in_block3_text', type: 'textBlock'},
-                            {text: 'block_in_block4_text', type: 'textBlock'},
-                        ],
-                    },
-                ],
-            }
-        );
+        expect(resourceStore.setMultiple).toHaveBeenCalledWith( {
+            blocks: [
+                {title: 'block1_title', description: 'block1_description', type: 'headline'},
+                {title: 'block2_title_remote', description: 'block2_description_remote', type: 'headline'},
+                {text: 'block3_text_remote', type: 'textEditor'},
+                {text: 'block4_text_remote', type: 'textEditor'},
+                {
+                    type: 'block_in_block',
+                    inlineBlock: [
+                        {
+                            title: 'block_in_block1_title_remote',
+                            description: 'block_in_block1_description',
+                            type: 'headline',
+                        },
+                        {
+                            title: 'block_in_block2_title_remote',
+                            description: 'block_in_block2_description',
+                            type: 'headline',
+                        },
+                        {text: 'block_in_block3_text_remote', type: 'textBlock'},
+                        {text: 'block_in_block4_text_remote', type: 'textBlock'},
+                    ],
+                },
+            ],
+        });
         resourceFormStore.destroy();
         done();
     }, 0);

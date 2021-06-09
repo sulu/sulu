@@ -1,5 +1,5 @@
 // @flow
-import {action, autorun, computed, get, isArrayLike, observable, when} from 'mobx';
+import {action, autorun, computed, get, isArrayLike, observable, toJS, when} from 'mobx';
 import jsonpointer from 'json-pointer';
 import {createAjv} from '../../../utils/Ajv';
 import ResourceStore from '../../../stores/ResourceStore';
@@ -16,14 +16,14 @@ const ajv = createAjv();
 export default class ResourceFormStore extends AbstractFormStore implements FormStoreInterface {
     resourceStore: ResourceStore;
     formKey: string;
-    options: {[string]: any};
+    options: { [string]: any };
     @observable type: string;
-    @observable types: {[key: string]: SchemaType} = {};
+    @observable types: { [key: string]: SchemaType } = {};
     @observable schemaLoading: boolean = true;
     @observable typesLoading: boolean = true;
     schemaDisposer: ?() => void;
     typeDisposer: ?() => void;
-    metadataOptions: ?{[string]: any};
+    metadataOptions: ?{ [string]: any };
 
     constructor(resourceStore: ResourceStore, formKey: string, options: Object = {}, metadataOptions: ?Object) {
         super();
@@ -91,151 +91,108 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
         this.validator = jsonSchema ? ajv.compile(jsonSchema) : undefined;
         this.pathsByTag = {};
 
-        return this.resourceStore.requestData().then((data: Object) => {
-            this.removeObsoleteData(this.schema, schema, this.data);
-            const result = this.mergeData(this.schema, schema, this.data, data);
-            this.setMultiple(result);
-
+        return this.requestRemoteDataAndMerge(this.schema, schema).then(action(() => {
             this.schema = schema;
             this.addMissingSchemaProperties();
             this.validate();
             this.setSchemaLoading(false);
-        });
+        }));
+    };
+
+    requestRemoteDataAndMerge = (localSchema: Schema, remoteSchema: Schema) => {
+        if (localSchema) {
+            return this.resourceStore.requestRemoteData({template: this.type}).then((data: Object) => {
+                const result = this.mergeData(localSchema, remoteSchema, this.data, data);
+                this.setMultiple(result);
+            });
+        }
+        return Promise.resolve();
     };
 
     mergeData(
-        oldSchema: Schema,
-        newSchema: Schema,
-        oldData: Object,
-        newData: Object,
-        parentPath: string[] = []
+        localSchema: Schema,
+        remoteSchema: Schema,
+        localData: Object,
+        remoteData: Object
     ) {
         let result = {};
-        if (!oldSchema || !newSchema) {
+        if (!localSchema || !remoteSchema) {
             return result;
         }
 
-        for (const key in newSchema) {
-            const {items: newItems, type: newType, types: newTypes} = newSchema[key];
-            const {items: oldItems, type: oldType, types: oldTypes} = oldSchema[key] || {};
+        for (const name in remoteSchema) {
+            const {items: remoteItems, type: remoteType, types: remoteTypes} = remoteSchema[name];
+            const {items: localItems, type: localType, types: localTypes} = localSchema[name] || {};
 
-            if (newType === SECTION_TYPE && newItems &&
-                oldType === SECTION_TYPE && oldItems) {
+            if (remoteType === SECTION_TYPE && remoteItems &&
+                localType === SECTION_TYPE && localItems) {
                 result = this.mergeData(
-                    oldItems,
-                    newItems,
-                    oldData,
-                    newData,
-                    parentPath
+                    localItems,
+                    remoteItems,
+                    localData,
+                    remoteData
                 );
                 continue;
             }
-            if (newTypes && oldTypes
-                && Object.keys(newTypes).length > 0 && Object.keys(oldTypes).length > 0
-                && oldData[key] && newData[key]
-                && isArrayLike(oldData[key]) && isArrayLike(newData[key])
+            if (remoteTypes && localTypes
+                && Object.keys(remoteTypes).length > 0 && Object.keys(localTypes).length > 0
+                && localData[name] && remoteData[name]
+                && isArrayLike(localData[name]) && isArrayLike(remoteData[name])
             ) {
-                for (const childKey of newData[key].keys()) {
-                    const newChildData = newData[key][childKey];
-                    const oldChildData = oldData[key].length > childKey ? oldData[key][childKey] || {} : {};
+                for (const key of remoteData[name].keys()) {
+                    const remoteChildData = remoteData[name][key];
+                    const localChildData = toJS(localData[name].length > key ? localData[name][key] || {} : {});
 
-                    const oldChildSchema = oldTypes[oldChildData.type]?.form;
-                    const newChildSchema = newTypes[newChildData.type].form;
+                    const localChildSchema = localTypes[localChildData.type]?.form;
+                    const remoteChildSchema = remoteTypes[remoteChildData.type].form;
 
-                    if (Object.keys(oldChildData).length === 0 && !oldChildSchema) {
-                        // set originData
-                        if (!result[key]) {
-                            result[key] = [];
+                    if (!(localChildData.type in remoteTypes)) {
+                        //set default type
+                        localChildData.type = remoteSchema[name].defaultType;
+                    }
+
+                    const resultChildData = this.mergeData(
+                        localChildSchema,
+                        remoteChildSchema,
+                        localChildData,
+                        remoteChildData
+                    );
+
+                    if (!result[name]) {
+                        result[name] = [];
+                    }
+
+                    if (Object.keys(resultChildData).length === 0) {
+                        if (localChildData.type === remoteChildData.type){
+                            result[name][key] = localChildData;
+                        } else {
+                            result[name][key] = remoteChildData;
                         }
-                        result[key][childKey] = newChildData;
-
-                        continue;
+                    } else {
+                        result[name][key] = resultChildData;
                     }
-
-                    if (!result[key]){
-                        result[key] = [];
-                    }
-                    if (!(oldChildData.type in newTypes)) {
-                        result[key][childKey] = this.mergeData(
-                            oldChildSchema,
-                            newChildSchema,
-                            oldChildData,
-                            newChildData,
-                            parentPath.concat([key, childKey])
-                        );
-
-                        continue;
-                    }
-                    result[key][childKey] = oldChildData;
                 }
 
                 continue;
             }
 
-            if (!oldData[key] || newSchema[key].type !== oldSchema[key]?.type) {
-                // set originData
-                result[key] = newData[key];
+            if (!localData[name]) {
+                result[name] = remoteData[name];
+                if (remoteData.type) {
+                    result.type = remoteData.type;
+                }
+
+                if (remoteData.settings) {
+                    result.settings = localData?.settings || remoteData.settings;
+                }
+            }
+
+            if (localData[name] && remoteSchema[name].type !== localSchema[name]?.type) {
+                result[name] = undefined;
             }
         }
 
         return result;
-    }
-
-    removeObsoleteData(oldSchema: Schema, newSchema: Schema, data: Object, parentPath: string[] = []) {
-        if (!oldSchema || !newSchema) {
-            return;
-        }
-
-        for (const key in oldSchema) {
-            const {items: newItems, type: newType, types: newTypes} = newSchema[key] || {};
-            const {items: oldItems, type: oldType, types: oldTypes} = oldSchema[key];
-
-            if (newType === SECTION_TYPE && newItems &&
-                oldType === SECTION_TYPE && oldItems) {
-                this.removeObsoleteData(
-                    oldItems,
-                    newItems,
-                    data,
-                    parentPath
-                );
-                continue;
-            }
-
-            if (newTypes && oldTypes
-                && Object.keys(newTypes).length > 0 && Object.keys(oldTypes).length > 0
-                && data[key] && isArrayLike(data[key])
-            ) {
-                for (const childKey of data[key].keys()) {
-                    const childData = data[key][childKey];
-                    const oldChildSchema = oldTypes[childData.type]?.form;
-                    let newChildSchema = newTypes[childData.type]?.form;
-
-                    if (!newChildSchema) {
-                        const defaultType = newSchema[key]?.defaultType;
-                        if (defaultType) {
-                            newChildSchema = newTypes[defaultType].form;
-                            //set default type
-                            const path = parentPath.concat([key, childKey]).join('/') + '/type';
-                            this.change(path, defaultType);
-                        }
-                    }
-
-                    this.removeObsoleteData(
-                        oldChildSchema,
-                        newChildSchema,
-                        childData,
-                        parentPath.concat([key, childKey])
-                    );
-                }
-
-                continue;
-            }
-
-            if (!newSchema[key] || newSchema[key]['type'] !== oldSchema[key]['type']) {
-                // remove obsolete data from previous schema
-                this.remove(parentPath.concat(key).join('/'));
-            }
-        }
     }
 
     @computed get hasTypes(): boolean {
