@@ -146,7 +146,8 @@ module.exports = { // eslint-disable-line
             rules: [
                 {
                     test: /\.js$/,
-                    exclude: /node_modules\/(?!(sulu-(.*)-bundle|@ckeditor|lodash-es)\/)/,
+                    // eslint-disable-next-line max-len
+                    exclude: /node_modules\/(?!(sulu-(.*)-bundle|@ckeditor|ckeditor5|lodash-es|@react-leaflet|react-leaflet)\/)/,
                     use: {
                         loader: 'babel-loader',
                         options: {
