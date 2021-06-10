@@ -13,6 +13,8 @@ namespace Sulu\Bundle\AdminBundle\DependencyInjection;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\DependencyInjection\Compiler\AddAdminPass;
+use Sulu\Bundle\AdminBundle\Exception\DeletionImpossibleChildPermissionsException;
+use Sulu\Bundle\AdminBundle\Exception\DeletionImpossibleChildrenException;
 use Sulu\Bundle\AdminBundle\Exception\MetadataNotFoundException;
 use Sulu\Bundle\AdminBundle\Exception\MetadataProviderNotFoundException;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadataVisitorInterface;
@@ -92,6 +94,8 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
                             MetadataNotFoundException::class => 404,
                             MetadataProviderNotFoundException::class => 404,
                             MissingArgumentException::class => 400,
+                            DeletionImpossibleChildrenException::class => 409,
+                            DeletionImpossibleChildPermissionsException::class => 403,
                         ],
                     ],
                 ]

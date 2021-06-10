@@ -11,10 +11,16 @@
 
 namespace Sulu\Bundle\MediaBundle\Collection\Manager;
 
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Query\Expr\Join;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Bundle\AdminBundle\Exception\DeletionImpossibleChildPermissionsException;
+use Sulu\Bundle\AdminBundle\Exception\DeletionImpossibleChildrenException;
+use Sulu\Bundle\AdminBundle\Resource\SuluResource;
 use Sulu\Bundle\MediaBundle\Api\Collection;
 use Sulu\Bundle\MediaBundle\Domain\Event\CollectionCreatedEvent;
 use Sulu\Bundle\MediaBundle\Domain\Event\CollectionModifiedEvent;
@@ -27,10 +33,12 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionTypeNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
+use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
@@ -108,6 +116,11 @@ class CollectionManager implements CollectionManagerInterface
      */
     private $permissions;
 
+    /**
+     * @var AccessControlQueryEnhancer
+     */
+    private $accessControlQueryEnhancer;
+
     public function __construct(
         CollectionRepositoryInterface $collectionRepository,
         MediaRepositoryInterface $mediaRepository,
@@ -115,6 +128,7 @@ class CollectionManager implements CollectionManagerInterface
         UserRepositoryInterface $userRepository,
         EntityManager $em,
         DomainEventCollectorInterface $domainEventCollector,
+        AccessControlQueryEnhancer $accessControlQueryEnhancer,
         TokenStorageInterface $tokenStorage = null,
         $collectionPreviewFormat,
         $permissions
@@ -125,6 +139,7 @@ class CollectionManager implements CollectionManagerInterface
         $this->userRepository = $userRepository;
         $this->em = $em;
         $this->domainEventCollector = $domainEventCollector;
+        $this->accessControlQueryEnhancer = $accessControlQueryEnhancer;
         $this->tokenStorage = $tokenStorage;
         $this->collectionPreviewFormat = $collectionPreviewFormat;
         $this->permissions = $permissions;
@@ -582,7 +597,52 @@ class CollectionManager implements CollectionManagerInterface
         $collectionTitle = $collectionMeta ? $collectionMeta->getTitle() : null;
         $locale = $collectionMeta ? $collectionMeta->getLocale() : null;
 
+        $user = $this->getCurrentUser();
+
+        if (null !== $user) {
+            $childCollectionResourcesWithoutPermissions = $this->findUnauthorizedChildCollectionResources(
+                $id,
+                $user,
+                $this->permissions['delete']
+            );
+
+            if (!empty($childCollectionResourcesWithoutPermissions)) {
+                $total = $this->countUnauthorizedChildCollections(
+                    $id,
+                    $user,
+                    $this->permissions['delete']
+                );
+
+                throw new DeletionImpossibleChildPermissionsException(
+                    new SuluResource(
+                        CollectionInterface::RESOURCE_KEY,
+                        $collectionId,
+                        $collectionTitle
+                    ),
+                    $childCollectionResourcesWithoutPermissions,
+                    $total
+                );
+            }
+        }
+
+        $childResources = $this->findAllChildResources($id);
+
+        if (!empty($childResources)) {
+            $total = $this->countAllChildren($id);
+
+            throw new DeletionImpossibleChildrenException(
+                new SuluResource(
+                    CollectionInterface::RESOURCE_KEY,
+                    $collectionId,
+                    $collectionTitle
+                ),
+                $childResources,
+                $total
+            );
+        }
+
         $this->em->remove($collectionEntity);
+
         foreach ($collectionEntity->getMeta() as $meta) {
             $this->em->remove($meta);
         }
@@ -782,7 +842,7 @@ class CollectionManager implements CollectionManagerInterface
             }
         }
 
-        return;
+        return null;
     }
 
     private function getCollectionMeta(CollectionInterface $collection, ?string $locale): ?CollectionMeta
@@ -796,5 +856,281 @@ class CollectionManager implements CollectionManagerInterface
         }
 
         return $meta;
+    }
+
+    /**
+     * @param array<{id: int, resourceKey: string, parentId: string}> $flatList
+     *
+     * @return SuluResource[]
+     */
+    private function transformListToResourcesTree(array $flatList, int $rootParentId)
+    {
+        $grouped = [];
+        foreach ($flatList as $node) {
+            $grouped[(int) $node['parentId']][] = $node;
+        }
+
+        $fnBuilder = function($siblings) use (&$fnBuilder, $grouped) {
+            foreach ($siblings as $key => $sibling) {
+                $id = $sibling['id'];
+                $resourceKey = $sibling['resourceKey'];
+                $title = $sibling['title'] ?? null;
+
+                $siblings[$key] = new SuluResource(
+                    $resourceKey,
+                    $id,
+                    $title,
+                    isset($grouped[$id]) ? $fnBuilder($grouped[$id]) : []
+                );
+            }
+
+            return $siblings;
+        };
+
+        return $fnBuilder($grouped[$rootParentId]);
+    }
+
+    /**
+     * @param SuluResource[] $tree
+     *
+     * @return array<string, SuluResource>
+     */
+    private function flattenResourcesTree(array $tree): array
+    {
+        $result = [];
+
+        foreach ($tree as $resource) {
+            $resourceKey = $resource->getResourceKey();
+            $id = $resource->getId();
+            $title = $resource->getTitle();
+
+            $result[$resourceKey . '-' . $id] = new SuluResource(
+                $resourceKey,
+                $id,
+                $title,
+                []
+            );
+
+            $children = $resource->getChildren();
+
+            if (!empty($children)) {
+                $result = \array_merge($result, $this->flattenResourcesTree($children));
+            }
+        }
+
+        return $result;
+    }
+
+    private function createChildCollectionsQueryBuilder(int $id): QueryBuilder
+    {
+        return $this->em->createQueryBuilder()
+            ->select('collection.id AS id')
+            ->addSelect('\'collections\' AS resourceKey')
+            ->addSelect('IDENTITY(collection.parent) AS parentId')
+            ->from(CollectionInterface::class, 'collection')
+            ->leftJoin(CollectionInterface::class, 'parent', Join::WITH, 'collection.lft > parent.lft AND collection.rgt < parent.rgt')
+            ->where('parent.id = :id')
+            ->orderBy('collection.depth', 'ASC')
+            ->addOrderBy('collection.lft', 'ASC')
+            ->setParameter('id', $id);
+    }
+
+    /**
+     * @return array<{id: int, resourceKey: string, parentId: string}>
+     */
+    private function findChildCollections(int $id): array
+    {
+        return $this->createChildCollectionsQueryBuilder($id)
+            ->getQuery()
+            ->getArrayResult();
+    }
+
+    /**
+     * @return array<{id: int, resourceKey: string, parentId: string}>
+     */
+    private function findChildCollectionIds(int $id): array
+    {
+        $childCollectionIds = $this->createChildCollectionsQueryBuilder($id)
+            ->select('collection.id AS id')
+            ->getQuery()
+            ->getArrayResult();
+
+        return \array_column($childCollectionIds, 'id');
+    }
+
+    private function countChildCollections(int $id): int
+    {
+        return $this->createChildCollectionsQueryBuilder($id)
+            ->select('COUNT(collection.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * @return SuluResource[]
+     */
+    private function findChildCollectionResources(int $id): array
+    {
+        $childCollectionsData = $this->findChildCollections($id);
+
+        return $this->transformListToResourcesTree($childCollectionsData, $id);
+    }
+
+    /**
+     * @param int[] $collectionIds
+     */
+    private function createChildMediaQueryBuilder(array $collectionIds): QueryBuilder
+    {
+        return $this->em->createQueryBuilder()
+            ->select('media.id as id')
+            ->addSelect('\'media\' AS resourceKey')
+            ->addSelect('IDENTITY(media.collection) AS parentId')
+            ->from(MediaInterface::class, 'media')
+            ->where('IDENTITY(media.collection) IN (:collectionIds)')
+            ->setParameter('collectionIds', $collectionIds, Connection::PARAM_INT_ARRAY);
+    }
+
+    /**
+     * @param int[] $collectionIds
+     *
+     * @return array<{id: int, resourceKey: string, parentId: string}>
+     */
+    private function findChildMedia(array $collectionIds): array
+    {
+        return $this
+            ->createChildMediaQueryBuilder($collectionIds)
+            ->getQuery()
+            ->getArrayResult();
+    }
+
+    /**
+     * @param int[] $collectionIds
+     */
+    private function countChildMedia(array $collectionIds): int
+    {
+        return $this
+            ->createChildMediaQueryBuilder($collectionIds)
+            ->select('COUNT(media.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * @return SuluResource[]
+     */
+    private function findAllChildResources(int $id): array
+    {
+        $childCollectionsData = $this->findChildCollections($id);
+
+        $collectionIds = \array_merge([$id], \array_column($childCollectionsData, 'id'));
+        $childMediaData = $this->findChildMedia($collectionIds);
+
+        $result = \array_merge($childCollectionsData, $childMediaData);
+
+        return $this->transformListToResourcesTree($result, $id);
+    }
+
+    private function countAllChildren(int $id): int
+    {
+        $countChildCollections = $this->countChildCollections($id);
+
+        $childCollectionIds = \array_merge([$id], $this->findChildCollectionIds($id));
+        $countChildMedia = $this->countChildMedia($childCollectionIds);
+
+        return $countChildCollections + $countChildMedia;
+    }
+
+    private function createPermittedChildCollectionQueryBuilder(
+        int $id,
+        UserInterface $user,
+        int $permission
+    ): QueryBuilder {
+        $qb = $this->createChildCollectionsQueryBuilder($id);
+
+        $this->accessControlQueryEnhancer->enhance(
+            $qb,
+            $user,
+            $permission,
+            CollectionEntity::class,
+            'collection'
+        );
+
+        return $qb;
+    }
+
+    /**
+     * @return array<string, SuluResource>
+     */
+    private function findPermittedChildCollectionResources(int $id, UserInterface $user, int $permission): array
+    {
+        $qb = $this->createPermittedChildCollectionQueryBuilder(
+            $id,
+            $user,
+            $permission
+        );
+
+        $permittedChildCollectionsData = $qb
+            ->getQuery()
+            ->getArrayResult();
+
+        $result = [];
+        foreach ($permittedChildCollectionsData as $collection) {
+            $resourceKey = $collection['resourceKey'];
+            $id = (string) $collection['id'];
+            $title = $collection['title'] ?? null;
+
+            $result[$resourceKey . '-' . $id] = new SuluResource(
+                $resourceKey,
+                $id,
+                $title
+            );
+        }
+
+        return $result;
+    }
+
+    private function countPermittedChildCollections(int $id, UserInterface $user, int $permission): int
+    {
+        $qb = $this->createPermittedChildCollectionQueryBuilder(
+            $id,
+            $user,
+            $permission
+        );
+
+        return $qb
+            ->select('COUNT(collection.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * @return SuluResource[]
+     */
+    private function findUnauthorizedChildCollectionResources(int $id, UserInterface $user, int $permission): array
+    {
+        $childCollectionResources = $this->flattenResourcesTree(
+            $this->findChildCollectionResources($id)
+        );
+
+        $permittedChildCollectionResources = $this->findPermittedChildCollectionResources($id, $user, $permission);
+
+        return \array_values(
+            \array_diff_key(
+                $childCollectionResources,
+                $permittedChildCollectionResources
+            )
+        );
+    }
+
+    private function countUnauthorizedChildCollections(int $id, UserInterface $user, int $permission): int
+    {
+        $countChildCollections = $this->countChildCollections($id);
+        $countPermittedChildCollections = $this->countPermittedChildCollections(
+            $id,
+            $user,
+            $permission
+        );
+
+        return $countChildCollections - $countPermittedChildCollections;
     }
 }

@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Rest;
 
+use Sulu\Component\Rest\Exception\AdditionalInformationExceptionInterface;
 use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -62,6 +63,10 @@ class FlattenExceptionNormalizer implements NormalizerInterface
             }
 
             $data['errors'] = [$errors];
+        }
+
+        if ($contextException instanceof AdditionalInformationExceptionInterface) {
+            $data = \array_merge($contextException->getAdditionalInformation(), $data);
         }
 
         return $data;
