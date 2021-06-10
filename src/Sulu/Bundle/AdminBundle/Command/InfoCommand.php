@@ -54,7 +54,7 @@ class InfoCommand extends Command
 <subtitle>-----------------</subtitle>
 
  - Sulu Documentation: <href=https://docs.sulu.io/>https://docs.sulu.io/</>
- - Symfony Documentation: <href=https://symfony.com/doc/current/index.html>href=https://symfony.com/doc/current/index.html</>
+ - Symfony Documentation: <href=https://symfony.com/doc/current/index.html>https://symfony.com/doc/current/index.html</>
  - Doctrine ORM Documentation: <href=https://www.doctrine-project.org/projects/doctrine-orm/en/2.9/index.html>https://www.doctrine-project.org/projects/doctrine-orm/en/2.9/index.html</>
 
 <subtitle>📦 Examples, Code and Bundles</subtitle>
@@ -89,7 +89,7 @@ Continue with the "Getting Started" documentation to setup your project:
  - <href=https://docs.sulu.io/en/%s/book/getting-started.html>https://docs.sulu.io/en/%s/book/getting-started.html</> 🚀
 
 
-<star>If you like Sulu, don't hesitate to spread some love and leave a star ⭐  on GitHub: <href=https://github.com/sulu/sulu>https://github.com/sulu/sulu</></star>
+<star>If you like Sulu, don't hesitate to spread some love and leave a star ⭐ on GitHub: <href=https://github.com/sulu/sulu>https://github.com/sulu/sulu</></star>
 EOT;
 
         $text = \sprintf(
