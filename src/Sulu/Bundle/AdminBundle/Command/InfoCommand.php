@@ -50,7 +50,7 @@ class InfoCommand extends Command
 <title>Welcome to the Sulu CMS 👋</title>
 <title>==========================</title>
 
-<subtitle>📘 Documentations</subtitle>
+<subtitle>📘 Documentation</subtitle>
 <subtitle>-----------------</subtitle>
 
  - Sulu Documentation: <href=https://docs.sulu.io/>https://docs.sulu.io/</>
@@ -63,7 +63,7 @@ class InfoCommand extends Command
  - Sulu Demo Project: <href=https://github.com/sulu/sulu-demo/>https://github.com/sulu/sulu-demo/</>
  - Sulu Workshop Project: <href=https://github.com/sulu/sulu-workshop/>https://github.com/sulu/sulu-workshop/</>
  - Sulu Source Code: <href=https://github.com/sulu/sulu/>https://github.com/sulu/sulu/</>
- - Sulu Official Bundles: <href=https://github.com/sulu?q=Bundle>https://github.com/sulu?q=Bundle</>
+ - Official Sulu Bundles: <href=https://github.com/sulu?q=Bundle>https://github.com/sulu?q=Bundle</>
 
 <subtitle>📺 News and Updates</subtitle>
 <subtitle>-------------------</subtitle>
@@ -84,12 +84,12 @@ class InfoCommand extends Command
 
 ---
 
-Continue now with the "Getting Started" documentation to setup your project:
+Continue with the "Getting Started" documentation to setup your project:
 
  - <href=https://docs.sulu.io/en/%s/book/getting-started.html>https://docs.sulu.io/en/%s/book/getting-started.html</> 🚀
 
 
-<star>If you like sulu let us now by give us a star ⭐ on github: <href=https://github.com/sulu/sulu>https://github.com/sulu/sulu</></star>
+<star>If you like Sulu, don't hesitate to spread some love and leave a star ⭐  on GitHub: <href=https://github.com/sulu/sulu>https://github.com/sulu/sulu</></star>
 EOT;
 
         $text = \sprintf(
