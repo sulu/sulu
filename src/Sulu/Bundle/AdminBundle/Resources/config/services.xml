@@ -242,6 +242,11 @@
             <tag name="console.command"/>
         </service>
 
+        <service id="sulu_admin.info_command" class="Sulu\Bundle\AdminBundle\Command\InfoCommand">
+            <argument>%sulu.version%</argument>
+            <tag name="console.command"/>
+        </service>
+
         <service
             id="sulu_admin.download_language_command"
             class="Sulu\Bundle\AdminBundle\Command\DownloadLanguageCommand"
