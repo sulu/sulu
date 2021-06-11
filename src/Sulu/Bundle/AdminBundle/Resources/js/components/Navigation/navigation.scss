@@ -25,6 +25,7 @@ $darkBackgroundColor: $ebonyClay;
     align-items: center;
     justify-content: space-between;
     background: $darkBackgroundColor;
+    border-bottom: 1px solid $backgroundColor;
 }
 
 .logo {
@@ -40,10 +41,6 @@ $darkBackgroundColor: $ebonyClay;
     cursor: pointer;
 
     &.active {
-        color: $color;
-    }
-
-    &:hover {
         color: $activeColor;
     }
 }
@@ -65,4 +62,5 @@ $darkBackgroundColor: $ebonyClay;
     background: $darkBackgroundColor;
     min-height: 60px;
     padding-inline: 20px;
+    border-top: 1px solid $backgroundColor;
 }
