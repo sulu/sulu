@@ -901,8 +901,7 @@ class CollectionManager implements CollectionManagerInterface
             ->from(CollectionInterface::class, 'collection')
             ->leftJoin(CollectionInterface::class, 'parent', Join::WITH, 'collection.lft > parent.lft AND collection.rgt < parent.rgt')
             ->where('parent.id = :id')
-            ->orderBy('collection.depth', 'DESC')
-            ->addOrderBy('collection.id', 'ASC')
+            ->orderBy('collection.id', 'ASC')
             ->setParameter('id', $id);
     }
 
@@ -949,8 +948,7 @@ class CollectionManager implements CollectionManagerInterface
             ->from(MediaInterface::class, 'media')
             ->leftJoin('media.collection', 'collection')
             ->where('collection.id IN (:collectionIds)')
-            ->orderBy('collection.depth', 'DESC')
-            ->addOrderBy('media.id', 'ASC')
+            ->orderBy('media.id', 'ASC')
             ->setParameter('collectionIds', $collectionIds, Connection::PARAM_INT_ARRAY);
     }
 
@@ -1063,7 +1061,7 @@ class CollectionManager implements CollectionManagerInterface
             ->select('collection.id AS id')
             ->addSelect('meta.title AS title')
             ->from(CollectionInterface::class, 'collection')
-            ->leftJoin('collection.meta', 'meta')
+            ->leftJoin('collection.defaultMeta', 'meta')
             ->where('collection.id IN (:ids)')
             ->setParameter('ids', $ids, Connection::PARAM_INT_ARRAY)
             ->getQuery()

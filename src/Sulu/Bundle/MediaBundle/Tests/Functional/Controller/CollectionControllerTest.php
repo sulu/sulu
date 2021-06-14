@@ -1332,19 +1332,19 @@ class CollectionControllerTest extends SuluTestCase
         $collection = $this->createCollection($this->collectionType1);
         $collectionId = $collection->getId();
 
-        $child1 = $this->createCollection($this->collectionType1, ['de' => 'Child 1'], $collection);
+        $child1 = $this->createCollection($this->collectionType1, ['en-gb' => 'Child 1'], $collection);
         $this->accessControlManager->setPermissions(Collection::class, (string) $child1->getId(), $permissions);
 
-        $child11 = $this->createCollection($this->collectionType1, ['de' => 'Child 1-1'], $child1);
+        $child11 = $this->createCollection($this->collectionType1, ['en-gb' => 'Child 1-1'], $child1);
         $this->accessControlManager->setPermissions(Collection::class, (string) $child11->getId(), $fullPermissions);
 
-        $child111 = $this->createCollection($this->collectionType1, ['de' => 'Child 1-1-1'], $child11);
+        $child111 = $this->createCollection($this->collectionType1, ['en-gb' => 'Child 1-1-1'], $child11);
         $this->accessControlManager->setPermissions(Collection::class, (string) $child111->getId(), $permissions);
 
-        $child12 = $this->createCollection($this->collectionType1, ['de' => 'Child 1-2'], $child1);
+        $child12 = $this->createCollection($this->collectionType1, ['en-gb' => 'Child 1-2'], $child1);
         $this->accessControlManager->setPermissions(Collection::class, (string) $child12->getId(), $permissions);
 
-        $child2 = $this->createCollection($this->collectionType1, ['de' => 'Child 2'], $collection);
+        $child2 = $this->createCollection($this->collectionType1, ['en-gb' => 'Child 2'], $collection);
         $this->accessControlManager->setPermissions(Collection::class, (string) $child2->getId(), $permissions);
 
         $this->em->clear();
