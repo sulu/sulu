@@ -13,15 +13,22 @@ namespace Sulu\Bundle\MediaBundle\Tests\Functional\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Sulu\Bundle\AdminBundle\Exception\DeletionImpossibleChildPermissionsException;
+use Sulu\Bundle\AdminBundle\Exception\DeletionImpossibleChildrenException;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
+use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\Media;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
+use Sulu\Bundle\SecurityBundle\Entity\RoleRepository;
+use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Cache\CacheInterface;
 use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
+use Sulu\Component\Security\Authorization\AccessControl\AccessControlManager;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class CollectionControllerTest extends SuluTestCase
@@ -65,6 +72,16 @@ class CollectionControllerTest extends SuluTestCase
      * @var KernelBrowser
      */
     private $client;
+
+    /**
+     * @var RoleRepository
+     */
+    private $roleRepository;
+
+    /**
+     * @var AccessControlManager
+     */
+    private $accessControlManager;
 
     public function setUp(): void
     {
@@ -242,11 +259,11 @@ class CollectionControllerTest extends SuluTestCase
         return $mediaType;
     }
 
-    private function createRole()
+    private function createRole(string $name = 'Role', string $system = 'Website')
     {
         $role = new Role();
-        $role->setName('Role');
-        $role->setSystem('Website');
+        $role->setName($name);
+        $role->setSystem($system);
 
         $this->em->persist($role);
 
@@ -777,7 +794,7 @@ class CollectionControllerTest extends SuluTestCase
             ],
         ];
 
-        $this->accessControlManager->setPermissions(Collection::class, $this->collection1->getId(), $permissions);
+        $this->accessControlManager->setPermissions(Collection::class, (string) $this->collection1->getId(), $permissions);
 
         $this->client->request(
             'POST',
@@ -1189,18 +1206,19 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
-    public function testDeleteById()
+    public function testDeleteById(): void
     {
-        $collection1Id = $this->collection1->getId();
+        $collection = $this->createCollection($this->collectionType1);
+        $collectionId = $collection->getId();
 
         $this->em->clear();
 
-        $this->client->jsonRequest('DELETE', '/api/collections/' . $collection1Id);
+        $this->client->jsonRequest('DELETE', '/api/collections/' . $collectionId);
         $this->assertHttpStatusCode(204, $this->client->getResponse());
 
         $this->client->jsonRequest(
             'GET',
-            '/api/collections/' . $collection1Id . '?locale=en'
+            '/api/collections/' . $collectionId . '?locale=en'
         );
 
         $this->assertHttpStatusCode(404, $this->client->getResponse());
@@ -1208,6 +1226,155 @@ class CollectionControllerTest extends SuluTestCase
         $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(5005, $response->code);
         $this->assertTrue(isset($response->message));
+    }
+
+    public function testDeleteByIdWithChildren(): void
+    {
+        $collection = $this->createCollection($this->collectionType1);
+        $this->addMedia($collection, 1);
+        $collectionId = $collection->getId();
+
+        $child1 = $this->createCollection($this->collectionType1, [], $collection);
+        $this->addMedia($child1, 1);
+
+        $child11 = $this->createCollection($this->collectionType1, [], $child1);
+        $this->addMedia($child11, 1);
+
+        $child2 = $this->createCollection($this->collectionType1, [], $collection);
+        $this->addMedia($child2, 1);
+
+        $this->em->clear();
+
+        $this->client->jsonRequest('DELETE', '/api/collections/' . $collectionId);
+        $this->assertHttpStatusCode(409, $this->client->getResponse());
+
+        $response = \json_decode((string) $this->client->getResponse()->getContent());
+        $this->assertEquals(DeletionImpossibleChildrenException::EXCEPTION_CODE, $response->code);
+        $this->assertTrue(isset($response->message));
+        $this->assertObjectHasAttribute('totalChildren', $response);
+        $this->assertSame(7, $response->totalChildren);
+        $this->assertObjectHasAttribute('children', $response);
+        $this->assertEquals([
+            [
+                (object) [
+                    'id' => $child11->getMedia()->first()->getId(),
+                    'resourceKey' => MediaInterface::RESOURCE_KEY,
+                ],
+            ],
+            [
+                (object) [
+                    'id' => $child11->getId(),
+                    'resourceKey' => CollectionInterface::RESOURCE_KEY,
+                ],
+                (object) [
+                    'id' => $child1->getMedia()->first()->getId(),
+                    'resourceKey' => MediaInterface::RESOURCE_KEY,
+                ],
+                (object) [
+                    'id' => $child2->getMedia()->first()->getId(),
+                    'resourceKey' => MediaInterface::RESOURCE_KEY,
+                ],
+            ],
+            [
+                (object) [
+                    'id' => $child1->getId(),
+                    'resourceKey' => CollectionInterface::RESOURCE_KEY,
+                ],
+                (object) [
+                    'id' => $child2->getId(),
+                    'resourceKey' => CollectionInterface::RESOURCE_KEY,
+                ],
+                (object) [
+                    'id' => $collection->getMedia()->first()->getId(),
+                    'resourceKey' => MediaInterface::RESOURCE_KEY,
+                ],
+            ],
+        ], $response->children);
+    }
+
+    public function testDeleteByIdWithChildrenWithoutPermissions(): void
+    {
+        $role = $this->createRole('User', 'Sulu');
+
+        $userRole = new UserRole();
+        $userRole->setUser($this->getTestUser());
+        $userRole->setLocale('["en-gb", "de"]');
+        $userRole->setRole($role);
+        $this->em->persist($userRole);
+
+        $this->getTestUser()->addUserRole($userRole);
+        $this->em->flush();
+
+        $permissions = [
+            $role->getId() => [
+                'view' => true,
+                'edit' => true,
+                'add' => true,
+                'delete' => false,
+                'archive' => true,
+                'live' => true,
+                'security' => true,
+            ],
+        ];
+
+        $fullPermissions = [
+            $role->getId() => [
+                'view' => true,
+                'edit' => true,
+                'add' => true,
+                'delete' => true,
+                'archive' => true,
+                'live' => true,
+                'security' => true,
+            ],
+        ];
+
+        $collection = $this->createCollection($this->collectionType1);
+        $collectionId = $collection->getId();
+
+        $child1 = $this->createCollection($this->collectionType1, ['de' => 'Child 1'], $collection);
+        $this->accessControlManager->setPermissions(Collection::class, (string) $child1->getId(), $permissions);
+
+        $child11 = $this->createCollection($this->collectionType1, ['de' => 'Child 1-1'], $child1);
+        $this->accessControlManager->setPermissions(Collection::class, (string) $child11->getId(), $fullPermissions);
+
+        $child111 = $this->createCollection($this->collectionType1, ['de' => 'Child 1-1-1'], $child11);
+        $this->accessControlManager->setPermissions(Collection::class, (string) $child111->getId(), $permissions);
+
+        $child12 = $this->createCollection($this->collectionType1, ['de' => 'Child 1-2'], $child1);
+        $this->accessControlManager->setPermissions(Collection::class, (string) $child12->getId(), $permissions);
+
+        $child2 = $this->createCollection($this->collectionType1, ['de' => 'Child 2'], $collection);
+        $this->accessControlManager->setPermissions(Collection::class, (string) $child2->getId(), $permissions);
+
+        $this->em->clear();
+
+        $this->client->jsonRequest('DELETE', '/api/collections/' . $collectionId);
+        $this->assertHttpStatusCode(403, $this->client->getResponse());
+
+        $response = \json_decode((string) $this->client->getResponse()->getContent());
+        $this->assertEquals(DeletionImpossibleChildPermissionsException::EXCEPTION_CODE, $response->code);
+        $this->assertTrue(isset($response->message));
+        $this->assertObjectHasAttribute('totalUnauthorizedChildren', $response);
+        $this->assertSame(4, $response->totalUnauthorizedChildren);
+        $this->assertObjectHasAttribute('unauthorizedChildren', $response);
+        $this->assertEquals([
+            (object) [
+                'id' => $child1->getId(),
+                'resourceKey' => CollectionInterface::RESOURCE_KEY,
+                'title' => 'Child 1',
+            ],
+            (object) [
+                'id' => $child111->getId(),
+                'resourceKey' => CollectionInterface::RESOURCE_KEY,
+                'title' => 'Child 1-1-1',
+            ],
+            (object) [
+                'id' => $child12->getId(),
+                'resourceKey' => CollectionInterface::RESOURCE_KEY,
+                'title' => 'Child 1-2',
+            ],
+        ], $response->unauthorizedChildren);
     }
 
     public function testDeleteByIdNotExisting()
