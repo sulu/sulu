@@ -582,7 +582,7 @@ class CollectionManager implements CollectionManagerInterface
         return $type;
     }
 
-    public function delete($id)
+    public function delete($id, bool $forceRemoveChildren = false)
     {
         $collectionEntity = $this->collectionRepository->findCollectionById($id);
 
@@ -596,38 +596,40 @@ class CollectionManager implements CollectionManagerInterface
         $collectionTitle = $collectionMeta ? $collectionMeta->getTitle() : null;
         $locale = $collectionMeta ? $collectionMeta->getLocale() : null;
 
-        $user = $this->getCurrentUser();
+        if (!$forceRemoveChildren) {
+            $user = $this->getCurrentUser();
 
-        if (null !== $user) {
-            $totalChildResourcesWithoutPermissions = $this->countUnauthorizedChildCollections(
-                $id,
-                $user,
-                $this->permissions['delete']
-            );
-
-            if ($totalChildResourcesWithoutPermissions) {
-                $childCollectionResourcesWithoutPermissions = $this->findUnauthorizedChildCollectionResources(
+            if (null !== $user) {
+                $totalChildResourcesWithoutPermissions = $this->countUnauthorizedChildCollections(
                     $id,
                     $user,
                     $this->permissions['delete']
                 );
 
-                throw new DeletionImpossibleChildPermissionsException(
-                    $childCollectionResourcesWithoutPermissions,
-                    $totalChildResourcesWithoutPermissions
+                if ($totalChildResourcesWithoutPermissions) {
+                    $childCollectionResourcesWithoutPermissions = $this->findUnauthorizedChildCollectionResources(
+                        $id,
+                        $user,
+                        $this->permissions['delete']
+                    );
+
+                    throw new DeletionImpossibleChildPermissionsException(
+                        $childCollectionResourcesWithoutPermissions,
+                        $totalChildResourcesWithoutPermissions
+                    );
+                }
+            }
+
+            $totalChildResources = $this->countAllChildren($id);
+
+            if ($totalChildResources) {
+                $childResources = $this->findAllChildResources($id);
+
+                throw new DeletionImpossibleChildrenException(
+                    $childResources,
+                    $totalChildResources
                 );
             }
-        }
-
-        $totalChildResources = $this->countAllChildren($id);
-
-        if ($totalChildResources) {
-            $childResources = $this->findAllChildResources($id);
-
-            throw new DeletionImpossibleChildrenException(
-                $childResources,
-                $totalChildResources
-            );
         }
 
         $this->em->remove($collectionEntity);
@@ -894,11 +896,13 @@ class CollectionManager implements CollectionManagerInterface
     {
         return $this->em->createQueryBuilder()
             ->select('collection.id AS id')
-            ->addSelect('\'collections\' AS resourceKey')
-            ->addSelect('collection.depth as depth')
+            ->addSelect('\'' . CollectionInterface::RESOURCE_KEY . '\' AS resourceKey')
+            ->addSelect('collection.depth AS depth')
             ->from(CollectionInterface::class, 'collection')
             ->leftJoin(CollectionInterface::class, 'parent', Join::WITH, 'collection.lft > parent.lft AND collection.rgt < parent.rgt')
             ->where('parent.id = :id')
+            ->orderBy('collection.depth', 'DESC')
+            ->addOrderBy('collection.id', 'ASC')
             ->setParameter('id', $id);
     }
 
@@ -939,12 +943,14 @@ class CollectionManager implements CollectionManagerInterface
     private function createChildMediaQueryBuilder(array $collectionIds): QueryBuilder
     {
         return $this->em->createQueryBuilder()
-            ->select('media.id as id')
-            ->addSelect('\'media\' AS resourceKey')
+            ->select('media.id AS id')
+            ->addSelect('\'' . MediaInterface::RESOURCE_KEY . '\' AS resourceKey')
             ->addSelect('collection.depth + 1 AS depth')
             ->from(MediaInterface::class, 'media')
             ->leftJoin('media.collection', 'collection')
             ->where('collection.id IN (:collectionIds)')
+            ->orderBy('collection.depth', 'DESC')
+            ->addOrderBy('media.id', 'ASC')
             ->setParameter('collectionIds', $collectionIds, Connection::PARAM_INT_ARRAY);
     }
 

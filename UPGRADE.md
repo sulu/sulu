@@ -1,5 +1,11 @@
 # Upgrade
 
+## 2.x
+
+### CollectionManagerInterface has changed
+
+A new parameter `$forceRemoveChildren` has been added to the `CollectionManagerInterface::delete()` method.
+
 ## 2.3.1
 
 ### Migrate permissions properties for pages
