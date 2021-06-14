@@ -13,20 +13,12 @@ declare(strict_types=1);
 
 namespace Sulu\Bundle\AdminBundle\Exception;
 
-use Sulu\Bundle\AdminBundle\Resource\SuluResource;
-use Sulu\Component\Rest\Exception\AdditionalInformationExceptionInterface;
-
-class DeletionImpossibleChildPermissionsException extends \Exception implements AdditionalInformationExceptionInterface
+class DeletionImpossibleChildPermissionsException extends \Exception
 {
     public const EXCEPTION_CODE = 12346; // TODO change
 
     /**
-     * @var SuluResource
-     */
-    private $resource;
-
-    /**
-     * @var SuluResource[]
+     * @var array<array{id: int, resourceKey: string}>
      */
     private $unauthorizedChildResources;
 
@@ -36,11 +28,10 @@ class DeletionImpossibleChildPermissionsException extends \Exception implements 
     private $totalUnauthorizedChildren;
 
     /**
-     * @param SuluResource[] $unauthorizedChildResources
+     * @param array<array{id: int, resourceKey: string}> $unauthorizedChildResources
      */
-    public function __construct(SuluResource $resource, array $unauthorizedChildResources, int $totalUnauthorizedChildren)
+    public function __construct(array $unauthorizedChildResources, int $totalUnauthorizedChildren)
     {
-        $this->resource = $resource;
         $this->unauthorizedChildResources = $unauthorizedChildResources;
         $this->totalUnauthorizedChildren = $totalUnauthorizedChildren;
 
@@ -53,13 +44,8 @@ class DeletionImpossibleChildPermissionsException extends \Exception implements 
         );
     }
 
-    public function getResource(): SuluResource
-    {
-        return $this->resource;
-    }
-
     /**
-     * @return SuluResource[]
+     * @return array<array{id: int, resourceKey: string}>
      */
     public function getUnauthorizedChildResources(): array
     {
@@ -69,13 +55,5 @@ class DeletionImpossibleChildPermissionsException extends \Exception implements 
     public function getTotalUnauthorizedChildren(): int
     {
         return $this->totalUnauthorizedChildren;
-    }
-
-    public function getAdditionalInformation(): array
-    {
-        return [
-            'unauthorizedChildren' => $this->unauthorizedChildResources,
-            'totalUnauthorizedChildren' => $this->totalUnauthorizedChildren,
-        ];
     }
 }

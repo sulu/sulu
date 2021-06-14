@@ -13,20 +13,12 @@ declare(strict_types=1);
 
 namespace Sulu\Bundle\AdminBundle\Exception;
 
-use Sulu\Bundle\AdminBundle\Resource\SuluResource;
-use Sulu\Component\Rest\Exception\AdditionalInformationExceptionInterface;
-
-class DeletionImpossibleChildrenException extends \Exception implements AdditionalInformationExceptionInterface
+class DeletionImpossibleChildrenException extends \Exception
 {
     public const EXCEPTION_CODE = 12345; // TODO change
 
     /**
-     * @var SuluResource
-     */
-    private $resource;
-
-    /**
-     * @var SuluResource[]
+     * @var array<int, array<array{id: int, resourceKey: string}>>
      */
     private $childResources;
 
@@ -36,11 +28,10 @@ class DeletionImpossibleChildrenException extends \Exception implements Addition
     private $totalChildren;
 
     /**
-     * @param SuluResource[] $childResources
+     * @param array<int, array<array{id: int, resourceKey: string}>> $childResources
      */
-    public function __construct(SuluResource $resource, array $childResources, int $totalChildren)
+    public function __construct(array $childResources, int $totalChildren)
     {
-        $this->resource = $resource;
         $this->childResources = $childResources;
         $this->totalChildren = $totalChildren;
 
@@ -50,13 +41,8 @@ class DeletionImpossibleChildrenException extends \Exception implements Addition
         );
     }
 
-    public function getResource(): SuluResource
-    {
-        return $this->resource;
-    }
-
     /**
-     * @return SuluResource[]
+     * @return array<int, array<array{id: int, resourceKey: string}>>
      */
     public function getChildResources(): array
     {
@@ -66,13 +52,5 @@ class DeletionImpossibleChildrenException extends \Exception implements Addition
     public function getTotalChildren(): int
     {
         return $this->totalChildren;
-    }
-
-    public function getAdditionalInformation(): array
-    {
-        return [
-            'children' => $this->childResources,
-            'totalChildren' => $this->totalChildren,
-        ];
     }
 }

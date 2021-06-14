@@ -26,6 +26,7 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionRepository;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepository;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
+use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 
 class CollectionManagerTest extends TestCase
@@ -61,6 +62,11 @@ class CollectionManagerTest extends TestCase
     private $domainEventCollector;
 
     /**
+     * @var AccessControlQueryEnhancer|ObjectProphecy
+     */
+    private $accessControlQueryEnhancer;
+
+    /**
      * @var CollectionManagerInterface
      */
     private $collectionManager;
@@ -73,6 +79,7 @@ class CollectionManagerTest extends TestCase
         $this->userRepository = $this->prophesize(UserRepositoryInterface::class);
         $this->entityManager = $this->prophesize(EntityManager::class);
         $this->domainEventCollector = $this->prophesize(DomainEventCollectorInterface::class);
+        $this->accessControlQueryEnhancer = $this->prophesize(AccessControlQueryEnhancer::class);
 
         $this->collectionManager = new CollectionManager(
             $this->collectionRepository->reveal(),
@@ -81,6 +88,7 @@ class CollectionManagerTest extends TestCase
             $this->userRepository->reveal(),
             $this->entityManager->reveal(),
             $this->domainEventCollector->reveal(),
+            $this->accessControlQueryEnhancer->reveal(),
             null,
             'sulu-50x50',
             ['view' => 64]
