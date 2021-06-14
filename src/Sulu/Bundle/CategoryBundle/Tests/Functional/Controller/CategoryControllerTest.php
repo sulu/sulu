@@ -1511,36 +1511,54 @@ class CategoryControllerTest extends SuluTestCase
         $this->createCategoryTranslation($category3, 'en', 'Third Category');
         $category4 = $this->createCategory(null, 'en', $category3);
         $this->createCategoryTranslation($category4, 'en', 'Fourth Category');
+        $category5 = $this->createCategory(null, 'en', $category3);
+        $this->createCategoryTranslation($category5, 'en', 'Fifth Category');
 
         $this->em->flush();
-        $this->em->clear();
 
         $category1Id = $category1->getId();
+        $category3Id = $category3->getId();
         $category4Id = $category4->getId();
+        $category5Id = $category5->getId();
+
+        $this->em->clear();
 
         $this->client->jsonRequest(
             'DELETE',
             '/api/categories/' . $category1Id
         );
 
-        $this->assertHttpStatusCode(204, $this->client->getResponse());
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(409, $response);
 
-        $this->client->jsonRequest(
-            'GET',
-            '/api/categories?locale=en'
-        );
+        $content = \json_decode((string) $response->getContent(), true);
+        $this->assertIsArray($content);
+        $this->assertArrayHasKey('errors', $content);
+        unset($content['errors']);
 
-        $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $response = \json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(1, \count($response->_embedded->categories));
-        $this->assertEquals($category2->getId(), $response->_embedded->categories[0]->id);
-
-        $this->client->jsonRequest(
-            'GET',
-            '/api/categories/' . $category4Id . '?locale=en'
-        );
-
-        $this->assertHttpStatusCode(404, $this->client->getResponse());
+        $this->assertEquals([
+            'code' => 1105,
+            'message' => 'Resource has 3 dependant resources.',
+            'dependantResourcesCount' => 3,
+            'dependantResources' => [
+                [
+                    [
+                        'id' => $category4Id,
+                        'resourceKey' => 'categories',
+                    ],
+                    [
+                        'id' => $category5Id,
+                        'resourceKey' => 'categories',
+                    ],
+                ],
+                [
+                    [
+                        'id' => $category3Id,
+                        'resourceKey' => 'categories',
+                    ],
+                ],
+            ],
+        ], $content);
     }
 
     public function testMove()

@@ -28,6 +28,7 @@ use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\KeywordInterface;
+use Sulu\Component\Rest\Exception\DependantResourcesFoundException;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -138,7 +139,7 @@ class CategoryManagerTest extends TestCase
         $this->assertEquals(null, $wrappers[4]);
     }
 
-    public function testDelete()
+    public function testDeleteWithoutChildren(): void
     {
         $id = 1;
 
@@ -155,12 +156,70 @@ class CategoryManagerTest extends TestCase
         $category->findTranslationByLocale('de')->willReturn($translation->reveal());
 
         $this->categoryRepository->findCategoryById($id)->willReturn($category->reveal());
+        $this->categoryRepository->findDescendantCategoryResources($id)->shouldBeCalled()->willReturn([]);
         $this->keywordManager->delete($keyword1->reveal(), $category->reveal())->shouldBeCalledTimes(1);
         $this->keywordManager->delete($keyword2->reveal(), $category->reveal())->shouldBeCalledTimes(1);
 
         $this->domainEventCollector->collect(Argument::type(CategoryRemovedEvent::class))->shouldBeCalled();
 
         $this->categoryManager->delete($id);
+    }
+
+    public function testDeleteWithChildren(): void
+    {
+        $id = 1;
+
+        $keyword1 = $this->prophesize(KeywordInterface::class);
+        $keyword2 = $this->prophesize(KeywordInterface::class);
+
+        $translation = $this->prophesize(CategoryTranslationInterface::class);
+        $translation->getTranslation()->willReturn('category-translation');
+        $translation->getKeywords()->willReturn([$keyword1->reveal(), $keyword2->reveal()]);
+
+        $category = $this->prophesize(CategoryInterface::class);
+        $category->getDefaultLocale()->willReturn('de');
+        $category->getTranslations()->willReturn([$translation->reveal()]);
+        $category->findTranslationByLocale('de')->willReturn($translation->reveal());
+
+        $this->categoryRepository->findCategoryById($id)->willReturn($category->reveal());
+        $this->categoryRepository->findDescendantCategoryResources($id)->willReturn([
+            ['id' => 2, 'resourceKey' => 'categories', 'depth' => 2],
+            ['id' => 3, 'resourceKey' => 'categories', 'depth' => 3],
+        ]);
+        $this->keywordManager->delete(Argument::any())->shouldNotBeCalled();
+        $this->keywordManager->delete(Argument::any())->shouldNotBeCalled();
+
+        $this->domainEventCollector->collect(Argument::any())->shouldNotBeCalled();
+
+        $this->expectException(DependantResourcesFoundException::class);
+
+        $this->categoryManager->delete($id);
+    }
+
+    public function testDeleteForceDeleteChildren(): void
+    {
+        $id = 1;
+
+        $keyword1 = $this->prophesize(KeywordInterface::class);
+        $keyword2 = $this->prophesize(KeywordInterface::class);
+
+        $translation = $this->prophesize(CategoryTranslationInterface::class);
+        $translation->getTranslation()->willReturn('category-translation');
+        $translation->getKeywords()->willReturn([$keyword1->reveal(), $keyword2->reveal()]);
+
+        $category = $this->prophesize(CategoryInterface::class);
+        $category->getDefaultLocale()->willReturn('de');
+        $category->getTranslations()->willReturn([$translation->reveal()]);
+        $category->findTranslationByLocale('de')->willReturn($translation->reveal());
+
+        $this->categoryRepository->findCategoryById($id)->willReturn($category->reveal());
+        $this->categoryRepository->findDescendantCategoryResources($id)->shouldNotBeCalled();
+        $this->keywordManager->delete($keyword1->reveal(), $category->reveal())->shouldBeCalledTimes(1);
+        $this->keywordManager->delete($keyword2->reveal(), $category->reveal())->shouldBeCalledTimes(1);
+
+        $this->domainEventCollector->collect(Argument::type(CategoryRemovedEvent::class))->shouldBeCalled();
+
+        $this->categoryManager->delete($id, true);
     }
 
     public function testMove($id = 1, $parentId = 2)

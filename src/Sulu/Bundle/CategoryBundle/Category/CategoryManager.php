@@ -20,7 +20,6 @@ use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryModifiedEvent;
 use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryMovedEvent;
 use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryRemovedEvent;
 use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryTranslationAddedEvent;
-use Sulu\Bundle\CategoryBundle\Entity\Category;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryMetaRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
@@ -33,6 +32,7 @@ use Sulu\Bundle\CategoryBundle\Exception\CategoryKeyNotFoundException;
 use Sulu\Bundle\CategoryBundle\Exception\CategoryKeyNotUniqueException;
 use Sulu\Bundle\CategoryBundle\Exception\CategoryNameMissingException;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
+use Sulu\Component\Rest\Exception\DependantResourcesFoundException;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -262,10 +262,55 @@ class CategoryManager implements CategoryManagerInterface
         return $categoryEntity;
     }
 
-    public function delete($id)
+    /**
+     * @param array<array{id: int, resourceKey: string, depth: int}> $resources
+     *
+     * @return array<int, array<array{id: int, resourceKey: string}>>
+     */
+    private function groupResourcesByDepth(array $resources)
     {
+        $grouped = [];
+
+        foreach ($resources as $resource) {
+            $depth = $resource['depth'];
+            unset($resource['depth']);
+
+            if (!isset($grouped[$depth])) {
+                $grouped[$depth] = [];
+            }
+
+            $grouped[$depth][] = $resource;
+        }
+
+        \krsort($grouped);
+
+        return \array_values($grouped);
+    }
+
+    private function checkDependantResourcesForDelete(int $id): void
+    {
+        $descendantCategoryResources = $this->categoryRepository->findDescendantCategoryResources($id);
+
+        if (empty($descendantCategoryResources)) {
+            return;
+        }
+
+        throw new DependantResourcesFoundException(
+            $this->groupResourcesByDepth($descendantCategoryResources),
+            \count($descendantCategoryResources)
+        );
+    }
+
+    public function delete($id/*, bool $forceRemoveChildren = false*/)
+    {
+        $forceRemoveChildren = \func_num_args() >= 2 ? (bool) \func_get_arg(1) : false;
+
         if (!$entity = $this->categoryRepository->findCategoryById($id)) {
             throw new CategoryIdNotFoundException($id);
+        }
+
+        if (!$forceRemoveChildren) {
+            $this->checkDependantResourcesForDelete($id);
         }
 
         /** @var CategoryTranslationInterface $translation */
