@@ -13,14 +13,10 @@ namespace Sulu\Bundle\MediaBundle\Tests\Functional\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
-use Sulu\Bundle\AdminBundle\Exception\DeletionImpossibleChildPermissionsException;
-use Sulu\Bundle\AdminBundle\Exception\DeletionImpossibleChildrenException;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
-use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\Media;
-use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\RoleRepository;
@@ -1246,50 +1242,56 @@ class CollectionControllerTest extends SuluTestCase
         $this->em->clear();
 
         $this->client->jsonRequest('DELETE', '/api/collections/' . $collectionId);
-        $this->assertHttpStatusCode(409, $this->client->getResponse());
 
-        $response = \json_decode((string) $this->client->getResponse()->getContent());
-        $this->assertEquals(DeletionImpossibleChildrenException::EXCEPTION_CODE, $response->code);
-        $this->assertTrue(isset($response->message));
-        $this->assertObjectHasAttribute('totalChildren', $response);
-        $this->assertSame(7, $response->totalChildren);
-        $this->assertObjectHasAttribute('children', $response);
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(409, $response);
+
+        $content = \json_decode((string) $response->getContent(), true);
+        $this->assertIsArray($content);
+        $this->assertArrayHasKey('errors', $content);
+        unset($content['errors']);
+
         $this->assertEquals([
-            [
-                (object) [
-                    'id' => $child11->getMedia()->first()->getId(),
-                    'resourceKey' => MediaInterface::RESOURCE_KEY,
+            'code' => 12345,
+            'message' => 'Resource cannot be deleted, because it has 7 children',
+            'totalChildResources' => 7,
+            'childResources' => [
+                [
+                    [
+                        'id' => $child11->getMedia()->first()->getId(),
+                        'resourceKey' => 'media',
+                    ],
+                ],
+                [
+                    [
+                        'id' => $child11->getId(),
+                        'resourceKey' => 'collections',
+                    ],
+                    [
+                        'id' => $child1->getMedia()->first()->getId(),
+                        'resourceKey' => 'media',
+                    ],
+                    [
+                        'id' => $child2->getMedia()->first()->getId(),
+                        'resourceKey' => 'media',
+                    ],
+                ],
+                [
+                    [
+                        'id' => $child1->getId(),
+                        'resourceKey' => 'collections',
+                    ],
+                    [
+                        'id' => $child2->getId(),
+                        'resourceKey' => 'collections',
+                    ],
+                    [
+                        'id' => $collection->getMedia()->first()->getId(),
+                        'resourceKey' => 'media',
+                    ],
                 ],
             ],
-            [
-                (object) [
-                    'id' => $child11->getId(),
-                    'resourceKey' => CollectionInterface::RESOURCE_KEY,
-                ],
-                (object) [
-                    'id' => $child1->getMedia()->first()->getId(),
-                    'resourceKey' => MediaInterface::RESOURCE_KEY,
-                ],
-                (object) [
-                    'id' => $child2->getMedia()->first()->getId(),
-                    'resourceKey' => MediaInterface::RESOURCE_KEY,
-                ],
-            ],
-            [
-                (object) [
-                    'id' => $child1->getId(),
-                    'resourceKey' => CollectionInterface::RESOURCE_KEY,
-                ],
-                (object) [
-                    'id' => $child2->getId(),
-                    'resourceKey' => CollectionInterface::RESOURCE_KEY,
-                ],
-                (object) [
-                    'id' => $collection->getMedia()->first()->getId(),
-                    'resourceKey' => MediaInterface::RESOURCE_KEY,
-                ],
-            ],
-        ], $response->children);
+        ], $content);
     }
 
     public function testDeleteByIdWithChildrenWithoutPermissions(): void
@@ -1350,31 +1352,37 @@ class CollectionControllerTest extends SuluTestCase
         $this->em->clear();
 
         $this->client->jsonRequest('DELETE', '/api/collections/' . $collectionId);
-        $this->assertHttpStatusCode(403, $this->client->getResponse());
 
-        $response = \json_decode((string) $this->client->getResponse()->getContent());
-        $this->assertEquals(DeletionImpossibleChildPermissionsException::EXCEPTION_CODE, $response->code);
-        $this->assertTrue(isset($response->message));
-        $this->assertObjectHasAttribute('totalUnauthorizedChildren', $response);
-        $this->assertSame(4, $response->totalUnauthorizedChildren);
-        $this->assertObjectHasAttribute('unauthorizedChildren', $response);
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(403, $response);
+
+        $content = \json_decode((string) $response->getContent(), true);
+        $this->assertIsArray($content);
+        $this->assertArrayHasKey('errors', $content);
+        unset($content['errors']);
+
         $this->assertEquals([
-            (object) [
-                'id' => $child1->getId(),
-                'resourceKey' => CollectionInterface::RESOURCE_KEY,
-                'title' => 'Child 1',
+            'code' => 12346,
+            'message' => 'Resource cannot be deleted, because the user doesn\'t have permissions for 4 children',
+            'totalUnauthorizedChildResources' => 4,
+            'unauthorizedChildResources' => [
+                [
+                    'id' => $child1->getId(),
+                    'resourceKey' => 'collections',
+                    'title' => 'Child 1',
+                ],
+                [
+                    'id' => $child111->getId(),
+                    'resourceKey' => 'collections',
+                    'title' => 'Child 1-1-1',
+                ],
+                [
+                    'id' => $child12->getId(),
+                    'resourceKey' => 'collections',
+                    'title' => 'Child 1-2',
+                ],
             ],
-            (object) [
-                'id' => $child111->getId(),
-                'resourceKey' => CollectionInterface::RESOURCE_KEY,
-                'title' => 'Child 1-1-1',
-            ],
-            (object) [
-                'id' => $child12->getId(),
-                'resourceKey' => CollectionInterface::RESOURCE_KEY,
-                'title' => 'Child 1-2',
-            ],
-        ], $response->unauthorizedChildren);
+        ], $content);
     }
 
     public function testDeleteByIdNotExisting()

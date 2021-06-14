@@ -13,44 +13,39 @@ declare(strict_types=1);
 
 namespace Sulu\Bundle\AdminBundle\Exception;
 
-class DeletionImpossibleChildrenException extends \Exception
+class DeletionImpossibleChildrenException extends \Exception implements DeletionImpossibleChildrenExceptionInterface
 {
-    public const EXCEPTION_CODE = 12345; // TODO change
-
     /**
-     * @var array<int, array<array{id: int, resourceKey: string}>>
+     * @var array<int, array<array{id: int|string, resourceKey: string}>>
      */
     private $childResources;
 
     /**
      * @var int
      */
-    private $totalChildren;
+    private $totalChildResources;
 
     /**
-     * @param array<int, array<array{id: int, resourceKey: string}>> $childResources
+     * @param array<int, array<array{id: int|string, resourceKey: string}>> $childResources
      */
-    public function __construct(array $childResources, int $totalChildren)
+    public function __construct(array $childResources, int $totalChildResources)
     {
         $this->childResources = $childResources;
-        $this->totalChildren = $totalChildren;
+        $this->totalChildResources = $totalChildResources;
 
         parent::__construct(
-            \sprintf('Resource cannot be deleted, because it has %d children', $this->totalChildren),
+            \sprintf('Resource cannot be deleted, because it has %d children', $this->totalChildResources),
             static::EXCEPTION_CODE
         );
     }
 
-    /**
-     * @return array<int, array<array{id: int, resourceKey: string}>>
-     */
     public function getChildResources(): array
     {
         return $this->childResources;
     }
 
-    public function getTotalChildren(): int
+    public function getTotalChildResources(): int
     {
-        return $this->totalChildren;
+        return $this->totalChildResources;
     }
 }

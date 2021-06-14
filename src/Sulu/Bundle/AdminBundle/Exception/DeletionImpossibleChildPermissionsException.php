@@ -13,47 +13,42 @@ declare(strict_types=1);
 
 namespace Sulu\Bundle\AdminBundle\Exception;
 
-class DeletionImpossibleChildPermissionsException extends \Exception
+class DeletionImpossibleChildPermissionsException extends \Exception implements DeletionImpossibleChildPermissionsExceptionInterface
 {
-    public const EXCEPTION_CODE = 12346; // TODO change
-
     /**
-     * @var array<array{id: int, resourceKey: string}>
+     * @var array<array{id: int|string, resourceKey: string}>
      */
     private $unauthorizedChildResources;
 
     /**
      * @var int
      */
-    private $totalUnauthorizedChildren;
+    private $totalUnauthorizedChildResources;
 
     /**
-     * @param array<array{id: int, resourceKey: string}> $unauthorizedChildResources
+     * @param array<array{id: int|string, resourceKey: string}> $unauthorizedChildResources
      */
-    public function __construct(array $unauthorizedChildResources, int $totalUnauthorizedChildren)
+    public function __construct(array $unauthorizedChildResources, int $totalUnauthorizedChildResources)
     {
         $this->unauthorizedChildResources = $unauthorizedChildResources;
-        $this->totalUnauthorizedChildren = $totalUnauthorizedChildren;
+        $this->totalUnauthorizedChildResources = $totalUnauthorizedChildResources;
 
         parent::__construct(
             \sprintf(
                 'Resource cannot be deleted, because the user doesn\'t have permissions for %d children',
-                $this->totalUnauthorizedChildren
+                $this->totalUnauthorizedChildResources
             ),
             static::EXCEPTION_CODE
         );
     }
 
-    /**
-     * @return array<array{id: int, resourceKey: string}>
-     */
     public function getUnauthorizedChildResources(): array
     {
         return $this->unauthorizedChildResources;
     }
 
-    public function getTotalUnauthorizedChildren(): int
+    public function getTotalUnauthorizedChildResources(): int
     {
-        return $this->totalUnauthorizedChildren;
+        return $this->totalUnauthorizedChildResources;
     }
 }

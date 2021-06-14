@@ -14,8 +14,6 @@ namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Filter;
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Exception\DeletionImpossibleChildPermissionsException;
 use Sulu\Bundle\AdminBundle\Exception\DeletionImpossibleChildrenException;
-use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
-use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
 use Sulu\Component\Rest\FlattenExceptionNormalizer;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
@@ -172,15 +170,15 @@ class FlattenExceptionNormalizerTest extends TestCase
 
         $exception = new DeletionImpossibleChildrenException([
             [
-                ['id' => 3, 'resourceKey' => MediaInterface::RESOURCE_KEY],
+                ['id' => 3, 'resourceKey' => 'media'],
             ],
             [
-                ['id' => 3, 'resourceKey' => CollectionInterface::RESOURCE_KEY],
-                ['id' => 2, 'resourceKey' => MediaInterface::RESOURCE_KEY],
+                ['id' => 3, 'resourceKey' => 'collections'],
+                ['id' => 2, 'resourceKey' => 'media'],
             ],
             [
-                ['id' => 2, 'resourceKey' => CollectionInterface::RESOURCE_KEY],
-                ['id' => 1, 'resourceKey' => MediaInterface::RESOURCE_KEY],
+                ['id' => 2, 'resourceKey' => 'collections'],
+                ['id' => 1, 'resourceKey' => 'media'],
             ],
         ], 5);
 
@@ -202,10 +200,10 @@ class FlattenExceptionNormalizerTest extends TestCase
         );
 
         $this->assertIsArray($result);
-        $this->assertSame(DeletionImpossibleChildrenException::EXCEPTION_CODE, $result['code']);
+        $this->assertSame(12345, $result['code']);
         $this->assertSame($exception->getMessage(), $result['message']);
-        $this->assertSame($exception->getTotalChildren(), $result['totalChildren']);
-        $this->assertEquals($exception->getChildResources(), $result['children']);
+        $this->assertSame($exception->getTotalChildResources(), $result['totalChildResources']);
+        $this->assertEquals($exception->getChildResources(), $result['childResources']);
         $this->assertArrayNotHasKey('errors', $result);
     }
 
@@ -221,15 +219,15 @@ class FlattenExceptionNormalizerTest extends TestCase
 
         $exception = new DeletionImpossibleChildrenException([
             [
-                ['id' => 3, 'resourceKey' => MediaInterface::RESOURCE_KEY],
+                ['id' => 3, 'resourceKey' => 'media'],
             ],
             [
-                ['id' => 3, 'resourceKey' => CollectionInterface::RESOURCE_KEY],
-                ['id' => 2, 'resourceKey' => MediaInterface::RESOURCE_KEY],
+                ['id' => 3, 'resourceKey' => 'collections'],
+                ['id' => 2, 'resourceKey' => 'media'],
             ],
             [
-                ['id' => 2, 'resourceKey' => CollectionInterface::RESOURCE_KEY],
-                ['id' => 1, 'resourceKey' => MediaInterface::RESOURCE_KEY],
+                ['id' => 2, 'resourceKey' => 'collections'],
+                ['id' => 1, 'resourceKey' => 'media'],
             ],
         ], 5);
 
@@ -251,10 +249,10 @@ class FlattenExceptionNormalizerTest extends TestCase
         );
 
         $this->assertIsArray($result);
-        $this->assertSame(DeletionImpossibleChildrenException::EXCEPTION_CODE, $result['code']);
+        $this->assertSame(12345, $result['code']);
         $this->assertSame($exception->getMessage(), $result['message']);
-        $this->assertSame($exception->getTotalChildren(), $result['totalChildren']);
-        $this->assertEquals($exception->getChildResources(), $result['children']);
+        $this->assertSame($exception->getTotalChildResources(), $result['totalChildResources']);
+        $this->assertEquals($exception->getChildResources(), $result['childResources']);
         $this->assertArrayHasKey('errors', $result);
     }
 
@@ -269,9 +267,9 @@ class FlattenExceptionNormalizerTest extends TestCase
         );
 
         $exception = new DeletionImpossibleChildPermissionsException([
-            ['id' => 2, 'resourceKey' => CollectionInterface::RESOURCE_KEY, 'title' => 'Collection 2'],
-            ['id' => 3, 'resourceKey' => CollectionInterface::RESOURCE_KEY, 'title' => 'Collection 3'],
-            ['id' => 4, 'resourceKey' => CollectionInterface::RESOURCE_KEY, 'title' => 'Collection 4'],
+            ['id' => 2, 'resourceKey' => 'collections', 'title' => 'Collection 2'],
+            ['id' => 3, 'resourceKey' => 'collections', 'title' => 'Collection 3'],
+            ['id' => 4, 'resourceKey' => 'collections', 'title' => 'Collection 4'],
         ], 4);
 
         $flattenException = FlattenException::createFromThrowable($exception);
@@ -292,10 +290,10 @@ class FlattenExceptionNormalizerTest extends TestCase
         );
 
         $this->assertIsArray($result);
-        $this->assertSame(DeletionImpossibleChildPermissionsException::EXCEPTION_CODE, $result['code']);
+        $this->assertSame(12346, $result['code']);
         $this->assertSame($exception->getMessage(), $result['message']);
-        $this->assertSame($exception->getTotalUnauthorizedChildren(), $result['totalUnauthorizedChildren']);
-        $this->assertEquals($exception->getUnauthorizedChildResources(), $result['unauthorizedChildren']);
+        $this->assertSame($exception->getTotalUnauthorizedChildResources(), $result['totalUnauthorizedChildResources']);
+        $this->assertEquals($exception->getUnauthorizedChildResources(), $result['unauthorizedChildResources']);
         $this->assertArrayNotHasKey('errors', $result);
     }
 
@@ -310,9 +308,9 @@ class FlattenExceptionNormalizerTest extends TestCase
         );
 
         $exception = new DeletionImpossibleChildPermissionsException([
-            ['id' => 2, 'resourceKey' => CollectionInterface::RESOURCE_KEY, 'title' => 'Collection 2'],
-            ['id' => 3, 'resourceKey' => CollectionInterface::RESOURCE_KEY, 'title' => 'Collection 3'],
-            ['id' => 4, 'resourceKey' => CollectionInterface::RESOURCE_KEY, 'title' => 'Collection 4'],
+            ['id' => 2, 'resourceKey' => 'collections', 'title' => 'Collection 2'],
+            ['id' => 3, 'resourceKey' => 'collections', 'title' => 'Collection 3'],
+            ['id' => 4, 'resourceKey' => 'collections', 'title' => 'Collection 4'],
         ], 4);
 
         $flattenException = FlattenException::createFromThrowable($exception);
@@ -333,10 +331,10 @@ class FlattenExceptionNormalizerTest extends TestCase
         );
 
         $this->assertIsArray($result);
-        $this->assertSame(DeletionImpossibleChildPermissionsException::EXCEPTION_CODE, $result['code']);
+        $this->assertSame(12346, $result['code']);
         $this->assertSame($exception->getMessage(), $result['message']);
-        $this->assertSame($exception->getTotalUnauthorizedChildren(), $result['totalUnauthorizedChildren']);
-        $this->assertEquals($exception->getUnauthorizedChildResources(), $result['unauthorizedChildren']);
+        $this->assertSame($exception->getTotalUnauthorizedChildResources(), $result['totalUnauthorizedChildResources']);
+        $this->assertEquals($exception->getUnauthorizedChildResources(), $result['unauthorizedChildResources']);
         $this->assertArrayHasKey('errors', $result);
     }
 
