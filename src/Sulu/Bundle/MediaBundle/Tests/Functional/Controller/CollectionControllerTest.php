@@ -1365,6 +1365,7 @@ class CollectionControllerTest extends SuluTestCase
             'code' => 1104,
             'message' => 'Insufficient permissions for 4 children of this resource',
             'totalUnauthorizedChildResources' => 4,
+            'permissionType' => 'delete',
             'unauthorizedChildResources' => [
                 [
                     'id' => $child1->getId(),

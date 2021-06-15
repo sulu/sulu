@@ -38,6 +38,7 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescrip
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
+use Sulu\Component\Security\Authorization\PermissionTypes;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -570,8 +571,10 @@ class CollectionManager implements CollectionManagerInterface
         return $type;
     }
 
-    public function delete($id, bool $forceRemoveChildren = false)
+    public function delete($id/*, bool $forceRemoveChildren = false*/)
     {
+        $forceRemoveChildren = \func_num_args() >= 2 ? (bool) \func_get_arg(1) : false;
+
         $collectionEntity = $this->collectionRepository->findCollectionById($id);
 
         if (!$collectionEntity) {
@@ -591,20 +594,21 @@ class CollectionManager implements CollectionManagerInterface
                 $totalChildResourcesWithoutPermissions = $this->collectionRepository->countUnauthorizedChildCollectionsOfRootCollection(
                     $id,
                     $user,
-                    $this->permissions['delete']
+                    $this->permissions[PermissionTypes::DELETE]
                 );
 
                 if ($totalChildResourcesWithoutPermissions) {
                     $childCollectionResourcesWithoutPermissions = $this->collectionRepository->findUnauthorizedChildCollectionResourcesOfRootCollection(
                         $id,
                         $user,
-                        $this->permissions['delete'],
+                        $this->permissions[PermissionTypes::DELETE],
                         3
                     );
 
                     throw new InsufficientChildPermissionsException(
                         $childCollectionResourcesWithoutPermissions,
-                        $totalChildResourcesWithoutPermissions
+                        $totalChildResourcesWithoutPermissions,
+                        PermissionTypes::DELETE
                     );
                 }
             }

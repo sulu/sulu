@@ -21,4 +21,6 @@ interface InsufficientChildPermissionsExceptionInterface extends RestExceptionIn
     public function getUnauthorizedChildResources(): array;
 
     public function getTotalUnauthorizedChildResources(): int;
+
+    public function getPermissionType(): string;
 }

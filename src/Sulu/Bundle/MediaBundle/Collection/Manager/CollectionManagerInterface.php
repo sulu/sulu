@@ -121,7 +121,7 @@ interface CollectionManagerInterface
      *
      * @param int $id the id of the category to delete
      */
-    public function delete($id, bool $forceRemoveChildren = false);
+    public function delete($id/*, bool $forceRemoveChildren = false*/);
 
     /**
      * Moves a collection into another collection

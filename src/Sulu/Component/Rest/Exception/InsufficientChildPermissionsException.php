@@ -26,12 +26,18 @@ class InsufficientChildPermissionsException extends \Exception implements Insuff
     private $totalUnauthorizedChildResources;
 
     /**
+     * @var string
+     */
+    private $permissionType;
+
+    /**
      * @param array<array{id: int|string, resourceKey: string}> $unauthorizedChildResources
      */
-    public function __construct(array $unauthorizedChildResources, int $totalUnauthorizedChildResources)
+    public function __construct(array $unauthorizedChildResources, int $totalUnauthorizedChildResources, string $permissionType)
     {
         $this->unauthorizedChildResources = $unauthorizedChildResources;
         $this->totalUnauthorizedChildResources = $totalUnauthorizedChildResources;
+        $this->permissionType = $permissionType;
 
         parent::__construct(
             \sprintf(
@@ -50,5 +56,10 @@ class InsufficientChildPermissionsException extends \Exception implements Insuff
     public function getTotalUnauthorizedChildResources(): int
     {
         return $this->totalUnauthorizedChildResources;
+    }
+
+    public function getPermissionType(): string
+    {
+        return $this->permissionType;
     }
 }

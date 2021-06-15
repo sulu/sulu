@@ -69,6 +69,7 @@ class FlattenExceptionNormalizer implements NormalizerInterface
         if ($contextException instanceof InsufficientChildPermissionsExceptionInterface) {
             $data['totalUnauthorizedChildResources'] = $contextException->getTotalUnauthorizedChildResources();
             $data['unauthorizedChildResources'] = $contextException->getUnauthorizedChildResources();
+            $data['permissionType'] = $contextException->getPermissionType();
         }
 
         if ($contextException instanceof DeletionWithChildrenNotAllowedExceptionInterface) {
