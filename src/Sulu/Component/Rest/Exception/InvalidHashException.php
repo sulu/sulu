@@ -36,7 +36,7 @@ class InvalidHashException extends RestException
                 $entity,
                 $id
             ),
-            1102
+            static::EXCEPTION_CODE_INVALID_HASH
         );
     }
 

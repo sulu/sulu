@@ -351,7 +351,6 @@
             <argument type="service" id="sulu.repository.user" />
             <argument type="service" id="doctrine.orm.entity_manager" />
             <argument type="service" id="sulu_activity.domain_event_collector"/>
-            <argument type="service" id="sulu_security.access_control_query_enhancer"/>
             <argument type="service" id="security.token_storage" on-invalid="null"/>
             <argument type="string">%sulu_media.collection.previews.format%</argument>
             <argument>%sulu_security.permissions%</argument>

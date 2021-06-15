@@ -12,8 +12,8 @@
 namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Filter;
 
 use PHPUnit\Framework\TestCase;
-use Sulu\Bundle\AdminBundle\Exception\DeletionImpossibleChildPermissionsException;
-use Sulu\Bundle\AdminBundle\Exception\DeletionImpossibleChildrenException;
+use Sulu\Component\Rest\Exception\DeletionWithChildrenNotAllowedException;
+use Sulu\Component\Rest\Exception\InsufficientChildPermissionsException;
 use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
 use Sulu\Component\Rest\FlattenExceptionNormalizer;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
@@ -168,7 +168,7 @@ class FlattenExceptionNormalizerTest extends TestCase
             $translator->reveal()
         );
 
-        $exception = new DeletionImpossibleChildrenException([
+        $exception = new DeletionWithChildrenNotAllowedException([
             [
                 ['id' => 3, 'resourceKey' => 'media'],
             ],
@@ -200,7 +200,7 @@ class FlattenExceptionNormalizerTest extends TestCase
         );
 
         $this->assertIsArray($result);
-        $this->assertSame(12345, $result['code']);
+        $this->assertSame(1103, $result['code']);
         $this->assertSame($exception->getMessage(), $result['message']);
         $this->assertSame($exception->getTotalChildResources(), $result['totalChildResources']);
         $this->assertEquals($exception->getChildResources(), $result['childResources']);
@@ -217,7 +217,7 @@ class FlattenExceptionNormalizerTest extends TestCase
             $translator->reveal()
         );
 
-        $exception = new DeletionImpossibleChildrenException([
+        $exception = new DeletionWithChildrenNotAllowedException([
             [
                 ['id' => 3, 'resourceKey' => 'media'],
             ],
@@ -249,7 +249,7 @@ class FlattenExceptionNormalizerTest extends TestCase
         );
 
         $this->assertIsArray($result);
-        $this->assertSame(12345, $result['code']);
+        $this->assertSame(1103, $result['code']);
         $this->assertSame($exception->getMessage(), $result['message']);
         $this->assertSame($exception->getTotalChildResources(), $result['totalChildResources']);
         $this->assertEquals($exception->getChildResources(), $result['childResources']);
@@ -266,7 +266,7 @@ class FlattenExceptionNormalizerTest extends TestCase
             $translator->reveal()
         );
 
-        $exception = new DeletionImpossibleChildPermissionsException([
+        $exception = new InsufficientChildPermissionsException([
             ['id' => 2, 'resourceKey' => 'collections', 'title' => 'Collection 2'],
             ['id' => 3, 'resourceKey' => 'collections', 'title' => 'Collection 3'],
             ['id' => 4, 'resourceKey' => 'collections', 'title' => 'Collection 4'],
@@ -290,7 +290,7 @@ class FlattenExceptionNormalizerTest extends TestCase
         );
 
         $this->assertIsArray($result);
-        $this->assertSame(12346, $result['code']);
+        $this->assertSame(1104, $result['code']);
         $this->assertSame($exception->getMessage(), $result['message']);
         $this->assertSame($exception->getTotalUnauthorizedChildResources(), $result['totalUnauthorizedChildResources']);
         $this->assertEquals($exception->getUnauthorizedChildResources(), $result['unauthorizedChildResources']);
@@ -307,7 +307,7 @@ class FlattenExceptionNormalizerTest extends TestCase
             $translator->reveal()
         );
 
-        $exception = new DeletionImpossibleChildPermissionsException([
+        $exception = new InsufficientChildPermissionsException([
             ['id' => 2, 'resourceKey' => 'collections', 'title' => 'Collection 2'],
             ['id' => 3, 'resourceKey' => 'collections', 'title' => 'Collection 3'],
             ['id' => 4, 'resourceKey' => 'collections', 'title' => 'Collection 4'],
@@ -331,7 +331,7 @@ class FlattenExceptionNormalizerTest extends TestCase
         );
 
         $this->assertIsArray($result);
-        $this->assertSame(12346, $result['code']);
+        $this->assertSame(1104, $result['code']);
         $this->assertSame($exception->getMessage(), $result['message']);
         $this->assertSame($exception->getTotalUnauthorizedChildResources(), $result['totalUnauthorizedChildResources']);
         $this->assertEquals($exception->getUnauthorizedChildResources(), $result['unauthorizedChildResources']);

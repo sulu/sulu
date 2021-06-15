@@ -16,6 +16,8 @@ use Oro\ORM\Query\AST\Functions\String\GroupConcat;
 use Sulu\Component\Content\Types\Block\BlockVisitorInterface;
 use Sulu\Component\HttpKernel\SuluKernel;
 use Sulu\Component\Rest\Csv\ObjectNotSupportedException;
+use Sulu\Component\Rest\Exception\DeletionWithChildrenNotAllowedExceptionInterface;
+use Sulu\Component\Rest\Exception\InsufficientChildPermissionsExceptionInterface;
 use Sulu\Component\Rest\Exception\InvalidHashException;
 use Sulu\Component\Rest\Exception\MissingParameterException;
 use Sulu\Component\Rest\ListBuilder\Filter\InvalidFilterTypeOptionsException;
@@ -93,6 +95,8 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
                             InvalidHashException::class => 409,
                             ObjectNotSupportedException::class => 406,
                             InvalidFilterTypeOptionsException::class => 400,
+                            DeletionWithChildrenNotAllowedExceptionInterface::class => 409,
+                            InsufficientChildPermissionsExceptionInterface::class => 403,
                         ],
                         'exception_listener' => false,
                         'serialize_exceptions' => false,

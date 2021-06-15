@@ -11,9 +11,9 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\AdminBundle\Exception;
+namespace Sulu\Component\Rest\Exception;
 
-class DeletionImpossibleChildrenException extends \Exception implements DeletionImpossibleChildrenExceptionInterface
+class DeletionWithChildrenNotAllowedException extends \Exception implements DeletionWithChildrenNotAllowedExceptionInterface
 {
     /**
      * @var array<int, array<array{id: int|string, resourceKey: string}>>
@@ -35,7 +35,7 @@ class DeletionImpossibleChildrenException extends \Exception implements Deletion
 
         parent::__construct(
             \sprintf('Resource cannot be deleted, because it has %d children', $this->totalChildResources),
-            static::EXCEPTION_CODE
+            static::EXCEPTION_CODE_DELETION_WITH_CHILDREN_NOT_ALLOWED
         );
     }
 

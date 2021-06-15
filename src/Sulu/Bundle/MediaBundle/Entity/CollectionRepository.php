@@ -14,8 +14,10 @@ namespace Sulu\Bundle\MediaBundle\Entity;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr\Join;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
+use Sulu\Bundle\MediaBundle\Entity\Collection as CollectionEntity;
 use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer;
 use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
@@ -408,5 +410,127 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
     public function supportsDescendantType(string $type): bool
     {
         return $this->getClassName() === $type;
+    }
+
+    private function createChildCollectionsQueryBuilder(string $alias, int $rootCollectionId): QueryBuilder
+    {
+        $rootCollectionAlias = $alias . '_rootCollection';
+
+        return $this->createQueryBuilder($alias)
+            ->innerJoin(
+                CollectionInterface::class,
+                $rootCollectionAlias,
+                Join::WITH,
+                $alias . '.lft > ' . $rootCollectionAlias . '.lft AND ' . $alias . '.rgt < ' . $rootCollectionAlias . '.rgt'
+            )
+            ->where($rootCollectionAlias . '.id = :id')
+            ->orderBy($alias . '.id', 'ASC')
+            ->setParameter('id', $rootCollectionId);
+    }
+
+    /**
+     * @return array<array{id: int, resourceKey: string, depth: int}>
+     */
+    public function findChildCollectionResourcesOfRootCollection(int $rootCollectionId): array
+    {
+        return $this->createChildCollectionsQueryBuilder('collection', $rootCollectionId)
+            ->select('collection.id AS id')
+            ->addSelect('\'' . CollectionInterface::RESOURCE_KEY . '\' AS resourceKey')
+            ->addSelect('collection.depth AS depth')
+            ->getQuery()
+            ->getArrayResult();
+    }
+
+    /**
+     * @return int[]
+     */
+    public function findChildCollectionIdsOfRootCollection(int $rootCollectionId): array
+    {
+        $childCollectionIds = $this->createChildCollectionsQueryBuilder('collection', $rootCollectionId)
+            ->select('collection.id AS id')
+            ->distinct()
+            ->getQuery()
+            ->getArrayResult();
+
+        return \array_column($childCollectionIds, 'id');
+    }
+
+    public function countChildCollectionsOfRootCollection(int $rootCollectionId): int
+    {
+        return $this->createChildCollectionsQueryBuilder('collection', $rootCollectionId)
+            ->select('COUNT(collection.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    private function createPermittedChildCollectionsQueryBuilder(
+        string $alias,
+        int $id,
+        UserInterface $user,
+        int $permission
+    ): QueryBuilder {
+        $qb = $this->createChildCollectionsQueryBuilder($alias, $id);
+
+        $this->accessControlQueryEnhancer->enhance(
+            $qb,
+            $user,
+            $permission,
+            CollectionEntity::class,
+            $alias
+        );
+
+        return $qb;
+    }
+
+    private function createUnauthorizedChildCollectionsQueryBuilder(
+        string $alias,
+        int $id,
+        UserInterface $user,
+        int $permission
+    ): QueryBuilder {
+        $qb = $this->createChildCollectionsQueryBuilder($alias, $id);
+
+        $permittedChildCollectionsQb = $this
+            ->createPermittedChildCollectionsQueryBuilder('permittedCollection', $id, $user, $permission)
+            ->select('permittedCollection.id')
+            ->distinct();
+
+        $qb->andWhere($alias . '.id NOT IN (' . $permittedChildCollectionsQb->getDQL() . ')');
+
+        /** @var Query\Parameter $parameter */
+        foreach ($permittedChildCollectionsQb->getParameters() as $parameter) {
+            $qb->setParameter($parameter->getName(), $parameter->getValue(), $parameter->getType());
+        }
+
+        return $qb;
+    }
+
+    /**
+     * @return array<array{id: int, resourceKey: string, title: string|null}>
+     */
+    public function findUnauthorizedChildCollectionResourcesOfRootCollection(
+        int $id,
+        UserInterface $user,
+        int $permission,
+        ?int $maxResults = null
+    ): array {
+        return $this
+            ->createUnauthorizedChildCollectionsQueryBuilder('collection', $id, $user, $permission)
+            ->select('collection.id AS id')
+            ->addSelect('\'' . CollectionInterface::RESOURCE_KEY . '\' AS resourceKey')
+            ->addSelect('meta.title AS title')
+            ->leftJoin('collection.defaultMeta', 'meta')
+            ->setMaxResults($maxResults)
+            ->getQuery()
+            ->getArrayResult();
+    }
+
+    public function countUnauthorizedChildCollectionsOfRootCollection(int $id, UserInterface $user, int $permission): int
+    {
+        return $this
+            ->createUnauthorizedChildCollectionsQueryBuilder('collection', $id, $user, $permission)
+            ->select('COUNT(collection.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 }

@@ -11,9 +11,9 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\AdminBundle\Exception;
+namespace Sulu\Component\Rest\Exception;
 
-class DeletionImpossibleChildPermissionsException extends \Exception implements DeletionImpossibleChildPermissionsExceptionInterface
+class InsufficientChildPermissionsException extends \Exception implements InsufficientChildPermissionsExceptionInterface
 {
     /**
      * @var array<array{id: int|string, resourceKey: string}>
@@ -35,10 +35,10 @@ class DeletionImpossibleChildPermissionsException extends \Exception implements 
 
         parent::__construct(
             \sprintf(
-                'Resource cannot be deleted, because the user doesn\'t have permissions for %d children',
+                'Insufficient permissions for %d children of this resource',
                 $this->totalUnauthorizedChildResources
             ),
-            static::EXCEPTION_CODE
+            static::EXCEPTION_CODE_INSUFFICIENT_CHILD_PERMISSIONS
         );
     }
 

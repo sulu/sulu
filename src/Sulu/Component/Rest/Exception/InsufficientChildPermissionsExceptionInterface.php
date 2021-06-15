@@ -11,12 +11,10 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\AdminBundle\Exception;
+namespace Sulu\Component\Rest\Exception;
 
-interface DeletionImpossibleChildPermissionsExceptionInterface extends \Throwable
+interface InsufficientChildPermissionsExceptionInterface extends RestExceptionInterface
 {
-    public const EXCEPTION_CODE = 12346; // TODO change
-
     /**
      * @return array<array{id: int|string, resourceKey: string}>
      */

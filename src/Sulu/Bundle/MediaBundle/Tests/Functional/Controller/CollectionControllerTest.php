@@ -1252,7 +1252,7 @@ class CollectionControllerTest extends SuluTestCase
         unset($content['errors']);
 
         $this->assertEquals([
-            'code' => 12345,
+            'code' => 1103,
             'message' => 'Resource cannot be deleted, because it has 7 children',
             'totalChildResources' => 7,
             'childResources' => [
@@ -1362,8 +1362,8 @@ class CollectionControllerTest extends SuluTestCase
         unset($content['errors']);
 
         $this->assertEquals([
-            'code' => 12346,
-            'message' => 'Resource cannot be deleted, because the user doesn\'t have permissions for 4 children',
+            'code' => 1104,
+            'message' => 'Insufficient permissions for 4 children of this resource',
             'totalUnauthorizedChildResources' => 4,
             'unauthorizedChildResources' => [
                 [

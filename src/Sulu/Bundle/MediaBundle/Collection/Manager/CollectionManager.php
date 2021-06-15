@@ -11,15 +11,10 @@
 
 namespace Sulu\Bundle\MediaBundle\Collection\Manager;
 
-use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Query\Expr\Join;
-use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
-use Sulu\Bundle\AdminBundle\Exception\DeletionImpossibleChildPermissionsException;
-use Sulu\Bundle\AdminBundle\Exception\DeletionImpossibleChildrenException;
 use Sulu\Bundle\MediaBundle\Api\Collection;
 use Sulu\Bundle\MediaBundle\Domain\Event\CollectionCreatedEvent;
 use Sulu\Bundle\MediaBundle\Domain\Event\CollectionModifiedEvent;
@@ -32,12 +27,12 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
-use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionTypeNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
-use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer;
+use Sulu\Component\Rest\Exception\DeletionWithChildrenNotAllowedException;
+use Sulu\Component\Rest\Exception\InsufficientChildPermissionsException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
@@ -115,11 +110,6 @@ class CollectionManager implements CollectionManagerInterface
      */
     private $permissions;
 
-    /**
-     * @var AccessControlQueryEnhancer
-     */
-    private $accessControlQueryEnhancer;
-
     public function __construct(
         CollectionRepositoryInterface $collectionRepository,
         MediaRepositoryInterface $mediaRepository,
@@ -127,7 +117,6 @@ class CollectionManager implements CollectionManagerInterface
         UserRepositoryInterface $userRepository,
         EntityManager $em,
         DomainEventCollectorInterface $domainEventCollector,
-        AccessControlQueryEnhancer $accessControlQueryEnhancer,
         TokenStorageInterface $tokenStorage = null,
         $collectionPreviewFormat,
         $permissions
@@ -138,7 +127,6 @@ class CollectionManager implements CollectionManagerInterface
         $this->userRepository = $userRepository;
         $this->em = $em;
         $this->domainEventCollector = $domainEventCollector;
-        $this->accessControlQueryEnhancer = $accessControlQueryEnhancer;
         $this->tokenStorage = $tokenStorage;
         $this->collectionPreviewFormat = $collectionPreviewFormat;
         $this->permissions = $permissions;
@@ -600,32 +588,33 @@ class CollectionManager implements CollectionManagerInterface
             $user = $this->getCurrentUser();
 
             if (null !== $user) {
-                $totalChildResourcesWithoutPermissions = $this->countUnauthorizedChildCollections(
+                $totalChildResourcesWithoutPermissions = $this->collectionRepository->countUnauthorizedChildCollectionsOfRootCollection(
                     $id,
                     $user,
                     $this->permissions['delete']
                 );
 
                 if ($totalChildResourcesWithoutPermissions) {
-                    $childCollectionResourcesWithoutPermissions = $this->findUnauthorizedChildCollectionResources(
+                    $childCollectionResourcesWithoutPermissions = $this->collectionRepository->findUnauthorizedChildCollectionResourcesOfRootCollection(
                         $id,
                         $user,
-                        $this->permissions['delete']
+                        $this->permissions['delete'],
+                        3
                     );
 
-                    throw new DeletionImpossibleChildPermissionsException(
+                    throw new InsufficientChildPermissionsException(
                         $childCollectionResourcesWithoutPermissions,
                         $totalChildResourcesWithoutPermissions
                     );
                 }
             }
 
-            $totalChildResources = $this->countAllChildren($id);
+            $totalChildResources = $this->countAllChildrenByRootCategory($id);
 
             if ($totalChildResources) {
-                $childResources = $this->findAllChildResources($id);
+                $childResources = $this->findAllChildResourcesByRootCategory($id);
 
-                throw new DeletionImpossibleChildrenException(
+                throw new DeletionWithChildrenNotAllowedException(
                     $childResources,
                     $totalChildResources
                 );
@@ -854,7 +843,7 @@ class CollectionManager implements CollectionManagerInterface
      *
      * @return array<int, array<array{id: int, resourceKey: string}>>
      */
-    private function groupResourcesByDepth(array $resources)
+    private function groupResourcesByDepth(array $resources): array
     {
         $grouped = [];
 
@@ -875,252 +864,27 @@ class CollectionManager implements CollectionManagerInterface
     }
 
     /**
-     * @param array<array{id: int, resourceKey: string, depth: int}> $resources
-     *
-     * @return array<string, array{id: int, resourceKey: string, depth: int}>
-     */
-    private function groupResourcesByKey(array $resources): array
-    {
-        $result = [];
-        foreach ($resources as $resource) {
-            $resourceKey = $resource['resourceKey'];
-            $id = (string) $resource['id'];
-
-            $result[$resourceKey . '-' . $id] = $resource;
-        }
-
-        return $result;
-    }
-
-    private function createChildCollectionsQueryBuilder(int $id): QueryBuilder
-    {
-        return $this->em->createQueryBuilder()
-            ->select('collection.id AS id')
-            ->addSelect('\'' . CollectionInterface::RESOURCE_KEY . '\' AS resourceKey')
-            ->addSelect('collection.depth AS depth')
-            ->from(CollectionInterface::class, 'collection')
-            ->leftJoin(CollectionInterface::class, 'parent', Join::WITH, 'collection.lft > parent.lft AND collection.rgt < parent.rgt')
-            ->where('parent.id = :id')
-            ->orderBy('collection.id', 'ASC')
-            ->setParameter('id', $id);
-    }
-
-    /**
-     * @return array<array{id: int, resourceKey: string, depth: int}>
-     */
-    private function findChildCollections(int $id): array
-    {
-        return $this->createChildCollectionsQueryBuilder($id)
-            ->getQuery()
-            ->getArrayResult();
-    }
-
-    /**
-     * @return int[]
-     */
-    private function findChildCollectionIds(int $id): array
-    {
-        $childCollectionIds = $this->createChildCollectionsQueryBuilder($id)
-            ->select('collection.id AS id')
-            ->getQuery()
-            ->getArrayResult();
-
-        return \array_column($childCollectionIds, 'id');
-    }
-
-    private function countChildCollections(int $id): int
-    {
-        return $this->createChildCollectionsQueryBuilder($id)
-            ->select('COUNT(collection.id)')
-            ->getQuery()
-            ->getSingleScalarResult();
-    }
-
-    /**
-     * @param int[] $collectionIds
-     */
-    private function createChildMediaQueryBuilder(array $collectionIds): QueryBuilder
-    {
-        return $this->em->createQueryBuilder()
-            ->select('media.id AS id')
-            ->addSelect('\'' . MediaInterface::RESOURCE_KEY . '\' AS resourceKey')
-            ->addSelect('collection.depth + 1 AS depth')
-            ->from(MediaInterface::class, 'media')
-            ->leftJoin('media.collection', 'collection')
-            ->where('collection.id IN (:collectionIds)')
-            ->orderBy('media.id', 'ASC')
-            ->setParameter('collectionIds', $collectionIds, Connection::PARAM_INT_ARRAY);
-    }
-
-    /**
-     * @param int[] $collectionIds
-     *
-     * @return array<array{id: int, resourceKey: string, depth: int}>
-     */
-    private function findChildMedia(array $collectionIds): array
-    {
-        return $this
-            ->createChildMediaQueryBuilder($collectionIds)
-            ->getQuery()
-            ->getArrayResult();
-    }
-
-    /**
-     * @param int[] $collectionIds
-     */
-    private function countChildMedia(array $collectionIds): int
-    {
-        return $this
-            ->createChildMediaQueryBuilder($collectionIds)
-            ->select('COUNT(media.id)')
-            ->getQuery()
-            ->getSingleScalarResult();
-    }
-
-    /**
      * @return array<int, array<array{id: int, resourceKey: string}>>
      */
-    private function findAllChildResources(int $id): array
+    private function findAllChildResourcesByRootCategory(int $rootCollectionId): array
     {
-        $childCollections = $this->findChildCollections($id);
+        $childCollections = $this->collectionRepository->findChildCollectionResourcesOfRootCollection($rootCollectionId);
 
-        $collectionIds = \array_merge([$id], \array_column($childCollections, 'id'));
-        $childMedia = $this->findChildMedia($collectionIds);
+        $collectionIds = \array_merge([$rootCollectionId], \array_column($childCollections, 'id'));
+        $childMedia = $this->mediaRepository->findMediaResourcesOfCollections($collectionIds);
 
         $result = \array_merge($childCollections, $childMedia);
 
         return $this->groupResourcesByDepth($result);
     }
 
-    private function countAllChildren(int $id): int
+    private function countAllChildrenByRootCategory(int $id): int
     {
-        $countChildCollections = $this->countChildCollections($id);
+        $countChildCollections = $this->collectionRepository->countChildCollectionsOfRootCollection($id);
 
-        $childCollectionIds = \array_merge([$id], $this->findChildCollectionIds($id));
-        $countChildMedia = $this->countChildMedia($childCollectionIds);
+        $childCollectionIds = \array_merge([$id], $this->collectionRepository->findChildCollectionIdsOfRootCollection($id));
+        $countChildMedia = $this->mediaRepository->countMediaOfCollections($childCollectionIds);
 
         return $countChildCollections + $countChildMedia;
-    }
-
-    private function createPermittedChildCollectionQueryBuilder(
-        int $id,
-        UserInterface $user,
-        int $permission
-    ): QueryBuilder {
-        $qb = $this->createChildCollectionsQueryBuilder($id);
-
-        $this->accessControlQueryEnhancer->enhance(
-            $qb,
-            $user,
-            $permission,
-            CollectionEntity::class,
-            'collection'
-        );
-
-        return $qb;
-    }
-
-    /**
-     * @return array<array{id: int, resourceKey: string, depth: int}>
-     */
-    private function findPermittedChildCollections(int $id, UserInterface $user, int $permission): array
-    {
-        $qb = $this->createPermittedChildCollectionQueryBuilder(
-            $id,
-            $user,
-            $permission
-        );
-
-        return $qb
-            ->getQuery()
-            ->getArrayResult();
-    }
-
-    private function countPermittedChildCollections(int $id, UserInterface $user, int $permission): int
-    {
-        $qb = $this->createPermittedChildCollectionQueryBuilder(
-            $id,
-            $user,
-            $permission
-        );
-
-        return $qb
-            ->select('COUNT(collection.id)')
-            ->getQuery()
-            ->getSingleScalarResult();
-    }
-
-    /**
-     * @param int[] $ids
-     *
-     * @return array<int, string>
-     */
-    private function findCollectionTitlesForIds(array $ids): array
-    {
-        $allData = $this->em->createQueryBuilder()
-            ->select('collection.id AS id')
-            ->addSelect('meta.title AS title')
-            ->from(CollectionInterface::class, 'collection')
-            ->leftJoin('collection.defaultMeta', 'meta')
-            ->where('collection.id IN (:ids)')
-            ->setParameter('ids', $ids, Connection::PARAM_INT_ARRAY)
-            ->getQuery()
-            ->getArrayResult();
-
-        $result = [];
-        foreach ($allData as $data) {
-            $id = (int) $data['id'];
-            $title = (string) $data['title'];
-
-            $result[$id] = $title;
-        }
-
-        return $result;
-    }
-
-    /**
-     * @return array<array{id: int, resourceKey: string}>
-     */
-    private function findUnauthorizedChildCollectionResources(int $id, UserInterface $user, int $permission): array
-    {
-        $childCollectionResources = $this->findChildCollections($id);
-        $childCollectionResources = $this->groupResourcesByKey($childCollectionResources);
-
-        $permittedChildCollections = $this->findPermittedChildCollections($id, $user, $permission);
-        $permittedChildCollections = $this->groupResourcesByKey($permittedChildCollections);
-
-        $unauthorizedChildCollections = \array_values(
-            \array_diff_key(
-                $childCollectionResources,
-                $permittedChildCollections
-            )
-        );
-
-        $unauthorizedChildCollections = \array_slice($unauthorizedChildCollections, 0, 3);
-        $ids = \array_column($unauthorizedChildCollections, 'id');
-        $titles = $this->findCollectionTitlesForIds($ids);
-
-        $result = [];
-        foreach ($unauthorizedChildCollections as $collection) {
-            $id = $collection['id'];
-            $collection['title'] = $titles[$id] ?? null;
-            unset($collection['depth']);
-
-            $result[] = $collection;
-        }
-
-        return $result;
-    }
-
-    private function countUnauthorizedChildCollections(int $id, UserInterface $user, int $permission): int
-    {
-        $countChildCollections = $this->countChildCollections($id);
-        $countPermittedChildCollections = $this->countPermittedChildCollections(
-            $id,
-            $user,
-            $permission
-        );
-
-        return $countChildCollections - $countPermittedChildCollections;
     }
 }

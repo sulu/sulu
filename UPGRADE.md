@@ -2,9 +2,22 @@
 
 ## 2.x
 
-### CollectionManagerInterface has changed
+### MediaRepositoryInterface has changed
 
-A new parameter `$forceRemoveChildren` has been added to the `CollectionManagerInterface::delete()` method.
+Two new methods been added to the `MediaRepositoryInterface`.
+
+- `findMediaResourcesOfCollections`
+- `countMediaOfCollections`
+
+### CollectionRepositoryInterface has changed
+
+Five new methods been added to the `CollectionManagerInterface`.
+
+- `findChildCollectionResourcesOfRootCollection`
+- `findChildCollectionIdsOfRootCollection`
+- `countChildCollectionsOfRootCollection`
+- `findUnauthorizedChildCollectionResourcesOfRootCollection`
+- `countUnauthorizedChildCollectionsOfRootCollection`
 
 ## 2.3.1
 

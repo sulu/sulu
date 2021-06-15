@@ -11,8 +11,8 @@
 
 namespace Sulu\Component\Rest;
 
-use Sulu\Bundle\AdminBundle\Exception\DeletionImpossibleChildPermissionsExceptionInterface;
-use Sulu\Bundle\AdminBundle\Exception\DeletionImpossibleChildrenExceptionInterface;
+use Sulu\Component\Rest\Exception\DeletionWithChildrenNotAllowedExceptionInterface;
+use Sulu\Component\Rest\Exception\InsufficientChildPermissionsExceptionInterface;
 use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -66,12 +66,12 @@ class FlattenExceptionNormalizer implements NormalizerInterface
             $data['errors'] = [$errors];
         }
 
-        if ($contextException instanceof DeletionImpossibleChildPermissionsExceptionInterface) {
+        if ($contextException instanceof InsufficientChildPermissionsExceptionInterface) {
             $data['totalUnauthorizedChildResources'] = $contextException->getTotalUnauthorizedChildResources();
             $data['unauthorizedChildResources'] = $contextException->getUnauthorizedChildResources();
         }
 
-        if ($contextException instanceof DeletionImpossibleChildrenExceptionInterface) {
+        if ($contextException instanceof DeletionWithChildrenNotAllowedExceptionInterface) {
             $data['totalChildResources'] = $contextException->getTotalChildResources();
             $data['childResources'] = $contextException->getChildResources();
         }

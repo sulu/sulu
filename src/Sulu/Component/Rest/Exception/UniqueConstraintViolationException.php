@@ -21,6 +21,6 @@ class UniqueConstraintViolationException extends ConstraintViolationException
      */
     public function __construct($field, $entity)
     {
-        parent::__construct($field, $entity, ConstraintViolationException::UNIQUE, 1101);
+        parent::__construct($field, $entity, ConstraintViolationException::UNIQUE, static::EXCEPTION_CODE_UNIQUE_CONSTRAINT_VIOLATION);
     }
 }
