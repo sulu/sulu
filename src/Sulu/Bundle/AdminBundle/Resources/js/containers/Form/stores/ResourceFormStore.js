@@ -13,6 +13,113 @@ const TYPE = 'template';
 
 const ajv = createAjv();
 
+function mergeData(
+    localSchema: Schema,
+    remoteSchema: Schema,
+    localData: Object,
+    remoteData: Object
+) {
+    let result = {};
+    if (!localSchema || !remoteSchema) {
+        return result;
+    }
+
+    for (const name in remoteSchema) {
+        const {
+            items: remoteItems,
+            defaultType: remoteDefaultType,
+            type: remoteType,
+            types: remoteTypes,
+        } = remoteSchema[name];
+        const {
+            items: localItems,
+            defaultType: localDefaultType,
+            type: localType,
+            types: localTypes,
+        } = localSchema[name] || {};
+
+        if (remoteType === SECTION_TYPE && remoteItems &&
+            localType === SECTION_TYPE && localItems) {
+            result = mergeData(
+                localItems,
+                remoteItems,
+                localData,
+                remoteData
+            );
+            continue;
+        }
+
+        if (remoteType === SECTION_TYPE && remoteItems) {
+            result = mergeData(
+                localSchema,
+                remoteItems,
+                localData,
+                remoteData
+            );
+            continue;
+        }
+
+        if (localType === SECTION_TYPE && localItems) {
+            result = mergeData(
+                localItems,
+                remoteSchema,
+                localData,
+                remoteData
+            );
+            continue;
+        }
+        if (remoteTypes && localTypes
+            && Object.keys(remoteTypes).length > 0 && Object.keys(localTypes).length > 0
+            && localData[name] && remoteData[name]
+            && isArrayLike(localData[name]) && isArrayLike(remoteData[name])
+        ) {
+            for (let key = 0; key < Math.max(remoteData[name].length, localData[name].length); ++key) {
+                const remoteChildData = toJS(remoteData[name].length > key ? remoteData[name][key] || {} : {});
+                const localChildData = toJS(localData[name].length > key ? localData[name][key] || {} : {});
+
+                const localChildDataType = localChildData?.type;
+                const resultType = localChildDataType && localChildDataType in remoteTypes
+                    ? localChildDataType
+                    : remoteChildData?.type || remoteDefaultType;
+
+                const localChildSchema =
+                    // $FlowFixMe
+                    localTypes[localChildData.type]?.form || localTypes[localDefaultType].form;
+
+                const remoteChildSchema = remoteTypes[resultType].form;
+
+                const resultChildData = mergeData(
+                    localChildSchema,
+                    remoteChildSchema,
+                    localChildData,
+                    remoteChildData
+                );
+
+                if (!result[name]) {
+                    result[name] = [];
+                }
+
+                if (Object.keys(resultChildData).length > 0) {
+                    resultChildData.type = resultType;
+                    resultChildData.settings = localChildData?.settings || remoteChildData.settings;
+
+                    result[name].push(resultChildData);
+                }
+            }
+
+            continue;
+        }
+
+        if (localData[name] && remoteType === localType) {
+            result[name] = localData[name];
+        } else {
+            result[name] = remoteData[name];
+        }
+    }
+
+    return result;
+}
+
 export default class ResourceFormStore extends AbstractFormStore implements FormStoreInterface {
     resourceStore: ResourceStore;
     formKey: string;
@@ -103,122 +210,12 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
         // load data only after initial schema was set to prevent duplicate requests during initialization
         if (localSchema) {
             return this.resourceStore.requestRemoteData({template: this.type}).then((data: Object) => {
-                const result = this.mergeData(localSchema, remoteSchema, this.data, data);
+                const result = mergeData(localSchema, remoteSchema, this.data, data);
                 this.setMultiple(result);
             });
         }
         return Promise.resolve();
     };
-
-    mergeData(
-        localSchema: Schema,
-        remoteSchema: Schema,
-        localData: Object,
-        remoteData: Object
-    ) {
-        let result = {};
-        if (!localSchema || !remoteSchema) {
-            return result;
-        }
-
-        for (const name in remoteSchema) {
-            const {
-                items: remoteItems,
-                defaultType: remoteDefaultType,
-                type: remoteType,
-                types: remoteTypes,
-            } = remoteSchema[name];
-            const {
-                items: localItems,
-                defaultType: localDefaultType,
-                type: localType,
-                types: localTypes,
-            } = localSchema[name] || {};
-
-            if (remoteType === SECTION_TYPE && remoteItems &&
-                localType === SECTION_TYPE && localItems) {
-                result = this.mergeData(
-                    localItems,
-                    remoteItems,
-                    localData,
-                    remoteData
-                );
-                continue;
-            }
-
-            if (remoteType === SECTION_TYPE && remoteItems) {
-                result = this.mergeData(
-                    localSchema,
-                    remoteItems,
-                    localData,
-                    remoteData
-                );
-                continue;
-            }
-
-            if (localType === SECTION_TYPE && localItems) {
-                result = this.mergeData(
-                    localItems,
-                    remoteSchema,
-                    localData,
-                    remoteData
-                );
-                continue;
-            }
-            if (remoteTypes && localTypes
-                && Object.keys(remoteTypes).length > 0 && Object.keys(localTypes).length > 0
-                && localData[name] && remoteData[name]
-                && isArrayLike(localData[name]) && isArrayLike(remoteData[name])
-            ) {
-                for (let key = 0; key < Math.max(remoteData[name].length, localData[name].length); ++key) {
-                    const remoteChildData = toJS(remoteData[name].length > key ? remoteData[name][key] || {} : {});
-                    const localChildData = toJS(localData[name].length > key ? localData[name][key] || {} : {});
-
-                    const localChildDataType = localChildData?.type;
-                    const resultType = localChildDataType && localChildDataType in remoteTypes
-                        ? localChildDataType
-                        : remoteChildData?.type || remoteDefaultType;
-
-                    const localChildSchema =
-                        // $FlowFixMe
-                        localTypes[localChildData.type]?.form || localTypes[localDefaultType].form;
-
-                    const remoteChildSchema = remoteTypes[resultType].form;
-
-                    const resultChildData = this.mergeData(
-                        localChildSchema,
-                        remoteChildSchema,
-                        localChildData,
-                        remoteChildData
-                    );
-
-                    if (!result[name]) {
-                        result[name] = [];
-                    }
-
-                    if (Object.keys(resultChildData).length > 0) {
-                        resultChildData.type = resultType;
-
-                        if (resultChildData.settings) {
-                            resultChildData.settings = localChildData?.settings || remoteChildData.settings;
-                        }
-
-                        result[name].push(resultChildData);
-                    }
-                }
-
-                continue;
-            }
-
-            if (localData[name] && remoteType === localType) {
-                result[name] = localData[name];
-            } else {
-                result[name] = remoteData[name];
-            }
-        }
-
-        return result;
-    }
 
     @computed get hasTypes(): boolean {
         return Object.keys(this.types).length > 0;
