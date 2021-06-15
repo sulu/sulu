@@ -455,7 +455,6 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
         return $this->createQueryBuilder($alias)
             ->leftJoin($alias . '.collection', $collectionAlias)
             ->where($collectionAlias . '.id IN (:collectionIds)')
-            ->orderBy($alias . '.id', 'ASC')
             ->setParameter('collectionIds', $collectionIds, Connection::PARAM_INT_ARRAY);
     }
 
@@ -470,6 +469,8 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
             ->select('media.id AS id')
             ->addSelect('\'' . MediaInterface::RESOURCE_KEY . '\' AS resourceKey')
             ->addSelect('collection.depth + 1 AS depth')
+            ->distinct()
+            ->orderBy('media.id', 'ASC')
             ->getQuery()
             ->getArrayResult();
     }

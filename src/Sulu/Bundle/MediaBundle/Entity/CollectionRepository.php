@@ -424,7 +424,6 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
                 $alias . '.lft > ' . $rootCollectionAlias . '.lft AND ' . $alias . '.rgt < ' . $rootCollectionAlias . '.rgt'
             )
             ->where($rootCollectionAlias . '.id = :id')
-            ->orderBy($alias . '.id', 'ASC')
             ->setParameter('id', $rootCollectionId);
     }
 
@@ -437,6 +436,8 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             ->select('collection.id AS id')
             ->addSelect('\'' . CollectionInterface::RESOURCE_KEY . '\' AS resourceKey')
             ->addSelect('collection.depth AS depth')
+            ->distinct()
+            ->orderBy('collection.id', 'ASC')
             ->getQuery()
             ->getArrayResult();
     }
@@ -449,6 +450,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
         $childCollectionIds = $this->createChildCollectionsQueryBuilder('collection', $rootCollectionId)
             ->select('collection.id AS id')
             ->distinct()
+            ->orderBy('collection.id', 'ASC')
             ->getQuery()
             ->getArrayResult();
 
@@ -493,7 +495,8 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
         $permittedChildCollectionsQb = $this
             ->createPermittedChildCollectionsQueryBuilder('permittedCollection', $id, $user, $permission)
             ->select('permittedCollection.id')
-            ->distinct();
+            ->distinct()
+            ->orderBy('permittedCollection.id', 'ASC');
 
         $qb->andWhere($alias . '.id NOT IN (' . $permittedChildCollectionsQb->getDQL() . ')');
 
@@ -519,7 +522,9 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             ->select('collection.id AS id')
             ->addSelect('\'' . CollectionInterface::RESOURCE_KEY . '\' AS resourceKey')
             ->addSelect('meta.title AS title')
+            ->distinct()
             ->leftJoin('collection.defaultMeta', 'meta')
+            ->orderBy('collection.id', 'ASC')
             ->setMaxResults($maxResults)
             ->getQuery()
             ->getArrayResult();
