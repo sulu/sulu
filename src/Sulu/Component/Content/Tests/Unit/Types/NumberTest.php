@@ -90,6 +90,17 @@ class NumberTest extends TestCase
         $this->number->write($this->node->reveal(), $this->property->reveal(), 1, 'sulu_io', 'de', null);
     }
 
+    public function testWriteZero()
+    {
+        $content = 0;
+
+        $this->property->getName()->willReturn('i18n:de-test');
+        $this->property->getValue()->willReturn(0);
+
+        $this->node->setProperty('i18n:de-test', $content, PropertyType::DOUBLE)->shouldBeCalled();
+        $this->number->write($this->node->reveal(), $this->property->reveal(), 1, 'sulu_io', 'de', null);
+    }
+
     public function testWriteNoValue()
     {
         $this->property->getName()->willReturn('i18n:de-test');

@@ -35,7 +35,7 @@ class Number extends SimpleContentType
         $segmentKey
     ) {
         $value = $property->getValue();
-        if (null != $value) {
+        if (\is_numeric($value)) {
             $node->setProperty(
                 $property->getName(),
                 $this->removeIllegalCharacters($this->encodeValue($value)),
