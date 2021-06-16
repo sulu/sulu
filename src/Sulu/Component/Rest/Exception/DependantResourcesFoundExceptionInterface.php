@@ -13,12 +13,12 @@ declare(strict_types=1);
 
 namespace Sulu\Component\Rest\Exception;
 
-interface DeletionWithChildrenNotAllowedExceptionInterface extends RestExceptionInterface
+interface DependantResourcesFoundExceptionInterface extends RestExceptionInterface
 {
     /**
      * @return array<int, array<array{id: int|string, resourceKey: string}>>
      */
-    public function getChildResources(): array;
+    public function getDependantResources(): array;
 
-    public function getTotalChildResources(): int;
+    public function getTotalDependantResources(): int;
 }

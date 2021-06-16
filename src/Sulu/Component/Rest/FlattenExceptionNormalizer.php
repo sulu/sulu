@@ -11,7 +11,7 @@
 
 namespace Sulu\Component\Rest;
 
-use Sulu\Component\Rest\Exception\DeletionWithChildrenNotAllowedExceptionInterface;
+use Sulu\Component\Rest\Exception\DependantResourcesFoundExceptionInterface;
 use Sulu\Component\Rest\Exception\InsufficientChildPermissionsExceptionInterface;
 use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
@@ -72,9 +72,9 @@ class FlattenExceptionNormalizer implements NormalizerInterface
             $data['permissionType'] = $contextException->getPermissionType();
         }
 
-        if ($contextException instanceof DeletionWithChildrenNotAllowedExceptionInterface) {
-            $data['totalChildResources'] = $contextException->getTotalChildResources();
-            $data['childResources'] = $contextException->getChildResources();
+        if ($contextException instanceof DependantResourcesFoundExceptionInterface) {
+            $data['totalDependantResources'] = $contextException->getTotalDependantResources();
+            $data['dependantResources'] = $contextException->getDependantResources();
         }
 
         return $data;

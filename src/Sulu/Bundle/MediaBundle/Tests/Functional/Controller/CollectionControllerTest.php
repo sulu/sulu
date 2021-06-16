@@ -1253,9 +1253,9 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->assertEquals([
             'code' => 1103,
-            'message' => 'Resource cannot be deleted, because it has 7 children',
-            'totalChildResources' => 7,
-            'childResources' => [
+            'message' => 'Resource has 7 dependant children',
+            'totalDependantResources' => 7,
+            'dependantResources' => [
                 [
                     [
                         'id' => $child11->getMedia()->first()->getId(),

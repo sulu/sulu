@@ -32,11 +32,11 @@ interface RestExceptionInterface extends \Throwable
     /**
      * Cannot delete resource, because it has children.
      *
-     * @see DeletionWithChildrenNotAllowedExceptionInterface
+     * @see DependantResourcesFoundExceptionInterface
      *
      * @var int
      */
-    const EXCEPTION_CODE_DELETION_WITH_CHILDREN_NOT_ALLOWED = 1103;
+    const EXCEPTION_CODE_DEPENDANT_RESOURCES_FOUND = 1103;
 
     /**
      * Cannot delete resource, because the user has insufficient permissions for some of it's children.

@@ -31,7 +31,7 @@ use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionTypeNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
-use Sulu\Component\Rest\Exception\DeletionWithChildrenNotAllowedException;
+use Sulu\Component\Rest\Exception\DependantResourcesFoundException;
 use Sulu\Component\Rest\Exception\InsufficientChildPermissionsException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
@@ -618,7 +618,7 @@ class CollectionManager implements CollectionManagerInterface
             if ($totalChildResources) {
                 $childResources = $this->findAllChildResourcesByRootCategory($id);
 
-                throw new DeletionWithChildrenNotAllowedException(
+                throw new DependantResourcesFoundException(
                     $childResources,
                     $totalChildResources
                 );

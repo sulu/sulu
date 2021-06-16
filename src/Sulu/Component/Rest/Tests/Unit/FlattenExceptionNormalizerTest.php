@@ -12,7 +12,7 @@
 namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Filter;
 
 use PHPUnit\Framework\TestCase;
-use Sulu\Component\Rest\Exception\DeletionWithChildrenNotAllowedException;
+use Sulu\Component\Rest\Exception\DependantResourcesFoundException;
 use Sulu\Component\Rest\Exception\InsufficientChildPermissionsException;
 use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
 use Sulu\Component\Rest\FlattenExceptionNormalizer;
@@ -169,7 +169,7 @@ class FlattenExceptionNormalizerTest extends TestCase
             $translator->reveal()
         );
 
-        $exception = new DeletionWithChildrenNotAllowedException([
+        $exception = new DependantResourcesFoundException([
             [
                 ['id' => 3, 'resourceKey' => 'media'],
             ],
@@ -203,8 +203,8 @@ class FlattenExceptionNormalizerTest extends TestCase
         $this->assertIsArray($result);
         $this->assertSame(1103, $result['code']);
         $this->assertSame($exception->getMessage(), $result['message']);
-        $this->assertSame($exception->getTotalChildResources(), $result['totalChildResources']);
-        $this->assertEquals($exception->getChildResources(), $result['childResources']);
+        $this->assertSame($exception->getTotalDependantResources(), $result['totalDependantResources']);
+        $this->assertEquals($exception->getDependantResources(), $result['dependantResources']);
         $this->assertArrayNotHasKey('errors', $result);
     }
 
@@ -218,7 +218,7 @@ class FlattenExceptionNormalizerTest extends TestCase
             $translator->reveal()
         );
 
-        $exception = new DeletionWithChildrenNotAllowedException([
+        $exception = new DependantResourcesFoundException([
             [
                 ['id' => 3, 'resourceKey' => 'media'],
             ],
@@ -252,8 +252,8 @@ class FlattenExceptionNormalizerTest extends TestCase
         $this->assertIsArray($result);
         $this->assertSame(1103, $result['code']);
         $this->assertSame($exception->getMessage(), $result['message']);
-        $this->assertSame($exception->getTotalChildResources(), $result['totalChildResources']);
-        $this->assertEquals($exception->getChildResources(), $result['childResources']);
+        $this->assertSame($exception->getTotalDependantResources(), $result['totalDependantResources']);
+        $this->assertEquals($exception->getDependantResources(), $result['dependantResources']);
         $this->assertArrayHasKey('errors', $result);
     }
 
