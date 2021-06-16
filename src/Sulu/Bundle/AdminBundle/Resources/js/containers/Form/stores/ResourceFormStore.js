@@ -38,17 +38,6 @@ function mergeData(
             types: localTypes,
         } = localSchema[name] || {};
 
-        if (remoteType === SECTION_TYPE && remoteItems &&
-            localType === SECTION_TYPE && localItems) {
-            result = mergeData(
-                localItems,
-                remoteItems,
-                localData,
-                remoteData
-            );
-            continue;
-        }
-
         if (remoteType === SECTION_TYPE && remoteItems) {
             result = mergeData(
                 localSchema,
