@@ -183,6 +183,8 @@ CREATE TABLE ac_activities (id INT AUTO_INCREMENT NOT NULL, type VARCHAR(191) NO
 ALTER TABLE ac_activities ADD CONSTRAINT FK_3EE015D064B64DCC FOREIGN KEY (userId) REFERENCES se_users (id) ON DELETE SET NULL;
 ```
 
+> For MYSQL 5.6 and lower, the `JSON` type of the `context` and `payload` columns must be replaced with `TEXT`. See the [doctrine/dbal type](https://www.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/types.html#json) documentation.
+
 Finally, you need to include the routes of the bundle in your `config/routes/sulu_admin.yaml`:
 
 ```yaml
