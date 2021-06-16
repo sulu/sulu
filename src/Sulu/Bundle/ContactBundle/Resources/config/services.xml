@@ -80,11 +80,13 @@
         <service id="sulu_contact.reference_store.contact"
                  class="Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore">
             <tag name="sulu_website.reference_store" alias="contact"/>
+            <tag name="kernel.reset" method="reset"/>
         </service>
 
         <service id="sulu_contact.reference_store.account"
                  class="Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore">
             <tag name="sulu_website.reference_store" alias="account"/>
+            <tag name="kernel.reset" method="reset"/>
         </service>
         <service id="sulu_contact.doctrine.invalidation_listener" class="Sulu\Bundle\ContactBundle\EventListener\CacheInvalidationListener">
             <argument type="service" id="sulu_http_cache.cache_manager" on-invalid="null" />

@@ -11,10 +11,12 @@
 
 namespace Sulu\Bundle\WebsiteBundle\ReferenceStore;
 
+use Symfony\Contracts\Service\ResetInterface;
+
 /**
  * Represents implementation for reference-store.
  */
-class ReferenceStore implements ReferenceStoreInterface
+class ReferenceStore implements ReferenceStoreInterface, ResetInterface
 {
     /**
      * @var array
@@ -33,5 +35,13 @@ class ReferenceStore implements ReferenceStoreInterface
     public function getAll()
     {
         return $this->ids;
+    }
+
+    /**
+     * @return void
+     */
+    public function reset()
+    {
+        $this->ids = [];
     }
 }
