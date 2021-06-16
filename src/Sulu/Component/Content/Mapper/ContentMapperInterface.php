@@ -155,7 +155,7 @@ interface ContentMapperInterface
      * @param string $uuid UUID of content
      * @param string $webspaceKey Key of webspace
      */
-    public function delete($uuid, $webspaceKey);
+    public function delete($uuid, $webspaceKey/*, bool $forceRemoveChildren = false*/);
 
     /**
      * Copies the content from one node from one localization to the other.
