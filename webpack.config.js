@@ -49,8 +49,8 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
 
     if (conflictingNodeModulesDirectories.length) {
         throw new Error(
-            'The following directories should not exist when creating an admin build ' +
-            'and could end in an unexpected error rename them temporary to avoid a conflict: ' +
+            'Aborting build because the following directories might cause webpack to resolve wrong package versions.' +
+            'Please rename or remove the directories before building the Sulu administration interface: ' +
             conflictingNodeModulesDirectories.join(', ')
         );
     }
