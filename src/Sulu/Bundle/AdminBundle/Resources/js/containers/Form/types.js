@@ -121,11 +121,16 @@ export interface FormStoreInterface {
     +options: SchemaOptions,
     +resourceKey: ?string,
     +schema: Object,
+    +set: (name: string, value: mixed) => void,
     +setMultiple: (data: Object) => void,
     +setType: (type: string) => void,
     +types: {[key: string]: SchemaType},
     +validate: () => boolean,
 }
+
+export type FieldChangeContext = {
+    isDefaultValue?: boolean,
+};
 
 export type FieldTypeProps<T> = {|
     dataPath: string,
@@ -137,7 +142,7 @@ export type FieldTypeProps<T> = {|
     label: ?string,
     maxOccurs: ?number,
     minOccurs: ?number,
-    onChange: (value: T) => void,
+    onChange: (value: T, context?: FieldChangeContext) => void,
     onFinish: (subDataPath: ?string, subSchemaPath: ?string) => void,
     onSuccess: ?() => void,
     router: ?Router,

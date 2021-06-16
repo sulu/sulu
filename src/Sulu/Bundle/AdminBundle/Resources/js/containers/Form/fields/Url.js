@@ -42,7 +42,7 @@ export default class Url extends React.Component<FieldTypeProps<?string>> {
             throw new Error('The "specific_part" default must be a string if set!');
         }
 
-        onChange(defaultSchemeOption.value + defaultSpecificPartOption.value);
+        onChange(defaultSchemeOption.value + defaultSpecificPartOption.value, {isDefaultValue: true});
     }
 
     handleBlur = () => {

@@ -10,7 +10,7 @@ import Renderer from './Renderer';
 import FormInspector from './FormInspector';
 import GhostDialog from './GhostDialog';
 import MissingTypeDialog from './MissingTypeDialog';
-import type {FormStoreInterface} from './types';
+import type {FieldChangeContext, FormStoreInterface} from './types';
 
 type Props = {|
     onError?: (errors: Object) => void,
@@ -55,13 +55,6 @@ class Form extends React.Component<Props> {
         this.displayGhostDialogDisposer();
     }
 
-    @action setRendererRef = () => {
-        const {store} = this.props;
-        // This avoids starting with an already dirty form
-        // That can happen if a field type calls the onChange handler to set a default value in their its constructor
-        store.dirty = false;
-    };
-
     @computed get formInspector(): FormInspector {
         return new FormInspector(this.props.store);
     }
@@ -96,8 +89,12 @@ class Form extends React.Component<Props> {
         }
     };
 
-    handleChange = (name: string, value: mixed) => {
-        this.props.store.change(name, value);
+    handleChange = (name: string, value: mixed, context: FieldChangeContext) => {
+        if (context.isDefaultValue) {
+            this.props.store.set(name, value);
+        } else {
+            this.props.store.change(name, value);
+        }
     };
 
     @action showGhostDialog() {
@@ -189,7 +186,6 @@ class Form extends React.Component<Props> {
                         onChange={this.handleChange}
                         onFieldFinish={this.handleFieldFinish}
                         onSuccess={onSuccess}
-                        ref={this.setRendererRef}
                         router={router}
                         schema={store.schema}
                         schemaPath=""

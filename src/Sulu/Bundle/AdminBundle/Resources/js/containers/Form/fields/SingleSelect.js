@@ -25,7 +25,7 @@ export default class SingleSelect extends React.Component<FieldTypeProps<string 
         }
 
         if (value === undefined) {
-            onChange(defaultValue);
+            onChange(defaultValue, {isDefaultValue: true});
         }
     }
 

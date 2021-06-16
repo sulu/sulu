@@ -1,5 +1,5 @@
 // @flow
-import {action, autorun, observable} from 'mobx';
+import {action, autorun, observable, set} from 'mobx';
 import Ajv from 'ajv';
 import jsonpointer from 'json-pointer';
 import AbstractFormStore from './AbstractFormStore';
@@ -38,7 +38,7 @@ export default class MemoryFormStore extends AbstractFormStore implements FormSt
     }
 
     @action change(path: string, value: mixed) {
-        jsonpointer.set(this.data, '/' + path, value);
+        this.set(path, value);
         this.dirty = true;
     }
 
@@ -46,8 +46,15 @@ export default class MemoryFormStore extends AbstractFormStore implements FormSt
         return false;
     }
 
+    @action set(path: string, value: mixed) {
+        jsonpointer.set(this.data, '/' + path, value);
+    }
+
     @action setMultiple(data: Object) {
-        this.data = {...this.data, ...data};
+        Object.keys(data).forEach((path) => {
+            this.set(path, data[path]);
+        });
+        set(this.data, this.data);
 
         super.setMultiple();
     }
