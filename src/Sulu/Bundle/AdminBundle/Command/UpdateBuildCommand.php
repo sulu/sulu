@@ -52,6 +52,11 @@ class UpdateBuildCommand extends Command
      */
     private $remoteArchive;
 
+    /**
+     * @var Filesystem
+     */
+    private $filesystem;
+
     const ASSETS_DIR = \DIRECTORY_SEPARATOR . 'assets' . \DIRECTORY_SEPARATOR . 'admin' . \DIRECTORY_SEPARATOR;
 
     const BUILD_DIR = \DIRECTORY_SEPARATOR . 'public' . \DIRECTORY_SEPARATOR . 'build' . \DIRECTORY_SEPARATOR . 'admin';
@@ -69,6 +74,7 @@ class UpdateBuildCommand extends Command
         $this->suluVersion = $suluVersion;
         $this->remoteRepository = 'https://raw.githubusercontent.com/sulu/skeleton/' . $suluVersion;
         $this->remoteArchive = 'https://codeload.github.com/sulu/skeleton/zip/' . $suluVersion;
+        $this->filesystem = new Filesystem();
     }
 
     protected function configure()
@@ -82,7 +88,6 @@ class UpdateBuildCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $ui = new SymfonyStyle($input, $output);
-        $filesystem = new Filesystem();
 
         if (!\preg_match(static::VERSION_REGEX, $this->suluVersion)) {
             $ui->warning(
@@ -113,11 +118,11 @@ class UpdateBuildCommand extends Command
         ];
 
         foreach ($renamedFiles as $oldFile => $newFile) {
-            if ($filesystem->exists($this->projectDir . $oldFile)) {
+            if ($this->filesystem->exists($this->projectDir . $oldFile)) {
                 if ('y' === \strtolower(
                     $ui->ask(\sprintf('The "%s" should be renamed to "%s" should wo do this now?', $oldFile, $newFile), 'y')
                 )) {
-                    $filesystem->rename($this->projectDir . $oldFile, $this->projectDir . $newFile);
+                    $this->filesystem->rename($this->projectDir . $oldFile, $this->projectDir . $newFile);
                 }
             }
         }
@@ -150,11 +155,11 @@ class UpdateBuildCommand extends Command
                         $ui->writeln($mergedJson);
 
                         if ('y' === \strtolower(
-                                $ui->ask(
-                                    \sprintf('Merge "%s" together like above?', $file),
-                                    'y'
-                                )
-                            )) {
+                            $ui->ask(
+                                \sprintf('Merge "%s" together like above?', $file),
+                                'y'
+                            )
+                        )) {
                             $ui->writeln(\sprintf('Write new "%s" version.', $file));
                             $this->writeFile($filePath, $mergedJson . "\n");
                         }
@@ -198,15 +203,15 @@ class UpdateBuildCommand extends Command
             $tempProjectDir = $tempDirectory . \DIRECTORY_SEPARATOR . $extractedFolderName;
 
             $output->writeln('<info>Delete old build folder...</info>');
-            $filesystem->remove(\glob($buildDir . \DIRECTORY_SEPARATOR . '*'));
+            $this->filesystem->remove(\glob($buildDir . \DIRECTORY_SEPARATOR . '*'));
 
             $output->writeln('<info>Copy build folder from remote repository...</info>');
-            $filesystem->mirror(
+            $this->filesystem->mirror(
                 $tempProjectDir . static::BUILD_DIR,
                 $buildDir
             );
 
-            $filesystem->remove($tempDirectory);
+            $this->filesystem->remove($tempDirectory);
         } else {
             $output->writeln('<error>Error when unpacking the ZIP archive</error>');
         }
@@ -268,23 +273,46 @@ class UpdateBuildCommand extends Command
             return static::EXIT_CODE_ABORTED_MANUAL_BUILD;
         }
 
-        $ui->title('Start manual build ...');
+        $conflictingDirectories = [];
+        foreach ([
+             $this->projectDir . '/node_modules',
+             \dirname(__DIR__, 5) . '/node_modules',
+        ] as $conflictingDirectory) {
+            $renamedConflictingDirectoryName = $conflictingDirectory . '.bak';
+            if ($this->filesystem->exists($conflictingDirectory)) {
+                $this->filesystem->rename($conflictingDirectory, $renamedConflictingDirectoryName);
+            } elseif (!$this->filesystem->exists($renamedConflictingDirectoryName)) {
+                // only continue here when also the renamed node_modules does not exist from a previous run
+                continue;
+            }
 
-        $ui->section('Cleanup previously installed "node_modules" folders');
-        $this->cleanupPreviouslyInstalledDependencies();
-
-        $ui->section('Install npm dependencies');
-        if ($this->runProcess($ui, 'npm install')) {
-            $ui->error('Unexpected error while installing npm dependencies.');
-
-            return static::EXIT_CODE_COULD_NOT_INSTALL_NPM_PACKAGES;
+            $ui->writeln(\sprintf('Renaming conflicting directory "%s"', $conflictingDirectory));
+            $conflictingDirectories[$conflictingDirectory] = $renamedConflictingDirectoryName;
         }
 
-        $ui->section('Build administration interface assets');
-        if ($this->runProcess($ui, 'npm run build')) {
-            $ui->error('Unexpected error while building administration interface assets.');
+        try {
+            $ui->title('Start manual build ...');
 
-            return static::EXIT_CODE_COULD_NOT_BUILD_ADMIN_ASSETS;
+            $ui->section('Cleanup previously installed "node_modules" folders');
+            $this->cleanupPreviouslyInstalledDependencies();
+
+            $ui->section('Install npm dependencies');
+            if ($this->runProcess($ui, 'npm install')) {
+                $ui->error('Unexpected error while installing npm dependencies.');
+
+                return static::EXIT_CODE_COULD_NOT_INSTALL_NPM_PACKAGES;
+            }
+
+            $ui->section('Build administration interface assets');
+            if ($this->runProcess($ui, 'npm run build')) {
+                $ui->error('Unexpected error while building administration interface assets.');
+
+                return static::EXIT_CODE_COULD_NOT_BUILD_ADMIN_ASSETS;
+            }
+        } finally {
+            foreach ($conflictingDirectories as $conflictingDirectory => $renamedConflictingDirectoryName) {
+                $this->filesystem->rename($renamedConflictingDirectoryName, $conflictingDirectory);
+            }
         }
 
         return 0;
@@ -318,16 +346,15 @@ class UpdateBuildCommand extends Command
             $npmPackageFolders[] = $this->projectDir . static::ASSETS_DIR . \substr($path, \strlen('file:'));
         }
 
-        $filesystem = new Filesystem();
         foreach ($npmPackageFolders as $folder) {
             foreach ($filesToCleanup as $blockingFile) {
                 $path = $folder . $blockingFile;
 
-                if (!$filesystem->exists($path)) {
+                if (!$this->filesystem->exists($path)) {
                     continue;
                 }
 
-                $filesystem->remove($path);
+                $this->filesystem->remove($path);
             }
         }
     }

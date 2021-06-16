@@ -34,6 +34,27 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
     const OptimizeCssAssetsPlugin = require(path.resolve(nodeModulesPath, 'optimize-css-assets-webpack-plugin'));
     const {styles} = require(path.resolve(nodeModulesPath, '@ckeditor/ckeditor5-dev-utils'));
 
+    const conflictingNodeModulesDirectories = [];
+    const projectRootNodeModules = path.resolve(projectRootPath, 'node_modules');
+    if (process.cwd() !== projectRootPath && fs.existsSync(projectRootNodeModules)) {
+        conflictingNodeModulesDirectories.push(projectRootNodeModules);
+    }
+
+    // eslint-disable-next-line no-undef
+    const suluRootNodeModules = path.resolve(__dirname, 'node_modules');
+    // eslint-disable-next-line no-undef
+    if (__dirname !== projectRootPath && fs.existsSync(suluRootNodeModules)) {
+        conflictingNodeModulesDirectories.push(suluRootNodeModules);
+    }
+
+    if (conflictingNodeModulesDirectories.length) {
+        throw new Error(
+            'The following directories should not exist when creating an admin build ' +
+            'and could end in an unexpected error rename them temporary to avoid a conflict: ' +
+            conflictingNodeModulesDirectories.join(', ')
+        );
+    }
+
     return {
         entry: [path.resolve(__dirname, 'index.js')], // eslint-disable-line no-undef
         output: {

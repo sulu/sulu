@@ -26,6 +26,7 @@ composer.lock
 # npm
 package-lock.json
 node_modules/
+node_modules.bak/
 yarn.lock
 .php_cs.cache
 .eslintcache
