@@ -15,6 +15,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use PHPCR\PropertyType;
 use PHPCR\SessionInterface;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
+use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TestBundle\Testing\PHPCRImporter;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
@@ -73,7 +74,7 @@ class PageControllerTest extends SuluTestCase
         $this->importer = new PHPCRImporter($this->session, $this->liveSession);
     }
 
-    public function testGetFlatResponseWithoutFieldsAndParent()
+    public function testGetFlatResponseWithoutFieldsAndParent(): void
     {
         $this->client->jsonRequest('GET', '/api/pages?locale=en&flat=true');
         $this->assertHttpStatusCode(200, $this->client->getResponse());
@@ -89,7 +90,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertContains('Test CMF', $titles);
     }
 
-    public function testGetFlatResponseForWebspace()
+    public function testGetFlatResponseForWebspace(): void
     {
         $this->client->jsonRequest('GET', '/api/pages?locale=en&flat=true&webspace=sulu_io');
         $this->assertHttpStatusCode(200, $this->client->getResponse());
@@ -99,7 +100,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertEquals('Sulu CMF', $response->_embedded->pages[0]->title);
     }
 
-    public function testGetFlatResponseWithParentAndWithoutWebspace()
+    public function testGetFlatResponseWithParentAndWithoutWebspace(): void
     {
         $webspaceUuid = $this->session->getNode('/cmf/sulu_io/contents')->getIdentifier();
 
@@ -110,7 +111,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertCount(0, $response->_embedded->pages);
     }
 
-    public function testGetFlatResponseWithIds()
+    public function testGetFlatResponseWithIds(): void
     {
         $webspaceUuids = [
             $this->session->getNode('/cmf/test_io/contents')->getIdentifier(),
@@ -132,7 +133,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertObjectHasAttribute('id', $page2);
     }
 
-    public function testGetFlatResponseWithGhostIds()
+    public function testGetFlatResponseWithGhostIds(): void
     {
         $ghostDocument = $this->createPageDocument();
         $ghostDocument->setTitle('ghost_test_en');
@@ -197,7 +198,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertEquals('sulu_io', $page2->webspaceKey);
     }
 
-    public function testGetFlatResponseWithShadowAndGhostContent()
+    public function testGetFlatResponseWithShadowAndGhostContent(): void
     {
         $ghostDocument = $this->createPageDocument();
         $ghostDocument->setTitle('ghost_test_en');
@@ -265,7 +266,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertEquals('en', $childPages[1]->type->value);
     }
 
-    public function testGetWithPermissions()
+    public function testGetWithPermissions(): void
     {
         $securedPage = $this->createPageDocument();
         $securedPage->setTitle('secured');
@@ -291,7 +292,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertArrayHasKey('_permissions', $response);
     }
 
-    public function testSmallResponse()
+    public function testSmallResponse(): void
     {
         $data = [
             [
@@ -345,7 +346,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertArrayNotHasKey('shadowBaseLanguage', $response);
     }
 
-    public function testPost()
+    public function testPost(): void
     {
         $role = $this->createRole();
         $this->em->flush();
@@ -435,7 +436,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertFalse($liveContent->hasProperty('i18n:en-title'));
     }
 
-    public function testPostAndPublish()
+    public function testPostAndPublish(): void
     {
         $data = [
             'title' => 'Testtitle',
@@ -487,7 +488,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertEquals($this->getTestUserId(), $content->getPropertyValue('i18n:en-changer'));
     }
 
-    public function testPostWithExistingResourceLocator()
+    public function testPostWithExistingResourceLocator(): void
     {
         $data = [
             'title' => 'news',
@@ -517,7 +518,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(409, $this->client->getResponse());
     }
 
-    public function testPostWithBlockSettings()
+    public function testPostWithBlockSettings(): void
     {
         $data = [
             'title' => 'Block',
@@ -561,7 +562,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertEquals('w', $response->article[1]->settings->segments->sulu_io);
     }
 
-    public function testGet()
+    public function testGet(): void
     {
         $document = $this->createPageDocument();
         $document->setTitle('test_en');
@@ -613,7 +614,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertEquals('Test German', $response['article']);
     }
 
-    public function testGetAnotherTemplate()
+    public function testGetAnotherTemplate(): void
     {
         $document = $this->createPageDocument();
         $document->setTitle('test_en');
@@ -660,19 +661,19 @@ class PageControllerTest extends SuluTestCase
         $this->assertEquals('Test English', $response['article']);
     }
 
-    public function testGetNotExisting()
+    public function testGetNotExisting(): void
     {
         $this->client->jsonRequest('GET', '/api/pages/not-existing-id?language=en');
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
-    public function testGetNotExistingTree()
+    public function testGetNotExistingTree(): void
     {
         $this->client->jsonRequest('GET', '/api/pages?expandedIds=not-existing-id&webspace=sulu_io&language=en&fields=title,order,published');
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
-    public function testGetGhostContent()
+    public function testGetGhostContent(): void
     {
         $document = $this->createPageDocument();
         $document->setTitle('test_en');
@@ -703,7 +704,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertArrayNotHasKey('type', $response);
     }
 
-    public function testGetShadowContent()
+    public function testGetShadowContent(): void
     {
         $document = $this->createPageDocument();
         $document->setTitle('test_en');
@@ -748,7 +749,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertEquals(true, $response['shadowOn']);
     }
 
-    public function testGetInternalLink()
+    public function testGetInternalLink(): void
     {
         $targetPage = $this->createPageDocument();
         $targetPage->setTitle('target');
@@ -777,7 +778,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertEquals($targetPage->getUuid(), $response['internal_link']);
     }
 
-    public function testGetExternalLink()
+    public function testGetExternalLink(): void
     {
         $externalLinkPage = $this->createPageDocument();
         $externalLinkPage->setTitle('page');
@@ -795,7 +796,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertEquals('http://www.sulu.io', $response['external']);
     }
 
-    public function testDelete()
+    public function testDelete(): void
     {
         $data = [
             [
@@ -829,7 +830,172 @@ class PageControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
-    public function testDeleteLocale()
+    public function testDeleteWithChildren(): void
+    {
+        $page1 = $this->setUpContent([
+            [
+                'template' => 'default',
+                'title' => 'test1',
+                'url' => '/test1',
+            ],
+        ])[0];
+
+        $page1_1 = $this->setUpContent([
+            [
+                'parentUuid' => $page1['id'],
+                'template' => 'default',
+                'title' => 'test1-1',
+                'url' => '/test1-1',
+            ],
+        ])[0];
+
+        $page1_2 = $this->setUpContent([
+            [
+                'parentUuid' => $page1['id'],
+                'template' => 'default',
+                'title' => 'test1-2',
+                'url' => '/test1-2',
+            ],
+        ])[0];
+
+        $page1_2_1 = $this->setUpContent([
+            [
+                'parentUuid' => $page1_2['id'],
+                'template' => 'default',
+                'title' => 'test1-2-1',
+                'url' => '/test1-2-1',
+            ],
+        ])[0];
+
+        $this->client->jsonRequest('DELETE', '/api/pages/' . $page1['id'] . '?webspace=sulu_io&language=en');
+
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(409, $response);
+
+        $content = \json_decode((string) $response->getContent(), true);
+        $this->assertIsArray($content);
+        $this->assertArrayHasKey('errors', $content);
+        unset($content['errors']);
+
+        $this->assertEquals([
+            'code' => 1105,
+            'message' => 'Resource has 3 dependant resources.',
+            'dependantResourcesCount' => 3,
+            'dependantResources' => [
+                [
+                    [
+                        'id' => $page1_2_1['id'],
+                        'resourceKey' => 'pages',
+                    ],
+                ],
+                [
+                    [
+                        'id' => $page1_1['id'],
+                        'resourceKey' => 'pages',
+                    ],
+                    [
+                        'id' => $page1_2['id'],
+                        'resourceKey' => 'pages',
+                    ],
+                ],
+            ],
+        ], $content);
+    }
+
+    public function testDeleteWithChildrenWithoutPermissions(): void
+    {
+        $role = $this->createRole('User', 'Sulu');
+
+        $userRole = new UserRole();
+        $userRole->setUser($this->getTestUser());
+        $userRole->setLocale('["en-gb", "de"]');
+        $userRole->setRole($role);
+        $this->em->persist($userRole);
+
+        $this->getTestUser()->addUserRole($userRole);
+        $this->em->flush();
+
+        $permissions = [
+            $role->getId() => [
+                'view' => true,
+                'edit' => true,
+                'add' => true,
+                'delete' => false,
+                'archive' => true,
+                'live' => true,
+                'security' => true,
+            ],
+        ];
+
+        $fullPermissions = [
+            $role->getId() => [
+                'view' => true,
+                'edit' => true,
+                'add' => true,
+                'delete' => true,
+                'archive' => true,
+                'live' => true,
+                'security' => true,
+            ],
+        ];
+
+        $page1 = $this->setUpContent([
+            [
+                'template' => 'default',
+                'title' => 'test1',
+                'url' => '/test1',
+            ],
+        ])[0];
+
+        $page1_1 = $this->setUpContent([
+            [
+                'parentUuid' => $page1['id'],
+                'template' => 'default',
+                'title' => 'test1-1',
+                'url' => '/test1-1',
+            ],
+        ])[0];
+
+        $page1_2 = $this->setUpContent([
+            [
+                'parentUuid' => $page1['id'],
+                'template' => 'default',
+                'title' => 'test1-2',
+                'url' => '/test1-2',
+            ],
+        ])[0];
+
+        $page1_2_1 = $this->setUpContent([
+            [
+                'parentUuid' => $page1_2['id'],
+                'template' => 'default',
+                'title' => 'test1-2-1',
+                'url' => '/test1-2-1',
+            ],
+        ])[0];
+
+        $this->accessControlManager->setPermissions(SecurityBehavior::class, (string) $page1_1['id'], $permissions);
+        $this->accessControlManager->setPermissions(SecurityBehavior::class, (string) $page1_2['id'], $fullPermissions);
+        $this->accessControlManager->setPermissions(SecurityBehavior::class, (string) $page1_2_1['id'], $permissions);
+
+        $this->client->jsonRequest('DELETE', '/api/pages/' . $page1['id'] . '?webspace=sulu_io&language=en');
+
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(403, $response);
+
+        $content = \json_decode((string) $response->getContent(), true);
+        $this->assertIsArray($content);
+        $this->assertArrayHasKey('errors', $content);
+        unset($content['errors']);
+
+        $this->assertEquals([
+            'code' => 1104,
+            'message' => 'Insufficient permissions for 2 descendant elements.',
+            'detail' => 'Insufficient permissions for 2 descendant elements.',
+        ], $content);
+    }
+
+    public function testDeleteLocale(): void
     {
         $data = [
             [
@@ -869,7 +1035,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertCount(1, \json_decode($this->client->getResponse()->getContent(), true)['contentLocales']);
     }
 
-    public function testPut()
+    public function testPut(): void
     {
         $data = [
             'title' => 'Testtitle',
@@ -940,7 +1106,7 @@ class PageControllerTest extends SuluTestCase
         );
     }
 
-    public function testPutAndPublish()
+    public function testPutAndPublish(): void
     {
         $data = [
             [
@@ -1002,7 +1168,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertEquals($this->getTestUserId(), $content->getPropertyValue('i18n:en-changer'));
     }
 
-    public function testPutHomeWithChildren()
+    public function testPutHomeWithChildren(): void
     {
         $data = [
             'title' => 'Testtitle',
@@ -1048,13 +1214,13 @@ class PageControllerTest extends SuluTestCase
         $this->assertEquals($data['title'], $response->title);
     }
 
-    public function testPutNotExisting()
+    public function testPutNotExisting(): void
     {
         $this->client->jsonRequest('PUT', '/api/pages/not-existing-id?language=de', []);
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
-    public function testPutWithTemplateChange()
+    public function testPutWithTemplateChange(): void
     {
         $data = [
             [
@@ -1090,7 +1256,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertEquals('article test', $response->article);
     }
 
-    public function testPutShadow()
+    public function testPutShadow(): void
     {
         $data = [
             'title' => 'Testtitle',
@@ -1133,7 +1299,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertArrayNotHasKey('type', $response);
     }
 
-    public function testPutRemoveShadowWithDifferentTemplate()
+    public function testPutRemoveShadowWithDifferentTemplate(): void
     {
         $document = $this->createPageDocument();
         $document->setTitle('test_en');
@@ -1183,7 +1349,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertEquals('overview', $response['template']);
     }
 
-    public function testPutWithValidHash()
+    public function testPutWithValidHash(): void
     {
         $data = [
             'title' => 'Testtitle',
@@ -1208,7 +1374,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $this->client->getResponse());
     }
 
-    public function testPutWithInvalidHash()
+    public function testPutWithInvalidHash(): void
     {
         $data = [
             'title' => 'Testtitle',
@@ -1245,7 +1411,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $this->client->getResponse());
     }
 
-    public function testPutWithAlreadyExistingUrl()
+    public function testPutWithAlreadyExistingUrl(): void
     {
         $data = [
             'title' => 'Testtitle',
@@ -1285,7 +1451,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertEquals(1103, $response['code']);
     }
 
-    public function testHistory()
+    public function testHistory(): void
     {
         $data = [
             'title' => 'news',
@@ -1343,7 +1509,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertEquals('/a1', $response['_embedded']['page_resourcelocators'][1]['resourcelocator']);
     }
 
-    public function testTreeGetTillId()
+    public function testTreeGetTillId(): void
     {
         $data = $this->importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
 
@@ -1380,7 +1546,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertNull($node4->_embedded->pages);
     }
 
-    public function testTreeGetTillSelectedId()
+    public function testTreeGetTillSelectedId(): void
     {
         $data = $this->importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
 
@@ -1417,7 +1583,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertNull($node4->_embedded->pages);
     }
 
-    public function testTreeGetTillSelectedIdWithoutWebspace()
+    public function testTreeGetTillSelectedIdWithoutWebspace(): void
     {
         $data = $this->importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
 
@@ -1454,7 +1620,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertNull($node4->_embedded->pages);
     }
 
-    public function testTreeGetTillIdWithLinkedProperty()
+    public function testTreeGetTillIdWithLinkedProperty(): void
     {
         $externalLinkPage = $this->createPageDocument();
         $externalLinkPage->setTitle('page');
@@ -1497,7 +1663,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertEquals('internal', $node2->linked);
     }
 
-    public function testMove()
+    public function testMove(): void
     {
         $data = $this->importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
 
@@ -1552,7 +1718,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertTrue($rootNode->hasNode('cmf/sulu_io/routes/fr/test2/test3/testing5'));
     }
 
-    public function testMoveNonExistingSource()
+    public function testMoveNonExistingSource(): void
     {
         $data = $this->importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
 
@@ -1563,7 +1729,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
-    public function testMoveNonExistingDestination()
+    public function testMoveNonExistingDestination(): void
     {
         $data = $this->importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
 
@@ -1574,7 +1740,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
-    public function testCopy()
+    public function testCopy(): void
     {
         $data = $this->importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
 
@@ -1613,7 +1779,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertFalse($rootNode->hasNode('cmf/sulu_io/routes/en/test2/test3/testing5'));
     }
 
-    public function testCopyOtherWebspace()
+    public function testCopyOtherWebspace(): void
     {
         $page = $this->createPageDocument();
         $page->setTitle('Testpage');
@@ -1655,7 +1821,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertEquals('/testpage', $response['url']);
     }
 
-    public function testCopyWithShadow()
+    public function testCopyWithShadow(): void
     {
         $document = $this->createPageDocument();
         $document->setTitle('test_en');
@@ -1711,7 +1877,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertStringStartsWith('/test-en/test-en', $englishDocument->getResourceSegment());
     }
 
-    public function testCopyNonExistingSource()
+    public function testCopyNonExistingSource(): void
     {
         $data = $this->importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
 
@@ -1722,7 +1888,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
-    public function testCopyNonExistingDestination()
+    public function testCopyNonExistingDestination(): void
     {
         $data = $this->importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
 
@@ -1733,7 +1899,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
-    public function testUnpublish()
+    public function testUnpublish(): void
     {
         $document = $this->createPageDocument();
         $document->setTitle('test_de');
@@ -1758,7 +1924,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertEmpty($liveNode->getProperties('i18n:de-*'));
     }
 
-    public function testRemoveDraft()
+    public function testRemoveDraft(): void
     {
         $document = $this->createPageDocument();
         $document->setTitle('published title');
@@ -1795,7 +1961,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertEquals('published title', $liveNode->getPropertyValue('i18n:de-title'));
     }
 
-    public function testRemoveDraftWithoutWebspace()
+    public function testRemoveDraftWithoutWebspace(): void
     {
         $document = $this->createPageDocument();
         $document->setTitle('published title');
@@ -1822,7 +1988,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(400, $this->client->getResponse());
     }
 
-    public function testOrder()
+    public function testOrder(): void
     {
         $data = $this->importer->import(__DIR__ . '/../../fixtures/exports/order.xml');
 
@@ -1877,7 +2043,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertEquals(40, $items[3]['order']);
     }
 
-    public function testOrderWithGhosts()
+    public function testOrderWithGhosts(): void
     {
         $data = $this->importer->import(__DIR__ . '/../../fixtures/exports/order.xml');
 
@@ -1928,7 +2094,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertEquals(40, $items[3]['order']);
     }
 
-    public function testOrderNonExistingSource()
+    public function testOrderNonExistingSource(): void
     {
         $this->client->jsonRequest(
             'POST',
@@ -1940,7 +2106,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(400, $this->client->getResponse());
     }
 
-    public function testOrderNonExistingPosition()
+    public function testOrderNonExistingPosition(): void
     {
         $data = [
             [
@@ -1969,7 +2135,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(400, $this->client->getResponse());
     }
 
-    public function testNavContexts()
+    public function testNavContexts(): void
     {
         $data = [
             'title' => 'test1',
@@ -2011,7 +2177,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertFalse($response['hasSub']);
     }
 
-    public function testSegment()
+    public function testSegment(): void
     {
         $data = [
             'title' => 'test1',
@@ -2052,7 +2218,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertEquals('s', $data['ext']['excerpt']['segments']['sulu_io']);
     }
 
-    public function testPostTriggerAction()
+    public function testPostTriggerAction(): void
     {
         $webspaceUuid = $this->session->getNode('/cmf/sulu_io/contents')->getIdentifier();
 
@@ -2063,7 +2229,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $this->client->getResponse());
     }
 
-    public function testCopyLocale()
+    public function testCopyLocale(): void
     {
         $data = [
             'title' => 'test1',
@@ -2111,7 +2277,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertContains('en', $result['contentLocales']);
     }
 
-    public function testCopyLocaleWithSource()
+    public function testCopyLocaleWithSource(): void
     {
         $data = [
             'title' => 'test1',
@@ -2157,7 +2323,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertContains('en', $result['contentLocales']);
     }
 
-    public function testCopyMultipleLocales()
+    public function testCopyMultipleLocales(): void
     {
         $data = [
             'title' => 'test1',
@@ -2204,7 +2370,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertContains('en', $result['contentLocales']);
     }
 
-    public function testInternalLinkAutoName()
+    public function testInternalLinkAutoName(): void
     {
         $data = [
             [
@@ -2243,7 +2409,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertEquals('Dornbirn', $result['title']);
     }
 
-    public function testRenamePageWithLinkedChild()
+    public function testRenamePageWithLinkedChild(): void
     {
         $this->importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
 
@@ -2288,7 +2454,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertEquals($data['id'], $node->getIdentifier());
     }
 
-    public function testDeleteReferencedNode()
+    public function testDeleteReferencedNode(): void
     {
         $linkedDocument = $this->createPageDocument();
         $linkedDocument->setTitle('test1');
@@ -2333,11 +2499,11 @@ class PageControllerTest extends SuluTestCase
         return $this->documentManager->create('page');
     }
 
-    private function createRole()
+    private function createRole(string $name = 'Role', string $system = 'Website')
     {
         $role = new Role();
-        $role->setName('Role');
-        $role->setSystem('Website');
+        $role->setName($name);
+        $role->setSystem($system);
 
         $this->em->persist($role);
 
@@ -2349,11 +2515,14 @@ class PageControllerTest extends SuluTestCase
         $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
 
         for ($i = 0; $i < \count($data); ++$i) {
+            $pageData = $data[$i];
+
             $this->client->jsonRequest(
                 'POST',
-                '/api/pages?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&language=en',
-                $data[$i]
+                '/api/pages?parentId=' . ($pageData['parentUuid'] ?? $homeDocument->getUuid()) . '&webspace=sulu_io&language=en',
+                $pageData
             );
+
             $data[$i] = (array) \json_decode($this->client->getResponse()->getContent(), true);
         }
 

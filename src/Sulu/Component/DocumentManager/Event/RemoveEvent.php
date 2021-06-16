@@ -11,6 +11,23 @@
 
 namespace Sulu\Component\DocumentManager\Event;
 
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
 class RemoveEvent extends AbstractDocumentEvent
 {
+    use EventOptionsTrait;
+
+    /**
+     * @param object $document
+     * @param mixed[] $options
+     */
+    public function __construct($document, array $options = [])
+    {
+        parent::__construct($document);
+
+        /** @var OptionsResolver $optionsResovler */
+        $optionsResovler = $options;
+
+        $this->options = $optionsResovler;
+    }
 }

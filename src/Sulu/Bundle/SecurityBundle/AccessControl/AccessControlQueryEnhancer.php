@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\SecurityBundle\AccessControl;
 
+use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Sulu\Bundle\SecurityBundle\Entity\AccessControl;
@@ -108,5 +109,58 @@ class AccessControlQueryEnhancer
         $queryBuilder->setParameter('roleIds', $roleIds);
         $queryBuilder->setParameter('permission', $permission);
         $queryBuilder->setParameter('system', $this->systemStore->getSystem());
+    }
+
+    /**
+     * @param array<string|int> $entityIds
+     *
+     * @return array<string|int>
+     */
+    public function findIdsWithGrantedPermissions(
+        ?UserInterface $user,
+        int $permission,
+        string $entityClass,
+        array $entityIds
+    ): array {
+        $systemRoleQueryBuilder = $this->entityManager->createQueryBuilder()
+            ->from(RoleInterface::class, 'systemRoles')
+            ->select('systemRoles.id')
+            ->where('systemRoles.system = :system');
+
+        $queryBuilder = $this->entityManager->createQueryBuilder()
+            ->select('accessControl.entityId as id')
+            ->distinct()
+            ->from(AccessControl::class, 'accessControl')
+            ->innerJoin('accessControl.role', 'role')
+            ->where('accessControl.entityClass = :entityClass')
+            ->andWhere('CAST(accessControl.entityId AS STRING) IN (:entityIds)')
+            ->andWhere('accessControl.role IN (' . $systemRoleQueryBuilder->getDQL() . ')')
+            ->setParameter('system', $this->systemStore->getSystem())
+            ->setParameter('entityClass', $entityClass)
+            ->setParameter('entityIds', $entityIds, Connection::PARAM_STR_ARRAY)
+        ;
+
+        $idsWithPermissions = \array_column($queryBuilder->getQuery()->getArrayResult(), 'id');
+        $idsWithoutPermissions = \array_diff($entityIds, $idsWithPermissions);
+
+        if ($user) {
+            $roleIds = \array_map(function(RoleInterface $role) {
+                return $role->getId();
+            }, $user->getRoleObjects());
+        } else {
+            $anonymousRole = $this->systemStore->getAnonymousRole();
+            $roleIds = $anonymousRole ? [$anonymousRole->getId()] : [];
+        }
+
+        $queryBuilder
+            ->andWhere('BIT_AND(accessControl.permissions, :permission) = :permission')
+            ->andWhere('role.id IN(:roleIds)')
+            ->setParameter('roleIds', $roleIds)
+            ->setParameter('permission', $permission)
+        ;
+
+        $idsWithGrantedPermissions = \array_column($queryBuilder->getQuery()->getArrayResult(), 'id');
+
+        return \array_merge($idsWithGrantedPermissions, $idsWithoutPermissions);
     }
 }
