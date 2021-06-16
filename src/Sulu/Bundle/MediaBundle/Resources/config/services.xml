@@ -430,6 +430,7 @@
 
         <service id="sulu_media.reference_store.media" class="Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore">
             <tag name="sulu_website.reference_store" alias="media"/>
+            <tag name="kernel.reset" method="reset"/>
         </service>
 
         <service id="sulu_media.doctrine.invalidation_listener"
