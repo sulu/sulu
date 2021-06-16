@@ -35,16 +35,19 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
     const {styles} = require(path.resolve(nodeModulesPath, '@ckeditor/ckeditor5-dev-utils'));
 
     const conflictingNodeModulesDirectories = [];
-    const projectRootNodeModules = path.resolve(projectRootPath, 'node_modules');
-    if (process.cwd() !== projectRootPath && fs.existsSync(projectRootNodeModules)) {
-        conflictingNodeModulesDirectories.push(projectRootNodeModules);
+    const projectRootNodeModulesPath = path.resolve(projectRootPath, 'node_modules');
+    if (process.cwd() !== projectRootPath && fs.existsSync(projectRootNodeModulesPath)) {
+        conflictingNodeModulesDirectories.push(projectRootNodeModulesPath);
     }
 
     // eslint-disable-next-line no-undef
-    const suluRootNodeModules = path.resolve(__dirname, 'node_modules');
+    const suluRootNodeModulesPath = path.resolve(__dirname, 'node_modules');
     // eslint-disable-next-line no-undef
-    if (__dirname !== projectRootPath && fs.existsSync(suluRootNodeModules)) {
-        conflictingNodeModulesDirectories.push(suluRootNodeModules);
+    if (__dirname !== projectRootPath
+        && fs.existsSync(suluRootNodeModulesPath)
+        && argv.mode !== 'development'
+    ) {
+        conflictingNodeModulesDirectories.push(suluRootNodeModulesPath);
     }
 
     if (conflictingNodeModulesDirectories.length) {

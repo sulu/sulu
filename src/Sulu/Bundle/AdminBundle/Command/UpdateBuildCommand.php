@@ -40,6 +40,11 @@ class UpdateBuildCommand extends Command
     /**
      * @var string
      */
+    private $suluVendorDir;
+
+    /**
+     * @var string
+     */
     private $suluVersion;
 
     /**
@@ -72,6 +77,8 @@ class UpdateBuildCommand extends Command
         $this->httpClient = $httpClient;
         $this->projectDir = $projectDir;
         $this->suluVersion = $suluVersion;
+
+        $this->suluVendorDir = \dirname(__DIR__, 5);
         $this->remoteRepository = 'https://raw.githubusercontent.com/sulu/skeleton/' . $suluVersion;
         $this->remoteArchive = 'https://codeload.github.com/sulu/skeleton/zip/' . $suluVersion;
         $this->filesystem = new Filesystem();
@@ -276,18 +283,17 @@ class UpdateBuildCommand extends Command
         $conflictingDirectories = [];
         foreach ([
              $this->projectDir . '/node_modules',
-             \dirname(__DIR__, 5) . '/node_modules',
+             $this->suluVendorDir . '/node_modules',
         ] as $conflictingDirectory) {
             $renamedConflictingDirectoryName = $conflictingDirectory . '.bak';
             if ($this->filesystem->exists($conflictingDirectory)) {
+                $ui->writeln(\sprintf('Renaming directory "%s" to prevent webpack resolution conflicts during build', $conflictingDirectory));
                 $this->filesystem->rename($conflictingDirectory, $renamedConflictingDirectoryName);
-            } elseif (!$this->filesystem->exists($renamedConflictingDirectoryName)) {
-                // only continue here when also the renamed node_modules does not exist from a previous run
-                continue;
+                $conflictingDirectories[$conflictingDirectory] = $renamedConflictingDirectoryName;
+            } elseif ($this->filesystem->exists($renamedConflictingDirectoryName)) {
+                // add also previously renamed directory from a manual cancelled process
+                $conflictingDirectories[$conflictingDirectory] = $renamedConflictingDirectoryName;
             }
-
-            $ui->writeln(\sprintf('Renaming directory "%s" to prevent webpack resolution conflicts during build', $conflictingDirectory));
-            $conflictingDirectories[$conflictingDirectory] = $renamedConflictingDirectoryName;
         }
 
         try {
@@ -333,10 +339,9 @@ class UpdateBuildCommand extends Command
             throw new \Exception(\sprintf('Could not parse "%s" file', static::ASSETS_DIR . 'package.json'));
         }
 
-        $suluVendorAssetFolder = \dirname(\dirname(\dirname(\dirname(\dirname(__DIR__)))));
         $npmPackageFolders = [
             $this->projectDir . static::ASSETS_DIR,
-            $suluVendorAssetFolder,
+            $this->suluVendorDir,
         ];
 
         foreach ($packageJson['dependencies'] as $dependency => $path) {
