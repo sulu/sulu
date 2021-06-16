@@ -16,6 +16,7 @@ use PHPCR\PropertyInterface as NodePropertyInterface;
 use PHPCR\PropertyType;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Types\Number;
 
@@ -32,17 +33,17 @@ class NumberTest extends TestCase
     private $number;
 
     /**
-     * @var NodeInterface
+     * @var NodeInterface|ObjectProphecy
      */
     private $node;
 
     /**
-     * @var PropertyInterface
+     * @var PropertyInterface|ObjectProphecy
      */
     private $property;
 
     /**
-     * @var NodePropertyInterface
+     * @var NodePropertyInterface|ObjectProphecy
      */
     private $nodeProperty;
 
@@ -55,7 +56,7 @@ class NumberTest extends TestCase
         $this->number = new Number($this->template);
     }
 
-    public function testRead()
+    public function testRead(): void
     {
         $content = 12.3;
 
@@ -68,7 +69,7 @@ class NumberTest extends TestCase
         $this->number->read($this->node->reveal(), $this->property->reveal(), 'sulu_io', 'de', null);
     }
 
-    public function testReadWithoutExistingProperty()
+    public function testReadWithoutExistingProperty(): void
     {
         $this->property->getName()->willReturn('i18n:de-test');
         $this->node->hasProperty('i18n:de-test')->willReturn(false)->shouldBeCalled();
@@ -79,7 +80,7 @@ class NumberTest extends TestCase
         $this->number->read($this->node->reveal(), $this->property->reveal(), 'sulu_io', 'de', null);
     }
 
-    public function testWrite()
+    public function testWrite(): void
     {
         $content = 15;
 
@@ -90,7 +91,7 @@ class NumberTest extends TestCase
         $this->number->write($this->node->reveal(), $this->property->reveal(), 1, 'sulu_io', 'de', null);
     }
 
-    public function testWriteZero()
+    public function testWriteZero(): void
     {
         $content = 0;
 
@@ -101,7 +102,7 @@ class NumberTest extends TestCase
         $this->number->write($this->node->reveal(), $this->property->reveal(), 1, 'sulu_io', 'de', null);
     }
 
-    public function testWriteNoValue()
+    public function testWriteNoValue(): void
     {
         $this->property->getName()->willReturn('i18n:de-test');
         $this->property->getValue()->willReturn(null);
