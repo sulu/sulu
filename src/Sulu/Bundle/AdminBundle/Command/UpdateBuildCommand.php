@@ -286,7 +286,7 @@ class UpdateBuildCommand extends Command
                 continue;
             }
 
-            $ui->writeln(\sprintf('Renaming conflicting directory "%s"', $conflictingDirectory));
+            $ui->writeln(\sprintf('Renaming directory "%s" to prevent webpack resolution conflicts during build', $conflictingDirectory));
             $conflictingDirectories[$conflictingDirectory] = $renamedConflictingDirectoryName;
         }
 
@@ -311,6 +311,7 @@ class UpdateBuildCommand extends Command
             }
         } finally {
             foreach ($conflictingDirectories as $conflictingDirectory => $renamedConflictingDirectoryName) {
+                $ui->writeln(\sprintf('Restore original name of renamed directory "%s"', $conflictingDirectory));
                 $this->filesystem->rename($renamedConflictingDirectoryName, $conflictingDirectory);
             }
         }
