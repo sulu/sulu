@@ -122,6 +122,7 @@
     "sulu_admin.heading6": "Überschrift 6",
     "sulu_admin.dirty_warning_dialog_title": "Formular verlassen?",
     "sulu_admin.dirty_warning_dialog_text": "Ihre Änderungen werden nicht gespeichert.",
+    "sulu_admin.change_type_dirty_warning_dialog_title": "Template ändern?",
     "sulu_admin.export": "Exportieren",
     "sulu_admin.export_overlay_title": "Datenformat konfigurieren",
     "sulu_admin.delimiter": "Trennzeichen",

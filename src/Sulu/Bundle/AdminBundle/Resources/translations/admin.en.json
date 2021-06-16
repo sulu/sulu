@@ -122,6 +122,7 @@
     "sulu_admin.heading6": "Heading 6",
     "sulu_admin.dirty_warning_dialog_title": "Leave form?",
     "sulu_admin.dirty_warning_dialog_text": "Changes you made will not be saved.",
+    "sulu_admin.change_type_dirty_warning_dialog_title": "Change template?",
     "sulu_admin.export": "Export",
     "sulu_admin.export_overlay_title": "Configure data format",
     "sulu_admin.delimiter": "Delimiter",

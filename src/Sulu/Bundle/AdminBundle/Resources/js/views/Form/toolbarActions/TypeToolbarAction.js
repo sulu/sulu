@@ -1,9 +1,15 @@
 // @flow
 import jexl from 'jexl';
+import React from 'react';
+import {observable, action} from 'mobx';
+import Dialog from '../../../components/Dialog';
+import {translate} from '../../../utils';
 import AbstractFormToolbarAction from './AbstractFormToolbarAction';
 import type {ToolbarItemConfig} from '../../../containers/Toolbar/types';
 
 export default class TypeToolbarAction extends AbstractFormToolbarAction {
+    @observable selectedTypeForUnsavedChangesDialog: ?string = undefined;
+
     getToolbarItemConfig(): ?ToolbarItemConfig<string> {
         const formTypes = Object.keys(this.resourceFormStore.types).map((key) => this.resourceFormStore.types[key]);
 
@@ -29,13 +35,17 @@ export default class TypeToolbarAction extends AbstractFormToolbarAction {
         return {
             type: 'select',
             icon: 'su-brush',
-            onChange: (value: string | number) => {
+            onChange: action((value: string | number) => {
                 if (typeof value !== 'string') {
                     throw new Error('Only strings are valid as a form type!');
                 }
 
-                this.resourceFormStore.changeType(value);
-            },
+                if (!this.resourceFormStore.dirty) {
+                    this.resourceFormStore.changeType(value);
+                } else {
+                    this.selectedTypeForUnsavedChangesDialog = value;
+                }
+            }),
             loading: this.resourceFormStore.typesLoading,
             value: this.resourceFormStore.type,
             disabled: isDisabled,
@@ -45,4 +55,32 @@ export default class TypeToolbarAction extends AbstractFormToolbarAction {
             })),
         };
     }
+
+    getNode() {
+        return (
+            <Dialog
+                cancelText={translate('sulu_admin.cancel')}
+                confirmText={translate('sulu_admin.ok')}
+                key="sulu_admin.type"
+                onCancel={this.handleUnsavedChangesDialogClose}
+                onConfirm={this.handleUnsavedChangesDialogConfirm}
+                open={!!this.selectedTypeForUnsavedChangesDialog}
+                title={translate('sulu_admin.change_type_dirty_warning_dialog_title')}
+            >
+                {translate('sulu_admin.dirty_warning_dialog_text')}
+            </Dialog>
+        );
+    }
+
+    @action handleUnsavedChangesDialogClose = () => {
+        this.selectedTypeForUnsavedChangesDialog = undefined;
+    };
+
+    @action handleUnsavedChangesDialogConfirm = () => {
+        if (this.selectedTypeForUnsavedChangesDialog) {
+            this.resourceFormStore.changeType(this.selectedTypeForUnsavedChangesDialog);
+        }
+
+        this.selectedTypeForUnsavedChangesDialog = undefined;
+    };
 }
