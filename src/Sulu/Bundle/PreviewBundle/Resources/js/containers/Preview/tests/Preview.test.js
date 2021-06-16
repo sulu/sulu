@@ -449,7 +449,7 @@ test('Dont react or update preview when data is changed during preview-store is 
     });
 });
 
-test('React and update-context when type is changed', () => {
+test('React and update-context when schema is changed', () => {
     const resourceStore = new ResourceStore('pages', 1);
     const formStore = new ResourceFormStore(resourceStore, 'pages');
 
@@ -459,6 +459,7 @@ test('React and update-context when type is changed', () => {
     formStore.loading = false;
     // $FlowFixMe
     formStore.type = observable.box('default');
+    formStore.schema = observable.box({title: {label: 'Title'}});
 
     const router = new Router({});
     const preview = mount(<Preview formStore={formStore} router={router} />);
@@ -475,9 +476,11 @@ test('React and update-context when type is changed', () => {
 
     // $FlowFixMe
     formStore.type.set('homepage');
+    // $FlowFixMe
+    formStore.schema.set({title: {label: 'Title', colSpan: 12}});
 
     return startPromise.then(() => {
-        expect(previewStore.updateContext).toBeCalledWith('homepage', observable.map({title: 'Test'}));
+        expect(previewStore.updateContext).toBeCalledWith('homepage', {title: 'Test'});
     });
 });
 

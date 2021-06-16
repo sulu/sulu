@@ -42,7 +42,7 @@ class Preview extends React.Component<Props> {
     @observable webspaceOptions: Array<Object> = [];
     @observable reloadCounter: number = 0;
 
-    typeDisposer: () => mixed;
+    schemaDisposer: () => mixed;
     dataDisposer: () => mixed;
 
     @computed get webspaceKey() {
@@ -136,10 +136,10 @@ class Preview extends React.Component<Props> {
             }
         );
 
-        this.typeDisposer = reaction(
-            () => toJS(formStore.type),
-            (type) => {
-                previewStore.updateContext(type, formStore.data).then(this.setContent);
+        this.schemaDisposer = reaction(
+            () => toJS(formStore.schema),
+            () => {
+                previewStore.updateContext(toJS(formStore.type), toJS(formStore.data)).then(this.setContent);
             }
         );
     };
@@ -162,8 +162,8 @@ class Preview extends React.Component<Props> {
     };
 
     componentWillUnmount() {
-        if (this.typeDisposer) {
-            this.typeDisposer();
+        if (this.schemaDisposer) {
+            this.schemaDisposer();
         }
 
         if (this.dataDisposer) {

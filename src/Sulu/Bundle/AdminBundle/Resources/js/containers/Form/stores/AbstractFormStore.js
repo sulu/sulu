@@ -5,7 +5,7 @@ import log from 'loglevel';
 import type {IObservableValue} from 'mobx/lib/mobx';
 import type {Schema, SchemaEntry} from '../types';
 
-const SECTION_TYPE = 'section';
+export const SECTION_TYPE = 'section';
 
 function addSchemaProperties(data: Object, key: string, schema: Schema) {
     const type = schema[key].type;
@@ -104,7 +104,7 @@ export default class AbstractFormStore
     +metadataOptions: ?{[string]: any};
     +loading: boolean;
     +locale: ?IObservableValue<string>;
-    schema: Schema;
+    @observable schema: Schema;
     modifiedFields: Array<string> = [];
     @observable errors: Object = {};
     validator: ?(data: Object) => boolean;

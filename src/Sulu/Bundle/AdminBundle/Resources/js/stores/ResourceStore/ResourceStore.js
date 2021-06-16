@@ -1,5 +1,5 @@
 // @flow
-import {action, autorun, observable, toJS, set, when} from 'mobx';
+import {action, autorun, observable, set, toJS, when} from 'mobx';
 import log from 'loglevel';
 import jsonpointer from 'json-pointer';
 import ResourceRequester from '../../services/ResourceRequester';
@@ -62,23 +62,12 @@ export default class ResourceStore {
             return;
         }
 
-        const options = {};
-        if (locale) {
-            options.locale = locale.get();
-        }
-
         log.info('ResourceStore loads "' + this.resourceKey + '" data with the ID "' + id + '"');
 
         this.setLoading(true);
         this.setForbidden(false);
-        const promise = this.idQueryParameter
-            ? ResourceRequester.get(
-                this.resourceKey,
-                {...options, ...this.loadOptions, [this.idQueryParameter]: id}
-            )
-            : ResourceRequester.get(this.resourceKey, {...options, ...this.loadOptions, id});
 
-        promise
+        this.requestRemoteData()
             .then(action((response: Object) => {
                 if (this.idQueryParameter) {
                     this.handleIdQueryParameterResponse(response);
@@ -96,6 +85,26 @@ export default class ResourceStore {
                     this.setForbidden(true);
                 }
             }));
+    };
+
+    requestRemoteData = (options: Object = {}) => {
+        const {
+            id,
+            observableOptions: {
+                locale,
+            },
+        } = this;
+
+        if (locale) {
+            options.locale = locale.get();
+        }
+
+        return this.idQueryParameter
+            ? ResourceRequester.get(
+                this.resourceKey,
+                {...options, ...this.loadOptions, [this.idQueryParameter]: id}
+            )
+            : ResourceRequester.get(this.resourceKey, {...options, ...this.loadOptions, id});
     };
 
     @action reload = () => {

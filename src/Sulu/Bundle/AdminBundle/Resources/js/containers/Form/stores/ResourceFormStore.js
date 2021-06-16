@@ -1,9 +1,9 @@
 // @flow
-import {action, autorun, computed, get, observable, when} from 'mobx';
+import {action, autorun, computed, get, isArrayLike, observable, toJS, when} from 'mobx';
 import jsonpointer from 'json-pointer';
 import {createAjv} from '../../../utils/Ajv';
 import ResourceStore from '../../../stores/ResourceStore';
-import AbstractFormStore from './AbstractFormStore';
+import AbstractFormStore, {SECTION_TYPE} from './AbstractFormStore';
 import metadataStore from './metadataStore';
 import type {FormStoreInterface, Schema, SchemaEntry, SchemaType, SchemaTypes} from '../types';
 import type {IObservableValue} from 'mobx/lib/mobx';
@@ -13,17 +13,113 @@ const TYPE = 'template';
 
 const ajv = createAjv();
 
+function mergeData(
+    localSchema: Schema,
+    remoteSchema: Schema,
+    localData: Object,
+    remoteData: Object
+) {
+    let result = {};
+    if (!localSchema || !remoteSchema) {
+        return result;
+    }
+
+    for (const name in remoteSchema) {
+        const {
+            items: remoteItems,
+            defaultType: remoteDefaultType,
+            type: remoteType,
+            types: remoteTypes,
+        } = remoteSchema[name];
+        const {
+            items: localItems,
+            defaultType: localDefaultType,
+            type: localType,
+            types: localTypes,
+        } = localSchema[name] || {};
+
+        if (remoteType === SECTION_TYPE && remoteItems) {
+            result = mergeData(
+                localSchema,
+                remoteItems,
+                localData,
+                remoteData
+            );
+            continue;
+        }
+
+        if (localType === SECTION_TYPE && localItems) {
+            result = mergeData(
+                localItems,
+                remoteSchema,
+                localData,
+                remoteData
+            );
+            continue;
+        }
+        if (remoteTypes && localTypes
+            && Object.keys(remoteTypes).length > 0 && Object.keys(localTypes).length > 0
+            && localData[name] && remoteData[name]
+            && isArrayLike(localData[name]) && isArrayLike(remoteData[name])
+        ) {
+            for (let key = 0; key < Math.max(remoteData[name].length, localData[name].length); ++key) {
+                const remoteChildData = toJS(remoteData[name].length > key ? remoteData[name][key] || {} : {});
+                const localChildData = toJS(localData[name].length > key ? localData[name][key] || {} : {});
+
+                const localChildDataType = localChildData?.type;
+                const resultType = localChildDataType && localChildDataType in remoteTypes
+                    ? localChildDataType
+                    : remoteChildData?.type || remoteDefaultType;
+
+                const localChildSchema =
+                    // $FlowFixMe
+                    localTypes[localChildData.type]?.form || localTypes[localDefaultType].form;
+
+                const remoteChildSchema = remoteTypes[resultType].form;
+
+                const resultChildData = mergeData(
+                    localChildSchema,
+                    remoteChildSchema,
+                    localChildData,
+                    remoteChildData
+                );
+
+                if (!result[name]) {
+                    result[name] = [];
+                }
+
+                if (Object.keys(resultChildData).length > 0) {
+                    resultChildData.type = resultType;
+                    resultChildData.settings = localChildData?.settings || remoteChildData.settings;
+
+                    result[name].push(resultChildData);
+                }
+            }
+
+            continue;
+        }
+
+        if (localData[name] && remoteType === localType) {
+            result[name] = localData[name];
+        } else {
+            result[name] = remoteData[name];
+        }
+    }
+
+    return result;
+}
+
 export default class ResourceFormStore extends AbstractFormStore implements FormStoreInterface {
     resourceStore: ResourceStore;
     formKey: string;
-    options: {[string]: any};
+    options: { [string]: any };
     @observable type: string;
-    @observable types: {[key: string]: SchemaType} = {};
+    @observable types: { [key: string]: SchemaType } = {};
     @observable schemaLoading: boolean = true;
     @observable typesLoading: boolean = true;
     schemaDisposer: ?() => void;
     typeDisposer: ?() => void;
-    metadataOptions: ?{[string]: any};
+    metadataOptions: ?{ [string]: any };
 
     constructor(resourceStore: ResourceStore, formKey: string, options: Object = {}, metadataOptions: ?Object) {
         super();
@@ -87,13 +183,27 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
         });
     };
 
-    @action handleSchemaResponse = ([schema, jsonSchema]: [Schema, Object]) => {
+    handleSchemaResponse = ([schema, jsonSchema]: [Schema, Object]) => {
         this.validator = jsonSchema ? ajv.compile(jsonSchema) : undefined;
         this.pathsByTag = {};
 
-        this.schema = schema;
-        this.addMissingSchemaProperties();
-        this.setSchemaLoading(false);
+        return this.loadAndMergeRemoteData(this.schema, schema).then(action(() => {
+            this.schema = schema;
+            this.addMissingSchemaProperties();
+            this.validate();
+            this.setSchemaLoading(false);
+        }));
+    };
+
+    loadAndMergeRemoteData = (localSchema: Schema, remoteSchema: Schema) => {
+        // load data only after initial schema was set to prevent duplicate requests during initialization
+        if (localSchema) {
+            return this.resourceStore.requestRemoteData({template: this.type}).then((data: Object) => {
+                const result = mergeData(localSchema, remoteSchema, this.data, data);
+                this.setMultiple(result);
+            });
+        }
+        return Promise.resolve();
     };
 
     @computed get hasTypes(): boolean {
