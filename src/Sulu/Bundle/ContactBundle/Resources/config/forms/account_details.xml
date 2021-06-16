@@ -67,8 +67,8 @@
                     <params>
                         <param name="type" value="auto_complete" />
                         <param name="use_deprecated_object_data_format" value="true" />
-                        <param name="data_path_to_auto_complete" type="collection">
-                            <param name="id" value="accountId" />
+                        <param name="resource_store_properties_to_request" type="collection">
+                            <param name="accountId" value="id" />
                         </param>
                     </params>
                 </property>

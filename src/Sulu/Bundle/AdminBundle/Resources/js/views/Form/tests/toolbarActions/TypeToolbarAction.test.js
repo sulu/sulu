@@ -1,4 +1,5 @@
 // @flow
+import {mount} from 'enzyme';
 import TypeToolbarAction from '../../toolbarActions/TypeToolbarAction';
 import {ResourceFormStore} from '../../../../containers/Form';
 import ResourceStore from '../../../../stores/ResourceStore';
@@ -24,6 +25,10 @@ jest.mock('../../../../containers/Form', () => ({
 
         get id() {
             return this.resourceStore.id;
+        }
+
+        get dirty() {
+            return this.resourceStore.dirty;
         }
 
         changeType = jest.fn();
@@ -125,8 +130,9 @@ test('Return item config with loading select', () => {
     }));
 });
 
-test('Change the type of the FormStore when another type is selected', () => {
+test('Change the type of the FormStore when FormStore is not dirty and another type is selected', () => {
     const typeToolbarAction = createTypeToolbarAction();
+    typeToolbarAction.resourceFormStore.resourceStore.dirty = false;
     typeToolbarAction.resourceFormStore.typesLoading = false;
     typeToolbarAction.resourceFormStore.type = 'default';
     typeToolbarAction.resourceFormStore.types = {
@@ -154,6 +160,121 @@ test('Change the type of the FormStore when another type is selected', () => {
     toolbarItemConfig.onChange('homepage');
 
     expect(typeToolbarAction.resourceFormStore.changeType).toBeCalledWith('homepage');
+});
+
+test('Display warning dialog when FormStore is dirty and another type is selected', () => {
+    const typeToolbarAction = createTypeToolbarAction();
+    typeToolbarAction.resourceFormStore.resourceStore.dirty = true;
+    typeToolbarAction.resourceFormStore.typesLoading = false;
+    typeToolbarAction.resourceFormStore.type = 'default';
+    typeToolbarAction.resourceFormStore.types = {
+        default: {
+            key: 'default',
+            title: 'Default',
+        },
+        homepage: {
+            key: 'homepage',
+            title: 'Homepage',
+        },
+    };
+
+    const toolbarItemConfig = typeToolbarAction.getToolbarItemConfig();
+    if (!toolbarItemConfig) {
+        throw new Error('The toolbarItemConfig should be a value!');
+    }
+
+    if (toolbarItemConfig.type !== 'select') {
+        throw new Error(
+            'The returned toolbar item must be of type "select", but "' + toolbarItemConfig.type + '" was given!'
+        );
+    }
+
+    expect(mount(typeToolbarAction.getNode()).instance().props).toEqual(expect.objectContaining({
+        title: 'sulu_admin.change_type_dirty_warning_dialog_title',
+        children: 'sulu_admin.dirty_warning_dialog_text',
+        open: false,
+    }));
+
+    toolbarItemConfig.onChange('homepage');
+
+    expect(typeToolbarAction.resourceFormStore.changeType).not.toBeCalled();
+    expect(mount(typeToolbarAction.getNode()).instance().props).toEqual(expect.objectContaining({
+        title: 'sulu_admin.change_type_dirty_warning_dialog_title',
+        children: 'sulu_admin.dirty_warning_dialog_text',
+        open: true,
+    }));
+});
+
+test('Change the type of the FormStore when warning dialog is confirmed', () => {
+    const typeToolbarAction = createTypeToolbarAction();
+    typeToolbarAction.resourceFormStore.resourceStore.dirty = true;
+    typeToolbarAction.resourceFormStore.typesLoading = false;
+    typeToolbarAction.resourceFormStore.type = 'default';
+    typeToolbarAction.resourceFormStore.types = {
+        default: {
+            key: 'default',
+            title: 'Default',
+        },
+        homepage: {
+            key: 'homepage',
+            title: 'Homepage',
+        },
+    };
+
+    const toolbarItemConfig = typeToolbarAction.getToolbarItemConfig();
+    if (!toolbarItemConfig) {
+        throw new Error('The toolbarItemConfig should be a value!');
+    }
+
+    if (toolbarItemConfig.type !== 'select') {
+        throw new Error(
+            'The returned toolbar item must be of type "select", but "' + toolbarItemConfig.type + '" was given!'
+        );
+    }
+
+    toolbarItemConfig.onChange('homepage');
+    expect(typeToolbarAction.resourceFormStore.changeType).not.toBeCalled();
+    expect(mount(typeToolbarAction.getNode()).instance().props.open).toBeTruthy();
+
+    mount(typeToolbarAction.getNode()).instance().props.onConfirm();
+    expect(typeToolbarAction.resourceFormStore.changeType).toBeCalledWith('homepage');
+    expect(mount(typeToolbarAction.getNode()).instance().props.open).toBeFalsy();
+});
+
+test('Do not change the type of the FormStore when warning dialog is canceled', () => {
+    const typeToolbarAction = createTypeToolbarAction();
+    typeToolbarAction.resourceFormStore.resourceStore.dirty = true;
+    typeToolbarAction.resourceFormStore.typesLoading = false;
+    typeToolbarAction.resourceFormStore.type = 'default';
+    typeToolbarAction.resourceFormStore.types = {
+        default: {
+            key: 'default',
+            title: 'Default',
+        },
+        homepage: {
+            key: 'homepage',
+            title: 'Homepage',
+        },
+    };
+
+    const toolbarItemConfig = typeToolbarAction.getToolbarItemConfig();
+    if (!toolbarItemConfig) {
+        throw new Error('The toolbarItemConfig should be a value!');
+    }
+
+    if (toolbarItemConfig.type !== 'select') {
+        throw new Error(
+            'The returned toolbar item must be of type "select", but "' + toolbarItemConfig.type + '" was given!'
+        );
+    }
+
+    toolbarItemConfig.onChange('homepage');
+    expect(typeToolbarAction.resourceFormStore.changeType).not.toBeCalled();
+    expect(mount(typeToolbarAction.getNode()).instance().props.open).toBeTruthy();
+
+    mount(typeToolbarAction.getNode()).instance().props.onCancel();
+    expect(typeToolbarAction.resourceFormStore.changeType).not.toBeCalled();
+    expect(mount(typeToolbarAction.getNode()).instance().props.open).toBeFalsy();
 });
 
 test('Throw error if no types are available in FormStore', () => {
