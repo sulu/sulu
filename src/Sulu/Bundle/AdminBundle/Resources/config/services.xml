@@ -47,6 +47,7 @@
         >
             <argument type="service" id="sulu_core.expression_language" />
             <argument type="tagged" tag="sulu_admin.form_metadata_loader"/>
+            <argument>%sulu_core.fallback_locale%</argument>
             <tag name="sulu_admin.metadata_provider" type="form" />
         </service>
 

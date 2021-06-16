@@ -28,7 +28,7 @@ class AdminControllerTest extends SuluTestCase
         $this->purgeDatabase();
     }
 
-    public function testGetConfig()
+    public function testGetConfig(): void
     {
         $this->initPhpcr();
         $collectionType = new LoadCollectionTypes();
@@ -38,7 +38,7 @@ class AdminControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        $response = \json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent() ?: '');
 
         $this->assertObjectHasAttribute('sulu_admin', $response);
         $this->assertObjectHasAttribute('navigation', $response->sulu_admin);
@@ -56,7 +56,7 @@ class AdminControllerTest extends SuluTestCase
         $this->assertEquals('de_at', $response->sulu_admin->localizations[3]->localization);
     }
 
-    public function testGetConfigWithFallbackNonExistUserLocale()
+    public function testGetConfigWithFallbackNonExistUserLocale(): void
     {
         $this->initPhpcr();
 
@@ -69,7 +69,7 @@ class AdminControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        $response = \json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent() ?: '');
 
         $this->assertObjectHasAttribute('sulu_admin', $response);
         $this->assertObjectHasAttribute('navigation', $response->sulu_admin);
@@ -133,7 +133,7 @@ class AdminControllerTest extends SuluTestCase
         ], $config);
     }
 
-    public function testGetNotExistingMetdata()
+    public function testGetNotExistingMetdata(): void
     {
         $this->client->jsonRequest('GET', '/admin/metadata/test1/test');
 

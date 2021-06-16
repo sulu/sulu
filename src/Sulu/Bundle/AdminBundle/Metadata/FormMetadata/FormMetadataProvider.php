@@ -31,26 +31,23 @@ class FormMetadataProvider implements MetadataProviderInterface
     /**
      * @var string
      */
-    private $defaultLocale;
+    private $fallbackLocale;
 
-    /**
-     * @param string[]|null $locales
-     */
     public function __construct(
         ExpressionLanguage $expressionLanguage,
         iterable $formMetadataLoaders,
-        ?array $locales = []
+        ?string $fallbackLocale = null
     ) {
         $this->expressionLanguage = $expressionLanguage;
         $this->formMetadataLoaders = $formMetadataLoaders;
 
-        if (!$locales) {
-            @\trigger_error('The usage of the "FormMetadataProvider" without "$locales" is deprecated. Please add "$locales" instead.', \E_USER_DEPRECATED);
+        if (!$fallbackLocale) {
+            @\trigger_error('The usage of the "FormMetadataProvider" without "$fallbackLocale" is deprecated. Please add "$fallbackLocale" instead.', \E_USER_DEPRECATED);
 
-            $locales = ['en'];
+            $fallbackLocale = 'en';
         }
 
-        $this->defaultLocale = $locales[0];
+        $this->fallbackLocale = $fallbackLocale;
     }
 
     public function getMetadata(string $key, string $locale, array $metadataOptions = []): MetadataInterface
@@ -64,7 +61,7 @@ class FormMetadataProvider implements MetadataProviderInterface
         }
         if (!$form) {
             foreach ($this->formMetadataLoaders as $metadataLoader) {
-                $form = $metadataLoader->getMetadata($key, $this->defaultLocale, $metadataOptions);
+                $form = $metadataLoader->getMetadata($key, $this->fallbackLocale, $metadataOptions);
                 if ($form) {
                     break;
                 }
