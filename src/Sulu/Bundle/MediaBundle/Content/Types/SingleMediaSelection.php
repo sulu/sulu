@@ -18,6 +18,7 @@ use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ObjectMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapperInterface;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\StringMetadata;
+use PHPCR\NodeInterface;
 use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
@@ -106,6 +107,32 @@ class SingleMediaSelection extends SimpleContentType implements PreResolvableCon
     public function getViewData(PropertyInterface $property)
     {
         return $property->getValue();
+    }
+
+    public function exportData($propertyValue)
+    {
+        if (!\is_array($propertyValue)) {
+            return '';
+        }
+
+        if (!empty($propertyValue)) {
+            return \json_encode($propertyValue) ?: '';
+        }
+
+        return '';
+    }
+
+    public function importData(
+        NodeInterface $node,
+        PropertyInterface $property,
+        $value,
+        $userId,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey = null
+    ) {
+        $property->setValue(\json_decode($value, true));
+        $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
     }
 
     public function preResolve(PropertyInterface $property)

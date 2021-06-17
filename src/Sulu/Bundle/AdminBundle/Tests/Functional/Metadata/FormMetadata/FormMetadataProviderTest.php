@@ -29,13 +29,13 @@ class FormMetadataProviderTest extends KernelTestCase
         $this->formMetadataProvider = $this->getContainer()->get('sulu_admin_test.form_metadata_provider');
     }
 
-    public function testMetadataNotFound()
+    public function testMetadataNotFound(): void
     {
         $this->expectException(MetadataNotFoundException::class);
         $this->formMetadataProvider->getMetadata('form_without_metadata', 'en');
     }
 
-    public function testGetMetadataFromFormMetadataXmlLoader()
+    public function testGetMetadataFromFormMetadataXmlLoader(): void
     {
         $form = $this->formMetadataProvider->getMetadata('form_with_schema', 'en');
         $this->assertInstanceOf(FormMetadata::class, $form);
@@ -44,7 +44,16 @@ class FormMetadataProviderTest extends KernelTestCase
         $this->assertCount(1, \array_keys($schema));
     }
 
-    public function testGetMetadataWithExpression()
+    public function testGetMetadataFromFormMetadataXmlLoaderFallbackLocale(): void
+    {
+        $form = $this->formMetadataProvider->getMetadata('form_with_schema', 'not-exist');
+        $this->assertInstanceOf(FormMetadata::class, $form);
+        $this->assertCount(3, $form->getItems());
+        $schema = $form->getSchema()->toJsonSchema();
+        $this->assertCount(2, \array_keys($schema));
+    }
+
+    public function testGetMetadataWithExpression(): void
     {
         $form = $this->formMetadataProvider->getMetadata(
             'form_with_webspace_expression_param',
@@ -56,7 +65,7 @@ class FormMetadataProviderTest extends KernelTestCase
         $this->assertEquals('sulu_io', $form->getItems()['name']->getOptions()['id']->getValue());
     }
 
-    public function testGetMetadataWithLocaleInExpression()
+    public function testGetMetadataWithLocaleInExpression(): void
     {
         $form = $this->formMetadataProvider->getMetadata(
             'form_with_locale_expression_param',
@@ -67,14 +76,14 @@ class FormMetadataProviderTest extends KernelTestCase
         $this->assertEquals('en', $form->getItems()['name']->getOptions()['id']->getValue());
     }
 
-    public function testGetMetadataFromStructureLoader()
+    public function testGetMetadataFromStructureLoader(): void
     {
         $typedForm = $this->formMetadataProvider->getMetadata('page', 'en');
         $this->assertInstanceOf(TypedFormMetadata::class, $typedForm);
         $this->assertCount(2, $typedForm->getForms());
     }
 
-    public function testGetMetadataTagFiltered()
+    public function testGetMetadataTagFiltered(): void
     {
         $typedForm = $this->formMetadataProvider->getMetadata(
             'page',

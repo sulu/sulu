@@ -51,6 +51,8 @@
             <argument type="tagged" tag="sulu_admin.form_metadata_loader"/>
             <argument type="tagged" tag="sulu_admin.form_metadata_visitor"/>
             <argument type="tagged" tag="sulu_admin.typed_form_metadata_visitor"/>
+            <argument>%sulu_core.fallback_locale%</argument>
+
             <tag name="sulu_admin.metadata_provider" type="form" />
         </service>
 

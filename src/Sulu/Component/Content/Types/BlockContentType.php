@@ -320,7 +320,7 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
         $blockPropertyWrapper->setValue($value);
 
         if ($isImport && $contentType instanceof ContentTypeExportInterface) {
-            return $contentType->importData(
+            $contentType->importData(
                 new SuluNode($node),
                 $blockPropertyWrapper,
                 $value,
@@ -329,6 +329,8 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
                 $languageCode,
                 $segmentKey
             );
+
+            return;
         }
 
         $contentType->write(

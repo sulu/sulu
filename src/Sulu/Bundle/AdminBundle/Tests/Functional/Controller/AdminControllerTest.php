@@ -28,7 +28,7 @@ class AdminControllerTest extends SuluTestCase
         $this->purgeDatabase();
     }
 
-    public function testGetConfig()
+    public function testGetConfig(): void
     {
         $this->initPhpcr();
         $collectionType = new LoadCollectionTypes();
@@ -38,7 +38,38 @@ class AdminControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        $response = \json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent() ?: '');
+
+        $this->assertObjectHasAttribute('sulu_admin', $response);
+        $this->assertObjectHasAttribute('navigation', $response->sulu_admin);
+        $this->assertObjectHasAttribute('resources', $response->sulu_admin);
+        $this->assertObjectHasAttribute('routes', $response->sulu_admin);
+        $this->assertObjectHasAttribute('fieldTypeOptions', $response->sulu_admin);
+        $this->assertIsArray($response->sulu_admin->navigation);
+        $this->assertIsArray($response->sulu_admin->routes);
+        $this->assertIsObject($response->sulu_admin->resources);
+        $this->assertObjectHasAttribute('sulu_preview', $response);
+
+        $this->assertEquals('en', $response->sulu_admin->localizations[0]->localization);
+        $this->assertEquals('en_us', $response->sulu_admin->localizations[1]->localization);
+        $this->assertEquals('de', $response->sulu_admin->localizations[2]->localization);
+        $this->assertEquals('de_at', $response->sulu_admin->localizations[3]->localization);
+    }
+
+    public function testGetConfigWithFallbackNonExistUserLocale(): void
+    {
+        $this->initPhpcr();
+
+        $this->getTestUser()->setLocale('not-exist');
+
+        $collectionType = new LoadCollectionTypes();
+        $collectionType->load($this->getEntityManager());
+
+        $this->client->jsonRequest('GET', '/admin/config');
+
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+
+        $response = \json_decode($this->client->getResponse()->getContent() ?: '');
 
         $this->assertObjectHasAttribute('sulu_admin', $response);
         $this->assertObjectHasAttribute('navigation', $response->sulu_admin);
@@ -102,7 +133,7 @@ class AdminControllerTest extends SuluTestCase
         ], $config);
     }
 
-    public function testGetNotExistingMetdata()
+    public function testGetNotExistingMetdata(): void
     {
         $this->client->jsonRequest('GET', '/admin/metadata/test1/test');
 
