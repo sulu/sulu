@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Content\Types;
 
+use PHPCR\NodeInterface;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\AnyOfsMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\NullMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\NumberMetadata;
@@ -18,7 +19,6 @@ use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ObjectMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapperInterface;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\StringMetadata;
-use PHPCR\NodeInterface;
 use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
