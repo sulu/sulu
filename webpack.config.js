@@ -66,11 +66,10 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
                     'vendor/friendsofsymfony/jsrouting-bundle/Resources/public/js'
                 ),
             },
-            symlinks: false,
-            modules: ['node_modules', nodeModulesPath],
+            symlinks: false, // @see https://github.com/sulu/sulu/pull/6117
         },
         resolveLoader: {
-            modules: ['node_modules', nodeModulesPath],
+            symlinks: false, // @see https://github.com/sulu/sulu/pull/6117
         },
         module: {
             rules: [
