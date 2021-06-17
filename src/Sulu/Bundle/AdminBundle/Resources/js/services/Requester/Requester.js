@@ -59,7 +59,7 @@ function transformRequestObject(data: Object): Object {
             return transformedData;
         }
 
-        if (isArrayLike(value) || isArrayLike(value)) {
+        if (isArrayLike(value)) {
             transformedData[key] = transformRequestArray(value);
 
             return transformedData;
