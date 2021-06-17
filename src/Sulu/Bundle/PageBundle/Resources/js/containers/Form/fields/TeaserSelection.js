@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {computed, observable} from 'mobx';
+import {computed, isArrayLike, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import jsonpointer from 'json-pointer';
 import {userStore} from 'sulu-admin-bundle/stores';
@@ -55,12 +55,13 @@ class TeaserSelection extends React.Component<FieldTypeProps<TeaserSelectionValu
             } = {},
         } = schemaOptions;
 
-        if (!Array.isArray(presentAs)) {
+        if (!isArrayLike(presentAs)) {
             throw new Error(
                 'The "present_as" schemaOption must be an array, but received ' + typeof presentAs + '!'
             );
         }
 
+        // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
         const presentations = presentAs.map((presentation) => {
             const {name, title} = presentation;
 

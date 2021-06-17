@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {computed, observable, reaction, toJS} from 'mobx';
+import {computed, isArrayLike, observable, reaction, toJS} from 'mobx';
 import log from 'loglevel';
 import jsonpointer from 'json-pointer';
 import equals from 'fast-deep-equal';
@@ -14,7 +14,7 @@ import FormInspector from '../FormInspector';
 import SingleSelectionStore from '../../../stores/SingleSelectionStore';
 import type {SchemaOption} from '../types';
 import type {FieldTypeProps} from '../../../types';
-import type {IObservableValue} from 'mobx/lib/mobx';
+import type {IObservableArray, IObservableValue} from 'mobx/lib/mobx';
 
 type Value = ?(string | number);
 type Props = FieldTypeProps<Value>;
@@ -44,10 +44,10 @@ class SingleSelection extends React.Component<Props>
             formInspector,
             schemaOptions: {
                 request_parameters: {
-                    value: requestParameters = [],
+                    value: unvalidatedRequestParameters = [],
                 } = {},
                 resource_store_properties_to_request: {
-                    value: resourceStorePropertiesToRequest = [],
+                    value: unvalidatedResourceStorePropertiesToRequest = [],
                 } = {},
             },
         } = this.props;
@@ -56,13 +56,17 @@ class SingleSelection extends React.Component<Props>
             throw new Error('The selection field needs a "resource_key" option to work properly');
         }
 
-        if (!Array.isArray(requestParameters)) {
+        if (!isArrayLike(unvalidatedRequestParameters)) {
             throw new Error('The "request_parameters" schemaOption must be an array!');
         }
+        // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
+        const requestParameters: Array<any> | IObservableArray<any> = unvalidatedRequestParameters;
 
-        if (!Array.isArray(resourceStorePropertiesToRequest)) {
+        if (!isArrayLike(unvalidatedResourceStorePropertiesToRequest)) {
             throw new Error('The "resource_store_properties_to_request" schemaOption must be an array!');
         }
+        // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
+        const resourceStorePropertiesToRequest: Array | IObservableArray = unvalidatedResourceStorePropertiesToRequest;
 
         this.requestOptions = this.buildRequestOptions(
             requestParameters,
@@ -304,7 +308,7 @@ class SingleSelection extends React.Component<Props>
             },
             schemaOptions: {
                 form_options_to_list_options: {
-                    value: formOptionsToListOptions = [],
+                    value: unvalidatedFormOptionsToListOptions = [],
                 } = {},
                 item_disabled_condition: {
                     value: itemDisabledCondition,
@@ -330,9 +334,11 @@ class SingleSelection extends React.Component<Props>
             throw new Error('The "allow_deselect_for_disabled_items" schema option must be a boolean if given!');
         }
 
-        if (!Array.isArray(formOptionsToListOptions)) {
+        if (!isArrayLike(unvalidatedFormOptionsToListOptions)) {
             throw new Error('The "form_options_to_list_options" option has to be an array if defined!');
         }
+        // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
+        const formOptionsToListOptions: Array<any> | IObservableArray<any> = unvalidatedFormOptionsToListOptions;
 
         if (typeDetailOptions && typeof typeDetailOptions !== 'object') {
             throw new Error('The "detail_options" option has to be an array if defined!');
@@ -433,7 +439,7 @@ class SingleSelection extends React.Component<Props>
             formInspector,
             schemaOptions: {
                 data_path_to_auto_complete: {
-                    value: dataPathToAutoComplete = [],
+                    value: unvalidatedDataPathToAutoComplete = [],
                 } = {},
             },
         } = this.props;
@@ -453,9 +459,11 @@ class SingleSelection extends React.Component<Props>
             },
         } = fieldTypeOptions;
 
-        if (!Array.isArray(dataPathToAutoComplete)) {
+        if (!isArrayLike(unvalidatedDataPathToAutoComplete)) {
             throw new Error('The "data_path_to_auto_complete" schemaOption must be an array!');
         }
+        // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
+        const dataPathToAutoComplete: Array<any> | IObservableArray<any> = unvalidatedDataPathToAutoComplete;
 
         if (dataPathToAutoComplete.length > 0 ){
             // @deprecated

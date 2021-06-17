@@ -57,7 +57,7 @@ class MediaSelection extends React.Component<FieldTypeProps<Value>> {
                 + 'This decreases performance and might lead to errors or other unexpected behaviour.'
             );
 
-            // $FlowFixMe: flow does recognize that isArrayLike(value) means that value is an array
+            // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
             return {ids: value.map((item) => item && typeof item === 'object' ? item.id : item)};
         }
 
@@ -103,10 +103,10 @@ class MediaSelection extends React.Component<FieldTypeProps<Value>> {
 
         const locale = formInspector.locale ? formInspector.locale : observable.box(userStore.contentLocale);
 
-        if (displayOptions !== undefined && displayOptions !== null && !Array.isArray(displayOptions)) {
+        if (displayOptions !== undefined && displayOptions !== null && !isArrayLike(displayOptions)) {
             throw new Error('The "displayOptions" option has to be an Array if set.');
         }
-
+        // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
         const displayOptionValues = convertDisplayOptionsFromParams(displayOptions);
 
         if (mediaTypes !== undefined && mediaTypes !== null && typeof mediaTypes !== 'string') {

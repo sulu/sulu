@@ -1,5 +1,5 @@
 // @flow
-import {isObservableArray} from 'mobx';
+import {isArrayLike} from 'mobx';
 import RequestPromise from './RequestPromise';
 import type {HandleResponseHook} from './types';
 
@@ -21,7 +21,7 @@ function transformResponseObject(data: Object) {
             return transformedData;
         }
 
-        if (Array.isArray(value)) {
+        if (isArrayLike(value)) {
             transformedData[key] = transformResponseArray(value);
 
             return transformedData;
@@ -59,7 +59,7 @@ function transformRequestObject(data: Object): Object {
             return transformedData;
         }
 
-        if (Array.isArray(value) || isObservableArray(value)) {
+        if (isArrayLike(value)) {
             transformedData[key] = transformRequestArray(value);
 
             return transformedData;
@@ -79,7 +79,7 @@ function transformRequestObject(data: Object): Object {
 
 function transformRequestArray(data) {
     return data.map((value) => {
-        if (Array.isArray(value) || isObservableArray(value)) {
+        if (isArrayLike(value)) {
             return transformRequestArray(value);
         }
 
@@ -92,7 +92,7 @@ function transformRequestArray(data) {
 }
 
 function transformRequestData(data: Object | Array<Object>) {
-    if (Array.isArray(data) || isObservableArray(data)) {
+    if (isArrayLike(data)) {
         return transformRequestArray(data);
     }
 
@@ -114,7 +114,7 @@ function handleResponse(response: Response, options: ?Object): Promise<Object | 
     }
 
     return response.json().then((data) => {
-        if (Array.isArray(data)) {
+        if (isArrayLike(data)) {
             return transformResponseArray(data);
         }
 
@@ -124,7 +124,7 @@ function handleResponse(response: Response, options: ?Object): Promise<Object | 
 
 function handleObjectResponse(response: Response, options: ?Object): Promise<Object> {
     return handleResponse(response, options).then((response) => {
-        if (Array.isArray(response)) {
+        if (isArrayLike(response)) {
             throw Error('Response was expected to be an object, but an array was given');
         }
 

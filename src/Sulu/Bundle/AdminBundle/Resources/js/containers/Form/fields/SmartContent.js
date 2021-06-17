@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {computed, toJS, reaction, when} from 'mobx';
+import {computed, toJS, reaction, when, isArrayLike} from 'mobx';
 import equals from 'fast-deep-equal';
 import jsonpointer from 'json-pointer';
 import SmartContentComponent, {smartContentConfigStore, SmartContentStore} from '../../SmartContent';
@@ -27,12 +27,13 @@ class SmartContent extends React.Component<Props> {
             } = {},
         } = this.props;
 
-        if (!Array.isArray(schemaPresentations)) {
+        if (!isArrayLike(schemaPresentations)) {
             throw new Error(
                 'The "present_as" schemaOption must be an array, but received ' + typeof schemaPresentations + '!'
             );
         }
 
+        // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
         return schemaPresentations.map((presentation) => {
             const {name, title} = presentation;
 

@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {isObservableArray} from 'mobx';
+import {isArrayLike} from 'mobx';
 import mediaSelectionBlockPreviewTransformerStyles from './mediaSelectionBlockPreviewTransformer.scss';
 import type {Node} from 'react';
 import type {BlockPreviewTransformer} from 'sulu-admin-bundle/types';
@@ -17,7 +17,7 @@ export default class MediaSelectionBlockPreviewTransformer implements BlockPrevi
     transform(value: *): Node {
         const {ids} = value;
 
-        if ((!Array.isArray(ids) && !isObservableArray(ids)) || ids.length === 0) {
+        if ((!isArrayLike(ids)) || ids.length === 0) {
             return null;
         }
 

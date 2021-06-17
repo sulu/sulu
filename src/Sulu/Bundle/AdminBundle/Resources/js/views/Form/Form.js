@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, computed, toJS, isObservableArray, observable} from 'mobx';
+import {action, computed, toJS, observable, isArrayLike} from 'mobx';
 import {observer} from 'mobx-react';
 import equals from 'fast-deep-equal';
 import log from 'loglevel';
@@ -277,10 +277,7 @@ class Form extends React.Component<Props> {
             },
         } = router;
 
-        if (
-            !Array.isArray(rawToolbarActions)
-            && !isObservableArray(rawToolbarActions)
-        ) {
+        if (!isArrayLike(rawToolbarActions)) {
             throw new Error('The view "Form" needs some defined toolbarActions to work properly!');
         }
 

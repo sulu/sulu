@@ -1,5 +1,5 @@
 // @flow
-import {action, computed, isObservableArray, observable, set, toJS} from 'mobx';
+import {action, computed, isArrayLike, observable, set, toJS} from 'mobx';
 import jsonpointer from 'json-pointer';
 import log from 'loglevel';
 import type {IObservableValue} from 'mobx/lib/mobx';
@@ -54,7 +54,7 @@ function collectTagPathsWithPriority(
         if (types
             && Object.keys(types).length > 0
             && data[key]
-            && (Array.isArray(data[key]) || isObservableArray(data[key]))
+            && (isArrayLike(data[key]))
         ) {
             for (const childKey of data[key].keys()) {
                 const childData = data[key][childKey];
