@@ -108,7 +108,7 @@ class SingleMediaSelection extends SimpleContentType implements PreResolvableCon
         }
 
         if (!empty($propertyValue)) {
-            return \json_encode($propertyValue);
+            return \json_encode($propertyValue) ?: '';
         }
 
         return '';
