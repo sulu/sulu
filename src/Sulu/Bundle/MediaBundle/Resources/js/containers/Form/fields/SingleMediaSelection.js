@@ -2,7 +2,7 @@
 import React from 'react';
 import {observer} from 'mobx-react';
 import userStore from 'sulu-admin-bundle/stores/userStore';
-import {computed, observable} from 'mobx';
+import {computed, isArrayLike, observable} from 'mobx';
 import {
     convertDisplayOptionsFromParams,
     convertMediaTypesFromParams,
@@ -89,10 +89,11 @@ class SingleMediaSelection extends React.Component<FieldTypeProps<Value>> {
         } = schemaOptions;
         const locale = formInspector.locale ? formInspector.locale : observable.box(userStore.contentLocale);
 
-        if (displayOptions !== undefined && displayOptions !== null && !Array.isArray(displayOptions)) {
+        if (displayOptions !== undefined && displayOptions !== null && !isArrayLike(displayOptions)) {
             throw new Error('The "displayOptions" option has to be an Array if set.');
         }
 
+        // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
         const displayOptionValues = convertDisplayOptionsFromParams(displayOptions);
 
         if (mediaTypes !== undefined && mediaTypes !== null && typeof mediaTypes !== 'string') {

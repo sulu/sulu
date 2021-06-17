@@ -16,7 +16,7 @@ import userStore from '../../../stores/userStore';
 import selectionStyles from './selection.scss';
 import type {FieldTypeProps} from '../../../types';
 import type {SchemaOption} from '../types';
-import type {IObservableValue} from 'mobx/lib/mobx';
+import type {IObservableArray, IObservableValue} from 'mobx/lib/mobx';
 
 type Value = Array<string | number>;
 type Props = FieldTypeProps<Value>;
@@ -51,10 +51,10 @@ class Selection extends React.Component<Props> {
             formInspector,
             schemaOptions: {
                 request_parameters: {
-                    value: requestParameters = [],
+                    value: unvalidatedRequestParameters = [],
                 } = {},
                 resource_store_properties_to_request: {
-                    value: resourceStorePropertiesToRequest = [],
+                    value: unvalidatedResourceStorePropertiesToRequest = [],
                 } = {},
             },
         } = this.props;
@@ -63,13 +63,17 @@ class Selection extends React.Component<Props> {
             throw new Error('The selection field needs a "resource_key" option to work properly');
         }
 
-        if (!Array.isArray(requestParameters)) {
+        if (!isArrayLike(unvalidatedRequestParameters)) {
             throw new Error('The "request_parameters" schemaOption must be an array!');
         }
+        // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
+        const requestParameters: Array<any> | IObservableArray<any> = unvalidatedRequestParameters;
 
-        if (!Array.isArray(resourceStorePropertiesToRequest)) {
+        if (!isArrayLike(unvalidatedResourceStorePropertiesToRequest)) {
             throw new Error('The "resource_store_properties_to_request" schemaOption must be an array!');
         }
+        // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
+        const resourceStorePropertiesToRequest: Array | IObservableArray = unvalidatedResourceStorePropertiesToRequest;
 
         this.requestOptions = this.buildRequestOptions(
             requestParameters,

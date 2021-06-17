@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, autorun, observable} from 'mobx';
+import {action, autorun, isArrayLike, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {ListStore} from 'sulu-admin-bundle/containers';
 import {Overlay} from 'sulu-admin-bundle/components';
@@ -71,7 +71,9 @@ class MediaSelectionOverlay extends React.Component<Props> {
             'thumbnails',
         ];
 
-        if (Array.isArray(types) && types.length > 0) {
+        // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
+        if (isArrayLike(types) && types.length > 0) {
+            // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
             options.types = types.join(',');
         }
 

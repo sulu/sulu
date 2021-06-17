@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {toJS} from 'mobx';
+import {isArrayLike, toJS} from 'mobx';
 import {SingleSelect} from 'sulu-admin-bundle/components';
 import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 
@@ -17,7 +17,7 @@ export default class PageSettingsShadowLocaleSelect extends React.Component<Fiel
         const contentLocales = toJS(formInspector.getValueByPath('/contentLocales'));
         const locale = formInspector.locale;
 
-        if (!Array.isArray(contentLocales)) {
+        if (!isArrayLike(contentLocales)) {
             throw new Error('The "contentLocales" should be an array!');
         }
 

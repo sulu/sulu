@@ -1,5 +1,5 @@
 // @flow
-import {isObservableArray} from 'mobx';
+import {isArrayLike} from 'mobx';
 import jsonpointer from 'json-pointer';
 
 export default function(data: Object, dataPath: ?string): {[string]: any} {
@@ -15,7 +15,7 @@ export default function(data: Object, dataPath: ?string): {[string]: any} {
         parentDataPath = parentDataPath.substring(0, parentDataPath.lastIndexOf('/'));
         const evaluatedData = jsonpointer.get(data, parentDataPath);
 
-        if (Array.isArray(evaluatedData) || isObservableArray(evaluatedData)) {
+        if (isArrayLike(evaluatedData)) {
             continue;
         }
 

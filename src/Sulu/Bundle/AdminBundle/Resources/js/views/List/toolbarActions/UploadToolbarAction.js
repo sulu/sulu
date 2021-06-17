@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import log from 'loglevel';
-import {action, computed, observable} from 'mobx';
+import {action, computed, isArrayLike, observable} from 'mobx';
 import Dropzone, {DropzoneRef, FileRejection} from 'react-dropzone';
 import symfonyRouting from 'fos-jsrouting/router';
 import {translate, transformBytesToReadableString} from '../../../utils';
@@ -303,10 +303,11 @@ export default class UploadToolbarAction extends AbstractListToolbarAction {
             return undefined;
         }
 
-        if (!Array.isArray(accept)) {
+        if (!isArrayLike(accept)) {
             throw new Error('The "accept" option must be an array!');
         }
 
+        // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
         return accept;
     }
 
