@@ -105,6 +105,7 @@ export type ConditionDataProvider = (
 
 export interface FormStoreInterface {
     +change: (name: string, value: mixed, context?: ChangeContext) => void, // TODO: rename parameter + check for starting slash
+    +changeType: (type: string, context?: ChangeContext) => void,
     +changeMultiple: (data: Object, context?: ChangeContext) => void, //  TODO: refine type of data
     // Only exists in one implementation, therefore optional. Maybe we can remove that definition one day...
     +copyFromLocale?: (string) => Promise<*>,
@@ -127,7 +128,6 @@ export interface FormStoreInterface {
     +options: SchemaOptions,
     +resourceKey: ?string,
     +schema: Object,
-    +setType: (type: string) => void,
     +types: {[key: string]: SchemaType},
     +validate: () => boolean,
 }

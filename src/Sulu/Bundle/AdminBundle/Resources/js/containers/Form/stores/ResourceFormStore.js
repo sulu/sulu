@@ -68,7 +68,10 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
             when(
                 () => !this.resourceStore.loading,
                 (): void => {
-                    this.setType(this.resourceStore.data[TYPE] || defaultType || Object.keys(this.types)[0]);
+                    this.changeType(
+                        this.resourceStore.data[TYPE] || defaultType || Object.keys(this.types)[0],
+                        {isDefaultValue: true}
+                    );
                 }
             );
         }
@@ -145,7 +148,7 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
         return this.resourceStore.copyFromLocale(sourceLocale, this.options)
             .then((response) => {
                 if (this.hasTypes) {
-                    this.setType(response[TYPE]);
+                    this.changeType(response[TYPE], {isServerValue: true});
                 }
             });
     }
@@ -177,7 +180,7 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
     }
 
     change(name: string, value: mixed, context?: ChangeContext) {
-        if (context?.isDefaultValue) {
+        if (context?.isDefaultValue || context?.isServerValue) {
             // set method of resource store will not mark the store as dirty
             this.resourceStore.set(name, value);
         } else {
@@ -186,7 +189,7 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
     }
 
     changeMultiple(data: Object, context?: ChangeContext) {
-        if (context?.isDefaultValue) {
+        if (context?.isDefaultValue || context?.isServerValue) {
             // setMultiple method of resource store will not mark the store as dirty
             this.resourceStore.setMultiple(data);
         } else {
@@ -230,16 +233,24 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
         this.schemaLoading = schemaLoading;
     }
 
+    /**
+     * @deprecated
+     */
     @action setType(type: string) {
+        log.warn(
+            'The "setType" method is deprecated and will be removed. ' +
+            'Use the "changeType" method instead.'
+        );
+
         this.validateTypes();
         this.type = type;
         this.set(TYPE, type);
     }
 
-    @action changeType(type: string) {
+    @action changeType(type: string, context?: ChangeContext) {
         this.validateTypes();
         this.type = type;
-        this.change(TYPE, type);
+        this.change(TYPE, type, context);
     }
 
     validateTypes() {

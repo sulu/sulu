@@ -27,6 +27,12 @@ export default class SchemaFormStoreDecorator implements FormStoreInterface {
         }
     }
 
+    changeType(type: string, context?: ChangeContext) {
+        if (this.innerFormStore) {
+            this.innerFormStore.changeType(type, context);
+        }
+    }
+
     changeMultiple(data: Object, context?: ChangeContext) {
         if (this.innerFormStore) {
             this.innerFormStore.changeMultiple(data, context);
@@ -205,8 +211,20 @@ export default class SchemaFormStoreDecorator implements FormStoreInterface {
         return {};
     }
 
+    /**
+     * @deprecated
+     */
     setType(type: string): void {
-        if (this.innerFormStore) {
+        log.warn(
+            'The "setType" method is deprecated and will be removed. ' +
+            'Use the "changeType" method instead.'
+        );
+
+        // the setType method was removed from the FormStoreInterface
+        // we still want to call it to keep backwards compatibility if it is defined
+        // $FlowFixMe
+        if (this.innerFormStore && typeof this.innerFormStore.setType === 'function') {
+            // $FlowFixMe
             return this.innerFormStore.setType(type);
         }
     }

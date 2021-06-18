@@ -119,7 +119,7 @@ class Form extends React.Component<Props> {
     @action handleMissingTypeDialogConfirm = (type: string) => {
         const {store} = this.props;
 
-        store.setType(type);
+        store.changeType(type);
     };
 
     @action handleMissingTypeDialogCancel = () => {

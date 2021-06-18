@@ -42,7 +42,7 @@ export default class MemoryFormStore extends AbstractFormStore implements FormSt
     @action change(path: string, value: mixed, context?: ChangeContext) {
         jsonpointer.set(this.data, '/' + path, value);
 
-        if (!context?.isDefaultValue) {
+        if (!context?.isDefaultValue && !context?.isServerValue) {
             this.dirty = true;
         }
     }
@@ -74,7 +74,7 @@ export default class MemoryFormStore extends AbstractFormStore implements FormSt
         super.setMultiple();
     }
 
-    setType() {
+    changeType() {
         throw new Error('The MemoryFormStore cannot handle types');
     }
 
