@@ -18,7 +18,7 @@ jest.mock('sulu-admin-bundle/containers/Form', () => ({
     ResourceFormStore: class {
         resourceStore;
 
-        set = jest.fn();
+        change = jest.fn();
 
         constructor(resourceStore) {
             this.resourceStore = resourceStore;
@@ -181,7 +181,7 @@ test('Set new enabled value to ResourceFormStore and show success-snackbar on su
     toolbarItemConfig.onClick();
 
     return enableUserPromise.then(() => {
-        expect(toolbarAction.resourceFormStore.set).toBeCalledWith('enabled', true);
+        expect(toolbarAction.resourceFormStore.change).toBeCalledWith('enabled', true, {isServerValue: true});
         expect(toolbarAction.form.showSuccessSnackbar).toBeCalled();
     });
 });

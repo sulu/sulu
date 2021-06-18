@@ -125,7 +125,7 @@ test('Set default display option if no value is passed', () => {
         />
     );
 
-    expect(changeSpy).toBeCalledWith({displayOption: 'left', ids: []});
+    expect(changeSpy).toBeCalledWith({displayOption: 'left', ids: []}, {'isDefaultValue': true});
 });
 
 test('Set types on MultiMediaSelection', () => {

@@ -94,6 +94,17 @@ test('Should set nested values', () => {
     expect(resourceStore.dirty).toBe(true);
 });
 
+test('Should set values when using path with leading slash', () => {
+    ResourceRequester.get.mockReturnValue(Promise.resolve({}));
+
+    const resourceStore = new ResourceStore('snippets', '1');
+    expect(resourceStore.dirty).toBe(false);
+    resourceStore.change('/test1/test2', 'value');
+
+    expect(resourceStore.data.test1.test2).toBe('value');
+    expect(resourceStore.dirty).toBe(true);
+});
+
 test('Should load the data with the ResourceRequester', () => {
     const promise = Promise.resolve({value: 'Value'});
     ResourceRequester.get.mockReturnValue(promise);
@@ -604,6 +615,13 @@ test('Should set the internal id if id is set using set', () => {
     const resourceStore = new ResourceStore('media');
     expect(resourceStore.id).toBe(undefined);
     resourceStore.set('id', 4);
+    expect(resourceStore.id).toBe(4);
+});
+
+test('Should set the internal id if id is set with leading slash', () => {
+    const resourceStore = new ResourceStore('media');
+    expect(resourceStore.id).toBe(undefined);
+    resourceStore.set('/id', 4);
     expect(resourceStore.id).toBe(4);
 });
 

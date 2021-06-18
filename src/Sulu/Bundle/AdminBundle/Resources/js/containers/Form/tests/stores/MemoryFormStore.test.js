@@ -3,6 +3,11 @@ import {observable} from 'mobx';
 import MemoryFormStore from '../../stores/MemoryFormStore';
 import conditionDataProviderRegistry from '../../registries/conditionDataProviderRegistry';
 
+jest.mock('loglevel', () => ({
+    warn: jest.fn(),
+    info: jest.fn(),
+}));
+
 beforeEach(() => {
     conditionDataProviderRegistry.clear();
 });
@@ -280,6 +285,33 @@ test('Evaluate all disabledConditions and visibleConditions after calling setMul
     }, 0);
 });
 
+test('Evaluate all disabledConditions and visibleConditions after calling changeMultiple', () => {
+    const schema = {
+        item1: {
+            type: 'text_line',
+        },
+        item2: {
+            type: 'text_line',
+            disabledCondition: 'item1 != "item2"',
+            visibleCondition: 'item1 == "item2"',
+        },
+    };
+
+    const memoryFormStore = new MemoryFormStore({}, schema);
+
+    setTimeout(() => {
+        expect(memoryFormStore.schema.item2.disabled).toEqual(true);
+        expect(memoryFormStore.schema.item2.visible).toEqual(false);
+
+        memoryFormStore.changeMultiple({item1: 'item2'});
+
+        expect(memoryFormStore.schema.item2.disabled).toEqual(false);
+        expect(memoryFormStore.schema.item2.visible).toEqual(true);
+
+        memoryFormStore.destroy();
+    }, 0);
+});
+
 test('Evaluate disabledConditions and visibleConditions for schema with locale', (done) => {
     const schema = {
         item: {
@@ -370,17 +402,64 @@ test('Read dirty flag', () => {
     memoryFormStore.destroy();
 });
 
-test('Set dirty flag', () => {
+test('Set dirty flag when changing value', () => {
     const memoryFormStore = new MemoryFormStore({}, {});
     memoryFormStore.change('test', 'test');
     expect(memoryFormStore.dirty).toEqual(true);
     memoryFormStore.destroy();
 });
 
-test('Set nested value', () => {
+test('Do not set dirty flag when changing value to default value', () => {
+    const memoryFormStore = new MemoryFormStore({}, {});
+    memoryFormStore.change('test', 'test', {isDefaultValue: true});
+    expect(memoryFormStore.data).toEqual({test: 'test'});
+    expect(memoryFormStore.dirty).toEqual(false);
+    memoryFormStore.destroy();
+});
+
+test('Do not set dirty flag when changing value to server value', () => {
+    const memoryFormStore = new MemoryFormStore({}, {});
+    memoryFormStore.change('test', 'test', {isServerValue: true});
+    expect(memoryFormStore.data).toEqual({test: 'test'});
+    expect(memoryFormStore.dirty).toEqual(false);
+    memoryFormStore.destroy();
+});
+
+test('Change nested value', () => {
     const memoryFormStore = new MemoryFormStore({}, {});
     memoryFormStore.change('test1/test2', 'test');
     expect(memoryFormStore.data).toEqual({test1: {test2: 'test'}});
+    memoryFormStore.destroy();
+});
+
+test('Change value by path with leading slash', () => {
+    const memoryFormStore = new MemoryFormStore({}, {});
+    memoryFormStore.change('/test1', 'test');
+    expect(memoryFormStore.data).toEqual({test1: 'test'});
+    memoryFormStore.destroy();
+});
+
+test('Change multiple values', () => {
+    const memoryFormStore = new MemoryFormStore({}, {});
+
+    memoryFormStore.changeMultiple({key1: 'value1', key2: 'value2'});
+    memoryFormStore.changeMultiple({key2: 'newValue2', 'key3/nested': 'value3'});
+
+    expect(memoryFormStore.data).toEqual({key1: 'value1', key2: 'newValue2', key3: {nested: 'value3'}});
+    expect(memoryFormStore.dirty).toEqual(true);
+
+    memoryFormStore.destroy();
+});
+
+test('Change multiple values to server values', () => {
+    const memoryFormStore = new MemoryFormStore({}, {});
+
+    memoryFormStore.changeMultiple({key1: 'value1', key2: 'value2'}, {isServerValue: true});
+    memoryFormStore.changeMultiple({key2: 'newValue2', 'key3/nested': 'value3'}, {isServerValue: true});
+
+    expect(memoryFormStore.data).toEqual({key1: 'value1', key2: 'newValue2', key3: {nested: 'value3'}});
+    expect(memoryFormStore.dirty).toEqual(false);
+
     memoryFormStore.destroy();
 });
 
@@ -391,6 +470,14 @@ test('Set multiple values', () => {
     memoryFormStore.setMultiple({key2: 'newValue2', key3: 'value3'});
 
     expect(memoryFormStore.data).toEqual({key1: 'value1', key2: 'newValue2', key3: 'value3'});
+    memoryFormStore.destroy();
+});
+
+test('Throw error when calling changeType method', () => {
+    const memoryFormStore = new MemoryFormStore({}, {});
+
+    expect(() => memoryFormStore.changeType()).toThrow(/MemoryFormStore cannot handle types/);
+
     memoryFormStore.destroy();
 });
 

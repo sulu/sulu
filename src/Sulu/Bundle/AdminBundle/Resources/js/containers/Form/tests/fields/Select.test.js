@@ -277,7 +277,7 @@ test('Set default value if no value is passed', () => {
         />
     );
 
-    expect(changeSpy).toBeCalledWith(['mr']);
+    expect(changeSpy).toBeCalledWith(['mr'], {'isDefaultValue': true});
 });
 
 test('Set default value to a number of 0 should work', () => {
@@ -311,7 +311,7 @@ test('Set default value to a number of 0 should work', () => {
         />
     );
 
-    expect(changeSpy).toBeCalledWith([0]);
+    expect(changeSpy).toBeCalledWith([0], {'isDefaultValue': true});
 });
 
 test('Throw error if no value option is passed', () => {

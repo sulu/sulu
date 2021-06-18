@@ -391,9 +391,9 @@ test('Call onChange callback when value of Field changes', () => {
         />
     );
 
-    field.find('Text').simulate('change', 'test value');
+    field.find('Text').props().onChange('test value', {isDefaultValue: true});
 
-    expect(changeSpy).toBeCalledWith('test', 'test value');
+    expect(changeSpy).toBeCalledWith('test', 'test value', {isDefaultValue: true});
 });
 
 test('Do not call onChange callback when value of disabled Field changes', () => {
@@ -418,7 +418,7 @@ test('Do not call onChange callback when value of disabled Field changes', () =>
         />
     );
 
-    field.find('Text').simulate('change', 'test value');
+    field.find('Text').props().onChange('test value');
 
     expect(changeSpy).not.toBeCalled();
 });

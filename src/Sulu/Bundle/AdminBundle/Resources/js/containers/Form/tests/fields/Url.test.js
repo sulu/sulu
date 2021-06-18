@@ -140,7 +140,7 @@ test('Pass correct default props to Url component', () => {
     expect(url.find(UrlComponent).prop('protocols')).toEqual(
         ['http://', 'https://', 'ftp://', 'ftps://', 'mailto:', 'tel:']
     );
-    expect(changeSpy).toBeCalledWith('http://github.com');
+    expect(changeSpy).toBeCalledWith('http://github.com', {'isDefaultValue': true});
 });
 
 test('Throw error if only specific_part default is set', () => {
@@ -234,7 +234,7 @@ test('Build URL from defaults to pass as value to URL component', () => {
         />
     );
 
-    expect(changeSpy).toBeCalledWith('https://sulu.io');
+    expect(changeSpy).toBeCalledWith('https://sulu.io', {'isDefaultValue': true});
 });
 
 test('Should not pass any arguments to onFinish callback', () => {
