@@ -204,7 +204,8 @@ export default class AbstractFormStore
         this.updateFieldPathEvaluations();
     }
 
-    changeMultiple() {
+    // eslint-disable-next-line no-unused-vars
+    changeMultiple(values: {[dataPath: string]: mixed}) {
         this.updateFieldPathEvaluations();
     }
 
@@ -287,8 +288,8 @@ export default class AbstractFormStore
         this.evaluatedSchema = evaluatedSchema;
     }
 
-    getValueByPath = (path: string): mixed => {
-        return jsonpointer.has(this.data, path) ? jsonpointer.get(this.data, path) : undefined;
+    getValueByPath = (dataPath: string): mixed => {
+        return jsonpointer.has(this.data, dataPath) ? jsonpointer.get(this.data, dataPath) : undefined;
     };
 
     getValuesByTag(tagName: string): Array<mixed> {

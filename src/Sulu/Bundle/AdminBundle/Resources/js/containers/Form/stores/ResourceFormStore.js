@@ -179,22 +179,24 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
         super.setMultiple();
     }
 
-    change(name: string, value: mixed, context?: ChangeContext) {
+    change(dataPath: string, value: mixed, context?: ChangeContext) {
         if (context?.isDefaultValue || context?.isServerValue) {
             // set method of resource store will not mark the store as dirty
-            this.resourceStore.set(name, value);
+            this.resourceStore.set(dataPath, value);
         } else {
-            this.resourceStore.change(name, value);
+            this.resourceStore.change(dataPath, value);
         }
     }
 
-    changeMultiple(data: Object, context?: ChangeContext) {
+    changeMultiple(values: {[dataPath: string]: mixed}, context?: ChangeContext) {
         if (context?.isDefaultValue || context?.isServerValue) {
             // setMultiple method of resource store will not mark the store as dirty
-            this.resourceStore.setMultiple(data);
+            this.resourceStore.setMultiple(values);
         } else {
-            this.resourceStore.change(data);
+            this.resourceStore.changeMultiple(values);
         }
+
+        super.changeMultiple(values);
     }
 
     @computed get locale(): ?IObservableValue<string> {

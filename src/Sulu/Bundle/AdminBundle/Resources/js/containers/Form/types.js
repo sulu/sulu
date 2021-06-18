@@ -104,9 +104,9 @@ export type ConditionDataProvider = (
 ) => {[string]: any};
 
 export interface FormStoreInterface {
-    +change: (name: string, value: mixed, context?: ChangeContext) => void, // TODO: rename parameter + check for starting slash
+    +change: (dataPath: string, value: mixed, context?: ChangeContext) => void,
+    +changeMultiple: (values: {[dataPath: string]: mixed}, context?: ChangeContext) => void,
     +changeType: (type: string, context?: ChangeContext) => void,
-    +changeMultiple: (data: Object, context?: ChangeContext) => void, //  TODO: refine type of data
     // Only exists in one implementation, therefore optional. Maybe we can remove that definition one day...
     +copyFromLocale?: (string) => Promise<*>,
     +data: {[string]: any},
@@ -117,7 +117,7 @@ export interface FormStoreInterface {
     +forbidden: boolean,
     +getPathsByTag: (tagName: string) => Array<string>,
     +getSchemaEntryByPath: (schemaPath: string) => ?SchemaEntry,
-    +getValueByPath: (path: string) => mixed,
+    +getValueByPath: (dataPath: string) => mixed,
     +getValuesByTag: (tagName: string) => Array<mixed>,
     +hasInvalidType: boolean,
     +id: ?string | number,

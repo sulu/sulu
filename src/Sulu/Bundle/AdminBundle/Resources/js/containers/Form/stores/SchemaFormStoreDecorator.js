@@ -21,9 +21,9 @@ export default class SchemaFormStoreDecorator implements FormStoreInterface {
         }));
     }
 
-    change(name: string, value: mixed, context?: ChangeContext) {
+    change(dataPath: string, value: mixed, context?: ChangeContext) {
         if (this.innerFormStore) {
-            this.innerFormStore.change(name, value, context);
+            this.innerFormStore.change(dataPath, value, context);
         }
     }
 
@@ -33,9 +33,9 @@ export default class SchemaFormStoreDecorator implements FormStoreInterface {
         }
     }
 
-    changeMultiple(data: Object, context?: ChangeContext) {
+    changeMultiple(values: {[dataPath: string]: mixed}, context?: ChangeContext) {
         if (this.innerFormStore) {
-            this.innerFormStore.changeMultiple(data, context);
+            this.innerFormStore.changeMultiple(values, context);
         }
     }
 
@@ -123,9 +123,9 @@ export default class SchemaFormStoreDecorator implements FormStoreInterface {
         return undefined;
     }
 
-    getValueByPath(path: string): mixed {
+    getValueByPath(dataPath: string): mixed {
         if (this.innerFormStore) {
-            return this.innerFormStore.getValueByPath(path);
+            return this.innerFormStore.getValueByPath(dataPath);
         }
 
         return false;

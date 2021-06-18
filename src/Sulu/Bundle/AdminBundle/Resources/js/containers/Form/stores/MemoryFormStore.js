@@ -39,21 +39,21 @@ export default class MemoryFormStore extends AbstractFormStore implements FormSt
         this.updateFieldPathEvaluationsDisposer = autorun(this.updateFieldPathEvaluations);
     }
 
-    @action change(path: string, value: mixed, context?: ChangeContext) {
-        jsonpointer.set(this.data, '/' + path, value);
+    @action change(dataPath: string, value: mixed, context?: ChangeContext) {
+        jsonpointer.set(this.data, '/' + dataPath, value);
 
         if (!context?.isDefaultValue && !context?.isServerValue) {
             this.dirty = true;
         }
     }
 
-    @action changeMultiple(data: Object, context?: ChangeContext) {
-        Object.keys(data).forEach((path) => {
-            this.change(path, data[path], context);
+    @action changeMultiple(values: {[dataPath: string]: mixed}, context?: ChangeContext) {
+        Object.keys(values).forEach((path) => {
+            this.change(path, values[path], context);
         });
         set(this.data, this.data);
 
-        super.changeMultiple();
+        super.changeMultiple(values);
     }
 
     get hasInvalidType() {
