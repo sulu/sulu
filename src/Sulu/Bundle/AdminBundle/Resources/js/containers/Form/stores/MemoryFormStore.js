@@ -1,9 +1,11 @@
 // @flow
 import {action, autorun, observable, set} from 'mobx';
 import Ajv from 'ajv';
+import log from 'loglevel';
 import jsonpointer from 'json-pointer';
 import AbstractFormStore from './AbstractFormStore';
-import type {FormStoreInterface, RawSchema, SchemaType} from '../types';
+import type {ChangeContext, FormStoreInterface, RawSchema, SchemaType} from '../types';
+
 import type {IObservableValue} from 'mobx';
 
 const ajv = new Ajv({allErrors: true, jsonPointers: true});
@@ -37,24 +39,37 @@ export default class MemoryFormStore extends AbstractFormStore implements FormSt
         this.updateFieldPathEvaluationsDisposer = autorun(this.updateFieldPathEvaluations);
     }
 
-    @action change(path: string, value: mixed) {
-        this.set(path, value);
-        this.dirty = true;
+    @action change(path: string, value: mixed, context?: ChangeContext) {
+        jsonpointer.set(this.data, '/' + path, value);
+
+        if (!context?.isDefaultValue) {
+            this.dirty = true;
+        }
+    }
+
+    @action changeMultiple(data: Object, context?: ChangeContext) {
+        Object.keys(data).forEach((path) => {
+            this.change(path, data[path], context);
+        });
+        set(this.data, this.data);
+
+        super.changeMultiple();
     }
 
     get hasInvalidType() {
         return false;
     }
 
-    @action set(path: string, value: mixed) {
-        jsonpointer.set(this.data, '/' + path, value);
-    }
-
+    /**
+     * @deprecated
+     */
     @action setMultiple(data: Object) {
-        Object.keys(data).forEach((path) => {
-            this.set(path, data[path]);
-        });
-        set(this.data, this.data);
+        log.warn(
+            'The "setMultiple" method is deprecated and will be removed. ' +
+            'Use the "changeMultiple" method instead.'
+        );
+
+        this.data = {...this.data, ...data};
 
         super.setMultiple();
     }

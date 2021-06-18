@@ -10,7 +10,7 @@ import Renderer from './Renderer';
 import FormInspector from './FormInspector';
 import GhostDialog from './GhostDialog';
 import MissingTypeDialog from './MissingTypeDialog';
-import type {FieldChangeContext, FormStoreInterface} from './types';
+import type {ChangeContext, FormStoreInterface} from './types';
 
 type Props = {|
     onError?: (errors: Object) => void,
@@ -89,12 +89,8 @@ class Form extends React.Component<Props> {
         }
     };
 
-    handleChange = (name: string, value: mixed, context: FieldChangeContext) => {
-        if (context.isDefaultValue) {
-            this.props.store.set(name, value);
-        } else {
-            this.props.store.change(name, value);
-        }
+    handleChange = (name: string, value: mixed, context?: ChangeContext) => {
+        this.props.store.change(name, value, context);
     };
 
     @action showGhostDialog() {

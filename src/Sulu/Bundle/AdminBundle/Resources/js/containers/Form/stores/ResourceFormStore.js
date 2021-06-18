@@ -2,11 +2,13 @@
 import {action, autorun, computed, get, observable, when} from 'mobx';
 import Ajv from 'ajv';
 import jsonpointer from 'json-pointer';
+import log from 'loglevel';
 import ResourceStore from '../../../stores/ResourceStore';
 import AbstractFormStore from './AbstractFormStore';
 import metadataStore from './metadataStore';
-import type {FormStoreInterface, RawSchema, SchemaEntry, SchemaType, SchemaTypes} from '../types';
-import type {IObservableValue} from 'mobx'; // eslint-disable-line import/named
+import type {ChangeContext, FormStoreInterface, RawSchema, SchemaEntry, SchemaType, SchemaTypes} from '../types';
+
+import type {IObservableValue} from 'mobx';
 
 // TODO do not hardcode "template", use some kind of metadata instead
 const TYPE = 'template';
@@ -148,18 +150,48 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
             });
     }
 
+    /**
+     * @deprecated
+     */
     set(name: string, value: mixed) {
+        log.warn(
+            'The "set" method is deprecated and will be removed. ' +
+            'Use the "change" method instead.'
+        );
+
         this.resourceStore.set(name, value);
     }
 
+    /**
+     * @deprecated
+     */
     setMultiple(data: Object) {
+        log.warn(
+            'The "setMultiple" method is deprecated and will be removed. ' +
+            'Use the "changeMultiple" method instead.'
+        );
+
         this.resourceStore.setMultiple(data);
 
         super.setMultiple();
     }
 
-    change(name: string, value: mixed) {
-        this.resourceStore.change(name, value);
+    change(name: string, value: mixed, context?: ChangeContext) {
+        if (context?.isDefaultValue) {
+            // set method of resource store will not mark the store as dirty
+            this.resourceStore.set(name, value);
+        } else {
+            this.resourceStore.change(name, value);
+        }
+    }
+
+    changeMultiple(data: Object, context?: ChangeContext) {
+        if (context?.isDefaultValue) {
+            // setMultiple method of resource store will not mark the store as dirty
+            this.resourceStore.setMultiple(data);
+        } else {
+            this.resourceStore.change(data);
+        }
     }
 
     @computed get locale(): ?IObservableValue<string> {

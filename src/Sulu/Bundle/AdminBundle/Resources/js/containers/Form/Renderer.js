@@ -8,14 +8,14 @@ import Router from '../../services/Router';
 import Field from './Field';
 import FormInspector from './FormInspector';
 import type {Element} from 'react';
-import type {ErrorCollection, Schema, SchemaEntry, FieldChangeContext} from './types';
+import type {ErrorCollection, Schema, SchemaEntry, ChangeContext} from './types';
 
 type Props = {|
     data: Object,
     dataPath: string,
     errors?: ErrorCollection,
     formInspector: FormInspector,
-    onChange: (name: string, value: *, context: FieldChangeContext) => void,
+    onChange: (name: string, value: *, context?: ChangeContext) => void,
     onFieldFinish: ?(dataPath: string, schemaPath: string) => void,
     onSuccess: ?() => void,
     router: ?Router,

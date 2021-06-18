@@ -204,7 +204,19 @@ export default class AbstractFormStore
         this.updateFieldPathEvaluations();
     }
 
+    changeMultiple() {
+        this.updateFieldPathEvaluations();
+    }
+
+    /**
+     * @deprecated
+     */
     setMultiple() {
+        log.warn(
+            'The "setMultiple" method is deprecated and will be removed. ' +
+            'Use the "changeMultiple" method instead.'
+        );
+
         this.updateFieldPathEvaluations();
     }
 

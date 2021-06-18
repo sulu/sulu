@@ -92,6 +92,11 @@ export type FinishFieldHandler = (dataPath: string, schemaPath: string) => void;
 
 export type SaveHandler = (action: ?string | {[string]: any}) => void;
 
+export type ChangeContext = {
+    isDefaultValue?: boolean,
+    isServerValue?: boolean,
+};
+
 export type ConditionDataProvider = (
     data: {[string]: any},
     options: {[string]: any},
@@ -99,7 +104,8 @@ export type ConditionDataProvider = (
 ) => {[string]: any};
 
 export interface FormStoreInterface {
-    +change: (name: string, value: mixed) => void,
+    +change: (name: string, value: mixed, context?: ChangeContext) => void, // TODO: rename parameter + check for starting slash
+    +changeMultiple: (data: Object, context?: ChangeContext) => void, //  TODO: refine type of data
     // Only exists in one implementation, therefore optional. Maybe we can remove that definition one day...
     +copyFromLocale?: (string) => Promise<*>,
     +data: {[string]: any},
@@ -121,16 +127,10 @@ export interface FormStoreInterface {
     +options: SchemaOptions,
     +resourceKey: ?string,
     +schema: Object,
-    +set: (name: string, value: mixed) => void,
-    +setMultiple: (data: Object) => void,
     +setType: (type: string) => void,
     +types: {[key: string]: SchemaType},
     +validate: () => boolean,
 }
-
-export type FieldChangeContext = {
-    isDefaultValue?: boolean,
-};
 
 export type FieldTypeProps<T> = {|
     dataPath: string,
@@ -142,7 +142,7 @@ export type FieldTypeProps<T> = {|
     label: ?string,
     maxOccurs: ?number,
     minOccurs: ?number,
-    onChange: (value: T, context?: FieldChangeContext) => void,
+    onChange: (value: T, context?: ChangeContext) => void,
     onFinish: (subDataPath: ?string, subSchemaPath: ?string) => void,
     onSuccess: ?() => void,
     router: ?Router,

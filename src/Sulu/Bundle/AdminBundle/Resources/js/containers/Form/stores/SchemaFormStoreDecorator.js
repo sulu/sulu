@@ -1,7 +1,8 @@
 // @flow
 import {action, computed, observable} from 'mobx';
+import log from 'loglevel';
 import metadataStore from './metadataStore';
-import type {FormStoreInterface, RawSchema, Schema, SchemaEntry} from '../types';
+import type {ChangeContext, FormStoreInterface, RawSchema, Schema, SchemaEntry} from '../types';
 
 export default class SchemaFormStoreDecorator implements FormStoreInterface {
     @observable innerFormStore: ?FormStoreInterface;
@@ -20,9 +21,15 @@ export default class SchemaFormStoreDecorator implements FormStoreInterface {
         }));
     }
 
-    change(name: string, value: mixed) {
+    change(name: string, value: mixed, context?: ChangeContext) {
         if (this.innerFormStore) {
-            this.innerFormStore.change(name, value);
+            this.innerFormStore.change(name, value, context);
+        }
+    }
+
+    changeMultiple(data: Object, context?: ChangeContext) {
+        if (this.innerFormStore) {
+            this.innerFormStore.changeMultiple(data, context);
         }
     }
 
@@ -34,14 +41,20 @@ export default class SchemaFormStoreDecorator implements FormStoreInterface {
         return {};
     }
 
-    set(name: string, value: mixed) {
-        if (this.innerFormStore) {
-            this.innerFormStore.set(name, value);
-        }
-    }
-
+    /**
+     * @deprecated
+     */
     setMultiple(data: Object) {
-        if (this.innerFormStore) {
+        log.warn(
+            'The "setMultiple" method is deprecated and will be removed. ' +
+            'Use the "changeMultiple" method instead.'
+        );
+
+        // the setMultiple method was removed from the FormStoreInterface
+        // we still want to call it to keep backwards compatibility if it is defined
+        // $FlowFixMe
+        if (this.innerFormStore && typeof this.innerFormStore.setMultiple === 'function') {
+            // $FlowFixMe
             this.innerFormStore.setMultiple(data);
         }
     }
