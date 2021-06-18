@@ -40,7 +40,9 @@ export default class MemoryFormStore extends AbstractFormStore implements FormSt
     }
 
     @action change(dataPath: string, value: mixed, context?: ChangeContext) {
-        jsonpointer.set(this.data, '/' + dataPath, value);
+        const sanitizedDataPath = !dataPath.startsWith('/') ? '/' + dataPath : dataPath;
+
+        jsonpointer.set( this.data, sanitizedDataPath, value );
 
         if (!context?.isDefaultValue && !context?.isServerValue) {
             this.dirty = true;
