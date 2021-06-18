@@ -42,12 +42,14 @@ class AudienceTargetingCacheListener implements EventSubscriberInterface
 
     public function preHandle(CacheEvent $cacheEvent)
     {
-        if (self::TARGET_GROUP_URL === $cacheEvent->getRequest()->getRequestUri()) {
+        $request = $cacheEvent->getRequest();
+
+        if ($request->attributes->get('internalRequest', false)) {
             return;
         }
 
         $this->hadValidTargetGroupCookie = $this->setTargetGroupHeader(
-            $cacheEvent->getRequest(),
+            $request,
             $cacheEvent->getKernel()
         );
     }
@@ -113,6 +115,8 @@ class AudienceTargetingCacheListener implements EventSubscriberInterface
             [],
             $request->server->all()
         );
+
+        $request->attributes->set('internalRequest', true);
 
         if ($currentTargetGroup) {
             $targetGroupRequest->headers->set(static::TARGET_GROUP_HEADER, $currentTargetGroup);
