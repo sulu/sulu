@@ -118,7 +118,7 @@ if (!window.ResizeObserver) {
 }
 
 window.log = log;
-log.setDefaultLevel(process.env.NODE_ENV === 'production' ? log.levels.ERROR : log.levels.TRACE);
+log.setDefaultLevel(process.env.NODE_ENV === 'production' ? log.levels.WARN : log.levels.TRACE);
 
 Requester.handleResponseHooks.push(logoutOnUnauthorizedResponse);
 
