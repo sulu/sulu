@@ -44,6 +44,7 @@ class AudienceTargetingCacheListener implements EventSubscriberInterface
     {
         $request = $cacheEvent->getRequest();
 
+        // requests like "/_sulu_target_group" or "/_fos_user_context_hash" should be ignored
         if ($request->attributes->get('internalRequest', false)) {
             return;
         }
