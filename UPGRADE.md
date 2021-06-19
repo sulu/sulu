@@ -4,18 +4,15 @@
 
 ### MediaRepositoryInterface has changed
 
-Two new methods been added to the `MediaRepositoryInterface`.
+A new method has been added to the `MediaRepositoryInterface`:
 
-- `findMediaResourcesOfCollections`
-- `countMediaOfCollections`
+- `findMediaResourcesOfRootCollection`
 
 ### CollectionRepositoryInterface has changed
 
-Five new methods been added to the `CollectionManagerInterface`.
+Three new methods have been added to the `CollectionManagerInterface`:
 
 - `findChildCollectionResourcesOfRootCollection`
-- `findChildCollectionIdsOfRootCollection`
-- `countChildCollectionsOfRootCollection`
 - `findUnauthorizedChildCollectionResourcesOfRootCollection`
 - `countUnauthorizedChildCollectionsOfRootCollection`
 

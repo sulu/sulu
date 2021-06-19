@@ -1253,7 +1253,7 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->assertEquals([
             'code' => 1103,
-            'message' => 'Resource has 7 dependant children',
+            'message' => 'Resource has 7 dependant resources',
             'totalDependantResources' => 7,
             'dependantResources' => [
                 [

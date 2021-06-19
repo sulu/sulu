@@ -131,20 +131,13 @@ interface CollectionRepositoryInterface
     public function findChildCollectionResourcesOfRootCollection(int $rootCollectionId): array;
 
     /**
-     * @return int[]
-     */
-    public function findChildCollectionIdsOfRootCollection(int $rootCollectionId): array;
-
-    public function countChildCollectionsOfRootCollection(int $rootCollectionId): int;
-
-    /**
      * @return array<array{id: int, resourceKey: string, title: string|null}>
      */
     public function findUnauthorizedChildCollectionResourcesOfRootCollection(
         int $id,
         UserInterface $user,
         int $permission,
-        ?int $maxResults = null
+        ?int $limit = null
     ): array;
 
     public function countUnauthorizedChildCollectionsOfRootCollection(int $id, UserInterface $user, int $permission): int;

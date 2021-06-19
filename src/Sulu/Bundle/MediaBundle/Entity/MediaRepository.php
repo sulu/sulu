@@ -11,11 +11,9 @@
 
 namespace Sulu\Bundle\MediaBundle\Entity;
 
-use Doctrine\DBAL\Connection;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr\Join;
-use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer;
 use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
@@ -448,42 +446,27 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
     }
 
     /**
-     * @param int[] $collectionIds
-     */
-    private function createMediaOfCollectionsQueryBuilder(string $alias, string $collectionAlias, array $collectionIds): QueryBuilder
-    {
-        return $this->createQueryBuilder($alias)
-            ->leftJoin($alias . '.collection', $collectionAlias)
-            ->where($collectionAlias . '.id IN (:collectionIds)')
-            ->setParameter('collectionIds', $collectionIds, Connection::PARAM_INT_ARRAY);
-    }
-
-    /**
-     * @param int[] $collectionIds
-     *
      * @return array<array{id: int, resourceKey: string, depth: int}>
      */
-    public function findMediaResourcesOfCollections(array $collectionIds): array
+    public function findMediaResourcesOfRootCollection(int $rootCollectionId): array
     {
-        return $this->createMediaOfCollectionsQueryBuilder('media', 'collection', $collectionIds)
+        return $this->createQueryBuilder('media')
             ->select('media.id AS id')
             ->addSelect('\'' . MediaInterface::RESOURCE_KEY . '\' AS resourceKey')
             ->addSelect('collection.depth + 1 AS depth')
             ->distinct()
+            ->innerJoin('media.collection', 'collection')
+            ->innerJoin(
+                CollectionInterface::class,
+                'rootCollection',
+                Join::WITH,
+                'collection.lft >= rootCollection.lft AND collection.rgt <= rootCollection.rgt'
+            )
+            ->where('rootCollection.id = :rootCollectionId')
             ->orderBy('media.id', 'ASC')
+            ->setParameter('rootCollectionId', $rootCollectionId)
             ->getQuery()
             ->getArrayResult();
-    }
-
-    /**
-     * @param int[] $collectionIds
-     */
-    public function countMediaOfCollections(array $collectionIds): int
-    {
-        return $this->createMediaOfCollectionsQueryBuilder('media', 'collection', $collectionIds)
-            ->select('COUNT(media.id)')
-            ->getQuery()
-            ->getSingleScalarResult();
     }
 
     public function setAccessControlQueryEnhancer(AccessControlQueryEnhancer $accessControlQueryEnhancer)

@@ -98,14 +98,7 @@ interface MediaRepositoryInterface extends RepositoryInterface
     public function count(array $filter);
 
     /**
-     * @param int[] $collectionIds
-     *
      * @return array<array{id: int, resourceKey: string, depth: int}>
      */
-    public function findMediaResourcesOfCollections(array $collectionIds): array;
-
-    /**
-     * @param int[] $collectionIds
-     */
-    public function countMediaOfCollections(array $collectionIds): int;
+    public function findMediaResourcesOfRootCollection(int $rootCollectionId): array;
 }

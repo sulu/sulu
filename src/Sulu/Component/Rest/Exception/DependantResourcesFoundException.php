@@ -34,7 +34,7 @@ class DependantResourcesFoundException extends \Exception implements DependantRe
         $this->totalDependantResources = $totalDependantResources;
 
         parent::__construct(
-            \sprintf('Resource has %d dependant children', $this->totalDependantResources),
+            \sprintf('Resource has %d dependant resources', $this->totalDependantResources),
             static::EXCEPTION_CODE_DEPENDANT_RESOURCES_FOUND
         );
     }

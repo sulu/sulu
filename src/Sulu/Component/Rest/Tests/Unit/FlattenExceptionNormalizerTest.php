@@ -159,7 +159,7 @@ class FlattenExceptionNormalizerTest extends TestCase
         $this->assertStringContainsString('Key already exists in', $result['errors'][0]);
     }
 
-    public function testNormalizeDeletionImpossibleChildrenExceptionDebugFalse(): void
+    public function testNormalizeDependantResourcesFoundExceptionDebugFalse(): void
     {
         $decoratedNormalizer = $this->prophesize(NormalizerInterface::class);
         $translator = $this->prophesize(TranslatorInterface::class);
@@ -208,7 +208,7 @@ class FlattenExceptionNormalizerTest extends TestCase
         $this->assertArrayNotHasKey('errors', $result);
     }
 
-    public function testNormalizeDeletionImpossibleChildrenExceptionDebugTrue(): void
+    public function testNormalizeDependantResourcesFoundExceptionDebugTrue(): void
     {
         $decoratedNormalizer = $this->prophesize(NormalizerInterface::class);
         $translator = $this->prophesize(TranslatorInterface::class);
@@ -257,7 +257,7 @@ class FlattenExceptionNormalizerTest extends TestCase
         $this->assertArrayHasKey('errors', $result);
     }
 
-    public function testNormalizeDeletionImpossibleChildPermissionsExceptionDebugFalse(): void
+    public function testNormalizeInsufficientChildPermissionsExceptionDebugFalse(): void
     {
         $decoratedNormalizer = $this->prophesize(NormalizerInterface::class);
         $translator = $this->prophesize(TranslatorInterface::class);
@@ -303,7 +303,7 @@ class FlattenExceptionNormalizerTest extends TestCase
         $this->assertArrayNotHasKey('errors', $result);
     }
 
-    public function testNormalizeDeletionImpossibleChildPermissionsExceptionDebugTrue(): void
+    public function testNormalizeInsufficientChildPermissionsExceptionDebugTrue(): void
     {
         $decoratedNormalizer = $this->prophesize(NormalizerInterface::class);
         $translator = $this->prophesize(TranslatorInterface::class);

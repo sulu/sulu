@@ -442,29 +442,6 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             ->getArrayResult();
     }
 
-    /**
-     * @return int[]
-     */
-    public function findChildCollectionIdsOfRootCollection(int $rootCollectionId): array
-    {
-        $childCollectionIds = $this->createChildCollectionsQueryBuilder('collection', $rootCollectionId)
-            ->select('collection.id AS id')
-            ->distinct()
-            ->orderBy('collection.id', 'ASC')
-            ->getQuery()
-            ->getArrayResult();
-
-        return \array_column($childCollectionIds, 'id');
-    }
-
-    public function countChildCollectionsOfRootCollection(int $rootCollectionId): int
-    {
-        return $this->createChildCollectionsQueryBuilder('collection', $rootCollectionId)
-            ->select('COUNT(collection.id)')
-            ->getQuery()
-            ->getSingleScalarResult();
-    }
-
     private function createPermittedChildCollectionsQueryBuilder(
         string $alias,
         int $id,
@@ -515,7 +492,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
         int $id,
         UserInterface $user,
         int $permission,
-        ?int $maxResults = null
+        ?int $limit = null
     ): array {
         return $this
             ->createUnauthorizedChildCollectionsQueryBuilder('collection', $id, $user, $permission)
@@ -525,7 +502,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             ->distinct()
             ->leftJoin('collection.defaultMeta', 'meta')
             ->orderBy('collection.id', 'ASC')
-            ->setMaxResults($maxResults)
+            ->setMaxResults($limit)
             ->getQuery()
             ->getArrayResult();
     }

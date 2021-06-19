@@ -613,10 +613,10 @@ class CollectionManager implements CollectionManagerInterface
                 }
             }
 
-            $totalChildResources = $this->countAllChildrenByRootCategory($id);
+            $childResources = $this->findAllChildResourcesByRootCollection($id);
 
-            if ($totalChildResources) {
-                $childResources = $this->findAllChildResourcesByRootCategory($id);
+            if (!empty($childResources)) {
+                $totalChildResources = $this->countGroupedResources($childResources);
 
                 throw new DependantResourcesFoundException(
                     $childResources,
@@ -870,25 +870,28 @@ class CollectionManager implements CollectionManagerInterface
     /**
      * @return array<int, array<array{id: int, resourceKey: string}>>
      */
-    private function findAllChildResourcesByRootCategory(int $rootCollectionId): array
+    private function findAllChildResourcesByRootCollection(int $rootCollectionId): array
     {
         $childCollections = $this->collectionRepository->findChildCollectionResourcesOfRootCollection($rootCollectionId);
-
-        $collectionIds = \array_merge([$rootCollectionId], \array_column($childCollections, 'id'));
-        $childMedia = $this->mediaRepository->findMediaResourcesOfCollections($collectionIds);
+        $childMedia = $this->mediaRepository->findMediaResourcesOfRootCollection($rootCollectionId);
 
         $result = \array_merge($childCollections, $childMedia);
 
         return $this->groupResourcesByDepth($result);
     }
 
-    private function countAllChildrenByRootCategory(int $id): int
+    /**
+     * @param array<int, array<array{id: int, resourceKey: string}>> $groupedResources
+     */
+    private function countGroupedResources(array $groupedResources): int
     {
-        $countChildCollections = $this->collectionRepository->countChildCollectionsOfRootCollection($id);
+        $counter = 0;
 
-        $childCollectionIds = \array_merge([$id], $this->collectionRepository->findChildCollectionIdsOfRootCollection($id));
-        $countChildMedia = $this->mediaRepository->countMediaOfCollections($childCollectionIds);
+        /** @var array<array{id: int, resourceKey: string}> $resources */
+        foreach ($groupedResources as $resources) {
+            $counter += \count($resources);
+        }
 
-        return $countChildCollections + $countChildMedia;
+        return $counter;
     }
 }
