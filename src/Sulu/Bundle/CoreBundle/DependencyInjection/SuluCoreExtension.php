@@ -20,6 +20,7 @@ use Sulu\Component\Rest\Exception\DependantResourcesFoundExceptionInterface;
 use Sulu\Component\Rest\Exception\InsufficientDescendantPermissionsException;
 use Sulu\Component\Rest\Exception\InvalidHashException;
 use Sulu\Component\Rest\Exception\MissingParameterException;
+use Sulu\Component\Rest\Exception\ReferencingResourcesFoundExceptionInterface;
 use Sulu\Component\Rest\ListBuilder\Filter\InvalidFilterTypeOptionsException;
 use Symfony\Bundle\TwigBundle\Controller\ExceptionController;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
@@ -97,6 +98,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
                             InvalidFilterTypeOptionsException::class => 400,
                             DependantResourcesFoundExceptionInterface::class => 409,
                             InsufficientDescendantPermissionsException::class => 403,
+                            ReferencingResourcesFoundExceptionInterface::class => 409,
                         ],
                         'exception_listener' => false,
                         'serialize_exceptions' => false,

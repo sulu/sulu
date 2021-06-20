@@ -39,6 +39,7 @@ class PageList extends React.Component<Props> {
     webspaceKeyDisposer: () => void;
     @observable availablePageTypes: Array<string> = [];
     @observable availablePageTypesLoading: boolean = true;
+    @observable errors = [];
 
     static getDerivedRouteAttributes(route: Route, attributes: AttributeMap) {
         if (typeof attributes.webspace !== 'string') {
@@ -199,6 +200,10 @@ class PageList extends React.Component<Props> {
         return indicators;
     };
 
+    @action addError = (message: string): void => {
+        this.errors.push(message);
+    };
+
     render() {
         const {getIndicators} = this;
 
@@ -214,6 +219,7 @@ class PageList extends React.Component<Props> {
                             },
                         }}
                         adapters={['column_list', 'tree_table']}
+                        addError={this.addError}
                         onCopyFinished={this.handleCopyFinished}
                         onItemAdd={this.handleItemAdd}
                         onItemClick={this.handleEditClick}
@@ -237,6 +243,7 @@ const PageListWithToolbar = withToolbar(PageList, function() {
     }
 
     return {
+        errors: this.errors,
         items: [
             {
                 label: translate('sulu_page.show_ghost_and_shadow'),

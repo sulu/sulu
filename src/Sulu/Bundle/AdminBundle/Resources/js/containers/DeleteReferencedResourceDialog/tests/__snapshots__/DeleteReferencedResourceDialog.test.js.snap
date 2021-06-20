@@ -1,0 +1,175 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The component should render 1`] = `
+Array [
+  <div
+    class="backdrop visible fixed"
+    role="button"
+  />,
+  <div
+    class="dialogContainer open"
+  >
+    <div
+      class="dialog"
+    >
+      <section
+        class="content"
+      >
+        <div
+          class="snackbar"
+        >
+          <div
+            class="snackbar error"
+            role="button"
+          >
+            <span
+              aria-label="su-exclamation-triangle"
+              class="su-exclamation-triangle icon"
+            />
+            <div
+              class="text"
+            >
+              <strong>
+                sulu_admin.error
+              </strong>
+               - 
+            </div>
+          </div>
+        </div>
+        <header
+          class="header"
+        >
+          sulu_admin.delete_linked_warning_title
+        </header>
+        <article
+          class="article center"
+        >
+          sulu_admin.delete_linked_warning_text
+          <ul>
+            <li>
+              Foo
+            </li>
+            <li>
+              Bar
+            </li>
+          </ul>
+        </article>
+        <footer
+          class="footer"
+        >
+          <button
+            class="button primary hasText"
+            type="button"
+          >
+            <span
+              class="buttonText"
+            >
+              sulu_admin.delete
+            </span>
+          </button>
+          <button
+            class="button secondary hasText"
+            type="button"
+          >
+            <span
+              class="buttonText"
+            >
+              sulu_admin.cancel
+            </span>
+          </button>
+        </footer>
+      </section>
+    </div>
+  </div>,
+]
+`;
+
+exports[`The component should render with loading state and deletion not allowed 1`] = `
+Array [
+  <div
+    class="backdrop visible fixed"
+    role="button"
+  />,
+  <div
+    class="dialogContainer open"
+  >
+    <div
+      class="dialog"
+    >
+      <section
+        class="content"
+      >
+        <div
+          class="snackbar"
+        >
+          <div
+            class="snackbar error"
+            role="button"
+          >
+            <span
+              aria-label="su-exclamation-triangle"
+              class="su-exclamation-triangle icon"
+            />
+            <div
+              class="text"
+            >
+              <strong>
+                sulu_admin.error
+              </strong>
+               - 
+            </div>
+          </div>
+        </div>
+        <header
+          class="header"
+        >
+          sulu_admin.item_not_deletable
+        </header>
+        <article
+          class="article center"
+        >
+          sulu_admin.delete_linked_abort_text
+          <ul>
+            <li>
+              Foo
+            </li>
+            <li>
+              Bar
+            </li>
+          </ul>
+        </article>
+        <footer
+          class="footer"
+        >
+          <button
+            class="button primary loading hasText"
+            disabled=""
+            type="button"
+          >
+            <span
+              class="buttonText"
+            >
+              sulu_admin.ok
+            </span>
+            <div
+              class="loader"
+            >
+              <div
+                class="spinner"
+                style="width: 25px; height: 25px;"
+              >
+                <div
+                  class="doubleBounce1"
+                />
+                <div
+                  class="doubleBounce2"
+                />
+              </div>
+            </div>
+          </button>
+        </footer>
+      </section>
+    </div>
+  </div>,
+]
+`;
