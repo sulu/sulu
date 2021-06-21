@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\SecurityBundle\EventListener;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Sulu\Component\Security\Authentication\UserInterface as SuluUserInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
@@ -60,7 +61,7 @@ class LastLoginListener implements EventSubscriberInterface
      */
     protected function updateLastLogin($user)
     {
-        if ($user instanceof UserInterface) {
+        if ($user instanceof SuluUserInterface) {
             $user->setLastLogin(new \DateTime());
             $this->entityManager->flush();
         }
