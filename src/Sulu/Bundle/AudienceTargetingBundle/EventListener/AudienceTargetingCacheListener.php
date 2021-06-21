@@ -44,7 +44,8 @@ class AudienceTargetingCacheListener implements EventSubscriberInterface
     {
         $request = $cacheEvent->getRequest();
 
-        // requests like "/_sulu_target_group" or "/_fos_user_context_hash" should be ignored
+        // the friendsofsymfony/http-cache-bundle package uses the "internalRequest" attribute to mark internal requests
+        // return early in this case to prevent loops on requests "/_sulu_target_group" or "/_fos_user_context_hash"
         if ($request->attributes->get('internalRequest', false)) {
             return;
         }
