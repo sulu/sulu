@@ -9,14 +9,14 @@ import FieldComponent from '../../components/Form/Field';
 import fieldRegistry from './registries/fieldRegistry';
 import fieldStyles from './field.scss';
 import FormInspector from './FormInspector';
-import type {Error, ErrorCollection, SchemaEntry} from './types';
+import type {ChangeContext, Error, ErrorCollection, SchemaEntry} from './types';
 
 type Props = {|
     dataPath: string,
     error?: Error | ErrorCollection,
     formInspector: FormInspector,
     name: string,
-    onChange: (string, *) => void,
+    onChange: (name: string, value: *, context?: ChangeContext) => void,
     onFinish: (dataPath: string, schemaPath: string) => void,
     onSuccess: ?() => void,
     router: ?Router,
@@ -32,14 +32,14 @@ class Field extends React.Component<Props> {
         showAllErrors: false,
     };
 
-    handleChange = (value: *) => {
+    handleChange = (value: *, context?: ChangeContext) => {
         const {name, onChange, schema} = this.props;
 
         if (schema.disabled) {
             return;
         }
 
-        onChange(name, value);
+        onChange(name, value, context);
     };
 
     handleFinish = (subDataPath: ?string, subSchemaPath: ?string) => {

@@ -137,7 +137,7 @@ test('Set default display option if no value is passed', () => {
         />
     );
 
-    expect(changeSpy).toBeCalledWith({displayOption: 'left', id: undefined});
+    expect(changeSpy).toBeCalledWith({displayOption: 'left', id: undefined}, {'isDefaultValue': true});
 });
 
 test('Do not set default display option if value is passed', () => {

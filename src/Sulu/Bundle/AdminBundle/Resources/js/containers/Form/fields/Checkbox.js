@@ -45,7 +45,7 @@ class Checkbox extends React.Component<FieldTypeProps<boolean>> {
         }
 
         if (value === undefined) {
-            onChange(defaultValue);
+            onChange(defaultValue, {isDefaultValue: true});
         }
     }
 

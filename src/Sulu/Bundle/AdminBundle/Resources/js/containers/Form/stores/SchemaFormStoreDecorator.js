@@ -1,7 +1,8 @@
 // @flow
 import {action, computed, observable} from 'mobx';
+import log from 'loglevel';
 import metadataStore from './metadataStore';
-import type {FormStoreInterface, RawSchema, Schema, SchemaEntry} from '../types';
+import type {ChangeContext, FormStoreInterface, RawSchema, Schema, SchemaEntry} from '../types';
 
 export default class SchemaFormStoreDecorator implements FormStoreInterface {
     @observable innerFormStore: ?FormStoreInterface;
@@ -20,9 +21,21 @@ export default class SchemaFormStoreDecorator implements FormStoreInterface {
         }));
     }
 
-    change(name: string, value: mixed) {
+    change(dataPath: string, value: mixed, context?: ChangeContext) {
         if (this.innerFormStore) {
-            this.innerFormStore.change(name, value);
+            this.innerFormStore.change(dataPath, value, context);
+        }
+    }
+
+    changeType(type: string, context?: ChangeContext) {
+        if (this.innerFormStore) {
+            this.innerFormStore.changeType(type, context);
+        }
+    }
+
+    changeMultiple(values: {[dataPath: string]: mixed}, context?: ChangeContext) {
+        if (this.innerFormStore) {
+            this.innerFormStore.changeMultiple(values, context);
         }
     }
 
@@ -34,8 +47,20 @@ export default class SchemaFormStoreDecorator implements FormStoreInterface {
         return {};
     }
 
+    /**
+     * @deprecated
+     */
     setMultiple(data: Object) {
-        if (this.innerFormStore) {
+        log.warn(
+            'The "setMultiple" method is deprecated and will be removed. ' +
+            'Use the "changeMultiple" method instead.'
+        );
+
+        // the setMultiple method was removed from the FormStoreInterface
+        // we still want to call it to keep backwards compatibility if it is defined
+        // $FlowFixMe
+        if (this.innerFormStore && typeof this.innerFormStore.setMultiple === 'function') {
+            // $FlowFixMe
             this.innerFormStore.setMultiple(data);
         }
     }
@@ -98,9 +123,9 @@ export default class SchemaFormStoreDecorator implements FormStoreInterface {
         return undefined;
     }
 
-    getValueByPath(path: string): mixed {
+    getValueByPath(dataPath: string): mixed {
         if (this.innerFormStore) {
-            return this.innerFormStore.getValueByPath(path);
+            return this.innerFormStore.getValueByPath(dataPath);
         }
 
         return false;
@@ -186,8 +211,20 @@ export default class SchemaFormStoreDecorator implements FormStoreInterface {
         return {};
     }
 
+    /**
+     * @deprecated
+     */
     setType(type: string): void {
-        if (this.innerFormStore) {
+        log.warn(
+            'The "setType" method is deprecated and will be removed. ' +
+            'Use the "changeType" method instead.'
+        );
+
+        // the setType method was removed from the FormStoreInterface
+        // we still want to call it to keep backwards compatibility if it is defined
+        // $FlowFixMe
+        if (this.innerFormStore && typeof this.innerFormStore.setType === 'function') {
+            // $FlowFixMe
             return this.innerFormStore.setType(type);
         }
     }

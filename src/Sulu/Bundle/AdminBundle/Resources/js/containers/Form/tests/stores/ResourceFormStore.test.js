@@ -5,6 +5,11 @@ import ResourceStore from '../../../../stores/ResourceStore';
 import metadataStore from '../../stores/metadataStore';
 import conditionDataProviderRegistry from '../../registries/conditionDataProviderRegistry';
 
+jest.mock('loglevel', () => ({
+    warn: jest.fn(),
+    info: jest.fn(),
+}));
+
 beforeEach(() => {
     conditionDataProviderRegistry.clear();
 });
@@ -19,6 +24,9 @@ jest.mock('../../../../stores/ResourceStore', () => function(resourceKey, id, op
         Object.assign(this.data, data);
     });
     this.change = jest.fn();
+    this.changeMultiple = jest.fn(function(data) {
+        Object.assign(this.data, data);
+    });
     this.copyFromLocale = jest.fn();
     this.data = mockObservable({});
     this.loading = false;
@@ -1125,6 +1133,54 @@ test('SetMultiple should be passed to resourceStore', () => {
     resourceFormStore.setMultiple(data);
 
     expect(resourceFormStore.resourceStore.setMultiple).toBeCalledWith(data);
+    resourceFormStore.destroy();
+});
+
+test('Should call change method of ResourceStore', () => {
+    const resourceFormStore = new ResourceFormStore(new ResourceStore('snippets', '3'), 'snippets');
+    resourceFormStore.change('title', 'Title');
+
+    expect(resourceFormStore.resourceStore.change).toBeCalledWith('title', 'Title');
+    resourceFormStore.destroy();
+});
+
+test('Should call set method of ResourceStore for server data', () => {
+    const resourceFormStore = new ResourceFormStore(new ResourceStore('snippets', '3'), 'snippets');
+    resourceFormStore.change('title', 'Title', {isDefaultValue: true});
+
+    expect(resourceFormStore.resourceStore.set).toBeCalledWith('title', 'Title');
+    resourceFormStore.destroy();
+});
+
+test('Should call set method of ResourceStore for default data', () => {
+    const resourceFormStore = new ResourceFormStore(new ResourceStore('snippets', '3'), 'snippets');
+    resourceFormStore.change('title', 'Title', {isDefaultValue: true});
+
+    expect(resourceFormStore.resourceStore.set).toBeCalledWith('title', 'Title');
+    resourceFormStore.destroy();
+});
+
+test('Should call changeMultiple method of ResourceStore', () => {
+    const resourceFormStore = new ResourceFormStore(new ResourceStore('snippets', '3'), 'snippets');
+    resourceFormStore.changeMultiple({title: 'test1', description: 'test2'});
+
+    expect(resourceFormStore.resourceStore.changeMultiple).toBeCalledWith({title: 'test1', description: 'test2'});
+    resourceFormStore.destroy();
+});
+
+test('Should call setMultiple method of ResourceStore for server data', () => {
+    const resourceFormStore = new ResourceFormStore(new ResourceStore('snippets', '3'), 'snippets');
+    resourceFormStore.changeMultiple({title: 'test1', description: 'test2'}, {isDefaultValue: true});
+
+    expect(resourceFormStore.resourceStore.setMultiple).toBeCalledWith({title: 'test1', description: 'test2'});
+    resourceFormStore.destroy();
+});
+
+test('Should call setMultiple method of ResourceStore for default data', () => {
+    const resourceFormStore = new ResourceFormStore(new ResourceStore('snippets', '3'), 'snippets');
+    resourceFormStore.changeMultiple({title: 'test1', description: 'test2'}, {isDefaultValue: true});
+
+    expect(resourceFormStore.resourceStore.setMultiple).toBeCalledWith({title: 'test1', description: 'test2'});
     resourceFormStore.destroy();
 });
 

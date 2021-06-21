@@ -39,7 +39,7 @@ export default class EnableUserToolbarAction extends AbstractFormToolbarAction {
                 id,
             }
         ).then(action((response) => {
-            this.resourceFormStore.set('enabled', response.enabled);
+            this.resourceFormStore.change('enabled', response.enabled, {isServerValue: true});
             this.loading = false;
             this.form.showSuccessSnackbar();
         })).catch(action((error) => {

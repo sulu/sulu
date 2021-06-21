@@ -1,9 +1,11 @@
 // @flow
-import {action, autorun, observable} from 'mobx';
+import {action, autorun, observable, set} from 'mobx';
 import Ajv from 'ajv';
+import log from 'loglevel';
 import jsonpointer from 'json-pointer';
 import AbstractFormStore from './AbstractFormStore';
-import type {FormStoreInterface, RawSchema, SchemaType} from '../types';
+import type {ChangeContext, FormStoreInterface, RawSchema, SchemaType} from '../types';
+
 import type {IObservableValue} from 'mobx';
 
 const ajv = new Ajv({allErrors: true, jsonPointers: true});
@@ -37,22 +39,44 @@ export default class MemoryFormStore extends AbstractFormStore implements FormSt
         this.updateFieldPathEvaluationsDisposer = autorun(this.updateFieldPathEvaluations);
     }
 
-    @action change(path: string, value: mixed) {
-        jsonpointer.set(this.data, '/' + path, value);
-        this.dirty = true;
+    @action change(dataPath: string, value: mixed, context?: ChangeContext) {
+        const sanitizedDataPath = !dataPath.startsWith('/') ? '/' + dataPath : dataPath;
+
+        jsonpointer.set( this.data, sanitizedDataPath, value );
+
+        if (!context?.isDefaultValue && !context?.isServerValue) {
+            this.dirty = true;
+        }
+    }
+
+    @action changeMultiple(values: {[dataPath: string]: mixed}, context?: ChangeContext) {
+        Object.keys(values).forEach((path) => {
+            this.change(path, values[path], context);
+        });
+        set(this.data, this.data);
+
+        super.changeMultiple(values);
     }
 
     get hasInvalidType() {
         return false;
     }
 
+    /**
+     * @deprecated
+     */
     @action setMultiple(data: Object) {
+        log.warn(
+            'The "setMultiple" method is deprecated and will be removed. ' +
+            'Use the "changeMultiple" method instead.'
+        );
+
         this.data = {...this.data, ...data};
 
         super.setMultiple();
     }
 
-    setType() {
+    changeType() {
         throw new Error('The MemoryFormStore cannot handle types');
     }
 

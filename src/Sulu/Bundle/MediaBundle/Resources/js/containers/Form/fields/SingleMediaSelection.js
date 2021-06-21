@@ -38,7 +38,7 @@ class SingleMediaSelection extends React.Component<FieldTypeProps<Value>> {
         }
 
         if (this.value === undefined) {
-            onChange({id: undefined, displayOption: defaultDisplayOption});
+            onChange({id: undefined, displayOption: defaultDisplayOption}, {isDefaultValue: true});
         }
     }
 

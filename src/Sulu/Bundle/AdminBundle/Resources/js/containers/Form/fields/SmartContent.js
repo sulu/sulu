@@ -112,7 +112,7 @@ class SmartContent extends React.Component<Props> {
         const {datasourceResourceKey} = smartContentConfigStore.getConfig(this.provider);
 
         if (value === undefined) {
-            onChange(this.value);
+            onChange(this.value, {isDefaultValue: true});
         }
 
         this.smartContentStore = new SmartContentStore(
