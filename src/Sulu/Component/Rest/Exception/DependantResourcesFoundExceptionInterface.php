@@ -20,5 +20,5 @@ interface DependantResourcesFoundExceptionInterface extends RestExceptionInterfa
      */
     public function getDependantResources(): array;
 
-    public function getTotalDependantResources(): int;
+    public function getDependantResourcesCount(): int;
 }

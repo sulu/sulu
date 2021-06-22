@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Sulu\Component\Rest\Exception;
 
+use Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException;
+
 interface RestExceptionInterface extends \Throwable
 {
     /**
@@ -30,20 +32,23 @@ interface RestExceptionInterface extends \Throwable
     const EXCEPTION_CODE_INVALID_HASH = 1102;
 
     /**
-     * Cannot delete resource, because it has children.
+     * @see ResourceLocatorAlreadyExistsException
      *
+     * @var int
+     */
+    const EXCEPTION_CODE_RESOURCE_LOCATOR_ALREADY_EXISTS = 1103;
+
+    /**
+     * @see InsufficientDescendantPermissionsException
+     *
+     * @var int
+     */
+    const EXCEPTION_CODE_INSUFFICIENT_DESCENDANT_PERMISSIONS = 1104;
+
+    /**
      * @see DependantResourcesFoundExceptionInterface
      *
      * @var int
      */
-    const EXCEPTION_CODE_DEPENDANT_RESOURCES_FOUND = 1103;
-
-    /**
-     * Cannot delete resource, because the user has insufficient permissions for some of it's children.
-     *
-     * @see InsufficientChildPermissionsExceptionInterface
-     *
-     * @var int
-     */
-    const EXCEPTION_CODE_INSUFFICIENT_CHILD_PERMISSIONS = 1104;
+    const EXCEPTION_CODE_DEPENDANT_RESOURCES_FOUND = 1105;
 }

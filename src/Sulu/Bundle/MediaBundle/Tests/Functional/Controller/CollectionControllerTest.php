@@ -1252,9 +1252,9 @@ class CollectionControllerTest extends SuluTestCase
         unset($content['errors']);
 
         $this->assertEquals([
-            'code' => 1103,
-            'message' => 'Resource has 7 dependant resources',
-            'totalDependantResources' => 7,
+            'code' => 1105,
+            'message' => 'Resource has 7 dependant resources.',
+            'dependantResourcesCount' => 7,
             'dependantResources' => [
                 [
                     [
@@ -1363,26 +1363,8 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->assertEquals([
             'code' => 1104,
-            'message' => 'Insufficient permissions for 4 children of this resource',
-            'totalUnauthorizedChildResources' => 4,
-            'permissionType' => 'delete',
-            'unauthorizedChildResources' => [
-                [
-                    'id' => $child1->getId(),
-                    'resourceKey' => 'collections',
-                    'title' => 'Child 1',
-                ],
-                [
-                    'id' => $child111->getId(),
-                    'resourceKey' => 'collections',
-                    'title' => 'Child 1-1-1',
-                ],
-                [
-                    'id' => $child12->getId(),
-                    'resourceKey' => 'collections',
-                    'title' => 'Child 1-2',
-                ],
-            ],
+            'message' => 'Insufficient permissions for 4 descendant elements.',
+            'detail' => 'Insufficient permissions for 4 descendant elements.',
         ], $content);
     }
 

@@ -128,17 +128,7 @@ interface CollectionRepositoryInterface
     /**
      * @return array<array{id: int, resourceKey: string, depth: int}>
      */
-    public function findChildCollectionResourcesOfRootCollection(int $rootCollectionId): array;
+    public function findDescendantCollectionResources(int $ancestorId): array;
 
-    /**
-     * @return array<array{id: int, resourceKey: string, title: string|null}>
-     */
-    public function findUnauthorizedChildCollectionResourcesOfRootCollection(
-        int $id,
-        UserInterface $user,
-        int $permission,
-        ?int $limit = null
-    ): array;
-
-    public function countUnauthorizedChildCollectionsOfRootCollection(int $id, UserInterface $user, int $permission): int;
+    public function countUnauthorizedDescendantCollections(int $ancestorId, UserInterface $user, int $permission): int;
 }

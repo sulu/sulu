@@ -412,27 +412,27 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
         return $this->getClassName() === $type;
     }
 
-    private function createChildCollectionsQueryBuilder(string $alias, int $rootCollectionId): QueryBuilder
+    private function createDescendantCollectionsQueryBuilder(string $alias, int $ancestorId): QueryBuilder
     {
-        $rootCollectionAlias = $alias . '_rootCollection';
+        $ancestorCollectionAlias = $alias . '_ancestorCollection';
 
         return $this->createQueryBuilder($alias)
             ->innerJoin(
                 CollectionInterface::class,
-                $rootCollectionAlias,
+                $ancestorCollectionAlias,
                 Join::WITH,
-                $alias . '.lft > ' . $rootCollectionAlias . '.lft AND ' . $alias . '.rgt < ' . $rootCollectionAlias . '.rgt'
+                $alias . '.lft > ' . $ancestorCollectionAlias . '.lft AND ' . $alias . '.rgt < ' . $ancestorCollectionAlias . '.rgt'
             )
-            ->where($rootCollectionAlias . '.id = :id')
-            ->setParameter('id', $rootCollectionId);
+            ->where($ancestorCollectionAlias . '.id = :id')
+            ->setParameter('id', $ancestorId);
     }
 
     /**
      * @return array<array{id: int, resourceKey: string, depth: int}>
      */
-    public function findChildCollectionResourcesOfRootCollection(int $rootCollectionId): array
+    public function findDescendantCollectionResources(int $ancestorId): array
     {
-        return $this->createChildCollectionsQueryBuilder('collection', $rootCollectionId)
+        return $this->createDescendantCollectionsQueryBuilder('collection', $ancestorId)
             ->select('collection.id AS id')
             ->addSelect('\'' . CollectionInterface::RESOURCE_KEY . '\' AS resourceKey')
             ->addSelect('collection.depth AS depth')
@@ -442,13 +442,13 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             ->getArrayResult();
     }
 
-    private function createPermittedChildCollectionsQueryBuilder(
+    private function createAuthorizedDescendantCollectionsQueryBuilder(
         string $alias,
-        int $id,
+        int $ancestorId,
         UserInterface $user,
         int $permission
     ): QueryBuilder {
-        $qb = $this->createChildCollectionsQueryBuilder($alias, $id);
+        $qb = $this->createDescendantCollectionsQueryBuilder($alias, $ancestorId);
 
         $this->accessControlQueryEnhancer->enhance(
             $qb,
@@ -461,56 +461,31 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
         return $qb;
     }
 
-    private function createUnauthorizedChildCollectionsQueryBuilder(
+    private function createUnauthorizedDescendantCollectionsQueryBuilder(
         string $alias,
-        int $id,
+        int $ancestorId,
         UserInterface $user,
         int $permission
     ): QueryBuilder {
-        $qb = $this->createChildCollectionsQueryBuilder($alias, $id);
+        $qb = $this->createDescendantCollectionsQueryBuilder($alias, $ancestorId);
 
-        $permittedChildCollectionsQb = $this
-            ->createPermittedChildCollectionsQueryBuilder('permittedCollection', $id, $user, $permission)
-            ->select('permittedCollection.id')
+        $authorizedDescendantCollectionsQb = $this
+            ->createAuthorizedDescendantCollectionsQueryBuilder('authorizedCollection', $ancestorId, $user, $permission)
+            ->select('authorizedCollection.id')
             ->distinct()
-            ->orderBy('permittedCollection.id', 'ASC');
+            ->orderBy('authorizedCollection.id', 'ASC');
 
-        $qb->andWhere($alias . '.id NOT IN (' . $permittedChildCollectionsQb->getDQL() . ')');
-
-        /** @var Query\Parameter $parameter */
-        foreach ($permittedChildCollectionsQb->getParameters() as $parameter) {
-            $qb->setParameter($parameter->getName(), $parameter->getValue(), $parameter->getType());
-        }
+        $qb
+            ->andWhere($alias . '.id NOT IN (' . $authorizedDescendantCollectionsQb->getDQL() . ')')
+            ->setParameters($authorizedDescendantCollectionsQb->getParameters());
 
         return $qb;
     }
 
-    /**
-     * @return array<array{id: int, resourceKey: string, title: string|null}>
-     */
-    public function findUnauthorizedChildCollectionResourcesOfRootCollection(
-        int $id,
-        UserInterface $user,
-        int $permission,
-        ?int $limit = null
-    ): array {
-        return $this
-            ->createUnauthorizedChildCollectionsQueryBuilder('collection', $id, $user, $permission)
-            ->select('collection.id AS id')
-            ->addSelect('\'' . CollectionInterface::RESOURCE_KEY . '\' AS resourceKey')
-            ->addSelect('meta.title AS title')
-            ->distinct()
-            ->leftJoin('collection.defaultMeta', 'meta')
-            ->orderBy('collection.id', 'ASC')
-            ->setMaxResults($limit)
-            ->getQuery()
-            ->getArrayResult();
-    }
-
-    public function countUnauthorizedChildCollectionsOfRootCollection(int $id, UserInterface $user, int $permission): int
+    public function countUnauthorizedDescendantCollections(int $ancestorId, UserInterface $user, int $permission): int
     {
         return $this
-            ->createUnauthorizedChildCollectionsQueryBuilder('collection', $id, $user, $permission)
+            ->createUnauthorizedDescendantCollectionsQueryBuilder('collection', $ancestorId, $user, $permission)
             ->select('COUNT(collection.id)')
             ->getQuery()
             ->getSingleScalarResult();

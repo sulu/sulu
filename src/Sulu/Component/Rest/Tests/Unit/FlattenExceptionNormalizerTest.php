@@ -13,10 +13,8 @@ namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Filter;
 
 use PHPUnit\Framework\TestCase;
 use Sulu\Component\Rest\Exception\DependantResourcesFoundException;
-use Sulu\Component\Rest\Exception\InsufficientChildPermissionsException;
 use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
 use Sulu\Component\Rest\FlattenExceptionNormalizer;
-use Sulu\Component\Security\Authorization\PermissionTypes;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -201,9 +199,9 @@ class FlattenExceptionNormalizerTest extends TestCase
         );
 
         $this->assertIsArray($result);
-        $this->assertSame(1103, $result['code']);
+        $this->assertSame(1105, $result['code']);
         $this->assertSame($exception->getMessage(), $result['message']);
-        $this->assertSame($exception->getTotalDependantResources(), $result['totalDependantResources']);
+        $this->assertSame($exception->getDependantResourcesCount(), $result['dependantResourcesCount']);
         $this->assertEquals($exception->getDependantResources(), $result['dependantResources']);
         $this->assertArrayNotHasKey('errors', $result);
     }
@@ -250,102 +248,10 @@ class FlattenExceptionNormalizerTest extends TestCase
         );
 
         $this->assertIsArray($result);
-        $this->assertSame(1103, $result['code']);
+        $this->assertSame(1105, $result['code']);
         $this->assertSame($exception->getMessage(), $result['message']);
-        $this->assertSame($exception->getTotalDependantResources(), $result['totalDependantResources']);
+        $this->assertSame($exception->getDependantResourcesCount(), $result['dependantResourcesCount']);
         $this->assertEquals($exception->getDependantResources(), $result['dependantResources']);
-        $this->assertArrayHasKey('errors', $result);
-    }
-
-    public function testNormalizeInsufficientChildPermissionsExceptionDebugFalse(): void
-    {
-        $decoratedNormalizer = $this->prophesize(NormalizerInterface::class);
-        $translator = $this->prophesize(TranslatorInterface::class);
-
-        $normalizer = new FlattenExceptionNormalizer(
-            $decoratedNormalizer->reveal(),
-            $translator->reveal()
-        );
-
-        $exception = new InsufficientChildPermissionsException(
-            [
-                ['id' => 2, 'resourceKey' => 'collections', 'title' => 'Collection 2'],
-                ['id' => 3, 'resourceKey' => 'collections', 'title' => 'Collection 3'],
-                ['id' => 4, 'resourceKey' => 'collections', 'title' => 'Collection 4'],
-            ],
-            4,
-            PermissionTypes::DELETE
-        );
-
-        $flattenException = FlattenException::createFromThrowable($exception);
-
-        $decoratedNormalizer->normalize(
-            $flattenException,
-            'json',
-            ['exception' => $exception, 'debug' => false]
-        )->willReturn([
-            'code' => 403,
-            'message' => $exception->getMessage(),
-        ]);
-
-        $result = $normalizer->normalize(
-            $flattenException,
-            'json',
-            ['exception' => $exception, 'debug' => false]
-        );
-
-        $this->assertIsArray($result);
-        $this->assertSame(1104, $result['code']);
-        $this->assertSame($exception->getMessage(), $result['message']);
-        $this->assertSame($exception->getTotalUnauthorizedChildResources(), $result['totalUnauthorizedChildResources']);
-        $this->assertSame($exception->getPermissionType(), $result['permissionType']);
-        $this->assertEquals($exception->getUnauthorizedChildResources(), $result['unauthorizedChildResources']);
-        $this->assertArrayNotHasKey('errors', $result);
-    }
-
-    public function testNormalizeInsufficientChildPermissionsExceptionDebugTrue(): void
-    {
-        $decoratedNormalizer = $this->prophesize(NormalizerInterface::class);
-        $translator = $this->prophesize(TranslatorInterface::class);
-
-        $normalizer = new FlattenExceptionNormalizer(
-            $decoratedNormalizer->reveal(),
-            $translator->reveal()
-        );
-
-        $exception = new InsufficientChildPermissionsException(
-            [
-                ['id' => 2, 'resourceKey' => 'collections', 'title' => 'Collection 2'],
-                ['id' => 3, 'resourceKey' => 'collections', 'title' => 'Collection 3'],
-                ['id' => 4, 'resourceKey' => 'collections', 'title' => 'Collection 4'],
-            ],
-            4,
-            PermissionTypes::DELETE
-        );
-
-        $flattenException = FlattenException::createFromThrowable($exception);
-
-        $decoratedNormalizer->normalize(
-            $flattenException,
-            'json',
-            ['exception' => $exception, 'debug' => true]
-        )->willReturn([
-            'code' => 403,
-            'message' => $exception->getMessage(),
-        ]);
-
-        $result = $normalizer->normalize(
-            $flattenException,
-            'json',
-            ['exception' => $exception, 'debug' => true]
-        );
-
-        $this->assertIsArray($result);
-        $this->assertSame(1104, $result['code']);
-        $this->assertSame($exception->getMessage(), $result['message']);
-        $this->assertSame($exception->getTotalUnauthorizedChildResources(), $result['totalUnauthorizedChildResources']);
-        $this->assertSame($exception->getPermissionType(), $result['permissionType']);
-        $this->assertEquals($exception->getUnauthorizedChildResources(), $result['unauthorizedChildResources']);
         $this->assertArrayHasKey('errors', $result);
     }
 

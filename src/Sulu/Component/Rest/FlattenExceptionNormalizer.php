@@ -12,7 +12,6 @@
 namespace Sulu\Component\Rest;
 
 use Sulu\Component\Rest\Exception\DependantResourcesFoundExceptionInterface;
-use Sulu\Component\Rest\Exception\InsufficientChildPermissionsExceptionInterface;
 use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -66,14 +65,8 @@ class FlattenExceptionNormalizer implements NormalizerInterface
             $data['errors'] = [$errors];
         }
 
-        if ($contextException instanceof InsufficientChildPermissionsExceptionInterface) {
-            $data['totalUnauthorizedChildResources'] = $contextException->getTotalUnauthorizedChildResources();
-            $data['unauthorizedChildResources'] = $contextException->getUnauthorizedChildResources();
-            $data['permissionType'] = $contextException->getPermissionType();
-        }
-
         if ($contextException instanceof DependantResourcesFoundExceptionInterface) {
-            $data['totalDependantResources'] = $contextException->getTotalDependantResources();
+            $data['dependantResourcesCount'] = $contextException->getDependantResourcesCount();
             $data['dependantResources'] = $contextException->getDependantResources();
         }
 

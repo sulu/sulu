@@ -23,18 +23,18 @@ class DependantResourcesFoundException extends \Exception implements DependantRe
     /**
      * @var int
      */
-    private $totalDependantResources;
+    private $dependantResourcesCount;
 
     /**
      * @param array<int, array<array{id: int|string, resourceKey: string}>> $dependantResources
      */
-    public function __construct(array $dependantResources, int $totalDependantResources)
+    public function __construct(array $dependantResources, int $dependantResourcesCount)
     {
         $this->dependantResources = $dependantResources;
-        $this->totalDependantResources = $totalDependantResources;
+        $this->dependantResourcesCount = $dependantResourcesCount;
 
         parent::__construct(
-            \sprintf('Resource has %d dependant resources', $this->totalDependantResources),
+            \sprintf('Resource has %d dependant resources.', $this->dependantResourcesCount),
             static::EXCEPTION_CODE_DEPENDANT_RESOURCES_FOUND
         );
     }
@@ -44,8 +44,8 @@ class DependantResourcesFoundException extends \Exception implements DependantRe
         return $this->dependantResources;
     }
 
-    public function getTotalDependantResources(): int
+    public function getDependantResourcesCount(): int
     {
-        return $this->totalDependantResources;
+        return $this->dependantResourcesCount;
     }
 }

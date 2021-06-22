@@ -100,5 +100,5 @@ interface MediaRepositoryInterface extends RepositoryInterface
     /**
      * @return array<array{id: int, resourceKey: string, depth: int}>
      */
-    public function findMediaResourcesOfRootCollection(int $rootCollectionId): array;
+    public function findMediaResourcesByCollection(int $collectionId, bool $includeDescendantCollections = true): array;
 }

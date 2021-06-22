@@ -17,7 +17,7 @@ use Sulu\Component\Content\Types\Block\BlockVisitorInterface;
 use Sulu\Component\HttpKernel\SuluKernel;
 use Sulu\Component\Rest\Csv\ObjectNotSupportedException;
 use Sulu\Component\Rest\Exception\DependantResourcesFoundExceptionInterface;
-use Sulu\Component\Rest\Exception\InsufficientChildPermissionsExceptionInterface;
+use Sulu\Component\Rest\Exception\InsufficientDescendantPermissionsException;
 use Sulu\Component\Rest\Exception\InvalidHashException;
 use Sulu\Component\Rest\Exception\MissingParameterException;
 use Sulu\Component\Rest\ListBuilder\Filter\InvalidFilterTypeOptionsException;
@@ -96,7 +96,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
                             ObjectNotSupportedException::class => 406,
                             InvalidFilterTypeOptionsException::class => 400,
                             DependantResourcesFoundExceptionInterface::class => 409,
-                            InsufficientChildPermissionsExceptionInterface::class => 403,
+                            InsufficientDescendantPermissionsException::class => 403,
                         ],
                         'exception_listener' => false,
                         'serialize_exceptions' => false,
