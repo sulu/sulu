@@ -91,7 +91,7 @@ export default class TogglerToolbarAction extends AbstractFormToolbarAction {
                 id,
             }
         ).then(action((response) => {
-            this.resourceFormStore.set(this.property, response[this.property]);
+            this.resourceFormStore.change(this.property, response[this.property], {isServerValue: true});
             this.loading = false;
             this.form.showSuccessSnackbar();
         })).catch(action((error) => {

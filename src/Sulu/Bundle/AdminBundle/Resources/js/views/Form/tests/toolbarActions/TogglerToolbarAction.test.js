@@ -20,7 +20,7 @@ jest.mock('../../../../containers/Form', () => ({
         resourceStore;
         resourceKey;
 
-        set = jest.fn();
+        change = jest.fn();
 
         constructor(resourceStore) {
             this.resourceStore = resourceStore;
@@ -160,7 +160,7 @@ test.each([
         );
 
         return promise.then(() => {
-            expect(toolbarAction.resourceFormStore.set).toBeCalledWith(property, true);
+            expect(toolbarAction.resourceFormStore.change).toBeCalledWith(property, true, {isServerValue: true});
             expect(toolbarAction.form.showSuccessSnackbar).toBeCalled();
         });
     }
@@ -195,7 +195,7 @@ test.each([
         );
 
         return promise.then(() => {
-            expect(toolbarAction.resourceFormStore.set).toBeCalledWith(property, false);
+            expect(toolbarAction.resourceFormStore.change).toBeCalledWith(property, false, {isServerValue: true});
             expect(toolbarAction.form.showSuccessSnackbar).toBeCalled();
         });
     }

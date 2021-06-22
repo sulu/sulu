@@ -11,7 +11,7 @@ import conditionDataProviderRegistry from './registries/conditionDataProviderReg
 import fieldRegistry from './registries/fieldRegistry';
 import fieldStyles from './field.scss';
 import FormInspector from './FormInspector';
-import type {Error, ErrorCollection, SchemaEntry} from './types';
+import type {ChangeContext, Error, ErrorCollection, SchemaEntry} from './types';
 
 type Props = {|
     data: Object,
@@ -19,7 +19,7 @@ type Props = {|
     error?: Error | ErrorCollection,
     formInspector: FormInspector,
     name: string,
-    onChange: (string, *) => void,
+    onChange: (name: string, value: *, context?: ChangeContext) => void,
     onFinish: (dataPath: string, schemaPath: string) => void,
     onSuccess: ?() => void,
     router: ?Router,
@@ -66,14 +66,14 @@ class Field extends React.Component<Props> {
         return jexl.evalSync(schema.visibleCondition, this.conditionData);
     }
 
-    handleChange = (value: *) => {
+    handleChange = (value: *, context?: ChangeContext) => {
         const {name, onChange} = this.props;
 
         if (this.disabled) {
             return;
         }
 
-        onChange(name, value);
+        onChange(name, value, context);
     };
 
     handleFinish = (subDataPath: ?string, subSchemaPath: ?string) => {

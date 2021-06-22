@@ -265,11 +265,13 @@ export default class ResourceStore {
     }
 
     @action set(path: string, value: mixed) {
-        if (path === 'id' && (typeof value === 'string' || typeof value === 'number')) {
+        const strippedPath = path.startsWith('/') ? path.substring(1) : path;
+
+        if (strippedPath === 'id' && (typeof value === 'string' || typeof value === 'number')) {
             this.id = value;
         }
 
-        jsonpointer.set(this.data, '/' + path, value);
+        jsonpointer.set(this.data, '/' + strippedPath, value);
     }
 
     @action setMultiple(data: Object) {

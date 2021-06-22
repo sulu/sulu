@@ -173,8 +173,8 @@ export default class AbstractFormStore
         return Object.keys(this.errors).length > 0;
     }
 
-    getValueByPath = (path: string): mixed => {
-        return jsonpointer.has(this.data, path) ? jsonpointer.get(this.data, path) : undefined;
+    getValueByPath = (dataPath: string): mixed => {
+        return jsonpointer.has(this.data, dataPath) ? jsonpointer.get(this.data, dataPath) : undefined;
     };
 
     getValuesByTag(tagName: string): Array<mixed> {

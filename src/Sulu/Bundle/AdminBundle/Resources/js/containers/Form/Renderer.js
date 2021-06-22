@@ -9,14 +9,14 @@ import Field from './Field';
 import FormInspector from './FormInspector';
 import Section from './Section';
 import type {Element} from 'react';
-import type {ErrorCollection, Schema, SchemaEntry} from './types';
+import type {ErrorCollection, Schema, SchemaEntry, ChangeContext} from './types';
 
 type Props = {|
     data: Object,
     dataPath: string,
     errors?: ErrorCollection,
     formInspector: FormInspector,
-    onChange: (string, *) => void,
+    onChange: (name: string, value: *, context?: ChangeContext) => void,
     onFieldFinish: ?(dataPath: string, schemaPath: string) => void,
     onSuccess: ?() => void,
     router: ?Router,

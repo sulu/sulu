@@ -51,7 +51,7 @@ jest.mock('../../../../containers/Form/stores/ResourceFormStore', () => (
         }
 
         delete = jest.fn();
-        setMultiple = jest.fn();
+        changeMultiple = jest.fn();
     })
 );
 
@@ -254,7 +254,10 @@ test('Unpublish page when dialog is confirmed', () => {
         element = mount(setUnpublishedToolbarAction.getNode());
         expect(setUnpublishedToolbarAction.form.showSuccessSnackbar).toBeCalledWith();
         expect(element.prop('confirmLoading')).toEqual(false);
-        expect(setUnpublishedToolbarAction.resourceFormStore.setMultiple).toBeCalledWith(data);
+        expect(setUnpublishedToolbarAction.resourceFormStore.changeMultiple).toBeCalledWith(
+            data,
+            {isServerValue: true}
+        );
         expect(setUnpublishedToolbarAction.resourceFormStore.dirty).toEqual(false);
     });
 });

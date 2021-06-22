@@ -48,7 +48,7 @@ jest.mock('../stores/ResourceFormStore', () => jest.fn(function(resourceStore) {
     this.getValueByPath = jest.fn();
     this.getSchemaEntryByPath = jest.fn().mockReturnValue({types: {default: {form: {}}}});
     this.types = {};
-    this.setType = jest.fn();
+    this.changeType = jest.fn();
 }));
 
 jest.mock('../../../stores/ResourceStore', () => jest.fn(function(resourceKey, id, observableOptions = {}) {
@@ -351,17 +351,8 @@ test('Should change data on store when changed', () => {
     const store = new ResourceFormStore(new ResourceStore('snippet', '1'), 'snippet');
     const form = shallow(<Form onSubmit={submitSpy} store={store} />);
 
-    form.find('Renderer').simulate('change', 'field', 'value');
-    expect(store.change).toBeCalledWith('field', 'value');
-});
-
-test('Reset dirty flag after form was rendered to avoid initial dirty state if defaults were set by fields', () => {
-    const submitSpy = jest.fn();
-    const store = new ResourceFormStore(new ResourceStore('snippet', '1'), 'snippet');
-    store.dirty = true;
-    mount(<Form onSubmit={submitSpy} store={store} />);
-
-    expect(store.dirty).toEqual(false);
+    form.find('Renderer').props().onChange('field', 'value', {isDefaultValue: true});
+    expect(store.change).toBeCalledWith('field', 'value', {isDefaultValue: true});
 });
 
 test('Should change data on store without sections', () => {
@@ -396,9 +387,9 @@ test('Should change data on store without sections', () => {
     };
 
     const form = mount(<Form onSubmit={submitSpy} store={store} />);
-    form.find('Input').at(0).instance().handleChange({currentTarget: {value: 'value!'}});
+    form.find('Input').at(0).props().onChange('value!');
 
-    expect(store.change).toBeCalledWith('item11', 'value!');
+    expect(store.change).toBeCalledWith('item11', 'value!', undefined);
 });
 
 test('Should show a GhostDialog if the current locale is not translated', () => {
@@ -509,7 +500,7 @@ test('Should set the type of the formStore to selected value in MissingTypeDialo
     form.find('MissingTypeDialog Button[skin="primary"]').simulate('click');
 
     expect(onMissingTypeCancelSpy).not.toBeCalledWith();
-    expect(formStore.setType).toBeCalledWith('default');
+    expect(formStore.changeType).toBeCalledWith('default');
 });
 
 test('Should call the onMissingTypeCancel callback if MissingTypeDialog is cancelled', () => {

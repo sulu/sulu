@@ -1,9 +1,10 @@
 // @flow
-import {action, observable} from 'mobx';
+import {action, observable, set} from 'mobx';
+import log from 'loglevel';
 import jsonpointer from 'json-pointer';
 import {createAjv} from '../../../utils/Ajv';
 import AbstractFormStore from './AbstractFormStore';
-import type {FormStoreInterface, Schema, SchemaType} from '../types';
+import type {ChangeContext, FormStoreInterface, Schema, SchemaType} from '../types';
 import type {IObservableValue} from 'mobx/lib/mobx';
 
 const ajv = createAjv();
@@ -34,20 +35,40 @@ export default class MemoryFormStore extends AbstractFormStore implements FormSt
         this.metadataOptions = metadataOptions;
     }
 
-    @action change(path: string, value: mixed) {
-        jsonpointer.set(this.data, '/' + path, value);
-        this.dirty = true;
+    @action change(dataPath: string, value: mixed, context?: ChangeContext) {
+        const sanitizedDataPath = !dataPath.startsWith('/') ? '/' + dataPath : dataPath;
+
+        jsonpointer.set( this.data, sanitizedDataPath, value );
+
+        if (!context?.isDefaultValue && !context?.isServerValue) {
+            this.dirty = true;
+        }
+    }
+
+    @action changeMultiple(values: {[dataPath: string]: mixed}, context?: ChangeContext) {
+        Object.keys(values).forEach((path) => {
+            this.change(path, values[path], context);
+        });
+        set(this.data, this.data);
     }
 
     get hasInvalidType() {
         return false;
     }
 
+    /**
+     * @deprecated
+     */
     @action setMultiple(data: Object) {
+        log.warn(
+            'The "setMultiple" method is deprecated and will be removed. ' +
+            'Use the "changeMultiple" method instead.'
+        );
+
         this.data = {...this.data, ...data};
     }
 
-    setType() {
+    changeType() {
         throw new Error('The MemoryFormStore cannot handle types');
     }
 }

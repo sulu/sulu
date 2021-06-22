@@ -3,6 +3,11 @@ import {observable} from 'mobx';
 import MemoryFormStore from '../../stores/MemoryFormStore';
 import conditionDataProviderRegistry from '../../registries/conditionDataProviderRegistry';
 
+jest.mock('loglevel', () => ({
+    warn: jest.fn(),
+    info: jest.fn(),
+}));
+
 beforeEach(() => {
     conditionDataProviderRegistry.clear();
 });
@@ -115,16 +120,56 @@ test('Read dirty flag', () => {
     expect(memoryFormStore.dirty).toEqual(false);
 });
 
-test('Set dirty flag', () => {
+test('Set dirty flag when changing value', () => {
     const memoryFormStore = new MemoryFormStore({}, {});
     memoryFormStore.change('test', 'test');
     expect(memoryFormStore.dirty).toEqual(true);
 });
 
-test('Set nested value', () => {
+test('Do not set dirty flag when changing value to default value', () => {
+    const memoryFormStore = new MemoryFormStore({}, {});
+    memoryFormStore.change('test', 'test', {isDefaultValue: true});
+    expect(memoryFormStore.data).toEqual({test: 'test'});
+    expect(memoryFormStore.dirty).toEqual(false);
+});
+
+test('Do not set dirty flag when changing value to server value', () => {
+    const memoryFormStore = new MemoryFormStore({}, {});
+    memoryFormStore.change('test', 'test', {isServerValue: true});
+    expect(memoryFormStore.data).toEqual({test: 'test'});
+    expect(memoryFormStore.dirty).toEqual(false);
+});
+
+test('Change nested value', () => {
     const memoryFormStore = new MemoryFormStore({}, {});
     memoryFormStore.change('test1/test2', 'test');
     expect(memoryFormStore.data).toEqual({test1: {test2: 'test'}});
+});
+
+test('Change value by path with leading slash', () => {
+    const memoryFormStore = new MemoryFormStore({}, {});
+    memoryFormStore.change('/test1', 'test');
+    expect(memoryFormStore.data).toEqual({test1: 'test'});
+});
+
+test('Change multiple values', () => {
+    const memoryFormStore = new MemoryFormStore({}, {});
+
+    memoryFormStore.changeMultiple({key1: 'value1', key2: 'value2'});
+    memoryFormStore.changeMultiple({key2: 'newValue2', 'key3/nested': 'value3'});
+
+    expect(memoryFormStore.data).toEqual({key1: 'value1', key2: 'newValue2', key3: {nested: 'value3'}});
+    expect(memoryFormStore.dirty).toEqual(true);
+});
+
+test('Change multiple values to server values', () => {
+    const memoryFormStore = new MemoryFormStore({}, {});
+
+    memoryFormStore.changeMultiple({key1: 'value1', key2: 'value2'}, {isServerValue: true});
+    memoryFormStore.changeMultiple({key2: 'newValue2', 'key3/nested': 'value3'}, {isServerValue: true});
+
+    expect(memoryFormStore.data).toEqual({key1: 'value1', key2: 'newValue2', key3: {nested: 'value3'}});
+    expect(memoryFormStore.dirty).toEqual(false);
 });
 
 test('Set multiple values', () => {
@@ -134,6 +179,12 @@ test('Set multiple values', () => {
     memoryFormStore.setMultiple({key2: 'newValue2', key3: 'value3'});
 
     expect(memoryFormStore.data).toEqual({key1: 'value1', key2: 'newValue2', key3: 'value3'});
+});
+
+test('Throw error when calling changeType method', () => {
+    const memoryFormStore = new MemoryFormStore({}, {});
+
+    expect(() => memoryFormStore.changeType()).toThrow(/MemoryFormStore cannot handle types/);
 });
 
 test('Loading flag should always be false', () => {

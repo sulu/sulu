@@ -39,7 +39,7 @@ class MediaSelection extends React.Component<FieldTypeProps<Value>> {
         }
 
         if (this.value === undefined) {
-            onChange({ids: [], displayOption: defaultDisplayOption});
+            onChange({ids: [], displayOption: defaultDisplayOption}, {isDefaultValue: true});
         }
     }
 

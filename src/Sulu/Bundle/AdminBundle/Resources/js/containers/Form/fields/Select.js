@@ -37,7 +37,7 @@ export default class Select extends React.Component<Props> {
         });
 
         if (value === undefined) {
-            onChange(defaultValues);
+            onChange(defaultValues, {isDefaultValue: true});
         }
     }
 

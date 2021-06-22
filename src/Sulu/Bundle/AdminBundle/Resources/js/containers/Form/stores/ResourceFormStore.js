@@ -1,11 +1,12 @@
 // @flow
 import {action, autorun, computed, get, isArrayLike, observable, toJS, when} from 'mobx';
 import jsonpointer from 'json-pointer';
+import log from 'loglevel';
 import {createAjv} from '../../../utils/Ajv';
 import ResourceStore from '../../../stores/ResourceStore';
 import AbstractFormStore, {SECTION_TYPE} from './AbstractFormStore';
 import metadataStore from './metadataStore';
-import type {FormStoreInterface, Schema, SchemaEntry, SchemaType, SchemaTypes} from '../types';
+import type {ChangeContext, FormStoreInterface, Schema, SchemaEntry, SchemaType, SchemaTypes} from '../types';
 import type {IObservableValue} from 'mobx/lib/mobx';
 
 // TODO do not hardcode "template", use some kind of metadata instead
@@ -157,7 +158,10 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
             when(
                 () => !this.resourceStore.loading,
                 (): void => {
-                    this.setType(this.resourceStore.data[TYPE] || defaultType || Object.keys(this.types)[0]);
+                    this.changeType(
+                        this.resourceStore.data[TYPE] || defaultType || Object.keys(this.types)[0],
+                        {isDefaultValue: true}
+                    );
                 }
             );
         }
@@ -246,21 +250,51 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
         return this.resourceStore.copyFromLocale(sourceLocale, this.options)
             .then((response) => {
                 if (this.hasTypes) {
-                    this.setType(response[TYPE]);
+                    this.changeType(response[TYPE], {isServerValue: true});
                 }
             });
     }
 
+    /**
+     * @deprecated
+     */
     set(name: string, value: mixed) {
+        log.warn(
+            'The "set" method is deprecated and will be removed. ' +
+            'Use the "change" method instead.'
+        );
+
         this.resourceStore.set(name, value);
     }
 
+    /**
+     * @deprecated
+     */
     setMultiple(data: Object) {
+        log.warn(
+            'The "setMultiple" method is deprecated and will be removed. ' +
+            'Use the "changeMultiple" method instead.'
+        );
+
         this.resourceStore.setMultiple(data);
     }
 
-    change(name: string, value: mixed) {
-        this.resourceStore.change(name, value);
+    change(dataPath: string, value: mixed, context?: ChangeContext) {
+        if (context?.isDefaultValue || context?.isServerValue) {
+            // set method of resource store will not mark the store as dirty
+            this.resourceStore.set(dataPath, value);
+        } else {
+            this.resourceStore.change(dataPath, value);
+        }
+    }
+
+    changeMultiple(values: {[dataPath: string]: mixed}, context?: ChangeContext) {
+        if (context?.isDefaultValue || context?.isServerValue) {
+            // setMultiple method of resource store will not mark the store as dirty
+            this.resourceStore.setMultiple(values);
+        } else {
+            this.resourceStore.changeMultiple(values);
+        }
     }
 
     @computed get locale(): ?IObservableValue<string> {
@@ -299,16 +333,24 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
         this.schemaLoading = schemaLoading;
     }
 
+    /**
+     * @deprecated
+     */
     @action setType(type: string) {
+        log.warn(
+            'The "setType" method is deprecated and will be removed. ' +
+            'Use the "changeType" method instead.'
+        );
+
         this.validateTypes();
         this.type = type;
         this.set(TYPE, type);
     }
 
-    @action changeType(type: string) {
+    @action changeType(type: string, context?: ChangeContext) {
         this.validateTypes();
         this.type = type;
-        this.change(TYPE, type);
+        this.change(TYPE, type, context);
     }
 
     validateTypes() {

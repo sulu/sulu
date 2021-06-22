@@ -51,7 +51,7 @@ jest.mock('../../../../containers/Form/stores/ResourceFormStore', () => (
         }
 
         delete = jest.fn();
-        setMultiple = jest.fn();
+        changeMultiple = jest.fn();
     })
 );
 
@@ -241,7 +241,7 @@ test('Delete draft when dialog is confirmed', () => {
         element = mount(deleteDraftToolbarAction.getNode());
         expect(deleteDraftToolbarAction.form.showSuccessSnackbar).toBeCalledWith();
         expect(element.prop('confirmLoading')).toEqual(false);
-        expect(deleteDraftToolbarAction.resourceFormStore.setMultiple).toBeCalledWith(data);
+        expect(deleteDraftToolbarAction.resourceFormStore.changeMultiple).toBeCalledWith(data, {isServerValue: true});
         expect(deleteDraftToolbarAction.resourceFormStore.dirty).toEqual(false);
     });
 });

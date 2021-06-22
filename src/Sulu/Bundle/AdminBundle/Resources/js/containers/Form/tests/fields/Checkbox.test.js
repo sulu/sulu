@@ -131,7 +131,7 @@ test('Set default value if no value is passed', () => {
         />
     );
 
-    expect(changeSpy).toBeCalledWith(false);
+    expect(changeSpy).toBeCalledWith(false, {'isDefaultValue': true});
 });
 
 test('Do not set default value if a value is passed', () => {
