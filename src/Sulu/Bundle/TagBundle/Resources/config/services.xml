@@ -15,6 +15,7 @@
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="sulu_activity.domain_event_collector"/>
+            <argument type="service" id="sulu_trash.trash_manager"/>
         </service>
         <service id="Sulu\Bundle\TagBundle\Tag\TagManagerInterface" alias="sulu_tag.tag_manager"/>
 
@@ -61,6 +62,16 @@
             <argument>%sulu.model.tag.class%</argument>
 
             <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <!-- Trash -->
+        <service id="sulu_tag.tag_trash_item_handler"
+                 class="Sulu\Bundle\TagBundle\Trash\TagTrashItemHandler">
+            <argument type="service" id="sulu_trash.trash_item_repository"/>
+            <argument type="service" id="sulu_tag.tag_manager"/>
+
+            <tag name="sulu_trash.store_trash_item_handler"/>
+            <tag name="sulu_trash.restore_trash_item_handler"/>
         </service>
     </services>
 </container>

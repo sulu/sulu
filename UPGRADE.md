@@ -2,6 +2,49 @@
 
 ## 2.x
 
+### Added restore method to TagManagerInterface
+
+The `TagManagerInterface` declares a new method `restore`.
+If you have overridden this service in your project without extending from Sulu's `TagManager`,
+you need to implement this new method in order to be able to restore trashed tags.
+
+### Changed constructor of multiple services to integrate them with the SuluTrashBundle
+
+To integrate the `SuluTrashBundle` with the existing services, the constructor of the following services was
+adjusted. If you have extended one of these services in your project, you need to adjust your `parent::__construct`
+call to pass the correct parameters:
+
+- `Sulu\Bundle\TagBundle\Tag\TagManager`
+
+### Added SuluTrashBundle to make resources trashable/restorable
+
+A new bundle was added to the `sulu/sulu` package. The `SuluTrashBundle` implements the functionality to move resources
+to trash and restore them from trash. To register the services of the bundle in your project, you need
+to add the bundle to your `config/bundles.php` file:
+
+```diff
++    Sulu\Bundle\TrashBundle\SuluTrashBundle::class => ['all' => true],
+```
+
+Additionally, you need to update your database schema to include the tables that are used by the bundle:
+
+```sql
+CREATE TABLE tr_trash_items (id INT AUTO_INCREMENT NOT NULL, resourceKey VARCHAR(191) NOT NULL, restoreData JSON NOT NULL, resourceTitle VARCHAR(191) NOT NULL, resourceSecurityContext VARCHAR(191) DEFAULT NULL, resourceSecurityObjectType VARCHAR(191) DEFAULT NULL, resourceSecurityObjectId VARCHAR(191) DEFAULT NULL, timestamp DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)', userId INT DEFAULT NULL, INDEX IDX_102989B64B64DCC (userId), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
+
+ALTER TABLE tr_trash_items ADD CONSTRAINT FK_102989B64B64DCC FOREIGN KEY (userId) REFERENCES se_users (id) ON DELETE SET NULL;
+```
+
+> For MYSQL 5.6 and lower, the `JSON` type of the `restoreData` column must be replaced with `TEXT`. See the [doctrine/dbal type](https://www.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/types.html#json) documentation.
+
+Finally, you need to include the routes of the bundle in your `config/routes/sulu_admin.yaml`:
+
+```yaml
+sulu_trash_api:
+    resource: "@SuluTrashBundle/Resources/config/routing_api.yml"
+    type: rest
+    prefix: /admin/api
+```
+
 ### AccessControlRepositoryInterface has changed
 
 A new method has been added to the `AccessControlRepositoryInterface`:

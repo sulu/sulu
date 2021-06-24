@@ -78,6 +78,7 @@ class SuluTestKernel extends SuluKernel
             new \Sulu\Bundle\MarkupBundle\SuluMarkupBundle(),
             new \Sulu\Bundle\PreviewBundle\SuluPreviewBundle(),
             new \Sulu\Bundle\AudienceTargetingBundle\SuluAudienceTargetingBundle(),
+            new \Sulu\Bundle\TrashBundle\SuluTrashBundle(),
         ];
 
         if (\class_exists(\Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle::class)) {
