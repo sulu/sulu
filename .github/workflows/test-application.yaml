@@ -123,13 +123,8 @@ jobs:
                 options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
             jackrabbit:
-                image: sulu/jackrabbit:2.18
+                image: sulu/jackrabbit:2.20-tomcat-filesystem
                 env:
-                    DATABASE_HOST: mysql
-                    DATABASE_PORT: 3306
-                    DATABASE_NAME: su_sulu_jackrabbit
-                    DATABASE_USER: root
-                    DATABASE_PASS: root
                     LOG_LEVEL: WARN
                 ports:
                     - 8080:8080
