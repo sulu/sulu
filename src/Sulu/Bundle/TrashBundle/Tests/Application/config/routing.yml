@@ -1,0 +1,4 @@
+sulu_trash_api:
+    type: rest
+    resource: "@SuluTrashBundle/Resources/config/routing_api.yml"
+    prefix: /api

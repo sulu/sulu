@@ -62,6 +62,13 @@ interface TagManagerInterface
     public function save($data, $id = null);
 
     /**
+     * Restores a tag.
+     *
+     * @param mixed[] $data
+     */
+    public function restore(int $id, array $data): TagInterface;
+
+    /**
      * Deletes the given Tag.
      *
      * @param number $id The tag to delete

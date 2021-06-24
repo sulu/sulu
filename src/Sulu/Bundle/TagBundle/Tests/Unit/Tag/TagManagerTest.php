@@ -18,6 +18,7 @@ use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TagBundle\Tag\TagManager;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Bundle\TagBundle\Tag\TagRepositoryInterface;
+use Sulu\Bundle\TrashBundle\Application\TrashManager\TrashManagerInterface;
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -53,6 +54,11 @@ class TagManagerTest extends TestCase
      * @var DomainEventCollectorInterface
      */
     private $domainEventCollector;
+
+    /**
+     * @var TrashManagerInterface
+     */
+    private $trashManager;
 
     /**
      * @var TagManagerInterface
@@ -99,6 +105,13 @@ class TagManagerTest extends TestCase
             false
         );
 
+        $this->trashManager = $this->getMockForAbstractClass(
+            TrashManagerInterface::class,
+            [],
+            '',
+            false
+        );
+
         $this->tagRepository->expects($this->any())->method('findTagByName')->will($this->returnValueMap(
                 [
                     ['Tag1', (new Tag())->setId(1)],
@@ -121,7 +134,8 @@ class TagManagerTest extends TestCase
             $this->tagRepository,
             $this->em,
             $this->eventDispatcher,
-            $this->domainEventCollector
+            $this->domainEventCollector,
+            $this->trashManager
         );
     }
 

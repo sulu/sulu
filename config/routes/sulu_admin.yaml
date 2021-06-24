@@ -98,3 +98,8 @@ sulu_activity_api:
     resource: "@SuluActivityBundle/Resources/config/routing_api.yml"
     type: rest
     prefix: /admin/api
+
+sulu_trash_api:
+    resource: "@SuluTrashBundle/Resources/config/routing_api.yml"
+    type: rest
+    prefix: /admin/api
