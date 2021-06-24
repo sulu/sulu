@@ -123,7 +123,7 @@ jobs:
                 options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
             jackrabbit:
-                image: sulu/jackrabbit:2.20-standalone
+                image: sulu/jackrabbit:2.20-tomcat-filesystem
                 env:
                     LOG_LEVEL: WARN
                 ports:
