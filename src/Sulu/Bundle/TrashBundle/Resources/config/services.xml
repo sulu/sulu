@@ -11,17 +11,16 @@
         <service id="Sulu\Bundle\TrashBundle\Domain\Factory\TrashItemFactoryInterface" alias="sulu_trash.trash_item_factory"/>
 
         <!-- Repository -->
-        <service id="sulu_trash.trash_item_repository.null" class="Sulu\Bundle\TrashBundle\Domain\Repository\NullTrashItemRepository">
-            <argument type="service" id="sulu_trash.trash_item_factory"/>
-        </service>
+        <service id="sulu_trash.trash_item_repository.null" class="Sulu\Bundle\TrashBundle\Domain\Repository\NullTrashItemRepository"/>
 
         <service id="sulu_trash.trash_item_repository.doctrine" class="Sulu\Bundle\TrashBundle\Infrastructure\Doctrine\Repository\TrashItemRepository">
             <argument type="service" id="doctrine.orm.entity_manager"/>
-            <argument type="service" id="sulu_trash.trash_item_factory"/>
         </service>
 
         <!-- TrashManager -->
         <service id="sulu_trash.trash_manager" class="Sulu\Bundle\TrashBundle\Application\TrashManager\TrashManager">
+            <argument type="service" id="sulu_trash.trash_item_repository"/>
+            <argument type="service" id="sulu_activity.domain_event_collector"/>
             <argument type="tagged" tag="sulu_trash.store_trash_item_handler"/>
             <argument type="tagged" tag="sulu_trash.restore_trash_item_handler"/>
         </service>
@@ -31,6 +30,7 @@
         <service id="sulu_trash.trash_admin" class="Sulu\Bundle\TrashBundle\Infrastructure\Sulu\Admin\TrashAdmin">
             <argument type="service" id="sulu_admin.view_builder_factory"/>
             <argument type="service" id="sulu_security.security_checker"/>
+            <argument type="service" id="sulu.core.localization_manager"/>
 
             <tag name="sulu.admin"/>
             <tag name="sulu.context" context="admin"/>

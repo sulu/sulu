@@ -13,6 +13,9 @@ declare(strict_types=1);
 
 namespace Sulu\Bundle\TrashBundle\Domain\Model;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Sulu\Bundle\TrashBundle\Domain\Exception\TrashItemTranslationNotFoundException;
 use Sulu\Component\Security\Authentication\UserInterface;
 
 class TrashItem implements TrashItemInterface
@@ -28,14 +31,14 @@ class TrashItem implements TrashItemInterface
     private $resourceKey;
 
     /**
+     * @var string
+     */
+    private $resourceId;
+
+    /**
      * @var mixed[]
      */
     private $restoreData;
-
-    /**
-     * @var string
-     */
-    private $resourceTitle;
 
     /**
      * @var string|null
@@ -62,6 +65,21 @@ class TrashItem implements TrashItemInterface
      */
     private $user;
 
+    /**
+     * @var Collection<int, TrashItemTranslation>
+     */
+    private $translations;
+
+    public function __construct()
+    {
+        $this->translations = new ArrayCollection();
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
     public function getResourceKey(): string
     {
         return $this->resourceKey;
@@ -70,6 +88,18 @@ class TrashItem implements TrashItemInterface
     public function setResourceKey(string $resourceKey): TrashItemInterface
     {
         $this->resourceKey = $resourceKey;
+
+        return $this;
+    }
+
+    public function getResourceId(): string
+    {
+        return $this->resourceId;
+    }
+
+    public function setResourceId(string $resourceId): TrashItemInterface
+    {
+        $this->resourceId = $resourceId;
 
         return $this;
     }
@@ -86,14 +116,23 @@ class TrashItem implements TrashItemInterface
         return $this;
     }
 
-    public function getResourceTitle(): string
+    public function getResourceTitle(?string $locale = null): string
     {
-        return $this->resourceTitle;
+        return $this->getTranslation($locale)->getTitle();
     }
 
-    public function setResourceTitle(string $resourceTitle): TrashItemInterface
+    public function setResourceTitle(string $resourceTitle, ?string $locale = null): TrashItemInterface
     {
-        $this->resourceTitle = $resourceTitle;
+        if (!$this->hasTranslation($locale)) {
+            $translation = new TrashItemTranslation($this, $locale, $resourceTitle);
+
+            $this->translations->add($translation);
+
+            return $this;
+        }
+
+        $translation = $this->getTranslation($locale);
+        $translation->setTitle($resourceTitle);
 
         return $this;
     }
@@ -156,5 +195,31 @@ class TrashItem implements TrashItemInterface
         $this->user = $user;
 
         return $this;
+    }
+
+    public function getTranslation(?string $locale = null): TrashItemTranslation
+    {
+        /** @var TrashItemTranslation|false $translation */
+        $translation = $this->translations->filter(
+            function(TrashItemTranslation $translation) use ($locale) {
+                return $translation->getLocale() === $locale;
+            }
+        )->first()
+            ?: $this->translations->first();
+
+        if (!$translation) {
+            throw new TrashItemTranslationNotFoundException();
+        }
+
+        return $translation;
+    }
+
+    private function hasTranslation(?string $locale): bool
+    {
+        return !$this->translations->filter(
+            function(TrashItemTranslation $translation) use ($locale) {
+                return $translation->getLocale() === $locale;
+            }
+        )->isEmpty();
     }
 }

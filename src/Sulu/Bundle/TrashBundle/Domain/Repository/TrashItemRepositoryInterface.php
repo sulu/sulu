@@ -17,18 +17,6 @@ use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
 
 interface TrashItemRepositoryInterface
 {
-    /**
-     * @param mixed[] $restoreData
-     */
-    public function create(
-        string $resourceKey,
-        array $restoreData,
-        string $resourceTitle,
-        ?string $resourceSecurityContext,
-        ?string $resourceSecurityObjectType,
-        ?string $resourceSecurityObjectId
-    ): TrashItemInterface;
-
     public function addAndCommit(TrashItemInterface $trashItem): void;
 
     public function removeAndCommit(TrashItemInterface $trashItem): void;

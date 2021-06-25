@@ -17,9 +17,11 @@ use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
 use Sulu\Bundle\AdminBundle\Admin\View\ListItemAction;
+use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
 use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
+use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
@@ -39,12 +41,19 @@ class TrashAdmin extends Admin
      */
     private $securityChecker;
 
+    /**
+     * @var LocalizationManagerInterface
+     */
+    private $localizationManager;
+
     public function __construct(
         ViewBuilderFactoryInterface $viewBuilderFactory,
-        SecurityCheckerInterface $securityChecker
+        SecurityCheckerInterface $securityChecker,
+        LocalizationManagerInterface $localizationManager
     ) {
         $this->viewBuilderFactory = $viewBuilderFactory;
         $this->securityChecker = $securityChecker;
+        $this->localizationManager = $localizationManager;
     }
 
     public function configureNavigationItems(NavigationItemCollection $navigationItemCollection): void
@@ -60,18 +69,31 @@ class TrashAdmin extends Admin
 
     public function configureViews(ViewCollection $viewCollection): void
     {
+        $locales = $this->localizationManager->getLocales();
+
         if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::VIEW)) {
-            $viewCollection->add(
-                $this->viewBuilderFactory->createListViewBuilder(static::LIST_VIEW, '/trash')
-                    ->setResourceKey(TrashItemInterface::RESOURCE_KEY)
-                    ->setListKey(TrashItemInterface::LIST_KEY)
-                    ->setTitle('sulu_trash.trash')
-                    ->addListAdapters(['table'])
-                    ->disableSelection()
-                    ->addItemActions([
-                        new ListItemAction('sulu_trash.restore'),
-                    ])
-            );
+            $toolbarActions = [];
+
+            if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::DELETE)) {
+                $toolbarActions[] = new ToolbarAction('sulu_admin.delete');
+            }
+
+            $listViewBuilder = $this->viewBuilderFactory->createListViewBuilder(static::LIST_VIEW, '/trash/:locale')
+                ->setResourceKey(TrashItemInterface::RESOURCE_KEY)
+                ->setListKey(TrashItemInterface::LIST_KEY)
+                ->setTitle('sulu_trash.trash')
+                ->addListAdapters(['table'])
+                ->addLocales($locales)
+                ->addToolbarActions($toolbarActions)
+                ->addItemActions([
+                    new ListItemAction('sulu_trash.restore'),
+                ]);
+
+            if (empty($toolbarActions)) {
+                $listViewBuilder->disableSelection();
+            }
+
+            $viewCollection->add($listViewBuilder);
         }
     }
 
@@ -82,6 +104,7 @@ class TrashAdmin extends Admin
                 'Trash' => [
                     static::SECURITY_CONTEXT => [
                         PermissionTypes::VIEW,
+                        PermissionTypes::DELETE,
                     ],
                 ],
             ],

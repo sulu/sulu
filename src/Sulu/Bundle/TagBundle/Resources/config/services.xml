@@ -67,7 +67,7 @@
         <!-- Trash -->
         <service id="sulu_tag.tag_trash_item_handler"
                  class="Sulu\Bundle\TagBundle\Trash\TagTrashItemHandler">
-            <argument type="service" id="sulu_trash.trash_item_repository"/>
+            <argument type="service" id="sulu_trash.trash_item_factory"/>
             <argument type="service" id="sulu_tag.tag_manager"/>
 
             <tag name="sulu_trash.store_trash_item_handler"/>

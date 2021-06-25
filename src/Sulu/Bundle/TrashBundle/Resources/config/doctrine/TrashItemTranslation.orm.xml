@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="Sulu\Bundle\TrashBundle\Domain\Model\TrashItemTranslation" table="tr_trash_item_translations">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+
+        <many-to-one field="trashItem" target-entity="Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface" inversed-by="translations">
+            <join-column name="trashItemId" referenced-column-name="id" on-delete="CASCADE" nullable="false"/>
+        </many-to-one>
+
+        <field name="locale" column="locale" type="string" nullable="true" length="191"/>
+        <field name="title" column="title" type="string" nullable="false" length="191"/>
+
+        <unique-constraints>
+            <unique-constraint columns="trashItemId,locale" />
+        </unique-constraints>
+    </entity>
+</doctrine-mapping>

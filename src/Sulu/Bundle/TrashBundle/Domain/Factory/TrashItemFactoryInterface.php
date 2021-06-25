@@ -17,11 +17,13 @@ interface TrashItemFactoryInterface
 {
     /**
      * @param mixed[] $restoreData
+     * @param string|array<string, string> $resourceTitle
      */
     public function create(
         string $resourceKey,
+        string $resourceId,
         array $restoreData,
-        string $resourceTitle,
+        $resourceTitle,
         ?string $resourceSecurityContext,
         ?string $resourceSecurityObjectType,
         ?string $resourceSecurityObjectId

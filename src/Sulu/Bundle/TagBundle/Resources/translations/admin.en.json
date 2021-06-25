@@ -6,5 +6,6 @@
     "sulu_activity.description.tags.created": "{userFullName} has created the tag \"{resourceTitle}\"",
     "sulu_activity.description.tags.modified": "{userFullName} has changed the tag \"{resourceTitle}\"",
     "sulu_activity.description.tags.removed": "{userFullName} has removed the tag \"{resourceTitle}\"",
-    "sulu_activity.description.tags.merged": "{userFullName} has merged the tag \"{context_sourceTagName}\" into \"{resourceTitle}\""
+    "sulu_activity.description.tags.merged": "{userFullName} has merged the tag \"{context_sourceTagName}\" into \"{resourceTitle}\"",
+    "sulu_activity.description.tags.restored": "{userFullName} has restored the tag \"{resourceTitle}\""
 }

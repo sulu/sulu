@@ -42,6 +42,7 @@
                         <param name="created" value="su-plus"/>
                         <param name="modified" value="su-pen"/>
                         <param name="removed" value="su-trash-alt"/>
+                        <param name="restored" value="su-process"/>
                         <param name="cache_cleared" value="su-clean"/>
                         <param name="moved" value="su-arrows-alt"/>
                         <param name="copied" value="su-copy"/>

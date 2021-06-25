@@ -12,6 +12,9 @@
 namespace Sulu\Bundle\TagBundle\Tag;
 
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Doctrine\ORM\Id\AssignedGenerator;
+use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Doctrine\Persistence\ObjectManager;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\TagBundle\Domain\Event\TagCreatedEvent;
@@ -171,6 +174,21 @@ class TagManager implements TagManagerInterface
         $tag = $this->tagRepository->createNew();
         $tag->setName($name);
 
+        $tagClass = \get_class($tag);
+
+        $idReflProperty = new \ReflectionProperty($tagClass, 'id');
+        $idReflProperty->setAccessible(true);
+        $idReflProperty->setValue($tag, $id);
+
+        /** @var ClassMetadataInfo<TagInterface> $metadata */
+        $metadata = $this->em->getClassMetaData($tagClass);
+
+        $oldIdGeneratorType = $metadata->generatorType;
+        $oldIdGenerator = $metadata->idGenerator;
+
+        $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+        $metadata->setIdGenerator(new AssignedGenerator());
+
         $this->em->persist($tag);
 
         $this->domainEventCollector->collect(
@@ -178,6 +196,9 @@ class TagManager implements TagManagerInterface
         );
 
         $this->em->flush();
+
+        $metadata->setIdGeneratorType($oldIdGeneratorType);
+        $metadata->setIdGenerator($oldIdGenerator);
 
         return $tag;
     }
