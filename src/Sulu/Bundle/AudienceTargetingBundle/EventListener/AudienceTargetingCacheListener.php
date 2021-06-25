@@ -42,24 +42,29 @@ class AudienceTargetingCacheListener implements EventSubscriberInterface
 
     public function preHandle(CacheEvent $cacheEvent)
     {
-        if (self::TARGET_GROUP_URL === $cacheEvent->getRequest()->getRequestUri()) {
+        $request = $cacheEvent->getRequest();
+
+        // the friendsofsymfony/http-cache-bundle package uses the "internalRequest" attribute to mark internal requests
+        // return early in this case to prevent loops on requests "/_sulu_target_group" or "/_fos_user_context_hash"
+        if ($request->attributes->get('internalRequest', false)) {
             return;
         }
 
         $this->hadValidTargetGroupCookie = $this->setTargetGroupHeader(
-            $cacheEvent->getRequest(),
+            $request,
             $cacheEvent->getKernel()
         );
     }
 
     public function postHandle(CacheEvent $cacheEvent)
     {
-        if (self::TARGET_GROUP_URL === $cacheEvent->getRequest()->getRequestUri()) {
+        $request = $cacheEvent->getRequest();
+
+        if ($request->attributes->get('internalRequest', false)) {
             return;
         }
 
         $response = $cacheEvent->getResponse();
-        $request = $cacheEvent->getRequest();
 
         if (!$this->hadValidTargetGroupCookie) {
             $this->setTargetGroupCookie($response, $request);
@@ -113,6 +118,8 @@ class AudienceTargetingCacheListener implements EventSubscriberInterface
             [],
             $request->server->all()
         );
+
+        $targetGroupRequest->attributes->set('internalRequest', true);
 
         if ($currentTargetGroup) {
             $targetGroupRequest->headers->set(static::TARGET_GROUP_HEADER, $currentTargetGroup);
