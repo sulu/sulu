@@ -13,6 +13,21 @@
         </join>
     </joins>
 
+    <joins name="translation">
+        <join>
+            <entity-name>%sulu.model.trash_item.class%_translation</entity-name>
+            <field-name>%sulu.model.trash_item.class%.translations</field-name>
+            <condition>%sulu.model.trash_item.class%_translation.locale = :locale</condition>
+        </join>
+    </joins>
+
+    <joins name="fallbackTranslation">
+        <join>
+            <entity-name>%sulu.model.trash_item.class%_fallbackTranslation</entity-name>
+            <field-name>%sulu.model.trash_item.class%.translations</field-name>
+        </join>
+    </joins>
+
     <properties>
         <property
             name="id"
@@ -36,16 +51,24 @@
             <entity-name>%sulu.model.trash_item.class%</entity-name>
         </property>
 
-        <property
+        <case-property
             name="resourceTitle"
             visibility="always"
             sortable="true"
             searchability="yes"
             translation="sulu_admin.title"
         >
-            <field-name>resourceTitle</field-name>
-            <entity-name>%sulu.model.trash_item.class%</entity-name>
-        </property>
+            <field>
+                <field-name>title</field-name>
+                <entity-name>%sulu.model.trash_item.class%_translation</entity-name>
+                <joins ref="translation"/>
+            </field>
+            <field>
+                <field-name>title</field-name>
+                <entity-name>%sulu.model.trash_item.class%_fallbackTranslation</entity-name>
+                <joins ref="fallbackTranslation"/>
+            </field>
+        </case-property>
 
         <concatenation-property
             name="user"

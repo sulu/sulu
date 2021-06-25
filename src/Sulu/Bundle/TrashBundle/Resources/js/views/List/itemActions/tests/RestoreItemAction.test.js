@@ -65,7 +65,7 @@ test('Display dialog if onClick callback is fired', () => {
         open: false,
         cancelText: 'sulu_admin.cancel',
         confirmText: 'sulu_admin.ok',
-        title: 'sulu_trash.restore_object',
+        title: 'sulu_trash.restore_element',
     }));
 
     const onClick = itemAction.getItemActionConfig({id: 'id-1234'}).onClick;

@@ -18,9 +18,15 @@ interface TrashItemInterface
     const RESOURCE_KEY = 'trash_items';
     const LIST_KEY = 'trash_items';
 
+    public function getId(): ?int;
+
     public function getResourceKey(): string;
 
     public function setResourceKey(string $resourceKey): self;
+
+    public function getResourceId(): string;
+
+    public function setResourceId(string $resourceId): TrashItemInterface;
 
     /**
      * @return mixed[]
@@ -32,9 +38,9 @@ interface TrashItemInterface
      */
     public function setRestoreData(array $restoreData): self;
 
-    public function getResourceTitle(): string;
+    public function getResourceTitle(?string $locale = null): string;
 
-    public function setResourceTitle(string $resourceTitle): self;
+    public function setResourceTitle(string $resourceTitle, ?string $locale = null): self;
 
     public function getResourceSecurityContext(): ?string;
 
@@ -55,4 +61,6 @@ interface TrashItemInterface
     public function getUser(): ?UserInterface;
 
     public function setUser(?UserInterface $user): self;
+
+    public function getTranslation(?string $locale = null): TrashItemTranslation;
 }

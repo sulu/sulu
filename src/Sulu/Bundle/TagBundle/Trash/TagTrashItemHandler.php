@@ -18,24 +18,24 @@ use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\RestoreTrashItemHandlerInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\StoreTrashItemHandlerInterface;
+use Sulu\Bundle\TrashBundle\Domain\Factory\TrashItemFactoryInterface;
 use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
-use Sulu\Bundle\TrashBundle\Domain\Repository\TrashItemRepositoryInterface;
 
 class TagTrashItemHandler implements StoreTrashItemHandlerInterface, RestoreTrashItemHandlerInterface
 {
     /**
-     * @var TrashItemRepositoryInterface
+     * @var TrashItemFactoryInterface
      */
-    private $trashItemRepository;
+    private $trashItemFactory;
 
     /**
      * @var TagManagerInterface
      */
     private $tagManager;
 
-    public function __construct(TrashItemRepositoryInterface $trashItemRepository, TagManagerInterface $tagManager)
+    public function __construct(TrashItemFactoryInterface $trashItemFactory, TagManagerInterface $tagManager)
     {
-        $this->trashItemRepository = $trashItemRepository;
+        $this->trashItemFactory = $trashItemFactory;
         $this->tagManager = $tagManager;
     }
 
@@ -50,10 +50,10 @@ class TagTrashItemHandler implements StoreTrashItemHandlerInterface, RestoreTras
             throw new \InvalidArgumentException();
         }
 
-        $trashItem = $this->trashItemRepository->create(
+        return $this->trashItemFactory->create(
             TagInterface::RESOURCE_KEY,
+            (string) $tag->getId(),
             [
-                'id' => $tag->getId(),
                 'name' => $tag->getName(),
             ],
             $tag->getName(),
@@ -61,25 +61,13 @@ class TagTrashItemHandler implements StoreTrashItemHandlerInterface, RestoreTras
             null,
             null
         );
-
-        $this->trashItemRepository->addAndCommit($trashItem);
-
-        return $trashItem;
     }
 
     public function restore(TrashItemInterface $trashItem): object
     {
-        $restoreData = $trashItem->getRestoreData();
-        $id = $restoreData['id'];
-        unset($restoreData['id']);
-
-        $tag = $this->tagManager->restore(
-            $id,
-            $restoreData
+        return $this->tagManager->restore(
+            (int) $trashItem->getResourceId(),
+            $trashItem->getRestoreData()
         );
-
-        $this->trashItemRepository->removeAndCommit($trashItem);
-
-        return $tag;
     }
 }

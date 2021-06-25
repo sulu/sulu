@@ -25,7 +25,7 @@ class RestoreTrashItemHandlerNotFoundException extends \Exception
         $this->resourceKey = $resourceKey;
 
         parent::__construct(
-            \sprintf('StoreTrashItemHandler for "%s" not found.', $this->resourceKey)
+            \sprintf('RestoreTrashItemHandler for "%s" not found.', $this->resourceKey)
         );
     }
 

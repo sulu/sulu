@@ -1,5 +1,9 @@
 {
     "sulu_trash.trash": "Trash",
-    "sulu_trash.restore_object": "Restore object",
-    "sulu_trash.restore_object_dialog_text": "Are you sure, that you want to restore this object?"
+    "sulu_trash.restore_element": "Restore element",
+    "sulu_trash.restore_element_dialog_text": "Are you sure, that you want to restore this element?",
+    "sulu_activity.resource.trash_items": "Trash item",
+    "sulu_activity.description.trash_items.created": "{userFullName} has added the element \"{resourceTitle}\" to trash",
+    "sulu_activity.description.trash_items.restored": "{userFullName} has restored the element \"{resourceTitle}\" from trash",
+    "sulu_activity.description.trash_items.removed": "{userFullName} has removed the element \"{resourceTitle}\" from trash"
 }

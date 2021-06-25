@@ -133,6 +133,8 @@ class TrashItemController extends AbstractRestController implements ClassResourc
             PermissionTypes::VIEW
         );
 
+        /** @var string|null $locale */
+        $locale = $this->getLocale($request);
         /** @var UserInterface $user */
         $user = $this->getUser();
 
@@ -150,6 +152,8 @@ class TrashItemController extends AbstractRestController implements ClassResourc
         /** @var DoctrineListBuilder $listBuilder */
         $listBuilder = $this->listBuilderFactory->create($this->trashItemClass);
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
+
+        $listBuilder->setParameter('locale', $locale);
 
         foreach ($additionalFieldDescriptors as $fieldDescriptor) {
             $listBuilder->addSelectField($fieldDescriptor);
@@ -187,6 +191,88 @@ class TrashItemController extends AbstractRestController implements ClassResourc
 
         return $this->handleView(
             $this->view($listRepresentation, 200)
+        );
+    }
+
+    /**
+     * This action is not used by sulu, but it still needs to be implemented, because the "detail" url of the TrashItem
+     * resource needs to be configured in order for the "deleteAction" and the "postTriggerAction" to work.
+     */
+    public function getAction(int $id): Response
+    {
+        $this->securityChecker->checkPermission(
+            TrashAdmin::SECURITY_CONTEXT,
+            PermissionTypes::VIEW
+        );
+
+        $trashItem = $this->trashItemRepository->getOneBy(['id' => $id]);
+
+        $this->securityChecker->checkPermission(
+            new SecurityCondition(
+                $trashItem->getResourceSecurityContext(),
+                null,
+                $trashItem->getResourceSecurityObjectType(),
+                $trashItem->getResourceSecurityObjectId()
+            ),
+            PermissionTypes::VIEW
+        );
+
+        return $this->handleView(
+            $this->view($trashItem)
+        );
+    }
+
+    public function deleteAction(int $id): Response
+    {
+        $this->securityChecker->checkPermission(
+            TrashAdmin::SECURITY_CONTEXT,
+            PermissionTypes::DELETE
+        );
+
+        $trashItem = $this->trashItemRepository->getOneBy(['id' => $id]);
+        $this->trashManager->remove($trashItem);
+
+        return $this->handleView(
+            $this->view(null, 204)
+        );
+    }
+
+    public function postTriggerAction(int $id, Request $request): Response
+    {
+        $action = $this->getRequestParameter($request, 'action', true);
+
+        try {
+            switch ($action) {
+                case 'restore':
+                    return $this->restoreTrashItem($id);
+                default:
+                    throw new RestException(\sprintf('Unrecognized action: "%s"', $action));
+            }
+        } catch (RestException $ex) {
+            $view = $this->view($ex->toArray(), 400);
+
+            return $this->handleView($view);
+        }
+    }
+
+    private function restoreTrashItem(int $id): Response
+    {
+        $trashItem = $this->trashItemRepository->getOneBy(['id' => $id]);
+
+        $this->securityChecker->checkPermission(
+            new SecurityCondition(
+                $trashItem->getResourceSecurityContext(),
+                null,
+                $trashItem->getResourceSecurityObjectType(),
+                $trashItem->getResourceSecurityObjectId()
+            ),
+            PermissionTypes::ADD
+        );
+
+        $restoredObject = $this->trashManager->restore($trashItem);
+
+        return $this->handleView(
+            $this->view($restoredObject)
         );
     }
 
@@ -305,73 +391,6 @@ class TrashItemController extends AbstractRestController implements ClassResourc
             FieldDescriptorInterface::SEARCHABILITY_NEVER,
             $type,
             false
-        );
-    }
-
-    /**
-     * This action is not used by sulu, but it still needs to be implemented, because the "detail" url of the TrashItem
-     * resource needs to be configured for the "postTriggerAction".
-     */
-    public function getAction(int $id): Response
-    {
-        $this->securityChecker->checkPermission(
-            TrashAdmin::SECURITY_CONTEXT,
-            PermissionTypes::VIEW
-        );
-
-        $trashItem = $this->trashItemRepository->getOneBy(['id' => $id]);
-
-        $this->securityChecker->checkPermission(
-            new SecurityCondition(
-                $trashItem->getResourceSecurityContext(),
-                null,
-                $trashItem->getResourceSecurityObjectType(),
-                $trashItem->getResourceSecurityObjectId()
-            ),
-            PermissionTypes::VIEW
-        );
-
-        return $this->handleView(
-            $this->view($trashItem)
-        );
-    }
-
-    public function postTriggerAction(int $id, Request $request): Response
-    {
-        $action = $this->getRequestParameter($request, 'action', true);
-
-        try {
-            switch ($action) {
-                case 'restore':
-                    return $this->restore($id);
-                default:
-                    throw new RestException(\sprintf('Unrecognized action: "%s"', $action));
-            }
-        } catch (RestException $ex) {
-            $view = $this->view($ex->toArray(), 400);
-
-            return $this->handleView($view);
-        }
-    }
-
-    private function restore(int $id): Response
-    {
-        $trashItem = $this->trashItemRepository->getOneBy(['id' => $id]);
-
-        $this->securityChecker->checkPermission(
-            new SecurityCondition(
-                $trashItem->getResourceSecurityContext(),
-                null,
-                $trashItem->getResourceSecurityObjectType(),
-                $trashItem->getResourceSecurityObjectId()
-            ),
-            PermissionTypes::ADD
-        );
-
-        $restoredObject = $this->trashManager->restore($trashItem);
-
-        return $this->handleView(
-            $this->view($restoredObject)
         );
     }
 }

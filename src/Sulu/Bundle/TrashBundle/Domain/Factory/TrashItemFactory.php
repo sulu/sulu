@@ -40,8 +40,9 @@ class TrashItemFactory implements TrashItemFactoryInterface
 
     public function create(
         string $resourceKey,
+        string $resourceId,
         array $restoreData,
-        string $resourceTitle,
+        $resourceTitle,
         ?string $resourceSecurityContext,
         ?string $resourceSecurityObjectType,
         ?string $resourceSecurityObjectId
@@ -49,15 +50,27 @@ class TrashItemFactory implements TrashItemFactoryInterface
         /** @var TrashItemInterface $trashItem */
         $trashItem = new $this->trashItemClass();
 
-        return $trashItem
+        $trashItem
             ->setResourceKey($resourceKey)
+            ->setResourceId($resourceId)
             ->setRestoreData($restoreData)
-            ->setResourceTitle($resourceTitle)
             ->setResourceSecurityContext($resourceSecurityContext)
             ->setResourceSecurityObjectType($resourceSecurityObjectType)
             ->setResourceSecurityObjectId($resourceSecurityObjectId)
             ->setTimestamp(new \DateTimeImmutable())
             ->setUser($this->getCurrentUser());
+
+        if (\is_string($resourceTitle)) {
+            $trashItem->setResourceTitle($resourceTitle);
+        }
+
+        if (\is_array($resourceTitle)) {
+            foreach ($resourceTitle as $locale => $title) {
+                $trashItem->setResourceTitle($title, $locale);
+            }
+        }
+
+        return $trashItem;
     }
 
     private function getCurrentUser(): ?UserInterface

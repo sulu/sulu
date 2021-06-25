@@ -52,9 +52,9 @@ export default class RestoreItemAction extends AbstractListItemAction {
                 onCancel={this.handleDialogCancel}
                 onConfirm={this.handleDialogConfirm}
                 open={!!this.idToBeRestored}
-                title={translate('sulu_trash.restore_object')}
+                title={translate('sulu_trash.restore_element')}
             >
-                {translate('sulu_trash.restore_object_dialog_text')}
+                {translate('sulu_trash.restore_element_dialog_text')}
             </Dialog>
         );
     }

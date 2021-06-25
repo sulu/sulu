@@ -18,4 +18,6 @@ interface TrashManagerInterface
     public function store(string $resourceKey, object $object): TrashItemInterface;
 
     public function restore(TrashItemInterface $trashItem): object;
+
+    public function remove(TrashItemInterface $trashItem): void;
 }
