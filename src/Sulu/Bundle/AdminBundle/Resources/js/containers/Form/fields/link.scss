@@ -9,7 +9,7 @@ $linkSelectionErrorBorderColor: $persianRed;
 $linkSelectionInputDisabledColor: $gray;
 $linkSelectionInputDisabledBackgroundColor: $wildSand;
 
-.link-provider {
+.link {
     display: flex;
     align-items: center;
     width: 100%;
@@ -33,16 +33,34 @@ $linkSelectionInputDisabledBackgroundColor: $wildSand;
         }
     }
 
-    input {
-        cursor: pointer;
-        color: $linkSelectionInputColor;
+    .item-container {
+        display: flex;
+        align-items: center;
+        text-align: left;
+        height: 100%;
         flex-grow: 1;
-        border: none;
-        padding: 7px 10px;
 
-        &:disabled {
-            color: $linkSelectionInputDisabledColor;
-            background-color: $linkSelectionInputDisabledBackgroundColor;
+        .item {
+            flex-grow: 1;
+            color: $linkSelectionInputColor;
+            padding: 7px 10px;
+            line-height: 30px;
         }
+    }
+
+    .clickable {
+        cursor: pointer;
+    }
+
+    .remove-button {
+        border: 0;
+        margin: 0 10px;
+        cursor: pointer;
+        background-color: transparent;
+    }
+
+    .disabled {
+        color: $linkSelectionInputDisabledColor;
+        background-color: $linkSelectionInputDisabledBackgroundColor;
     }
 }

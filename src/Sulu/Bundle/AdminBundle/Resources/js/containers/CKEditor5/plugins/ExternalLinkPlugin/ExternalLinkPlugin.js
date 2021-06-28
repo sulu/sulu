@@ -12,7 +12,7 @@ import {addLinkConversion, findModelItemInSelection, findViewLinkItemInSelection
 import LinkBalloonView from '../../LinkBalloonView';
 import LinkCommand from '../../LinkCommand';
 import UnlinkCommand from '../../UnlinkCommand';
-import ExternalLinkOverlay from './ExternalLinkOverlay';
+import {ExternalLinkTypeOverlay} from '../../../Link';
 // $FlowFixMe
 import linkIcon from '!!raw-loader!./link.svg'; // eslint-disable-line import/no-webpack-loader-syntax
 
@@ -59,20 +59,24 @@ export default class ExternalLinkPlugin extends Plugin {
             this.hideBalloon();
         }));
 
+        const locale = this.editor.config.get('internalLinks.locale');
+
         render(
             (
                 <Observer>
                     {() => (
-                        <ExternalLinkOverlay
+                        <ExternalLinkTypeOverlay
+                            href={this.url}
+                            locale={locale}
                             onCancel={this.handleOverlayClose}
                             onConfirm={this.handleOverlayConfirm}
+                            onHrefChange={this.handleHrefChange}
                             onTargetChange={this.handleTargetChange}
                             onTitleChange={this.handleTitleChange}
-                            onUrlChange={this.handleUrlChange}
                             open={this.open}
+                            options={undefined}
                             target={this.target}
                             title={this.title}
-                            url={this.url}
                         />
                     )}
                 </Observer>
@@ -182,8 +186,8 @@ export default class ExternalLinkPlugin extends Plugin {
         this.title = title;
     };
 
-    @action handleUrlChange = (url: ?string) => {
-        this.url = url;
+    @action handleHrefChange = (href: ?string | number) => {
+        this.url = String(href);
     };
 
     destroy() {

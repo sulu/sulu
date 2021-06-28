@@ -112,8 +112,8 @@ import {smartContentConfigStore} from './containers/SmartContent';
 import PreviewForm from './views/PreviewForm';
 import FormOverlayList from './views/FormOverlayList';
 import {initializeJexl} from './utils/jexl';
-import LinkProvider from './containers/Form/fields/LinkProvider';
-import {LinkTypeOverlay} from './containers/Link';
+import Link from './containers/Form/fields/Link';
+import {ExternalLinkTypeOverlay, LinkTypeOverlay} from './containers/Link';
 import linkTypeRegistry from './containers/Link/registries/linkTypeRegistry';
 
 configure({enforceActions: 'observed'});
@@ -148,7 +148,7 @@ const FIELD_TYPE_TEXT_EDITOR = 'text_editor';
 const FIELD_TYPE_TEXT_LINE = 'text_line';
 const FIELD_TYPE_TIME = 'time';
 const FIELD_TYPE_URL = 'url';
-const FIELD_TYPE_LINK_PROVIDER = 'link_provider';
+const FIELD_TYPE_LINK = 'link';
 
 initializer.addUpdateConfigHook('sulu_admin', (config: Object, initialized: boolean) => {
     if (!initialized) {
@@ -248,7 +248,7 @@ function registerFieldTypes(fieldTypeOptions) {
     fieldRegistry.add(FIELD_TYPE_TEXT_LINE, Input);
     fieldRegistry.add(FIELD_TYPE_TIME, DatePicker, {dateFormat: false, timeFormat: true});
     fieldRegistry.add(FIELD_TYPE_URL, Url);
-    fieldRegistry.add(FIELD_TYPE_LINK_PROVIDER, LinkProvider);
+    fieldRegistry.add(FIELD_TYPE_LINK, Link);
 
     registerFieldTypesWithOptions(fieldTypeOptions['selection'], Selection);
     registerFieldTypesWithOptions(fieldTypeOptions['single_selection'], SingleSelection);
@@ -300,6 +300,14 @@ function registerInternalLinkTypes(internalLinkTypes) {
             }
         );
     }
+
+    // Add external LinkType
+    linkTypeRegistry.add(
+        'external',
+        ExternalLinkTypeOverlay,
+        'Link',
+        undefined
+    );
 }
 
 function registerFormToolbarActions() {
