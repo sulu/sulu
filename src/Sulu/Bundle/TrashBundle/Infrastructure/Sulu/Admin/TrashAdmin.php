@@ -46,14 +46,24 @@ class TrashAdmin extends Admin
      */
     private $localizationManager;
 
+    /**
+     * @var array<string, string>
+     */
+    private $restoreFormMapping;
+
+    /**
+     * @param array<string, string> $restoreFormMapping
+     */
     public function __construct(
         ViewBuilderFactoryInterface $viewBuilderFactory,
         SecurityCheckerInterface $securityChecker,
-        LocalizationManagerInterface $localizationManager
+        LocalizationManagerInterface $localizationManager,
+        array $restoreFormMapping
     ) {
         $this->viewBuilderFactory = $viewBuilderFactory;
         $this->securityChecker = $securityChecker;
         $this->localizationManager = $localizationManager;
+        $this->restoreFormMapping = $restoreFormMapping;
     }
 
     public function configureNavigationItems(NavigationItemCollection $navigationItemCollection): void
@@ -97,7 +107,10 @@ class TrashAdmin extends Admin
         }
     }
 
-    public function getSecurityContexts()
+    /**
+     * @return array<string, mixed>
+     */
+    public function getSecurityContexts(): array
     {
         return [
             self::SULU_ADMIN_SECURITY_SYSTEM => [
@@ -108,6 +121,21 @@ class TrashAdmin extends Admin
                     ],
                 ],
             ],
+        ];
+    }
+
+    public function getConfigKey(): ?string
+    {
+        return 'sulu_trash';
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getConfig(): array
+    {
+        return [
+            'restoreFormMapping' => $this->restoreFormMapping,
         ];
     }
 }

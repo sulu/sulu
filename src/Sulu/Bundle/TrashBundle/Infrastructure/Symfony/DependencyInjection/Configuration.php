@@ -30,7 +30,12 @@ class Configuration implements ConfigurationInterface
                 ->children()
                     ->scalarNode('adapter')->defaultValue('doctrine')->end()
                 ->end()
-            ->end();
+            ->end()
+            ->arrayNode('restore_form')
+                ->useAttributeAsKey('resourceKey')
+                ->scalarPrototype()
+            ->end()
+        ->end();
 
         $this->addObjectsSection($rootNode);
 

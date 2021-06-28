@@ -1,5 +1,6 @@
 {
     "sulu_trash.trash": "Trash",
+    "sulu_trash.restore_error": "An error occurred while restoring that element",
     "sulu_trash.restore_element": "Restore element",
     "sulu_trash.restore_element_dialog_text": "Are you sure, that you want to restore this element?",
     "sulu_activity.resource.trash_items": "Trash item",

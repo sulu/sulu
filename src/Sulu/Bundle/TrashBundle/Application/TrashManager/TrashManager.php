@@ -83,7 +83,7 @@ class TrashManager implements TrashManagerInterface
         throw new StoreTrashItemHandlerNotFoundException($resourceKey);
     }
 
-    public function restore(TrashItemInterface $trashItem): object
+    public function restore(TrashItemInterface $trashItem, array $restoreFormData): object
     {
         $resourceKey = $trashItem->getResourceKey();
 
@@ -92,7 +92,7 @@ class TrashManager implements TrashManagerInterface
                 continue;
             }
 
-            $object = $restoreTrashItemHandler->restore($trashItem);
+            $object = $restoreTrashItemHandler->restore($trashItem, $restoreFormData);
 
             $translation = $trashItem->getTranslation();
 
