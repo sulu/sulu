@@ -2,7 +2,6 @@
 import {
     configRegistry as ckeditorConfigRegistry,
     pluginRegistry as ckeditorPluginRegistry,
-    internalLinkTypeRegistry,
 } from './CKEditor5';
 import List, {
     AbstractFieldFilterType,
@@ -42,6 +41,7 @@ import SingleAutoComplete from './SingleAutoComplete';
 import SingleListOverlay from './SingleListOverlay';
 import SingleSelection from './SingleSelection';
 import TextEditor, {textEditorRegistry} from './TextEditor';
+import {linkTypeRegistry} from './Link';
 import type {FormStoreInterface, Schema, SchemaOption} from './Form/types';
 import type {ViewProps} from './ViewRenderer';
 import type {ListAdapterProps, LoadingStrategyInterface, StructureStrategyInterface} from './List';
@@ -64,7 +64,7 @@ export {
     ckeditorPluginRegistry,
     CardCollection,
     conditionDataProviderRegistry,
-    internalLinkTypeRegistry,
+    linkTypeRegistry,
     List,
     ListStore,
     listAdapterRegistry,

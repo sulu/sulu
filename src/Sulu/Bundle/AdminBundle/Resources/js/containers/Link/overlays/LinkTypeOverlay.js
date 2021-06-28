@@ -1,14 +1,14 @@
 // @flow
 import React from 'react';
-import SingleSelection from '../../../../SingleSelection';
-import {translate} from '../../../../../utils/Translator';
-import Dialog from '../../../../../components/Dialog';
-import Form from '../../../../../components/Form';
-import Input from '../../../../../components/Input';
-import SingleSelect from '../../../../../components/SingleSelect';
-import type {InternalLinkTypeOverlayProps} from '../types';
+import SingleSelection from '../../SingleSelection';
+import {translate} from '../../../utils';
+import Dialog from '../../../components/Dialog';
+import Form from '../../../components/Form';
+import Input from '../../../components/Input';
+import SingleSelect from '../../../components/SingleSelect';
+import type {LinkTypeOverlayProps} from '../types';
 
-export default class InternalLinkTypeOverlay extends React.Component<InternalLinkTypeOverlayProps> {
+export default class LinkTypeOverlay extends React.Component<LinkTypeOverlayProps> {
     render() {
         const {
             anchor,
@@ -27,7 +27,7 @@ export default class InternalLinkTypeOverlay extends React.Component<InternalLin
         } = this.props;
 
         if (!options) {
-            throw new Error('The InternalLinkTypeOverlay needs some options in order to work!');
+            throw new Error('The LinkTypeOverlay needs some options in order to work!');
         }
 
         const {displayProperties, emptyText, icon, listAdapter, overlayTitle, resourceKey} = options;

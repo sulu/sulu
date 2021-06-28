@@ -31,7 +31,6 @@ import List, {
 } from './views/List';
 import Tabs from './views/Tabs';
 import CKEditor5 from './containers/TextEditor/adapters/CKEditor5';
-import {InternalLinkTypeOverlay, internalLinkTypeRegistry} from './containers/CKEditor5';
 import {
     ArrayFieldTransformer,
     BooleanFieldFilterType,
@@ -113,6 +112,9 @@ import {smartContentConfigStore} from './containers/SmartContent';
 import PreviewForm from './views/PreviewForm';
 import FormOverlayList from './views/FormOverlayList';
 import {initializeJexl} from './utils/jexl';
+import LinkProvider from './containers/Form/fields/LinkProvider';
+import {LinkTypeOverlay} from './containers/Link';
+import linkTypeRegistry from './containers/Link/registries/linkTypeRegistry';
 
 configure({enforceActions: 'observed'});
 
@@ -146,6 +148,7 @@ const FIELD_TYPE_TEXT_EDITOR = 'text_editor';
 const FIELD_TYPE_TEXT_LINE = 'text_line';
 const FIELD_TYPE_TIME = 'time';
 const FIELD_TYPE_URL = 'url';
+const FIELD_TYPE_LINK_PROVIDER = 'link_provider';
 
 initializer.addUpdateConfigHook('sulu_admin', (config: Object, initialized: boolean) => {
     if (!initialized) {
@@ -245,6 +248,7 @@ function registerFieldTypes(fieldTypeOptions) {
     fieldRegistry.add(FIELD_TYPE_TEXT_LINE, Input);
     fieldRegistry.add(FIELD_TYPE_TIME, DatePicker, {dateFormat: false, timeFormat: true});
     fieldRegistry.add(FIELD_TYPE_URL, Url);
+    fieldRegistry.add(FIELD_TYPE_LINK_PROVIDER, LinkProvider);
 
     registerFieldTypesWithOptions(fieldTypeOptions['selection'], Selection);
     registerFieldTypesWithOptions(fieldTypeOptions['single_selection'], SingleSelection);
@@ -282,9 +286,9 @@ function registerTextEditors() {
 function registerInternalLinkTypes(internalLinkTypes) {
     for (const internalLinkTypeKey in internalLinkTypes) {
         const internalLinkType = internalLinkTypes[internalLinkTypeKey];
-        internalLinkTypeRegistry.add(
+        linkTypeRegistry.add(
             internalLinkTypeKey,
-            InternalLinkTypeOverlay,
+            LinkTypeOverlay,
             internalLinkType.title,
             {
                 displayProperties: internalLinkType.displayProperties,

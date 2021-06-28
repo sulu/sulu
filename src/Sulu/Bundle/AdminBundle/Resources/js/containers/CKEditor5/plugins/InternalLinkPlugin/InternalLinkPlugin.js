@@ -15,7 +15,7 @@ import LinkBalloonView from '../../LinkBalloonView';
 import LinkCommand from '../../LinkCommand';
 import {addLinkConversion, findModelItemInSelection, findViewLinkItemInSelection} from '../../utils';
 import UnlinkCommand from '../../UnlinkCommand';
-import internalLinkTypeRegistry from './registries/internalLinkTypeRegistry';
+import linkTypeRegistry from '../../../Link/registries/linkTypeRegistry';
 // $FlowFixMe
 import linkIcon from '!!raw-loader!./link.svg'; // eslint-disable-line import/no-webpack-loader-syntax
 
@@ -94,11 +94,11 @@ export default class InternalLinkPlugin extends Plugin {
                 <Observer>
                     {() => (
                         <Fragment>
-                            {internalLinkTypeRegistry.getKeys().map((key) => {
-                                const InternalLinkOverlay = internalLinkTypeRegistry.getOverlay(key);
+                            {linkTypeRegistry.getKeys().map((key) => {
+                                const LinkOverlay = linkTypeRegistry.getOverlay(key);
 
                                 return (
-                                    <InternalLinkOverlay
+                                    <LinkOverlay
                                         anchor={this.anchor}
                                         id={this.openOverlay === key ? this.id : undefined}
                                         key={key}
@@ -110,7 +110,7 @@ export default class InternalLinkPlugin extends Plugin {
                                         onTargetChange={this.handleTargetChange}
                                         onTitleChange={this.handleTitleChange}
                                         open={this.openOverlay === key}
-                                        options={internalLinkTypeRegistry.getOptions(key)}
+                                        options={linkTypeRegistry.getOptions(key)}
                                         target={this.target}
                                         title={this.title}
                                     />
@@ -168,11 +168,11 @@ export default class InternalLinkPlugin extends Plugin {
                 tooltip: true,
             });
 
-            internalLinkTypeRegistry.getKeys().forEach((key) => {
+            linkTypeRegistry.getKeys().forEach((key) => {
                 const button = new ButtonView(locale);
                 button.set({
                     class: 'ck-link-button',
-                    label: internalLinkTypeRegistry.getTitle(key),
+                    label: linkTypeRegistry.getTitle(key),
                     withText: true,
                 });
                 const listItem = new ListItemView(locale);
