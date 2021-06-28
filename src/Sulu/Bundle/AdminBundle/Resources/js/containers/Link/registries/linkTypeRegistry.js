@@ -1,11 +1,14 @@
 // @flow
 import type {ComponentType} from 'react';
-import type {InternalLinkTypeOptions, InternalLinkTypeOverlayProps} from '../types';
+import type {
+    LinkTypeOptions,
+    LinkTypeOverlayProps,
+} from '../types';
 
-class InternalLinkTypeRegistry {
-    overlays: {[string]: ComponentType<InternalLinkTypeOverlayProps>};
+class linkTypeRegistry {
+    overlays: {[string]: ComponentType<LinkTypeOverlayProps>};
     titles: {[string]: string};
-    options: {[string]: ?InternalLinkTypeOptions};
+    options: {[string]: ?LinkTypeOptions};
 
     constructor() {
         this.clear();
@@ -19,12 +22,12 @@ class InternalLinkTypeRegistry {
 
     add(
         name: string,
-        overlay: ComponentType<InternalLinkTypeOverlayProps>,
+        overlay: ComponentType<LinkTypeOverlayProps>,
         title: string,
-        options: ?InternalLinkTypeOptions
+        options: ?LinkTypeOptions
     ) {
         if (name in this.titles) {
-            throw new Error('The key "' + name + '" has already been used for another internal link type');
+            throw new Error('The key "' + name + '" has already been used for another link type');
         }
 
         this.overlays[name] = overlay;
@@ -36,10 +39,10 @@ class InternalLinkTypeRegistry {
         return Object.keys(this.titles);
     }
 
-    getOverlay(name: string): ComponentType<InternalLinkTypeOverlayProps> {
+    getOverlay(name: string): ComponentType<LinkTypeOverlayProps> {
         if (!(name in this.overlays)) {
             throw new Error(
-                'There is no overlay for an internal link type with the key "' + name + '" registered.' +
+                'There is no overlay for an link type with the key "' + name + '" registered.' +
                 '\n\nRegistered keys: ' + Object.keys(this.overlays).sort().join(', ')
             );
         }
@@ -50,7 +53,7 @@ class InternalLinkTypeRegistry {
     getTitle(name: string): string {
         if (!(name in this.titles)) {
             throw new Error(
-                'There is no title for an internal link type with the key "' + name + '" registered.' +
+                'There is no title for an link type with the key "' + name + '" registered.' +
                 '\n\nRegistered keys: ' + Object.keys(this.titles).sort().join(', ')
             );
         }
@@ -58,10 +61,10 @@ class InternalLinkTypeRegistry {
         return this.titles[name];
     }
 
-    getOptions(name: string): ?InternalLinkTypeOptions {
+    getOptions(name: string): ?LinkTypeOptions {
         if (!(name in this.options)) {
             throw new Error(
-                'There are no options for an internal link type with the key "' + name + '" registered.' +
+                'There are no options for an link type with the key "' + name + '" registered.' +
                 '\n\nRegistered keys: ' + Object.keys(this.options).sort().join(', ')
             );
         }
@@ -70,4 +73,4 @@ class InternalLinkTypeRegistry {
     }
 }
 
-export default new InternalLinkTypeRegistry();
+export default new linkTypeRegistry();

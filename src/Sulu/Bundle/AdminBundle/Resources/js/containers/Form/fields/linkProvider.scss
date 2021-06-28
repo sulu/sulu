@@ -1,0 +1,48 @@
+@import '../../Application/colors.scss';
+
+$linkSelectionBackgroundColor: $white;
+$linkSelectionBorderColor: $silver;
+$linkSelectionButtonColor: $dustyGray;
+$linkSelectionInputColor: $black;
+$linkSelectionErrorBorderColor: $persianRed;
+
+$linkSelectionInputDisabledColor: $gray;
+$linkSelectionInputDisabledBackgroundColor: $wildSand;
+
+.link-provider {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 30px;
+    border-radius: 3px;
+    border: 1px solid $linkSelectionBorderColor;
+    background-color: $linkSelectionBackgroundColor;
+    font-size: 12px;
+    overflow: hidden;
+
+    &.error {
+        border-color: $linkSelectionErrorBorderColor;
+    }
+
+    .provider {
+        color: $linkSelectionButtonColor;
+        border-right: 1px solid $linkSelectionBorderColor;
+
+        button > span {
+            line-height: 30px;
+        }
+    }
+
+    input {
+        cursor: pointer;
+        color: $linkSelectionInputColor;
+        flex-grow: 1;
+        border: none;
+        padding: 7px 10px;
+
+        &:disabled {
+            color: $linkSelectionInputDisabledColor;
+            background-color: $linkSelectionInputDisabledBackgroundColor;
+        }
+    }
+}

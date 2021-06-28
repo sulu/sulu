@@ -4,12 +4,12 @@ import {observable} from 'mobx';
 import {Dialog, Input, Form} from 'sulu-admin-bundle/components';
 import {userStore} from 'sulu-admin-bundle/stores';
 import {translate} from 'sulu-admin-bundle/utils';
-import SingleMediaSelection from '../../../../SingleMediaSelection';
-import type {InternalLinkTypeOverlayProps} from 'sulu-admin-bundle/types';
-import type {Value} from '../../../../SingleMediaSelection/types';
-import type {Media} from '../../../../../types';
+import SingleMediaSelection from '../../SingleMediaSelection';
+import type {Value} from '../../SingleMediaSelection';
+import type {Media} from '../../../types';
+import type {LinkTypeOverlayProps} from 'sulu-admin-bundle/containers/Link/types';
 
-export default class MediaInternalLinkTypeOverlay extends React.Component<InternalLinkTypeOverlayProps> {
+export default class MediaLinkTypeOverlay extends React.Component<LinkTypeOverlayProps> {
     handleChange = (value: Value, media: ?Media) => {
         const {onResourceChange} = this.props;
 

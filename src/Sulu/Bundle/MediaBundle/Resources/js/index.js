@@ -5,12 +5,11 @@ import {
     blockPreviewTransformerRegistry,
     listAdapterRegistry,
     fieldRegistry,
-    internalLinkTypeRegistry,
     viewRegistry,
 } from 'sulu-admin-bundle/containers';
 import {translate} from 'sulu-admin-bundle/utils';
 import {TeaserSelection} from 'sulu-page-bundle/containers';
-import {MediaInternalLinkTypeOverlay} from './containers/CKEditor5';
+import linkTypeRegistry from 'sulu-admin-bundle/containers/Link/registries/linkTypeRegistry';
 import {MediaCardOverviewAdapter, MediaCardSelectionAdapter} from './containers/List';
 import {MediaSelection, MediaVersionUpload, SingleMediaUpload, SingleMediaSelection, ImageMap} from './containers/Form';
 import {
@@ -21,6 +20,7 @@ import MediaCollection from './containers/MediaCollection';
 import MediaOverview from './views/MediaOverview';
 import MediaHistory from './views/MediaHistory';
 import MediaFormats from './views/MediaFormats';
+import {MediaLinkTypeOverlay} from './containers/Link';
 
 const FIELD_TYPE_MEDIA_SELECTION = 'media_selection';
 const FIELD_TYPE_SINGLE_MEDIA_SELECTION = 'single_media_selection';
@@ -67,7 +67,7 @@ initializer.addUpdateConfigHook('sulu_media', (config: Object, initialized: bool
     when(
         () => !!initializer.initializedTranslationsLocale,
         (): void => {
-            internalLinkTypeRegistry.add('media', MediaInternalLinkTypeOverlay, translate('sulu_media.media'));
+            linkTypeRegistry.add('media', MediaLinkTypeOverlay, translate('sulu_media.media'));
         }
     );
 });

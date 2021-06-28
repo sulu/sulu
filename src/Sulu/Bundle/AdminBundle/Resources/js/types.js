@@ -3,10 +3,10 @@ import type {BlockError, ErrorCollection, FieldTypeProps} from './containers/For
 import type {FormFieldTypes} from './components/Form/types';
 import type {ButtonOption} from './components/MultiItemSelection/types';
 import type {SelectionData} from './components/RectangleSelection';
-import type {InternalLinkTypeOverlayProps} from './containers/CKEditor5/types';
 import type {BlockPreviewTransformer} from './containers/FieldBlocks/types';
 import type {FieldTransformer} from './containers/List/types';
 import type {ToolbarItemConfig} from './containers/Toolbar/types';
+import type {LinkTypeOverlayProps} from './containers/Link/types';
 
 export type {
     BlockError,
@@ -16,7 +16,7 @@ export type {
     FieldTransformer,
     FieldTypeProps,
     FormFieldTypes,
-    InternalLinkTypeOverlayProps,
+    LinkTypeOverlayProps,
     SelectionData,
     ToolbarItemConfig,
 };
