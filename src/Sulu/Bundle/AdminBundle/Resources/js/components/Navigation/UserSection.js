@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import Icon from '../Icon';
 import Button from '../Button';
 import {translate} from '../../utils';
-import profileButtonStyles from './profileButton.scss';
+import userSectionStyles from './userSection.scss';
 
 type Props = {
     onLogoutClick: () => void,
@@ -18,7 +18,7 @@ type Props = {
 }
 
 @observer
-class ProfileButton extends React.Component<Props> {
+class UserSection extends React.Component<Props> {
     @observable open: boolean = false;
 
     @action handleButtonClick = () => {
@@ -43,39 +43,32 @@ class ProfileButton extends React.Component<Props> {
         onLogoutClick();
     };
 
-    handleSuluClick = () => {
-        const {suluVersionLink} = this.props;
-
-        this.close();
-        window.open(suluVersionLink, '_blank').focus();
-    };
-
     render() {
-        const {username, userImage, suluVersion} = this.props;
+        const {username, userImage} = this.props;
 
-        const menuClass = classNames(profileButtonStyles.menu, this.open && profileButtonStyles.open);
+        const menuClass = classNames(userSectionStyles.menu, this.open && userSectionStyles.open);
 
         return (
-            <div className={profileButtonStyles.profileButton}>
+            <div className={userSectionStyles.userSection}>
                 <div
-                    className={profileButtonStyles.button}
+                    className={userSectionStyles.button}
                     onClick={this.handleButtonClick}
                     role="button"
                 >
-                    <div className={profileButtonStyles.userImage}>
+                    <div className={userSectionStyles.userImage}>
                         {userImage && (
                             <img
                                 alt={username}
-                                className={profileButtonStyles.image}
+                                className={userSectionStyles.image}
                                 src={userImage}
                                 title={username}
                             />)
                         }
 
-                        {!userImage && <Icon className={profileButtonStyles.placeholder} name="su-user" />}
+                        {!userImage && <Icon className={userSectionStyles.placeholder} name="su-user" />}
                     </div>
 
-                    <span className={profileButtonStyles.username}>
+                    <span className={userSectionStyles.username}>
                         {username}
                     </span>
 
@@ -84,7 +77,7 @@ class ProfileButton extends React.Component<Props> {
 
                 <div className={menuClass}>
                     <Button
-                        className={profileButtonStyles.menuButton}
+                        className={userSectionStyles.menuButton}
                         icon="su-user"
                         onClick={this.handleProfileClick}
                         size="large"
@@ -94,17 +87,7 @@ class ProfileButton extends React.Component<Props> {
                     </Button>
 
                     <Button
-                        className={profileButtonStyles.menuButton}
-                        icon="su-sulu"
-                        onClick={this.handleSuluClick}
-                        size="large"
-                        skin="text"
-                    >
-                        Sulu ({suluVersion})
-                    </Button>
-
-                    <Button
-                        className={profileButtonStyles.menuButton}
+                        className={userSectionStyles.menuButton}
                         icon="su-sign-out-alt"
                         onClick={this.handleLogoutClick}
                         size="large"
@@ -118,4 +101,4 @@ class ProfileButton extends React.Component<Props> {
     }
 }
 
-export default ProfileButton;
+export default UserSection;

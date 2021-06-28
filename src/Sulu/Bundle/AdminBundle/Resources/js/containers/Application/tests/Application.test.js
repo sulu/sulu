@@ -4,6 +4,10 @@ import {render, mount} from 'enzyme';
 import Router, {Route} from '../../../services/Router';
 import Application from '../Application';
 
+jest.mock('../../../utils/Translator', () => ({
+    translate: (key) => key,
+}));
+
 jest.mock('../../../services/Router/Router', () => jest.fn(function() {
     this.attributes = {};
 }));

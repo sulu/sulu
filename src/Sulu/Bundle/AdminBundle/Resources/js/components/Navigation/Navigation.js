@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import Icon from '../Icon';
 import Item from './Item';
 import navigationStyles from './navigation.scss';
-import ProfileButton from './ProfileButton';
+import UserSection from './UserSection';
 import type {ChildrenArray, Element} from 'react';
 
 type Props = {|
@@ -140,7 +140,7 @@ class Navigation extends React.Component<Props> {
                 </div>
 
                 <div className={navigationStyles.footer}>
-                    <ProfileButton
+                    <UserSection
                         onLogoutClick={onLogoutClick}
                         onProfileClick={onProfileClick}
                         suluVersion={suluVersion}

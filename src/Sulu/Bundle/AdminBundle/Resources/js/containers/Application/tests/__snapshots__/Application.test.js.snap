@@ -35,7 +35,7 @@ Array [
           class="footer"
         >
           <div
-            class="profileButton"
+            class="userSection"
           >
             <div
               class="button"
@@ -74,20 +74,6 @@ Array [
                   class="buttonText"
                 >
                   sulu_admin.edit_profile
-                </span>
-              </button>
-              <button
-                class="button text hasText menuButton"
-                type="button"
-              >
-                <span
-                  aria-label="su-sulu"
-                  class="su-sulu buttonIcon"
-                />
-                <span
-                  class="buttonText"
-                >
-                  Sulu (2.0.0-RC1)
                 </span>
               </button>
               <button
@@ -232,7 +218,7 @@ Array [
           class="footer"
         >
           <div
-            class="profileButton"
+            class="userSection"
           >
             <div
               class="button"
@@ -271,20 +257,6 @@ Array [
                   class="buttonText"
                 >
                   sulu_admin.edit_profile
-                </span>
-              </button>
-              <button
-                class="button text hasText menuButton"
-                type="button"
-              >
-                <span
-                  aria-label="su-sulu"
-                  class="su-sulu buttonIcon"
-                />
-                <span
-                  class="buttonText"
-                >
-                  Sulu (2.0.0-RC1)
                 </span>
               </button>
               <button
@@ -767,7 +739,7 @@ Array [
           class="footer"
         >
           <div
-            class="profileButton"
+            class="userSection"
           >
             <div
               class="button"
@@ -806,20 +778,6 @@ Array [
                   class="buttonText"
                 >
                   sulu_admin.edit_profile
-                </span>
-              </button>
-              <button
-                class="button text hasText menuButton"
-                type="button"
-              >
-                <span
-                  aria-label="su-sulu"
-                  class="su-sulu buttonIcon"
-                />
-                <span
-                  class="buttonText"
-                >
-                  Sulu (2.0.0-RC1)
                 </span>
               </button>
               <button
@@ -968,7 +926,7 @@ Array [
           class="footer"
         >
           <div
-            class="profileButton"
+            class="userSection"
           >
             <div
               class="button"
@@ -1007,20 +965,6 @@ Array [
                   class="buttonText"
                 >
                   sulu_admin.edit_profile
-                </span>
-              </button>
-              <button
-                class="button text hasText menuButton"
-                type="button"
-              >
-                <span
-                  aria-label="su-sulu"
-                  class="su-sulu buttonIcon"
-                />
-                <span
-                  class="buttonText"
-                >
-                  Sulu (2.0.0-RC1)
                 </span>
               </button>
               <button

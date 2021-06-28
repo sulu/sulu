@@ -2,7 +2,7 @@
 
 exports[`The component should render with all available props and handle clicks correctly 1`] = `
 <div
-  class="profileButton"
+  class="userSection"
 >
   <div
     class="button"
@@ -43,20 +43,6 @@ exports[`The component should render with all available props and handle clicks 
         class="buttonText"
       >
         sulu_admin.edit_profile
-      </span>
-    </button>
-    <button
-      class="button text hasText menuButton"
-      type="button"
-    >
-      <span
-        aria-label="su-sulu"
-        class="su-sulu buttonIcon"
-      />
-      <span
-        class="buttonText"
-      >
-        Sulu (2.0.0-RC1)
       </span>
     </button>
     <button

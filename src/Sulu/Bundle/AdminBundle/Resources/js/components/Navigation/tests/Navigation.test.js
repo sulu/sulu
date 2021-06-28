@@ -27,7 +27,7 @@ test('The component should render and handle clicks correctly', () => {
     navigation.find('button.menuButton').at(0).simulate('click');
     expect(handleProfileClick).toBeCalled();
 
-    navigation.find('button.menuButton').at(2).simulate('click');
+    navigation.find('button.menuButton').at(1).simulate('click');
     expect(handleLogoutClick).toBeCalled();
 });
 
@@ -81,7 +81,7 @@ test('The component should render with all available props and handle clicks cor
     navigation.find('button.menuButton').at(0).simulate('click');
     expect(handleProfileClick).toBeCalled();
 
-    navigation.find('button.menuButton').at(2).simulate('click');
+    navigation.find('button.menuButton').at(1).simulate('click');
     expect(handleLogoutClick).toBeCalled();
 });
 

@@ -3,7 +3,7 @@
 $color: $white;
 $lightColor: $silver;
 
-.profile-button {
+.user-section {
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -69,7 +69,7 @@ $lightColor: $silver;
     will-change: max-height, padding-bottom;
 
     &.open {
-        max-height: 180px;
+        max-height: 86px;
         padding-bottom: 20px;
     }
 }
