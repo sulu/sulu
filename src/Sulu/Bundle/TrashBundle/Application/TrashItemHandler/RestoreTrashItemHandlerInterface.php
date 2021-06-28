@@ -17,5 +17,8 @@ use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
 
 interface RestoreTrashItemHandlerInterface extends SupportableTrashItemHandlerInterface
 {
-    public function restore(TrashItemInterface $trashItem): object;
+    /**
+     * @param array<string, mixed> $restoreFormData
+     */
+    public function restore(TrashItemInterface $trashItem, array $restoreFormData): object;
 }

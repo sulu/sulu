@@ -90,6 +90,8 @@ class SuluTrashExtension extends Extension implements PrependExtensionInterface
         $container->setAlias('sulu_trash.trash_item_repository', $trashItemRepositoryService);
         $container->setAlias(TrashItemRepositoryInterface::class, 'sulu_trash.trash_item_repository');
 
+        $container->setParameter('sulu_trash.restore_form_mapping', $config['restore_form']);
+
         $container->registerForAutoconfiguration(StoreTrashItemHandlerInterface::class)
             ->addTag('sulu_trash.store_trash_item_handler');
 

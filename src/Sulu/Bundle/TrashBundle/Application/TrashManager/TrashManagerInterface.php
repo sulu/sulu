@@ -17,7 +17,10 @@ interface TrashManagerInterface
 {
     public function store(string $resourceKey, object $object): TrashItemInterface;
 
-    public function restore(TrashItemInterface $trashItem): object;
+    /**
+     * @param array<string, mixed> $restoreFormData
+     */
+    public function restore(TrashItemInterface $trashItem, array $restoreFormData): object;
 
     public function remove(TrashItemInterface $trashItem): void;
 }

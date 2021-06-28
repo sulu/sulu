@@ -143,9 +143,11 @@ class TrashItemController extends AbstractRestController implements ClassResourc
             TrashItemInterface::LIST_KEY
         );
 
-        $additionalFieldDescriptors = $this->getAdditionalFieldDescriptors();
+        $hiddenFieldDescriptors = $this->getHiddenFieldDescriptors();
+        $requiredFieldDescriptors = $this->getRequiredFieldDescriptors();
         $fieldDescriptors = \array_merge(
-            $additionalFieldDescriptors,
+            $hiddenFieldDescriptors,
+            $requiredFieldDescriptors,
             $configurationFieldDescriptors
         );
 
@@ -155,7 +157,11 @@ class TrashItemController extends AbstractRestController implements ClassResourc
 
         $listBuilder->setParameter('locale', $locale);
 
-        foreach ($additionalFieldDescriptors as $fieldDescriptor) {
+        foreach ($hiddenFieldDescriptors as $fieldDescriptor) {
+            $listBuilder->addSelectField($fieldDescriptor);
+        }
+
+        foreach ($requiredFieldDescriptors as $fieldDescriptor) {
             $listBuilder->addSelectField($fieldDescriptor);
         }
 
@@ -165,12 +171,12 @@ class TrashItemController extends AbstractRestController implements ClassResourc
         $trashItems = $listBuilder->execute();
 
         $trashItems = \array_map(
-            function(array $trashItem) use ($additionalFieldDescriptors) {
-                if (isset($trashItem['resourceKey'])) {
-                    $trashItem['resourceKey'] = $this->getResourceTranslation($trashItem['resourceKey']);
+            function(array $trashItem) use ($hiddenFieldDescriptors) {
+                if (isset($trashItem['resourceType'])) {
+                    $trashItem['resourceType'] = $this->getResourceTranslation($trashItem['resourceType']);
                 }
 
-                foreach ($additionalFieldDescriptors as $fieldDescriptor) {
+                foreach ($hiddenFieldDescriptors as $fieldDescriptor) {
                     unset($trashItem[$fieldDescriptor->getName()]);
                 }
 
@@ -244,7 +250,7 @@ class TrashItemController extends AbstractRestController implements ClassResourc
         try {
             switch ($action) {
                 case 'restore':
-                    return $this->restoreTrashItem($id);
+                    return $this->restoreTrashItem($id, $request->request->all());
                 default:
                     throw new RestException(\sprintf('Unrecognized action: "%s"', $action));
             }
@@ -255,7 +261,10 @@ class TrashItemController extends AbstractRestController implements ClassResourc
         }
     }
 
-    private function restoreTrashItem(int $id): Response
+    /**
+     * @param mixed[] $restoreFormData
+     */
+    private function restoreTrashItem(int $id, array $restoreFormData): Response
     {
         $trashItem = $this->trashItemRepository->getOneBy(['id' => $id]);
 
@@ -269,7 +278,7 @@ class TrashItemController extends AbstractRestController implements ClassResourc
             PermissionTypes::ADD
         );
 
-        $restoredObject = $this->trashManager->restore($trashItem);
+        $restoredObject = $this->trashManager->restore($trashItem, $restoreFormData);
 
         return $this->handleView(
             $this->view($restoredObject)
@@ -357,12 +366,23 @@ class TrashItemController extends AbstractRestController implements ClassResourc
     /**
      * @return array<string, FieldDescriptorInterface>
      */
-    private function getAdditionalFieldDescriptors(): array
+    private function getHiddenFieldDescriptors(): array
     {
         return [
             'resourceSecurityContext' => $this->createFieldDescriptor('resourceSecurityContext'),
             'resourceSecurityObjectType' => $this->createFieldDescriptor('resourceSecurityObjectType'),
             'resourceSecurityObjectId' => $this->createFieldDescriptor('resourceSecurityObjectId'),
+        ];
+    }
+
+    /**
+     * @return array<string, FieldDescriptorInterface>
+     */
+    private function getRequiredFieldDescriptors(): array
+    {
+        return [
+            'id' => $this->createFieldDescriptor('id'),
+            'resourceKey' => $this->createFieldDescriptor('resourceKey'),
         ];
     }
 

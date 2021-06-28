@@ -63,7 +63,7 @@ class TagTrashItemHandler implements StoreTrashItemHandlerInterface, RestoreTras
         );
     }
 
-    public function restore(TrashItemInterface $trashItem): object
+    public function restore(TrashItemInterface $trashItem, array $restoreFormData): object
     {
         return $this->tagManager->restore(
             (int) $trashItem->getResourceId(),

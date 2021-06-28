@@ -30,18 +30,7 @@
 
     <properties>
         <property
-            name="id"
-            visibility="no"
-            sortable="true"
-            searchability="never"
-            translation="sulu_admin.id"
-        >
-            <field-name>id</field-name>
-            <entity-name>%sulu.model.trash_item.class%</entity-name>
-        </property>
-
-        <property
-            name="resourceKey"
+            name="resourceType"
             visibility="yes"
             sortable="true"
             searchability="no"
