@@ -2,56 +2,45 @@
 import React, {Fragment} from 'react';
 import {observer} from 'mobx-react';
 import {action, observable} from 'mobx';
-import Dialog from '../../../../components/Dialog';
-import Form from '../../../../components/Form';
-import Input from '../../../../components/Input';
-import SingleSelect from '../../../../components/SingleSelect';
-import TextArea from '../../../../components/TextArea';
-import Url from '../../../../components/Url';
-import {translate} from '../../../../utils/Translator';
-
-type Props = {|
-    onCancel: () => void,
-    onConfirm: () => void,
-    onTargetChange: (target: string) => void,
-    onTitleChange: (title: ?string) => void,
-    onUrlChange: (url: ?string) => void,
-    open: boolean,
-    target: ?string,
-    title: ?string,
-    url: ?string,
-|};
+import Dialog from '../../../components/Dialog';
+import Form from '../../../components/Form';
+import Input from '../../../components/Input';
+import SingleSelect from '../../../components/SingleSelect';
+import TextArea from '../../../components/TextArea';
+import Url from '../../../components/Url';
+import {translate} from '../../../utils';
+import type {LinkTypeOverlayProps} from '../types';
 
 @observer
-class ExternalLinkOverlay extends React.Component<Props> {
+class ExternalLinkTypeOverlay extends React.Component<LinkTypeOverlayProps> {
     @observable protocol: ?string = undefined;
-    @observable url: ?string = undefined;
+    @observable href: ?string = undefined;
     @observable mailSubject: ?string = undefined;
     @observable mailBody: ?string = undefined;
 
-    constructor(props: Props) {
+    constructor(props: LinkTypeOverlayProps) {
         super(props);
 
         this.updateUrl();
     }
 
-    @action componentDidUpdate(prevProps: Props) {
+    @action componentDidUpdate(prevProps: LinkTypeOverlayProps) {
         if (prevProps.open === false && this.props.open === true) {
             this.updateUrl();
         }
     }
 
     updateUrl() {
-        const {url} = this.props;
+        const {href} = this.props;
 
-        if (!url) {
-            this.url = undefined;
+        if (!href) {
+            this.href = undefined;
             return;
         }
 
-        const urlParts = url.split('?');
+        const urlParts = String(href).split('?');
 
-        this.url = urlParts[0];
+        this.href = urlParts[0];
 
         const urlParameters = new URLSearchParams(urlParts[1]);
         const mailSubject = urlParameters.get('subject');
@@ -62,15 +51,15 @@ class ExternalLinkOverlay extends React.Component<Props> {
     }
 
     callUrlChange = () => {
-        const {onTargetChange, onUrlChange} = this.props;
-        const {mailBody, mailSubject, url} = this;
+        const {onTargetChange, onHrefChange} = this.props;
+        const {mailBody, mailSubject, href} = this;
 
-        if (!url) {
-            onUrlChange(undefined);
+        if (!href) {
+            onHrefChange(undefined);
             return;
         }
 
-        if (url.startsWith('mailto:')) {
+        if (href.startsWith('mailto:')) {
             onTargetChange('_self');
         }
 
@@ -84,8 +73,8 @@ class ExternalLinkOverlay extends React.Component<Props> {
             urlParameters.set('body', mailBody);
         }
 
-        onUrlChange(
-            url + (
+        onHrefChange(
+            href + (
                 Array.from(urlParameters).length > 0
                     // Replacing value is required, because Apple Mail does not seem to understand it otherwise
                     ? '?' + urlParameters.toString().replace(/\+/g, '%20')
@@ -96,8 +85,8 @@ class ExternalLinkOverlay extends React.Component<Props> {
 
     handleUrlBlur = this.callUrlChange;
 
-    @action handleUrlChange = (url: ?string) => {
-        this.url = url;
+    @action handleHrefChange = (href: ?string) => {
+        this.href = href;
     };
 
     handleMailSubjectBlur = this.callUrlChange;
@@ -125,13 +114,13 @@ class ExternalLinkOverlay extends React.Component<Props> {
             open,
             target,
             title,
-            url,
+            href,
         } = this.props;
 
         return (
             <Dialog
                 cancelText={translate('sulu_admin.cancel')}
-                confirmDisabled={!url}
+                confirmDisabled={!href}
                 confirmText={translate('sulu_admin.confirm')}
                 onCancel={onCancel}
                 onConfirm={onConfirm}
@@ -143,10 +132,10 @@ class ExternalLinkOverlay extends React.Component<Props> {
                         <Url
                             defaultProtocol="https://"
                             onBlur={this.handleUrlBlur}
-                            onChange={this.handleUrlChange}
+                            onChange={this.handleHrefChange}
                             onProtocolChange={this.handleProtocolChange}
                             valid={true}
-                            value={this.url}
+                            value={this.href}
                         />
                     </Form.Field>
 
@@ -189,4 +178,4 @@ class ExternalLinkOverlay extends React.Component<Props> {
     }
 }
 
-export default ExternalLinkOverlay;
+export default ExternalLinkTypeOverlay;

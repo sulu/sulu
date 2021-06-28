@@ -12,14 +12,14 @@ export default class LinkTypeOverlay extends React.Component<LinkTypeOverlayProp
     render() {
         const {
             anchor,
-            id,
+            href,
             locale,
             onAnchorChange,
             onCancel,
             onConfirm,
             onTargetChange,
             onTitleChange,
-            onResourceChange,
+            onHrefChange,
             open,
             options,
             target,
@@ -50,10 +50,10 @@ export default class LinkTypeOverlay extends React.Component<LinkTypeOverlayProp
                             icon={icon}
                             listKey={resourceKey}
                             locale={locale}
-                            onChange={onResourceChange}
+                            onChange={onHrefChange}
                             overlayTitle={overlayTitle}
                             resourceKey={resourceKey}
-                            value={id}
+                            value={href}
                         />
                     </Form.Field>
 

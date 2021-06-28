@@ -11,15 +11,15 @@ import type {LinkTypeOverlayProps} from 'sulu-admin-bundle/containers/Link/types
 
 export default class MediaLinkTypeOverlay extends React.Component<LinkTypeOverlayProps> {
     handleChange = (value: Value, media: ?Media) => {
-        const {onResourceChange} = this.props;
+        const {onHrefChange} = this.props;
 
-        onResourceChange(value.id, media);
+        onHrefChange(value.id, media);
     };
 
     render() {
-        const {id, locale, onCancel, onConfirm, onTitleChange, open, title} = this.props;
+        const {href, locale, onCancel, onConfirm, onTitleChange, open, title} = this.props;
 
-        if (typeof id === 'string') {
+        if (typeof href === 'string') {
             throw new Error('The id of a media should always be a number!');
         }
 
@@ -37,7 +37,7 @@ export default class MediaLinkTypeOverlay extends React.Component<LinkTypeOverla
                         <SingleMediaSelection
                             locale={locale || observable.box(userStore.contentLocale)}
                             onChange={this.handleChange}
-                            value={{displayOption: undefined, id}}
+                            value={{displayOption: undefined, id: href}}
                         />
                     </Form.Field>
 

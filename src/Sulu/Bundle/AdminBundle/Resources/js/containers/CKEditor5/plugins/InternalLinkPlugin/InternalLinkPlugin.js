@@ -100,13 +100,13 @@ export default class InternalLinkPlugin extends Plugin {
                                 return (
                                     <LinkOverlay
                                         anchor={this.anchor}
-                                        id={this.openOverlay === key ? this.id : undefined}
+                                        href={this.openOverlay === key ? this.id : undefined}
                                         key={key}
                                         locale={observable.box(locale)}
                                         onAnchorChange={this.handleAnchorChange}
                                         onCancel={this.handleOverlayClose}
                                         onConfirm={this.handleOverlayConfirm}
-                                        onResourceChange={this.handleResourceChange}
+                                        onHrefChange={this.handleHrefChange}
                                         onTargetChange={this.handleTargetChange}
                                         onTitleChange={this.handleTitleChange}
                                         open={this.openOverlay === key}
@@ -262,7 +262,7 @@ export default class InternalLinkPlugin extends Plugin {
         this.title = title;
     };
 
-    @action handleResourceChange = (id: ?string | number, item: ?Object) => {
+    @action handleHrefChange = (id: ?string | number, item: ?Object) => {
         this.id = id;
         this.defaultText = item ? item.title : undefined;
     };

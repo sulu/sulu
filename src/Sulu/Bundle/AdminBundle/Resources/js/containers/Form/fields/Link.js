@@ -1,20 +1,22 @@
 // @flow
 import React, {Component, Fragment} from 'react';
+import classNames from 'classnames';
 import {observer} from 'mobx-react';
-import {action, computed, observable} from 'mobx';
+import {action, computed, observable, toJS} from 'mobx';
 import SingleSelect from '../../../components/SingleSelect/SingleSelect';
 import {userStore} from '../../../stores';
 import linkTypeRegistry from '../../Link/registries/linkTypeRegistry';
-import linkProviderStyles from './linkProvider.scss';
-import type {FieldTypeProps, LinkProviderValue} from '../types';
+import Icon from '../../../components/Icon';
+import linkStyles from './link.scss';
+import type {FieldTypeProps, LinkTypeValue} from '../types';
 import type {IObservableValue} from 'mobx/lib/mobx';
 
-type Props = FieldTypeProps<?LinkProviderValue>;
+type Props = FieldTypeProps<?LinkTypeValue>;
 
 const DEFAULT_TARGET = '_self';
 
 @observer
-class LinkProvider extends Component<Props> {
+class Link extends Component<Props> {
     @observable provider: ?string;
     @observable openOverlay: ?string;
     @observable target: ?string;
@@ -51,11 +53,22 @@ class LinkProvider extends Component<Props> {
     }
 
     render(): React$Node {
+        const {disabled} = this.props;
+
+        const itemClass = classNames(
+            linkStyles.item,
+            {
+                [linkStyles.clickable]: !disabled || !this.href,
+                [linkStyles.disabled]: disabled,
+            }
+        );
+
         return (
             <Fragment>
-                <div className={linkProviderStyles.linkProvider}>
-                    <div className={linkProviderStyles.provider}>
+                <div className={linkStyles.link}>
+                    <div className={linkStyles.provider}>
                         <SingleSelect
+                            disabled={!!disabled}
                             onChange={this.handleProviderChange}
                             skin="flat"
                             value={this.provider}
@@ -65,24 +78,32 @@ class LinkProvider extends Component<Props> {
                             ))}
                         </SingleSelect>
                     </div>
-                    <input
-                        onClick={this.handleClick}
-                        readOnly={true}
-                        type="text"
-                        value={this.title}
-                    />
+                    <div className={linkStyles.itemContainer}>
+                        <div className={itemClass} onClick={disabled || this.handleClick} role="button">
+                            { this.title }
+                        </div>
+                        {!disabled &&
+                            <button
+                                className={linkStyles.removeButton}
+                                onClick={this.handleRemove}
+                                type="button"
+                            >
+                                <Icon name="su-trash-alt" />
+                            </button>
+                        }
+                    </div>
                 </div>
                 {linkTypeRegistry.getKeys().map((key) => {
                     const LinkOverlay = linkTypeRegistry.getOverlay(key);
 
                     return (
                         <LinkOverlay
-                            id={this.openOverlay === key ? this.overlayItemId : undefined}
+                            href={this.openOverlay === key ? this.overlayItemId : undefined}
                             key={key}
                             locale={this.locale}
                             onCancel={this.handleOverlayClose}
                             onConfirm={this.handleOverlayConfirm}
-                            onResourceChange={this.handleResourceChange}
+                            onHrefChange={this.handleHrefChange}
                             onTargetChange={this.handleTargetChange}
                             onTitleChange={this.handleTitleChange}
                             open={this.openOverlay === key}
@@ -95,6 +116,20 @@ class LinkProvider extends Component<Props> {
             </Fragment>
         );
     }
+
+    @action handleRemove = () => {
+        this.overlayItemId = undefined;
+        this.overlayProvider = undefined;
+        this.overlayTarget = undefined;
+        this.overlayTitle = undefined;
+
+        this.href = undefined;
+        this.provider = undefined;
+        this.title = undefined;
+        this.target = undefined;
+
+        this.handleOnChange();
+    };
 
     @action handleClick = () => {
         this.overlayItemId = this.href;
@@ -110,8 +145,6 @@ class LinkProvider extends Component<Props> {
     };
 
     @action handleOverlayConfirm = () => {
-        const {onChange} = this.props;
-
         if (!this.overlayItemId) {
             return;
         }
@@ -123,14 +156,7 @@ class LinkProvider extends Component<Props> {
 
         this.openOverlay = undefined;
 
-        onChange(
-            {
-                provider: this.provider,
-                target: this.target,
-                href: this.href,
-                title: this.title,
-            }
-        );
+        this.handleOnChange();
     };
 
     @action handleOverlayClose = () => {
@@ -148,10 +174,24 @@ class LinkProvider extends Component<Props> {
         this.overlayTitle = title;
     };
 
-    @action handleResourceChange = (id: ?string | number, item: ?Object) => {
+    @action handleHrefChange = (id: ?string | number, item: ?Object) => {
         this.overlayItemId = id;
         this.overlayDefaultText = item?.title ?? undefined;
     };
+
+    handleOnChange = () => {
+        const {onChange} = this.props;
+
+        onChange(
+            {
+                provider: this.provider,
+                target: this.target,
+                href: this.href,
+                title: this.title,
+                locale: toJS(this.locale),
+            }
+        );
+    };
 }
 
-export default LinkProvider;
+export default Link;
