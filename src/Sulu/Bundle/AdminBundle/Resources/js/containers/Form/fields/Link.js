@@ -23,9 +23,8 @@ class Link extends Component<Props> {
     @observable href: ?string | number;
     @observable title: ?string = '';
 
-    @observable overlayItemId: ?string | number;
+    @observable overlayHref: ?string | number;
     @observable overlayProvider: ?string;
-    @observable overlayDefaultText: ?string;
     @observable overlayTitle: ?string;
     @observable overlayTarget: ?string = DEFAULT_TARGET;
 
@@ -40,10 +39,13 @@ class Link extends Component<Props> {
             this.target = value.target;
 
             this.overlayProvider = this.provider;
-            this.overlayTitle = this.title;
-            this.overlayItemId = this.href;
+            this.overlayHref = this.href;
             this.overlayTarget = this.target;
         }
+    }
+
+    @computed get targetEnabled(): boolean {
+        return this.props.schemaOptions?.target?.value === true;
     }
 
     @computed get locale(): IObservableValue<string> {
@@ -98,18 +100,16 @@ class Link extends Component<Props> {
 
                     return (
                         <LinkOverlay
-                            href={this.openOverlay === key ? this.overlayItemId : undefined}
+                            href={this.openOverlay === key ? this.overlayHref : undefined}
                             key={key}
                             locale={this.locale}
                             onCancel={this.handleOverlayClose}
                             onConfirm={this.handleOverlayConfirm}
                             onHrefChange={this.handleHrefChange}
-                            onTargetChange={this.handleTargetChange}
-                            onTitleChange={this.handleTitleChange}
+                            onTargetChange={this.targetEnabled ? this.handleTargetChange : undefined}
                             open={this.openOverlay === key}
                             options={linkTypeRegistry.getOptions(key)}
                             target={this.overlayTarget}
-                            title={this.overlayTitle}
                         />
                     );
                 })}
@@ -118,10 +118,9 @@ class Link extends Component<Props> {
     }
 
     @action handleRemove = () => {
-        this.overlayItemId = undefined;
+        this.overlayHref = undefined;
         this.overlayProvider = undefined;
         this.overlayTarget = undefined;
-        this.overlayTitle = undefined;
 
         this.href = undefined;
         this.provider = undefined;
@@ -132,26 +131,29 @@ class Link extends Component<Props> {
     };
 
     @action handleClick = () => {
-        this.overlayItemId = this.href;
+        this.initOverlay();
+
         this.openOverlay = this.provider;
     };
 
     @action handleProviderChange = (provider: string) => {
+        this.initOverlay();
+
         if (this.overlayProvider !== provider) {
-            this.overlayItemId = undefined;
+            this.overlayHref = undefined;
         }
         this.overlayProvider = provider;
         this.openOverlay = this.overlayProvider;
     };
 
     @action handleOverlayConfirm = () => {
-        if (!this.overlayItemId) {
+        if (!this.overlayHref) {
             return;
         }
 
-        this.href = this.overlayItemId;
+        this.href = this.overlayHref;
         this.provider = this.overlayProvider;
-        this.title = this.overlayTitle || this.overlayDefaultText;
+        this.title = this.overlayTitle;
         this.target = this.overlayTarget;
 
         this.openOverlay = undefined;
@@ -160,9 +162,6 @@ class Link extends Component<Props> {
     };
 
     @action handleOverlayClose = () => {
-        this.overlayItemId = this.href;
-        this.overlayProvider = this.provider;
-
         this.openOverlay = undefined;
     };
 
@@ -170,13 +169,15 @@ class Link extends Component<Props> {
         this.overlayTarget = target;
     };
 
-    @action handleTitleChange = (title: ?string) => {
-        this.overlayTitle = title;
+    @action handleHrefChange = (href: ?string | number, item: ?Object) => {
+        this.overlayHref = href;
+        this.overlayTitle = item?.title ?? String(href);
     };
 
-    @action handleHrefChange = (id: ?string | number, item: ?Object) => {
-        this.overlayItemId = id;
-        this.overlayDefaultText = item?.title ?? undefined;
+    initOverlay = () => {
+        this.overlayHref = this.href;
+        this.overlayTarget = this.target;
+        this.overlayTitle = this.title;
     };
 
     handleOnChange = () => {
@@ -185,7 +186,7 @@ class Link extends Component<Props> {
         onChange(
             {
                 provider: this.provider,
-                target: this.target,
+                target: this.targetEnabled ? this.target : undefined,
                 href: this.href,
                 title: this.title,
                 locale: toJS(this.locale),

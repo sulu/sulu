@@ -61,18 +61,22 @@ export default class LinkTypeOverlay extends React.Component<LinkTypeOverlayProp
                         <Input onChange={onAnchorChange} value={anchor} />
                     </Form.Field>
 
-                    <Form.Field label={translate('sulu_admin.link_target')} required={true}>
-                        <SingleSelect onChange={onTargetChange} value={target}>
-                            <SingleSelect.Option value="_blank">_blank</SingleSelect.Option>
-                            <SingleSelect.Option value="_self">_self</SingleSelect.Option>
-                            <SingleSelect.Option value="_parent">_parent</SingleSelect.Option>
-                            <SingleSelect.Option value="_top">_top</SingleSelect.Option>
-                        </SingleSelect>
-                    </Form.Field>
+                    {!!onTargetChange &&
+                        <Form.Field label={translate('sulu_admin.link_target')} required={true}>
+                            <SingleSelect onChange={onTargetChange} value={target}>
+                                <SingleSelect.Option value="_blank">_blank</SingleSelect.Option>
+                                <SingleSelect.Option value="_self">_self</SingleSelect.Option>
+                                <SingleSelect.Option value="_parent">_parent</SingleSelect.Option>
+                                <SingleSelect.Option value="_top">_top</SingleSelect.Option>
+                            </SingleSelect>
+                        </Form.Field>
+                    }
 
-                    <Form.Field label={translate('sulu_admin.link_title')}>
-                        <Input onChange={onTitleChange} value={title} />
-                    </Form.Field>
+                    {!!onTitleChange &&
+                        <Form.Field label={translate('sulu_admin.link_title')}>
+                            <Input onChange={onTitleChange} value={title} />
+                        </Form.Field>
+                    }
                 </Form>
             </Dialog>
         );

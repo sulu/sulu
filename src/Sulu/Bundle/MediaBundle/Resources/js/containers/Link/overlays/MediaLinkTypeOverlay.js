@@ -4,6 +4,7 @@ import {observable} from 'mobx';
 import {Dialog, Input, Form} from 'sulu-admin-bundle/components';
 import {userStore} from 'sulu-admin-bundle/stores';
 import {translate} from 'sulu-admin-bundle/utils';
+import SingleSelect from 'sulu-admin-bundle/components/SingleSelect';
 import SingleMediaSelection from '../../SingleMediaSelection';
 import type {Value} from '../../SingleMediaSelection';
 import type {Media} from '../../../types';
@@ -17,7 +18,7 @@ export default class MediaLinkTypeOverlay extends React.Component<LinkTypeOverla
     };
 
     render() {
-        const {href, locale, onCancel, onConfirm, onTitleChange, open, title} = this.props;
+        const {href, locale, onCancel, onConfirm, onTitleChange, onTargetChange, open, title, target} = this.props;
 
         if (typeof href === 'string') {
             throw new Error('The id of a media should always be a number!');
@@ -41,9 +42,22 @@ export default class MediaLinkTypeOverlay extends React.Component<LinkTypeOverla
                         />
                     </Form.Field>
 
-                    <Form.Field label={translate('sulu_admin.link_title')}>
-                        <Input onChange={onTitleChange} value={title} />
-                    </Form.Field>
+                    {!!onTargetChange &&
+                        <Form.Field label={translate('sulu_admin.link_target')} required={true}>
+                            <SingleSelect onChange={onTargetChange} value={target}>
+                                <SingleSelect.Option value="_blank">_blank</SingleSelect.Option>
+                                <SingleSelect.Option value="_self">_self</SingleSelect.Option>
+                                <SingleSelect.Option value="_parent">_parent</SingleSelect.Option>
+                                <SingleSelect.Option value="_top">_top</SingleSelect.Option>
+                            </SingleSelect>
+                        </Form.Field>
+                    }
+
+                    {!!onTitleChange &&
+                        <Form.Field label={translate('sulu_admin.link_title')}>
+                            <Input onChange={onTitleChange} value={title} />
+                        </Form.Field>
+                    }
                 </Form>
             </Dialog>
         );

@@ -9,12 +9,12 @@ export type LinkTypeOverlayProps = {|
     onCancel: () => void,
     onConfirm: () => void,
     onHrefChange: (id: ?string | number, item: ?Object) => void,
-    onTargetChange: (target: string) => void,
-    onTitleChange: (title: ?string) => void,
+    onTargetChange?: ?(target: string) => void,
+    onTitleChange?: ?(title: ?string) => void,
     open: boolean,
     options?: ?LinkTypeOptions,
     target?: ?string,
-    title: ?string,
+    title?: ?string,
 |};
 
 export type LinkTypeOptions = {|
