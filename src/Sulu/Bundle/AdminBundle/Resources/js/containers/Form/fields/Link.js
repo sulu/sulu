@@ -22,11 +22,13 @@ class Link extends Component<Props> {
     @observable target: ?string;
     @observable href: ?string | number;
     @observable title: ?string = '';
+    @observable anchor: ?string;
 
     @observable overlayHref: ?string | number;
     @observable overlayProvider: ?string;
     @observable overlayTitle: ?string;
     @observable overlayTarget: ?string = DEFAULT_TARGET;
+    @observable overlayAnchor: ?string;
 
     constructor(props: Props): void {
         super(props);
@@ -37,15 +39,21 @@ class Link extends Component<Props> {
             this.title = value.title;
             this.href = value.href;
             this.target = value.target;
+            this.anchor = value.anchor;
 
             this.overlayProvider = this.provider;
             this.overlayHref = this.href;
             this.overlayTarget = this.target;
+            this.overlayAnchor = this.anchor;
         }
     }
 
     @computed get targetEnabled(): boolean {
         return this.props.schemaOptions?.target?.value === true;
+    }
+
+    @computed get anchorEnabled(): boolean {
+        return this.props.schemaOptions?.anchor?.value === true;
     }
 
     @computed get locale(): IObservableValue<string> {
@@ -100,9 +108,11 @@ class Link extends Component<Props> {
 
                     return (
                         <LinkOverlay
+                            anchor={this.overlayAnchor}
                             href={this.openOverlay === key ? this.overlayHref : undefined}
                             key={key}
                             locale={this.locale}
+                            onAnchorChange={this.anchorEnabled ? this.handleAnchorChange : undefined}
                             onCancel={this.handleOverlayClose}
                             onConfirm={this.handleOverlayConfirm}
                             onHrefChange={this.handleHrefChange}
@@ -121,11 +131,13 @@ class Link extends Component<Props> {
         this.overlayHref = undefined;
         this.overlayProvider = undefined;
         this.overlayTarget = undefined;
+        this.overlayAnchor = undefined;
 
         this.href = undefined;
         this.provider = undefined;
         this.title = undefined;
         this.target = undefined;
+        this.anchor = undefined;
 
         this.handleOnChange();
     };
@@ -155,6 +167,7 @@ class Link extends Component<Props> {
         this.provider = this.overlayProvider;
         this.title = this.overlayTitle;
         this.target = this.overlayTarget;
+        this.anchor = this.overlayAnchor;
 
         this.openOverlay = undefined;
 
@@ -163,6 +176,10 @@ class Link extends Component<Props> {
 
     @action handleOverlayClose = () => {
         this.openOverlay = undefined;
+    };
+
+    @action handleAnchorChange = (anchor: ?string) => {
+        this.overlayAnchor = anchor;
     };
 
     @action handleTargetChange = (target: ?string) => {
@@ -178,6 +195,7 @@ class Link extends Component<Props> {
         this.overlayHref = this.href;
         this.overlayTarget = this.target;
         this.overlayTitle = this.title;
+        this.overlayAnchor = this.anchor;
     };
 
     handleOnChange = () => {
@@ -187,6 +205,7 @@ class Link extends Component<Props> {
             {
                 provider: this.provider,
                 target: this.targetEnabled ? this.target : undefined,
+                anchor: this.anchorEnabled ? this.anchor : undefined,
                 href: this.href,
                 title: this.title,
                 locale: toJS(this.locale),

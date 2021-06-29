@@ -169,7 +169,7 @@ class ExternalLinkTypeOverlay extends React.Component<LinkTypeOverlayProps> {
                         </Fragment>
                     }
 
-                    {!!onTitleChange &&
+                    {onTitleChange &&
                         <Form.Field label={translate('sulu_admin.link_title')}>
                             <Input onChange={onTitleChange} value={title} />
                         </Form.Field>
