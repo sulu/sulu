@@ -19,7 +19,7 @@ use Sulu\Bundle\TrashBundle\Domain\Exception\TrashItemNotFoundException;
 use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
 use Sulu\Bundle\TrashBundle\Domain\Repository\TrashItemRepositoryInterface;
 
-class TrashItemRepository implements TrashItemRepositoryInterface
+final class TrashItemRepository implements TrashItemRepositoryInterface
 {
     /**
      * @var EntityManager

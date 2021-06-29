@@ -21,7 +21,7 @@ use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\StoreTrashItemHandlerIn
 use Sulu\Bundle\TrashBundle\Domain\Factory\TrashItemFactoryInterface;
 use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
 
-class TagTrashItemHandler implements StoreTrashItemHandlerInterface, RestoreTrashItemHandlerInterface
+final class TagTrashItemHandler implements StoreTrashItemHandlerInterface, RestoreTrashItemHandlerInterface
 {
     /**
      * @var TrashItemFactoryInterface

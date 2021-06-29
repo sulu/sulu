@@ -17,7 +17,7 @@ use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\Security\Core\Security;
 
-class TrashItemFactory implements TrashItemFactoryInterface
+final class TrashItemFactory implements TrashItemFactoryInterface
 {
     /**
      * @var Security|null
