@@ -57,11 +57,13 @@ export default class LinkTypeOverlay extends React.Component<LinkTypeOverlayProp
                         />
                     </Form.Field>
 
-                    <Form.Field label={translate('sulu_admin.link_anchor')}>
-                        <Input onChange={onAnchorChange} value={anchor} />
-                    </Form.Field>
+                    {onAnchorChange &&
+                        <Form.Field label={translate('sulu_admin.link_anchor')}>
+                            <Input onChange={onAnchorChange} value={anchor} />
+                        </Form.Field>
+                    }
 
-                    {!!onTargetChange &&
+                    {onTargetChange &&
                         <Form.Field label={translate('sulu_admin.link_target')} required={true}>
                             <SingleSelect onChange={onTargetChange} value={target}>
                                 <SingleSelect.Option value="_blank">_blank</SingleSelect.Option>
@@ -72,7 +74,7 @@ export default class LinkTypeOverlay extends React.Component<LinkTypeOverlayProp
                         </Form.Field>
                     }
 
-                    {!!onTitleChange &&
+                    {onTitleChange &&
                         <Form.Field label={translate('sulu_admin.link_title')}>
                             <Input onChange={onTitleChange} value={title} />
                         </Form.Field>

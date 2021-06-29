@@ -2,9 +2,17 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of Sulu.
+ *
+ * (c) Sulu GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Component\Content\Types;
 
-use Sulu\Bundle\MarkupBundle\Markup\Link\LinkItem;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\SimpleContentType;
@@ -29,26 +37,31 @@ class Link extends SimpleContentType
     }
 
     /**
-     * {@inheritdoc}
+     * @param mixed[] $value
      */
-    protected function encodeValue($value)
+    protected function encodeValue($value): string
     {
-        return \json_encode($value);
+        return \json_encode($value, \JSON_THROW_ON_ERROR);
     }
 
     /**
-     * {@inheritdoc}
+     * @param string|null $value
+     *
+     * @return mixed[]
      */
-    protected function decodeValue($value)
+    protected function decodeValue($value): array
     {
         if (null === $value) {
-            return null;
+            return [];
         }
 
-        return \json_decode($value, true);
+        return \json_decode($value, true, 512, \JSON_THROW_ON_ERROR);
     }
 
-    public function getViewData(PropertyInterface $property)
+    /**
+     * @return mixed[]
+     */
+    public function getViewData(PropertyInterface $property): array
     {
         $value = $property->getValue();
 
@@ -61,14 +74,14 @@ class Link extends SimpleContentType
             'locale' => $value['locale'],
         ];
 
-        if(isset($value['target'])){
-            $result['target'] =  $value['target'];
+        if (isset($value['target'])) {
+            $result['target'] = $value['target'];
         }
 
         return $result;
     }
 
-    public function getContentData(PropertyInterface $property)
+    public function getContentData(PropertyInterface $property): ?string
     {
         $value = $property->getValue();
 
@@ -76,18 +89,22 @@ class Link extends SimpleContentType
             return null;
         }
 
-        if ($value['provider'] === self::LINK_TYPE_EXTERNAL) {
+        if (self::LINK_TYPE_EXTERNAL === $value['provider']) {
             return $value['href'];
         }
 
         $provider = $this->providerPool->getProvider($value['provider']);
 
-        $linkItem = $provider->preload([$value['href']], $value['locale'], true);
+        $linkItems = $provider->preload([$value['href']], $value['locale'], true);
 
-        if (\count($linkItem) === 0) {
-            return [];
+        if (0 === \count($linkItems)) {
+            return null;
+        }
+        $url = \reset($linkItems)->getUrl();
+        if (isset($value['anchor'])) {
+            $url = \sprintf('%s#%s', $url, $value['anchor']);
         }
 
-        return reset($linkItem)->getUrl();
+        return $url;
     }
 }

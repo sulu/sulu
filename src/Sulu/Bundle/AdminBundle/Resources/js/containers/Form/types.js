@@ -135,6 +135,7 @@ export type FieldTypeProps<T> = {|
 |};
 
 export type LinkTypeValue = {|
+    anchor: ?string,
     href: ?string | number,
     locale: ?string,
     provider: ?string,
