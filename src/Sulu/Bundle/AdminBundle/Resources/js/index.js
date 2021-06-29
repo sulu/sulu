@@ -92,6 +92,7 @@ import {
     TextArea,
     TextEditor,
     Url,
+    Link,
 } from './containers/Form';
 import {textEditorRegistry} from './containers/TextEditor';
 import Form, {
@@ -112,7 +113,6 @@ import {smartContentConfigStore} from './containers/SmartContent';
 import PreviewForm from './views/PreviewForm';
 import FormOverlayList from './views/FormOverlayList';
 import {initializeJexl} from './utils/jexl';
-import Link from './containers/Form/fields/Link';
 import {ExternalLinkTypeOverlay, LinkTypeOverlay} from './containers/Link';
 import linkTypeRegistry from './containers/Link/registries/linkTypeRegistry';
 

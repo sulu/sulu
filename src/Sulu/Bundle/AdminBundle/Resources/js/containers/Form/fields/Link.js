@@ -1,217 +1,57 @@
 // @flow
-import React, {Component, Fragment} from 'react';
-import classNames from 'classnames';
-import {observer} from 'mobx-react';
-import {action, computed, observable, toJS} from 'mobx';
-import SingleSelect from '../../../components/SingleSelect/SingleSelect';
-import {userStore} from '../../../stores';
-import linkTypeRegistry from '../../Link/registries/linkTypeRegistry';
-import Icon from '../../../components/Icon';
-import linkStyles from './link.scss';
-import type {FieldTypeProps, LinkTypeValue} from '../types';
-import type {IObservableValue} from 'mobx/lib/mobx';
+import React from 'react';
+import {observable, toJS} from 'mobx';
+import userStore from '../../../stores/userStore';
+import LinkContainer from '../../Link/Link';
+import type {FieldTypeProps} from '../types';
+import type {LinkTypeValue} from '../../Link/types';
 
-type Props = FieldTypeProps<?LinkTypeValue>;
+export default class Link extends React.Component<FieldTypeProps<LinkTypeValue>> {
+    render() {
+        const {
+            disabled,
+            formInspector,
+            onChange,
+            onFinish,
+            value,
+            schemaOptions: {
+                anchor: {
+                    value: enableAnchor,
+                } = {},
+                target: {
+                    value: enableTarget,
+                } = {},
+                types: {
+                    value: providerTypes,
+                } = {},
+            },
+        } = this.props;
 
-const DEFAULT_TARGET = '_self';
-
-@observer
-class Link extends Component<Props> {
-    @observable provider: ?string;
-    @observable openOverlay: ?string;
-    @observable target: ?string;
-    @observable href: ?string | number;
-    @observable title: ?string = '';
-    @observable anchor: ?string;
-
-    @observable overlayHref: ?string | number;
-    @observable overlayProvider: ?string;
-    @observable overlayTitle: ?string;
-    @observable overlayTarget: ?string = DEFAULT_TARGET;
-    @observable overlayAnchor: ?string;
-
-    constructor(props: Props): void {
-        super(props);
-        const {value} = this.props;
-
-        if (value) {
-            this.provider = value.provider;
-            this.title = value.title;
-            this.href = value.href;
-            this.target = value.target;
-            this.anchor = value.anchor;
-
-            this.overlayProvider = this.provider;
-            this.overlayHref = this.href;
-            this.overlayTarget = this.target;
-            this.overlayAnchor = this.anchor;
+        const locale = formInspector.locale ? formInspector.locale : observable.box(userStore.contentLocale);
+        if (providerTypes !== undefined && providerTypes !== null && typeof providerTypes !== 'string') {
+            throw new Error('The "types" schema option must be a string if given!');
         }
-    }
+        const types = providerTypes ? providerTypes.split(',').map((name) => name.trim()) : [];
 
-    @computed get targetEnabled(): boolean {
-        return this.props.schemaOptions?.target?.value === true;
-    }
+        if (enableAnchor !== undefined && enableAnchor !== null && typeof enableAnchor !== 'boolean') {
+            throw new Error('The "anchor" schema option must be a boolean if given!');
+        }
 
-    @computed get anchorEnabled(): boolean {
-        return this.props.schemaOptions?.anchor?.value === true;
-    }
-
-    @computed get locale(): IObservableValue<string> {
-        const {formInspector} = this.props;
-
-        return formInspector.locale ? formInspector.locale : observable.box(userStore.contentLocale);
-    }
-
-    render(): React$Node {
-        const {disabled} = this.props;
-
-        const itemClass = classNames(
-            linkStyles.item,
-            {
-                [linkStyles.clickable]: !disabled || !this.href,
-                [linkStyles.disabled]: disabled,
-            }
-        );
+        if (enableTarget !== undefined && enableTarget !== null && typeof enableTarget !== 'boolean') {
+            throw new Error('The "target" schema option must be a boolean if given!');
+        }
 
         return (
-            <Fragment>
-                <div className={linkStyles.link}>
-                    <div className={linkStyles.provider}>
-                        <SingleSelect
-                            disabled={!!disabled}
-                            onChange={this.handleProviderChange}
-                            skin="flat"
-                            value={this.provider}
-                        >
-                            {linkTypeRegistry.getKeys().map((key) => (
-                                <SingleSelect.Option key={key} value={key}>{key}</SingleSelect.Option>
-                            ))}
-                        </SingleSelect>
-                    </div>
-                    <div className={linkStyles.itemContainer}>
-                        <div className={itemClass} onClick={disabled || this.handleClick} role="button">
-                            { this.title }
-                        </div>
-                        {!disabled &&
-                            <button
-                                className={linkStyles.removeButton}
-                                onClick={this.handleRemove}
-                                type="button"
-                            >
-                                <Icon name="su-trash-alt" />
-                            </button>
-                        }
-                    </div>
-                </div>
-                {linkTypeRegistry.getKeys().map((key) => {
-                    const LinkOverlay = linkTypeRegistry.getOverlay(key);
-
-                    return (
-                        <LinkOverlay
-                            anchor={this.overlayAnchor}
-                            href={this.openOverlay === key ? this.overlayHref : undefined}
-                            key={key}
-                            locale={this.locale}
-                            onAnchorChange={this.anchorEnabled ? this.handleAnchorChange : undefined}
-                            onCancel={this.handleOverlayClose}
-                            onConfirm={this.handleOverlayConfirm}
-                            onHrefChange={this.handleHrefChange}
-                            onTargetChange={this.targetEnabled ? this.handleTargetChange : undefined}
-                            open={this.openOverlay === key}
-                            options={linkTypeRegistry.getOptions(key)}
-                            target={this.overlayTarget}
-                        />
-                    );
-                })}
-            </Fragment>
+            <LinkContainer
+                disabled={disabled === true}
+                enableAnchor={enableAnchor}
+                enableTarget={enableTarget}
+                locale={toJS(locale)}
+                onChange={onChange}
+                onFinish={onFinish}
+                types={types}
+                value={value}
+            />
         );
     }
-
-    @action handleRemove = () => {
-        this.overlayHref = undefined;
-        this.overlayProvider = undefined;
-        this.overlayTarget = undefined;
-        this.overlayAnchor = undefined;
-
-        this.href = undefined;
-        this.provider = undefined;
-        this.title = undefined;
-        this.target = undefined;
-        this.anchor = undefined;
-
-        this.handleOnChange();
-    };
-
-    @action handleClick = () => {
-        this.initOverlay();
-
-        this.openOverlay = this.provider;
-    };
-
-    @action handleProviderChange = (provider: string) => {
-        this.initOverlay();
-
-        if (this.overlayProvider !== provider) {
-            this.overlayHref = undefined;
-        }
-        this.overlayProvider = provider;
-        this.openOverlay = this.overlayProvider;
-    };
-
-    @action handleOverlayConfirm = () => {
-        if (!this.overlayHref) {
-            return;
-        }
-
-        this.href = this.overlayHref;
-        this.provider = this.overlayProvider;
-        this.title = this.overlayTitle;
-        this.target = this.overlayTarget;
-        this.anchor = this.overlayAnchor;
-
-        this.openOverlay = undefined;
-
-        this.handleOnChange();
-    };
-
-    @action handleOverlayClose = () => {
-        this.openOverlay = undefined;
-    };
-
-    @action handleAnchorChange = (anchor: ?string) => {
-        this.overlayAnchor = anchor;
-    };
-
-    @action handleTargetChange = (target: ?string) => {
-        this.overlayTarget = target;
-    };
-
-    @action handleHrefChange = (href: ?string | number, item: ?Object) => {
-        this.overlayHref = href;
-        this.overlayTitle = item?.title ?? String(href);
-    };
-
-    initOverlay = () => {
-        this.overlayHref = this.href;
-        this.overlayTarget = this.target;
-        this.overlayTitle = this.title;
-        this.overlayAnchor = this.anchor;
-    };
-
-    handleOnChange = () => {
-        const {onChange} = this.props;
-
-        onChange(
-            {
-                provider: this.provider,
-                target: this.targetEnabled ? this.target : undefined,
-                anchor: this.anchorEnabled ? this.anchor : undefined,
-                href: this.href,
-                title: this.title,
-                locale: toJS(this.locale),
-            }
-        );
-    };
 }
-
-export default Link;
