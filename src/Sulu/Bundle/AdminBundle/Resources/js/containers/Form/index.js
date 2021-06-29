@@ -32,6 +32,7 @@ import SmartContent from './fields/SmartContent';
 import TextArea from './fields/TextArea';
 import TextEditor from './fields/TextEditor';
 import Url from './fields/Url';
+import Link from './fields/Link';
 import type {FormStoreInterface, Schema, Types} from './types';
 
 export {
@@ -67,6 +68,7 @@ export {
     TextArea,
     TextEditor,
     Url,
+    Link,
 };
 export type {FormStoreInterface, Schema, Types};
 export default Form;

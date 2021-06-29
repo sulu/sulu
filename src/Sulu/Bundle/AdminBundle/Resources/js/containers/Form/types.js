@@ -133,12 +133,3 @@ export type FieldTypeProps<T> = {|
     types: ?Types,
     value: ?T,
 |};
-
-export type LinkTypeValue = {|
-    anchor: ?string,
-    href: ?string | number,
-    locale: ?string,
-    provider: ?string,
-    target: ?string,
-    title: ?string,
-|};
