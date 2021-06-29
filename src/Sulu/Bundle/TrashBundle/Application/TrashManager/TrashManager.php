@@ -24,7 +24,7 @@ use Sulu\Bundle\TrashBundle\Domain\Exception\StoreTrashItemHandlerNotFoundExcept
 use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
 use Sulu\Bundle\TrashBundle\Domain\Repository\TrashItemRepositoryInterface;
 
-class TrashManager implements TrashManagerInterface
+final class TrashManager implements TrashManagerInterface
 {
     /**
      * @var TrashItemRepositoryInterface
