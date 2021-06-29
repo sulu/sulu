@@ -56,11 +56,16 @@ class Link extends SimpleContentType
             return [];
         }
 
-        return [
-            'target' => $value['target'],
+        $result = [
             'provider' => $value['provider'],
             'locale' => $value['locale'],
         ];
+
+        if(isset($value['target'])){
+            $result['target'] =  $value['target'];
+        }
+
+        return $result;
     }
 
     public function getContentData(PropertyInterface $property)

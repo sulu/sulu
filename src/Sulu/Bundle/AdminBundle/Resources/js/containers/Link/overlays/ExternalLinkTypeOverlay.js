@@ -59,7 +59,7 @@ class ExternalLinkTypeOverlay extends React.Component<LinkTypeOverlayProps> {
             return;
         }
 
-        if (href.startsWith('mailto:')) {
+        if (href.startsWith('mailto:') && !!onTargetChange) {
             onTargetChange('_self');
         }
 
@@ -139,7 +139,7 @@ class ExternalLinkTypeOverlay extends React.Component<LinkTypeOverlayProps> {
                         />
                     </Form.Field>
 
-                    {this.protocol && this.protocol !== 'mailto:' &&
+                    {this.protocol && this.protocol !== 'mailto:' && !!onTargetChange &&
                         <Form.Field label={translate('sulu_admin.link_target')} required={true}>
                             <SingleSelect onChange={onTargetChange} value={target}>
                                 <SingleSelect.Option value="_blank">_blank</SingleSelect.Option>
@@ -169,9 +169,11 @@ class ExternalLinkTypeOverlay extends React.Component<LinkTypeOverlayProps> {
                         </Fragment>
                     }
 
-                    <Form.Field label={translate('sulu_admin.link_title')}>
-                        <Input onChange={onTitleChange} value={title} />
-                    </Form.Field>
+                    {!!onTitleChange &&
+                        <Form.Field label={translate('sulu_admin.link_title')}>
+                            <Input onChange={onTitleChange} value={title} />
+                        </Form.Field>
+                    }
                 </Form>
             </Dialog>
         );
