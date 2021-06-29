@@ -141,6 +141,17 @@ class LinkTagTest extends TestCase
                 [new LinkItem('123-123-123', 'Page-Title', '/de/test', true)],
                 '<a href="http://sulu.lo/de/test" title="Test-Title" class="test">Test-Content</a>',
             ],
+            [
+                '<sulu-link href="123-123-123#anchor" provider="article" title="Test-Title">Test-Content</sulu-link>',
+                [
+                    'href' => '123-123-123#anchor',
+                    'title' => 'Test-Title',
+                    'provider' => 'article',
+                    'content' => 'Test-Content',
+                ],
+                [new LinkItem('123-123-123', 'Page-Title', '/de/test', true)],
+                '<a href="http://sulu.lo/de/test#anchor" title="Test-Title">Test-Content</a>',
+            ],
         ];
     }
 
@@ -149,8 +160,11 @@ class LinkTagTest extends TestCase
      */
     public function testParseAll($tag, $attributes, $items, $expected)
     {
-        $hrefs = [$attributes['href']];
-        $this->providers[$attributes['provider']]->preload($hrefs, 'de', true)->willReturn($items);
+        $uuids = [
+            \explode('#', $attributes['href'], 2)[0],
+        ];
+
+        $this->providers[$attributes['provider']]->preload($uuids, 'de', true)->willReturn($items);
 
         $result = $this->linkTag->parseAll([$tag => $attributes], 'de');
 
@@ -464,6 +478,30 @@ class LinkTagTest extends TestCase
             [
                 '<sulu-link href="123-123-123" title="Test-Title" provider="article">Test-Content</sulu-link>' => [
                     'href' => '123-123-123',
+                    'title' => 'Test-Title',
+                    'content' => 'Test-Content',
+                    'provider' => 'article',
+                ],
+            ],
+            'de'
+        );
+
+        $this->assertEquals([], $result);
+    }
+
+    public function testValidateWithAnchor(): void
+    {
+        $this->providers['article']->preload(['123-123-123'], 'de', false)
+            ->willReturn(
+                [
+                    new LinkItem('123-123-123', 'Page-Title', '/de/test', true),
+                ]
+            );
+
+        $result = $this->linkTag->validateAll(
+            [
+                '<sulu-link href="123-123-123#anchor" title="Test-Title" provider="article">Test-Content</sulu-link>' => [
+                    'href' => '123-123-123#anchor',
                     'title' => 'Test-Title',
                     'content' => 'Test-Content',
                     'provider' => 'article',

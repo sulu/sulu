@@ -1,7 +1,7 @@
 // @flow
 import React, {Fragment} from 'react';
 import {render, unmountComponentAtNode} from 'react-dom';
-import {action, observable} from 'mobx';
+import {action, computed, observable} from 'mobx';
 import {Observer} from 'mobx-react';
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
 import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
@@ -22,7 +22,7 @@ import linkIcon from '!!raw-loader!./link.svg'; // eslint-disable-line import/no
 const DEFAULT_TARGET = '_self';
 
 const LINK_EVENT_TARGET = 'target';
-const LINK_EVENT_ID = 'id';
+const LINK_EVENT_HREF = 'href';
 const LINK_EVENT_PROVIDER = 'provider';
 const LINK_EVENT_TITLE = 'title';
 
@@ -41,8 +41,23 @@ export default class InternalLinkPlugin extends Plugin {
     @observable target: ?string = DEFAULT_TARGET;
     @observable id: ?string | number = undefined;
     @observable title: ?string;
+    @observable anchor: ?string;
     defaultText: ?string;
     balloon: typeof ContextualBalloon;
+
+    @computed get href(): ?string | number {
+        const {id, anchor} = this;
+
+        if (!id) {
+            return null;
+        }
+
+        if (anchor) {
+            return id + '#' + anchor.replace(/^#+/g, '');
+        }
+
+        return id;
+    }
 
     init() {
         this.internalLinkElement = document.createElement('div');
@@ -59,8 +74,12 @@ export default class InternalLinkPlugin extends Plugin {
             this.selection = this.editor.model.document.selection;
             const node = findModelItemInSelection(this.editor);
 
-            const id = node.getAttribute(LINK_HREF_ATTRIBUTE);
+            const href = node.getAttribute(LINK_HREF_ATTRIBUTE);
+            const hrefParts = href.split('#', 2);
+            const id = hrefParts[0] || null;
+            const anchor = hrefParts[1] || null;
             this.id = !isNaN(id) ? parseInt(id) : id;
+            this.anchor = anchor;
             this.target = node.getAttribute(LINK_TARGET_ATTRIBUTE);
             this.title = node.getAttribute(LINK_TITLE_ATTRIBUTE);
             this.openOverlay = node.getAttribute(LINK_PROVIDER_ATTRIBUTE);
@@ -80,9 +99,11 @@ export default class InternalLinkPlugin extends Plugin {
 
                                 return (
                                     <InternalLinkOverlay
+                                        anchor={this.anchor}
                                         id={this.openOverlay === key ? this.id : undefined}
                                         key={key}
                                         locale={observable.box(locale)}
+                                        onAnchorChange={this.handleAnchorChange}
                                         onCancel={this.handleOverlayClose}
                                         onConfirm={this.handleOverlayConfirm}
                                         onResourceChange={this.handleResourceChange}
@@ -107,7 +128,7 @@ export default class InternalLinkPlugin extends Plugin {
             new LinkCommand(
                 this.editor,
                 {
-                    [LINK_HREF_ATTRIBUTE]: LINK_EVENT_ID,
+                    [LINK_HREF_ATTRIBUTE]: LINK_EVENT_HREF,
                     [LINK_TARGET_ATTRIBUTE]: LINK_EVENT_TARGET,
                     [LINK_TITLE_ATTRIBUTE]: LINK_EVENT_TITLE,
                     [LINK_PROVIDER_ATTRIBUTE]: LINK_EVENT_PROVIDER,
@@ -164,6 +185,7 @@ export default class InternalLinkPlugin extends Plugin {
                     this.target = DEFAULT_TARGET;
                     this.title = undefined;
                     this.id = undefined;
+                    this.anchor = undefined;
                 }));
 
                 list.items.add(listItem);
@@ -213,7 +235,7 @@ export default class InternalLinkPlugin extends Plugin {
         this.editor.execute(
             'internalLink',
             {
-                [LINK_EVENT_ID]: this.id,
+                [LINK_EVENT_HREF]: this.href,
                 [LINK_EVENT_PROVIDER]: this.openOverlay,
                 selection: this.selection,
                 [LINK_EVENT_TARGET]: this.target,
@@ -226,6 +248,10 @@ export default class InternalLinkPlugin extends Plugin {
 
     @action handleOverlayClose = () => {
         this.openOverlay = undefined;
+    };
+
+    @action handleAnchorChange = (anchor: ?string) => {
+        this.anchor = anchor;
     };
 
     @action handleTargetChange = (target: ?string) => {

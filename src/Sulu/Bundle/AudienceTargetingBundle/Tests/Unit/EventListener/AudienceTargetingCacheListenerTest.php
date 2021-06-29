@@ -26,7 +26,7 @@ class AudienceTargetingCacheListenerTest extends TestCase
 {
     use ReadObjectAttributeTrait;
 
-    public function testHandle()
+    public function testHandle(): void
     {
         $request = $this->getRequest();
         $response = $this->getResponse();
@@ -71,7 +71,20 @@ class AudienceTargetingCacheListenerTest extends TestCase
         );
     }
 
-    public function testHandleWithCorrectCookies()
+    public function testHandleInternalRequest(): void
+    {
+        $request = $this->getRequest();
+        $request->attributes->set('internalRequest', true);
+        $response = $this->getResponse();
+        $httpCache = $this->prophesize(SuluHttpCache::class);
+        $httpCache->handle(Argument::any())
+            ->shouldNotBeCalled();
+
+        $audienceTargetingCacheListener = new AudienceTargetingCacheListener();
+        $audienceTargetingCacheListener->preHandle($this->getCacheEvent($httpCache->reveal(), $request, $response));
+    }
+
+    public function testHandleWithCorrectCookies(): void
     {
         $request = $this->getRequest(true);
         $response = $this->getResponse();
