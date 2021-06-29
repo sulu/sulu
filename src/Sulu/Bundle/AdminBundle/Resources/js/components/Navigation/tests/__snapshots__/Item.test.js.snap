@@ -10,9 +10,13 @@ exports[`The component should render 1`] = `
   >
     <span
       aria-label="su-search"
-      class="su-search"
+      class="su-search icon"
     />
-    Test
+    <span
+      class="text"
+    >
+      Test
+    </span>
   </div>
 </div>
 `;
@@ -27,9 +31,13 @@ exports[`The component should render active 1`] = `
   >
     <span
       aria-label="su-search"
-      class="su-search"
+      class="su-search icon"
     />
-    Test
+    <span
+      class="text"
+    >
+      Test
+    </span>
   </div>
 </div>
 `;
@@ -44,16 +52,20 @@ exports[`The component should render with children 1`] = `
   >
     <span
       aria-label="su-cog"
-      class="su-cog"
+      class="su-cog icon"
     />
-    Settings
+    <span
+      class="text"
+    >
+      Settings
+    </span>
+    <span
+      aria-label="su-angle-right"
+      class="su-angle-right clickable childrenIndicator"
+      role="button"
+      tabindex="0"
+    />
   </div>
-  <span
-    aria-label="su-angle-right"
-    class="su-angle-right clickable childrenIndicator"
-    role="button"
-    tabindex="0"
-  />
 </div>
 `;
 
@@ -67,9 +79,19 @@ exports[`The component should render with children an active child and expanded 
   >
     <span
       aria-label="su-cog"
-      class="su-cog"
+      class="su-cog icon"
     />
-    Settings
+    <span
+      class="text"
+    >
+      Settings
+    </span>
+    <span
+      aria-label="su-angle-down"
+      class="su-angle-down clickable childrenIndicator"
+      role="button"
+      tabindex="0"
+    />
   </div>
   <div>
     <div
@@ -79,7 +101,11 @@ exports[`The component should render with children an active child and expanded 
         class="title"
         role="button"
       >
-        Settings 1
+        <span
+          class="text"
+        >
+          Settings 1
+        </span>
       </div>
     </div>
     <div
@@ -89,15 +115,13 @@ exports[`The component should render with children an active child and expanded 
         class="title"
         role="button"
       >
-        Settings 2
+        <span
+          class="text"
+        >
+          Settings 2
+        </span>
       </div>
     </div>
   </div>
-  <span
-    aria-label="su-angle-down"
-    class="su-angle-down clickable childrenIndicator"
-    role="button"
-    tabindex="0"
-  />
 </div>
 `;

@@ -1,23 +1,16 @@
 @import '../../containers/Application/colors.scss';
 
 $color: $silver;
-$backgroundColor: $ebonyClay;
 $activeColor: $shakespeare;
-$activeBackgroundColor: $ebonyClayDark;
+$activeBackgroundColor: $ebonyClay;
 
 .item {
-    color: $color;
     font-size: 14px;
     line-height: 16px;
     cursor: pointer;
-    background: $backgroundColor;
     box-sizing: border-box;
     padding-left: 4px;
     position: relative;
-
-    &:hover {
-        color: $activeColor;
-    }
 
     &.active {
         border-left: 4px solid $activeColor;
@@ -27,32 +20,45 @@ $activeBackgroundColor: $ebonyClayDark;
     }
 
     .title {
-        padding: 20px 40px 20px 36px;
+        display: flex;
+        align-items: center;
+        color: $color;
+        padding: 20px;
 
-        span {
+        &:hover {
+            color: $activeColor;
+        }
+
+        .icon {
+            flex: 0 0 auto;
             margin-right: 20px;
             width: 15px;
         }
+
+        .text {
+            flex: 1 1 auto;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+        }
+
+        .children-indicator {
+            flex: 0 0 auto;
+            margin-left: 20px;
+        }
     }
 
-    .children-indicator {
-        position: absolute;
-        right: 20px;
-        top: 20px;
-    }
-
-    /** Child **/
+    /* Child */
     .item {
         font-size: 12px;
         background: inherit;
         font-weight: normal;
-        margin-left: 30px;
+        margin-left: 0;
         padding-left: 0;
 
         .title {
             padding-top: 0;
             padding-bottom: 15px;
-            padding-left: 41px;
+            padding-left: 55px;
         }
 
         &.active {

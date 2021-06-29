@@ -43,6 +43,7 @@
     "sulu_admin.password": "Password",
     "sulu_admin.repeat_password": "Repeat password",
     "sulu_admin.login": "Login",
+    "sulu_admin.logout": "Log out",
     "sulu_admin.login_error": "This Email/Password combination is wrong. Please try again.",
     "sulu_admin.to_login": "Back to login",
     "sulu_admin.reset": "Reset",

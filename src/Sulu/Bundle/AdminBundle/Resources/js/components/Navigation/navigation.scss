@@ -1,170 +1,66 @@
 @import './variables.scss';
 @import '../../containers/Application/colors.scss';
 
-$navigationBackgroundColor: $cloudBurst;
 $color: $white;
-$versionColor: $silver;
-$userBackgroundColor: $pickledBluewood;
-$buttonColor: $silver;
-$pinColor: $shakespeare;
-$pinBackgroundColor: $cloudBurst;
-$pinActiveColor: $cloudBurst;
-$pinActiveBackgroundColor: $shakespeare;
-$pinBorderColor: $shakespeare;
+$activeColor: $shakespeare;
+$backgroundColor: $pickledBluewood;
+$darkBackgroundColor: $ebonyClay;
 
 .navigation {
     width: $navigationWidth;
-    background-color: $navigationBackgroundColor;
+    background-color: $backgroundColor;
     color: $color;
     min-height: 100%;
-    opacity: .94;
+    max-height: 100%;
     position: relative;
     display: flex;
     flex-direction: column;
 }
 
 .header {
+    flex: 0 0 60px;
     height: 60px;
-    background-color: rgba(0, 0, 0, .15);
-}
-
-.header-content {
-    padding: 20px 40px;
-}
-
-.header-icon {
-    font-size: 20px;
-    line-height: 20px;
-    padding-right: 20px;
-    vertical-align: middle;
-    height: 100%;
-}
-
-.header-title {
-    font-size: 16px;
-    line-height: 20px;
-    vertical-align: middle;
-    height: 100%;
-}
-
-.user {
-    min-height: 130px;
-    background-color: $userBackgroundColor;
-}
-
-.user-content {
-    padding: 40px;
+    padding-inline: 20px;
     display: flex;
-    font-size: 14px;
-    line-height: 16px;
     align-items: center;
-
-    img,
-    .no-user-image {
-        width: 50px;
-        height: 50px;
-        flex-grow: 0;
-        flex-shrink: 0;
-        border-radius: 25px;
-        cursor: pointer;
-    }
-
-    .no-user-image {
-        background-color: $silver;
-        color: $color;
-        border: 0;
-
-        span {
-            font-size: 30px;
-            height: 100%;
-            width: 100%;
-            text-align: center;
-            display: block;
-            line-height: 50px;
-        }
-    }
+    justify-content: space-between;
+    background: $darkBackgroundColor;
+    border-bottom: 1px solid $backgroundColor;
 }
 
-.user-profile {
-    margin-left: 20px;
-
-    .username {
-        color: $color;
-        font-size: 14px;
-        text-align: left;
-        cursor: pointer;
-    }
-
-    .logout {
-        font-size: 12px;
-        color: $buttonColor;
-        line-height: 16px;
-        margin-top: 10px;
-    }
-
-    button {
-        background: none;
-        border: none;
-        padding: 0;
-        cursor: pointer;
-
-        span {
-            padding-right: 10px;
-        }
-    }
-}
-
-.items {
-    flex-grow: 1;
-}
-
-.footer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
+.logo {
+    flex: 0 0 auto;
+    display: block;
+    font-size: 90px;
+    line-height: 1;
 }
 
 .pin {
-    position: relative;
     flex: 0 0 auto;
-    align-self: flex-end;
-    min-width: 25px;
-    height: 25px;
-    border-radius: 5px;
-    border: 1px $pinBorderColor solid;
-    margin-right: 20px;
-    background-color: $pinBackgroundColor;
-    color: $pinColor;
+    color: $color;
     cursor: pointer;
 
-    &:hover,
-    &.pin-active {
-        background-color: $pinActiveBackgroundColor;
-        color: $pinActiveColor;
-    }
-
-    .pin-icon {
-        line-height: 23px;
-        font-size: 14px;
-        margin-left: auto;
+    &.active {
+        color: $activeColor;
     }
 }
 
-.versions {
-    flex: 1 1 auto;
-    font-size: 10px;
-    line-height: 14px;
-    text-align: center;
-    color: $versionColor;
-    word-break: break-word;
+.pin-icon {
+    display: block;
+    line-height: 1;
+    font-size: 20px;
+}
 
-    a {
-        color: $versionColor;
-        text-decoration: none;
+.items {
+    position: relative;
+    flex-grow: 1;
+    overflow-y: auto;
+}
 
-        &:hover {
-            text-decoration: underline;
-        }
-    }
+.footer {
+    flex: 0 0 auto;
+    background: $darkBackgroundColor;
+    min-height: 60px;
+    padding-inline: 20px;
+    border-top: 1px solid $backgroundColor;
 }

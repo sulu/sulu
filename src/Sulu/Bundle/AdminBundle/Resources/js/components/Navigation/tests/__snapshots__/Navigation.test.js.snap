@@ -7,53 +7,10 @@ exports[`The component should render and handle clicks correctly 1`] = `
   <div
     class="header"
   >
-    <div
-      class="headerContent"
-    >
-      <span
-        aria-label="su-sulu"
-        class="su-sulu headerIcon"
-      />
-      <span
-        class="headerTitle"
-      >
-        sulu.io
-      </span>
-    </div>
-  </div>
-  <div
-    class="user"
-  >
-    <div
-      class="userContent"
-    >
-      <button
-        class="noUserImage"
-      >
-        <span
-          aria-label="fa-user"
-          class="fa fa-user"
-        />
-      </button>
-      <div
-        class="userProfile"
-      >
-        <button
-          class="username"
-        >
-          John Terence Maximilian Travolta
-        </button>
-        <button
-          class="logout"
-        >
-          <span
-            aria-label="su-exit"
-            class="su-exit"
-          />
-          Log out
-        </button>
-      </div>
-    </div>
+    <span
+      aria-label="su-sulu-logo"
+      class="su-sulu-logo logo"
+    />
   </div>
   <div
     class="items"
@@ -67,9 +24,13 @@ exports[`The component should render and handle clicks correctly 1`] = `
       >
         <span
           aria-label="su-search"
-          class="su-search"
+          class="su-search icon"
         />
-        Search
+        <span
+          class="text"
+        >
+          Search
+        </span>
       </div>
     </div>
     <div
@@ -81,9 +42,13 @@ exports[`The component should render and handle clicks correctly 1`] = `
       >
         <span
           aria-label="fa-bullseye"
-          class="fa fa-bullseye"
+          class="fa fa-bullseye icon"
         />
-        Webspaces
+        <span
+          class="text"
+        >
+          Webspaces
+        </span>
       </div>
     </div>
   </div>
@@ -91,18 +56,61 @@ exports[`The component should render and handle clicks correctly 1`] = `
     class="footer"
   >
     <div
-      class="versions"
+      class="userSection"
     >
-      <div>
-        Sulu (
-        <a
-          href="http://link.com"
-          rel="noopener noreferrer"
-          target="_blank"
+      <div
+        class="button"
+        role="button"
+      >
+        <div
+          class="userImage"
         >
-          2.0.0-RC1
-        </a>
-        )
+          <span
+            aria-label="su-user"
+            class="su-user placeholder"
+          />
+        </div>
+        <span
+          class="username"
+        >
+          John Terence Maximilian Travolta
+        </span>
+        <span
+          aria-label="su-angle-up"
+          class="su-angle-up"
+        />
+      </div>
+      <div
+        class="menu"
+      >
+        <button
+          class="button text hasText menuButton"
+          type="button"
+        >
+          <span
+            aria-label="su-user"
+            class="su-user buttonIcon"
+          />
+          <span
+            class="buttonText"
+          >
+            sulu_admin.edit_profile
+          </span>
+        </button>
+        <button
+          class="button text hasText menuButton"
+          type="button"
+        >
+          <span
+            aria-label="su-sign-out-alt"
+            class="su-sign-out-alt buttonIcon"
+          />
+          <span
+            class="buttonText"
+          >
+            sulu_admin.logout
+          </span>
+        </button>
       </div>
     </div>
   </div>
@@ -116,48 +124,18 @@ exports[`The component should render with all available props and handle clicks 
   <div
     class="header"
   >
+    <span
+      aria-label="su-sulu-logo"
+      class="su-sulu-logo logo"
+    />
     <div
-      class="headerContent"
+      class="pin"
+      role="button"
     >
       <span
-        aria-label="su-sulu"
-        class="su-sulu headerIcon"
+        aria-label="su-stick-right"
+        class="su-stick-right pinIcon"
       />
-      <span
-        class="headerTitle"
-      >
-        sulu.io
-      </span>
-    </div>
-  </div>
-  <div
-    class="user"
-  >
-    <div
-      class="userContent"
-    >
-      <img
-        src="http://lorempixel.com/200/200"
-        title="John Travolta"
-      />
-      <div
-        class="userProfile"
-      >
-        <button
-          class="username"
-        >
-          John Travolta
-        </button>
-        <button
-          class="logout"
-        >
-          <span
-            aria-label="su-exit"
-            class="su-exit"
-          />
-          Log out
-        </button>
-      </div>
     </div>
   </div>
   <div
@@ -172,9 +150,13 @@ exports[`The component should render with all available props and handle clicks 
       >
         <span
           aria-label="su-search"
-          class="su-search"
+          class="su-search icon"
         />
-        Search
+        <span
+          class="text"
+        >
+          Search
+        </span>
       </div>
     </div>
     <div
@@ -186,9 +168,13 @@ exports[`The component should render with all available props and handle clicks 
       >
         <span
           aria-label="su-webspace"
-          class="su-webspace"
+          class="su-webspace icon"
         />
-        Webspaces
+        <span
+          class="text"
+        >
+          Webspaces
+        </span>
       </div>
     </div>
     <div
@@ -200,9 +186,13 @@ exports[`The component should render with all available props and handle clicks 
       >
         <span
           aria-label="fa-image"
-          class="fa fa-image"
+          class="fa fa-image icon"
         />
-        Media
+        <span
+          class="text"
+        >
+          Media
+        </span>
       </div>
     </div>
     <div
@@ -214,9 +204,13 @@ exports[`The component should render with all available props and handle clicks 
       >
         <span
           aria-label="fa-newspaper-o"
-          class="fa fa-newspaper-o"
+          class="fa fa-newspaper-o icon"
         />
-        Article
+        <span
+          class="text"
+        >
+          Article
+        </span>
       </div>
     </div>
     <div
@@ -228,9 +222,13 @@ exports[`The component should render with all available props and handle clicks 
       >
         <span
           aria-label="fa-sticky-note-o"
-          class="fa fa-sticky-note-o"
+          class="fa fa-sticky-note-o icon"
         />
-        Snippets
+        <span
+          class="text"
+        >
+          Snippets
+        </span>
       </div>
     </div>
     <div
@@ -242,9 +240,19 @@ exports[`The component should render with all available props and handle clicks 
       >
         <span
           aria-label="su-user-1"
-          class="su-user-1"
+          class="su-user-1 icon"
         />
-        Contact
+        <span
+          class="text"
+        >
+          Contact
+        </span>
+        <span
+          aria-label="su-angle-down"
+          class="su-angle-down clickable childrenIndicator"
+          role="button"
+          tabindex="0"
+        />
       </div>
       <div>
         <div
@@ -254,7 +262,11 @@ exports[`The component should render with all available props and handle clicks 
             class="title"
             role="button"
           >
-            Contact 1
+            <span
+              class="text"
+            >
+              Contact 1
+            </span>
           </div>
         </div>
         <div
@@ -264,7 +276,11 @@ exports[`The component should render with all available props and handle clicks 
             class="title"
             role="button"
           >
-            Contact 2
+            <span
+              class="text"
+            >
+              Contact 2
+            </span>
           </div>
         </div>
         <div
@@ -274,16 +290,14 @@ exports[`The component should render with all available props and handle clicks 
             class="title"
             role="button"
           >
-            Contact 3
+            <span
+              class="text"
+            >
+              Contact 3
+            </span>
           </div>
         </div>
       </div>
-      <span
-        aria-label="su-angle-down"
-        class="su-angle-down clickable childrenIndicator"
-        role="button"
-        tabindex="0"
-      />
     </div>
     <div
       class="item"
@@ -294,54 +308,83 @@ exports[`The component should render with all available props and handle clicks 
       >
         <span
           aria-label="fa-gear"
-          class="fa fa-gear"
+          class="fa fa-gear icon"
         />
-        Settings
+        <span
+          class="text"
+        >
+          Settings
+        </span>
+        <span
+          aria-label="su-angle-right"
+          class="su-angle-right clickable childrenIndicator"
+          role="button"
+          tabindex="0"
+        />
       </div>
-      <span
-        aria-label="su-angle-right"
-        class="su-angle-right clickable childrenIndicator"
-        role="button"
-        tabindex="0"
-      />
     </div>
   </div>
   <div
     class="footer"
   >
-    <button
-      class="pin"
-      type="button"
-    >
-      <span
-        aria-label="fa-thumb-tack"
-        class="fa fa-thumb-tack pinIcon"
-      />
-    </button>
     <div
-      class="versions"
+      class="userSection"
     >
-      <div>
-        sulu.io (
-        <a
-          href="http://link.com"
-          rel="noopener noreferrer"
-          target="_blank"
+      <div
+        class="button"
+        role="button"
+      >
+        <div
+          class="userImage"
         >
-          1.0.0
-        </a>
-        )
+          <img
+            alt="John Travolta"
+            class="image"
+            src="http://lorempixel.com/200/200"
+            title="John Travolta"
+          />
+        </div>
+        <span
+          class="username"
+        >
+          John Travolta
+        </span>
+        <span
+          aria-label="su-angle-up"
+          class="su-angle-up"
+        />
       </div>
-      <div>
-        Sulu (
-        <a
-          href="http://link.com"
-          rel="noopener noreferrer"
-          target="_blank"
+      <div
+        class="menu"
+      >
+        <button
+          class="button text hasText menuButton"
+          type="button"
         >
-          2.0.0-RC1
-        </a>
-        )
+          <span
+            aria-label="su-user"
+            class="su-user buttonIcon"
+          />
+          <span
+            class="buttonText"
+          >
+            sulu_admin.edit_profile
+          </span>
+        </button>
+        <button
+          class="button text hasText menuButton"
+          type="button"
+        >
+          <span
+            aria-label="su-sign-out-alt"
+            class="su-sign-out-alt buttonIcon"
+          />
+          <span
+            class="buttonText"
+          >
+            sulu_admin.logout
+          </span>
+        </button>
       </div>
     </div>
   </div>

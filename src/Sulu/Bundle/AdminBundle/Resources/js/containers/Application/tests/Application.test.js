@@ -4,6 +4,10 @@ import {render, mount} from 'enzyme';
 import Router, {Route} from '../../../services/Router';
 import Application from '../Application';
 
+jest.mock('../../../utils/Translator', () => ({
+    translate: (key) => key,
+}));
+
 jest.mock('../../../services/Router/Router', () => jest.fn(function() {
     this.attributes = {};
 }));
@@ -186,7 +190,7 @@ test('Pin navigation', () => {
 
     const view = mount(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
     view.find('Button[icon="su-bars"]').simulate('click');
-    view.find('button.pin').simulate('click');
+    view.find('.pin').simulate('click');
 
     expect(view.find('Navigation').at(0).prop('pinned')).toEqual(true);
     expect(mockUserStoreSetPersistentSetting).toBeCalledWith('sulu_admin.application.navigation_pinned', true);
@@ -204,8 +208,8 @@ test('Pin navigation from beginning', () => {
 
     const view = mount(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
     expect(view.find('Button[icon="su-bars"]')).toHaveLength(0);
-    expect(view.find('Button[icon="su-sulu"]')).toHaveLength(0);
-    expect(view.find('button.pin')).toHaveLength(1);
+    expect(view.find('Button[icon="su-sulu-logo"]')).toHaveLength(0);
+    expect(view.find('.pin')).toHaveLength(1);
 
     expect(mockUserStoreGetPersistentSetting).toBeCalledWith('sulu_admin.application.navigation_pinned');
 
@@ -224,8 +228,8 @@ test('Do not pin navigation from beginning', () => {
 
     const view = mount(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
     expect(view.find('Button[icon="su-bars"]')).toHaveLength(1);
-    expect(view.find('Button[icon="su-sulu"]')).toHaveLength(0);
-    expect(view.find('button.pin')).toHaveLength(1);
+    expect(view.find('Button[icon="su-sulu-logo"]')).toHaveLength(0);
+    expect(view.find('.pin')).toHaveLength(1);
 
     expect(mockUserStoreGetPersistentSetting).toBeCalledWith('sulu_admin.application.navigation_pinned');
 

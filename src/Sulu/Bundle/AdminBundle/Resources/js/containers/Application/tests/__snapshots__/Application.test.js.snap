@@ -14,52 +14,18 @@ Array [
         <div
           class="header"
         >
+          <span
+            aria-label="su-sulu-logo"
+            class="su-sulu-logo logo"
+          />
           <div
-            class="headerContent"
+            class="pin"
+            role="button"
           >
             <span
-              aria-label="su-sulu"
-              class="su-sulu headerIcon"
+              aria-label="su-stick-right"
+              class="su-stick-right pinIcon"
             />
-            <span
-              class="headerTitle"
-            >
-              Sulu
-            </span>
-          </div>
-        </div>
-        <div
-          class="user"
-        >
-          <div
-            class="userContent"
-          >
-            <button
-              class="noUserImage"
-            >
-              <span
-                aria-label="fa-user"
-                class="fa fa-user"
-              />
-            </button>
-            <div
-              class="userProfile"
-            >
-              <button
-                class="username"
-              >
-                Hikaru Sulu
-              </button>
-              <button
-                class="logout"
-              >
-                <span
-                  aria-label="su-exit"
-                  class="su-exit"
-                />
-                Log out
-              </button>
-            </div>
           </div>
         </div>
         <div
@@ -68,28 +34,62 @@ Array [
         <div
           class="footer"
         >
-          <button
-            class="pin"
-            type="button"
-          >
-            <span
-              aria-label="fa-thumb-tack"
-              class="fa fa-thumb-tack pinIcon"
-            />
-          </button>
           <div
-            class="versions"
+            class="userSection"
           >
-            <div>
-              Sulu (
-              <a
-                href="https://github.com/sulu/sulu/releases"
-                rel="noopener noreferrer"
-                target="_blank"
+            <div
+              class="button"
+              role="button"
+            >
+              <div
+                class="userImage"
               >
-                2.0.0-RC1
-              </a>
-              )
+                <span
+                  aria-label="su-user"
+                  class="su-user placeholder"
+                />
+              </div>
+              <span
+                class="username"
+              >
+                Hikaru Sulu
+              </span>
+              <span
+                aria-label="su-angle-up"
+                class="su-angle-up"
+              />
+            </div>
+            <div
+              class="menu"
+            >
+              <button
+                class="button text hasText menuButton"
+                type="button"
+              >
+                <span
+                  aria-label="su-user"
+                  class="su-user buttonIcon"
+                />
+                <span
+                  class="buttonText"
+                >
+                  sulu_admin.edit_profile
+                </span>
+              </button>
+              <button
+                class="button text hasText menuButton"
+                type="button"
+              >
+                <span
+                  aria-label="su-sign-out-alt"
+                  class="su-sign-out-alt buttonIcon"
+                />
+                <span
+                  class="buttonText"
+                >
+                  sulu_admin.logout
+                </span>
+              </button>
             </div>
           </div>
         </div>
@@ -197,52 +197,18 @@ Array [
         <div
           class="header"
         >
+          <span
+            aria-label="su-sulu-logo"
+            class="su-sulu-logo logo"
+          />
           <div
-            class="headerContent"
+            class="pin"
+            role="button"
           >
             <span
-              aria-label="su-sulu"
-              class="su-sulu headerIcon"
+              aria-label="su-stick-right"
+              class="su-stick-right pinIcon"
             />
-            <span
-              class="headerTitle"
-            >
-              Sulu
-            </span>
-          </div>
-        </div>
-        <div
-          class="user"
-        >
-          <div
-            class="userContent"
-          >
-            <button
-              class="noUserImage"
-            >
-              <span
-                aria-label="fa-user"
-                class="fa fa-user"
-              />
-            </button>
-            <div
-              class="userProfile"
-            >
-              <button
-                class="username"
-              >
-                Hikaru Sulu
-              </button>
-              <button
-                class="logout"
-              >
-                <span
-                  aria-label="su-exit"
-                  class="su-exit"
-                />
-                Log out
-              </button>
-            </div>
           </div>
         </div>
         <div
@@ -251,31 +217,62 @@ Array [
         <div
           class="footer"
         >
-          <button
-            class="pin"
-            type="button"
-          >
-            <span
-              aria-label="fa-thumb-tack"
-              class="fa fa-thumb-tack pinIcon"
-            />
-          </button>
           <div
-            class="versions"
+            class="userSection"
           >
-            <div>
-              Sulu (666)
-            </div>
-            <div>
-              Sulu (
-              <a
-                href="https://github.com/sulu/sulu/releases"
-                rel="noopener noreferrer"
-                target="_blank"
+            <div
+              class="button"
+              role="button"
+            >
+              <div
+                class="userImage"
               >
-                2.0.0-RC1
-              </a>
-              )
+                <span
+                  aria-label="su-user"
+                  class="su-user placeholder"
+                />
+              </div>
+              <span
+                class="username"
+              >
+                Hikaru Sulu
+              </span>
+              <span
+                aria-label="su-angle-up"
+                class="su-angle-up"
+              />
+            </div>
+            <div
+              class="menu"
+            >
+              <button
+                class="button text hasText menuButton"
+                type="button"
+              >
+                <span
+                  aria-label="su-user"
+                  class="su-user buttonIcon"
+                />
+                <span
+                  class="buttonText"
+                >
+                  sulu_admin.edit_profile
+                </span>
+              </button>
+              <button
+                class="button text hasText menuButton"
+                type="button"
+              >
+                <span
+                  aria-label="su-sign-out-alt"
+                  class="su-sign-out-alt buttonIcon"
+                />
+                <span
+                  class="buttonText"
+                >
+                  sulu_admin.logout
+                </span>
+              </button>
             </div>
           </div>
         </div>
@@ -721,52 +718,18 @@ Array [
         <div
           class="header"
         >
+          <span
+            aria-label="su-sulu-logo"
+            class="su-sulu-logo logo"
+          />
           <div
-            class="headerContent"
+            class="pin"
+            role="button"
           >
             <span
-              aria-label="su-sulu"
-              class="su-sulu headerIcon"
+              aria-label="su-stick-right"
+              class="su-stick-right pinIcon"
             />
-            <span
-              class="headerTitle"
-            >
-              Sulu
-            </span>
-          </div>
-        </div>
-        <div
-          class="user"
-        >
-          <div
-            class="userContent"
-          >
-            <button
-              class="noUserImage"
-            >
-              <span
-                aria-label="fa-user"
-                class="fa fa-user"
-              />
-            </button>
-            <div
-              class="userProfile"
-            >
-              <button
-                class="username"
-              >
-                Hikaru Sulu
-              </button>
-              <button
-                class="logout"
-              >
-                <span
-                  aria-label="su-exit"
-                  class="su-exit"
-                />
-                Log out
-              </button>
-            </div>
           </div>
         </div>
         <div
@@ -775,28 +738,62 @@ Array [
         <div
           class="footer"
         >
-          <button
-            class="pin"
-            type="button"
-          >
-            <span
-              aria-label="fa-thumb-tack"
-              class="fa fa-thumb-tack pinIcon"
-            />
-          </button>
           <div
-            class="versions"
+            class="userSection"
           >
-            <div>
-              Sulu (
-              <a
-                href="https://github.com/sulu/sulu/releases"
-                rel="noopener noreferrer"
-                target="_blank"
+            <div
+              class="button"
+              role="button"
+            >
+              <div
+                class="userImage"
               >
-                2.0.0-RC1
-              </a>
-              )
+                <span
+                  aria-label="su-user"
+                  class="su-user placeholder"
+                />
+              </div>
+              <span
+                class="username"
+              >
+                Hikaru Sulu
+              </span>
+              <span
+                aria-label="su-angle-up"
+                class="su-angle-up"
+              />
+            </div>
+            <div
+              class="menu"
+            >
+              <button
+                class="button text hasText menuButton"
+                type="button"
+              >
+                <span
+                  aria-label="su-user"
+                  class="su-user buttonIcon"
+                />
+                <span
+                  class="buttonText"
+                >
+                  sulu_admin.edit_profile
+                </span>
+              </button>
+              <button
+                class="button text hasText menuButton"
+                type="button"
+              >
+                <span
+                  aria-label="su-sign-out-alt"
+                  class="su-sign-out-alt buttonIcon"
+                />
+                <span
+                  class="buttonText"
+                >
+                  sulu_admin.logout
+                </span>
+              </button>
             </div>
           </div>
         </div>
@@ -908,52 +905,18 @@ Array [
         <div
           class="header"
         >
+          <span
+            aria-label="su-sulu-logo"
+            class="su-sulu-logo logo"
+          />
           <div
-            class="headerContent"
+            class="pin"
+            role="button"
           >
             <span
-              aria-label="su-sulu"
-              class="su-sulu headerIcon"
+              aria-label="su-stick-right"
+              class="su-stick-right pinIcon"
             />
-            <span
-              class="headerTitle"
-            >
-              Sulu
-            </span>
-          </div>
-        </div>
-        <div
-          class="user"
-        >
-          <div
-            class="userContent"
-          >
-            <button
-              class="noUserImage"
-            >
-              <span
-                aria-label="fa-user"
-                class="fa fa-user"
-              />
-            </button>
-            <div
-              class="userProfile"
-            >
-              <button
-                class="username"
-              >
-                Hikaru Sulu
-              </button>
-              <button
-                class="logout"
-              >
-                <span
-                  aria-label="su-exit"
-                  class="su-exit"
-                />
-                Log out
-              </button>
-            </div>
           </div>
         </div>
         <div
@@ -962,28 +925,62 @@ Array [
         <div
           class="footer"
         >
-          <button
-            class="pin"
-            type="button"
-          >
-            <span
-              aria-label="fa-thumb-tack"
-              class="fa fa-thumb-tack pinIcon"
-            />
-          </button>
           <div
-            class="versions"
+            class="userSection"
           >
-            <div>
-              Sulu (
-              <a
-                href="https://github.com/sulu/sulu/releases"
-                rel="noopener noreferrer"
-                target="_blank"
+            <div
+              class="button"
+              role="button"
+            >
+              <div
+                class="userImage"
               >
-                2.0.0-RC1
-              </a>
-              )
+                <span
+                  aria-label="su-user"
+                  class="su-user placeholder"
+                />
+              </div>
+              <span
+                class="username"
+              >
+                Hikaru Sulu
+              </span>
+              <span
+                aria-label="su-angle-up"
+                class="su-angle-up"
+              />
+            </div>
+            <div
+              class="menu"
+            >
+              <button
+                class="button text hasText menuButton"
+                type="button"
+              >
+                <span
+                  aria-label="su-user"
+                  class="su-user buttonIcon"
+                />
+                <span
+                  class="buttonText"
+                >
+                  sulu_admin.edit_profile
+                </span>
+              </button>
+              <button
+                class="button text hasText menuButton"
+                type="button"
+              >
+                <span
+                  aria-label="su-sign-out-alt"
+                  class="su-sign-out-alt buttonIcon"
+                />
+                <span
+                  class="buttonText"
+                >
+                  sulu_admin.logout
+                </span>
+              </button>
             </div>
           </div>
         </div>
