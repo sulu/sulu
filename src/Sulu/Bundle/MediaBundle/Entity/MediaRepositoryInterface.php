@@ -96,4 +96,9 @@ interface MediaRepositoryInterface extends RepositoryInterface
      * @throws NonUniqueResultException
      */
     public function count(array $filter);
+
+    /**
+     * @return array<array{id: int, resourceKey: string, depth: int}>
+     */
+    public function findMediaResourcesByCollection(int $collectionId, bool $includeDescendantCollections = true): array;
 }

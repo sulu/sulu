@@ -14,8 +14,10 @@ namespace Sulu\Bundle\MediaBundle\Entity;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr\Join;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
+use Sulu\Bundle\MediaBundle\Entity\Collection as CollectionEntity;
 use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer;
 use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
@@ -408,5 +410,84 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
     public function supportsDescendantType(string $type): bool
     {
         return $this->getClassName() === $type;
+    }
+
+    private function createDescendantCollectionsQueryBuilder(string $alias, int $ancestorId): QueryBuilder
+    {
+        $ancestorCollectionAlias = $alias . '_ancestorCollection';
+
+        return $this->createQueryBuilder($alias)
+            ->innerJoin(
+                CollectionInterface::class,
+                $ancestorCollectionAlias,
+                Join::WITH,
+                $alias . '.lft > ' . $ancestorCollectionAlias . '.lft AND ' . $alias . '.rgt < ' . $ancestorCollectionAlias . '.rgt'
+            )
+            ->where($ancestorCollectionAlias . '.id = :id')
+            ->setParameter('id', $ancestorId);
+    }
+
+    /**
+     * @return array<array{id: int, resourceKey: string, depth: int}>
+     */
+    public function findDescendantCollectionResources(int $ancestorId): array
+    {
+        return $this->createDescendantCollectionsQueryBuilder('collection', $ancestorId)
+            ->select('collection.id AS id')
+            ->addSelect('\'' . CollectionInterface::RESOURCE_KEY . '\' AS resourceKey')
+            ->addSelect('collection.depth AS depth')
+            ->distinct()
+            ->orderBy('collection.id', 'ASC')
+            ->getQuery()
+            ->getArrayResult();
+    }
+
+    private function createAuthorizedDescendantCollectionsQueryBuilder(
+        string $alias,
+        int $ancestorId,
+        UserInterface $user,
+        int $permission
+    ): QueryBuilder {
+        $qb = $this->createDescendantCollectionsQueryBuilder($alias, $ancestorId);
+
+        $this->accessControlQueryEnhancer->enhance(
+            $qb,
+            $user,
+            $permission,
+            CollectionEntity::class,
+            $alias
+        );
+
+        return $qb;
+    }
+
+    private function createUnauthorizedDescendantCollectionsQueryBuilder(
+        string $alias,
+        int $ancestorId,
+        UserInterface $user,
+        int $permission
+    ): QueryBuilder {
+        $qb = $this->createDescendantCollectionsQueryBuilder($alias, $ancestorId);
+
+        $authorizedDescendantCollectionsQb = $this
+            ->createAuthorizedDescendantCollectionsQueryBuilder('authorizedCollection', $ancestorId, $user, $permission)
+            ->select('authorizedCollection.id')
+            ->distinct()
+            ->orderBy('authorizedCollection.id', 'ASC');
+
+        $qb
+            ->andWhere($alias . '.id NOT IN (' . $authorizedDescendantCollectionsQb->getDQL() . ')')
+            ->setParameters($authorizedDescendantCollectionsQb->getParameters());
+
+        return $qb;
+    }
+
+    public function countUnauthorizedDescendantCollections(int $ancestorId, UserInterface $user, int $permission): int
+    {
+        return $this
+            ->createUnauthorizedDescendantCollectionsQueryBuilder('collection', $ancestorId, $user, $permission)
+            ->select('COUNT(collection.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 }

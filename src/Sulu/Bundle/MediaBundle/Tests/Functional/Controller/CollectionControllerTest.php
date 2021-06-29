@@ -19,9 +19,12 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
+use Sulu\Bundle\SecurityBundle\Entity\RoleRepository;
+use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Cache\CacheInterface;
 use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
+use Sulu\Component\Security\Authorization\AccessControl\AccessControlManager;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class CollectionControllerTest extends SuluTestCase
@@ -65,6 +68,16 @@ class CollectionControllerTest extends SuluTestCase
      * @var KernelBrowser
      */
     private $client;
+
+    /**
+     * @var RoleRepository
+     */
+    private $roleRepository;
+
+    /**
+     * @var AccessControlManager
+     */
+    private $accessControlManager;
 
     public function setUp(): void
     {
@@ -242,11 +255,11 @@ class CollectionControllerTest extends SuluTestCase
         return $mediaType;
     }
 
-    private function createRole()
+    private function createRole(string $name = 'Role', string $system = 'Website')
     {
         $role = new Role();
-        $role->setName('Role');
-        $role->setSystem('Website');
+        $role->setName($name);
+        $role->setSystem($system);
 
         $this->em->persist($role);
 
@@ -777,7 +790,7 @@ class CollectionControllerTest extends SuluTestCase
             ],
         ];
 
-        $this->accessControlManager->setPermissions(Collection::class, $this->collection1->getId(), $permissions);
+        $this->accessControlManager->setPermissions(Collection::class, (string) $this->collection1->getId(), $permissions);
 
         $this->client->request(
             'POST',
@@ -1189,18 +1202,19 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
-    public function testDeleteById()
+    public function testDeleteById(): void
     {
-        $collection1Id = $this->collection1->getId();
+        $collection = $this->createCollection($this->collectionType1);
+        $collectionId = $collection->getId();
 
         $this->em->clear();
 
-        $this->client->jsonRequest('DELETE', '/api/collections/' . $collection1Id);
+        $this->client->jsonRequest('DELETE', '/api/collections/' . $collectionId);
         $this->assertHttpStatusCode(204, $this->client->getResponse());
 
         $this->client->jsonRequest(
             'GET',
-            '/api/collections/' . $collection1Id . '?locale=en'
+            '/api/collections/' . $collectionId . '?locale=en'
         );
 
         $this->assertHttpStatusCode(404, $this->client->getResponse());
@@ -1208,6 +1222,150 @@ class CollectionControllerTest extends SuluTestCase
         $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(5005, $response->code);
         $this->assertTrue(isset($response->message));
+    }
+
+    public function testDeleteByIdWithChildren(): void
+    {
+        $collection = $this->createCollection($this->collectionType1);
+        $this->addMedia($collection, 1);
+        $collectionId = $collection->getId();
+
+        $child1 = $this->createCollection($this->collectionType1, [], $collection);
+        $this->addMedia($child1, 1);
+
+        $child11 = $this->createCollection($this->collectionType1, [], $child1);
+        $this->addMedia($child11, 1);
+
+        $child2 = $this->createCollection($this->collectionType1, [], $collection);
+        $this->addMedia($child2, 1);
+
+        $this->em->clear();
+
+        $this->client->jsonRequest('DELETE', '/api/collections/' . $collectionId);
+
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(409, $response);
+
+        $content = \json_decode((string) $response->getContent(), true);
+        $this->assertIsArray($content);
+        $this->assertArrayHasKey('errors', $content);
+        unset($content['errors']);
+
+        $this->assertEquals([
+            'code' => 1105,
+            'message' => 'Resource has 7 dependant resources.',
+            'dependantResourcesCount' => 7,
+            'dependantResources' => [
+                [
+                    [
+                        'id' => $child11->getMedia()->first()->getId(),
+                        'resourceKey' => 'media',
+                    ],
+                ],
+                [
+                    [
+                        'id' => $child11->getId(),
+                        'resourceKey' => 'collections',
+                    ],
+                    [
+                        'id' => $child1->getMedia()->first()->getId(),
+                        'resourceKey' => 'media',
+                    ],
+                    [
+                        'id' => $child2->getMedia()->first()->getId(),
+                        'resourceKey' => 'media',
+                    ],
+                ],
+                [
+                    [
+                        'id' => $child1->getId(),
+                        'resourceKey' => 'collections',
+                    ],
+                    [
+                        'id' => $child2->getId(),
+                        'resourceKey' => 'collections',
+                    ],
+                    [
+                        'id' => $collection->getMedia()->first()->getId(),
+                        'resourceKey' => 'media',
+                    ],
+                ],
+            ],
+        ], $content);
+    }
+
+    public function testDeleteByIdWithChildrenWithoutPermissions(): void
+    {
+        $role = $this->createRole('User', 'Sulu');
+
+        $userRole = new UserRole();
+        $userRole->setUser($this->getTestUser());
+        $userRole->setLocale('["en-gb", "de"]');
+        $userRole->setRole($role);
+        $this->em->persist($userRole);
+
+        $this->getTestUser()->addUserRole($userRole);
+        $this->em->flush();
+
+        $permissions = [
+            $role->getId() => [
+                'view' => true,
+                'edit' => true,
+                'add' => true,
+                'delete' => false,
+                'archive' => true,
+                'live' => true,
+                'security' => true,
+            ],
+        ];
+
+        $fullPermissions = [
+            $role->getId() => [
+                'view' => true,
+                'edit' => true,
+                'add' => true,
+                'delete' => true,
+                'archive' => true,
+                'live' => true,
+                'security' => true,
+            ],
+        ];
+
+        $collection = $this->createCollection($this->collectionType1);
+        $collectionId = $collection->getId();
+
+        $child1 = $this->createCollection($this->collectionType1, ['en-gb' => 'Child 1'], $collection);
+        $this->accessControlManager->setPermissions(Collection::class, (string) $child1->getId(), $permissions);
+
+        $child11 = $this->createCollection($this->collectionType1, ['en-gb' => 'Child 1-1'], $child1);
+        $this->accessControlManager->setPermissions(Collection::class, (string) $child11->getId(), $fullPermissions);
+
+        $child111 = $this->createCollection($this->collectionType1, ['en-gb' => 'Child 1-1-1'], $child11);
+        $this->accessControlManager->setPermissions(Collection::class, (string) $child111->getId(), $permissions);
+
+        $child12 = $this->createCollection($this->collectionType1, ['en-gb' => 'Child 1-2'], $child1);
+        $this->accessControlManager->setPermissions(Collection::class, (string) $child12->getId(), $permissions);
+
+        $child2 = $this->createCollection($this->collectionType1, ['en-gb' => 'Child 2'], $collection);
+        $this->accessControlManager->setPermissions(Collection::class, (string) $child2->getId(), $permissions);
+
+        $this->em->clear();
+
+        $this->client->jsonRequest('DELETE', '/api/collections/' . $collectionId);
+
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(403, $response);
+
+        $content = \json_decode((string) $response->getContent(), true);
+        $this->assertIsArray($content);
+        $this->assertArrayHasKey('errors', $content);
+        unset($content['errors']);
+
+        $this->assertEquals([
+            'code' => 1104,
+            'message' => 'Insufficient permissions for 4 descendant elements.',
+            'detail' => 'Insufficient permissions for 4 descendant elements.',
+        ], $content);
     }
 
     public function testDeleteByIdNotExisting()

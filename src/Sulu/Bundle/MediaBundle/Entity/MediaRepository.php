@@ -445,6 +445,38 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
         return $subQuery->getScalarResult();
     }
 
+    /**
+     * @return array<array{id: int, resourceKey: string, depth: int}>
+     */
+    public function findMediaResourcesByCollection(int $collectionId, bool $includeDescendantCollections = true): array
+    {
+        $qb = $this->createQueryBuilder('media')
+            ->select('media.id AS id')
+            ->addSelect('\'' . MediaInterface::RESOURCE_KEY . '\' AS resourceKey')
+            ->addSelect('collection.depth + 1 AS depth')
+            ->distinct()
+            ->innerJoin('media.collection', 'collection');
+
+        if (!$includeDescendantCollections) {
+            $qb->where('collection.id = :collectionId');
+        } else {
+            $qb
+                ->innerJoin(
+                    CollectionInterface::class,
+                    'ancestorCollection',
+                    Join::WITH,
+                    'collection.lft >= ancestorCollection.lft AND collection.rgt <= ancestorCollection.rgt'
+                )
+                ->where('ancestorCollection.id = :collectionId');
+        }
+
+        return $qb
+            ->orderBy('media.id', 'ASC')
+            ->setParameter('collectionId', $collectionId)
+            ->getQuery()
+            ->getArrayResult();
+    }
+
     public function setAccessControlQueryEnhancer(AccessControlQueryEnhancer $accessControlQueryEnhancer)
     {
         $this->accessControlQueryEnhancer = $accessControlQueryEnhancer;

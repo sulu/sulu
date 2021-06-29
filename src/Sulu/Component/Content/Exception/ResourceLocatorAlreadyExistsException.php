@@ -11,9 +11,10 @@
 
 namespace Sulu\Component\Content\Exception;
 
+use Sulu\Component\Rest\Exception\RestExceptionInterface;
 use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
 
-class ResourceLocatorAlreadyExistsException extends \Exception implements TranslationErrorMessageExceptionInterface
+class ResourceLocatorAlreadyExistsException extends \Exception implements RestExceptionInterface, TranslationErrorMessageExceptionInterface
 {
     /**
      * @var string
@@ -37,7 +38,7 @@ class ResourceLocatorAlreadyExistsException extends \Exception implements Transl
                 $this->resourceLocator,
                 $this->path
             ),
-            1103
+            static::EXCEPTION_CODE_RESOURCE_LOCATOR_ALREADY_EXISTS
         );
     }
 

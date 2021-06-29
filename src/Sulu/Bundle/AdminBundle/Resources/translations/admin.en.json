@@ -199,5 +199,6 @@
     "sulu_admin.sameDay": "Today",
     "sulu_admin.activity": "Activity",
     "sulu_admin.versions": "Versions",
-    "sulu_admin.activity_versions": "Activity & Versions"
+    "sulu_admin.activity_versions": "Activity & Versions",
+    "sulu_admin.insufficient_descendant_permissions": "Insufficient permissions for {count} descendant elements."
 }

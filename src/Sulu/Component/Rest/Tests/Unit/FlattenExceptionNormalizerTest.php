@@ -12,6 +12,7 @@
 namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Filter;
 
 use PHPUnit\Framework\TestCase;
+use Sulu\Component\Rest\Exception\DependantResourcesFoundException;
 use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
 use Sulu\Component\Rest\FlattenExceptionNormalizer;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
@@ -20,7 +21,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class FlattenExceptionNormalizerTest extends TestCase
 {
-    public function testNormalizeGeneralExceptionDebugTrue()
+    public function testNormalizeGeneralExceptionDebugTrue(): void
     {
         $decoratedNormalizer = $this->prophesize(NormalizerInterface::class);
         $translator = $this->prophesize(TranslatorInterface::class);
@@ -58,7 +59,7 @@ class FlattenExceptionNormalizerTest extends TestCase
         $this->assertStringContainsString('Exception: An unexpected error happened in', $result['errors'][0]);
     }
 
-    public function testNormalizeGeneralExceptionDebugFalse()
+    public function testNormalizeGeneralExceptionDebugFalse(): void
     {
         $decoratedNormalizer = $this->prophesize(NormalizerInterface::class);
         $translator = $this->prophesize(TranslatorInterface::class);
@@ -92,7 +93,7 @@ class FlattenExceptionNormalizerTest extends TestCase
         $this->assertArrayNotHasKey('errors', $result);
     }
 
-    public function testNormalizeTranslationErrorMessageExceptionDebugTrue()
+    public function testNormalizeTranslationErrorMessageExceptionDebugTrue(): void
     {
         $decoratedNormalizer = $this->prophesize(NormalizerInterface::class);
         $translator = $this->prophesize(TranslatorInterface::class);
@@ -108,6 +109,9 @@ class FlattenExceptionNormalizerTest extends TestCase
                 return 'error_message_translation_key';
             }
 
+            /**
+             * @return array<string, string>
+             */
             public function getMessageTranslationParameters(): array
             {
                 return [
@@ -153,7 +157,105 @@ class FlattenExceptionNormalizerTest extends TestCase
         $this->assertStringContainsString('Key already exists in', $result['errors'][0]);
     }
 
-    public function testNormalizeTranslationErrorMessageExceptionDebugFalse()
+    public function testNormalizeDependantResourcesFoundExceptionDebugFalse(): void
+    {
+        $decoratedNormalizer = $this->prophesize(NormalizerInterface::class);
+        $translator = $this->prophesize(TranslatorInterface::class);
+
+        $normalizer = new FlattenExceptionNormalizer(
+            $decoratedNormalizer->reveal(),
+            $translator->reveal()
+        );
+
+        $exception = new DependantResourcesFoundException([
+            [
+                ['id' => 3, 'resourceKey' => 'media'],
+            ],
+            [
+                ['id' => 3, 'resourceKey' => 'collections'],
+                ['id' => 2, 'resourceKey' => 'media'],
+            ],
+            [
+                ['id' => 2, 'resourceKey' => 'collections'],
+                ['id' => 1, 'resourceKey' => 'media'],
+            ],
+        ], 5);
+
+        $flattenException = FlattenException::createFromThrowable($exception);
+
+        $decoratedNormalizer->normalize(
+            $flattenException,
+            'json',
+            ['exception' => $exception, 'debug' => false]
+        )->willReturn([
+            'code' => 409,
+            'message' => $exception->getMessage(),
+        ]);
+
+        $result = $normalizer->normalize(
+            $flattenException,
+            'json',
+            ['exception' => $exception, 'debug' => false]
+        );
+
+        $this->assertIsArray($result);
+        $this->assertSame(1105, $result['code']);
+        $this->assertSame($exception->getMessage(), $result['message']);
+        $this->assertSame($exception->getDependantResourcesCount(), $result['dependantResourcesCount']);
+        $this->assertEquals($exception->getDependantResources(), $result['dependantResources']);
+        $this->assertArrayNotHasKey('errors', $result);
+    }
+
+    public function testNormalizeDependantResourcesFoundExceptionDebugTrue(): void
+    {
+        $decoratedNormalizer = $this->prophesize(NormalizerInterface::class);
+        $translator = $this->prophesize(TranslatorInterface::class);
+
+        $normalizer = new FlattenExceptionNormalizer(
+            $decoratedNormalizer->reveal(),
+            $translator->reveal()
+        );
+
+        $exception = new DependantResourcesFoundException([
+            [
+                ['id' => 3, 'resourceKey' => 'media'],
+            ],
+            [
+                ['id' => 3, 'resourceKey' => 'collections'],
+                ['id' => 2, 'resourceKey' => 'media'],
+            ],
+            [
+                ['id' => 2, 'resourceKey' => 'collections'],
+                ['id' => 1, 'resourceKey' => 'media'],
+            ],
+        ], 5);
+
+        $flattenException = FlattenException::createFromThrowable($exception);
+
+        $decoratedNormalizer->normalize(
+            $flattenException,
+            'json',
+            ['exception' => $exception, 'debug' => true]
+        )->willReturn([
+            'code' => 409,
+            'message' => $exception->getMessage(),
+        ]);
+
+        $result = $normalizer->normalize(
+            $flattenException,
+            'json',
+            ['exception' => $exception, 'debug' => true]
+        );
+
+        $this->assertIsArray($result);
+        $this->assertSame(1105, $result['code']);
+        $this->assertSame($exception->getMessage(), $result['message']);
+        $this->assertSame($exception->getDependantResourcesCount(), $result['dependantResourcesCount']);
+        $this->assertEquals($exception->getDependantResources(), $result['dependantResources']);
+        $this->assertArrayHasKey('errors', $result);
+    }
+
+    public function testNormalizeTranslationErrorMessageExceptionDebugFalse(): void
     {
         $decoratedNormalizer = $this->prophesize(NormalizerInterface::class);
         $translator = $this->prophesize(TranslatorInterface::class);
@@ -169,6 +271,9 @@ class FlattenExceptionNormalizerTest extends TestCase
                 return 'error_message_translation_key';
             }
 
+            /**
+             * @return array<string, string>
+             */
             public function getMessageTranslationParameters(): array
             {
                 return [

@@ -1,5 +1,20 @@
 # Upgrade
 
+## 2.x
+
+### MediaRepositoryInterface has changed
+
+A new method has been added to the `MediaRepositoryInterface`:
+
+- `findMediaResourcesByCollection`
+
+### CollectionRepositoryInterface has changed
+
+Two new methods have been added to the `CollectionManagerInterface`:
+
+- `findDescendantCollectionResources`
+- `countUnauthorizedDescendantCollections`
+
 ## 2.3.1
 
 ### Migrate permissions properties for pages

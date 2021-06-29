@@ -124,4 +124,11 @@ interface CollectionRepositoryInterface
      * @return string
      */
     public function findCollectionTypeById($id);
+
+    /**
+     * @return array<array{id: int, resourceKey: string, depth: int}>
+     */
+    public function findDescendantCollectionResources(int $ancestorId): array;
+
+    public function countUnauthorizedDescendantCollections(int $ancestorId, UserInterface $user, int $permission): int;
 }

@@ -198,5 +198,6 @@
     "sulu_admin.sameDay": "Heute",
     "sulu_admin.activity": "Aktivität",
     "sulu_admin.versions": "Versionierung",
-    "sulu_admin.activity_versions": "Aktivität & Versionierung"
+    "sulu_admin.activity_versions": "Aktivität & Versionierung",
+    "sulu_admin.insufficient_descendant_permissions": "Nicht ausreichende Berechtigungen für {count} untergeordnete Elemente."
 }

@@ -31,11 +31,14 @@ use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionTypeNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
+use Sulu\Component\Rest\Exception\DependantResourcesFoundException;
+use Sulu\Component\Rest\Exception\InsufficientDescendantPermissionsException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
+use Sulu\Component\Security\Authorization\PermissionTypes;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -568,8 +571,50 @@ class CollectionManager implements CollectionManagerInterface
         return $type;
     }
 
-    public function delete($id)
+    private function checkDescendantPermissionsForDelete(int $id): void
     {
+        $user = $this->getCurrentUser();
+
+        if (null === $user) {
+            return;
+        }
+
+        $unauthorizedDescendantCollectionsCount = $this->collectionRepository->countUnauthorizedDescendantCollections(
+            $id,
+            $user,
+            $this->permissions[PermissionTypes::DELETE]
+        );
+
+        if (!$unauthorizedDescendantCollectionsCount) {
+            return;
+        }
+
+        throw new InsufficientDescendantPermissionsException(
+            $unauthorizedDescendantCollectionsCount,
+            PermissionTypes::DELETE
+        );
+    }
+
+    private function checkDependantResourcesForDelete(int $id): void
+    {
+        $descendantResources = $this->findAllDescendantResources($id);
+
+        if (empty($descendantResources)) {
+            return;
+        }
+
+        $descendantResourcesCount = $this->countGroupedResources($descendantResources);
+
+        throw new DependantResourcesFoundException(
+            $descendantResources,
+            $descendantResourcesCount
+        );
+    }
+
+    public function delete($id/*, bool $forceRemoveChildren = false*/)
+    {
+        $forceRemoveChildren = \func_num_args() >= 2 ? (bool) \func_get_arg(1) : false;
+
         $collectionEntity = $this->collectionRepository->findCollectionById($id);
 
         if (!$collectionEntity) {
@@ -582,7 +627,13 @@ class CollectionManager implements CollectionManagerInterface
         $collectionTitle = $collectionMeta ? $collectionMeta->getTitle() : null;
         $locale = $collectionMeta ? $collectionMeta->getLocale() : null;
 
+        if (!$forceRemoveChildren) {
+            $this->checkDescendantPermissionsForDelete($id);
+            $this->checkDependantResourcesForDelete($id);
+        }
+
         $this->em->remove($collectionEntity);
+
         foreach ($collectionEntity->getMeta() as $meta) {
             $this->em->remove($meta);
         }
@@ -782,7 +833,7 @@ class CollectionManager implements CollectionManagerInterface
             }
         }
 
-        return;
+        return null;
     }
 
     private function getCollectionMeta(CollectionInterface $collection, ?string $locale): ?CollectionMeta
@@ -796,5 +847,58 @@ class CollectionManager implements CollectionManagerInterface
         }
 
         return $meta;
+    }
+
+    /**
+     * @param array<array{id: int, resourceKey: string, depth: int}> $resources
+     *
+     * @return array<int, array<array{id: int, resourceKey: string}>>
+     */
+    private function groupResourcesByDepth(array $resources): array
+    {
+        $grouped = [];
+
+        foreach ($resources as $resource) {
+            $depth = $resource['depth'];
+            unset($resource['depth']);
+
+            if (!isset($grouped[$depth])) {
+                $grouped[$depth] = [];
+            }
+
+            $grouped[$depth][] = $resource;
+        }
+
+        \krsort($grouped);
+
+        return \array_values($grouped);
+    }
+
+    /**
+     * @return array<int, array<array{id: int, resourceKey: string}>>
+     */
+    private function findAllDescendantResources(int $collectionId): array
+    {
+        $descendantCollections = $this->collectionRepository->findDescendantCollectionResources($collectionId);
+        $descendantMedia = $this->mediaRepository->findMediaResourcesByCollection($collectionId, true);
+
+        $result = \array_merge($descendantCollections, $descendantMedia);
+
+        return $this->groupResourcesByDepth($result);
+    }
+
+    /**
+     * @param array<int, array<array{id: int, resourceKey: string}>> $groupedResources
+     */
+    private function countGroupedResources(array $groupedResources): int
+    {
+        $counter = 0;
+
+        /** @var array<array{id: int, resourceKey: string}> $resources */
+        foreach ($groupedResources as $resources) {
+            $counter += \count($resources);
+        }
+
+        return $counter;
     }
 }

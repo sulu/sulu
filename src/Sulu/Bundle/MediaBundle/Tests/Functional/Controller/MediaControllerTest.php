@@ -1452,27 +1452,6 @@ class MediaControllerTest extends SuluTestCase
         $this->assertFileNotExists($this->getStoragePath() . '/1/photo.jpeg');
     }
 
-    public function testDeleteCollection(): void
-    {
-        $media = $this->createMedia('photo');
-        $this->getEntityManager()->clear();
-        $mediaId = $media->getId();
-
-        $this->client->jsonRequest('DELETE', '/api/collections/' . $this->collection->getId());
-        $this->assertHttpStatusCode(204, $this->client->getResponse());
-
-        $this->client->jsonRequest(
-            'GET',
-            '/api/media/' . $mediaId . '?locale=en-gb'
-        );
-
-        $this->assertHttpStatusCode(404, $this->client->getResponse());
-
-        $response = \json_decode($this->client->getResponse()->getContent());
-        $this->assertEquals(5015, $response->code);
-        $this->assertTrue(isset($response->message));
-    }
-
     public function testDeleteByIdNotExisting(): void
     {
         $media = $this->createMedia('photo');
