@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Bundle\TrashBundle\Infrastructure\Doctrine\Repository;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Sulu\Bundle\TrashBundle\Domain\Exception\TrashItemNotFoundException;
 use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
@@ -22,16 +22,16 @@ use Sulu\Bundle\TrashBundle\Domain\Repository\TrashItemRepositoryInterface;
 final class TrashItemRepository implements TrashItemRepositoryInterface
 {
     /**
-     * @var EntityManager
+     * @var EntityManagerInterface
      */
-    protected $entityManager;
+    private $entityManager;
 
     /**
      * @var EntityRepository<TrashItemInterface>
      */
-    protected $entityRepository;
+    private $entityRepository;
 
-    public function __construct(EntityManager $entityManager)
+    public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
         $this->entityRepository = $entityManager->getRepository(TrashItemInterface::class);
