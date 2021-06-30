@@ -16,6 +16,7 @@ namespace Sulu\Bundle\TrashBundle\Infrastructure\Symfony\DependencyInjection;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\RestoreTrashItemHandlerInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\StoreTrashItemHandlerInterface;
+use Sulu\Bundle\TrashBundle\Domain\Exception\TrashItemNotFoundException;
 use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -62,6 +63,19 @@ class SuluTrashExtension extends Extension implements PrependExtensionInterface
                                 'list' => 'sulu_trash.get_trash-items',
                                 'detail' => 'sulu_trash.get_trash-item',
                             ],
+                        ],
+                    ],
+                ]
+            );
+        }
+
+        if ($container->hasExtension('fos_rest')) {
+            $container->prependExtensionConfig(
+                'fos_rest',
+                [
+                    'exception' => [
+                        'codes' => [
+                            TrashItemNotFoundException::class => 404,
                         ],
                     ],
                 ]
