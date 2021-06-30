@@ -340,6 +340,8 @@ class CategoryController extends AbstractRestController implements ClassResource
         $listBuilder->sort($fieldDescriptors['depth']);
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
+        // add default sort order
+        $listBuilder->sort($fieldDescriptors['name']);
         $listBuilder->addSelectField($fieldDescriptors['depth']);
         $listBuilder->addSelectField($fieldDescriptors['parent']);
         $listBuilder->addSelectField($fieldDescriptors['locale']);
