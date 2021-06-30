@@ -15,10 +15,12 @@ namespace Sulu\Bundle\TrashBundle\Application\TrashItemHandler;
 
 use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
 
-interface RestoreTrashItemHandlerInterface extends SupportableTrashItemHandlerInterface
+interface RestoreTrashItemHandlerInterface
 {
     /**
      * @param array<string, mixed> $restoreFormData
      */
     public function restore(TrashItemInterface $trashItem, array $restoreFormData): object;
+
+    public static function getResourceKey(): string;
 }

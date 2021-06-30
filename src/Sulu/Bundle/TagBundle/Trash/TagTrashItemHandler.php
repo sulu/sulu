@@ -18,30 +18,25 @@ use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\RestoreTrashItemHandlerInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\StoreTrashItemHandlerInterface;
-use Sulu\Bundle\TrashBundle\Domain\Factory\TrashItemFactoryInterface;
 use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
+use Sulu\Bundle\TrashBundle\Domain\Repository\TrashItemRepositoryInterface;
 
 final class TagTrashItemHandler implements StoreTrashItemHandlerInterface, RestoreTrashItemHandlerInterface
 {
     /**
-     * @var TrashItemFactoryInterface
+     * @var TrashItemRepositoryInterface
      */
-    private $trashItemFactory;
+    private $trashItemRepository;
 
     /**
      * @var TagManagerInterface
      */
     private $tagManager;
 
-    public function __construct(TrashItemFactoryInterface $trashItemFactory, TagManagerInterface $tagManager)
+    public function __construct(TrashItemRepositoryInterface $trashItemRepository, TagManagerInterface $tagManager)
     {
-        $this->trashItemFactory = $trashItemFactory;
+        $this->trashItemRepository = $trashItemRepository;
         $this->tagManager = $tagManager;
-    }
-
-    public function supports(string $resourceKey): bool
-    {
-        return TagInterface::RESOURCE_KEY === $resourceKey;
     }
 
     public function store(object $tag): TrashItemInterface
@@ -50,7 +45,7 @@ final class TagTrashItemHandler implements StoreTrashItemHandlerInterface, Resto
             throw new \InvalidArgumentException();
         }
 
-        return $this->trashItemFactory->create(
+        return $this->trashItemRepository->create(
             TagInterface::RESOURCE_KEY,
             (string) $tag->getId(),
             [
@@ -69,5 +64,10 @@ final class TagTrashItemHandler implements StoreTrashItemHandlerInterface, Resto
             (int) $trashItem->getResourceId(),
             $trashItem->getRestoreData()
         );
+    }
+
+    public static function getResourceKey(): string
+    {
+        return TagInterface::RESOURCE_KEY;
     }
 }

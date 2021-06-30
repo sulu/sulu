@@ -17,7 +17,6 @@ use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\RestoreTrashItemHandlerInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\StoreTrashItemHandlerInterface;
 use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
-use Sulu\Bundle\TrashBundle\Domain\Repository\TrashItemRepositoryInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
@@ -75,23 +74,28 @@ class SuluTrashExtension extends Extension implements PrependExtensionInterface
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
+        $this->loadServices($container);
+        $this->configurePersistence($config['objects'], $container);
+        $this->setParameters($container, $config);
+        $this->registerInterfacesForAutoconfiguration($container);
+    }
+
+    private function loadServices(ContainerBuilder $container): void
+    {
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../../../Resources/config'));
         $loader->load('services.xml');
+    }
 
-        $this->configurePersistence($config['objects'], $container);
-
-        $storageAdapter = $container->resolveEnvPlaceholders($config['storage']['adapter'], true);
-        $container->setParameter('sulu_trash.storage.adapter', $storageAdapter);
-
-        // set sulu_trash.trash_item_repository service based on configured storage adapter
-        $trashItemRepositoryService = $storageAdapter
-            ? 'sulu_trash.trash_item_repository.' . $storageAdapter
-            : 'sulu_trash.trash_item_repository.null';
-        $container->setAlias('sulu_trash.trash_item_repository', $trashItemRepositoryService);
-        $container->setAlias(TrashItemRepositoryInterface::class, 'sulu_trash.trash_item_repository');
-
+    /**
+     * @param mixed[] $config
+     */
+    private function setParameters(ContainerBuilder $container, array $config): void
+    {
         $container->setParameter('sulu_trash.restore_form_mapping', $config['restore_form']);
+    }
 
+    private function registerInterfacesForAutoconfiguration(ContainerBuilder $container): void
+    {
         $container->registerForAutoconfiguration(StoreTrashItemHandlerInterface::class)
             ->addTag('sulu_trash.store_trash_item_handler');
 

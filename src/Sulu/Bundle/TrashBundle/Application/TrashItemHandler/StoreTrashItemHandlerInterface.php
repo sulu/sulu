@@ -15,7 +15,9 @@ namespace Sulu\Bundle\TrashBundle\Application\TrashItemHandler;
 
 use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
 
-interface StoreTrashItemHandlerInterface extends SupportableTrashItemHandlerInterface
+interface StoreTrashItemHandlerInterface
 {
     public function store(object $resource): TrashItemInterface;
+
+    public static function getResourceKey(): string;
 }

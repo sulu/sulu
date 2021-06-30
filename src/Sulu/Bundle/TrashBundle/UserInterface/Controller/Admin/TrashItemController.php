@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Bundle\TrashBundle\UserInterface\Controller\Admin;
 
+use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use HandcraftedInTheAlps\RestRoutingBundle\Controller\Annotations\RouteResource;
 use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
@@ -51,6 +52,11 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class TrashItemController extends AbstractRestController implements ClassResourceInterface
 {
     use RequestParametersTrait;
+
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
 
     /**
      * @var DoctrineListBuilderFactoryInterface
@@ -101,6 +107,7 @@ class TrashItemController extends AbstractRestController implements ClassResourc
      * @param array<string, int> $permissions Inject `sulu_security.permissions` parameter
      */
     public function __construct(
+        EntityManagerInterface $entityManager,
         FieldDescriptorFactoryInterface $fieldDescriptorFactory,
         DoctrineListBuilderFactoryInterface $listBuilderFactory,
         RestHelperInterface $restHelper,
@@ -115,6 +122,7 @@ class TrashItemController extends AbstractRestController implements ClassResourc
     ) {
         parent::__construct($viewHandler, $tokenStorage);
 
+        $this->entityManager = $entityManager;
         $this->fieldDescriptorFactory = $fieldDescriptorFactory;
         $this->listBuilderFactory = $listBuilderFactory;
         $this->restHelper = $restHelper;
@@ -236,7 +244,9 @@ class TrashItemController extends AbstractRestController implements ClassResourc
         );
 
         $trashItem = $this->trashItemRepository->getOneBy(['id' => $id]);
+
         $this->trashManager->remove($trashItem);
+        $this->entityManager->flush();
 
         return $this->handleView(
             $this->view(null, 204)
@@ -279,6 +289,7 @@ class TrashItemController extends AbstractRestController implements ClassResourc
         );
 
         $restoredObject = $this->trashManager->restore($trashItem, $restoreFormData);
+        $this->entityManager->flush();
 
         return $this->handleView(
             $this->view($restoredObject)

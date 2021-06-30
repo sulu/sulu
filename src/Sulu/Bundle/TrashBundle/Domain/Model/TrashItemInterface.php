@@ -62,5 +62,5 @@ interface TrashItemInterface
 
     public function setUser(?UserInterface $user): self;
 
-    public function getTranslation(?string $locale = null): TrashItemTranslation;
+    public function getTranslation(?string $locale = null, bool $fallback = true): TrashItemTranslation;
 }
