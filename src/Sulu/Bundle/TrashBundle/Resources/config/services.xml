@@ -3,26 +3,19 @@
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
-        <!-- Factory -->
-        <service id="sulu_trash.trash_item_factory" class="Sulu\Bundle\TrashBundle\Domain\Factory\TrashItemFactory">
-            <argument type="service" id="security.helper" on-invalid="null"/>
-            <argument>%sulu.model.trash_item.class%</argument>
-        </service>
-        <service id="Sulu\Bundle\TrashBundle\Domain\Factory\TrashItemFactoryInterface" alias="sulu_trash.trash_item_factory"/>
-
         <!-- Repository -->
-        <service id="sulu_trash.trash_item_repository.null" class="Sulu\Bundle\TrashBundle\Domain\Repository\NullTrashItemRepository"/>
-
-        <service id="sulu_trash.trash_item_repository.doctrine" class="Sulu\Bundle\TrashBundle\Infrastructure\Doctrine\Repository\TrashItemRepository">
+        <service id="sulu_trash.trash_item_repository" class="Sulu\Bundle\TrashBundle\Infrastructure\Doctrine\Repository\TrashItemRepository">
             <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="security.helper" on-invalid="null"/>
         </service>
+        <service id="Sulu\Bundle\TrashBundle\Domain\Repository\TrashItemRepositoryInterface" alias="sulu_trash.trash_item_repository"/>
 
         <!-- TrashManager -->
         <service id="sulu_trash.trash_manager" class="Sulu\Bundle\TrashBundle\Application\TrashManager\TrashManager">
             <argument type="service" id="sulu_trash.trash_item_repository"/>
             <argument type="service" id="sulu_activity.domain_event_collector"/>
-            <argument type="tagged" tag="sulu_trash.store_trash_item_handler"/>
-            <argument type="tagged" tag="sulu_trash.restore_trash_item_handler"/>
+            <argument type="tagged_locator" tag="sulu_trash.store_trash_item_handler" index-by="resourceKey" default-index-method="getResourceKey"/>
+            <argument type="tagged_locator" tag="sulu_trash.restore_trash_item_handler" index-by="resourceKey" default-index-method="getResourceKey"/>
         </service>
         <service id="Sulu\Bundle\TrashBundle\Application\TrashManager\TrashManagerInterface" alias="sulu_trash.trash_manager"/>
 
@@ -41,6 +34,7 @@
         <service id="sulu_trash.trash_item_controller"
                  class="Sulu\Bundle\TrashBundle\UserInterface\Controller\Admin\TrashItemController"
                  public="true">
+            <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="sulu_core.list_builder.field_descriptor_factory"/>
             <argument type="service" id="sulu_core.doctrine_list_builder_factory"/>
             <argument type="service" id="sulu_core.doctrine_rest_helper"/>

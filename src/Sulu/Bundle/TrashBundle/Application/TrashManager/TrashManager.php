@@ -23,6 +23,7 @@ use Sulu\Bundle\TrashBundle\Domain\Exception\RestoreTrashItemHandlerNotFoundExce
 use Sulu\Bundle\TrashBundle\Domain\Exception\StoreTrashItemHandlerNotFoundException;
 use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
 use Sulu\Bundle\TrashBundle\Domain\Repository\TrashItemRepositoryInterface;
+use Symfony\Component\DependencyInjection\ServiceLocator;
 
 final class TrashManager implements TrashManagerInterface
 {
@@ -37,81 +38,75 @@ final class TrashManager implements TrashManagerInterface
     private $domainEventCollector;
 
     /**
-     * @var iterable<StoreTrashItemHandlerInterface>
+     * @var ServiceLocator
      */
-    private $storeTrashItemHandlers;
+    private $storeTrashItemHandlerLocator;
 
     /**
-     * @var iterable<RestoreTrashItemHandlerInterface>
+     * @var ServiceLocator
      */
-    private $restoreTrashItemHandlers;
+    private $restoreTrashItemHandlerLocator;
 
-    /**
-     * @param iterable<StoreTrashItemHandlerInterface> $storeTrashItemHandlers
-     * @param iterable<RestoreTrashItemHandlerInterface> $restoreTrashItemHandlers
-     */
     public function __construct(
         TrashItemRepositoryInterface $trashItemRepository,
         DomainEventCollectorInterface $domainEventCollector,
-        iterable $storeTrashItemHandlers,
-        iterable $restoreTrashItemHandlers
+        ServiceLocator $storeTrashItemHandlerLocator,
+        ServiceLocator $restoreTrashItemHandlerLocator
     ) {
         $this->trashItemRepository = $trashItemRepository;
         $this->domainEventCollector = $domainEventCollector;
-        $this->storeTrashItemHandlers = $storeTrashItemHandlers;
-        $this->restoreTrashItemHandlers = $restoreTrashItemHandlers;
+        $this->storeTrashItemHandlerLocator = $storeTrashItemHandlerLocator;
+        $this->restoreTrashItemHandlerLocator = $restoreTrashItemHandlerLocator;
     }
 
     public function store(string $resourceKey, object $object): TrashItemInterface
     {
-        foreach ($this->storeTrashItemHandlers as $storeTrashItemHandler) {
-            if (!$storeTrashItemHandler->supports($resourceKey)) {
-                continue;
-            }
-
-            $trashItem = $storeTrashItemHandler->store($object);
-
-            $this->domainEventCollector->collect(
-                new TrashItemCreatedEvent($trashItem)
-            );
-
-            $this->trashItemRepository->addAndCommit($trashItem);
-
-            return $trashItem;
+        if (!$this->storeTrashItemHandlerLocator->has($resourceKey)) {
+            throw new StoreTrashItemHandlerNotFoundException($resourceKey);
         }
 
-        throw new StoreTrashItemHandlerNotFoundException($resourceKey);
+        /** @var StoreTrashItemHandlerInterface $storeTrashItemHandler */
+        $storeTrashItemHandler = $this->storeTrashItemHandlerLocator->get($resourceKey);
+
+        $trashItem = $storeTrashItemHandler->store($object);
+
+        $this->domainEventCollector->collect(
+            new TrashItemCreatedEvent($trashItem)
+        );
+
+        $this->trashItemRepository->add($trashItem);
+
+        return $trashItem;
     }
 
     public function restore(TrashItemInterface $trashItem, array $restoreFormData): object
     {
         $resourceKey = $trashItem->getResourceKey();
 
-        foreach ($this->restoreTrashItemHandlers as $restoreTrashItemHandler) {
-            if (!$restoreTrashItemHandler->supports($resourceKey)) {
-                continue;
-            }
-
-            $object = $restoreTrashItemHandler->restore($trashItem, $restoreFormData);
-
-            $translation = $trashItem->getTranslation();
-
-            $this->domainEventCollector->collect(
-                new TrashItemRestoredEvent(
-                    (int) $trashItem->getId(),
-                    $trashItem->getResourceKey(),
-                    $trashItem->getResourceId(),
-                    $translation->getTitle(),
-                    $translation->getLocale()
-                )
-            );
-
-            $this->trashItemRepository->removeAndCommit($trashItem);
-
-            return $object;
+        if (!$this->restoreTrashItemHandlerLocator->has($resourceKey)) {
+            throw new RestoreTrashItemHandlerNotFoundException($resourceKey);
         }
 
-        throw new RestoreTrashItemHandlerNotFoundException($resourceKey);
+        /** @var RestoreTrashItemHandlerInterface $restoreTrashItemHandler */
+        $restoreTrashItemHandler = $this->restoreTrashItemHandlerLocator->get($resourceKey);
+
+        $object = $restoreTrashItemHandler->restore($trashItem, $restoreFormData);
+
+        $translation = $trashItem->getTranslation();
+
+        $this->domainEventCollector->collect(
+            new TrashItemRestoredEvent(
+                (int) $trashItem->getId(),
+                $trashItem->getResourceKey(),
+                $trashItem->getResourceId(),
+                $translation->getTitle(),
+                $translation->getLocale()
+            )
+        );
+
+        $this->trashItemRepository->remove($trashItem);
+
+        return $object;
     }
 
     public function remove(TrashItemInterface $trashItem): void
@@ -128,6 +123,6 @@ final class TrashManager implements TrashManagerInterface
             )
         );
 
-        $this->trashItemRepository->removeAndCommit($trashItem);
+        $this->trashItemRepository->remove($trashItem);
     }
 }

@@ -15,4 +15,10 @@ namespace Sulu\Bundle\TrashBundle\Domain\Exception;
 
 class TrashItemTranslationNotFoundException extends \Exception
 {
+    public function __construct(?string $locale)
+    {
+        parent::__construct(
+            \sprintf('Translation for locale "%s" not found.', $locale)
+        );
+    }
 }

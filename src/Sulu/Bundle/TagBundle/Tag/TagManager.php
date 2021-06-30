@@ -59,7 +59,7 @@ class TagManager implements TagManagerInterface
     private $domainEventCollector;
 
     /**
-     * @var TrashManagerInterface
+     * @var TrashManagerInterface|null
      */
     private $trashManager;
 
@@ -68,7 +68,7 @@ class TagManager implements TagManagerInterface
         ObjectManager $em,
         EventDispatcherInterface $eventDispatcher,
         DomainEventCollectorInterface $domainEventCollector,
-        TrashManagerInterface $trashManager
+        ?TrashManagerInterface $trashManager = null
     ) {
         $this->tagRepository = $tagRepository;
         $this->em = $em;
@@ -218,7 +218,9 @@ class TagManager implements TagManagerInterface
             throw new TagNotFoundException($id);
         }
 
-        $this->trashManager->store(TagInterface::RESOURCE_KEY, $tag);
+        if (null !== $this->trashManager) {
+            $this->trashManager->store(TagInterface::RESOURCE_KEY, $tag);
+        }
 
         $this->em->remove($tag);
         $this->domainEventCollector->collect(new TagRemovedEvent($tag->getId(), $tag->getName()));
