@@ -52,7 +52,7 @@ interface DocumentManagerInterface
      *
      * @param object $document
      */
-    public function remove($document);
+    public function remove($document/*, array $options = []*/);
 
     /**
      * Remove a specific locale of a document.

@@ -58,9 +58,12 @@ class DocumentManager implements DocumentManagerInterface, ResetInterface
         $this->eventDispatcher->dispatch($event, Events::PERSIST);
     }
 
-    public function remove($document)
+    public function remove($document/*, array $options = []*/)
     {
-        $event = new Event\RemoveEvent($document);
+        $options = \func_num_args() >= 2 ? (array) \func_get_arg(1) : [];
+        $options = $this->getOptionsResolver(Events::REMOVE)->resolve($options);
+
+        $event = new Event\RemoveEvent($document, $options);
         $this->eventDispatcher->dispatch($event, Events::REMOVE);
     }
 

@@ -1,7 +1,7 @@
 // @flow
 import classNames from 'classnames';
 import Mousetrap from 'mousetrap';
-import {action, observable} from 'mobx';
+import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import React, {Fragment} from 'react';
 import {Portal} from 'react-portal';
@@ -9,6 +9,7 @@ import Icon from '../Icon';
 import Button from '../Button';
 import {afterElementsRendered} from '../../utils/DOM';
 import Backdrop from '../Backdrop';
+import Snackbar from '../Snackbar';
 import Actions from './Actions';
 import overlayStyles from './overlay.scss';
 import type {Action, Size} from './types';
@@ -20,11 +21,15 @@ type Props = {
     confirmDisabled: boolean,
     confirmLoading: boolean,
     confirmText: string,
+    error?: string,
     onClose: () => void,
     onConfirm: () => void,
+    onSnackbarClick?: () => void,
+    onSnackbarCloseClick?: () => void,
     open: boolean,
     size?: Size,
     title: string,
+    warning?: string,
 };
 
 const CLOSE_ICON = 'su-times';
@@ -40,11 +45,12 @@ class Overlay extends React.Component<Props> {
 
     @observable open: boolean = false;
     @observable visible: boolean = false;
+    @observable snackbarType: 'error' | 'warning' = 'error';
 
     constructor(props: Props) {
         super(props);
 
-        const {open} = this.props;
+        const {open, error, warning} = this.props;
 
         if (open) {
             Mousetrap.bind(CLOSE_OVERLAY_KEY, this.close);
@@ -52,6 +58,7 @@ class Overlay extends React.Component<Props> {
 
         this.open = open;
         this.visible = open;
+        this.snackbarType = warning && !error ? 'warning' : 'error';
     }
 
     componentWillUnmount() {
@@ -61,7 +68,7 @@ class Overlay extends React.Component<Props> {
     }
 
     @action componentDidUpdate(prevProps: Props) {
-        const {open} = this.props;
+        const {open, error, warning} = this.props;
 
         if (prevProps.open !== open) {
             if (open) {
@@ -78,6 +85,27 @@ class Overlay extends React.Component<Props> {
         if (prevProps.open === false && open === true) {
             this.visible = true;
         }
+
+        if (prevProps.error !== error || prevProps.warning !== warning) {
+            if (error) {
+                this.snackbarType = 'error';
+            } else if (warning) {
+                this.snackbarType = 'warning';
+            }
+        }
+    }
+
+    @computed get snackbarMessage(): ?string {
+        const {error, warning} = this.props;
+
+        switch (this.snackbarType) {
+            case 'error':
+                return error || undefined;
+            case 'warning':
+                return warning || undefined;
+        }
+
+        return undefined;
     }
 
     close = () => {
@@ -102,9 +130,13 @@ class Overlay extends React.Component<Props> {
             confirmDisabled,
             confirmLoading,
             confirmText,
+            error,
             onConfirm,
+            onSnackbarClick,
+            onSnackbarCloseClick,
             title,
             size,
+            warning,
         } = this.props;
 
         const {open, visible} = this;
@@ -154,6 +186,15 @@ class Overlay extends React.Component<Props> {
                                             {confirmText}
                                         </Button>
                                     </footer>
+                                    <div className={overlayStyles.snackbar}>
+                                        <Snackbar
+                                            message={this.snackbarMessage || ''}
+                                            onClick={onSnackbarClick}
+                                            onCloseClick={onSnackbarCloseClick}
+                                            type={this.snackbarType}
+                                            visible={!!(error || warning)}
+                                        />
+                                    </div>
                                 </section>
                             </div>
                         </div>

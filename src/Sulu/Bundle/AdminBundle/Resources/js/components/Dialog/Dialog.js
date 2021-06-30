@@ -1,12 +1,13 @@
 // @flow
 import classNames from 'classnames';
-import {action, observable} from 'mobx';
+import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import React, {Fragment} from 'react';
 import {Portal} from 'react-portal';
 import {afterElementsRendered} from '../../utils/DOM';
 import Backdrop from '../Backdrop';
 import Button from '../Button';
+import Snackbar from '../Snackbar';
 import dialogStyles from './dialog.scss';
 import type {Node} from 'react';
 
@@ -17,11 +18,15 @@ type Props = {|
     confirmDisabled: boolean,
     confirmLoading: boolean,
     confirmText: string,
+    error?: string,
     onCancel?: () => void,
     onConfirm: () => void,
+    onSnackbarClick?: () => void,
+    onSnackbarCloseClick?: () => void,
     open: boolean,
     size?: 'small' | 'large',
     title: string,
+    warning?: string,
 |};
 
 @observer
@@ -34,18 +39,20 @@ class Dialog extends React.Component<Props> {
 
     @observable open: boolean = false;
     @observable visible: boolean = false;
+    @observable snackbarType: 'error' | 'warning' = 'error';
 
     constructor(props: Props) {
         super(props);
 
-        const {open} = this.props;
+        const {open, error, warning} = this.props;
 
         this.open = open;
         this.visible = open;
+        this.snackbarType = warning && !error ? 'warning' : 'error';
     }
 
     @action componentDidUpdate(prevProps: Props) {
-        const {open} = this.props;
+        const {open, error, warning} = this.props;
 
         if (prevProps.open === false && open === true) {
             this.visible = true;
@@ -56,6 +63,14 @@ class Dialog extends React.Component<Props> {
                 this.open = open;
             }));
         }
+
+        if (prevProps.error !== error || prevProps.warning !== warning) {
+            if (error) {
+                this.snackbarType = 'error';
+            } else if (warning) {
+                this.snackbarType = 'warning';
+            }
+        }
     }
 
     @action handleTransitionEnd = () => {
@@ -65,6 +80,19 @@ class Dialog extends React.Component<Props> {
         }
     };
 
+    @computed get snackbarMessage(): ?string {
+        const {error, warning} = this.props;
+
+        switch (this.snackbarType) {
+            case 'error':
+                return error || undefined;
+            case 'warning':
+                return warning || undefined;
+        }
+
+        return undefined;
+    }
+
     render() {
         const {
             align,
@@ -73,10 +101,14 @@ class Dialog extends React.Component<Props> {
             cancelText,
             confirmLoading,
             confirmText,
+            error,
             onCancel,
             onConfirm,
+            onSnackbarClick,
+            onSnackbarCloseClick,
             size,
             title,
+            warning,
         } = this.props;
 
         const {open, visible} = this;
@@ -113,6 +145,16 @@ class Dialog extends React.Component<Props> {
                         >
                             <div className={dialogClass}>
                                 <section className={dialogStyles.content}>
+                                    <div className={dialogStyles.snackbar}>
+                                        <Snackbar
+                                            message={this.snackbarMessage || ''}
+                                            onClick={onSnackbarClick}
+                                            onCloseClick={onSnackbarCloseClick}
+                                            type={this.snackbarType}
+                                            visible={!!(error || warning)}
+                                        />
+                                    </div>
+
                                     <header className={dialogStyles.header}>
                                         {title}
                                     </header>

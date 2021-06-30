@@ -462,10 +462,14 @@ class ContentMapper implements ContentMapperInterface
         return $items;
     }
 
-    public function delete($uuid, $webspaceKey)
+    public function delete($uuid, $webspaceKey/*, bool $forceRemoveChildren = false*/)
     {
+        $forceRemoveChildren = \func_num_args() >= 3 ? (bool) \func_get_arg(2) : false;
+
         $document = $this->documentManager->find($uuid);
-        $this->documentManager->remove($document);
+        $this->documentManager->remove($document, [
+            'force_remove_children' => $forceRemoveChildren,
+        ]);
         $this->documentManager->flush();
     }
 
