@@ -27,10 +27,10 @@ export type LinkTypeOptions = {|
 |};
 
 export type LinkTypeValue = {|
-    anchor: ?string,
+    anchor?: ?string,
     href: ?string | number,
     locale: string,
     provider: ?string,
-    target: ?string,
+    target?: ?string,
     title: ?string,
 |};
