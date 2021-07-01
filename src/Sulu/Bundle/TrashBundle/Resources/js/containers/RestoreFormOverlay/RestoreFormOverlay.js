@@ -10,6 +10,7 @@ import SchemaFormStoreDecorator from 'sulu-admin-bundle/containers/Form/stores/S
 import type {Schema} from 'sulu-admin-bundle/containers/Form';
 
 type Props = {
+    confirmLoading: boolean,
     formKey: ?string,
     onClose: () => void,
     onConfirm: (data: {[string]: any}) => void,
@@ -18,6 +19,10 @@ type Props = {
 
 @observer
 class RestoreFormOverlay extends React.Component<Props> {
+    static defaultProps = {
+        confirmLoading: false,
+    };
+
     @observable formStore: ?FormStoreInterface;
 
     componentDidMount() {
@@ -67,7 +72,7 @@ class RestoreFormOverlay extends React.Component<Props> {
     };
 
     render() {
-        const {onClose, open} = this.props;
+        const {onClose, open, confirmLoading} = this.props;
         const {formStore} = this;
 
         if (!formStore) {
@@ -76,6 +81,7 @@ class RestoreFormOverlay extends React.Component<Props> {
 
         return (
             <FormOverlay
+                confirmLoading={confirmLoading}
                 confirmText={translate('sulu_admin.ok')}
                 formStore={formStore}
                 onClose={onClose}

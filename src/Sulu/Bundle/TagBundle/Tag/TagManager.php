@@ -189,16 +189,18 @@ class TagManager implements TagManagerInterface
         $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
         $metadata->setIdGenerator(new AssignedGenerator());
 
-        $this->em->persist($tag);
+        try {
+            $this->em->persist($tag);
 
-        $this->domainEventCollector->collect(
-            new TagRestoredEvent($tag, $data)
-        );
+            $this->domainEventCollector->collect(
+                new TagRestoredEvent($tag, $data)
+            );
 
-        $this->em->flush();
-
-        $metadata->setIdGeneratorType($oldIdGeneratorType);
-        $metadata->setIdGenerator($oldIdGenerator);
+            $this->em->flush();
+        } finally {
+            $metadata->setIdGeneratorType($oldIdGeneratorType);
+            $metadata->setIdGenerator($oldIdGenerator);
+        }
 
         return $tag;
     }

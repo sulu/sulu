@@ -9,7 +9,7 @@ import RestoreFormOverlay from '../../../containers/RestoreFormOverlay';
 import type {Node} from 'react';
 
 export default class RestoreItemAction extends AbstractListItemAction {
-    static restoreFormMapping = {};
+    static restoreFormMapping: {[key: string]: string} = {};
 
     @observable idToBeRestored: ?string | number = undefined;
     @observable resourceKeyToBeRestored: ?string = undefined;
@@ -83,6 +83,7 @@ export default class RestoreItemAction extends AbstractListItemAction {
                     {translate('sulu_trash.restore_element_dialog_text')}
                 </Dialog>
                 <RestoreFormOverlay
+                    confirmLoading={this.restoring}
                     formKey={this.restoreFormKey}
                     onClose={this.handleCancel}
                     onConfirm={this.handleConfirm}
