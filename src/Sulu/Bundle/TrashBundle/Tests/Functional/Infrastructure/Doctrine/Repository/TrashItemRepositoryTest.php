@@ -140,7 +140,7 @@ class TrashItemRepositoryTest extends SuluTestCase
 
     public function testFindOneByNotFound(): void
     {
-        $result = $this->repository->findOneBy(['id' => 'not-existing']);
+        $result = $this->repository->findOneBy(['id' => 12345]);
 
         static::assertNull($result);
     }
@@ -163,7 +163,7 @@ class TrashItemRepositoryTest extends SuluTestCase
     {
         $this->expectException(TrashItemNotFoundException::class);
 
-        $this->repository->getOneBy(['id' => 'not-existing']);
+        $this->repository->getOneBy(['id' => 12345]);
     }
 
     protected static function getTrashItemRepository(): TrashItemRepositoryInterface
