@@ -12130,7 +12130,7 @@ if ( typeof module === "object" && module && typeof module.exports === "object" 
     return result.value;
   };
 
-  // Shuffle an array, using the modern version of the 
+  // Shuffle an array, using the modern version of the
   // [Fisher-Yates shuffle](http://en.wikipedia.org/wiki/Fisher–Yates_shuffle).
   _.shuffle = function(obj) {
     var rand;
@@ -18354,7 +18354,7 @@ define('type/decimal',[
                         if (this.options.nullable === true) {
                             return null;
                         }
-                        
+
                         return '';
                     }
                     return Globalize.parseFloat(val);
@@ -22681,15 +22681,15 @@ var objectHelper = (function () {
     function isString (value) {
         return Object.prototype.toString.apply(value) === '[object String]';
     }
-    
+
     function isNumber (value) {
         return Object.prototype.toString.apply(value) === '[object Number]';
     }
-    
+
     function isBoolean (value) {
         return Object.prototype.toString.apply(value) === '[object Boolean]';
     }
-    
+
     function join (arr, separator) {
         var
             result = '',
@@ -25422,9 +25422,9 @@ define("typeahead", function(){});
 
     /*
     This is a list of all available events you can register on a dropzone object.
-    
+
     You can register an event handler like this:
-    
+
         dropzone.on("dragEnter", function() { });
      */
 
@@ -26933,7 +26933,7 @@ define("typeahead", function(){});
 
 
   /*
-  
+
   Bugfix for iOS 6 and 7
   Source: http://stackoverflow.com/questions/11929099/html5-canvas-drawimage-ratio-bug-ios
   based on the work of https://github.com/stomita/ios-imagefile-megapixel
@@ -27125,7 +27125,7 @@ define("dropzone", ["jquery"], (function (global) {
                     if ( -1 === suggestion ) {
                         //console.log("tag:" + tag + " not in tagList, not adding it");
                         return;
-                    } 
+                    }
                 }
 
             }
@@ -29307,7 +29307,7 @@ define('bower_components/aura/lib/aura',[
      * @return {void}
      */
     app.cleanUp = function () {
-      _.defer(function() {    
+      _.defer(function() {
         _.each(appSandboxes, function(sandbox) {
           if (!!sandbox && !!sandbox.el && !app.core.dom.contains($(sandbox.el)[0], document)) {
             sandbox.stop();
@@ -29348,7 +29348,7 @@ define('bower_components/aura/lib/aura',[
       // Stop sandbox directly if the selector is a ref and which _ref can be
       // found
       var sandbox = app.sandboxes.get(selector);
-      
+
       if (sandbox) {
         stopSandbox(sandbox);
       }
@@ -29379,7 +29379,7 @@ define('bower_components/aura/lib/aura',[
         _.invoke(sandbox._children, 'stop');
         app.core.mediator.emit(event, sandbox);
         if (sandbox._component) {
-          // remove is deprecated 
+          // remove is deprecated
           sandbox._component.invokeWithCallbacks('remove');
           sandbox._component.invokeWithCallbacks('destroy');
         }
@@ -32633,14 +32633,14 @@ define('husky_components/datagrid/decorators/tiles-view',[],function() {
         tile: [
             '<div class="tile">',
             '   <span class="<%= icon %> icon"></span>',
-            '   <span title="<%= title %>" class="title"><%= title %></span>',
-            '   <span class="description"><%= description %></span>',
+            '   <span title="<%- title %>" class="title"><%- title %></span>',
+            '   <span class="description"><%- description %></span>',
             '</div>'
         ].join(''),
         addNewTile: [
             '<div class="add-new-tile">',
             '   <span class="<%= icon %> icon"></span>',
-            '   <span class="title"><%= title %></span>',
+            '   <span class="title"><%- title %></span>',
             '</div>'
         ].join('')
     },
@@ -48201,7 +48201,7 @@ define('__component__$url-input@husky',['services/husky/url-validator'], functio
 
                 /**
                  * Get a cache reference
-                 * @method get 
+                 * @method get
                  * @param  {[Number} cacheId
                  */
                 get: function(cacheId) {
