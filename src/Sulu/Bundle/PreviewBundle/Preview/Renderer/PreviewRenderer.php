@@ -115,7 +115,7 @@ class PreviewRenderer implements PreviewRendererInterface
         $partial = false,
         $options = []
     ) {
-        $webspaceKey = $options['webspaceKey'] ?? null;
+        $webspaceKey = $options['webspace'] ?? null;
         $locale = $options['locale'] ?? null;
 
         if (!$this->routeDefaultsProvider->supports(\get_class($object))) {
