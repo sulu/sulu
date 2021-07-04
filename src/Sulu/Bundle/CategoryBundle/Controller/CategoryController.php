@@ -334,7 +334,7 @@ class CategoryController extends AbstractRestController implements ClassResource
         );
     }
 
-    private function initializeListBuilder($locale)
+    protected function initializeListBuilder($locale)
     {
         $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors(CategoryInterface::RESOURCE_KEY);
 
