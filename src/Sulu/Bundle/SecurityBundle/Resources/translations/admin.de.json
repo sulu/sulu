@@ -1,4 +1,5 @@
 {
+    "sulu_security.user": "Benutzer",
     "sulu_security.roles": "Benutzerrollen",
     "sulu_security.user_name": "Username",
     "sulu_security.enable_user": "Benutzer aktivieren",

@@ -1,0 +1,10 @@
+{
+    "sulu_trash.trash": "Papierkorb",
+    "sulu_trash.restore_error": "Beim wiederherstellen dieses Elements ist ein Fehler aufgetreten",
+    "sulu_trash.restore_element": "Element wiederherstellen",
+    "sulu_trash.restore_element_dialog_text": "Sind sie sicher, dass Sie dieses Element wiederherstellen möchten?",
+    "sulu_activity.resource.trash_items": "Gelöschtes Element",
+    "sulu_activity.description.trash_items.created": "{userFullName} hat das Element \"{resourceTitle}\" zum Papierkorb hinzugefügt",
+    "sulu_activity.description.trash_items.restored": "{userFullName} hat das Element \"{resourceTitle}\" aus dem Papierkorb wiederhergestellt",
+    "sulu_activity.description.trash_items.removed": "{userFullName} hat das Element \"{resourceTitle}\" endgültig aus dem Papierkorb gelöscht"
+}
