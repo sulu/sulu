@@ -811,6 +811,35 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertEquals('Erste Kategorie', $categories[1]->name);
     }
 
+    public function testCGetFlatWithDefaultSorting(): void
+    {
+        $category1 = $this->createCategory('B', 'en');
+        $this->createCategoryTranslation($category1, 'de', 'B');
+        $category2 = $this->createCategory('A', 'en');
+        $this->createCategoryTranslation($category2, 'de', 'A');
+        $category3 = $this->createCategory('C', 'en');
+        $this->createCategoryTranslation($category3, 'de', 'C');
+
+        $this->em->flush();
+        $this->em->clear();
+
+        $this->client->jsonRequest(
+            'GET',
+            '/api/categories?locale=de&flat=true'
+        );
+
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+
+        $response = \json_decode($this->client->getResponse()->getContent());
+        $categories = $response->_embedded->categories;
+
+        $this->assertCount(3, $categories);
+
+        $this->assertEquals('A', $categories[0]->name);
+        $this->assertEquals('B', $categories[1]->name);
+        $this->assertEquals('C', $categories[2]->name);
+    }
+
     public function testCGetLocaleFallback()
     {
         $category1 = $this->createCategory('first-category-key', 'en');

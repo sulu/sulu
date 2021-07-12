@@ -445,7 +445,7 @@ class ResettingController
             ->setSubject($this->getSubject())
             ->setFrom($from)
             ->setTo($to)
-            ->setBody($this->getMessage($user, $token));
+            ->setBody($this->getMessage($user, $token), 'text/html');
 
         $mailer->send($message);
         $user->setPasswordResetTokenEmailsSent($user->getPasswordResetTokenEmailsSent() + 1);
