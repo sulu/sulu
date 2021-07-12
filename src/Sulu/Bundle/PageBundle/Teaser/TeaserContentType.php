@@ -201,7 +201,10 @@ class TeaserContentType extends SimpleContentType implements PreResolvableConten
 
         $itemsMetadata = new ArrayMetadata(
             new ObjectMetadata([
-                new PropertyMetadata('id', true, new StringMetadata()),
+                new PropertyMetadata('id', true, new AnyOfsMetadata([
+                    new StringMetadata(),
+                    new NumberMetadata(),
+                ])),
                 new PropertyMetadata('type', true, new StringMetadata()),
                 new PropertyMetadata('title', false, new StringMetadata()),
                 new PropertyMetadata('description', false, new StringMetadata()),
