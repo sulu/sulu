@@ -128,13 +128,15 @@ class CategoryController extends AbstractRestController implements ClassResource
         if ('true' == $request->get('flat')) {
             $rootId = ($rootKey) ? $this->categoryManager->findByKey($rootKey)->getId() : null;
             $expandedIds = \array_filter(\explode(',', $request->get('expandedIds', $request->get('selectedIds'))));
+            $defaultSort = !$request->query->has('sortBy');
             $list = $this->getListRepresentation(
                 $request,
                 $locale,
                 $parentId ?? $rootId,
                 $expandedIds,
                 $request->query->has('expandedIds'),
-                $includeRoot
+                $includeRoot,
+                $defaultSort
             );
         } elseif ($request->query->has('ids')) {
             $entities = $this->categoryManager->findByIds(\explode(',', $request->query->get('ids')));
@@ -238,9 +240,10 @@ class CategoryController extends AbstractRestController implements ClassResource
         $parentId = null,
         $expandedIds = [],
         $expandSelf = false,
-        $includeRoot = false
+        $includeRoot = false,
+        bool $defaultSort = true
     ) {
-        $listBuilder = $this->initializeListBuilder($locale);
+        $listBuilder = $this->initializeListBuilder($locale, $defaultSort);
 
         // disable pagination to simplify tree handling
         $listBuilder->limit(null);
@@ -334,7 +337,7 @@ class CategoryController extends AbstractRestController implements ClassResource
         );
     }
 
-    private function initializeListBuilder($locale)
+    private function initializeListBuilder($locale, bool $defaultSort = false)
     {
         $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors(CategoryInterface::RESOURCE_KEY);
 
@@ -344,6 +347,10 @@ class CategoryController extends AbstractRestController implements ClassResource
         $listBuilder->sort($fieldDescriptors['depth']);
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
+        // add default sort order
+        if ($defaultSort && isset($fieldDescriptors['name'])) {
+            $listBuilder->sort($fieldDescriptors['name']);
+        }
         $listBuilder->addSelectField($fieldDescriptors['depth']);
         $listBuilder->addSelectField($fieldDescriptors['parent']);
         $listBuilder->addSelectField($fieldDescriptors['locale']);

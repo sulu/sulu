@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>SULU</title>
+    {%- block meta ~%}
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>{% block title %}SULU{% endblock %}</title>
+    {% endblock %}
     {% block style %}
         {#- We do not preload the files because of problems with big files on http push in Chrome -#}
         <link rel="stylesheet" href="{{ asset('main.css', 'sulu_admin') }}">
