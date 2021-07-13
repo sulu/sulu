@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\CategoryBundle\Entity;
 
-use Doctrine\ORM\Query;
+use Doctrine\ORM\Query\Expr\Join;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 
 class CategoryRepository extends NestedTreeRepository implements CategoryRepositoryInterface
@@ -227,5 +227,28 @@ class CategoryRepository extends NestedTreeRepository implements CategoryReposit
         $query->setParameter('key', $key);
 
         return $query->getResult();
+    }
+
+    /**
+     * @return array<array{id: int, resourceKey: string, depth: int}>
+     */
+    public function findDescendantCategoryResources(int $ancestorId): array
+    {
+        return $this->createQueryBuilder('category')
+            ->select('category.id AS id')
+            ->addSelect('\'' . CategoryInterface::RESOURCE_KEY . '\' AS resourceKey')
+            ->addSelect('category.depth AS depth')
+            ->distinct()
+            ->innerJoin(
+                CategoryInterface::class,
+                'ancestorCategory',
+                Join::WITH,
+                'category.lft > ancestorCategory.lft AND category.rgt < ancestorCategory.rgt'
+            )
+            ->where('ancestorCategory.id = :ancestorId')
+            ->orderBy('category.id', 'ASC')
+            ->setParameter('ancestorId', $ancestorId)
+            ->getQuery()
+            ->getArrayResult();
     }
 }
