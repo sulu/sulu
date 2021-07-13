@@ -2,6 +2,12 @@
 
 ## 2.x
 
+### CategoryRepositoryInterface has changed
+
+A new method has been added to the `CategoryRepositoryInterface`:
+
+- `findDescendantCategoryResources`
+
 ### MediaRepositoryInterface has changed
 
 A new method has been added to the `MediaRepositoryInterface`:

@@ -133,4 +133,9 @@ interface CategoryRepositoryInterface extends RepositoryInterface
      * @return array
      */
     public function findCategoryIdsBetween($fromIds, $toIds);
+
+    /**
+     * @return array<array{id: int, resourceKey: string, depth: int}>
+     */
+    public function findDescendantCategoryResources(int $ancestorId): array;
 }
