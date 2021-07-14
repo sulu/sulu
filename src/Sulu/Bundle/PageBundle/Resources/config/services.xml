@@ -204,6 +204,18 @@
             <tag name="sulu.sitemap.provider"/>
         </service>
 
+        <!-- event subscribers -->
+        <service id="sulu_page.page_remove_subscriber"
+                 class="Sulu\Bundle\PageBundle\EventListener\PageRemoveSubscriber">
+            <argument type="service" id="sulu.phpcr.session"/>
+            <argument type="service" id="sulu.repository.access_control"/>
+            <argument type="service" id="sulu_security.system_store"/>
+            <argument type="service" id="security.helper" on-invalid="null"/>
+            <argument>%sulu_security.permissions%</argument>
+
+            <tag name="sulu_document_manager.event_subscriber" />
+        </service>
+
         <!-- domain events -->
         <service id="sulu_page.document_manager.event_subscriber"
                  class="Sulu\Bundle\PageBundle\EventListener\DomainEventSubscriber">

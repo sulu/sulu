@@ -11,6 +11,8 @@
 
 namespace Sulu\Component\Security\Authorization\AccessControl;
 
+use Sulu\Component\Security\Authentication\UserInterface;
+
 /**
  * Defines methods to retrieve AccessControl models.
  */
@@ -36,4 +38,18 @@ interface AccessControlRepositoryInterface
      * @return AccessControlInterface[]
      */
     public function findByTypeAndId($type, $id, $system = null);
+
+    /**
+     * @param array<string|int> $entityIds
+     *
+     * @return array<string|int>
+     */
+    public function findIdsWithGrantedPermissions(
+        ?UserInterface $user,
+        int $permission,
+        string $entityClass,
+        array $entityIds,
+        ?string $system,
+        ?int $anonymousRoleId
+    ): array;
 }
