@@ -38,7 +38,7 @@
     "sulu_page.meta_title": "Titel (Meta title)",
     "sulu_page.meta_title_info_text": "SEO Guidelines empfehlen einen Meta-Titel mit einer Länge von maximal 55 Zeichen.",
     "sulu_page.meta_description": "Beschreibung (Meta description)",
-    "sulu_page.meta_description_info_text": "SEO Guidelines empfehlen eine Meta-Beschreibung mit einer Länge von maximal 320 Zeichen.",
+    "sulu_page.meta_description_info_text": "SEO Guidelines empfehlen eine Meta-Beschreibung mit einer Länge von maximal 160 Zeichen.",
     "sulu_page.meta_keywords": "Keywords (Meta keywords)",
     "sulu_page.meta_keywords_info_text": "Keywords werden durch Kommas getrennt und sollten den den Inhalt der Seite beschreiben. SEO Guidelines empfehlen die Zuweisung von maximal 5 Keywords pro Seite.",
     "sulu_page.canonical_url": "Canonical URL  (Canonical tag)",
