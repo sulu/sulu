@@ -24,7 +24,7 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 class SnippetImportCommand extends Command
 {
-    protected static $defaultName = 'sulu:snippet:import';
+    protected static $defaultName = 'sulu:snippet:translation-import';
 
     /**
      * @var SnippetImportInterface
@@ -49,7 +49,7 @@ class SnippetImportCommand extends Command
         $this->addArgument('file', InputArgument::REQUIRED, 'test.xliff')
             ->addArgument('locale', InputArgument::REQUIRED)
             ->addOption('format', 'f', InputOption::VALUE_REQUIRED, '', '1.2.xliff')
-            ->setDescription('Import Snippets');
+            ->setDescription('Import Snippet translations');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
