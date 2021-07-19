@@ -6,17 +6,20 @@ import {List, ListStore, SingleListOverlay} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {translate} from 'sulu-admin-bundle/utils';
 import {Button, ButtonGroup, Dialog, DropdownButton} from 'sulu-admin-bundle/components';
+import DeleteDependantsDialog from 'sulu-admin-bundle/containers/DeleteDependantsDialog';
 import CollectionFormOverlay from './CollectionFormOverlay';
 import CollectionBreadcrumb from './CollectionBreadcrumb';
 import PermissionFormOverlay from './PermissionFormOverlay';
 import collectionSectionStyles from './collectionSection.scss';
 import type {OperationType, OverlayType} from './types';
 import type {IObservableValue} from 'mobx/lib/mobx';
+import type {Resource} from 'sulu-admin-bundle/types';
 
 const COLLECTIONS_RESOURCE_KEY = 'collections';
 
 type Props = {
     addable: boolean,
+    addError?: (message: string) => void,
     deletable: boolean,
     editable: boolean,
     listStore: ListStore,
@@ -31,6 +34,12 @@ type Props = {
 class CollectionSection extends React.Component<Props> {
     @observable openedCollectionOperationOverlayType: OperationType;
     @observable movingRestrictedTargetCollection: ?Object = undefined;
+
+    @observable showDeleteDependantsDialog: boolean = false;
+    @observable dependantResourcesData: {
+        dependantResources: Resource[][],
+        dependantResourcesCount: number,
+    } | null = null;
 
     @action openCollectionOperationOverlay(operationType: OperationType) {
         this.openedCollectionOperationOverlayType = operationType;
@@ -138,7 +147,11 @@ class CollectionSection extends React.Component<Props> {
     };
 
     handleRemoveCollectionConfirm = () => {
-        const {resourceStore} = this.props;
+        this.delete();
+    };
+
+    delete = () => {
+        const {addError, resourceStore} = this.props;
         const {data} = resourceStore;
 
         const parentCollectionId = data._embedded && data._embedded.parent && data._embedded.parent.id
@@ -148,7 +161,31 @@ class CollectionSection extends React.Component<Props> {
         resourceStore.delete()
             .then(() => {
                 this.closeCollectionOperationOverlay();
+                this.closeDeleteDependantsDialog();
+
                 this.props.onCollectionNavigate(parentCollectionId);
+            })
+            .catch((response) => {
+                this.closeCollectionOperationOverlay();
+
+                response.json()
+                    .then(action((data) => {
+                        if (response.status === 409 && data.code === 1105) {
+                            this.showDeleteDependantsDialog = true;
+                            this.dependantResourcesData = {
+                                dependantResources: data.dependantResources,
+                                dependantResourcesCount: data.dependantResourcesCount,
+                            };
+
+                            return;
+                        }
+
+                        const error = data.detail || data.message;
+
+                        if (addError && error) {
+                            addError(error);
+                        }
+                    }));
             });
     };
 
@@ -185,6 +222,54 @@ class CollectionSection extends React.Component<Props> {
     handleMoveCollectionClose = () => {
         this.closeCollectionOperationOverlay();
     };
+
+    handleDeleteDependantsDialogFinish = () => {
+        this.delete();
+    };
+
+    handleDeleteDependantsDialogCancel = () => {
+        this.closeDeleteDependantsDialog();
+    };
+
+    handleDeleteDependantsDialogClose = () => {
+        this.closeDeleteDependantsDialog();
+    };
+
+    @action closeDeleteDependantsDialog = () => {
+        this.showDeleteDependantsDialog = false;
+        this.dependantResourcesData = null;
+    };
+
+    @computed get deleteDependantsDialogRequestOptions() {
+        const {locale} = this.props;
+
+        if (locale) {
+            return {
+                locale: locale.get(),
+            };
+        }
+
+        return {};
+    }
+
+    renderDeleteDependantsDialog() {
+        if (!this.showDeleteDependantsDialog || this.dependantResourcesData === null) {
+            return null;
+        }
+
+        const {dependantResourcesCount, dependantResources} = this.dependantResourcesData;
+
+        return (
+            <DeleteDependantsDialog
+                dependantResources={dependantResources}
+                dependantResourcesCount={dependantResourcesCount}
+                onCancel={this.handleDeleteDependantsDialogCancel}
+                onClose={this.handleDeleteDependantsDialogClose}
+                onFinish={this.handleDeleteDependantsDialogFinish}
+                requestOptions={this.deleteDependantsDialogRequestOptions}
+            />
+        );
+    }
 
     render() {
         const {
@@ -270,6 +355,7 @@ class CollectionSection extends React.Component<Props> {
                 >
                     {translate('sulu_media.remove_collection_warning')}
                 </Dialog>
+                {this.renderDeleteDependantsDialog()}
                 <PermissionFormOverlay
                     collectionId={this.collectionId}
                     hasChildren={this.hasChildren}

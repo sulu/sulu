@@ -1,0 +1,88 @@
+@import '../../containers/Application/colors.scss';
+
+$width: 250px;
+$height: 20px;
+$borderRadius: 3px;
+$backgroundColor: $white;
+$borderColor: $silver;
+$progressColor: $shakespeare;
+$progressColorError: $roman;
+$progressColorWarning: $gold;
+$progressColorSuccess: $mantis;
+
+.progressBar {
+    appearance: none;
+    width: $width;
+    height: $height;
+    overflow: hidden;
+    border: 1px solid $borderColor;
+    border-radius: $borderRadius;
+    background-color: $backgroundColor;
+
+    --progress-color: $progressColor;
+
+    &.error {
+        --progress-color: $progressColorError;
+    }
+
+    &.warning {
+        --progress-color: $progressColorWarning;
+    }
+
+    &.success {
+        --progress-color: $progressColorSuccess;
+    }
+
+    &::-webkit-progress-bar {
+        overflow: hidden;
+        background-color: $backgroundColor;
+    }
+
+    &::-webkit-progress-value {
+        background-image:
+            -webkit-linear-gradient(
+                -45deg,
+                transparent 33%,
+                rgba(0, 0, 0, .1) 33%,
+                rgba(0, 0, 0, .1) 66%,
+                transparent 66%
+            ),
+            -webkit-linear-gradient(
+                top,
+                rgba(255, 255, 255, .25),
+                rgba(0, 0, 0, .25)
+            ),
+            -webkit-linear-gradient(
+                left,
+                var(--progress-color),
+                var(--progress-color)
+            );
+        border-radius: $borderRadius;
+        background-size: 35px 20px, 100% 100%, 100% 100%;
+        transform: scale(1.05, 1.05);
+    }
+
+    &::-moz-progress-bar {
+        background-image:
+            -moz-linear-gradient(
+                135deg,
+                transparent 33%,
+                rgba(0, 0, 0, .1) 33%,
+                rgba(0, 0, 0, .1) 66%,
+                transparent 66%
+            ),
+            -moz-linear-gradient(
+                top,
+                rgba(255, 255, 255, .25),
+                rgba(0, 0, 0, .25)
+            ),
+            -moz-linear-gradient(
+                left,
+                var(--progress-color),
+                var(--progress-color)
+            );
+        border-radius: $borderRadius;
+        background-size: 35px 20px, 100% 100%, 100% 100%;
+        transform: scale(1.05, 1.05);
+    }
+}

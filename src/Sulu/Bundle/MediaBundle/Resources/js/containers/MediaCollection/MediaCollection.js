@@ -13,6 +13,7 @@ import type {IObservableValue} from 'mobx/lib/mobx';
 import type {ElementRef} from 'react';
 
 type Props = {|
+    addError?: (message: string) => void,
     className?: string,
     collectionListStore: ListStore,
     collectionStore: CollectionStore,
@@ -79,6 +80,7 @@ class MediaCollection extends React.Component<Props> {
 
     render() {
         const {
+            addError,
             className,
             collectionListStore,
             collectionStore,
@@ -126,6 +128,7 @@ class MediaCollection extends React.Component<Props> {
             >
                 <CollectionSection
                     addable={addable}
+                    addError={addError}
                     deletable={deletable}
                     editable={editable}
                     listStore={collectionListStore}

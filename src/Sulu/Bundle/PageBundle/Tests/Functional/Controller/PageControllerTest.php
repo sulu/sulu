@@ -880,6 +880,10 @@ class PageControllerTest extends SuluTestCase
         $this->assertEquals([
             'code' => 1105,
             'message' => 'Resource has 3 dependant resources.',
+            'resource' => [
+                'id' => $page1['id'],
+                'resourceKey' => 'pages',
+            ],
             'dependantResourcesCount' => 3,
             'dependantResources' => [
                 [
@@ -2506,11 +2510,31 @@ class PageControllerTest extends SuluTestCase
         $this->documentManager->flush();
 
         $this->client->jsonRequest('DELETE', '/api/pages/' . $linkedDocument->getUuid() . '?webspace=sulu_io&language=en');
-        $this->assertHttpStatusCode(409, $this->client->getResponse());
-        $response = \json_decode($this->client->getResponse()->getContent(), true);
-        $this->assertEquals($linkedDocument->getUuid(), $response['id']);
-        $this->assertCount(1, $response['items'][0]);
-        $this->assertEquals('test2', $response['items'][0]['name']);
+
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(409, $response);
+
+        $content = \json_decode((string) $response->getContent(), true);
+        $this->assertIsArray($content);
+        $this->assertArrayHasKey('errors', $content);
+        unset($content['errors']);
+
+        $this->assertEquals([
+            'code' => 1106,
+            'message' => 'Found 1 referencing resources.',
+            'resource' => [
+                'id' => $linkedDocument->getUuid(),
+                'resourceKey' => 'pages',
+            ],
+            'referencingResourcesCount' => 1,
+            'referencingResources' => [
+                [
+                    'id' => $document->getUuid(),
+                    'resourceKey' => 'pages',
+                    'title' => 'test2',
+                ],
+            ],
+        ], $content);
 
         $this->client->jsonRequest('DELETE', '/api/pages/' . $linkedDocument->getUuid() . '?webspace=sulu_io&language=en&force=true');
         $this->assertHttpStatusCode(204, $this->client->getResponse());

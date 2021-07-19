@@ -51,4 +51,11 @@ interface RestExceptionInterface extends \Throwable
      * @var int
      */
     public const EXCEPTION_CODE_DEPENDANT_RESOURCES_FOUND = 1105;
+
+    /**
+     * @see ReferencingResourcesFoundExceptionInterface
+     *
+     * @var int
+     */
+    public const EXCEPTION_CODE_REFERENCING_RESOURCES_FOUND = 1106;
 }

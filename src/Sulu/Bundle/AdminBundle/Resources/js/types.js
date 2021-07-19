@@ -8,6 +8,12 @@ import type {FieldTransformer} from './containers/List/types';
 import type {ToolbarItemConfig} from './containers/Toolbar/types';
 import type {LinkTypeOverlayProps} from './containers/Link/types';
 
+export type Resource = {
+    id: string | number,
+    resourceKey: string,
+    title?: string | null,
+};
+
 export type {
     BlockError,
     BlockPreviewTransformer,

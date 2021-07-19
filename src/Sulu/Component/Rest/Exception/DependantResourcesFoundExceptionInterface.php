@@ -16,6 +16,11 @@ namespace Sulu\Component\Rest\Exception;
 interface DependantResourcesFoundExceptionInterface extends RestExceptionInterface
 {
     /**
+     * @return array{id: int|string, resourceKey: string}
+     */
+    public function getResource(): array;
+
+    /**
      * @return array<int, array<array{id: int|string, resourceKey: string}>>
      */
     public function getDependantResources(): array;
