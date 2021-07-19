@@ -3,6 +3,10 @@ import {mount, shallow} from 'enzyme';
 import React from 'react';
 import Dialog from '../Dialog';
 
+jest.mock('../../../utils/Translator', () => ({
+    translate: jest.fn((key) => key),
+}));
+
 test('The component should render in body when open', () => {
     const view = mount(
         <Dialog
@@ -170,4 +174,105 @@ test('The component should call the callback when the cancel button is clicked',
     expect(onCancel).not.toBeCalled();
     view.find('Button[skin="secondary"]').simulate('click');
     expect(onCancel).toBeCalled();
+});
+
+test('The component should render with a warning', () => {
+    const onConfirm = jest.fn();
+    const view = mount(
+        <Dialog
+            confirmText="Confirm"
+            onConfirm={onConfirm}
+            open={true}
+            snackbarMessage="Something really strange happened"
+            snackbarType="warning"
+            title="My dialog title"
+        >
+            <div>My dialog content</div>
+        </Dialog>
+    );
+
+    expect(view.find('.snackbar.warning')).toHaveLength(1);
+    expect(view.find('.snackbar.warning').text()).toBe('sulu_admin.warning - Something really strange happened');
+    expect(view.find('.snackbar.error')).toHaveLength(0);
+});
+
+test('The component should render with an error', () => {
+    const onConfirm = jest.fn();
+    const view = mount(
+        <Dialog
+            confirmText="Confirm"
+            onConfirm={onConfirm}
+            open={true}
+            snackbarMessage="Money transfer unsuccessful"
+            snackbarType="error"
+            title="My dialog title"
+        >
+            <div>My dialog content</div>
+        </Dialog>
+    );
+
+    expect(view.find('.snackbar.error')).toHaveLength(1);
+    expect(view.find('.snackbar.error').text()).toBe('sulu_admin.error - Money transfer unsuccessful');
+    expect(view.find('.snackbar.warning')).toHaveLength(0);
+});
+
+test('The component should render with an error if the type is unknown', () => {
+    const onConfirm = jest.fn();
+    const view = mount(
+        <Dialog
+            confirmText="Confirm"
+            onConfirm={onConfirm}
+            open={true}
+            snackbarMessage="Money transfer unsuccessful"
+            title="My dialog title"
+        >
+            <div>My dialog content</div>
+        </Dialog>
+    );
+
+    expect(view.find('.snackbar.error')).toHaveLength(1);
+    expect(view.find('.snackbar.error').text()).toBe('sulu_admin.error - Money transfer unsuccessful');
+    expect(view.find('.snackbar.warning')).toHaveLength(0);
+});
+
+test('The component should call the callback when the snackbar close button is clicked', () => {
+    const onSnackbarCloseClick = jest.fn();
+    const view = mount(
+        <Dialog
+            confirmText="Confirm"
+            onConfirm={jest.fn()}
+            onSnackbarCloseClick={onSnackbarCloseClick}
+            open={true}
+            snackbarMessage="Money transfer unsuccessful"
+            snackbarType="error"
+            title="My dialog title"
+        >
+            My dialog content
+        </Dialog>
+    );
+
+    expect(onSnackbarCloseClick).not.toBeCalled();
+    view.find('.snackbar.error .su-times').simulate('click');
+    expect(onSnackbarCloseClick).toBeCalled();
+});
+
+test('The component should call the callback when the snackbar is clicked', () => {
+    const onSnackbarClick = jest.fn();
+    const view = mount(
+        <Dialog
+            confirmText="Confirm"
+            onConfirm={jest.fn()}
+            onSnackbarClick={onSnackbarClick}
+            open={true}
+            snackbarMessage="Something really strange happened"
+            snackbarType="warning"
+            title="My dialog title"
+        >
+            My dialog content
+        </Dialog>
+    );
+
+    expect(onSnackbarClick).not.toBeCalled();
+    view.find('.snackbar.warning').simulate('click');
+    expect(onSnackbarClick).toBeCalled();
 });
