@@ -646,6 +646,27 @@ Array [
             </span>
           </button>
         </footer>
+        <div
+          class="snackbar"
+        >
+          <div
+            class="snackbar error"
+            role="button"
+          >
+            <span
+              aria-label="su-exclamation-triangle"
+              class="su-exclamation-triangle icon"
+            />
+            <div
+              class="text"
+            >
+              <strong>
+                sulu_admin.error
+              </strong>
+               - 
+            </div>
+          </div>
+        </div>
       </section>
     </div>
   </div>,
@@ -1297,6 +1318,27 @@ Array [
             </span>
           </button>
         </footer>
+        <div
+          class="snackbar"
+        >
+          <div
+            class="snackbar error"
+            role="button"
+          >
+            <span
+              aria-label="su-exclamation-triangle"
+              class="su-exclamation-triangle icon"
+            />
+            <div
+              class="text"
+            >
+              <strong>
+                sulu_admin.error
+              </strong>
+               - 
+            </div>
+          </div>
+        </div>
       </section>
     </div>
   </div>,
