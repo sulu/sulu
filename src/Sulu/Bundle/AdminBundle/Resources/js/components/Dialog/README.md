@@ -52,3 +52,44 @@ const onConfirm = () => {
     </Dialog>
 </div>
 ```
+
+Errors and warnings can be displayed at the top of the dialog.
+
+```javascript
+const [open, setOpen] = React.useState(false);
+const [snackbarType, setSnackbarType] = React.useState(undefined);
+
+const onConfirm = () => {
+    /* do confirm things */
+    setOpen(false);
+};
+
+const onCancel = () => {
+    /* do cancel things */
+    setOpen(false);
+};
+
+<div>
+    <button onClick={() => setOpen(true)}>Open dialog</button>
+    <Dialog
+        title="Question?"
+        onCancel={onCancel}
+        onConfirm={onConfirm}
+        cancelText="No"
+        confirmText="Yes"
+        snackbarType={snackbarType}
+        snackbarMessage={
+            snackbarType === 'error'
+                ? 'An error occurred'
+                : snackbarType === 'warning'
+                    ? 'Something strange happened'
+                    : undefined
+        }
+        open={open}>
+
+        <button onClick={() => setSnackbarType((type) => type !== 'error' ? 'error' : undefined)}>Toggle error</button>
+        &nbsp;
+        <button onClick={() => setSnackbarType((type) => type !== 'warning' ? 'warning' : undefined)}>Toggle warning</button>
+    </Dialog>
+</div>
+```

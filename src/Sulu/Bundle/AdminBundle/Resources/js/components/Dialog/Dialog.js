@@ -7,6 +7,7 @@ import {Portal} from 'react-portal';
 import {afterElementsRendered} from '../../utils/DOM';
 import Backdrop from '../Backdrop';
 import Button from '../Button';
+import Snackbar, {type SnackbarType} from '../Snackbar';
 import dialogStyles from './dialog.scss';
 import type {Node} from 'react';
 
@@ -19,8 +20,12 @@ type Props = {|
     confirmText: string,
     onCancel?: () => void,
     onConfirm: () => void,
+    onSnackbarClick?: () => void,
+    onSnackbarCloseClick?: () => void,
     open: boolean,
     size?: 'small' | 'large',
+    snackbarMessage?: string,
+    snackbarType: SnackbarType,
     title: string,
 |};
 
@@ -30,22 +35,25 @@ class Dialog extends React.Component<Props> {
         align: 'center',
         confirmDisabled: false,
         confirmLoading: false,
+        snackbarType: 'error',
     };
 
     @observable open: boolean = false;
     @observable visible: boolean = false;
+    @observable snackbarType: SnackbarType;
 
     constructor(props: Props) {
         super(props);
 
-        const {open} = this.props;
+        const {open, snackbarType} = this.props;
 
         this.open = open;
         this.visible = open;
+        this.snackbarType = snackbarType;
     }
 
     @action componentDidUpdate(prevProps: Props) {
-        const {open} = this.props;
+        const {open, snackbarMessage, snackbarType} = this.props;
 
         if (prevProps.open === false && open === true) {
             this.visible = true;
@@ -55,6 +63,10 @@ class Dialog extends React.Component<Props> {
             afterElementsRendered(action(() => {
                 this.open = open;
             }));
+        }
+
+        if (snackbarMessage && this.snackbarType !== snackbarType) {
+            this.snackbarType = snackbarType;
         }
     }
 
@@ -75,7 +87,10 @@ class Dialog extends React.Component<Props> {
             confirmText,
             onCancel,
             onConfirm,
+            onSnackbarClick,
+            onSnackbarCloseClick,
             size,
+            snackbarMessage,
             title,
         } = this.props;
 
@@ -113,6 +128,16 @@ class Dialog extends React.Component<Props> {
                         >
                             <div className={dialogClass}>
                                 <section className={dialogStyles.content}>
+                                    <div className={dialogStyles.snackbar}>
+                                        <Snackbar
+                                            message={snackbarMessage || ''}
+                                            onClick={onSnackbarClick}
+                                            onCloseClick={onSnackbarCloseClick}
+                                            type={this.snackbarType}
+                                            visible={!!snackbarMessage}
+                                        />
+                                    </div>
+
                                     <header className={dialogStyles.header}>
                                         {title}
                                     </header>
