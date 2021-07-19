@@ -22,6 +22,7 @@ const API_OPTIONS = {resourceKey: 'media'};
 @observer
 class PermissionFormOverlay extends React.Component<Props> {
     @observable showInheritDialog: boolean = false;
+    @observable error: string | null = null;
     permissionFormRef: ?Form;
     inheritDialogFormRef: ?Form;
     resourceStore: ResourceStore;
@@ -34,10 +35,11 @@ class PermissionFormOverlay extends React.Component<Props> {
         this.createFormStores();
     }
 
-    componentDidUpdate(prevProps: Props) {
+    @action componentDidUpdate(prevProps: Props) {
         const {collectionId} = this.props;
 
         if (collectionId !== prevProps.collectionId) {
+            this.error = null;
             this.destroyFormStores();
             this.createFormStores();
         }
@@ -106,11 +108,35 @@ class PermissionFormOverlay extends React.Component<Props> {
             throw new Error('The passed options should not be a string. This should not happen and is likely a bug.');
         }
 
-        this.resourceStore.save({...options, ...API_OPTIONS}).then(() => onConfirm());
+        this.resourceStore.save({...options, ...API_OPTIONS})
+            .then(() => onConfirm())
+            .catch((response) => {
+                response.json().then(action((content) => {
+                    const error = content.detail || content.message;
+
+                    if (!error) {
+                        return;
+                    }
+
+                    this.error = error;
+                }));
+            });
+    };
+
+    @action handleSnackbarCloseClick = () => {
+        this.error = null;
+    };
+
+    @action handleClose = () => {
+        const {onClose} = this.props;
+
+        this.error = null;
+
+        onClose();
     };
 
     render() {
-        const {onClose, open} = this.props;
+        const {open} = this.props;
 
         return (
             <Fragment>
@@ -118,10 +144,13 @@ class PermissionFormOverlay extends React.Component<Props> {
                     cancelText={translate('sulu_admin.cancel')}
                     confirmLoading={this.resourceStore && this.resourceStore.saving}
                     confirmText={translate('sulu_admin.ok')}
-                    onClose={onClose}
+                    onClose={this.handleClose}
                     onConfirm={this.handleConfirm}
+                    onSnackbarCloseClick={this.handleSnackbarCloseClick}
                     open={open}
                     size="small"
+                    snackbarMessage={this.error || undefined}
+                    snackbarType="error"
                     title={translate('sulu_security.permissions')}
                 >
                     <div className={permissionFormOverlayStyles.overlay}>

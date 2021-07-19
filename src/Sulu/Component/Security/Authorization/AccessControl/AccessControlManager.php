@@ -13,14 +13,17 @@ namespace Sulu\Component\Security\Authorization\AccessControl;
 
 use Sulu\Bundle\SecurityBundle\Exception\AccessControlDescendantProviderNotFoundException;
 use Sulu\Bundle\SecurityBundle\System\SystemStoreInterface;
+use Sulu\Component\Rest\Exception\InsufficientDescendantPermissionsException;
 use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\MaskConverterInterface;
+use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Security\Event\PermissionUpdateEvent;
 use Sulu\Component\Security\Event\SecurityEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * An implementation of the AccessControlManagerInterface, which supports registering AccessControlProvider. All method
@@ -58,18 +61,42 @@ class AccessControlManager implements AccessControlManagerInterface
      */
     private $roleRepository;
 
+    /**
+     * @var AccessControlRepositoryInterface
+     */
+    private $accessControlRepository;
+
+    /**
+     * @var Security|null
+     */
+    private $security;
+
+    /**
+     * @var array<string, int>
+     */
+    private $permissions;
+
+    /**
+     * @param array<string, int> $permissions
+     */
     public function __construct(
         MaskConverterInterface $maskConverter,
         EventDispatcherInterface $eventDispatcher,
         SystemStoreInterface $systemStore,
         iterable $descendantProviders,
-        RoleRepositoryInterface $roleRepository
+        RoleRepositoryInterface $roleRepository,
+        AccessControlRepositoryInterface $accessControlRepository,
+        ?Security $security,
+        array $permissions
     ) {
         $this->maskConverter = $maskConverter;
         $this->eventDispatcher = $eventDispatcher;
         $this->systemStore = $systemStore;
         $this->descendantProviders = $descendantProviders;
         $this->roleRepository = $roleRepository;
+        $this->accessControlRepository = $accessControlRepository;
+        $this->security = $security;
+        $this->permissions = $permissions;
     }
 
     public function setPermissions($type, $identifier, $permissions, $inherit = false)
@@ -80,18 +107,31 @@ class AccessControlManager implements AccessControlManagerInterface
             return;
         }
 
-        $accessControlProvider->setPermissions($type, $identifier, $permissions);
-
-        $this->eventDispatcher->dispatch(
-            new PermissionUpdateEvent($type, $identifier, $permissions),
-            SecurityEvents::PERMISSION_UPDATE
-        );
-
         if ($inherit) {
-            $childrenProvider = $this->getChildrenProvider($type);
+            $childrenProvider = $this->getDescendantProvider($type);
 
             if (!$childrenProvider) {
                 throw new AccessControlDescendantProviderNotFoundException($type);
+            }
+
+            $anonymousRole = $this->systemStore->getAnonymousRole();
+
+            $descendantIds = $childrenProvider->findDescendantIdsById($identifier);
+            $authorizedDescendantIds = $this->accessControlRepository->findIdsWithGrantedPermissions(
+                $this->getCurrentUser(),
+                $this->permissions[PermissionTypes::SECURITY],
+                $type,
+                $descendantIds,
+                $this->systemStore->getSystem(),
+                $anonymousRole ? $anonymousRole->getId() : null
+            );
+            $unauthorizedDescendantIds = \array_diff($descendantIds, $authorizedDescendantIds);
+
+            if (!empty($unauthorizedDescendantIds)) {
+                throw new InsufficientDescendantPermissionsException(
+                    \count($unauthorizedDescendantIds),
+                    PermissionTypes::SECURITY
+                );
             }
 
             foreach ($childrenProvider->findDescendantIdsById($identifier) as $childIdentifier) {
@@ -103,6 +143,13 @@ class AccessControlManager implements AccessControlManagerInterface
                 );
             }
         }
+
+        $accessControlProvider->setPermissions($type, $identifier, $permissions);
+
+        $this->eventDispatcher->dispatch(
+            new PermissionUpdateEvent($type, $identifier, $permissions),
+            SecurityEvents::PERMISSION_UPDATE
+        );
     }
 
     public function getPermissions($type, $identifier, $system = null)
@@ -398,7 +445,7 @@ class AccessControlManager implements AccessControlManagerInterface
         }
     }
 
-    private function getChildrenProvider(string $type): ?DescendantProviderInterface
+    private function getDescendantProvider(string $type): ?DescendantProviderInterface
     {
         foreach ($this->descendantProviders as $descendantProvider) {
             if ($descendantProvider->supportsDescendantType($type)) {
@@ -407,5 +454,17 @@ class AccessControlManager implements AccessControlManagerInterface
         }
 
         return null;
+    }
+
+    private function getCurrentUser(): ?UserInterface
+    {
+        if (null === $this->security) {
+            return null;
+        }
+
+        /** @var UserInterface|null $user */
+        $user = $this->security->getUser();
+
+        return $user;
     }
 }
