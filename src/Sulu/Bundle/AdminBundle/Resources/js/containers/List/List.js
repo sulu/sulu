@@ -12,7 +12,9 @@ import Loader from '../../components/Loader';
 import PermissionHint from '../../components/PermissionHint';
 import userStore from '../../stores/userStore';
 import SingleListOverlay from '../SingleListOverlay';
-import {translate} from '../../utils/Translator';
+import {translate} from '../../utils';
+import DeleteReferencedResourceDialog from '../DeleteReferencedResourceDialog';
+import DeleteDependantsDialog from '../DeleteDependantsDialog';
 import ListStore from './stores/ListStore';
 import listAdapterRegistry from './registries/listAdapterRegistry';
 import AbstractAdapter from './adapters/AbstractAdapter';
@@ -34,11 +36,13 @@ import type {
 } from './types';
 import type {Node} from 'react';
 import type {IValueWillChange} from 'mobx/lib/mobx';
+import type {Resource} from '../../types';
 
 type Props = {|
     actions: Array<ActionConfig>,
     adapterOptions?: {[adapterKey: string]: AdapterOptions},
     adapters: Array<string>,
+    addError?: (message: string) => void,
     allowActivateForDisabledItems: boolean,
     copyable: boolean,
     deletable: boolean,
@@ -85,14 +89,26 @@ class List extends React.Component<Props> {
     @observable currentAdapterKey: string;
     @observable showCopyOverlay: boolean = false;
     @observable showDeleteDialog: boolean = false;
-    @observable showDeleteLinkedDialog: boolean = false;
     @observable showMoveOverlay: boolean = false;
     @observable showDeleteSelectionDialog: boolean = false;
     @observable allowConflictDeletion: boolean = true;
     @observable showOrderDialog: boolean = false;
     @observable adapterOptionsOpen: boolean = false;
     @observable columnOptionsOpen: boolean = false;
-    @observable referencingItemsForDelete: Array<Object> = [];
+
+    @observable showDeleteReferencedResourcesDialog: boolean = false;
+    @observable referencingResourcesData: {
+        referencingResources: Resource[],
+        referencingResourcesCount: number,
+        resource: Resource,
+    } | null = null;
+
+    @observable showDeleteDependantsDialog: boolean = false;
+    @observable dependantResourcesData: {
+        dependantResources: Resource[][],
+        dependantResourcesCount: number,
+    } | null = null;
+
     @observable movingRestrictedTarget: ?Object = undefined;
     resolveCopy: ?(ResolveCopyArgument) => void;
     resolveDelete: ?(ResolveDeleteArgument) => void;
@@ -241,37 +257,79 @@ class List extends React.Component<Props> {
         return deletePromise;
     };
 
-    @action handleDeleteResponseError = (response: Object) => {
-        if (response.status !== 409) {
-            throw response;
-        }
-
+    @action closeAllDialogs = () => {
         this.showDeleteDialog = false;
         this.showDeleteSelectionDialog = false;
-        this.showDeleteLinkedDialog = true;
+        this.showDeleteReferencedResourcesDialog = false;
+        this.referencingResourcesData = null;
+        this.showDeleteDependantsDialog = false;
+        this.dependantResourcesData = null;
+    };
+
+    @action handleDeleteResponseError = (response: Object) => {
+        const {addError} = this.props;
+
         response.json().then(action((data) => {
-            this.referencingItemsForDelete.splice(0, this.referencingItemsForDelete.length);
-            this.referencingItemsForDelete.push(...data.items);
+            this.closeAllDialogs();
 
-            const deleteLinkedPromise: Promise<ResolveDeleteArgument> = new Promise(
-                (resolve) => this.resolveDelete = resolve
-            );
+            if (response.status === 409 && data.code === 1106) {
+                this.showDeleteReferencedResourcesDialog = true;
+                this.referencingResourcesData = {
+                    resource: data.resource,
+                    referencingResources: data.referencingResources,
+                    referencingResourcesCount: data.referencingResourcesCount,
+                };
 
-            deleteLinkedPromise.then(action((response) => {
-                if (!response.deleted) {
-                    this.showDeleteDialog = false;
-                    this.showDeleteSelectionDialog = false;
-                    this.showDeleteLinkedDialog = false;
-                    return response;
-                }
+                const promise: Promise<ResolveDeleteArgument> = new Promise(
+                    (resolve) => this.resolveDelete = resolve
+                );
 
-                this.props.store.delete(data.id, {force: true})
-                    .then(action(() => {
-                        this.showDeleteDialog = false;
-                        this.showDeleteSelectionDialog = false;
-                        this.showDeleteLinkedDialog = false;
-                    }));
-            }));
+                promise.then(action((response) => {
+                    if (!response.deleted) {
+                        this.closeAllDialogs();
+
+                        return response;
+                    }
+
+                    this.props.store.delete(data.resource.id, {force: true})
+                        .then(this.closeAllDialogs)
+                        .catch(this.handleDeleteResponseError);
+                }));
+
+                return;
+            }
+
+            if (response.status === 409 && data.code === 1105) {
+                this.showDeleteDependantsDialog = true;
+                this.dependantResourcesData = {
+                    dependantResources: data.dependantResources,
+                    dependantResourcesCount: data.dependantResourcesCount,
+                };
+
+                const promise: Promise<ResolveDeleteArgument> = new Promise(
+                    (resolve) => this.resolveDelete = resolve
+                );
+
+                promise.then(action((response) => {
+                    if (!response.deleted) {
+                        this.closeAllDialogs();
+
+                        return response;
+                    }
+
+                    this.props.store.delete(data.resource.id)
+                        .then(this.closeAllDialogs)
+                        .catch(this.handleDeleteResponseError);
+                }));
+
+                return;
+            }
+
+            const error = data.detail || data.message;
+
+            if (addError && error) {
+                addError(error);
+            }
         }));
     };
 
@@ -516,6 +574,56 @@ class List extends React.Component<Props> {
         this.props.store.changeUserSchema(schema);
     };
 
+    renderDeleteReferencedResourceDialog() {
+        if (!this.showDeleteReferencedResourcesDialog || this.referencingResourcesData === null) {
+            return null;
+        }
+
+        const {store} = this.props;
+        const {resource, referencingResources, referencingResourcesCount} = this.referencingResourcesData;
+
+        return (
+            <DeleteReferencedResourceDialog
+                allowDeletion={this.allowConflictDeletion}
+                loading={store.deleting}
+                onCancel={this.handleDeleteDialogCancelClick}
+                onConfirm={this.handleDeleteDialogConfirmClick}
+                referencingResources={referencingResources}
+                referencingResourcesCount={referencingResourcesCount}
+                resource={resource}
+            />
+        );
+    }
+
+    @computed get deleteDependantsDialogRequestOptions() {
+        const {store} = this.props;
+
+        return store.queryOptions;
+    }
+
+    @action handleDeleteDependantsDialogClose = () => {
+        this.closeAllDialogs();
+    };
+
+    renderDeleteDependantsDialog() {
+        if (!this.showDeleteDependantsDialog || this.dependantResourcesData === null) {
+            return null;
+        }
+
+        const {dependantResourcesCount, dependantResources} = this.dependantResourcesData;
+
+        return (
+            <DeleteDependantsDialog
+                dependantResources={dependantResources}
+                dependantResourcesCount={dependantResourcesCount}
+                onCancel={this.handleDeleteDialogCancelClick}
+                onClose={this.handleDeleteDependantsDialogClose}
+                onFinish={this.handleDeleteDialogConfirmClick}
+                requestOptions={this.deleteDependantsDialogRequestOptions}
+            />
+        );
+    }
+
     render() {
         const {
             actions,
@@ -697,34 +805,8 @@ class List extends React.Component<Props> {
                         >
                             {translate('sulu_admin.delete_warning_text')}
                         </Dialog>
-                        <Dialog
-                            cancelText={translate('sulu_admin.cancel')}
-                            confirmLoading={store.deleting}
-                            confirmText={translate('sulu_admin.ok')}
-                            onCancel={this.allowConflictDeletion
-                                ? this.handleDeleteDialogCancelClick
-                                : undefined
-                            }
-                            onConfirm={this.allowConflictDeletion
-                                ? this.handleDeleteDialogConfirmClick
-                                : this.handleDeleteDialogCancelClick
-                            }
-                            open={this.showDeleteLinkedDialog}
-                            title={this.allowConflictDeletion
-                                ? translate('sulu_admin.delete_linked_warning_title')
-                                : translate('sulu_admin.item_not_deletable')
-                            }
-                        >
-                            {this.allowConflictDeletion
-                                ? translate('sulu_admin.delete_linked_warning_text')
-                                : translate('sulu_admin.delete_linked_abort_text')
-                            }
-                            <ul>
-                                {this.referencingItemsForDelete.map((referencingItem, index) => (
-                                    <li key={index}>{referencingItem.name}</li>
-                                ))}
-                            </ul>
-                        </Dialog>
+                        {this.renderDeleteReferencedResourceDialog()}
+                        {this.renderDeleteDependantsDialog()}
                     </Fragment>
                 }
                 {movable &&

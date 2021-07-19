@@ -606,6 +606,10 @@ class CollectionManager implements CollectionManagerInterface
         $descendantResourcesCount = $this->countGroupedResources($descendantResources);
 
         throw new DependantResourcesFoundException(
+            [
+                'id' => $id,
+                'resourceKey' => CollectionInterface::RESOURCE_KEY,
+            ],
             $descendantResources,
             $descendantResourcesCount
         );

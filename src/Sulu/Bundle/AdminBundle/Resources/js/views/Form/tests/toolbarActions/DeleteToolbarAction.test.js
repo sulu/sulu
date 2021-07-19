@@ -86,13 +86,7 @@ test('Return item config with correct disabled, loading, icon, type and value an
         open: false,
         title: 'sulu_admin.delete_warning_title',
     }));
-    expect(element.at(1).instance().props).toEqual(expect.objectContaining({
-        cancelText: 'sulu_admin.cancel',
-        children: expect.arrayContaining(['sulu_admin.delete_linked_warning_text']),
-        confirmText: 'sulu_admin.ok',
-        open: false,
-        title: 'sulu_admin.delete_linked_warning_title',
-    }));
+    expect(element.contains('DeleteReferencedResourceDialog')).toBe(false);
 });
 
 test('Return item config with correct translations for deleteLocale', () => {
@@ -114,13 +108,7 @@ test('Return item config with correct translations for deleteLocale', () => {
         open: false,
         title: 'sulu_admin.delete_locale_warning_title',
     }));
-    expect(element.at(1).instance().props).toEqual(expect.objectContaining({
-        cancelText: 'sulu_admin.cancel',
-        children: expect.arrayContaining(['sulu_admin.delete_linked_warning_text']),
-        confirmText: 'sulu_admin.ok',
-        open: false,
-        title: 'sulu_admin.delete_linked_warning_title',
-    }));
+    expect(element.contains('DeleteReferencedResourceDialog')).toBe(false);
 });
 
 test('Return item config with disabled button if an add form is opened', () => {
@@ -350,7 +338,18 @@ test('Call delete with force when dialog is confirmed twice', (done) => {
     deleteToolbarAction.resourceFormStore.resourceStore.id = 3;
     deleteToolbarAction.router.route.options.backView = 'sulu_test.list';
 
-    const jsonDeletePromise = Promise.resolve({items: [{name: 'Item 1'}, {name: 'Item 2'}]});
+    const jsonDeletePromise = Promise.resolve({
+        code: 1106,
+        resource: {
+            id: 5,
+            resourceKey: 'pages',
+        },
+        referencingResources: [
+            {id: 7, resourceKey: 'pages', title: 'Item 1'},
+            {id: 8, resourceKey: 'pages', title: 'Item 2'},
+        ],
+        referencingResourcesCount: 2,
+    });
     const deletePromise = Promise.reject({
         json: jest.fn().mockReturnValue(jsonDeletePromise),
         status: 409,
@@ -375,10 +374,10 @@ test('Call delete with force when dialog is confirmed twice', (done) => {
         element = mount(deleteToolbarAction.getNode());
         expect(deleteToolbarAction.router.restore).toBeCalledTimes(0);
         expect(element.at(0).prop('open')).toEqual(false);
-        expect(element.at(1).prop('open')).toEqual(true);
-        expect(element.at(1).find('li')).toHaveLength(2);
-        expect(element.at(1).find('li').at(0).prop('children')).toEqual('Item 1');
-        expect(element.at(1).find('li').at(1).prop('children')).toEqual('Item 2');
+        expect(element.contains('DeleteReferencedResourceDialog'));
+        expect(element.find('DeleteReferencedResourceDialog').find('li')).toHaveLength(2);
+        expect(element.find('DeleteReferencedResourceDialog').find('li').at(0).prop('children')).toEqual('Item 1');
+        expect(element.find('DeleteReferencedResourceDialog').find('li').at(1).prop('children')).toEqual('Item 2');
 
         const deletePromise = Promise.resolve({});
         deleteToolbarAction.resourceFormStore.delete.mockReturnValueOnce(deletePromise);
@@ -401,7 +400,18 @@ test('Call delete with force and deleteLocale when dialog is confirmed twice', (
     deleteToolbarAction.resourceFormStore.resourceStore.id = 3;
     deleteToolbarAction.router.route.options.backView = 'sulu_test.list';
 
-    const jsonDeletePromise = Promise.resolve({items: [{name: 'Item 1'}, {name: 'Item 2'}]});
+    const jsonDeletePromise = Promise.resolve({
+        code: 1106,
+        resource: {
+            id: 5,
+            resourceKey: 'pages',
+        },
+        referencingResources: [
+            {id: 7, resourceKey: 'pages', title: 'Item 1'},
+            {id: 8, resourceKey: 'pages', title: 'Item 2'},
+        ],
+        referencingResourcesCount: 2,
+    });
     const deletePromise = Promise.reject({
         json: jest.fn().mockReturnValue(jsonDeletePromise),
         status: 409,
@@ -426,10 +436,10 @@ test('Call delete with force and deleteLocale when dialog is confirmed twice', (
         element = mount(deleteToolbarAction.getNode());
         expect(deleteToolbarAction.router.restore).toBeCalledTimes(0);
         expect(element.at(0).prop('open')).toEqual(false);
-        expect(element.at(1).prop('open')).toEqual(true);
-        expect(element.at(1).find('li')).toHaveLength(2);
-        expect(element.at(1).find('li').at(0).prop('children')).toEqual('Item 1');
-        expect(element.at(1).find('li').at(1).prop('children')).toEqual('Item 2');
+        expect(element.contains('DeleteReferencedResourceDialog'));
+        expect(element.find('DeleteReferencedResourceDialog').find('li')).toHaveLength(2);
+        expect(element.find('DeleteReferencedResourceDialog').find('li').at(0).prop('children')).toEqual('Item 1');
+        expect(element.find('DeleteReferencedResourceDialog').find('li').at(1).prop('children')).toEqual('Item 2');
 
         const deletePromise = Promise.resolve({});
         deleteToolbarAction.resourceFormStore.delete.mockReturnValueOnce(deletePromise);
@@ -452,7 +462,18 @@ test('Cancel delete conflict occured with the allowConflictDeletion option set t
     deleteToolbarAction.resourceFormStore.resourceStore.id = 3;
     deleteToolbarAction.router.route.options.backView = 'sulu_test.list';
 
-    const jsonDeletePromise = Promise.resolve({items: [{name: 'Item 1'}, {name: 'Item 2'}]});
+    const jsonDeletePromise = Promise.resolve({
+        code: 1106,
+        resource: {
+            id: 5,
+            resourceKey: 'pages',
+        },
+        referencingResources: [
+            {id: 7, resourceKey: 'pages', title: 'Item 1'},
+            {id: 8, resourceKey: 'pages', title: 'Item 2'},
+        ],
+        referencingResourcesCount: 2,
+    });
     const deletePromise = Promise.reject({
         json: jest.fn().mockReturnValue(jsonDeletePromise),
         status: 409,
@@ -477,15 +498,134 @@ test('Cancel delete conflict occured with the allowConflictDeletion option set t
         element = mount(deleteToolbarAction.getNode());
         expect(deleteToolbarAction.router.restore).toBeCalledTimes(0);
         expect(element.at(0).prop('open')).toEqual(false);
-        expect(element.at(1).prop('open')).toEqual(true);
-        expect(element.at(1).find('li')).toHaveLength(2);
-        expect(element.at(1).find('li').at(0).prop('children')).toEqual('Item 1');
-        expect(element.at(1).find('li').at(1).prop('children')).toEqual('Item 2');
+        expect(element.contains('DeleteReferencedResourceDialog'));
+        expect(element.find('DeleteReferencedResourceDialog').find('li')).toHaveLength(2);
+        expect(element.find('DeleteReferencedResourceDialog').find('li').at(0).prop('children')).toEqual('Item 1');
+        expect(element.find('DeleteReferencedResourceDialog').find('li').at(1).prop('children')).toEqual('Item 2');
 
         const deletePromise = Promise.resolve({});
         deleteToolbarAction.resourceFormStore.delete.mockReturnValueOnce(deletePromise);
 
         element.find('Button[skin="primary"]').simulate('click');
+
+        setTimeout(() => {
+            expect(deleteToolbarAction.router.restore).not.toBeCalled();
+            expect(deleteToolbarAction.resourceFormStore.delete).toBeCalledTimes(1);
+            expect(element.at(0).instance().props).toEqual(expect.objectContaining({
+                open: false,
+            }));
+
+            done();
+        });
+    });
+});
+
+test('Call delete when DeleteDependantsDialog is finished', (done) => {
+    const deleteToolbarAction = createDeleteToolbarAction();
+    deleteToolbarAction.resourceFormStore.resourceStore.id = 3;
+    deleteToolbarAction.router.route.options.backView = 'sulu_test.list';
+
+    const jsonDeletePromise = Promise.resolve({
+        code: 1105,
+        resource: {
+            id: 5,
+            resourceKey: 'pages',
+        },
+        dependantResources: [
+            {id: 7, resourceKey: 'pages'},
+            {id: 8, resourceKey: 'pages'},
+        ],
+        dependantResourcesCount: 2,
+    });
+    const deletePromise = Promise.reject({
+        json: jest.fn().mockReturnValue(jsonDeletePromise),
+        status: 409,
+    });
+    deleteToolbarAction.resourceFormStore.delete.mockReturnValueOnce(deletePromise);
+
+    const toolbarItemConfig = deleteToolbarAction.getToolbarItemConfig();
+    if (!toolbarItemConfig) {
+        throw new Error('The toolbarItemConfig should be a value!');
+    }
+    toolbarItemConfig.onClick();
+
+    let element = mount(deleteToolbarAction.getNode());
+    expect(element.at(0).instance().props).toEqual(expect.objectContaining({
+        open: true,
+    }));
+
+    element.find('Button[skin="primary"]').simulate('click');
+    expect(deleteToolbarAction.resourceFormStore.delete).toBeCalledWith({deleteLocale: false});
+
+    setTimeout(() => {
+        element = mount(deleteToolbarAction.getNode());
+        expect(deleteToolbarAction.router.restore).toBeCalledTimes(0);
+        expect(element.at(0).prop('open')).toEqual(false);
+        expect(element.contains('DeleteDependantsDialog'));
+
+        const deletePromise = Promise.resolve({});
+        deleteToolbarAction.resourceFormStore.delete.mockReturnValueOnce(deletePromise);
+
+        element.find('DeleteDependantsDialog').prop('onFinish')();
+
+        setTimeout(() => {
+            expect(deleteToolbarAction.router.restore).toBeCalledWith('sulu_test.list', {locale: 'en'});
+            expect(element.at(0).instance().props).toEqual(expect.objectContaining({
+                open: false,
+            }));
+
+            done();
+        });
+    });
+});
+
+test('Do not call delete when DeleteDependantsDialog is cancelled', (done) => {
+    const deleteToolbarAction = createDeleteToolbarAction();
+    deleteToolbarAction.resourceFormStore.resourceStore.id = 3;
+    deleteToolbarAction.router.route.options.backView = 'sulu_test.list';
+
+    const jsonDeletePromise = Promise.resolve({
+        code: 1105,
+        resource: {
+            id: 5,
+            resourceKey: 'pages',
+        },
+        dependantResources: [
+            {id: 7, resourceKey: 'pages'},
+            {id: 8, resourceKey: 'pages'},
+        ],
+        dependantResourcesCount: 2,
+    });
+    const deletePromise = Promise.reject({
+        json: jest.fn().mockReturnValue(jsonDeletePromise),
+        status: 409,
+    });
+    deleteToolbarAction.resourceFormStore.delete.mockReturnValueOnce(deletePromise);
+
+    const toolbarItemConfig = deleteToolbarAction.getToolbarItemConfig();
+    if (!toolbarItemConfig) {
+        throw new Error('The toolbarItemConfig should be a value!');
+    }
+    toolbarItemConfig.onClick();
+
+    let element = mount(deleteToolbarAction.getNode());
+    expect(element.at(0).instance().props).toEqual(expect.objectContaining({
+        open: true,
+    }));
+
+    element.find('Button[skin="primary"]').simulate('click');
+    expect(deleteToolbarAction.resourceFormStore.delete).toBeCalledWith({deleteLocale: false});
+
+    setTimeout(() => {
+        element = mount(deleteToolbarAction.getNode());
+        expect(deleteToolbarAction.router.restore).toBeCalledTimes(0);
+        expect(element.at(0).prop('open')).toEqual(false);
+        expect(element.contains('DeleteDependantsDialog'));
+
+        const deletePromise = Promise.resolve({});
+        deleteToolbarAction.resourceFormStore.delete.mockReturnValueOnce(deletePromise);
+
+        element.find('DeleteDependantsDialog').prop('onCancel')();
 
         setTimeout(() => {
             expect(deleteToolbarAction.router.restore).not.toBeCalled();

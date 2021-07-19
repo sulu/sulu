@@ -8,6 +8,12 @@ import type {BlockPreviewTransformer} from './containers/FieldBlocks/types';
 import type {FieldTransformer} from './containers/List/types';
 import type {ToolbarItemConfig} from './containers/Toolbar/types';
 
+export type Resource = {
+    id: string | number,
+    resourceKey: string,
+    title?: string | null,
+};
+
 export type {
     BlockError,
     BlockPreviewTransformer,

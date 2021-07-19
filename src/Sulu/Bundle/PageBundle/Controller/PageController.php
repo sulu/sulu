@@ -18,6 +18,7 @@ use PHPCR\ItemNotFoundException;
 use PHPCR\PropertyInterface;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Bundle\PageBundle\Document\BasePageDocument;
+use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\PageBundle\Repository\NodeRepositoryInterface;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Form\Exception\InvalidFormException;
@@ -36,6 +37,7 @@ use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\MissingParameterChoiceException;
 use Sulu\Component\Rest\Exception\MissingParameterException;
 use Sulu\Component\Rest\Exception\ParameterDataTypeException;
+use Sulu\Component\Rest\Exception\ReferencingResourcesFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\Rest\RequestParametersTrait;
@@ -385,10 +387,7 @@ class PageController extends AbstractRestController implements ClassResourceInte
             );
 
             if (\count($references) > 0) {
-                $data = [
-                    'id' => $id,
-                    'items' => [],
-                ];
+                $items = [];
 
                 foreach ($references as $reference) {
                     $content = $this->contentMapper->load(
@@ -398,10 +397,21 @@ class PageController extends AbstractRestController implements ClassResourceInte
                         true
                     );
 
-                    $data['items'][] = ['name' => $content->getTitle()];
+                    $items[] = [
+                        'id' => $content->getUuid(),
+                        'resourceKey' => PageDocument::RESOURCE_KEY,
+                        'title' => $content->getTitle(),
+                    ];
                 }
 
-                return $this->handleView($this->view($data, 409));
+                throw new ReferencingResourcesFoundException(
+                    [
+                        'id' => $id,
+                        'resourceKey' => PageDocument::RESOURCE_KEY,
+                    ],
+                    $items,
+                    \count($items)
+                );
             }
         }
 
