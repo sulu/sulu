@@ -166,3 +166,116 @@ test('The component should call the callback when the confirm button is clicked'
     view.find('Button').simulate('click');
     expect(onConfirm).toBeCalled();
 });
+
+test('The component should render with a warning', () => {
+    const onClose = jest.fn();
+    const onConfirm = jest.fn();
+    const view = mount(
+        <Overlay
+            confirmText="Alright mate!"
+            onClose={onClose}
+            onConfirm={onConfirm}
+            open={true}
+            snackbarMessage="Something really strange happened"
+            snackbarType="warning"
+            title="My title"
+        >
+            <p>My overlay content</p>
+        </Overlay>
+    );
+
+    expect(view.find('.snackbar.warning')).toHaveLength(1);
+    expect(view.find('.snackbar.warning').text()).toBe('sulu_admin.warning - Something really strange happened');
+    expect(view.find('.snackbar.error')).toHaveLength(0);
+});
+
+test('The component should render with an error', () => {
+    const onClose = jest.fn();
+    const onConfirm = jest.fn();
+    const view = mount(
+        <Overlay
+            confirmText="Alright mate!"
+            onClose={onClose}
+            onConfirm={onConfirm}
+            open={true}
+            snackbarMessage="Money transfer unsuccessful"
+            snackbarType="error"
+            title="My title"
+        >
+            <p>My overlay content</p>
+        </Overlay>
+    );
+
+    expect(view.find('.snackbar.error')).toHaveLength(1);
+    expect(view.find('.snackbar.error').text()).toBe('sulu_admin.error - Money transfer unsuccessful');
+    expect(view.find('.snackbar.warning')).toHaveLength(0);
+});
+
+test('The component should render with an error if type is unknown', () => {
+    const onClose = jest.fn();
+    const onConfirm = jest.fn();
+    const view = mount(
+        <Overlay
+            confirmText="Alright mate!"
+            onClose={onClose}
+            onConfirm={onConfirm}
+            open={true}
+            snackbarMessage="Money transfer unsuccessful"
+            title="My title"
+        >
+            <p>My overlay content</p>
+        </Overlay>
+    );
+
+    expect(view.find('.snackbar.error')).toHaveLength(1);
+    expect(view.find('.snackbar.error').text()).toBe('sulu_admin.error - Money transfer unsuccessful');
+    expect(view.find('.snackbar.warning')).toHaveLength(0);
+});
+
+test('The component should call the callback when the snackbar close button is clicked', () => {
+    const onSnackbarCloseClick = jest.fn();
+    const onClose = jest.fn();
+    const onConfirm = jest.fn();
+    const view = mount(
+        <Overlay
+            confirmText="Alright mate!"
+            onClose={onClose}
+            onConfirm={onConfirm}
+            onSnackbarCloseClick={onSnackbarCloseClick}
+            open={true}
+            snackbarMessage="Money transfer unsuccessful"
+            snackbarType="error"
+            title="My title"
+        >
+            <p>My overlay content</p>
+        </Overlay>
+    );
+
+    expect(onSnackbarCloseClick).not.toBeCalled();
+    view.find('.snackbar.error .su-times').simulate('click');
+    expect(onSnackbarCloseClick).toBeCalled();
+});
+
+test('The component should call the callback when the snackbar is clicked', () => {
+    const onSnackbarClick = jest.fn();
+    const onClose = jest.fn();
+    const onConfirm = jest.fn();
+    const view = mount(
+        <Overlay
+            confirmText="Alright mate!"
+            onClose={onClose}
+            onConfirm={onConfirm}
+            onSnackbarClick={onSnackbarClick}
+            open={true}
+            snackbarMessage="Something really strange happened"
+            snackbarType="warning"
+            title="My title"
+        >
+            <p>My overlay content</p>
+        </Overlay>
+    );
+
+    expect(onSnackbarClick).not.toBeCalled();
+    view.find('.snackbar.warning').simulate('click');
+    expect(onSnackbarClick).toBeCalled();
+});
