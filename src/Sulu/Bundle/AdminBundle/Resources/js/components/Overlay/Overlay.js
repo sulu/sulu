@@ -9,6 +9,7 @@ import Icon from '../Icon';
 import Button from '../Button';
 import {afterElementsRendered} from '../../utils/DOM';
 import Backdrop from '../Backdrop';
+import Snackbar, {type SnackbarType} from '../Snackbar';
 import Actions from './Actions';
 import overlayStyles from './overlay.scss';
 import type {Action, Size} from './types';
@@ -22,8 +23,12 @@ type Props = {
     confirmText: string,
     onClose: () => void,
     onConfirm: () => void,
+    onSnackbarClick?: () => void,
+    onSnackbarCloseClick?: () => void,
     open: boolean,
     size?: Size,
+    snackbarMessage?: string,
+    snackbarType: SnackbarType,
     title: string,
 };
 
@@ -36,15 +41,17 @@ class Overlay extends React.Component<Props> {
         actions: [],
         confirmDisabled: false,
         confirmLoading: false,
+        snackbarType: 'error',
     };
 
     @observable open: boolean = false;
     @observable visible: boolean = false;
+    @observable snackbarType: SnackbarType;
 
     constructor(props: Props) {
         super(props);
 
-        const {open} = this.props;
+        const {open, snackbarType} = this.props;
 
         if (open) {
             Mousetrap.bind(CLOSE_OVERLAY_KEY, this.close);
@@ -52,6 +59,7 @@ class Overlay extends React.Component<Props> {
 
         this.open = open;
         this.visible = open;
+        this.snackbarType = snackbarType;
     }
 
     componentWillUnmount() {
@@ -61,7 +69,7 @@ class Overlay extends React.Component<Props> {
     }
 
     @action componentDidUpdate(prevProps: Props) {
-        const {open} = this.props;
+        const {open, snackbarMessage, snackbarType} = this.props;
 
         if (prevProps.open !== open) {
             if (open) {
@@ -77,6 +85,10 @@ class Overlay extends React.Component<Props> {
 
         if (prevProps.open === false && open === true) {
             this.visible = true;
+        }
+
+        if (snackbarMessage && this.snackbarType !== snackbarType) {
+            this.snackbarType = snackbarType;
         }
     }
 
@@ -103,8 +115,11 @@ class Overlay extends React.Component<Props> {
             confirmLoading,
             confirmText,
             onConfirm,
-            title,
+            onSnackbarClick,
+            onSnackbarCloseClick,
             size,
+            snackbarMessage,
+            title,
         } = this.props;
 
         const {open, visible} = this;
@@ -154,6 +169,15 @@ class Overlay extends React.Component<Props> {
                                             {confirmText}
                                         </Button>
                                     </footer>
+                                    <div className={overlayStyles.snackbar}>
+                                        <Snackbar
+                                            message={snackbarMessage || ''}
+                                            onClick={onSnackbarClick}
+                                            onCloseClick={onSnackbarCloseClick}
+                                            type={this.snackbarType}
+                                            visible={!!snackbarMessage}
+                                        />
+                                    </div>
                                 </section>
                             </div>
                         </div>

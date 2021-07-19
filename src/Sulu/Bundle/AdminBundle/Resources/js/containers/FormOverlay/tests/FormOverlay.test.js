@@ -277,7 +277,7 @@ test('Should display Snackbar with generic message if an error happens while sav
     const formStore = new ResourceFormStore(new ResourceStore('test'), 'test');
     const confirmSpy = jest.fn();
 
-    const formOverlay = shallow(<FormOverlay
+    const formOverlay = mount(<FormOverlay
         confirmDisabled={false}
         confirmLoading={false}
         confirmText="confirm-text"
@@ -311,7 +311,7 @@ test('Should display Snackbar with message from server if an error happens while
     const formStore = new ResourceFormStore(new ResourceStore('test'), 'test');
     const confirmSpy = jest.fn();
 
-    const formOverlay = shallow(<FormOverlay
+    const formOverlay = mount(<FormOverlay
         confirmDisabled={false}
         confirmLoading={false}
         confirmText="confirm-text"
@@ -345,7 +345,7 @@ test('Should display Snackbar if a form is not valid', () => {
     const formStore = new ResourceFormStore(new ResourceStore('test'), 'test');
     const confirmSpy = jest.fn();
 
-    const formOverlay = shallow(<FormOverlay
+    const formOverlay = mount(<FormOverlay
         confirmDisabled={false}
         confirmLoading={false}
         confirmText="confirm-text"
@@ -368,7 +368,7 @@ test('Should hide Snackbar when closeClick callback of Snackbar is fired', () =>
     const formStore = new ResourceFormStore(new ResourceStore('test'), 'test');
     const confirmSpy = jest.fn();
 
-    const formOverlay = shallow(<FormOverlay
+    const formOverlay = mount(<FormOverlay
         confirmDisabled={false}
         confirmLoading={false}
         confirmText="confirm-text"
@@ -393,7 +393,7 @@ test('Should clear old errors if Overlay is opened a second time', () => {
     const formStore = new ResourceFormStore(new ResourceStore('test'), 'test');
     const confirmSpy = jest.fn();
 
-    const formOverlay = shallow(<FormOverlay
+    const formOverlay = mount(<FormOverlay
         confirmDisabled={false}
         confirmLoading={false}
         confirmText="confirm-text"
@@ -411,6 +411,7 @@ test('Should clear old errors if Overlay is opened a second time', () => {
 
     formOverlay.setProps({open: false});
     formOverlay.setProps({open: true});
+    formOverlay.update();
 
     expect(formOverlay.find(Snackbar).props().visible).toBeFalsy();
 });
