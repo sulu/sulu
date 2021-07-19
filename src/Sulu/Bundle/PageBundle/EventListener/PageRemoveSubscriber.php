@@ -168,6 +168,10 @@ class PageRemoveSubscriber implements EventSubscriberInterface
 
         if (!empty($descendantPages)) {
             throw new DependantResourcesFoundException(
+                [
+                    'id' => $document->getUuid(),
+                    'resourceKey' => PageDocument::RESOURCE_KEY,
+                ],
                 $this->groupResourcesByDepth($descendantPages),
                 \count($descendantPages)
             );

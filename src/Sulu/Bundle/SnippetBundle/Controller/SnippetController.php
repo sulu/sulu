@@ -15,6 +15,7 @@ use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
 use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use PHPCR\NodeInterface;
+use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManagerInterface;
 use Sulu\Bundle\SnippetBundle\Snippet\SnippetRepository;
@@ -26,6 +27,7 @@ use Sulu\Component\Content\Mapper\ContentMapper;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 use Sulu\Component\Hash\RequestHashChecker;
+use Sulu\Component\Rest\Exception\ReferencingResourcesFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\ListBuilder\ListRestHelper;
@@ -273,7 +275,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
     public function deleteAction(Request $request, $id)
     {
         $locale = $this->getLocale($request);
-        $webspaceKey = $request->query->get('webspace', null);
+        $webspaceKey = (string) $request->query->get('webspace');
 
         $references = $this->snippetRepository->getReferences($id);
 
@@ -282,7 +284,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
             if ($force) {
                 $this->contentMapper->delete($id, $webspaceKey, true);
             } else {
-                return $this->getReferentialIntegrityResponse($webspaceKey, $references, $id, $locale);
+                $this->throwReferentialIntegrityException($webspaceKey, $references, $id, $locale);
             }
         } else {
             $this->contentMapper->delete($id, $webspaceKey);
@@ -411,15 +413,13 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
      * @param string $webspace
      * @param NodeInterface[] $references
      * @param string $id
+     * @param string $locale
      *
-     * @return Response
+     * @throws ReferencingResourcesFoundException
      */
-    private function getReferentialIntegrityResponse($webspace, $references, $id, $locale)
+    private function throwReferentialIntegrityException($webspace, $references, $id, $locale): void
     {
-        $data = [
-            'id' => $id,
-            'items' => [],
-        ];
+        $items = [];
 
         foreach ($references as $reference) {
             $parentReference = $reference->getParent();
@@ -430,13 +430,19 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
                     $locale,
                     true
                 );
-                $data['items'][] = ['name' => $content->getPropertyValue('title')];
+                $items[] = [
+                    'id' => $content->getUuid(),
+                    'resourceKey' => PageDocument::RESOURCE_KEY,
+                    'title' => $content->getPropertyValue('title'),
+                ];
             }
         }
 
         foreach ($this->defaultSnippetManager->loadWebspaces($id) as $defaultSnippetWebspace) {
-            $data['items'][] = [
-                'name' => $this->translator->trans(
+            $items[] = [
+                'id' => $defaultSnippetWebspace->getKey(),
+                'resourceKey' => 'webspaces',
+                'title' => $this->translator->trans(
                     'sulu_snippet.webspace_default_snippet',
                     ['{webspaceKey}' => $defaultSnippetWebspace->getName()],
                     'admin'
@@ -444,7 +450,14 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
             ];
         }
 
-        return new JsonResponse($data, 409);
+        throw new ReferencingResourcesFoundException(
+            [
+                'id' => $id,
+                'resourceKey' => SnippetDocument::RESOURCE_KEY,
+            ],
+            $items,
+            \count($items)
+        );
     }
 
     private function findDocument($id, $locale)
