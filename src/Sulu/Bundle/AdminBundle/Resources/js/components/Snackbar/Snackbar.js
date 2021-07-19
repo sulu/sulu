@@ -7,11 +7,13 @@ import {translate} from '../../utils/Translator';
 import Icon from '../Icon';
 import snackbarStyles from './snackbar.scss';
 
+export type SnackbarType = 'error' | 'warning';
+
 type Props = {|
     message: string,
     onClick?: () => void,
     onCloseClick?: () => void,
-    type: 'error' | 'warning',
+    type: SnackbarType,
     visible: boolean,
 |};
 
