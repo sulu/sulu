@@ -23,21 +23,24 @@ test('Pass props correctly to Link component', () => {
     const finishSpy = jest.fn();
 
     const locale = observable.box('en');
+    // $FlowFixMe
+    formInspector.locale = locale;
+
     const value = {
         anchor: 'anchorTest',
         href: '123-asdf-123',
-        locale,
+        locale: 'en',
         provider: 'page',
         target: '_blank',
         title: 'Test',
     };
 
     const options = {
-        target: {
+        enable_target: {
             name: 'target',
             value: true,
         },
-        anchor: {
+        enable_anchor: {
             name: 'anchor',
             value: true,
         },
@@ -59,14 +62,14 @@ test('Pass props correctly to Link component', () => {
         'disabled': true,
         'enableAnchor': true,
         'enableTarget': true,
-        'locale': 'en',
+        locale,
         'onChange': changeSpy,
         'onFinish': finishSpy,
         'types': [],
         'value': {
             'anchor': 'anchorTest',
             'href': '123-asdf-123',
-            locale,
+            'locale': 'en',
             'provider': 'page',
             'target': '_blank',
             'title': 'Test',
@@ -80,27 +83,33 @@ test('Pass props correctly to Link component filtered types', () => {
     const finishSpy = jest.fn();
 
     const locale = observable.box('en');
+    // $FlowFixMe
+    formInspector.locale = locale;
+
     const value: LinkTypeValue = {
         anchor: 'anchorTest',
         href: '123-asdf-123',
-        locale,
+        locale: 'en',
         provider: 'page',
         target: '_blank',
         title: 'Test',
     };
 
     const options = {
-        target: {
+        enable_target: {
             name: 'target',
             value: true,
         },
-        anchor: {
+        enable_anchor: {
             name: 'anchor',
             value: true,
         },
         types: {
             name: 'types',
-            value: 'external,page',
+            value: [
+                {name: 'external'},
+                {name: 'page'},
+            ],
         },
     };
 
@@ -120,14 +129,14 @@ test('Pass props correctly to Link component filtered types', () => {
         'disabled': true,
         'enableAnchor': true,
         'enableTarget': true,
-        'locale': 'en',
+        locale,
         'onChange': changeSpy,
         'onFinish': finishSpy,
         'types': ['external', 'page'],
         'value': {
             'anchor': 'anchorTest',
             'href': '123-asdf-123',
-            locale,
+            'locale': 'en',
             'provider': 'page',
             'target': '_blank',
             'title': 'Test',
@@ -141,10 +150,13 @@ test('Pass props correctly to Link component disabled anchor and target', () => 
     const finishSpy = jest.fn();
 
     const locale = observable.box('en');
+    // $FlowFixMe
+    formInspector.locale = locale;
+
     const value: LinkTypeValue = {
         anchor: 'anchorTest',
         href: '123-asdf-123',
-        locale,
+        locale: 'en',
         provider: 'page',
         target: '_blank',
         title: 'Test',
@@ -153,7 +165,10 @@ test('Pass props correctly to Link component disabled anchor and target', () => 
     const options = {
         types: {
             name: 'types',
-            value: 'external,page',
+            value: [
+                {name: 'external'},
+                {name: 'page'},
+            ],
         },
     };
 
@@ -173,14 +188,14 @@ test('Pass props correctly to Link component disabled anchor and target', () => 
         'disabled': true,
         'enableAnchor': false,
         'enableTarget': false,
-        'locale': 'en',
+        locale,
         'onChange': changeSpy,
         'onFinish': finishSpy,
         'types': ['external', 'page'],
         'value': {
             'anchor': 'anchorTest',
             'href': '123-asdf-123',
-            locale,
+            'locale': 'en',
             'provider': 'page',
             'target': '_blank',
             'title': 'Test',

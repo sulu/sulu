@@ -85,7 +85,7 @@ test('Create a CKEditor5 instance', () => {
                 },
             ],
         },
-        internalLinks: {
+        sulu: {
             locale: 'en',
         },
     }));
@@ -173,7 +173,7 @@ test('Create a CKEditor5 instance with given formats', () => {
                 },
             ],
         },
-        internalLinks: {
+        sulu: {
             locale: undefined,
         },
     }));

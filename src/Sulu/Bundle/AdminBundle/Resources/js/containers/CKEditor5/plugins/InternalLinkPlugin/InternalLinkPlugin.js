@@ -87,14 +87,18 @@ export default class InternalLinkPlugin extends Plugin {
             this.hideBalloon();
         }));
 
-        const locale = this.editor.config.get('internalLinks.locale');
+        const locale = this.editor.config.get('sulu.locale');
 
         render(
             (
                 <Observer>
                     {() => (
                         <Fragment>
-                            {linkTypeRegistry.getKeys().map((key) => {
+                            {linkTypeRegistry.getKeys().flatMap((key) => {
+                                if (key === 'external') {
+                                    return [];
+                                }
+
                                 const LinkOverlay = linkTypeRegistry.getOverlay(key);
 
                                 return (
@@ -169,6 +173,10 @@ export default class InternalLinkPlugin extends Plugin {
             });
 
             linkTypeRegistry.getKeys().forEach((key) => {
+                if (key === 'external') {
+                    return;
+                }
+
                 const button = new ButtonView(locale);
                 button.set({
                     class: 'ck-link-button',

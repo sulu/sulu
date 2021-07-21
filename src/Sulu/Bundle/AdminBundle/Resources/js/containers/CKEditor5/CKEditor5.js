@@ -143,7 +143,7 @@ export default class CKEditor5 extends React.Component<Props> {
                     } : undefined,
                 ].filter((entry) => entry !== undefined),
             },
-            internalLinks: {
+            sulu: {
                 locale: locale && locale.get(),
             },
             table: {

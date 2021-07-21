@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import {render, shallow} from 'enzyme';
+import {observable} from 'mobx';
 import Link from '../Link';
 import linkTypeRegistry from '../registries/linkTypeRegistry';
 import LinkTypeOverlay from '../overlays/LinkTypeOverlay';
@@ -29,7 +30,7 @@ test('Render Link container', () => {
 
     expect(
         render(
-            <Link locale="en" onChange={changeSpy} onFinish={finishSpy} value={value} />
+            <Link locale={observable.box('en')} onChange={changeSpy} onFinish={finishSpy} value={value} />
         )
     ).toMatchSnapshot();
 });
@@ -59,7 +60,7 @@ test('Pass correct props to overlay', () => {
         <Link
             enableAnchor={true}
             enableTarget={true}
-            locale="en"
+            locale={observable.box('en')}
             onChange={changeSpy}
             onFinish={finishSpy}
             value={value}
@@ -102,7 +103,7 @@ test('Open overlay on input click', () => {
         <Link
             enableAnchor={true}
             enableTarget={true}
-            locale="en"
+            locale={observable.box('en')}
             onChange={changeSpy}
             onFinish={finishSpy}
             value={value}
@@ -140,7 +141,7 @@ test('Open overlay on provider change', () => {
         <Link
             enableAnchor={true}
             enableTarget={true}
-            locale="en"
+            locale={observable.box('en')}
             onChange={changeSpy}
             onFinish={finishSpy}
             value={value}
@@ -176,7 +177,7 @@ test('Update values on overlay confirm', () => {
         <Link
             enableAnchor={true}
             enableTarget={true}
-            locale="en"
+            locale={observable.box('en')}
             onChange={changeSpy}
             onFinish={finishSpy}
             value={value}
@@ -228,7 +229,7 @@ test('Invalidate values on RemoveButton click', () => {
         <Link
             enableAnchor={true}
             enableTarget={true}
-            locale="en"
+            locale={observable.box('en')}
             onChange={changeSpy}
             onFinish={finishSpy}
             value={value}
