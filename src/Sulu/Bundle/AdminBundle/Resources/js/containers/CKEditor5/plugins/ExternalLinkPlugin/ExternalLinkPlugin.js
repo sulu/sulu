@@ -59,7 +59,7 @@ export default class ExternalLinkPlugin extends Plugin {
             this.hideBalloon();
         }));
 
-        const locale = this.editor.config.get('internalLinks.locale');
+        const locale = this.editor.config.get('sulu.locale');
 
         render(
             (

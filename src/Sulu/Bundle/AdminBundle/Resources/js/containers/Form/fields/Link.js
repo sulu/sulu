@@ -1,10 +1,11 @@
 // @flow
 import React from 'react';
-import {observable, toJS} from 'mobx';
+import {isArrayLike, observable} from 'mobx';
 import userStore from '../../../stores/userStore';
 import LinkContainer from '../../Link/Link';
 import type {FieldTypeProps} from '../types';
 import type {LinkTypeValue} from '../../Link/types';
+import type {IObservableArray} from 'mobx/lib/mobx';
 
 export default class Link extends React.Component<FieldTypeProps<LinkTypeValue>> {
     render() {
@@ -15,23 +16,42 @@ export default class Link extends React.Component<FieldTypeProps<LinkTypeValue>>
             onFinish,
             value,
             schemaOptions: {
-                anchor: {
+                enable_anchor: {
                     value: enableAnchor,
                 } = {},
-                target: {
+                enable_target: {
                     value: enableTarget,
                 } = {},
                 types: {
-                    value: providerTypes,
+                    value: unvalidatedTypes,
                 } = {},
             },
         } = this.props;
 
         const locale = formInspector.locale ? formInspector.locale : observable.box(userStore.contentLocale);
-        if (providerTypes !== undefined && providerTypes !== null && typeof providerTypes !== 'string') {
-            throw new Error('The "types" schema option must be a string if given!');
+
+        let providerTypes = undefined;
+
+        if (unvalidatedTypes) {
+            if (!isArrayLike(unvalidatedTypes)) {
+                throw new Error('The "schemes" schema option must be an array!');
+            }
+            // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
+            const types: Array<any> | IObservableArray<any> = unvalidatedTypes;
+
+            if (types.length === 0) {
+                throw new Error('The "schemes" schema option must contain some values!');
+            }
+
+            providerTypes = types.map((type) => {
+                if (typeof type.name !== 'string') {
+                    throw new Error(
+                        'Every type in the "types" schemaOption must contain a string as name'
+                    );
+                }
+                return type.name;
+            });
         }
-        const types = providerTypes ? providerTypes.split(',').map((name) => name.trim()) : [];
 
         if (enableAnchor !== undefined && enableAnchor !== null && typeof enableAnchor !== 'boolean') {
             throw new Error('The "anchor" schema option must be a boolean if given!');
@@ -43,13 +63,13 @@ export default class Link extends React.Component<FieldTypeProps<LinkTypeValue>>
 
         return (
             <LinkContainer
-                disabled={disabled === true}
+                disabled={!!disabled}
                 enableAnchor={enableAnchor}
                 enableTarget={enableTarget}
-                locale={toJS(locale)}
+                locale={locale}
                 onChange={onChange}
                 onFinish={onFinish}
-                types={types}
+                types={providerTypes}
                 value={value}
             />
         );

@@ -2,21 +2,21 @@
 import React, {Component, Fragment} from 'react';
 import classNames from 'classnames';
 import {observer} from 'mobx-react';
-import {action, observable} from 'mobx';
+import {action, observable, toJS} from 'mobx';
 import SingleSelect from '../../components/SingleSelect/SingleSelect';
 import Icon from '../../components/Icon';
 import linkStyles from '../Form/fields/link.scss';
 import linkTypeRegistry from './registries/linkTypeRegistry';
-import type {ChangeContext} from '../Form/types';
 import type {LinkTypeValue} from './types';
+import type {IObservableValue} from 'mobx/lib/mobx';
 
 type Props = {
     disabled?: boolean,
     enableAnchor?: ?boolean,
     enableTarget?: ?boolean,
-    locale: string,
-    onChange: (value: LinkTypeValue, context?: ChangeContext) => void,
-    onFinish: (subDataPath: ?string, subSchemaPath: ?string) => void,
+    locale: IObservableValue<string>,
+    onChange: (value: LinkTypeValue) => void,
+    onFinish: () => void,
     types?: string[],
     value: ?LinkTypeValue,
 }
@@ -32,85 +32,43 @@ class Link extends Component<Props> {
         types: [],
     };
 
-    @observable provider: ?string;
-    @observable openOverlay: ?string;
-    @observable target: ?string;
-    @observable href: ?string | number;
-    @observable title: ?string = '';
-    @observable anchor: ?string;
-
+    @observable openedOverlayProvider: ?string;
     @observable overlayHref: ?string | number;
-    @observable overlayProvider: ?string;
     @observable overlayTitle: ?string;
     @observable overlayTarget: ?string = DEFAULT_TARGET;
     @observable overlayAnchor: ?string;
 
-    constructor(props: Props): void {
-        super(props);
-        const {value} = this.props;
-
-        if (value) {
-            const {provider, title, href, target, anchor} = value;
-            this.provider = provider;
-            this.title = title;
-            this.href = href;
-            this.target = target;
-            this.anchor = anchor;
-
-            this.overlayProvider = this.provider;
-            this.initOverlay();
-        }
-    }
-
     @action handleRemove = () => {
-        this.overlayHref = undefined;
-        this.overlayProvider = undefined;
-        this.overlayTarget = undefined;
-        this.overlayAnchor = undefined;
-
-        this.href = undefined;
-        this.provider = undefined;
-        this.title = undefined;
-        this.target = undefined;
-        this.anchor = undefined;
-
-        this.handleOnChange();
+        this.handleOnChange(undefined, undefined, undefined, undefined, undefined);
     };
 
-    @action handleClick = () => {
-        this.initOverlay();
+    @action handleTitleClick = () => {
+        const {value} = this.props;
+        const {provider} = value || {};
 
-        this.openOverlay = this.provider;
+        this.openOverlay(provider);
     };
 
     @action handleOverlayConfirm = () => {
         if (!this.overlayHref) {
             return;
         }
-
-        this.href = this.overlayHref;
-        this.provider = this.overlayProvider;
-        this.title = this.overlayTitle;
-        this.target = this.overlayTarget;
-        this.anchor = this.overlayAnchor;
-
-        this.openOverlay = undefined;
-
-        this.handleOnChange();
+        this.handleOnChange(
+            this.openedOverlayProvider,
+            this.overlayHref,
+            this.overlayTitle,
+            this.overlayTarget,
+            this.overlayAnchor
+        );
+        this.closeOverlay();
     };
 
     @action handleOverlayClose = () => {
-        this.openOverlay = undefined;
+        this.closeOverlay();
     };
 
     @action handleProviderChange = (provider: string) => {
-        this.initOverlay();
-
-        if (this.overlayProvider !== provider) {
-            this.overlayHref = undefined;
-        }
-        this.overlayProvider = provider;
-        this.openOverlay = this.overlayProvider;
+        this.openOverlay(provider);
     };
 
     @action handleAnchorChange = (anchor: ?string) => {
@@ -126,42 +84,59 @@ class Link extends Component<Props> {
         this.overlayTitle = item?.title ?? String(href);
     };
 
-    initOverlay = () => {
-        this.overlayHref = this.href;
-        this.overlayTarget = this.target;
-        this.overlayTitle = this.title;
-        this.overlayAnchor = this.anchor;
+    closeOverlay = () => {
+        this.openedOverlayProvider = undefined;
     };
 
-    handleOnChange = () => {
+    openOverlay = (provider: ?string) => {
+        const {value} = this.props;
+        const {provider: currentProvider, title, href, target, anchor} = value || {};
+
+        this.overlayHref = currentProvider === provider ? href : undefined;
+        this.overlayTarget = target;
+        this.overlayTitle = title;
+        this.overlayAnchor = anchor;
+
+        this.openedOverlayProvider = provider;
+    };
+
+    handleOnChange = (provider: ?string, href: ?string | number, title: ?string, target: ?string, anchor: ?string) => {
         const {onChange, onFinish, enableTarget, enableAnchor, locale} = this.props;
 
         onChange(
             {
-                provider: this.provider,
-                target: enableTarget ? this.target : undefined,
-                anchor: enableAnchor ? this.anchor : undefined,
-                href: this.href,
-                title: this.title,
-                locale,
+                provider,
+                target: enableTarget ? target : undefined,
+                anchor: enableAnchor ? anchor : undefined,
+                href,
+                title,
+                locale: toJS(locale),
             }
         );
         onFinish();
     };
 
     render(): React$Node {
-        const {disabled, locale, enableAnchor, enableTarget, types} = this.props;
+        const {
+            disabled,
+            locale,
+            enableAnchor,
+            enableTarget,
+            types,
+            value,
+        } = this.props;
+        const {href, provider, title} = value || {};
 
         const itemClass = classNames(
             linkStyles.item,
             {
-                [linkStyles.clickable]: !disabled || !this.href,
+                [linkStyles.clickable]: !disabled || !href,
                 [linkStyles.disabled]: disabled,
             }
         );
 
         const allowedTypes = linkTypeRegistry.getKeys().flatMap((key) => {
-            if (types === undefined || types.length === 0){
+            if (types === undefined || types.length === 0) {
                 return key;
             }
 
@@ -176,7 +151,7 @@ class Link extends Component<Props> {
                             disabled={!!disabled}
                             onChange={this.handleProviderChange}
                             skin="flat"
-                            value={this.provider}
+                            value={provider}
                         >
                             {allowedTypes.map((key) => (
                                 <SingleSelect.Option key={key} value={key}>{key}</SingleSelect.Option>
@@ -184,8 +159,8 @@ class Link extends Component<Props> {
                         </SingleSelect>
                     </div>
                     <div className={linkStyles.itemContainer}>
-                        <div className={itemClass} onClick={disabled || this.handleClick} role="button">
-                            { this.title }
+                        <div className={itemClass} onClick={disabled || this.handleTitleClick} role="button">
+                            {title}
                         </div>
                         {!disabled &&
                             <button
@@ -204,15 +179,15 @@ class Link extends Component<Props> {
                     return (
                         <LinkOverlay
                             anchor={this.overlayAnchor}
-                            href={this.openOverlay === key ? this.overlayHref : undefined}
+                            href={this.openedOverlayProvider === key ? this.overlayHref : undefined}
                             key={key}
-                            locale={observable.box(locale)}
+                            locale={locale}
                             onAnchorChange={enableAnchor ? this.handleAnchorChange : undefined}
                             onCancel={this.handleOverlayClose}
                             onConfirm={this.handleOverlayConfirm}
                             onHrefChange={this.handleHrefChange}
                             onTargetChange={enableTarget ? this.handleTargetChange : undefined}
-                            open={this.openOverlay === key}
+                            open={this.openedOverlayProvider === key}
                             options={linkTypeRegistry.getOptions(key)}
                             target={this.overlayTarget}
                         />
