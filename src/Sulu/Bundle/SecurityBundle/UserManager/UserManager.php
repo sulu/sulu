@@ -15,7 +15,7 @@ use Doctrine\ORM\NoResultException;
 use Doctrine\Persistence\ObjectManager;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
-use Sulu\Bundle\ContactBundle\Contact\ContactManager;
+use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\SecurityBundle\Domain\Event\UserCreatedEvent;
 use Sulu\Bundle\SecurityBundle\Domain\Event\UserEnabledEvent;
@@ -62,7 +62,7 @@ class UserManager implements UserManagerInterface
     private $groupRepository;
 
     /**
-     * @var ContactManager
+     * @var ContactManagerInterface
      */
     protected $contactManager;
 
@@ -86,7 +86,7 @@ class UserManager implements UserManagerInterface
         EncoderFactory $encoderFactory = null,
         RoleRepositoryInterface $roleRepository,
         GroupRepository $groupRepository,
-        ContactManager $contactManager,
+        ContactManagerInterface $contactManager,
         SaltGenerator $saltGenerator,
         UserRepositoryInterface $userRepository,
         DomainEventCollectorInterface $domainEventCollector
