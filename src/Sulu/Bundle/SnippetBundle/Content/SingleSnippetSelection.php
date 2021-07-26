@@ -19,6 +19,7 @@ use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Sulu\Component\Content\PreResolvableContentTypeInterface;
 use Sulu\Component\Content\SimpleContentType;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
 class SingleSnippetSelection extends SimpleContentType implements PreResolvableContentTypeInterface
 {
@@ -37,14 +38,25 @@ class SingleSnippetSelection extends SimpleContentType implements PreResolvableC
      */
     private $snippetReferenceStore;
 
+    /**
+     * @var RequestAnalyzerInterface|null
+     */
+    private $requestAnalyzer;
+
     public function __construct(
         SnippetResolverInterface $snippetResolver,
         DefaultSnippetManagerInterface $defaultSnippetManager,
-        ReferenceStoreInterface $snippetReferenceStore
+        ReferenceStoreInterface $snippetReferenceStore,
+        RequestAnalyzerInterface $requestAnalyzer = null
     ) {
         $this->snippetResolver = $snippetResolver;
         $this->defaultSnippetManager = $defaultSnippetManager;
         $this->snippetReferenceStore = $snippetReferenceStore;
+        $this->requestAnalyzer = $requestAnalyzer;
+
+        if (null === $this->requestAnalyzer) {
+            @\trigger_error('Instantiating the SingleSnippetSelection class without the $requestAnalyzer argument is deprecated!', \E_USER_DEPRECATED);
+        }
 
         parent::__construct('SingleSnippetSelection', null);
     }
@@ -88,7 +100,12 @@ class SingleSnippetSelection extends SimpleContentType implements PreResolvableC
 
         /** @var PageBridge $page */
         $page = $property->getStructure();
+
         $webspaceKey = $page->getWebspaceKey();
+        if ($this->requestAnalyzer) {
+            $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
+        }
+
         $locale = $page->getLanguageCode();
         $shadowLocale = null;
         if ($page->getIsShadow()) {
@@ -99,7 +116,7 @@ class SingleSnippetSelection extends SimpleContentType implements PreResolvableC
         $loadExcerpt = isset($params['loadExcerpt']) ? $params['loadExcerpt']->getValue() : false;
         $defaultSnippetArea = isset($params['default']) ? $params['default']->getValue() : null;
 
-        if (empty($snippetUuid) && $defaultSnippetArea) {
+        if (empty($snippetUuid) && $defaultSnippetArea && $webspaceKey) {
             $snippetUuid = $this->getDefaultSnippetId($webspaceKey, $defaultSnippetArea, $locale);
         }
 

@@ -13,6 +13,7 @@ namespace Sulu\Bundle\SnippetBundle\Tests\Unit\Content;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\SnippetBundle\Content\SingleSnippetSelection;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManagerInterface;
@@ -21,23 +22,30 @@ use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Compat\Structure\StructureBridge;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Sulu\Component\Webspace\Webspace;
 
 class SingleSnippetSelectionTest extends TestCase
 {
     /**
-     * @var DefaultSnippetManagerInterface
+     * @var DefaultSnippetManagerInterface|ObjectProphecy
      */
     private $defaultSnippetManager;
 
     /**
-     * @var SnippetResolverInterface
+     * @var SnippetResolverInterface|ObjectProphecy
      */
     private $snippetResolver;
 
     /**
-     * @var ReferenceStoreInterface
+     * @var ReferenceStoreInterface|ObjectProphecy
      */
     private $referenceStore;
+
+    /**
+     * @var RequestAnalyzerInterface|ObjectProphecy
+     */
+    private $requestAnalyzer;
 
     /**
      * @var SingleSnippetSelection
@@ -49,18 +57,24 @@ class SingleSnippetSelectionTest extends TestCase
         $this->defaultSnippetManager = $this->prophesize(DefaultSnippetManagerInterface::class);
         $this->snippetResolver = $this->prophesize(SnippetResolverInterface::class);
         $this->referenceStore = $this->prophesize(ReferenceStoreInterface::class);
+        $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
 
         $this->singleSnippetSelection = new SingleSnippetSelection(
             $this->snippetResolver->reveal(),
             $this->defaultSnippetManager->reveal(),
-            $this->referenceStore->reveal()
+            $this->referenceStore->reveal(),
+            $this->requestAnalyzer->reveal()
         );
     }
 
     public function testGetContentData()
     {
+        $webspace = $this->prophesize(Webspace::class);
+        $webspace->getKey()->willReturn('sulu_io');
+        $this->requestAnalyzer->getWebspace()->willReturn($webspace->reveal());
+
         $structure = $this->prophesize(StructureBridge::class);
-        $structure->getWebspaceKey()->willReturn('sulu_io');
+        $structure->getWebspaceKey()->shouldNotBeCalled();
         $structure->getLanguageCode()->willReturn('de');
         $structure->getIsShadow()->wilLReturn(true);
         $structure->getShadowBaseLanguage()->wilLReturn('en');
@@ -83,8 +97,12 @@ class SingleSnippetSelectionTest extends TestCase
 
     public function testGetContentDataNullValue()
     {
+        $webspace = $this->prophesize(Webspace::class);
+        $webspace->getKey()->willReturn('sulu_io');
+        $this->requestAnalyzer->getWebspace()->willReturn($webspace->reveal());
+
         $structure = $this->prophesize(StructureBridge::class);
-        $structure->getWebspaceKey()->willReturn('sulu_io');
+        $structure->getWebspaceKey()->shouldNotBeCalled();
         $structure->getLanguageCode()->willReturn('de');
         $structure->getIsShadow()->wilLReturn(true);
         $structure->getShadowBaseLanguage()->wilLReturn('en');
@@ -101,8 +119,12 @@ class SingleSnippetSelectionTest extends TestCase
 
     public function testGetContentDataFallbackToSnippetArea()
     {
+        $webspace = $this->prophesize(Webspace::class);
+        $webspace->getKey()->willReturn('sulu_io');
+        $this->requestAnalyzer->getWebspace()->willReturn($webspace->reveal());
+
         $structure = $this->prophesize(StructureBridge::class);
-        $structure->getWebspaceKey()->willReturn('sulu_io');
+        $structure->getWebspaceKey()->shouldNotBeCalled();
         $structure->getLanguageCode()->willReturn('de');
         $structure->getIsShadow()->wilLReturn(false);
 
@@ -128,8 +150,12 @@ class SingleSnippetSelectionTest extends TestCase
 
     public function testGetContentDataWithExtensions()
     {
+        $webspace = $this->prophesize(Webspace::class);
+        $webspace->getKey()->willReturn('sulu_io');
+        $this->requestAnalyzer->getWebspace()->willReturn($webspace->reveal());
+
         $structure = $this->prophesize(StructureBridge::class);
-        $structure->getWebspaceKey()->willReturn('sulu_io');
+        $structure->getWebspaceKey()->shouldNotBeCalled();
         $structure->getLanguageCode()->willReturn('de');
         $structure->getIsShadow()->wilLReturn(false);
 
@@ -156,8 +182,12 @@ class SingleSnippetSelectionTest extends TestCase
 
     public function testGetViewData()
     {
+        $webspace = $this->prophesize(Webspace::class);
+        $webspace->getKey()->willReturn('sulu_io');
+        $this->requestAnalyzer->getWebspace()->willReturn($webspace->reveal());
+
         $structure = $this->prophesize(StructureBridge::class);
-        $structure->getWebspaceKey()->willReturn('sulu_io');
+        $structure->getWebspaceKey()->shouldNotBeCalled();
         $structure->getLanguageCode()->willReturn('de');
         $structure->getIsShadow()->wilLReturn(true);
         $structure->getShadowBaseLanguage()->wilLReturn('en');
@@ -180,8 +210,12 @@ class SingleSnippetSelectionTest extends TestCase
 
     public function testGetViewDataNullValue()
     {
+        $webspace = $this->prophesize(Webspace::class);
+        $webspace->getKey()->willReturn('sulu_io');
+        $this->requestAnalyzer->getWebspace()->willReturn($webspace->reveal());
+
         $structure = $this->prophesize(StructureBridge::class);
-        $structure->getWebspaceKey()->willReturn('sulu_io');
+        $structure->getWebspaceKey()->shouldNotBeCalled();
         $structure->getLanguageCode()->willReturn('de');
         $structure->getIsShadow()->wilLReturn(true);
         $structure->getShadowBaseLanguage()->wilLReturn('en');

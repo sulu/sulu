@@ -27,6 +27,7 @@
             <argument type="service" id="sulu_snippet.resolver"/>
             <argument type="service" id="sulu_snippet.default_snippet.manager"/>
             <argument type="service" id="sulu_snippet.reference_store.snippet"/>
+            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
 
             <tag name="sulu.content.type" alias="single_snippet_selection"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
@@ -36,6 +37,7 @@
             <argument type="service" id="sulu_snippet.resolver"/>
             <argument type="service" id="sulu_snippet.reference_store.snippet"/>
             <argument>%sulu_snippet.content-type.default_enabled%</argument>
+            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
 
             <tag name="sulu.content.type" alias="snippet_selection"/>
             <tag name="sulu.content.export" format="1.2.xliff" translate="false" />

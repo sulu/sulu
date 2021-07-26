@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\SnippetBundle\Tests\Unit\Content;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\SnippetBundle\Content\SnippetContent;
 use Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManagerInterface;
 use Sulu\Bundle\SnippetBundle\Snippet\SnippetResolverInterface;
@@ -19,23 +20,30 @@ use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Compat\Structure\StructureBridge;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Sulu\Component\Webspace\Webspace;
 
 class SnippetContentTest extends TestCase
 {
     /**
-     * @var DefaultSnippetManagerInterface
+     * @var DefaultSnippetManagerInterface|ObjectProphecy
      */
     private $defaultSnippetManager;
 
     /**
-     * @var SnippetResolverInterface
+     * @var SnippetResolverInterface|ObjectProphecy
      */
     private $snippetResolver;
 
     /**
-     * @var ReferenceStoreInterface
+     * @var ReferenceStoreInterface|ObjectProphecy
      */
     private $referenceStore;
+
+    /**
+     * @var RequestAnalyzerInterface|ObjectProphecy
+     */
+    private $requestAnalyzer;
 
     /**
      * @var SnippetContent
@@ -47,21 +55,26 @@ class SnippetContentTest extends TestCase
         $this->defaultSnippetManager = $this->prophesize(DefaultSnippetManagerInterface::class);
         $this->snippetResolver = $this->prophesize(SnippetResolverInterface::class);
         $this->referenceStore = $this->prophesize(ReferenceStoreInterface::class);
+        $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
 
         $this->contentType = new SnippetContent(
             $this->defaultSnippetManager->reveal(),
             $this->snippetResolver->reveal(),
             $this->referenceStore->reveal(),
             false,
-            ''
+            $this->requestAnalyzer->reveal()
         );
     }
 
     public function testGetContentData()
     {
+        $webspace = $this->prophesize(Webspace::class);
+        $webspace->getKey()->willReturn('sulu_io');
+        $this->requestAnalyzer->getWebspace()->willReturn($webspace->reveal());
+
         $property = $this->prophesize(PropertyInterface::class);
         $structure = $this->prophesize(StructureBridge::class);
-        $structure->getWebspaceKey()->willReturn('sulu_io');
+        $structure->getWebspaceKey()->shouldNotBeCalled();
         $structure->getLanguageCode()->willReturn('de');
         $structure->getIsShadow()->wilLReturn(true);
         $structure->getShadowBaseLanguage()->wilLReturn('en');
@@ -81,9 +94,13 @@ class SnippetContentTest extends TestCase
 
     public function testGetContentDataWithExtensions()
     {
+        $webspace = $this->prophesize(Webspace::class);
+        $webspace->getKey()->willReturn('sulu_io');
+        $this->requestAnalyzer->getWebspace()->willReturn($webspace->reveal());
+
         $property = $this->prophesize(PropertyInterface::class);
         $structure = $this->prophesize(StructureBridge::class);
-        $structure->getWebspaceKey()->willReturn('sulu_io');
+        $structure->getWebspaceKey()->shouldNotBeCalled();
         $structure->getLanguageCode()->willReturn('de');
         $structure->getIsShadow()->wilLReturn(true);
         $structure->getShadowBaseLanguage()->wilLReturn('en');
@@ -108,9 +125,13 @@ class SnippetContentTest extends TestCase
 
     public function testGetViewData()
     {
+        $webspace = $this->prophesize(Webspace::class);
+        $webspace->getKey()->willReturn('sulu_io');
+        $this->requestAnalyzer->getWebspace()->willReturn($webspace->reveal());
+
         $property = $this->prophesize(PropertyInterface::class);
         $structure = $this->prophesize(StructureBridge::class);
-        $structure->getWebspaceKey()->willReturn('sulu_io');
+        $structure->getWebspaceKey()->shouldNotBeCalled();
         $structure->getLanguageCode()->willReturn('de');
         $structure->getIsShadow()->wilLReturn(true);
         $structure->getShadowBaseLanguage()->wilLReturn('en');

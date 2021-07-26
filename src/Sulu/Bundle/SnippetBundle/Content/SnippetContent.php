@@ -25,6 +25,7 @@ use Sulu\Component\Content\Compat\Structure\SnippetBridge;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeExportInterface;
 use Sulu\Component\Content\PreResolvableContentTypeInterface;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
 class SnippetContent extends ComplexContentType implements ContentTypeExportInterface, PreResolvableContentTypeInterface
 {
@@ -49,18 +50,29 @@ class SnippetContent extends ComplexContentType implements ContentTypeExportInte
     protected $defaultEnabled;
 
     /**
+     * @var RequestAnalyzerInterface|null
+     */
+    private $requestAnalyzer;
+
+    /**
      * @param true $defaultEnabled
      */
     public function __construct(
         DefaultSnippetManagerInterface $defaultSnippetManager,
         SnippetResolverInterface $snippetResolver,
         ReferenceStoreInterface $referenceStore,
-        $defaultEnabled
+        $defaultEnabled,
+        RequestAnalyzerInterface $requestAnalyzer = null
     ) {
         $this->snippetResolver = $snippetResolver;
         $this->defaultSnippetManager = $defaultSnippetManager;
         $this->referenceStore = $referenceStore;
         $this->defaultEnabled = $defaultEnabled;
+        $this->requestAnalyzer = $requestAnalyzer;
+
+        if (null === $this->requestAnalyzer) {
+            @\trigger_error('Instantiating the SnippetContent class without the $requestAnalyzer argument is deprecated!', \E_USER_DEPRECATED);
+        }
     }
 
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
@@ -140,7 +152,12 @@ class SnippetContent extends ComplexContentType implements ContentTypeExportInte
     {
         /** @var PageBridge $page */
         $page = $property->getStructure();
+
         $webspaceKey = $page->getWebspaceKey();
+        if ($this->requestAnalyzer) {
+            $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
+        }
+
         $locale = $page->getLanguageCode();
         $shadowLocale = null;
         if ($page->getIsShadow()) {
@@ -158,7 +175,7 @@ class SnippetContent extends ComplexContentType implements ContentTypeExportInte
             $snippetArea = $snippetType;
         }
 
-        if (empty($ids) && $snippetArea && $this->defaultEnabled) {
+        if (empty($ids) && $snippetArea && $this->defaultEnabled && $webspaceKey) {
             $ids = $this->loadSnippetAreaIds($webspaceKey, $snippetArea, $locale);
         }
 
