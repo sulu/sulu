@@ -72,6 +72,7 @@ class ForgotPasswordForm extends React.Component<Props> {
                                 {translate('sulu_admin.username_or_email')}
                             </div>
                             <Input
+                                autocomplete="username"
                                 icon="su-user"
                                 inputRef={this.setInputRef}
                                 onChange={this.handleUserChange}
