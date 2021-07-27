@@ -80,6 +80,7 @@ class PasswordConfirmation extends React.Component<Props> {
             <Grid className={passwordConfirmationStyles.grid}>
                 <Grid.Item colSpan={6}>
                     <Input
+                        autocomplete="new-password"
                         disabled={disabled}
                         icon={LOCK_ICON}
                         onChange={this.handleFirstChange}
@@ -90,6 +91,7 @@ class PasswordConfirmation extends React.Component<Props> {
                 </Grid.Item>
                 <Grid.Item className={passwordConfirmationStyles.item} colSpan={6}>
                     <Input
+                        autocomplete="new-password"
                         disabled={disabled}
                         icon={LOCK_ICON}
                         onChange={this.handleSecondChange}
