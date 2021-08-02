@@ -31,7 +31,7 @@ class Link extends SimpleContentType
 
     public function __construct(LinkProviderPoolInterface $providerPool)
     {
-        parent::__construct('LinkProvider');
+        parent::__construct('Link');
 
         $this->providerPool = $providerPool;
     }
@@ -41,7 +41,7 @@ class Link extends SimpleContentType
      */
     protected function encodeValue($value): string
     {
-        return \json_encode($value, \JSON_THROW_ON_ERROR);
+        return \json_encode($value, \defined('JSON_THROW_ON_ERROR') ? \JSON_THROW_ON_ERROR : 0);
     }
 
     /**
@@ -55,7 +55,7 @@ class Link extends SimpleContentType
             return [];
         }
 
-        return \json_decode($value, true, 512, \JSON_THROW_ON_ERROR);
+        return \json_decode($value, true, 512, \defined('JSON_THROW_ON_ERROR') ? \JSON_THROW_ON_ERROR : 0);
     }
 
     /**
