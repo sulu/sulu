@@ -28,7 +28,7 @@ export type LinkTypeOptions = {|
 
 export type LinkTypeValue = {|
     anchor?: ?string,
-    href: ?string | number,
+    href: ?string | ?number,
     locale: string,
     provider: ?string,
     target?: ?string,
