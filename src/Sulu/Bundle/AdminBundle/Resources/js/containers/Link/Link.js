@@ -38,8 +38,8 @@ class Link extends Component<Props> {
     @observable overlayTarget: ?string = DEFAULT_TARGET;
     @observable overlayAnchor: ?string;
 
-    @action handleRemove = () => {
-        this.handleOnChange(undefined, undefined, undefined, undefined, undefined);
+    @action handleRemoveClick = () => {
+        this.changeValue(undefined, undefined, undefined, undefined, undefined);
     };
 
     @action handleTitleClick = () => {
@@ -53,7 +53,7 @@ class Link extends Component<Props> {
         if (!this.overlayHref) {
             return;
         }
-        this.handleOnChange(
+        this.changeValue(
             this.openedOverlayProvider,
             this.overlayHref,
             this.overlayTitle,
@@ -71,15 +71,15 @@ class Link extends Component<Props> {
         this.openOverlay(provider);
     };
 
-    @action handleAnchorChange = (anchor: ?string) => {
+    @action handleOverlayAnchorChange = (anchor: ?string) => {
         this.overlayAnchor = anchor;
     };
 
-    @action handleTargetChange = (target: ?string) => {
+    @action handleOverlayTargetChange = (target: ?string) => {
         this.overlayTarget = target;
     };
 
-    @action handleHrefChange = (href: ?string | number, item: ?Object) => {
+    @action handleOverlayHrefChange = (href: ?string | number, item: ?Object) => {
         this.overlayHref = href;
         this.overlayTitle = item?.title ?? String(href);
     };
@@ -100,7 +100,7 @@ class Link extends Component<Props> {
         this.openedOverlayProvider = provider;
     };
 
-    handleOnChange = (provider: ?string, href: ?string | number, title: ?string, target: ?string, anchor: ?string) => {
+    changeValue = (provider: ?string, href: ?string | number, title: ?string, target: ?string, anchor: ?string) => {
         const {onChange, onFinish, enableTarget, enableAnchor, locale} = this.props;
 
         onChange(
@@ -135,12 +135,12 @@ class Link extends Component<Props> {
             }
         );
 
-        const allowedTypes = linkTypeRegistry.getKeys().flatMap((key) => {
+        const allowedTypes = linkTypeRegistry.getKeys().filter((key) => {
             if (types === undefined || types.length === 0) {
-                return key;
+                return true;
             }
 
-            return types.includes(key) ? key : [];
+            return types.includes(key);
         });
 
         return (
@@ -165,7 +165,7 @@ class Link extends Component<Props> {
                         {!disabled &&
                             <button
                                 className={linkStyles.removeButton}
-                                onClick={this.handleRemove}
+                                onClick={this.handleRemoveClick}
                                 type="button"
                             >
                                 <Icon name="su-trash-alt" />
@@ -182,11 +182,11 @@ class Link extends Component<Props> {
                             href={this.openedOverlayProvider === key ? this.overlayHref : undefined}
                             key={key}
                             locale={locale}
-                            onAnchorChange={enableAnchor ? this.handleAnchorChange : undefined}
+                            onAnchorChange={enableAnchor ? this.handleOverlayAnchorChange : undefined}
                             onCancel={this.handleOverlayClose}
                             onConfirm={this.handleOverlayConfirm}
-                            onHrefChange={this.handleHrefChange}
-                            onTargetChange={enableTarget ? this.handleTargetChange : undefined}
+                            onHrefChange={this.handleOverlayHrefChange}
+                            onTargetChange={enableTarget ? this.handleOverlayTargetChange : undefined}
                             open={this.openedOverlayProvider === key}
                             options={linkTypeRegistry.getOptions(key)}
                             target={this.overlayTarget}
