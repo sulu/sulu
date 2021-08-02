@@ -45,6 +45,10 @@ export default class InternalLinkPlugin extends Plugin {
     defaultText: ?string;
     balloon: typeof ContextualBalloon;
 
+    @computed get internalLinkTypes(): Array<string> {
+        return linkTypeRegistry.getKeys().filter((type) => type !== 'external');
+    }
+
     @computed get href(): ?string | number {
         const {id, anchor} = this;
 
@@ -94,11 +98,7 @@ export default class InternalLinkPlugin extends Plugin {
                 <Observer>
                     {() => (
                         <Fragment>
-                            {linkTypeRegistry.getKeys().flatMap((key) => {
-                                if (key === 'external') {
-                                    return [];
-                                }
-
+                            {this.internalLinkTypes.map((key) => {
                                 const LinkOverlay = linkTypeRegistry.getOverlay(key);
 
                                 return (
@@ -172,11 +172,7 @@ export default class InternalLinkPlugin extends Plugin {
                 tooltip: true,
             });
 
-            linkTypeRegistry.getKeys().forEach((key) => {
-                if (key === 'external') {
-                    return;
-                }
-
+            this.internalLinkTypes.forEach((key) => {
                 const button = new ButtonView(locale);
                 button.set({
                     class: 'ck-link-button',
