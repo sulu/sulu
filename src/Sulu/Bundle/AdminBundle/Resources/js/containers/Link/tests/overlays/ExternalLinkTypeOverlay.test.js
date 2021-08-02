@@ -1,9 +1,9 @@
 // @flow
 import React from 'react';
 import {mount, shallow} from 'enzyme';
-import {ExternalLinkTypeOverlay} from '../../../../Link';
+import ExternalLinkTypeOverlay from '../../overlays/ExternalLinkTypeOverlay';
 
-jest.mock('../../../../../utils/Translator', () => ({
+jest.mock('../../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
