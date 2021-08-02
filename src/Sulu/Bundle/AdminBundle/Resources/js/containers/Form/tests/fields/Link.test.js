@@ -7,7 +7,7 @@ import ResourceStore from '../../../../stores/ResourceStore';
 import FormInspector from '../../FormInspector';
 import ResourceFormStore from '../../stores/ResourceFormStore';
 import Link from '../../fields/Link';
-import type {LinkTypeValue} from '../../../Link/types';
+import type {LinkValue} from '../../../Link/types';
 
 jest.mock('loglevel', () => ({
     warn: jest.fn(),
@@ -86,7 +86,7 @@ test('Pass props correctly to Link component filtered types', () => {
     // $FlowFixMe
     formInspector.locale = locale;
 
-    const value: LinkTypeValue = {
+    const value: LinkValue = {
         anchor: 'anchorTest',
         href: '123-asdf-123',
         locale: 'en',
@@ -153,7 +153,7 @@ test('Pass props correctly to Link component disabled anchor and target', () => 
     // $FlowFixMe
     formInspector.locale = locale;
 
-    const value: LinkTypeValue = {
+    const value: LinkValue = {
         anchor: 'anchorTest',
         href: '123-asdf-123',
         locale: 'en',

@@ -4,10 +4,10 @@ import {isArrayLike, observable} from 'mobx';
 import userStore from '../../../stores/userStore';
 import LinkContainer from '../../Link/Link';
 import type {FieldTypeProps} from '../types';
-import type {LinkTypeValue} from '../../Link/types';
+import type {LinkValue} from '../../Link/types';
 import type {IObservableArray} from 'mobx/lib/mobx';
 
-export default class Link extends React.Component<FieldTypeProps<LinkTypeValue>> {
+export default class Link extends React.Component<FieldTypeProps<LinkValue>> {
     render() {
         const {
             disabled,

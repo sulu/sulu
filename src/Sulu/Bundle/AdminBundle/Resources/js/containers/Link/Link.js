@@ -7,7 +7,7 @@ import SingleSelect from '../../components/SingleSelect/SingleSelect';
 import Icon from '../../components/Icon';
 import linkStyles from '../Form/fields/link.scss';
 import linkTypeRegistry from './registries/linkTypeRegistry';
-import type {LinkTypeValue} from './types';
+import type {LinkValue} from './types';
 import type {IObservableValue} from 'mobx/lib/mobx';
 
 type Props = {
@@ -15,10 +15,10 @@ type Props = {
     enableAnchor?: ?boolean,
     enableTarget?: ?boolean,
     locale: IObservableValue<string>,
-    onChange: (value: LinkTypeValue) => void,
+    onChange: (value: LinkValue) => void,
     onFinish: () => void,
     types?: string[],
-    value: ?LinkTypeValue,
+    value: ?LinkValue,
 }
 
 const DEFAULT_TARGET = '_self';

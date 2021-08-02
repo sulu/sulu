@@ -26,7 +26,7 @@ export type LinkTypeOptions = {|
     resourceKey: string,
 |};
 
-export type LinkTypeValue = {|
+export type LinkValue = {|
     anchor?: ?string,
     href: ?string | ?number,
     locale: string,
