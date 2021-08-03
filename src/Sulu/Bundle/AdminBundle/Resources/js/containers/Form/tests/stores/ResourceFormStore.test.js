@@ -1187,20 +1187,17 @@ test('Should call setMultiple method of ResourceStore for default data', () => {
 test('Destroying the store should call all the disposers', () => {
     const resourceFormStore = new ResourceFormStore(new ResourceStore('snippets', '2'), 'snippets');
     resourceFormStore.schemaDisposer = jest.fn();
-    resourceFormStore.typeDisposer = jest.fn();
     resourceFormStore.updateFieldPathEvaluationsDisposer = jest.fn();
 
     resourceFormStore.destroy();
 
     expect(resourceFormStore.schemaDisposer).toBeCalled();
-    expect(resourceFormStore.typeDisposer).toBeCalled();
     expect(resourceFormStore.updateFieldPathEvaluationsDisposer).toBeCalled();
 });
 
 test('Destroying the store should not fail if no disposers are available', () => {
     const resourceFormStore = new ResourceFormStore(new ResourceStore('snippets', '2'), 'snippets');
     resourceFormStore.schemaDisposer = undefined;
-    resourceFormStore.typeDisposer = undefined;
 
     resourceFormStore.destroy();
 });

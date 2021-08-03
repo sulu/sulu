@@ -31,6 +31,10 @@ jest.mock('../../../../containers/Form', () => ({
             return this.resourceStore.dirty;
         }
 
+        get type() {
+            return this.data.template;
+        }
+
         changeType = jest.fn();
     },
 }));
@@ -58,7 +62,7 @@ function createTypeToolbarAction(options = {}) {
 test('Return item config with correct disabled, loading, options, icon, type and value ', () => {
     const typeToolbarAction = createTypeToolbarAction();
     typeToolbarAction.resourceFormStore.typesLoading = false;
-    typeToolbarAction.resourceFormStore.type = 'default';
+    typeToolbarAction.resourceFormStore.data.template = 'default';
     typeToolbarAction.resourceFormStore.types = {
         homepage: {
             key: 'homepage',
@@ -91,7 +95,7 @@ test('Return item config with correct disabled, loading, options, icon, type and
 test('Return item config with options sorted by title if sort_by is set to title', () => {
     const typeToolbarAction = createTypeToolbarAction({sort_by: 'title'});
     typeToolbarAction.resourceFormStore.typesLoading = false;
-    typeToolbarAction.resourceFormStore.type = 'default';
+    typeToolbarAction.resourceFormStore.data.template = 'default';
     typeToolbarAction.resourceFormStore.types = {
         homepage: {
             key: 'homepage',
@@ -120,7 +124,7 @@ test('Return item config with options sorted by title if sort_by is set to title
 test('Return item config with loading select', () => {
     const typeToolbarAction = createTypeToolbarAction();
     typeToolbarAction.resourceFormStore.typesLoading = true;
-    typeToolbarAction.resourceFormStore.type = 'homepage';
+    typeToolbarAction.resourceFormStore.data.template = 'homepage';
     typeToolbarAction.resourceFormStore.types = {};
 
     expect(typeToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
@@ -134,7 +138,7 @@ test('Change the type of the FormStore when FormStore is not dirty and another t
     const typeToolbarAction = createTypeToolbarAction();
     typeToolbarAction.resourceFormStore.resourceStore.dirty = false;
     typeToolbarAction.resourceFormStore.typesLoading = false;
-    typeToolbarAction.resourceFormStore.type = 'default';
+    typeToolbarAction.resourceFormStore.data.template = 'default';
     typeToolbarAction.resourceFormStore.types = {
         default: {
             key: 'default',
@@ -166,7 +170,7 @@ test('Display warning dialog when FormStore is dirty and another type is selecte
     const typeToolbarAction = createTypeToolbarAction();
     typeToolbarAction.resourceFormStore.resourceStore.dirty = true;
     typeToolbarAction.resourceFormStore.typesLoading = false;
-    typeToolbarAction.resourceFormStore.type = 'default';
+    typeToolbarAction.resourceFormStore.data.template = 'default';
     typeToolbarAction.resourceFormStore.types = {
         default: {
             key: 'default',
@@ -209,7 +213,7 @@ test('Change the type of the FormStore when warning dialog is confirmed', () => 
     const typeToolbarAction = createTypeToolbarAction();
     typeToolbarAction.resourceFormStore.resourceStore.dirty = true;
     typeToolbarAction.resourceFormStore.typesLoading = false;
-    typeToolbarAction.resourceFormStore.type = 'default';
+    typeToolbarAction.resourceFormStore.data.template = 'default';
     typeToolbarAction.resourceFormStore.types = {
         default: {
             key: 'default',
@@ -245,7 +249,7 @@ test('Do not change the type of the FormStore when warning dialog is canceled', 
     const typeToolbarAction = createTypeToolbarAction();
     typeToolbarAction.resourceFormStore.resourceStore.dirty = true;
     typeToolbarAction.resourceFormStore.typesLoading = false;
-    typeToolbarAction.resourceFormStore.type = 'default';
+    typeToolbarAction.resourceFormStore.data.template = 'default';
     typeToolbarAction.resourceFormStore.types = {
         default: {
             key: 'default',
