@@ -517,6 +517,7 @@ export default class ListStore {
             .then(action(() => {
                 this.selectionIds.forEach(this.remove);
                 this.clearSelection();
+                this.reload();
                 this.deletingSelection = false;
             }))
             .catch(action((error) => {
