@@ -15,6 +15,8 @@ use Sulu\Component\Persistence\Repository\RepositoryInterface;
 
 /**
  * Interface for target groups conditions repository.
+ *
+ * @extends RepositoryInterface<TargetGroupConditionInterface>
  */
 interface TargetGroupConditionRepositoryInterface extends RepositoryInterface
 {

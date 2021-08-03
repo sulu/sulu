@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\AudienceTargetingBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\VirtualProperty;
 
@@ -51,12 +52,12 @@ class TargetGroup implements TargetGroupInterface
     private $active = false;
 
     /**
-     * @var TargetGroupWebspaceInterface[]
+     * @var Collection<int, TargetGroupWebspaceInterface>
      */
     private $webspaces;
 
     /**
-     * @var TargetGroupRuleInterface[]
+     * @var Collection<int, TargetGroupRuleInterface>
      */
     private $rules;
 

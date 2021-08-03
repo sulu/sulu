@@ -16,9 +16,16 @@ use Sulu\Component\Persistence\Repository\RepositoryInterface;
 
 /**
  * Doctrine ORM entity repository.
+ *
+ * @template T
+ * @template-extends BaseEntityRepository<T>
+ * @template-implements RepositoryInterface<T>
  */
 class EntityRepository extends BaseEntityRepository implements RepositoryInterface
 {
+    /**
+     * @return T
+     */
     public function createNew()
     {
         $className = $this->getClassName();

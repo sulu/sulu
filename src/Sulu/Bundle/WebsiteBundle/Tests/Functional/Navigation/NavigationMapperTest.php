@@ -80,7 +80,7 @@ class NavigationMapperTest extends SuluTestCase
     private $homeDocument;
 
     /**
-     * @var RoleInteface
+     * @var RoleInterface
      */
     private $anonymousRole;
 

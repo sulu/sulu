@@ -15,6 +15,8 @@ use Sulu\Component\Persistence\Repository\RepositoryInterface;
 
 /**
  * Interface for target group webspace repository.
+ *
+ * @extends RepositoryInterface<TargetGroupWebspaceInterface>
  */
 interface TargetGroupWebspaceRepositoryInterface extends RepositoryInterface
 {

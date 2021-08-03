@@ -15,6 +15,8 @@ use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
 
 /**
  * Implementation of keyword repository.
+ *
+ * @extends EntityRepository<KeywordInterface>
  */
 class KeywordRepository extends EntityRepository implements KeywordRepositoryInterface
 {

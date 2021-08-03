@@ -17,6 +17,8 @@ use Sulu\Component\Security\Authentication\UserSettingRepositoryInterface;
 /**
  * Repository for the UserSettings, implementing some additional functions
  * for querying objects.
+ *
+ * @extends EntityRepository<UserSetting>
  */
 class UserSettingRepository extends EntityRepository implements UserSettingRepositoryInterface
 {

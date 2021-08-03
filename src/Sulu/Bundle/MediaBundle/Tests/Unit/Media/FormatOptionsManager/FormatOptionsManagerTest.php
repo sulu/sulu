@@ -15,13 +15,13 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FormatOptions;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\FormatNotFoundException;
-use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManager;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\FormatOptions\FormatOptionsManager;
 use Sulu\Bundle\MediaBundle\Media\FormatOptions\FormatOptionsManagerInterface;
@@ -30,22 +30,22 @@ use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 class FormatOptionsManagerTest extends TestCase
 {
     /**
-     * @var EntityManagerInterface
+     * @var EntityManagerInterface|ObjectProphecy
      */
     private $em;
 
     /**
-     * @var EntityRepository
+     * @var EntityRepository|ObjectProphecy
      */
     private $formatOptionsRepository;
 
     /**
-     * @var MediaManagerInterface
+     * @var MediaManagerInterface|ObjectProphecy
      */
     private $mediaManager;
 
     /**
-     * @var FormatManagerInterface
+     * @var FormatManagerInterface|ObjectProphecy
      */
     private $formatManager;
 
@@ -72,7 +72,7 @@ class FormatOptionsManagerTest extends TestCase
 
         $this->formatOptionsRepository = $this->prophesize(EntityRepository::class);
         $this->mediaManager = $this->prophesize(MediaManagerInterface::class);
-        $this->formatManager = $this->prophesize(FormatManager::class);
+        $this->formatManager = $this->prophesize(FormatManagerInterface::class);
 
         $this->formatOptionsManager = new FormatOptionsManager(
             $this->em->reveal(),
