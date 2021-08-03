@@ -178,9 +178,7 @@ class UserManager implements UserManagerInterface
 
             // check if username is already in database and the current user is not the user with this username
             if (!$patch || null !== $username) {
-                if ($user->getUsername() != $username &&
-                    !$this->isUsernameUnique($username)
-                ) {
+                if (strcasecmp($username, $user->getUsername()) !== 0 && !$this->isUsernameUnique($username)) {
                     throw new UsernameNotUniqueException($username);
                 }
                 $user->setUsername($username);
@@ -683,9 +681,7 @@ class UserManager implements UserManagerInterface
             }
         } else {
             if (null !== $email) {
-                if ($email !== $user->getEmail() &&
-                    !$this->isEmailUnique($email)
-                ) {
+                if (strcasecmp($email, $user->getEmail()) !== 0 && !$this->isEmailUnique($email)) {
                     throw new EmailNotUniqueException($email);
                 }
                 $user->setEmail($email);

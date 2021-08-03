@@ -11,6 +11,8 @@
 
 namespace Sulu\Bundle\SecurityBundle\Tests\Functional\Controller;
 
+use Sulu\Bundle\ContactBundle\Entity\Contact;
+use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
@@ -87,6 +89,22 @@ class ProfileControllerTest extends SuluTestCase
 
     public function testPutEmailNotUnique()
     {
+        $existingContact = new Contact();
+        $existingContact->setFirstName('Max');
+        $existingContact->setLastName('Muster');
+
+        $existingUser = new User();
+        $existingUser->setUsername('existing-username');
+        $existingUser->setEmail('existing@email.com');
+        $existingUser->setPassword('securepassword');
+        $existingUser->setSalt('salt');
+        $existingUser->setLocale('de');
+        $existingUser->setContact($existingContact);
+
+        static::getEntityManager()->persist($existingContact);
+        static::getEntityManager()->persist($existingUser);
+        static::getEntityManager()->flush();
+
         $this->client->jsonRequest(
             'PUT',
             '/api/profile',
@@ -94,7 +112,7 @@ class ProfileControllerTest extends SuluTestCase
                 'firstName' => 'Hans',
                 'lastName' => 'Mustermann',
                 'username' => 'hansi',
-                'email' => '',
+                'email' => 'existing@email.com',
                 'password' => 'testpassword',
                 'locale' => 'de',
             ]
@@ -103,18 +121,34 @@ class ProfileControllerTest extends SuluTestCase
         $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertHttpStatusCode(409, $this->client->getResponse());
         $this->assertEquals(1004, $response->code);
-        $this->assertEquals('The email address "" is already assigned to another contact.', $response->detail);
+        $this->assertEquals('The email address "existing@email.com" is already assigned to another contact.', $response->detail);
     }
 
     public function testPutUsernameNotUnique()
     {
+        $existingContact = new Contact();
+        $existingContact->setFirstName('Max');
+        $existingContact->setLastName('Muster');
+
+        $existingUser = new User();
+        $existingUser->setUsername('existing-username');
+        $existingUser->setEmail('existing@email.com');
+        $existingUser->setPassword('securepassword');
+        $existingUser->setSalt('salt');
+        $existingUser->setLocale('de');
+        $existingUser->setContact($existingContact);
+
+        static::getEntityManager()->persist($existingContact);
+        static::getEntityManager()->persist($existingUser);
+        static::getEntityManager()->flush();
+
         $this->client->jsonRequest(
             'PUT',
             '/api/profile',
             [
                 'firstName' => 'Hans',
                 'lastName' => 'Mustermann',
-                'username' => '',
+                'username' => 'existing-username',
                 'email' => 'hans.mustermann@muster.at',
                 'password' => 'testpassword',
                 'locale' => 'de',
