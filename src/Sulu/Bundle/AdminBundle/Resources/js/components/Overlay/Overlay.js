@@ -9,6 +9,7 @@ import Icon from '../Icon';
 import Button from '../Button';
 import {afterElementsRendered} from '../../utils/DOM';
 import Backdrop from '../Backdrop';
+import Snackbar, {type SnackbarType} from '../Snackbar';
 import Actions from './Actions';
 import overlayStyles from './overlay.scss';
 import type {Action, Size} from './types';
@@ -22,8 +23,12 @@ type Props = {
     confirmText: string,
     onClose: () => void,
     onConfirm: () => void,
+    onSnackbarClick?: () => void,
+    onSnackbarCloseClick?: () => void,
     open: boolean,
     size?: Size,
+    snackbarMessage?: string,
+    snackbarType: SnackbarType,
     title: string,
 };
 
@@ -36,6 +41,7 @@ class Overlay extends React.Component<Props> {
         actions: [],
         confirmDisabled: false,
         confirmLoading: false,
+        snackbarType: 'error',
     };
 
     @observable open: boolean = false;
@@ -103,8 +109,12 @@ class Overlay extends React.Component<Props> {
             confirmLoading,
             confirmText,
             onConfirm,
-            title,
+            onSnackbarClick,
+            onSnackbarCloseClick,
             size,
+            snackbarMessage,
+            snackbarType,
+            title,
         } = this.props;
 
         const {open, visible} = this;
@@ -154,6 +164,15 @@ class Overlay extends React.Component<Props> {
                                             {confirmText}
                                         </Button>
                                     </footer>
+                                    <div className={overlayStyles.snackbar}>
+                                        <Snackbar
+                                            message={snackbarMessage || ''}
+                                            onClick={onSnackbarClick}
+                                            onCloseClick={onSnackbarCloseClick}
+                                            type={snackbarType}
+                                            visible={!!snackbarMessage}
+                                        />
+                                    </div>
                                 </section>
                             </div>
                         </div>
