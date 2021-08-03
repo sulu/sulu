@@ -111,7 +111,7 @@ export type TreeItem = {
 };
 
 export interface FieldTransformer {
-    transform(value: *, parameters: {[string]: mixed}): Node,
+    transform(value: *, parameters: {[string]: mixed}, item: Object): Node,
 }
 
 export type ResolveCopyArgument = {copied: boolean, parent?: ?Object};
