@@ -38,6 +38,12 @@ const onConfirm = () => {
     setOpen(false);
 };
 
+const snackbarMessage = snackbarType === 'error'
+    ? 'An error occurred'
+    : snackbarType === 'warning'
+        ? 'Something strange happened'
+        : undefined;
+
 <div>
     <button onClick={() => setOpen(true)}>Open overlay</button>
     <Overlay
@@ -48,13 +54,7 @@ const onConfirm = () => {
         onConfirm={onConfirm}
         open={open}
         snackbarType={snackbarType}
-        snackbarMessage={
-            snackbarType === 'error'
-                ? 'An error occurred'
-                : snackbarType === 'warning'
-                    ? 'Something strange happened'
-                    : undefined
-        }>
+        snackbarMessage={snackbarMessage}>
         <div style={{padding: '50px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
             <button onClick={() => setSnackbarType((type) => type !== 'error' ? 'error' : undefined)}>Toggle error</button>
             &nbsp;

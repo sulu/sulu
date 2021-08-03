@@ -46,12 +46,11 @@ class Overlay extends React.Component<Props> {
 
     @observable open: boolean = false;
     @observable visible: boolean = false;
-    @observable snackbarType: SnackbarType;
 
     constructor(props: Props) {
         super(props);
 
-        const {open, snackbarType} = this.props;
+        const {open} = this.props;
 
         if (open) {
             Mousetrap.bind(CLOSE_OVERLAY_KEY, this.close);
@@ -59,7 +58,6 @@ class Overlay extends React.Component<Props> {
 
         this.open = open;
         this.visible = open;
-        this.snackbarType = snackbarType;
     }
 
     componentWillUnmount() {
@@ -69,7 +67,7 @@ class Overlay extends React.Component<Props> {
     }
 
     @action componentDidUpdate(prevProps: Props) {
-        const {open, snackbarMessage, snackbarType} = this.props;
+        const {open} = this.props;
 
         if (prevProps.open !== open) {
             if (open) {
@@ -85,10 +83,6 @@ class Overlay extends React.Component<Props> {
 
         if (prevProps.open === false && open === true) {
             this.visible = true;
-        }
-
-        if (snackbarMessage && this.snackbarType !== snackbarType) {
-            this.snackbarType = snackbarType;
         }
     }
 
@@ -119,6 +113,7 @@ class Overlay extends React.Component<Props> {
             onSnackbarCloseClick,
             size,
             snackbarMessage,
+            snackbarType,
             title,
         } = this.props;
 
@@ -174,7 +169,7 @@ class Overlay extends React.Component<Props> {
                                             message={snackbarMessage || ''}
                                             onClick={onSnackbarClick}
                                             onCloseClick={onSnackbarCloseClick}
-                                            type={this.snackbarType}
+                                            type={snackbarType}
                                             visible={!!snackbarMessage}
                                         />
                                     </div>
