@@ -69,6 +69,12 @@ const onCancel = () => {
     setOpen(false);
 };
 
+const snackbarMessage = snackbarType === 'error'
+    ? 'An error occurred'
+    : snackbarType === 'warning'
+        ? 'Something strange happened'
+        : undefined;
+
 <div>
     <button onClick={() => setOpen(true)}>Open dialog</button>
     <Dialog
@@ -78,13 +84,7 @@ const onCancel = () => {
         cancelText="No"
         confirmText="Yes"
         snackbarType={snackbarType}
-        snackbarMessage={
-            snackbarType === 'error'
-                ? 'An error occurred'
-                : snackbarType === 'warning'
-                    ? 'Something strange happened'
-                    : undefined
-        }
+        snackbarMessage={snackbarMessage}
         open={open}>
 
         <button onClick={() => setSnackbarType((type) => type !== 'error' ? 'error' : undefined)}>Toggle error</button>

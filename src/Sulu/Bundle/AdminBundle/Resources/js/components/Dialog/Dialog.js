@@ -40,20 +40,18 @@ class Dialog extends React.Component<Props> {
 
     @observable open: boolean = false;
     @observable visible: boolean = false;
-    @observable snackbarType: SnackbarType;
 
     constructor(props: Props) {
         super(props);
 
-        const {open, snackbarType} = this.props;
+        const {open} = this.props;
 
         this.open = open;
         this.visible = open;
-        this.snackbarType = snackbarType;
     }
 
     @action componentDidUpdate(prevProps: Props) {
-        const {open, snackbarMessage, snackbarType} = this.props;
+        const {open} = this.props;
 
         if (prevProps.open === false && open === true) {
             this.visible = true;
@@ -63,10 +61,6 @@ class Dialog extends React.Component<Props> {
             afterElementsRendered(action(() => {
                 this.open = open;
             }));
-        }
-
-        if (snackbarMessage && this.snackbarType !== snackbarType) {
-            this.snackbarType = snackbarType;
         }
     }
 
@@ -91,6 +85,7 @@ class Dialog extends React.Component<Props> {
             onSnackbarCloseClick,
             size,
             snackbarMessage,
+            snackbarType,
             title,
         } = this.props;
 
@@ -133,7 +128,7 @@ class Dialog extends React.Component<Props> {
                                             message={snackbarMessage || ''}
                                             onClick={onSnackbarClick}
                                             onCloseClick={onSnackbarCloseClick}
-                                            type={this.snackbarType}
+                                            type={snackbarType}
                                             visible={!!snackbarMessage}
                                         />
                                     </div>
