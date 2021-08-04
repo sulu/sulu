@@ -9,6 +9,7 @@ import Router from '../../../../services/Router';
 import ResourceStore from '../../../../stores/ResourceStore';
 import List from '../../../../views/List';
 import UploadToolbarAction from '../../toolbarActions/UploadToolbarAction';
+import {Requester} from '../../../../services';
 
 jest.mock('loglevel', () => ({
     warn: jest.fn(),
@@ -30,6 +31,10 @@ jest.mock('../../../../services/Router', () => jest.fn(function() {
     this.attributes = {
         locale: 'en',
     };
+}));
+
+jest.mock('../../../../services/Requester', () => ({
+    fetch: jest.fn(),
 }));
 
 function createUploadToolbarAction(options = {}) {
@@ -96,9 +101,7 @@ test('Should make xhr request on confirm', () => {
         statusText: '',
         ok: true,
     });
-
-    // eslint-disable-next-line no-undef
-    global.fetch = jest.fn(() => promise);
+    Requester.fetch.mockReturnValue(promise);
 
     SymfonyRouting.generate.mockImplementation((routeName, params) => {
         return routeName + '?' + Object.keys(params).map((key) => key + '=' + params[key]).join('&');
@@ -123,7 +126,7 @@ test('Should make xhr request on confirm', () => {
 
     uploadToolbarAction.handleConfirm([new File(['foo'], 'foo.jpg')]);
 
-    expect(fetch).toBeCalledWith('foo?locale=en&locale2=en&foo=bar&baz=foo', expect.objectContaining({
+    expect(Requester.fetch).toBeCalledWith('foo?locale=en&locale2=en&foo=bar&baz=foo', expect.objectContaining({
         method: 'POST',
         body: expect.any(FormData),
         credentials: 'same-origin',
@@ -236,9 +239,7 @@ test('Should display error if server error occurs', () => {
         ok: false,
         json: () => jsonPromise,
     });
-
-    // eslint-disable-next-line no-undef
-    global.fetch = jest.fn(() => fetchPromise);
+    Requester.fetch.mockReturnValue(fetchPromise);
 
     SymfonyRouting.generate.mockImplementation((routeName, params) => {
         return routeName + '?' + Object.keys(params).map((key) => key + '=' + params[key]).join('&');
@@ -255,7 +256,7 @@ test('Should display error if server error occurs', () => {
 
     uploadToolbarAction.handleConfirm([new File(['foo'], 'foo.jpg')]);
 
-    expect(fetch).toBeCalledWith('foo?', expect.objectContaining({
+    expect(Requester.fetch).toBeCalledWith('foo?', expect.objectContaining({
         method: 'POST',
         body: expect.any(FormData),
         credentials: 'same-origin',
@@ -289,9 +290,7 @@ test('Should display error message returned by server if server error occurs', (
         ok: false,
         json: () => jsonPromise,
     });
-
-    // eslint-disable-next-line no-undef
-    global.fetch = jest.fn(() => fetchPromise);
+    Requester.fetch.mockReturnValue(fetchPromise);
 
     SymfonyRouting.generate.mockImplementation((routeName, params) => {
         return routeName + '?' + Object.keys(params).map((key) => key + '=' + params[key]).join('&');
@@ -308,7 +307,7 @@ test('Should display error message returned by server if server error occurs', (
 
     uploadToolbarAction.handleConfirm([new File(['foo'], 'foo.jpg')]);
 
-    expect(fetch).toBeCalledWith('foo?', expect.objectContaining({
+    expect(Requester.fetch).toBeCalledWith('foo?', expect.objectContaining({
         method: 'POST',
         body: expect.any(FormData),
         credentials: 'same-origin',
@@ -342,9 +341,7 @@ test('Should display error message from deprecated errorCodeMapping option if se
         ok: false,
         json: () => jsonPromise,
     });
-
-    // eslint-disable-next-line no-undef
-    global.fetch = jest.fn(() => fetchPromise);
+    Requester.fetch.mockReturnValue(fetchPromise);
 
     SymfonyRouting.generate.mockImplementation((routeName, params) => {
         return routeName + '?' + Object.keys(params).map((key) => key + '=' + params[key]).join('&');
@@ -366,7 +363,7 @@ test('Should display error message from deprecated errorCodeMapping option if se
 
     expect(log.warn).toBeCalledWith(expect.stringContaining('The "errorCodeMapping" option is deprecated'));
 
-    expect(fetch).toBeCalledWith('foo?', expect.objectContaining({
+    expect(Requester.fetch).toBeCalledWith('foo?', expect.objectContaining({
         method: 'POST',
         body: expect.any(FormData),
         credentials: 'same-origin',
