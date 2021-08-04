@@ -1,5 +1,5 @@
 // @flow
-import {isObservable, observable, observable as mockObservable, toJS, when} from 'mobx';
+import {isObservable, observable, extendObservable as mockExtendObservable, toJS, when} from 'mobx';
 import ResourceFormStore from '../../stores/ResourceFormStore';
 import ResourceStore from '../../../../stores/ResourceStore';
 import metadataStore from '../../stores/metadataStore';
@@ -19,21 +19,28 @@ jest.mock('../../../../stores/ResourceStore', () => function(resourceKey, id, op
     this.resourceKey = resourceKey;
     this.save = jest.fn().mockReturnValue(Promise.resolve());
     this.delete = jest.fn().mockReturnValue(Promise.resolve());
-    this.set = jest.fn();
-    this.setMultiple = jest.fn(function(data) {
-        Object.assign(this.data, data);
+    this.set = jest.fn(function(path, value) {
+        this.data[path] = value;
     });
-    this.change = jest.fn();
+    this.setMultiple = jest.fn(function(data) {
+        this.data = {...this.data, ...data};
+    });
+    this.change = jest.fn(function(path, value) {
+        this.data[path] = value;
+    });
     this.changeMultiple = jest.fn(function(data) {
-        Object.assign(this.data, data);
+        this.data = {...this.data, ...data};
     });
     this.copyFromLocale = jest.fn();
-    this.data = mockObservable({});
     this.loading = false;
 
     if (options) {
         this.locale = options.locale;
     }
+
+    mockExtendObservable(this, {
+        data: {},
+    });
 });
 
 jest.mock('../../stores/metadataStore', () => ({}));
@@ -243,15 +250,15 @@ test('Evaluate all disabledConditions and visibleConditions for schema', () => {
     }, 0);
 });
 
-test('Evaluate all disabledConditions and visibleConditions for schema after calling setMultiple', () => {
+test('Evaluate all disabledConditions and visibleConditions for schema after calling setMultiple', (done) => {
     const metadata = {
         item1: {
             type: 'text_line',
         },
         item2: {
             type: 'text_line',
-            disabledCondition: 'item1 != "item2"',
-            visibleCondition: 'item1 == "item2"',
+            disabledCondition: 'item1 != "trigger-condition"',
+            visibleCondition: 'item1 == "trigger-condition"',
         },
     };
 
@@ -263,12 +270,12 @@ test('Evaluate all disabledConditions and visibleConditions for schema after cal
 
     setTimeout(() => {
         expect(isObservable(resourceFormStore.schema)).toBe(false);
-
-        resourceFormStore.setMultiple({item1: 'item2'});
+        resourceFormStore.setMultiple({item1: 'trigger-condition'});
         expect(resourceFormStore.schema.item2.disabled).toEqual(false);
         expect(resourceFormStore.schema.item2.visible).toEqual(true);
 
         resourceFormStore.destroy();
+        done();
     }, 0);
 });
 
@@ -373,7 +380,7 @@ test('Evaluate disabledConditions and visibleConditions for schema from options'
     }, 0);
 });
 
-test('Evaluate disabledConditions and visibleConditions for schema from metadatOptions', (done) => {
+test('Evaluate disabledConditions and visibleConditions for schema from metadataOptions', (done) => {
     const metadata = {
         item: {
             type: 'text_line',
@@ -626,7 +633,7 @@ test('types property should be returning types from server', () => {
     });
 });
 
-test('Type should be set from response', () => {
+test('type property should be returning type from ResourceStore', () => {
     const resourceStore = new ResourceStore('snippets', '1');
     resourceStore.data = observable({
         template: 'sidebar',
@@ -646,22 +653,7 @@ test('Type should be set from response', () => {
     });
 });
 
-test('Type should not be set from response if types are not supported', () => {
-    const resourceStore = new ResourceStore('snippets', '1');
-    resourceStore.data = observable({
-        template: 'sidebar',
-    });
-
-    const schemaTypesPromise = Promise.resolve(null);
-    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
-    const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
-
-    return schemaTypesPromise.then(() => {
-        expect(resourceFormStore.type).toEqual(undefined);
-    });
-});
-
-test('Changing type should set the appropriate property in the ResourceStore', (done) => {
+test('Changing type should set the appropriate property in the ResourceStore', () => {
     const resourceStore = new ResourceStore('snippets', '1');
     resourceStore.data = observable({
         template: 'sidebar',
@@ -682,12 +674,12 @@ test('Changing type should set the appropriate property in the ResourceStore', (
     const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
 
     return metadataPromise.then(() => {
+        expect(resourceStore.change).not.toBeCalled();
+
         resourceFormStore.changeType('footer');
+
+        expect(resourceStore.change).toBeCalledWith('template', 'footer');
         expect(resourceFormStore.type).toEqual('footer');
-        setTimeout(() => { // The observe command is executed later
-            expect(resourceStore.change).toBeCalledWith('template', 'footer');
-            done();
-        });
     });
 });
 
@@ -1511,32 +1503,6 @@ test('Remember fields being finished as modified fields and forget about them af
     });
 });
 
-test('Set new type after copying from different locale', () => {
-    const schemaTypesPromise = Promise.resolve({
-        types: {
-            sidebar: {key: 'sidebar', title: 'Sidebar'},
-            footer: {key: 'footer', title: 'Footer'},
-        },
-        defaultType: 'sidebar',
-    });
-
-    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
-
-    const resourceStore = new ResourceStore('test', 5);
-    const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
-
-    resourceStore.copyFromLocale.mockReturnValue(Promise.resolve(observable({template: 'sidebar'})));
-
-    return schemaTypesPromise.then(() => {
-        resourceFormStore.setType('footer');
-        const promise = resourceFormStore.copyFromLocale('de');
-
-        return promise.then(() => {
-            expect(resourceFormStore.type).toEqual('sidebar');
-        });
-    });
-});
-
 test('HasInvalidType return true when invalid type is set', () => {
     const schemaTypesPromise = Promise.resolve({
         types: {
@@ -1549,8 +1515,9 @@ test('HasInvalidType return true when invalid type is set', () => {
     const resourceStore = new ResourceStore('test', 1);
     const resourceFormStore = new ResourceFormStore(resourceStore, 'test');
 
+    resourceStore.data.template = 'not-sidebar';
+
     return schemaTypesPromise.then(() => {
-        resourceFormStore.setType('not-sidebar');
         expect(resourceFormStore.hasInvalidType).toEqual(true);
     });
 });
@@ -1567,8 +1534,9 @@ test('HasInvalidType return false valid type is set', () => {
     const resourceStore = new ResourceStore('test', 1);
     const resourceFormStore = new ResourceFormStore(resourceStore, 'test');
 
+    resourceStore.data.template = 'sidebar';
+
     return schemaTypesPromise.then(() => {
-        resourceFormStore.setType('sidebar');
         expect(resourceFormStore.hasInvalidType).toEqual(false);
     });
 });
@@ -1626,6 +1594,7 @@ test.each(['sidebar', 'footer'])('Set type to default "%s" if data has no templa
     const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
 
     return schemaTypesPromise.then(() => {
+        expect(resourceStore.set).toBeCalledWith('template', defaultType);
         expect(resourceFormStore.type).toEqual(defaultType);
     });
 });
