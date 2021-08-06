@@ -1050,6 +1050,34 @@ class PageControllerTest extends SuluTestCase
         $this->assertEquals('article test', $response->article);
     }
 
+    public function testPutWithMissingNodeInLiveWorkspace(): void
+    {
+        $data = [
+            [
+                'template' => 'simple',
+                'title' => 'test1',
+                'url' => '/test1',
+            ],
+        ];
+        $data = $this->setUpContent($data);
+
+        // simulate error during page creation be removing node from live workspace
+        $this->liveSession->getNodeByIdentifier($data[0]['id'])->remove();
+        $this->liveSession->save();
+
+        $data[0]['title'] = 'new title';
+
+        $this->client->jsonRequest(
+            'PUT',
+            '/api/pages/' . $data[0]['id'] . '?webspace=sulu_io&language=en',
+            $data[0]
+        );
+
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $response = \json_decode($this->client->getResponse()->getContent() ?: '');
+        $this->assertEquals('new title', $response->title);
+    }
+
     public function testPutShadow()
     {
         $data = [

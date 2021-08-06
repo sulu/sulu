@@ -12,6 +12,7 @@
 namespace Sulu\Component\Content\Document\Subscriber;
 
 use PHPCR\NodeInterface;
+use PHPCR\PathNotFoundException;
 use PHPCR\SessionInterface;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\PathBehavior;
@@ -237,6 +238,10 @@ class SecuritySubscriber implements EventSubscriberInterface
             return null;
         }
 
-        return $this->liveSession->getNode($path);
+        try {
+            return $this->liveSession->getNode($path);
+        } catch (PathNotFoundException $e) {
+            return null;
+        }
     }
 }
