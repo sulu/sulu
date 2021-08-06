@@ -15,6 +15,8 @@ use Sulu\Component\Persistence\Repository\RepositoryInterface;
 
 /**
  * Interface for target group rule repository.
+ *
+ * @extends RepositoryInterface<TargetGroupRuleInterface>
  */
 interface TargetGroupRuleRepositoryInterface extends RepositoryInterface
 {

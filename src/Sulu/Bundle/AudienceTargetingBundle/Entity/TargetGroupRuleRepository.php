@@ -15,6 +15,8 @@ use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
 
 /**
  * Repository class for target group rules.
+ *
+ * @extends EntityRepository<TargetGroupRuleInterface>
  */
 class TargetGroupRuleRepository extends EntityRepository implements TargetGroupRuleRepositoryInterface
 {

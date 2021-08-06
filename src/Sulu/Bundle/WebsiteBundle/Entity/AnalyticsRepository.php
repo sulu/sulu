@@ -15,6 +15,8 @@ use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
 
 /**
  * Repository for analytics.
+ *
+ * @extends EntityRepository<Analytics>
  */
 class AnalyticsRepository extends EntityRepository implements AnalyticsRepositoryInterface
 {

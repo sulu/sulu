@@ -13,6 +13,9 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 
+/**
+ * @extends EntityRepository<Position>
+ */
 class PositionRepository extends EntityRepository
 {
 }

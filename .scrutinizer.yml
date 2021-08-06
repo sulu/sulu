@@ -1,5 +1,0 @@
-imports:
-    - php
-
-filter:
-    excluded_paths: [tests/*, src/Sulu/Bundle/*/Tests/*]

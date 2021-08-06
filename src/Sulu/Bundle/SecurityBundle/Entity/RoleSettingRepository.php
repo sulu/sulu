@@ -18,6 +18,8 @@ use Sulu\Component\Security\Authentication\RoleSettingRepositoryInterface;
 
 /**
  * Repository for the Role-Settings, implementing some additional functions for querying objects.
+ *
+ * @extends EntityRepository<RoleSettingInterface>
  */
 class RoleSettingRepository extends EntityRepository implements RoleSettingRepositoryInterface
 {

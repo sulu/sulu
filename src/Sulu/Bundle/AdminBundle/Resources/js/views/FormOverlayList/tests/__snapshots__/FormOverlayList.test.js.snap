@@ -41,29 +41,6 @@ Array [
           class="article"
         >
           <div
-            class="snackbar error"
-            role="button"
-          >
-            <span
-              aria-label="su-exclamation-triangle"
-              class="su-exclamation-triangle icon"
-            />
-            <div
-              class="text"
-            >
-              <strong>
-                sulu_admin.error
-              </strong>
-               - 
-            </div>
-            <span
-              aria-label="su-times"
-              class="su-times clickable closeIcon"
-              role="button"
-              tabindex="0"
-            />
-          </div>
-          <div
             class="form"
           >
             <div>
@@ -86,6 +63,33 @@ Array [
             </span>
           </button>
         </footer>
+        <div
+          class="snackbar"
+        >
+          <div
+            class="snackbar error"
+            role="button"
+          >
+            <span
+              aria-label="su-exclamation-triangle"
+              class="su-exclamation-triangle icon"
+            />
+            <div
+              class="text"
+            >
+              <strong>
+                sulu_admin.error
+              </strong>
+               - 
+            </div>
+            <span
+              aria-label="su-times"
+              class="su-times clickable closeIcon"
+              role="button"
+              tabindex="0"
+            />
+          </div>
+        </div>
       </section>
     </div>
   </div>,

@@ -15,6 +15,8 @@ use Sulu\Component\Persistence\Repository\RepositoryInterface;
 
 /**
  * Defines the method for the doctrine repository.
+ *
+ * @extends RepositoryInterface<TagInterface>
  */
 interface TagRepositoryInterface extends RepositoryInterface
 {

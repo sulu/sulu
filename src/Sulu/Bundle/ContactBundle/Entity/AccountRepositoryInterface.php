@@ -13,6 +13,9 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Sulu\Component\Persistence\Repository\RepositoryInterface;
 
+/**
+ * @extends RepositoryInterface<AccountInterface>
+ */
 interface AccountRepositoryInterface extends RepositoryInterface
 {
     public function findById(int $id): ?AccountInterface;

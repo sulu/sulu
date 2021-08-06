@@ -13,6 +13,7 @@ namespace Sulu\Bundle\AudienceTargetingBundle\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleInterface;
@@ -31,27 +32,27 @@ use Twig\Environment;
 class TargetGroupSubscriberTest extends TestCase
 {
     /**
-     * @var Environment
+     * @var Environment|ObjectProphecy
      */
     private $twig;
 
     /**
-     * @var TargetGroupStoreInterface
+     * @var TargetGroupStoreInterface|ObjectProphecy
      */
     private $targetGroupStore;
 
     /**
-     * @var TargetGroupEvaluatorInterface
+     * @var TargetGroupEvaluatorInterface|ObjectProphecy
      */
     private $targetGroupEvaluator;
 
     /**
-     * @var TargetGroupRepositoryInterface
+     * @var TargetGroupRepositoryInterface|ObjectProphecy
      */
     private $targetGroupRepository;
 
     /**
-     * @var HttpKernelInterface
+     * @var HttpKernelInterface|ObjectProphecy
      */
     private $kernel;
 

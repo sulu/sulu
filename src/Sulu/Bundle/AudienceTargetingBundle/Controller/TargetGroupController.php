@@ -269,6 +269,7 @@ class TargetGroupController extends AbstractRestController implements ClassResou
      */
     private function deserializeData($data)
     {
+        /** @var TargetGroupInterface $result */
         $result = $this->serializer->deserialize(
             $data,
             $this->targetGroupRepository->getClassName(),

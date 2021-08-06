@@ -80,6 +80,13 @@ $transitionDuration: 300ms;
     }
 }
 
+.snackbar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
 .article {
     max-height: $dialogContentMaxHeight;
     color: $contentColor;

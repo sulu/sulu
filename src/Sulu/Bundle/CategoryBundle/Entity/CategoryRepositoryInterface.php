@@ -15,6 +15,8 @@ use Sulu\Component\Persistence\Repository\RepositoryInterface;
 
 /**
  * Defines the methods for the doctrine repository which enables accessing the categories.
+ *
+ * @extends RepositoryInterface<CategoryInterface>
  */
 interface CategoryRepositoryInterface extends RepositoryInterface
 {

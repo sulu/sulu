@@ -7,6 +7,7 @@ import {Portal} from 'react-portal';
 import {afterElementsRendered} from '../../utils/DOM';
 import Backdrop from '../Backdrop';
 import Button from '../Button';
+import Snackbar, {type SnackbarType} from '../Snackbar';
 import dialogStyles from './dialog.scss';
 import type {Node} from 'react';
 
@@ -19,8 +20,12 @@ type Props = {|
     confirmText: string,
     onCancel?: () => void,
     onConfirm: () => void,
+    onSnackbarClick?: () => void,
+    onSnackbarCloseClick?: () => void,
     open: boolean,
     size?: 'small' | 'large',
+    snackbarMessage?: string,
+    snackbarType: SnackbarType,
     title: string,
 |};
 
@@ -30,6 +35,7 @@ class Dialog extends React.Component<Props> {
         align: 'center',
         confirmDisabled: false,
         confirmLoading: false,
+        snackbarType: 'error',
     };
 
     @observable open: boolean = false;
@@ -75,7 +81,11 @@ class Dialog extends React.Component<Props> {
             confirmText,
             onCancel,
             onConfirm,
+            onSnackbarClick,
+            onSnackbarCloseClick,
             size,
+            snackbarMessage,
+            snackbarType,
             title,
         } = this.props;
 
@@ -113,6 +123,16 @@ class Dialog extends React.Component<Props> {
                         >
                             <div className={dialogClass}>
                                 <section className={dialogStyles.content}>
+                                    <div className={dialogStyles.snackbar}>
+                                        <Snackbar
+                                            message={snackbarMessage || ''}
+                                            onClick={onSnackbarClick}
+                                            onCloseClick={onSnackbarCloseClick}
+                                            type={snackbarType}
+                                            visible={!!snackbarMessage}
+                                        />
+                                    </div>
+
                                     <header className={dialogStyles.header}>
                                         {title}
                                     </header>

@@ -14,7 +14,7 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 use Doctrine\ORM\EntityRepository;
 
 /**
- * Class AddressTypeRepository.
+ * @extends EntityRepository<EmailType>
  */
 class EmailTypeRepository extends EntityRepository
 {

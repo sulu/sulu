@@ -20,6 +20,8 @@ use Sulu\Component\SmartContent\Orm\DataProviderRepositoryTrait;
 
 /**
  * Repository for the contacts, implementing some additional functions for querying objects.
+ *
+ * @extends EntityRepository<ContactInterface>
  */
 class ContactRepository extends EntityRepository implements DataProviderRepositoryInterface, ContactRepositoryInterface
 {

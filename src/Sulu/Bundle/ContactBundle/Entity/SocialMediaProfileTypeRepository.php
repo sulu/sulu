@@ -15,6 +15,8 @@ use Doctrine\ORM\EntityRepository;
 
 /**
  * Repository for social media profile types.
+ *
+ * @extends EntityRepository<SocialMediaProfileType>
  */
 class SocialMediaProfileTypeRepository extends EntityRepository
 {

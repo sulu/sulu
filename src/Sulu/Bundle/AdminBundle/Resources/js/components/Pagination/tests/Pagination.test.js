@@ -181,7 +181,7 @@ test('Change limit to current limit should not call callback', () => {
     expect(changeSpy).not.toBeCalled();
 });
 
-test('Change input value should call callback', () => {
+test('Change callback should be called on blur when input was changed', () => {
     const changeSpy = jest.fn();
     const pagination = mount(
         <Pagination
@@ -195,12 +195,41 @@ test('Change input value should call callback', () => {
         </Pagination>
     );
 
+    pagination.find('Input').prop('onBlur')();
+    expect(changeSpy).not.toBeCalled();
+
     pagination.find('Input').prop('onChange')(3);
+    expect(changeSpy).not.toBeCalled();
+
     pagination.find('Input').prop('onBlur')();
     expect(changeSpy).toBeCalledWith(3);
 });
 
-test('Change input value to something lower than 1 should call callback with 1', () => {
+test('Change callback should be called on enter when input was changed', () => {
+    const changeSpy = jest.fn();
+    const pagination = mount(
+        <Pagination
+            currentLimit={10}
+            currentPage={6}
+            onLimitChange={jest.fn()}
+            onPageChange={changeSpy}
+            totalPages={10}
+        >
+            <p>Test</p>
+        </Pagination>
+    );
+
+    pagination.find('Input').prop('onKeyPress')('Enter');
+    expect(changeSpy).not.toBeCalled();
+
+    pagination.find('Input').prop('onChange')(3);
+    expect(changeSpy).not.toBeCalled();
+
+    pagination.find('Input').prop('onKeyPress')('Enter');
+    expect(changeSpy).toBeCalledWith(3);
+});
+
+test('Change callback should be called with 1 if input value is lower than 1', () => {
     const changeSpy = jest.fn();
     const pagination = mount(
         <Pagination
@@ -219,28 +248,26 @@ test('Change input value to something lower than 1 should call callback with 1',
     expect(changeSpy).toBeCalledWith(1);
 });
 
-test('Change input value to something higher than total pages should call callback with the amount of total pages',
-    () => {
-        const changeSpy = jest.fn();
-        const pagination = shallow(
-            <Pagination
-                currentLimit={10}
-                currentPage={6}
-                onLimitChange={jest.fn()}
-                onPageChange={changeSpy}
-                totalPages={10}
-            >
-                <p>Test</p>
-            </Pagination>
-        );
+test('Change callback should be called with value of totalPages if input value is higher than total pages', () => {
+    const changeSpy = jest.fn();
+    const pagination = shallow(
+        <Pagination
+            currentLimit={10}
+            currentPage={6}
+            onLimitChange={jest.fn()}
+            onPageChange={changeSpy}
+            totalPages={10}
+        >
+            <p>Test</p>
+        </Pagination>
+    );
 
-        pagination.find('Input').prop('onChange')(12);
-        pagination.find('Input').prop('onBlur')();
-        expect(changeSpy).toBeCalledWith(10);
-    }
-);
+    pagination.find('Input').prop('onChange')(12);
+    pagination.find('Input').prop('onBlur')();
+    expect(changeSpy).toBeCalledWith(10);
+});
 
-test('Change input value to the current value should not call callback', () => {
+test('Change callback should not be called if input value is equal to currentPage', () => {
     const changeSpy = jest.fn();
     const pagination = mount(
         <Pagination

@@ -4,7 +4,6 @@ import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import Overlay from '../../components/Overlay';
 import {translate} from '../../utils';
-import Snackbar from '../../components/Snackbar';
 import Form from '../Form';
 import formOverlayStyles from './formOverlay.scss';
 import type {FormStoreInterface} from '../Form/types';
@@ -117,16 +116,13 @@ class FormOverlay extends React.Component<Props> {
                 confirmText={confirmText}
                 onClose={onClose}
                 onConfirm={this.handleOverlayConfirm}
+                onSnackbarCloseClick={this.handleErrorSnackbarClose}
                 open={open}
                 size={size}
+                snackbarMessage={this.formErrors[this.formErrors.length - 1]}
+                snackbarType="error"
                 title={title}
             >
-                <Snackbar
-                    message={this.formErrors[this.formErrors.length - 1]}
-                    onCloseClick={this.handleErrorSnackbarClose}
-                    type="error"
-                    visible={!!this.formErrors.length}
-                />
                 <div className={formOverlayStyles.form}>
                     <Form
                         onError={this.handleFormError}
