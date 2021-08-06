@@ -92,7 +92,7 @@ class UserManager implements UserManagerInterface
      *
      * @param int $id userId
      *
-     * @return UserInterface
+     * @return UserInterface|null
      */
     public function getUserById($id)
     {

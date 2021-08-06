@@ -13,8 +13,12 @@ namespace Sulu\Bundle\SecurityBundle\Entity;
 
 use Doctrine\ORM\NoResultException;
 use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
+use Sulu\Component\Security\Authorization\AccessControl\AccessControlInterface;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlRepositoryInterface;
 
+/**
+ * @extends EntityRepository<AccessControlInterface>
+ */
 class AccessControlRepository extends EntityRepository implements AccessControlRepositoryInterface
 {
     public function findByTypeAndIdAndRole($type, $id, $roleId)

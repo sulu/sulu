@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\ContactBundle\Twig;
 
 use Doctrine\Common\Cache\Cache;
-use Sulu\Bundle\ContactBundle\Entity\Contact;
+use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\ContactBundle\Entity\ContactRepository;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
@@ -48,7 +48,7 @@ class ContactTwigExtension extends AbstractExtension
     /**
      * @param int $id id to resolve
      *
-     * @return Contact
+     * @return ContactInterface
      */
     public function resolveContactFunction($id)
     {

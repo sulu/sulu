@@ -487,7 +487,7 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
      *
      * @throws EntityNotFoundException
      */
-    public function setMainAccount(Contact $contact, $data)
+    public function setMainAccount(ContactInterface $contact, $data)
     {
         // set account relation
         if (isset($data['account']) &&
@@ -549,7 +549,7 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
      *
      * @throws EntityNotFoundException
      */
-    private function setAvatar(Contact $contact, $avatar)
+    private function setAvatar(ContactInterface $contact, $avatar)
     {
         $mediaEntity = null;
         if (\is_array($avatar) && $this->getProperty($avatar, 'id')) {
@@ -571,7 +571,7 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
      *
      * @throws EntityNotFoundException
      */
-    private function setMedias(Contact $contact, $mediaIds)
+    private function setMedias(ContactInterface $contact, $mediaIds)
     {
         $foundMedias = $this->mediaRepository->findById($mediaIds);
         $foundMediaIds = \array_map(

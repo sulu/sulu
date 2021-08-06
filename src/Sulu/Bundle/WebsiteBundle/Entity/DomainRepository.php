@@ -16,6 +16,8 @@ use Doctrine\ORM\NoResultException;
 
 /**
  * Repository for domains.
+ *
+ * @extends EntityRepository<Domain>
  */
 class DomainRepository extends EntityRepository
 {

@@ -40,7 +40,7 @@ class TargetGroupRule implements TargetGroupRuleInterface
     private $targetGroup;
 
     /**
-     * @var Collection|TargetGroupConditionInterface[]
+     * @var Collection<int, TargetGroupConditionInterface>
      */
     private $conditions;
 

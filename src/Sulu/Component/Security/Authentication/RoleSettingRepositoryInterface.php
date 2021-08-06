@@ -13,6 +13,9 @@ namespace Sulu\Component\Security\Authentication;
 
 use Sulu\Component\Persistence\Repository\RepositoryInterface;
 
+/**
+ * @extends RepositoryInterface<RoleSettingInterface>
+ */
 interface RoleSettingRepositoryInterface extends RepositoryInterface
 {
     /**

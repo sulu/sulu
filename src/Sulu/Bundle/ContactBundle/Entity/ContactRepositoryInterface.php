@@ -15,6 +15,8 @@ use Sulu\Component\Persistence\Repository\RepositoryInterface;
 
 /**
  * Repository for the contacts, implementing some additional functions for querying objects.
+ *
+ * @extends RepositoryInterface<ContactInterface>
  */
 interface ContactRepositoryInterface extends RepositoryInterface
 {

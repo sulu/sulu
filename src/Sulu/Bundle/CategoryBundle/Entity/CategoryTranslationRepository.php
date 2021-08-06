@@ -13,6 +13,9 @@ namespace Sulu\Bundle\CategoryBundle\Entity;
 
 use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
 
+/**
+ * @extends EntityRepository<CategoryTranslationInterface>
+ */
 class CategoryTranslationRepository extends EntityRepository implements CategoryTranslationRepositoryInterface
 {
 }

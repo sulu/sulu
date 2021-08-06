@@ -11,6 +11,8 @@
 
 namespace Sulu\Bundle\AudienceTargetingBundle\Entity;
 
+use Doctrine\Common\Collections\Collection;
+
 /**
  * Interface for target group entity.
  */
@@ -106,7 +108,7 @@ interface TargetGroupInterface
     /**
      * Returns all Webspaces the TargetGroup is valid for.
      *
-     * @return TargetGroupWebspace[]
+     * @return Collection<int, TargetGroupWebspaceInterface>
      */
     public function getWebspaces();
 
@@ -132,7 +134,7 @@ interface TargetGroupInterface
     /**
      * Returns the rules, which have to match in order to be assigned to this TargetGroup.
      *
-     * @return TargetGroupRuleInterface[]
+     * @return Collection<int, TargetGroupRuleInterface>
      */
     public function getRules();
 

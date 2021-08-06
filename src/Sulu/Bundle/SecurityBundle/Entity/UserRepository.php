@@ -14,13 +14,15 @@ namespace Sulu\Bundle\SecurityBundle\Entity;
 use Doctrine\ORM\NoResultException;
 use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
 use Sulu\Component\Persistence\Repository\ORM\OrderByTrait;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Repository for the User, implementing some additional functions
  * for querying objects.
+ *
+ * @extends EntityRepository<UserInterface>
  */
 class UserRepository extends EntityRepository implements UserRepositoryInterface
 {
