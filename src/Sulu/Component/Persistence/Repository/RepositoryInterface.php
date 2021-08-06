@@ -16,8 +16,8 @@ use Doctrine\Persistence\ObjectRepository;
 /**
  * Repository interface.
  *
- * @template T
- * @template-extends ObjectRepository<T>
+ * @template T of object
+ * @extends ObjectRepository<T>
  */
 interface RepositoryInterface extends ObjectRepository
 {

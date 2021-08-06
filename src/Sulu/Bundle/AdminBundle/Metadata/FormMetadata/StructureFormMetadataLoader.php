@@ -188,7 +188,7 @@ class StructureFormMetadataLoader implements FormMetadataLoaderInterface, CacheW
         foreach ($itemsMetadata as $itemMetadata) {
             if ($itemMetadata instanceof FieldMetadata) {
                 if ('block' === $itemMetadata->getType()) {
-                    if (!array_key_exists('settings_form_key', $itemMetadata->getOptions())) {
+                    if (!\array_key_exists('settings_form_key', $itemMetadata->getOptions())) {
                         $optionMetadata = new OptionMetadata();
                         $optionMetadata->setName('settings_form_key');
                         $optionMetadata->setValue('page_block_settings');
