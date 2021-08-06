@@ -15,7 +15,7 @@
 
         <one-to-many field="conditions"
                      mapped-by="rule"
-                     target-entity="Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupCondition">
+                     target-entity="Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupConditionInterface">
             <cascade>
                 <cascade-persist/>
             </cascade>
@@ -23,13 +23,10 @@
 
         <many-to-one field="targetGroup"
                      inversed-by="rules"
-                     target-entity="Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroup">
+                     target-entity="Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface">
             <join-columns>
                 <join-column name="idTargetGroups" referenced-column-name="id" on-delete="CASCADE"/>
             </join-columns>
-            <cascade>
-                <cascade-persist/>
-            </cascade>
         </many-to-one>
     </mapped-superclass>
 </doctrine-mapping>

@@ -17,6 +17,8 @@ use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
 
 /**
  * Contains special queries to find routes.
+ *
+ * @extends EntityRepository<RouteInterface>
  */
 class RouteRepository extends EntityRepository implements RouteRepositoryInterface
 {

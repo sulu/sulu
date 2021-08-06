@@ -15,6 +15,8 @@ use Sulu\Component\Persistence\Repository\RepositoryInterface;
 
 /**
  * Interface for keyword repository.
+ *
+ * @extends RepositoryInterface<KeywordInterface>
  */
 interface KeywordRepositoryInterface extends RepositoryInterface
 {
@@ -23,7 +25,7 @@ interface KeywordRepositoryInterface extends RepositoryInterface
      *
      * @param int $id
      *
-     * @return KeywordInterface
+     * @return KeywordInterface|null
      */
     public function findById($id);
 
@@ -33,7 +35,7 @@ interface KeywordRepositoryInterface extends RepositoryInterface
      * @param string $keyword
      * @param string $locale
      *
-     * @return KeywordInterface
+     * @return KeywordInterface|null
      */
     public function findByKeyword($keyword, $locale);
 }

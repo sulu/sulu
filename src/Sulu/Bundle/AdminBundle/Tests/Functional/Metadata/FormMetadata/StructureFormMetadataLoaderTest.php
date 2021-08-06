@@ -47,7 +47,7 @@ class StructureFormMetadataLoaderTest extends KernelTestCase
         $this->assertInstanceOf(FormMetadata::class, $overviewForm);
         $this->assertEquals('overview', $overviewForm->getName());
         $this->assertEquals('Overview', $overviewForm->getTitle());
-        $this->assertCount(7, $overviewForm->getItems());
+        $this->assertCount(8, $overviewForm->getItems());
         $this->assertCount(1, $overviewForm->getTags());
         $this->assertNotNull($overviewForm->getSchema());
         $this->assertInstanceOf(SchemaMetadata::class, $overviewForm->getSchema());
@@ -82,7 +82,7 @@ class StructureFormMetadataLoaderTest extends KernelTestCase
         $this->assertInstanceOf(FormMetadata::class, $overviewForm);
         $this->assertEquals('overview', $overviewForm->getName());
         $this->assertEquals('Overview', $overviewForm->getTitle());
-        $this->assertCount(7, $overviewForm->getItems());
+        $this->assertCount(8, $overviewForm->getItems());
         $this->assertCount(1, $overviewForm->getTags());
         $this->assertNotNull($overviewForm->getSchema());
         $this->assertInstanceOf(SchemaMetadata::class, $overviewForm->getSchema());
@@ -107,6 +107,10 @@ class StructureFormMetadataLoaderTest extends KernelTestCase
         $this->assertEquals(
             'page_block_settings',
             $overviewForm->getItems()['blocks']->getOptions()['settings_form_key']->getValue()
+        );
+        $this->assertEquals(
+            'custom_block_settings',
+            $overviewForm->getItems()['blocks_with_custom_settings_form_key']->getOptions()['settings_form_key']->getValue()
         );
     }
 

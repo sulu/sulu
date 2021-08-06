@@ -200,7 +200,14 @@ class TeaserContentTypeTest extends TestCase
             'type' => 'object',
             'properties' => [
                 'id' => [
-                    'type' => 'string',
+                    'anyOf' => [
+                        [
+                            'type' => 'string',
+                        ],
+                        [
+                            'type' => 'number',
+                        ],
+                    ],
                 ],
                 'type' => [
                     'type' => 'string',

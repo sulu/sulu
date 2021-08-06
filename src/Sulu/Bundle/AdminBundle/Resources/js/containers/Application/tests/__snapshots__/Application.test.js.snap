@@ -138,18 +138,18 @@ Array [
             />
           </div>
           <div
-            class="snackbar warning"
+            class="snackbar error"
             role="button"
           >
             <span
-              aria-label="su-bell"
-              class="su-bell icon"
+              aria-label="su-exclamation-triangle"
+              class="su-exclamation-triangle icon"
             />
             <div
               class="text"
             >
               <strong>
-                sulu_admin.warning
+                sulu_admin.error
               </strong>
                - 
             </div>
@@ -321,18 +321,18 @@ Array [
             />
           </div>
           <div
-            class="snackbar warning"
+            class="snackbar error"
             role="button"
           >
             <span
-              aria-label="su-bell"
-              class="su-bell icon"
+              aria-label="su-exclamation-triangle"
+              class="su-exclamation-triangle icon"
             />
             <div
               class="text"
             >
               <strong>
-                sulu_admin.warning
+                sulu_admin.error
               </strong>
                - 
             </div>
@@ -1020,18 +1020,18 @@ Array [
             />
           </div>
           <div
-            class="snackbar warning"
+            class="snackbar error"
             role="button"
           >
             <span
-              aria-label="su-bell"
-              class="su-bell icon"
+              aria-label="su-exclamation-triangle"
+              class="su-exclamation-triangle icon"
             />
             <div
               class="text"
             >
               <strong>
-                sulu_admin.warning
+                sulu_admin.error
               </strong>
                - 
             </div>

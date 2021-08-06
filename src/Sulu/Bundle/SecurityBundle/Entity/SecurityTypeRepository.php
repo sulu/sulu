@@ -13,11 +13,12 @@ namespace Sulu\Bundle\SecurityBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
-use Sulu\Component\Security\Authentication\RoleInterface;
 
 /**
  * Repository for the User, implementing some additional functions
  * for querying objects.
+ *
+ * @extends EntityRepository<SecurityType>
  */
 class SecurityTypeRepository extends EntityRepository
 {
@@ -26,7 +27,7 @@ class SecurityTypeRepository extends EntityRepository
      *
      * @param $id
      *
-     * @return RoleInterface
+     * @return SecurityType|null
      */
     public function findSecurityTypeById($id)
     {

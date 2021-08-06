@@ -111,7 +111,17 @@ class Pagination extends React.Component<Props> {
         }
     };
 
-    @action handleInputBlur = () => {
+    handleInputBlur = () => {
+        this.submitInputValue();
+    };
+
+    handleInputKeyPress = (key: ?string) => {
+        if (key === 'Enter') {
+            this.submitInputValue();
+        }
+    };
+
+    @action submitInputValue = () => {
         const {currentPage, onPageChange, totalPages} = this.props;
         let page = this.currentInputValue;
 
@@ -159,6 +169,7 @@ class Pagination extends React.Component<Props> {
                             inputMode="numeric"
                             onBlur={this.handleInputBlur}
                             onChange={this.handleInputChange}
+                            onKeyPress={this.handleInputKeyPress}
                             skin="dark"
                             type="text"
                             value={currentInputValue}

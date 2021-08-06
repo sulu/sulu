@@ -15,11 +15,16 @@ use Doctrine\Persistence\ObjectRepository;
 
 /**
  * Repository interface.
+ *
+ * @template T of object
+ * @extends ObjectRepository<T>
  */
 interface RepositoryInterface extends ObjectRepository
 {
     /**
      * Create a new instance of a model.
+     *
+     * @return T
      */
     public function createNew();
 }

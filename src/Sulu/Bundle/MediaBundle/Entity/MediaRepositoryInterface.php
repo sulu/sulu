@@ -18,6 +18,8 @@ use Sulu\Component\Security\Authentication\UserInterface;
 
 /**
  * Defines the method for the doctrine repository.
+ *
+ * @extends RepositoryInterface<MediaInterface>
  */
 interface MediaRepositoryInterface extends RepositoryInterface
 {

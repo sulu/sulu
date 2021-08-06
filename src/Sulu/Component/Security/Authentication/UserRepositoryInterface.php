@@ -16,6 +16,8 @@ use Sulu\Component\Persistence\Repository\RepositoryInterface;
 
 /**
  * Defines the interface for a UserRepository.
+ *
+ * @extends RepositoryInterface<UserInterface>
  */
 interface UserRepositoryInterface extends RepositoryInterface
 {

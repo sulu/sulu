@@ -15,6 +15,27 @@ Array [
       <section
         class="content"
       >
+        <div
+          class="snackbar"
+        >
+          <div
+            class="snackbar error"
+            role="button"
+          >
+            <span
+              aria-label="su-exclamation-triangle"
+              class="su-exclamation-triangle icon"
+            />
+            <div
+              class="text"
+            >
+              <strong>
+                sulu_admin.error
+              </strong>
+               - 
+            </div>
+          </div>
+        </div>
         <header
           class="header"
         >

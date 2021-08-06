@@ -15,6 +15,9 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Sulu\Bundle\SecurityBundle\Entity\AccessControl;
 
+/**
+ * @extends EntityRepository<FileVersionMeta>
+ */
 class FileVersionMetaRepository extends EntityRepository implements FileVersionMetaRepositoryInterface
 {
     public function findLatestWithoutSecurity()

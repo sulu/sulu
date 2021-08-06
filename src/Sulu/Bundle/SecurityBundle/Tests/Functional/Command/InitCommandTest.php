@@ -15,6 +15,7 @@ use Sulu\Bundle\SecurityBundle\Command\InitCommand;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -110,7 +111,7 @@ class InitCommandTest extends SuluTestCase
         $this->assertSame(127, $collectionPermissions->getPermissions());
     }
 
-    private function createAnonymousRole(string $system): Role
+    private function createAnonymousRole(string $system): RoleInterface
     {
         $role = $this->roleRepository->createNew();
         $role->setAnonymous(true);

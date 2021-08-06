@@ -13,11 +13,14 @@ namespace Sulu\Bundle\SecurityBundle\Entity;
 
 use Doctrine\ORM\NoResultException;
 use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
+use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
 
 /**
  * Repository for the User, implementing some additional functions
  * for querying objects.
+ *
+ * @extends EntityRepository<RoleInterface>
  */
 class RoleRepository extends EntityRepository implements RoleRepositoryInterface
 {

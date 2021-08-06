@@ -15,6 +15,8 @@ use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
 
 /**
  * Repository class for target groups webspaces.
+ *
+ * @extends EntityRepository<TargetGroupWebspaceInterface>
  */
 class TargetGroupWebspaceRepository extends EntityRepository implements TargetGroupWebspaceRepositoryInterface
 {

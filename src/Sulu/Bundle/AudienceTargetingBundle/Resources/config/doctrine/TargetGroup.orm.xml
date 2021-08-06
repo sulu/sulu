@@ -20,7 +20,7 @@
         <one-to-many
             field="webspaces"
             mapped-by="targetGroup"
-            target-entity="Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupWebspace"
+            target-entity="Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupWebspaceInterface"
         >
             <cascade>
                 <cascade-persist/>
@@ -29,7 +29,7 @@
         <one-to-many
             field="rules"
             mapped-by="targetGroup"
-            target-entity="Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRule"
+            target-entity="Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleInterface"
         >
             <cascade>
                 <cascade-persist/>

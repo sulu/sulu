@@ -12,9 +12,13 @@
 namespace Sulu\Bundle\TagBundle\Entity;
 
 use Doctrine\ORM\NoResultException;
+use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Bundle\TagBundle\Tag\TagRepositoryInterface;
 use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
 
+/**
+ * @extends EntityRepository<TagInterface>
+ */
 class TagRepository extends EntityRepository implements TagRepositoryInterface
 {
     public function findTagById($id)

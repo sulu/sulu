@@ -37,7 +37,11 @@ export default class AbstractTableAdapter extends AbstractAdapter {
 
         return schemaKeys.map((schemaKey, index) => {
             const transformer = listFieldTransformerRegistry.get(this.schema[schemaKey].type);
-            const value = transformer.transform(item[schemaKey], this.schema[schemaKey].transformerTypeParameters);
+            const value = transformer.transform(
+                item[schemaKey],
+                this.schema[schemaKey].transformerTypeParameters,
+                item
+            );
 
             const indicators = [];
             if (index === 0) {
