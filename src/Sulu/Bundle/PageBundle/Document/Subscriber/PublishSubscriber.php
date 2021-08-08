@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\PageBundle\Document\Subscriber;
 
 use PHPCR\NodeInterface;
+use PHPCR\PathNotFoundException;
 use PHPCR\PropertyInterface;
 use PHPCR\SessionInterface;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
@@ -98,7 +99,14 @@ class PublishSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $liveNode = $this->getLiveNode($event->getDocument());
+        try {
+            $liveNode = $this->getLiveNode($event->getDocument());
+        } catch (PathNotFoundException $e) {
+            $this->createNodesWithUuid($node);
+
+            return;
+        }
+
         $nodeName = $node->getName();
 
         if ($liveNode->getName() !== $nodeName) {
