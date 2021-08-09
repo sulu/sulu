@@ -47,6 +47,7 @@ exports[`Should render the Login component when initialized is true 1`] = `
                 />
               </div>
               <input
+                autocomplete="username"
                 type="text"
                 value=""
               />
@@ -72,6 +73,7 @@ exports[`Should render the Login component when initialized is true 1`] = `
                 />
               </div>
               <input
+                autocomplete="current-password"
                 type="password"
                 value=""
               />
@@ -170,6 +172,7 @@ exports[`Should render the Login with forgot password view 1`] = `
                 />
               </div>
               <input
+                autocomplete="username"
                 type="text"
                 value=""
               />
@@ -268,6 +271,7 @@ exports[`Should render the Login with forgot password with success 1`] = `
                 />
               </div>
               <input
+                autocomplete="username"
                 type="text"
                 value=""
               />
@@ -366,6 +370,7 @@ exports[`Should render the Login with reset password view 1`] = `
                 />
               </div>
               <input
+                autocomplete="new-password"
                 type="password"
                 value=""
               />
@@ -391,6 +396,7 @@ exports[`Should render the Login with reset password view 1`] = `
                 />
               </div>
               <input
+                autocomplete="new-password"
                 type="password"
                 value=""
               />
@@ -489,6 +495,7 @@ exports[`Should render the LoginForm component with error 1`] = `
                 />
               </div>
               <input
+                autocomplete="username"
                 type="text"
                 value=""
               />
@@ -514,6 +521,7 @@ exports[`Should render the LoginForm component with error 1`] = `
                 />
               </div>
               <input
+                autocomplete="current-password"
                 type="password"
                 value=""
               />

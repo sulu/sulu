@@ -85,6 +85,7 @@ class LoginForm extends React.Component<Props> {
                                 {translate('sulu_admin.username_or_email')}
                             </div>
                             <Input
+                                autocomplete="username"
                                 icon="su-user"
                                 inputRef={this.setInputRef}
                                 onChange={this.handleUserChange}
@@ -97,6 +98,7 @@ class LoginForm extends React.Component<Props> {
                                 {translate('sulu_admin.password')}
                             </div>
                             <Input
+                                autocomplete="current-password"
                                 icon="su-lock"
                                 onChange={this.handlePasswordChange}
                                 type="password"
