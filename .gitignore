@@ -27,7 +27,8 @@ composer.lock
 package-lock.json
 node_modules/
 yarn.lock
-.php_cs.cache
+
+.php-cs-fixer.cache
 .eslintcache
 .env.local
 
