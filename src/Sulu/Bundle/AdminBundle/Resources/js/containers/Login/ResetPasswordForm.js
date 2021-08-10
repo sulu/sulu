@@ -91,6 +91,7 @@ class ForgotPasswordForm extends React.Component<Props> {
                                 {translate('sulu_admin.password')}
                             </div>
                             <Input
+                                autocomplete="new-password"
                                 icon="su-lock"
                                 inputRef={this.setInputRef}
                                 onChange={this.handlePassword1Change}
@@ -104,6 +105,7 @@ class ForgotPasswordForm extends React.Component<Props> {
                                 {translate('sulu_admin.repeat_password')}
                             </div>
                             <Input
+                                autocomplete="new-password"
                                 icon="su-lock"
                                 onChange={this.handlePassword2Change}
                                 type="password"

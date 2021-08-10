@@ -73,6 +73,68 @@ test('Render disabled previous link current page is first page', () => {
     )).toMatchSnapshot();
 });
 
+test('Should call callback with updated page when initialized with an invalid page', () => {
+    const changeSpy = jest.fn();
+
+    mount(
+        <Pagination
+            currentLimit={10}
+            currentPage={15}
+            onLimitChange={jest.fn()}
+            onPageChange={changeSpy}
+            totalPages={10}
+        >
+            <p>Test</p>
+        </Pagination>
+    );
+
+    expect(changeSpy).toBeCalledWith(10);
+});
+
+test('Should call callback with updated page when changing page to invalid value', () => {
+    const changeSpy = jest.fn();
+
+    const pagination = mount(
+        <Pagination
+            currentLimit={10}
+            currentPage={5}
+            onLimitChange={jest.fn()}
+            onPageChange={changeSpy}
+            totalPages={10}
+        >
+            <p>Test</p>
+        </Pagination>
+    );
+
+    pagination.setProps({currentPage: 8});
+    expect(changeSpy).not.toBeCalled();
+
+    pagination.setProps({currentPage: 15});
+    expect(changeSpy).toBeCalledWith(10);
+});
+
+test('Should call callback with updated page when changing total number of pages to lower value', () => {
+    const changeSpy = jest.fn();
+
+    const pagination = mount(
+        <Pagination
+            currentLimit={10}
+            currentPage={5}
+            onLimitChange={jest.fn()}
+            onPageChange={changeSpy}
+            totalPages={10}
+        >
+            <p>Test</p>
+        </Pagination>
+    );
+
+    pagination.setProps({totalPages: 7});
+    expect(changeSpy).not.toBeCalled();
+
+    pagination.setProps({totalPages: 3});
+    expect(changeSpy).toBeCalledWith(3);
+});
+
 test('Click previous link should call callback', () => {
     const clickSpy = jest.fn();
     const pagination = mount(
@@ -127,7 +189,7 @@ test('Click previous link on first page should not call callback', () => {
     expect(clickSpy).not.toBeCalled();
 });
 
-test('Click next link on laster page should call callback', () => {
+test('Click next link on last page should not call callback', () => {
     const clickSpy = jest.fn();
     const pagination = mount(
         <Pagination

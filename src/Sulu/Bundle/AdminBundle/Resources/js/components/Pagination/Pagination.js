@@ -33,23 +33,20 @@ class Pagination extends React.Component<Props> {
     @action componentDidMount() {
         const {currentPage} = this.props;
 
-        if (!currentPage) {
-            return;
-        }
-
-        this.currentInputValue = this.props.currentPage;
+        this.currentInputValue = currentPage;
+        this.validateAndSubmitInputValue();
     }
 
     @action componentDidUpdate(prevProps: Props) {
-        const {currentPage} = this.props;
+        const {currentPage, totalPages} = this.props;
 
         if (prevProps.currentPage !== currentPage) {
-            if (!currentPage) {
-                this.currentInputValue = 1;
-                return;
-            }
-
             this.currentInputValue = currentPage;
+            this.validateAndSubmitInputValue();
+        }
+
+        if (prevProps.totalPages !== totalPages) {
+            this.validateAndSubmitInputValue();
         }
     }
 
@@ -112,16 +109,16 @@ class Pagination extends React.Component<Props> {
     };
 
     handleInputBlur = () => {
-        this.submitInputValue();
+        this.validateAndSubmitInputValue();
     };
 
     handleInputKeyPress = (key: ?string) => {
         if (key === 'Enter') {
-            this.submitInputValue();
+            this.validateAndSubmitInputValue();
         }
     };
 
-    @action submitInputValue = () => {
+    @action validateAndSubmitInputValue = () => {
         const {currentPage, onPageChange, totalPages} = this.props;
         let page = this.currentInputValue;
 
