@@ -469,7 +469,6 @@ test('Change schema should update data and use remoteData for invalid blocks', (
     resourceFormStore.schema = oldSchema;
 
     setTimeout(() => {
-        expect(toJS(resourceFormStore.type)).toEqual('default');
         expect(resourceFormStore.schema).toEqual(newSchema);
         expect(resourceStore.setMultiple).toHaveBeenCalledWith({
             title: 'Title',
@@ -581,7 +580,6 @@ test('Change schema should update data and use default-type for unknown block ty
     resourceFormStore.schema = oldSchema;
 
     setTimeout(() => {
-        expect(toJS(resourceFormStore.type)).toEqual('default');
         expect(resourceFormStore.schema).toEqual(newSchema);
         expect(resourceStore.setMultiple).toHaveBeenCalledWith({
             title: 'Title',
@@ -672,7 +670,6 @@ test('Change schema should merge locale and remote data', (done) => {
     resourceFormStore.schema = oldSchema;
 
     setTimeout(() => {
-        expect(toJS(resourceFormStore.type)).toEqual('default');
         expect(resourceFormStore.schema).toEqual(newSchema);
         expect(resourceStore.setMultiple).toHaveBeenNthCalledWith(1,
             {
@@ -783,7 +780,6 @@ test('Change schema should merge current and origin data partially in block', (d
     resourceFormStore.schema = oldSchema;
 
     setTimeout(() => {
-        expect(toJS(resourceFormStore.type)).toEqual('default');
         expect(resourceFormStore.schema).toEqual(newSchema);
         expect(resourceStore.setMultiple).toHaveBeenCalledWith( {
             title: 'Title',
@@ -1008,7 +1004,6 @@ test('Change schema should merge current and origin data partially block in bloc
     resourceFormStore.schema = oldSchema;
 
     setTimeout(() => {
-        expect(toJS(resourceFormStore.type)).toEqual('default');
         expect(resourceFormStore.schema).toEqual(newSchema);
         expect(resourceStore.setMultiple).toHaveBeenCalledWith( {
             description: undefined,
@@ -1272,6 +1267,7 @@ test('Save the store should reject if request has failed', (done) => {
 
 test('Validate should return true if no errors occured', (done) => {
     const jsonSchemaPromise = Promise.resolve({
+        type: 'object',
         required: ['title'],
     });
     metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
@@ -1295,6 +1291,7 @@ test('Validate should return true if no errors occured', (done) => {
 
 test('Validate should return false if errors occured', (done) => {
     const jsonSchemaPromise = Promise.resolve({
+        type: 'object',
         required: ['title'],
     });
     metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
@@ -1317,6 +1314,7 @@ test('Validate should not return incorrect errors', (done) => {
     // This test ensures that https://github.com/sulu/sulu/issues/5709 has been fixed
 
     const jsonSchemaPromise = Promise.resolve({
+        type: 'object',
         properties: {
             blocks: {
                 type: 'array',
@@ -1324,6 +1322,7 @@ test('Validate should not return incorrect errors', (done) => {
                     allOf: [
                         {
                             if: {
+                                type: 'object',
                                 properties: {
                                     type: {
                                         const: 'text',
@@ -1331,11 +1330,13 @@ test('Validate should not return incorrect errors', (done) => {
                                 },
                             },
                             then: {
+                                type: 'object',
                                 required: ['text'],
                             },
                         },
                         {
                             if: {
+                                type: 'object',
                                 properties: {
                                     type: {
                                         const: 'image',
@@ -1343,6 +1344,7 @@ test('Validate should not return incorrect errors', (done) => {
                                 },
                             },
                             then: {
+                                type: 'object',
                                 required: ['title'],
                             },
                         },
@@ -1383,6 +1385,7 @@ test('Validate should not return incorrect errors', (done) => {
 
 test('Save the store should validate the current data and an oneOf', (done) => {
     const jsonSchemaPromise = Promise.resolve({
+        type: 'object',
         required: ['title', 'blocks'],
         properties: {
             blocks: {
@@ -1391,6 +1394,7 @@ test('Save the store should validate the current data and an oneOf', (done) => {
                     type: 'object',
                     oneOf: [
                         {
+                            type: 'object',
                             properties: {
                                 text: {
                                     type: 'string',
@@ -1453,6 +1457,7 @@ test('Save the store should validate the current data and an oneOf', (done) => {
 
 test('Save the store should validate the current data and an anyOf', (done) => {
     const jsonSchemaPromise = Promise.resolve({
+        type: 'object',
         required: ['title', 'blocks'],
         properties: {
             blocks: {
@@ -1523,6 +1528,7 @@ test('Save the store should validate the current data and an anyOf', (done) => {
 
 test('Save the store should validate the current data and skip type errors', (done) => {
     const jsonSchemaPromise = Promise.resolve({
+        type: 'object',
         properties: {
             images: {
                 anyOf: [
