@@ -10,7 +10,7 @@ import type {ChangeContext, FormStoreInterface, Schema, SchemaEntry, SchemaType,
 import type {IObservableValue} from 'mobx/lib/mobx';
 
 // TODO do not hardcode "template", use some kind of metadata instead
-const TYPE = 'template';
+const TYPE_PROPERTY = 'template';
 
 const ajv = createAjv();
 
@@ -114,13 +114,11 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
     resourceStore: ResourceStore;
     formKey: string;
     options: { [string]: any };
-    @observable type: string;
     @observable types: { [key: string]: SchemaType } = {};
     @observable schemaLoading: boolean = true;
     @observable typesLoading: boolean = true;
     schemaDisposer: ?() => void;
-    typeDisposer: ?() => void;
-    metadataOptions: ?{ [string]: any };
+    metadataOptions: ?{[string]: any};
 
     constructor(resourceStore: ResourceStore, formKey: string, options: Object = {}, metadataOptions: ?Object) {
         super();
@@ -138,10 +136,6 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
         if (this.schemaDisposer) {
             this.schemaDisposer();
         }
-
-        if (this.typeDisposer) {
-            this.typeDisposer();
-        }
     }
 
     @action handleSchemaTypeResponse = (schemaTypes: ?SchemaTypes) => {
@@ -154,12 +148,12 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
         this.typesLoading = false;
 
         if (this.hasTypes) {
-            // this will set the correct type from the server response after it has been loaded
+            // set default type to the resource store if the loaded data does not contain a type
             when(
                 () => !this.resourceStore.loading,
                 (): void => {
                     this.changeType(
-                        this.resourceStore.data[TYPE] || defaultType || Object.keys(this.types)[0],
+                        this.resourceStore.data[TYPE_PROPERTY] || defaultType || Object.keys(this.types)[0],
                         {isDefaultValue: true}
                     );
                 }
@@ -167,22 +161,20 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
         }
 
         this.schemaDisposer = autorun(() => {
-            const {type} = this;
-
-            if (this.hasTypes && !type) {
+            if (this.hasTypes && !this.type) {
                 this.setSchemaLoading(false);
                 return;
             }
 
-            if (this.hasTypes && !this.types[type]) {
+            if (this.hasTypes && !this.types[this.type]) {
                 this.setSchemaLoading(false);
                 return;
             }
 
             this.setSchemaLoading(true);
             Promise.all([
-                metadataStore.getSchema(this.formKey, type, this.metadataOptions),
-                metadataStore.getJsonSchema(this.formKey, type, this.metadataOptions),
+                metadataStore.getSchema(this.formKey, this.type, this.metadataOptions),
+                metadataStore.getJsonSchema(this.formKey, this.type, this.metadataOptions),
             ]).then(this.handleSchemaResponse);
         });
     };
@@ -226,6 +218,10 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
         return this.resourceStore.data;
     }
 
+    @computed get type(): string {
+        return this.data[TYPE_PROPERTY];
+    }
+
     @action save(options: Object = {}): Promise<Object> {
         if (!this.validate()) {
             return Promise.reject('Errors occured when trying to save the data from the FormStore');
@@ -247,12 +243,7 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
     }
 
     copyFromLocale(sourceLocale: string) {
-        return this.resourceStore.copyFromLocale(sourceLocale, this.options)
-            .then((response) => {
-                if (this.hasTypes) {
-                    this.changeType(response[TYPE], {isServerValue: true});
-                }
-            });
+        return this.resourceStore.copyFromLocale(sourceLocale, this.options);
     }
 
     /**
@@ -342,23 +333,23 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
             'Use the "changeType" method instead.'
         );
 
-        this.validateTypes();
-        this.type = type;
-        this.set(TYPE, type);
-    }
-
-    @action changeType(type: string, context?: ChangeContext) {
-        this.validateTypes();
-        this.type = type;
-        this.change(TYPE, type, context);
-    }
-
-    validateTypes() {
-        if (Object.keys(this.types).length === 0) {
+        if (!this.hasTypes) {
             throw new Error(
                 'The form "' + this.formKey + '" handled by this ResourceFormStore cannot handle types'
             );
         }
+
+        this.set(TYPE_PROPERTY, type);
+    }
+
+    @action changeType(type: string, context?: ChangeContext) {
+        if (!this.hasTypes) {
+            throw new Error(
+                'The form "' + this.formKey + '" handled by this ResourceFormStore cannot handle types'
+            );
+        }
+
+        this.change(TYPE_PROPERTY, type, context);
     }
 
     getSchemaEntryByPath(schemaPath: string): SchemaEntry {

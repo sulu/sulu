@@ -1,5 +1,5 @@
 // @flow
-import {observable, observable as mockObservable, toJS, when} from 'mobx';
+import {observable, extendObservable as mockExtendObservable, toJS, when} from 'mobx';
 import ResourceFormStore from '../../stores/ResourceFormStore';
 import ResourceStore from '../../../../stores/ResourceStore';
 import metadataStore from '../../stores/metadataStore';
@@ -20,22 +20,29 @@ jest.mock('../../../../stores/ResourceStore', () => function(resourceKey, id, op
     this.save = jest.fn().mockReturnValue(Promise.resolve());
     this.delete = jest.fn().mockReturnValue(Promise.resolve());
     this.requestRemoteData = jest.fn().mockReturnValue(Promise.resolve());
-    this.set = jest.fn();
-    this.setMultiple = jest.fn(function(data) {
-        Object.assign(this.data, data);
+    this.set = jest.fn(function(path, value) {
+        this.data[path] = value;
     });
-    this.change = jest.fn();
+    this.setMultiple = jest.fn(function(data) {
+        this.data = {...this.data, ...data};
+    });
+    this.change = jest.fn(function(path, value) {
+        this.data[path] = value;
+    });
     this.remove = jest.fn();
     this.changeMultiple = jest.fn(function(data) {
-        Object.assign(this.data, data);
+        this.data = {...this.data, ...data};
     });
     this.copyFromLocale = jest.fn();
-    this.data = mockObservable({});
     this.loading = false;
 
     if (options) {
         this.locale = options.locale;
     }
+
+    mockExtendObservable(this, {
+        data: {},
+    });
 });
 
 jest.mock('../../stores/metadataStore', () => ({}));
@@ -459,7 +466,6 @@ test('Change schema should update data and use remoteData for invalid blocks', (
     metadataStore.getSchema.mockReturnValue(newSchemaPromise);
     metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
     const resourceFormStore = new ResourceFormStore(resourceStore, 'pages');
-    resourceFormStore.type = observable.box('default');
     resourceFormStore.schema = oldSchema;
 
     setTimeout(() => {
@@ -572,7 +578,6 @@ test('Change schema should update data and use default-type for unknown block ty
     metadataStore.getSchema.mockReturnValue(newSchemaPromise);
     metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
     const resourceFormStore = new ResourceFormStore(resourceStore, 'pages');
-    resourceFormStore.type = observable.box('default');
     resourceFormStore.schema = oldSchema;
 
     setTimeout(() => {
@@ -664,7 +669,6 @@ test('Change schema should merge locale and remote data', (done) => {
     metadataStore.getSchema.mockReturnValue(newSchemaPromise);
     metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
     const resourceFormStore = new ResourceFormStore(resourceStore, 'pages');
-    resourceFormStore.type = observable.box('default');
     resourceFormStore.schema = oldSchema;
 
     setTimeout(() => {
@@ -776,7 +780,6 @@ test('Change schema should merge current and origin data partially in block', (d
     metadataStore.getSchema.mockReturnValue(newSchemaPromise);
     metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
     const resourceFormStore = new ResourceFormStore(resourceStore, 'pages');
-    resourceFormStore.type = observable.box('default');
     resourceFormStore.schema = oldSchema;
 
     setTimeout(() => {
@@ -1002,7 +1005,6 @@ test('Change schema should merge current and origin data partially block in bloc
     metadataStore.getSchema.mockReturnValue(newSchemaPromise);
     metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
     const resourceFormStore = new ResourceFormStore(resourceStore, 'pages');
-    resourceFormStore.type = observable.box('default');
     resourceFormStore.schema = oldSchema;
 
     setTimeout(() => {
@@ -1076,7 +1078,7 @@ test('types property should be returning types from server', () => {
     });
 });
 
-test('Type should be set from response', () => {
+test('type property should be returning type from ResourceStore', () => {
     const resourceStore = new ResourceStore('snippets', '1');
     resourceStore.data = observable({
         template: 'sidebar',
@@ -1096,22 +1098,7 @@ test('Type should be set from response', () => {
     });
 });
 
-test('Type should not be set from response if types are not supported', () => {
-    const resourceStore = new ResourceStore('snippets', '1');
-    resourceStore.data = observable({
-        template: 'sidebar',
-    });
-
-    const schemaTypesPromise = Promise.resolve(null);
-    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
-    const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
-
-    return schemaTypesPromise.then(() => {
-        expect(resourceFormStore.type).toEqual(undefined);
-    });
-});
-
-test('Changing type should set the appropriate property in the ResourceStore', (done) => {
+test('Changing type should set the appropriate property in the ResourceStore', () => {
     const resourceStore = new ResourceStore('snippets', '1');
     resourceStore.data = observable({
         template: 'sidebar',
@@ -1132,12 +1119,12 @@ test('Changing type should set the appropriate property in the ResourceStore', (
     const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
 
     return metadataPromise.then(() => {
+        expect(resourceStore.change).not.toBeCalled();
+
         resourceFormStore.changeType('footer');
+
+        expect(resourceStore.change).toBeCalledWith('template', 'footer');
         expect(resourceFormStore.type).toEqual('footer');
-        setTimeout(() => { // The observe command is executed later
-            expect(resourceStore.change).toBeCalledWith('template', 'footer');
-            done();
-        });
     });
 });
 
@@ -1715,18 +1702,15 @@ test('Should call setMultiple method of ResourceStore for default data', () => {
 test('Destroying the store should call all the disposers', () => {
     const resourceFormStore = new ResourceFormStore(new ResourceStore('snippets', '2'), 'snippets');
     resourceFormStore.schemaDisposer = jest.fn();
-    resourceFormStore.typeDisposer = jest.fn();
 
     resourceFormStore.destroy();
 
     expect(resourceFormStore.schemaDisposer).toBeCalled();
-    expect(resourceFormStore.typeDisposer).toBeCalled();
 });
 
 test('Destroying the store should not fail if no disposers are available', () => {
     const resourceFormStore = new ResourceFormStore(new ResourceStore('snippets', '2'), 'snippets');
     resourceFormStore.schemaDisposer = undefined;
-    resourceFormStore.typeDisposer = undefined;
 
     resourceFormStore.destroy();
 });
@@ -2040,32 +2024,6 @@ test('Remember fields being finished as modified fields and forget about them af
     });
 });
 
-test('Set new type after copying from different locale', () => {
-    const schemaTypesPromise = Promise.resolve({
-        types: {
-            sidebar: {key: 'sidebar', title: 'Sidebar'},
-            footer: {key: 'footer', title: 'Footer'},
-        },
-        defaultType: 'sidebar',
-    });
-
-    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
-
-    const resourceStore = new ResourceStore('test', 5);
-    const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
-
-    resourceStore.copyFromLocale.mockReturnValue(Promise.resolve(observable({template: 'sidebar'})));
-
-    return schemaTypesPromise.then(() => {
-        resourceFormStore.setType('footer');
-        const promise = resourceFormStore.copyFromLocale('de');
-
-        return promise.then(() => {
-            expect(resourceFormStore.type).toEqual('sidebar');
-        });
-    });
-});
-
 test('HasInvalidType return true when invalid type is set', () => {
     const schemaTypesPromise = Promise.resolve({
         types: {
@@ -2078,8 +2036,9 @@ test('HasInvalidType return true when invalid type is set', () => {
     const resourceStore = new ResourceStore('test', 1);
     const resourceFormStore = new ResourceFormStore(resourceStore, 'test');
 
+    resourceStore.data.template = 'not-sidebar';
+
     return schemaTypesPromise.then(() => {
-        resourceFormStore.setType('not-sidebar');
         expect(resourceFormStore.hasInvalidType).toEqual(true);
     });
 });
@@ -2096,8 +2055,9 @@ test('HasInvalidType return false valid type is set', () => {
     const resourceStore = new ResourceStore('test', 1);
     const resourceFormStore = new ResourceFormStore(resourceStore, 'test');
 
+    resourceStore.data.template = 'sidebar';
+
     return schemaTypesPromise.then(() => {
-        resourceFormStore.setType('sidebar');
         expect(resourceFormStore.hasInvalidType).toEqual(false);
     });
 });
@@ -2155,6 +2115,7 @@ test.each(['sidebar', 'footer'])('Set type to default "%s" if data has no templa
     const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
 
     return schemaTypesPromise.then(() => {
+        expect(resourceStore.set).toBeCalledWith('template', defaultType);
         expect(resourceFormStore.type).toEqual(defaultType);
     });
 });

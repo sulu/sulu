@@ -21,7 +21,7 @@ const defaultOptions = {
 };
 
 export default class UploadToolbarAction extends AbstractListToolbarAction {
-    @observable dropzoneRef: ?ElementRef<Dropzone>;
+    @observable dropzoneRef: ?ElementRef<typeof Dropzone>;
     @observable errors: string[] = [];
 
     constructor(
@@ -115,7 +115,7 @@ export default class UploadToolbarAction extends AbstractListToolbarAction {
         super(listStore, list, router, locales, resourceStore, options);
     }
 
-    @action setDropzoneRef = (ref: ?ElementRef<Dropzone>) => {
+    @action setDropzoneRef = (ref: ?ElementRef<typeof Dropzone>) => {
         this.dropzoneRef = ref;
     };
 
