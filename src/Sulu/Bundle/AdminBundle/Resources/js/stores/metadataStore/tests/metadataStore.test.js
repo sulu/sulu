@@ -1,6 +1,11 @@
 // @flow
 import SymfonyRouting from 'fos-jsrouting/router';
 import metadataStore from '../metadataStore';
+import {Requester} from '../../../services';
+
+jest.mock('../../../services/Requester', () => ({
+    fetch: jest.fn(),
+}));
 
 test('Load metadata for given type and key', () => {
     const snippetMetadata = {
@@ -60,8 +65,7 @@ test('Load metadata for given type and key', () => {
         return '/metadata/' + value.type + '/' + value.key;
     });
 
-    window.fetch = jest.fn();
-    window.fetch.mockImplementation((key) => {
+    Requester.fetch.mockImplementation((key) => {
         switch (key) {
             case '/metadata/form/snippets':
                 return snippetResponsePromise;
@@ -98,12 +102,10 @@ test('Load configuration twice should return the same promise', () => {
             get: jest.fn(),
         },
     };
-
     response.json.mockReturnValue(Promise.resolve(tagMetadata));
-    const tagPromise = Promise.resolve(response);
 
-    window.fetch = jest.fn();
-    window.fetch.mockReturnValue(tagPromise);
+    const tagPromise = Promise.resolve(response);
+    Requester.fetch.mockReturnValue(tagPromise);
 
     const tagPromise1 = metadataStore.loadMetadata('form', 'tags');
     const tagPromise2 = metadataStore.loadMetadata('form', 'tags');
@@ -131,9 +133,7 @@ test('Load metadata should not cache metadata if no-store is set in response', (
     response.headers.get.mockReturnValue('no-store');
 
     const responsePromise = Promise.resolve(response);
-
-    window.fetch = jest.fn();
-    window.fetch.mockReturnValue(responsePromise);
+    Requester.fetch.mockReturnValue(responsePromise);
 
     const metadataPromise1 = metadataStore.loadMetadata('form', 'no_cache');
 
@@ -141,7 +141,7 @@ test('Load metadata should not cache metadata if no-store is set in response', (
         expect(metadata1).toBe(metadata);
 
         const metadataPromise2 = metadataStore.loadMetadata('form', 'no_cache');
-        expect(window.fetch).toBeCalledTimes(2);
+        expect(Requester.fetch).toBeCalledTimes(2);
 
         return metadataPromise2.then((metadata2) => {
             expect(metadata2).toBe(metadata);
@@ -164,9 +164,7 @@ test('Load metadata should cache metadata if no-store is not set in response', (
     response.json.mockReturnValue(Promise.resolve(metadata));
 
     const responsePromise = Promise.resolve(response);
-
-    window.fetch = jest.fn();
-    window.fetch.mockReturnValue(responsePromise);
+    Requester.fetch.mockReturnValue(responsePromise);
 
     const metadataPromise1 = metadataStore.loadMetadata('form', 'no_cache');
 
@@ -174,7 +172,7 @@ test('Load metadata should cache metadata if no-store is not set in response', (
         expect(metadata1).toBe(metadata);
 
         const metadataPromise2 = metadataStore.loadMetadata('form', 'no_cache');
-        expect(window.fetch).toBeCalledTimes(1);
+        expect(Requester.fetch).toBeCalledTimes(1);
 
         return metadataPromise2.then((metadata2) => {
             expect(metadata2).toBe(metadata);
@@ -188,8 +186,7 @@ test('Load metadata should reject with response when the response contains error
     };
 
     const promise = Promise.resolve(response);
-    window.fetch = jest.fn();
-    window.fetch.mockReturnValue(promise);
+    Requester.fetch.mockReturnValue(promise);
 
     expect(metadataStore.loadMetadata('form', 'reject')).rejects.toEqual(response);
 });

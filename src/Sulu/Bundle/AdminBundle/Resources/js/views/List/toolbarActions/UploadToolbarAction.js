@@ -9,6 +9,7 @@ import ResourceStore from '../../../stores/ResourceStore';
 import Router from '../../../services/Router';
 import List from '../../../views/List/List';
 import ListStore from '../../../containers/List/stores/ListStore';
+import {Requester} from '../../../services';
 import AbstractListToolbarAction from './AbstractListToolbarAction';
 
 const defaultOptions = {
@@ -198,7 +199,7 @@ export default class UploadToolbarAction extends AbstractListToolbarAction {
             formData.append(requestPropertyName + '[]', file);
         }
 
-        fetch(this.url, {...defaultOptions, method: 'POST', body: formData}).then((response) => {
+        Requester.fetch(this.url, {...defaultOptions, method: 'POST', body: formData}).then((response) => {
             if (!response.ok) {
                 const translatedErrorMessage = translate(
                     this.errorCodeMapping[response.status] || 'sulu_admin.unexpected_upload_error',

@@ -1,6 +1,7 @@
 // @flow
 import symfonyRouting from 'fos-jsrouting/router';
 import {buildQueryString} from '../../utils/Request';
+import {Requester} from '../../services';
 
 const defaultOptions = {
     credentials: 'same-origin',
@@ -27,7 +28,7 @@ class MetadataStore {
 
         if (!this.metadataPromises[type][keyWithOptions]) {
             const url = symfonyRouting.generate('sulu_admin.metadata', parameters);
-            const response = fetch(url, defaultOptions).then((response) => {
+            const response = Requester.fetch(url, defaultOptions).then((response) => {
                 if (!response.ok) {
                     this.metadataPromises[type][keyWithOptions] = undefined;
                     return Promise.reject(response);

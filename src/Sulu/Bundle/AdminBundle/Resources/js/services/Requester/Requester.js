@@ -99,10 +99,16 @@ function transformRequestData(data: Object | Array<Object>) {
     return transformRequestObject(data);
 }
 
-function handleResponse(response: Response, options: ?Object): Promise<Object | Array<Object>> {
+function handleResponse(response: Response, options: ?Object): Response {
     for (const handleResponseHook of Requester.handleResponseHooks) {
         handleResponseHook(response, options);
     }
+
+    return response;
+}
+
+function handleJsonResponse(response: Response, options: ?Object): Promise<Object | Array<Object>> {
+    response = handleResponse(response, options);
 
     if (!response.ok) {
         return Promise.reject(response);
@@ -123,7 +129,7 @@ function handleResponse(response: Response, options: ?Object): Promise<Object | 
 }
 
 function handleObjectResponse(response: Response, options: ?Object): Promise<Object> {
-    return handleResponse(response, options).then((response) => {
+    return handleJsonResponse(response, options).then((response) => {
         if (Array.isArray(response)) {
             throw Error('Response was expected to be an object, but an array was given');
         }
@@ -132,7 +138,7 @@ function handleObjectResponse(response: Response, options: ?Object): Promise<Obj
     });
 }
 
-function createFetchCall(url, options: ?Object): RequestPromise<*> {
+function createAbortableFetchCall(input: RequestInfo, init?: RequestOptions): RequestPromise<*> {
     let promiseResolve, promiseReject;
     const requestPromise = new RequestPromise(function(resolve, reject) {
         promiseResolve = resolve;
@@ -142,7 +148,7 @@ function createFetchCall(url, options: ?Object): RequestPromise<*> {
     const abortController = new AbortController();
     requestPromise.setAbortController(abortController);
 
-    fetch(url, {...defaultOptions, ...options, signal: abortController.signal})
+    fetch(input, {...defaultOptions, ...init, signal: abortController.signal})
         .then(promiseResolve)
         .catch(promiseReject);
 
@@ -152,9 +158,14 @@ function createFetchCall(url, options: ?Object): RequestPromise<*> {
 export default class Requester {
     static handleResponseHooks: Array<HandleResponseHook> = [];
 
+    static fetch(input: RequestInfo, init?: RequestOptions): RequestPromise<Response> {
+        return createAbortableFetchCall(input, init)
+            .then((response) => handleResponse(response, init));
+    }
+
     static get(url: string): RequestPromise<Object> {
         const options = {method: 'GET'};
-        return createFetchCall(url, options)
+        return createAbortableFetchCall(url, options)
             .then((response) => handleObjectResponse(response, options));
     }
 
@@ -165,7 +176,7 @@ export default class Requester {
             body: data ? JSON.stringify(transformRequestData(data)) : undefined,
         };
 
-        return createFetchCall(
+        return createAbortableFetchCall(
             url,
             options
         ).then((response) => handleObjectResponse(response, options));
@@ -178,7 +189,7 @@ export default class Requester {
             body: data ? JSON.stringify(transformRequestData(data)) : undefined,
         };
 
-        return createFetchCall(
+        return createAbortableFetchCall(
             url,
             options
         ).then((response) => handleObjectResponse(response, options));
@@ -187,14 +198,14 @@ export default class Requester {
     static patch(url: string, data: Array<Object> | Object): RequestPromise<Array<Object> | Object> {
         const options = {method: 'PATCH', body: JSON.stringify(transformRequestData(data))};
 
-        return createFetchCall(url, options)
-            .then((response) => handleResponse(response, options));
+        return createAbortableFetchCall(url, options)
+            .then((response) => handleJsonResponse(response, options));
     }
 
     static delete(url: string): RequestPromise<Object> {
         const options = {method: 'DELETE'};
 
-        return createFetchCall(url, options)
+        return createAbortableFetchCall(url, options)
             .then((response) => handleObjectResponse(response, options));
     }
 }
