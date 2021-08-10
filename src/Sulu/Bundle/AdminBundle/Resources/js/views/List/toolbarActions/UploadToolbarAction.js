@@ -2,7 +2,7 @@
 import React from 'react';
 import log from 'loglevel';
 import {action, computed, observable} from 'mobx';
-import Dropzone, {DropzoneRef, FileRejection} from 'react-dropzone';
+import Dropzone from 'react-dropzone';
 import symfonyRouting from 'fos-jsrouting/router';
 import {translate, transformBytesToReadableString} from '../../../utils';
 import ResourceStore from '../../../stores/ResourceStore';
@@ -11,6 +11,7 @@ import List from '../../../views/List/List';
 import ListStore from '../../../containers/List/stores/ListStore';
 import {Requester} from '../../../services';
 import AbstractListToolbarAction from './AbstractListToolbarAction';
+import type {ElementRef} from 'react';
 
 const defaultOptions = {
     credentials: 'same-origin',
@@ -20,7 +21,7 @@ const defaultOptions = {
 };
 
 export default class UploadToolbarAction extends AbstractListToolbarAction {
-    @observable dropzoneRef: ?DropzoneRef;
+    @observable dropzoneRef: ?ElementRef<Dropzone>;
     @observable errors: string[] = [];
 
     constructor(
@@ -114,7 +115,7 @@ export default class UploadToolbarAction extends AbstractListToolbarAction {
         super(listStore, list, router, locales, resourceStore, options);
     }
 
-    @action setDropzoneRef = (ref: ?DropzoneRef) => {
+    @action setDropzoneRef = (ref: ?ElementRef<Dropzone>) => {
         this.dropzoneRef = ref;
     };
 
@@ -145,7 +146,7 @@ export default class UploadToolbarAction extends AbstractListToolbarAction {
         this.list.errors = [...this.list.errors, error];
     };
 
-    handleError = (fileRejections: FileRejection[]) => {
+    handleError = (fileRejections: any[]) => {
         for (const fileRejection of fileRejections) {
             for (const {code} of fileRejection.errors) {
                 let error;
