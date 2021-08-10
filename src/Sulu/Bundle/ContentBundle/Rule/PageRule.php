@@ -22,7 +22,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class PageRule implements RuleInterface
 {
-    const PAGE = 'page';
+    public const PAGE = 'page';
 
     /**
      * @var RequestStack

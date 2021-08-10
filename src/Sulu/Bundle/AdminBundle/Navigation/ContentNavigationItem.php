@@ -16,9 +16,9 @@ namespace Sulu\Bundle\AdminBundle\Navigation;
  */
 class ContentNavigationItem
 {
-    const DISPLAY_NEW = 'new';
+    public const DISPLAY_NEW = 'new';
 
-    const DISPLAY_EDIT = 'edit';
+    public const DISPLAY_EDIT = 'edit';
 
     /**
      * The id of the navigation item.

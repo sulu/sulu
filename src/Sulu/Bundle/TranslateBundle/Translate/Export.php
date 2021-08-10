@@ -24,15 +24,15 @@ use Symfony\Component\Translation\Translator;
  */
 class Export
 {
-    const XLIFF = 0;
+    public const XLIFF = 0;
 
-    const JSON = 1;
+    public const JSON = 1;
 
-    const BACKEND_DOMAIN = 'backend';
+    public const BACKEND_DOMAIN = 'backend';
 
-    const FRONTEND_DOMAIN = 'frontend';
+    public const FRONTEND_DOMAIN = 'frontend';
 
-    const DEFAULT_LOCALE = 'en';
+    public const DEFAULT_LOCALE = 'en';
 
     /**
      * The locale of the catalogue to export.

@@ -20,7 +20,7 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class TargetGroupControllerTest extends SuluTestCase
 {
-    const BASE_URL = 'api/target-groups';
+    public const BASE_URL = 'api/target-groups';
 
     /**
      * @var TargetGroupInterface

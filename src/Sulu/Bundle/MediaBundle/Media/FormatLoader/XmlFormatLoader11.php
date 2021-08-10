@@ -18,9 +18,9 @@ use Sulu\Bundle\MediaBundle\Media\FormatLoader\Exception\MissingScaleDimensionEx
  */
 class XmlFormatLoader11 extends BaseXmlFormatLoader
 {
-    const SCHEMA_URI = 'http://schemas.sulu.io/media/formats-1.1.xsd';
+    public const SCHEMA_URI = 'http://schemas.sulu.io/media/formats-1.1.xsd';
 
-    const SCHEME_PATH = '/schema/formats/formats-1.1.xsd';
+    public const SCHEME_PATH = '/schema/formats/formats-1.1.xsd';
 
     protected function getKeyFromFormatNode(\DOMNode $formatNode)
     {

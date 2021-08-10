@@ -11,8 +11,6 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Fixtures;
 
-use Sulu\Component\Content\Block\BlockProperty;
-use Sulu\Component\Content\Block\BlockPropertyType;
 use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Compat\PropertyTag;
 use Sulu\Component\Content\Compat\Structure\Page;

@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class AnalyticsController extends RestController implements ClassResourceInterface, SecuredControllerInterface
 {
-    const RESULT_KEY = 'analytics';
+    public const RESULT_KEY = 'analytics';
 
     /**
      * Returns webspace analytics by webspace key.

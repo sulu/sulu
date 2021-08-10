@@ -23,12 +23,12 @@ class AddMessageDispatcherPass implements CompilerPassInterface
     /**
      * Service id of websocket manager.
      */
-    const DISPATCHER_TAG = 'sulu.websocket.message.dispatcher';
+    public const DISPATCHER_TAG = 'sulu.websocket.message.dispatcher';
 
     /**
      * Tag name for websocket apps.
      */
-    const HANDLER_TAG = 'sulu.websocket.message.handler';
+    public const HANDLER_TAG = 'sulu.websocket.message.handler';
 
     public function process(ContainerBuilder $container)
     {

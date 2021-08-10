@@ -51,9 +51,9 @@ class NodeController extends RestController implements ClassResourceInterface, S
 {
     use RequestParametersTrait;
 
-    const WEBSPACE_NODE_SINGLE = 'single';
+    public const WEBSPACE_NODE_SINGLE = 'single';
 
-    const WEBSPACE_NODES_ALL = 'all';
+    public const WEBSPACE_NODES_ALL = 'all';
 
     private static $relationName = 'nodes';
 

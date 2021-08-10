@@ -24,7 +24,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  */
 class GoogleGeolocator implements GeolocatorInterface
 {
-    const ENDPOINT = 'https://maps.googleapis.com/maps/api/geocode/json';
+    public const ENDPOINT = 'https://maps.googleapis.com/maps/api/geocode/json';
 
     /**
      * @var ClientInterface

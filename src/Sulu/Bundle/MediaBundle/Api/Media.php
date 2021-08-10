@@ -42,22 +42,22 @@ class Media extends ApiWrapper
     /**
      * @var string
      */
-    const MEDIA_TYPE_IMAGE = 'image';
+    public const MEDIA_TYPE_IMAGE = 'image';
 
     /**
      * @var string
      */
-    const MEDIA_TYPE_VIDEO = 'video';
+    public const MEDIA_TYPE_VIDEO = 'video';
 
     /**
      * @var string
      */
-    const MEDIA_TYPE_AUDIO = 'audio';
+    public const MEDIA_TYPE_AUDIO = 'audio';
 
     /**
      * @var string
      */
-    const MEDIA_TYPE_DOCUMENT = 'document';
+    public const MEDIA_TYPE_DOCUMENT = 'document';
 
     /**
      * @var string

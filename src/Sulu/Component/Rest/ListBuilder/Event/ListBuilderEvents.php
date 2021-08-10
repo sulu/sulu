@@ -22,7 +22,7 @@ final class ListBuilderEvents
      *
      * @var string
      */
-    const LISTBUILDER_CREATE = 'sulu.listbuilder.create';
+    public const LISTBUILDER_CREATE = 'sulu.listbuilder.create';
 
     private function __construct()
     {

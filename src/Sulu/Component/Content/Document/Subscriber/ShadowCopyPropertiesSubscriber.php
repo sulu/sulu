@@ -24,13 +24,13 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class ShadowCopyPropertiesSubscriber implements EventSubscriberInterface
 {
-    const SHADOW_BASE_PROPERTY = 'i18n:*-shadow-base';
+    public const SHADOW_BASE_PROPERTY = 'i18n:*-shadow-base';
 
-    const TAGS_PROPERTY = 'i18n:%s-excerpt-tags';
+    public const TAGS_PROPERTY = 'i18n:%s-excerpt-tags';
 
-    const CATEGORIES_PROPERTY = 'i18n:%s-excerpt-categories';
+    public const CATEGORIES_PROPERTY = 'i18n:%s-excerpt-categories';
 
-    const NAVIGATION_CONTEXT_PROPERTY = 'i18n:%s-navContexts';
+    public const NAVIGATION_CONTEXT_PROPERTY = 'i18n:%s-navContexts';
 
     /**
      * @var PropertyEncoder

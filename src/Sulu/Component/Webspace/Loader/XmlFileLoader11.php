@@ -20,9 +20,9 @@ use Sulu\Component\Webspace\Webspace;
  */
 class XmlFileLoader11 extends XmlFileLoader10
 {
-    const SCHEMA_LOCATION = '/schema/webspace/webspace-1.1.xsd';
+    public const SCHEMA_LOCATION = '/schema/webspace/webspace-1.1.xsd';
 
-    const SCHEMA_URI = 'http://schemas.sulu.io/webspace/webspace-1.1.xsd';
+    public const SCHEMA_URI = 'http://schemas.sulu.io/webspace/webspace-1.1.xsd';
 
     protected function parseXml($file)
     {

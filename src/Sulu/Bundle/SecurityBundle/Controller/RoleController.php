@@ -38,7 +38,7 @@ class RoleController extends RestController implements ClassResourceInterface, S
 {
     protected static $entityKey = 'roles';
 
-    const ENTITY_NAME_PERMISSION = 'SuluSecurityBundle:Permission';
+    public const ENTITY_NAME_PERMISSION = 'SuluSecurityBundle:Permission';
 
     protected $fieldsDefault = ['name'];
 

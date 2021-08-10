@@ -16,13 +16,13 @@ namespace Sulu\Component\Rest\ListBuilder\Metadata\Doctrine;
  */
 class JoinMetadata
 {
-    const JOIN_METHOD_LEFT = 'LEFT';
+    public const JOIN_METHOD_LEFT = 'LEFT';
 
-    const JOIN_METHOD_INNER = 'INNER';
+    public const JOIN_METHOD_INNER = 'INNER';
 
-    const JOIN_CONDITION_METHOD_ON = 'ON';
+    public const JOIN_CONDITION_METHOD_ON = 'ON';
 
-    const JOIN_CONDITION_METHOD_WITH = 'WITH';
+    public const JOIN_CONDITION_METHOD_WITH = 'WITH';
 
     /**
      * @var string

@@ -18,7 +18,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class NavigationContextSubscriber implements EventSubscriberInterface
 {
-    const FIELD = 'navContexts';
+    public const FIELD = 'navContexts';
 
     public static function getSubscribedEvents()
     {

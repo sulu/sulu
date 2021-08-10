@@ -22,15 +22,15 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class DebugHandler implements HandlerUpdateResponseInterface
 {
-    const HEADER_HANDLERS = 'X-Sulu-Handlers';
+    public const HEADER_HANDLERS = 'X-Sulu-Handlers';
 
-    const HEADER_CLIENT_NAME = 'X-Sulu-Proxy-Client';
+    public const HEADER_CLIENT_NAME = 'X-Sulu-Proxy-Client';
 
-    const HEADER_STRUCTURE_TYPE = 'X-Sulu-Structure-Type';
+    public const HEADER_STRUCTURE_TYPE = 'X-Sulu-Structure-Type';
 
-    const HEADER_STRUCTURE_UUID = 'X-Sulu-Structure-UUID';
+    public const HEADER_STRUCTURE_UUID = 'X-Sulu-Structure-UUID';
 
-    const HEADER_STRUCTURE_TTL = 'X-Sulu-Page-TTL';
+    public const HEADER_STRUCTURE_TTL = 'X-Sulu-Page-TTL';
 
     /**
      * @var CacheLifetimeResolverInterface

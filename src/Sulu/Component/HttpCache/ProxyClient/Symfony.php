@@ -30,7 +30,7 @@ use Psr\Http\Message\ResponseInterface;
  */
 class Symfony implements ProxyClientInterface, PurgeInterface
 {
-    const HTTP_METHOD_PURGE = 'PURGE';
+    public const HTTP_METHOD_PURGE = 'PURGE';
 
     /**
      * HTTP client.

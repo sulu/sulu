@@ -32,7 +32,7 @@ use Symfony\Component\Routing\RouteCollection;
  */
 class RouteProvider implements RouteProviderInterface
 {
-    const ROUTE_PREFIX = 'sulu_route_';
+    public const ROUTE_PREFIX = 'sulu_route_';
 
     /**
      * @var RouteRepositoryInterface

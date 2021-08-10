@@ -20,7 +20,7 @@ use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
  */
 class MediaTag implements TagInterface
 {
-    const VALIDATE_REMOVED = 'removed';
+    public const VALIDATE_REMOVED = 'removed';
 
     /**
      * @var string

@@ -18,7 +18,7 @@ use Symfony\Component\Config\Loader\LoaderInterface;
  */
 class PreviewKernel extends \WebsiteKernel
 {
-    const CONTEXT_PREVIEW = 'preview';
+    public const CONTEXT_PREVIEW = 'preview';
 
     /**
      * @var string

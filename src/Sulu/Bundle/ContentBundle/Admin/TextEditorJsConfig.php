@@ -20,7 +20,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class TextEditorJsConfig implements JsConfigInterface
 {
-    const SETTING_KEY = 'texteditor-toolbar';
+    public const SETTING_KEY = 'texteditor-toolbar';
 
     /**
      * @var TokenStorageInterface

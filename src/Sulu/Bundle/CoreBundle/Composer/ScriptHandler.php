@@ -16,7 +16,7 @@ namespace Sulu\Bundle\CoreBundle\Composer;
  */
 class ScriptHandler
 {
-    const GIT_IGNORE_FILE = '.gitignore';
+    public const GIT_IGNORE_FILE = '.gitignore';
 
     /**
      * Removes the composer.lock file from .gitignore, because we don't want the composer.lock to be included in our

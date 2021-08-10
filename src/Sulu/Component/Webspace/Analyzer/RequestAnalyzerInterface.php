@@ -29,28 +29,28 @@ interface RequestAnalyzerInterface
      *
      * A full match is when the URL completely starts with the given URL
      */
-    const MATCH_TYPE_FULL = 1;
+    public const MATCH_TYPE_FULL = 1;
 
     /**
      * Type for a partial match.
      *
      * A partial match is when only the partial URL matches the given URL
      */
-    const MATCH_TYPE_PARTIAL = 2;
+    public const MATCH_TYPE_PARTIAL = 2;
 
     /**
      * Type for a redirect.
      *
      * A redirect is when the given URL is just defined to be a redirect
      */
-    const MATCH_TYPE_REDIRECT = 3;
+    public const MATCH_TYPE_REDIRECT = 3;
 
     /**
      * Type for a wildcard url.
      *
      * The url contains a wildcard, which can be replaced with anything.
      */
-    const MATCH_TYPE_WILDCARD = 4;
+    public const MATCH_TYPE_WILDCARD = 4;
 
     /**
      * Analyzes the current request, and saves the values for portal, language, country and segment for further usage.

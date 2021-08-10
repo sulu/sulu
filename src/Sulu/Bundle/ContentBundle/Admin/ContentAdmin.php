@@ -27,14 +27,14 @@ class ContentAdmin extends Admin
      *
      * @var string
      */
-    const SECURITY_CONTEXT_PREFIX = 'sulu.webspaces.';
+    public const SECURITY_CONTEXT_PREFIX = 'sulu.webspaces.';
 
     /**
      * The prefix for the settings security context, the key of the webspace has to be appended.
      *
      * @var string
      */
-    const SECURITY_SETTINGS_CONTEXT_PREFIX = 'sulu.webspace_settings.';
+    public const SECURITY_SETTINGS_CONTEXT_PREFIX = 'sulu.webspace_settings.';
 
     /**
      * @var WebspaceManagerInterface

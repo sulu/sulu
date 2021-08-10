@@ -43,7 +43,7 @@ use Sulu\Component\Rest\ApiWrapper;
  */
 class Account extends ApiWrapper
 {
-    const TYPE = 'account';
+    public const TYPE = 'account';
 
     /**
      * @var Media

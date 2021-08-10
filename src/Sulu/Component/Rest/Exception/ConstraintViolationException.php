@@ -16,7 +16,7 @@ namespace Sulu\Component\Rest\Exception;
  */
 class ConstraintViolationException extends RestException
 {
-    const UNIQUE = 'unique';
+    public const UNIQUE = 'unique';
 
     /**
      * @var string

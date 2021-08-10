@@ -20,9 +20,9 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class SmartContentDataProviderCompilerPass implements CompilerPassInterface
 {
-    const POOL_SERVICE_ID = 'sulu_content.smart_content.data_provider_pool';
+    public const POOL_SERVICE_ID = 'sulu_content.smart_content.data_provider_pool';
 
-    const STRUCTURE_EXTENSION_TAG = 'sulu.smart_content.data_provider';
+    public const STRUCTURE_EXTENSION_TAG = 'sulu.smart_content.data_provider';
 
     public function process(ContainerBuilder $container)
     {

@@ -18,7 +18,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class OperatingSystemRule implements RuleInterface
 {
-    const OPERATING_SYSTEM = 'os';
+    public const OPERATING_SYSTEM = 'os';
 
     private static $operatingSystems = ['Android', 'iOS', 'GNU/Linux', 'Mac', 'Windows'];
 

@@ -20,13 +20,13 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class DeviceTypeRule implements RuleInterface
 {
-    const DEVICE_TYPE = 'device_type';
+    public const DEVICE_TYPE = 'device_type';
 
-    const SMARTPHONE = 'smartphone';
+    public const SMARTPHONE = 'smartphone';
 
-    const TABLET = 'tablet';
+    public const TABLET = 'tablet';
 
-    const DESKTOP = 'desktop';
+    public const DESKTOP = 'desktop';
 
     private static $deviceTypes = [self::SMARTPHONE, self::TABLET, self::DESKTOP];
 

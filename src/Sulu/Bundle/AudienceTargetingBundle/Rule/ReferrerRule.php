@@ -17,7 +17,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class ReferrerRule implements RuleInterface
 {
-    const REFERRER = 'referrer';
+    public const REFERRER = 'referrer';
 
     /**
      * @var RequestStack

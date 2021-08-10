@@ -20,9 +20,9 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class ContentExportCompilerPass implements CompilerPassInterface
 {
-    const CONTENT_EXPORT_SERVICE_ID = 'sulu_content.export.manager';
+    public const CONTENT_EXPORT_SERVICE_ID = 'sulu_content.export.manager';
 
-    const STRUCTURE_EXTENSION_TAG = 'sulu.content.export';
+    public const STRUCTURE_EXTENSION_TAG = 'sulu.content.export';
 
     public function process(ContainerBuilder $container)
     {

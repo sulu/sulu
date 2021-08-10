@@ -20,7 +20,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class SubscriberDebugCommand extends ContainerAwareCommand
 {
-    const PREFIX = 'sulu_document_manager.';
+    public const PREFIX = 'sulu_document_manager.';
 
     public function configure()
     {

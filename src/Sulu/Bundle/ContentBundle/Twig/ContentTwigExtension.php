@@ -79,7 +79,7 @@ class ContentTwigExtension extends \Twig_Extension
 
         foreach ($arrays as $array) {
             \reset($base);
-            while (list($key, $value) = @\each($array)) {
+            while (list($key, $value) = @each($array)) {
                 if (\is_array($value) && @\is_array($base[$key])) {
                     $base[$key] = $this->mergeRecursive($base[$key], $value);
                 } else {

@@ -16,7 +16,7 @@ namespace Sulu\Bundle\PreviewBundle\Preview\Exception;
  */
 abstract class PreviewRendererException extends PreviewException
 {
-    const BASE_CODE = 9900;
+    public const BASE_CODE = 9900;
 
     /**
      * @var mixed

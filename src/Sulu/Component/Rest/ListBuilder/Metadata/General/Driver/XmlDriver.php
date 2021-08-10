@@ -25,7 +25,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
  */
 class XmlDriver extends AbstractFileDriver implements DriverInterface
 {
-    const SCHEME_PATH = '/../../Resources/schema/metadata/list-builder-general-1.0.xsd';
+    public const SCHEME_PATH = '/../../Resources/schema/metadata/list-builder-general-1.0.xsd';
 
     /**
      * @var ParameterBagInterface

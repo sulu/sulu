@@ -18,7 +18,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class BrowserRule implements RuleInterface
 {
-    const BROWSER = 'browser';
+    public const BROWSER = 'browser';
 
     private static $browsers = ['Chrome', 'Firefox', 'Internet Explorer', 'Opera', 'Safari'];
 

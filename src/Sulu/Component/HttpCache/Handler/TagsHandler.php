@@ -27,7 +27,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class TagsHandler implements HandlerInvalidateStructureInterface, HandlerInvalidateReferenceInterface, HandlerUpdateResponseInterface, HandlerFlushInterface
 {
-    const TAGS_HEADER = 'X-Cache-Tags';
+    public const TAGS_HEADER = 'X-Cache-Tags';
 
     /**
      * @var ProxyClientInterface

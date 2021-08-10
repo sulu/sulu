@@ -18,19 +18,19 @@ namespace Sulu\Bundle\ResourceBundle\Resource;
 final class DataTypes
 {
     /** Types used by operators and conditions */
-    const UNDEFINED_TYPE = 0;
+    public const UNDEFINED_TYPE = 0;
 
-    const STRING_TYPE = 1;
+    public const STRING_TYPE = 1;
 
-    const NUMBER_TYPE = 2;
+    public const NUMBER_TYPE = 2;
 
-    const DATETIME_TYPE = 3;
+    public const DATETIME_TYPE = 3;
 
-    const BOOLEAN_TYPE = 4;
+    public const BOOLEAN_TYPE = 4;
 
-    const TAGS_TYPE = 5;
+    public const TAGS_TYPE = 5;
 
-    const AUTO_COMPLETE_TYPE = 6;
+    public const AUTO_COMPLETE_TYPE = 6;
 
     /**
      * Types constructor.

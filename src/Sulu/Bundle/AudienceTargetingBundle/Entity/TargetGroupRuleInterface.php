@@ -16,17 +16,17 @@ namespace Sulu\Bundle\AudienceTargetingBundle\Entity;
  */
 interface TargetGroupRuleInterface
 {
-    const FREQUENCY_HIT = 1;
+    public const FREQUENCY_HIT = 1;
 
-    const FREQUENCY_SESSION = 2;
+    public const FREQUENCY_SESSION = 2;
 
-    const FREQUENCY_VISITOR = 3;
+    public const FREQUENCY_VISITOR = 3;
 
-    const FREQUENCY_HIT_NAME = 'hit';
+    public const FREQUENCY_HIT_NAME = 'hit';
 
-    const FREQUENCY_SESSION_NAME = 'session';
+    public const FREQUENCY_SESSION_NAME = 'session';
 
-    const FREQUENCY_VISITOR_NAME = 'visitor';
+    public const FREQUENCY_VISITOR_NAME = 'visitor';
 
     /**
      * @return int

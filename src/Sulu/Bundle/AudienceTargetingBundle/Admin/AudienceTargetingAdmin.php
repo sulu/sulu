@@ -22,7 +22,7 @@ use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
  */
 class AudienceTargetingAdmin extends Admin
 {
-    const SECURITY_CONTEXT = 'sulu.settings.target-groups';
+    public const SECURITY_CONTEXT = 'sulu.settings.target-groups';
 
     /**
      * @var SecurityCheckerInterface

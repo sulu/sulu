@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class RegisterContentTypesCompilerPass implements CompilerPassInterface
 {
-    const CONTENT_TYPE_TAG = 'sulu.content.type';
+    public const CONTENT_TYPE_TAG = 'sulu.content.type';
 
     public function process(ContainerBuilder $container)
     {

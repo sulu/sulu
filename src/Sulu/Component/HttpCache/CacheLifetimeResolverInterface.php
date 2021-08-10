@@ -20,12 +20,12 @@ interface CacheLifetimeResolverInterface
     /**
      * Cache lifetime in seconds.
      */
-    const TYPE_SECONDS = 'seconds';
+    public const TYPE_SECONDS = 'seconds';
 
     /**
      * Cache lifetime as cron expression.
      */
-    const TYPE_EXPRESSION = 'expression';
+    public const TYPE_EXPRESSION = 'expression';
 
     /**
      * Get cache lifetime in seconds.

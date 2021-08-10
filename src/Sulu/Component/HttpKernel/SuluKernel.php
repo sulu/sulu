@@ -20,9 +20,9 @@ abstract class SuluKernel extends Kernel
 {
     private $context = null;
 
-    const CONTEXT_ADMIN = 'admin';
+    public const CONTEXT_ADMIN = 'admin';
 
-    const CONTEXT_WEBSITE = 'website';
+    public const CONTEXT_WEBSITE = 'website';
 
     /**
      * Overload the parent constructor method to add an additional

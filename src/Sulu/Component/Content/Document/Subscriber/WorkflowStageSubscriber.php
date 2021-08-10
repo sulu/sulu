@@ -30,9 +30,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class WorkflowStageSubscriber implements EventSubscriberInterface
 {
-    const WORKFLOW_STAGE_FIELD = 'state';
+    public const WORKFLOW_STAGE_FIELD = 'state';
 
-    const PUBLISHED_FIELD = 'published';
+    public const PUBLISHED_FIELD = 'published';
 
     /**
      * @var DocumentInspector

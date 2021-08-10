@@ -24,7 +24,7 @@ class DumpWebsocketAppsCommand extends ContainerAwareCommand
     /**
      * Service id of websocket manager.
      */
-    const MANAGER_ID = 'sulu_websocket.manager';
+    public const MANAGER_ID = 'sulu_websocket.manager';
 
     protected function configure()
     {

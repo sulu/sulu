@@ -28,9 +28,9 @@ use Symfony\Component\HttpKernel\KernelInterface;
  */
 abstract class BaseContext extends RawMinkContext implements Context, KernelAwareContext
 {
-    const LONG_WAIT_TIME = 30000;
+    public const LONG_WAIT_TIME = 30000;
 
-    const MEDIUM_WAIT_TIME = 5000;
+    public const MEDIUM_WAIT_TIME = 5000;
 
     /**
      * @var KernelInterface

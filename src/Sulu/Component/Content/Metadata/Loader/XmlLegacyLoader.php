@@ -27,7 +27,7 @@ use Symfony\Component\Config\Util\XmlUtils;
  */
 class XmlLegacyLoader implements LoaderInterface
 {
-    const SCHEME_PATH = '/schema/template-1.0.xsd';
+    public const SCHEME_PATH = '/schema/template-1.0.xsd';
 
     /**
      * tags that are required in template

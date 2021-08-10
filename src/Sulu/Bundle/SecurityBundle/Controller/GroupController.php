@@ -42,7 +42,7 @@ class GroupController extends RestController implements ClassResourceInterface, 
      */
     protected $fieldDescriptors;
 
-    const ENTITY_NAME_ROLE = 'SuluSecurityBundle:Role';
+    public const ENTITY_NAME_ROLE = 'SuluSecurityBundle:Role';
 
     // TODO: move the field descriptors to a manager
 

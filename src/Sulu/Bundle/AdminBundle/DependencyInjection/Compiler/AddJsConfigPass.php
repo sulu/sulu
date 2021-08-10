@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class AddJsConfigPass implements CompilerPassInterface
 {
-    const CONFIG_TAG = 'sulu.js_config';
+    public const CONFIG_TAG = 'sulu.js_config';
 
     public function process(ContainerBuilder $container)
     {

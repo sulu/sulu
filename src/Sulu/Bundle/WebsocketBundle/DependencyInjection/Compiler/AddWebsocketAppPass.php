@@ -23,12 +23,12 @@ class AddWebsocketAppPass implements CompilerPassInterface
     /**
      * Service id of websocket manager.
      */
-    const MANAGER_ID = 'sulu_websocket.manager';
+    public const MANAGER_ID = 'sulu_websocket.manager';
 
     /**
      * Tag name for websocket apps.
      */
-    const APP_TAG = 'sulu.websocket.app';
+    public const APP_TAG = 'sulu.websocket.app';
 
     public function process(ContainerBuilder $container)
     {
