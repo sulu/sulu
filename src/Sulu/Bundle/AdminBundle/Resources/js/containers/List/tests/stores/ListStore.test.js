@@ -2160,30 +2160,42 @@ test('Should delete the item with the given ID without locale', () => {
     });
 });
 
-test('Should delete all selected items', () => {
+test('Should delete all selected items and reload the list afterwards', () => {
+    const schemaPromise = Promise.resolve({});
+    metadataStore.getSchema.mockReturnValueOnce(schemaPromise);
+
+    ResourceRequester.delete.mockReturnValue(Promise.resolve());
+
     const page = observable.box(1);
     const listStore = new ListStore('snippets', 'snippets', 'list_test', {page});
-    listStore.schema = {};
+
+    const loadingStrategy = new LoadingStrategy();
     const structureStrategy = new StructureStrategy();
+    listStore.updateLoadingStrategy(loadingStrategy);
     listStore.updateStructureStrategy(structureStrategy);
 
-    listStore.select({id: 1});
-    listStore.select({id: 2});
+    return schemaPromise.then(() => {
+        listStore.select({id: 1});
+        listStore.select({id: 2});
 
-    expect(listStore.deletingSelection).toEqual(false);
-
-    const deletePromise = listStore.deleteSelection();
-
-    expect(listStore.deletingSelection).toEqual(true);
-
-    return deletePromise.then(() => {
-        expect(ResourceRequester.delete).toHaveBeenCalledTimes(2);
-        expect(ResourceRequester.delete).toBeCalledWith('snippets', {id: 1});
-        expect(ResourceRequester.delete).toBeCalledWith('snippets', {id: 2});
-        expect(structureStrategy.remove).toBeCalledWith(1);
-        expect(structureStrategy.remove).toBeCalledWith(2);
-        expect(listStore.selections).toEqual([]);
         expect(listStore.deletingSelection).toEqual(false);
+        expect(loadingStrategy.load).toBeCalledTimes(1);
+
+        const deletePromise = listStore.deleteSelection();
+
+        expect(listStore.deletingSelection).toEqual(true);
+        expect(loadingStrategy.load).toBeCalledTimes(1);
+
+        return deletePromise.then(() => {
+            expect(ResourceRequester.delete).toHaveBeenCalledTimes(2);
+            expect(ResourceRequester.delete).toBeCalledWith('snippets', {id: 1});
+            expect(ResourceRequester.delete).toBeCalledWith('snippets', {id: 2});
+            expect(structureStrategy.remove).toBeCalledWith(1);
+            expect(structureStrategy.remove).toBeCalledWith(2);
+            expect(listStore.selections).toEqual([]);
+            expect(listStore.deletingSelection).toEqual(false);
+            expect(loadingStrategy.load).toBeCalledTimes(2);
+        });
     });
 });
 

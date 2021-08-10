@@ -417,6 +417,7 @@ Array [
                   />
                 </div>
                 <input
+                  autocomplete="new-password"
                   type="password"
                   value=""
                 />
@@ -442,6 +443,7 @@ Array [
                   />
                 </div>
                 <input
+                  autocomplete="new-password"
                   type="password"
                   value=""
                 />
@@ -557,6 +559,7 @@ Array [
                   />
                 </div>
                 <input
+                  autocomplete="username"
                   type="text"
                   value=""
                 />
@@ -582,6 +585,7 @@ Array [
                   />
                 </div>
                 <input
+                  autocomplete="current-password"
                   type="password"
                   value=""
                 />
