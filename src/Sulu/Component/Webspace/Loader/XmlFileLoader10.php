@@ -44,9 +44,9 @@ use Symfony\Component\Config\Util\XmlUtils;
  */
 class XmlFileLoader10 extends BaseXmlFileLoader
 {
-    const SCHEMA_LOCATION = '/schema/webspace/webspace-1.0.xsd';
+    public const SCHEMA_LOCATION = '/schema/webspace/webspace-1.0.xsd';
 
-    const SCHEMA_URI = 'http://schemas.sulu.io/webspace/webspace-1.0.xsd';
+    public const SCHEMA_URI = 'http://schemas.sulu.io/webspace/webspace-1.0.xsd';
 
     /**
      * @var \DOMXPath

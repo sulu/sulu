@@ -20,11 +20,11 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 class Configuration implements ConfigurationInterface
 {
-    const STORAGE_GOOGLE_CLOUD = 'google_cloud';
+    public const STORAGE_GOOGLE_CLOUD = 'google_cloud';
 
-    const STORAGE_S3 = 's3';
+    public const STORAGE_S3 = 's3';
 
-    const STORAGE_AZURE_BLOB = 'azure_blob';
+    public const STORAGE_AZURE_BLOB = 'azure_blob';
 
     public function getConfigTreeBuilder()
     {

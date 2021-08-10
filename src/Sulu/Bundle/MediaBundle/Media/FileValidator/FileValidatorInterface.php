@@ -19,13 +19,13 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  */
 interface FileValidatorInterface
 {
-    const VALIDATOR_FILE_SET = 'FILE_SET';
+    public const VALIDATOR_FILE_SET = 'FILE_SET';
 
-    const VALIDATOR_FILE_ERRORS = 'FILE_ERRORS';
+    public const VALIDATOR_FILE_ERRORS = 'FILE_ERRORS';
 
-    const VALIDATOR_BLOCK_FILE_TYPES = 'BLOCK_FILE_TYPES';
+    public const VALIDATOR_BLOCK_FILE_TYPES = 'BLOCK_FILE_TYPES';
 
-    const VALIDATOR_MAX_FILE_SIZE = 'MAX_FILE_SIZE';
+    public const VALIDATOR_MAX_FILE_SIZE = 'MAX_FILE_SIZE';
 
     /**
      * Validated a given file.

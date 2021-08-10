@@ -25,9 +25,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ShadowLocaleSubscriber implements EventSubscriberInterface
 {
-    const SHADOW_ENABLED_FIELD = 'shadow-on';
+    public const SHADOW_ENABLED_FIELD = 'shadow-on';
 
-    const SHADOW_LOCALE_FIELD = 'shadow-base';
+    public const SHADOW_LOCALE_FIELD = 'shadow-base';
 
     /**
      * @var DocumentInspector

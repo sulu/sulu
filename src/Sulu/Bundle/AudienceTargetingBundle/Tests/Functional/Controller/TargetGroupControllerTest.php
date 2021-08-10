@@ -21,7 +21,7 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class TargetGroupControllerTest extends SuluTestCase
 {
-    const BASE_URL = 'api/target-groups';
+    public const BASE_URL = 'api/target-groups';
 
     /**
      * @var KernelBrowser

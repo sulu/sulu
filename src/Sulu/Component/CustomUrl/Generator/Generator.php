@@ -19,9 +19,9 @@ use Sulu\Component\Webspace\Url\ReplacerInterface;
  */
 class Generator implements GeneratorInterface
 {
-    const PREFIX_REGEX = '/^([^\/]*)(\*)(.*)$/';
+    public const PREFIX_REGEX = '/^([^\/]*)(\*)(.*)$/';
 
-    const POSTFIX_REGEX = '/^.*\/.*\*.*$/';
+    public const POSTFIX_REGEX = '/^.*\/.*\*.*$/';
 
     /**
      * @var ReplacerInterface

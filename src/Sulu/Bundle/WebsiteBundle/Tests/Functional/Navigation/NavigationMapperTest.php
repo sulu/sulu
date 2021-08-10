@@ -654,7 +654,7 @@ class ExcerptStructureExtension extends AbstractExtension
     /**
      * name of structure extension.
      */
-    const EXCERPT_EXTENSION_NAME = 'excerpt';
+    public const EXCERPT_EXTENSION_NAME = 'excerpt';
 
     /**
      * will be filled with data in constructor

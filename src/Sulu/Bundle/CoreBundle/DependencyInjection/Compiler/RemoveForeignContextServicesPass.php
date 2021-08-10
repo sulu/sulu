@@ -20,7 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class RemoveForeignContextServicesPass implements CompilerPassInterface
 {
-    const SULU_CONTEXT_TAG = 'sulu.context';
+    public const SULU_CONTEXT_TAG = 'sulu.context';
 
     public function process(ContainerBuilder $container)
     {

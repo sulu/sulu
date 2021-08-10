@@ -37,9 +37,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class RoutableSubscriber implements EventSubscriberInterface
 {
-    const ROUTE_PROPERTY = 'routePath';
+    public const ROUTE_PROPERTY = 'routePath';
 
-    const TAG_NAME = 'sulu_route.route_path';
+    public const TAG_NAME = 'sulu_route.route_path';
 
     /**
      * @var ChainRouteGeneratorInterface

@@ -19,9 +19,9 @@ use Sulu\Component\Content\Types\ResourceLocator\ResourceLocatorInformation;
  */
 interface ResourceLocatorStrategyInterface
 {
-    const INPUT_TYPE_LEAF = 'leaf';
+    public const INPUT_TYPE_LEAF = 'leaf';
 
-    const INPUT_TYPE_FULL = 'full';
+    public const INPUT_TYPE_FULL = 'full';
 
     /**
      * Returns the child part from the given resource segment.

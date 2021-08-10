@@ -20,9 +20,9 @@ use Sulu\Component\Content\Types\TextEditor;
 
 class TextEditorTest extends TestCase
 {
-    const VALIDATE_REMOVED = 'removed';
+    public const VALIDATE_REMOVED = 'removed';
 
-    const VALIDATE_UNPUBLISHED = 'unpublished';
+    public const VALIDATE_UNPUBLISHED = 'unpublished';
 
     /**
      * @var MarkupParserInterface

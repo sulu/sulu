@@ -26,7 +26,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class OrderSubscriber implements EventSubscriberInterface
 {
-    const FIELD = 'order';
+    public const FIELD = 'order';
 
     /**
      * @var DocumentInspector

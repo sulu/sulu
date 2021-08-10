@@ -17,9 +17,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class SegmentCacheListener implements EventSubscriberInterface
 {
-    const SEGMENT_COOKIE = '_ss';
+    public const SEGMENT_COOKIE = '_ss';
 
-    const SEGMENT_HEADER = 'X-Sulu-Segment';
+    public const SEGMENT_HEADER = 'X-Sulu-Segment';
 
     public static function getSubscribedEvents()
     {

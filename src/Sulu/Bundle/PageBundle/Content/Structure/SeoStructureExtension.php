@@ -23,7 +23,7 @@ class SeoStructureExtension extends AbstractExtension implements ExportExtension
     /**
      * name of structure extension.
      */
-    const SEO_EXTENSION_NAME = 'seo';
+    public const SEO_EXTENSION_NAME = 'seo';
 
     protected $seoAttributes = [
         'hideInSitemap',

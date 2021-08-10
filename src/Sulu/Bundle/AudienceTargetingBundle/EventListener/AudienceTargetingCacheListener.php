@@ -26,17 +26,17 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
  */
 class AudienceTargetingCacheListener implements EventSubscriberInterface
 {
-    const TARGET_GROUP_URL = '/_sulu_target_group';
+    public const TARGET_GROUP_URL = '/_sulu_target_group';
 
-    const TARGET_GROUP_HEADER = 'X-Sulu-Target-Group';
+    public const TARGET_GROUP_HEADER = 'X-Sulu-Target-Group';
 
-    const TARGET_GROUP_COOKIE = '_svtg';
+    public const TARGET_GROUP_COOKIE = '_svtg';
 
-    const TARGET_GROUP_COOKIE_LIFETIME = 2147483647;
+    public const TARGET_GROUP_COOKIE_LIFETIME = 2147483647;
 
-    const VISITOR_SESSION_COOKIE = '_svs';
+    public const VISITOR_SESSION_COOKIE = '_svs';
 
-    const USER_CONTEXT_URL_HEADER = 'X-Forwarded-URL';
+    public const USER_CONTEXT_URL_HEADER = 'X-Forwarded-URL';
 
     protected $hadValidTargetGroupCookie = false;
 

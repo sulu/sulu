@@ -16,5 +16,5 @@ namespace Sulu\Component\Security\Event;
  */
 final class SecurityEvents
 {
-    const PERMISSION_UPDATE = 'sulu_security.permission_update';
+    public const PERMISSION_UPDATE = 'sulu_security.permission_update';
 }

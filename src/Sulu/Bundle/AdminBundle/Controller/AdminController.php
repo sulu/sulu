@@ -36,7 +36,7 @@ use Twig\Environment;
 
 class AdminController
 {
-    const TRANSLATION_DOMAIN = 'admin';
+    public const TRANSLATION_DOMAIN = 'admin';
 
     /**
      * @var UrlGeneratorInterface

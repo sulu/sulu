@@ -19,15 +19,15 @@ class LocalizationState
     /**
      * Document is loaded in requested locale.
      */
-    const LOCALIZED = 'localized';
+    public const LOCALIZED = 'localized';
 
     /**
      * Document is using a fallback.
      */
-    const GHOST = 'ghost';
+    public const GHOST = 'ghost';
 
     /**
      * Document is using the content of a different localization.
      */
-    const SHADOW = 'shadow';
+    public const SHADOW = 'shadow';
 }

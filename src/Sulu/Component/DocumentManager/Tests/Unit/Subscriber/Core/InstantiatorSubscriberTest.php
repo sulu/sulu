@@ -22,7 +22,7 @@ use Sulu\Component\DocumentManager\Subscriber\Core\InstantiatorSubscriber;
 
 class InstantiatorSubscriberTest extends TestCase
 {
-    const ALIAS = 'alias';
+    public const ALIAS = 'alias';
 
     private $subscriber;
 

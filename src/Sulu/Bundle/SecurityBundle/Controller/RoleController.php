@@ -40,7 +40,7 @@ class RoleController extends AbstractRestController implements ClassResourceInte
 {
     protected static $entityKey = 'roles';
 
-    const ENTITY_NAME_PERMISSION = 'SuluSecurityBundle:Permission';
+    public const ENTITY_NAME_PERMISSION = 'SuluSecurityBundle:Permission';
 
     protected $bundlePrefix = 'security.roles.';
 

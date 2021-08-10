@@ -23,13 +23,13 @@ use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
 class CategoryAdmin extends Admin
 {
-    const SECURITY_CONTEXT = 'sulu.settings.categories';
+    public const SECURITY_CONTEXT = 'sulu.settings.categories';
 
-    const LIST_VIEW = 'sulu_category.list';
+    public const LIST_VIEW = 'sulu_category.list';
 
-    const ADD_FORM_VIEW = 'sulu_category.add_form';
+    public const ADD_FORM_VIEW = 'sulu_category.add_form';
 
-    const EDIT_FORM_VIEW = 'sulu_category.edit_form';
+    public const EDIT_FORM_VIEW = 'sulu_category.edit_form';
 
     /**
      * @var ViewBuilderFactoryInterface

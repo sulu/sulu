@@ -21,7 +21,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class TitleSubscriber implements EventSubscriberInterface
 {
-    const PROPERTY_NAME = 'title';
+    public const PROPERTY_NAME = 'title';
 
     /**
      * @var PropertyEncoder

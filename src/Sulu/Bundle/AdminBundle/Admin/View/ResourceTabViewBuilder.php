@@ -17,7 +17,7 @@ class ResourceTabViewBuilder implements ResourceTabViewBuilderInterface
     use FormViewBuilderTrait;
     use TabViewBuilderTrait;
 
-    const TYPE = 'sulu_admin.resource_tabs';
+    public const TYPE = 'sulu_admin.resource_tabs';
 
     public function __construct(string $name, string $path)
     {

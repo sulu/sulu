@@ -19,9 +19,9 @@ use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
  */
 interface StructureInterface extends \JsonSerializable
 {
-    const STATE_TEST = 1;
+    public const STATE_TEST = 1;
 
-    const STATE_PUBLISHED = 2;
+    public const STATE_PUBLISHED = 2;
 
     /**
      * @param string $language

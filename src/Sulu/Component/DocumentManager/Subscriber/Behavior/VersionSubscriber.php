@@ -32,7 +32,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class VersionSubscriber implements EventSubscriberInterface
 {
-    const VERSION_PROPERTY = 'sulu:versions';
+    public const VERSION_PROPERTY = 'sulu:versions';
 
     /**
      * @var SessionInterface

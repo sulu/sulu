@@ -28,13 +28,13 @@ use Sulu\Component\Webspace\Webspace;
  */
 class SnippetAdmin extends Admin
 {
-    const SECURITY_CONTEXT = 'sulu.global.snippets';
+    public const SECURITY_CONTEXT = 'sulu.global.snippets';
 
-    const LIST_VIEW = 'sulu_snippet.list';
+    public const LIST_VIEW = 'sulu_snippet.list';
 
-    const ADD_FORM_VIEW = 'sulu_snippet.add_form';
+    public const ADD_FORM_VIEW = 'sulu_snippet.add_form';
 
-    const EDIT_FORM_VIEW = 'sulu_snippet.edit_form';
+    public const EDIT_FORM_VIEW = 'sulu_snippet.edit_form';
 
     /**
      * @var ViewBuilderFactoryInterface

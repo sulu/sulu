@@ -27,9 +27,9 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  */
 class Query
 {
-    const HYDRATE_DOCUMENT = 'document';
+    public const HYDRATE_DOCUMENT = 'document';
 
-    const HYDRATE_PHPCR = 'phpcr_node';
+    public const HYDRATE_PHPCR = 'phpcr_node';
 
     /**
      * @var QueryInterface

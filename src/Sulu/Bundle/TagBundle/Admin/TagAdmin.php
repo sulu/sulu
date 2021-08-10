@@ -22,13 +22,13 @@ use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
 class TagAdmin extends Admin
 {
-    const SECURITY_CONTEXT = 'sulu.settings.tags';
+    public const SECURITY_CONTEXT = 'sulu.settings.tags';
 
-    const LIST_VIEW = 'sulu_tag.list';
+    public const LIST_VIEW = 'sulu_tag.list';
 
-    const ADD_FORM_VIEW = 'sulu_tag.add_form';
+    public const ADD_FORM_VIEW = 'sulu_tag.add_form';
 
-    const EDIT_FORM_VIEW = 'sulu_tag.edit_form';
+    public const EDIT_FORM_VIEW = 'sulu_tag.edit_form';
 
     /**
      * @var ViewBuilderFactoryInterface
