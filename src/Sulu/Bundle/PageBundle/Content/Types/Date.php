@@ -20,7 +20,7 @@ use Sulu\Component\Content\SimpleContentType;
  */
 class Date extends SimpleContentType
 {
-    const FORMAT = 'Y-m-d';
+    public const FORMAT = 'Y-m-d';
 
     public function __construct()
     {

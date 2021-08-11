@@ -19,15 +19,15 @@ final class RedirectType
     /**
      * indicates that the node is a content node.
      */
-    const NONE = 1;
+    public const NONE = 1;
 
     /**
      * indicates that the node links to an internal resource.
      */
-    const INTERNAL = 2;
+    public const INTERNAL = 2;
 
     /**
      * indicates that the node links to an external resource.
      */
-    const EXTERNAL = 4;
+    public const EXTERNAL = 4;
 }

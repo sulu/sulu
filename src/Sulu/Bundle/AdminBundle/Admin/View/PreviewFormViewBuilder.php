@@ -17,7 +17,7 @@ class PreviewFormViewBuilder implements PreviewFormViewBuilderInterface
     use FormViewBuilderTrait;
     use TabViewChildBuilderTrait;
 
-    const TYPE = 'sulu_admin.preview_form';
+    public const TYPE = 'sulu_admin.preview_form';
 
     public function __construct(string $name, string $path)
     {

@@ -20,9 +20,9 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class StructureExtensionCompilerPass implements CompilerPassInterface
 {
-    const STRUCTURE_MANAGER_ID = 'sulu_page.extension.manager';
+    public const STRUCTURE_MANAGER_ID = 'sulu_page.extension.manager';
 
-    const STRUCTURE_EXTENSION_TAG = 'sulu.structure.extension';
+    public const STRUCTURE_EXTENSION_TAG = 'sulu.structure.extension';
 
     public function process(ContainerBuilder $container)
     {

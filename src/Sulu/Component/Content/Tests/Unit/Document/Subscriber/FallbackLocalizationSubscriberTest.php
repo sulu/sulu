@@ -24,9 +24,9 @@ use Sulu\Component\Webspace\Webspace;
 
 class FallbackLocalizationSubscriberTest extends SubscriberTestCase
 {
-    const FIX_LOCALE = 'en';
+    public const FIX_LOCALE = 'en';
 
-    const FIX_WEBSPACE = 'sulu_io';
+    public const FIX_WEBSPACE = 'sulu_io';
 
     /**
      * @var WebspaceManagerInterface

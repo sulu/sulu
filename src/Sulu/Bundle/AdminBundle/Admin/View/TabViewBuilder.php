@@ -23,7 +23,7 @@ class TabViewBuilder implements TabViewBuilderInterface
         TabViewChildBuilderTrait::setDisableTabGapToView insteadof TabViewBuilderTrait;
     }
 
-    const TYPE = 'sulu_admin.tabs';
+    public const TYPE = 'sulu_admin.tabs';
 
     public function __construct(string $name, string $path)
     {

@@ -21,9 +21,9 @@ use Symfony\Component\Config\Util\XmlUtils;
  */
 abstract class BaseXmlFileLoader extends FileLoader
 {
-    const SCHEMA_IDENTIFIER = 'http://schemas.sulu.io/webspace/webspace';
+    public const SCHEMA_IDENTIFIER = 'http://schemas.sulu.io/webspace/webspace';
 
-    const SCHEMA_URI = '';
+    public const SCHEMA_URI = '';
 
     public function supports($resource, $type = null)
     {

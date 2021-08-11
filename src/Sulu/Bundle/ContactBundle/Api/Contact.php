@@ -41,7 +41,7 @@ use Sulu\Component\Security\Authentication\UserInterface;
  */
 class Contact extends ApiWrapper
 {
-    const TYPE = 'contact';
+    public const TYPE = 'contact';
 
     /**
      * @var Media

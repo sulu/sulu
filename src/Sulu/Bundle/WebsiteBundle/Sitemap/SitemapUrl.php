@@ -19,19 +19,19 @@ class SitemapUrl
     /**
      * Constants which indicates the change frequency (google will use them).
      */
-    const CHANGE_FREQUENCY_ALWAYS = 'always';
+    public const CHANGE_FREQUENCY_ALWAYS = 'always';
 
-    const CHANGE_FREQUENCY_HOURLY = 'hourly';
+    public const CHANGE_FREQUENCY_HOURLY = 'hourly';
 
-    const CHANGE_FREQUENCY_DAILY = 'daily';
+    public const CHANGE_FREQUENCY_DAILY = 'daily';
 
-    const CHANGE_FREQUENCY_WEEKLY = 'weekly';
+    public const CHANGE_FREQUENCY_WEEKLY = 'weekly';
 
-    const CHANGE_FREQUENCY_MONTHLY = 'monthly';
+    public const CHANGE_FREQUENCY_MONTHLY = 'monthly';
 
-    const CHANGE_FREQUENCY_YEARLY = 'yearly';
+    public const CHANGE_FREQUENCY_YEARLY = 'yearly';
 
-    const CHANGE_FREQUENCY_NEVER = 'never';
+    public const CHANGE_FREQUENCY_NEVER = 'never';
 
     /**
      * Relative URL.

@@ -21,7 +21,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class TargetSubscriber implements EventSubscriberInterface
 {
-    const DOCUMENT_TARGET_FIELD = 'content';
+    public const DOCUMENT_TARGET_FIELD = 'content';
 
     public static function getSubscribedEvents()
     {

@@ -21,7 +21,7 @@ use Sulu\Bundle\TagBundle\Tag\TagInterface;
  */
 interface ContactInterface
 {
-    const RESOURCE_KEY = 'contacts';
+    public const RESOURCE_KEY = 'contacts';
 
     /**
      * Get id.

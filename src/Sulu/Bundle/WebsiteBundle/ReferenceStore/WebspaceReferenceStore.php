@@ -16,7 +16,7 @@ use Sulu\Component\Webspace\Webspace;
 
 class WebspaceReferenceStore implements ReferenceStoreInterface
 {
-    const WEBSPACE_REFERENCE_ALIAS = 'webspace';
+    public const WEBSPACE_REFERENCE_ALIAS = 'webspace';
 
     public static function generateTagByWebspaceKey(string $webspaceKey): string
     {

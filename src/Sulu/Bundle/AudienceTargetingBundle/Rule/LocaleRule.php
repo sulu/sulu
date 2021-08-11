@@ -20,7 +20,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class LocaleRule implements RuleInterface
 {
-    const LOCALE = 'locale';
+    public const LOCALE = 'locale';
 
     /**
      * @var RequestStack

@@ -28,9 +28,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class BlameSubscriber implements EventSubscriberInterface
 {
-    const CREATOR = 'creator';
+    public const CREATOR = 'creator';
 
-    const CHANGER = 'changer';
+    public const CHANGER = 'changer';
 
     /**
      * @var PropertyEncoder

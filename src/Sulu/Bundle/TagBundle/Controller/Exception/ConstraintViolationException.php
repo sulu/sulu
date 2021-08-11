@@ -24,7 +24,7 @@ class ConstraintViolationException extends RestException
      *
      * @var int
      */
-    const EXCEPTION_CODE_NON_UNIQUE_NAME = 1101;
+    public const EXCEPTION_CODE_NON_UNIQUE_NAME = 1101;
 
     /**
      * The field of the tag which is not unique.

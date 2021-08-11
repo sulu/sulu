@@ -30,5 +30,5 @@ final class CategoryEvents
      *
      * @var string
      */
-    const CATEGORY_DELETE = 'sulu.category.delete';
+    public const CATEGORY_DELETE = 'sulu.category.delete';
 }

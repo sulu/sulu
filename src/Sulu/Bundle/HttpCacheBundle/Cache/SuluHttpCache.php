@@ -34,7 +34,7 @@ class SuluHttpCache extends HttpCache implements CacheInvalidation
 {
     use EventDispatchingHttpCache;
 
-    const HEADER_REVERSE_PROXY_TTL = 'X-Reverse-Proxy-TTL';
+    public const HEADER_REVERSE_PROXY_TTL = 'X-Reverse-Proxy-TTL';
 
     /**
      * @param string $cacheDir

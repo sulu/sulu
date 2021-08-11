@@ -20,15 +20,15 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class TagCompilerPass implements CompilerPassInterface
 {
-    const SERVICE_ID = 'sulu_markup.tag.registry';
+    public const SERVICE_ID = 'sulu_markup.tag.registry';
 
-    const TAG_NAME = 'sulu_markup.tag';
+    public const TAG_NAME = 'sulu_markup.tag';
 
-    const NAMESPACE_ATTRIBUTE = 'namespace';
+    public const NAMESPACE_ATTRIBUTE = 'namespace';
 
-    const TAG_ATTRIBUTE = 'tag';
+    public const TAG_ATTRIBUTE = 'tag';
 
-    const TYPE_ATTRIBUTE = 'type';
+    public const TYPE_ATTRIBUTE = 'type';
 
     public function process(ContainerBuilder $container)
     {

@@ -18,11 +18,11 @@ use Doctrine\Common\Collections\Collection;
  */
 interface TargetGroupRuleInterface
 {
-    const FREQUENCY_HIT = 1;
+    public const FREQUENCY_HIT = 1;
 
-    const FREQUENCY_SESSION = 2;
+    public const FREQUENCY_SESSION = 2;
 
-    const FREQUENCY_VISITOR = 3;
+    public const FREQUENCY_VISITOR = 3;
 
     /**
      * @return int

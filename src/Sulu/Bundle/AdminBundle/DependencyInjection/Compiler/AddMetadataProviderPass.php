@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\Reference;
 
 class AddMetadataProviderPass implements CompilerPassInterface
 {
-    const TAG = 'sulu_admin.metadata_provider';
+    public const TAG = 'sulu_admin.metadata_provider';
 
     public function process(ContainerBuilder $container)
     {

@@ -19,7 +19,7 @@ use JsonSerializable;
  */
 class ContactTitle implements JsonSerializable
 {
-    const RESOURCE_KEY = 'contact_titles';
+    public const RESOURCE_KEY = 'contact_titles';
 
     /**
      * @var string

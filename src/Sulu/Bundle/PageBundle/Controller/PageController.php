@@ -53,9 +53,9 @@ class PageController extends AbstractRestController implements ClassResourceInte
 {
     use RequestParametersTrait;
 
-    const WEBSPACE_NODE_SINGLE = 'single';
+    public const WEBSPACE_NODE_SINGLE = 'single';
 
-    const WEBSPACE_NODES_ALL = 'all';
+    public const WEBSPACE_NODES_ALL = 'all';
 
     /**
      * @deprecated Use the BasePageDocument::RESOURCE_KEY constant instead

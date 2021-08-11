@@ -25,7 +25,7 @@ class FormOverlayListViewBuilder implements FormOverlayListViewBuilderInterface
     }
     use TabViewChildBuilderTrait;
 
-    const TYPE = 'sulu_admin.form_overlay_list';
+    public const TYPE = 'sulu_admin.form_overlay_list';
 
     public function __construct(string $name, string $path)
     {

@@ -15,9 +15,9 @@ use Sulu\Bundle\TestBundle\Testing\KernelTestCase;
 
 abstract class BaseTestCase extends KernelTestCase
 {
-    const BASE_NAME = 'test';
+    public const BASE_NAME = 'test';
 
-    const BASE_PATH = '/test';
+    public const BASE_PATH = '/test';
 
     public function setUp(): void
     {

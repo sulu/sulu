@@ -19,8 +19,8 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class AddAdminPass implements CompilerPassInterface
 {
-    const ADMIN_POOL_DEFINITION_ID = 'sulu_admin.admin_pool';
-    const ADMIN_TAG = 'sulu.admin';
+    public const ADMIN_POOL_DEFINITION_ID = 'sulu_admin.admin_pool';
+    public const ADMIN_TAG = 'sulu.admin';
 
     public function process(ContainerBuilder $container)
     {

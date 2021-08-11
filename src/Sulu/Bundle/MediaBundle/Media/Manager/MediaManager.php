@@ -67,7 +67,7 @@ class MediaManager implements MediaManagerInterface
     /**
      * @deprecated This const is deprecated and will be removed in Sulu 3.0 use the CollectionInterface::class instead.
      */
-    const ENTITY_NAME_COLLECTION = 'SuluMediaBundle:Collection';
+    public const ENTITY_NAME_COLLECTION = 'SuluMediaBundle:Collection';
 
     /**
      * The repository for communication with the database.

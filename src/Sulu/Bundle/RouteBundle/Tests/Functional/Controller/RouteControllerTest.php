@@ -18,13 +18,13 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class RouteControllerTest extends SuluTestCase
 {
-    const TEST_ENTITY = 'AppBundle\\Entity\\Test';
+    public const TEST_ENTITY = 'AppBundle\\Entity\\Test';
 
-    const TEST_RESOURCE_KEY = 'tests';
+    public const TEST_RESOURCE_KEY = 'tests';
 
-    const TEST_ID = 1;
+    public const TEST_ID = 1;
 
-    const TEST_LOCALE = 'de';
+    public const TEST_LOCALE = 'de';
 
     /**
      * @var EntityManagerInterface

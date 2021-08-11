@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class CacheLifetimeRequestStore
 {
-    const ATTRIBUTE_KEY = '_cacheLifetime';
+    public const ATTRIBUTE_KEY = '_cacheLifetime';
 
     /**
      * @var RequestStack

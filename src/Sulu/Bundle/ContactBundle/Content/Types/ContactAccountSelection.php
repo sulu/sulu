@@ -31,9 +31,9 @@ use Sulu\Component\Serializer\ArraySerializerInterface;
  */
 class ContactAccountSelection extends ComplexContentType implements ContentTypeExportInterface, PreResolvableContentTypeInterface
 {
-    const PREFIX_CONTACT = 'c';
+    public const PREFIX_CONTACT = 'c';
 
-    const PREFIX_ACCOUNT = 'a';
+    public const PREFIX_ACCOUNT = 'a';
 
     /**
      * @var ContactManagerInterface

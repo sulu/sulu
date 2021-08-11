@@ -25,8 +25,8 @@ use Sulu\Component\Security\Authorization\PermissionTypes;
 
 class ActivityControllerTest extends SuluTestCase
 {
-    const GRANTED_CONTEXT = 'sulu.context.granted';
-    const NOT_GRANTED_CONTEXT = 'sulu.context.not_granted';
+    public const GRANTED_CONTEXT = 'sulu.context.granted';
+    public const NOT_GRANTED_CONTEXT = 'sulu.context.not_granted';
 
     /**
      * @var SuluKernelBrowser

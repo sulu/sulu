@@ -23,32 +23,32 @@ class Focus implements FocusInterface
     /**
      * 0 is the x value if the focus point is set on the most left column.
      */
-    const FOCUS_LEFT = 0;
+    public const FOCUS_LEFT = 0;
 
     /**
      * 1 is the x value if the focus point is set on the center column.
      */
-    const FOCUS_CENTER = 1;
+    public const FOCUS_CENTER = 1;
 
     /**
      * 2 is the x value if the focus point is set on the most right column.
      */
-    const FOCUS_RIGHT = 2;
+    public const FOCUS_RIGHT = 2;
 
     /**
      * 0 is the y value if the focus point is set on the most top row.
      */
-    const FOCUS_TOP = 0;
+    public const FOCUS_TOP = 0;
 
     /**
      * 1 is the y value if the focus point is set on the middle row.
      */
-    const FOCUS_MIDDLE = 1;
+    public const FOCUS_MIDDLE = 1;
 
     /**
      * 2 is the y value if the focus point is set on the most bottom row.
      */
-    const FOCUS_BOTTOM = 2;
+    public const FOCUS_BOTTOM = 2;
 
     public function focus(ImageInterface $image, $x, $y, $width, $height)
     {

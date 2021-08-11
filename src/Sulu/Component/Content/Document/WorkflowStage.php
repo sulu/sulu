@@ -28,10 +28,10 @@ final class WorkflowStage
     /**
      * Document is published.
      */
-    const PUBLISHED = 2;
+    public const PUBLISHED = 2;
 
     /**
      * Document is not published.
      */
-    const TEST = 1;
+    public const TEST = 1;
 }

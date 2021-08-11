@@ -33,7 +33,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class StructureSubscriber implements EventSubscriberInterface
 {
-    const STRUCTURE_TYPE_FIELD = 'template';
+    public const STRUCTURE_TYPE_FIELD = 'template';
 
     /**
      * @var ContentTypeManagerInterface

@@ -19,7 +19,7 @@ use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
 
 class SearchAdmin extends Admin
 {
-    const SEARCH_VIEW = 'sulu_search.search';
+    public const SEARCH_VIEW = 'sulu_search.search';
     /**
      * @var ViewBuilderFactoryInterface
      */

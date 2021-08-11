@@ -17,9 +17,9 @@ namespace Sulu\Bundle\MediaBundle\Media\Storage;
  */
 interface StorageInterface
 {
-    const TYPE_REMOTE = 'remote';
+    public const TYPE_REMOTE = 'remote';
 
-    const TYPE_LOCAL = 'local';
+    public const TYPE_LOCAL = 'local';
 
     /**
      * Save the document in a storage and give back the path to the document.

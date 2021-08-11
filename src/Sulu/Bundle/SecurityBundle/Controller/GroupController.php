@@ -67,7 +67,7 @@ class GroupController extends AbstractRestController implements ClassResourceInt
      */
     private $entityManager;
 
-    const ENTITY_NAME_ROLE = 'SuluSecurityBundle:Role';
+    public const ENTITY_NAME_ROLE = 'SuluSecurityBundle:Role';
 
     // TODO: move the field descriptors to a manager
     public function __construct(
