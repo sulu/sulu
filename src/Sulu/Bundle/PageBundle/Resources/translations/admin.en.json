@@ -38,7 +38,7 @@
     "sulu_page.meta_title": "Title (Meta title)",
     "sulu_page.meta_title_info_text": "SEO guidelines recommend to use a meta title that is no longer than 55 characters.",
     "sulu_page.meta_description": "Description (Meta description)",
-    "sulu_page.meta_description_info_text": "SEO guidelines recommend to use a meta description that is no longer than 320 characters.",
+    "sulu_page.meta_description_info_text": "SEO guidelines recommend to use a meta description that is no longer than 160 characters.",
     "sulu_page.meta_keywords": "Keywords (Meta keywords)",
     "sulu_page.meta_keywords_info_text": "Keywords are sperated by commas and should match the content of the page. SEO guidelines recommend to use no more than 5 keywords per page.",
     "sulu_page.canonical_url": "Canonical URL  (Canonical tag)",

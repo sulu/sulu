@@ -26,7 +26,7 @@
                 <info_text>sulu_page.meta_description_info_text</info_text>
             </meta>
             <params>
-                <param name="max_characters" value="320" />
+                <param name="max_characters" value="160" />
             </params>
         </property>
         <property name="ext/seo/keywords" type="text_line">
