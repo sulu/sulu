@@ -1,5 +1,5 @@
 // @flow
-import {action, autorun, computed, get, observable, when} from 'mobx';
+import {action, autorun, computed, get, set, observable, when} from 'mobx';
 import Ajv from 'ajv';
 import jsonpointer from 'json-pointer';
 import log from 'loglevel';
@@ -62,10 +62,8 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
             when(
                 () => !this.resourceStore.loading,
                 (): void => {
-                    this.changeType(
-                        this.resourceStore.data[TYPE_PROPERTY] || defaultType || Object.keys(this.types)[0],
-                        {isDefaultValue: true}
-                    );
+                    const type = this.resourceStore.data[TYPE_PROPERTY] || defaultType || Object.keys(this.types)[0];
+                    set(this.data, {[TYPE_PROPERTY]: type});
                 }
             );
         }
@@ -117,7 +115,7 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
     }
 
     @computed get type(): string {
-        return this.data[TYPE_PROPERTY];
+        return get(this.data, TYPE_PROPERTY);
     }
 
     @action save(options: Object = {}): Promise<Object> {
