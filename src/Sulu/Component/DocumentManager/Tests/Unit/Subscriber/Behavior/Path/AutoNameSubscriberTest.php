@@ -28,7 +28,7 @@ use Symfony\Cmf\Api\Slugifier\SlugifierInterface;
 
 class AutoNameSubscriberTest extends TestCase
 {
-    const DEFAULT_LOCALE = 'en';
+    public const DEFAULT_LOCALE = 'en';
 
     /**
      * @var DocumentRegistry

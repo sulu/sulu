@@ -34,7 +34,6 @@ jest.mock('../../../../stores/ResourceStore', () => function(resourceKey, id, op
         this.data = {...this.data, ...data};
     });
     this.copyFromLocale = jest.fn();
-    this.loading = false;
 
     if (options) {
         this.locale = options.locale;
@@ -42,6 +41,7 @@ jest.mock('../../../../stores/ResourceStore', () => function(resourceKey, id, op
 
     mockExtendObservable(this, {
         data: {},
+        loading: false,
     });
 });
 
@@ -169,7 +169,7 @@ test('Set template property of ResourceStore from the loaded data', () => {
     const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
 
     return Promise.all([schemaTypesPromise, metadataPromise]).then(() => {
-        expect(resourceStore.set).toBeCalledWith('template', 'type2');
+        expect(resourceFormStore.type).toEqual('type2');
         resourceFormStore.destroy();
     });
 });
@@ -2106,7 +2106,7 @@ test('HasTypes return false when types are not set', () => {
     });
 });
 
-test.each(['sidebar', 'footer'])('Set type to default "%s" if data has no template set', (defaultType) => {
+test.each(['sidebar', 'footer'])('Set type to default "%s" if loaded data has no template set', (defaultType, done) => {
     const schemaTypesPromise = Promise.resolve({
         types: {
             sidebar: {key: 'sidebar', title: 'Sidebar'},
@@ -2117,12 +2117,23 @@ test.each(['sidebar', 'footer'])('Set type to default "%s" if data has no templa
 
     metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
 
-    const resourceStore = new ResourceStore('test', 5);
+    const resourceStore = new ResourceStore('test');
+    resourceStore.loading = true;
+
     const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
 
-    return schemaTypesPromise.then(() => {
-        expect(resourceStore.set).toBeCalledWith('template', defaultType);
-        expect(resourceFormStore.type).toEqual(defaultType);
+    expect(resourceFormStore.type).toEqual(undefined);
+
+    schemaTypesPromise.then(() => {
+        // type should not be set until ResourceStore is loaded completely
+        expect(resourceFormStore.type).toEqual(undefined);
+        resourceStore.loading = false;
+
+        setTimeout(() => {
+            expect(resourceFormStore.type).toEqual(defaultType);
+            resourceFormStore.destroy();
+            done();
+        }, 0);
     });
 });
 

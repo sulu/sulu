@@ -27,7 +27,7 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 class StructureFormMetadataLoaderTest extends TestCase
 {
-    const CACHE_DIR = __DIR__ . '/../../../../../../../tests/Resources/cache';
+    public const CACHE_DIR = __DIR__ . '/../../../../../../../tests/Resources/cache';
 
     /**
      * @var ObjectProphecy&StructureMetadataFactoryInterface

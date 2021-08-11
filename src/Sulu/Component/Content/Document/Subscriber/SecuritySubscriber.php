@@ -31,9 +31,9 @@ class SecuritySubscriber implements EventSubscriberInterface
     /**
      * @deprecated use the SECURITY_PERMISSION_PROPERTY to access the permissions
      */
-    const SECURITY_PROPERTY_PREFIX = 'sec:role-';
+    public const SECURITY_PROPERTY_PREFIX = 'sec:role-';
 
-    const SECURITY_PERMISSION_PROPERTY = 'sec:permissions';
+    public const SECURITY_PERMISSION_PROPERTY = 'sec:permissions';
 
     /**
      * @var array

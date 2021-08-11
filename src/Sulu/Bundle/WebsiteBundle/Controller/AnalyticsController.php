@@ -34,7 +34,7 @@ class AnalyticsController extends AbstractRestController implements ClassResourc
     /**
      * @deprecated Use the AnalyticsInterface::RESOURCE_KEY constant instead
      */
-    const RESULT_KEY = 'analytics';
+    public const RESULT_KEY = 'analytics';
 
     /**
      * @var AnalyticsManagerInterface

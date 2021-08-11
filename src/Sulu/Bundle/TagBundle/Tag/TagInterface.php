@@ -18,7 +18,7 @@ use Sulu\Component\Persistence\Model\AuditableInterface;
  */
 interface TagInterface extends AuditableInterface
 {
-    const RESOURCE_KEY = 'tags';
+    public const RESOURCE_KEY = 'tags';
 
     /**
      * Set name.

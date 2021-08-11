@@ -13,11 +13,11 @@ namespace Sulu\Bundle\AdminBundle\Metadata\FormMetadata;
 
 class OptionMetadata
 {
-    const TYPE_STRING = 'string';
+    public const TYPE_STRING = 'string';
 
-    const TYPE_COLLECTION = 'collection';
+    public const TYPE_COLLECTION = 'collection';
 
-    const TYPE_EXPRESSION = 'expression';
+    public const TYPE_EXPRESSION = 'expression';
 
     /**
      * @var null|string

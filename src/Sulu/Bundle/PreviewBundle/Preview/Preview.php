@@ -20,7 +20,7 @@ use Sulu\Bundle\PreviewBundle\Preview\Renderer\PreviewRendererInterface;
 
 class Preview implements PreviewInterface
 {
-    const CONTENT_REPLACER = '<!-- CONTENT-REPLACER -->';
+    public const CONTENT_REPLACER = '<!-- CONTENT-REPLACER -->';
 
     /**
      * @var PreviewObjectProviderRegistryInterface

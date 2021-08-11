@@ -22,9 +22,9 @@ use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
 class ActivityAdmin extends Admin
 {
-    const SECURITY_CONTEXT = 'sulu.activities.activities';
+    public const SECURITY_CONTEXT = 'sulu.activities.activities';
 
-    const LIST_VIEW = 'sulu_activity.activities.list';
+    public const LIST_VIEW = 'sulu_activity.activities.list';
 
     /**
      * @var ViewBuilderFactoryInterface

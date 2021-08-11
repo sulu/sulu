@@ -43,8 +43,8 @@ class SnippetDocument implements
     LocalizedTitleBehavior,
     ExtensionBehavior
 {
-    const RESOURCE_KEY = 'snippets';
-    const LIST_KEY = 'snippets';
+    public const RESOURCE_KEY = 'snippets';
+    public const LIST_KEY = 'snippets';
 
     /**
      * @var \DateTime

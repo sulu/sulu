@@ -23,25 +23,25 @@ use Sulu\Component\Security\Authentication\UserInterface;
  */
 interface ListBuilderInterface
 {
-    const WHERE_COMPARATOR_EQUAL = '=';
+    public const WHERE_COMPARATOR_EQUAL = '=';
 
-    const WHERE_COMPARATOR_UNEQUAL = '!=';
+    public const WHERE_COMPARATOR_UNEQUAL = '!=';
 
-    const WHERE_COMPARATOR_GREATER = '>';
+    public const WHERE_COMPARATOR_GREATER = '>';
 
-    const WHERE_COMPARATOR_GREATER_THAN = '>=';
+    public const WHERE_COMPARATOR_GREATER_THAN = '>=';
 
-    const WHERE_COMPARATOR_LESS = '<';
+    public const WHERE_COMPARATOR_LESS = '<';
 
-    const WHERE_COMPARATOR_LESS_THAN = '<=';
+    public const WHERE_COMPARATOR_LESS_THAN = '<=';
 
-    const SORTORDER_ASC = 'ASC';
+    public const SORTORDER_ASC = 'ASC';
 
-    const SORTORDER_DESC = 'DESC';
+    public const SORTORDER_DESC = 'DESC';
 
-    const CONJUNCTION_AND = 'AND';
+    public const CONJUNCTION_AND = 'AND';
 
-    const CONJUNCTION_OR = 'OR';
+    public const CONJUNCTION_OR = 'OR';
 
     /**
      * Sets all the field descriptors for the ListBuilder at once.

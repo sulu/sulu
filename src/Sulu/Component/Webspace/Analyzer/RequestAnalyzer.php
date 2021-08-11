@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class RequestAnalyzer implements RequestAnalyzerInterface
 {
-    const SULU_ATTRIBUTE = '_sulu';
+    public const SULU_ATTRIBUTE = '_sulu';
 
     /**
      * @var RequestProcessorInterface[]

@@ -23,7 +23,7 @@ class SubscriberDebugCommand extends Command
 {
     protected static $defaultName = 'sulu:document:subscriber:debug';
 
-    const PREFIX = 'sulu_document_manager.';
+    public const PREFIX = 'sulu_document_manager.';
 
     /**
      * @var EventDispatcherInterface

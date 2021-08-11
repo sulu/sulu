@@ -25,7 +25,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
  */
 class RouterListener implements EventSubscriberInterface
 {
-    const REQUEST_ANALYZER = '_requestAnalyzer';
+    public const REQUEST_ANALYZER = '_requestAnalyzer';
 
     /**
      * @var BaseRouterListener

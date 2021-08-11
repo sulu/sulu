@@ -39,7 +39,7 @@ use Webmozart\Assert\Assert;
  */
 class DomainEventSubscriber implements EventSubscriberInterface
 {
-    const TITLE_FIELD = 'title';
+    public const TITLE_FIELD = 'title';
 
     /**
      * @var DocumentDomainEventCollectorInterface

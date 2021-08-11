@@ -25,7 +25,7 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\XmlFormMetadataLoader;
 
 class XmlFormMetadataLoaderTest extends TestCase
 {
-    const CACHE_DIR = __DIR__ . '/../../../../../../../tests/Resources/cache';
+    public const CACHE_DIR = __DIR__ . '/../../../../../../../tests/Resources/cache';
 
     /**
      * @var ObjectProphecy&FormXmlLoader

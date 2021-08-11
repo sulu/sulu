@@ -18,11 +18,11 @@ use Symfony\Component\HttpFoundation\UrlHelper;
 
 class LinkTag implements TagInterface
 {
-    const VALIDATE_UNPUBLISHED = 'unpublished';
+    public const VALIDATE_UNPUBLISHED = 'unpublished';
 
-    const VALIDATE_REMOVED = 'removed';
+    public const VALIDATE_REMOVED = 'removed';
 
-    const DEFAULT_PROVIDER = 'page';
+    public const DEFAULT_PROVIDER = 'page';
 
     /**
      * @var LinkProviderPoolInterface

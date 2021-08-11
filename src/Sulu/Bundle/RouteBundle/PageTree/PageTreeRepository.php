@@ -27,9 +27,9 @@ use Sulu\Component\Route\Document\Behavior\RoutableBehavior;
  */
 class PageTreeRepository implements PageTreeUpdaterInterface, PageTreeMoverInterface
 {
-    const ROUTE_PROPERTY = 'routePath';
+    public const ROUTE_PROPERTY = 'routePath';
 
-    const TAG_NAME = 'sulu_route.route_path';
+    public const TAG_NAME = 'sulu_route.route_path';
 
     /**
      * @var DocumentManagerInterface

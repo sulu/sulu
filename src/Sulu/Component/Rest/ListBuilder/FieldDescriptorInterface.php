@@ -18,23 +18,23 @@ use Sulu\Component\Rest\ListBuilder\Metadata\AbstractPropertyMetadata;
  */
 interface FieldDescriptorInterface
 {
-    const VISIBILITY_ALWAYS = 'always';
+    public const VISIBILITY_ALWAYS = 'always';
 
-    const VISIBILITY_NEVER = 'never';
+    public const VISIBILITY_NEVER = 'never';
 
-    const VISIBILITY_YES = 'yes';
+    public const VISIBILITY_YES = 'yes';
 
-    const VISIBILITY_NO = 'no';
+    public const VISIBILITY_NO = 'no';
 
-    const SEARCHABILITY_NEVER = 'never';
+    public const SEARCHABILITY_NEVER = 'never';
 
-    const SEARCHABILITY_YES = 'yes';
+    public const SEARCHABILITY_YES = 'yes';
 
-    const SEARCHABILITY_NO = 'no';
+    public const SEARCHABILITY_NO = 'no';
 
-    const WIDTH_AUTO = 'auto';
+    public const WIDTH_AUTO = 'auto';
 
-    const WIDTH_SHRINK = 'shrink';
+    public const WIDTH_SHRINK = 'shrink';
 
     /**
      * Returns the name of the field.

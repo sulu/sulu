@@ -25,11 +25,11 @@ use Sulu\Component\DocumentManager\Subscriber\Phpcr\GeneralSubscriber;
 
 class GeneralSubscriberTest extends TestCase
 {
-    const SRC_PATH = '/path/to';
+    public const SRC_PATH = '/path/to';
 
-    const DST_PATH = '/dest/path';
+    public const DST_PATH = '/dest/path';
 
-    const DST_NAME = 'foo';
+    public const DST_NAME = 'foo';
 
     /**
      * @var NodeManager

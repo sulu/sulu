@@ -24,7 +24,7 @@ class ResourceTabViewBuilder implements ResourceTabViewBuilderInterface
         TabViewChildBuilderTrait::setDisableTabGapToView insteadof TabViewBuilderTrait;
     }
 
-    const TYPE = 'sulu_admin.resource_tabs';
+    public const TYPE = 'sulu_admin.resource_tabs';
 
     public function __construct(string $name, string $path)
     {

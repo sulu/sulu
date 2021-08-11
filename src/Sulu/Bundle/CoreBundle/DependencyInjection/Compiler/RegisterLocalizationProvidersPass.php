@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class RegisterLocalizationProvidersPass implements CompilerPassInterface
 {
-    const LOCALIZATION_PROVIDER_TAG = 'sulu.localization_provider';
+    public const LOCALIZATION_PROVIDER_TAG = 'sulu.localization_provider';
 
     public function process(ContainerBuilder $container)
     {

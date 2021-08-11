@@ -28,27 +28,27 @@ abstract class Structure implements StructureInterface
     /**
      * indicates that the node is a content node.
      */
-    const NODE_TYPE_CONTENT = 1;
+    public const NODE_TYPE_CONTENT = 1;
 
     /**
      * indicates that the node links to an internal resource.
      */
-    const NODE_TYPE_INTERNAL_LINK = 2;
+    public const NODE_TYPE_INTERNAL_LINK = 2;
 
     /**
      * indicates that the node links to an external resource.
      */
-    const NODE_TYPE_EXTERNAL_LINK = 4;
+    public const NODE_TYPE_EXTERNAL_LINK = 4;
 
     /**
      * Structure type page.
      */
-    const TYPE_PAGE = 'page';
+    public const TYPE_PAGE = 'page';
 
     /**
      * Structure type page.
      */
-    const TYPE_SNIPPET = 'snippet';
+    public const TYPE_SNIPPET = 'snippet';
 
     /**
      * webspaceKey of node.

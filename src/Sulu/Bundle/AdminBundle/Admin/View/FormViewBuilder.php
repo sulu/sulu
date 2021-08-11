@@ -17,7 +17,7 @@ class FormViewBuilder implements FormViewBuilderInterface
     use FormViewBuilderTrait;
     use TabViewChildBuilderTrait;
 
-    const TYPE = 'sulu_admin.form';
+    public const TYPE = 'sulu_admin.form';
 
     public function __construct(string $name, string $path)
     {

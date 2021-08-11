@@ -27,19 +27,19 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class MediaAdmin extends Admin
 {
-    const SECURITY_CONTEXT = 'sulu.media.collections';
+    public const SECURITY_CONTEXT = 'sulu.media.collections';
 
-    const SECURITY_CONTEXT_GROUP = 'Media';
+    public const SECURITY_CONTEXT_GROUP = 'Media';
 
-    const MEDIA_OVERVIEW_VIEW = 'sulu_media.overview';
+    public const MEDIA_OVERVIEW_VIEW = 'sulu_media.overview';
 
-    const EDIT_FORM_VIEW = 'sulu_media.form';
+    public const EDIT_FORM_VIEW = 'sulu_media.form';
 
-    const EDIT_FORM_DETAILS_VIEW = 'sulu_media.form.details';
+    public const EDIT_FORM_DETAILS_VIEW = 'sulu_media.form.details';
 
-    const EDIT_FORM_FORMATS_VIEW = 'sulu_media.form.formats';
+    public const EDIT_FORM_FORMATS_VIEW = 'sulu_media.form.formats';
 
-    const EDIT_FORM_HISTORY_VIEW = 'sulu_media.form.history';
+    public const EDIT_FORM_HISTORY_VIEW = 'sulu_media.form.history';
 
     /**
      * @var ViewBuilderFactoryInterface

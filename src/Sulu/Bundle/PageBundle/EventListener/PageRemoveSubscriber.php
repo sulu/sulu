@@ -33,7 +33,7 @@ use Symfony\Component\Security\Core\Security;
 
 class PageRemoveSubscriber implements EventSubscriberInterface
 {
-    const FORCE_REMOVE_CHILDREN_OPTION = 'force_remove_children';
+    public const FORCE_REMOVE_CHILDREN_OPTION = 'force_remove_children';
 
     /**
      * @var SessionManagerInterface

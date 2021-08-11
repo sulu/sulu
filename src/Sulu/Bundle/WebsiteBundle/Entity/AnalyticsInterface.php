@@ -15,9 +15,9 @@ use Doctrine\Common\Collections\Collection;
 
 interface AnalyticsInterface
 {
-    const RESOURCE_KEY = 'analytics';
+    public const RESOURCE_KEY = 'analytics';
 
-    const LIST_KEY = 'analytics';
+    public const LIST_KEY = 'analytics';
 
     public function getId(): ?int;
 

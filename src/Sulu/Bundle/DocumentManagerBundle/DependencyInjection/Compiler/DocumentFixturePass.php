@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\Reference;
 
 class DocumentFixturePass implements CompilerPassInterface
 {
-    const TAG_NAME = 'sulu.document_manager_fixture';
+    public const TAG_NAME = 'sulu.document_manager_fixture';
 
     public function process(ContainerBuilder $container)
     {

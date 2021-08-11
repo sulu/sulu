@@ -26,7 +26,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
  */
 class GoogleGeolocator implements GeolocatorInterface
 {
-    const ENDPOINT = 'https://maps.googleapis.com/maps/api/geocode/json';
+    public const ENDPOINT = 'https://maps.googleapis.com/maps/api/geocode/json';
 
     /**
      * @var HttpClientInterface|ClientInterface

@@ -21,9 +21,9 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class UpdateBuildCommand extends Command
 {
-    const EXIT_CODE_ABORTED_MANUAL_BUILD = 1;
-    const EXIT_CODE_COULD_NOT_INSTALL_NPM_PACKAGES = 2;
-    const EXIT_CODE_COULD_NOT_BUILD_ADMIN_ASSETS = 3;
+    public const EXIT_CODE_ABORTED_MANUAL_BUILD = 1;
+    public const EXIT_CODE_COULD_NOT_INSTALL_NPM_PACKAGES = 2;
+    public const EXIT_CODE_COULD_NOT_BUILD_ADMIN_ASSETS = 3;
 
     protected static $defaultName = 'sulu:admin:update-build';
 
@@ -42,13 +42,13 @@ class UpdateBuildCommand extends Command
      */
     private $suluVersion;
 
-    const ASSETS_DIR = \DIRECTORY_SEPARATOR . 'assets' . \DIRECTORY_SEPARATOR . 'admin' . \DIRECTORY_SEPARATOR;
+    public const ASSETS_DIR = \DIRECTORY_SEPARATOR . 'assets' . \DIRECTORY_SEPARATOR . 'admin' . \DIRECTORY_SEPARATOR;
 
-    const BUILD_DIR = \DIRECTORY_SEPARATOR . 'public' . \DIRECTORY_SEPARATOR . 'build' . \DIRECTORY_SEPARATOR . 'admin';
+    public const BUILD_DIR = \DIRECTORY_SEPARATOR . 'public' . \DIRECTORY_SEPARATOR . 'build' . \DIRECTORY_SEPARATOR . 'admin';
 
-    const REPOSITORY_NAME = 'skeleton';
+    public const REPOSITORY_NAME = 'skeleton';
 
-    const VERSION_REGEX = '/^\d+\.\d+\.\d+(-(alpha|beta|RC)\d+)?$/';
+    public const VERSION_REGEX = '/^\d+\.\d+\.\d+(-(alpha|beta|RC)\d+)?$/';
 
     public function __construct(HttpClientInterface $httpClient, string $projectDir, string $suluVersion)
     {

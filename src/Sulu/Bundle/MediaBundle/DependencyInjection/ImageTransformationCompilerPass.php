@@ -20,9 +20,9 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class ImageTransformationCompilerPass implements CompilerPassInterface
 {
-    const POOL_SERVICE_ID = 'sulu_media.image.transformation_pool';
+    public const POOL_SERVICE_ID = 'sulu_media.image.transformation_pool';
 
-    const TAG = 'sulu_media.image.transformation';
+    public const TAG = 'sulu_media.image.transformation';
 
     public function process(ContainerBuilder $container)
     {
