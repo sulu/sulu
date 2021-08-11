@@ -37,11 +37,11 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class KeywordController extends AbstractRestController implements ClassResourceInterface, SecuredControllerInterface
 {
-    const FORCE_OVERWRITE = 'overwrite';
+    public const FORCE_OVERWRITE = 'overwrite';
 
-    const FORCE_DETACH = 'detach';
+    public const FORCE_DETACH = 'detach';
 
-    const FORCE_MERGE = 'merge';
+    public const FORCE_MERGE = 'merge';
 
     /**
      * @var RestHelperInterface

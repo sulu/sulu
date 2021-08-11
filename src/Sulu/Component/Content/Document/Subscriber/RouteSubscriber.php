@@ -33,9 +33,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class RouteSubscriber implements EventSubscriberInterface
 {
-    const DOCUMENT_HISTORY_FIELD = 'history';
+    public const DOCUMENT_HISTORY_FIELD = 'history';
 
-    const NODE_HISTORY_FIELD = 'sulu:history';
+    public const NODE_HISTORY_FIELD = 'sulu:history';
 
     /**
      * @var DocumentManagerInterface

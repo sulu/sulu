@@ -19,7 +19,7 @@ interface SitemapProviderInterface
     /**
      * Google limit for sitemap-url elements.
      */
-    const PAGE_SIZE = 50000;
+    public const PAGE_SIZE = 50000;
 
     /**
      * Returns sitemap-entries.

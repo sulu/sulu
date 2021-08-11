@@ -23,7 +23,7 @@ use Sulu\Component\Persistence\Model\AuditableInterface;
  */
 interface RoleInterface extends AuditableInterface, SecurityIdentityInterface
 {
-    const IS_SULU_ANONYMOUS = 'IS_SULU_ANONYMOUS';
+    public const IS_SULU_ANONYMOUS = 'IS_SULU_ANONYMOUS';
 
     /**
      * Set name.

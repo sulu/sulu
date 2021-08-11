@@ -27,13 +27,13 @@ use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
  */
 class AudienceTargetingAdmin extends Admin
 {
-    const SECURITY_CONTEXT = 'sulu.settings.target-groups';
+    public const SECURITY_CONTEXT = 'sulu.settings.target-groups';
 
-    const LIST_VIEW = 'sulu_audience_targeting.list';
+    public const LIST_VIEW = 'sulu_audience_targeting.list';
 
-    const ADD_FORM_VIEW = 'sulu_audience_targeting.add_form';
+    public const ADD_FORM_VIEW = 'sulu_audience_targeting.add_form';
 
-    const EDIT_FORM_VIEW = 'sulu_audience_targeting.edit_form';
+    public const EDIT_FORM_VIEW = 'sulu_audience_targeting.edit_form';
 
     /**
      * @var ViewBuilderFactoryInterface

@@ -29,7 +29,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class AnalyticsController extends AbstractRestController implements ClassResourceInterface, SecuredControllerInterface
 {
-    const RESULT_KEY = 'analytics';
+    public const RESULT_KEY = 'analytics';
 
     /**
      * @var AnalyticsManagerInterface

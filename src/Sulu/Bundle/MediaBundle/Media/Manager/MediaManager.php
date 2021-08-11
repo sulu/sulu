@@ -49,7 +49,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class MediaManager implements MediaManagerInterface
 {
-    const ENTITY_NAME_COLLECTION = 'SuluMediaBundle:Collection';
+    public const ENTITY_NAME_COLLECTION = 'SuluMediaBundle:Collection';
 
     /**
      * The repository for communication with the database.

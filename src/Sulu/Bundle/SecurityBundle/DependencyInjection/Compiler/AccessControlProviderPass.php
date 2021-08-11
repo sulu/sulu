@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class AccessControlProviderPass implements CompilerPassInterface
 {
-    const ACCESS_CONTROL_TAG = 'sulu.access_control';
+    public const ACCESS_CONTROL_TAG = 'sulu.access_control';
 
     public function process(ContainerBuilder $container)
     {

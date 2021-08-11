@@ -26,9 +26,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class AuthorSubscriber implements EventSubscriberInterface
 {
-    const AUTHORED_PROPERTY_NAME = 'authored';
+    public const AUTHORED_PROPERTY_NAME = 'authored';
 
-    const AUTHOR_PROPERTY_NAME = 'author';
+    public const AUTHOR_PROPERTY_NAME = 'author';
 
     /**
      * @var PropertyEncoder

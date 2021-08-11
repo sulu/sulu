@@ -16,7 +16,7 @@ class TabViewBuilder implements TabViewBuilderInterface
     use ViewBuilderTrait;
     use TabViewBuilderTrait;
 
-    const TYPE = 'sulu_admin.tabs';
+    public const TYPE = 'sulu_admin.tabs';
 
     public function __construct(string $name, string $path)
     {

@@ -17,7 +17,7 @@ class ListViewBuilder implements ListViewBuilderInterface
     use ListViewBuilderTrait;
     use TabViewChildBuilderTrait;
 
-    const TYPE = 'sulu_admin.list';
+    public const TYPE = 'sulu_admin.list';
 
     public function __construct(string $name, string $path)
     {

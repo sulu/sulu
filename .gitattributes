@@ -14,7 +14,7 @@ Gruntfile.js export-ignore
 phpunit.xml.dist export-ignore
 phpstan.neon export-ignore
 phpstan-baseline.neon export-ignore
-.php_cs.dist export-ignore
+.php-cs-fixer.dist.php export-ignore
 README.md export-ignore
 UPGRADE.md export-ignore
 /src/Sulu/Bundle/*/Tests export-ignore

@@ -31,9 +31,9 @@ class StructureXmlLoader extends AbstractLoader
 {
     use XmlParserTrait;
 
-    const SCHEME_PATH = '/schema/template-1.0.xsd';
+    public const SCHEME_PATH = '/schema/template-1.0.xsd';
 
-    const SCHEMA_NAMESPACE_URI = 'http://schemas.sulu.io/template/template';
+    public const SCHEMA_NAMESPACE_URI = 'http://schemas.sulu.io/template/template';
 
     /**
      * Tags that are required in template.

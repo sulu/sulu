@@ -13,8 +13,8 @@ $finder = PhpCsFixer\Finder::create()
     ->exclude(['var/cache', 'tests/Resources/cache', 'node_modules'])
     ->in(__DIR__);
 
-return PhpCsFixer\Config::create()
-    ->setRiskyAllowed(true)
+$config = new PhpCsFixer\Config();
+$config->setRiskyAllowed(true)
     ->setRules([
         '@Symfony' => true,
         'array_syntax' => ['syntax' => 'short'],
@@ -24,7 +24,7 @@ return PhpCsFixer\Config::create()
         'header_comment' => ['header' => $header],
         'native_constant_invocation' => true,
         'native_function_casing' => true,
-        'native_function_invocation' => true,
+        'native_function_invocation' => ['include' => ['@internal']],
         'no_superfluous_phpdoc_tags' => ['allow_mixed' => true, 'remove_inheritdoc' => true],
         'ordered_imports' => true,
         'phpdoc_align' => ['align' => 'left'],
@@ -32,3 +32,5 @@ return PhpCsFixer\Config::create()
         'single_line_throw' => false,
     ])
     ->setFinder($finder);
+
+return $config;

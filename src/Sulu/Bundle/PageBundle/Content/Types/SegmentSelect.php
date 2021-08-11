@@ -17,7 +17,7 @@ use Sulu\Component\Content\ComplexContentType;
 
 class SegmentSelect extends ComplexContentType
 {
-    const SEPARATOR = '-';
+    public const SEPARATOR = '-';
 
     public function write(NodeInterface $node, PropertyInterface $property, $userId, $webspaceKey, $languageCode, $segmentKey)
     {

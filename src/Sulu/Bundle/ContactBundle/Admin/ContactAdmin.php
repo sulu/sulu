@@ -25,21 +25,21 @@ use Symfony\Component\Intl\Countries;
 
 class ContactAdmin extends Admin
 {
-    const CONTACT_SECURITY_CONTEXT = 'sulu.contact.people';
+    public const CONTACT_SECURITY_CONTEXT = 'sulu.contact.people';
 
-    const ACCOUNT_SECURITY_CONTEXT = 'sulu.contact.organizations';
+    public const ACCOUNT_SECURITY_CONTEXT = 'sulu.contact.organizations';
 
-    const CONTACT_LIST_VIEW = 'sulu_contact.contacts_list';
+    public const CONTACT_LIST_VIEW = 'sulu_contact.contacts_list';
 
-    const CONTACT_ADD_FORM_VIEW = 'sulu_contact.contact_add_form';
+    public const CONTACT_ADD_FORM_VIEW = 'sulu_contact.contact_add_form';
 
-    const CONTACT_EDIT_FORM_VIEW = 'sulu_contact.contact_edit_form';
+    public const CONTACT_EDIT_FORM_VIEW = 'sulu_contact.contact_edit_form';
 
-    const ACCOUNT_LIST_VIEW = 'sulu_contact.accounts_list';
+    public const ACCOUNT_LIST_VIEW = 'sulu_contact.accounts_list';
 
-    const ACCOUNT_ADD_FORM_VIEW = 'sulu_contact.account_add_form';
+    public const ACCOUNT_ADD_FORM_VIEW = 'sulu_contact.account_add_form';
 
-    const ACCOUNT_EDIT_FORM_VIEW = 'sulu_contact.account_edit_form';
+    public const ACCOUNT_EDIT_FORM_VIEW = 'sulu_contact.account_edit_form';
 
     /**
      * @var ViewBuilderFactoryInterface

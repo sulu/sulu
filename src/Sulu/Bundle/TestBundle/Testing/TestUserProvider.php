@@ -26,7 +26,7 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
  */
 class TestUserProvider implements UserProviderInterface
 {
-    const TEST_USER_USERNAME = 'test';
+    public const TEST_USER_USERNAME = 'test';
 
     /**
      * @var UserInterface

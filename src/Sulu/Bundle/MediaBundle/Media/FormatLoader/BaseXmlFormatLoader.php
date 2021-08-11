@@ -21,17 +21,17 @@ use Symfony\Component\Config\Util\XmlUtils;
  */
 abstract class BaseXmlFormatLoader extends FileLoader
 {
-    const XML_NAMESPACE_URI = 'http://schemas.sulu.io/media/formats';
+    public const XML_NAMESPACE_URI = 'http://schemas.sulu.io/media/formats';
 
-    const SCHEMA_URI = '';
+    public const SCHEMA_URI = '';
 
-    const SCHEME_PATH = '';
+    public const SCHEME_PATH = '';
 
-    const SCALE_MODE_DEFAULT = ImageInterface::THUMBNAIL_OUTBOUND;
+    public const SCALE_MODE_DEFAULT = ImageInterface::THUMBNAIL_OUTBOUND;
 
-    const SCALE_RETINA_DEFAULT = false;
+    public const SCALE_RETINA_DEFAULT = false;
 
-    const SCALE_FORCE_RATIO_DEFAULT = true;
+    public const SCALE_FORCE_RATIO_DEFAULT = true;
 
     /**
      * @var \DOMXPath

@@ -24,9 +24,9 @@ use Sulu\Component\Content\Metadata\Parser\SchemaXmlParser;
  */
 class FormXmlLoader extends AbstractLoader
 {
-    const SCHEMA_PATH = '/schema/form-1.0.xsd';
+    public const SCHEMA_PATH = '/schema/form-1.0.xsd';
 
-    const SCHEMA_NAMESPACE_URI = 'http://schemas.sulu.io/template/template';
+    public const SCHEMA_NAMESPACE_URI = 'http://schemas.sulu.io/template/template';
 
     /**
      * @var PropertiesXmlParser

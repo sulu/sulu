@@ -19,7 +19,7 @@ final class Events
     /**
      * Will be raised right before preview rendering.
      */
-    const PRE_RENDER = 'sulu.preview.pre-render';
+    public const PRE_RENDER = 'sulu.preview.pre-render';
 
     /**
      * No object can be created for this class.

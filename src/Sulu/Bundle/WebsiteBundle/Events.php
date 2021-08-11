@@ -19,5 +19,5 @@ final class Events
     /**
      * Will be raised after http caches have been cleared.
      */
-    const CACHE_CLEAR = 'sulu_website.cache_clear';
+    public const CACHE_CLEAR = 'sulu_website.cache_clear';
 }

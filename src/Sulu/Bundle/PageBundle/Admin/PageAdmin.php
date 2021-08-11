@@ -34,17 +34,17 @@ class PageAdmin extends Admin
      *
      * @var string
      */
-    const SECURITY_CONTEXT_PREFIX = 'sulu.webspaces.';
+    public const SECURITY_CONTEXT_PREFIX = 'sulu.webspaces.';
 
-    const SECURITY_CONTEXT_GROUP = 'Webspaces';
+    public const SECURITY_CONTEXT_GROUP = 'Webspaces';
 
-    const WEBSPACE_TABS_VIEW = 'sulu_page.webspaces';
+    public const WEBSPACE_TABS_VIEW = 'sulu_page.webspaces';
 
-    const PAGES_VIEW = 'sulu_page.pages_list';
+    public const PAGES_VIEW = 'sulu_page.pages_list';
 
-    const ADD_FORM_VIEW = 'sulu_page.page_add_form';
+    public const ADD_FORM_VIEW = 'sulu_page.page_add_form';
 
-    const EDIT_FORM_VIEW = 'sulu_page.page_edit_form';
+    public const EDIT_FORM_VIEW = 'sulu_page.page_edit_form';
 
     /**
      * @var ViewBuilderFactoryInterface

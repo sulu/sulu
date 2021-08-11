@@ -29,7 +29,7 @@ use Sulu\Component\DocumentManager\DocumentRegistry;
  */
 class PageTreeRouteContentType extends SimpleContentType
 {
-    const NAME = 'page_tree_route';
+    public const NAME = 'page_tree_route';
 
     /**
      * @var DocumentManagerInterface

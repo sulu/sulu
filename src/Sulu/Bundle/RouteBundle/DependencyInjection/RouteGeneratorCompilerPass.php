@@ -20,11 +20,11 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class RouteGeneratorCompilerPass implements CompilerPassInterface
 {
-    const TAG_NAME = 'sulu.route_generator';
+    public const TAG_NAME = 'sulu.route_generator';
 
-    const SERVICE_ID = 'sulu_route.chain_generator';
+    public const SERVICE_ID = 'sulu_route.chain_generator';
 
-    const PARAMETER_NAME = 'sulu_route.mappings';
+    public const PARAMETER_NAME = 'sulu_route.mappings';
 
     public function process(ContainerBuilder $container)
     {

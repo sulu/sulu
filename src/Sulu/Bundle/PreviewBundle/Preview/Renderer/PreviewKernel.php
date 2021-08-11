@@ -20,7 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class PreviewKernel extends Kernel
 {
-    const CONTEXT_PREVIEW = 'preview';
+    public const CONTEXT_PREVIEW = 'preview';
 
     /**
      * @var string

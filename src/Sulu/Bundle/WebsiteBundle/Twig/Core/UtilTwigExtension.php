@@ -48,7 +48,7 @@ class UtilTwigExtension extends AbstractExtension
         );
 
         if (\function_exists('tld_extract')) {
-            return \tld_extract($url, $mode);
+            return tld_extract($url, $mode);
         }
 
         throw new \LogicException(
