@@ -14,6 +14,19 @@ export type Resource = {
     title?: string | null,
 };
 
+export type DependantResourceBatches = Resource[][];
+
+export type DependantResourcesData = {
+    dependantResources: DependantResourceBatches,
+    dependantResourcesCount: number,
+};
+
+export type ReferencingResourcesData = {
+    referencingResources: Resource[],
+    referencingResourcesCount: number,
+    resource: Resource,
+};
+
 export type {
     BlockError,
     BlockPreviewTransformer,

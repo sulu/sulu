@@ -14,7 +14,7 @@ Beside the default `progress` style, it supports a `success` style,
 <ProgressBar
     value={100}
     max={100}
-    style="success"
+    type="success"
 />
 ```
 
@@ -24,7 +24,7 @@ an `error` style
 <ProgressBar
     value={25}
     max={100}
-    style="error"
+    type="error"
 />
 ```
 
@@ -34,6 +34,6 @@ and a `warning` style.
 <ProgressBar
     value={75}
     max={100}
-    style="warning"
+    type="warning"
 />
 ```

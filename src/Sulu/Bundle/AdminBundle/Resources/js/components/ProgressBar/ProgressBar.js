@@ -1,23 +1,23 @@
 // @flow
 import React from 'react';
 import classNames from 'classnames';
-import styles from './progressBar.scss';
+import progressBarStyles from './progressBar.scss';
 
 type Props = {
     max: number,
-    style: 'progress' | 'success' | 'error' | 'warning',
+    type: 'progress' | 'success' | 'error' | 'warning',
     value: number,
 }
 
 class ProgressBar extends React.PureComponent<Props> {
     static defaultProps = {
-        style: 'progress',
+        type: 'progress',
     };
 
     render() {
-        const {value, max, style} = this.props;
+        const {value, max, type} = this.props;
 
-        const className = classNames(styles.progressBar, styles[style]);
+        const className = classNames(progressBarStyles.progressBar, progressBarStyles[type]);
 
         return (
             <progress className={className} max={max} value={value}>

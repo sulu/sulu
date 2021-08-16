@@ -520,7 +520,7 @@ test('Cancel delete conflict occured with the allowConflictDeletion option set t
     });
 });
 
-test('Call delete when DeleteDependantsDialog is finished', (done) => {
+test('Call delete when DeleteDependantResourcesDialog is finished', (done) => {
     const deleteToolbarAction = createDeleteToolbarAction();
     deleteToolbarAction.resourceFormStore.resourceStore.id = 3;
     deleteToolbarAction.router.route.options.backView = 'sulu_test.list';
@@ -561,12 +561,12 @@ test('Call delete when DeleteDependantsDialog is finished', (done) => {
         element = mount(deleteToolbarAction.getNode());
         expect(deleteToolbarAction.router.restore).toBeCalledTimes(0);
         expect(element.at(0).prop('open')).toEqual(false);
-        expect(element.contains('DeleteDependantsDialog'));
+        expect(element.contains('DeleteDependantResourcesDialog'));
 
         const deletePromise = Promise.resolve({});
         deleteToolbarAction.resourceFormStore.delete.mockReturnValueOnce(deletePromise);
 
-        element.find('DeleteDependantsDialog').prop('onFinish')();
+        element.find('DeleteDependantResourcesDialog').prop('onFinish')();
 
         setTimeout(() => {
             expect(deleteToolbarAction.router.restore).toBeCalledWith('sulu_test.list', {locale: 'en'});
@@ -579,7 +579,7 @@ test('Call delete when DeleteDependantsDialog is finished', (done) => {
     });
 });
 
-test('Do not call delete when DeleteDependantsDialog is cancelled', (done) => {
+test('Do not call delete when DeleteDependantResourcesDialog is cancelled', (done) => {
     const deleteToolbarAction = createDeleteToolbarAction();
     deleteToolbarAction.resourceFormStore.resourceStore.id = 3;
     deleteToolbarAction.router.route.options.backView = 'sulu_test.list';
@@ -620,12 +620,12 @@ test('Do not call delete when DeleteDependantsDialog is cancelled', (done) => {
         element = mount(deleteToolbarAction.getNode());
         expect(deleteToolbarAction.router.restore).toBeCalledTimes(0);
         expect(element.at(0).prop('open')).toEqual(false);
-        expect(element.contains('DeleteDependantsDialog'));
+        expect(element.contains('DeleteDependantResourcesDialog'));
 
         const deletePromise = Promise.resolve({});
         deleteToolbarAction.resourceFormStore.delete.mockReturnValueOnce(deletePromise);
 
-        element.find('DeleteDependantsDialog').prop('onCancel')();
+        element.find('DeleteDependantResourcesDialog').prop('onCancel')();
 
         setTimeout(() => {
             expect(deleteToolbarAction.router.restore).not.toBeCalled();

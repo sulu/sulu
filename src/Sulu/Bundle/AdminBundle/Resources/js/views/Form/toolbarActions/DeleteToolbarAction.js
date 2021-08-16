@@ -4,29 +4,21 @@ import {action, computed, observable} from 'mobx';
 import jexl from 'jexl';
 import log from 'loglevel';
 import Dialog from '../../../components/Dialog';
-import DeleteDependantsDialog from '../../../containers/DeleteDependantsDialog';
+import DeleteDependantResourcesDialog from '../../../containers/DeleteDependantResourcesDialog';
 import DeleteReferencedResourceDialog from '../../../containers/DeleteReferencedResourceDialog';
 import {translate} from '../../../utils';
 import {ResourceFormStore} from '../../../containers/Form';
 import Router from '../../../services/Router';
 import ResourceStore from '../../../stores/ResourceStore';
 import Form from '../Form';
+import ERROR_CODES from '../../../utils/Error/ErrorCodes';
 import AbstractFormToolbarAction from './AbstractFormToolbarAction';
-import type {Resource} from '../../../types';
+import type {DependantResourcesData, ReferencingResourcesData} from '../../../types';
 
 export default class DeleteToolbarAction extends AbstractFormToolbarAction {
     @observable showDialog: boolean = false;
-    @observable showDeleteReferencedResourcesDialog: boolean = false;
-    @observable referencingResourcesData: {
-        referencingResources: Resource[],
-        referencingResourcesCount: number,
-        resource: Resource,
-    } | null = null;
-    @observable showDeleteDependantsDialog: boolean = false;
-    @observable dependantResourcesData: {
-        dependantResources: Resource[][],
-        dependantResourcesCount: number,
-    } | null = null;
+    @observable referencingResourcesData: ?ReferencingResourcesData = undefined;
+    @observable dependantResourcesData: ?DependantResourcesData = undefined;
 
     @computed get allowConflictDeletion(): boolean {
         const {allow_conflict_deletion: allowConflictDeletion = true} = this.options;
@@ -76,12 +68,11 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
     };
 
     @action closeDeleteReferencedResourceDialog = () => {
-        this.showDeleteReferencedResourcesDialog = false;
-        this.referencingResourcesData = null;
+        this.referencingResourcesData = undefined;
     };
 
     renderDeleteReferencedResourceDialog() {
-        if (!this.showDeleteReferencedResourcesDialog || this.referencingResourcesData === null) {
+        if (!this.referencingResourcesData) {
             return null;
         }
 
@@ -100,24 +91,23 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
         );
     }
 
-    handleDeleteDependantsDialogFinish = () => {
+    handleDeleteDependantResourcesDialogFinish = () => {
         this.delete();
     };
 
-    handleDeleteDependantsDialogCancel = () => {
-        this.closeDeleteDependantsDialog();
+    handleDeleteDependantResourcesDialogCancel = () => {
+        this.closeDeleteDependantResourcesDialog();
     };
 
-    handleDeleteDependantsDialogClose = () => {
-        this.closeDeleteDependantsDialog();
+    handleDeleteDependantResourcesDialogClose = () => {
+        this.closeDeleteDependantResourcesDialog();
     };
 
-    @action closeDeleteDependantsDialog = () => {
-        this.showDeleteDependantsDialog = false;
-        this.dependantResourcesData = null;
+    @action closeDeleteDependantResourcesDialog = () => {
+        this.dependantResourcesData = undefined;
     };
 
-    @computed get deleteDependantsDialogRequestOptions() {
+    @computed get deleteDependantResourcesDialogRequestOptions() {
         const {locale, options: resourceFormStoreOptions = {}} = this.resourceFormStore;
 
         const options = resourceFormStoreOptions;
@@ -129,21 +119,18 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
         return options;
     }
 
-    renderDeleteDependantsDialog() {
-        if (!this.showDeleteDependantsDialog || this.dependantResourcesData === null) {
+    renderDeleteDependantResourcesDialog() {
+        if (!this.dependantResourcesData) {
             return null;
         }
 
-        const {dependantResourcesCount, dependantResources} = this.dependantResourcesData;
-
         return (
-            <DeleteDependantsDialog
-                dependantResources={dependantResources}
-                dependantResourcesCount={dependantResourcesCount}
-                onCancel={this.handleDeleteDependantsDialogCancel}
-                onClose={this.handleDeleteDependantsDialogClose}
-                onFinish={this.handleDeleteDependantsDialogFinish}
-                requestOptions={this.deleteDependantsDialogRequestOptions}
+            <DeleteDependantResourcesDialog
+                dependantResourcesData={this.dependantResourcesData}
+                onCancel={this.handleDeleteDependantResourcesDialogCancel}
+                onClose={this.handleDeleteDependantResourcesDialogClose}
+                onFinish={this.handleDeleteDependantResourcesDialogFinish}
+                requestOptions={this.deleteDependantResourcesDialogRequestOptions}
             />
         );
     }
@@ -184,7 +171,7 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
             <Fragment key={'sulu_admin.delete' + postfix}>
                 {this.renderDialog(postfix)}
                 {this.renderDeleteReferencedResourceDialog()}
-                {this.renderDeleteDependantsDialog()}
+                {this.renderDeleteDependantResourcesDialog()}
             </Fragment>
         );
     }
@@ -255,7 +242,7 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
         return this.resourceFormStore.delete(options)
             .then(() => {
                 this.closeDialog();
-                this.closeDeleteDependantsDialog();
+                this.closeDeleteDependantResourcesDialog();
                 this.closeDeleteReferencedResourceDialog();
 
                 this.navigateBack();
@@ -263,11 +250,10 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
             .catch(action((response) => {
                 response.json().then(action((data) => {
                     this.closeDialog();
-                    this.closeDeleteDependantsDialog();
+                    this.closeDeleteDependantResourcesDialog();
                     this.closeDeleteReferencedResourceDialog();
 
-                    if (response.status === 409 && data.code === 1105) {
-                        this.showDeleteDependantsDialog = true;
+                    if (response.status === 409 && data.code === ERROR_CODES.DEPENDANT_RESOURCES_FOUND) {
                         this.dependantResourcesData = {
                             dependantResources: data.dependantResources,
                             dependantResourcesCount: data.dependantResourcesCount,
@@ -276,8 +262,7 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
                         return;
                     }
 
-                    if (response.status === 409 && data.code === 1106) {
-                        this.showDeleteReferencedResourcesDialog = true;
+                    if (response.status === 409 && data.code === ERROR_CODES.REFERENCING_RESOURCES_FOUND) {
                         this.referencingResourcesData = {
                             resource: data.resource,
                             referencingResources: data.referencingResources,
@@ -287,10 +272,10 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
                         return;
                     }
 
-                    const error = data.detail || data.message;
+                    const error = data.detail || data.title || data.message;
 
                     if (error) {
-                        this.form.errors.push(data.detail || data.message);
+                        this.form.errors.push(error);
                     }
                 }));
             }));

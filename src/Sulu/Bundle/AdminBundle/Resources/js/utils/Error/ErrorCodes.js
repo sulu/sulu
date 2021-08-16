@@ -1,0 +1,5 @@
+// @flow
+export default {
+    DEPENDANT_RESOURCES_FOUND: 1105,
+    REFERENCING_RESOURCES_FOUND: 1106,
+};

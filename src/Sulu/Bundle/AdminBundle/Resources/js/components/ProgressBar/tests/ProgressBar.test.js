@@ -30,7 +30,7 @@ test('The component should render with success style', () => {
     const view = mount(
         <ProgressBar
             max={10}
-            style="success"
+            type="success"
             value={10}
         />
     );
@@ -43,7 +43,7 @@ test('The component should render with warning style', () => {
     const view = mount(
         <ProgressBar
             max={10}
-            style="warning"
+            type="warning"
             value={0}
         />
     );
@@ -56,7 +56,7 @@ test('The component should render with error style', () => {
     const view = mount(
         <ProgressBar
             max={10}
-            style="error"
+            type="error"
             value={3}
         />
     );

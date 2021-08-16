@@ -1,19 +1,19 @@
 // @flow
 import React from 'react';
 import {observer} from 'mobx-react';
-import {action, computed, observable} from 'mobx';
+import {toJS, action, computed, observable} from 'mobx';
+import equals from 'fast-deep-equal';
 import Dialog from '../../components/Dialog';
 import {type SnackbarType} from '../../components/Snackbar';
 import ProgressBar from '../../components/ProgressBar';
 import ResourceRequester from '../../services/ResourceRequester';
 import RequestPromise from '../../services/Requester/RequestPromise';
 import {translate} from '../../utils';
-import styles from './deleteDependantsDialogStyles.scss';
-import type {Resource} from '../../types';
+import styles from './deleteDependantResourcesDialogStyles.scss';
+import type {Resource, DependantResourcesData, DependantResourceBatches} from '../../types';
 
 type Props = {
-    dependantResources: Resource[][],
-    dependantResourcesCount: number,
+    dependantResourcesData: DependantResourcesData,
     onCancel?: () => void,
     onClose?: () => void,
     onError?: (error: any) => void,
@@ -22,40 +22,47 @@ type Props = {
 }
 
 @observer
-class DeleteDependantsDialog extends React.Component<Props> {
+class DeleteDependantResourcesDialog extends React.Component<Props> {
     @observable inProgress: boolean = false;
     @observable cancelled: boolean = false;
     @observable finished: boolean = false;
     @observable showSnackbar: boolean = true;
-    @observable error: string | null = null;
+    @observable error: string | typeof undefined = undefined;
     @observable totalDeletedResources: number = 0;
 
     promises: Array<RequestPromise<any>> = [];
 
+    @computed get dependantResourceBatches(): DependantResourceBatches {
+        return this.props.dependantResourcesData.dependantResources;
+    }
+
+    @computed get dependantResourcesCount(): number {
+        return this.props.dependantResourcesData.dependantResourcesCount;
+    }
+
     @action componentDidUpdate(prevProps: $ReadOnly<Props>) {
-        if (prevProps.dependantResources !== this.props.dependantResources
-            || prevProps.dependantResourcesCount !== this.props.dependantResourcesCount
-            || prevProps.requestOptions !== this.props.requestOptions) {
+        if (!equals(toJS(prevProps.dependantResourcesData), toJS(this.props.dependantResourcesData))
+            || !equals(toJS(prevProps.requestOptions), toJS(this.props.requestOptions))) {
             this.inProgress = false;
             this.cancelled = false;
             this.finished = false;
             this.showSnackbar = true;
-            this.error = null;
+            this.error = undefined;
             this.totalDeletedResources = 0;
             this.promises = [];
         }
     }
 
     @computed get errored() {
-        return this.error !== null;
+        return !!this.error;
     }
 
     @action handleConfirm = () => {
-        const {onFinish, onError, dependantResources} = this.props;
+        const {onFinish, onError} = this.props;
 
         this.inProgress = true;
 
-        this.deleteBatchedResources(dependantResources)
+        this.deleteResourceBatches(this.dependantResourceBatches)
             .then(action(() => {
                 this.inProgress = false;
                 this.finished = true;
@@ -69,7 +76,7 @@ class DeleteDependantsDialog extends React.Component<Props> {
             .catch((errorResponse) => {
                 errorResponse.json().then(action((error) => {
                     this.inProgress = false;
-                    this.error = error.detail || error.message || 'An error occurred';
+                    this.error = error.detail || error.title || error.message;
 
                     if (!onError) {
                         return;
@@ -80,16 +87,16 @@ class DeleteDependantsDialog extends React.Component<Props> {
             });
     };
 
-    deleteBatchedResources = (batchedResources: Resource[][]): Promise<void> => {
+    deleteResourceBatches = (batchedResources: DependantResourceBatches): Promise<void> => {
         const {requestOptions} = this.props;
 
         if (batchedResources.length === 0) {
             return Promise.resolve();
         }
 
-        const resources = batchedResources.shift();
+        const [currentBatch, ...remainingBatches] = batchedResources;
 
-        resources.forEach((resource: Resource) => {
+        currentBatch.forEach((resource: Resource) => {
             const promise = ResourceRequester.delete(resource.resourceKey, {
                 ...requestOptions,
                 id: resource.id,
@@ -100,7 +107,8 @@ class DeleteDependantsDialog extends React.Component<Props> {
                     this.totalDeletedResources++;
                 }))
                 .catch(() => {
-                    // ignore exception here
+                    // Ignore exception here, because it is being caught in `handleConfirm`
+                    // This just prevents an `Uncaught (in promise)` exception to be thrown
                 });
 
             this.promises.push(promise);
@@ -114,7 +122,7 @@ class DeleteDependantsDialog extends React.Component<Props> {
                     return;
                 }
 
-                return this.deleteBatchedResources(batchedResources);
+                return this.deleteResourceBatches(remainingBatches);
             });
     };
 
@@ -187,8 +195,6 @@ class DeleteDependantsDialog extends React.Component<Props> {
     }
 
     render() {
-        const {dependantResourcesCount} = this.props;
-
         return (
             <Dialog
                 cancelText={
@@ -210,13 +216,13 @@ class DeleteDependantsDialog extends React.Component<Props> {
                 snackbarMessage={this.snackbarMessage}
                 snackbarType={this.snackbarType}
                 title={translate('sulu_admin.delete_dependants_warning_title', {
-                    count: dependantResourcesCount,
+                    count: this.dependantResourcesCount,
                 })}
             >
                 {!this.inProgress && !this.cancelled && !this.finished && !this.errored && (
                     <p>
                         {translate('sulu_admin.delete_dependants_warning', {
-                            count: dependantResourcesCount,
+                            count: this.dependantResourcesCount,
                         })}
                     </p>
                 )}
@@ -225,8 +231,8 @@ class DeleteDependantsDialog extends React.Component<Props> {
                     <React.Fragment>
                         <div className={styles.progressBar}>
                             <ProgressBar
-                                max={dependantResourcesCount}
-                                style={this.errored
+                                max={this.dependantResourcesCount}
+                                type={this.errored
                                     ? 'error'
                                     : this.finished
                                         ? 'success'
@@ -242,7 +248,7 @@ class DeleteDependantsDialog extends React.Component<Props> {
 
                         <p>
                             {translate('sulu_admin.delete_dependants_progress_text', {
-                                count: `${this.totalDeletedResources}/${dependantResourcesCount}`,
+                                count: `${this.totalDeletedResources}/${this.dependantResourcesCount}`,
                             })}
                         </p>
                     </React.Fragment>
@@ -252,4 +258,4 @@ class DeleteDependantsDialog extends React.Component<Props> {
     }
 }
 
-export default DeleteDependantsDialog;
+export default DeleteDependantResourcesDialog;

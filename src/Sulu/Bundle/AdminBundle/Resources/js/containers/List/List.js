@@ -14,7 +14,8 @@ import userStore from '../../stores/userStore';
 import SingleListOverlay from '../SingleListOverlay';
 import {translate} from '../../utils';
 import DeleteReferencedResourceDialog from '../DeleteReferencedResourceDialog';
-import DeleteDependantsDialog from '../DeleteDependantsDialog';
+import DeleteDependantResourcesDialog from '../DeleteDependantResourcesDialog';
+import ERROR_CODES from '../../utils/Error/ErrorCodes';
 import ListStore from './stores/ListStore';
 import listAdapterRegistry from './registries/listAdapterRegistry';
 import AbstractAdapter from './adapters/AbstractAdapter';
@@ -36,7 +37,7 @@ import type {
 } from './types';
 import type {Node} from 'react';
 import type {IValueWillChange} from 'mobx/lib/mobx';
-import type {Resource} from '../../types';
+import type {ReferencingResourcesData, DependantResourcesData} from '../../types';
 
 type Props = {|
     actions: Array<ActionConfig>,
@@ -95,20 +96,8 @@ class List extends React.Component<Props> {
     @observable showOrderDialog: boolean = false;
     @observable adapterOptionsOpen: boolean = false;
     @observable columnOptionsOpen: boolean = false;
-
-    @observable showDeleteReferencedResourcesDialog: boolean = false;
-    @observable referencingResourcesData: {
-        referencingResources: Resource[],
-        referencingResourcesCount: number,
-        resource: Resource,
-    } | null = null;
-
-    @observable showDeleteDependantsDialog: boolean = false;
-    @observable dependantResourcesData: {
-        dependantResources: Resource[][],
-        dependantResourcesCount: number,
-    } | null = null;
-
+    @observable referencingResourcesData: ?ReferencingResourcesData = undefined;
+    @observable dependantResourcesData: ?DependantResourcesData = undefined;
     @observable movingRestrictedTarget: ?Object = undefined;
     resolveCopy: ?(ResolveCopyArgument) => void;
     resolveDelete: ?(ResolveDeleteArgument) => void;
@@ -260,10 +249,8 @@ class List extends React.Component<Props> {
     @action closeAllDialogs = () => {
         this.showDeleteDialog = false;
         this.showDeleteSelectionDialog = false;
-        this.showDeleteReferencedResourcesDialog = false;
-        this.referencingResourcesData = null;
-        this.showDeleteDependantsDialog = false;
-        this.dependantResourcesData = null;
+        this.referencingResourcesData = undefined;
+        this.dependantResourcesData = undefined;
     };
 
     @action handleDeleteResponseError = (response: Object) => {
@@ -272,8 +259,7 @@ class List extends React.Component<Props> {
         response.json().then(action((data) => {
             this.closeAllDialogs();
 
-            if (response.status === 409 && data.code === 1106) {
-                this.showDeleteReferencedResourcesDialog = true;
+            if (response.status === 409 && data.code === ERROR_CODES.REFERENCING_RESOURCES_FOUND) {
                 this.referencingResourcesData = {
                     resource: data.resource,
                     referencingResources: data.referencingResources,
@@ -299,8 +285,7 @@ class List extends React.Component<Props> {
                 return;
             }
 
-            if (response.status === 409 && data.code === 1105) {
-                this.showDeleteDependantsDialog = true;
+            if (response.status === 409 && data.code === ERROR_CODES.DEPENDANT_RESOURCES_FOUND) {
                 this.dependantResourcesData = {
                     dependantResources: data.dependantResources,
                     dependantResourcesCount: data.dependantResourcesCount,
@@ -325,7 +310,7 @@ class List extends React.Component<Props> {
                 return;
             }
 
-            const error = data.detail || data.message;
+            const error = data.detail || data.title || data.message;
 
             if (addError && error) {
                 addError(error);
@@ -575,7 +560,7 @@ class List extends React.Component<Props> {
     };
 
     renderDeleteReferencedResourceDialog() {
-        if (!this.showDeleteReferencedResourcesDialog || this.referencingResourcesData === null) {
+        if (!this.referencingResourcesData) {
             return null;
         }
 
@@ -595,31 +580,28 @@ class List extends React.Component<Props> {
         );
     }
 
-    @computed get deleteDependantsDialogRequestOptions() {
+    @computed get deleteDependantResourcesDialogRequestOptions() {
         const {store} = this.props;
 
         return store.queryOptions;
     }
 
-    @action handleDeleteDependantsDialogClose = () => {
+    @action handleDeleteDependantResourcesDialogClose = () => {
         this.closeAllDialogs();
     };
 
-    renderDeleteDependantsDialog() {
-        if (!this.showDeleteDependantsDialog || this.dependantResourcesData === null) {
+    renderDeleteDependantResourcesDialog() {
+        if (!this.dependantResourcesData) {
             return null;
         }
 
-        const {dependantResourcesCount, dependantResources} = this.dependantResourcesData;
-
         return (
-            <DeleteDependantsDialog
-                dependantResources={dependantResources}
-                dependantResourcesCount={dependantResourcesCount}
+            <DeleteDependantResourcesDialog
+                dependantResourcesData={this.dependantResourcesData}
                 onCancel={this.handleDeleteDialogCancelClick}
-                onClose={this.handleDeleteDependantsDialogClose}
+                onClose={this.handleDeleteDependantResourcesDialogClose}
                 onFinish={this.handleDeleteDialogConfirmClick}
-                requestOptions={this.deleteDependantsDialogRequestOptions}
+                requestOptions={this.deleteDependantResourcesDialogRequestOptions}
             />
         );
     }
@@ -806,7 +788,7 @@ class List extends React.Component<Props> {
                             {translate('sulu_admin.delete_warning_text')}
                         </Dialog>
                         {this.renderDeleteReferencedResourceDialog()}
-                        {this.renderDeleteDependantsDialog()}
+                        {this.renderDeleteDependantResourcesDialog()}
                     </Fragment>
                 }
                 {movable &&

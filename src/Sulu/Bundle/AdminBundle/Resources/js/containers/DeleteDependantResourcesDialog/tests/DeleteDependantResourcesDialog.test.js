@@ -1,7 +1,7 @@
 // @flow
 import {mount} from 'enzyme';
 import React from 'react';
-import DeleteDependantsDialog from '../DeleteDependantsDialog';
+import DeleteDependantResourcesDialog from '../DeleteDependantResourcesDialog';
 import ResourceRequester from '../../../services/ResourceRequester';
 
 jest.mock('../../../utils/Translator', () => ({
@@ -52,6 +52,10 @@ test('The component should render', () => {
     ];
 
     const dependantResourcesCount = 6;
+    const dependantResourcesData = {
+        dependantResources,
+        dependantResourcesCount,
+    };
 
     const requestOptions = {
         foo: 'bar',
@@ -59,9 +63,8 @@ test('The component should render', () => {
     };
 
     const view = mount(
-        <DeleteDependantsDialog
-            dependantResources={dependantResources}
-            dependantResourcesCount={dependantResourcesCount}
+        <DeleteDependantResourcesDialog
+            dependantResourcesData={dependantResourcesData}
             onCancel={onCancel}
             onClose={onClose}
             onError={onError}
@@ -95,6 +98,10 @@ test('The component should call cancel callback', () => {
     ];
 
     const dependantResourcesCount = 6;
+    const dependantResourcesData = {
+        dependantResources,
+        dependantResourcesCount,
+    };
 
     const requestOptions = {
         foo: 'bar',
@@ -102,9 +109,8 @@ test('The component should call cancel callback', () => {
     };
 
     const view = mount(
-        <DeleteDependantsDialog
-            dependantResources={dependantResources}
-            dependantResourcesCount={dependantResourcesCount}
+        <DeleteDependantResourcesDialog
+            dependantResourcesData={dependantResourcesData}
             onCancel={onCancel}
             onClose={onClose}
             onError={onError}
@@ -140,15 +146,19 @@ test('The component should delete dependant resources', () => {
 
     const dependantResourcesCount = 6;
 
+    const dependantResourcesData = {
+        dependantResources,
+        dependantResourcesCount,
+    };
+
     const requestOptions = {
         foo: 'bar',
         locale: 'de',
     };
 
     const view = mount(
-        <DeleteDependantsDialog
-            dependantResources={dependantResources}
-            dependantResourcesCount={dependantResourcesCount}
+        <DeleteDependantResourcesDialog
+            dependantResourcesData={dependantResourcesData}
             onCancel={onCancel}
             onClose={onClose}
             onError={onError}
@@ -244,15 +254,19 @@ test('The component should call error callback', () => {
 
     const dependantResourcesCount = 6;
 
+    const dependantResourcesData = {
+        dependantResources,
+        dependantResourcesCount,
+    };
+
     const requestOptions = {
         foo: 'bar',
         locale: 'de',
     };
 
     const view = mount(
-        <DeleteDependantsDialog
-            dependantResources={dependantResources}
-            dependantResourcesCount={dependantResourcesCount}
+        <DeleteDependantResourcesDialog
+            dependantResourcesData={dependantResourcesData}
             onCancel={onCancel}
             onClose={onClose}
             onError={onError}
@@ -338,15 +352,19 @@ test('The component should abort requests on cancel', () => {
 
     const dependantResourcesCount = 6;
 
+    const dependantResourcesData = {
+        dependantResources,
+        dependantResourcesCount,
+    };
+
     const requestOptions = {
         foo: 'bar',
         locale: 'de',
     };
 
     const view = mount(
-        <DeleteDependantsDialog
-            dependantResources={dependantResources}
-            dependantResourcesCount={dependantResourcesCount}
+        <DeleteDependantResourcesDialog
+            dependantResourcesData={dependantResourcesData}
             onCancel={onCancel}
             onClose={onClose}
             onError={onError}

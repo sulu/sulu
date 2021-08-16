@@ -6,14 +6,15 @@ import {List, ListStore, SingleListOverlay} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {translate} from 'sulu-admin-bundle/utils';
 import {Button, ButtonGroup, Dialog, DropdownButton} from 'sulu-admin-bundle/components';
-import DeleteDependantsDialog from 'sulu-admin-bundle/containers/DeleteDependantsDialog';
+import DeleteDependantResourcesDialog from 'sulu-admin-bundle/containers/DeleteDependantResourcesDialog';
+import ERROR_CODES from 'sulu-admin-bundle/utils/Error/ErrorCodes';
 import CollectionFormOverlay from './CollectionFormOverlay';
 import CollectionBreadcrumb from './CollectionBreadcrumb';
 import PermissionFormOverlay from './PermissionFormOverlay';
 import collectionSectionStyles from './collectionSection.scss';
 import type {OperationType, OverlayType} from './types';
 import type {IObservableValue} from 'mobx/lib/mobx';
-import type {Resource} from 'sulu-admin-bundle/types';
+import type {DependantResourcesData} from 'sulu-admin-bundle/types';
 
 const COLLECTIONS_RESOURCE_KEY = 'collections';
 
@@ -34,12 +35,7 @@ type Props = {
 class CollectionSection extends React.Component<Props> {
     @observable openedCollectionOperationOverlayType: OperationType;
     @observable movingRestrictedTargetCollection: ?Object = undefined;
-
-    @observable showDeleteDependantsDialog: boolean = false;
-    @observable dependantResourcesData: {
-        dependantResources: Resource[][],
-        dependantResourcesCount: number,
-    } | null = null;
+    @observable dependantResourcesData: ?DependantResourcesData = undefined;
 
     @action openCollectionOperationOverlay(operationType: OperationType) {
         this.openedCollectionOperationOverlayType = operationType;
@@ -161,7 +157,7 @@ class CollectionSection extends React.Component<Props> {
         resourceStore.delete()
             .then(() => {
                 this.closeCollectionOperationOverlay();
-                this.closeDeleteDependantsDialog();
+                this.closeDeleteDependantResourcesDialog();
 
                 this.props.onCollectionNavigate(parentCollectionId);
             })
@@ -170,8 +166,7 @@ class CollectionSection extends React.Component<Props> {
 
                 response.json()
                     .then(action((data) => {
-                        if (response.status === 409 && data.code === 1105) {
-                            this.showDeleteDependantsDialog = true;
+                        if (response.status === 409 && data.code === ERROR_CODES.DEPENDANT_RESOURCES_FOUND) {
                             this.dependantResourcesData = {
                                 dependantResources: data.dependantResources,
                                 dependantResourcesCount: data.dependantResourcesCount,
@@ -180,7 +175,7 @@ class CollectionSection extends React.Component<Props> {
                             return;
                         }
 
-                        const error = data.detail || data.message;
+                        const error = data.detail || data.title || data.message;
 
                         if (addError && error) {
                             addError(error);
@@ -223,24 +218,23 @@ class CollectionSection extends React.Component<Props> {
         this.closeCollectionOperationOverlay();
     };
 
-    handleDeleteDependantsDialogFinish = () => {
+    handleDeleteDependantResourcesDialogFinish = () => {
         this.delete();
     };
 
-    handleDeleteDependantsDialogCancel = () => {
-        this.closeDeleteDependantsDialog();
+    handleDeleteDependantResourcesDialogCancel = () => {
+        this.closeDeleteDependantResourcesDialog();
     };
 
-    handleDeleteDependantsDialogClose = () => {
-        this.closeDeleteDependantsDialog();
+    handleDeleteDependantResourcesDialogClose = () => {
+        this.closeDeleteDependantResourcesDialog();
     };
 
-    @action closeDeleteDependantsDialog = () => {
-        this.showDeleteDependantsDialog = false;
-        this.dependantResourcesData = null;
+    @action closeDeleteDependantResourcesDialog = () => {
+        this.dependantResourcesData = undefined;
     };
 
-    @computed get deleteDependantsDialogRequestOptions() {
+    @computed get deleteDependantResourcesDialogRequestOptions() {
         const {locale} = this.props;
 
         if (locale) {
@@ -252,21 +246,18 @@ class CollectionSection extends React.Component<Props> {
         return {};
     }
 
-    renderDeleteDependantsDialog() {
-        if (!this.showDeleteDependantsDialog || this.dependantResourcesData === null) {
+    renderDeleteDependantResourcesDialog() {
+        if (!this.dependantResourcesData) {
             return null;
         }
 
-        const {dependantResourcesCount, dependantResources} = this.dependantResourcesData;
-
         return (
-            <DeleteDependantsDialog
-                dependantResources={dependantResources}
-                dependantResourcesCount={dependantResourcesCount}
-                onCancel={this.handleDeleteDependantsDialogCancel}
-                onClose={this.handleDeleteDependantsDialogClose}
-                onFinish={this.handleDeleteDependantsDialogFinish}
-                requestOptions={this.deleteDependantsDialogRequestOptions}
+            <DeleteDependantResourcesDialog
+                dependantResourcesData={this.dependantResourcesData}
+                onCancel={this.handleDeleteDependantResourcesDialogCancel}
+                onClose={this.handleDeleteDependantResourcesDialogClose}
+                onFinish={this.handleDeleteDependantResourcesDialogFinish}
+                requestOptions={this.deleteDependantResourcesDialogRequestOptions}
             />
         );
     }
@@ -355,7 +346,7 @@ class CollectionSection extends React.Component<Props> {
                 >
                     {translate('sulu_media.remove_collection_warning')}
                 </Dialog>
-                {this.renderDeleteDependantsDialog()}
+                {this.renderDeleteDependantResourcesDialog()}
                 <PermissionFormOverlay
                     collectionId={this.collectionId}
                     hasChildren={this.hasChildren}

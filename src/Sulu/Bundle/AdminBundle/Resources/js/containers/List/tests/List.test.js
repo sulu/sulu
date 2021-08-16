@@ -1484,19 +1484,19 @@ test('ListStore should delete item with dependants when onFinish callback called
         setTimeout(() => {
             list.update();
             expect(list.find('Dialog').at(1).prop('open')).toEqual(false);
-            expect(list.contains('DeleteDependantsDialog'));
+            expect(list.contains('DeleteDependantResourcesDialog'));
 
             const deletePromise = Promise.resolve();
             // $FlowFixMe
             listStore.delete.mockReturnValueOnce(deletePromise);
-            list.find('DeleteDependantsDialog').prop('onFinish')();
+            list.find('DeleteDependantResourcesDialog').prop('onFinish')();
 
             setTimeout(() => {
                 expect(listStore.delete).toHaveBeenCalledWith(5);
                 expect(listStore.delete).toHaveBeenCalledTimes(2);
                 list.update();
                 expect(list.find('Dialog').at(1).prop('open')).toEqual(false);
-                expect(list.contains('DeleteDependantsDialog')).toBe(false);
+                expect(list.contains('DeleteDependantResourcesDialog')).toBe(false);
                 done();
             });
         });
@@ -1544,18 +1544,18 @@ test('ListStore should not delete item with dependants when onCancel callback ca
         setTimeout(() => {
             list.update();
             expect(list.find('Dialog').at(1).prop('open')).toEqual(false);
-            expect(list.contains('DeleteDependantsDialog'));
+            expect(list.contains('DeleteDependantResourcesDialog'));
 
             const deletePromise = Promise.resolve();
             // $FlowFixMe
             listStore.delete.mockReturnValueOnce(deletePromise);
-            list.find('DeleteDependantsDialog').prop('onCancel')();
+            list.find('DeleteDependantResourcesDialog').prop('onCancel')();
 
             setTimeout(() => {
                 expect(listStore.delete).toHaveBeenCalledTimes(1);
                 list.update();
                 expect(list.find('Dialog').at(1).prop('open')).toEqual(false);
-                expect(list.contains('DeleteDependantsDialog')).toBe(false);
+                expect(list.contains('DeleteDependantResourcesDialog')).toBe(false);
                 done();
             });
         });
