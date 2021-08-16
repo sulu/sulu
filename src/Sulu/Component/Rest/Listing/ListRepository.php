@@ -12,7 +12,7 @@
 namespace Sulu\Component\Rest\Listing;
 
 use Doctrine\ORM\EntityRepository;
-use Doctrine\Persistence\Mapping\ClassMetadata;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\Persistence\ObjectManager;
 
 /**
