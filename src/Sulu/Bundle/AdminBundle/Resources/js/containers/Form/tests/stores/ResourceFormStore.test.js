@@ -643,7 +643,7 @@ test('type property should return undefined if ResourceStore has a type but sche
     const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
 
     return schemaTypesPromise.then(() => {
-        expect(resourceFormStore.type).toBeUndefined()
+        expect(resourceFormStore.type).toBeUndefined();
     });
 });
 

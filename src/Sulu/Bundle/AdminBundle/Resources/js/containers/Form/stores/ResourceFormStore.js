@@ -74,7 +74,7 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
                 return;
             }
 
-            if (this.hasTypes && !this.types[this.type]) {
+            if (this.hasTypes && this.type && !this.types[this.type]) {
                 this.setSchemaLoading(false);
                 return;
             }
@@ -114,7 +114,7 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
         return this.resourceStore.data;
     }
 
-    @computed get type(): string {
+    @computed get type(): ?string {
         return this.hasTypes ? get(this.data, TYPE_PROPERTY) : undefined;
     }
 
