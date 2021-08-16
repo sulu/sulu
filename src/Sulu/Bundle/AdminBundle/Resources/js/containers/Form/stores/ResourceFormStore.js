@@ -115,7 +115,7 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
     }
 
     @computed get type(): string {
-        return get(this.data, TYPE_PROPERTY);
+        return this.hasTypes ? get(this.data, TYPE_PROPERTY) : undefined;
     }
 
     @action save(options: Object = {}): Promise<Object> {
