@@ -459,31 +459,6 @@ test('Set dirty flag from ResourceStore', () => {
     expect(resourceFormStore.dirty).toEqual(true);
 });
 
-test('Set template property of ResourceStore from the loaded data', () => {
-    const metadata = {};
-
-    const schemaTypesPromise = Promise.resolve({
-        defaultType: 'type1',
-        types: {
-            type1: {},
-            type2: {},
-        },
-    });
-    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
-
-    const metadataPromise = Promise.resolve(metadata);
-    metadataStore.getSchema.mockReturnValue(metadataPromise);
-
-    const resourceStore = new ResourceStore('snippets', '1');
-    resourceStore.data = observable({template: 'type2'});
-    const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
-
-    return Promise.all([schemaTypesPromise, metadataPromise]).then(() => {
-        expect(resourceFormStore.type).toEqual('type2');
-        resourceFormStore.destroy();
-    });
-});
-
 test('Create data object for schema with sections', () => {
     const metadata = {
         section1: {
@@ -643,6 +618,7 @@ test('type property should be returning type from ResourceStore', () => {
         defaultType: 'sidebar',
         types: {
             sidebar: {},
+            other: {},
         },
     });
     metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
@@ -650,6 +626,24 @@ test('type property should be returning type from ResourceStore', () => {
 
     return schemaTypesPromise.then(() => {
         expect(resourceFormStore.type).toEqual('sidebar');
+    });
+});
+
+test('type property should return undefined if ResourceStore has a type but schema does not include any types', () => {
+    const resourceStore = new ResourceStore('snippets', '1');
+    resourceStore.data = observable({
+        template: 'sidebar',
+    });
+
+    const schemaTypesPromise = Promise.resolve({
+        defaultType: 'sidebar',
+        types: undefined,
+    });
+    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
+    const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
+
+    return schemaTypesPromise.then(() => {
+        expect(resourceFormStore.type).toBeUndefined();
     });
 });
 

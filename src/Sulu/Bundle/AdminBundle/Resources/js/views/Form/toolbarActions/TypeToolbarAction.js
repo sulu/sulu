@@ -10,7 +10,7 @@ import type {ToolbarItemConfig} from '../../../containers/Toolbar/types';
 export default class TypeToolbarAction extends AbstractFormToolbarAction {
     @observable selectedTypeForUnsavedChangesDialog: ?string = undefined;
 
-    getToolbarItemConfig(): ?ToolbarItemConfig<string> {
+    getToolbarItemConfig(): ?ToolbarItemConfig<?string> {
         const formTypes = Object.keys(this.resourceFormStore.types).map((key) => this.resourceFormStore.types[key]);
 
         if (!this.resourceFormStore.typesLoading && formTypes.length === 0) {
