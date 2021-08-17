@@ -1558,6 +1558,10 @@ class CategoryControllerTest extends SuluTestCase
                     ],
                 ],
             ],
+            'resource' => [
+                'id' => $category1Id,
+                'resourceKey' => 'categories',
+            ],
         ], $content);
     }
 
