@@ -13,7 +13,6 @@ import type {IObservableValue} from 'mobx/lib/mobx';
 import type {ElementRef} from 'react';
 
 type Props = {|
-    addError?: (message: string) => void,
     className?: string,
     collectionListStore: ListStore,
     collectionStore: CollectionStore,
@@ -23,6 +22,7 @@ type Props = {|
     mediaListRef?: (?ElementRef<typeof List>) => void,
     mediaListStore: ListStore,
     onCollectionNavigate: (collectionId: ?string | number) => void,
+    onDeleteError?: (message: string) => void,
     onMediaNavigate?: (mediaId: string | number) => void,
     onUploadError?: (errors: Array<Object>) => void,
     onUploadOverlayClose: () => void,
@@ -80,7 +80,7 @@ class MediaCollection extends React.Component<Props> {
 
     render() {
         const {
-            addError,
+            onDeleteError,
             className,
             collectionListStore,
             collectionStore,
@@ -128,12 +128,12 @@ class MediaCollection extends React.Component<Props> {
             >
                 <CollectionSection
                     addable={addable}
-                    addError={addError}
                     deletable={deletable}
                     editable={editable}
                     listStore={collectionListStore}
                     locale={locale}
                     onCollectionNavigate={this.handleCollectionNavigate}
+                    onDeleteError={onDeleteError}
                     overlayType={overlayType}
                     resourceStore={collectionStore.resourceStore}
                     securable={securable}

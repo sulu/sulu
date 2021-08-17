@@ -1450,7 +1450,7 @@ test('ListStore should delete item with dependants when onFinish callback called
             id: 5,
             resourceKey: 'pages',
         },
-        dependantResources: [
+        dependantResourceBatches: [
             {id: 7, resourceKey: 'pages'},
             {id: 8, resourceKey: 'pages'},
         ],
@@ -1510,7 +1510,7 @@ test('ListStore should not delete item with dependants when onCancel callback ca
             id: 5,
             resourceKey: 'pages',
         },
-        dependantResources: [
+        dependantResourceBatches: [
             {id: 7, resourceKey: 'pages'},
             {id: 8, resourceKey: 'pages'},
         ],

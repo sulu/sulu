@@ -200,7 +200,7 @@ class PageList extends React.Component<Props> {
         return indicators;
     };
 
-    @action addError = (message: string): void => {
+    @action handleDeleteError = (message: string): void => {
         this.errors.push(message);
     };
 
@@ -219,8 +219,8 @@ class PageList extends React.Component<Props> {
                             },
                         }}
                         adapters={['column_list', 'tree_table']}
-                        addError={this.addError}
                         onCopyFinished={this.handleCopyFinished}
+                        onDeleteError={this.handleDeleteError}
                         onItemAdd={this.handleItemAdd}
                         onItemClick={this.handleEditClick}
                         searchable={false}

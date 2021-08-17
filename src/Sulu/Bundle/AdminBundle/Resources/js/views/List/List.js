@@ -354,7 +354,7 @@ class List extends React.Component<Props> {
         this.list = list;
     };
 
-    @action addError = (message: string): void => {
+    @action handleDeleteError = (message: string): void => {
         this.errors.push(message);
     };
 
@@ -390,11 +390,11 @@ class List extends React.Component<Props> {
                     <ListContainer
                         adapterOptions={adapterOptions}
                         adapters={adapters}
-                        addError={this.addError}
                         filterable={filterable}
                         header={title && <h1>{title}</h1>}
                         itemActionsProvider={this.getItemActionConfigs}
                         itemDisabledCondition={itemDisabledCondition}
+                        onDeleteError={this.handleDeleteError}
                         onItemAdd={onItemAdd || addView ? this.addItem : undefined}
                         onItemClick={onItemClick || editView ? this.handleItemClick : undefined}
                         paginated={paginated}

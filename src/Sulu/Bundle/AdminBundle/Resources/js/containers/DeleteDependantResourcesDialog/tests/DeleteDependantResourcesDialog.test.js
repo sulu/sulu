@@ -36,7 +36,7 @@ test('The component should render', () => {
     const onError = jest.fn();
     const onFinish = jest.fn();
 
-    const dependantResources = [
+    const dependantResourceBatches = [
         [
             {id: 4, resourceKey: 'media'},
         ],
@@ -53,7 +53,7 @@ test('The component should render', () => {
 
     const dependantResourcesCount = 6;
     const dependantResourcesData = {
-        dependantResources,
+        dependantResourceBatches,
         dependantResourcesCount,
     };
 
@@ -82,7 +82,7 @@ test('The component should call cancel callback', () => {
     const onError = jest.fn();
     const onFinish = jest.fn();
 
-    const dependantResources = [
+    const dependantResourceBatches = [
         [
             {id: 4, resourceKey: 'media'},
         ],
@@ -99,7 +99,7 @@ test('The component should call cancel callback', () => {
 
     const dependantResourcesCount = 6;
     const dependantResourcesData = {
-        dependantResources,
+        dependantResourceBatches,
         dependantResourcesCount,
     };
 
@@ -129,7 +129,7 @@ test('The component should delete dependant resources', () => {
     const onError = jest.fn();
     const onFinish = jest.fn();
 
-    const dependantResources = [
+    const dependantResourceBatches = [
         [
             {id: 4, resourceKey: 'media'},
         ],
@@ -147,7 +147,7 @@ test('The component should delete dependant resources', () => {
     const dependantResourcesCount = 6;
 
     const dependantResourcesData = {
-        dependantResources,
+        dependantResourceBatches,
         dependantResourcesCount,
     };
 
@@ -237,7 +237,7 @@ test('The component should call error callback', () => {
     const onError = jest.fn();
     const onFinish = jest.fn();
 
-    const dependantResources = [
+    const dependantResourceBatches = [
         [
             {id: 4, resourceKey: 'media'},
         ],
@@ -255,7 +255,7 @@ test('The component should call error callback', () => {
     const dependantResourcesCount = 6;
 
     const dependantResourcesData = {
-        dependantResources,
+        dependantResourceBatches,
         dependantResourcesCount,
     };
 
@@ -335,7 +335,7 @@ test('The component should abort requests on cancel', () => {
     const onError = jest.fn();
     const onFinish = jest.fn();
 
-    const dependantResources = [
+    const dependantResourceBatches = [
         [
             {id: 4, resourceKey: 'media'},
         ],
@@ -353,7 +353,7 @@ test('The component should abort requests on cancel', () => {
     const dependantResourcesCount = 6;
 
     const dependantResourcesData = {
-        dependantResources,
+        dependantResourceBatches,
         dependantResourcesCount,
     };
 

@@ -296,6 +296,10 @@ class CategoryManager implements CategoryManagerInterface
         }
 
         throw new DependantResourcesFoundException(
+            [
+                'id' => $id,
+                'resourceKey' => CategoryInterface::RESOURCE_KEY,
+            ],
             $this->groupResourcesByDepth($descendantCategoryResources),
             \count($descendantCategoryResources)
         );

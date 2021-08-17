@@ -531,7 +531,7 @@ test('Call delete when DeleteDependantResourcesDialog is finished', (done) => {
             id: 5,
             resourceKey: 'pages',
         },
-        dependantResources: [
+        dependantResourceBatches: [
             {id: 7, resourceKey: 'pages'},
             {id: 8, resourceKey: 'pages'},
         ],
@@ -590,7 +590,7 @@ test('Do not call delete when DeleteDependantResourcesDialog is cancelled', (don
             id: 5,
             resourceKey: 'pages',
         },
-        dependantResources: [
+        dependantResourceBatches: [
             {id: 7, resourceKey: 'pages'},
             {id: 8, resourceKey: 'pages'},
         ],

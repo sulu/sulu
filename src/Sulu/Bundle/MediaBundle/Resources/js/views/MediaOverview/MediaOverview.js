@@ -190,7 +190,7 @@ class MediaOverview extends React.Component<ViewProps> {
         }));
     };
 
-    @action addError = (message: string): void => {
+    @action handleDeleteError = (message: string): void => {
         this.errors.push(message);
     };
 
@@ -198,7 +198,6 @@ class MediaOverview extends React.Component<ViewProps> {
         return (
             <>
                 <MediaCollection
-                    addError={this.addError}
                     className={mediaOverviewStyles.mediaCollection}
                     collectionListStore={this.collectionListStore}
                     collectionStore={this.collectionStore}
@@ -208,6 +207,7 @@ class MediaOverview extends React.Component<ViewProps> {
                     mediaListRef={this.setMediaListRef}
                     mediaListStore={this.mediaListStore}
                     onCollectionNavigate={this.handleCollectionNavigate}
+                    onDeleteError={this.handleDeleteError}
                     onMediaNavigate={this.handleMediaNavigate}
                     onUploadError={this.handleUploadError}
                     onUploadOverlayClose={this.handleUploadOverlayClose}

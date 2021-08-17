@@ -33,7 +33,7 @@ class DeleteDependantResourcesDialog extends React.Component<Props> {
     promises: Array<RequestPromise<any>> = [];
 
     @computed get dependantResourceBatches(): DependantResourceBatches {
-        return this.props.dependantResourcesData.dependantResources;
+        return this.props.dependantResourcesData.dependantResourceBatches;
     }
 
     @computed get dependantResourcesCount(): number {
@@ -76,7 +76,7 @@ class DeleteDependantResourcesDialog extends React.Component<Props> {
             .catch((errorResponse) => {
                 errorResponse.json().then(action((error) => {
                     this.inProgress = false;
-                    this.error = error.detail || error.title || error.message;
+                    this.error = error.detail || error.title || translate('sulu_admin.unexpected_delete_server_error');
 
                     if (!onError) {
                         return;

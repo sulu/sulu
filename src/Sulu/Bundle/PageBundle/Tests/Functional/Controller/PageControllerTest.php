@@ -885,7 +885,7 @@ class PageControllerTest extends SuluTestCase
                 'resourceKey' => 'pages',
             ],
             'dependantResourcesCount' => 3,
-            'dependantResources' => [
+            'dependantResourceBatches' => [
                 [
                     [
                         'id' => $page1_2_1['id'],

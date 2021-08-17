@@ -255,7 +255,7 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
 
                     if (response.status === 409 && data.code === ERROR_CODES.DEPENDANT_RESOURCES_FOUND) {
                         this.dependantResourcesData = {
-                            dependantResources: data.dependantResources,
+                            dependantResourceBatches: data.dependantResourceBatches,
                             dependantResourcesCount: data.dependantResourcesCount,
                         };
 
@@ -272,7 +272,7 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
                         return;
                     }
 
-                    const error = data.detail || data.title || data.message;
+                    const error = data.detail || data.title || translate('sulu_admin.unexpected_delete_server_error');
 
                     if (error) {
                         this.form.errors.push(error);

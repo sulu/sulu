@@ -43,7 +43,6 @@ type Props = {|
     actions: Array<ActionConfig>,
     adapterOptions?: {[adapterKey: string]: AdapterOptions},
     adapters: Array<string>,
-    addError?: (message: string) => void,
     allowActivateForDisabledItems: boolean,
     copyable: boolean,
     deletable: boolean,
@@ -55,6 +54,7 @@ type Props = {|
     itemDisabledCondition?: ?string,
     movable: boolean,
     onCopyFinished?: (response: Object) => void,
+    onDeleteError?: (message: string) => void,
     onItemAdd?: (id: ?string | number) => void,
     onItemClick?: (itemId: string | number) => void,
     orderable: boolean,
@@ -254,7 +254,7 @@ class List extends React.Component<Props> {
     };
 
     @action handleDeleteResponseError = (response: Object) => {
-        const {addError} = this.props;
+        const {onDeleteError} = this.props;
 
         response.json().then(action((data) => {
             this.closeAllDialogs();
@@ -287,7 +287,7 @@ class List extends React.Component<Props> {
 
             if (response.status === 409 && data.code === ERROR_CODES.DEPENDANT_RESOURCES_FOUND) {
                 this.dependantResourcesData = {
-                    dependantResources: data.dependantResources,
+                    dependantResourceBatches: data.dependantResourceBatches,
                     dependantResourcesCount: data.dependantResourcesCount,
                 };
 
@@ -310,10 +310,10 @@ class List extends React.Component<Props> {
                 return;
             }
 
-            const error = data.detail || data.title || data.message;
+            const error = data.detail || data.title || translate('sulu_admin.unexpected_delete_server_error');
 
-            if (addError && error) {
-                addError(error);
+            if (onDeleteError && error) {
+                onDeleteError(error);
             }
         }));
     };

@@ -68,7 +68,7 @@ class FlattenExceptionNormalizer implements NormalizerInterface
 
         if ($contextException instanceof DependantResourcesFoundExceptionInterface) {
             $data['dependantResourcesCount'] = $contextException->getDependantResourcesCount();
-            $data['dependantResources'] = $contextException->getDependantResources();
+            $data['dependantResourceBatches'] = $contextException->getDependantResourceBatches();
             $data['resource'] = $contextException->getResource();
         }
 

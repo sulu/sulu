@@ -1259,7 +1259,7 @@ class CollectionControllerTest extends SuluTestCase
                 'resourceKey' => 'collections',
             ],
             'dependantResourcesCount' => 7,
-            'dependantResources' => [
+            'dependantResourceBatches' => [
                 [
                     [
                         'id' => $child11->getMedia()->first()->getId(),

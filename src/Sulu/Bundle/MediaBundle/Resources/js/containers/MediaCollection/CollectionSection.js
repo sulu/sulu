@@ -20,12 +20,12 @@ const COLLECTIONS_RESOURCE_KEY = 'collections';
 
 type Props = {
     addable: boolean,
-    addError?: (message: string) => void,
     deletable: boolean,
     editable: boolean,
     listStore: ListStore,
     locale: IObservableValue<string>,
     onCollectionNavigate: (collectionId: ?string | number) => void,
+    onDeleteError?: (message: string) => void,
     overlayType: OverlayType,
     resourceStore: ResourceStore,
     securable: boolean,
@@ -147,7 +147,7 @@ class CollectionSection extends React.Component<Props> {
     };
 
     delete = () => {
-        const {addError, resourceStore} = this.props;
+        const {onDeleteError, resourceStore} = this.props;
         const {data} = resourceStore;
 
         const parentCollectionId = data._embedded && data._embedded.parent && data._embedded.parent.id
@@ -168,17 +168,19 @@ class CollectionSection extends React.Component<Props> {
                     .then(action((data) => {
                         if (response.status === 409 && data.code === ERROR_CODES.DEPENDANT_RESOURCES_FOUND) {
                             this.dependantResourcesData = {
-                                dependantResources: data.dependantResources,
+                                dependantResourceBatches: data.dependantResourceBatches,
                                 dependantResourcesCount: data.dependantResourcesCount,
                             };
 
                             return;
                         }
 
-                        const error = data.detail || data.title || data.message;
+                        const error = data.detail
+                            || data.title
+                            || translate('sulu_admin.unexpected_delete_server_error');
 
-                        if (addError && error) {
-                            addError(error);
+                        if (onDeleteError && error) {
+                            onDeleteError(error);
                         }
                     }));
             });

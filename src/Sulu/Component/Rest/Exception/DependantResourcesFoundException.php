@@ -23,7 +23,7 @@ class DependantResourcesFoundException extends \Exception implements DependantRe
     /**
      * @var array<int, array<array{id: int|string, resourceKey: string}>>
      */
-    private $dependantResources;
+    private $dependantResourceBatches;
 
     /**
      * @var int
@@ -32,12 +32,12 @@ class DependantResourcesFoundException extends \Exception implements DependantRe
 
     /**
      * @param array{id: int|string, resourceKey: string} $resource
-     * @param array<int, array<array{id: int|string, resourceKey: string}>> $dependantResources
+     * @param array<int, array<array{id: int|string, resourceKey: string}>> $dependantResourceBatches
      */
-    public function __construct(array $resource, array $dependantResources, int $dependantResourcesCount)
+    public function __construct(array $resource, array $dependantResourceBatches, int $dependantResourcesCount)
     {
         $this->resource = $resource;
-        $this->dependantResources = $dependantResources;
+        $this->dependantResourceBatches = $dependantResourceBatches;
         $this->dependantResourcesCount = $dependantResourcesCount;
 
         parent::__construct(
@@ -51,9 +51,9 @@ class DependantResourcesFoundException extends \Exception implements DependantRe
         return $this->resource;
     }
 
-    public function getDependantResources(): array
+    public function getDependantResourceBatches(): array
     {
-        return $this->dependantResources;
+        return $this->dependantResourceBatches;
     }
 
     public function getDependantResourcesCount(): int

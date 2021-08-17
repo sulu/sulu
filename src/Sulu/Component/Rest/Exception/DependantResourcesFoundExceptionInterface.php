@@ -23,7 +23,7 @@ interface DependantResourcesFoundExceptionInterface extends RestExceptionInterfa
     /**
      * @return array<int, array<array{id: int|string, resourceKey: string}>>
      */
-    public function getDependantResources(): array;
+    public function getDependantResourceBatches(): array;
 
     public function getDependantResourcesCount(): int;
 }

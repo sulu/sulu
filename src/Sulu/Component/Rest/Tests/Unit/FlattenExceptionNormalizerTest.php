@@ -207,7 +207,7 @@ class FlattenExceptionNormalizerTest extends TestCase
         $this->assertSame(1105, $result['code']);
         $this->assertSame($exception->getMessage(), $result['message']);
         $this->assertSame($exception->getDependantResourcesCount(), $result['dependantResourcesCount']);
-        $this->assertEquals($exception->getDependantResources(), $result['dependantResources']);
+        $this->assertEquals($exception->getDependantResourceBatches(), $result['dependantResourceBatches']);
         $this->assertEquals($exception->getResource(), $result['resource']);
         $this->assertArrayNotHasKey('errors', $result);
     }
@@ -261,7 +261,7 @@ class FlattenExceptionNormalizerTest extends TestCase
         $this->assertSame(1105, $result['code']);
         $this->assertSame($exception->getMessage(), $result['message']);
         $this->assertSame($exception->getDependantResourcesCount(), $result['dependantResourcesCount']);
-        $this->assertEquals($exception->getDependantResources(), $result['dependantResources']);
+        $this->assertEquals($exception->getDependantResourceBatches(), $result['dependantResourceBatches']);
         $this->assertEquals($exception->getResource(), $result['resource']);
         $this->assertArrayHasKey('errors', $result);
     }
