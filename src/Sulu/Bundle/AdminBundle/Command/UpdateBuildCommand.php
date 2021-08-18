@@ -16,6 +16,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpClient\Exception\ClientException;
 use Symfony\Component\Process\Process;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
@@ -108,6 +109,7 @@ class UpdateBuildCommand extends Command
         $output->writeln('<info>Checking for changed files...</info>');
 
         $assetFiles = [
+            'app.js',
             'index.js',
             'package.json',
             'webpack.config.js',
@@ -120,6 +122,9 @@ class UpdateBuildCommand extends Command
         $renamedFiles = [
             '.babelrc' => 'babel.config.json',
         ];
+
+        // files which are expected to be changed but requires then a manual build
+        $appFiles = ['app.js'];
 
         foreach ($renamedFiles as $oldFile => $newFile) {
             if ($filesystem->exists($this->projectDir . $oldFile)) {
@@ -145,8 +150,13 @@ class UpdateBuildCommand extends Command
                     [$localContent, $remoteContent],
                 ]);
 
+                $defaultValueUseLocaleFile = 'y';
+                if ($localContent && \in_array($file, $appFiles)) {
+                    $defaultValueUseLocaleFile = 'n';
+                }
+
                 if ('y' !== \strtolower(
-                    $ui->ask(\sprintf('Do you want to overwrite your local version of "%s"?', $file), 'y')
+                    $ui->ask(\sprintf('Do you want to overwrite your local version of "%s"?', $file), $defaultValueUseLocaleFile)
                 )) {
                     $needManualBuild = true;
 
@@ -161,7 +171,8 @@ class UpdateBuildCommand extends Command
                                     \sprintf('Merge "%s" together like above?', $file),
                                     'y'
                                 )
-                            )) {
+                            )
+                        ) {
                             $ui->writeln(\sprintf('Write new "%s" version.', $file));
                             $this->writeFile($filePath, $mergedJson . "\n");
                         }
@@ -174,6 +185,9 @@ class UpdateBuildCommand extends Command
                 $this->writeFile($filePath, $remoteContent);
             }
         }
+
+        $ui->section('Cleanup previously installed "node_modules" folders');
+        $this->cleanupPreviouslyInstalledDependencies();
 
         if ($needManualBuild) {
             if ($isTaggedVersion) {
@@ -197,6 +211,10 @@ class UpdateBuildCommand extends Command
         $output->writeln('<info>Download remote repository...</info>');
         $response = $this->httpClient->request('GET', $remoteArchive);
         \file_put_contents($tempFileZip, $response->getContent());
+
+        if (\class_exists(\ZipArchive::class)) {
+            throw new \RuntimeException('The "ext-zip" extension is required to download the admin build.');
+        }
 
         $zip = new \ZipArchive();
         if ($zip->open($tempFileZip)) {
@@ -239,9 +257,14 @@ class UpdateBuildCommand extends Command
     private function getRemoteFile(string $remoteRepository, string $path)
     {
         $path = \str_replace(\DIRECTORY_SEPARATOR, '/', $path);
-        $response = $this->httpClient->request('GET', $remoteRepository . $path);
 
-        return $response->getContent();
+        try {
+            $response = $this->httpClient->request('GET', $remoteRepository . $path);
+
+            return $response->getContent();
+        } catch (ClientException $e) {
+            return '';
+        }
     }
 
     private function hash($content)
@@ -280,9 +303,6 @@ class UpdateBuildCommand extends Command
         }
 
         $ui->title('Start manual build ...');
-
-        $ui->section('Cleanup previously installed "node_modules" folders');
-        $this->cleanupPreviouslyInstalledDependencies();
 
         $ui->section('Install npm dependencies');
         if ($this->runProcess($ui, 'npm install')) {
