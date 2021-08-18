@@ -8,6 +8,7 @@ import formToolbarActionRegistry from '../registries/formToolbarActionRegistry';
 import Form from '../Form';
 import AbstractFormToolbarAction from './AbstractFormToolbarAction';
 import type {DropdownOption} from '../../../components/Toolbar/types';
+import type {ToolbarItemConfig, DropdownItemConfig} from '../../../containers/Toolbar/types';
 
 export default class DropdownToolbarAction extends AbstractFormToolbarAction {
     toolbarActions: Array<AbstractFormToolbarAction> = [];
@@ -71,7 +72,7 @@ export default class DropdownToolbarAction extends AbstractFormToolbarAction {
         );
     }
 
-    getToolbarItemConfig() {
+    getToolbarItemConfig(): ?DropdownItemConfig {
         const {icon, label} = this.options;
 
         if (typeof label !== 'string') {
@@ -82,41 +83,39 @@ export default class DropdownToolbarAction extends AbstractFormToolbarAction {
             throw new Error('The "icon" option must be a string!');
         }
 
-        const options: Array<DropdownOption> = this.toolbarActions
-            .reduce((toolbarActions, toolbarAction) => {
-                const toolbarItemConfig = toolbarAction.getToolbarItemConfig();
+        const childToolbarItemConfigs: Array<ToolbarItemConfig<*>> = this.toolbarActions
+            .map((toolbarAction) => toolbarAction.getToolbarItemConfig())
+            .filter((toolbarItemConfig) => !!toolbarItemConfig);
 
-                if (!toolbarItemConfig) {
-                    return toolbarActions;
-                }
-
-                if (toolbarItemConfig.options) {
-                    throw new Error('This ToolbarAction only supports child ToolbarActions not being a dropdown');
-                }
-
-                const {disabled, label, onClick} = toolbarItemConfig;
-
-                if (!label) {
-                    throw new Error('Child ToolbarActions must return a "label"');
-                }
-
-                if (!onClick) {
-                    throw new Error('Child ToolbarActions must return a "onClick" handler');
-                }
-
-                toolbarActions.push({disabled, label, onClick});
-
-                return toolbarActions;
-            }, []);
-
-        if (options.length === 0) {
+        if (childToolbarItemConfigs.length === 0) {
             return undefined;
         }
+
+        const options: Array<DropdownOption> = childToolbarItemConfigs.map((toolbarItemConfig) => {
+            if (toolbarItemConfig.options) {
+                throw new Error('This ToolbarAction only supports child ToolbarActions not being a dropdown');
+            }
+
+            const {disabled, label, onClick} = toolbarItemConfig;
+
+            if (!label) {
+                throw new Error('Child ToolbarActions must return a "label"');
+            }
+
+            if (!onClick) {
+                throw new Error('Child ToolbarActions must return a "onClick" handler');
+            }
+
+            return {disabled, label, onClick};
+        });
+
+        const loading = childToolbarItemConfigs.some((toolbarItemConfig) => toolbarItemConfig.loading);
 
         return {
             type: 'dropdown',
             label,
             icon,
+            loading,
             options,
         };
     }

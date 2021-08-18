@@ -118,16 +118,40 @@ class PageAdmin extends Admin
     {
         /** @var Webspace $firstWebspace */
         $firstWebspace = \current($this->webspaceManager->getWebspaceCollection()->getWebspaces());
-        $publishDisplayCondition = '(!_permissions || _permissions.live)';
+        $saveVisibleCondition = '(!_permissions || _permissions.edit)';
+        $publishVisibleCondition = '(!_permissions || _permissions.live)';
+
+        $saveWithPublishingDropdown = new DropdownToolbarAction(
+            'sulu_admin.save',
+            'su-save',
+            [
+                new ToolbarAction(
+                    'sulu_admin.save',
+                    [
+                        'label' => 'sulu_admin.save_draft',
+                        'options' => ['action' => 'draft'],
+                        'visible_condition' => $saveVisibleCondition,
+                    ]
+                ),
+                new ToolbarAction(
+                    'sulu_admin.save',
+                    [
+                        'label' => 'sulu_admin.save_publish',
+                        'options' => ['action' => 'publish'],
+                        'visible_condition' => '(' . $saveVisibleCondition . ') && (' . $publishVisibleCondition . ')',
+                    ]
+                ),
+                new ToolbarAction(
+                    'sulu_admin.publish',
+                    [
+                        'visible_condition' => $publishVisibleCondition,
+                    ]
+                ),
+            ]
+        );
 
         $formToolbarActionsWithType = [
-            new ToolbarAction(
-                'sulu_admin.save_with_publishing',
-                [
-                    'publish_visible_condition' => '(!_permissions || _permissions.live)',
-                    'save_visible_condition' => '(!_permissions || _permissions.edit)',
-                ]
-            ),
+            $saveWithPublishingDropdown,
             new ToolbarAction(
                 'sulu_admin.type',
                 [
@@ -169,13 +193,13 @@ class PageAdmin extends Admin
                     new ToolbarAction(
                         'sulu_admin.delete_draft',
                         [
-                            'visible_condition' => $publishDisplayCondition,
+                            'visible_condition' => $publishVisibleCondition,
                         ]
                     ),
                     new ToolbarAction(
                         'sulu_admin.set_unpublished',
                         [
-                            'visible_condition' => $publishDisplayCondition,
+                            'visible_condition' => $publishVisibleCondition,
                         ]
                     ),
                 ]
@@ -183,7 +207,7 @@ class PageAdmin extends Admin
         ];
 
         $formToolbarActionsWithoutType = [
-            new ToolbarAction('sulu_admin.save_with_publishing'),
+            $saveWithPublishingDropdown
         ];
 
         $routerAttributesToFormRequest = ['parentId', 'webspace'];
