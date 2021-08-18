@@ -83,9 +83,10 @@ export default class DropdownToolbarAction extends AbstractFormToolbarAction {
             throw new Error('The "icon" option must be a string!');
         }
 
+        // use "Boolean" to filter undefined: https://github.com/facebook/flow/issues/1414#issuecomment-251422935
         const childToolbarItemConfigs: Array<ToolbarItemConfig<*>> = this.toolbarActions
             .map((toolbarAction) => toolbarAction.getToolbarItemConfig())
-            .filter((toolbarItemConfig) => !!toolbarItemConfig);
+            .filter(Boolean);
 
         if (childToolbarItemConfigs.length === 0) {
             return undefined;

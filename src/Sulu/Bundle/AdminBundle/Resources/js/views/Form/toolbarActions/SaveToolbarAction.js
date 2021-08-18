@@ -17,7 +17,7 @@ export default class SaveToolbarAction extends AbstractFormToolbarAction {
             throw new Error('The "label" option must be a string!');
         }
 
-        if (submitOptions === null || typeof submitOptions !== 'object') {
+        if (submitOptions && typeof submitOptions !== 'object') {
             throw new Error('The "options" option must be an object!');
         }
 
@@ -30,7 +30,7 @@ export default class SaveToolbarAction extends AbstractFormToolbarAction {
                 label: translate(label),
                 loading: saving,
                 onClick: () => {
-                    this.form.submit(submitOptions);
+                    this.form.submit((submitOptions: any));
                 },
                 type: 'button',
             };

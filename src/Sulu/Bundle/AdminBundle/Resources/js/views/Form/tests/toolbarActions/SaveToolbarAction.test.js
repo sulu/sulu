@@ -9,8 +9,9 @@ jest.mock('../../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
-jest.mock('../../../../stores/ResourceStore', () => jest.fn());
-
+jest.mock('../../../../stores/ResourceStore', () => jest.fn(function() {
+    this.data = {};
+}));
 jest.mock('../../../../containers/Form', () => ({
     ResourceFormStore: class {
         resourceStore;
@@ -25,6 +26,10 @@ jest.mock('../../../../containers/Form', () => ({
         get saving() {
             return this.resourceStore.saving;
         }
+
+        get data() {
+            return this.resourceStore.data;
+        }
     },
 }));
 
@@ -34,7 +39,7 @@ jest.mock('../../../../views/Form', () => jest.fn(function() {
     this.submit = jest.fn();
 }));
 
-function createSaveToolbarAction() {
+function createSaveToolbarAction(options = {}) {
     const resourceStore = new ResourceStore('test');
     const resourceFormStore = new ResourceFormStore(resourceStore, 'test');
     const router = new Router({});
@@ -45,7 +50,7 @@ function createSaveToolbarAction() {
         router,
     });
 
-    return new SaveToolbarAction(resourceFormStore, form, router, [], {}, resourceStore);
+    return new SaveToolbarAction(resourceFormStore, form, router, [], options, resourceStore);
 }
 
 test('Return item config with correct disabled, loading, icon, type and value', () => {
@@ -79,10 +84,64 @@ test('Return item config with loading button when saving flag is set', () => {
     }));
 });
 
+test('Return item config if passed visible_condition is met', () => {
+    const saveToolbarAction = createSaveToolbarAction({visible_condition: '_permission.edit'});
+    saveToolbarAction.resourceFormStore.resourceStore.data._permission = {edit: true};
+
+    expect(saveToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
+        label: 'sulu_admin.save',
+    }));
+});
+
+test('Return empty item config if passed visible_condition is not met', () => {
+    const saveToolbarAction = createSaveToolbarAction({visible_condition: '_permission.edit'});
+    saveToolbarAction.resourceFormStore.resourceStore.data._permission = {edit: false};
+
+    expect(saveToolbarAction.getToolbarItemConfig()).toEqual(undefined);
+});
+
+test('Return item config with label from options', () => {
+    const saveToolbarAction = createSaveToolbarAction({label: 'app.custom_save_text'});
+
+    expect(saveToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
+        label: 'app.custom_save_text',
+    }));
+});
+
+test('Throw error if given label is not a string', () => {
+    const saveToolbarAction = createSaveToolbarAction({label: {}});
+
+    expect(() => saveToolbarAction.getToolbarItemConfig()).toThrow(/"label" option must be a string/);
+});
+
 test('Submit form when button is clicked', () => {
     const saveToolbarAction = createSaveToolbarAction();
     const toolbarItemConfig = saveToolbarAction.getToolbarItemConfig();
+
+    if (!toolbarItemConfig) {
+        throw new Error('The toolbarItemConfig should be a value!');
+    }
+
     toolbarItemConfig.onClick();
 
-    expect(saveToolbarAction.form.submit).toBeCalledWith();
+    expect(saveToolbarAction.form.submit).toBeCalledWith(undefined);
+});
+
+test('Submit form with given options when button is clicked', () => {
+    const saveToolbarAction = createSaveToolbarAction({options: {action: 'publish'}});
+    const toolbarItemConfig = saveToolbarAction.getToolbarItemConfig();
+
+    if (!toolbarItemConfig) {
+        throw new Error('The toolbarItemConfig should be a value!');
+    }
+
+    toolbarItemConfig.onClick();
+
+    expect(saveToolbarAction.form.submit).toBeCalledWith({action: 'publish'});
+});
+
+test('Throw error if given options are not an object', () => {
+    const saveToolbarAction = createSaveToolbarAction({options: 'test'});
+
+    expect(() => saveToolbarAction.getToolbarItemConfig()).toThrow(/"options" option must be an object/);
 });

@@ -74,6 +74,7 @@ test('Return item config with an option for every action in array and skip undef
                         return {
                             label: 'Copy',
                             onClick: copyClickSpy,
+                            disabled: true,
                         };
                     }
                 };
@@ -99,6 +100,7 @@ test('Return item config with an option for every action in array and skip undef
     expect(dropdownToolbarAction.getToolbarItemConfig()).toEqual({
         icon: 'su-edit',
         label: 'edit',
+        loading: false,
         options: [
             {
                 label: 'Delete',
@@ -107,6 +109,7 @@ test('Return item config with an option for every action in array and skip undef
             {
                 label: 'Copy',
                 onClick: copyClickSpy,
+                disabled: true,
             },
         ],
         type: 'dropdown',
@@ -161,6 +164,7 @@ test('Return item config with options passed to child ToolbarActions', () => {
     expect(dropdownToolbarAction.getToolbarItemConfig()).toEqual({
         icon: 'su-edit',
         label: 'edit',
+        loading: false,
         options: [
             expect.objectContaining({
                 label: 'Delete',
@@ -171,6 +175,56 @@ test('Return item config with options passed to child ToolbarActions', () => {
         ],
         type: 'dropdown',
     });
+});
+
+test('Return item config with loading if one of the child ToolbarActions is loading', () => {
+    formToolbarActionRegistry.get.mockImplementation((key) => {
+        switch (key) {
+            case 'sulu_admin.not_loading':
+                return class {
+                    getToolbarItemConfig() {
+                        return {
+                            label: 'Not Loading',
+                            loading: false,
+                            onClick: jest.fn(),
+                        };
+                    }
+                };
+            case 'sulu_admin.loading':
+                return class {
+                    getToolbarItemConfig() {
+                        return {
+                            label: 'Loading',
+                            loading: true,
+                            onClick: jest.fn(),
+                        };
+                    }
+                };
+            case 'sulu_admin.nothing':
+                return class {
+                    getToolbarItemConfig() {
+
+                    }
+                };
+        }
+    });
+
+    const dropdownToolbarAction = createDropdownToolbarAction({
+        icon: 'su-edit',
+        label: 'edit',
+        toolbarActions: [
+            {type: 'sulu_admin.not_loading', options: {}},
+            {type: 'sulu_admin.loading', options: {}},
+            {type: 'sulu_admin.nothing', options: {}},
+        ],
+    });
+
+    expect(dropdownToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
+        icon: 'su-edit',
+        label: 'edit',
+        loading: true,
+        type: 'dropdown',
+    }));
 });
 
 test('Return no item config if all child ToolbarActions return nothing', () => {

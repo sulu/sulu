@@ -207,7 +207,7 @@ class PageAdmin extends Admin
         ];
 
         $formToolbarActionsWithoutType = [
-            $saveWithPublishingDropdown
+            $saveWithPublishingDropdown,
         ];
 
         $routerAttributesToFormRequest = ['parentId', 'webspace'];
