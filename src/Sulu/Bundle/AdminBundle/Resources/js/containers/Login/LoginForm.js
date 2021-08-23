@@ -14,7 +14,7 @@ type Props = {|
     error: boolean,
     loading: boolean,
     onChangeForm: () => void,
-    onSubmit: (user: string, password: string) => void,
+    onSubmit: (user: string | Object, password?: string) => void,
 |};
 
 @observer
@@ -60,7 +60,10 @@ class LoginForm extends React.Component<Props> {
 
         const {onSubmit} = this.props;
 
-        onSubmit(this.user, this.password);
+        onSubmit({
+            username: this.user,
+            password: this.password,
+        });
     };
 
     render() {

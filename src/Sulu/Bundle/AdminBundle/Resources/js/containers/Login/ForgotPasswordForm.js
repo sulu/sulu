@@ -12,7 +12,7 @@ import type {ElementRef} from 'react';
 type Props = {|
     loading: boolean,
     onChangeForm: () => void,
-    onSubmit: (user: string) => void,
+    onSubmit: (data: string | Object) => void,
     success: boolean,
 |};
 
@@ -54,7 +54,7 @@ class ForgotPasswordForm extends React.Component<Props> {
 
         const {onSubmit} = this.props;
 
-        onSubmit(this.user);
+        onSubmit({user: this.user});
     };
 
     render() {

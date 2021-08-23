@@ -13,11 +13,11 @@ import type {ElementRef} from 'react';
 type Props = {|
     loading: boolean,
     onChangeForm: () => void,
-    onSubmit: (password: string) => void,
+    onSubmit: (data: string | Object) => void,
 |};
 
 @observer
-class ForgotPasswordForm extends React.Component<Props> {
+class ResetPasswordForm extends React.Component<Props> {
     static defaultProps = {
         loading: false,
     };
@@ -68,7 +68,7 @@ class ForgotPasswordForm extends React.Component<Props> {
 
         const {onSubmit} = this.props;
 
-        onSubmit(this.password1);
+        onSubmit({password: this.password1});
     };
 
     render() {
@@ -133,4 +133,4 @@ class ForgotPasswordForm extends React.Component<Props> {
     }
 }
 
-export default ForgotPasswordForm;
+export default ResetPasswordForm;

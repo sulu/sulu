@@ -73,12 +73,12 @@ test('Should trigger onSubmit correctly', () => {
         preventDefault: jest.fn(),
     };
 
-    resetForm.find('Input[icon="su-lock"]').at(0).prop('onChange')('max');
-    resetForm.find('Input[icon="su-lock"]').at(1).prop('onChange')('max');
+    resetForm.find('Input[icon="su-lock"]').at(0).prop('onChange')('testpassword');
+    resetForm.find('Input[icon="su-lock"]').at(1).prop('onChange')('testpassword');
     resetForm.find('form').prop('onSubmit')(event);
 
     expect(event.preventDefault).toBeCalledWith();
-    expect(onSubmit).toBeCalledWith('max');
+    expect(onSubmit).toBeCalledWith({password: 'testpassword'});
 });
 
 test('Should not trigger onSubmit if one password is missing', () => {
@@ -94,7 +94,7 @@ test('Should not trigger onSubmit if one password is missing', () => {
         preventDefault: jest.fn(),
     };
 
-    resetForm.find('Input[icon="su-lock"]').at(0).prop('onChange')('max');
+    resetForm.find('Input[icon="su-lock"]').at(0).prop('onChange')('testpassword');
     resetForm.find('form').prop('onSubmit')(event);
 
     expect(event.preventDefault).toBeCalledWith();

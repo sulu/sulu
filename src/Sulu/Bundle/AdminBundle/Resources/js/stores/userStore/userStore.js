@@ -1,5 +1,6 @@
 // @flow
 import {action, computed, observable} from 'mobx';
+import log from 'loglevel';
 import debounce from 'debounce';
 import {Config, Requester} from '../../services';
 import initializer from '../../services/initializer';
@@ -91,11 +92,12 @@ class UserStore {
         }
     }
 
-    handleLogin = (user: string) => {
+    handleLogin = (data: Object) => {
         if (this.user) {
             // when the user was logged in already and comes again with the same user
             // we don't need to initialize again
-            if (user === this.user.username) {
+
+            if (data.username === this.user.username) {
                 this.setLoggedIn(true);
                 this.setLoading(false);
 
@@ -111,11 +113,20 @@ class UserStore {
         });
     };
 
-    login = (user: string, password: string) => {
+    login = (data: string | Object, password?: string) => {
         this.setLoading(true);
 
-        return Requester.post(Config.endpoints.loginCheck, {username: user, password})
-            .then(() => this.handleLogin(user))
+        if (typeof data === 'string') {
+            log.warn('The "login" method called with user and password string is deprecated give object instead.');
+
+            data = {
+                username: data,
+                password,
+            };
+        }
+
+        return Requester.post(Config.endpoints.loginCheck, data)
+            .then(() => this.handleLogin(data))
             .catch((error) => {
                 this.setLoading(false);
                 if (error.status !== 401) {
@@ -126,10 +137,18 @@ class UserStore {
             });
     };
 
-    forgotPassword(user: string) {
+    forgotPassword(data: string | Object) {
         this.setLoading(true);
 
-        return Requester.post(Config.endpoints.forgotPasswordReset, {user})
+        if (typeof data === 'string') {
+            log.warn('The "forgotPassword" method called with user string is deprecated give object instead.');
+
+            data = {
+                user: data,
+            };
+        }
+
+        return Requester.post(Config.endpoints.forgotPasswordReset, data)
             .then(() => {
                 this.setLoading(false);
                 this.setForgotPasswordSuccess(true);
@@ -143,11 +162,22 @@ class UserStore {
             });
     }
 
-    resetPassword(password: string, token: string) {
+    resetPassword(data: string | Object, token?: string) {
         this.setLoading(true);
 
-        return Requester.post(Config.endpoints.resetPassword, {password, token})
-            .then(({user}) => this.handleLogin(user))
+        if (typeof data === 'string') {
+            log.warn(
+                'The "resetPassword" method called with user and password string is deprecated give object instead.'
+            );
+
+            data = {
+                password: data,
+                token,
+            };
+        }
+
+        return Requester.post(Config.endpoints.resetPassword, data)
+            .then(({user}) => this.handleLogin({username: user}))
             .catch(() => {
                 this.setLoading(false);
             });

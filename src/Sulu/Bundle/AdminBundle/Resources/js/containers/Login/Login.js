@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import log from 'loglevel';
 import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import Icon from '../../components/Icon/index';
@@ -60,17 +61,40 @@ class Login extends React.Component<Props> {
         this.visibleForm = 'forgot-password';
     };
 
-    handleLoginFormSubmit = (user: string, password: string) => {
-        userStore.login(user, password).then(() => {
+    handleLoginFormSubmit = (data: string | Object, password?: string) => {
+        if (typeof data === 'string') {
+            log.warn(
+                'The "handleLoginFormSubmit" method called with user and password string'
+                + 'is deprecated give object instead.'
+            );
+
+            data = {
+                username: data,
+                password,
+            };
+        }
+
+        userStore.login(data).then(() => {
             this.props.onLoginSuccess();
         });
     };
 
-    handleForgotPasswordFormSubmit = (user: string) => {
-        userStore.forgotPassword(user);
+    handleForgotPasswordFormSubmit = (data: string | Object) => {
+        if (typeof data === 'string') {
+            log.warn(
+                'The "handleForgotPasswordFormSubmit" method called with user and password string'
+                + 'is deprecated give object instead.'
+            );
+
+            data = {
+                user: data,
+            };
+        }
+
+        userStore.forgotPassword(data);
     };
 
-    handleResetPasswordFormSubmit = (password: string) => {
+    handleResetPasswordFormSubmit = (data: string | Object) => {
         const {
             onLoginSuccess,
             router,
@@ -82,7 +106,21 @@ class Login extends React.Component<Props> {
             throw new Error('The "forgotPasswordToken" router attribute must be a string!');
         }
 
-        userStore.resetPassword(password, forgotPasswordToken)
+        if (typeof data === 'string') {
+            log.warn(
+                'The "handleResetPasswordFormSubmit" method called with user and password string'
+                + 'is deprecated give object instead.'
+            );
+
+            data = {
+                password: data,
+            };
+        }
+
+        userStore.resetPassword({
+            token: forgotPasswordToken,
+            ...data,
+        })
             .then(() => {
                 router.reset();
                 onLoginSuccess();
