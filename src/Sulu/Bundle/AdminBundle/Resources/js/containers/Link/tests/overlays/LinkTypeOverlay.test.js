@@ -7,16 +7,12 @@ jest.mock('../../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
-jest.mock('../../../../services/ResourceRequester/registries/resourceRouteRegistry', () => ({
-    getDetailUrl: jest.fn(),
-    getListUrl: jest.fn(),
-}));
-
 test('Render overlay with minimal config', () => {
     const response = {
         ok: true,
         json: jest.fn(),
     };
+    response.json.mockReturnValue(Promise.resolve({}));
     const promise = new Promise((resolve) => resolve(response));
 
     window.fetch = jest.fn();
