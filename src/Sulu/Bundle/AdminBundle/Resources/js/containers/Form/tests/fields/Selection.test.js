@@ -1345,10 +1345,31 @@ test('Should pass props with schema-options type correctly to MultiAutoComplete 
         )
     );
 
+    const formInspectorValues = {'/otherPropertyName': 'value-returned-by-form-inspector'};
+    formInspector.getValueByPath.mockImplementation((path) => formInspectorValues[path]);
+
     const schemaOptions = {
         type: {
             name: 'type',
             value: 'auto_complete',
+        },
+        request_parameters: {
+            name: 'request_parameters',
+            value: [
+                {
+                    name: 'staticKey',
+                    value: 'some-static-value',
+                },
+            ],
+        },
+        resource_store_properties_to_request: {
+            name: 'resource_store_properties_to_request',
+            value: [
+                {
+                    name: 'dynamicKey',
+                    value: 'otherPropertyName',
+                },
+            ],
         },
     };
 
@@ -1363,6 +1384,8 @@ test('Should pass props with schema-options type correctly to MultiAutoComplete 
         />
     );
 
+    expect(formInspector.getValueByPath).toBeCalledWith('/otherPropertyName');
+
     expect(selection.find('MultiAutoComplete').props()).toEqual(expect.objectContaining({
         allowAdd: false,
         disabled: true,
@@ -1370,6 +1393,10 @@ test('Should pass props with schema-options type correctly to MultiAutoComplete 
         idProperty: 'uuid',
         searchProperties: ['name'],
         selectionStore: selection.instance().autoCompleteSelectionStore,
+        options: {
+            staticKey: 'some-static-value',
+            dynamicKey: 'value-returned-by-form-inspector',
+        },
     }));
 });
 

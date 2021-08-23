@@ -464,6 +464,7 @@ class Selection extends React.Component<Props> {
                 displayProperty={displayProperty}
                 id={dataPath}
                 idProperty={this.autoCompleteIdProperty}
+                options={this.requestOptions}
                 searchProperties={searchProperties}
                 selectionStore={this.autoCompleteSelectionStore}
             />
