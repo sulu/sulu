@@ -98,11 +98,11 @@ class Scaler implements ScalerInterface
     }
 
     /**
-     * @param int $size1
-     * @param int $size2
-     * @param int $originalSize
+     * @param int|float $size1
+     * @param int|float $size2
+     * @param int|float $originalSize
      *
-     * @return array
+     * @return array{0: int|float, 1: int|float}
      */
     private function getSizeInSameRatio($size1, $size2, $originalSize)
     {
