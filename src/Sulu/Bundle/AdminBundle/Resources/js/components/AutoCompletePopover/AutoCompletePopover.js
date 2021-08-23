@@ -12,6 +12,7 @@ type Props = {
     anchorElement: ElementRef<*>,
     idProperty: string,
     minWidth: number,
+    onClose?: () => void,
     onSelect: (suggestion: Object) => void,
     open: boolean,
     query: ?string,
@@ -44,9 +45,8 @@ export default class AutoCompletePopover extends React.Component<Props> {
     };
 
     handlePopoverClose = () => {
-        const {onSelect, suggestions} = this.props;
-        if (suggestions.length > 0) {
-            onSelect(suggestions[0]);
+        if (this.props.onClose) {
+            this.props.onClose();
         }
     };
 

@@ -24,6 +24,7 @@ export type InputProps<T: ?string | ?number> = {|
     onBlur?: () => void,
     onChange: (value: ?string, event: SyntheticEvent<HTMLInputElement>) => void,
     onClearClick?: () => void,
+    onFocus?: () => void,
     onIconClick?: () => void,
     onKeyPress?: (key: ?string, event: SyntheticKeyboardEvent<HTMLInputElement>) => void,
     placeholder?: string,

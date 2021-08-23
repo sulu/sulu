@@ -22,11 +22,6 @@ export default class SearchStore {
     @action search = (query: string, excludedIds: ?Array<string | number> = undefined): Promise<Array<Object>> => {
         const {resourceKey, searchProperties} = this;
 
-        if (!query) {
-            this.clearSearchResults();
-            return Promise.resolve([]);
-        }
-
         this.loading = true;
 
         return ResourceRequester.getList(resourceKey, {

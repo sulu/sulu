@@ -34,6 +34,7 @@ class SingleAutoComplete extends React.Component<Props> {
 
     @observable labelRef: ElementRef<'label'>;
 
+    @observable displaySuggestions = false;
     @observable inputValue: ?string = this.props.value ? this.props.value[this.props.displayProperty] : undefined;
 
     overrideValue: boolean = false;
@@ -67,11 +68,14 @@ class SingleAutoComplete extends React.Component<Props> {
         return this.labelRef ? this.labelRef.scrollWidth - 10 : 0;
     }
 
-    debouncedSearch = debounce((query: string) => {
+    @action search = (query: string) => {
         this.props.onSearch(query);
-    }, DEBOUNCE_TIME);
+        this.displaySuggestions = true;
+    };
 
-    handleSelect = (value: Object) => {
+    debouncedSearch = debounce(this.search, DEBOUNCE_TIME);
+
+    handlePopoverSelect = (value: Object) => {
         this.overrideValue = true;
         this.props.onChange(value);
     };
@@ -85,6 +89,14 @@ class SingleAutoComplete extends React.Component<Props> {
         this.debouncedSearch(this.inputValue);
     };
 
+    @action handleInputFocus = () => {
+        this.search(this.inputValue || '');
+    };
+
+    @action handlePopoverClose = () => {
+        this.displaySuggestions = false;
+    };
+
     render() {
         const {
             disabled,
@@ -96,7 +108,6 @@ class SingleAutoComplete extends React.Component<Props> {
             suggestions,
         } = this.props;
         const {inputValue} = this;
-        const showSuggestionList = (!!inputValue && inputValue.length > 0) && suggestions.length > 0;
 
         // The mousetrap class is required to allow mousetrap catch key bindings for up and down keys
         return (
@@ -111,14 +122,16 @@ class SingleAutoComplete extends React.Component<Props> {
                     loading={loading}
                     onBlur={onFinish}
                     onChange={this.handleInputChange}
+                    onFocus={this.handleInputFocus}
                     placeholder={placeholder}
                     value={inputValue}
                 />
                 <AutoCompletePopover
                     anchorElement={this.labelRef}
                     minWidth={this.popoverMinWidth}
-                    onSelect={this.handleSelect}
-                    open={!disabled && showSuggestionList}
+                    onClose={this.handlePopoverClose}
+                    onSelect={this.handlePopoverSelect}
+                    open={!disabled && this.displaySuggestions && suggestions.length > 0}
                     query={inputValue}
                     searchProperties={searchProperties}
                     suggestions={suggestions}
