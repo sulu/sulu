@@ -1,6 +1,5 @@
 // @flow
 import React from 'react';
-import log from 'loglevel';
 import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import Icon from '../../components/Icon/index';
@@ -61,40 +60,17 @@ class Login extends React.Component<Props> {
         this.visibleForm = 'forgot-password';
     };
 
-    handleLoginFormSubmit = (data: string | Object, password?: string) => {
-        if (typeof data === 'string') {
-            log.warn(
-                'The "handleLoginFormSubmit" method called with user and password string'
-                + 'is deprecated give object instead.'
-            );
-
-            data = {
-                username: data,
-                password,
-            };
-        }
-
+    handleLoginFormSubmit = (data: Object) => {
         userStore.login(data).then(() => {
             this.props.onLoginSuccess();
         });
     };
 
-    handleForgotPasswordFormSubmit = (data: string | Object) => {
-        if (typeof data === 'string') {
-            log.warn(
-                'The "handleForgotPasswordFormSubmit" method called with user and password string'
-                + 'is deprecated give object instead.'
-            );
-
-            data = {
-                user: data,
-            };
-        }
-
+    handleForgotPasswordFormSubmit = (data: Object) => {
         userStore.forgotPassword(data);
     };
 
-    handleResetPasswordFormSubmit = (data: string | Object) => {
+    handleResetPasswordFormSubmit = (data: Object) => {
         const {
             onLoginSuccess,
             router,
@@ -104,17 +80,6 @@ class Login extends React.Component<Props> {
 
         if (typeof forgotPasswordToken !== 'string') {
             throw new Error('The "forgotPasswordToken" router attribute must be a string!');
-        }
-
-        if (typeof data === 'string') {
-            log.warn(
-                'The "handleResetPasswordFormSubmit" method called with user and password string'
-                + 'is deprecated give object instead.'
-            );
-
-            data = {
-                password: data,
-            };
         }
 
         userStore.resetPassword({

@@ -12,7 +12,7 @@ import type {ElementRef} from 'react';
 type Props = {|
     loading: boolean,
     onChangeForm: () => void,
-    onSubmit: (data: string | Object) => void,
+    onSubmit: (data: Object) => void,
     success: boolean,
 |};
 

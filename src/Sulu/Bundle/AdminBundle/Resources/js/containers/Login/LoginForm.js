@@ -14,7 +14,7 @@ type Props = {|
     error: boolean,
     loading: boolean,
     onChangeForm: () => void,
-    onSubmit: (user: string | Object, password?: string) => void,
+    onSubmit: (user: Object) => void,
 |};
 
 @observer
