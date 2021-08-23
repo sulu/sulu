@@ -59,17 +59,18 @@ test('Render with highlighted suggestions', () => {
     )).toMatchSnapshot();
 });
 
-test('Call onSelect with first suggestion on close', () => {
+test('Call onClose when Popover is closed', () => {
     const suggestions = [
         {id: 1, name: 'Test 1'},
         {id: 2, name: 'Test 2'},
     ];
 
-    const selectSpy = jest.fn();
+    const closeSpy = jest.fn();
     const autoCompletePopover = shallow(
         <AutoCompletePopover
             anchorElement={jest.fn()}
-            onSelect={selectSpy}
+            onClose={closeSpy()}
+            onSelect={jest.fn()}
             open={true}
             query="Test"
             searchProperties={['name']}
@@ -78,7 +79,7 @@ test('Call onSelect with first suggestion on close', () => {
     );
 
     autoCompletePopover.find(Popover).prop('onClose')();
-    expect(selectSpy).toBeCalledWith(suggestions[0]);
+    expect(closeSpy).toBeCalledWith();
 });
 
 test('Call onSelect with clicked suggestion', () => {

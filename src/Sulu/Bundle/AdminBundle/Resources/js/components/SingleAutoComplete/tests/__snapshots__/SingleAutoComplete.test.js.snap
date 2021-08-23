@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`SingleAutoComplete should render 1`] = `
+exports[`SingleAutoComplete should render with suggestions 1`] = `
 <div
   class="singleAutoComplete"
 >
@@ -25,7 +25,7 @@ exports[`SingleAutoComplete should render 1`] = `
 </div>
 `;
 
-exports[`SingleAutoComplete should render 2`] = `
+exports[`SingleAutoComplete should render with suggestions 2`] = `
 Array [
   <div
     class="backdrop fixed"
