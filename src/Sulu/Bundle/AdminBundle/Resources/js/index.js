@@ -102,6 +102,7 @@ import Form, {
     DeleteToolbarAction as FormDeleteToolbarAction,
     DropdownToolbarAction as FormDropdownToolbarAction,
     SaveToolbarAction as FormSaveToolbarAction,
+    PublishToolbarAction as FormPublishToolbarAction,
     SaveWithFormDialogToolbarAction as FormSaveWithFormDialogToolbarAction,
     SaveWithPublishingToolbarAction as FormSaveWithPublishingToolbarAction,
     SetUnpublishedToolbarAction as FormSetUnpublishedToolbarAction,
@@ -305,6 +306,7 @@ function registerFormToolbarActions() {
     formToolbarActionRegistry.add('sulu_admin.dropdown', FormDropdownToolbarAction);
     formToolbarActionRegistry.add('sulu_admin.save_with_publishing', FormSaveWithPublishingToolbarAction);
     formToolbarActionRegistry.add('sulu_admin.save', FormSaveToolbarAction);
+    formToolbarActionRegistry.add('sulu_admin.publish', FormPublishToolbarAction);
     formToolbarActionRegistry.add('sulu_admin.save_with_form_dialog', FormSaveWithFormDialogToolbarAction);
     formToolbarActionRegistry.add('sulu_admin.set_unpublished', FormSetUnpublishedToolbarAction);
     formToolbarActionRegistry.add('sulu_admin.type', FormTypeToolbarAction);

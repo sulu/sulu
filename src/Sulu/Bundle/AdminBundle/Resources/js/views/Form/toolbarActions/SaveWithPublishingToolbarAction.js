@@ -9,6 +9,7 @@ import Router from '../../../services/Router';
 import AbstractFormToolbarAction from './AbstractFormToolbarAction';
 
 export default class SaveWithPublishingToolbarAction extends AbstractFormToolbarAction {
+    // @deprecated
     constructor(
         resourceFormStore: ResourceFormStore,
         form: Form,
@@ -23,6 +24,11 @@ export default class SaveWithPublishingToolbarAction extends AbstractFormToolbar
             publish_visible_condition: publishVisibleCondition,
             save_visible_condition: saveVisibleCondition,
         } = options;
+
+        log.warn(
+            'The "SaveWithPublishingToolbarAction" is deprecated since 2.3 and will be removed. ' +
+            'Use a "DropdownToolbarAction" with a "SaveToolbarAction" and "PublishToolbarAction" instead.'
+        );
 
         if (publishDisplayCondition) {
             // @deprecated
