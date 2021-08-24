@@ -383,7 +383,7 @@ class ActivityController extends AbstractRestController implements ClassResource
             : $this->translator->trans('sulu_activity.someone', [], 'admin', $translationLocale);
 
         $translationParameters['{resourceTitle}'] = $this->getLocalizedValue(
-            $activity['resourceTitle'] ?? '',
+            $activity['resourceTitle'],
             $activity['resourceTitleLocale'] ?? null,
             $translationLocale
         );
@@ -400,13 +400,13 @@ class ActivityController extends AbstractRestController implements ClassResource
         );
     }
 
-    private function getLocalizedValue(string $value, ?string $valueLocale, string $translationLocale): string
+    private function getLocalizedValue(?string $value, ?string $valueLocale, string $translationLocale): string
     {
         if (null !== $valueLocale && $translationLocale !== $valueLocale) {
             return $value . ' [' . \strtoupper($valueLocale) . ']';
         }
 
-        return $value;
+        return $value ?: '';
     }
 
     /**
