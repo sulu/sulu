@@ -1,0 +1,110 @@
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of Sulu.
+ *
+ * (c) Sulu GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+namespace Sulu\Component\Content\Types;
+
+use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface;
+use Sulu\Component\Content\Compat\PropertyInterface;
+use Sulu\Component\Content\SimpleContentType;
+
+/**
+ * Link selection content type for linking to different providers.
+ */
+class Link extends SimpleContentType
+{
+    public const LINK_TYPE_EXTERNAL = 'external';
+
+    /**
+     * @var LinkProviderPoolInterface
+     */
+    private $providerPool;
+
+    public function __construct(LinkProviderPoolInterface $providerPool)
+    {
+        parent::__construct('Link');
+
+        $this->providerPool = $providerPool;
+    }
+
+    /**
+     * @param mixed[] $value
+     */
+    protected function encodeValue($value): string
+    {
+        return (string) \json_encode($value, \defined('JSON_THROW_ON_ERROR') ? \JSON_THROW_ON_ERROR : 0);
+    }
+
+    /**
+     * @param string|null $value
+     *
+     * @return mixed[]
+     */
+    protected function decodeValue($value): array
+    {
+        if (null === $value) {
+            return [];
+        }
+
+        return \json_decode($value, true, 512, \defined('JSON_THROW_ON_ERROR') ? \JSON_THROW_ON_ERROR : 0);
+    }
+
+    /**
+     * @return mixed[]
+     */
+    public function getViewData(PropertyInterface $property): array
+    {
+        $value = $property->getValue();
+
+        if (!$value) {
+            return [];
+        }
+
+        $result = [
+            'provider' => $value['provider'],
+            'locale' => $value['locale'],
+        ];
+
+        if (isset($value['target'])) {
+            $result['target'] = $value['target'];
+        }
+
+        return $result;
+    }
+
+    public function getContentData(PropertyInterface $property): ?string
+    {
+        $value = $property->getValue();
+
+        if (!$value || !isset($value['provider'])) {
+            return null;
+        }
+
+        if (self::LINK_TYPE_EXTERNAL === $value['provider']) {
+            return $value['href'];
+        }
+
+        $provider = $this->providerPool->getProvider($value['provider']);
+
+        $linkItems = $provider->preload([$value['href']], $value['locale'], true);
+
+        if (0 === \count($linkItems)) {
+            return null;
+        }
+        $url = \reset($linkItems)->getUrl();
+        if (isset($value['anchor'])) {
+            $url = \sprintf('%s#%s', $url, $value['anchor']);
+        }
+
+        return $url;
+    }
+}

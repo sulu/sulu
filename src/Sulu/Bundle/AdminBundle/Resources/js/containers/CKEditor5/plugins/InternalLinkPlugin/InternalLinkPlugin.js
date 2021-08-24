@@ -15,7 +15,7 @@ import LinkBalloonView from '../../LinkBalloonView';
 import LinkCommand from '../../LinkCommand';
 import {addLinkConversion, findModelItemInSelection, findViewLinkItemInSelection} from '../../utils';
 import UnlinkCommand from '../../UnlinkCommand';
-import internalLinkTypeRegistry from './registries/internalLinkTypeRegistry';
+import linkTypeRegistry from '../../../Link/registries/linkTypeRegistry';
 // $FlowFixMe
 import linkIcon from '!!raw-loader!./link.svg'; // eslint-disable-line import/no-webpack-loader-syntax
 
@@ -44,6 +44,10 @@ export default class InternalLinkPlugin extends Plugin {
     @observable anchor: ?string;
     defaultText: ?string;
     balloon: typeof ContextualBalloon;
+
+    @computed get internalLinkTypes(): Array<string> {
+        return linkTypeRegistry.getKeys().filter((type) => type !== 'external');
+    }
 
     @computed get href(): ?string | number {
         const {id, anchor} = this;
@@ -87,30 +91,30 @@ export default class InternalLinkPlugin extends Plugin {
             this.hideBalloon();
         }));
 
-        const locale = this.editor.config.get('internalLinks.locale');
+        const locale = this.editor.config.get('sulu.locale');
 
         render(
             (
                 <Observer>
                     {() => (
                         <Fragment>
-                            {internalLinkTypeRegistry.getKeys().map((key) => {
-                                const InternalLinkOverlay = internalLinkTypeRegistry.getOverlay(key);
+                            {this.internalLinkTypes.map((key) => {
+                                const LinkOverlay = linkTypeRegistry.getOverlay(key);
 
                                 return (
-                                    <InternalLinkOverlay
+                                    <LinkOverlay
                                         anchor={this.anchor}
-                                        id={this.openOverlay === key ? this.id : undefined}
+                                        href={this.openOverlay === key ? this.id : undefined}
                                         key={key}
                                         locale={observable.box(locale)}
                                         onAnchorChange={this.handleAnchorChange}
                                         onCancel={this.handleOverlayClose}
                                         onConfirm={this.handleOverlayConfirm}
-                                        onResourceChange={this.handleResourceChange}
+                                        onHrefChange={this.handleHrefChange}
                                         onTargetChange={this.handleTargetChange}
                                         onTitleChange={this.handleTitleChange}
                                         open={this.openOverlay === key}
-                                        options={internalLinkTypeRegistry.getOptions(key)}
+                                        options={linkTypeRegistry.getOptions(key)}
                                         target={this.target}
                                         title={this.title}
                                     />
@@ -168,11 +172,11 @@ export default class InternalLinkPlugin extends Plugin {
                 tooltip: true,
             });
 
-            internalLinkTypeRegistry.getKeys().forEach((key) => {
+            this.internalLinkTypes.forEach((key) => {
                 const button = new ButtonView(locale);
                 button.set({
                     class: 'ck-link-button',
-                    label: internalLinkTypeRegistry.getTitle(key),
+                    label: linkTypeRegistry.getTitle(key),
                     withText: true,
                 });
                 const listItem = new ListItemView(locale);
@@ -262,7 +266,7 @@ export default class InternalLinkPlugin extends Plugin {
         this.title = title;
     };
 
-    @action handleResourceChange = (id: ?string | number, item: ?Object) => {
+    @action handleHrefChange = (id: ?string | number, item: ?Object) => {
         this.id = id;
         this.defaultText = item ? item.title : undefined;
     };

@@ -1,0 +1,230 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render overlay with minimal config 1`] = `
+<div
+  class="grid grid"
+>
+  <div
+    class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+  >
+    <div
+      class="field"
+    >
+      <label
+        class="label"
+      >
+        sulu_admin.link_url *
+      </label>
+      <div
+        class="singleItemSelection"
+      >
+        <button
+          class="button left"
+          type="button"
+        >
+          <span
+            aria-label="su-image"
+            class="su-image icon"
+          />
+        </button>
+        <div
+          class="itemContainer"
+        >
+          <div
+            class="item clickable"
+            role="button"
+          >
+            <div
+              class="empty"
+            >
+              sulu_media.select_media_singular
+            </div>
+          </div>
+        </div>
+      </div>
+      <label
+        class="errorLabel"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render overlay with target enabled 1`] = `
+<div
+  class="grid grid"
+>
+  <div
+    class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+  >
+    <div
+      class="field"
+    >
+      <label
+        class="label"
+      >
+        sulu_admin.link_url *
+      </label>
+      <div
+        class="singleItemSelection"
+      >
+        <button
+          class="button left"
+          type="button"
+        >
+          <span
+            aria-label="su-image"
+            class="su-image icon"
+          />
+        </button>
+        <div
+          class="itemContainer"
+        >
+          <div
+            class="item clickable"
+            role="button"
+          >
+            <div
+              class="empty"
+            >
+              sulu_media.select_media_singular
+            </div>
+          </div>
+        </div>
+      </div>
+      <label
+        class="errorLabel"
+      />
+    </div>
+  </div>
+  <div
+    class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+  >
+    <div
+      class="field"
+    >
+      <label
+        class="label"
+      >
+        sulu_admin.link_target *
+      </label>
+      <div
+        class="select"
+        role="none"
+      >
+        <button
+          class="displayValue default"
+          type="button"
+        >
+          <div
+            aria-label="sulu_admin.please_choose"
+            class="croppedText"
+            title="sulu_admin.please_choose"
+          >
+            <div
+              aria-hidden="true"
+              class="front"
+            >
+              sulu_admin.p
+            </div>
+            <div
+              aria-hidden="true"
+              class="back"
+            >
+              <span>
+                lease_choose
+              </span>
+            </div>
+            <div
+              class="whole"
+            >
+              sulu_admin.please_choose
+            </div>
+          </div>
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down toggle"
+          />
+        </button>
+      </div>
+      <label
+        class="errorLabel"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render overlay with title enabled 1`] = `
+<div
+  class="grid grid"
+>
+  <div
+    class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+  >
+    <div
+      class="field"
+    >
+      <label
+        class="label"
+      >
+        sulu_admin.link_url *
+      </label>
+      <div
+        class="singleItemSelection"
+      >
+        <button
+          class="button left"
+          type="button"
+        >
+          <span
+            aria-label="su-image"
+            class="su-image icon"
+          />
+        </button>
+        <div
+          class="itemContainer"
+        >
+          <div
+            class="item clickable"
+            role="button"
+          >
+            <div
+              class="empty"
+            >
+              sulu_media.select_media_singular
+            </div>
+          </div>
+        </div>
+      </div>
+      <label
+        class="errorLabel"
+      />
+    </div>
+  </div>
+  <div
+    class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+  >
+    <div
+      class="field"
+    >
+      <label
+        class="label"
+      >
+        sulu_admin.link_title
+      </label>
+      <label
+        class="input default left"
+      >
+        <input
+          type="text"
+          value=""
+        />
+      </label>
+      <label
+        class="errorLabel"
+      />
+    </div>
+  </div>
+</div>
+`;

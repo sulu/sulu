@@ -1,24 +1,24 @@
 // @flow
 import React from 'react';
 import {mount, shallow} from 'enzyme';
-import ExternalLinkOverlay from '../../../plugins/ExternalLinkPlugin/ExternalLinkOverlay';
+import ExternalLinkTypeOverlay from '../../overlays/ExternalLinkTypeOverlay';
 
-jest.mock('../../../../../utils/Translator', () => ({
+jest.mock('../../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
 test('Render overlay with an undefined URL', () => {
     const externalLinkOverlay = mount(
-        <ExternalLinkOverlay
+        <ExternalLinkTypeOverlay
+            href={undefined}
             onCancel={jest.fn()}
             onConfirm={jest.fn()}
+            onHrefChange={jest.fn()}
             onTargetChange={jest.fn()}
             onTitleChange={jest.fn()}
-            onUrlChange={jest.fn()}
             open={true}
             target={undefined}
             title={undefined}
-            url={undefined}
         />
     );
 
@@ -27,16 +27,16 @@ test('Render overlay with an undefined URL', () => {
 
 test('Render overlay with mailto URL', () => {
     const externalLinkOverlay = mount(
-        <ExternalLinkOverlay
+        <ExternalLinkTypeOverlay
+            href="mailto:test@example.org?subject=Subject&body=Body"
             onCancel={jest.fn()}
             onConfirm={jest.fn()}
+            onHrefChange={jest.fn()}
             onTargetChange={jest.fn()}
             onTitleChange={jest.fn()}
-            onUrlChange={jest.fn()}
             open={true}
             target={undefined}
             title={undefined}
-            url="mailto:test@example.org?subject=Subject&body=Body"
         />
     );
 
@@ -45,16 +45,16 @@ test('Render overlay with mailto URL', () => {
 
 test('Render overlay with a URL', () => {
     const externalLinkOverlay = mount(
-        <ExternalLinkOverlay
+        <ExternalLinkTypeOverlay
+            href="http://www.sulu.io"
             onCancel={jest.fn()}
             onConfirm={jest.fn()}
+            onHrefChange={jest.fn()}
             onTargetChange={jest.fn()}
             onTitleChange={jest.fn()}
-            onUrlChange={jest.fn()}
             open={true}
             target={undefined}
             title={undefined}
-            url="http://www.sulu.io"
         />
     );
 
@@ -66,16 +66,16 @@ test('Pass correct props to Dialog', () => {
     const confirmSpy = jest.fn();
 
     const externalLinkOverlay = shallow(
-        <ExternalLinkOverlay
+        <ExternalLinkTypeOverlay
+            href={undefined}
             onCancel={cancelSpy}
             onConfirm={confirmSpy}
+            onHrefChange={jest.fn()}
             onTargetChange={jest.fn()}
             onTitleChange={jest.fn()}
-            onUrlChange={jest.fn()}
             open={false}
             target={undefined}
             title={undefined}
-            url={undefined}
         />
     );
 
@@ -84,21 +84,21 @@ test('Pass correct props to Dialog', () => {
     expect(externalLinkOverlay.find('Dialog').prop('open')).toEqual(false);
 });
 
-test('Do not call onUrlChange handler if input did not loose focus', () => {
+test('Do not call onHrefChange handler if input did not loose focus', () => {
     const targetChangeSpy = jest.fn();
     const urlChangeSpy = jest.fn();
 
     const externalLinkOverlay = shallow(
-        <ExternalLinkOverlay
+        <ExternalLinkTypeOverlay
+            href={undefined}
             onCancel={jest.fn()}
             onConfirm={jest.fn()}
+            onHrefChange={urlChangeSpy}
             onTargetChange={targetChangeSpy}
             onTitleChange={jest.fn()}
-            onUrlChange={urlChangeSpy}
             open={true}
             target="_blank"
             title={undefined}
-            url={undefined}
         />
     );
 
@@ -111,16 +111,16 @@ test('Fields should change immediately after protocol was changed', () => {
     const urlChangeSpy = jest.fn();
 
     const externalLinkOverlay = mount(
-        <ExternalLinkOverlay
+        <ExternalLinkTypeOverlay
+            href={undefined}
             onCancel={jest.fn()}
             onConfirm={jest.fn()}
+            onHrefChange={urlChangeSpy}
             onTargetChange={targetChangeSpy}
             onTitleChange={jest.fn()}
-            onUrlChange={urlChangeSpy}
             open={true}
             target="_blank"
             title={undefined}
-            url={undefined}
         />
     );
 
@@ -136,21 +136,21 @@ test('Fields should change immediately after protocol was changed', () => {
     expect(externalLinkOverlay.find('Field[label="sulu_admin.mail_body"]')).toHaveLength(1);
 });
 
-test('Call onUrlChange with all mail values', () => {
+test('Call onHrefChange with all mail values', () => {
     const targetChangeSpy = jest.fn();
     const urlChangeSpy = jest.fn();
 
     const externalLinkOverlay = shallow(
-        <ExternalLinkOverlay
+        <ExternalLinkTypeOverlay
+            href="mailto:bla@example.org"
             onCancel={jest.fn()}
             onConfirm={jest.fn()}
+            onHrefChange={urlChangeSpy}
             onTargetChange={targetChangeSpy}
             onTitleChange={jest.fn()}
-            onUrlChange={urlChangeSpy}
             open={true}
             target="_blank"
             title={undefined}
-            url="mailto:bla@example.org"
         />
     );
 
@@ -179,16 +179,16 @@ test('Reset target to self when a mailto link is entered', () => {
     const urlChangeSpy = jest.fn();
 
     const externalLinkOverlay = shallow(
-        <ExternalLinkOverlay
+        <ExternalLinkTypeOverlay
+            href="http://www.sulu.io"
             onCancel={jest.fn()}
             onConfirm={jest.fn()}
+            onHrefChange={urlChangeSpy}
             onTargetChange={targetChangeSpy}
             onTitleChange={jest.fn()}
-            onUrlChange={urlChangeSpy}
             open={true}
             target="_blank"
             title={undefined}
-            url="http://www.sulu.io"
         />
     );
 
@@ -203,16 +203,16 @@ test('Should not reset target to self when a non-mail URL is entered', () => {
     const urlChangeSpy = jest.fn();
 
     const externalLinkOverlay = shallow(
-        <ExternalLinkOverlay
+        <ExternalLinkTypeOverlay
+            href="http://www.sulu.io"
             onCancel={jest.fn()}
             onConfirm={jest.fn()}
+            onHrefChange={urlChangeSpy}
             onTargetChange={targetChangeSpy}
             onTitleChange={jest.fn()}
-            onUrlChange={urlChangeSpy}
             open={true}
             target="_blank"
             title={undefined}
-            url="http://www.sulu.io"
         />
     );
 
