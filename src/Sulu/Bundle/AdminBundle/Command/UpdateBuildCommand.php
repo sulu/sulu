@@ -212,7 +212,7 @@ class UpdateBuildCommand extends Command
         $response = $this->httpClient->request('GET', $remoteArchive);
         \file_put_contents($tempFileZip, $response->getContent());
 
-        if (\class_exists(\ZipArchive::class)) {
+        if (!\class_exists(\ZipArchive::class)) {
             throw new \RuntimeException('The "ext-zip" extension is required to download the admin build.');
         }
 
