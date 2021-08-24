@@ -3,7 +3,7 @@
 @import './fonts.scss';
 
 $bodyBackgroundColor: $wildSand;
-$h1TextColor: $blueZodiac;
+$h1TextColor: $black;
 $h2TextColor: $black;
 $h3TextColor: $scorpion;
 $inputBackgroundColor: $white;
@@ -35,7 +35,7 @@ h1 {
     color: $h1TextColor;
     margin: 0 0 20px;
     font-size: 24px;
-    font-weight: 600;
+    font-weight: normal;
 }
 
 h2 {

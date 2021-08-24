@@ -1,6 +1,7 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import {mount, shallow} from 'enzyme';
 import React from 'react';
+import Mousetrap from 'mousetrap';
 import Popover from '../Popover';
 import PopoverPositioner from '../PopoverPositioner';
 
@@ -142,6 +143,63 @@ test('The popover should request to be closed when the window is blurred', () =>
     expect(windowListeners.blur).toBeDefined();
     windowListeners.blur();
     expect(onCloseSpy).toBeCalled();
+});
+
+test('The popover should request to be closed when the esc key is pressed', () => {
+    const closeSpy = jest.fn();
+    mount(
+        <Popover
+            anchorElement={getMockedAnchorEl()}
+            onClose={closeSpy}
+            open={true}
+        >
+            {
+                (setPopoverRef, styles) => (
+                    <div ref={setPopoverRef} style={styles}>
+                        <div>My item 1</div>
+                    </div>
+                )
+            }
+        </Popover>
+    );
+
+    expect(closeSpy).not.toBeCalled();
+    Mousetrap.trigger('esc');
+    expect(closeSpy).toBeCalled();
+});
+
+test('The popover should bind and unbind the esc key when overlay is opened and closed', () => {
+    const closeSpy = jest.fn();
+    const popover = mount(
+        <Popover
+            anchorElement={getMockedAnchorEl()}
+            onClose={closeSpy}
+            open={true}
+        >
+            {
+                (setPopoverRef, styles) => (
+                    <div ref={setPopoverRef} style={styles}>
+                        <div>My item 1</div>
+                    </div>
+                )
+            }
+        </Popover>
+    );
+
+    expect(closeSpy).not.toBeCalled();
+    Mousetrap.trigger('esc');
+    expect(closeSpy).toBeCalled();
+    closeSpy.mockReset();
+
+    popover.setProps({open: false});
+    Mousetrap.trigger('esc');
+    expect(closeSpy).not.toBeCalled();
+    closeSpy.mockReset();
+
+    popover.setProps({open: true});
+    Mousetrap.trigger('esc');
+    expect(closeSpy).toBeCalled();
+    closeSpy.mockReset();
 });
 
 test('The popover should pass its child ref to the parent', () => {

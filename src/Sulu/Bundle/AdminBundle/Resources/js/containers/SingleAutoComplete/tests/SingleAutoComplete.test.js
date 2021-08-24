@@ -80,7 +80,7 @@ test('Render with loaded suggestions', () => {
         />
     );
 
-    singleAutoComplete.find(SingleAutoCompleteComponent).instance().inputValue = 'James';
+    singleAutoComplete.find(SingleAutoCompleteComponent).instance().displaySuggestions = true;
     singleAutoComplete.update();
 
     expect(singleAutoComplete.find('SingleAutoComplete').find('Suggestion').at(0).prop('value'))
