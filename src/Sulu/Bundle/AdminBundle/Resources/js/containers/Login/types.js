@@ -2,15 +2,15 @@
 
 export type FormTypes = 'login' | 'reset-password' | 'forgot-password';
 
-export type ResetPasswordFormData = {|
+export type ResetPasswordFormData = {
     password: string,
-|};
+};
 
-export type ForgotPasswordFormData = {|
+export type ForgotPasswordFormData = {
     user: string,
-|};
+};
 
-export type LoginFormData = {|
+export type LoginFormData = {
     password: string,
     username: string,
-|};
+};

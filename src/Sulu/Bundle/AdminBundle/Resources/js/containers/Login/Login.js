@@ -83,8 +83,8 @@ class Login extends React.Component<Props> {
         }
 
         userStore.resetPassword({
-            token: forgotPasswordToken,
             ...data,
+            token: forgotPasswordToken,
         })
             .then(() => {
                 router.reset();

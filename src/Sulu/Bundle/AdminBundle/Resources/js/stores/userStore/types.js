@@ -21,16 +21,16 @@ export type Avatar = {
     url: string,
 };
 
-export type ForgotPasswordData = {|
+export type ForgotPasswordData = {
     user: string,
-|};
+};
 
-export type ResetPasswordData = {|
+export type ResetPasswordData = {
     password: string,
     token: string,
-|};
+};
 
-export type LoginData = {|
+export type LoginData = {
     password: string,
     username: string,
-|};
+};
