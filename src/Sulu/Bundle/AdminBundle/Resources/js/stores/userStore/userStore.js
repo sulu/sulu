@@ -4,7 +4,7 @@ import debounce from 'debounce';
 import {Config, Requester} from '../../services';
 import initializer from '../../services/initializer';
 import localizationStore from '../localizationStore';
-import type {Contact, User} from './types';
+import type {Contact, ForgotPasswordData, LoginData, ResetPasswordData, User} from './types';
 
 const UPDATE_PERSISTENT_SETTINGS_DELAY = 2500;
 const CONTENT_LOCALE_SETTING_KEY = 'sulu_admin.content_locale';
@@ -112,7 +112,7 @@ class UserStore {
         });
     };
 
-    login = (data: Object) => {
+    login = (data: LoginData) => {
         this.setLoading(true);
 
         return Requester.post(Config.endpoints.loginCheck, data)
@@ -127,7 +127,7 @@ class UserStore {
             });
     };
 
-    forgotPassword(data: Object) {
+    forgotPassword(data: ForgotPasswordData) {
         this.setLoading(true);
 
         return Requester.post(Config.endpoints.forgotPasswordReset, data)
@@ -144,7 +144,7 @@ class UserStore {
             });
     }
 
-    resetPassword(data: Object) {
+    resetPassword(data: ResetPasswordData) {
         this.setLoading(true);
 
         return Requester.post(Config.endpoints.resetPassword, data)

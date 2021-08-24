@@ -9,12 +9,13 @@ import Input from '../../components/Input/index';
 import formStyles from './form.scss';
 import Header from './Header';
 import type {ElementRef} from 'react';
+import type {LoginFormData} from './types';
 
 type Props = {|
     error: boolean,
     loading: boolean,
     onChangeForm: () => void,
-    onSubmit: (user: Object) => void,
+    onSubmit: (data: LoginFormData) => void,
 |};
 
 @observer

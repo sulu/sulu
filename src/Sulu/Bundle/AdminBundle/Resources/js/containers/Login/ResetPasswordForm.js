@@ -9,11 +9,12 @@ import Input from '../../components/Input/index';
 import formStyles from './form.scss';
 import Header from './Header';
 import type {ElementRef} from 'react';
+import type {ResetPasswordFormData} from './types';
 
 type Props = {|
     loading: boolean,
     onChangeForm: () => void,
-    onSubmit: (data: Object) => void,
+    onSubmit: (data: ResetPasswordFormData) => void,
 |};
 
 @observer

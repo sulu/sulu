@@ -8,11 +8,12 @@ import Input from '../../components/Input/index';
 import Header from './Header';
 import formStyles from './form.scss';
 import type {ElementRef} from 'react';
+import type {ForgotPasswordFormData} from './types';
 
 type Props = {|
     loading: boolean,
     onChangeForm: () => void,
-    onSubmit: (data: Object) => void,
+    onSubmit: (data: ForgotPasswordFormData) => void,
     success: boolean,
 |};
 

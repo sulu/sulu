@@ -11,7 +11,7 @@ import ForgotPasswordForm from './ForgotPasswordForm';
 import LoginForm from './LoginForm';
 import ResetPasswordForm from './ResetPasswordForm';
 import loginStyles from './login.scss';
-import type {FormTypes} from './types';
+import type {FormTypes, ForgotPasswordFormData, LoginFormData, ResetPasswordFormData} from './types';
 
 const BACK_LINK_ARROW_LEFT_ICON = 'su-angle-left';
 
@@ -60,17 +60,17 @@ class Login extends React.Component<Props> {
         this.visibleForm = 'forgot-password';
     };
 
-    handleLoginFormSubmit = (data: Object) => {
+    handleLoginFormSubmit = (data: LoginFormData) => {
         userStore.login(data).then(() => {
             this.props.onLoginSuccess();
         });
     };
 
-    handleForgotPasswordFormSubmit = (data: Object) => {
+    handleForgotPasswordFormSubmit = (data: ForgotPasswordFormData) => {
         userStore.forgotPassword(data);
     };
 
-    handleResetPasswordFormSubmit = (data: Object) => {
+    handleResetPasswordFormSubmit = (data: ResetPasswordFormData) => {
         const {
             onLoginSuccess,
             router,
