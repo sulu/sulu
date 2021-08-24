@@ -984,10 +984,9 @@ class Media extends ApiWrapper
             return $this->localizedMeta;
         }
 
-        $metas = $this->getFileVersion()->getMeta();
-        $this->localizedMeta = $metas[0];
+        $this->localizedMeta = $this->getFileVersion()->getDefaultMeta();
 
-        foreach ($metas as $key => $meta) {
+        foreach ($this->getFileVersion()->getMeta() as $meta) {
             if ($meta->getLocale() == $this->locale) {
                 $this->localizedMeta = $meta;
                 break;
