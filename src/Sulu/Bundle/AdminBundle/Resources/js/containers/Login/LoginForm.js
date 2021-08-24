@@ -9,12 +9,13 @@ import Input from '../../components/Input/index';
 import formStyles from './form.scss';
 import Header from './Header';
 import type {ElementRef} from 'react';
+import type {LoginFormData} from './types';
 
 type Props = {|
     error: boolean,
     loading: boolean,
     onChangeForm: () => void,
-    onSubmit: (user: string, password: string) => void,
+    onSubmit: (data: LoginFormData) => void,
 |};
 
 @observer
@@ -60,7 +61,10 @@ class LoginForm extends React.Component<Props> {
 
         const {onSubmit} = this.props;
 
-        onSubmit(this.user, this.password);
+        onSubmit({
+            username: this.user,
+            password: this.password,
+        });
     };
 
     render() {

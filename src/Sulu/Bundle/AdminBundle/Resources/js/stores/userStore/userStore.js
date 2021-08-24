@@ -4,7 +4,7 @@ import debounce from 'debounce';
 import {Config, Requester} from '../../services';
 import initializer from '../../services/initializer';
 import localizationStore from '../localizationStore';
-import type {Contact, User} from './types';
+import type {Contact, ForgotPasswordData, LoginData, ResetPasswordData, User} from './types';
 
 const UPDATE_PERSISTENT_SETTINGS_DELAY = 2500;
 const CONTENT_LOCALE_SETTING_KEY = 'sulu_admin.content_locale';
@@ -91,11 +91,12 @@ class UserStore {
         }
     }
 
-    handleLogin = (user: string) => {
+    handleLogin = (data: Object) => {
         if (this.user) {
             // when the user was logged in already and comes again with the same user
             // we don't need to initialize again
-            if (user === this.user.username) {
+
+            if (data.username === this.user.username) {
                 this.setLoggedIn(true);
                 this.setLoading(false);
 
@@ -111,11 +112,11 @@ class UserStore {
         });
     };
 
-    login = (user: string, password: string) => {
+    login = (data: LoginData) => {
         this.setLoading(true);
 
-        return Requester.post(Config.endpoints.loginCheck, {username: user, password})
-            .then(() => this.handleLogin(user))
+        return Requester.post(Config.endpoints.loginCheck, data)
+            .then(() => this.handleLogin(data))
             .catch((error) => {
                 this.setLoading(false);
                 if (error.status !== 401) {
@@ -126,10 +127,10 @@ class UserStore {
             });
     };
 
-    forgotPassword(user: string) {
+    forgotPassword(data: ForgotPasswordData) {
         this.setLoading(true);
 
-        return Requester.post(Config.endpoints.forgotPasswordReset, {user})
+        return Requester.post(Config.endpoints.forgotPasswordReset, data)
             .then(() => {
                 this.setLoading(false);
                 this.setForgotPasswordSuccess(true);
@@ -143,11 +144,11 @@ class UserStore {
             });
     }
 
-    resetPassword(password: string, token: string) {
+    resetPassword(data: ResetPasswordData) {
         this.setLoading(true);
 
-        return Requester.post(Config.endpoints.resetPassword, {password, token})
-            .then(({user}) => this.handleLogin(user))
+        return Requester.post(Config.endpoints.resetPassword, data)
+            .then(({user}) => this.handleLogin({username: user}))
             .catch(() => {
                 this.setLoading(false);
             });

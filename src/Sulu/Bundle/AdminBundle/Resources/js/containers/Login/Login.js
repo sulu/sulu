@@ -11,7 +11,7 @@ import ForgotPasswordForm from './ForgotPasswordForm';
 import LoginForm from './LoginForm';
 import ResetPasswordForm from './ResetPasswordForm';
 import loginStyles from './login.scss';
-import type {FormTypes} from './types';
+import type {FormTypes, ForgotPasswordFormData, LoginFormData, ResetPasswordFormData} from './types';
 
 const BACK_LINK_ARROW_LEFT_ICON = 'su-angle-left';
 
@@ -60,17 +60,17 @@ class Login extends React.Component<Props> {
         this.visibleForm = 'forgot-password';
     };
 
-    handleLoginFormSubmit = (user: string, password: string) => {
-        userStore.login(user, password).then(() => {
+    handleLoginFormSubmit = (data: LoginFormData) => {
+        userStore.login(data).then(() => {
             this.props.onLoginSuccess();
         });
     };
 
-    handleForgotPasswordFormSubmit = (user: string) => {
-        userStore.forgotPassword(user);
+    handleForgotPasswordFormSubmit = (data: ForgotPasswordFormData) => {
+        userStore.forgotPassword(data);
     };
 
-    handleResetPasswordFormSubmit = (password: string) => {
+    handleResetPasswordFormSubmit = (data: ResetPasswordFormData) => {
         const {
             onLoginSuccess,
             router,
@@ -82,7 +82,10 @@ class Login extends React.Component<Props> {
             throw new Error('The "forgotPasswordToken" router attribute must be a string!');
         }
 
-        userStore.resetPassword(password, forgotPasswordToken)
+        userStore.resetPassword({
+            ...data,
+            token: forgotPasswordToken,
+        })
             .then(() => {
                 router.reset();
                 onLoginSuccess();

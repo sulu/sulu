@@ -20,3 +20,17 @@ export type Avatar = {
     thumbnails: {[string]: string},
     url: string,
 };
+
+export type ForgotPasswordData = {
+    user: string,
+};
+
+export type ResetPasswordData = {
+    password: string,
+    token: string,
+};
+
+export type LoginData = {
+    password: string,
+    username: string,
+};

@@ -9,15 +9,16 @@ import Input from '../../components/Input/index';
 import formStyles from './form.scss';
 import Header from './Header';
 import type {ElementRef} from 'react';
+import type {ResetPasswordFormData} from './types';
 
 type Props = {|
     loading: boolean,
     onChangeForm: () => void,
-    onSubmit: (password: string) => void,
+    onSubmit: (data: ResetPasswordFormData) => void,
 |};
 
 @observer
-class ForgotPasswordForm extends React.Component<Props> {
+class ResetPasswordForm extends React.Component<Props> {
     static defaultProps = {
         loading: false,
     };
@@ -68,7 +69,7 @@ class ForgotPasswordForm extends React.Component<Props> {
 
         const {onSubmit} = this.props;
 
-        onSubmit(this.password1);
+        onSubmit({password: this.password1});
     };
 
     render() {
@@ -133,4 +134,4 @@ class ForgotPasswordForm extends React.Component<Props> {
     }
 }
 
-export default ForgotPasswordForm;
+export default ResetPasswordForm;
