@@ -41,7 +41,7 @@ class Link extends SimpleContentType
      */
     protected function encodeValue($value): string
     {
-        return (string)\json_encode($value, \defined('JSON_THROW_ON_ERROR') ? \JSON_THROW_ON_ERROR : 0);
+        return (string) \json_encode($value, \defined('JSON_THROW_ON_ERROR') ? \JSON_THROW_ON_ERROR : 0);
     }
 
     /**
