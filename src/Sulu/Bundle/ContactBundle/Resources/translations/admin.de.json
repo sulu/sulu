@@ -87,9 +87,11 @@
     "sulu_activity.description.accounts.media_removed": "{userFullName} hat das Medium \"{context_mediaTitle}\" von der Organisation \"{resourceTitle}\" gelöscht",
     "sulu_activity.description.accounts.contact_added": "{userFullName} hat den Kontakt \"{context_contactName}\" zur Organisation \"{resourceTitle}\" hinzugefügt",
     "sulu_activity.description.accounts.contact_removed": "{userFullName} hat den Kontakt \"{context_contactName}\" von der Organisation \"{resourceTitle}\" gelöscht",
+    "sulu_activity.resource.contact_positions": "Kontaktposition",
     "sulu_activity.description.contact_positions.created": "{userFullName} hat die Kontaktposition \"{resourceTitle}\" erstellt",
     "sulu_activity.description.contact_positions.modified": "{userFullName} hat die Kontaktposition \"{resourceTitle}\" geändert",
     "sulu_activity.description.contact_positions.removed": "{userFullName} hat die Kontaktposition \"{resourceTitle}\" gelöscht",
+    "sulu_activity.resource.contact_titles": "Kontakttitel",
     "sulu_activity.description.contact_titles.created": "{userFullName} hat den Kontakttitel \"{resourceTitle}\" erstellt",
     "sulu_activity.description.contact_titles.modified": "{userFullName} hat den Kontakttitel \"{resourceTitle}\" geändert",
     "sulu_activity.description.contact_titles.removed": "{userFullName} hat den Kontakttitel \"{resourceTitle}\" gelöscht"
