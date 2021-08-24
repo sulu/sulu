@@ -9,6 +9,7 @@ import DropdownToolbarAction from './toolbarActions/DropdownToolbarAction';
 import SaveWithPublishingToolbarAction from './toolbarActions/SaveWithPublishingToolbarAction';
 import SaveWithFormDialogToolbarAction from './toolbarActions/SaveWithFormDialogToolbarAction';
 import SaveToolbarAction from './toolbarActions/SaveToolbarAction';
+import PublishToolbarAction from './toolbarActions/PublishToolbarAction';
 import SetUnpublishedToolbarAction from './toolbarActions/SetUnpublishedToolbarAction';
 import TypeToolbarAction from './toolbarActions/TypeToolbarAction';
 import TogglerToolbarAction from './toolbarActions/TogglerToolbarAction';
@@ -24,6 +25,7 @@ export {
     DropdownToolbarAction,
     SaveWithPublishingToolbarAction,
     SaveToolbarAction,
+    PublishToolbarAction,
     SaveWithFormDialogToolbarAction,
     SetUnpublishedToolbarAction,
     TypeToolbarAction,

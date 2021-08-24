@@ -90,7 +90,7 @@ class MediaImageExtractor implements MediaImageExtractorInterface
 
         $command = $this->ghostScriptPath .
             ' -dNOPAUSE -sDEVICE=jpeg -dFirstPage=1 -dLastPage=1 -sOutputFile=' . $temporaryFilePath . ' ' .
-            '-dJPEGQ=100 -r300x300 -q ' . $temporaryFilePath . ' -c quit 2> /dev/null';
+            '-dJPEGQ=100 -r300x300 -q ' . $temporaryFilePath . ' -c quit';
 
         \shell_exec($command);
         $output = \file_get_contents($temporaryFilePath);

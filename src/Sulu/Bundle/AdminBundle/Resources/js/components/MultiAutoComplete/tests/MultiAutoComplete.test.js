@@ -4,6 +4,8 @@ import {mount} from 'enzyme';
 import Mousetrap from 'mousetrap';
 import MultiAutoComplete from '../MultiAutoComplete';
 
+jest.mock('debounce', () => jest.fn((callback) => callback));
+
 beforeEach(() => {
     Mousetrap.reset();
 });
@@ -27,7 +29,8 @@ test('Render the MultiAutoComplete with open suggestions list', () => {
         />
     );
 
-    multiAutoComplete.instance().inputValue = 'test';
+    // suggestions are displayed when input field is focused
+    multiAutoComplete.find('input').prop('onFocus')();
     multiAutoComplete.update();
 
     expect(multiAutoComplete.render()).toMatchSnapshot();
@@ -104,7 +107,8 @@ test('Clicking a suggestion should call onChange with value of the Suggestion an
         />
     );
 
-    multiAutoComplete.instance().inputValue = 'test';
+    // suggestions are displayed when input field is focused
+    multiAutoComplete.find('input').prop('onFocus')();
     multiAutoComplete.update();
 
     multiAutoComplete.instance().inputRef = {focus: jest.fn()};
@@ -159,7 +163,8 @@ test('Should call the onFinish callback when an item is added', () => {
         />
     );
 
-    multiAutoComplete.instance().inputValue = 'test';
+    // suggestions are displayed when input field is focused
+    multiAutoComplete.find('input').prop('onFocus')();
     multiAutoComplete.update();
 
     multiAutoComplete.find('Suggestion button').at(0).simulate('click');
@@ -389,6 +394,7 @@ test('Should not trigger callbacks when input does not match case-insensitive an
 
 test('Should delete last value item if backspace is pressed in empty focused input field', () => {
     const changeSpy = jest.fn();
+    const searchSpy = jest.fn();
     const finishSpy = jest.fn();
 
     const multiAutoComplete = mount(
@@ -398,7 +404,7 @@ test('Should delete last value item if backspace is pressed in empty focused inp
             idProperty="name"
             onChange={changeSpy}
             onFinish={finishSpy}
-            onSearch={jest.fn()}
+            onSearch={searchSpy}
             searchProperties={['name']}
             suggestions={[]}
             value={[{name: 'Tag1'}, {name: 'Tag2'}]}
@@ -406,9 +412,13 @@ test('Should delete last value item if backspace is pressed in empty focused inp
     );
 
     multiAutoComplete.find('input').prop('onFocus')();
+    expect(searchSpy).toBeCalledTimes(1);
+    expect(searchSpy).nthCalledWith(1, '');
 
     Mousetrap.trigger('backspace');
 
+    expect(searchSpy).toBeCalledTimes(2);
+    expect(searchSpy).nthCalledWith(2, '');
     expect(changeSpy).toBeCalledWith([{name: 'Tag1'}]);
     expect(finishSpy).toBeCalledWith();
 });
@@ -463,4 +473,66 @@ test('Should not delete last value item if backspace is pressed in empty non-foc
 
     expect(changeSpy).not.toBeCalled();
     expect(finishSpy).not.toBeCalled();
+});
+
+test('Should fire onSearch callback and open popover when input field is focused', () => {
+    const searchSpy = jest.fn();
+    const suggestions = [
+        {id: 1, name: 'Suggestion 1'},
+    ];
+
+    const multiAutoComplete = mount(
+        <MultiAutoComplete
+            displayProperty="name"
+            idProperty="name"
+            onChange={jest.fn()}
+            onFinish={jest.fn()}
+            onSearch={searchSpy}
+            searchProperties={['name']}
+            suggestions={suggestions}
+            value={[{name: 'Tag1'}, {name: 'Tag2'}]}
+        />
+    );
+
+    expect(searchSpy).not.toBeCalled();
+    expect(multiAutoComplete.find('AutoCompletePopover').prop('open')).toEqual(false);
+
+    multiAutoComplete.find('input').prop('onFocus')();
+    multiAutoComplete.update();
+    expect(searchSpy).toBeCalledWith('');
+    expect(multiAutoComplete.find('AutoCompletePopover').prop('open')).toEqual(true);
+});
+
+test('Should close popover when requested and reopen popover when input field is changed', () => {
+    const searchSpy = jest.fn();
+    const suggestions = [
+        {id: 1, name: 'Suggestion 1'},
+    ];
+
+    const multiAutoComplete = mount(
+        <MultiAutoComplete
+            displayProperty="name"
+            idProperty="name"
+            onChange={jest.fn()}
+            onFinish={jest.fn()}
+            onSearch={searchSpy}
+            searchProperties={['name']}
+            suggestions={suggestions}
+            value={[{name: 'Tag1'}, {name: 'Tag2'}]}
+        />
+    );
+
+    multiAutoComplete.find('input').prop('onFocus')();
+    multiAutoComplete.update();
+    expect(searchSpy).nthCalledWith(1, '');
+    expect(multiAutoComplete.find('AutoCompletePopover').prop('open')).toEqual(true);
+
+    multiAutoComplete.find('AutoCompletePopover').prop('onClose')();
+    multiAutoComplete.update();
+    expect(multiAutoComplete.find('AutoCompletePopover').prop('open')).toEqual(false);
+
+    multiAutoComplete.find('input').prop('onChange')({currentTarget: {value: 'search term'}});
+    multiAutoComplete.update();
+    expect(searchSpy).nthCalledWith(2, 'search term');
+    expect(multiAutoComplete.find('AutoCompletePopover').prop('open')).toEqual(true);
 });

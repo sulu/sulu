@@ -90,5 +90,5 @@ test('Should trigger onSubmit correctly', () => {
     loginForm.find('form').prop('onSubmit')(event);
 
     expect(event.preventDefault).toBeCalledWith();
-    expect(onSubmit).toBeCalledWith('Max', 'max');
+    expect(onSubmit).toBeCalledWith({username: 'Max', password: 'max'});
 });

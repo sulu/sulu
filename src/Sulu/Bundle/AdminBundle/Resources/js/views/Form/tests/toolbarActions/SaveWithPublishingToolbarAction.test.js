@@ -184,7 +184,9 @@ test('Return item config without publish specific options if passed publish_visi
             label: 'sulu_admin.save_draft',
         }),
     ]);
-    expect(log.warn).not.toBeCalled();
+    expect(log.warn).not.toBeCalledWith(
+        expect.stringContaining('The "publish_display_condition" option is deprecated')
+    );
 });
 
 test('Return item config without saving specific options if deprecated save_display_condition is not met', () => {
@@ -216,7 +218,7 @@ test('Return item config without saving specific options if passed save_visible_
             label: 'sulu_admin.publish',
         }),
     ]);
-    expect(log.warn).not.toBeCalled();
+    expect(log.warn).not.toBeCalledWith(expect.stringContaining('The "save_display_condition" option is deprecated'));
 });
 
 test('Return item config with publish specific options if passed publish_visible_condition is met', () => {
@@ -271,7 +273,6 @@ test('Return empty item config if no options are returned', () => {
 
     const toolbarItemConfig = editToolbarAction.getToolbarItemConfig();
     expect(toolbarItemConfig).toEqual(undefined);
-    expect(log.warn).not.toBeCalled();
 });
 
 test('Return item config with loading button when saving flag is set', () => {

@@ -3,6 +3,7 @@ import React, {Fragment} from 'react';
 import {Portal} from 'react-portal';
 import {observer} from 'mobx-react';
 import {action, computed, observable} from 'mobx';
+import Mousetrap from 'mousetrap';
 import {afterElementsRendered} from '../../utils/DOM';
 import Backdrop from '../Backdrop';
 import PopoverPositioner from './PopoverPositioner';
@@ -27,6 +28,8 @@ type Props = {
     popoverChildRef?: (ref: ?ElementRef<*>) => void,
     verticalOffset: number,
 };
+
+const CLOSE_KEY = 'esc';
 
 @observer
 class Popover extends React.Component<Props> {
@@ -54,21 +57,37 @@ class Popover extends React.Component<Props> {
             this.setPopoverSize(0, 0);
             this.updateDimensions();
         });
+
+        if (this.props.open) {
+            Mousetrap.bind(CLOSE_KEY, this.close);
+        }
     }
 
     componentWillUnmount() {
         window.removeEventListener('blur', this.close);
         window.removeEventListener('resize', this.close);
         this.mutationObserver.disconnect();
+
+        if (this.props.open) {
+            Mousetrap.unbind(CLOSE_KEY);
+        }
     }
 
-    componentDidUpdate() {
+    componentDidUpdate(prevProps: Props) {
         if (this.popoverChildRef) {
             this.updateDimensions();
 
             afterElementsRendered(() => {
                 this.popoverChildRef.scrollTop = this.dimensions.scrollTop;
             });
+        }
+
+        if (prevProps.open !== this.props.open) {
+            if (this.props.open) {
+                Mousetrap.bind(CLOSE_KEY, this.close);
+            } else {
+                Mousetrap.unbind(CLOSE_KEY);
+            }
         }
     }
 

@@ -83,9 +83,9 @@ test('Should trigger onSubmit correctly', () => {
         preventDefault: jest.fn(),
     };
 
-    resetForm.find('Input[icon="su-user"]').prop('onChange')('Max');
+    resetForm.find('Input[icon="su-user"]').prop('onChange')('testusername');
     resetForm.find('form').prop('onSubmit')(event);
 
     expect(event.preventDefault).toBeCalledWith();
-    expect(onSubmit).toBeCalledWith('Max');
+    expect(onSubmit).toBeCalledWith({user: 'testusername'});
 });

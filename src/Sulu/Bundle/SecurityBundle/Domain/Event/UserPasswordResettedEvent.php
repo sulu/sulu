@@ -44,6 +44,11 @@ class UserPasswordResettedEvent extends DomainEvent
         return (string) $this->resourceUser->getId();
     }
 
+    public function getResourceTitle(): ?string
+    {
+        return $this->resourceUser->getUsername();
+    }
+
     public function getResourceSecurityContext(): ?string
     {
         return SecurityAdmin::USER_SECURITY_CONTEXT;

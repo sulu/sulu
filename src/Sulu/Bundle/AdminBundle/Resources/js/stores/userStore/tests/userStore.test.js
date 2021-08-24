@@ -155,7 +155,7 @@ test('Should login', () => {
     Requester.post.mockReturnValue(loginPromise);
     initializer.initialize.mockReturnValue(initializePromise);
 
-    userStore.login('test', 'password');
+    userStore.login({username: 'test', password: 'password'});
     expect(userStore.loading).toBe(true);
 
     return loginPromise.then(() => {
@@ -175,7 +175,7 @@ test('Should login after the password was reset', () => {
     Requester.post.mockReturnValue(resetPromise);
     initializer.initialize.mockReturnValue(initializePromise);
 
-    userStore.resetPassword('test', 'some-uuid');
+    userStore.resetPassword({password: 'test', token: 'some-uuid'});
     expect(userStore.loading).toBe(true);
 
     return resetPromise.then(() => {
@@ -194,7 +194,7 @@ test('Should login without initializing when it`s the same user', () => {
     Requester.post.mockReturnValue(loginPromise);
     userStore.setUser(user);
 
-    userStore.login('test', 'password');
+    userStore.login({username: 'test', password: 'password'});
     expect(userStore.loading).toBe(true);
 
     return loginPromise.then(() => {
@@ -213,7 +213,7 @@ test('Should login with initializing when it`s not the same user', () => {
 
     expect(Requester.post).not.toBeCalled();
 
-    userStore.login('other-user-than-test', 'password');
+    userStore.login({username: 'other-user-than-test', password: 'password'});
     expect(userStore.loading).toBe(true);
 
     return loginPromise.then(() => {
@@ -238,7 +238,7 @@ test('Should login with initializing when it`s not the same user', () => {
 test('Should show error when login is not working and error status is 401', () => {
     Requester.post.mockReturnValue(Promise.reject({status: 401}));
 
-    const loginPromise = userStore.login('test', 'password');
+    const loginPromise = userStore.login({username: 'test', password: 'password'});
     expect(userStore.loading).toBe(true);
 
     return loginPromise
@@ -254,7 +254,7 @@ test('Should show error when login is not working and error status is 401', () =
 test('Should send an email when the password is forgotten', () => {
     Requester.post.mockReturnValue(Promise.resolve({}));
 
-    const promise = userStore.forgotPassword('test');
+    const promise = userStore.forgotPassword({user: 'test'});
     expect(userStore.loading).toBe(true);
 
     return promise.then(() => {

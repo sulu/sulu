@@ -7,12 +7,14 @@ $disabledColor: $silver;
 
 .checkbox.dark {
     input + span {
-        border-color: $primaryColor;
-        color: $secondaryColor;
+        border-color: currentColor;
+        color: currentColor;
     }
 
     input:checked + span {
         background: $primaryColor;
+        border-color: $primaryColor;
+        color: $white;
     }
 }
 

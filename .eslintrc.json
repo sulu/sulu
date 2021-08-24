@@ -28,6 +28,12 @@
         "flowtype",
         "jsx-a11y"
     ],
+    "settings": {
+        "react": {
+            "version": "detect",
+            "flowVersion": "0.142.0"
+        }
+    },
     "rules": {
         "indent": [
             "error",

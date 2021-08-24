@@ -31,16 +31,16 @@ jest.mock('../../../stores/userStore', () => {
             return mockUserStoreClear();
         }
 
-        login(user, password) {
-            return mockUserStoreLogin(user, password);
+        login(data) {
+            return mockUserStoreLogin(data);
         }
 
-        forgotPassword(user) {
-            return mockUserStoreForgotPassword(user);
+        forgotPassword(data) {
+            return mockUserStoreForgotPassword(data);
         }
 
-        resetPassword(password) {
-            return mockUserStoreResetPassword(password);
+        resetPassword(data) {
+            return mockUserStoreResetPassword(data);
         }
 
         setLoginError(value) {
@@ -137,7 +137,7 @@ test('Should call the submit handler of the login view', () => {
 
     login.find('form').prop('onSubmit')(eventMock);
 
-    expect(mockUserStoreLogin).toBeCalledWith('testUser', 'testPassword');
+    expect(mockUserStoreLogin).toBeCalledWith({username: 'testUser', password: 'testPassword'});
 });
 
 test('Should call the submit handler of the forgot password view', () => {
@@ -154,7 +154,7 @@ test('Should call the submit handler of the forgot password view', () => {
     login.find('Input[icon="su-user"]').prop('onChange')('testUser');
     login.find('form').prop('onSubmit')(eventMock);
 
-    expect(mockUserStoreForgotPassword).toBeCalledWith('testUser');
+    expect(mockUserStoreForgotPassword).toBeCalledWith({user: 'testUser'});
 });
 
 test('Should call the submit handler of the reset password view', () => {
@@ -169,11 +169,14 @@ test('Should call the submit handler of the reset password view', () => {
         <Login initialized={true} onLoginSuccess={jest.fn()} router={router} />
     );
 
-    login.find('Input[icon="su-lock"]').at(0).prop('onChange')('test');
-    login.find('Input[icon="su-lock"]').at(1).prop('onChange')('test');
+    login.find('Input[icon="su-lock"]').at(0).prop('onChange')('testpassword');
+    login.find('Input[icon="su-lock"]').at(1).prop('onChange')('testpassword');
     login.find('form').prop('onSubmit')(eventMock);
 
-    expect(mockUserStoreResetPassword).toBeCalledWith('test');
+    expect(mockUserStoreResetPassword).toBeCalledWith({
+        password: 'testpassword',
+        token: 'some-uuid',
+    });
 
     return promise.then(() => {
         expect(router.reset).toBeCalled();
