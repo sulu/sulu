@@ -33,7 +33,7 @@ Array [
       </span>
       <input
         class="input mousetrap"
-        value="test"
+        value=""
       />
     </div>
   </label>,

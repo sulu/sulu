@@ -156,7 +156,7 @@ test('Render with loaded suggestions', () => {
         />
     );
 
-    multiAutoComplete.find(MultiAutoCompleteComponent).instance().inputValue = 'James';
+    multiAutoComplete.find(MultiAutoCompleteComponent).instance().displaySuggestions = true;
     multiAutoComplete.update();
 
     expect(multiAutoComplete.find('MultiAutoComplete').find('Suggestion').at(0).prop('value'))

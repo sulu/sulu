@@ -41,7 +41,13 @@ class MultiAutoComplete extends React.Component<Props> {
 
     @observable labelRef: ElementRef<'label'>;
     @observable inputRef: ElementRef<'input'>;
+
+    @observable displaySuggestions = false;
     @observable inputValue: string = '';
+
+    componentWillUnmount() {
+        this.debouncedSearch.clear();
+    }
 
     @action setLabelRef = (labelRef: ?ElementRef<'label'>) => {
         if (labelRef) {
@@ -65,9 +71,12 @@ class MultiAutoComplete extends React.Component<Props> {
         return this.labelRef ? this.labelRef.scrollWidth - 10 : 0;
     }
 
-    @action handleDelete = (newValue: Object) => {
+    handleDelete = (newValue: Object) => {
         const {onChange, onFinish, value} = this.props;
         onChange(value.filter((item) => item != newValue));
+
+        // reload suggestion list as deleted item should not be excluded from suggestions anymore
+        this.debouncedSearch(this.inputValue);
 
         if (onFinish) {
             onFinish();
@@ -79,13 +88,15 @@ class MultiAutoComplete extends React.Component<Props> {
         this.debouncedSearch(this.inputValue);
     };
 
-    @action handleInputFocus = () => {
+    handleInputFocus = () => {
         Mousetrap.bind('enter', this.handleEnterAndComma);
         Mousetrap.bind(',', this.handleEnterAndComma);
         Mousetrap.bind('backspace', this.handleBackspace);
+
+        this.search(this.inputValue);
     };
 
-    @action handleInputBlur = () => {
+    handleInputBlur = () => {
         Mousetrap.unbind('enter');
         Mousetrap.unbind(',');
         Mousetrap.unbind('backspace');
@@ -148,9 +159,16 @@ class MultiAutoComplete extends React.Component<Props> {
         }
     };
 
-    debouncedSearch = debounce((query: string) => {
+    @action handlePopoverClose = () => {
+        this.displaySuggestions = false;
+    };
+
+    @action search = (query: string) => {
         this.props.onSearch(query);
-    }, DEBOUNCE_TIME);
+        this.displaySuggestions = true;
+    };
+
+    debouncedSearch = debounce(this.search, DEBOUNCE_TIME);
 
     render() {
         const {
@@ -163,8 +181,6 @@ class MultiAutoComplete extends React.Component<Props> {
             suggestions,
             value,
         } = this.props;
-
-        const showSuggestionList = (!!this.inputValue && this.inputValue.length > 0) && suggestions.length > 0;
 
         const multiAutoCompleteClass = classNames(
             multiAutoCompleteStyles.multiAutoComplete,
@@ -215,8 +231,9 @@ class MultiAutoComplete extends React.Component<Props> {
                     anchorElement={this.labelRef}
                     idProperty={idProperty}
                     minWidth={this.popoverMinWidth}
+                    onClose={this.handlePopoverClose}
                     onSelect={this.handleSelect}
-                    open={!disabled && showSuggestionList}
+                    open={!disabled && this.displaySuggestions && suggestions.length > 0}
                     query={this.inputValue}
                     searchProperties={searchProperties}
                     suggestions={suggestions}

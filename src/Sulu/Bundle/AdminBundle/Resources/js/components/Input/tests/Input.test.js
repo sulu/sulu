@@ -109,6 +109,16 @@ test('Input should call the callback when icon was clicked', () => {
     expect(handleIconClick).toHaveBeenCalled();
 });
 
+test('Input should call the given focus callback', () => {
+    const onFocusSpy = jest.fn();
+
+    const input = mount(<Input icon="su-pen" onChange={jest.fn()} onFocus={onFocusSpy} value="My value" />);
+
+    expect(onFocusSpy).not.toHaveBeenCalled();
+    input.find('input').simulate('focus');
+    expect(onFocusSpy).toHaveBeenCalled();
+});
+
 test('Input should render with a loader', () => {
     const onChange = jest.fn();
     expect(render(<Input loading={true} onBlur={jest.fn()} onChange={onChange} value={undefined} />)).toMatchSnapshot();

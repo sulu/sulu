@@ -41,6 +41,32 @@ test('Send a request using the ResourceRequester when something is being searche
     });
 });
 
+test('Send a request using the ResourceRequester when query is an empty string', () => {
+    const searchStore = new SearchStore('accounts', ['name', 'number']);
+    const searchResults = [{id: 1, name: 'Sulu'}];
+    const searchPromise = Promise.resolve({
+        _embedded: {
+            accounts: searchResults,
+        },
+    });
+
+    ResourceRequester.getList.mockReturnValue(searchPromise);
+
+    const autoCompletePromise = searchStore.search('');
+    expect(searchStore.loading).toEqual(true);
+
+    return autoCompletePromise.then(() => {
+        expect(ResourceRequester.getList).toBeCalledWith('accounts', {
+            limit: 10,
+            page: 1,
+            search: '',
+            searchFields: ['name', 'number'],
+        });
+        expect(searchStore.searchResults).toEqual(searchResults);
+        expect(searchStore.loading).toEqual(false);
+    });
+});
+
 test('Send a request using the ResourceRequester with given options when something is being searched', () => {
     const searchStore = new SearchStore('accounts', ['name', 'number'], {country: 'US'});
     const searchResults = [{id: 1, name: 'Sulu'}];

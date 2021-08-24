@@ -72,6 +72,7 @@ export default class Input<T: ?string | ?number> extends React.PureComponent<Inp
             onBlur,
             onIconClick,
             onClearClick,
+            onFocus,
             onKeyPress,
             segmentDelimiter,
             type,
@@ -152,6 +153,7 @@ export default class Input<T: ?string | ?number> extends React.PureComponent<Inp
                         name={name}
                         onBlur={onBlur}
                         onChange={this.handleChange}
+                        onFocus={onFocus}
                         onKeyPress={onKeyPress ? this.handleKeyPress : undefined}
                         placeholder={placeholder}
                         ref={inputRef ? this.setInputRef : undefined}
