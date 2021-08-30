@@ -274,10 +274,7 @@ class UpdateBuildCommand extends Command
         $this->cleanupPreviouslyInstalledDependencies();
 
         $ui->section('Install npm dependencies');
-
-        // pass "--legacy-peer-deps" to npm to prevent confusing dependency tree error message when using npm 7
-        // https://github.com/sulu/skeleton/issues/133#issuecomment-907271497
-        if ($this->runProcess($ui, 'npm install --legacy-peer-deps')) {
+        if ($this->runProcess($ui, 'npm install')) {
             $ui->error('Unexpected error while installing npm dependencies.');
 
             return static::EXIT_CODE_COULD_NOT_INSTALL_NPM_PACKAGES;
