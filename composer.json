@@ -24,6 +24,12 @@
         "source": "https://github.com/sulu/skeleton",
         "docs": "http://docs.sulu.io/"
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/alexander-schranz/csv.git"
+        }
+    ],
     "require": {
         "php": "^7.2 || ^8.0",
         "ext-dom": "*",
@@ -107,6 +113,7 @@
         "twig/twig": "^1.41 || ^2.10 || ^3.0"
     },
     "require-dev": {
+        "laminas/laminas-code": "^3.4.1 || ^4.0 || ^4.5@dev",
         "friendsofphp/php-cs-fixer": "^3.0",
         "google/cloud-storage": "^1.0",
         "handcraftedinthealps/zendsearch": "^2.0",
