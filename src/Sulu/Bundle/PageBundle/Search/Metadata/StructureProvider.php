@@ -42,13 +42,13 @@ use Sulu\Component\DocumentManager\Metadata\MetadataFactory;
  */
 class StructureProvider implements ProviderInterface
 {
-    const FIELD_STRUCTURE_TYPE = '_structure_type';
+    public const FIELD_STRUCTURE_TYPE = '_structure_type';
 
-    const FIELD_TEASER_DESCRIPTION = '_teaser_description';
+    public const FIELD_TEASER_DESCRIPTION = '_teaser_description';
 
-    const FIELD_TEASER_MEDIA = '_teaser_media';
+    public const FIELD_TEASER_MEDIA = '_teaser_media';
 
-    const FIELD_WEBSPACE_KEY = 'webspace_key';
+    public const FIELD_WEBSPACE_KEY = 'webspace_key';
 
     /**
      * @var Factory
