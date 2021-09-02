@@ -1,5 +1,6 @@
 // @flow
-import 'font-awesome/css/font-awesome.min.css';
+import '@fortawesome/fontawesome-free/js/all.js';
+import '@fortawesome/fontawesome-free/js/v4-shims.js';
 import './sulu-icon.css';
 import React from 'react';
 import classNames from 'classnames';
@@ -45,6 +46,10 @@ export default class Icon extends React.PureComponent<Props> {
                 break;
             case 'fa-':
                 fontClass = 'fa';
+                break;
+            case 'fas':
+            case 'fab':
+                fontClass = null;
                 break;
             default:
                 logInvalidIconWarning(name);
