@@ -22,7 +22,7 @@ type Props = {|
     mediaListRef?: (?ElementRef<typeof List>) => void,
     mediaListStore: ListStore,
     onCollectionNavigate: (collectionId: ?string | number) => void,
-    onDeleteError?: (message: string) => void,
+    onDeleteError?: (error?: Object) => void,
     onMediaNavigate?: (mediaId: string | number) => void,
     onUploadError?: (errors: Array<Object>) => void,
     onUploadOverlayClose: () => void,

@@ -25,7 +25,7 @@ type Props = {
     listStore: ListStore,
     locale: IObservableValue<string>,
     onCollectionNavigate: (collectionId: ?string | number) => void,
-    onDeleteError?: (message: string) => void,
+    onDeleteError?: (error?: Object) => void,
     overlayType: OverlayType,
     resourceStore: ResourceStore,
     securable: boolean,
@@ -175,12 +175,8 @@ class CollectionSection extends React.Component<Props> {
                             return;
                         }
 
-                        const error = data.detail
-                            || data.title
-                            || translate('sulu_admin.unexpected_delete_server_error');
-
-                        if (onDeleteError && error) {
-                            onDeleteError(error);
+                        if (onDeleteError) {
+                            onDeleteError(data);
                         }
                     }));
             });

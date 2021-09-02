@@ -200,7 +200,9 @@ class PageList extends React.Component<Props> {
         return indicators;
     };
 
-    @action handleDeleteError = (message: string): void => {
+    @action handleDeleteError = (error?: Object): void => {
+        const message = error?.detail || error?.title || translate('sulu_admin.unexpected_delete_server_error');
+
         this.errors.push(message);
     };
 

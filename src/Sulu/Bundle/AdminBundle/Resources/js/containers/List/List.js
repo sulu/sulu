@@ -54,7 +54,7 @@ type Props = {|
     itemDisabledCondition?: ?string,
     movable: boolean,
     onCopyFinished?: (response: Object) => void,
-    onDeleteError?: (message: string) => void,
+    onDeleteError?: (error?: Object) => void,
     onItemAdd?: (id: ?string | number) => void,
     onItemClick?: (itemId: string | number) => void,
     orderable: boolean,
@@ -310,10 +310,8 @@ class List extends React.Component<Props> {
                 return;
             }
 
-            const error = data.detail || data.title || translate('sulu_admin.unexpected_delete_server_error');
-
-            if (onDeleteError && error) {
-                onDeleteError(error);
+            if (onDeleteError) {
+                onDeleteError(data);
             }
         }));
     };
