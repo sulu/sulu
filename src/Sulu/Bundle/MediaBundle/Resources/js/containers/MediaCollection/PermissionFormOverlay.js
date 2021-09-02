@@ -22,7 +22,7 @@ const API_OPTIONS = {resourceKey: 'media'};
 @observer
 class PermissionFormOverlay extends React.Component<Props> {
     @observable showInheritDialog: boolean = false;
-    @observable error: string | null = null;
+    @observable error: ?string = undefined;
     permissionFormRef: ?Form;
     inheritDialogFormRef: ?Form;
     resourceStore: ResourceStore;
@@ -39,7 +39,7 @@ class PermissionFormOverlay extends React.Component<Props> {
         const {collectionId} = this.props;
 
         if (collectionId !== prevProps.collectionId) {
-            this.error = null;
+            this.error = undefined;
             this.destroyFormStores();
             this.createFormStores();
         }
@@ -111,26 +111,26 @@ class PermissionFormOverlay extends React.Component<Props> {
         this.resourceStore.save({...options, ...API_OPTIONS})
             .then(() => onConfirm())
             .catch((response) => {
-                response.json().then(action((content) => {
-                    const error = content.detail || content.message;
+                response.json().then(action((data) => {
+                    const message = data.detail || data.title || translate('sulu_admin.form_save_server_error');
 
-                    if (!error) {
+                    if (!message) {
                         return;
                     }
 
-                    this.error = error;
+                    this.error = message;
                 }));
             });
     };
 
     @action handleSnackbarCloseClick = () => {
-        this.error = null;
+        this.error = undefined;
     };
 
     @action handleClose = () => {
         const {onClose} = this.props;
 
-        this.error = null;
+        this.error = undefined;
 
         onClose();
     };
