@@ -43,7 +43,7 @@ class ImagePropertiesProvider implements MediaPropertiesProviderInterface
             $size = $image->getSize();
             $properties['width'] = $size->getWidth();
             $properties['height'] = $size->getHeight();
-        } catch (InvalidArgumentException | RuntimeException $exception) {
+        } catch (InvalidArgumentException|RuntimeException $exception) {
             // @ignoreException
         }
 
