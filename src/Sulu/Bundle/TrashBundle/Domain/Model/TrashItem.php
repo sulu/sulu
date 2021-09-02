@@ -131,7 +131,7 @@ class TrashItem implements TrashItemInterface
             return $this;
         }
 
-        $translation = $this->getTranslation($locale);
+        $translation = $this->getTranslation($locale, false);
         $translation->setTitle($resourceTitle);
 
         return $this;
@@ -197,7 +197,7 @@ class TrashItem implements TrashItemInterface
         return $this;
     }
 
-    public function getTranslation(?string $locale = null, bool $fallback = true): TrashItemTranslation
+    public function getTranslation(?string $locale = null, bool $fallback = false): TrashItemTranslation
     {
         /** @var TrashItemTranslation|false $translation */
         $translation = $this->translations->filter(

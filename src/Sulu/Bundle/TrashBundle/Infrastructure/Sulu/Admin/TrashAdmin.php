@@ -25,11 +25,11 @@ use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
-class TrashAdmin extends Admin
+final class TrashAdmin extends Admin
 {
-    const SECURITY_CONTEXT = 'sulu.trash.trash';
+    public const SECURITY_CONTEXT = 'sulu.trash.trash';
 
-    const LIST_VIEW = 'sulu_trash.trash_items.list';
+    public const LIST_VIEW = 'sulu_trash.trash_items.list';
 
     /**
      * @var ViewBuilderFactoryInterface

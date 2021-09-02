@@ -118,8 +118,24 @@ class TrashItemTest extends TestCase
         static::assertSame('Tag Name (EN)', $trashItem->getTranslation('en')->getTitle());
         static::assertSame('en', $trashItem->getTranslation('en')->getLocale());
 
-        static::assertSame('Tag Name', $trashItem->getTranslation('de')->getTitle());
-        static::assertNull($trashItem->getTranslation('de')->getLocale());
+        static::expectException(TrashItemTranslationNotFoundException::class);
+        $trashItem->getTranslation('de');
+    }
+
+    public function testGetTranslationWithFallback(): void
+    {
+        $trashItem = new TrashItem();
+        $trashItem->setResourceTitle('Tag Name');
+        $trashItem->setResourceTitle('Tag Name (EN)', 'en');
+
+        static::assertSame('Tag Name', $trashItem->getTranslation(null, true)->getTitle());
+        static::assertNull($trashItem->getTranslation(null, true)->getLocale());
+
+        static::assertSame('Tag Name (EN)', $trashItem->getTranslation('en', true)->getTitle());
+        static::assertSame('en', $trashItem->getTranslation('en', true)->getLocale());
+
+        static::assertSame('Tag Name', $trashItem->getTranslation('de', true)->getTitle());
+        static::assertNull($trashItem->getTranslation('de', true)->getLocale());
     }
 
     public function testGetTranslationWithoutFallback(): void

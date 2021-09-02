@@ -55,7 +55,7 @@ export default class RestoreItemAction extends AbstractListItemAction {
                 this.listStore.setShouldReload(true);
 
                 response.json().then(action((error) => {
-                    this.list.errors.push(error.detail || error.message || translate('sulu_trash.restore_error'));
+                    this.list.errors.push(error.detail || error.title || translate('sulu_trash.restore_error'));
                 }));
             }));
     };

@@ -20,6 +20,7 @@ use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\RestoreTrashItemHandler
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\StoreTrashItemHandlerInterface;
 use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
 use Sulu\Bundle\TrashBundle\Domain\Repository\TrashItemRepositoryInterface;
+use Webmozart\Assert\Assert;
 
 final class TagTrashItemHandler implements StoreTrashItemHandlerInterface, RestoreTrashItemHandlerInterface
 {
@@ -41,9 +42,7 @@ final class TagTrashItemHandler implements StoreTrashItemHandlerInterface, Resto
 
     public function store(object $tag): TrashItemInterface
     {
-        if (!$tag instanceof TagInterface) {
-            throw new \InvalidArgumentException();
-        }
+        Assert::isInstanceOf($tag, TagInterface::class);
 
         return $this->trashItemRepository->create(
             TagInterface::RESOURCE_KEY,

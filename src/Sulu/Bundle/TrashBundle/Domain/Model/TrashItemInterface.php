@@ -15,8 +15,8 @@ use Sulu\Component\Security\Authentication\UserInterface;
 
 interface TrashItemInterface
 {
-    const RESOURCE_KEY = 'trash_items';
-    const LIST_KEY = 'trash_items';
+    public const RESOURCE_KEY = 'trash_items';
+    public const LIST_KEY = 'trash_items';
 
     public function getId(): ?int;
 
@@ -62,5 +62,5 @@ interface TrashItemInterface
 
     public function setUser(?UserInterface $user): self;
 
-    public function getTranslation(?string $locale = null, bool $fallback = true): TrashItemTranslation;
+    public function getTranslation(?string $locale = null, bool $fallback = false): TrashItemTranslation;
 }

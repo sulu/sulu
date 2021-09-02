@@ -53,12 +53,12 @@ class TrashItemCreatedEvent extends DomainEvent
 
     public function getResourceTitle(): ?string
     {
-        return $this->trashItem->getTranslation()->getTitle();
+        return $this->trashItem->getTranslation(null, true)->getTitle();
     }
 
     public function getResourceTitleLocale(): ?string
     {
-        return $this->trashItem->getTranslation()->getLocale();
+        return $this->trashItem->getTranslation(null, true)->getLocale();
     }
 
     public function getResourceSecurityContext(): ?string

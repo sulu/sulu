@@ -92,7 +92,7 @@ final class TrashManager implements TrashManagerInterface
 
         $object = $restoreTrashItemHandler->restore($trashItem, $restoreFormData);
 
-        $translation = $trashItem->getTranslation();
+        $translation = $trashItem->getTranslation(null, true);
 
         $this->domainEventCollector->collect(
             new TrashItemRestoredEvent(
@@ -111,7 +111,7 @@ final class TrashManager implements TrashManagerInterface
 
     public function remove(TrashItemInterface $trashItem): void
     {
-        $translation = $trashItem->getTranslation();
+        $translation = $trashItem->getTranslation(null, true);
 
         $this->domainEventCollector->collect(
             new TrashItemRemovedEvent(

@@ -21,7 +21,7 @@ use Sulu\Bundle\TrashBundle\Domain\Repository\TrashItemRepositoryInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\Security\Core\Security;
 
-class TrashItemRepository implements TrashItemRepositoryInterface
+final class TrashItemRepository implements TrashItemRepositoryInterface
 {
     /**
      * @var EntityManagerInterface
