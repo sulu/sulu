@@ -22,14 +22,19 @@ use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\SecurityBundle\Exception\AccessControlDescendantProviderNotFoundException;
 use Sulu\Bundle\SecurityBundle\System\SystemStoreInterface;
 use Sulu\Bundle\TestBundle\Testing\ReadObjectAttributeTrait;
+use Sulu\Component\Rest\Exception\InsufficientDescendantPermissionsException;
 use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlManager;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlProviderInterface;
+use Sulu\Component\Security\Authorization\AccessControl\AccessControlRepositoryInterface;
 use Sulu\Component\Security\Authorization\AccessControl\DescendantProviderInterface;
 use Sulu\Component\Security\Authorization\MaskConverterInterface;
+use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Security\Event\PermissionUpdateEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Security\Core\Security;
 
 class AccessControlManagerTest extends TestCase
 {
@@ -70,12 +75,45 @@ class AccessControlManagerTest extends TestCase
      */
     private $roleRepository;
 
+    /**
+     * @var ObjectProphecy<AccessControlRepositoryInterface>
+     */
+    private $accessControlRepository;
+
+    /**
+     * @var ObjectProphecy<Security>
+     */
+    private $security;
+
+    /**
+     * @var ObjectProphecy<UserInterface>
+     */
+    private $user;
+
+    /**
+     * @var array<string, int>
+     */
+    private $permissions = [
+        'view' => 64,
+        'add' => 32,
+        'edit' => 16,
+        'delete' => 8,
+        'archive' => 4,
+        'live' => 2,
+        'security' => 1,
+    ];
+
     public function setUp(): void
     {
         $this->maskConverter = $this->prophesize(MaskConverterInterface::class);
         $this->eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
         $this->systemStore = $this->prophesize(SystemStoreInterface::class);
         $this->roleRepository = $this->prophesize(RoleRepositoryInterface::class);
+        $this->accessControlRepository = $this->prophesize(AccessControlRepositoryInterface::class);
+        $this->security = $this->prophesize(Security::class);
+        $this->user = $this->prophesize(UserInterface::class);
+
+        $this->security->getUser()->willReturn($this->user->reveal());
 
         $this->maskConverter->convertPermissionsToArray(0)->willReturn(['view' => false, 'edit' => false]);
         $this->maskConverter->convertPermissionsToArray(32)->willReturn(['view' => false, 'edit' => true]);
@@ -101,11 +139,14 @@ class AccessControlManagerTest extends TestCase
                 $this->descendantProvider1->reveal(),
                 $this->descendantProvider2->reveal(),
             ],
-            $this->roleRepository->reveal()
+            $this->roleRepository->reveal(),
+            $this->accessControlRepository->reveal(),
+            $this->security->reveal(),
+            $this->permissions
         );
     }
 
-    public function testSetPermissions()
+    public function testSetPermissions(): void
     {
         $accessControlProvider1 = $this->prophesize(AccessControlProviderInterface::class);
         $accessControlProvider1->supports(Argument::any())->willReturn(false);
@@ -125,8 +166,11 @@ class AccessControlManagerTest extends TestCase
         $this->accessControlManager->setPermissions(\stdClass::class, '1', []);
     }
 
-    public function testSetPermissionsWithInheritance()
+    public function testSetPermissionsWithInheritance(): void
     {
+        $this->systemStore->getSystem()->willReturn('Sulu');
+        $this->systemStore->getAnonymousRole()->willReturn(null);
+
         $accessControlProvider = $this->prophesize(AccessControlProviderInterface::class);
         $accessControlProvider->supports(Argument::any())->willReturn(true);
         $accessControlProvider->setPermissions(\stdClass::class, '1', [])->shouldBeCalled();
@@ -138,11 +182,14 @@ class AccessControlManagerTest extends TestCase
         $this->descendantProvider1->findDescendantIdsById('1')->willReturn(['2', '3', '5']);
 
         $this->accessControlManager->addAccessControlProvider($accessControlProvider->reveal());
-
-        $this->eventDispatcher->dispatch(
-            new PermissionUpdateEvent(\stdClass::class, '1', []),
-            'sulu_security.permission_update'
-        )->shouldBeCalled();
+        $this->accessControlRepository->findIdsWithGrantedPermissions(
+            $this->user->reveal(),
+            $this->permissions[PermissionTypes::SECURITY],
+            \stdClass::class,
+            ['2', '3', '5'],
+            'Sulu',
+            null
+        )->willReturn(['2', '3', '5']);
 
         $this->eventDispatcher->dispatch(
             new PermissionUpdateEvent(\stdClass::class, '2', []),
@@ -159,22 +206,6 @@ class AccessControlManagerTest extends TestCase
             'sulu_security.permission_update'
         )->shouldBeCalled();
 
-        $this->accessControlManager->setPermissions(\stdClass::class, '1', [], true);
-    }
-
-    public function testSetPermissionsWithInheritanceWithoutDescendantProvider()
-    {
-        $this->expectException(AccessControlDescendantProviderNotFoundException::class);
-
-        $accessControlProvider = $this->prophesize(AccessControlProviderInterface::class);
-        $accessControlProvider->supports(Argument::any())->willReturn(true);
-        $accessControlProvider->setPermissions(\stdClass::class, '1', [])->shouldBeCalled();
-
-        $this->descendantProvider1->supportsDescendantType(\stdClass::class)->willReturn(false);
-        $this->descendantProvider2->supportsDescendantType(\stdClass::class)->willReturn(false);
-
-        $this->accessControlManager->addAccessControlProvider($accessControlProvider->reveal());
-
         $this->eventDispatcher->dispatch(
             new PermissionUpdateEvent(\stdClass::class, '1', []),
             'sulu_security.permission_update'
@@ -183,12 +214,59 @@ class AccessControlManagerTest extends TestCase
         $this->accessControlManager->setPermissions(\stdClass::class, '1', [], true);
     }
 
-    public function testSetPermissionsWithoutProvider()
+    public function testSetPermissionsWithInheritanceWithoutDescendantProvider(): void
+    {
+        $this->expectException(AccessControlDescendantProviderNotFoundException::class);
+
+        $accessControlProvider = $this->prophesize(AccessControlProviderInterface::class);
+        $accessControlProvider->supports(Argument::any())->willReturn(true);
+        $accessControlProvider->setPermissions(Argument::any())->shouldNotBeCalled();
+
+        $this->descendantProvider1->supportsDescendantType(\stdClass::class)->willReturn(false);
+        $this->descendantProvider2->supportsDescendantType(\stdClass::class)->willReturn(false);
+
+        $this->accessControlManager->addAccessControlProvider($accessControlProvider->reveal());
+
+        $this->eventDispatcher->dispatch(Argument::any())->shouldNotBeCalled();
+
+        $this->accessControlManager->setPermissions(\stdClass::class, '1', [], true);
+    }
+
+    public function testSetPermissionsWithInheritanceWithInsufficientDescendantPermissions(): void
+    {
+        $this->systemStore->getSystem()->willReturn('Sulu');
+        $this->systemStore->getAnonymousRole()->willReturn(null);
+
+        $this->expectException(InsufficientDescendantPermissionsException::class);
+
+        $accessControlProvider = $this->prophesize(AccessControlProviderInterface::class);
+        $accessControlProvider->supports(Argument::any())->willReturn(true);
+        $accessControlProvider->setPermissions(Argument::any())->shouldNotBeCalled();
+
+        $this->descendantProvider1->supportsDescendantType(\stdClass::class)->willReturn(true);
+        $this->descendantProvider1->findDescendantIdsById('1')->willReturn(['2', '3', '5']);
+
+        $this->accessControlManager->addAccessControlProvider($accessControlProvider->reveal());
+        $this->accessControlRepository->findIdsWithGrantedPermissions(
+            $this->user->reveal(),
+            $this->permissions[PermissionTypes::SECURITY],
+            \stdClass::class,
+            ['2', '3', '5'],
+            'Sulu',
+            null
+        )->willReturn(['2', '5']);
+
+        $this->eventDispatcher->dispatch(Argument::any())->shouldNotBeCalled();
+
+        $this->accessControlManager->setPermissions(\stdClass::class, '1', [], true);
+    }
+
+    public function testSetPermissionsWithoutProvider(): void
     {
         $this->assertNull($this->accessControlManager->setPermissions(\stdClass::class, '1', []));
     }
 
-    public function testGetPermissions()
+    public function testGetPermissions(): void
     {
         $accessControlProvider1 = $this->prophesize(AccessControlProviderInterface::class);
         $accessControlProvider1->supports(Argument::any())->willReturn(false);
@@ -203,7 +281,7 @@ class AccessControlManagerTest extends TestCase
         $this->accessControlManager->getPermissions(\stdClass::class, '1');
     }
 
-    public function testGetPermissionsWithSystem()
+    public function testGetPermissionsWithSystem(): void
     {
         $accessControlProvider1 = $this->prophesize(AccessControlProviderInterface::class);
         $accessControlProvider1->supports(Argument::any())->willReturn(false);
@@ -218,7 +296,7 @@ class AccessControlManagerTest extends TestCase
         $this->accessControlManager->getPermissions(\stdClass::class, '1', 'Sulu');
     }
 
-    public function testGetPermissionsWithoutProvider()
+    public function testGetPermissionsWithoutProvider(): void
     {
         $this->assertNull($this->accessControlManager->getPermissions(\stdClass::class, '1'));
     }
@@ -233,7 +311,7 @@ class AccessControlManagerTest extends TestCase
         $locale,
         $result,
         $system
-    ) {
+    ): void {
         $this->systemStore->getSystem()->willReturn($system);
 
         $accessControlProvider = $this->prophesize(AccessControlProviderInterface::class);
@@ -278,7 +356,7 @@ class AccessControlManagerTest extends TestCase
         $this->assertEquals($result, $permissions);
     }
 
-    public function testGetUserPermissionsWithMissingRole()
+    public function testGetUserPermissionsWithMissingRole(): void
     {
         $this->systemStore->getSystem()->willReturn('Sulu');
 
@@ -313,7 +391,7 @@ class AccessControlManagerTest extends TestCase
         $this->assertEquals(['view' => true, 'edit' => false], $permissions);
     }
 
-    public function testGetUserPermissionsWithoutUser()
+    public function testGetUserPermissionsWithoutUser(): void
     {
         $this->systemStore->getSystem()->willReturn('Sulu');
 
@@ -341,7 +419,7 @@ class AccessControlManagerTest extends TestCase
         $this->assertEquals(['view' => true, 'edit' => false], $permissions);
     }
 
-    public function testGetUserPermissionsWithoutSystem()
+    public function testGetUserPermissionsWithoutSystem(): void
     {
         $this->systemStore->getSystem()->willReturn(null);
 
@@ -366,7 +444,7 @@ class AccessControlManagerTest extends TestCase
         ], $permissions);
     }
 
-    public function testGetUserPermissionsWithSystemFromSecurityCondition()
+    public function testGetUserPermissionsWithSystemFromSecurityCondition(): void
     {
         $this->systemStore->getSystem()->willReturn('system1');
 
@@ -404,7 +482,7 @@ class AccessControlManagerTest extends TestCase
         ], $permissions);
     }
 
-    public function testGetUserPermissionByArrayWithSystem()
+    public function testGetUserPermissionByArrayWithSystem(): void
     {
         $this->systemStore->getSystem()->willReturn('system1');
 
@@ -449,7 +527,7 @@ class AccessControlManagerTest extends TestCase
         ], $permissions);
     }
 
-    public function testGetUserPermissionByArrayWithSystemFromSystemStore()
+    public function testGetUserPermissionByArrayWithSystemFromSystemStore(): void
     {
         $this->systemStore->getSystem()->willReturn('system1');
 
@@ -493,7 +571,7 @@ class AccessControlManagerTest extends TestCase
         ], $permissions);
     }
 
-    public function testGetUserPermissionByArrayWithoutSystem()
+    public function testGetUserPermissionByArrayWithoutSystem(): void
     {
         $this->systemStore->getSystem()->willReturn(null);
 
@@ -515,7 +593,7 @@ class AccessControlManagerTest extends TestCase
         ], $permissions);
     }
 
-    public function testGetUserPermissionsWithoutAnonymousUser()
+    public function testGetUserPermissionsWithoutAnonymousUser(): void
     {
         $this->systemStore->getSystem()->willReturn('Sulu');
 
@@ -543,7 +621,7 @@ class AccessControlManagerTest extends TestCase
         $this->assertEquals(['view' => true, 'edit' => false], $permissions);
     }
 
-    public function testAddAccessControlProvider()
+    public function testAddAccessControlProvider(): void
     {
         $accessControlProvider1 = $this->prophesize(AccessControlProviderInterface::class);
         $accessControlProvider2 = $this->prophesize(AccessControlProviderInterface::class);
