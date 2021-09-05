@@ -24,6 +24,9 @@ jobs:
                     - node-version: '12'
                     - node-version: '14'
 
+        env:
+            COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
         steps:
             - name: Checkout project
               uses: actions/checkout@v2
@@ -59,8 +62,6 @@ jobs:
               with:
                   php-version: '7.4'
                   tools: 'composer:v2'
-              env:
-                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Install php dependencies
               run: rm composer.json && composer require friendsofsymfony/jsrouting-bundle:^2.3 --no-interaction
@@ -78,6 +79,7 @@ jobs:
             MAILER_URL: null://localhost
             SULU_ADMIN_EMAIL:
             PHPCR_TRANSPORT: ${{ matrix.phpcr-transport }}
+            COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
         strategy:
             fail-fast: false
@@ -143,8 +145,6 @@ jobs:
                   extensions: ${{ matrix.php-extensions }}
                   tools: ${{ matrix.tools }}
                   coverage: none
-              env:
-                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Require jackrabbit dependencies
               if: ${{ matrix.phpcr-transport == 'jackrabbit' }}
@@ -174,6 +174,7 @@ jobs:
             APP_SECRET: a448d1dfcaa563fce56c2fd9981f662b
             MAILER_URL: null://localhost
             SULU_ADMIN_EMAIL:
+            COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
         steps:
             - name: Checkout project
@@ -186,8 +187,6 @@ jobs:
                   extensions: 'ctype, iconv, mysql, imagick'
                   tools: 'composer:v2'
                   coverage: none
-              env:
-                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Install composer dependencies
               uses: ramsey/composer-install@v1
@@ -208,6 +207,7 @@ jobs:
             SULU_ADMIN_EMAIL:
             DATABASE_URL: mysql://root:root@127.0.0.1:3306/sulu_test?serverVersion=${{ matrix.mysql-version }}
             PHPCR_TRANSPORT: ${{ matrix.phpcr-transport }}
+            COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
         strategy:
             fail-fast: false
@@ -235,8 +235,6 @@ jobs:
                   extensions: ${{ matrix.php-extensions }}
                   tools: ${{ matrix.tools }}
                   ini-values: 'memory_limit=-1'
-              env:
-                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Install and configure MySQL
               uses: shogo82148/actions-setup-mysql@v1.0.1
