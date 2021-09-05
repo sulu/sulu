@@ -311,15 +311,23 @@ class User extends ApiEntity implements UserInterface, Serializable, EquatableIn
     public function serialize()
     {
         return \serialize(
-            [
-                $this->id,
-                $this->password,
-                $this->salt,
-                $this->username,
-                $this->locked,
-                $this->enabled,
-            ]
+            $this->__serialize()
         );
+    }
+
+    /**
+     * @return mixed[]
+     */
+    public function __serialize(): array
+    {
+        return [
+            $this->id,
+            $this->password,
+            $this->salt,
+            $this->username,
+            $this->locked,
+            $this->enabled,
+        ];
     }
 
     /**
@@ -331,9 +339,17 @@ class User extends ApiEntity implements UserInterface, Serializable, EquatableIn
      */
     public function unserialize($serialized)
     {
+        $this->__unserialize(\unserialize($serialized));
+    }
+
+    /**
+     * @param mixed[] $data
+     */
+    public function __unserialize(array $data): void
+    {
         list(
             $this->id, $this->password, $this->salt, $this->username, $this->locked, $this->enabled
-            ) = \unserialize($serialized);
+        ) = $data;
     }
 
     /**
