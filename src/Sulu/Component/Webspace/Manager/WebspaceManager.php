@@ -366,7 +366,7 @@ class WebspaceManager implements WebspaceManagerInterface
         return $this->getWebspaceCollection()->getPortalInformations($environment);
     }
 
-    public function getPortalInformationsByWebspaceKey(?string $environment = null, string $webspaceKey): array
+    public function getPortalInformationsByWebspaceKey(?string $environment, string $webspaceKey): array
     {
         if (null === $environment) {
             $environment = $this->environment;
