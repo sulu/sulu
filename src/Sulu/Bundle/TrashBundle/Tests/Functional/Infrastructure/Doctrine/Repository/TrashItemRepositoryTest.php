@@ -63,7 +63,7 @@ class TrashItemRepositoryTest extends SuluTestCase
         static::assertSame('sulu.settings.test_context', $trashItem->getResourceSecurityContext());
         static::assertSame('TestClass', $trashItem->getResourceSecurityObjectType());
         static::assertSame('1', $trashItem->getResourceSecurityObjectId());
-        static::assertInstanceOf(\DateTimeImmutable::class, $trashItem->getTimestamp());
+        static::assertInstanceOf(\DateTimeImmutable::class, $trashItem->getStoreTimestamp());
     }
 
     public function testCreateLocalizedTitles(): void

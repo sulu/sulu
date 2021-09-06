@@ -81,13 +81,13 @@
         </concatenation-property>
 
         <property
-            name="timestamp"
+            name="storeTimestamp"
             visibility="no"
             sortable="true"
             searchability="never"
             translation="sulu_admin.timestamp"
         >
-            <field-name>timestamp</field-name>
+            <field-name>storeTimestamp</field-name>
             <entity-name>%sulu.model.trash_item.class%</entity-name>
             <transformer type="datetime"/>
             <filter type="datetime"/>

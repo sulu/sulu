@@ -88,13 +88,13 @@ class TrashItemTest extends TestCase
         static::assertSame('1', $trashItem->getResourceSecurityObjectId());
     }
 
-    public function testGetSetTimestamp(): void
+    public function testGetSetStoreTimestamp(): void
     {
-        $timestamp = new \DateTimeImmutable();
+        $storeTimestamp = new \DateTimeImmutable();
 
         $trashItem = new TrashItem();
-        $trashItem->setTimestamp($timestamp);
-        static::assertSame($timestamp, $trashItem->getTimestamp());
+        $trashItem->setStoreTimestamp($storeTimestamp);
+        static::assertSame($storeTimestamp, $trashItem->getStoreTimestamp());
     }
 
     public function testGetSetUser(): void

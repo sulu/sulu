@@ -54,9 +54,9 @@ interface TrashItemInterface
 
     public function setResourceSecurityObjectId(?string $resourceSecurityObjectId): self;
 
-    public function getTimestamp(): \DateTimeImmutable;
+    public function getStoreTimestamp(): \DateTimeImmutable;
 
-    public function setTimestamp(\DateTimeImmutable $timestamp): self;
+    public function setStoreTimestamp(\DateTimeImmutable $storeTimestamp): self;
 
     public function getUser(): ?UserInterface;
 

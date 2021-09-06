@@ -58,7 +58,7 @@ class TrashItem implements TrashItemInterface
     /**
      * @var \DateTimeImmutable
      */
-    private $timestamp;
+    private $storeTimestamp;
 
     /**
      * @var UserInterface|null
@@ -173,14 +173,14 @@ class TrashItem implements TrashItemInterface
         return $this;
     }
 
-    public function getTimestamp(): \DateTimeImmutable
+    public function getStoreTimestamp(): \DateTimeImmutable
     {
-        return $this->timestamp;
+        return $this->storeTimestamp;
     }
 
-    public function setTimestamp(\DateTimeImmutable $timestamp): TrashItemInterface
+    public function setStoreTimestamp(\DateTimeImmutable $storeTimestamp): TrashItemInterface
     {
-        $this->timestamp = $timestamp;
+        $this->storeTimestamp = $storeTimestamp;
 
         return $this;
     }

@@ -29,7 +29,7 @@ to add the bundle to your `config/bundles.php` file:
 Additionally, you need to update your database schema to include the tables that are used by the bundle:
 
 ```sql
-CREATE TABLE tr_trash_items (id INT AUTO_INCREMENT NOT NULL, resourceKey VARCHAR(191) NOT NULL, resourceId VARCHAR(191) NOT NULL, restoreData JSON NOT NULL, resourceSecurityContext VARCHAR(191) DEFAULT NULL, resourceSecurityObjectType VARCHAR(191) DEFAULT NULL, resourceSecurityObjectId VARCHAR(191) DEFAULT NULL, timestamp DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)', userId INT DEFAULT NULL, INDEX IDX_102989B64B64DCC (userId), UNIQUE INDEX UNIQ_102989B5DAEB55C8CF57CB1 (resourceKey, resourceId), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
+CREATE TABLE tr_trash_items (id INT AUTO_INCREMENT NOT NULL, resourceKey VARCHAR(191) NOT NULL, resourceId VARCHAR(191) NOT NULL, restoreData JSON NOT NULL, resourceSecurityContext VARCHAR(191) DEFAULT NULL, resourceSecurityObjectType VARCHAR(191) DEFAULT NULL, resourceSecurityObjectId VARCHAR(191) DEFAULT NULL, storeTimestamp DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)', userId INT DEFAULT NULL, INDEX IDX_102989B64B64DCC (userId), UNIQUE INDEX UNIQ_102989B5DAEB55C8CF57CB1 (resourceKey, resourceId), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
 CREATE TABLE tr_trash_item_translations (id INT AUTO_INCREMENT NOT NULL, locale VARCHAR(191) DEFAULT NULL, title VARCHAR(191) NOT NULL, trashItemId INT NOT NULL, INDEX IDX_8264DAF45C8D7CA (trashItemId), UNIQUE INDEX UNIQ_8264DAF45C8D7CA4180C698 (trashItemId, locale), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
 ALTER TABLE tr_trash_items ADD CONSTRAINT FK_102989B64B64DCC FOREIGN KEY (userId) REFERENCES se_users (id) ON DELETE SET NULL;
 ALTER TABLE tr_trash_item_translations ADD CONSTRAINT FK_8264DAF45C8D7CA FOREIGN KEY (trashItemId) REFERENCES tr_trash_items (id) ON DELETE CASCADE;
@@ -44,6 +44,18 @@ sulu_trash_api:
     resource: "@SuluTrashBundle/Resources/config/routing_api.yml"
     type: rest
     prefix: /admin/api
+```
+
+then add the following to the dependencies section of your `assets/admin/package.json`:
+
+```json
+"sulu-trash-bundle": "file:node_modules/@sulu/vendor/sulu/sulu/src/Sulu/Bundle/TrashBundle/Resources/js",
+```
+
+and import the `SuluTrashBundle` assets in your `assets/admin/index.js`:
+
+```js
+import 'sulu-trash-bundle';
 ```
 
 ### AccessControlRepositoryInterface has changed

@@ -68,7 +68,7 @@ final class TrashItemRepository implements TrashItemRepositoryInterface
             ->setResourceSecurityContext($resourceSecurityContext)
             ->setResourceSecurityObjectType($resourceSecurityObjectType)
             ->setResourceSecurityObjectId($resourceSecurityObjectId)
-            ->setTimestamp(new \DateTimeImmutable())
+            ->setStoreTimestamp(new \DateTimeImmutable())
             ->setUser($this->getCurrentUser());
 
         if (\is_string($resourceTitle)) {
