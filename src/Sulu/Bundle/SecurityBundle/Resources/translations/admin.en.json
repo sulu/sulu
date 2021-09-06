@@ -1,4 +1,5 @@
 {
+    "sulu_security.user": "User",
     "sulu_security.roles": "User roles",
     "sulu_security.user_name": "Username",
     "sulu_security.enable_user": "Enable User",

@@ -1,0 +1,96 @@
+<?xml version="1.0" ?>
+<list xmlns="http://schemas.sulu.io/list-builder/list">
+    <key>trash_items</key>
+
+    <joins name="user">
+        <join>
+            <entity-name>%sulu.model.user.class%</entity-name>
+            <field-name>%sulu.model.trash_item.class%.user</field-name>
+        </join>
+        <join>
+            <entity-name>%sulu.model.contact.class%</entity-name>
+            <field-name>%sulu.model.user.class%.contact</field-name>
+        </join>
+    </joins>
+
+    <joins name="translation">
+        <join>
+            <entity-name>%sulu.model.trash_item.class%_translation</entity-name>
+            <field-name>%sulu.model.trash_item.class%.translations</field-name>
+            <condition>%sulu.model.trash_item.class%_translation.locale = :locale</condition>
+        </join>
+    </joins>
+
+    <joins name="fallbackTranslation">
+        <join>
+            <entity-name>%sulu.model.trash_item.class%_fallbackTranslation</entity-name>
+            <field-name>%sulu.model.trash_item.class%.translations</field-name>
+        </join>
+    </joins>
+
+    <properties>
+        <property
+            name="resourceType"
+            visibility="yes"
+            sortable="true"
+            searchability="no"
+            translation="sulu_admin.resource"
+        >
+            <field-name>resourceKey</field-name>
+            <entity-name>%sulu.model.trash_item.class%</entity-name>
+        </property>
+
+        <case-property
+            name="resourceTitle"
+            visibility="always"
+            sortable="true"
+            searchability="yes"
+            translation="sulu_admin.title"
+        >
+            <field>
+                <field-name>title</field-name>
+                <entity-name>%sulu.model.trash_item.class%_translation</entity-name>
+                <joins ref="translation"/>
+            </field>
+            <field>
+                <field-name>title</field-name>
+                <entity-name>%sulu.model.trash_item.class%_fallbackTranslation</entity-name>
+                <joins ref="fallbackTranslation"/>
+            </field>
+        </case-property>
+
+        <concatenation-property
+            name="user"
+            visibility="no"
+            sortable="true"
+            searchability="never"
+            translation="sulu_security.user"
+        >
+            <field>
+                <field-name>firstName</field-name>
+                <entity-name>%sulu.model.contact.class%</entity-name>
+
+                <joins ref="user"/>
+            </field>
+            <field>
+                <field-name>lastName</field-name>
+                <entity-name>%sulu.model.contact.class%</entity-name>
+
+                <joins ref="user"/>
+            </field>
+        </concatenation-property>
+
+        <property
+            name="storeTimestamp"
+            visibility="no"
+            sortable="true"
+            searchability="never"
+            translation="sulu_admin.timestamp"
+        >
+            <field-name>storeTimestamp</field-name>
+            <entity-name>%sulu.model.trash_item.class%</entity-name>
+            <transformer type="datetime"/>
+            <filter type="datetime"/>
+        </property>
+    </properties>
+</list>

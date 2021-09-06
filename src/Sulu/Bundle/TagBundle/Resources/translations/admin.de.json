@@ -2,9 +2,11 @@
     "sulu_tag.tags": "Tags",
     "sulu_tag.tag": "Tag",
     "sulu_tag.no_commas_allowed": "In diesem Feld sind keine Beistriche erlaubt",
+    "sulu_tag.tag_already_exists": "Ein Tag mit dem Namen \"{name}\" existiert bereits.",
     "sulu_activity.resource.tags": "Tag",
     "sulu_activity.description.tags.created": "{userFullName} hat den Tag \"{resourceTitle}\" erstellt",
     "sulu_activity.description.tags.modified": "{userFullName} hat den Tag \"{resourceTitle}\" geändert",
     "sulu_activity.description.tags.removed": "{userFullName} hat den Tag \"{resourceTitle}\" gelöscht",
-    "sulu_activity.description.tags.merged": "{userFullName} hat die Tags \"{context_sourceTagName}\" und \"{resourceTitle}\" zusammengeführt"
+    "sulu_activity.description.tags.merged": "{userFullName} hat die Tags \"{context_sourceTagName}\" und \"{resourceTitle}\" zusammengeführt",
+    "sulu_activity.description.tags.restored": "{userFullName} hat den Tag \"{resourceTitle}\" wiederhergestellt"
 }

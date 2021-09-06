@@ -12,11 +12,12 @@
 namespace Sulu\Bundle\TagBundle\Tag\Exception;
 
 use Exception;
+use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
 
 /**
  * This Exception is thrown when a Tag already exists.
  */
-class TagAlreadyExistsException extends Exception
+class TagAlreadyExistsException extends Exception implements TranslationErrorMessageExceptionInterface
 {
     /**
      * The id of the tag, which was not found.
@@ -43,5 +44,20 @@ class TagAlreadyExistsException extends Exception
     public function getName()
     {
         return $this->name;
+    }
+
+    public function getMessageTranslationKey(): string
+    {
+        return 'sulu_tag.tag_already_exists';
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getMessageTranslationParameters(): array
+    {
+        return [
+            '{name}' => $this->name,
+        ];
     }
 }

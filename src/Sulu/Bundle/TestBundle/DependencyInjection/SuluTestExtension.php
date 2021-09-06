@@ -28,5 +28,7 @@ class SuluTestExtension extends Extension
         if (isset($config['enable_test_user_provider']) && $config['enable_test_user_provider']) {
             $loader->load('test_user_provider.xml');
         }
+
+        $loader->load('services_trash.xml');
     }
 }

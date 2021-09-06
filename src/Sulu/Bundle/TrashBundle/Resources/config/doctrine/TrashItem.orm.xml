@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <mapped-superclass name="Sulu\Bundle\TrashBundle\Domain\Model\TrashItem" table="tr_trash_items">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+
+        <field name="resourceKey" column="resourceKey" type="string" nullable="false" length="191"/>
+        <field name="resourceId" column="resourceId" type="string" nullable="false" length="191"/>
+        <field name="restoreData" column="restoreData" type="json" nullable="false"/>
+        <field name="resourceSecurityContext" column="resourceSecurityContext" type="string" nullable="true" length="191"/>
+        <field name="resourceSecurityObjectType" column="resourceSecurityObjectType" type="string" nullable="true" length="191"/>
+        <field name="resourceSecurityObjectId" column="resourceSecurityObjectId" type="string" nullable="true" length="191"/>
+        <field name="storeTimestamp" column="storeTimestamp" type="datetime_immutable" nullable="false"/>
+
+        <many-to-one field="user" target-entity="Sulu\Component\Security\Authentication\UserInterface">
+            <join-column name="userId" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
+        </many-to-one>
+
+        <one-to-many field="translations" target-entity="Sulu\Bundle\TrashBundle\Domain\Model\TrashItemTranslation" mapped-by="trashItem">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+        </one-to-many>
+
+        <unique-constraints>
+            <unique-constraint columns="resourceKey,resourceId" />
+        </unique-constraints>
+    </mapped-superclass>
+</doctrine-mapping>
