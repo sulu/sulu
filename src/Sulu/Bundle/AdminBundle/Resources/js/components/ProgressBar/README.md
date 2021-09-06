@@ -14,7 +14,7 @@ Beside the default `progress` skin, it supports a `success` skin,
 <ProgressBar
     value={100}
     max={100}
-    type="success"
+    skin="success"
 />
 ```
 
@@ -24,7 +24,7 @@ an `error` skin
 <ProgressBar
     value={25}
     max={100}
-    type="error"
+    skin="error"
 />
 ```
 
@@ -34,6 +34,6 @@ and a `warning` skin.
 <ProgressBar
     value={75}
     max={100}
-    type="warning"
+    skin="warning"
 />
 ```

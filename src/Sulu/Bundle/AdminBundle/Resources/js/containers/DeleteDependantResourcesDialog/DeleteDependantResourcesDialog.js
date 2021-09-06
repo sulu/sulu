@@ -233,7 +233,7 @@ class DeleteDependantResourcesDialog extends React.Component<Props> {
                         <div className={styles.progressBar}>
                             <ProgressBar
                                 max={this.dependantResourcesCount}
-                                type={this.errored
+                                skin={this.errored
                                     ? 'error'
                                     : this.finished
                                         ? 'success'
