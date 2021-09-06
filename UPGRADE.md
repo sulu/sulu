@@ -26,7 +26,7 @@ to add the bundle to your `config/bundles.php` file:
 +    Sulu\Bundle\TrashBundle\SuluTrashBundle::class => ['all' => true],
 ```
 
-Additionally, you need to update your database schema to include the tables that are used by the bundle:
+To update your database schema to include the tables that are used by the bundle, you need to execute the following SQL statements:
 
 ```sql
 CREATE TABLE tr_trash_items (id INT AUTO_INCREMENT NOT NULL, resourceKey VARCHAR(191) NOT NULL, resourceId VARCHAR(191) NOT NULL, restoreData JSON NOT NULL, resourceSecurityContext VARCHAR(191) DEFAULT NULL, resourceSecurityObjectType VARCHAR(191) DEFAULT NULL, resourceSecurityObjectId VARCHAR(191) DEFAULT NULL, storeTimestamp DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)', userId INT DEFAULT NULL, INDEX IDX_102989B64B64DCC (userId), UNIQUE INDEX UNIQ_102989B5DAEB55C8CF57CB1 (resourceKey, resourceId), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
@@ -37,7 +37,7 @@ ALTER TABLE tr_trash_item_translations ADD CONSTRAINT FK_8264DAF45C8D7CA FOREIGN
 
 > For MYSQL 5.6 and lower, the `JSON` type of the `restoreData` column must be replaced with `TEXT`. See the [doctrine/dbal type](https://www.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/types.html#json) documentation.
 
-Finally, you need to include the routes of the bundle in your `config/routes/sulu_admin.yaml`:
+Additionally, you need to include the routes of the bundle in your `config/routes/sulu_admin.yaml`:
 
 ```yaml
 sulu_trash_api:
@@ -46,13 +46,13 @@ sulu_trash_api:
     prefix: /admin/api
 ```
 
-then add the following to the dependencies section of your `assets/admin/package.json`:
+Furthermore, you need to add the Javascript code of the bundle to the dependencies section in your `assets/admin/package.json`:
 
 ```json
 "sulu-trash-bundle": "file:node_modules/@sulu/vendor/sulu/sulu/src/Sulu/Bundle/TrashBundle/Resources/js",
 ```
 
-and import the `SuluTrashBundle` assets in your `assets/admin/index.js`:
+Finally, you need to import the `SuluTrashBundle` Javascript code in your `assets/admin/index.js` file:
 
 ```js
 import 'sulu-trash-bundle';
