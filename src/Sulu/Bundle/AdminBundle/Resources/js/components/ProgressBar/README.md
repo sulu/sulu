@@ -8,7 +8,7 @@ A simple progress bar component used to indicate the progress of multiple tasks 
 ```
 
 The style can be customized.
-Beside the default `progress` style, it supports a `success` style,
+Beside the default `progress` skin, it supports a `success` skin,
 
 ```javascript
 <ProgressBar
@@ -18,7 +18,7 @@ Beside the default `progress` style, it supports a `success` style,
 />
 ```
 
-an `error` style
+an `error` skin
 
 ```javascript
 <ProgressBar
@@ -28,7 +28,7 @@ an `error` style
 />
 ```
 
-and a `warning` style.
+and a `warning` skin.
 
 ```javascript
 <ProgressBar

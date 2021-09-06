@@ -119,6 +119,7 @@ class DeleteDependantResourcesDialog extends React.Component<Props> {
                 this.promises.splice(0, this.promises.length);
 
                 if (!this.inProgress) {
+                    // do not delete next batch if user cancelled the dialog during the previous batch
                     return;
                 }
 
@@ -239,8 +240,8 @@ class DeleteDependantResourcesDialog extends React.Component<Props> {
                                         : this.cancelled
                                             ? 'warning'
                                             : 'progress'}
-                                value={this.errored && this.totalDeletedResources === 0
-                                    ? 1
+                                value={this.errored
+                                    ? this.totalDeletedResources + 1
                                     : this.totalDeletedResources
                                 }
                             />
