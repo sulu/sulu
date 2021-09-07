@@ -201,6 +201,13 @@ class Category implements CategoryInterface
         return $this;
     }
 
+    public function setCreated(\DateTime $created)
+    {
+        $this->created = $created;
+
+        return $this;
+    }
+
     public function getCreator()
     {
         return $this->creator;

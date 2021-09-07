@@ -70,6 +70,11 @@ class TrashItem implements TrashItemInterface
      */
     private $translations;
 
+    /**
+     * @var string|null
+     */
+    private $defaultLocale;
+
     public function __construct()
     {
         $this->translations = new ArrayCollection();
@@ -125,8 +130,7 @@ class TrashItem implements TrashItemInterface
     {
         if (!$this->hasTranslation($locale)) {
             $translation = new TrashItemTranslation($this, $locale, $resourceTitle);
-
-            $this->translations->add($translation);
+            $this->addTranslation($translation);
 
             return $this;
         }
@@ -207,7 +211,11 @@ class TrashItem implements TrashItemInterface
         )->first();
 
         if (!$translation && $fallback) {
-            $translation = $this->translations->first();
+            $translation = $this->translations->filter(
+                function(TrashItemTranslation $translation) {
+                    return $translation->getLocale() === $this->defaultLocale;
+                }
+            )->first();
         }
 
         if (!$translation) {
@@ -224,5 +232,14 @@ class TrashItem implements TrashItemInterface
                 return $translation->getLocale() === $locale;
             }
         )->isEmpty();
+    }
+
+    private function addTranslation(TrashItemTranslation $translation): void
+    {
+        if ($this->translations->count() === 0) {
+            $this->defaultLocale = $translation->getLocale();
+        }
+
+        $this->translations->add($translation);
     }
 }

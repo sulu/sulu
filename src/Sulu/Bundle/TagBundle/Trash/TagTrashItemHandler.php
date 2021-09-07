@@ -44,6 +44,7 @@ final class TagTrashItemHandler implements StoreTrashItemHandlerInterface, Resto
     {
         Assert::isInstanceOf($tag, TagInterface::class);
 
+        // TODO: maybe store creator/created here too?
         return $this->trashItemRepository->create(
             TagInterface::RESOURCE_KEY,
             (string) $tag->getId(),
@@ -59,6 +60,7 @@ final class TagTrashItemHandler implements StoreTrashItemHandlerInterface, Resto
 
     public function restore(TrashItemInterface $trashItem, array $restoreFormData): object
     {
+        // TODO: maybe inline functionality of $tagManager->restore() to keep handling of $trashItem->getRestoreData() in this class?
         return $this->tagManager->restore(
             (int) $trashItem->getResourceId(),
             $trashItem->getRestoreData()

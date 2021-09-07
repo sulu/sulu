@@ -1,6 +1,6 @@
 {
     "sulu_trash.trash": "Papierkorb",
-    "sulu_trash.restore_error": "Beim wiederherstellen dieses Elements ist ein Fehler aufgetreten",
+    "sulu_trash.restore_error": "Beim wiederherstellen des Elements ist ein Fehler aufgetreten",
     "sulu_trash.restore_element": "Element wiederherstellen",
     "sulu_trash.restore_element_dialog_text": "Sind sie sicher, dass Sie dieses Element wiederherstellen möchten?",
     "sulu_activity.resource.trash_items": "Gelöschtes Element",

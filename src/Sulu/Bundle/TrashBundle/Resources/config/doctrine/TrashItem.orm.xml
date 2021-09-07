@@ -14,6 +14,7 @@
         <field name="resourceSecurityObjectType" column="resourceSecurityObjectType" type="string" nullable="true" length="191"/>
         <field name="resourceSecurityObjectId" column="resourceSecurityObjectId" type="string" nullable="true" length="191"/>
         <field name="storeTimestamp" column="storeTimestamp" type="datetime_immutable" nullable="false"/>
+        <field name="defaultLocale" column="defaultLocale" type="string" nullable="true" length="191"/>
 
         <many-to-one field="user" target-entity="Sulu\Component\Security\Authentication\UserInterface">
             <join-column name="userId" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
