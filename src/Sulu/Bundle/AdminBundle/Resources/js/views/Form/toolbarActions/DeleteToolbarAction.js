@@ -11,7 +11,7 @@ import {ResourceFormStore} from '../../../containers/Form';
 import Router from '../../../services/Router';
 import ResourceStore from '../../../stores/ResourceStore';
 import Form from '../Form';
-import ERROR_CODES from '../../../utils/Error/ErrorCodes';
+import {ERROR_CODE_DEPENDANT_RESOURCES_FOUND, ERROR_CODE_REFERENCING_RESOURCES_FOUND} from '../../../index';
 import AbstractFormToolbarAction from './AbstractFormToolbarAction';
 import type {DependantResourcesData, ReferencingResourcesData} from '../../../types';
 
@@ -76,17 +76,13 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
             return null;
         }
 
-        const {resource, referencingResources, referencingResourcesCount} = this.referencingResourcesData;
-
         return (
             <DeleteReferencedResourceDialog
                 allowDeletion={this.allowConflictDeletion}
-                loading={this.resourceFormStore.deleting}
+                confirmLoading={this.resourceFormStore.deleting}
                 onCancel={this.handleDeleteReferencedResourcesDialogCancel}
                 onConfirm={this.handleDeleteReferencedResourcesDialogConfirm}
-                referencingResources={referencingResources}
-                referencingResourcesCount={referencingResourcesCount}
-                resource={resource}
+                referencingResourcesData={this.referencingResourcesData}
             />
         );
     }
@@ -96,10 +92,6 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
     };
 
     handleDeleteDependantResourcesDialogCancel = () => {
-        this.closeDeleteDependantResourcesDialog();
-    };
-
-    handleDeleteDependantResourcesDialogClose = () => {
         this.closeDeleteDependantResourcesDialog();
     };
 
@@ -128,7 +120,6 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
             <DeleteDependantResourcesDialog
                 dependantResourcesData={this.dependantResourcesData}
                 onCancel={this.handleDeleteDependantResourcesDialogCancel}
-                onClose={this.handleDeleteDependantResourcesDialogClose}
                 onFinish={this.handleDeleteDependantResourcesDialogFinish}
                 requestOptions={this.deleteDependantResourcesDialogRequestOptions}
             />
@@ -253,7 +244,7 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
                     this.closeDeleteDependantResourcesDialog();
                     this.closeDeleteReferencedResourceDialog();
 
-                    if (response.status === 409 && data.code === ERROR_CODES.DEPENDANT_RESOURCES_FOUND) {
+                    if (response.status === 409 && data.code === ERROR_CODE_DEPENDANT_RESOURCES_FOUND) {
                         this.dependantResourcesData = {
                             dependantResourceBatches: data.dependantResourceBatches,
                             dependantResourcesCount: data.dependantResourcesCount,
@@ -262,7 +253,7 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
                         return;
                     }
 
-                    if (response.status === 409 && data.code === ERROR_CODES.REFERENCING_RESOURCES_FOUND) {
+                    if (response.status === 409 && data.code === ERROR_CODE_REFERENCING_RESOURCES_FOUND) {
                         this.referencingResourcesData = {
                             resource: data.resource,
                             referencingResources: data.referencingResources,

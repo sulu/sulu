@@ -15,7 +15,7 @@ import SingleListOverlay from '../SingleListOverlay';
 import {translate} from '../../utils';
 import DeleteReferencedResourceDialog from '../DeleteReferencedResourceDialog';
 import DeleteDependantResourcesDialog from '../DeleteDependantResourcesDialog';
-import ERROR_CODES from '../../utils/Error/ErrorCodes';
+import {ERROR_CODE_DEPENDANT_RESOURCES_FOUND, ERROR_CODE_REFERENCING_RESOURCES_FOUND} from '../../index';
 import ListStore from './stores/ListStore';
 import listAdapterRegistry from './registries/listAdapterRegistry';
 import AbstractAdapter from './adapters/AbstractAdapter';
@@ -259,7 +259,7 @@ class List extends React.Component<Props> {
         response.json().then(action((data) => {
             this.closeAllDialogs();
 
-            if (response.status === 409 && data.code === ERROR_CODES.REFERENCING_RESOURCES_FOUND) {
+            if (response.status === 409 && data.code === ERROR_CODE_REFERENCING_RESOURCES_FOUND) {
                 this.referencingResourcesData = {
                     resource: data.resource,
                     referencingResources: data.referencingResources,
@@ -285,7 +285,7 @@ class List extends React.Component<Props> {
                 return;
             }
 
-            if (response.status === 409 && data.code === ERROR_CODES.DEPENDANT_RESOURCES_FOUND) {
+            if (response.status === 409 && data.code === ERROR_CODE_DEPENDANT_RESOURCES_FOUND) {
                 this.dependantResourcesData = {
                     dependantResourceBatches: data.dependantResourceBatches,
                     dependantResourcesCount: data.dependantResourcesCount,
@@ -563,17 +563,14 @@ class List extends React.Component<Props> {
         }
 
         const {store} = this.props;
-        const {resource, referencingResources, referencingResourcesCount} = this.referencingResourcesData;
 
         return (
             <DeleteReferencedResourceDialog
                 allowDeletion={this.allowConflictDeletion}
-                loading={store.deleting}
+                confirmLoading={store.deleting}
                 onCancel={this.handleDeleteDialogCancelClick}
                 onConfirm={this.handleDeleteDialogConfirmClick}
-                referencingResources={referencingResources}
-                referencingResourcesCount={referencingResourcesCount}
-                resource={resource}
+                referencingResourcesData={this.referencingResourcesData}
             />
         );
     }
@@ -584,10 +581,6 @@ class List extends React.Component<Props> {
         return store.queryOptions;
     }
 
-    @action handleDeleteDependantResourcesDialogClose = () => {
-        this.closeAllDialogs();
-    };
-
     renderDeleteDependantResourcesDialog() {
         if (!this.dependantResourcesData) {
             return null;
@@ -597,7 +590,6 @@ class List extends React.Component<Props> {
             <DeleteDependantResourcesDialog
                 dependantResourcesData={this.dependantResourcesData}
                 onCancel={this.handleDeleteDialogCancelClick}
-                onClose={this.handleDeleteDependantResourcesDialogClose}
                 onFinish={this.handleDeleteDialogConfirmClick}
                 requestOptions={this.deleteDependantResourcesDialogRequestOptions}
             />

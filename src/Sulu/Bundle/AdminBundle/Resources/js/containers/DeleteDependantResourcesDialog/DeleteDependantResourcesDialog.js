@@ -15,7 +15,6 @@ import type {Resource, DependantResourcesData, DependantResourceBatches} from '.
 type Props = {
     dependantResourcesData: DependantResourcesData,
     onCancel?: () => void,
-    onClose?: () => void,
     onError?: (error: any) => void,
     onFinish?: () => void,
     requestOptions?: {[string]: any} | null,
@@ -24,10 +23,10 @@ type Props = {
 @observer
 class DeleteDependantResourcesDialog extends React.Component<Props> {
     @observable inProgress: boolean = false;
-    @observable cancelled: boolean = false;
     @observable finished: boolean = false;
     @observable showSnackbar: boolean = true;
     @observable error: string | typeof undefined = undefined;
+    @observable closed: boolean = false;
     @observable totalDeletedResources: number = 0;
 
     promises: Array<RequestPromise<any>> = [];
@@ -44,10 +43,10 @@ class DeleteDependantResourcesDialog extends React.Component<Props> {
         if (!equals(toJS(prevProps.dependantResourcesData), toJS(this.props.dependantResourcesData))
             || !equals(toJS(prevProps.requestOptions), toJS(this.props.requestOptions))) {
             this.inProgress = false;
-            this.cancelled = false;
             this.finished = false;
             this.showSnackbar = true;
             this.error = undefined;
+            this.closed = false;
             this.totalDeletedResources = 0;
             this.promises = [];
         }
@@ -138,7 +137,7 @@ class DeleteDependantResourcesDialog extends React.Component<Props> {
             });
         }
 
-        this.cancelled = true;
+        this.closed = true;
 
         if (!onCancel) {
             return;
@@ -147,49 +146,21 @@ class DeleteDependantResourcesDialog extends React.Component<Props> {
         onCancel();
     };
 
-    handleClose = () => {
-        const {onClose} = this.props;
-
-        if (!onClose) {
-            return;
-        }
-
-        onClose();
-    };
-
     @action handleSnackbarCloseClick = () => {
         this.showSnackbar = false;
     };
 
     @computed get snackbarType(): SnackbarType | typeof undefined {
-        if (!this.showSnackbar) {
-            return undefined;
-        }
-
-        if (this.errored) {
+        if (this.showSnackbar && this.errored) {
             return 'error';
-        }
-
-        if (this.cancelled) {
-            return 'warning';
         }
 
         return undefined;
     }
 
     @computed get snackbarMessage(): string | typeof undefined {
-        const {snackbarType} = this;
-
-        if (!snackbarType) {
-            return undefined;
-        }
-
-        if (snackbarType === 'error' && this.error) {
+        if (this.snackbarType === 'error' && this.error) {
             return this.error;
-        }
-
-        if (snackbarType === 'warning') {
-            return translate('sulu_admin.delete_dependants_cancelled_text');
         }
 
         return undefined;
@@ -199,28 +170,24 @@ class DeleteDependantResourcesDialog extends React.Component<Props> {
         return (
             <Dialog
                 cancelText={
-                    this.errored || this.cancelled || this.finished
+                    this.errored || this.finished
                         ? translate('sulu_admin.close')
                         : translate('sulu_admin.cancel')
                 }
-                confirmDisabled={this.errored || this.cancelled || this.finished}
+                confirmDisabled={this.errored || this.finished}
                 confirmLoading={this.inProgress}
                 confirmText={translate('sulu_admin.delete')}
-                onCancel={
-                    this.errored || this.cancelled || this.finished
-                        ? this.handleClose
-                        : this.handleCancel
-                }
+                onCancel={this.handleCancel}
                 onConfirm={this.handleConfirm}
                 onSnackbarCloseClick={this.handleSnackbarCloseClick}
-                open={true}
+                open={!this.closed}
                 snackbarMessage={this.snackbarMessage}
                 snackbarType={this.snackbarType}
                 title={translate('sulu_admin.delete_dependants_warning_title', {
                     count: this.dependantResourcesCount,
                 })}
             >
-                {!this.inProgress && !this.cancelled && !this.finished && !this.errored && (
+                {!this.inProgress && !this.finished && !this.errored && (
                     <p>
                         {translate('sulu_admin.delete_dependants_warning', {
                             count: this.dependantResourcesCount,
@@ -228,7 +195,7 @@ class DeleteDependantResourcesDialog extends React.Component<Props> {
                     </p>
                 )}
 
-                {(this.inProgress || this.cancelled || this.finished || this.errored) && (
+                {(this.inProgress || this.finished || this.errored) && (
                     <React.Fragment>
                         <div className={styles.progressBar}>
                             <ProgressBar
@@ -237,9 +204,7 @@ class DeleteDependantResourcesDialog extends React.Component<Props> {
                                     ? 'error'
                                     : this.finished
                                         ? 'success'
-                                        : this.cancelled
-                                            ? 'warning'
-                                            : 'progress'}
+                                        : 'progress'}
                                 value={this.errored
                                     ? this.totalDeletedResources + 1
                                     : this.totalDeletedResources

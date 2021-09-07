@@ -2,6 +2,7 @@
 import {mount} from 'enzyme';
 import React from 'react';
 import DeleteReferencedResourceDialog from '../DeleteReferencedResourceDialog';
+import type {ReferencingResourcesData} from '../../../types';
 
 jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
@@ -10,19 +11,25 @@ jest.mock('../../../utils/Translator', () => ({
 test('The component should render', () => {
     const onConfirm = jest.fn();
     const onCancel = jest.fn();
-    const referencingResources = [
-        {id: 2, resourceKey: 'pages', title: 'Foo'},
-        {id: 3, resourceKey: 'pages', title: 'Bar'},
-    ];
+    const referencingResourcesData: ReferencingResourcesData = {
+        referencingResources: [
+            {id: 2, resourceKey: 'pages', title: 'Foo'},
+            {id: 3, resourceKey: 'pages', title: 'Bar'},
+        ],
+        referencingResourcesCount: 2,
+        resource: {
+            id: 1,
+            resourceKey: 'pages',
+        },
+    };
 
     const view = mount(
         <DeleteReferencedResourceDialog
             allowDeletion={true}
-            loading={false}
+            confirmLoading={false}
             onCancel={onCancel}
             onConfirm={onConfirm}
-            referencingResources={referencingResources}
-            referencingResourcesCount={referencingResources.length}
+            referencingResourcesData={referencingResourcesData}
         />
     );
 
@@ -32,19 +39,25 @@ test('The component should render', () => {
 test('The component should render with loading state and deletion not allowed', () => {
     const onConfirm = jest.fn();
     const onCancel = jest.fn();
-    const referencingResources = [
-        {id: 2, resourceKey: 'pages', title: 'Foo'},
-        {id: 3, resourceKey: 'pages', title: 'Bar'},
-    ];
+    const referencingResourcesData: ReferencingResourcesData = {
+        referencingResources: [
+            {id: 2, resourceKey: 'pages', title: 'Foo'},
+            {id: 3, resourceKey: 'pages', title: 'Bar'},
+        ],
+        referencingResourcesCount: 2,
+        resource: {
+            id: 1,
+            resourceKey: 'pages',
+        },
+    };
 
     const view = mount(
         <DeleteReferencedResourceDialog
             allowDeletion={false}
-            loading={true}
+            confirmLoading={true}
             onCancel={onCancel}
             onConfirm={onConfirm}
-            referencingResources={referencingResources}
-            referencingResourcesCount={referencingResources.length}
+            referencingResourcesData={referencingResourcesData}
         />
     );
 
@@ -54,19 +67,25 @@ test('The component should render with loading state and deletion not allowed', 
 test('The component should call the confirm callback when the confirm button is clicked', () => {
     const onConfirm = jest.fn();
     const onCancel = jest.fn();
-    const referencingResources = [
-        {id: 2, resourceKey: 'pages', title: 'Foo'},
-        {id: 3, resourceKey: 'pages', title: 'Bar'},
-    ];
+    const referencingResourcesData: ReferencingResourcesData = {
+        referencingResources: [
+            {id: 2, resourceKey: 'pages', title: 'Foo'},
+            {id: 3, resourceKey: 'pages', title: 'Bar'},
+        ],
+        referencingResourcesCount: 2,
+        resource: {
+            id: 1,
+            resourceKey: 'pages',
+        },
+    };
 
     const view = mount(
         <DeleteReferencedResourceDialog
             allowDeletion={true}
-            loading={false}
+            confirmLoading={false}
             onCancel={onCancel}
             onConfirm={onConfirm}
-            referencingResources={referencingResources}
-            referencingResourcesCount={referencingResources.length}
+            referencingResourcesData={referencingResourcesData}
         />
     );
 
@@ -78,19 +97,25 @@ test('The component should call the confirm callback when the confirm button is 
 test('The component should call the cancel callback when the cancel button is clicked', () => {
     const onConfirm = jest.fn();
     const onCancel = jest.fn();
-    const referencingResources = [
-        {id: 2, resourceKey: 'pages', title: 'Foo'},
-        {id: 3, resourceKey: 'pages', title: 'Bar'},
-    ];
+    const referencingResourcesData: ReferencingResourcesData = {
+        referencingResources: [
+            {id: 2, resourceKey: 'pages', title: 'Foo'},
+            {id: 3, resourceKey: 'pages', title: 'Bar'},
+        ],
+        referencingResourcesCount: 2,
+        resource: {
+            id: 1,
+            resourceKey: 'pages',
+        },
+    };
 
     const view = mount(
         <DeleteReferencedResourceDialog
             allowDeletion={true}
-            loading={false}
+            confirmLoading={false}
             onCancel={onCancel}
             onConfirm={onConfirm}
-            referencingResources={referencingResources}
-            referencingResourcesCount={referencingResources.length}
+            referencingResourcesData={referencingResourcesData}
         />
     );
 
@@ -104,19 +129,25 @@ test(
     () => {
         const onConfirm = jest.fn();
         const onCancel = jest.fn();
-        const referencingResources = [
-            {id: 2, resourceKey: 'pages', title: 'Foo'},
-            {id: 3, resourceKey: 'pages', title: 'Bar'},
-        ];
+        const referencingResourcesData: ReferencingResourcesData = {
+            referencingResources: [
+                {id: 2, resourceKey: 'pages', title: 'Foo'},
+                {id: 3, resourceKey: 'pages', title: 'Bar'},
+            ],
+            referencingResourcesCount: 2,
+            resource: {
+                id: 1,
+                resourceKey: 'pages',
+            },
+        };
 
         const view = mount(
             <DeleteReferencedResourceDialog
                 allowDeletion={false}
-                loading={false}
+                confirmLoading={false}
                 onCancel={onCancel}
                 onConfirm={onConfirm}
-                referencingResources={referencingResources}
-                referencingResourcesCount={referencingResources.length}
+                referencingResourcesData={referencingResourcesData}
             />
         );
 

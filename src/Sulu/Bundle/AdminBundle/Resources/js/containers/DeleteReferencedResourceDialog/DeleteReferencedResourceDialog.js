@@ -2,15 +2,14 @@
 import React from 'react';
 import Dialog from '../../components/Dialog';
 import {translate} from '../../utils';
-import type {Resource} from '../../types';
+import type {ReferencingResourcesData} from '../../types';
 
 type Props = {
     allowDeletion: boolean,
-    loading: boolean,
+    confirmLoading: boolean,
     onCancel: () => void,
     onConfirm: () => void,
-    referencingResources: Resource[],
-    referencingResourcesCount: number,
+    referencingResourcesData: ReferencingResourcesData,
 }
 
 class DeleteReferencedResourceDialog extends React.PureComponent<Props> {
@@ -37,12 +36,12 @@ class DeleteReferencedResourceDialog extends React.PureComponent<Props> {
     };
 
     render() {
-        const {allowDeletion, loading, referencingResources} = this.props;
+        const {allowDeletion, confirmLoading, referencingResourcesData} = this.props;
 
         return (
             <Dialog
                 cancelText={translate('sulu_admin.cancel')}
-                confirmLoading={loading}
+                confirmLoading={confirmLoading}
                 confirmText={allowDeletion ? translate('sulu_admin.delete') : translate('sulu_admin.ok')}
                 onCancel={allowDeletion ? this.handleCancel : undefined}
                 onConfirm={this.handleConfirm}
@@ -58,7 +57,7 @@ class DeleteReferencedResourceDialog extends React.PureComponent<Props> {
                 }
 
                 <ul>
-                    {referencingResources.map((item, index) => {
+                    {referencingResourcesData.referencingResources.map((item, index) => {
                         const {title = null} = item;
 
                         if (!title) {

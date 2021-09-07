@@ -32,7 +32,6 @@ jest.mock('../../../services/ResourceRequester', () => ({
 
 test('The component should render', () => {
     const onCancel = jest.fn();
-    const onClose = jest.fn();
     const onError = jest.fn();
     const onFinish = jest.fn();
 
@@ -66,7 +65,6 @@ test('The component should render', () => {
         <DeleteDependantResourcesDialog
             dependantResourcesData={dependantResourcesData}
             onCancel={onCancel}
-            onClose={onClose}
             onError={onError}
             onFinish={onFinish}
             requestOptions={requestOptions}
@@ -78,7 +76,6 @@ test('The component should render', () => {
 
 test('The component should call cancel callback', () => {
     const onCancel = jest.fn();
-    const onClose = jest.fn();
     const onError = jest.fn();
     const onFinish = jest.fn();
 
@@ -112,7 +109,6 @@ test('The component should call cancel callback', () => {
         <DeleteDependantResourcesDialog
             dependantResourcesData={dependantResourcesData}
             onCancel={onCancel}
-            onClose={onClose}
             onError={onError}
             onFinish={onFinish}
             requestOptions={requestOptions}
@@ -125,7 +121,6 @@ test('The component should call cancel callback', () => {
 
 test('The component should delete dependant resources', () => {
     const onCancel = jest.fn();
-    const onClose = jest.fn();
     const onError = jest.fn();
     const onFinish = jest.fn();
 
@@ -160,7 +155,6 @@ test('The component should delete dependant resources', () => {
         <DeleteDependantResourcesDialog
             dependantResourcesData={dependantResourcesData}
             onCancel={onCancel}
-            onClose={onClose}
             onError={onError}
             onFinish={onFinish}
             requestOptions={requestOptions}
@@ -182,10 +176,9 @@ test('The component should delete dependant resources', () => {
         .mockReturnValueOnce(promise5)
         .mockReturnValueOnce(promise6);
 
-    const confirmButton = view.find('Button[skin="primary"]');
-    expect(confirmButton.hasClass('loading')).toBe(false);
-    confirmButton.simulate('click');
-    expect(confirmButton.hasClass('loading'));
+    expect(view.find('Button[skin="primary"]').prop('loading')).toBe(false);
+    view.find('Button[skin="primary"]').simulate('click');
+    expect(view.find('Button[skin="primary"]').prop('loading')).toBe(true);
 
     expect(ResourceRequester.delete).toHaveBeenCalledTimes(1);
     expect(ResourceRequester.delete).toHaveBeenNthCalledWith(1, 'media', {...requestOptions, id: 4});
@@ -214,26 +207,130 @@ test('The component should delete dependant resources', () => {
                 expect(view.instance().totalDeletedResources).toBe(6);
 
                 return new Promise((resolve) => setTimeout(resolve)).then(() => {
-                    expect(confirmButton.hasClass('loading')).toBe(false);
+                    view.update();
+                    expect(view.find('Button[skin="primary"]').prop('loading')).toBe(false);
 
                     expect(onFinish).toHaveBeenCalled();
                     expect(onError).not.toHaveBeenCalled();
-                    expect(onClose).not.toHaveBeenCalled();
                     expect(onCancel).not.toHaveBeenCalled();
 
                     const cancelButton = view.find('Button[skin="secondary"]');
                     expect(cancelButton.text()).toBe('sulu_admin.close');
                     cancelButton.simulate('click');
-                    expect(onClose).toHaveBeenCalled();
+                    expect(onCancel).toHaveBeenCalled();
                 });
             });
         });
     });
 });
 
+test('The component should reset itself when dependantResourcesData prop has changed', () => {
+    const onCancel = jest.fn();
+    const onError = jest.fn();
+    const onFinish = jest.fn();
+
+    const dependantResourcesData = {
+        dependantResourceBatches: [
+            [
+                {id: 1, resourceKey: 'media'},
+            ],
+        ],
+        dependantResourcesCount: 1,
+    };
+
+    const requestOptions = {
+        foo: 'bar',
+        locale: 'de',
+    };
+
+    const view = mount(
+        <DeleteDependantResourcesDialog
+            dependantResourcesData={dependantResourcesData}
+            onCancel={onCancel}
+            onError={onError}
+            onFinish={onFinish}
+            requestOptions={requestOptions}
+        />
+    );
+
+    ResourceRequester.delete
+        .mockReturnValueOnce(RequestPromise.resolve({}));
+
+    expect(view.find('Button[skin="primary"]').prop('loading')).toBe(false);
+    view.find('Button[skin="primary"]').simulate('click');
+    expect(view.find('Button[skin="primary"]').prop('loading')).toBe(true);
+
+    const newDependantResourcesData = {
+        dependantResourceBatches: [],
+        dependantResourcesCount: 0,
+    };
+
+    const promise = new Promise((resolve) => {
+        view.setProps({...view.props(), dependantResourcesData: newDependantResourcesData}, () => {
+            resolve(true);
+        });
+    });
+
+    return promise.then(() => {
+        view.update();
+        expect(view.find('Button[skin="primary"]').prop('loading')).toBe(false);
+    });
+});
+
+test('The component should reset itself when requestOptions prop has changed', () => {
+    const onCancel = jest.fn();
+    const onError = jest.fn();
+    const onFinish = jest.fn();
+
+    const dependantResourcesData = {
+        dependantResourceBatches: [
+            [
+                {id: 1, resourceKey: 'media'},
+            ],
+        ],
+        dependantResourcesCount: 1,
+    };
+
+    const requestOptions = {
+        foo: 'bar',
+        locale: 'de',
+    };
+
+    const view = mount(
+        <DeleteDependantResourcesDialog
+            dependantResourcesData={dependantResourcesData}
+            onCancel={onCancel}
+            onError={onError}
+            onFinish={onFinish}
+            requestOptions={requestOptions}
+        />
+    );
+
+    ResourceRequester.delete
+        .mockReturnValueOnce(RequestPromise.resolve({}));
+
+    expect(view.find('Button[skin="primary"]').prop('loading')).toBe(false);
+    view.find('Button[skin="primary"]').simulate('click');
+    expect(view.find('Button[skin="primary"]').prop('loading')).toBe(true);
+
+    const newRequestOptions = {
+        locale: 'en',
+    };
+
+    const promise = new Promise((resolve) => {
+        view.setProps({...view.props(), requestOptions: newRequestOptions}, () => {
+            resolve(true);
+        });
+    });
+
+    return promise.then(() => {
+        view.update();
+        expect(view.find('Button[skin="primary"]').prop('loading')).toBe(false);
+    });
+});
+
 test('The component should call error callback', () => {
     const onCancel = jest.fn();
-    const onClose = jest.fn();
     const onError = jest.fn();
     const onFinish = jest.fn();
 
@@ -268,7 +365,6 @@ test('The component should call error callback', () => {
         <DeleteDependantResourcesDialog
             dependantResourcesData={dependantResourcesData}
             onCancel={onCancel}
-            onClose={onClose}
             onError={onError}
             onFinish={onFinish}
             requestOptions={requestOptions}
@@ -288,10 +384,9 @@ test('The component should call error callback', () => {
         .mockReturnValueOnce(promise3)
         .mockReturnValueOnce(promise4);
 
-    const confirmButton = view.find('Button[skin="primary"]');
-    expect(confirmButton.hasClass('loading')).toBe(false);
-    confirmButton.simulate('click');
-    expect(confirmButton.hasClass('loading'));
+    expect(view.find('Button[skin="primary"]').prop('loading')).toBe(false);
+    view.find('Button[skin="primary"]').simulate('click');
+    expect(view.find('Button[skin="primary"]').prop('loading')).toBe(true);
 
     expect(ResourceRequester.delete).toHaveBeenCalledTimes(1);
     expect(ResourceRequester.delete).toHaveBeenNthCalledWith(1, 'media', {...requestOptions, id: 4});
@@ -313,17 +408,17 @@ test('The component should call error callback', () => {
             expect(view.instance().totalDeletedResources).toBe(3);
 
             return new Promise((resolve) => setTimeout(resolve)).then(() => {
-                expect(confirmButton.hasClass('loading')).toBe(false);
+                view.update();
+                expect(view.find('Button[skin="primary"]').prop('loading')).toBe(false);
 
                 expect(onError).toHaveBeenCalled();
                 expect(onFinish).not.toHaveBeenCalled();
-                expect(onClose).not.toHaveBeenCalled();
                 expect(onCancel).not.toHaveBeenCalled();
 
                 const cancelButton = view.find('Button[skin="secondary"]');
                 expect(cancelButton.text()).toBe('sulu_admin.close');
                 cancelButton.simulate('click');
-                expect(onClose).toHaveBeenCalled();
+                expect(onCancel).toHaveBeenCalled();
             });
         });
     });
@@ -331,7 +426,6 @@ test('The component should call error callback', () => {
 
 test('The component should abort requests on cancel', () => {
     const onCancel = jest.fn();
-    const onClose = jest.fn();
     const onError = jest.fn();
     const onFinish = jest.fn();
 
@@ -366,7 +460,6 @@ test('The component should abort requests on cancel', () => {
         <DeleteDependantResourcesDialog
             dependantResourcesData={dependantResourcesData}
             onCancel={onCancel}
-            onClose={onClose}
             onError={onError}
             onFinish={onFinish}
             requestOptions={requestOptions}
@@ -395,10 +488,9 @@ test('The component should abort requests on cancel', () => {
         .mockReturnValueOnce(promise5)
         .mockReturnValueOnce(promise6);
 
-    const confirmButton = view.find('Button[skin="primary"]');
-    expect(confirmButton.hasClass('loading')).toBe(false);
-    confirmButton.simulate('click');
-    expect(confirmButton.hasClass('loading'));
+    expect(view.find('Button[skin="primary"]').prop('loading')).toBe(false);
+    view.find('Button[skin="primary"]').simulate('click');
+    expect(view.find('Button[skin="primary"]').prop('loading')).toBe(true);
 
     expect(ResourceRequester.delete).toHaveBeenCalledTimes(1);
     expect(ResourceRequester.delete).toHaveBeenNthCalledWith(1, 'media', {...requestOptions, id: 4});
@@ -429,10 +521,5 @@ test('The component should abort requests on cancel', () => {
         expect(onCancel).toHaveBeenCalled();
         expect(onError).not.toHaveBeenCalled();
         expect(onFinish).not.toHaveBeenCalled();
-        expect(onClose).not.toHaveBeenCalled();
-
-        expect(cancelButton.text()).toBe('sulu_admin.close');
-        cancelButton.simulate('click');
-        expect(onClose).toHaveBeenCalled();
     });
 });

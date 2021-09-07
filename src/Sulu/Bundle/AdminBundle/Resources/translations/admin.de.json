@@ -80,7 +80,6 @@
     "sulu_admin.delete_dependants_warning_title": "{count} abhängige Elemente löschen",
     "sulu_admin.delete_dependants_warning": "Sind Sie sich sicher, dass Sie {count} abhängige Elemente löschen möchten?",
     "sulu_admin.delete_dependants_progress_text": "Es wurden {count} abhängige Elemente gelöscht",
-    "sulu_admin.delete_dependants_cancelled_text": "Das Löschen wurde abgebrochen",
     "sulu_admin.ghost_dialog_title": "Sprachvariante kopieren?",
     "sulu_admin.ghost_dialog_description": "Diese Seite existiert nicht in dieser Sprache. Wollen Sie den Inhalt aus einer anderen Sprache kopieren?",
     "sulu_admin.choose_language": "Sprache wählen",

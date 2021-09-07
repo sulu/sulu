@@ -7,7 +7,7 @@ import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {translate} from 'sulu-admin-bundle/utils';
 import {Button, ButtonGroup, Dialog, DropdownButton} from 'sulu-admin-bundle/components';
 import DeleteDependantResourcesDialog from 'sulu-admin-bundle/containers/DeleteDependantResourcesDialog';
-import ERROR_CODES from 'sulu-admin-bundle/utils/Error/ErrorCodes';
+import {ERROR_CODE_DEPENDANT_RESOURCES_FOUND} from 'sulu-admin-bundle';
 import CollectionFormOverlay from './CollectionFormOverlay';
 import CollectionBreadcrumb from './CollectionBreadcrumb';
 import PermissionFormOverlay from './PermissionFormOverlay';
@@ -166,7 +166,7 @@ class CollectionSection extends React.Component<Props> {
 
                 response.json()
                     .then(action((data) => {
-                        if (response.status === 409 && data.code === ERROR_CODES.DEPENDANT_RESOURCES_FOUND) {
+                        if (response.status === 409 && data.code === ERROR_CODE_DEPENDANT_RESOURCES_FOUND) {
                             this.dependantResourcesData = {
                                 dependantResourceBatches: data.dependantResourceBatches,
                                 dependantResourcesCount: data.dependantResourcesCount,
@@ -224,10 +224,6 @@ class CollectionSection extends React.Component<Props> {
         this.closeDeleteDependantResourcesDialog();
     };
 
-    handleDeleteDependantResourcesDialogClose = () => {
-        this.closeDeleteDependantResourcesDialog();
-    };
-
     @action closeDeleteDependantResourcesDialog = () => {
         this.dependantResourcesData = undefined;
     };
@@ -253,7 +249,6 @@ class CollectionSection extends React.Component<Props> {
             <DeleteDependantResourcesDialog
                 dependantResourcesData={this.dependantResourcesData}
                 onCancel={this.handleDeleteDependantResourcesDialogCancel}
-                onClose={this.handleDeleteDependantResourcesDialogClose}
                 onFinish={this.handleDeleteDependantResourcesDialogFinish}
                 requestOptions={this.deleteDependantResourcesDialogRequestOptions}
             />

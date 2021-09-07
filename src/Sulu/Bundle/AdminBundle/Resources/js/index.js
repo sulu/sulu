@@ -130,6 +130,9 @@ Requester.handleResponseHooks.push(logoutOnUnauthorizedResponse);
 
 initializeJexl();
 
+export const ERROR_CODE_DEPENDANT_RESOURCES_FOUND = 1105;
+export const ERROR_CODE_REFERENCING_RESOURCES_FOUND = 1106;
+
 const FIELD_TYPE_BLOCK = 'block';
 const FIELD_TYPE_CHANGELOG_LINE = 'changelog_line';
 const FIELD_TYPE_CHECKBOX = 'checkbox';
