@@ -164,6 +164,17 @@ class SuluCategoryExtension extends Extension implements PrependExtensionInterfa
             );
         }
 
+        if ($container->hasExtension('sulu_trash')) {
+            $container->prependExtensionConfig(
+                'sulu_trash',
+                [
+                    'restore_form' => [
+                        CategoryInterface::RESOURCE_KEY => 'restore_category'
+                    ],
+                ]
+            );
+        }
+
         if ($container->hasExtension('sulu_search')) {
             $container->prependExtensionConfig(
                 'sulu_search',

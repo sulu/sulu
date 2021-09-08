@@ -174,8 +174,7 @@ final class CategoryTrashItemHandler implements StoreTrashItemHandlerInterface, 
     {
         $id = (int) $trashItem->getResourceId();
         $data = $trashItem->getRestoreData();
-
-        // TODO: select new parent in overlay in frontend
+        $parentId = $restoreFormData['parent'];
 
         if ($data['key'] && null !== $this->categoryRepository->findCategoryByKey($data['key'])) {
             throw new CategoryKeyNotUniqueException($data['key']);
@@ -186,6 +185,10 @@ final class CategoryTrashItemHandler implements StoreTrashItemHandlerInterface, 
         $category->setDefaultLocale($data['defaultLocale']);
         $category->setCreated(new \DateTime($data['created']));
         $category->setCreator($this->entityManager->find(UserInterface::class, $data['creatorId']));
+
+        if ($parentId) {
+            $category->setParent($this->categoryRepository->findCategoryById($parentId));
+        }
 
         foreach ($data['metas'] as $metaData) {
             $meta = $this->categoryMetaRepository->createNew();
