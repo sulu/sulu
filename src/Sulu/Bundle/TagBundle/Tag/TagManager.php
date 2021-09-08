@@ -12,16 +12,12 @@
 namespace Sulu\Bundle\TagBundle\Tag;
 
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-use Doctrine\ORM\Id\AssignedGenerator;
-use Doctrine\ORM\Mapping\ClassMetadata;
-use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Doctrine\Persistence\ObjectManager;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\TagBundle\Domain\Event\TagCreatedEvent;
 use Sulu\Bundle\TagBundle\Domain\Event\TagMergedEvent;
 use Sulu\Bundle\TagBundle\Domain\Event\TagModifiedEvent;
 use Sulu\Bundle\TagBundle\Domain\Event\TagRemovedEvent;
-use Sulu\Bundle\TagBundle\Domain\Event\TagRestoredEvent;
 use Sulu\Bundle\TagBundle\Entity\TagRepository;
 use Sulu\Bundle\TagBundle\Event\TagDeleteEvent;
 use Sulu\Bundle\TagBundle\Event\TagEvents;

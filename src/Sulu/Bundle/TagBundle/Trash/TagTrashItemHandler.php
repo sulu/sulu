@@ -18,11 +18,9 @@ use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterfa
 use Sulu\Bundle\TagBundle\Admin\TagAdmin;
 use Sulu\Bundle\TagBundle\Domain\Event\TagRestoredEvent;
 use Sulu\Bundle\TagBundle\Entity\Tag;
-use Sulu\Bundle\TagBundle\Entity\TagRepository;
 use Sulu\Bundle\TagBundle\Tag\Exception\TagAlreadyExistsException;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Bundle\TagBundle\Tag\TagRepositoryInterface;
-use Sulu\Bundle\TrashBundle\Application\DoctrineRestoreHelper\DoctrineRestoreHelper;
 use Sulu\Bundle\TrashBundle\Application\DoctrineRestoreHelper\DoctrineRestoreHelperInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\RestoreTrashItemHandlerInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\StoreTrashItemHandlerInterface;
@@ -59,13 +57,12 @@ final class TagTrashItemHandler implements StoreTrashItemHandlerInterface, Resto
     private $domainEventCollector;
 
     public function __construct(
-        TrashItemRepositoryInterface   $trashItemRepository,
-        TagRepositoryInterface         $tagRepository,
+        TrashItemRepositoryInterface $trashItemRepository,
+        TagRepositoryInterface $tagRepository,
         DoctrineRestoreHelperInterface $doctrineRestoreHelper,
-        EntityManagerInterface         $entityManager,
-        DomainEventCollectorInterface  $domainEventCollector
-    )
-    {
+        EntityManagerInterface $entityManager,
+        DomainEventCollectorInterface $domainEventCollector
+    ) {
         $this->trashItemRepository = $trashItemRepository;
         $this->tagRepository = $tagRepository;
         $this->doctrineRestoreHelper = $doctrineRestoreHelper;

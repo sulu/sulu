@@ -30,7 +30,8 @@ final class DoctrineRestoreHelper implements DoctrineRestoreHelperInterface
         $this->entityManager = $entityManager;
     }
 
-    public function persistAndFlushWithId(object $entity, $id): void {
+    public function persistAndFlushWithId(object $entity, $id): void
+    {
         $entityClass = \get_class($entity);
         $metadata = $this->entityManager->getClassMetaData($entityClass);
 

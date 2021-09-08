@@ -85,9 +85,8 @@ final class CategoryTrashItemHandler implements StoreTrashItemHandlerInterface, 
         KeywordRepositoryInterface $keywordRepository,
         EntityManagerInterface $entityManager,
         DoctrineRestoreHelperInterface $doctrineRestoreHelper,
-        DomainEventCollectorInterface  $domainEventCollector
-    )
-    {
+        DomainEventCollectorInterface $domainEventCollector
+    ) {
         $this->trashItemRepository = $trashItemRepository;
         $this->categoryRepository = $categoryRepository;
         $this->categoryMetaRepository = $categoryMetaRepository;
@@ -108,7 +107,7 @@ final class CategoryTrashItemHandler implements StoreTrashItemHandlerInterface, 
         $data = [
             'key' => $category->getKey(),
             'defaultLocale' => $category->getDefaultLocale(),
-            'parentId' => $category->getParent() ?  $category->getParent()->getId() : null,
+            'parentId' => $category->getParent() ? $category->getParent()->getId() : null,
             'created' => $category->getCreated()->format('c'),
             'creatorId' => $category->getCreator() ? $category->getCreator()->getId() : null,
             'metas' => [],

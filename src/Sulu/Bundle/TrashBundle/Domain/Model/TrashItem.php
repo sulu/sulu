@@ -236,7 +236,7 @@ class TrashItem implements TrashItemInterface
 
     private function addTranslation(TrashItemTranslation $translation): void
     {
-        if ($this->translations->count() === 0) {
+        if (0 === $this->translations->count()) {
             $this->defaultLocale = $translation->getLocale();
         }
 
