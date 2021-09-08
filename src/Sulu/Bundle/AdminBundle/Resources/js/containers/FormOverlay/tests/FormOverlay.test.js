@@ -156,28 +156,6 @@ test('Should pass correct props to Form component', () => {
     }));
 });
 
-test('Should disable confirm button if FormStore is not dirty', () => {
-    const formStore = new MemoryFormStore({}, {}, undefined, undefined);
-
-    const formOverlay = shallow(<FormOverlay
-        confirmDisabled={false}
-        confirmLoading={false}
-        confirmText="confirm-text"
-        formStore={formStore}
-        onClose={jest.fn()}
-        onConfirm={jest.fn()}
-        open={true}
-        size="small"
-        title="overlay-title"
-    />);
-
-    formStore.dirty = false;
-    expect(formOverlay.find(Overlay).props().confirmDisabled).toEqual(true);
-
-    formStore.dirty = true;
-    expect(formOverlay.find(Overlay).props().confirmDisabled).toEqual(false);
-});
-
 test('Should display confirm button as loading if FormStore is saving', () => {
     const formStore = new ResourceFormStore(new ResourceStore('test'), 'test');
 
