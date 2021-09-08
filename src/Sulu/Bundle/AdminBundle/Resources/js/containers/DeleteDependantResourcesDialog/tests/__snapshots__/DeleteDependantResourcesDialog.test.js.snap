@@ -1,0 +1,85 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The component should render 1`] = `
+Array [
+  <div
+    class="backdrop visible fixed"
+    role="button"
+  />,
+  <div
+    class="dialogContainer open"
+  >
+    <div
+      class="dialog"
+    >
+      <section
+        class="content"
+      >
+        <div
+          class="snackbar"
+        >
+          <div
+            class="snackbar error"
+            role="button"
+          >
+            <span
+              aria-label="su-exclamation-triangle"
+              class="su-exclamation-triangle icon"
+            />
+            <div
+              class="text"
+            >
+              <strong>
+                sulu_admin.error
+              </strong>
+               - 
+            </div>
+            <span
+              aria-label="su-times"
+              class="su-times clickable closeIcon"
+              role="button"
+              tabindex="0"
+            />
+          </div>
+        </div>
+        <header
+          class="header"
+        >
+          sulu_admin.delete_dependants_warning_title
+        </header>
+        <article
+          class="article center"
+        >
+          <p>
+            sulu_admin.delete_dependants_warning
+          </p>
+        </article>
+        <footer
+          class="footer"
+        >
+          <button
+            class="button primary hasText"
+            type="button"
+          >
+            <span
+              class="buttonText"
+            >
+              sulu_admin.delete
+            </span>
+          </button>
+          <button
+            class="button secondary hasText"
+            type="button"
+          >
+            <span
+              class="buttonText"
+            >
+              sulu_admin.cancel
+            </span>
+          </button>
+        </footer>
+      </section>
+    </div>
+  </div>,
+]
+`;

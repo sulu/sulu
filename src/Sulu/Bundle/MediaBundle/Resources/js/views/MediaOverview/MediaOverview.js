@@ -145,7 +145,7 @@ class MediaOverview extends React.Component<ViewProps> {
         this.collectionId.set(collectionId);
     };
 
-    @action handleUploadError= (errors: Array<Object>) => {
+    @action handleUploadError = (errors: Array<Object>) => {
         if (errors.length === 1) {
             this.errors.push(errors[0].detail || errors[0].title || translate('sulu_media.upload_server_error'));
         } else {
@@ -190,6 +190,12 @@ class MediaOverview extends React.Component<ViewProps> {
         }));
     };
 
+    @action handleDeleteError = (error?: Object): void => {
+        const message = error?.detail || error?.title || translate('sulu_admin.unexpected_delete_server_error');
+
+        this.errors.push(message);
+    };
+
     render() {
         return (
             <>
@@ -203,6 +209,7 @@ class MediaOverview extends React.Component<ViewProps> {
                     mediaListRef={this.setMediaListRef}
                     mediaListStore={this.mediaListStore}
                     onCollectionNavigate={this.handleCollectionNavigate}
+                    onDeleteError={this.handleDeleteError}
                     onMediaNavigate={this.handleMediaNavigate}
                     onUploadError={this.handleUploadError}
                     onUploadOverlayClose={this.handleUploadOverlayClose}

@@ -6,12 +6,15 @@ import {List, ListStore, SingleListOverlay} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {translate} from 'sulu-admin-bundle/utils';
 import {Button, ButtonGroup, Dialog, DropdownButton} from 'sulu-admin-bundle/components';
+import DeleteDependantResourcesDialog from 'sulu-admin-bundle/containers/DeleteDependantResourcesDialog';
+import {ERROR_CODE_DEPENDANT_RESOURCES_FOUND} from 'sulu-admin-bundle/constants';
 import CollectionFormOverlay from './CollectionFormOverlay';
 import CollectionBreadcrumb from './CollectionBreadcrumb';
 import PermissionFormOverlay from './PermissionFormOverlay';
 import collectionSectionStyles from './collectionSection.scss';
 import type {OperationType, OverlayType} from './types';
 import type {IObservableValue} from 'mobx/lib/mobx';
+import type {DependantResourcesData} from 'sulu-admin-bundle/types';
 
 const COLLECTIONS_RESOURCE_KEY = 'collections';
 
@@ -22,6 +25,7 @@ type Props = {
     listStore: ListStore,
     locale: IObservableValue<string>,
     onCollectionNavigate: (collectionId: ?string | number) => void,
+    onDeleteError?: (error?: Object) => void,
     overlayType: OverlayType,
     resourceStore: ResourceStore,
     securable: boolean,
@@ -31,6 +35,7 @@ type Props = {
 class CollectionSection extends React.Component<Props> {
     @observable openedCollectionOperationOverlayType: OperationType;
     @observable movingRestrictedTargetCollection: ?Object = undefined;
+    @observable dependantResourcesData: ?DependantResourcesData = undefined;
 
     @action openCollectionOperationOverlay(operationType: OperationType) {
         this.openedCollectionOperationOverlayType = operationType;
@@ -138,7 +143,11 @@ class CollectionSection extends React.Component<Props> {
     };
 
     handleRemoveCollectionConfirm = () => {
-        const {resourceStore} = this.props;
+        this.delete();
+    };
+
+    delete = () => {
+        const {onDeleteError, resourceStore} = this.props;
         const {data} = resourceStore;
 
         const parentCollectionId = data._embedded && data._embedded.parent && data._embedded.parent.id
@@ -148,7 +157,28 @@ class CollectionSection extends React.Component<Props> {
         resourceStore.delete()
             .then(() => {
                 this.closeCollectionOperationOverlay();
+                this.closeDeleteDependantResourcesDialog();
+
                 this.props.onCollectionNavigate(parentCollectionId);
+            })
+            .catch((response) => {
+                this.closeCollectionOperationOverlay();
+
+                response.json()
+                    .then(action((data) => {
+                        if (response.status === 409 && data.code === ERROR_CODE_DEPENDANT_RESOURCES_FOUND) {
+                            this.dependantResourcesData = {
+                                dependantResourceBatches: data.dependantResourceBatches,
+                                dependantResourcesCount: data.dependantResourcesCount,
+                            };
+
+                            return;
+                        }
+
+                        if (onDeleteError) {
+                            onDeleteError(data);
+                        }
+                    }));
             });
     };
 
@@ -185,6 +215,45 @@ class CollectionSection extends React.Component<Props> {
     handleMoveCollectionClose = () => {
         this.closeCollectionOperationOverlay();
     };
+
+    handleDeleteDependantResourcesDialogFinish = () => {
+        this.delete();
+    };
+
+    handleDeleteDependantResourcesDialogCancel = () => {
+        this.closeDeleteDependantResourcesDialog();
+    };
+
+    @action closeDeleteDependantResourcesDialog = () => {
+        this.dependantResourcesData = undefined;
+    };
+
+    @computed get deleteDependantResourcesDialogRequestOptions() {
+        const {locale} = this.props;
+
+        if (locale) {
+            return {
+                locale: locale.get(),
+            };
+        }
+
+        return {};
+    }
+
+    renderDeleteDependantResourcesDialog() {
+        if (!this.dependantResourcesData) {
+            return null;
+        }
+
+        return (
+            <DeleteDependantResourcesDialog
+                dependantResourcesData={this.dependantResourcesData}
+                onCancel={this.handleDeleteDependantResourcesDialogCancel}
+                onFinish={this.handleDeleteDependantResourcesDialogFinish}
+                requestOptions={this.deleteDependantResourcesDialogRequestOptions}
+            />
+        );
+    }
 
     render() {
         const {
@@ -270,6 +339,7 @@ class CollectionSection extends React.Component<Props> {
                 >
                     {translate('sulu_media.remove_collection_warning')}
                 </Dialog>
+                {this.renderDeleteDependantResourcesDialog()}
                 <PermissionFormOverlay
                     collectionId={this.collectionId}
                     hasChildren={this.hasChildren}

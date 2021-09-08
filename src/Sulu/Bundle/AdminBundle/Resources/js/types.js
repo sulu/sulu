@@ -8,6 +8,25 @@ import type {FieldTransformer} from './containers/List/types';
 import type {ToolbarItemConfig} from './containers/Toolbar/types';
 import type {LinkTypeOverlayProps} from './containers/Link/types';
 
+export type Resource = {
+    id: string | number,
+    resourceKey: string,
+    title?: string | null,
+};
+
+export type DependantResourceBatches = Resource[][];
+
+export type DependantResourcesData = {
+    dependantResourceBatches: DependantResourceBatches,
+    dependantResourcesCount: number,
+};
+
+export type ReferencingResourcesData = {
+    referencingResources: Resource[],
+    referencingResourcesCount: number,
+    resource: Resource,
+};
+
 export type {
     BlockError,
     BlockPreviewTransformer,

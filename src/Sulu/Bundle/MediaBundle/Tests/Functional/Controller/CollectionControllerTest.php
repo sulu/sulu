@@ -1254,8 +1254,12 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertEquals([
             'code' => 1105,
             'message' => 'Resource has 7 dependant resources.',
+            'resource' => [
+                'id' => $collectionId,
+                'resourceKey' => 'collections',
+            ],
             'dependantResourcesCount' => 7,
-            'dependantResources' => [
+            'dependantResourceBatches' => [
                 [
                     [
                         'id' => $child11->getMedia()->first()->getId(),

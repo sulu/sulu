@@ -22,6 +22,7 @@ type Props = {|
     mediaListRef?: (?ElementRef<typeof List>) => void,
     mediaListStore: ListStore,
     onCollectionNavigate: (collectionId: ?string | number) => void,
+    onDeleteError?: (error?: Object) => void,
     onMediaNavigate?: (mediaId: string | number) => void,
     onUploadError?: (errors: Array<Object>) => void,
     onUploadOverlayClose: () => void,
@@ -79,6 +80,7 @@ class MediaCollection extends React.Component<Props> {
 
     render() {
         const {
+            onDeleteError,
             className,
             collectionListStore,
             collectionStore,
@@ -131,6 +133,7 @@ class MediaCollection extends React.Component<Props> {
                     listStore={collectionListStore}
                     locale={locale}
                     onCollectionNavigate={this.handleCollectionNavigate}
+                    onDeleteError={onDeleteError}
                     overlayType={overlayType}
                     resourceStore={collectionStore.resourceStore}
                     securable={securable}

@@ -1206,7 +1206,19 @@ test('ListStore should delete item when onRequestItemDelete callback is called a
 });
 
 test('ListStore should delete linked item when onRequestItemDelete callback is is confirmed twice', (done) => {
-    const jsonDeletePromise = Promise.resolve({id: 5, items: [{name: 'Item 1'}, {name: 'Item 2'}]});
+    const jsonDeletePromise = Promise.resolve({
+        code: 1106,
+        resource: {
+            id: 5,
+            resourceKey: 'pages',
+        },
+        referencingResources: [
+            {id: 7, resourceKey: 'pages', title: 'Item 1'},
+            {id: 8, resourceKey: 'pages', title: 'Item 2'},
+        ],
+        referencingResourcesCount: 2,
+    });
+
     const deletePromise = Promise.reject({
         json: jest.fn().mockReturnValue(jsonDeletePromise),
         status: 409,
@@ -1234,18 +1246,18 @@ test('ListStore should delete linked item when onRequestItemDelete callback is i
         setTimeout(() => {
             list.update();
             expect(list.find('Dialog').at(1).prop('open')).toEqual(false);
-            expect(list.find('Dialog').at(2).prop('open')).toEqual(true);
+            expect(list.contains('DeleteReferencedResourceDialog'));
 
             const deletePromise = Promise.resolve();
             // $FlowFixMe
             listStore.delete.mockReturnValueOnce(deletePromise);
-            list.find('Dialog').at(2).prop('onConfirm')();
+            list.find('DeleteReferencedResourceDialog Dialog Button[skin="primary"]').simulate('click');
 
             setTimeout(() => {
                 expect(listStore.delete).toBeCalledWith(5, {force: true});
                 list.update();
                 expect(list.find('Dialog').at(1).prop('open')).toEqual(false);
-                expect(list.find('Dialog').at(2).prop('open')).toEqual(false);
+                expect(list.contains('DeleteReferencedResourceDialog')).toBe(false);
                 done();
             });
         });
@@ -1253,7 +1265,19 @@ test('ListStore should delete linked item when onRequestItemDelete callback is i
 });
 
 test('ListStore should not delete linked item when onRequestItemDelete callback is is confirmed once', (done) => {
-    const jsonDeletePromise = Promise.resolve({items: [{name: 'Item 1'}, {name: 'Item 2'}]});
+    const jsonDeletePromise = Promise.resolve({
+        code: 1106,
+        resource: {
+            id: 5,
+            resourceKey: 'pages',
+        },
+        referencingResources: [
+            {id: 7, resourceKey: 'pages', title: 'Item 1'},
+            {id: 8, resourceKey: 'pages', title: 'Item 2'},
+        ],
+        referencingResourcesCount: 2,
+    });
+
     const deletePromise = Promise.reject({
         json: jest.fn().mockReturnValue(jsonDeletePromise),
         status: 409,
@@ -1283,21 +1307,21 @@ test('ListStore should not delete linked item when onRequestItemDelete callback 
         setTimeout(() => {
             list.update();
             expect(list.find('Dialog').at(1).prop('open')).toEqual(false);
-            expect(list.find('Dialog').at(2).prop('open')).toEqual(true);
-            expect(list.find('Dialog').at(2).find('li')).toHaveLength(2);
-            expect(list.find('Dialog').at(2).find('li').at(0).prop('children')).toEqual('Item 1');
-            expect(list.find('Dialog').at(2).find('li').at(1).prop('children')).toEqual('Item 2');
+            expect(list.contains('DeleteReferencedResourceDialog'));
+            expect(list.find('DeleteReferencedResourceDialog').find('li')).toHaveLength(2);
+            expect(list.find('DeleteReferencedResourceDialog').find('li').at(0).prop('children')).toEqual('Item 1');
+            expect(list.find('DeleteReferencedResourceDialog').find('li').at(1).prop('children')).toEqual('Item 2');
 
             const deletePromise = Promise.resolve();
             // $FlowFixMe
             listStore.delete.mockReturnValueOnce(deletePromise);
-            list.find('Dialog').at(2).prop('onCancel')();
+            list.find('DeleteReferencedResourceDialog').prop('onCancel')();
 
             setTimeout(() => {
                 expect(listStore.delete).not.toBeCalled();
                 list.update();
                 expect(list.find('Dialog').at(1).prop('open')).toEqual(false);
-                expect(list.find('Dialog').at(2).prop('open')).toEqual(false);
+                expect(list.contains('DeleteReferencedResourceDialog')).toBe(false);
                 done();
             });
         });
@@ -1305,7 +1329,19 @@ test('ListStore should not delete linked item when onRequestItemDelete callback 
 });
 
 test('ListStore should delete linked item when called with allowConflictDeletion value of true', (done) => {
-    const jsonDeletePromise = Promise.resolve({id: 5, items: [{name: 'Item 1'}, {name: 'Item 2'}]});
+    const jsonDeletePromise = Promise.resolve({
+        code: 1106,
+        resource: {
+            id: 5,
+            resourceKey: 'pages',
+        },
+        referencingResources: [
+            {id: 7, resourceKey: 'pages', title: 'Item 1'},
+            {id: 8, resourceKey: 'pages', title: 'Item 2'},
+        ],
+        referencingResourcesCount: 2,
+    });
+
     const deletePromise = Promise.reject({
         json: jest.fn().mockReturnValue(jsonDeletePromise),
         status: 409,
@@ -1333,26 +1369,38 @@ test('ListStore should delete linked item when called with allowConflictDeletion
         list.update();
         expect(list.find('Dialog').at(0).prop('open')).toEqual(false);
         expect(list.find('Dialog').at(1).prop('open')).toEqual(false);
-        expect(list.find('Dialog').at(2).prop('open')).toEqual(true);
+        expect(list.contains('DeleteReferencedResourceDialog'));
 
         const deletePromise = Promise.resolve();
         // $FlowFixMe
         listStore.delete.mockReturnValueOnce(deletePromise);
-        list.find('Dialog').at(2).prop('onConfirm')();
+        list.find('DeleteReferencedResourceDialog Dialog Button[skin="primary"]').simulate('click');
 
         setTimeout(() => {
             expect(listStore.delete).toBeCalledWith(5, {force: true});
             list.update();
             expect(list.find('Dialog').at(0).prop('open')).toEqual(false);
             expect(list.find('Dialog').at(1).prop('open')).toEqual(false);
-            expect(list.find('Dialog').at(2).prop('open')).toEqual(false);
+            expect(list.contains('DeleteReferencedResourceDialog')).toBe(false);
             done();
         });
     });
 });
 
 test('ListStore should not delete linked item when called with allowConflictDeletion value of false', (done) => {
-    const jsonDeletePromise = Promise.resolve({id: 5, items: [{name: 'Item 1'}, {name: 'Item 2'}]});
+    const jsonDeletePromise = Promise.resolve({
+        code: 1106,
+        resource: {
+            id: 5,
+            resourceKey: 'pages',
+        },
+        referencingResources: [
+            {id: 7, resourceKey: 'pages', title: 'Item 1'},
+            {id: 8, resourceKey: 'pages', title: 'Item 2'},
+        ],
+        referencingResourcesCount: 2,
+    });
+
     const deletePromise = Promise.reject({
         json: jest.fn().mockReturnValue(jsonDeletePromise),
         status: 409,
@@ -1380,17 +1428,136 @@ test('ListStore should not delete linked item when called with allowConflictDele
         list.update();
         expect(list.find('Dialog').at(0).prop('open')).toEqual(false);
         expect(list.find('Dialog').at(1).prop('open')).toEqual(false);
-        expect(list.find('Dialog').at(2).prop('open')).toEqual(true);
+        expect(list.contains('DeleteReferencedResourceDialog'));
 
-        list.find('Dialog').at(2).prop('onConfirm')();
+        list.find('DeleteReferencedResourceDialog Dialog Button[skin="primary"]').simulate('click');
 
         setTimeout(() => {
             expect(listStore.delete).not.toBeCalledWith(5, {force: true});
             list.update();
             expect(list.find('Dialog').at(0).prop('open')).toEqual(false);
             expect(list.find('Dialog').at(1).prop('open')).toEqual(false);
-            expect(list.find('Dialog').at(2).prop('open')).toEqual(false);
+            expect(list.contains('DeleteReferencedResourceDialog')).toBe(false);
             done();
+        });
+    });
+});
+
+test('ListStore should delete item with dependants when onFinish callback called', (done) => {
+    const jsonDeletePromise = Promise.resolve({
+        code: 1105,
+        resource: {
+            id: 5,
+            resourceKey: 'pages',
+        },
+        dependantResourceBatches: [
+            {id: 7, resourceKey: 'pages'},
+            {id: 8, resourceKey: 'pages'},
+        ],
+        dependantResourcesCount: 2,
+    });
+
+    const deletePromise = Promise.reject({
+        json: jest.fn().mockReturnValue(jsonDeletePromise),
+        status: 409,
+    });
+
+    listAdapterRegistry.get.mockReturnValue(TableAdapter);
+    const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
+    // $FlowFixMe
+    listStore.delete.mockReturnValueOnce(deletePromise);
+    mockStructureStrategyData = [
+        {id: 1},
+        {id: 2},
+        {id: 3},
+    ];
+    const list = mount(<List adapters={['table']} store={listStore} />);
+
+    const requestDeletePromise = list.find('TableAdapter').prop('onRequestItemDelete')(5);
+    list.update();
+    expect(list.find('Dialog').at(1).prop('open')).toEqual(true);
+
+    list.find('Dialog').at(1).prop('onConfirm')();
+    return requestDeletePromise.then(() => {
+        expect(listStore.delete).toHaveBeenCalledWith(5);
+
+        setTimeout(() => {
+            list.update();
+            expect(list.find('Dialog').at(1).prop('open')).toEqual(false);
+            expect(list.contains('DeleteDependantResourcesDialog'));
+
+            const deletePromise = Promise.resolve();
+            // $FlowFixMe
+            listStore.delete.mockReturnValueOnce(deletePromise);
+            list.find('DeleteDependantResourcesDialog').prop('onFinish')();
+
+            setTimeout(() => {
+                expect(listStore.delete).toHaveBeenCalledWith(5);
+                expect(listStore.delete).toHaveBeenCalledTimes(2);
+                list.update();
+                expect(list.find('Dialog').at(1).prop('open')).toEqual(false);
+                expect(list.contains('DeleteDependantResourcesDialog')).toBe(false);
+                done();
+            });
+        });
+    });
+});
+
+test('ListStore should not delete item with dependants when onCancel callback called', (done) => {
+    const jsonDeletePromise = Promise.resolve({
+        code: 1105,
+        resource: {
+            id: 5,
+            resourceKey: 'pages',
+        },
+        dependantResourceBatches: [
+            {id: 7, resourceKey: 'pages'},
+            {id: 8, resourceKey: 'pages'},
+        ],
+        dependantResourcesCount: 2,
+    });
+
+    const deletePromise = Promise.reject({
+        json: jest.fn().mockReturnValue(jsonDeletePromise),
+        status: 409,
+    });
+
+    listAdapterRegistry.get.mockReturnValue(TableAdapter);
+    const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
+    // $FlowFixMe
+    listStore.delete.mockReturnValueOnce(deletePromise);
+    mockStructureStrategyData = [
+        {id: 1},
+        {id: 2},
+        {id: 3},
+    ];
+    const list = mount(<List adapters={['table']} store={listStore} />);
+
+    const requestDeletePromise = list.find('TableAdapter').prop('onRequestItemDelete')(5);
+    list.update();
+    expect(list.find('Dialog').at(1).prop('open')).toEqual(true);
+
+    list.find('Dialog').at(1).prop('onConfirm')();
+    return requestDeletePromise.then(() => {
+        expect(listStore.delete).toHaveBeenCalledWith(5);
+
+        setTimeout(() => {
+            list.update();
+            expect(list.find('Dialog').at(1).prop('open')).toEqual(false);
+            expect(list.contains('DeleteDependantResourcesDialog'));
+
+            const deletePromise = Promise.resolve();
+            // $FlowFixMe
+            listStore.delete.mockReturnValueOnce(deletePromise);
+            list.find('DeleteDependantResourcesDialog').prop('onCancel')();
+
+            setTimeout(() => {
+                expect(listStore.delete).toHaveBeenCalledTimes(1);
+                list.update();
+                expect(list.find('Dialog').at(1).prop('open')).toEqual(false);
+                expect(list.contains('DeleteDependantResourcesDialog')).toBe(false);
+                done();
+            });
         });
     });
 });

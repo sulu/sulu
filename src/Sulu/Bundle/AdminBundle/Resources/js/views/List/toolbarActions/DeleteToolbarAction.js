@@ -1,6 +1,6 @@
 // @flow
 import jexl from 'jexl';
-import {translate} from '../../../utils/Translator';
+import {translate} from '../../../utils';
 import AbstractListToolbarAction from './AbstractListToolbarAction';
 
 export default class DeleteToolbarAction extends AbstractListToolbarAction {

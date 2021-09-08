@@ -1540,7 +1540,7 @@ class CategoryControllerTest extends SuluTestCase
             'code' => 1105,
             'message' => 'Resource has 3 dependant resources.',
             'dependantResourcesCount' => 3,
-            'dependantResources' => [
+            'dependantResourceBatches' => [
                 [
                     [
                         'id' => $category4Id,
@@ -1557,6 +1557,10 @@ class CategoryControllerTest extends SuluTestCase
                         'resourceKey' => 'categories',
                     ],
                 ],
+            ],
+            'resource' => [
+                'id' => $category1Id,
+                'resourceKey' => 'categories',
             ],
         ], $content);
     }

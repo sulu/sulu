@@ -518,12 +518,36 @@ class SnippetControllerTest extends SuluTestCase
         $this->defaultSnippetManager->save('sulu_io', 'sport_hotel', $this->hotel1->getUuid(), 'en');
 
         $this->client->jsonRequest('DELETE', '/api/snippets/' . $this->hotel1->getUuid());
-        $response = $this->client->getResponse();
-        $content = \json_decode($response->getContent(), true);
 
-        $this->assertEquals(409, $response->getStatusCode());
-        $this->assertEquals('Hotels page', $content['items'][0]['name']);
-        $this->assertEquals('sulu.io default snippet', $content['items'][1]['name']);
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(409, $response);
+
+        $content = \json_decode((string) $response->getContent(), true);
+        $this->assertIsArray($content);
+        $this->assertArrayHasKey('errors', $content);
+        unset($content['errors']);
+
+        $this->assertEquals([
+            'code' => 1106,
+            'message' => 'Found 2 referencing resources.',
+            'resource' => [
+                'id' => $this->hotel1->getUuid(),
+                'resourceKey' => 'snippets',
+            ],
+            'referencingResourcesCount' => 2,
+            'referencingResources' => [
+                [
+                    'id' => $page->getUuid(),
+                    'resourceKey' => 'pages',
+                    'title' => 'Hotels page',
+                ],
+                [
+                    'id' => 'sulu_io',
+                    'resourceKey' => 'webspaces',
+                    'title' => 'sulu.io default snippet',
+                ],
+            ],
+        ], $content);
 
         $this->client->jsonRequest('DELETE', '/api/snippets/' . $this->hotel1->getUuid() . '?force=true');
         $response = $this->client->getResponse();

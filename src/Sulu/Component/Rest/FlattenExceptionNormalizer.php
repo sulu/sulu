@@ -12,6 +12,7 @@
 namespace Sulu\Component\Rest;
 
 use Sulu\Component\Rest\Exception\DependantResourcesFoundExceptionInterface;
+use Sulu\Component\Rest\Exception\ReferencingResourcesFoundExceptionInterface;
 use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -67,7 +68,14 @@ class FlattenExceptionNormalizer implements NormalizerInterface
 
         if ($contextException instanceof DependantResourcesFoundExceptionInterface) {
             $data['dependantResourcesCount'] = $contextException->getDependantResourcesCount();
-            $data['dependantResources'] = $contextException->getDependantResources();
+            $data['dependantResourceBatches'] = $contextException->getDependantResourceBatches();
+            $data['resource'] = $contextException->getResource();
+        }
+
+        if ($contextException instanceof ReferencingResourcesFoundExceptionInterface) {
+            $data['referencingResourcesCount'] = $contextException->getReferencingResourcesCount();
+            $data['referencingResources'] = $contextException->getReferencingResources();
+            $data['resource'] = $contextException->getResource();
         }
 
         return $data;

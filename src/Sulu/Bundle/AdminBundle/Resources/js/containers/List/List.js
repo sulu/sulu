@@ -12,7 +12,10 @@ import Loader from '../../components/Loader';
 import PermissionHint from '../../components/PermissionHint';
 import userStore from '../../stores/userStore';
 import SingleListOverlay from '../SingleListOverlay';
-import {translate} from '../../utils/Translator';
+import {translate} from '../../utils';
+import DeleteReferencedResourceDialog from '../DeleteReferencedResourceDialog';
+import DeleteDependantResourcesDialog from '../DeleteDependantResourcesDialog';
+import {ERROR_CODE_DEPENDANT_RESOURCES_FOUND, ERROR_CODE_REFERENCING_RESOURCES_FOUND} from '../../constants';
 import ListStore from './stores/ListStore';
 import listAdapterRegistry from './registries/listAdapterRegistry';
 import AbstractAdapter from './adapters/AbstractAdapter';
@@ -34,6 +37,7 @@ import type {
 } from './types';
 import type {Node} from 'react';
 import type {IValueWillChange} from 'mobx/lib/mobx';
+import type {ReferencingResourcesData, DependantResourcesData} from '../../types';
 
 type Props = {|
     actions: Array<ActionConfig>,
@@ -50,6 +54,7 @@ type Props = {|
     itemDisabledCondition?: ?string,
     movable: boolean,
     onCopyFinished?: (response: Object) => void,
+    onDeleteError?: (error?: Object) => void,
     onItemAdd?: (id: ?string | number) => void,
     onItemClick?: (itemId: string | number) => void,
     orderable: boolean,
@@ -85,14 +90,14 @@ class List extends React.Component<Props> {
     @observable currentAdapterKey: string;
     @observable showCopyOverlay: boolean = false;
     @observable showDeleteDialog: boolean = false;
-    @observable showDeleteLinkedDialog: boolean = false;
     @observable showMoveOverlay: boolean = false;
     @observable showDeleteSelectionDialog: boolean = false;
     @observable allowConflictDeletion: boolean = true;
     @observable showOrderDialog: boolean = false;
     @observable adapterOptionsOpen: boolean = false;
     @observable columnOptionsOpen: boolean = false;
-    @observable referencingItemsForDelete: Array<Object> = [];
+    @observable referencingResourcesData: ?ReferencingResourcesData = undefined;
+    @observable dependantResourcesData: ?DependantResourcesData = undefined;
     @observable movingRestrictedTarget: ?Object = undefined;
     resolveCopy: ?(ResolveCopyArgument) => void;
     resolveDelete: ?(ResolveDeleteArgument) => void;
@@ -241,37 +246,73 @@ class List extends React.Component<Props> {
         return deletePromise;
     };
 
-    @action handleDeleteResponseError = (response: Object) => {
-        if (response.status !== 409) {
-            throw response;
-        }
-
+    @action closeAllDialogs = () => {
         this.showDeleteDialog = false;
         this.showDeleteSelectionDialog = false;
-        this.showDeleteLinkedDialog = true;
+        this.referencingResourcesData = undefined;
+        this.dependantResourcesData = undefined;
+    };
+
+    @action handleDeleteResponseError = (response: Object) => {
+        const {onDeleteError} = this.props;
+
         response.json().then(action((data) => {
-            this.referencingItemsForDelete.splice(0, this.referencingItemsForDelete.length);
-            this.referencingItemsForDelete.push(...data.items);
+            this.closeAllDialogs();
 
-            const deleteLinkedPromise: Promise<ResolveDeleteArgument> = new Promise(
-                (resolve) => this.resolveDelete = resolve
-            );
+            if (response.status === 409 && data.code === ERROR_CODE_REFERENCING_RESOURCES_FOUND) {
+                this.referencingResourcesData = {
+                    resource: data.resource,
+                    referencingResources: data.referencingResources,
+                    referencingResourcesCount: data.referencingResourcesCount,
+                };
 
-            deleteLinkedPromise.then(action((response) => {
-                if (!response.deleted) {
-                    this.showDeleteDialog = false;
-                    this.showDeleteSelectionDialog = false;
-                    this.showDeleteLinkedDialog = false;
-                    return response;
-                }
+                const promise: Promise<ResolveDeleteArgument> = new Promise(
+                    (resolve) => this.resolveDelete = resolve
+                );
 
-                this.props.store.delete(data.id, {force: true})
-                    .then(action(() => {
-                        this.showDeleteDialog = false;
-                        this.showDeleteSelectionDialog = false;
-                        this.showDeleteLinkedDialog = false;
-                    }));
-            }));
+                promise.then(action((response) => {
+                    if (!response.deleted) {
+                        this.closeAllDialogs();
+
+                        return response;
+                    }
+
+                    this.props.store.delete(data.resource.id, {force: true})
+                        .then(this.closeAllDialogs)
+                        .catch(this.handleDeleteResponseError);
+                }));
+
+                return;
+            }
+
+            if (response.status === 409 && data.code === ERROR_CODE_DEPENDANT_RESOURCES_FOUND) {
+                this.dependantResourcesData = {
+                    dependantResourceBatches: data.dependantResourceBatches,
+                    dependantResourcesCount: data.dependantResourcesCount,
+                };
+
+                const promise: Promise<ResolveDeleteArgument> = new Promise(
+                    (resolve) => this.resolveDelete = resolve
+                );
+
+                promise.then(action((response) => {
+                    if (!response.deleted) {
+                        this.closeAllDialogs();
+
+                        return response;
+                    }
+
+                    this.props.store.delete(data.resource.id)
+                        .then(this.closeAllDialogs)
+                        .catch(this.handleDeleteResponseError);
+                }));
+
+                return;
+            }
+
+            if (onDeleteError) {
+                onDeleteError(data);
+            }
         }));
     };
 
@@ -516,6 +557,45 @@ class List extends React.Component<Props> {
         this.props.store.changeUserSchema(schema);
     };
 
+    renderDeleteReferencedResourceDialog() {
+        if (!this.referencingResourcesData) {
+            return null;
+        }
+
+        const {store} = this.props;
+
+        return (
+            <DeleteReferencedResourceDialog
+                allowDeletion={this.allowConflictDeletion}
+                confirmLoading={store.deleting}
+                onCancel={this.handleDeleteDialogCancelClick}
+                onConfirm={this.handleDeleteDialogConfirmClick}
+                referencingResourcesData={this.referencingResourcesData}
+            />
+        );
+    }
+
+    @computed get deleteDependantResourcesDialogRequestOptions() {
+        const {store} = this.props;
+
+        return store.queryOptions;
+    }
+
+    renderDeleteDependantResourcesDialog() {
+        if (!this.dependantResourcesData) {
+            return null;
+        }
+
+        return (
+            <DeleteDependantResourcesDialog
+                dependantResourcesData={this.dependantResourcesData}
+                onCancel={this.handleDeleteDialogCancelClick}
+                onFinish={this.handleDeleteDialogConfirmClick}
+                requestOptions={this.deleteDependantResourcesDialogRequestOptions}
+            />
+        );
+    }
+
     render() {
         const {
             actions,
@@ -697,34 +777,8 @@ class List extends React.Component<Props> {
                         >
                             {translate('sulu_admin.delete_warning_text')}
                         </Dialog>
-                        <Dialog
-                            cancelText={translate('sulu_admin.cancel')}
-                            confirmLoading={store.deleting}
-                            confirmText={translate('sulu_admin.ok')}
-                            onCancel={this.allowConflictDeletion
-                                ? this.handleDeleteDialogCancelClick
-                                : undefined
-                            }
-                            onConfirm={this.allowConflictDeletion
-                                ? this.handleDeleteDialogConfirmClick
-                                : this.handleDeleteDialogCancelClick
-                            }
-                            open={this.showDeleteLinkedDialog}
-                            title={this.allowConflictDeletion
-                                ? translate('sulu_admin.delete_linked_warning_title')
-                                : translate('sulu_admin.item_not_deletable')
-                            }
-                        >
-                            {this.allowConflictDeletion
-                                ? translate('sulu_admin.delete_linked_warning_text')
-                                : translate('sulu_admin.delete_linked_abort_text')
-                            }
-                            <ul>
-                                {this.referencingItemsForDelete.map((referencingItem, index) => (
-                                    <li key={index}>{referencingItem.name}</li>
-                                ))}
-                            </ul>
-                        </Dialog>
+                        {this.renderDeleteReferencedResourceDialog()}
+                        {this.renderDeleteDependantResourcesDialog()}
                     </Fragment>
                 }
                 {movable &&

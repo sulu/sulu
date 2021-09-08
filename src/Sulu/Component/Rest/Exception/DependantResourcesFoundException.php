@@ -16,9 +16,14 @@ namespace Sulu\Component\Rest\Exception;
 class DependantResourcesFoundException extends \Exception implements DependantResourcesFoundExceptionInterface
 {
     /**
+     * @var array{id: int|string, resourceKey: string}
+     */
+    private $resource;
+
+    /**
      * @var array<int, array<array{id: int|string, resourceKey: string}>>
      */
-    private $dependantResources;
+    private $dependantResourceBatches;
 
     /**
      * @var int
@@ -26,11 +31,13 @@ class DependantResourcesFoundException extends \Exception implements DependantRe
     private $dependantResourcesCount;
 
     /**
-     * @param array<int, array<array{id: int|string, resourceKey: string}>> $dependantResources
+     * @param array{id: int|string, resourceKey: string} $resource
+     * @param array<int, array<array{id: int|string, resourceKey: string}>> $dependantResourceBatches
      */
-    public function __construct(array $dependantResources, int $dependantResourcesCount)
+    public function __construct(array $resource, array $dependantResourceBatches, int $dependantResourcesCount)
     {
-        $this->dependantResources = $dependantResources;
+        $this->resource = $resource;
+        $this->dependantResourceBatches = $dependantResourceBatches;
         $this->dependantResourcesCount = $dependantResourcesCount;
 
         parent::__construct(
@@ -39,9 +46,14 @@ class DependantResourcesFoundException extends \Exception implements DependantRe
         );
     }
 
-    public function getDependantResources(): array
+    public function getResource(): array
     {
-        return $this->dependantResources;
+        return $this->resource;
+    }
+
+    public function getDependantResourceBatches(): array
+    {
+        return $this->dependantResourceBatches;
     }
 
     public function getDependantResourcesCount(): int

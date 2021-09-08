@@ -39,6 +39,7 @@ class PageList extends React.Component<Props> {
     webspaceKeyDisposer: () => void;
     @observable availablePageTypes: Array<string> = [];
     @observable availablePageTypesLoading: boolean = true;
+    @observable errors = [];
 
     static getDerivedRouteAttributes(route: Route, attributes: AttributeMap) {
         if (typeof attributes.webspace !== 'string') {
@@ -199,6 +200,12 @@ class PageList extends React.Component<Props> {
         return indicators;
     };
 
+    @action handleDeleteError = (error?: Object): void => {
+        const message = error?.detail || error?.title || translate('sulu_admin.unexpected_delete_server_error');
+
+        this.errors.push(message);
+    };
+
     render() {
         const {getIndicators} = this;
 
@@ -215,6 +222,7 @@ class PageList extends React.Component<Props> {
                         }}
                         adapters={['column_list', 'tree_table']}
                         onCopyFinished={this.handleCopyFinished}
+                        onDeleteError={this.handleDeleteError}
                         onItemAdd={this.handleItemAdd}
                         onItemClick={this.handleEditClick}
                         searchable={false}
@@ -237,6 +245,7 @@ const PageListWithToolbar = withToolbar(PageList, function() {
     }
 
     return {
+        errors: this.errors,
         items: [
             {
                 label: translate('sulu_page.show_ghost_and_shadow'),

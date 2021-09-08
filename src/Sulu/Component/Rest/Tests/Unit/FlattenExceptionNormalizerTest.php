@@ -13,6 +13,7 @@ namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Filter;
 
 use PHPUnit\Framework\TestCase;
 use Sulu\Component\Rest\Exception\DependantResourcesFoundException;
+use Sulu\Component\Rest\Exception\ReferencingResourcesFoundException;
 use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
 use Sulu\Component\Rest\FlattenExceptionNormalizer;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
@@ -167,19 +168,23 @@ class FlattenExceptionNormalizerTest extends TestCase
             $translator->reveal()
         );
 
-        $exception = new DependantResourcesFoundException([
+        $exception = new DependantResourcesFoundException(
+            ['id' => 1, 'resourceKey' => 'collections'],
             [
-                ['id' => 3, 'resourceKey' => 'media'],
+                [
+                    ['id' => 3, 'resourceKey' => 'media'],
+                ],
+                [
+                    ['id' => 3, 'resourceKey' => 'collections'],
+                    ['id' => 2, 'resourceKey' => 'media'],
+                ],
+                [
+                    ['id' => 2, 'resourceKey' => 'collections'],
+                    ['id' => 1, 'resourceKey' => 'media'],
+                ],
             ],
-            [
-                ['id' => 3, 'resourceKey' => 'collections'],
-                ['id' => 2, 'resourceKey' => 'media'],
-            ],
-            [
-                ['id' => 2, 'resourceKey' => 'collections'],
-                ['id' => 1, 'resourceKey' => 'media'],
-            ],
-        ], 5);
+            5
+        );
 
         $flattenException = FlattenException::createFromThrowable($exception);
 
@@ -202,7 +207,8 @@ class FlattenExceptionNormalizerTest extends TestCase
         $this->assertSame(1105, $result['code']);
         $this->assertSame($exception->getMessage(), $result['message']);
         $this->assertSame($exception->getDependantResourcesCount(), $result['dependantResourcesCount']);
-        $this->assertEquals($exception->getDependantResources(), $result['dependantResources']);
+        $this->assertEquals($exception->getDependantResourceBatches(), $result['dependantResourceBatches']);
+        $this->assertEquals($exception->getResource(), $result['resource']);
         $this->assertArrayNotHasKey('errors', $result);
     }
 
@@ -216,19 +222,23 @@ class FlattenExceptionNormalizerTest extends TestCase
             $translator->reveal()
         );
 
-        $exception = new DependantResourcesFoundException([
+        $exception = new DependantResourcesFoundException(
+            ['id' => 1, 'resourceKey' => 'collections'],
             [
-                ['id' => 3, 'resourceKey' => 'media'],
+                [
+                    ['id' => 3, 'resourceKey' => 'media'],
+                ],
+                [
+                    ['id' => 3, 'resourceKey' => 'collections'],
+                    ['id' => 2, 'resourceKey' => 'media'],
+                ],
+                [
+                    ['id' => 2, 'resourceKey' => 'collections'],
+                    ['id' => 1, 'resourceKey' => 'media'],
+                ],
             ],
-            [
-                ['id' => 3, 'resourceKey' => 'collections'],
-                ['id' => 2, 'resourceKey' => 'media'],
-            ],
-            [
-                ['id' => 2, 'resourceKey' => 'collections'],
-                ['id' => 1, 'resourceKey' => 'media'],
-            ],
-        ], 5);
+            5
+        );
 
         $flattenException = FlattenException::createFromThrowable($exception);
 
@@ -251,7 +261,100 @@ class FlattenExceptionNormalizerTest extends TestCase
         $this->assertSame(1105, $result['code']);
         $this->assertSame($exception->getMessage(), $result['message']);
         $this->assertSame($exception->getDependantResourcesCount(), $result['dependantResourcesCount']);
-        $this->assertEquals($exception->getDependantResources(), $result['dependantResources']);
+        $this->assertEquals($exception->getDependantResourceBatches(), $result['dependantResourceBatches']);
+        $this->assertEquals($exception->getResource(), $result['resource']);
+        $this->assertArrayHasKey('errors', $result);
+    }
+
+    public function testNormalizeReferencingResourcesFoundExceptionDebugFalse(): void
+    {
+        $decoratedNormalizer = $this->prophesize(NormalizerInterface::class);
+        $translator = $this->prophesize(TranslatorInterface::class);
+
+        $normalizer = new FlattenExceptionNormalizer(
+            $decoratedNormalizer->reveal(),
+            $translator->reveal()
+        );
+
+        $exception = new ReferencingResourcesFoundException(
+            ['id' => 1, 'resourceKey' => 'snippets'],
+            [
+                ['id' => 2, 'resourceKey' => 'snippets', 'title' => 'Foo'],
+                ['id' => 3, 'resourceKey' => 'snippets', 'title' => 'Bar'],
+                ['id' => 4, 'resourceKey' => 'snippets', 'title' => 'Baz'],
+            ],
+            3
+        );
+
+        $flattenException = FlattenException::createFromThrowable($exception);
+
+        $decoratedNormalizer->normalize(
+            $flattenException,
+            'json',
+            ['exception' => $exception, 'debug' => false]
+        )->willReturn([
+            'code' => 409,
+            'message' => $exception->getMessage(),
+        ]);
+
+        $result = $normalizer->normalize(
+            $flattenException,
+            'json',
+            ['exception' => $exception, 'debug' => false]
+        );
+
+        $this->assertIsArray($result);
+        $this->assertSame(1106, $result['code']);
+        $this->assertSame($exception->getMessage(), $result['message']);
+        $this->assertSame($exception->getReferencingResourcesCount(), $result['referencingResourcesCount']);
+        $this->assertEquals($exception->getResource(), $result['resource']);
+        $this->assertEquals($exception->getReferencingResources(), $result['referencingResources']);
+        $this->assertArrayNotHasKey('errors', $result);
+    }
+
+    public function testNormalizeReferencingResourcesFoundExceptionDebugTrue(): void
+    {
+        $decoratedNormalizer = $this->prophesize(NormalizerInterface::class);
+        $translator = $this->prophesize(TranslatorInterface::class);
+
+        $normalizer = new FlattenExceptionNormalizer(
+            $decoratedNormalizer->reveal(),
+            $translator->reveal()
+        );
+
+        $exception = new ReferencingResourcesFoundException(
+            ['id' => 1, 'resourceKey' => 'snippets'],
+            [
+                ['id' => 2, 'resourceKey' => 'snippets', 'title' => 'Foo'],
+                ['id' => 3, 'resourceKey' => 'snippets', 'title' => 'Bar'],
+                ['id' => 4, 'resourceKey' => 'snippets', 'title' => 'Baz'],
+            ],
+            3
+        );
+
+        $flattenException = FlattenException::createFromThrowable($exception);
+
+        $decoratedNormalizer->normalize(
+            $flattenException,
+            'json',
+            ['exception' => $exception, 'debug' => true]
+        )->willReturn([
+            'code' => 409,
+            'message' => $exception->getMessage(),
+        ]);
+
+        $result = $normalizer->normalize(
+            $flattenException,
+            'json',
+            ['exception' => $exception, 'debug' => true]
+        );
+
+        $this->assertIsArray($result);
+        $this->assertSame(1106, $result['code']);
+        $this->assertSame($exception->getMessage(), $result['message']);
+        $this->assertSame($exception->getReferencingResourcesCount(), $result['referencingResourcesCount']);
+        $this->assertEquals($exception->getResource(), $result['resource']);
+        $this->assertEquals($exception->getReferencingResources(), $result['referencingResources']);
         $this->assertArrayHasKey('errors', $result);
     }
 

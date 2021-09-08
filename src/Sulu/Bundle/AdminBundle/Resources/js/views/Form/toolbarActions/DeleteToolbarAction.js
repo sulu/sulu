@@ -4,22 +4,26 @@ import {action, computed, observable} from 'mobx';
 import jexl from 'jexl';
 import log from 'loglevel';
 import Dialog from '../../../components/Dialog';
-import {translate} from '../../../utils/Translator';
+import DeleteDependantResourcesDialog from '../../../containers/DeleteDependantResourcesDialog';
+import DeleteReferencedResourceDialog from '../../../containers/DeleteReferencedResourceDialog';
+import {translate} from '../../../utils';
 import {ResourceFormStore} from '../../../containers/Form';
 import Router from '../../../services/Router';
 import ResourceStore from '../../../stores/ResourceStore';
 import Form from '../Form';
+import {ERROR_CODE_DEPENDANT_RESOURCES_FOUND, ERROR_CODE_REFERENCING_RESOURCES_FOUND} from '../../../constants';
 import AbstractFormToolbarAction from './AbstractFormToolbarAction';
+import type {DependantResourcesData, ReferencingResourcesData} from '../../../types';
 
 export default class DeleteToolbarAction extends AbstractFormToolbarAction {
     @observable showDialog: boolean = false;
-    @observable showLinkedDialog: boolean = false;
-    @observable referencingItems: Array<Object> = [];
+    @observable referencingResourcesData: ?ReferencingResourcesData = undefined;
+    @observable dependantResourcesData: ?DependantResourcesData = undefined;
 
-    @computed get allowConflictDeletion() {
+    @computed get allowConflictDeletion(): boolean {
         const {allow_conflict_deletion: allowConflictDeletion = true} = this.options;
 
-        return allowConflictDeletion;
+        return !!allowConflictDeletion;
     }
 
     constructor(
@@ -55,45 +59,110 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
         super(resourceFormStore, form, router, locales, options, parentResourceStore);
     }
 
+    handleDeleteReferencedResourcesDialogCancel = () => {
+        this.closeDeleteReferencedResourceDialog();
+    };
+
+    @action handleDeleteReferencedResourcesDialogConfirm = () => {
+        this.delete(true);
+    };
+
+    @action closeDeleteReferencedResourceDialog = () => {
+        this.referencingResourcesData = undefined;
+    };
+
+    renderDeleteReferencedResourceDialog() {
+        if (!this.referencingResourcesData) {
+            return null;
+        }
+
+        return (
+            <DeleteReferencedResourceDialog
+                allowDeletion={this.allowConflictDeletion}
+                confirmLoading={this.resourceFormStore.deleting}
+                onCancel={this.handleDeleteReferencedResourcesDialogCancel}
+                onConfirm={this.handleDeleteReferencedResourcesDialogConfirm}
+                referencingResourcesData={this.referencingResourcesData}
+            />
+        );
+    }
+
+    handleDeleteDependantResourcesDialogFinish = () => {
+        this.delete();
+    };
+
+    handleDeleteDependantResourcesDialogCancel = () => {
+        this.closeDeleteDependantResourcesDialog();
+    };
+
+    @action closeDeleteDependantResourcesDialog = () => {
+        this.dependantResourcesData = undefined;
+    };
+
+    @computed get deleteDependantResourcesDialogRequestOptions() {
+        const {locale, options: resourceFormStoreOptions = {}} = this.resourceFormStore;
+
+        const options = resourceFormStoreOptions;
+
+        if (locale) {
+            options.locale = locale.get();
+        }
+
+        return options;
+    }
+
+    renderDeleteDependantResourcesDialog() {
+        if (!this.dependantResourcesData) {
+            return null;
+        }
+
+        return (
+            <DeleteDependantResourcesDialog
+                dependantResourcesData={this.dependantResourcesData}
+                onCancel={this.handleDeleteDependantResourcesDialogCancel}
+                onFinish={this.handleDeleteDependantResourcesDialogFinish}
+                requestOptions={this.deleteDependantResourcesDialogRequestOptions}
+            />
+        );
+    }
+
+    handleDialogCancel = () => {
+        this.closeDialog();
+    };
+
+    handleDialogConfirm = () => {
+        this.delete();
+    };
+
+    @action closeDialog = () => {
+        this.showDialog = false;
+    };
+
+    renderDialog(postfix: string) {
+        return (
+            <Dialog
+                cancelText={translate('sulu_admin.cancel')}
+                confirmLoading={this.resourceFormStore.deleting}
+                confirmText={translate('sulu_admin.ok')}
+                onCancel={this.handleDialogCancel}
+                onConfirm={this.handleDialogConfirm}
+                open={this.showDialog}
+                title={translate('sulu_admin.delete' + postfix + '_warning_title')}
+            >
+                {translate('sulu_admin.delete' + postfix + '_warning_text')}
+            </Dialog>
+        );
+    }
+
     getNode() {
         const {delete_locale: deleteLocale = false} = this.options;
         const postfix = deleteLocale ? '_locale' : '';
 
         return (
             <Fragment key={'sulu_admin.delete' + postfix}>
-                <Dialog
-                    cancelText={translate('sulu_admin.cancel')}
-                    confirmLoading={this.resourceFormStore.deleting}
-                    confirmText={translate('sulu_admin.ok')}
-                    onCancel={this.handleCancel}
-                    onConfirm={this.handleConfirm}
-                    open={this.showDialog}
-                    title={translate('sulu_admin.delete' + postfix + '_warning_title')}
-                >
-                    {translate('sulu_admin.delete' + postfix + '_warning_text')}
-                </Dialog>
-                <Dialog
-                    cancelText={translate('sulu_admin.cancel')}
-                    confirmLoading={this.resourceFormStore.deleting}
-                    confirmText={translate('sulu_admin.ok')}
-                    onCancel={this.allowConflictDeletion ? this.handleLinkCancel : undefined}
-                    onConfirm={this.handleLinkConfirm}
-                    open={this.showLinkedDialog}
-                    title={this.allowConflictDeletion
-                        ? translate('sulu_admin.delete_linked_warning_title')
-                        : translate('sulu_admin.item_not_deletable')
-                    }
-                >
-                    {this.allowConflictDeletion
-                        ? translate('sulu_admin.delete_linked_warning_text')
-                        : translate('sulu_admin.delete_linked_abort_text')
-                    }
-                    <ul>
-                        {this.referencingItems.map((referencingItem, index) => (
-                            <li key={index}>{referencingItem.name}</li>
-                        ))}
-                    </ul>
-                </Dialog>
+                {this.renderDialog(postfix)}
+                {this.renderDeleteReferencedResourceDialog()}
+                {this.renderDeleteDependantResourcesDialog()}
             </Fragment>
         );
     }
@@ -152,48 +221,54 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
         this.router.restore(backView, backViewAttributes);
     };
 
-    @action handleCancel = () => {
-        this.showDialog = false;
-    };
-
-    @action handleConfirm = () => {
+    @action delete = (force: boolean = false) => {
         const {delete_locale: deleteLocale = false} = this.options;
 
-        this.resourceFormStore.delete({deleteLocale})
-            .then(action(() => {
-                this.showDialog = false;
-                this.navigateBack();
-            }))
-            .catch(action((response) => {
-                if (response.status !== 409) {
-                    throw response;
-                }
+        const options: {[string]: any} = {deleteLocale};
 
-                this.showDialog = false;
-                this.showLinkedDialog = true;
-                response.json().then(action((data) => {
-                    this.referencingItems.splice(0, this.referencingItems.length);
-                    this.referencingItems.push(...data.items);
-                }));
-            }));
-    };
-
-    @action handleLinkCancel = () => {
-        this.showLinkedDialog = false;
-    };
-
-    @action handleLinkConfirm = () => {
-        const {delete_locale: deleteLocale = false} = this.options;
-
-        if (!this.allowConflictDeletion) {
-            this.showLinkedDialog = false;
-            return;
+        if (force) {
+            options.force = true;
         }
 
-        this.resourceFormStore.delete({force: true, deleteLocale})
-            .then(action(() => {
-                this.showLinkedDialog = false;
+        return this.resourceFormStore.delete(options)
+            .then(() => {
+                this.closeDialog();
+                this.closeDeleteDependantResourcesDialog();
+                this.closeDeleteReferencedResourceDialog();
+
                 this.navigateBack();
+            })
+            .catch(action((response) => {
+                response.json().then(action((data) => {
+                    this.closeDialog();
+                    this.closeDeleteDependantResourcesDialog();
+                    this.closeDeleteReferencedResourceDialog();
+
+                    if (response.status === 409 && data.code === ERROR_CODE_DEPENDANT_RESOURCES_FOUND) {
+                        this.dependantResourcesData = {
+                            dependantResourceBatches: data.dependantResourceBatches,
+                            dependantResourcesCount: data.dependantResourcesCount,
+                        };
+
+                        return;
+                    }
+
+                    if (response.status === 409 && data.code === ERROR_CODE_REFERENCING_RESOURCES_FOUND) {
+                        this.referencingResourcesData = {
+                            resource: data.resource,
+                            referencingResources: data.referencingResources,
+                            referencingResourcesCount: data.referencingResourcesCount,
+                        };
+
+                        return;
+                    }
+
+                    const error = data.detail || data.title || translate('sulu_admin.unexpected_delete_server_error');
+
+                    if (error) {
+                        this.form.errors.push(error);
+                    }
+                }));
             }));
     };
 }
