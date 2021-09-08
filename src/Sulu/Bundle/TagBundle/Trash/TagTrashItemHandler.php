@@ -77,13 +77,15 @@ final class TagTrashItemHandler implements StoreTrashItemHandlerInterface, Resto
     {
         Assert::isInstanceOf($tag, TagInterface::class);
 
+        $creator = $tag->getCreator();
+
         return $this->trashItemRepository->create(
             TagInterface::RESOURCE_KEY,
             (string) $tag->getId(),
             [
                 'name' => $tag->getName(),
                 'created' => $tag->getCreated()->format('c'),
-                'creatorId' => $tag->getCreator() ? $tag->getCreator()->getId() : null,
+                'creatorId' => $creator ? $creator->getId() : null,
             ],
             $tag->getName(),
             TagAdmin::SECURITY_CONTEXT,
@@ -97,7 +99,6 @@ final class TagTrashItemHandler implements StoreTrashItemHandlerInterface, Resto
         $id = (int) $trashItem->getResourceId();
         $data = $trashItem->getRestoreData();
 
-        /** @var TagInterface|null $existingTag */
         $existingTag = $this->tagRepository->findTagByName($data['name']);
         if (null !== $existingTag) {
             throw new TagAlreadyExistsException($existingTag->getName());

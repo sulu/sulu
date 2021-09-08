@@ -28,6 +28,9 @@ class CategoryRestoredEvent extends DomainEvent
      */
     private $payload;
 
+    /**
+     * @param mixed[] $payload
+     */
     public function __construct(
         CategoryInterface $category,
         array $payload

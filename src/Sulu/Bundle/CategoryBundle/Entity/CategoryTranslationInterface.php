@@ -133,12 +133,12 @@ interface CategoryTranslationInterface extends AuditableInterface
     public function hasKeyword(KeywordInterface $keyword);
 
     /**
-     * @param UserInterface $creator
+     * @param UserInterface|null $creator
      */
     public function setCreator($creator);
 
     /**
-     * @param UserInterface $changer
+     * @param UserInterface|null $changer
      */
     public function setChanger($changer);
 

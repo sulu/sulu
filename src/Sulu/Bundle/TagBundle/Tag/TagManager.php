@@ -88,7 +88,7 @@ class TagManager implements TagManagerInterface
      *
      * @param $id number The id of the tag
      *
-     * @return TagInterface
+     * @return TagInterface|null
      */
     public function findById($id)
     {
@@ -100,7 +100,7 @@ class TagManager implements TagManagerInterface
      *
      * @param $name
      *
-     * @return TagInterface
+     * @return TagInterface|null
      */
     public function findByName($name)
     {

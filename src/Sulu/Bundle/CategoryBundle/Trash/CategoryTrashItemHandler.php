@@ -104,12 +104,15 @@ final class CategoryTrashItemHandler implements StoreTrashItemHandlerInterface, 
     {
         Assert::isInstanceOf($category, CategoryInterface::class);
 
+        $parent = $category->getParent();
+        $creator = $category->getCreator();
+
         $data = [
             'key' => $category->getKey(),
             'defaultLocale' => $category->getDefaultLocale(),
-            'parentId' => $category->getParent() ? $category->getParent()->getId() : null,
+            'parentId' => $parent ? $parent->getId() : null,
             'created' => $category->getCreated()->format('c'),
-            'creatorId' => $category->getCreator() ? $category->getCreator()->getId() : null,
+            'creatorId' => $creator ? $creator->getId() : null,
             'metas' => [],
             'translations' => [],
         ];
@@ -127,12 +130,14 @@ final class CategoryTrashItemHandler implements StoreTrashItemHandlerInterface, 
 
         /** @var CategoryTranslationInterface $translation */
         foreach ($category->getTranslations() as $translation) {
+            $creator = $translation->getCreator();
+
             $translationData = [
                 'translation' => $translation->getTranslation(),
                 'description' => $translation->getDescription(),
                 'locale' => $translation->getLocale(),
                 'created' => $translation->getCreated()->format('c'),
-                'creatorId' => $translation->getCreator() ? $translation->getCreator()->getId() : null,
+                'creatorId' => $creator ? $creator->getId() : null,
                 'mediaIds' => [],
                 'keywords' => [],
             ];
@@ -144,10 +149,12 @@ final class CategoryTrashItemHandler implements StoreTrashItemHandlerInterface, 
 
             /** @var KeywordInterface $keyword */
             foreach ($translation->getKeywords() as $keyword) {
+                $creator = $keyword->getCreator();
+
                 $translationData['keywords'][] = [
                     'keyword' => $keyword->getKeyword(),
                     'created' => $keyword->getCreated()->format('c'),
-                    'creatorId' => $keyword->getCreator() ? $keyword->getCreator()->getId() : null,
+                    'creatorId' => $creator ? $creator->getId() : null,
                 ];
             }
 

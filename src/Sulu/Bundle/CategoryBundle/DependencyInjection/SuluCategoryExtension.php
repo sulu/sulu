@@ -169,7 +169,7 @@ class SuluCategoryExtension extends Extension implements PrependExtensionInterfa
                 'sulu_trash',
                 [
                     'restore_form' => [
-                        CategoryInterface::RESOURCE_KEY => 'restore_category'
+                        CategoryInterface::RESOURCE_KEY => 'restore_category',
                     ],
                 ]
             );
