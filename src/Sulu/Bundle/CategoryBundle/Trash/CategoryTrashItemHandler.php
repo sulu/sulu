@@ -14,7 +14,9 @@ declare(strict_types=1);
 namespace Sulu\Bundle\CategoryBundle\Trash;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\CategoryBundle\Admin\CategoryAdmin;
+use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryRestoredEvent;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryMetaInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryMetaRepositoryInterface;
@@ -23,7 +25,9 @@ use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\KeywordInterface;
 use Sulu\Bundle\CategoryBundle\Entity\KeywordRepositoryInterface;
+use Sulu\Bundle\CategoryBundle\Exception\CategoryKeyNotUniqueException;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
+use Sulu\Bundle\TrashBundle\Application\DoctrineRestoreHelper\DoctrineRestoreHelperInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\RestoreTrashItemHandlerInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\StoreTrashItemHandlerInterface;
 use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
@@ -63,13 +67,25 @@ final class CategoryTrashItemHandler implements StoreTrashItemHandlerInterface, 
      */
     private $entityManager;
 
+    /**
+     * @var DoctrineRestoreHelperInterface
+     */
+    private $doctrineRestoreHelper;
+
+    /**
+     * @var DomainEventCollectorInterface
+     */
+    private $domainEventCollector;
+
     public function __construct(
         TrashItemRepositoryInterface $trashItemRepository,
         CategoryRepositoryInterface $categoryRepository,
         CategoryMetaRepositoryInterface $categoryMetaRepository,
         CategoryTranslationRepositoryInterface $categoryTranslationRepository,
         KeywordRepositoryInterface $keywordRepository,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        DoctrineRestoreHelperInterface $doctrineRestoreHelper,
+        DomainEventCollectorInterface  $domainEventCollector
     )
     {
         $this->trashItemRepository = $trashItemRepository;
@@ -78,6 +94,8 @@ final class CategoryTrashItemHandler implements StoreTrashItemHandlerInterface, 
         $this->categoryTranslationRepository = $categoryTranslationRepository;
         $this->keywordRepository = $keywordRepository;
         $this->entityManager = $entityManager;
+        $this->doctrineRestoreHelper = $doctrineRestoreHelper;
+        $this->domainEventCollector = $domainEventCollector;
     }
 
     /**
@@ -155,15 +173,16 @@ final class CategoryTrashItemHandler implements StoreTrashItemHandlerInterface, 
 
     public function restore(TrashItemInterface $trashItem, array $restoreFormData): object
     {
+        $id = (int) $trashItem->getResourceId();
         $data = $trashItem->getRestoreData();
 
         // TODO: select new parent in overlay in frontend
-        // TODO: check if key is still unique
-        // TODO: set id to previous id if possible
+
+        if ($data['key'] && null !== $this->categoryRepository->findCategoryByKey($data['key'])) {
+            throw new CategoryKeyNotUniqueException($data['key']);
+        }
 
         $category = $this->categoryRepository->createNew();
-        $this->entityManager->persist($category);
-
         $category->setKey($data['key']);
         $category->setDefaultLocale($data['defaultLocale']);
         $category->setCreated(new \DateTime($data['created']));
@@ -220,9 +239,16 @@ final class CategoryTrashItemHandler implements StoreTrashItemHandlerInterface, 
             $category->addTranslation($translation);
         }
 
-        // TODO: dispatch restore domain event
+        $this->domainEventCollector->collect(
+            new CategoryRestoredEvent($category, $data)
+        );
 
-        $this->entityManager->flush();
+        if (null === $this->categoryRepository->findCategoryById($id)) {
+            $this->doctrineRestoreHelper->persistAndFlushWithId($category, $id);
+        } else {
+            $this->entityManager->persist($category);
+            $this->entityManager->flush();
+        }
 
         return $category;
     }

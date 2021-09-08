@@ -11,10 +11,12 @@
 
 namespace Sulu\Bundle\CategoryBundle\Exception;
 
+use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
+
 /**
  * An instance of this exception signals that a specific key is already assigned to another category.
  */
-class CategoryKeyNotUniqueException extends \Exception
+class CategoryKeyNotUniqueException extends \Exception implements TranslationErrorMessageExceptionInterface
 {
     /**
      * @var mixed
@@ -37,5 +39,18 @@ class CategoryKeyNotUniqueException extends \Exception
     public function getCategoryKey()
     {
         return $this->categoryKey;
+    }
+
+    public function getMessageTranslationKey(): string
+    {
+        return 'sulu_category.key_assigned_to_other_category';
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getMessageTranslationParameters(): array
+    {
+        return ['{key}' => $this->categoryKey];
     }
 }

@@ -46,7 +46,7 @@ final class TagTrashItemHandler implements StoreTrashItemHandlerInterface, Resto
     /**
      * @var DoctrineRestoreHelperInterface
      */
-    private $DoctrineRestoreHelper;
+    private $doctrineRestoreHelper;
 
     /**
      * @var EntityManagerInterface
@@ -59,16 +59,16 @@ final class TagTrashItemHandler implements StoreTrashItemHandlerInterface, Resto
     private $domainEventCollector;
 
     public function __construct(
-        TrashItemRepositoryInterface $trashItemRepository,
-        TagRepositoryInterface $tagRepository,
-        DoctrineRestoreHelperInterface $DoctrineRestoreHelper,
-        EntityManagerInterface $entityManager,
-        DomainEventCollectorInterface $domainEventCollector
+        TrashItemRepositoryInterface   $trashItemRepository,
+        TagRepositoryInterface         $tagRepository,
+        DoctrineRestoreHelperInterface $doctrineRestoreHelper,
+        EntityManagerInterface         $entityManager,
+        DomainEventCollectorInterface  $domainEventCollector
     )
     {
         $this->trashItemRepository = $trashItemRepository;
         $this->tagRepository = $tagRepository;
-        $this->DoctrineRestoreHelper = $DoctrineRestoreHelper;
+        $this->doctrineRestoreHelper = $doctrineRestoreHelper;
         $this->entityManager = $entityManager;
         $this->domainEventCollector = $domainEventCollector;
     }
@@ -120,7 +120,7 @@ final class TagTrashItemHandler implements StoreTrashItemHandlerInterface, Resto
 
         $existingTag = $this->tagRepository->findTagById($id);
         if (null === $existingTag) {
-            $this->DoctrineRestoreHelper->persistAndFlushWithId($tag, $id);
+            $this->doctrineRestoreHelper->persistAndFlushWithId($tag, $id);
         } else {
             $this->entityManager->persist($tag);
             $this->entityManager->flush();
