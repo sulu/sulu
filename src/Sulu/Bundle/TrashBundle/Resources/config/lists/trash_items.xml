@@ -25,7 +25,7 @@
         <join>
             <entity-name>%sulu.model.trash_item.class%_defaultTranslation</entity-name>
             <field-name>%sulu.model.trash_item.class%.translations</field-name>
-            <condition>%sulu.model.trash_item.class%_defaultTranslation.locale = %sulu.model.trash_item.class%.defaultLocale</condition>
+            <condition>%sulu.model.trash_item.class%_defaultTranslation.locale = %sulu.model.trash_item.class%.defaultLocale OR (%sulu.model.trash_item.class%.defaultLocale IS NULL AND %sulu.model.trash_item.class%_defaultTranslation.locale IS NULL)</condition>
         </join>
     </joins>
 

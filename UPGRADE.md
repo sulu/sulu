@@ -2,12 +2,6 @@
 
 ## 2.x
 
-### Added restore method to TagManagerInterface
-
-The `TagManagerInterface` declares a new method `restore`.
-If you have overridden this service in your project without extending from Sulu's `TagManager`,
-you need to implement this new method in order to be able to restore trashed tags.
-
 ### Changed constructor of multiple services to integrate them with the SuluTrashBundle
 
 To integrate the `SuluTrashBundle` with the existing services, the constructor of the following services was

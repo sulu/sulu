@@ -155,63 +155,6 @@ class TagManager implements TagManagerInterface
         }
     }
 
-    public function restore(int $id, array $data): TagInterface
-    {
-        $name = $data['name'];
-
-        /** @var TagInterface|null $existingTag */
-        $existingTag = $this->tagRepository->findTagByName($name);
-        if (null !== $existingTag) {
-            throw new TagAlreadyExistsException($existingTag->getName());
-        }
-
-        /** @var TagInterface|null $existingTag */
-        $existingTag = $this->tagRepository->findTagById($id);
-
-        $tag = $this->tagRepository->createNew();
-        $tag->setName($name);
-
-        if (null === $existingTag) {
-            $tagClass = \get_class($tag);
-
-            $idReflProperty = new \ReflectionProperty($tagClass, 'id');
-            $idReflProperty->setAccessible(true);
-            $idReflProperty->setValue($tag, $id);
-
-            /** @var ClassMetadataInfo<TagInterface> $metadata */
-            $metadata = $this->em->getClassMetaData($tagClass);
-
-            $oldIdGeneratorType = $metadata->generatorType;
-            $oldIdGenerator = $metadata->idGenerator;
-
-            $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
-            $metadata->setIdGenerator(new AssignedGenerator());
-
-            try {
-                $this->em->persist($tag);
-
-                $this->domainEventCollector->collect(
-                    new TagRestoredEvent($tag, $data)
-                );
-
-                $this->em->flush();
-            } finally {
-                $metadata->setIdGeneratorType($oldIdGeneratorType);
-                $metadata->setIdGenerator($oldIdGenerator);
-            }
-        } else {
-            $this->em->persist($tag);
-
-            $this->domainEventCollector->collect(
-                new TagRestoredEvent($tag, $data)
-            );
-
-            $this->em->flush();
-        }
-
-        return $tag;
-    }
-
     /**
      * Deletes the given Tag.
      *
