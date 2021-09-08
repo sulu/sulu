@@ -7,7 +7,7 @@ import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {translate} from 'sulu-admin-bundle/utils';
 import {Button, ButtonGroup, Dialog, DropdownButton} from 'sulu-admin-bundle/components';
 import DeleteDependantResourcesDialog from 'sulu-admin-bundle/containers/DeleteDependantResourcesDialog';
-import {ERROR_CODE_DEPENDANT_RESOURCES_FOUND} from 'sulu-admin-bundle';
+import {ERROR_CODE_DEPENDANT_RESOURCES_FOUND} from 'sulu-admin-bundle/constants';
 import CollectionFormOverlay from './CollectionFormOverlay';
 import CollectionBreadcrumb from './CollectionBreadcrumb';
 import PermissionFormOverlay from './PermissionFormOverlay';

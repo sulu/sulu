@@ -11,7 +11,7 @@ import {ResourceFormStore} from '../../../containers/Form';
 import Router from '../../../services/Router';
 import ResourceStore from '../../../stores/ResourceStore';
 import Form from '../Form';
-import {ERROR_CODE_DEPENDANT_RESOURCES_FOUND, ERROR_CODE_REFERENCING_RESOURCES_FOUND} from '../../../index';
+import {ERROR_CODE_DEPENDANT_RESOURCES_FOUND, ERROR_CODE_REFERENCING_RESOURCES_FOUND} from '../../../constants';
 import AbstractFormToolbarAction from './AbstractFormToolbarAction';
 import type {DependantResourcesData, ReferencingResourcesData} from '../../../types';
 

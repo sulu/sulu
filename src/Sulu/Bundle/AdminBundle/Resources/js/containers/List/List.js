@@ -15,7 +15,7 @@ import SingleListOverlay from '../SingleListOverlay';
 import {translate} from '../../utils';
 import DeleteReferencedResourceDialog from '../DeleteReferencedResourceDialog';
 import DeleteDependantResourcesDialog from '../DeleteDependantResourcesDialog';
-import {ERROR_CODE_DEPENDANT_RESOURCES_FOUND, ERROR_CODE_REFERENCING_RESOURCES_FOUND} from '../../index';
+import {ERROR_CODE_DEPENDANT_RESOURCES_FOUND, ERROR_CODE_REFERENCING_RESOURCES_FOUND} from '../../constants';
 import ListStore from './stores/ListStore';
 import listAdapterRegistry from './registries/listAdapterRegistry';
 import AbstractAdapter from './adapters/AbstractAdapter';
