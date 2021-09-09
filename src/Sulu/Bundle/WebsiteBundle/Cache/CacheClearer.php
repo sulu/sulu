@@ -80,24 +80,27 @@ class CacheClearer implements CacheClearerInterface
 
         $tags = \func_num_args() >= 1 ? \func_get_arg(0) : null;
 
-        if ($this->cacheManager && $this->cacheManager->supportsInvalidate()) {
-            if (null !== $tags && $this->cacheManager->supportsTags()) {
-                foreach ($tags as $tag) {
-                    $this->cacheManager->invalidateTag($tag);
-                }
-
-                $this->eventDispatcher->dispatch(new CacheClearEvent($tags), Events::CACHE_CLEAR);
-
-                return;
+        if (null !== $tags && $this->cacheManager && $this->cacheManager->supportsTags()) {
+            foreach ($tags as $tag) {
+                $this->cacheManager->invalidateTag($tag);
             }
 
-            $request = $this->requestStack->getCurrentRequest();
-            if (!$request) {
-                return;
-            }
-
-            $this->cacheManager->invalidateDomain($request->getHost());
             $this->eventDispatcher->dispatch(new CacheClearEvent($tags), Events::CACHE_CLEAR);
+
+            return;
+        }
+
+        $request = $this->requestStack->getCurrentRequest();
+        if (null !== $request && $this->cacheManager && $this->cacheManager->supportsInvalidate()) {
+            $this->cacheManager->invalidateDomain($request->getHost());
+            $this->eventDispatcher->dispatch(new CacheClearEvent(), Events::CACHE_CLEAR);
+
+            return;
+        }
+
+        if ($this->cacheManager && $this->cacheManager->supportsClear()) {
+            $this->cacheManager->clear();
+            $this->eventDispatcher->dispatch(new CacheClearEvent(), Events::CACHE_CLEAR);
 
             return;
         }
@@ -112,6 +115,6 @@ class CacheClearer implements CacheClearerInterface
             $this->filesystem->remove($path);
         }
 
-        $this->eventDispatcher->dispatch(new CacheClearEvent($tags), Events::CACHE_CLEAR);
+        $this->eventDispatcher->dispatch(new CacheClearEvent(), Events::CACHE_CLEAR);
     }
 }

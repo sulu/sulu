@@ -283,8 +283,8 @@
 
         <service id="sulu_website.event_subscriber.cache_clear"
                  class="Sulu\Bundle\WebsiteBundle\EventSubscriber\DomainEventEventSubscriber">
-            <argument type="service" id="sulu_activity.domain_event_collector"/>
-            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="sulu_activity.domain_event_dispatcher"/>
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
 
             <tag name="kernel.event_subscriber"/>
         </service>
