@@ -191,10 +191,7 @@ final class CategoryTrashItemHandler implements StoreTrashItemHandlerInterface, 
         $category->setKey($data['key']);
         $category->setDefaultLocale($data['defaultLocale']);
         $category->setCreated(new \DateTime($data['created']));
-
-        if ($data['creatorId']) {
-            $category->setCreator($this->entityManager->find(UserInterface::class, $data['creatorId']));
-        }
+        $category->setCreator($this->findEntity(UserInterface::class, $data['creatorId']));
 
         if ($parentId) {
             $category->setParent($this->categoryRepository->findCategoryById($parentId));
@@ -202,33 +199,30 @@ final class CategoryTrashItemHandler implements StoreTrashItemHandlerInterface, 
 
         foreach ($data['metas'] as $metaData) {
             $meta = $this->categoryMetaRepository->createNew();
+            $meta->setCategory($category);
+            $category->addMeta($meta);
             $this->entityManager->persist($meta);
 
-            $meta->setCategory($category);
             $meta->setKey($metaData['key']);
             $meta->setValue($metaData['value']);
             $meta->setLocale($metaData['locale']);
-
-            $category->addMeta($meta);
         }
 
         foreach ($data['translations'] as $translationData) {
             $translation = $this->categoryTranslationRepository->createNew();
+            $translation->setCategory($category);
+            $category->addTranslation($translation);
             $this->entityManager->persist($translation);
 
-            $translation->setCategory($category);
             $translation->setTranslation($translationData['translation']);
             $translation->setDescription($translationData['description']);
             $translation->setLocale($translationData['locale']);
             $translation->setCreated(new \DateTime($translationData['created']));
-
-            if ($translationData['creatorId']) {
-                $translation->setCreator($this->entityManager->find(UserInterface::class, $translationData['creatorId']));
-            }
+            $translation->setCreator($this->findEntity(UserInterface::class, $translationData['creatorId']));
 
             $medias = [];
             foreach ($translationData['mediaIds'] as $mediaId) {
-                if ($media = $this->entityManager->find(MediaInterface::class, $mediaId)) {
+                if ($media = $this->findEntity(MediaInterface::class, $mediaId)) {
                     $medias[] = $media;
                 }
             }
@@ -244,17 +238,12 @@ final class CategoryTrashItemHandler implements StoreTrashItemHandlerInterface, 
                     $keyword->setKeyword($keywordData['keyword']);
                     $keyword->setLocale($translationData['locale']);
                     $keyword->setCreated(new \DateTime($keywordData['created']));
-
-                    if ($keywordData['creatorId']) {
-                        $keyword->setCreator($this->entityManager->find(UserInterface::class, $keywordData['creatorId']));
-                    }
+                    $keyword->setCreator($this->findEntity(UserInterface::class, $keywordData['creatorId']));
                 }
 
                 $keyword->addCategoryTranslation($translation);
                 $translation->addKeyword($keyword);
             }
-
-            $category->addTranslation($translation);
         }
 
         $this->domainEventCollector->collect(
@@ -274,5 +263,22 @@ final class CategoryTrashItemHandler implements StoreTrashItemHandlerInterface, 
     public static function getResourceKey(): string
     {
         return CategoryInterface::RESOURCE_KEY;
+    }
+
+    /**
+     * @template T of object
+     *
+     * @param class-string<T> $className
+     * @param mixed|null $id
+     *
+     * @return T|null
+     */
+    private function findEntity(string $className, $id)
+    {
+        if ($id) {
+            return $this->entityManager->find($className, $id);
+        }
+
+        return null;
     }
 }

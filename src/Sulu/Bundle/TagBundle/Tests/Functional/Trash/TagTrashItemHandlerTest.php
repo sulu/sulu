@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\TagBundle\Tests\Functional\Controller\Trash;
+namespace Sulu\Bundle\TagBundle\Tests\Functional\Trash;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\TagBundle\Entity\Tag;
@@ -69,6 +69,8 @@ class TagTrashItemHandlerTest extends SuluTestCase
         $trashItem = $this->tagTrashItemHandler->store($tag1);
         $this->entityManager->remove($tag1);
         $this->entityManager->flush();
+        static::assertSame($originalTagId, (int) $trashItem->getResourceId());
+        static::assertSame('First Tag', $trashItem->getResourceTitle());
         static::assertCount(1, $this->entityManager->getRepository(TagInterface::class)->findAll());
 
         // the TagTrashItemHandler::restore method changes the id generator for the entity to restore the original id
@@ -77,11 +79,9 @@ class TagTrashItemHandlerTest extends SuluTestCase
         // this problem does not occur during normal usage because restoring is a separate request with a fresh kernel
         $this->bootKernelAndSetServices();
 
-        $this->tagTrashItemHandler->restore($trashItem, []);
-        static::assertCount(2, $this->entityManager->getRepository(TagInterface::class)->findAll());
-
         /** @var TagInterface $restoredTag */
-        $restoredTag = $this->tagRepository->find($trashItem->getResourceId());
+        $restoredTag = $this->tagTrashItemHandler->restore($trashItem, []);
+        static::assertCount(2, $this->entityManager->getRepository(TagInterface::class)->findAll());
         static::assertSame($originalTagId, $restoredTag->getId());
         static::assertSame('First Tag', $restoredTag->getName());
         static::assertEquals(new \DateTime('2020-10-10'), $restoredTag->getCreated());
