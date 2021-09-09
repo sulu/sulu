@@ -11,12 +11,13 @@
 
 namespace Sulu\Bundle\WebsiteBundle\EventSubscriber;
 
-use Doctrine\ORM\EntityManagerInterface;
-use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Bundle\ActivityBundle\Application\Dispatcher\DomainEventDispatcherInterface;
 use Sulu\Bundle\WebsiteBundle\Domain\Event\CacheClearedEvent;
 use Sulu\Bundle\WebsiteBundle\Event\CacheClearEvent;
 use Sulu\Bundle\WebsiteBundle\Events;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\WebspaceReferenceStore;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -25,21 +26,21 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class DomainEventEventSubscriber implements EventSubscriberInterface
 {
     /**
-     * @var DomainEventCollectorInterface
+     * @var DomainEventDispatcherInterface
      */
-    private $domainEventCollector;
+    private $domainEventDispatcher;
 
     /**
-     * @var EntityManagerInterface
+     * @var WebspaceManagerInterface
      */
-    private $entityManager;
+    private $webspaceManager;
 
     public function __construct(
-        DomainEventCollectorInterface $domainEventCollector,
-        EntityManagerInterface $entityManager
+        DomainEventDispatcherInterface $domainEventDispatcher,
+        WebspaceManagerInterface $webspaceManager
     ) {
-        $this->entityManager = $entityManager;
-        $this->domainEventCollector = $domainEventCollector;
+        $this->domainEventDispatcher = $domainEventDispatcher;
+        $this->webspaceManager = $webspaceManager;
     }
 
     public static function getSubscribedEvents()
@@ -53,17 +54,20 @@ class DomainEventEventSubscriber implements EventSubscriberInterface
     {
         $tags = $event->getTags();
         if (null === $tags || 0 === \count($tags)) {
+            /** @var Webspace $webspace */
+            foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
+                $this->domainEventDispatcher->dispatch(new CacheClearedEvent($webspace->getKey(), null));
+            }
+
             return;
         }
 
         foreach ($tags as $tag) {
             $webspaceKey = $this->getWebspaceKeyFromTag($tag);
             if ($webspaceKey) {
-                $this->domainEventCollector->collect(new CacheClearedEvent($webspaceKey, $tags));
+                $this->domainEventDispatcher->dispatch(new CacheClearedEvent($webspaceKey, $tags));
             }
         }
-
-        $this->entityManager->flush();
     }
 
     private function getWebspaceKeyFromTag(string $tag): ?string
