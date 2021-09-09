@@ -75,6 +75,15 @@ class CacheManager implements CacheManagerInterface
         );
     }
 
+    public function clear(): void
+    {
+        if (!$this->fosCacheManager->supports(FOSCacheManager::CLEAR)) {
+            return;
+        }
+
+        $this->fosCacheManager->clearCache();
+    }
+
     public function supportsInvalidate(): bool
     {
         return $this->fosCacheManager->supports(FOSCacheManager::INVALIDATE);
@@ -83,5 +92,10 @@ class CacheManager implements CacheManagerInterface
     public function supportsTags(): bool
     {
         return $this->fosCacheManager->supports(FOSCacheManager::TAGS);
+    }
+
+    public function supportsClear(): bool
+    {
+        return $this->fosCacheManager->supports(FOSCacheManager::CLEAR);
     }
 }

@@ -29,6 +29,11 @@ interface CacheManagerInterface
     public function invalidateDomain(string $domain): void;
 
     /**
+     * Clear the whole cache.
+     */
+    public function clear(): void;
+
+    /**
      * Invalidates reference.
      */
     public function invalidateReference(string $alias, string $id): void;
@@ -42,4 +47,9 @@ interface CacheManagerInterface
      * Returns true if current proxy client supports tags-invalidation.
      */
     public function supportsTags(): bool;
+
+    /**
+     * Returns true if current proxy client supports clear.
+     */
+    public function supportsClear(): bool;
 }
