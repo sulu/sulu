@@ -191,7 +191,10 @@ final class CategoryTrashItemHandler implements StoreTrashItemHandlerInterface, 
         $category->setKey($data['key']);
         $category->setDefaultLocale($data['defaultLocale']);
         $category->setCreated(new \DateTime($data['created']));
-        $category->setCreator($this->entityManager->find(UserInterface::class, $data['creatorId']));
+
+        if ($data['creatorId']) {
+            $category->setCreator($this->entityManager->find(UserInterface::class, $data['creatorId']));
+        }
 
         if ($parentId) {
             $category->setParent($this->categoryRepository->findCategoryById($parentId));
@@ -218,7 +221,10 @@ final class CategoryTrashItemHandler implements StoreTrashItemHandlerInterface, 
             $translation->setDescription($translationData['description']);
             $translation->setLocale($translationData['locale']);
             $translation->setCreated(new \DateTime($translationData['created']));
-            $translation->setCreator($this->entityManager->find(UserInterface::class, $translationData['creatorId']));
+
+            if ($translationData['creatorId']) {
+                $translation->setCreator($this->entityManager->find(UserInterface::class, $translationData['creatorId']));
+            }
 
             $medias = [];
             foreach ($translationData['mediaIds'] as $mediaId) {
@@ -238,7 +244,10 @@ final class CategoryTrashItemHandler implements StoreTrashItemHandlerInterface, 
                     $keyword->setKeyword($keywordData['keyword']);
                     $keyword->setLocale($translationData['locale']);
                     $keyword->setCreated(new \DateTime($keywordData['created']));
-                    $keyword->setCreator($this->entityManager->find(UserInterface::class, $keywordData['creatorId']));
+
+                    if ($keywordData['creatorId']) {
+                        $keyword->setCreator($this->entityManager->find(UserInterface::class, $keywordData['creatorId']));
+                    }
                 }
 
                 $keyword->addCategoryTranslation($translation);

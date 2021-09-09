@@ -109,7 +109,10 @@ final class TagTrashItemHandler implements StoreTrashItemHandlerInterface, Resto
 
         if ($tag instanceof Tag) {
             $tag->setCreated(new \DateTime($data['created']));
-            $tag->setCreator($this->entityManager->find(UserInterface::class, $data['creatorId']));
+
+            if ($data['creatorId']) {
+                $tag->setCreator($this->entityManager->find(UserInterface::class, $data['creatorId']));
+            }
         }
 
         $this->domainEventCollector->collect(

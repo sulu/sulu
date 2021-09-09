@@ -25,7 +25,7 @@ final class DoctrineRestoreHelper implements DoctrineRestoreHelperInterface
     private $entityManager;
 
     public function __construct(
-        EntityManagerInterface $entityManager,
+        EntityManagerInterface $entityManager
     ) {
         $this->entityManager = $entityManager;
     }
@@ -43,6 +43,10 @@ final class DoctrineRestoreHelper implements DoctrineRestoreHelperInterface
         $previousIdGenerator = $metadata->idGenerator;
 
         try {
+            // changing the id generator for a class after an entity of the class was persisted can lead to errors
+            // during flush, because the doctrine BasicEntityPersister caches the insert sql on the first insert:
+            // https://github.com/doctrine/orm/blob/7fcab3d52e9fd8d1e8f6b16139ed600a2af3e953/lib/Doctrine/ORM/Persisters/Entity/BasicEntityPersister.php#L1381-L1383
+            // this problem should not occur during normal usage because restoring happens in a separate request
             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
             $metadata->setIdGenerator(new AssignedGenerator());
 
