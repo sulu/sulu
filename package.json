@@ -80,7 +80,7 @@
         "react-styleguidist": "^11.0.5",
         "react-test-renderer": "^17.0.0",
         "regenerator-runtime": "^0.13.3",
-        "style-loader": "^2.0.0",
+        "style-loader": "^1.0.0",
         "stylelint": "^13.2.1",
         "stylelint-config-standard": "^22.0.0",
         "url-search-params-polyfill": "^8.0.0",
