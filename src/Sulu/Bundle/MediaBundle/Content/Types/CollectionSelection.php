@@ -58,13 +58,14 @@ class CollectionSelection extends SimpleContentType implements PreResolvableCont
             try {
                 $collections[] = $this->collectionManager->getById($id, $locale);
             } catch (CollectionNotFoundException $e) {
+                // @ignoreException: do not crash page if selection collection is deleted
             }
         }
 
         return $collections;
     }
 
-    public function preResolve(PropertyInterface $property)
+    public function preResolve(PropertyInterface $property): void
     {
         $ids = $property->getValue();
         if (!\is_array($ids) || empty($ids)) {

@@ -57,7 +57,7 @@ class SingleCollectionSelection extends SimpleContentType implements PreResolvab
         }
     }
 
-    public function preResolve(PropertyInterface $property)
+    public function preResolve(PropertyInterface $property): void
     {
         $id = $property->getValue();
         if (!$id) {
