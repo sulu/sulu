@@ -30,6 +30,15 @@ interface MediaInterface extends AuditableInterface
     public function getId();
 
     /**
+     * Set created.
+     *
+     * @param \DateTime $created
+     *
+     * @return $this
+     */
+    public function setCreated($created);
+
+    /**
      * Set changed.
      *
      * @param \DateTime $changed

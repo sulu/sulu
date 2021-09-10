@@ -28,7 +28,7 @@ interface MediaRepositoryInterface extends RepositoryInterface
      *
      * @param int $id
      *
-     * @return Media
+     * @return Media|null
      */
     public function findMediaById($id);
 

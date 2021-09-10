@@ -88,6 +88,7 @@
     "sulu_activity.description.media.modified": "{userFullName} has changed the media \"{resourceTitle}\"",
     "sulu_activity.description.media.moved": "{userFullName} has moved the media \"{resourceTitle}\" from \"{context_previousCollectionTitle}\" to \"{context_newCollectionTitle}\"",
     "sulu_activity.description.media.removed": "{userFullName} has removed the media \"{resourceTitle}\"",
+    "sulu_activity.description.media.restored": "{userFullName} has restored the media \"{resourceTitle}\"",
     "sulu_activity.description.media.translation_added": "{userFullName} has added a translation \"{resourceLocale}\" to the media \"{resourceTitle}\"",
     "sulu_activity.description.media.crop_modified": "{userFullName} has changed the crop for the \"{context_formatKey}\" format of the media \"{resourceTitle}\"",
     "sulu_activity.description.media.crop_removed": "{userFullName} has removed the crop for the \"{context_formatKey}\" format from the media \"{resourceTitle}\"",

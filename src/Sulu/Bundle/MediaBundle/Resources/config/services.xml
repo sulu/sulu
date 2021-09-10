@@ -271,7 +271,7 @@
             <argument type="string">%sulu_media.media_manager.media_download_path%</argument>
             <argument type="service" id="sulu.repository.target_group" on-invalid="null"/>
             <argument type="string">%sulu_media.media_manager.media_download_path_admin%</argument>
-            <argument type="service" id="sulu_media.adapter"/>
+            <argument type="service" id="sulu_trash.trash_manager" on-invalid="null"/>
         </service>
 
         <service id="Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface" alias="sulu_media.media_manager"/>

@@ -2,6 +2,13 @@
 
 ## 2.x
 
+### MediaInterface was changed
+
+A new method has been added to the `MediaInterface`:
+
+- `setCreated`
+
+
 ### CategoryInterface was changed
 
 A new method has been added to the `CategoryInterface`:
@@ -16,6 +23,7 @@ call to pass the correct parameters:
 
 - `Sulu\Bundle\TagBundle\Tag\TagManager`
 - `Sulu\Bundle\CategoryBundle\Category\CategoryManager`
+- `Sulu\Bundle\MediaBundle\Media\Manager\MediaManager`
 
 ### Added SuluTrashBundle to make resources trashable/restorable
 
