@@ -26,7 +26,7 @@ interface CollectionManagerInterface
      * Returns a collection with a given id.
      *
      * @param int $id the id of the collection
-     * @param int $locale the locale which the collection should be return
+     * @param string $locale the locale which the collection should be return
      * @param int $depth if depth > 1 children will returned also
      * @param bool $breadcrumb if true breadcrumb will be appended
      * @param array $filter array of criteria
@@ -48,7 +48,7 @@ interface CollectionManagerInterface
      * Returns collections with a given parent and/or a given depth-level
      * if no arguments passed returns all collection.
      *
-     * @param int $locale the locale which the collection should be return
+     * @param string $locale the locale which the collection should be return
      * @param array $filter for parent or depth
      * @param int $limit limit the output
      * @param int $offset offset the output
