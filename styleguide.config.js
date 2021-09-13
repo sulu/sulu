@@ -178,6 +178,7 @@ module.exports = { // eslint-disable-line
                                 injectType: 'singletonStyleTag',
                             },
                         },
+                        'css-loader',
                         {
                             loader: 'postcss-loader',
                             options: styles.getPostCssConfig({
