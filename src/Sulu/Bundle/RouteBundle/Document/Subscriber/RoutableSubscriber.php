@@ -212,8 +212,6 @@ class RoutableSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $node = $this->documentInspector->getNode($document);
-
         try {
             $route = $this->createOrUpdateRoute($document, $event->getLocale());
         } catch (RouteIsNotUniqueException $exception) {
@@ -223,7 +221,7 @@ class RoutableSubscriber implements EventSubscriberInterface
         $document->setRoutePath($route->getPath());
         $this->entityManager->persist($route);
 
-        $node->setProperty(
+        $event->getNode()->setProperty(
             $this->getRoutePathPropertyName($document, $event->getLocale()),
             $route->getPath()
         );
@@ -257,10 +255,6 @@ class RoutableSubscriber implements EventSubscriberInterface
                 $this->getRoutePathPropertyName($localizedDocument, $locale),
                 $route->getPath()
             );
-
-            $propertyName = $this->getRoutePathPropertyName($localizedDocument, $locale);
-            $node = $this->documentInspector->getNode($localizedDocument);
-            $node->setProperty($propertyName, $route->getPath());
         }
     }
 
