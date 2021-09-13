@@ -25,6 +25,7 @@ test('Load localizations', () => {
         locale: 'de',
         settings: {},
         username: 'test',
+        roles: [],
     };
 
     const response = {
