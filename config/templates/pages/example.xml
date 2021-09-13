@@ -325,6 +325,20 @@
             </meta>
         </property>
 
+        <property name="single_collection_selection" type="single_collection_selection">
+            <meta>
+                <title lang="en">Single Collection Selection</title>
+                <title lang="de">Ordner</title>
+            </meta>
+        </property>
+
+        <property name="collection_selection" type="collection_selection">
+            <meta>
+                <title lang="en">Collection Selection</title>
+                <title lang="de">Ordner</title>
+            </meta>
+        </property>
+
         <property name="single_media_selection" type="single_media_selection">
             <meta>
                 <title lang="en">Single Media Selection</title>
