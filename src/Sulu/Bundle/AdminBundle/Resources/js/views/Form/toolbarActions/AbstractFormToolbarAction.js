@@ -1,6 +1,7 @@
 // @flow
+import {computed} from 'mobx';
 import ResourceStore from '../../../stores/ResourceStore';
-import {ResourceFormStore} from '../../../containers/Form';
+import {ResourceFormStore, FormInspector, conditionDataProviderRegistry} from '../../../containers/Form';
 import Router from '../../../services/Router';
 import Form from '../Form';
 import type {ToolbarItemConfig} from '../../../containers/Toolbar/types';
@@ -8,11 +9,24 @@ import type {Node} from 'react';
 
 export default class AbstractFormToolbarAction {
     resourceFormStore: ResourceFormStore;
+    formInspector: FormInspector;
     form: Form;
     router: Router;
     locales: ?Array<string>;
     options: {[key: string]: mixed};
     parentResourceStore: ResourceStore;
+
+    @computed get conditionData() {
+        const data = this.resourceFormStore.data;
+        const formInspector = this.formInspector;
+
+        return conditionDataProviderRegistry.getAll().reduce(
+            function(data, conditionDataProvider) {
+                return {...data, ...conditionDataProvider(data, undefined, formInspector)};
+            },
+            {...data}
+        );
+    }
 
     constructor(
         resourceFormStore: ResourceFormStore,
@@ -23,6 +37,7 @@ export default class AbstractFormToolbarAction {
         parentResourceStore: ResourceStore
     ) {
         this.resourceFormStore = resourceFormStore;
+        this.formInspector = new FormInspector(this.resourceFormStore);
         this.form = form;
         this.router = router;
         this.locales = locales;

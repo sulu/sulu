@@ -21,8 +21,8 @@ jest.mock('../../../../stores/ResourceStore', () => jest.fn(function(resourceKey
     this.observableOptions = observableOptions;
 }));
 
-jest.mock('../../../../containers/Form', () => ({
-    ResourceFormStore: class {
+jest.mock('../../../../containers/Form/stores/ResourceFormStore', () => (
+    class {
         data = {};
         resourceStore;
 
@@ -39,8 +39,8 @@ jest.mock('../../../../containers/Form', () => ({
         }
 
         delete = jest.fn();
-    },
-}));
+    }
+));
 
 jest.mock('../../../../services/Router', () => jest.fn(function() {
     this.attributes = {};

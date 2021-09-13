@@ -18,8 +18,8 @@ jest.mock('../../../../stores/ResourceStore', () => jest.fn(function() {
     this.data = {};
 }));
 
-jest.mock('../../../../containers/Form', () => ({
-    ResourceFormStore: class {
+jest.mock('../../../../containers/Form/stores/ResourceFormStore', () => (
+    class {
         resourceStore;
         constructor(resourceStore) {
             this.resourceStore = resourceStore;
@@ -36,8 +36,8 @@ jest.mock('../../../../containers/Form', () => ({
         get data() {
             return this.resourceStore.data;
         }
-    },
-}));
+    }
+));
 
 jest.mock('../../../../services/Router', () => jest.fn());
 

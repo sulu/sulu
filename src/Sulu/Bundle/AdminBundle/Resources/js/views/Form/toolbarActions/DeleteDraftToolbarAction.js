@@ -77,10 +77,9 @@ export default class DeleteDraftToolbarAction extends AbstractFormToolbarAction 
         } = this.options;
 
         const {id, data} = this.resourceFormStore;
-
         const {published, publishedState} = data;
 
-        const visibleConditionFulfilled = !visibleCondition || jexl.evalSync(visibleCondition, data);
+        const visibleConditionFulfilled = !visibleCondition || jexl.evalSync(visibleCondition, this.conditionData);
 
         if (visibleConditionFulfilled) {
             return {
