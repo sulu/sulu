@@ -196,7 +196,7 @@ jobs:
             - name: Install and configure PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: '8.1'
+                  php-version: '8.0'
                   extensions: 'ctype, iconv, mysql, imagick'
                   tools: 'composer:v2'
                   coverage: none
