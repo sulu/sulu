@@ -179,6 +179,40 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
                             ],
                         ],
                     ],
+                    'field_type_options' => [
+                        'single_selection' => [
+                            'single_collection_selection' => [
+                                'default_type' => 'list_overlay',
+                                'resource_key' => 'collections',
+                                'types' => [
+                                    'list_overlay' => [
+                                        'adapter' => 'column_list',
+                                        'list_key' => 'collections',
+                                        'display_properties' => ['title'],
+                                        'icon' => 'su-folder',
+                                        'empty_text' => 'sulu_media.no_collection_selected',
+                                        'overlay_title' => 'sulu_media.single_collection_selection_overlay_title',
+                                    ],
+                                ],
+                            ],
+                        ],
+                        'selection' => [
+                            'collection_selection' => [
+                                'default_type' => 'list_overlay',
+                                'resource_key' => 'collections',
+                                'types' => [
+                                    'list_overlay' => [
+                                        'adapter' => 'column_list',
+                                        'list_key' => 'collections',
+                                        'display_properties' => ['title'],
+                                        'icon' => 'su-folder',
+                                        'label' => 'sulu_media.collection_selection_label',
+                                        'overlay_title' => 'sulu_media.collection_selection_overlay_title',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
                 ]
             );
         }

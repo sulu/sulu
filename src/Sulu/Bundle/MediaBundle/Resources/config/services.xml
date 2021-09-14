@@ -314,6 +314,22 @@
             <argument type="service" id="logger" on-invalid="null"/>
         </service>
 
+        <service id="sulu_media.type.collection_selection" class="Sulu\Bundle\MediaBundle\Content\Types\CollectionSelection">
+            <argument type="service" id="sulu_media.collection_manager"/>
+            <argument type="service" id="sulu_media.reference_store.collection"/>
+
+            <tag name="sulu.content.type" alias="collection_selection"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
+        </service>
+
+        <service id="sulu_media.type.single_collection_selection" class="Sulu\Bundle\MediaBundle\Content\Types\SingleCollectionSelection">
+            <argument type="service" id="sulu_media.collection_manager"/>
+            <argument type="service" id="sulu_media.reference_store.collection"/>
+
+            <tag name="sulu.content.type" alias="single_collection_selection"/>
+            <tag name="sulu.content.export" format="1.2.xliff" translate="false" />
+        </service>
+
         <service id="sulu_media.type.media_selection" class="%sulu_media.media_selection.class%">
             <argument type="service" id="sulu_media.media_manager"/>
             <argument type="service" id="sulu_media.reference_store.media"/>
@@ -431,6 +447,10 @@
         <service id="sulu_media.reference_store.media" class="Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore">
             <tag name="sulu_website.reference_store" alias="media"/>
             <tag name="kernel.reset" method="reset"/>
+        </service>
+
+        <service id="sulu_media.reference_store.collection" class="Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore">
+            <tag name="sulu_website.reference_store" alias="collection"/>
         </service>
 
         <service id="sulu_media.doctrine.invalidation_listener"
