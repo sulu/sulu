@@ -4,7 +4,7 @@ const path = require('path');
 const fs = require('fs');
 const webpack = require('webpack');
 const glob = require('glob');
-const {styles} = require('@ckeditor/ckeditor5-dev-utils'); // eslint-disable-line import/no-extraneous-dependencies
+const webpackConfig = require('./webpack.config.js');
 
 const firstLetterIsUppercase = (string) => {
     const first = string.charAt(0);
@@ -126,106 +126,15 @@ module.exports = { // eslint-disable-line
             },
         },
     ],
-    webpackConfig: {
-        devServer: {
-            disableHostCheck: true,
-        },
-        devtool: 'eval-source-map',
-        plugins: [
+    webpackConfig: (env, argv) => {
+        const config = webpackConfig(env, argv);
+
+        config.plugins.push(
             new webpack.DefinePlugin({
                 SULU_CONFIG: {},
-            }),
-        ],
-        resolve: {
-            alias: {
-                // eslint-disable-next-line no-undef
-                'fos-jsrouting/router': path.resolve(__dirname, 'tests/js/mocks/empty.js'),
-            },
-        },
-        module: {
-            rules: [
-                {
-                    test: /\.js$/,
-                    exclude: /node_modules\/(?!(sulu-(.*)-bundle|@ckeditor|lodash-es)\/)/,
-                    use: {
-                        loader: 'babel-loader',
-                        options: {
-                            cacheDirectory: true,
-                            cacheCompression: false,
-                        },
-                    },
-                },
-                {
-                    test: /\.css/,
-                    exclude: /ckeditor5-[^/]+\/theme\/[\w-/]+\.css$/,
-                    use: [
-                        'style-loader',
-                        {
-                            loader: 'css-loader',
-                            options: {
-                                modules: false,
-                            },
-                        },
-                    ],
-                },
-                {
-                    test: /ckeditor5-[^/]+\/theme\/[\w-/]+\.css$/,
-                    use: [
-                        {
-                            loader: 'style-loader',
-                            options: {
-                                injectType: 'singletonStyleTag',
-                            },
-                        },
-                        {
-                            loader: 'postcss-loader',
-                            options: styles.getPostCssConfig({
-                                themeImporter: {
-                                    themePath: require.resolve('@ckeditor/ckeditor5-theme-lark'),
-                                },
-                            }),
-                        },
-                    ],
-                },
-                {
-                    test: /\.(scss)$/,
-                    use: [
-                        'style-loader',
-                        {
-                            loader: 'css-loader',
-                            options: {
-                                importLoaders: 1,
-                                localsConvention: 'camelCase',
-                                modules: {
-                                    localIdentName: '[local]--[hash:base64:10]',
-                                },
-                            },
-                        },
-                        'postcss-loader',
-                    ],
-                },
-                {
-                    test: /ckeditor5-[^/]+\/theme\/icons\/[^/]+\.svg$/,
-                    use: 'raw-loader',
-                },
-                {
-                    test: /\.(jpg|gif|png)(\?.*$|$)/,
-                    use: [
-                        {
-                            loader: 'file-loader',
-                        },
-                    ],
-                },
-                {
-                    test: /\.(svg|ttf|woff|woff2|eot)(\?.*$|$)/,
-                    exclude: /ckeditor5-[^/]+\/theme\/icons\/[^/]+\.svg$/,
-                    use: [
-                        {
-                            loader: 'file-loader',
-                        },
-                    ],
-                },
-            ],
-        },
+            })
+        );
+
+        return config;
     },
 };

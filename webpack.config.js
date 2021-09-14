@@ -5,6 +5,9 @@ const fs = require('fs');
 const path = require('path');
 
 module.exports = (env, argv) => { // eslint-disable-line no-undef
+    env = env ? env : {};
+    argv = argv ? argv : {};
+
     let publicDir = 'public';
     const outputPath = env && env.output_path ? env.output_path : path.join('build', 'admin');
     // eslint-disable-next-line no-undef
@@ -88,14 +91,26 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
                     test: /\.css/,
                     exclude: /ckeditor5-[^/\\]+[/\\]theme[/\\].+\.css$/,
                     use: [
-                        MiniCssExtractPlugin.loader,
+                        {
+                            loader: MiniCssExtractPlugin.loader,
+                            options: {
+                                // https://github.com/webpack-contrib/mini-css-extract-plugin/issues/44#issuecomment-391009221
+                                publicPath: '../../',
+                            },
+                        },
                         'css-loader',
                     ],
                 },
                 {
                     test: /\.(scss)$/,
                     use: [
-                        MiniCssExtractPlugin.loader,
+                        {
+                            loader: MiniCssExtractPlugin.loader,
+                            options: {
+                                // https://github.com/webpack-contrib/mini-css-extract-plugin/issues/44#issuecomment-391009221
+                                publicPath: '../../',
+                            },
+                        },
                         {
                             loader: 'css-loader',
                             options: {
@@ -116,7 +131,13 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
                 {
                     test: /ckeditor5-[^/\\]+[/\\]theme[/\\].+\.css$/,
                     use: [
-                        MiniCssExtractPlugin.loader,
+                        {
+                            loader: MiniCssExtractPlugin.loader,
+                            options: {
+                                // https://github.com/webpack-contrib/mini-css-extract-plugin/issues/44#issuecomment-391009221
+                                publicPath: '../../',
+                            },
+                        },
                         {
                             loader: 'css-loader',
                         },
@@ -140,7 +161,7 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
                         {
                             loader: 'file-loader',
                             options: {
-                                name: '/' + outputPath + '/fonts/[name].[hash].[ext]',
+                                name: outputPath + '/fonts/[name].[hash].[ext]',
                             },
                         },
                     ],
@@ -151,7 +172,7 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
                         {
                             loader: 'file-loader',
                             options: {
-                                name: '/' + outputPath + '/images/[name].[hash].[ext]',
+                                name: outputPath + '/images/[name].[hash].[ext]',
                             },
                         },
                     ],
