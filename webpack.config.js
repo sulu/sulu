@@ -8,7 +8,7 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
     env = env ? env : {};
     argv = argv ? argv : {};
 
-    let publicDir = 'public';
+    const publicPath = env && env.public_path ? env.public_path : '/';
     const outputPath = env && env.output_path ? env.output_path : path.join('build', 'admin');
     // eslint-disable-next-line no-undef
     const projectRootPath = env && env.project_root_path ? env.project_root_path : __dirname;
@@ -16,6 +16,7 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
         ? env.node_modules_path
         : path.resolve(projectRootPath, 'node_modules');
 
+    let publicDir = 'public';
     const composerConfig = require(path.resolve(projectRootPath, 'composer.json'));
     if (composerConfig.extra && composerConfig.extra['public-dir']) {
         publicDir = composerConfig.extra['public-dir'];
@@ -42,6 +43,7 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
         output: {
             path: path.resolve(projectRootPath, publicDir),
             filename: outputPath + '/[name].[chunkhash].js',
+            publicPath,
         },
         devtool: argv.mode === 'development' ? 'eval-source-map' : 'source-map',
         plugins: [
@@ -94,7 +96,8 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
                         {
                             loader: MiniCssExtractPlugin.loader,
                             options: {
-                                publicPath: '../../', // @see https://github.com/sulu/sulu/pull/6225
+                                // set path to public root from bundled css: https://github.com/sulu/sulu/pull/6225
+                                publicPath: path.relative(outputPath, '.'),
                             },
                         },
                         'css-loader',
@@ -106,7 +109,8 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
                         {
                             loader: MiniCssExtractPlugin.loader,
                             options: {
-                                publicPath: '../../', // @see https://github.com/sulu/sulu/pull/6225
+                                // set path to public root from bundled css: https://github.com/sulu/sulu/pull/6225
+                                publicPath: path.relative(outputPath, '.'),
                             },
                         },
                         {
@@ -132,7 +136,8 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
                         {
                             loader: MiniCssExtractPlugin.loader,
                             options: {
-                                publicPath: '../../', // @see https://github.com/sulu/sulu/pull/6225
+                                // set path to public root from bundled css: https://github.com/sulu/sulu/pull/6225
+                                publicPath: path.relative(outputPath, '.'),
                             },
                         },
                         {
