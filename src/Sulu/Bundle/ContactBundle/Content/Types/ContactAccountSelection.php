@@ -213,7 +213,7 @@ class ContactAccountSelection extends ComplexContentType implements ContentTypeE
     {
         $value = $property->getValue();
         if (null === $value || !\is_array($value) || 0 === \count($value)) {
-            return [];
+            return;
         }
 
         $ids = $this->converter->convertIdsToGroupedIds(

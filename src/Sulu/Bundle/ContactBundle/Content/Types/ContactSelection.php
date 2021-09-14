@@ -64,7 +64,7 @@ class ContactSelection extends SimpleContentType implements PreResolvableContent
     {
         $ids = $property->getValue();
         if (!\is_array($ids) || empty($ids)) {
-            return [];
+            return;
         }
 
         foreach ($ids as $id) {

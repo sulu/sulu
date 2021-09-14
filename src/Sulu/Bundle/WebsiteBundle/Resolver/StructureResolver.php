@@ -105,11 +105,11 @@ class StructureResolver implements StructureResolverInterface
             $data['published'] = $structure->getPublished();
             $data['shadowBaseLocale'] = $structure->getShadowBaseLanguage();
             $data['webspaceKey'] = $structure->getWebspaceKey();
+        }
 
-            if ($document instanceof LocalizedAuthorBehavior) {
-                $data['authored'] = $document->getAuthored();
-                $data['author'] = $document->getAuthor();
-            }
+        if ($document instanceof LocalizedAuthorBehavior) {
+            $data['authored'] = $document->getAuthored();
+            $data['author'] = $document->getAuthor();
         }
 
         // pre-resolve content-types
