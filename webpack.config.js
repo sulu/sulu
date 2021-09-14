@@ -94,8 +94,7 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
                         {
                             loader: MiniCssExtractPlugin.loader,
                             options: {
-                                // https://github.com/webpack-contrib/mini-css-extract-plugin/issues/44#issuecomment-391009221
-                                publicPath: '../../',
+                                publicPath: '../../', // @see https://github.com/sulu/sulu/pull/6225
                             },
                         },
                         'css-loader',
@@ -107,8 +106,7 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
                         {
                             loader: MiniCssExtractPlugin.loader,
                             options: {
-                                // https://github.com/webpack-contrib/mini-css-extract-plugin/issues/44#issuecomment-391009221
-                                publicPath: '../../',
+                                publicPath: '../../', // @see https://github.com/sulu/sulu/pull/6225
                             },
                         },
                         {
@@ -134,8 +132,7 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
                         {
                             loader: MiniCssExtractPlugin.loader,
                             options: {
-                                // https://github.com/webpack-contrib/mini-css-extract-plugin/issues/44#issuecomment-391009221
-                                publicPath: '../../',
+                                publicPath: '../../', // @see https://github.com/sulu/sulu/pull/6225
                             },
                         },
                         {
