@@ -119,13 +119,13 @@ class PageAdmin extends Admin
         /** @var Webspace $firstWebspace */
         $firstWebspace = \current($this->webspaceManager->getWebspaceCollection()->getWebspaces());
 
-        $webspaceSaveVisibleCondition = ' (!__webspace || __webspace._permissions.edit)';
-        $pageSaveVisibleCondition = '(!_permissions || _permissions.edit)';
-        $saveVisibleCondition = '(' . $webspaceSaveVisibleCondition . ') && (' . $pageSaveVisibleCondition . ')';
+        $createPageSaveVisibleCondition = '!_permissions && (!__webspace || __webspace._permissions.edit)';
+        $editPageSaveVisibleCondition = '_permissions && _permissions.edit';
+        $saveVisibleCondition = '(' . $createPageSaveVisibleCondition . ') || (' . $editPageSaveVisibleCondition . ')';
 
-        $webspacePublishVisibleCondition = '(!__webspace || __webspace._permissions.live)';
-        $pagePublishVisibleCondition = '(!_permissions || _permissions.live)';
-        $publishVisibleCondition = '(' . $webspacePublishVisibleCondition . ') && (' . $pagePublishVisibleCondition . ')';
+        $createPagePublishVisibleCondition = '!_permissions  && (!__webspace || __webspace._permissions.live)';
+        $editPagePublishVisibleCondition = '(!_permissions || _permissions.live)';
+        $publishVisibleCondition = '(' . $createPagePublishVisibleCondition . ') || (' . $editPagePublishVisibleCondition . ')';
 
         $saveWithPublishingDropdown = new DropdownToolbarAction(
             'sulu_admin.save',
