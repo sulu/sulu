@@ -193,22 +193,20 @@ test('Should construct ResourceStore and ResourceFormStore with correct paramete
     }, {});
 });
 
-test('Should pass metadataRequestParameters options to FormStore', () => {
-    const metadataRequestParameters = {
-        'testParam': 'testValue',
-    };
-
+test('Should construct ResourceFormStore with correct metadataOptions on item-add callback', () => {
     const route: Route = ({}: any);
     const router: Router = ({
         attributes: {
             id: 'test-id',
-            category: 'category-id',
+            webspace: 'webspace-attribute-value',
+            template: 'template-attribute-value',
         },
         route: {
             options: {
                 formKey: 'test-form-key',
                 resourceKey: 'test-resource-key',
-                metadataRequestParameters,
+                metadataRequestParameters: {'staticParam': 'staticValue'},
+                routerAttributesToFormMetadata: {'0': 'webspace', 'template': 'pageTemplate'},
             },
         },
     }: any);
@@ -218,10 +216,11 @@ test('Should pass metadataRequestParameters options to FormStore', () => {
     formOverlayList.instance().locale = observable.box('en');
     formOverlayList.find(List).props().onItemAdd();
 
-    expect(ResourceFormStore).toBeCalledWith(expect.anything(), 'test-form-key', {}, metadataRequestParameters);
-
-    const formStore = formOverlayList.instance().formStore;
-    expect(formStore.metadataOptions).toEqual(metadataRequestParameters);
+    expect(ResourceFormStore).toBeCalledWith(expect.anything(), 'test-form-key', {}, {
+        staticParam: 'staticValue',
+        webspace: 'webspace-attribute-value',
+        pageTemplate: 'template-attribute-value',
+    });
 });
 
 test('Should open FormOverlay with correct props when List fires the item-add callback', () => {
