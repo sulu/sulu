@@ -295,7 +295,7 @@ class FormOverlayListViewBuilderTest extends TestCase
         );
     }
 
-    public function testBuildFormWithRouterAttributesToFormMetadata()
+    public function testBuildFormWithRouterAttributesToFormMetadata(): void
     {
         $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles'))
             ->setResourceKey('roles')
