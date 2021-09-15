@@ -7,25 +7,22 @@ type Props = {|
     adapters: Array<string>,
     listStore: ListStore,
     mediaListRef?: (?ElementRef<typeof List>) => void,
-    onMediaClick: (mediaId: string | number) => void,
+    onMediaClick?: (mediaId: string | number) => void,
 |};
 
 export default class MediaSection extends React.PureComponent<Props> {
-    handleMediaClick = (mediaId: string | number) => {
-        this.props.onMediaClick(mediaId);
-    };
-
     render() {
         const {
             adapters,
             listStore,
             mediaListRef,
+            onMediaClick,
         } = this.props;
 
         return (
             <List
                 adapters={adapters}
-                onItemClick={this.handleMediaClick}
+                onItemClick={onMediaClick}
                 ref={mediaListRef}
                 store={listStore}
             />
