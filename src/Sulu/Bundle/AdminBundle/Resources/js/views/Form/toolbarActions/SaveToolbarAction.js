@@ -11,7 +11,7 @@ export default class SaveToolbarAction extends AbstractFormToolbarAction {
             options: submitOptions,
         } = this.options;
 
-        const {data, dirty, saving} = this.resourceFormStore;
+        const {dirty, saving} = this.resourceFormStore;
 
         if (typeof label !== 'string') {
             throw new Error('The "label" option must be a string!');
@@ -21,7 +21,7 @@ export default class SaveToolbarAction extends AbstractFormToolbarAction {
             throw new Error('The "options" option must be an object!');
         }
 
-        const visibleConditionFulfilled = !visibleCondition || jexl.evalSync(visibleCondition, data);
+        const visibleConditionFulfilled = !visibleCondition || jexl.evalSync(visibleCondition, this.conditionData);
 
         if (visibleConditionFulfilled) {
             return {

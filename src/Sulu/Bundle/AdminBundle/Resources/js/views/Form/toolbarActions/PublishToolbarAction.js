@@ -11,7 +11,7 @@ export default class PublishToolbarAction extends AbstractFormToolbarAction {
 
         const {dirty, data} = this.resourceFormStore;
 
-        const visibleConditionFulfilled = !visibleCondition || jexl.evalSync(visibleCondition, data);
+        const visibleConditionFulfilled = !visibleCondition || jexl.evalSync(visibleCondition, this.conditionData);
 
         if (visibleConditionFulfilled) {
             return {

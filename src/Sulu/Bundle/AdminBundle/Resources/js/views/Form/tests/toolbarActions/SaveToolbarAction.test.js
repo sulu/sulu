@@ -4,6 +4,11 @@ import {ResourceFormStore} from '../../../../containers/Form';
 import ResourceStore from '../../../../stores/ResourceStore';
 import Router from '../../../../services/Router';
 import Form from '../../../../views/Form';
+import conditionDataProviderRegistry from '../../../../containers/Form/registries/conditionDataProviderRegistry';
+
+beforeEach(() => {
+    conditionDataProviderRegistry.clear();
+});
 
 jest.mock('../../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
@@ -12,8 +17,8 @@ jest.mock('../../../../utils/Translator', () => ({
 jest.mock('../../../../stores/ResourceStore', () => jest.fn(function() {
     this.data = {};
 }));
-jest.mock('../../../../containers/Form', () => ({
-    ResourceFormStore: class {
+jest.mock('../../../../containers/Form/stores/ResourceFormStore', () => (
+    class {
         resourceStore;
         constructor(resourceStore) {
             this.resourceStore = resourceStore;
@@ -30,9 +35,8 @@ jest.mock('../../../../containers/Form', () => ({
         get data() {
             return this.resourceStore.data;
         }
-    },
-}));
-
+    }
+));
 jest.mock('../../../../services/Router', () => jest.fn());
 
 jest.mock('../../../../views/Form', () => jest.fn(function() {
@@ -98,6 +102,18 @@ test('Return empty item config if passed visible_condition is not met', () => {
     saveToolbarAction.resourceFormStore.resourceStore.data._permission = {edit: false};
 
     expect(saveToolbarAction.getToolbarItemConfig()).toEqual(undefined);
+});
+
+test('Include data of conditionDataProviderRegistry when evaluating passed visible_condition', () => {
+    const saveToolbarAction = createSaveToolbarAction({visible_condition: '__conditionDataProviderValue'});
+    expect(saveToolbarAction.getToolbarItemConfig()).toBeUndefined();
+
+    conditionDataProviderRegistry.add(() => ({__conditionDataProviderValue: true}));
+    expect(saveToolbarAction.getToolbarItemConfig()).toBeDefined();
+
+    conditionDataProviderRegistry.clear();
+    conditionDataProviderRegistry.add(() => ({__conditionDataProviderValue: false}));
+    expect(saveToolbarAction.getToolbarItemConfig()).toBeUndefined();
 });
 
 test('Return item config with label from options', () => {

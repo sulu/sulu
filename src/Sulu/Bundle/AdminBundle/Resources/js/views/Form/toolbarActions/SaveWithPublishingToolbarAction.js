@@ -66,10 +66,10 @@ export default class SaveWithPublishingToolbarAction extends AbstractFormToolbar
         const {dirty, data, saving} = this.resourceFormStore;
 
         const publishVisibleConditionFulfilled = !publishVisibleCondition
-            || jexl.evalSync(publishVisibleCondition, data);
+            || jexl.evalSync(publishVisibleCondition, this.conditionData);
 
         const saveVisibleConditionFulfilled = !saveVisibleCondition
-            || jexl.evalSync(saveVisibleCondition, data);
+            || jexl.evalSync(saveVisibleCondition, this.conditionData);
 
         const options = [];
 

@@ -26,7 +26,7 @@ export default class TypeToolbarAction extends AbstractFormToolbarAction {
             throw new Error('The "sort_by" option must be a string if given!');
         }
 
-        const isDisabled = disabledCondition ? jexl.evalSync(disabledCondition, this.resourceFormStore.data) : false;
+        const isDisabled = disabledCondition ? jexl.evalSync(disabledCondition, this.conditionData) : false;
 
         const sortedTypes = sortBy
             ? formTypes.sort((t1, t2) => String(t1[sortBy]).localeCompare(String(t2[sortBy])))

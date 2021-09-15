@@ -118,8 +118,14 @@ class PageAdmin extends Admin
     {
         /** @var Webspace $firstWebspace */
         $firstWebspace = \current($this->webspaceManager->getWebspaceCollection()->getWebspaces());
-        $saveVisibleCondition = '(!_permissions || _permissions.edit)';
-        $publishVisibleCondition = '(!_permissions || _permissions.live)';
+
+        $webspaceSaveVisibleCondition = ' (!__webspace || __webspace._permissions.edit)';
+        $pageSaveVisibleCondition = '(!_permissions || _permissions.edit)';
+        $saveVisibleCondition = '(' . $webspaceSaveVisibleCondition . ') && (' . $pageSaveVisibleCondition . ')';
+
+        $webspacePublishVisibleCondition = '(!__webspace || __webspace._permissions.live)';
+        $pagePublishVisibleCondition = '(!_permissions || _permissions.live)';
+        $publishVisibleCondition = '(' . $webspacePublishVisibleCondition . ') && (' . $pagePublishVisibleCondition . ')';
 
         $saveWithPublishingDropdown = new DropdownToolbarAction(
             'sulu_admin.save',

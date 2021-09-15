@@ -77,10 +77,9 @@ export default class SetUnpublishedToolbarAction extends AbstractFormToolbarActi
         } = this.options;
 
         const {id, data} = this.resourceFormStore;
-
         const {published} = data;
 
-        const visibleConditionFulfilled = !visibleCondition || jexl.evalSync(visibleCondition, data);
+        const visibleConditionFulfilled = !visibleCondition || jexl.evalSync(visibleCondition, this.conditionData);
 
         if (visibleConditionFulfilled) {
             return {

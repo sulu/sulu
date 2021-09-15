@@ -102,9 +102,9 @@ export default class CopyLocaleToolbarAction extends AbstractFormToolbarAction {
             visible_condition: visibleCondition,
         } = this.options;
 
-        const {id, data} = this.resourceFormStore;
+        const {id} = this.resourceFormStore;
 
-        const visibleConditionFulfilled = !visibleCondition || jexl.evalSync(visibleCondition, data);
+        const visibleConditionFulfilled = !visibleCondition || jexl.evalSync(visibleCondition, this.conditionData);
 
         if (visibleConditionFulfilled) {
             return {

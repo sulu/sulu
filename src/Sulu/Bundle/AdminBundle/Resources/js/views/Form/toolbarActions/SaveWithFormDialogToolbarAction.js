@@ -93,7 +93,7 @@ export default class SaveWithFormDialogToolbarAction extends AbstractFormToolbar
                 if (
                     jexl.evalSync(
                         this.options.condition,
-                        {...this.resourceFormStore.data, __parent: this.parentResourceStore.data}
+                        {...this.conditionData, __parent: this.parentResourceStore.data}
                     )
                 ) {
                     this.showDialog = true;
