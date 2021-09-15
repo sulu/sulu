@@ -135,6 +135,11 @@ module.exports = { // eslint-disable-line
             })
         );
 
+        // set alias for "fos-jsrouting" package to allow for building styleguide without composer dependencies
+        delete config.resolve.alias['fos-jsrouting'];
+        // eslint-disable-next-line no-undef
+        config.resolve.alias['fos-jsrouting/router'] = path.resolve(__dirname, 'tests/js/mocks/empty.js');
+
         return config;
     },
 };
