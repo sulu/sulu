@@ -40,7 +40,7 @@ test('Roles of user can be used in jexl expression', () => {
         fullName: 'Adam Ministrator',
         roles: ['ROLE_USER', 'ROLE_SULU_DESIGNER'],
         settings: {},
-    } );
+    });
 
     const conditionData = userConditionDataProvider();
     expect(jexl.evalSync('"ROLE_SULU_DESIGNER" in __user.roles', conditionData)).toBeTruthy();
