@@ -14,8 +14,8 @@ jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn(function() {
     this.data = {};
 }));
 
-jest.mock('sulu-admin-bundle/containers/Form', () => ({
-    ResourceFormStore: class {
+jest.mock('sulu-admin-bundle/containers/Form/stores/ResourceFormStore', () => (
+    class {
         resourceStore;
 
         change = jest.fn();
@@ -39,8 +39,8 @@ jest.mock('sulu-admin-bundle/containers/Form', () => ({
         get loading() {
             return this.resourceStore.loading;
         }
-    },
-}));
+    }
+));
 
 jest.mock('sulu-admin-bundle/services/Router/Router', () => jest.fn());
 

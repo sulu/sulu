@@ -12,8 +12,8 @@ jest.mock('../../../../utils/Translator', () => ({
 
 jest.mock('../../../../stores/ResourceStore', () => jest.fn());
 
-jest.mock('../../../../containers/Form', () => ({
-    ResourceFormStore: class {
+jest.mock('../../../../containers/Form/stores/ResourceFormStore', () => (
+    class {
         data = {};
         resourceStore;
         types = {};
@@ -36,8 +36,8 @@ jest.mock('../../../../containers/Form', () => ({
         }
 
         changeType = jest.fn();
-    },
-}));
+    }
+));
 
 jest.mock('../../../../services/Router', () => jest.fn());
 

@@ -173,14 +173,14 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
             delete_locale: deleteLocale = false,
         } = this.options;
 
-        const {id, data} = this.resourceFormStore;
+        const {id} = this.resourceFormStore;
 
-        const visibleConditionFulfilled = !visibleCondition || jexl.evalSync(visibleCondition, data);
-        const disableCondition = !id || (deleteLocale && jexl.evalSync('contentLocales.length == 1', data));
+        const visibleConditionFulfilled = !visibleCondition || jexl.evalSync(visibleCondition, this.conditionData);
+        const isDisabled = !id || (deleteLocale && jexl.evalSync('contentLocales.length == 1', this.conditionData));
 
         if (visibleConditionFulfilled) {
             return {
-                disabled: !!disableCondition,
+                disabled: !!isDisabled,
                 icon: 'su-trash-alt',
                 label: translate('sulu_admin.delete' + (deleteLocale ? '_locale' : '')),
                 onClick: action(() => {
