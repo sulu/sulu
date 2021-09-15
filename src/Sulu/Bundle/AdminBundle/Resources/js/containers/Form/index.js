@@ -4,6 +4,7 @@ import FormInspector from './FormInspector';
 import bundlesConditionDataProvider from './conditionDataProviders/bundlesConditionDataProvider';
 import localeConditionDataProvider from './conditionDataProviders/localeConditionDataProvider';
 import parentConditionDataProvider from './conditionDataProviders/parentConditionDataProvider';
+import userConditionDataProvider from './conditionDataProviders/userConditionDataProvider';
 import conditionDataProviderRegistry from './registries/conditionDataProviderRegistry';
 import fieldRegistry from './registries/fieldRegistry';
 import MemoryFormStore from './stores/MemoryFormStore';
@@ -38,6 +39,7 @@ export {
     bundlesConditionDataProvider,
     localeConditionDataProvider,
     parentConditionDataProvider,
+    userConditionDataProvider,
     conditionDataProviderRegistry,
     fieldRegistry,
     Selection,

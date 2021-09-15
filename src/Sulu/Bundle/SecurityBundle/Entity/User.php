@@ -587,6 +587,7 @@ class User extends ApiEntity implements UserInterface, Serializable, EquatableIn
 
     /**
      * @VirtualProperty
+     * @Groups({"frontend"})
      */
     public function getRoles()
     {
