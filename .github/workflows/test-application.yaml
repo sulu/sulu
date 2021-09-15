@@ -60,10 +60,11 @@ jobs:
                   php-version: '7.4'
                   tools: 'composer:v2'
 
+            - name: Install php dependencies
+              run: rm composer.json && composer require friendsofsymfony/jsrouting-bundle:^2.3 --no-interaction
+
             - name: Test application build
-              run: |
-                  rm composer.json && composer require friendsofsymfony/jsrouting-bundle:^2.3 --no-interaction
-                  npm run build
+              run: npm run build
 
     php:
         name: "PHP ${{ matrix.php-version }} (${{ matrix.database }}, ${{ matrix.phpcr-transport }}, ${{ matrix.dependency-versions }})"
