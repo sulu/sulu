@@ -51,6 +51,9 @@ jobs:
             - name: Test JavaScript code
               run: npm test -- --maxWorkers=4
 
+            - name: Test Styleguidist build
+              run: npm run styleguide:build
+
             - name: Install and configure PHP
               uses: shivammathur/setup-php@v2
               with:
@@ -59,9 +62,6 @@ jobs:
 
             - name: Install php dependencies
               run: rm composer.json && composer require friendsofsymfony/jsrouting-bundle:^2.3 --no-interaction
-
-            - name: Test Styleguidist build
-              run: npm run styleguide:build
 
             - name: Test application build
               run: npm run build
