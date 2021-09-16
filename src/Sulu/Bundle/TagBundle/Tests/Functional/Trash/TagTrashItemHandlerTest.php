@@ -58,6 +58,7 @@ class TagTrashItemHandlerTest extends SuluTestCase
         $tag1->setCreated(new \DateTime('2020-10-10'));
         $this->entityManager->persist($tag1);
 
+        // create second tag to check if id of first tag is restored correctly
         $tag2 = $this->tagRepository->createNew();
         $tag2->setName('Second Tag');
         $this->entityManager->persist($tag2);

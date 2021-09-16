@@ -17,6 +17,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Id\AssignedGenerator;
 use Doctrine\ORM\Mapping\ClassMetadata;
 
+/**
+ * @internal
+ */
 final class DoctrineRestoreHelper implements DoctrineRestoreHelperInterface
 {
     /**

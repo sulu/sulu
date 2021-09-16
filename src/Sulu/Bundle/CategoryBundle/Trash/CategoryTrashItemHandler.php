@@ -107,6 +107,7 @@ final class CategoryTrashItemHandler implements StoreTrashItemHandlerInterface, 
         $parent = $category->getParent();
         $creator = $category->getCreator();
 
+        $categoryTitles = [];
         $data = [
             'key' => $category->getKey(),
             'defaultLocale' => $category->getDefaultLocale(),
@@ -130,6 +131,8 @@ final class CategoryTrashItemHandler implements StoreTrashItemHandlerInterface, 
 
         /** @var CategoryTranslationInterface $translation */
         foreach ($category->getTranslations() as $translation) {
+            $categoryTitles[$translation->getLocale()] = $translation->getTranslation();
+
             $creator = $translation->getCreator();
 
             $translationData = [
@@ -159,11 +162,6 @@ final class CategoryTrashItemHandler implements StoreTrashItemHandlerInterface, 
             }
 
             $data['translations'][] = $translationData;
-        }
-
-        $categoryTitles = [];
-        foreach ($category->getTranslations() as $translation) {
-            $categoryTitles[$translation->getLocale()] = $translation->getTranslation();
         }
 
         return $this->trashItemRepository->create(
