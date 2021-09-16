@@ -109,10 +109,7 @@ final class TagTrashItemHandler implements StoreTrashItemHandlerInterface, Resto
 
         if ($tag instanceof Tag) {
             $tag->setCreated(new \DateTime($data['created']));
-
-            if ($data['creatorId']) {
-                $tag->setCreator($this->entityManager->find(UserInterface::class, $data['creatorId']));
-            }
+            $tag->setCreator($this->findEntity(UserInterface::class, $data['creatorId']));
         }
 
         $this->domainEventCollector->collect(
@@ -133,5 +130,22 @@ final class TagTrashItemHandler implements StoreTrashItemHandlerInterface, Resto
     public static function getResourceKey(): string
     {
         return TagInterface::RESOURCE_KEY;
+    }
+
+    /**
+     * @template T of object
+     *
+     * @param class-string<T> $className
+     * @param mixed|null $id
+     *
+     * @return T|null
+     */
+    private function findEntity(string $className, $id)
+    {
+        if ($id) {
+            return $this->entityManager->find($className, $id);
+        }
+
+        return null;
     }
 }

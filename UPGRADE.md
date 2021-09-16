@@ -2,6 +2,12 @@
 
 ## 2.x
 
+### CategoryRepositoryInterface has changed
+
+A new method has been added to the `CategoryInterface`:
+
+- `setCreated`
+
 ### Changed constructor of multiple services to integrate them with the SuluTrashBundle
 
 To integrate the `SuluTrashBundle` with the existing services, the constructor of the following services was
@@ -9,6 +15,7 @@ adjusted. If you have extended one of these services in your project, you need t
 call to pass the correct parameters:
 
 - `Sulu\Bundle\TagBundle\Tag\TagManager`
+- `Sulu\Bundle\CategoryBundle\Category\CategoryManager`
 
 ### Added SuluTrashBundle to make resources trashable/restorable
 
