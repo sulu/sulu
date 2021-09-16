@@ -24,21 +24,23 @@ export default class Suggestion extends React.PureComponent<Props> {
             return null;
         }
 
-        const query = this.props.query || '';
-        const regex = new RegExp(query, 'gi');
-        const matches = text.match(regex);
-
-        if (!matches || query.length === 0) {
+        if (!this.props.query) {
             return text;
         }
 
-        let matchIndex = 0;
-        const highlightedMatches = text.replace(regex, () => {
-            return `<strong>${matches[matchIndex++]}</strong>`;
-        });
+        let matcher;
+        try {
+            // try to match all highlighted parts using case insensitive regular expression
+            matcher = new RegExp(this.props.query, 'gi');
+        } catch (e) {
+            // fallback to highlight first exact match if given query is an invalid regular expression like "*"
+            matcher = this.props.query;
+        }
+
+        const highlightedText = text.replace(matcher, '<strong>$&</strong>');
 
         return (
-            <span dangerouslySetInnerHTML={{__html: highlightedMatches}} />
+            <span dangerouslySetInnerHTML={{__html: highlightedText}} />
         );
     };
 
