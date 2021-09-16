@@ -7,7 +7,7 @@
     "sulu_category.multiple_usage": "Mehrfachverwendung",
     "sulu_category.all_categories": "Alle Kategorien",
     "sulu_category.parent_category": "Übergeordnete Kategorie",
-    "sulu_category.restore_parent_category_info_text": "Wählen Sie eine Kategorie um die gelöschte Kategorie als Kind einer bestehenden Kategorie wiederherzustellen",
+    "sulu_category.restore_parent_category_info_text": "Wählen Sie eine Kategorie um die gelöschte Kategorie als Kind der ausgewählten Kategorie wiederherzustellen",
     "sulu_category.no_category_selected": "Keine Kategorie ausgewählt",
     "sulu_category.single_category_selection_overlay_title": "Kategorie auswählen",
     "sulu_category.key_assigned_to_other_category": "Der Schlüssel \"{key}\" ist bereits einer anderen Kategorie zugewiesen.",

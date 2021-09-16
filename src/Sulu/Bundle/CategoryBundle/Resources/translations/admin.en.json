@@ -7,7 +7,7 @@
     "sulu_category.multiple_usage": "Multiple Usage",
     "sulu_category.all_categories": "All categories",
     "sulu_category.parent_category": "Parent category",
-    "sulu_category.restore_parent_category_info_text": "Select a category to restore the removed category as child of an existing category",
+    "sulu_category.restore_parent_category_info_text": "Select a category to restore the removed category as child of the selected category",
     "sulu_category.no_category_selected": "No category selected",
     "sulu_category.single_category_selection_overlay_title": "Choose category",
     "sulu_category.key_assigned_to_other_category": "The key \"{key}\" is already assigned to another category.",
