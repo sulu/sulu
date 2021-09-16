@@ -88,6 +88,7 @@ export default class RestoreItemAction extends AbstractListItemAction {
                     onClose={this.handleCancel}
                     onConfirm={this.handleConfirm}
                     open={!!this.idToBeRestored && !!this.restoreFormKey}
+                    trashItemId={this.idToBeRestored}
                 />
             </React.Fragment>
         );

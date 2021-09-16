@@ -5,9 +5,8 @@ import React from 'react';
 import FormOverlay from 'sulu-admin-bundle/containers/FormOverlay';
 import {translate} from 'sulu-admin-bundle/utils/Translator';
 import {FormStoreInterface} from 'sulu-admin-bundle/containers/Form/types';
-import MemoryFormStore from 'sulu-admin-bundle/containers/Form/stores/MemoryFormStore';
-import SchemaFormStoreDecorator from 'sulu-admin-bundle/containers/Form/stores/SchemaFormStoreDecorator';
-import type {Schema} from 'sulu-admin-bundle/containers/Form';
+import {memoryFormStoreFactory} from 'sulu-admin-bundle/containers/Form';
+import {ResourceRequester} from 'sulu-admin-bundle/services';
 
 type Props = {
     confirmLoading: boolean,
@@ -15,6 +14,7 @@ type Props = {
     onClose: () => void,
     onConfirm: (data: {[string]: any}) => void,
     open: boolean,
+    trashItemId: ?string | number,
 }
 
 @observer
@@ -30,9 +30,12 @@ class RestoreFormOverlay extends React.Component<Props> {
     }
 
     componentDidUpdate(prevProps: Props) {
-        const {open, formKey} = this.props;
+        const {open, formKey, trashItemId} = this.props;
 
-        if (prevProps.formKey !== formKey || prevProps.open === false && open === true) {
+        if (prevProps.formKey !== formKey
+            || prevProps.trashItemId !== trashItemId
+            || prevProps.open === false && open === true
+        ) {
             this.updateFormStoreInstance();
         }
     }
@@ -44,25 +47,26 @@ class RestoreFormOverlay extends React.Component<Props> {
     }
 
     @action updateFormStoreInstance() {
-        const {formKey} = this.props;
+        const {formKey, trashItemId} = this.props;
 
         if (this.formStore) {
             this.formStore.destroy();
             this.formStore = null;
         }
 
-        if (!formKey) {
+        if (!formKey || !trashItemId) {
             return;
         }
 
-        this.formStore = new SchemaFormStoreDecorator(
-            (schema: Schema, jsonSchema: Object) => new MemoryFormStore(
-                {},
-                schema,
-                jsonSchema
-            ),
-            formKey
-        );
+        const formStore = memoryFormStoreFactory.createFromFormKey(formKey);
+        formStore.loading = true;
+
+        ResourceRequester.get('trash_items', {id: trashItemId}).then(action((response) => {
+            formStore.changeMultiple(response.restoreData, {isServerValue: true});
+            formStore.loading = false;
+        }));
+
+        this.formStore = formStore;
     }
 
     handleConfirm = () => {

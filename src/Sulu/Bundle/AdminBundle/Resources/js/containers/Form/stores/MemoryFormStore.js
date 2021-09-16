@@ -15,6 +15,7 @@ export default class MemoryFormStore extends AbstractFormStore implements FormSt
     resourceKey = undefined;
     @observable data: {[string]: any};
     @observable dirty: boolean = false;
+    @observable loading: boolean = false;
     @observable types: {[key: string]: SchemaType} = {};
 
     constructor(
@@ -27,7 +28,6 @@ export default class MemoryFormStore extends AbstractFormStore implements FormSt
         super();
 
         this.data = data;
-        this.loading = false;
         this.schema = schema;
         this.locale = locale;
         this.addMissingSchemaProperties();

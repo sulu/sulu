@@ -179,7 +179,7 @@ final class CategoryTrashItemHandler implements StoreTrashItemHandlerInterface, 
     {
         $id = (int) $trashItem->getResourceId();
         $data = $trashItem->getRestoreData();
-        $parentId = $restoreFormData['parent'];
+        $parentId = $restoreFormData['parentId'];
 
         if ($data['key'] && null !== $this->categoryRepository->findCategoryByKey($data['key'])) {
             throw new CategoryKeyNotUniqueException($data['key']);

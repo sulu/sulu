@@ -6,7 +6,7 @@
     <key>restore_category</key>
 
     <properties>
-        <property name="parent" type="single_category_selection">
+        <property name="parentId" type="single_category_selection">
             <meta>
                 <title>sulu_category.parent_category</title>
                 <info_text>sulu_category.restore_parent_category_info_text</info_text>
