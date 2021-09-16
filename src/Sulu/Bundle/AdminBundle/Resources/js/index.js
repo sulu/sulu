@@ -83,6 +83,7 @@ import {
     Select,
     Number,
     parentConditionDataProvider,
+    userConditionDataProvider,
     PasswordConfirmation,
     Phone,
     Selection,
@@ -168,6 +169,7 @@ initializer.addUpdateConfigHook('sulu_admin', (config: Object, initialized: bool
         conditionDataProviderRegistry.add(bundlesConditionDataProvider);
         conditionDataProviderRegistry.add(localeConditionDataProvider);
         conditionDataProviderRegistry.add(parentConditionDataProvider);
+        conditionDataProviderRegistry.add(userConditionDataProvider);
     }
 
     processConfig(config);

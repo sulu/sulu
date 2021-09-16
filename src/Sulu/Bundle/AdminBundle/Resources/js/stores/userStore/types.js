@@ -3,6 +3,7 @@
 export type User = {
     id: number,
     locale: string,
+    roles: string[],
     settings: {[string]: string},
     username: string,
 };

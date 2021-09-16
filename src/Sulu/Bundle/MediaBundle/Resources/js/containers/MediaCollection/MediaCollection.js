@@ -43,14 +43,6 @@ class MediaCollection extends React.Component<Props> {
     static editable: boolean = true;
     static securable: boolean = true;
 
-    handleMediaClick = (mediaId: string | number) => {
-        const {onMediaNavigate} = this.props;
-
-        if (onMediaNavigate) {
-            onMediaNavigate(mediaId);
-        }
-    };
-
     handleCollectionNavigate = (collectionId: ?string | number) => {
         this.props.onCollectionNavigate(collectionId);
     };
@@ -90,6 +82,7 @@ class MediaCollection extends React.Component<Props> {
             mediaListAdapters,
             mediaListRef,
             mediaListStore,
+            onMediaNavigate,
             onUploadOverlayClose,
             onUploadOverlayOpen,
             uploadOverlayOpen,
@@ -142,7 +135,7 @@ class MediaCollection extends React.Component<Props> {
                 <List
                     actions={listActions}
                     adapters={mediaListAdapters}
-                    onItemClick={this.handleMediaClick}
+                    onItemClick={onMediaNavigate}
                     ref={mediaListRef}
                     store={mediaListStore}
                 />

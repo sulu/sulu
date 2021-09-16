@@ -25,7 +25,7 @@ beforeEach(() => {
 });
 
 test('Should clear the user store', () => {
-    const user = {id: 1, locale: 'cool_locale', settings: {}, username: 'test'};
+    const user = {id: 1, locale: 'cool_locale', settings: {}, username: 'test', roles: []};
     const contact = {id: 12, avatar: undefined, firstName: 'Firsti', lastName: 'Lasti', fullName: 'Firsti Lasti'};
     userStore.setLoggedIn(true);
     userStore.setLoading(true);
@@ -58,6 +58,7 @@ test('Should return the locale of the user as system-locale', () => {
         locale: 'de',
         settings: {},
         username: 'test',
+        roles: [],
     });
 
     expect(userStore.systemLocale).toEqual('de');
@@ -83,6 +84,7 @@ test('Should load and set first default-localization as content-locale when user
         locale: 'de',
         settings: {},
         username: 'test',
+        roles: [],
     });
 
     expect(userStore.contentLocale).toEqual('ru');
@@ -100,6 +102,7 @@ test('Should load and set first localization as content-locale if there is no de
         locale: 'de',
         settings: {},
         username: 'test',
+        roles: [],
     });
 
     expect(userStore.contentLocale).toEqual('cz');
@@ -113,6 +116,7 @@ test('Should return initial persistent settings', () => {
             test1: 'value1',
         },
         username: 'test',
+        roles: [],
     });
 
     expect(userStore.getPersistentSetting('test1')).toEqual('value1');
@@ -189,7 +193,7 @@ test('Should login after the password was reset', () => {
 });
 
 test('Should login without initializing when it`s the same user', () => {
-    const user = {id: 1, locale: 'cool_locale', settings: {}, username: 'test'};
+    const user = {id: 1, locale: 'cool_locale', settings: {}, username: 'test', roles: []};
     const loginPromise = Promise.resolve({});
     Requester.post.mockReturnValue(loginPromise);
     userStore.setUser(user);
@@ -206,7 +210,7 @@ test('Should login without initializing when it`s the same user', () => {
 });
 
 test('Should login with initializing when it`s not the same user', () => {
-    const user = {id: 1, locale: 'cool_locale', settings: {}, username: 'test'};
+    const user = {id: 1, locale: 'cool_locale', settings: {}, username: 'test', roles: []};
     const loginPromise = Promise.resolve({});
     const initializePromise = Promise.resolve({});
     userStore.setUser(user);

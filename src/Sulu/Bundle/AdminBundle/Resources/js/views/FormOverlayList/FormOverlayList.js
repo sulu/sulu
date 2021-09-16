@@ -54,6 +54,7 @@ class FormOverlayList extends React.Component<Props> {
                         resourceKey,
                         routerAttributesToFormRequest = {},
                         resourceStorePropertiesToFormRequest = {},
+                        routerAttributesToFormMetadata = {},
                         metadataRequestParameters = {},
                     },
                 },
@@ -76,12 +77,18 @@ class FormOverlayList extends React.Component<Props> {
             resourceStorePropertiesToFormRequest
         );
 
+        const formStoreMetadataOptions = this.buildFormStoreMetadataOptions(
+            metadataRequestParameters,
+            attributes,
+            routerAttributesToFormMetadata
+        );
+
         const resourceStore = new ResourceStore(resourceKey, itemId, observableOptions, formStoreOptions);
         this.formStore = resourceFormStoreFactory.createFromResourceStore(
             resourceStore,
             formKey,
             formStoreOptions,
-            metadataRequestParameters
+            formStoreMetadataOptions
         );
     };
 
@@ -122,6 +129,23 @@ class FormOverlayList extends React.Component<Props> {
         });
 
         return formStoreOptions;
+    }
+
+    buildFormStoreMetadataOptions(
+        metadataRequestParameters: Object,
+        attributes: Object,
+        routerAttributesToFormMetadata: {[string | number]: string}
+    ) {
+        const metadataOptions = metadataRequestParameters ? metadataRequestParameters : {};
+
+        Object.keys(toJS(routerAttributesToFormMetadata)).forEach((key) => {
+            const metadataOptionKey = routerAttributesToFormMetadata[key];
+            const attributeName = isNaN(key) ? key : toJS(routerAttributesToFormMetadata[key]);
+
+            metadataOptions[metadataOptionKey] = attributes[attributeName];
+        });
+
+        return metadataOptions;
     }
 
     setListRef = (listRef: ?ElementRef<typeof List>) => {
