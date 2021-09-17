@@ -127,7 +127,7 @@ class CategoryTrashItemHandlerTest extends SuluTestCase
         $this->bootKernelAndSetServices();
 
         /** @var CategoryInterface $restoredCategory */
-        $restoredCategory = $this->categoryTrashItemHandler->restore($trashItem, ['parent' => $category2->getId()]);
+        $restoredCategory = $this->categoryTrashItemHandler->restore($trashItem, ['parentId' => $category2->getId()]);
         static::assertCount(2, $this->entityManager->getRepository(CategoryInterface::class)->findAll());
         static::assertSame($originalCategoryId, $restoredCategory->getId());
         static::assertSame('test-key', $restoredCategory->getKey());

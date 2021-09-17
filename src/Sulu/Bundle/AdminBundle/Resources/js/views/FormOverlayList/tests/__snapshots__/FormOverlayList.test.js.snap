@@ -53,6 +53,7 @@ Array [
         >
           <button
             class="button primary hasText"
+            disabled=""
             type="button"
           >
             <span

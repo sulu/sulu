@@ -199,7 +199,6 @@ final class CategoryTrashItemHandler implements StoreTrashItemHandlerInterface, 
             $meta = $this->categoryMetaRepository->createNew();
             $meta->setCategory($category);
             $category->addMeta($meta);
-            $this->entityManager->persist($meta);
 
             $meta->setKey($metaData['key']);
             $meta->setValue($metaData['value']);
@@ -210,7 +209,6 @@ final class CategoryTrashItemHandler implements StoreTrashItemHandlerInterface, 
             $translation = $this->categoryTranslationRepository->createNew();
             $translation->setCategory($category);
             $category->addTranslation($translation);
-            $this->entityManager->persist($translation);
 
             $translation->setTranslation($translationData['translation']);
             $translation->setDescription($translationData['description']);

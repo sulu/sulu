@@ -2,7 +2,7 @@
 
 ## 2.x
 
-### CategoryRepositoryInterface has changed
+### CategoryInterface was changed
 
 A new method has been added to the `CategoryInterface`:
 
