@@ -105,20 +105,6 @@
             "enzyme-to-json/serializer"
         ],
         "clearMocks": true,
-        "transform": {
-            "\\.js$": [
-                "babel-jest",
-                {
-                    "babelrcRoots": [
-                        ".",
-                        "./src/Sulu/Bundle/*/Resource/js"
-                    ],
-                    "presets": [
-                        "@babel/preset-env"
-                    ]
-                }
-            ]
-        },
         "transformIgnorePatterns": [
             "node_modules/(?!(@ckeditor|lodash-es)/)"
         ],
