@@ -47,7 +47,6 @@ class MediaCollection extends React.Component<Props> {
     @action handleUpload = (media: Array<Object>) => {
         const {mediaListStore} = this.props;
 
-        mediaListStore.reset();
         mediaListStore.reload();
 
         when(
@@ -63,7 +62,6 @@ class MediaCollection extends React.Component<Props> {
             onUploadError(errorResponses);
         }
 
-        mediaListStore.reset();
         mediaListStore.reload();
     };
 
