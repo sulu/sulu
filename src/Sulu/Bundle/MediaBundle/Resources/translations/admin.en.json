@@ -1,5 +1,6 @@
 {
     "sulu_media.media": "Media",
+    "sulu_media.collection": "Collection",
     "sulu_media.all_media": "All media",
     "sulu_media.audio": "Audio",
     "sulu_media.document": "Document",

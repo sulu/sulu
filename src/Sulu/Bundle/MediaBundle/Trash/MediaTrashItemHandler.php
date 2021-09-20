@@ -203,8 +203,7 @@ final class MediaTrashItemHandler implements StoreTrashItemHandlerInterface, Res
         $id = (int) $trashItem->getResourceId();
         $data = $trashItem->getRestoreData();
 
-        // TODO: select collection for restoring in restore form
-        $collection = $this->findEntity(CollectionInterface::class, 9);
+        $collection = $this->findEntity(CollectionInterface::class, $restoreFormData['collectionId']);
         Assert::isInstanceOf($collection, CollectionInterface::class);
 
         $type = $this->findEntity(MediaType::class, $data['typeId']);

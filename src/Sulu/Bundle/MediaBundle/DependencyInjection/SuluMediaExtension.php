@@ -216,6 +216,17 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
                 ]
             );
         }
+
+        if ($container->hasExtension('sulu_trash')) {
+            $container->prependExtensionConfig(
+                'sulu_trash',
+                [
+                    'restore_form' => [
+                        MediaInterface::RESOURCE_KEY => 'restore_media',
+                    ],
+                ]
+            );
+        }
     }
 
     public function load(array $configs, ContainerBuilder $container)
