@@ -14,7 +14,7 @@ Array [
     class="container isDown"
   >
     <div
-      class="overlay large"
+      class="overlay small"
     >
       <section
         class="content"

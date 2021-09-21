@@ -52,10 +52,8 @@ class AzureBlobStorage extends FlysystemStorage
 
     public function getPath(array $storageOptions): string
     {
-        $segment = $this->getStorageOption($storageOptions, 'segment');
-        $fileName = $this->getStorageOption($storageOptions, 'fileName');
-
-        $blob = $this->adapter->applyPathPrefix($segment . '/' . $fileName);
+        $filePath = $this->getFilePath($storageOptions);
+        $blob = $this->adapter->applyPathPrefix($filePath);
 
         return $this->client->getBlobUrl($this->container, $blob);
     }

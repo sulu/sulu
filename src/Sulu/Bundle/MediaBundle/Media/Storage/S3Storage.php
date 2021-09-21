@@ -48,10 +48,8 @@ class S3Storage extends FlysystemStorage
 
     public function getPath(array $storageOptions): string
     {
-        $segment = $this->getStorageOption($storageOptions, 'segment');
-        $fileName = $this->getStorageOption($storageOptions, 'fileName');
-
-        $path = $this->adapter->applyPathPrefix($segment . '/' . $fileName);
+        $filePath = $this->getFilePath($storageOptions);
+        $path = $this->adapter->applyPathPrefix($filePath);
 
         return $this->endpoint . '/' . $this->bucketName . '/' . \ltrim($path, '/');
     }

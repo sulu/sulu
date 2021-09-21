@@ -2,6 +2,12 @@
 
 ## 2.x
 
+### StorageInterface was changed
+
+A new method has been added to the `StorageInterface` to allow for moving files:
+
+- `move`
+
 ### MediaInterface was changed
 
 A new method has been added to the `MediaInterface`:

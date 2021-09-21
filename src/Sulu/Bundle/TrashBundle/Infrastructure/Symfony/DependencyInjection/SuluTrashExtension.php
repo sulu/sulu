@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sulu\Bundle\TrashBundle\Infrastructure\Symfony\DependencyInjection;
 
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
+use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\RemoveTrashItemHandlerInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\RestoreTrashItemHandlerInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\StoreTrashItemHandlerInterface;
 use Sulu\Bundle\TrashBundle\Domain\Exception\TrashItemNotFoundException;
@@ -115,5 +116,8 @@ class SuluTrashExtension extends Extension implements PrependExtensionInterface
 
         $container->registerForAutoconfiguration(RestoreTrashItemHandlerInterface::class)
             ->addTag('sulu_trash.restore_trash_item_handler');
+
+        $container->registerForAutoconfiguration(RemoveTrashItemHandlerInterface::class)
+            ->addTag('sulu_trash.remove_trash_item_handler');
     }
 }

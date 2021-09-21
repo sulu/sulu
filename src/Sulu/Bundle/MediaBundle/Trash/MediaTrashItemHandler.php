@@ -29,8 +29,10 @@ use Sulu\Bundle\MediaBundle\Entity\FormatOptions;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
+use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Bundle\TrashBundle\Application\DoctrineRestoreHelper\DoctrineRestoreHelperInterface;
+use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\RemoveTrashItemHandlerInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\RestoreTrashItemHandlerInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\StoreTrashItemHandlerInterface;
 use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
@@ -38,7 +40,7 @@ use Sulu\Bundle\TrashBundle\Domain\Repository\TrashItemRepositoryInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Webmozart\Assert\Assert;
 
-final class MediaTrashItemHandler implements StoreTrashItemHandlerInterface, RestoreTrashItemHandlerInterface
+final class MediaTrashItemHandler implements StoreTrashItemHandlerInterface, RestoreTrashItemHandlerInterface, RemoveTrashItemHandlerInterface
 {
     /**
      * @var TrashItemRepositoryInterface
@@ -65,18 +67,25 @@ final class MediaTrashItemHandler implements StoreTrashItemHandlerInterface, Res
      */
     private $domainEventCollector;
 
+    /**
+     * @var StorageInterface
+     */
+    private $storage;
+
     public function __construct(
         TrashItemRepositoryInterface $trashItemRepository,
         MediaRepositoryInterface $mediaRepository,
         EntityManagerInterface $entityManager,
         DoctrineRestoreHelperInterface $doctrineRestoreHelper,
-        DomainEventCollectorInterface $domainEventCollector
+        DomainEventCollectorInterface $domainEventCollector,
+        StorageInterface $storage
     ) {
         $this->trashItemRepository = $trashItemRepository;
         $this->mediaRepository = $mediaRepository;
         $this->entityManager = $entityManager;
         $this->doctrineRestoreHelper = $doctrineRestoreHelper;
         $this->domainEventCollector = $domainEventCollector;
+        $this->storage = $storage;
     }
 
     /**
@@ -85,8 +94,6 @@ final class MediaTrashItemHandler implements StoreTrashItemHandlerInterface, Res
     public function store(object $media): TrashItemInterface
     {
         Assert::isInstanceOf($media, MediaInterface::class);
-
-        // TODO: move original image file
 
         $creator = $media->getCreator();
         $previewImage = $media->getPreviewImage();
@@ -114,6 +121,10 @@ final class MediaTrashItemHandler implements StoreTrashItemHandlerInterface, Res
 
             /** @var FileVersion $fileVersion */
             foreach ($file->getFileVersions() as $fileVersion) {
+                // move original file into trash directory
+                $trashStorageOptions = $this->getTrashStorageOptions($fileVersion->getStorageOptions());
+                $this->storage->move($fileVersion->getStorageOptions(), $trashStorageOptions);
+
                 $creator = $fileVersion->getCreator();
 
                 $fileVersionData = [
@@ -227,6 +238,10 @@ final class MediaTrashItemHandler implements StoreTrashItemHandlerInterface, Res
             $file->setCreator($this->findEntity(UserInterface::class, $fileData['creatorId']));
 
             foreach ($fileData['fileVersions'] as $fileVersionData) {
+                // move original file from trash directory to original location
+                $trashStorageOptions = $this->getTrashStorageOptions($fileVersionData['storageOptions']);
+                $this->storage->move($trashStorageOptions, $fileVersionData['storageOptions']);
+
                 $fileVersion = new FileVersion();
                 $fileVersion->setFile($file);
                 $file->addFileVersion($fileVersion);
@@ -320,6 +335,18 @@ final class MediaTrashItemHandler implements StoreTrashItemHandlerInterface, Res
         return $media;
     }
 
+    public function remove(TrashItemInterface $trashItem): void
+    {
+        $data = $trashItem->getRestoreData();
+
+        foreach ($data['files'] as $fileData) {
+            foreach ($fileData['fileVersions'] as $fileVersionData) {
+                $trashStorageOptions = $this->getTrashStorageOptions($fileVersionData['storageOptions']);
+                $this->storage->remove($trashStorageOptions);
+            }
+        }
+    }
+
     public static function getResourceKey(): string
     {
         return MediaInterface::RESOURCE_KEY;
@@ -340,5 +367,15 @@ final class MediaTrashItemHandler implements StoreTrashItemHandlerInterface, Res
         }
 
         return null;
+    }
+
+    /**
+     * @param array<string, string|null> $originalStorageOptions
+     *
+     * @return array<string, string|null>
+     */
+    private function getTrashStorageOptions(array $originalStorageOptions): array
+    {
+        return \array_merge($originalStorageOptions, ['directory' => 'trash']);
     }
 }

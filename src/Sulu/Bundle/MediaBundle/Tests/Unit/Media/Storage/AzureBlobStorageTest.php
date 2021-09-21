@@ -18,6 +18,7 @@ use League\Flysystem\Filesystem;
 use MicrosoftAzure\Storage\Blob\BlobRestProxy;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Sulu\Bundle\MediaBundle\Media\Exception\FilenameAlreadyExistsException;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException;
 
 class AzureBlobStorageTest extends TestCase
@@ -53,7 +54,7 @@ class AzureBlobStorageTest extends TestCase
         $flysystem->createDir('1')->shouldBeCalled();
 
         $storageOptions = $storage->save(\tempnam(\sys_get_temp_dir(), 'test'), 'test.jpg');
-        $this->assertEquals(['segment' => '1', 'fileName' => 'test.jpg'], $storageOptions);
+        $this->assertEquals(['directory' => null, 'segment' => '1', 'fileName' => 'test.jpg'], $storageOptions);
     }
 
     public function testSaveDirectoryExists(): void
@@ -74,7 +75,7 @@ class AzureBlobStorageTest extends TestCase
         $flysystem->createDir(Argument::any())->shouldNotBeCalled();
 
         $storageOptions = $storage->save(\tempnam(\sys_get_temp_dir(), 'test'), 'test.jpg');
-        $this->assertEquals(['segment' => '1', 'fileName' => 'test.jpg'], $storageOptions);
+        $this->assertEquals(['directory' => null, 'segment' => '1', 'fileName' => 'test.jpg'], $storageOptions);
     }
 
     public function testSaveUniqueFileName(): void
@@ -88,15 +89,16 @@ class AzureBlobStorageTest extends TestCase
         $storage = new AzureBlobStorage($flysystem->reveal(), $client, 'test-container', 1);
 
         $flysystem->has('1/test.jpg')->wilLReturn(true);
-        $flysystem->has('1/test-1.jpg')->wilLReturn(false);
+        $flysystem->has('1/test-1.jpg')->wilLReturn(true);
+        $flysystem->has('1/test-2.jpg')->wilLReturn(false);
         $flysystem->has('1')->wilLReturn(false);
-        $flysystem->writeStream('1/test-1.jpg', Argument::any(), ['visibility' => AdapterInterface::VISIBILITY_PUBLIC])
+        $flysystem->writeStream('1/test-2.jpg', Argument::any(), ['visibility' => AdapterInterface::VISIBILITY_PUBLIC])
             ->shouldBeCalled();
 
         $flysystem->createDir('1')->shouldBeCalled();
 
         $storageOptions = $storage->save(\tempnam(\sys_get_temp_dir(), 'test'), 'test.jpg');
-        $this->assertEquals(['segment' => '1', 'fileName' => 'test-1.jpg'], $storageOptions);
+        $this->assertEquals(['directory' => null, 'segment' => '1', 'fileName' => 'test-2.jpg'], $storageOptions);
     }
 
     public function testLoad(): void
@@ -113,6 +115,24 @@ class AzureBlobStorageTest extends TestCase
         $flysystem->readStream('1/test.jpg')->willReturn($handle)->shouldBeCalled();
 
         $result = $storage->load(['segment' => '1', 'fileName' => 'test.jpg']);
+        $this->assertEquals(\stream_get_contents($handle), \stream_get_contents($result));
+    }
+
+    public function testLoadWithDirectory(): void
+    {
+        $adapter = $this->prophesize(AzureBlobStorageAdapter::class);
+        $flysystem = $this->prophesize(Filesystem::class);
+        $client = $this->createMock(BlobRestProxy::class);
+
+        $flysystem->getAdapter()->willReturn($adapter->reveal());
+
+        $storage = new AzureBlobStorage($flysystem->reveal(), $client, 'test-container', 1);
+
+        /** @var resource $handle */
+        $handle = \tmpfile();
+        $flysystem->readStream('trash/1/test.jpg')->willReturn($handle)->shouldBeCalled();
+
+        $result = $storage->load(['directory' => 'trash', 'segment' => '1', 'fileName' => 'test.jpg']);
         $this->assertEquals(\stream_get_contents($handle), \stream_get_contents($result));
     }
 
@@ -150,6 +170,21 @@ class AzureBlobStorageTest extends TestCase
         $storage->remove(['segment' => '1', 'fileName' => 'test.jpg']);
     }
 
+    public function testRemoveWithDirectory(): void
+    {
+        $adapter = $this->prophesize(AzureBlobStorageAdapter::class);
+        $flysystem = $this->prophesize(Filesystem::class);
+        $client = $this->createMock(BlobRestProxy::class);
+
+        $flysystem->getAdapter()->willReturn($adapter->reveal());
+
+        $storage = new AzureBlobStorage($flysystem->reveal(), $client, 'test-container', 1);
+
+        $flysystem->delete('trash/1/test.jpg')->shouldBeCalled();
+
+        $storage->remove(['directory' => 'trash', 'segment' => '1', 'fileName' => 'test.jpg']);
+    }
+
     public function testRemoveNotFound(): void
     {
         $adapter = $this->prophesize(AzureBlobStorageAdapter::class);
@@ -163,6 +198,75 @@ class AzureBlobStorageTest extends TestCase
         $flysystem->delete('1/test.jpg')->willThrow(new FileNotFoundException('1/test.jpg'))->shouldBeCalled();
 
         $storage->remove(['segment' => '1', 'fileName' => 'test.jpg']);
+    }
+
+    public function testMove(): void
+    {
+        $adapter = $this->prophesize(AzureBlobStorageAdapter::class);
+        $flysystem = $this->prophesize(Filesystem::class);
+        $client = $this->createMock(BlobRestProxy::class);
+
+        $flysystem->getAdapter()->willReturn($adapter->reveal());
+
+        $storage = new AzureBlobStorage($flysystem->reveal(), $client, 'test-container', 1);
+
+        $flysystem->has('trash')->wilLReturn(false);
+        $flysystem->createDir('trash')->shouldBeCalled();
+
+        $flysystem->has('trash/1')->wilLReturn(false);
+        $flysystem->createDir('trash/1')->shouldBeCalled();
+
+        $flysystem->has('trash/1/test.jpg')->wilLReturn(false);
+        $flysystem->rename('1/test.jpg', 'trash/1/test.jpg')->shouldBeCalled();
+
+        $storage->move(
+            ['segment' => '1', 'fileName' => 'test.jpg'],
+            ['directory' => 'trash', 'segment' => '1', 'fileName' => 'test.jpg']
+        );
+    }
+
+    public function testMoveTargetDirectoryExists(): void
+    {
+        $adapter = $this->prophesize(AzureBlobStorageAdapter::class);
+        $flysystem = $this->prophesize(Filesystem::class);
+        $client = $this->createMock(BlobRestProxy::class);
+
+        $flysystem->getAdapter()->willReturn($adapter->reveal());
+
+        $storage = new AzureBlobStorage($flysystem->reveal(), $client, 'test-container', 1);
+
+        $flysystem->has('trash')->wilLReturn(true);
+        $flysystem->has('trash/1')->wilLReturn(true);
+
+        $flysystem->has('trash/1/test.jpg')->wilLReturn(false);
+        $flysystem->rename('1/test.jpg', 'trash/1/test.jpg')->shouldBeCalled();
+
+        $storage->move(
+            ['segment' => '1', 'fileName' => 'test.jpg'],
+            ['directory' => 'trash', 'segment' => '1', 'fileName' => 'test.jpg']
+        );
+    }
+
+    public function testMoveTargetFileExists(): void
+    {
+        $adapter = $this->prophesize(AzureBlobStorageAdapter::class);
+        $flysystem = $this->prophesize(Filesystem::class);
+        $client = $this->createMock(BlobRestProxy::class);
+
+        $flysystem->getAdapter()->willReturn($adapter->reveal());
+
+        $storage = new AzureBlobStorage($flysystem->reveal(), $client, 'test-container', 1);
+
+        $flysystem->has('trash')->wilLReturn(true);
+        $flysystem->has('trash/1')->wilLReturn(true);
+        $flysystem->has('trash/1/test.jpg')->wilLReturn(true);
+
+        $this->expectException(FilenameAlreadyExistsException::class);
+
+        $storage->move(
+            ['segment' => '1', 'fileName' => 'test.jpg'],
+            ['directory' => 'trash', 'segment' => '1', 'fileName' => 'test.jpg']
+        );
     }
 
     public function testGetPath(): void
@@ -186,6 +290,29 @@ class AzureBlobStorageTest extends TestCase
 
         $path = $storage->getPath(['segment' => '1', 'fileName' => 'test.jpg']);
         $this->assertEquals('http://azure.com/test-container/1/test.jpg', $path);
+    }
+
+    public function testGetPathWithDirectory(): void
+    {
+        $adapter = $this->prophesize(AzureBlobStorageAdapter::class);
+        $flysystem = $this->prophesize(Filesystem::class);
+        $client = $this->createMock(BlobRestProxy::class);
+
+        $flysystem->getAdapter()->willReturn($adapter->reveal());
+
+        $storage = new AzureBlobStorage($flysystem->reveal(), $client, 'test-container', 1);
+
+        $adapter->applyPathPrefix('trash/1/test.jpg')->willReturn('trash/1/test.jpg')->shouldBeCalled();
+
+        $client
+            ->expects($this->once())
+            ->method('getBlobUrl')
+            ->with('test-container', 'trash/1/test.jpg')
+            ->willReturn('http://azure.com/test-container/trash/1/test.jpg')
+        ;
+
+        $path = $storage->getPath(['directory' => 'trash', 'segment' => '1', 'fileName' => 'test.jpg']);
+        $this->assertEquals('http://azure.com/test-container/trash/1/test.jpg', $path);
     }
 
     public function testGetType(): void

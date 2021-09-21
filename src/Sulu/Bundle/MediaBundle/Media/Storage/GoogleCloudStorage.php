@@ -35,10 +35,9 @@ class GoogleCloudStorage extends FlysystemStorage
 
     public function getPath(array $storageOptions): string
     {
-        $segment = $this->getStorageOption($storageOptions, 'segment');
-        $fileName = $this->getStorageOption($storageOptions, 'fileName');
+        $filePath = $this->getFilePath($storageOptions);
 
-        return $this->adapter->getUrl($segment . '/' . $fileName);
+        return $this->adapter->getUrl($filePath);
     }
 
     public function getType(array $storageOptions): string
