@@ -13,13 +13,20 @@ declare(strict_types=1);
 
 namespace Sulu\Bundle\TagBundle\Trash;
 
+use Doctrine\ORM\EntityManagerInterface;
+use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\TagBundle\Admin\TagAdmin;
+use Sulu\Bundle\TagBundle\Domain\Event\TagRestoredEvent;
+use Sulu\Bundle\TagBundle\Entity\Tag;
+use Sulu\Bundle\TagBundle\Tag\Exception\TagAlreadyExistsException;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
-use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
+use Sulu\Bundle\TagBundle\Tag\TagRepositoryInterface;
+use Sulu\Bundle\TrashBundle\Application\DoctrineRestoreHelper\DoctrineRestoreHelperInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\RestoreTrashItemHandlerInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\StoreTrashItemHandlerInterface;
 use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
 use Sulu\Bundle\TrashBundle\Domain\Repository\TrashItemRepositoryInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Webmozart\Assert\Assert;
 
 final class TagTrashItemHandler implements StoreTrashItemHandlerInterface, RestoreTrashItemHandlerInterface
@@ -30,25 +37,55 @@ final class TagTrashItemHandler implements StoreTrashItemHandlerInterface, Resto
     private $trashItemRepository;
 
     /**
-     * @var TagManagerInterface
+     * @var TagRepositoryInterface
      */
-    private $tagManager;
+    private $tagRepository;
 
-    public function __construct(TrashItemRepositoryInterface $trashItemRepository, TagManagerInterface $tagManager)
-    {
+    /**
+     * @var DoctrineRestoreHelperInterface
+     */
+    private $doctrineRestoreHelper;
+
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    /**
+     * @var DomainEventCollectorInterface
+     */
+    private $domainEventCollector;
+
+    public function __construct(
+        TrashItemRepositoryInterface $trashItemRepository,
+        TagRepositoryInterface $tagRepository,
+        DoctrineRestoreHelperInterface $doctrineRestoreHelper,
+        EntityManagerInterface $entityManager,
+        DomainEventCollectorInterface $domainEventCollector
+    ) {
         $this->trashItemRepository = $trashItemRepository;
-        $this->tagManager = $tagManager;
+        $this->tagRepository = $tagRepository;
+        $this->doctrineRestoreHelper = $doctrineRestoreHelper;
+        $this->entityManager = $entityManager;
+        $this->domainEventCollector = $domainEventCollector;
     }
 
+    /**
+     * @param TagInterface $tag
+     */
     public function store(object $tag): TrashItemInterface
     {
         Assert::isInstanceOf($tag, TagInterface::class);
+
+        $creator = $tag->getCreator();
 
         return $this->trashItemRepository->create(
             TagInterface::RESOURCE_KEY,
             (string) $tag->getId(),
             [
                 'name' => $tag->getName(),
+                'created' => $tag->getCreated()->format('c'),
+                'creatorId' => $creator ? $creator->getId() : null,
             ],
             $tag->getName(),
             TagAdmin::SECURITY_CONTEXT,
@@ -59,14 +96,56 @@ final class TagTrashItemHandler implements StoreTrashItemHandlerInterface, Resto
 
     public function restore(TrashItemInterface $trashItem, array $restoreFormData): object
     {
-        return $this->tagManager->restore(
-            (int) $trashItem->getResourceId(),
-            $trashItem->getRestoreData()
+        $id = (int) $trashItem->getResourceId();
+        $data = $trashItem->getRestoreData();
+
+        $existingTag = $this->tagRepository->findTagByName($data['name']);
+        if (null !== $existingTag) {
+            throw new TagAlreadyExistsException($existingTag->getName());
+        }
+
+        $tag = $this->tagRepository->createNew();
+        $tag->setName($data['name']);
+
+        if ($tag instanceof Tag) {
+            $tag->setCreated(new \DateTime($data['created']));
+            $tag->setCreator($this->findEntity(UserInterface::class, $data['creatorId']));
+        }
+
+        $this->domainEventCollector->collect(
+            new TagRestoredEvent($tag, $data)
         );
+
+        $existingTag = $this->tagRepository->findTagById($id);
+        if (null === $existingTag) {
+            $this->doctrineRestoreHelper->persistAndFlushWithId($tag, $id);
+        } else {
+            $this->entityManager->persist($tag);
+            $this->entityManager->flush();
+        }
+
+        return $tag;
     }
 
     public static function getResourceKey(): string
     {
         return TagInterface::RESOURCE_KEY;
+    }
+
+    /**
+     * @template T of object
+     *
+     * @param class-string<T> $className
+     * @param mixed|null $id
+     *
+     * @return T|null
+     */
+    private function findEntity(string $className, $id)
+    {
+        if ($id) {
+            return $this->entityManager->find($className, $id);
+        }
+
+        return null;
     }
 }

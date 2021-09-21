@@ -188,6 +188,7 @@ class FormOverlayList extends React.Component<Props> {
                 />
                 {!!formStore && (
                     <FormOverlay
+                        confirmDisabled={!formStore.dirty}
                         confirmText={translate('sulu_admin.save')}
                         formStore={formStore}
                         onClose={this.handleFormOverlayClose}

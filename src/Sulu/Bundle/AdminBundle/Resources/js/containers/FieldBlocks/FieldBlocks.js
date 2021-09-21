@@ -482,6 +482,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
                 />
                 {this.openedBlockSettingsIndex !== undefined && blockSettingsFormStore && (
                     <FormOverlay
+                        confirmDisabled={!blockSettingsFormStore.dirty}
                         confirmText={translate('sulu_admin.apply')}
                         formStore={blockSettingsFormStore}
                         onClose={this.handleSettingsOverlayClose}

@@ -2,6 +2,8 @@
 
 exports[`Component should not render without formKey 1`] = `null`;
 
+exports[`Component should not render without trashItemId 1`] = `null`;
+
 exports[`Component should render 1`] = `
 Array [
   <div
@@ -46,7 +48,6 @@ Array [
         >
           <button
             class="button primary hasText"
-            disabled=""
             type="button"
           >
             <span

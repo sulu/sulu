@@ -19,6 +19,12 @@
         </service>
         <service id="Sulu\Bundle\TrashBundle\Application\TrashManager\TrashManagerInterface" alias="sulu_trash.trash_manager"/>
 
+        <!-- DoctrineRestoreHelper -->
+        <service id="sulu_trash.doctrine_restore_helper" class="Sulu\Bundle\TrashBundle\Application\DoctrineRestoreHelper\DoctrineRestoreHelper">
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+        </service>
+        <service id="Sulu\Bundle\TrashBundle\Application\DoctrineRestoreHelper\DoctrineRestoreHelperInterface" alias="sulu_trash.doctrine_restore_helper"/>
+
         <!-- Admin -->
         <service id="sulu_trash.trash_admin" class="Sulu\Bundle\TrashBundle\Infrastructure\Sulu\Admin\TrashAdmin">
             <argument type="service" id="sulu_admin.view_builder_factory"/>

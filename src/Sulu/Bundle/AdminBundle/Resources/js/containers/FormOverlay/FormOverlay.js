@@ -34,12 +34,6 @@ class FormOverlay extends React.Component<Props> {
 
     @observable formErrors: Array<string> = [];
 
-    @computed get confirmDisabled() {
-        const {confirmDisabled, formStore} = this.props;
-
-        return confirmDisabled || !formStore.dirty;
-    }
-
     @computed get confirmLoading() {
         const {confirmLoading, formStore} = this.props;
 
@@ -101,6 +95,7 @@ class FormOverlay extends React.Component<Props> {
 
     render() {
         const {
+            confirmDisabled,
             confirmText,
             formStore,
             onClose,
@@ -111,7 +106,7 @@ class FormOverlay extends React.Component<Props> {
 
         return (
             <Overlay
-                confirmDisabled={this.confirmDisabled}
+                confirmDisabled={confirmDisabled}
                 confirmLoading={this.confirmLoading}
                 confirmText={confirmText}
                 onClose={onClose}

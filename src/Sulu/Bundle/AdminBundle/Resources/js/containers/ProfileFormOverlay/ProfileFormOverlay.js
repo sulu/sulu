@@ -61,6 +61,7 @@ class ProfileFormOverlay extends React.Component<Props> {
 
         return (
             <FormOverlay
+                confirmDisabled={!this.formStore.dirty}
                 confirmText={translate('sulu_admin.save')}
                 formStore={this.formStore}
                 onClose={onClose}

@@ -32,7 +32,7 @@ class TagRepository extends EntityRepository implements TagRepositoryInterface
         try {
             return $query->getSingleResult();
         } catch (NoResultException $nre) {
-            return;
+            return null;
         }
     }
 
@@ -47,7 +47,7 @@ class TagRepository extends EntityRepository implements TagRepositoryInterface
         try {
             return $query->getSingleResult();
         } catch (NoResultException $nre) {
-            return;
+            return null;
         }
     }
 

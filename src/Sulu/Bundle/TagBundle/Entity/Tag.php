@@ -85,9 +85,29 @@ class Tag implements TagInterface
         return $this->created;
     }
 
+    /**
+     * @return $this
+     */
+    public function setCreated(\DateTime $created)
+    {
+        $this->created = $created;
+
+        return $this;
+    }
+
     public function getChanged()
     {
         return $this->changed;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setChanged(\DateTime $changed)
+    {
+        $this->changed = $changed;
+
+        return $this;
     }
 
     /**

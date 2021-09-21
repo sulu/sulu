@@ -25,7 +25,7 @@ interface TagRepositoryInterface extends RepositoryInterface
      *
      * @param int $id
      *
-     * @return TagInterface
+     * @return TagInterface|null
      */
     public function findTagById($id);
 
@@ -33,6 +33,8 @@ interface TagRepositoryInterface extends RepositoryInterface
      * Finds the tag with the given name.
      *
      * @param string $name
+     *
+     * @return TagInterface|null
      */
     public function findTagByName($name);
 

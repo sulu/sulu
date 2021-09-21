@@ -1,7 +1,7 @@
 // @flow
 import mockReact from 'react';
 import {mount} from 'enzyme';
-import {observable, extendObservable as mockExtendObservable} from 'mobx';
+import {observable} from 'mobx';
 import ListStore from 'sulu-admin-bundle/containers/List/stores/ListStore';
 import Router from 'sulu-admin-bundle/services/Router';
 import List from 'sulu-admin-bundle/views/List';
@@ -30,24 +30,15 @@ jest.mock('sulu-admin-bundle/services/Router', () => jest.fn(function() {
     this.attributes = {};
 }));
 
-jest.mock('sulu-admin-bundle/containers/Form/stores/SchemaFormStoreDecorator',
-    () => jest.fn(function(initializer: any, formKey: string) {
-        this.destroy = jest.fn();
-        this.formKey = formKey;
+jest.mock('sulu-admin-bundle/containers/Form/stores/memoryFormStoreFactory', () => ({
+    createFromFormKey: jest.fn(() => ({
+        data: {},
+    })),
+}));
 
-        mockExtendObservable(this, {
-            data: {},
-        });
-    })
-);
-
-jest.mock('sulu-admin-bundle/containers/Form/stores/MemoryFormStore',
-    () => jest.fn()
-);
-
-jest.mock('sulu-admin-bundle/containers/Form', () => class FormMock extends mockReact.Component<*> {
+jest.mock('../../../../containers/RestoreFormOverlay', () => class RestoreFormOverlay extends mockReact.Component<*> {
     render() {
-        return <div>form container mock</div>;
+        return <div>restore form overlay mock</div>;
     }
 });
 
@@ -173,6 +164,7 @@ test('Display RestoreFormOverlay if onClick callback is fired', () => {
     expect(overlay.props()).toEqual(expect.objectContaining({
         open: true,
         formKey: 'foo',
+        trashItemId: 'id-1234',
     }));
 });
 

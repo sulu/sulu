@@ -6,8 +6,11 @@
     "sulu_category.keyword": "Schlüsselwort",
     "sulu_category.multiple_usage": "Mehrfachverwendung",
     "sulu_category.all_categories": "Alle Kategorien",
+    "sulu_category.parent_category": "Übergeordnete Kategorie",
+    "sulu_category.restore_parent_category_info_text": "Wählen Sie eine Kategorie um die gelöschte Kategorie als Kind der ausgewählten Kategorie wiederherzustellen",
     "sulu_category.no_category_selected": "Keine Kategorie ausgewählt",
     "sulu_category.single_category_selection_overlay_title": "Kategorie auswählen",
+    "sulu_category.key_assigned_to_other_category": "Der Schlüssel \"{key}\" ist bereits einer anderen Kategorie zugewiesen.",
     "sulu_activity.resource.categories": "Kategorie",
     "sulu_activity.description.categories.created": "{userFullName} hat die Kategorie \"{resourceTitle}\" erstellt",
     "sulu_activity.description.categories.modified": "{userFullName} hat die Kategorie \"{resourceTitle}\" geändert",
@@ -16,5 +19,6 @@
     "sulu_activity.description.categories.translation_added": "{userFullName} hat eine Übersetzung für \"{resourceLocale}\" zur Kategorie \"{resourceTitle}\" hinzugefügt",
     "sulu_activity.description.categories.keyword_added": "{userFullName} hat das Schlüsselwort \"{context_keywordTitle}\" zur Kategorie \"{resourceTitle}\" hinzugefügt",
     "sulu_activity.description.categories.keyword_modified": "{userFullName} hat das Schlüsselwort \"{context_keywordTitle}\" der Kategorie \"{resourceTitle}\" geändert",
-    "sulu_activity.description.categories.keyword_removed": "{userFullName} hat das Schlüsselwort \"{context_keywordTitle}\" der Kategorie \"{resourceTitle}\" gelöscht"
+    "sulu_activity.description.categories.keyword_removed": "{userFullName} hat das Schlüsselwort \"{context_keywordTitle}\" der Kategorie \"{resourceTitle}\" gelöscht",
+    "sulu_activity.description.categories.restored": "{userFullName} hat die Kategorie \"{resourceTitle}\" wiederhergestellt"
 }

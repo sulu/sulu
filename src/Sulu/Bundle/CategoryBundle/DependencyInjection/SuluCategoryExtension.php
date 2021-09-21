@@ -43,6 +43,11 @@ class SuluCategoryExtension extends Extension implements PrependExtensionInterfa
         $loader->load('services.xml');
         $loader->load('command.xml');
 
+        $bundles = $container->getParameter('kernel.bundles');
+        if (\array_key_exists('SuluTrashBundle', $bundles)) {
+            $loader->load('services_trash.xml');
+        }
+
         $this->configurePersistence($config['objects'], $container);
         $container->addAliases(
             [
@@ -154,6 +159,17 @@ class SuluCategoryExtension extends Extension implements PrependExtensionInterfa
                                 ],
                             ],
                         ],
+                    ],
+                ]
+            );
+        }
+
+        if ($container->hasExtension('sulu_trash')) {
+            $container->prependExtensionConfig(
+                'sulu_trash',
+                [
+                    'restore_form' => [
+                        CategoryInterface::RESOURCE_KEY => 'restore_category',
                     ],
                 ]
             );

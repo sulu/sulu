@@ -12,16 +12,12 @@
 namespace Sulu\Bundle\TagBundle\Tag;
 
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-use Doctrine\ORM\Id\AssignedGenerator;
-use Doctrine\ORM\Mapping\ClassMetadata;
-use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Doctrine\Persistence\ObjectManager;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\TagBundle\Domain\Event\TagCreatedEvent;
 use Sulu\Bundle\TagBundle\Domain\Event\TagMergedEvent;
 use Sulu\Bundle\TagBundle\Domain\Event\TagModifiedEvent;
 use Sulu\Bundle\TagBundle\Domain\Event\TagRemovedEvent;
-use Sulu\Bundle\TagBundle\Domain\Event\TagRestoredEvent;
 use Sulu\Bundle\TagBundle\Entity\TagRepository;
 use Sulu\Bundle\TagBundle\Event\TagDeleteEvent;
 use Sulu\Bundle\TagBundle\Event\TagEvents;
@@ -92,7 +88,7 @@ class TagManager implements TagManagerInterface
      *
      * @param $id number The id of the tag
      *
-     * @return TagInterface
+     * @return TagInterface|null
      */
     public function findById($id)
     {
@@ -104,7 +100,7 @@ class TagManager implements TagManagerInterface
      *
      * @param $name
      *
-     * @return TagInterface
+     * @return TagInterface|null
      */
     public function findByName($name)
     {
@@ -153,63 +149,6 @@ class TagManager implements TagManagerInterface
         } catch (UniqueConstraintViolationException $exc) {
             throw new TagAlreadyExistsException($name);
         }
-    }
-
-    public function restore(int $id, array $data): TagInterface
-    {
-        $name = $data['name'];
-
-        /** @var TagInterface|null $existingTag */
-        $existingTag = $this->tagRepository->findTagByName($name);
-        if (null !== $existingTag) {
-            throw new TagAlreadyExistsException($existingTag->getName());
-        }
-
-        /** @var TagInterface|null $existingTag */
-        $existingTag = $this->tagRepository->findTagById($id);
-
-        $tag = $this->tagRepository->createNew();
-        $tag->setName($name);
-
-        if (null === $existingTag) {
-            $tagClass = \get_class($tag);
-
-            $idReflProperty = new \ReflectionProperty($tagClass, 'id');
-            $idReflProperty->setAccessible(true);
-            $idReflProperty->setValue($tag, $id);
-
-            /** @var ClassMetadataInfo<TagInterface> $metadata */
-            $metadata = $this->em->getClassMetaData($tagClass);
-
-            $oldIdGeneratorType = $metadata->generatorType;
-            $oldIdGenerator = $metadata->idGenerator;
-
-            $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
-            $metadata->setIdGenerator(new AssignedGenerator());
-
-            try {
-                $this->em->persist($tag);
-
-                $this->domainEventCollector->collect(
-                    new TagRestoredEvent($tag, $data)
-                );
-
-                $this->em->flush();
-            } finally {
-                $metadata->setIdGeneratorType($oldIdGeneratorType);
-                $metadata->setIdGenerator($oldIdGenerator);
-            }
-        } else {
-            $this->em->persist($tag);
-
-            $this->domainEventCollector->collect(
-                new TagRestoredEvent($tag, $data)
-            );
-
-            $this->em->flush();
-        }
-
-        return $tag;
     }
 
     /**

@@ -32,6 +32,7 @@ use Sulu\Bundle\CategoryBundle\Exception\CategoryKeyNotFoundException;
 use Sulu\Bundle\CategoryBundle\Exception\CategoryKeyNotUniqueException;
 use Sulu\Bundle\CategoryBundle\Exception\CategoryNameMissingException;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
+use Sulu\Bundle\TrashBundle\Application\TrashManager\TrashManagerInterface;
 use Sulu\Component\Rest\Exception\DependantResourcesFoundException;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -82,6 +83,11 @@ class CategoryManager implements CategoryManagerInterface
      */
     private $domainEventCollector;
 
+    /**
+     * @var TrashManagerInterface|null
+     */
+    private $trashManager;
+
     public function __construct(
         CategoryRepositoryInterface $categoryRepository,
         CategoryMetaRepositoryInterface $categoryMetaRepository,
@@ -90,7 +96,8 @@ class CategoryManager implements CategoryManagerInterface
         KeywordManagerInterface $keywordManager,
         EntityManagerInterface $em,
         EventDispatcherInterface $eventDispatcher,
-        DomainEventCollectorInterface $domainEventCollector
+        DomainEventCollectorInterface $domainEventCollector,
+        ?TrashManagerInterface $trashManager = null
     ) {
         $this->em = $em;
         $this->userRepository = $userRepository;
@@ -100,6 +107,7 @@ class CategoryManager implements CategoryManagerInterface
         $this->eventDispatcher = $eventDispatcher;
         $this->keywordManager = $keywordManager;
         $this->domainEventCollector = $domainEventCollector;
+        $this->trashManager = $trashManager;
     }
 
     public function findById($id)
@@ -315,6 +323,10 @@ class CategoryManager implements CategoryManagerInterface
 
         if (!$forceRemoveChildren) {
             $this->checkDependantResourcesForDelete($id);
+        }
+
+        if (null !== $this->trashManager) {
+            $this->trashManager->store(CategoryInterface::RESOURCE_KEY, $entity);
         }
 
         /** @var CategoryTranslationInterface $translation */

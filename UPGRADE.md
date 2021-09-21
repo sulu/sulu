@@ -2,11 +2,11 @@
 
 ## 2.x
 
-### Added restore method to TagManagerInterface
+### CategoryInterface was changed
 
-The `TagManagerInterface` declares a new method `restore`.
-If you have overridden this service in your project without extending from Sulu's `TagManager`,
-you need to implement this new method in order to be able to restore trashed tags.
+A new method has been added to the `CategoryInterface`:
+
+- `setCreated`
 
 ### Changed constructor of multiple services to integrate them with the SuluTrashBundle
 
@@ -15,6 +15,7 @@ adjusted. If you have extended one of these services in your project, you need t
 call to pass the correct parameters:
 
 - `Sulu\Bundle\TagBundle\Tag\TagManager`
+- `Sulu\Bundle\CategoryBundle\Category\CategoryManager`
 
 ### Added SuluTrashBundle to make resources trashable/restorable
 
@@ -29,7 +30,7 @@ to add the bundle to your `config/bundles.php` file:
 To update your database schema to include the tables that are used by the bundle, you need to execute the following SQL statements:
 
 ```sql
-CREATE TABLE tr_trash_items (id INT AUTO_INCREMENT NOT NULL, resourceKey VARCHAR(191) NOT NULL, resourceId VARCHAR(191) NOT NULL, restoreData JSON NOT NULL, resourceSecurityContext VARCHAR(191) DEFAULT NULL, resourceSecurityObjectType VARCHAR(191) DEFAULT NULL, resourceSecurityObjectId VARCHAR(191) DEFAULT NULL, storeTimestamp DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)', userId INT DEFAULT NULL, INDEX IDX_102989B64B64DCC (userId), UNIQUE INDEX UNIQ_102989B5DAEB55C8CF57CB1 (resourceKey, resourceId), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
+CREATE TABLE tr_trash_items (id INT AUTO_INCREMENT NOT NULL, resourceKey VARCHAR(191) NOT NULL, resourceId VARCHAR(191) NOT NULL, restoreData JSON NOT NULL, resourceSecurityContext VARCHAR(191) DEFAULT NULL, resourceSecurityObjectType VARCHAR(191) DEFAULT NULL, resourceSecurityObjectId VARCHAR(191) DEFAULT NULL, storeTimestamp DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)', defaultLocale VARCHAR(191) DEFAULT NULL, userId INT DEFAULT NULL, INDEX IDX_102989B64B64DCC (userId), UNIQUE INDEX UNIQ_102989B5DAEB55C8CF57CB1 (resourceKey, resourceId), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
 CREATE TABLE tr_trash_item_translations (id INT AUTO_INCREMENT NOT NULL, locale VARCHAR(191) DEFAULT NULL, title VARCHAR(191) NOT NULL, trashItemId INT NOT NULL, INDEX IDX_8264DAF45C8D7CA (trashItemId), UNIQUE INDEX UNIQ_8264DAF45C8D7CA4180C698 (trashItemId, locale), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
 ALTER TABLE tr_trash_items ADD CONSTRAINT FK_102989B64B64DCC FOREIGN KEY (userId) REFERENCES se_users (id) ON DELETE SET NULL;
 ALTER TABLE tr_trash_item_translations ADD CONSTRAINT FK_8264DAF45C8D7CA FOREIGN KEY (trashItemId) REFERENCES tr_trash_items (id) ON DELETE CASCADE;

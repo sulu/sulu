@@ -62,6 +62,39 @@ class TrashItemControllerTest extends SuluTestCase
 
     public function testCgetAction(): void
     {
+        static::setUpUserRole();
+
+        static::createTrashItem(
+            'test-resource-key',
+            'resource-id-1',
+            ['key1' => 'value1', 'key2' => 'value2'],
+            'unlocalized title'
+        );
+
+        static::createTrashItem(
+            'test-resource-key',
+            'resource-id-2',
+            ['key1' => 'value1', 'key2' => 'value2'],
+            ['de' => 'german title', 'en' => 'english title', 'fr' => 'french title']
+        );
+
+        $this->client->jsonRequest('GET', '/api/trash-items', ['locale' => 'de']);
+        $content = \json_decode((string) $this->client->getResponse()->getContent(), true);
+
+        self::assertCount(2, $content['_embedded']['trash_items']);
+        self::assertSame('unlocalized title', $content['_embedded']['trash_items'][0]['resourceTitle']);
+        self::assertSame('german title', $content['_embedded']['trash_items'][1]['resourceTitle']);
+
+        $this->client->jsonRequest('GET', '/api/trash-items', ['locale' => 'en']);
+        $content = \json_decode((string) $this->client->getResponse()->getContent(), true);
+
+        self::assertCount(2, $content['_embedded']['trash_items']);
+        self::assertSame('unlocalized title', $content['_embedded']['trash_items'][0]['resourceTitle']);
+        self::assertSame('english title', $content['_embedded']['trash_items'][1]['resourceTitle']);
+    }
+
+    public function testCgetActionWithSecurity(): void
+    {
         $accessControlManager = static::getContainer()->get('sulu_security.access_control_manager');
 
         $role = static::setUpUserRole();

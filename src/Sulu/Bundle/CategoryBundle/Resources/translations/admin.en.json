@@ -6,8 +6,11 @@
     "sulu_category.keyword": "Keyword",
     "sulu_category.multiple_usage": "Multiple Usage",
     "sulu_category.all_categories": "All categories",
+    "sulu_category.parent_category": "Parent category",
+    "sulu_category.restore_parent_category_info_text": "Select a category to restore the removed category as child of the selected category",
     "sulu_category.no_category_selected": "No category selected",
     "sulu_category.single_category_selection_overlay_title": "Choose category",
+    "sulu_category.key_assigned_to_other_category": "The key \"{key}\" is already assigned to another category.",
     "sulu_activity.resource.categories": "Category",
     "sulu_activity.description.categories.created": "{userFullName} has created the category \"{resourceTitle}\"",
     "sulu_activity.description.categories.modified": "{userFullName} has changed the category \"{resourceTitle}\"",
@@ -16,5 +19,6 @@
     "sulu_activity.description.categories.translation_added": "{userFullName} has added a translation \"{resourceLocale}\" to the category \"{resourceTitle}\"",
     "sulu_activity.description.categories.keyword_added": "{userFullName} has added the keyword \"{context_keywordTitle}\" to the category \"{resourceTitle}\"",
     "sulu_activity.description.categories.keyword_modified": "{userFullName} has changed the keyword \"{context_keywordTitle}\" of the category \"{resourceTitle}\"",
-    "sulu_activity.description.categories.keyword_removed": "{userFullName} has removed the keyword \"{context_keywordTitle}\" from the category \"{resourceTitle}\""
+    "sulu_activity.description.categories.keyword_removed": "{userFullName} has removed the keyword \"{context_keywordTitle}\" from the category \"{resourceTitle}\"",
+    "sulu_activity.description.categories.restored": "{userFullName} has restored the category \"{resourceTitle}\""
 }

@@ -1,5 +1,5 @@
 // @flow
-import {action, computed, observable} from 'mobx';
+import {action, computed, observable, when} from 'mobx';
 import log from 'loglevel';
 import metadataStore from './metadataStore';
 import type {ChangeContext, FormStoreInterface, Schema, SchemaEntry} from '../types';
@@ -22,21 +22,30 @@ export default class SchemaFormStoreDecorator implements FormStoreInterface {
     }
 
     change(dataPath: string, value: mixed, context?: ChangeContext) {
-        if (this.innerFormStore) {
-            this.innerFormStore.change(dataPath, value, context);
-        }
+        when(
+            () => !!this.innerFormStore,
+            (): void => {
+                this.innerFormStore?.change(dataPath, value, context);
+            }
+        );
     }
 
     changeType(type: string, context?: ChangeContext) {
-        if (this.innerFormStore) {
-            this.innerFormStore.changeType(type, context);
-        }
+        when(
+            () => !!this.innerFormStore,
+            (): void => {
+                this.innerFormStore?.changeType(type, context);
+            }
+        );
     }
 
     changeMultiple(values: {[dataPath: string]: mixed}, context?: ChangeContext) {
-        if (this.innerFormStore) {
-            this.innerFormStore.changeMultiple(values, context);
-        }
+        when(
+            () => !!this.innerFormStore,
+            (): void => {
+                this.innerFormStore?.changeMultiple(values, context);
+            }
+        );
     }
 
     @computed get data() {
@@ -47,34 +56,13 @@ export default class SchemaFormStoreDecorator implements FormStoreInterface {
         return {};
     }
 
-    /**
-     * @deprecated
-     */
-    setMultiple(data: Object) {
-        log.warn(
-            'The "setMultiple" method is deprecated and will be removed. ' +
-            'Use the "changeMultiple" method instead.'
-        );
-
-        // the setMultiple method was removed from the FormStoreInterface
-        // we still want to call it to keep backwards compatibility if it is defined
-        // $FlowFixMe
-        if (this.innerFormStore && typeof this.innerFormStore.setMultiple === 'function') {
-            // $FlowFixMe
-            this.innerFormStore.setMultiple(data);
-        }
-    }
-
     destroy() {
-        if (this.innerFormStore) {
-            this.innerFormStore.destroy();
-        }
-    }
-
-    set dirty(dirty: boolean) {
-        if (this.innerFormStore) {
-            this.innerFormStore.dirty = dirty;
-        }
+        when(
+            () => !!this.innerFormStore,
+            (): void => {
+                this.innerFormStore?.destroy();
+            }
+        );
     }
 
     @computed get dirty() {
@@ -83,6 +71,16 @@ export default class SchemaFormStoreDecorator implements FormStoreInterface {
         }
 
         return false;
+    }
+
+    set dirty(dirty: boolean) {
+        when(
+            () => !!this.innerFormStore,
+            (): void => {
+                // $FlowFixMe
+                this.innerFormStore.dirty = dirty;
+            }
+        );
     }
 
     @computed get errors() {
@@ -110,9 +108,12 @@ export default class SchemaFormStoreDecorator implements FormStoreInterface {
     }
 
     finishField(dataPath: string) {
-        if (this.innerFormStore) {
-            this.innerFormStore.finishField(dataPath);
-        }
+        when(
+            () => !!this.innerFormStore,
+            (): void => {
+                this.innerFormStore?.finishField(dataPath);
+            }
+        );
     }
 
     getPathsByTag(tagName: string) {
@@ -179,6 +180,16 @@ export default class SchemaFormStoreDecorator implements FormStoreInterface {
         return true;
     }
 
+    set loading(loading: boolean) {
+        when(
+            () => !!this.innerFormStore,
+            (): void => {
+                // $FlowFixMe
+                this.innerFormStore.loading = loading;
+            }
+        );
+    }
+
     @computed get locale() {
         if (this.innerFormStore) {
             return this.innerFormStore.locale;
@@ -219,6 +230,22 @@ export default class SchemaFormStoreDecorator implements FormStoreInterface {
         return {};
     }
 
+    @computed get types() {
+        if (this.innerFormStore) {
+            return this.innerFormStore.types;
+        }
+
+        return {};
+    }
+
+    validate() {
+        if (this.innerFormStore) {
+            return this.innerFormStore.validate();
+        }
+
+        return true;
+    }
+
     /**
      * @deprecated
      */
@@ -237,19 +264,21 @@ export default class SchemaFormStoreDecorator implements FormStoreInterface {
         }
     }
 
-    @computed get types() {
-        if (this.innerFormStore) {
-            return this.innerFormStore.types;
+    /**
+     * @deprecated
+     */
+    setMultiple(data: Object) {
+        log.warn(
+            'The "setMultiple" method is deprecated and will be removed. ' +
+            'Use the "changeMultiple" method instead.'
+        );
+
+        // the setMultiple method was removed from the FormStoreInterface
+        // we still want to call it to keep backwards compatibility if it is defined
+        // $FlowFixMe
+        if (this.innerFormStore && typeof this.innerFormStore.setMultiple === 'function') {
+            // $FlowFixMe
+            this.innerFormStore.setMultiple(data);
         }
-
-        return {};
-    }
-
-    validate() {
-        if (this.innerFormStore) {
-            return this.innerFormStore.validate();
-        }
-
-        return true;
     }
 }
