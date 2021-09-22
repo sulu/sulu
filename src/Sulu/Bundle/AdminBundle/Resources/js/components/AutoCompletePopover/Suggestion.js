@@ -37,6 +37,7 @@ export default class Suggestion extends React.PureComponent<Props> {
             matcher = this.props.query;
         }
 
+        // $FlowFixMe: flow does not recognize the replaceAll method: https://github.com/facebook/flow/issues/560
         const highlightedText = text.replaceAll(matcher, '<strong>$&</strong>');
 
         return (
