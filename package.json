@@ -96,7 +96,8 @@
         },
         "setupFiles": [
             "jest-canvas-mock",
-            "regenerator-runtime/runtime"
+            "regenerator-runtime/runtime",
+            "core-js/features/string/replace-all"
         ],
         "setupFilesAfterEnv": [
             "./tests/js/testSetup.config.js"
@@ -105,20 +106,6 @@
             "enzyme-to-json/serializer"
         ],
         "clearMocks": true,
-        "transform": {
-            "\\.js$": [
-                "babel-jest",
-                {
-                    "babelrcRoots": [
-                        ".",
-                        "./src/Sulu/Bundle/*/Resource/js"
-                    ],
-                    "presets": [
-                        "@babel/preset-env"
-                    ]
-                }
-            ]
-        },
         "transformIgnorePatterns": [
             "node_modules/(?!(@ckeditor|lodash-es)/)"
         ],

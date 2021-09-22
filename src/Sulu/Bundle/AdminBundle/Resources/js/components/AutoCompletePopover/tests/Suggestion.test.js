@@ -28,6 +28,19 @@ test('Suggestion should render strong-tags around found chars', () => {
     )).toMatchSnapshot();
 });
 
+test('Suggestion should render if given query is not a valid regular expression', () => {
+    expect(render(
+        <Suggestion
+            icon="fa-ticket"
+            onSelect={jest.fn()}
+            query="*+"
+            value={{name: 'suggestion-1'}}
+        >
+            Suggestion 2
+        </Suggestion>
+    )).toMatchSnapshot();
+});
+
 test('Clicking on a suggestion should call the onClick handler', () => {
     const selectSpy = jest.fn();
     const suggestion = shallow(
