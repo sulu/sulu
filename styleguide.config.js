@@ -33,7 +33,6 @@ const javaScriptFileExists = (path, fileName) => {
 module.exports = { // eslint-disable-line
     title: 'Sulu Javascript Docs',
     require: [
-        'regenerator-runtime/runtime',
         './src/Sulu/Bundle/AdminBundle/Resources/js/containers/Application/global.scss',
         './src/Sulu/Bundle/AdminBundle/Resources/js/containers/Application/styleguidist.scss',
     ],
