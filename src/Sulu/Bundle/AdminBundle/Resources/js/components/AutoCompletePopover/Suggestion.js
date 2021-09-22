@@ -37,7 +37,7 @@ export default class Suggestion extends React.PureComponent<Props> {
             matcher = this.props.query;
         }
 
-        const highlightedText = text.replace(matcher, '<strong>$&</strong>');
+        const highlightedText = text.replaceAll(matcher, '<strong>$&</strong>');
 
         return (
             <span dangerouslySetInnerHTML={{__html: highlightedText}} />

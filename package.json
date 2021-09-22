@@ -96,7 +96,8 @@
         },
         "setupFiles": [
             "jest-canvas-mock",
-            "regenerator-runtime/runtime"
+            "regenerator-runtime/runtime",
+            "core-js/features/string/replace-all"
         ],
         "setupFilesAfterEnv": [
             "./tests/js/testSetup.config.js"
