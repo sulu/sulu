@@ -15,6 +15,7 @@ namespace Sulu\Bundle\MediaBundle\Trash;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Domain\Event\MediaRestoredEvent;
@@ -146,6 +147,7 @@ final class MediaTrashItemHandler implements StoreTrashItemHandlerInterface, Res
                     'formatOptions' => [],
                     'tagIds' => [],
                     'categoryIds' => [],
+                    'targetGroupIds' => [],
                 ];
 
                 /** @var FileVersionContentLanguage $contentLanguage */
@@ -160,7 +162,9 @@ final class MediaTrashItemHandler implements StoreTrashItemHandlerInterface, Res
 
                 /** @var FileVersionMeta $meta */
                 foreach ($fileVersion->getMeta() as $meta) {
-                    $mediaTitles[$meta->getLocale()] = $meta->getTitle();
+                    if ($file->getVersion() === $fileVersion->getVersion()) {
+                        $mediaTitles[$meta->getLocale()] = $meta->getTitle();
+                    }
 
                     $fileVersionData['meta'][] = [
                         'title' => $meta->getTitle(),
@@ -190,6 +194,11 @@ final class MediaTrashItemHandler implements StoreTrashItemHandlerInterface, Res
                 /** @var CategoryInterface $category */
                 foreach ($fileVersion->getCategories() as $category) {
                     $fileVersionData['categoryIds'][] = $category->getId();
+                }
+
+                /** @var TargetGroupInterface $targetGroup */
+                foreach ($fileVersion->getTargetGroups() as $targetGroup) {
+                    $fileVersionData['targetGroupIds'][] = $targetGroup->getId();
                 }
 
                 $fileData['fileVersions'][] = $fileVersionData;
@@ -231,7 +240,6 @@ final class MediaTrashItemHandler implements StoreTrashItemHandlerInterface, Res
             $file = new File();
             $file->setMedia($media);
             $media->addFile($file);
-            $this->entityManager->persist($file);
 
             $file->setVersion($fileData['version']);
             $file->setCreated(new \DateTime($fileData['created']));
@@ -245,7 +253,6 @@ final class MediaTrashItemHandler implements StoreTrashItemHandlerInterface, Res
                 $fileVersion = new FileVersion();
                 $fileVersion->setFile($file);
                 $file->addFileVersion($fileVersion);
-                $this->entityManager->persist($fileVersion);
 
                 $fileVersion->setName($fileVersionData['name']);
                 $fileVersion->setVersion($fileVersionData['version']);
@@ -263,7 +270,6 @@ final class MediaTrashItemHandler implements StoreTrashItemHandlerInterface, Res
                     $contentLanguage = new FileVersionContentLanguage();
                     $contentLanguage->setFileVersion($fileVersion);
                     $fileVersion->addContentLanguage($contentLanguage);
-                    $this->entityManager->persist($contentLanguage);
 
                     $contentLanguage->setLocale($contentLanguageLocale);
                 }
@@ -272,7 +278,6 @@ final class MediaTrashItemHandler implements StoreTrashItemHandlerInterface, Res
                     $publishLanguage = new FileVersionPublishLanguage();
                     $publishLanguage->setFileVersion($fileVersion);
                     $fileVersion->addPublishLanguage($publishLanguage);
-                    $this->entityManager->persist($publishLanguage);
 
                     $publishLanguage->setLocale($publishLanguageLocale);
                 }
@@ -281,7 +286,6 @@ final class MediaTrashItemHandler implements StoreTrashItemHandlerInterface, Res
                     $meta = new FileVersionMeta();
                     $meta->setFileVersion($fileVersion);
                     $fileVersion->addMeta($meta);
-                    $this->entityManager->persist($meta);
 
                     if ($metaData['locale'] === $fileVersionData['defaultMetaLocale']) {
                         $fileVersion->setDefaultMeta($meta);
@@ -297,10 +301,9 @@ final class MediaTrashItemHandler implements StoreTrashItemHandlerInterface, Res
                 foreach ($fileVersionData['formatOptions'] as $formatOptionData) {
                     $formatOption = new FormatOptions();
                     $formatOption->setFileVersion($fileVersion);
-                    $fileVersion->addFormatOptions($formatOption);
-                    $this->entityManager->persist($formatOption);
-
                     $formatOption->setFormatKey($formatOptionData['formatKey']);
+                    $fileVersion->addFormatOptions($formatOption);
+
                     $formatOption->setCropHeight($formatOptionData['cropHeight']);
                     $formatOption->setCropWidth($formatOptionData['cropWidth']);
                     $formatOption->setCropX($formatOptionData['cropX']);
@@ -316,6 +319,12 @@ final class MediaTrashItemHandler implements StoreTrashItemHandlerInterface, Res
                 foreach ($fileVersionData['categoryIds'] as $categoryId) {
                     if ($category = $this->findEntity(CategoryInterface::class, $categoryId)) {
                         $fileVersion->addCategory($category);
+                    }
+                }
+
+                foreach ($fileVersionData['targetGroupIds'] as $targetGroupId) {
+                    if ($targetGroup = $this->findEntity(TargetGroupInterface::class, $targetGroupId)) {
+                        $fileVersion->addTargetGroup($targetGroup);
                     }
                 }
             }
