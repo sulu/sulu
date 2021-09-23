@@ -62,5 +62,20 @@
 
             <tag name="sulu.context" context="admin"/>
         </service>
+        <service id="sulu_preview.public_preview_controller" class="Sulu\Bundle\PreviewBundle\Controller\PublicPreviewController" public="true">
+            <argument type="service" id="sulu_preview.preview.renderer"/>
+            <argument type="service" id="sulu_preview.preview_object_provider_registry"/>
+            <argument type="service" id="twig"/>
+            <argument type="service" id="router"/>
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument type="service" id="sulu_core.array_serializer"/>
+            <argument>%sulu.version%</argument>
+            <argument>%app.version%</argument>
+            <argument>%sulu_core.translations%</argument>
+            <argument>%sulu_core.fallback_locale%</argument>
+            <argument type="service" id="profiler" on-invalid="null"/>
+
+            <tag name="sulu.context" context="admin"/>
+        </service>
     </services>
 </container>

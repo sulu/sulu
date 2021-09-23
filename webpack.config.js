@@ -39,7 +39,7 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
     const {styles} = require(path.resolve(nodeModulesPath, '@ckeditor/ckeditor5-dev-utils'));
 
     return {
-        entry: [path.resolve(__dirname, 'index.js')], // eslint-disable-line no-undef
+        entry: {main: path.resolve(__dirname, 'index.js'), preview: path.resolve(__dirname, 'preview.js')}, // eslint-disable-line no-undef
         output: {
             path: path.resolve(projectRootPath, publicDir),
             filename: outputPath + '/[name].[chunkhash].js',

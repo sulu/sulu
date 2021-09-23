@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {%- block meta ~%}
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>{% block title %}SULU{% endblock %}</title>
+    {% endblock %}
+    {% block style %}
+        {#- We do not preload the files because of problems with big files on http push in Chrome -#}
+        <link rel="stylesheet" href="{{ asset('main.css', 'sulu_admin') }}">
+    {%- endblock ~%}
+</head>
+<body>
+    {% block application -%}
+        <div id="preview"></div>
+    {% endblock %}
+
+    <script>
+        {%- set config = {
+            locale: locale,
+            initialLoginState: is_granted('IS_AUTHENTICATED_REMEMBERED'),
+            translations: translations,
+            fallbackLocale: fallback_locale,
+            endpoints: endpoints,
+            suluVersion: sulu_version,
+            appVersion: app_version,
+            webspaces: webspaces,
+        } -%}
+
+        {%- block config -%}
+        const SULU_CONFIG = Object.freeze({{ config|json_encode(constant('JSON_PRETTY_PRINT'))|raw }});
+        {%- endblock -%}
+    </script>
+
+    {% block javascript %}
+        {#- We do not preload the files because of problems with big files on http push in Chrome -#}
+        <script src="{{ asset('preview.js', 'sulu_admin') }}"></script>
+    {%- endblock %}
+</body>
+</html>

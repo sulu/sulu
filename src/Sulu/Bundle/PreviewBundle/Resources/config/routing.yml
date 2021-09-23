@@ -23,3 +23,13 @@ sulu_preview.stop:
     path: "/stop"
     defaults:
         _controller: sulu_preview.preview_controller::stopAction
+
+sulu_preview.public:
+    path: "/public/{locale}/{providerKey}/{id}"
+    defaults:
+        _controller: sulu_preview.public_preview_controller::indexAction
+
+sulu_preview.public_render:
+    path: "/public/{locale}/{providerKey}/{id}/render"
+    defaults:
+        _controller: sulu_preview.public_preview_controller::renderAction

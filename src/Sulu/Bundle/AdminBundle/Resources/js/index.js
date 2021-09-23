@@ -373,7 +373,7 @@ function startAdmin() {
     const applicationElement = document.getElementById(id);
 
     if (!applicationElement) {
-        throw new Error('DOM element with ID "id" was not found!');
+        throw new Error('DOM element with ID "' + id + '" was not found!');
     }
 
     render(
