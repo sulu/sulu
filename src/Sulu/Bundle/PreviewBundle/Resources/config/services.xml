@@ -17,7 +17,7 @@
             <tag name="sulu.context" context="admin"/>
         </service>
 
-        <service id="sulu_preview.cache_command_subscriber" class="Sulu\Bundle\PreviewBundle\EventSubscriber\CacheCommandSubscriber">
+        <service id="sulu_preview.cache_command_subscriber" class="Sulu\Bundle\PreviewBundle\Infrastructure\Symfony\EventSubscriber\CacheCommandSubscriber">
             <argument type="service" id="sulu_preview.preview.kernel_factory"/>
             <argument type="string">%kernel.environment%</argument>
 
@@ -55,16 +55,17 @@
         </service>
 
         <!-- controller -->
-        <service id="sulu_preview.preview_controller" class="Sulu\Bundle\PreviewBundle\Controller\PreviewController" public="true">
+        <service id="sulu_preview.preview_controller" class="Sulu\Bundle\PreviewBundle\UserInterface\Controller\PreviewController" public="true">
             <argument type="service" id="sulu_preview.preview"/>
             <argument type="service" id="security.token_storage"/>
             <argument type="service" id="profiler" on-invalid="null"/>
 
             <tag name="sulu.context" context="admin"/>
         </service>
-        <service id="sulu_preview.public_preview_controller" class="Sulu\Bundle\PreviewBundle\Controller\PublicPreviewController" public="true">
+        <service id="sulu_preview.public_preview_controller" class="Sulu\Bundle\PreviewBundle\UserInterface\Controller\PublicPreviewController" public="true">
             <argument type="service" id="sulu_preview.preview.renderer"/>
             <argument type="service" id="sulu_preview.preview_object_provider_registry"/>
+            <argument type="service" id="sulu.repository.preview_link"/>
             <argument type="service" id="profiler" on-invalid="null"/>
 
             <tag name="sulu.context" context="admin"/>

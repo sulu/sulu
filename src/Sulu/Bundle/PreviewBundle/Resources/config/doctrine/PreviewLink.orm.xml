@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Sulu\Bundle\PreviewBundle\Domain\Model\PreviewLink" table="pr_link" repository-class="Sulu\Bundle\PreviewBundle\Infrastructure\Doctrine\Repository\PreviewLinkRepository">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+
+        <field name="token" type="string" column="token" length="12" unique="true"/>
+        <field name="resourceKey" type="string" column="resourceKey"/>
+        <field name="resourceId" type="string" column="resourceId"/>
+        <field name="locale" type="string" column="locale"/>
+        <field name="options" type="json" column="options"/>
+        <field name="visitCount" type="integer" column="visitCount"/>
+        <field name="lastVisit" type="datetime_immutable" column="lastVisit" nullable="true"/>
+    </entity>
+</doctrine-mapping>

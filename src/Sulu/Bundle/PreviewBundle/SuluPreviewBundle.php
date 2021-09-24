@@ -11,6 +11,9 @@
 
 namespace Sulu\Bundle\PreviewBundle;
 
+use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
+use Sulu\Bundle\PreviewBundle\Domain\Model\PreviewLinkInterface;
+use Sulu\Bundle\PreviewBundle\Infrastructure\Symfony\DependencyInjection\SuluPreviewExtension;
 use Sulu\Component\Symfony\CompilerPass\TaggedServiceCollectorCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -20,9 +23,18 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class SuluPreviewBundle extends Bundle
 {
+    use PersistenceBundleTrait;
+
     public function build(ContainerBuilder $container)
     {
         parent::build($container);
+
+        $this->buildPersistence(
+            [
+                PreviewLinkInterface::class => 'sulu.model.preview_link.class',
+            ],
+            $container
+        );
 
         $container->addCompilerPass(
             new TaggedServiceCollectorCompilerPass(
@@ -32,5 +44,10 @@ class SuluPreviewBundle extends Bundle
                 'provider-key'
             )
         );
+    }
+
+    public function getContainerExtension()
+    {
+        return new SuluPreviewExtension();
     }
 }
