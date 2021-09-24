@@ -25,10 +25,6 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder('sulu_trash');
         $rootNode = $treeBuilder->getRootNode();
         $rootNode->children()
-            ->arrayNode('restore_form')
-                ->useAttributeAsKey('resourceKey')
-                ->scalarPrototype()
-            ->end()
         ->end();
 
         $this->addObjectsSection($rootNode);

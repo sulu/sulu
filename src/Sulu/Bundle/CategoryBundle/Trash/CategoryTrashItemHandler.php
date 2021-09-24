@@ -28,6 +28,8 @@ use Sulu\Bundle\CategoryBundle\Entity\KeywordRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Exception\CategoryKeyNotUniqueException;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\TrashBundle\Application\DoctrineRestoreHelper\DoctrineRestoreHelperInterface;
+use Sulu\Bundle\TrashBundle\Application\RestoreConfigurationProvider\RestoreConfiguration;
+use Sulu\Bundle\TrashBundle\Application\RestoreConfigurationProvider\RestoreConfigurationProviderInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\RestoreTrashItemHandlerInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\StoreTrashItemHandlerInterface;
 use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
@@ -35,7 +37,10 @@ use Sulu\Bundle\TrashBundle\Domain\Repository\TrashItemRepositoryInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Webmozart\Assert\Assert;
 
-final class CategoryTrashItemHandler implements StoreTrashItemHandlerInterface, RestoreTrashItemHandlerInterface
+final class CategoryTrashItemHandler implements
+    StoreTrashItemHandlerInterface,
+    RestoreTrashItemHandlerInterface,
+    RestoreConfigurationProviderInterface
 {
     /**
      * @var TrashItemRepositoryInterface
@@ -276,5 +281,10 @@ final class CategoryTrashItemHandler implements StoreTrashItemHandlerInterface, 
         }
 
         return null;
+    }
+
+    public function getConfiguration(): RestoreConfiguration
+    {
+        return new RestoreConfiguration('restore_category');
     }
 }

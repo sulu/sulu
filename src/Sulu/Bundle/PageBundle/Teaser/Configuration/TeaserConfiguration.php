@@ -46,17 +46,20 @@ class TeaserConfiguration
     private $overlayTitle;
 
     /**
-     * @var ?string
+     * @var string|null
      * @Groups({"frontend"})
      */
     private $view;
 
     /**
-     * @var ?string[]
+     * @var array<string, string>|null
      * @Groups({"frontend"})
      */
     private $resultToView;
 
+    /**
+     * @param array<string, string>|null $resultToView
+     */
     public function __construct(
         string $title,
         string $resourceKey,

@@ -20,6 +20,7 @@ use Sulu\Bundle\AdminBundle\Admin\View\ListItemAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
+use Sulu\Bundle\TrashBundle\Application\RestoreConfigurationProvider\RestoreConfigurationProviderInterface;
 use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
@@ -47,23 +48,23 @@ final class TrashAdmin extends Admin
     private $localizationManager;
 
     /**
-     * @var array<string, string>
+     * @var iterable<string, RestoreConfigurationProviderInterface>
      */
-    private $restoreFormMapping;
+    private $restoreConfigurationProviders;
 
     /**
-     * @param array<string, string> $restoreFormMapping
+     * @param iterable<string, RestoreConfigurationProviderInterface> $restoreConfigurationProviders
      */
     public function __construct(
         ViewBuilderFactoryInterface $viewBuilderFactory,
         SecurityCheckerInterface $securityChecker,
         LocalizationManagerInterface $localizationManager,
-        array $restoreFormMapping
+        iterable $restoreConfigurationProviders
     ) {
         $this->viewBuilderFactory = $viewBuilderFactory;
         $this->securityChecker = $securityChecker;
         $this->localizationManager = $localizationManager;
-        $this->restoreFormMapping = $restoreFormMapping;
+        $this->restoreConfigurationProviders = $restoreConfigurationProviders;
     }
 
     public function configureNavigationItems(NavigationItemCollection $navigationItemCollection): void
@@ -134,8 +135,14 @@ final class TrashAdmin extends Admin
      */
     public function getConfig(): array
     {
+        $restoreConfigurationMapping = [];
+        foreach ($this->restoreConfigurationProviders as $restoreConfigurationProvider) {
+            $resourceKey = $restoreConfigurationProvider::getResourceKey();
+            $restoreConfigurationMapping[$resourceKey] = $restoreConfigurationProvider->getConfiguration();
+        }
+
         return [
-            'restoreFormMapping' => $this->restoreFormMapping,
+            'restoreConfigurationMapping' => $restoreConfigurationMapping,
         ];
     }
 }

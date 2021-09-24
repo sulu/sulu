@@ -95,6 +95,8 @@ interface BuilderInterface
 
     /**
      * Defines where the deep link when clicking on a smart content item should navigate to.
+     *
+     * @param array<string, string> $resultToView
      */
     public function enableView(string $view, array $resultToView);
 

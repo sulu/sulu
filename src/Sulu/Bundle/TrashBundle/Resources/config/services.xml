@@ -31,7 +31,7 @@
             <argument type="service" id="sulu_admin.view_builder_factory"/>
             <argument type="service" id="sulu_security.security_checker"/>
             <argument type="service" id="sulu.core.localization_manager"/>
-            <argument>%sulu_trash.restore_form_mapping%</argument>
+            <argument type="tagged_iterator" tag="sulu_trash.restore_configuration_provider" index-by="resourceKey" default-index-method="getResourceKey"/>
 
             <tag name="sulu.admin"/>
             <tag name="sulu.context" context="admin"/>

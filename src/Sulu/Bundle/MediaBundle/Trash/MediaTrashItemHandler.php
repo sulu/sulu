@@ -33,6 +33,8 @@ use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Bundle\TrashBundle\Application\DoctrineRestoreHelper\DoctrineRestoreHelperInterface;
+use Sulu\Bundle\TrashBundle\Application\RestoreConfigurationProvider\RestoreConfiguration;
+use Sulu\Bundle\TrashBundle\Application\RestoreConfigurationProvider\RestoreConfigurationProviderInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\RemoveTrashItemHandlerInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\RestoreTrashItemHandlerInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\StoreTrashItemHandlerInterface;
@@ -41,7 +43,11 @@ use Sulu\Bundle\TrashBundle\Domain\Repository\TrashItemRepositoryInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Webmozart\Assert\Assert;
 
-final class MediaTrashItemHandler implements StoreTrashItemHandlerInterface, RestoreTrashItemHandlerInterface, RemoveTrashItemHandlerInterface
+final class MediaTrashItemHandler implements
+    StoreTrashItemHandlerInterface,
+    RestoreTrashItemHandlerInterface,
+    RemoveTrashItemHandlerInterface,
+    RestoreConfigurationProviderInterface
 {
     /**
      * @var TrashItemRepositoryInterface
@@ -378,5 +384,10 @@ final class MediaTrashItemHandler implements StoreTrashItemHandlerInterface, Res
         }
 
         return null;
+    }
+
+    public function getConfiguration(): RestoreConfiguration
+    {
+        return new RestoreConfiguration('restore_media');
     }
 }
