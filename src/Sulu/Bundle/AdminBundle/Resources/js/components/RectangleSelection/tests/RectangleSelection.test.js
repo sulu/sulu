@@ -192,6 +192,36 @@ test('The component should enforce a ratio on the selection if minWidth and minH
     expect(changeSpy).toBeCalledWith(expect.objectContaining({width: 55, height: 110}));
 });
 
+test(
+    'The component should allow selections across the whole container' +
+    'even if a minValue is bigger than actual container size',
+    () => {
+        const changeSpy = jest.fn();
+
+        const view = mount(
+            <RectangleSelection
+                // containerHeight={360}
+                // containerWidth={640}
+                minHeight={180}
+                minWidth={1280}
+                onChange={changeSpy}
+                onFinish={jest.fn()}
+                value={{height: 90, left: 0, top: 0, width: 640}}
+            >
+                <p>Lorem ipsum</p>
+            </RectangleSelection>
+        );
+
+        view.find('RawRectangleSelectionComponent').first().instance().handleRectangleChange({
+            width: 0,
+            height: 0,
+            left: 0,
+            top: 360,
+        });
+        expect(changeSpy).toBeCalledWith(expect.objectContaining({top: 360 - 90}));
+    }
+);
+
 test('The component should not round if told by the properties', () => {
     const changeSpy = jest.fn();
 
