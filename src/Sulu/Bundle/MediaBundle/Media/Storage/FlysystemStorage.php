@@ -48,7 +48,7 @@ abstract class FlysystemStorage implements StorageInterface
 
         $this->createDirectories($storageOptions);
 
-        $parentPath = \implode('/', \array_filter([$storageOptions['directory'], $storageOptions['segment']]));
+        $parentPath = $this->getFilePath(\array_merge($storageOptions, ['fileName' => null]));
         $storageOptions['fileName'] = $this->getUniqueFileName($parentPath, $fileName);
 
         $filePath = $this->getFilePath($storageOptions);
@@ -91,9 +91,12 @@ abstract class FlysystemStorage implements StorageInterface
         }
     }
 
-    public function move(array $sourceStorageOptions, array $targetStorageOptions): void
+    public function move(array $sourceStorageOptions, array $targetStorageOptions): array
     {
         $this->createDirectories($targetStorageOptions);
+
+        $targetParentPath = $this->getFilePath(\array_merge($targetStorageOptions, ['fileName' => null]));
+        $targetStorageOptions['fileName'] = $this->getUniqueFileName($targetParentPath, $targetStorageOptions['fileName']);
 
         $targetFilePath = $this->getFilePath($targetStorageOptions);
         if ($this->filesystem->has($targetFilePath)) {
@@ -101,6 +104,8 @@ abstract class FlysystemStorage implements StorageInterface
         }
 
         $this->filesystem->rename($this->getFilePath($sourceStorageOptions), $targetFilePath);
+
+        return $targetStorageOptions;
     }
 
     protected function getUniqueFileName(string $parentPath, string $fileName, int $counter = 0): string

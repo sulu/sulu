@@ -25,6 +25,8 @@ interface StorageInterface
      * Save the document in the storage and return storage options of the stored document.
      *
      * @param array<string, string|null> $storageOptions
+     *
+     * @return array<string, string|null>
      */
     public function save(string $tempPath, string $fileName, array $storageOptions = []): array;
 
@@ -56,8 +58,10 @@ interface StorageInterface
      *
      * @param array<string, string|null> $sourceStorageOptions
      * @param array<string, string|null> $targetStorageOptions
+     *
+     * @return array<string, string|null>
      */
-    public function move(array $sourceStorageOptions, array $targetStorageOptions): void;
+    public function move(array $sourceStorageOptions, array $targetStorageOptions): array;
 
     /**
      * Removes the file from storage.

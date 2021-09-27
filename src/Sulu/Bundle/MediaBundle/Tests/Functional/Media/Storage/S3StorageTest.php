@@ -34,6 +34,7 @@ class S3StorageTest extends SuluTestCase
 
         $this->assertArrayHasKey('segment', $result);
         $this->assertSame('sulu.jpg', $result['fileName']);
+        $this->assertNotNull($result['segment']);
         $this->assertTrue($adapter->has($result['segment']));
         $this->assertTrue($adapter->has($result['segment'] . '/sulu.jpg'));
     }

@@ -18,7 +18,6 @@ use League\Flysystem\Filesystem;
 use MicrosoftAzure\Storage\Blob\BlobRestProxy;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
-use Sulu\Bundle\MediaBundle\Media\Exception\FilenameAlreadyExistsException;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException;
 
 class AzureBlobStorageTest extends TestCase
@@ -219,10 +218,12 @@ class AzureBlobStorageTest extends TestCase
         $flysystem->has('trash/1/test.jpg')->wilLReturn(false);
         $flysystem->rename('1/test.jpg', 'trash/1/test.jpg')->shouldBeCalled();
 
-        $storage->move(
+        $result = $storage->move(
             ['segment' => '1', 'fileName' => 'test.jpg'],
             ['directory' => 'trash', 'segment' => '1', 'fileName' => 'test.jpg']
         );
+
+        $this->assertSame(['directory' => 'trash', 'segment' => '1', 'fileName' => 'test.jpg'], $result);
     }
 
     public function testMoveTargetDirectoryExists(): void
@@ -241,10 +242,12 @@ class AzureBlobStorageTest extends TestCase
         $flysystem->has('trash/1/test.jpg')->wilLReturn(false);
         $flysystem->rename('1/test.jpg', 'trash/1/test.jpg')->shouldBeCalled();
 
-        $storage->move(
+        $result = $storage->move(
             ['segment' => '1', 'fileName' => 'test.jpg'],
             ['directory' => 'trash', 'segment' => '1', 'fileName' => 'test.jpg']
         );
+
+        $this->assertSame(['directory' => 'trash', 'segment' => '1', 'fileName' => 'test.jpg'], $result);
     }
 
     public function testMoveTargetFileExists(): void
@@ -259,14 +262,18 @@ class AzureBlobStorageTest extends TestCase
 
         $flysystem->has('trash')->wilLReturn(true);
         $flysystem->has('trash/1')->wilLReturn(true);
+
         $flysystem->has('trash/1/test.jpg')->wilLReturn(true);
+        $flysystem->has('trash/1/test-1.jpg')->wilLReturn(true);
+        $flysystem->has('trash/1/test-2.jpg')->wilLReturn(false);
+        $flysystem->rename('1/test.jpg', 'trash/1/test-2.jpg')->shouldBeCalled();
 
-        $this->expectException(FilenameAlreadyExistsException::class);
-
-        $storage->move(
+        $result = $storage->move(
             ['segment' => '1', 'fileName' => 'test.jpg'],
             ['directory' => 'trash', 'segment' => '1', 'fileName' => 'test.jpg']
         );
+
+        $this->assertSame(['directory' => 'trash', 'segment' => '1', 'fileName' => 'test-2.jpg'], $result);
     }
 
     public function testGetPath(): void

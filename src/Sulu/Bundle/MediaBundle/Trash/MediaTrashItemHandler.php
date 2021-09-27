@@ -123,8 +123,8 @@ final class MediaTrashItemHandler implements StoreTrashItemHandlerInterface, Res
             /** @var FileVersion $fileVersion */
             foreach ($file->getFileVersions() as $fileVersion) {
                 // move original file into trash directory
-                $trashStorageOptions = $this->getTrashStorageOptions($fileVersion->getStorageOptions());
-                $this->storage->move($fileVersion->getStorageOptions(), $trashStorageOptions);
+                $trashStorageOptions = \array_merge($fileVersion->getStorageOptions(), ['directory' => 'trash']);
+                $trashStorageOptions = $this->storage->move($fileVersion->getStorageOptions(), $trashStorageOptions);
 
                 $creator = $fileVersion->getCreator();
 
@@ -133,7 +133,8 @@ final class MediaTrashItemHandler implements StoreTrashItemHandlerInterface, Res
                     'version' => $fileVersion->getVersion(),
                     'size' => $fileVersion->getSize(),
                     'downloadCounter' => $fileVersion->getDownloadCounter(),
-                    'storageOptions' => $fileVersion->getStorageOptions(),
+                    'originalStorageOptions' => $fileVersion->getStorageOptions(),
+                    'trashStorageOptions' => $trashStorageOptions,
                     'mimeType' => $fileVersion->getMimeType(),
                     'properties' => $fileVersion->getProperties(),
                     'focusPointX' => $fileVersion->getFocusPointX(),
@@ -197,7 +198,7 @@ final class MediaTrashItemHandler implements StoreTrashItemHandlerInterface, Res
                 }
 
                 /** @var TargetGroupInterface $targetGroup */
-                foreach ($fileVersion->getTargetGroups() as $targetGroup) {
+                foreach ($fileVersion->getTargetGroups() ?? [] as $targetGroup) {
                     $fileVersionData['targetGroupIds'][] = $targetGroup->getId();
                 }
 
@@ -247,8 +248,10 @@ final class MediaTrashItemHandler implements StoreTrashItemHandlerInterface, Res
 
             foreach ($fileData['fileVersions'] as $fileVersionData) {
                 // move original file from trash directory to original location
-                $trashStorageOptions = $this->getTrashStorageOptions($fileVersionData['storageOptions']);
-                $this->storage->move($trashStorageOptions, $fileVersionData['storageOptions']);
+                $restoredStorageOptions = $this->storage->move(
+                    $fileVersionData['trashStorageOptions'],
+                    $fileVersionData['originalStorageOptions']
+                );
 
                 $fileVersion = new FileVersion();
                 $fileVersion->setFile($file);
@@ -258,7 +261,7 @@ final class MediaTrashItemHandler implements StoreTrashItemHandlerInterface, Res
                 $fileVersion->setVersion($fileVersionData['version']);
                 $fileVersion->setSize($fileVersionData['size']);
                 $fileVersion->setDownloadCounter($fileVersionData['downloadCounter']);
-                $fileVersion->setStorageOptions($fileVersionData['storageOptions']);
+                $fileVersion->setStorageOptions($restoredStorageOptions);
                 $fileVersion->setMimeType($fileVersionData['mimeType']);
                 $fileVersion->setProperties($fileVersionData['properties']);
                 $fileVersion->setFocusPointX($fileVersionData['focusPointX']);
@@ -350,8 +353,7 @@ final class MediaTrashItemHandler implements StoreTrashItemHandlerInterface, Res
 
         foreach ($data['files'] as $fileData) {
             foreach ($fileData['fileVersions'] as $fileVersionData) {
-                $trashStorageOptions = $this->getTrashStorageOptions($fileVersionData['storageOptions']);
-                $this->storage->remove($trashStorageOptions);
+                $this->storage->remove($fileVersionData['trashStorageOptions']);
             }
         }
     }
@@ -376,15 +378,5 @@ final class MediaTrashItemHandler implements StoreTrashItemHandlerInterface, Res
         }
 
         return null;
-    }
-
-    /**
-     * @param array<string, string|null> $originalStorageOptions
-     *
-     * @return array<string, string|null>
-     */
-    private function getTrashStorageOptions(array $originalStorageOptions): array
-    {
-        return \array_merge($originalStorageOptions, ['directory' => 'trash']);
     }
 }
