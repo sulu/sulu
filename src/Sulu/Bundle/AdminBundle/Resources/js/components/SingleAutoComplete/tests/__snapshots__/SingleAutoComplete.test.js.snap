@@ -48,7 +48,9 @@ Array [
           <span
             class="column"
           >
-            Suggestion 1
+            <span>
+              Suggestion 1
+            </span>
           </span>
         </button>
       </li>
@@ -62,7 +64,9 @@ Array [
           <span
             class="column"
           >
-            Suggestion 2
+            <span>
+              Suggestion 2
+            </span>
           </span>
         </button>
       </li>
@@ -76,7 +80,9 @@ Array [
           <span
             class="column"
           >
-            Suggestion 3
+            <span>
+              Suggestion 3
+            </span>
           </span>
         </button>
       </li>
