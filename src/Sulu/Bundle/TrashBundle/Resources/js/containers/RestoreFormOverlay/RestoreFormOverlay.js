@@ -5,8 +5,9 @@ import React from 'react';
 import FormOverlay from 'sulu-admin-bundle/containers/FormOverlay';
 import {translate} from 'sulu-admin-bundle/utils/Translator';
 import {FormStoreInterface} from 'sulu-admin-bundle/containers/Form/types';
-import {memoryFormStoreFactory} from 'sulu-admin-bundle/containers/Form';
 import {ResourceRequester} from 'sulu-admin-bundle/services';
+import SchemaFormStoreDecorator from 'sulu-admin-bundle/containers/Form/stores/SchemaFormStoreDecorator';
+import MemoryFormStore from 'sulu-admin-bundle/containers/Form/stores/MemoryFormStore';
 
 type Props = {
     confirmLoading: boolean,
@@ -58,8 +59,15 @@ class RestoreFormOverlay extends React.Component<Props> {
             return;
         }
 
-        const formStore = memoryFormStoreFactory.createFromFormKey(formKey);
-        formStore.loading = true;
+        const formStore = new SchemaFormStoreDecorator(
+            (schema, jsonSchema) => {
+                const store = new MemoryFormStore({}, schema, jsonSchema);
+                store.loading = true;
+
+                return store;
+            },
+            formKey
+        );
 
         ResourceRequester.get('trash_items', {id: trashItemId}).then(action((response) => {
             formStore.changeMultiple(response.restoreData, {isServerValue: true});

@@ -2,6 +2,9 @@
     "name": "sulu-trash-bundle",
     "license": "MIT",
     "repository": "https://github.com/sulu/sulu.git",
+    "dependencies": {
+        "json-pointer": "^0.6.0"
+    },
     "devDependencies": {
         "enzyme": "^3.3.0",
         "sulu-admin-bundle": "file:../../../AdminBundle/Resources/js"

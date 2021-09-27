@@ -285,6 +285,6 @@ final class CategoryTrashItemHandler implements
 
     public function getConfiguration(): RestoreConfiguration
     {
-        return new RestoreConfiguration('restore_category');
+        return new RestoreConfiguration('restore_category', CategoryAdmin::EDIT_FORM_VIEW, ['id' => 'id']);
     }
 }

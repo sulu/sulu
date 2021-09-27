@@ -388,6 +388,6 @@ final class MediaTrashItemHandler implements
 
     public function getConfiguration(): RestoreConfiguration
     {
-        return new RestoreConfiguration('restore_media');
+        return new RestoreConfiguration('restore_media', MediaAdmin::EDIT_FORM_VIEW, ['id' => 'id']);
     }
 }

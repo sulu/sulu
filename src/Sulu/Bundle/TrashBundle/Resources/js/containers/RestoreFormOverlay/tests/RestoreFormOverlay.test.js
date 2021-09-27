@@ -1,8 +1,8 @@
 // @flow
 import mockReact from 'react';
 import {shallow, mount} from 'enzyme';
-import {memoryFormStoreFactory} from 'sulu-admin-bundle/containers/Form';
 import {ResourceRequester} from 'sulu-admin-bundle/services';
+import SchemaFormStoreDecorator from 'sulu-admin-bundle/containers/Form/stores/SchemaFormStoreDecorator';
 import RestoreFormOverlay from '../RestoreFormOverlay';
 
 const React = mockReact;
@@ -11,13 +11,18 @@ jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
-jest.mock('sulu-admin-bundle/containers/Form/stores/memoryFormStoreFactory', () => ({
-    createFromFormKey: jest.fn((formKey) => ({
-        formKey,
-        data: {},
-        destroy: jest.fn(),
-    })),
-}));
+jest.mock('sulu-admin-bundle/containers/Form/stores/SchemaFormStoreDecorator',
+    () => jest.fn(function(initializer) {
+        return initializer({}, {});
+    })
+);
+
+jest.mock('sulu-admin-bundle/containers/Form/stores/MemoryFormStore',
+    () => jest.fn(function() {
+        this.destroy = jest.fn();
+        this.changeMultiple = jest.fn();
+    })
+);
 
 jest.mock('sulu-admin-bundle/containers/Form/Form', () => class FormMock extends mockReact.Component<*> {
     render() {
@@ -111,12 +116,6 @@ test('Component should call confirm callback', () => {
 });
 
 test('Component should create formStore, load restore data and set it to the formstore', () => {
-    const mockedStore = {
-        changeMultiple: jest.fn(),
-        loading: undefined,
-    };
-    memoryFormStoreFactory.createFromFormKey.mockReturnValueOnce(mockedStore);
-
     const trashItemPromise = Promise.resolve({
         id: 5,
         resourceKey: 'categories',
@@ -128,7 +127,7 @@ test('Component should create formStore, load restore data and set it to the for
     });
     ResourceRequester.get.mockReturnValue(trashItemPromise);
 
-    shallow(
+    const restoreFormOverlay = shallow(
         <RestoreFormOverlay
             formKey="test-form-key"
             onClose={jest.fn()}
@@ -138,14 +137,16 @@ test('Component should create formStore, load restore data and set it to the for
         />
     );
 
-    expect(memoryFormStoreFactory.createFromFormKey).toBeCalledWith('test-form-key');
+    expect(SchemaFormStoreDecorator).toBeCalledWith(expect.anything(), 'test-form-key');
     expect(ResourceRequester.get).toBeCalledWith('trash_items', {'id': 'trash-item-123'});
-    expect(mockedStore.changeMultiple).not.toBeCalled();
-    expect(mockedStore.loading).toBeTruthy();
+    expect(restoreFormOverlay.instance().formStore.changeMultiple).not.toBeCalled();
+    expect(restoreFormOverlay.instance().formStore.loading).toBeTruthy();
 
     return trashItemPromise.then(() => {
-        expect(mockedStore.changeMultiple).toBeCalledWith({key: 'test-key', parentId: 32}, {isServerValue: true});
-        expect(mockedStore.loading).toBeFalsy();
+        expect(restoreFormOverlay.instance().formStore.changeMultiple).toBeCalledWith(
+            {key: 'test-key', parentId: 32}, {isServerValue: true}
+        );
+        expect(restoreFormOverlay.instance().formStore.loading).toBeFalsy();
     });
 });
 
@@ -163,14 +164,18 @@ test('Component should update formStore on changing form key', () => {
     );
 
     const formStore = restoreFormOverlay.instance().formStore;
-    expect(formStore.formKey).toBe('test');
+    expect(SchemaFormStoreDecorator).toBeCalledTimes(1);
+    expect(SchemaFormStoreDecorator).toBeCalledWith(expect.anything(), 'test');
+    expect(formStore.destroy).not.toHaveBeenCalled();
 
     restoreFormOverlay.setProps({formKey: 'other'});
+
+    expect(SchemaFormStoreDecorator).toBeCalledTimes(2);
+    expect(SchemaFormStoreDecorator).toBeCalledWith(expect.anything(), 'other');
     expect(formStore.destroy).toHaveBeenCalled();
 
     const newFormStore = restoreFormOverlay.instance().formStore;
     expect(newFormStore).not.toBe(formStore);
-    expect(newFormStore.formKey).toBe('other');
     expect(newFormStore.destroy).not.toHaveBeenCalled();
 });
 
