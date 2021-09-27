@@ -640,7 +640,6 @@ test('Reload medias and fire onUploadError callback if an error happens while up
             },
         ]
     );
-    expect(mediaListStore.reset).toBeCalled();
     expect(mediaListStore.reload).toBeCalled();
 });
 

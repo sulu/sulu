@@ -88,13 +88,12 @@ class RawRectangleSelectionComponent extends React.Component<Props> {
                 minWidth,
                 minHeight
             ),
-            new PositionNormalizer(
-                containerWidth,
-                containerHeight
-            ),
         ];
 
         if (minWidth && minHeight) {
+            // It's important that the RatioNormalizer is added before the PositionNormalizer, because it may alter the
+            // width and height of the selection and the PositionNormalizer needs the final calculated width and height
+            // to correctly calculate all valid positions
             normalizers.push(
                 new RatioNormalizer(
                     containerWidth,
@@ -104,6 +103,13 @@ class RawRectangleSelectionComponent extends React.Component<Props> {
                 )
             );
         }
+
+        normalizers.push(
+            new PositionNormalizer(
+                containerWidth,
+                containerHeight
+            )
+        );
 
         if (round) {
             normalizers.push(new RoundingNormalizer());

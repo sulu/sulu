@@ -41,6 +41,25 @@ exports[`Suggestion should render 1`] = `
 </li>
 `;
 
+exports[`Suggestion should render if given query is not a valid regular expression 1`] = `
+<li
+  class="suggestionItem"
+  style="min-width:0px"
+>
+  <button
+    class="suggestion"
+  >
+    <span
+      aria-label="fa-ticket"
+      class="fa fa-ticket icon"
+    />
+    <span>
+      Suggestion 2
+    </span>
+  </button>
+</li>
+`;
+
 exports[`Suggestion should render strong-tags around found chars 1`] = `
 <li
   class="suggestionItem"

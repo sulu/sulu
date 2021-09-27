@@ -118,6 +118,8 @@ class CollectionSection extends React.Component<Props> {
     };
 
     handleSaveResponse = (resourceStore: ResourceStore) => {
+        this.closeCollectionOperationOverlay();
+
         if (this.openedCollectionOperationOverlayType === 'update') {
             this.props.resourceStore.setMultiple(resourceStore.data);
         } else {
@@ -125,7 +127,6 @@ class CollectionSection extends React.Component<Props> {
         }
 
         resourceStore.destroy();
-        this.closeCollectionOperationOverlay();
     };
 
     handleCollectionOverlayClose = () => {
