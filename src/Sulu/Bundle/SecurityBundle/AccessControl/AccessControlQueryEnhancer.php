@@ -13,6 +13,7 @@ namespace Sulu\Bundle\SecurityBundle\AccessControl;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\Persistence\Mapping\MappingException;
 use Sulu\Bundle\SecurityBundle\Entity\AccessControl;
 use Sulu\Bundle\SecurityBundle\System\SystemStoreInterface;
 use Sulu\Component\Security\Authentication\RoleInterface;
@@ -43,12 +44,22 @@ class AccessControlQueryEnhancer
         string $entityClass,
         string $entityAlias
     ): void {
+        $entityIdCondition = 'accessControl.entityId = ' . $entityAlias . '.id';
+        try {
+            $metadata = $this->entityManager->getClassMetadata($entityClass);
+            if ('integer' === $metadata->getTypeOfField('id')) {
+                $entityIdCondition = 'accessControl.entityIdInteger = ' . $entityAlias . '.id';
+            }
+        } catch (MappingException $e) {
+            $metadata = null;
+        }
+
         $this->enhanceQueryWithAccessControl(
             $queryBuilder,
             $user,
             $permission,
             'accessControl.entityClass = :entityClass',
-            'CAST(accessControl.entityId AS STRING) = CAST(' . $entityAlias . '.id AS STRING)'
+            $entityIdCondition
         );
 
         $queryBuilder->setParameter('entityClass', $entityClass);
@@ -67,7 +78,7 @@ class AccessControlQueryEnhancer
             $user,
             $permission,
             'accessControl.entityClass = ' . $entityAlias . '.' . $entityClassField,
-            'CAST(accessControl.entityId AS STRING) = CAST(' . $entityAlias . '.' . $entityIdField . ' AS STRING)'
+            'accessControl.entityId = ' . $entityAlias . '.' . $entityIdField
         );
     }
 
