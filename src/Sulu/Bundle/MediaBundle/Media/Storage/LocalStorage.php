@@ -104,8 +104,12 @@ class LocalStorage implements StorageInterface
     {
         $this->createDirectories($targetStorageOptions);
 
-        $parentPath = $this->getFilesystemPath($targetStorageOptions['directory'], $targetStorageOptions['segment']);
-        $targetStorageOptions['fileName'] = $this->getUniqueFileName($parentPath, $targetStorageOptions['fileName']);
+        $targetDirectory = $this->getStorageOption($targetStorageOptions, 'directory');
+        $targetSegment = $this->getStorageOption($targetStorageOptions, 'segment');
+        $targetFileName = $this->getStorageOption($targetStorageOptions, 'fileName');
+
+        $targetParentPath = $this->getFilesystemPath($targetDirectory, $targetSegment);
+        $targetStorageOptions['fileName'] = $this->getUniqueFileName($targetParentPath, $targetFileName);
 
         $targetPath = $this->getPath($targetStorageOptions);
         if ($this->filesystem->exists($targetPath)) {
