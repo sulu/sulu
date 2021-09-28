@@ -1,0 +1,12 @@
+sulu_preview:
+    resource: "@SuluPreviewBundle/Resources/config/routing.yml"
+    prefix: /
+
+sulu_preview_api:
+    type: rest
+    resource: "@SuluPreviewBundle/Resources/config/routing_api.yml"
+    prefix: /api
+
+sulu_preview_public:
+    resource: "@SuluPreviewBundle/Resources/config/routing_public.yml"
+    prefix: /p

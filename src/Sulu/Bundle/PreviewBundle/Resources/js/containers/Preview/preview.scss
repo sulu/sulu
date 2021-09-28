@@ -81,6 +81,11 @@ $previewTabletHeight: 1248px;
     padding-top: 100px;
 }
 
-.date-time-form {
+.date-time-form,
+.preview-link-container {
     padding: 20px;
+}
+
+.preview-link-button {
+    margin-right: 10px;
 }

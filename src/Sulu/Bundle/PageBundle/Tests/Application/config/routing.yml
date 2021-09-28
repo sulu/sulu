@@ -29,6 +29,15 @@ sulu_preview:
     resource: "@SuluPreviewBundle/Resources/config/routing.yml"
     prefix: /admin
 
+sulu_preview_api:
+    type: rest
+    resource: "@SuluPreviewBundle/Resources/config/routing_api.yml"
+    prefix: /admin/api
+
+sulu_preview_public:
+    resource: "@SuluPreviewBundle/Resources/config/routing_public.yml"
+    prefix: /admin/p
+
 sulu_website:
     type: rest
     resource: "@SuluWebsiteBundle/Resources/config/routing.yml"

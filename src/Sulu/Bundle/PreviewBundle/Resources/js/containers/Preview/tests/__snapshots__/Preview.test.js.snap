@@ -116,6 +116,29 @@ exports[`Dont react or update preview when data is changed during formstore is l
             </button>
           </li>
           <li>
+            <div
+              class="popover"
+            >
+              <button
+                class="button dark"
+              >
+                <span
+                  aria-label="fa-share"
+                  class="fa fa-share icon"
+                />
+                <span
+                  class="label"
+                >
+                  sulu_preview.preview_link
+                </span>
+                <span
+                  aria-label="su-angle-down"
+                  class="su-angle-down dropdownIcon"
+                />
+              </button>
+            </div>
+          </li>
+          <li>
             <button
               class="button dark"
             >
@@ -256,6 +279,29 @@ exports[`Dont react or update preview when data is changed during preview-store 
             </button>
           </li>
           <li>
+            <div
+              class="popover"
+            >
+              <button
+                class="button dark"
+              >
+                <span
+                  aria-label="fa-share"
+                  class="fa fa-share icon"
+                />
+                <span
+                  class="label"
+                >
+                  sulu_preview.preview_link
+                </span>
+                <span
+                  aria-label="su-angle-down"
+                  class="su-angle-down dropdownIcon"
+                />
+              </button>
+            </div>
+          </li>
+          <li>
             <button
               class="button dark"
             >
@@ -393,6 +439,29 @@ exports[`React and update preview when data is changed 1`] = `
                 sulu_preview.reload
               </span>
             </button>
+          </li>
+          <li>
+            <div
+              class="popover"
+            >
+              <button
+                class="button dark"
+              >
+                <span
+                  aria-label="fa-share"
+                  class="fa fa-share icon"
+                />
+                <span
+                  class="label"
+                >
+                  sulu_preview.preview_link
+                </span>
+                <span
+                  aria-label="su-angle-down"
+                  class="su-angle-down dropdownIcon"
+                />
+              </button>
+            </div>
           </li>
           <li>
             <button
@@ -556,6 +625,29 @@ exports[`Render correct preview 1`] = `
             </button>
           </li>
           <li>
+            <div
+              class="popover"
+            >
+              <button
+                class="button dark"
+              >
+                <span
+                  aria-label="fa-share"
+                  class="fa fa-share icon"
+                />
+                <span
+                  class="label"
+                >
+                  sulu_preview.preview_link
+                </span>
+                <span
+                  aria-label="su-angle-down"
+                  class="su-angle-down dropdownIcon"
+                />
+              </button>
+            </div>
+          </li>
+          <li>
             <button
               class="button dark"
             >
@@ -711,6 +803,29 @@ exports[`Render correct preview with target groups 1`] = `
             </button>
           </li>
           <li>
+            <div
+              class="popover"
+            >
+              <button
+                class="button dark"
+              >
+                <span
+                  aria-label="fa-share"
+                  class="fa fa-share icon"
+                />
+                <span
+                  class="label"
+                >
+                  sulu_preview.preview_link
+                </span>
+                <span
+                  aria-label="su-angle-down"
+                  class="su-angle-down dropdownIcon"
+                />
+              </button>
+            </div>
+          </li>
+          <li>
             <button
               class="button dark"
             >
@@ -848,6 +963,29 @@ exports[`Render nothing if separate window is opened and rerender if it is close
             </button>
           </li>
           <li>
+            <div
+              class="popover"
+            >
+              <button
+                class="button dark"
+              >
+                <span
+                  aria-label="fa-share"
+                  class="fa fa-share icon"
+                />
+                <span
+                  class="label"
+                >
+                  sulu_preview.preview_link
+                </span>
+                <span
+                  aria-label="su-angle-down"
+                  class="su-angle-down dropdownIcon"
+                />
+              </button>
+            </div>
+          </li>
+          <li>
             <button
               class="button dark"
             >
@@ -983,6 +1121,29 @@ exports[`Render nothing if separate window is opened and rerender if it is close
                 sulu_preview.reload
               </span>
             </button>
+          </li>
+          <li>
+            <div
+              class="popover"
+            >
+              <button
+                class="button dark"
+              >
+                <span
+                  aria-label="fa-share"
+                  class="fa fa-share icon"
+                />
+                <span
+                  class="label"
+                >
+                  sulu_preview.preview_link
+                </span>
+                <span
+                  aria-label="su-angle-down"
+                  class="su-angle-down dropdownIcon"
+                />
+              </button>
+            </div>
           </li>
           <li>
             <button

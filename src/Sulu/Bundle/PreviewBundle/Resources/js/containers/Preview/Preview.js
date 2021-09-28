@@ -12,6 +12,7 @@ import {translate} from 'sulu-admin-bundle/utils';
 import {webspaceStore} from 'sulu-page-bundle/stores';
 import previewStyles from './preview.scss';
 import PreviewStore from './stores/PreviewStore';
+import PreviewLinkPopover from './PreviewLinkPopover';
 import type {PreviewMode} from './types';
 
 type Props = {|
@@ -363,6 +364,16 @@ class Preview extends React.Component<Props> {
                             >
                                 {translate('sulu_preview.reload')}
                             </Toolbar.Button>
+                            <Toolbar.Popover
+                                icon="fa-share"
+                                label={translate('sulu_preview.preview_link')}
+                            >
+                                {() => (
+                                    <PreviewLinkPopover
+                                        previewStore={this.previewStore}
+                                    />
+                                )}
+                            </Toolbar.Popover>
                             <Toolbar.Button
                                 icon="su-link"
                                 onClick={this.handlePreviewWindowClick}

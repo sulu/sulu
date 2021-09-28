@@ -13,6 +13,13 @@ namespace Sulu\Bundle\PreviewBundle\Domain\Model;
 
 interface PreviewLinkInterface
 {
+    public const RESOURCE_KEY = 'preview_links';
+
+    /**
+     * @param mixed[] $options
+     */
+    public function __construct(string $token, string $resourceKey, string $resourceId, string $locale, array $options);
+
     public function getId(): int;
 
     public function getToken(): string;

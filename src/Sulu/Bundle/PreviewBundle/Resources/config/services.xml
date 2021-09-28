@@ -54,6 +54,10 @@
             <argument type="collection"/>
         </service>
 
+        <service id="sulu_preview.preview_link_manager" class="Sulu\Bundle\PreviewBundle\Application\Manager\PreviewLinkManager">
+            <argument type="service" id="sulu.repository.preview_link"/>
+        </service>
+
         <!-- controller -->
         <service id="sulu_preview.preview_controller" class="Sulu\Bundle\PreviewBundle\UserInterface\Controller\PreviewController" public="true">
             <argument type="service" id="sulu_preview.preview"/>
@@ -62,11 +66,23 @@
 
             <tag name="sulu.context" context="admin"/>
         </service>
+
         <service id="sulu_preview.public_preview_controller" class="Sulu\Bundle\PreviewBundle\UserInterface\Controller\PublicPreviewController" public="true">
             <argument type="service" id="sulu_preview.preview.renderer"/>
             <argument type="service" id="sulu_preview.preview_object_provider_registry"/>
             <argument type="service" id="sulu.repository.preview_link"/>
             <argument type="service" id="profiler" on-invalid="null"/>
+
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <service id="sulu_preview.preview_link_controller"
+                 class="Sulu\Bundle\PreviewBundle\UserInterface\Controller\PreviewLinkController"
+                 public="true">
+            <argument type="service" id="sulu.repository.preview_link"/>
+            <argument type="service" id="sulu_preview.preview_link_manager"/>
+            <argument type="service" id="fos_rest.view_handler"/>
+            <argument type="service" id="security.token_storage"/>
 
             <tag name="sulu.context" context="admin"/>
         </service>

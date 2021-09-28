@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\PreviewBundle\Infrastructure\Symfony\DependencyInjection;
 
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
+use Sulu\Bundle\PreviewBundle\Domain\Model\PreviewLinkInterface;
 use Sulu\Bundle\PreviewBundle\Domain\Repository\PreviewLinkRepositoryInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -93,6 +94,21 @@ class SuluPreviewExtension extends Extension implements PrependExtensionInterfac
                                 'dir' => __DIR__ . '/../../../Resources/config/doctrine',
                                 'prefix' => 'Sulu\Bundle\PreviewBundle\Domain\Model',
                                 'alias' => 'SuluPreviewBundle',
+                            ],
+                        ],
+                    ],
+                ]
+            );
+        }
+
+        if ($container->hasExtension('sulu_admin')) {
+            $container->prependExtensionConfig(
+                'sulu_admin',
+                [
+                    'resources' => [
+                        PreviewLinkInterface::RESOURCE_KEY => [
+                            'routes' => [
+                                'detail' => 'sulu_preview.get_preview-link',
                             ],
                         ],
                     ],

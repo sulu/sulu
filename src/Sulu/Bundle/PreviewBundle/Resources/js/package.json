@@ -9,6 +9,7 @@
     },
     "devDependencies": {
         "enzyme": "^3.3.0",
+        "copy-to-clipboard": "^3.0.8",
         "sulu-admin-bundle": "file:../../../AdminBundle/Resources/js",
         "sulu-page-bundle": "file:../../../PageBundle/Resources/js"
     },
