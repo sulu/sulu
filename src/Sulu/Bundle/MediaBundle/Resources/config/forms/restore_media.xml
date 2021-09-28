@@ -6,7 +6,7 @@
     <key>restore_media</key>
 
     <properties>
-        <property name="collectionId" type="single_collection_selection">
+        <property name="collectionId" type="single_collection_selection" mandatory="true">
             <meta>
                 <title>sulu_media.collection</title>
             </meta>
