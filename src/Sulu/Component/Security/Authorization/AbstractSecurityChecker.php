@@ -25,9 +25,10 @@ abstract class AbstractSecurityChecker implements SecurityCheckerInterface
         if (!$this->hasPermission($subject, $permission)) {
             if ($subject instanceof SecurityCondition) {
                 $message = \sprintf(
-                    'Permission "%s" in localization "%s" for object with id "%s" and of type "%s" not granted',
+                    'Permission "%s" in localization "%s" for context "%s" and object with id "%s" and type "%s" not granted',
                     $permission,
                     $subject->getLocale(),
+                    $subject->getSecurityContext(),
                     $subject->getObjectId(),
                     $subject->getObjectType()
                 );
