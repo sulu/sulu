@@ -15,11 +15,7 @@
         </join>
     </joins>
 
-    <joins name="position">
-        <join>
-            <entity-name>SuluContactBundle:AccountContact</entity-name>
-            <field-name>%sulu.model.contact.class%.accountContacts</field-name>
-        </join>
+    <joins name="position" ref="accountContact">
         <join>
             <entity-name>SuluContactBundle:Position</entity-name>
             <field-name>SuluContactBundle:AccountContact.position</field-name>

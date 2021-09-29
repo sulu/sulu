@@ -796,28 +796,43 @@ class ContactControllerTest extends SuluTestCase
 
     public function testGetListByAccountId()
     {
-        $account = $this->createAccount('Musterfirma');
-        $this->em->persist($account);
+        $account1 = $this->createAccount('Musterfirma 1');
+        $this->em->persist($account1);
+
+        $account2 = $this->createAccount('Musterfirma 2');
+        $this->em->persist($account2);
 
         $contact1 = new Contact();
         $contact1->setFirstName('Erika');
         $contact1->setLastName('Mustermann');
         $accountContact1 = new AccountContact();
-        $accountContact1->setMain(false);
+        $accountContact1->setMain(true);
         $accountContact1->setContact($contact1);
-        $accountContact1->setAccount($account);
+        $accountContact1->setAccount($account1);
         $contact1->addAccountContact($accountContact1);
+        $accountContact2 = new AccountContact();
+        $accountContact2->setMain(false);
+        $accountContact2->setContact($contact1);
+        $accountContact2->setAccount($account2);
+        $contact1->addAccountContact($accountContact2);
         $this->em->persist($accountContact1);
+        $this->em->persist($accountContact2);
         $this->em->persist($contact1);
 
         $contact2 = new Contact();
         $contact2->setFirstName('Max');
         $contact2->setLastName('Mustermann');
+        $accountContact3 = new AccountContact();
+        $accountContact3->setMain(true);
+        $accountContact3->setContact($contact2);
+        $accountContact3->setAccount($account2);
+        $contact2->addAccountContact($accountContact3);
+        $this->em->persist($accountContact3);
         $this->em->persist($contact2);
 
         $this->em->flush();
 
-        $this->client->jsonRequest('GET', '/api/contacts?flat=true&accountId=' . $account->getId());
+        $this->client->jsonRequest('GET', '/api/contacts?flat=true&accountId=' . $account1->getId());
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $response = \json_decode($this->client->getResponse()->getContent());
