@@ -17,12 +17,12 @@ namespace Sulu\Component\Content\Document\Behavior;
 interface LocalizedBlameBehavior
 {
     /**
-     * @return int
+     * @return int|null
      */
     public function getCreator();
 
     /**
-     * @return int
+     * @return int|null
      */
     public function getChanger();
 }

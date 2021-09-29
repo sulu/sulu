@@ -19,28 +19,28 @@ interface LocalizedAuthorBehavior extends LocalizedBlameBehavior
     /**
      * Returns author-date.
      *
-     * @return string
+     * @return \DateTime
      */
     public function getAuthored();
 
     /**
      * Set author-date.
      *
-     * @param string $authored
+     * @param \DateTime $authored
      */
     public function setAuthored($authored);
 
     /**
      * Returns id of author contact.
      *
-     * @return int
+     * @return int|null
      */
     public function getAuthor();
 
     /**
      * Set id of author contact.
      *
-     * @param int $author
+     * @param int|null $contactId
      */
-    public function setAuthor($author);
+    public function setAuthor($contactId);
 }

@@ -86,14 +86,14 @@ class BasePageDocument implements
     /**
      * User ID of creator.
      *
-     * @var int
+     * @var int|null
      */
     protected $creator;
 
     /**
      * User ID of changer.
      *
-     * @var int
+     * @var int|null
      */
     protected $changer;
 
@@ -259,7 +259,7 @@ class BasePageDocument implements
     /**
      * Id of author.
      *
-     * @var int
+     * @var int|null
      */
     protected $author;
 
@@ -292,9 +292,29 @@ class BasePageDocument implements
         return $this->created;
     }
 
+    /**
+     * @param \DateTime $created
+     *
+     * @return void
+     */
+    public function setCreated($created)
+    {
+        $this->created = $created;
+    }
+
     public function getChanged()
     {
         return $this->changed;
+    }
+
+    /**
+     * @param \DateTime $changed
+     *
+     * @return void
+     */
+    public function setChanged($changed)
+    {
+        $this->changed = $changed;
     }
 
     public function getCreator()
@@ -302,9 +322,29 @@ class BasePageDocument implements
         return $this->creator;
     }
 
+    /**
+     * @param int|null $userId
+     *
+     * @return void
+     */
+    public function setCreator($userId)
+    {
+        $this->creator = $userId;
+    }
+
     public function getChanger()
     {
         return $this->changer;
+    }
+
+    /**
+     * @param int|null $userId
+     *
+     * @return void
+     */
+    public function setChanger($userId)
+    {
+        $this->changer = $userId;
     }
 
     public function getResourceSegment()
@@ -497,6 +537,11 @@ class BasePageDocument implements
         return $this->authored;
     }
 
+    /**
+     * @param \DateTime $authored
+     *
+     * @return void
+     */
     public function setAuthored($authored)
     {
         $this->authored = $authored;
@@ -507,8 +552,13 @@ class BasePageDocument implements
         return $this->author;
     }
 
-    public function setAuthor($author)
+    /**
+     * @param int|null $contactId
+     *
+     * @return void
+     */
+    public function setAuthor($contactId)
     {
-        $this->author = $author;
+        $this->author = $contactId;
     }
 }
