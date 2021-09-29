@@ -60,7 +60,7 @@ class Checkbox extends SimpleContentType
     ) {
         $preparedValue = true;
 
-        if ('0' === $value) {
+        if ('0' === $value || '' === $value) {
             $preparedValue = false;
         }
 

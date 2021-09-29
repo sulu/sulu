@@ -100,6 +100,13 @@ class UpdateBuildCommand extends Command
                 $suluVersion = \str_replace('.x', '', $suluVersion);
             }
 
+            if (0 === \strpos($suluVersion, 'dev-')) {
+                $suluVersion = $ui->ask(
+                    \sprintf('Cannot detect "sulu/skeleton" branch for version "%s". Which "sulu/skeleton" branch do you want to use to update your "assets/admin" folder?', $suluVersion),
+                    '2.x'
+                );
+            }
+
             $needManualBuild = true;
         }
 
