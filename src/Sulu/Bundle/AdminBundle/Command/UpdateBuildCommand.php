@@ -102,7 +102,7 @@ class UpdateBuildCommand extends Command
 
             if (0 === \strpos($suluVersion, 'dev-')) {
                 $suluVersion = $ui->ask(
-                    \sprintf('Sulu Version for "%s" could not be detected, which branch of sulu/skeleton asset directory you want to download?', $suluVersion),
+                    \sprintf('Cannot detect "sulu/skeleton" branch for version "%s". Which "sulu/skeleton" branch do you want to use to update your "assets/admin" folder?', $suluVersion),
                     '2.x'
                 );
             }
