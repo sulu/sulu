@@ -43,6 +43,13 @@ class AccessControl implements AccessControlInterface
     private $entityId;
 
     /**
+     * The id as integer representation of the model this access control rule applies to.
+     *
+     * @var int|null
+     */
+    private $entityIdInteger;
+
+    /**
      * The class of the model this access control rule applies to.
      *
      * @var string
@@ -76,8 +83,8 @@ class AccessControl implements AccessControlInterface
 
     public function getEntityId()
     {
-        if (\is_numeric($this->entityId)) {
-            return (int) $this->entityId;
+        if ($this->entityIdInteger) {
+            return $this->entityIdInteger;
         }
 
         return $this->entityId;
@@ -86,6 +93,10 @@ class AccessControl implements AccessControlInterface
     public function setEntityId($entityId)
     {
         $this->entityId = (string) $entityId;
+
+        if (\is_numeric($entityId)) {
+            $this->entityIdInteger = (int) $entityId;
+        }
     }
 
     public function getEntityClass()

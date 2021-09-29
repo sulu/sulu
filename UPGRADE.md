@@ -1,5 +1,36 @@
 # Upgrade
 
+## 2.3.5
+
+### Migrate access control entityIdInteger field
+
+Because of performance problems, an additional integer representation of the
+entityId need to be added to the access control list.
+
+MySQL:
+
+```sql
+ALTER TABLE se_access_controls ADD entityIdInteger INT DEFAULT NULL;
+CREATE INDEX IDX_C526DC524473BB7A ON se_access_controls (entityIdInteger);
+
+UPDATE se_access_controls
+SET entityIdInteger = entityId
+WHERE entityIdInteger IS NULL
+    AND LENGTH(entityId) != 36;
+```
+
+PostgreSQL:
+
+```sql
+ALTER TABLE se_access_controls ADD entityIdInteger INT DEFAULT NULL;
+CREATE INDEX IDX_C526DC524473BB7A ON se_access_controls (entityIdInteger);
+
+UPDATE se_access_controls
+SET entityIdInteger = CAST(entityId AS int)
+WHERE entityIdInteger IS NULL
+    AND LENGTH(entityId) != 36;
+```
+
 ## 2.3.1
 
 ### Migrate permissions properties for pages
