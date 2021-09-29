@@ -16,6 +16,8 @@ use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Bundle\PageBundle\Preview\PageObjectProvider;
 use Sulu\Component\Content\Document\Structure\Structure;
@@ -24,14 +26,19 @@ use Sulu\Component\DocumentManager\DocumentManagerInterface;
 class PageObjectProviderTest extends TestCase
 {
     /**
-     * @var DocumentManagerInterface
+     * @var DocumentManagerInterface|ObjectProphecy
      */
     private $documentManager;
 
     /**
-     * @var SerializerInterface
+     * @var SerializerInterface|ObjectProphecy
      */
     private $serializer;
+
+    /**
+     * @var DocumentInspector|ObjectProphecy
+     */
+    private $documentInspector;
 
     /**
      * @var PageObjectProvider
@@ -44,19 +51,25 @@ class PageObjectProviderTest extends TestCase
 
         $this->documentManager = $this->prophesize(DocumentManagerInterface::class);
         $this->serializer = $this->prophesize(SerializerInterface::class);
+        $this->documentInspector = $this->prophesize(DocumentInspector::class);
 
-        $this->provider = new PageObjectProvider($this->documentManager->reveal(), $this->serializer->reveal());
+        $this->provider = new PageObjectProvider(
+            $this->documentManager->reveal(),
+            $this->serializer->reveal(),
+            $this->documentInspector->reveal()
+        );
     }
 
-    public function testGetObject($id = '123-123-123', $locale = 'de')
+    public function testGetObject(string $id = '123-123-123', string $locale = 'de'): void
     {
         $this->documentManager->find($id, $locale)
-            ->willReturn($this->prophesize(BasePageDocument::class)->reveal())->shouldBeCalledTimes(1);
+            ->willReturn($this->prophesize(BasePageDocument::class)->reveal())
+            ->shouldBeCalledTimes(1);
 
         $this->assertInstanceOf(BasePageDocument::class, $this->provider->getObject($id, $locale));
     }
 
-    public function testGetId($id = '123-123-123')
+    public function testGetId(string $id = '123-123-123'): void
     {
         $object = $this->prophesize(BasePageDocument::class);
         $object->getUuid()->willReturn($id);
@@ -64,7 +77,10 @@ class PageObjectProviderTest extends TestCase
         $this->assertEquals($id, $this->provider->getId($object->reveal()));
     }
 
-    public function testSetValues($locale = 'de', $data = ['title' => 'SULU'])
+    /**
+     * @param string[] $data
+     */
+    public function testSetValues(string $locale = 'de', array $data = ['title' => 'SULU']): void
     {
         $structure = new Structure();
         $object = $this->prophesize(BasePageDocument::class);
@@ -75,7 +91,10 @@ class PageObjectProviderTest extends TestCase
         $this->assertEquals('SULU', $structure->getProperty('title')->getValue());
     }
 
-    public function testSetContext($locale = 'de', $context = ['template' => 'test-template'])
+    /**
+     * @param string[] $context
+     */
+    public function testSetContext(string $locale = 'de', array $context = ['template' => 'test-template']): void
     {
         $object = $this->prophesize(BasePageDocument::class);
         $object->setStructureType('test-template')->shouldBeCalled();
@@ -83,25 +102,22 @@ class PageObjectProviderTest extends TestCase
         $this->assertEquals($object->reveal(), $this->provider->setContext($object->reveal(), $locale, $context));
     }
 
-    public function testSerialize()
+    public function testSerialize(): void
     {
         $object = $this->prophesize(BasePageDocument::class);
 
         $this->serializer->serialize(
             $object->reveal(),
             'json',
-            Argument::that(
-                function(SerializationContext $context) {
-                    return $context->shouldSerializeNull()
-                           && $context->getAttribute('groups') === ['preview'];
-                }
-            )
+            Argument::that(function(SerializationContext $context) {
+                return $context->shouldSerializeNull() && $context->getAttribute('groups') === ['preview'];
+            })
         )->shouldBeCalled()->willReturn('{"title": "test"}');
 
         $this->assertEquals('{"title": "test"}', $this->provider->serialize($object->reveal()));
     }
 
-    public function testDeserialize()
+    public function testDeserialize(): void
     {
         $object = $this->prophesize(BasePageDocument::class);
 
@@ -109,16 +125,26 @@ class PageObjectProviderTest extends TestCase
             '{"title": "test"}',
             \get_class($object->reveal()),
             'json',
-            Argument::that(
-                function(DeserializationContext $context) {
-                    return $context->getAttribute('groups') === ['preview'];
-                }
-            )
+            Argument::that(function(DeserializationContext $context) {
+                return $context->getAttribute('groups') === ['preview'];
+            })
         )->shouldBeCalled()->willReturn($object->reveal());
 
         $this->assertEquals(
             $object->reveal(),
             $this->provider->deserialize('{"title": "test"}', \get_class($object->reveal()))
         );
+    }
+
+    public function testGetSecurityContext(string $id = '123-123-123', string $locale = 'de'): void
+    {
+        $page = $this->prophesize(BasePageDocument::class)->reveal();
+        $this->documentManager->find($id, $locale)
+            ->willReturn($page)
+            ->shouldBeCalledTimes(1);
+
+        $this->documentInspector->getWebspace($page)->willReturn('example');
+
+        $this->assertEquals('sulu.webspaces.example', $this->provider->getSecurityContext($id, $locale));
     }
 }

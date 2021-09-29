@@ -14,6 +14,8 @@ namespace Sulu\Bundle\PageBundle\Preview;
 use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
@@ -34,10 +36,16 @@ class PageObjectProvider implements PreviewObjectProviderInterface
      */
     private $serializer;
 
-    public function __construct(DocumentManagerInterface $documentManager, SerializerInterface $serializer)
+    /**
+     * @var DocumentInspector
+     */
+    private $documentInspector;
+
+    public function __construct(DocumentManagerInterface $documentManager, SerializerInterface $serializer, DocumentInspector $documentInspector)
     {
         $this->documentManager = $documentManager;
         $this->serializer = $serializer;
+        $this->documentInspector = $documentInspector;
     }
 
     public function getObject($id, $locale)
@@ -104,5 +112,12 @@ class PageObjectProvider implements PreviewObjectProviderInterface
             'json',
             DeserializationContext::create()->setGroups(['preview'])
         );
+    }
+
+    public function getSecurityContext($id, $locale): ?string
+    {
+        $webspaceKey = $this->documentInspector->getWebspace($this->getObject($id, $locale));
+
+        return PageAdmin::getPageSecurityContext($webspaceKey);
     }
 }

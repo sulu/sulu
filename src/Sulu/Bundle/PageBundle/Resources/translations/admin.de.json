@@ -75,5 +75,7 @@
     "sulu_activity.description.pages.translation_added": "{userFullName} hat eine neue Sprachvariante für \"{resourceLocale}\" zur Seite \"{resourceTitle}\" hinzugefügt",
     "sulu_activity.description.pages.translation_copied": "{userFullName} hat die Sprachvariante für \"{context_sourceLocale}\" der Seite \"{resourceTitle}\" nach \"{resourceLocale}\" kopiert",
     "sulu_activity.description.pages.translation_removed": "{userFullName} hat die Sprachvariante für \"{resourceLocale}\" der Seite \"{resourceTitle}\" gelöscht",
-    "sulu_activity.description.pages.version_restored": "{userFullName} hat die Version \"{context_version}\" der Seite \"{resourceTitle}\" wiederhergestellt"
+    "sulu_activity.description.pages.version_restored": "{userFullName} hat die Version \"{context_version}\" der Seite \"{resourceTitle}\" wiederhergestellt",
+    "sulu_activity.description.pages.preview_link_generated": "{userFullName} hat den Public Preview Link \"{resourceTitle}\" generiert",
+    "sulu_activity.description.pages.preview_link_revoked": "{userFullName} hat den Public Preview Link \"{resourceTitle}\" widerrufen"
 }

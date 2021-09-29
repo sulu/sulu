@@ -63,4 +63,10 @@ interface PreviewObjectProviderInterface
      * @param string $objectClass
      */
     public function deserialize($serializedObject, $objectClass);
+
+    /**
+     * @param string $id
+     * @param string $locale
+     */
+    public function getSecurityContext($id, $locale): ?string;
 }

@@ -11,8 +11,13 @@
 
 namespace Sulu\Bundle\PreviewBundle\Application\Manager;
 
+use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Bundle\PreviewBundle\Domain\Event\PreviewLinkGeneratedEvent;
+use Sulu\Bundle\PreviewBundle\Domain\Event\PreviewLinkRevokedEvent;
 use Sulu\Bundle\PreviewBundle\Domain\Model\PreviewLinkInterface;
 use Sulu\Bundle\PreviewBundle\Domain\Repository\PreviewLinkRepositoryInterface;
+use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderRegistryInterface;
+use Symfony\Component\Routing\RouterInterface;
 
 class PreviewLinkManager implements PreviewLinkManagerInterface
 {
@@ -21,9 +26,31 @@ class PreviewLinkManager implements PreviewLinkManagerInterface
      */
     private $previewLinkRepository;
 
-    public function __construct(PreviewLinkRepositoryInterface $previewLinkRepository)
-    {
+    /**
+     * @var DomainEventCollectorInterface
+     */
+    private $domainEventCollector;
+
+    /**
+     * @var PreviewObjectProviderRegistryInterface
+     */
+    private $previewObjectProviderRegistry;
+
+    /**
+     * @var RouterInterface
+     */
+    private $router;
+
+    public function __construct(
+        PreviewLinkRepositoryInterface $previewLinkRepository,
+        DomainEventCollectorInterface $domainEventCollector,
+        PreviewObjectProviderRegistryInterface $previewObjectProviderRegistry,
+        RouterInterface $router
+    ) {
         $this->previewLinkRepository = $previewLinkRepository;
+        $this->domainEventCollector = $domainEventCollector;
+        $this->previewObjectProviderRegistry = $previewObjectProviderRegistry;
+        $this->router = $router;
     }
 
     public function generate(
@@ -34,6 +61,23 @@ class PreviewLinkManager implements PreviewLinkManagerInterface
     ): PreviewLinkInterface {
         $previewLink = $this->previewLinkRepository->createNew($resourceKey, $resourceId, $locale, $options);
         $this->previewLinkRepository->add($previewLink);
+        $this->domainEventCollector->collect(
+            new PreviewLinkGeneratedEvent(
+                $previewLink,
+                $this->router->generate(
+                    'sulu_preview.public_render',
+                    ['token' => $previewLink->getToken()],
+                    RouterInterface::ABSOLUTE_URL
+                ),
+                [
+                    'resourceKey' => $resourceKey,
+                    'resourceId' => $resourceId,
+                    'locale' => $locale,
+                    'options' => $options,
+                ],
+                $this->resolveSecurityContext($resourceKey, $resourceId, $locale)
+            )
+        );
         $this->previewLinkRepository->commit();
 
         return $previewLink;
@@ -46,7 +90,28 @@ class PreviewLinkManager implements PreviewLinkManagerInterface
             return;
         }
 
+        $link = $this->router->generate(
+            'sulu_preview.public_render',
+            ['token' => $previewLink->getToken()],
+            RouterInterface::ABSOLUTE_URL
+        );
+
         $this->previewLinkRepository->remove($previewLink);
+        $this->domainEventCollector->collect(
+            new PreviewLinkRevokedEvent(
+                $resourceKey,
+                $resourceId,
+                $link,
+                $this->resolveSecurityContext($resourceKey, $resourceId, $locale)
+            )
+        );
         $this->previewLinkRepository->commit();
+    }
+
+    protected function resolveSecurityContext(string $resourceKey, string $resourceId, string $locale): ?string
+    {
+        $provider = $this->previewObjectProviderRegistry->getPreviewObjectProvider($resourceKey);
+
+        return $provider->getSecurityContext($resourceId, $locale);
     }
 }

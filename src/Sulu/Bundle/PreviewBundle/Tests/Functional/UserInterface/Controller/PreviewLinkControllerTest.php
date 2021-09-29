@@ -11,10 +11,13 @@
 
 namespace Sulu\Bundle\PreviewBundle\Tests\Functional\UserInterface\Controller;
 
-use Ramsey\Uuid\Uuid;
+use Gedmo\Sluggable\Util\Urlizer;
+use Sulu\Bundle\PageBundle\Document\BasePageDocument;
+use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\PreviewBundle\Domain\Model\PreviewLinkInterface;
 use Sulu\Bundle\TestBundle\Kernel\SuluKernelBrowser;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 
 class PreviewLinkControllerTest extends SuluTestCase
 {
@@ -23,41 +26,71 @@ class PreviewLinkControllerTest extends SuluTestCase
      */
     private $client;
 
+    /**
+     * @var BasePageDocument
+     */
+    private $homePage;
+
+    /**
+     * @var DocumentManagerInterface
+     */
+    private $documentManager;
+
+    /**
+     * @var string
+     */
+    private $resourceKey = 'pages';
+
+    /**
+     * @var string
+     */
+    private $webspaceKey = 'sulu_io';
+
+    /**
+     * @var string
+     */
+    private $locale = 'en';
+
     public function setUp(): void
     {
         /** @var SuluKernelBrowser $client */
         $client = static::createAuthenticatedClient();
 
         $this->client = $client;
+
+        static::initPhpcr();
+        $this->documentManager = static::getContainer()->get('sulu_document_manager.document_manager');
+
+        /** @var BasePageDocument $document */
+        $document = $this->documentManager->find(\sprintf('/cmf/%s/contents', $this->webspaceKey), $this->locale);
+        $this->homePage = $document;
     }
 
     public function testGetAction(): void
     {
-        $resourceKey = 'pages';
-        $resourceId = Uuid::uuid4()->toString();
-        $locale = 'en';
-        $webspaceKey = 'example';
+        $page = $this->createPage(__METHOD__);
+        $resourceId = $page->getUuid();
 
-        $this->createPreviewLink($resourceKey, $resourceId, $locale, $webspaceKey);
+        $this->createPreviewLink($this->resourceKey, $resourceId, $this->locale, $this->webspaceKey);
 
         $this->client->jsonRequest(
             'GET',
             \sprintf(
                 '/api/preview-links/%s?resourceKey=%s&locale=%s&webspaceKey=%s',
                 $resourceId,
-                $resourceKey,
-                $locale,
-                $webspaceKey
+                $this->resourceKey,
+                $this->locale,
+                $this->webspaceKey
             )
         );
 
         static::assertHttpStatusCode(200, $this->client->getResponse());
         $json = \json_decode((string) $this->client->getResponse()->getContent(), true);
 
-        static::assertEquals($resourceKey, $json['resourceKey']);
+        static::assertEquals($this->resourceKey, $json['resourceKey']);
         static::assertEquals($resourceId, $json['resourceId']);
-        static::assertEquals($locale, $json['locale']);
-        static::assertEquals(['webspaceKey' => $webspaceKey], $json['options']);
+        static::assertEquals($this->locale, $json['locale']);
+        static::assertEquals(['webspaceKey' => $this->webspaceKey], $json['options']);
         static::assertIsString($json['token']);
         static::assertNotNull($json['lastVisit']);
         static::assertSame(1, $json['visitCount']);
@@ -65,19 +98,17 @@ class PreviewLinkControllerTest extends SuluTestCase
 
     public function testGetActionNotFound(): void
     {
-        $resourceKey = 'pages';
-        $resourceId = Uuid::uuid4()->toString();
-        $locale = 'en';
-        $webspaceKey = 'example';
+        $page = $this->createPage(__METHOD__);
+        $resourceId = $page->getUuid();
 
         $this->client->jsonRequest(
             'GET',
             \sprintf(
                 '/api/preview-links/%s?resourceKey=%s&locale=%s&webspaceKey=%s',
                 $resourceId,
-                $resourceKey,
-                $locale,
-                $webspaceKey
+                $this->resourceKey,
+                $this->locale,
+                $this->webspaceKey
             )
         );
 
@@ -86,29 +117,27 @@ class PreviewLinkControllerTest extends SuluTestCase
 
     public function testGenerate(): void
     {
-        $resourceKey = 'pages';
-        $resourceId = Uuid::uuid4()->toString();
-        $locale = 'en';
-        $webspaceKey = 'example';
+        $page = $this->createPage(__METHOD__);
+        $resourceId = $page->getUuid();
 
         $this->client->jsonRequest(
             'POST',
             \sprintf(
                 '/api/preview-links/%s?action=generate&resourceKey=%s&locale=%s&webspaceKey=%s',
                 $resourceId,
-                $resourceKey,
-                $locale,
-                $webspaceKey
+                $this->resourceKey,
+                $this->locale,
+                $this->webspaceKey
             )
         );
 
         static::assertHttpStatusCode(201, $this->client->getResponse());
         $json = \json_decode((string) $this->client->getResponse()->getContent(), true);
 
-        static::assertEquals($resourceKey, $json['resourceKey']);
+        static::assertEquals($this->resourceKey, $json['resourceKey']);
         static::assertEquals($resourceId, $json['resourceId']);
-        static::assertEquals($locale, $json['locale']);
-        static::assertEquals(['webspaceKey' => $webspaceKey], $json['options']);
+        static::assertEquals($this->locale, $json['locale']);
+        static::assertEquals(['webspaceKey' => $this->webspaceKey], $json['options']);
         static::assertIsString($json['token']);
         static::assertNull($json['lastVisit']);
         static::assertSame(0, $json['visitCount']);
@@ -116,21 +145,19 @@ class PreviewLinkControllerTest extends SuluTestCase
 
     public function testRevoke(): void
     {
-        $resourceKey = 'pages';
-        $resourceId = Uuid::uuid4()->toString();
-        $locale = 'en';
-        $webspaceKey = 'example';
+        $page = $this->createPage(__METHOD__);
+        $resourceId = $page->getUuid();
 
-        $this->createPreviewLink($resourceKey, $resourceId, $locale, $webspaceKey);
+        $this->createPreviewLink($this->resourceKey, $resourceId, $this->locale, $this->webspaceKey);
 
         $this->client->jsonRequest(
             'POST',
             \sprintf(
                 '/api/preview-links/%s?action=revoke&resourceKey=%s&locale=%s&webspaceKey=%s',
                 $resourceId,
-                $resourceKey,
-                $locale,
-                $webspaceKey
+                $this->resourceKey,
+                $this->locale,
+                $this->webspaceKey
             )
         );
 
@@ -150,5 +177,25 @@ class PreviewLinkControllerTest extends SuluTestCase
         $repository->commit();
 
         return $previewLink;
+    }
+
+    private function createPage(string $title): BasePageDocument
+    {
+        $page = new PageDocument();
+        $page->setTitle($title);
+        $page->setResourceSegment('/' . Urlizer::urlize($title));
+        $page->setParent($this->homePage);
+        $page->setStructureType('default');
+        $page->getStructure()->bind(
+            [
+                'title' => 'World',
+            ],
+            true
+        );
+
+        $this->documentManager->persist($page, $this->locale);
+        $this->documentManager->flush();
+
+        return $page;
     }
 }

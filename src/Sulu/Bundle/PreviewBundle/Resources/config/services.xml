@@ -56,6 +56,9 @@
 
         <service id="sulu_preview.preview_link_manager" class="Sulu\Bundle\PreviewBundle\Application\Manager\PreviewLinkManager">
             <argument type="service" id="sulu.repository.preview_link"/>
+            <argument type="service" id="sulu_activity.domain_event_collector"/>
+            <argument type="service" id="sulu_preview.preview_object_provider_registry"/>
+            <argument type="service" id="router"/>
         </service>
 
         <!-- controller -->
