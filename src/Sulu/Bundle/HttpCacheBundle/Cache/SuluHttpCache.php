@@ -22,7 +22,9 @@ use FOS\HttpCache\TagHeaderFormatter\TagHeaderFormatter;
 use Sulu\Bundle\WebsiteBundle\EventListener\SegmentCacheListener;
 use Sulu\Component\HttpKernel\SuluKernel;
 use Symfony\Bundle\FrameworkBundle\HttpCache\HttpCache;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\HttpCache\StoreInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Toflar\Psr6HttpCacheStore\Psr6Store;
 
@@ -47,18 +49,30 @@ class SuluHttpCache extends HttpCache implements CacheInvalidation
 
         parent::__construct($kernel, $cacheDir);
 
-        $this->addSubscriber(new CustomTtlListener(static::HEADER_REVERSE_PROXY_TTL));
-        $this->addSubscriber(new PurgeListener());
-        $this->addSubscriber(new PurgeTagsListener());
-        $this->addSubscriber(new SegmentCacheListener());
+        foreach ($this->getSubscribers() as $subscriber) {
+            $this->addSubscriber($subscriber);
+        }
+    }
 
-        if (!$kernel->isDebug()) {
-            $this->addSubscriber(new CleanupCacheTagsListener());
+    /**
+     * @return EventSubscriberInterface[]
+     */
+    protected function getSubscribers(): array
+    {
+        $subscribers = [
+            CustomTtlListener::class => new CustomTtlListener(static::HEADER_REVERSE_PROXY_TTL),
+            PurgeListener::class => new PurgeListener(),
+            PurgeTagsListener::class => new PurgeTagsListener(),
+            SegmentCacheListener::class => new SegmentCacheListener(),
+        ];
 
-            return;
+        if ($this->kernel->isDebug()) {
+            $subscribers[DebugListener::class] = new DebugListener();
+        } else {
+            $subscribers[CleanupCacheTagsListener::class] = new CleanupCacheTagsListener();
         }
 
-        $this->addSubscriber(new DebugListener());
+        return $subscribers;
     }
 
     /**
@@ -71,6 +85,9 @@ class SuluHttpCache extends HttpCache implements CacheInvalidation
         return parent::fetch($request, $catch);
     }
 
+    /**
+     * @return StoreInterface
+     */
     protected function createStore()
     {
         return new Psr6Store([
