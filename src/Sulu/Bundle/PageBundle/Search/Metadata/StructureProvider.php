@@ -16,7 +16,6 @@ use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\Metadata\ComplexMetadata;
 use Massive\Bundle\SearchBundle\Search\Metadata\Field\Expression;
 use Massive\Bundle\SearchBundle\Search\Metadata\Field\Value;
-use Massive\Bundle\SearchBundle\Search\Metadata\FieldInterface;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadataInterface;
 use Massive\Bundle\SearchBundle\Search\Metadata\ProviderInterface;
@@ -32,7 +31,7 @@ use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
-use Sulu\Component\Content\Metadata\PropertyMetadata;
+use Sulu\Component\Content\Metadata\ItemMetadata;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\DocumentManager\Behavior\Mapping\TitleBehavior;
 use Sulu\Component\DocumentManager\Metadata;
@@ -287,9 +286,14 @@ EOT;
         return $this->getMetadata($documentMetadata, $structure);
     }
 
-    private function mapProperty(PropertyMetadata $property, $metadata, string $prefix = '')
+    /**
+     * @param IndexMetadata|ComplexMetadata $metadata
+     */
+    private function mapProperty(ItemMetadata $property, $metadata, string $prefix = '')
     {
-        if($metadata instanceof IndexMetadata) {
+        $propertyName = $prefix . $property->getName();
+
+        if ($metadata instanceof IndexMetadata) {
             $field = $this->factory->createMetadataExpression(
                 \sprintf(
                     'object.getStructure().%s.getValue()',
@@ -301,9 +305,7 @@ EOT;
                 '[' . $property->getName() . ']'
             );
         }
-        
-        $propertyName = $prefix . $property->getName();
-        
+
         if ($property instanceof BlockMetadata) {
             $propertyMapping = new ComplexMetadata();
 
@@ -311,12 +313,12 @@ EOT;
                 foreach ($component->getChildren() as $componentProperty) {
                     $this->mapProperty(
                         $componentProperty,
-                        $propertyMapping, 
+                        $propertyMapping,
                         $component->getName() . '_'
                     );
                 }
             }
-            
+
             $metadata->addFieldMapping(
                 $propertyName,
                 [
@@ -325,15 +327,31 @@ EOT;
                     'field' => $field,
                 ]
             );
-            
+
             return;
         }
-        
+
         if ($metadata instanceof IndexMetadata && $property->hasTag('sulu.teaser.description')) {
-            $this->mapTeaserDescription($property, $metadata);
+            $metadata->addFieldMapping(
+                self::FIELD_TEASER_DESCRIPTION,
+                [
+                    'type' => 'string',
+                    'field' => $field,
+                    'aggregate' => true,
+                    'indexed' => false,
+                ]
+            );
         }
         if ($metadata instanceof IndexMetadata && $property->hasTag('sulu.teaser.media')) {
-            $this->mapTeaserMedia($property, $metadata);
+            $metadata->addFieldMapping(
+                self::FIELD_TEASER_MEDIA,
+                [
+                    'type' => 'json',
+                    'field' => $field,
+                    'aggregate' => true,
+                    'indexed' => false,
+                ]
+            );
         }
 
         if (false === $property->hasTag('sulu.search.field')) {
@@ -396,32 +414,6 @@ EOT;
                 ]
             );
         }
-    }
-
-    private function mapTeaserDescription(FieldInterface $field, IndexMetadata $metadata)
-    {
-        $metadata->addFieldMapping(
-            self::FIELD_TEASER_DESCRIPTION,
-            [
-                'type' => 'string',
-                'field' => $field,
-                'aggregate' => true,
-                'indexed' => false,
-            ]
-        );
-    }
-
-    private function mapTeaserMedia(FieldInterface $field, IndexMetadata $metadata)
-    {
-        $metadata->addFieldMapping(
-            self::FIELD_TEASER_MEDIA,
-            [
-                'type' => 'json',
-                'field' => $field,
-                'aggregate' => true,
-                'indexed' => false,
-            ]
-        );
     }
 
     private function createIndexNameField(Metadata $documentMetadata, $indexName, $decorate)
