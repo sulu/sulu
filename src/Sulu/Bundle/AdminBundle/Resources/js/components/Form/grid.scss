@@ -1,7 +1,6 @@
 @import '../../components/Grid/variables.scss';
 @import '../../components/Form/variables.scss';
 @import './variables.scss';
-@import '../Divider/variables.scss';
 
 .grid {
     margin-bottom: -$sectionMarginBottom;
@@ -12,8 +11,9 @@
     margin-bottom: -$fieldMarginBottom;
 
     &:first-child {
-        > .divider-container {
-            margin-top: -$dividerTopMargin;
+        /* the first section divider should not have a margin top */
+        > .divider-container > :first-child {
+            margin-top: 0;
         }
     }
 
