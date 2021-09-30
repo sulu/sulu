@@ -91,19 +91,18 @@ final class PageTrashItemHandler implements
             /** @var BasePageDocument|null $redirectTarget */
             $redirectTarget = $localizedPage->getRedirectTarget();
 
-            $pageTitles[$localizedPage->getLocale()] = $localizedPage->getTitle();
+            $pageTitles[$locale] = $localizedPage->getTitle();
 
             $data['locales'][] = [
                 'title' => $localizedPage->getTitle(),
-                'locale' => $localizedPage->getLocale(),
-                'originalLocale' => $localizedPage->getOriginalLocale(),
+                'locale' => $locale,
                 'creator' => $localizedPage->getCreator(),
                 'created' => $localizedPage->getCreated()->format('c'),
                 'author' => $localizedPage->getAuthor(),
                 'authored' => $localizedPage->getAuthored()->format('c'),
                 'structureType' => $localizedPage->getStructureType(),
                 'structureData' => $localizedPage->getStructure()->toArray(),
-                'extensionsData' => $localizedPage->getExtensionsData(),
+                'extensionsData' => $localizedPage->getExtensionsData()->toArray(),
                 'permissions' => $localizedPage->getPermissions(),
                 'navigationContexts' => $localizedPage->getNavigationContexts(),
                 'shadowLocaleEnabled' => $localizedPage->isShadowLocaleEnabled(),
@@ -151,7 +150,6 @@ final class PageTrashItemHandler implements
 
             $localizedPage->setTitle($localeData['title']);
             $localizedPage->setLocale($locale);
-            $localizedPage->setOriginalLocale($localeData['originalLocale']);
             $localizedPage->setCreator($localeData['creator']);
             $localizedPage->setCreated(new \DateTime($localeData['created']));
             $localizedPage->setAuthor($localeData['author']);
@@ -191,7 +189,8 @@ final class PageTrashItemHandler implements
         return new RestoreConfiguration(
             'restore_page',
             PageAdmin::EDIT_FORM_VIEW,
-            ['id' => 'id', 'webspace' => 'webspace']
+            ['id' => 'id', 'webspace' => 'webspace'],
+            ['defaultPage']
         );
     }
 }

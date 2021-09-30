@@ -14,9 +14,11 @@ declare(strict_types=1);
 namespace Sulu\Bundle\TrashBundle\UserInterface\Controller\Admin;
 
 use Doctrine\ORM\EntityManagerInterface;
+use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use HandcraftedInTheAlps\RestRoutingBundle\Controller\Annotations\RouteResource;
 use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
+use Sulu\Bundle\TrashBundle\Application\RestoreConfigurationProvider\RestoreConfigurationProviderInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashManager\TrashManagerInterface;
 use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
 use Sulu\Bundle\TrashBundle\Domain\Repository\TrashItemRepositoryInterface;
@@ -37,6 +39,7 @@ use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
+use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -94,6 +97,11 @@ class TrashItemController extends AbstractRestController implements ClassResourc
     private $securityChecker;
 
     /**
+     * @var ServiceLocator
+     */
+    private $restoreConfigurationProviderLocator;
+
+    /**
      * @var string
      */
     private $trashItemClass;
@@ -115,6 +123,7 @@ class TrashItemController extends AbstractRestController implements ClassResourc
         TrashManagerInterface $trashManager,
         TrashItemRepositoryInterface $trashItemRepository,
         SecurityCheckerInterface $securityChecker,
+        ServiceLocator $restoreConfigurationProviderLocator,
         string $trashItemClass,
         array $permissions,
         ViewHandlerInterface $viewHandler,
@@ -130,6 +139,7 @@ class TrashItemController extends AbstractRestController implements ClassResourc
         $this->trashManager = $trashManager;
         $this->trashItemRepository = $trashItemRepository;
         $this->securityChecker = $securityChecker;
+        $this->restoreConfigurationProviderLocator = $restoreConfigurationProviderLocator;
         $this->trashItemClass = $trashItemClass;
         $this->permissions = $permissions;
     }
@@ -287,8 +297,20 @@ class TrashItemController extends AbstractRestController implements ClassResourc
         $restoredObject = $this->trashManager->restore($trashItem, $restoreFormData);
         $this->entityManager->flush();
 
+        $viewContext = new Context();
+
+        if ($this->restoreConfigurationProviderLocator->has($trashItem->getResourceKey())) {
+            /** @var RestoreConfigurationProviderInterface $restoreConfigurationProvider */
+            $restoreConfigurationProvider = $this->restoreConfigurationProviderLocator->get($trashItem->getResourceKey());
+            $restoreConfiguration = $restoreConfigurationProvider->getConfiguration();
+
+            if ($serializationGroups = $restoreConfiguration->getResultSerializationGroups()) {
+                $viewContext->setGroups($serializationGroups);
+            }
+        }
+
         return $this->handleView(
-            $this->view($restoredObject)
+            $this->view($restoredObject)->setContext($viewContext)
         );
     }
 
