@@ -126,14 +126,14 @@ class BasePageDocument implements
     /**
      * The target of redirection.
      *
-     * @var object
+     * @var object|null
      */
     protected $redirectTarget;
 
     /**
      * The External redirect.
      *
-     * @var string
+     * @var string|null
      */
     protected $redirectExternal;
 
@@ -161,7 +161,7 @@ class BasePageDocument implements
     /**
      * Shadow locale.
      *
-     * @var string
+     * @var string|null
      */
     protected $shadowLocale;
 
@@ -217,7 +217,7 @@ class BasePageDocument implements
     /**
      * Document's extensions ie seo, ...
      *
-     * @var ExtensionContainer
+     * @var array<mixed[]>|ExtensionContainer
      */
     protected $extensions;
 

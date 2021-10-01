@@ -122,7 +122,7 @@ class SnippetDocument implements
     private $nodeName;
 
     /**
-     * @var ExtensionContainer
+     * @var array<mixed[]>|ExtensionContainer
      */
     private $extensions;
 

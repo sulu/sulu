@@ -36,7 +36,7 @@ interface RedirectTypeBehavior
      *
      * Applies when the redirect type is RedirectType::INTERNAL
      *
-     * @return object $document
+     * @return object|null $document
      */
     public function getRedirectTarget();
 
@@ -45,7 +45,7 @@ interface RedirectTypeBehavior
      *
      * Applies when the redirect type is RedirectType::INTERNAL
      *
-     * @param object $redirectTarget
+     * @param object|null $redirectTarget
      */
     public function setRedirectTarget($redirectTarget);
 
@@ -54,7 +54,7 @@ interface RedirectTypeBehavior
      *
      * Applies when the redirect type is RedirectType::EXTERNAL
      *
-     * @return string
+     * @return string|null
      */
     public function getRedirectExternal();
 
@@ -63,7 +63,7 @@ interface RedirectTypeBehavior
      *
      * Applies when the redirect type is RedirectType::EXTERNAL
      *
-     * @param string $redirectExternal
+     * @param string|null $redirectExternal
      */
     public function setRedirectExternal($redirectExternal);
 }

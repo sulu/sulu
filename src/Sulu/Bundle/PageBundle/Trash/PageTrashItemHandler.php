@@ -26,6 +26,7 @@ use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\StoreTrashItemHandlerIn
 use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
 use Sulu\Bundle\TrashBundle\Domain\Repository\TrashItemRepositoryInterface;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
+use Sulu\Component\Content\Document\Extension\ExtensionContainer;
 use Sulu\Component\DocumentManager\DocumentAccessor;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
@@ -81,15 +82,19 @@ final class PageTrashItemHandler implements
         $parent = $page->getParent();
         $data = [
             'parentUuid' => $parent->getUuid(),
-            'suluOrder' => $page->getSuluOrder(),
             'locales' => [],
         ];
 
+        /** @var string $locale */
         foreach ($this->documentInspector->getLocales($page) as $locale) {
             /** @var PageDocument $localizedPage */
             $localizedPage = $this->documentManager->find($page->getUuid(), $locale);
             /** @var BasePageDocument|null $redirectTarget */
             $redirectTarget = $localizedPage->getRedirectTarget();
+
+            $extensionsData = ($localizedPage->getExtensionsData() instanceof ExtensionContainer)
+                ? $data['extensionsData'] = $localizedPage->getExtensionsData()->toArray()
+                : $data['extensionsData'] = $localizedPage->getExtensionsData();
 
             $pageTitles[$locale] = $localizedPage->getTitle();
 
@@ -102,7 +107,7 @@ final class PageTrashItemHandler implements
                 'authored' => $localizedPage->getAuthored()->format('c'),
                 'structureType' => $localizedPage->getStructureType(),
                 'structureData' => $localizedPage->getStructure()->toArray(),
-                'extensionsData' => $localizedPage->getExtensionsData()->toArray(),
+                'extensionsData' => $extensionsData,
                 'permissions' => $localizedPage->getPermissions(),
                 'navigationContexts' => $localizedPage->getNavigationContexts(),
                 'shadowLocaleEnabled' => $localizedPage->isShadowLocaleEnabled(),
@@ -111,6 +116,7 @@ final class PageTrashItemHandler implements
                 'redirectExternal' => $localizedPage->getRedirectExternal(),
                 'redirectTargetUuid' => $redirectTarget ? $redirectTarget->getUUid() : null,
                 'resourceSegment' => $localizedPage->getResourceSegment(),
+                'suluOrder' => $page->getSuluOrder(),
             ];
         }
 
@@ -138,7 +144,7 @@ final class PageTrashItemHandler implements
             if ($localeData['shadowLocaleEnabled']) {
                 $sortedLocales[] = $localeData;
             } else {
-                array_unshift($sortedLocales, $localeData);
+                \array_unshift($sortedLocales, $localeData);
             }
         }
 
@@ -152,13 +158,14 @@ final class PageTrashItemHandler implements
                 /** @var PageDocument $localizedPage */
                 $localizedPage = $this->documentManager->create('page');
                 $localizedPage->setParent($this->documentManager->find($parentUuid));
-                $localizedPage->setSuluOrder($data['suluOrder']);
 
                 $localizedPageAccessor = new DocumentAccessor($localizedPage);
                 $localizedPageAccessor->set('uuid', $uuid);
             }
 
             $localizedPage->setTitle($localeData['title']);
+            $localizedPage->setResourceSegment($localeData['resourceSegment']);
+            $localizedPage->setSuluOrder($localeData['suluOrder']);
             $localizedPage->setLocale($locale);
             $localizedPage->setCreator($localeData['creator']);
             $localizedPage->setCreated(new \DateTime($localeData['created']));
@@ -173,7 +180,6 @@ final class PageTrashItemHandler implements
             $localizedPage->setShadowLocale($localeData['shadowLocale']);
             $localizedPage->setRedirectType($localeData['redirectType']);
             $localizedPage->setRedirectExternal($localeData['redirectExternal']);
-            $localizedPage->setResourceSegment($localeData['resourceSegment']);
 
             if ($localeData['redirectTargetUuid']) {
                 $localizedPage->setRedirectTarget($this->documentManager->find($localeData['redirectTargetUuid']));

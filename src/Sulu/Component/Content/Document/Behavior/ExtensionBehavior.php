@@ -11,6 +11,8 @@
 
 namespace Sulu\Component\Content\Document\Behavior;
 
+use Sulu\Component\Content\Document\Extension\ExtensionContainer;
+
 /**
  * Documents implementing this behavior can have extensions applied to their
  * content.
@@ -20,14 +22,14 @@ interface ExtensionBehavior extends StructureBehavior
     /**
      * Returns all extension data.
      *
-     * @return array
+     * @return array<mixed[]>|ExtensionContainer
      */
     public function getExtensionsData();
 
     /**
      * Set all the extension data.
      *
-     * @param array $extensionData
+     * @param array<mixed[]>|ExtensionContainer $extensionData
      */
     public function setExtensionsData($extensionData);
 

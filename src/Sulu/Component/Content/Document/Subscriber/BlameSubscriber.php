@@ -147,11 +147,9 @@ class BlameSubscriber implements EventSubscriberInterface
 
         $creatorPropertyName = $this->propertyEncoder->encode($encoding, static::CREATOR, $locale);
         if (!$node->hasProperty($creatorPropertyName)) {
-            $accessor->set(self::CREATOR, $userId);
-            $node->setProperty(
-                $creatorPropertyName,
-                $document->getCreator()
-            );
+            $creator = $document->getCreator() ?: $userId;
+            $accessor->set(self::CREATOR, $creator);
+            $node->setProperty($creatorPropertyName, $creator);
         }
 
         $accessor->set(self::CHANGER, $userId);
