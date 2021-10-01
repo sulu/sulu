@@ -38,6 +38,13 @@ class PreviewFormViewBuilder implements PreviewFormViewBuilderInterface
         return $this;
     }
 
+    public function setPreviewResourceKey(string $previewResourceKey): PreviewFormViewBuilderInterface
+    {
+        $this->setOption('previewResourceKey', $previewResourceKey);
+
+        return $this;
+    }
+
     public function setFormKey(string $formKey): PreviewFormViewBuilderInterface
     {
         $this->setFormKeyToView($this->view, $formKey);

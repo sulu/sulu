@@ -72,10 +72,6 @@ class Preview extends React.Component<Props> {
     constructor(props: Props) {
         super(props);
 
-        const {
-            formStore,
-        } = this.props;
-
         if (Preview.audienceTargeting) {
             this.targetGroupsStore = new ResourceListStore('target_groups');
         }
@@ -85,18 +81,59 @@ class Preview extends React.Component<Props> {
             value: webspace.key,
         }));
 
-        this.previewStore = new PreviewStore(
-            formStore.resourceKey,
-            formStore.id,
-            formStore.locale,
-            this.webspaceKey,
-            this.segments.find((segment) => segment.default === true)?.key
-        );
+        this.createPreviewStore();
 
         if (Preview.mode === 'auto') {
             this.startPreview();
         }
     }
+
+    componentDidUpdate(props: Props) {
+        const {
+            formStore,
+        } = this.props;
+
+        when(() => formStore.loading, () => {
+            this.dispose();
+            if (props.formStore.resourceKey !== formStore.resourceKey) {
+                this.previewStore.stop().then(() => {
+                    this.createPreviewStore();
+
+                    this.startPreview();
+                });
+
+                return;
+            }
+
+            this.updatePreview(this.props.formStore.data);
+            this.initializeReaction();
+        });
+    }
+
+    @action createPreviewStore = () => {
+        const {
+            formStore: {
+                resourceKey,
+                id,
+                locale,
+            },
+            router: {
+                route: {
+                    options: {
+                        previewResourceKey = null,
+                    },
+                },
+            },
+        } = this.props;
+
+        this.previewStore = new PreviewStore(
+            previewResourceKey ? previewResourceKey : resourceKey,
+            id,
+            locale,
+            this.webspaceKey,
+            this.segments.find((segment) => segment.default === true)?.key
+        );
+    };
 
     @action setStarted = (started: boolean) => {
         this.started = started;
@@ -116,7 +153,7 @@ class Preview extends React.Component<Props> {
                 && !previewStore.starting
                 && this.iframeRef !== null
                 && (!this.targetGroupsStore || !this.targetGroupsStore.loading),
-            this.initializeReaction
+            () => this.initializeReaction()
         );
 
         this.setStarted(true);
@@ -129,6 +166,10 @@ class Preview extends React.Component<Props> {
             formStore,
         } = this.props;
 
+        if (previewStore.resourceKey !== formStore.resourceKey) {
+            return;
+        }
+
         this.dataDisposer = reaction(
             () => toJS(formStore.data),
             (data) => {
@@ -139,7 +180,9 @@ class Preview extends React.Component<Props> {
         this.schemaDisposer = reaction(
             () => toJS(formStore.schema),
             () => {
-                previewStore.updateContext(toJS(formStore.type), toJS(formStore.data)).then(this.setContent);
+                if (formStore.type) {
+                    previewStore.updateContext(toJS(formStore.type), toJS(formStore.data)).then(this.setContent);
+                }
             }
         );
     };
@@ -162,13 +205,7 @@ class Preview extends React.Component<Props> {
     };
 
     componentWillUnmount() {
-        if (this.schemaDisposer) {
-            this.schemaDisposer();
-        }
-
-        if (this.dataDisposer) {
-            this.dataDisposer();
-        }
+        this.dispose();
 
         if (!this.started) {
             return;
@@ -176,6 +213,16 @@ class Preview extends React.Component<Props> {
 
         this.updatePreview.clear();
         this.previewStore.stop();
+    }
+
+    dispose() {
+        if (this.schemaDisposer) {
+            this.schemaDisposer();
+        }
+
+        if (this.dataDisposer) {
+            this.dataDisposer();
+        }
     }
 
     getPreviewDocument = (): ?Document => {

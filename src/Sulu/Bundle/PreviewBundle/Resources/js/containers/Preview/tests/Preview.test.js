@@ -4,7 +4,7 @@ import {observable} from 'mobx';
 import {mount, shallow} from 'enzyme';
 import ResourceStore from 'sulu-admin-bundle/stores/ResourceStore';
 import ResourceFormStore from 'sulu-admin-bundle/containers/Form/stores/ResourceFormStore';
-import Router from 'sulu-admin-bundle/services/Router';
+import Router, {Route} from 'sulu-admin-bundle/services/Router';
 import ResourceRequester from 'sulu-admin-bundle/services/ResourceRequester';
 import {webspaceStore} from 'sulu-page-bundle/stores';
 import PreviewStore from '../stores/PreviewStore';
@@ -29,7 +29,8 @@ Date = class extends Date {
 
 jest.mock('debounce', () => jest.fn((value) => value));
 
-jest.mock('../stores/PreviewStore', () => jest.fn(function() {
+jest.mock('../stores/PreviewStore', () => jest.fn(function(resourceKey) {
+    this.resourceKey = resourceKey;
     this.start = jest.fn().mockReturnValue(Promise.resolve());
     this.update = jest.fn().mockReturnValue(Promise.resolve());
     this.updateContext = jest.fn().mockReturnValue(Promise.resolve());
@@ -54,6 +55,7 @@ jest.mock('sulu-admin-bundle/services/Requester', () => ({
 jest.mock('sulu-admin-bundle/containers/Form/stores/ResourceFormStore', () => jest.fn(
     (resourceStore) => {
         return {
+            resourceKey: resourceStore.resourceKey,
             locale: resourceStore.observableOptions?.locale,
         };
     }
@@ -66,6 +68,7 @@ jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
 jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn(
     (resourceKey, id, observableOptions) => {
         return {
+            resourceKey,
             observableOptions,
         };
     }
@@ -111,6 +114,43 @@ test('Render correct preview', () => {
 
     const startPromise = Promise.resolve();
     const previewStore = preview.instance().previewStore;
+    expect(previewStore.resourceKey).toBe('pages');
+    previewStore.start.mockReturnValue(startPromise);
+    previewStore.starting = false;
+
+    preview.instance().handleStartClick();
+
+    return startPromise.then(() => {
+        preview.update();
+        expect(preview.render()).toMatchSnapshot();
+    });
+});
+
+test('Render correct preview use route option for resourceKey', () => {
+    const resourceStore = new ResourceStore('pages', 1);
+    const formStore = new ResourceFormStore(resourceStore, 'pages');
+    const router = new Router({});
+    router.route = new Route({
+        path: '/test',
+        name: 'test',
+        type: 'test',
+        options: {
+            previewResourceKey: 'page_contents',
+        },
+    });
+
+    webspaceStore.getWebspace.mockReturnValue({
+        segments: [
+            {key: 's', name: 'Summer', default: false},
+            {key: 'w', name: 'Winter', default: true},
+        ],
+    });
+
+    const preview = mount(<Preview formStore={formStore} router={router} />);
+
+    const startPromise = Promise.resolve();
+    const previewStore = preview.instance().previewStore;
+    expect(previewStore.resourceKey).toBe('page_contents');
     previewStore.start.mockReturnValue(startPromise);
     previewStore.starting = false;
 
@@ -240,7 +280,7 @@ test('Change webspace in PreviewStore when selection of webspace has changed', (
     preview.instance().handleStartClick();
 
     return startPromise.then(() => {
-        expect(PreviewStore).toBeCalledWith(undefined, undefined, locale, 'sulu_io', undefined);
+        expect(PreviewStore).toBeCalledWith('pages', undefined, locale, 'sulu_io', undefined);
 
         preview.find('Select').at(1).prop('onChange')('example');
         expect(previewStore.setWebspace).toBeCalledWith('example');
@@ -264,7 +304,7 @@ test('Use router attribute to determine webspace', () => {
     preview.instance().handleStartClick();
 
     return startPromise.then(() => {
-        expect(PreviewStore).toBeCalledWith(undefined, undefined, locale, 'example', undefined);
+        expect(PreviewStore).toBeCalledWith('pages', undefined, locale, 'example', undefined);
     });
 });
 
@@ -290,7 +330,7 @@ test('Change segment in PreviewStore when selection of segment has changed', () 
     preview.instance().handleStartClick();
 
     return startPromise.then(() => {
-        expect(PreviewStore).toBeCalledWith(undefined, undefined, undefined, 'sulu_io', 'w');
+        expect(PreviewStore).toBeCalledWith('pages', undefined, undefined, 'sulu_io', 'w');
 
         preview.find('Select').at(2).prop('onChange')('s');
         expect(previewStore.setSegment).toBeCalledWith('s');
@@ -502,7 +542,7 @@ test('Change target group in PreviewStore when selection of target group has cha
     preview.instance().handleStartClick();
 
     return startPromise.then(() => {
-        expect(PreviewStore).toBeCalledWith(undefined, undefined, locale, 'sulu_io', undefined);
+        expect(PreviewStore).toBeCalledWith('pages', undefined, locale, 'sulu_io', undefined);
 
         preview.find('Select').at(2).prop('onChange')(4);
         expect(previewStore.setTargetGroup).toBeCalledWith(4);
@@ -526,7 +566,7 @@ test('Change dateTime in PreviewStore when DatePicker changed', () => {
 
     return startPromise.then(() => {
         preview.update();
-        expect(PreviewStore).toBeCalledWith(undefined, undefined, undefined, 'sulu_io', undefined);
+        expect(PreviewStore).toBeCalledWith('pages', undefined, undefined, 'sulu_io', undefined);
 
         const date = new Date();
         preview.find('Button[icon="su-calendar"]').simulate('click');
