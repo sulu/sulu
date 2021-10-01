@@ -44,6 +44,7 @@ class PreviewFormViewBuilderTest extends TestCase
                 'sulu_category.add_form',
                 '/categories/add',
                 'categories',
+                null,
                 'categories',
                 'Details',
                 'name == "Test"',
@@ -60,6 +61,7 @@ class PreviewFormViewBuilderTest extends TestCase
                 'sulu_tag.edit_form',
                 '/tags/:id',
                 'tags',
+                'tag_contents',
                 'tags',
                 null,
                 null,
@@ -82,6 +84,7 @@ class PreviewFormViewBuilderTest extends TestCase
         string $name,
         string $path,
         string $resourceKey,
+        ?string $previewResourceKey,
         string $formKey,
         ?string $tabTitle,
         ?string $tabCondition,
@@ -97,6 +100,10 @@ class PreviewFormViewBuilderTest extends TestCase
         $viewBuilder = (new PreviewFormViewBuilder($name, $path))
             ->setResourceKey($resourceKey)
             ->setFormKey($formKey);
+
+        if ($previewResourceKey) {
+            $viewBuilder->setPreviewResourceKey($previewResourceKey);
+        }
 
         if ($tabTitle) {
             $viewBuilder->setTabTitle($tabTitle);
@@ -143,6 +150,7 @@ class PreviewFormViewBuilderTest extends TestCase
         $this->assertSame($name, $view->getName());
         $this->assertSame($path, $view->getPath());
         $this->assertSame($resourceKey, $view->getOption('resourceKey'));
+        $this->assertSame($previewResourceKey, $view->getOption('previewResourceKey'));
         $this->assertSame($formKey, $view->getOption('formKey'));
         $this->assertSame($tabTitle, $view->getOption('tabTitle'));
         $this->assertSame($tabCondition, $view->getOption('tabCondition'));
