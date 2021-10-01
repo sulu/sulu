@@ -132,7 +132,17 @@ final class PageTrashItemHandler implements
         $parentUuid = $restoreFormData['parentUuid'];
         $localizedPage = null;
 
+        // restore shadow locales after concrete locales because shadow locales depend on their target locale
+        $sortedLocales = [];
         foreach ($data['locales'] as $localeData) {
+            if ($localeData['shadowLocaleEnabled']) {
+                $sortedLocales[] = $localeData;
+            } else {
+                array_unshift($sortedLocales, $localeData);
+            }
+        }
+
+        foreach ($sortedLocales as $localeData) {
             $locale = $localeData['locale'];
 
             try {
