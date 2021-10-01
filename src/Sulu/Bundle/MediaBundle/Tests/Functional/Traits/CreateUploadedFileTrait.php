@@ -54,4 +54,35 @@ trait CreateUploadedFileTrait
 
         return $uploadedFile;
     }
+
+    private function createUploadedFileSvgImage(?int $width = null, ?int $height = null): UploadedFile
+    {
+        $tempFilePath = \tempnam(\sys_get_temp_dir(), 'sulu_test_image_');
+
+        if (!$tempFilePath) {
+            throw new \RuntimeException(\sprintf(
+                'Could not create temporary image in "%s".',
+                __CLASS__
+            ));
+        }
+
+        $attributess = [];
+        if ($width) {
+            $attributes[] = ' width="' . $width . '"';
+        }
+        if ($height) {
+            $attributes[] = ' height="' . $height . '"';
+        }
+
+        \file_put_contents(
+            $tempFilePath,
+            '<svg xmlns="http://www.w3.org/2000/svg"' . \implode(' ', $attributes) . ' viewBox="0 0 600 400">
+                <path xmlns="http://www.w3.org/2000/svg" fill="#eee" d="M0 0h600v400H0z"/>
+            </svg>'
+        );
+
+        $uploadedFile = new UploadedFile($tempFilePath, $width . 'x' . $height . '.svg');
+
+        return $uploadedFile;
+    }
 }

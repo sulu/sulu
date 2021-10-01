@@ -23,9 +23,12 @@ class ImagePropertiesProvider implements MediaPropertiesProviderInterface
      */
     private $imagine;
 
-    public function __construct(ImagineInterface $imagine)
-    {
+    public function __construct(
+        ImagineInterface $imagine,
+        ?ImagineInterface $svgImagine = null
+    ) {
         $this->imagine = $imagine;
+        $this->svgImagine = $svgImagine;
     }
 
     public function provide(File $file): array
@@ -36,10 +39,14 @@ class ImagePropertiesProvider implements MediaPropertiesProviderInterface
             return [];
         }
 
+        $imagine = \in_array($mimeType, ['image/svg', 'image/svg+xml']) && $this->svgImagine
+            ? $this->svgImagine
+            : $this->imagine;
+
         $properties = [];
 
         try {
-            $image = $this->imagine->open($file->getPathname());
+            $image = $imagine->open($file->getPathname());
             $size = $image->getSize();
             $properties['width'] = $size->getWidth();
             $properties['height'] = $size->getHeight();
