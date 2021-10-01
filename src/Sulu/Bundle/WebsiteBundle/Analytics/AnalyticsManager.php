@@ -13,6 +13,7 @@ namespace Sulu\Bundle\WebsiteBundle\Analytics;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Bundle\TrashBundle\Application\TrashManager\TrashManagerInterface;
 use Sulu\Bundle\WebsiteBundle\Domain\Event\AnalyticsCreatedEvent;
 use Sulu\Bundle\WebsiteBundle\Domain\Event\AnalyticsModifiedEvent;
 use Sulu\Bundle\WebsiteBundle\Domain\Event\AnalyticsRemovedEvent;
@@ -51,18 +52,25 @@ class AnalyticsManager implements AnalyticsManagerInterface
      */
     private $domainEventCollector;
 
+    /**
+     * @var TrashManagerInterface|null
+     */
+    private $trashManager;
+
     public function __construct(
         EntityManagerInterface $entityManager,
         AnalyticsRepositoryInterface $analyticsRepository,
         DomainRepository $domainRepository,
         string $environment,
-        DomainEventCollectorInterface $domainEventCollector
+        DomainEventCollectorInterface $domainEventCollector,
+        ?TrashManagerInterface $trashManager = null
     ) {
         $this->entityManager = $entityManager;
         $this->analyticsRepository = $analyticsRepository;
         $this->domainRepository = $domainRepository;
         $this->environment = $environment;
         $this->domainEventCollector = $domainEventCollector;
+        $this->trashManager = $trashManager;
     }
 
     public function findAll($webspaceKey)
@@ -104,6 +112,13 @@ class AnalyticsManager implements AnalyticsManagerInterface
 
         $webspaceKey = $entity->getWebspaceKey();
         $analyticsTitle = $entity->getTitle();
+
+        if ($this->trashManager) {
+            $this->trashManager->store(
+                AnalyticsInterface::RESOURCE_KEY,
+                $entity
+            );
+        }
 
         $this->entityManager->remove($entity);
 

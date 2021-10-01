@@ -74,6 +74,7 @@ call to pass the correct parameters:
 - `Sulu\Bundle\TagBundle\Tag\TagManager`
 - `Sulu\Bundle\CategoryBundle\Category\CategoryManager`
 - `Sulu\Bundle\MediaBundle\Media\Manager\MediaManager`
+- `Sulu\Bundle\WebsiteBundle\Analytics\AnalyticsManager`
 
 ### Added SuluTrashBundle to make resources trashable/restorable
 

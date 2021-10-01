@@ -25,13 +25,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class WebsiteAdmin extends Admin
 {
-    /**
-     * Returns security context for analytics in given webspace.
-     */
-    public static function getAnalyticsSecurityContext(string $webspaceKey): string
-    {
-        return \sprintf('%s%s.%s', PageAdmin::SECURITY_CONTEXT_PREFIX, $webspaceKey, 'analytics');
-    }
+    public const ANALYTICS_LIST_VIEW = 'sulu_webspace.analytics_list';
 
     /**
      * @var ViewBuilderFactoryInterface
@@ -75,7 +69,7 @@ class WebsiteAdmin extends Admin
         if ($this->hasSomeWebspaceAnalyticsPermission()) {
             $viewCollection->add(
                 $this->viewBuilderFactory
-                    ->createFormOverlayListViewBuilder('sulu_webspace.analytics_list', '/analytics')
+                    ->createFormOverlayListViewBuilder(static::ANALYTICS_LIST_VIEW, '/analytics')
                     ->setResourceKey(AnalyticsInterface::RESOURCE_KEY)
                     ->setListKey(AnalyticsInterface::LIST_KEY)
                     ->addListAdapters(['table'])
@@ -158,5 +152,13 @@ class WebsiteAdmin extends Admin
         }
 
         return false;
+    }
+
+    /**
+     * Returns security context for analytics in given webspace.
+     */
+    public static function getAnalyticsSecurityContext(string $webspaceKey): string
+    {
+        return \sprintf('%s%s.%s', PageAdmin::SECURITY_CONTEXT_PREFIX, $webspaceKey, 'analytics');
     }
 }

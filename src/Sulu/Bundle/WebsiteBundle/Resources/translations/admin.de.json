@@ -23,6 +23,7 @@
     "sulu_activity.description.analytics.created": "{userFullName} hat den Analytics Eintrag \"{resourceTitle}\" erstellt",
     "sulu_activity.description.analytics.modified": "{userFullName} hat den Analytics Eintrag \"{resourceTitle}\" geändert",
     "sulu_activity.description.analytics.removed": "{userFullName} hat den Analytics Eintrag \"{resourceTitle}\" gelöscht",
+    "sulu_activity.description.analytics.restored": "{userFullName} hat den Analytics Eintrag \"{resourceTitle}\" wiederhergestellt",
     "sulu_activity.resource.webspaces": "Webspace",
     "sulu_activity.description.webspaces.cache_cleared": "{userFullName} hat den Webseiten Cache für den Webspace \"{resourceTitle}\" geleert."
 }
