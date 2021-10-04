@@ -73,7 +73,7 @@ class WebsiteSearchController
      */
     public function queryAction(Request $request)
     {
-        $query = $this->getRequestParameter($request, 'q', true);
+        $query = $this->getRequestParameter($request, 'q', true, '');
 
         $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocale();
         $webspace = $this->requestAnalyzer->getWebspace();
