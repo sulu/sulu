@@ -363,6 +363,8 @@ class PageAdmin extends Admin
                 $viewCollection->add(
                     $this->viewBuilderFactory
                         ->createResourceTabViewBuilder($activityResourceTabViewName, '/activity')
+                        ->setType('sulu_admin.preview_resource_tabs')
+                        ->setOption('previewResourceKey', BasePageDocument::RESOURCE_KEY)
                         ->setResourceKey(BasePageDocument::RESOURCE_KEY)
                         ->setTabOrder(6144)
                         ->setTabTitle($this->versioningEnabled ? 'sulu_admin.activity_versions' : 'sulu_admin.activity')

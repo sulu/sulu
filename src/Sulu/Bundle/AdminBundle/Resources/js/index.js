@@ -113,6 +113,7 @@ import Form, {
 import {navigationRegistry} from './containers/Navigation';
 import {smartContentConfigStore} from './containers/SmartContent';
 import PreviewForm from './views/PreviewForm';
+import PreviewResourceTabs from './views/PreviewResourceTabs';
 import FormOverlayList from './views/FormOverlayList';
 import {initializeJexl} from './utils/jexl';
 import {ExternalLinkTypeOverlay, LinkTypeOverlay} from './containers/Link';
@@ -182,6 +183,7 @@ initializer.addUpdateConfigHook('sulu_admin', (config: Object, initialized: bool
 function registerViews() {
     viewRegistry.add('sulu_admin.form', Form);
     viewRegistry.add('sulu_admin.preview_form', PreviewForm);
+    viewRegistry.add('sulu_admin.preview_resource_tabs', PreviewResourceTabs);
     viewRegistry.add('sulu_admin.list', List);
     viewRegistry.add('sulu_admin.form_overlay_list', FormOverlayList);
     viewRegistry.add('sulu_admin.resource_tabs', ResourceTabs);

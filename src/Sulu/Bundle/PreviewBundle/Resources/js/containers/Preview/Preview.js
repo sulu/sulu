@@ -15,7 +15,7 @@ import PreviewStore from './stores/PreviewStore';
 import type {PreviewMode} from './types';
 
 type Props = {|
-    formStore: ResourceFormStore,
+    formStore: ?ResourceFormStore,
     router: Router,
 |};
 
@@ -93,9 +93,9 @@ class Preview extends React.Component<Props> {
             formStore,
         } = this.props;
 
-        when(() => formStore.loading, () => {
+        when(() => !formStore?.loading, () => {
             this.dispose();
-            if (props.formStore.resourceKey !== formStore.resourceKey) {
+            if (props.formStore?.resourceKey !== formStore?.resourceKey) {
                 this.previewStore.stop().then(() => {
                     this.createPreviewStore();
 
@@ -105,31 +105,39 @@ class Preview extends React.Component<Props> {
                 return;
             }
 
-            this.updatePreview(this.props.formStore.data);
-            this.initializeReaction();
+            if (formStore) {
+                this.updatePreview(formStore.data);
+                this.initializeReaction();
+            }
         });
     }
 
     @action createPreviewStore = () => {
         const {
-            formStore: {
-                resourceKey,
-                id,
-                locale,
-            },
+            formStore,
             router: {
+                attributes: {
+                    locale,
+                    id,
+                },
                 route: {
                     options: {
+                        resourceKey: routeResourceKey = null,
                         previewResourceKey = null,
                     },
                 },
             },
         } = this.props;
 
+        const resourceKey = previewResourceKey || formStore?.resourceKey || routeResourceKey;
+        if (!resourceKey) {
+            throw new Error('A "resourceKey" has to be specified for the preview!');
+        }
+
         this.previewStore = new PreviewStore(
-            previewResourceKey ? previewResourceKey : resourceKey,
-            id,
-            locale,
+            resourceKey,
+            formStore?.id || id,
+            formStore?.locale || locale,
             this.webspaceKey,
             this.segments.find((segment) => segment.default === true)?.key
         );
@@ -149,7 +157,7 @@ class Preview extends React.Component<Props> {
         previewStore.start();
 
         when(
-            () => !formStore.loading
+            () => !formStore?.loading
                 && !previewStore.starting
                 && this.iframeRef !== null
                 && (!this.targetGroupsStore || !this.targetGroupsStore.loading),
@@ -166,7 +174,7 @@ class Preview extends React.Component<Props> {
             formStore,
         } = this.props;
 
-        if (previewStore.resourceKey !== formStore.resourceKey) {
+        if (!formStore || previewStore.resourceKey !== formStore.resourceKey) {
             return;
         }
 
@@ -265,14 +273,18 @@ class Preview extends React.Component<Props> {
         const {formStore} = this.props;
 
         this.previewStore.setTargetGroup(targetGroupId);
-        this.updatePreview(toJS(formStore.data));
+        if (formStore) {
+            this.updatePreview(toJS(formStore.data));
+        }
     };
 
     handleSegmentChange = (segmentKey: ?string) => {
         const {formStore} = this.props;
 
         this.previewStore.setSegment(segmentKey);
-        this.updatePreview(toJS(formStore.data));
+        if (formStore) {
+            this.updatePreview(toJS(formStore.data));
+        }
     };
 
     @action handleRefreshClick = () => {
