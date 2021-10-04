@@ -204,10 +204,10 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
                 $qb->setParameter('search', '%' . $search . '%');
             }
             if (null !== $offset) {
-                $qb->setFirstResult($offset);
+                $qb->setFirstResult((int) $offset);
             }
             if (null !== $limit) {
-                $qb->setMaxResults($limit);
+                $qb->setMaxResults((int) $limit);
             }
 
             return new Paginator($qb->getQuery());

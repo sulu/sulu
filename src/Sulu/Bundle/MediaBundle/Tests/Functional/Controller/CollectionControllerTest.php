@@ -355,6 +355,34 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertCount(16, $response->_embedded->collections);
     }
 
+    public function testCGetPageAndLimit()
+    {
+        for ($i = 1; $i < 8; ++$i) {
+            $this->createCollection(
+                $this->collectionType1,
+                ['en-gb' => 'Test Collection ' . $i, 'de' => 'Test Kollektion ' . $i]
+            );
+        }
+
+        $this->client->jsonRequest(
+            'GET',
+            '/api/collections?page=3&limit=3',
+            [
+                'locale' => 'en-gb',
+            ]
+        );
+
+        $response = \json_decode($this->client->getResponse()->getContent());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+
+        $this->assertNotEmpty($response->_embedded->collections);
+
+        $this->assertCount(2, $response->_embedded->collections);
+        $this->assertSame(8, $response->total);
+        $this->assertSame(3, $response->page);
+        $this->assertSame(3, $response->pages);
+    }
+
     public function testCGetFlatWithRootParent()
     {
         $collection = $this->createCollection($this->collectionType1);
