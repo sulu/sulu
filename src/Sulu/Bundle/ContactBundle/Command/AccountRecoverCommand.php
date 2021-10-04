@@ -178,8 +178,10 @@ class AccountRecoverCommand extends Command
                 WHERE ( c2.depth - 1 ) <> c1.depth';
 
         $statement = $this->entityManager->getConnection()->prepare($sql);
-        if ($statement->execute()) {
-            return $statement->rowCount();
+        $result = $statement->execute();
+
+        if ($result) {
+            return method_exists($statement, 'rowCount') ? $statement->rowCount() : $result->rowCount();
         }
 
         return false;

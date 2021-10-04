@@ -718,21 +718,17 @@ class MediaManager implements MediaManagerInterface
 
     public function move($id, $locale, $destCollection)
     {
-        try {
-            $mediaEntity = $this->mediaRepository->findMediaById($id);
+        $mediaEntity = $this->mediaRepository->findMediaById($id);
 
-            if (null === $mediaEntity) {
-                throw new MediaNotFoundException($id);
-            }
-
-            $mediaEntity->setCollection($this->em->getReference(self::ENTITY_NAME_COLLECTION, $destCollection));
-
-            $this->em->flush();
-
-            return $this->addFormatsAndUrl(new Media($mediaEntity, $locale, null));
-        } catch (DBALException $ex) {
-            throw new CollectionNotFoundException($destCollection);
+        if (null === $mediaEntity) {
+            throw new MediaNotFoundException($id);
         }
+
+        $mediaEntity->setCollection($this->em->getReference(self::ENTITY_NAME_COLLECTION, $destCollection));
+
+        $this->em->flush();
+
+        return $this->addFormatsAndUrl(new Media($mediaEntity, $locale, null));
     }
 
     public function increaseDownloadCounter($fileVersionId)

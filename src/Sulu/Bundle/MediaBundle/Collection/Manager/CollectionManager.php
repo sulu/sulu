@@ -536,25 +536,21 @@ class CollectionManager implements CollectionManagerInterface
 
     public function move($id, $locale, $destinationId = null)
     {
-        try {
-            $collectionEntity = $this->collectionRepository->findCollectionById($id);
+        $collectionEntity = $this->collectionRepository->findCollectionById($id);
 
-            if (null === $collectionEntity) {
-                throw new CollectionNotFoundException($id);
-            }
-
-            $destinationEntity = null;
-            if (null !== $destinationId) {
-                $destinationEntity = $this->collectionRepository->findCollectionById($destinationId);
-            }
-
-            $collectionEntity->setParent($destinationEntity);
-            $this->em->flush();
-
-            return $this->getApiEntity($collectionEntity, $locale);
-        } catch (DBALException $ex) {
-            throw new CollectionNotFoundException($destinationId);
+        if (null === $collectionEntity) {
+            throw new CollectionNotFoundException($id);
         }
+
+        $destinationEntity = null;
+        if (null !== $destinationId) {
+            $destinationEntity = $this->collectionRepository->findCollectionById($destinationId);
+        }
+
+        $collectionEntity->setParent($destinationEntity);
+        $this->em->flush();
+
+        return $this->getApiEntity($collectionEntity, $locale);
     }
 
     /**

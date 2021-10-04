@@ -168,12 +168,8 @@ class TagController extends AbstractRestController implements ClassResourceInter
     /**
      * Inserts a new tag.
      *
-     * @throws \Doctrine\DBAL\DBALException
-     * @throws \Exception
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      *
-     * @throws \Doctrine\DBAL\DBALException
      * @throws \Exception
      */
     public function postAction(Request $request)
@@ -211,7 +207,6 @@ class TagController extends AbstractRestController implements ClassResourceInter
      *
      * @return \Symfony\Component\HttpFoundation\Response
      *
-     * @throws \Doctrine\DBAL\DBALException
      * @throws \Exception
      */
     public function putAction(Request $request, $id)
@@ -258,7 +253,7 @@ class TagController extends AbstractRestController implements ClassResourceInter
             try {
                 $this->tagManager->delete($id);
             } catch (TagNotFoundException $tnfe) {
-                throw new EntityNotFoundException(self::$entityName, $id);
+                throw new EntityNotFoundException(self::$entityName, $id, $tnfe);
             }
         };
 
