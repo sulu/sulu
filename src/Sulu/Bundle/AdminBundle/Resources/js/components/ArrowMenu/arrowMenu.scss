@@ -6,6 +6,12 @@ $arrowMenuBoxShadow: 0 0 14px 0 rgba($doveGray, .5);
 .arrowMenuContainer {
     margin: 0;
     position: relative;
+
+    /*
+    * the popover component sets a max-height to this element. we use flexbox to make sure that the children do not
+    * overflow the container and exceed the max-height: https://stackoverflow.com/a/23300532/16151545
+    */
+    display: flex;
 }
 
 .arrowMenu {
