@@ -337,8 +337,9 @@ class PageAdmin extends Admin
             );
             $viewCollection->add(
                 $this->viewBuilderFactory
-                    ->createFormViewBuilder('sulu_page.page_edit_form.permissions', '/permissions')
+                    ->createPreviewFormViewBuilder('sulu_page.page_edit_form.permissions', '/permissions')
                     ->setResourceKey('permissions')
+                    ->setPreviewResourceKey(BasePageDocument::RESOURCE_KEY)
                     ->setFormKey('permission_details')
                     ->addRequestParameters(['resourceKey' => BasePageDocument::RESOURCE_KEY])
                     ->setTabCondition('_permissions.security')

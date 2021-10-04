@@ -89,14 +89,6 @@ export default class PreviewStore {
         });
     }
 
-    restart = (newResourceKey: string) => {
-        return this.stop().then(() => {
-            this.resourceKey = newResourceKey;
-
-            return this.start();
-        });
-    };
-
     update(data: Object): Promise<string> {
         const route = generateRoute('update', {
             locale: this.locale,
