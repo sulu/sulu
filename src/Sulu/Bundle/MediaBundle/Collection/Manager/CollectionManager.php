@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Collection\Manager;
 
-use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Sulu\Bundle\MediaBundle\Api\Collection;

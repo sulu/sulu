@@ -181,7 +181,8 @@ class RecoverCommand extends Command
         $result = $statement->execute();
 
         if ($result) {
-            return method_exists($statement, 'rowCount') ? $statement->rowCount() : $result->rowCount();
+            // DBAL 2 to 3 BC Layer
+            return \method_exists($statement, 'rowCount') ? $statement->rowCount() : $result->rowCount();
         }
 
         return false;

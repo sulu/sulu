@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\Manager;
 
-use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
 use FFMpeg\Exception\ExecutableNotFoundException;
 use FFMpeg\FFProbe;
