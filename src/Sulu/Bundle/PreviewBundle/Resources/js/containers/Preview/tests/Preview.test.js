@@ -449,7 +449,7 @@ test('Dont react or update preview when data is changed during formstore is load
 
     return startPromise.then(() => {
         preview.update();
-        expect(previewStore.update).toBeCalled();
+        expect(previewStore.update).not.toBeCalled();
 
         expect(preview.render()).toMatchSnapshot();
     });

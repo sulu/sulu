@@ -88,26 +88,17 @@ class Preview extends React.Component<Props> {
         }
     }
 
-    componentDidUpdate(props: Props) {
+    componentDidUpdate(prevProps: Props) {
         const {
             formStore,
         } = this.props;
 
-        when(() => formStore.loading, () => {
+        if (this.props.formStore !== prevProps.formStore) {
             this.dispose();
-            if (props.formStore.resourceKey !== formStore.resourceKey) {
-                this.previewStore.stop().then(() => {
-                    this.createPreviewStore();
+            this.updatePreview(toJS(formStore.data));
 
-                    this.startPreview();
-                });
-
-                return;
-            }
-
-            this.updatePreview(this.props.formStore.data);
             this.initializeReaction();
-        });
+        }
     }
 
     @action createPreviewStore = () => {
@@ -153,7 +144,7 @@ class Preview extends React.Component<Props> {
                 && !previewStore.starting
                 && this.iframeRef !== null
                 && (!this.targetGroupsStore || !this.targetGroupsStore.loading),
-            () => this.initializeReaction()
+            this.initializeReaction
         );
 
         this.setStarted(true);
@@ -188,8 +179,10 @@ class Preview extends React.Component<Props> {
     };
 
     updatePreview = debounce((data: Object) => {
-        const {previewStore} = this;
-        previewStore.update(data).then(this.setContent);
+        if (this.props.formStore.resourceKey === this.previewStore.resourceKey) {
+            const {previewStore} = this;
+            previewStore.update(data).then(this.setContent);
+        }
     }, Preview.debounceDelay);
 
     setContent = (previewContent: string) => {
@@ -254,11 +247,17 @@ class Preview extends React.Component<Props> {
     };
 
     @action handleDateTimeChange = debounce((value: ?Date) => {
+        const {formStore} = this.props;
+
         this.previewStore.setDateTime(value || new Date());
+        this.updatePreview(toJS(formStore.data));
     }, Preview.debounceDelay);
 
     @action handleWebspaceChange = (webspace: string) => {
+        const {formStore} = this.props;
+
         this.previewStore.setWebspace(webspace);
+        this.updatePreview(toJS(formStore.data));
     };
 
     handleTargetGroupChange = (targetGroupId: number) => {
@@ -301,7 +300,7 @@ class Preview extends React.Component<Props> {
             return null;
         }
 
-        if (!this.started) {
+        if (Preview.mode !== 'auto' && !this.started) {
             return <button onClick={this.handleStartClick}>Start</button>;
         }
 
