@@ -20,7 +20,8 @@ x/UPGRADE.md#upgrade-to-30).
 Else you should define the doctrine/dbal version to ^2.10 with:
 
 ```bash
-composer require doctrine/dbal:^2.10
+composer require doctrine/dbal:^2.10 --no-update
+composer update
 ```
 
 ## 2.2.11
