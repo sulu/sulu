@@ -302,8 +302,8 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
 
     /**
      * @param int $collectionId
-     * @param int $limit
-     * @param int $offset
+     * @param int|null $limit
+     * @param int|null $offset
      *
      * @return array
      */
@@ -321,9 +321,14 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
             ->innerJoin('files.fileVersions', 'versions', 'WITH', 'versions.version = files.version')
             ->join('media.collection', 'collection')
             ->where('collection.id = :collectionId')
-            ->setFirstResult($offset)
-            ->setMaxResults($limit)
             ->setParameter('collectionId', $collectionId);
+
+        if ($offset) {
+            $queryBuilder->setFirstResult((int) $offset);
+        }
+        if ($limit) {
+            $queryBuilder->setMaxResults((int) $limit);
+        }
 
         $query = $queryBuilder->getQuery();
         $paginator = new Paginator($query);

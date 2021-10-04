@@ -82,8 +82,14 @@ class ListRepository extends EntityRepository
             ->createQuery($dql);
 
         if (!$justCount) {
-            $query->setFirstResult($this->helper->getOffset())
-                ->setMaxResults($this->helper->getLimit());
+            $offset = $this->helper->getOffset();
+            if (null !== $offset) {
+                $query->setFirstResult($offset);
+            }
+            $limit = $this->helper->getLimit();
+            if (null !== $limit) {
+                $query->setMaxResults($limit);
+            }
         }
         if (null != $searchPattern && '' != $searchPattern) {
             if (\count($searchFields) > 0) {

@@ -17,12 +17,11 @@
         </id>
 
         <field name="key" type="string" column="settingKey" length="191"/>
-        <field name="value" type="json_array" column="value"/>
+        <field name="value" type="json" column="value"/>
 
         <many-to-one field="role" target-entity="Sulu\Component\Security\Authentication\RoleInterface"
                      inversed-by="settings">
             <join-column name="roleId" referenced-column-name="id" on-delete="CASCADE" />
         </many-to-one>
-
     </entity>
 </doctrine-mapping>

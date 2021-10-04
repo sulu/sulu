@@ -14,7 +14,7 @@ namespace Sulu\Bundle\MediaBundle\Media\Exception;
 class CollectionNotFoundException extends MediaException
 {
     /**
-     * @param string $id
+     * @param string|int $id
      */
     public function __construct($id)
     {

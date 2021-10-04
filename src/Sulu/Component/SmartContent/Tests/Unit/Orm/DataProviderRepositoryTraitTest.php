@@ -33,8 +33,9 @@ class Query extends AbstractQuery
     {
     }
 
-    public function _doExecute()
+    public function _doExecute(): int
     {
+        return 0;
     }
 }
 
@@ -95,20 +96,31 @@ class DataProviderRepositoryTraitTest extends TestCase
         $dataProviderRepositoryTrait = new class($accessControlQueryEnhancer->reveal(), $queryBuilder->reveal()) {
             use DataProviderRepositoryTrait;
 
+            /**
+             * @var QueryBuilder
+             */
             private $queryBuilder;
 
-            public function __construct($accessControlQueryEnhancer, $queryBuilder)
+            public function __construct(AccessControlQueryEnhancer $accessControlQueryEnhancer, QueryBuilder $queryBuilder)
             {
                 $this->accessControlQueryEnhancer = $accessControlQueryEnhancer;
                 $this->queryBuilder = $queryBuilder;
             }
 
-            public function createQueryBuilder($alias, $indexBy = null)
+            /**
+             * @param string $alias
+             * @param string|null $indexBy
+             */
+            public function createQueryBuilder($alias, $indexBy = null): QueryBuilder
             {
                 return $this->queryBuilder;
             }
 
-            public function appendJoins(QueryBuilder $queryBuilder, $alias, $locale)
+            /**
+             * @param string $alias
+             * @param string $locale
+             */
+            public function appendJoins(QueryBuilder $queryBuilder, $alias, $locale): void
             {
             }
         };

@@ -270,7 +270,7 @@ class DoctrineListBuilder extends AbstractListBuilder
 
         $subQueryBuilder = $this->createSubQueryBuilder($select);
         if (null != $this->limit) {
-            $subQueryBuilder->setMaxResults($this->limit)->setFirstResult($this->limit * ($this->page - 1));
+            $subQueryBuilder->setMaxResults((int) $this->limit)->setFirstResult((int) ($this->limit * ($this->page - 1)));
         }
 
         foreach ($this->sortFields as $index => $sortField) {
