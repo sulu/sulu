@@ -330,7 +330,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertFalse($response->_hasPermissions);
     }
 
-    public function testCGet()
+    public function testCGet(): void
     {
         for ($i = 1; $i <= 15; ++$i) {
             $this->createCollection(
@@ -355,7 +355,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertCount(16, $response->_embedded->collections);
     }
 
-    public function testCGetPageAndLimit()
+    public function testCGetPaginatedFlat(): void
     {
         for ($i = 1; $i < 8; ++$i) {
             $this->createCollection(
@@ -366,15 +366,16 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->client->jsonRequest(
             'GET',
-            '/api/collections?page=3&limit=3',
+            '/api/collections?page=3&limit=3&flat=true',
             [
                 'locale' => 'en-gb',
             ]
         );
 
-        $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $response = \json_decode($this->client->getResponse()->getContent());
 
+        $this->assertInstanceOf(\stdClass::class, $response);
         $this->assertNotEmpty($response->_embedded->collections);
 
         $this->assertCount(2, $response->_embedded->collections);
@@ -383,7 +384,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertSame(3, $response->pages);
     }
 
-    public function testCGetFlatWithRootParent()
+    public function testCGetFlatWithRootParent(): void
     {
         $collection = $this->createCollection($this->collectionType1);
 
@@ -405,7 +406,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertCount(2, $response->_embedded->collections);
     }
 
-    public function testCGetFlatWithRootParentAndIncludeRoot()
+    public function testCGetFlatWithRootParentAndIncludeRoot(): void
     {
         $collection = $this->createCollection($this->collectionType1);
 
@@ -428,7 +429,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertCount(2, $response->_embedded->collections);
     }
 
-    public function testCGetFlatWithParent()
+    public function testCGetFlatWithParent(): void
     {
         $collection = $this->createCollection($this->collectionType1);
 
@@ -458,7 +459,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertCount(5, $response->_embedded->collections);
     }
 
-    public function testcGetPaginated()
+    public function testcGetPaginated(): void
     {
         $this->createCollection(
             $this->collectionType1,
@@ -518,7 +519,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertEquals('Test Collection', $response->_embedded->collections[0]->_embedded->collections[0]->title);
     }
 
-    public function testcGetPaginatedWithParentAndIgnoredRoot()
+    public function testcGetPaginatedWithParentAndIgnoredRoot(): void
     {
         $this->client->jsonRequest(
             'GET',
@@ -577,7 +578,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertEquals(1, $response->_embedded->collections[1]->objectCount);
     }
 
-    public function testGetByIdNotExisting()
+    public function testGetByIdNotExisting(): void
     {
         $this->client->jsonRequest(
             'GET',
@@ -591,7 +592,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertTrue(isset($response->message));
     }
 
-    public function testPost()
+    public function testPost(): void
     {
         $generateColor = '#ffcc00';
 
@@ -688,7 +689,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertEquals('This Description 2 is only for testing', $responseSecondEntity->description);
     }
 
-    public function testPostNested()
+    public function testPostNested(): void
     {
         $this->getContainer()->get('sulu_media.system_collections.manager')->warmUp();
         $this->client->getContainer()->get('sulu_media.system_collections.manager')->warmUp();
@@ -783,7 +784,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertEquals(2 + $this->getAmountOfSystemCollections(), $response->total);
     }
 
-    public function testPostWithPermissions()
+    public function testPostWithPermissions(): void
     {
         $this->getContainer()->get('sulu_media.system_collections.manager')->warmUp();
         $this->client->getContainer()->get('sulu_media.system_collections.manager')->warmUp();
@@ -836,7 +837,7 @@ class CollectionControllerTest extends SuluTestCase
         );
     }
 
-    public function testPostWithoutDetails()
+    public function testPostWithoutDetails(): void
     {
         $this->client->jsonRequest(
             'POST',
@@ -954,7 +955,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertEquals('Test Collection 2', $responseSecondEntity->title);
     }
 
-    public function testPostWithNotExistingType()
+    public function testPostWithNotExistingType(): void
     {
         $generateColor = '#ffcc00';
 
@@ -984,7 +985,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertTrue(isset($response->message));
     }
 
-    public function testPut()
+    public function testPut(): void
     {
         $this->getContainer()->get('sulu_media.system_collections.manager')->warmUp();
         $this->client->getContainer()->get('sulu_media.system_collections.manager')->warmUp();
@@ -1069,7 +1070,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertEquals('en-gb', $responseFirstEntity->locale);
     }
 
-    public function testPutWithoutLocale()
+    public function testPutWithoutLocale(): void
     {
         $this->client->jsonRequest(
             'PUT',
@@ -1088,7 +1089,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(400, $this->client->getResponse());
     }
 
-    public function testPutWithChildCollection()
+    public function testPutWithChildCollection(): void
     {
         $childCollection = $this->createCollection(
             $this->collectionType1,
@@ -1121,7 +1122,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertEquals($this->collection1->getId(), $response->_embedded->breadcrumb[0]->id);
     }
 
-    public function testPutWithoutBreadcrumb()
+    public function testPutWithoutBreadcrumb(): void
     {
         $childCollection = $this->createCollection(
             $this->collectionType1,
@@ -1153,7 +1154,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertNull($response['_embedded']['breadcrumb']);
     }
 
-    public function testPutNoDetails()
+    public function testPutNoDetails(): void
     {
         // Add New Collection Type
         $collectionType = new CollectionType();
@@ -1199,7 +1200,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertNotNull($response->type->id);
     }
 
-    public function testPutNotExisting()
+    public function testPutNotExisting(): void
     {
         $this->client->jsonRequest(
             'PUT',
@@ -1217,7 +1218,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
-    public function testDeleteById()
+    public function testDeleteById(): void
     {
         $collection1Id = $this->collection1->getId();
 
@@ -1236,7 +1237,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertTrue(isset($response->message));
     }
 
-    public function testDeleteByIdNotExisting()
+    public function testDeleteByIdNotExisting(): void
     {
         $this->client->jsonRequest('DELETE', '/api/collections/404');
         $this->assertHttpStatusCode(404, $this->client->getResponse());
@@ -1246,7 +1247,10 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertEquals(2, $response->total);
     }
 
-    private function prepareTree()
+    /**
+     * @return mixed[]
+     */
+    private function prepareTree(): array
     {
         $collection1 = $this->collection1;
         $collection2 = $this->createCollection(
@@ -1310,7 +1314,7 @@ class CollectionControllerTest extends SuluTestCase
         ];
     }
 
-    public function testCGetNestedFlat()
+    public function testCGetNestedFlat(): void
     {
         list($titles) = $this->prepareTree();
 
@@ -1381,7 +1385,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertContains(['title' => $titles[6], 'parent' => $titles[5], 'collections' => []], $items);
     }
 
-    public function testCGetNestedTree()
+    public function testCGetNestedTree(): void
     {
         list($titles) = $this->prepareTree();
 
@@ -1486,7 +1490,7 @@ class CollectionControllerTest extends SuluTestCase
         );
     }
 
-    public function testGetBreadcrumb()
+    public function testGetBreadcrumb(): void
     {
         list($titles, $ids) = $this->prepareTree();
 
@@ -1510,7 +1514,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertEquals($ids[5], $breadcrumb[1]['id']);
     }
 
-    public function testGetByIdWithDepth()
+    public function testGetByIdWithDepth(): void
     {
         list($titles, $ids) = $this->prepareTree();
 
@@ -1580,7 +1584,7 @@ class CollectionControllerTest extends SuluTestCase
         );
     }
 
-    public function testMove()
+    public function testMove(): void
     {
         list($titles, $ids) = $this->prepareTree();
 
@@ -1626,7 +1630,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertContains(['title' => $titles[6], 'parent' => $titles[5], 'collections' => []], $items);
     }
 
-    public function testPostParentIsSystemCollection()
+    public function testPostParentIsSystemCollection(): void
     {
         $collectionId = $this->client->getContainer()->get('sulu_media.system_collections.manager')->getSystemCollection(
             'sulu_media'
@@ -1649,7 +1653,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(403, $this->client->getResponse());
     }
 
-    public function testPutSystemCollection()
+    public function testPutSystemCollection(): void
     {
         $collectionId = $this->client->getContainer()->get('sulu_media.system_collections.manager')->getSystemCollection(
             'sulu_media'
@@ -1671,7 +1675,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(403, $this->client->getResponse());
     }
 
-    public function testDeleteSystemCollection()
+    public function testDeleteSystemCollection(): void
     {
         $collectionId = $this->client->getContainer()->get('sulu_media.system_collections.manager')->getSystemCollection(
             'sulu_media'
