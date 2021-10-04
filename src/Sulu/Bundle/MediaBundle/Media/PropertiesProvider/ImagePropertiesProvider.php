@@ -23,6 +23,11 @@ class ImagePropertiesProvider implements MediaPropertiesProviderInterface
      */
     private $imagine;
 
+    /**
+     * @var ImagineInterface|null
+     */
+    private $svgImagine;
+
     public function __construct(
         ImagineInterface $imagine,
         ?ImagineInterface $svgImagine = null
