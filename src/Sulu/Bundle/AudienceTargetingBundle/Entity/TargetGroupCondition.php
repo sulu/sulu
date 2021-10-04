@@ -27,7 +27,7 @@ class TargetGroupCondition implements TargetGroupConditionInterface
     private $type;
 
     /**
-     * @var string
+     * @var mixed[]
      */
     private $condition;
 

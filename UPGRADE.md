@@ -1,5 +1,19 @@
 # Upgrade
 
+## 2.2.15
+
+### Add doctrine/dbal 3 and doctrine/orm 2.10 support
+
+The doctrine/orm 2.10 did remove the json_array type which need to be patched.
+
+```sql
+ALTER TABLE se_role_settings CHANGE value value JSON NOT NULL;
+ALTER TABLE we_analytics CHANGE content content JSON NOT NULL;
+
+-- if you use audience targeting also the following is required:
+ALTER TABLE at_target_group_conditions CHANGE condition condition JSON NOT NULL
+```
+
 ## 2.2.11
 
 ### Migrate permissions properties for pages
