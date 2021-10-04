@@ -30,12 +30,24 @@ trait PurgeDatabaseTrait
         $entityManager = static::getEntityManager();
         $connection = $entityManager->getConnection();
 
-        if ($connection->getDriver() instanceof \Doctrine\DBAL\Driver\PDOMySql\Driver) {
-            $connection->executeUpdate('SET foreign_key_checks = 0;');
+        $isMysql = 'mysql' === $connection->getDriver()->getDatabasePlatform()->getName();
+        $isPostgreSQL = 'postgresql' === $connection->getDriver()->getDatabasePlatform()->getName();
+
+        $executeDoctrineStatement = function(string $sql) use ($connection) {
+            if (\method_exists($connection, 'executeStatement')) {
+                $connection->executeStatement($sql);
+            } else {
+                // executeUpdate can be removed when upgrade to a doctrine/dbal 3
+                $connection->executeUpdate($sql);
+            }
+        };
+
+        if ($isMysql) {
+            $executeDoctrineStatement('SET foreign_key_checks = 0;');
         }
 
-        if ($connection->getDriver() instanceof \Doctrine\DBAL\Driver\PDOPgSql\Driver) {
-            $connection->executeUpdate('SET session_replication_role = "replica";');
+        if ($isPostgreSQL) {
+            $executeDoctrineStatement('SET session_replication_role = "replica";');
         }
 
         $purger = new ORMPurger();
@@ -44,12 +56,12 @@ trait PurgeDatabaseTrait
         $executor->setReferenceRepository($referenceRepository);
         $executor->purge();
 
-        if ($connection->getDriver() instanceof \Doctrine\DBAL\Driver\PDOMySql\Driver) {
-            $connection->executeUpdate('SET foreign_key_checks = 1;');
+        if ($isMysql) {
+            $executeDoctrineStatement('SET foreign_key_checks = 1;');
         }
 
-        if ($connection->getDriver() instanceof \Doctrine\DBAL\Driver\PDOPgSql\Driver) {
-            $connection->executeUpdate('SET session_replication_role = "origin";');
+        if ($isPostgreSQL) {
+            $executeDoctrineStatement('SET session_replication_role = "origin";');
         }
     }
 
