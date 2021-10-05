@@ -311,9 +311,17 @@ class UpdateBuildCommand extends Command
 
         $ui->title('Start manual build ...');
 
+        $ui->section('Cleanup previously installed "node_modules" folders');
+        $this->cleanupPreviouslyInstalledDependencies();
+
+        $errorHelpMessage =
+            'Visit https://docs.sulu.io/en/latest/cookbook/build-admin-frontend.html#common-errors' . \PHP_EOL
+            . 'to get some tips on how to fix this error.';
+
         $ui->section('Install npm dependencies');
         if ($this->runProcess($ui, 'npm install')) {
             $ui->error('Unexpected error while installing npm dependencies.');
+            $ui->info($errorHelpMessage);
 
             return static::EXIT_CODE_COULD_NOT_INSTALL_NPM_PACKAGES;
         }
@@ -321,6 +329,7 @@ class UpdateBuildCommand extends Command
         $ui->section('Build administration interface assets');
         if ($this->runProcess($ui, 'npm run build')) {
             $ui->error('Unexpected error while building administration interface assets.');
+            $ui->info($errorHelpMessage);
 
             return static::EXIT_CODE_COULD_NOT_BUILD_ADMIN_ASSETS;
         }
