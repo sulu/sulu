@@ -280,7 +280,7 @@ class UpdateBuildCommand extends Command
         $ui->section('Install npm dependencies');
         if ($this->runProcess($ui, 'npm install')) {
             $ui->error('Unexpected error while installing npm dependencies.');
-            $ui->note($errorHelpMessage);
+            $ui->info($errorHelpMessage);
 
             return static::EXIT_CODE_COULD_NOT_INSTALL_NPM_PACKAGES;
         }
@@ -288,7 +288,7 @@ class UpdateBuildCommand extends Command
         $ui->section('Build administration interface assets');
         if ($this->runProcess($ui, 'npm run build')) {
             $ui->error('Unexpected error while building administration interface assets.');
-            $ui->note($errorHelpMessage);
+            $ui->info($errorHelpMessage);
 
             return static::EXIT_CODE_COULD_NOT_BUILD_ADMIN_ASSETS;
         }
