@@ -1,5 +1,29 @@
 # Upgrade
 
+## 2.3.6/2.2.15
+
+### Add doctrine/dbal 3 and doctrine/orm 2.10 support
+
+The doctrine/orm 2.10 did remove the deprecated `json_array` type which need to be patched to `json` type.
+
+```sql
+ALTER TABLE se_role_settings CHANGE value value JSON NOT NULL;
+ALTER TABLE we_analytics CHANGE content content JSON NOT NULL;
+
+-- if you use audience targeting also the following is required:
+ALTER TABLE at_target_group_conditions CHANGE condition condition JSON NOT NULL
+```
+
+If you upgrade doctrine/dbal to Version 3 see the [DBAL 3.0 UPGRADE.md](https://github.com/doctrine/dbal/blob/3.1.
+x/UPGRADE.md#upgrade-to-30).
+
+Else you should define the doctrine/dbal version to ^2.10 with:
+
+```bash
+composer require doctrine/dbal:^2.10 --no-update
+composer update
+```
+
 ## 2.3.5
 
 ### Migrate access control entityIdInteger field
