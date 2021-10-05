@@ -34,12 +34,12 @@ interface TargetGroupConditionInterface
     public function setType($type);
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public function getCondition();
 
     /**
-     * @param string $condition
+     * @param mixed[] $condition
      *
      * @return $this
      */

@@ -79,8 +79,9 @@ export default class PopoverPositioner {
             dimensions.top = anchorTop + verticalOffset;
         }
 
-        // If the bottom border is touched, it gets positioned from the anchor upwards.
-        if (crop.touchesBottomBorder) {
+        // If the bottom border is touched and there is more space above the popover than below, the popover gets
+        // positioned from the anchor upwards.
+        if (crop.touchesBottomBorder && crop.dimensions.top > windowHeight - crop.dimensions.top) {
             if (alignOnVerticalAnchorEdges) {
                 dimensions.top = anchorTop - popoverHeight - verticalOffset;
             } else {

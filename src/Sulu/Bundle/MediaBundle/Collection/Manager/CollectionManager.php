@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Collection\Manager;
 
-use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
@@ -651,41 +650,37 @@ class CollectionManager implements CollectionManagerInterface
 
     public function move($id, $locale, $destinationId = null)
     {
-        try {
-            $collectionEntity = $this->collectionRepository->findCollectionById($id);
+        $collectionEntity = $this->collectionRepository->findCollectionById($id);
 
-            if (null === $collectionEntity) {
-                throw new CollectionNotFoundException($id);
-            }
-
-            $previousParent = $collectionEntity->getParent();
-            $previousParentId = $previousParent ? $previousParent->getId() : null;
-            $previousParentMeta = $previousParent ? $this->getCollectionMeta($previousParent, $locale) : null;
-            $previousParentTitle = $previousParentMeta ? $previousParentMeta->getTitle() : null;
-            $previousParentTitleLocale = $previousParentMeta ? $previousParentMeta->getLocale() : null;
-
-            $destinationEntity = null;
-            if (null !== $destinationId) {
-                $destinationEntity = $this->collectionRepository->findCollectionById($destinationId);
-            }
-
-            $collectionEntity->setParent($destinationEntity);
-
-            $this->domainEventCollector->collect(
-                new CollectionMovedEvent(
-                    $collectionEntity,
-                    $previousParentId,
-                    $previousParentTitle,
-                    $previousParentTitleLocale
-                )
-            );
-
-            $this->em->flush();
-
-            return $this->getApiEntity($collectionEntity, $locale);
-        } catch (DBALException $ex) {
-            throw new CollectionNotFoundException($destinationId, $ex);
+        if (null === $collectionEntity) {
+            throw new CollectionNotFoundException($id);
         }
+
+        $previousParent = $collectionEntity->getParent();
+        $previousParentId = $previousParent ? $previousParent->getId() : null;
+        $previousParentMeta = $previousParent ? $this->getCollectionMeta($previousParent, $locale) : null;
+        $previousParentTitle = $previousParentMeta ? $previousParentMeta->getTitle() : null;
+        $previousParentTitleLocale = $previousParentMeta ? $previousParentMeta->getLocale() : null;
+
+        $destinationEntity = null;
+        if (null !== $destinationId) {
+            $destinationEntity = $this->collectionRepository->findCollectionById($destinationId);
+        }
+
+        $collectionEntity->setParent($destinationEntity);
+
+        $this->domainEventCollector->collect(
+            new CollectionMovedEvent(
+                $collectionEntity,
+                $previousParentId,
+                $previousParentTitle,
+                $previousParentTitleLocale
+            )
+        );
+
+        $this->em->flush();
+
+        return $this->getApiEntity($collectionEntity, $locale);
     }
 
     /**

@@ -278,6 +278,7 @@
 
         <service id="sulu_media.image_properties_provider" class="Sulu\Bundle\MediaBundle\Media\PropertiesProvider\ImagePropertiesProvider">
             <argument type="service" id="sulu_media.adapter"/>
+            <argument type="service" id="sulu_media.adapter.svg" on-invalid="null"/>
 
             <tag name="sulu_media.media_properties_provider"/>
         </service>

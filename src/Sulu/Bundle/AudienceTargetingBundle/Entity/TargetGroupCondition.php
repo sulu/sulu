@@ -11,6 +11,8 @@
 
 namespace Sulu\Bundle\AudienceTargetingBundle\Entity;
 
+use JMS\Serializer\Annotation\Type;
+
 /**
  * Entity that holds conditions for target group rules.
  */
@@ -27,7 +29,8 @@ class TargetGroupCondition implements TargetGroupConditionInterface
     private $type;
 
     /**
-     * @var string
+     * @var mixed[]
+     * @Type("array")
      */
     private $condition;
 

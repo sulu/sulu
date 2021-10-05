@@ -321,7 +321,9 @@ class ContentMapper implements ContentMapperInterface
     public function loadBySql2($sql2, $locale, $webspaceKey, $limit = null)
     {
         $query = $this->documentManager->createQuery($sql2, $locale);
-        $query->setMaxResults($limit);
+        if (null !== $limit) {
+            $query->setMaxResults($limit);
+        }
 
         $documents = $query->execute();
 

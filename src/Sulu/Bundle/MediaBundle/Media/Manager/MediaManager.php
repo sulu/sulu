@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\Manager;
 
-use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManagerInterface;
 use FFMpeg\FFProbe;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
@@ -780,38 +779,34 @@ class MediaManager implements MediaManagerInterface
 
     public function move($id, $locale, $destCollection)
     {
-        try {
-            $mediaEntity = $this->mediaRepository->findMediaById($id);
+        $mediaEntity = $this->mediaRepository->findMediaById($id);
 
-            if (null === $mediaEntity) {
-                throw new MediaNotFoundException($id);
-            }
-
-            $previousCollection = $mediaEntity->getCollection();
-            $previousCollectionId = $previousCollection->getId();
-            $previousCollectionMeta = $this->getCollectionMeta($previousCollection, $locale);
-            $previousCollectionTitle = $previousCollectionMeta ? $previousCollectionMeta->getTitle() : null;
-            $previousCollectionTitleLocale = $previousCollectionMeta ? $previousCollectionMeta->getLocale() : null;
-
-            /** @var CollectionInterface $collection */
-            $collection = $this->em->getReference(CollectionInterface::class, $destCollection);
-            $mediaEntity->setCollection($collection);
-
-            $this->domainEventCollector->collect(
-                new MediaMovedEvent(
-                    $mediaEntity,
-                    $previousCollectionId,
-                    $previousCollectionTitle,
-                    $previousCollectionTitleLocale
-                )
-            );
-
-            $this->em->flush();
-
-            return $this->addFormatsAndUrl(new Media($mediaEntity, $locale, null));
-        } catch (DBALException $ex) {
-            throw new CollectionNotFoundException($destCollection, $ex);
+        if (null === $mediaEntity) {
+            throw new MediaNotFoundException($id);
         }
+
+        $previousCollection = $mediaEntity->getCollection();
+        $previousCollectionId = $previousCollection->getId();
+        $previousCollectionMeta = $this->getCollectionMeta($previousCollection, $locale);
+        $previousCollectionTitle = $previousCollectionMeta ? $previousCollectionMeta->getTitle() : null;
+        $previousCollectionTitleLocale = $previousCollectionMeta ? $previousCollectionMeta->getLocale() : null;
+
+        /** @var CollectionInterface $collection */
+        $collection = $this->em->getReference(CollectionInterface::class, $destCollection);
+        $mediaEntity->setCollection($collection);
+
+        $this->domainEventCollector->collect(
+            new MediaMovedEvent(
+                $mediaEntity,
+                $previousCollectionId,
+                $previousCollectionTitle,
+                $previousCollectionTitleLocale
+            )
+        );
+
+        $this->em->flush();
+
+        return $this->addFormatsAndUrl(new Media($mediaEntity, $locale, null));
     }
 
     public function increaseDownloadCounter($fileVersionId)
