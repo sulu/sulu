@@ -319,14 +319,17 @@ EOT;
                 }
             }
 
-            $metadata->addFieldMapping(
-                $propertyName,
-                [
-                    'type' => 'complex',
-                    'mapping' => $propertyMapping,
-                    'field' => $field,
-                ]
-            );
+            // add field for block only if block contains least one mapped field
+            if (!empty($propertyMapping->getFieldMapping())) {
+                $metadata->addFieldMapping(
+                    $propertyName,
+                    [
+                        'type' => 'complex',
+                        'mapping' => $propertyMapping,
+                        'field' => $field,
+                    ]
+                );
+            }
 
             return;
         }
