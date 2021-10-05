@@ -14,8 +14,7 @@ ALTER TABLE we_analytics CHANGE content content JSON NOT NULL;
 ALTER TABLE at_target_group_conditions CHANGE condition condition JSON NOT NULL
 ```
 
-If you upgrade doctrine/dbal to Version 3 see the [DBAL 3.0 UPGRADE.md](https://github.com/doctrine/dbal/blob/3.1.
-x/UPGRADE.md#upgrade-to-30).
+If you upgrade doctrine/dbal to Version 3 see the [DBAL 3.0 UPGRADE.md](https://github.com/doctrine/dbal/blob/3.1.x/UPGRADE.md#upgrade-to-30).
 
 Else you should define the doctrine/dbal version to ^2.10 with:
 
@@ -414,8 +413,7 @@ ALTER TABLE we_analytics CHANGE content content JSON NOT NULL;
 ALTER TABLE at_target_group_conditions CHANGE condition condition JSON NOT NULL
 ```
 
-If you upgrade doctrine/dbal to Version 3 see the [DBAL 3.0 UPGRADE.md](https://github.com/doctrine/dbal/blob/3.1.
-x/UPGRADE.md#upgrade-to-30).
+If you upgrade doctrine/dbal to Version 3 see the [DBAL 3.0 UPGRADE.md](https://github.com/doctrine/dbal/blob/3.1.x/UPGRADE.md#upgrade-to-30).
 
 Else you should define the doctrine/dbal version to ^2.10 with:
 
