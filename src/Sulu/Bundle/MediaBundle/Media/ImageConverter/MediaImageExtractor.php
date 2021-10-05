@@ -152,11 +152,13 @@ class MediaImageExtractor implements MediaImageExtractorInterface
      */
     private function convertVideoToImage($content)
     {
-        $temporaryFilePath = $this->createTemporaryFile($content);
-        $this->videoThumbnail->generate($temporaryFilePath, '00:00:02:01', $temporaryFilePath);
+        $source = $this->createTemporaryFile($content);
+        $destination = \tempnam(\sys_get_temp_dir(), 'media');
+        $this->videoThumbnail->generate($source, '00:00:02:01', $destination);
 
-        $extractedImage = \file_get_contents($temporaryFilePath);
-        \unlink($temporaryFilePath);
+        $extractedImage = \file_get_contents($destination);
+        \unlink($source);
+        \unlink($destination);
 
         return $extractedImage;
     }
