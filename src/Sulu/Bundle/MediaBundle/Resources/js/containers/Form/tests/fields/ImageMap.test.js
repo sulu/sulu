@@ -7,6 +7,9 @@ import {FormInspector, ResourceFormStore} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import fieldRegistry from 'sulu-admin-bundle/containers/Form/registries/fieldRegistry';
 import SingleSelect from 'sulu-admin-bundle/containers/Form/fields/SingleSelect';
+import {Renderer} from 'sulu-admin-bundle/containers/Form';
+import Field from 'sulu-admin-bundle/containers/Form/Field';
+import jsonpointer from 'json-pointer';
 import ImageMap from '../../fields/ImageMap';
 import ImageMapContainer from '../../../ImageMap';
 
@@ -42,7 +45,7 @@ jest.mock('sulu-admin-bundle/stores/userStore', () => ({
 jest.mock('../../../SingleMediaSelectionOverlay', () => jest.fn(() => null));
 
 jest.mock('sulu-admin-bundle/containers/Form/registries/fieldRegistry', () => ({
-    get: jest.fn(),
+    get: jest.fn().mockReturnValue(() => <div>field type mock</div>),
     getOptions: jest.fn().mockReturnValue({}),
 }));
 
@@ -157,6 +160,65 @@ test('Pass content-locale of user to SingleMediaSelection if locale is not prese
 });
 
 test('Should call onChange and onFinish if the value changes', () => {
+    const changeSpy = jest.fn();
+    const finishSpy = jest.fn();
+
+    const formInspector = new FormInspector(
+        new ResourceFormStore(
+            new ResourceStore('test', undefined, {locale: observable.box('en')}),
+            'test'
+        )
+    );
+
+    const types = {
+        default: {
+            title: 'Default',
+            form: {
+                text: {
+                    label: 'Text',
+                    type: 'text_line',
+                },
+            },
+        },
+    };
+
+    const value = {
+        imageId: 55,
+        hotspots: [
+            {'hotspot': {'type': 'point'}, 'type': 'default', 'text': 'text-value-123'},
+        ],
+    };
+
+    const data = {
+        imageMapProperty: value,
+        otherProperty: 'other-value',
+    };
+
+    const imageMap = mount(
+        <ImageMap
+            {...fieldTypeDefaultProps}
+            data={data}
+            dataPath="imageMapProperty"
+            defaultType="default"
+            formInspector={formInspector}
+            onChange={changeSpy}
+            onFinish={finishSpy}
+            types={types}
+            value={value}
+        />
+    );
+
+    expect(imageMap.find(Field).props().data).toEqual(data);
+    expect(imageMap.find(Field).props().value).toEqual('text-value-123');
+
+    // check if data path that is passed to field leads to correct value for field
+    const fieldData = imageMap.find(Renderer).props().data;
+    const fieldDataPath = imageMap.find(Renderer).props().dataPath;
+    const fieldValue = imageMap.find(Renderer).props().value;
+    expect(jsonpointer.get(fieldData, '/' + fieldDataPath)).toEqual(fieldValue);
+});
+
+test('Should pass correct data to Renderer component', () => {
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
 
