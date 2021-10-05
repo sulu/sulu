@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Unit\Media\PropertiesProvider;
 
+use Contao\ImagineSvg\Imagine as SvgImagine;
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
 use Imagine\Image\ImagineInterface;
@@ -39,7 +40,8 @@ class ImagePropertiesProviderTest extends TestCase
         $this->imagine = $this->prophesize(ImagineInterface::class);
 
         $this->imagePropertiesProvider = new ImagePropertiesProvider(
-            $this->imagine->reveal()
+            $this->imagine->reveal(),
+            new SvgImagine()
         );
     }
 
@@ -76,6 +78,21 @@ class ImagePropertiesProviderTest extends TestCase
             [
                 'width' => 360,
                 'height' => 240,
+            ],
+            $this->imagePropertiesProvider->provide($uploadedFile)
+        );
+    }
+
+    public function testProvideSvgImage(): void
+    {
+        // prepare data
+        $uploadedFile = $this->createUploadedFileSvgImage(400, 200);
+
+        // test function
+        $this->assertSame(
+            [
+                'width' => 400,
+                'height' => 200,
             ],
             $this->imagePropertiesProvider->provide($uploadedFile)
         );
