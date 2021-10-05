@@ -112,7 +112,7 @@ class ImageMap extends React.Component<FieldTypeProps<Value>> {
         return (
             <FieldRenderer
                 data={data}
-                dataPath={dataPath + '/' + index}
+                dataPath={dataPath + '/hotspots/' + index}
                 errors={errors && errors.length > index && errors[index] ? errors[index] : undefined}
                 formInspector={formInspector}
                 index={index}
