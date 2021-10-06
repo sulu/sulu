@@ -323,13 +323,8 @@ class ContactRepository extends EntityRepository implements DataProviderReposito
      */
     private function addPagination($qb, $offset, $limit)
     {
-        // Add pagination
-        if ($offset) {
-            $qb->setFirstResult((int) $offset);
-        }
-        if ($limit) {
-            $qb->setMaxResults((int) $limit);
-        }
+        $qb->setFirstResult($offset);
+        $qb->setMaxResults($limit);
 
         return $qb;
     }
