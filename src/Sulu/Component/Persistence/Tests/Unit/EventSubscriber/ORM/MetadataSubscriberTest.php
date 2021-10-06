@@ -15,6 +15,7 @@ use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\Mapping\ClassMetadataFactory;
 use Doctrine\Persistence\Mapping\Driver\MappingDriver;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
@@ -34,6 +35,11 @@ class MetadataSubscriberTest extends TestCase
     protected $classMetadata;
 
     /**
+     * @var \Doctrine\ORM\Mapping\ClassMetadata
+     */
+    protected $parentClassMetadata;
+
+    /**
      * @var \ReflectionClass
      */
     protected $reflection;
@@ -42,6 +48,11 @@ class MetadataSubscriberTest extends TestCase
      * @var \Doctrine\ORM\EntityManager
      */
     protected $entityManager;
+
+    /**
+     * @var \Doctrine\ORM\Mapping\ClassMetadataFactory
+     */
+    protected $classMetadataFactory;
 
     /**
      * @var \Doctrine\ORM\Configuration
@@ -69,8 +80,7 @@ class MetadataSubscriberTest extends TestCase
         $this->loadClassMetadataEvent = $this->prophesize(LoadClassMetadataEventArgs::class);
 
         $this->parentObject = $this->prophesize(\stdClass::class);
-        $this->object = $this->prophesize(\stdClass::class)
-            ->willExtend(\get_class($this->parentObject->reveal()));
+        $this->object = $this->prophesize(\stdClass::class)->willExtend(\get_class($this->parentObject->reveal()));
 
         $objects = [
             'sulu' => [
@@ -87,9 +97,11 @@ class MetadataSubscriberTest extends TestCase
             ],
         ];
 
+        $this->parentClassMetadata = $this->prophesize(ClassMetadata::class);
         $this->classMetadata = $this->prophesize(ClassMetadata::class);
         $this->reflection = $this->prophesize(\ReflectionClass::class);
         $this->entityManager = $this->prophesize(EntityManager::class);
+        $this->classMetadataFactory = $this->prophesize(ClassMetadataFactory::class);
         $this->configuration = $this->prophesize(Configuration::class);
 
         $this->subscriber = new MetadataSubscriber($objects);
@@ -105,6 +117,7 @@ class MetadataSubscriberTest extends TestCase
             ->shouldBeCalled();
         $this->loadClassMetadataEvent->getEntityManager()->willReturn($this->entityManager->reveal());
         $this->entityManager->getConfiguration()->willReturn($this->configuration->reveal());
+        $this->entityManager->getMetadataFactory()->willReturn($this->classMetadataFactory->reveal());
 
         $this->subscriber->loadClassMetadata($this->loadClassMetadataEvent->reveal());
     }
@@ -119,22 +132,26 @@ class MetadataSubscriberTest extends TestCase
             ->shouldNotBeCalled();
         $this->loadClassMetadataEvent->getEntityManager()->willReturn($this->entityManager->reveal());
         $this->entityManager->getConfiguration()->willReturn($this->configuration->reveal());
+        $this->entityManager->getMetadataFactory()->willReturn($this->classMetadataFactory->reveal());
 
         $this->subscriber->loadClassMetadata($this->loadClassMetadataEvent->reveal());
     }
 
     public function testLoadClassMetadataWithoutParent()
     {
+        $this->object = $this->prophesize(\stdClass::class);
         $this->loadClassMetadataEvent->getClassMetadata()->willReturn($this->classMetadata->reveal());
         $this->classMetadata->getName()->willReturn(\get_class($this->object->reveal()));
 
         $this->classMetadata
             ->setCustomRepositoryClass(ContactRepository::class)
             ->shouldNotBeCalled();
-        $this->loadClassMetadataEvent->getEntityManager()->willReturn($this->entityManager->reveal());
 
+        $this->loadClassMetadataEvent->getEntityManager()->willReturn($this->entityManager->reveal());
         $this->entityManager->getConfiguration()->willReturn($this->configuration->reveal());
+        $this->entityManager->getMetadataFactory()->willReturn($this->classMetadataFactory->reveal());
         $this->configuration->getNamingStrategy()->willReturn(null);
+        $this->classMetadataFactory->getMetadataFor(\stdClass::class)->willReturn($this->parentClassMetadata->reveal());
 
         /** @var MappingDriver $mappingDriver */
         $mappingDriver = $this->prophesize(MappingDriver::class);
@@ -143,7 +160,7 @@ class MetadataSubscriberTest extends TestCase
         $mappingDriver->loadMetadataForClass(
             \get_class($this->parentObject->reveal()),
             Argument::type(ClassMetadata::class)
-        )->shouldBeCalled();
+        )->shouldNotBeCalled();
 
         $this->subscriber->loadClassMetadata($this->loadClassMetadataEvent->reveal());
     }

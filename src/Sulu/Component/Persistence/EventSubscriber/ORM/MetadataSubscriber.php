@@ -17,6 +17,7 @@ use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
+use Doctrine\ORM\Mapping\ClassMetadataFactory;
 
 /**
  * Doctrine subscriber used to manipulate metadata.
@@ -58,7 +59,8 @@ class MetadataSubscriber implements EventSubscriber
         $this->process($metadata);
 
         if (!$metadata->isMappedSuperclass) {
-            $this->setAssociationMappings($metadata, $event->getEntityManager()->getConfiguration());
+            $em = $event->getEntityManager();
+            $this->setAssociationMappings($metadata, $em->getMetadataFactory(), $em->getConfiguration());
         } else {
             $this->unsetAssociationMappings($metadata);
         }
@@ -79,17 +81,18 @@ class MetadataSubscriber implements EventSubscriber
         }
     }
 
-    private function setAssociationMappings(ClassMetadataInfo $metadata, Configuration $configuration)
-    {
+    private function setAssociationMappings(
+        ClassMetadataInfo $metadata,
+        ClassMetadataFactory $classMetadataFactory,
+        Configuration $configuration
+    ) {
         if (!\class_exists($metadata->getName())) {
             return;
         }
 
         foreach (\class_parents($metadata->getName()) as $parent) {
-            $parentMetadata = new ClassMetadata(
-                $parent,
-                $configuration->getNamingStrategy()
-            );
+            /** @var ClassMetadata $parentMetadata */
+            $parentMetadata = $classMetadataFactory->getMetadataFor($parent);
 
             if (!\in_array($parent, $this->getAllClassNames($configuration))) {
                 continue;
