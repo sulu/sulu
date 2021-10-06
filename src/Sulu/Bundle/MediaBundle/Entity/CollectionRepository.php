@@ -204,10 +204,10 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
                 $qb->setParameter('search', '%' . $search . '%');
             }
             if (null !== $offset) {
-                $qb->setFirstResult((int) $offset);
+                $qb->setFirstResult($offset);
             }
             if (null !== $limit) {
-                $qb->setMaxResults((int) $limit);
+                $qb->setMaxResults($limit);
             }
 
             return new Paginator($qb->getQuery());
@@ -361,11 +361,11 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
 
         $queryBuilder->addOrderBy('collection.id', 'ASC');
 
-        if (isset($filter['limit'])) {
-            $queryBuilder->setMaxResults((int) $filter['limit']);
+        if (\array_key_exists('limit', $filter)) {
+            $queryBuilder->setMaxResults($filter['limit']);
         }
-        if (isset($filter['offset'])) {
-            $queryBuilder->setFirstResult((int) $filter['offset']);
+        if (\array_key_exists('offset', $filter)) {
+            $queryBuilder->setFirstResult($filter['offset']);
         }
 
         return $queryBuilder->getQuery();
