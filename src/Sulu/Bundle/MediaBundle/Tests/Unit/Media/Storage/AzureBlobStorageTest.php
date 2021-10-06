@@ -53,7 +53,7 @@ class AzureBlobStorageTest extends TestCase
         $flysystem->createDir('1')->shouldBeCalled();
 
         $storageOptions = $storage->save(\tempnam(\sys_get_temp_dir(), 'test'), 'test.jpg');
-        $this->assertEquals(['directory' => null, 'segment' => '1', 'fileName' => 'test.jpg'], $storageOptions);
+        $this->assertEquals(['segment' => '1', 'fileName' => 'test.jpg'], $storageOptions);
     }
 
     public function testSaveDirectoryExists(): void
@@ -74,7 +74,7 @@ class AzureBlobStorageTest extends TestCase
         $flysystem->createDir(Argument::any())->shouldNotBeCalled();
 
         $storageOptions = $storage->save(\tempnam(\sys_get_temp_dir(), 'test'), 'test.jpg');
-        $this->assertEquals(['directory' => null, 'segment' => '1', 'fileName' => 'test.jpg'], $storageOptions);
+        $this->assertEquals(['segment' => '1', 'fileName' => 'test.jpg'], $storageOptions);
     }
 
     public function testSaveUniqueFileName(): void
@@ -97,7 +97,7 @@ class AzureBlobStorageTest extends TestCase
         $flysystem->createDir('1')->shouldBeCalled();
 
         $storageOptions = $storage->save(\tempnam(\sys_get_temp_dir(), 'test'), 'test.jpg');
-        $this->assertEquals(['directory' => null, 'segment' => '1', 'fileName' => 'test-2.jpg'], $storageOptions);
+        $this->assertEquals(['segment' => '1', 'fileName' => 'test-2.jpg'], $storageOptions);
     }
 
     public function testLoad(): void

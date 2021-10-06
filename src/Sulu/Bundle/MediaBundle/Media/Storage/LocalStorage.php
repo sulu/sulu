@@ -53,20 +53,18 @@ class LocalStorage implements StorageInterface
 
     public function save(string $tempPath, string $fileName, array $storageOptions = []): array
     {
-        if (!\array_key_exists('directory', $storageOptions)) {
-            $storageOptions['directory'] = null;
-        }
-
         if (!\array_key_exists('segment', $storageOptions)) {
             $storageOptions['segment'] = \sprintf('%0' . \strlen($this->segments) . 'd', \rand(1, $this->segments));
         }
 
         $this->createDirectories($storageOptions);
 
-        $parentPath = $this->getFilesystemPath($storageOptions['directory'], $storageOptions['segment']);
+        $directory = $this->getStorageOption($storageOptions, 'directory');
+        $segment = $this->getStorageOption($storageOptions, 'segment');
+        $parentPath = $this->getFilesystemPath($directory, $segment);
         $storageOptions['fileName'] = $this->getUniqueFileName($parentPath, $fileName);
 
-        $filePath = $this->getFilesystemPath($storageOptions['directory'], $storageOptions['segment'], $storageOptions['fileName']);
+        $filePath = $this->getFilesystemPath($directory, $segment, $storageOptions['fileName']);
         $this->logger->debug('Try to copy File "' . $tempPath . '" to "' . $filePath . '"');
 
         if ($this->filesystem->exists($filePath)) {
@@ -177,13 +175,6 @@ class LocalStorage implements StorageInterface
     private function createDirectories(array $storageOptions): void
     {
         $directory = $this->getStorageOption($storageOptions, 'directory');
-        $directoryPath = $this->getFilesystemPath($directory);
-
-        if (!$this->filesystem->exists($directoryPath)) {
-            $this->logger->debug('Try Create Folder: ' . $directoryPath);
-            $this->filesystem->mkdir($directoryPath, 0777);
-        }
-
         $segment = $this->getStorageOption($storageOptions, 'segment');
         $segmentPath = $this->getFilesystemPath($directory, $segment);
 

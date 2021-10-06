@@ -38,10 +38,6 @@ abstract class FlysystemStorage implements StorageInterface
 
     public function save(string $tempPath, string $fileName, array $storageOptions = []): array
     {
-        if (!\array_key_exists('directory', $storageOptions)) {
-            $storageOptions['directory'] = null;
-        }
-
         if (!\array_key_exists('segment', $storageOptions)) {
             $storageOptions['segment'] = \sprintf('%0' . \strlen($this->segments) . 'd', \rand(1, $this->segments));
         }
@@ -139,7 +135,19 @@ abstract class FlysystemStorage implements StorageInterface
     /**
      * @param array<string, string|null> $storageOptions
      */
-    protected function createDirectories(array $storageOptions): void
+    protected function getFilePath(array $storageOptions): string
+    {
+        $directory = $this->getStorageOption($storageOptions, 'directory');
+        $segment = $this->getStorageOption($storageOptions, 'segment');
+        $fileName = $this->getStorageOption($storageOptions, 'fileName');
+
+        return \implode('/', \array_filter([$directory, $segment, $fileName]));
+    }
+
+    /**
+     * @param array<string, string|null> $storageOptions
+     */
+    private function createDirectories(array $storageOptions): void
     {
         $directory = $this->getStorageOption($storageOptions, 'directory');
         $directoryPath = \implode('/', \array_filter([$directory]));
@@ -154,17 +162,5 @@ abstract class FlysystemStorage implements StorageInterface
         if ($segmentPath && !$this->filesystem->has($segmentPath)) {
             $this->filesystem->createDir($segmentPath);
         }
-    }
-
-    /**
-     * @param array<string, string|null> $storageOptions
-     */
-    protected function getFilePath(array $storageOptions): string
-    {
-        $directory = $this->getStorageOption($storageOptions, 'directory');
-        $segment = $this->getStorageOption($storageOptions, 'segment');
-        $fileName = $this->getStorageOption($storageOptions, 'fileName');
-
-        return \implode('/', \array_filter([$directory, $segment, $fileName]));
     }
 }
