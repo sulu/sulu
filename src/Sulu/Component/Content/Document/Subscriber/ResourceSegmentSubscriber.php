@@ -15,7 +15,6 @@ use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\PageBundle\Document\HomeDocument;
-use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\RedirectType;
@@ -179,10 +178,6 @@ class ResourceSegmentSubscriber implements EventSubscriberInterface
         }
 
         if ($document instanceof HomeDocument) {
-            return;
-        }
-
-        if ($document instanceof RedirectTypeBehavior && RedirectType::NONE !== $document->getRedirectType()) {
             return;
         }
 

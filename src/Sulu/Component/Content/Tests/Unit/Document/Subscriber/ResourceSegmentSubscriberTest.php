@@ -15,6 +15,7 @@ use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
@@ -38,47 +39,47 @@ use Sulu\Component\DocumentManager\PropertyEncoder;
 class ResourceSegmentSubscriberTest extends TestCase
 {
     /**
-     * @var PropertyEncoder
+     * @var PropertyEncoder|ObjectProphecy
      */
     private $encoder;
 
     /**
-     * @var DocumentManagerInterface
+     * @var DocumentManagerInterface|ObjectProphecy
      */
     private $documentManager;
 
     /**
-     * @var DocumentInspector
+     * @var DocumentInspector|ObjectProphecy
      */
     private $documentInspector;
 
     /**
-     * @var ResourceLocatorStrategyInterface
+     * @var ResourceLocatorStrategyInterface|ObjectProphecy
      */
     private $resourceLocatorStrategy;
 
     /**
-     * @var ResourceLocatorStrategyPoolInterface
+     * @var ResourceLocatorStrategyPoolInterface|ObjectProphecy
      */
     private $resourceLocatorStrategyPool;
 
     /**
-     * @var ResourceSegmentBehavior
+     * @var ResourceSegmentBehavior|ObjectProphecy
      */
     private $document;
 
     /**
-     * @var StructureMetadata
+     * @var StructureMetadata|ObjectProphecy
      */
     private $structureMetadata;
 
     /**
-     * @var SessionInterface
+     * @var SessionInterface|ObjectProphecy
      */
     private $defaultSession;
 
     /**
-     * @var SessionInterface
+     * @var SessionInterface|ObjectProphecy
      */
     private $liveSession;
 
@@ -88,7 +89,7 @@ class ResourceSegmentSubscriberTest extends TestCase
     private $resourceSegmentSubscriber;
 
     /**
-     * @var PropertyMetadata
+     * @var PropertyMetadata|ObjectProphecy
      */
     private $propertyMetaData;
 
@@ -204,10 +205,12 @@ class ResourceSegmentSubscriberTest extends TestCase
         $event = $this->prophesize(PublishEvent::class);
         $event->getLocale()->willReturn('de');
 
+        $this->documentInspector->getWebspace($this->document->reveal())->willReturn('sulu_io');
+
         $this->document->getRedirectType()->willReturn(RedirectType::INTERNAL);
         $event->getDocument()->willReturn($this->document->reveal());
 
-        $this->resourceLocatorStrategy->save(Argument::any())->shouldNotBeCalled();
+        $this->resourceLocatorStrategy->save($this->document->reveal(), null)->shouldBeCalled();
         $this->resourceSegmentSubscriber->handlePersistRoute($event->reveal());
     }
 
