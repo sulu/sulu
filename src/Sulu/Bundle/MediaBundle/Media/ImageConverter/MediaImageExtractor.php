@@ -1,4 +1,4 @@
-src/Sulu/Bundle/MediaBundle/Media/ImageConverter/MediaImageExtractor.php<?php
+<?php
 
 /*
  * This file is part of Sulu.
