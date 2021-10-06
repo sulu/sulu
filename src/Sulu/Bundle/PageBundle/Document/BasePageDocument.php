@@ -307,16 +307,6 @@ class BasePageDocument implements
         return $this->changed;
     }
 
-    /**
-     * @param \DateTime $changed
-     *
-     * @return void
-     */
-    public function setChanged($changed)
-    {
-        $this->changed = $changed;
-    }
-
     public function getCreator()
     {
         return $this->creator;
@@ -335,16 +325,6 @@ class BasePageDocument implements
     public function getChanger()
     {
         return $this->changer;
-    }
-
-    /**
-     * @param int|null $userId
-     *
-     * @return void
-     */
-    public function setChanger($userId)
-    {
-        $this->changer = $userId;
     }
 
     public function getResourceSegment()

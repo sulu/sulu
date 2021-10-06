@@ -14,6 +14,7 @@ namespace Sulu\Component\Content\Tests\Unit\Document\Subscriber;
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Content\Document\Behavior\BlameBehavior;
 use Sulu\Component\Content\Document\Behavior\LocalizedBlameBehavior;
 use Sulu\Component\Content\Document\Subscriber\BlameSubscriber;
@@ -27,27 +28,27 @@ use Sulu\Component\DocumentManager\PropertyEncoder;
 class BlameSubscriberTest extends TestCase
 {
     /**
-     * @var PersistEvent
+     * @var PersistEvent|ObjectProphecy
      */
     private $persistEvent;
 
     /**
-     * @var HydrateEvent
+     * @var HydrateEvent|ObjectProphecy
      */
     private $hydrateEvent;
 
     /**
-     * @var NodeInterface
+     * @var NodeInterface|ObjectProphecy
      */
     private $node;
 
     /**
-     * @var DocumentAccessor
+     * @var DocumentAccessor|ObjectProphecy
      */
     private $accessor;
 
     /**
-     * @var PropertyEncoder
+     * @var PropertyEncoder|ObjectProphecy
      */
     private $propertyEncoder;
 
@@ -76,7 +77,7 @@ class BlameSubscriberTest extends TestCase
         $this->propertyEncoder->encode('system', 'changer', 'de')->willReturn('changer');
     }
 
-    public function testPersistNotImplementing()
+    public function testPersistNotImplementing(): void
     {
         $this->persistEvent->getDocument()->willReturn(new \stdClass());
         $this->accessor->set(Argument::cetera())->shouldNotBeCalled();
@@ -84,7 +85,7 @@ class BlameSubscriberTest extends TestCase
         $this->subscriber->setBlamesOnNodeForPersist($this->persistEvent->reveal());
     }
 
-    public function testPersistLocaleIsNull()
+    public function testPersistLocaleIsNull(): void
     {
         $document = $this->prophesize(LocalizedBlameBehavior::class);
         $this->persistEvent->getLocale()->willReturn(null);
@@ -96,7 +97,7 @@ class BlameSubscriberTest extends TestCase
         $this->subscriber->setBlamesOnNodeForPersist($this->persistEvent->reveal());
     }
 
-    public function testPersistCreatorWhenNull()
+    public function testPersistCreatorFromEventWhenNull(): void
     {
         $document = $this->prophesize(LocalizedBlameBehavior::class);
         $document->getCreator()->willReturn(null);
@@ -114,7 +115,25 @@ class BlameSubscriberTest extends TestCase
         $this->subscriber->setBlamesOnNodeForPersist($this->persistEvent->reveal());
     }
 
-    public function testPersistChanger()
+    public function testPersistCreatorFromDocumentWhenNull(): void
+    {
+        $document = $this->prophesize(LocalizedBlameBehavior::class);
+        $document->getCreator()->willReturn(1234);
+
+        $this->persistEvent->getDocument()->willReturn($document->reveal());
+        $this->persistEvent->getOption('user')->willReturn(2);
+
+        $this->node->hasProperty('i18n:de-creator')->willReturn(false);
+
+        $this->accessor->set('creator', 1234)->shouldBeCalled();
+        $this->node->setProperty('i18n:de-creator', Argument::any())->shouldBeCalled();
+        $this->accessor->set('changer', 2)->shouldBeCalled();
+        $this->node->setProperty('i18n:de-changer', 2)->shouldBeCalled();
+
+        $this->subscriber->setBlamesOnNodeForPersist($this->persistEvent->reveal());
+    }
+
+    public function testPersistChanger(): void
     {
         $document = $this->prophesize(LocalizedBlameBehavior::class);
         $document->getCreator()->willReturn(1);
@@ -131,7 +150,7 @@ class BlameSubscriberTest extends TestCase
         $this->subscriber->setBlamesOnNodeForPersist($this->persistEvent->reveal());
     }
 
-    public function testPersistChangerWithoutLocalization()
+    public function testPersistChangerWithoutLocalization(): void
     {
         $document = $this->prophesize(BlameBehavior::class);
         $document->getCreator()->willReturn(1);
@@ -148,7 +167,7 @@ class BlameSubscriberTest extends TestCase
         $this->subscriber->setBlamesOnNodeForPersist($this->persistEvent->reveal());
     }
 
-    public function testPublish()
+    public function testPublish(): void
     {
         $event = $this->prophesize(PublishEvent::class);
         $event->getLocale()->willReturn('de');
@@ -170,7 +189,7 @@ class BlameSubscriberTest extends TestCase
         $this->subscriber->setBlamesOnNodeForPublish($event->reveal());
     }
 
-    public function testPublishWithoutLocalization()
+    public function testPublishWithoutLocalization(): void
     {
         $event = $this->prophesize(PublishEvent::class);
         $event->getLocale()->willReturn('de');
@@ -192,7 +211,7 @@ class BlameSubscriberTest extends TestCase
         $this->subscriber->setBlamesOnNodeForPublish($event->reveal());
     }
 
-    public function testPublishOnlyChanger()
+    public function testPublishOnlyChanger(): void
     {
         $event = $this->prophesize(PublishEvent::class);
         $event->getLocale()->willReturn('de');
@@ -214,7 +233,7 @@ class BlameSubscriberTest extends TestCase
         $this->subscriber->setBlamesOnNodeForPublish($event->reveal());
     }
 
-    public function testPublishNonBlameBehavior()
+    public function testPublishNonBlameBehavior(): void
     {
         $event = $this->prophesize(PublishEvent::class);
         $event->getAccessor()->willReturn($this->accessor->reveal());
@@ -227,7 +246,7 @@ class BlameSubscriberTest extends TestCase
         $this->subscriber->setBlamesOnNodeForPublish($event->reveal());
     }
 
-    public function testRestore()
+    public function testRestore(): void
     {
         $event = $this->prophesize(RestoreEvent::class);
         $event->getLocale()->willReturn('de');
@@ -241,7 +260,7 @@ class BlameSubscriberTest extends TestCase
         $this->subscriber->setChangerForRestore($event->reveal());
     }
 
-    public function testRestoreWithoutLocale()
+    public function testRestoreWithoutLocale(): void
     {
         $event = $this->prophesize(RestoreEvent::class);
         $event->getLocale()->willReturn('de');
@@ -256,7 +275,7 @@ class BlameSubscriberTest extends TestCase
         $this->subscriber->setChangerForRestore($event->reveal());
     }
 
-    public function testRestoreNonBlameSubscriber()
+    public function testRestoreNonBlameSubscriber(): void
     {
         $event = $this->prophesize(RestoreEvent::class);
         $event->getDocument()->willReturn(new \stdClass());
