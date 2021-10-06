@@ -13,6 +13,7 @@ namespace Sulu\Bundle\SearchBundle\Controller;
 
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use Sulu\Bundle\WebsiteBundle\Resolver\ParameterResolverInterface;
+use Sulu\Bundle\WebsiteBundle\Resolver\TemplateAttributeResolverInterface;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -52,18 +53,32 @@ class WebsiteSearchController
      */
     private $indexes;
 
+    /**
+     * @var TemplateAttributeResolverInterface|null
+     */
+    private $templateAttributeResolver;
+
     public function __construct(
         SearchManagerInterface $searchManager,
         RequestAnalyzerInterface $requestAnalyzer,
         ParameterResolverInterface $parameterResolver,
         Environment $twig,
-        array $indexes = []
+        array $indexes = [],
+        ?TemplateAttributeResolverInterface $templateAttributeResolver = null
     ) {
         $this->searchManager = $searchManager;
         $this->requestAnalyzer = $requestAnalyzer;
         $this->parameterResolver = $parameterResolver;
         $this->twig = $twig;
         $this->indexes = $indexes;
+        $this->templateAttributeResolver = $templateAttributeResolver;
+
+        if (null === $this->templateAttributeResolver) {
+            @\trigger_error(
+                'Instantiating the WebsiteSearchController class without the $templateAttributeResolver argument is deprecated.',
+                \E_USER_DEPRECATED
+            );
+        }
     }
 
     /**
@@ -112,13 +127,15 @@ class WebsiteSearchController
             throw new NotFoundHttpException();
         }
 
-        $response = new Response($this->twig->render(
-            $template,
-            $this->parameterResolver->resolve(
-                ['query' => $query, 'hits' => $hits],
-                $this->requestAnalyzer
-            )
-        ));
+        $parameters = ['query' => $query, 'hits' => $hits];
+
+        if ($this->templateAttributeResolver) {
+            $parameters = $this->templateAttributeResolver->resolve($parameters);
+        } else {
+            $parameters = $this->parameterResolver->resolve($parameters, $this->requestAnalyzer);
+        }
+
+        $response = new Response($this->twig->render($template, $parameters));
 
         // we need to set the content type ourselves here
         // else symfony will use the accept header of the client and the page could be cached with false content-type
