@@ -66,7 +66,7 @@ trait CreateUploadedFileTrait
             ));
         }
 
-        $attributess = [];
+        $attributes = [];
         if ($width) {
             $attributes[] = ' width="' . $width . '"';
         }

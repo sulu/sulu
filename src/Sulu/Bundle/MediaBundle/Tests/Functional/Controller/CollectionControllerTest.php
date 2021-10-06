@@ -1329,6 +1329,9 @@ class CollectionControllerTest extends SuluTestCase
 
     public function testDeleteByIdWithChildrenWithoutPermissions(): void
     {
+        // warmup system collections to prevent error when setting permissions to collections
+        $this->getContainer()->get('sulu_media.system_collections.manager')->warmUp();
+
         $role = $this->createRole('User', 'Sulu');
 
         $userRole = new UserRole();
