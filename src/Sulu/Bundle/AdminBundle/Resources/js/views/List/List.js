@@ -41,6 +41,8 @@ class List extends React.Component<Props> {
     @observable itemActions: Array<AbstractListItemAction> = [];
     @observable errors = [];
 
+    static remountViewOnLogin = true;
+
     static getDerivedRouteAttributes(route: Route) {
         const {
             options: {

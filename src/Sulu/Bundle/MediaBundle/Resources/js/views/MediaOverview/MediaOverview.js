@@ -35,6 +35,8 @@ class MediaOverview extends React.Component<ViewProps> {
     @observable mediaMoving: boolean = false;
     disposer: () => void;
 
+    static remountViewOnLogin = true;
+
     static getDerivedRouteAttributes() {
         return {
             collectionLimit: ListStore.getLimitSetting(COLLECTIONS_RESOURCE_KEY, USER_SETTINGS_KEY),

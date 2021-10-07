@@ -13,4 +13,8 @@ interface GetDerivedRouteAttributesInterface {
     +getDerivedRouteAttributes?: (route: Route, attributes: AttributeMap) => Object,
 }
 
-export type View = Class<Component<ViewProps & *>> & GetDerivedRouteAttributesInterface;
+interface RemountViewOnLoginInterface {
+    +remountViewOnLogin?: boolean,
+}
+
+export type View = Class<Component<ViewProps & *>> & GetDerivedRouteAttributesInterface & RemountViewOnLoginInterface;

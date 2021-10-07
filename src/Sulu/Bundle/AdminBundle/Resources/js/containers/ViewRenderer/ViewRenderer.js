@@ -1,7 +1,9 @@
 // @flow
 import React from 'react';
 import {observer} from 'mobx-react';
+import {observable, reaction} from 'mobx';
 import Router, {getViewKeyFromRoute, Route} from '../../services/Router';
+import userStore from '../../stores/userStore';
 import viewRegistry from './registries/viewRegistry';
 import type {Element} from 'react';
 import type {View} from './types';
@@ -14,6 +16,10 @@ const UPDATE_ROUTE_HOOK_PRIORITY = 1024;
 
 @observer
 class ViewRenderer extends React.Component<Props> {
+    @observable loginCount: number = 0;
+
+    updateLoginCountDisposer: ?() => *;
+
     componentDidMount() {
         const {router} = this.props;
 
@@ -25,6 +31,21 @@ class ViewRenderer extends React.Component<Props> {
 
             return true;
         }, UPDATE_ROUTE_HOOK_PRIORITY);
+
+        this.updateLoginCountDisposer = reaction(
+            () => (userStore.loggedIn),
+            (newIsLoggedIn) => {
+                if (newIsLoggedIn) {
+                    this.loginCount = this.loginCount + 1;
+                }
+            }
+        );
+    }
+
+    componentWillUnmount() {
+        if (this.updateLoginCountDisposer) {
+            this.updateLoginCountDisposer();
+        }
     }
 
     getView = (route: Route): View => {
@@ -41,8 +62,13 @@ class ViewRenderer extends React.Component<Props> {
         const {router} = this.props;
         const View = this.getView(route);
 
+        let viewKey = getViewKeyFromRoute(route, router.attributes);
+        if (View.remountViewOnLogin) {
+            viewKey = viewKey + '__' + this.loginCount;
+        }
+
         const element = (
-            <View key={getViewKeyFromRoute(route, router.attributes)} route={route} router={router}>
+            <View key={viewKey} route={route} router={router}>
                 {(props) => child ? React.cloneElement(child, props) : null}
             </View>
         );
