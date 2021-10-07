@@ -92,7 +92,7 @@ class WorkflowStageSubscriber implements EventSubscriberInterface
         }
 
         $node = $event->getNode();
-        $locale = $event->getLocale();
+        $locale = $this->documentInspector->getOriginalLocale($document);
 
         $document->setWorkflowStage(
             $node->getPropertyValueWithDefault(
