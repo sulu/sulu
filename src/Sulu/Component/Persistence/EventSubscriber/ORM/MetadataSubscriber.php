@@ -91,12 +91,12 @@ class MetadataSubscriber implements EventSubscriber
         }
 
         foreach (\class_parents($metadata->getName()) as $parent) {
-            /** @var ClassMetadata $parentMetadata */
-            $parentMetadata = $classMetadataFactory->getMetadataFor($parent);
-
             if (!\in_array($parent, $this->getAllClassNames($configuration))) {
                 continue;
             }
+            
+            /** @var ClassMetadata $parentMetadata */
+            $parentMetadata = $classMetadataFactory->getMetadataFor($parent);
 
             $configuration->getMetadataDriverImpl()->loadMetadataForClass($parent, $parentMetadata);
             if (!$parentMetadata->isMappedSuperclass) {
