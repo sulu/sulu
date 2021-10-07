@@ -17,6 +17,7 @@ use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Mapping\ClassMetadataFactory;
 use Doctrine\Persistence\Mapping\Driver\MappingDriver;
+use Doctrine\Persistence\Mapping\ReflectionService;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\ContactBundle\Entity\ContactRepository;
@@ -53,6 +54,11 @@ class MetadataSubscriberTest extends TestCase
      * @var \Doctrine\ORM\Mapping\ClassMetadataFactory
      */
     protected $classMetadataFactory;
+
+    /**
+     * @var \Doctrine\Persistence\Mapping\ReflectionService
+     */
+    protected $reflectionService;
 
     /**
      * @var \Doctrine\ORM\Configuration
@@ -102,6 +108,7 @@ class MetadataSubscriberTest extends TestCase
         $this->reflection = $this->prophesize(\ReflectionClass::class);
         $this->entityManager = $this->prophesize(EntityManager::class);
         $this->classMetadataFactory = $this->prophesize(ClassMetadataFactory::class);
+        $this->reflectionService = $this->prophesize(ReflectionService::class);
         $this->configuration = $this->prophesize(Configuration::class);
 
         $this->subscriber = new MetadataSubscriber($objects);
@@ -118,6 +125,7 @@ class MetadataSubscriberTest extends TestCase
         $this->loadClassMetadataEvent->getEntityManager()->willReturn($this->entityManager->reveal());
         $this->entityManager->getConfiguration()->willReturn($this->configuration->reveal());
         $this->entityManager->getMetadataFactory()->willReturn($this->classMetadataFactory->reveal());
+        $this->classMetadataFactory->getReflectionService()->willReturn($this->reflectionService->reveal());
 
         $this->subscriber->loadClassMetadata($this->loadClassMetadataEvent->reveal());
     }
@@ -133,6 +141,7 @@ class MetadataSubscriberTest extends TestCase
         $this->loadClassMetadataEvent->getEntityManager()->willReturn($this->entityManager->reveal());
         $this->entityManager->getConfiguration()->willReturn($this->configuration->reveal());
         $this->entityManager->getMetadataFactory()->willReturn($this->classMetadataFactory->reveal());
+        $this->classMetadataFactory->getReflectionService()->willReturn($this->reflectionService->reveal());
 
         $this->subscriber->loadClassMetadata($this->loadClassMetadataEvent->reveal());
     }
@@ -151,7 +160,7 @@ class MetadataSubscriberTest extends TestCase
         $this->entityManager->getConfiguration()->willReturn($this->configuration->reveal());
         $this->entityManager->getMetadataFactory()->willReturn($this->classMetadataFactory->reveal());
         $this->configuration->getNamingStrategy()->willReturn(null);
-        $this->classMetadataFactory->getMetadataFor(\stdClass::class)->willReturn($this->parentClassMetadata->reveal());
+        $this->classMetadataFactory->getReflectionService()->willReturn($this->reflectionService->reveal());
 
         /** @var MappingDriver $mappingDriver */
         $mappingDriver = $this->prophesize(MappingDriver::class);

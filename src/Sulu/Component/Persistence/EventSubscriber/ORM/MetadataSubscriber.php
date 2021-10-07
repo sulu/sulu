@@ -18,6 +18,7 @@ use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Doctrine\ORM\Mapping\ClassMetadataFactory;
+use Doctrine\Persistence\Mapping\ReflectionService;
 
 /**
  * Doctrine subscriber used to manipulate metadata.
@@ -60,7 +61,11 @@ class MetadataSubscriber implements EventSubscriber
 
         if (!$metadata->isMappedSuperclass) {
             $em = $event->getEntityManager();
-            $this->setAssociationMappings($metadata, $em->getMetadataFactory(), $em->getConfiguration());
+            $this->setAssociationMappings(
+                $metadata,
+                $em->getConfiguration(),
+                $em->getMetadataFactory()->getReflectionService()
+            );
         } else {
             $this->unsetAssociationMappings($metadata);
         }
@@ -83,8 +88,8 @@ class MetadataSubscriber implements EventSubscriber
 
     private function setAssociationMappings(
         ClassMetadataInfo $metadata,
-        ClassMetadataFactory $classMetadataFactory,
-        Configuration $configuration
+        Configuration $configuration,
+        ReflectionService $reflectionService
     ) {
         if (!\class_exists($metadata->getName())) {
             return;
@@ -94,9 +99,9 @@ class MetadataSubscriber implements EventSubscriber
             if (!\in_array($parent, $this->getAllClassNames($configuration))) {
                 continue;
             }
-            
-            /** @var ClassMetadata $parentMetadata */
-            $parentMetadata = $classMetadataFactory->getMetadataFor($parent);
+
+            $parentMetadata = new ClassMetadata($parent, $configuration->getNamingStrategy());
+            $parentMetadata->initializeReflection($reflectionService);
 
             $configuration->getMetadataDriverImpl()->loadMetadataForClass($parent, $parentMetadata);
             if (!$parentMetadata->isMappedSuperclass) {
