@@ -99,12 +99,12 @@ interface ProviderConfigurationInterface
     /**
      * Returns the name of the view to navigate to when a smart content item in the UI is clicked.
      */
-    public function getView(): string;
+    public function getView(): ?string;
 
     /**
      * Returns the mapping from smart content item properties to view.
      *
-     * @return string[]
+     * @return array<string, string>|null
      */
-    public function getResultToView(): array;
+    public function getResultToView(): ?array;
 }

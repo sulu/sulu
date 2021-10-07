@@ -21,13 +21,14 @@ jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
 
 jest.mock('sulu-admin-bundle/containers/List/stores/ListStore', () => jest.fn(function(resourceKey) {
     this.resourceKey = resourceKey;
-    this.setShouldReload = jest.fn();
+    this.reload = jest.fn();
 }));
 
 jest.mock('sulu-admin-bundle/views/List/List', () => jest.fn());
 
 jest.mock('sulu-admin-bundle/services/Router', () => jest.fn(function() {
     this.attributes = {};
+    this.navigate = jest.fn();
 }));
 
 jest.mock('sulu-admin-bundle/containers/Form/stores/memoryFormStoreFactory', () => ({
@@ -141,12 +142,49 @@ test('Send request and reload list store if dialog is confirmed', () => {
             confirmLoading: false,
             open: false,
         }));
-        expect(itemAction.listStore.setShouldReload).toBeCalledWith(true);
+        expect(itemAction.listStore.reload).toBeCalledWith();
+    });
+});
+
+test('Send request and navigate to view if dialog is confirmed and view is configured', () => {
+    RestoreItemAction.restoreConfigurationMapping.test = {
+        view: 'test-view',
+        resultToView: {id: 'id'},
+    };
+
+    const postPromise = Promise.resolve({id: '1234-1234-1234', key: 'test-key'});
+    ResourceRequester.post.mockReturnValue(postPromise);
+
+    const itemAction = createItemAction();
+
+    const onClick = itemAction.getItemActionConfig({id: 'id-1234', resourceKey: 'test'}).onClick;
+    if (!onClick) {
+        throw new Error('The onClick callback should not be undefined in this case');
+    }
+    onClick('id-1234', 1);
+    mount(itemAction.getNode()).find(Dialog).props().onConfirm();
+
+    expect(ResourceRequester.post).toBeCalledWith(
+        'list-resource-key',
+        {},
+        {action: 'restore', id: 'id-1234'}
+    );
+    expect(mount(itemAction.getNode()).find(Dialog).props()).toEqual(expect.objectContaining({
+        confirmLoading: true,
+        open: true,
+    }));
+
+    return postPromise.then(() => {
+        expect(mount(itemAction.getNode()).find(Dialog).props()).toEqual(expect.objectContaining({
+            confirmLoading: false,
+            open: false,
+        }));
+        expect(itemAction.router.navigate).toHaveBeenLastCalledWith('test-view', {id: '1234-1234-1234'});
     });
 });
 
 test('Display RestoreFormOverlay if onClick callback is fired', () => {
-    RestoreItemAction.restoreFormMapping.test = 'foo';
+    RestoreItemAction.restoreConfigurationMapping.test = {form: 'foo'};
     const itemAction = createItemAction();
 
     let overlay = mount(itemAction.getNode()).find('RestoreFormOverlay');
@@ -169,7 +207,7 @@ test('Display RestoreFormOverlay if onClick callback is fired', () => {
 });
 
 test('Close dialog if it is canceled', () => {
-    RestoreItemAction.restoreFormMapping.test = 'foo';
+    RestoreItemAction.restoreConfigurationMapping.test = {form: 'foo'};
     const itemAction = createItemAction();
 
     const onClick = itemAction.getItemActionConfig({id: 'id-1234', resourceKey: 'test'}).onClick;
@@ -188,7 +226,7 @@ test('Close dialog if it is canceled', () => {
 });
 
 test('Send request and reload list store if dialog is confirmed', () => {
-    RestoreItemAction.restoreFormMapping.test = 'foo';
+    RestoreItemAction.restoreConfigurationMapping.test = {form: 'foo'};
     const postPromise = Promise.resolve();
     ResourceRequester.post.mockReturnValue(postPromise);
 
@@ -218,6 +256,6 @@ test('Send request and reload list store if dialog is confirmed', () => {
             confirmLoading: false,
             open: false,
         }));
-        expect(itemAction.listStore.setShouldReload).toBeCalledWith(true);
+        expect(itemAction.listStore.reload).toBeCalledWith();
     });
 });

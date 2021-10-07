@@ -47,7 +47,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  *
  * This controller cannot implement the SecuredControllerInterface, because then the SuluSecurityListener would check
  * for the "edit" permission in the "postTriggerAction", but the TrashAdmin::SECURITY_CONTEXT doesn't define an "edit" permission.
- * Therefore the "view" permissions are checked explicitly in this controller.
+ * Because of this, the controller needs to explicitly check the "view" permissions by itself.
  */
 class TrashItemController extends AbstractRestController implements ClassResourceInterface
 {
@@ -208,10 +208,6 @@ class TrashItemController extends AbstractRestController implements ClassResourc
         );
     }
 
-    /**
-     * This action is not used by sulu, but it still needs to be implemented, because the "detail" url of the TrashItem
-     * resource needs to be configured in order for the "deleteAction" and the "postTriggerAction" to work.
-     */
     public function getAction(int $id): Response
     {
         $this->securityChecker->checkPermission(

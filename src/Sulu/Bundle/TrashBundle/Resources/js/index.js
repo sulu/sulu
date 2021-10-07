@@ -6,5 +6,10 @@ import RestoreItemAction from './views/List/itemActions/RestoreItemAction';
 listItemActionRegistry.add('sulu_trash.restore', RestoreItemAction);
 
 initializer.addUpdateConfigHook('sulu_trash', (config: Object) => {
-    RestoreItemAction.restoreFormMapping = config.restoreFormMapping;
+    if (!config) {
+        // config is undefined if SuluTrashBundle is not registered
+        return;
+    }
+
+    RestoreItemAction.restoreConfigurationMapping = config.restoreConfigurationMapping;
 });

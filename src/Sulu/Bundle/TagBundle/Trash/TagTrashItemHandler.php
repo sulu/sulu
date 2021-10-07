@@ -22,6 +22,8 @@ use Sulu\Bundle\TagBundle\Tag\Exception\TagAlreadyExistsException;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Bundle\TagBundle\Tag\TagRepositoryInterface;
 use Sulu\Bundle\TrashBundle\Application\DoctrineRestoreHelper\DoctrineRestoreHelperInterface;
+use Sulu\Bundle\TrashBundle\Application\RestoreConfigurationProvider\RestoreConfiguration;
+use Sulu\Bundle\TrashBundle\Application\RestoreConfigurationProvider\RestoreConfigurationProviderInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\RestoreTrashItemHandlerInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\StoreTrashItemHandlerInterface;
 use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
@@ -29,7 +31,10 @@ use Sulu\Bundle\TrashBundle\Domain\Repository\TrashItemRepositoryInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Webmozart\Assert\Assert;
 
-final class TagTrashItemHandler implements StoreTrashItemHandlerInterface, RestoreTrashItemHandlerInterface
+final class TagTrashItemHandler implements
+    StoreTrashItemHandlerInterface,
+    RestoreTrashItemHandlerInterface,
+    RestoreConfigurationProviderInterface
 {
     /**
      * @var TrashItemRepositoryInterface
@@ -147,5 +152,10 @@ final class TagTrashItemHandler implements StoreTrashItemHandlerInterface, Resto
         }
 
         return null;
+    }
+
+    public function getConfiguration(): RestoreConfiguration
+    {
+        return new RestoreConfiguration(null, TagAdmin::EDIT_FORM_VIEW, ['id' => 'id']);
     }
 }

@@ -74,12 +74,12 @@ class ProviderConfiguration implements ProviderConfigurationInterface
     private $paginated = false;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $view;
 
     /**
-     * @var string[]
+     * @var array<string, string>|null
      */
     private $resultToView;
 
@@ -214,22 +214,22 @@ class ProviderConfiguration implements ProviderConfigurationInterface
         $this->paginated = $paginated;
     }
 
-    public function getView(): string
+    public function getView(): ?string
     {
         return $this->view;
     }
 
-    public function setView(string $view)
+    public function setView(?string $view)
     {
         $this->view = $view;
     }
 
-    public function getResultToView(): array
+    public function getResultToView(): ?array
     {
         return $this->resultToView;
     }
 
-    public function setResultToView(array $resultToView)
+    public function setResultToView(?array $resultToView)
     {
         $this->resultToView = $resultToView;
     }

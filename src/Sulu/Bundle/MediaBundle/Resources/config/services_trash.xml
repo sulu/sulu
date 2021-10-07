@@ -15,6 +15,7 @@
             <tag name="sulu_trash.store_trash_item_handler"/>
             <tag name="sulu_trash.restore_trash_item_handler"/>
             <tag name="sulu_trash.remove_trash_item_handler"/>
+            <tag name="sulu_trash.restore_configuration_provider"/>
         </service>
     </services>
 </container>

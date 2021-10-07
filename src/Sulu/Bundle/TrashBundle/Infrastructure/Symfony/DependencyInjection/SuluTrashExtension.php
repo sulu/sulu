@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sulu\Bundle\TrashBundle\Infrastructure\Symfony\DependencyInjection;
 
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
+use Sulu\Bundle\TrashBundle\Application\RestoreConfigurationProvider\RestoreConfigurationProviderInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\RemoveTrashItemHandlerInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\RestoreTrashItemHandlerInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\StoreTrashItemHandlerInterface;
@@ -106,7 +107,6 @@ class SuluTrashExtension extends Extension implements PrependExtensionInterface
      */
     private function setParameters(ContainerBuilder $container, array $config): void
     {
-        $container->setParameter('sulu_trash.restore_form_mapping', $config['restore_form']);
     }
 
     private function registerInterfacesForAutoconfiguration(ContainerBuilder $container): void
@@ -119,5 +119,8 @@ class SuluTrashExtension extends Extension implements PrependExtensionInterface
 
         $container->registerForAutoconfiguration(RemoveTrashItemHandlerInterface::class)
             ->addTag('sulu_trash.remove_trash_item_handler');
+
+        $container->registerForAutoconfiguration(RestoreConfigurationProviderInterface::class)
+            ->addTag('sulu_trash.restore_configuration_provider');
     }
 }
