@@ -25,6 +25,7 @@ class S3StorageTest extends SuluTestCase
     {
         $kernel = self::bootKernel();
 
+        /** @var S3AdapterMock $adapter */
         $adapter = $kernel->getContainer()->get('sulu_media.storage.s3.adapter');
         $storage = $kernel->getContainer()->get('sulu_media.storage.s3');
         $this->assertInstanceOf(S3Storage::class, $storage);
@@ -33,6 +34,7 @@ class S3StorageTest extends SuluTestCase
 
         $this->assertArrayHasKey('segment', $result);
         $this->assertSame('sulu.jpg', $result['fileName']);
+        $this->assertNotNull($result['segment']);
         $this->assertTrue($adapter->has($result['segment']));
         $this->assertTrue($adapter->has($result['segment'] . '/sulu.jpg'));
     }
@@ -73,6 +75,27 @@ class S3StorageTest extends SuluTestCase
         $storage->remove(['segment' => '02', 'fileName' => 'sulu.jpg']);
 
         $this->assertFalse($adapter->has('02/sulu.jpg'));
+    }
+
+    public function testMove(): void
+    {
+        $kernel = self::bootKernel();
+
+        /** @var S3AdapterMock $adapter */
+        $adapter = $kernel->getContainer()->get('sulu_media.storage.s3.adapter');
+        $storage = $kernel->getContainer()->get('sulu_media.storage.s3');
+        $this->assertInstanceOf(S3Storage::class, $storage);
+
+        $sourceStorageOptions = $storage->save($this->getImagePath(), 'sulu.jpg', []);
+        $sourceFilePath = $sourceStorageOptions['segment'] . '/' . $sourceStorageOptions['fileName'];
+
+        $this->assertTrue($adapter->has($sourceFilePath));
+
+        $targetStorageOptions = ['directory' => 'trash', 'segment' => '5', 'fileName' => 'new-name.jpg'];
+        $storage->move($sourceStorageOptions, $targetStorageOptions);
+
+        $this->assertFalse($adapter->has($sourceFilePath));
+        $this->assertTrue($adapter->has('trash/5/new-name.jpg'));
     }
 
     public function testGetPath(): void

@@ -16,6 +16,7 @@
             <argument type="service" id="sulu_activity.domain_event_collector"/>
             <argument type="tagged_locator" tag="sulu_trash.store_trash_item_handler" index-by="resourceKey" default-index-method="getResourceKey"/>
             <argument type="tagged_locator" tag="sulu_trash.restore_trash_item_handler" index-by="resourceKey" default-index-method="getResourceKey"/>
+            <argument type="tagged_locator" tag="sulu_trash.remove_trash_item_handler" index-by="resourceKey" default-index-method="getResourceKey"/>
         </service>
         <service id="Sulu\Bundle\TrashBundle\Application\TrashManager\TrashManagerInterface" alias="sulu_trash.trash_manager"/>
 

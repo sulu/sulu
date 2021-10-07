@@ -116,10 +116,10 @@ class ImagineImageConverterTest extends TestCase
         $fileVersion = new FileVersion();
         $fileVersion->setName('test.jpg');
         $fileVersion->setVersion(1);
-        $fileVersion->setStorageOptions(['option' => 1]);
+        $fileVersion->setStorageOptions(['option' => 'value']);
         $fileVersion->setMimeType('image/jpeg');
 
-        $this->storage->load(['option' => 1])->willReturn('image-resource');
+        $this->storage->load(['option' => 'value'])->willReturn('image-resource');
         $this->mediaImageExtractor->extract('image-resource', 'image/jpeg')->willReturn('image-resource');
         $this->imagine->read('image-resource')->willReturn($imagineImage->reveal());
 
@@ -145,10 +145,10 @@ class ImagineImageConverterTest extends TestCase
         $fileVersion = new FileVersion();
         $fileVersion->setName('test.svg');
         $fileVersion->setVersion(1);
-        $fileVersion->setStorageOptions(['option' => 1]);
+        $fileVersion->setStorageOptions(['option' => 'value']);
         $fileVersion->setMimeType('image/svg+xml');
 
-        $this->storage->load(['option' => 1])->willReturn('image-resource');
+        $this->storage->load(['option' => 'value'])->willReturn('image-resource');
         $this->mediaImageExtractor->extract('image-resource', 'image/svg+xml')->willReturn('image-resource');
         $this->svgImagine->read('image-resource')->willReturn($imagineImage->reveal());
 
@@ -174,10 +174,10 @@ class ImagineImageConverterTest extends TestCase
         $fileVersion = new FileVersion();
         $fileVersion->setName('test.jpg');
         $fileVersion->setVersion(1);
-        $fileVersion->setStorageOptions(['option' => 1]);
+        $fileVersion->setStorageOptions(['option' => 'value']);
         $fileVersion->setMimeType('image/jpeg');
 
-        $this->storage->load(['option' => 1])->willReturn('image-resource');
+        $this->storage->load(['option' => 'value'])->willReturn('image-resource');
         $this->mediaImageExtractor->extract('image-resource', 'image/jpeg')->willReturn('image-resource');
         $this->imagine->read('image-resource')->willReturn($imagineImage->reveal());
 
@@ -202,10 +202,10 @@ class ImagineImageConverterTest extends TestCase
         $fileVersion = new FileVersion();
         $fileVersion->setName('test.svg');
         $fileVersion->setVersion(1);
-        $fileVersion->setStorageOptions(['option' => 1]);
+        $fileVersion->setStorageOptions(['option' => 'value']);
         $fileVersion->setMimeType('image/svg+xml');
 
-        $this->storage->load(['option' => 1])->willReturn('image-resource');
+        $this->storage->load(['option' => 'value'])->willReturn('image-resource');
         $this->mediaImageExtractor->extract('image-resource', 'image/svg+xml')->willReturn('image-resource');
         $this->imagine->read('image-resource')->willReturn($imagineImage->reveal());
 
@@ -229,10 +229,10 @@ class ImagineImageConverterTest extends TestCase
         $fileVersion = new FileVersion();
         $fileVersion->setName('test.jpg');
         $fileVersion->setVersion(1);
-        $fileVersion->setStorageOptions(['option' => 1]);
+        $fileVersion->setStorageOptions(['option' => 'value']);
         $fileVersion->setMimeType('image/jpeg');
 
-        $this->storage->load(['option' => 1])->willReturn('image-resource');
+        $this->storage->load(['option' => 'value'])->willReturn('image-resource');
         $this->mediaImageExtractor->extract('image-resource', 'image/jpeg')->willReturn('image-resource');
         $this->imagine->read('image-resource')->willReturn($imagineImage->reveal());
 
@@ -255,9 +255,9 @@ class ImagineImageConverterTest extends TestCase
         $fileVersion = new FileVersion();
         $fileVersion->setName('test.jpg');
         $fileVersion->setVersion(1);
-        $fileVersion->setStorageOptions(['option' => 1]);
+        $fileVersion->setStorageOptions(['option' => 'value']);
 
-        $this->storage->load(['option' => 1])->willThrow(ImageProxyMediaNotFoundException::class);
+        $this->storage->load(['option' => 'value'])->willThrow(ImageProxyMediaNotFoundException::class);
 
         $this->imagineImageConverter->convert($fileVersion, '640x480', 'jpg');
     }

@@ -17,6 +17,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\RemoveTrashItemHandlerInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\RestoreTrashItemHandlerInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\StoreTrashItemHandlerInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashManager\TrashManager;
@@ -53,6 +54,11 @@ class TrashManagerTest extends TestCase
     private $restoreTrashItemHandlerLocator;
 
     /**
+     * @var ObjectProphecy<ServiceLocator>
+     */
+    private $removeTrashItemHandlerLocator;
+
+    /**
      * @var TrashManagerInterface
      */
     private $trashManager;
@@ -63,12 +69,14 @@ class TrashManagerTest extends TestCase
         $this->domainEventCollector = $this->prophesize(DomainEventCollectorInterface::class);
         $this->storeTrashItemHandlerLocator = $this->prophesize(ServiceLocator::class);
         $this->restoreTrashItemHandlerLocator = $this->prophesize(ServiceLocator::class);
+        $this->removeTrashItemHandlerLocator = $this->prophesize(ServiceLocator::class);
 
         $this->trashManager = new TrashManager(
             $this->trashItemRepository->reveal(),
             $this->domainEventCollector->reveal(),
             $this->storeTrashItemHandlerLocator->reveal(),
-            $this->restoreTrashItemHandlerLocator->reveal()
+            $this->restoreTrashItemHandlerLocator->reveal(),
+            $this->removeTrashItemHandlerLocator->reveal()
         );
     }
 
@@ -135,13 +143,34 @@ class TrashManagerTest extends TestCase
         $this->trashManager->restore($trashItem, []);
     }
 
-    public function testRemove(): void
+    public function testRemoveWithoutRemoveTrashItemHandler(): void
     {
         $trashItem = new TrashItem();
         $trashItem->setResourceKey('tags');
         $trashItem->setResourceId('1');
         $trashItem->setResourceTitle('Tag Title');
 
+        $this->removeTrashItemHandlerLocator->has('tags')->willReturn(false);
+
+        $this->domainEventCollector->collect(Argument::type(TrashItemRemovedEvent::class))->shouldBeCalled();
+        $this->trashItemRepository->remove($trashItem)->shouldBeCalled();
+
+        $this->trashManager->remove($trashItem);
+    }
+
+    public function testRemoveWithRemoveTrashItemHandler(): void
+    {
+        $removeTrashItemHandler = $this->prophesize(RemoveTrashItemHandlerInterface::class);
+
+        $trashItem = new TrashItem();
+        $trashItem->setResourceKey('tags');
+        $trashItem->setResourceId('1');
+        $trashItem->setResourceTitle('Tag Title');
+
+        $this->removeTrashItemHandlerLocator->has('tags')->willReturn(true);
+        $this->removeTrashItemHandlerLocator->get('tags')->willReturn($removeTrashItemHandler->reveal());
+
+        $removeTrashItemHandler->remove($trashItem)->shouldBeCalled();
         $this->domainEventCollector->collect(Argument::type(TrashItemRemovedEvent::class))->shouldBeCalled();
         $this->trashItemRepository->remove($trashItem)->shouldBeCalled();
 

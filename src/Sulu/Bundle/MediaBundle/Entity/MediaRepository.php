@@ -77,13 +77,13 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
                 if (isset($query->getArrayResult()[0])) {
                     return $query->getArrayResult()[0];
                 } else {
-                    return;
+                    return null;
                 }
             } else {
                 return $query->getSingleResult();
             }
         } catch (NoResultException $ex) {
-            return;
+            return null;
         }
     }
 

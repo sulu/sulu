@@ -91,7 +91,7 @@ class RestoreFormOverlay extends React.Component<Props> {
                 onClose={onClose}
                 onConfirm={this.handleConfirm}
                 open={open}
-                size="large"
+                size="small"
                 title={translate('sulu_trash.restore_element')}
             />
         );

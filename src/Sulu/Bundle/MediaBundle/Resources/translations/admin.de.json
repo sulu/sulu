@@ -1,5 +1,6 @@
 {
     "sulu_media.media": "Medien",
+    "sulu_media.collection": "Ordner",
     "sulu_media.all_media": "Alle Medien",
     "sulu_media.audio": "Audio",
     "sulu_media.document": "Dokument",
@@ -88,6 +89,7 @@
     "sulu_activity.description.media.modified": "{userFullName} hat das Medium \"{resourceTitle}\" geändert",
     "sulu_activity.description.media.moved": "{userFullName} hat das Medium \"{resourceTitle}\" von \"{context_previousCollectionTitle}\" nach \"{context_newCollectionTitle}\" verschoben",
     "sulu_activity.description.media.removed": "{userFullName} hat das Medium \"{resourceTitle}\" gelöscht",
+    "sulu_activity.description.media.restored": "{userFullName} hat das Medium \"{resourceTitle}\" wiederhergestellt",
     "sulu_activity.description.media.translation_added": "{userFullName} hat eine Übersetzung für \"{resourceLocale}\" zum Medium \"{resourceTitle}\" hinzugefügt",
     "sulu_activity.description.media.crop_modified": "{userFullName} hat den Ausschnitt für das Format \"{context_formatKey}\" des Mediums \"{resourceTitle}\" geändert",
     "sulu_activity.description.media.crop_removed": "{userFullName} hat den Ausschnitt für das Format \"{context_formatKey}\" des Mediums \"{resourceTitle}\" gelöscht",

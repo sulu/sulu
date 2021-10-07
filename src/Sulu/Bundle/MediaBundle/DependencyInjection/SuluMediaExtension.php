@@ -216,6 +216,17 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
                 ]
             );
         }
+
+        if ($container->hasExtension('sulu_trash')) {
+            $container->prependExtensionConfig(
+                'sulu_trash',
+                [
+                    'restore_form' => [
+                        MediaInterface::RESOURCE_KEY => 'restore_media',
+                    ],
+                ]
+            );
+        }
     }
 
     public function load(array $configs, ContainerBuilder $container)
@@ -357,6 +368,10 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
 
         if (\array_key_exists('SuluAudienceTargetingBundle', $bundles)) {
             $loader->load('audience_targeting.xml');
+        }
+
+        if (\array_key_exists('SuluTrashBundle', $bundles)) {
+            $loader->load('services_trash.xml');
         }
 
         $ffmpegBinary = $container->resolveEnvPlaceholders($config['ffmpeg']['ffmpeg_binary'] ?? null, true);

@@ -38,17 +38,16 @@ abstract class FlysystemStorage implements StorageInterface
 
     public function save(string $tempPath, string $fileName, array $storageOptions = []): array
     {
-        $segment = $this->getStorageOption($storageOptions, 'segment');
-        if (!$segment) {
-            $segment = \sprintf('%0' . \strlen($this->segments) . 'd', \rand(1, $this->segments));
+        if (!\array_key_exists('segment', $storageOptions)) {
+            $storageOptions['segment'] = \sprintf('%0' . \strlen($this->segments) . 'd', \rand(1, $this->segments));
         }
 
-        $fileName = $this->getUniqueFileName($segment, $fileName);
-        $filePath = $segment . '/' . $fileName;
+        $this->createDirectories($storageOptions);
 
-        if (!$this->filesystem->has($segment)) {
-            $this->filesystem->createDir($segment);
-        }
+        $parentPath = $this->getFilePath(\array_merge($storageOptions, ['fileName' => null]));
+        $storageOptions['fileName'] = $this->getUniqueFileName($parentPath, $fileName);
+
+        $filePath = $this->getFilePath($storageOptions);
 
         try {
             $this->filesystem->writeStream(
@@ -60,41 +59,52 @@ abstract class FlysystemStorage implements StorageInterface
             throw new FilenameAlreadyExistsException($filePath);
         }
 
-        return [
-            'segment' => $segment,
-            'fileName' => $fileName,
-        ];
+        return $storageOptions;
     }
 
     public function load(array $storageOptions)
     {
-        $segment = $this->getStorageOption($storageOptions, 'segment');
-        $fileName = $this->getStorageOption($storageOptions, 'fileName');
-        $path = $segment . '/' . $fileName;
+        $filePath = $this->getFilePath($storageOptions);
 
         try {
-            return $this->filesystem->readStream($path);
+            return $this->filesystem->readStream($filePath);
         } catch (FileNotFoundException $exception) {
-            throw new ImageProxyMediaNotFoundException(\sprintf('Original media at path "%s" not found', $path));
+            throw new ImageProxyMediaNotFoundException(\sprintf('Original media at path "%s" not found', $filePath));
         }
     }
 
     public function remove(array $storageOptions): void
     {
-        $segment = $this->getStorageOption($storageOptions, 'segment');
-        $fileName = $this->getStorageOption($storageOptions, 'fileName');
+        $filePath = $this->getFilePath($storageOptions);
 
-        if (!$segment || !$fileName) {
+        if (!$filePath) {
             return;
         }
 
         try {
-            $this->filesystem->delete($segment . '/' . $fileName);
+            $this->filesystem->delete($filePath);
         } catch (FileNotFoundException $exception) {
         }
     }
 
-    protected function getUniqueFileName(string $folder, string $fileName, int $counter = 0): string
+    public function move(array $sourceStorageOptions, array $targetStorageOptions): array
+    {
+        $this->createDirectories($targetStorageOptions);
+
+        $targetParentPath = $this->getFilePath(\array_merge($targetStorageOptions, ['fileName' => null]));
+        $targetStorageOptions['fileName'] = $this->getUniqueFileName($targetParentPath, $targetStorageOptions['fileName']);
+
+        $targetFilePath = $this->getFilePath($targetStorageOptions);
+        if ($this->filesystem->has($targetFilePath)) {
+            throw new FilenameAlreadyExistsException($targetFilePath);
+        }
+
+        $this->filesystem->rename($this->getFilePath($sourceStorageOptions), $targetFilePath);
+
+        return $targetStorageOptions;
+    }
+
+    protected function getUniqueFileName(string $parentPath, string $fileName, int $counter = 0): string
     {
         $newFileName = $fileName;
         if ($counter > 0) {
@@ -105,15 +115,52 @@ abstract class FlysystemStorage implements StorageInterface
             }
         }
 
-        if (!$this->filesystem->has($folder . '/' . $newFileName)) {
+        $filePath = \rtrim($parentPath, '/') . '/' . \ltrim($newFileName, '/');
+
+        if (!$this->filesystem->has($filePath)) {
             return $newFileName;
         }
 
-        return $this->getUniqueFileName($folder, $fileName, $counter + 1);
+        return $this->getUniqueFileName($parentPath, $fileName, $counter + 1);
     }
 
+    /**
+     * @param array<string, string|null> $storageOptions
+     */
     protected function getStorageOption(array $storageOptions, string $key): ?string
     {
         return $storageOptions[$key] ?? null;
+    }
+
+    /**
+     * @param array<string, string|null> $storageOptions
+     */
+    protected function getFilePath(array $storageOptions): string
+    {
+        $directory = $this->getStorageOption($storageOptions, 'directory');
+        $segment = $this->getStorageOption($storageOptions, 'segment');
+        $fileName = $this->getStorageOption($storageOptions, 'fileName');
+
+        return \implode('/', \array_filter([$directory, $segment, $fileName]));
+    }
+
+    /**
+     * @param array<string, string|null> $storageOptions
+     */
+    private function createDirectories(array $storageOptions): void
+    {
+        $directory = $this->getStorageOption($storageOptions, 'directory');
+        $directoryPath = \implode('/', \array_filter([$directory]));
+
+        if ($directoryPath && !$this->filesystem->has($directoryPath)) {
+            $this->filesystem->createDir($directoryPath);
+        }
+
+        $segment = $this->getStorageOption($storageOptions, 'segment');
+        $segmentPath = \implode('/', \array_filter([$directory, $segment]));
+
+        if ($segmentPath && !$this->filesystem->has($segmentPath)) {
+            $this->filesystem->createDir($segmentPath);
+        }
     }
 }

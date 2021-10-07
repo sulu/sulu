@@ -79,6 +79,9 @@ class S3AdapterMock extends AwsS3Adapter implements AdapterInterface
 
     public function rename($path, $newpath)
     {
+        $this->objectMap[$newpath] = $this->objectMap[$path];
+        unset($this->objectMap[$path]);
+
         return false;
     }
 

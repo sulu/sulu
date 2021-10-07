@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sulu\Bundle\TrashBundle\Application\TrashManager;
 
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\RemoveTrashItemHandlerInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\RestoreTrashItemHandlerInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\StoreTrashItemHandlerInterface;
 use Sulu\Bundle\TrashBundle\Domain\Event\TrashItemCreatedEvent;
@@ -47,16 +48,23 @@ final class TrashManager implements TrashManagerInterface
      */
     private $restoreTrashItemHandlerLocator;
 
+    /**
+     * @var ServiceLocator
+     */
+    private $removeTrashItemHandlerLocator;
+
     public function __construct(
         TrashItemRepositoryInterface $trashItemRepository,
         DomainEventCollectorInterface $domainEventCollector,
         ServiceLocator $storeTrashItemHandlerLocator,
-        ServiceLocator $restoreTrashItemHandlerLocator
+        ServiceLocator $restoreTrashItemHandlerLocator,
+        ServiceLocator $removeTrashItemHandlerLocator
     ) {
         $this->trashItemRepository = $trashItemRepository;
         $this->domainEventCollector = $domainEventCollector;
         $this->storeTrashItemHandlerLocator = $storeTrashItemHandlerLocator;
         $this->restoreTrashItemHandlerLocator = $restoreTrashItemHandlerLocator;
+        $this->removeTrashItemHandlerLocator = $removeTrashItemHandlerLocator;
     }
 
     public function store(string $resourceKey, object $object): TrashItemInterface
@@ -111,6 +119,15 @@ final class TrashManager implements TrashManagerInterface
 
     public function remove(TrashItemInterface $trashItem): void
     {
+        $resourceKey = $trashItem->getResourceKey();
+
+        if ($this->removeTrashItemHandlerLocator->has($resourceKey)) {
+            /** @var RemoveTrashItemHandlerInterface $removeTrashItemHandler */
+            $removeTrashItemHandler = $this->removeTrashItemHandlerLocator->get($resourceKey);
+
+            $removeTrashItemHandler->remove($trashItem);
+        }
+
         $translation = $trashItem->getTranslation(null, true);
 
         $this->domainEventCollector->collect(

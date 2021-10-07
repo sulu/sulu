@@ -46,6 +46,7 @@ use Sulu\Bundle\MediaBundle\Media\PropertiesProvider\VideoPropertiesProvider;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\MediaBundle\Media\TypeManager\TypeManagerInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
+use Sulu\Bundle\TrashBundle\Application\TrashManager\TrashManagerInterface;
 use Sulu\Component\PHPCR\PathCleanupInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
@@ -168,6 +169,11 @@ class MediaManager implements MediaManagerInterface
     private $mediaPropertiesProviders;
 
     /**
+     * @var TrashManagerInterface|null
+     */
+    private $trashManager;
+
+    /**
      * @param CollectionRepository $collectionRepository
      * @param null|FFprobe|MediaPropertiesProviderInterface[] $mediaPropertiesProviders
      * @param string $downloadPath
@@ -191,7 +197,8 @@ class MediaManager implements MediaManagerInterface
         $mediaPropertiesProviders,
         $downloadPath,
         ?TargetGroupRepositoryInterface $targetGroupRepository,
-        $adminDownloadPath = null
+        $adminDownloadPath = null,
+        ?TrashManagerInterface $trashManager = null
     ) {
         $this->mediaRepository = $mediaRepository;
         $this->collectionRepository = $collectionRepository;
@@ -209,6 +216,7 @@ class MediaManager implements MediaManagerInterface
         $this->tokenStorage = $tokenStorage;
         $this->securityChecker = $securityChecker;
         $this->downloadPath = $downloadPath;
+        $this->trashManager = $trashManager;
 
         if (!$adminDownloadPath) {
             @\trigger_error(
@@ -742,6 +750,10 @@ class MediaManager implements MediaManagerInterface
                 ),
                 PermissionTypes::DELETE
             );
+        }
+
+        if (null !== $this->trashManager) {
+            $this->trashManager->store(MediaInterface::RESOURCE_KEY, $mediaEntity);
         }
 
         /** @var File $file */

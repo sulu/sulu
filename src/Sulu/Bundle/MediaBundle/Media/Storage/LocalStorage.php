@@ -53,32 +53,26 @@ class LocalStorage implements StorageInterface
 
     public function save(string $tempPath, string $fileName, array $storageOptions = []): array
     {
+        if (!\array_key_exists('segment', $storageOptions)) {
+            $storageOptions['segment'] = \sprintf('%0' . \strlen($this->segments) . 'd', \rand(1, $this->segments));
+        }
+
+        $this->createDirectories($storageOptions);
+
+        $directory = $this->getStorageOption($storageOptions, 'directory');
         $segment = $this->getStorageOption($storageOptions, 'segment');
-        if (!$segment) {
-            $segment = \sprintf('%0' . \strlen($this->segments) . 'd', \rand(1, $this->segments));
-        }
+        $parentPath = $this->getFilesystemPath($directory, $segment);
+        $storageOptions['fileName'] = $this->getUniqueFileName($parentPath, $fileName);
 
-        $segmentPath = $this->createPath($segment);
-        $fileName = $this->getUniqueFileName($segmentPath, $fileName);
-
-        $filePath = $this->createPath($segment, $fileName);
-        $this->logger->debug('Check FilePath: ' . $filePath);
-
-        if (!$this->filesystem->exists($segmentPath)) {
-            $this->logger->debug('Try Create Folder: ' . $segmentPath);
-            $this->filesystem->mkdir($segmentPath, 0777);
-        }
-
+        $filePath = $this->getFilesystemPath($directory, $segment, $storageOptions['fileName']);
         $this->logger->debug('Try to copy File "' . $tempPath . '" to "' . $filePath . '"');
+
         if ($this->filesystem->exists($filePath)) {
             throw new FilenameAlreadyExistsException($filePath);
         }
         $this->filesystem->copy($tempPath, $filePath);
 
-        return [
-            'segment' => $segment,
-            'fileName' => $fileName,
-        ];
+        return $storageOptions;
     }
 
     public function load(array $storageOptions)
@@ -88,6 +82,7 @@ class LocalStorage implements StorageInterface
 
     public function getPath(array $storageOptions): string
     {
+        $directory = $this->getStorageOption($storageOptions, 'directory');
         $segment = $this->getStorageOption($storageOptions, 'segment');
         $fileName = $this->getStorageOption($storageOptions, 'fileName');
 
@@ -95,7 +90,7 @@ class LocalStorage implements StorageInterface
             throw new \RuntimeException();
         }
 
-        return $this->createPath($segment, $fileName);
+        return $this->getFilesystemPath($directory, $segment, $fileName);
     }
 
     public function getType(array $storageOptions): string
@@ -103,17 +98,31 @@ class LocalStorage implements StorageInterface
         return self::TYPE_LOCAL;
     }
 
-    public function remove(array $storageOptions): void
+    public function move(array $sourceStorageOptions, array $targetStorageOptions): array
     {
-        $segment = $this->getStorageOption($storageOptions, 'segment');
-        $fileName = $this->getStorageOption($storageOptions, 'fileName');
+        $this->createDirectories($targetStorageOptions);
 
-        if (!$segment || !$fileName) {
-            throw new \RuntimeException();
+        $targetDirectory = $this->getStorageOption($targetStorageOptions, 'directory');
+        $targetSegment = $this->getStorageOption($targetStorageOptions, 'segment');
+        $targetFileName = $this->getStorageOption($targetStorageOptions, 'fileName');
+
+        $targetParentPath = $this->getFilesystemPath($targetDirectory, $targetSegment);
+        $targetStorageOptions['fileName'] = $this->getUniqueFileName($targetParentPath, $targetFileName);
+
+        $targetPath = $this->getPath($targetStorageOptions);
+        if ($this->filesystem->exists($targetPath)) {
+            throw new FilenameAlreadyExistsException($targetPath);
         }
 
+        $this->filesystem->rename($this->getPath($sourceStorageOptions), $targetPath);
+
+        return $targetStorageOptions;
+    }
+
+    public function remove(array $storageOptions): void
+    {
         try {
-            $this->filesystem->remove($this->uploadPath . '/' . $segment . '/' . $fileName);
+            $this->filesystem->remove($this->getPath($storageOptions));
         } catch (IOException $ex) {
         }
     }
@@ -121,7 +130,7 @@ class LocalStorage implements StorageInterface
     /**
      * Get a unique filename in path.
      */
-    private function getUniqueFileName(string $folder, string $fileName, int $counter = 0): string
+    private function getUniqueFileName(string $parentPath, string $fileName, int $counter = 0): string
     {
         $newFileName = $fileName;
 
@@ -134,7 +143,7 @@ class LocalStorage implements StorageInterface
             }
         }
 
-        $filePath = $this->getPathByFolderAndFileName($folder, $newFileName);
+        $filePath = \rtrim($parentPath, '/') . '/' . \ltrim($newFileName, '/');
 
         $this->logger->debug('Check FilePath: ' . $filePath);
 
@@ -144,21 +153,34 @@ class LocalStorage implements StorageInterface
 
         ++$counter;
 
-        return $this->getUniqueFileName($folder, $fileName, $counter);
+        return $this->getUniqueFileName($parentPath, $fileName, $counter);
     }
 
-    private function getPathByFolderAndFileName(string $folder, string $fileName): string
+    private function getFilesystemPath(?string $directory, ?string $segment = null, ?string $fileName = null): string
     {
-        return \rtrim($folder, '/') . '/' . \ltrim($fileName, '/');
+        return \implode('/', \array_filter([$this->uploadPath, $directory, $segment, $fileName]));
     }
 
-    private function createPath(string $segment, ?string $fileName = null): string
+    /**
+     * @param array<string, string|null> $storageOptions
+     */
+    private function getStorageOption(array $storageOptions, string $key): ?string
     {
-        return \implode('/', \array_filter([$this->uploadPath, $segment, $fileName]));
+        return \array_key_exists($key, $storageOptions) ? $storageOptions[$key] : null;
     }
 
-    private function getStorageOption(array $storageOption, string $key): ?string
+    /**
+     * @param array<string, string|null> $storageOptions
+     */
+    private function createDirectories(array $storageOptions): void
     {
-        return \array_key_exists($key, $storageOption) ? $storageOption[$key] : null;
+        $directory = $this->getStorageOption($storageOptions, 'directory');
+        $segment = $this->getStorageOption($storageOptions, 'segment');
+        $segmentPath = $this->getFilesystemPath($directory, $segment);
+
+        if (!$this->filesystem->exists($segmentPath)) {
+            $this->logger->debug('Try Create Folder: ' . $segmentPath);
+            $this->filesystem->mkdir($segmentPath, 0777);
+        }
     }
 }

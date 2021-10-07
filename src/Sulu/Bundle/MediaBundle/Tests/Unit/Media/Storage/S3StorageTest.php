@@ -131,6 +131,27 @@ class S3StorageTest extends TestCase
         $this->assertEquals($handle, $result);
     }
 
+    public function testLoadWithDirectory(): void
+    {
+        $adapter = $this->prophesize(AwsS3Adapter::class);
+        $flysystem = $this->prophesize(Filesystem::class);
+
+        $flysystem->getAdapter()->willReturn($adapter->reveal());
+
+        $client = $this->prophesize(S3Client::class);
+        $client->getEndpoint()->willReturn('http://aws.com');
+        $adapter->getClient()->willReturn($client->reveal());
+        $adapter->getBucket()->willReturn('test');
+
+        $storage = new S3Storage($flysystem->reveal(), 1);
+
+        $handle = \tmpfile();
+        $flysystem->readStream('trash/1/test.jpg')->willReturn($handle)->shouldBeCalled();
+
+        $result = $storage->load(['directory' => 'trash', 'segment' => '1', 'fileName' => 'test.jpg']);
+        $this->assertEquals($handle, $result);
+    }
+
     public function testLoadNotFound(): void
     {
         $this->expectException(ImageProxyMediaNotFoundException::class);
@@ -173,6 +194,25 @@ class S3StorageTest extends TestCase
         $storage->remove(['segment' => '1', 'fileName' => 'test.jpg']);
     }
 
+    public function testRemoveWithDirectory(): void
+    {
+        $adapter = $this->prophesize(AwsS3Adapter::class);
+        $flysystem = $this->prophesize(Filesystem::class);
+
+        $flysystem->getAdapter()->willReturn($adapter->reveal());
+
+        $client = $this->prophesize(S3Client::class);
+        $client->getEndpoint()->willReturn('http://aws.com');
+        $adapter->getClient()->willReturn($client->reveal());
+        $adapter->getBucket()->willReturn('test');
+
+        $storage = new S3Storage($flysystem->reveal(), 1);
+
+        $flysystem->delete('trash/1/test.jpg')->shouldBeCalled();
+
+        $storage->remove(['directory' => 'trash', 'segment' => '1', 'fileName' => 'test.jpg']);
+    }
+
     public function testRemoveNotFound(): void
     {
         $adapter = $this->prophesize(AwsS3Adapter::class);
@@ -192,6 +232,95 @@ class S3StorageTest extends TestCase
         $storage->remove(['segment' => '1', 'fileName' => 'test.jpg']);
     }
 
+    public function testMove(): void
+    {
+        $adapter = $this->prophesize(AwsS3Adapter::class);
+        $flysystem = $this->prophesize(Filesystem::class);
+
+        $flysystem->getAdapter()->willReturn($adapter->reveal());
+
+        $client = $this->prophesize(S3Client::class);
+        $client->getEndpoint()->willReturn('http://aws.com');
+        $adapter->getClient()->willReturn($client->reveal());
+        $adapter->getBucket()->willReturn('test');
+
+        $storage = new S3Storage($flysystem->reveal(), 1);
+
+        $flysystem->has('trash')->wilLReturn(false);
+        $flysystem->createDir('trash')->shouldBeCalled();
+
+        $flysystem->has('trash/1')->wilLReturn(false);
+        $flysystem->createDir('trash/1')->shouldBeCalled();
+
+        $flysystem->has('trash/1/test.jpg')->wilLReturn(false);
+        $flysystem->rename('1/test.jpg', 'trash/1/test.jpg')->shouldBeCalled();
+
+        $result = $storage->move(
+            ['segment' => '1', 'fileName' => 'test.jpg'],
+            ['directory' => 'trash', 'segment' => '1', 'fileName' => 'test.jpg']
+        );
+
+        $this->assertSame(['directory' => 'trash', 'segment' => '1', 'fileName' => 'test.jpg'], $result);
+    }
+
+    public function testMoveTargetDirectoryExists(): void
+    {
+        $adapter = $this->prophesize(AwsS3Adapter::class);
+        $flysystem = $this->prophesize(Filesystem::class);
+
+        $flysystem->getAdapter()->willReturn($adapter->reveal());
+
+        $client = $this->prophesize(S3Client::class);
+        $client->getEndpoint()->willReturn('http://aws.com');
+        $adapter->getClient()->willReturn($client->reveal());
+        $adapter->getBucket()->willReturn('test');
+
+        $storage = new S3Storage($flysystem->reveal(), 1);
+
+        $flysystem->has('trash')->wilLReturn(true);
+        $flysystem->has('trash/1')->wilLReturn(true);
+
+        $flysystem->has('trash/1/test.jpg')->wilLReturn(false);
+        $flysystem->rename('1/test.jpg', 'trash/1/test.jpg')->shouldBeCalled();
+
+        $result = $storage->move(
+            ['segment' => '1', 'fileName' => 'test.jpg'],
+            ['directory' => 'trash', 'segment' => '1', 'fileName' => 'test.jpg']
+        );
+
+        $this->assertSame(['directory' => 'trash', 'segment' => '1', 'fileName' => 'test.jpg'], $result);
+    }
+
+    public function testMoveTargetFileExists(): void
+    {
+        $adapter = $this->prophesize(AwsS3Adapter::class);
+        $flysystem = $this->prophesize(Filesystem::class);
+
+        $flysystem->getAdapter()->willReturn($adapter->reveal());
+
+        $client = $this->prophesize(S3Client::class);
+        $client->getEndpoint()->willReturn('http://aws.com');
+        $adapter->getClient()->willReturn($client->reveal());
+        $adapter->getBucket()->willReturn('test');
+
+        $storage = new S3Storage($flysystem->reveal(), 1);
+
+        $flysystem->has('trash')->wilLReturn(true);
+        $flysystem->has('trash/1')->wilLReturn(true);
+
+        $flysystem->has('trash/1/test.jpg')->wilLReturn(true);
+        $flysystem->has('trash/1/test-1.jpg')->wilLReturn(true);
+        $flysystem->has('trash/1/test-2.jpg')->wilLReturn(false);
+        $flysystem->rename('1/test.jpg', 'trash/1/test-2.jpg')->shouldBeCalled();
+
+        $result = $storage->move(
+            ['segment' => '1', 'fileName' => 'test.jpg'],
+            ['directory' => 'trash', 'segment' => '1', 'fileName' => 'test.jpg']
+        );
+
+        $this->assertSame(['directory' => 'trash', 'segment' => '1', 'fileName' => 'test-2.jpg'], $result);
+    }
+
     public function testGetPath(): void
     {
         $adapter = $this->prophesize(AwsS3Adapter::class);
@@ -209,6 +338,25 @@ class S3StorageTest extends TestCase
 
         $path = $storage->getPath(['segment' => '1', 'fileName' => 'test.jpg']);
         $this->assertEquals('http://aws.com/test/xxx/1/test.jpg', $path);
+    }
+
+    public function testGetPathWithDirectory(): void
+    {
+        $adapter = $this->prophesize(AwsS3Adapter::class);
+        $flysystem = $this->prophesize(Filesystem::class);
+
+        $flysystem->getAdapter()->willReturn($adapter->reveal());
+
+        $client = $this->prophesize(S3Client::class);
+        $client->getEndpoint()->willReturn('http://aws.com');
+        $adapter->getClient()->willReturn($client->reveal());
+        $adapter->getBucket()->willReturn('test');
+        $adapter->applyPathPrefix('trash/1/test.jpg')->willReturn('xxx/trash/1/test.jpg');
+
+        $storage = new S3Storage($flysystem->reveal(), 1);
+
+        $path = $storage->getPath(['directory' => 'trash', 'segment' => '1', 'fileName' => 'test.jpg']);
+        $this->assertEquals('http://aws.com/test/xxx/trash/1/test.jpg', $path);
     }
 
     public function testGetType(): void
