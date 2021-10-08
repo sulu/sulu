@@ -20,48 +20,44 @@ use Doctrine\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\Persistence\Mapping\ReflectionService;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ContactBundle\Entity\ContactRepository;
 use Sulu\Component\Persistence\EventSubscriber\ORM\MetadataSubscriber;
 
 class MetadataSubscriberTest extends TestCase
 {
     /**
-     * @var \Doctrine\ORM\Event\LoadClassMetadataEventArgs
+     * @var LoadClassMetadataEventArgs|ObjectProphecy
      */
     protected $loadClassMetadataEvent;
 
     /**
-     * @var \Doctrine\ORM\Mapping\ClassMetadata
+     * @var ClassMetadata|ObjectProphecy
      */
     protected $classMetadata;
 
     /**
-     * @var \Doctrine\ORM\Mapping\ClassMetadata
-     */
-    protected $parentClassMetadata;
-
-    /**
-     * @var \ReflectionClass
+     * @var \ReflectionClass|ObjectProphecy
      */
     protected $reflection;
 
     /**
-     * @var \Doctrine\ORM\EntityManager
+     * @var EntityManager|ObjectProphecy
      */
     protected $entityManager;
 
     /**
-     * @var \Doctrine\ORM\Mapping\ClassMetadataFactory
+     * @var ClassMetadataFactory|ObjectProphecy
      */
     protected $classMetadataFactory;
 
     /**
-     * @var \Doctrine\Persistence\Mapping\ReflectionService
+     * @var ReflectionService|ObjectProphecy
      */
     protected $reflectionService;
 
     /**
-     * @var \Doctrine\ORM\Configuration
+     * @var Configuration|ObjectProphecy
      */
     protected $configuration;
 
@@ -71,12 +67,12 @@ class MetadataSubscriberTest extends TestCase
     protected $subscriber;
 
     /**
-     * @var \stdClass
+     * @var \stdClass|ObjectProphecy
      */
     protected $object;
 
     /**
-     * @var \stdClass
+     * @var \stdClass|ObjectProphecy
      */
     protected $parentObject;
 
@@ -103,7 +99,6 @@ class MetadataSubscriberTest extends TestCase
             ],
         ];
 
-        $this->parentClassMetadata = $this->prophesize(ClassMetadata::class);
         $this->classMetadata = $this->prophesize(ClassMetadata::class);
         $this->reflection = $this->prophesize(\ReflectionClass::class);
         $this->entityManager = $this->prophesize(EntityManager::class);
@@ -162,7 +157,7 @@ class MetadataSubscriberTest extends TestCase
         $this->configuration->getNamingStrategy()->willReturn(null);
         $this->classMetadataFactory->getReflectionService()->willReturn($this->reflectionService->reveal());
 
-        /** @var MappingDriver $mappingDriver */
+        /** @var MappingDriver|ObjectProphecy $mappingDriver */
         $mappingDriver = $this->prophesize(MappingDriver::class);
         $this->configuration->getMetadataDriverImpl()->willReturn($mappingDriver->reveal());
         $mappingDriver->getAllClassNames()->willReturn([\get_class($this->parentObject->reveal())]);
