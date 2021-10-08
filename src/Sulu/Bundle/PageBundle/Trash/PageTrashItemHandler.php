@@ -74,20 +74,22 @@ final class PageTrashItemHandler implements
      */
     public function store(object $page): TrashItemInterface
     {
-        Assert::isInstanceOf($page, PageDocument::class);
+        Assert::isInstanceOf($page, BasePageDocument::class);
 
         $pageTitles = [];
-
-        /** @var BasePageDocument $parent */
-        $parent = $page->getParent();
         $data = [
-            'parentUuid' => $parent->getUuid(),
             'locales' => [],
         ];
 
+        if ($page instanceof PageDocument) {
+            /** @var BasePageDocument $parent */
+            $parent = $page->getParent();
+            $data['parentUuid'] = $parent->getUuid();
+        }
+
         /** @var string $locale */
         foreach ($this->documentInspector->getLocales($page) as $locale) {
-            /** @var PageDocument $localizedPage */
+            /** @var BasePageDocument $localizedPage */
             $localizedPage = $this->documentManager->find($page->getUuid(), $locale);
             /** @var BasePageDocument|null $redirectTarget */
             $redirectTarget = $localizedPage->getRedirectTarget();
