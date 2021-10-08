@@ -16,12 +16,16 @@ namespace Sulu\Bundle\PageBundle\EventListener;
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Bundle\TrashBundle\Application\TrashManager\TrashManagerInterface;
+use Sulu\Component\DocumentManager\Event\ClearEvent;
 use Sulu\Component\DocumentManager\Event\FlushEvent;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
 use Sulu\Component\DocumentManager\Events;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class PageTrashSubscriber implements EventSubscriberInterface
+/**
+ * @internal
+ */
+final class PageTrashSubscriber implements EventSubscriberInterface
 {
     /**
      * @var TrashManagerInterface
@@ -32,6 +36,11 @@ class PageTrashSubscriber implements EventSubscriberInterface
      * @var EntityManagerInterface
      */
     private $entityManager;
+
+    /**
+     * @var bool
+     */
+    private $hasPendingTrashItem = false;
 
     public function __construct(
         TrashManagerInterface $trashManager,
@@ -49,6 +58,7 @@ class PageTrashSubscriber implements EventSubscriberInterface
         return [
             Events::REMOVE => ['storePageToTrash', 1024],
             Events::FLUSH => 'flushTrashItem',
+            Events::CLEAR => 'clearPendingTrashItem',
         ];
     }
 
@@ -61,10 +71,21 @@ class PageTrashSubscriber implements EventSubscriberInterface
         }
 
         $this->trashManager->store(BasePageDocument::RESOURCE_KEY, $event->getDocument());
+        $this->hasPendingTrashItem = true;
     }
 
     public function flushTrashItem(FlushEvent $event): void
     {
+        if (!$this->hasPendingTrashItem) {
+            return;
+        }
+
         $this->entityManager->flush();
+        $this->hasPendingTrashItem = false;
+    }
+
+    public function clearPendingTrashItem(ClearEvent $event): void
+    {
+        $this->hasPendingTrashItem = false;
     }
 }
