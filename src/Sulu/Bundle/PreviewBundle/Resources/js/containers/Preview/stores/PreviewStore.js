@@ -126,6 +126,6 @@ export default class PreviewStore {
     stop(): Promise<*> {
         const route = generateRoute('stop', {token: this.token});
 
-        return Requester.post(route).then(this.setToken(null));
+        return Requester.post(route).then(() => this.setToken(null));
     }
 }

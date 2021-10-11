@@ -15,6 +15,8 @@ interface PreviewFormViewBuilderInterface extends ViewBuilderInterface
 {
     public function setResourceKey(string $resourceKey): self;
 
+    public function setPreviewResourceKey(string $previewResourceKey): self;
+
     public function setFormKey(string $formKey): self;
 
     /**

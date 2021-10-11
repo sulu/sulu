@@ -15,12 +15,19 @@ export default withSidebar(Form, function() {
     } = this.props;
     const enablePreview = !previewCondition || jexl.evalSync(previewCondition, this.resourceFormStore.data);
 
+    const {
+        resourceFormStore: {
+            resourceKey,
+        },
+    } = this;
+
     return enablePreview ? {
         view: 'sulu_preview.preview',
         sizes: ['medium', 'large'],
         props: {
             router: this.props.router,
             formStore: this.resourceFormStore,
+            key: resourceKey,
         },
     } : null;
 });

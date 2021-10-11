@@ -69,12 +69,12 @@ class Preview extends React.Component<Props> {
         return webspaceStore.getWebspace(this.webspaceKey).segments;
     }
 
+    @computed get shouldUpdateFormStore() {
+        return this.props.formStore.resourceKey === this.previewStore.resourceKey;
+    }
+
     constructor(props: Props) {
         super(props);
-
-        const {
-            formStore,
-        } = this.props;
 
         if (Preview.audienceTargeting) {
             this.targetGroupsStore = new ResourceListStore('target_groups');
@@ -85,18 +85,50 @@ class Preview extends React.Component<Props> {
             value: webspace.key,
         }));
 
-        this.previewStore = new PreviewStore(
-            formStore.resourceKey,
-            formStore.id,
-            formStore.locale,
-            this.webspaceKey,
-            this.segments.find((segment) => segment.default === true)?.key
-        );
+        this.createPreviewStore();
 
         if (Preview.mode === 'auto') {
             this.startPreview();
         }
     }
+
+    componentDidUpdate(prevProps: Props) {
+        const {
+            formStore,
+        } = this.props;
+
+        if (this.props.formStore !== prevProps.formStore) {
+            this.disposeFormStoreReactions();
+            this.updatePreview(toJS(formStore.data));
+
+            this.initializeFormStoreReactions();
+        }
+    }
+
+    @action createPreviewStore = () => {
+        const {
+            formStore: {
+                resourceKey,
+                id,
+                locale,
+            },
+            router: {
+                route: {
+                    options: {
+                        previewResourceKey = null,
+                    },
+                },
+            },
+        } = this.props;
+
+        this.previewStore = new PreviewStore(
+            previewResourceKey || resourceKey,
+            id,
+            locale,
+            this.webspaceKey,
+            this.segments.find((segment) => segment.default === true)?.key
+        );
+    };
 
     @action setStarted = (started: boolean) => {
         this.started = started;
@@ -116,18 +148,22 @@ class Preview extends React.Component<Props> {
                 && !previewStore.starting
                 && this.iframeRef !== null
                 && (!this.targetGroupsStore || !this.targetGroupsStore.loading),
-            this.initializeReaction
+            this.initializeFormStoreReactions
         );
 
         this.setStarted(true);
     };
 
-    initializeReaction = (): void => {
+    initializeFormStoreReactions = (): void => {
         const {previewStore} = this;
 
         const {
             formStore,
         } = this.props;
+
+        if (previewStore.resourceKey !== formStore.resourceKey) {
+            return;
+        }
 
         this.dataDisposer = reaction(
             () => toJS(formStore.data),
@@ -139,14 +175,18 @@ class Preview extends React.Component<Props> {
         this.schemaDisposer = reaction(
             () => toJS(formStore.schema),
             () => {
-                previewStore.updateContext(toJS(formStore.type), toJS(formStore.data)).then(this.setContent);
+                if (formStore.type) {
+                    previewStore.updateContext(toJS(formStore.type), toJS(formStore.data)).then(this.setContent);
+                }
             }
         );
     };
 
     updatePreview = debounce((data: Object) => {
-        const {previewStore} = this;
-        previewStore.update(data).then(this.setContent);
+        if (this.shouldUpdateFormStore) {
+            const {previewStore} = this;
+            previewStore.update(data).then(this.setContent);
+        }
     }, Preview.debounceDelay);
 
     setContent = (previewContent: string) => {
@@ -162,13 +202,7 @@ class Preview extends React.Component<Props> {
     };
 
     componentWillUnmount() {
-        if (this.schemaDisposer) {
-            this.schemaDisposer();
-        }
-
-        if (this.dataDisposer) {
-            this.dataDisposer();
-        }
+        this.disposeFormStoreReactions();
 
         if (!this.started) {
             return;
@@ -176,6 +210,16 @@ class Preview extends React.Component<Props> {
 
         this.updatePreview.clear();
         this.previewStore.stop();
+    }
+
+    disposeFormStoreReactions() {
+        if (this.schemaDisposer) {
+            this.schemaDisposer();
+        }
+
+        if (this.dataDisposer) {
+            this.dataDisposer();
+        }
     }
 
     getPreviewDocument = (): ?Document => {
@@ -207,11 +251,17 @@ class Preview extends React.Component<Props> {
     };
 
     @action handleDateTimeChange = debounce((value: ?Date) => {
+        const {formStore} = this.props;
+
         this.previewStore.setDateTime(value || new Date());
+        this.updatePreview(toJS(formStore.data));
     }, Preview.debounceDelay);
 
     @action handleWebspaceChange = (webspace: string) => {
+        const {formStore} = this.props;
+
         this.previewStore.setWebspace(webspace);
+        this.updatePreview(toJS(formStore.data));
     };
 
     handleTargetGroupChange = (targetGroupId: number) => {
@@ -254,7 +304,7 @@ class Preview extends React.Component<Props> {
             return null;
         }
 
-        if (!this.started) {
+        if (Preview.mode !== 'auto' && !this.started) {
             return <button onClick={this.handleStartClick}>Start</button>;
         }
 
