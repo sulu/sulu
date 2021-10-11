@@ -1,6 +1,6 @@
 // @flow
 import SingleMediaSelectionBlockPreviewTransformer
-    from '../../blockPreviewTransformers/SingleMediaSelectionBlockPreviewTransformer';
+from '../../blockPreviewTransformers/SingleMediaSelectionBlockPreviewTransformer';
 
 const MEDIA_URL = '/admin/media/redirect/media/:id';
 
