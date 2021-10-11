@@ -3,7 +3,7 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
-    <entity name="Sulu\Bundle\PreviewBundle\Domain\Model\PreviewLink" table="pr_link" repository-class="Sulu\Bundle\PreviewBundle\Infrastructure\Doctrine\Repository\PreviewLinkRepository">
+    <entity name="Sulu\Bundle\PreviewBundle\Domain\Model\PreviewLink" table="pr_preview_links" repository-class="Sulu\Bundle\PreviewBundle\Infrastructure\Doctrine\Repository\PreviewLinkRepository">
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>

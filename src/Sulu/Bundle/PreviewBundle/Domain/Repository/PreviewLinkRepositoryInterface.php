@@ -18,7 +18,7 @@ interface PreviewLinkRepositoryInterface
     /**
      * @param mixed[] $options
      */
-    public function createNew(string $resourceKey, string $resourceId, string $locale, array $options): PreviewLinkInterface;
+    public function create(string $resourceKey, string $resourceId, string $locale, array $options): PreviewLinkInterface;
 
     public function findByResource(string $resourceKey, string $resourceId, string $locale): ?PreviewLinkInterface;
 

@@ -18,7 +18,7 @@ type Props = {|
 @observer
 class PreviewLinkPopover extends React.Component<Props> {
     @observable previewLink: ?PreviewLink;
-    @observable loading: boolean;
+    @observable loading: boolean = false;
     @observable generating: boolean = false;
     @observable copying: boolean = false;
 
@@ -38,8 +38,6 @@ class PreviewLinkPopover extends React.Component<Props> {
             locale: previewStore.locale,
         }).then(action((previewLink) => {
             this.previewLink = previewLink;
-            this.loading = false;
-        })).catch(action(() => {
             this.loading = false;
         }));
     }

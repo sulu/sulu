@@ -59,7 +59,7 @@ class PreviewLinkManager implements PreviewLinkManagerInterface
         string $locale,
         array $options
     ): PreviewLinkInterface {
-        $previewLink = $this->previewLinkRepository->createNew($resourceKey, $resourceId, $locale, $options);
+        $previewLink = $this->previewLinkRepository->create($resourceKey, $resourceId, $locale, $options);
         $this->previewLinkRepository->add($previewLink);
         $this->domainEventCollector->collect(
             new PreviewLinkGeneratedEvent(

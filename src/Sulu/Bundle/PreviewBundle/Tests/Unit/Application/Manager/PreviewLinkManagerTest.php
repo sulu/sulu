@@ -94,7 +94,7 @@ class PreviewLinkManagerTest extends TestCase
         $previewLink->getToken()->willReturn('123');
         $previewLink->getResourceId()->willReturn($resourceId);
         $previewLink->getResourceKey()->willReturn($this->resourceKey);
-        $this->previewLinkRepository->createNew($this->resourceKey, $resourceId, $locale, [])
+        $this->previewLinkRepository->create($this->resourceKey, $resourceId, $locale, [])
             ->shouldBeCalled()
             ->willReturn($previewLink->reveal());
 

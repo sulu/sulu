@@ -54,8 +54,12 @@
             <argument type="collection"/>
         </service>
 
+        <service id="sulu_preview.preview_link_repository" class="Sulu\Bundle\PreviewBundle\Infrastructure\Doctrine\Repository\PreviewLinkRepository">
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+        </service>
+
         <service id="sulu_preview.preview_link_manager" class="Sulu\Bundle\PreviewBundle\Application\Manager\PreviewLinkManager">
-            <argument type="service" id="sulu.repository.preview_link"/>
+            <argument type="service" id="sulu_preview.preview_link_repository"/>
             <argument type="service" id="sulu_activity.domain_event_collector"/>
             <argument type="service" id="sulu_preview.preview_object_provider_registry"/>
             <argument type="service" id="router"/>
@@ -73,7 +77,7 @@
         <service id="sulu_preview.public_preview_controller" class="Sulu\Bundle\PreviewBundle\UserInterface\Controller\PublicPreviewController" public="true">
             <argument type="service" id="sulu_preview.preview.renderer"/>
             <argument type="service" id="sulu_preview.preview_object_provider_registry"/>
-            <argument type="service" id="sulu.repository.preview_link"/>
+            <argument type="service" id="sulu_preview.preview_link_repository"/>
             <argument type="service" id="twig"/>
             <argument type="service" id="profiler" on-invalid="null"/>
 
@@ -83,7 +87,7 @@
         <service id="sulu_preview.preview_link_controller"
                  class="Sulu\Bundle\PreviewBundle\UserInterface\Controller\PreviewLinkController"
                  public="true">
-            <argument type="service" id="sulu.repository.preview_link"/>
+            <argument type="service" id="sulu_preview.preview_link_repository"/>
             <argument type="service" id="sulu_preview.preview_link_manager"/>
             <argument type="service" id="fos_rest.view_handler"/>
             <argument type="service" id="security.token_storage"/>

@@ -170,8 +170,8 @@ class PreviewLinkControllerTest extends SuluTestCase
         string $locale,
         string $webspaceKey
     ): PreviewLinkInterface {
-        $repository = static::getContainer()->get('sulu.repository.preview_link');
-        $previewLink = $repository->createNew($resourceKey, $resourceId, $locale, ['webspaceKey' => $webspaceKey]);
+        $repository = static::getContainer()->get('sulu_preview.preview_link_repository');
+        $previewLink = $repository->create($resourceKey, $resourceId, $locale, ['webspaceKey' => $webspaceKey]);
         $previewLink->increaseVisitCount();
         $repository->add($previewLink);
         $repository->commit();

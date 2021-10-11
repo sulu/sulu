@@ -41,7 +41,7 @@ class SuluPreviewExtension extends Extension implements PrependExtensionInterfac
         $this->configurePersistence($config['objects'], $container);
         $container->addAliases(
             [
-                PreviewLinkRepositoryInterface::class => 'sulu.repository.preview_link',
+                PreviewLinkRepositoryInterface::class => 'sulu_preview.preview_link_repository',
             ]
         );
     }

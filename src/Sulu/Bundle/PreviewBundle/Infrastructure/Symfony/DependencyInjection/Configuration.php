@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\PreviewBundle\Infrastructure\Symfony\DependencyInjection;
 
 use Sulu\Bundle\PreviewBundle\Domain\Model\PreviewLink;
-use Sulu\Bundle\PreviewBundle\Infrastructure\Doctrine\Repository\PreviewLinkRepository;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -142,9 +141,6 @@ class Configuration implements ConfigurationInterface
                             ->children()
                                 ->scalarNode('model')
                                     ->defaultValue(PreviewLink::class)
-                                ->end()
-                                ->scalarNode('repository')
-                                    ->defaultValue(PreviewLinkRepository::class)
                                 ->end()
                             ->end()
                         ->end()

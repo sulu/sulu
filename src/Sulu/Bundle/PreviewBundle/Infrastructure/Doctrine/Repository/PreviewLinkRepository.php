@@ -11,22 +11,36 @@
 
 namespace Sulu\Bundle\PreviewBundle\Infrastructure\Doctrine\Repository;
 
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Ramsey\Uuid\Uuid;
 use Sulu\Bundle\PreviewBundle\Domain\Model\PreviewLinkInterface;
 use Sulu\Bundle\PreviewBundle\Domain\Repository\PreviewLinkRepositoryInterface;
 
-/**
- * @extends EntityRepository<PreviewLinkInterface>
- */
-class PreviewLinkRepository extends EntityRepository implements PreviewLinkRepositoryInterface
+class PreviewLinkRepository implements PreviewLinkRepositoryInterface
 {
-    public function createNew(string $resourceKey, string $resourceId, string $locale, array $options): PreviewLinkInterface
+    /**
+     * @var EntityManager
+     */
+    protected $entityManager;
+
+    /**
+     * @var EntityRepository<PreviewLinkInterface>
+     */
+    protected $entityRepository;
+
+    public function __construct(EntityManager $entityManager)
+    {
+        $this->entityManager = $entityManager;
+        $this->entityRepository = $entityManager->getRepository(PreviewLinkInterface::class);
+    }
+
+    public function create(string $resourceKey, string $resourceId, string $locale, array $options): PreviewLinkInterface
     {
         $token = $this->generateToken();
 
         /** @var class-string<PreviewLinkInterface> $className */
-        $className = $this->getClassName();
+        $className = $this->entityRepository->getClassName();
 
         return new $className($token, $resourceKey, $resourceId, $locale, $options);
     }
@@ -34,7 +48,7 @@ class PreviewLinkRepository extends EntityRepository implements PreviewLinkRepos
     public function findByResource(string $resourceKey, string $resourceId, string $locale): ?PreviewLinkInterface
     {
         /** @var PreviewLinkInterface|null $previewLink */
-        $previewLink = $this->findOneBy(['resourceKey' => $resourceKey, 'resourceId' => $resourceId, 'locale' => $locale]);
+        $previewLink = $this->entityRepository->findOneBy(['resourceKey' => $resourceKey, 'resourceId' => $resourceId, 'locale' => $locale]);
 
         return $previewLink;
     }
@@ -42,24 +56,24 @@ class PreviewLinkRepository extends EntityRepository implements PreviewLinkRepos
     public function findByToken(string $token): ?PreviewLinkInterface
     {
         /** @var PreviewLinkInterface|null $previewLink */
-        $previewLink = $this->findOneBy(['token' => $token]);
+        $previewLink = $this->entityRepository->findOneBy(['token' => $token]);
 
         return $previewLink;
     }
 
     public function add(PreviewLinkInterface $previewLink): void
     {
-        $this->getEntityManager()->persist($previewLink);
+        $this->entityManager->persist($previewLink);
     }
 
     public function remove(PreviewLinkInterface $previewLink): void
     {
-        $this->getEntityManager()->remove($previewLink);
+        $this->entityManager->remove($previewLink);
     }
 
     public function commit(): void
     {
-        $this->getEntityManager()->flush();
+        $this->entityManager->flush();
     }
 
     protected function generateToken(): string
