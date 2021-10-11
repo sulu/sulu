@@ -64,8 +64,8 @@ class PreviewLinkPopover extends React.Component<Props> {
         })).finally(action(() => this.generating = false));
     };
 
-    handleRevokeClick = (e) => {
-        e.preventDefault();
+    handleRevokeClick = (event: SyntheticEvent<HTMLFormElement>) => {
+        event.preventDefault();
 
         const {
             previewStore,
@@ -118,8 +118,8 @@ class PreviewLinkPopover extends React.Component<Props> {
 
                                 <Button
                                     className={previewLinkStyles.copyButton}
-                                    onClick={this.handleCopyClick}
                                     loading={this.copying}
+                                    onClick={this.handleCopyClick}
                                     skin="primary"
                                 >
                                     {translate('sulu_preview.copy')}
@@ -133,8 +133,8 @@ class PreviewLinkPopover extends React.Component<Props> {
 
                             <a
                                 className={previewLinkStyles.dangerZoneLink}
-                                onClick={this.handleRevokeClick}
                                 href="#"
+                                onClick={this.handleRevokeClick}
                             >
                                 {translate('sulu_preview.revoke')}
                             </a>

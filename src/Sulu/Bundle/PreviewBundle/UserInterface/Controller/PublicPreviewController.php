@@ -17,6 +17,7 @@ use Sulu\Bundle\PreviewBundle\Preview\Renderer\PreviewRendererInterface;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Profiler\Profiler;
+use Twig\Environment;
 
 class PublicPreviewController
 {
@@ -38,6 +39,11 @@ class PublicPreviewController
     private $previewLinkRepository;
 
     /**
+     * @var Environment
+     */
+    private $twig;
+
+    /**
      * @var Profiler|null
      */
     private $profiler;
@@ -46,11 +52,13 @@ class PublicPreviewController
         PreviewRendererInterface $previewRenderer,
         PreviewObjectProviderRegistryInterface $previewObjectProviderRegistry,
         PreviewLinkRepositoryInterface $previewLinkRepository,
+        Environment $twig,
         Profiler $profiler = null
     ) {
         $this->previewRenderer = $previewRenderer;
         $this->previewObjectProviderRegistry = $previewObjectProviderRegistry;
         $this->previewLinkRepository = $previewLinkRepository;
+        $this->twig = $twig;
         $this->profiler = $profiler;
     }
 
@@ -58,7 +66,7 @@ class PublicPreviewController
     {
         $previewLink = $this->previewLinkRepository->findByToken($token);
         if (!$previewLink) {
-            return new Response(null, 404);
+            return new Response($this->twig->render('@SuluPreview/PreviewLink/not-found.html.twig'), 404);
         }
 
         $previewLink->increaseVisitCount();

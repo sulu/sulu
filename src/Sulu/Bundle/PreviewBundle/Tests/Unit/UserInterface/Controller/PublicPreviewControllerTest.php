@@ -20,6 +20,7 @@ use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderRegistryInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Renderer\PreviewRendererInterface;
 use Sulu\Bundle\PreviewBundle\UserInterface\Controller\PublicPreviewController;
+use Twig\Environment;
 
 class PublicPreviewControllerTest extends TestCase
 {
@@ -39,6 +40,11 @@ class PublicPreviewControllerTest extends TestCase
     private $previewLinkRepository;
 
     /**
+     * @var Environment|ObjectProphecy
+     */
+    private $twig;
+
+    /**
      * @var PublicPreviewController
      */
     private $publicPreviewController;
@@ -48,11 +54,13 @@ class PublicPreviewControllerTest extends TestCase
         $this->previewRenderer = $this->prophesize(PreviewRendererInterface::class);
         $this->previewObjectProviderRegistry = $this->prophesize(PreviewObjectProviderRegistryInterface::class);
         $this->previewLinkRepository = $this->prophesize(PreviewLinkRepositoryInterface::class);
+        $this->twig = $this->prophesize(Environment::class);
 
         $this->publicPreviewController = new PublicPreviewController(
             $this->previewRenderer->reveal(),
             $this->previewObjectProviderRegistry->reveal(),
-            $this->previewLinkRepository->reveal()
+            $this->previewLinkRepository->reveal(),
+            $this->twig->reveal()
         );
     }
 
@@ -85,5 +93,18 @@ class PublicPreviewControllerTest extends TestCase
         $response = $this->publicPreviewController->renderAction('1234567890123');
 
         $this->assertEquals('<html><body><h1>Hello World</h1></body></html>', $response->getContent());
+    }
+
+    public function testRenderNotFound(): void
+    {
+        $this->previewLinkRepository->findByToken('1234567890123')->willReturn(null);
+
+        $this->twig->render('@SuluPreview/PreviewLink/not-found.html.twig')
+            ->willReturn('<html><body><h1>Not found</h1></body></html>');
+
+        $response = $this->publicPreviewController->renderAction('1234567890123');
+
+        $this->assertEquals(404, $response->getStatusCode());
+        $this->assertEquals('<html><body><h1>Not found</h1></body></html>', $response->getContent());
     }
 }
