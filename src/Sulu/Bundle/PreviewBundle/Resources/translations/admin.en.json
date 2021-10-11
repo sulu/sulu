@@ -5,8 +5,10 @@
     "sulu_preview.smartphone": "Smartphone",
     "sulu_preview.reload": "Reload",
     "sulu_preview.open_in_window": "Open in window",
-    "sulu_preview.preview_link":  "Share preview",
-    "sulu_preview.copy_to_clipboard": "Copy link",
-    "sulu_preview.revoke": "Revoke link",
-    "sulu_preview.generate_link": "Generate link and copy"
+    "sulu_preview.preview_link":  "Share preview link",
+    "sulu_preview.copy_preview_link": "Copy this private link",
+    "sulu_preview.copy": "Copy",
+    "sulu_preview.revoke": "Revoke share link",
+    "sulu_preview.generate_link": "Generate link",
+    "sulu_preview.danger_zone": "Danger zone"
 }

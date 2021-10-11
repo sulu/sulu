@@ -77,7 +77,7 @@ class PublicPreviewController
 
         $this->disableProfiler();
 
-        return new Response($content, 200, ['Content-Type' => 'text/html']);
+        return new Response($content);
     }
 
     private function disableProfiler(): void

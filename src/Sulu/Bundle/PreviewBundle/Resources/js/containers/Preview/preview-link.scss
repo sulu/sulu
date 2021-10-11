@@ -1,0 +1,46 @@
+@import 'sulu-admin-bundle/containers/Application/colors.scss';
+
+.container {
+    padding: 20px;
+}
+
+.input-container {
+    display: flex;
+}
+
+.label {
+    color: $silverChalice;
+    display: block;
+    height: 20px;
+}
+
+.input {
+    background-color: $blueZodiac;
+    border: 1px solid $doveGray;
+    color: $white;
+    display: block;
+    border-radius: 3px;
+    height: 30px;
+    width: 240px;
+    padding: 5px;
+}
+
+.copy-button {
+    min-width: 90px;
+    margin-left: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.danger-zone {
+    font-size: 14px;
+    margin-top: 20px;
+}
+
+.danger-zone-label {
+    font-weight: bold;
+}
+
+.danger-zone-link {
+    color: $white;
+}

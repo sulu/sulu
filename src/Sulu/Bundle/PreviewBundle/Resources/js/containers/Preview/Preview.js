@@ -365,7 +365,7 @@ class Preview extends React.Component<Props> {
                                 {translate('sulu_preview.reload')}
                             </Toolbar.Button>
                             <Toolbar.Popover
-                                icon="fa-share"
+                                icon="su-exchange"
                                 label={translate('sulu_preview.preview_link')}
                             >
                                 {() => (

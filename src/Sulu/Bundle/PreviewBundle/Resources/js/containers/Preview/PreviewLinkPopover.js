@@ -8,7 +8,7 @@ import {ResourceRequester} from 'sulu-admin-bundle/services';
 import {transformDateForUrl} from 'sulu-admin-bundle/utils/Date';
 import {translate} from 'sulu-admin-bundle/utils';
 import PreviewStore from './stores/PreviewStore';
-import previewStyles from './preview.scss';
+import previewLinkStyles from './preview-link.scss';
 import type {PreviewLink} from './types';
 
 type Props = {|
@@ -20,6 +20,7 @@ class PreviewLinkPopover extends React.Component<Props> {
     @observable previewLink: ?PreviewLink;
     @observable loading: boolean;
     @observable generating: boolean = false;
+    @observable copying: boolean = false;
 
     componentDidMount() {
         this.loadPreviewLink();
@@ -63,7 +64,9 @@ class PreviewLinkPopover extends React.Component<Props> {
         })).finally(action(() => this.generating = false));
     };
 
-    handleRevokeClick = () => {
+    handleRevokeClick = (e) => {
+        e.preventDefault();
+
         const {
             previewStore,
         } = this.props;
@@ -78,7 +81,10 @@ class PreviewLinkPopover extends React.Component<Props> {
         }));
     };
 
-    handleCopyClick = () => {
+    @action handleCopyClick = () => {
+        this.copying = true;
+        setTimeout(action(() => this.copying = false), 125);
+
         copyToClipboard(this.link);
     };
 
@@ -96,26 +102,42 @@ class PreviewLinkPopover extends React.Component<Props> {
         }
 
         return (
-            <div className={previewStyles.previewLinkContainer}>
+            <div className={previewLinkStyles.container}>
                 {this.previewLink && (
                     <React.Fragment>
-                        <div style={{marginBottom: '10px'}}>
-                            <a href={this.link} style={{color: '#fff'}} target="blank">{this.link}</a>
-                        </div>
                         <div>
-                            <Button
-                                className={previewStyles.previewLinkButton}
-                                onClick={this.handleCopyClick}
-                                skin="secondary"
-                            >
-                                {translate('sulu_preview.copy_to_clipboard')}
-                            </Button>
-                            <Button
+                            <label className={previewLinkStyles.label}>
+                                {translate('sulu_preview.copy_preview_link')}
+                            </label>
+                            <div className={previewLinkStyles.inputContainer}>
+                                <input
+                                    className={previewLinkStyles.input}
+                                    readOnly={true}
+                                    value={this.link}
+                                />
+
+                                <Button
+                                    className={previewLinkStyles.copyButton}
+                                    onClick={this.handleCopyClick}
+                                    loading={this.copying}
+                                    skin="primary"
+                                >
+                                    {translate('sulu_preview.copy')}
+                                </Button>
+                            </div>
+                        </div>
+                        <div className={previewLinkStyles.dangerZone}>
+                            <span className={previewLinkStyles.dangerZoneLabel}>
+                                {translate('sulu_preview.danger_zone')}:&nbsp;
+                            </span>
+
+                            <a
+                                className={previewLinkStyles.dangerZoneLink}
                                 onClick={this.handleRevokeClick}
-                                skin="secondary"
+                                href="#"
                             >
                                 {translate('sulu_preview.revoke')}
-                            </Button>
+                            </a>
                         </div>
                     </React.Fragment>
                 )}
@@ -124,7 +146,7 @@ class PreviewLinkPopover extends React.Component<Props> {
                         <Button
                             loading={this.generating}
                             onClick={this.handleGenerateClick}
-                            skin="secondary"
+                            skin="primary"
                         >
                             {translate('sulu_preview.generate_link')}
                         </Button>
