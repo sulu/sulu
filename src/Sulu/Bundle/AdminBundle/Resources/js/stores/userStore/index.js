@@ -1,8 +1,8 @@
 // @flow
 import updateRouterAttributesFromUserStoreContentLocale
-    from '../../stores/userStore/updateRouterAttributesFromUserStoreContentLocale';
+from '../../stores/userStore/updateRouterAttributesFromUserStoreContentLocale';
 import updateUserStoreContentLocaleFromRouterAttributes
-    from '../../stores/userStore/updateUserStoreContentLocaleFromRouterAttributes';
+from '../../stores/userStore/updateUserStoreContentLocaleFromRouterAttributes';
 import userStore from './userStore';
 import logoutOnUnauthorizedResponse from './logoutOnUnauthorizedResponse';
 

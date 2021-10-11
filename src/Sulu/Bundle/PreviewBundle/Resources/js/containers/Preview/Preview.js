@@ -69,6 +69,10 @@ class Preview extends React.Component<Props> {
         return webspaceStore.getWebspace(this.webspaceKey).segments;
     }
 
+    @computed get shouldUpdateFormStore() {
+        return this.props.formStore.resourceKey === this.previewStore.resourceKey;
+    }
+
     constructor(props: Props) {
         super(props);
 
@@ -94,10 +98,10 @@ class Preview extends React.Component<Props> {
         } = this.props;
 
         if (this.props.formStore !== prevProps.formStore) {
-            this.dispose();
+            this.disposeFormStoreReactions();
             this.updatePreview(toJS(formStore.data));
 
-            this.initializeReaction();
+            this.initializeFormStoreReactions();
         }
     }
 
@@ -118,7 +122,7 @@ class Preview extends React.Component<Props> {
         } = this.props;
 
         this.previewStore = new PreviewStore(
-            previewResourceKey ? previewResourceKey : resourceKey,
+            previewResourceKey || resourceKey,
             id,
             locale,
             this.webspaceKey,
@@ -144,13 +148,13 @@ class Preview extends React.Component<Props> {
                 && !previewStore.starting
                 && this.iframeRef !== null
                 && (!this.targetGroupsStore || !this.targetGroupsStore.loading),
-            this.initializeReaction
+            this.initializeFormStoreReactions
         );
 
         this.setStarted(true);
     };
 
-    initializeReaction = (): void => {
+    initializeFormStoreReactions = (): void => {
         const {previewStore} = this;
 
         const {
@@ -179,7 +183,7 @@ class Preview extends React.Component<Props> {
     };
 
     updatePreview = debounce((data: Object) => {
-        if (this.props.formStore.resourceKey === this.previewStore.resourceKey) {
+        if (this.shouldUpdateFormStore) {
             const {previewStore} = this;
             previewStore.update(data).then(this.setContent);
         }
@@ -198,7 +202,7 @@ class Preview extends React.Component<Props> {
     };
 
     componentWillUnmount() {
-        this.dispose();
+        this.disposeFormStoreReactions();
 
         if (!this.started) {
             return;
@@ -208,7 +212,7 @@ class Preview extends React.Component<Props> {
         this.previewStore.stop();
     }
 
-    dispose() {
+    disposeFormStoreReactions() {
         if (this.schemaDisposer) {
             this.schemaDisposer();
         }

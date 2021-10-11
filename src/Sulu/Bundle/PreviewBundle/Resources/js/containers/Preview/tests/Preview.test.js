@@ -148,18 +148,8 @@ test('Render correct preview use route option for resourceKey', () => {
 
     const preview = mount(<Preview formStore={formStore} router={router} />);
 
-    const startPromise = Promise.resolve();
     const previewStore = preview.instance().previewStore;
     expect(previewStore.resourceKey).toBe('page_contents');
-    previewStore.start.mockReturnValue(startPromise);
-    previewStore.starting = false;
-
-    preview.instance().handleStartClick();
-
-    return startPromise.then(() => {
-        preview.update();
-        expect(preview.render()).toMatchSnapshot();
-    });
 });
 
 test('Render correct preview with target groups', () => {
