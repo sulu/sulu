@@ -21,7 +21,7 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 class SnippetExportCommand extends Command
 {
-    protected static $defaultName = 'sulu:snippet:export';
+    protected static $defaultName = 'sulu:snippet:translation-export';
 
     /**
      * @var SnippetExportInterface
