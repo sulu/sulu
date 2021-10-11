@@ -12,6 +12,7 @@
 namespace Sulu\Component\DocumentManager\Subscriber\Behavior\Mapping;
 
 use PHPCR\Util\UUIDHelper;
+use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface;
@@ -47,7 +48,13 @@ class MixinSubscriber implements EventSubscriberInterface
         $node->addMixin($metadata->getPhpcrType());
 
         if (!$node->hasProperty('jcr:uuid')) {
-            $node->setProperty('jcr:uuid', UUIDHelper::generateUUID());
+            $uuid = UUIDHelper::generateUUID();
+
+            if ($document instanceof UuidBehavior && $document->getUuid()) {
+                $uuid = $document->getUuid();
+            }
+
+            $node->setProperty('jcr:uuid', $uuid);
         }
     }
 }

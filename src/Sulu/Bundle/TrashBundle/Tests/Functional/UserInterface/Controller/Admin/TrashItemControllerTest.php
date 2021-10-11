@@ -175,6 +175,13 @@ class TrashItemControllerTest extends SuluTestCase
         $this->client->jsonRequest('POST', '/api/trash-items/' . $id, ['action' => 'restore']);
         static::assertHttpStatusCode(200, $this->client->getResponse());
 
+        $content = \json_decode((string) $this->client->getResponse()->getContent(), true);
+        static::assertArrayHasKey('property1', $content);
+        static::assertSame('value-1', $content['property1']);
+
+        // only properties with "restoreSerializationGroup" should be included
+        static::assertArrayNotHasKey('property2', $content);
+
         $this->client->jsonRequest('GET', '/api/trash-items/' . $id);
         static::assertHttpStatusCode(404, $this->client->getResponse());
     }

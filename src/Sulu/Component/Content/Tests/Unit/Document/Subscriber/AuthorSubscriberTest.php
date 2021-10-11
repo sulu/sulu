@@ -133,6 +133,7 @@ class AuthorSubscriberTest extends TestCase
         $this->propertyEncoder->encode('system', AuthorSubscriber::AUTHOR_PROPERTY_NAME, 'de')
             ->willReturn('sulu:author');
 
+        $document->getCreator()->willReturn(5);
         $document->getAuthor()->willReturn(1);
         $document->getAuthored()->willReturn(new \DateTime('2017-01-01'));
 
@@ -157,6 +158,7 @@ class AuthorSubscriberTest extends TestCase
         $this->propertyEncoder->encode('system', AuthorSubscriber::AUTHOR_PROPERTY_NAME, 'de')
             ->willReturn('i18n:author');
 
+        $document->getCreator()->willReturn(5);
         $document->getAuthor()->willReturn(1);
         $document->getAuthored()->willReturn(new \DateTime('2017-01-01'));
 

@@ -204,10 +204,12 @@ class ShadowLocaleSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $event->getAccessor()->set(
-          'resourceSegment',
-          $shadowLocator
-        );
+        if (!$event->getAccessor()->get('resourceSegment')) {
+            $event->getAccessor()->set(
+                'resourceSegment',
+                $shadowLocator
+            );
+        }
     }
 
     private function getShadowLocaleEnabled(NodeInterface $node, $locale)

@@ -35,14 +35,14 @@ interface ShadowLocaleBehavior
     /**
      * Return the shadow locale.
      *
-     * @return string
+     * @return string|null
      */
     public function getShadowLocale();
 
     /**
      * Set the shadow locale.
      *
-     * @param string $shadowLocale
+     * @param string|null $shadowLocale
      */
     public function setShadowLocale($shadowLocale);
 }

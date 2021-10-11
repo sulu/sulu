@@ -139,11 +139,13 @@ class AuthorSubscriber implements EventSubscriberInterface
      */
     private function setDefaultAuthor(LocalizedAuthorBehavior $document)
     {
-        if ($document->getAuthor() || !$document->getCreator()) {
+        $creator = $document->getCreator();
+
+        if ($document->getAuthor() || !$creator) {
             return;
         }
 
-        $user = $this->userRepository->findUserById($document->getCreator());
+        $user = $this->userRepository->findUserById($creator);
         if ($user && $user->getContact()) {
             $document->setAuthor($user->getContact()->getId());
         }

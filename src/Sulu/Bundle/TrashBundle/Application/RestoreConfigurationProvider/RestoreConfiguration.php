@@ -34,15 +34,50 @@ class RestoreConfiguration
     private $resultToView;
 
     /**
+     * @var array<string>|null
+     * @Groups({"frontend"})
+     */
+    private $resultSerializationGroups;
+
+    /**
      * @param array<string, string>|null $resultToView
+     * @param array<string>|null $resultSerializationGroups
      */
     public function __construct(
         ?string $form = null,
         ?string $view = null,
-        ?array $resultToView = null
+        ?array $resultToView = null,
+        ?array $resultSerializationGroups = null
     ) {
         $this->form = $form;
         $this->view = $view;
         $this->resultToView = $resultToView;
+        $this->resultSerializationGroups = $resultSerializationGroups;
+    }
+
+    public function getForm(): ?string
+    {
+        return $this->form;
+    }
+
+    public function getView(): ?string
+    {
+        return $this->view;
+    }
+
+    /**
+     * @return array<string, string>|null
+     */
+    public function getResultToView(): ?array
+    {
+        return $this->resultToView;
+    }
+
+    /**
+     * @return array<string>|null
+     */
+    public function getResultSerializationGroups(): ?array
+    {
+        return $this->resultSerializationGroups;
     }
 }

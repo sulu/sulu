@@ -112,7 +112,7 @@ class ExtensionSubscriberTest extends SubscriberTestCase
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
 
         $this->assertEquals(
-            $document->getExtensionsData()->offsetGet('ext_1'),
+            $document->getExtensionsData()['ext_1'],
             $expectedData
         );
     }

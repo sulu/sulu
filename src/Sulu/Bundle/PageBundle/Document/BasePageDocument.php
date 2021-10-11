@@ -86,14 +86,14 @@ class BasePageDocument implements
     /**
      * User ID of creator.
      *
-     * @var int
+     * @var int|null
      */
     protected $creator;
 
     /**
      * User ID of changer.
      *
-     * @var int
+     * @var int|null
      */
     protected $changer;
 
@@ -126,14 +126,14 @@ class BasePageDocument implements
     /**
      * The target of redirection.
      *
-     * @var object
+     * @var object|null
      */
     protected $redirectTarget;
 
     /**
      * The External redirect.
      *
-     * @var string
+     * @var string|null
      */
     protected $redirectExternal;
 
@@ -161,7 +161,7 @@ class BasePageDocument implements
     /**
      * Shadow locale.
      *
-     * @var string
+     * @var string|null
      */
     protected $shadowLocale;
 
@@ -217,7 +217,7 @@ class BasePageDocument implements
     /**
      * Document's extensions ie seo, ...
      *
-     * @var ExtensionContainer
+     * @var array<mixed[]>|ExtensionContainer
      */
     protected $extensions;
 
@@ -259,7 +259,7 @@ class BasePageDocument implements
     /**
      * Id of author.
      *
-     * @var int
+     * @var int|null
      */
     protected $author;
 
@@ -292,6 +292,16 @@ class BasePageDocument implements
         return $this->created;
     }
 
+    /**
+     * @param \DateTime $created
+     *
+     * @return void
+     */
+    public function setCreated($created)
+    {
+        $this->created = $created;
+    }
+
     public function getChanged()
     {
         return $this->changed;
@@ -300,6 +310,16 @@ class BasePageDocument implements
     public function getCreator()
     {
         return $this->creator;
+    }
+
+    /**
+     * @param int|null $userId
+     *
+     * @return void
+     */
+    public function setCreator($userId)
+    {
+        $this->creator = $userId;
     }
 
     public function getChanger()
@@ -497,6 +517,11 @@ class BasePageDocument implements
         return $this->authored;
     }
 
+    /**
+     * @param \DateTime $authored
+     *
+     * @return void
+     */
     public function setAuthored($authored)
     {
         $this->authored = $authored;
@@ -507,8 +532,13 @@ class BasePageDocument implements
         return $this->author;
     }
 
-    public function setAuthor($author)
+    /**
+     * @param int|null $contactId
+     *
+     * @return void
+     */
+    public function setAuthor($contactId)
     {
-        $this->author = $author;
+        $this->author = $contactId;
     }
 }

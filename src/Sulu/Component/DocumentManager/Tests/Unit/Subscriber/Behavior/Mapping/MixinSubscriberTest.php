@@ -14,6 +14,8 @@ namespace Sulu\Component\DocumentManager\Tests\Unit\Subscriber\Behavior\Mapping;
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
+use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface;
@@ -22,7 +24,7 @@ use Sulu\Component\DocumentManager\Subscriber\Behavior\Mapping\MixinSubscriber;
 class MixinSubscriberTest extends TestCase
 {
     /**
-     * @var MetadataFactoryInterface
+     * @var MetadataFactoryInterface|ObjectProphecy
      */
     private $metadataFactory;
 
@@ -37,7 +39,7 @@ class MixinSubscriberTest extends TestCase
         $this->mixinSubscriber = new MixinSubscriber($this->metadataFactory->reveal());
     }
 
-    public function testSetDocumentMixinsOnNode()
+    public function testSetDocumentMixinsOnNode(): void
     {
         $event = $this->prophesize(AbstractMappingEvent::class);
         $node = $this->prophesize(NodeInterface::class);
@@ -57,7 +59,28 @@ class MixinSubscriberTest extends TestCase
         $this->mixinSubscriber->setDocumentMixinsOnNode($event->reveal());
     }
 
-    public function testSetDocumentMixinsOnNodeWithUuid()
+    public function testSetDocumentMixinsOnNodeWithDocumentUuid(): void
+    {
+        $event = $this->prophesize(AbstractMappingEvent::class);
+        $node = $this->prophesize(NodeInterface::class);
+        $node->hasProperty('jcr:uuid')->willReturn(false);
+        $metadata = $this->prophesize(Metadata::class);
+        $metadata->getPhpcrType()->willReturn('phpcr:type');
+        $document = $this->prophesize(UuidBehavior::class);
+        $document->getUuid()->willReturn('document-uuid-1234');
+
+        $this->metadataFactory->getMetadataForClass(\get_class($document->reveal()))->willReturn($metadata->reveal());
+
+        $event->getNode()->willReturn($node->reveal());
+        $event->getDocument()->willReturn($document->reveal());
+
+        $node->addMixin('phpcr:type')->shouldBeCalled();
+        $node->setProperty('jcr:uuid', 'document-uuid-1234')->shouldBeCalled();
+
+        $this->mixinSubscriber->setDocumentMixinsOnNode($event->reveal());
+    }
+
+    public function testSetDocumentMixinsOnNodeWithUuidProperty(): void
     {
         $event = $this->prophesize(AbstractMappingEvent::class);
         $node = $this->prophesize(NodeInterface::class);

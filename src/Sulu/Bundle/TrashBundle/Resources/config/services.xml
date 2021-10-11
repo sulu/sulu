@@ -49,6 +49,7 @@
             <argument type="service" id="sulu_trash.trash_manager"/>
             <argument type="service" id="sulu_trash.trash_item_repository"/>
             <argument type="service" id="sulu_security.security_checker"/>
+            <argument type="tagged_locator" tag="sulu_trash.restore_configuration_provider" index-by="resourceKey" default-index-method="getResourceKey"/>
             <argument>%sulu.model.trash_item.class%</argument>
             <argument>%sulu_security.permissions%</argument>
             <argument type="service" id="fos_rest.view_handler"/>

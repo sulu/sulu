@@ -146,7 +146,7 @@ class PageDocumentSerializationTest extends SuluTestCase
 
         $uuidReflection = new \ReflectionProperty(PageDocument::class, 'uuid');
         $uuidReflection->setAccessible(true);
-        $uuidReflection->setValue($page, 1);
+        $uuidReflection->setValue($page, '59336be4-814b-4054-818a-78668389a85a');
 
         $page->setTitle($data['title']);
         $page->setParent($this->parent);

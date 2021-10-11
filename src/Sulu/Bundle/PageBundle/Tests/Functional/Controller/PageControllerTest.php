@@ -14,10 +14,12 @@ namespace Sulu\Bundle\PageBundle\Tests\Functional\Controller;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPCR\PropertyType;
 use PHPCR\SessionInterface;
+use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TestBundle\Testing\PHPCRImporter;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\WorkflowStage;
@@ -823,8 +825,15 @@ class PageControllerTest extends SuluTestCase
 
         $data = $this->setUpContent($data);
 
+        static::assertCount(0, $this->em->getRepository(TrashItemInterface::class)->findAll());
+
         $this->client->jsonRequest('DELETE', '/api/pages/' . $data[0]['id'] . '?webspace=sulu_io&language=en');
         $this->assertHttpStatusCode(204, $this->client->getResponse());
+
+        /** @var TrashItemInterface[] $trashItems */
+        $trashItems = $this->em->getRepository(TrashItemInterface::class)->findAll();
+        static::assertCount(1, $trashItems);
+        static::assertSame(BasePageDocument::RESOURCE_KEY, $trashItems[0]->getResourceKey());
 
         $this->client->jsonRequest('GET', '/api/pages/' . $data[0]['id'] . '?webspace=sulu_io&language=en');
         $this->assertHttpStatusCode(404, $this->client->getResponse());
