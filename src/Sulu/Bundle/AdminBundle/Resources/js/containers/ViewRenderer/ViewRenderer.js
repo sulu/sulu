@@ -62,7 +62,7 @@ class ViewRenderer extends React.Component<Props> {
         const {router} = this.props;
         const View = this.getView(route);
 
-        let viewKey = getViewKeyFromRoute(route, router.attributes);
+        let viewKey = getViewKeyFromRoute(route, router.attributes) || '';
         if (View.remountViewOnLogin) {
             viewKey = viewKey + '__' + this.loginCount;
         }

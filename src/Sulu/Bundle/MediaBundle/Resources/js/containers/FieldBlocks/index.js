@@ -1,7 +1,7 @@
 // @flow
 import MediaSelectionBlockPreviewTransformer from './blockPreviewTransformers/MediaSelectionBlockPreviewTransformer';
 import SingleMediaSelectionBlockPreviewTransformer
-    from './blockPreviewTransformers/SingleMediaSelectionBlockPreviewTransformer';
+from './blockPreviewTransformers/SingleMediaSelectionBlockPreviewTransformer';
 
 export {
     MediaSelectionBlockPreviewTransformer,
