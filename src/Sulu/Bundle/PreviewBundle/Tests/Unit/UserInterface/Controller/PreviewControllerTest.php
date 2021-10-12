@@ -9,11 +9,12 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\PreviewBundle\Tests\Unit\Preview;
+namespace Sulu\Bundle\PreviewBundle\Tests\Unit\UserInterface\Controller;
 
 use PHPUnit\Framework\TestCase;
-use Sulu\Bundle\PreviewBundle\Controller\PreviewController;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\PreviewBundle\Preview\PreviewInterface;
+use Sulu\Bundle\PreviewBundle\UserInterface\Controller\PreviewController;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,12 +24,12 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 class PreviewControllerTest extends TestCase
 {
     /**
-     * @var PreviewInterface
+     * @var PreviewInterface|ObjectProphecy
      */
     private $preview;
 
     /**
-     * @var TokenStorageInterface
+     * @var TokenStorageInterface|ObjectProphecy
      */
     private $tokenStorage;
 
@@ -56,7 +57,7 @@ class PreviewControllerTest extends TestCase
         $user->getId()->willReturn(42);
     }
 
-    public function testStart()
+    public function testStart(): void
     {
         $request = new Request(
             [
@@ -72,7 +73,7 @@ class PreviewControllerTest extends TestCase
         $this->assertEquals(\json_encode(['token' => 'test-token']), $response->getContent());
     }
 
-    public function testRender()
+    public function testRender(): void
     {
         $request = new Request(
             [
@@ -96,7 +97,7 @@ class PreviewControllerTest extends TestCase
         $this->assertEquals('<html><body><h1>SULU is awesome</h1></body></html>', $response->getContent());
     }
 
-    public function testRenderInvalidToken()
+    public function testRenderInvalidToken(): void
     {
         $request = new Request(
             [
@@ -133,7 +134,7 @@ class PreviewControllerTest extends TestCase
         $this->assertEquals('<html><body><h1>SULU is awesome</h1></body></html>', $response->getContent());
     }
 
-    public function testRenderWithATags()
+    public function testRenderWithATags(): void
     {
         $request = new Request(
             [
@@ -157,7 +158,7 @@ class PreviewControllerTest extends TestCase
         $this->assertEquals('<html><body><h1>SULU is awesome</h1></body></html>', $response->getContent());
     }
 
-    public function testUpdate()
+    public function testUpdate(): void
     {
         $request = new Request(
             [
@@ -189,7 +190,7 @@ class PreviewControllerTest extends TestCase
         );
     }
 
-    public function testUpdateWithATags()
+    public function testUpdateWithATags(): void
     {
         $request = new Request(
             [
@@ -223,7 +224,7 @@ class PreviewControllerTest extends TestCase
         );
     }
 
-    public function testUpdateContext()
+    public function testUpdateContext(): void
     {
         $request = new Request(
             [
@@ -256,7 +257,7 @@ class PreviewControllerTest extends TestCase
         );
     }
 
-    public function testUpdateContextWithATags()
+    public function testUpdateContextWithATags(): void
     {
         $request = new Request(
             [

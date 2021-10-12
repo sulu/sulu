@@ -156,7 +156,8 @@
         "rokka/imagine-vips": "<0.9.2",
         "symfony/doctrine-bridge": "< 3.4.0",
         "symfony/framework-bundle": "5.2.6",
-        "symfony/http-foundation": "4.3.4"
+        "symfony/http-foundation": "4.3.4",
+        "symfony/translation": "5.3.8"
     },
     "replace": {
         "sulu/document-manager": "self.version",

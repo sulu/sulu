@@ -1,0 +1,4 @@
+sulu_preview.public_render:
+    path: "/{token}"
+    defaults:
+        _controller: sulu_preview.public_preview_controller::renderAction

@@ -9,11 +9,12 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\PreviewBundle\Tests\Unit\EventSubscriber;
+namespace Sulu\Bundle\PreviewBundle\Tests\Unit\Infrastructure\Symfony\EventSubscriber;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
-use Sulu\Bundle\PreviewBundle\EventSubscriber\CacheCommandSubscriber;
+use Prophecy\Prophecy\ObjectProphecy;
+use Sulu\Bundle\PreviewBundle\Infrastructure\Symfony\EventSubscriber\CacheCommandSubscriber;
 use Sulu\Bundle\PreviewBundle\Preview\Renderer\KernelFactoryInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Command\Command;
@@ -25,7 +26,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 class CacheCommandSubscriberTest extends TestCase
 {
     /**
-     * @var KernelFactoryInterface
+     * @var KernelFactoryInterface|ObjectProphecy
      */
     private $kernelFactory;
 
@@ -35,12 +36,12 @@ class CacheCommandSubscriberTest extends TestCase
     private $cacheCommandSubscriber;
 
     /**
-     * @var KernelInterface
+     * @var KernelInterface|ObjectProphecy
      */
     private $previewKernel;
 
     /**
-     * @var Application
+     * @var Application|ObjectProphecy
      */
     private $application;
 

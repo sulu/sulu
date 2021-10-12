@@ -13,6 +13,7 @@ namespace Sulu\Bundle\PreviewBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RouterInterface;
 
 class PreviewAdmin extends Admin
 {
@@ -62,6 +63,7 @@ class PreviewAdmin extends Admin
                 'update' => $this->urlGenerator->generate('sulu_preview.update'),
                 'update-context' => $this->urlGenerator->generate('sulu_preview.update-context'),
                 'stop' => $this->urlGenerator->generate('sulu_preview.stop'),
+                'preview-link' => $this->urlGenerator->generate('sulu_preview.public_render', ['token' => ':token'], RouterInterface::ABSOLUTE_URL),
             ],
             'debounceDelay' => $this->previewDelay,
             'mode' => $this->previewMode,

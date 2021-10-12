@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\PreviewBundle\Security;
+namespace Sulu\Bundle\PreviewBundle\Infrastructure\Symfony\Security;
 
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -26,7 +26,7 @@ class PreviewVoter implements VoterInterface
      *
      * @return bool true if this Voter supports the attribute, false otherwise
      */
-    public function supportsAttribute($attribute)
+    public function supportsAttribute($attribute): bool
     {
         return true;
     }
@@ -38,7 +38,7 @@ class PreviewVoter implements VoterInterface
      *
      * @return bool true if this Voter can process the class
      */
-    public function supportsClass($class)
+    public function supportsClass($class): bool
     {
         return true;
     }
@@ -51,11 +51,11 @@ class PreviewVoter implements VoterInterface
      *
      * @param TokenInterface $token A TokenInterface instance
      * @param object $object The object to secure
-     * @param array $attributes An array of attributes associated with the method being invoked
+     * @param mixed[] $attributes An array of attributes associated with the method being invoked
      *
      * @return int either ACCESS_GRANTED, ACCESS_ABSTAIN, or ACCESS_DENIED
      */
-    public function vote(TokenInterface $token, $object, array $attributes)
+    public function vote(TokenInterface $token, $object, array $attributes): int
     {
         return VoterInterface::ACCESS_GRANTED;
     }

@@ -77,5 +77,7 @@
     "sulu_activity.description.pages.translation_added": "{userFullName} has added a new translation \"{resourceLocale}\" to the page \"{resourceTitle}\"",
     "sulu_activity.description.pages.translation_copied": "{userFullName} has copied the \"{context_sourceLocale}\" translation of the page \"{resourceTitle}\" into \"{resourceLocale}\"",
     "sulu_activity.description.pages.translation_removed": "{userFullName} has removed the \"{resourceLocale}\" translation of the page \"{resourceTitle}\"",
-    "sulu_activity.description.pages.version_restored": "{userFullName} has restored the version \"{context_version}\" of the page \"{resourceTitle}\""
+    "sulu_activity.description.pages.version_restored": "{userFullName} has restored the version \"{context_version}\" of the page \"{resourceTitle}\"",
+    "sulu_activity.description.pages.preview_link_generated": "{userFullName} has generated a public preview link \"{resourceTitle}\"",
+    "sulu_activity.description.pages.preview_link_revoked": "{userFullName} has revoked the public preview link \"{resourceTitle}\""
 }

@@ -9,13 +9,15 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\PreviewBundle\Controller;
+namespace Sulu\Bundle\PreviewBundle\UserInterface\Controller;
 
 use Sulu\Bundle\PreviewBundle\Preview\PreviewInterface;
 use Sulu\Component\Rest\RequestParametersTrait;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Profiler\Profiler;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -34,7 +36,7 @@ class PreviewController
     private $tokenStorage;
 
     /**
-     * @var Profiler
+     * @var Profiler|null
      */
     private $profiler;
 
@@ -85,7 +87,7 @@ class PreviewController
         $provider = $this->getRequestParameter($request, 'provider', true);
         $id = $this->getRequestParameter($request, 'id', true);
         $token = $this->getRequestParameter($request, 'token', true);
-        $data = $this->getRequestParameter($request, 'data', true);
+        $data = (array) $this->getRequestParameter($request, 'data', true);
 
         $options = $this->getOptionsFromRequest($request);
 
@@ -107,7 +109,7 @@ class PreviewController
         $id = $this->getRequestParameter($request, 'id', true);
         $provider = $this->getRequestParameter($request, 'provider', true);
         $token = $this->getRequestParameter($request, 'token', true);
-        $context = $this->getRequestParameter($request, 'context', true);
+        $context = (array) $this->getRequestParameter($request, 'context', true);
         /** @var mixed[] $data */
         $data = $this->getRequestParameter($request, 'data', true);
 
@@ -134,7 +136,7 @@ class PreviewController
         return new JsonResponse();
     }
 
-    private function disableProfiler()
+    private function disableProfiler(): void
     {
         if (!$this->profiler) {
             return;
@@ -143,22 +145,25 @@ class PreviewController
         $this->profiler->disable();
     }
 
-    private function getUserId(): ?int
+    private function getUserId(): int
     {
         $token = $this->tokenStorage->getToken();
         if (!$token) {
-            return null;
+            throw new AccessDeniedHttpException();
         }
 
         $user = $token->getUser();
-        if (!$token) {
-            return null;
+        if (!$user || !$user instanceof UserInterface) {
+            throw new AccessDeniedHttpException();
         }
 
         return $user->getId();
     }
 
-    private function getOptionsFromRequest(Request $request)
+    /**
+     * @return mixed[]
+     */
+    private function getOptionsFromRequest(Request $request): array
     {
         return \array_filter($request->query->all(), function($key) {
             switch ($key) {

@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\PreviewBundle\EventSubscriber;
+namespace Sulu\Bundle\PreviewBundle\Infrastructure\Symfony\EventSubscriber;
 
 use Sulu\Bundle\PreviewBundle\Preview\Renderer\KernelFactoryInterface;
 use Symfony\Bundle\FrameworkBundle\Command\CacheClearCommand;
@@ -44,7 +44,10 @@ class CacheCommandSubscriber implements EventSubscriberInterface
         $this->environment = $environment;
     }
 
-    public static function getSubscribedEvents()
+    /**
+     * @return array<string, mixed>
+     */
+    public static function getSubscribedEvents(): array
     {
         return [
             ConsoleEvents::COMMAND => [
@@ -53,12 +56,19 @@ class CacheCommandSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function onCommand(ConsoleCommandEvent $event)
+    public function onCommand(ConsoleCommandEvent $event): void
     {
-        if (!\in_array($event->getCommand()->getName(), [
-            CacheClearCommand::getDefaultName(),
-            CacheWarmupCommand::getDefaultName(),
-        ])) {
+        $command = $event->getCommand();
+
+        if (null === $command
+            || !\in_array(
+                $command->getName(),
+                [
+                    CacheClearCommand::getDefaultName(),
+                    CacheWarmupCommand::getDefaultName(),
+                ]
+            )
+        ) {
             return;
         }
 

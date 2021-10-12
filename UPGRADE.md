@@ -2,6 +2,24 @@
 
 ## 2.x
 
+### Added entity PreviewLink in PreviewBundle
+
+To update your database schema to include the new table, you need to execute the following SQL statements:
+
+```sql
+CREATE TABLE pr_preview_links (id INT AUTO_INCREMENT NOT NULL, token VARCHAR(12) NOT NULL, resourceKey VARCHAR(255) NOT NULL, resourceId VARCHAR(255) NOT NULL, locale VARCHAR(255) NOT NULL, options JSON NOT NULL, visitCount INT NOT NULL, lastVisit DATETIME DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)', UNIQUE INDEX UNIQ_9A45BD685F37A13B (token), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
+```
+
+### Changed constructor of PageObjectProvider
+
+- `Sulu\Bundle\PageBundle\Preview\PageObjectProvider`
+
+### PreviewObjectProviderInterface was changed
+
+A new method has been added to the `PreviewObjectProviderInterface`:
+
+- `getSecurityContext`
+
 ### StorageInterface was changed
 
 A new method has been added to the `StorageInterface` to allow for moving files:
@@ -13,7 +31,6 @@ A new method has been added to the `StorageInterface` to allow for moving files:
 A new method has been added to the `MediaInterface`:
 
 - `setCreated`
-
 
 ### CategoryInterface was changed
 

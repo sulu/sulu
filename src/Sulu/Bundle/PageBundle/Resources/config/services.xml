@@ -164,6 +164,7 @@
         <service id="sulu_page.preview.object_provider" class="Sulu\Bundle\PageBundle\Preview\PageObjectProvider">
             <argument type="service" id="sulu_document_manager.document_manager"/>
             <argument type="service" id="jms_serializer"/>
+            <argument type="service" id="sulu_document_manager.document_inspector"/>
 
             <tag name="sulu_preview.object_provider" provider-key="pages"/>
         </service>

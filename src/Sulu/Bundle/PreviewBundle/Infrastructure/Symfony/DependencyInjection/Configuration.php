@@ -9,8 +9,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\PreviewBundle\DependencyInjection;
+namespace Sulu\Bundle\PreviewBundle\Infrastructure\Symfony\DependencyInjection;
 
+use Sulu\Bundle\PreviewBundle\Domain\Model\PreviewLink;
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -60,6 +62,8 @@ class Configuration implements ConfigurationInterface
                 ->end()
             ->end()
         ->end();
+
+        $this->addObjectsSection($rootNode);
 
         return $treeBuilder;
     }
@@ -120,5 +124,28 @@ class Configuration implements ConfigurationInterface
             ->end();
 
         return $node;
+    }
+
+    /**
+     * Adds `objects` section.
+     */
+    private function addObjectsSection(ArrayNodeDefinition $node): void
+    {
+        $node
+            ->children()
+                ->arrayNode('objects')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->arrayNode('preview_link')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->scalarNode('model')
+                                    ->defaultValue(PreviewLink::class)
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end();
     }
 }
