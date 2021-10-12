@@ -54,7 +54,7 @@ use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrateg
 use Sulu\Component\DocumentManager\Behavior\Mapping\ParentBehavior;
 use Sulu\Component\DocumentManager\Document\UnknownDocument;
 use Sulu\Component\DocumentManager\DocumentAccessor;
-use Sulu\Component\DocumentManager\DocumentManager;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\DocumentManager\NamespaceRegistry;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
@@ -112,7 +112,7 @@ class ContentMapper implements ContentMapperInterface
     private $resourceLocatorStrategyPool;
 
     /**
-     * @var DocumentManager
+     * @var DocumentManagerInterface
      */
     private $documentManager;
 
@@ -152,7 +152,7 @@ class ContentMapper implements ContentMapperInterface
     private $security;
 
     public function __construct(
-        DocumentManager $documentManager,
+        DocumentManagerInterface $documentManager,
         WebspaceManagerInterface $webspaceManager,
         FormFactoryInterface $formFactory,
         DocumentInspector $inspector,

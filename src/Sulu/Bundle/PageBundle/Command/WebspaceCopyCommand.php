@@ -24,7 +24,7 @@ use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\ItemMetadata;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
-use Sulu\Component\DocumentManager\DocumentManager;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -48,7 +48,7 @@ class WebspaceCopyCommand extends Command
     private $output;
 
     /**
-     * @var DocumentManager
+     * @var DocumentManagerInterface
      */
     private $documentManager;
 
@@ -78,7 +78,7 @@ class WebspaceCopyCommand extends Command
     protected $webspaceKeyDestination;
 
     public function __construct(
-        DocumentManager $documentManager,
+        DocumentManagerInterface $documentManager,
         SessionManagerInterface $sessionManager,
         DocumentInspector $documentInspector,
         HtmlTagExtractor $htmlTagExtractor

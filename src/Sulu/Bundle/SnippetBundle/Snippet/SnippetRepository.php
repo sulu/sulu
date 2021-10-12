@@ -18,7 +18,7 @@ use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\Structure\SnippetBridge;
 use Sulu\Component\Content\Mapper\ContentMapper;
-use Sulu\Component\DocumentManager\DocumentManager;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\PHPCR\SessionManager\SessionManager;
 
@@ -44,11 +44,11 @@ class SnippetRepository
     private $contentMapper;
 
     /**
-     * @var DocumentManager
+     * @var DocumentManagerInterface
      */
     private $documentManager;
 
-    public function __construct(SessionManager $sessionManager, ContentMapper $contentMapper, DocumentManager $documentManager)
+    public function __construct(SessionManager $sessionManager, ContentMapper $contentMapper, DocumentManagerInterface $documentManager)
     {
         $this->contentMapper = $contentMapper;
         $this->sessionManager = $sessionManager;
