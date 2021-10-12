@@ -107,7 +107,9 @@ class AppendAnalyticsListenerTest extends TestCase
         $requestAnalyzer->getPortalInformation()->willReturn($portalInformation->reveal());
         $requestAnalyzer->getAttribute('urlExpression')->willReturn('sulu.lo/{localization}');
 
-        $analyticsRepository->findByUrl('sulu.lo/{localization}', 'sulu_io', 'prod')->willReturn([$analytics]);
+        $analyticsRepository->findByUrl('sulu.lo/{localization}', 'sulu_io', 'prod')
+            ->willReturn([$analytics])
+            ->shouldBeCalled();
         $listener = new AppendAnalyticsListener(
             $engine->reveal(),
             $requestAnalyzer->reveal(),
@@ -206,6 +208,46 @@ class AppendAnalyticsListenerTest extends TestCase
         $listener->onResponse($event);
     }
 
+    public function testAppendNoUrlExpression(): void
+    {
+        $portalInformation = $this->prophesize(PortalInformation::class);
+        $portalInformation->getUrlExpression()->willReturn('sulu.lo/{localization}');
+        $portalInformation->getType()->willReturn(RequestAnalyzerInterface::MATCH_TYPE_FULL);
+        $portalInformation->getWebspaceKey()->willReturn('sulu_io');
+
+        $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
+        $requestAnalyzer->getPortalInformation()->willReturn($portalInformation->reveal());
+        $requestAnalyzer->getAttribute('urlExpression')
+            ->willReturn(null)
+            ->shouldBeCalled();
+
+        $engine = $this->prophesize(Environment::class);
+
+        $analyticsRepository = $this->prophesize(AnalyticsRepository::class);
+        $analyticsRepository->findByUrl(Argument::cetera())
+            ->shouldNotBeCalled();
+
+        $request = $this->prophesize(Request::class);
+        $request->getRequestFormat()->willReturn('html');
+
+        $response = $this->prophesize(Response::class);
+        $response->getContent()->willReturn('<html><head><title>Test</title></head><body><h1>Title</h1></body></html>');
+        $response->reveal()->headers = new ParameterBag(['Content-Type' => 'text/html']);
+        $response->setContent(Argument::cetera())
+            ->shouldNotBeCalled();
+
+        $event = $this->createResponseEvent($request->reveal(), $response->reveal());
+
+        $listener = new AppendAnalyticsListener(
+            $engine->reveal(),
+            $requestAnalyzer->reveal(),
+            $analyticsRepository->reveal(),
+            'prod'
+        );
+
+        $listener->onResponse($event);
+    }
+
     public function testAppendGoogleTagManager()
     {
         $engine = $this->prophesize(Environment::class);
@@ -222,7 +264,9 @@ class AppendAnalyticsListenerTest extends TestCase
         $requestAnalyzer->getPortalInformation()->willReturn($portalInformation->reveal());
         $requestAnalyzer->getAttribute('urlExpression')->willReturn('sulu.lo/{localization}');
 
-        $analyticsRepository->findByUrl('sulu.lo/{localization}', 'sulu_io', 'prod')->willReturn([$analytics]);
+        $analyticsRepository->findByUrl('sulu.lo/{localization}', 'sulu_io', 'prod')
+            ->willReturn([$analytics])
+            ->shouldBeCalled();
         $listener = new AppendAnalyticsListener(
             $engine->reveal(),
             $requestAnalyzer->reveal(),
@@ -279,7 +323,9 @@ class AppendAnalyticsListenerTest extends TestCase
         $requestAnalyzer->getPortalInformation()->willReturn($portalInformation->reveal());
         $requestAnalyzer->getAttribute('urlExpression')->willReturn('sulu.lo/{localization}');
 
-        $analyticsRepository->findByUrl('sulu.lo/{localization}', 'sulu_io', 'prod')->willReturn([$analytics]);
+        $analyticsRepository->findByUrl('sulu.lo/{localization}', 'sulu_io', 'prod')
+            ->willReturn([$analytics])
+            ->shouldBeCalled();
         $listener = new AppendAnalyticsListener(
             $engine->reveal(),
             $requestAnalyzer->reveal(),
@@ -336,7 +382,9 @@ class AppendAnalyticsListenerTest extends TestCase
         $requestAnalyzer->getPortalInformation()->willReturn($portalInformation->reveal());
         $requestAnalyzer->getAttribute('urlExpression')->willReturn('sulu.lo/{localization}');
 
-        $analyticsRepository->findByUrl('sulu.lo/{localization}', 'sulu_io', 'prod')->willReturn([$analytics]);
+        $analyticsRepository->findByUrl('sulu.lo/{localization}', 'sulu_io', 'prod')
+            ->willReturn([$analytics])
+            ->shouldBeCalled();
         $listener = new AppendAnalyticsListener(
             $engine->reveal(),
             $requestAnalyzer->reveal(),
@@ -383,7 +431,8 @@ class AppendAnalyticsListenerTest extends TestCase
         $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
         $analyticsRepository = $this->prophesize(AnalyticsRepository::class);
 
-        $analyticsRepository->findByUrl('1.sulu.lo/2', 'sulu_io', 'prod')->willReturn(['test' => 1]);
+        $analyticsRepository->findByUrl(Argument::cetera())
+            ->shouldNotBeCalled();
         $listener = new AppendAnalyticsListener(
             $engine->reveal(),
             $requestAnalyzer->reveal(),
