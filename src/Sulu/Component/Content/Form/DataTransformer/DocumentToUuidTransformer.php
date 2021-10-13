@@ -60,7 +60,6 @@ class DocumentToUuidTransformer implements DataTransformerInterface
         }
 
         $document = $this->documentManager->find($uuid);
-
         if (null === $document) {
             throw new TransformationFailedException(\sprintf(
                 'Could not find document with UUID "%s"', $uuid
