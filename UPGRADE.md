@@ -13,15 +13,15 @@ CREATE TABLE pr_preview_links (id INT AUTO_INCREMENT NOT NULL, token VARCHAR(12)
 To access the preview-link as anonymous user add following rule to the `access_control` section in your 
 `config/packages/security.yaml`:
 
-```yaml
+```diff
 security:
     ...
     
     access_control:
-        ...
-        - { path: ^/admin/$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/admin/p/, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/admin, roles: ROLE_USER }
+         ...
+         - { path: ^/admin/$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
++        - { path: ^/admin/p/, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/admin, roles: ROLE_USER }
 ```
 
 Additionally, you need to include the routes of the bundle in your `config/routes/sulu_admin.yaml`:
