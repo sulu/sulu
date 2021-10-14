@@ -39,6 +39,12 @@ class PreviewLinkPopover extends React.Component<Props> {
         }).then(action((previewLink) => {
             this.previewLink = previewLink;
             this.loading = false;
+        })).catch(action((error) => {
+            if (error.status !== 404) {
+                return Promise.reject(error);
+            }
+
+            this.loading = false;
         }));
     }
 
