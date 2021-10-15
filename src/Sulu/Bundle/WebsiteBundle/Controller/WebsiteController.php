@@ -168,7 +168,7 @@ abstract class WebsiteController extends AbstractController
             return null;
         }
 
-        /** @var CacheLifetimeEnhancer $cacheLifetimeEnhancer */
+        /** @var CacheLifetimeEnhancerInterface $cacheLifetimeEnhancer */
         $cacheLifetimeEnhancer = $this->get('sulu_http_cache.cache_lifetime.enhancer');
 
         return $cacheLifetimeEnhancer;
