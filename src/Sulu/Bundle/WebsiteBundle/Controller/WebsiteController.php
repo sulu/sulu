@@ -162,7 +162,7 @@ abstract class WebsiteController extends AbstractController
         return $this->get('request_stack')->getCurrentRequest();
     }
 
-    protected function getCacheTimeLifeEnhancer(): ?CacheLifetimeEnhancer
+    protected function getCacheTimeLifeEnhancer(): ?CacheLifetimeEnhancerInterface
     {
         if (!$this->has('sulu_http_cache.cache_lifetime.enhancer')) {
             return null;
