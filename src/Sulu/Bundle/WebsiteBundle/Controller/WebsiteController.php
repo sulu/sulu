@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Controller;
 
-use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeEnhancer;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeEnhancerInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Preview;
 use Sulu\Bundle\WebsiteBundle\Resolver\ParameterResolverInterface;
