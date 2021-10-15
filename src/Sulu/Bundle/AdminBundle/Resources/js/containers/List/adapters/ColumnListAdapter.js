@@ -102,7 +102,7 @@ class ColumnListAdapter extends AbstractAdapter {
     };
 
     getIndicators = (item: Object) => {
-        if (item.ghostLocale) {
+        if (item.ghostLocale && item.ghostLocale !== item.locale) {
             return [<GhostIndicator key="ghost" locale={item.ghostLocale} />];
         }
 

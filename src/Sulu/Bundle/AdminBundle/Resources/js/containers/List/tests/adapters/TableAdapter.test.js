@@ -87,6 +87,14 @@ test('Render data with schema', () => {
             published: null,
             ghostLocale: 'de',
         },
+        {
+            id: 9,
+            title: 'Page 9',
+            publishedState: false,
+            published: null,
+            ghostLocale: 'de',
+            locale: 'de',
+        },
     ];
 
     const schema = {

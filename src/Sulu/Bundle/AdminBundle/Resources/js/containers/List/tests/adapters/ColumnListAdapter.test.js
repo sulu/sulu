@@ -94,6 +94,14 @@ test('Render different kind of data with edit button', () => {
                     view: false,
                 },
             },
+            {
+                id: 12,
+                title: 'Page 2.1.3',
+                hasChildren: false,
+                publishedState: false,
+                ghostLocale: 'nl',
+                locale: 'nl',
+            },
         ],
         [],
     ];

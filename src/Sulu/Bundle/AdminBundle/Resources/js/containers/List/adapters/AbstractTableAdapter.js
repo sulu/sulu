@@ -45,7 +45,7 @@ export default class AbstractTableAdapter extends AbstractAdapter {
 
             const indicators = [];
             if (index === 0) {
-                if (item.ghostLocale) {
+                if (item.ghostLocale && item.ghostLocale !== item.locale) {
                     indicators.push(
                         <GhostIndicator
                             className={abstractTableAdapterStyles.ghostIndicator}

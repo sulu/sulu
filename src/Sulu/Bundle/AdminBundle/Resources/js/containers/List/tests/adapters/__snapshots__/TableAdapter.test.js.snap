@@ -1104,6 +1104,19 @@ exports[`Render data with schema 1`] = `
             </div>
           </td>
         </tr>
+        <tr
+          class="row"
+        >
+          <td
+            class="cell"
+          >
+            <div
+              class="cellContent"
+            >
+              Page 9
+            </div>
+          </td>
+        </tr>
       </tbody>
     </table>
   </div>
