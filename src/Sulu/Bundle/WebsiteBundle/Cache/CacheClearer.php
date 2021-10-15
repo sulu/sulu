@@ -109,7 +109,10 @@ class CacheClearer implements CacheClearerInterface
         );
 
         if ($this->filesystem->exists($path)) {
-            $this->filesystem->remove($path);
+            // rename directory before removing it to prevent new requests from writing into the old directory
+            $invalidatedPath = $path . '_invalidated';
+            $this->filesystem->rename($path, $invalidatedPath, true);
+            $this->filesystem->remove($invalidatedPath);
         }
 
         $this->eventDispatcher->dispatch(new CacheClearEvent($tags), Events::CACHE_CLEAR);

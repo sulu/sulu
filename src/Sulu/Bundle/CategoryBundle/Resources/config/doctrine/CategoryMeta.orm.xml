@@ -13,9 +13,6 @@
         <field name="locale" column="locale" type="string" length="5" nullable="true"/>
 
         <many-to-one field="category" target-entity="Sulu\Bundle\CategoryBundle\Entity\CategoryInterface" inversed-by="meta">
-            <cascade>
-                <cascade-all/>
-            </cascade>
             <join-columns>
                 <join-column name="idCategories" on-delete="CASCADE" referenced-column-name="id" nullable="false"/>
             </join-columns>
