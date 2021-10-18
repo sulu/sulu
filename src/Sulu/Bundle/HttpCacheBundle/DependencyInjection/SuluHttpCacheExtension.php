@@ -61,6 +61,18 @@ class SuluHttpCacheExtension extends Extension implements PrependExtensionInterf
                 $fosHttpCacheConfig['proxy_client']['varnish']['tags_header'] = $varnishProxyClient['tags_header'];
             }
         }
+        
+        if ($config['proxy_client']['nginx']['enabled']) {
+
+            if ($config['tags']['enabled']) {
+                throw new InvalidConfigurationException(sprintf('The nginx proxy client does not support Tagged Cache Invalidation, please set tags to false'));
+            }
+
+            $nginxProxyClient = $config['proxy_client']['nginx'];
+
+            $fosHttpCacheConfig['proxy_client']['nginx']['http']['servers'] =
+                \count($nginxProxyClient['servers']) ? $nginxProxyClient['servers'] : ['127.0.0.1'];
+        }
 
         if (\array_key_exists('proxy_client', $fosHttpCacheConfig)) {
             $fosHttpCacheConfig['tags']['enabled'] = $config['tags']['enabled'];
