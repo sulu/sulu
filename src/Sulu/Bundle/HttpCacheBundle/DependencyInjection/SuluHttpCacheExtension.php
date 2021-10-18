@@ -63,9 +63,8 @@ class SuluHttpCacheExtension extends Extension implements PrependExtensionInterf
         }
         
         if ($config['proxy_client']['nginx']['enabled']) {
-
             if ($config['tags']['enabled']) {
-                throw new InvalidConfigurationException(sprintf('The nginx proxy client does not support Tagged Cache Invalidation, please set tags to false'));
+                throw new InvalidConfigurationException('The nginx proxy client does not support Tagged Cache Invalidation, please set tags to false');
             }
 
             $nginxProxyClient = $config['proxy_client']['nginx'];
