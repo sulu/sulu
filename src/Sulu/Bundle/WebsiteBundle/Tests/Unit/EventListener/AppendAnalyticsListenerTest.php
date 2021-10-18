@@ -223,7 +223,7 @@ class AppendAnalyticsListenerTest extends TestCase
 
         $engine = $this->prophesize(Environment::class);
 
-        $analyticsRepository = $this->prophesize(AnalyticsRepository::class);
+        $analyticsRepository = $this->prophesize(AnalyticsRepositoryInterface::class);
         $analyticsRepository->findByUrl(Argument::cetera())
             ->shouldNotBeCalled();
 
