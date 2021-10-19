@@ -88,7 +88,9 @@ class AppendAnalyticsListener
      */
     public function onResponse(ResponseEvent $event)
     {
-        if ($this->preview) {
+        if (!$event->isMasterRequest()
+            || $this->preview
+        ) {
             return;
         }
 
@@ -102,6 +104,10 @@ class AppendAnalyticsListener
         }
 
         $portalUrl = $this->requestAnalyzer->getAttribute('urlExpression');
+
+        if (!$portalUrl) {
+            return;
+        }
 
         $analyticsArray = $this->analyticsRepository->findByUrl(
             $portalUrl,

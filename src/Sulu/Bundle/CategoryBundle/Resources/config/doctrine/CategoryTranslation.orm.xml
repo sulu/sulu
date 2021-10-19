@@ -22,9 +22,6 @@
         </one-to-many>
 
         <many-to-one field="category" target-entity="Sulu\Bundle\CategoryBundle\Entity\CategoryInterface" inversed-by="translations">
-            <cascade>
-                <cascade-all/>
-            </cascade>
             <join-columns>
                 <join-column name="idCategories" on-delete="CASCADE" referenced-column-name="id" nullable="false"/>
             </join-columns>

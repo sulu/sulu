@@ -1529,6 +1529,20 @@ class QueryBuilderTest extends SuluTestCase
                 Structure::STATE_TEST
             )
         );
+        $nodesEn = \array_merge(
+            $nodesEn,
+            $this->save(
+                [
+                    'title' => 'Alex',
+                    'url' => '/team/alex',
+                ],
+                'en',
+                null,
+                $nodesEn['/team']->getUuid(),
+                false,
+                null
+            )
+        );
 
         $nodesDe = \array_merge(
             $nodesDe,
@@ -1555,7 +1569,8 @@ class QueryBuilderTest extends SuluTestCase
                 $nodesEn['/team/thomas']->getUuid(),
                 null,
                 true,
-                'en'
+                'en',
+                Structure::STATE_TEST
             )
         );
         $nodesDe = \array_merge(
@@ -1581,6 +1596,21 @@ class QueryBuilderTest extends SuluTestCase
                 ],
                 'de',
                 $nodesEn['/team/johannes']->getUuid()
+            )
+        );
+        $nodesDe = \array_merge(
+            $nodesDe,
+            $this->save(
+                [
+                    'title' => 'not-important-2',
+                    'url' => '/team/alex',
+                ],
+                'de',
+                $nodesEn['/team/alex']->getUuid(),
+                null,
+                true,
+                'en',
+                Structure::STATE_TEST
             )
         );
 
@@ -1649,13 +1679,14 @@ class QueryBuilderTest extends SuluTestCase
                     $data['en']['/team/thomas']->getUuid(),
                     $data['en']['/team/daniel']->getUuid(),
                     $data['en']['/team/johannes']->getUuid(),
+                    $data['en']['/team/alex']->getUuid(),
                 ],
             ]
         );
 
         $result = $this->contentQuery->execute('sulu_io', ['en'], $builder);
 
-        $this->assertEquals(3, \count($result));
+        $this->assertEquals(4, \count($result));
         $this->assertEquals('/team/thomas', $result[0]['url']);
         $this->assertEquals('Thomas', $result[0]['title']);
         $this->assertEquals(false, $result[0]['publishedState']);
@@ -1668,10 +1699,13 @@ class QueryBuilderTest extends SuluTestCase
         $this->assertEquals('Johannes', $result[2]['title']);
         $this->assertEquals(false, $result[2]['publishedState']);
         $this->assertNull($result[2]['published']);
+        $this->assertEquals('/team/alex', $result[3]['url']);
+        $this->assertEquals('Alex', $result[3]['title']);
+        $this->assertEquals(true, $result[3]['publishedState']);
 
         $result = $this->contentQuery->execute('sulu_io', ['de'], $builder);
 
-        $this->assertEquals(3, \count($result));
+        $this->assertEquals(4, \count($result));
         $this->assertEquals('/team/thomas', $result[0]['url']);
         $this->assertEquals('Thomas', $result[0]['title']);
         $this->assertEquals(false, $result[0]['publishedState']);
@@ -1684,5 +1718,8 @@ class QueryBuilderTest extends SuluTestCase
         $this->assertEquals('Johannes DE', $result[2]['title']);
         $this->assertEquals(true, $result[2]['publishedState']);
         $this->assertNotNull($result[2]['published']);
+        $this->assertEquals('/team/alex', $result[3]['url']);
+        $this->assertEquals('Alex', $result[3]['title']);
+        $this->assertEquals(false, $result[3]['publishedState']);
     }
 }

@@ -16,6 +16,7 @@ use PHPCR\PropertyInterface;
 use PHPCR\SessionInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
 use Sulu\Component\Content\Document\Subscriber\WorkflowStageSubscriber;
 use Sulu\Component\Content\Document\WorkflowStage;
@@ -32,22 +33,22 @@ use Sulu\Component\DocumentManager\PropertyEncoder;
 class WorkflowStageSubscriberTest extends TestCase
 {
     /**
-     * @var PropertyEncoder
+     * @var PropertyEncoder|ObjectProphecy
      */
     private $propertyEncoder;
 
     /**
-     * @var DocumentInspector
+     * @var DocumentInspector|ObjectProphecy
      */
     private $documentInspector;
 
     /**
-     * @var SessionInterface
+     * @var SessionInterface|ObjectProphecy
      */
     private $defaultSession;
 
     /**
-     * @var SessionInterface
+     * @var SessionInterface|ObjectProphecy
      */
     private $liveSession;
 
@@ -57,22 +58,22 @@ class WorkflowStageSubscriberTest extends TestCase
     private $workflowStageSubscriber;
 
     /**
-     * @var WorkflowStageBehavior
+     * @var WorkflowStageBehavior|ObjectProphecy
      */
     private $document;
 
     /**
-     * @var NodeInterface
+     * @var NodeInterface|ObjectProphecy
      */
     private $defaultNode;
 
     /**
-     * @var NodeInterface
+     * @var NodeInterface|ObjectProphecy
      */
     private $liveNode;
 
     /**
-     * @var DocumentAccessor
+     * @var DocumentAccessor|ObjectProphecy
      */
     private $documentAccessor;
 
@@ -104,10 +105,12 @@ class WorkflowStageSubscriberTest extends TestCase
         $this->liveSession->getNode('/some/path')->willReturn($this->liveNode->reveal());
     }
 
-    public function testSetWorkflowStageOnDocument()
+    public function testSetWorkflowStageOnDocument(): void
     {
         $publishedDate = new \DateTime();
         $event = $this->getHydrateEventMock();
+
+        $this->documentInspector->getOriginalLocale($this->document)->willReturn('de');
         $this->defaultNode
             ->getPropertyValueWithDefault('i18n:de-state', WorkflowStage::TEST)
             ->willReturn(WorkflowStage::PUBLISHED);
@@ -119,7 +122,27 @@ class WorkflowStageSubscriberTest extends TestCase
         $this->workflowStageSubscriber->setWorkflowStageOnDocument($event->reveal());
     }
 
-    public function testSetWorkflowStageOnDocumentWithWrongDocument()
+    public function testSetWorkflowStageOnDocumentWithShadeowLocale(): void
+    {
+        $publishedDate = new \DateTime();
+        $event = $this->getHydrateEventMock();
+
+        $this->documentInspector->getOriginalLocale($this->document)->willReturn('en');
+        $this->propertyEncoder->localizedSystemName('state', 'en')->willReturn('i18n:en-state');
+        $this->propertyEncoder->localizedSystemName('published', 'en')->willReturn('i18n:en-published');
+
+        $this->defaultNode
+            ->getPropertyValueWithDefault('i18n:en-state', WorkflowStage::TEST)
+            ->willReturn(WorkflowStage::PUBLISHED);
+        $this->defaultNode->getPropertyValueWithDefault('i18n:en-published', null)->willReturn($publishedDate);
+
+        $this->document->setWorkflowStage(WorkflowStage::PUBLISHED)->shouldBeCalled();
+        $this->documentAccessor->set('published', $publishedDate)->shouldBeCalled();
+
+        $this->workflowStageSubscriber->setWorkflowStageOnDocument($event->reveal());
+    }
+
+    public function testSetWorkflowStageOnDocumentWithWrongDocument(): void
     {
         $event = $this->getHydrateEventMock();
         $event->getDocument()->willReturn(new \stdClass());
@@ -129,7 +152,7 @@ class WorkflowStageSubscriberTest extends TestCase
         $this->workflowStageSubscriber->setWorkflowStageOnDocument($event->reveal());
     }
 
-    public function testSetWorkflowStageOnDocumentWithoutLocale()
+    public function testSetWorkflowStageOnDocumentWithoutLocale(): void
     {
         $event = $this->prophesize(HydrateEvent::class);
         $event->getLocale()->willReturn(null);
@@ -142,7 +165,7 @@ class WorkflowStageSubscriberTest extends TestCase
         $this->workflowStageSubscriber->setWorkflowStageOnDocument($event->reveal());
     }
 
-    public function testSetWorkflowStageToTest()
+    public function testSetWorkflowStageToTest(): void
     {
         $event = $this->getPersistEventMock();
 
@@ -160,7 +183,7 @@ class WorkflowStageSubscriberTest extends TestCase
         $this->workflowStageSubscriber->setWorkflowStageToTest($event->reveal());
     }
 
-    public function testSetWorkflowStageToTestWithWrongDocument()
+    public function testSetWorkflowStageToTestWithWrongDocument(): void
     {
         $event = $this->getPersistEventMock();
         $event->getDocument()->willReturn(new \stdClass());
@@ -169,7 +192,7 @@ class WorkflowStageSubscriberTest extends TestCase
         $this->workflowStageSubscriber->setWorkflowStageToTest($event->reveal());
     }
 
-    public function testSetWorkflowStageToTestWithoutLocale()
+    public function testSetWorkflowStageToTestWithoutLocale(): void
     {
         $event = $this->prophesize(PersistEvent::class);
         $event->getLocale()->willReturn(null);
@@ -182,7 +205,7 @@ class WorkflowStageSubscriberTest extends TestCase
         $this->workflowStageSubscriber->setWorkflowStageToTest($event->reveal());
     }
 
-    public function testSetWorkflowStageToPublished()
+    public function testSetWorkflowStageToPublished(): void
     {
         $event = $this->getPublishEventMock();
 
@@ -200,7 +223,7 @@ class WorkflowStageSubscriberTest extends TestCase
         $this->workflowStageSubscriber->setWorkflowStageToPublished($event->reveal());
     }
 
-    public function testSetWorkflowStageToPublishedWithDraft()
+    public function testSetWorkflowStageToPublishedWithDraft(): void
     {
         $event = $this->getPublishEventMock();
 
@@ -217,7 +240,7 @@ class WorkflowStageSubscriberTest extends TestCase
         $this->workflowStageSubscriber->setWorkflowStageToPublished($event->reveal());
     }
 
-    public function testSetWorkflowStageToPublishedWithWrongDocument()
+    public function testSetWorkflowStageToPublishedWithWrongDocument(): void
     {
         $event = $this->getPublishEventMock();
         $event->getDocument()->willReturn(new \stdClass());
@@ -226,7 +249,7 @@ class WorkflowStageSubscriberTest extends TestCase
         $this->workflowStageSubscriber->setWorkflowStageToPublished($event->reveal());
     }
 
-    public function testSetWorkflowStageToPublishedWithoutLocale()
+    public function testSetWorkflowStageToPublishedWithoutLocale(): void
     {
         $event = $this->prophesize(PublishEvent::class);
         $event->getLocale()->willReturn(null);
@@ -239,7 +262,7 @@ class WorkflowStageSubscriberTest extends TestCase
         $this->workflowStageSubscriber->setWorkflowStageToPublished($event->reveal());
     }
 
-    public function testSetWorkflowStageToTestAndResetPublishedDate()
+    public function testSetWorkflowStageToTestAndResetPublishedDate(): void
     {
         $document = $this->prophesize(WorkflowStageBehavior::class);
         $this->documentInspector->getPath($document->reveal())->willReturn('/cmf/sulu_io/contents');
@@ -257,7 +280,7 @@ class WorkflowStageSubscriberTest extends TestCase
         $this->workflowStageSubscriber->setWorkflowStageToTestAndResetPublishedDate($event->reveal());
     }
 
-    public function testSetWorkflowStageToTestAndResetPublishedDateWithoutLocale()
+    public function testSetWorkflowStageToTestAndResetPublishedDateWithoutLocale(): void
     {
         $event = $this->prophesize(UnpublishEvent::class);
         $event->getLocale()->willReturn(null);
@@ -270,7 +293,7 @@ class WorkflowStageSubscriberTest extends TestCase
         $this->workflowStageSubscriber->setWorkflowStageToTestAndResetPublishedDate($event->reveal());
     }
 
-    public function testSetWorkflowStageToTestForCopy()
+    public function testSetWorkflowStageToTestForCopy(): void
     {
         $event = $this->prophesize(CopyEvent::class);
         $event->getCopiedNode()->willReturn($this->defaultNode->reveal());
@@ -321,7 +344,7 @@ class WorkflowStageSubscriberTest extends TestCase
         $this->workflowStageSubscriber->setWorkflowStageToTestForCopy($event->reveal());
     }
 
-    public function testSetWorkflowStageToTestForRestore()
+    public function testSetWorkflowStageToTestForRestore(): void
     {
         $event = $this->prophesize(RestoreEvent::class);
         $event->getLocale()->willReturn('de');
@@ -337,7 +360,7 @@ class WorkflowStageSubscriberTest extends TestCase
         $this->workflowStageSubscriber->setWorkflowStageToTestForRestore($event->reveal());
     }
 
-    public function testSetWorkflowStageToTestForRestoreWithoutWorkflowStageBehavior()
+    public function testSetWorkflowStageToTestForRestoreWithoutWorkflowStageBehavior(): void
     {
         $event = $this->prophesize(RestoreEvent::class);
         $event->getLocale()->willReturn('de');
@@ -352,7 +375,7 @@ class WorkflowStageSubscriberTest extends TestCase
     }
 
     /**
-     * @return HydrateEvent
+     * @return HydrateEvent|ObjectProphecy
      */
     private function getHydrateEventMock()
     {
@@ -366,7 +389,7 @@ class WorkflowStageSubscriberTest extends TestCase
     }
 
     /**
-     * @return PersistEvent
+     * @return PersistEvent|ObjectProphecy
      */
     private function getPersistEventMock()
     {
@@ -379,7 +402,7 @@ class WorkflowStageSubscriberTest extends TestCase
     }
 
     /**
-     * @return PublishEvent
+     * @return PublishEvent|ObjectProphecy
      */
     private function getPublishEventMock()
     {
