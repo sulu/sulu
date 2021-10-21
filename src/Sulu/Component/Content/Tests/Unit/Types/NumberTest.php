@@ -124,17 +124,6 @@ class NumberTest extends TestCase
         ];
     }
 
-    /**
-     * @return array<string, mixed>
-     */
-    private function getEmptyStringSchema(): array
-    {
-        return [
-            'type' => 'string',
-            'maxLength' => 0,
-        ];
-    }
-
     public function testMapPropertyMetadata(): void
     {
         $propertyMetadata = new PropertyMetadata();
@@ -145,7 +134,6 @@ class NumberTest extends TestCase
         $this->assertEquals([
             'anyOf' => [
                 $this->getNullSchema(),
-                $this->getEmptyStringSchema(),
                 [
                     'type' => 'number',
                 ],
@@ -179,7 +167,6 @@ class NumberTest extends TestCase
         $this->assertEquals([
             'anyOf' => [
                 $this->getNullSchema(),
-                $this->getEmptyStringSchema(),
                 [
                     'type' => 'number',
                     'multipleOf' => 0.5,
@@ -201,7 +188,6 @@ class NumberTest extends TestCase
         $this->assertEquals([
             'anyOf' => [
                 $this->getNullSchema(),
-                $this->getEmptyStringSchema(),
                 [
                     'type' => 'integer',
                     'multipleOf' => 2.0,
@@ -223,7 +209,6 @@ class NumberTest extends TestCase
         $this->assertEquals([
             'anyOf' => [
                 $this->getNullSchema(),
-                $this->getEmptyStringSchema(),
                 [
                     'type' => 'integer',
                     'multipleOf' => 2.0,
@@ -272,7 +257,6 @@ class NumberTest extends TestCase
         $this->assertEquals([
             'anyOf' => [
                 $this->getNullSchema(),
-                $this->getEmptyStringSchema(),
                 [
                     'type' => 'number',
                     'minimum' => 2,
@@ -295,7 +279,6 @@ class NumberTest extends TestCase
         $this->assertEquals([
             'anyOf' => [
                 $this->getNullSchema(),
-                $this->getEmptyStringSchema(),
                 [
                     'type' => 'number',
                     'minimum' => 2,
@@ -317,7 +300,6 @@ class NumberTest extends TestCase
         $this->assertEquals([
             'anyOf' => [
                 $this->getNullSchema(),
-                $this->getEmptyStringSchema(),
                 [
                     'type' => 'number',
                     'maximum' => 2,
@@ -340,7 +322,6 @@ class NumberTest extends TestCase
         $this->assertEquals([
             'anyOf' => [
                 $this->getNullSchema(),
-                $this->getEmptyStringSchema(),
                 [
                     'type' => 'number',
                     'minimum' => 2,
@@ -364,7 +345,6 @@ class NumberTest extends TestCase
         $this->assertEquals([
             'anyOf' => [
                 $this->getNullSchema(),
-                $this->getEmptyStringSchema(),
                 [
                     'type' => 'number',
                     'minimum' => 1.2,

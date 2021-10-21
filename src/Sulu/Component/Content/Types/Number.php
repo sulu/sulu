@@ -14,7 +14,6 @@ namespace Sulu\Component\Content\Types;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyType;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\AnyOfsMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\EmptyStringMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\NullMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\NumberMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata;
@@ -101,7 +100,6 @@ class Number extends SimpleContentType implements PropertyMetadataMapperInterfac
         if (!$mandatory) {
             $numberMetadata = new AnyOfsMetadata([
                 new NullMetadata(),
-                new EmptyStringMetadata(),
                 $numberMetadata,
             ]);
         }
