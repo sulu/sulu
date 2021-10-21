@@ -233,7 +233,12 @@ class WebspaceImport extends Import implements WebspaceImportInterface
 
             // save document
             $this->documentManager->persist($document, $locale);
-            $this->documentManager->publish($document, $locale);
+            
+            // Only publish when workflowStage is set to published.
+            if (2 == $data['workflowStage']['value']){
+                $this->documentManager->publish($document, $locale);
+            }
+
             $this->documentManager->flush();
             $this->documentRegistry->clear(); // FIXME else it failed on multiple page import
 
