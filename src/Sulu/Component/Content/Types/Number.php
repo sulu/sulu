@@ -13,13 +13,21 @@ namespace Sulu\Component\Content\Types;
 
 use PHPCR\NodeInterface;
 use PHPCR\PropertyType;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\AnyOfsMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\EmptyStringMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\NullMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\NumberMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapperInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
+use Sulu\Component\Content\Metadata\PropertyMetadata as ContentPropertyMetadata;
 use Sulu\Component\Content\SimpleContentType;
+use Webmozart\Assert\Assert;
 
 /**
  * ContentType for Number.
  */
-class Number extends SimpleContentType
+class Number extends SimpleContentType implements PropertyMetadataMapperInterface
 {
     public function __construct()
     {
@@ -56,5 +64,67 @@ class Number extends SimpleContentType
         $property->setValue($this->decodeValue($value));
 
         return $value;
+    }
+
+    public function mapPropertyMetadata(ContentPropertyMetadata $propertyMetadata): PropertyMetadata
+    {
+        $mandatory = $propertyMetadata->isRequired();
+
+        $min = $this->getFloatParam($propertyMetadata, 'min');
+        $max = $this->getFloatParam($propertyMetadata, 'max');
+        $multipleOf = $this->getFloatParam($propertyMetadata, 'multiple_of');
+
+        Assert::nullOrGreaterThan($multipleOf, 0, \sprintf(
+            'Parameter "%s" of property "%s" needs to be greater than "0"',
+            'multiple_of',
+            $propertyMetadata->getName()
+        ));
+
+        if (null !== $min && null !== $max) {
+            Assert::greaterThanEq($max, $min, \sprintf(
+                'Because parameter "%1$s" of property "%2$s" has value "%4$s", parameter "%3$s" needs to be greater than or equal "%4$s"',
+                'min',
+                $propertyMetadata->getName(),
+                'max',
+                \strval($min)
+            ));
+        }
+
+        $numberMetadata = new NumberMetadata(
+            $min,
+            $max,
+            $multipleOf
+        );
+
+        if (!$mandatory) {
+            $numberMetadata = new AnyOfsMetadata([
+                new NullMetadata(),
+                new EmptyStringMetadata(),
+                $numberMetadata,
+            ]);
+        }
+
+        return new PropertyMetadata(
+            $propertyMetadata->getName(),
+            $mandatory,
+            $numberMetadata
+        );
+    }
+
+    private function getFloatParam(ContentPropertyMetadata $propertyMetadata, string $paramName): ?float
+    {
+        $value = $propertyMetadata->getParameter($paramName)['value'] ?? null;
+
+        if (null === $value) {
+            return null;
+        }
+
+        Assert::numeric($value, \sprintf(
+            'Parameter "%s" of property "%s" needs to be either null or numeric',
+            $paramName,
+            $propertyMetadata->getName()
+        ));
+
+        return (float) $value;
     }
 }
