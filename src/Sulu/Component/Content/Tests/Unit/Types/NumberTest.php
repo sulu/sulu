@@ -114,6 +114,9 @@ class NumberTest extends TestCase
         $this->number->write($this->node->reveal(), $this->property->reveal(), 1, 'sulu_io', 'de', null);
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private function getNullSchema(): array
     {
         return [
@@ -121,6 +124,9 @@ class NumberTest extends TestCase
         ];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private function getEmptyStringSchema(): array
     {
         return [

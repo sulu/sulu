@@ -68,6 +68,8 @@ class Number extends SimpleContentType implements PropertyMetadataMapperInterfac
 
     public function mapPropertyMetadata(ContentPropertyMetadata $propertyMetadata): PropertyMetadata
     {
+        /** @var string $propertyName */
+        $propertyName = $propertyMetadata->getName();
         $mandatory = $propertyMetadata->isRequired();
 
         $min = $this->getFloatParam($propertyMetadata, 'min');
@@ -77,14 +79,14 @@ class Number extends SimpleContentType implements PropertyMetadataMapperInterfac
         Assert::nullOrGreaterThan($multipleOf, 0, \sprintf(
             'Parameter "%s" of property "%s" needs to be greater than "0"',
             'multiple_of',
-            $propertyMetadata->getName()
+            $propertyName
         ));
 
         if (null !== $min && null !== $max) {
             Assert::greaterThanEq($max, $min, \sprintf(
                 'Because parameter "%1$s" of property "%2$s" has value "%4$s", parameter "%3$s" needs to be greater than or equal "%4$s"',
                 'min',
-                $propertyMetadata->getName(),
+                $propertyName,
                 'max',
                 \strval($min)
             ));
@@ -105,7 +107,7 @@ class Number extends SimpleContentType implements PropertyMetadataMapperInterfac
         }
 
         return new PropertyMetadata(
-            $propertyMetadata->getName(),
+            $propertyName,
             $mandatory,
             $numberMetadata
         );
