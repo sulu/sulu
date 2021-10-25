@@ -168,32 +168,9 @@ class AnalyticsTrashItemHandler implements StoreTrashItemHandlerInterface, Resto
         $analytics->setContent($this->getValue($data, 'content', ''));
         $analytics->setAllDomains($this->getValue($data, 'allDomains', false));
 
-        if ($analytics->isAllDomains()) {
-            $analytics->clearDomains();
-
-            return;
-        }
-
-        $domains = [];
-        $domainCollection = $analytics->getDomains();
-        if ($domainCollection) {
-            $domains = $domainCollection->toArray();
-        }
-
         foreach ($this->getValue($data, 'domains', []) as $domain) {
-            if (\in_array($domain, $domains)) {
-                unset($domains[\array_search($domain, $domains)]);
-
-                continue;
-            }
-
             $domainEntity = $this->findOrCreateNewDomain($domain);
             $analytics->addDomain($domainEntity);
-        }
-
-        foreach ($domains as $domain) {
-            $domainEntity = $this->findOrCreateNewDomain($domain);
-            $analytics->removeDomain($domainEntity);
         }
     }
 

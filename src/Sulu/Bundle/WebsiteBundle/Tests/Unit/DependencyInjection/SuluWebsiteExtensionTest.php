@@ -26,6 +26,7 @@ class SuluWebsiteExtensionTest extends AbstractExtensionTestCase
     public function testLoadNoContext()
     {
         $this->container->setParameter('sulu.context', null);
+        $this->container->setParameter('kernel.bundles', []);
         $this->load();
         $this->assertContainerBuilderNotHasService('sulu_website.data_collector.sulu_collector');
     }
@@ -33,6 +34,7 @@ class SuluWebsiteExtensionTest extends AbstractExtensionTestCase
     public function testLoadWithContextWebsite()
     {
         $this->container->setParameter('sulu.context', 'website');
+        $this->container->setParameter('kernel.bundles', []);
         $this->load();
         $this->assertContainerBuilderHasService('sulu_website.data_collector.sulu_collector');
     }
@@ -40,6 +42,15 @@ class SuluWebsiteExtensionTest extends AbstractExtensionTestCase
     public function testLoadWithContextAdmin()
     {
         $this->container->setParameter('sulu.context', 'admin');
+        $this->container->setParameter('kernel.bundles', []);
+        $this->load();
+        $this->assertContainerBuilderNotHasService('sulu_website.data_collector.sulu_collector');
+    }
+
+    public function testLoadWithContextAdminAndTrashBundle()
+    {
+        $this->container->setParameter('sulu.context', 'admin');
+        $this->container->setParameter('kernel.bundles', ['SuluTrashBundle' => true]);
         $this->load();
         $this->assertContainerBuilderNotHasService('sulu_website.data_collector.sulu_collector');
     }
