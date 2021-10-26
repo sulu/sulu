@@ -422,6 +422,8 @@
         <service id="Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface" alias="sulu_media.system_collections.manager"/>
 
         <service id="sulu_media.system_collections.builder" class="Sulu\Component\Media\SystemCollections\SystemCollectionBuilder">
+            <argument type="service" id="sulu_media.system_collections.manager"/>
+
             <tag name="massive_build.builder" />
         </service>
 

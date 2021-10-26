@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\CustomUrlBundle\Tests\Functional\Controller;
 
+use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 

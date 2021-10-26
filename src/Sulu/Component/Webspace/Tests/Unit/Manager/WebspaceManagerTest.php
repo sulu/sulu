@@ -12,6 +12,7 @@
 namespace Sulu\Component\Webspace\Tests\Unit;
 
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
@@ -37,7 +38,7 @@ class WebspaceManagerTest extends WebspaceTestCase
     protected $loader;
 
     /**
-     * @var RequestStack
+     * @var ObjectProphecy|RequestStack
      */
     private $requestStack;
 
@@ -52,7 +53,7 @@ class WebspaceManagerTest extends WebspaceTestCase
     private $cacheDirectory;
 
     /**
-     * @var ObjectProphecy
+     * @var ObjectProphecy|StructureMetadataFactoryInterface
      */
     private $structureMetadataFactory;
 
