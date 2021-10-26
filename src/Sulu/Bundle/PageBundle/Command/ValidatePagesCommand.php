@@ -68,7 +68,7 @@ class ValidatePagesCommand extends Command
             ->setDescription('Dumps pages without valid templates');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $webspaceKey = $input->getArgument('webspaceKey');
 

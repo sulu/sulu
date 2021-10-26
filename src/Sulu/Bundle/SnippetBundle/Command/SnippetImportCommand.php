@@ -52,7 +52,7 @@ class SnippetImportCommand extends Command
             ->setDescription('Import snippet translations from xliff file into a specific language.');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $filePath = $input->getArgument('file');
 
@@ -98,7 +98,7 @@ class SnippetImportCommand extends Command
 
         $this->printExceptions($import, $output);
 
-        return $import->fails;
+        return (int) $import->fails;
     }
 
     /**

@@ -104,7 +104,7 @@ EOT
         $this->addOption('dry-run', null, InputOption::VALUE_NONE, 'Do not persist changes');
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $srcLocale = $input->getArgument('srcLocale');
         $destLocale = $input->getArgument('destLocale');

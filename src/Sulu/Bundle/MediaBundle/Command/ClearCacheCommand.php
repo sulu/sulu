@@ -40,7 +40,7 @@ class ClearCacheCommand extends Command
         ;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $cache = $input->getArgument('cache');
 

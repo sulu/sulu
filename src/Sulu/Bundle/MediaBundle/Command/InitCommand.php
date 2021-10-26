@@ -43,7 +43,7 @@ class InitCommand extends Command
         $this->setDescription('Init Sulu Media Bundle');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln('Create Media Cache dir in ' . $this->formatCacheDir);
 

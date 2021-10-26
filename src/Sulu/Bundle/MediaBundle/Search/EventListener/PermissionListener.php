@@ -15,11 +15,12 @@ use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMetaRepository;
 use Sulu\Component\Security\Event\PermissionUpdateEvent;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Removes a media from the index, as soon as it gets secured.
  */
-class PermissionListener
+class PermissionListener implements EventSubscriberInterface
 {
     /**
      * @var FileVersionMetaRepository
@@ -37,6 +38,11 @@ class PermissionListener
     ) {
         $this->fileVersionMetaRepository = $fileVersionMetaRepository;
         $this->searchManager = $searchManager;
+    }
+
+    public static function getSubscribedEvents(): array
+    {
+        return ['sulu_security.permission_update' => 'onPermissionUpdate'];
     }
 
     /**
