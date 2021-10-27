@@ -1,5 +1,19 @@
 # Upgrade
 
+## 2.2.17
+
+### Add missing on delete cascade on CategoryTranslation to Keyword relation
+
+The relation table `ca_category_translation_keywords` is missing a `ON DELETE CASCADE`
+to the related entities.
+
+```sql
+ALTER TABLE ca_category_translation_keywords DROP FOREIGN KEY FK_D15FBE3717CA14DA;
+ALTER TABLE ca_category_translation_keywords DROP FOREIGN KEY FK_D15FBE37F9FC9F05;
+ALTER TABLE ca_category_translation_keywords ADD CONSTRAINT FK_D15FBE3717CA14DA FOREIGN KEY (idCategoryTranslations) REFERENCES ca_category_translations (id) ON DELETE CASCADE;
+ALTER TABLE ca_category_translation_keywords ADD CONSTRAINT FK_D15FBE37F9FC9F05 FOREIGN KEY (idKeywords) REFERENCES ca_keywords (id) ON DELETE CASCADE;
+```
+
 ## 2.2.15
 
 ### Add doctrine/dbal 3 and doctrine/orm 2.10 support
@@ -7,11 +21,11 @@
 The doctrine/orm 2.10 did remove the deprecated `json_array` type which need to be patched to `json` type.
 
 ```sql
-ALTER TABLE se_role_settings CHANGE value value JSON NOT NULL;
-ALTER TABLE we_analytics CHANGE content content JSON NOT NULL;
+ALTER TABLE se_role_settings CHANGE `value` `value` JSON NOT NULL;
+ALTER TABLE we_analytics CHANGE `content` `content` JSON NOT NULL;
 
 -- if you use audience targeting also the following is required:
-ALTER TABLE at_target_group_conditions CHANGE condition condition JSON NOT NULL
+ALTER TABLE at_target_group_conditions CHANGE `condition` `condition` JSON NOT NULL
 ```
 
 If you upgrade doctrine/dbal to Version 3 see the [DBAL 3.0 UPGRADE.md](https://github.com/doctrine/dbal/blob/3.1.x/UPGRADE.md#upgrade-to-30).
