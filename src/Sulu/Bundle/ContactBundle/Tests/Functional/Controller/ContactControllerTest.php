@@ -41,6 +41,7 @@ use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class ContactControllerTest extends SuluTestCase
@@ -1848,6 +1849,11 @@ class ContactControllerTest extends SuluTestCase
         $this->client->jsonRequest('GET', '/api/contacts/' . $contactId);
 
         $this->assertHttpStatusCode(404, $this->client->getResponse());
+
+        $trashItemRepository = $this->em->getRepository(TrashItemInterface::class);
+
+        $trashItem = $trashItemRepository->findOneBy(['resourceKey' => 'contacts', 'resourceId' => $contactId]);
+        $this->assertNotNull($trashItem);
     }
 
     public function testDeleteNotExisting()
