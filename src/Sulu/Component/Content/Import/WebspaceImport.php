@@ -20,6 +20,7 @@ use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
+use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Exception\ResourceLocatorGeneratorException;
 use Sulu\Component\Content\Extension\ExportExtensionInterface;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
@@ -233,9 +234,9 @@ class WebspaceImport extends Import implements WebspaceImportInterface
 
             // save document
             $this->documentManager->persist($document, $locale);
-            
+
             // Only publish when workflowStage is set to published.
-            if (2 == $data['workflowStage']['value']){
+            if (WorkflowStage::PUBLISHED == ((int) $data['workflowStage']['value'])){
                 $this->documentManager->publish($document, $locale);
             }
 
