@@ -42,6 +42,7 @@ use Sulu\Bundle\PageBundle\Content\Types\Phone;
 use Sulu\Bundle\SecurityBundle\Domain\Event\UserRemovedEvent;
 use Sulu\Bundle\SecurityBundle\Entity\UserRepository;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
+use Sulu\Bundle\TrashBundle\Application\TrashManager\TrashManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
@@ -81,6 +82,11 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
      */
     protected $userRepository;
 
+    /**
+     * @var TrashManagerInterface|null
+     */
+    private $trashManager;
+
     public function __construct(
         ObjectManager $em,
         TagManagerInterface $tagManager,
@@ -90,7 +96,8 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
         ContactRepository $contactRepository,
         MediaRepositoryInterface $mediaRepository,
         DomainEventCollectorInterface $domainEventCollector,
-        UserRepository $userRepository
+        UserRepository $userRepository,
+        ?TrashManagerInterface $trashManager
     ) {
         parent::__construct($em, $tagManager, $mediaManager);
         $this->accountRepository = $accountRepository;
@@ -99,6 +106,7 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
         $this->mediaRepository = $mediaRepository;
         $this->domainEventCollector = $domainEventCollector;
         $this->userRepository = $userRepository;
+        $this->trashManager = $trashManager;
     }
 
     /**
@@ -159,6 +167,10 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
 
             if (!$contact) {
                 throw new EntityNotFoundException($this->contactRepository->getClassName(), $id);
+            }
+
+            if ($this->trashManager) {
+                $this->trashManager->store(ContactInterface::RESOURCE_KEY, $contact);
             }
 
             $contactId = $contact->getId();

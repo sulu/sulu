@@ -53,6 +53,15 @@ A new method has been added to the `StorageInterface` to allow for moving files:
 
 - `move`
 
+### ContactInterface was changed
+
+Extends now from the `AuditableInterface`:
+
+- `getCreated`
+- `getChanged`
+- `getCreator`
+- `getChanger`
+
 ### MediaInterface was changed
 
 A new method has been added to the `MediaInterface`:
@@ -75,6 +84,8 @@ call to pass the correct parameters:
 - `Sulu\Bundle\CategoryBundle\Category\CategoryManager`
 - `Sulu\Bundle\MediaBundle\Media\Manager\MediaManager`
 - `Sulu\Bundle\WebsiteBundle\Analytics\AnalyticsManager`
+- `Sulu\Bundle\ContactBundle\Contact\ContactManager`
+- `Sulu\Bundle\ContactBundle\Controller\AccountController`
 
 ### Added SuluTrashBundle to make resources trashable/restorable
 

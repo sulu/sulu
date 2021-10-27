@@ -15,11 +15,12 @@ use Doctrine\Common\Collections\Collection;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
+use Sulu\Component\Persistence\Model\AuditableInterface;
 
 /**
  * Contact interface.
  */
-interface ContactInterface
+interface ContactInterface extends AuditableInterface
 {
     public const RESOURCE_KEY = 'contacts';
 
@@ -81,7 +82,7 @@ interface ContactInterface
     /**
      * Set title.
      *
-     * @param object $title
+     * @param ContactTitle|null $title
      *
      * @return ContactInterface
      */
@@ -90,7 +91,7 @@ interface ContactInterface
     /**
      * Get title.
      *
-     * @return string
+     * @return ContactTitle|null
      */
     public function getTitle();
 
@@ -113,7 +114,7 @@ interface ContactInterface
     /**
      * Set birthday.
      *
-     * @param \DateTime $birthday
+     * @param \DateTime|null $birthday
      *
      * @return ContactInterface
      */
