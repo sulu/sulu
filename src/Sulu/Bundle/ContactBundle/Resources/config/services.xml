@@ -115,6 +115,7 @@
             <argument type="service" id="sulu_activity.domain_event_collector"/>
             <argument>%sulu.model.account.class%</argument>
             <argument>%sulu.model.contact.class%</argument>
+            <argument type="service" id="sulu_trash.trash_manager" on-invalid="null"/>
 
             <tag name="sulu.context" context="admin"/>
         </service>

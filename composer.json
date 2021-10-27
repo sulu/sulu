@@ -120,7 +120,7 @@
         "microsoft/azure-storage-blob": "^1.2",
         "php-ffmpeg/php-ffmpeg": "0.13 - 0.17",
         "phpcr/phpcr-shell": "^1.0",
-        "phpspec/prophecy": "^1.8",
+        "phpspec/prophecy": "^1.14.0",
         "phpstan/phpstan": "^0.12",
         "phpstan/phpstan-doctrine": "^0.12.33",
         "phpstan/phpstan-phpunit": "^0.12.18",
