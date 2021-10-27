@@ -38,6 +38,7 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class AccountControllerTest extends SuluTestCase
@@ -59,12 +60,18 @@ class AccountControllerTest extends SuluTestCase
      */
     private $activityRepository;
 
+    /**
+     * @var ObjectRepository<TrashItemInterface>
+     */
+    private $trashItemRepository;
+
     public function setUp(): void
     {
         $this->client = $this->createAuthenticatedClient();
         $this->purgeDatabase();
         $this->em = $this->getEntityManager();
         $this->activityRepository = $this->em->getRepository(ActivityInterface::class);
+        $this->trashItemRepository = $this->em->getRepository(TrashItemInterface::class);
     }
 
     /**
@@ -1408,12 +1415,16 @@ class AccountControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
-        $this->client->jsonRequest('DELETE', '/api/accounts/' . $account->getId());
+        $accountId = $account->getId();
+        $this->client->jsonRequest('DELETE', '/api/accounts/' . $accountId);
         $this->assertHttpStatusCode(204, $this->client->getResponse());
 
         /** @var ActivityInterface $activity */
         $activity = $this->activityRepository->findOneBy(['type' => 'removed']);
         $this->assertSame((string) $account->getId(), $activity->getResourceId());
+
+        $trashItem = $this->trashItemRepository->findOneBy(['resourceKey' => 'accounts', 'resourceId' => $accountId]);
+        $this->assertNotNull($trashItem);
     }
 
     public function testDeleteParentById()

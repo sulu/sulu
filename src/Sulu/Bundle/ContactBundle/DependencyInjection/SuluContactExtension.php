@@ -280,6 +280,8 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
 
     public function load(array $configs, ContainerBuilder $container)
     {
+        $bundles = $container->getParameter('kernel.bundles');
+
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
@@ -287,6 +289,10 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
         $loader->load('services.xml');
         $loader->load('content.xml');
         $loader->load('command.xml');
+
+        if (\array_key_exists('SuluTrashBundle', $bundles)) {
+            $loader->load('services_trash.xml');
+        }
 
         $container->setParameter(
             'sulu_contact.defaults',

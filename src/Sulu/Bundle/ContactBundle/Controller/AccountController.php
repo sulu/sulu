@@ -31,6 +31,7 @@ use Sulu\Bundle\ContactBundle\Entity\Address as AddressEntity;
 use Sulu\Bundle\ContactBundle\Entity\Contact as ContactEntity;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
+use Sulu\Bundle\TrashBundle\Application\TrashManager\TrashManagerInterface;
 use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
@@ -152,6 +153,11 @@ class AccountController extends AbstractRestController implements ClassResourceI
      */
     private $contactClass;
 
+    /**
+     * @var TrashManagerInterface|null
+     */
+    private $trashManager;
+
     public function __construct(
         ViewHandlerInterface $viewHandler,
         TokenStorageInterface $tokenStorage,
@@ -165,7 +171,8 @@ class AccountController extends AbstractRestController implements ClassResourceI
         AccountFactoryInterface $accountFactory,
         DomainEventCollectorInterface $domainEventCollector,
         string $accountClass,
-        string $contactClass
+        string $contactClass,
+        ?TrashManagerInterface $trashManager
     ) {
         parent::__construct($viewHandler, $tokenStorage);
         $this->restHelper = $restHelper;
@@ -179,6 +186,7 @@ class AccountController extends AbstractRestController implements ClassResourceI
         $this->domainEventCollector = $domainEventCollector;
         $this->accountClass = $accountClass;
         $this->contactClass = $contactClass;
+        $this->trashManager = $trashManager;
     }
 
     /**
@@ -796,6 +804,10 @@ class AccountController extends AbstractRestController implements ClassResourceI
 
             if (!$account) {
                 throw new EntityNotFoundException($this->getAccountEntityName(), $id);
+            }
+
+            if ($this->trashManager) {
+                $this->trashManager->store(AccountInterface::RESOURCE_KEY, $account);
             }
 
             $addresses = $account->getAddresses();
