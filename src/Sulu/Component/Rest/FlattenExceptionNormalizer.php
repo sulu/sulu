@@ -69,6 +69,6 @@ class FlattenExceptionNormalizer implements NormalizerInterface
 
     public function supportsNormalization($data, $format = null)
     {
-        return $this->decoratedNormalizer->supportsNormalization($data, $format);
+        return $data instanceof FlattenException;
     }
 }
