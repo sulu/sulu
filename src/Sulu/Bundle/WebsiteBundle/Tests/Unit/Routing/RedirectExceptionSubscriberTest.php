@@ -13,6 +13,7 @@ namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\Routing;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\WebsiteBundle\EventListener\RedirectExceptionSubscriber;
 use Sulu\Bundle\WebsiteBundle\Locale\DefaultLocaleProviderInterface;
 use Sulu\Component\Localization\Localization;
@@ -35,22 +36,22 @@ use Symfony\Component\Routing\Route;
 class RedirectExceptionSubscriberTest extends TestCase
 {
     /**
-     * @var RequestMatcherInterface
+     * @var RequestMatcherInterface|ObjectProphecy
      */
     private $router;
 
     /**
-     * @var RequestAnalyzerInterface
+     * @var RequestAnalyzerInterface|ObjectProphecy
      */
     private $requestAnalyzer;
 
     /**
-     * @var DefaultLocaleProviderInterface
+     * @var DefaultLocaleProviderInterface|ObjectProphecy
      */
     private $defaultLocaleProvider;
 
     /**
-     * @var ReplacerInterface
+     * @var ReplacerInterface|ObjectProphecy
      */
     private $urlReplacer;
 
@@ -60,12 +61,12 @@ class RedirectExceptionSubscriberTest extends TestCase
     private $exceptionListener;
 
     /**
-     * @var RequestAttributes
+     * @var RequestAttributes|ObjectProphecy
      */
     private $attributes;
 
     /**
-     * @var Request
+     * @var Request|ObjectProphecy
      */
     private $request;
 
@@ -75,7 +76,7 @@ class RedirectExceptionSubscriberTest extends TestCase
     private $event;
 
     /**
-     * @var HttpKernelInterface
+     * @var HttpKernelInterface|ObjectProphecy
      */
     private $kernel;
 
@@ -108,7 +109,7 @@ class RedirectExceptionSubscriberTest extends TestCase
         );
     }
 
-    public function testRedirectTrailingSlash()
+    public function testRedirectTrailingSlash(): void
     {
         $this->attributes->getAttribute('resourceLocator', null)->willReturn('/test/');
         $this->attributes->getAttribute('resourceLocatorPrefix', null)->willReturn('/de');
@@ -127,7 +128,7 @@ class RedirectExceptionSubscriberTest extends TestCase
         $this->assertSame('/de/test', $redirectResponse->getTargetUrl());
     }
 
-    public function testRedirectSlashToHomepage()
+    public function testRedirectSlashToHomepage(): void
     {
         $this->attributes->getAttribute('resourceLocator', null)->willReturn('/');
         $this->attributes->getAttribute('resourceLocatorPrefix', null)->willReturn(null);
@@ -146,7 +147,7 @@ class RedirectExceptionSubscriberTest extends TestCase
         $this->assertSame('/', $redirectResponse->getTargetUrl());
     }
 
-    public function testRedirectDoubleSlashToHomepage()
+    public function testRedirectDoubleSlashToHomepage(): void
     {
         $this->attributes->getAttribute('resourceLocator', null)->willReturn('//');
         $this->attributes->getAttribute('resourceLocatorPrefix', null)->willReturn(null);
@@ -165,7 +166,7 @@ class RedirectExceptionSubscriberTest extends TestCase
         $this->assertSame('/', $redirectResponse->getTargetUrl());
     }
 
-    public function testRedirectTrailingHtml()
+    public function testRedirectTrailingHtml(): void
     {
         $this->attributes->getAttribute('resourceLocator', null)->willReturn('/test');
         $this->attributes->getAttribute('resourceLocatorPrefix', null)->willReturn('/de');
@@ -184,7 +185,7 @@ class RedirectExceptionSubscriberTest extends TestCase
         $this->assertSame('/de/test', $redirectResponse->getTargetUrl());
     }
 
-    public function testRedirectJson()
+    public function testRedirectJson(): void
     {
         $this->attributes->getAttribute('resourceLocator', null)->willReturn('/test');
         $this->attributes->getAttribute('resourceLocatorPrefix', null)->willReturn('/de');
@@ -201,7 +202,7 @@ class RedirectExceptionSubscriberTest extends TestCase
         $this->assertNull($this->event->getResponse());
     }
 
-    public function testRedirectTrailingHtmlNotExists()
+    public function testRedirectTrailingHtmlNotExists(): void
     {
         $this->attributes->getAttribute('resourceLocator', null)->willReturn('/test');
         $this->attributes->getAttribute('resourceLocatorPrefix', null)->willReturn('/de');
@@ -216,7 +217,7 @@ class RedirectExceptionSubscriberTest extends TestCase
         $this->assertNull($this->event->getResponse());
     }
 
-    public function testRedirectPartialMatchNoLocalization()
+    public function testRedirectPartialMatchNoLocalization(): void
     {
         $portal = new Portal();
         $portal->setKey('portal');
@@ -248,7 +249,7 @@ class RedirectExceptionSubscriberTest extends TestCase
         $this->assertSame('http://sulu.lo', $redirectResponse->getTargetUrl());
     }
 
-    public function testRedirectPartialMatchNoLocalizationRedirect()
+    public function testRedirectPartialMatchNoLocalizationRedirect(): void
     {
         $portal = new Portal();
         $portal->setKey('portal');
@@ -280,7 +281,7 @@ class RedirectExceptionSubscriberTest extends TestCase
         $this->assertSame('http://sulu.lo', $redirectResponse->getTargetUrl());
     }
 
-    public function testRedirectPartialMatchSlashOnly()
+    public function testRedirectPartialMatchSlashOnly(): void
     {
         $portal = new Portal();
         $portal->setKey('portal');
@@ -316,7 +317,45 @@ class RedirectExceptionSubscriberTest extends TestCase
         $this->assertSame('http://sulu.lo/de', $redirectResponse->getTargetUrl());
     }
 
-    public function testRedirectPartialMatch()
+    public function testRedirectPartialMatchSlashOnlyWithFormat(): void
+    {
+        $portal = new Portal();
+        $portal->setKey('portal');
+        $webspace = new Webspace();
+        $webspace->setKey('webspace');
+        $webspace->setTheme('theme');
+        $portal->setWebspace($webspace);
+        $this->attributes->getAttribute('portal', null)->willReturn($portal);
+
+        $this->attributes->getAttribute('localization', null)->willReturn(null);
+        $this->attributes->getAttribute('matchType', null)->willReturn(RequestAnalyzer::MATCH_TYPE_REDIRECT);
+        $this->attributes->getAttribute('resourceLocator', null)->willReturn('/');
+        $this->attributes->getAttribute('resourceLocatorPrefix', null)->willReturn('/de');
+        $this->attributes->getAttribute('redirect', null)->willReturn('sulu.lo/de');
+        $this->attributes->getAttribute('portalUrl', null)->willReturn('sulu.lo/de/');
+
+        $localization = new Localization();
+        $localization->setLanguage('de');
+        $this->defaultLocaleProvider->getDefaultLocale()->willReturn($localization);
+
+        $this->urlReplacer->replaceCountry(Argument::cetera())->shouldBeCalled()->willReturn('sulu.lo/de');
+        $this->urlReplacer->replaceLanguage(Argument::cetera())->shouldBeCalled()->willReturn('sulu.lo/de');
+        $this->urlReplacer->replaceLocalization(Argument::cetera())->shouldBeCalled()->willReturn('sulu.lo/de');
+
+        $this->router->matchRequest(Argument::type(Request::class))->willReturn(
+            $this->prophesize(Route::class)->reveal()
+        );
+
+        $this->request->getUri()->willReturn('sulu.lo/.json');
+
+        $this->exceptionListener->redirectPartialMatch($this->event);
+
+        $redirectResponse = $this->event->getResponse();
+        $this->assertInstanceOf(RedirectResponse::class, $redirectResponse);
+        $this->assertSame('http://sulu.lo/de.json', $redirectResponse->getTargetUrl());
+    }
+
+    public function testRedirectPartialMatch(): void
     {
         $portal = new Portal();
         $portal->setKey('portal');
@@ -363,7 +402,7 @@ class RedirectExceptionSubscriberTest extends TestCase
         $this->assertSame('http://sulu.lo/de-at', $redirectResponse->getTargetUrl());
     }
 
-    public function testRedirectPartialMatchNotExists()
+    public function testRedirectPartialMatchNotExists(): void
     {
         $portal = new Portal();
         $portal->setKey('portal');
@@ -400,7 +439,7 @@ class RedirectExceptionSubscriberTest extends TestCase
         $this->assertNull($this->event->getResponse());
     }
 
-    public function testRedirectPartialMatchForRedirect()
+    public function testRedirectPartialMatchForRedirect(): void
     {
         $portal = new Portal();
         $portal->setKey('portal');
@@ -434,7 +473,7 @@ class RedirectExceptionSubscriberTest extends TestCase
         $this->assertSame('http://sulu.lo', $redirectResponse->getTargetUrl());
     }
 
-    public function testRedirectPartialMatchWithDoubleSlashOnly()
+    public function testRedirectPartialMatchWithDoubleSlashOnly(): void
     {
         $localization = new Localization('de', 'at');
         $this->attributes->getAttribute('localization', null)->willReturn($localization);
@@ -461,7 +500,10 @@ class RedirectExceptionSubscriberTest extends TestCase
         $this->assertSame('http://sulu.lo/de-at', $redirectResponse->getTargetUrl());
     }
 
-    public function provideResolveData()
+    /**
+     * @return mixed[]
+     */
+    public function provideResolveData(): array
     {
         return [
             ['http://sulu.lo/articles?foo=bar', 'sulu.lo', 'sulu.lo/en', 'http://sulu.lo/en/articles?foo=bar'],
@@ -512,7 +554,7 @@ class RedirectExceptionSubscriberTest extends TestCase
         $redirectUrl,
         $expectedTargetUrl,
         $prefix = ''
-    ) {
+    ): void {
         $this->request->getUri()->willReturn($requestUri);
 
         $localization = new Localization('de');
