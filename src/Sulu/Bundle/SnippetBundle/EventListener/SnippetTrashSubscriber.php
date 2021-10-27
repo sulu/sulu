@@ -11,10 +11,10 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\PageBundle\EventListener;
+namespace Sulu\Bundle\SnippetBundle\EventListener;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Sulu\Bundle\PageBundle\Document\BasePageDocument;
+use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\TrashBundle\Application\TrashManager\TrashManagerInterface;
 use Sulu\Component\DocumentManager\Event\ClearEvent;
 use Sulu\Component\DocumentManager\Event\FlushEvent;
@@ -25,7 +25,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 /**
  * @internal
  */
-final class PageTrashSubscriber implements EventSubscriberInterface
+final class SnippetTrashSubscriber implements EventSubscriberInterface
 {
     /**
      * @var TrashManagerInterface
@@ -56,21 +56,21 @@ final class PageTrashSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            Events::REMOVE => ['storePageToTrash', 1024],
+            Events::REMOVE => ['storeSnippetToTrash', 1024],
             Events::FLUSH => 'flushTrashItem',
             Events::CLEAR => 'clearPendingTrashItem',
         ];
     }
 
-    public function storePageToTrash(RemoveEvent $event): void
+    public function storeSnippetToTrash(RemoveEvent $event): void
     {
         $document = $event->getDocument();
 
-        if (!$document instanceof BasePageDocument) {
+        if (!$document instanceof SnippetDocument) {
             return;
         }
 
-        $this->trashManager->store(BasePageDocument::RESOURCE_KEY, $document);
+        $this->trashManager->store(SnippetDocument::RESOURCE_KEY, $document);
         $this->hasPendingTrashItem = true;
     }
 

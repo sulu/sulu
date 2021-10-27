@@ -185,6 +185,8 @@ class SuluSnippetExtension extends Extension implements PrependExtensionInterfac
 
     public function load(array $configs, ContainerBuilder $container)
     {
+        $bundles = $container->getParameter('kernel.bundles');
+
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
         $container->setParameter(
@@ -203,5 +205,9 @@ class SuluSnippetExtension extends Extension implements PrependExtensionInterfac
         $loader->load('import.xml');
         $loader->load('admin.xml');
         $loader->load('command.xml');
+
+        if (\array_key_exists('SuluTrashBundle', $bundles)) {
+            $loader->load('services_trash.xml');
+        }
     }
 }

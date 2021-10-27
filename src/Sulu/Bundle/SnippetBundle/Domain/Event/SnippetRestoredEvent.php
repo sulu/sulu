@@ -15,7 +15,7 @@ use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
 use Sulu\Bundle\SnippetBundle\Admin\SnippetAdmin;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 
-class SnippetCopiedEvent extends DomainEvent
+class SnippetRestoredEvent extends DomainEvent
 {
     /**
      * @var SnippetDocument
@@ -23,61 +23,36 @@ class SnippetCopiedEvent extends DomainEvent
     private $snippetDocument;
 
     /**
-     * @var string
+     * @var mixed[]
      */
-    private $sourceSnippetId;
+    private $payload;
 
     /**
-     * @var string|null
+     * @param mixed[] $payload
      */
-    private $sourceSnippetTitle;
-
-    /**
-     * @var string|null
-     */
-    private $sourceSnippetTitleLocale;
-
     public function __construct(
         SnippetDocument $snippetDocument,
-        string $sourceSnippetId,
-        ?string $sourceSnippetTitle,
-        ?string $sourceSnippetTitleLocale
+        array $payload
     ) {
         parent::__construct();
 
         $this->snippetDocument = $snippetDocument;
-        $this->sourceSnippetId = $sourceSnippetId;
-        $this->sourceSnippetTitle = $sourceSnippetTitle;
-        $this->sourceSnippetTitleLocale = $sourceSnippetTitleLocale;
+        $this->payload = $payload;
     }
 
-    /**
-     * @deprecated
-     */
-    public function getPageDocument(): SnippetDocument
-    {
-        @\trigger_error(\sprintf('The "%s" method is deprecated. Use "%s" instead.', __METHOD__, 'getSnippetDocument'), \E_USER_DEPRECATED);
-
-        return $this->getSnippetDocument();
-    }
-
-    public function getSnippetDocument(): SnippetDocument
+    public function getsnippetDocument(): SnippetDocument
     {
         return $this->snippetDocument;
     }
 
     public function getEventType(): string
     {
-        return 'copied';
+        return 'restored';
     }
 
-    public function getEventContext(): array
+    public function getEventPayload(): ?array
     {
-        return [
-            'sourceSnippetId' => $this->sourceSnippetId,
-            'sourceSnippetTitle' => $this->sourceSnippetTitle,
-            'sourceSnippetTitleLocale' => $this->sourceSnippetTitleLocale,
-        ];
+        return $this->payload;
     }
 
     public function getResourceKey(): string
