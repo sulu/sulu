@@ -15,6 +15,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Sulu\Bundle\ActivityBundle\Domain\Model\ActivityInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
 use Sulu\Bundle\WebsiteBundle\Analytics\AnalyticsManagerInterface;
 use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsInterface;
 use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsRepositoryInterface;
@@ -129,6 +130,17 @@ class BaseFunctional extends SuluTestCase
     {
         /** @var EntityRepository<ActivityInterface> $repository */
         $repository = $this->getEntityManager()->getRepository(ActivityInterface::class);
+
+        return $repository;
+    }
+
+    /**
+     * @return EntityRepository<TrashItemInterface>
+     */
+    protected function getTrashItemRepository(): EntityRepository
+    {
+        /** @var EntityRepository<TrashItemInterface> $repository */
+        $repository = $this->getEntityManager()->getRepository(TrashItemInterface::class);
 
         return $repository;
     }

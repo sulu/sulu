@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\WebsiteBundle\Tests\Functional\Analytics;
 
 use Sulu\Bundle\ActivityBundle\Domain\Model\Activity;
+use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
 use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsInterface;
 use Sulu\Bundle\WebsiteBundle\Tests\Functional\BaseFunctional;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -315,9 +316,21 @@ class AnalyticsManagerTest extends BaseFunctional
 
         /** @var Activity[] $activities */
         $activities = $activityRepository->findAll();
-        $this->assertCount(1, $activities);
-        $this->assertSame((string) $id, $activities[0]->getResourceId());
-        $this->assertSame('removed', $activities[0]->getType());
+        $this->assertCount(2, $activities);
+
+        $this->assertSame('trash_items', $activities[0]->getResourceKey());
+        $this->assertSame('created', $activities[0]->getType());
+
+        $this->assertSame((string) $id, $activities[1]->getResourceId());
+        $this->assertSame('analytics', $activities[1]->getResourceKey());
+        $this->assertSame('removed', $activities[1]->getType());
+
+        $trashItemRepository = $this->getTrashItemRepository();
+
+        /** @var TrashItemInterface[] $trashItems */
+        $trashItems = $trashItemRepository->findAll();
+        $this->assertCount(1, $trashItems);
+        $this->assertSame((string) $id, $trashItems[0]->getResourceId());
 
         $this->assertEmpty(
             \array_filter(
@@ -340,6 +353,14 @@ class AnalyticsManagerTest extends BaseFunctional
         $ids = [$id1, $id2];
         $this->analyticsManager->removeMultiple($ids);
         $this->getEntityManager()->flush();
+
+        $trashItemRepository = $this->getTrashItemRepository();
+
+        /** @var TrashItemInterface[] $trashItems */
+        $trashItems = $trashItemRepository->findAll();
+        $this->assertCount(2, $trashItems);
+        $this->assertSame((string) $ids[0], $trashItems[0]->getResourceId());
+        $this->assertSame((string) $ids[1], $trashItems[1]->getResourceId());
 
         $this->assertEmpty(
             \array_filter(
