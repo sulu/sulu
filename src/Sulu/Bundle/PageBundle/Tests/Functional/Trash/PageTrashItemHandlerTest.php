@@ -17,6 +17,7 @@ use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\PageBundle\Trash\PageTrashItemHandler;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 
@@ -53,7 +54,7 @@ class PageTrashItemHandlerTest extends SuluTestCase
         $homepageDocument = $this->documentManager->find('/cmf/test_io/contents');
 
         /** @var PageDocument $page1De */
-        $page1De = $this->documentManager->create('page');
+        $page1De = $this->documentManager->create(Structure::TYPE_PAGE);
         $page1De->setParent($homepageDocument);
         $page1De->setTitle('test-title-de');
         $page1De->setResourceSegment('test-resource-segment-de');
@@ -110,7 +111,7 @@ class PageTrashItemHandlerTest extends SuluTestCase
         $this->documentManager->persist($page1En, 'en');
 
         /** @var PageDocument $page2De */
-        $page2De = $this->documentManager->create('page');
+        $page2De = $this->documentManager->create(Structure::TYPE_PAGE);
         $page2De->setParent($homepageDocument);
         $page2De->setTitle('second page');
         $page2De->setResourceSegment('second-page');
@@ -213,7 +214,7 @@ class PageTrashItemHandlerTest extends SuluTestCase
         $homepageUuid = $homepageDocument->getUuid();
 
         /** @var PageDocument $pageDe */
-        $pageDe = $this->documentManager->create('page');
+        $pageDe = $this->documentManager->create(Structure::TYPE_PAGE);
         $pageDe->setParent($homepageDocument);
         $pageDe->setTitle('target-locale-title');
         $pageDe->setResourceSegment('target-locale-resource-segment-de');
@@ -268,7 +269,7 @@ class PageTrashItemHandlerTest extends SuluTestCase
         $homepageUuid = $homepageDocument->getUuid();
 
         /** @var PageDocument $pageDe */
-        $pageDe = $this->documentManager->create('page');
+        $pageDe = $this->documentManager->create(Structure::TYPE_PAGE);
         $pageDe->setParent($homepageDocument);
         $pageDe->setTitle('content-locale-title');
         $pageDe->setResourceSegment('content-locale-resource-segment');
@@ -326,7 +327,7 @@ class PageTrashItemHandlerTest extends SuluTestCase
         $homepageUuid = $homepageDocument->getUuid();
 
         /** @var PageDocument $pageDe */
-        $pageDe = $this->documentManager->create('page');
+        $pageDe = $this->documentManager->create(Structure::TYPE_PAGE);
         $pageDe->setParent($homepageDocument);
         $pageDe->setTitle('content-locale-title');
         $pageDe->setResourceSegment('content-locale-resource-segment');
