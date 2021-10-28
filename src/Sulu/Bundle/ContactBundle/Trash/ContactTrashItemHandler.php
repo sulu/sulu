@@ -256,7 +256,7 @@ final class ContactTrashItemHandler implements
             (string) $data['id'],
             \array_filter($data),
             \trim($resource->getFirstName() . ' ' . $resource->getLastName()),
-            ContactAdmin::ACCOUNT_SECURITY_CONTEXT,
+            ContactAdmin::CONTACT_SECURITY_CONTEXT,
             null,
             null
         );

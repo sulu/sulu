@@ -286,6 +286,26 @@ class Collection implements CollectionInterface, PermissionInheritanceInterface
     }
 
     /**
+     * @return $this
+     */
+    public function setCreated(\DateTime $created)
+    {
+        $this->created = $created;
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setChanged(\DateTime $changed)
+    {
+        $this->changed = $changed;
+
+        return $this;
+    }
+
+    /**
      * Set type.
      *
      * @return CollectionInterface

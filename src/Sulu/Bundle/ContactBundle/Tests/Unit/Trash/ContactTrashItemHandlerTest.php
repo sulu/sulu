@@ -45,12 +45,14 @@ use Sulu\Bundle\ContactBundle\Entity\UrlType;
 use Sulu\Bundle\ContactBundle\Trash\ContactTrashItemHandler;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
+use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Bundle\TrashBundle\Application\DoctrineRestoreHelper\DoctrineRestoreHelperInterface;
 use Sulu\Bundle\TrashBundle\Domain\Model\TrashItem;
 use Sulu\Bundle\TrashBundle\Domain\Repository\TrashItemRepositoryInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
 
 class ContactTrashItemHandlerTest extends TestCase
 {
@@ -152,7 +154,7 @@ class ContactTrashItemHandlerTest extends TestCase
         $this->assertSame('1', $trashItem->getResourceId());
         $this->assertSame('Minimal Contact', $trashItem->getResourceTitle());
         $this->assertSame('contacts', $trashItem->getResourceKey());
-        $this->assertSame('sulu.contact.organizations', $trashItem->getResourceSecurityContext());
+        $this->assertSame('sulu.contact.people', $trashItem->getResourceSecurityContext());
         $this->assertNull($trashItem->getResourceSecurityObjectId());
         $this->assertNull($trashItem->getResourceSecurityObjectType());
         $this->assertSame($this->getMinimalAccountData(), $trashItem->getRestoreData());
@@ -167,7 +169,7 @@ class ContactTrashItemHandlerTest extends TestCase
         $this->assertSame('1', $trashItem->getResourceId());
         $this->assertSame('Complex Contact', $trashItem->getResourceTitle());
         $this->assertSame('contacts', $trashItem->getResourceKey());
-        $this->assertSame('sulu.contact.organizations', $trashItem->getResourceSecurityContext());
+        $this->assertSame('sulu.contact.people', $trashItem->getResourceSecurityContext());
         $this->assertNull($trashItem->getResourceSecurityObjectId());
         $this->assertNull($trashItem->getResourceSecurityObjectType());
         $this->assertSame($this->getComplexAccountData(), $trashItem->getRestoreData());
@@ -317,6 +319,7 @@ class ContactTrashItemHandlerTest extends TestCase
             AccountInterface::class => Account::class,
             ContactInterface::class => Contact::class,
             MediaInterface::class => Media::class,
+            UserInterface::class => User::class,
             TagInterface::class => Tag::class,
             CategoryInterface::class => Category::class,
         ];
@@ -343,6 +346,14 @@ class ContactTrashItemHandlerTest extends TestCase
         $contact->setNote('123456');
         $contact->setCreated(new \DateTime('2020-11-05T12:15:00+01:00'));
         $contact->setChanged(new \DateTime('2020-12-10T14:15:00+01:00'));
+
+        $creator = new User();
+        static::setPrivateProperty($creator, 'id', 21);
+        $contact->setCreator($creator);
+
+        $changer = new User();
+        static::setPrivateProperty($changer, 'id', 22);
+        $contact->setChanger($changer);
 
         $contactTitle = new ContactTitle();
         static::setPrivateProperty($contactTitle, 'id', 4);
@@ -686,6 +697,8 @@ class ContactTrashItemHandlerTest extends TestCase
             ],
             'created' => '2020-11-05T12:15:00+01:00',
             'changed' => '2020-12-10T14:15:00+01:00',
+            'creatorId' => 21,
+            'changerId' => 22,
             'avatarId' => 5,
         ];
     }
