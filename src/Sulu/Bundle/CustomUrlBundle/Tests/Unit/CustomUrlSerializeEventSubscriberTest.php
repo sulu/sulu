@@ -79,6 +79,8 @@ class CustomUrlSerializeEventSubscriberTest extends TestCase
 
         $generator->generate('*.sulu.io', ['prefix' => 'test', 'suffix' => []])->willReturn('test.sulu.io');
 
+        $documentInspector->getWebspace($document->reveal())->willReturn('test-webspace');
+
         $event->getObject()->willReturn($document->reveal());
         $event->getVisitor()->willReturn($visitor->reveal());
 
@@ -95,6 +97,10 @@ class CustomUrlSerializeEventSubscriberTest extends TestCase
         $visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
             return 'customUrl' === $metadata->name;
         }), 'test.sulu.io')->shouldBeCalled();
+
+        $visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
+            return 'webspace' === $metadata->name;
+        }), 'test-webspace')->shouldBeCalled();
 
         $visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
             return 'creatorFullName' === $metadata->name;
@@ -154,6 +160,8 @@ class CustomUrlSerializeEventSubscriberTest extends TestCase
 
         $generator->generate('*.sulu.io', ['prefix' => 'test', 'suffix' => []])->willReturn('test.sulu.io');
 
+        $documentInspector->getWebspace($document->reveal())->willReturn('test-webspace');
+
         $event->getObject()->willReturn($document->reveal());
         $event->getVisitor()->willReturn($visitor->reveal());
 
@@ -166,6 +174,10 @@ class CustomUrlSerializeEventSubscriberTest extends TestCase
         $visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
             return 'customUrl' === $metadata->name;
         }), 'test.sulu.io')->shouldBeCalled();
+
+        $visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
+            return 'webspace' === $metadata->name;
+        }), 'test-webspace')->shouldBeCalled();
 
         $visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
             return 'creatorFullName' === $metadata->name;
@@ -204,6 +216,8 @@ class CustomUrlSerializeEventSubscriberTest extends TestCase
 
         $generator->generate('*.sulu.io', ['prefix' => 'test', 'suffix' => []])->willReturn('test.sulu.io');
 
+        $documentInspector->getWebspace($document->reveal())->willReturn('test-webspace');
+
         $event->getObject()->willReturn($document->reveal());
         $event->getVisitor()->willReturn($visitor->reveal());
 
@@ -220,6 +234,10 @@ class CustomUrlSerializeEventSubscriberTest extends TestCase
         $visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
             return 'customUrl' === $metadata->name;
         }), 'test.sulu.io')->shouldBeCalled();
+
+        $visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
+            return 'webspace' === $metadata->name;
+        }), 'test-webspace')->shouldBeCalled();
 
         $visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
             return 'creatorFullName' === $metadata->name;
