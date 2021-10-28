@@ -43,12 +43,14 @@ use Sulu\Bundle\ContactBundle\Entity\UrlType;
 use Sulu\Bundle\ContactBundle\Trash\AccountTrashItemHandler;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
+use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Bundle\TrashBundle\Application\DoctrineRestoreHelper\DoctrineRestoreHelperInterface;
 use Sulu\Bundle\TrashBundle\Domain\Model\TrashItem;
 use Sulu\Bundle\TrashBundle\Domain\Repository\TrashItemRepositoryInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
 
 class AccountTrashItemHandlerTest extends TestCase
 {
@@ -312,6 +314,7 @@ class AccountTrashItemHandlerTest extends TestCase
             ContactInterface::class => Contact::class,
             MediaInterface::class => Media::class,
             TagInterface::class => Tag::class,
+            UserInterface::class => User::class,
             CategoryInterface::class => Category::class,
         ];
 
@@ -334,6 +337,14 @@ class AccountTrashItemHandlerTest extends TestCase
         $account->setNote('123456');
         $account->setCreated(new \DateTime('2020-11-05T12:15:00+01:00'));
         $account->setChanged(new \DateTime('2020-12-10T14:15:00+01:00'));
+
+        $creator = new User();
+        static::setPrivateProperty($creator, 'id', 21);
+        $account->setCreator($creator);
+
+        $changer = new User();
+        static::setPrivateProperty($changer, 'id', 22);
+        $account->setChanger($changer);
 
         $parent = new Account();
         $parent->setId(2);
@@ -665,6 +676,8 @@ class AccountTrashItemHandlerTest extends TestCase
             ],
             'created' => '2020-11-05T12:15:00+01:00',
             'changed' => '2020-12-10T14:15:00+01:00',
+            'creatorId' => 21,
+            'changerId' => 22,
             'parentId' => 2,
             'logoId' => 5,
             'mainContactId' => 10,

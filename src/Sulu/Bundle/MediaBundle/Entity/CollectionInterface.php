@@ -57,7 +57,7 @@ interface CollectionInterface extends AuditableInterface, SecuredEntityInterface
     /**
      * Get changer.
      *
-     * @return UserInterface
+     * @return UserInterface|null
      */
     public function getChanger();
 
@@ -71,7 +71,7 @@ interface CollectionInterface extends AuditableInterface, SecuredEntityInterface
     /**
      * Get creator.
      *
-     * @return UserInterface
+     * @return UserInterface|null
      */
     public function getCreator();
 

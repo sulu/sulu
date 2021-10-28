@@ -78,6 +78,7 @@
     "sulu_media.circle": "Kreis",
     "sulu_media.point": "Punkt",
     "sulu_media.rectangle": "Rechteck",
+    "sulu_media.parent_collection": "Elternkollektion",
     "sulu_activity.resource.collections": "Ordner",
     "sulu_activity.description.collections.created": "{userFullName} hat den Ordner \"{resourceTitle}\" erstellt",
     "sulu_activity.description.collections.modified": "{userFullName} hat den Ordner \"{resourceTitle}\" geändert",

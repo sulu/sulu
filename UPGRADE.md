@@ -86,6 +86,7 @@ call to pass the correct parameters:
 - `Sulu\Bundle\WebsiteBundle\Analytics\AnalyticsManager`
 - `Sulu\Bundle\ContactBundle\Contact\ContactManager`
 - `Sulu\Bundle\ContactBundle\Controller\AccountController`
+- `Sulu\Bundle\MediaBundle\Collection\CollectionManager`
 
 ### Added SuluTrashBundle to make resources trashable/restorable
 

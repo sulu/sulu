@@ -22,6 +22,7 @@ use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\RoleRepository;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
 use Sulu\Component\Cache\CacheInterface;
 use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlManager;
@@ -1251,6 +1252,10 @@ class CollectionControllerTest extends SuluTestCase
         $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(5005, $response->code);
         $this->assertTrue(isset($response->message));
+
+        $trashItemRepository = $this->em->getRepository(TrashItemInterface::class);
+        $trashItem = $trashItemRepository->findOneBy(['resourceKey' => 'collections', 'resourceId' => $collectionId]);
+        $this->assertNotNull($trashItem);
     }
 
     public function testDeleteByIdWithChildren(): void

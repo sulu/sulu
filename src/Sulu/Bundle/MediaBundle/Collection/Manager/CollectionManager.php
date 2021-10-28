@@ -30,6 +30,7 @@ use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionTypeNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
+use Sulu\Bundle\TrashBundle\Application\TrashManager\TrashManagerInterface;
 use Sulu\Component\Rest\Exception\DependantResourcesFoundException;
 use Sulu\Component\Rest\Exception\InsufficientDescendantPermissionsException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
@@ -86,9 +87,14 @@ class CollectionManager implements CollectionManagerInterface
     private $domainEventCollector;
 
     /**
-     * @var TokenStorageInterface
+     * @var TokenStorageInterface|null
      */
     private $tokenStorage;
+
+    /**
+     * @var TrashManagerInterface|null
+     */
+    private $trashManager;
 
     /**
      * @var DoctrineFieldDescriptor[]
@@ -117,7 +123,8 @@ class CollectionManager implements CollectionManagerInterface
         UserRepositoryInterface $userRepository,
         EntityManager $em,
         DomainEventCollectorInterface $domainEventCollector,
-        TokenStorageInterface $tokenStorage = null,
+        ?TokenStorageInterface $tokenStorage,
+        ?TrashManagerInterface $trashManager,
         $collectionPreviewFormat,
         $permissions
     ) {
@@ -128,6 +135,7 @@ class CollectionManager implements CollectionManagerInterface
         $this->em = $em;
         $this->domainEventCollector = $domainEventCollector;
         $this->tokenStorage = $tokenStorage;
+        $this->trashManager = $trashManager;
         $this->collectionPreviewFormat = $collectionPreviewFormat;
         $this->permissions = $permissions;
     }
@@ -622,6 +630,10 @@ class CollectionManager implements CollectionManagerInterface
 
         if (!$collectionEntity) {
             throw new CollectionNotFoundException($id);
+        }
+
+        if ($this->trashManager) {
+            $this->trashManager->store(CollectionInterface::RESOURCE_KEY, $collectionEntity);
         }
 
         $collectionId = $collectionEntity->getId();
