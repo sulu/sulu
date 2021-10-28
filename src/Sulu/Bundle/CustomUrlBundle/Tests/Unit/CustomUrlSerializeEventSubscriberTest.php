@@ -19,6 +19,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Sulu\Bundle\CustomUrlBundle\EventListener\CustomUrlSerializeEventSubscriber;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 use Sulu\Component\CustomUrl\Generator\GeneratorInterface;
@@ -29,7 +30,12 @@ class CustomUrlSerializeEventSubscriberTest extends TestCase
     {
         $generator = $this->prophesize(GeneratorInterface::class);
         $userManager = $this->prophesize(UserManagerInterface::class);
-        $subscriber = new CustomUrlSerializeEventSubscriber($generator->reveal(), $userManager->reveal());
+        $documentInspector = $this->prophesize(DocumentInspector::class);
+        $subscriber = new CustomUrlSerializeEventSubscriber(
+            $generator->reveal(),
+            $userManager->reveal(),
+            $documentInspector->reveal()
+        );
 
         $events = $subscriber->getSubscribedEvents();
 
@@ -49,7 +55,12 @@ class CustomUrlSerializeEventSubscriberTest extends TestCase
     {
         $generator = $this->prophesize(GeneratorInterface::class);
         $userManager = $this->prophesize(UserManagerInterface::class);
-        $subscriber = new CustomUrlSerializeEventSubscriber($generator->reveal(), $userManager->reveal());
+        $documentInspector = $this->prophesize(DocumentInspector::class);
+        $subscriber = new CustomUrlSerializeEventSubscriber(
+            $generator->reveal(),
+            $userManager->reveal(),
+            $documentInspector->reveal()
+        );
 
         $event = $this->prophesize(ObjectEvent::class);
         $document = $this->prophesize(CustomUrlDocument::class);
@@ -98,7 +109,12 @@ class CustomUrlSerializeEventSubscriberTest extends TestCase
     {
         $generator = $this->prophesize(GeneratorInterface::class);
         $userManager = $this->prophesize(UserManagerInterface::class);
-        $subscriber = new CustomUrlSerializeEventSubscriber($generator->reveal(), $userManager->reveal());
+        $documentInspector = $this->prophesize(DocumentInspector::class);
+        $subscriber = new CustomUrlSerializeEventSubscriber(
+            $generator->reveal(),
+            $userManager->reveal(),
+            $documentInspector->reveal()
+        );
 
         $event = $this->prophesize(ObjectEvent::class);
         $document = $this->prophesize(\stdClass::class);
@@ -117,7 +133,12 @@ class CustomUrlSerializeEventSubscriberTest extends TestCase
     {
         $generator = $this->prophesize(GeneratorInterface::class);
         $userManager = $this->prophesize(UserManagerInterface::class);
-        $subscriber = new CustomUrlSerializeEventSubscriber($generator->reveal(), $userManager->reveal());
+        $documentInspector = $this->prophesize(DocumentInspector::class);
+        $subscriber = new CustomUrlSerializeEventSubscriber(
+            $generator->reveal(),
+            $userManager->reveal(),
+            $documentInspector->reveal()
+        );
 
         $event = $this->prophesize(ObjectEvent::class);
         $document = $this->prophesize(CustomUrlDocument::class);
@@ -159,7 +180,12 @@ class CustomUrlSerializeEventSubscriberTest extends TestCase
     {
         $generator = $this->prophesize(GeneratorInterface::class);
         $userManager = $this->prophesize(UserManagerInterface::class);
-        $subscriber = new CustomUrlSerializeEventSubscriber($generator->reveal(), $userManager->reveal());
+        $documentInspector = $this->prophesize(DocumentInspector::class);
+        $subscriber = new CustomUrlSerializeEventSubscriber(
+            $generator->reveal(),
+            $userManager->reveal(),
+            $documentInspector->reveal()
+        );
 
         $event = $this->prophesize(ObjectEvent::class);
         $document = $this->prophesize(CustomUrlDocument::class);
