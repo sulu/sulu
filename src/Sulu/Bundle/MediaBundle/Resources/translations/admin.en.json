@@ -84,6 +84,7 @@
     "sulu_activity.description.collections.modified": "{userFullName} has changed the collection \"{resourceTitle}\"",
     "sulu_activity.description.collections.moved": "{userFullName} has moved the collection \"{resourceTitle}\" from \"{context_previousParentTitle}\" to \"{context_newParentTitle}\"",
     "sulu_activity.description.collections.removed": "{userFullName} has removed the collection \"{resourceTitle}\"",
+    "sulu_activity.description.collections.restored": "{userFullName} has restored the collection \"{resourceTitle}\"",
     "sulu_activity.description.collections.translation_added": "{userFullName} has added a translation \"{resourceLocale}\" to the collection \"{resourceTitle}\"",
     "sulu_activity.resource.media": "Media",
     "sulu_activity.description.media.created": "{userFullName} has created the media \"{resourceTitle}\"",
