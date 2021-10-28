@@ -101,7 +101,7 @@ final class ContactTrashItemHandler implements
     {
         Assert::isInstanceOf($resource, ContactInterface::class);
 
-        $contactTitle = $resource->getTitle() ;
+        $contactTitle = $resource->getTitle();
         $contactBirthday = $resource->getBirthday();
 
         $data = [
