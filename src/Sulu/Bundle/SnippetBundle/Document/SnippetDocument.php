@@ -57,12 +57,12 @@ class SnippetDocument implements
     private $changed;
 
     /**
-     * @var int
+     * @var int|null
      */
     private $creator;
 
     /**
-     * @var int
+     * @var int|null
      */
     private $changer;
 
@@ -156,6 +156,16 @@ class SnippetDocument implements
         return $this->created;
     }
 
+    /**
+     * @param \DateTime $created
+     *
+     * @return void
+     */
+    public function setCreated($created)
+    {
+        $this->created = $created;
+    }
+
     public function getChanged()
     {
         return $this->changed;
@@ -164,6 +174,16 @@ class SnippetDocument implements
     public function getCreator()
     {
         return $this->creator;
+    }
+
+    /**
+     * @param int|null $userId
+     *
+     * @return void
+     */
+    public function setCreator($userId)
+    {
+        $this->creator = $userId;
     }
 
     public function getChanger()

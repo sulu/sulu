@@ -14,6 +14,7 @@
     "sulu_activity.description.snippets.modified": "{userFullName} has changed the snippet \"{resourceTitle}\"",
     "sulu_activity.description.snippets.copied": "{userFullName} has copied the snippet \"{resourceTitle}\"",
     "sulu_activity.description.snippets.removed": "{userFullName} has removed the snippet \"{resourceTitle}\"",
+    "sulu_activity.description.snippets.restored": "{userFullName} has restored the snippet \"{resourceTitle}\"",
     "sulu_activity.description.snippets.translation_added": "{userFullName} has added a new translation \"{resourceLocale}\" to the snippet \"{resourceTitle}\"",
     "sulu_activity.description.snippets.translation_copied": "{userFullName} has copied the \"{context_sourceLocale}\" translation of the snippet \"{resourceTitle}\" into \"{resourceLocale}\"",
     "sulu_activity.description.snippets.translation_removed": "{userFullName} has removed the \"{resourceLocale}\" translation of the snippet \"{resourceTitle}\"",

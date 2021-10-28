@@ -70,7 +70,7 @@ final class PageTrashSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $this->trashManager->store(BasePageDocument::RESOURCE_KEY, $event->getDocument());
+        $this->trashManager->store(BasePageDocument::RESOURCE_KEY, $document);
         $this->hasPendingTrashItem = true;
     }
 

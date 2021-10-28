@@ -51,7 +51,17 @@ class SnippetCopiedEvent extends DomainEvent
         $this->sourceSnippetTitleLocale = $sourceSnippetTitleLocale;
     }
 
+    /**
+     * @deprecated
+     */
     public function getPageDocument(): SnippetDocument
+    {
+        @\trigger_error(\sprintf('The "%s" method is deprecated. Use "%s" instead.', __METHOD__, 'getSnippetDocument'), \E_USER_DEPRECATED);
+
+        return $this->getSnippetDocument();
+    }
+
+    public function getSnippetDocument(): SnippetDocument
     {
         return $this->snippetDocument;
     }

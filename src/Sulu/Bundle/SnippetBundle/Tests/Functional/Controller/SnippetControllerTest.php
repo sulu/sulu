@@ -17,6 +17,7 @@ use Sulu\Bundle\ActivityBundle\Domain\Model\ActivityInterface;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManagerInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
@@ -60,6 +61,11 @@ class SnippetControllerTest extends SuluTestCase
      */
     private $activityRepository;
 
+    /**
+     * @var ObjectRepository<TrashItemInterface>
+     */
+    private $trashItemRepository;
+
     public function setUp(): void
     {
         $this->client = $this->createAuthenticatedClient();
@@ -69,6 +75,7 @@ class SnippetControllerTest extends SuluTestCase
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->defaultSnippetManager = $this->getContainer()->get('sulu_snippet.default_snippet.manager');
         $this->activityRepository = $this->getEntityManager()->getRepository(ActivityInterface::class);
+        $this->trashItemRepository = $this->getEntityManager()->getRepository(TrashItemInterface::class);
         $this->loadFixtures();
     }
 
@@ -549,6 +556,8 @@ class SnippetControllerTest extends SuluTestCase
             ],
         ], $content);
 
+        static::assertCount(0, $this->trashItemRepository->findAll());
+
         $this->client->jsonRequest('DELETE', '/api/snippets/' . $this->hotel1->getUuid() . '?force=true');
         $response = $this->client->getResponse();
         $content = \json_decode($response->getContent(), true);
@@ -558,6 +567,11 @@ class SnippetControllerTest extends SuluTestCase
         /** @var ActivityInterface $activity */
         $activity = $this->activityRepository->findOneBy(['type' => 'removed']);
         $this->assertSame((string) $this->hotel1->getUuid(), $activity->getResourceId());
+
+        /** @var TrashItemInterface[] $trashItems */
+        $trashItems = $this->trashItemRepository->findAll();
+        static::assertCount(1, $trashItems);
+        static::assertSame(SnippetDocument::RESOURCE_KEY, $trashItems[0]->getResourceKey());
     }
 
     public function testCopyLocale()
