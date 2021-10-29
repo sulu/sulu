@@ -32,6 +32,9 @@ class CustomUrlDocument implements
 {
     public const RESOURCE_KEY = 'custom_urls';
 
+    // custom urls are not localized, but the DocumentManager needs a locale to work
+    public const DOCUMENT_LOCALE = 'en';
+
     /**
      * @var string
      */
@@ -108,7 +111,7 @@ class CustomUrlDocument implements
     protected $changed;
 
     /**
-     * @var int
+     * @var int|null
      */
     protected $creator;
 
@@ -318,6 +321,16 @@ class CustomUrlDocument implements
         return $this->created;
     }
 
+    /**
+     * @param \DateTime $created
+     *
+     * @return void
+     */
+    public function setCreated($created)
+    {
+        $this->created = $created;
+    }
+
     public function getChanged()
     {
         return $this->changed;
@@ -326,6 +339,16 @@ class CustomUrlDocument implements
     public function getCreator()
     {
         return $this->creator;
+    }
+
+    /**
+     * @param int|null $userId
+     *
+     * @return void
+     */
+    public function setCreator($userId)
+    {
+        $this->creator = $userId;
     }
 
     public function getChanger()

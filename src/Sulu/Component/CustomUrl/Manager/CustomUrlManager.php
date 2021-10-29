@@ -31,8 +31,6 @@ use Sulu\Component\Webspace\CustomUrl;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
-const LOCALE = 'en'; // actually custom urls are not localized, but the DocumentManager needs a locale to work
-
 /**
  * Manages custom-url documents and their routes.
  */
@@ -107,14 +105,14 @@ class CustomUrlManager implements CustomUrlManagerInterface
         try {
             $this->documentManager->persist(
                 $document,
-                LOCALE,
+                CustomUrlDocument::DOCUMENT_LOCALE,
                 [
                     'parent_path' => $this->getItemsPath($webspaceKey),
                     'load_ghost_content' => true,
                     'auto_rename' => false,
                 ]
             );
-            $this->documentManager->publish($document, LOCALE);
+            $this->documentManager->publish($document, CustomUrlDocument::DOCUMENT_LOCALE);
             $this->documentDomainEventCollector->collect(new CustomUrlCreatedEvent($document, $webspaceKey, $data));
         } catch (NodeNameAlreadyExistsException $ex) {
             throw new TitleAlreadyExistsException($document->getTitle());
@@ -178,7 +176,7 @@ class CustomUrlManager implements CustomUrlManagerInterface
 
     public function find($uuid)
     {
-        return $this->documentManager->find($uuid, LOCALE, ['load_ghost_content' => true]);
+        return $this->documentManager->find($uuid, CustomUrlDocument::DOCUMENT_LOCALE, ['load_ghost_content' => true]);
     }
 
     public function findByUrl($url, $webspaceKey, $locale = null)
@@ -250,15 +248,15 @@ class CustomUrlManager implements CustomUrlManagerInterface
         try {
             $this->documentManager->persist(
                 $document,
-                LOCALE,
+                CustomUrlDocument::DOCUMENT_LOCALE,
                 [
                     'parent_path' => PathHelper::getParentPath($document->getPath()),
                     'load_ghost_content' => true,
                     'auto_rename' => false,
-                    'auto_name_locale' => LOCALE,
+                    'auto_name_locale' => CustomUrlDocument::DOCUMENT_LOCALE,
                 ]
             );
-            $this->documentManager->publish($document, LOCALE);
+            $this->documentManager->publish($document, CustomUrlDocument::DOCUMENT_LOCALE);
             $this->documentDomainEventCollector->collect(
                 new CustomUrlModifiedEvent($document, $this->documentInspector->getWebspace($document), $data)
             );
@@ -339,7 +337,7 @@ class CustomUrlManager implements CustomUrlManagerInterface
 
             $value = $data[$fieldName];
             if (\array_key_exists('type', $mapping) && 'reference' === $mapping['type']) {
-                $value = $this->documentManager->find($value, LOCALE, ['load_ghost_content' => true]);
+                $value = $this->documentManager->find($value, CustomUrlDocument::DOCUMENT_LOCALE, ['load_ghost_content' => true]);
             }
 
             $accessor->setValue($document, $fieldName, $value);

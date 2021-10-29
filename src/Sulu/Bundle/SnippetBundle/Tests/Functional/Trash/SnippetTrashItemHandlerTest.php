@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\SnippetBundle\Tests\Functional\Trash;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\SnippetBundle\Trash\SnippetTrashItemHandler;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
@@ -30,11 +29,6 @@ class SnippetTrashItemHandlerTest extends SuluTestCase
      */
     private $snippetTrashItemHandler;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
     public function setUp(): void
     {
         static::purgeDatabase();
@@ -42,7 +36,6 @@ class SnippetTrashItemHandlerTest extends SuluTestCase
 
         $this->documentManager = static::getContainer()->get('sulu_document_manager.document_manager');
         $this->snippetTrashItemHandler = static::getContainer()->get('sulu_snippet.snippet_trash_item_handler');
-        $this->entityManager = static::getEntityManager();
     }
 
     public function testStoreAndRestore(): void

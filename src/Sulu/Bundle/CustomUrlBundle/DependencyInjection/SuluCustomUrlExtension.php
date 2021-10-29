@@ -30,11 +30,17 @@ class SuluCustomUrlExtension extends Extension implements PrependExtensionInterf
 {
     public function load(array $configs, ContainerBuilder $container)
     {
+        $bundles = $container->getParameter('kernel.bundles');
+
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('admin.xml');
         $loader->load('document.xml');
         $loader->load('routing.xml');
         $loader->load('event_listener.xml');
+
+        if (\array_key_exists('SuluTrashBundle', $bundles)) {
+            $loader->load('services_trash.xml');
+        }
     }
 
     public function prepend(ContainerBuilder $container)

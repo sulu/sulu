@@ -27,6 +27,8 @@ use Sulu\Component\Webspace\Webspace;
  */
 class CustomUrlAdmin extends Admin
 {
+    public const LIST_VIEW = 'sulu_custom_url.custom_urls_list';
+
     /**
      * Returns security context for custom-urls in given webspace.
      *
@@ -76,7 +78,7 @@ class CustomUrlAdmin extends Admin
         if ($this->hasSomeWebspaceCustomUrlPermission()) {
             $viewCollection->add(
                 $this->viewBuilderFactory
-                    ->createFormOverlayListViewBuilder('sulu_custom_url.custom_urls_list', '/custom-urls')
+                    ->createFormOverlayListViewBuilder(static::LIST_VIEW, '/custom-urls')
                     ->setResourceKey(CustomUrlDocument::RESOURCE_KEY)
                     ->setListKey('custom_urls')
                     ->addListAdapters(['table'])

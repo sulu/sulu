@@ -17,6 +17,7 @@ use JMS\Serializer\EventDispatcher\ObjectEvent;
 use JMS\Serializer\Metadata\StaticPropertyMetadata;
 use JMS\Serializer\Visitor\SerializationVisitorInterface;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 use Sulu\Component\CustomUrl\Generator\GeneratorInterface;
 
@@ -35,10 +36,19 @@ class CustomUrlSerializeEventSubscriber implements EventSubscriberInterface
      */
     private $userManager;
 
-    public function __construct(GeneratorInterface $generator, UserManagerInterface $userManager)
-    {
+    /**
+     * @var DocumentInspector
+     */
+    private $documentInspector;
+
+    public function __construct(
+        GeneratorInterface $generator,
+        UserManagerInterface $userManager,
+        DocumentInspector $documentInspector
+    ) {
         $this->generator = $generator;
         $this->userManager = $userManager;
+        $this->documentInspector = $documentInspector;
     }
 
     public static function getSubscribedEvents()
@@ -83,6 +93,12 @@ class CustomUrlSerializeEventSubscriber implements EventSubscriberInterface
         $visitor->visitProperty(
             new StaticPropertyMetadata('', 'customUrl', $customUrlProperty),
             $customUrlProperty
+        );
+
+        $webspaceKey = $this->documentInspector->getWebspace($customUrl);
+        $visitor->visitProperty(
+            new StaticPropertyMetadata('', 'webspace', $webspaceKey),
+            $webspaceKey
         );
 
         $creatorFullName = null;
