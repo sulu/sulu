@@ -68,7 +68,7 @@ final class CustomUrlTrashItemHandler implements
     /**
      * @param CustomUrlDocument $customUrl
      */
-    public function store(object $customUrl): TrashItemInterface
+    public function store(object $customUrl, array $options = []): TrashItemInterface
     {
         Assert::isInstanceOf($customUrl, CustomUrlDocument::class);
 
@@ -92,15 +92,17 @@ final class CustomUrlTrashItemHandler implements
         return $this->trashItemRepository->create(
             CustomUrlDocument::RESOURCE_KEY,
             (string) $customUrl->getUuid(),
-            $data,
             $customUrl->getTitle(),
+            $data,
+            null,
+            $options,
             CustomUrlAdmin::getCustomUrlSecurityContext($webspaceKey),
             null,
             null
         );
     }
 
-    public function restore(TrashItemInterface $trashItem, array $restoreFormData): object
+    public function restore(TrashItemInterface $trashItem, array $restoreFormData = []): object
     {
         $uuid = $trashItem->getResourceId();
         $data = $trashItem->getRestoreData();

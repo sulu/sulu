@@ -49,8 +49,10 @@ final class TrashItemRepository implements TrashItemRepositoryInterface
     public function create(
         string $resourceKey,
         string $resourceId,
-        array $restoreData,
         $resourceTitle,
+        array $restoreData,
+        ?string $restoreType,
+        array $restoreOptions,
         ?string $resourceSecurityContext,
         ?string $resourceSecurityObjectType,
         ?string $resourceSecurityObjectId
@@ -65,10 +67,11 @@ final class TrashItemRepository implements TrashItemRepositoryInterface
             ->setResourceKey($resourceKey)
             ->setResourceId($resourceId)
             ->setRestoreData($restoreData)
+            ->setRestoreType($restoreType)
+            ->setRestoreOptions($restoreOptions)
             ->setResourceSecurityContext($resourceSecurityContext)
             ->setResourceSecurityObjectType($resourceSecurityObjectType)
             ->setResourceSecurityObjectId($resourceSecurityObjectId)
-            ->setStoreTimestamp(new \DateTimeImmutable())
             ->setUser($this->getCurrentUser());
 
         if (\is_string($resourceTitle)) {

@@ -71,7 +71,7 @@ final class SnippetTrashItemHandler implements
     /**
      * @param SnippetDocument $snippet
      */
-    public function store(object $snippet): TrashItemInterface
+    public function store(object $snippet, array $options = []): TrashItemInterface
     {
         Assert::isInstanceOf($snippet, SnippetDocument::class);
 
@@ -105,15 +105,17 @@ final class SnippetTrashItemHandler implements
         return $this->trashItemRepository->create(
             SnippetDocument::RESOURCE_KEY,
             (string) $snippet->getUuid(),
-            $data,
             $snipetTitles,
+            $data,
+            null,
+            $options,
             SnippetAdmin::SECURITY_CONTEXT,
             null,
             null
         );
     }
 
-    public function restore(TrashItemInterface $trashItem, array $restoreFormData): object
+    public function restore(TrashItemInterface $trashItem, array $restoreFormData = []): object
     {
         $uuid = $trashItem->getResourceId();
         $data = $trashItem->getRestoreData();

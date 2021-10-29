@@ -102,11 +102,13 @@ class ContactTrashItemHandlerTest extends TestCase
                 $trashItem = new TrashItem();
                 $trashItem->setResourceKey($args[0]);
                 $trashItem->setResourceId($args[1]);
-                $trashItem->setRestoreData($args[2]);
-                $trashItem->setResourceTitle($args[3]);
-                $trashItem->setResourceSecurityContext($args[4]);
-                $trashItem->setResourceSecurityObjectType($args[5]);
-                $trashItem->setResourceSecurityObjectId($args[6]);
+                $trashItem->setResourceTitle($args[2]);
+                $trashItem->setRestoreData($args[3]);
+                $trashItem->setRestoreType($args[4]);
+                $trashItem->setRestoreOptions($args[5]);
+                $trashItem->setResourceSecurityContext($args[6]);
+                $trashItem->setResourceSecurityObjectType($args[7]);
+                $trashItem->setResourceSecurityObjectId($args[8]);
 
                 return $trashItem;
             });

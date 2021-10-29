@@ -79,7 +79,7 @@ final class CollectionTrashItemHandler implements
     /**
      * @param CollectionInterface $resource
      */
-    public function store(object $resource): TrashItemInterface
+    public function store(object $resource, array $options = []): TrashItemInterface
     {
         Assert::isInstanceOf($resource, CollectionInterface::class);
 
@@ -128,15 +128,17 @@ final class CollectionTrashItemHandler implements
         return $this->trashItemRepository->create(
             CollectionInterface::RESOURCE_KEY,
             (string) $resource->getId(),
-            \array_filter($data),
             $collectionTitles,
+            \array_filter($data),
+            null,
+            $options,
             MediaAdmin::SECURITY_CONTEXT,
             null,
             null
         );
     }
 
-    public function restore(TrashItemInterface $trashItem, array $restoreFormData): object
+    public function restore(TrashItemInterface $trashItem, array $restoreFormData = []): object
     {
         $id = (int) $trashItem->getResourceId();
         $data = $trashItem->getRestoreData();

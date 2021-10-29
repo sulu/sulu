@@ -101,7 +101,7 @@ class AnalyticsTrashItemHandler implements StoreTrashItemHandlerInterface, Resto
     /**
      * @param AnalyticsInterface $analytics
      */
-    public function store(object $analytics): TrashItemInterface
+    public function store(object $analytics, array $options = []): TrashItemInterface
     {
         Assert::isInstanceOf($analytics, AnalyticsInterface::class);
 
@@ -114,6 +114,7 @@ class AnalyticsTrashItemHandler implements StoreTrashItemHandlerInterface, Resto
         return $this->trashItemRepository->create(
             AnalyticsInterface::RESOURCE_KEY,
             (string) $analytics->getId(),
+            $analytics->getTitle(),
             [
                 'title' => $analytics->getTitle(),
                 'type' => $analytics->getType(),
@@ -122,14 +123,15 @@ class AnalyticsTrashItemHandler implements StoreTrashItemHandlerInterface, Resto
                 'allDomains' => $analytics->isAllDomains(),
                 'domains' => $domains,
             ],
-            $analytics->getTitle(),
+            null,
+            $options,
             WebsiteAdmin::getAnalyticsSecurityContext($analytics->getWebspaceKey()),
             null,
             null
         );
     }
 
-    public function restore(TrashItemInterface $trashItem, array $restoreFormData): object
+    public function restore(TrashItemInterface $trashItem, array $restoreFormData = []): object
     {
         $id = (int) $trashItem->getResourceId();
         $data = $trashItem->getRestoreData();

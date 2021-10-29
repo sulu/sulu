@@ -73,7 +73,7 @@ final class PageTrashItemHandler implements
     /**
      * @param PageDocument $page
      */
-    public function store(object $page): TrashItemInterface
+    public function store(object $page, array $options = []): TrashItemInterface
     {
         Assert::isInstanceOf($page, BasePageDocument::class);
 
@@ -126,15 +126,17 @@ final class PageTrashItemHandler implements
         return $this->trashItemRepository->create(
             BasePageDocument::RESOURCE_KEY,
             (string) $page->getUuid(),
-            $data,
             $pageTitles,
+            $data,
+            null,
+            $options,
             PageAdmin::getPageSecurityContext($page->getWebspaceName()),
             SecurityBehavior::class,
             (string) $page->getUuid()
         );
     }
 
-    public function restore(TrashItemInterface $trashItem, array $restoreFormData): object
+    public function restore(TrashItemInterface $trashItem, array $restoreFormData = []): object
     {
         $uuid = $trashItem->getResourceId();
         $data = $trashItem->getRestoreData();

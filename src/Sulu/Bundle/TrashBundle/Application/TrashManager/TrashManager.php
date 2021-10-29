@@ -67,7 +67,7 @@ final class TrashManager implements TrashManagerInterface
         $this->removeTrashItemHandlerLocator = $removeTrashItemHandlerLocator;
     }
 
-    public function store(string $resourceKey, object $object): TrashItemInterface
+    public function store(string $resourceKey, object $object, array $options = []): TrashItemInterface
     {
         if (!$this->storeTrashItemHandlerLocator->has($resourceKey)) {
             throw new StoreTrashItemHandlerNotFoundException($resourceKey);
@@ -87,7 +87,7 @@ final class TrashManager implements TrashManagerInterface
         return $trashItem;
     }
 
-    public function restore(TrashItemInterface $trashItem, array $restoreFormData): object
+    public function restore(TrashItemInterface $trashItem, array $restoreFormData = []): object
     {
         $resourceKey = $trashItem->getResourceKey();
 
