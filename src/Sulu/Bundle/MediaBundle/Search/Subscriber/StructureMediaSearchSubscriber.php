@@ -108,6 +108,8 @@ class StructureMediaSearchSubscriber implements EventSubscriberInterface
      * @param array|MediaSelectionContainer $data
      * @param string $locale
      *
+     * @return string|null
+     *
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
      */
@@ -115,7 +117,7 @@ class StructureMediaSearchSubscriber implements EventSubscriberInterface
     {
         // new structures will container an instance of MediaSelectionContainer
         if ($data instanceof MediaSelectionContainer) {
-            $medias = $data->getData('de');
+            $medias = $data->getData();
         // old ones an array ...
         } else {
             $ids = [];
@@ -127,7 +129,7 @@ class StructureMediaSearchSubscriber implements EventSubscriberInterface
             }
 
             if (0 === \count($ids)) {
-                return;
+                return null;
             }
 
             $medias = $this->mediaManager->get($locale, [
@@ -137,16 +139,20 @@ class StructureMediaSearchSubscriber implements EventSubscriberInterface
 
         // no media, no thumbnail URL
         if (!$medias) {
-            return;
+            return null;
         }
 
         $media = \current($medias);
 
         if (!$media) {
-            return;
+            return null;
         }
 
         $formats = $media->getThumbnails();
+
+        if (empty($formats)) {
+            return null;
+        }
 
         if (!isset($formats[$this->searchImageFormat])) {
             throw new \InvalidArgumentException(
