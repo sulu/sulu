@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\Admin\Navigation;
 
-class NavigationItem implements \Iterator, NavigationItemInterface
+class NavigationExternalItem implements \Iterator, NavigationItemInterface
 {
     /**
      * The id of the NavigationItem.
@@ -42,7 +42,7 @@ class NavigationItem implements \Iterator, NavigationItemInterface
     /**
      * @var string
      */
-    protected $view;
+    protected $url;
 
     /**
      * @var string[]
@@ -162,14 +162,14 @@ class NavigationItem implements \Iterator, NavigationItemInterface
         return $this->icon;
     }
 
-    public function setView(string $view = null): void
+    public function setUrl(string $url = null): void
     {
-        $this->view = $view;
+        $this->url = $url;
     }
 
-    public function getView(): ?string
+    public function getUrl(): ?string
     {
-        return $this->view;
+        return $this->url;
     }
 
     public function setChildViews(array $childViews): void
@@ -420,7 +420,7 @@ class NavigationItem implements \Iterator, NavigationItemInterface
             'title' => $this->getName(),
             'label' => $this->getLabel(),
             'icon' => $this->getIcon(),
-            'view' => $this->getView(),
+            'url' => $this->getUrl(),
             'disabled' => $this->getDisabled(),
             'visible' => $this->getVisible(),
             'id' => (null != $this->getId()) ? $this->getId() : \str_replace('.', '', \uniqid('', true)), //FIXME don't use uniqid()
@@ -449,9 +449,14 @@ class NavigationItem implements \Iterator, NavigationItemInterface
 
         return $array;
     }
-    
+
     public function hasLink(): bool
     {
-        return $this->getView() !== null;
+        return $this->getUrl() !== null;
+    }
+
+    public function getView()
+    {
+        return null;
     }
 }

@@ -17,6 +17,7 @@ use FOS\RestBundle\View\ViewHandlerInterface;
 use JMS\Serializer\SerializerInterface;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
+use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemInterface;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationRegistry;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewRegistry;
 use Sulu\Bundle\AdminBundle\FieldType\FieldTypeOptionRegistryInterface;
@@ -256,7 +257,7 @@ class AdminController
                 'fieldTypeOptions' => $this->fieldTypeOptionRegistry->toArray(),
                 'internalLinkTypes' => $this->linkProviderPool->getConfiguration(),
                 'localizations' => \array_values($this->localizationManager->getLocalizations()),
-                'navigation' => \array_map(function(NavigationItem $navigationItem) {
+                'navigation' => \array_map(function(NavigationItemInterface $navigationItem) {
                     return $navigationItem->toArray();
                 }, \array_values($this->navigationRegistry->getNavigationItems())),
                 'routes' => $this->viewRegistry->getViews(),
