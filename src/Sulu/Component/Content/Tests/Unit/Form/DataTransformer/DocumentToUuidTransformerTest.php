@@ -14,21 +14,21 @@ namespace Sulu\Component\Content\Tests\Unit\Form\DataTransformer;
 use PHPUnit\Framework\TestCase;
 use Sulu\Component\Content\Form\DataTransformer\DocumentToUuidTransformer;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
-use Sulu\Component\DocumentManager\DocumentManager;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
+use Sulu\Component\DocumentManager\Exception\DocumentManagerException;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 
 class DocumentToUuidTransformerTest extends TestCase
 {
     private $documentManager;
 
-    private $node;
-
     private $document;
+
+    private $transformer;
 
     public function setUp(): void
     {
-        $this->documentManager = $this->prophesize(DocumentManager::class);
-        $this->node = $this->prophesize('PHPCR\NodeInterface');
+        $this->documentManager = $this->prophesize(DocumentManagerInterface::class);
         $this->document = $this->prophesize(UuidBehavior::class);
 
         $this->transformer = new DocumentToUuidTransformer($this->documentManager->reveal());
@@ -36,6 +36,8 @@ class DocumentToUuidTransformerTest extends TestCase
 
     /**
      * It should transform a document to a UUID.
+     *
+     * @return void
      */
     public function testTransform()
     {
@@ -47,6 +49,8 @@ class DocumentToUuidTransformerTest extends TestCase
     /**
      * It should throw an exception if reverse transform is attempted with something
      * that is not a UUID.
+     *
+     * @return void
      */
     public function testReverseTransformNotUuid()
     {
@@ -55,12 +59,19 @@ class DocumentToUuidTransformerTest extends TestCase
         $this->transformer->reverseTransform(1234);
     }
 
+    /**
+     * It should throw an exception if the document was not found.
+     *
+     * @return void
+     */
     public function testReverseTransformNotFound()
     {
-        $this->expectExceptionMessage('Could not find document');
-        $this->expectException(TransformationFailedException::class);
         $uuid = '9fce0181-fabf-43d5-9b73-79f100ce2a9b';
-        $this->documentManager->find($uuid)->willReturn(null);
+        $exceptionMessage = \sprintf('No document has been set for the findEvent for "%s".', $uuid);
+
+        $this->expectExceptionMessage($exceptionMessage);
+        $this->expectException(DocumentManagerException::class);
+        $this->documentManager->find($uuid)->willThrow(new DocumentManagerException($exceptionMessage));
         $this->transformer->reverseTransform($uuid);
     }
 }

@@ -16,13 +16,15 @@ use PHPCR\NodeInterface;
 class ReorderEvent extends AbstractMappingEvent
 {
     /**
-     * @var string
+     * @var string|null
      */
     private $destId;
 
     /**
+     * Creates a re-ordering event. If the destId is null then the element will be sorted to the end.
+     *
      * @param object $document
-     * @param string $destId
+     * @param string|null $destId
      */
     public function __construct($document, $destId)
     {
@@ -40,7 +42,7 @@ class ReorderEvent extends AbstractMappingEvent
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getDestId()
     {

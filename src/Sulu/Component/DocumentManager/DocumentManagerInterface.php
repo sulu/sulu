@@ -74,9 +74,10 @@ interface DocumentManagerInterface
 
     /**
      * Re-Order node before or after a specific node.
+     * If the destId is null, then the document will be sorted at the end.
      *
      * @param object $document
-     * @param string $destId
+     * @param string|null $destId
      */
     public function reorder($document, $destId);
 
