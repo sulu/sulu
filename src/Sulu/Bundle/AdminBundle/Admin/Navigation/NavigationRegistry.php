@@ -75,9 +75,7 @@ class NavigationRegistry
             $admin->configureNavigationItems($navigationItemCollection);
         }
 
-        $navigationItems = \array_filter($navigationItemCollection->all(), function($navigationItem) {
-            return $navigationItem->getChildren() || $navigationItem->hasLink();
-        });
+        $navigationItems = $navigationItemCollection->all();
 
         foreach ($navigationItems as $navigationItem) {
             $this->processNavigationItem($navigationItem);

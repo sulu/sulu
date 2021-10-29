@@ -29,6 +29,4 @@ interface NavigationItemInterface
     public function setVisible($visible);
     public function getVisible();
     public function toArray();
-    public function hasLink();
-    public function getView();
 }

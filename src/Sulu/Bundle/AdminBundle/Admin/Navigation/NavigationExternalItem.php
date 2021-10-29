@@ -276,7 +276,7 @@ class NavigationExternalItem implements \Iterator, NavigationItemInterface
     public function copyChildless()
     {
         $new = $this->copyWithName();
-        $new->setView($this->getView());
+        $new->setUrl($this->getUrl());
         $new->setChildViews($this->getChildViews());
         $new->setIcon($this->getIcon());
         $new->setId($this->getId());
@@ -449,14 +449,5 @@ class NavigationExternalItem implements \Iterator, NavigationItemInterface
 
         return $array;
     }
-
-    public function hasLink(): bool
-    {
-        return $this->getUrl() !== null;
-    }
-
-    public function getView()
-    {
-        return null;
-    }
+    
 }

@@ -449,9 +449,4 @@ class NavigationItem implements \Iterator, NavigationItemInterface
 
         return $array;
     }
-    
-    public function hasLink(): bool
-    {
-        return $this->getView() !== null;
-    }
 }
