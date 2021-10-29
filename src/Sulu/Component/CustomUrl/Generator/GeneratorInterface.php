@@ -23,7 +23,7 @@ interface GeneratorInterface
      * If locales are passed the urls will be localized by replacers after generation.
      *
      * @param string $baseDomain
-     * @param string $domainParts
+     * @param string[] $domainParts
      * @param Localization $locale
      *
      * @return string

@@ -89,8 +89,6 @@ final class CustomUrlTrashItemHandler implements
 
         $webspaceKey = $this->documentInspector->getWebspace($customUrl);
 
-        // TODO: test security context
-
         return $this->trashItemRepository->create(
             CustomUrlDocument::RESOURCE_KEY,
             (string) $customUrl->getUuid(),
