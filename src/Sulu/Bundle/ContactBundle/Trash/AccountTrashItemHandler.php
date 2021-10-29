@@ -95,7 +95,7 @@ final class AccountTrashItemHandler implements
     /**
      * @param object|AccountInterface $resource
      */
-    public function store(object $resource): TrashItemInterface
+    public function store(object $resource, array $options = []): TrashItemInterface
     {
         Assert::isInstanceOf($resource, AccountInterface::class);
 
@@ -252,15 +252,17 @@ final class AccountTrashItemHandler implements
         return $this->trashItemRepository->create(
             AccountInterface::RESOURCE_KEY,
             (string) $data['id'],
-            \array_filter($data),
             $data['name'],
+            \array_filter($data),
+            null,
+            $options,
             ContactAdmin::ACCOUNT_SECURITY_CONTEXT,
             null,
             null
         );
     }
 
-    public function restore(TrashItemInterface $trashItem, array $restoreFormData): object
+    public function restore(TrashItemInterface $trashItem, array $restoreFormData = []): object
     {
         $id = (int) $trashItem->getResourceId();
         $data = $trashItem->getRestoreData();

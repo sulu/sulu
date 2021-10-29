@@ -78,12 +78,14 @@ class CollectionTrashItemHandlerTest extends TestCase
                 $trashItem = new TrashItem();
                 $trashItem->setResourceKey($args[0]);
                 $trashItem->setResourceId($args[1]);
-                $trashItem->setRestoreData($args[2]);
-                $trashItem->setResourceSecurityContext($args[4]);
-                $trashItem->setResourceSecurityObjectType($args[5]);
-                $trashItem->setResourceSecurityObjectId($args[6]);
+                $trashItem->setRestoreData($args[3]);
+                $trashItem->setRestoreType($args[4]);
+                $trashItem->setRestoreOptions($args[5]);
+                $trashItem->setResourceSecurityContext($args[6]);
+                $trashItem->setResourceSecurityObjectType($args[7]);
+                $trashItem->setResourceSecurityObjectId($args[8]);
 
-                foreach ($args[3] as $locale => $title) {
+                foreach ($args[2] as $locale => $title) {
                     $trashItem->setResourceTitle($title, $locale);
                 }
 

@@ -17,7 +17,10 @@ use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
 
 interface StoreTrashItemHandlerInterface
 {
-    public function store(object $resource): TrashItemInterface;
+    /**
+     * @param array<string, mixed> $options
+     */
+    public function store(object $resource, array $options = []): TrashItemInterface;
 
     public static function getResourceKey(): string;
 }

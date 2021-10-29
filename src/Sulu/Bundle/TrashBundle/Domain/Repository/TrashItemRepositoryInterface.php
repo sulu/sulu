@@ -18,14 +18,17 @@ use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
 interface TrashItemRepositoryInterface
 {
     /**
-     * @param mixed[] $restoreData
      * @param string|array<string, string> $resourceTitle
+     * @param mixed[] $restoreData
+     * @param mixed[] $restoreOptions
      */
     public function create(
         string $resourceKey,
         string $resourceId,
-        array $restoreData,
         $resourceTitle,
+        array $restoreData,
+        ?string $restoreType,
+        array $restoreOptions,
         ?string $resourceSecurityContext,
         ?string $resourceSecurityObjectType,
         ?string $resourceSecurityObjectId

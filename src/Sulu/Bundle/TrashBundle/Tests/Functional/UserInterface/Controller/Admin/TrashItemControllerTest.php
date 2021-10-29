@@ -67,15 +67,17 @@ class TrashItemControllerTest extends SuluTestCase
         static::createTrashItem(
             'test-resource-key',
             'resource-id-1',
-            ['key1' => 'value1', 'key2' => 'value2'],
-            'unlocalized title'
+            'unlocalized title',
+            ['key1' => 'value1', 'key2' => 'value2']
         );
 
         static::createTrashItem(
             'test-resource-key',
             'resource-id-2',
+            ['de' => 'german title', 'en' => 'english title', 'fr' => 'french title'],
             ['key1' => 'value1', 'key2' => 'value2'],
-            ['de' => 'german title', 'en' => 'english title', 'fr' => 'french title']
+            'test-translation',
+            ['locale' => 'en']
         );
 
         $this->client->jsonRequest('GET', '/api/trash-items', ['locale' => 'de']);
@@ -109,8 +111,10 @@ class TrashItemControllerTest extends SuluTestCase
                 static::createTrashItem(
                     'test_resource',
                     $resourceId,
-                    [],
                     'Resource title',
+                    [],
+                    null,
+                    [],
                     $resourceSecurityContext,
                     $resourceSecurityObjectType,
                     $resourceSecurityObjectId

@@ -20,7 +20,7 @@ interface RestoreTrashItemHandlerInterface
     /**
      * @param array<string, mixed> $restoreFormData
      */
-    public function restore(TrashItemInterface $trashItem, array $restoreFormData): object;
+    public function restore(TrashItemInterface $trashItem, array $restoreFormData = []): object;
 
     public static function getResourceKey(): string;
 }

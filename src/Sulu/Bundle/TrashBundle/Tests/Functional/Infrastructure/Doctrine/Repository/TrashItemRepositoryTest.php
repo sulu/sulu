@@ -48,8 +48,10 @@ class TrashItemRepositoryTest extends SuluTestCase
         $trashItem = $this->repository->create(
             'resourceKey',
             '1',
-            $restoreData,
             'Unlocalized resource title',
+            $restoreData,
+            'translation',
+            ['locale' => 'en'],
             'sulu.settings.test_context',
             'TestClass',
             '1'
@@ -57,7 +59,9 @@ class TrashItemRepositoryTest extends SuluTestCase
 
         static::assertSame('resourceKey', $trashItem->getResourceKey());
         static::assertSame('1', $trashItem->getResourceId());
+        static::assertSame('translation', $trashItem->getRestoreType());
         static::assertSame($restoreData, $trashItem->getRestoreData());
+        static::assertSame(['locale' => 'en'], $trashItem->getRestoreOptions());
         static::assertSame('Unlocalized resource title', $trashItem->getResourceTitle());
         static::assertSame('Unlocalized resource title', $trashItem->getResourceTitle('anything'));
         static::assertSame('sulu.settings.test_context', $trashItem->getResourceSecurityContext());
@@ -71,11 +75,13 @@ class TrashItemRepositoryTest extends SuluTestCase
         $trashItem = $this->repository->create(
             'resourceKey',
             '1',
-            [],
             [
                 'en' => 'English resource title',
                 'de' => 'German resource title',
             ],
+            [],
+            null,
+            [],
             null,
             null,
             null
@@ -92,8 +98,10 @@ class TrashItemRepositoryTest extends SuluTestCase
         $trashItem = $this->repository->create(
             'resourceKey',
             '1',
-            ['foo' => 'bar'],
             'Resource title',
+            ['foo' => 'bar'],
+            null,
+            [],
             null,
             null,
             null
@@ -112,7 +120,6 @@ class TrashItemRepositoryTest extends SuluTestCase
         $trashItem = static::createTrashItem(
             'test_resource',
             '1',
-            [],
             'Resource title'
         );
 
@@ -129,7 +136,6 @@ class TrashItemRepositoryTest extends SuluTestCase
         $trashItem = static::createTrashItem(
             'test_resource',
             '1',
-            [],
             'Resource title'
         );
 
@@ -150,7 +156,6 @@ class TrashItemRepositoryTest extends SuluTestCase
         $trashItem = static::createTrashItem(
             'test_resource',
             '1',
-            [],
             'Resource title'
         );
 

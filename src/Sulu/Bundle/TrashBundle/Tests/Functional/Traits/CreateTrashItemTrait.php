@@ -22,13 +22,16 @@ trait CreateTrashItemTrait
 {
     /**
      * @param mixed[] $restoreData
+     * @param mixed[] $restoreOptions
      * @param string|array<string, string> $resourceTitle
      */
     protected static function createTrashItem(
         string $resourceKey = 'test_resource',
         string $resourceId = '1',
-        array $restoreData = [],
         $resourceTitle = '',
+        array $restoreData = [],
+        ?string $restoreType = null,
+        array $restoreOptions = [],
         ?string $resourceSecurityContext = null,
         ?string $resourceSecurityObjectType = null,
         ?string $resourceSecurityObjectId = null
@@ -36,8 +39,10 @@ trait CreateTrashItemTrait
         $trashItem = static::getTrashItemRepository()->create(
             $resourceKey,
             $resourceId,
-            $restoreData,
             $resourceTitle,
+            $restoreData,
+            $restoreType,
+            $restoreOptions,
             $resourceSecurityContext,
             $resourceSecurityObjectType,
             $resourceSecurityObjectId

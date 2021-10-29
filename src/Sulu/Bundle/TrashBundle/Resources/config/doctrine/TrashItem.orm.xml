@@ -10,6 +10,8 @@
         <field name="resourceKey" column="resourceKey" type="string" nullable="false" length="191"/>
         <field name="resourceId" column="resourceId" type="string" nullable="false" length="191"/>
         <field name="restoreData" column="restoreData" type="json" nullable="false"/>
+        <field name="restoreType" column="restoreType" type="string" nullable="true" length="191"/>
+        <field name="restoreOptions" column="restoreOptions" type="json" nullable="false"/>
         <field name="resourceSecurityContext" column="resourceSecurityContext" type="string" nullable="true" length="191"/>
         <field name="resourceSecurityObjectType" column="resourceSecurityObjectType" type="string" nullable="true" length="191"/>
         <field name="resourceSecurityObjectId" column="resourceSecurityObjectId" type="string" nullable="true" length="191"/>

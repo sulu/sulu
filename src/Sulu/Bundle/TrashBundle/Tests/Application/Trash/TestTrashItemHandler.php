@@ -33,18 +33,20 @@ class TestTrashItemHandler implements StoreTrashItemHandlerInterface, RestoreTra
         $this->trashItemRepository = $trashItemRepository;
     }
 
-    public function restore(TrashItemInterface $trashItem, array $restoreFormData): object
+    public function restore(TrashItemInterface $trashItem, array $restoreFormData = []): object
     {
         return new TestResource();
     }
 
-    public function store(object $resource): TrashItemInterface
+    public function store(object $resource, array $options = []): TrashItemInterface
     {
         return $this->trashItemRepository->create(
             static::getResourceKey(),
             '1',
-            [],
             'Resource title',
+            [],
+            null,
+            $options,
             null,
             null,
             null

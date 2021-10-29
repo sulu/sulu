@@ -97,7 +97,7 @@ final class ContactTrashItemHandler implements
     /**
      * @param object|ContactInterface $resource
      */
-    public function store(object $resource): TrashItemInterface
+    public function store(object $resource, array $options = []): TrashItemInterface
     {
         Assert::isInstanceOf($resource, ContactInterface::class);
 
@@ -254,15 +254,17 @@ final class ContactTrashItemHandler implements
         return $this->trashItemRepository->create(
             ContactInterface::RESOURCE_KEY,
             (string) $data['id'],
-            \array_filter($data),
             \trim($resource->getFirstName() . ' ' . $resource->getLastName()),
+            \array_filter($data),
+            null,
+            $options,
             ContactAdmin::CONTACT_SECURITY_CONTEXT,
             null,
             null
         );
     }
 
-    public function restore(TrashItemInterface $trashItem, array $restoreFormData): object
+    public function restore(TrashItemInterface $trashItem, array $restoreFormData = []): object
     {
         $id = (int) $trashItem->getResourceId();
         $data = $trashItem->getRestoreData();

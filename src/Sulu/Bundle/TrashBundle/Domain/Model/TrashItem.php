@@ -38,7 +38,25 @@ class TrashItem implements TrashItemInterface
     /**
      * @var mixed[]
      */
-    private $restoreData;
+    private $restoreData = [];
+
+    /**
+     * The restoreType can be used to indicate a sub entity.
+     *     e.g.: Store and Restore a single translation of a page.
+     *          -> "translation".
+     *
+     * @var string|null
+     */
+    private $restoreType;
+
+    /**
+     * The restoreOptions are used to change behaviour of store and restore handler.
+     *     e.g.: Store and Restore a single translation of a page.
+     *          -> ["locale" => "en"].
+     *
+     * @var mixed[]
+     */
+    private $restoreOptions = [];
 
     /**
      * @var string|null
@@ -78,6 +96,7 @@ class TrashItem implements TrashItemInterface
     public function __construct()
     {
         $this->translations = new ArrayCollection();
+        $this->storeTimestamp = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -117,6 +136,30 @@ class TrashItem implements TrashItemInterface
     public function setRestoreData(array $restoreData): TrashItemInterface
     {
         $this->restoreData = $restoreData;
+
+        return $this;
+    }
+
+    public function getRestoreType(): ?string
+    {
+        return $this->restoreType;
+    }
+
+    public function setRestoreType(?string $restoreType): TrashItemInterface
+    {
+        $this->restoreType = $restoreType;
+
+        return $this;
+    }
+
+    public function getRestoreOptions(): array
+    {
+        return $this->restoreOptions;
+    }
+
+    public function setRestoreOptions(array $restoreOptions): TrashItemInterface
+    {
+        $this->restoreOptions = $restoreOptions;
 
         return $this;
     }
