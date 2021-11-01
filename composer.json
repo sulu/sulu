@@ -247,5 +247,6 @@
             "*": "dist"
         },
         "sort-packages": true
-    }
+    },
+    "minimum-stability": "dev"
 }
