@@ -30,7 +30,7 @@ use Symfony\Component\Security\Core\User\UserInterface as SymfonyUserInterface;
  *
  * @ExclusionPolicy("all")
  */
-class User extends ApiEntity implements UserInterface, Serializable, EquatableInterface
+class User extends ApiEntity implements UserInterface, Serializable, EquatableInterface, PasswordAuthenticatedUserInterface
 {
     /**
      * @var int
@@ -193,6 +193,11 @@ class User extends ApiEntity implements UserInterface, Serializable, EquatableIn
         return $this->username;
     }
 
+    public function getUserIdentifier(): string
+    {
+        return $this->username;
+    }
+
     /**
      * Set password.
      *
@@ -212,7 +217,7 @@ class User extends ApiEntity implements UserInterface, Serializable, EquatableIn
      *
      * @return string
      */
-    public function getPassword()
+    public function getPassword(): ?string
     {
         return $this->password;
     }
