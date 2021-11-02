@@ -190,12 +190,8 @@ class TrashItemController extends AbstractRestController implements ClassResourc
 
         $trashItems = \array_map(
             function(array $trashItem) use ($hiddenFieldDescriptors) {
-                if (isset($trashItem['resourceKey'])) {
-                    $trashItem['resourceKey'] = $this->getResourceTranslation($trashItem['resourceKey']);
-
-                    if (!empty($trashItem['restoreType'])) {
-                        $trashItem['resourceKey'] .= ' (' . $this->getResourceTranslation($trashItem['restoreType']) . ')';
-                    }
+                if (isset($trashItem['resourceType'])) {
+                    $trashItem['resourceType'] = $this->getResourceTranslation($trashItem['resourceType'], $trashItem['restoreType']);
                 }
 
                 foreach ($hiddenFieldDescriptors as $fieldDescriptor) {
@@ -384,9 +380,9 @@ class TrashItemController extends AbstractRestController implements ClassResourc
         );
     }
 
-    private function getResourceTranslation(string $resourceKey): string
+    private function getResourceTranslation(string $resourceKey, ?string $restoreType = null): string
     {
-        return $this->translator->trans(
+        $resourceTranslation = $this->translator->trans(
             \sprintf(
                 'sulu_activity.resource.%s',
                 $resourceKey
@@ -394,6 +390,24 @@ class TrashItemController extends AbstractRestController implements ClassResourc
             [],
             'admin'
         );
+
+        if ($restoreType) {
+            $resourceTranslation = \sprintf(
+                '%s (%s)',
+                $resourceTranslation,
+                $this->translator->trans(
+                    \sprintf(
+                        'sulu_activity.resource.%s.%s',
+                        $resourceKey,
+                        $restoreType
+                    ),
+                    [],
+                    'admin'
+                )
+            );
+        }
+
+        return $resourceTranslation;
     }
 
     /**
@@ -402,7 +416,6 @@ class TrashItemController extends AbstractRestController implements ClassResourc
     private function getHiddenFieldDescriptors(): array
     {
         return [
-            'restoreType' => $this->createFieldDescriptor('restoreType'),
             'resourceSecurityContext' => $this->createFieldDescriptor('resourceSecurityContext'),
             'resourceSecurityObjectType' => $this->createFieldDescriptor('resourceSecurityObjectType'),
             'resourceSecurityObjectId' => $this->createFieldDescriptor('resourceSecurityObjectId'),
@@ -417,6 +430,7 @@ class TrashItemController extends AbstractRestController implements ClassResourc
         return [
             'id' => $this->createFieldDescriptor('id'),
             'resourceKey' => $this->createFieldDescriptor('resourceKey'),
+            'restoreType' => $this->createFieldDescriptor('restoreType'),
         ];
     }
 

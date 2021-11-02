@@ -7,6 +7,10 @@
             <generator strategy="AUTO"/>
         </id>
 
+        <indexes>
+            <index columns="resourceKey,resourceId"/>
+        </indexes>
+
         <field name="resourceKey" column="resourceKey" type="string" nullable="false" length="191"/>
         <field name="resourceId" column="resourceId" type="string" nullable="false" length="191"/>
         <field name="restoreData" column="restoreData" type="json" nullable="false"/>
@@ -27,9 +31,5 @@
                 <cascade-persist/>
             </cascade>
         </one-to-many>
-
-        <unique-constraints>
-            <unique-constraint columns="resourceKey,resourceId" />
-        </unique-constraints>
     </mapped-superclass>
 </doctrine-mapping>

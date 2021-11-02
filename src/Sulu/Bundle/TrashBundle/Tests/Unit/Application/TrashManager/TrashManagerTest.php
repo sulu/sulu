@@ -89,12 +89,13 @@ class TrashManagerTest extends TestCase
 
         $object = new \stdClass();
         $trashItem = new TrashItem();
+        $options = [];
 
-        $storeTrashItemHandler->store($object)->shouldBeCalled()->willReturn($trashItem);
+        $storeTrashItemHandler->store($object, $options)->shouldBeCalled()->willReturn($trashItem);
         $this->domainEventCollector->collect(Argument::type(TrashItemCreatedEvent::class))->shouldBeCalled();
         $this->trashItemRepository->add($trashItem)->shouldBeCalled();
 
-        $result = $this->trashManager->store('tags', $object);
+        $result = $this->trashManager->store('tags', $object, $options);
 
         static::assertSame($trashItem, $result);
     }
