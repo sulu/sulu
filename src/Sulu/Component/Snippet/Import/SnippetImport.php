@@ -17,7 +17,6 @@ use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
-use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\DocumentManager\Exception\DocumentManagerException;
@@ -55,7 +54,7 @@ class SnippetImport extends Import implements SnippetImportInterface
     protected $logger;
 
     public function __construct(
-        DocumentManager $documentManager,
+        DocumentManagerInterface $documentManager,
         StructureManagerInterface $structureManager,
         DocumentRegistry $documentRegistry,
         ImportManagerInterface $importManager,

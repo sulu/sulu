@@ -13,7 +13,7 @@ namespace Sulu\Bundle\DocumentManagerBundle\DataFixtures;
 
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Sulu\Bundle\DocumentManagerBundle\Initializer\Initializer;
-use Sulu\Component\DocumentManager\DocumentManager;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -27,7 +27,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class DocumentExecutor
 {
     /**
-     * @var DocumentManager
+     * @var DocumentManagerInterface
      */
     private $documentManager;
 
@@ -37,7 +37,7 @@ class DocumentExecutor
     private $initializer;
 
     public function __construct(
-        DocumentManager $documentManager,
+        DocumentManagerInterface $documentManager,
         Initializer $initializer
     ) {
         $this->documentManager = $documentManager;

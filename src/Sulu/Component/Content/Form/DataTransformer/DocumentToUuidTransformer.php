@@ -13,15 +13,18 @@ namespace Sulu\Component\Content\Form\DataTransformer;
 
 use PHPCR\Util\UUIDHelper;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
-use Sulu\Component\DocumentManager\DocumentManager;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 
 class DocumentToUuidTransformer implements DataTransformerInterface
 {
+    /**
+     * @var DocumentManagerInterface
+     */
     private $documentManager;
 
-    public function __construct(DocumentManager $documentManager)
+    public function __construct(DocumentManagerInterface $documentManager)
     {
         $this->documentManager = $documentManager;
     }
@@ -57,7 +60,6 @@ class DocumentToUuidTransformer implements DataTransformerInterface
         }
 
         $document = $this->documentManager->find($uuid);
-
         if (null === $document) {
             throw new TransformationFailedException(\sprintf(
                 'Could not find document with UUID "%s"', $uuid

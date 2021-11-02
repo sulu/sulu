@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\PageBundle\Form\Type;
 
 use Sulu\Component\Content\Form\Type\DocumentObjectType;
-use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Metadata\MetadataFactory;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
@@ -40,7 +39,7 @@ class PageDocumentType extends BasePageDocumentType
 
     public function __construct(
         SessionManagerInterface $sessionManager,
-        DocumentManager $documentManager,
+        DocumentManagerInterface $documentManager,
         MetadataFactory $metadataFactory
     ) {
         $this->sessionManager = $sessionManager;

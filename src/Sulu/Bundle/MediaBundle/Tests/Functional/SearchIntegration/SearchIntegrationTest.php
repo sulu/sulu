@@ -15,6 +15,7 @@ use Sulu\Bundle\MediaBundle\Api\Media as ApiMedia;
 use Sulu\Bundle\MediaBundle\Content\MediaSelectionContainer;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\PageBundle\Document\HomeDocument;
+use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
@@ -65,10 +66,10 @@ class SearchIntegrationTest extends SuluTestCase
     /**
      * @dataProvider provideIndex
      */
-    public function testIndex($format, $expectException)
+    public function testIndex($format, $expectException): void
     {
         $mediaSelectionContainer = $this->prophesize(MediaSelectionContainer::class);
-        $mediaSelectionContainer->getData('de')->willReturn([$this->media]);
+        $mediaSelectionContainer->getData()->willReturn([$this->media]);
         $mediaSelectionContainer->toArray()->willReturn(null);
 
         if ($expectException) {
@@ -86,6 +87,7 @@ class SearchIntegrationTest extends SuluTestCase
             $testAdapter->purge($indexName);
         }
 
+        /** @var PageDocument $document */
         $document = $this->documentManager->create('page');
         $document->setTitle('Hallo');
         $document->setResourceSegment('/hallo/fo');
@@ -104,7 +106,41 @@ class SearchIntegrationTest extends SuluTestCase
         $this->assertEquals('myimage.jpg', $document->getImageUrl());
     }
 
-    public function testIndexWithArrayIdsEmpty()
+    public function testIndexNoFormats(): void
+    {
+        $mediaSelectionContainer = $this->prophesize(MediaSelectionContainer::class);
+        $mediaSelectionContainer->getData()->willReturn([$this->media]);
+        $mediaSelectionContainer->toArray()->willReturn(null);
+
+        $this->media->setFormats([]);
+
+        $testAdapter = $this->getContainer()->get('massive_search.adapter.test');
+
+        // remove the documents indexed when creating the fixtures
+        foreach ($testAdapter->listIndexes() as $indexName) {
+            $testAdapter->purge($indexName);
+        }
+
+        /** @var PageDocument $document */
+        $document = $this->documentManager->create('page');
+        $document->setTitle('Hallo');
+        $document->setResourceSegment('/hallo/fo');
+        $document->setStructureType('images');
+        $document->setParent($this->webspaceDocument);
+        $document->getStructure()->bind([
+            'images' => $mediaSelectionContainer->reveal(),
+        ], false);
+        $this->documentManager->persist($document, 'de');
+        $this->documentManager->flush();
+
+        $documents = $testAdapter->getDocuments();
+        $this->assertCount(1, $documents);
+        $document = \end($documents);
+        $this->assertInstanceOf('Massive\Bundle\SearchBundle\Search\Document', $document);
+        $this->assertNull($document->getImageUrl());
+    }
+
+    public function testIndexWithArrayIdsEmpty(): void
     {
         $testAdapter = $this->getContainer()->get('massive_search.adapter.test');
 
@@ -113,6 +149,7 @@ class SearchIntegrationTest extends SuluTestCase
             $testAdapter->purge($indexName);
         }
 
+        /** @var PageDocument $document */
         $document = $this->documentManager->create('page');
         $document->setTitle('Hallo');
         $document->setResourceSegment('/hallo/fo');
@@ -131,7 +168,7 @@ class SearchIntegrationTest extends SuluTestCase
         $this->assertNull($document->getImageUrl());
     }
 
-    public function testIndexWithArrayIdEmpty()
+    public function testIndexWithArrayIdEmpty(): void
     {
         $testAdapter = $this->getContainer()->get('massive_search.adapter.test');
 
@@ -140,6 +177,7 @@ class SearchIntegrationTest extends SuluTestCase
             $testAdapter->purge($indexName);
         }
 
+        /** @var PageDocument $document */
         $document = $this->documentManager->create('page');
         $document->setTitle('Hallo');
         $document->setResourceSegment('/hallo/fo');
@@ -158,10 +196,11 @@ class SearchIntegrationTest extends SuluTestCase
         $this->assertNull($document->getImageUrl());
     }
 
-    public function testIndexNoMedia()
+    public function testIndexNoMedia(): void
     {
         $testAdapter = $this->getContainer()->get('massive_search.adapter.test');
 
+        /** @var PageDocument $document */
         $document = $this->documentManager->create('page');
         $document->setStructureType('images');
         $document->setTitle('Hallo');

@@ -24,7 +24,7 @@ use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Form\Exception\InvalidFormException;
 use Sulu\Component\Content\Mapper\ContentMapper;
-use Sulu\Component\DocumentManager\DocumentManager;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 use Sulu\Component\Hash\RequestHashChecker;
 use Sulu\Component\Rest\Exception\ReferencingResourcesFoundException;
@@ -84,7 +84,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
     private $defaultSnippetManager;
 
     /**
-     * @var DocumentManager
+     * @var DocumentManagerInterface
      */
     private $documentManager;
 
@@ -121,7 +121,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
         TokenStorageInterface $tokenStorage,
         UrlGeneratorInterface $urlGenerator,
         DefaultSnippetManagerInterface $defaultSnippetManager,
-        DocumentManager $documentManager,
+        DocumentManagerInterface $documentManager,
         FormFactory $formFactory,
         RequestHashChecker $requestHashChecker,
         ListRestHelper $listRestHelper,
