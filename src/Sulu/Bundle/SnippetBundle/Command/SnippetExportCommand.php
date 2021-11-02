@@ -37,7 +37,7 @@ class SnippetExportCommand extends Command
 
     public function configure()
     {
-        $this->setDescription('Export snippet translations from given language.');
+        $this->setDescription('Export snippet translations from given language into xliff file for translating into a new language.');
         $this->addArgument('target', InputArgument::REQUIRED, 'Target for export (e.g. export_de.xliff)');
         $this->addArgument('locale', InputArgument::REQUIRED, 'Locale to export (e.g. de, en)');
         $this->addOption('format', 'f', InputOption::VALUE_REQUIRED, '', '1.2.xliff');

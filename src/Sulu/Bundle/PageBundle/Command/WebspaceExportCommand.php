@@ -44,7 +44,7 @@ class WebspaceExportCommand extends Command
             ->addOption('nodes', 'm', InputOption::VALUE_REQUIRED)
             ->addOption('ignored-nodes', 'i', InputOption::VALUE_REQUIRED)
             ->addOption('uuid', 'u', InputOption::VALUE_REQUIRED)
-            ->setDescription('Export webspace');
+            ->setDescription('Export webspace page translations from given language into xliff file for translating into a new language.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

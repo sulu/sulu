@@ -12,7 +12,7 @@
 namespace Sulu\Component\Content\Form\Type;
 
 use Sulu\Component\Content\Form\DataTransformer\DocumentToUuidTransformer;
-use Sulu\Component\DocumentManager\DocumentManager;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -23,11 +23,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class DocumentObjectType extends AbstractType
 {
     /**
-     * @var DocumentManager
+     * @var DocumentManagerInterface
      */
     private $documentManager;
 
-    public function __construct(DocumentManager $documentManager)
+    public function __construct(DocumentManagerInterface $documentManager)
     {
         $this->documentManager = $documentManager;
     }
