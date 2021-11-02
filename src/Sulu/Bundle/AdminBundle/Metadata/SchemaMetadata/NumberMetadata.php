@@ -31,7 +31,7 @@ class NumberMetadata implements SchemaMetadataInterface
     public function __construct(
         ?float $minimum = null,
         ?float $maximum = null,
-        ?float $multipleOf = null,
+        ?float $multipleOf = null
     ) {
         $this->minimum = $minimum;
         $this->maximum = $maximum;

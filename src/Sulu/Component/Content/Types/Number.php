@@ -74,12 +74,33 @@ class Number extends SimpleContentType implements PropertyMetadataMapperInterfac
         $min = $this->getFloatParam($propertyMetadata, 'min');
         $max = $this->getFloatParam($propertyMetadata, 'max');
         $multipleOf = $this->getFloatParam($propertyMetadata, 'multiple_of');
+        $step = $this->getFloatParam($propertyMetadata, 'step');
 
         Assert::nullOrGreaterThan($multipleOf, 0, \sprintf(
             'Parameter "%s" of property "%s" needs to be greater than "0"',
             'multiple_of',
             $propertyName
         ));
+
+        Assert::nullOrGreaterThan($step, 0, \sprintf(
+            'Parameter "%s" of property "%s" needs to be greater than "0"',
+            'step',
+            $propertyName
+        ));
+
+        if (null !== $step && null !== $multipleOf) {
+            if (!$this->isMultipleOf($step, $multipleOf)) {
+                throw new \RuntimeException(
+                    \sprintf(
+                        'Because parameter "%1$s" of property "%2$s" has value "%4$s", parameter "%3$s" needs to be a multiple of "%4$s"',
+                        'multiple_of',
+                        $propertyName,
+                        'step',
+                        \strval($multipleOf)
+                    )
+                );
+            }
+        }
 
         if (null !== $min && null !== $max) {
             Assert::greaterThanEq($max, $min, \sprintf(
@@ -109,6 +130,12 @@ class Number extends SimpleContentType implements PropertyMetadataMapperInterfac
             $mandatory,
             $numberMetadata
         );
+    }
+
+    // Cannot use fmod($value, $multipleOf) here, because fmod(1, 0.01) returns 0.09999999999999995 instead of 0
+    private function isMultipleOf(float $value, float $multipleOf): bool
+    {
+        return 0.0 === $value - (int) (\floor($value / $multipleOf) * $multipleOf);
     }
 
     private function getFloatParam(ContentPropertyMetadata $propertyMetadata, string $paramName): ?float
