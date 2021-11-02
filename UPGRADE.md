@@ -2,7 +2,7 @@
 
 ## 2.2.17
 
-### Add missing `kernel.reset` event to document manager cache
+### Add missing kernel.reset tag for document manager cache services
 
 The configured `doctrine_phpcr.meta_cache_provider` and `doctrine_phpcr.nodes_cache_provider`
 in the `config/packages/prod/sulu_document_manager.yaml` should be tagged with `kernel.reset`
