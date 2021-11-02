@@ -415,6 +415,37 @@ If you have implemented this interface in your project, you need to add the para
 
 ## 2.2.17
 
+### Add missing `kernel.reset` tag for document manager cache services
+
+The configured `doctrine_phpcr.meta_cache_provider` and `doctrine_phpcr.nodes_cache_provider`
+in the `config/packages/prod/sulu_document_manager.yaml` should be tagged with `kernel.reset`
+to be correctly be reseted:
+
+```diff
+# config/packages/prod/sulu_document_manager.yaml
+
+# ...
+
+services:
+    doctrine_phpcr.meta_cache_provider:
+        class: Symfony\Component\Cache\DoctrineProvider
+        public: false
+        arguments:
+            - '@doctrine_phpcr.meta_cache_pool'
++        tags:
++            - { name: 'kernel.reset', method: 'reset' }
+
+    doctrine_phpcr.nodes_cache_provider:
+        class: Symfony\Component\Cache\DoctrineProvider
+        public: false
+        arguments:
+            - '@doctrine_phpcr.nodes_cache_pool'
++        tags:
++            - { name: 'kernel.reset', method: 'reset' }
+
+# ...
+```
+
 ### Add missing on delete cascade on CategoryTranslation to Keyword relation
 
 The relation table `ca_category_translation_keywords` is missing a `ON DELETE CASCADE`

@@ -17,12 +17,16 @@ services:
         public: false
         arguments:
             - '@doctrine_phpcr.meta_cache_pool'
+        tags:
+            - { name: 'kernel.reset', method: 'reset' }
 
     doctrine_phpcr.nodes_cache_provider:
         class: Symfony\Component\Cache\DoctrineProvider
         public: false
         arguments:
             - '@doctrine_phpcr.nodes_cache_pool'
+        tags:
+            - { name: 'kernel.reset', method: 'reset' }
 
 framework:
     cache:
