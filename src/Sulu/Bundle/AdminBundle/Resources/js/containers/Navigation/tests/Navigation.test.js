@@ -5,6 +5,10 @@ import Navigation from '../Navigation';
 import Router, {Route} from '../../../services/Router';
 import type {NavigationItem} from '../types';
 
+jest.mock('../../../utils/Translator', () => ({
+    translate: jest.fn((key) => key),
+}));
+
 jest.mock('../../../services/Router/Router', () => jest.fn(function() {
     this.navigate = jest.fn();
 }));

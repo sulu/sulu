@@ -6,7 +6,7 @@ import ListStore from '../../../containers/List/stores/ListStore';
 import ListOverlay from '../../../containers/ListOverlay';
 import MultiListOverlay from '../MultiListOverlay';
 
-jest.mock('../../../utils', () => ({
+jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 

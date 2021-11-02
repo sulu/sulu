@@ -6,7 +6,7 @@ import MediaCardOverviewAdapter from '../../adapters/MediaCardOverviewAdapter';
 
 jest.mock('sulu-admin-bundle/services/initializer', () => jest.fn());
 
-jest.mock('sulu-admin-bundle/utils', () => ({
+jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate(key) {
         switch (key) {
             case 'sulu_media.copy_url':
