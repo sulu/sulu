@@ -1622,7 +1622,7 @@ test('Should show error if form has been tried to save although it is not valid'
     const schemaPromise = Promise.resolve({});
     metadataStore.getSchema.mockReturnValue(schemaPromise);
 
-    const jsonSchemaPromise = Promise.resolve({required: ['title']});
+    const jsonSchemaPromise = Promise.resolve({type: 'object', required: ['title']});
     metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
 
     const route = {
@@ -1674,7 +1674,7 @@ test('Should clear errors if form has been saved', () => {
     const schemaPromise = Promise.resolve({});
     metadataStore.getSchema.mockReturnValue(schemaPromise);
 
-    const jsonSchemaPromise = Promise.resolve({required: []});
+    const jsonSchemaPromise = Promise.resolve({type: 'object', required: []});
     metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
 
     const route = {

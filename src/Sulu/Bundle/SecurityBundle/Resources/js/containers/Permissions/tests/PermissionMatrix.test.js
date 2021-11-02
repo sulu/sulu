@@ -6,7 +6,7 @@ import type {MatrixValues} from 'sulu-admin-bundle/components/Matrix/types';
 import type {ContextPermission} from '../types';
 import type {SecurityContexts} from '../../../stores/securityContextStore/types';
 
-jest.mock('sulu-admin-bundle/utils', () => ({
+jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: (key) => key,
 }));
 

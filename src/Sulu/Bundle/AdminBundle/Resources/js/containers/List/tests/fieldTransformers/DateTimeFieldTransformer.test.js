@@ -13,6 +13,10 @@ jest.mock('loglevel', () => ({
     error: jest.fn(),
 }));
 
+jest.mock('../../../../utils/Translator', () => ({
+    translate: jest.fn((key) => key),
+}));
+
 test('Test undefined', () => {
     expect(dateTimeFieldTransformer.transform(undefined)).toBe(null);
 });

@@ -18,7 +18,7 @@ jest.mock('../registries/fieldRegistry', () => ({
     getOptions: jest.fn(),
 }));
 
-jest.mock('../../../utils', () => ({
+jest.mock('../../../utils/Translator', () => ({
     translate: (key) => key,
 }));
 
