@@ -3,6 +3,10 @@ import {mount} from 'enzyme';
 import React from 'react';
 import Navigation from '../Navigation';
 
+jest.mock('../../../utils/Translator', () => ({
+    translate: jest.fn((key) => key),
+}));
+
 test('The component should render and handle clicks correctly', () => {
     const handleNavigationClick = jest.fn();
     const handleLogoutClick = jest.fn();

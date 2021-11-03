@@ -56,7 +56,7 @@
         "handcraftedinthealps/rest-routing-bundle": "^1.0",
         "imagine/imagine": "^0.6.1 || ^0.7.0 || ^1.0",
         "jms/serializer": "^3.0",
-        "jms/serializer-bundle": "^3.0",
+        "jms/serializer-bundle": "^3.0 || ^4.0",
         "massive/build-bundle": "^0.3 || ^0.4 || ^0.5",
         "massive/search-bundle": "^2.0",
         "matomo/device-detector": "^3.7 || ^4.0.1",

@@ -82,7 +82,7 @@ jest.mock('sulu-admin-bundle/services/Router/Router', () => jest.fn(function(his
     this.route = {options: {}};
 }));
 
-jest.mock('sulu-admin-bundle/utils', () => ({
+jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
