@@ -3,7 +3,7 @@ import React from 'react';
 import {render} from 'enzyme';
 import AddressCardPreview from '../AddressCardPreview';
 
-jest.mock('sulu-admin-bundle/utils', () => ({
+jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 

@@ -15,7 +15,7 @@ jest.mock('../../../stores/MediaUploadStore', () => jest.fn(function(media) {
     this.media = media;
 }));
 
-jest.mock('sulu-admin-bundle/utils', () => ({
+jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 

@@ -8,7 +8,7 @@ jest.mock('sulu-admin-bundle/containers', () => ({
     SingleListOverlay: jest.fn(() => null),
     withToolbar: jest.fn((Component) => Component),
 }));
-jest.mock('sulu-admin-bundle/utils', () => ({
+jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) =>key),
 }));
 jest.mock('../stores/SnippetAreaStore', () => jest.fn());

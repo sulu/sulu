@@ -496,21 +496,21 @@ test('Remember fields being finished as modified fields', () => {
 });
 
 test('Validate should return true if no errors occured', () => {
-    const memoryFormStore = new MemoryFormStore({title: 'Test'}, {}, {required: ['title']});
+    const memoryFormStore = new MemoryFormStore({title: 'Test'}, {}, {type: 'object', required: ['title']});
 
     expect(memoryFormStore.validate()).toEqual(true);
     expect(memoryFormStore.hasErrors).toEqual(false);
 });
 
 test('Validate should return false if errors occured', () => {
-    const memoryFormStore = new MemoryFormStore({}, {}, {required: ['title']});
+    const memoryFormStore = new MemoryFormStore({}, {}, {type: 'object', required: ['title']});
 
     expect(memoryFormStore.validate()).toEqual(false);
     expect(memoryFormStore.hasErrors).toEqual(true);
 });
 
 test('Forbidden flag should always be set to false', () => {
-    const memoryFormStore = new MemoryFormStore({}, {}, {required: ['title']});
+    const memoryFormStore = new MemoryFormStore({}, {}, {type: 'object', required: ['title']});
 
     expect(memoryFormStore.forbidden).toEqual(false);
 });

@@ -6,7 +6,7 @@ import MultiSelection from '../MultiSelection';
 import MultiSelectionStore from '../../../stores/MultiSelectionStore';
 import MultiItemSelection from '../../../components/MultiItemSelection';
 
-jest.mock('../../../utils', () => ({
+jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
