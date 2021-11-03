@@ -7,6 +7,10 @@ import linkTypeRegistry from '../registries/linkTypeRegistry';
 import LinkTypeOverlay from '../overlays/LinkTypeOverlay';
 import type {LinkValue} from '../types';
 
+jest.mock('../../../utils/Translator', () => ({
+    translate: jest.fn((key) => key),
+}));
+
 jest.mock('../registries/linkTypeRegistry', () => ({
     getKeys: jest.fn(),
     getOverlay: jest.fn(),

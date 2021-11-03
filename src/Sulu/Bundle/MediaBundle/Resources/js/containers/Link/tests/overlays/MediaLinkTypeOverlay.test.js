@@ -7,16 +7,11 @@ jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
+jest.mock('../../../SingleMediaSelectionOverlay', () => jest.fn(function() {
+    return <div>single media selection overlay</div>;
+}));
+
 test('Render overlay with minimal config', () => {
-    const response = {
-        ok: true,
-        json: jest.fn(),
-    };
-    const promise = new Promise((resolve) => resolve(response));
-
-    window.fetch = jest.fn();
-    window.fetch.mockReturnValue(promise);
-
     const mediaLinkTypeOverlay = mount(
         <MediaLinkTypeOverlay
             href={undefined}
@@ -44,15 +39,6 @@ test('Render overlay with invalid href type', () => {
 });
 
 test('Render overlay with target enabled', () => {
-    const response = {
-        ok: true,
-        json: jest.fn(),
-    };
-    const promise = new Promise((resolve) => resolve(response));
-
-    window.fetch = jest.fn();
-    window.fetch.mockReturnValue(promise);
-
     const mediaLinkTypeOverlay = mount(
         <MediaLinkTypeOverlay
             href={undefined}
@@ -68,15 +54,6 @@ test('Render overlay with target enabled', () => {
 });
 
 test('Render overlay with title enabled', () => {
-    const response = {
-        ok: true,
-        json: jest.fn(),
-    };
-    const promise = new Promise((resolve) => resolve(response));
-
-    window.fetch = jest.fn();
-    window.fetch.mockReturnValue(promise);
-
     const mediaLinkTypeOverlay = mount(
         <MediaLinkTypeOverlay
             href={undefined}
@@ -92,15 +69,6 @@ test('Render overlay with title enabled', () => {
 });
 
 test('Delegate only id to onHrefChange method', () => {
-    const response = {
-        ok: true,
-        json: jest.fn(),
-    };
-    const promise = new Promise((resolve) => resolve(response));
-
-    window.fetch = jest.fn();
-    window.fetch.mockReturnValue(promise);
-
     const hrefChangeSpy = jest.fn();
 
     const mediaLinkTypeOverlay = mount(

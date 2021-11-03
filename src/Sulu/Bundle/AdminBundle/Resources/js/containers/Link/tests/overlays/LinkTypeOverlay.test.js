@@ -7,17 +7,11 @@ jest.mock('../../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
+jest.mock('../../../SingleListOverlay', () => jest.fn(function() {
+    return <div>single list overlay</div>;
+}));
+
 test('Render overlay with minimal config', () => {
-    const response = {
-        ok: true,
-        json: jest.fn(),
-    };
-    response.json.mockReturnValue(Promise.resolve({}));
-    const promise = new Promise((resolve) => resolve(response));
-
-    window.fetch = jest.fn();
-    window.fetch.mockReturnValue(promise);
-
     const linkOverlay = mount(
         <LinkTypeOverlay
             href={undefined}
@@ -55,15 +49,6 @@ test('Render overlay without options', () => {
 });
 
 test('Render overlay with anchor enabled', () => {
-    const response = {
-        ok: true,
-        json: jest.fn(),
-    };
-    const promise = new Promise((resolve) => resolve(response));
-
-    window.fetch = jest.fn();
-    window.fetch.mockReturnValue(promise);
-
     const linkOverlay = mount(
         <LinkTypeOverlay
             href={undefined}
@@ -89,15 +74,6 @@ test('Render overlay with anchor enabled', () => {
 });
 
 test('Render overlay with target enabled', () => {
-    const response = {
-        ok: true,
-        json: jest.fn(),
-    };
-    const promise = new Promise((resolve) => resolve(response));
-
-    window.fetch = jest.fn();
-    window.fetch.mockReturnValue(promise);
-
     const linkOverlay = mount(
         <LinkTypeOverlay
             href={undefined}
@@ -123,15 +99,6 @@ test('Render overlay with target enabled', () => {
 });
 
 test('Render overlay with title enabled', () => {
-    const response = {
-        ok: true,
-        json: jest.fn(),
-    };
-    const promise = new Promise((resolve) => resolve(response));
-
-    window.fetch = jest.fn();
-    window.fetch.mockReturnValue(promise);
-
     const linkOverlay = mount(
         <LinkTypeOverlay
             href={undefined}
