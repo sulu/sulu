@@ -123,8 +123,6 @@ final class CollectionTrashItemHandler implements
             $collectionTitles[$locale] = $meta->getTitle();
         }
 
-        // TODO permissions
-
         return $this->trashItemRepository->create(
             CollectionInterface::RESOURCE_KEY,
             (string) $resource->getId(),
@@ -175,8 +173,6 @@ final class CollectionTrashItemHandler implements
                 $collection->setDefaultMeta($collectionMeta);
             }
         }
-
-        // TODO permissions
 
         $this->domainEventCollector->collect(
             new CollectionRestoredEvent($collection, $data)
