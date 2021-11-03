@@ -215,8 +215,10 @@ class RedirectExceptionSubscriber implements EventSubscriberInterface
                 $path = \substr($path, \strlen($resourceLocatorPrefix));
             }
 
-            $url .= $path;
-            $url = \rtrim($url, '/');
+            [$resourceLocator, $formatResult] = $this->getResourceLocatorFromRequest($path);
+
+            $url .= $resourceLocator;
+            $url = \rtrim($url, '/') . (null !== $formatResult ? ('.' . $formatResult) : '');
         }
 
         if (isset($requestInfo['query'])) {
@@ -245,5 +247,23 @@ class RedirectExceptionSubscriber implements EventSubscriberInterface
         }
 
         return \parse_url($url);
+    }
+
+    /**
+     * @return array<int, string|null>
+     */
+    private function getResourceLocatorFromRequest(string $path): array
+    {
+        // extract file and extension info
+        $pathParts = \explode('/', $path);
+        $fileInfo = \explode('.', \array_pop($pathParts));
+
+        $resourceLocator = \rtrim(\implode('/', $pathParts), '/') . '/' . $fileInfo[0];
+        $formatResult = null;
+        if (\count($fileInfo) > 1) {
+            $formatResult = \end($fileInfo);
+        }
+
+        return [$resourceLocator, $formatResult];
     }
 }
