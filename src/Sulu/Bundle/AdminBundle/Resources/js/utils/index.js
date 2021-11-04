@@ -1,5 +1,5 @@
 // @flow
-import arrayMove from 'array-move';
+import {arrayMoveImmutable as arrayMove} from 'array-move';
 import {buildQueryString} from './Request';
 import {createAjv} from './Ajv';
 import {transformBytesToReadableString} from './Bytes';
