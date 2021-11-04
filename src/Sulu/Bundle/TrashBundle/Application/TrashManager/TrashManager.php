@@ -76,7 +76,7 @@ final class TrashManager implements TrashManagerInterface
         /** @var StoreTrashItemHandlerInterface $storeTrashItemHandler */
         $storeTrashItemHandler = $this->storeTrashItemHandlerLocator->get($resourceKey);
 
-        $trashItem = $storeTrashItemHandler->store($object);
+        $trashItem = $storeTrashItemHandler->store($object, $options);
 
         $this->domainEventCollector->collect(
             new TrashItemCreatedEvent($trashItem)

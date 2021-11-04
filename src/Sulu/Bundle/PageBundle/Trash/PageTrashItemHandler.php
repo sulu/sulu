@@ -88,8 +88,11 @@ final class PageTrashItemHandler implements
             $data['parentUuid'] = $parent->getUuid();
         }
 
+        $restoreType = isset($options['locale']) ? 'translation' : null;
+        $locales = isset($options['locale']) ? [$options['locale']] : $this->documentInspector->getLocales($page);
+
         /** @var string $locale */
-        foreach ($this->documentInspector->getLocales($page) as $locale) {
+        foreach ($locales as $locale) {
             /** @var BasePageDocument $localizedPage */
             $localizedPage = $this->documentManager->find($page->getUuid(), $locale);
             /** @var BasePageDocument|null $redirectTarget */
@@ -128,7 +131,7 @@ final class PageTrashItemHandler implements
             (string) $page->getUuid(),
             $pageTitles,
             $data,
-            null,
+            $restoreType,
             $options,
             PageAdmin::getPageSecurityContext($page->getWebspaceName()),
             SecurityBehavior::class,

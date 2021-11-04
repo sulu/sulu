@@ -31,7 +31,7 @@
 
     <properties>
         <property
-            name="resourceKey"
+            name="resourceType"
             visibility="yes"
             sortable="true"
             searchability="no"
