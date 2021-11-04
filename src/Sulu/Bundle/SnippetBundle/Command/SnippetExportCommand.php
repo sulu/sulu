@@ -43,7 +43,7 @@ class SnippetExportCommand extends Command
         $this->addOption('format', 'f', InputOption::VALUE_REQUIRED, '', '1.2.xliff');
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $target = $input->getArgument('target');
         if (false === \strpos($target, '/')) {

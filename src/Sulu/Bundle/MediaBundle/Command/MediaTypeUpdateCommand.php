@@ -47,7 +47,7 @@ class MediaTypeUpdateCommand extends Command
         $this->setDescription('Update all media type by the set configuration');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $em = $this->entityManager;
         $repo = $em->getRepository('SuluMediaBundle:Media');

@@ -56,8 +56,7 @@ class CreateRoleCommand extends Command
 
     protected function configure()
     {
-        $this->setName('sulu:security:role:create')
-            ->setDescription('Create a role.')
+        $this->setDescription('Create a role.')
             ->setDefinition(
                 [
                     new InputArgument('name', InputArgument::REQUIRED, 'Name of role'),
@@ -66,7 +65,7 @@ class CreateRoleCommand extends Command
             );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $name = $input->getArgument('name');
         $system = $input->getArgument('system');

@@ -14,6 +14,7 @@ namespace Sulu\Bundle\SecurityBundle\Tests\Functional\Entity;
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class RoleRepositoryTest extends SuluTestCase
@@ -29,7 +30,7 @@ class RoleRepositoryTest extends SuluTestCase
     private $em;
 
     /**
-     * @var RoleRepositoryInteface
+     * @var RoleRepositoryInterface
      */
     private $roleRepository;
 

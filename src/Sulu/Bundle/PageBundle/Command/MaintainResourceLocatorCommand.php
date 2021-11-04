@@ -86,7 +86,7 @@ class MaintainResourceLocatorCommand extends Command
         $this->setDescription('Resets the cached url value on every node in the live workspace');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         /** @var Webspace $webspace */
         foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {

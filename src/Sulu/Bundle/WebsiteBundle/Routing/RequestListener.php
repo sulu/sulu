@@ -12,10 +12,12 @@
 namespace Sulu\Bundle\WebsiteBundle\Routing;
 
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\RouterInterface;
 
-class RequestListener
+class RequestListener implements EventSubscriberInterface
 {
     /**
      * @var RouterInterface
@@ -31,6 +33,11 @@ class RequestListener
     {
         $this->router = $router;
         $this->requestAnalyzer = $requestAnalyzer;
+    }
+
+    public static function getSubscribedEvents(): array
+    {
+        return [KernelEvents::REQUEST => ['onRequest', 31]];
     }
 
     public function onRequest(RequestEvent $event)

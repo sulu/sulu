@@ -56,7 +56,7 @@ class FormatCacheRegenerateCommand extends Command
         $this->setDescription('Loops over sulu image cache, and regenerates the existing images');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $ui = new SymfonyStyle($input, $output);
 

@@ -89,7 +89,7 @@ class DumpSitemapCommand extends Command
             ->addOption('clear', null, InputOption::VALUE_NONE, 'Delete all file before start.');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->output = $output;
 

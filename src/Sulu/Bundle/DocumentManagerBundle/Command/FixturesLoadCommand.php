@@ -75,7 +75,7 @@ EOT
         );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $noInitialize = $input->getOption('no-initialize');
         $append = $input->getOption('append');

@@ -16,13 +16,15 @@ use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Security\SecuredControllerInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Listens on the kernel.controller event and checks if Sulu allows this action.
  */
-class SuluSecurityListener
+class SuluSecurityListener implements EventSubscriberInterface
 {
     /**
      * @var SecurityCheckerInterface
@@ -32,6 +34,11 @@ class SuluSecurityListener
     public function __construct(SecurityCheckerInterface $securityChecker)
     {
         $this->securityChecker = $securityChecker;
+    }
+
+    public static function getSubscribedEvents(): array
+    {
+        return [KernelEvents::CONTROLLER => 'onKernelController'];
     }
 
     /**

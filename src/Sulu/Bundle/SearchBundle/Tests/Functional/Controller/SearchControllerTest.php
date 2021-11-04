@@ -17,7 +17,7 @@ use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Symfony\Component\BrowserKit\Client;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class SearchControllerTest extends SuluTestCase
 {
@@ -27,7 +27,7 @@ class SearchControllerTest extends SuluTestCase
     private $searchManager;
 
     /**
-     * @var Client
+     * @var KernelBrowser
      */
     protected $client;
 

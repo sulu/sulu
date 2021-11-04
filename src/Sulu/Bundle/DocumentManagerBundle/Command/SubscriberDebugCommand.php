@@ -43,7 +43,7 @@ class SubscriberDebugCommand extends Command
         $this->setDescription('Show event listeners associated with the document manager');
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $eventName = $input->getArgument('event_name');
 
@@ -119,7 +119,7 @@ class SubscriberDebugCommand extends Command
         }
     }
 
-    private function showEventNames(OutputInterface $output)
+    private function showEventNames(OutputInterface $output): int
     {
         $refl = new \ReflectionClass(Events::class);
         $constants = $refl->getConstants();

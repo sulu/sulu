@@ -36,7 +36,7 @@ class DownloadBuildCommand extends Command
         $this->setDescription('Downloads the current admin application build from the sulu/skeleton repository.');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $command = $this->getApplication()->find('sulu:admin:update-build');
 
