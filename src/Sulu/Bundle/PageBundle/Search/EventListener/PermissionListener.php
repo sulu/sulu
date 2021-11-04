@@ -15,6 +15,7 @@ use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Security\Event\PermissionUpdateEvent;
+use Sulu\Component\Security\Event\SecurityEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -40,7 +41,7 @@ class PermissionListener implements EventSubscriberInterface
 
     public static function getSubscribedEvents(): array
     {
-        return ['sulu_security.permission_update' => 'onPermissionUpdate'];
+        return [SecurityEvents::PERMISSION_UPDATE => 'onPermissionUpdate'];
     }
 
     public function onPermissionUpdate(PermissionUpdateEvent $permissionUpdateEvent)
