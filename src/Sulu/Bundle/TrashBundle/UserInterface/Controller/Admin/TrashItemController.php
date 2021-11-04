@@ -241,8 +241,11 @@ class TrashItemController extends AbstractRestController implements ClassResourc
             PermissionTypes::VIEW
         );
 
+        $context = new Context();
+        $context->setGroups(['trash_item_admin_api']);
+
         return $this->handleView(
-            $this->view($trashItem)
+            $this->view($trashItem)->setContext($context)
         );
     }
 

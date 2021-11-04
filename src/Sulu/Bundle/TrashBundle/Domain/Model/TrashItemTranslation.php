@@ -13,6 +13,13 @@ declare(strict_types=1);
 
 namespace Sulu\Bundle\TrashBundle\Domain\Model;
 
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\Groups;
+
+/**
+ * @ExclusionPolicy("all")
+ */
 class TrashItemTranslation
 {
     /**
@@ -26,11 +33,17 @@ class TrashItemTranslation
     private $trashItem;
 
     /**
+     * @Expose
+     * @Groups({"trash_item_admin_api"})
+     *
      * @var string|null
      */
     private $locale;
 
     /**
+     * @Expose
+     * @Groups({"trash_item_admin_api"})
+     *
      * @var string
      */
     private $title;
