@@ -114,8 +114,8 @@ class Portal
             $this->setDefaultLocalization($localization);
         }
 
-        if ($localization->isXDefault()) {
-            $this->setXDefaultLocalization($localization);
+        if ($localization->isXDefault(false)) {
+            $this->setXDefaultLocalization($localization, false);
         }
     }
 
@@ -177,7 +177,9 @@ class Portal
      */
     public function setXDefaultLocalization($xDefaultLocalization)
     {
-        @\trigger_error(\sprintf('The "%s" method is deprecated on "%s" use "setDefaultLocalization" instead.', __METHOD__, __CLASS__), \E_USER_DEPRECATED);
+        if (\func_num_args() < 2 || \func_get_arg(1)) {
+            @\trigger_error(\sprintf('The "%s" method is deprecated on "%s" use "setDefaultLocalization" instead.', __METHOD__, __CLASS__), \E_USER_DEPRECATED);
+        }
 
         $this->xDefaultLocalization = $xDefaultLocalization;
     }

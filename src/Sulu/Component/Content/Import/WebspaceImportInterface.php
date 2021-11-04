@@ -30,7 +30,7 @@ interface WebspaceImportInterface
      * @param bool $overrideSettings
      * @param string $exportSuluVersion
      *
-     * @return array
+     * @return \stdClass
      */
     public function import(
         $webspaceKey,

@@ -24,6 +24,8 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class MovePageTreeCommand extends Command
 {
+    protected static $defaultName = 'sulu:route:page-tree:move';
+
     /**
      * @var PageTreeMoverInterface
      */
@@ -44,7 +46,7 @@ class MovePageTreeCommand extends Command
         ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool,
         DocumentManagerInterface $documentManager
     ) {
-        parent::__construct('sulu:route:page-tree:move');
+        parent::__construct();
         $this->pageTreeMover = $pageTreeMover;
         $this->resourceLocatorStrategyPool = $resourceLocatorStrategyPool;
         $this->documentManager = $documentManager;
@@ -58,7 +60,7 @@ class MovePageTreeCommand extends Command
             ->addArgument('locale', InputArgument::REQUIRED);
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $source = $input->getArgument('source-segment');
         $destination = $input->getArgument('destination-segment');
@@ -73,5 +75,7 @@ class MovePageTreeCommand extends Command
         $this->pageTreeMover->move($source, $document);
 
         $this->documentManager->flush();
+
+        return 0;
     }
 }

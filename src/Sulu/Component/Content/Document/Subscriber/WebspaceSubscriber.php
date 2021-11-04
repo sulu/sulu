@@ -34,7 +34,7 @@ class WebspaceSubscriber implements EventSubscriberInterface
     private $documentInspector;
 
     /**
-     * @var DocumentManagerInteface
+     * @var DocumentManagerInterface
      */
     private $documentManager;
 

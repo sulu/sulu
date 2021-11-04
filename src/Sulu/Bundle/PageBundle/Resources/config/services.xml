@@ -26,7 +26,8 @@
         <service id="sulu_page.permission_listener" class="Sulu\Bundle\PageBundle\Search\EventListener\PermissionListener">
             <argument type="service" id="sulu_document_manager.document_manager"/>
             <argument type="service" id="massive_search.search_manager"/>
-            <tag name="kernel.event_listener" event="sulu_security.permission_update" method="onPermissionUpdate"/>
+
+            <tag name="kernel.event_subscriber"/>
         </service>
 
         <!-- webspace settings -->

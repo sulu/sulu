@@ -60,7 +60,7 @@ class RecoverCommand extends Command
             );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $em = $this->entityManager;
         $force = $input->getOption('force');

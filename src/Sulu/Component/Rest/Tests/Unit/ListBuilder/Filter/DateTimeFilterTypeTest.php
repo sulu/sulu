@@ -20,7 +20,7 @@ use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
 class DateTimeFilterTypeTest extends TestCase
 {
     /**
-     * @var DateFilterType
+     * @var DateTimeFilterType
      */
     private $dateTimeFilterType;
 
