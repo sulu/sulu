@@ -13,6 +13,7 @@ namespace Sulu\Component\Webspace\Tests\Functional\Analyzer;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\Attributes\PortalInformationRequestProcessor;
@@ -37,17 +38,17 @@ class RequestAnalyzerTest extends TestCase
     private $requestAnalyzer;
 
     /**
-     * @var PHPUnit\Framework\MockObject_MockObject
+     * @var ObjectProphecy|WebspaceManagerInterface
      */
     private $webspaceManager;
 
     /**
-     * @var ContentMapperInterface
+     * @var ObjectProphecy|ContentMapperInterface
      */
     private $contentMapper;
 
     /**
-     * @var RequestStack
+     * @var ObjectProphecy|RequestStack
      */
     private $requestStack;
 

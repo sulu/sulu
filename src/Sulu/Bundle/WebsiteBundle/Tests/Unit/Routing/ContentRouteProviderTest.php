@@ -13,6 +13,7 @@ namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\Routing;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\WebsiteBundle\Routing\ContentRouteProvider;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
@@ -50,37 +51,37 @@ use Symfony\Component\Routing\Route;
 class ContentRouteProviderTest extends TestCase
 {
     /**
-     * @var DocumentManagerInterface
+     * @var ObjectProphecy|DocumentManagerInterface
      */
     private $documentManager;
 
     /**
-     * @var DocumentInspector
+     * @var ObjectProphecy|DocumentInspector
      */
     private $documentInspector;
 
     /**
-     * @var ResourceLocatorStrategyInterface
+     * @var ObjectProphecy|ResourceLocatorStrategyInterface
      */
     private $resourceLocatorStrategy;
 
     /**
-     * @var ResourceLocatorStrategyPoolInterface
+     * @var ObjectProphecy|ResourceLocatorStrategyPoolInterface
      */
     private $resourceLocatorStrategyPool;
 
     /**
-     * @var StructureManagerInterface
+     * @var ObjectProphecy|StructureManagerInterface
      */
     private $structureManager;
 
     /**
-     * @var RequestAnalyzerInterface
+     * @var ObjectProphecy|RequestAnalyzerInterface
      */
     private $requestAnalyzer;
 
     /**
-     * @var ObjectProphecy
+     * @var ObjectProphecy|WebspaceManagerInterface
      */
     private $webspaceManager;
 

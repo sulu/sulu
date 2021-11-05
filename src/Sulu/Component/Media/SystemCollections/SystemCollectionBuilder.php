@@ -14,13 +14,12 @@ namespace Sulu\Component\Media\SystemCollections;
 use Massive\Bundle\BuildBundle\Build\BuilderContext;
 use Massive\Bundle\BuildBundle\Build\BuilderInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Build task to initialize system collections.
  */
-class SystemCollectionBuilder implements BuilderInterface, ContainerAwareInterface
+class SystemCollectionBuilder implements BuilderInterface
 {
     /**
      * @var OutputInterface
@@ -28,14 +27,14 @@ class SystemCollectionBuilder implements BuilderInterface, ContainerAwareInterfa
     protected $output;
 
     /**
-     * @var ContainerInterface
-     */
-    protected $container;
-
-    /**
      * @var SystemCollectionManagerInterface
      */
     private $systemCollectionManager;
+
+    public function __construct(SystemCollectionManagerInterface $systemCollectionManager)
+    {
+        $this->systemCollectionManager = $systemCollectionManager;
+    }
 
     public function getName()
     {
@@ -49,7 +48,6 @@ class SystemCollectionBuilder implements BuilderInterface, ContainerAwareInterfa
 
     public function build()
     {
-        $this->systemCollectionManager = $this->container->get('sulu_media.system_collections.manager');
         $this->systemCollectionManager->warmUp();
     }
 

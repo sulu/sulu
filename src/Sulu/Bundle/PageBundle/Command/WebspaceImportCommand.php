@@ -56,7 +56,7 @@ class WebspaceImportCommand extends Command
             ->setDescription('Import webspace page translations from xliff file into a specific language.');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $webspaceKey = $input->getArgument('webspace');
         $filePath = $input->getArgument('file');
@@ -112,7 +112,7 @@ class WebspaceImportCommand extends Command
 
         $this->printExceptions($import, $output);
 
-        return $import->fails;
+        return (int) $import->fails;
     }
 
     /**

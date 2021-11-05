@@ -47,7 +47,7 @@ class WebspaceExportCommand extends Command
             ->setDescription('Export webspace page translations from given language into xliff file for translating into a new language.');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $webspaceKey = $input->getArgument('webspace');
         $target = $input->getArgument('target');

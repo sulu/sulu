@@ -11,7 +11,8 @@
 
         <service id="sulu_security.event_listener.security" class="Sulu\Bundle\SecurityBundle\EventListener\SuluSecurityListener">
             <argument type="service" id="sulu_security.security_checker"/>
-            <tag name="kernel.event_listener" event="kernel.controller" method="onKernelController"/>
+
+            <tag name="kernel.event_subscriber"/>
         </service>
 
         <service id="sulu_security.last_login_listener" class="Sulu\Bundle\SecurityBundle\EventListener\LastLoginListener">

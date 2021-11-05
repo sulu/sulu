@@ -12,9 +12,11 @@
 namespace Sulu\Bundle\PageBundle\Tests\Functional\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
+use PHPCR\NodeInterface;
 use PHPCR\PropertyType;
 use PHPCR\SessionInterface;
 use Sulu\Bundle\PageBundle\Document\BasePageDocument;
+use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TestBundle\Testing\PHPCRImporter;
@@ -23,6 +25,7 @@ use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\WorkflowStage;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
@@ -44,7 +47,7 @@ class PageControllerTest extends SuluTestCase
     private $liveSession;
 
     /**
-     * @var DocumentManagerInteface
+     * @var DocumentManagerInterface
      */
     private $documentManager;
 

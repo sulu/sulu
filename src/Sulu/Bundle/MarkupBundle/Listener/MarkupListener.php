@@ -12,12 +12,14 @@
 namespace Sulu\Bundle\MarkupBundle\Listener;
 
 use Sulu\Bundle\MarkupBundle\Markup\MarkupParserInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
  * Parses content of response and set the replaced html as new content.
  */
-class MarkupListener
+class MarkupListener implements EventSubscriberInterface
 {
     /**
      * @var MarkupParserInterface
@@ -30,6 +32,11 @@ class MarkupListener
     public function __construct(array $markupParser)
     {
         $this->markupParser = $markupParser;
+    }
+
+    public static function getSubscribedEvents(): array
+    {
+        return [KernelEvents::RESPONSE => ['replaceMarkup', -10]];
     }
 
     /**

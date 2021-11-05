@@ -58,11 +58,10 @@ final class InitCommand extends Command
 
     protected function configure()
     {
-        $this->setName('sulu:security:init')
-            ->setDescription('Create required sulu security entities.');
+        $this->setDescription('Create required sulu security entities.');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $systems = \array_keys($this->adminPool->getSecurityContexts());
         $roles = $this->roleRepository->findAllRoles();
