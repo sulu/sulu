@@ -18,9 +18,9 @@ class AliasForSecurityEncoderCompilerPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        if ($container->hasAlias('security.encoder_factory')) {
+        if ($container->hasAlias('security.password_hasher_factory')) {
             // the service "security.encoder_factory" is private use an alias to make it public
-            $container->setAlias('sulu_security.encoder_factory', 'security.encoder_factory')->setPublic(true);
+            $container->setAlias('sulu_security.encoder_factory', 'security.password_hasher_factory')->setPublic(true);
         }
     }
 }

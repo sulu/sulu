@@ -351,7 +351,7 @@
 
         <service id="sulu_security.user_manager" class="Sulu\Bundle\SecurityBundle\UserManager\UserManager" public="true">
             <argument type="service" id="doctrine.orm.entity_manager"/>
-            <argument type="service" id="security.encoder_factory" on-invalid="null"/>
+            <argument type="service" id="security.password_hasher_factory" on-invalid="null"/>
             <argument type="service" id="sulu.repository.role"/>
             <argument type="service" id="sulu_security.group_repository"/>
             <argument type="service" id="sulu_contact.contact_manager"/>
