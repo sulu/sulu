@@ -93,6 +93,7 @@
         "webpack-manifest-plugin": "^5.0.0"
     },
     "jest": {
+        "testEnvironment": "jsdom",
         "moduleNameMapper": {
             "\\.(scss|css)$": "identity-obj-proxy",
             "\\.svg$": "<rootDir>/tests/js/mocks/svg.js",
