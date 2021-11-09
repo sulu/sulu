@@ -296,7 +296,7 @@ test('Saving and dirty flag should be set to false when creating has failed', (d
 
     const savePromise = resourceStore.save();
 
-    return savePromise.catch((promiseError) => {
+    savePromise.catch((promiseError) => {
         expect(promiseError).toBe(error);
         when(
             () => !resourceStore.saving,
@@ -512,7 +512,7 @@ test('Saving and dirty flag should be set to false when updating has failed', (d
 
     resourceStore.locale.set('en');
 
-    return loadingPromise.then(() => {
+    loadingPromise.then(() => {
         resourceStore.saving = true;
         resourceStore.dirty = true;
         const savePromise = resourceStore.save();
