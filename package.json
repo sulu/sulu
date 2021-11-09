@@ -110,7 +110,7 @@
         ],
         "clearMocks": true,
         "transformIgnorePatterns": [
-            "node_modules/(?!(@ckeditor|ckeditor5|lodash-es|@react-leaflet|react-leaflet)/)"
+            "node_modules/(?!(@ckeditor|ckeditor5|array-move|lodash-es|@react-leaflet|react-leaflet)/)"
         ],
         "testPathIgnorePatterns": [
             "vendor/friendsofsymfony"
