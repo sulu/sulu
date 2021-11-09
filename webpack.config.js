@@ -45,6 +45,10 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
             filename: outputPath + '/[name].[chunkhash].js',
             publicPath,
         },
+        stats: 'minimal',
+        performance: {
+            hints: false,
+        },
         devtool: argv.mode === 'development' ? 'eval-source-map' : 'source-map',
         plugins: [
             new CleanWebpackPlugin({
