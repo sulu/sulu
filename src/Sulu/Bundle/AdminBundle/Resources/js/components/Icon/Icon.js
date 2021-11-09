@@ -1,6 +1,6 @@
 // @flow
-import '@fortawesome/fontawesome-free/js/all.js';
-import '@fortawesome/fontawesome-free/js/v4-shims.js';
+import '@fortawesome/fontawesome-free/css/all.css';
+import '@fortawesome/fontawesome-free/css/v4-shims.css';
 import './sulu-icon.css';
 import React from 'react';
 import classNames from 'classnames';
