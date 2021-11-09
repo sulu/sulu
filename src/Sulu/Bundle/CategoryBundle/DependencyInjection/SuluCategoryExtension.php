@@ -153,7 +153,7 @@ class SuluCategoryExtension extends Extension implements PrependExtensionInterfa
                                         'list_key' => 'categories',
                                         'display_properties' => ['name'],
                                         'empty_text' => 'sulu_category.no_category_selected',
-                                        'icon' => 'fa-tags',
+                                        'icon' => 'su-tag',
                                         'overlay_title' => 'sulu_category.single_category_selection_overlay_title',
                                     ],
                                 ],
