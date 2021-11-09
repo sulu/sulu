@@ -252,6 +252,34 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertEquals('Fourth Category', $categories[1]->name);
     }
 
+    public function testCGetByEmptyIds(): void
+    {
+        $category1 = $this->createCategory('first-category-key', 'en');
+        $this->createCategoryTranslation($category1, 'en', 'First Category');
+        $category2 = $this->createCategory('second-category-key', 'en');
+        $this->createCategoryTranslation($category2, 'en', 'Second Category');
+        $category3 = $this->createCategory(null, 'en', $category1);
+        $this->createCategoryTranslation($category3, 'en', 'Third Category');
+        $category4 = $this->createCategory(null, 'en', $category3);
+        $this->createCategoryTranslation($category4, 'en', 'Fourth Category');
+
+        $this->em->flush();
+        $this->em->clear();
+
+        $this->client->jsonRequest(
+            'GET',
+            '/api/categories?locale=en&ids='
+        );
+
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+
+        $response = \json_decode($this->client->getResponse()->getContent());
+
+        $categories = $response->_embedded->categories;
+
+        $this->assertCount(0, $categories);
+    }
+
     public function testCGetFlat()
     {
         $category1 = $this->createCategory('first-category-key', 'en');
