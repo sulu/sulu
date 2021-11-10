@@ -377,6 +377,9 @@ class Selection extends React.Component<Props> {
                 allow_deselect_for_disabled_items: {
                     value: allowDeselectForDisabledItems = true,
                 } = {},
+                sortable: {
+                    value: sortable = true,
+                } = {},
             },
         } = this.props;
 
@@ -390,6 +393,10 @@ class Selection extends React.Component<Props> {
 
         if (allowDeselectForDisabledItems !== undefined && typeof allowDeselectForDisabledItems !== 'boolean') {
             throw new Error('The "allow_deselect_for_disabled_items" schema option must be a boolean if given!');
+        }
+
+        if (sortable !== undefined && typeof sortable !== 'boolean') {
+            throw new Error('The "sortable" schema option must be a boolean if given!');
         }
 
         if (!adapter) {
@@ -418,6 +425,7 @@ class Selection extends React.Component<Props> {
                 options={options}
                 overlayTitle={translate(overlayTitle)}
                 resourceKey={resourceKey}
+                sortable={sortable}
                 value={this.value || []}
             />
         );
