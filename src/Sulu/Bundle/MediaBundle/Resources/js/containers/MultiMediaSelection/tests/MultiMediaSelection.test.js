@@ -362,8 +362,9 @@ test('Should call the onItemClick handler if an item is clicked', () => {
 
 test('Pass correct props to MultiItemSelection component', () => {
     const mediaSelection = mount(
-        <MultiMediaSelection disabled={true} locale={observable.box('en')} onChange={jest.fn()} />
+        <MultiMediaSelection disabled={true} locale={observable.box('en')} onChange={jest.fn()} sortable={false} />
     );
 
     expect(mediaSelection.find('MultiItemSelection').prop('disabled')).toEqual(true);
+    expect(mediaSelection.find('MultiItemSelection').prop('sortable')).toEqual(false);
 });
