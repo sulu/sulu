@@ -284,7 +284,7 @@ test('Should pass props with schema-options correctly to MultiSelection componen
         },
         sortable: {
             name: 'sortable',
-            value: false
+            value: false<span class="x x-first x-last">,</span>
         },
         request_parameters: {
             name: 'request_parameters',
