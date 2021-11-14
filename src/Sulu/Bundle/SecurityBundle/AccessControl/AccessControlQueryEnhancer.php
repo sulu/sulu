@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\SecurityBundle\AccessControl;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\Mapping\MappingException;
 use Sulu\Bundle\SecurityBundle\Entity\AccessControl;
@@ -89,19 +90,13 @@ class AccessControlQueryEnhancer
         string $entityClassCondition,
         string $entityIdCondition
     ): void {
-        $systemRoleQueryBuilder = $this->entityManager->createQueryBuilder()
-            ->from(RoleInterface::class, 'systemRoles')
-            ->select('systemRoles.id')
-            ->where('systemRoles.system = :system');
-
         $queryBuilder->leftJoin(
             AccessControl::class,
             'accessControl',
             'WITH',
-            $entityClassCondition . ' AND ' . $entityIdCondition . ' '
-            . 'AND accessControl.role IN (' . $systemRoleQueryBuilder->getDQL() . ')'
+            $entityClassCondition . ' AND ' . $entityIdCondition
         );
-        $queryBuilder->leftJoin('accessControl.role', 'role');
+        $queryBuilder->leftJoin('accessControl.role', 'role', Join::WITH, 'role.system = :system');
         $queryBuilder->andWhere(
             'BIT_AND(accessControl.permissions, :permission) = :permission OR accessControl.permissions IS NULL'
         );
@@ -116,6 +111,7 @@ class AccessControlQueryEnhancer
         }
 
         $queryBuilder->andWhere('role.id IN(:roleIds) OR role.id IS NULL');
+
         $queryBuilder->setParameter('roleIds', $roleIds);
         $queryBuilder->setParameter('permission', $permission);
         $queryBuilder->setParameter('system', $this->systemStore->getSystem());
