@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\SecurityBundle\AccessControl;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\Mapping\MappingException;
 use Sulu\Bundle\SecurityBundle\Entity\AccessControl;
@@ -45,22 +44,31 @@ class AccessControlQueryEnhancer
         string $entityClass,
         string $entityAlias
     ): void {
-        $entityIdCondition = 'accessControl.entityId = ' . $entityAlias . '.id';
-        try {
-            $metadata = $this->entityManager->getClassMetadata($entityClass);
-            if ('integer' === $metadata->getTypeOfField('id')) {
-                $entityIdCondition = 'accessControl.entityIdInteger = ' . $entityAlias . '.id';
-            }
-        } catch (MappingException $e) {
-            $metadata = null;
-        }
-
         $this->enhanceQueryWithAccessControl(
             $queryBuilder,
             $user,
             $permission,
             'accessControl.entityClass = :entityClass',
-            $entityIdCondition
+            $this->getEntityIdCondition($entityClass, $entityAlias)
+        );
+
+        $queryBuilder->setParameter('entityClass', $entityClass);
+    }
+
+    public function enhanceCount(
+        QueryBuilder $queryBuilder,
+        ?UserInterface $user,
+        int $permission,
+        string $entityClass,
+        string $entityAlias
+    ): void {
+        $this->enhanceCountQueryWithAccessControl(
+            $queryBuilder,
+            $user,
+            $permission,
+            $this->getEntityIdCondition($entityClass, $entityAlias),
+            $entityClass,
+            $entityAlias
         );
 
         $queryBuilder->setParameter('entityClass', $entityClass);
@@ -90,30 +98,88 @@ class AccessControlQueryEnhancer
         string $entityClassCondition,
         string $entityIdCondition
     ): void {
+        $systemRoleQueryBuilder = $this->entityManager->createQueryBuilder()
+            ->from(RoleInterface::class, 'systemRoles')
+            ->select('systemRoles.id')
+            ->where('systemRoles.system = :system');
+
         $queryBuilder->leftJoin(
             AccessControl::class,
             'accessControl',
             'WITH',
-            $entityClassCondition . ' AND ' . $entityIdCondition
+            $entityClassCondition . ' AND ' . $entityIdCondition . ' '
+            . 'AND accessControl.role IN (' . $systemRoleQueryBuilder->getDQL() . ')'
         );
-        $queryBuilder->leftJoin('accessControl.role', 'role', Join::WITH, 'role.system = :system');
+        $queryBuilder->leftJoin('accessControl.role', 'role');
         $queryBuilder->andWhere(
             'BIT_AND(accessControl.permissions, :permission) = :permission OR accessControl.permissions IS NULL'
         );
 
-        if ($user) {
-            $roleIds = \array_map(function(RoleInterface $role) {
-                return $role->getId();
-            }, $user->getRoleObjects());
-        } else {
-            $anonymousRole = $this->systemStore->getAnonymousRole();
-            $roleIds = $anonymousRole ? [$anonymousRole->getId()] : [];
-        }
-
         $queryBuilder->andWhere('role.id IN(:roleIds) OR role.id IS NULL');
-
-        $queryBuilder->setParameter('roleIds', $roleIds);
+        $queryBuilder->setParameter('roleIds', $this->getUserRoleIds($user));
         $queryBuilder->setParameter('permission', $permission);
         $queryBuilder->setParameter('system', $this->systemStore->getSystem());
+    }
+
+    private function enhanceCountQueryWithAccessControl(
+        QueryBuilder $queryBuilder,
+        ?UserInterface $user,
+        int $permission,
+        string $entityIdCondition,
+        string $entityClass,
+        string $entityAlias
+    ): void {
+        $subQueryBuilder = $this->entityManager->createQueryBuilder()
+            ->from($entityClass, 'entity')
+            ->select('entity.id');
+
+        $subQueryBuilder->leftJoin(
+            AccessControl::class,
+            'accessControl',
+            'WITH',
+            'accessControl.entityClass = :entityClass AND ' . $entityIdCondition
+        );
+        $subQueryBuilder->leftJoin('accessControl.role', 'role', 'WITH', 'role.system = :system');
+        $subQueryBuilder->andWhere(
+            'BIT_AND(accessControl.permissions, :permission) = :permission OR accessControl.permissions IS NULL'
+        );
+
+        $subQueryBuilder->andWhere('role.id IN(:roleIds) OR role.id IS NULL');
+        $queryBuilder->setParameter('roleIds', $this->getUserRoleIds($user));
+        $queryBuilder->setParameter('permission', $permission);
+        $queryBuilder->setParameter('system', $this->systemStore->getSystem());
+
+        $queryBuilder->andWhere(\sprintf('%s.id IN (%s)', $entityAlias, $subQueryBuilder->getDQL()));
+    }
+
+    private function getEntityIdCondition(string $entityClass, string $entityAlias): string
+    {
+        $entityIdCondition = 'accessControl.entityId = ' . $entityAlias . '.id';
+        try {
+            $metadata = $this->entityManager->getClassMetadata($entityClass);
+            if ('integer' === $metadata->getTypeOfField('id')) {
+                $entityIdCondition = 'accessControl.entityIdInteger = ' . $entityAlias . '.id';
+            }
+        } catch (MappingException $e) {
+            $metadata = null;
+        }
+
+        return $entityIdCondition;
+    }
+
+    /**
+     * @return int[]
+     */
+    private function getUserRoleIds(?UserInterface $user): array
+    {
+        if ($user) {
+            return \array_map(function(RoleInterface $role) {
+                return $role->getId();
+            }, $user->getRoleObjects());
+        }
+
+        $anonymousRole = $this->systemStore->getAnonymousRole();
+
+        return $anonymousRole ? [$anonymousRole->getId()] : [];
     }
 }

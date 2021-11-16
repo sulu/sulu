@@ -100,7 +100,7 @@ class DoctrineListBuilder extends AbstractListBuilder
     private $distinct = false;
 
     /**
-     * @var FieldDescriptorInterface
+     * @var DoctrineFieldDescriptorInterface
      */
     private $idField;
 
@@ -221,7 +221,7 @@ class DoctrineListBuilder extends AbstractListBuilder
 
     public function count()
     {
-        $subQueryBuilder = $this->createSubQueryBuilder('COUNT(' . $this->idField->getSelect() . ')');
+        $subQueryBuilder = $this->createSubQueryBuilder('COUNT(' . $this->idField->getSelect() . ')', true);
 
         $this->assignParameters($subQueryBuilder);
 
@@ -308,9 +308,7 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     protected function findIdsByGivenCriteria()
     {
-        $select = $this->getSelectAs($this->idField);
-
-        $subQueryBuilder = $this->createSubQueryBuilder($select);
+        $subQueryBuilder = $this->createSubQueryBuilder($this->getSelectAs($this->idField));
         if (null != $this->limit) {
             $subQueryBuilder->setMaxResults((int) $this->limit)->setFirstResult((int) ($this->limit * ($this->page - 1)));
         }
@@ -446,16 +444,10 @@ class DoctrineListBuilder extends AbstractListBuilder
     /**
      * Creates a query-builder for sub-selecting ID's.
      *
-     * @param null|string $select
-     *
      * @return QueryBuilder
      */
-    protected function createSubQueryBuilder($select = null)
+    protected function createSubQueryBuilder(string $select, bool $isCount = false)
     {
-        if (!$select) {
-            $select = $this->getSelectAs($this->idField);
-        }
-
         // get all filter-fields
         $filterFields = $this->getAllFields(true);
 
@@ -478,8 +470,16 @@ class DoctrineListBuilder extends AbstractListBuilder
                     $this->securedEntityIdField,
                     $this->encodeAlias($this->entityName)
                 );
-            } elseif ($this->accessControlQueryEnhancer) {
+            } elseif ($this->accessControlQueryEnhancer && !$isCount) {
                 $this->accessControlQueryEnhancer->enhance(
+                    $queryBuilder,
+                    $this->user,
+                    $this->permissions[$this->permission],
+                    $this->securedEntityName,
+                    $this->encodeAlias($this->securedEntityName)
+                );
+            } elseif ($this->accessControlQueryEnhancer && $isCount) {
+                $this->accessControlQueryEnhancer->enhanceCount(
                     $queryBuilder,
                     $this->user,
                     $this->permissions[$this->permission],
@@ -703,7 +703,7 @@ class DoctrineListBuilder extends AbstractListBuilder
     /**
      * Set id-field of the "root" entity.
      */
-    public function setIdField(FieldDescriptorInterface $idField)
+    public function setIdField(DoctrineFieldDescriptorInterface $idField)
     {
         $this->idField = $idField;
     }
