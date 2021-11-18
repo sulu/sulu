@@ -16,6 +16,7 @@ use JMS\Serializer\Metadata\StaticPropertyMetadata;
 use JMS\Serializer\Visitor\SerializationVisitorInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Api\Media as MediaApiWrapper;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
@@ -23,44 +24,43 @@ use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Serializer\Subscriber\MediaPermissionsSubscriber;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
-use Sulu\Component\Security\Serializer\Subscriber\SecuredEntitySubscriber;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class MediaPermissionsSubscriberTest extends TestCase
 {
     /**
-     * @var SecuredEntitySubscriber
+     * @var MediaPermissionsSubscriber
      */
     private $mediaPermissionsSubscriber;
 
     /**
-     * @var AccessControlManagerInterface
+     * @var AccessControlManagerInterface|ObjectProphecy
      */
     private $accessControlManager;
 
     /**
-     * @var TokenStorageInterface
+     * @var TokenStorageInterface|ObjectProphecy
      */
     private $tokenStorage;
 
     /**
-     * @var TokenInterface
+     * @var TokenInterface|ObjectProphecy
      */
     private $token;
 
     /**
-     * @var ObjectEvent
+     * @var ObjectEvent|ObjectProphecy
      */
     private $objectEvent;
 
     /**
-     * @var UserInterface
+     * @var UserInterface|ObjectProphecy
      */
     private $user;
 
     /**
-     * @var SerializationVisitorInterface
+     * @var SerializationVisitorInterface|ObjectProphecy
      */
     private $visitor;
 
@@ -68,7 +68,7 @@ class MediaPermissionsSubscriberTest extends TestCase
     {
         $this->user = $this->prophesize(UserInterface::class);
         $this->token = $this->prophesize(TokenInterface::class);
-        $this->token->getUser()->willReturn($this->user);
+        $this->token->getUser()->willReturn($this->user->reveal());
 
         $this->accessControlManager = $this->prophesize(AccessControlManagerInterface::class);
         $this->tokenStorage = $this->prophesize(TokenStorageInterface::class);
@@ -80,10 +80,10 @@ class MediaPermissionsSubscriberTest extends TestCase
 
         $this->visitor = $this->prophesize(SerializationVisitorInterface::class);
         $this->objectEvent = $this->prophesize(ObjectEvent::class);
-        $this->objectEvent->getVisitor()->willReturn($this->visitor);
+        $this->objectEvent->getVisitor()->willReturn($this->visitor->reveal());
     }
 
-    public function testOnPostSerialize()
+    public function testOnPostSerialize(): void
     {
         $media = $this->prophesize(Media::class);
         $this->objectEvent->getObject()->willReturn($media->reveal());
@@ -111,7 +111,7 @@ class MediaPermissionsSubscriberTest extends TestCase
         $this->mediaPermissionsSubscriber->onPostSerialize($this->objectEvent->reveal());
     }
 
-    public function testOnPostSerializeWithApiWrapper()
+    public function testOnPostSerializeWithApiWrapper(): void
     {
         $apiWrapper = $this->prophesize(MediaApiWrapper::class);
         $media = $this->prophesize(Media::class);
