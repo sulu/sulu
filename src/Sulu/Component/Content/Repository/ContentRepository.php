@@ -820,6 +820,11 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
             $type
         );
 
+        if ($mapping->resolveUrl()) {
+            $url = $this->resolveUrl($row, $locale);
+            $content->setUrl($url);
+        }
+
         if (!$content->getTemplate() || !$this->structureManager->getStructure($content->getTemplate())) {
             $content->setBrokenTemplate();
         }
