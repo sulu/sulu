@@ -113,9 +113,10 @@ class CollectionSection extends React.Component<Props> {
     };
 
     handleSaveResponse = (resourceStore: ResourceStore) => {
+        const openedCollectionOperationOverlayType = this.openedCollectionOperationOverlayType;
         this.closeCollectionOperationOverlay();
 
-        if (this.openedCollectionOperationOverlayType === 'update') {
+        if (openedCollectionOperationOverlayType === 'update') {
             this.props.resourceStore.setMultiple(resourceStore.data);
         } else {
             this.props.onCollectionNavigate(resourceStore.id);
