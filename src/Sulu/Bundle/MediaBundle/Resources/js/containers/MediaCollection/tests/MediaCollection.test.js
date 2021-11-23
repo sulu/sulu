@@ -166,6 +166,7 @@ jest.mock('sulu-admin-bundle/stores', () => {
             return resourceStore;
         });
         this.save = jest.fn();
+        this.set = jest.fn();
         this.setMultiple = jest.fn();
         this.changeSchema = jest.fn();
         this.load = jest.fn();
@@ -1159,7 +1160,12 @@ test('Should send a request to add a new collection via the overlay', () => {
     return promise.then(() => {
         mediaCollection.update();
         expect(mediaCollection.find('CollectionFormOverlay > Overlay').prop('open')).toEqual(false);
-        expect(newResourceStore.save).toBeCalled();
+        expect(newResourceStore.save).toHaveBeenCalledWith({
+            breadcrumb: true,
+        });
+        expect(newResourceStore.set).toHaveBeenCalledWith('parent', 1);
+        expect(collectionNavigateSpy).toBeCalled();
+        expect(collectionStore.resourceStore.setMultiple).not.toBeCalled();
     });
 });
 
@@ -1244,6 +1250,8 @@ test('Should send a request to update the collection via the overlay', () => {
         mediaCollection.update();
         expect(mediaCollection.find('CollectionFormOverlay > Overlay').prop('open')).toEqual(false);
         expect(newResourceStore.save).toBeCalledWith({breadcrumb: true});
+        expect(collectionNavigateSpy).not.toBeCalled();
+        expect(collectionStore.resourceStore.setMultiple).toBeCalled();
     });
 });
 

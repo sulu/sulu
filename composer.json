@@ -148,7 +148,6 @@
         "jackalope/jackalope": "< 1.3.4",
         "jackalope/jackalope-doctrine-dbal": "< 1.3.0",
         "jackalope/jackalope-jackrabbit": "< 1.3.0",
-        "jms/metadata": "2.5.2",
         "jms/serializer-bundle": "3.9.0",
         "php-http/discovery": "< 1.8.0",
         "phpcr/phpcr-utils": "1.2.0 - 1.2.10 || 1.3.0 - 1.3.2",
