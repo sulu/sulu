@@ -364,7 +364,7 @@ class CollectionController extends AbstractRestController implements ClassResour
     }
 
     /**
-     * @return Collection
+     * @return mixed[]
      */
     protected function getData(Request $request)
     {
