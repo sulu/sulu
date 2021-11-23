@@ -51,11 +51,11 @@ interface AccessControlManagerInterface
     /**
      * Returns the permissions regarding an array of role permissions and its security context for a given user.
      *
-     * @param string $locale
+     * @param string|null $locale
      * @param string $securityContext
      * @param mixed[] $objectPermissionsByRole
-     * @param ?UserInterface $user The user for which the security is returned
-     * @param ?string $system The system in which the permission should be checked
+     * @param UserInterface|null $user The user for which the security is returned
+     * @param string|null $system The system in which the permission should be checked
      *
      * @return mixed[]
      */

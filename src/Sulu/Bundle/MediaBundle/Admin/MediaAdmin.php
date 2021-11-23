@@ -107,15 +107,14 @@ class MediaAdmin extends Admin
     {
         $mediaLocales = $this->localizationManager->getLocales();
 
-        $toolbarActions = [];
-
-        if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
-            $toolbarActions[] = new ToolbarAction('sulu_admin.save');
-        }
-
-        if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::DELETE)) {
-            $toolbarActions[] = new ToolbarAction('sulu_admin.delete');
-        }
+        $toolbarActions = [
+            new ToolbarAction('sulu_admin.save', [
+                'visible_condition' => '(_permissions && _permissions.edit)',
+            ]),
+            new ToolbarAction('sulu_admin.delete', [
+                'visible_condition' => '(!_permissions || _permissions.delete)',
+            ]),
+        ];
 
         if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
             $viewCollection->add(
