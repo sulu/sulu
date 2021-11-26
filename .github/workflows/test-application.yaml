@@ -192,7 +192,6 @@ jobs:
             MAILER_URL: null://localhost
             SULU_ADMIN_EMAIL:
             COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            PHP_CS_FIXER_IGNORE_ENV: true
 
         steps:
             - name: Checkout project
