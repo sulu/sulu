@@ -115,6 +115,7 @@ jobs:
                       dependency-versions: 'highest'
                       php-extensions: 'ctype, iconv, mysql, imagick'
                       tools: 'composer:v2'
+                      composer-stability: dev
                       env:
                           SYMFONY_DEPRECATIONS_HELPER: weak
                           DATABASE_URL: mysql://root:root@127.0.0.1:3306/sulu_test?serverVersion=5.7
@@ -163,6 +164,10 @@ jobs:
               run: |
                   composer remove jackalope/jackalope-doctrine-dbal --dev --no-interaction --no-update
                   composer require jackalope/jackalope-jackrabbit:^1.4  --no-interaction --no-update
+
+            - name: Set composer stability
+              if: ${{ matrix.composer-stability }}
+              run: composer config minimum-stability ${{ matrix.composer-stability }}
 
             - name: Install composer dependencies
               uses: ramsey/composer-install@v1

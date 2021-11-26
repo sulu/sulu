@@ -24,12 +24,6 @@
         "source": "https://github.com/sulu/skeleton",
         "docs": "http://docs.sulu.io/"
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/alexander-schranz/csv.git"
-        }
-    ],
     "require": {
         "php": "^7.2 || ^8.0",
         "ext-dom": "*",
@@ -57,8 +51,8 @@
         "friendsofsymfony/jsrouting-bundle": "^2.3",
         "friendsofsymfony/rest-bundle": "^2.8 || ^3.0",
         "gedmo/doctrine-extensions": "^2.4 || ^3.0",
-        "goodby/csv": "dev-patch-2 as 1.4.0",
         "guzzlehttp/promises": "^1.0",
+        "handcraftedinthealps/goodby-csv": "^1.4",
         "handcraftedinthealps/rest-routing-bundle": "^1.0",
         "imagine/imagine": "^0.6.1 || ^0.7.0 || ^1.0",
         "jms/serializer": "^3.0",
@@ -113,7 +107,6 @@
         "twig/twig": "^1.41 || ^2.10 || ^3.0"
     },
     "require-dev": {
-        "laminas/laminas-code": "^3.4.1 || ^4.0 || ^4.5@dev",
         "friendsofphp/php-cs-fixer": "^3.0",
         "google/cloud-storage": "^1.0",
         "handcraftedinthealps/zendsearch": "^2.0",
