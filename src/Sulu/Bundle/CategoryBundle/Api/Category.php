@@ -492,6 +492,7 @@ class Category extends ApiEntityWrapper
             'id' => $this->getId(),
             'key' => $this->getKey(),
             'name' => $this->getName(),
+            'description' => $this->getDescription(),
             'meta' => $this->getMeta(),
             'keywords' => $this->getKeywords(),
             'defaultLocale' => $this->getDefaultLocale(),
