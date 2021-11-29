@@ -90,7 +90,7 @@ jobs:
                       phpcr-transport: jackrabbit
                       dependency-versions: 'lowest'
                       php-extensions: 'ctype, iconv, mysql, gd'
-                      tools: 'composer:v1'
+                      tools: 'composer:v2'
                       env:
                           SYMFONY_DEPRECATIONS_HELPER: disabled
                           DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/sulu_test?serverVersion=12.5
