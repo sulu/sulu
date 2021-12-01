@@ -14,6 +14,7 @@ type Props = {
     disabled?: boolean,
     enableAnchor?: ?boolean,
     enableTarget?: ?boolean,
+    enableTitle?: ?boolean,
     locale: IObservableValue<string>,
     onChange: (value: LinkValue) => void,
     onFinish: () => void,
@@ -29,6 +30,7 @@ class Link extends Component<Props> {
         disabled: false,
         enableAnchor: false,
         enableTarget: false,
+        enableTitle: false,
         types: [],
     };
 
@@ -79,6 +81,10 @@ class Link extends Component<Props> {
         this.overlayTarget = target;
     };
 
+    @action handleOverlayTitleChange = (title: ?string) => {
+        this.overlayTitle = title;
+    };
+
     @action handleOverlayHrefChange = (href: ?string | number, item: ?Object) => {
         this.overlayHref = href;
         this.overlayTitle = item?.title ?? String(href);
@@ -101,7 +107,7 @@ class Link extends Component<Props> {
     };
 
     changeValue = (provider: ?string, href: ?string | number, title: ?string, target: ?string, anchor: ?string) => {
-        const {onChange, onFinish, enableTarget, enableAnchor, locale} = this.props;
+        const {onChange, onFinish, enableTarget, enableTitle, enableAnchor, locale} = this.props;
 
         onChange(
             {
@@ -109,7 +115,7 @@ class Link extends Component<Props> {
                 target: enableTarget ? target : undefined,
                 anchor: enableAnchor ? anchor : undefined,
                 href,
-                title,
+                title: enableTitle ? title : undefined,
                 locale: toJS(locale),
             }
         );
@@ -122,6 +128,7 @@ class Link extends Component<Props> {
             locale,
             enableAnchor,
             enableTarget,
+            enableTitle,
             types,
             value,
         } = this.props;
@@ -187,9 +194,11 @@ class Link extends Component<Props> {
                             onConfirm={this.handleOverlayConfirm}
                             onHrefChange={this.handleOverlayHrefChange}
                             onTargetChange={enableTarget ? this.handleOverlayTargetChange : undefined}
+                            onTitleChange={enableTitle ? this.handleOverlayTitleChange : undefined}
                             open={this.openedOverlayProvider === key}
                             options={linkTypeRegistry.getOptions(key)}
                             target={this.overlayTarget}
+                            title={this.overlayTitle}
                         />
                     );
                 })}
