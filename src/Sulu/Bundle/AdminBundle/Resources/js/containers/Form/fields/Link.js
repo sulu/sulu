@@ -65,7 +65,7 @@ export default class Link extends React.Component<FieldTypeProps<LinkValue>> {
         }
 
         if (enableTitle !== undefined && enableTitle !== null && typeof enableTitle !== 'boolean') {
-            throw new Error('The "target" schema option must be a boolean if given!');
+            throw new Error('The "title" schema option must be a boolean if given!');
         }
 
         return (
