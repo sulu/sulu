@@ -60,6 +60,7 @@ class LinkTest extends TestCase
                 'provider' => 'pages',
                 'locale' => 'de',
                 'target' => 'testTarget',
+                'title' => 'testTitle',
                 'anchor' => 'testAnchor',
             ]);
 
@@ -69,6 +70,7 @@ class LinkTest extends TestCase
             'provider' => 'pages',
             'locale' => 'de',
             'target' => 'testTarget',
+            'title' => 'testTitle',
         ], $result);
     }
 
