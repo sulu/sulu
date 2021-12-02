@@ -90,7 +90,7 @@ jobs:
                       phpcr-transport: jackrabbit
                       dependency-versions: 'lowest'
                       php-extensions: 'ctype, iconv, mysql, gd'
-                      tools: 'composer:v1'
+                      tools: 'composer:v2'
                       env:
                           SYMFONY_DEPRECATIONS_HELPER: disabled
                           DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/sulu_test?serverVersion=12.5
@@ -168,10 +168,6 @@ jobs:
             - name: Set composer stability
               if: ${{ matrix.composer-stability }}
               run: composer config minimum-stability ${{ matrix.composer-stability }}
-
-            - name: Install handcraftedinthealps/goodby-csv
-              if: ${{ matrix.php-version }} == '8.1'
-              run: composer require handcraftedinthealps/goodby-csv:^1.4
 
             - name: Install composer dependencies
               uses: ramsey/composer-install@v1
