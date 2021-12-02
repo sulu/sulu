@@ -13,6 +13,7 @@ namespace Sulu\Bundle\PageBundle;
 
 use PHPCR\ImportUUIDBehaviorInterface;
 use PHPCR\Migrations\VersionInterface;
+use PHPCR\RepositoryException;
 use PHPCR\SessionInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -32,7 +33,12 @@ class Version201607181533 implements VersionInterface, ContainerAwareInterface
     {
         $defaultSession = $this->container->get('sulu_document_manager.default_session');
         $liveSession = $this->container->get('sulu_document_manager.live_session');
-        $session->getWorkspace()->createWorkspace($liveSession->getWorkspace()->getName());
+        try {
+            $session->getWorkspace()->createWorkspace($liveSession->getWorkspace()->getName());
+        } catch (RepositoryException $e) {
+            // do nothing if workspace already exists
+            return;
+        }
         $queryManager = $liveSession->getWorkspace()->getQueryManager();
 
         $fileName = \tempnam(\sys_get_temp_dir(), 'sulu-publishing');
