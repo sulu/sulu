@@ -18,6 +18,9 @@
             <join-columns>
                 <join-column name="idAddresses" referenced-column-name="id" nullable="false" on-delete="CASCADE"/>
             </join-columns>
+            <cascade>
+                <cascade-persist/>
+            </cascade>
         </many-to-one>
         <many-to-one field="account" target-entity="Sulu\Bundle\ContactBundle\Entity\AccountInterface" inversed-by="accountAddresses">
             <join-columns>
