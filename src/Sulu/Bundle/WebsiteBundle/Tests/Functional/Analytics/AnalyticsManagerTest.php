@@ -316,14 +316,11 @@ class AnalyticsManagerTest extends BaseFunctional
 
         /** @var Activity[] $activities */
         $activities = $activityRepository->findAll();
-        $this->assertCount(2, $activities);
+        $this->assertCount(1, $activities);
 
-        $this->assertSame('trash_items', $activities[0]->getResourceKey());
-        $this->assertSame('created', $activities[0]->getType());
-
-        $this->assertSame((string) $id, $activities[1]->getResourceId());
-        $this->assertSame('analytics', $activities[1]->getResourceKey());
-        $this->assertSame('removed', $activities[1]->getType());
+        $this->assertSame((string) $id, $activities[0]->getResourceId());
+        $this->assertSame('analytics', $activities[0]->getResourceKey());
+        $this->assertSame('removed', $activities[0]->getType());
 
         $trashItemRepository = $this->getTrashItemRepository();
 

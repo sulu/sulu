@@ -17,9 +17,7 @@ use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterfa
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\RemoveTrashItemHandlerInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\RestoreTrashItemHandlerInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\StoreTrashItemHandlerInterface;
-use Sulu\Bundle\TrashBundle\Domain\Event\TrashItemCreatedEvent;
 use Sulu\Bundle\TrashBundle\Domain\Event\TrashItemRemovedEvent;
-use Sulu\Bundle\TrashBundle\Domain\Event\TrashItemRestoredEvent;
 use Sulu\Bundle\TrashBundle\Domain\Exception\RestoreTrashItemHandlerNotFoundException;
 use Sulu\Bundle\TrashBundle\Domain\Exception\StoreTrashItemHandlerNotFoundException;
 use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
@@ -78,10 +76,6 @@ final class TrashManager implements TrashManagerInterface
 
         $trashItem = $storeTrashItemHandler->store($object, $options);
 
-        $this->domainEventCollector->collect(
-            new TrashItemCreatedEvent($trashItem)
-        );
-
         $this->trashItemRepository->add($trashItem);
 
         return $trashItem;
@@ -99,18 +93,6 @@ final class TrashManager implements TrashManagerInterface
         $restoreTrashItemHandler = $this->restoreTrashItemHandlerLocator->get($resourceKey);
 
         $object = $restoreTrashItemHandler->restore($trashItem, $restoreFormData);
-
-        $translation = $trashItem->getTranslation(null, true);
-
-        $this->domainEventCollector->collect(
-            new TrashItemRestoredEvent(
-                (int) $trashItem->getId(),
-                $trashItem->getResourceKey(),
-                $trashItem->getResourceId(),
-                $translation->getTitle(),
-                $translation->getLocale()
-            )
-        );
 
         $this->trashItemRepository->remove($trashItem);
 
