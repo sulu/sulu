@@ -78,10 +78,15 @@ class Version201504271608 implements VersionInterface, ContainerAwareInterface
             }
 
             $session->save();
-            $homeNode->removeMixin($from);
-            $session->save();
-            $homeNode->addMixin($to);
-            $session->save();
+            if ($homeNode->isNodeType($from)) {
+                $homeNode->removeMixin($from);
+                $session->save();
+            }
+
+            if (!$homeNode->isNodeType($to)) {
+                $homeNode->addMixin($to);
+                $session->save();
+            }
 
             foreach ($homeNodeReferences as $homeNodeReference) {
                 $homeNodeReference->setValue(
