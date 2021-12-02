@@ -140,7 +140,9 @@ class Number extends SimpleContentType implements PropertyMetadataMapperInterfac
 
     private function getFloatParam(ContentPropertyMetadata $propertyMetadata, string $paramName): ?float
     {
-        $value = $propertyMetadata->getParameter($paramName)['value'] ?? null;
+        /** @var mixed[]|null $param */
+        $param = $propertyMetadata->getParameter($paramName);
+        $value = $param['value'] ?? null;
 
         if (null === $value) {
             return null;
