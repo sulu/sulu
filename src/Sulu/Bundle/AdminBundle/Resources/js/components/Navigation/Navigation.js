@@ -117,7 +117,6 @@ class Navigation extends React.Component<Props> {
             onLogoutClick,
             onProfileClick,
             suluVersion,
-            suluVersionLink,
             onPinToggle,
         } = this.props;
 
@@ -126,9 +125,7 @@ class Navigation extends React.Component<Props> {
         return (
             <div className={navigationStyles.navigation}>
                 <div className={navigationStyles.header}>
-                    <a className={navigationStyles.logo} href={suluVersionLink} title={suluVersion} target="_blank">
-                        <Icon name="su-sulu-logo" />
-                    </a>
+                    <Icon className={navigationStyles.logo} name="su-sulu-logo" title={suluVersion} />
 
                     {onPinToggle &&
                         <div className={pinClass} onClick={this.handlePinToggle} role="button">
