@@ -99,6 +99,9 @@ class MediaSelection extends React.Component<FieldTypeProps<Value>> {
             types: {
                 value: mediaTypes,
             } = {},
+            sortable: {
+                value: sortable = true,
+            } = {},
         } = schemaOptions;
 
         const locale = formInspector.locale ? formInspector.locale : observable.box(userStore.contentLocale);
@@ -115,6 +118,10 @@ class MediaSelection extends React.Component<FieldTypeProps<Value>> {
 
         const mediaTypeValues = convertMediaTypesFromParams(mediaTypes);
 
+        if (sortable !== undefined && typeof sortable !== 'boolean') {
+            throw new Error('The "sortable" schema option must be a boolean if given!');
+        }
+
         return (
             <MultiMediaSelection
                 disabled={!!disabled}
@@ -122,6 +129,7 @@ class MediaSelection extends React.Component<FieldTypeProps<Value>> {
                 locale={locale}
                 onChange={this.handleChange}
                 onItemClick={this.handleItemClick}
+                sortable={sortable}
                 types={mediaTypeValues}
                 value={this.value ? this.value : undefined}
             />

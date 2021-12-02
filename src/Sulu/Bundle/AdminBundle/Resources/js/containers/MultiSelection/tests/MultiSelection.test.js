@@ -76,7 +76,7 @@ test('Show with passed icon and label and open overlay', () => {
     expect(selection.render()).toMatchSnapshot();
 });
 
-test('Show disbaled in disabled state', () => {
+test('Pass correct props to MultiItemSelection component', () => {
     const multiSelection = mount(
         <MultiSelection
             adapter="table"
@@ -85,10 +85,12 @@ test('Show disbaled in disabled state', () => {
             onChange={jest.fn()}
             overlayTitle="Selection"
             resourceKey="snippets"
+            sortable={false}
         />
     );
 
     expect(multiSelection.find('MultiItemSelection').prop('disabled')).toEqual(true);
+    expect(multiSelection.find('MultiItemSelection').prop('sortable')).toEqual(false);
 });
 
 test('Render with disabled item', () => {
