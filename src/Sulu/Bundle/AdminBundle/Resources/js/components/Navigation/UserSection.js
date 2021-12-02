@@ -47,11 +47,12 @@ class UserSection extends React.Component<Props> {
         const {username, userImage} = this.props;
 
         const menuClass = classNames(userSectionStyles.menu, this.open && userSectionStyles.open);
+        const buttonClass = classNames(userSectionStyles.button, this.open && userSectionStyles.active);
 
         return (
             <div className={userSectionStyles.userSection}>
                 <div
-                    className={userSectionStyles.button}
+                    className={buttonClass}
                     onClick={this.handleButtonClick}
                     role="button"
                 >

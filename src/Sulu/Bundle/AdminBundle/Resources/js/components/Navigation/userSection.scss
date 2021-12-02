@@ -1,6 +1,7 @@
 @import '../../containers/Application/colors.scss';
 
 $color: $white;
+$hoverColor: $shakespeare;
 $lightColor: $silver;
 
 .user-section {
@@ -15,10 +16,14 @@ $lightColor: $silver;
     align-items: center;
     height: 60px;
     cursor: pointer;
-    color: $lightColor;
+    color: $color;
 
     &:hover {
-        color: $color;
+        color: $hoverColor;
+    }
+
+    &.active {
+        font-weight: bold;
     }
 }
 
@@ -79,6 +84,6 @@ $lightColor: $silver;
     padding-block: 10px;
 
     &:hover {
-        color: $color;
+        color: $hoverColor;
     }
 }
