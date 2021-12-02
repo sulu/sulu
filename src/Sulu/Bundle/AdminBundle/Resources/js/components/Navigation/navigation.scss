@@ -32,10 +32,12 @@ $hoverColor: $shakespeare;
 }
 
 .logo {
+    color: inherit;
     flex: 0 0 auto;
     display: block;
     font-size: 90px;
     line-height: 1;
+    text-decoration: none;
     transform: translateY(2px); /* visual centering the logo */
 }
 
