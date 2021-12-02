@@ -64,6 +64,26 @@ class PublicPreviewControllerTest extends TestCase
         );
     }
 
+    public function testPreview(): void
+    {
+        $options = [
+            'webspace' => 'example',
+        ];
+
+        $previewLink = $this->prophesize(PreviewLinkInterface::class);
+        $previewLink->increaseVisitCount()->shouldBeCalled();
+
+        $this->previewLinkRepository->findByToken('1234567890123')->willReturn($previewLink->reveal());
+        $this->previewLinkRepository->commit()->shouldBeCalled();
+
+        $this->twig->render('@SuluPreview/PreviewLink/preview.html.twig', ['token' => '1234567890123'])
+            ->willReturn('<html><body><h1>Public Preview</h1></body></html>');
+
+        $response = $this->publicPreviewController->previewAction('1234567890123');
+
+        $this->assertEquals('<html><body><h1>Public Preview</h1></body></html>', $response->getContent());
+    }
+
     public function testRender(): void
     {
         $options = [
@@ -75,10 +95,8 @@ class PublicPreviewControllerTest extends TestCase
         $previewLink->getResourceId()->willReturn('123-123-123');
         $previewLink->getLocale()->willReturn('de');
         $previewLink->getOptions()->willReturn($options);
-        $previewLink->increaseVisitCount()->shouldBeCalled();
 
         $this->previewLinkRepository->findByToken('1234567890123')->willReturn($previewLink->reveal());
-        $this->previewLinkRepository->commit()->shouldBeCalled();
 
         $page = $this->prophesize(PageDocument::class);
 
@@ -105,6 +123,6 @@ class PublicPreviewControllerTest extends TestCase
         $response = $this->publicPreviewController->renderAction('1234567890123');
 
         $this->assertEquals(404, $response->getStatusCode());
-        $this->assertEquals('<html><body><h1>Not found</h1></body></html>', $response->getContent());
+        $this->assertEquals('', $response->getContent());
     }
 }

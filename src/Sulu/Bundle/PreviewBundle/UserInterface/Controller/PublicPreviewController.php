@@ -62,7 +62,7 @@ class PublicPreviewController
         $this->profiler = $profiler;
     }
 
-    public function renderAction(string $token): Response
+    public function previewAction(string $token): Response
     {
         $previewLink = $this->previewLinkRepository->findByToken($token);
         if (!$previewLink) {
@@ -71,6 +71,16 @@ class PublicPreviewController
 
         $previewLink->increaseVisitCount();
         $this->previewLinkRepository->commit();
+
+        return new Response($this->twig->render('@SuluPreview/PreviewLink/preview.html.twig', ['token' => $token]));
+    }
+
+    public function renderAction(string $token): Response
+    {
+        $previewLink = $this->previewLinkRepository->findByToken($token);
+        if (!$previewLink) {
+            return new Response(null, 404);
+        }
 
         $resourceKey = $previewLink->getResourceKey();
         $resourceId = $previewLink->getResourceId();

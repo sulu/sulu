@@ -123,8 +123,8 @@ exports[`Dont react or update preview when data is changed during formstore is l
                 class="button dark"
               >
                 <span
-                  aria-label="su-exchange"
-                  class="su-exchange icon"
+                  aria-label="su-share"
+                  class="su-share icon"
                 />
                 <span
                   class="label"
@@ -286,8 +286,8 @@ exports[`Dont react or update preview when data is changed during preview-store 
                 class="button dark"
               >
                 <span
-                  aria-label="su-exchange"
-                  class="su-exchange icon"
+                  aria-label="su-share"
+                  class="su-share icon"
                 />
                 <span
                   class="label"
@@ -448,8 +448,8 @@ exports[`React and update preview when data is changed 1`] = `
                 class="button dark"
               >
                 <span
-                  aria-label="su-exchange"
-                  class="su-exchange icon"
+                  aria-label="su-share"
+                  class="su-share icon"
                 />
                 <span
                   class="label"
@@ -632,8 +632,8 @@ exports[`Render correct preview 1`] = `
                 class="button dark"
               >
                 <span
-                  aria-label="su-exchange"
-                  class="su-exchange icon"
+                  aria-label="su-share"
+                  class="su-share icon"
                 />
                 <span
                   class="label"
@@ -810,8 +810,8 @@ exports[`Render correct preview with target groups 1`] = `
                 class="button dark"
               >
                 <span
-                  aria-label="su-exchange"
-                  class="su-exchange icon"
+                  aria-label="su-share"
+                  class="su-share icon"
                 />
                 <span
                   class="label"
@@ -970,8 +970,8 @@ exports[`Render nothing if separate window is opened and rerender if it is close
                 class="button dark"
               >
                 <span
-                  aria-label="su-exchange"
-                  class="su-exchange icon"
+                  aria-label="su-share"
+                  class="su-share icon"
                 />
                 <span
                   class="label"
@@ -1130,8 +1130,8 @@ exports[`Render nothing if separate window is opened and rerender if it is close
                 class="button dark"
               >
                 <span
-                  aria-label="su-exchange"
-                  class="su-exchange icon"
+                  aria-label="su-share"
+                  class="su-share icon"
                 />
                 <span
                   class="label"
