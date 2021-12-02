@@ -13,6 +13,7 @@ namespace Sulu\Bundle\CategoryBundle\Twig;
 
 use JMS\Serializer\SerializationContext;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
+use Sulu\Bundle\CategoryBundle\Exception\CategoryKeyNotFoundException;
 use Sulu\Component\Cache\MemoizeInterface;
 use Sulu\Component\Category\Request\CategoryRequestHandlerInterface;
 use Sulu\Component\Serializer\ArraySerializerInterface;
@@ -83,12 +84,16 @@ class CategoryTwigExtension extends AbstractExtension
             'sulu_categories',
             \func_get_args(),
             function($locale, $parentKey = null) {
-                $entities = $this->categoryManager->findChildrenByParentKey($parentKey);
-                $categories = $this->categoryManager->getApiObjects($entities, $locale);
-                $context = SerializationContext::create();
-                $context->setSerializeNull(true);
+                try {
+                    $entities = $this->categoryManager->findChildrenByParentKey($parentKey);
+                    $categories = $this->categoryManager->getApiObjects($entities, $locale);
+                    $context = SerializationContext::create();
+                    $context->setSerializeNull(true);
 
-                return $this->serializer->serialize($categories, $context);
+                    return $this->serializer->serialize($categories, $context);
+                } catch (CategoryKeyNotFoundException $exception) {
+                    return [];
+                }
             }
         );
     }

@@ -105,13 +105,7 @@ class Link extends SimpleContentType
             return null;
         }
 
-        $linkItem = \reset($linkItems);
-
-        if (!$linkItem) {
-            return null;
-        }
-
-        $url = $linkItem->getUrl();
+        $url = \reset($linkItems)->getUrl();
         if (isset($value['anchor'])) {
             $url = \sprintf('%s#%s', $url, $value['anchor']);
         }
