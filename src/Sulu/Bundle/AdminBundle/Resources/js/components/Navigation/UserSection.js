@@ -11,8 +11,6 @@ import userSectionStyles from './userSection.scss';
 type Props = {
     onLogoutClick: () => void,
     onProfileClick: () => void,
-    suluVersion: string,
-    suluVersionLink: string,
     userImage: ?string,
     username: string,
 }
