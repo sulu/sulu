@@ -18,6 +18,7 @@ use Prophecy\Argument;
 use Sulu\Bundle\CategoryBundle\Api\Category as ApiCategory;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface as EntityCategory;
+use Sulu\Bundle\CategoryBundle\Exception\CategoryKeyNotFoundException;
 use Sulu\Bundle\CategoryBundle\Twig\CategoryTwigExtension;
 use Sulu\Component\Cache\Memoize;
 use Sulu\Component\Cache\MemoizeInterface;
@@ -127,6 +128,31 @@ class CategoryTwigExtensionTest extends TestCase
             ['categories', '/test', '1,3', '1,3'],
             ['categories', '/test', '', '3'],
         ];
+    }
+
+    public function testGetReturnsEmptyOnCategoryKeyNotFoundException(): void
+    {
+        $exception = new CategoryKeyNotFoundException('abc');
+
+        $manager = $this->prophesize(CategoryManagerInterface::class);
+
+        $manager->findChildrenByParentKey('abc')->shouldBeCalled()->willThrow($exception);
+        $manager->getApiObjects()->shouldNotBeCalled();
+
+        $serializer = $this->prophesize(ArraySerializerInterface::class);
+        $serializer->serialize()->shouldNotBeCalled();
+
+        $requestHandler = $this->prophesize(CategoryRequestHandlerInterface::class);
+
+        $extension = new CategoryTwigExtension(
+            $manager->reveal(),
+            $requestHandler->reveal(),
+            $serializer->reveal(),
+            $this->getMemoizeCache()
+        );
+
+        $result = $extension->getCategoriesFunction('en', 'abc');
+        $this->assertSame([], $result);
     }
 
     /**
