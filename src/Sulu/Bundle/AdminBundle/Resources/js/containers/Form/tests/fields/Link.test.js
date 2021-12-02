@@ -44,6 +44,10 @@ test('Pass props correctly to Link component', () => {
             name: 'anchor',
             value: true,
         },
+        enable_title: {
+            name: 'title',
+            value: true,
+        },
     };
 
     const link = shallow(
@@ -62,6 +66,7 @@ test('Pass props correctly to Link component', () => {
         'disabled': true,
         'enableAnchor': true,
         'enableTarget': true,
+        'enableTitle': true,
         locale,
         'onChange': changeSpy,
         'onFinish': finishSpy,
@@ -104,6 +109,10 @@ test('Pass props correctly to Link component filtered types', () => {
             name: 'anchor',
             value: true,
         },
+        enable_title: {
+            name: 'title',
+            value: true,
+        },
         types: {
             name: 'types',
             value: [
@@ -129,6 +138,7 @@ test('Pass props correctly to Link component filtered types', () => {
         'disabled': true,
         'enableAnchor': true,
         'enableTarget': true,
+        'enableTitle': true,
         locale,
         'onChange': changeSpy,
         'onFinish': finishSpy,
@@ -188,6 +198,7 @@ test('Pass props correctly to Link component disabled anchor and target', () => 
         'disabled': true,
         'enableAnchor': false,
         'enableTarget': false,
+        'enableTitle': false,
         locale,
         'onChange': changeSpy,
         'onFinish': finishSpy,

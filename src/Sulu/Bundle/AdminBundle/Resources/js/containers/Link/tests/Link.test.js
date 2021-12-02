@@ -64,6 +64,7 @@ test('Pass correct props to overlay', () => {
         <Link
             enableAnchor={true}
             enableTarget={true}
+            enableTitle={true}
             locale={observable.box('en')}
             onChange={changeSpy}
             onFinish={finishSpy}
@@ -107,6 +108,7 @@ test('Open overlay on input click', () => {
         <Link
             enableAnchor={true}
             enableTarget={true}
+            enableTitle={true}
             locale={observable.box('en')}
             onChange={changeSpy}
             onFinish={finishSpy}
@@ -145,6 +147,7 @@ test('Open overlay on provider change', () => {
         <Link
             enableAnchor={true}
             enableTarget={true}
+            enableTitle={true}
             locale={observable.box('en')}
             onChange={changeSpy}
             onFinish={finishSpy}
@@ -181,6 +184,7 @@ test('Update values on overlay confirm', () => {
         <Link
             enableAnchor={true}
             enableTarget={true}
+            enableTitle={true}
             locale={observable.box('en')}
             onChange={changeSpy}
             onFinish={finishSpy}
@@ -193,12 +197,13 @@ test('Update values on overlay confirm', () => {
     overlayProps.onHrefChange('10');
     overlayProps.onAnchorChange('newAnchor');
     overlayProps.onTargetChange('newTarget');
+    overlayProps.onTitleChange('newTitle');
 
     overlayProps.onConfirm();
 
     expect(changeSpy).toBeCalledWith(
         {
-            title: '10',
+            title: 'newTitle',
             href: '10',
             provider: 'media',
             locale: 'en',
@@ -233,6 +238,7 @@ test('Invalidate values on RemoveButton click', () => {
         <Link
             enableAnchor={true}
             enableTarget={true}
+            enableTitle={true}
             locale={observable.box('en')}
             onChange={changeSpy}
             onFinish={finishSpy}
