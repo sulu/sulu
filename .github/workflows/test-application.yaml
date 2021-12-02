@@ -170,7 +170,7 @@ jobs:
               run: composer config minimum-stability ${{ matrix.composer-stability }}
 
             - name: Install handcraftedinthealps/goodby-csv
-              if: ${{ matrix.php-version }} == '8.1'
+              if: ${{ matrix.php-version == '8.1' }}
               run: composer require handcraftedinthealps/goodby-csv:^1.4
 
             - name: Install composer dependencies
