@@ -42,9 +42,17 @@
         <field name="mainFax" type="string" column="mainFax" nullable="true"/>
         <field name="mainUrl" type="string" column="mainUrl" nullable="true"/>
 
-        <one-to-many field="accountContacts" target-entity="Sulu\Bundle\ContactBundle\Entity\AccountContact" mapped-by="account"/>
+        <one-to-many field="accountContacts" target-entity="Sulu\Bundle\ContactBundle\Entity\AccountContact" mapped-by="account">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+        </one-to-many>
 
-        <one-to-many field="accountAddresses" target-entity="Sulu\Bundle\ContactBundle\Entity\AccountAddress" mapped-by="account"/>
+        <one-to-many field="accountAddresses" target-entity="Sulu\Bundle\ContactBundle\Entity\AccountAddress" mapped-by="account">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+        </one-to-many>
 
         <!-- enabled EXTRA_LAZY loading to avoid overhead while using slice() to get contacts -->
         <one-to-many field="children" target-entity="Sulu\Bundle\ContactBundle\Entity\AccountInterface" mapped-by="parent"
