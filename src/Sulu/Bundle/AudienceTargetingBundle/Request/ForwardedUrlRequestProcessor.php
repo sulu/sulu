@@ -40,7 +40,7 @@ class ForwardedUrlRequestProcessor implements RequestProcessorInterface
             return new RequestAttributes();
         }
 
-        $originalRequest = Request::create($request->headers->get($this->urlHeader));
+        $originalRequest = Request::create($request->headers->get($this->urlHeader), 'GET', [], [], [], $request->server);
         $host = $originalRequest->getHost();
         $port = $originalRequest->getPort();
 
