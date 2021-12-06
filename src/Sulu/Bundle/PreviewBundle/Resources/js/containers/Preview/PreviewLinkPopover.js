@@ -131,10 +131,6 @@ class PreviewLinkPopover extends React.Component<Props> {
                             </div>
                         </div>
                         <div className={previewLinkStyles.dangerZone}>
-                            <span className={previewLinkStyles.dangerZoneLabel}>
-                                {translate('sulu_preview.danger_zone')}:&nbsp;
-                            </span>
-
                             <a
                                 className={previewLinkStyles.dangerZoneLink}
                                 href="#"

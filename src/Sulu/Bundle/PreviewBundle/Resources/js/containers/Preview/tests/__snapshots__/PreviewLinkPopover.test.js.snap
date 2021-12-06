@@ -36,12 +36,6 @@ exports[`Generate link 1`] = `
   <div
     className="dangerZone"
   >
-    <span
-      className="dangerZoneLabel"
-    >
-      sulu_preview.danger_zone
-      : 
-    </span>
     <a
       className="dangerZoneLink"
       href="#"
@@ -108,12 +102,6 @@ exports[`Render popover when preview link is available and copy link to clipboar
   <div
     className="dangerZone"
   >
-    <span
-      className="dangerZoneLabel"
-    >
-      sulu_preview.danger_zone
-      : 
-    </span>
     <a
       className="dangerZoneLink"
       href="#"
