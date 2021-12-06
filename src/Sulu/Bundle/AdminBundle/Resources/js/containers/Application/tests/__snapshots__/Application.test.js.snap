@@ -15,9 +15,14 @@ Array [
           class="header"
         >
           <span
-            aria-label="su-sulu-logo"
-            class="su-sulu-logo logo"
-          />
+            class="logo"
+            title="2.0.0-RC1"
+          >
+            <span
+              aria-label="su-sulu-logo"
+              class="su-sulu-logo"
+            />
+          </span>
           <div
             class="pin"
             role="button"
@@ -198,9 +203,14 @@ Array [
           class="header"
         >
           <span
-            aria-label="su-sulu-logo"
-            class="su-sulu-logo logo"
-          />
+            class="logo"
+            title="2.0.0-RC1"
+          >
+            <span
+              aria-label="su-sulu-logo"
+              class="su-sulu-logo"
+            />
+          </span>
           <div
             class="pin"
             role="button"
@@ -723,9 +733,14 @@ Array [
           class="header"
         >
           <span
-            aria-label="su-sulu-logo"
-            class="su-sulu-logo logo"
-          />
+            class="logo"
+            title="2.0.0-RC1"
+          >
+            <span
+              aria-label="su-sulu-logo"
+              class="su-sulu-logo"
+            />
+          </span>
           <div
             class="pin"
             role="button"
@@ -910,9 +925,14 @@ Array [
           class="header"
         >
           <span
-            aria-label="su-sulu-logo"
-            class="su-sulu-logo logo"
-          />
+            class="logo"
+            title="2.0.0-RC1"
+          >
+            <span
+              aria-label="su-sulu-logo"
+              class="su-sulu-logo"
+            />
+          </span>
           <div
             class="pin"
             role="button"

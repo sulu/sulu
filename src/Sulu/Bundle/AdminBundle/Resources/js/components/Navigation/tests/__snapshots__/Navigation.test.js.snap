@@ -8,9 +8,14 @@ exports[`The component should render and handle clicks correctly 1`] = `
     class="header"
   >
     <span
-      aria-label="su-sulu-logo"
-      class="su-sulu-logo logo"
-    />
+      class="logo"
+      title="2.0.0-RC1"
+    >
+      <span
+        aria-label="su-sulu-logo"
+        class="su-sulu-logo"
+      />
+    </span>
   </div>
   <div
     class="items"
@@ -125,9 +130,14 @@ exports[`The component should render with all available props and handle clicks 
     class="header"
   >
     <span
-      aria-label="su-sulu-logo"
-      class="su-sulu-logo logo"
-    />
+      class="logo"
+      title="2.0.0-RC1"
+    >
+      <span
+        aria-label="su-sulu-logo"
+        class="su-sulu-logo"
+      />
+    </span>
     <div
       class="pin"
       role="button"

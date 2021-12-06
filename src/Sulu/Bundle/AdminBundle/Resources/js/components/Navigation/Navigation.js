@@ -125,7 +125,9 @@ class Navigation extends React.Component<Props> {
         return (
             <div className={navigationStyles.navigation}>
                 <div className={navigationStyles.header}>
-                    <Icon className={navigationStyles.logo} name="su-sulu-logo" title={suluVersion} />
+                    <span className={navigationStyles.logo} title={suluVersion}>
+                        <Icon name="su-sulu-logo" />
+                    </span>
 
                     {onPinToggle &&
                         <div className={pinClass} onClick={this.handlePinToggle} role="button">
