@@ -1,5 +1,11 @@
 # Upgrade
 
+## 1.6.44
+
+### ListRestHelper
+
+The `SnippetController` has changed its constructor, it was extended by `FieldDescriptorFactoryInterface $fieldDescriptorFactory`.
+
 ## 1.6.24
 
 ### Collection Repository count function changed

@@ -232,6 +232,17 @@ class SnippetControllerTest extends SuluTestCase
         }
     }
 
+    public function testIndexUnknownSortColumn()
+    {
+        $query = \http_build_query([
+            'template' => 'template"]/sv:value[1]%27)+as+decimal);select+sleep(5);',
+        ]);
+        $this->client->jsonRequest('GET', '/api/snippets?' . $query);
+        $response = $this->client->getResponse();
+
+        $this->assertHttpStatusCode(400, $response);
+    }
+
     public function providePost()
     {
         return [
