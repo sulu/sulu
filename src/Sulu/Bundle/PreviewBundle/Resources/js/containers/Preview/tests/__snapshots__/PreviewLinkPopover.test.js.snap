@@ -103,7 +103,7 @@ exports[`Render popover when preview link is available and copy link to clipboar
     className="revoke"
   >
     <button
-      className="revokeLink"
+      className="revokeButton"
       onClick={[Function]}
       type="button"
     >
