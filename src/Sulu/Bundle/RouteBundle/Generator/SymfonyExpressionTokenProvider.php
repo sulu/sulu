@@ -44,7 +44,10 @@ class SymfonyExpressionTokenProvider implements TokenProviderInterface
                 $this->translator->setLocale($entity->getLocale());
             }
 
-            $result = $this->expressionLanguage->evaluate($name, ['object' => $entity, 'translator' => $this->translator]);
+            $result = $this->expressionLanguage->evaluate($name, [
+                'object' => $entity,
+                'translator' => new TranslatorWrapper($this->translator),
+            ]);
             $this->translator->setLocale($locale);
 
             return $result;
