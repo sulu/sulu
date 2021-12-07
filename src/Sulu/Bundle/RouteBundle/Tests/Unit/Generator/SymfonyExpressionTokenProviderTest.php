@@ -122,7 +122,7 @@ class SymfonyExpressionTokenProviderTest extends TestCase
         $provider->provide($entity, 'object.title');
     }
 
-    public function testResolveTranslationAddResource()
+    public function testResolveTranslationAddResource(): void
     {
         $this->expectException(CannotEvaluateTokenException::class);
 

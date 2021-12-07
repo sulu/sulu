@@ -11,39 +11,41 @@
 
 namespace Sulu\Bundle\RouteBundle\Generator;
 
+use Symfony\Contracts\Translation\LocaleAwareInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @internal
  */
-class TranslatorWrapper implements TranslatorInterface
+class TranslatorWrapper implements TranslatorInterface, LocaleAwareInterface
 {
     /**
-     * @var TranslatorInterface
+     * @var TranslatorInterface&LocaleAwareInterface
      */
     private $translator;
 
+    /**
+     * @param TranslatorInterface&LocaleAwareInterface $translator
+     */
     public function __construct(TranslatorInterface $translator)
     {
         $this->translator = $translator;
     }
 
-    public function trans($id, array $parameters = [], $domain = null, $locale = null)
+    /**
+     * @param mixed[] $parameters
+     */
+    public function trans($id, array $parameters = [], $domain = null, $locale = null): string
     {
         return $this->translator->trans($id, $parameters, $domain, $locale);
     }
 
-    public function transChoice($id, $number, array $parameters = [], $domain = null, $locale = null)
+    public function setLocale($locale): void
     {
-        return $this->translator->transChoice($id, $number, $parameters, $domain, $locale);
+        throw new \LogicException('Not supported.');
     }
 
-    public function setLocale($locale)
-    {
-        throw new \Exception('Not supported.');
-    }
-
-    public function getLocale()
+    public function getLocale(): string
     {
         return $this->translator->getLocale();
     }
