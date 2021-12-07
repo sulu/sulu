@@ -15,13 +15,14 @@ use Sulu\Component\Rest\Exception\DependantResourcesFoundExceptionInterface;
 use Sulu\Component\Rest\Exception\ReferencingResourcesFoundExceptionInterface;
 use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
+use Symfony\Component\Serializer\Normalizer\ContextAwareNormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @internal the following class is only for internal use don't use it in your project
  */
-class FlattenExceptionNormalizer implements NormalizerInterface
+class FlattenExceptionNormalizer implements ContextAwareNormalizerInterface
 {
     /**
      * @var NormalizerInterface
@@ -81,8 +82,8 @@ class FlattenExceptionNormalizer implements NormalizerInterface
         return $data;
     }
 
-    public function supportsNormalization($data, $format = null)
+    public function supportsNormalization($data, $format = null, array $context = [])
     {
-        return $data instanceof FlattenException;
+        return $data instanceof FlattenException && !($context['messenger_serialization'] ?? false);
     }
 }
