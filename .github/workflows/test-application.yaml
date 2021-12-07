@@ -138,6 +138,10 @@ jobs:
                   composer remove jackalope/jackalope-doctrine-dbal --dev --no-interaction --no-update
                   composer require jackalope/jackalope-jackrabbit:~1.2  --no-interaction --no-update
 
+            - name: Require Laminas Zend bridge
+              if: ${{ matrix.php-version == '7.4' }}
+              run: composer require laminas/laminas-zendframework-bridge --no-update
+
             - name: Install composer dependencies
               uses: ramsey/composer-install@v1
               with:
