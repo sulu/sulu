@@ -130,14 +130,14 @@ class PreviewLinkPopover extends React.Component<Props> {
                                 </Button>
                             </div>
                         </div>
-                        <div className={previewLinkStyles.dangerZone}>
-                            <a
-                                className={previewLinkStyles.dangerZoneLink}
-                                href="#"
+                        <div className={previewLinkStyles.revoke}>
+                            <button
+                                className={previewLinkStyles.revokeButton}
+                                type="button"
                                 onClick={this.handleRevokeClick}
                             >
                                 {translate('sulu_preview.revoke')}
-                            </a>
+                            </button>
                         </div>
                     </React.Fragment>
                 )}
