@@ -5,6 +5,8 @@
 
 :global {
     .public-preview {
+        height: 100%;
+
         &__404-message {
             position: absolute;
             left: 50%;
