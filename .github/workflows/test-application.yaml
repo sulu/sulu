@@ -110,7 +110,7 @@ jobs:
                           DATABASE_COLLATE: utf8mb4_unicode_ci
 
                     - php-version: '8.1'
-                      database: mysql
+                      database: mariadb
                       phpcr-transport: doctrinedbal
                       dependency-versions: 'highest'
                       php-extensions: 'ctype, iconv, mysql, imagick'
@@ -118,7 +118,7 @@ jobs:
                       composer-stability: dev
                       env:
                           SYMFONY_DEPRECATIONS_HELPER: weak
-                          DATABASE_URL: mysql://root:root@127.0.0.1:3306/sulu_test?serverVersion=5.7
+                          DATABASE_URL: mysql://root:root@127.0.0.1:3307/sulu_test?serverVersion=mariadb-10.3.32
                           DATABASE_CHARSET: utf8mb4
                           DATABASE_COLLATE: utf8mb4_unicode_ci
 
@@ -129,6 +129,14 @@ jobs:
                     MYSQL_ROOT_PASSWORD: root
                 ports:
                     - 3306:3306
+                options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=5
+
+            mariadb:
+                image: mariadb:10.3
+                env:
+                    MYSQL_ROOT_PASSWORD: root
+                ports:
+                    - 3307:3306
                 options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=5
 
             postgres:
