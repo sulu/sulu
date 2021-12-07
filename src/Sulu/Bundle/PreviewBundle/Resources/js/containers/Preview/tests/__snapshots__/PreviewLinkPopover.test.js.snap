@@ -34,12 +34,12 @@ exports[`Generate link 1`] = `
     </div>
   </div>
   <div
-    className="dangerZone"
+    className="revoke"
   >
-    <a
-      className="dangerZoneLink"
-      href="#"
+    <button
+      className="revokeButton"
       onClick={[Function]}
+      type="button"
     >
       sulu_preview.revoke
     </a>
@@ -100,12 +100,12 @@ exports[`Render popover when preview link is available and copy link to clipboar
     </div>
   </div>
   <div
-    className="dangerZone"
+    className="revoke"
   >
-    <a
-      className="dangerZoneLink"
-      href="#"
+    <button
+      className="revokeLink"
       onClick={[Function]}
+      type="button"
     >
       sulu_preview.revoke
     </a>
