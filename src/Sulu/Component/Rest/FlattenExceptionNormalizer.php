@@ -68,7 +68,7 @@ class FlattenExceptionNormalizer implements ContextAwareNormalizerInterface
         return $data;
     }
 
-    public function supportsNormalization($data, string $format = null, array $context = [])
+    public function supportsNormalization($data, $format = null, array $context = [])
     {
         return $data instanceof FlattenException && !($context['messenger_serialization'] ?? false);
     }
