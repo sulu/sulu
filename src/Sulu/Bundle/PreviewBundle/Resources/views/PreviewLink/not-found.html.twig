@@ -3,16 +3,14 @@
 {% block title %}{{ 'sulu_preview.not_found.title'|trans({}, 'admin') }}{% endblock %}
 
 {% block content %}
-    <div class="public-preview__container">
-        <div class="public-preview__preview-container">
-            <div class="public-preview__404-message">
-                <header>
-                    <span aria-label="su-unlink" class="su-unlink"></span>
-                </header>
+    <div class="public-preview__preview-container">
+        <div class="public-preview__404-message">
+            <header>
+                <span aria-label="su-unlink" class="su-unlink"></span>
+            </header>
 
-                <h1>{{ 'sulu_preview.not_found.headline'|trans({}, 'admin') }}</h1>
-                <h2>{{ 'sulu_preview.not_found.description'|trans({}, 'admin') }}</h2>
-            </div>
+            <h1>{{ 'sulu_preview.not_found.headline'|trans({}, 'admin') }}</h1>
+            <h2>{{ 'sulu_preview.not_found.description'|trans({}, 'admin') }}</h2>
         </div>
     </div>
 {% endblock %}

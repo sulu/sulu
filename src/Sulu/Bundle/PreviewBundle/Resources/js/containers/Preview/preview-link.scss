@@ -32,15 +32,19 @@
     padding-right: 10px;
 }
 
-.danger-zone {
-    font-size: 14px;
+.revoke {
     margin-top: 20px;
 }
 
-.danger-zone-label {
-    font-weight: bold;
-}
-
-.danger-zone-link {
+.revoke-button {
     color: $white;
+    font-size: 14px;
+    text-decoration: underline;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+
+    &:hover {
+        color: $shakespeare;
+    }
 }

@@ -34,21 +34,15 @@ exports[`Generate link 1`] = `
     </div>
   </div>
   <div
-    className="dangerZone"
+    className="revoke"
   >
-    <span
-      className="dangerZoneLabel"
-    >
-      sulu_preview.danger_zone
-      : 
-    </span>
-    <a
-      className="dangerZoneLink"
-      href="#"
+    <button
+      className="revokeButton"
       onClick={[Function]}
+      type="button"
     >
       sulu_preview.revoke
-    </a>
+    </button>
   </div>
 </div>
 `;
@@ -106,21 +100,15 @@ exports[`Render popover when preview link is available and copy link to clipboar
     </div>
   </div>
   <div
-    className="dangerZone"
+    className="revoke"
   >
-    <span
-      className="dangerZoneLabel"
-    >
-      sulu_preview.danger_zone
-      : 
-    </span>
-    <a
-      className="dangerZoneLink"
-      href="#"
+    <button
+      className="revokeButton"
       onClick={[Function]}
+      type="button"
     >
       sulu_preview.revoke
-    </a>
+    </button>
   </div>
 </div>
 `;
