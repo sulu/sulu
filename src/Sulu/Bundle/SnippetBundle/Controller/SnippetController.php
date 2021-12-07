@@ -31,7 +31,6 @@ use Sulu\Component\Hash\RequestHashChecker;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\ListBuilder\ListRestHelper;
-use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\Form\FormFactory;
@@ -108,11 +107,6 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
      */
     private $metadataFactory;
 
-    /**
-     * @var FieldDescriptorFactoryInterface
-     */
-    private $fieldDescriptorFactory;
-
     public function __construct(
         ViewHandler $viewHandler,
         ContentMapper $contentMapper,
@@ -125,8 +119,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
         FormFactory $formFactory,
         RequestHashChecker $requestHashChecker,
         ListRestHelper $listRestHelper,
-        MetadataFactoryInterface $metadataFactory,
-        FieldDescriptorFactoryInterface $fieldDescriptorFactory
+        MetadataFactoryInterface $metadataFactory
     ) {
         $this->viewHandler = $viewHandler;
         $this->contentMapper = $contentMapper;
@@ -140,7 +133,6 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
         $this->requestHashChecker = $requestHashChecker;
         $this->listRestHelper = $listRestHelper;
         $this->metadataFactory = $metadataFactory;
-        $this->fieldDescriptorFactory = $fieldDescriptorFactory;
     }
 
     /**
@@ -157,12 +149,6 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
 
         $uuidsString = $request->get('ids');
 
-        $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors('snippets');
-        $sortColumn = $this->listRestHelper->getSortColumn();
-        if (!array_key_exists($sortColumn, $fieldDescriptors)) {
-            throw new RestException('Unrecognized sort column: ' . $sortColumn);
-        }
-
         if ($uuidsString) {
             $uuids = \explode(',', $uuidsString);
             $snippets = $this->snippetRepository->getSnippetsByUuids($uuids, $locale);
@@ -174,7 +160,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
                 $this->listRestHelper->getOffset(),
                 $this->listRestHelper->getLimit(),
                 $this->listRestHelper->getSearchPattern(),
-                $fieldDescriptors[$sortColumn]->getName(),
+                $this->listRestHelper->getSortColumn(),
                 $this->listRestHelper->getSortOrder()
             );
 
@@ -182,7 +168,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
                 $locale,
                 $type,
                 $this->listRestHelper->getSearchPattern(),
-                $fieldDescriptors[$sortColumn]->getName(),
+                $this->listRestHelper->getSortColumn(),
                 $this->listRestHelper->getSortOrder()
             );
         }
