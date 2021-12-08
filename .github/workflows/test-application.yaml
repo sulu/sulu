@@ -132,7 +132,7 @@ jobs:
                 options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=5
 
             mariadb:
-                image: mariadb:10.3
+                image: mariadb:10.3.32-focal
                 env:
                     MYSQL_ROOT_PASSWORD: root
                 ports:
