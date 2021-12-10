@@ -64,6 +64,7 @@ class Structure implements StructureInterface
         return $this->offsetExists($name);
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetExists($offset)
     {
         return isset($this->properties[$offset]);
@@ -74,11 +75,13 @@ class Structure implements StructureInterface
         return $this->getProperty($offset);
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         $this->getProperty($offset)->setValue($value);
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
         unset($this->properties[$offset]);

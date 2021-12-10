@@ -175,6 +175,7 @@ class ManagedStructure extends Structure
         return $values;
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetExists($offset)
     {
         $this->init();
