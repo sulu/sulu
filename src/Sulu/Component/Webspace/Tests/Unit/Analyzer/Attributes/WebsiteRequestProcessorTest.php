@@ -248,8 +248,8 @@ class WebsiteRequestProcessorTest extends TestCase
                         false,
                         'sulu.lo',
                         5
-                    )
-                ]
+                    ),
+                ],
             ],
         ];
     }
