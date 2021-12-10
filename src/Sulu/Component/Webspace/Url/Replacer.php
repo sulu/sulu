@@ -76,6 +76,14 @@ class Replacer implements ReplacerInterface
 
     public function replace($url, $replacer, $value)
     {
+        if (!$url) {
+            return '';
+        }
+
+        if (!$value) {
+            $value = '';
+        }
+
         return \str_replace($replacer, $value, $url);
     }
 

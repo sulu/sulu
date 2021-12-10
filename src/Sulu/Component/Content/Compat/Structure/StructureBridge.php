@@ -400,6 +400,7 @@ class StructureBridge implements StructureInterface
         return $result;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
     }
