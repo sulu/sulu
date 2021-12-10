@@ -65,9 +65,10 @@ class LinkTag implements TagInterface
             $provider = $this->getValue($attributes, 'provider', self::DEFAULT_PROVIDER);
             $validationState = $attributes['sulu-validation-state'] ?? null;
 
-            $hrefParts = $this->getUuidAndAnchorFromHref($attributes['href'] ?? null);
+            $hrefParts = $this->getPartsFromHref($attributes['href'] ?? null);
             $uuid = $hrefParts['uuid'];
             $anchor = $hrefParts['anchor'];
+            $query = $hrefParts['query'];
 
             if ($uuid && \array_key_exists($provider . '-' . $uuid, $contents)) {
                 $item = $contents[$provider . '-' . $uuid];
@@ -79,6 +80,10 @@ class LinkTag implements TagInterface
 
                 if ($anchor) {
                     $url .= '#' . $anchor;
+                }
+
+                if ($query) {
+                    $url .= '?' . $query;
                 }
 
                 $title = $item->getTitle();
@@ -125,7 +130,7 @@ class LinkTag implements TagInterface
         $result = [];
         foreach ($attributesByTag as $tag => $attributes) {
             $provider = $this->getValue($attributes, 'provider', self::DEFAULT_PROVIDER);
-            $uuid = $this->getUuidAndAnchorFromHref($attributes['href'] ?? null)['uuid'];
+            $uuid = $this->getPartsFromHref($attributes['href'] ?? null)['uuid'];
 
             if (!$uuid || !\array_key_exists($provider . '-' . $uuid, $items)) {
                 $result[$tag] = self::VALIDATE_REMOVED;
@@ -155,7 +160,7 @@ class LinkTag implements TagInterface
                 $uuidsByType[$provider] = [];
             }
 
-            $uuid = $this->getUuidAndAnchorFromHref($attributes['href'] ?? null)['uuid'];
+            $uuid = $this->getPartsFromHref($attributes['href'] ?? null)['uuid'];
 
             if ($uuid) {
                 $uuidsByType[$provider][] = $uuid;
@@ -209,21 +214,23 @@ class LinkTag implements TagInterface
     /**
      * @param mixed $href
      *
-     * @return array{uuid: string|null, anchor: string|null}
+     * @return array{uuid: string|null, anchor: string|null, query: string|null}
      */
-    private function getUuidAndAnchorFromHref($href): array
+    private function getPartsFromHref($href): array
     {
         $href = (string) $href ?: null;
 
         /** @var string[] $hrefParts */
-        $hrefParts = $href ? \explode('#', $href, 2) : [];
+        \preg_match("/(?'uuid'[^#\?]+)(?>#(?'anchor'[^\?]*))?(?>\?(?'query'.*))?/", $href, $hrefParts, PREG_UNMATCHED_AS_NULL);
 
-        $uuid = $hrefParts[0] ?? null;
-        $anchor = $hrefParts[1] ?? null;
+        $uuid = $hrefParts['uuid'] ?? null;
+        $anchor = $hrefParts['anchor'] ?? null;
+        $query = $hrefParts['query'] ?? null;
 
         return [
             'uuid' => $uuid,
             'anchor' => $anchor,
+            'query' => $query,
         ];
     }
 }
