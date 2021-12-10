@@ -13,6 +13,7 @@ namespace Sulu\Component\Webspace\Tests\Unit\Analyzer\Attributes;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
@@ -33,12 +34,12 @@ class WebsiteRequestProcessorTest extends TestCase
     private $provider;
 
     /**
-     * @var WebspaceManagerInterface
+     * @var ObjectProphecy<WebspaceManagerInterface>
      */
     private $webspaceManager;
 
     /**
-     * @var ContentMapperInterface
+     * @var ObjectProphecy<ContentMapperInterface>
      */
     private $contentMapper;
 
@@ -254,6 +255,8 @@ class WebsiteRequestProcessorTest extends TestCase
     }
 
     /**
+     * @param PortalInformation[] $portalInformations
+     *
      * @dataProvider provideValidateData
      */
     public function testValidate($attributes, $exception = null, $message = '', $portalInformations = [])
