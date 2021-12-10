@@ -115,6 +115,7 @@ class ManagedExtensionContainer extends ExtensionContainer
         return $data;
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetExists($extensionName)
     {
         return $this->extensionManager->hasExtension($this->structureType, $extensionName);

@@ -388,6 +388,7 @@ class Content implements \ArrayAccess
         $this->contentLocales = $contentLocales;
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetExists($offset)
     {
         return \array_key_exists($offset, $this->data);
@@ -398,11 +399,13 @@ class Content implements \ArrayAccess
         return $this->data[$offset];
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         throw new FeatureNotImplementedException();
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
         throw new FeatureNotImplementedException();

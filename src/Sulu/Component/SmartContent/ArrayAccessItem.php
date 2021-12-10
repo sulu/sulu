@@ -94,6 +94,7 @@ class ArrayAccessItem implements ResourceItemInterface, \ArrayAccess, \JsonSeria
         return $this->get($name);
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetExists($offset)
     {
         return $this->exists($offset);
@@ -104,11 +105,13 @@ class ArrayAccessItem implements ResourceItemInterface, \ArrayAccess, \JsonSeria
         return $this->get($offset);
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         throw new NotSupportedException();
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
         throw new NotSupportedException();
