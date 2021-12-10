@@ -27,7 +27,7 @@ class ResourceTabViewBuilderTest extends TestCase
     public function testBuildResourceTabViewWithoutResourceKey()
     {
         $this->expectException(\DomainException::class);
-        $this->expectExceptionMessageRegExp('/"setResourceKey"/');
+        $this->expectExceptionMessageMatches('/"setResourceKey"/');
 
         $view = (new ResourceTabViewBuilder('sulu_category.list', '/category'))
             ->getView();
@@ -168,7 +168,7 @@ class ResourceTabViewBuilderTest extends TestCase
     public function testBuildResourceTabWithLocalesWithoutLocalePlaceholder()
     {
         $this->expectException(\DomainException::class);
-        $this->expectExceptionMessageRegExp('":locale"');
+        $this->expectExceptionMessageMatches('":locale"');
 
         $view = (new ResourceTabViewBuilder('sulu_role.list', '/roles'))
             ->setResourceKey('roles')
@@ -180,7 +180,7 @@ class ResourceTabViewBuilderTest extends TestCase
     public function testBuildResourceTabWithoutLocalesWithLocalePlaceholder()
     {
         $this->expectException(\DomainException::class);
-        $this->expectExceptionMessageRegExp('":locale"');
+        $this->expectExceptionMessageMatches('":locale"');
 
         $view = (new ResourceTabViewBuilder('sulu_role.list', '/roles/:locale'))
             ->setResourceKey('roles')

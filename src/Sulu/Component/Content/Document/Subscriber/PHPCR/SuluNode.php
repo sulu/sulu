@@ -301,6 +301,7 @@ class SuluNode implements \IteratorAggregate, NodeInterface
         return $this->node->getAllowedLifecycleTransitions();
     }
 
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         if (!$this->node instanceof \IteratorAggregate) {

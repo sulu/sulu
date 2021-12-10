@@ -134,6 +134,7 @@ class WebspaceCollection implements \IteratorAggregate
         return \count($this->webspaces);
     }
 
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         return new \ArrayIterator($this->webspaces);

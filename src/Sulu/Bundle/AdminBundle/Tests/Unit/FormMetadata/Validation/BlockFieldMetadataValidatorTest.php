@@ -81,9 +81,9 @@ class BlockFieldMetadataValidatorTest extends TestCase
     private function expectReservedPropertyNameException(string $formKey, string $blockName, string $propertyName)
     {
         $this->expectException(ReservedPropertyNameException::class);
-        $this->expectExceptionMessageRegExp('"' . $formKey . '"');
-        $this->expectExceptionMessageRegExp('"' . $blockName . '"');
-        $this->expectExceptionMessageRegExp('"' . $propertyName . '"');
+        $this->expectExceptionMessageMatches('"' . $formKey . '"');
+        $this->expectExceptionMessageMatches('"' . $blockName . '"');
+        $this->expectExceptionMessageMatches('"' . $propertyName . '"');
     }
 
     public function testValidate()

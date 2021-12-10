@@ -81,9 +81,9 @@ class TypesPropertyFieldMetadataValidatorTest extends TestCase
     private function expectReservedPropertyNameException(string $formKey, string $propertyName, string $subPropertyName)
     {
         $this->expectException(ReservedPropertyNameException::class);
-        $this->expectExceptionMessageRegExp('"' . $formKey . '"');
-        $this->expectExceptionMessageRegExp('"' . $propertyName . '"');
-        $this->expectExceptionMessageRegExp('"' . $subPropertyName . '"');
+        $this->expectExceptionMessageMatches('"' . $formKey . '"');
+        $this->expectExceptionMessageMatches('"' . $propertyName . '"');
+        $this->expectExceptionMessageMatches('"' . $subPropertyName . '"');
     }
 
     public function testValidate()
