@@ -97,6 +97,18 @@ jobs:
                           DATABASE_CHARSET: UTF8
                           DATABASE_COLLATE:
 
+                    - php-version: '7.3'
+                      database: postgres
+                      phpcr-transport: doctrinedbal
+                      dependency-versions: 'highest'
+                      php-extensions: 'ctype, iconv, mysql, gd'
+                      tools: 'composer:v2'
+                      env:
+                          SYMFONY_DEPRECATIONS_HELPER: weak
+                          DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/sulu_test?serverVersion=12.5
+                          DATABASE_CHARSET: UTF8
+                          DATABASE_COLLATE:
+
                     - php-version: '8.0'
                       database: mysql
                       phpcr-transport: doctrinedbal
