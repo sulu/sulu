@@ -171,7 +171,7 @@ jobs:
 
             - name: Install handcraftedinthealps/goodby-csv
               if: ${{ matrix.php-version == '8.1' }}
-              run: composer require handcraftedinthealps/goodby-csv:^1.4
+              run: composer require handcraftedinthealps/goodby-csv:^1.4 --no-update
 
             - name: Install composer dependencies
               uses: ramsey/composer-install@v1
