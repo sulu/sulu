@@ -77,8 +77,8 @@ class RoleRepository extends EntityRepository implements RoleRepositoryInterface
             }
 
             if (isset($filters['system'])) {
-                $queryBuilder->andWhere('role.system = :system')
-                    ->setParameter('system', $filters['system']);
+                $queryBuilder->andWhere('role.system = :roleSystem')
+                    ->setParameter('roleSystem', $filters['system']);
             }
 
             $query = $queryBuilder->getQuery();
@@ -107,8 +107,8 @@ class RoleRepository extends EntityRepository implements RoleRepositoryInterface
     {
         $result = $this->createQueryBuilder('role')
             ->select('role.id')
-            ->where('role.system = :system')
-            ->setParameter('system', $system)
+            ->where('role.system = :roleSystem')
+            ->setParameter('roleSystem', $system)
             ->getQuery()
             ->getResult();
 
