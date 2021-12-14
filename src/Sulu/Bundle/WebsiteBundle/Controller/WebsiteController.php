@@ -103,6 +103,11 @@ abstract class WebsiteController extends AbstractController
 
     /**
      * Generates attributes.
+     *
+     * @param mixed[] $attributes
+     * @param bool $preview
+     *
+     * @return mixed[]
      */
     protected function getAttributes($attributes, StructureInterface $structure = null, $preview = false)
     {

@@ -369,6 +369,7 @@ class NavigationItem implements \Iterator
      *
      * @see http://php.net/manual/en/iterator.next.php
      */
+    #[\ReturnTypeWillChange]
     public function next()
     {
         ++$this->position;
@@ -394,6 +395,7 @@ class NavigationItem implements \Iterator
      * @return bool The return value will be casted to boolean and then evaluated.
      *              Returns true on success or false on failure
      */
+    #[\ReturnTypeWillChange]
     public function valid()
     {
         return $this->position < \count($this->children);
@@ -404,6 +406,7 @@ class NavigationItem implements \Iterator
      *
      * @see http://php.net/manual/en/iterator.rewind.php
      */
+    #[\ReturnTypeWillChange]
     public function rewind()
     {
         $this->position = 0;

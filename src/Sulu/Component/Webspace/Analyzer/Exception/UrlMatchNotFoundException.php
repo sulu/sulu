@@ -23,10 +23,18 @@ class UrlMatchNotFoundException extends \Exception
      */
     private $url;
 
-    public function __construct($url)
+    /**
+     * @param string[] $portalUrls
+     */
+    public function __construct($url, array $portalUrls = [])
     {
         $this->url = $url;
         $message = 'There exists no portal for the URL "' . $url . '"';
+
+        if (!empty($portalUrls)) {
+            $message .= ', the URL should begin with one of the following Portal URLs: "' . \implode('", "', $portalUrls) . '"';
+        }
+
         parent::__construct($message, 0);
     }
 
