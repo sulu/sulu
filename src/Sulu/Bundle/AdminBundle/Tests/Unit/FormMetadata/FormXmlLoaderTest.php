@@ -544,7 +544,7 @@ class FormXmlLoaderTest extends TestCase
     public function testLoadFormInvalidRootTag()
     {
         $this->expectException(InvalidRootTagException::class);
-        $this->expectExceptionMessageRegExp('/"form"/');
+        $this->expectExceptionMessageMatches('/"form"/');
 
         $this->loader->load(
             __DIR__ . \DIRECTORY_SEPARATOR . 'data' . \DIRECTORY_SEPARATOR . 'form_invalid_root_tag.xml'

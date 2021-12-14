@@ -58,6 +58,7 @@ class ComponentConfiguration implements ComponentConfigurationInterface
         $this->componentOptions = $componentOptions;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

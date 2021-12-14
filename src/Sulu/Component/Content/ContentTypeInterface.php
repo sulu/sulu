@@ -95,11 +95,15 @@ interface ContentTypeInterface
 
     /**
      * Prepare view data (or metadata) for the template.
+     *
+     * @return mixed[]
      */
     public function getViewData(PropertyInterface $property);
 
     /**
      * Prepare content data for the template.
+     *
+     * @return mixed
      */
     public function getContentData(PropertyInterface $property);
 }

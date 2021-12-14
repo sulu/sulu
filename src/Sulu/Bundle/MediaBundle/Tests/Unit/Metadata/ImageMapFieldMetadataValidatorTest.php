@@ -81,9 +81,9 @@ class ImageMapFieldMetadataValidatorTest extends TestCase
     private function expectReservedPropertyNameException(string $formKey, string $imageMapName, string $propertyName)
     {
         $this->expectException(ReservedPropertyNameException::class);
-        $this->expectExceptionMessageRegExp('"' . $formKey . '"');
-        $this->expectExceptionMessageRegExp('"' . $imageMapName . '"');
-        $this->expectExceptionMessageRegExp('"' . $propertyName . '"');
+        $this->expectExceptionMessageMatches('"' . $formKey . '"');
+        $this->expectExceptionMessageMatches('"' . $imageMapName . '"');
+        $this->expectExceptionMessageMatches('"' . $propertyName . '"');
     }
 
     public function testValidate()

@@ -81,7 +81,21 @@ class WebsiteRequestProcessor implements RequestProcessorInterface
     public function validate(RequestAttributes $attributes)
     {
         if (null === $attributes->getAttribute('portalInformation')) {
-            throw new UrlMatchNotFoundException($attributes->getAttribute('requestUri'));
+            $portalUrls = [];
+            foreach ($this->webspaceManager->getPortalInformations() as $portalInformation) {
+                $portalUrls[] = $attributes->getAttribute('scheme') . '://'
+                    . $portalInformation->getUrl();
+            }
+
+            $fullUrl = $attributes->getAttribute('scheme') . '://'
+                . $attributes->getAttribute('host')
+                . (!\in_array($attributes->getAttribute('port'), ['80', '443'], true) ? ':' . $attributes->getAttribute('port') : '')
+                    . $attributes->getAttribute('path');
+
+            throw new UrlMatchNotFoundException(
+                $fullUrl,
+                $portalUrls
+            );
         }
 
         return true;

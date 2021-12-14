@@ -13,6 +13,7 @@ namespace Sulu\Component\Webspace\Tests\Unit\Analyzer\Attributes;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
@@ -33,12 +34,12 @@ class WebsiteRequestProcessorTest extends TestCase
     private $provider;
 
     /**
-     * @var WebspaceManagerInterface
+     * @var ObjectProphecy<WebspaceManagerInterface>
      */
     private $webspaceManager;
 
     /**
-     * @var ContentMapperInterface
+     * @var ObjectProphecy<ContentMapperInterface>
      */
     private $contentMapper;
 
@@ -213,23 +214,58 @@ class WebsiteRequestProcessorTest extends TestCase
     {
         $portalInformation = $this->prophesize(PortalInformation::class);
 
+        $webspace = new Webspace();
+        $webspace->setKey('sulu');
+
+        $portal = new Portal();
+        $portal->setKey('sulu');
+
+        $localization = new Localization();
+        $localization->setCountry('at');
+        $localization->setLanguage('de');
+
         return [
             [['portalInformation' => $portalInformation]],
             [
-                ['requestUri' => 'http://sulu.io'],
+                ['scheme' => 'http', 'host' => 'sulu.io', 'port' => '80', 'path' => '/', 'requestUri' => '/'],
                 UrlMatchNotFoundException::class,
                 'There exists no portal for the URL "http://sulu.io"',
+                [],
+            ],
+            [
+                ['scheme' => 'http', 'host' => 'sulu.io', 'port' => '80', 'path' => '/', 'requestUri' => '/'],
+                UrlMatchNotFoundException::class,
+                'There exists no portal for the URL "http://sulu.io/", the url should begin with one of the following Portal Urls: "http://sulu.lo"',
+                [
+                    new PortalInformation(
+                        RequestAnalyzerInterface::MATCH_TYPE_FULL,
+                        $webspace,
+                        $portal,
+                        $localization,
+                        'sulu.lo',
+                        null,
+                        null,
+                        false,
+                        'sulu.lo',
+                        5
+                    ),
+                ],
             ],
         ];
     }
 
     /**
+     * @param PortalInformation[] $portalInformations
+     *
      * @dataProvider provideValidateData
      */
-    public function testValidate($attributes, $exception = null, $message = '')
+    public function testValidate($attributes, $exception = null, $message = '', $portalInformations = [])
     {
         if (null !== $exception) {
             $this->expectException($exception, $message);
+
+            $this->webspaceManager->getPortalInformations()
+                ->willReturn($portalInformations);
         }
 
         $this->assertTrue($this->provider->validate(new RequestAttributes($attributes)));
