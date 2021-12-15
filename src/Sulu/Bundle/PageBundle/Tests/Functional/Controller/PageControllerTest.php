@@ -915,8 +915,8 @@ class PageControllerTest extends SuluTestCase
                     ],
                 ],
             ],
-            'title' => 'Delete 3 additional pages',
-            'detail' => 'Are you sure, that you want to delete 3 additional pages?',
+            'title' => 'Delete 3 subpages?',
+            'detail' => 'Are you sure that you also want to delete 3 subpages?',
         ], $content);
     }
 
