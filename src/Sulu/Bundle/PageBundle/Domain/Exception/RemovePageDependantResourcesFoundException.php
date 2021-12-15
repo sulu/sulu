@@ -17,11 +17,11 @@ class RemovePageDependantResourcesFoundException extends RemoveDependantResource
 {
     public function getTitleTranslationKey(): string
     {
-        return 'sulu_page.delete_page_warning_title';
+        return 'sulu_page.delete_page_dependant_warning_title';
     }
 
     public function getDetailTranslationKey(): string
     {
-        return 'sulu_page.delete_page_warning';
+        return 'sulu_page.delete_page_dependant_warning_detail';
     }
 }

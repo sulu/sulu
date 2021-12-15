@@ -48,7 +48,7 @@ class RemoveDependantResourcesFoundException extends \Exception implements Remov
 
     public function getTitleTranslationKey(): string
     {
-        return 'sulu_admin.delete_dependants_warning_title';
+        return 'sulu_admin.delete_element_dependant_warning_title';
     }
 
     public function getTitleTranslationParameters(): array
@@ -60,7 +60,7 @@ class RemoveDependantResourcesFoundException extends \Exception implements Remov
 
     public function getDetailTranslationKey(): string
     {
-        return 'sulu_admin.delete_dependants_warning';
+        return 'sulu_admin.delete_element_dependant_warning_detail';
     }
 
     public function getDetailTranslationParameters(): array

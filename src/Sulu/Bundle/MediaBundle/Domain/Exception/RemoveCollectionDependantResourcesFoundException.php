@@ -17,11 +17,11 @@ class RemoveCollectionDependantResourcesFoundException extends RemoveDependantRe
 {
     public function getTitleTranslationKey(): string
     {
-        return 'sulu_media.delete_collection_warning_title';
+        return 'sulu_media.delete_collection_dependant_warning_title';
     }
 
     public function getDetailTranslationKey(): string
     {
-        return 'sulu_media.delete_collection_warning';
+        return 'sulu_media.delete_collection_dependant_warning_detail';
     }
 }

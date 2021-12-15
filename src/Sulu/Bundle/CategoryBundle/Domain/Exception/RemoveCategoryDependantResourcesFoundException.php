@@ -17,11 +17,11 @@ class RemoveCategoryDependantResourcesFoundException extends RemoveDependantReso
 {
     public function getTitleTranslationKey(): string
     {
-        return 'sulu_category.delete_category_warning_title';
+        return 'sulu_category.delete_category_dependant_warning_title';
     }
 
     public function getDetailTranslationKey(): string
     {
-        return 'sulu_category.delete_category_warning';
+        return 'sulu_category.delete_category_dependant_warning_detail';
     }
 }
